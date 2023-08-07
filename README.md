@@ -107,5 +107,9 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 'Real' underyling data won't be available to the development team so a set of fake data will be created for testing purposes.
 
+## A few questions - Sam
+How is data storage going to work? Are we going to do cloud storage? Otherwise we would have a different copy for each user that then would need merging.
+I think we could probably find a good python library so we wouldn't need a web interface. Either that or there exist plenty of good libraries in other languages (I have experience with .NET MAUI for example, which is cross platform).
 
+-Sam
 

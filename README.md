@@ -107,6 +107,12 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 'Real' underyling data won't be available to the development team so a set of fake data will be created for testing purposes.
 
+## Random thoughts
+
+### Pattern matching
+
+Whilst merging in lists of potential new cadets or volunteers, need to avoid accidental duplicates use [fuzzy](https://github.com/seatgeek/thefuzz) or similar.
+
 ## A few questions - Sam
 ### Q:How is data storage going to work? Are we going to do cloud storage? Otherwise we would have a different copy for each user that then would need merging.
 

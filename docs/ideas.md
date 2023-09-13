@@ -36,11 +36,11 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ## Components
 
-- [Data pipeline](data_access/) - only .csv provided
-- [Interface](interface/) (consisting of display and interactive input, plus reporting output). CLI and GUI will be provided.
-- [Business logic](/logic), with hooks to the data pipeline and interface, which allows you to 'run' skipperman.
+- [Data pipeline](https://github.com/robcarver17/skipperman/tree/main/data_access/) - only .csv provided
+- [Interface](https://github.com/robcarver17/skipperman/tree/main/interface/) (consisting of display and interactive input, plus reporting output). CLI and GUI will be provided.
+- [Business logic](https://github.com/robcarver17/skipperman/tree/main/logic/), with hooks to the data pipeline and interface, which allows you to 'run' skipperman.
 - Back end functions called by the business logic
-- [Launcher](launcher/) that sets up an instance of the appropriate data pipeline, interface and logic and runs.
+- [Launcher](https://github.com/robcarver17/skipperman/tree/main/launcher/) that sets up an instance of the appropriate data pipeline, interface and logic and runs.
 
 
 ## Features

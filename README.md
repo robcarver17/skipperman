@@ -107,5 +107,20 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 'Real' underyling data won't be available to the development team so a set of fake data will be created for testing purposes.
 
+## Random thoughts
 
+### Pattern matching
+
+Whilst merging in lists of potential new cadets or volunteers, need to avoid accidental duplicates use [fuzzy](https://github.com/seatgeek/thefuzz) or similar.
+
+## A few questions - Sam
+### Q:How is data storage going to work? Are we going to do cloud storage? Otherwise we would have a different copy for each user that then would need merging.
+
+A: Mostly this is single user, but the main exception would be the volunteer rotas where the skipper and deputy will work on these in colloboration so there might be a case for having a merge feature for this specific use case.
+
+That does not preclude cloud storage, which may make sense depending on how the application is ultimatly deployed.
+
+### I think we could probably find a good python library so we wouldn't need a web interface. Either that or there exist plenty of good libraries in other languages (I have experience with .NET MAUI for example, which is cross platform).
+
+-Sam
 

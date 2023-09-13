@@ -33,9 +33,7 @@ data_csv_path = os.path.join(dir_this_file(), "example_data")
 data_csv_files = package_files(data_csv_path, "csv")
 
 
-package_data = {
-    "":data_csv_files
-}
+package_data = {"": data_csv_files}
 
 print(package_data)
 
@@ -43,9 +41,7 @@ setup(
     name="skipperman",
     version="0.0.1",
     author="Robert Carver",
-    description=(
-        "BSC cadet management system"
-    ),
+    description=("BSC cadet management system"),
     license="GNU GPL v3",
     keywords="sailing wildapricot",
     url="https://github.com/robcarver17/skipperman",

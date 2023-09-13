@@ -1,0 +1,32 @@
+[project]
+name = "skipperman"
+version = "0.01"
+authors = [
+  { name="Robert Carver", email="rob@systematicmoney.org" },
+]
+description = "BSC Cadet skipper management system"
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: GNU v3",
+    "Operating System :: Linux",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/robcarver17/skipperman"
+"Bug Tracker" = "https://github.com/robcarver17/skipperman/issues"
+
+[tool.pytest.ini_options]
+log_cli = "true"
+log_cli_level = 10
+log_format = '%(asctime)s %(levelname)s %(name)s %(message)s'
+log_date_format = '%Y-%m-%d %H:%M:%S'
+doctest_optionflags = ["ELLIPSIS", "NUMBER", "NORMALIZE_WHITESPACE"]
+testpaths = [
+    "tests"
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+required-version = '22.12.0'

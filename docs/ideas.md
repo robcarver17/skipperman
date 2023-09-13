@@ -4,9 +4,6 @@
 SKIPPERMAN will be a piece of software to ease the admin burden on the cadet skipper and their team, which is considerable and involves lots of manual hacking of spreadsheets. 
 
 
-NOTE: This is not a proper readme.md, rather a series of notes.
-
-
 
 ## Abbreviations
 
@@ -39,10 +36,11 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ## Components
 
-- Data pipeline
-- Interface (consisting of display and interactive input, plus reporting output). CLI and GUI will be provided.
-- Driver, with hooks to the data pipeline and interface, which allows you to 'run' skipperman.
-- Back end functions called by the driver.
+- [Data pipeline](data_access/) - only .csv provided
+- [Interface](interface/) (consisting of display and interactive input, plus reporting output). CLI and GUI will be provided.
+- [Business logic](/logic), with hooks to the data pipeline and interface, which allows you to 'run' skipperman.
+- Back end functions called by the business logic
+- [Launcher](launcher/) that sets up an instance of the appropriate data pipeline, interface and logic and runs.
 
 
 ## Features

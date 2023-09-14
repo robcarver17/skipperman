@@ -25,5 +25,6 @@ def get_path_and_filename_for_named_csv_file(
 ## MODIFY THE FOLLOWING LINES TO CHANGE WHERE FILES LIVE AND THEIR
 ## THE FIRST ITEM IN EACH TUPLE IS THE PATH, THE SECOND IS THE FILENAME
 _dict_of_filenames_and_paths = dict(
-    cadet_master_list=("cadets", "cadet_master_list.csv")
+    cadet_master_list=("cadets", "cadet_master_list.csv"),
+    list_of_events=("events", "list_of_events.csv"),
 )

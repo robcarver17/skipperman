@@ -2,6 +2,9 @@
 from data_access.api.csv_api import GenericDataApi
 from interface.api.generic_api import GenericInterfaceApi
 
+from logic.cadets.view_cadets import view_list_of_cadets
+from logic.events.create_new_event import create_new_event
+from logic.events.view_events import view_list_of_events
 
 class LogicApi:
     def __init__(self, data: GenericDataApi, interface: GenericInterfaceApi):
@@ -14,7 +17,14 @@ class LogicApi:
             func_name_from_interface = self.interface.get_menu_item()
             if self.interface.user_selected_exit_state():
                 break
-            func_to_run = getattr(self, func_name_from_interface)
+            try:
+                func_to_run = getattr(self, func_name_from_interface)
+            except:
+                self.interface.message(
+                    "Menu item points to method %s - not yet implemented"
+                    % str(func_name_from_interface)
+                )
+                continue
             func_to_run()
 
         self.interface.message("Exiting Skipperman")
@@ -22,8 +32,13 @@ class LogicApi:
         return
 
     def view_master_list_of_cadets(self):
-        master_list = self.data.data_list_of_cadets.read()
-        self.interface.display_df(master_list.to_df())
+        view_list_of_cadets(data = self.data, interface=self.interface)
+
+    def view_list_of_events(self):
+        view_list_of_events(data = self.data, interface=self.interface)
+
+    def create_new_event(self):
+        create_new_event(data = self.data, interface=self.interface)
 
     @property
     def data(self) -> GenericDataApi:

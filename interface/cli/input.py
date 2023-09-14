@@ -1,7 +1,54 @@
+import datetime
+from enum import EnumMeta
+from typing import List
+
+
 def get_input_from_user_and_convert_to_type(
     prompt: str,
     type_expected=int,
-    allow_default: bool = True,
+    **kwargs,
+):
+    if type_expected is datetime.date:
+        value = get_date_from_user(prompt)
+    elif type(type_expected) is EnumMeta:
+        value = get_enum_from_user(prompt, enum_class=type_expected)
+    else:
+        value = get_input_from_user_and_convert_to_type_other(prompt,
+                                                              type_expected=type_expected,
+                                                              **kwargs)
+
+    return value
+
+INPUT_DATE_FORMAT = "%Y-%m-%d"
+
+def get_date_from_user(
+prompt: str
+) -> datetime.date:
+    invalid = True
+    while invalid:
+        user_input = input(prompt+" (date format: YYYY-MM-DD eg 2008-02-08) ")
+        try:
+            somedatetime = datetime.datetime.strptime(user_input, INPUT_DATE_FORMAT)
+            invalid = False
+        except:
+            print("Date %s not in format %s" % (user_input, INPUT_DATE_FORMAT))
+            continue
+
+
+    return somedatetime.date()
+
+def get_enum_from_user(prompt: str, enum_class: EnumMeta):
+    enum_options = [item.name for item in enum_class]
+    print(prompt+" Choose option:")
+    selected_name = print_menu_and_get_desired_option(enum_options)
+
+    return enum_class[selected_name]
+
+
+def get_input_from_user_and_convert_to_type_other(
+    prompt: str,
+    type_expected=int,
+    allow_default: bool = False,
     default_value=0,
     default_str: str = None,
     check_type: bool = True,
@@ -22,7 +69,6 @@ def get_input_from_user_and_convert_to_type(
     )
 
     return result
-
 
 def _get_input_and_check_type(
     input_str: str,
@@ -73,12 +119,12 @@ def str2Bool(x: str) -> bool:
         return False
     raise Exception("%s can't be resolved as a bool" % x)
 
-def true_if_answer_is_yes(
-    prompt: str = "") -> bool:
+
+def true_if_answer_is_yes(prompt: str = "") -> bool:
     invalid = True
     while invalid:
-        x = input(prompt+"?")
-        if len(x)==0:
+        x = input(prompt + "?")
+        if len(x) == 0:
             pass
         else:
             first_character = x[0].lower()
@@ -88,3 +134,42 @@ def true_if_answer_is_yes(
                 return False
 
         print("Need one of yes/no, Yes/No, y/n, Y/N")
+
+
+def print_menu_and_get_desired_option(menu_of_options: list) -> str:
+    menu_of_options_with_int_index = _list_menu_to_dict_menu(menu_of_options)
+    _print_options_menu(menu_of_options_with_int_index)
+    list_of_menu_indices = list(menu_of_options_with_int_index.keys())
+
+    invalid_response = True
+    while invalid_response:
+        option_index = get_input_from_user_and_convert_to_type(
+            "Your choice?", type_expected=int,
+            allow_default=True,
+            default_value = 0,
+
+        )
+        if option_index not in list_of_menu_indices:
+            print("Not a valid option")
+            continue
+        else:
+            break
+
+    return menu_of_options_with_int_index[option_index]
+
+
+def _list_menu_to_dict_menu(menu_of_options_as_list: List[str]) -> dict:
+    menu_of_options = dict(
+        [
+            (int_key, menu_value)
+            for int_key, menu_value in enumerate(menu_of_options_as_list)
+        ]
+    )
+    return menu_of_options
+
+
+def _print_options_menu(menu_of_options: dict):
+    menu_options_list = sorted(menu_of_options.keys())
+    for option in menu_options_list:
+        print("%d: %s" % (option, str(menu_of_options[option])))
+    print("\n")

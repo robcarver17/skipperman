@@ -1,3 +1,4 @@
+import pandas as pd
 from interface.api.generic_api import GenericInterfaceApi
 
 ## place holder for web api, assuming that is how we do GUI

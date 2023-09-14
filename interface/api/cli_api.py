@@ -1,8 +1,14 @@
 from typing import List
 import pandas as pd
 from interface.api.generic_api import GenericInterfaceApi
-from interface.cli.interactive_cli_menu import InteractiveCliMenu, EXIT, print_menu_and_get_desired_option
-from interface.cli.input import get_input_from_user_and_convert_to_type, true_if_answer_is_yes
+from interface.cli.interactive_cli_menu import (
+    InteractiveCliMenu,
+    EXIT,
+)
+from interface.cli.input import (
+    get_input_from_user_and_convert_to_type,
+    true_if_answer_is_yes, print_menu_and_get_desired_option,
+)
 from interface.menus.menu_define import menu_definition
 
 
@@ -29,7 +35,7 @@ class CliInterfaceApi(GenericInterfaceApi):
         self,
         prompt: str,
         type_expected=int,
-        allow_default: bool = True,
+        allow_default: bool = False,
         default_value=0,
         default_str: str = None,
         check_type: bool = True,
@@ -48,7 +54,7 @@ class CliInterfaceApi(GenericInterfaceApi):
 
     def get_generic_input_from_user(self, prompt: str):
         print("\n")
-        result = input(prompt+":")
+        result = input(prompt + ":")
         print("\n")
 
         return result
@@ -60,7 +66,6 @@ class CliInterfaceApi(GenericInterfaceApi):
     def return_true_if_answer_is_yes(self, prompt: str) -> bool:
         input = true_if_answer_is_yes(prompt)
         return input
-
 
     @property
     def main_menu(self) -> InteractiveCliMenu:

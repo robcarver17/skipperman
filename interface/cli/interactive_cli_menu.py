@@ -1,6 +1,5 @@
-from typing import List
 from copy import copy
-from interface.cli.input import get_input_from_user_and_convert_to_type
+from interface.cli.input import print_menu_and_get_desired_option
 
 EXIT = object()
 exit_string = "Exit"
@@ -32,9 +31,9 @@ class InteractiveCliMenu:
         )
         is_toplevel_menu = self.position_is_top_level
         if is_toplevel_menu:
-            list_of_menu_options = [exit_string]+list_of_menu_options
+            list_of_menu_options = [exit_string] + list_of_menu_options
         else:
-            list_of_menu_options = [traverse_up_string]+list_of_menu_options
+            list_of_menu_options = [traverse_up_string] + list_of_menu_options
 
         return list_of_menu_options
 
@@ -113,37 +112,3 @@ def _get_menu_dict_for_current_state_with_copied_position(
     )
 
 
-def print_menu_and_get_desired_option(menu_of_options: list) -> str:
-    menu_of_options_with_int_index = _list_menu_to_dict_menu(menu_of_options)
-    _print_options_menu(menu_of_options_with_int_index)
-    list_of_menu_indices = list(menu_of_options_with_int_index.keys())
-
-    invalid_response = True
-    while invalid_response:
-        option_index = get_input_from_user_and_convert_to_type(
-            "Your choice?", type_expected=int
-        )
-        if option_index not in list_of_menu_indices:
-            print("Not a valid option")
-            continue
-        else:
-            break
-
-    return menu_of_options_with_int_index[option_index]
-
-
-def _list_menu_to_dict_menu(menu_of_options_as_list: List[str]) -> dict:
-    menu_of_options = dict(
-        [
-            (int_key, menu_value)
-            for int_key, menu_value in enumerate(menu_of_options_as_list)
-        ]
-    )
-    return menu_of_options
-
-
-def _print_options_menu(menu_of_options: dict):
-    menu_options_list = sorted(menu_of_options.keys())
-    for option in menu_options_list:
-        print("%d: %s" % (option, str(menu_of_options[option])))
-    print("\n")

@@ -23,6 +23,11 @@ class GenericInterfaceApi(object):
     def get_input_from_user_and_convert_to_type(
         self,
         prompt: str,
+        type_expected=int,
+        allow_default: bool = False,
+        default_value=0,
+        default_str: str = None,
+        check_type: bool = True,
     ):
         raise NotImplemented
 

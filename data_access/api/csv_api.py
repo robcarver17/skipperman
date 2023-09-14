@@ -1,5 +1,6 @@
 from data_access.api.generic_api import GenericDataApi
 from data_access.csv.master_list_of_cadets import CsvDataListOfCadets
+from data_access.csv.list_of_events import CsvDataListOfEvents
 
 
 class CsvDataApi(GenericDataApi):
@@ -9,6 +10,10 @@ class CsvDataApi(GenericDataApi):
     @property
     def data_list_of_cadets(self):
         return CsvDataListOfCadets(master_data_path=self.master_data_path)
+
+    @property
+    def data_list_of_events(self):
+        return CsvDataListOfEvents(master_data_path=self.master_data_path)
 
     @property
     def master_data_path(self) -> str:

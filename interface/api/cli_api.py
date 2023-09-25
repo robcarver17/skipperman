@@ -9,13 +9,12 @@ from interface.cli.input import (
     get_input_from_user_and_convert_to_type,
     true_if_answer_is_yes, print_menu_and_get_desired_option,
 )
+from interface.cli.file_selector import interactive_file_selector
 from interface.menus.menu_define import menu_definition
 
+main_menu = InteractiveCliMenu(menu_definition)
 
 class CliInterfaceApi(GenericInterfaceApi):
-    def __init__(self):
-        self._main_menu = InteractiveCliMenu(menu_definition)
-
     def message(self, message_to_display: str):
         print("\n%s\n" % message_to_display)
 
@@ -64,9 +63,17 @@ class CliInterfaceApi(GenericInterfaceApi):
         return option
 
     def return_true_if_answer_is_yes(self, prompt: str) -> bool:
-        input = true_if_answer_is_yes(prompt)
-        return input
+        ans = true_if_answer_is_yes(prompt)
+        return ans
+
+    def select_file(self, message_to_display: str):
+        starting_directory_for_up_download = self.starting_directory_for_up_download
+        filename = interactive_file_selector(message_to_display,
+                                             starting_directory_for_up_download=starting_directory_for_up_download)
+
+        return filename
 
     @property
     def main_menu(self) -> InteractiveCliMenu:
-        return self._main_menu
+        return main_menu
+

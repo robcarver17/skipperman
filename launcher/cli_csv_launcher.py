@@ -10,6 +10,6 @@ if __name__ == "__main__":
 
     master_data_path = arguments[1]
     launcher = GenericLauncher(
-        data=CsvDataApi(master_data_path=master_data_path), interface=CliInterfaceApi()
+        data=CsvDataApi(master_data_path=master_data_path), interface=CliInterfaceApi(starting_directory_for_up_download=master_data_path)
     )
     launcher.run()

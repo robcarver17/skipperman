@@ -1,11 +1,17 @@
 from os.path import join
+from objects.constants import arg_not_passed
 
+## HANDLE MISSING DIRECTORY?
 
 def get_path_and_filename_for_named_csv_file(
-    master_data_path: str, generic_name_of_file_required: str
+    master_data_path: str, generic_name_of_file_required: str,
+        additional_file_identifiers: tuple = arg_not_passed
 ):
 
     ## returns eg 'cadets', 'cadet_master_list.csv'
+    if additional_file_identifiers is arg_not_passed:
+        additional_file_identifiers = ()
+
     try:
         path, filename = _dict_of_filenames_and_paths[generic_name_of_file_required]
     except KeyError:
@@ -17,7 +23,9 @@ def get_path_and_filename_for_named_csv_file(
             )
         )
 
-    resolved_path_and_filename = join(master_data_path, path, filename)
+    filename_with_additional_items = filename % additional_file_identifiers
+
+    resolved_path_and_filename = join(master_data_path, path, filename_with_additional_items)
 
     return resolved_path_and_filename
 
@@ -27,4 +35,7 @@ def get_path_and_filename_for_named_csv_file(
 _dict_of_filenames_and_paths = dict(
     cadet_master_list=("cadets", "cadet_master_list.csv"),
     list_of_events=("events", "list_of_events.csv"),
+    wa_event_mapping=("events", "wa_event_mapping.csv"),
+    wa_field_mapping=("event_mapping", "wa_field_mapping_for_event_%s.csv"),
+    mapped_wa_event = ("mapped_events", "mapped_wa_event_%s.csv")
 )

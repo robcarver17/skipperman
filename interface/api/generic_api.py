@@ -2,6 +2,12 @@ import pandas as pd
 
 
 class GenericInterfaceApi(object):
+    def __init__(self, starting_directory_for_up_download: str):
+        self._starting_directory_for_up_download = starting_directory_for_up_download
+
+    def select_file(self, message_to_display: str):
+        raise NotImplemented
+
     def message(self, message_to_display: str):
         raise NotImplemented
 
@@ -38,3 +44,7 @@ class GenericInterfaceApi(object):
     def user_selected_exit_state(self):
         exit_state = getattr(self, "_exit_state", False)
         return exit_state
+
+    @property
+    def starting_directory_for_up_download(self) -> str:
+        return self._starting_directory_for_up_download

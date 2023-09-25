@@ -1,7 +1,6 @@
-from data_access.api.csv_api import GenericDataApi
-from interface.api.generic_api import GenericInterfaceApi
+from logic.data_and_interface import DataAndInterface
 
-def view_list_of_events( data: GenericDataApi, interface: GenericInterfaceApi):
-    list_of_events = data.data_list_of_events.read()
-    interface.display_df(list_of_events.to_df_of_str())
+def view_list_of_events(data_and_interface: DataAndInterface):
+    list_of_events = data_and_interface.data.data_list_of_events.read()
+    data_and_interface.interface.display_df(list_of_events.to_df_of_str())
 

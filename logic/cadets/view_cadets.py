@@ -1,7 +1,6 @@
-from data_access.api.csv_api import GenericDataApi
-from interface.api.generic_api import GenericInterfaceApi
+from logic.data_and_interface import DataAndInterface
 
-def view_list_of_cadets( data: GenericDataApi, interface: GenericInterfaceApi):
+def view_list_of_cadets(data_and_interface: DataAndInterface):
 
-    master_list = data.data_list_of_cadets.read()
-    interface.display_df(master_list.to_df_of_str())
+    master_list = data_and_interface.data.data_list_of_cadets.read()
+    data_and_interface.interface.display_df(master_list.to_df_of_str())

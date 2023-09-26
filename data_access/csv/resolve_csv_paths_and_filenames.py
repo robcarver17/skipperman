@@ -1,7 +1,7 @@
-from os.path import join
+from os.path import join, exists
+from pathlib import Path
 from objects.constants import arg_not_passed
 
-## HANDLE MISSING DIRECTORY?
 
 def get_path_and_filename_for_named_csv_file(
     master_data_path: str, generic_name_of_file_required: str,
@@ -25,7 +25,12 @@ def get_path_and_filename_for_named_csv_file(
 
     filename_with_additional_items = filename % additional_file_identifiers
 
-    resolved_path_and_filename = join(master_data_path, path, filename_with_additional_items)
+    resolved_path = join(master_data_path, path)
+    if not exists(resolved_path):
+        path= Path(resolved_path)
+        path.mkdir(parents=True)
+
+    resolved_path_and_filename = join(resolved_path, filename_with_additional_items)
 
     return resolved_path_and_filename
 

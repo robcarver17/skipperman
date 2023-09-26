@@ -1,5 +1,6 @@
-from objects.wa_event_mapping import WAEventMapping
+#from objects.wa_event_mapping import WAEventMapping
 
+"""
 class DataWAEventMapping(object):
     def read(self) -> WAEventMapping:
         raise NotImplemented
@@ -7,3 +8,4 @@ class DataWAEventMapping(object):
     def write(self, wa_event_mapping: WAEventMapping):
         raise NotImplemented
 
+"""

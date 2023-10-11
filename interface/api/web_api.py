@@ -1,6 +1,9 @@
 import pandas as pd
 from interface.api.generic_api import GenericInterfaceApi
 
+# We would have stuff like this once created:
+# from interface.web.
+
 ## place holder for web api, assuming that is how we do GUI
 class WebInterfaceApi(GenericInterfaceApi):
     def __init__(self):

@@ -37,23 +37,23 @@ def import_wa_event_without_checking(
         data_and_interface=data_and_interface,
         event=event,
         wa_as_df=wa_as_df,
-        update_existing=update_existing
+        update_existing=update_existing,
     )
     if not verified_okay:
         return
 
     ## Step four: Field mapping; put WA data into consistent format
     mapped_wa_event_data = map_wa_fields_in_df_for_event(
-        data_and_interface=data_and_interface,
-        event=event,
-        wa_as_df=wa_as_df
+        data_and_interface=data_and_interface, event=event, wa_as_df=wa_as_df
     )
 
     # Step five: Identify cadets, and if required create new cadets; write in cadet ID; save data
-    mapped_wa_event_data_with_cadet_ids = update_and_save_mapped_wa_event_data_with_cadet_ids(
-        data_and_interface=data_and_interface,
-        mapped_wa_event_data=mapped_wa_event_data,
-        event=event,
+    mapped_wa_event_data_with_cadet_ids = (
+        update_and_save_mapped_wa_event_data_with_cadet_ids(
+            data_and_interface=data_and_interface,
+            mapped_wa_event_data=mapped_wa_event_data,
+            event=event,
+        )
     )
 
     # Step six: deal with cancellations, duplicates; adding status
@@ -64,4 +64,3 @@ def import_wa_event_without_checking(
         mapped_wa_event_data_with_cadet_ids=mapped_wa_event_data_with_cadet_ids,
         event=event,
     )
-

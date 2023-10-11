@@ -74,7 +74,9 @@ def report_and_change_status_for_missing_cadets(
     messenger = data_and_interface.interface.message
 
     for cadet_id in missing_cadet_ids:
-        cadet_is_already_deleted = wa_event_data_without_duplicates.is_cadet_status_deleted(cadet_id)
+        cadet_is_already_deleted = (
+            wa_event_data_without_duplicates.is_cadet_status_deleted(cadet_id)
+        )
         if cadet_is_already_deleted:
             continue
         else:

@@ -21,4 +21,5 @@ menu_definition = {
             "Change allocation for cadets in groups": "change_allocated_cadets",
         },
     },
+    "Reports": {"Cadets allocated to groups for an event": "report_group_allocations"},
 }

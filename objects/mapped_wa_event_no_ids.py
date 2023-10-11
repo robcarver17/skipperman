@@ -9,6 +9,7 @@ from objects.utils import (
 
 from objects.field_list import REGISTRATION_DATE
 
+
 class RowInMappedWAEventNoId(dict):
     @classmethod
     def from_external_dict(cls, some_dict: dict):
@@ -21,6 +22,7 @@ class RowInMappedWAEventNoId(dict):
     @property
     def registration_date(self):
         return self[REGISTRATION_DATE]
+
 
 class MappedWAEventNoIDs(list):
     def __init__(self, list_of_rows: List[RowInMappedWAEventNoId]):
@@ -41,7 +43,7 @@ class MappedWAEventNoIDs(list):
     def list_of_timestamps(self) -> list:
         return extract_list_of_entry_timestamps_from_existing_wa_event(self)
 
-    def subset_with_timestamps(self, list_of_timestamps: list) -> 'MappedWAEventNoIDs':
+    def subset_with_timestamps(self, list_of_timestamps: list) -> "MappedWAEventNoIDs":
         subset = [row for row in self if row.registration_date in list_of_timestamps]
         return MappedWAEventNoIDs(subset)
 
@@ -64,6 +66,7 @@ class MappedWAEventNoIDs(list):
     def create_empty(cls):
         return cls([])
 
+
 def extract_list_of_entry_timestamps_from_existing_wa_event(
     existing_mapped_wa_event_with_ids: MappedWAEventNoIDs,
 ) -> list:
@@ -74,4 +77,3 @@ def extract_list_of_entry_timestamps_from_existing_wa_event(
     ]
 
     return list_of_timestamps
-

@@ -6,10 +6,13 @@ from logic.events.load_wa_file import (
     get_event_id_from_wa_df,
 )
 
-def verify_and_if_required_add_wa_mapping(data_and_interface: DataAndInterface,
-                                          wa_as_df: pd.DataFrame,
-                                          event: Event,
-                                          update_existing: bool):
+
+def verify_and_if_required_add_wa_mapping(
+    data_and_interface: DataAndInterface,
+    wa_as_df: pd.DataFrame,
+    event: Event,
+    update_existing: bool,
+):
 
     wa_id = get_event_id_from_wa_df(
         wa_as_df=wa_as_df, data_and_interface=data_and_interface
@@ -35,6 +38,7 @@ def verify_and_if_required_add_wa_mapping(data_and_interface: DataAndInterface,
         )
 
     return True
+
 
 def confirm_correct_wa_mapping(
     data_and_interface: DataAndInterface,
@@ -115,5 +119,3 @@ def add_wa_to_event_mapping(
     wa_event_mapping = data.data_wa_event_mapping.read()
     wa_event_mapping.add_event(event_id=event_id, wa_id=wa_id)
     data.data_wa_event_mapping.write(wa_event_mapping)
-
-

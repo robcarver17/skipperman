@@ -112,21 +112,27 @@ class MappedWAEventWithoutDuplicatesAndWithStatus(MappedWAEventWithIDs):
         # in place replacement
         self[idx] = row_of_mapped_wa_event_data_with_id_and_status
 
-    def list_of_cadet_ids_with_given_status(self,  exclude_cancelled: bool = True,
-                                 exclude_active: bool = False,
-                                 exclude_deleted: bool =True) -> list:
+    def list_of_cadet_ids_with_given_status(
+        self,
+        exclude_cancelled: bool = True,
+        exclude_active: bool = False,
+        exclude_deleted: bool = True,
+    ) -> list:
 
         event_subsetted_for_given_status = self.subset_with_given_status(
             exclude_cancelled=exclude_cancelled,
             exclude_deleted=exclude_deleted,
-            exclude_active=exclude_active
+            exclude_active=exclude_active,
         )
 
         return event_subsetted_for_given_status.list_of_cadet_ids
 
-    def subset_with_given_status(self, exclude_cancelled: bool = True,
-                                 exclude_active: bool = False,
-                                 exclude_deleted: bool =True) -> 'MappedWAEventWithoutDuplicatesAndWithStatus':
+    def subset_with_given_status(
+        self,
+        exclude_cancelled: bool = True,
+        exclude_active: bool = False,
+        exclude_deleted: bool = True,
+    ) -> "MappedWAEventWithoutDuplicatesAndWithStatus":
 
         new_subset = copy(self)
         if exclude_active:

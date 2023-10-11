@@ -1,11 +1,11 @@
 from objects.events import Event
-from objects.groups import ListOfCadetsWithGroups
+from objects.groups import ListOfCadetIdsWithGroups
 from logic.data_and_interface import DataAndInterface
 
 
 def load_allocation_for_event(
     event: Event, data_and_interface: DataAndInterface
-) -> ListOfCadetsWithGroups:
+) -> ListOfCadetIdsWithGroups:
     data = data_and_interface.data
     event_id = event.id
 
@@ -15,7 +15,7 @@ def load_allocation_for_event(
 
 
 def save_allocation_for_event(
-    list_of_cadets_with_groups: ListOfCadetsWithGroups,
+    list_of_cadets_with_groups: ListOfCadetIdsWithGroups,
     event: Event,
     data_and_interface: DataAndInterface,
 ):

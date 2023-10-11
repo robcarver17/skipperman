@@ -3,7 +3,10 @@ from copy import copy
 import pandas as pd
 from logic.data_and_interface import DataAndInterface
 from logic.cadets.edit_cadet import edit_provided_cadet_details
-from logic.cadets.load_and_save_master_list_of_cadets import add_new_cadet_to_master_list, load_master_list_of_cadets
+from logic.cadets.load_and_save_master_list_of_cadets import (
+    add_new_cadet_to_master_list,
+    load_master_list_of_cadets,
+)
 
 from objects.mapped_wa_event_no_ids import (
     MappedWAEventNoIDs,
@@ -160,6 +163,3 @@ def check_for_possible_duplicate_cadet_or_add_if_required(
             similarity_threshold_to_warn_age = similarity_threshold_to_warn_age * 0.9
             similarity_threshold_to_warn_name = similarity_threshold_to_warn_name * 0.9
             continue
-
-
-

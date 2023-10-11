@@ -105,7 +105,9 @@ class GenericListOfObjects(list):
         return item.id in list_of_ids
 
     @classmethod
-    def subset_from_list_of_ids(cls, full_list: 'GenericListOfObjects', list_of_ids: list):
+    def subset_from_list_of_ids(
+        cls, full_list: "GenericListOfObjects", list_of_ids: list
+    ):
         subset_list = [full_list.has_id(id) for id in list_of_ids]
 
         return cls(subset_list)
@@ -113,7 +115,7 @@ class GenericListOfObjects(list):
     def has_id(self, id: str):
         list_of_ids = self.list_of_ids
         try:
-            idx =list_of_ids.index(id)
+            idx = list_of_ids.index(id)
         except ValueError:
             raise Exception("id %s not in list" % id)
 

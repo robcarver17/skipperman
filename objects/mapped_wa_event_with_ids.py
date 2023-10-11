@@ -5,7 +5,11 @@ from typing import List
 import pandas as pd
 
 from objects.constants import missing_data
-from objects.mapped_wa_event_no_ids import RowInMappedWAEventNoId, MappedWAEventNoIDs, extract_list_of_entry_timestamps_from_existing_wa_event
+from objects.mapped_wa_event_no_ids import (
+    RowInMappedWAEventNoId,
+    MappedWAEventNoIDs,
+    extract_list_of_entry_timestamps_from_existing_wa_event,
+)
 
 CADET_ID = "cadet_id"
 
@@ -37,6 +41,7 @@ class RowInMappedWAEventWithId:
     def registration_date(self) -> datetime.datetime:
         return self.data_in_row.registration_date
 
+
 class MappedWAEventWithIDs(list):
     def __init__(self, list_of_rows: List[RowInMappedWAEventWithId]):
         super().__init__(list_of_rows)
@@ -52,11 +57,11 @@ class MappedWAEventWithIDs(list):
         current_row = self.get_row_with_timestamp(timestamp)
         current_row.data_in_row = data
 
-    def add_new_rows(self, list_of_rows:'MappedWAEventWithIDs'):
+    def add_new_rows(self, list_of_rows: "MappedWAEventWithIDs"):
         ## new rows should be on top eg first
         [self.add_row(new_row) for new_row in list_of_rows]
 
-    def add_row(self, new_row:RowInMappedWAEventWithId):
+    def add_row(self, new_row: RowInMappedWAEventWithId):
         self.insert(0, new_row)
 
     def delete_list_of_rows_with_timestamps(self, list_of_timestamps: list):
@@ -67,7 +72,9 @@ class MappedWAEventWithIDs(list):
         try:
             idx = list_of_timestamps.index(timestamp)
         except:
-            raise Exception("Can't delete non existing row with timestamp %s" % str(timestamp))
+            raise Exception(
+                "Can't delete non existing row with timestamp %s" % str(timestamp)
+            )
 
         self.pop(idx)
 
@@ -124,4 +131,3 @@ class MappedWAEventWithIDs(list):
     @classmethod
     def create_empty(cls):
         return cls([])
-

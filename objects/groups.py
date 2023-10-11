@@ -1,6 +1,7 @@
 ## table of groups
 ## we have groups for each event? No need, too complicated
 ## So can hard code all groups in configuration
+import pandas as pd
 
 from data_access.configuration.configuration import (
     LAKE_TRAINING_GROUPS,
@@ -9,7 +10,7 @@ from data_access.configuration.configuration import (
 )
 from objects.cadets import Cadet, ListOfCadets
 from dataclasses import dataclass
-from objects.generic import GenericSkipperManObject
+from objects.generic import GenericSkipperManObject, GenericListOfObjects
 
 
 ALL_GROUPS = LAKE_TRAINING_GROUPS + RIVER_TRAINING_GROUPS + MG_GROUPS
@@ -21,6 +22,7 @@ MG = "MG"
 UNALLOCATED_GROUP = "Unallocated"
 
 ALL_GROUPS_INCLUDING_UNALLOCATED = [UNALLOCATED_GROUP] + ALL_GROUPS
+
 
 class Group:
     def __init__(self, group_name: str):
@@ -44,7 +46,7 @@ class Group:
 
     @property
     def is_unallocated(self):
-        return self.group_name==UNALLOCATED_GROUP
+        return self.group_name == UNALLOCATED_GROUP
 
     @property
     def group_name(self):
@@ -75,12 +77,12 @@ class Group:
         return self.group_name in MG_GROUPS
 
 
-
 GROUP_STR_NAME = "group"
 ID_NAME = "cadet_id"
 
+
 @dataclass(frozen=True)
-class CadetWithGroup(GenericSkipperManObject):
+class CadetIdWithGroup(GenericListOfObjects):
     cadet_id: str
     group: Group
 
@@ -99,20 +101,31 @@ class CadetWithGroup(GenericSkipperManObject):
 
         return cls(cadet_id=cadet_id, group=group)
 
-NOT_ALLOCATED= Group.create_unallocated()
 
-class ListOfCadetsWithGroups(ListOfCadets):
+NOT_ALLOCATED = Group.create_unallocated()
+
+
+class ListOfCadetIdsWithGroups(GenericListOfObjects):
     @property
     def _object_class_contained(self):
-        return CadetWithGroup
+        return CadetIdWithGroup
 
-    def update_group_for_cadet(self, cadet:Cadet, chosen_group:Group):
+    def add_list_of_unallocated_cadets(self, list_of_unallocated_cadets: ListOfCadets):
+        [self.add_unallocated_cadet(cadet) for cadet in list_of_unallocated_cadets]
+
+    def add_unallocated_cadet(self, cadet: Cadet):
+        cadet_id = cadet.id
+        self.append(CadetIdWithGroup(cadet_id=cadet_id, group=NOT_ALLOCATED))
+
+    def update_group_for_cadet(self, cadet: Cadet, chosen_group: Group):
         if self.cadet_is_allocated_to_group(cadet):
-            self._update_group_for_existing_cadet(cadet=cadet, chosen_group=chosen_group)
+            self._update_group_for_existing_cadet(
+                cadet=cadet, chosen_group=chosen_group
+            )
         else:
             self._update_group_for_new_cadet(cadet=cadet, chosen_group=chosen_group)
 
-    def _update_group_for_existing_cadet(self, cadet:Cadet, chosen_group:Group):
+    def _update_group_for_existing_cadet(self, cadet: Cadet, chosen_group: Group):
         cadet_id = cadet.id
         list_of_ids = self.list_of_ids
         idx = list_of_ids.index(cadet_id)
@@ -120,29 +133,32 @@ class ListOfCadetsWithGroups(ListOfCadets):
             ## don't store group as unallocated instead remove entirely
             self.pop(idx)
         else:
-            self[idx] = CadetWithGroup(cadet_id=cadet_id, group=chosen_group)
+            self[idx] = CadetIdWithGroup(cadet_id=cadet_id, group=chosen_group)
 
-    def _update_group_for_new_cadet(self, cadet:Cadet, chosen_group:Group):
+    def _update_group_for_new_cadet(self, cadet: Cadet, chosen_group: Group):
         if chosen_group.is_unallocated:
             ## don't store group as unallocated
             return
         else:
             cadet_id = cadet.id
-            self.append(CadetWithGroup(cadet_id=cadet_id, group=chosen_group))
+            self.append(CadetIdWithGroup(cadet_id=cadet_id, group=chosen_group))
 
-    def cadets_in_list_not_allocated_to_group(self, list_of_cadets: ListOfCadets) -> ListOfCadets:
+    def cadets_in_list_not_allocated_to_group(
+        self, list_of_cadets: ListOfCadets
+    ) -> ListOfCadets:
         my_ids = self.list_of_ids
         list_ids = list_of_cadets.list_of_ids
 
         ids_in_list_not_given_group = list(set(list_ids).difference(set(my_ids)))
 
-        return list_of_cadets.subset_from_list_of_ids(full_list=list_of_cadets,
-                                                      list_of_ids=ids_in_list_not_given_group)
+        return list_of_cadets.subset_from_list_of_ids(
+            full_list=list_of_cadets, list_of_ids=ids_in_list_not_given_group
+        )
 
     def group_for_cadet(self, cadet: Cadet):
         return self.group_for_cadet_id(cadet.id)
 
-    def group_for_cadet_id(self, cadet_id: str) ->Group:
+    def group_for_cadet_id(self, cadet_id: str) -> Group:
         try:
             item = self.item_with_cadet_id(cadet_id)
         except:
@@ -157,7 +173,7 @@ class ListOfCadetsWithGroups(ListOfCadets):
         except:
             return False
 
-    def item_with_cadet_id(self, cadet_id: str) -> CadetWithGroup:
+    def item_with_cadet_id(self, cadet_id: str) -> CadetIdWithGroup:
         list_of_cadet_ids = self.list_of_ids
         try:
             idx = list_of_cadet_ids.index(cadet_id)
@@ -170,3 +186,47 @@ class ListOfCadetsWithGroups(ListOfCadets):
     def list_of_ids(self) -> list:
         return [item.cadet_id for item in self]
 
+
+CADET_NAME = "Cadet"
+
+
+@dataclass(frozen=True)
+class CadetWithGroup(GenericSkipperManObject):
+    ## For display purposes, can't store
+    cadet: Cadet
+    group: Group
+
+    def as_str_dict(self, display_full_names: bool = True) -> dict:
+        ## for display purposes
+        if display_full_names:
+            cadet_name = self.cadet.name
+        else:
+            cadet_name = self.cadet.initial_and_surname
+
+        return {CADET_NAME: cadet_name, GROUP_STR_NAME: str(self.group)}
+
+
+class ListOfCadetsWithGroup(GenericListOfObjects):
+    def _object_class_contained(self):
+        return CadetWithGroup
+
+    @classmethod
+    def from_list_of_cadets_and_list_of_allocations(
+        cls, list_of_cadets: ListOfCadets, list_of_allocations: ListOfCadetIdsWithGroups
+    ):
+
+        list_of_cadets_with_group = [
+            CadetWithGroup(
+                cadet=list_of_cadets.has_id(allocation.cadet_id), group=allocation.group
+            )
+            for allocation in list_of_allocations
+        ]
+
+        return cls(list_of_cadets_with_group)
+
+    def to_df_of_str(self, display_full_names: bool = True) -> pd.DataFrame:
+        list_of_dicts = [
+            item.as_str_dict(display_full_names=display_full_names) for item in self
+        ]
+
+        return pd.DataFrame(list_of_dicts)

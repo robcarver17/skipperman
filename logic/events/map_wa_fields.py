@@ -4,9 +4,10 @@ from objects.events import Event
 from objects.wa_field_mapping import WAFieldMapping
 from objects.mapped_wa_event_no_ids import MappedWAEventNoIDs
 
-def map_wa_fields_in_df_for_event(data_and_interface: DataAndInterface,
-      event: Event,
-      wa_as_df: pd.DataFrame) -> MappedWAEventNoIDs:
+
+def map_wa_fields_in_df_for_event(
+    data_and_interface: DataAndInterface, event: Event, wa_as_df: pd.DataFrame
+) -> MappedWAEventNoIDs:
     # Set up WA event mapping fields
     wa_field_mapping = get_wa_field_mapping_dict(
         wa_as_df=wa_as_df, event=event, data_and_interface=data_and_interface

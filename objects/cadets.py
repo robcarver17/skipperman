@@ -38,6 +38,11 @@ class Cadet(GenericSkipperManObject):
         return self.first_name.title() + " " + self.surname.title()
 
     @property
+    def initial_and_surname(self):
+        initial = self.first_name[1].upper()
+        return "%s. %s" % (initial, self.surname.title())
+
+    @property
     def id(self) -> str:
         return (
             self.first_name.lower()

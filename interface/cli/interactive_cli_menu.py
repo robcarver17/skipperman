@@ -110,5 +110,3 @@ def _get_menu_dict_for_current_state_with_copied_position(
     return get_menu_dict_for_current_state(
         copy_position_in_menus, menu_definition[menu_label]
     )
-
-

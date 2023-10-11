@@ -1,18 +1,23 @@
 import os
 from pathlib import Path
 from interface.cli.input import (
-   print_menu_and_get_desired_option,
+    print_menu_and_get_desired_option,
 )
 
-def interactive_file_selector(message_to_display: str,
-                              starting_directory_for_up_download: str) -> str:
+
+def interactive_file_selector(
+    message_to_display: str, starting_directory_for_up_download: str
+) -> str:
     print(message_to_display)
     input("Press return to start file selection")
     selected_file = recursive_file_selector(starting_directory_for_up_download)
 
     return selected_file
 
+
 GO_UP_DIR = "<Parent directory>"
+
+
 def recursive_file_selector(current_directory: str) -> str:
     try:
         list_of_files_and_directorys = os.listdir(current_directory)
@@ -24,10 +29,12 @@ def recursive_file_selector(current_directory: str) -> str:
 
     list_of_files_and_directorys.insert(0, GO_UP_DIR)
     print("Files and directories in %s" % current_directory)
-    selected_file_or_dir = print_menu_and_get_desired_option(list_of_files_and_directorys)
+    selected_file_or_dir = print_menu_and_get_desired_option(
+        list_of_files_and_directorys
+    )
 
     if selected_file_or_dir == GO_UP_DIR:
-        new_file_or_dir = (Path(current_directory).parent.absolute())
+        new_file_or_dir = Path(current_directory).parent.absolute()
     else:
         new_file_or_dir = os.path.join(current_directory, selected_file_or_dir)
 

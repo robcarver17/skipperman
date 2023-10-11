@@ -7,12 +7,14 @@ from interface.cli.interactive_cli_menu import (
 )
 from interface.cli.input import (
     get_input_from_user_and_convert_to_type,
-    true_if_answer_is_yes, print_menu_and_get_desired_option,
+    true_if_answer_is_yes,
+    print_menu_and_get_desired_option,
 )
 from interface.cli.file_selector import interactive_file_selector
 from interface.menus.menu_define import menu_definition
 
 main_menu = InteractiveCliMenu(menu_definition)
+
 
 class CliInterfaceApi(GenericInterfaceApi):
     def message(self, message_to_display: str):
@@ -68,12 +70,13 @@ class CliInterfaceApi(GenericInterfaceApi):
 
     def select_file(self, message_to_display: str):
         starting_directory_for_up_download = self.starting_directory_for_up_download
-        filename = interactive_file_selector(message_to_display,
-                                             starting_directory_for_up_download=starting_directory_for_up_download)
+        filename = interactive_file_selector(
+            message_to_display,
+            starting_directory_for_up_download=starting_directory_for_up_download,
+        )
 
         return filename
 
     @property
     def main_menu(self) -> InteractiveCliMenu:
         return main_menu
-

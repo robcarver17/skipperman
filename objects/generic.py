@@ -15,10 +15,13 @@ from objects.utils import (
 )
 
 
-@dataclass
+@dataclass(frozen=True)
 class GenericSkipperManObject:
     def __eq__(self, other):
         return self.id == other.id
+
+    def __hash__(self):
+        return hash(self.id)
 
     @classmethod
     def create_null(cls):
@@ -101,12 +104,27 @@ class GenericListOfObjects(list):
         list_of_ids = self.list_of_ids
         return item.id in list_of_ids
 
+    @classmethod
+    def subset_from_list_of_ids(cls, full_list: 'GenericListOfObjects', list_of_ids: list):
+        subset_list = [full_list.has_id(id) for id in list_of_ids]
+
+        return cls(subset_list)
+
+    def has_id(self, id: str):
+        list_of_ids = self.list_of_ids
+        try:
+            idx =list_of_ids.index(id)
+        except ValueError:
+            raise Exception("id %s not in list" % id)
+
+        return self[idx]
+
     @property
-    def list_of_ids(self)-> list:
+    def list_of_ids(self) -> list:
         return [item.id for item in self]
 
     @classmethod
-    def create_null(cls):
+    def create_empty(cls):
         return cls([])
 
     @property
@@ -115,8 +133,8 @@ class GenericListOfObjects(list):
 
     @classmethod
     def from_df_of_str(cls, df: pd.DataFrame):
-        null_instance = cls.create_null()
-        contained_class = null_instance._object_class_contained
+        empty_instance = cls.create_empty()
+        contained_class = empty_instance._object_class_contained
         list_of_items = create_list_of_objects_from_dataframe(contained_class, df)
 
         return cls(list_of_items)

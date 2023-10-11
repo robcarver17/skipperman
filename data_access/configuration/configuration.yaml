@@ -1,0 +1,43 @@
+#
+# Filtering cadet inputs
+#
+similarity_level_to_warn_when_comparing_cadet_names: 0.85
+similarity_level_to_warn_when_comparing_cadet_ages: 0.9
+minimum_cadet_age: 7
+maximium_cadet_age: 19
+#
+#
+# Wild apricot
+#
+wild_apricot_payment_fields_which_are_active_status:
+  - "Partially paid"
+  - "Paid"
+  - "Unpaid"
+wild_apricot_payment_fields_which_are_cancelled_status:
+  - "Canceled"
+#
+# Groups
+#
+lake_training_groups:
+  - "Sprites"
+  - "Topper on the lake"
+  - "Vimto"
+  - "Fanta"
+  - "Jolly sailors"
+  - "Lilt"
+river_training_groups:
+  - "Quest beginners"
+  - "Quest intermediate"
+  - "Oppie-over-the-wall"
+  - "Oppie Tango"
+  - "Topper/Tera in the hole"
+  - "Topper/Tera Tango"
+  - "Seamanship"
+  - "Day sailing"
+  - "Spinnaker training"
+mg_groups:
+  - "Oppie MG"
+  - "Topper MG"
+  - "Feva MG"
+  - "Laser MG"
+  - "GH/Double handed MG"

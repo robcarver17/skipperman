@@ -16,5 +16,9 @@ menu_definition = {
             "Import new event data from WA .csv": "import_new_wa_event",
             "Update existing event from WA .csv": "update_existing_wa_event",
         },
+        "Allocate cadets to groups": {
+            "Allocate cadets not yet in groups": "allocate_unallocated_cadets",
+            "Change allocation for cadets in groups": "change_allocated_cadets",
+        },
     },
 }

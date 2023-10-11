@@ -32,7 +32,7 @@ class Event(GenericSkipperManObject):
             self.event_name,
             self._start_of_event_as_str,
             self._end_of_event_as_str,
-            self._event_type_as_str
+            self._event_type_as_str,
         )
 
     @property
@@ -67,12 +67,12 @@ class Event(GenericSkipperManObject):
     def _event_type_as_str(self) -> str:
         return self.event_type.name
 
+
 class ListOfEvents(GenericListOfObjects):
     @property
     def _object_class_contained(self):
         return Event
 
     @property
-    def list_of_event_names(self)-> list:
+    def list_of_event_names(self) -> list:
         return [event.event_name for event in self]
-

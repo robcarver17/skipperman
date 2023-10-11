@@ -10,11 +10,12 @@ class GenericCsvData(object):
         self._master_data_path = master_data_path
 
     def get_path_and_filename_for_named_csv_file(
-        self, generic_name_of_file_required: str,
-            additional_file_identifiers=arg_not_passed
+        self,
+        generic_name_of_file_required: str,
+        additional_file_identifiers=arg_not_passed,
     ) -> str:
         return get_path_and_filename_for_named_csv_file(
             generic_name_of_file_required=generic_name_of_file_required,
             master_data_path=self._master_data_path,
-            additional_file_identifiers=additional_file_identifiers
+            additional_file_identifiers=additional_file_identifiers,
         )

@@ -4,11 +4,14 @@ from objects.wa_event_mapping import WAEventMapping
 from data_access.classes.wa_event_mapping import DataWAEventMapping
 
 
-
 class CsvDataWAEventMapping(GenericCsvData, DataWAEventMapping):
     def read(self) -> WAEventMapping:
         path_and_filename = self.path_and_filename
-        df = pd.read_csv(path_and_filename)
+        try:
+            df = pd.read_csv(path_and_filename)
+        except FileNotFoundError:
+            return WAEventMapping.create_empty()
+
         wa_event_mapping = WAEventMapping.from_df(df)
 
         return wa_event_mapping

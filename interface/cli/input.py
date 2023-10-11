@@ -13,20 +13,20 @@ def get_input_from_user_and_convert_to_type(
     elif type(type_expected) is EnumMeta:
         value = get_enum_from_user(prompt, enum_class=type_expected)
     else:
-        value = get_input_from_user_and_convert_to_type_other(prompt,
-                                                              type_expected=type_expected,
-                                                              **kwargs)
+        value = get_input_from_user_and_convert_to_type_other(
+            prompt, type_expected=type_expected, **kwargs
+        )
 
     return value
 
+
 INPUT_DATE_FORMAT = "%Y-%m-%d"
 
-def get_date_from_user(
-prompt: str
-) -> datetime.date:
+
+def get_date_from_user(prompt: str) -> datetime.date:
     invalid = True
     while invalid:
-        user_input = input(prompt+" (date format: YYYY-MM-DD eg 2008-02-08) ")
+        user_input = input(prompt + " (date format: YYYY-MM-DD eg 2008-02-08) ")
         try:
             somedatetime = datetime.datetime.strptime(user_input, INPUT_DATE_FORMAT)
             invalid = False
@@ -34,12 +34,12 @@ prompt: str
             print("Date %s not in format %s" % (user_input, INPUT_DATE_FORMAT))
             continue
 
-
     return somedatetime.date()
+
 
 def get_enum_from_user(prompt: str, enum_class: EnumMeta):
     enum_options = [item.name for item in enum_class]
-    print(prompt+" Choose option:")
+    print(prompt + " Choose option:")
     selected_name = print_menu_and_get_desired_option(enum_options)
 
     return enum_class[selected_name]
@@ -69,6 +69,7 @@ def get_input_from_user_and_convert_to_type_other(
     )
 
     return result
+
 
 def _get_input_and_check_type(
     input_str: str,
@@ -144,10 +145,10 @@ def print_menu_and_get_desired_option(menu_of_options: list) -> str:
     invalid_response = True
     while invalid_response:
         option_index = get_input_from_user_and_convert_to_type(
-            "Your choice?", type_expected=int,
+            "Your choice?",
+            type_expected=int,
             allow_default=True,
-            default_value = 0,
-
+            default_value=0,
         )
         if option_index not in list_of_menu_indices:
             print("Not a valid option")

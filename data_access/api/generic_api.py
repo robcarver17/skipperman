@@ -2,7 +2,12 @@ from data_access.classes.master_list_of_cadets import DataListOfCadets
 from data_access.classes.list_of_events import DataListOfEvents
 from data_access.classes.wa_event_mapping import DataWAEventMapping
 from data_access.classes.wa_field_mapping import DataWAFieldMapping
-from data_access.classes.mapped_wa_event import DataMappedWAEvent
+from data_access.classes.mapped_wa_event import (
+    DataMappedWAEventWithIDs,
+    DataMappedWAEventWithoutDuplicatesAndWithStatus,
+)
+from data_access.classes.cadets_with_groups_for_event import DataListOfCadetsWithGroups
+
 
 class GenericDataApi(object):
 
@@ -24,5 +29,17 @@ class GenericDataApi(object):
         raise NotImplemented
 
     @property
-    def data_mapped_wa_event(self) -> DataMappedWAEvent:
+    def data_mapped_wa_event_with_cadet_ids(self) -> DataMappedWAEventWithIDs:
+        raise NotImplemented
+
+    @property
+    def data_mapped_wa_event_without_duplicates_and_with_status(
+        self,
+    ) -> DataMappedWAEventWithoutDuplicatesAndWithStatus:
+        raise NotImplemented
+
+    @property
+    def data_list_of_cadets_with_groups(
+        self,
+    ) -> DataListOfCadetsWithGroups:
         raise NotImplemented

@@ -1,4 +1,7 @@
 import datetime
+import math
+from dataclasses import dataclass
+
 import pandas as pd
 from difflib import SequenceMatcher
 
@@ -74,5 +77,57 @@ def get_list_of_attributes(some_class) -> list:
 def get_dict_of_class_attributes(some_class) -> dict:
     return some_class.__annotations__
 
+
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
+
+
+@dataclass
+class SingleDiff:
+    old_value: object
+    new_value: object
+
+
+class DictOfDictDiffs(dict):
+    def __str__(self):
+        return string_of_dict_diffs(self)
+
+
+def create_dict_of_dict_diffs(dict_old: dict, dict_new: dict) -> DictOfDictDiffs:
+    # dict
+    # throws exception if missing or added fields
+    keys_old = list(dict_old.keys())
+    keys_new = list(dict_new.keys())
+    try:
+        assert set(keys_old) == set(keys_new)
+    except:
+        raise Exception("Have to have matching keys to see differences")
+
+    dict_of_diffs = {}
+    for key in keys_new:
+        old_value = dict_old[key]
+        new_value = dict_new[key]
+        if old_value != new_value:
+            dict_of_diffs[key] = SingleDiff(old_value=old_value, new_value=new_value)
+
+    return DictOfDictDiffs(dict_of_diffs)
+
+
+def string_of_dict_diffs(dict_of_diffs: DictOfDictDiffs) -> str:
+    full_string = [
+        "For %s, old value is %s new value is %s"
+        % (key, diff.old_value, diff.new_value)
+        for key, diff in dict_of_diffs.items()
+    ]
+    return "\n".join(full_string)
+
+
+def clean_up_dict_with_nans(some_dict) -> dict:
+    for key, value in some_dict.items():
+        try:
+            if math.isnan(value):
+                some_dict[key] = ""
+        except:
+            ## another type
+            pass
+    return some_dict

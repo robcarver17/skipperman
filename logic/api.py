@@ -7,13 +7,13 @@ from logic.data_and_interface import DataAndInterface
 from logic.events.create_new_event import create_new_event
 from logic.events.view_events import view_list_of_events
 from logic.events.import_new_wa_event import import_new_wa_event
-
+from logic.events.update_existing_wa_event import update_existing_wa_event
+from logic.allocation.allocate_unallocated_cadets import allocate_unallocated_cadets
+from logic.allocation.change_allocated_cadets import change_allocated_cadets
 
 class LogicApi:
     def __init__(self, data: GenericDataApi, interface: GenericInterfaceApi):
-        self._data_and_interface = DataAndInterface(data=data,
-                                interface=interface)
-
+        self._data_and_interface = DataAndInterface(data=data, interface=interface)
 
     def run(self):
         ## Infinite loop around interface
@@ -36,6 +36,7 @@ class LogicApi:
 
         return
 
+    ### Here follows the long list of functions that the menu can call
     def view_master_list_of_cadets(self):
         view_list_of_cadets(self.data_and_interface)
 
@@ -47,6 +48,15 @@ class LogicApi:
 
     def import_new_wa_event(self):
         import_new_wa_event(self.data_and_interface)
+
+    def update_existing_wa_event(self):
+        update_existing_wa_event(self.data_and_interface)
+
+    def allocate_unallocated_cadets(self):
+        allocate_unallocated_cadets(self.data_and_interface)
+
+    def change_allocated_cadets(self):
+        change_allocated_cadets(self.data_and_interface)
 
     @property
     def data_and_interface(self) -> DataAndInterface:

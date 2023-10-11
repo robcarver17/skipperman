@@ -8,7 +8,11 @@ from objects.events import ListOfEvents
 class CsvDataListOfEvents(GenericCsvData, DataListOfEvents):
     def read(self) -> ListOfEvents:
         path_and_filename = self.path_and_filename
-        df = pd.read_csv(path_and_filename)
+        try:
+            df = pd.read_csv(path_and_filename)
+        except FileNotFoundError:
+            return ListOfEvents.create_empty()
+
         list_of_events = ListOfEvents.from_df_of_str(df)
 
         return list_of_events

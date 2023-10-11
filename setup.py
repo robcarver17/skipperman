@@ -32,8 +32,10 @@ def dir_this_file():
 data_csv_path = os.path.join(dir_this_file(), "example_data")
 data_csv_files = package_files(data_csv_path, "csv")
 
+config_yaml_path = os.path.join(dir_this_file(), "data_access", "configuration")
+config_files = package_files(config_yaml_path, "yaml")
 
-package_data = {"": data_csv_files}
+package_data = {"": data_csv_files+config_files}
 
 print(package_data)
 
@@ -48,10 +50,7 @@ setup(
     packages=find_packages(),
     package_data=package_data,
     long_description=read("README.md"),
-    install_requires=[
-        "pandas==1.0.5",
-        "xlrd >= 1.0.0"
-    ],
+    install_requires=["pandas==1.0.5", "xlrd >= 1.0.0", "PyYAML>=5.4"],
     tests_require=["nose", "flake8"],
     extras_require=dict(),
     test_suite="nose.collector",

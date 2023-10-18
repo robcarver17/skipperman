@@ -2,7 +2,7 @@ from logic.data_and_interface import DataAndInterface
 from objects.cadets import Cadet
 from objects.groups import (
     ListOfCadetIdsWithGroups,
-    ALL_GROUPS_INCLUDING_UNALLOCATED,
+    ALL_GROUPS,
     Group,
 )
 
@@ -21,10 +21,9 @@ def allocate_cadet(
     interface.message(
         "Cadet %s, currently in group %s" % (cadet.name, previous_group_name)
     )
-    interface.message("Choose group to allocate into")
 
     chosen_group_name = interface.get_choice_from_adhoc_menu(
-        ALL_GROUPS_INCLUDING_UNALLOCATED
+        ALL_GROUPS, prompt="Choose group to allocate into"
     )
     chosen_group = Group(chosen_group_name)
 

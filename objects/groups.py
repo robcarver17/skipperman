@@ -7,28 +7,23 @@ from data_access.configuration.configuration import (
     LAKE_TRAINING_GROUPS,
     RIVER_TRAINING_GROUPS,
     MG_GROUPS,
+    ALL_GROUPS,
+    UNALLOCATED_GROUP,
 )
 from objects.cadets import Cadet, ListOfCadets
 from dataclasses import dataclass
 from objects.generic import GenericSkipperManObject, GenericListOfObjects
 
-
-ALL_GROUPS = LAKE_TRAINING_GROUPS + RIVER_TRAINING_GROUPS + MG_GROUPS
-
 LAKE_TRAINING = "Lake training"
 RIVER_TRAINING = "River training"
 MG = "MG"
-
-UNALLOCATED_GROUP = "Unallocated"
-
-ALL_GROUPS_INCLUDING_UNALLOCATED = [UNALLOCATED_GROUP] + ALL_GROUPS
 
 
 class Group:
     def __init__(self, group_name: str):
 
         try:
-            assert group_name in ALL_GROUPS_INCLUDING_UNALLOCATED
+            assert group_name in ALL_GROUPS
         except:
             raise Exception(
                 "Group %s is not a valid group name - correct or add to configuration"

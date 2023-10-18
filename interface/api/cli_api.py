@@ -1,5 +1,6 @@
 from typing import List
 import pandas as pd
+import webbrowser
 from interface.api.generic_api import GenericInterfaceApi
 from interface.cli.interactive_cli_menu import (
     InteractiveCliMenu,
@@ -60,7 +61,10 @@ class CliInterfaceApi(GenericInterfaceApi):
 
         return result
 
-    def get_choice_from_adhoc_menu(self, list_of_options: List[str]) -> str:
+    def get_choice_from_adhoc_menu(
+        self, list_of_options: List[str], prompt: str = ""
+    ) -> str:
+        print(prompt)
         option = print_menu_and_get_desired_option(list_of_options)
         return option
 
@@ -76,6 +80,32 @@ class CliInterfaceApi(GenericInterfaceApi):
         )
 
         return filename
+
+    def select_path(self, message_to_display: str):
+        starting_directory_for_up_download = self.starting_directory_for_up_download
+        pathname = interactive_file_selector(
+            message_to_display,
+            starting_directory_for_up_download=starting_directory_for_up_download,
+            choose_path=True,
+        )
+
+        return pathname
+
+    def process_pdf_report(self, filename: str):
+        print("Report is in file: %s" % filename)
+        open_file = self.return_true_if_answer_is_yes(
+            "Do you want to open in web browser?"
+        )
+        if open_file:
+            webbrowser.open(filename)
+
+    def put_items_in_order(self, items, prompt: str = ""):
+        print("Not implemented")
+        return items
+
+    def create_nested_list_from_items(self, items, prompt: str = ""):
+        print("Not implemented - putting all on single page")
+        return [items]
 
     @property
     def main_menu(self) -> InteractiveCliMenu:

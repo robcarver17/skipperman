@@ -26,3 +26,12 @@ class WebInterfaceApi(GenericInterfaceApi):
 
     def return_true_if_answer_is_yes(self, prompt: str) -> bool:
         raise NotImplemented
+
+    def process_pdf_report(self, filename: str):
+        raise NotImplemented
+
+    def put_items_in_order(self, items, prompt: str = ""):
+        raise NotImplemented
+
+    def create_nested_list_from_items(self, items, prompt: str = ""):
+        raise NotImplemented

@@ -16,7 +16,7 @@ EventType = Enum(
 # WA_event_id: int  ## does this need to be here?
 
 
-@dataclass
+@dataclass(frozen=True)
 class Event(GenericSkipperManObject):
     event_name: str  ## has to be preselected
     start_date: datetime.date

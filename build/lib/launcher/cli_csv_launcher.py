@@ -15,7 +15,7 @@ if __name__ == "__main__":
     )
     launcher.run()
 
-
+"""
 from data_access.api.csv_api import CsvDataApi
 from interface.api.cli_api import CliInterfaceApi
 from launcher.generic_launcher import GenericLauncher
@@ -26,23 +26,4 @@ launcher = GenericLauncher(
     interface=CliInterfaceApi(starting_directory_for_up_download=master_data_path),
 )
 data_and_interface = launcher.logic.data_and_interface
-from logic.reporting.report_group_allocations import *
-
-event = choose_event("Event to report for", data_and_interface=data_and_interface)
-
-df = get_df_for_reporting(data_and_interface=data_and_interface, event=event)
-default_title = "Group allocation for %s (%s)" % (
-    event.event_name,
-    str(event.event_year),
-)
-default_markuplist_from_df_options = (
-    default_markuplist_from_df_options_for_group_allocation
-)
-reporting_options = choose_reporting_options(
-    data_and_interface=data_and_interface,
-    df=df,
-    default_title=default_title,
-    default_markuplist_from_df_options=default_markuplist_from_df_options,
-)
-
-from interface.reporting.create_column_pdf_report_from_df import *
+"""

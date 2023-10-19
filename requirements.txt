@@ -3,4 +3,3 @@ xlrd >= 1.0.0
 pyyaml==5.4
 fpdf>=1.7
 flask>=2.0.0
-Flask-Menu=1.0.0

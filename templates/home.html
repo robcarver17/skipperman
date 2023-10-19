@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+      <div class="container">
+        <strong><nav>
+          <ul class="menu">
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('cadets') }}">Cadets</a></li>
+            <li><a href="{{ url_for('events') }}">Events</a></li>
+            <li><a href="{{ url_for('reports') }}">Reports</a></li>
+          </ul>
+        </nav></strong>
+      </div>
+{% endblock %}

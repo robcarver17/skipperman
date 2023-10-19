@@ -51,8 +51,7 @@ setup(
     package_data=package_data,
     long_description=read("README.md"),
     install_requires=["pandas==1.0.5", "xlrd >= 1.0.0", "PyYAML>=5.4", "fpdf>=1.7",
-                      "flask>=2.0.0",
-                      "Flask-Menu>=1.0.0"
+                      "flask>=2.0.0"
 ],
     tests_require=["nose", "flake8"],
     extras_require=dict(),

@@ -7,7 +7,9 @@ from logic.api import LogicApi
 from flask import Flask, render_template
 app = Flask(__name__)
 
-master_data_path = "/home/rob/skipperman_data/"
+import os
+
+master_data_path = os.path.expanduser('~')+"/skipperman_data/"
 data=CsvDataApi(master_data_path=master_data_path)
 interface=WebInterfaceApi()
 logic_api = LogicApi(data=data, interface=interface)

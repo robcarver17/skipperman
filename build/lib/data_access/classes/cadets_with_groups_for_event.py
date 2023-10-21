@@ -1,4 +1,4 @@
-from objects.groups import ListOfCadetIdsWithGroups
+from app.objects import ListOfCadetIdsWithGroups
 
 
 class DataListOfCadetsWithGroups(object):

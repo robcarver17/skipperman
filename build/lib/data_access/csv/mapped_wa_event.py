@@ -1,14 +1,14 @@
 import pandas as pd
-from data_access.csv.generic_csv_data import GenericCsvData
-from data_access.csv.utils import (
+from app.data_access import GenericCsvData
+from app.data_access import (
     transform_df_from_str_to_dates,
     transform_df_from_dates_to_str,
 )
-from objects.mapped_wa_event_with_id_and_status import (
+from app.objects import (
     MappedWAEventWithoutDuplicatesAndWithStatus,
 )
-from objects.mapped_wa_event_with_ids import MappedWAEventWithIDs
-from data_access.classes.mapped_wa_event import (
+from app.objects import MappedWAEventWithIDs
+from app.data_access import (
     DataMappedWAEventWithIDs,
     DataMappedWAEventWithoutDuplicatesAndWithStatus,
 )

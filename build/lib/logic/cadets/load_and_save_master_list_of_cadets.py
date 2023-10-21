@@ -1,5 +1,5 @@
-from logic.data_and_interface import DataAndInterface
-from objects.cadets import ListOfCadets, Cadet
+from app.logic.data import DataAndInterface
+from app.objects import ListOfCadets, Cadet
 
 
 def load_master_list_of_cadets(data_and_interface: DataAndInterface) -> ListOfCadets:

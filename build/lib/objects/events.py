@@ -2,11 +2,10 @@ from dataclasses import dataclass
 import datetime
 from enum import Enum
 
-from objects.utils import (
-    similar,
+from app.objects import (
     transform_str_from_date,
 )
-from objects.generic import GenericSkipperManObject, GenericListOfObjects
+from app.objects import GenericSkipperManObject, GenericListOfObjects
 
 
 EventType = Enum(

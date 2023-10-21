@@ -1,8 +1,8 @@
 import pandas as pd
-from data_access.csv.generic_csv_data import GenericCsvData
-from data_access.classes.cadets_with_groups_for_event import DataListOfCadetsWithGroups
+from app.data_access import GenericCsvData
+from app.data_access import DataListOfCadetsWithGroups
 
-from objects.groups import ListOfCadetIdsWithGroups
+from app.objects import ListOfCadetIdsWithGroups
 
 
 class CsvDataListOfCadetsWithGroups(GenericCsvData, DataListOfCadetsWithGroups):

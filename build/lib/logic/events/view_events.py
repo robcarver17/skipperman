@@ -1,4 +1,4 @@
-from logic.data_and_interface import DataAndInterface
+from app.logic.data import DataAndInterface
 
 
 def view_list_of_events(data_and_interface: DataAndInterface):

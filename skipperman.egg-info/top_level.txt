@@ -1,7 +1,3 @@
-data_access
+app
 example_data
-interface
-launcher
-logic
-objects
 tests

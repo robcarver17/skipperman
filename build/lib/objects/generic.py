@@ -1,11 +1,11 @@
 import datetime
 import enum
-from enum import EnumMeta, Enum
+from enum import EnumMeta
 from dataclasses import dataclass
 from typing import List
 import pandas as pd
 
-from objects.utils import (
+from app.objects import (
     create_list_of_objects_from_dataframe,
     data_object_as_dict,
     transform_date_from_str,

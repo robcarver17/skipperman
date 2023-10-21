@@ -1,6 +1,6 @@
 import pandas as pd
 import datetime
-from objects.field_list import FIELDS_WITH_DATES, FIELDS_WITH_DATETIMES
+from app.objects import FIELDS_WITH_DATES, FIELDS_WITH_DATETIMES
 
 DATE_STR = "%Y/%m/%d"
 DATETIME_STR = "%Y/%m/%d %H:%M:%S.%f"

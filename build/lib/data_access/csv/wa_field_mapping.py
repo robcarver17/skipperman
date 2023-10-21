@@ -1,7 +1,7 @@
 import pandas as pd
-from data_access.csv.generic_csv_data import GenericCsvData
-from objects.wa_field_mapping import WAFieldMapping
-from data_access.classes.wa_field_mapping import DataWAFieldMapping
+from app.data_access import GenericCsvData
+from app.objects.wa_field_mapping import WAFieldMapping
+from app.data_access import DataWAFieldMapping
 
 
 class CsvDataWAFieldMapping(GenericCsvData, DataWAFieldMapping):

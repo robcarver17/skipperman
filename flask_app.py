@@ -1,49 +1,23 @@
-import sys
-from data_access.api.csv_api import CsvDataApi
-from interface.api.web_api import WebInterfaceApi
-from launcher.generic_launcher import GenericLauncher
-from logic.api import LogicApi
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
+
+
+from app.interface.html.menu_page import menu_page_html
+from app.interface.html.action import action_html
+
 app = Flask(__name__)
-
-import os
-
-master_data_path = os.path.expanduser('~')+"/skipperman_data/"
-data=CsvDataApi(master_data_path=master_data_path)
-interface=WebInterfaceApi()
-logic_api = LogicApi(data=data, interface=interface)
-data_and_interface = logic_api.data_and_interface
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return menu_page_html('home')
 
-@app.route('/cadets/')
-def cadets():
-    return render_template('cadets.html')
+@app.route('/menu/<menu_option>')
+def menu(menu_option):
+    return menu_page_html(menu_option)
 
-
-from logic.cadets.load_and_save_master_list_of_cadets import load_master_list_of_cadets
-df = load_master_list_of_cadets(data_and_interface=data_and_interface).to_df_of_str()
-
-@app.route('/view_cadets/')
-def view_cadets():
-    return render_template('view_cadets.html', column_names=df.columns.values, row_data=list(df.values.tolist()),
-                           zip=zip)
-
-@app.route('/events/')
-def events():
-    return render_template('events.html')
-
-@app.route('/reports/')
-def reports():
-    return render_template('reports.html')
-
-
-@app.route('/reports_group_allocation/')
-def reports_group_allocation():
-    return render_template('reports_group_allocation.html')
+@app.route('/action/<action_option>', methods=["GET", "POST"])
+def action(action_option):
+    return action_html(action_option)
 
 
 if __name__ == '__main__':

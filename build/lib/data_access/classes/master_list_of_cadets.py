@@ -1,4 +1,4 @@
-from objects.cadets import ListOfCadets, Cadet
+from app.objects import ListOfCadets, Cadet
 
 
 class DataListOfCadets(object):

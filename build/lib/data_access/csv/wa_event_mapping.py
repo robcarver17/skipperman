@@ -1,7 +1,7 @@
 import pandas as pd
-from data_access.csv.generic_csv_data import GenericCsvData
-from objects.wa_event_mapping import WAEventMapping
-from data_access.classes.wa_event_mapping import DataWAEventMapping
+from app.data_access import GenericCsvData
+from app.objects import WAEventMapping
+from app.data_access import DataWAEventMapping
 
 
 class CsvDataWAEventMapping(GenericCsvData, DataWAEventMapping):

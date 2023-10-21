@@ -1,5 +1,5 @@
 import yaml
-from data_access.configuration.file_access import get_relative_pathname_from_list
+from app.data_access import get_relative_pathname_from_list
 
 ## IMPORTANT: In the unlikely event we move the config file, this needs changing
 configuration_file = get_relative_pathname_from_list(

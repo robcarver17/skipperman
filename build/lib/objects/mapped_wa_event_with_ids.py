@@ -4,8 +4,8 @@ from typing import List
 
 import pandas as pd
 
-from objects.constants import missing_data
-from objects.mapped_wa_event_no_ids import (
+from app.objects import missing_data
+from app.objects import (
     RowInMappedWAEventNoId,
     MappedWAEventNoIDs,
     extract_list_of_entry_timestamps_from_existing_wa_event,

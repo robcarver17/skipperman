@@ -1,4 +1,4 @@
-from objects.events import ListOfEvents, Event
+from app.objects import ListOfEvents, Event
 
 
 class DataListOfEvents(object):

@@ -5,16 +5,16 @@ from typing import List
 
 import pandas as pd
 
-from data_access.configuration.configuration import ACTIVE_STATUS, CANCELLED_STATUS
-from objects.constants import missing_data
-from objects.field_list import PAYMENT_STATUS
-from objects.mapped_wa_event_no_ids import RowInMappedWAEventNoId
-from objects.mapped_wa_event_with_ids import (
+from app.data_access.configuration.configuration import ACTIVE_STATUS, CANCELLED_STATUS
+from app.objects import missing_data
+from app.objects import PAYMENT_STATUS
+from app.objects import RowInMappedWAEventNoId
+from app.objects import (
     RowInMappedWAEventWithId,
     MappedWAEventWithIDs,
     CADET_ID,
 )
-from objects.utils import DictOfDictDiffs
+from app.objects import DictOfDictDiffs
 
 RowStatus = Enum("RowStatus", ["Cancelled", "Active", "Deleted"])
 STATUS_FIELD = "row_status"

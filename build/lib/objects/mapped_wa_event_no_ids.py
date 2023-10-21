@@ -1,13 +1,13 @@
 from typing import List
 import pandas as pd
 
-from objects.utils import (
+from app.objects import (
     DictOfDictDiffs,
     create_dict_of_dict_diffs,
     clean_up_dict_with_nans,
 )
 
-from objects.field_list import REGISTRATION_DATE
+from app.objects import REGISTRATION_DATE
 
 
 class RowInMappedWAEventNoId(dict):

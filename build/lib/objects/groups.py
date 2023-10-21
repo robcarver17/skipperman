@@ -3,16 +3,16 @@
 ## So can hard code all groups in configuration
 import pandas as pd
 
-from data_access.configuration.configuration import (
+from app.data_access.configuration.configuration import (
     LAKE_TRAINING_GROUPS,
     RIVER_TRAINING_GROUPS,
     MG_GROUPS,
     ALL_GROUPS,
     UNALLOCATED_GROUP,
 )
-from objects.cadets import Cadet, ListOfCadets
+from app.objects import Cadet, ListOfCadets
 from dataclasses import dataclass
-from objects.generic import GenericSkipperManObject, GenericListOfObjects
+from app.objects import GenericSkipperManObject, GenericListOfObjects
 
 LAKE_TRAINING = "Lake training"
 RIVER_TRAINING = "River training"

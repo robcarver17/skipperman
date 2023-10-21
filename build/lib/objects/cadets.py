@@ -1,16 +1,15 @@
 from dataclasses import dataclass
-from typing import List
 import datetime
 
-from data_access.configuration.configuration import (
+from app.data_access.configuration.configuration import (
     MIN_CADET_AGE,
     MAX_CADET_AGE,
     SIMILARITY_LEVEL_TO_WARN_AGE,
     SIMILARITY_LEVEL_TO_WARN_NAME,
 )
-from objects.generic import GenericSkipperManObject, GenericListOfObjects
-from objects.utils import transform_str_from_date, similar
-from objects.constants import arg_not_passed, DAYS_IN_YEAR
+from app.objects import GenericSkipperManObject, GenericListOfObjects
+from app.objects import transform_str_from_date, similar
+from app.objects import arg_not_passed, DAYS_IN_YEAR
 
 
 @dataclass(frozen=True)

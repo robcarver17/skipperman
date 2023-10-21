@@ -1,7 +1,7 @@
-from objects.mapped_wa_event_with_id_and_status import (
+from app.objects import (
     MappedWAEventWithoutDuplicatesAndWithStatus,
 )
-from objects.mapped_wa_event_with_ids import MappedWAEventWithIDs
+from app.objects import MappedWAEventWithIDs
 
 
 class DataMappedWAEventWithIDs(object):

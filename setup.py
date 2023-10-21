@@ -32,11 +32,11 @@ def dir_this_file():
 data_csv_path = os.path.join(dir_this_file(), "example_data")
 data_csv_files = package_files(data_csv_path, "csv")
 
-config_yaml_path = os.path.join(dir_this_file(), "data_access", "configuration")
+config_yaml_path = os.path.join(dir_this_file(), "app","data_access", "configuration")
 config_files = package_files(config_yaml_path, "yaml")
 
 package_data = {"": data_csv_files + config_files}
-
+print("***************************")
 print(package_data)
 
 setup(

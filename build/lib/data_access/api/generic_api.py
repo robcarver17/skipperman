@@ -1,12 +1,12 @@
-from data_access.classes.master_list_of_cadets import DataListOfCadets
-from data_access.classes.list_of_events import DataListOfEvents
-from data_access.classes.wa_event_mapping import DataWAEventMapping
-from data_access.classes.wa_field_mapping import DataWAFieldMapping
-from data_access.classes.mapped_wa_event import (
+from app.data_access import DataListOfCadets
+from app.data_access import DataListOfEvents
+from app.data_access import DataWAEventMapping
+from app.data_access import DataWAFieldMapping
+from app.data_access import (
     DataMappedWAEventWithIDs,
     DataMappedWAEventWithoutDuplicatesAndWithStatus,
 )
-from data_access.classes.cadets_with_groups_for_event import DataListOfCadetsWithGroups
+from app.data_access import DataListOfCadetsWithGroups
 
 
 class GenericDataApi(object):

@@ -5,12 +5,10 @@ from app.logic.events.view_events import get_list_of_events
 
 from app.data_access.data_access import make_data
 data = make_data()
-list_of_events = get_list_of_events(data)
-list_of_events_as_str = [str(event) for event in list_of_events]
 
 def confirm_event_exists(event_selected):
-    print(event_selected)
-    print(list_of_events_as_str)
+    list_of_events = get_list_of_events(data)
+    list_of_events_as_str = [str(event) for event in list_of_events]
     assert event_selected in list_of_events_as_str
 
 
@@ -25,5 +23,8 @@ def get_specific_event_str_from_state(state_data: StateDataForAction) ->str:
 
 
 def get_event_from_list_of_events(event_selected: str) -> Event:
+    list_of_events = get_list_of_events(data)
+    list_of_events_as_str = [str(event) for event in list_of_events]
+
     event_idx = list_of_events_as_str.index(event_selected)
     return list_of_events[event_idx]

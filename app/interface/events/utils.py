@@ -8,6 +8,8 @@ list_of_events = get_list_of_events(data)
 list_of_events_as_str = [str(event) for event in list_of_events]
 
 def confirm_event_exists(event_selected):
+    print(event_selected)
+    print(list_of_events_as_str)
     assert event_selected in list_of_events_as_str
 
 

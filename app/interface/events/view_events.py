@@ -1,4 +1,5 @@
-from app.data_access.data_access import data
+from app.data_access.data_access import make_data
+data = make_data()
 from app.interface.flask.state_for_action import StateDataForAction
 from app.logic.events.view_events import get_list_of_events, SORT_BY_START_DSC
 from app.interface.html.forms import form_html_wrapper, html_button

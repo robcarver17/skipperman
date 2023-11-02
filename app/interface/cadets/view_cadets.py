@@ -1,4 +1,5 @@
-from app.data_access.data_access import data
+from app.data_access.data_access import make_data
+data = make_data()
 from app.interface.cadets.constants import sort_buttons, ADD_CADET_BUTTON_LABEL
 from app.interface.flask.state_for_action import StateDataForAction
 from app.interface.html.html import Html, ListOfHtml

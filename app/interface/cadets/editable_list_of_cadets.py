@@ -1,5 +1,6 @@
 from app.interface.flask.state_for_action import StateDataForAction
-from app.data_access.data_access import data
+from app.data_access.data_access import make_data
+data = make_data()
 from app.logic.cadets.view_cadets import get_list_of_cadets, SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, \
     SORT_BY_DOB_DSC
 

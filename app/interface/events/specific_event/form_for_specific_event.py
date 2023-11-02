@@ -1,4 +1,5 @@
-from app.data_access.data_access import data
+from app.data_access.data_access import make_data
+data = make_data()
 from app.interface.events.constants import WA_UPLOAD_BUTTON_LABEL, WA_FIELD_MAPPING_BUTTON_LABEL, \
     ALLOCATE_CADETS_BUTTON_LABEL, BACK_BUTTON_LABEL
 from app.interface.events.utils import get_event_from_state

@@ -17,7 +17,8 @@ from app.logic.events.map_wa_fields import map_wa_fields_in_df_for_event
 from app.objects.events import Event
 from app.objects.constants import NoFileUploaded, FileError
 
-from app.data_access.data_access import data
+from app.data_access.data_access import make_data
+data = make_data()
 from app.data_access.configuration.configuration import WILD_APRICOT_FILE_TYPES
 
 

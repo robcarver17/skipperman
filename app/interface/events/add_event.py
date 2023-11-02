@@ -14,7 +14,8 @@ from app.interface.events.view_events import display_view_of_events
 from app.logic.events.add_event import add_new_verified_event, verify_event_and_warn
 from app.objects.events import Event, default_event, list_of_event_types, EventType
 
-from app.data_access.data_access import data
+from app.data_access.data_access import make_data
+data = make_data()
 
 
 def get_view_for_add_event(state_data: StateDataForAction):

@@ -3,7 +3,8 @@ from app.interface.flask.state_for_action import StateDataForAction
 from app.objects.events import Event
 from app.logic.events.view_events import get_list_of_events
 
-from app.data_access.data_access import data
+from app.data_access.data_access import make_data
+data = make_data()
 list_of_events = get_list_of_events(data)
 list_of_events_as_str = [str(event) for event in list_of_events]
 

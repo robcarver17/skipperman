@@ -1,5 +1,8 @@
 from typing import Tuple
 
+from app.data_access.data_access import make_data
+data = make_data()
+
 from app.interface.flask.state_for_action import StateDataForAction
 from app.interface.html.html import Html, html_error, empty_html, html_bold, html_joined_list, html_joined_list_as_paragraphs
 from app.interface.html.components import back_button_only_with_text
@@ -10,7 +13,6 @@ from app.interface.cadets.view_cadets import display_view_of_cadets
 from app.logic.cadets.add_cadet import add_new_verified_cadet, verify_cadet_and_warn
 from app.objects.cadets import Cadet, default_cadet
 
-from app.data_access.data_access import data
 
 def get_view_for_add_cadet(state_data: StateDataForAction):
     ## don't need to check get/post as will always be post

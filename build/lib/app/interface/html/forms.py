@@ -5,7 +5,7 @@ from app.objects.constants import arg_not_passed
 def form_html_wrapper(current_url: str):
     ## we don't use %s to resolve current url here as we need to return with a single %s inside
     return HtmlWrapper(
-'<form method="post" action="'+current_url+'">%s</form>'
+'<form method="post" action="'+current_url+'" enctype="multipart/form-data" >%s</form>'
 )
 
 ## Buttons
@@ -74,9 +74,20 @@ def html_single_radio_button(input_name: str, option_label: str, option_value: s
     return '<input type="radio" name="%s" value="%s" %s /> %s' % (input_name, option_value, checked_str, option_label)
 
 def html_dropdown_input(input_label: str, input_name: str, dict_of_options: dict):
+    ## FIXME NEEDS DEBUGGING
     options_str_as_list = [
         '<option value="%s">%s</option>' % (option_returned_value, option_label)
     for option_label, option_returned_value in dict_of_options.items()]
     options_str = " ".join(options_str_as_list)
     value_html = ""
     return Html('%s <select name="%s"> %s </select' % (input_label, input_name, options_str))
+
+def html_file_input(input_name: str="file", accept:str = arg_not_passed):
+    # accept can be eg '.doc' or '.doc, .csv'
+    if accept is not arg_not_passed:
+        accept_html = 'accept="%s">' % accept
+    else:
+        accept_html = ''
+
+    return Html('<input type="file" name="%s" %s>' % (input_name, accept_html))
+

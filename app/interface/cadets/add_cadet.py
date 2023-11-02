@@ -1,8 +1,7 @@
-import datetime
 from typing import Tuple
 
 from app.interface.flask.state_for_action import StateDataForAction
-from app.interface.html.html import Html, ListOfHtml, html_error, empty_html, html_bold
+from app.interface.html.html import Html, html_error, empty_html, html_bold, html_joined_list, html_joined_list_as_paragraphs
 from app.interface.html.components import back_button_only_with_text
 from app.interface.html.forms import form_html_wrapper, html_button, html_form_text_input, html_date_input, html_as_date
 from app.interface.cadets.constants import BACK_BUTTON_LABEL, CHECK_BUTTON_LABEL, FIRST_NAME, SURNAME, DOB, FINAL_ADD_BUTTON_LABEL,  ADD_CADET_BUTTON_LABEL
@@ -29,7 +28,7 @@ def get_view_for_add_cadet(state_data: StateDataForAction):
         return process_form_when_cadet_verified(state_data)
 
     elif last_button_pressed==BACK_BUTTON_LABEL:
-        state_data.reset_to_initial_stage()
+        state_data.clear_session_data_for_action_and_reset_stage()
         return display_view_of_cadets(state_data)
 
     else:
@@ -39,7 +38,15 @@ def get_view_for_add_cadet(state_data: StateDataForAction):
 def display_form(state_data: StateDataForAction, form_values: Cadet = default_cadet,
                  verification_text: Html = empty_html):
 
-    cadet_is_verified = form_values is not default_cadet
+    html_inside_form = get_html_inside_form(form_values=form_values,
+                                            verification_text=verification_text)
+    form = form_html_wrapper(state_data.current_url)
+
+    return form.wrap_around(html_inside_form)
+
+def get_html_inside_form(form_values: Cadet = default_cadet,
+                 verification_text: Html = empty_html):
+
     header_text = Html("Add a new cadet")
     first_name = html_form_text_input(input_label="First name", input_name=FIRST_NAME, value = form_values.first_name)
     surname = html_form_text_input(input_label="Second name", input_name=SURNAME, value=form_values.surname)
@@ -47,7 +54,8 @@ def display_form(state_data: StateDataForAction, form_values: Cadet = default_ca
                           max_date_years=-5, min_date_years=40,
                           value=form_values.date_of_birth)
 
-    footer_buttons = get_footer_buttons(cadet_is_verified=cadet_is_verified)
+    form_is_empty = form_values == default_cadet
+    footer_buttons = get_footer_buttons(form_is_empty)
 
     list_of_html_inside_form = [header_text,
                                 first_name,
@@ -56,11 +64,9 @@ def display_form(state_data: StateDataForAction, form_values: Cadet = default_ca
                                 verification_text,
                                 footer_buttons
                                 ]
-    html_inside_form = ListOfHtml(list_of_html_inside_form).join_as_paragraphs()
-    form = form_html_wrapper(state_data.current_url)
+    html_inside_form = html_joined_list_as_paragraphs(list_of_html_inside_form)
 
-    return form.wrap_around(html_inside_form)
-
+    return html_inside_form
 
 def process_form_when_checking_cadet(state_data: StateDataForAction) -> Tuple[Html, Cadet]:
     try:
@@ -92,19 +98,18 @@ def process_form_when_cadet_verified(state_data: StateDataForAction):
                                       some_text="Added cadet %s" % str(cadet))
 
 
-
-def get_footer_buttons(cadet_is_verified: bool):
+def get_footer_buttons(form_is_empty: bool):
     back = html_button(BACK_BUTTON_LABEL)
     final_submit = html_button(FINAL_ADD_BUTTON_LABEL)
     check_submit = html_button(CHECK_BUTTON_LABEL)
-    if cadet_is_verified:
-        return ListOfHtml([
+    if form_is_empty:
+        return html_joined_list([
+            back,
+            check_submit
+        ])
+    else:
+        return html_joined_list([
             back,
             check_submit,
             final_submit
-        ]).join()
-    else:
-        return ListOfHtml([
-            back,
-            check_submit
-        ]).join()
+        ])

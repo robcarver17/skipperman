@@ -1,5 +1,5 @@
 from app.data_access.api.generic_api import GenericDataApi
-from app.objects.events import ListOfEvents
+from app.objects.events import ListOfEvents, Event
 
 SORT_BY_START_ASC = "Sort by start date, ascending"
 SORT_BY_START_DSC = "Sort by start date, descending"
@@ -16,3 +16,20 @@ def get_list_of_events(data: GenericDataApi, sort_by = SORT_BY_START_DSC) -> Lis
         return list_of_events.sort_by_name()
     else:
         return list_of_events
+
+def is_wa_mapping_setup_for_event(data: GenericDataApi, event: Event) -> bool:
+    event_id = event.id
+    wa_event_mapping = data.data_wa_event_mapping.read()
+
+    event_is_already_in_mapping_list = wa_event_mapping.is_event_in_mapping_list(
+        event_id
+    )
+
+    return event_is_already_in_mapping_list
+
+def is_wa_field_mapping_setup_for_event(data: GenericDataApi, event: Event)-> bool:
+    wa_mapping_dict = data.data_wa_field_mapping.read(event.id)
+    if len(wa_mapping_dict)==0:
+        return False
+    else:
+        return True

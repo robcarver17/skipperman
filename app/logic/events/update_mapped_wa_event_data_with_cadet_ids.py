@@ -1,4 +1,4 @@
-from app.logic.data import DataAndInterface
+from app.data_access.api.generic_api import GenericDataApi
 from app.logic.events.add_cadet_ids_to_mapped_wa_event_data import (
     add_cadet_ids_to_mapped_wa_event_data,
 )
@@ -7,21 +7,21 @@ from app.logic.events.load_and_save_wa_mapped_events import (
     save_mapped_wa_event_with_ids,
 )
 
-from app.objects import Event
-from app.objects import MappedWAEventNoIDs
-from app.objects import (
+from app.objects.events import Event
+from app.objects.mapped_wa_event_no_ids import MappedWAEventNoIDs
+from app.objects.mapped_wa_event_with_ids import (
     MappedWAEventWithIDs,
 )
 
 
 def update_and_save_mapped_wa_event_data_with_cadet_ids(
-    data_and_interface: DataAndInterface,
+    data: GenericDataApi,
     mapped_wa_event_data: MappedWAEventNoIDs,
     event: Event,
 ):
 
     existing_mapped_wa_event_with_ids = load_existing_mapped_wa_event_with_ids(
-        data_and_interface=data_and_interface, event=event
+        data=data, event=event
     )
 
     ## Each of these functions does an in place update
@@ -36,7 +36,7 @@ def update_and_save_mapped_wa_event_data_with_cadet_ids(
     )
 
     add_new_rows_to_event(
-        data_and_interface=data_and_interface,
+        data=data,
         mapped_wa_event_data=mapped_wa_event_data,
         existing_mapped_wa_event_with_ids=existing_mapped_wa_event_with_ids,
     )
@@ -44,7 +44,7 @@ def update_and_save_mapped_wa_event_data_with_cadet_ids(
     save_mapped_wa_event_with_ids(
         mapped_wa_event_data_with_ids=existing_mapped_wa_event_with_ids,
         event=event,
-        data_and_interface=data_and_interface,
+        data=data
     )
 
     return existing_mapped_wa_event_with_ids
@@ -116,7 +116,7 @@ def update_existing_wa_event_data_with_new_field_data(
 
 
 def add_new_rows_to_event(
-    data_and_interface: DataAndInterface,
+    data: GenericDataApi,
     mapped_wa_event_data: MappedWAEventNoIDs,
     existing_mapped_wa_event_with_ids: MappedWAEventWithIDs,
 ):
@@ -130,7 +130,7 @@ def add_new_rows_to_event(
     ## add IDS to those
     new_mapped_wa_event_data_with_ids = add_cadet_ids_to_mapped_wa_event_data(
         mapped_wa_event_data=new_mapped_wa_event_data,
-        data_and_interface=data_and_interface,
+        data=data,
     )
 
     existing_mapped_wa_event_with_ids.add_new_rows(new_mapped_wa_event_data_with_ids)

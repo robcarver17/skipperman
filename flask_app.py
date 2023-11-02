@@ -2,10 +2,11 @@ from flask import Flask
 from app.interface.menu_pages import generate_menu_page_html
 from app.interface.action_pages import generate_action_page_html
 from app.interface.html.url import INDEX_URL, ACTION_PREFIX, MENU_PREFIX
-from app.data_access.configuration.configuration import SECRET_KEY
+from app.data_access.configuration.configuration import SECRET_KEY, MAX_FILE_SIZE
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = SECRET_KEY
+app.config['MAX_CONTENT_LENGTH'] = MAX_FILE_SIZE
 
 @app.route(INDEX_URL)
 def home():

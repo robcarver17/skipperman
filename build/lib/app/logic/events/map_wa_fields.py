@@ -1,22 +1,24 @@
 import pandas as pd
-from app.logic.data import DataAndInterface
-from app.objects import Event
+from app.data_access.api.generic_api import GenericDataApi
+from app.objects.events import Event
 from app.objects.wa_field_mapping import WAFieldMapping
-from app.objects import MappedWAEventNoIDs
-
+from app.objects.mapped_wa_event_no_ids import MappedWAEventNoIDs
+from app.logic.events.load_wa_file import load_raw_wa_file
 
 def map_wa_fields_in_df_for_event(
-    data_and_interface: DataAndInterface, event: Event, wa_as_df: pd.DataFrame
+    data: GenericDataApi, event: Event, filename: str
 ) -> MappedWAEventNoIDs:
+
+    wa_as_df = load_raw_wa_file(filename)
     # Set up WA event mapping fields
     wa_field_mapping = get_wa_field_mapping_dict(
-        wa_as_df=wa_as_df, event=event, data_and_interface=data_and_interface
+        wa_as_df=wa_as_df, event=event, data=data
     )
 
     # Do the field mapping
     # need to think about what happens if a field is missing
     mapped_wa_event_data = map_wa_fields_in_df(
-        data_and_interface=data_and_interface,
+        data=data,
         wa_as_df=wa_as_df,
         wa_field_mapping=wa_field_mapping,
     )
@@ -25,7 +27,7 @@ def map_wa_fields_in_df_for_event(
 
 
 def map_wa_fields_in_df(
-    data_and_interface: DataAndInterface,
+    data: GenericDataApi,
     wa_as_df: pd.DataFrame,
     wa_field_mapping: WAFieldMapping,
 ) -> MappedWAEventNoIDs:
@@ -33,17 +35,19 @@ def map_wa_fields_in_df(
     # FIXME THINK ABOUT HOW TO HANDLE MISSING FIELDS
 
     ## Return dataframe with new columns; but don't map non existent
+    """
     _warn_user_about_fields(
         data_and_interface=data_and_interface,
         wa_as_df=wa_as_df,
         wa_field_mapping=wa_field_mapping,
     )
+    """
     mapped_wa_event_data = _map_wa_fields_in_df_no_warnings(
         wa_as_df=wa_as_df, wa_field_mapping=wa_field_mapping
     )
     return mapped_wa_event_data
 
-
+"""
 def _warn_user_about_fields(
     data_and_interface: DataAndInterface,
     wa_as_df: pd.DataFrame,
@@ -70,7 +74,7 @@ def _warn_user_about_fields(
             "Following fields are in WA file but will not be imported, probably OK: %s"
             % (str(in_wa_file_not_in_mapping))
         )
-
+"""
 
 def _map_wa_fields_in_df_no_warnings(
     wa_as_df: pd.DataFrame, wa_field_mapping: WAFieldMapping
@@ -89,7 +93,7 @@ def _map_wa_fields_in_df_no_warnings(
 
 
 def get_wa_field_mapping_dict(
-    wa_as_df: pd.DataFrame, event: Event, data_and_interface: DataAndInterface
+    wa_as_df: pd.DataFrame, event: Event, data: GenericDataApi
 ):
     """
     Want to end up with a dict of WA event field <-> my field name
@@ -107,9 +111,8 @@ def get_wa_field_mapping_dict(
     For now keep it simple: we use a .csv file
     """
 
-    data = data_and_interface.data
     wa_mapping_dict = data.data_wa_field_mapping.read(event.id)
     if len(wa_mapping_dict) == 0:
-        raise Exception("No mapping found!")
+        raise Exception("No mapping found!") ### NEEDS TO BE MUCH MORE VERBOSE
 
     return wa_mapping_dict

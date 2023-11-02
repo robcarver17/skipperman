@@ -4,13 +4,13 @@ from app.interface.html.url import HOME, INDEX_URL, get_menu_url, get_action_url
 from app.interface.html.html import Html, html_link, html_link_in_list_item, html_link_with_nested_list, menu_layout_html_wrapper, ListOfHtml
 from app.interface.html.master_layout import master_layout_html
 from app.interface.menu_define import menu_definition
-from app.interface.flask.state_for_action import clear_state_data_for_all_actions
+from app.interface.flask.session_data_for_action import clear_session_data_for_all_actions
 
 
 ### Returns HTML for a menu page
 def generate_menu_page_html(menu_option: str = HOME) -> str:
     ## We do this so on entering a particular action we have no state; start from scratch
-    clear_state_data_for_all_actions()
+    clear_session_data_for_all_actions()
 
     html_code_for_menu = generate_menu_html(menu_option)
     html_code_for_menu_inside_layout = master_layout_html.wrap_around(html_code_for_menu)

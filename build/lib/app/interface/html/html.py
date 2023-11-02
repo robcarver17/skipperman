@@ -1,11 +1,7 @@
 ## my functions for easy construction of html
-
+from typing import List
 class Html(str):
-    def prefix_with(self, prefix: 'Html'):
-        return Html(prefix+self)
-
-    def suffix_with(self, suffix: 'Html'):
-        return Html(self+suffix)
+    pass
 
 class ListOfHtml(list):
 
@@ -26,6 +22,27 @@ class HtmlWrapper(Html):
     def wrap_around(self, other_html: Html) -> Html:
         return Html(self % other_html)
 
+ErrorHtml = HtmlWrapper('<h2 class="error">%s</h2>') ## FIXME CSS
+
+def html_error(html_str: str):
+    return ErrorHtml.wrap_around(Html(html_str))
+
+def html_joined_list(list_of_html: List[Html]):
+    return ListOfHtml(
+        list_of_html
+    ).join()
+
+def html_joined_list_as_paragraphs(list_of_html:List[Html]):
+    return ListOfHtml(
+        list_of_html
+    ).join_as_paragraphs()
+
+def html_joined_list_as_lines(list_of_html: List[Html]):
+    return ListOfHtml(
+        list_of_html
+    ).join_as_lines()
+
+
 empty_html = Html("")
 html_unordered_list_wrapper= HtmlWrapper("<ul>%s</ul>")
 html_list_item_wrapper= HtmlWrapper("<li>%s</li>")
@@ -34,9 +51,6 @@ html_bold_wrapper = HtmlWrapper("<b>%s</b>")
 def html_bold(some_text:str):
     return html_bold_wrapper.wrap_around(Html(some_text))
 
-## FIX ME COULD DO COLOURS OR SIZE OR SOMETHING - CSS
-def html_error(error_str):
-    return Html(error_str)
 
 def html_link(string: str, url: str):
     return Html('<a href="%s">%s</a>' % (url, string))

@@ -14,7 +14,7 @@ def post_view_of_cadets_with_cadet_selected(state_data: StateDataForAction):
     try:
         confirm_cadet_exists(cadet_selected)
     except:
-        state_data.reset_to_initial_stage() ## on refresh will go back to view cadets
+        state_data.clear_session_data_for_action_and_reset_stage() ## on refresh will go back to view cadets
         return html_error("Cadet %s no longer in list- someone else has deleted or file corruption?" % cadet_selected)
 
     update_state_for_specific_cadet(state_data=state_data, cadet_selected=cadet_selected)

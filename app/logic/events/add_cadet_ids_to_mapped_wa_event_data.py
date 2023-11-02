@@ -1,32 +1,30 @@
 import datetime
 from copy import copy
 import pandas as pd
-from app.logic.data import DataAndInterface
+from app.data_access.api.generic_api import GenericDataApi
 from app.logic import edit_provided_cadet_details
-from app.logic.cadets.load_and_save_master_list_of_cadets import (
-    add_new_cadet_to_master_list,
-    load_master_list_of_cadets,
-)
+from app.logic.cadets.add_cadet import add_new_verified_cadet
+from app.logic.cadets.view_cadets import get_list_of_cadets
 
-from app.objects import (
+from app.objects.mapped_wa_event_no_ids import (
     MappedWAEventNoIDs,
     RowInMappedWAEventNoId,
 )
-from app.objects import MappedWAEventWithIDs
-from app.objects import Cadet, is_cadet_age_surprising
+from app.objects.mapped_wa_event_with_ids import MappedWAEventWithIDs
+from app.objects.cadets import Cadet, is_cadet_age_surprising
 from app.data_access.configuration.configuration import (
-    SIMILARITY_LEVEL_TO_WARN_AGE,
+    SIMILARITY_LEVEL_TO_WARN_DATE,
     SIMILARITY_LEVEL_TO_WARN_NAME,
 )
 
 
 def add_cadet_ids_to_mapped_wa_event_data(
-    data_and_interface: DataAndInterface, mapped_wa_event_data: MappedWAEventNoIDs
+    data: GenericDataApi, mapped_wa_event_data: MappedWAEventNoIDs
 ) -> MappedWAEventWithIDs:
 
     list_of_cadet_ids = [
         get_cadet_id_resolving_possible_duplicates(
-            data_and_interface=data_and_interface, row_of_mapped_data=row_of_mapped_data
+            data=data, row_of_mapped_data=row_of_mapped_data
         )
         for row_of_mapped_data in mapped_wa_event_data
     ]

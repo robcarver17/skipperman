@@ -4,7 +4,7 @@ from app.interface.cadets.view_cadets import display_view_of_cadets
 from app.interface.cadets.view_specific_cadet import post_view_of_cadets_with_cadet_selected
 from app.interface.flask.state_for_action import StateDataForAction
 
-from app.interface.html.html import Html
+from app.interface.html.html import Html, html_error
 
 
 def generate_cadet_pages(state_data: StateDataForAction) -> Html:
@@ -14,6 +14,8 @@ def generate_cadet_pages(state_data: StateDataForAction) -> Html:
         pass
     elif state_data.stage== ADD_CADET_STAGE:
         return get_view_for_add_cadet(state_data)
+    else:
+        return html_error("Stage %s not recognised something has gone horribly wrong" % state_data.stage)
 
 ## INITIAL STAGE
 

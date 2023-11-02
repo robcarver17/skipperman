@@ -1,5 +1,5 @@
 import yaml
-from app.data_access.configuration.file_access import get_relative_pathname_from_list
+from app.data_access.file_access import get_relative_pathname_from_list
 
 
 ## IMPORTANT: In the unlikely event we move the config file, this needs changing
@@ -25,12 +25,18 @@ SIMILARITY_LEVEL_TO_WARN_DATE = configuration["similarity_level_to_warn_when_com
 MIN_CADET_AGE = configuration["minimum_cadet_age"]
 MAX_CADET_AGE = configuration["maximium_cadet_age"]
 
+## WA
 ## Status of payment_status, used to determine cadet status
 ACTIVE_STATUS = configuration["wild_apricot_payment_fields_which_are_active_status"]
 CANCELLED_STATUS = configuration[
     "wild_apricot_payment_fields_which_are_cancelled_status"
 ]
-
+WILD_APRICOT_EVENT_ID = configuration["wild_apricot_event_id"]
+WILD_APRICOT_FILE_TYPES = configuration["wild_apricot_file_types"]
+#
+# File handling
+MAX_FILE_SIZE= configuration['max_file_size']
+UPLOAD_EXTENSIONS = configuration['upload_extensions']
 ## GROUPS
 LAKE_TRAINING_GROUPS = configuration["lake_training_groups"]
 RIVER_TRAINING_GROUPS = configuration["river_training_groups"]

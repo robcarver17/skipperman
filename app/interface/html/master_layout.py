@@ -1,5 +1,5 @@
 from app.interface.html.html import Html, HtmlWrapper
-
+from app.interface.flask.flash import get_flashed_errors
 ## applies to all pages
 ## FIXME: Does CSS even work?
 master_layout_html = HtmlWrapper(
@@ -26,9 +26,7 @@ master_layout_html = HtmlWrapper(
 go_home_html = Html('''
       <div class="container">
         <strong><nav>
-          <ul class="menu">
-          <a href="/">CANCEL: Back to home menu</a>\n
-          </ul>
+          <a href="/">CANCEL: Back to menu</a>
         </nav></strong>
       </div>
 ''')

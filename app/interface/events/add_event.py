@@ -4,10 +4,10 @@ from typing import Tuple
 from app.interface.flask.state_for_action import StateDataForAction
 
 from app.interface.html.components import back_button_only_with_text
-from app.interface.html.html import Html, ListOfHtml, html_error, empty_html, html_bold
+from app.interface.html.html import Html, ListOfHtml, html_error, empty_html, html_bold, html_joined_list, html_joined_list_as_paragraphs
 from app.interface.html.forms import form_html_wrapper, html_button, html_form_text_input, html_date_input, html_as_date, html_radio_input
 
-from app.interface.events.constants import BACK_BUTTON_LABEL, CHECK_BUTTON_LABEL, CLONE_EVENT_LABEL,\
+from app.interface.events.constants import BACK_BUTTON_LABEL, CHECK_BUTTON_LABEL, CLONE_EVENT_BUTTON_LABEL,\
     EVENT_NAME, EVENT_START_DATE, EVENT_END_DATE, EVENT_TYPE, FINAL_ADD_BUTTON_LABEL, ADD_EVENT_BUTTON_LABEL
 
 from app.interface.events.view_events import display_view_of_events
@@ -23,8 +23,9 @@ def get_view_for_add_event(state_data: StateDataForAction):
     if last_button_pressed==ADD_EVENT_BUTTON_LABEL:
         ## hasn't been displayed before, will have no defaults
         return display_form(state_data)
-    elif last_button_pressed==CLONE_EVENT_LABEL:
-        pass
+
+    elif last_button_pressed==CLONE_EVENT_BUTTON_LABEL:
+        return html_error("Cloning not implemented")
 
     elif last_button_pressed==CHECK_BUTTON_LABEL:
         ## verify results, display form again
@@ -44,7 +45,15 @@ def get_view_for_add_event(state_data: StateDataForAction):
 def display_form(state_data: StateDataForAction, form_values:Event = default_event,
                  verification_text: Html = empty_html):
 
-    event_is_verified = form_values is not default_event
+    html_inside_form = get_html_inside_form(form_values=form_values,
+                                            verification_text=verification_text)
+    form = form_html_wrapper(state_data.current_url)
+
+    return form.wrap_around(html_inside_form)
+
+def get_html_inside_form(form_values:Event = default_event,
+                 verification_text: Html = empty_html):
+
     header_text = Html("Add a new event. Do not duplicate!")
 
     event_name = html_form_text_input(input_label="Event name (do not include year, eg 'Cadet Week' not 'Cadet Week 2023')", input_name=EVENT_NAME, value = form_values.event_name)
@@ -58,7 +67,8 @@ def display_form(state_data: StateDataForAction, form_values:Event = default_eve
                                   default_label=form_values.event_type_as_str,
                                      dict_of_options=dict_of_event_types)
 
-    footer_buttons = get_footer_buttons(event_is_verified)
+    form_is_blank = form_values is default_event
+    footer_buttons = get_footer_buttons(form_is_blank)
 
     list_of_html_inside_form = [header_text,
                                 event_name,
@@ -68,12 +78,9 @@ def display_form(state_data: StateDataForAction, form_values:Event = default_eve
                                 verification_text,
                                 footer_buttons
                                 ]
-    html_inside_form = ListOfHtml(list_of_html_inside_form).join_as_paragraphs()
-    form = form_html_wrapper(state_data.current_url)
+    html_inside_form = html_joined_list_as_paragraphs(list_of_html_inside_form)
 
-    return form.wrap_around(html_inside_form)
-
-
+    return html_inside_form
 
 def process_form_when_checking_event(state_data: StateDataForAction) -> Tuple[Html, Event]:
 
@@ -107,23 +114,23 @@ def process_form_when_event_verified(state_data: StateDataForAction):
                                       some_text="Added event %s" % str(event))
 
 
-def get_footer_buttons(event_is_verified: bool):
+def get_footer_buttons(form_is_blank: bool):
     back = html_button(BACK_BUTTON_LABEL)
     final_submit = html_button(FINAL_ADD_BUTTON_LABEL)
     check_submit = html_button(CHECK_BUTTON_LABEL)
-    clone_event = html_button(CLONE_EVENT_LABEL)
-    if event_is_verified:
-        return ListOfHtml([
-            back,
-            check_submit,
-            final_submit
-        ]).join()
-    else:
-        return ListOfHtml([
+    clone_event = html_button(CLONE_EVENT_BUTTON_LABEL)
+    if form_is_blank:
+        return html_joined_list([
             back,
             clone_event,
             check_submit
-        ]).join()
+        ])
+    else:
+        return html_joined_list([
+            back,
+            check_submit,
+            final_submit
+        ])
 
 dict_of_event_types = dict([
     (event_type, event_type) for event_type in list_of_event_types

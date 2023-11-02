@@ -6,4 +6,10 @@ import os
 
 home_directory = os.path.expanduser('~')
 master_data_path = os.path.join(home_directory, DATAPATH)
+
+try:
+    os.mkdir(master_data_path)
+except:
+    pass
+
 data = CsvDataApi(master_data_path)

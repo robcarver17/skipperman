@@ -38,6 +38,7 @@ unallocated: "Unallocated"
 #
 datapath: "skipperman_data" ## directory in users home directory where data stored; only change for test purposes
 reporting_subdirectory: "Reports"
+uploads: "uploads" ## staging directory in users home directory where uploads are stored; only change for test purposes
 # Filtering cadet inputs
 #
 similarity_level_to_warn_when_comparing_names: 0.85 # change if too many/too few similars coming through
@@ -56,3 +57,11 @@ wild_apricot_payment_fields_which_are_active_status:
   - "Unpaid"
 wild_apricot_payment_fields_which_are_cancelled_status:
   - "Canceled"
+wild_apricot_event_id: "Event ID"
+wild_apricot_file_types: ".csv, .xls"
+#
+## needs to be large enough to upload a zip with everything
+max_file_size: 2100000 # ~2mb
+upload_extensions: ".csv, .xls, .zip"
+#
+#

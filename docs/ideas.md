@@ -55,6 +55,10 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Basic:
 
+- nicer CSS
+- view / edit / delete cadets
+- edit / delete events  
+- clone an existing event
 - create a volunteer rota, manage it, and report on it
 - maintain ticksheets, print and record ticks
 - print roll call lists and contact details
@@ -69,7 +73,12 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - create a report of t-shirts and other merch required (CW)
 - create a report of polo shirts required (CW)
 - create a report of RYA logbooks/certficates required (CW)
-
+- users and passwords (skipper, deputy, instructors)
+- view all linked information for cadet
+- view all linked information for event
+- upload/download all data as zip
+- regular backups on all writes; include roll back function
+- editable user sailing groups
 
 ### Future / wishlist / nice to have:
 

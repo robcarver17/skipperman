@@ -7,7 +7,6 @@ import pandas as pd
 from app.objects.constants import missing_data
 from app.objects.mapped_wa_event_no_ids import (
     RowInMappedWAEventNoId,
-    MappedWAEventNoIDs,
     extract_list_of_entry_timestamps_from_existing_wa_event,
 )
 
@@ -90,19 +89,6 @@ class MappedWAEventWithIDs(list):
         list_of_dicts = [item.as_dict() for item in self]
 
         return pd.DataFrame(list_of_dicts)
-
-    @classmethod
-    def from_unmapped_event_and_id_list(
-        cls, mapped_event_no_ids: MappedWAEventNoIDs, list_of_cadet_ids: list
-    ):
-        mapped_event_with_ids = [
-            RowInMappedWAEventWithId(cadet_id=cadet_id, data_in_row=mapped_event_row)
-            for cadet_id, mapped_event_row in zip(
-                list_of_cadet_ids, mapped_event_no_ids
-            )
-        ]
-
-        return cls(mapped_event_with_ids)
 
     def get_row_with_timestamp(self, timestamp):
         list_of_timestamps = self.list_of_timestamps()

@@ -4,10 +4,13 @@ from app.data_access.csv.list_of_events import CsvDataListOfEvents
 from app.data_access.csv.wa_event_mapping import CsvDataWAEventMapping
 from app.data_access.csv.wa_field_mapping import CsvDataWAFieldMapping
 from app.data_access.csv.mapped_wa_event import (
+    CsvDataMappedWAEventWithNoIDs,
     CsvDataMappedWAEventWithIDs,
     CsvDataMappedWAEventWithoutDuplicatesAndWithStatus,
 )
-from app.data_access.csv.cadets_with_groups_for_event import CsvDataListOfCadetsWithGroups
+from app.data_access.csv.cadets_with_groups_for_event import (
+    CsvDataListOfCadetsWithGroups,
+)
 
 
 class CsvDataApi(GenericDataApi):
@@ -29,6 +32,10 @@ class CsvDataApi(GenericDataApi):
     @property
     def data_wa_field_mapping(self) -> CsvDataWAFieldMapping:
         return CsvDataWAFieldMapping(master_data_path=self.master_data_path)
+
+    @property
+    def data_mapped_wa_event_with_no_ids(self) -> CsvDataMappedWAEventWithNoIDs:
+        return CsvDataMappedWAEventWithNoIDs(master_data_path=self.master_data_path)
 
     @property
     def data_mapped_wa_event_with_cadet_ids(self) -> CsvDataMappedWAEventWithIDs:

@@ -14,13 +14,20 @@ with open(configuration_file) as file_to_parse:
 ## Get everything from config as constants
 
 SECRET_KEY = configuration["secret_key"]
+
+### directories
 DATAPATH = configuration["datapath"]
+UPLOADS = configuration["uploads"]
+STAGING = configuration["staging"]
+REPORTING_SUBDIRECTORY = configuration["reporting_subdirectory"]
+
 
 SIMILARITY_LEVEL_TO_WARN_NAME = configuration[
     "similarity_level_to_warn_when_comparing_names"
 ]
-
-SIMILARITY_LEVEL_TO_WARN_DATE = configuration["similarity_level_to_warn_when_comparing_dates"]
+SIMILARITY_LEVEL_TO_WARN_DATE = configuration[
+    "similarity_level_to_warn_when_comparing_dates"
+]
 
 MIN_CADET_AGE = configuration["minimum_cadet_age"]
 MAX_CADET_AGE = configuration["maximium_cadet_age"]
@@ -35,8 +42,8 @@ WILD_APRICOT_EVENT_ID = configuration["wild_apricot_event_id"]
 WILD_APRICOT_FILE_TYPES = configuration["wild_apricot_file_types"]
 #
 # File handling
-MAX_FILE_SIZE= configuration['max_file_size']
-UPLOAD_EXTENSIONS = configuration['upload_extensions']
+MAX_FILE_SIZE = configuration["max_file_size"]
+UPLOAD_EXTENSIONS = configuration["upload_extensions"]
 ## GROUPS
 LAKE_TRAINING_GROUPS = configuration["lake_training_groups"]
 RIVER_TRAINING_GROUPS = configuration["river_training_groups"]
@@ -47,8 +54,8 @@ ALL_GROUPS = (
     LAKE_TRAINING_GROUPS + RIVER_TRAINING_GROUPS + MG_GROUPS + [UNALLOCATED_GROUP]
 )
 
-### directories
-REPORTING_SUBDIRECTORY = configuration["reporting_subdirectory"]
+
+## Page sizes - not configured in yaml
 A4_PAGESIZE = "A4"
 A3_PAGESIZE = "A3"
 ALL_PAGESIZE = [A3_PAGESIZE, A4_PAGESIZE]

@@ -1,24 +1,20 @@
 import pandas as pd
-from app.data_access.api.generic_api import GenericDataApi
+from app.data_access.data import data
 from app.objects.events import Event
 from app.objects.wa_field_mapping import WAFieldMapping
 from app.objects.mapped_wa_event_no_ids import MappedWAEventNoIDs
 from app.logic.events.load_wa_file import load_raw_wa_file
 
-def map_wa_fields_in_df_for_event(
-    data: GenericDataApi, event: Event, filename: str
-) -> MappedWAEventNoIDs:
+
+def map_wa_fields_in_df_for_event(event: Event, filename: str) -> MappedWAEventNoIDs:
 
     wa_as_df = load_raw_wa_file(filename)
     # Set up WA event mapping fields
-    wa_field_mapping = get_wa_field_mapping_dict(
-        wa_as_df=wa_as_df, event=event, data=data
-    )
+    wa_field_mapping = get_wa_field_mapping_dict(wa_as_df=wa_as_df, event=event)
 
     # Do the field mapping
     # need to think about what happens if a field is missing
     mapped_wa_event_data = map_wa_fields_in_df(
-        data=data,
         wa_as_df=wa_as_df,
         wa_field_mapping=wa_field_mapping,
     )
@@ -27,7 +23,6 @@ def map_wa_fields_in_df_for_event(
 
 
 def map_wa_fields_in_df(
-    data: GenericDataApi,
     wa_as_df: pd.DataFrame,
     wa_field_mapping: WAFieldMapping,
 ) -> MappedWAEventNoIDs:
@@ -46,6 +41,7 @@ def map_wa_fields_in_df(
         wa_as_df=wa_as_df, wa_field_mapping=wa_field_mapping
     )
     return mapped_wa_event_data
+
 
 """
 def _warn_user_about_fields(
@@ -76,6 +72,7 @@ def _warn_user_about_fields(
         )
 """
 
+
 def _map_wa_fields_in_df_no_warnings(
     wa_as_df: pd.DataFrame, wa_field_mapping: WAFieldMapping
 ) -> MappedWAEventNoIDs:
@@ -93,7 +90,8 @@ def _map_wa_fields_in_df_no_warnings(
 
 
 def get_wa_field_mapping_dict(
-    wa_as_df: pd.DataFrame, event: Event, data: GenericDataApi
+    wa_as_df: pd.DataFrame,
+    event: Event,
 ):
     """
     Want to end up with a dict of WA event field <-> my field name
@@ -113,6 +111,8 @@ def get_wa_field_mapping_dict(
 
     wa_mapping_dict = data.data_wa_field_mapping.read(event.id)
     if len(wa_mapping_dict) == 0:
-        raise Exception("No mapping found!") ### NEEDS TO BE MUCH MORE VERBOSE
+        raise Exception(
+            "No mapping found - set up the mapping and then re-import"
+        )  ### NEEDS TO BE MUCH MORE VERBOSE
 
     return wa_mapping_dict

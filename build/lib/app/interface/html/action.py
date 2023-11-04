@@ -1,10 +1,11 @@
-from app.data_access.data_access import data
+from app.data_access.data import data
 
 from app.logic.cadets.view_cadets import get_list_of_cadets_as_str
 from app.logic.events.view_events import get_list_of_events_as_str
 
 from app.interface.html.html import Html
-from app.interface.html.master_layout import master_layout_html, go_home_html
+from app.interface.html.master_layout import master_layout_html
+from app.interface.html.components import go_home_html
 from app.interface.cadets.generate_page import generate_cadet_pages
 
 

@@ -2,11 +2,12 @@ from dataclasses import dataclass
 import datetime
 from enum import Enum
 
-from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME, SIMILARITY_LEVEL_TO_WARN_DATE
-
-from app.objects.utils import (
-    transform_str_from_date,similar
+from app.data_access.configuration.configuration import (
+    SIMILARITY_LEVEL_TO_WARN_NAME,
+    SIMILARITY_LEVEL_TO_WARN_DATE,
 )
+
+from app.objects.utils import transform_str_from_date, similar
 from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
 
 
@@ -79,10 +80,12 @@ class Event(GenericSkipperManObject):
         return self.event_type.name
 
 
-default_event = Event(start_date=datetime.datetime.now(),
-                      end_date=datetime.datetime.now(),
-                      event_name="",
-                      event_type=EventType.Training)
+default_event = Event(
+    start_date=datetime.datetime.now(),
+    end_date=datetime.datetime.now(),
+    event_name="",
+    event_type=EventType.Training,
+)
 
 
 class ListOfEvents(GenericListOfObjects):
@@ -95,13 +98,13 @@ class ListOfEvents(GenericListOfObjects):
         return [event.event_name for event in self]
 
     def sort_by_start_date_asc(self):
-        return ListOfEvents(sorted(self, key = lambda x: x.start_date))
+        return ListOfEvents(sorted(self, key=lambda x: x.start_date))
 
     def sort_by_start_date_desc(self):
-        return ListOfEvents(sorted(self, key = lambda x: x.start_date, reverse=True))
+        return ListOfEvents(sorted(self, key=lambda x: x.start_date, reverse=True))
 
     def sort_by_name(self):
-        return ListOfEvents(sorted(self, key = lambda x: x.event_name))
+        return ListOfEvents(sorted(self, key=lambda x: x.event_name))
 
     def similar_events(
         self,
@@ -113,12 +116,12 @@ class ListOfEvents(GenericListOfObjects):
         similar_start_date = [
             other_event
             for other_event in self
-            if event.similarity_start_date(other_event)>date_threshold
+            if event.similarity_start_date(other_event) > date_threshold
         ]
         similar_end_date = [
             other_event
             for other_event in self
-            if event.similarity_end_date(other_event)>date_threshold
+            if event.similarity_end_date(other_event) > date_threshold
         ]
 
         similar_names = [
@@ -127,7 +130,8 @@ class ListOfEvents(GenericListOfObjects):
             if event.similarity_event_name(other_event) > name_threshold
         ]
 
-        joint_list_of_similar_events = list(set(similar_end_date+similar_start_date+similar_names))
+        joint_list_of_similar_events = list(
+            set(similar_end_date + similar_start_date + similar_names)
+        )
 
         return ListOfEvents(joint_list_of_similar_events)
-

@@ -1,45 +1,112 @@
 import datetime
 from copy import copy
 import pandas as pd
-from app.logic.data import DataAndInterface
-from app.logic import edit_provided_cadet_details
-from app.logic.cadets.load_and_save_master_list_of_cadets import (
-    add_new_cadet_to_master_list,
-    load_master_list_of_cadets,
-)
+from app.data_access.data import data
 
-from app.objects import (
+# from app.logic import edit_provided_cadet_details
+from app.logic.cadets.add_cadet import add_new_verified_cadet
+from app.logic.cadets.view_cadets import get_list_of_cadets
+from app.logic.events.load_and_save_wa_mapped_events import (
+    load_mapped_wa_event_with_no_ids,
+    save_mapped_wa_event_with_no_ids,
+)
+from app.objects.mapped_wa_event_no_ids import (
     MappedWAEventNoIDs,
     RowInMappedWAEventNoId,
 )
-from app.objects import MappedWAEventWithIDs
-from app.objects import Cadet, is_cadet_age_surprising
+from app.objects.mapped_wa_event_with_ids import MappedWAEventWithIDs
+from app.objects.cadets import Cadet, is_cadet_age_surprising
+from app.objects.field_list import CADET_SURNAME, CADET_DATE_OF_BIRTH, CADET_FIRST_NAME
+from app.objects.constants import NoMoreData
+from app.objects.events import Event
 from app.data_access.configuration.configuration import (
-    SIMILARITY_LEVEL_TO_WARN_AGE,
+    SIMILARITY_LEVEL_TO_WARN_DATE,
     SIMILARITY_LEVEL_TO_WARN_NAME,
 )
 
+from app.logic.events.load_and_save_wa_mapped_events import (
+    load_existing_mapped_wa_event_with_ids,
+    save_mapped_wa_event_with_ids,
+)
+from app.objects.mapped_wa_event_with_ids import (
+    MappedWAEventWithIDs,
+    RowInMappedWAEventWithId,
+    RowInMappedWAEventNoId,
+)
+from app.objects.events import Event
 
-def add_cadet_ids_to_mapped_wa_event_data(
-    data_and_interface: DataAndInterface, mapped_wa_event_data: MappedWAEventNoIDs
-) -> MappedWAEventWithIDs:
 
-    list_of_cadet_ids = [
-        get_cadet_id_resolving_possible_duplicates(
-            data_and_interface=data_and_interface, row_of_mapped_data=row_of_mapped_data
-        )
-        for row_of_mapped_data in mapped_wa_event_data
-    ]
+FIRST_ROW_INDEX = 0
 
-    mapped_wa_event_data_with_cadet_ids = (
-        MappedWAEventWithIDs.from_unmapped_event_and_id_list(
-            list_of_cadet_ids=list_of_cadet_ids,
-            mapped_event_no_ids=mapped_wa_event_data,
-        )
+
+def get_first_unmapped_row_for_event(event: Event):
+    all_unmapped_rows = load_unmapped_rows_for_event(event)
+    if len(all_unmapped_rows) == 0:
+        raise NoMoreData()
+    return all_unmapped_rows[FIRST_ROW_INDEX]
+
+
+def load_unmapped_rows_for_event(event: Event):
+    return load_mapped_wa_event_with_no_ids(event)
+
+
+def get_cadet_data_from_row_of_mapped_data_no_checks(
+    row_of_mapped_data: RowInMappedWAEventNoId,
+) -> Cadet:
+    first_name = row_of_mapped_data[CADET_FIRST_NAME]
+    second_name = row_of_mapped_data[CADET_SURNAME]
+    dob = row_of_mapped_data[CADET_DATE_OF_BIRTH]
+    dob_as_date = _translate_df_timestamp_to_datetime(dob)
+
+    return Cadet(first_name=first_name, surname=second_name, date_of_birth=dob_as_date)
+
+
+def _translate_df_timestamp_to_datetime(df_timestamp) -> datetime.date:
+    if type(df_timestamp) is datetime.date:
+        return df_timestamp
+
+    if type(df_timestamp) is pd._libs.tslibs.timestamps.Timestamp:
+        return df_timestamp.date()
+
+    if type(df_timestamp) is str:
+        return datetime.datetime.strptime(df_timestamp, "")
+
+    raise Exception(
+        "Can't handle timestamp %s with type %s"
+        % (str(df_timestamp), str(type(df_timestamp)))
     )
 
-    return mapped_wa_event_data_with_cadet_ids
 
+def add_row_data_with_id_included(
+    event: Event, new_row: RowInMappedWAEventNoId, cadet_id: str
+):
+    new_row_with_cadet_id = RowInMappedWAEventWithId(
+        cadet_id=cadet_id, data_in_row=new_row
+    )
+    existing_mapped_wa_event_with_ids = load_existing_mapped_wa_event_with_ids(
+        event=event
+    )
+
+    new_row_as_list = MappedWAEventWithIDs([new_row_with_cadet_id])
+    existing_mapped_wa_event_with_ids.add_new_rows(new_row_as_list)
+
+    delete_first_unmapped_row_for_event(event)
+    save_mapped_wa_event_with_ids(
+        mapped_wa_event_data_with_ids=existing_mapped_wa_event_with_ids, event=event
+    )
+
+
+def delete_first_unmapped_row_for_event(event: Event):
+    all_unmapped_rows = load_unmapped_rows_for_event(event)
+    if len(all_unmapped_rows) == 0:
+        raise NoMoreData()
+    all_unmapped_rows.pop(FIRST_ROW_INDEX)
+    save_mapped_wa_event_with_no_ids(
+        event=event, mapped_wa_event_data_with_no_ids=all_unmapped_rows
+    )
+
+
+"""
 
 def get_cadet_id_resolving_possible_duplicates(
     data_and_interface: DataAndInterface, row_of_mapped_data: RowInMappedWAEventNoId
@@ -162,3 +229,4 @@ def check_for_possible_duplicate_cadet_or_add_if_required(
             similarity_threshold_to_warn_age = similarity_threshold_to_warn_age * 0.9
             similarity_threshold_to_warn_name = similarity_threshold_to_warn_name * 0.9
             continue
+"""

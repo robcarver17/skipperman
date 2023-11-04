@@ -3,7 +3,7 @@ pyproject.toml
 setup.py
 app/__init__.py
 app/data_access/__init__.py
-app/data_access/data_access.py
+app/data_access/data.py
 app/data_access/file_access.py
 app/data_access/uploads_and_downloads.py
 app/data_access/api/__init__.py
@@ -29,8 +29,8 @@ app/data_access/csv/utils.py
 app/data_access/csv/wa_event_mapping.py
 app/data_access/csv/wa_field_mapping.py
 app/interface/__init__.py
+app/interface/action_hooks.py
 app/interface/action_pages.py
-app/interface/actions.py
 app/interface/menu_define.py
 app/interface/menu_pages.py
 app/interface/cadets/__init__.py
@@ -46,10 +46,18 @@ app/interface/events/constants.py
 app/interface/events/generate_page.py
 app/interface/events/utils.py
 app/interface/events/view_events.py
+app/interface/events/WA/__init__.py
+app/interface/events/WA/utils.py
+app/interface/events/WA/wa_import.py
+app/interface/events/WA/wa_update.py
+app/interface/events/WA/wa_upload.py
+app/interface/events/WA/process_staged_files/__init__.py
+app/interface/events/WA/process_staged_files/process_staged_file.py
+app/interface/events/WA/process_staged_files/wa_add_or_select_existing_cadet.py
+app/interface/events/WA/process_staged_files/wa_iteratively_add_cadet_ids.py
 app/interface/events/specific_event/__init__.py
 app/interface/events/specific_event/form_for_specific_event.py
 app/interface/events/specific_event/view_specific_event.py
-app/interface/events/specific_event/wa_import.py
 app/interface/flask/__init__.py
 app/interface/flask/flash.py
 app/interface/flask/global_state.py
@@ -87,7 +95,6 @@ app/logic/events/add_event.py
 app/logic/events/choose_event.py
 app/logic/events/create_new_event.py
 app/logic/events/get_list_of_cadets_at_event.py
-app/logic/events/import_wa_event.py
 app/logic/events/load_and_save_wa_mapped_events.py
 app/logic/events/load_wa_file.py
 app/logic/events/map_wa_fields.py

@@ -1,42 +1,25 @@
-import pandas as pd
-from app.data_access.api.generic_api import GenericDataApi
+from app.data_access.data import data
 from app.objects.events import Event
-from app.logic.events.load_wa_file import (
-    get_event_id_from_wa_df,
-load_raw_wa_file
-)
+from app.logic.events.load_wa_file import get_event_id_from_wa_df, load_raw_wa_file
 from app.objects.constants import FileError
 
 
-def verify_and_if_required_add_wa_mapping(
-    data: GenericDataApi,
-    filename: str,
-    event: Event
-):
+def verify_and_if_required_add_wa_mapping(filename: str, event: Event):
     wa_as_df = load_raw_wa_file(filename)
 
-    wa_id = get_event_id_from_wa_df(
-        wa_as_df=wa_as_df
-    )
+    wa_id = get_event_id_from_wa_df(wa_as_df=wa_as_df)
 
     new_event = confirm_correct_wa_mapping_and_return_true_if_new_event(
-        data=data,
-        wa_id=wa_id,
-        event=event
+        wa_id=wa_id, event=event
     )
 
-    # Add the WA/Event id mapping to the relevant table unless we are updating
+    # Add the WA/Event id mapping to the relevant table unless we are updating an existing event
     if new_event:
-        add_wa_to_event_mapping(
-            data=data, event=event, wa_id=wa_id
-        )
-
+        add_wa_to_event_mapping(event=event, wa_id=wa_id)
 
 
 def confirm_correct_wa_mapping_and_return_true_if_new_event(
-    data: GenericDataApi,
-    event: Event,
-    wa_id: str
+    event: Event, wa_id: str
 ) -> bool:
 
     event_id = event.id
@@ -76,9 +59,7 @@ def confirm_correct_wa_mapping_and_return_true_if_new_event(
     return True
 
 
-def add_wa_to_event_mapping(
-    data: GenericDataApi, event: Event, wa_id: str
-):
+def add_wa_to_event_mapping(event: Event, wa_id: str):
 
     event_id = event.id
     wa_event_mapping = data.data_wa_event_mapping.read()

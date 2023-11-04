@@ -1,10 +1,8 @@
-from app.data_access.api.generic_api import GenericDataApi
-from app.logic.events.add_cadet_ids_to_mapped_wa_event_data import (
-    add_cadet_ids_to_mapped_wa_event_data,
-)
+from typing import Callable
 from app.logic.events.load_and_save_wa_mapped_events import (
     load_existing_mapped_wa_event_with_ids,
     save_mapped_wa_event_with_ids,
+    save_mapped_wa_event_with_no_ids,
 )
 
 from app.objects.events import Event
@@ -13,18 +11,19 @@ from app.objects.mapped_wa_event_with_ids import (
     MappedWAEventWithIDs,
 )
 
+from app.interface.flask.flash import flash_log, flash_error
 
-def update_and_save_mapped_wa_event_data_with_cadet_ids(
-    data: GenericDataApi,
+
+def update_and_save_mapped_wa_event_data_with_and_without_ids(
     mapped_wa_event_data: MappedWAEventNoIDs,
     event: Event,
 ):
 
     existing_mapped_wa_event_with_ids = load_existing_mapped_wa_event_with_ids(
-        data=data, event=event
+        event=event
     )
-
     ## Each of these functions does an in place update
+    ## offline
     remove_deleted_cadets_from_event(
         mapped_wa_event_data=mapped_wa_event_data,
         existing_mapped_wa_event_with_ids=existing_mapped_wa_event_with_ids,
@@ -35,19 +34,16 @@ def update_and_save_mapped_wa_event_data_with_cadet_ids(
         existing_mapped_wa_event_with_ids=existing_mapped_wa_event_with_ids,
     )
 
-    add_new_rows_to_event(
-        data=data,
+    new_mapped_wa_event_data_no_ids = only_new_rows_in_mapped_wa_event_data(
         mapped_wa_event_data=mapped_wa_event_data,
         existing_mapped_wa_event_with_ids=existing_mapped_wa_event_with_ids,
     )
-
     save_mapped_wa_event_with_ids(
-        mapped_wa_event_data_with_ids=existing_mapped_wa_event_with_ids,
-        event=event,
-        data=data
+        mapped_wa_event_data_with_ids=existing_mapped_wa_event_with_ids, event=event
     )
-
-    return existing_mapped_wa_event_with_ids
+    save_mapped_wa_event_with_no_ids(
+        mapped_wa_event_data_with_no_ids=new_mapped_wa_event_data_no_ids, event=event
+    )
 
 
 def remove_deleted_cadets_from_event(
@@ -69,6 +65,11 @@ def remove_deleted_cadets_from_event(
     existing_mapped_wa_event_with_ids.delete_list_of_rows_with_timestamps(
         missing_timestamps
     )
+    if len(missing_timestamps) > 0:
+        flash_log(
+            "Removed %d rows of existing data that have vanised"
+            % len(missing_timestamps)
+        )
 
 
 def existing_timestamps_that_are_missing_from_mapped_wa_event_data(
@@ -114,26 +115,11 @@ def update_existing_wa_event_data_with_new_field_data(
         for timestamp in timestamps_in_both
     ]
 
-
-def add_new_rows_to_event(
-    data: GenericDataApi,
-    mapped_wa_event_data: MappedWAEventNoIDs,
-    existing_mapped_wa_event_with_ids: MappedWAEventWithIDs,
-):
-
-    ## New rows not in previous file
-    new_mapped_wa_event_data = only_new_rows_in_mapped_wa_event_data(
-        mapped_wa_event_data=mapped_wa_event_data,
-        existing_mapped_wa_event_with_ids=existing_mapped_wa_event_with_ids,
-    )
-
-    ## add IDS to those
-    new_mapped_wa_event_data_with_ids = add_cadet_ids_to_mapped_wa_event_data(
-        mapped_wa_event_data=new_mapped_wa_event_data,
-        data=data,
-    )
-
-    existing_mapped_wa_event_with_ids.add_new_rows(new_mapped_wa_event_data_with_ids)
+    if len(timestamps_in_both) > 0:
+        flash_log(
+            "Found %d rows of existing data that may have changed"
+            % len(timestamps_in_both)
+        )
 
 
 def only_new_rows_in_mapped_wa_event_data(
@@ -155,5 +141,7 @@ def only_new_rows_in_mapped_wa_event_data(
     )
 
     new_rows = mapped_wa_event_data.subset_with_timestamps(new_timestamps)
+    if len(new_rows) > 0:
+        flash_log("Found %d rows of new data not in previous file(s)" % len(new_rows))
 
     return new_rows

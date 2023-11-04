@@ -34,6 +34,8 @@ def transform_datetime_into_str(date: datetime.datetime) -> str:
 
 
 def transform_df_from_str_to_dates(df: pd.DataFrame):
+    if len(df) == 0:
+        return df
     for field in FIELDS_WITH_DATES:
         transform_df_column_from_str_to_dates(df=df, date_series_name=field)
     for field in FIELDS_WITH_DATETIMES:

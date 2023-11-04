@@ -6,7 +6,9 @@ from app.logic.data import DataAndInterface
 from app.logic.events import (
     get_list_of_cadets_in_mapped_wa_event,
 )
-from app.logic.cadets.load_and_save_master_list_of_cadets import load_master_list_of_cadets
+from app.logic.cadets.load_and_save_master_list_of_cadets import (
+    load_master_list_of_cadets,
+)
 
 from app.objects import ListOfCadets
 from app.objects import arg_not_passed

@@ -2,7 +2,8 @@ from app.interface.cadets.generate_page import generate_cadet_pages
 from app.interface.events.generate_page import generate_event_pages
 
 from app.interface.flask.state_for_action import get_state_data_for_action, StateDataForAction
-from app.interface.html.html import Html, html_error
+from app.interface.html.html import Html
+from app.interface.flask.flash import html_error
 
 DEBUG = True
 

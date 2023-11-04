@@ -79,6 +79,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - upload/download all data as zip
 - regular backups on all writes; include roll back function
 - editable user sailing groups
+- clean up eg old data, uploaded files, staged files
 
 ### Future / wishlist / nice to have:
 

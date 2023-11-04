@@ -1,11 +1,12 @@
 from copy import copy
-
-from app.logic.data import DataAndInterface
+from app.interface.flask.flash import flash_log, flash_error
+from app.data_access.data import data
 from app.logic.events.load_and_save_wa_mapped_events import (
     load_mapped_wa_event_data_without_duplicates,
     save_mapped_wa_event_data_without_duplicates,
+load_existing_mapped_wa_event_with_ids
 )
-from app.objects import (
+from app.objects.mapped_wa_event_with_id_and_status import (
     RowStatus,
     cancelled_status,
     active_status,
@@ -14,28 +15,60 @@ from app.objects import (
     MappedWAEventWithoutDuplicatesAndWithStatus,
     get_row_of_mapped_wa_event_data_with_status,
 )
-from app.objects import (
+from app.objects.mapped_wa_event_with_ids import (
     RowInMappedWAEventWithId,
     MappedWAEventWithIDs,
 )
-from app.objects import DictOfDictDiffs
-from app.objects import cadet_name_from_id
-from app.objects import Event
+from app.objects.utils import DictOfDictDiffs
+from app.objects.cadets import cadet_name_from_id
+from app.objects.events import Event
+from app.objects.constants import NoMoreData
 
-
-def save_with_removed_duplicates_from_mapped_wa_event_data(
-    data_and_interface: DataAndInterface,
-    mapped_wa_event_data_with_cadet_ids: MappedWAEventWithIDs,
+def save_and_report_on_missing_data_from_mapped_wa_event_data(
     event: Event,
 ):
+    ## We do this first because we are going to burn through the
+
+    # load up event with IDs and possible duplicates
+    mapped_wa_event_data_with_cadet_ids = load_existing_mapped_wa_event_with_ids(event)
+
     # will dynamically update this, then save when finished
     wa_event_data_without_duplicates = load_mapped_wa_event_data_without_duplicates(
-        data_and_interface=data_and_interface, event=event
+        event=event
     )
 
     ## updates wa_event_data_without_duplicates in memory
     report_and_change_status_for_missing_cadets(
-        data_and_interface=data_and_interface,
+        wa_event_data_without_duplicates=wa_event_data_without_duplicates,
+        mapped_wa_event_data_with_cadet_ids=mapped_wa_event_data_with_cadet_ids,
+    )
+
+    # Save updated version
+    save_mapped_wa_event_data_without_duplicates(
+        event=event,
+        wa_event_data_without_duplicates=wa_event_data_without_duplicates,
+    )
+
+def get_row_from_file_with_ids_and_possible_duplicates(event: Event, row_id: int):
+    mapped_wa_event_data_with_cadet_ids = load_existing_mapped_wa_event_with_ids(event)
+    try:
+        return mapped_wa_event_data_with_cadet_ids[row_id]
+    except:
+        raise NoMoreData()
+
+def save_with_removed_duplicates_from_mapped_wa_event_data(
+    event: Event,
+):
+    # load up event with IDs and possible duplicates
+    mapped_wa_event_data_with_cadet_ids = load_existing_mapped_wa_event_with_ids(event)
+
+    # will dynamically update this, then save when finished
+    wa_event_data_without_duplicates = load_mapped_wa_event_data_without_duplicates(
+        event=event
+    )
+
+    ## updates wa_event_data_without_duplicates in memory
+    report_and_change_status_for_missing_cadets(
         wa_event_data_without_duplicates=wa_event_data_without_duplicates,
         mapped_wa_event_data_with_cadet_ids=mapped_wa_event_data_with_cadet_ids,
     )
@@ -47,13 +80,11 @@ def save_with_removed_duplicates_from_mapped_wa_event_data(
         ## updates wa_event_data_without_duplicates in memory
         add_or_update_row_of_mapped_wa_event_data_with_check_for_duplicate(
             row_in_mapped_wa_event_with_id=row_in_mapped_wa_event_with_id,
-            data_and_interface=data_and_interface,
             wa_event_data_without_duplicates=wa_event_data_without_duplicates,
         )
 
     # Save updated version
     save_mapped_wa_event_data_without_duplicates(
-        data_and_interface=data_and_interface,
         event=event,
         wa_event_data_without_duplicates=wa_event_data_without_duplicates,
     )
@@ -61,7 +92,6 @@ def save_with_removed_duplicates_from_mapped_wa_event_data(
 
 def report_and_change_status_for_missing_cadets(
     wa_event_data_without_duplicates: MappedWAEventWithoutDuplicatesAndWithStatus,
-    data_and_interface: DataAndInterface,
     mapped_wa_event_data_with_cadet_ids: MappedWAEventWithIDs,
 ):
 
@@ -71,8 +101,6 @@ def report_and_change_status_for_missing_cadets(
         )
     )
 
-    messenger = data_and_interface.interface.message
-
     for cadet_id in missing_cadet_ids:
         cadet_is_already_deleted = (
             wa_event_data_without_duplicates.is_cadet_status_deleted(cadet_id)
@@ -80,8 +108,8 @@ def report_and_change_status_for_missing_cadets(
         if cadet_is_already_deleted:
             continue
         else:
-            messenger(
-                "Cadet %s was in WA event data, now appears to be deleted"
+            flash_log(
+                "Cadet %s was in WA event data, now appears to be missing from latest file - marked as deleted"
                 % cadet_name_from_id(cadet_id)
             )
             wa_event_data_without_duplicates.mark_cadet_as_deleted(cadet_id)
@@ -92,7 +120,6 @@ def report_and_change_status_for_missing_cadets(
 def add_or_update_row_of_mapped_wa_event_data_with_check_for_duplicate(
     row_in_mapped_wa_event_with_id: RowInMappedWAEventWithId,
     wa_event_data_without_duplicates: MappedWAEventWithoutDuplicatesAndWithStatus,
-    data_and_interface: DataAndInterface,
 ):
 
     cadet_id = row_in_mapped_wa_event_with_id.cadet_id
@@ -103,7 +130,6 @@ def add_or_update_row_of_mapped_wa_event_data_with_check_for_duplicate(
     if cadet_already_present:
         interactively_update_row_of_mapped_wa_event_data(
             row_in_mapped_wa_event_with_id=row_in_mapped_wa_event_with_id,
-            data_and_interface=data_and_interface,
             wa_event_data_without_duplicates=wa_event_data_without_duplicates,
         )
 
@@ -120,7 +146,6 @@ def add_or_update_row_of_mapped_wa_event_data_with_check_for_duplicate(
 def interactively_update_row_of_mapped_wa_event_data(
     row_in_mapped_wa_event_with_id: RowInMappedWAEventWithId,
     wa_event_data_without_duplicates: MappedWAEventWithoutDuplicatesAndWithStatus,
-    data_and_interface: DataAndInterface,
 ):
 
     new_row_in_mapped_wa_event_with_status = (

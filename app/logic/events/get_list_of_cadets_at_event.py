@@ -2,7 +2,9 @@ from app.logic.data import DataAndInterface
 from app.logic.events.load_and_save_wa_mapped_events import (
     load_mapped_wa_event_data_without_duplicates,
 )
-from app.logic.cadets.load_and_save_master_list_of_cadets import load_master_list_of_cadets
+from app.logic.cadets.load_and_save_master_list_of_cadets import (
+    load_master_list_of_cadets,
+)
 from app.objects import ListOfCadets
 from app.objects import Event
 

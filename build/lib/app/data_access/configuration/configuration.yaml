@@ -38,7 +38,8 @@ unallocated: "Unallocated"
 #
 datapath: "skipperman_data" ## directory in users home directory where data stored; only change for test purposes
 reporting_subdirectory: "Reports"
-uploads: "uploads" ## staging directory in users home directory where uploads are stored; only change for test purposes
+uploads: "uploads" ## directory in users home directory where uploads are stored; only change for test purposes
+staging: "staging" ## staging directory
 # Filtering cadet inputs
 #
 similarity_level_to_warn_when_comparing_names: 0.85 # change if too many/too few similars coming through

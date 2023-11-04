@@ -71,16 +71,16 @@ def cadet_name_from_id(cadet_id: str) -> str:
 
 class ListOfCadets(GenericListOfObjects):
     def sort_by_surname(self):
-        return ListOfCadets(sorted(self, key = lambda x: x.surname))
+        return ListOfCadets(sorted(self, key=lambda x: x.surname))
 
     def sort_by_firstname(self):
-        return ListOfCadets(sorted(self, key = lambda x: x.first_name))
+        return ListOfCadets(sorted(self, key=lambda x: x.first_name))
 
     def sort_by_dob_asc(self):
-        return ListOfCadets(sorted(self, key = lambda x: x.date_of_birth))
+        return ListOfCadets(sorted(self, key=lambda x: x.date_of_birth))
 
     def sort_by_dob_desc(self):
-        return ListOfCadets(sorted(self, key = lambda x: x.date_of_birth, reverse=True))
+        return ListOfCadets(sorted(self, key=lambda x: x.date_of_birth, reverse=True))
 
     @property
     def _object_class_contained(self):
@@ -104,7 +104,7 @@ class ListOfCadets(GenericListOfObjects):
             if cadet.similarity_name(other_cadet) > name_threshold
         ]
 
-        joint_list_of_similar_cadets = list(set(similar_dob+similar_names))
+        joint_list_of_similar_cadets = list(set(similar_dob + similar_names))
 
         return ListOfCadets(joint_list_of_similar_cadets)
 

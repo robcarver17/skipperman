@@ -1,6 +1,11 @@
 from app.interface.html.html import ListOfHtml
 from app.interface.html.forms import html_button
-from app.logic.cadets.view_cadets import SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, SORT_BY_DOB_DSC
+from app.logic.cadets.view_cadets import (
+    SORT_BY_SURNAME,
+    SORT_BY_FIRSTNAME,
+    SORT_BY_DOB_ASC,
+    SORT_BY_DOB_DSC,
+)
 
 all_sort_types = [SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, SORT_BY_DOB_DSC]
 
@@ -9,18 +14,15 @@ BACK_BUTTON_LABEL = "Back"
 CHECK_BUTTON_LABEL = "Check details entered"
 FINAL_ADD_BUTTON_LABEL = "Yes - these details are correct - add to data"
 
-sort_buttons = ListOfHtml([
-    html_button(sortby) for sortby in all_sort_types
-                          ]).join()
+sort_buttons = ListOfHtml([html_button(sortby) for sortby in all_sort_types]).join()
 
-VIEW_INDIVIDUAL_CADET_STAGE= "view_cadet"
+VIEW_INDIVIDUAL_CADET_STAGE = "view_cadet"
 ADD_CADET_STAGE = "add_cadet"
 
 ## constants in session data
 CADET = "cadet"
 
 # field names
-FIRST_NAME="first_name"
-SURNAME="surname"
-DOB="date_of_birth"
-
+FIRST_NAME = "first_name"
+SURNAME = "surname"
+DOB = "date_of_birth"

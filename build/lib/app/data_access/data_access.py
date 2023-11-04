@@ -12,4 +12,5 @@ try:
 except:
     pass
 
-data = CsvDataApi(master_data_path)
+def make_data():
+    return CsvDataApi(master_data_path)

@@ -3,11 +3,18 @@ from app.objects.constants import arg_not_passed
 from app.data_access.csv.resolve_csv_paths_and_filenames import (
     get_path_and_filename_for_named_csv_file,
 )
+import os
 
 
 class GenericCsvData(object):
     def __init__(self, master_data_path: str):
         self._master_data_path = master_data_path
+
+    def delete(self, filename):
+        try:
+            os.remove(filename)
+        except:
+            pass
 
     def get_path_and_filename_for_named_csv_file(
         self,

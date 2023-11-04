@@ -22,5 +22,7 @@ def get_relative_pathname_from_list(path_as_list: List[str]) -> str:
 
 
 def get_files_in_directory(mypath: str):
-    onlyfiles = [f for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))]
+    onlyfiles = [
+        f for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))
+    ]
     return onlyfiles

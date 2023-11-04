@@ -1,13 +1,14 @@
-from app.data_access.data_access import data
+from app.data_access.data import data
 
-from app.interface.events.constants import WA_UPLOAD_BUTTON_LABEL, WA_UPDATE_BUTTON_LABEL, WA_FIELD_MAPPING_BUTTON_LABEL, ALLOCATE_CADETS_BUTTON_LABEL, BACK_BUTTON_LABEL, WA_IMPORT_SUBSTAGE_IN_VIEW_EVENT_STAGE
+from app.interface.events.constants import WA_UPLOAD_BUTTON_LABEL, WA_UPDATE_BUTTON_LABEL, WA_FIELD_MAPPING_BUTTON_LABEL, ALLOCATE_CADETS_BUTTON_LABEL, BACK_BUTTON_LABEL, WA_UPLOAD_SUBSTAGE_IN_VIEW_EVENT_STAGE
 from app.interface.events.utils import confirm_event_exists, update_state_for_specific_event, \
     get_event_from_list_of_events
 from app.interface.events.view_events import display_view_of_events
-from app.interface.events.specific_event.wa_import import display_form_wa_import
+from app.interface.events.WA.wa_upload import display_form_wa_upload
 
 from app.interface.flask.state_for_action import StateDataForAction
-from app.interface.html.html import html_error, Html, html_joined_list, html_joined_list_as_paragraphs
+from app.interface.html.html import Html, html_joined_list, html_joined_list_as_paragraphs
+from app.interface.flask.flash import html_error
 from app.interface.html.forms import html_button, form_html_wrapper
 
 from app.logic.events.view_events import is_wa_mapping_setup_for_event, is_wa_field_mapping_setup_for_event
@@ -41,8 +42,8 @@ def post_action_on_selected_event(state_data: StateDataForAction) -> Html:
         return display_view_of_events(state_data)
 
     if last_button_pressed == WA_UPLOAD_BUTTON_LABEL:
-        state_data.stage = WA_IMPORT_SUBSTAGE_IN_VIEW_EVENT_STAGE
-        return display_form_wa_import(state_data)
+        state_data.stage = WA_UPLOAD_SUBSTAGE_IN_VIEW_EVENT_STAGE
+        return display_form_wa_upload(state_data)
 
     if last_button_pressed == WA_UPDATE_BUTTON_LABEL:
         pass

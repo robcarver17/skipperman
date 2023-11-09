@@ -1,28 +1,21 @@
 from app.data_access.data import data
 from app.objects.events import Event
-from app.objects.mapped_wa_event_with_id_and_status import (
-    MappedWAEventWithoutDuplicatesAndWithStatus,
+from app.objects.master_event import (
+    MasterEvent,
 )
 from app.objects.mapped_wa_event_with_ids import MappedWAEventWithIDs
 from app.objects.mapped_wa_event_no_ids import MappedWAEventNoIDs
 
 
-def load_mapped_wa_event_data_without_duplicates(
+def load_master_event(
     event: Event,
-) -> MappedWAEventWithoutDuplicatesAndWithStatus:
+) -> MasterEvent:
 
-    return data.data_mapped_wa_event_without_duplicates_and_with_status.read(event.id)
+    return data.data_master_event.read(event.id)
 
 
-def save_mapped_wa_event_data_without_duplicates(
-    event: Event,
-    wa_event_data_without_duplicates: MappedWAEventWithoutDuplicatesAndWithStatus,
-):
-
-    data.data_mapped_wa_event_without_duplicates_and_with_status.write(
-        mapped_wa_event_without_duplicates=wa_event_data_without_duplicates,
-        event_id=event.id,
-    )
+def save_master_event(event: Event, master_event: MasterEvent):
+    data.data_master_event.write(master_event=master_event, event_id=event.id)
 
 
 def save_mapped_wa_event_with_ids(

@@ -50,5 +50,6 @@ def list_of_similar_cadets(cadet: Cadet) -> list:
 
     return similar_cadets
 
+
 def add_new_verified_cadet(cadet: Cadet):
     data.data_list_of_cadets.add(cadet)

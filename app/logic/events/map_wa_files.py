@@ -64,4 +64,4 @@ def add_wa_to_event_mapping(event: Event, wa_id: str):
     event_id = event.id
     wa_event_mapping = data.data_wa_event_mapping.read()
     wa_event_mapping.add_event(event_id=event_id, wa_id=wa_id)
-    data.data_wa_event_mapping.write(wa_event_mapping)
+    data.data_wa_event_mapping.write(wa_event_mapping, )

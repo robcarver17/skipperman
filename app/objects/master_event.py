@@ -1,33 +1,28 @@
 from copy import copy
 from dataclasses import dataclass
-from enum import Enum
 from typing import List
 
 import pandas as pd
 
-from app.data_access.configuration.configuration import ACTIVE_STATUS, CANCELLED_STATUS
-from app.objects.constants import missing_data
-from app.objects.field_list import PAYMENT_STATUS
 from app.objects.mapped_wa_event_no_ids import RowInMappedWAEventNoId
 from app.objects.mapped_wa_event_with_ids import (
     RowInMappedWAEventWithId,
     MappedWAEventWithIDs,
-    CADET_ID,
+    CADET_ID, RowStatus, STATUS_FIELD, cancelled_status, active_status,
+    deleted_status, get_status_from_row_of_mapped_wa_event_data,
 )
 from app.objects.utils import DictOfDictDiffs
 
-RowStatus = Enum("RowStatus", ["Cancelled", "Active", "Deleted"])
-STATUS_FIELD = "row_status"
-cancelled_status = RowStatus.Cancelled
-active_status = RowStatus.Active
-deleted_status = RowStatus.Deleted
-
 
 @dataclass
-class RowInMappedWAEventWithIdAndStatus:
+class RowInMasterEvent:
     cadet_id: str
     data_in_row: RowInMappedWAEventNoId
     status: RowStatus
+
+    def __eq__(self, other):
+        return other.cadet_id == self.cadet_id and other.status == self.status \
+               and len(self.dict_of_row_diffs_in_rowdata(other))==0
 
     def update_data_in_row(self, key, new_value):
         self.data_in_row[key] = new_value
@@ -63,13 +58,13 @@ class RowInMappedWAEventWithIdAndStatus:
         )
 
     def dict_of_row_diffs_in_rowdata(
-        self, other_row: "RowInMappedWAEventWithIdAndStatus"
+        self, other_row: "RowInMasterEvent"
     ) -> DictOfDictDiffs:
         return self.data_in_row.dict_of_row_diffs(other_row.data_in_row)
 
 
-class MappedWAEventWithoutDuplicatesAndWithStatus(MappedWAEventWithIDs):
-    def __init__(self, list_of_rows: List[RowInMappedWAEventWithIdAndStatus]):
+class MasterEvent(MappedWAEventWithIDs):
+    def __init__(self, list_of_rows: List[RowInMasterEvent]):
         super().__init__(list_of_rows)
 
     def __repr__(self):
@@ -78,14 +73,14 @@ class MappedWAEventWithoutDuplicatesAndWithStatus(MappedWAEventWithIDs):
     @classmethod
     def from_df(cls, some_df: pd.DataFrame):
         list_of_dicts = [
-            RowInMappedWAEventWithIdAndStatus.from_dict(df_row.to_dict())
+            RowInMasterEvent.from_dict(df_row.to_dict())
             for __, df_row in some_df.iterrows()
         ]
         return cls(list_of_dicts)
 
     def add_row(
         self,
-        row_of_mapped_wa_event_data_with_status: RowInMappedWAEventWithIdAndStatus,
+        row_of_mapped_wa_event_data_with_status: RowInMasterEvent,
     ):
         cadet_id = row_of_mapped_wa_event_data_with_status.cadet_id
 
@@ -93,14 +88,14 @@ class MappedWAEventWithoutDuplicatesAndWithStatus(MappedWAEventWithIDs):
             assert not self.is_cadet_id_in_event(cadet_id)
         except:
             raise Exception(
-                "Can't add a duplicate cadet ID to a WA event without duplication"
+                "Can't add a duplicate cadet ID to master event data"
             )
 
         self.append(row_of_mapped_wa_event_data_with_status)
 
     def update_row(
         self,
-        row_of_mapped_wa_event_data_with_id_and_status: RowInMappedWAEventWithIdAndStatus,
+        row_of_mapped_wa_event_data_with_id_and_status: RowInMasterEvent,
     ):
         cadet_id = row_of_mapped_wa_event_data_with_id_and_status.cadet_id
         list_of_cadet_ids = self.list_of_cadet_ids
@@ -132,7 +127,7 @@ class MappedWAEventWithoutDuplicatesAndWithStatus(MappedWAEventWithIDs):
         exclude_cancelled: bool = True,
         exclude_active: bool = False,
         exclude_deleted: bool = True,
-    ) -> "MappedWAEventWithoutDuplicatesAndWithStatus":
+    ) -> "MasterEvent":
 
         new_subset = copy(self)
         if exclude_active:
@@ -142,7 +137,7 @@ class MappedWAEventWithoutDuplicatesAndWithStatus(MappedWAEventWithIDs):
         if exclude_cancelled:
             new_subset = [row for row in self if row.status is not cancelled_status]
 
-        return MappedWAEventWithoutDuplicatesAndWithStatus(new_subset)
+        return MasterEvent(new_subset)
 
     def cadet_ids_missing_from_new_list(self, list_of_cadet_ids: list):
         current_ids = self.list_of_cadet_ids
@@ -167,49 +162,14 @@ class MappedWAEventWithoutDuplicatesAndWithStatus(MappedWAEventWithIDs):
         relevant_row.status = new_status
 
 
-def get_row_of_mapped_wa_event_data_with_status(
+def get_row_of_master_event_from_mapped_row_with_idx_and_status(
     row_in_mapped_wa_event_with_id: RowInMappedWAEventWithId,
-):
+) -> RowInMasterEvent:
     status = get_status_from_row_of_mapped_wa_event_data(row_in_mapped_wa_event_with_id)
     row_of_mapped_wa_event_data_with_status = (
-        RowInMappedWAEventWithIdAndStatus.from_row_in_mapped_wa_event_with_id(
+        RowInMasterEvent.from_row_in_mapped_wa_event_with_id(
             row_in_mapped_wa_event_with_id=row_in_mapped_wa_event_with_id, status=status
         )
     )
 
     return row_of_mapped_wa_event_data_with_status
-
-
-def get_status_from_row_of_mapped_wa_event_data(
-    row_of_mapped_wa_event_data: RowInMappedWAEventWithId,
-) -> RowStatus:
-
-    status_str = get_status_str_from_row_of_mapped_wa_event_data(
-        row_of_mapped_wa_event_data
-    )
-    if status_str in ACTIVE_STATUS:
-        return RowStatus.Active
-
-    if status_str in CANCELLED_STATUS:
-        return RowStatus.Cancelled
-
-    raise Exception(
-        "WA has used a status of %s in the mapped field %s, not recognised, update configuration.py"
-        % (status_str, PAYMENT_STATUS)
-    )
-
-
-def get_status_str_from_row_of_mapped_wa_event_data(
-    row_of_mapped_wa_event_data: RowInMappedWAEventWithId,
-) -> str:
-
-    status_field = row_of_mapped_wa_event_data.get_data_attribute_or_missing_data(
-        PAYMENT_STATUS
-    )
-    if status_field is missing_data:
-        raise Exception(
-            "Can't get status of entry because field %s is missing from mapping; check your field mapping"
-            % PAYMENT_STATUS
-        )
-
-    return status_field

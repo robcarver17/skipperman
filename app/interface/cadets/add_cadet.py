@@ -10,7 +10,7 @@ from app.interface.html.html import (
     html_joined_list_as_paragraphs,
 )
 from app.interface.flask.flash import html_error, flash_error
-from app.interface.html.components import back_button_only_with_text
+from app.interface.html.components import back_button_only_with_text, BACK_BUTTON_LABEL
 from app.interface.html.forms import (
     form_html_wrapper,
     html_button,
@@ -19,8 +19,7 @@ from app.interface.html.forms import (
     html_as_date,
 )
 from app.interface.cadets.constants import (
-    BACK_BUTTON_LABEL,
-    CHECK_BUTTON_LABEL,
+     CHECK_BUTTON_LABEL,
     FIRST_NAME,
     SURNAME,
     DOB,
@@ -32,33 +31,25 @@ from app.interface.cadets.view_cadets import display_view_of_cadets
 from app.logic.cadets.add_cadet import (
     add_new_verified_cadet,
     verify_cadet_and_warn,
-    HIGHEST_FEASIBLE_CADET_AGE,
-    LOWEST_FEASIBLE_CADET_AGE,
 )
 from app.objects.cadets import Cadet, default_cadet
 
 
-def get_view_for_add_cadet(state_data: StateDataForAction):
+def display_view_for_add_cadet(state_data: StateDataForAction):
     ## don't need to check get/post as will always be post
     last_button_pressed = state_data.last_button_pressed()
     if last_button_pressed == ADD_CADET_BUTTON_LABEL:
         ## hasn't been displayed before, will have no defaults
-        footer_buttons_html = get_footer_buttons(form_is_empty=True)
-        return display_add_cadet_form(
-            state_data, footer_buttons_html=footer_buttons_html
+        return get_add_cadet_form(
+            state_data=state_data,
+            first_time_displayed=True
         )
 
     elif last_button_pressed == CHECK_BUTTON_LABEL:
         ## verify results, display form again
-        verification_text, cadet = process_form_when_checking_cadet(state_data)
-        form_is_empty = cadet == default_cadet
-        footer_buttons_html = get_footer_buttons(form_is_empty)
-
-        return display_add_cadet_form(
-            state_data,
-            verification_text=verification_text,
-            cadet=cadet,
-            footer_buttons_html=footer_buttons_html,
+        return get_add_cadet_form(
+            state_data=state_data,
+            first_time_displayed=False
         )
 
     elif last_button_pressed == FINAL_ADD_BUTTON_LABEL:
@@ -71,35 +62,47 @@ def get_view_for_add_cadet(state_data: StateDataForAction):
         return html_error("Uknown button pressed - shouldn't happen!")
 
 
-def reset_stage_and_return_previous(
-    state_data: StateDataForAction, error_msg: str = ""
-):
-    if error_msg is not "":
-        flash_error(error_msg)
-    state_data.clear_session_data_for_action_and_reset_stage()
-    return display_view_of_cadets(state_data)
+
+def get_add_cadet_form(    state_data: StateDataForAction,
+                           first_time_displayed: bool = True):
+    if first_time_displayed:
+        footer_buttons_html = get_footer_buttons_for_add_cadet_form(form_is_empty=True)
+        return get_add_cadet_form_with_information_passed(
+            state_data, footer_buttons_html=footer_buttons_html
+        )
+    else:
+        verification_text, cadet = verify_form_with_cadet_details(state_data)
+        form_is_empty = cadet == default_cadet
+        footer_buttons_html = get_footer_buttons_for_add_cadet_form(form_is_empty)
+
+        return get_add_cadet_form_with_information_passed(
+            state_data,
+            verification_text=verification_text,
+            cadet=cadet,
+            footer_buttons_html=footer_buttons_html,
+        )
 
 
-def display_add_cadet_form(
+def get_add_cadet_form_with_information_passed(
     state_data: StateDataForAction,
     cadet: Cadet = default_cadet,
     verification_text: Html = empty_html,
     footer_buttons_html: Html = empty_html,
-    header_text: str = "Add a new cadet"
+    header_text: str = "Add a new cadet",
 ):
 
-    html_inside_form = get_html_inside_form(
+    html_inside_form = get_html_inside_add_cadet_form(
         cadet=cadet,
         verification_text=verification_text,
         footer_buttons_html=footer_buttons_html,
-        header_text=header_text
+        header_text=header_text,
     )
     form = form_html_wrapper(state_data.current_url)
 
     return form.wrap_around(html_inside_form)
 
 
-def get_html_inside_form(
+def get_html_inside_add_cadet_form(
     cadet: Cadet = default_cadet,
     verification_text: Html = empty_html,
     footer_buttons_html: Html = empty_html,
@@ -138,7 +141,7 @@ def form_fields_for_add_cadet(cadet: Cadet):
     return form_fields
 
 
-def process_form_when_checking_cadet(
+def verify_form_with_cadet_details(
     state_data: StateDataForAction, default=default_cadet
 ) -> Tuple[Html, Cadet]:
     try:
@@ -154,8 +157,8 @@ def process_form_when_checking_cadet(
 
 
 def get_cadet_from_form(state_data: StateDataForAction) -> Cadet:
-    first_name = state_data.value_from_form(FIRST_NAME)
-    surname = state_data.value_from_form(SURNAME)
+    first_name = state_data.value_from_form(FIRST_NAME).strip().title()
+    surname = state_data.value_from_form(SURNAME).strip().title()
     date_of_birth = html_as_date(state_data.value_from_form(DOB))
 
     return Cadet(first_name=first_name, surname=surname, date_of_birth=date_of_birth)
@@ -163,7 +166,7 @@ def get_cadet_from_form(state_data: StateDataForAction) -> Cadet:
 
 def process_form_when_cadet_verified(state_data: StateDataForAction):
     try:
-        cadet=add_cadet_from_form_to_data(state_data)
+        cadet = add_cadet_from_form_to_data(state_data)
     except Exception as e:
         ## should never happen as we have to be verified to get here, but still
         return html_error(
@@ -171,18 +174,19 @@ def process_form_when_cadet_verified(state_data: StateDataForAction):
             % str(e)
         )
 
-    state_data.clear_session_data_for_action_and_reset_stage()
     return back_button_only_with_text(
         state_data=state_data, some_text="Added cadet %s" % str(cadet)
     )
 
-def add_cadet_from_form_to_data(state_data:StateDataForAction):
+
+def add_cadet_from_form_to_data(state_data: StateDataForAction):
     cadet = get_cadet_from_form(state_data)
     add_new_verified_cadet(cadet)
 
     return cadet
 
-def get_footer_buttons(form_is_empty: bool):
+
+def get_footer_buttons_for_add_cadet_form(form_is_empty: bool):
     back = html_button(BACK_BUTTON_LABEL)
     final_submit = html_button(FINAL_ADD_BUTTON_LABEL)
     check_submit = html_button(CHECK_BUTTON_LABEL)
@@ -190,3 +194,12 @@ def get_footer_buttons(form_is_empty: bool):
         return html_joined_list([back, check_submit])
     else:
         return html_joined_list([back, check_submit, final_submit])
+
+
+def reset_stage_and_return_previous(
+    state_data: StateDataForAction, error_msg: str = ""
+):
+    if error_msg is not "":
+        flash_error(error_msg)
+    state_data.clear_session_data_for_action_and_reset_stage()
+    return display_view_of_cadets(state_data)

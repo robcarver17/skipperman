@@ -77,7 +77,7 @@ def _translate_df_timestamp_to_datetime(df_timestamp) -> datetime.date:
     )
 
 
-def add_row_data_with_id_included(
+def add_row_data_with_id_included_and_delete_from_unmapped_data(
     event: Event, new_row: RowInMappedWAEventNoId, cadet_id: str
 ):
     new_row_with_cadet_id = RowInMappedWAEventWithId(

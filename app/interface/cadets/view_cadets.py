@@ -6,7 +6,6 @@ from app.logic.cadets.view_cadets import SORT_BY_SURNAME, get_list_of_cadets
 
 add_button = html_button(ADD_CADET_BUTTON_LABEL)
 
-
 def display_view_of_cadets(
     state_data: StateDataForAction, sort_order=SORT_BY_SURNAME
 ) -> Html:
@@ -37,7 +36,6 @@ def display_list_of_cadets_with_buttons(sort_order=SORT_BY_SURNAME) -> Html:
     list_with_buttons_as_single_str = ListOfHtml(list_with_buttons).join_as_lines()
 
     return Html(list_with_buttons_as_single_str)
-
 
 def row_of_form_for_cadets_with_buttons(cadet) -> Html:
     return html_button(str(cadet))

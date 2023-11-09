@@ -1,6 +1,5 @@
-from app.interface.events.constants import BACK_BUTTON_LABEL
 from app.interface.flask.state_for_action import StateDataForAction
-from app.interface.html.forms import form_html_wrapper, html_button
+from app.interface.html.forms import form_html_wrapper, html_button, BACK_BUTTON_LABEL
 from app.interface.html.html import (
     Html,
     html_joined_list_as_paragraphs,

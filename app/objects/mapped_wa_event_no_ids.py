@@ -11,6 +11,7 @@ from app.objects.field_list import REGISTRATION_DATE
 
 
 class RowInMappedWAEventNoId(dict):
+
     @classmethod
     def from_external_dict(cls, some_dict: dict):
         some_dict = clean_up_dict_with_nans(some_dict)

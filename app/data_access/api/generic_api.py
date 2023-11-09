@@ -4,7 +4,7 @@ from app.data_access.classes.wa_event_mapping import DataWAEventMapping
 from app.data_access.classes.wa_field_mapping import DataWAFieldMapping
 from app.data_access.classes.mapped_wa_event import (
     DataMappedWAEventWithIDs,
-    DataMappedWAEventWithoutDuplicatesAndWithStatus,
+    DataMasterEvent,
 )
 from app.data_access.classes.cadets_with_groups_for_event import (
     DataListOfCadetsWithGroups,
@@ -40,9 +40,9 @@ class GenericDataApi(object):
         raise NotImplemented
 
     @property
-    def data_mapped_wa_event_without_duplicates_and_with_status(
+    def data_master_event(
         self,
-    ) -> DataMappedWAEventWithoutDuplicatesAndWithStatus:
+    ) -> DataMasterEvent:
         raise NotImplemented
 
     @property

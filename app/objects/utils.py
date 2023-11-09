@@ -1,3 +1,4 @@
+from collections import defaultdict
 import datetime
 import math
 from dataclasses import dataclass
@@ -131,3 +132,12 @@ def clean_up_dict_with_nans(some_dict) -> dict:
             ## another type
             pass
     return some_dict
+
+
+def list_duplicate_indices(seq):
+    tally = defaultdict(list)
+    for i,item in enumerate(seq):
+        tally[item].append(i)
+    return [locs for locs in tally.values()
+                            if len(locs)>1]
+

@@ -1,6 +1,6 @@
 from app.logic.data import DataAndInterface
 from app.logic.events.load_and_save_wa_mapped_events import (
-    load_mapped_wa_event_data_without_duplicates,
+    load_master_event,
 )
 from app.logic.cadets.load_and_save_master_list_of_cadets import (
     load_master_list_of_cadets,
@@ -51,7 +51,7 @@ def get_list_of_cadet_ids_in_mapped_wa_event(
     exclude_active: bool = False,
 ) -> list:
     mapped_wa_event_data_without_duplicates = (
-        load_mapped_wa_event_data_without_duplicates(
+        load_master_event(
             event=event, data_and_interface=data_and_interface
         )
     )

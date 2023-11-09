@@ -2,6 +2,8 @@ from app.interface.events.constants import EVENT
 from app.interface.flask.state_for_action import StateDataForAction
 from app.objects.events import Event
 from app.logic.events.view_events import get_list_of_events
+from app.interface.html.forms import html_button
+from app.interface.html.html import Html
 
 
 def confirm_event_exists(event_selected):
@@ -30,3 +32,8 @@ def get_event_from_list_of_events(event_selected: str) -> Event:
 
     event_idx = list_of_events_as_str.index(event_selected)
     return list_of_events[event_idx]
+
+
+
+def row_of_form_for_event_with_buttons(event) -> Html:
+    return html_button(str(event))

@@ -1,9 +1,11 @@
 from app.interface.flask.state_for_action import StateDataForAction
 from app.logic.events.view_events import get_list_of_events, SORT_BY_START_DSC
+
 from app.interface.html.forms import form_html_wrapper, html_button
 from app.interface.html.html import Html, ListOfHtml
-from app.interface.events.constants import ADD_EVENT_BUTTON_LABEL, sort_buttons
 
+from app.interface.events.constants import ADD_EVENT_BUTTON_LABEL, sort_buttons
+from app.interface.events.utils import row_of_form_for_event_with_buttons
 
 def display_view_of_events(
     state_data: StateDataForAction, sort_by: str = SORT_BY_START_DSC
@@ -36,7 +38,3 @@ def display_list_of_events_with_buttons(sort_by=SORT_BY_START_DSC) -> Html:
     list_with_buttons_as_single_str = ListOfHtml(list_with_buttons).join_as_lines()
 
     return Html(list_with_buttons_as_single_str)
-
-
-def row_of_form_for_event_with_buttons(event) -> Html:
-    return html_button(str(event))

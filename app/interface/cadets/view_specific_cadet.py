@@ -11,7 +11,7 @@ from app.objects.cadets import Cadet
 # FIXME ADD DELETE / EDIT OPTIONS
 
 
-def post_view_of_cadets_with_cadet_selected(state_data: StateDataForAction):
+def display_view_for_specific_cadet(state_data: StateDataForAction):
     cadet_selected = state_data.last_button_pressed()
 
     try:
@@ -53,7 +53,8 @@ def display_form_for_selected_cadet(
 ):
     return Html("%s %s" % (state_data.stage, get_specific_cadet_from_state(state_data)))
 
-def get_cadet_from_list_of_cadets(cadet_selected:str) -> Cadet:
+
+def get_cadet_from_list_of_cadets(cadet_selected: str) -> Cadet:
     list_of_cadets = get_list_of_cadets()
     list_of_cadets_as_str = [str(cadet) for cadet in list_of_cadets]
 

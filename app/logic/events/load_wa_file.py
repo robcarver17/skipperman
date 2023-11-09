@@ -47,7 +47,7 @@ def get_event_id_from_wa_df(wa_as_df: pd.DataFrame) -> str:
 
 def does_raw_event_file_exist(event_id: str):
     try:
-        filename = get_raw_event_filename(event_id)
+        filename = get_staged_file_raw_event_filename(event_id)
         with open(filename, "rb") as f:
             pass
         return True
@@ -56,27 +56,19 @@ def does_raw_event_file_exist(event_id: str):
 
 
 def delete_raw_event_upload_with_event_id(event_id: str):
-    filename = get_raw_event_filename(event_id)
+    filename = get_staged_file_raw_event_filename(event_id)
     try:
         os.remove(filename)
     except:
         pass
 
 
-def save_raw_event_upload_with_event_id(original_filename: str, event_id: str):
+def save_staged_file_of_raw_event_upload_with_event_id(original_filename: str, event_id: str):
     print(original_filename)
-    new_filename = get_raw_event_filename(event_id)
+    new_filename = get_staged_file_raw_event_filename(event_id)
     shutil.copy(original_filename, new_filename)
 
 
-def get_raw_event_filename(event_id: str):
+def get_staged_file_raw_event_filename(event_id: str):
     return os.path.join(staging_directory, "raw_event_%s" % event_id)
 
-
-def save_temporary_new_rows_file(new_rows, event_id: str):
-    new_filename = get_raw_event_filename(event_id)
-    shutil.copy(original_filename, new_filename)
-
-
-def get_temporary_new_rows_filename(event_id: str):
-    return os.path.join(staging_directory, "new_rows_%s" % event_id)

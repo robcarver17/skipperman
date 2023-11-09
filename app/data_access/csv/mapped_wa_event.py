@@ -4,15 +4,15 @@ from app.data_access.csv.utils import (
     transform_df_from_str_to_dates,
     transform_df_from_dates_to_str,
 )
-from app.objects.mapped_wa_event_with_id_and_status import (
-    MappedWAEventWithoutDuplicatesAndWithStatus,
+from app.objects.master_event import (
+    MasterEvent,
 )
 from app.objects.mapped_wa_event_no_ids import MappedWAEventNoIDs
 from app.objects.mapped_wa_event_with_ids import MappedWAEventWithIDs
 from app.data_access.classes.mapped_wa_event import (
     DataMappedWAEventWithNoIDs,
     DataMappedWAEventWithIDs,
-    DataMappedWAEventWithoutDuplicatesAndWithStatus,
+    DataMasterEvent,
 )
 
 
@@ -74,18 +74,18 @@ class CsvDataMappedWAEventWithIDs(GenericCsvData, DataMappedWAEventWithIDs):
         )
 
 
-class CsvDataMappedWAEventWithoutDuplicatesAndWithStatus(
-    GenericCsvData, DataMappedWAEventWithoutDuplicatesAndWithStatus
+class CsvDataMasterEvent(
+    GenericCsvData, DataMasterEvent
 ):
-    def read(self, event_id: str) -> MappedWAEventWithoutDuplicatesAndWithStatus:
+    def read(self, event_id: str) -> MasterEvent:
         path_and_filename = self.path_and_filename_for_eventid(event_id)
         try:
             mapped_wa_event_df = pd.read_csv(path_and_filename)
         except FileNotFoundError:
-            return MappedWAEventWithoutDuplicatesAndWithStatus.create_empty()
+            return MasterEvent.create_empty()
 
         transform_df_from_str_to_dates(mapped_wa_event_df)
-        mapped_wa_event = MappedWAEventWithoutDuplicatesAndWithStatus.from_df(
+        mapped_wa_event = MasterEvent.from_df(
             mapped_wa_event_df
         )
 
@@ -94,19 +94,19 @@ class CsvDataMappedWAEventWithoutDuplicatesAndWithStatus(
     def write(
         self,
         event_id: str,
-        mapped_wa_event_without_duplicates: MappedWAEventWithoutDuplicatesAndWithStatus,
+        master_event: MasterEvent,
     ):
         path_and_filename = self.path_and_filename_for_eventid(event_id)
-        if len(mapped_wa_event_without_duplicates) == 0:
+        if len(master_event) == 0:
             self.delete(path_and_filename)
         else:
-            df = mapped_wa_event_without_duplicates.to_df()
+            df = master_event.to_df()
             transform_df_from_dates_to_str(df)
 
             df.to_csv(path_and_filename, index=False)
 
     def path_and_filename_for_eventid(self, event_id: str):
         return self.get_path_and_filename_for_named_csv_file(
-            "mapped_wa_event_without_duplicates_and_with_status",
+            "master_event",
             additional_file_identifiers=event_id,
         )

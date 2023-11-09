@@ -1,14 +1,18 @@
 import datetime
 from dataclasses import dataclass
+from enum import Enum
 from typing import List
 
 import pandas as pd
 
+from app.data_access.configuration.configuration import ACTIVE_STATUS, CANCELLED_STATUS
 from app.objects.constants import missing_data
+from app.objects.field_list import PAYMENT_STATUS
 from app.objects.mapped_wa_event_no_ids import (
     RowInMappedWAEventNoId,
     extract_list_of_entry_timestamps_from_existing_wa_event,
 )
+from app.objects.cadets import ListOfCadets
 
 CADET_ID = "cadet_id"
 
@@ -40,6 +44,53 @@ class RowInMappedWAEventWithId:
     def registration_date(self) -> datetime.datetime:
         return self.data_in_row.registration_date
 
+    @property
+    def cancelled_or_deleted(self) -> bool:
+        status = get_status_from_row_of_mapped_wa_event_data(self)
+        return status in [cancelled_status, deleted_status]
+
+RowStatus = Enum("RowStatus", ["Cancelled", "Active", "Deleted"])
+
+
+def get_status_from_row_of_mapped_wa_event_data(
+    row_of_mapped_wa_event_data: RowInMappedWAEventWithId,
+) -> RowStatus:
+
+    status_str = get_status_str_from_row_of_mapped_wa_event_data(
+        row_of_mapped_wa_event_data
+    )
+    if status_str in ACTIVE_STATUS:
+        return RowStatus.Active
+
+    if status_str in CANCELLED_STATUS:
+        return RowStatus.Cancelled
+
+    raise Exception(
+        "WA has used a status of %s in the mapped field %s, not recognised, update configuration.py"
+        % (status_str, PAYMENT_STATUS)
+    )
+
+
+def get_status_str_from_row_of_mapped_wa_event_data(
+    row_of_mapped_wa_event_data: RowInMappedWAEventWithId,
+) -> str:
+
+    status_field = row_of_mapped_wa_event_data.get_data_attribute_or_missing_data(
+        PAYMENT_STATUS
+    )
+    if status_field is missing_data:
+        raise Exception(
+            "Can't get status of entry because field %s is missing from mapping; check your field mapping"
+            % PAYMENT_STATUS
+        )
+
+    return status_field
+
+
+STATUS_FIELD = "row_status"
+cancelled_status = RowStatus.Cancelled
+active_status = RowStatus.Active
+deleted_status = RowStatus.Deleted
 
 class MappedWAEventWithIDs(list):
     def __init__(self, list_of_rows: List[RowInMappedWAEventWithId]):
@@ -110,10 +161,45 @@ class MappedWAEventWithIDs(list):
     def is_cadet_id_in_event(self, cadet_id: str) -> bool:
         return cadet_id in self.list_of_cadet_ids
 
+    def index_of_duplicate_cadet_ids_ignore_cancelled_and_deleted(self):
+        list_of_cadet_ids = self.list_of_cadet_ids
+        duplicate_id_list = list_of_cadet_ids.duplicate_indices()
+        list_of_cancelled_or_deleted_id = self._index_of_rows_that_are_cancelled_or_deleted()
+
+        return filter_duplicate_list_to_remove_cancelled_or_delete(
+            duplicate_id_list=duplicate_id_list,
+            list_of_cancelled_or_deleted_id=list_of_cancelled_or_deleted_id
+        )
+
+    def _index_of_rows_that_are_cancelled_or_deleted(self) -> list:
+        return [idx for idx,row in enumerate(self) if row.cancelled_or_deleted]
+
     @property
-    def list_of_cadet_ids(self) -> list:
-        return [row.cadet_id for row in self]
+    def list_of_cadet_ids(self) -> ListOfCadets:
+        return ListOfCadets([row.cadet_id for row in self])
+
 
     @classmethod
     def create_empty(cls):
         return cls([])
+
+
+
+def filter_duplicate_list_to_remove_cancelled_or_delete(
+            duplicate_id_list: list,
+            list_of_cancelled_or_deleted_id: list
+        ):
+
+    new_list_of_duplicates = []
+    while len(duplicate_id_list)>0:
+        next_duplicate_group = duplicate_id_list.pop()
+        next_duplicate_group_without_cancelled_or_deleted = [idx for idx in next_duplicate_group
+                                                             if idx not in list_of_cancelled_or_deleted_id]
+
+        if len(next_duplicate_group_without_cancelled_or_deleted)>1:
+            ## if 0 or 1 then no duplicates left
+            new_list_of_duplicates.append(next_duplicate_group_without_cancelled_or_deleted)
+
+    return new_list_of_duplicates
+
+

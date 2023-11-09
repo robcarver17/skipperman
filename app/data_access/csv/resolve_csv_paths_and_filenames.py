@@ -45,9 +45,9 @@ _dict_of_filenames_and_paths = dict(
     wa_field_mapping=("event_field_mapping", "wa_field_mapping_for_event_%s.csv"),
     mapped_wa_event_with_no_ids=("mapped_events", "mapped_wa_event_with_no_ids_%s.csv"),
     mapped_wa_event_with_ids=("mapped_events", "mapped_wa_event_with_ids_%s.csv"),
-    mapped_wa_event_without_duplicates_and_with_status=(
+    master_event=(
         "mapped_events",
-        "mapped_wa_event_without_duplicates_and_with_status_%s.csv",
+        "master_event_%s.csv",
     ),
     cadets_with_groups_for_event=(
         "cadets_with_groups_for_event",

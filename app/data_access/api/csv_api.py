@@ -6,7 +6,7 @@ from app.data_access.csv.wa_field_mapping import CsvDataWAFieldMapping
 from app.data_access.csv.mapped_wa_event import (
     CsvDataMappedWAEventWithNoIDs,
     CsvDataMappedWAEventWithIDs,
-    CsvDataMappedWAEventWithoutDuplicatesAndWithStatus,
+    CsvDataMasterEvent,
 )
 from app.data_access.csv.cadets_with_groups_for_event import (
     CsvDataListOfCadetsWithGroups,
@@ -42,10 +42,10 @@ class CsvDataApi(GenericDataApi):
         return CsvDataMappedWAEventWithIDs(master_data_path=self.master_data_path)
 
     @property
-    def data_mapped_wa_event_without_duplicates_and_with_status(
+    def data_master_event(
         self,
-    ) -> CsvDataMappedWAEventWithoutDuplicatesAndWithStatus:
-        return CsvDataMappedWAEventWithoutDuplicatesAndWithStatus(
+    ) -> CsvDataMasterEvent:
+        return CsvDataMasterEvent(
             master_data_path=self.master_data_path
         )
 

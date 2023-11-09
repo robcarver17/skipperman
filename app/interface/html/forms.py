@@ -138,3 +138,6 @@ def html_file_input(input_name: str = "file", accept: str = arg_not_passed):
 
 def html_as_date(some_html: str) -> datetime.date:
     return datetime.datetime.strptime(some_html, HTML_DATE_FORMAT).date()
+
+
+BACK_BUTTON_LABEL = "Back"

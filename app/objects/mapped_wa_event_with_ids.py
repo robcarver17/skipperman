@@ -92,6 +92,8 @@ cancelled_status = RowStatus.Cancelled
 active_status = RowStatus.Active
 deleted_status = RowStatus.Deleted
 
+all_possible_status = [cancelled_status, active_status, deleted_status]
+
 class MappedWAEventWithIDs(list):
     def __init__(self, list_of_rows: List[RowInMappedWAEventWithId]):
         super().__init__(list_of_rows)

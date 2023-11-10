@@ -1,3 +1,4 @@
+from typing import Callable
 import datetime
 
 from app.interface.html.html import Html, HtmlWrapper
@@ -112,18 +113,19 @@ def html_single_radio_button(
         option_label,
     )
 
+def html_int_input(input_label: str,
+                   input_name: str,
+                   value: int = arg_not_passed,
+                   ):
+    if value is not arg_not_passed:
+        value_html = 'value="%d"' % value
+    else:
+        value_html = ""
 
-def html_dropdown_input(input_label: str, input_name: str, dict_of_options: dict):
-    ## FIXME NEEDS DEBUGGING
-    options_str_as_list = [
-        '<option value="%s">%s</option>' % (option_returned_value, option_label)
-        for option_label, option_returned_value in dict_of_options.items()
-    ]
-    options_str = " ".join(options_str_as_list)
-    value_html = ""
     return Html(
-        '%s <select name="%s"> %s </select' % (input_label, input_name, options_str)
+        '%s: <input type="number" name="%s" %s />' % (input_label, input_name, value_html)
     )
+
 
 
 def html_file_input(input_name: str = "file", accept: str = arg_not_passed):
@@ -141,3 +143,5 @@ def html_as_date(some_html: str) -> datetime.date:
 
 
 BACK_BUTTON_LABEL = "Back"
+
+

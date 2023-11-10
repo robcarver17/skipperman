@@ -65,3 +65,6 @@ EVENT_START_DATE = "event_start_date"
 EVENT_END_DATE = "event_end_date"
 EVENT_TYPE = "event_type"
 WA_FILE = "file"
+
+## field names row
+ROW_STATUS="row_status"

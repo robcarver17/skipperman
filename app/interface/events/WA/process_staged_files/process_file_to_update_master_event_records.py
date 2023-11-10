@@ -1,15 +1,14 @@
-from copy import copy
+from app.interface.events.WA.process_staged_files.forms_interactively_update_modified_event_records import \
+    display_form_for_update_to_existing_row_of_event_data, update_mapped_wa_event_data_with_new_data, \
+    update_mapped_wa_event_data_with_form_data,increment_and_save_id_in_event_data, get_current_row_id_in_event_data
+
 
 from app.interface.html.html import Html
-from app.interface.html.components import back_button_only_with_text, BACK_BUTTON_LABEL
-
 from app.interface.flask.state_for_action import StateDataForAction
 
 from app.interface.events.utils import get_event_from_state
-from app.interface.events.view_events import display_view_of_events
 from app.interface.events.constants import (
-ROW_IN_EVENT_DATA, WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE,
-USE_NEW_DATA, USE_DATA_IN_FORM, USE_ORIGINAL_DATA
+    USE_NEW_DATA, USE_DATA_IN_FORM, USE_ORIGINAL_DATA
 )
 
 from app.logic.events.load_and_save_wa_mapped_events import (
@@ -17,24 +16,21 @@ from app.logic.events.load_and_save_wa_mapped_events import (
 )
 from app.logic.events.update_master_event_data import \
     report_on_missing_data_from_mapped_wa_event_data_and_save_to_master_event, get_row_from_event_file_with_ids, \
-    add_new_row_to_master_event_data, message_about_status_change
+    add_new_row_to_master_event_data
 
-from app.objects.constants import  NoMoreData, missing_data
+from app.objects.constants import  NoMoreData
 from app.objects.mapped_wa_event_with_ids import RowInMappedWAEventWithId
 from app.objects.events import Event
 from app.objects.master_event import get_row_of_master_event_from_mapped_row_with_idx_and_status
-from app.objects.cadets import cadet_name_from_id
+
 
 def process_file_to_update_master_event_records(state_data: StateDataForAction)-> Html:
-    ## we do this now so if there is no interaction required when the back button
-    ##   appears at the end we know how to post respond to it
-    state_data.stage = WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE
     event = get_event_from_state(state_data)
     report_on_missing_data_from_mapped_wa_event_data_and_save_to_master_event(event)
 
-    return process_updates_to_event_data(state_data)
+    return process_updates_to_master_event_data(state_data)
 
-def process_updates_to_event_data(state_data: StateDataForAction) -> Html:
+def process_updates_to_master_event_data(state_data: StateDataForAction) -> Html:
     event = get_event_from_state(state_data)
     row_idx = get_current_row_id_in_event_data(state_data)
 
@@ -43,7 +39,7 @@ def process_updates_to_event_data(state_data: StateDataForAction) -> Html:
             get_row_from_event_file_with_ids(event, row_idx=row_idx)
         )
     except NoMoreData:
-        return Html("Finished ") ## not actually used since nothing more to do
+        return action_when_finished(state_data=state_data)
 
     if row_in_mapped_wa_event_with_id.cancelled_or_deleted:
         return iterate_to_next_row_of_mapped_wa_data(state_data)
@@ -111,24 +107,12 @@ def process_update_to_existing_row_of_event_data(
 
     if new_row_in_mapped_wa_event_with_status==existing_row_in_master_event:
         ## nothing to do
-        print("No change to %s" % (existing_row_in_master_event))
+        print("No change to %s" % (str(existing_row_in_master_event)))
         return iterate_to_next_row_of_mapped_wa_data(state_data)
-
-    status_change_message = message_about_status_change(existing_row_in_master_event=existing_row_in_master_event,
-                                                       new_row_in_mapped_wa_event_with_status=new_row_in_mapped_wa_event_with_status)
-
-    dict_of_dict_diffs = (
-        existing_row_in_master_event.dict_of_row_diffs_in_rowdata(
-            new_row_in_mapped_wa_event_with_status
-        )
-    )
-
-    for key, diff in dict_of_dict_diffs.items():
-        thing = (key, diff.old_value, diff.new_value)
-
-def buttons_for_update_row():
-    # USE_NEW_DATA, USE_DATA_IN_FORM, USE_ORIGINAL_DATA
-    #
+    else:
+        return display_form_for_update_to_existing_row_of_event_data(state_data=state_data,
+                                                                     existing_row_in_master_event=existing_row_in_master_event,
+                                                                     new_row_in_mapped_wa_event_with_status=new_row_in_mapped_wa_event_with_status)
 
 
 def post_response_of_interactive_row_updating_of_mapped_wa_event_data(
@@ -136,29 +120,27 @@ def post_response_of_interactive_row_updating_of_mapped_wa_event_data(
 ) -> Html:
     ## Called by generate_page
     last_button_pressed = state_data.last_button_pressed()
+    if last_button_pressed == USE_ORIGINAL_DATA:
+        ## nothing to do, no change to master file
+        print("Using original data")
+    elif last_button_pressed==USE_NEW_DATA:
+        print("using new data")
+        update_mapped_wa_event_data_with_new_data(state_data)
+    elif last_button_pressed==USE_DATA_IN_FORM:
+        print("Updating from form data")
+        update_mapped_wa_event_data_with_form_data(state_data)
 
-    if last_button_pressed ==BACK_BUTTON_LABEL:
-        ## Needs to have back button even though one not created in form as we use when finished
-        state_data.clear_session_data_for_action_and_reset_stage()
-    # USE_NEW_DATA, USE_DATA_IN_FORM, USE_ORIGINAL_DATA
+    return iterate_to_next_row_of_mapped_wa_data(state_data)
+
 
 def iterate_to_next_row_of_mapped_wa_data(state_data: StateDataForAction)-> Html:
     ## we don't delete from the event data with ID, but increment a row marker
     increment_and_save_id_in_event_data(state_data)
     ## next row until file finished
-    return process_updates_to_event_data(state_data)
+    return process_updates_to_master_event_data(state_data)
 
-
-
-
-def increment_and_save_id_in_event_data(state_data: StateDataForAction):
-    id = get_current_row_id_in_event_data(state_data)
-    id+=1
-    state_data.set_value(ROW_IN_EVENT_DATA, id)
-
-def get_current_row_id_in_event_data(state_data: StateDataForAction):
-    id = state_data.get_value(ROW_IN_EVENT_DATA)
-    if id is missing_data:
-        return 0
+def action_when_finished(state_data: StateDataForAction):
+    ## nothing more required and clear up handled by calling functions
+    return Html()
 
 

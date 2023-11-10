@@ -96,13 +96,15 @@ def add_new_row_to_master_event_data(
     )
 
 
-def message_about_status_change(existing_row_in_master_event: RowInMasterEvent,
-                                new_row_in_mapped_wa_event_with_status: RowInMasterEvent)->str:
+NO_STATUS_CHANGE = object()
+
+def new_status_and_status_message(existing_row_in_master_event: RowInMasterEvent,
+                                  new_row_in_mapped_wa_event_with_status: RowInMasterEvent)-> tuple:
     old_status = existing_row_in_master_event.status
     new_status = new_row_in_mapped_wa_event_with_status.status
 
     if old_status==new_status:
-        return ""
+        return new_status, NO_STATUS_CHANGE
 
     old_status_name = old_status.name
     new_status_name = new_status.name
@@ -128,4 +130,21 @@ def message_about_status_change(existing_row_in_master_event: RowInMasterEvent,
             "Cadet status change from %s to %s, shouldn't happen! Check very carefully" % \
             (old_status_name, new_status_name)
 
-    return status_message
+    return new_status,status_message
+
+
+def update_row_in_master_event_data(
+    event: Event, new_row_in_mapped_wa_event_with_status: RowInMasterEvent
+):
+
+    master_event = load_master_event(
+        event
+    )
+    print("Updating event %s with existing row new values %s" % (str(event), str(new_row_in_mapped_wa_event_with_status)))
+
+    master_event.update_row(row_of_mapped_wa_event_data_with_id_and_status=new_row_in_mapped_wa_event_with_status)
+
+    save_master_event(
+        event=event, master_event=master_event
+    )
+

@@ -16,10 +16,6 @@ from app.interface.events.WA.process_staged_files.process_file_to_remove_duplica
     process_file_with_ids_to_remove_duplicate_cadets,
 )
 from app.interface.events.utils import get_event_from_state
-from app.interface.events.WA.utils import (
-    reset_stage_and_return_previous,
-    delete_staged_file_for_current_event,
-)
 from app.interface.events.constants import (
     WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE,
     CHECK_CADET_BUTTON_LABEL,
@@ -46,10 +42,15 @@ def process_rows_of_unmapped_data_and_proceed_to_process_file_with_ids(
     state_data: StateDataForAction,
 ) -> Html:
     event = get_event_from_state(state_data)
+    print("Looping through allocating IDs on WA file without IDs")
+    input("Press enter to continue")
+
     try:
         next_row = get_first_unmapped_row_for_event(event)
+        print("On row %s" % str(next_row))
         return process_next_row(next_row=next_row, state_data=state_data)
     except NoMoreData:
+        print("Finished looping through allocating IDs")
         return action_when_reached_end_of_data(state_data)
 
 
@@ -60,18 +61,18 @@ def process_next_row(
         cadet = get_cadet_data_from_row_of_mapped_data_no_checks(next_row)
     except Exception as e:
         ## Mapping has gone badly wrong, or date field corrupted
-        return action_to_take_on_error(
-            state_data=state_data,
-            error_msg="Error code %s cannot identify cadet from row %s: file is probably corrupt re-upload"
+        raise Exception("Error code %s cannot identify cadet from row %s: file is probably corrupt re-upload"
             % (str(e), str(next_row)),
         )
 
     list_of_cadets = get_list_of_cadets()
     if cadet in list_of_cadets:
         ## MATCHED
+        print("Cadet %s matched" % str(cadet))
         return process_row_when_cadet_matched(state_data=state_data, cadet=cadet)
     else:
         ## NOT MATCHED
+        print("Cadet %s not matched" % str(cadet))
         return process_row_when_cadet_unmatched(state_data=state_data, cadet=cadet)
 
 
@@ -142,9 +143,8 @@ def process_form_when_verified_cadet_to_be_added(
     try:
         cadet = add_cadet_from_form_to_data(state_data=state_data)
     except Exception as e:
-        return action_to_take_on_error(
-            state_data=state_data,
-            error_msg="Problem adding cadet to data code %s CONTACT SUPPORT" % str(e),
+        raise Exception(
+            "Problem adding cadet to data code %s CONTACT SUPPORT" % str(e),
         )
 
     return process_row_when_cadet_matched(state_data=state_data, cadet=cadet)
@@ -156,9 +156,7 @@ def process_form_when_existing_cadet_chosen(state_data: StateDataForAction) -> H
     try:
         confirm_cadet_exists(cadet_selected)
     except:
-        return action_to_take_on_error(
-            state_data=state_data,
-            error_msg="Cadet selected no longer exists - file corruption or someone deleted?",
+        raise Exception("Cadet selected no longer exists - file corruption or someone deleted?",
         )
 
     cadet = get_cadet_from_list_of_cadets(cadet_selected)
@@ -168,11 +166,7 @@ def process_form_when_existing_cadet_chosen(state_data: StateDataForAction) -> H
 
 def action_when_reached_end_of_data(state_data: StateDataForAction) -> Html:
     ## We now have dealt with the staging file, plus we have no unmatched events
-    delete_staged_file_for_current_event(state_data)
 
     return process_file_with_ids_to_remove_duplicate_cadets(state_data)
 
 
-def action_to_take_on_error(state_data: StateDataForAction, error_msg: str):
-    delete_staged_file_for_current_event(state_data)
-    return reset_stage_and_return_previous(state_data=state_data, error_msg=error_msg)

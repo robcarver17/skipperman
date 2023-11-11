@@ -68,7 +68,7 @@ def _get_session_data_dict_for_action(action_name: str) -> dict:
     all_action_state_data = _get_all_action_state_data_from_session()
     if action_name not in all_action_state_data:
         all_action_state_data[action_name] = {}
-
+    print(all_action_state_data[action_name])
     return all_action_state_data[action_name]
 
 

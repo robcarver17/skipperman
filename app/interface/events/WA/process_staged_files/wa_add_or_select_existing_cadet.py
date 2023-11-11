@@ -31,7 +31,7 @@ def get_add_or_select_existing_cadet_form(state_data: StateDataForAction,
                                           see_all_cadets:bool,
                                           include_final_button: bool,
                                           cadet: Cadet = arg_not_passed) -> Html:
-
+    print("Generating add/select cadet form")
     if cadet is arg_not_passed:
         ## get initial verification
         verification_text, cadet = verify_form_with_cadet_details(state_data)

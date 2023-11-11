@@ -4,6 +4,9 @@ from app.interface.events.WA.process_staged_files.forms_interactively_update_mod
 
 
 from app.interface.html.html import Html
+from app.interface.events.WA.utils import (
+    reset_stage_and_return_previous,
+)
 from app.interface.flask.state_for_action import StateDataForAction
 
 from app.interface.events.utils import get_event_from_state
@@ -25,12 +28,17 @@ from app.objects.master_event import get_row_of_master_event_from_mapped_row_wit
 
 
 def process_file_to_update_master_event_records(state_data: StateDataForAction)-> Html:
+    input("Press enter to continue")
+
     event = get_event_from_state(state_data)
+    print("Now updating cadets which are missing")
     report_on_missing_data_from_mapped_wa_event_data_and_save_to_master_event(event)
 
     return process_updates_to_master_event_data(state_data)
 
 def process_updates_to_master_event_data(state_data: StateDataForAction) -> Html:
+    print("Looping through updating master event data")
+    input("Press enter to continue")
     event = get_event_from_state(state_data)
     row_idx = get_current_row_id_in_event_data(state_data)
 
@@ -39,6 +47,7 @@ def process_updates_to_master_event_data(state_data: StateDataForAction) -> Html
             get_row_from_event_file_with_ids(event, row_idx=row_idx)
         )
     except NoMoreData:
+        print("Finished looping")
         return action_when_finished(state_data=state_data)
 
     if row_in_mapped_wa_event_with_id.cancelled_or_deleted:
@@ -59,12 +68,14 @@ def process_update_to_next_row_of_event_data(state_data: StateDataForAction,
     )
 
     if cadet_already_present_in_master_data:
+        print("Not a new cadet")
         return process_update_to_existing_row_of_event_data(state_data=state_data,
                                                             event=event,
                                                             row_in_mapped_wa_event_with_id=row_in_mapped_wa_event_with_id)
     else:
         # new cadet
         ## updates wa_event_data_without_duplicates in memory no return required
+        print("New cadet, adding to master event data %s" % str(row_in_mapped_wa_event_with_id))
         add_new_row_to_master_event_data(
             event, row_in_mapped_wa_event_with_id=row_in_mapped_wa_event_with_id
         )
@@ -110,6 +121,7 @@ def process_update_to_existing_row_of_event_data(
         print("No change to %s" % (str(existing_row_in_master_event)))
         return iterate_to_next_row_of_mapped_wa_data(state_data)
     else:
+        print("Data has changed displaying form")
         return display_form_for_update_to_existing_row_of_event_data(state_data=state_data,
                                                                      existing_row_in_master_event=existing_row_in_master_event,
                                                                      new_row_in_mapped_wa_event_with_status=new_row_in_mapped_wa_event_with_status)
@@ -141,6 +153,8 @@ def iterate_to_next_row_of_mapped_wa_data(state_data: StateDataForAction)-> Html
 
 def action_when_finished(state_data: StateDataForAction):
     ## nothing more required and clear up handled by calling functions
-    return Html()
-
+    return reset_stage_and_return_previous(
+        state_data=state_data,
+        log_msg="File import done"
+    )
 

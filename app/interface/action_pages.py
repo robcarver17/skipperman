@@ -21,6 +21,7 @@ def generate_action_page_html(action_option: str) -> Html:
 
 def action_html_inner_code(action_name: str) -> Html:
     html_actions = SiteActions()
+    print("getting html for %s" % action_name)
     html_code_for_action = html_actions.get_html_for_action(action_name=action_name)
 
     return html_code_for_action

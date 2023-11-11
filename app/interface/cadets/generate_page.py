@@ -14,6 +14,10 @@ from app.interface.flask.flash import html_error
 
 def generate_cadet_pages(state_data: StateDataForAction) -> Html:
     stage = state_data.stage
+    print("Stage is %s generating page" % stage)
+    print("Last button pressed %s" % str(state_data.last_button_pressed()))
+    print("Is post %s" % str(state_data.is_post))
+
     if state_data.is_initial_stage:
         return generate_initial_stage_html_for_cadets(state_data)
     elif stage == VIEW_INDIVIDUAL_CADET_STAGE:

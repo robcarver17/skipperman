@@ -219,6 +219,8 @@ def get_current_row_id_in_event_data(state_data: StateDataForAction):
     id = state_data.get_value(ROW_IN_EVENT_DATA)
     if id is missing_data:
         return 0
+    else:
+        return id
 
 def get_list_of_field_names_from_dict_of_dict_diffs(dict_of_dict_diffs: dict) -> list:
     return [field_name

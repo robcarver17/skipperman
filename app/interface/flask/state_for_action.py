@@ -79,9 +79,12 @@ def is_website_post() -> bool:
 def get_value_from_form(key: str):
     return request.form[key]
 
-
+NO_BUTTON_PRESSED=""
 def get_last_button_pressed() -> str:
-    return request.form[HTML_BUTTON_NAME]
+    try:
+        return request.form[HTML_BUTTON_NAME]
+    except:
+        return NO_BUTTON_PRESSED
 
 
 def uploaded_file(input_name: str = "file"):

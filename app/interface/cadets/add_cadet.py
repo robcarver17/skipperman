@@ -89,8 +89,8 @@ def get_add_cadet_form_with_information_passed(
     verification_text: Html = empty_html,
     footer_buttons_html: Html = empty_html,
     header_text: str = "Add a new cadet",
-):
-
+) -> Html:
+    print("add cadet form")
     html_inside_form = get_html_inside_add_cadet_form(
         cadet=cadet,
         verification_text=verification_text,

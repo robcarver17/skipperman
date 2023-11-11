@@ -17,6 +17,8 @@ from app.logic.events.update_master_event_data import remove_duplicated_row_from
 from app.objects.constants import  NoMoreData
 
 def process_file_with_ids_to_remove_duplicate_cadets(state_data: StateDataForAction)-> Html:
+    print("Now removing duplicate cadets")
+    input("Press enter to continue")
 
     try:
         get_first_set_of_duplicate_rows_from_state_date(state_data)

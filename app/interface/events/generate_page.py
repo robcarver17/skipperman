@@ -28,6 +28,7 @@ from app.interface.events.WA.process_staged_files.process_file_to_update_master_
 
 def generate_event_pages(state_data: StateDataForAction) -> Html:
     stage = state_data.stage
+    print("Stage is %s generating page" % stage)
     if state_data.is_initial_stage:
         return generate_initial_stage_html_for_events(state_data)
     elif stage == ADD_EVENT_STAGE:

@@ -70,13 +70,6 @@ def cadet_name_from_id(cadet_id: str) -> str:
 
 
 class ListOfCadets(GenericListOfObjects):
-    def duplicate_indices(self) -> list:
-        ## eg if cadets in position 0,3 are the same, and in 5, 20, will return
-        #   [[0,3],[5,20]]
-        list_of_ids = self.list_of_ids
-        list_of_index_of_duplicate_ids = list_duplicate_indices(list_of_ids)
-
-        return list_of_index_of_duplicate_ids
 
     def sort_by_surname(self):
         return ListOfCadets(sorted(self, key=lambda x: x.surname))

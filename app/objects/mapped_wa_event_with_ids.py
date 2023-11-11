@@ -8,6 +8,8 @@ import pandas as pd
 from app.data_access.configuration.configuration import ACTIVE_STATUS, CANCELLED_STATUS
 from app.objects.constants import missing_data
 from app.objects.field_list import PAYMENT_STATUS
+from app.objects.utils import transform_str_from_date, similar, list_duplicate_indices
+
 from app.objects.mapped_wa_event_no_ids import (
     RowInMappedWAEventNoId,
     extract_list_of_entry_timestamps_from_existing_wa_event,
@@ -165,7 +167,7 @@ class MappedWAEventWithIDs(list):
 
     def index_of_duplicate_cadet_ids_ignore_cancelled_and_deleted(self):
         list_of_cadet_ids = self.list_of_cadet_ids
-        duplicate_id_list = list_of_cadet_ids.duplicate_indices()
+        duplicate_id_list = list_duplicate_indices(list_of_cadet_ids)
         list_of_cancelled_or_deleted_id = self._index_of_rows_that_are_cancelled_or_deleted()
 
         return filter_duplicate_list_to_remove_cancelled_or_delete(
@@ -177,8 +179,8 @@ class MappedWAEventWithIDs(list):
         return [idx for idx,row in enumerate(self) if row.cancelled_or_deleted]
 
     @property
-    def list_of_cadet_ids(self) -> ListOfCadets:
-        return ListOfCadets([row.cadet_id for row in self])
+    def list_of_cadet_ids(self) -> list:
+        return [row.cadet_id for row in self]
 
 
     @classmethod

@@ -56,7 +56,8 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 ### Basic:
 
 - nicer CSS
-- view / edit / delete cadets
+- view / delete cadets
+- delete cadets must also delete them from other tables or bad things will happen
 - edit / delete events  
 - clone an existing event
 - create a volunteer rota, manage it, and report on it

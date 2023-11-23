@@ -1,0 +1,8 @@
+VIEW_INDIVIDUAL_CADET_FORM = "view_cadet"
+ADD_CADET_FORM = "add_cadet"
+ADD_CADET_BUTTON_LABEL = "Add cadet"
+CHECK_BUTTON_LABEL = "Check details entered"
+FINAL_ADD_BUTTON_LABEL = "Yes - these details are correct - add to data"
+FIRST_NAME = "first_name"
+SURNAME = "surname"
+DOB = "date_of_birth"

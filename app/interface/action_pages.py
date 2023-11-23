@@ -5,7 +5,6 @@ from app.interface.html.html import (
     html_joined_list_as_lines,
 )
 from app.interface.html.master_layout import master_layout_html
-from app.interface.html.components import go_home_html
 from app.interface.flask.flash import get_html_of_flashed_messages
 
 
@@ -30,7 +29,7 @@ def action_html_inner_code(action_name: str) -> Html:
 def add_standard_layout_and_buttons_to_action_code(html_code_for_action: Html) -> Html:
     flash_html = get_html_of_flashed_messages()
     html_code_with_buttons = html_joined_list_as_paragraphs(
-        [go_home_html, flash_html, html_code_for_action]
+        [ flash_html, html_code_for_action]
     )
     html_code_for_action_in_layout = master_layout_html.wrap_around(
         html_code_with_buttons

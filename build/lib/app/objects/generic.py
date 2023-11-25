@@ -15,7 +15,6 @@ from app.objects.utils import (
 )
 
 
-@dataclass(frozen=True)
 class GenericSkipperManObject:
     def __eq__(self, other):
         return self.id == other.id
@@ -100,9 +99,11 @@ class GenericListOfObjects(list):
     def __repr__(self):
         return str(self.to_df())
 
-    def __contains__(self, item):
+    def object_with_id(self, id: str):
         list_of_ids = self.list_of_ids
-        return item.id in list_of_ids
+        index = list_of_ids.index(id)
+
+        return self[index]
 
     @classmethod
     def subset_from_list_of_ids(
@@ -150,3 +151,13 @@ class GenericListOfObjects(list):
         list_of_dicts = [item.as_str_dict() for item in self]
 
         return pd.DataFrame(list_of_dicts)
+
+    def next_id(self) -> str:
+        if len(self)==0:
+            return 1
+        list_of_ids = self.list_of_ids
+        list_of_ids_as_int = [int(id) for id in list_of_ids]
+        max_id = max(list_of_ids_as_int)
+        next_id = max_id+1
+
+        return str(next_id)

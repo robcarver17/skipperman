@@ -45,10 +45,10 @@ def respond_to_uploaded_file_for_wa_update(state_data: StateDataForAction):
         delete_staged_file_for_current_event(state_data)
         return reset_stage_and_return_previous(
             state_data=state_data,
-            error_msg="Problem with file upload and import %s, try again" % e,
+            error_msg="Problem with file upload and import_wa %s, try again" % e,
         )
 
     return reset_stage_and_return_previous(
         state_data=state_data,
-        log_msg="File import and data update done"
+        log_msg="File import_wa and data update done"
     )

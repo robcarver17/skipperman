@@ -1,4 +1,4 @@
-from app.objects.constants import missing_data, NoFileUploaded
+from app.objects.constants import missing_data, NoFileUploaded, FileError
 
 
 class abstractInterface(object):
@@ -51,3 +51,14 @@ class abstractInterface(object):
     def uploaded_file(self, input_name: str = "file"):
         raise NoFileUploaded
 
+
+def get_file_from_interface(file_label: str, interface: abstractInterface):
+    try:
+        file = interface.uploaded_file(file_label)
+    except NoFileUploaded:
+        raise FileError("No file uploaded")
+
+    if file.filename == "":
+        raise FileError("No file name selected")
+
+    return file

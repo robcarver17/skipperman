@@ -1,6 +1,9 @@
 ## my functions for easy construction of html
 from typing import List
 
+import pandas as pd
+
+
 ## primitives
 class Html(str):
     pass
@@ -94,3 +97,6 @@ def html_doc_wrapper(head_material: Html) -> HtmlWrapper:
         + head_material
         + "</head><body>%s</body></html>"
     )
+
+def html_from_table(table: pd.DataFrame) -> Html:
+    return table.to_html()

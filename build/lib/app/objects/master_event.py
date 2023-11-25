@@ -12,7 +12,7 @@ from app.objects.mapped_wa_event_with_ids import (
     deleted_status, get_status_from_row_of_mapped_wa_event_data,
 )
 from app.objects.utils import DictOfDictDiffs
-
+from app.objects.constants import arg_not_passed
 
 @dataclass
 class RowInMasterEvent:
@@ -58,9 +58,10 @@ class RowInMasterEvent:
         )
 
     def dict_of_row_diffs_in_rowdata(
-        self, other_row: "RowInMasterEvent"
+        self, other_row: "RowInMasterEvent",
+            comparing_fields =arg_not_passed
     ) -> DictOfDictDiffs:
-        return self.data_in_row.dict_of_row_diffs(other_row.data_in_row)
+        return self.data_in_row.dict_of_row_diffs(other_row.data_in_row, comparing_fields=comparing_fields)
 
 
 class MasterEvent(MappedWAEventWithIDs):

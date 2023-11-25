@@ -8,7 +8,7 @@ from app.logic.events.constants import WA_FILE, UPLOAD_FILE_BUTTON_LABEL
 from app.logic.events.backend.load_wa_file import save_staged_file_of_raw_event_upload_with_event_id, \
     verify_and_return_uploaded_wa_event_file, save_uploaded_wa_as_local_file, \
     check_local_file_is_valid_wa_file
-from app.logic.events.backend.map_wa_files import verify_and_if_required_add_wa_mapping
+from app.logic.events.backend.map_wa_files import verify_file_has_correct_wa_id
 from app.logic.events.utilities import get_event_from_state
 from app.objects.events import Event
 
@@ -66,7 +66,7 @@ def respond_to_uploaded_file(interface: abstractInterface) -> Union[Form, NewFor
 def upload_wa_file_and_save_as_raw_event_with_mapping(interface: abstractInterface):
     local_filename = verify_and_save_uploaded_wa_event_file(interface)
     event = get_event_from_state(interface)
-    verify_and_if_required_add_wa_mapping(filename=local_filename, event=event)
+    verify_file_has_correct_wa_id(filename=local_filename, event=event)
     save_staged_file_of_raw_event_upload_with_event_id(local_filename, event_id=event.id)
 
 

@@ -11,7 +11,7 @@ from app.objects.master_event import (
 from app.objects.mapped_wa_event_with_ids import (
     RowInMappedWAEventWithId,
     MappedWAEventWithIDs, cancelled_status, active_status, deleted_status, )
-from app.objects.cadets import cadet_name_from_id
+from app.logic.cadets.view_cadets import cadet_name_from_id
 from app.objects.events import Event
 from app.objects.constants import NoMoreData
 

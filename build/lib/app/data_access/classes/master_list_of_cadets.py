@@ -7,6 +7,8 @@ class DataListOfCadets(object):
         if cadet in list_of_cadets:
             raise Exception("Cadet %s already in list of existing cadets" % str(cadet))
 
+        cadet_id = list_of_cadets.next_id()
+        cadet.id = cadet_id
         list_of_cadets.append(cadet)
 
         self.write(list_of_cadets)

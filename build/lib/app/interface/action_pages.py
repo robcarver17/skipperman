@@ -5,7 +5,6 @@ from app.interface.html.html import (
     html_joined_list_as_lines,
 )
 from app.interface.html.master_layout import master_layout_html
-from app.interface.html.components import go_home_html
 from app.interface.flask.flash import get_html_of_flashed_messages
 
 

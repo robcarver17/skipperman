@@ -6,10 +6,9 @@ from app.logic.abstract_form import Form, NewForm, Line, ListOfLines, Button, ba
 from app.logic.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form
 
-from app.logic.events.constants import EVENT
-from app.logic.events.constants import WA_IMPORT_BUTTON_LABEL, WA_UPLOAD_BUTTON_LABEL, WA_FIELD_MAPPING_BUTTON_LABEL, WA_UPDATE_BUTTON_LABEL, ALLOCATE_CADETS_BUTTON_LABEL, WA_UPLOAD_SUBSTAGE_IN_VIEW_EVENT_STAGE, WA_IMPORT_SUBSTAGE_IN_VIEW_EVENT_STAGE, WA_UPDATE_SUBSTAGE_IN_VIEW_EVENT_STAGE
+from app.logic.events.constants import *
 from app.logic.events.backend.load_wa_file import does_raw_event_file_exist
-from app.logic.events.utilities import get_event_from_state, get_list_of_events
+from app.logic.events.utilities import get_event_from_state, confirm_event_exists
 from app.objects.events import Event
 
 def display_form_view_individual_event(
@@ -57,10 +56,10 @@ def get_event_buttons(event: Event,
     wa_field_mapping = Button(
         WA_FIELD_MAPPING_BUTTON_LABEL
     )  ## does field mapping from staged file
-    wa_import = Button(WA_IMPORT_BUTTON_LABEL)  ## does import given a staged file
+    wa_import = Button(WA_IMPORT_BUTTON_LABEL)  ## does import_wa given a staged file
     wa_update = Button(
         WA_UPDATE_BUTTON_LABEL
-    )  ## does upload and import, assuming no staged file
+    )  ## does upload and import_wa, assuming no staged file
 
     cadet_allocation = Button(ALLOCATE_CADETS_BUTTON_LABEL)
 
@@ -69,25 +68,21 @@ def get_event_buttons(event: Event,
     raw_event_file_exists = does_raw_event_file_exist(event.id)
 
     if not wa_import_done and not field_mapping_done and not raw_event_file_exists:
-        return Line([back_button, wa_initial_upload])
-
-    if wa_import_done and not field_mapping_done and not raw_event_file_exists:
-        ## something went wrong getting the raw event file, try again
-        return Line([back_button, wa_initial_upload])
+        return Line([back_button, wa_initial_upload, wa_field_mapping])
 
     if not wa_import_done and field_mapping_done and not raw_event_file_exists:
         ## probably done mapping manually, need to do initial upload
-        return Line([back_button, wa_initial_upload])
+        return Line([back_button, wa_initial_upload, wa_field_mapping])
 
-    if wa_import_done and not field_mapping_done and raw_event_file_exists:
+    if not wa_import_done and not field_mapping_done and raw_event_file_exists:
         return Line([back_button, wa_field_mapping])
 
-    if wa_import_done and field_mapping_done and raw_event_file_exists:
-        return Line([back_button, wa_import])
+    if not wa_import_done and field_mapping_done and raw_event_file_exists:
+        return Line([back_button, wa_import, wa_field_mapping])
 
     ## both done, we can update the WA file and do cadet allocation
     if wa_import_done and field_mapping_done and not raw_event_file_exists:
-        return Line([back_button, wa_update, cadet_allocation])
+        return Line([back_button, wa_update, cadet_allocation, wa_field_mapping])
 
     interface.log_error(
         "Something went wrong; contact support [wa_import_done=%s, field_mapping_done=%s, raw_event_file_exists=%s]"
@@ -104,8 +99,7 @@ def post_form_view_individual_event(interface: abstractInterface) -> Union[Form,
         return NewForm(WA_UPLOAD_SUBSTAGE_IN_VIEW_EVENT_STAGE)
 
     elif last_button_pressed == WA_FIELD_MAPPING_BUTTON_LABEL:
-        interface.log_error("not implemented, have to manually hack .csv")
-        return initial_state_form
+        return NewForm(WA_FIELD_MAPPING_IN_VIEW_EVENT_STAGE)
 
     elif last_button_pressed == WA_IMPORT_BUTTON_LABEL:
         return NewForm(WA_IMPORT_SUBSTAGE_IN_VIEW_EVENT_STAGE)
@@ -120,11 +114,6 @@ def post_form_view_individual_event(interface: abstractInterface) -> Union[Form,
     else:
         interface.log_error("Don't recognise button %s" % last_button_pressed)
         return initial_state_form
-
-def confirm_event_exists(event_selected):
-    list_of_events = get_list_of_events()
-    list_of_events_as_str = [str(event) for event in list_of_events]
-    assert event_selected in list_of_events_as_str
 
 
 def update_state_for_specific_event(
@@ -148,8 +137,12 @@ def is_wa_mapping_setup_for_event(event: Event) -> bool:
 
 
 def is_wa_field_mapping_setup_for_event(event: Event) -> bool:
-    wa_mapping_dict = data.data_wa_field_mapping.read(event.id)
-    if len(wa_mapping_dict) == 0:
+    try:
+        wa_mapping_dict = data.data_wa_field_mapping.read(event.id)
+
+        if len(wa_mapping_dict) == 0:
+            return False
+        else:
+            return True
+    except:
         return False
-    else:
-        return True

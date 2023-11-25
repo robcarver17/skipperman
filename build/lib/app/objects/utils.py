@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 import pandas as pd
 from difflib import SequenceMatcher
+from app.objects.constants import arg_not_passed
 
 DATE_FORMAT_STRING = "%Y/%m/%d"
 
@@ -94,18 +95,20 @@ class DictOfDictDiffs(dict):
         return string_of_dict_diffs(self)
 
 
-def create_dict_of_dict_diffs(dict_old: dict, dict_new: dict) -> DictOfDictDiffs:
+def create_dict_of_dict_diffs(dict_old: dict, dict_new: dict, comparing_fields: list = arg_not_passed ) -> DictOfDictDiffs:
     # dict
     # throws exception if missing or added fields
-    keys_old = list(dict_old.keys())
-    keys_new = list(dict_new.keys())
-    try:
-        assert set(keys_old) == set(keys_new)
-    except:
-        raise Exception("Have to have matching keys to see differences")
+    if comparing_fields is arg_not_passed:
+        keys_old = list(dict_old.keys())
+        keys_new = list(dict_new.keys())
+        try:
+            assert set(keys_old) == set(keys_new)
+        except:
+            raise Exception("Have to have matching keys to automatically see differences")
+        comparing_fields = keys_new
 
     dict_of_diffs = {}
-    for key in keys_new:
+    for key in comparing_fields:
         old_value = dict_old[key]
         new_value = dict_new[key]
         if old_value != new_value:

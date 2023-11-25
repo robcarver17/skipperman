@@ -83,3 +83,11 @@ def get_list_of_cadets(sort_by: str = "") -> ListOfCadets:
         return master_list.sort_by_dob_desc()
     else:
         return master_list
+
+
+def cadet_name_from_id(cadet_id: str) -> str:
+    list_of_cadets = get_list_of_cadets()
+
+    cadet = list_of_cadets.object_with_id(cadet_id)
+
+    return str(cadet)

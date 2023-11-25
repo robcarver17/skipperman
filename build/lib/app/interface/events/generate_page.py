@@ -44,7 +44,7 @@ def generate_event_pages(state_data: StateDataForAction) -> Html:
     elif stage == WA_UPDATE_SUBSTAGE_IN_VIEW_EVENT_STAGE:
         return post_response_to_wa_update(state_data)
 
-    ## Following is called during import or update
+    ## Following is called during import_wa or update
     elif stage == WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE:
         return post_response_when_adding_cadet_ids_to_event(state_data)
 

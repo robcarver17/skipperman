@@ -8,7 +8,7 @@ from app.objects.utils import (
 )
 
 from app.objects.field_list import REGISTRATION_DATE
-
+from app.objects.constants import arg_not_passed
 
 class RowInMappedWAEventNoId(dict):
 
@@ -17,8 +17,8 @@ class RowInMappedWAEventNoId(dict):
         some_dict = clean_up_dict_with_nans(some_dict)
         return cls(some_dict)
 
-    def dict_of_row_diffs(self, other_dict: dict) -> DictOfDictDiffs:
-        return create_dict_of_dict_diffs(self, other_dict)
+    def dict_of_row_diffs(self, other_dict: dict, comparing_fields =arg_not_passed ) -> DictOfDictDiffs:
+        return create_dict_of_dict_diffs(self, other_dict, comparing_fields=comparing_fields)
 
     @property
     def registration_date(self):

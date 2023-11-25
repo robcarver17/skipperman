@@ -21,6 +21,11 @@ FINAL_CADET_ADD_BUTTON_LABEL = "Yes - these details are correct - add this new c
 SEE_ALL_CADETS_BUTTON_LABEL = "Choose from all existing cadets"
 SEE_SIMILAR_CADETS_ONLY_LABEL = "See similar cadets only"
 #
+# Field mapping
+MAP_TO_TEMPLATE = "Use template mapping"
+UPLOAD_TEMPLATE = "Upload and use new template"
+UPLOAD_MAPPING = "Upload new mapping .csv file"
+
 # specific event; allocation
 ALLOCATE_CADETS_BUTTON_LABEL = "Allocate cadets to groups"
 
@@ -37,6 +42,13 @@ USE_DATA_IN_FORM = "Use data as edited in form above"
 ADD_EVENT_STAGE = "Add_event_stage"
 VIEW_EVENT_STAGE = "View_event_stage"
 
+WA_FIELD_MAPPING_IN_VIEW_EVENT_STAGE = "WA_field_mapping_in_View_event_stage"
+
+WA_SELECT_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE = "WA_select_template_in_view_event_stage"
+WA_UPLOAD_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE= "WA_upload_template_in_view_event_stage"
+WA_CLONE_EVENT_MAPPING_IN_VIEW_EVENT_STAGE = "WA_clone_event_in_view_event_stage"
+WA_UPLOAD_EVENT_MAPPING_IN_VIEW_EVENT_STAGE = "WA_upload_event_mapping_in_view_event_stage"
+
 WA_UPLOAD_SUBSTAGE_IN_VIEW_EVENT_STAGE = "WA_upload_substage_in_View_event_stage"
 WA_IMPORT_SUBSTAGE_IN_VIEW_EVENT_STAGE = "WA_import_substage_in_View_event_stage"
 WA_UPDATE_SUBSTAGE_IN_VIEW_EVENT_STAGE = "WA_update_substage_in_View_event_stage"
@@ -51,6 +63,7 @@ WA_INTERACTIVELY_REMOVE_SPECIFIC_DUPLICATES_FROM_WA_FILE = "WA_interactively_rem
 ## constants.py in session data
 EVENT = "event"
 ROW_IN_EVENT_DATA = "row_in_event_data"
+CADET_ID = "cadet_id"
 
 # field names
 EVENT_NAME = "event_name"
@@ -58,6 +71,8 @@ EVENT_START_DATE = "event_start_date"
 EVENT_END_DATE = "event_end_date"
 EVENT_TYPE = "event_type"
 WA_FILE = "file"
+MAPPING_FILE = "file"
+TEMPLATE_NAME= "template_name"
 
 ## field names row
 ROW_STATUS="row_status"

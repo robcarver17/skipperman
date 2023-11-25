@@ -1,7 +1,7 @@
 import datetime
 import pandas as pd
 
-# from app.logic import edit_provided_cadet_details
+# from app.logic import_wa edit_provided_cadet_details
 from app.logic.events.backend.load_and_save_wa_mapped_events import (
     load_mapped_wa_event_with_no_ids,
     save_mapped_wa_event_with_no_ids,

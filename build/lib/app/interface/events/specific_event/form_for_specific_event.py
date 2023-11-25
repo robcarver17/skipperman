@@ -50,10 +50,10 @@ def get_event_buttons(event: Event):
     wa_field_mapping = html_button(
         WA_FIELD_MAPPING_BUTTON_LABEL
     )  ## does field mapping from staged file
-    wa_import = html_button(WA_IMPORT_BUTTON_LABEL)  ## does import given a staged file
+    wa_import = html_button(WA_IMPORT_BUTTON_LABEL)  ## does import_wa given a staged file
     wa_update = html_button(
         WA_UPDATE_BUTTON_LABEL
-    )  ## does upload and import, assuming no staged file
+    )  ## does upload and import_wa, assuming no staged file
 
     cadet_allocation = html_button(ALLOCATE_CADETS_BUTTON_LABEL)
 

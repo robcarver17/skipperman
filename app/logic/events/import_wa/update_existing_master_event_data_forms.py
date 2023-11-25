@@ -1,27 +1,28 @@
-from app.logic.events.constants import  USE_NEW_DATA, \
-    USE_ORIGINAL_DATA, USE_DATA_IN_FORM, ROW_IN_EVENT_DATA, ROW_STATUS
+from app.logic.events.constants import USE_NEW_DATA, \
+    USE_ORIGINAL_DATA, USE_DATA_IN_FORM, ROW_IN_EVENT_DATA, ROW_STATUS, CADET_ID
 from app.logic.events.utilities import get_event_from_state
 from app.logic.abstract_interface import abstractInterface
 from app.logic.abstract_form import Form, Line, ListOfLines, radioInput, Button, construct_form_field_given_field_name
 
 from app.logic.events.backend.update_master_event_data import new_status_and_status_message, update_row_in_master_event_data, \
     get_row_from_event_file_with_ids, NO_STATUS_CHANGE
-from app.logic.events.backend.load_and_save_wa_mapped_events import load_master_event
+from app.logic.events.backend.load_and_save_wa_mapped_events import load_master_event, \
+    load_existing_mapped_wa_event_with_ids
 
-from app.objects.cadets import cadet_name_from_id
-from app.objects.constants import NoMoreData, missing_data
+from app.logic.cadets.view_cadets import cadet_name_from_id
+from app.objects.constants import NoMoreData, missing_data, NoCadets, DuplicateCadets
 from app.objects.events import Event
 from app.objects.master_event import RowInMasterEvent, get_row_of_master_event_from_mapped_row_with_idx_and_status
-from app.objects.mapped_wa_event_with_ids import all_possible_status
+from app.objects.mapped_wa_event_with_ids import all_possible_status, RowInMappedWAEventWithId
 from app.objects.utils import SingleDiff
-from app.objects.field_list import FIELDS_TO_IGNORE_WHEN_COMPARING_WA_DIFF
+from app.objects.field_list import FIELDS_TO_FLAG_WHEN_COMPARING_WA_DIFF
 
 def display_form_for_update_to_existing_row_of_event_data(
         interface: abstractInterface,
         new_row_in_mapped_wa_event_with_status: RowInMasterEvent,
         existing_row_in_master_event: RowInMasterEvent,
 ) -> Form:
-    overall_message = "There have been changes for event registration information about cadet %s" % cadet_name_from_id(existing_row_in_master_event.cadet_id)
+    overall_message = "There have been important changes for event registration information about cadet %s" % cadet_name_from_id(existing_row_in_master_event.cadet_id)
 
     status_change_field = get_status_change_field(new_row_in_mapped_wa_event_with_status=new_row_in_mapped_wa_event_with_status,
                                                   existing_row_in_master_event=existing_row_in_master_event)
@@ -75,15 +76,25 @@ def get_status_change_field(new_row_in_mapped_wa_event_with_status: RowInMasterE
 
 all_status_names = [row_status.name for row_status in all_possible_status]
 
+def any_important_difference_between_rows(new_row_in_mapped_wa_event_with_status: RowInMasterEvent,
+        existing_row_in_master_event: RowInMasterEvent) ->bool:
+
+    if new_row_in_mapped_wa_event_with_status.status!=existing_row_in_master_event.status:
+        return True
+
+    dict_of_other_diffs =get_dict_of_dict_diffs(new_row_in_mapped_wa_event_with_status=new_row_in_mapped_wa_event_with_status,
+                                                existing_row_in_master_event=existing_row_in_master_event)
+
+    if len(dict_of_other_diffs)>0:
+        return True
+
+    return False
+
+
 def get_form_fields_with_other_differences(new_row_in_mapped_wa_event_with_status: RowInMasterEvent,
         existing_row_in_master_event: RowInMasterEvent) -> ListOfLines:
-
-    dict_of_dict_diffs = (
-        existing_row_in_master_event.dict_of_row_diffs_in_rowdata(
-            new_row_in_mapped_wa_event_with_status
-        )
-    )
-
+    dict_of_dict_diffs = get_dict_of_dict_diffs(new_row_in_mapped_wa_event_with_status=new_row_in_mapped_wa_event_with_status,
+                                                existing_row_in_master_event=existing_row_in_master_event)
     list_of_field_names = get_list_of_field_names_from_dict_of_dict_diffs(
         dict_of_dict_diffs
     )
@@ -91,12 +102,22 @@ def get_form_fields_with_other_differences(new_row_in_mapped_wa_event_with_statu
         form_field_for_item_with_difference(field_name=field_name,
                                             diff=dict_of_dict_diffs[field_name])
         for field_name in list_of_field_names
-        if field_name not in FIELDS_TO_IGNORE_WHEN_COMPARING_WA_DIFF
+
         ]
 
     return ListOfLines(list_of_form_fields)
 
+def get_dict_of_dict_diffs(new_row_in_mapped_wa_event_with_status: RowInMasterEvent,
+        existing_row_in_master_event: RowInMasterEvent):
 
+    dict_of_dict_diffs = (
+        existing_row_in_master_event.dict_of_row_diffs_in_rowdata(
+            new_row_in_mapped_wa_event_with_status,
+            comparing_fields=FIELDS_TO_FLAG_WHEN_COMPARING_WA_DIFF
+        )
+    )
+
+    return dict_of_dict_diffs
 
 
 def form_field_for_item_with_difference(field_name:str, diff: SingleDiff) -> Line:
@@ -141,14 +162,9 @@ def update_mapped_wa_event_data_with_form_data(interface: abstractInterface):
 
 def get_new_row_in_mapped_wa_event_from_state_data(interface: abstractInterface,
                                                    event: Event) -> RowInMasterEvent:
-    row_idx = get_current_row_id_in_event_data(interface)
+    cadet_id = get_current_cadet_id(interface)
 
-    try:
-        row_in_mapped_wa_event_with_id = (
-            get_row_from_event_file_with_ids(event, row_idx=row_idx)
-        )
-    except NoMoreData:
-        raise Exception("Row index too large when trying to get row from imported WA data")
+    row_in_mapped_wa_event_with_id = get_row_in_mapped_event_for_cadet_id(event, cadet_id=cadet_id)
 
     new_row_in_mapped_wa_event_with_status = (
         get_row_of_master_event_from_mapped_row_with_idx_and_status(
@@ -187,39 +203,45 @@ def get_field_names_for_recently_posted_event_diff_form(interface: abstractInter
                                          new_row_in_mapped_wa_event_with_status: RowInMasterEvent
                                          ):
     event = get_event_from_state(interface)
-    master_event = load_master_event(
-        event
-    )
+    cadet_id = get_current_cadet_id(interface)
+    existing_row_in_master_event = get_row_in_master_event_for_cadet_id(cadet_id=cadet_id, event=event)
+    dict_of_dict_diffs = get_dict_of_dict_diffs(new_row_in_mapped_wa_event_with_status=new_row_in_mapped_wa_event_with_status,
+                                                existing_row_in_master_event=existing_row_in_master_event)
 
-    existing_row_in_master_event = (
-        master_event.get_row_with_id(
-            new_row_in_mapped_wa_event_with_status.cadet_id
-        )
-    )
-    dict_of_dict_diffs = (
-        existing_row_in_master_event.dict_of_row_diffs_in_rowdata(
-            new_row_in_mapped_wa_event_with_status
-        )
-    )
+    field_names = get_list_of_field_names_from_dict_of_dict_diffs(dict_of_dict_diffs)
 
-    return get_list_of_field_names_from_dict_of_dict_diffs(dict_of_dict_diffs)
+    return [ROW_STATUS]+field_names
 
 
-def increment_and_save_id_in_event_data(interface: abstractInterface):
-    id = get_current_row_id_in_event_data(interface)
-    id+=1
-    interface.set_persistent_value(ROW_IN_EVENT_DATA, id)
 
-
-def get_current_row_id_in_event_data(interface: abstractInterface):
-    id = interface.get_persistent_value(ROW_IN_EVENT_DATA)
-    if id is missing_data:
-        return 0
-    else:
-        return id
 
 def get_list_of_field_names_from_dict_of_dict_diffs(dict_of_dict_diffs: dict) -> list:
     return [field_name
             for field_name in dict_of_dict_diffs.items()
-            if field_name not in FIELDS_TO_IGNORE_WHEN_COMPARING_WA_DIFF
+            if field_name in FIELDS_TO_FLAG_WHEN_COMPARING_WA_DIFF
             ]
+
+
+def get_current_cadet_id(interface: abstractInterface) -> str:
+    cadet_id = interface.get_persistent_value(CADET_ID)
+
+    return cadet_id
+
+
+def get_row_in_mapped_event_for_cadet_id(
+                                             event: Event,
+                                          cadet_id: str) -> RowInMappedWAEventWithId:
+
+    mapped_event = load_existing_mapped_wa_event_with_ids(event)
+    relevant_row = mapped_event.get_row_with_cadet_id_ignore_cancellations(cadet_id)
+
+    return relevant_row
+
+
+def get_row_in_master_event_for_cadet_id(
+        event: Event,
+        cadet_id: str) -> RowInMasterEvent:
+    master_event = load_master_event(event)
+    relevant_row = master_event.get_unique_row_with_cadet_id_(cadet_id)
+
+    return relevant_row

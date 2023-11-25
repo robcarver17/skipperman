@@ -112,7 +112,7 @@ def get_wa_field_mapping_dict(
     wa_mapping_dict = data.data_wa_field_mapping.read(event.id)
     if len(wa_mapping_dict) == 0:
         raise Exception(
-            "No mapping found - set up the mapping and then re-import"
+            "No mapping found - set up the mapping and then re-import_wa"
         )  ### NEEDS TO BE MUCH MORE VERBOSE
 
     return wa_mapping_dict

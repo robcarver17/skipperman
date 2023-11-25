@@ -10,7 +10,7 @@ from app.logic.events.backend.update_master_event_data import new_status_and_sta
     get_row_from_event_file_with_ids, NO_STATUS_CHANGE
 from app.logic.events.backend.load_and_save_wa_mapped_events import load_master_event
 
-from app.objects.cadets import cadet_name_from_id
+from app.logic.cadets.view_cadets import cadet_name_from_id
 from app.objects.constants import NoMoreData, missing_data
 from app.objects.events import Event
 from app.objects.master_event import RowInMasterEvent, get_row_of_master_event_from_mapped_row_with_idx_and_status

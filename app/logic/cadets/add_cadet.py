@@ -124,10 +124,10 @@ def verify_form_with_cadet_details(
     try:
         cadet = get_cadet_from_form(interface)
         verify_text = verify_cadet_and_warn(cadet=cadet)
-    except:
+    except Exception as e:
         cadet = copy(default)
         verify_text = \
-            "Doesn't appear to be a valid cadet (wrong date time in old browser?)"
+            "Doesn't appear to be a valid cadet (wrong date time in old browser?) error code %s" % str(e)
 
     return CadetAndVerificationText(cadet=cadet, verification_text=verify_text)
 

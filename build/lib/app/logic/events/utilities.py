@@ -30,3 +30,9 @@ def get_list_of_events(sort_by=SORT_BY_START_DSC) -> ListOfEvents:
         return list_of_events.sort_by_name()
     else:
         return list_of_events
+
+
+def confirm_event_exists(event_selected):
+    list_of_events = get_list_of_events()
+    list_of_events_as_str = [str(event) for event in list_of_events]
+    assert event_selected in list_of_events_as_str

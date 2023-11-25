@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from copy import copy
 from typing import Union, Tuple
 from app.logic.abstract_form import Form, NewForm,Line, ListOfLines, Button, dateInput, textInput, form_with_message_and_finished_button, _______________, cancel_button
@@ -44,6 +45,17 @@ def display_form_add_cadet(
         interface.log_error("Uknown button pressed %s - shouldn't happen!" % last_button_pressed)
         return initial_state_form
 
+@dataclass
+class CadetAndVerificationText:
+    cadet: Cadet
+    verification_text: str = ""
+
+    @property
+    def is_default(self) -> bool:
+        return self.cadet is default_cadet
+
+default_cadet_and_text = CadetAndVerificationText(cadet=default_cadet, verification_text="")
+
 def post_form_add_cadets(interface: abstractInterface) -> Union[Form, NewForm]:
     return display_form_add_cadet(interface, first_time_displayed = False)
 
@@ -56,32 +68,30 @@ def get_add_cadet_form(interface: abstractInterface,
             footer_buttons=footer_buttons
         )
     else:
-        verification_text, cadet = verify_form_with_cadet_details(interface)
-        form_is_empty = cadet == default_cadet
+        cadet_and_text = verify_form_with_cadet_details(interface)
+        form_is_empty = cadet_and_text.is_default
         footer_buttons = get_footer_buttons_for_add_cadet_form(form_is_empty)
 
         return get_add_cadet_form_with_information_passed(
-            verification_text=verification_text,
-            cadet=cadet,
+            cadet_and_text=cadet_and_text,
             footer_buttons=footer_buttons,
         )
 
 
 def get_add_cadet_form_with_information_passed(
-    footer_buttons: Line,
-    verification_text: str="",
-    cadet: Cadet = default_cadet,
+    footer_buttons: Union[Line, ListOfLines],
     header_text: str = "Add a new cadet",
+    cadet_and_text: CadetAndVerificationText = default_cadet_and_text
 ) -> Form:
     print("add cadet form")
-    form_fields = form_fields_for_add_cadet(cadet)
+    form_fields = form_fields_for_add_cadet(cadet_and_text.cadet)
 
     list_of_lines_inside_form = ListOfLines([
         header_text,
         _______________,
         form_fields,
         _______________,
-        verification_text,
+        cadet_and_text.verification_text,
         _______________,
         footer_buttons,
     ])
@@ -107,18 +117,19 @@ def form_fields_for_add_cadet(cadet: Cadet):
     return form_fields
 
 
+
 def verify_form_with_cadet_details(
     interface: abstractInterface, default=default_cadet
-) -> Tuple[str, Cadet]:
+) -> CadetAndVerificationText:
     try:
         cadet = get_cadet_from_form(interface)
         verify_text = verify_cadet_and_warn(cadet=cadet)
-    except:
+    except Exception as e:
         cadet = copy(default)
         verify_text = \
-            "Doesn't appear to be a valid cadet (wrong date time in old browser?)"
+            "Doesn't appear to be a valid cadet (wrong date time in old browser?) error code %s" % str(e)
 
-    return verify_text, cadet
+    return CadetAndVerificationText(cadet=cadet, verification_text=verify_text)
 
 
 def get_cadet_from_form(interface: abstractInterface) -> Cadet:

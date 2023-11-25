@@ -1,18 +1,19 @@
 from typing import Union
 
-from app.logic.abstract_form import Form, NewForm, Button, ListOfLines, Line, _______________, form_with_message_and_finished_button
+from app.logic.abstract_form import Form, NewForm, form_with_message_and_finished_button
 from app.logic.abstract_interface import abstractInterface
-from app.logic.events.constants import WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE, ROW_IN_EVENT_DATA, USE_ORIGINAL_DATA, USE_DATA_IN_FORM, USE_NEW_DATA
+from app.logic.events.constants import ROW_IN_EVENT_DATA, USE_ORIGINAL_DATA, USE_DATA_IN_FORM, USE_NEW_DATA
 
 from app.logic.events.utilities import get_event_from_state
 
 from app.logic.events.backend.load_and_save_wa_mapped_events import (
-load_existing_mapped_wa_event_with_ids, load_master_event
+    load_master_event
 
 )
 from app.logic.events.update_existing_master_event_data_forms import display_form_for_update_to_existing_row_of_event_data,increment_and_save_id_in_event_data, update_mapped_wa_event_data_with_form_data, update_mapped_wa_event_data_with_new_data
 
-from app.logic.events.backend.update_master_event_data import remove_duplicated_row_from_mapped_wa_event_data, report_on_missing_data_from_mapped_wa_event_data_and_save_to_master_event, get_row_from_event_file_with_ids, add_new_row_to_master_event_data, get_row_of_master_event_from_mapped_row_with_idx_and_status
+from app.logic.events.backend.update_master_event_data import \
+    report_on_missing_data_from_mapped_wa_event_data_and_save_to_master_event, get_row_from_event_file_with_ids, add_new_row_to_master_event_data, get_row_of_master_event_from_mapped_row_with_idx_and_status
 from app.objects.events import Event
 from app.objects.mapped_wa_event_with_ids import RowInMappedWAEventWithId
 from app.objects.constants import  NoMoreData, missing_data

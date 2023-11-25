@@ -1,4 +1,4 @@
-### this is called by WA import or update
+### this is called by WA import_wa or update
 from app.interface.events.WA.process_staged_files.wa_iteratively_add_cadet_ids import (
     process_rows_of_unmapped_data_and_proceed_to_process_file_with_ids,
 )

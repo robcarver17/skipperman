@@ -1,4 +1,7 @@
 from typing import Callable
+
+import pandas as pd
+
 from app.objects.field_list import FIELDS_WITH_DATES,  FIELDS_WITH_INTEGERS, SPECIAL_FIELDS
 from typing import Union
 import datetime
@@ -43,6 +46,9 @@ class Line(list):
 class ListOfLines(list):
     def __repr__(self):
         return "ListOfLines: contents %s" % super().__repr__()
+
+class Table(pd.DataFrame):
+    pass
 
 ### FIX ME ADD 'GO BACK AND RETURN' FORM ATTRIBUTE, INCLUDE FUNCTION TO WRITE THIS WITH A SINGLE BUTTON
 class Form(list):

@@ -6,6 +6,8 @@ class DataListOfEvents(object):
         list_of_events = self.read()
         if event in list_of_events:
             raise Exception("Event %s already in list of existing events" % str(event))
+        next_id = list_of_events.next_id()
+        event.id = next_id
         list_of_events.append(event)
 
         self.write(list_of_events)

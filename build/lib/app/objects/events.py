@@ -9,7 +9,7 @@ from app.data_access.configuration.configuration import (
 
 from app.objects.utils import transform_str_from_date, similar
 from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
-
+from app.objects.constants import arg_not_passed
 
 EventType = Enum(
     "EventType", ["Training", "Racing", "TrainingAndRacing", "Social", "Merchandise"]
@@ -19,15 +19,23 @@ list_of_event_types = [e.name for e in EventType]
 # WA_event_id: int  ## does this need to be here?
 
 
-@dataclass(frozen=True)
+
+@dataclass
 class Event(GenericSkipperManObject):
     event_name: str  ## has to be preselected
     start_date: datetime.date
     end_date: datetime.date
     event_type: EventType
+    id: str = arg_not_passed
 
     def __repr__(self):
         return self.event_description
+
+    def __eq__(self, other):
+        return (self.event_name==other.event_name) and (self.event_year==other.event_year)
+
+    def __hash__(self):
+        return hash(self.event_name+"_"+str(self.event_year))
 
     @property
     def verbose_repr(self):
@@ -38,10 +46,6 @@ class Event(GenericSkipperManObject):
             self.event_type_as_str,
         )
 
-    @property
-    def id(self) -> str:
-        event_name_no_spaces = self.event_name.replace(" ", "")
-        return "%s_%d" % (event_name_no_spaces, self.event_year)
 
     @property
     def event_description(self) -> str:

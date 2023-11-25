@@ -15,9 +15,19 @@ from app.objects.mapped_wa_event_no_ids import (
     extract_list_of_entry_timestamps_from_existing_wa_event,
 )
 from app.objects.cadets import ListOfCadets
+from app.objects.constants import NoCadets, DuplicateCadets
 
 CADET_ID = "cadet_id"
 
+
+RowStatus = Enum("RowStatus", ["Cancelled", "Active", "Deleted"])
+
+STATUS_FIELD = "row_status"
+cancelled_status = RowStatus.Cancelled
+active_status = RowStatus.Active
+deleted_status = RowStatus.Deleted
+
+all_possible_status = [cancelled_status, active_status, deleted_status]
 
 @dataclass
 class RowInMappedWAEventWithId:
@@ -51,8 +61,6 @@ class RowInMappedWAEventWithId:
         status = get_status_from_row_of_mapped_wa_event_data(self)
         return status in [cancelled_status, deleted_status]
 
-RowStatus = Enum("RowStatus", ["Cancelled", "Active", "Deleted"])
-
 
 def get_status_from_row_of_mapped_wa_event_data(
     row_of_mapped_wa_event_data: RowInMappedWAEventWithId,
@@ -62,10 +70,10 @@ def get_status_from_row_of_mapped_wa_event_data(
         row_of_mapped_wa_event_data
     )
     if status_str in ACTIVE_STATUS:
-        return RowStatus.Active
+        return active_status
 
     if status_str in CANCELLED_STATUS:
-        return RowStatus.Cancelled
+        return cancelled_status
 
     raise Exception(
         "WA has used a status of %s in the mapped field %s, not recognised, update configuration.py"
@@ -89,12 +97,6 @@ def get_status_str_from_row_of_mapped_wa_event_data(
     return status_field
 
 
-STATUS_FIELD = "row_status"
-cancelled_status = RowStatus.Cancelled
-active_status = RowStatus.Active
-deleted_status = RowStatus.Deleted
-
-all_possible_status = [cancelled_status, active_status, deleted_status]
 
 class MappedWAEventWithIDs(list):
     def __init__(self, list_of_rows: List[RowInMappedWAEventWithId]):
@@ -154,29 +156,28 @@ class MappedWAEventWithIDs(list):
 
         return self[idx_of_timestamp]
 
-    def get_row_with_id(self, cadet_id: str):
-        try:
-            matching_row = self[self.list_of_cadet_ids.index(cadet_id)]
-        except ValueError:
-            raise Exception("Cadet id %s not in data" % cadet_id)
+    def get_unique_row_with_cadet_id_(self, cadet_id: str):
 
-        return matching_row
+        list_of_rows = [row for row in self if row.cadet_id==cadet_id]
+        if len(list_of_rows)==0:
+            raise NoCadets
+        elif len(list_of_rows)>1:
+            raise DuplicateCadets
+        return list_of_rows[0]
+
+    def get_row_with_cadet_id_ignore_cancellations(self, cadet_id: str):
+
+        list_of_rows = [row for row in self if row.cadet_id==cadet_id and not row.cancelled_or_deleted]
+        if len(list_of_rows)==0:
+            raise NoCadets
+        elif len(list_of_rows)>1:
+            raise DuplicateCadets
+        return list_of_rows[0]
 
     def is_cadet_id_in_event(self, cadet_id: str) -> bool:
         return cadet_id in self.list_of_cadet_ids
 
-    def index_of_duplicate_cadet_ids_ignore_cancelled_and_deleted(self):
-        list_of_cadet_ids = self.list_of_cadet_ids
-        duplicate_id_list = list_duplicate_indices(list_of_cadet_ids)
-        list_of_cancelled_or_deleted_id = self._index_of_rows_that_are_cancelled_or_deleted()
 
-        return filter_duplicate_list_to_remove_cancelled_or_delete(
-            duplicate_id_list=duplicate_id_list,
-            list_of_cancelled_or_deleted_id=list_of_cancelled_or_deleted_id
-        )
-
-    def _index_of_rows_that_are_cancelled_or_deleted(self) -> list:
-        return [idx for idx,row in enumerate(self) if row.cancelled_or_deleted]
 
     @property
     def list_of_cadet_ids(self) -> list:

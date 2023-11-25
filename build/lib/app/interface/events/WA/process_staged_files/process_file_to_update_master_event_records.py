@@ -155,6 +155,6 @@ def action_when_finished(state_data: StateDataForAction):
     ## nothing more required and clear up handled by calling functions
     return reset_stage_and_return_previous(
         state_data=state_data,
-        log_msg="File import done"
+        log_msg="File import_wa done"
     )
 

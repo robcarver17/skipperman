@@ -8,15 +8,17 @@ from app.data_access.configuration.configuration import (
     SIMILARITY_LEVEL_TO_WARN_NAME,
 )
 from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
-from app.objects.utils import transform_str_from_date, similar, list_duplicate_indices
+from app.objects.utils import transform_str_from_date, similar
 from app.objects.constants import arg_not_passed, DAYS_IN_YEAR
 
 
-@dataclass(frozen=True)
+
+@dataclass
 class Cadet(GenericSkipperManObject):
     first_name: str
     surname: str
     date_of_birth: datetime.date
+    id: str = arg_not_passed
 
     def __repr__(self):
         return "%s %s (%s)" % (
@@ -24,6 +26,12 @@ class Cadet(GenericSkipperManObject):
             self.surname.title(),
             str(self.date_of_birth),
         )
+
+    def __eq__(self, other):
+        return (self.first_name==other.first_name) and (self.surname==other.surname) and (self.date_of_birth==other.date_of_birth)
+
+    def __hash__(self):
+        return hash(self.first_name+"_"+self.surname+"_"+self._date_of_birth_as_str)
 
     def approx_age_years(self, at_date: datetime.date = arg_not_passed) -> float:
         if at_date is arg_not_passed:
@@ -42,16 +50,6 @@ class Cadet(GenericSkipperManObject):
         return "%s. %s" % (initial, self.surname.title())
 
     @property
-    def id(self) -> str:
-        return (
-            self.first_name.lower()
-            + "_"
-            + self.surname.lower()
-            + "_"
-            + self._date_of_birth_as_str
-        )
-
-    @property
     def _date_of_birth_as_str(self) -> str:
         dob = self.date_of_birth
         return transform_str_from_date(dob)
@@ -61,12 +59,6 @@ class Cadet(GenericSkipperManObject):
 
     def similarity_dob(self, other_cadet: "Cadet") -> float:
         return similar(self._date_of_birth_as_str, other_cadet._date_of_birth_as_str)
-
-
-def cadet_name_from_id(cadet_id: str) -> str:
-    first_name, surname, __ = cadet_id.split("_")
-
-    return first_name.title() + " " + surname.title()
 
 
 class ListOfCadets(GenericListOfObjects):
@@ -116,4 +108,4 @@ def is_cadet_age_surprising(cadet: Cadet):
     return age < MIN_CADET_AGE or age > MAX_CADET_AGE
 
 
-default_cadet = Cadet("", "", datetime.date.today() - datetime.timedelta(days=8 * 365))
+default_cadet = Cadet(first_name=" ", surname=" ", date_of_birth=datetime.date.today() - datetime.timedelta(days=8 * 365))

@@ -1,3 +1,8 @@
+from typing import Callable
+
+import pandas as pd
+
+from app.objects.field_list import FIELDS_WITH_DATES,  FIELDS_WITH_INTEGERS, SPECIAL_FIELDS
 from typing import Union
 import datetime
 from dataclasses import dataclass
@@ -41,6 +46,9 @@ class Line(list):
 class ListOfLines(list):
     def __repr__(self):
         return "ListOfLines: contents %s" % super().__repr__()
+
+class Table(pd.DataFrame):
+    pass
 
 ### FIX ME ADD 'GO BACK AND RETURN' FORM ATTRIBUTE, INCLUDE FUNCTION TO WRITE THIS WITH A SINGLE BUTTON
 class Form(list):
@@ -105,3 +113,23 @@ class fileInput(Input):
 @dataclass
 class NewForm:
     form_name: str
+
+
+
+def construct_form_field_given_field_name(field_name: str,
+                                               *args,
+                                               **kwargs):
+
+    form_function  = get_required_form_field_type(field_name)
+
+    return form_function(*args, **kwargs)
+
+def get_required_form_field_type(field_name: str)->Callable:
+    if field_name in FIELDS_WITH_INTEGERS:
+        return intInput
+    elif field_name in FIELDS_WITH_DATES:
+        return dateInput
+    elif field_name in SPECIAL_FIELDS:
+        raise Exception("Can't construct a form field for field name %s" % field_name)
+    else:
+        return textInput

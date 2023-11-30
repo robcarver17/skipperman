@@ -1,7 +1,7 @@
 from typing import Union
 
-from app.logic.abstract_form import Form, NewForm
-from app.logic.abstract_interface import abstractInterface
+from app.logic.forms_and_interfaces.abstract_form import Form, NewForm
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form
 from app.logic.events.constants import WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE
 from app.logic.events.backend.load_wa_file import     delete_raw_event_upload_with_event_id,  get_staged_file_raw_event_filename

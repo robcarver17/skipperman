@@ -1,9 +1,9 @@
 from typing import Union
 from app.logic.cadets.view_cadets import cadet_name_from_id
-from app.logic.abstract_form import Form, NewForm, form_with_message_and_finished_button
-from app.logic.abstract_interface import abstractInterface
+from app.logic.forms_and_interfaces.abstract_form import Form, NewForm
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface, form_with_message_and_finished_button
 from app.logic.abstract_logic_api import initial_state_form
-from app.logic.events.constants import USE_ORIGINAL_DATA, USE_DATA_IN_FORM, USE_NEW_DATA, CADET_ID
+from app.logic.events.constants import USE_ORIGINAL_DATA_BUTTON_LABEL, USE_DATA_IN_FORM_BUTTON_LABEL, USE_NEW_DATA_BUTTON_LABEL, CADET_ID
 
 from app.logic.events.utilities import get_event_from_state
 
@@ -16,7 +16,7 @@ from app.logic.events.import_wa.update_existing_master_event_data_forms import \
     update_mapped_wa_event_data_with_new_data, any_important_difference_between_rows, get_current_cadet_id, \
     get_row_in_mapped_event_for_cadet_id, get_row_in_master_event_for_cadet_id
 
-from app.logic.events.backend.update_master_event_data import get_row_of_master_event_from_mapped_row_with_idx_and_status, add_new_row_to_master_event_data
+from app.logic.events.backend.update_master_event_data import get_row_of_master_event_from_mapped_row_with_idx_and_status, add_new_row_to_master_event_data,update_row_in_master_event_data
 from app.logic.events.backend.load_and_save_wa_mapped_events import load_existing_mapped_wa_event_with_ids
 from app.objects.events import Event
 from app.objects.mapped_wa_event_with_ids import RowInMappedWAEventWithId
@@ -26,21 +26,23 @@ from app.objects.constants import  NoMoreData, missing_data, DuplicateCadets
 def display_form_interactively_update_master_records(
     interface: abstractInterface
 ) -> Union[Form, NewForm]:
-    input("Press enter to continue")
+
 
     return iterative_process_updates_to_master_event_data(interface)
 
 
 def iterative_process_updates_to_master_event_data(interface: abstractInterface) -> Union[Form, NewForm]:
     print("Looping through updating master event data")
-    input("Press enter to continue")
+
     event = get_event_from_state(interface)
 
     try:
         cadet_id = get_and_save_next_cadet_id(interface)
     except NoMoreData:
         print("Finished looping")
-        return form_with_message_and_finished_button("Finished importing WA data")
+        return form_with_message_and_finished_button("Finished importing WA data", interface=interface)
+
+    print("Current cadet id is %s" % cadet_id)
 
     return process_update_to_cadet_in_event_data(
         interface=interface,
@@ -92,6 +94,7 @@ def process_update_to_existing_cadet_in_event_data(interface: abstractInterface,
 def process_update_to_cadet_new_to_master_data(interface: abstractInterface,
                                              event: Event,
                                           cadet_id: str) -> Form:
+    print("Row in master data for cadet with id %s" % cadet_id)
     try:
         relevant_row = get_row_in_mapped_event_for_cadet_id(cadet_id=cadet_id, event=event)
     except DuplicateCadets:
@@ -106,14 +109,17 @@ def process_update_to_cadet_new_to_master_data(interface: abstractInterface,
 def process_update_to_deleted_cadet(interface: abstractInterface,
                                              event: Event,
                                           cadet_id: str) -> Form:
-    master_event = load_master_event(
-        event
-    )
-    interface.log_message(
-        "Cadet %s was in WA event data, now appears to be missing from latest file - marked as deleted"
-        % cadet_name_from_id(cadet_id)
-    )
-    master_event.mark_cadet_as_deleted(cadet_id)
+    existing_row_in_master_event = get_row_in_master_event_for_cadet_id(event=event, cadet_id=cadet_id)
+    if not existing_row_in_master_event.is_deleted():
+        interface.log_message(
+            "Cadet %s was in WA event data, now appears to be missing or cancelled in latest file - marked as deleted"
+            % cadet_name_from_id(cadet_id)
+        )
+        existing_row_in_master_event.mark_as_deleted()
+        update_row_in_master_event_data(event=event,
+                                        new_row_in_mapped_wa_event_with_status=existing_row_in_master_event)
+    else:
+        print("Cadet %s already marked as deleted" % cadet_name_from_id(cadet_id))
 
     return iterative_process_updates_to_master_event_data(interface)
 
@@ -170,13 +176,13 @@ def process_update_to_existing_row_of_event_data(
 def post_form_interactively_update_master_records(interface: abstractInterface) -> Union[Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
     last_button_pressed = interface.last_button_pressed()
-    if last_button_pressed == USE_ORIGINAL_DATA:
+    if last_button_pressed == USE_ORIGINAL_DATA_BUTTON_LABEL:
         ## nothing to do, no change to master file
         print("Using original data")
-    elif last_button_pressed == USE_NEW_DATA:
+    elif last_button_pressed == USE_NEW_DATA_BUTTON_LABEL:
         print("using new data")
         update_mapped_wa_event_data_with_new_data(interface)
-    elif last_button_pressed == USE_DATA_IN_FORM:
+    elif last_button_pressed == USE_DATA_IN_FORM_BUTTON_LABEL:
         print("Updating from form data")
         update_mapped_wa_event_data_with_form_data(interface)
 
@@ -198,7 +204,12 @@ def get_and_save_next_cadet_id(interface: abstractInterface) -> str:
 
 def get_first_cadet_id_in_event_data(interface: abstractInterface) -> str:
     event = get_event_from_state(interface)
-    return list_of_cadet_ids_in_master_and_mapped_data(event)[0]
+    list_of_ids = list_of_cadet_ids_in_master_and_mapped_data(event)
+    id =  list_of_ids[0]
+
+    print("Getting first ID %s from list %s "  % (id, list_of_ids))
+
+    return id
 
 def get_next_cadet_id_in_event_data(interface: abstractInterface, current_id: str) -> str:
     event = get_event_from_state(interface)

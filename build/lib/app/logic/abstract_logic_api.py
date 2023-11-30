@@ -1,7 +1,7 @@
 from typing import Union
 from dataclasses import dataclass
-from app.logic.abstract_interface import abstractInterface
-from app.logic.abstract_form import NewForm, Form, button_label_requires_going_back
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.logic.forms_and_interfaces.abstract_form import NewForm, Form, button_label_requires_going_back
 
 INITIAL_STATE = "Initial form"
 @dataclass

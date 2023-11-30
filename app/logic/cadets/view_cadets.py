@@ -3,8 +3,8 @@ from typing import Union
 from app.logic.cadets.constants import VIEW_INDIVIDUAL_CADET_FORM, ADD_CADET_FORM, ADD_CADET_BUTTON_LABEL
 from app.objects.cadets import ListOfCadets, Cadet
 from app.data_access.data import data
-from app.logic.abstract_form import Form, NewForm, Line, Button, ListOfLines, _______________, main_menu_button, MAIN_MENU_BUTTON_LABEL
-from app.logic.abstract_interface import abstractInterface
+from app.logic.forms_and_interfaces.abstract_form import Form, NewForm, Line, Button, ListOfLines, _______________, main_menu_button
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 
 SORT_BY_SURNAME = "Sort by surname"
 SORT_BY_FIRSTNAME = "Sort by first name"
@@ -86,8 +86,19 @@ def get_list_of_cadets(sort_by: str = "") -> ListOfCadets:
 
 
 def cadet_name_from_id(cadet_id: str) -> str:
+    cadet = cadet_from_id(cadet_id)
+
+    return str(cadet)
+
+def cadet_from_id(cadet_id: str) -> Cadet:
     list_of_cadets = get_list_of_cadets()
 
     cadet = list_of_cadets.object_with_id(cadet_id)
 
-    return str(cadet)
+    return cadet
+
+def cadet_from_id_with_passed_list(cadet_id: str, list_of_cadets: ListOfCadets) -> Cadet:
+
+    cadet = list_of_cadets.object_with_id(cadet_id)
+
+    return cadet

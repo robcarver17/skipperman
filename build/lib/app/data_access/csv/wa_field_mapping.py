@@ -12,10 +12,8 @@ class CsvDataWAFieldMapping(GenericCsvData, DataWAFieldMapping):
         return read_mapping_from_file_object_or_filename(path_and_filename)
 
     def write(self, event_id: str, wa_field_mapping: WAFieldMapping):
-        df = wa_field_mapping.to_df()
         path_and_filename = self.path_and_filename_for_eventid(event_id)
-
-        df.to_csv(path_and_filename, index=False)
+        save_mapping_to_filename(path_and_filename=path_and_filename, wa_field_mapping=wa_field_mapping)
 
     def path_and_filename_for_eventid(self, event_id: str):
         return self.get_path_and_filename_for_named_csv_file(
@@ -31,11 +29,9 @@ class CsvDataWAFieldMapping(GenericCsvData, DataWAFieldMapping):
 
         return read_mapping_from_file_object_or_filename(path_and_filename)
 
-    def write_template(self, template_name: str, wa_field_mapping: WAFieldMapping) -> WAFieldMapping:
-        df = wa_field_mapping.to_df()
+    def write_template(self, template_name: str, wa_field_mapping: WAFieldMapping):
         path_and_filename = self.path_and_filename_for_template(template_name)
-
-        df.to_csv(path_and_filename, index=False)
+        save_mapping_to_filename(path_and_filename=path_and_filename, wa_field_mapping=wa_field_mapping)
 
 
     def path_and_filename_for_template(self, template_name: str):
@@ -55,3 +51,8 @@ def read_mapping_from_file_object_or_filename(file) -> WAFieldMapping:
     wa_field_mapping = WAFieldMapping.from_df(df)
 
     return wa_field_mapping
+
+def save_mapping_to_filename(path_and_filename: str,  wa_field_mapping: WAFieldMapping):
+    df = wa_field_mapping.to_df()
+    df.to_csv(path_and_filename, index=False)
+

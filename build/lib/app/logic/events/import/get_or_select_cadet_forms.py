@@ -1,9 +1,9 @@
-from app.logic.abstract_form import Form, NewForm, Line, ListOfLines, Button
-from app.logic.abstract_interface import abstractInterface
+from app.logic.forms_and_interfaces.abstract_form import Form, Line, ListOfLines, Button
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 
 
 from app.logic.cadets.add_cadet import list_of_similar_cadets
-from app.logic.cadets.view_cadets import get_list_of_cadets, SORT_BY_FIRSTNAME
+from app.logic.cadets.view_cadets import SORT_BY_FIRSTNAME
 
 
 from app.logic.events.constants import (

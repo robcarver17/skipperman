@@ -1,8 +1,8 @@
 from typing import Union
 
 from app.data_access.configuration.configuration import WILD_APRICOT_FILE_TYPES
-from app.logic.abstract_form import Form, NewForm, Line, ListOfLines, form_with_message_and_finished_button, Button, back_button, fileInput
-from app.logic.abstract_interface import abstractInterface
+from app.logic.forms_and_interfaces.abstract_form import Form, NewForm, Line, ListOfLines, Button, back_button, fileInput
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface, form_with_message_and_finished_button
 from app.logic.abstract_logic_api import initial_state_form
 from app.logic.events.constants import WA_FILE, UPLOAD_FILE_BUTTON_LABEL
 from app.logic.events.backend.load_wa_file import save_staged_file_of_raw_event_upload_with_event_id, \

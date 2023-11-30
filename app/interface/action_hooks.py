@@ -1,30 +1,19 @@
-from typing import Callable
-from app.interface.html.html import Html
-from app.interface.flask.flash import html_error ### seems a weird place to put it
-
-from app.interface.html.process_abstract_form_to_html import process_abstract_form_to_html
 from app.logic.cadets.cadets_logic_api import CadetLogicApi
 from app.logic.events.events_logic_api import EventLogicApi
+from app.logic.reporting.reporting_logic_api import ReportingLogicApi
 
 from app.interface.flask.interface import flaskInterface
-from app.logic.abstract_form import Form, Line, form_with_message
+from app.logic.forms_and_interfaces.abstract_form import Form,  form_with_message, File
 from app.logic.abstract_logic_api import AbstractLogicApi
 
-DEBUG = True
 
 class MissingMethod(Exception):
     pass
 
 class SiteActions:
 
-    def get_html_for_action(self, action_name: str) -> Html:
-        interface = flaskInterface(action_name)
-        abstract_form_for_action = self.get_abstract_form_for_specific_action(action_name)
-        html_code_for_action = process_abstract_form_to_html(abstract_form_for_action, interface=interface)
 
-        return html_code_for_action
-
-    def get_abstract_form_for_specific_action(self, action_name) -> Form:
+    def get_abstract_form_for_specific_action(self, action_name) -> [File, Form]:
         try:
             api = self.get_api_for_specific_action(action_name)
         except MissingMethod:
@@ -34,17 +23,7 @@ class SiteActions:
                 % action_name
             )
 
-        if DEBUG:
-            abstract_form_for_action = api.get_form()
-        else:
-            try:
-                abstract_form_for_action = api.get_form()
-
-            except Exception as e:
-                ## broken action
-                return form_with_message(
-                    "Action %s went wrong - exception code %s\n" % (action_name, str(e))
-                )
+        abstract_form_for_action = api.get_form()
 
         return abstract_form_for_action
 
@@ -67,3 +46,6 @@ class SiteActions:
 
     def view_list_of_events(self, interface: flaskInterface) -> AbstractLogicApi:
         return EventLogicApi(interface)
+
+    def view_possible_reports(self, interface: flaskInterface) -> AbstractLogicApi:
+        return ReportingLogicApi(interface)

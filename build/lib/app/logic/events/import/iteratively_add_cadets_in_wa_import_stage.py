@@ -1,7 +1,7 @@
 from typing import Union
 
-from app.logic.abstract_form import Form, NewForm
-from app.logic.abstract_interface import abstractInterface
+from app.logic.forms_and_interfaces.abstract_form import Form, NewForm
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 from app.logic.events.constants import WA_INTERACTIVELY_REMOVE_SPECIFIC_DUPLICATES_FROM_WA_FILE,     CHECK_CADET_BUTTON_LABEL,    FINAL_CADET_ADD_BUTTON_LABEL,    SEE_ALL_CADETS_BUTTON_LABEL,SEE_SIMILAR_CADETS_ONLY_LABEL
 
 from app.logic.events.utilities import get_event_from_state

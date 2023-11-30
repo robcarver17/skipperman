@@ -1,7 +1,7 @@
 from typing import Union
 
-from app.logic.abstract_form import Form, NewForm
-from app.logic.abstract_interface import abstractInterface
+from app.logic.forms_and_interfaces.abstract_form import Form, NewForm
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 from app.logic.events.constants import WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE,     CHECK_CADET_BUTTON_LABEL,    FINAL_CADET_ADD_BUTTON_LABEL,    SEE_ALL_CADETS_BUTTON_LABEL,SEE_SIMILAR_CADETS_ONLY_LABEL
 
 from app.logic.events.utilities import get_event_from_state
@@ -10,7 +10,7 @@ from app.logic.events.backend.add_cadet_ids_to_mapped_wa_event_data import (
     add_row_data_with_id_included_and_delete_from_unmapped_data,
     get_cadet_data_from_row_of_mapped_data_no_checks,
 )
-
+from app.logic.events.backend.load_and_save_wa_mapped_events import load_existing_mapped_wa_event_with_ids
 from app.logic.events.import_wa.get_or_select_cadet_forms import get_add_or_select_existing_cadet_form
 from app.logic.cadets.view_cadets import get_list_of_cadets
 from app.logic.cadets.view_individual_cadets import confirm_cadet_exists, get_cadet_from_list_of_cadets
@@ -24,7 +24,7 @@ def display_form_iteratively_add_cadets_during_import(
 ) -> Union[Form, NewForm]:
     event = get_event_from_state(interface)
     print("Looping through allocating IDs on WA file without IDs")
-    input("Press enter to continue")
+
 
     try:
         next_row = get_first_unmapped_row_for_event(event)
@@ -32,6 +32,7 @@ def display_form_iteratively_add_cadets_during_import(
         return process_next_row(next_row=next_row, interface=interface)
     except NoMoreData:
         print("Finished looping through allocating IDs")
+        print("%s" % str(load_existing_mapped_wa_event_with_ids(event)))
         return NewForm(WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE)
 
 
@@ -48,9 +49,10 @@ def process_next_row(
 
     list_of_cadets = get_list_of_cadets()
     if cadet in list_of_cadets:
-        ## MATCHED
-        print("Cadet %s matched" % str(cadet))
-        return process_row_when_cadet_matched(interface=interface, cadet=cadet)
+        ## MATCHED, WE NEED TO GET THE ID
+        matched_cadet_with_id = list_of_cadets.matching_cadet(cadet)
+        print("Cadet %s matched id is %s" % (str(cadet), matched_cadet_with_id.id))
+        return process_row_when_cadet_matched(interface=interface, cadet=matched_cadet_with_id)
     else:
         ## NOT MATCHED
         print("Cadet %s not matched" % str(cadet))

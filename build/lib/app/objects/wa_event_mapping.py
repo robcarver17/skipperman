@@ -18,8 +18,8 @@ class WAEventMapping(object):
     @classmethod
     def from_df(cls, some_df: pd.DataFrame):
         try:
-            events_list = list(some_df[EVENT_ID_LABEL].values)
-            wa_list = list(some_df[WA_ID_LABEL].values)
+            events_list = list(some_df[EVENT_ID_LABEL].astype(str).to_list())
+            wa_list = list(some_df[WA_ID_LABEL].to_list())
         except KeyError:
             raise Exception(
                 "WA/Event mapping needs to have columns %s and %s"

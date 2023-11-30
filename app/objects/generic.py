@@ -1,3 +1,4 @@
+from copy import copy
 import datetime
 import enum
 from enum import EnumMeta
@@ -14,6 +15,8 @@ from app.objects.utils import (
     get_dict_of_class_attributes,
 )
 
+KEYS = "Keys"
+VALUES = "Values"
 
 class GenericSkipperManObject:
     def __eq__(self, other):
@@ -28,6 +31,18 @@ class GenericSkipperManObject:
         dict_of_nones = dict([(attribute, None) for attribute in list_of_attributes])
 
         return cls(**dict_of_nones)
+
+    def as_df(self) -> pd.DataFrame:
+        as_str_dict = self.as_str_dict()
+        return pd.DataFrame({KEYS: as_str_dict.keys(), VALUES: as_str_dict.values()})
+
+    @classmethod
+    def from_df(self, df: pd.DataFrame):
+        new_df = df.drop(KEYS, axis=1)
+        new_df.index = df[KEYS]
+        as_dict = new_df.squeeze().to_dict()
+
+        return self.from_dict(as_dict)
 
     def as_str_dict(self) -> dict:
         as_dict = self.as_dict()
@@ -88,7 +103,7 @@ def _transform_string_into_class_instance(object_class, string):
     elif type(object_class) is EnumMeta:
         return object_class[string]
 
-    ## this will work for non strings eg floats
+    ## this will work for non strings eg floats, bool
     return object_class(string)
 
 

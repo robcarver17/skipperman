@@ -2,13 +2,13 @@ from typing import Union
 
 from app.data_access.data import data
 
-from app.logic.abstract_form import Form, NewForm, Line, ListOfLines, Button, back_button
-from app.logic.abstract_interface import abstractInterface
+from app.logic.forms_and_interfaces.abstract_form import Form, NewForm, Line, ListOfLines, Button, back_button
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form
 
 from app.logic.events.constants import *
 from app.logic.events.backend.load_wa_file import does_raw_event_file_exist
-from app.logic.events.utilities import get_event_from_state, confirm_event_exists
+from app.logic.events.utilities import get_event_from_state, confirm_event_exists, update_state_for_specific_event
 from app.objects.events import Event
 
 def display_form_view_individual_event(
@@ -67,6 +67,10 @@ def get_event_buttons(event: Event,
     field_mapping_done = is_wa_field_mapping_setup_for_event(event=event)
     raw_event_file_exists = does_raw_event_file_exist(event.id)
 
+    print(        "[wa_import_done=%s, field_mapping_done=%s, raw_event_file_exists=%s]"
+        % (str(wa_import_done), str(field_mapping_done), str(raw_event_file_exists))
+)
+
     if not wa_import_done and not field_mapping_done and not raw_event_file_exists:
         return Line([back_button, wa_initial_upload, wa_field_mapping])
 
@@ -108,18 +112,11 @@ def post_form_view_individual_event(interface: abstractInterface) -> Union[Form,
         return NewForm(WA_UPDATE_SUBSTAGE_IN_VIEW_EVENT_STAGE)
 
     elif last_button_pressed == ALLOCATE_CADETS_BUTTON_LABEL:
-        interface.log_error("not implemented")
-        return initial_state_form
+        return NewForm(WA_ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE)
 
     else:
         interface.log_error("Don't recognise button %s" % last_button_pressed)
         return initial_state_form
-
-
-def update_state_for_specific_event(
-    interface: abstractInterface, event_selected: str
-):
-    interface.set_persistent_value(EVENT, event_selected)
 
 
 def row_of_form_for_event_with_buttons(event) -> Line:

@@ -1,9 +1,7 @@
 from typing import Union
-from app.logic.abstract_form import Form, NewForm, Line, ListOfLines, form_with_message_and_finished_button
-from app.data_access.data import data
+from app.logic.forms_and_interfaces.abstract_form import Form, NewForm
 from app.logic.abstract_logic_api import initial_state_form
-from app.logic.abstract_interface import abstractInterface
-from app.logic.abstract_logic_api import INITIAL_STATE
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface, form_with_message_and_finished_button
 from app.logic.cadets.view_cadets import get_list_of_cadets
 
 from app.objects.cadets import Cadet

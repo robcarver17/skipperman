@@ -83,4 +83,5 @@ _dict_of_filenames_and_paths = dict(
         "cadets_with_groups_for_event",
         "cadets_with_groups_for_event_%s.csv",
     ),
+    print_options = ("options", "print_options_for_report_%s.csv")
 )

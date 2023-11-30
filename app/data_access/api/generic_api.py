@@ -10,7 +10,7 @@ from app.data_access.classes.cadets_with_groups_for_event import (
     DataListOfCadetsWithGroups,
 )
 from app.data_access.classes.mapped_wa_event import DataMappedWAEventWithNoIDs
-
+from app.data_access.classes.print_options import DataListOfPrintOptions
 
 class GenericDataApi(object):
 
@@ -49,4 +49,8 @@ class GenericDataApi(object):
     def data_list_of_cadets_with_groups(
         self,
     ) -> DataListOfCadetsWithGroups:
+        raise NotImplemented
+
+    @property
+    def data_print_options(self) -> DataListOfPrintOptions:
         raise NotImplemented

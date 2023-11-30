@@ -6,5 +6,5 @@
 menu_definition = {
     "Cadets": "view_master_list_of_cadets",
     "Events": "view_list_of_events",
-    "Reports": {"Cadets allocated to groups for an event": "report_group_allocations"},
+    "Reports": "view_possible_reports",
 }

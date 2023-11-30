@@ -17,7 +17,7 @@ from app.objects.mapped_wa_event_no_ids import (
 from app.objects.cadets import ListOfCadets
 from app.objects.constants import NoCadets, DuplicateCadets
 
-CADET_ID = "cadet_id"
+from app.objects.field_list import CADET_ID
 
 
 RowStatus = Enum("RowStatus", ["Cancelled", "Active", "Deleted"])

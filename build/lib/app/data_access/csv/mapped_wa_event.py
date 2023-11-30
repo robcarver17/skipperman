@@ -3,6 +3,7 @@ from app.data_access.csv.generic_csv_data import GenericCsvData
 from app.data_access.csv.utils import (
     transform_df_from_str_to_dates,
     transform_df_from_dates_to_str,
+transform_df_to_str
 )
 from app.objects.master_event import (
     MasterEvent,
@@ -54,6 +55,8 @@ class CsvDataMappedWAEventWithIDs(GenericCsvData, DataMappedWAEventWithIDs):
             return MappedWAEventWithIDs.create_empty()
 
         transform_df_from_str_to_dates(mapped_wa_event_df)
+        transform_df_to_str(mapped_wa_event_df)
+
         mapped_wa_event = MappedWAEventWithIDs.from_df(mapped_wa_event_df)
 
         return mapped_wa_event
@@ -85,6 +88,8 @@ class CsvDataMasterEvent(
             return MasterEvent.create_empty()
 
         transform_df_from_str_to_dates(mapped_wa_event_df)
+        transform_df_to_str(mapped_wa_event_df)
+
         mapped_wa_event = MasterEvent.from_df(
             mapped_wa_event_df
         )

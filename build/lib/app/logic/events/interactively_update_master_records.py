@@ -1,8 +1,8 @@
 from typing import Union
 
-from app.logic.abstract_form import Form, NewForm, form_with_message_and_finished_button
-from app.logic.abstract_interface import abstractInterface
-from app.logic.events.constants import ROW_IN_EVENT_DATA, USE_ORIGINAL_DATA, USE_DATA_IN_FORM, USE_NEW_DATA
+from app.logic.forms_and_interfaces.abstract_form import Form, NewForm
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface, form_with_message_and_finished_button
+from app.logic.events.constants import ROW_IN_EVENT_DATA, USE_ORIGINAL_DATA_BUTTON_LABEL, USE_DATA_IN_FORM_BUTTON_LABEL, USE_NEW_DATA_BUTTON_LABEL
 
 from app.logic.events.utilities import get_event_from_state
 
@@ -126,13 +126,13 @@ def process_update_to_existing_row_of_event_data(
 def post_form_interactively_update_master_records(interface: abstractInterface) -> Union[Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
     last_button_pressed = interface.last_button_pressed()
-    if last_button_pressed == USE_ORIGINAL_DATA:
+    if last_button_pressed == USE_ORIGINAL_DATA_BUTTON_LABEL:
         ## nothing to do, no change to master file
         print("Using original data")
-    elif last_button_pressed == USE_NEW_DATA:
+    elif last_button_pressed == USE_NEW_DATA_BUTTON_LABEL:
         print("using new data")
         update_mapped_wa_event_data_with_new_data(interface)
-    elif last_button_pressed == USE_DATA_IN_FORM:
+    elif last_button_pressed == USE_DATA_IN_FORM_BUTTON_LABEL:
         print("Updating from form data")
         update_mapped_wa_event_data_with_form_data(interface)
 

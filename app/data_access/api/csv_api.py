@@ -11,7 +11,7 @@ from app.data_access.csv.mapped_wa_event import (
 from app.data_access.csv.cadets_with_groups_for_event import (
     CsvDataListOfCadetsWithGroups,
 )
-
+from app.data_access.csv.print_options import csvDataListOfPrintOptions
 
 class CsvDataApi(GenericDataApi):
     def __init__(self, master_data_path: str):
@@ -56,5 +56,10 @@ class CsvDataApi(GenericDataApi):
         return CsvDataListOfCadetsWithGroups(master_data_path=self.master_data_path)
 
     @property
+    def data_print_options(self) -> csvDataListOfPrintOptions:
+        return csvDataListOfPrintOptions(master_data_path=self.master_data_path)
+
+    @property
     def master_data_path(self) -> str:
         return self._master_data_path
+

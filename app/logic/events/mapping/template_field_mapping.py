@@ -1,10 +1,11 @@
 from typing import Union
 from app.logic.events.mapping.read_and_write_mapping_files import get_list_of_templates, write_field_mapping_for_event, get_template, write_template, read_mapping_from_csv_file_object
-from app.logic.abstract_interface import abstractInterface, get_file_from_interface
-from app.logic.abstract_form import cancel_button, Form, ListOfLines, _______________, Line, form_with_message_and_finished_button, Button, NewForm, fileInput, textInput
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface, get_file_from_interface, \
+    form_with_message_and_finished_button
+from app.logic.forms_and_interfaces.abstract_form import cancel_button, Form, ListOfLines, _______________, Line, Button, NewForm, fileInput, textInput
 from app.logic.events.utilities import  get_event_from_state
 from app.logic.abstract_logic_api import initial_state_form
-from app.logic.events.constants import UPLOAD_TEMPLATE, WA_UPLOAD_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE, UPLOAD_FILE_BUTTON_LABEL, MAPPING_FILE, TEMPLATE_NAME
+from app.logic.events.constants import UPLOAD_TEMPLATE_BUTTON_LABEL, WA_UPLOAD_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE, UPLOAD_FILE_BUTTON_LABEL, MAPPING_FILE, TEMPLATE_NAME, DOWNLOAD_MAPPING_BUTTON_LABEL, WA_DOWNLOAD_EVENT_TEMPLATE_MAPPING_IN_VIEW_EVENT_STAGE
 
 def display_form_for_choose_template_field_mapping(interface: abstractInterface):
     list_of_templates_with_buttons = display_list_of_templates_with_buttons()
@@ -14,17 +15,23 @@ def display_form_for_choose_template_field_mapping(interface: abstractInterface)
                 cancel_button,
                 "Click to upload a new template",
                 _______________,
-                Button(UPLOAD_TEMPLATE),
+                Button(UPLOAD_TEMPLATE_BUTTON_LABEL),
             ]
         )
     else:
         contents_of_form = ListOfLines(
             [
                 cancel_button,
-                    "Choose template to use or upload a new one",
                 _______________,
-                Button(UPLOAD_TEMPLATE),
+                "Choose template to use, or...",
                 list_of_templates_with_buttons,
+                _______________,
+                    "... or upload a new one, or...",
+                Button(UPLOAD_TEMPLATE_BUTTON_LABEL),
+                _______________,
+                "... download a template to edit in excel then upload",
+                _______________,
+                Button(DOWNLOAD_MAPPING_BUTTON_LABEL)
             ]
         )
 
@@ -37,8 +44,10 @@ def display_list_of_templates_with_buttons()-> ListOfLines:
 
 def post_form_for_choose_template_field_mapping(interface: abstractInterface) -> Union[Form, NewForm]:
     last_button_pressed = interface.last_button_pressed()
-    if last_button_pressed==UPLOAD_TEMPLATE:
+    if last_button_pressed==UPLOAD_TEMPLATE_BUTTON_LABEL:
         return NewForm(WA_UPLOAD_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE)
+    elif last_button_pressed==DOWNLOAD_MAPPING_BUTTON_LABEL:
+        return NewForm(WA_DOWNLOAD_EVENT_TEMPLATE_MAPPING_IN_VIEW_EVENT_STAGE)
     ## should be a template
     template_name = last_button_pressed
 
@@ -51,7 +60,7 @@ def post_form_for_choose_template_field_mapping(interface: abstractInterface) ->
     event = get_event_from_state(interface)
     write_field_mapping_for_event(event=event, new_mapping=mapping)
 
-    return form_with_message_and_finished_button("Selected mapping template %s for event %s" % (template_name, str(event)))
+    return form_with_message_and_finished_button("Selected mapping template %s for event %s" % (template_name, str(event)), interface=interface)
 
 empty_name= ""
 def display_form_for_upload_template_field_mapping(interface: abstractInterface):
@@ -87,5 +96,5 @@ def post_form_for_upload_template_field_mapping(interface: abstractInterface):
 
     write_template(template_name=template_name, new_mapping=mapping)
 
-    return form_with_message_and_finished_button("Uploaded new template %s" % (template_name))
+    return form_with_message_and_finished_button("Uploaded new template %s" % (template_name), interface=interface)
 

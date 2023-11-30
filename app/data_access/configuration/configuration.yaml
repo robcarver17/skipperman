@@ -4,7 +4,7 @@
 #
 secret_key: "jasldjflsahdfsah"
 # Groups
-# Order matters as used in reporting
+# Order matters as used in backend
 # DO NOT CHANGE GROUP NAMES - instead keep the old ones, and add new if required
 # FIXME Consider moving to user editable file
 #

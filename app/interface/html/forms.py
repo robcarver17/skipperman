@@ -18,9 +18,22 @@ def form_html_wrapper(current_url: str):
 HTML_BUTTON_NAME = "action"
 
 
-def html_button(button_text, button_name=HTML_BUTTON_NAME):
+"""
+def html_button(button_text, button_name=arg_not_passed):
+    if button_name==arg_not_passed:
+        button_name = HTML_BUTTON_NAME
     return Html(
         '<input type="submit" name="%s" value="%s" />' % (button_name, button_text)
+    )
+"""
+
+def html_button(button_text, button_name=arg_not_passed, button_value = arg_not_passed):
+    if button_name==arg_not_passed:
+        button_name = HTML_BUTTON_NAME
+    if button_value==arg_not_passed:
+        button_value = button_text
+    return Html(
+        '<button name="%s" type="submit" value="%s">%s</button>' % (button_name, button_value, button_text)
     )
 
 
@@ -65,6 +78,40 @@ def html_as_date(some_html: str) -> datetime.date:
 
 DEFAULT_LABEL = "__!_!__canbeanythingunlikely to be used"
 
+
+def  html_dropdown_input(    input_label: str,
+    input_name: str,
+    dict_of_options: dict,
+    default_label: str = DEFAULT_LABEL,
+):
+    options_str_as_list = [
+        html_single_dropdown_option(
+            option_label=option_label,
+            option_value=option_value,
+            default_label=default_label,
+        )
+        for option_label, option_value in dict_of_options.items()
+    ]
+    options_str = " ".join(options_str_as_list)
+
+    return Html('%s <select name="%s"> %s </select>' % (input_label, input_name, options_str))
+
+
+def html_single_dropdown_option(
+    option_label: str,
+    option_value: str,
+    default_label: str = DEFAULT_LABEL,
+):
+    if default_label == option_label:
+        selected_str = 'selected="selected"'
+    else:
+        selected_str = ""
+
+    return '<option value="%s" %s> %s </option>' % (
+        option_value,
+        selected_str,
+        option_label,
+    )
 
 def html_radio_input(
     input_label: str,

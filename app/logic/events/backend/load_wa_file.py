@@ -4,7 +4,7 @@ import shutil
 import pandas as pd
 from app.data_access.configuration.configuration import WILD_APRICOT_EVENT_ID, WILD_APRICOT_FILE_TYPES
 from app.data_access.uploads_and_downloads import staging_directory, get_next_valid_upload_file_name
-from app.logic.abstract_interface import abstractInterface, get_file_from_interface
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface, get_file_from_interface
 from app.logic.events.constants import WA_FILE
 from app.objects.constants import NoValidFile, NoValidID, FileError
 

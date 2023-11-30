@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 from copy import copy
-from typing import Union, Tuple
-from app.logic.abstract_form import Form, NewForm,Line, ListOfLines, Button, dateInput, textInput, form_with_message_and_finished_button, _______________, cancel_button
+from typing import Union
+from app.logic.forms_and_interfaces.abstract_form import Form, NewForm,Line, ListOfLines, Button, dateInput, textInput, _______________, cancel_button
 from app.logic.cadets.constants import CHECK_BUTTON_LABEL, FINAL_ADD_BUTTON_LABEL, FIRST_NAME, \
     SURNAME, DOB
 
 from app.objects.cadets import Cadet, is_cadet_age_surprising, default_cadet
 from app.data_access.data import data
-from app.logic.abstract_interface import abstractInterface
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface, form_with_message_and_finished_button
 from app.logic.abstract_logic_api import initial_state_form
 
 
@@ -177,6 +177,7 @@ HIGHEST_FEASIBLE_CADET_AGE = MAX_CADET_AGE + 20  ## might be backfilling
 
 
 def verify_cadet_and_warn(cadet: Cadet) -> str:
+    print("Checking %s" % cadet)
     warn_text = ""
     if len(cadet.surname) < 4:
         warn_text += "Surname seems too short. "
@@ -206,6 +207,7 @@ def warning_for_similar_cadets(cadet: Cadet) -> str:
 
 
 def list_of_similar_cadets(cadet: Cadet) -> list:
+    print("Checking for similar %s" % cadet)
     existing_cadets = data.data_list_of_cadets.read()
     similar_cadets = existing_cadets.similar_cadets(
         cadet,

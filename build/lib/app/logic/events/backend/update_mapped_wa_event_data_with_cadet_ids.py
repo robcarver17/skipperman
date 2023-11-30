@@ -10,7 +10,7 @@ from app.objects.mapped_wa_event_with_ids import (
     MappedWAEventWithIDs,
 )
 
-from app.logic.abstract_interface import abstractInterface
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 
 
 def update_and_save_mapped_wa_event_data_with_and_without_ids(

@@ -1,5 +1,5 @@
 from app.logic.abstract_logic_api import AbstractLogicApi, INITIAL_STATE
-from app.logic.abstract_form import Form
+from app.logic.forms_and_interfaces.abstract_form import Form
 
 from app.logic.cadets.view_cadets import display_form_view_of_cadets, post_form_view_of_cadets
 from app.logic.cadets.add_cadet import display_form_add_cadet, post_form_add_cadets

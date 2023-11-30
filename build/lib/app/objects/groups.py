@@ -12,6 +12,8 @@ from app.data_access.configuration.configuration import (
 )
 from app.objects.cadets import Cadet, ListOfCadets
 from dataclasses import dataclass
+
+from app.objects.field_list import CADET_NAME, GROUP_STR_NAME, ID_NAME
 from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
 
 LAKE_TRAINING = "Lake training"
@@ -72,10 +74,6 @@ class Group:
         return self.group_name in MG_GROUPS
 
 
-GROUP_STR_NAME = "group"
-ID_NAME = "cadet_id"
-
-
 @dataclass(frozen=True)
 class CadetIdWithGroup(GenericListOfObjects):
     cadet_id: str
@@ -124,7 +122,9 @@ class ListOfCadetIdsWithGroups(GenericListOfObjects):
         cadet_id = cadet.id
         list_of_ids = self.list_of_ids
         idx = list_of_ids.index(cadet_id)
-        if chosen_group.create_unallocated:
+        if self[idx].group == chosen_group:
+            pass
+        if chosen_group.is_unallocated:
             ## don't store group as unallocated instead remove entirely
             self.pop(idx)
         else:
@@ -182,10 +182,7 @@ class ListOfCadetIdsWithGroups(GenericListOfObjects):
         return [item.cadet_id for item in self]
 
 
-CADET_NAME = "Cadet"
-
-
-@dataclass(frozen=True)
+@dataclass
 class CadetWithGroup(GenericSkipperManObject):
     ## For display purposes, can't store
     cadet: Cadet

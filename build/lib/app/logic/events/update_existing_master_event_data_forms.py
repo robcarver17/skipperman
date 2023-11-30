@@ -1,8 +1,8 @@
-from app.logic.events.constants import  USE_NEW_DATA, \
-    USE_ORIGINAL_DATA, USE_DATA_IN_FORM, ROW_IN_EVENT_DATA, ROW_STATUS
+from app.logic.events.constants import  USE_NEW_DATA_BUTTON_LABEL, \
+    USE_ORIGINAL_DATA_BUTTON_LABEL, USE_DATA_IN_FORM_BUTTON_LABEL, ROW_IN_EVENT_DATA, ROW_STATUS
 from app.logic.events.utilities import get_event_from_state
-from app.logic.abstract_interface import abstractInterface
-from app.logic.abstract_form import Form, Line, ListOfLines, radioInput, Button, construct_form_field_given_field_name
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.logic.forms_and_interfaces.abstract_form import Form, Line, ListOfLines, radioInput, Button, construct_form_field_given_field_name
 
 from app.logic.events.backend.update_master_event_data import new_status_and_status_message, update_row_in_master_event_data, \
     get_row_from_event_file_with_ids, NO_STATUS_CHANGE
@@ -110,9 +110,9 @@ def form_field_for_item_with_difference(field_name:str, diff: SingleDiff) -> Lin
     return Line(form_field)
 
 def buttons_for_update_row() -> Line:
-    use_new_data =Button(USE_NEW_DATA)
-    use_original_data = Button(USE_ORIGINAL_DATA)
-    use_data_in_form = Button(USE_DATA_IN_FORM)
+    use_new_data =Button(USE_NEW_DATA_BUTTON_LABEL)
+    use_original_data = Button(USE_ORIGINAL_DATA_BUTTON_LABEL)
+    use_data_in_form = Button(USE_DATA_IN_FORM_BUTTON_LABEL)
 
     return Line([
         use_original_data, use_new_data, use_data_in_form

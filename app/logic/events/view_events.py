@@ -1,10 +1,10 @@
 from typing import Union
 from app.logic.events.utilities import get_list_of_events
 
-from app.logic.abstract_form import Button, Form, ListOfLines, _______________, Line, NewForm, main_menu_button
+from app.logic.forms_and_interfaces.abstract_form import Button, Form, ListOfLines, _______________, Line, NewForm, main_menu_button
 from app.logic.events.constants import ADD_EVENT_BUTTON_LABEL, ADD_EVENT_STAGE, VIEW_EVENT_STAGE, SORT_BY_START_ASC, \
     SORT_BY_START_DSC, SORT_BY_NAME
-from app.logic.abstract_interface import abstractInterface
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 
 
 def display_form_view_of_events(

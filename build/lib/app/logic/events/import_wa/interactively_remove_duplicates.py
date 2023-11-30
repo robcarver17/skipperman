@@ -1,7 +1,7 @@
 from typing import Union
 
-from app.logic.abstract_form import Form, NewForm, Button, ListOfLines, Line, _______________
-from app.logic.abstract_interface import abstractInterface
+from app.logic.forms_and_interfaces.abstract_form import Form, NewForm, Button, ListOfLines, Line, _______________
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 from app.logic.events.constants import WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE
 
 from app.logic.events.utilities import get_event_from_state

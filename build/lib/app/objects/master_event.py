@@ -63,6 +63,11 @@ class RowInMasterEvent:
     ) -> DictOfDictDiffs:
         return self.data_in_row.dict_of_row_diffs(other_row.data_in_row, comparing_fields=comparing_fields)
 
+    def mark_as_deleted(self):
+        self.status = deleted_status
+
+    def is_deleted(self):
+        return self.status == deleted_status
 
 class MasterEvent(MappedWAEventWithIDs):
     def __init__(self, list_of_rows: List[RowInMasterEvent]):

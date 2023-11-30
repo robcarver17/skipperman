@@ -1,4 +1,5 @@
 from app.objects.constants import missing_data, NoFileUploaded, FileError
+from app.logic.forms_and_interfaces.abstract_form import ListOfLines, Form, Line, finished_button, _______________, YES, NO
 
 
 class abstractInterface(object):
@@ -7,6 +8,9 @@ class abstractInterface(object):
         raise NotImplemented
 
     def log_message(self, log_message: str):
+        raise NotImplemented
+
+    def print_logs(self) -> ListOfLines:
         raise NotImplemented
 
     def get_persistent_value(self, key):
@@ -45,6 +49,15 @@ class abstractInterface(object):
         # FIXME NEEDS TO PROCESS DATES FROM HTML - NEEDS TO KNOW KEY IS A DATE
         return missing_data
 
+    def true_if_radio_was_yes(self, input_label: str) -> bool:
+        value = self.value_from_form(input_label)
+        if value==YES:
+            return True
+        elif value==NO:
+            return False
+        else:
+            raise Exception("Value %s is not a yes or no option!" % str(value))
+
     def last_button_pressed(self) -> str:
         return missing_data
 
@@ -62,3 +75,16 @@ def get_file_from_interface(file_label: str, interface: abstractInterface):
         raise FileError("No file name selected")
 
     return file
+
+
+def form_with_message_and_finished_button(message: str, interface: abstractInterface) -> Form:
+    return Form(ListOfLines([
+                interface.print_logs(),
+                _______________,
+                Line(message),
+        _______________,
+                Line(finished_button)
+                ]
+        )
+    )
+

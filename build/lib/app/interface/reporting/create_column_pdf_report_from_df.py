@@ -1,15 +1,15 @@
 import pandas as pd
 
-from app.interface.reporting.reporting_options import (
+from app.logic.reporting.backend import (
     ReportingOptionsForSpecificGroupsInReport,
 )
-from app.interface.reporting.create_list_of_groups_from_df import (
+from app.logic.reporting.backend import (
     create_list_of_group_of_marked_up_str_from_df,
 )
-from app.interface.reporting.create_list_of_columns_from_groups import (
+from app.logic.reporting.backend import (
     create_columns_from_list_of_groups_of_marked_up_str,
 )
-from app.interface.reporting.create_pdf_from_list_of_columns import (
+from app.logic.reporting.backend import (
     create_pdf_from_list_of_columns_and_return_filename,
 )
 

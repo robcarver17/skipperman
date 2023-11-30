@@ -1,16 +1,16 @@
-from app.logic.events.constants import USE_NEW_DATA, \
-    USE_ORIGINAL_DATA, USE_DATA_IN_FORM, ROW_IN_EVENT_DATA, ROW_STATUS, CADET_ID
+from app.logic.events.constants import USE_NEW_DATA_BUTTON_LABEL, \
+    USE_ORIGINAL_DATA_BUTTON_LABEL, USE_DATA_IN_FORM_BUTTON_LABEL, ROW_STATUS, CADET_ID
 from app.logic.events.utilities import get_event_from_state
-from app.logic.abstract_interface import abstractInterface
-from app.logic.abstract_form import Form, Line, ListOfLines, radioInput, Button, construct_form_field_given_field_name
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.logic.forms_and_interfaces.abstract_form import Form, Line, ListOfLines, radioInput, Button, construct_form_field_given_field_name
 
 from app.logic.events.backend.update_master_event_data import new_status_and_status_message, update_row_in_master_event_data, \
-    get_row_from_event_file_with_ids, NO_STATUS_CHANGE
+    NO_STATUS_CHANGE
 from app.logic.events.backend.load_and_save_wa_mapped_events import load_master_event, \
     load_existing_mapped_wa_event_with_ids
 
 from app.logic.cadets.view_cadets import cadet_name_from_id
-from app.objects.constants import NoMoreData, missing_data, NoCadets, DuplicateCadets
+from app.objects.constants import DuplicateCadets
 from app.objects.events import Event
 from app.objects.master_event import RowInMasterEvent, get_row_of_master_event_from_mapped_row_with_idx_and_status
 from app.objects.mapped_wa_event_with_ids import all_possible_status, RowInMappedWAEventWithId
@@ -64,7 +64,7 @@ def get_status_change_field(new_row_in_mapped_wa_event_with_status: RowInMasterE
                              new_status.name:new_status.name
                          }))
     else:
-        return Line(radioInput(input_label="% select status" % status_message,
+        return Line(radioInput(input_label="%s: select status" % status_message,
                                 input_name=ROW_STATUS,
                                 default_label=new_status.name,
                                     dict_of_options=dict(
@@ -95,9 +95,11 @@ def get_form_fields_with_other_differences(new_row_in_mapped_wa_event_with_statu
         existing_row_in_master_event: RowInMasterEvent) -> ListOfLines:
     dict_of_dict_diffs = get_dict_of_dict_diffs(new_row_in_mapped_wa_event_with_status=new_row_in_mapped_wa_event_with_status,
                                                 existing_row_in_master_event=existing_row_in_master_event)
+    print(dict_of_dict_diffs)
     list_of_field_names = get_list_of_field_names_from_dict_of_dict_diffs(
         dict_of_dict_diffs
     )
+    print(list_of_field_names)
     list_of_form_fields = [
         form_field_for_item_with_difference(field_name=field_name,
                                             diff=dict_of_dict_diffs[field_name])
@@ -109,6 +111,12 @@ def get_form_fields_with_other_differences(new_row_in_mapped_wa_event_with_statu
 
 def get_dict_of_dict_diffs(new_row_in_mapped_wa_event_with_status: RowInMasterEvent,
         existing_row_in_master_event: RowInMasterEvent):
+
+    print("All diffs %s" % str(
+        existing_row_in_master_event.dict_of_row_diffs_in_rowdata(
+            new_row_in_mapped_wa_event_with_status,
+        )
+    ))
 
     dict_of_dict_diffs = (
         existing_row_in_master_event.dict_of_row_diffs_in_rowdata(
@@ -131,9 +139,9 @@ def form_field_for_item_with_difference(field_name:str, diff: SingleDiff) -> Lin
     return Line(form_field)
 
 def buttons_for_update_row() -> Line:
-    use_new_data =Button(USE_NEW_DATA)
-    use_original_data = Button(USE_ORIGINAL_DATA)
-    use_data_in_form = Button(USE_DATA_IN_FORM)
+    use_new_data =Button(USE_NEW_DATA_BUTTON_LABEL)
+    use_original_data = Button(USE_ORIGINAL_DATA_BUTTON_LABEL)
+    use_data_in_form = Button(USE_DATA_IN_FORM_BUTTON_LABEL)
 
     return Line([
         use_original_data, use_new_data, use_data_in_form
@@ -217,8 +225,7 @@ def get_field_names_for_recently_posted_event_diff_form(interface: abstractInter
 
 def get_list_of_field_names_from_dict_of_dict_diffs(dict_of_dict_diffs: dict) -> list:
     return [field_name
-            for field_name in dict_of_dict_diffs.items()
-            if field_name in FIELDS_TO_FLAG_WHEN_COMPARING_WA_DIFF
+            for field_name in dict_of_dict_diffs.keys()
             ]
 
 
@@ -233,7 +240,11 @@ def get_row_in_mapped_event_for_cadet_id(
                                           cadet_id: str) -> RowInMappedWAEventWithId:
 
     mapped_event = load_existing_mapped_wa_event_with_ids(event)
-    relevant_row = mapped_event.get_row_with_cadet_id_ignore_cancellations(cadet_id)
+    try:
+        relevant_row = mapped_event.get_unique_row_with_cadet_id_(cadet_id)
+    except DuplicateCadets:
+        ## could still raise duplicates
+        relevant_row = mapped_event.get_row_with_cadet_id_ignore_cancellations(cadet_id)
 
     return relevant_row
 

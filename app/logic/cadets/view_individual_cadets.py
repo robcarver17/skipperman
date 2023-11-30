@@ -1,9 +1,7 @@
 from typing import Union
-from app.logic.abstract_form import Form, NewForm, Line, ListOfLines, form_with_message_and_finished_button
-from app.data_access.data import data
+from app.logic.forms_and_interfaces.abstract_form import Form, NewForm
 from app.logic.abstract_logic_api import initial_state_form
-from app.logic.abstract_interface import abstractInterface
-from app.logic.abstract_logic_api import INITIAL_STATE
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface, form_with_message_and_finished_button
 from app.logic.cadets.view_cadets import get_list_of_cadets
 
 from app.objects.cadets import Cadet
@@ -31,7 +29,7 @@ def display_form_view_individual_cadet(
         interface=interface, cadet_selected=cadet_selected
     )
 
-    return display_form_for_selected_cadet(cadet_selected=cadet_selected)
+    return display_form_for_selected_cadet(cadet_selected=cadet_selected, interface=interface)
 
 
 def post_form_view_individual_cadet(interface: abstractInterface) -> Union[Form, NewForm]:
@@ -56,8 +54,9 @@ def get_specific_cadet_from_state(interface:abstractInterface) -> str:
 
 def display_form_for_selected_cadet(
     cadet_selected: str,
+        interface: abstractInterface
 ) -> Form:
-    return form_with_message_and_finished_button(cadet_selected)
+    return form_with_message_and_finished_button(cadet_selected, interface=interface)
 
 
 def get_cadet_from_list_of_cadets(cadet_selected: str) -> Cadet:

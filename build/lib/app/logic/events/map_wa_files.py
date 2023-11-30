@@ -1,6 +1,7 @@
 from app.data_access.data import data
 from app.objects.events import Event
 from app.logic.events.backend.load_wa_file import get_event_id_from_wa_df, load_raw_wa_file
+from app.logic.events.utilities import get_event_from_id
 from app.objects.constants import FileError
 
 
@@ -50,9 +51,10 @@ def confirm_correct_wa_mapping_and_return_true_if_new_event(
             # existing event mapped correctly - shouldn't get here, but for good order:
             return False
         else:
+            other_event = get_event_from_id(existing_event_id)
             raise FileError(
-                "WA ID %s in file is already mapped to a different existing event with ID %s - are you sure you have the right file?"
-                % (wa_id, existing_event_id)
+                "WA ID %s in file is already mapped to a different existing event with ID %s - are you sure you have the right file? [my id %s, other id %s]"
+                % (wa_id, other_event, event_id, existing_event_id)
             )
 
     ## not in eithier list, new mapping

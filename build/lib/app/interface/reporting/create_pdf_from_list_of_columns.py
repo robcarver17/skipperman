@@ -1,5 +1,5 @@
 from app.interface import ListtOfColumns
-from app.interface.reporting.pdf_layout import PdfLayout
+from app.logic.reporting.backend import PdfLayout
 from app.interface import (
     ReportingOptionsForSpecificGroupsInReport,
 )
@@ -29,7 +29,7 @@ def create_pdf_from_list_of_columns_and_return_filename(
             ## end of group, add extra line
             line_number += 1
 
-    path_and_filename = print_options.path_and_filename
+    path_and_filename = print_options.filename
     pdf_layout.output_file(path_and_filename)
 
     return path_and_filename

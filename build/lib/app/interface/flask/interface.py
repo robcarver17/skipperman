@@ -1,15 +1,14 @@
-from app.logic.abstract_interface import abstractInterface
-from app.interface.flask.flash import flash_log, flash_error
+from app.logic.forms_and_interfaces.abstract_form import ListOfLines
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.interface.flask.flash import flash_error
 
 from app.interface.flask.session_data_for_action import (
     SessionDataForAction,
     clear_session_data_for_action,
-    clear_session_data_for_all_actions,
 )
 from app.interface.html.forms import HTML_BUTTON_NAME, html_as_date
 from app.interface.html.url import get_action_url
-from app.objects.constants import NoFileUploaded
-from dataclasses import dataclass
+from app.objects.constants import NoFileUploaded, missing_data, arg_not_passed, NoButtonPressed
 from flask import request
 
 
@@ -21,10 +20,28 @@ class flaskInterface(abstractInterface):
         flash_error(error_message)
 
     def log_message(self, log_message: str):
-        flash_log(log_message)
+        logs = self.logs
+        logs.append(log_message)
+        self.logs = logs
+
+    def print_logs(self) -> ListOfLines:
+        return ListOfLines(self.logs)
+
+    @property
+    def logs(self) -> list:
+        logs = self.get_persistent_value("_logs")
+        if logs is missing_data:
+            return []
+        return logs
+
+    @logs.setter
+    def logs(self, logs: list):
+        self.set_persistent_value("_logs", logs)
 
     def get_persistent_value(self, key):
         return self.session_data.get_value(key)
+
+
 
     def set_persistent_value(self, key, value):
         self.session_data.set_value(key, value)
@@ -60,8 +77,8 @@ class flaskInterface(abstractInterface):
 
         return value
 
-    def last_button_pressed(self) -> str:
-        return get_last_button_pressed()
+    def last_button_pressed(self, button_name = arg_not_passed) -> str:
+        return get_last_button_pressed(button_name)
 
     @property
     def session_data(
@@ -90,12 +107,15 @@ def is_website_post() -> bool:
 def get_value_from_form(key: str):
     return request.form[key]
 
-NO_BUTTON_PRESSED=""
-def get_last_button_pressed() -> str:
+
+def get_last_button_pressed(button_name: str= arg_not_passed) -> str:
+    if button_name == arg_not_passed:
+        button_name=HTML_BUTTON_NAME
+    print("Testing press of %s" % button_name)
     try:
-        return request.form[HTML_BUTTON_NAME]
+        return request.form[button_name]
     except:
-        return NO_BUTTON_PRESSED
+        raise NoButtonPressed
 
 
 def uploaded_file(input_name: str = "file"):

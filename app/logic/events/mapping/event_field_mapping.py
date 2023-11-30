@@ -1,7 +1,7 @@
 from typing import Union
 
-from app.logic.abstract_form import Form, NewForm, Line, ListOfLines, Button, back_button, _______________, Table
-from app.logic.abstract_interface import abstractInterface
+from app.logic.forms_and_interfaces.abstract_form import Form, NewForm, Line, ListOfLines, Button, back_button, _______________, PandasDFTable
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form
 from app.logic.events.constants import *
 from app.logic.events.utilities import get_event_from_state
@@ -30,22 +30,22 @@ def display_form_event_field_mapping(
         )
     )
 
-def text_for_pre_existing_mapping(interface: abstractInterface) -> Table:
+def text_for_pre_existing_mapping(interface: abstractInterface) -> PandasDFTable:
     event = get_event_from_state(interface)
     try:
         mapping = get_field_mapping_for_event(event)
     except:
-        return Table()
+        return PandasDFTable()
 
-    return Table(mapping.to_df())
+    return PandasDFTable(mapping.to_df())
 
 
 def mapping_buttons() -> Line:
     return Line([
         back_button,
-        Button(MAP_TO_TEMPLATE),
+        Button(MAP_TO_TEMPLATE_BUTTON_LABEL),
         Button(CLONE_EVENT_BUTTON_LABEL),
-        Button(UPLOAD_MAPPING)
+        Button(UPLOAD_MAPPING_BUTTON_LABEL)
     ])
 
 
@@ -53,11 +53,11 @@ def post_form_event_field_mapping(interface: abstractInterface) -> Union[Form, N
     ## Called by post on view events form, so both stage and event name are set
 
     button_pressed = interface.last_button_pressed()
-    if button_pressed==MAP_TO_TEMPLATE:
+    if button_pressed==MAP_TO_TEMPLATE_BUTTON_LABEL:
         return NewForm(WA_SELECT_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE)
     elif button_pressed==CLONE_EVENT_BUTTON_LABEL:
         return NewForm(WA_CLONE_EVENT_MAPPING_IN_VIEW_EVENT_STAGE)
-    elif button_pressed==UPLOAD_MAPPING:
+    elif button_pressed==UPLOAD_MAPPING_BUTTON_LABEL:
         return NewForm(WA_UPLOAD_EVENT_MAPPING_IN_VIEW_EVENT_STAGE)
     else:
         interface.log_error("Button %s not recognised" % button_pressed)

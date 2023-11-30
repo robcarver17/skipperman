@@ -63,6 +63,8 @@ class Cadet(GenericSkipperManObject):
 
 class ListOfCadets(GenericListOfObjects):
 
+    def matching_cadet(self, cadet: Cadet) -> Cadet:
+        return self[self.index(cadet)]
     def sort_by_surname(self):
         return ListOfCadets(sorted(self, key=lambda x: x.surname))
 

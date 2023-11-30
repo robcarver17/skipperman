@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Tuple, Union
+from typing import Union
 import datetime
 from app.data_access.data import data
 from app.data_access.configuration.configuration import (
@@ -18,8 +18,9 @@ CHECK_BUTTON_LABEL, FINAL_ADD_BUTTON_LABEL
 
 from app.objects.events import Event, default_event, list_of_event_types, EventType
 
-from app.logic.abstract_interface import abstractInterface
-from app.logic.abstract_form import Form, Button, ListOfLines, Line, _______________, NewForm, textInput, dateInput, radioInput, form_with_message_and_finished_button, cancel_button
+from app.logic.forms_and_interfaces.abstract_interface import abstractInterface, form_with_message_and_finished_button
+from app.logic.forms_and_interfaces.abstract_form import Form, Button, ListOfLines, Line, NewForm, textInput, dateInput, radioInput, \
+    cancel_button
 from app.logic.abstract_logic_api import initial_state_form
 
 dict_of_event_types = dict(
@@ -178,7 +179,7 @@ def process_form_when_event_verified(interface: abstractInterface) -> Form:
         interface.log_error("Can't add this event, reason: %s, try again or consult support" % str(e))
         return initial_state_form
 
-    return form_with_message_and_finished_button("Added event %s" % str(event))
+    return form_with_message_and_finished_button("Added event %s" % str(event), interface=interface)
 
 
 

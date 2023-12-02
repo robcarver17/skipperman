@@ -1,4 +1,3 @@
-
 #### EVENTS
 
 
@@ -35,7 +34,9 @@ UPLOAD_FILE_BUTTON_LABEL = "Upload selected file"
 # update master event rows
 USE_ORIGINAL_DATA_BUTTON_LABEL = "Use original data that we already have"
 USE_NEW_DATA_BUTTON_LABEL = "Use new data imported from WA file"
-USE_DATA_IN_FORM_BUTTON_LABEL = "Use data as edited in form above (will be newest data if not edited)"
+USE_DATA_IN_FORM_BUTTON_LABEL = (
+    "Use data as edited in form above (will be newest data if not edited)"
+)
 
 # allocation
 UPDATE_ALLOCATION_BUTTON_LABEL = "Update group allocation as shown above"
@@ -46,11 +47,19 @@ VIEW_EVENT_STAGE = "View_event_stage"
 
 WA_FIELD_MAPPING_IN_VIEW_EVENT_STAGE = "WA_field_mapping_in_View_event_stage"
 
-WA_SELECT_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE = "WA_select_template_in_view_event_stage"
-WA_UPLOAD_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE= "WA_upload_template_in_view_event_stage"
+WA_SELECT_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE = (
+    "WA_select_template_in_view_event_stage"
+)
+WA_UPLOAD_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE = (
+    "WA_upload_template_in_view_event_stage"
+)
 WA_CLONE_EVENT_MAPPING_IN_VIEW_EVENT_STAGE = "WA_clone_event_in_view_event_stage"
-WA_UPLOAD_EVENT_MAPPING_IN_VIEW_EVENT_STAGE = "WA_upload_event_mapping_in_view_event_stage"
-WA_DOWNLOAD_EVENT_TEMPLATE_MAPPING_IN_VIEW_EVENT_STAGE = "WA_download_event_mapping_in_view_event_stage"
+WA_UPLOAD_EVENT_MAPPING_IN_VIEW_EVENT_STAGE = (
+    "WA_upload_event_mapping_in_view_event_stage"
+)
+WA_DOWNLOAD_EVENT_TEMPLATE_MAPPING_IN_VIEW_EVENT_STAGE = (
+    "WA_download_event_mapping_in_view_event_stage"
+)
 
 WA_UPLOAD_SUBSTAGE_IN_VIEW_EVENT_STAGE = "WA_upload_substage_in_View_event_stage"
 WA_IMPORT_SUBSTAGE_IN_VIEW_EVENT_STAGE = "WA_import_substage_in_View_event_stage"
@@ -62,7 +71,7 @@ WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE = (
     "WA_process_rows_in_interation_in_view_event_stage"
 )
 
-WA_ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE= "WA_allocate_cadets_in_View_event_stage"
+WA_ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE = "WA_allocate_cadets_in_View_event_stage"
 
 ## constants.py in session data
 EVENT = "event"
@@ -76,11 +85,11 @@ EVENT_END_DATE = "event_end_date"
 EVENT_TYPE = "event_type"
 WA_FILE = "file"
 MAPPING_FILE = "file"
-TEMPLATE_NAME= "template_name"
-ALLOCATION  = "allocation"
+TEMPLATE_NAME = "template_name"
+ALLOCATION = "allocation"
 
 ## field names row
-ROW_STATUS="row_status"
+ROW_STATUS = "row_status"
 SORT_BY_START_ASC = "Sort by start date, ascending"
 SORT_BY_START_DSC = "Sort by start date, descending"
 SORT_BY_NAME = "Sort by event name"

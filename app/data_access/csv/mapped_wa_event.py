@@ -3,7 +3,7 @@ from app.data_access.csv.generic_csv_data import GenericCsvData
 from app.data_access.csv.utils import (
     transform_df_from_str_to_dates,
     transform_df_from_dates_to_str,
-transform_df_to_str
+    transform_df_to_str,
 )
 from app.objects.master_event import (
     MasterEvent,
@@ -77,9 +77,7 @@ class CsvDataMappedWAEventWithIDs(GenericCsvData, DataMappedWAEventWithIDs):
         )
 
 
-class CsvDataMasterEvent(
-    GenericCsvData, DataMasterEvent
-):
+class CsvDataMasterEvent(GenericCsvData, DataMasterEvent):
     def read(self, event_id: str) -> MasterEvent:
         path_and_filename = self.path_and_filename_for_eventid(event_id)
         try:
@@ -90,9 +88,7 @@ class CsvDataMasterEvent(
         transform_df_from_str_to_dates(mapped_wa_event_df)
         transform_df_to_str(mapped_wa_event_df)
 
-        mapped_wa_event = MasterEvent.from_df(
-            mapped_wa_event_df
-        )
+        mapped_wa_event = MasterEvent.from_df(mapped_wa_event_df)
 
         return mapped_wa_event
 

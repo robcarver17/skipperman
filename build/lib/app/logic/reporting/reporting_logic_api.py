@@ -1,6 +1,6 @@
 from app.logic.abstract_logic_api import AbstractLogicApi, INITIAL_STATE
 from app.logic.reporting.view_list_of_reports import display_form_view_of_reports, post_form_view_of_reports
-from app.logic.reporting.report_group_allocations import *
+from app.logic.reporting.allocations.report_group_allocations import *
 
 class ReportingLogicApi(AbstractLogicApi):
     def get_displayed_form_given_form_name(self, form_name: str):
@@ -9,14 +9,12 @@ class ReportingLogicApi(AbstractLogicApi):
 
         elif form_name==GROUP_ALLOCATION_REPORT_STAGE:
             return display_form_report_group_allocation(self.interface)
-        elif form_name==REPORT_OPTIONS_IN_GROUP_ALLOCATION_STATE:
-            return display_form_for_report_group_allocation_options(self.interface)
+        elif form_name==REPORT_ADDITIONAL_OPTIONS_FOR_ALLOCATION_REPORT:
+            return display_form_for_report_group_additional_options(self.interface)
         elif form_name==GENERIC_OPTIONS_IN_GROUP_ALLOCATION_STATE:
             return display_form_for_report_group_allocation_generic_options(self.interface)
-        elif form_name==CHANGE_GROUP_ORDER_IN_GROUP_ALLOCATION_STATE:
-            return display_form_for_group_order_allocation_options(self.interface)
         elif form_name==CHANGE_GROUP_LAYOUT_IN_GROUP_ALLOCATION_STATE:
-            return display_form_for_group_arrangement_options(self.interface)
+            return display_form_for_group_arrangement_options_allocation_report(self.interface)
         elif form_name==CHANGE_PRINT_OPTIONS_IN_GROUP_ALLOCATION_STATE:
             return display_form_for_report_group_allocation_print_options(self.interface)
         else:
@@ -28,14 +26,12 @@ class ReportingLogicApi(AbstractLogicApi):
 
         elif form_name==GROUP_ALLOCATION_REPORT_STAGE:
             return post_form_report_group_allocation(self.interface)
-        elif form_name == REPORT_OPTIONS_IN_GROUP_ALLOCATION_STATE:
+        elif form_name == REPORT_ADDITIONAL_OPTIONS_FOR_ALLOCATION_REPORT:
             return post_form_for_report_group_allocation_options(self.interface)
         elif form_name==GENERIC_OPTIONS_IN_GROUP_ALLOCATION_STATE:
             return post_form_for_report_group_allocation_generic_options(self.interface)
-        elif form_name==CHANGE_GROUP_ORDER_IN_GROUP_ALLOCATION_STATE:
-            return post_form_for_group_order_allocation_options(self.interface)
         elif form_name==CHANGE_GROUP_LAYOUT_IN_GROUP_ALLOCATION_STATE:
-            return post_form_for_group_arrangement_options(self.interface)
+            return post_form_for_group_arrangement_options_allocation_report(self.interface)
         elif form_name==CHANGE_PRINT_OPTIONS_IN_GROUP_ALLOCATION_STATE:
             return post_form_for_report_group_allocation_print_options(self.interface)
 

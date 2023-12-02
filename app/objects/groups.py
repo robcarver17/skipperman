@@ -23,7 +23,6 @@ MG = "MG"
 
 class Group:
     def __init__(self, group_name: str):
-
         try:
             assert group_name in ALL_GROUPS
         except:
@@ -206,7 +205,6 @@ class ListOfCadetsWithGroup(GenericListOfObjects):
     def from_list_of_cadets_and_list_of_allocations(
         cls, list_of_cadets: ListOfCadets, list_of_allocations: ListOfCadetIdsWithGroups
     ):
-
         list_of_cadets_with_group = [
             CadetWithGroup(
                 cadet=list_of_cadets.has_id(allocation.cadet_id), group=allocation.group

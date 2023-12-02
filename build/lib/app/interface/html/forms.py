@@ -27,13 +27,15 @@ def html_button(button_text, button_name=arg_not_passed):
     )
 """
 
-def html_button(button_text, button_name=arg_not_passed, button_value = arg_not_passed):
-    if button_name==arg_not_passed:
+
+def html_button(button_text, button_name=arg_not_passed, button_value=arg_not_passed):
+    if button_name == arg_not_passed:
         button_name = HTML_BUTTON_NAME
-    if button_value==arg_not_passed:
+    if button_value == arg_not_passed:
         button_value = button_text
     return Html(
-        '<button name="%s" type="submit" value="%s">%s</button>' % (button_name, button_value, button_text)
+        '<button name="%s" type="submit" value="%s">%s</button>'
+        % (button_name, button_value, button_text)
     )
 
 
@@ -61,8 +63,7 @@ def html_date_input(
         value_html = ""
 
     return Html(
-        '%s: <input type="date" name="%s" %s/>'
-        % (input_label, input_name, value_html)
+        '%s: <input type="date" name="%s" %s/>' % (input_label, input_name, value_html)
     )
 
 
@@ -72,6 +73,7 @@ HTML_DATE_FORMAT = "%Y-%m-%d"
 def date_as_html(some_datetime: datetime.date) -> str:
     return some_datetime.strftime(HTML_DATE_FORMAT)
 
+
 def html_as_date(some_html: str) -> datetime.date:
     return datetime.datetime.strptime(some_html, HTML_DATE_FORMAT).date()
 
@@ -79,7 +81,8 @@ def html_as_date(some_html: str) -> datetime.date:
 DEFAULT_LABEL = "__!_!__canbeanythingunlikely to be used"
 
 
-def  html_dropdown_input(    input_label: str,
+def html_dropdown_input(
+    input_label: str,
     input_name: str,
     dict_of_options: dict,
     default_label: str = DEFAULT_LABEL,
@@ -94,7 +97,9 @@ def  html_dropdown_input(    input_label: str,
     ]
     options_str = " ".join(options_str_as_list)
 
-    return Html('%s <select name="%s"> %s </select>' % (input_label, input_name, options_str))
+    return Html(
+        '%s <select name="%s"> %s </select>' % (input_label, input_name, options_str)
+    )
 
 
 def html_single_dropdown_option(
@@ -112,6 +117,7 @@ def html_single_dropdown_option(
         selected_str,
         option_label,
     )
+
 
 def html_radio_input(
     input_label: str,
@@ -151,19 +157,21 @@ def html_single_radio_button(
         option_label,
     )
 
-def html_int_input(input_label: str,
-                   input_name: str,
-                   value: int = arg_not_passed,
-                   ):
+
+def html_int_input(
+    input_label: str,
+    input_name: str,
+    value: int = arg_not_passed,
+):
     if value is not arg_not_passed:
         value_html = 'value="%d"' % value
     else:
         value_html = ""
 
     return Html(
-        '%s: <input type="number" name="%s" %s />' % (input_label, input_name, value_html)
+        '%s: <input type="number" name="%s" %s />'
+        % (input_label, input_name, value_html)
     )
-
 
 
 def html_file_input(input_name: str = "file", accept: str = arg_not_passed):
@@ -176,8 +184,4 @@ def html_file_input(input_name: str = "file", accept: str = arg_not_passed):
     return Html('<input type="file" name="%s" %s>' % (input_name, accept_html))
 
 
-
-
 BACK_BUTTON_LABEL = "Back"
-
-

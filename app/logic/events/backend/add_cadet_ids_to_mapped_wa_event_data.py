@@ -44,7 +44,11 @@ def get_cadet_data_from_row_of_mapped_data_no_checks(
     dob = row_of_mapped_data[CADET_DATE_OF_BIRTH]
     dob_as_date = _translate_df_timestamp_to_datetime(dob)
 
-    return Cadet(first_name=first_name.strip(), surname=second_name.strip(), date_of_birth=dob_as_date)
+    return Cadet(
+        first_name=first_name.strip(),
+        surname=second_name.strip(),
+        date_of_birth=dob_as_date,
+    )
 
 
 def _translate_df_timestamp_to_datetime(df_timestamp) -> datetime.date:

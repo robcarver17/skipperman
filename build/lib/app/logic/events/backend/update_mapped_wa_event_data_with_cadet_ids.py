@@ -14,12 +14,8 @@ from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 
 
 def update_and_save_mapped_wa_event_data_with_and_without_ids(
-    mapped_wa_event_data: MappedWAEventNoIDs,
-    event: Event,
-    interface: abstractInterface
-
+    mapped_wa_event_data: MappedWAEventNoIDs, event: Event, interface: abstractInterface
 ):
-
     existing_mapped_wa_event_with_ids = load_existing_mapped_wa_event_with_ids(
         event=event
     )
@@ -50,7 +46,10 @@ def update_and_save_mapped_wa_event_data_with_and_without_ids(
         existing_mapped_wa_event_with_ids=existing_mapped_wa_event_with_ids,
     )
     if len(new_mapped_wa_event_data_no_ids) > 0:
-        interface.log_message("Found %d rows of new data not in previous file(s)" % len(new_mapped_wa_event_data_no_ids))
+        interface.log_message(
+            "Found %d rows of new data not in previous file(s)"
+            % len(new_mapped_wa_event_data_no_ids)
+        )
 
     save_mapped_wa_event_with_ids(
         mapped_wa_event_data_with_ids=existing_mapped_wa_event_with_ids, event=event
@@ -82,11 +81,11 @@ def remove_deleted_cadets_from_event(
 
     return missing_timestamps
 
+
 def existing_timestamps_that_are_missing_from_mapped_wa_event_data(
     mapped_wa_event_data: MappedWAEventNoIDs,
     existing_mapped_wa_event_with_ids: MappedWAEventWithIDs,
 ) -> list:
-
     list_of_timestamps_in_existing_data = (
         existing_mapped_wa_event_with_ids.list_of_timestamps()
     )
@@ -105,7 +104,6 @@ def update_existing_wa_event_data_with_new_field_data(
     mapped_wa_event_data: MappedWAEventNoIDs,
     existing_mapped_wa_event_with_ids: MappedWAEventWithIDs,
 ):
-
     list_of_timestamps_in_existing_data = (
         existing_mapped_wa_event_with_ids.list_of_timestamps()
     )
@@ -126,6 +124,7 @@ def update_existing_wa_event_data_with_new_field_data(
     ]
 
     return timestamps_in_both
+
 
 def only_new_rows_in_mapped_wa_event_data(
     mapped_wa_event_data: MappedWAEventNoIDs,

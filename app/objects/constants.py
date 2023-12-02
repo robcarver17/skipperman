@@ -23,11 +23,14 @@ class NoValidID(Exception):
 class NoMoreData(Exception):
     pass
 
+
 class NoCadets(Exception):
     pass
+
+
 class DuplicateCadets(Exception):
     pass
 
+
 class NoButtonPressed(Exception):
     pass
-

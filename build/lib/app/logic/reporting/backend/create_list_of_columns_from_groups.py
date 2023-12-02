@@ -1,65 +1,86 @@
 import numpy as np
 
-from app.logic.reporting.backend.optimise_column_layout import (
+from app.reporting.process_stages.optimise_column_layout import (
     _generate_list_of_all_possible_indices,
     _find_best_list_of_indices,
 )
-from app.logic.reporting.backend.strings_columns_groups import (
+from app.reporting.process_stages.strings_columns_groups import (
     ListtOfColumns,
     ListOfGroupsOfMarkedUpStrings,
-    _create_columns_from_list_of_groups_of_marked_up_str_with_passed_list,
+    create_columns_from_list_of_groups_of_marked_up_str_with_passed_list,
 )
-from app.logic.reporting.backend.reporting_options import (
+from app.logic.reporting.backend.TODELETE import (
     ReportingOptionsForSpecificGroupsInReport,
 )
-from app.objects.reporting_options import ARRANGE_OPTIMISE, ARRANGE_PASSED_LIST, ARRANGE_RECTANGLE
+from app.reporting.arrangement.arrangement_order import (
+    ArrangementOfColumns,
+)
+from app.reporting.arrangement.arrangement_methods import (
+    ARRANGE_OPTIMISE,
+    ARRANGE_PASSED_LIST,
+    ARRANGE_RECTANGLE,
+)
 
 
 def create_columns_from_list_of_groups_of_marked_up_str(
     list_of_groups_of_marked_up_str: ListOfGroupsOfMarkedUpStrings,
     report_options: ReportingOptionsForSpecificGroupsInReport,
 ) -> ListtOfColumns:
+    arrangement_of_columns = create_arrangement_from_list_of_groups_of_marked_up_str(
+        list_of_groups_of_marked_up_str=list_of_groups_of_marked_up_str,
+        report_options=report_options,
+    )
 
+    return create_columns_from_list_of_groups_of_marked_up_str_with_passed_list(
+        list_of_groups_of_marked_up_str=list_of_groups_of_marked_up_str,
+        arrangement_of_columns=arrangement_of_columns,
+    )
+
+
+def create_arrangement_from_list_of_groups_of_marked_up_str(
+    list_of_groups_of_marked_up_str: ListOfGroupsOfMarkedUpStrings,
+    report_options: ReportingOptionsForSpecificGroupsInReport,
+) -> ArrangementOfColumns:
     arrangement = report_options.arrange_groups.arrangement
-
     if arrangement is ARRANGE_PASSED_LIST:
-        return _create_columns_from_list_of_groups_of_marked_up_str_forced_order(
-            list_of_groups_of_marked_up_str=list_of_groups_of_marked_up_str,
-            report_options=report_options,
-        )
+        return get_order_of_indices_passed_list(report_options)
+
     elif arrangement is ARRANGE_RECTANGLE:
-        return _create_columns_from_list_of_groups_of_marked_up_str_evenly_size(
+        return get_order_of_indices_even_sizing(
             list_of_groups_of_marked_up_str=list_of_groups_of_marked_up_str,
             report_options=report_options,
         )
+
     elif arrangement is ARRANGE_OPTIMISE:
-        return _create_columns_from_list_of_groups_of_marked_up_str_optimise_size(
-            list_of_groups_of_marked_up_str=list_of_groups_of_marked_up_str,
+        return get_optimal_size_indices(
             report_options=report_options,
+            list_of_groups_of_marked_up_str=list_of_groups_of_marked_up_str,
         )
     else:
         raise Exception("Arrangement %s not recognised" % arrangement)
 
 
-def _create_columns_from_list_of_groups_of_marked_up_str_evenly_size(
+def get_order_of_indices_passed_list(
+    report_options: ReportingOptionsForSpecificGroupsInReport,
+) -> ArrangementOfColumns:
+    return report_options.arrange_groups.arrangement_of_columns
+
+
+def get_order_of_indices_even_sizing(
     list_of_groups_of_marked_up_str: ListOfGroupsOfMarkedUpStrings,
     report_options: ReportingOptionsForSpecificGroupsInReport,
-) -> ListtOfColumns:
-
+) -> ArrangementOfColumns:
     landscape = report_options.landscape
     group_count = len(list_of_groups_of_marked_up_str)
 
-    order_list_of_indices = _get_order_of_indices_even_sizing(
+    return get_order_of_indices_even_sizing_with_parameters(
         group_count=group_count, landscape=landscape
     )
 
-    return _create_columns_from_list_of_groups_of_marked_up_str_with_passed_list(
-        list_of_groups_of_marked_up_str=list_of_groups_of_marked_up_str,
-        order_list_of_indices=order_list_of_indices,
-    )
 
-
-def _get_order_of_indices_even_sizing(group_count: int, landscape: bool = True) -> list:
+def get_order_of_indices_even_sizing_with_parameters(
+    group_count: int, landscape: bool = True
+) -> ArrangementOfColumns:
     long_side_column_count = (group_count * (2**0.5)) ** 0.5
     short_side_column_count = group_count / long_side_column_count
     if landscape:
@@ -70,7 +91,6 @@ def _get_order_of_indices_even_sizing(group_count: int, landscape: bool = True) 
     column_length = int(np.ceil(group_count / number_of_columns))
 
     def _potentially_truncated_list(column_number):
-
         full_list = range(
             column_number * column_length, (column_number + 1) * column_length
         )
@@ -85,30 +105,16 @@ def _get_order_of_indices_even_sizing(group_count: int, landscape: bool = True) 
         ]
     )
 
-    return order_list_of_indices
+    return ArrangementOfColumns(order_list_of_indices)
 
 
-def _create_columns_from_list_of_groups_of_marked_up_str_forced_order(
-    list_of_groups_of_marked_up_str: ListOfGroupsOfMarkedUpStrings,
+def get_optimal_size_indices(
     report_options: ReportingOptionsForSpecificGroupsInReport,
-) -> ListtOfColumns:
-    force_order_list_of_indices = (
-        report_options.arrange_groups.force_order_of_columns_list_of_indices
-    )
-
-    return _create_columns_from_list_of_groups_of_marked_up_str_with_passed_list(
-        list_of_groups_of_marked_up_str=list_of_groups_of_marked_up_str,
-        order_list_of_indices=force_order_list_of_indices,
-    )
-
-
-def _create_columns_from_list_of_groups_of_marked_up_str_optimise_size(
     list_of_groups_of_marked_up_str: ListOfGroupsOfMarkedUpStrings,
-    report_options: ReportingOptionsForSpecificGroupsInReport,
-) -> ListtOfColumns:
-
+) -> ArrangementOfColumns:
     ## want to get ratio as close as possible to h/w ratio which will come from paper size
     ## generate all possible combinations and test
+
     group_count = len(list_of_groups_of_marked_up_str)
     series_of_possible_indices = _generate_list_of_all_possible_indices(group_count)
 
@@ -118,11 +124,4 @@ def _create_columns_from_list_of_groups_of_marked_up_str_optimise_size(
         report_options=report_options,
     )
 
-    best_list_of_columns = (
-        _create_columns_from_list_of_groups_of_marked_up_str_with_passed_list(
-            list_of_groups_of_marked_up_str=list_of_groups_of_marked_up_str,
-            order_list_of_indices=best_list_of_indices,
-        )
-    )
-
-    return best_list_of_columns
+    return ArrangementOfColumns(best_list_of_indices)

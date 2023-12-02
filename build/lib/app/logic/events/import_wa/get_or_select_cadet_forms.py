@@ -14,15 +14,23 @@ from app.logic.events.constants import (
 )
 
 from app.logic.cadets.view_cadets import get_list_of_cadets
-from app.logic.cadets.add_cadet import verify_cadet_and_warn, verify_form_with_cadet_details, get_add_cadet_form_with_information_passed, CadetAndVerificationText
+from app.logic.cadets.add_cadet import (
+    verify_cadet_and_warn,
+    verify_form_with_cadet_details,
+    get_add_cadet_form_with_information_passed,
+    CadetAndVerificationText,
+)
 
 from app.objects.cadets import Cadet
 from app.objects.constants import arg_not_passed
 
-def get_add_or_select_existing_cadet_form(interface: abstractInterface,
-                                          see_all_cadets:bool,
-                                          include_final_button: bool,
-                                          cadet: Cadet = arg_not_passed) -> Form:
+
+def get_add_or_select_existing_cadet_form(
+    interface: abstractInterface,
+    see_all_cadets: bool,
+    include_final_button: bool,
+    cadet: Cadet = arg_not_passed,
+) -> Form:
     print("Generating add/select cadet form")
     print("Passed cadet %s" % str(cadet))
     if cadet is arg_not_passed:
@@ -32,11 +40,16 @@ def get_add_or_select_existing_cadet_form(interface: abstractInterface,
     else:
         ## Cadet details as in WA, uese these
         verification_text = verify_cadet_and_warn(cadet)
-        cadet_and_text = CadetAndVerificationText(cadet=cadet ,verification_text=verification_text)
+        cadet_and_text = CadetAndVerificationText(
+            cadet=cadet, verification_text=verification_text
+        )
 
     ## First time, don't include final or all cadets
-    footer_buttons = get_footer_buttons_add_or_select_existing_cadets_form(cadet=cadet, see_all_cadets=see_all_cadets,
-                                                                                include_final_button=include_final_button)
+    footer_buttons = get_footer_buttons_add_or_select_existing_cadets_form(
+        cadet=cadet,
+        see_all_cadets=see_all_cadets,
+        include_final_button=include_final_button,
+    )
     # Custom header text
     header_text = "Looks like a new cadet in the WA entry file. You can edit them, check their details and then add, or choose an existing cadet instead (avoid creating duplicates! If the existing cadet details are wrong, select them for now and edit later)"
     return get_add_cadet_form_with_information_passed(
@@ -46,8 +59,9 @@ def get_add_or_select_existing_cadet_form(interface: abstractInterface,
     )
 
 
-def get_footer_buttons_add_or_select_existing_cadets_form(cadet: Cadet, see_all_cadets: bool = False,
-                                                          include_final_button: bool = False)-> ListOfLines:
+def get_footer_buttons_add_or_select_existing_cadets_form(
+    cadet: Cadet, see_all_cadets: bool = False, include_final_button: bool = False
+) -> ListOfLines:
     print("Get buttons for %s" % str(cadet))
     main_buttons = get_list_of_main_buttons(include_final_button)
 
@@ -56,6 +70,7 @@ def get_footer_buttons_add_or_select_existing_cadets_form(cadet: Cadet, see_all_
     )
 
     return ListOfLines([main_buttons, cadet_buttons])
+
 
 def get_list_of_main_buttons(include_final_button: bool) -> Line:
     check = Button(CHECK_CADET_BUTTON_LABEL)
@@ -68,6 +83,7 @@ def get_list_of_main_buttons(include_final_button: bool) -> Line:
 
     return main_buttons
 
+
 def get_list_of_cadet_buttons(cadet: Cadet, see_all_cadets: bool = False) -> Line:
     if see_all_cadets:
         list_of_cadets = get_list_of_cadets(sort_by=SORT_BY_FIRSTNAME)
@@ -77,6 +93,6 @@ def get_list_of_cadet_buttons(cadet: Cadet, see_all_cadets: bool = False) -> Lin
         list_of_cadets = list_of_similar_cadets(cadet)
         extra_button = SEE_ALL_CADETS_BUTTON_LABEL
 
-    all_labels = [extra_button]+list_of_cadets
+    all_labels = [extra_button] + list_of_cadets
 
     return Line([Button(str(label)) for label in all_labels])

@@ -10,7 +10,6 @@ from app.objects.mapped_wa_event_no_ids import MappedWAEventNoIDs
 def load_master_event(
     event: Event,
 ) -> MasterEvent:
-
     return data.data_master_event.read(event.id)
 
 

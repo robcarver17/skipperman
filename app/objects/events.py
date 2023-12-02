@@ -19,7 +19,6 @@ list_of_event_types = [e.name for e in EventType]
 # WA_event_id: int  ## does this need to be here?
 
 
-
 @dataclass
 class Event(GenericSkipperManObject):
     event_name: str  ## has to be preselected
@@ -32,10 +31,12 @@ class Event(GenericSkipperManObject):
         return self.event_description
 
     def __eq__(self, other):
-        return (self.event_name==other.event_name) and (self.event_year==other.event_year)
+        return (self.event_name == other.event_name) and (
+            self.event_year == other.event_year
+        )
 
     def __hash__(self):
-        return hash(self.event_name+"_"+str(self.event_year))
+        return hash(self.event_name + "_" + str(self.event_year))
 
     @property
     def verbose_repr(self):
@@ -45,7 +46,6 @@ class Event(GenericSkipperManObject):
             self._end_of_event_as_str,
             self.event_type_as_str,
         )
-
 
     @property
     def event_description(self) -> str:
@@ -116,7 +116,6 @@ class ListOfEvents(GenericListOfObjects):
         name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME,
         date_threshold: float = SIMILARITY_LEVEL_TO_WARN_DATE,
     ) -> "ListOfEvents":
-
         similar_start_date = [
             other_event
             for other_event in self

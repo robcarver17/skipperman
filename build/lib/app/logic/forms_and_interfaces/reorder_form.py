@@ -1,101 +1,118 @@
+from typing import Tuple
 from copy import copy
-from enum import Enum
 
-from app.logic.forms_and_interfaces.abstract_form import FINISHED_BUTTON_LABEL, Form, ListOfLines, bold, \
-    _______________, Button, Line
+from app.logic.forms_and_interfaces.abstract_form import (
+    FINISHED_BUTTON_LABEL,
+    ListOfLines,
+    bold,
+    _______________,
+    Button,
+    Line,
+    up_arrow,
+    down_arrow,
+    Table,
+    RowInTable,
+)
 from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
-from app.objects.constants import NoButtonPressed
+
 
 class reorderFormInterface:
     def __init__(self, interface: abstractInterface, current_order: list):
         self.interface = interface
         self.current_order = current_order
 
+    def indices_to_swap(self):
+        last_button_pressed = self.interface.last_button_pressed()
+        return indices_to_swap_given_button_name(
+            current_order=self.current_order, button_name=last_button_pressed
+        )
+
     def new_order_of_list(self):
         last_button_pressed = self.interface.last_button_pressed()
         return modify_list_given_button_name(
-            current_order=self.current_order,
-            button_name=last_button_pressed
+            current_order=self.current_order, button_name=last_button_pressed
         )
 
-    def finished(self):
-        last_button =  self.interface.last_button_pressed()
-        return last_button==FINISHED_BUTTON_NAME
 
+def list_of_button_names_given_group_order(current_order:list) -> list:
+    up_buttons = [get_button_name(label, UP) for label in current_order]
+    down_buttons = [get_button_name(label,DOWN) for label in current_order]
 
+    return up_buttons+down_buttons
 
 def modify_list_given_button_name(current_order: list, button_name: str) -> list:
-    element_name, action = from_button_name_to_action(button_name)
-    index = current_order.index(element_name)
-    last_item = index == (len(current_order)-1)
-
-    if (index==0 and action==UP) or (last_item and action == DOWN):
-        print("Can't push up top in list - swapping")
-        first_element = copy(current_order[0])
-        last_element = copy(current_order[-1])
-
-        current_order[0] = last_element
-        current_order[-1] = first_element
+    index, other_index = indices_to_swap_given_button_name(
+        current_order=current_order, button_name=button_name
+    )
 
     current_elmement = copy(current_order[index])
+    other_element = copy(current_order[other_index])
 
-    if action==UP:
-        previous_element = copy(current_order[index-1])
+    current_order[other_index] = current_elmement
+    current_order[index] = other_element
 
-        current_order[index] = previous_element
-        current_order[index-1] = current_elmement
+    return current_order
+
+
+def indices_to_swap_given_button_name(
+    current_order: list, button_name: str
+) -> Tuple[int, int]:
+    element_name, action = from_button_name_to_action(button_name)
+    index = current_order.index(element_name)
+    last_item = index == (len(current_order) - 1)
+
+    if (index == 0 and action == UP) or (last_item and action == DOWN):
+        return 0, -1
+
+    if action == UP:
+        return index, index - 1
     elif action == DOWN:
-        next_element = copy(current_order[index+1])
-
-        current_order[index] = next_element
-        current_order[index +1] = current_elmement
+        return index, index + 1
     else:
         raise Exception("Can't do this")
 
-    return current_order
 
 def from_button_name_to_action(button_name: str):
     split_it = button_name.split(DIVIDER)
 
-    return split_it[0],split_it[1]
+    return split_it[0], split_it[1]
 
 
-Arrow = Enum("Arrow", ["Up", "Down", "Left", "Right"])
-up_arrow = Arrow.Up
-down_arrow = Arrow.Down
 
-FINISHED_BUTTON_NAME = "finished_button"
-
-def reorder_form(
-    heading: str,
+def reorder_table(
     starting_list: list,
-    finished_button_label: str = FINISHED_BUTTON_LABEL) -> Form:
+) -> Table:
 
-    return Form(
-        ListOfLines([bold(heading), _______________]+
-            [
-                row_in_reorder_form(element_in_list=element_in_list, list_index=list_index, starting_list=starting_list) for list_index, element_in_list in enumerate(starting_list)
-            ]
-                    +[_______________, Button(finished_button_label, value=FINISHED_BUTTON_NAME)]
-        )
+    reorder_table = Table(
+        [
+            row_in_reorder_form(
+                element_in_list=element_in_list,
+                list_index=list_index,
+                starting_list=starting_list,
+            )
+            for list_index, element_in_list in enumerate(starting_list)
+        ]
     )
+    return reorder_table
 
 
 UP = "UP"
-DOWN="DOWN"
-DIVIDER = "_" ##
+DOWN = "DOWN"
+DIVIDER = "_"  ##
 
 
-def row_in_reorder_form(element_in_list: str, list_index: int, starting_list: list)-> Line:
+def row_in_reorder_form(
+    element_in_list: str, list_index: int, starting_list: list
+) -> RowInTable:
     up_button = Button(up_arrow, value=get_button_name(element_in_list, UP))
     down_button = Button(down_arrow, value=get_button_name(element_in_list, DOWN))
 
-    if list_index==0:
-        return Line([element_in_list, down_button])
-    if list_index==len(starting_list)-1:
-        return Line([element_in_list, up_button])
+    if list_index == 0:
+        return RowInTable([element_in_list, down_button])
+    if list_index == len(starting_list) - 1:
+        return RowInTable([element_in_list, up_button])
     else:
-        return Line([element_in_list, up_button, down_button])
+        return RowInTable([element_in_list, up_button, down_button])
 
 
 def get_button_name(label, direction):

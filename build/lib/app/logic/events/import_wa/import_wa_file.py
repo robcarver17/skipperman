@@ -4,14 +4,20 @@ from app.logic.forms_and_interfaces.abstract_form import Form, NewForm
 from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form
 from app.logic.events.constants import WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE
-from app.logic.events.backend.load_wa_file import     delete_raw_event_upload_with_event_id,  get_staged_file_raw_event_filename
+from app.logic.events.backend.load_wa_file import (
+    delete_raw_event_upload_with_event_id,
+    get_staged_file_raw_event_filename,
+)
 from app.logic.events.backend.map_wa_fields import map_wa_fields_in_df_for_event
 from app.logic.events.backend.map_wa_files import verify_and_if_required_add_wa_mapping
-from app.logic.events.backend.update_mapped_wa_event_data_with_cadet_ids import    update_and_save_mapped_wa_event_data_with_and_without_ids
+from app.logic.events.backend.update_mapped_wa_event_data_with_cadet_ids import (
+    update_and_save_mapped_wa_event_data_with_and_without_ids,
+)
 from app.logic.events.utilities import get_event_from_state
 
+
 def display_form_import_event_file(
-    interface: abstractInterface
+    interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     try:
         ## deletes staged file if works ok
@@ -35,7 +41,7 @@ def process_wa_staged_file_already_uploaded(interface: abstractInterface) -> New
     ## no need for exceptions always in try catch
     event = get_event_from_state(interface)
     filename = get_staged_file_raw_event_filename(event.id)
-    print("Working on %s "% filename)
+    print("Working on %s " % filename)
     ## add WA mapping
     verify_and_if_required_add_wa_mapping(filename, event=event)
 
@@ -43,9 +49,7 @@ def process_wa_staged_file_already_uploaded(interface: abstractInterface) -> New
     mapped_wa_event_data = map_wa_fields_in_df_for_event(event=event, filename=filename)
     print("mapped data %s" % mapped_wa_event_data)
     update_and_save_mapped_wa_event_data_with_and_without_ids(
-        event=event,
-        mapped_wa_event_data=mapped_wa_event_data,
-        interface=interface
+        event=event, mapped_wa_event_data=mapped_wa_event_data, interface=interface
     )
 
     print("Deleting staging file no longer needed")

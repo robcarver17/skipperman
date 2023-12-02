@@ -2,10 +2,15 @@ import os
 from typing import List
 import pandas as pd
 import datetime
-from app.objects.field_list import FIELDS_WITH_DATES, FIELDS_WITH_DATETIMES, FIELDS_AS_STR
+from app.objects.field_list import (
+    FIELDS_WITH_DATES,
+    FIELDS_WITH_DATETIMES,
+    FIELDS_AS_STR,
+)
 
 DATE_STR = "%Y/%m/%d"
 DATETIME_STR = "%Y/%m/%d %H:%M:%S.%f"
+
 
 def files_with_extension_in_resolved_pathname(
     resolved_pathname: str, extension=".csv"
@@ -27,6 +32,7 @@ def transform_df_to_str(df: pd.DataFrame):
 
     return df
 
+
 def transform_df_from_dates_to_str(df: pd.DataFrame):
     for field in FIELDS_WITH_DATES:
         transform_df_column_from_dates_to_str(df=df, date_series_name=field)
@@ -42,7 +48,6 @@ def transform_df_column_from_dates_to_str(df: pd.DataFrame, date_series_name: st
 
 def transform_date_into_str(date: datetime.date) -> str:
     return date.strftime(DATE_STR)
-
 
 
 def transform_df_column_from_datetime_to_str(df: pd.DataFrame, date_series_name: str):

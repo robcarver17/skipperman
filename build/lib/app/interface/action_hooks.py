@@ -3,16 +3,15 @@ from app.logic.events.events_logic_api import EventLogicApi
 from app.logic.reporting.reporting_logic_api import ReportingLogicApi
 
 from app.interface.flask.interface import flaskInterface
-from app.logic.forms_and_interfaces.abstract_form import Form,  form_with_message, File
+from app.logic.forms_and_interfaces.abstract_form import Form, form_with_message, File
 from app.logic.abstract_logic_api import AbstractLogicApi
 
 
 class MissingMethod(Exception):
     pass
 
+
 class SiteActions:
-
-
     def get_abstract_form_for_specific_action(self, action_name) -> [File, Form]:
         try:
             api = self.get_api_for_specific_action(action_name)
@@ -27,7 +26,7 @@ class SiteActions:
 
         return abstract_form_for_action
 
-    def get_api_for_specific_action(self, action_name)-> AbstractLogicApi:
+    def get_api_for_specific_action(self, action_name) -> AbstractLogicApi:
         interface = flaskInterface(action_name)
         try:
             method_to_get_api = getattr(self, action_name)
@@ -39,7 +38,6 @@ class SiteActions:
     ## TO ADD NEW ACTIONS SUBMIT A NEW METHOD HERE
     ## These are values from the dict in menu_define
     ## ALL METHODS MUST TAKE interface and only that as an argument
-
 
     def view_master_list_of_cadets(self, interface: flaskInterface) -> AbstractLogicApi:
         return CadetLogicApi(interface)

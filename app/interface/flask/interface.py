@@ -8,7 +8,12 @@ from app.interface.flask.session_data_for_action import (
 )
 from app.interface.html.forms import HTML_BUTTON_NAME, html_as_date
 from app.interface.html.url import get_action_url
-from app.objects.constants import NoFileUploaded, missing_data, arg_not_passed, NoButtonPressed
+from app.objects.constants import (
+    NoFileUploaded,
+    missing_data,
+    arg_not_passed,
+    NoButtonPressed,
+)
 from flask import request
 
 
@@ -38,14 +43,11 @@ class flaskInterface(abstractInterface):
     def logs(self, logs: list):
         self.set_persistent_value("_logs", logs)
 
-    def get_persistent_value(self, key):
-        return self.session_data.get_value(key)
-
-
+    def get_persistent_value(self, key, default=missing_data):
+        return self.session_data.get_value(key, default=missing_data)
 
     def set_persistent_value(self, key, value):
         self.session_data.set_value(key, value)
-
 
     @property
     def is_initial_stage_form(self) -> bool:
@@ -77,7 +79,7 @@ class flaskInterface(abstractInterface):
 
         return value
 
-    def last_button_pressed(self, button_name = arg_not_passed) -> str:
+    def last_button_pressed(self, button_name=arg_not_passed) -> str:
         return get_last_button_pressed(button_name)
 
     @property
@@ -99,7 +101,6 @@ class flaskInterface(abstractInterface):
         return self._action_name
 
 
-
 def is_website_post() -> bool:
     return request.method == "POST"
 
@@ -108,9 +109,9 @@ def get_value_from_form(key: str):
     return request.form[key]
 
 
-def get_last_button_pressed(button_name: str= arg_not_passed) -> str:
+def get_last_button_pressed(button_name: str = arg_not_passed) -> str:
     if button_name == arg_not_passed:
-        button_name=HTML_BUTTON_NAME
+        button_name = HTML_BUTTON_NAME
     print("Testing press of %s" % button_name)
     try:
         return request.form[button_name]

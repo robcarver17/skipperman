@@ -8,6 +8,7 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = SECRET_KEY
 app.config["MAX_CONTENT_LENGTH"] = MAX_FILE_SIZE
 
+
 ## Two types of entry point:
 @app.route(INDEX_URL)
 def home():

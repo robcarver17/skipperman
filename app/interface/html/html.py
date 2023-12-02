@@ -90,6 +90,7 @@ def html_link_with_nested_list(string: str, url: str, nested_list_to_wrap: Html)
 empty_html = Html("")
 horizontal_line = Html("<hr />")
 
+
 ## Entire document
 def html_doc_wrapper(head_material: Html) -> HtmlWrapper:
     return HtmlWrapper(
@@ -98,10 +99,12 @@ def html_doc_wrapper(head_material: Html) -> HtmlWrapper:
         + "</head><body>%s</body></html>"
     )
 
+
 def html_from_pandas_table(table: pd.DataFrame) -> Html:
     return Html(table.to_html())
 
-html_table_wrappper= HtmlWrapper("<table> %s </table>")
+
+html_table_wrappper = HtmlWrapper('<table border="1"> %s </table>')
 html_table_row_wrapper = HtmlWrapper("<tr>%s</tr>")
 html_table_element_wrapper = HtmlWrapper("<td>%s</td>")
 html_table_heading_wrapper = HtmlWrapper("<th>%s</th>")

@@ -3,9 +3,7 @@ from fpdf import FPDF
 
 import numpy as np
 
-from app.logic.reporting.backend.reporting_options import (
-    PrintOptions,
-)
+from app.reporting.options_and_parameters.print_options import PrintOptions
 from app.data_access.configuration.configuration import (
     ALL_PAGESIZE,
     ALL_FONTS,
@@ -15,7 +13,10 @@ from app.data_access.configuration.configuration import (
     TITLE_MULTIPLIER,
     LINE_GAP_AS_PERCENTAGE_OF_CHARACTER_HEIGHT,
 )
-from app.logic.reporting.backend.strings_columns_groups import ListtOfColumns, MarkedUpString
+from app.reporting.process_stages.strings_columns_groups import (
+    ListtOfColumns,
+    MarkedUpString,
+)
 
 
 @dataclass
@@ -48,7 +49,6 @@ class PdfLayout:
     def put_text_on_page(
         self, column_number: int, line_number: int, marked_up_text: MarkedUpString
     ):
-
         x_point = self._x_cordinate_given_column_number(column_number)
         y_point = self._y_cordinate_given_line_number(line_number)
 

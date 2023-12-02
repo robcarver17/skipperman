@@ -8,11 +8,17 @@ from app.objects.mapped_wa_event_no_ids import RowInMappedWAEventNoId
 from app.objects.mapped_wa_event_with_ids import (
     RowInMappedWAEventWithId,
     MappedWAEventWithIDs,
-    CADET_ID, RowStatus, STATUS_FIELD, cancelled_status, active_status,
-    deleted_status, get_status_from_row_of_mapped_wa_event_data,
+    CADET_ID,
+    RowStatus,
+    STATUS_FIELD,
+    cancelled_status,
+    active_status,
+    deleted_status,
+    get_status_from_row_of_mapped_wa_event_data,
 )
 from app.objects.utils import DictOfDictDiffs
 from app.objects.constants import arg_not_passed
+
 
 @dataclass
 class RowInMasterEvent:
@@ -21,8 +27,11 @@ class RowInMasterEvent:
     status: RowStatus
 
     def __eq__(self, other):
-        return other.cadet_id == self.cadet_id and other.status == self.status \
-               and len(self.dict_of_row_diffs_in_rowdata(other))==0
+        return (
+            other.cadet_id == self.cadet_id
+            and other.status == self.status
+            and len(self.dict_of_row_diffs_in_rowdata(other)) == 0
+        )
 
     def update_data_in_row(self, key, new_value):
         self.data_in_row[key] = new_value
@@ -31,7 +40,6 @@ class RowInMasterEvent:
     def from_row_in_mapped_wa_event_with_id(
         cls, row_in_mapped_wa_event_with_id: RowInMappedWAEventWithId, status: RowStatus
     ):
-
         return cls(
             data_in_row=row_in_mapped_wa_event_with_id.data_in_row,
             cadet_id=row_in_mapped_wa_event_with_id.cadet_id,
@@ -58,16 +66,18 @@ class RowInMasterEvent:
         )
 
     def dict_of_row_diffs_in_rowdata(
-        self, other_row: "RowInMasterEvent",
-            comparing_fields =arg_not_passed
+        self, other_row: "RowInMasterEvent", comparing_fields=arg_not_passed
     ) -> DictOfDictDiffs:
-        return self.data_in_row.dict_of_row_diffs(other_row.data_in_row, comparing_fields=comparing_fields)
+        return self.data_in_row.dict_of_row_diffs(
+            other_row.data_in_row, comparing_fields=comparing_fields
+        )
 
     def mark_as_deleted(self):
         self.status = deleted_status
 
     def is_deleted(self):
         return self.status == deleted_status
+
 
 class MasterEvent(MappedWAEventWithIDs):
     def __init__(self, list_of_rows: List[RowInMasterEvent]):
@@ -93,9 +103,7 @@ class MasterEvent(MappedWAEventWithIDs):
         try:
             assert not self.is_cadet_id_in_event(cadet_id)
         except:
-            raise Exception(
-                "Can't add a duplicate cadet ID to master event data"
-            )
+            raise Exception("Can't add a duplicate cadet ID to master event data")
 
         self.append(row_of_mapped_wa_event_data_with_status)
 
@@ -119,7 +127,6 @@ class MasterEvent(MappedWAEventWithIDs):
         exclude_active: bool = False,
         exclude_deleted: bool = True,
     ) -> list:
-
         event_subsetted_for_given_status = self.subset_with_given_status(
             exclude_cancelled=exclude_cancelled,
             exclude_deleted=exclude_deleted,
@@ -134,7 +141,6 @@ class MasterEvent(MappedWAEventWithIDs):
         exclude_active: bool = False,
         exclude_deleted: bool = True,
     ) -> "MasterEvent":
-
         new_subset = copy(self)
         if exclude_active:
             new_subset = [row for row in self if row.status is not active_status]

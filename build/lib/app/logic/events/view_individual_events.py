@@ -2,44 +2,40 @@ from typing import Union
 
 from app.data_access.data import data
 
-from app.logic.forms_and_interfaces.abstract_form import Form, NewForm, Line, ListOfLines, Button, back_button
+from app.logic.forms_and_interfaces.abstract_form import (
+    Form,
+    NewForm,
+    Line,
+    ListOfLines,
+    Button,
+    back_button,
+    BACK_BUTTON_LABEL,
+)
 from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form
 
 from app.logic.events.constants import *
 from app.logic.events.backend.load_wa_file import does_raw_event_file_exist
-from app.logic.events.utilities import get_event_from_state, confirm_event_exists, update_state_for_specific_event
+from app.logic.events.utilities import (
+    get_event_from_state,
+    confirm_event_exists,
+    update_state_for_specific_event,
+)
 from app.objects.events import Event
 
+
 def display_form_view_individual_event(
-    interface: abstractInterface
+    interface: abstractInterface,
 ) -> Union[Form, NewForm]:
-    event_name_selected = interface.last_button_pressed()
-
-    try:
-        confirm_event_exists(event_name_selected)
-    except:
-        interface.log_error("Event %s no longer in list- someone else has deleted or file corruption?"
-            % event_name_selected)
-        return initial_state_form
-
-    ## so whilst we are in this stage, we know which event we are talking about
-    update_state_for_specific_event(
-        interface=interface, event_selected=event_name_selected)
-
-    return get_selected_event_form(interface)
-
-def get_selected_event_form(    interface: abstractInterface
-) -> Union[Form, NewForm]:
-
     event = get_event_from_state(interface)
     form = get_event_form_for_event(event, interface=interface)
 
     return form
 
 
-def get_event_form_for_event(event: Event, interface: abstractInterface) -> Union[Form, NewForm]:
-
+def get_event_form_for_event(
+    event: Event, interface: abstractInterface
+) -> Union[Form, NewForm]:
     event_description = event.verbose_repr
     buttons = get_event_buttons(event, interface=interface)
 
@@ -48,8 +44,7 @@ def get_event_form_for_event(event: Event, interface: abstractInterface) -> Unio
     return Form(lines_in_form)
 
 
-def get_event_buttons(event: Event,
-                      interface: abstractInterface)-> Line:
+def get_event_buttons(event: Event, interface: abstractInterface) -> Line:
     wa_initial_upload = Button(
         WA_UPLOAD_BUTTON_LABEL
     )  ## uploads and creates staging file
@@ -67,9 +62,10 @@ def get_event_buttons(event: Event,
     field_mapping_done = is_wa_field_mapping_setup_for_event(event=event)
     raw_event_file_exists = does_raw_event_file_exist(event.id)
 
-    print(        "[wa_import_done=%s, field_mapping_done=%s, raw_event_file_exists=%s]"
+    print(
+        "[wa_import_done=%s, field_mapping_done=%s, raw_event_file_exists=%s]"
         % (str(wa_import_done), str(field_mapping_done), str(raw_event_file_exists))
-)
+    )
 
     if not wa_import_done and not field_mapping_done and not raw_event_file_exists:
         return Line([back_button, wa_initial_upload, wa_field_mapping])
@@ -95,7 +91,9 @@ def get_event_buttons(event: Event,
     return Line([back_button])
 
 
-def post_form_view_individual_event(interface: abstractInterface) -> Union[Form, NewForm]:
+def post_form_view_individual_event(
+    interface: abstractInterface,
+) -> Union[Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
 
     last_button_pressed = interface.last_button_pressed()
@@ -113,7 +111,8 @@ def post_form_view_individual_event(interface: abstractInterface) -> Union[Form,
 
     elif last_button_pressed == ALLOCATE_CADETS_BUTTON_LABEL:
         return NewForm(WA_ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE)
-
+    elif last_button_pressed == BACK_BUTTON_LABEL:
+        return initial_state_form
     else:
         interface.log_error("Don't recognise button %s" % last_button_pressed)
         return initial_state_form
@@ -121,6 +120,7 @@ def post_form_view_individual_event(interface: abstractInterface) -> Union[Form,
 
 def row_of_form_for_event_with_buttons(event) -> Line:
     return Line(Button(str(event)))
+
 
 def is_wa_mapping_setup_for_event(event: Event) -> bool:
     event_id = event.id

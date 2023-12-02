@@ -12,8 +12,8 @@ from app.data_access.classes.cadets_with_groups_for_event import (
 from app.data_access.classes.mapped_wa_event import DataMappedWAEventWithNoIDs
 from app.data_access.classes.print_options import DataListOfPrintOptions
 
-class GenericDataApi(object):
 
+class GenericDataApi(object):
     ## FOLLOWING SHOULD BE OVERWRITTEN BY SPECIFIC CLASSES
     @property
     def data_list_of_cadets(self) -> DataListOfCadets:

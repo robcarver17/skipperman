@@ -29,6 +29,7 @@ deleted_status = RowStatus.Deleted
 
 all_possible_status = [cancelled_status, active_status, deleted_status]
 
+
 @dataclass
 class RowInMappedWAEventWithId:
     cadet_id: str
@@ -65,7 +66,6 @@ class RowInMappedWAEventWithId:
 def get_status_from_row_of_mapped_wa_event_data(
     row_of_mapped_wa_event_data: RowInMappedWAEventWithId,
 ) -> RowStatus:
-
     status_str = get_status_str_from_row_of_mapped_wa_event_data(
         row_of_mapped_wa_event_data
     )
@@ -84,7 +84,6 @@ def get_status_from_row_of_mapped_wa_event_data(
 def get_status_str_from_row_of_mapped_wa_event_data(
     row_of_mapped_wa_event_data: RowInMappedWAEventWithId,
 ) -> str:
-
     status_field = row_of_mapped_wa_event_data.get_data_attribute_or_missing_data(
         PAYMENT_STATUS
     )
@@ -95,7 +94,6 @@ def get_status_str_from_row_of_mapped_wa_event_data(
         )
 
     return status_field
-
 
 
 class MappedWAEventWithIDs(list):
@@ -157,54 +155,53 @@ class MappedWAEventWithIDs(list):
         return self[idx_of_timestamp]
 
     def get_unique_row_with_cadet_id_(self, cadet_id: str):
-
-        list_of_rows = [row for row in self if row.cadet_id==cadet_id]
-        if len(list_of_rows)==0:
+        list_of_rows = [row for row in self if row.cadet_id == cadet_id]
+        if len(list_of_rows) == 0:
             raise NoCadets
-        elif len(list_of_rows)>1:
+        elif len(list_of_rows) > 1:
             raise DuplicateCadets
         return list_of_rows[0]
 
     def get_row_with_cadet_id_ignore_cancellations(self, cadet_id: str):
-
-        list_of_rows = [row for row in self if row.cadet_id==cadet_id and not row.cancelled_or_deleted]
-        if len(list_of_rows)==0:
+        list_of_rows = [
+            row
+            for row in self
+            if row.cadet_id == cadet_id and not row.cancelled_or_deleted
+        ]
+        if len(list_of_rows) == 0:
             raise NoCadets
-        elif len(list_of_rows)>1:
+        elif len(list_of_rows) > 1:
             raise DuplicateCadets
         return list_of_rows[0]
 
     def is_cadet_id_in_event(self, cadet_id: str) -> bool:
         return cadet_id in self.list_of_cadet_ids
 
-
-
     @property
     def list_of_cadet_ids(self) -> list:
         return [row.cadet_id for row in self]
-
 
     @classmethod
     def create_empty(cls):
         return cls([])
 
 
-
 def filter_duplicate_list_to_remove_cancelled_or_delete(
-            duplicate_id_list: list,
-            list_of_cancelled_or_deleted_id: list
-        ):
-
+    duplicate_id_list: list, list_of_cancelled_or_deleted_id: list
+):
     new_list_of_duplicates = []
-    while len(duplicate_id_list)>0:
+    while len(duplicate_id_list) > 0:
         next_duplicate_group = duplicate_id_list.pop()
-        next_duplicate_group_without_cancelled_or_deleted = [idx for idx in next_duplicate_group
-                                                             if idx not in list_of_cancelled_or_deleted_id]
+        next_duplicate_group_without_cancelled_or_deleted = [
+            idx
+            for idx in next_duplicate_group
+            if idx not in list_of_cancelled_or_deleted_id
+        ]
 
-        if len(next_duplicate_group_without_cancelled_or_deleted)>1:
+        if len(next_duplicate_group_without_cancelled_or_deleted) > 1:
             ## if 0 or 1 then no duplicates left
-            new_list_of_duplicates.append(next_duplicate_group_without_cancelled_or_deleted)
+            new_list_of_duplicates.append(
+                next_duplicate_group_without_cancelled_or_deleted
+            )
 
     return new_list_of_duplicates
-
-

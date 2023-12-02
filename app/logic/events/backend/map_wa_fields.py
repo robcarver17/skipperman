@@ -7,7 +7,6 @@ from app.logic.events.backend.load_wa_file import load_raw_wa_file
 
 
 def map_wa_fields_in_df_for_event(event: Event, filename: str) -> MappedWAEventNoIDs:
-
     wa_as_df = load_raw_wa_file(filename)
     # Set up WA event mapping fields
     wa_field_mapping = get_wa_field_mapping_dict(wa_as_df=wa_as_df, event=event)
@@ -26,7 +25,6 @@ def map_wa_fields_in_df(
     wa_as_df: pd.DataFrame,
     wa_field_mapping: WAFieldMapping,
 ) -> MappedWAEventNoIDs:
-
     # FIXME THINK ABOUT HOW TO HANDLE MISSING FIELDS
 
     ## Return dataframe with new columns; but don't map non existent
@@ -76,7 +74,6 @@ def _warn_user_about_fields(
 def _map_wa_fields_in_df_no_warnings(
     wa_as_df: pd.DataFrame, wa_field_mapping: WAFieldMapping
 ) -> MappedWAEventNoIDs:
-
     fields_in_wa_file = list(wa_as_df.columns)
     matching_wa_fields = wa_field_mapping.matching_wa_fields(fields_in_wa_file)
     dict_of_mapped_data = {}
@@ -116,6 +113,3 @@ def get_wa_field_mapping_dict(
         )  ### NEEDS TO BE MUCH MORE VERBOSE
 
     return wa_mapping_dict
-
-
-

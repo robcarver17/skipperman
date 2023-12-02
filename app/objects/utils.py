@@ -35,7 +35,6 @@ def data_object_as_dict(some_object) -> dict:
 
 
 def create_list_of_objects_from_dataframe(class_of_object, df: pd.DataFrame):
-
     list_of_objects = [
         create_object_from_df_row(class_of_object=class_of_object, row=row)
         for index, row in df.iterrows()
@@ -95,7 +94,9 @@ class DictOfDictDiffs(dict):
         return string_of_dict_diffs(self)
 
 
-def create_dict_of_dict_diffs(dict_old: dict, dict_new: dict, comparing_fields: list = arg_not_passed ) -> DictOfDictDiffs:
+def create_dict_of_dict_diffs(
+    dict_old: dict, dict_new: dict, comparing_fields: list = arg_not_passed
+) -> DictOfDictDiffs:
     # dict
     # throws exception if missing or added fields
     if comparing_fields is arg_not_passed:
@@ -104,7 +105,9 @@ def create_dict_of_dict_diffs(dict_old: dict, dict_new: dict, comparing_fields: 
         try:
             assert set(keys_old) == set(keys_new)
         except:
-            raise Exception("Have to have matching keys to automatically see differences")
+            raise Exception(
+                "Have to have matching keys to automatically see differences"
+            )
         comparing_fields = keys_new
 
     dict_of_diffs = {}
@@ -139,8 +142,6 @@ def clean_up_dict_with_nans(some_dict) -> dict:
 
 def list_duplicate_indices(seq):
     tally = defaultdict(list)
-    for i,item in enumerate(seq):
+    for i, item in enumerate(seq):
         tally[item].append(i)
-    return [locs for locs in tally.values()
-                            if len(locs)>1]
-
+    return [locs for locs in tally.values() if len(locs) > 1]

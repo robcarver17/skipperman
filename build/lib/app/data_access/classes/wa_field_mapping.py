@@ -14,5 +14,7 @@ class DataWAFieldMapping(object):
     def get_template(self, template_name: str) -> WAFieldMapping:
         raise NotImplemented
 
-    def write_template(self, template_name: str, wa_field_mapping: WAFieldMapping) -> WAFieldMapping:
+    def write_template(
+        self, template_name: str, wa_field_mapping: WAFieldMapping
+    ) -> WAFieldMapping:
         raise NotImplemented

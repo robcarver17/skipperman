@@ -2,9 +2,18 @@ import os
 import shutil
 
 import pandas as pd
-from app.data_access.configuration.configuration import WILD_APRICOT_EVENT_ID, WILD_APRICOT_FILE_TYPES
-from app.data_access.uploads_and_downloads import staging_directory, get_next_valid_upload_file_name
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface, get_file_from_interface
+from app.data_access.configuration.configuration import (
+    WILD_APRICOT_EVENT_ID,
+    WILD_APRICOT_FILE_TYPES,
+)
+from app.data_access.uploads_and_downloads import (
+    staging_directory,
+    get_next_valid_upload_file_name,
+)
+from app.logic.forms_and_interfaces.abstract_interface import (
+    abstractInterface,
+    get_file_from_interface,
+)
 from app.logic.events.constants import WA_FILE
 from app.objects.constants import NoValidFile, NoValidID, FileError
 
@@ -15,28 +24,28 @@ def load_raw_wa_file(wa_filename: str) -> pd.DataFrame:
 
     return wa_as_df
 
+
 def load_raw_wa_file_from_spreadsheet(wa_filename: str) -> pd.DataFrame:
-    engine_types = ['csv', 'xlrd']
-    error_str = "Filename %s is not as expected- are you sure this is a WA export file? Errors: " % wa_filename
+    engine_types = ["csv", "xlrd"]
+    error_str = (
+        "Filename %s is not as expected- are you sure this is a WA export file? Errors: "
+        % wa_filename
+    )
     for engine in engine_types:
         try:
-            if engine=="csv":
+            if engine == "csv":
                 wa_as_df = pd.read_csv(wa_filename)
             else:
                 wa_as_df = pd.read_excel(wa_filename, engine=engine)
             return wa_as_df
         except Exception as e:
             error = "Error %s using engine %s. " % (str(e), engine)
-            error_str+=error
+            error_str += error
 
-    raise NoValidFile(
-        error_str
-    )
-
+    raise NoValidFile(error_str)
 
 
 def get_event_id_from_wa_df(wa_as_df: pd.DataFrame) -> str:
-
     try:
         series_of_id = wa_as_df[WILD_APRICOT_EVENT_ID]
     except KeyError:
@@ -74,7 +83,9 @@ def delete_raw_event_upload_with_event_id(event_id: str):
         pass
 
 
-def save_staged_file_of_raw_event_upload_with_event_id(original_filename: str, event_id: str):
+def save_staged_file_of_raw_event_upload_with_event_id(
+    original_filename: str, event_id: str
+):
     print(original_filename)
     new_filename = get_staged_file_raw_event_filename(event_id)
     shutil.copy(original_filename, new_filename)

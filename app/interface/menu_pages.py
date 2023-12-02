@@ -53,7 +53,6 @@ def parse_menu_option_into_html(
     breadcrumbs: str = "",
     top_level: bool = True,
 ) -> Html:
-
     menu_option_as_list = menu_option.split(LEVEL_SEPERATOR)
     first_part_of_menu_option = menu_option_as_list[0]
     list_of_html_to_return = ListOfHtml()

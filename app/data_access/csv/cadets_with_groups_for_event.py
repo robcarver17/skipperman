@@ -8,15 +8,17 @@ from app.objects.groups import ListOfCadetIdsWithGroups
 
 LAST_GROUP_ALIAS = "_Last_group"
 
+
 class CsvDataListOfCadetsWithGroups(GenericCsvData, DataListOfCadetsWithGroups):
     def read_last_groups(self) -> ListOfCadetIdsWithGroups:
         return self.read_groups_for_event(LAST_GROUP_ALIAS)
 
-    def write_last_groups(
-        self, list_of_cadets_with_groups: ListOfCadetIdsWithGroups
-    ):
-        self.write_groups_for_event(event_id=LAST_GROUP_ALIAS, list_of_cadets_with_groups=list_of_cadets_with_groups)
-        
+    def write_last_groups(self, list_of_cadets_with_groups: ListOfCadetIdsWithGroups):
+        self.write_groups_for_event(
+            event_id=LAST_GROUP_ALIAS,
+            list_of_cadets_with_groups=list_of_cadets_with_groups,
+        )
+
     def read_groups_for_event(self, event_id: str) -> ListOfCadetIdsWithGroups:
         path_and_filename = self.path_and_filename_for_eventid(event_id)
         try:

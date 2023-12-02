@@ -18,6 +18,7 @@ from app.objects.utils import (
 KEYS = "Keys"
 VALUES = "Values"
 
+
 class GenericSkipperManObject:
     def __eq__(self, other):
         return self.id == other.id
@@ -80,8 +81,17 @@ def _transform_class_instance_into_string(class_instance):
         return transform_str_from_date(class_instance)
     elif isinstance(class_instance, enum.Enum):
         return class_instance.name
+    elif isinstance(class_instance, bool):
+        if class_instance:
+            return TRUE
+        else:
+            return FALSE
     else:
         return str(class_instance)
+
+
+TRUE = "TRUE_VALUE"
+FALSE = "FALSE_VALUE"
 
 
 def _get_class_instance_from_str_dict(some_class, dict_with_str: dict):
@@ -102,8 +112,10 @@ def _transform_string_into_class_instance(object_class, string):
 
     elif type(object_class) is EnumMeta:
         return object_class[string]
+    elif object_class is bool:
+        return string == TRUE
 
-    ## this will work for non strings eg floats, bool
+    ## this will work for non strings eg floats
     return object_class(string)
 
 
@@ -168,11 +180,11 @@ class GenericListOfObjects(list):
         return pd.DataFrame(list_of_dicts)
 
     def next_id(self) -> str:
-        if len(self)==0:
+        if len(self) == 0:
             return 1
         list_of_ids = self.list_of_ids
         list_of_ids_as_int = [int(id) for id in list_of_ids]
         max_id = max(list_of_ids_as_int)
-        next_id = max_id+1
+        next_id = max_id + 1
 
         return str(next_id)

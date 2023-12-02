@@ -17,7 +17,7 @@ class SessionDataForAction(object):
     def is_initial_stage(self) -> bool:
         return self.stage == INITIAL_STAGE
 
-    def get_value(self, key):
+    def get_value(self, key, default=missing_data):
         return self.other_data.get(key, missing_data)
 
     def set_value(self, key, value):

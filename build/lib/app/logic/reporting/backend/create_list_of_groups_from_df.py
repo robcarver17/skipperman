@@ -1,12 +1,10 @@
 from typing import List
 import pandas as pd
 
-from app.logic.reporting.backend.reporting_options import (
-    ReportingOptionsForSpecificGroupsInReport,
-    MarkedUpListFromDfParametersWithActualGroupOrder,
-)
+from app.reporting.options_and_parameters.marked_up_list_from_df_parameters import \
+    MarkedUpListFromDfParametersWithActualGroupOrder
 
-from app.logic.reporting.backend.strings_columns_groups import (
+from app.reporting.process_stages.strings_columns_groups import (
     ListOfGroupsOfMarkedUpStrings,
     GroupOfMarkedUpString,
     MarkedUpString,
@@ -14,12 +12,13 @@ from app.logic.reporting.backend.strings_columns_groups import (
 
 
 def create_list_of_group_of_marked_up_str_from_df(
-    df: pd.DataFrame, report_options: ReportingOptionsForSpecificGroupsInReport
+    df: pd.DataFrame,
+    marked_up_list_from_df_parameters: MarkedUpListFromDfParametersWithActualGroupOrder,
 ) -> ListOfGroupsOfMarkedUpStrings:
-
-    marked_up_list_from_df_parameters = report_options.marked_up_list_from_df
     ordered_list_of_groups = marked_up_list_from_df_parameters.actual_group_order
-    grouped_df = df.groupby(marked_up_list_from_df_parameters.group_by_column)
+    grouped_df = get_grouped_df(
+        df=df, marked_up_list_from_df_parameters=marked_up_list_from_df_parameters
+    )
 
     list_of_groups_of_marked_up_str = ListOfGroupsOfMarkedUpStrings()
     for group in ordered_list_of_groups:
@@ -33,12 +32,20 @@ def create_list_of_group_of_marked_up_str_from_df(
     return list_of_groups_of_marked_up_str
 
 
+def get_grouped_df(
+    df: pd.DataFrame,
+    marked_up_list_from_df_parameters: MarkedUpListFromDfParametersWithActualGroupOrder,
+) -> pd.core.groupby.generic.DataFrameGroupBy:
+    grouped_df = df.groupby(marked_up_list_from_df_parameters.group_by_column)
+
+    return grouped_df
+
+
 def _create_marked_up_str_for_group(
     group: str,
     grouped_df: pd.core.groupby.generic.DataFrameGroupBy,
     marked_up_list_from_df_parameters: MarkedUpListFromDfParametersWithActualGroupOrder,
 ) -> GroupOfMarkedUpString:
-
     subset_group = grouped_df.get_group(group)
     subset_group_as_list = list(subset_group.iterrows())
 
@@ -72,7 +79,6 @@ def _add_groupname_inplace_to_list_for_this_group_if_required(
     group_of_marked_up_str: GroupOfMarkedUpString,
     marked_up_list_from_df_parameters: MarkedUpListFromDfParametersWithActualGroupOrder,
 ):
-
     if marked_up_list_from_df_parameters.include_group_as_header:
         group_of_marked_up_str.append(MarkedUpString.header(group))
 
@@ -84,7 +90,6 @@ def create_marked_string_from_row(
     keyvalue: bool = False,
     prepend_group_name: bool = False,
 ) -> MarkedUpString:
-
     entry = " ".join([row[column_name] for column_name in entry_columns])
     if prepend_group_name:
         entry = "%s: %s" % (group, entry)

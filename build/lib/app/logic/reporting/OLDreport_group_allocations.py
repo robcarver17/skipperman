@@ -15,7 +15,7 @@ from app.logic import (
 )
 from app.logic import choose_reporting_options
 
-from app.objects.reporting_options import MarkedUpListFromDfParameters
+from app.reporting.options_and_parameters.report_type_specific_parameters import SpecificParametersForTypeOfReport
 
 from app.objects.field_list import CADET_NAME, GROUP_STR_NAME
 
@@ -87,7 +87,7 @@ def report_group_allocations_with_df(
     data_and_interface.interface.process_pdf_report(filename)
 
 
-default_markuplist_from_df_options_for_group_allocation = MarkedUpListFromDfParameters(
+default_markuplist_from_df_options_for_group_allocation = SpecificParametersForTypeOfReport(
     entry_columns=[CADET_NAME],
     group_by_column=GROUP_STR_NAME,
     include_group_as_header=True,
@@ -369,7 +369,7 @@ def modify_a_single_reporting_option(
             # new_order = interface.create_nested_list_from_items(ordered_groups, prompt="Put groups in desired order")
             ## NOTE: the order is indicies, not group names!
             # report_options.arrange_groups.force_order_of_columns_list_of_indices = new_order
-        report_options.arrange_groups.arrangement = chosen_arrangement
+        report_options.arrange_groups.arrangement_method = chosen_arrangement
 
     elif key_of_option_chosen == "include_group_as_header":
         report_options.marked_up_list_from_df.include_group_as_header = (

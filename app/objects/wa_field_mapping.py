@@ -40,8 +40,12 @@ class WAFieldMapping(dict):
         )
 
     def as_df(self) -> pd.DataFrame:
-
-        return pd.DataFrame({WA_FIELD_COLUMN_KEY: self.list_of_wa_fields, SKIPPERMAN_FIELD_COLUMN_VALUE: self.list_of_skipperman_fields})
+        return pd.DataFrame(
+            {
+                WA_FIELD_COLUMN_KEY: self.list_of_wa_fields,
+                SKIPPERMAN_FIELD_COLUMN_VALUE: self.list_of_skipperman_fields,
+            }
+        )
 
     def matching_wa_fields(self, list_of_wa_fields: list):
         return list(set(list_of_wa_fields).intersection(set(self.list_of_wa_fields)))

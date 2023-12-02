@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.logic.reporting.backend.reporting_options import (
+from app.logic.reporting.backend.TODELETE import (
     ReportingOptionsForSpecificGroupsInReport,
 )
-from app.logic.reporting.backend.strings_columns_groups import (
+from app.reporting.process_stages.strings_columns_groups import (
     ListOfGroupsOfMarkedUpStrings,
-    _create_columns_from_list_of_groups_of_marked_up_str_with_passed_list,
+    create_columns_from_list_of_groups_of_marked_up_str_with_passed_list,
 )
 
 
@@ -89,7 +89,6 @@ def _find_best_list_of_indices(
     list_of_groups_of_marked_up_str: ListOfGroupsOfMarkedUpStrings,
     report_options: ReportingOptionsForSpecificGroupsInReport,
 ) -> List[List[int]]:
-
     tracking_errors = [
         _tracking_error_for_list_of_indices(
             list_of_groups_of_marked_up_str=list_of_groups_of_marked_up_str,
@@ -110,11 +109,10 @@ def _tracking_error_for_list_of_indices(
     list_of_groups_of_marked_up_str: ListOfGroupsOfMarkedUpStrings,
     report_options: ReportingOptionsForSpecificGroupsInReport,
 ) -> float:
-
     list_of_columns = (
-        _create_columns_from_list_of_groups_of_marked_up_str_with_passed_list(
+        create_columns_from_list_of_groups_of_marked_up_str_with_passed_list(
             list_of_groups_of_marked_up_str=list_of_groups_of_marked_up_str,
-            order_list_of_indices=order_list_of_indices,
+            arrangement_of_columns=order_list_of_indices,
         )
     )
 

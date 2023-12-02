@@ -8,14 +8,16 @@ def get_path_and_filename_for_named_csv_file(
     generic_name_of_file_required: str,
     additional_file_identifiers: tuple = arg_not_passed,
 ):
-
     ## returns eg 'cadets', 'cadet_master_list.csv'
     if additional_file_identifiers is arg_not_passed:
         additional_file_identifiers = ()
 
     filename = file_from_generic(generic_name_of_file_required)
     filename_with_additional_items = filename % additional_file_identifiers
-    resolved_path = get_path_for_generic_name(master_data_path=master_data_path, generic_name_of_file_required=generic_name_of_file_required)
+    resolved_path = get_path_for_generic_name(
+        master_data_path=master_data_path,
+        generic_name_of_file_required=generic_name_of_file_required,
+    )
 
     resolved_path_and_filename = join(resolved_path, filename_with_additional_items)
 
@@ -23,10 +25,9 @@ def get_path_and_filename_for_named_csv_file(
 
 
 def get_path_for_generic_name(
-master_data_path: str,
+    master_data_path: str,
     generic_name_of_file_required: str,
 ):
-
     path = path_from_generic(generic_name_of_file_required)
     resolved_path = join(master_data_path, path)
     if not exists(resolved_path):
@@ -34,6 +35,7 @@ master_data_path: str,
         path.mkdir(parents=True)
 
     return resolved_path
+
 
 def path_from_generic(generic_name_of_file_required):
     try:
@@ -83,5 +85,5 @@ _dict_of_filenames_and_paths = dict(
         "cadets_with_groups_for_event",
         "cadets_with_groups_for_event_%s.csv",
     ),
-    print_options = ("options", "print_options_for_report_%s.csv")
+    print_options=("options", "print_options_for_report_%s.csv"),
 )

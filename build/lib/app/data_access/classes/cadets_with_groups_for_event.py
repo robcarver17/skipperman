@@ -13,7 +13,5 @@ class DataListOfCadetsWithGroups(object):
     def read_last_groups(self) -> ListOfCadetIdsWithGroups:
         raise NotImplemented
 
-    def write_last_groups(
-        self, list_of_cadets_with_groups: ListOfCadetIdsWithGroups
-    ):
+    def write_last_groups(self, list_of_cadets_with_groups: ListOfCadetIdsWithGroups):
         raise NotImplemented

@@ -18,9 +18,7 @@ SPECIAL_FIELDS = [PAYMENT_STATUS]
 ## Rule of thumb is we do all editing in skipperman, not WA
 ## The only things that will change WA are those relating to payment, eg cancellation, change in numbers etc
 ## payment status will also change, but this is flagged seperately
-FIELDS_TO_FLAG_WHEN_COMPARING_WA_DIFF = [
-    DAYS_ATTENDED
-]
+FIELDS_TO_FLAG_WHEN_COMPARING_WA_DIFF = [DAYS_ATTENDED]
 
 ## following are derived names, not found in WA data
 CADET_NAME = "Cadet"

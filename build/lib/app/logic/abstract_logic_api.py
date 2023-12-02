@@ -1,15 +1,20 @@
 from typing import Union
 from dataclasses import dataclass
 from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
-from app.logic.forms_and_interfaces.abstract_form import NewForm, Form, button_label_requires_going_back
+from app.logic.forms_and_interfaces.abstract_form import (
+    NewForm,
+    Form,
+    button_label_requires_going_back,
+)
 
 INITIAL_STATE = "Initial form"
+
+
 @dataclass
 class AbstractLogicApi:
     interface: abstractInterface
 
     def get_form(self) -> Form:
-
         if self.interface.is_posted_form:
             return self.get_posted_form()
         else:
@@ -34,11 +39,13 @@ class AbstractLogicApi:
         return form
 
     def get_posted_form_going_back_to_initial_state(self) -> Form:
-        form = self.get_displayed_form_given_form_name_and_reset_state_if_required(INITIAL_STATE)
+        form = self.get_displayed_form_given_form_name_and_reset_state_if_required(
+            INITIAL_STATE
+        )
 
         return form
 
-## Special buttons
+    ## Special buttons
     def get_posted_form_standard_buttons(self) -> Form:
         form_name = self.form_name
         print("Getting posted form for %s" % form_name)
@@ -46,31 +53,41 @@ class AbstractLogicApi:
 
         return form
 
-
     def get_posted_form_given_form_name(self, form_name: str):
-        form = self.get_posted_form_given_form_name_without_checking_for_redirection(form_name)
-        if type(form) is NewForm: ## redirection, action we are taking is to create a new form
+        form = self.get_posted_form_given_form_name_without_checking_for_redirection(
+            form_name
+        )
+        if (
+            type(form) is NewForm
+        ):  ## redirection, action we are taking is to create a new form
             form = self.redirect_to_new_form(form)
 
         return form
 
-
-    def get_posted_form_given_form_name_without_checking_for_redirection(self, form_name: str) -> Union[Form, NewForm]:
+    def get_posted_form_given_form_name_without_checking_for_redirection(
+        self, form_name: str
+    ) -> Union[Form, NewForm]:
         raise NotImplemented("implement in inherited class")
 
-    def get_displayed_form_given_form_name_and_reset_state_if_required(self, form_name: str) -> Form:
+    def get_displayed_form_given_form_name_and_reset_state_if_required(
+        self, form_name: str
+    ) -> Form:
         ## We never have redirection issues here
         if form_name is INITIAL_STATE:
             self.interface.clear_persistent_data_for_action_and_reset_to_initial_stage_form()
 
         form = self.get_displayed_form_given_form_name(form_name)
-        if type(form) is NewForm: ## redirection, action we are taking is to create a new form
+        if (
+            type(form) is NewForm
+        ):  ## redirection, action we are taking is to create a new form
             return self.redirect_to_new_form(form)
 
         return form
 
-    def get_displayed_form_given_form_name(self, form_name: str) -> Union[Form, NewForm]:
-            raise NotImplemented("implement in inherited class")
+    def get_displayed_form_given_form_name(
+        self, form_name: str
+    ) -> Union[Form, NewForm]:
+        raise NotImplemented("implement in inherited class")
 
     def redirect_to_new_form(self, form: NewForm):
         new_form_name = form.form_name
@@ -80,7 +97,9 @@ class AbstractLogicApi:
         self.interface.form_name = new_form_name
 
         ## We always redirect to displaying a form
-        form = self.get_displayed_form_given_form_name_and_reset_state_if_required(new_form_name)
+        form = self.get_displayed_form_given_form_name_and_reset_state_if_required(
+            new_form_name
+        )
 
         return form
 
@@ -92,5 +111,6 @@ class AbstractLogicApi:
             form_name = self.interface.form_name
 
         return form_name
+
 
 initial_state_form = NewForm(INITIAL_STATE)

@@ -12,7 +12,6 @@ from app.objects.utils import transform_str_from_date, similar
 from app.objects.constants import arg_not_passed, DAYS_IN_YEAR
 
 
-
 @dataclass
 class Cadet(GenericSkipperManObject):
     first_name: str
@@ -28,10 +27,16 @@ class Cadet(GenericSkipperManObject):
         )
 
     def __eq__(self, other):
-        return (self.first_name==other.first_name) and (self.surname==other.surname) and (self.date_of_birth==other.date_of_birth)
+        return (
+            (self.first_name == other.first_name)
+            and (self.surname == other.surname)
+            and (self.date_of_birth == other.date_of_birth)
+        )
 
     def __hash__(self):
-        return hash(self.first_name+"_"+self.surname+"_"+self._date_of_birth_as_str)
+        return hash(
+            self.first_name + "_" + self.surname + "_" + self._date_of_birth_as_str
+        )
 
     def approx_age_years(self, at_date: datetime.date = arg_not_passed) -> float:
         if at_date is arg_not_passed:
@@ -62,9 +67,9 @@ class Cadet(GenericSkipperManObject):
 
 
 class ListOfCadets(GenericListOfObjects):
-
     def matching_cadet(self, cadet: Cadet) -> Cadet:
         return self[self.index(cadet)]
+
     def sort_by_surname(self):
         return ListOfCadets(sorted(self, key=lambda x: x.surname))
 
@@ -87,7 +92,6 @@ class ListOfCadets(GenericListOfObjects):
         name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME,
         dob_threshold: float = SIMILARITY_LEVEL_TO_WARN_DATE,
     ) -> "ListOfCadets":
-
         similar_dob = [
             other_cadet
             for other_cadet in self
@@ -110,4 +114,8 @@ def is_cadet_age_surprising(cadet: Cadet):
     return age < MIN_CADET_AGE or age > MAX_CADET_AGE
 
 
-default_cadet = Cadet(first_name=" ", surname=" ", date_of_birth=datetime.date.today() - datetime.timedelta(days=8 * 365))
+default_cadet = Cadet(
+    first_name=" ",
+    surname=" ",
+    date_of_birth=datetime.date.today() - datetime.timedelta(days=8 * 365),
+)

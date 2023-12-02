@@ -95,7 +95,7 @@ def _create_columns_from_list_of_groups_of_marked_up_str_forced_order(
     report_options: ReportingOptionsForSpecificGroupsInReport,
 ) -> ListtOfColumns:
     force_order_list_of_indices = (
-        report_options.arrange_groups.force_order_of_columns_list_of_indices
+        report_options.arrange_groups.arrangement_of_columns
     )
 
     return _create_columns_from_list_of_groups_of_marked_up_str_with_passed_list(

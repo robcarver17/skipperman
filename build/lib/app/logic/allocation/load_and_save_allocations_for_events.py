@@ -4,12 +4,12 @@ from app.objects.groups import ListOfCadetIdsWithGroups
 from app.data_access.data import data
 
 
-def load_allocation_for_event(
-    event: Event
-) -> ListOfCadetIdsWithGroups:
+def load_allocation_for_event(event: Event) -> ListOfCadetIdsWithGroups:
     event_id = event.id
 
-    list_of_cadets_with_groups = data.data_list_of_cadets_with_groups.read_groups_for_event(event_id)
+    list_of_cadets_with_groups = (
+        data.data_list_of_cadets_with_groups.read_groups_for_event(event_id)
+    )
 
     return list_of_cadets_with_groups
 

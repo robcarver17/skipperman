@@ -17,7 +17,7 @@ def read(fname):
 
 def package_files(directory, extension="yaml"):
     paths = []
-    for (path, directories, filenames) in os.walk(directory):
+    for path, directories, filenames in os.walk(directory):
         for filename in filenames:
             if filename.split(".")[-1] == extension:
                 paths.append(os.path.join("..", path, filename))

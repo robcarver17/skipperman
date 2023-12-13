@@ -8,7 +8,7 @@ from app.data_access.configuration.configuration import (
     SIMILARITY_LEVEL_TO_WARN_NAME,
 )
 from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
-from app.objects.utils import transform_str_from_date, similar
+from app.objects.utils import transform_date_into_str, similar
 from app.objects.constants import arg_not_passed, DAYS_IN_YEAR
 
 
@@ -57,7 +57,7 @@ class Cadet(GenericSkipperManObject):
     @property
     def _date_of_birth_as_str(self) -> str:
         dob = self.date_of_birth
-        return transform_str_from_date(dob)
+        return transform_date_into_str(dob)
 
     def similarity_name(self, other_cadet: "Cadet") -> float:
         return similar(self.name, other_cadet.name)

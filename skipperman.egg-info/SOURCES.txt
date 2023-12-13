@@ -163,6 +163,7 @@ app/logic/events/import_wa/../../../../example_data/field_mapping_templates/temp
 app/logic/events/import_wa/../../../../example_data/field_mapping_templates/template_field_map_for_training_weekend.csv
 app/logic/events/import_wa/../../../data_access/configuration/configuration.yaml
 app/logic/events/mapping/__init__.py
+app/logic/events/mapping/check_mapping.py
 app/logic/events/mapping/clone_field_mapping.py
 app/logic/events/mapping/download_template_field_mapping.py
 app/logic/events/mapping/event_field_mapping.py

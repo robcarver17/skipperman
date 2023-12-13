@@ -25,6 +25,14 @@ class SessionDataForAction(object):
         other_data[key] = value
         self.other_data = other_data
 
+    def delete_persistent_value(self, key):
+        other_data = self.other_data
+        other_data.pop(key)
+
+    def list_of_keys_with_persistent_values(self) -> list:
+        other_data = self.other_data
+        return list(other_data.keys())
+
     @property
     def other_data(self) -> dict:
         return self.state_data_as_dict_from_session.get("other_data", {})

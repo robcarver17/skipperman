@@ -25,6 +25,7 @@ MAP_TO_TEMPLATE_BUTTON_LABEL = "Use template mapping"
 UPLOAD_TEMPLATE_BUTTON_LABEL = "Upload and use new template"
 UPLOAD_MAPPING_BUTTON_LABEL = "Upload new mapping .csv file"
 DOWNLOAD_MAPPING_BUTTON_LABEL = "Download a mapping .csv file to edit"
+CHECK_MAPPING_BUTTON_LABEL = "Check mapping against uploaded file"
 
 # specific event; allocation
 ALLOCATE_CADETS_BUTTON_LABEL = "Allocate cadets to groups"
@@ -53,6 +54,10 @@ WA_SELECT_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE = (
 WA_UPLOAD_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE = (
     "WA_upload_template_in_view_event_stage"
 )
+WA_CHECK_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE = (
+    "WA_check_mapping_template_in_view_event_stage"
+)
+
 WA_CLONE_EVENT_MAPPING_IN_VIEW_EVENT_STAGE = "WA_clone_event_in_view_event_stage"
 WA_UPLOAD_EVENT_MAPPING_IN_VIEW_EVENT_STAGE = (
     "WA_upload_event_mapping_in_view_event_stage"

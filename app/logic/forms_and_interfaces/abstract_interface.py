@@ -53,6 +53,9 @@ class abstractInterface(object):
     def clear_persistent_data_for_action_and_reset_to_initial_stage_form(self):
         raise NotImplemented
 
+    def clear_persistent_data_except_specified_fields(self, specified_fields: list):
+        raise NotImplemented
+
     @property
     def is_posted_form(self) -> bool:
         raise NotImplemented
@@ -92,12 +95,17 @@ def get_file_from_interface(file_label: str, interface: abstractInterface):
 def form_with_message_and_finished_button(
     message: str, interface: abstractInterface
 ) -> Form:
+    return form_with_content_and_finished_button(Line(message))
+
+def form_with_content_and_finished_button(
+    content, interface: abstractInterface
+) -> Form:
     return Form(
         ListOfLines(
             [
                 interface.print_logs(),
                 _______________,
-                Line(message),
+                content,
                 _______________,
                 Line(finished_button),
             ]

@@ -84,9 +84,11 @@ def get_df_for_reporting_allocations(interface: abstractInterface) -> pd.DataFra
 
 
 def create_report(interface: abstractInterface) -> File:
+    print("Creating report")
     df = get_df_for_reporting_allocations(interface)
     reporting_options = get_reporting_options(df=df, specific_parameters_for_type_of_report=specific_parameters_for_allocation_report,
                                            interface=interface)
+    print("Reporting options %s" % reporting_options)
     filename = create_column_pdf_report_from_df_and_return_filename(
         reporting_options=reporting_options
     )

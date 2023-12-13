@@ -24,12 +24,13 @@ def display_form_event_field_mapping(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     pre_existing = text_for_pre_existing_mapping(interface)
-    if len(pre_existing) == 0:
-        pre_existing = Line(
+    pre_existing_mapping = len(pre_existing)>0
+    if not pre_existing_mapping:
+        pre_existing_lines = Line(
             "Mapping converts WA field names to our internal field names - we can't import_wa an event without it"
         )
     else:
-        pre_existing = ListOfLines(
+        pre_existing_lines = ListOfLines(
             [
                 "Mapping already set up:",
                 _______________,
@@ -39,7 +40,7 @@ def display_form_event_field_mapping(
                 % back_button.label,
             ]
         )
-    return Form(ListOfLines([pre_existing, _______________, mapping_buttons()]))
+    return Form(ListOfLines([pre_existing_lines, _______________, mapping_buttons(pre_existing_mapping)]))
 
 
 def text_for_pre_existing_mapping(interface: abstractInterface) -> PandasDFTable:
@@ -52,15 +53,26 @@ def text_for_pre_existing_mapping(interface: abstractInterface) -> PandasDFTable
     return PandasDFTable(mapping.to_df())
 
 
-def mapping_buttons() -> Line:
-    return Line(
-        [
-            back_button,
-            Button(MAP_TO_TEMPLATE_BUTTON_LABEL),
-            Button(CLONE_EVENT_BUTTON_LABEL),
-            Button(UPLOAD_MAPPING_BUTTON_LABEL),
-        ]
-    )
+def mapping_buttons(pre_existing_mapping: bool) -> Line:
+    if pre_existing_mapping:
+        return Line(
+            [
+                back_button,
+                Button(MAP_TO_TEMPLATE_BUTTON_LABEL),
+                Button(CLONE_EVENT_BUTTON_LABEL),
+                Button(UPLOAD_MAPPING_BUTTON_LABEL),
+                Button(CHECK_MAPPING_BUTTON_LABEL)
+            ]
+        )
+    else:
+        return Line(
+            [
+                back_button,
+                Button(MAP_TO_TEMPLATE_BUTTON_LABEL),
+                Button(CLONE_EVENT_BUTTON_LABEL),
+                Button(UPLOAD_MAPPING_BUTTON_LABEL),
+            ]
+        )
 
 
 def post_form_event_field_mapping(interface: abstractInterface) -> Union[Form, NewForm]:
@@ -73,6 +85,8 @@ def post_form_event_field_mapping(interface: abstractInterface) -> Union[Form, N
         return NewForm(WA_CLONE_EVENT_MAPPING_IN_VIEW_EVENT_STAGE)
     elif button_pressed == UPLOAD_MAPPING_BUTTON_LABEL:
         return NewForm(WA_UPLOAD_EVENT_MAPPING_IN_VIEW_EVENT_STAGE)
+    elif button_pressed==CHECK_MAPPING_BUTTON_LABEL:
+        return NewForm(WA_CHECK_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE)
     elif button_pressed == BACK_BUTTON_LABEL:
         return NewForm(VIEW_EVENT_STAGE)
     else:

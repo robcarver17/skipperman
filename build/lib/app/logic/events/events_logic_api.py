@@ -36,6 +36,7 @@ from app.logic.events.mapping.clone_field_mapping import (
     display_form_for_clone_event_field_mapping,
     post_form_for_clone_event_field_mapping,
 )
+from app.logic.events.mapping.check_mapping import display_form_check_field_mapping, post_form_check_field_mapping
 from app.logic.events.mapping.download_template_field_mapping import (
     display_form_for_download_template_field_mapping,
     post_form_for_download_template_field_mapping,
@@ -84,6 +85,9 @@ class EventLogicApi(AbstractLogicApi):
             return display_form_for_upload_custom_field_mapping(self.interface)
         elif form_name == WA_CLONE_EVENT_MAPPING_IN_VIEW_EVENT_STAGE:
             return display_form_for_clone_event_field_mapping(self.interface)
+        elif form_name == WA_CHECK_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE:
+            return display_form_check_field_mapping(self.interface)
+
         elif form_name == WA_SELECT_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE:
             return display_form_for_choose_template_field_mapping(self.interface)
         elif form_name == WA_UPLOAD_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE:
@@ -125,6 +129,9 @@ class EventLogicApi(AbstractLogicApi):
             return post_form_for_upload_custom_field_mapping(self.interface)
         elif form_name == WA_CLONE_EVENT_MAPPING_IN_VIEW_EVENT_STAGE:
             return post_form_for_clone_event_field_mapping(self.interface)
+        elif form_name == WA_CHECK_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE:
+            return post_form_check_field_mapping(self.interface)
+
         elif form_name == WA_SELECT_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE:
             return post_form_for_choose_template_field_mapping(self.interface)
         elif form_name == WA_UPLOAD_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE:

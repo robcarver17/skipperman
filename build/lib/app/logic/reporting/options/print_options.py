@@ -98,6 +98,7 @@ def get_print_options_from_main_option_form_fields(
     interface: abstractInterface,
 ) -> PrintOptions:
     ## doesn't get order or arrangement
+    print("Getting print options")
     page_alignment = interface.value_from_form(PAGE_ALIGNMENT)
     font = interface.value_from_form(FONT)
     page_size = interface.value_from_form(PAGE_SIZE)
@@ -134,7 +135,7 @@ def report_print_options_as_form_contents(print_options: PrintOptions) -> ListOf
             radioInput(
                 input_label="Alignment",
                 input_name=PAGE_ALIGNMENT,
-                dict_of_options=dict(Landscape="Landscape", portrait="Portrait"),
+                dict_of_options={LANDSCAPE:LANDSCAPE, PORTRAIT:PORTRAIT},
                 default_label=landscape_str,
             ),
             radioInput(

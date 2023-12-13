@@ -8,13 +8,11 @@ import pandas as pd
 from app.data_access.configuration.configuration import ACTIVE_STATUS, CANCELLED_STATUS
 from app.objects.constants import missing_data
 from app.objects.field_list import PAYMENT_STATUS
-from app.objects.utils import transform_str_from_date, similar, list_duplicate_indices
 
 from app.objects.mapped_wa_event_no_ids import (
     RowInMappedWAEventNoId,
-    extract_list_of_entry_timestamps_from_existing_wa_event,
+    extract_list_of_entry_timestamps_from_existing_wa_event
 )
-from app.objects.cadets import ListOfCadets
 from app.objects.constants import NoCadets, DuplicateCadets
 
 from app.objects.field_list import CADET_ID
@@ -39,7 +37,7 @@ class RowInMappedWAEventWithId:
         return self.data_in_row.get(attr_name, missing_data)
 
     def as_dict(self):
-        data_in_row_as_dict = dict(self.data_in_row)
+        data_in_row_as_dict = self.data_in_row.as_dict()
         data_in_row_as_dict.update({CADET_ID: self.cadet_id})
 
         return data_in_row_as_dict

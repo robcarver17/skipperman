@@ -5,23 +5,12 @@ from dataclasses import dataclass
 
 import pandas as pd
 from difflib import SequenceMatcher
+
+from app.data_access.csv.utils import DATE_STR, DATETIME_STR
 from app.objects.constants import arg_not_passed
+from app.objects.field_list import FIELDS_AS_STR, FIELDS_WITH_DATES, FIELDS_WITH_DATETIMES
+from dateutil.parser import parse
 
-DATE_FORMAT_STRING = "%Y/%m/%d"
-
-
-def transform_date_from_str(date_str: str) -> datetime.date:
-    if type(date_str) is datetime.date:
-        return date_str
-
-    return datetime.datetime.strptime(date_str, DATE_FORMAT_STRING).date()
-
-
-def transform_str_from_date(date: datetime.date) -> str:
-    if type(date) is str:
-        return date
-
-    return datetime.date.strftime(date, DATE_FORMAT_STRING)
 
 
 def data_object_as_dict(some_object) -> dict:
@@ -145,3 +134,89 @@ def list_duplicate_indices(seq):
     for i, item in enumerate(seq):
         tally[item].append(i)
     return [locs for locs in tally.values() if len(locs) > 1]
+
+
+def transform_df_to_str(df: pd.DataFrame):
+    for field in FIELDS_AS_STR:
+        df[field] = df[field].astype(str)
+
+    return df
+
+
+def transform_df_from_dates_to_str(df: pd.DataFrame):
+    for field in FIELDS_WITH_DATES:
+        transform_df_column_from_dates_to_str(df=df, date_series_name=field)
+    for field in FIELDS_WITH_DATETIMES:
+        transform_df_column_from_datetime_to_str(df=df, date_series_name=field)
+
+
+def transform_df_column_from_dates_to_str(df: pd.DataFrame, date_series_name: str):
+    date_series = getattr(df, date_series_name)
+    date_series = [transform_date_into_str(date) for date in date_series]
+    setattr(df, date_series_name, date_series)
+
+
+def transform_date_into_str(date: datetime.date) -> str:
+    return date.strftime(DATE_STR)
+
+
+def transform_df_column_from_datetime_to_str(df: pd.DataFrame, date_series_name: str):
+    date_series = getattr(df, date_series_name)
+    date_series = [transform_datetime_into_str(date) for date in date_series]
+    setattr(df, date_series_name, date_series)
+
+
+def transform_datetime_into_str(date: datetime.datetime) -> str:
+    return date.strftime(DATETIME_STR)
+
+
+def transform_df_from_str_to_dates(df: pd.DataFrame):
+    if len(df) == 0:
+        return df
+    for field in FIELDS_WITH_DATES:
+        transform_df_column_from_str_to_dates(df=df, date_series_name=field)
+    for field in FIELDS_WITH_DATETIMES:
+        transform_df_column_from_str_to_datetimes(df=df, date_series_name=field)
+
+
+def transform_df_column_from_str_to_dates(df: pd.DataFrame, date_series_name: str):
+    date_series = getattr(df, date_series_name)
+    date_series = [transform_str_into_date(date_str) for date_str in date_series]
+    setattr(df, date_series_name, date_series)
+
+
+def transform_str_into_date(date_string: str) -> datetime.date:
+    if isinstance(date_string, datetime.date):
+        return date_string
+    elif isinstance(date_string, datetime.datetime):
+        return date_string.date()
+
+    try:
+        return datetime.datetime.strptime(date_string, DATE_STR).date()
+    except:
+        str_as_datetime = transform_str_into_datetime(date_string)
+        return str_as_datetime.date()
+
+
+def transform_df_column_from_str_to_datetimes(df: pd.DataFrame, date_series_name: str):
+    date_series = getattr(df, date_series_name)
+    date_series = [transform_str_into_datetime(date_str) for date_str in date_series]
+    setattr(df, date_series_name, date_series)
+
+
+def transform_str_into_datetime(date_string: str) -> datetime.datetime:
+    if isinstance(date_string, datetime.datetime):
+        return date_string
+
+    try:
+        return datetime.datetime.strptime(date_string, DATETIME_STR)
+    except:
+        return parse(date_string)
+
+
+def in_x_not_in_y(x,y):
+    return list(set(x).difference(set(y)))
+
+
+def in_both_x_and_y(x,y):
+    return list(set(x).intersection(set(y)))

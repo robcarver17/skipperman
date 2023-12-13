@@ -12,6 +12,7 @@ from app.data_access.configuration.configuration import (
     APPROX_WIDTH_TO_HEIGHT_RATIO,
     TITLE_MULTIPLIER,
     LINE_GAP_AS_PERCENTAGE_OF_CHARACTER_HEIGHT,
+    MAX_FONT_SIZE
 )
 from app.reporting.process_stages.strings_columns_groups import (
     ListtOfColumns,
@@ -214,8 +215,10 @@ class PdfLayout:
         max_possible_approx_font_size = min(
             [approx_font_size_from_width, approx_font_size_from_height]
         )
+        font_size = int(np.floor(max_possible_approx_font_size))
+        font_size = min([MAX_FONT_SIZE, font_size])
 
-        return int(np.floor(max_possible_approx_font_size))
+        return font_size
 
     def _approx_font_size_from_width_required(self) -> float:
         approx_point_size_from_width_excluding_title = (

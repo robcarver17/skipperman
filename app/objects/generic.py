@@ -9,10 +9,12 @@ import pandas as pd
 from app.objects.utils import (
     create_list_of_objects_from_dataframe,
     data_object_as_dict,
-    transform_date_from_str,
-    transform_str_from_date,
     get_list_of_attributes,
     get_dict_of_class_attributes,
+transform_date_into_str,
+transform_datetime_into_str,
+transform_str_into_datetime,
+transform_str_into_date
 )
 
 KEYS = "Keys"
@@ -78,7 +80,9 @@ def _transform_class_dict_into_str_dict(
 
 def _transform_class_instance_into_string(class_instance):
     if isinstance(class_instance, datetime.date):
-        return transform_str_from_date(class_instance)
+        return transform_date_into_str(class_instance)
+    elif isinstance(class_instance, datetime.datetime):
+        return transform_datetime_into_str(class_instance)
     elif isinstance(class_instance, enum.Enum):
         return class_instance.name
     elif isinstance(class_instance, bool):
@@ -108,8 +112,9 @@ def _get_class_instance_from_str_dict(some_class, dict_with_str: dict):
 
 def _transform_string_into_class_instance(object_class, string):
     if object_class is datetime.date:
-        return transform_date_from_str(string)
-
+        return transform_str_into_date(string)
+    elif object_class is datetime.datetime:
+        return transform_str_into_datetime(string)
     elif type(object_class) is EnumMeta:
         return object_class[string]
     elif object_class is bool:

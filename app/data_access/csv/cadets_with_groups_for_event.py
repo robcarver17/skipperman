@@ -3,7 +3,7 @@ from app.data_access.csv.generic_csv_data import GenericCsvData
 from app.data_access.classes.cadets_with_groups_for_event import (
     DataListOfCadetsWithGroups,
 )
-from app.data_access.csv.utils import transform_df_to_str
+from app.objects.utils import transform_df_to_str
 from app.objects.groups import ListOfCadetIdsWithGroups
 
 LAST_GROUP_ALIAS = "_Last_group"

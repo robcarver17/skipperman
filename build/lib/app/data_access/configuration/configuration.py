@@ -55,7 +55,7 @@ ALL_GROUPS = (
 )
 
 
-## Page sizes - not configured in yaml
+## Page sizes - not configured in yaml as won't need changing
 A4_PAGESIZE = "A4"
 A3_PAGESIZE = "A3"
 ALL_PAGESIZE = [A3_PAGESIZE, A4_PAGESIZE]
@@ -81,3 +81,4 @@ COLUMN_GAP_MM = 10  ## change if you like but bear in mind readability / efficie
 LINE_GAP_AS_PERCENTAGE_OF_CHARACTER_HEIGHT = (
     0.2  ## change if you like but bear in mind readability / efficiency
 )
+MAX_FONT_SIZE = 18

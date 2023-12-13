@@ -128,6 +128,9 @@ def post_form_for_report_group_allocation_generic_options(
         return NewForm(CHANGE_GROUP_LAYOUT_IN_GROUP_ALLOCATION_STATE)
 
     elif last_button_pressed == BACK_BUTTON_LABEL:
+        # otherwise event/report specific data like filenames is remembered
+        # note if the report type was persistently stored we'd need to keep it here but it is not
+        interface.clear_persistent_data_except_specified_fields([])
         return NewForm(GROUP_ALLOCATION_REPORT_STAGE)
 
     elif last_button_pressed == MODIFY_ADDITIONAL_OPTIONS_BUTTON_LABEL:
@@ -217,19 +220,16 @@ def post_form_for_report_group_allocation_print_options(
     if last_button_pressed == BACK_BUTTON_LABEL:
         return NewForm(GENERIC_OPTIONS_IN_GROUP_ALLOCATION_STATE)
 
-    if last_button_pressed in [
-        CREATE_REPORT_BUTTON_LABEL,
-        SAVE_THESE_OPTIONS_BUTTON_LABEL,
-    ]:
-        print_options = get_print_options_from_main_option_form_fields(interface)
-        save_print_options(
-            report_type=specific_parameters_for_allocation_report.report_type, print_options=print_options, interface=interface
-        )
-
+    print("Saving print options!")
+    print_options = get_print_options_from_main_option_form_fields(interface)
+    save_print_options(
+        report_type=specific_parameters_for_allocation_report.report_type, print_options=print_options, interface=interface
+    )
+    print("here")
     if last_button_pressed == CREATE_REPORT_BUTTON_LABEL:
+        print("Creating report")
         return create_report(interface)
     elif last_button_pressed == SAVE_THESE_OPTIONS_BUTTON_LABEL:
-        print("Saving print options")
         return NewForm(GENERIC_OPTIONS_IN_GROUP_ALLOCATION_STATE)
     else:
         interface.log_error("Button %s not recognised" % last_button_pressed)

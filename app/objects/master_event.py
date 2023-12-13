@@ -47,7 +47,7 @@ class RowInMasterEvent:
         )
 
     def as_dict(self):
-        data_in_row_as_dict = dict(self.data_in_row)
+        data_in_row_as_dict = self.data_in_row.as_dict()
         data_in_row_as_dict.update(
             {CADET_ID: self.cadet_id, STATUS_FIELD: self.status.name}
         )

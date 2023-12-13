@@ -13,3 +13,14 @@ Payment state,registration_payment_status
 Event registration date,registration_date
 Member,registered_by_member
 Internal notes,registration_internal_notes
+Can you or someone else volunteer as an adult helper?,volunteer_status
+Adult Helper 1 Availability,volunteer1_availability_all_days
+Adult Helper 1 Full Name,volunteer1_name
+Adult helper 1 preferred duties,volunteer1_duties
+Adult helper 1: Would you rather do the same type of duty all week or varied?,volunteer1_same_or_varied
+Adult Helper 1 Food Preferences/Allergies,volunteer1_food_preference
+Adult Helper 2 Availability,volunteer2_availability_all_days
+Adult Helper 2 Full Name,volunteer2_name
+Adult helper 2 preferred duties,volunteer2_duties
+Adult helper 2: Would you rather do the same type of duty all week or varied?,volunteer2_same_or_varied
+Adult Helper 2 Food Preferences/Allergies,volunteer2_food_preference

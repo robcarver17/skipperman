@@ -49,6 +49,12 @@ class flaskInterface(abstractInterface):
     def set_persistent_value(self, key, value):
         self.session_data.set_value(key, value)
 
+    def delete_persistent_value(self, key):
+        self.session_data.delete_persistent_value(key)
+
+    def list_of_keys_with_persistent_values(self) -> list:
+        return self.session_data.list_of_keys_with_persistent_values()
+
     @property
     def is_initial_stage_form(self) -> bool:
         return self.session_data.is_initial_stage
@@ -68,14 +74,26 @@ class flaskInterface(abstractInterface):
         self.reset_to_initial_stage_form()  ## this should happen anyway, but belt and braces
         clear_session_data_for_action(self.action_name)
 
+    def clear_persistent_data_except_specified_fields(self, specified_fields: list):
+        all_keys = self.list_of_keys_with_persistent_values()
+        for key in all_keys:
+            if key in specified_fields:
+                continue
+            self.delete_persistent_value(key)
+
     @property
     def is_posted_form(self) -> bool:
         return is_website_post()
 
     def value_from_form(self, key: str):
-        value = get_value_from_form(key)
+        print("Getting value %s" % key)
+        try:
+            value = get_value_from_form(key)
+        except:
+            raise Exception("Value %s not found in form" % key)
         if "date" in key:
             value = html_as_date(value)
+        print("Value is %s" % str(value))
 
         return value
 

@@ -1,10 +1,6 @@
 import pandas as pd
 from app.data_access.csv.generic_csv_data import GenericCsvData
-from app.data_access.csv.utils import (
-    transform_df_from_str_to_dates,
-    transform_df_from_dates_to_str,
-    transform_df_to_str,
-)
+from app.objects.utils import transform_df_to_str, transform_df_from_dates_to_str, transform_df_from_str_to_dates
 from app.objects.master_event import (
     MasterEvent,
 )

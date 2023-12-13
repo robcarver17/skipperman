@@ -34,9 +34,9 @@ def load_raw_wa_file_from_spreadsheet(wa_filename: str) -> pd.DataFrame:
     for engine in engine_types:
         try:
             if engine == "csv":
-                wa_as_df = pd.read_csv(wa_filename)
+                wa_as_df = pd.read_csv(wa_filename, parse_dates=True)
             else:
-                wa_as_df = pd.read_excel(wa_filename, engine=engine)
+                wa_as_df = pd.read_excel(wa_filename, engine=engine, parse_dates=True)
             return wa_as_df
         except Exception as e:
             error = "Error %s using engine %s. " % (str(e), engine)

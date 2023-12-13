@@ -44,6 +44,5 @@ class ReportingLogicApi(AbstractLogicApi):
             return post_form_for_group_arrangement_options_allocation_report(self.interface)
         elif form_name == CHANGE_PRINT_OPTIONS_IN_GROUP_ALLOCATION_STATE:
             return post_form_for_report_group_allocation_print_options(self.interface)
-
         else:
             raise Exception("Form name %s not recognised" % form_name)

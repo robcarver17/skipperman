@@ -5,8 +5,7 @@ from app.interface.html.url import INDEX_URL
 from app.interface.flask.interface import flaskInterface
 from app.interface.html.forms import *
 
-DEBUG = False
-
+DEBUG =True
 
 def process_abstract_form_to_html(form: Form, interface: flaskInterface) -> Html:
     print("Abstract form %s" % str(form))

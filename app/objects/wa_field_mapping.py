@@ -1,5 +1,7 @@
 import pandas as pd
 
+from app.objects.utils import in_x_not_in_y, in_both_x_and_y
+
 SKIPPERMAN_FIELD_COLUMN_VALUE = "skipperman_field"
 WA_FIELD_COLUMN_KEY = "wa_field"
 
@@ -48,13 +50,13 @@ class WAFieldMapping(dict):
         )
 
     def matching_wa_fields(self, list_of_wa_fields: list):
-        return list(set(list_of_wa_fields).intersection(set(self.list_of_wa_fields)))
+        return in_both_x_and_y(list_of_wa_fields, self.list_of_wa_fields)
 
     def wa_fields_missing_from_list(self, list_of_wa_fields: list):
-        return list(set(self.list_of_wa_fields).difference(set(list_of_wa_fields)))
+        return in_x_not_in_y(x=self.list_of_wa_fields, y=list_of_wa_fields)
 
     def wa_fields_missing_from_mapping(self, list_of_wa_fields: list):
-        return list(set(list_of_wa_fields).difference(set(self.list_of_wa_fields)))
+        return in_x_not_in_y(x=list_of_wa_fields, y=self.list_of_wa_fields)
 
     def skipperman_field_given_wa_field(self, wa_field: str):
         return self[wa_field]
@@ -66,3 +68,4 @@ class WAFieldMapping(dict):
     @property
     def list_of_skipperman_fields(self):
         return list(self.values())
+

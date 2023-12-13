@@ -39,8 +39,8 @@ class ArrangeGroupsOptions:
         if arrangement_of_columns is arg_not_passed:
             arrangement_of_columns = ArrangementOfColumns()
 
-        self.arrangement_method = arrangement_method
-        self.arrangement_of_columns = arrangement_of_columns
+        self._arrangement_method = arrangement_method
+        self._arrangement_of_columns = arrangement_of_columns
 
     def __repr__(self):
         return "%s: Indices %s" % (
@@ -52,22 +52,26 @@ class ArrangeGroupsOptions:
         return len(self.arrangement_of_columns) == 0
 
     def delete_arrangement_of_columns(self):
-        self.arrangement_of_columns = ArrangementOfColumns()
+        self._arrangement_of_columns = ArrangementOfColumns()
 
     def add_arrangement_of_columns(self, new_arrangement_of_columns: ArrangementOfColumns):
-        self.arrangement_of_columns = new_arrangement_of_columns
-        self.arrangement_method = ARRANGE_PASSED_LIST
+        self._arrangement_of_columns = new_arrangement_of_columns
+        self._arrangement_method = ARRANGE_PASSED_LIST
 
     def change_arrangement_options_given_new_method_name(self, arrangment_method_name: str):
         arrangement_method = dict_of_arrangements_that_reorder[arrangment_method_name]
-        self.arrangement_method = arrangement_method
+        self._arrangement_method = arrangement_method
 
         ## AS we are now using a specific method, delete custom arrangement
         self.delete_arrangement_of_columns()
 
     @property
-    def arrangement(self):
-        return None
+    def arrangement_of_columns(self) -> ArrangementOfColumns:
+        return self._arrangement_of_columns
+
+    @property
+    def arrangement_method(self) -> ArrangementMethod:
+        return self._arrangement_method
 
 @dataclass
 class ArrangementOptionsAndGroupOrder:

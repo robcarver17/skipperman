@@ -7,7 +7,7 @@ from app.data_access.configuration.configuration import (
     SIMILARITY_LEVEL_TO_WARN_DATE,
 )
 
-from app.objects.utils import transform_str_from_date, similar
+from app.objects.utils import transform_date_into_str, similar
 from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
 from app.objects.constants import arg_not_passed
 
@@ -72,12 +72,12 @@ class Event(GenericSkipperManObject):
     @property
     def _start_of_event_as_str(self) -> str:
         start_date = self.start_date
-        return transform_str_from_date(start_date)
+        return transform_date_into_str(start_date)
 
     @property
     def _end_of_event_as_str(self) -> str:
         end_date = self.end_date
-        return transform_str_from_date(end_date)
+        return transform_date_into_str(end_date)
 
     @property
     def event_type_as_str(self) -> str:

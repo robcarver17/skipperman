@@ -13,8 +13,7 @@ from app.logic.forms_and_interfaces.abstract_form import (
     Line,
     Button,
     ListOfLines,
-    _______________,
-    main_menu_button,
+    main_menu_button, _______________,
 )
 from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 
@@ -81,9 +80,11 @@ add_button = Button(ADD_CADET_BUTTON_LABEL)
 
 sort_buttons = Line([Button(sort_by) for sort_by in all_sort_types])
 
-
-def get_list_of_cadets(sort_by: str = "") -> ListOfCadets:
+from app.objects.constants import arg_not_passed
+def get_list_of_cadets(sort_by: str = arg_not_passed) -> ListOfCadets:
     master_list = data.data_list_of_cadets.read()
+    if sort_by is arg_not_passed:
+        return master_list
     if sort_by == SORT_BY_SURNAME:
         return master_list.sort_by_surname()
     elif sort_by == SORT_BY_FIRSTNAME:

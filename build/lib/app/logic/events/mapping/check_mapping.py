@@ -4,8 +4,9 @@ from app.logic.events.backend.map_wa_fields import get_wa_field_mapping_dict
 from app.logic.forms_and_interfaces.abstract_form import (
     Form,
     NewForm,
-Line,
-ListOfLines
+    Line,
+    ListOfLines,
+    bold, _______________
 )
 from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 from app.logic.events.utilities import get_event_from_state
@@ -22,21 +23,19 @@ from app.objects.field_list import ALL_FIELDS_EXPECTED_IN_WA_FILE
 from app.objects.utils import in_x_not_in_y
 
 
-def display_form_check_field_mapping(
+def check_field_mapping(
     interface: abstractInterface,
-) -> Union[Form, NewForm]:
+) -> ListOfLines:
     event = get_event_from_state(interface)
     if not does_raw_event_file_exist(event_id=event.id):
-        return form_with_message_and_finished_button(message="You can only check mapping AFTER you have uploaded a WA file, but BEFORE you have imported it: go back to event and import a file", interface=interface)
+        return ListOfLines([Line("You can only check mapping AFTER you have uploaded a WA file, but BEFORE you have imported it: go back to event and import a file")])
 
     ## get the raw event file
     filename = get_staged_file_raw_event_filename(event.id)
     warning_list = list_of_warnings_about_fields(event, filename)
 
-    return form_with_content_and_finished_button(warning_list, interface=interface)
+    return warning_list
 
-def post_form_check_field_mapping(interface: abstractInterface) -> Union[Form, NewForm]:
-    raise Exception("Should never be reached!")
 
 
 def list_of_warnings_about_fields(
@@ -58,16 +57,25 @@ def list_of_warnings_about_fields(
 
     output = []
     if len(in_mapping_not_in_wa_file)>0:
-            output.append(Line(
-            "Following fields are missing from WA file; may cause problems later: %s\n" % ", ".join(in_mapping_not_in_wa_file)))
+        in_mapping_not_in_wa_file_as_lines = [Line("-" + x) for x in in_mapping_not_in_wa_file]
+        output.append(Line([bold(
+            "Following fields are missing from WA file; may cause problems later: ")]))
+        output+=in_mapping_not_in_wa_file_as_lines
+        output.append(_______________)
 
     if len(in_wa_file_not_in_mapping) > 0:
-        output.append(Line(
-            "Following fields are in WA file but will not be imported, probably OK: %s\n" % ", ".join(in_wa_file_not_in_mapping)))
+        in_wa_file_not_in_mapping_as_lines = [Line("-" + x) for x in in_wa_file_not_in_mapping]
+        output.append(Line([bold(
+            "Following fields are in WA file but will not be imported, probably OK: ")]))
+        output+=in_wa_file_not_in_mapping_as_lines
+        output.append(_______________)
 
     if len(expected_not_in_mapping) > 0:
-        output.append(Line(
-            "Following internal fields are not defined in mapping file, might be OK depending on event type: %s\n" % ", ".join(expected_not_in_mapping)))
+        expected_not_in_mapping_as_lines = [Line("-" + x) for x in expected_not_in_mapping]
+        output.append(Line([bold(
+            "Following internal fields are not defined in mapping file, might be OK depending on event type: ")]))
+        output+=expected_not_in_mapping_as_lines
+        output.append(_______________)
 
     if len(output)==0:
         output = [Line("No problems with mapping")]

@@ -6,7 +6,7 @@ from app.interface import (
 )
 from app.logic.data import DataAndInterface
 from app.logic.events import choose_event
-from app.logic.allocation.load_and_save_allocations_for_events import (
+from app.logic.events.allocation.backend import (
     load_allocation_for_event,
 )
 from app.logic import (
@@ -65,7 +65,7 @@ def report_group_allocations_with_df(
     data_and_interface: DataAndInterface, df: pd.DataFrame, event
 ):
 
-    default_title = "Group allocation for %s (%s)" % (
+    default_title = "Group backend for %s (%s)" % (
         event.event_name,
         str(event.event_year),
     )

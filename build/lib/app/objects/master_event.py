@@ -173,6 +173,9 @@ class MasterEvent(MappedWAEventWithIDs):
         relevant_row = self.get_row_with_id(cadet_id)
         relevant_row.status = new_status
 
+    def sort_given_superset_of_cadet_ids(self, list_of_ids):
+        new_master_event_list = [self.get_row_with_id(cadet_id) for cadet_id in list_of_ids if self.is_cadet_id_in_event(cadet_id)]
+        return MasterEvent(new_master_event_list)
 
 def get_row_of_master_event_from_mapped_row_with_idx_and_status(
     row_in_mapped_wa_event_with_id: RowInMappedWAEventWithId,

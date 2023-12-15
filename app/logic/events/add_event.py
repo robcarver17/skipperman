@@ -29,10 +29,7 @@ from app.logic.forms_and_interfaces.abstract_form import (
     ListOfLines,
     Line,
     NewForm,
-    textInput,
-    dateInput,
-    radioInput,
-    cancel_button,
+    cancel_button, textInput, dateInput, radioInput,
 )
 from app.logic.abstract_logic_api import initial_state_form
 

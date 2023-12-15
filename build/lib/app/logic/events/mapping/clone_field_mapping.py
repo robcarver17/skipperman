@@ -10,14 +10,12 @@ from app.logic.events.view_events import display_list_of_events_with_buttons
 from app.logic.forms_and_interfaces.abstract_form import (
     cancel_button,
     Form,
-    ListOfLines,
-    _______________,
+    ListOfLines, _______________,
 )
 from app.logic.events.utilities import (
     confirm_event_exists,
     get_event_from_list_of_events,
-    get_event_from_state,
-)
+    get_event_from_state, )
 from app.logic.abstract_logic_api import initial_state_form
 
 

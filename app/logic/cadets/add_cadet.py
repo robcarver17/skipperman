@@ -7,10 +7,7 @@ from app.logic.forms_and_interfaces.abstract_form import (
     Line,
     ListOfLines,
     Button,
-    dateInput,
-    textInput,
-    _______________,
-    cancel_button,
+    cancel_button, _______________, textInput, dateInput,
 )
 from app.logic.cadets.constants import (
     CHECK_BUTTON_LABEL,

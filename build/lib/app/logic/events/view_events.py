@@ -2,17 +2,15 @@ from typing import Union
 from app.logic.events.utilities import (
     get_list_of_events,
     update_state_for_specific_event,
-    confirm_event_exists,
-)
+    confirm_event_exists, )
 
 from app.logic.forms_and_interfaces.abstract_form import (
     Button,
     Form,
     ListOfLines,
-    _______________,
     Line,
     NewForm,
-    main_menu_button,
+    main_menu_button, _______________,
 )
 from app.logic.events.constants import (
     ADD_EVENT_BUTTON_LABEL,

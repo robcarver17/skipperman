@@ -5,13 +5,12 @@ from app.logic.forms_and_interfaces.abstract_form import (
     FINISHED_BUTTON_LABEL,
     ListOfLines,
     bold,
-    _______________,
     Button,
     Line,
     up_arrow,
     down_arrow,
     Table,
-    RowInTable,
+    RowInTable, _______________,
 )
 from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 

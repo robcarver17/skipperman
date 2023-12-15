@@ -137,8 +137,9 @@ def list_duplicate_indices(seq):
 
 
 def transform_df_to_str(df: pd.DataFrame):
-    for field in FIELDS_AS_STR:
-        df[field] = df[field].astype(str)
+    for field in df.columns:
+        if field in FIELDS_AS_STR:
+            df[field] = df[field].astype(str)
 
     return df
 

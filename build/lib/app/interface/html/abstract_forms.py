@@ -1,5 +1,6 @@
 from typing import  Union
-from app.logic.forms_and_interfaces.abstract_form import Form, Line, ListOfLines, Button, intInput,dateInput, textInput, fileInput, radioInput
+from app.logic.forms_and_interfaces.abstract_form import Form, Line, ListOfLines, Button, intInput, fileInput, \
+    textInput, dateInput, radioInput
 from app.interface.html.html import Html, html_joined_list_as_lines, html_paragraph_line_wrapper
 from app.interface.flask.interface import flaskInterface
 from app.interface.html.forms import form_html_wrapper, html_button, html_form_text_input, html_radio_input, html_file_input, html_int_input, html_date_input

@@ -1,7 +1,7 @@
 from app.logic import allocate_cadet
 from app.logic.data import DataAndInterface
 from app.logic.events import choose_event
-from app.logic.allocation.load_and_save_allocations_for_events import (
+from app.logic.events.allocation.backend import (
     load_allocation_for_event,
     save_allocation_for_event,
 )

@@ -25,10 +25,13 @@ MAP_TO_TEMPLATE_BUTTON_LABEL = "Use template mapping"
 UPLOAD_TEMPLATE_BUTTON_LABEL = "Upload and use new template"
 UPLOAD_MAPPING_BUTTON_LABEL = "Upload new mapping .csv file"
 DOWNLOAD_MAPPING_BUTTON_LABEL = "Download a mapping .csv file to edit"
-CHECK_MAPPING_BUTTON_LABEL = "Check mapping against uploaded file"
 
-# specific event; allocation
+# specific event; backend
 ALLOCATE_CADETS_BUTTON_LABEL = "Allocate cadets to groups"
+
+# specific event; edit
+EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON = "View/edit registration data"
+SAVE_CHANGES = "Save changes"
 
 UPLOAD_FILE_BUTTON_LABEL = "Upload selected file"
 
@@ -54,9 +57,6 @@ WA_SELECT_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE = (
 WA_UPLOAD_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE = (
     "WA_upload_template_in_view_event_stage"
 )
-WA_CHECK_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE = (
-    "WA_check_mapping_template_in_view_event_stage"
-)
 
 WA_CLONE_EVENT_MAPPING_IN_VIEW_EVENT_STAGE = "WA_clone_event_in_view_event_stage"
 WA_UPLOAD_EVENT_MAPPING_IN_VIEW_EVENT_STAGE = (
@@ -76,7 +76,9 @@ WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE = (
     "WA_process_rows_in_interation_in_view_event_stage"
 )
 
-WA_ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE = "WA_allocate_cadets_in_View_event_stage"
+ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE = "Allocate_cadets_in_View_event_stage"
+
+EDIT_CADET_REGISTRATION_DATA_IN_VIEW_EVENT_STAGE = "Edit_registration_details_in_view_event_stage"
 
 ## constants.py in session data
 EVENT = "event"
@@ -92,6 +94,7 @@ WA_FILE = "file"
 MAPPING_FILE = "file"
 TEMPLATE_NAME = "template_name"
 ALLOCATION = "allocation"
+SORT_ORDER = "sort_order"
 
 ## field names row
 ROW_STATUS = "row_status"

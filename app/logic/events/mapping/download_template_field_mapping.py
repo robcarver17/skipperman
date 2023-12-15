@@ -8,8 +8,7 @@ from app.logic.forms_and_interfaces.abstract_form import (
     cancel_button,
     Form,
     ListOfLines,
-    _______________,
-    File,
+    File, _______________,
 )
 from app.logic.abstract_logic_api import initial_state_form
 from app.logic.events.mapping.template_field_mapping import (

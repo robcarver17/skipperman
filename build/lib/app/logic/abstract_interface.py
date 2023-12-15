@@ -1,5 +1,6 @@
 from app.objects.constants import missing_data, NoFileUploaded, FileError
-from app.logic.forms_and_interfaces.abstract_form import ListOfLines, Form, Line, finished_button, _______________, YES, NO
+from app.logic.forms_and_interfaces.abstract_form import ListOfLines, Form, Line, finished_button, _______________, YES, \
+    NO
 
 
 class abstractInterface(object):

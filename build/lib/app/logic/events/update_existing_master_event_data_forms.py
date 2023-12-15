@@ -2,7 +2,8 @@ from app.logic.events.constants import  USE_NEW_DATA_BUTTON_LABEL, \
     USE_ORIGINAL_DATA_BUTTON_LABEL, USE_DATA_IN_FORM_BUTTON_LABEL, ROW_IN_EVENT_DATA, ROW_STATUS
 from app.logic.events.utilities import get_event_from_state
 from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
-from app.logic.forms_and_interfaces.abstract_form import Form, Line, ListOfLines, radioInput, Button, construct_form_field_given_field_name
+from app.logic.forms_and_interfaces.abstract_form import Form, Line, ListOfLines, Button, \
+    construct_form_field_given_field_name, radioInput
 
 from app.logic.events.backend.update_master_event_data import new_status_and_status_message, update_row_in_master_event_data, \
     get_row_from_event_file_with_ids, NO_STATUS_CHANGE

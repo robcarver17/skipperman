@@ -3,10 +3,7 @@ from app.data_access.data import data
 from app.logic.events.utilities import get_event_from_state
 from app.logic.forms_and_interfaces.abstract_form import (
     ListOfLines,
-    radioInput,
-    yes_no_radio,
-    textInput,
-    _______________,
+    yes_no_radio, _______________, textInput, radioInput,
 )
 from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 from app.logic.reporting.constants import (

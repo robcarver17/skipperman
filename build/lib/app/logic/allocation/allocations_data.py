@@ -1,5 +1,5 @@
 from app.data_access.data import data
-from app.logic.allocation.load_and_save_allocations_for_events import (
+from app.logic.events.allocation.backend import (
     load_allocation_for_event,
 )
 from app.logic.events.backend.load_and_save_wa_mapped_events import (
@@ -86,8 +86,6 @@ def get_current_allocations(event: Event) -> ListOfCadetIdsWithGroups:
     return data.data_list_of_cadets_with_groups.read_groups_for_event(event_id=event.id)
 
 
-def get_previous_allocations() -> ListOfCadetIdsWithGroups:
-    return data.data_list_of_cadets_with_groups.read_last_groups()
 
 
 def save_current_allocations_for_event(
@@ -97,9 +95,6 @@ def save_current_allocations_for_event(
         event_id=event.id, list_of_cadets_with_groups=list_of_cadets_with_groups
     )
 
-
-def update_previous_allocations(list_of_cadets_with_groups: ListOfCadetIdsWithGroups):
-    data.data_list_of_cadets_with_groups.write_last_groups(list_of_cadets_with_groups)
 
 
 def get_unallocated_cadets(
@@ -137,7 +132,7 @@ def get_list_of_cadets_with_groups(
             )
         )
     except:
-        raise Exception("Cadets in allocation missing from master list of cadets")
+        raise Exception("Cadets in backend missing from master list of cadets")
 
     return list_of_cadet_with_groups
 

@@ -1,3 +1,4 @@
+import datetime
 from enum import Enum
 from typing import Callable, List
 import pandas as pd
@@ -7,23 +8,7 @@ from app.objects.field_list import (
     FIELDS_WITH_INTEGERS,
     SPECIAL_FIELDS,
 )
-from app.objects.field_list import (
-    FIELDS_WITH_DATES,
-    FIELDS_WITH_INTEGERS,
-    SPECIAL_FIELDS,
-)
-from app.objects.field_list import (
-    FIELDS_WITH_DATES,
-    FIELDS_WITH_INTEGERS,
-    SPECIAL_FIELDS,
-)
-from app.objects.field_list import (
-    FIELDS_WITH_DATES,
-    FIELDS_WITH_INTEGERS,
-    SPECIAL_FIELDS,
-)
 from typing import Union
-import datetime
 from dataclasses import dataclass
 from app.objects.constants import arg_not_passed
 
@@ -88,7 +73,7 @@ class ListOfLines(list):
         return "ListOfLines: contents %s" % super().__repr__()
 
     def __add__(self, other):
-        return ListOfLines(self + other)
+        return ListOfLines(list(self) + list(other))
 
 
 class PandasDFTable(pd.DataFrame):
@@ -161,36 +146,12 @@ def form_with_message(message: str) -> Form:
     return Form(ListOfLines([Line(message)]))
 
 
-_______________ = Line("")
-
-
-@dataclass
-class textInput(Input):
-    input_label: str
-    input_name: str
-    value: str = arg_not_passed
-
-
-@dataclass
-class dateInput(Input):
-    input_label: str
-    input_name: str
-    value: datetime.date = (arg_not_passed,)
-
-
-DEFAULT_LABEL = "__!_!__canbeanythingunlikely to be used"
-
-
 @dataclass
 class radioInput(Input):
     input_label: str
     input_name: str
     dict_of_options: dict
     default_label: str = arg_not_passed
-
-
-YES = "Yes"
-NO = "No"
 
 
 def yes_no_radio(input_label, input_name, default_is_yes: bool = True) -> radioInput:
@@ -215,12 +176,21 @@ class dropDownInput(Input):
     dict_of_options: dict
     default_label: str = arg_not_passed
 
+@dataclass
+class checkboxInput(Input):
+    dict_of_labels: dict
+    dict_of_checked: dict
+
+
+
 
 @dataclass
 class intInput(Input):
     input_label: str
     input_name: str
     value: int = arg_not_passed
+
+
 
 
 @dataclass
@@ -262,3 +232,23 @@ up_arrow = Arrow.Up
 down_arrow = Arrow.Down
 right_arrow = Arrow.Right
 left_arrow = Arrow.Left
+_______________ = Line("")
+
+
+@dataclass
+class textInput(Input):
+    input_label: str
+    input_name: str
+    value: str = arg_not_passed
+
+
+@dataclass
+class dateInput(Input):
+    input_label: str
+    input_name: str
+    value: datetime.date = (arg_not_passed,)
+
+
+DEFAULT_LABEL = "__!_!__canbeanythingunlikely to be used"
+YES = "Yes"
+NO = "No"

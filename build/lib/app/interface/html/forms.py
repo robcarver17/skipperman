@@ -158,6 +158,42 @@ def html_single_radio_button(
     )
 
 
+def html_checkbox_input(
+        input_label: str,
+    input_name: str,
+    dict_of_labels: dict,
+    dict_of_checked: dict):
+
+    all_html = [html_single_checkbox_entry(name_for_all_checks_in_group=input_name,
+                                           label_unique_to_entry=dict_of_labels[id_unique_to_entry],
+                                           checked=dict_of_checked.get(id_unique_to_entry, False),
+                                           id_unique_to_entry=id_unique_to_entry,
+                                           )
+                for id_unique_to_entry in dict_of_labels.keys()]
+
+    return "%s "% input_label+" ".join(all_html)
+
+def html_single_checkbox_entry(id_unique_to_entry: str,
+                               name_for_all_checks_in_group: str,
+                               label_unique_to_entry:str,
+                               checked: bool):
+    if checked:
+        check_text="checked"
+    else:
+        check_text = ""
+
+    value=id_unique_to_entry
+
+    return '<input type="checkbox" id="%s" name="%s" value="%s" %s /><label for="%s">%s</label>' % (
+        id_unique_to_entry,
+        name_for_all_checks_in_group,
+        value,
+        check_text,
+        id_unique_to_entry,
+        label_unique_to_entry
+
+    )
+
 def html_int_input(
     input_label: str,
     input_name: str,
@@ -172,6 +208,8 @@ def html_int_input(
         '%s: <input type="number" name="%s" %s />'
         % (input_label, input_name, value_html)
     )
+
+
 
 
 def html_file_input(input_name: str = "file", accept: str = arg_not_passed):

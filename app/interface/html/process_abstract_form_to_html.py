@@ -1,9 +1,9 @@
-from typing import Union
 from app.logic.forms_and_interfaces.abstract_form import *
 from app.interface.html.html import *
 from app.interface.html.url import INDEX_URL
 from app.interface.flask.interface import flaskInterface
 from app.interface.html.forms import *
+from app.logic.forms_and_interfaces.abstract_form import textInput, dateInput, radioInput, checkboxInput
 
 DEBUG =True
 
@@ -117,6 +117,12 @@ def get_html_for_element_in_line(
             dict_of_options=element_in_line.dict_of_options,
             default_label=element_in_line.default_label,
         )
+    elif type(element_in_line) is checkboxInput:
+        return html_checkbox_input(input_name=element_in_line.input_name,
+                                   dict_of_labels=element_in_line.dict_of_labels,
+                                   dict_of_checked=element_in_line.dict_of_checked,
+                                   input_label=element_in_line.input_label)
+
     elif type(element_in_line) is PandasDFTable:
         return html_from_pandas_table(element_in_line)
     elif type(element_in_line) is Table:

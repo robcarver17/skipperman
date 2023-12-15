@@ -1,11 +1,15 @@
+import datetime
 from enum import Enum
 from typing import Dict
 from dataclasses import dataclass
 
-Day = Enum("Day", ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"])
+Day = Enum("Day", [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday", "Sunday"])
 
 all_possible_days =list(Day.__members__.values())
 ## we keep the original format, but dynamically add this to data frames on import
+
+def day_given_datetime(some_day: datetime.date):
+    return all_possible_days[some_day.weekday()]
 
 class DaySelector(Dict[Day, bool]):
     pass

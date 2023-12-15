@@ -183,6 +183,10 @@ class MappedWAEventWithIDs(list):
     def create_empty(cls):
         return cls([])
 
+    def get_row_with_id(self, cadet_id: str):
+        index = self.list_of_cadet_ids.index(cadet_id)
+
+        return self[index]
 
 def filter_duplicate_list_to_remove_cancelled_or_delete(
     duplicate_id_list: list, list_of_cancelled_or_deleted_id: list

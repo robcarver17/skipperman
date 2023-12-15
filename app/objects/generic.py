@@ -131,11 +131,20 @@ class GenericListOfObjects(list):
     def __repr__(self):
         return str(self.to_df())
 
+    def pop_with_id(self, id):
+        index = self.index_of_id(id)
+        self.pop(index)
+
     def object_with_id(self, id: str):
+        index = self.index_of_id(id)
+
+        return self[index]
+
+    def index_of_id(self, id) -> int:
         list_of_ids = self.list_of_ids
         index = list_of_ids.index(id)
 
-        return self[index]
+        return index
 
     @classmethod
     def subset_from_list_of_ids(

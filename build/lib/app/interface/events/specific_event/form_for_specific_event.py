@@ -80,7 +80,7 @@ def get_event_buttons(event: Event):
     if wa_import_done and field_mapping_done and raw_event_file_exists:
         return html_joined_list([back, wa_import])
 
-    ## both done, we can update the WA file and do cadet allocation
+    ## both done, we can update the WA file and do cadet backend
     if wa_import_done and field_mapping_done and not raw_event_file_exists:
         return html_joined_list([back, wa_update, cadet_allocation])
 

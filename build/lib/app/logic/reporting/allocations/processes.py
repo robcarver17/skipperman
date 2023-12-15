@@ -1,6 +1,6 @@
 import pandas as pd
 
-from app.logic.allocation.allocations_data import (
+from app.logic.events.allocation.backend.allocations_data import (
     get_df_for_reporting_allocations_with_flags,
 )
 from app.logic.events.utilities import get_event_from_state

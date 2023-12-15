@@ -38,7 +38,7 @@ FINAL_CADET_ADD_BUTTON_LABEL = "Yes - these details are correct - add this new c
 SEE_ALL_CADETS_BUTTON_LABEL = "Choose from all existing cadets"
 SEE_SIMILAR_CADETS_ONLY_LABEL = "See similar cadets only"
 #
-# specific event; allocation
+# specific event; backend
 ALLOCATE_CADETS_BUTTON_LABEL = "Allocate cadets to groups"
 
 UPLOAD_FILE_BUTTON_LABEL = "Upload selected file"

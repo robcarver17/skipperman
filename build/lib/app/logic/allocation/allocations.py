@@ -124,6 +124,6 @@ def get_list_of_cadets_with_groups(
             )
         )
     except:
-        raise Exception("Cadets in allocation missing from master list of cadets")
+        raise Exception("Cadets in backend missing from master list of cadets")
 
     return list_of_cadet_with_groups

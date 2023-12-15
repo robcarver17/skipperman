@@ -1,6 +1,6 @@
 # BUTTONS
 
-GROUP_ALLOCATION_REPORT_BUTTON_LABEL = "Event group allocation"
+GROUP_ALLOCATION_REPORT_BUTTON_LABEL = "Event group backend"
 SAVE_THESE_OPTIONS_BUTTON_LABEL = "Save these options"
 USE_THESE_OPTIONS_BUTTON_LABEL = "Use these options"
 CREATE_REPORT_BUTTON_LABEL = "Create report with these options"

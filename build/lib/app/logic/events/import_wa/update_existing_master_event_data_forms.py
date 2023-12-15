@@ -11,9 +11,8 @@ from app.logic.forms_and_interfaces.abstract_form import (
     Form,
     Line,
     ListOfLines,
-    radioInput,
     Button,
-    construct_form_field_given_field_name,
+    construct_form_field_given_field_name, radioInput,
 )
 
 from app.logic.events.backend.update_master_event_data import (

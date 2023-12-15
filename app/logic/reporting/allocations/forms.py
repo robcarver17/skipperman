@@ -3,8 +3,7 @@ from typing import Tuple
 from app.logic.forms_and_interfaces.abstract_form import (
     ListOfLines,
     yes_no_radio,
-    _______________,
-    bold,
+    bold, _______________,
 )
 from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 from app.logic.reporting.allocations.processes import (

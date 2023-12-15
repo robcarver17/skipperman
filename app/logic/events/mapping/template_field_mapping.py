@@ -15,12 +15,10 @@ from app.logic.forms_and_interfaces.abstract_form import (
     cancel_button,
     Form,
     ListOfLines,
-    _______________,
     Line,
     Button,
     NewForm,
-    fileInput,
-    textInput,
+    fileInput, _______________, textInput,
 )
 from app.logic.events.utilities import get_event_from_state
 from app.logic.abstract_logic_api import initial_state_form

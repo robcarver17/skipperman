@@ -23,22 +23,20 @@ from app.logic.forms_and_interfaces.abstract_form import (
     Form,
     NewForm,
     ListOfLines,
-    _______________,
     back_button,
     cancel_button,
     Button,
     File,
     bold,
     Line,
-    BACK_BUTTON_LABEL,
+    BACK_BUTTON_LABEL, _______________,
 )
 from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form
 from app.logic.events.utilities import (
     get_event_from_state,
     confirm_event_exists,
-    update_state_for_specific_event,
-)
+    update_state_for_specific_event, )
 
 from app.logic.reporting.constants import *
 from app.logic.events.view_events import display_list_of_events_with_buttons

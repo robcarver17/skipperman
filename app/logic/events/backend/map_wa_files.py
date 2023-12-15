@@ -81,3 +81,14 @@ def add_wa_to_event_mapping(event: Event, wa_id: str):
     data.data_wa_event_mapping.write(
         wa_event_mapping,
     )
+
+
+def is_wa_mapping_setup_for_event(event: Event) -> bool:
+    event_id = event.id
+    wa_event_mapping = data.data_wa_event_mapping.read()
+
+    event_is_already_in_mapping_list = wa_event_mapping.is_event_in_mapping_list(
+        event_id
+    )
+
+    return event_is_already_in_mapping_list

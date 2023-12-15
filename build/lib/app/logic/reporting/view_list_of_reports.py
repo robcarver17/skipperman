@@ -5,8 +5,7 @@ from app.logic.forms_and_interfaces.abstract_form import (
     NewForm,
     Button,
     ListOfLines,
-    _______________,
-    main_menu_button,
+    main_menu_button, _______________,
 )
 from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 from app.logic.reporting.constants import (

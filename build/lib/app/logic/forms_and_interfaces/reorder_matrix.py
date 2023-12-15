@@ -5,7 +5,6 @@ from app.logic.forms_and_interfaces.abstract_form import (
     FINISHED_BUTTON_LABEL,
     ListOfLines,
     bold,
-    _______________,
     Button,
     Line,
     up_arrow,
@@ -14,7 +13,7 @@ from app.logic.forms_and_interfaces.abstract_form import (
     RowInTable,
     ElementsInTable,
     left_arrow,
-    right_arrow,
+    right_arrow, _______________,
 )
 from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 from app.reporting.arrangement.arrangement_order import (

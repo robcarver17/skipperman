@@ -36,6 +36,10 @@ class Group:
     def __repr__(self):
         return self.group_name
 
+    def __lt__(self, other):
+        return self.group_name<other.group_name
+
+
     @classmethod
     def create_unallocated(cls):
         return cls(UNALLOCATED_GROUP)
@@ -101,6 +105,23 @@ class ListOfCadetIdsWithGroups(GenericListOfObjects):
     @property
     def _object_class_contained(self):
         return CadetIdWithGroup
+
+    def total_in_each_group_as_dict(self) -> dict:
+        list_of_groups = self.unique_list_of_groups()
+        total_by_group = dict([(str(group),0) for group in list_of_groups])
+        for cadet_id_with_group in self:
+            total_by_group[str(cadet_id_with_group.group)]+=1
+
+        return total_by_group
+
+    def unique_list_of_groups(self) -> list:
+        list_of_groups = self.groups
+        return list(set(list_of_groups))
+
+    @property
+    def groups(self) -> list:
+        list_of_groups = [cadet_id_with_group.group for cadet_id_with_group in self]
+        return list_of_groups
 
     def add_list_of_unallocated_cadets(self, list_of_unallocated_cadets: ListOfCadets):
         [self.add_unallocated_cadet(cadet) for cadet in list_of_unallocated_cadets]
@@ -180,6 +201,9 @@ class ListOfCadetIdsWithGroups(GenericListOfObjects):
     def list_of_ids(self) -> list:
         return [item.cadet_id for item in self]
 
+    def sort_by_group(self):
+        new_list = sorted(self, key=lambda x: x.group, reverse=False)
+        return ListOfCadetIdsWithGroups(new_list)
 
 @dataclass
 class CadetWithGroup(GenericSkipperManObject):

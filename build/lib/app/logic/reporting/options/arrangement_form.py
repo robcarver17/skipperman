@@ -3,7 +3,8 @@ from typing import Union
 import pandas as pd
 
 from app.logic.abstract_logic_api import initial_state_form
-from app.logic.forms_and_interfaces.abstract_form import Form, Line, Button, ListOfLines, _______________, NewForm, File, Table
+from app.logic.forms_and_interfaces.abstract_form import Form, Line, Button, ListOfLines, NewForm, File, Table, \
+    _______________
 from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 
 from app.logic.forms_and_interfaces.reorder_form import reorder_table, reorderFormInterface, list_of_button_names_given_group_order

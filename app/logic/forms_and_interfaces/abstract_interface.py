@@ -9,9 +9,7 @@ from app.logic.forms_and_interfaces.abstract_form import (
     Form,
     Line,
     finished_button,
-    _______________,
-    YES,
-    NO,
+    Button, _______________, YES, NO,
 )
 
 
@@ -93,12 +91,14 @@ def get_file_from_interface(file_label: str, interface: abstractInterface):
 
 
 def form_with_message_and_finished_button(
-    message: str, interface: abstractInterface
+    message: str, interface: abstractInterface,
+        button: Button = finished_button
 ) -> Form:
-    return form_with_content_and_finished_button(Line(message))
+    return form_with_content_and_finished_button(content = Line(message), interface=interface, button=button)
 
 def form_with_content_and_finished_button(
-    content, interface: abstractInterface
+    content, interface: abstractInterface,
+        button: Button = finished_button
 ) -> Form:
     return Form(
         ListOfLines(
@@ -107,7 +107,7 @@ def form_with_content_and_finished_button(
                 _______________,
                 content,
                 _______________,
-                Line(finished_button),
+                Line(button),
             ]
         )
     )

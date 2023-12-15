@@ -36,7 +36,6 @@ from app.logic.events.mapping.clone_field_mapping import (
     display_form_for_clone_event_field_mapping,
     post_form_for_clone_event_field_mapping,
 )
-from app.logic.events.mapping.check_mapping import display_form_check_field_mapping, post_form_check_field_mapping
 from app.logic.events.mapping.download_template_field_mapping import (
     display_form_for_download_template_field_mapping,
     post_form_for_download_template_field_mapping,
@@ -62,7 +61,7 @@ from app.logic.events.allocation.allocate_cadets_to_groups import (
     display_form_allocate_cadets,
     post_form_allocate_cadets,
 )
-
+from app.logic.events.registration_details.edit_registration_details import display_form_edit_registration_details, post_form_edit_registration_details
 from app.logic.events.constants import *
 
 
@@ -85,8 +84,6 @@ class EventLogicApi(AbstractLogicApi):
             return display_form_for_upload_custom_field_mapping(self.interface)
         elif form_name == WA_CLONE_EVENT_MAPPING_IN_VIEW_EVENT_STAGE:
             return display_form_for_clone_event_field_mapping(self.interface)
-        elif form_name == WA_CHECK_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE:
-            return display_form_check_field_mapping(self.interface)
 
         elif form_name == WA_SELECT_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE:
             return display_form_for_choose_template_field_mapping(self.interface)
@@ -105,8 +102,11 @@ class EventLogicApi(AbstractLogicApi):
         elif form_name == WA_UPDATE_SUBSTAGE_IN_VIEW_EVENT_STAGE:
             return display_form_update_existing_event(self.interface)
 
-        elif form_name == WA_ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE:
+        elif form_name == ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE:
             return display_form_allocate_cadets(self.interface)
+
+        elif form_name == EDIT_CADET_REGISTRATION_DATA_IN_VIEW_EVENT_STAGE:
+            return display_form_edit_registration_details(self.interface)
 
         else:
             raise Exception("Form name %s not recognised" % form_name)
@@ -129,8 +129,6 @@ class EventLogicApi(AbstractLogicApi):
             return post_form_for_upload_custom_field_mapping(self.interface)
         elif form_name == WA_CLONE_EVENT_MAPPING_IN_VIEW_EVENT_STAGE:
             return post_form_for_clone_event_field_mapping(self.interface)
-        elif form_name == WA_CHECK_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE:
-            return post_form_check_field_mapping(self.interface)
 
         elif form_name == WA_SELECT_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE:
             return post_form_for_choose_template_field_mapping(self.interface)
@@ -149,7 +147,11 @@ class EventLogicApi(AbstractLogicApi):
         elif form_name == WA_UPDATE_SUBSTAGE_IN_VIEW_EVENT_STAGE:
             return post_form_uupdate_existing_event(self.interface)
 
-        elif form_name == WA_ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE:
+        elif form_name == ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE:
             return post_form_allocate_cadets(self.interface)
+
+        elif form_name == EDIT_CADET_REGISTRATION_DATA_IN_VIEW_EVENT_STAGE:
+            return post_form_edit_registration_details(self.interface)
+
         else:
             raise Exception("Form name %s not recognised" % form_name)

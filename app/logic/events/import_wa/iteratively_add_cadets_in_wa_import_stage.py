@@ -22,11 +22,7 @@ from app.logic.events.backend.load_and_save_wa_mapped_events import (
 from app.logic.events.import_wa.get_or_select_cadet_forms import (
     get_add_or_select_existing_cadet_form,
 )
-from app.logic.cadets.view_cadets import get_list_of_cadets
-from app.logic.cadets.view_individual_cadets import (
-    confirm_cadet_exists,
-    get_cadet_from_list_of_cadets,
-)
+from app.logic.cadets.backend import confirm_cadet_exists, get_cadet_from_list_of_cadets, get_list_of_cadets
 from app.logic.cadets.add_cadet import add_cadet_from_form_to_data
 from app.objects.constants import NoMoreData
 from app.objects.mapped_wa_event_no_ids import RowInMappedWAEventNoId

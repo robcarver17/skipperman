@@ -5,6 +5,7 @@
 
 menu_definition = {
     "Cadets": "view_master_list_of_cadets",
+    "Volunteers": "view_list_of_volunteers",
     "Events": "view_list_of_events",
     "Reports": "view_possible_reports",
 }

@@ -86,4 +86,8 @@ _dict_of_filenames_and_paths = dict(
         "cadets_with_groups_for_event_%s.csv",
     ),
     print_options=("options", "print_options_for_report_%s.csv"),
+    list_of_volunteers=("volunteers", "list_of_volunteers.csv"),
+list_of_volunteer_skills=("volunteers", "list_of_volunteers_skills.csv"),
+list_of_cadet_volunteer_associations=("volunteers", "list_of_cadet_volunteer_associations.csv"),
+list_of_volunteers_at_event=("volunteers_at_event", "list_of_volunteers_at_event_%s.csv")
 )

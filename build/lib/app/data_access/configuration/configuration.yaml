@@ -67,3 +67,33 @@ max_file_size: 2100000 # ~2mb
 upload_extensions: ".csv, .xls, .zip"
 #
 #
+volunteer_skills:
+  - "DI"
+  - "RCL2"
+  - "AI"
+  - "PB2"
+  - "First aid"
+  - "DBS"
+  - "SI"
+volunteer_locations:
+  - "Lake"
+  - "River"
+  - "Other"
+volunteer_roles:
+  - "SI"
+  - "SKipper"
+  - "Deputy skipper"
+  - "DI"
+  - "Coach"
+  - "AI"
+  - "Admin"
+  - "Photo"
+  - "Drone"
+  - "Ramp lead"
+  - "Ramp"
+  - "Galley"
+  - "Galley lead"
+  - "Safety lead"
+  - "Safety helm"
+  - "Safety crew"
+  - "Lake helper"

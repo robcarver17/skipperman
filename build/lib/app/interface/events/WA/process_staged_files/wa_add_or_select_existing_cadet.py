@@ -7,7 +7,7 @@ from app.interface.events.constants import (
 from app.interface.html.forms import html_button
 from app.interface.html.html import html_joined_list, html_joined_list_as_lines, Html
 from app.logic.cadets.add_cadet import list_of_similar_cadets
-from app.logic.cadets.view_cadets import get_list_of_cadets, SORT_BY_FIRSTNAME
+from app.logic.cadets.backend import get_list_of_cadets, SORT_BY_FIRSTNAME
 
 from app.interface.flask.state_for_action import StateDataForAction
 from app.interface.html.html import html_bold, Html

@@ -97,6 +97,14 @@ class flaskInterface(abstractInterface):
 
         return value
 
+    def value_of_multiple_options_from_form(self, key: str) -> list:
+        try:
+            list_of_values = get_list_from_form(key)
+        except:
+            raise Exception("Value %s not found in form" % key)
+
+        return list_of_values
+
     def last_button_pressed(self, button_name=arg_not_passed) -> str:
         return get_last_button_pressed(button_name)
 
@@ -125,6 +133,9 @@ def is_website_post() -> bool:
 
 def get_value_from_form(key: str):
     return request.form[key]
+
+def get_list_from_form(key: str):
+    return request.form.getlist(key)
 
 
 def get_last_button_pressed(button_name: str = arg_not_passed) -> str:

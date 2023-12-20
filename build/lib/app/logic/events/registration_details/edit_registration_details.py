@@ -13,7 +13,8 @@ from app.logic.forms_and_interfaces.abstract_form import (
 )
 from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form
-from app.logic.cadets.view_cadets import sort_buttons, all_sort_types, SORT_BY_SURNAME
+from app.logic.cadets.view_cadets import sort_buttons, all_sort_types
+from app.logic.cadets.backend import SORT_BY_SURNAME
 from app.logic.events.constants import *
 from app.logic.events.utilities import (
     get_event_from_state, )

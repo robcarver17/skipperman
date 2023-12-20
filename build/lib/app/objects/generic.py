@@ -20,13 +20,14 @@ transform_str_into_date
 KEYS = "Keys"
 VALUES = "Values"
 
-
 class GenericSkipperManObject:
     def __eq__(self, other):
-        return self.id == other.id
+        return self.__hash__()== other.__hash__()
 
     def __hash__(self):
-        return hash(self.id)
+        list_of_attributes = get_list_of_attributes(self)
+        str_dict_repr = "_".join([str(getattr(self, key)) for key in list_of_attributes])
+        return hash(str_dict_repr)
 
     @classmethod
     def create_null(cls):
@@ -62,14 +63,22 @@ class GenericSkipperManObject:
 
         return class_instance
 
+
+class GenericSkipperManObjectWithIds(GenericSkipperManObject):
+    def __eq__(self, other):
+        return self.id == other.id
+
+    def __hash__(self):
+        return hash(self.id)
+
     @property
     def id(self) -> str:
         raise NotImplemented
 
 
 def _transform_class_dict_into_str_dict(
-    some_class_instance: GenericSkipperManObject, class_dict: dict
-) -> dict:
+    some_class_instance: GenericSkipperManObjectWithIds, class_dict: dict
+):
     ## don't need to check attributes match is guaranteed
     list_of_attributes = get_list_of_attributes(some_class_instance)
 
@@ -124,48 +133,13 @@ def _transform_string_into_class_instance(object_class, string):
     return object_class(string)
 
 
-class GenericListOfObjects(list):
+class GenericListOfObjectsNoIds(list):
     def __init__(self, list_of_objects: List[GenericSkipperManObject]):
         super().__init__(list_of_objects)
 
     def __repr__(self):
         return str(self.to_df())
 
-    def pop_with_id(self, id):
-        index = self.index_of_id(id)
-        self.pop(index)
-
-    def object_with_id(self, id: str):
-        index = self.index_of_id(id)
-
-        return self[index]
-
-    def index_of_id(self, id) -> int:
-        list_of_ids = self.list_of_ids
-        index = list_of_ids.index(id)
-
-        return index
-
-    @classmethod
-    def subset_from_list_of_ids(
-        cls, full_list: "GenericListOfObjects", list_of_ids: list
-    ):
-        subset_list = [full_list.has_id(id) for id in list_of_ids]
-
-        return cls(subset_list)
-
-    def has_id(self, id: str):
-        list_of_ids = self.list_of_ids
-        try:
-            idx = list_of_ids.index(id)
-        except ValueError:
-            raise Exception("id %s not in list" % id)
-
-        return self[idx]
-
-    @property
-    def list_of_ids(self) -> list:
-        return [item.id for item in self]
 
     @classmethod
     def create_empty(cls):
@@ -192,6 +166,56 @@ class GenericListOfObjects(list):
         list_of_dicts = [item.as_str_dict() for item in self]
 
         return pd.DataFrame(list_of_dicts)
+
+
+class GenericListOfObjectsWithIds(GenericListOfObjectsNoIds):
+    def __init__(self, list_of_objects: List[GenericSkipperManObjectWithIds]):
+        super().__init__(list_of_objects)
+
+    def pop_with_id(self, id):
+        index = self.index_of_id(id)
+        self.pop(index)
+
+    def object_with_id(self, id: str):
+        index = self.index_of_id(id)
+
+        return self[index]
+
+    def index_of_id(self, id) -> int:
+        list_of_ids = self.list_of_ids
+        index = list_of_ids.index(id)
+
+        return index
+
+    @classmethod
+    def subset_from_list_of_ids(
+        cls, full_list: "GenericListOfObjectsWithIds", list_of_ids: list
+    ):
+        subset_list = [full_list.has_id(id) for id in list_of_ids]
+
+        return cls(subset_list)
+
+    def replace_with_new_object(self, new_object):
+        idx = self.index_of_object_with_id(new_object.id)
+        self[idx] = new_object
+
+    def has_id(self, id: str):
+        idx = self.index_of_object_with_id(id)
+        return self[idx]
+
+    def index_of_object_with_id(self, id: str):
+        list_of_ids = self.list_of_ids
+        try:
+            idx = list_of_ids.index(id)
+        except ValueError:
+            raise Exception("id %s not in list" % id)
+
+        return idx
+
+    @property
+    def list_of_ids(self) -> list:
+        return [item.id for item in self]
+
 
     def next_id(self) -> str:
         if len(self) == 0:

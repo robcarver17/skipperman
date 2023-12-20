@@ -59,8 +59,10 @@ class abstractInterface(object):
         raise NotImplemented
 
     def value_from_form(self, key: str):
-        # FIXME NEEDS TO PROCESS DATES FROM HTML - NEEDS TO KNOW KEY IS A DATE
-        return missing_data
+        raise NotImplemented
+
+    def value_of_multiple_options_from_form(self, key: str) -> list:
+        raise NotImplemented
 
     def true_if_radio_was_yes(self, input_label: str) -> bool:
         value = self.value_from_form(input_label)

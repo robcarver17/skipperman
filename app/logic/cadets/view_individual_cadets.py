@@ -1,38 +1,31 @@
 from typing import Union
-from app.logic.forms_and_interfaces.abstract_form import Form, NewForm
+
+from app.logic.cadets.backend import get_cadet_from_state
+from app.logic.forms_and_interfaces.abstract_form import Form, NewForm, Button, Line, ListOfLines, _______________
 from app.logic.abstract_logic_api import initial_state_form
 from app.logic.forms_and_interfaces.abstract_interface import (
     abstractInterface,
     form_with_message_and_finished_button,
 )
-from app.logic.cadets.view_cadets import get_list_of_cadets
-
+from app.logic.events.allocation.backend.previous_allocations import get_dict_of_all_event_allocations_for_single_cadet
+from app.logic.cadets.constants import EDIT_BUTTON_LABEL, DELETE_BUTTON_LABEL, BACK_BUTTON_LABEL, EDIT_INDIVIDUAL_CADET_STAGE, DELETE_INDIVIDUAL_CADET_STAGE
 from app.objects.cadets import Cadet
-
-# FIXME NOT PROPERLY IMPLEMENTED
-# FIXME ADD OTHER INFORMATION ABOUT CADET HERE
-# FIXME ADD DELETE / EDIT OPTIONS
-
-CADET = "Selected_Cadet"
 
 
 def display_form_view_individual_cadet(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
-    cadet_selected = interface.last_button_pressed()
+
     try:
-        confirm_cadet_exists(cadet_selected)
+        cadet = get_cadet_from_state(interface)
     except:
         interface.log_error(
-            "Cadet %s no longer in list- someone else has deleted or file corruption?"
-            % cadet_selected
+            "Cadet selected no longer in list- someone else has deleted or file corruption?"
         )
         return initial_state_form
 
-    update_state_for_specific_cadet(interface=interface, cadet_selected=cadet_selected)
-
     return display_form_for_selected_cadet(
-        cadet_selected=cadet_selected, interface=interface
+        cadet = cadet, interface=interface
     )
 
 
@@ -40,31 +33,39 @@ def post_form_view_individual_cadet(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     ## placeholder, not currently used
-    pass
-
-
-def confirm_cadet_exists(cadet_selected):
-    list_of_cadets_as_str = [str(cadet) for cadet in get_list_of_cadets()]
-    assert cadet_selected in list_of_cadets_as_str
-
-
-def update_state_for_specific_cadet(interface: abstractInterface, cadet_selected: str):
-    interface.set_persistent_value(key=CADET, value=cadet_selected)
-
-
-def get_specific_cadet_from_state(interface: abstractInterface) -> str:
-    return interface.get_persistent_value(CADET)
+    button = interface.last_button_pressed()
+    if button==BACK_BUTTON_LABEL:
+        return initial_state_form
+    elif button==DELETE_BUTTON_LABEL:
+        return NewForm(DELETE_INDIVIDUAL_CADET_STAGE)
+    elif button==EDIT_BUTTON_LABEL:
+        return NewForm(EDIT_INDIVIDUAL_CADET_STAGE)
+    else:
+        raise NotImplemented("Button not recognised")
 
 
 def display_form_for_selected_cadet(
-    cadet_selected: str, interface: abstractInterface
+    cadet: Cadet, interface: abstractInterface
 ) -> Form:
-    return form_with_message_and_finished_button(cadet_selected, interface=interface)
+    lines_of_allocations = list_of_lines_with_allocations(cadet)
+    buttons = buttons_for_cadet_form()
+    return Form(
+        ListOfLines([
+            str(cadet),
+            _______________,
+            lines_of_allocations,
+            _______________,
+            buttons
+        ])
+    )
+
+def list_of_lines_with_allocations(cadet: Cadet) -> ListOfLines:
+    dict_of_allocations = get_dict_of_all_event_allocations_for_single_cadet(cadet)
+    return ListOfLines(["Events registered at:", _______________]+
+        ["%s: %s" % (str(event), group) for event, group in dict_of_allocations.items()]
+    )
+
+def buttons_for_cadet_form() -> Line:
+    return Line([Button(BACK_BUTTON_LABEL), Button(EDIT_BUTTON_LABEL), Button(DELETE_BUTTON_LABEL)])
 
 
-def get_cadet_from_list_of_cadets(cadet_selected: str) -> Cadet:
-    list_of_cadets = get_list_of_cadets()
-    list_of_cadets_as_str = [str(cadet) for cadet in list_of_cadets]
-
-    cadet_idx = list_of_cadets_as_str.index(cadet_selected)
-    return list_of_cadets[cadet_idx]

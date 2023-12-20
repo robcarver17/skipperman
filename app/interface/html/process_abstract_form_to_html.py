@@ -5,7 +5,7 @@ from app.interface.flask.interface import flaskInterface
 from app.interface.html.forms import *
 from app.logic.forms_and_interfaces.abstract_form import textInput, dateInput, radioInput, checkboxInput
 
-DEBUG =True
+DEBUG =False
 
 def process_abstract_form_to_html(form: Form, interface: flaskInterface) -> Html:
     print("Abstract form %s" % str(form))

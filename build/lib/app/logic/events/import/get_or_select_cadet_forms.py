@@ -3,8 +3,6 @@ from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
 
 
 from app.logic.cadets.add_cadet import list_of_similar_cadets
-from app.logic.cadets.view_cadets import SORT_BY_FIRSTNAME
-
 
 from app.logic.events.constants import (
     CHECK_CADET_BUTTON_LABEL,
@@ -13,7 +11,7 @@ from app.logic.events.constants import (
     SEE_SIMILAR_CADETS_ONLY_LABEL,
 )
 
-from app.logic.cadets.view_cadets import get_list_of_cadets
+from app.logic.cadets.backend import get_list_of_cadets, SORT_BY_FIRSTNAME
 from app.logic.cadets.add_cadet import verify_cadet_and_warn, verify_form_with_cadet_details, get_add_cadet_form_with_information_passed, CadetAndVerificationText
 
 from app.objects.cadets import Cadet

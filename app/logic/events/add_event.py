@@ -8,7 +8,6 @@ from app.data_access.configuration.configuration import (
 )
 
 from app.logic.events.constants import (
-    CLONE_EVENT_BUTTON_LABEL,
     EVENT_NAME,
     EVENT_START_DATE,
     EVENT_END_DATE,
@@ -51,11 +50,7 @@ def post_form_view_for_add_event(
 
     last_button_pressed = interface.last_button_pressed()
 
-    if last_button_pressed == CLONE_EVENT_BUTTON_LABEL:
-        interface.log_error("Cloning not implemented")
-        return initial_state_form
-
-    elif last_button_pressed == CHECK_BUTTON_LABEL:
+    if last_button_pressed == CHECK_BUTTON_LABEL:
         ## verify results, display form again
         return get_add_event_form(interface=interface, first_time_displayed=False)
 
@@ -204,9 +199,8 @@ def process_form_when_event_verified(interface: abstractInterface) -> Form:
 def get_footer_buttons(form_is_blank: bool):
     final_submit = Button(FINAL_ADD_BUTTON_LABEL)
     check_submit = Button(CHECK_BUTTON_LABEL)
-    clone_event = Button(CLONE_EVENT_BUTTON_LABEL)
     if form_is_blank:
-        return Line([cancel_button, clone_event, check_submit])
+        return Line([cancel_button,  check_submit])
     else:
         return Line([cancel_button, check_submit, final_submit])
 

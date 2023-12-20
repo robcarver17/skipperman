@@ -11,7 +11,7 @@ from app.data_access.classes.cadets_with_groups_for_event import (
 )
 from app.data_access.classes.mapped_wa_event import DataMappedWAEventWithNoIDs
 from app.data_access.classes.print_options import DataListOfPrintOptions
-
+from app.data_access.classes.volunteers import DataListOfVolunteers, DataListOfVolunteersAtEvent, DataListOfVolunteerSkills, DataListOfCadetVolunteerAssociations
 
 class GenericDataApi(object):
     ## FOLLOWING SHOULD BE OVERWRITTEN BY SPECIFIC CLASSES
@@ -54,3 +54,20 @@ class GenericDataApi(object):
     @property
     def data_print_options(self) -> DataListOfPrintOptions:
         raise NotImplemented
+
+    @property
+    def data_list_of_volunteers(self) -> DataListOfVolunteers:
+        raise NotImplemented
+
+    @property
+    def data_list_of_volunteer_skills(self) -> DataListOfVolunteerSkills:
+        raise NotImplemented
+
+    @property
+    def data_list_of_cadet_volunteer_associations(self) -> DataListOfCadetVolunteerAssociations:
+        raise NotImplemented
+
+    @property
+    def data_list_of_volunteers_at_event(self) -> DataListOfVolunteersAtEvent:
+        raise NotImplemented
+

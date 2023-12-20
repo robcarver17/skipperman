@@ -1,12 +1,14 @@
+from typing import List
 from dataclasses import dataclass
 
-from app.logic.cadets.view_cadets import get_list_of_cadets, cadet_from_id_with_passed_list
+from app.logic.cadets.view_cadets import cadet_from_id_with_passed_list
+from app.logic.cadets.backend import get_list_of_cadets
 from app.logic.events.backend.load_and_save_wa_mapped_events import load_master_event
 from app.logic.events.constants import ROW_STATUS
 from app.logic.events.utilities import dropdown_input_for_status_change
 from app.logic.forms_and_interfaces.abstract_form import RowInTable, dropDownInput, checkboxInput, textInput, intInput
 from app.objects.cadets import ListOfCadets
-from app.objects.day_selectors import DaySelector
+from app.objects.day_selectors import DaySelector, Day
 from app.objects.events import Event
 from app.objects.field_list import FIELDS_TO_EDIT_IN_EDIT_VIEW, FIELDS_VIEW_ONLY_IN_EDIT_VIEW, DAYS_ATTENDING, \
     FIELDS_WITH_INTEGERS
@@ -18,7 +20,7 @@ from app.objects.constants import arg_not_passed
 class RegistrationDetailsForEvent:
     event: Event
     list_of_cadets: ListOfCadets
-    weekdays_in_event: list
+    weekdays_in_event: List[Day]
     all_columns: list
     master_event_details: MasterEvent
 

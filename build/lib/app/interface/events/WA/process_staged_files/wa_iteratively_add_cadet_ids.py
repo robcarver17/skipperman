@@ -29,8 +29,7 @@ from app.logic.events.backend.add_cadet_ids_to_mapped_wa_event_data import (
     add_row_data_with_id_included_and_delete_from_unmapped_data,
     get_cadet_data_from_row_of_mapped_data_no_checks,
 )
-from app.logic.cadets.view_cadets import get_list_of_cadets
-
+from app.logic.cadets.backend import get_list_of_cadets
 
 from app.objects.mapped_wa_event_no_ids import RowInMappedWAEventNoId
 from app.objects.cadets import Cadet

@@ -54,6 +54,11 @@ ALL_GROUPS = (
     LAKE_TRAINING_GROUPS + RIVER_TRAINING_GROUPS + MG_GROUPS + [UNALLOCATED_GROUP]
 )
 
+# VOLUNTEERS
+VOLUNTEER_SKILLS = configuration['volunteer_skills']
+VOLUNTEER_LOCATIONS = configuration['volunteer_locations']
+VOLUNTEER_ROLES = configuration['volunteer_roles']
+
 
 ## Page sizes - not configured in yaml as won't need changing
 A4_PAGESIZE = "A4"

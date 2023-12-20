@@ -1,6 +1,7 @@
 from app.logic.cadets.cadets_logic_api import CadetLogicApi
 from app.logic.events.events_logic_api import EventLogicApi
 from app.logic.reporting.reporting_logic_api import ReportingLogicApi
+from app.logic.volunteers.volunteer_logic_api import VolunteerLogicApi
 
 from app.interface.flask.interface import flaskInterface
 from app.logic.forms_and_interfaces.abstract_form import Form, form_with_message, File
@@ -47,3 +48,6 @@ class SiteActions:
 
     def view_possible_reports(self, interface: flaskInterface) -> AbstractLogicApi:
         return ReportingLogicApi(interface)
+
+    def view_list_of_volunteers(self,interface: flaskInterface) -> AbstractLogicApi:
+        return VolunteerLogicApi(interface)

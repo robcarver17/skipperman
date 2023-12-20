@@ -14,7 +14,7 @@ from app.objects.cadets import Cadet, ListOfCadets
 from dataclasses import dataclass
 
 from app.objects.field_list import CADET_NAME, GROUP_STR_NAME, ID_NAME
-from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
+from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds
 
 LAKE_TRAINING = "Lake training"
 RIVER_TRAINING = "River training"
@@ -78,7 +78,7 @@ class Group:
 
 
 @dataclass(frozen=True)
-class CadetIdWithGroup(GenericListOfObjects):
+class CadetIdWithGroup(GenericListOfObjectsWithIds):
     cadet_id: str
     group: Group
 
@@ -101,7 +101,7 @@ class CadetIdWithGroup(GenericListOfObjects):
 NOT_ALLOCATED = Group.create_unallocated()
 
 
-class ListOfCadetIdsWithGroups(GenericListOfObjects):
+class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return CadetIdWithGroup
@@ -206,7 +206,7 @@ class ListOfCadetIdsWithGroups(GenericListOfObjects):
         return ListOfCadetIdsWithGroups(new_list)
 
 @dataclass
-class CadetWithGroup(GenericSkipperManObject):
+class CadetWithGroup(GenericSkipperManObjectWithIds):
     ## For display purposes, can't store
     cadet: Cadet
     group: Group
@@ -221,7 +221,7 @@ class CadetWithGroup(GenericSkipperManObject):
         return {CADET_NAME: cadet_name, GROUP_STR_NAME: str(self.group)}
 
 
-class ListOfCadetsWithGroup(GenericListOfObjects):
+class ListOfCadetsWithGroup(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return CadetWithGroup
 

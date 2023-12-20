@@ -5,10 +5,10 @@ import pandas as pd
 from app.data_access.configuration.configuration import A4_PAGESIZE, UNIT_MM, TITLE_MULTIPLIER, HEIGHT, WIDTH, \
     PAGESIZE_MM, EDGE_MARGIN_MM, COLUMN_GAP_MM
 
-from app.objects.generic import GenericSkipperManObject
+from app.objects.generic import GenericSkipperManObjectWithIds
 
 @dataclass
-class PrintOptions(GenericSkipperManObject):
+class PrintOptions(GenericSkipperManObjectWithIds):
     filename: str = ""
     title_str: str = ""
     page_size: str = A4_PAGESIZE

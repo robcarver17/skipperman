@@ -1,3 +1,4 @@
+from typing import List
 from dataclasses import dataclass
 import datetime
 from enum import Enum
@@ -8,9 +9,9 @@ from app.data_access.configuration.configuration import (
 )
 
 from app.objects.utils import transform_date_into_str, similar
-from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
+from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds
 from app.objects.constants import arg_not_passed
-from app.objects.day_selectors import day_given_datetime, all_possible_days
+from app.objects.day_selectors import day_given_datetime, all_possible_days, Day
 
 EventType = Enum(
     "EventType", ["Training", "Racing", "TrainingAndRacing", "Social", "Merchandise"]
@@ -21,7 +22,7 @@ list_of_event_types = [e.name for e in EventType]
 
 
 @dataclass
-class Event(GenericSkipperManObject):
+class Event(GenericSkipperManObjectWithIds):
     event_name: str  ## has to be preselected
     start_date: datetime.date
     end_date: datetime.date
@@ -89,7 +90,7 @@ class Event(GenericSkipperManObject):
         days_in_event = self.weekdays_in_event()
         return [day for day in all_possible_days if day in days_in_event]
 
-    def weekdays_in_event(self) -> list:
+    def weekdays_in_event(self) -> List[Day]:
         date_list = self.dates_in_event()
         weekdays = [day_given_datetime(some_day) for some_day in date_list]
 
@@ -111,7 +112,7 @@ default_event = Event(
 )
 
 
-class ListOfEvents(GenericListOfObjects):
+class ListOfEvents(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return Event

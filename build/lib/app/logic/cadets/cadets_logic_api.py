@@ -10,17 +10,23 @@ from app.logic.cadets.view_individual_cadets import (
     display_form_view_individual_cadet,
     post_form_view_individual_cadet,
 )
-from app.logic.cadets.constants import VIEW_INDIVIDUAL_CADET_FORM, ADD_CADET_FORM
+from app.logic.cadets.edit_cadet import display_form_edit_individual_cadet, post_form_edit_individual_cadet
+from app.logic.cadets.delete_cadet import display_form_delete_individual_cadet, post_form_delete_individual_cadet
+from app.logic.cadets.constants import *
 
 
 class CadetLogicApi(AbstractLogicApi):
     def get_displayed_form_given_form_name(self, form_name: str):
         if form_name == INITIAL_STATE:
             return display_form_view_of_cadets()
-        elif form_name == VIEW_INDIVIDUAL_CADET_FORM:
+        elif form_name == VIEW_INDIVIDUAL_CADET_STAGE:
             return display_form_view_individual_cadet(self.interface)
         elif form_name == ADD_CADET_FORM:
             return display_form_add_cadet(self.interface)
+        elif form_name==DELETE_INDIVIDUAL_CADET_STAGE:
+            return display_form_delete_individual_cadet(self.interface)
+        elif form_name==EDIT_INDIVIDUAL_CADET_STAGE:
+            return display_form_edit_individual_cadet(self.interface)
         else:
             raise Exception("Form name %s not recognised" % form_name)
 
@@ -31,7 +37,12 @@ class CadetLogicApi(AbstractLogicApi):
             return post_form_view_of_cadets(self.interface)
         elif form_name == ADD_CADET_FORM:
             return post_form_add_cadets(self.interface)
-        elif form_name == VIEW_INDIVIDUAL_CADET_FORM:
+        elif form_name == VIEW_INDIVIDUAL_CADET_STAGE:
             return post_form_view_individual_cadet(self.interface)
+        elif form_name==DELETE_INDIVIDUAL_CADET_STAGE:
+            return post_form_delete_individual_cadet(self.interface)
+        elif form_name==EDIT_INDIVIDUAL_CADET_STAGE:
+            return post_form_edit_individual_cadet(self.interface)
+
         else:
             raise Exception("Form name %s not recognised" % form_name)

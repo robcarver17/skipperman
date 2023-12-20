@@ -11,7 +11,7 @@ transform_df_from_str_to_dates
 
 from app.objects.field_list import REGISTRATION_DATE, WEEKEND_DAYS_ATTENDING_INPUT, DAYS_ATTENDING, ALL_DAYS_ATTENDING_INPUT
 from app.objects.constants import arg_not_passed
-from app.objects.day_selectors import weekend_day_selector_from_text, any_day_selector_from_text, DaySelector, ALL_DAYS_SELECTED, day_selector_stored_format_from_text, day_selector_to_text_in_stored_format
+from app.objects.day_selectors import weekend_day_selector_from_text, any_day_selector_from_short_form_text, DaySelector, ALL_DAYS_SELECTED, day_selector_stored_format_from_text, day_selector_to_text_in_stored_format
 
 
 class RowInMappedWAEventNoId(dict):
@@ -55,7 +55,7 @@ def get_attendance_selection_from_event_row(
         days_attending = weekend_day_selector_from_text(row_as_dict[WEEKEND_DAYS_ATTENDING_INPUT])
 
     elif ALL_DAYS_ATTENDING_INPUT in row_as_dict.keys():
-        days_attending = any_day_selector_from_text(row_as_dict[WEEKEND_DAYS_ATTENDING_INPUT])
+        days_attending = any_day_selector_from_short_form_text(row_as_dict[WEEKEND_DAYS_ATTENDING_INPUT])
 
     else:
         days_attending = ALL_DAYS_SELECTED

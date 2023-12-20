@@ -7,13 +7,13 @@ from app.data_access.configuration.configuration import (
     SIMILARITY_LEVEL_TO_WARN_DATE,
     SIMILARITY_LEVEL_TO_WARN_NAME,
 )
-from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
+from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds
 from app.objects.utils import transform_date_into_str, similar
 from app.objects.constants import arg_not_passed, DAYS_IN_YEAR
 
 
 @dataclass
-class Cadet(GenericSkipperManObject):
+class Cadet(GenericSkipperManObjectWithIds):
     first_name: str
     surname: str
     date_of_birth: datetime.date
@@ -66,7 +66,7 @@ class Cadet(GenericSkipperManObject):
         return similar(self._date_of_birth_as_str, other_cadet._date_of_birth_as_str)
 
 
-class ListOfCadets(GenericListOfObjects):
+class ListOfCadets(GenericListOfObjectsWithIds):
     def matching_cadet(self, cadet: Cadet) -> Cadet:
         return self[self.index(cadet)]
 

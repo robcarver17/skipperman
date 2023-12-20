@@ -45,21 +45,19 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ## Features
 
-### Minimum viable product:
+### Done:
 
 - maintain a master list of cadets and events
 - import a list of entries for a specific event from WA
 - allocate cadets to groups 
 - print a report of which cadet is in which group
+- view / delete cadets
+- edit / delete events  
 
 
-### Basic:
+### Basic - to do:
 
 - nicer CSS
-- view / delete cadets
-- delete cadets must also delete them from other tables or bad things will happen
-- edit / delete events  
-- clone an existing event
 - create a volunteer rota, manage it, and report on it
 - maintain ticksheets, print and record ticks
 - print roll call lists and contact details
@@ -75,11 +73,10 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - create a report of polo shirts required (CW)
 - create a report of RYA logbooks/certficates required (CW)
 - users and passwords (skipper, deputy, instructors)
-- view all linked information for cadet
 - view all linked information for event
 - upload/download all data as zip
 - regular backups on all writes; include roll back function
-- editable user sailing groups
+- editable user sailing groups, volunteer roles, skills
 - clean up eg old data, uploaded files, staged files
 
 ### Future / wishlist / nice to have:
@@ -118,7 +115,6 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ## Random thoughts
 
-### Pattern matching
 
 Whilst merging in lists of potential new cadets or volunteers, need to avoid accidental duplicates use [fuzzy](https://github.com/seatgeek/thefuzz) or similar.
 

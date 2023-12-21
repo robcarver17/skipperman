@@ -58,3 +58,6 @@ SORT_BY_SURNAME = "Sort by surname"
 SORT_BY_FIRSTNAME = "Sort by first name"
 SORT_BY_DOB_ASC = "Sort by date of birth, ascending"
 SORT_BY_DOB_DSC = "Sort by date of birth, descending"
+
+def get_cadet_from_id(id: str, list_of_cadets: ListOfCadets):
+    return list_of_cadets.object_with_id(id)

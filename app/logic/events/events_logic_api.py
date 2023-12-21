@@ -61,6 +61,7 @@ from app.logic.events.allocation.allocate_cadets_to_groups import (
     display_form_allocate_cadets,
     post_form_allocate_cadets,
 )
+from app.logic.events.volunteer_allocation.volunteer_extraction_given_master_file import display_form_volunteer_extraction_from_master_records, post_form_volunteer_extraction_from_master_records
 from app.logic.events.registration_details.edit_registration_details import display_form_edit_registration_details, post_form_edit_registration_details
 from app.logic.events.constants import *
 
@@ -98,6 +99,9 @@ class EventLogicApi(AbstractLogicApi):
             return display_form_iteratively_add_cadets_during_import(self.interface)
         elif form_name == WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE:
             return display_form_interactively_update_master_records(self.interface)
+
+        elif form_name == WA_VOLUNTEER_EXTRACTION_IN_VIEW_EVENT_STAGE:
+            return display_form_volunteer_extraction_from_master_records(self.interface)
 
         elif form_name == WA_UPDATE_SUBSTAGE_IN_VIEW_EVENT_STAGE:
             return display_form_update_existing_event(self.interface)
@@ -143,6 +147,9 @@ class EventLogicApi(AbstractLogicApi):
             return post_form_iteratively_add_cadets_during_import(self.interface)
         elif form_name == WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE:
             return post_form_interactively_update_master_records(self.interface)
+
+        elif form_name == WA_VOLUNTEER_EXTRACTION_IN_VIEW_EVENT_STAGE:
+            return post_form_volunteer_extraction_from_master_records(self.interface)
 
         elif form_name == WA_UPDATE_SUBSTAGE_IN_VIEW_EVENT_STAGE:
             return post_form_uupdate_existing_event(self.interface)

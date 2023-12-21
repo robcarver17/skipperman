@@ -44,7 +44,17 @@ USE_DATA_IN_FORM_BUTTON_LABEL = (
 # allocation
 UPDATE_ALLOCATION_BUTTON_LABEL = "Update group allocation as shown above"
 
-## Stages
+## Volunteers
+CHECK_VOLUNTEER_BUTTON_LABEL = "Check volunteer details entered"
+FINAL_VOLUNTEER_ADD_BUTTON_LABEL = "Yes - these details are correct - add this new volunteer"
+SEE_ALL_VOLUNTEER_BUTTON_LABEL = "Choose from all existing volunteers"
+SEE_SIMILAR_VOLUNTEER_ONLY_LABEL = "See similar volunteers only"
+SKIP_VOLUNTEER_BUTTON_LABEL = "Skip - no volunteer to add for this cadet"
+
+############
+## Stages ##
+############
+
 ADD_EVENT_STAGE = "Add_event_stage"
 VIEW_EVENT_STAGE = "View_event_stage"
 
@@ -74,6 +84,9 @@ WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE = (
 WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE = (
     "WA_process_rows_in_interation_in_view_event_stage"
 )
+
+WA_VOLUNTEER_EXTRACTION_IN_VIEW_EVENT_STAGE = "WA_extract_volunteer_information_in_view_event_stage"
+
 
 ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE = "Allocate_cadets_in_View_event_stage"
 

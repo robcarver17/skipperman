@@ -1,14 +1,15 @@
 from typing import Dict
+
 from dataclasses import dataclass
 
 from app.data_access.configuration.configuration import (
     SIMILARITY_LEVEL_TO_WARN_NAME,
 VOLUNTEER_SKILLS
 )
-from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds, GenericListOfObjectsNoIds, GenericSkipperManObject, get_class_instance_from_str_dict
-from app.objects.utils import transform_date_into_str, similar
-from app.objects.constants import arg_not_passed, DAYS_IN_YEAR
-from app.objects.generic import data_object_as_dict
+from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds, GenericListOfObjectsNoIds, GenericSkipperManObject
+from app.objects.utils import similar
+from app.objects.constants import arg_not_passed
+
 
 @dataclass
 class Volunteer(GenericSkipperManObjectWithIds):
@@ -49,11 +50,16 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return Volunteer
 
+    def matching_volunteer(self, volunteer: Volunteer) -> Volunteer:
+        return self[self.index(volunteer)]
+
     def similar_volunteers(
         self,
         volunteer: Volunteer,
         name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME,
     ) -> "ListOfVolunteers":
+
+
         similar_names = [
             other_volunteer
             for other_volunteer in self
@@ -156,45 +162,3 @@ class ListOfVolunteerSkills(GenericListOfObjectsNoIds):
         element_with_skill = element_with_skill_in_list[0]
         self.remove(element_with_skill)
 
-LIST_KEY = 'list_of_associated_cadet_id'
-
-@dataclass
-class VolunteerAtEvent(GenericSkipperManObject):
-    volunteer_id: str
-    location: str
-    list_of_associated_cadet_id: list = arg_not_passed
-    group: str = ""
-
-    @property
-    def associated_cadet_id(self) -> list:
-        if self.list_of_associated_cadet_id is arg_not_passed:
-            return []
-        return self.list_of_associated_cadet_id
-
-    @classmethod
-    def from_dict(cls, dict_with_str):
-        dict_with_str[LIST_KEY] = dict_with_str[LIST_KEY].split(",")
-        class_dict = get_class_instance_from_str_dict(cls, dict_with_str=dict_with_str,)
-
-    def as_str_dict(self) -> dict:
-        as_dict = self.as_dict()
-
-        ## all strings except the list
-        list_of_associated_cadets = as_dict[LIST_KEY]
-        list_of_associated_cadets = ",".join(list_of_associated_cadets)
-
-        as_dict[LIST_KEY] = list_of_associated_cadets
-
-    def as_dict(self) -> dict:
-        as_dict = data_object_as_dict(self)
-        as_dict[LIST_KEY] = self.associated_cadet_id ## instead of arg_not_passed
-
-        return as_dict
-
-## FIXME - Boats done seperately
-
-class ListOfVolunteersAtEvent(GenericListOfObjectsNoIds):
-
-    @property
-    def _object_class_contained(self):
-        return VolunteerAtEvent

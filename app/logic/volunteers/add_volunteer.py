@@ -85,7 +85,7 @@ default_volunteer_and_text = VolunteerAndVerificationText(
 
 def get_add_volunteer_form_with_information_passed(
     footer_buttons: Union[Line, ListOfLines],
-    header_text: str = "Add a new volunteer",
+    header_text: ListOfLines = "Add a new volunteer",
     volunteer_and_text: VolunteerAndVerificationText = default_volunteer_and_text,
 ) -> Form:
 

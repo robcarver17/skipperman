@@ -29,6 +29,9 @@ class abstractInterface(object):
     def set_persistent_value(self, key, value):
         self.persistent_store[key] = value
 
+    def clear_persistent_value(self, key):
+        del(self.persistent_store[key])
+
     @property
     def persistent_store(self) -> dict:
         raise NotImplemented

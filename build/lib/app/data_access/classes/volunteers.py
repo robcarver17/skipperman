@@ -1,4 +1,6 @@
-from app.objects.volunteers import Volunteer, VolunteerSkill, VolunteerAtEvent, ListOfVolunteers, ListOfVolunteerSkills, ListOfVolunteersAtEvent, CadetVolunteerAssociation, ListOfCadetVolunteerAssociations
+from app.objects.volunteers import Volunteer, VolunteerSkill, ListOfVolunteers, ListOfVolunteerSkills, \
+    CadetVolunteerAssociation, ListOfCadetVolunteerAssociations
+from app.objects.volunteers_at_event import VolunteerAtEvent, ListOfVolunteersAtEvent
 
 
 class DataListOfVolunteers(object):

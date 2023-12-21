@@ -59,6 +59,12 @@ VOLUNTEER_SKILLS = configuration['volunteer_skills']
 VOLUNTEER_LOCATIONS = configuration['volunteer_locations']
 VOLUNTEER_ROLES = configuration['volunteer_roles']
 
+LAKE = 'Lake'
+RIVER = 'River'
+OTHER = 'Other'
+
+LAKE_VOLUNTEER_ROLES = VOLUNTEER_ROLES[LAKE]
+RIVER_VOLUNTEER_ROLES = VOLUNTEER_ROLES[RIVER]
 
 ## Page sizes - not configured in yaml as won't need changing
 A4_PAGESIZE = "A4"

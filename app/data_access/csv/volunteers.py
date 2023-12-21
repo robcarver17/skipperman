@@ -1,10 +1,9 @@
 import pandas as pd
 from app.data_access.csv.generic_csv_data import GenericCsvData
-from app.objects.utils import transform_df_to_str
 
-
-from app.objects.volunteers import *
 from app.data_access.classes.volunteers import *
+from app.objects.volunteers_at_event import ListOfVolunteersAtEvent
+
 
 class CsvDataListOfVolunteers(GenericCsvData, DataListOfVolunteers):
 

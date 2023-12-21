@@ -1,14 +1,21 @@
+from copy import copy
 from typing import Dict
+
 from dataclasses import dataclass
 
 from app.data_access.configuration.configuration import (
     SIMILARITY_LEVEL_TO_WARN_NAME,
-VOLUNTEER_SKILLS
+VOLUNTEER_SKILLS,
+VOLUNTEER_ROLES,
+VOLUNTEER_LOCATIONS,
+LAKE_TRAINING_GROUPS,
+RIVER_TRAINING_GROUPS,
+MG_GROUPS
 )
-from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds, GenericListOfObjectsNoIds, GenericSkipperManObject
+from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds, GenericListOfObjectsNoIds, GenericSkipperManObject, get_class_instance_from_str_dict
 from app.objects.utils import transform_date_into_str, similar
 from app.objects.constants import arg_not_passed, DAYS_IN_YEAR
-
+from app.objects.generic import data_object_as_dict
 
 @dataclass
 class Volunteer(GenericSkipperManObjectWithIds):
@@ -156,11 +163,43 @@ class ListOfVolunteerSkills(GenericListOfObjectsNoIds):
         element_with_skill = element_with_skill_in_list[0]
         self.remove(element_with_skill)
 
+LIST_KEY = 'list_of_associated_cadet_id'
+
 @dataclass
 class VolunteerAtEvent(GenericSkipperManObject):
     volunteer_id: str
-    location: str
+    role: str
+    list_of_associated_cadet_id: list
     group: str = ""
+
+
+    @classmethod
+    def from_dict(cls, dict_with_str):
+        list_of_cadet_ids_as_str = dict_with_str[LIST_KEY]
+        if len(list_of_cadet_ids_as_str)==0:
+            list_of_cadet_ids=[]
+        else:
+            list_of_cadet_ids= list_of_cadet_ids_as_str.split(",")
+
+        new_dict = copy(dict_with_str)
+        new_dict[LIST_KEY] = list_of_cadet_ids
+
+        return get_class_instance_from_str_dict(cls, dict_with_str=new_dict)
+
+    def as_str_dict(self) -> dict:
+        as_dict = self.as_dict()
+
+        ## all strings except the list
+        list_of_associated_cadets = as_dict[LIST_KEY]
+        list_of_associated_cadets_as_str = ",".join(list_of_associated_cadets)
+
+        as_dict[LIST_KEY] = list_of_associated_cadets_as_str
+
+        return as_dict
+
+    @property
+    def location(self):
+        if self.role in
 
 ## FIXME - Boats done seperately
 

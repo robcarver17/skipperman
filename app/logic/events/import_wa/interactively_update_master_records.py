@@ -11,6 +11,7 @@ from app.logic.events.constants import (
     USE_DATA_IN_FORM_BUTTON_LABEL,
     USE_NEW_DATA_BUTTON_LABEL,
     CADET_ID,
+    WA_VOLUNTEER_EXTRACTION_IN_VIEW_EVENT_STAGE
 )
 
 from app.logic.events.utilities import get_event_from_state
@@ -57,9 +58,7 @@ def iterative_process_updates_to_master_event_data(
         cadet_id = get_and_save_next_cadet_id(interface)
     except NoMoreData:
         print("Finished looping")
-        return form_with_message_and_finished_button(
-            "Finished importing WA data", interface=interface
-        )
+        return NewForm(WA_VOLUNTEER_EXTRACTION_IN_VIEW_EVENT_STAGE)
 
     print("Current cadet id is %s" % cadet_id)
 

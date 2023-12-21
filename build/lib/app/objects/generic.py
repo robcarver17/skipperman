@@ -59,7 +59,7 @@ class GenericSkipperManObject:
 
     @classmethod
     def from_dict(cls, dict_with_str):
-        class_instance = _get_class_instance_from_str_dict(cls, dict_with_str)
+        class_instance = get_class_instance_from_str_dict(cls, dict_with_str)
 
         return class_instance
 
@@ -107,7 +107,7 @@ TRUE = "TRUE_VALUE"
 FALSE = "FALSE_VALUE"
 
 
-def _get_class_instance_from_str_dict(some_class, dict_with_str: dict):
+def get_class_instance_from_str_dict(some_class, dict_with_str: dict):
     dict_of_attributes = get_dict_of_class_attributes(some_class)
 
     for attribute, object_class in dict_of_attributes.items():

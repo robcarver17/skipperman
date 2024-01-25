@@ -1,6 +1,6 @@
-from app.interface import ListtOfColumns
+from app.web import ListtOfColumns
 from app.logic.reporting.backend import PdfLayout
-from app.interface import (
+from app.web import (
     ReportingOptionsForSpecificGroupsInReport,
 )
 

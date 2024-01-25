@@ -1,17 +1,17 @@
 from typing import Tuple
 
-from app.interface.flask.state_for_action import StateDataForAction
+from app.web.flask.state_for_action import StateDataForAction
 
-from app.interface.html.components import back_button_only_with_text
-from app.interface.html.html import (
+from app.web.html.components import back_button_only_with_text
+from app.web.html.html import (
     Html,
     empty_html,
     html_bold,
     html_joined_list,
     html_joined_list_as_paragraphs,
 )
-from app.interface.flask.flash import html_error
-from app.interface.html.forms import (
+from app.web.flask.flash import html_error
+from app.web.html.forms import (
     form_html_wrapper,
     html_button,
     html_form_text_input,
@@ -20,7 +20,7 @@ from app.interface.html.forms import (
     html_as_date, BACK_BUTTON_LABEL,
 )
 
-from app.interface.events.constants import (
+from app.web.events.constants import (
     CHECK_BUTTON_LABEL,
     CLONE_EVENT_BUTTON_LABEL,
     EVENT_NAME,
@@ -31,8 +31,8 @@ from app.interface.events.constants import (
     ADD_EVENT_BUTTON_LABEL,
 )
 
-from app.interface.events.view_events import display_view_of_events
-from app.logic.events.add_event import add_new_verified_event, verify_event_and_warn
+from app.web.events.view_events import display_view_of_events
+from app.backend.events import verify_event_and_warn, add_new_verified_event
 from app.objects.events import Event, default_event, list_of_event_types, EventType
 
 dict_of_event_types = dict(

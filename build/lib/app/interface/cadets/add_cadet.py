@@ -1,24 +1,24 @@
 from copy import copy
 from typing import Tuple
 
-from app.interface.flask.state_for_action import StateDataForAction
-from app.interface.html.html import (
+from app.web.flask.state_for_action import StateDataForAction
+from app.web.html.html import (
     Html,
     empty_html,
     html_bold,
     html_joined_list,
     html_joined_list_as_paragraphs,
 )
-from app.interface.flask.flash import html_error, flash_error
-from app.interface.html.components import back_button_only_with_text, BACK_BUTTON_LABEL
-from app.interface.html.forms import (
+from app.web.flask.flash import html_error, flash_error
+from app.web.html.components import back_button_only_with_text, BACK_BUTTON_LABEL
+from app.web.html.forms import (
     form_html_wrapper,
     html_button,
     html_form_text_input,
     html_date_input,
     html_as_date,
 )
-from app.interface.cadets.constants import (
+from app.web.cadets.constants import (
      CHECK_BUTTON_LABEL,
     FIRST_NAME,
     SURNAME,
@@ -26,12 +26,9 @@ from app.interface.cadets.constants import (
     FINAL_ADD_BUTTON_LABEL,
     ADD_CADET_BUTTON_LABEL,
 )
-from app.interface.cadets.view_cadets import display_view_of_cadets
+from app.web.cadets.view_cadets import display_view_of_cadets
 
-from app.logic.cadets.add_cadet import (
-    add_new_verified_cadet,
-    verify_cadet_and_warn,
-)
+from app.backend.cadets import verify_cadet_and_warn, add_new_verified_cadet
 from app.objects.cadets import Cadet, default_cadet
 
 

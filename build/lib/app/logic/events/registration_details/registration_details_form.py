@@ -1,12 +1,12 @@
 from typing import List
 from dataclasses import dataclass
 
-from app.logic.cadets.view_cadets import cadet_from_id_with_passed_list
-from app.logic.cadets.backend import get_list_of_cadets
-from app.logic.events.backend.load_and_save_wa_mapped_events import load_master_event
+from app.backend.cadets import get_list_of_cadets, cadet_from_id_with_passed_list
+from app.backend.load_and_save_wa_mapped_events import load_master_event
 from app.logic.events.constants import ROW_STATUS
-from app.logic.events.utilities import dropdown_input_for_status_change
-from app.logic.forms_and_interfaces.abstract_form import RowInTable, dropDownInput, checkboxInput, textInput, intInput
+from app.logic.events.update_master.status_fields_in_master_event_data_update import dropdown_input_for_status_change
+from app.objects.abstract_objects.abstract_form import dropDownInput, checkboxInput, textInput, intInput
+from app.objects.abstract_objects.abstract_tables import RowInTable
 from app.objects.cadets import ListOfCadets
 from app.objects.day_selectors import DaySelector, Day
 from app.objects.events import Event

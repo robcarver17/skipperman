@@ -4,97 +4,70 @@ from app.data_access.csv.generic_csv_data import GenericCsvData
 from app.data_access.classes.volunteers import *
 from app.objects.volunteers_at_event import ListOfVolunteersAtEvent
 
+LIST_OF_VOLUNTEERS_FILE_ID = "list_of_volunteers"
 
 class CsvDataListOfVolunteers(GenericCsvData, DataListOfVolunteers):
 
     def read(self) -> ListOfVolunteers:
-        path_and_filename = self.path_and_filename()
-        try:
-            list_as_df = pd.read_csv(path_and_filename)
-        except:
-            return ListOfVolunteers.create_empty()
-        list_of_volunteers = ListOfVolunteers.from_df_of_str(list_as_df)
+        list_of_volunteers = self.read_and_return_object_of_type(ListOfVolunteers, file_identifier=LIST_OF_VOLUNTEERS_FILE_ID)
 
         return list_of_volunteers
 
     def write(self, list_of_volunteers: ListOfVolunteers):
-        df = list_of_volunteers.to_df()
-        path_and_filename = self.path_and_filename()
+        self.write_object(list_of_volunteers, file_identifier=LIST_OF_VOLUNTEERS_FILE_ID)
 
-        df.to_csv(path_and_filename, index=False)
-
-    def path_and_filename(self):
-        return self.get_path_and_filename_for_named_csv_file(
-            "list_of_volunteers"
-        )
+LIST_OF_VOLUNTEER_SKILLS_FILE_ID = "list_of_volunteer_skills"
 
 class CsvDataListOfVolunteerSkills(GenericCsvData, DataListOfVolunteerSkills):
 
     def read(self) -> ListOfVolunteerSkills:
-        path_and_filename = self.path_and_filename()
-        try:
-            list_as_df = pd.read_csv(path_and_filename)
-        except:
-            return ListOfVolunteerSkills.create_empty()
-        list_of_volunteer_skills = ListOfVolunteerSkills.from_df_of_str(list_as_df)
+        list_of_volunteer_skills = self.read_and_return_object_of_type(ListOfVolunteerSkills, file_identifier=LIST_OF_VOLUNTEER_SKILLS_FILE_ID)
 
         return list_of_volunteer_skills
 
     def write(self, list_of_volunteer_skills: ListOfVolunteerSkills):
-        df = list_of_volunteer_skills.to_df()
-        path_and_filename = self.path_and_filename()
+        self.write_object(list_of_volunteer_skills, file_identifier=LIST_OF_VOLUNTEER_SKILLS_FILE_ID)
 
-        df.to_csv(path_and_filename, index=False)
-
-    def path_and_filename(self):
-        return self.get_path_and_filename_for_named_csv_file(
-            "list_of_volunteer_skills"        )
-
+LIST_OF_VOLUNTEER_ASSOCIATIONS_FILE_ID ="list_of_cadet_volunteer_associations"
 
 class CsvDataListOfCadetVolunteerAssociations(GenericCsvData, DataListOfCadetVolunteerAssociations):
 
     def read(self) -> ListOfCadetVolunteerAssociations:
-        path_and_filename = self.path_and_filename()
-        try:
-            list_as_df = pd.read_csv(path_and_filename)
-        except:
-            return ListOfCadetVolunteerAssociations.create_empty()
-        list_of_cadet_volunteer_associations = ListOfCadetVolunteerAssociations.from_df_of_str(list_as_df)
+        list_of_cadet_volunteer_associations = self.read_and_return_object_of_type(ListOfCadetVolunteerAssociations,
+                                                                                   file_identifier=LIST_OF_VOLUNTEER_ASSOCIATIONS_FILE_ID)
 
         return list_of_cadet_volunteer_associations
 
     def write(self, list_of_cadet_volunteer_associations: ListOfCadetVolunteerAssociations):
-        df = list_of_cadet_volunteer_associations.to_df()
-        path_and_filename = self.path_and_filename()
+        self.write_object(list_of_cadet_volunteer_associations, file_identifier=LIST_OF_VOLUNTEER_ASSOCIATIONS_FILE_ID)
 
-        df.to_csv(path_and_filename, index=False)
 
-    def path_and_filename(self):
-        return self.get_path_and_filename_for_named_csv_file(
-            "list_of_cadet_volunteer_associations"
-        )
-
+LIST_OF_VOLUNTEERS_AT_EVENT_FILE_ID = "list_of_volunteers_at_event"
 
 class CsvDataListOfVolunteersAtEvent(GenericCsvData, DataListOfVolunteersAtEvent):
 
     def read(self, event_id: str) -> ListOfVolunteersAtEvent:
-        path_and_filename = self.path_and_filename_for_event(event_id=event_id)
-        try:
-            list_as_df = pd.read_csv(path_and_filename)
-        except:
-            return ListOfVolunteersAtEvent.create_empty()
-        list_of_volunteers_at_event = ListOfVolunteersAtEvent.from_df_of_str(list_as_df)
+        list_of_volunteers_at_event = self.read_and_return_object_of_type(ListOfVolunteersAtEvent,
+                                                                          file_identifier=LIST_OF_VOLUNTEERS_AT_EVENT_FILE_ID,
+                                                                          additional_file_identifiers=event_id)
 
         return list_of_volunteers_at_event
 
     def write(self, list_of_volunteers_at_event: ListOfVolunteersAtEvent, event_id: str):
-        df = list_of_volunteers_at_event.to_df()
-        path_and_filename = self.path_and_filename_for_event(event_id)
+        self.write_object(list_of_volunteers_at_event,
+                          file_identifier=LIST_OF_VOLUNTEERS_AT_EVENT_FILE_ID,
+                          additional_file_identifiers=event_id)
 
-        df.to_csv(path_and_filename, index=False)
+LIST_OF_CADETS_WITHOUT_VOLUNTEERS_AT_EVENT_FILE_ID = "list_of_cadets_without_volunteers_at_event"
 
-    def path_and_filename_for_event(self, event_id: str):
-        return self.get_path_and_filename_for_named_csv_file(
-            "list_of_volunteers_at_event",
-            additional_file_identifiers=event_id,
-        )
+class CsvDataListOfCadetsWithoutVolunteersAtEvent(GenericCsvData, DataListOfCadetsWithoutVolunteersAtEvent):
+
+    def read(self) -> ListOfCadetsWithoutVolunteersAtEvent:
+        return self.read_and_return_object_of_type(ListOfCadetsWithoutVolunteersAtEvent,
+                                                    file_identifier=LIST_OF_CADETS_WITHOUT_VOLUNTEERS_AT_EVENT_FILE_ID)
+
+
+    def write(self, list_of_cadets_without_volunteers_at_event: ListOfCadetsWithoutVolunteersAtEvent):
+        self.write_object(list_of_cadets_without_volunteers_at_event,
+                          file_identifier=LIST_OF_CADETS_WITHOUT_VOLUNTEERS_AT_EVENT_FILE_ID)
+

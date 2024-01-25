@@ -1,10 +1,10 @@
-from app.interface.flask.session_data_for_action import (
+from app.web.flask.session_data_for_action import (
     SessionDataForAction,
     clear_session_data_for_action,
     clear_session_data_for_all_actions,
 )
-from app.interface.html.forms import HTML_BUTTON_NAME
-from app.interface.html.url import get_action_url
+from app.web.html.forms import HTML_BUTTON_NAME
+from app.web.html.url import get_action_url
 from app.objects.constants import NoFileUploaded
 from dataclasses import dataclass
 from flask import request

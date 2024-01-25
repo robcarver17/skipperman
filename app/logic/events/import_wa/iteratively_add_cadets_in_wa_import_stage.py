@@ -1,7 +1,7 @@
 from typing import Union
 
-from app.logic.forms_and_interfaces.abstract_form import Form, NewForm
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_form import Form, NewForm
+from app.logic.abstract_interface import abstractInterface
 from app.logic.events.constants import (
     WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE,
     CHECK_CADET_BUTTON_LABEL,
@@ -10,19 +10,19 @@ from app.logic.events.constants import (
     SEE_SIMILAR_CADETS_ONLY_LABEL,
 )
 
-from app.logic.events.utilities import get_event_from_state
-from app.logic.events.backend.add_cadet_ids_to_mapped_wa_event_data import (
+from app.logic.events.events_in_state import get_event_from_state
+from app.backend.add_cadet_ids_to_mapped_wa_event_data import (
     get_first_unmapped_row_for_event,
     add_row_data_with_id_included_and_delete_from_unmapped_data,
     get_cadet_data_from_row_of_mapped_data_no_checks,
 )
-from app.logic.events.backend.load_and_save_wa_mapped_events import (
+from app.backend.load_and_save_wa_mapped_events import (
     load_existing_mapped_wa_event_with_ids,
 )
 from app.logic.events.import_wa.get_or_select_cadet_forms import (
     get_add_or_select_existing_cadet_form,
 )
-from app.logic.cadets.backend import confirm_cadet_exists, get_cadet_from_list_of_cadets, get_list_of_cadets
+from app.backend.cadets import confirm_cadet_exists, get_cadet_from_list_of_cadets, get_list_of_cadets
 from app.logic.cadets.add_cadet import add_cadet_from_form_to_data
 from app.objects.constants import NoMoreData
 from app.objects.mapped_wa_event_no_ids import RowInMappedWAEventNoId
@@ -56,17 +56,21 @@ def process_next_row(
             "Error code %s cannot identify cadet from row %s: file is probably corrupt re-upload"
             % (str(e), str(next_row)),
         )
+    return process_next_row_with_cadet_from_row(cadet=cadet,
+                                                interface=interface)
 
+def process_next_row_with_cadet_from_row(
+    interface: abstractInterface,
+    cadet: Cadet
+) -> Form:
     list_of_cadets = get_list_of_cadets()
     if cadet in list_of_cadets:
-        ## MATCHED, WE NEED TO GET THE ID
         matched_cadet_with_id = list_of_cadets.matching_cadet(cadet)
         print("Cadet %s matched id is %s" % (str(cadet), matched_cadet_with_id.id))
         return process_row_when_cadet_matched(
             interface=interface, cadet=matched_cadet_with_id
         )
     else:
-        ## NOT MATCHED
         print("Cadet %s not matched" % str(cadet))
         return process_row_when_cadet_unmatched(interface=interface, cadet=cadet)
 
@@ -98,8 +102,6 @@ def process_row_when_cadet_unmatched(
 def post_form_iteratively_add_cadets_during_import(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
-    ## Called by post on view events form, so both stage and event name are set
-    ## don't need to check for post as will always be one
     last_button_pressed = interface.last_button_pressed()
     if (
         last_button_pressed == CHECK_CADET_BUTTON_LABEL

@@ -1,22 +1,22 @@
-from app.interface.events.WA.process_staged_files.wa_add_or_select_existing_cadet import (
+from app.web.events.WA.process_staged_files.wa_add_or_select_existing_cadet import (
     get_add_or_select_existing_cadet_form,
 )
 from app.objects.constants import NoMoreData
 
-from app.interface.flask.state_for_action import StateDataForAction
-from app.interface.html.html import  Html
-from app.interface.cadets.add_cadet import (
+from app.web.flask.state_for_action import StateDataForAction
+from app.web.html.html import  Html
+from app.web.cadets.add_cadet import (
     add_cadet_from_form_to_data,
 )
-from app.interface.cadets.view_specific_cadet import (
+from app.web.cadets.view_specific_cadet import (
     confirm_cadet_exists,
     get_cadet_from_list_of_cadets,
 )
-from app.interface.events.WA.process_staged_files.process_file_to_remove_duplicates import (
+from app.web.events.WA.process_staged_files.process_file_to_remove_duplicates import (
     process_file_with_ids_to_remove_duplicate_cadets,
 )
-from app.interface.events.utils import get_event_from_state
-from app.interface.events.constants import (
+from app.web.events.utils import get_event_from_state
+from app.web.events.constants import (
     WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE,
     CHECK_CADET_BUTTON_LABEL,
     FINAL_CADET_ADD_BUTTON_LABEL,
@@ -24,12 +24,12 @@ from app.interface.events.constants import (
     SEE_SIMILAR_CADETS_ONLY_LABEL,
 )
 
-from app.logic.events.backend.add_cadet_ids_to_mapped_wa_event_data import (
+from app.backend.add_cadet_ids_to_mapped_wa_event_data import (
     get_first_unmapped_row_for_event,
     add_row_data_with_id_included_and_delete_from_unmapped_data,
     get_cadet_data_from_row_of_mapped_data_no_checks,
 )
-from app.logic.cadets.backend import get_list_of_cadets
+from app.backend.cadets import get_list_of_cadets
 
 from app.objects.mapped_wa_event_no_ids import RowInMappedWAEventNoId
 from app.objects.cadets import Cadet

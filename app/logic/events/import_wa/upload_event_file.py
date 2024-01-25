@@ -1,17 +1,14 @@
 from typing import Union
 
 from app.data_access.configuration.configuration import WILD_APRICOT_FILE_TYPES
-from app.logic.forms_and_interfaces.abstract_form import (
+from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
-    Line,
-    ListOfLines,
-    Button,
-    back_button,
     fileInput,
-    BACK_BUTTON_LABEL,
 )
-from app.logic.forms_and_interfaces.abstract_interface import (
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, back_button, Button
+from app.logic.abstract_interface import (
     abstractInterface,
     form_with_message_and_finished_button,
 )
@@ -21,14 +18,14 @@ from app.logic.events.constants import (
     UPLOAD_FILE_BUTTON_LABEL,
     VIEW_EVENT_STAGE,
 )
-from app.logic.events.backend.load_wa_file import (
+from app.backend.load_wa_file import (
     save_staged_file_of_raw_event_upload_with_event_id,
     verify_and_return_uploaded_wa_event_file,
     save_uploaded_wa_as_local_file,
     check_local_file_is_valid_wa_file,
 )
-from app.logic.events.backend.map_wa_files import verify_file_has_correct_wa_id
-from app.logic.events.utilities import get_event_from_state
+from app.backend.map_wa_files import verify_file_has_correct_wa_id
+from app.logic.events.events_in_state import get_event_from_state
 from app.objects.events import Event
 
 
@@ -48,7 +45,7 @@ def get_form_for_wa_upload(event: Event) -> Union[Form, NewForm]:
 
 def get_form_for_wa_upload_with_prompt(prompt: str) -> Form:
     buttons = get_upload_buttons()
-    input_field = fileInput(input_label=WA_FILE, accept=WILD_APRICOT_FILE_TYPES)
+    input_field = fileInput(input_name=WA_FILE, accept=WILD_APRICOT_FILE_TYPES)
 
     list_of_lines = ListOfLines([prompt, input_field, buttons])
 

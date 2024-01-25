@@ -1,6 +1,6 @@
 import pandas as pd
 
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.logic.abstract_interface import abstractInterface
 from app.logic.reporting.constants import GROUP_ORDER
 from app.objects.constants import missing_data
 from app.reporting.arrangement.group_order import get_group_order_from_df_given_report_parameters, GroupOrder

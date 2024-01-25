@@ -1,25 +1,14 @@
-from typing import Union
-
-from app.logic.events.backend.map_wa_fields import get_wa_field_mapping_dict
-from app.logic.forms_and_interfaces.abstract_form import (
-    Form,
-    NewForm,
-    Line,
-    ListOfLines,
-    bold, _______________
-)
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
-from app.logic.events.utilities import get_event_from_state
-from app.logic.events.backend.load_wa_file import does_raw_event_file_exist, load_raw_wa_file
-from app.logic.forms_and_interfaces.abstract_interface import (
-    form_with_message_and_finished_button,
-form_with_content_and_finished_button
-)
-from app.logic.events.backend.load_wa_file import (
+from app.backend.map_wa_fields import get_wa_field_mapping_dict
+from app.objects.abstract_objects.abstract_text import bold
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
+from app.logic.abstract_interface import abstractInterface
+from app.logic.events.events_in_state import get_event_from_state
+from app.backend.load_wa_file import does_raw_event_file_exist, load_raw_wa_file
+from app.backend.load_wa_file import (
     get_staged_file_raw_event_filename,
 )
 from app.objects.events import Event
-from app.objects.field_list import ALL_FIELDS_EXPECTED_IN_WA_FILE
+from app.objects.field_list import ALL_FIELDS_EXPECTED_IN_WA_FILE_MAPPING
 from app.objects.utils import in_x_not_in_y
 
 
@@ -53,7 +42,7 @@ def list_of_warnings_about_fields(
     in_wa_file_not_in_mapping = wa_field_mapping.wa_fields_missing_from_mapping(
         fields_in_wa_file
     )
-    expected_not_in_mapping = in_x_not_in_y(ALL_FIELDS_EXPECTED_IN_WA_FILE, wa_field_mapping.list_of_skipperman_fields)
+    expected_not_in_mapping = in_x_not_in_y(ALL_FIELDS_EXPECTED_IN_WA_FILE_MAPPING, wa_field_mapping.list_of_skipperman_fields)
 
     output = []
     if len(in_mapping_not_in_wa_file)>0:

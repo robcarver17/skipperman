@@ -1,6 +1,6 @@
-from app.interface.flask.state_for_action import StateDataForAction
-from app.interface.html.forms import form_html_wrapper, html_button, BACK_BUTTON_LABEL
-from app.interface.html.html import (
+from app.web.flask.state_for_action import StateDataForAction
+from app.web.html.forms import form_html_wrapper, html_button, BACK_BUTTON_LABEL
+from app.web.html.html import (
     Html,
     html_joined_list_as_paragraphs,
     html_container_wrapper,
@@ -8,7 +8,7 @@ from app.interface.html.html import (
     html_nav_wrapper,
     html_link,
 )
-from app.interface.html.url import INDEX_URL
+from app.web.html.url import INDEX_URL
 
 
 def back_button_only_with_text(state_data: StateDataForAction, some_text: str):

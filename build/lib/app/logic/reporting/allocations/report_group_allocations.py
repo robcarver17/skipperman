@@ -19,24 +19,17 @@ from app.logic.reporting.options.print_options import (
 
 from app.reporting.allocation_report import specific_parameters_for_allocation_report
 
-from app.logic.forms_and_interfaces.abstract_form import (
+from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
-    ListOfLines,
-    back_button,
-    cancel_button,
-    Button,
     File,
-    bold,
-    Line,
-    BACK_BUTTON_LABEL, _______________,
 )
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_text import bold
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, cancel_button, back_button, Button
+from app.logic.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form
-from app.logic.events.utilities import (
-    get_event_from_state,
-    confirm_event_exists,
-    update_state_for_specific_event, )
+from app.logic.events.events_in_state import get_event_from_state, confirm_event_exists, update_state_for_specific_event
 
 from app.logic.reporting.constants import *
 from app.logic.events.view_events import display_list_of_events_with_buttons

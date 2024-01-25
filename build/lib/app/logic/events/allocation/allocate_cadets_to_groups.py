@@ -4,19 +4,16 @@ from typing import Union
 
 from app.data_access.configuration.configuration import ALL_GROUPS, UNALLOCATED_GROUP
 from app.logic.abstract_logic_api import initial_state_form
-from app.logic.forms_and_interfaces.abstract_form import (
+from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
-    ListOfLines,
     dropDownInput,
-    Button,
-    Table,
-    RowInTable,
-    back_button,
-    BACK_BUTTON_LABEL,
 )
+from app.objects.abstract_objects.abstract_tables import RowInTable, Table
+from app.objects.abstract_objects.abstract_lines import ListOfLines
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, back_button, Button
 from app.logic.events.allocation.backend.summarise_allocations_data import summarise_allocations_for_event, reorder_list_of_cadets_by_allocated_group
-from app.logic.forms_and_interfaces.abstract_interface import (
+from app.logic.abstract_interface import (
     abstractInterface,
 )
 from app.logic.events.allocation.backend.allocations_data import (
@@ -25,14 +22,14 @@ from app.logic.events.allocation.backend.allocations_data import (
     save_current_allocations_for_event,
 )
 from app.logic.events.allocation.backend.previous_allocations import allocation_for_cadet_in_previous_events, get_dict_of_allocations_for_events_and_list_of_cadets, list_of_events_excluding_one_event
-from app.logic.events.backend.load_and_save_wa_mapped_events import load_master_event
+from app.backend.load_and_save_wa_mapped_events import load_master_event
 
 from app.logic.events.constants import (
     ALLOCATION,
     UPDATE_ALLOCATION_BUTTON_LABEL,
     VIEW_EVENT_STAGE,
 )
-from app.logic.events.utilities import get_event_from_state
+from app.logic.events.events_in_state import get_event_from_state
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.groups import ListOfCadetIdsWithGroups, Group
 from app.objects.events import Event

@@ -1,12 +1,12 @@
 from typing import List
 import pandas as pd
 
-from app.interface import (
+from app.web import (
     ReportingOptionsForSpecificGroupsInReport,
     MarkedUpListFromDfParametersWithActualGroupOrder,
 )
 
-from app.interface import (
+from app.web import (
     ListOfGroupsOfMarkedUpStrings,
     GroupOfMarkedUpString,
     MarkedUpString,

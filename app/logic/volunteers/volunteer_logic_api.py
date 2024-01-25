@@ -1,5 +1,5 @@
 from app.logic.abstract_logic_api import AbstractLogicApi, INITIAL_STATE
-from app.logic.forms_and_interfaces.abstract_form import Form
+from app.objects.abstract_objects.abstract_form import Form
 
 from app.logic.volunteers.view_volunteers import display_form_view_of_volunteers, post_form_view_of_volunteers
 from app.logic.volunteers.constants import *

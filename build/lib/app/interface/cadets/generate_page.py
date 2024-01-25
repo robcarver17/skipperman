@@ -1,15 +1,15 @@
-from app.interface.cadets.add_cadet import display_view_for_add_cadet
-from app.interface.cadets.constants import (
+from app.web.cadets.add_cadet import display_view_for_add_cadet
+from app.web.cadets.constants import (
     ADD_CADET_BUTTON_LABEL,
     all_sort_types,
     VIEW_INDIVIDUAL_CADET_STAGE,
     ADD_CADET_STAGE,
 )
-from app.interface.cadets.initial_stage import generate_initial_stage_html_for_cadets
-from app.interface.flask.state_for_action import StateDataForAction
+from app.web.cadets.initial_stage import generate_initial_stage_html_for_cadets
+from app.web.flask.state_for_action import StateDataForAction
 
-from app.interface.html.html import Html
-from app.interface.flask.flash import html_error
+from app.web.html.html import Html
+from app.web.flask.flash import html_error
 
 
 def generate_cadet_pages(state_data: StateDataForAction) -> Html:

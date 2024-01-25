@@ -1,12 +1,7 @@
 from dataclasses import dataclass
 from typing import Union
-import datetime
-from app.data_access.data import data
-from app.data_access.configuration.configuration import (
-    SIMILARITY_LEVEL_TO_WARN_NAME,
-    SIMILARITY_LEVEL_TO_WARN_DATE,
-)
 
+from app.backend.events import verify_event_and_warn, add_new_verified_event
 from app.logic.events.constants import (
     EVENT_NAME,
     EVENT_START_DATE,
@@ -18,18 +13,17 @@ from app.logic.events.constants import (
 
 from app.objects.events import Event, default_event, list_of_event_types, EventType
 
-from app.logic.forms_and_interfaces.abstract_interface import (
+from app.logic.abstract_interface import (
     abstractInterface,
     form_with_message_and_finished_button,
 )
-from app.logic.forms_and_interfaces.abstract_form import (
+from app.objects.abstract_objects.abstract_form import (
     Form,
-    Button,
-    ListOfLines,
-    Line,
     NewForm,
-    cancel_button, textInput, dateInput, radioInput,
+    textInput, dateInput, radioInput,
 )
+from app.objects.abstract_objects.abstract_buttons import cancel_button, Button
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.logic.abstract_logic_api import initial_state_form
 
 dict_of_event_types = dict(
@@ -110,6 +104,15 @@ def get_add_event_form_with_information_passed(
 
     return Form(list_of_elements_inside_form)
 
+def get_footer_buttons(form_is_blank: bool):
+    final_submit = Button(FINAL_ADD_BUTTON_LABEL)
+    check_submit = Button(CHECK_BUTTON_LABEL)
+    if form_is_blank:
+        return Line([cancel_button,  check_submit])
+    else:
+        return Line([cancel_button, check_submit, final_submit])
+
+
 
 def form_fields_for_add_event(event: Event = default_event) -> ListOfLines:
     print("event %s type %s" % (str(event), str(type(event))))
@@ -164,8 +167,8 @@ def process_form_when_checking_event(
 
 def get_event_from_form(interface) -> Event:
     event_name = interface.value_from_form(EVENT_NAME)
-    start_date = interface.value_from_form(EVENT_START_DATE)
-    end_date = interface.value_from_form(EVENT_END_DATE)
+    start_date = interface.value_from_form(EVENT_START_DATE, value_is_date=True)
+    end_date = interface.value_from_form(EVENT_END_DATE, value_is_date=True)
     event_type = EventType[interface.value_from_form(EVENT_TYPE)]
 
     event = Event(
@@ -196,53 +199,3 @@ def process_form_when_event_verified(interface: abstractInterface) -> Form:
     )
 
 
-def get_footer_buttons(form_is_blank: bool):
-    final_submit = Button(FINAL_ADD_BUTTON_LABEL)
-    check_submit = Button(CHECK_BUTTON_LABEL)
-    if form_is_blank:
-        return Line([cancel_button,  check_submit])
-    else:
-        return Line([cancel_button, check_submit, final_submit])
-
-
-def verify_event_and_warn(event: Event) -> str:
-    warn_text = ""
-    if len(event.event_name) < 5:
-        warn_text += "Event name seems a bit short. "
-    if event.start_date < datetime.date.today():
-        warn_text += "Event started in the past. "
-    if event.end_date < event.start_date:
-        warn_text += "Event ends before it starts. "
-    if event.duration == 1:
-        warn_text += "Event is only one day long. "
-
-    if event.duration > 8:
-        warn_text += "Event is more than a week long. "
-
-    warn_text += warning_for_similar_events(event=event)
-
-    if len(warn_text) > 0:
-        warn_text = "DOUBLE CHECK BEFORE ADDING: " + warn_text
-
-    return warn_text
-
-
-def warning_for_similar_events(event: Event) -> str:
-    existing_events = data.data_list_of_events.read()
-    similar_events = existing_events.similar_events(
-        event,
-        name_threshold=SIMILARITY_LEVEL_TO_WARN_NAME,
-        date_threshold=SIMILARITY_LEVEL_TO_WARN_DATE,
-    )
-
-    if len(similar_events) > 0:
-        similar_events_str = ", ".join(
-            [str(other_event) for other_event in similar_events]
-        )
-        return "Following events look awfully similar:\n %s" % similar_events_str
-    else:
-        return ""
-
-
-def add_new_verified_event(event: Event):
-    data.data_list_of_events.add(event)

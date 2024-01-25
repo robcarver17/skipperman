@@ -1,6 +1,6 @@
 import pandas as pd
 
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.logic.abstract_interface import abstractInterface
 from app.logic.reporting.options.group_order import get_group_order_from_stored_or_df
 from app.logic.reporting.options.print_options import get_saved_print_options
 from app.logic.reporting.constants import (

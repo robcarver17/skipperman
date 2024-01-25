@@ -6,7 +6,6 @@ from dataclasses import dataclass
 import pandas as pd
 from difflib import SequenceMatcher
 
-from app.data_access.csv.utils import DATE_STR, DATETIME_STR
 from app.objects.constants import arg_not_passed
 from app.objects.field_list import FIELDS_AS_STR, FIELDS_WITH_DATES, FIELDS_WITH_DATETIMES
 from dateutil.parser import parse
@@ -215,9 +214,15 @@ def transform_str_into_datetime(date_string: str) -> datetime.datetime:
         return parse(date_string)
 
 
-def in_x_not_in_y(x,y):
+def in_x_not_in_y(x: list,y: list) -> list:
     return list(set(x).difference(set(y)))
 
 
-def in_both_x_and_y(x,y):
+def in_both_x_and_y(x: list,y: list) -> list:
     return list(set(x).intersection(set(y)))
+
+def union_of_x_and_y(x: list,y: list) -> list:
+    return list(set(x).union(set(y)))
+
+DATE_STR = "%Y/%m/%d"
+DATETIME_STR = "%Y/%m/%d %H:%M:%S.%f"

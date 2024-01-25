@@ -3,8 +3,8 @@ from app.logic.events.events_logic_api import EventLogicApi
 from app.logic.reporting.reporting_logic_api import ReportingLogicApi
 from app.logic.volunteers.volunteer_logic_api import VolunteerLogicApi
 
-from app.interface.flask.interface import flaskInterface
-from app.logic.forms_and_interfaces.abstract_form import Form, form_with_message, File
+from app.web.flask.interface import flaskInterface
+from app.objects.abstract_objects.abstract_form import Form, form_with_message, File
 from app.logic.abstract_logic_api import AbstractLogicApi
 
 
@@ -38,7 +38,7 @@ class SiteActions:
 
     ## TO ADD NEW ACTIONS SUBMIT A NEW METHOD HERE
     ## These are values from the dict in menu_define
-    ## ALL METHODS MUST TAKE interface and only that as an argument
+    ## ALL METHODS MUST TAKE web and only that as an argument
 
     def view_master_list_of_cadets(self, interface: flaskInterface) -> AbstractLogicApi:
         return CadetLogicApi(interface)

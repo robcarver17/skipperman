@@ -4,25 +4,15 @@ from app.data_access.classes.master_list_of_cadets import DataListOfCadets
 
 from app.objects.cadets import ListOfCadets
 
+LIST_OF_CADETS_FILE_ID = "cadet_master_list"
 
 class CsvDataListOfCadets(GenericCsvData, DataListOfCadets):
     def read(self) -> ListOfCadets:
-        path_and_filename = self.path_and_filename
-        try:
-            df = pd.read_csv(path_and_filename)
-        except:
-            return ListOfCadets.create_empty()
-
-        list_of_cadets = ListOfCadets.from_df_of_str(df)
+        list_of_cadets = self.read_and_return_object_of_type(ListOfCadets, file_identifier=LIST_OF_CADETS_FILE_ID)
 
         return list_of_cadets
 
     def write(self, list_of_cadets: ListOfCadets):
-        df = list_of_cadets.to_df_of_str()
-        path_and_filename = self.path_and_filename
+        self.write_object(list_of_cadets, file_identifier=LIST_OF_CADETS_FILE_ID)
 
-        df.to_csv(path_and_filename, index=False)
 
-    @property
-    def path_and_filename(self):
-        return self.get_path_and_filename_for_named_csv_file("cadet_master_list")

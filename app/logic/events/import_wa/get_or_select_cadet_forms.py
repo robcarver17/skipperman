@@ -1,8 +1,7 @@
-from app.logic.forms_and_interfaces.abstract_form import Form, Line, ListOfLines, Button
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
-
-
-from app.logic.cadets.add_cadet import list_of_similar_cadets
+from app.objects.abstract_objects.abstract_form import Form
+from app.objects.abstract_objects.abstract_buttons import Button
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
+from app.logic.abstract_interface import abstractInterface
 
 from app.logic.events.constants import (
     CHECK_CADET_BUTTON_LABEL,
@@ -11,9 +10,8 @@ from app.logic.events.constants import (
     SEE_SIMILAR_CADETS_ONLY_LABEL,
 )
 
-from app.logic.cadets.backend import get_list_of_cadets, SORT_BY_FIRSTNAME
+from app.backend.cadets import get_list_of_cadets, SORT_BY_FIRSTNAME, verify_cadet_and_warn, list_of_similar_cadets
 from app.logic.cadets.add_cadet import (
-    verify_cadet_and_warn,
     verify_form_with_cadet_details,
     get_add_cadet_form_with_information_passed,
     CadetAndVerificationText,
@@ -27,7 +25,7 @@ def get_add_or_select_existing_cadet_form(
     interface: abstractInterface,
     see_all_cadets: bool,
     include_final_button: bool,
-    cadet: Cadet = arg_not_passed,
+    cadet: Cadet = arg_not_passed, ## Is passed only on first iteration when cadet is from data not form
 ) -> Form:
     print("Generating add/select cadet form")
     print("Passed cadet %s" % str(cadet))
@@ -36,7 +34,7 @@ def get_add_or_select_existing_cadet_form(
         cadet_and_text = verify_form_with_cadet_details(interface=interface)
         cadet = cadet_and_text.cadet
     else:
-        ## Cadet details as in WA, uese these
+        ## Cadet details as in WA passed through, uese these
         verification_text = verify_cadet_and_warn(cadet)
         cadet_and_text = CadetAndVerificationText(
             cadet=cadet, verification_text=verification_text

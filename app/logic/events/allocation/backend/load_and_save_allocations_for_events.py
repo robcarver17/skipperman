@@ -1,4 +1,4 @@
-from app.logic.cadets.view_cadets import cadet_name_from_id
+from app.backend.cadets import cadet_name_from_id
 from app.objects.events import Event
 from app.objects.groups import ListOfCadetIdsWithGroups
 from app.data_access.data import data

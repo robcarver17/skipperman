@@ -2,7 +2,7 @@ import os
 import datetime
 import pandas as pd
 from app.logic.data import DataAndInterface
-from app.interface import (
+from app.web import (
     ReportingOptions,
     ReportingOptionsForSpecificGroupsInReport,
     PrintOptions,

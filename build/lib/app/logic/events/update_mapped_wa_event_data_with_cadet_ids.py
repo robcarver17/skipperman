@@ -1,4 +1,4 @@
-from app.logic.events.backend.load_and_save_wa_mapped_events import (
+from app.backend.load_and_save_wa_mapped_events import (
     load_existing_mapped_wa_event_with_ids,
     save_mapped_wa_event_with_ids,
     save_mapped_wa_event_with_no_ids,
@@ -10,7 +10,7 @@ from app.objects.mapped_wa_event_with_ids import (
     MappedWAEventWithIDs,
 )
 
-from app.interface.flask.flash import flash_log
+from app.web.flask.flash import flash_log
 
 
 def update_and_save_mapped_wa_event_data_with_and_without_ids(

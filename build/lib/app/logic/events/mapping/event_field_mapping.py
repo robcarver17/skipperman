@@ -1,25 +1,22 @@
 from typing import Union
 
-from app.logic.forms_and_interfaces.abstract_form import (
+from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
-    Line,
-    ListOfLines,
-    Button,
-    back_button,
-    PandasDFTable,
-    BACK_BUTTON_LABEL, _______________,
 )
+from app.objects.abstract_objects.abstract_tables import PandasDFTable
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, back_button, Button
 
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.logic.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form
 from app.logic.events.constants import *
-from app.logic.events.utilities import get_event_from_state
-from app.logic.events.mapping.read_and_write_mapping_files import (
+from app.logic.events.events_in_state import get_event_from_state
+from app.backend.read_and_write_mapping_files import (
     get_field_mapping_for_event,
 )
-from app.logic.events.mapping.check_mapping import check_field_mapping
-from app.logic.events.backend.map_wa_files import is_wa_mapping_setup_for_event
+from app.backend.check_mapping import check_field_mapping
+from app.backend.map_wa_files import is_wa_file_mapping_setup_for_event
 
 def display_form_event_field_mapping(
     interface: abstractInterface,
@@ -37,7 +34,7 @@ def display_form_event_field_mapping(
         )
         check_mapping_lines = Line([])
     else:
-        wa_import_done = is_wa_mapping_setup_for_event(event=event)
+        wa_import_done = is_wa_file_mapping_setup_for_event(event=event)
         check_mapping_lines = check_field_mapping(interface=interface)
         if wa_import_done:
             warning = ""

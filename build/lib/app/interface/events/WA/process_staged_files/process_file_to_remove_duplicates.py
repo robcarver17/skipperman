@@ -1,18 +1,18 @@
 
-from app.interface.html.html import Html, html_joined_list_as_lines, html_joined_list, html_joined_list_as_paragraphs
-from app.interface.html.forms import html_button, form_html_wrapper
-from app.interface.flask.state_for_action import StateDataForAction
+from app.web.html.html import Html, html_joined_list_as_lines, html_joined_list, html_joined_list_as_paragraphs
+from app.web.html.forms import html_button, form_html_wrapper
+from app.web.flask.state_for_action import StateDataForAction
 
-from app.interface.events.utils import get_event_from_state
-from app.interface.events.constants import (
+from app.web.events.utils import get_event_from_state
+from app.web.events.constants import (
 WA_INTERACTIVELY_REMOVE_SPECIFIC_DUPLICATES_FROM_WA_FILE
 )
-from app.interface.events.WA.process_staged_files.process_file_to_update_master_event_records import process_file_to_update_master_event_records
-from app.logic.events.backend.load_and_save_wa_mapped_events import (
+from app.web.events.WA.process_staged_files.process_file_to_update_master_event_records import process_file_to_update_master_event_records
+from app.backend.load_and_save_wa_mapped_events import (
 load_existing_mapped_wa_event_with_ids
 )
 
-from app.logic.events.backend.update_master_event_data import remove_duplicated_row_from_mapped_wa_event_data
+from app.backend.update_master_event_data import remove_duplicated_row_from_mapped_wa_event_data
 
 from app.objects.constants import  NoMoreData
 

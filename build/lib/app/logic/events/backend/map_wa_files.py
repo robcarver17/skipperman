@@ -1,10 +1,10 @@
 from app.data_access.data import data
 from app.objects.events import Event
-from app.logic.events.backend.load_wa_file import (
+from app.backend.load_wa_file import (
     get_event_id_from_wa_df,
     load_raw_wa_file,
 )
-from app.logic.events.utilities import get_event_from_id
+from app.logic.events.events_in_state import get_event_from_id
 from app.objects.constants import FileError
 
 

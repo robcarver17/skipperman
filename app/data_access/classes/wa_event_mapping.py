@@ -1,9 +1,9 @@
-from app.objects.wa_event_mapping import WAEventMapping
+from app.objects.wa_event_mapping import ListOfWAEventMaps
 
 
 class DataWAEventMapping(object):
-    def read(self) -> WAEventMapping:
+    def read(self) -> ListOfWAEventMaps:
         raise NotImplemented
 
-    def write(self, wa_event_mapping: WAEventMapping):
+    def write(self, wa_event_mapping: ListOfWAEventMaps):
         raise NotImplemented

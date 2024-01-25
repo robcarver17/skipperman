@@ -1,15 +1,15 @@
 import numpy as np
 
-from app.interface import (
+from app.web import (
     _generate_list_of_all_possible_indices,
     _find_best_list_of_indices,
 )
-from app.interface import (
+from app.web import (
     ListtOfColumns,
     ListOfGroupsOfMarkedUpStrings,
     _create_columns_from_list_of_groups_of_marked_up_str_with_passed_list,
 )
-from app.interface import (
+from app.web import (
     ReportingOptionsForSpecificGroupsInReport,
     ARRANGE_OPTIMISE,
     ARRANGE_PASSED_LIST,

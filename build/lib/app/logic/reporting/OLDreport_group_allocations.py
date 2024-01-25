@@ -1,7 +1,7 @@
 import pandas as pd
 from app.data_access.configuration.configuration import ALL_GROUPS
 
-from app.interface import (
+from app.web import (
     create_column_pdf_report_from_df_and_return_filename,
 )
 from app.logic.data import DataAndInterface
@@ -102,7 +102,7 @@ import os
 import datetime
 import pandas as pd
 from app.logic.data import DataAndInterface
-from app.interface import (
+from app.web import (
     ReportingOptions,
     ReportingOptionsForSpecificGroupsInReport,
     PrintOptions,
@@ -366,7 +366,7 @@ def modify_a_single_reporting_option(
             interface.message("Can't do this yet not implemented")
             return  # no change
             # ordered_groups = report_options.marked_up_list_from_df.actual_group_order
-            # new_order = interface.create_nested_list_from_items(ordered_groups, prompt="Put groups in desired order")
+            # new_order = web.create_nested_list_from_items(ordered_groups, prompt="Put groups in desired order")
             ## NOTE: the order is indicies, not group names!
             # report_options.arrange_groups.force_order_of_columns_list_of_indices = new_order
         report_options.arrange_groups.arrangement_method = chosen_arrangement

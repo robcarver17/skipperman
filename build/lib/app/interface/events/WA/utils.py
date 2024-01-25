@@ -1,9 +1,9 @@
-from app.interface.events.utils import get_event_from_state
-from app.interface.events.view_events import display_view_of_events
-from app.interface.flask.flash import flash_error, flash_log
-from app.interface.flask.state_for_action import StateDataForAction
+from app.web.events.utils import get_event_from_state
+from app.web.events.view_events import display_view_of_events
+from app.web.flask.flash import flash_error, flash_log
+from app.web.flask.state_for_action import StateDataForAction
 
-from app.logic.events.backend.load_wa_file import (
+from app.backend.load_wa_file import (
     delete_raw_event_upload_with_event_id,
 )
 

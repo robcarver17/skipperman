@@ -1,12 +1,12 @@
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.logic.abstract_interface import abstractInterface
 from app.objects.master_event import MasterEvent, RowInMasterEvent
 from app.objects.events import Event
-from app.logic.events.backend.update_master_event_data import save_master_event
+from app.backend.update_master_event_data import save_master_event
 
 from app.logic.events.registration_details.registration_details_form import get_registration_data, \
-    get_top_row_for_event, row_for_cadet_in_event, RegistrationDetailsForEvent, input_name_from_column_name_and_cadet_id, _column_can_be_edited
+    RegistrationDetailsForEvent, input_name_from_column_name_and_cadet_id, _column_can_be_edited
 
-from app.objects.field_list import FIELDS_WITH_INTEGERS, FIELDS_AS_STR, FIELDS_WITH_DATES, DAYS_ATTENDING
+from app.objects.field_list import FIELDS_WITH_INTEGERS, FIELDS_AS_STR, DAYS_ATTENDING
 
 def parse_registration_details_from_form(interface: abstractInterface, event: Event):
     master_event = get_registration_details_from_form(interface=interface, event=event)

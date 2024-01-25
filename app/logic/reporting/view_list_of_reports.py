@@ -1,13 +1,12 @@
 from typing import Union
 
-from app.logic.forms_and_interfaces.abstract_form import (
+from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
-    Button,
-    ListOfLines,
-    main_menu_button, _______________,
 )
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
+from app.logic.abstract_interface import abstractInterface
 from app.logic.reporting.constants import (
     GROUP_ALLOCATION_REPORT_STAGE,
     GROUP_ALLOCATION_REPORT_BUTTON_LABEL,

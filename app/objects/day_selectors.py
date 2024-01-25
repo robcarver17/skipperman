@@ -1,7 +1,6 @@
 import datetime
 from enum import Enum
 from typing import Dict
-from dataclasses import dataclass
 
 Day = Enum("Day", [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday", "Sunday"])
 
@@ -15,6 +14,7 @@ class DaySelector(Dict[Day, bool]):
     pass
 
 ALL_DAYS_SELECTED = dict([(day, True) for day in all_possible_days])
+NO_DAYS_SELECTED = dict([(day, False) for day in all_possible_days])
 
 
 def weekend_day_selector_from_text(text: str) -> DaySelector: ## we read WA files like this but don't write them internally

@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.interface import (
+from app.web import (
     ReportingOptionsForSpecificGroupsInReport,
 )
-from app.interface import (
+from app.web import (
     ListOfGroupsOfMarkedUpStrings,
     _create_columns_from_list_of_groups_of_marked_up_str_with_passed_list,
 )

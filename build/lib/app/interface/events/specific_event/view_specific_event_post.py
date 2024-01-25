@@ -1,15 +1,15 @@
-from app.interface.events.WA.wa_import import display_view_for_specific_event_wa_import
-from app.interface.events.WA.wa_update import display_form_wa_update
-from app.interface.events.WA.wa_upload import display_view_for_specific_event_wa_upload
-from app.interface.events.constants import WA_UPLOAD_BUTTON_LABEL, \
+from app.web.events.WA.wa_import import display_view_for_specific_event_wa_import
+from app.web.events.WA.wa_update import display_form_wa_update
+from app.web.events.WA.wa_upload import display_view_for_specific_event_wa_upload
+from app.web.events.constants import WA_UPLOAD_BUTTON_LABEL, \
     WA_UPLOAD_SUBSTAGE_IN_VIEW_EVENT_STAGE, WA_FIELD_MAPPING_BUTTON_LABEL, WA_IMPORT_BUTTON_LABEL, \
     WA_IMPORT_SUBSTAGE_IN_VIEW_EVENT_STAGE, WA_UPDATE_BUTTON_LABEL, WA_UPDATE_SUBSTAGE_IN_VIEW_EVENT_STAGE, \
     ALLOCATE_CADETS_BUTTON_LABEL
-from app.interface.html.forms import BACK_BUTTON_LABEL
-from app.interface.events.view_events import display_view_of_events
-from app.interface.flask.flash import html_error
-from app.interface.flask.state_for_action import StateDataForAction
-from app.interface.html.html import Html
+from app.web.html.forms import BACK_BUTTON_LABEL
+from app.web.events.view_events import display_view_of_events
+from app.web.flask.flash import html_error
+from app.web.flask.state_for_action import StateDataForAction
+from app.web.html.html import Html
 
 
 def post_view_of_selected_event(state_data: StateDataForAction) -> Html:

@@ -2,7 +2,7 @@ import pandas as pd
 
 from app.data_access.configuration.configuration import ALL_PAGESIZE, ALL_FONTS
 from app.data_access.data import data
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.logic.abstract_interface import abstractInterface
 from app.logic.reporting.backend.TODELETE import (
     ReportingOptionsForSpecificGroupsInReport,
     ReportingOptions,

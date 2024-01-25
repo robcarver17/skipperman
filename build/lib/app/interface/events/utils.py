@@ -1,9 +1,9 @@
-from app.interface.events.constants import EVENT
-from app.interface.flask.state_for_action import StateDataForAction
+from app.web.events.constants import EVENT
+from app.web.flask.state_for_action import StateDataForAction
 from app.objects.events import Event
-from app.logic.events.utilities import get_list_of_events
-from app.interface.html.forms import html_button
-from app.interface.html.html import Html
+from app.logic.events.events_in_state import get_list_of_events
+from app.web.html.forms import html_button
+from app.web.html.html import Html
 
 
 def confirm_event_exists(event_selected):

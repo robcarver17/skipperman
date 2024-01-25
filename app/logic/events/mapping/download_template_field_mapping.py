@@ -1,15 +1,14 @@
 from typing import Union
-from app.logic.events.mapping.read_and_write_mapping_files import (
+from app.backend.read_and_write_mapping_files import (
     get_template,
-    csv_path_and_filename_for_template,
+    write_mapping_to_temp_csv_file_and_return_filename
 )
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
-from app.logic.forms_and_interfaces.abstract_form import (
-    cancel_button,
+from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_form import (
     Form,
-    ListOfLines,
-    File, _______________,
-)
+    File, )
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
+from app.objects.abstract_objects.abstract_buttons import cancel_button
 from app.logic.abstract_logic_api import initial_state_form
 from app.logic.events.mapping.template_field_mapping import (
     display_list_of_templates_with_buttons,
@@ -36,7 +35,7 @@ def display_form_for_download_template_field_mapping(interface: abstractInterfac
 
 def post_form_for_download_template_field_mapping(
     interface: abstractInterface,
-) -> Union[File]:
+) -> Union[File, Form]:
     template_name = interface.last_button_pressed()
 
     try:
@@ -48,6 +47,5 @@ def post_form_for_download_template_field_mapping(
         )
         return initial_state_form
 
-    # FIXME: technically should read the mapping file and then write to temp csv file as this assumes data is always stored in csv format
-    filename = csv_path_and_filename_for_template(template_name)
+    filename = write_mapping_to_temp_csv_file_and_return_filename(mapping)
     return File(filename)

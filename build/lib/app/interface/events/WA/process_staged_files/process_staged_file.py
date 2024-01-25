@@ -1,17 +1,17 @@
 ### this is called by WA import_wa or update
-from app.interface.events.WA.process_staged_files.wa_iteratively_add_cadet_ids import (
+from app.web.events.WA.process_staged_files.wa_iteratively_add_cadet_ids import (
     process_rows_of_unmapped_data_and_proceed_to_process_file_with_ids,
 )
-from app.interface.events.WA.utils import (
+from app.web.events.WA.utils import (
     delete_staged_file_for_current_event,
     get_event_from_state,
 )
 
-from app.interface.flask.state_for_action import StateDataForAction
+from app.web.flask.state_for_action import StateDataForAction
 
-from app.logic.events.backend.load_wa_file import get_staged_file_raw_event_filename
-from app.logic.events.backend.map_wa_fields import map_wa_fields_in_df_for_event
-from app.logic.events.backend.update_mapped_wa_event_data_with_cadet_ids import (
+from app.backend.load_wa_file import get_staged_file_raw_event_filename
+from app.backend.map_wa_fields import map_wa_fields_in_df_for_event
+from app.backend.update_mapped_wa_event_data_with_cadet_ids import (
     update_and_save_mapped_wa_event_data_with_and_without_ids,
 )
 

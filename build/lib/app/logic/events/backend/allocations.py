@@ -1,8 +1,8 @@
 from app.data_access.data import data
-from app.logic.events.backend.load_and_save_wa_mapped_events import (
+from app.backend.load_and_save_wa_mapped_events import (
     load_master_event,
 )
-from app.logic.cadets.backend import get_list_of_cadets
+from app.backend.cadets import get_list_of_cadets
 from app.objects.cadets import ListOfCadets
 from app.objects.events import Event
 from app.objects.groups import ListOfCadetIdsWithGroups

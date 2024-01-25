@@ -1,9 +1,9 @@
-from app.interface.events.initial_stage import generate_initial_stage_html_for_events
-from app.interface.flask.state_for_action import StateDataForAction
-from app.interface.html.html import Html
-from app.interface.flask.flash import html_error
+from app.web.events.initial_stage import generate_initial_stage_html_for_events
+from app.web.flask.state_for_action import StateDataForAction
+from app.web.html.html import Html
+from app.web.flask.flash import html_error
 
-from app.interface.events.constants import (
+from app.web.events.constants import (
     ADD_EVENT_STAGE,
     VIEW_EVENT_STAGE,
     WA_UPLOAD_SUBSTAGE_IN_VIEW_EVENT_STAGE,
@@ -13,18 +13,18 @@ from app.interface.events.constants import (
     WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE,
 WA_INTERACTIVELY_REMOVE_SPECIFIC_DUPLICATES_FROM_WA_FILE
 )
-from app.interface.events.add_event import display_view_for_add_event
-from app.interface.events.specific_event.view_specific_event_post import post_view_of_selected_event
-from app.interface.events.WA.wa_upload import post_response_to_wa_upload
-from app.interface.events.WA.wa_import import display_view_for_specific_event_wa_import
-from app.interface.events.WA.process_staged_files.wa_iteratively_add_cadet_ids import (
+from app.web.events.add_event import display_view_for_add_event
+from app.web.events.specific_event.view_specific_event_post import post_view_of_selected_event
+from app.web.events.WA.wa_upload import post_response_to_wa_upload
+from app.web.events.WA.wa_import import display_view_for_specific_event_wa_import
+from app.web.events.WA.process_staged_files.wa_iteratively_add_cadet_ids import (
     post_response_when_adding_cadet_ids_to_event,
 )
-from app.interface.events.WA.wa_update import post_response_to_wa_update
-from app.interface.events.WA.process_staged_files.process_file_to_remove_duplicates import (
+from app.web.events.WA.wa_update import post_response_to_wa_update
+from app.web.events.WA.process_staged_files.process_file_to_remove_duplicates import (
     post_response_of_removing_specific_duplicates_from_mapped_wa_event_data
 )
-from app.interface.events.WA.process_staged_files.process_file_to_update_master_event_records import post_response_of_interactive_row_updating_of_mapped_wa_event_data
+from app.web.events.WA.process_staged_files.process_file_to_update_master_event_records import post_response_of_interactive_row_updating_of_mapped_wa_event_data
 
 def generate_event_pages(state_data: StateDataForAction) -> Html:
     stage = state_data.stage

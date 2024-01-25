@@ -3,7 +3,8 @@ from fpdf import FPDF
 
 import numpy as np
 
-from app.interface import (
+import app.objects.abstract_objects.abstract_text
+from app.web import (
     PrintOptions,
 )
 from app.data_access.configuration.configuration import (
@@ -15,7 +16,7 @@ from app.data_access.configuration.configuration import (
     TITLE_MULTIPLIER,
     LINE_GAP_AS_PERCENTAGE_OF_CHARACTER_HEIGHT,
 )
-from app.interface import ListtOfColumns, MarkedUpString
+from app.web import ListtOfColumns, MarkedUpString
 
 
 @dataclass
@@ -398,7 +399,7 @@ class PdfLayout:
 
 def get_style_for_marked_up_text(marked_up_text: MarkedUpString) -> str:
     style = ""
-    if marked_up_text.bold:
+    if app.objects.abstract_objects.abstract_text.bold:
         style += "B"
     if marked_up_text.italics:
         style += "I"

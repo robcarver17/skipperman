@@ -1,21 +1,15 @@
-from copy import copy
 from typing import Dict
 
 from dataclasses import dataclass
 
 from app.data_access.configuration.configuration import (
     SIMILARITY_LEVEL_TO_WARN_NAME,
-VOLUNTEER_SKILLS,
-VOLUNTEER_ROLES,
-VOLUNTEER_LOCATIONS,
-LAKE_TRAINING_GROUPS,
-RIVER_TRAINING_GROUPS,
-MG_GROUPS
+VOLUNTEER_SKILLS
 )
-from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds, GenericListOfObjectsNoIds, GenericSkipperManObject, get_class_instance_from_str_dict
-from app.objects.utils import transform_date_into_str, similar
-from app.objects.constants import arg_not_passed, DAYS_IN_YEAR
-from app.objects.generic import data_object_as_dict
+from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds, GenericListOfObjects, GenericSkipperManObject
+from app.objects.utils import similar
+from app.objects.constants import arg_not_passed
+
 
 @dataclass
 class Volunteer(GenericSkipperManObjectWithIds):
@@ -56,11 +50,16 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return Volunteer
 
+    def matching_volunteer(self, volunteer: Volunteer) -> Volunteer:
+        return self[self.index(volunteer)]
+
     def similar_volunteers(
         self,
         volunteer: Volunteer,
         name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME,
     ) -> "ListOfVolunteers":
+
+
         similar_names = [
             other_volunteer
             for other_volunteer in self
@@ -88,11 +87,14 @@ class CadetVolunteerAssociation(GenericSkipperManObject):
     cadet_id: str
     volunteer_id: str
 
-class ListOfCadetVolunteerAssociations(GenericListOfObjectsNoIds):
+class ListOfCadetVolunteerAssociations(GenericListOfObjects):
 
     @property
     def _object_class_contained(self):
         return CadetVolunteerAssociation
+
+    def list_of_volunteer_ids_associated_with_cadet_id(self, cadet_id: str):
+        return [element.volunteer_id for element in self if element.cadet_id == cadet_id]
 
     def list_of_connections_for_volunteer(self, volunteer_id: str):
         return [element.cadet_id for element in self if element.volunteer_id == volunteer_id]
@@ -101,7 +103,7 @@ class ListOfCadetVolunteerAssociations(GenericListOfObjectsNoIds):
         matching_elements_list = [element for element in self if element.volunteer_id==volunteer_id and element.cadet_id==cadet_id]
         if len(matching_elements_list)==0:
             return
-        matching_element = matching_elements_list[0]
+        matching_element = matching_elements_list[0] ## corner case of duplicates shouldn't happen just in case
         self.remove(matching_element)
 
     def add(self, cadet_id: str, volunteer_id: str):
@@ -111,14 +113,14 @@ class ListOfCadetVolunteerAssociations(GenericListOfObjectsNoIds):
 
     def connection_exists(self, cadet_id: str, volunteer_id: str):
         exists = [True for element in self if element.volunteer_id==volunteer_id and element.cadet_id == cadet_id]
-        return len(exists)>0
+        return any(exists)
 
 @dataclass
 class VolunteerSkill(GenericSkipperManObject):
     volunteer_id: str
     skill: str
 
-class ListOfVolunteerSkills(GenericListOfObjectsNoIds):
+class ListOfVolunteerSkills(GenericListOfObjects):
 
     @property
     def _object_class_contained(self):
@@ -163,48 +165,3 @@ class ListOfVolunteerSkills(GenericListOfObjectsNoIds):
         element_with_skill = element_with_skill_in_list[0]
         self.remove(element_with_skill)
 
-LIST_KEY = 'list_of_associated_cadet_id'
-
-@dataclass
-class VolunteerAtEvent(GenericSkipperManObject):
-    volunteer_id: str
-    role: str
-    list_of_associated_cadet_id: list
-    group: str = ""
-
-
-    @classmethod
-    def from_dict(cls, dict_with_str):
-        list_of_cadet_ids_as_str = dict_with_str[LIST_KEY]
-        if len(list_of_cadet_ids_as_str)==0:
-            list_of_cadet_ids=[]
-        else:
-            list_of_cadet_ids= list_of_cadet_ids_as_str.split(",")
-
-        new_dict = copy(dict_with_str)
-        new_dict[LIST_KEY] = list_of_cadet_ids
-
-        return get_class_instance_from_str_dict(cls, dict_with_str=new_dict)
-
-    def as_str_dict(self) -> dict:
-        as_dict = self.as_dict()
-
-        ## all strings except the list
-        list_of_associated_cadets = as_dict[LIST_KEY]
-        list_of_associated_cadets_as_str = ",".join(list_of_associated_cadets)
-
-        as_dict[LIST_KEY] = list_of_associated_cadets_as_str
-
-        return as_dict
-
-    @property
-    def location(self):
-        if self.role in
-
-## FIXME - Boats done seperately
-
-class ListOfVolunteersAtEvent(GenericListOfObjectsNoIds):
-
-    @property
-    def _object_class_contained(self):
-        return VolunteerAtEvent

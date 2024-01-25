@@ -1,20 +1,21 @@
-from app.objects.wa_field_mapping import WAFieldMapping
+from app.objects.wa_field_mapping import ListOfWAFieldMappings
 
 
 class DataWAFieldMapping(object):
-    def read(self, event_id: str) -> WAFieldMapping:
+    def read(self, event_id: str) -> ListOfWAFieldMappings:
         raise NotImplemented
 
-    def write(self, event_id: str, wa_field_mapping: WAFieldMapping):
+    def write(self, event_id: str, wa_field_mapping: ListOfWAFieldMappings):
         raise NotImplemented
 
     def get_list_of_templates(self) -> list:
         raise NotImplemented
 
-    def get_template(self, template_name: str) -> WAFieldMapping:
+    def get_template(self, template_name: str) -> ListOfWAFieldMappings:
         raise NotImplemented
 
     def write_template(
-        self, template_name: str, wa_field_mapping: WAFieldMapping
-    ) -> WAFieldMapping:
+        self, template_name: str, wa_field_mapping: ListOfWAFieldMappings
+    ) -> ListOfWAFieldMappings:
         raise NotImplemented
+

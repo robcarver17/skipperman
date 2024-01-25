@@ -1,8 +1,8 @@
-from app.interface.events.add_event import display_view_for_add_event
-from app.interface.events.constants import ADD_EVENT_BUTTON_LABEL, ADD_EVENT_STAGE, all_sort_types, VIEW_EVENT_STAGE
-from app.interface.events.specific_event.view_specific_event import display_view_for_specific_event
-from app.interface.events.view_events import display_view_of_events
-from app.interface.flask.state_for_action import StateDataForAction
+from app.web.events.add_event import display_view_for_add_event
+from app.web.events.constants import ADD_EVENT_BUTTON_LABEL, ADD_EVENT_STAGE, all_sort_types, VIEW_EVENT_STAGE
+from app.web.events.specific_event.view_specific_event import display_view_for_specific_event
+from app.web.events.view_events import display_view_of_events
+from app.web.flask.state_for_action import StateDataForAction
 
 
 def post_view_of_events(state_data: StateDataForAction):

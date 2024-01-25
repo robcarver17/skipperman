@@ -1,5 +1,5 @@
-from app.logic.cadets.backend import get_list_of_cadets
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.backend.cadets import get_list_of_cadets
+from app.logic.abstract_interface import abstractInterface
 from app.data_access.data import data
 from app.objects.constants import arg_not_passed
 from app.objects.volunteers import ListOfVolunteers, Volunteer

@@ -12,7 +12,7 @@ from app.data_access.csv.cadets_with_groups_for_event import (
     CsvDataListOfCadetsWithGroups,
 )
 from app.data_access.csv.print_options import csvDataListOfPrintOptions
-from app.data_access.csv.volunteers import CsvDataListOfVolunteers, CsvDataListOfVolunteerSkills, CsvDataListOfCadetVolunteerAssociations, CsvDataListOfVolunteersAtEvent
+from app.data_access.csv.volunteers import CsvDataListOfVolunteers, CsvDataListOfVolunteerSkills, CsvDataListOfCadetVolunteerAssociations, CsvDataListOfVolunteersAtEvent, CsvDataListOfCadetsWithoutVolunteersAtEvent
 
 class CsvDataApi(GenericDataApi):
     def __init__(self, master_data_path: str):
@@ -78,3 +78,6 @@ class CsvDataApi(GenericDataApi):
     def data_list_of_volunteers_at_event(self) -> CsvDataListOfVolunteersAtEvent:
         return CsvDataListOfVolunteersAtEvent(master_data_path=self.master_data_path)
 
+    @property
+    def data_list_of_cadets_without_volunteers_at_event(self) -> CsvDataListOfCadetsWithoutVolunteersAtEvent:
+        return CsvDataListOfCadetsWithoutVolunteersAtEvent(master_data_path=self.master_data_path)

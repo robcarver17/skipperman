@@ -1,21 +1,18 @@
-from app.logic.events.mapping.read_and_write_mapping_files import (
+from app.backend.read_and_write_mapping_files import (
     get_field_mapping_for_event,
     write_field_mapping_for_event,
 )
-from app.logic.forms_and_interfaces.abstract_interface import (
+from app.logic.abstract_interface import (
     abstractInterface,
     form_with_message_and_finished_button,
 )
 from app.logic.events.view_events import display_list_of_events_with_buttons
-from app.logic.forms_and_interfaces.abstract_form import (
-    cancel_button,
+from app.objects.abstract_objects.abstract_form import (
     Form,
-    ListOfLines, _______________,
 )
-from app.logic.events.utilities import (
-    confirm_event_exists,
-    get_event_from_list_of_events,
-    get_event_from_state, )
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
+from app.objects.abstract_objects.abstract_buttons import cancel_button
+from app.logic.events.events_in_state import get_event_from_state, get_event_from_list_of_events, confirm_event_exists
 from app.logic.abstract_logic_api import initial_state_form
 
 
@@ -49,6 +46,7 @@ def post_form_for_clone_event_field_mapping(interface: abstractInterface):
     event = get_event_from_list_of_events(event_name_selected)
     try:
         mapping = get_field_mapping_for_event(event=event)
+        assert len(mapping)>0
     except:
         interface.log_error(
             "Event %s has no mapping set up, or mapping file is corrupted - choose another event"

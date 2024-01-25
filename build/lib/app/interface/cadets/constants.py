@@ -1,6 +1,6 @@
-from app.interface.html.html import ListOfHtml
-from app.interface.html.forms import html_button
-from app.logic.cadets.backend import SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, SORT_BY_DOB_DSC
+from app.web.html.html import ListOfHtml
+from app.web.html.forms import html_button
+from app.backend.cadets import SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, SORT_BY_DOB_DSC
 
 all_sort_types = [SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, SORT_BY_DOB_DSC]
 

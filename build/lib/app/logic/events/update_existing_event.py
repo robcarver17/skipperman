@@ -1,11 +1,11 @@
 from typing import Union
 
-from app.logic.forms_and_interfaces.abstract_form import Form, NewForm
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_form import Form, NewForm
+from app.logic.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form
 from app.logic.events.constants import UPLOAD_FILE_BUTTON_LABEL, WA_IMPORT_SUBSTAGE_IN_VIEW_EVENT_STAGE
 from app.logic.events.import_wa.upload_event_file import get_form_for_wa_upload_with_prompt,upload_wa_file_and_save_as_raw_event_with_mapping
-from app.logic.events.utilities import get_event_from_state
+from app.logic.events.events_in_state import get_event_from_state
 from app.objects.events import Event
 
 def display_form_update_existing_event(

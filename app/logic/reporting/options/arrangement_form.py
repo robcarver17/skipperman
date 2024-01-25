@@ -3,12 +3,14 @@ from typing import Union
 import pandas as pd
 
 from app.logic.abstract_logic_api import initial_state_form
-from app.logic.forms_and_interfaces.abstract_form import Form, Line, Button, ListOfLines, NewForm, File, Table, \
-    _______________
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_form import Form, NewForm, File
+from app.objects.abstract_objects.abstract_tables import Table
+from app.objects.abstract_objects.abstract_buttons import Button
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
+from app.logic.abstract_interface import abstractInterface
 
-from app.logic.forms_and_interfaces.reorder_form import reorder_table, reorderFormInterface, list_of_button_names_given_group_order
-from app.logic.forms_and_interfaces.reorder_matrix import reorder_matrix, reorderMatrixInterface, list_of_button_values_given_list_of_entries
+from app.logic.forms.reorder_form import reorder_table, reorderFormInterface, list_of_button_names_given_group_order
+from app.logic.forms.reorder_matrix import reorder_matrix, reorderMatrixInterface, list_of_button_values_given_list_of_entries
 
 from app.logic.reporting.options.arrangements import save_arrangement, \
     modify_arrangement_given_change_in_group_order, get_arrangement_of_rows_from_storage_or_derive_from_method, \

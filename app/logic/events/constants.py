@@ -10,6 +10,8 @@ FINAL_ADD_BUTTON_LABEL = "Yes - these details are correct - add to data"
 # specific event; WA
 WA_UPLOAD_BUTTON_LABEL = "Upload initial Wild Apricot export file"
 WA_FIELD_MAPPING_BUTTON_LABEL = "Set up mapping of Wild Apricot fields"
+WA_CHECK_FIELD_MAPPING_BUTTON_LABEL = "Check mapping of Wild Apricot fields against uploaded file"
+WA_MODIFY_FIELD_MAPPING_BUTTON_LABEL = "Modify mapping of Wild Apricot fields (not recommended!)"
 WA_IMPORT_BUTTON_LABEL = "Import data from uploaded Wild Apricot file"
 WA_UPDATE_BUTTON_LABEL = "Upload and update Wild Apricot data from export file"
 
@@ -21,9 +23,10 @@ SEE_SIMILAR_CADETS_ONLY_LABEL = "See similar cadets only"
 #
 # Field mapping
 MAP_TO_TEMPLATE_BUTTON_LABEL = "Use template mapping"
-UPLOAD_TEMPLATE_BUTTON_LABEL = "Upload and use new template"
+UPLOAD_TEMPLATE_BUTTON_LABEL = "Upload a new template"
 UPLOAD_MAPPING_BUTTON_LABEL = "Upload new mapping .csv file"
-DOWNLOAD_MAPPING_BUTTON_LABEL = "Download a mapping .csv file to edit"
+DOWNLOAD_MAPPING_BUTTON_LABEL = "Download a mapping .csv file to edit (which you can then upload)"
+CLONE_EVENT_BUTTON_LABEL = "Clone the mapping for an existing event"
 
 # specific event; backend
 ALLOCATE_CADETS_BUTTON_LABEL = "Allocate cadets to groups"
@@ -85,7 +88,17 @@ WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE = (
     "WA_process_rows_in_interation_in_view_event_stage"
 )
 
-WA_VOLUNTEER_EXTRACTION_IN_VIEW_EVENT_STAGE = "WA_extract_volunteer_information_in_view_event_stage"
+WA_VOLUNTEER_EXTRACTION_INITIALISE_IN_VIEW_EVENT_STAGE = "WA_extract_volunteer_information_initialise_in_view_event_stage"
+WA_VOLUNTEER_EXTRACTION_LOOP_IN_VIEW_EVENT_STAGE = "WA_extract_volunteer_information_loop_in_view_event_stage"
+
+WA_VOLUNTEER_EXTRACTION_MISSING_CADET_IN_VIEW_EVENT_STAGE = "WA_extract_volunteer_information_missing_cadet_in_view_event_stage"
+
+WA_VOLUNTEER_EXTRACTION_ADD_VOLUNTEERS_TO_CADET_INIT_IN_VIEW_EVENT_STAGE = "WA_extract_volunteer_information_add_volunteers_init_in_view_event_stage"
+WA_VOLUNTEER_EXTRACTION_ADD_VOLUNTEERS_TO_CADET_LOOP_IN_VIEW_EVENT_STAGE = "WA_extract_volunteer_information_add_volunteers_loop_in_view_event_stage"
+
+
+WA_VOLUNTEER_EXTRACTION_SELECTION_IN_VIEW_EVENT_STAGE = "WA_extract_volunteer_information_selection_in_view_event_stage"
+WA_VOLUNTEER_EXTRACTION_ADD_DETAILS_IN_VIEW_EVENT_STAGE = "WA_extract_volunteer_information_add_details_in_view_event_stage"
 
 
 ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE = "Allocate_cadets_in_View_event_stage"
@@ -95,7 +108,6 @@ EDIT_CADET_REGISTRATION_DATA_IN_VIEW_EVENT_STAGE = "Edit_registration_details_in
 ## constants.py in session data
 EVENT = "event"
 ROW_IN_EVENT_DATA = "row_in_event_data"
-CADET_ID = "cadet_id"
 
 # field names
 EVENT_NAME = "event_name"

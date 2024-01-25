@@ -1,15 +1,16 @@
 from app.logic.events.constants import  USE_NEW_DATA_BUTTON_LABEL, \
     USE_ORIGINAL_DATA_BUTTON_LABEL, USE_DATA_IN_FORM_BUTTON_LABEL, ROW_IN_EVENT_DATA, ROW_STATUS
-from app.logic.events.utilities import get_event_from_state
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
-from app.logic.forms_and_interfaces.abstract_form import Form, Line, ListOfLines, Button, \
-    construct_form_field_given_field_name, radioInput
+from app.logic.events.events_in_state import get_event_from_state
+from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_form import Form, construct_form_field_given_field_name, radioInput
+from app.objects.abstract_objects.abstract_buttons import Button
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
-from app.logic.events.backend.update_master_event_data import new_status_and_status_message, update_row_in_master_event_data, \
+from app.backend.update_master_event_data import new_status_and_status_message, update_row_in_master_event_data, \
     get_row_from_event_file_with_ids, NO_STATUS_CHANGE
-from app.logic.events.backend.load_and_save_wa_mapped_events import load_master_event
+from app.backend.load_and_save_wa_mapped_events import load_master_event
 
-from app.logic.cadets.view_cadets import cadet_name_from_id
+from app.backend.cadets import cadet_name_from_id
 from app.objects.constants import NoMoreData, missing_data
 from app.objects.events import Event
 from app.objects.master_event import RowInMasterEvent, get_row_of_master_event_from_mapped_row_with_idx_and_status

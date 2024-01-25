@@ -1,5 +1,5 @@
-from app.interface.html.html import ListOfHtml
-from app.interface.html.forms import html_button
+from app.web.html.html import ListOfHtml
+from app.web.html.forms import html_button
 
 from app.logic.events.constants import SORT_BY_START_ASC, SORT_BY_START_DSC, SORT_BY_NAME
 

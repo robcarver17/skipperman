@@ -3,21 +3,19 @@ from typing import Union
 from app.logic.events.registration_details.registration_details_form import get_registration_data, \
     get_top_row_for_event, row_for_cadet_in_event
 from app.logic.events.registration_details.parse_registration_details_form import parse_registration_details_from_form
-from app.logic.forms_and_interfaces.abstract_form import (
+from app.objects.abstract_objects.abstract_form import (
     Form,
-    NewForm,
-    BACK_BUTTON_LABEL,
-    ListOfLines, Line,
-    Button,
-    Table, _______________
+    NewForm
 )
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_tables import Table
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button
+from app.logic.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form
 from app.logic.cadets.view_cadets import sort_buttons, all_sort_types
-from app.logic.cadets.backend import SORT_BY_SURNAME
+from app.backend.cadets import SORT_BY_SURNAME
 from app.logic.events.constants import *
-from app.logic.events.utilities import (
-    get_event_from_state, )
+from app.logic.events.events_in_state import get_event_from_state
 from app.objects.events import Event
 
 

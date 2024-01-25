@@ -1,4 +1,4 @@
-from app.interface.events.constants import (
+from app.web.events.constants import (
     WA_UPLOAD_BUTTON_LABEL,
     WA_FIELD_MAPPING_BUTTON_LABEL,
     ALLOCATE_CADETS_BUTTON_LABEL,
@@ -6,11 +6,11 @@ from app.interface.events.constants import (
     WA_UPDATE_BUTTON_LABEL,
 )
 
-from app.interface.events.utils import get_event_from_state
-from app.interface.flask.state_for_action import StateDataForAction
-from app.interface.flask.flash import flash_error
-from app.interface.html.forms import form_html_wrapper, html_button, BACK_BUTTON_LABEL
-from app.interface.html.html import (
+from app.web.events.utils import get_event_from_state
+from app.web.flask.state_for_action import StateDataForAction
+from app.web.flask.flash import flash_error
+from app.web.html.forms import form_html_wrapper, html_button, BACK_BUTTON_LABEL
+from app.web.html.html import (
     Html,
     html_joined_list_as_paragraphs,
     html_joined_list,
@@ -19,7 +19,7 @@ from app.logic.events.view_events import (
     is_wa_mapping_setup_for_event,
     is_wa_field_mapping_setup_for_event,
 )
-from app.logic.events.backend.load_wa_file import does_raw_event_file_exist
+from app.backend.load_wa_file import does_raw_event_file_exist
 from app.objects.events import Event
 
 

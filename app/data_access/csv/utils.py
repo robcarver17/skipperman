@@ -1,9 +1,6 @@
 import os
 from typing import List
 
-DATE_STR = "%Y/%m/%d"
-DATETIME_STR = "%Y/%m/%d %H:%M:%S.%f"
-
 
 def files_with_extension_in_resolved_pathname(
     resolved_pathname: str, extension=".csv"

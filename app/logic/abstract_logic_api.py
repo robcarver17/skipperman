@@ -1,11 +1,11 @@
 from typing import Union
 from dataclasses import dataclass
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
-from app.logic.forms_and_interfaces.abstract_form import (
+from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_form import (
     NewForm,
     Form,
-    button_label_requires_going_back,
 )
+from app.objects.abstract_objects.abstract_buttons import button_label_requires_going_back
 
 INITIAL_STATE = "Initial form"
 
@@ -67,7 +67,15 @@ class AbstractLogicApi:
     def get_posted_form_given_form_name_without_checking_for_redirection(
         self, form_name: str
     ) -> Union[Form, NewForm]:
-        raise NotImplemented("implement in inherited class")
+        posted_forms_as_dict = self.dict_of_posted_forms
+        form = posted_forms_as_dict.get(form_name, None)
+        if form is None:
+            self.interface.log_error("Internal error, form name %s not recognised" % form_name)
+            return self.get_posted_form_going_back_to_initial_state()
+
+        form_contents = form(self.interface)
+
+        return form_contents
 
     def get_displayed_form_given_form_name_and_reset_state_if_required(
         self, form_name: str
@@ -87,7 +95,15 @@ class AbstractLogicApi:
     def get_displayed_form_given_form_name(
         self, form_name: str
     ) -> Union[Form, NewForm]:
-        raise NotImplemented("implement in inherited class")
+        display_forms_as_dict = self.dict_of_display_forms
+        form = display_forms_as_dict.get(form_name, None)
+        if form is None:
+            self.interface.log_error("Internal error, form name %s not recognised" % form_name)
+            return self.get_posted_form_going_back_to_initial_state()
+
+        form_contents = form(self.interface)
+
+        return form_contents
 
     def redirect_to_new_form(self, form: NewForm):
         new_form_name = form.form_name
@@ -112,5 +128,12 @@ class AbstractLogicApi:
 
         return form_name
 
+    @property
+    def dict_of_display_forms(self) -> dict:
+        return {}
+
+    @property
+    def dict_of_posted_forms(self) -> dict:
+        return {}
 
 initial_state_form = NewForm(INITIAL_STATE)

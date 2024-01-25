@@ -1,9 +1,9 @@
 import pandas as pd
 from app.data_access.data import data
 from app.objects.events import Event
-from app.objects.wa_field_mapping import WAFieldMapping
+from app.objects.wa_field_mapping import ListOfWAFieldMappings
 from app.objects.mapped_wa_event_no_ids import MappedWAEventNoIDs
-from app.logic.events.backend.load_wa_file import load_raw_wa_file
+from app.backend.load_wa_file import load_raw_wa_file
 
 
 def map_wa_fields_in_df_for_event(event: Event, filename: str) -> MappedWAEventNoIDs:
@@ -24,7 +24,7 @@ def map_wa_fields_in_df_for_event(event: Event, filename: str) -> MappedWAEventN
 
 def map_wa_fields_in_df(
     wa_as_df: pd.DataFrame,
-    wa_field_mapping: WAFieldMapping,
+    wa_field_mapping: ListOfWAFieldMappings,
 ) -> MappedWAEventNoIDs:
 
     # FIXME THINK ABOUT HOW TO HANDLE MISSING FIELDS
@@ -58,15 +58,15 @@ def _warn_user_about_fields(
         fields_in_wa_file
     )
 
-    interface = data_and_interface.interface
+    web = data_and_interface.web
     if len(in_mapping_not_in_wa_file) > 0:
-        interface.message(
+        web.message(
             "Following fields are missing from WA file; may cause problems later: %s"
             % str(in_mapping_not_in_wa_file)
         )
 
     if len(in_wa_file_not_in_mapping) > 0:
-        interface.message(
+        web.message(
             "Following fields are in WA file but will not be imported, probably OK: %s"
             % (str(in_wa_file_not_in_mapping))
         )
@@ -74,7 +74,7 @@ def _warn_user_about_fields(
 
 
 def _map_wa_fields_in_df_no_warnings(
-    wa_as_df: pd.DataFrame, wa_field_mapping: WAFieldMapping
+    wa_as_df: pd.DataFrame, wa_field_mapping: ListOfWAFieldMappings
 ) -> MappedWAEventNoIDs:
 
     fields_in_wa_file = list(wa_as_df.columns)

@@ -1,16 +1,18 @@
 from typing import Union
 
-from app.logic.forms_and_interfaces.abstract_form import Form, NewForm, Button, ListOfLines, Line, _______________
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_form import Form, NewForm
+from app.objects.abstract_objects.abstract_buttons import Button
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
+from app.logic.abstract_interface import abstractInterface
 from app.logic.events.constants import WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE
 
-from app.logic.events.utilities import get_event_from_state
+from app.logic.events.events_in_state import get_event_from_state
 
-from app.logic.events.backend.load_and_save_wa_mapped_events import (
+from app.backend.load_and_save_wa_mapped_events import (
 load_existing_mapped_wa_event_with_ids
 )
 
-from app.logic.events.backend.update_master_event_data import remove_duplicated_row_from_mapped_wa_event_data
+from app.backend.update_master_event_data import remove_duplicated_row_from_mapped_wa_event_data
 
 from app.objects.constants import  NoMoreData
 

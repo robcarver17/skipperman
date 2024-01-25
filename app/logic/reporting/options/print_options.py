@@ -1,11 +1,11 @@
 from app.data_access.configuration.configuration import ALL_PAGESIZE, ALL_FONTS
 from app.data_access.data import data
-from app.logic.events.utilities import get_event_from_state
-from app.logic.forms_and_interfaces.abstract_form import (
-    ListOfLines,
-    yes_no_radio, _______________, textInput, radioInput,
+from app.logic.events.events_in_state import get_event_from_state
+from app.objects.abstract_objects.abstract_form import (
+    yes_no_radio, textInput, radioInput,
 )
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
+from app.logic.abstract_interface import abstractInterface
 from app.logic.reporting.constants import (
     REPORT_TITLE,
     REPORT_FILENAME,

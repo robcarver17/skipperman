@@ -1,9 +1,9 @@
 import pandas as pd
 from app.data_access.data import data
 from app.objects.events import Event
-from app.objects.wa_field_mapping import WAFieldMapping
+from app.objects.wa_field_mapping import ListOfWAFieldMappings
 from app.objects.mapped_wa_event_no_ids import MappedWAEventNoIDs
-from app.logic.events.backend.load_wa_file import load_raw_wa_file
+from app.backend.load_wa_file import load_raw_wa_file
 
 
 def map_wa_fields_in_df_for_event(event: Event, filename: str) -> MappedWAEventNoIDs:
@@ -23,7 +23,7 @@ def map_wa_fields_in_df_for_event(event: Event, filename: str) -> MappedWAEventN
 
 def map_wa_fields_in_df(
     wa_as_df: pd.DataFrame,
-    wa_field_mapping: WAFieldMapping,
+    wa_field_mapping: ListOfWAFieldMappings,
 ) -> MappedWAEventNoIDs:
 
     mapped_wa_event_data = _map_wa_fields_in_df_no_warnings(
@@ -37,7 +37,7 @@ def map_wa_fields_in_df(
 
 
 def _map_wa_fields_in_df_no_warnings(
-    wa_as_df: pd.DataFrame, wa_field_mapping: WAFieldMapping
+    wa_as_df: pd.DataFrame, wa_field_mapping: ListOfWAFieldMappings
 ) -> MappedWAEventNoIDs:
     fields_in_wa_file = list(wa_as_df.columns)
     matching_wa_fields = wa_field_mapping.matching_wa_fields(fields_in_wa_file)

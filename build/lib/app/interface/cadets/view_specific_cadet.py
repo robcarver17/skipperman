@@ -1,8 +1,8 @@
-from app.interface.cadets.constants import CADET, VIEW_INDIVIDUAL_CADET_STAGE
-from app.interface.flask.state_for_action import StateDataForAction
-from app.interface.html.html import Html
-from app.interface.flask.flash import html_error
-from app.logic.cadets.backend import get_list_of_cadets
+from app.web.cadets.constants import CADET, VIEW_INDIVIDUAL_CADET_STAGE
+from app.web.flask.state_for_action import StateDataForAction
+from app.web.html.html import Html
+from app.web.flask.flash import html_error
+from app.backend.cadets import get_list_of_cadets
 
 from app.objects.cadets import Cadet
 

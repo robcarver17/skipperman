@@ -1,24 +1,20 @@
 from typing import Union
 
 from app.data_access.data import data
-from app.logic.events.backend.map_wa_files import is_wa_mapping_setup_for_event
+from app.backend.map_wa_files import is_wa_file_mapping_setup_for_event
 from app.logic.events.allocation.backend.summarise_allocations_data import summarise_allocations_for_event
-from app.logic.forms_and_interfaces.abstract_form import (
+from app.objects.abstract_objects.abstract_form import (
     Form,
-    NewForm,
-    Line,
-    ListOfLines,
-    Button,
-    back_button,
-    BACK_BUTTON_LABEL, _______________
+    NewForm
 )
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button
+from app.logic.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form
 
 from app.logic.events.constants import *
-from app.logic.events.backend.load_wa_file import does_raw_event_file_exist
-from app.logic.events.utilities import (
-    get_event_from_state, )
+from app.backend.load_wa_file import does_raw_event_file_exist
+from app.logic.events.events_in_state import get_event_from_state
 from app.objects.events import Event
 
 
@@ -47,19 +43,24 @@ def get_event_buttons(event: Event, interface: abstractInterface) -> Line:
     wa_initial_upload = Button(
         WA_UPLOAD_BUTTON_LABEL
     )  ## uploads and creates staging file
-    wa_field_mapping = Button(
+    wa_create_field_mapping = Button(
         WA_FIELD_MAPPING_BUTTON_LABEL
     )  ## does field mapping from staged file
+    wa_check_field_mapping = Button(WA_CHECK_FIELD_MAPPING_BUTTON_LABEL)
+    wa_modify_field_mapping = Button(WA_MODIFY_FIELD_MAPPING_BUTTON_LABEL)
+
     wa_import = Button(WA_IMPORT_BUTTON_LABEL)  ## does import_wa given a staged file
     wa_update = Button(
         WA_UPDATE_BUTTON_LABEL
     )  ## does upload and import_wa, assuming no staged file
+    back_button = Button(BACK_BUTTON_LABEL)
 
     cadet_allocation = Button(ALLOCATE_CADETS_BUTTON_LABEL)
+    edit_registration = Button(EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON)
 
-    wa_import_done = is_wa_mapping_setup_for_event(event=event)
-    field_mapping_done = is_wa_field_mapping_setup_for_event(event=event)
-    raw_event_file_exists = does_raw_event_file_exist(event.id)
+    wa_import_done = is_wa_file_mapping_setup_for_event(event=event) ## have we done an import already (sets up event mapping)
+    field_mapping_done = is_wa_field_mapping_setup_for_event(event=event) ## have set up field mapping
+    raw_event_file_exists = does_raw_event_file_exist(event.id) ## is there a staging file waiting to be uploaded
 
     print(
         "[wa_import_done=%s, field_mapping_done=%s, raw_event_file_exists=%s]"
@@ -74,14 +75,14 @@ def get_event_buttons(event: Event, interface: abstractInterface) -> Line:
         return Line([back_button, wa_initial_upload])
 
     if not wa_import_done and not field_mapping_done and raw_event_file_exists:
-        return Line([back_button, wa_field_mapping])
+        return Line([back_button, wa_create_field_mapping])
 
     if not wa_import_done and field_mapping_done and raw_event_file_exists:
-        return Line([back_button, wa_import, wa_field_mapping])
+        return Line([back_button, wa_import, wa_check_field_mapping])
 
-    ## both done, we can update the WA file and do cadet backend
+    ## both done, we can update the WA file and do cadet backend / other editing
     if wa_import_done and field_mapping_done and not raw_event_file_exists:
-        return Line([back_button, wa_update, cadet_allocation, wa_field_mapping])
+        return Line([back_button, wa_update, cadet_allocation, wa_modify_field_mapping, edit_registration])
 
     interface.log_error(
         "Something went wrong; contact support [wa_import_done=%s, field_mapping_done=%s, raw_event_file_exists=%s]"
@@ -99,7 +100,8 @@ def post_form_view_individual_event(
     if last_button_pressed == WA_UPLOAD_BUTTON_LABEL:
         return NewForm(WA_UPLOAD_SUBSTAGE_IN_VIEW_EVENT_STAGE)
 
-    elif last_button_pressed == WA_FIELD_MAPPING_BUTTON_LABEL:
+    elif last_button_pressed in [WA_FIELD_MAPPING_BUTTON_LABEL, WA_MODIFY_FIELD_MAPPING_BUTTON_LABEL, WA_CHECK_FIELD_MAPPING_BUTTON_LABEL]:
+        ## same form, but contents will be different
         return NewForm(WA_FIELD_MAPPING_IN_VIEW_EVENT_STAGE)
 
     elif last_button_pressed == WA_IMPORT_BUTTON_LABEL:
@@ -110,6 +112,10 @@ def post_form_view_individual_event(
 
     elif last_button_pressed == ALLOCATE_CADETS_BUTTON_LABEL:
         return NewForm(ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE)
+
+    elif last_button_pressed==EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON:
+        return NewForm(EDIT_CADET_REGISTRATION_DATA_IN_VIEW_EVENT_STAGE)
+
     elif last_button_pressed == BACK_BUTTON_LABEL:
         return initial_state_form
     else:

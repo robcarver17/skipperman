@@ -1,9 +1,11 @@
 from typing import  Union
-from app.logic.forms_and_interfaces.abstract_form import Form, Line, ListOfLines, Button, intInput, fileInput, \
+from app.objects.abstract_objects.abstract_form import Form, intInput, fileInput, \
     textInput, dateInput, radioInput
-from app.interface.html.html import Html, html_joined_list_as_lines, html_paragraph_line_wrapper
-from app.interface.flask.interface import flaskInterface
-from app.interface.html.forms import form_html_wrapper, html_button, html_form_text_input, html_radio_input, html_file_input, html_int_input, html_date_input
+from app.objects.abstract_objects.abstract_buttons import Button
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
+from app.web.html.html import Html, html_joined_list_as_lines, html_paragraph_line_wrapper
+from app.web.flask.interface import flaskInterface
+from app.web.html.forms import form_html_wrapper, html_button, html_form_text_input, html_radio_input, html_file_input, html_int_input, html_date_input
 
 def process_abstract_form(form: Form, interface: flaskInterface) -> Html:
     html_inside_form = get_html_inside_form(form)
@@ -42,14 +44,14 @@ def get_html_for_element_in_line(element_in_line: Union[str, Button, textInput, 
     elif type(element_in_line) is Button:
         return html_button(element_in_line.label)
     elif type(element_in_line) is textInput:
-        return html_form_text_input(input_label=element_in_line.input_label, input_name=element_in_line.input_name, value=element_in_line.value)
+        return html_form_text_input(input_label=element_in_line.input_name, input_name=element_in_line.input_name, value=element_in_line.value)
     elif type(element_in_line) is dateInput:
-        return html_date_input(input_label=element_in_line.input_label, input_name=element_in_line.input_name, value=element_in_line.value)
+        return html_date_input(input_label=element_in_line.input_name, input_name=element_in_line.input_name, value=element_in_line.value)
     elif type(element_in_line) is intInput:
-        return html_int_input(input_label=element_in_line.input_label, input_name=element_in_line.input_name, value=element_in_line.value)
+        return html_int_input(input_label=element_in_line.input_name, input_name=element_in_line.input_name, value=element_in_line.value)
     elif type(element_in_line) is fileInput:
         return html_file_input(input_name=element_in_line.input_name, accept=element_in_line.accept)
     elif type(element_in_line) is radioInput:
-        return html_radio_input(input_label=element_in_line.input_label, input_name=element_in_line.input_name, dict_of_options=element_in_line.dict_of_options, default_label=element_in_line.default_label)
+        return html_radio_input(input_label=element_in_line.input_name, input_name=element_in_line.input_name, dict_of_options=element_in_line.dict_of_options, default_label=element_in_line.default_label)
     else:
         raise Exception("Type %s of object %s not recognised!" % (type(element_in_line), str(element_in_line)))

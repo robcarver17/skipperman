@@ -89,5 +89,6 @@ _dict_of_filenames_and_paths = dict(
     list_of_volunteers=("volunteers", "list_of_volunteers.csv"),
 list_of_volunteer_skills=("volunteers", "list_of_volunteers_skills.csv"),
 list_of_cadet_volunteer_associations=("volunteers", "list_of_cadet_volunteer_associations.csv"),
-list_of_volunteers_at_event=("volunteers_at_event", "list_of_volunteers_at_event_%s.csv")
+list_of_volunteers_at_event=("volunteers_at_event", "list_of_volunteers_at_event_%s.csv"),
+list_of_cadets_without_volunteers_at_event=("volunteers_at_event", "list_of_cadets_without_volunteers_at_event.csv")
 )

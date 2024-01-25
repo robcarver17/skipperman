@@ -1,12 +1,12 @@
-from app.interface.flask.state_for_action import StateDataForAction
+from app.web.flask.state_for_action import StateDataForAction
 from app.logic.events.constants import SORT_BY_START_DSC
-from app.logic.events.utilities import get_list_of_events
+from app.logic.events.events_in_state import get_list_of_events
 
-from app.interface.html.forms import form_html_wrapper, html_button
-from app.interface.html.html import Html, ListOfHtml
+from app.web.html.forms import form_html_wrapper, html_button
+from app.web.html.html import Html, ListOfHtml
 
-from app.interface.events.constants import ADD_EVENT_BUTTON_LABEL, sort_buttons
-from app.interface.events.utils import row_of_form_for_event_with_buttons
+from app.web.events.constants import ADD_EVENT_BUTTON_LABEL, sort_buttons
+from app.web.events.utils import row_of_form_for_event_with_buttons
 
 def display_view_of_events(
     state_data: StateDataForAction, sort_by: str = SORT_BY_START_DSC

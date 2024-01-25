@@ -4,13 +4,12 @@ from app.objects.constants import (
     FileError,
     arg_not_passed,
 )
-from app.logic.forms_and_interfaces.abstract_form import (
-    ListOfLines,
+from app.objects.abstract_objects.abstract_form import (
     Form,
-    Line,
-    finished_button,
-    Button, _______________, YES, NO,
+    YES, NO,
 )
+from app.objects.abstract_objects.abstract_buttons import finished_button, Button
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 
 
 class abstractInterface(object):
@@ -28,6 +27,9 @@ class abstractInterface(object):
 
     def set_persistent_value(self, key, value):
         self.persistent_store[key] = value
+
+    def clear_persistent_value(self, key):
+        del(self.persistent_store[key])
 
     @property
     def persistent_store(self) -> dict:
@@ -58,7 +60,7 @@ class abstractInterface(object):
     def is_posted_form(self) -> bool:
         raise NotImplemented
 
-    def value_from_form(self, key: str):
+    def value_from_form(self, key: str, value_is_date: bool = False):
         raise NotImplemented
 
     def value_of_multiple_options_from_form(self, key: str) -> list:

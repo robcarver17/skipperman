@@ -17,14 +17,16 @@ from app.data_access.configuration.configuration import ALL_GROUPS
 
 from app.reporting.options_and_parameters.report_type_specific_parameters import SpecificParametersForTypeOfReport
 
-from app.logic.forms_and_interfaces.abstract_form import Form, NewForm, ListOfLines, back_button, yes_no_radio, \
-    cancel_button, Button, File, \
-    bold, Line, BACK_BUTTON_LABEL, _______________
-from app.logic.forms_and_interfaces.reorder_form import reorder_table, reorderFormInterface
-from app.logic.forms_and_interfaces.reorder_matrix import reorder_matrix, reorderMatrixInterface
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_form import Form, NewForm, yes_no_radio, \
+    File
+from app.objects.abstract_objects.abstract_text import bold
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, cancel_button, back_button, Button
+from app.logic.forms.reorder_form import reorder_table, reorderFormInterface
+from app.logic.forms.reorder_matrix import reorder_matrix, reorderMatrixInterface
+from app.logic.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form
-from app.logic.events.utilities import get_event_from_state, confirm_event_exists, update_state_for_specific_event
+from app.logic.events.events_in_state import get_event_from_state, confirm_event_exists, update_state_for_specific_event
 from app.logic.events.allocation.backend import get_df_for_reporting_allocations_with_flags
 
 from app.logic.reporting.constants import *

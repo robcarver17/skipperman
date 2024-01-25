@@ -1,23 +1,23 @@
-from app.interface.events.WA.process_staged_files.forms_interactively_update_modified_event_records import \
+from app.web.events.WA.process_staged_files.forms_interactively_update_modified_event_records import \
     display_form_for_update_to_existing_row_of_event_data, update_mapped_wa_event_data_with_new_data, \
     update_mapped_wa_event_data_with_form_data,increment_and_save_id_in_event_data, get_current_row_id_in_event_data
 
 
-from app.interface.html.html import Html
-from app.interface.events.WA.utils import (
+from app.web.html.html import Html
+from app.web.events.WA.utils import (
     reset_stage_and_return_previous,
 )
-from app.interface.flask.state_for_action import StateDataForAction
+from app.web.flask.state_for_action import StateDataForAction
 
-from app.interface.events.utils import get_event_from_state
-from app.interface.events.constants import (
+from app.web.events.utils import get_event_from_state
+from app.web.events.constants import (
     USE_NEW_DATA, USE_DATA_IN_FORM, USE_ORIGINAL_DATA
 )
 
-from app.logic.events.backend.load_and_save_wa_mapped_events import (
+from app.backend.load_and_save_wa_mapped_events import (
     load_master_event
 )
-from app.logic.events.backend.update_master_event_data import \
+from app.backend.update_master_event_data import \
     report_on_missing_data_from_mapped_wa_event_data_and_save_to_master_event, get_row_from_event_file_with_ids, \
     add_new_row_to_master_event_data
 

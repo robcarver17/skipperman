@@ -6,6 +6,7 @@ from app.reporting.options_and_parameters.report_type_specific_parameters import
 )
 
 specific_parameters_for_allocation_report = SpecificParametersForTypeOfReport(
+    ## FIX ME RATHER NOT USE THESE HERE?
     entry_columns=[CADET_NAME],
     group_by_column=GROUP_STR_NAME,
     passed_group_order=ALL_GROUPS,

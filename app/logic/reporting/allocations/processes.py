@@ -3,9 +3,9 @@ import pandas as pd
 from app.logic.events.allocation.backend.allocations_data import (
     get_df_for_reporting_allocations_with_flags,
 )
-from app.logic.events.utilities import get_event_from_state
-from app.logic.forms_and_interfaces.abstract_form import File
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.logic.events.events_in_state import get_event_from_state
+from app.objects.abstract_objects.abstract_form import File
+from app.logic.abstract_interface import abstractInterface
 from app.logic.reporting.constants import SHOW_FULL_NAMES, INCLUDE_UNALLOCATED_CADETS
 from app.logic.reporting.options.group_order import get_group_order_from_stored_or_df
 from app.logic.reporting.options.arrangements import get_reporting_options

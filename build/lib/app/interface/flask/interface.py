@@ -1,13 +1,13 @@
-from app.logic.forms_and_interfaces.abstract_form import ListOfLines
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
-from app.interface.flask.flash import flash_error
+from app.objects.abstract_objects.abstract_lines import ListOfLines
+from app.logic.abstract_interface import abstractInterface
+from app.web.flask.flash import flash_error
 
-from app.interface.flask.session_data_for_action import (
+from app.web.flask.session_data_for_action import (
     SessionDataForAction,
     clear_session_data_for_action,
 )
-from app.interface.html.forms import HTML_BUTTON_NAME, html_as_date
-from app.interface.html.url import get_action_url
+from app.web.html.forms import HTML_BUTTON_NAME, html_as_date
+from app.web.html.url import get_action_url
 from app.objects.constants import (
     NoFileUploaded,
     missing_data,

@@ -1,9 +1,8 @@
 from typing import Union
-from app.logic.cadets.view_cadets import cadet_name_from_id
-from app.logic.forms_and_interfaces.abstract_form import Form, NewForm
-from app.logic.forms_and_interfaces.abstract_interface import (
+from app.backend.cadets import cadet_name_from_id
+from app.objects.abstract_objects.abstract_form import Form, NewForm
+from app.logic.abstract_interface import (
     abstractInterface,
-    form_with_message_and_finished_button,
 )
 from app.logic.abstract_logic_api import initial_state_form
 from app.logic.events.constants import (
@@ -11,27 +10,26 @@ from app.logic.events.constants import (
     USE_DATA_IN_FORM_BUTTON_LABEL,
     USE_NEW_DATA_BUTTON_LABEL,
     CADET_ID,
+    WA_VOLUNTEER_EXTRACTION_INITIALISE_IN_VIEW_EVENT_STAGE
 )
 
-from app.logic.events.utilities import get_event_from_state
+from app.logic.events.events_in_state import get_event_from_state
 
-from app.logic.events.backend.load_and_save_wa_mapped_events import load_master_event
-from app.logic.events.import_wa.update_existing_master_event_data_forms import (
+from app.backend.load_and_save_wa_mapped_events import load_master_event
+from app.logic.events.update_master.update_existing_master_event_data_forms import (
     display_form_for_update_to_existing_row_of_event_data,
-    update_mapped_wa_event_data_with_form_data,
-    update_mapped_wa_event_data_with_new_data,
-    any_important_difference_between_rows,
-    get_current_cadet_id,
-    get_row_in_mapped_event_for_cadet_id,
-    get_row_in_master_event_for_cadet_id,
 )
+from app.logic.events.update_master.update_master_from_form_entries import update_mapped_wa_event_data_with_new_data, \
+    update_mapped_wa_event_data_with_form_data
+from app.logic.events.update_master.track_cadet_id_in_master_file_update import get_current_cadet_id
 
-from app.logic.events.backend.update_master_event_data import (
+from app.backend.update_master_event_data import (
     get_row_of_master_event_from_mapped_row_with_idx_and_status,
     add_new_row_to_master_event_data,
-    update_row_in_master_event_data,
+    update_row_in_master_event_data, any_important_difference_between_rows, get_row_in_mapped_event_for_cadet_id,
+    get_row_in_master_event_for_cadet_id,
 )
-from app.logic.events.backend.load_and_save_wa_mapped_events import (
+from app.backend.load_and_save_wa_mapped_events import (
     load_existing_mapped_wa_event_with_ids,
 )
 from app.objects.events import Event
@@ -57,9 +55,7 @@ def iterative_process_updates_to_master_event_data(
         cadet_id = get_and_save_next_cadet_id(interface)
     except NoMoreData:
         print("Finished looping")
-        return form_with_message_and_finished_button(
-            "Finished importing WA data", interface=interface
-        )
+        return NewForm(WA_VOLUNTEER_EXTRACTION_INITIALISE_IN_VIEW_EVENT_STAGE)
 
     print("Current cadet id is %s" % cadet_id)
 
@@ -206,10 +202,8 @@ def process_update_to_existing_row_of_event_data(
     else:
         print("Data has changed displaying form")
         return display_form_for_update_to_existing_row_of_event_data(
-            interface=interface,
-            existing_row_in_master_event=existing_row_in_master_event,
             new_row_in_mapped_wa_event_with_status=new_row_in_mapped_wa_event_with_status,
-        )
+            existing_row_in_master_event=existing_row_in_master_event)
 
 
 def post_form_interactively_update_master_records(

@@ -2,7 +2,7 @@ import datetime
 import pandas as pd
 
 # from app.logic import_wa edit_provided_cadet_details
-from app.logic.events.backend.load_and_save_wa_mapped_events import (
+from app.backend.load_and_save_wa_mapped_events import (
     load_mapped_wa_event_with_no_ids,
     save_mapped_wa_event_with_no_ids,
 )
@@ -10,7 +10,7 @@ from app.objects.cadets import Cadet
 from app.objects.field_list import CADET_SURNAME, CADET_DATE_OF_BIRTH, CADET_FIRST_NAME
 from app.objects.constants import NoMoreData
 
-from app.logic.events.backend.load_and_save_wa_mapped_events import (
+from app.backend.load_and_save_wa_mapped_events import (
     load_existing_mapped_wa_event_with_ids,
     save_mapped_wa_event_with_ids,
 )
@@ -119,7 +119,7 @@ def get_cadet_data_from_row_of_mapped_data_with_age_checks(
     cadet = get_cadet_data_from_row_of_mapped_data_no_checks(row_of_mapped_data)
     surprising_age = is_cadet_age_surprising(cadet)
     if surprising_age:
-        data_and_interface.interface.message(
+        data_and_interface.web.message(
             "Cadet %s is surprisingly old or young, are you sure their DOB is correct?"
             % str(cadet)
         )
@@ -166,7 +166,7 @@ def check_for_possible_duplicate_cadet_or_add_if_required(
     data_and_interface: DataAndInterface, cadet_from_mapped_data: Cadet
 ) -> Cadet:
 
-    interface = data_and_interface.interface
+    web = data_and_interface.web
     similarity_threshold_to_warn_age = copy(SIMILARITY_LEVEL_TO_WARN_AGE)
     similarity_threshold_to_warn_name = copy(SIMILARITY_LEVEL_TO_WARN_NAME)
 
@@ -185,21 +185,21 @@ def check_for_possible_duplicate_cadet_or_add_if_required(
 
         if len(similar_cadets) > 0:
             ## Some similar cadets, let's see if it's a match
-            interface.message(
+            web.message(
                 "Looks like cadet %s is very similar to some existing cadets. \n Select an existing cadet [options 1... upwards], or choose the cadet from the WA file [0] if this cadet is not in the list shown and is really new."
                 % cadet_from_mapped_data
             )
             similar_cadets.insert(0, cadet_from_mapped_data)
-            chosen_cadet = interface.get_choice_from_adhoc_menu(similar_cadets)
+            chosen_cadet = web.get_choice_from_adhoc_menu(similar_cadets)
             chosen_an_existing_cadet = not chosen_cadet == cadet_from_mapped_data
 
             if chosen_an_existing_cadet:
                 return chosen_cadet
         else:
-            interface.message("Cadet %s appears to be new" % cadet_from_mapped_data)
+            web.message("Cadet %s appears to be new" % cadet_from_mapped_data)
 
         ## Must be new
-        add_cadet = interface.return_true_if_answer_is_yes(
+        add_cadet = web.return_true_if_answer_is_yes(
             "Add %s to the master list as a new cadet? Say no to see more potential duplicates."
             % cadet_from_mapped_data
         )
@@ -211,7 +211,7 @@ def check_for_possible_duplicate_cadet_or_add_if_required(
             )
             return cadet_from_mapped_data
         else:
-            interface.message(
+            web.message(
                 "You have chosen not to add cadet %s, checking again to see if an existing cadet looks similar"
                 % cadet_from_mapped_data
             )

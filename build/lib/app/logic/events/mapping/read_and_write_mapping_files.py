@@ -1,9 +1,7 @@
-from app.data_access.data import data
+import pandas as pd
 
-from app.data_access.csv.wa_field_mapping import (
-    read_mapping_from_file_object_or_filename,
-    save_mapping_to_filename,
-)
+from app.data_access.data import data
+from app.objects.wa_field_mapping import ListOfWAFieldMappings
 
 
 def get_field_mapping_for_event(event):
@@ -28,9 +26,23 @@ def write_template(template_name, new_mapping):
     )
 
 
-def read_mapping_from_csv_file_object(file):
-    return read_mapping_from_file_object_or_filename(file)
+def read_mapping_from_csv_file_object(file) -> ListOfWAFieldMappings:
+    df = pd.read_csv(file)
+
+    ## error condition
+    wa_field_mapping = ListOfWAFieldMappings.from_df_of_str(df)
+
+    return wa_field_mapping
 
 
 def csv_path_and_filename_for_template(template_name):
     return data.data_wa_field_mapping.path_and_filename_for_template(template_name)
+
+
+def read_mapping_from_file_object_or_filename(file) -> ListOfWAFieldMappings:
+    df = pd.read_csv(file)
+
+    ## error condition
+    wa_field_mapping = ListOfWAFieldMappings.from_df_of_str(df)
+
+    return wa_field_mapping

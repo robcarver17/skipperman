@@ -1,7 +1,7 @@
 from typing import Callable
 from app.objects.field_list import FIELDS_WITH_DATES,  FIELDS_WITH_INTEGERS, SPECIAL_FIELDS
-from app.interface.html.html import Html
-from app.interface.html.forms import html_form_text_input, html_date_input, html_int_input
+from app.web.html.html import Html
+from app.web.html.forms import html_form_text_input, html_date_input, html_int_input
 
 from app.objects.constants import arg_not_passed
 

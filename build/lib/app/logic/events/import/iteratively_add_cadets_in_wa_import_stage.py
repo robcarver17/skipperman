@@ -1,18 +1,18 @@
 from typing import Union
 
-from app.logic.forms_and_interfaces.abstract_form import Form, NewForm
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_form import Form, NewForm
+from app.logic.abstract_interface import abstractInterface
 from app.logic.events.constants import WA_INTERACTIVELY_REMOVE_SPECIFIC_DUPLICATES_FROM_WA_FILE,     CHECK_CADET_BUTTON_LABEL,    FINAL_CADET_ADD_BUTTON_LABEL,    SEE_ALL_CADETS_BUTTON_LABEL,SEE_SIMILAR_CADETS_ONLY_LABEL
 
-from app.logic.events.utilities import get_event_from_state
-from app.logic.events.backend.add_cadet_ids_to_mapped_wa_event_data import (
+from app.logic.events.events_in_state import get_event_from_state
+from app.backend.add_cadet_ids_to_mapped_wa_event_data import (
     get_first_unmapped_row_for_event,
     add_row_data_with_id_included_and_delete_from_unmapped_data,
     get_cadet_data_from_row_of_mapped_data_no_checks,
 )
 
 from app.logic.events.get_or_select_cadet_forms import get_add_or_select_existing_cadet_form
-from app.logic.cadets.backend import confirm_cadet_exists, get_cadet_from_list_of_cadets, get_list_of_cadets
+from app.backend.cadets import confirm_cadet_exists, get_cadet_from_list_of_cadets, get_list_of_cadets
 from app.logic.cadets.add_cadet import add_cadet_from_form_to_data
 from app.objects.constants import NoMoreData
 from app.objects.mapped_wa_event_no_ids import RowInMappedWAEventNoId

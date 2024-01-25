@@ -1,14 +1,14 @@
-from app.interface.events.WA.utils import (
+from app.web.events.WA.utils import (
     reset_stage_and_return_previous,
 )
-from app.interface.events.WA.wa_import_logic import upload_wa_file_and_save_as_raw_event_with_mapping, \
+from app.web.events.WA.wa_import_logic import upload_wa_file_and_save_as_raw_event_with_mapping, \
     verify_and_save_uploaded_wa_event_file
-from app.interface.events.WA.wa_forms import get_form_for_wa_upload
-from app.interface.events.utils import get_event_from_state
-from app.interface.events.constants import UPLOAD_FILE_BUTTON_LABEL
+from app.web.events.WA.wa_forms import get_form_for_wa_upload
+from app.web.events.utils import get_event_from_state
+from app.web.events.constants import UPLOAD_FILE_BUTTON_LABEL
 
-from app.interface.flask.state_for_action import StateDataForAction
-from app.interface.html.components import back_button_only_with_text
+from app.web.flask.state_for_action import StateDataForAction
+from app.web.html.components import back_button_only_with_text
 
 def display_view_for_specific_event_wa_upload(state_data: StateDataForAction):
     ## no need to check post as always will be

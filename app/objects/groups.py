@@ -13,7 +13,6 @@ from app.data_access.configuration.configuration import (
 from app.objects.cadets import Cadet, ListOfCadets
 from dataclasses import dataclass
 
-from app.objects.field_list import CADET_NAME, GROUP_STR_NAME, ID_NAME
 from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds
 
 LAKE_TRAINING = "Lake training"
@@ -77,25 +76,12 @@ class Group:
         return self.group_name in MG_GROUPS
 
 
-@dataclass(frozen=True)
+@dataclass
 class CadetIdWithGroup(GenericListOfObjectsWithIds):
     cadet_id: str
     group: Group
 
-    def as_dict(self) -> dict:
-        return_dict = {}
-        return_dict[ID_NAME] = self.cadet_id
-        return_dict[GROUP_STR_NAME] = str(self.group)
 
-        return return_dict
-
-    @classmethod
-    def from_dict(cls, dict_with_str: dict):
-        group_name = dict_with_str.pop(GROUP_STR_NAME)
-        group = Group(group_name)
-        cadet_id = dict_with_str.pop(ID_NAME)
-
-        return cls(cadet_id=cadet_id, group=group)
 
 
 NOT_ALLOCATED = Group.create_unallocated()
@@ -210,15 +196,6 @@ class CadetWithGroup(GenericSkipperManObjectWithIds):
     ## For display purposes, can't store
     cadet: Cadet
     group: Group
-
-    def as_str_dict(self, display_full_names: bool = True) -> dict:
-        ## for display purposes
-        if display_full_names:
-            cadet_name = self.cadet.name
-        else:
-            cadet_name = self.cadet.initial_and_surname
-
-        return {CADET_NAME: cadet_name, GROUP_STR_NAME: str(self.group)}
 
 
 class ListOfCadetsWithGroup(GenericListOfObjectsWithIds):

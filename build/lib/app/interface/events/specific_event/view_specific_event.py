@@ -1,13 +1,13 @@
-from app.interface.events.specific_event.form_for_specific_event import (
+from app.web.events.specific_event.form_for_specific_event import (
     get_selected_event_form,
 )
-from app.interface.events.utils import (
+from app.web.events.utils import (
     confirm_event_exists,
     update_state_for_specific_event,
 )
 
-from app.interface.flask.state_for_action import StateDataForAction
-from app.interface.flask.flash import html_error
+from app.web.flask.state_for_action import StateDataForAction
+from app.web.flask.flash import html_error
 
 
 

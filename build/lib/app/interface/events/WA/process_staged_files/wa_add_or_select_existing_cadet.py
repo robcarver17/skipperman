@@ -1,20 +1,19 @@
-from app.interface.events.constants import (
+from app.web.events.constants import (
     CHECK_CADET_BUTTON_LABEL,
     FINAL_CADET_ADD_BUTTON_LABEL,
     SEE_ALL_CADETS_BUTTON_LABEL,
     SEE_SIMILAR_CADETS_ONLY_LABEL,
 )
-from app.interface.html.forms import html_button
-from app.interface.html.html import html_joined_list, html_joined_list_as_lines, Html
-from app.logic.cadets.add_cadet import list_of_similar_cadets
-from app.logic.cadets.backend import get_list_of_cadets, SORT_BY_FIRSTNAME
+from app.web.html.forms import html_button
+from app.web.html.html import html_joined_list, html_joined_list_as_lines, Html
+from app.backend.cadets import get_list_of_cadets, SORT_BY_FIRSTNAME, verify_cadet_and_warn, list_of_similar_cadets
 
-from app.interface.flask.state_for_action import StateDataForAction
-from app.interface.html.html import html_bold, Html
-from app.interface.cadets.add_cadet import (
+from app.web.flask.state_for_action import StateDataForAction
+from app.web.html.html import html_bold, Html
+from app.web.cadets.add_cadet import (
     get_add_cadet_form_with_information_passed,verify_form_with_cadet_details
 )
-from app.interface.events.constants import (
+from app.web.events.constants import (
     CHECK_CADET_BUTTON_LABEL,
     FINAL_CADET_ADD_BUTTON_LABEL,
     SEE_ALL_CADETS_BUTTON_LABEL,
@@ -22,7 +21,6 @@ from app.interface.events.constants import (
 )
 
 from app.logic.cadets.view_cadets import get_list_of_cadets
-from app.logic.cadets.add_cadet import verify_cadet_and_warn
 
 from app.objects.cadets import Cadet
 from app.objects.constants import arg_not_passed

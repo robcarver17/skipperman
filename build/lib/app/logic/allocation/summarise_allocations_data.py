@@ -1,4 +1,4 @@
-from app.logic.forms_and_interfaces.abstract_form import ListOfLines, _______________
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.logic.events.allocation.backend import load_allocation_for_event, get_unallocated_cadets
 from app.objects.groups import ListOfCadetIdsWithGroups
 from app.objects.cadets import ListOfCadets

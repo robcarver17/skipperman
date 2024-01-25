@@ -5,27 +5,27 @@ from app.logic.events.constants import (
     ROW_STATUS,
     CADET_ID,
 )
-from app.logic.events.utilities import get_event_from_state
-from app.logic.forms_and_interfaces.abstract_interface import abstractInterface
-from app.logic.forms_and_interfaces.abstract_form import (
+from app.logic.events.update_master.status_fields_in_master_event_data_update import dropdown_input_for_status_change
+from app.logic.events.events_in_state import get_event_from_state
+from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_form import (
     Form,
-    Line,
-    ListOfLines,
-    Button,
-    construct_form_field_given_field_name, radioInput,
+    construct_form_field_given_field_name,
 )
+from app.objects.abstract_objects.abstract_buttons import Button
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
-from app.logic.events.backend.update_master_event_data import (
+from app.backend.update_master_event_data import (
     new_status_and_status_message,
     update_row_in_master_event_data,
     NO_STATUS_CHANGE,
 )
-from app.logic.events.backend.load_and_save_wa_mapped_events import (
+from app.backend.load_and_save_wa_mapped_events import (
     load_master_event,
     load_existing_mapped_wa_event_with_ids,
 )
 
-from app.logic.cadets.view_cadets import cadet_name_from_id
+from app.backend.cadets import cadet_name_from_id
 from app.objects.constants import DuplicateCadets
 from app.objects.events import Event
 from app.objects.master_event import (
@@ -33,8 +33,7 @@ from app.objects.master_event import (
     get_row_of_master_event_from_mapped_row_with_idx_and_status,
 )
 from app.objects.mapped_wa_event_with_ids import (
-    all_possible_status,
-    RowInMappedWAEventWithId,
+    RowInMappedWAEventWithId
 )
 from app.objects.utils import SingleDiff
 from app.objects.field_list import FIELDS_TO_FLAG_WHEN_COMPARING_WA_DIFF
@@ -89,27 +88,22 @@ def get_status_change_field(
 
     if status_message is NO_STATUS_CHANGE:
         return Line(
-            radioInput(
+            [dropdown_input_for_status_change(
                 input_label="Status of entry",
-                input_name=ROW_STATUS,
-                default_label=new_status.name,
+                current_status=new_status,
                 dict_of_options={new_status.name: new_status.name},
-            )
+
+            )]
         )
     else:
         return Line(
-            radioInput(
-                input_label="%s: select status" % status_message,
-                input_name=ROW_STATUS,
-                default_label=new_status.name,
-                dict_of_options=dict(
-                    [(status_name, status_name) for status_name in all_status_names]
-                ),
-            )
+            [
+                dropdown_input_for_status_change(
+                    input_label="%s: select status" % status_message,
+                    current_status=new_status)
+
+                ]
         )
-
-
-all_status_names = [row_status.name for row_status in all_possible_status]
 
 
 def any_important_difference_between_rows(

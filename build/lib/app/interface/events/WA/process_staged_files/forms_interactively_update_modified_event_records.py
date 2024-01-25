@@ -1,16 +1,16 @@
-from app.interface.events.constants import WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE, USE_NEW_DATA, \
+from app.web.events.constants import WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE, USE_NEW_DATA, \
     USE_ORIGINAL_DATA, USE_DATA_IN_FORM, ROW_IN_EVENT_DATA, ROW_STATUS
-from app.interface.events.utils import get_event_from_state
-from app.interface.flask.state_for_action import StateDataForAction
-from app.interface.html.forms import form_html_wrapper, html_button, html_radio_input
-from app.interface.html.html import Html, html_joined_list_as_paragraphs, html_joined_list
-from app.interface.html.form_fields import construct_html_form_field_given_field_name
+from app.web.events.utils import get_event_from_state
+from app.web.flask.state_for_action import StateDataForAction
+from app.web.html.forms import form_html_wrapper, html_button, html_radio_input
+from app.web.html.html import Html, html_joined_list_as_paragraphs, html_joined_list
+from app.web.html.form_fields import construct_html_form_field_given_field_name
 
-from app.logic.events.backend.update_master_event_data import new_status_and_status_message, update_row_in_master_event_data, \
+from app.backend.update_master_event_data import new_status_and_status_message, update_row_in_master_event_data, \
     get_row_from_event_file_with_ids, NO_STATUS_CHANGE
-from app.logic.events.backend.load_and_save_wa_mapped_events import load_master_event
+from app.backend.load_and_save_wa_mapped_events import load_master_event
 
-from app.logic.cadets.view_cadets import cadet_name_from_id
+from app.backend.cadets import cadet_name_from_id
 from app.objects.constants import NoMoreData, missing_data
 from app.objects.events import Event
 from app.objects.master_event import RowInMasterEvent, get_row_of_master_event_from_mapped_row_with_idx_and_status

@@ -1,9 +1,9 @@
-from app.interface.cadets.add_cadet import display_view_for_add_cadet
-from app.interface.cadets.constants import ADD_CADET_BUTTON_LABEL, ADD_CADET_STAGE, all_sort_types, \
+from app.web.cadets.add_cadet import display_view_for_add_cadet
+from app.web.cadets.constants import ADD_CADET_BUTTON_LABEL, ADD_CADET_STAGE, all_sort_types, \
     VIEW_INDIVIDUAL_CADET_STAGE
-from app.interface.cadets.view_cadets import display_view_of_cadets
-from app.interface.cadets.view_specific_cadet import display_view_for_specific_cadet
-from app.interface.flask.state_for_action import StateDataForAction
+from app.web.cadets.view_cadets import display_view_of_cadets
+from app.web.cadets.view_specific_cadet import display_view_for_specific_cadet
+from app.web.flask.state_for_action import StateDataForAction
 
 
 def post_view_of_cadets(state_data: StateDataForAction):

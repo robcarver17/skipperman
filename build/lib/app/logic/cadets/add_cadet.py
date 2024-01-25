@@ -1,14 +1,15 @@
 from dataclasses import dataclass
 from copy import copy
 from typing import Union
-from app.logic.forms_and_interfaces.abstract_form import (
+
+from app.backend.cadets import verify_cadet_and_warn, add_new_verified_cadet
+from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
-    Line,
-    ListOfLines,
-    Button,
-    cancel_button, _______________, textInput, dateInput,
+    textInput, dateInput,
 )
+from app.objects.abstract_objects.abstract_buttons import cancel_button, Button
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.cadets.constants import (
     CHECK_BUTTON_LABEL,
     FINAL_ADD_BUTTON_LABEL,
@@ -17,21 +18,12 @@ from app.logic.cadets.constants import (
     DOB,
 )
 
-from app.objects.cadets import Cadet, is_cadet_age_surprising, default_cadet
-from app.data_access.data import data
-from app.logic.forms_and_interfaces.abstract_interface import (
+from app.objects.cadets import Cadet, default_cadet
+from app.logic.abstract_interface import (
     abstractInterface,
     form_with_message_and_finished_button,
 )
 from app.logic.abstract_logic_api import initial_state_form
-
-
-from app.data_access.configuration.configuration import (
-    SIMILARITY_LEVEL_TO_WARN_DATE,
-    SIMILARITY_LEVEL_TO_WARN_NAME,
-    MIN_CADET_AGE,
-    MAX_CADET_AGE,
-)
 
 
 def display_form_add_cadet(
@@ -152,7 +144,7 @@ def verify_form_with_cadet_details(
 def get_cadet_from_form(interface: abstractInterface) -> Cadet:
     first_name = interface.value_from_form(FIRST_NAME).strip().title()
     surname = interface.value_from_form(SURNAME).strip().title()
-    date_of_birth = interface.value_from_form(DOB)
+    date_of_birth = interface.value_from_form(DOB, value_is_date=True)
 
     return Cadet(first_name=first_name, surname=surname, date_of_birth=date_of_birth)
 
@@ -191,51 +183,3 @@ def get_footer_buttons_for_add_cadet_form(form_is_empty: bool) -> Line:
         return Line([cancel_button, check_submit, final_submit])
 
 
-LOWEST_FEASIBLE_CADET_AGE = MIN_CADET_AGE - 2
-HIGHEST_FEASIBLE_CADET_AGE = MAX_CADET_AGE + 20  ## might be backfilling
-
-
-def verify_cadet_and_warn(cadet: Cadet) -> str:
-    print("Checking %s" % cadet)
-    warn_text = ""
-    if len(cadet.surname) < 4:
-        warn_text += "Surname seems too short. "
-    if len(cadet.first_name) < 4:
-        warn_text += "First name seems too short. "
-    if is_cadet_age_surprising(cadet):
-        warn_text += "Cadet seems awfully old or young."
-    warn_text += warning_for_similar_cadets(cadet=cadet)
-
-    if len(warn_text) > 0:
-        warn_text = "DOUBLE CHECK BEFORE ADDING: " + warn_text
-
-    return warn_text
-
-
-def warning_for_similar_cadets(cadet: Cadet) -> str:
-    similar_cadets = list_of_similar_cadets(cadet)
-
-    if len(similar_cadets) > 0:
-        similar_cadets_str = ", ".join(
-            [str(other_cadet) for other_cadet in similar_cadets]
-        )
-        ## Some similar cadets, let's see if it's a match
-        return "Following cadets look awfully similar:\n %s" % similar_cadets_str
-    else:
-        return ""
-
-
-def list_of_similar_cadets(cadet: Cadet) -> list:
-    print("Checking for similar %s" % cadet)
-    existing_cadets = data.data_list_of_cadets.read()
-    similar_cadets = existing_cadets.similar_cadets(
-        cadet,
-        name_threshold=SIMILARITY_LEVEL_TO_WARN_NAME,
-        dob_threshold=SIMILARITY_LEVEL_TO_WARN_DATE,
-    )
-
-    return similar_cadets
-
-
-def add_new_verified_cadet(cadet: Cadet):
-    data.data_list_of_cadets.add(cadet)

@@ -76,12 +76,12 @@ volunteer_skills:
   - "DBS"
   - "SI"
 volunteer_locations:
-  - Lake:
+  Lake:
     - "Deputy skipper"
     - "Lake safety helm"
     - "Lake safety crew"
     - "Lake helper"
-  - River:
+  River:
     - "River safety lead"
     - "River safety helm"
     - "River safety crew"

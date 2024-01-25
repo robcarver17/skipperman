@@ -36,6 +36,21 @@ class GenericSkipperManObject:
 
         return cls(**dict_of_nones)
 
+
+    @classmethod
+    def from_str(cls, object_as_str: str):
+        as_list_of_str = object_as_str.split(",")
+        as_list_of_key_value_pairs = [key_value_as_str.split(":") for key_value_as_str in as_list_of_str]
+        as_dict = dict([(key,value) for key,value in as_list_of_key_value_pairs])
+
+        return cls.from_dict(as_dict)
+
+    def to_str(self)-> str:
+        as_str_dict = self.as_str_dict()
+        as_list_of_str = ["%s:%s" % (key, value) for key,value in as_str_dict.items()]
+
+        return ",".join(as_list_of_str)
+
     def as_df(self) -> pd.DataFrame:
         as_str_dict = self.as_str_dict()
         return pd.DataFrame({KEYS: as_str_dict.keys(), VALUES: as_str_dict.values()})
@@ -133,7 +148,7 @@ def _transform_string_into_class_instance(object_class, string):
     return object_class(string)
 
 
-class GenericListOfObjectsNoIds(list):
+class GenericListOfObjects(list):
     def __init__(self, list_of_objects: List[GenericSkipperManObject]):
         super().__init__(list_of_objects)
 
@@ -168,7 +183,7 @@ class GenericListOfObjectsNoIds(list):
         return pd.DataFrame(list_of_dicts)
 
 
-class GenericListOfObjectsWithIds(GenericListOfObjectsNoIds):
+class GenericListOfObjectsWithIds(GenericListOfObjects):
     def __init__(self, list_of_objects: List[GenericSkipperManObjectWithIds]):
         super().__init__(list_of_objects)
 

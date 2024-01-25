@@ -1,8 +1,8 @@
 from app.data_access.configuration.configuration import WILD_APRICOT_FILE_TYPES
-from app.interface.events.constants import WA_FILE, UPLOAD_FILE_BUTTON_LABEL
-from app.interface.flask.state_for_action import StateDataForAction
-from app.interface.html.forms import form_html_wrapper, html_file_input, html_button, BACK_BUTTON_LABEL
-from app.interface.html.html import Html, html_joined_list_as_paragraphs, html_joined_list
+from app.web.events.constants import WA_FILE, UPLOAD_FILE_BUTTON_LABEL
+from app.web.flask.state_for_action import StateDataForAction
+from app.web.html.forms import form_html_wrapper, html_file_input, html_button, BACK_BUTTON_LABEL
+from app.web.html.html import Html, html_joined_list_as_paragraphs, html_joined_list
 from app.objects.events import Event
 
 

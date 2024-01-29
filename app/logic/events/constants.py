@@ -39,9 +39,9 @@ UPLOAD_FILE_BUTTON_LABEL = "Upload selected file"
 
 # update master event rows
 USE_ORIGINAL_DATA_BUTTON_LABEL = "Use original data that we already have"
-USE_NEW_DATA_BUTTON_LABEL = "Use new data imported from WA file"
+USE_NEW_DATA_BUTTON_LABEL = "Use new data imported from latest WA file (recommended)"
 USE_DATA_IN_FORM_BUTTON_LABEL = (
-    "Use data as edited in form above (will be newest data if not edited)"
+    "Use data as edited in form above (will be newest data from WA file if not edited)"
 )
 
 # allocation
@@ -122,6 +122,7 @@ SORT_ORDER = "sort_order"
 
 ## field names row
 ROW_STATUS = "row_status"
+ATTENDANCE = "attendance"
 SORT_BY_START_ASC = "Sort by start date, ascending"
 SORT_BY_START_DSC = "Sort by start date, descending"
 SORT_BY_NAME = "Sort by event name"

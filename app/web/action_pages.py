@@ -10,7 +10,7 @@ from app.web.html.process_abstract_form_to_html import (
     process_abstract_form_to_html,
 )
 from app.web.flask.flash import get_html_of_flashed_messages
-from app.web.flask.interface import flaskInterface
+from app.web.flask.flask_interface import flaskInterface
 from flask import send_file, Response
 
 

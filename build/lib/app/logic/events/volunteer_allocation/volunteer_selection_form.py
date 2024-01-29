@@ -3,9 +3,10 @@ from app.objects.abstract_objects.abstract_form import Form
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.logic.abstract_interface import abstractInterface
-from app.logic.events.volunteer_allocation.relevant_information import RelevantInformationForVolunteerIdentification
-from app.backend.volunteers import get_list_of_volunteers, SORT_BY_SURNAME
-from app.logic.volunteers.add_volunteer import verify_volunteer_and_warn, VolunteerAndVerificationText, get_add_volunteer_form_with_information_passed, verify_form_with_volunteer_details, list_of_similar_volunteers
+from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteerIdentification
+from app.backend.volunteers import get_list_of_volunteers, SORT_BY_SURNAME, list_of_similar_volunteers, \
+    verify_volunteer_and_warn
+from app.logic.volunteers.add_volunteer import VolunteerAndVerificationText, get_add_volunteer_form_with_information_passed, verify_form_with_volunteer_details
 from app.backend.cadets import get_list_of_cadets, get_cadet_from_id
 
 from app.objects.volunteers import Volunteer

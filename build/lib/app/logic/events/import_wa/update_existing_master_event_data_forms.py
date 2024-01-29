@@ -5,7 +5,7 @@ from app.logic.events.constants import (
     ROW_STATUS,
     CADET_ID,
 )
-from app.logic.events.update_master.status_fields_in_master_event_data_update import dropdown_input_for_status_change
+from app.backend.form_utils import dropdown_input_for_status_change
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import (

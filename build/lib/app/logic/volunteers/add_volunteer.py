@@ -2,9 +2,11 @@ from copy import copy
 from dataclasses import dataclass
 from typing import Union
 
-from app.data_access.data import data
+from app.backend.volunteers import add_new_verified_volunteer, \
+    verify_volunteer_and_warn
 from app.logic.abstract_logic_api import initial_state_form
 from app.objects.volunteers import Volunteer, default_volunteer
+
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -15,7 +17,17 @@ from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _____
 from app.logic.abstract_interface import abstractInterface, form_with_message_and_finished_button
 from app.logic.volunteers.constants import *
 
-def display_form_add_volunteer(    interface: abstractInterface, first_time_displayed: bool = True
+def display_form_add_volunteer(    interface: abstractInterface
+) -> Form:
+    ## Called by logic API only once, subsequently we are responding to button presses
+    return present_form_add_volunteer_and_respond_to_input(interface=interface, first_time_displayed=True)
+
+def post_form_add_volunteer(interface: abstractInterface) -> Union[Form, NewForm]:
+    ## Called by Logic API when buttons pressed
+    return present_form_add_volunteer_and_respond_to_input(interface=interface, first_time_displayed=False)
+
+
+def present_form_add_volunteer_and_respond_to_input(    interface: abstractInterface, first_time_displayed: bool = True
 ) -> Form:
 
     if first_time_displayed:
@@ -38,6 +50,7 @@ def display_form_add_volunteer(    interface: abstractInterface, first_time_disp
         return initial_state_form
 
 
+
 def get_add_volunteer_form(    interface: abstractInterface, first_time_displayed: bool = True) -> Form:
     if first_time_displayed:
         footer_buttons = get_footer_buttons_for_add_volunteer_form(form_is_empty=True)
@@ -51,14 +64,6 @@ def get_add_volunteer_form(    interface: abstractInterface, first_time_displaye
             volunteer_and_text=volunteer_and_text,
             footer_buttons=footer_buttons,
         )
-
-
-
-def post_form_add_volunteer(interface: abstractInterface) -> Union[Form, NewForm]:
-    return display_form_add_volunteer(interface, first_time_displayed=False)
-
-
-
 
 
 @dataclass
@@ -77,12 +82,10 @@ default_volunteer_and_text = VolunteerAndVerificationText(
 
 
 
-
-
 def get_add_volunteer_form_with_information_passed(
     footer_buttons: Union[Line, ListOfLines],
     header_text: ListOfLines = "Add a new volunteer",
-    volunteer_and_text: VolunteerAndVerificationText = default_volunteer_and_text,
+    volunteer_and_text: VolunteerAndVerificationText = default_volunteer_and_text, ## if blank
 ) -> Form:
 
     form_fields = form_fields_for_add_volunteer(volunteer_and_text.volunteer)
@@ -123,7 +126,7 @@ def verify_form_with_volunteer_details(
     except Exception as e:
         volunteer = copy(default)
         verify_text = (
-            "Doesn't appear to be a valid cadet (wrong date time in old browser?) error code %s"
+            "Doesn't appear to be a valid volunteer error code %s"
             % str(e)
         )
 
@@ -172,41 +175,3 @@ def get_footer_buttons_for_add_volunteer_form(form_is_empty: bool) -> Line:
 
 
 
-def verify_volunteer_and_warn(volunteer: Volunteer) -> str:
-    warn_text = ""
-    if len(volunteer.surname) < 4:
-        warn_text += "Surname seems too short. "
-    if len(volunteer.first_name) < 4:
-        warn_text += "First name seems too short. "
-    warn_text += warning_for_similar_volunteers(volunteer)
-
-    if len(warn_text) > 0:
-        warn_text = "DOUBLE CHECK BEFORE ADDING: " + warn_text
-
-    return warn_text
-
-
-def warning_for_similar_volunteers(volunteer: Volunteer) -> str:
-    similar_volunteers = list_of_similar_volunteers(volunteer)
-
-    if len(similar_volunteers) > 0:
-        similar_volunteers_str = ", ".join(
-            [str(other_volunteer) for other_volunteer in similar_volunteers]
-        )
-        ## Some similar cadets, let's see if it's a match
-        return "Following existing volunteers look awfully similar:\n %s" % similar_volunteers_str
-    else:
-        return ""
-
-
-def list_of_similar_volunteers(volunteer: Volunteer) -> list:
-    existing_volunteers = data.data_list_of_volunteers.read()
-    similar_volunteers = existing_volunteers.similar_volunteers(
-        volunteer=volunteer
-    )
-
-    return similar_volunteers
-
-
-def add_new_verified_volunteer(volunteer: Volunteer):
-    data.data_list_of_volunteers.add(volunteer)

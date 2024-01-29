@@ -3,7 +3,6 @@ from app.backend.load_and_save_wa_mapped_events import (
     save_master_event,
     load_existing_mapped_wa_event_with_ids,
 )
-from app.objects.field_list import FIELDS_TO_FLAG_WHEN_COMPARING_WA_DIFF
 
 from app.objects.master_event import (
     get_row_of_master_event_from_mapped_row_with_idx_and_status,
@@ -34,7 +33,8 @@ def add_new_row_to_master_event_data(
     event: Event, row_in_mapped_wa_event_with_id: RowInMappedWAEventWithId
 ):
     row_of_master_event = get_row_of_master_event_from_mapped_row_with_idx_and_status(
-        row_in_mapped_wa_event_with_id=row_in_mapped_wa_event_with_id
+        row_in_mapped_wa_event_with_id=row_in_mapped_wa_event_with_id,
+        event=event
     )
     print("Adding row %s to master event" % str(row_of_master_event))
     master_event = load_master_event(event)
@@ -129,45 +129,12 @@ def any_important_difference_between_rows(
     new_row_in_mapped_wa_event_with_status: RowInMasterEvent,
     existing_row_in_master_event: RowInMasterEvent,
 ) -> bool:
-    if (
-        new_row_in_mapped_wa_event_with_status.status
-        != existing_row_in_master_event.status
-    ):
-        return True
+    status_match=new_row_in_mapped_wa_event_with_status.status\
+        == existing_row_in_master_event.status
+    attendance_match = new_row_in_mapped_wa_event_with_status.attendance \
+        == existing_row_in_master_event.attendance
 
-    dict_of_other_diffs = get_dict_of_diffs_where_significant_values_changed(
-        new_row_in_mapped_wa_event_with_status=new_row_in_mapped_wa_event_with_status,
-        existing_row_in_master_event=existing_row_in_master_event,
-    )
-
-    if len(dict_of_other_diffs) > 0:
-        return True
-
-    return False
-
-
-def get_dict_of_diffs_where_significant_values_changed(
-    new_row_in_mapped_wa_event_with_status: RowInMasterEvent,
-    existing_row_in_master_event: RowInMasterEvent,
-):
-    print(
-        "All diffs %s"
-        % str(
-            existing_row_in_master_event.dict_of_row_diffs_in_rowdata(
-                new_row_in_mapped_wa_event_with_status,
-            )
-        )
-    )
-
-    dict_of_dict_diffs = existing_row_in_master_event.dict_of_row_diffs_in_rowdata(
-        new_row_in_mapped_wa_event_with_status,
-        comparing_fields=FIELDS_TO_FLAG_WHEN_COMPARING_WA_DIFF,
-    )
-
-    return dict_of_dict_diffs
-
-def get_list_of_field_names_from_dict_of_dict_diffs(dict_of_dict_diffs: dict) -> list:
-    return [field_name for field_name in dict_of_dict_diffs.keys()]
+    return not (status_match and attendance_match)
 
 
 def get_row_in_mapped_event_for_cadet_id(

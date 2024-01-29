@@ -1,5 +1,5 @@
 from typing import Union
-from app.logic.events.events_in_state import get_list_of_events, confirm_event_exists, update_state_for_specific_event
+from app.logic.events.events_in_state import get_list_of_events, confirm_event_exists, update_state_for_specific_event_given_event_name
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -53,7 +53,7 @@ def post_form_view_of_events(interface: abstractInterface) -> Union[Form, NewFor
         try:
             confirm_event_exists(event_name_selected)
             ## so whilst we are in this stage, we know which event we are talking about
-            update_state_for_specific_event(
+            update_state_for_specific_event_given_event_name(
                 interface=interface, event_selected=event_name_selected
             )
         except:

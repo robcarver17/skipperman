@@ -1,11 +1,14 @@
 from app.backend.load_and_save_wa_mapped_events import load_master_event
+from app.backend.update_master_event_data import get_row_in_master_event_for_cadet_id
 from app.logic.events.events_in_state import get_event_from_state
-from app.backend.volunteer_allocation import CADET_ID
 from app.logic.abstract_interface import abstractInterface
+from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer, \
+    get_relevant_information_for_volunteer
 from app.objects.constants import missing_data, NoMoreData
 from app.objects.events import Event
 from app.objects.field_list import LIST_OF_VOLUNTEER_FIELDS
 
+CADET_ID = "cadet_id"
 
 def get_and_save_next_cadet_id(interface: abstractInterface) -> str:
     current_id = get_current_cadet_id(interface)
@@ -97,3 +100,16 @@ def save_allocated_volunteer_id(interface: abstractInterface, id:str):
 
 def clear_allocated_volunteer_id(interface: abstractInterface):
     interface.clear_persistent_value(ALLOCATED_VOLUNTEER_ID)
+
+
+def get_relevant_information_for_current_volunteer(interface: abstractInterface) -> RelevantInformationForVolunteer:
+    cadet_id = get_current_cadet_id(interface)
+    volunteer_index = get_volunteer_index(interface)
+    event = get_event_from_state(interface)
+    row_in_master_event = get_row_in_master_event_for_cadet_id(
+        event=event, cadet_id=cadet_id
+    )
+
+    relevant_information = get_relevant_information_for_volunteer(row_in_master_event=row_in_master_event, volunteer_index=volunteer_index)
+
+    return relevant_information

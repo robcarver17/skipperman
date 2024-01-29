@@ -10,7 +10,7 @@ from app.data_access.configuration.configuration import (
 from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds
 from app.objects.utils import transform_date_into_str, similar
 from app.objects.constants import arg_not_passed, DAYS_IN_YEAR
-
+from app.objects.utils import union_of_x_and_y
 
 @dataclass
 class Cadet(GenericSkipperManObjectWithIds):
@@ -62,6 +62,9 @@ class Cadet(GenericSkipperManObjectWithIds):
     def similarity_name(self, other_cadet: "Cadet") -> float:
         return similar(self.name, other_cadet.name)
 
+    def similarity_surname(self, other_cadet: "Cadet") -> float:
+        return similar(self.surname, other_cadet.surname)
+
     def similarity_dob(self, other_cadet: "Cadet") -> float:
         return similar(self._date_of_birth_as_str, other_cadet._date_of_birth_as_str)
 
@@ -92,20 +95,38 @@ class ListOfCadets(GenericListOfObjectsWithIds):
         name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME,
         dob_threshold: float = SIMILARITY_LEVEL_TO_WARN_DATE,
     ) -> "ListOfCadets":
-        similar_dob = [
-            other_cadet
-            for other_cadet in self
-            if cadet.similarity_dob(other_cadet) > dob_threshold
-        ]
+        similar_dob = self.similar_dob(cadet, dob_threshold=dob_threshold)
+        similar_names = self.similar_names(cadet, name_threshold=name_threshold)
+        joint_list_of_similar_cadets = union_of_x_and_y(similar_names, similar_dob)
+
+        return ListOfCadets(joint_list_of_similar_cadets)
+
+    def similar_names(self, cadet: Cadet, name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME,):
         similar_names = [
             other_cadet
             for other_cadet in self
             if cadet.similarity_name(other_cadet) > name_threshold
         ]
 
-        joint_list_of_similar_cadets = list(set(similar_dob + similar_names))
+        return ListOfCadets(similar_names)
 
-        return ListOfCadets(joint_list_of_similar_cadets)
+    def similar_dob(self, cadet: Cadet, dob_threshold: float = SIMILARITY_LEVEL_TO_WARN_DATE,):
+        similar_dob = [
+            other_cadet
+            for other_cadet in self
+            if cadet.similarity_dob(other_cadet) > dob_threshold
+        ]
+
+        return ListOfCadets(similar_dob)
+
+    def similar_surnames(self, cadet: Cadet, name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME,):
+        similar_surnames = [
+            other_cadet
+            for other_cadet in self
+            if cadet.similarity_surname(other_cadet) > name_threshold
+        ]
+
+        return ListOfCadets(similar_surnames)
 
 
 def is_cadet_age_surprising(cadet: Cadet):

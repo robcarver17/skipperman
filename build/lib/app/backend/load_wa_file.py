@@ -62,7 +62,7 @@ def get_event_id_from_wa_df(wa_as_df: pd.DataFrame) -> str:
             "Column %s in WA file does not contain identical event IDs"
             % WILD_APRICOT_EVENT_ID
         )
-    return unique_id
+    return str(unique_id)
 
 
 def does_raw_event_file_exist(event_id: str):

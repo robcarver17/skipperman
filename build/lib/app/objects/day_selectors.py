@@ -11,11 +11,26 @@ def day_given_datetime(some_day: datetime.date) -> Day:
     return all_possible_days[some_day.weekday()]
 
 class DaySelector(Dict[Day, bool]):
-    pass
+    def __repr__(self):
+        return self.__str__()
+
+    def __str__(self):
+        days = [day.name for day, selected in self.items() if selected]
+
+        return ", ".join(days)
+
+    def __eq__(self, other: 'DaySelector'):
+        for day in all_possible_days:
+            if other.get(day, False)!=self.get(day, False):
+                return False
+
+        return True
 
 ALL_DAYS_SELECTED = dict([(day, True) for day in all_possible_days])
 NO_DAYS_SELECTED = dict([(day, False) for day in all_possible_days])
 
+def no_days_selected(day_selector: DaySelector, possible_days: list):
+    return not any([day_selector.get(day, False) for day in possible_days])
 
 def weekend_day_selector_from_text(text: str) -> DaySelector: ## we read WA files like this but don't write them internally
     if text=="Saturday only":
@@ -30,6 +45,7 @@ selection_dict = dict(Mon= Day.Monday, Tues=Day.Tuesday, Wed=Day.Wednesday, Thur
 inverse_selection_dict = {value: key for key, value in selection_dict.items()}
 
 def any_day_selector_from_short_form_text(text: str) -> DaySelector:
+
     starting_dict = dict()
     for day_to_find, day_to_select in selection_dict.items():
         if day_to_find in text:

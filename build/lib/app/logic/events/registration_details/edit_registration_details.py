@@ -1,7 +1,7 @@
 from typing import Union
 
 from app.logic.events.registration_details.registration_details_form import get_registration_data, \
-    get_top_row_for_event, row_for_cadet_in_event
+    get_top_row_for_table_of_registration_details, row_for_cadet_in_event
 from app.logic.events.registration_details.parse_registration_details_form import parse_registration_details_from_form
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -70,7 +70,7 @@ def get_registration_details_inner_form_for_event(
         sort_order: str
 ) -> Table:
     registration_details = get_registration_data(event=event, sort_order=sort_order)
-    top_row = get_top_row_for_event(all_columns=registration_details.all_columns)
+    top_row = get_top_row_for_table_of_registration_details(all_columns=registration_details.all_columns_excluding_special_fields)
     rows_in_table = [
         row_for_cadet_in_event(row_in_event=row_in_event, registration_details=registration_details)
                      for row_in_event in registration_details.master_event_details]

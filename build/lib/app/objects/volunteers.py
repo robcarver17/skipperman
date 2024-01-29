@@ -9,7 +9,7 @@ VOLUNTEER_SKILLS
 from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds, GenericListOfObjects, GenericSkipperManObject
 from app.objects.utils import similar
 from app.objects.constants import arg_not_passed
-
+from app.objects.constants import missing_data
 
 @dataclass
 class Volunteer(GenericSkipperManObjectWithIds):
@@ -42,6 +42,8 @@ class Volunteer(GenericSkipperManObjectWithIds):
     def similarity_name(self, other_volunteer: "Volunteer") -> float:
         return similar(self.name, other_volunteer.name)
 
+    def similarity_surname(self, other_volunteer: "Volunteer") -> float:
+        return similar(self.surname, other_volunteer.surname)
 
 
 class ListOfVolunteers(GenericListOfObjectsWithIds):
@@ -51,7 +53,10 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
         return Volunteer
 
     def matching_volunteer(self, volunteer: Volunteer) -> Volunteer:
-        return self[self.index(volunteer)]
+        try:
+            return self[self.index(volunteer)]
+        except ValueError:
+            return missing_data
 
     def similar_volunteers(
         self,

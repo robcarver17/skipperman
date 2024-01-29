@@ -77,7 +77,7 @@ class Group:
 
 
 @dataclass
-class CadetIdWithGroup(GenericListOfObjectsWithIds):
+class CadetIdWithGroup(GenericSkipperManObjectWithIds):
     cadet_id: str
     group: Group
 

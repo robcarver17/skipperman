@@ -56,17 +56,21 @@ def process_next_row(
             "Error code %s cannot identify cadet from row %s: file is probably corrupt re-upload"
             % (str(e), str(next_row)),
         )
+    return process_next_row_with_cadet_from_row(cadet=cadet,
+                                                interface=interface)
 
+def process_next_row_with_cadet_from_row(
+    interface: abstractInterface,
+    cadet: Cadet
+) -> Form:
     list_of_cadets = get_list_of_cadets()
     if cadet in list_of_cadets:
-        ## MATCHED, WE NEED TO GET THE ID
         matched_cadet_with_id = list_of_cadets.matching_cadet(cadet)
         print("Cadet %s matched id is %s" % (str(cadet), matched_cadet_with_id.id))
         return process_row_when_cadet_matched(
             interface=interface, cadet=matched_cadet_with_id
         )
     else:
-        ## NOT MATCHED
         print("Cadet %s not matched" % str(cadet))
         return process_row_when_cadet_unmatched(interface=interface, cadet=cadet)
 
@@ -98,8 +102,6 @@ def process_row_when_cadet_unmatched(
 def post_form_iteratively_add_cadets_during_import(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
-    ## Called by post on view events form, so both stage and event name are set
-    ## don't need to check for post as will always be one
     last_button_pressed = interface.last_button_pressed()
     if (
         last_button_pressed == CHECK_CADET_BUTTON_LABEL

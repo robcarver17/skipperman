@@ -1,8 +1,7 @@
 
 from typing import Union
 
-from app.data_access.data import data
-from app.backend.cadets import get_list_of_cadets_as_str, get_cadet_from_list_of_cadets
+from app.backend.cadets import get_list_of_cadets_as_str_similar_to_name_first, get_cadet_from_list_of_cadets
 from app.objects.abstract_objects.abstract_form import Form, NewForm, dropDownInput
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
@@ -11,7 +10,7 @@ from app.logic.abstract_interface import (
     abstractInterface,
 )
 from app.logic.volunteers.constants import *
-from app.backend.volunteers import get_connected_cadets
+from app.backend.volunteers import get_connected_cadets, delete_connection_in_data, add_volunteer_connection_to_cadet_in_master_list_of_volunteers
 from app.logic.volunteers.volunteer_state import get_volunteer_from_state
 from app.objects.volunteers import Volunteer
 from app.objects.cadets import Cadet
@@ -24,7 +23,7 @@ def display_form_edit_cadet_volunteer_connections(
         volunteer = get_volunteer_from_state(interface)
     except:
         interface.log_error(
-            "Cadet selected no longer in list- someone else has deleted or file corruption?"
+            "Volunteer selected no longer in list- someone else has deleted or file corruption?"
         )
         return initial_state_form
 
@@ -41,7 +40,8 @@ def form_to_edit_connections(volunteer: Volunteer,
 
     return Form([
         ListOfLines([
-            "Edit volunteer and cadet connections (used to avoid putting cadets/parents together):",
+            "Edit volunteer and cadet connections (used to avoid putting cadets/parents together and to find volunteers):",
+            "Note: This will not automatically connect volunteers and cadets in events, nor will deleting a connection remove the connection in an event",
             _______________,
             existing_entries,
             new_entries,
@@ -70,8 +70,7 @@ def cadet_from_button_str(button_str: str) -> Cadet:
     return get_cadet_from_list_of_cadets(cadet_selected)
 
 def row_for_new_entries(volunteer: Volunteer) -> Line:
-    list_of_cadets_as_str =get_list_of_cadets_as_str()
-    list_of_cadets_as_str.sort()
+    list_of_cadets_as_str =get_list_of_cadets_as_str_similar_to_name_first(volunteer)
     list_of_cadets_as_str.insert(0, CADET_FILLER)
     dict_of_options = dict([(cadet_str, cadet_str) for cadet_str in list_of_cadets_as_str])
     drop_down = dropDownInput(input_label="Add new connection",
@@ -80,6 +79,8 @@ def row_for_new_entries(volunteer: Volunteer) -> Line:
                               input_name=CONNECTION,
                               )
     return Line([drop_down, Button(ADD_CONNECTION_BUTTON_LABEL)])
+
+
 
 CADET_FILLER = "Choose cadet from dropdown and hit add to add connection"
 
@@ -117,12 +118,7 @@ def add_connection_from_form(interface: abstractInterface):
         interface.log_error("You have to select a cadet from the dropdown before adding")
         return
     selected_cadet = get_cadet_from_list_of_cadets(selected_cadet_as_str)
-    add_connection_to_data(cadet=selected_cadet, volunteer=volunteer)
-
-def add_connection_to_data(cadet: Cadet, volunteer: Volunteer):
-    existing_connections = data.data_list_of_cadet_volunteer_associations.read()
-    existing_connections.add(cadet_id=cadet.id, volunteer_id=volunteer.id)
-    data.data_list_of_cadet_volunteer_associations.write(existing_connections)
+    add_volunteer_connection_to_cadet_in_master_list_of_volunteers(cadet=selected_cadet, volunteer=volunteer)
 
 
 def delete_connection_given_form(interface: abstractInterface):
@@ -131,7 +127,3 @@ def delete_connection_given_form(interface: abstractInterface):
     volunteer = get_volunteer_from_state(interface)
     delete_connection_in_data(cadet=cadet, volunteer=volunteer)
 
-def delete_connection_in_data(cadet: Cadet, volunteer: Volunteer):
-    existing_connections = data.data_list_of_cadet_volunteer_associations.read()
-    existing_connections.delete(cadet_id=cadet.id, volunteer_id=volunteer.id)
-    data.data_list_of_cadet_volunteer_associations.write(existing_connections)

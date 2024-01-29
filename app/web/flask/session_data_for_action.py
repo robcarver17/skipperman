@@ -27,7 +27,10 @@ class SessionDataForAction(object):
 
     def delete_persistent_value(self, key):
         other_data = self.other_data
-        other_data.pop(key)
+        try:
+            other_data.pop(key)
+        except:
+            print("%s not in persistent storage")
 
     def list_of_keys_with_persistent_values(self) -> list:
         other_data = self.other_data

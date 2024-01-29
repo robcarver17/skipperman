@@ -77,46 +77,6 @@ class SingleDiff:
     new_value: object
 
 
-class DictOfDictDiffs(dict):
-    def __str__(self):
-        return string_of_dict_diffs(self)
-
-
-def create_dict_of_dict_diffs(
-    dict_old: dict, dict_new: dict, comparing_fields: list = arg_not_passed
-) -> DictOfDictDiffs:
-    # dict
-    # throws exception if missing or added fields
-    if comparing_fields is arg_not_passed:
-        keys_old = list(dict_old.keys())
-        keys_new = list(dict_new.keys())
-        try:
-            assert set(keys_old) == set(keys_new)
-        except:
-            raise Exception(
-                "Have to have matching keys to automatically see differences"
-            )
-        comparing_fields = keys_new
-
-    dict_of_diffs = {}
-    for key in comparing_fields:
-        old_value = dict_old[key]
-        new_value = dict_new[key]
-        if old_value != new_value:
-            dict_of_diffs[key] = SingleDiff(old_value=old_value, new_value=new_value)
-
-    return DictOfDictDiffs(dict_of_diffs)
-
-
-def string_of_dict_diffs(dict_of_diffs: DictOfDictDiffs) -> str:
-    full_string = [
-        "For %s, old value is %s new value is %s"
-        % (key, diff.old_value, diff.new_value)
-        for key, diff in dict_of_diffs.items()
-    ]
-    return "\n".join(full_string)
-
-
 def clean_up_dict_with_nans(some_dict) -> dict:
     for key, value in some_dict.items():
         try:

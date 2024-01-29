@@ -26,7 +26,7 @@ from app.logic.forms.reorder_form import reorder_table, reorderFormInterface
 from app.logic.forms.reorder_matrix import reorder_matrix, reorderMatrixInterface
 from app.logic.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form
-from app.logic.events.events_in_state import get_event_from_state, confirm_event_exists, update_state_for_specific_event
+from app.logic.events.events_in_state import get_event_from_state, confirm_event_exists, update_state_for_specific_event_given_event_name
 from app.logic.events.allocation.backend import get_df_for_reporting_allocations_with_flags
 
 from app.logic.reporting.constants import *
@@ -67,7 +67,7 @@ def post_form_report_group_allocation(interface: abstractInterface) -> Union[For
         return initial_state_form
 
     ## so whilst we are in this stage, we know which event we are talking about
-    update_state_for_specific_event(
+    update_state_for_specific_event_given_event_name(
         interface=interface, event_selected=event_name_selected)
 
     return NewForm(REPORT_ADDITIONAL_OPTIONS_FOR_ALLOCATION_REPORT)

@@ -29,7 +29,7 @@ from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _____
 from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, cancel_button, back_button, Button
 from app.logic.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form
-from app.logic.events.events_in_state import get_event_from_state, confirm_event_exists, update_state_for_specific_event
+from app.logic.events.events_in_state import get_event_from_state, confirm_event_exists, update_state_for_specific_event_given_event_name
 
 from app.logic.reporting.constants import *
 from app.logic.events.view_events import display_list_of_events_with_buttons
@@ -63,7 +63,7 @@ def post_form_report_group_allocation(
         return initial_state_form
 
     ## so whilst we are in this stage, we know which event we are talking about
-    update_state_for_specific_event(
+    update_state_for_specific_event_given_event_name(
         interface=interface, event_selected=event_name_selected
     )
 

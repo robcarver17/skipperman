@@ -4,7 +4,7 @@ from app.objects.abstract_objects.abstract_form import Form, intInput, fileInput
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.web.html.html import Html, html_joined_list_as_lines, html_paragraph_line_wrapper
-from app.web.flask.interface import flaskInterface
+from app.web.flask.flask_interface import flaskInterface
 from app.web.html.forms import form_html_wrapper, html_button, html_form_text_input, html_radio_input, html_file_input, html_int_input, html_date_input
 
 def process_abstract_form(form: Form, interface: flaskInterface) -> Html:

@@ -33,7 +33,7 @@ class ListOfWAEventMaps(GenericListOfObjects):
             raise NO_EVENT_ID
 
         idx = self.list_of_event_ids.index(event_id)
-        return self.list_of_wa_ids[idx]
+        return str(self.list_of_wa_ids[idx])
 
     def get_event_id_for_wa(self, wa_id: str) -> str:
         try:

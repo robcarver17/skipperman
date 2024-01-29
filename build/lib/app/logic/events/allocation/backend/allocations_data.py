@@ -1,7 +1,5 @@
 from app.data_access.data import data
-from app.logic.events.allocation.backend.load_and_save_allocations_for_events import (
-    load_allocation_for_event,
-)
+from app.backend.cadet_event_allocations import load_allocation_for_event
 from app.backend.load_and_save_wa_mapped_events import (
     load_master_event,
 )

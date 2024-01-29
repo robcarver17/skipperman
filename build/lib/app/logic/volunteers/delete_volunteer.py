@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.data_access.data import data
+from app.backend.volunteers import delete_a_volunteer
 from app.logic.volunteers.volunteer_state import get_volunteer_from_state
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import Button
@@ -53,7 +53,3 @@ def post_form_delete_individual_volunteer(
         delete_a_volunteer(volunteer)
         return initial_state_form
 
-def delete_a_volunteer(volunteer):
-    all_volunteers= data.data_list_of_volunteers.read()
-    all_volunteers.pop_with_id(volunteer.id)
-    data.data_list_of_volunteers.write(all_volunteers)

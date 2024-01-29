@@ -1,27 +1,45 @@
 wa_field,skipperman_field
-First name,registered_by_first_name
-Last name,registered_by_last_name
-Email for Club Communications,registered_by_email
-Primary Telephone Contact,registered_by_phone
-Named Responsible Adult for the event,responsible_adult_name
-Emergency Contact Number,responsible_adult_number
-Cadet First Name,cadet_first_name
-Cadet Last Name,cadet_second_name
-Cadet Date of Birth,cadet_date_of_birth
-Total fee incl. extra costs and guests registration fees,registration_total_fee
-Payment state,registration_payment_status
-Event registration date,registration_date
-Member,registered_by_member
-Internal notes,registration_internal_notes
-Can you or someone else volunteer as an adult helper?,volunteer_status
 Adult Helper 1 Availability,volunteer1_availability_all_days
+Adult Helper 1 Food Preferences/Allergies,volunteer1_food_preference
 Adult Helper 1 Full Name,volunteer1_name
 Adult helper 1 preferred duties,volunteer1_duties
 Adult helper 1: Would you rather do the same type of duty all week or varied?,volunteer1_same_or_varied
-Adult Helper 1 Food Preferences/Allergies,volunteer1_food_preference
 Adult Helper 2 Availability,volunteer2_availability_all_days
+Adult Helper 2 Food Preferences/Allergies,volunteer2_food_preference
 Adult Helper 2 Full Name,volunteer2_name
 Adult helper 2 preferred duties,volunteer2_duties
 Adult helper 2: Would you rather do the same type of duty all week or varied?,volunteer2_same_or_varied
-Adult Helper 2 Food Preferences/Allergies,volunteer2_food_preference
+Alternative club boat if available,desired_club_boat_if_available
 Cadet Any other information about this cadet including medical conditions?,any_other_information
+Cadet Can you swim at least 25 metres?,cadet_swim_25m
+Cadet Date of Birth,cadet_date_of_birth
+Cadet Do you have a suitable buoyancy aid?,cadet_bouyancy_aid
+Cadet Do you have your own boat?,cadet_own_boat_yes_or_no
+Cadet First Name,cadet_first_name
+Cadet Food Preferences/Allergies,cadet_food_preference
+Cadet Last Name,cadet_second_name
+Cadet Own Boat Class,cadet_own_boat_class
+Cadet Own Boat Sail Number,cadet_own_boat_sail_number
+Cadet Tee Shirt Size,cadet_t_shirt_size
+Can you or someone else volunteer as an adult helper?,volunteer_status
+Email for Club Communications,registered_by_email
+Emergency Contact Number,responsible_adult_number
+Event registration date,registration_date
+First name,registered_by_first_name
+Gala dinner only tickets,food_tickets_gala_dinner
+Group preference,cadet_group_preference
+Highest qualification achieved,cadet_highest_qualification
+"If sailing double-handed, please enter the name of who you are sailing with",cadet_double_handed_partner
+Internal notes,registration_internal_notes
+Last name,registered_by_last_name
+Member,registered_by_member
+Named Responsible Adult for the event,responsible_adult_name
+Number of temporary memberships required,temporary_memberships_required
+Payment state,registration_payment_status
+Primary Telephone Contact,registered_by_phone
+Temporary membership names,temporary_membership_names
+Total fee incl. extra costs and guests registration fees,registration_total_fee
+Weekly food ticket for adult who is volunteering for one day,food_ticket_one_day
+Weekly food ticket for adult who is volunteering for two days,food_ticket_two_days
+Weekly food ticket for child under 16,food_ticket_under16
+Weekly food ticket(s) for adult who is not volunteering,food_ticket_non_volunteer

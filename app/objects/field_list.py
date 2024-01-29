@@ -20,6 +20,27 @@ RESPONSIBLE_ADULT_NUMBER = "responsible_adult_number"
 
 ANY_OTHER_INFORMATION = "any_other_information"
 
+DESIRED_CLUB_BOAT = "desired_club_boat_if_available"
+SWIM_25_METRES = "cadet_swim_25m"
+CADET_BOUYANCY_AID = "cadet_bouyancy_aid"
+CADET_OWN_BOAT = "cadet_own_boat_yes_or_no"
+CADET_OWN_BOAT_CLASS = "cadet_own_boat_class"
+CADET_OWN_BOAT_SAIL_NUMBER = "cadet_own_boat_sail_number"
+CADET_DOUBLE_HANDED_PARTNER = "cadet_double_handed_partner"
+
+CADET_T_SHIRT_SIZE = "cadet_t_shirt_size"
+CADET_GROUP_PREFERENCE = "cadet_group_preference"
+CADET_HIGHEST_QUALIFICATION = "cadet_highest_qualification"
+
+TEMPORARY_MEMBERSHIPS_REQUIRED = "temporary_memberships_required"
+TEMPORARY_MEMBERSHIP_NAMES = "temporary_membership_names"
+
+FOOD_TICKET_ONE_DAY = "food_ticket_one_day"
+FOOD_TICKET_TWO_DAYS ="food_ticket_two_days"
+FOOD_TICKET_CHILD ="food_ticket_under16"
+FOOD_TICKET_ADULT_NOT_VOLUNTEERING ="food_ticket_non_volunteer"
+FOOD_TICKET_GALA_ONLY = "food_tickets_gala_dinner"
+
 VOLUNTEER_STATUS = "volunteer_status"
 
 VOLUNTEER1_AVAILABILITY = "volunteer1_availability_all_days"
@@ -40,6 +61,8 @@ REGISTRATION_TOTAL_FEE = "registration_total_fee"
 REGISTRATION_INTERNAL_NOTES = "registration_internal_notes"
 REGISTERED_BY_MEMBER = "registered_by_member"
 
+CADET_FOOD_PREFERENCE = "cadet_food_preference"
+
 ALL_FIELDS_EXPECTED_IN_WA_FILE_MAPPING = [
     CADET_FIRST_NAME,
 CADET_SURNAME,
@@ -48,7 +71,7 @@ PAYMENT_STATUS,
 REGISTRATION_DATE,
 WEEKEND_DAYS_ATTENDING_INPUT,
 ALL_DAYS_ATTENDING_INPUT,
-
+CADET_FOOD_PREFERENCE,
 RESPONSIBLE_ADULT_NAME,
     RESPONSIBLE_ADULT_NUMBER,
 
@@ -82,58 +105,37 @@ VOLUNTEER2_FOOD_PREFERENCE,
 #### FIXME CHECK ALL REQUIRED
 
 ## following are derived fields, not found in WA data
-CADET_NAME = "Cadet"
-GROUP_STR_NAME = "group"
-ID_NAME = "cadet_id"
-DAYS_ATTENDING = "days_attending"
-CADET_ID = "cadet_id" ## Needed
+CADET_NAME = "Cadet" #### FIXME USED IN REPORTING DELETE
+GROUP_STR_NAME = "group"#### FIXME USED IN REPORTING DELETE
 
-INTERNAL_FIELDS = [CADET_NAME, GROUP_STR_NAME, ID_NAME, DAYS_ATTENDING, CADET_ID]
-
-### THIS MUST BE ACCURATE OR FILE IN/OUT WILL FAIL
+### THIS MUST BE ACCURATE OR WA FILE IN/OUT WILL FAIL
 FIELDS_WITH_DATES = [CADET_DATE_OF_BIRTH]
 FIELDS_WITH_DATETIMES = [REGISTRATION_DATE]
 FIELDS_WITH_INTEGERS = []
-FIELDS_AS_STR = [CADET_ID, RESPONSIBLE_ADULT_NAME, RESPONSIBLE_ADULT_NUMBER]
+FIELDS_AS_STR = [RESPONSIBLE_ADULT_NUMBER] ## Only fields where resolving as natural field would cause problems
 
-SPECIAL_FIELDS = [PAYMENT_STATUS]
 
+## Editable/non editable in registration data page
+
+## VIEW ONLY
 ## Rule of thumb is we do all editing in skipperman, not WA
-## The only things that will change WA are those relating to payment, eg cancellation, change in numbers etc
-## payment status will also change, but this is flagged seperately
-FIELDS_TO_FLAG_WHEN_COMPARING_WA_DIFF = [WEEKEND_DAYS_ATTENDING_INPUT] ## USED
-
-## Editable/non editable
-## VIEW ONLY - REQUIRED??
+## don't include everything just what is required for information purposes
 FIELDS_VIEW_ONLY_IN_EDIT_VIEW = [
-    VOLUNTEER_STATUS,
-    VOLUNTEER1_AVAILABILITY,
-    VOLUNTEER1_WEEKEND_AVAILABILITY,
-    VOLUNTEER1_NAME,
-    VOLUNTEER1_DUTIES,
-    VOLUNTEER1_SAME_OR_VARIED,
-    VOLUNTEER1_FOOD_PREFERENCE,
-    VOLUNTEER2_AVAILABILITY,
-    VOLUNTEER2_WEEKEND_AVAILABILITY,
-    VOLUNTEER2_NAME,
-    VOLUNTEER2_DUTIES,
-    VOLUNTEER2_SAME_OR_VARIED,
-    VOLUNTEER2_FOOD_PREFERENCE,
+    ANY_OTHER_INFORMATION,
+    CADET_FOOD_PREFERENCE,
     REGISTRATION_DATE,
     PAYMENT_STATUS, REGISTRATION_TOTAL_FEE,
     REGISTERED_BY_FIRST_NAME,
     REGISTERED_BY_LAST_NAME,
     REGISTERED_EMAIL,
     REGISTERED_PHONE,
-    REGISTRATION_INTERNAL_NOTES,
-    REGISTERED_BY_MEMBER
+    REGISTRATION_INTERNAL_NOTES
 
 ]
 
-FIELDS_TO_EDIT_IN_EDIT_VIEW = [
+FIELDS_TO_EDIT_IN_EDIT_VIEW = [ ## excludes status, days attending, food preference since these are added afterwards
     RESPONSIBLE_ADULT_NAME,
     RESPONSIBLE_ADULT_NUMBER,
-    DAYS_ATTENDING
     ]
 
 

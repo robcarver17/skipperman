@@ -1,14 +1,14 @@
 import pandas as pd
 
-from app.logic.events.allocation.backend.allocations_data import (
-    get_df_for_reporting_allocations_with_flags,
-)
+from app.backend.cadet_event_allocations import get_unallocated_cadets, get_list_of_cadets_with_groups, \
+    load_allocation_for_event
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_form import File
 from app.logic.abstract_interface import abstractInterface
 from app.logic.reporting.constants import SHOW_FULL_NAMES, INCLUDE_UNALLOCATED_CADETS
 from app.logic.reporting.options.group_order import get_group_order_from_stored_or_df
 from app.logic.reporting.options.arrangements import get_reporting_options
+from app.objects.events import Event
 
 from app.reporting.allocation_report import (
     specific_parameters_for_allocation_report,
@@ -96,3 +96,26 @@ def create_report(interface: abstractInterface) -> File:
     return File(filename)
 
 
+def get_df_for_reporting_allocations_with_flags(
+    event: Event,
+    display_full_names: bool = False,
+    include_unallocated_cadets: bool = False,
+):
+    ## NOTE DOESN'T DEAL WITH WAITING LISTS
+    ##   is a waiting list cadet unallocated, or allocated with a * against their name?
+    ##   at some point report would include club boats
+
+    list_of_cadet_ids_with_groups = load_allocation_for_event(event=event)
+    if include_unallocated_cadets:
+        unallocated_cadets = get_unallocated_cadets(
+            event=event,
+            list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups,
+        )
+        list_of_cadet_ids_with_groups.add_list_of_unallocated_cadets(unallocated_cadets)
+
+    list_of_cadets_with_groups = get_list_of_cadets_with_groups(
+        list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups,
+    )
+    df = list_of_cadets_with_groups.to_df_of_str(display_full_names=display_full_names)
+
+    return df

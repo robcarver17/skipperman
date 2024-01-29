@@ -2,8 +2,6 @@ from typing import List
 import pandas as pd
 
 from app.objects.utils import (
-    DictOfDictDiffs,
-    create_dict_of_dict_diffs,
     clean_up_dict_with_nans,
     transform_df_from_str_to_dates
 )
@@ -14,6 +12,9 @@ from app.objects.constants import arg_not_passed
 
 # can't use generic methods here as based on dataclasses
 class RowInMappedWAEventNoId(dict):
+    def get_item(self, key, default=""):
+        return self.get(key, default)
+
     @classmethod
     def from_external_dict(cls, some_dict: dict):
         some_dict = clean_up_dict_with_nans(some_dict)
@@ -24,12 +25,6 @@ class RowInMappedWAEventNoId(dict):
 
         return row_as_dict
 
-    def dict_of_row_diffs(
-        self, other_dict: dict, comparing_fields=arg_not_passed
-    ) -> DictOfDictDiffs:
-        return create_dict_of_dict_diffs(
-            self, other_dict, comparing_fields=comparing_fields
-        )
 
     @property
     def registration_date(self):

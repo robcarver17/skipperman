@@ -2,7 +2,7 @@ from typing import Union
 
 from app.data_access.data import data
 from app.backend.map_wa_files import is_wa_file_mapping_setup_for_event
-from app.logic.events.allocation.backend.summarise_allocations_data import summarise_allocations_for_event
+from app.backend.summarise_allocations_data import summarise_allocations_for_event
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm

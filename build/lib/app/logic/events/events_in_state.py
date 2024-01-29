@@ -5,14 +5,16 @@ from app.objects.events import Event, ListOfEvents
 
 
 def get_event_from_state(interface: abstractInterface) -> Event:
-    return get_event_from_list_of_events(get_specific_event_str_from_state(interface))
+    list_of_events = get_list_of_events()
+    id = get_event_id_from_state(interface)
+    return list_of_events.has_id(id)
 
 
-def get_specific_event_str_from_state(interface: abstractInterface) -> str:
+def get_event_id_from_state(interface: abstractInterface) -> str:
     return interface.get_persistent_value(EVENT)
 
 
-def get_event_from_list_of_events(event_selected: str) -> Event:
+def get_event_from_list_of_events_given_event_name(event_selected: str) -> Event:
     list_of_events = get_list_of_events()
     list_of_events_as_str = [str(event) for event in list_of_events]
 
@@ -43,5 +45,7 @@ def confirm_event_exists(event_selected):
     assert event_selected in list_of_events_as_str
 
 
-def update_state_for_specific_event(interface: abstractInterface, event_selected: str):
-    interface.set_persistent_value(EVENT, event_selected)
+def update_state_for_specific_event_given_event_name(interface: abstractInterface, event_selected: str):
+    event = get_event_from_list_of_events_given_event_name(event_selected)
+    id = event.id
+    interface.set_persistent_value(EVENT, id)

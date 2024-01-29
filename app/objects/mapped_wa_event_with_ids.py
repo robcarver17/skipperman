@@ -5,12 +5,14 @@ from typing import List
 
 import pandas as pd
 
+from app.objects.food import FoodRequirements, guess_food_requirements_from_food_field
+from app.objects.utils import clean_up_dict_with_nans
 from app.data_access.configuration.configuration import ACTIVE_STATUS, CANCELLED_STATUS
 from app.objects.constants import missing_data
-from app.objects.day_selectors import DaySelector, day_selector_stored_format_from_text, weekend_day_selector_from_text, \
-    any_day_selector_from_short_form_text, ALL_DAYS_SELECTED, day_selector_to_text_in_stored_format
-from app.objects.field_list import PAYMENT_STATUS, DAYS_ATTENDING, WEEKEND_DAYS_ATTENDING_INPUT, \
-    ALL_DAYS_ATTENDING_INPUT
+from app.objects.day_selectors import DaySelector, weekend_day_selector_from_text, \
+    any_day_selector_from_short_form_text
+from app.objects.field_list import PAYMENT_STATUS, WEEKEND_DAYS_ATTENDING_INPUT, \
+    ALL_DAYS_ATTENDING_INPUT, CADET_FOOD_PREFERENCE
 
 from app.objects.mapped_wa_event_no_ids import (
     RowInMappedWAEventNoId,
@@ -18,12 +20,10 @@ from app.objects.mapped_wa_event_no_ids import (
 )
 from app.objects.constants import NoCadets, DuplicateCadets
 
-from app.objects.field_list import CADET_ID
-
+from app.objects.events import Event
 
 RowStatus = Enum("RowStatus", ["Cancelled", "Active", "Deleted"])
 
-STATUS_FIELD = "row_status"
 cancelled_status = RowStatus.Cancelled
 active_status = RowStatus.Active
 deleted_status = RowStatus.Deleted
@@ -31,6 +31,7 @@ deleted_status = RowStatus.Deleted
 all_possible_status = [cancelled_status, active_status, deleted_status]
 
 
+CADET_ID = "cadet_id" ## must match
 @dataclass
 class RowInMappedWAEventWithId:
     cadet_id: str
@@ -42,14 +43,20 @@ class RowInMappedWAEventWithId:
     def as_dict(self):
         data_in_row_as_dict = self.data_in_row.as_dict()
         data_in_row_as_dict.update({CADET_ID: self.cadet_id})
-        translate_attendance_fields_to_text(data_in_row_as_dict)
 
         return data_in_row_as_dict
 
     @classmethod
+    def from_row_without_id(cls, cadet_id: str, data_in_row: RowInMappedWAEventNoId):
+        as_dict = data_in_row.as_dict()
+        as_dict[CADET_ID] = cadet_id
+
+        return cls.from_dict(as_dict)
+
+    @classmethod
     def from_dict(cls, some_dict: dict):
-        cadet_id = some_dict.pop(CADET_ID)
-        some_dict = add_attendance_to_event_row(some_dict)
+        some_dict = clean_up_dict_with_nans(some_dict)
+        cadet_id = str(some_dict.pop(CADET_ID))
 
         return cls(
             cadet_id=cadet_id,
@@ -66,39 +73,19 @@ class RowInMappedWAEventWithId:
         return status in [cancelled_status, deleted_status]
 
 
-def add_attendance_to_event_row(row_as_dict: dict) -> dict:
-    days_attending = get_attendance_selection_from_event_row(row_as_dict)
-    row_as_dict[DAYS_ATTENDING] = days_attending
-
-    return row_as_dict
-
 
 def get_attendance_selection_from_event_row(
-        row_as_dict: dict) -> DaySelector:
+        row: RowInMappedWAEventWithId, event: Event) -> DaySelector:
 
-    if DAYS_ATTENDING in row_as_dict.keys():
-        ## we've already processed days attending, so it will be stored in our internal format
-        days_attending = day_selector_stored_format_from_text(row_as_dict[DAYS_ATTENDING])
+    row_as_dict = row.data_in_row.as_dict()
 
-    elif WEEKEND_DAYS_ATTENDING_INPUT in row_as_dict.keys():
-        days_attending = weekend_day_selector_from_text(row_as_dict[WEEKEND_DAYS_ATTENDING_INPUT])
+    if WEEKEND_DAYS_ATTENDING_INPUT in row_as_dict.keys():
+        return weekend_day_selector_from_text(row_as_dict[WEEKEND_DAYS_ATTENDING_INPUT])
 
     elif ALL_DAYS_ATTENDING_INPUT in row_as_dict.keys():
-        days_attending = any_day_selector_from_short_form_text(row_as_dict[WEEKEND_DAYS_ATTENDING_INPUT])
+        return any_day_selector_from_short_form_text(row_as_dict[WEEKEND_DAYS_ATTENDING_INPUT])
 
-    else:
-        days_attending = ALL_DAYS_SELECTED
-
-    return days_attending
-
-
-def remove_input_fields_from_wa_event_row(row_as_dict: dict):
-    for key in [WEEKEND_DAYS_ATTENDING_INPUT, ALL_DAYS_ATTENDING_INPUT]:
-        row_as_dict.pop(key)
-
-
-def translate_attendance_fields_to_text(row_as_dict: dict):
-    row_as_dict[DAYS_ATTENDING] = day_selector_to_text_in_stored_format(row_as_dict[DAYS_ATTENDING])
+    return event.day_selector_with_covered_days()
 
 
 def get_status_from_row_of_mapped_wa_event_data(
@@ -149,17 +136,13 @@ class MappedWAEventWithIDs(list):
         current_row = self.get_row_with_timestamp(timestamp)
         current_row.data_in_row = data
 
-    def add_new_rows(self, list_of_rows: "MappedWAEventWithIDs"):
-        ## new rows should be on top eg first
-        [self.add_row(new_row) for new_row in list_of_rows]
-
     def add_row(self, new_row: RowInMappedWAEventWithId):
         self.insert(0, new_row)
 
     def delete_list_of_rows_with_timestamps(self, list_of_timestamps: list):
-        [self.delete_row_with_timetsamps(timestamp) for timestamp in list_of_timestamps]
+        [self.delete_row_with_timestamps(timestamp) for timestamp in list_of_timestamps]
 
-    def delete_row_with_timetsamps(self, timestamp):
+    def delete_row_with_timestamps(self, timestamp):
         list_of_timestamps = self.list_of_timestamps()
         try:
             idx = list_of_timestamps.index(timestamp)
@@ -247,5 +230,11 @@ def filter_duplicate_list_to_remove_cancelled_or_delete(
             )
 
     return new_list_of_duplicates
+
+
+def get_cadet_food_requirements_from_row_of_mapped_wa_event_data(row_in_mapped_wa_event_with_id: RowInMappedWAEventWithId) -> FoodRequirements:
+    return guess_food_requirements_from_food_field(
+        row_in_mapped_wa_event_with_id.data_in_row.get_item(CADET_FOOD_PREFERENCE)
+    )
 
 

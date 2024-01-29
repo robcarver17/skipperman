@@ -109,6 +109,7 @@ def process_update_to_existing_cadet_in_event_data(
         interface=interface,
         row_in_mapped_wa_event_with_id=row_in_mapped_event,
         existing_row_in_master_event=existing_row_in_master_event,
+        event=event
     )
 
 
@@ -160,10 +161,12 @@ def process_update_to_existing_row_of_event_data(
     interface: abstractInterface,
     row_in_mapped_wa_event_with_id: RowInMappedWAEventWithId,
     existing_row_in_master_event: RowInMasterEvent,
+        event: Event
 ) -> Form:
     new_row_in_mapped_wa_event_with_status = (
         get_row_of_master_event_from_mapped_row_with_idx_and_status(
-            row_in_mapped_wa_event_with_id=row_in_mapped_wa_event_with_id
+            row_in_mapped_wa_event_with_id=row_in_mapped_wa_event_with_id,
+            event=event
         )
     )
 
@@ -178,7 +181,8 @@ def process_update_to_existing_row_of_event_data(
         print("Data has changed displaying form")
         return display_form_for_update_to_existing_row_of_event_data(
             new_row_in_mapped_wa_event_with_status=new_row_in_mapped_wa_event_with_status,
-            existing_row_in_master_event=existing_row_in_master_event)
+            existing_row_in_master_event=existing_row_in_master_event,
+        event=event)
 
 
 def post_form_interactively_update_master_records(

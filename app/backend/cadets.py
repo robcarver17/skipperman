@@ -16,6 +16,24 @@ def get_list_of_cadets_as_str(list_of_cadets = arg_not_passed) -> list:
     return [str(cadet) for cadet in list_of_cadets]
 
 
+def get_list_of_cadets_as_str_similar_to_name_first(object_with_name) -> list:
+    list_of_cadets_similar_to_first = get_list_of_cadets_similar_to_name_first(object_with_name)
+    return [str(cadet) for cadet in list_of_cadets_similar_to_first]
+
+def get_list_of_cadets_similar_to_name_first(object_with_name) -> list:
+    list_of_cadets = get_list_of_cadets(sort_by=SORT_BY_SURNAME)
+    similar_cadets = list_of_cadets.similar_surnames(object_with_name)
+    similar_cadets = similar_cadets.sort_by_firstname()
+
+    first_lot = []
+    for cadet in similar_cadets:
+        ## avoid double counting
+        first_lot.append(list_of_cadets.pop_with_id(cadet.id))
+
+    return ListOfCadets(first_lot+list_of_cadets)
+
+
+
 def get_cadet_from_list_of_cadets(cadet_selected: str) -> Cadet:
     list_of_cadets = get_list_of_cadets()
     list_of_cadets_as_str = get_list_of_cadets_as_str(list_of_cadets=list_of_cadets)
@@ -46,8 +64,13 @@ SORT_BY_DOB_ASC = "Sort by date of birth, ascending"
 SORT_BY_DOB_DSC = "Sort by date of birth, descending"
 
 
-def get_cadet_from_id(id: str, list_of_cadets: ListOfCadets):
-    return list_of_cadets.object_with_id(id)
+def cadet_from_id_with_passed_list(
+    cadet_id: str, list_of_cadets: ListOfCadets
+) -> Cadet:
+    cadet = list_of_cadets.object_with_id(cadet_id)
+
+    return cadet
+
 
 
 def cadet_name_from_id(cadet_id: str) -> str:
@@ -64,13 +87,6 @@ def cadet_from_id(cadet_id: str) -> Cadet:
 
     return cadet
 
-
-def cadet_from_id_with_passed_list(
-    cadet_id: str, list_of_cadets: ListOfCadets
-) -> Cadet:
-    cadet = list_of_cadets.object_with_id(cadet_id)
-
-    return cadet
 
 
 LOWEST_FEASIBLE_CADET_AGE = MIN_CADET_AGE - 2
@@ -92,6 +108,10 @@ def verify_cadet_and_warn(cadet: Cadet) -> str:
         warn_text = "DOUBLE CHECK BEFORE ADDING: " + warn_text
 
     return warn_text
+
+def add_new_verified_cadet(cadet: Cadet):
+    data.data_list_of_cadets.add(cadet)
+
 
 
 def warning_for_similar_cadets(cadet: Cadet) -> str:
@@ -117,10 +137,6 @@ def list_of_similar_cadets(cadet: Cadet) -> list:
     )
 
     return similar_cadets
-
-
-def add_new_verified_cadet(cadet: Cadet):
-    data.data_list_of_cadets.add(cadet)
 
 
 def delete_a_cadet(cadet: Cadet):

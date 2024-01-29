@@ -3,7 +3,7 @@ from app.logic.events.events_logic_api import EventLogicApi
 from app.logic.reporting.reporting_logic_api import ReportingLogicApi
 from app.logic.volunteers.volunteer_logic_api import VolunteerLogicApi
 
-from app.web.flask.interface import flaskInterface
+from app.web.flask.flask_interface import flaskInterface
 from app.objects.abstract_objects.abstract_form import Form, form_with_message, File
 from app.logic.abstract_logic_api import AbstractLogicApi
 

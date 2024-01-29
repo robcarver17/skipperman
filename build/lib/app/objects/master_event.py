@@ -8,69 +8,77 @@ from app.objects.mapped_wa_event_no_ids import RowInMappedWAEventNoId
 from app.objects.mapped_wa_event_with_ids import (
     RowInMappedWAEventWithId,
     MappedWAEventWithIDs,
-    CADET_ID,
     RowStatus,
-    STATUS_FIELD,
     cancelled_status,
     active_status,
     deleted_status,
     get_status_from_row_of_mapped_wa_event_data,
+    get_attendance_selection_from_event_row,
+    get_cadet_food_requirements_from_row_of_mapped_wa_event_data
 )
-from app.objects.utils import DictOfDictDiffs
-from app.objects.constants import arg_not_passed
+from app.objects.events import Event
+from app.objects.day_selectors import DaySelector, day_selector_stored_format_from_text, day_selector_to_text_in_stored_format
+from app.objects.food import FoodRequirements
+from app.objects.constants import missing_data
 
+CADET_ID = "cadet_id" ## must match
+STATUS_FIELD = "status"
+ATTENDANCE = "attendance"
+FOOD_REQUIREMENTS = "food_requirements"
 
 @dataclass
 class RowInMasterEvent:
     cadet_id: str
     data_in_row: RowInMappedWAEventNoId
+    attendance: DaySelector
     status: RowStatus
+    food_requirements: FoodRequirements
 
-    def __eq__(self, other):
-        return (
-            other.cadet_id == self.cadet_id
-            and other.status == self.status
-            and len(self.dict_of_row_diffs_in_rowdata(other)) == 0
-        )
+    def get_item(self, key, default=""):
+        return self.data_in_row.get_item(key, default=default)
 
     def update_data_in_row(self, key, new_value):
         self.data_in_row[key] = new_value
 
     @classmethod
     def from_row_in_mapped_wa_event_with_id(
-        cls, row_in_mapped_wa_event_with_id: RowInMappedWAEventWithId, status: RowStatus
+        cls, row_in_mapped_wa_event_with_id: RowInMappedWAEventWithId, status: RowStatus,
+            attendance: DaySelector,
+            food_requirements: FoodRequirements
     ):
         return cls(
             data_in_row=row_in_mapped_wa_event_with_id.data_in_row,
             cadet_id=row_in_mapped_wa_event_with_id.cadet_id,
             status=status,
+            attendance=attendance,
+            food_requirements=food_requirements
         )
 
     def as_dict(self):
         data_in_row_as_dict = self.data_in_row.as_dict()
         data_in_row_as_dict.update(
-            {CADET_ID: self.cadet_id, STATUS_FIELD: self.status.name}
+            {CADET_ID: self.cadet_id, STATUS_FIELD: self.status.name,
+             ATTENDANCE: day_selector_to_text_in_stored_format(self.attendance),
+             FOOD_REQUIREMENTS: self.food_requirements.to_str()
+             }
         )
         return data_in_row_as_dict
 
     @classmethod
     def from_dict(cls, some_dict: dict):
-        cadet_id = some_dict.pop(CADET_ID)
-        status_str = some_dict.pop(STATUS_FIELD)
-        status = RowStatus[status_str]
+        cadet_id = str(some_dict.pop(CADET_ID))
+        status = RowStatus[some_dict.pop(STATUS_FIELD)]
+        attendance = day_selector_stored_format_from_text(some_dict.pop(ATTENDANCE))
+        food_requirements = FoodRequirements.from_str(some_dict.pop(FOOD_REQUIREMENTS))
 
         return cls(
             cadet_id=cadet_id,
             status=status,
             data_in_row=RowInMappedWAEventNoId.from_external_dict(some_dict),
+            attendance=attendance,
+            food_requirements=food_requirements
         )
 
-    def dict_of_row_diffs_in_rowdata(
-        self, other_row: "RowInMasterEvent", comparing_fields=arg_not_passed
-    ) -> DictOfDictDiffs:
-        return self.data_in_row.dict_of_row_diffs(
-            other_row.data_in_row, comparing_fields=comparing_fields
-        )
 
     def mark_as_deleted(self):
         self.status = deleted_status
@@ -179,12 +187,20 @@ class MasterEvent(MappedWAEventWithIDs):
 
 def get_row_of_master_event_from_mapped_row_with_idx_and_status(
     row_in_mapped_wa_event_with_id: RowInMappedWAEventWithId,
+        event: Event
 ) -> RowInMasterEvent:
+
     status = get_status_from_row_of_mapped_wa_event_data(row_in_mapped_wa_event_with_id)
+    attendance = get_attendance_selection_from_event_row(row_in_mapped_wa_event_with_id, event=event)
+    food_requirements = get_cadet_food_requirements_from_row_of_mapped_wa_event_data(row_in_mapped_wa_event_with_id)
+
     row_of_mapped_wa_event_data_with_status = (
         RowInMasterEvent.from_row_in_mapped_wa_event_with_id(
-            row_in_mapped_wa_event_with_id=row_in_mapped_wa_event_with_id, status=status
-        )
+            row_in_mapped_wa_event_with_id=row_in_mapped_wa_event_with_id, status=status,
+            attendance=attendance,
+            food_requirements=food_requirements
+            )
     )
 
     return row_of_mapped_wa_event_data_with_status
+

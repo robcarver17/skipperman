@@ -8,7 +8,7 @@ from app.logic.abstract_logic_api import initial_state_form
 from app.logic.abstract_interface import (
     abstractInterface,
 )
-from app.logic.events.allocation.backend.previous_allocations import get_dict_of_all_event_allocations_for_single_cadet
+from app.backend.previous_allocations import get_dict_of_all_event_allocations_for_single_cadet
 from app.logic.cadets.constants import EDIT_BUTTON_LABEL, DELETE_BUTTON_LABEL, BACK_BUTTON_LABEL, EDIT_INDIVIDUAL_CADET_STAGE, DELETE_INDIVIDUAL_CADET_STAGE
 from app.objects.cadets import Cadet
 

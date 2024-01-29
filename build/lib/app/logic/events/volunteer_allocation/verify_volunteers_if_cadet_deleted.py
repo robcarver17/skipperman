@@ -7,21 +7,18 @@ from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation i
 from app.backend.cadets import cadet_name_from_id
 from app.logic.events.events_in_state import get_event_from_state
 from app.backend.volunteer_allocation import volunteer_ids_associated_with_cadet_at_specific_event, \
-    remove_volunteer_and_cadet_association, delete_volunteer_with_id, \
+    remove_volunteer_and_cadet_association, delete_volunteer_with_id_at_event, \
     get_volunteer_name_and_associated_cadets_for_event
 
 VOLUNTEERS= "volunteers"
 
 def display_form_volunteer_extraction_from_master_records_if_cadet_is_deleted_or_cancelled(interface: abstractInterface)-> Form:
-    #  check to see if VOLUNTEERS are still available ( USE checkboxes - POST Form will need to distinguish between this and add volunteer)
     cadet_id = get_current_cadet_id(interface)
     cadet_name = cadet_name_from_id(cadet_id)
 
-
-    ### FIXME Need to flag if volunteer is still with other cadets; and status of those cadets
     checkbox = checkbox_for_volunteers(interface=interface, cadet_id=cadet_id)
     return Form(ListOfLines([
-        "Cadet %s has been deleted or registration cancelled, check if any of the following volunteers are still available to volunteer" % cadet_name,
+        "Cadet %s has been deleted or registration cancelled, if any of the following volunteers are still available to volunteer then tick their names" % cadet_name,
         checkbox,
         Button(SAVE_CHANGES)
     ]))
@@ -56,15 +53,16 @@ def post_form_volunteer_extraction_from_master_records_if_cadet_is_deleted_or_ca
     dict_of_relevant_volunteers_with_ids = get_dict_of_relevant_volunteers_with_ids(interface=interface, cadet_id=cadet_id)
     volunteers_checked_in_form= interface.value_of_multiple_options_from_form(VOLUNTEERS)
     list_of_relevant_volunteers = list(dict_of_relevant_volunteers_with_ids.keys())
+    event = get_event_from_state(interface)
 
     for volunteer_name in list_of_relevant_volunteers:
         volunteer_id = dict_of_relevant_volunteers_with_ids.get(volunteer_name)
         if volunteer_name in volunteers_checked_in_form:
             ## just remove cadet association
-            remove_volunteer_and_cadet_association(volunteer_id=volunteer_id, cadet_id=cadet_id)
+            remove_volunteer_and_cadet_association(volunteer_id=volunteer_id, cadet_id=cadet_id, event=event)
         else:
             ## delete volunteer entirely
-            delete_volunteer_with_id(volunteer_id=volunteer_id)
+            delete_volunteer_with_id_at_event(volunteer_id=volunteer_id, event=event)
 
     ## next cadet
     return NewForm(WA_VOLUNTEER_EXTRACTION_LOOP_IN_VIEW_EVENT_STAGE)

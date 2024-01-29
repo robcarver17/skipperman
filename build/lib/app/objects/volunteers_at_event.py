@@ -12,7 +12,6 @@ from app.objects.constants import missing_data
 LIST_KEY = 'list_of_associated_cadet_id'
 FOOD_REQUIRED_KEY = 'food_requirements'
 AVAILABILITY_KEY = 'availablity'
-## FIXME - Boats done seperately
 
 
 @dataclass
@@ -24,26 +23,24 @@ class VolunteerAtEvent(GenericSkipperManObject):
     preferred_duties: str = "" ## information only
     same_or_different:  str = ""  ## information only
     any_other_information:  str = ""  ## information only - double counted as required twice
-    #group: str = "" FIXME REMOVE CHANGES BY DAY SET SEPERATELY
-    #role: str - FIXME REMOVE CHANGES BY DAY
 
 
     @classmethod
     def from_dict(cls, dict_with_str):
-        list_of_cadet_ids_as_str = dict_with_str[LIST_KEY]
-        if len(list_of_cadet_ids_as_str)==0:
-            list_of_cadet_ids=[]
-        else:
-            list_of_cadet_ids= list_of_cadet_ids_as_str.split(",")
+        list_of_cadet_ids_as_str = str(dict_with_str[LIST_KEY])
+        list_of_cadet_ids = list_of_cadet_ids_as_str.split(",")
 
         food_requirements_as_str  =dict_with_str[FOOD_REQUIRED_KEY]
         food_requirements = FoodRequirements.from_str(food_requirements_as_str)
 
         availability_as_str = dict_with_str[AVAILABILITY_KEY]
+        if type(availability_as_str) is not str:
+            availability_as_str = "" ## corner case
+
         availability = day_selector_stored_format_from_text(availability_as_str)
 
         return cls(
-            volunteer_id=dict_with_str['volunteer_id'],
+            volunteer_id=str(dict_with_str['volunteer_id']),
             preferred_duties=dict_with_str['preferred_duties'],
             same_or_different=dict_with_str['same_or_different'],
             any_other_information=dict_with_str['any_other_information'],
@@ -66,6 +63,8 @@ class VolunteerAtEvent(GenericSkipperManObject):
 
         availability = self.availablity
         as_dict[AVAILABILITY_KEY] = day_selector_to_text_in_stored_format(availability)
+
+        print("AS DICT: %s" % as_dict)
 
         return as_dict
 
@@ -93,23 +92,26 @@ class ListOfVolunteersAtEvent(GenericListOfObjects):
         return VolunteerAtEvent
 
     def list_of_volunteer_ids_associated_with_cadet_id(self, cadet_id: str):
+        list_of_volunteers = self.list_of_volunteers_associated_with_cadet_id(cadet_id)
+        return list_of_volunteers.list_of_volunteer_ids
+
+    def list_of_volunteers_associated_with_cadet_id(self, cadet_id: str):
         return ListOfVolunteersAtEvent([volunteer_at_event for volunteer_at_event in self if cadet_id in volunteer_at_event.list_of_associated_cadet_id])
 
     def update_volunteer_at_event(self, volunteer_at_event: VolunteerAtEvent):
-        current_volunteer = self.volunteer_at_event_with_id(volunteer_at_event.volunteer_id)
-        if current_volunteer is missing_data:
+        current_volunteer_idx = self.index_of_volunteer_at_event_with_id(volunteer_at_event.volunteer_id)
+        if current_volunteer_idx is missing_data:
             raise Exception("Can't update if volunteer doesn't exist at event")
 
         ## ignore warning, it's an in place replacement
-        current_volunteer = volunteer_at_event
-
+        self[current_volunteer_idx] = volunteer_at_event
 
     def remove_volunteer_with_id(self, volunteer_id: str):
-        volunteer_at_event = self.volunteer_at_event_with_id(volunteer_id)
-        if volunteer_at_event is missing_data:
+        idx_of_volunteer_at_event = self.index_of_volunteer_at_event_with_id(volunteer_id)
+        if idx_of_volunteer_at_event is missing_data:
             pass
         else:
-            del(volunteer_at_event)
+            self.pop(idx_of_volunteer_at_event)
 
     def remove_cadet_id_association_from_volunteer(self, cadet_id: str, volunteer_id:str):
         volunteer_at_event = self.volunteer_at_event_with_id(volunteer_id)
@@ -122,14 +124,25 @@ class ListOfVolunteersAtEvent(GenericListOfObjects):
         associated_cadets.remove(cadet_id)
 
     def volunteer_at_event_with_id(self, volunteer_id: str) -> VolunteerAtEvent:
-        list_of_matching_volunteers = [item for item in self if item.volunteer_id==volunteer_id]
-        if len(list_of_matching_volunteers)==0:
+        index_of_matching_volunteer = self.index_of_volunteer_at_event_with_id(volunteer_id)
+        if index_of_matching_volunteer is missing_data:
             return missing_data
-        elif len(list_of_matching_volunteers)==1:
-            return list_of_matching_volunteers[0]
+        else:
+            return self[index_of_matching_volunteer]
+
+    def index_of_volunteer_at_event_with_id(self, volunteer_id: str) -> int:
+        list_of_ids = self.list_of_volunteer_ids
+        list_of_matching_indices = [idx for idx, item_id in enumerate(list_of_ids) if item_id==volunteer_id]
+        if len(list_of_matching_indices)==0:
+            return missing_data
+        elif len(list_of_matching_indices)==1:
+            return list_of_matching_indices[0]
         else:
             raise Exception("A volunteer can't appear more than once at an event")
 
+    @property
+    def list_of_volunteer_ids(self) -> list:
+        return [object.volunteer_id for object in self]
 
     def add_potentially_new_volunteer_with_cadet_association(self, volunteer_at_event: VolunteerAtEvent):
         existing_volunteer_at_event = self.volunteer_at_event_with_id(volunteer_id=volunteer_at_event.volunteer_id)
@@ -149,11 +162,13 @@ def add_cadet_association_to_existing_volunteer(existing_volunteer_at_event: Vol
     else:
         existing_volunteer_at_event.list_of_associated_cadet_id.append(cadet_id)
 
+@dataclass
 class CadetWithoutVolunteerAtEvent(GenericSkipperManObject):
     cadet_id: str
     event_id: str
 
 class ListOfCadetsWithoutVolunteersAtEvent(GenericListOfObjects):
+    @property
     def _object_class_contained(self):
         return CadetWithoutVolunteerAtEvent
 

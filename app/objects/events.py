@@ -11,7 +11,7 @@ from app.data_access.configuration.configuration import (
 from app.objects.utils import transform_date_into_str, similar
 from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds
 from app.objects.constants import arg_not_passed
-from app.objects.day_selectors import day_given_datetime, all_possible_days, Day
+from app.objects.day_selectors import day_given_datetime, all_possible_days, Day, DaySelector
 
 EventType = Enum(
     "EventType", ["Training", "Racing", "TrainingAndRacing", "Social", "Merchandise"]
@@ -85,10 +85,9 @@ class Event(GenericSkipperManObjectWithIds):
     def event_type_as_str(self) -> str:
         return self.event_type.name
 
-    def days_of_week_covered(self) -> list:
-        ## preserve order
-        days_in_event = self.weekdays_in_event()
-        return [day for day in all_possible_days if day in days_in_event]
+    def day_selector_with_covered_days(self) -> DaySelector:
+        weekdays_covered = self.weekdays_in_event()
+        return DaySelector(dict([(day, day in weekdays_covered) for day in all_possible_days]))
 
     def weekdays_in_event(self) -> List[Day]:
         date_list = self.dates_in_event()

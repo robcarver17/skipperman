@@ -14,7 +14,8 @@ from app.objects.utils import (
 transform_date_into_str,
 transform_datetime_into_str,
 transform_str_into_datetime,
-transform_str_into_date
+transform_str_into_date,
+clean_up_dict_with_nans
 )
 
 KEYS = "Keys"
@@ -123,6 +124,7 @@ FALSE = "FALSE_VALUE"
 
 
 def get_class_instance_from_str_dict(some_class, dict_with_str: dict):
+    dict_with_str = clean_up_dict_with_nans(dict_with_str)
     dict_of_attributes = get_dict_of_class_attributes(some_class)
 
     for attribute, object_class in dict_of_attributes.items():
@@ -189,7 +191,7 @@ class GenericListOfObjectsWithIds(GenericListOfObjects):
 
     def pop_with_id(self, id):
         index = self.index_of_id(id)
-        self.pop(index)
+        return self.pop(index)
 
     def object_with_id(self, id: str):
         index = self.index_of_id(id)

@@ -6,7 +6,7 @@ from app.objects.abstract_objects.abstract_text import Text, Arrow, up_arrow, do
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.web.html.html import *
 from app.web.html.url import INDEX_URL
-from app.web.flask.interface import flaskInterface
+from app.web.flask.flask_interface import flaskInterface
 from app.web.html.forms import *
 from app.objects.abstract_objects.abstract_form import textInput, dateInput, radioInput, checkboxInput
 

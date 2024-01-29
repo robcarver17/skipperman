@@ -1,6 +1,5 @@
 from typing import Union
 
-from app.data_access.data import data
 from app.objects.abstract_objects.abstract_form import Form, NewForm, textInput, checkboxInput
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
@@ -9,7 +8,7 @@ from app.logic.abstract_interface import (
     abstractInterface,
 )
 from app.logic.volunteers.constants import *
-from app.backend.volunteers import get_dict_of_existing_skills
+from app.backend.volunteers import get_dict_of_existing_skills, save_skills_for_volunteer, save_volunteer_details
 from app.logic.volunteers.volunteer_state import get_volunteer_from_state
 from app.logic.volunteers.add_volunteer import get_volunteer_from_form
 from app.objects.volunteers import Volunteer
@@ -93,17 +92,13 @@ def modify_volunteer_given_form_contents(interface: abstractInterface):
 def get_and_save_core_volunteer_details_from_form(interface: abstractInterface, original_volunteer: Volunteer):
     volunteer_details_from_form = get_volunteer_from_form(interface)
     volunteer_details_from_form.id = original_volunteer.id ## won't be in form
+    save_volunteer_details(volunteer_details_from_form)
 
-    list_of_volunteers = data.data_list_of_volunteers.read()
-    index = list_of_volunteers.index_of_id(original_volunteer.id)
-    list_of_volunteers[index] = volunteer_details_from_form
-    data.data_list_of_volunteers.write(list_of_volunteers)
 
 def get_and_save_volunteer_skills_from_form(interface: abstractInterface, volunteer: Volunteer):
     dict_of_skills = get_dict_of_skills_from_form(interface=interface, volunteer=volunteer)
-    all_skills = data.data_list_of_volunteer_skills.read()
-    all_skills.replace_skills_for_volunteer_with_new_skills_dict(volunteer_id=volunteer.id, dict_of_skills=dict_of_skills)
-    data.data_list_of_volunteer_skills.write(all_skills)
+    save_skills_for_volunteer(volunteer=volunteer, dict_of_skills=dict_of_skills)
+
 
 def get_dict_of_skills_from_form(interface: abstractInterface, volunteer: Volunteer) -> dict:
     selected_skills = interface.value_of_multiple_options_from_form(SKILLS)

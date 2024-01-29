@@ -7,7 +7,7 @@ from app.objects.abstract_objects.abstract_text import Text, Arrow, up_arrow, do
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.web.html.html import *
 from app.web.html.url import INDEX_URL
-from app.web.flask.interface import flaskInterface
+from app.web.flask.flask_interface import flaskInterface
 from app.web.html.forms import *
 from app.objects.abstract_objects.abstract_form import textInput, dateInput, radioInput, checkboxInput
 
@@ -89,19 +89,19 @@ def get_html_for_element_in_line(
         return get_html_for_button(element_in_line)
     elif type(element_in_line) is textInput:
         return html_form_text_input(
-            input_label=element_in_line.input_name,
+            input_label=element_in_line.input_label,
             input_name=element_in_line.input_name,
             value=element_in_line.value,
         )
     elif type(element_in_line) is dateInput:
         return html_date_input(
-            input_label=element_in_line.input_name,
+            input_label=element_in_line.input_label,
             input_name=element_in_line.input_name,
             value=element_in_line.value,
         )
     elif type(element_in_line) is intInput:
         return html_int_input(
-            input_label=element_in_line.input_name,
+            input_label=element_in_line.input_label,
             input_name=element_in_line.input_name,
             value=element_in_line.value,
         )
@@ -111,14 +111,14 @@ def get_html_for_element_in_line(
         )
     elif type(element_in_line) is radioInput:
         return html_radio_input(
-            input_label=element_in_line.input_name,
+            input_label=element_in_line.input_label,
             input_name=element_in_line.input_name,
             dict_of_options=element_in_line.dict_of_options,
             default_label=element_in_line.default_label,
         )
     elif type(element_in_line) is dropDownInput:
         return html_dropdown_input(
-            input_label=element_in_line.input_name,
+            input_label=element_in_line.input_label,
             input_name=element_in_line.input_name,
             dict_of_options=element_in_line.dict_of_options,
             default_label=element_in_line.default_label,

@@ -1,5 +1,5 @@
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
-from app.logic.events.allocation.backend.allocations_data import load_allocation_for_event, get_unallocated_cadets
+from app.backend.cadet_event_allocations import get_unallocated_cadets, load_allocation_for_event
 from app.objects.groups import ListOfCadetIdsWithGroups
 from app.objects.cadets import ListOfCadets
 from app.objects.events import Event

@@ -12,16 +12,13 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_tables import RowInTable, Table
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, back_button, Button
-from app.logic.events.allocation.backend.summarise_allocations_data import summarise_allocations_for_event, reorder_list_of_cadets_by_allocated_group
+from app.backend.summarise_allocations_data import summarise_allocations_for_event, reorder_list_of_cadets_by_allocated_group
 from app.logic.abstract_interface import (
     abstractInterface,
 )
-from app.logic.events.allocation.backend.allocations_data import (
-    get_list_of_cadets_in_master_event,
-    get_current_allocations,
-    save_current_allocations_for_event,
-)
-from app.logic.events.allocation.backend.previous_allocations import allocation_for_cadet_in_previous_events, get_dict_of_allocations_for_events_and_list_of_cadets, list_of_events_excluding_one_event
+from app.backend.cadet_event_allocations import get_list_of_cadets_in_master_event, get_current_allocations, \
+    save_current_allocations_for_event
+from app.backend.previous_allocations import allocation_for_cadet_in_previous_events, get_dict_of_allocations_for_events_and_list_of_cadets, list_of_events_excluding_one_event
 from app.backend.load_and_save_wa_mapped_events import load_master_event
 
 from app.logic.events.constants import (

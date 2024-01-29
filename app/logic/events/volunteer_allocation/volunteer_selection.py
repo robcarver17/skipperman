@@ -1,28 +1,26 @@
+from app.backend.volunteers import get_connected_cadets, delete_connection_in_data, add_volunteer_connection_to_cadet_in_master_list_of_volunteers
 from typing import Union
-from app.backend.cadets import get_list_of_cadets, get_cadet_from_id
+from app.logic.events.volunteer_allocation.volunteer_selection_form_contents import \
+    get_header_text_for_volunteer_selection_form, get_footer_buttons_add_or_select_existing_volunteer_form, \
+    get_dict_of_volunteer_names_and_volunteers
 from app.logic.volunteers.add_volunteer import add_volunteer_from_form_to_data
 from app.logic.events.volunteer_allocation.add_volunteers_to_cadet import process_update_when_volunteer_matched
+from app.backend.cadets import cadet_from_id
 
 from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
-from app.backend.volunteer_allocation import get_list_of_relevant_voluteers, \
+from app.objects.relevant_information_for_volunteers import get_volunteer_from_relevant_information
+from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import get_current_cadet_id, \
     get_relevant_information_for_current_volunteer
-from app.logic.events.volunteer_allocation.relevant_information import get_volunteer_from_relevant_information
-from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import get_current_cadet_id
 from app.logic.abstract_interface import abstractInterface
 
-from app.logic.volunteers.add_volunteer import verify_volunteer_and_warn, VolunteerAndVerificationText, get_add_volunteer_form_with_information_passed, verify_form_with_volunteer_details
-from app.backend.volunteers import get_list_of_volunteers, SORT_BY_SURNAME
+from app.logic.volunteers.add_volunteer import VolunteerAndVerificationText, get_add_volunteer_form_with_information_passed, verify_form_with_volunteer_details
+from app.backend.volunteers import verify_volunteer_and_warn
 
-from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_form import Form, NewForm
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
 from app.objects.constants import arg_not_passed
 from app.objects.volunteers import Volunteer
-
-list_of_cadets = get_list_of_cadets()
-
 
 
 #WA_VOLUNTEER_EXTRACTION_SELECTION_IN_VIEW_EVENT_STAGE
@@ -64,23 +62,8 @@ def get_add_or_select_existing_volunteers_form(
         include_final_button=include_final_button,
         cadet_id=cadet_id
     )
-    # Custom header text
-    relevant_information = get_relevant_information_for_current_volunteer(interface)
-    relevant_information_for_identification = relevant_information.identify
-
-    status_text = relevant_information_for_identification.self_declared_status
-    other_information = relevant_information_for_identification.any_other_information
-    if len(status_text)>0:
-        status_text = "Registration volunteer status %s" % status_text
-
-    cadet = get_cadet_from_id(relevant_information_for_identification.cadet_id, list_of_cadets=list_of_cadets)
-    header_text =ListOfLines([
-        "Looks like a potential new volunteer in the WA entry file for cadet %s" % str(cadet),
-        status_text,
-        other_information,
-        ". You can edit them, check their details and then add, or choose an existing volunteer instead. ",
-        "(avoid creating duplicates! If the existing volunteer details are wrong, select them for now and edit later). Skip if there is no volunteer for this cadet available here."
-        ])
+    header_text = get_header_text_for_volunteer_selection_form(interface=interface,
+                                                               volunteer=volunteer)
 
     return get_add_volunteer_form_with_information_passed(
         volunteer_and_text=volunteer_and_text,
@@ -88,54 +71,6 @@ def get_add_or_select_existing_volunteers_form(
         header_text=header_text,
     )
 
-
-def get_footer_buttons_add_or_select_existing_volunteer_form(
-    volunteer:Volunteer,
-        cadet_id: str,
-        see_all_volunteers: bool = False, include_final_button: bool = False,
-
-) -> ListOfLines:
-    print("Get buttons for %s" % str(volunteer))
-    main_buttons = get_list_of_main_buttons(include_final_button)
-
-    volunteer_buttons = get_list_of_volunteer_buttons(
-        volunteer=volunteer, see_all_volunteers=see_all_volunteers,
-        cadet_id=cadet_id
-    )
-
-    return ListOfLines([main_buttons, volunteer_buttons])
-
-
-def get_list_of_main_buttons(include_final_button: bool) -> Line:
-    check = Button(CHECK_VOLUNTEER_BUTTON_LABEL)
-    add = Button(FINAL_VOLUNTEER_ADD_BUTTON_LABEL)
-    skip = Button(SKIP_VOLUNTEER_BUTTON_LABEL)
-
-    if include_final_button:
-        main_buttons = Line([check, skip, add])
-    else:
-        main_buttons = Line([check, skip])
-
-    return main_buttons
-
-
-def get_list_of_volunteer_buttons(volunteer: Volunteer, cadet_id: str, see_all_volunteers: bool = False) -> Line:
-    if see_all_volunteers:
-        list_of_volunteers = get_list_of_volunteers(SORT_BY_SURNAME)
-        extra_button = SEE_SIMILAR_VOLUNTEER_ONLY_LABEL
-    else:
-        ## similar volunteers with option to see more
-        list_of_volunteers = get_list_of_relevant_voluteers(volunteer=volunteer, cadet_id=cadet_id)
-
-        extra_button = SEE_ALL_VOLUNTEER_BUTTON_LABEL
-
-    all_labels = [extra_button] + list_of_volunteers
-
-    return Line([Button(str(label)) for label in all_labels])
-
-def get_dict_of_volunteer_names_and_volunteers():
-    list_of_volunteers = get_list_of_volunteers()
-    return dict([(str(volunteer), volunteer) for volunteer in list_of_volunteers])
 
 ### POST: WA_VOLUNTEER_EXTRACTION_SELECTION_IN_VIEW_EVENT_STAGE
 def post_form_volunteer_selection_for_cadet_at_event(interface: abstractInterface) -> Union[Form, NewForm]:
@@ -165,8 +100,9 @@ def action_when_new_volunteer_to_be_added(interface: abstractInterface) -> Union
 
     return action_when_volunteer_known(volunteer=volunteer, interface=interface)
 
+
 def action_when_specific_volunteer_selected(name_of_volunteer: str, interface: abstractInterface) -> Union[Form, NewForm]:
-    dict_of_volunteer_names_and_volunteers=get_dict_of_volunteer_names_and_volunteers()
+    dict_of_volunteer_names_and_volunteers= get_dict_of_volunteer_names_and_volunteers()
     volunteer = dict_of_volunteer_names_and_volunteers.get(name_of_volunteer, None)
     if volunteer is None:
         raise Exception("Volunteer %s has gone missing!" % name_of_volunteer)

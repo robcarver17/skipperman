@@ -1,7 +1,7 @@
 from typing import Union
 
 from app.logic.events.registration_details.registration_details_form import get_registration_data, \
-    get_top_row_for_event, row_for_cadet_in_event
+    get_top_row_for_table_of_registration_details, row_for_cadet_in_event
 from app.logic.events.registration_details.parse_registration_details_form import parse_registration_details_from_form
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -43,8 +43,8 @@ def display_form_edit_registration_details_given_event_and_sort_order(
         ListOfLines(
             [
                 "Registration details for %s" % event,
-                "(Excludes allocation and volunteer information; plus cadet name/DOB - edit in the appropriate places)",
-
+                "(Excludes group allocation and volunteer information; plus cadet name/DOB - edit in the appropriate places)",
+                "*CHECK FOOD PREFERENCES - autocompleted and may not be accurate*",
                 _______________,
                 "Always save before sorting - sorting will lose any edits",
                 sort_buttons,
@@ -58,25 +58,26 @@ def display_form_edit_registration_details_given_event_and_sort_order(
     )
 
 
-def buttons_for_registration_form() -> Line:
-    return Line([
-      Button(BACK_BUTTON_LABEL),
-        Button(SAVE_CHANGES)
-    ])
-
 
 def get_registration_details_inner_form_for_event(
     event: Event,
         sort_order: str
 ) -> Table:
     registration_details = get_registration_data(event=event, sort_order=sort_order)
-    top_row = get_top_row_for_event(all_columns=registration_details.all_columns)
+    top_row = get_top_row_for_table_of_registration_details(all_columns=registration_details.all_columns_excluding_special_fields)
     rows_in_table = [
         row_for_cadet_in_event(row_in_event=row_in_event, registration_details=registration_details)
                      for row_in_event in registration_details.master_event_details]
 
     return Table([top_row]+rows_in_table)
 
+
+
+def buttons_for_registration_form() -> Line:
+    return Line([
+      Button(BACK_BUTTON_LABEL),
+        Button(SAVE_CHANGES)
+    ])
 
 def post_form_edit_registration_details(
     interface: abstractInterface,

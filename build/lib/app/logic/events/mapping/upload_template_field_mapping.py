@@ -39,13 +39,14 @@ def post_form_for_upload_template_field_mapping(interface: abstractInterface):
     template_name = interface.value_from_form(TEMPLATE_NAME)
     if len(template_name) < 4:
         interface.log_error("Template name needs to be longer")
-        return initial_state_form
+        return display_form_for_upload_template_field_mapping(interface)
     try:
         file = get_file_from_interface(MAPPING_FILE, interface=interface)
         mapping = read_mapping_from_csv_file_object(file)
     except Exception as e:
-        interface.log_error("Something went wrong uploading file %s" % str(e))
-        return initial_state_form
+        interface.log_error("Something went wrong uploading file: error %s" % str(e))
+        return display_form_for_upload_template_field_mapping(interface)
+
     print("template name %s, mapping %s" % (template_name, str(mapping)))
     write_template(template_name=template_name, new_mapping=mapping)
 

@@ -1,13 +1,7 @@
 import datetime
-from typing import Callable
 
 from app.objects.abstract_objects.abstract_text import Input
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
-from app.objects.field_list import (
-    FIELDS_WITH_DATES,
-    FIELDS_WITH_INTEGERS,
-    SPECIAL_FIELDS,
-)
 from dataclasses import dataclass
 from app.objects.constants import arg_not_passed
 
@@ -83,21 +77,6 @@ class fileInput(Input):
     # accept can be eg '.doc' or '.doc, .csv'
 
 
-def construct_form_field_given_field_name(field_name: str, *args, **kwargs):
-    form_function = get_required_form_field_type(field_name)
-
-    return form_function(*args, **kwargs)
-
-
-def get_required_form_field_type(field_name: str) -> Callable:
-    if field_name in FIELDS_WITH_INTEGERS:
-        return intInput
-    elif field_name in FIELDS_WITH_DATES:
-        return dateInput
-    elif field_name in SPECIAL_FIELDS:
-        raise Exception("Can't construct a form field for field name %s" % field_name)
-    else:
-        return textInput
 
 
 @dataclass

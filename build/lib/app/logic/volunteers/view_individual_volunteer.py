@@ -31,28 +31,13 @@ def display_form_view_individual_volunteer(
     )
 
 
-def post_form_view_individual_volunteer(
-    interface: abstractInterface,
-) -> Union[Form, NewForm]:
-    ## placeholder, not currently used
-    button = interface.last_button_pressed()
-    if button==BACK_BUTTON_LABEL:
-        return initial_state_form
-    elif button==DELETE_BUTTON_LABEL:
-        return NewForm(DELETE_VOLUNTEER_STAGE)
-    elif button==EDIT_BUTTON_LABEL:
-        return NewForm(EDIT_VOLUNTEER_STAGE)
-    elif button==EDIT_CADET_CONNECTIONS_BUTTON_LABEL:
-        return NewForm(EDIT_CADET_CONNECTIONS_BUTTON_LABEL)
-    else:
-        raise NotImplemented("Button not recognised")
 
 
 def display_form_for_selected_volunteer(
     volunteer: Volunteer, interface: abstractInterface
 ) -> Form:
     #lines_of_allocations = list_of_lines_with_allocations(volunteer)
-    # skills
+
     connected = lines_for_connected_cadets(volunteer)
     skills = list_of_skills(volunteer)
     buttons = buttons_for_volunteer_form()
@@ -69,7 +54,7 @@ def display_form_for_selected_volunteer(
         ])
     )
 
-def list_of_lines_with_allocations(volunteer: Volunteer) -> ListOfLines:
+def list_of_lines_with_allocations_and_roles(volunteer: Volunteer) -> ListOfLines:
     #dict_of_allocations = get_dict_of_all_event_allocations_for_single_volunteer(cadet)
     #return ListOfLines(["Events helping at:", _______________]+
     #    ["%s: %s" % (str(event), group) for event, group in dict_of_allocations.items()]
@@ -99,3 +84,18 @@ def buttons_for_volunteer_form() -> Line:
     return Line([Button(BACK_BUTTON_LABEL), Button(EDIT_BUTTON_LABEL), Button(DELETE_BUTTON_LABEL), Button(EDIT_CADET_CONNECTIONS_BUTTON_LABEL)])
 
 
+def post_form_view_individual_volunteer(
+    interface: abstractInterface,
+) -> Union[Form, NewForm]:
+    ## placeholder, not currently used
+    button = interface.last_button_pressed()
+    if button==BACK_BUTTON_LABEL:
+        return initial_state_form
+    elif button==DELETE_BUTTON_LABEL:
+        return NewForm(DELETE_VOLUNTEER_STAGE)
+    elif button==EDIT_BUTTON_LABEL:
+        return NewForm(EDIT_VOLUNTEER_STAGE)
+    elif button==EDIT_CADET_CONNECTIONS_BUTTON_LABEL:
+        return NewForm(EDIT_CONNECTIONS_STAGE)
+    else:
+        raise NotImplemented("Button not recognised")

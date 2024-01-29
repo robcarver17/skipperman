@@ -12,7 +12,7 @@ from app.objects.abstract_objects.abstract_form import (
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.objects.abstract_objects.abstract_buttons import cancel_button
-from app.logic.events.events_in_state import get_event_from_state, get_event_from_list_of_events, confirm_event_exists
+from app.logic.events.events_in_state import get_event_from_state, get_event_from_list_of_events_given_event_name, confirm_event_exists
 from app.logic.abstract_logic_api import initial_state_form
 
 
@@ -43,7 +43,7 @@ def post_form_for_clone_event_field_mapping(interface: abstractInterface):
         )
         return initial_state_form
 
-    event = get_event_from_list_of_events(event_name_selected)
+    event = get_event_from_list_of_events_given_event_name(event_name_selected)
     try:
         mapping = get_field_mapping_for_event(event=event)
         assert len(mapping)>0

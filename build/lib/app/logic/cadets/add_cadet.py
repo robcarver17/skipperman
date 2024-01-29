@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from copy import copy
 from typing import Union
 
-from app.backend.cadets import verify_cadet_and_warn, add_new_verified_cadet
+from app.backend.cadets import verify_cadet_and_warn,  add_new_verified_cadet
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,

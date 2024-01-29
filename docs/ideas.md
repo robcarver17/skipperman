@@ -52,12 +52,17 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - allocate cadets to groups 
 - print a report of which cadet is in which group
 - view / delete cadets
-- edit / delete events  
+- edit / delete events
+- view / edit /add volunteers (not yet with a rota)
 
 
 ### Basic - to do:
 
 - nicer CSS
+- unpleasant way that checkboxes pile up in tables
+- volunteer view should show list of events volunteer allocated to
+- identify if events have food, merch, etc so don't get irrelevant fields coming up
+- add ad hoc volunteers not included in entry list
 - create a volunteer rota, manage it, and report on it
 - maintain ticksheets, print and record ticks
 - print roll call lists and contact details
@@ -65,7 +70,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - import a set of members from WA to populate a list of cadets or volunteers
 - allocate and maintain colour groups (CW)
 - print spotter sheets (CW and racing events)
-- maintain and report on tickets for gala dinner (CW)
+- maintain and report on tickets for gala dinner, include additional gala dinner invites eg sponsors, plus ones (CW)
 - maintain and report on wristbands (CW)
 - create a report of cadets and their ages for fancy dress (CW)
 - create a report of cadets 

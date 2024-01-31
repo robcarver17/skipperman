@@ -59,11 +59,12 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 ### Basic - to do:
 
 - nicer CSS
-- unpleasant way that checkboxes pile up in tables
-- volunteer view should show list of events volunteer allocated to
-- identify if events have food, merch, etc so don't get irrelevant fields coming up
 - add ad hoc volunteers not included in entry list
 - create a volunteer rota, manage it, and report on it
+- volunteer view should show list of events volunteer allocated to
+- event view should summarise volunteer rota numbers
+
+- identify if events have food, merch, etc so don't get irrelevant fields coming up
 - maintain ticksheets, print and record ticks
 - print roll call lists and contact details
 - allocate resources such as club dinghies and safety boats

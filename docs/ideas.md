@@ -64,6 +64,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - volunteer view should show list of events volunteer allocated to
 - event view should summarise volunteer rota numbers
 
+- anything that is displayed on screen can be exported to .csv eg reg details, volunteer rota (and imported...???)
 - identify if events have food, merch, etc so don't get irrelevant fields coming up
 - maintain ticksheets, print and record ticks
 - print roll call lists and contact details

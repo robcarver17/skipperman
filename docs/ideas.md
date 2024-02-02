@@ -51,10 +51,13 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Basic - to do:
 
+- WEIRD BUG with finish form
 - group allocations summary as pandas DF by day; also include title 'allocatoin' and 'volunteer rota'
 - when cadets deleted, if existing volunteer connections default to ticking yes to keep
   ACTION REQUIRED in master event update: Make an error log so bigger letters
   - click on cadet displaying previous events should ignore unallocated
+  - don't allow events without mapping to appear in clone mapping list
+  - don't show event for group allocation if allocation not done
   
 - report on a volunteer rota
 

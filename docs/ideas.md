@@ -34,14 +34,6 @@ A key design decision is how the GUI is implemented and deployed; a web front en
 Skipperman also needs to be flexible enough so that it can cope with eg changes in WA event fields without rewriting code.
 
 
-## Components
-
-- [Data pipeline](https://github.com/robcarver17/skipperman/tree/main/data_access/) - only .csv provided
-- [Interface](https://github.com/robcarver17/skipperman/tree/main/interface/) (consisting of display and interactive input, plus reporting output). CLI and GUI will be provided.
-- [Business logic](https://github.com/robcarver17/skipperman/tree/main/logic/), with hooks to the data pipeline and interface, which allows you to 'run' skipperman.
-- Back end functions called by the business logic
-- [Launcher](https://github.com/robcarver17/skipperman/tree/main/launcher/) that sets up an instance of the appropriate data pipeline, interface and logic and runs.
-
 
 ## Features
 
@@ -53,15 +45,20 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - print a report of which cadet is in which group
 - view / delete cadets
 - edit / delete events
-- view / edit /add volunteers (not yet with a rota)
+- view / edit /add volunteers 
+- allocate volunteers to a rota
 
 
 ### Basic - to do:
 
-- nicer CSS
+- group allocations summary as pandas DF by day; also include title 'allocatoin' and 'volunteer rota'
+- when cadets deleted, if existing volunteer connections default to ticking yes to keep
+  ACTION REQUIRED in master event update: Make an error log so bigger letters
+  - click on cadet displaying previous events should ignore unallocated
+  
 - report on a volunteer rota
 
-- anything that is displayed on screen can be exported to .csv eg reg details, volunteer rota (and imported...???)
+- edit event (warnings especially days!), delete event (many warnings!)
 - all pdf reports should have csv counterparts
 - identify if events have food, merch, etc so don't get irrelevant fields coming up
 - maintain ticksheets, print and record ticks
@@ -86,6 +83,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Future / wishlist / nice to have:
 
+- nicer CSS
 - maintain lists of past, present and future cadet committee members
 - create a list of key volunteers to invite to curry evening
 - instructor facing interface to update ticks on a GUI
@@ -93,6 +91,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - create a report of birthdays during an event
 - maintain a list of key volunteers and thank yous (CW)
 - manage orders for hoodies (CW)
+- anything that is displayed on screen can be exported to .csv eg reg details, volunteer rota (and imported...???)
 
 
 ## Business objects

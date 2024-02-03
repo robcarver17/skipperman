@@ -57,7 +57,7 @@ class checkboxInput(Input):
     dict_of_checked: dict
     input_name: str
     input_label: str
-
+    line_break: bool = False
 
 
 

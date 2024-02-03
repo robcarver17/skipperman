@@ -18,24 +18,20 @@ def form_html_wrapper(current_url: str):
 HTML_BUTTON_NAME = "action"
 
 
-"""
-def html_button(button_text, button_name=arg_not_passed):
-    if button_name==arg_not_passed:
-        button_name = HTML_BUTTON_NAME
-    return Html(
-        '<input type="submit" name="%s" value="%s" />' % (button_name, button_text)
-    )
-"""
 
-
-def html_button(button_text, button_name=arg_not_passed, button_value=arg_not_passed):
-    if button_name == arg_not_passed:
-        button_name = HTML_BUTTON_NAME
+def html_button(button_text, button_value=arg_not_passed, big_button: bool = False):
+    button_name = HTML_BUTTON_NAME
     if button_value == arg_not_passed:
         button_value = button_text
+    if big_button:
+        #size = 'style="font-size : 20px; width: 100%; height: 100px;"'
+        size = 'style="font-size : 20px"'
+    else:
+        size = ""
+
     return Html(
-        '<button name="%s" type="submit" value="%s">%s</button>'
-        % (button_name, button_value, button_text)
+        '<button name="%s" type="submit" value="%s" %s>%s</button>'
+        % (button_name, button_value, size, button_text)
     )
 
 
@@ -158,17 +154,14 @@ def html_single_radio_button(
     )
 
 
-def html_checkbox_input(
-        input_label: str,
-    input_name: str,
-    dict_of_labels: dict,
-    dict_of_checked: dict):
+def html_checkbox_input(input_name: str, dict_of_labels: dict, dict_of_checked: dict, line_break: bool = False,
+                        input_label: str = ""):
 
     all_html = [html_single_checkbox_entry(name_for_all_checks_in_group=input_name,
                                            label_unique_to_entry=dict_of_labels[id_unique_to_entry],
                                            checked=dict_of_checked.get(id_unique_to_entry, False),
                                            id_unique_to_entry=id_unique_to_entry,
-                                           )
+                                           line_break=line_break)
                 for id_unique_to_entry in dict_of_labels.keys()]
 
     return "%s "% input_label+" ".join(all_html)
@@ -176,22 +169,28 @@ def html_checkbox_input(
 def html_single_checkbox_entry(id_unique_to_entry: str,
                                name_for_all_checks_in_group: str,
                                label_unique_to_entry:str,
-                               checked: bool):
+                               checked: bool,
+                               line_break: bool = False):
     if checked:
         check_text="checked"
     else:
         check_text = ""
 
+    if line_break:
+        breaker = "<br>"
+    else:
+        breaker = ""
+
     value=id_unique_to_entry
 
-    return '<input type="checkbox" id="%s" name="%s" value="%s" %s /><label for="%s">%s</label>' % (
+    return '<input type="checkbox" id="%s" name="%s" value="%s" %s /><label for="%s">%s</label>%s' % (
         id_unique_to_entry,
         name_for_all_checks_in_group,
         value,
         check_text,
         id_unique_to_entry,
-        label_unique_to_entry
-
+        label_unique_to_entry,
+        breaker
     )
 
 def html_int_input(

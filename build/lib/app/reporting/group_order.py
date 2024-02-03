@@ -1,6 +1,6 @@
 import pandas as pd
 
-from app.reporting.options_and_parameters.report_type_specific_parameters import (
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
     SpecificParametersForTypeOfReport,
 )
 

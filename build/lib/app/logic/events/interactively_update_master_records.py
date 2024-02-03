@@ -6,13 +6,13 @@ from app.logic.events.constants import ROW_IN_EVENT_DATA, USE_ORIGINAL_DATA_BUTT
 
 from app.logic.events.events_in_state import get_event_from_state
 
-from app.backend.load_and_save_wa_mapped_events import (
+from app.backend.wa_import.load_and_save_wa_mapped_events import (
     load_master_event
 
 )
 from app.logic.events.update_existing_master_event_data_forms import display_form_for_update_to_existing_row_of_event_data,increment_and_save_id_in_event_data, update_mapped_wa_event_data_with_form_data, update_mapped_wa_event_data_with_new_data
 
-from app.backend.update_master_event_data import \
+from app.backend.wa_import.update_master_event_data import \
     report_on_missing_data_from_mapped_wa_event_data_and_save_to_master_event, get_row_from_event_file_with_ids, add_new_row_to_master_event_data, get_row_of_master_event_from_mapped_row_with_idx_and_status
 from app.objects.events import Event
 from app.objects.mapped_wa_event_with_ids import RowInMappedWAEventWithId
@@ -24,7 +24,7 @@ def display_form_interactively_update_master_records(
     input("Press enter to continue")
 
     event = get_event_from_state(interface)
-    print("Now updating cadets which are missing")
+    print("Now updating group_allocations which are missing")
     report_on_missing_data_from_mapped_wa_event_data_and_save_to_master_event(event=event, interface=interface)
 
     return process_updates_to_master_event_data(interface)

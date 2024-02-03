@@ -6,17 +6,17 @@ from app.objects.abstract_objects.abstract_form import (
 )
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, back_button, Button
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL,  Button
 
 from app.logic.abstract_interface import abstractInterface
-from app.logic.abstract_logic_api import initial_state_form
+from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
-from app.backend.read_and_write_mapping_files import (
+from app.backend.wa_import.read_and_write_mapping_files import (
     get_field_mapping_for_event,
 )
-from app.backend.check_mapping import check_field_mapping
-from app.backend.map_wa_files import is_wa_file_mapping_setup_for_event
+from app.backend.wa_import.check_mapping import check_field_mapping
+from app.backend.wa_import.map_wa_files import is_wa_file_mapping_setup_for_event
 from app.objects.events import Event
 
 def display_form_event_field_mapping(
@@ -46,7 +46,7 @@ def display_form_event_field_mapping_existing_mapping(
             pre_existing_text,
             _______________,
             ".... press %s to keep existing, or continue to change (see diagnostic information below). %s"
-            % (back_button.label, warning_text),
+            % (BACK_BUTTON_LABEL, warning_text),
             _______________,
 
         ]
@@ -98,9 +98,9 @@ def text_for_pre_existing_mapping(interface: abstractInterface) -> PandasDFTable
 def mapping_buttons() -> Line:
     return Line(
         [
-            back_button,
+            Button(BACK_BUTTON_LABEL),
             Button(MAP_TO_TEMPLATE_BUTTON_LABEL),
-            Button(CLONE_EVENT_BUTTON_LABEL),
+            Button(CLONE_EVENT_MAPPING_BUTTON_LABEL),
             Button(UPLOAD_MAPPING_BUTTON_LABEL),
         ]
     )
@@ -112,12 +112,11 @@ def post_form_event_field_mapping(interface: abstractInterface) -> Union[Form, N
     button_pressed = interface.last_button_pressed()
     if button_pressed == MAP_TO_TEMPLATE_BUTTON_LABEL:
         return NewForm(WA_SELECT_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE)
-    elif button_pressed == CLONE_EVENT_BUTTON_LABEL:
+    elif button_pressed == CLONE_EVENT_MAPPING_BUTTON_LABEL:
         return NewForm(WA_CLONE_EVENT_MAPPING_IN_VIEW_EVENT_STAGE)
     elif button_pressed == UPLOAD_MAPPING_BUTTON_LABEL:
         return NewForm(WA_UPLOAD_EVENT_MAPPING_IN_VIEW_EVENT_STAGE)
     elif button_pressed == BACK_BUTTON_LABEL:
         return NewForm(VIEW_EVENT_STAGE)
     else:
-        interface.log_error("Button %s not recognised" % button_pressed)
-        return initial_state_form
+        button_error_and_back_to_initial_state_form(interface)

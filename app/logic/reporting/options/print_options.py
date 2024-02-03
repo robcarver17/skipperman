@@ -1,3 +1,5 @@
+import datetime
+
 from app.data_access.configuration.configuration import ALL_PAGESIZE, ALL_FONTS
 from app.data_access.data import data
 from app.logic.events.events_in_state import get_event_from_state
@@ -18,7 +20,7 @@ from app.logic.reporting.constants import (
     PREPEND_GROUP_NAME,
 )
 from app.objects.constants import missing_data
-from app.reporting.options_and_parameters.print_options import PrintOptions, get_default_filename_for_report
+from app.backend.reporting.options_and_parameters.print_options import PrintOptions
 
 
 def get_saved_print_options(
@@ -200,3 +202,11 @@ all_pagesize_as_dict = dict([(pagesize, pagesize) for pagesize in ALL_PAGESIZE])
 all_fonts_as_dict = dict([(font, font) for font in ALL_FONTS])
 LANDSCAPE = "Landscape"
 PORTRAIT = "Portrait"
+
+
+def get_default_filename_for_report(default_title: str) -> str:
+    default_file_name = default_title.replace(" ", "_")
+    timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
+    default_file_name = "%s_%s.pdf" % (default_file_name, timestamp)
+
+    return default_file_name

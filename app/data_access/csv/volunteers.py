@@ -3,6 +3,7 @@ from app.data_access.csv.generic_csv_data import GenericCsvData
 
 from app.data_access.classes.volunteers import *
 from app.objects.volunteers_at_event import ListOfVolunteersAtEvent
+from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent
 
 LIST_OF_VOLUNTEERS_FILE_ID = "list_of_volunteers"
 
@@ -71,3 +72,18 @@ class CsvDataListOfCadetsWithoutVolunteersAtEvent(GenericCsvData, DataListOfCade
         self.write_object(list_of_cadets_without_volunteers_at_event,
                           file_identifier=LIST_OF_CADETS_WITHOUT_VOLUNTEERS_AT_EVENT_FILE_ID)
 
+
+LIST_OF_VOLUNTEERS_IN_ROLES_FILE_ID = "list_of_volunteers_in_roles_at_event"
+
+class CsvDataListOfVolunteersInRolesAtEvent(GenericCsvData, DataListOfVolunteersInRolesAtEvent):
+    def read(self, event_id: str) -> ListOfVolunteersInRoleAtEvent:
+        list_of_volunteers_in_roles_at_event = self.read_and_return_object_of_type(ListOfVolunteersInRoleAtEvent,
+                                                                          file_identifier=LIST_OF_VOLUNTEERS_IN_ROLES_FILE_ID,
+                                                                          additional_file_identifiers=event_id)
+
+        return list_of_volunteers_in_roles_at_event
+
+    def write(self, list_of_volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent, event_id: str):
+        self.write_object(list_of_volunteers_in_roles_at_event,
+                          file_identifier=LIST_OF_VOLUNTEERS_IN_ROLES_FILE_ID,
+                          additional_file_identifiers=event_id)

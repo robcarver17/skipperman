@@ -1,5 +1,5 @@
 import pandas as pd
-from app.data_access.configuration.configuration import ALL_GROUPS
+from app.data_access.configuration.configuration import ALL_GROUPS_NAMES
 
 from app.web import (
     create_column_pdf_report_from_df_and_return_filename,
@@ -15,9 +15,9 @@ from app.logic import (
 )
 from app.logic import choose_reporting_options
 
-from app.reporting.options_and_parameters.report_type_specific_parameters import SpecificParametersForTypeOfReport
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import SpecificParametersForTypeOfReport
 
-from app.objects.field_list import CADET_NAME, GROUP_STR_NAME
+from app.objects.groups import CADET_NAME, GROUP_STR_NAME
 
 
 def report_group_allocations(data_and_interface: DataAndInterface):
@@ -38,7 +38,7 @@ def get_df_for_reporting(data_and_interface: DataAndInterface, event):
         "Show full names? (no to include first initial and surname only)"
     )
     include_unallocated = data_and_interface.interface.return_true_if_answer_is_yes(
-        "Include unallocated cadets?"
+        "Include unallocated group_allocations?"
     )
 
     list_of_cadet_ids_with_groups = load_allocation_for_event(
@@ -92,7 +92,7 @@ default_markuplist_from_df_options_for_group_allocation = SpecificParametersForT
     group_by_column=GROUP_STR_NAME,
     include_group_as_header=True,
     first_value_in_group_is_key=False,
-    passed_group_order=ALL_GROUPS,
+    passed_group_order=ALL_GROUPS_NAMES,
     prepend_group_name=False,
 )
 

@@ -1,20 +1,21 @@
 import pandas as pd
 
-from app.backend.cadet_event_allocations import get_unallocated_cadets, get_list_of_cadets_with_groups, \
+from app.backend.group_allocations.cadet_event_allocations import get_unallocated_cadets, get_list_of_cadets_with_groups, \
     load_allocation_for_event
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_form import File
 from app.logic.abstract_interface import abstractInterface
 from app.logic.reporting.constants import SHOW_FULL_NAMES, INCLUDE_UNALLOCATED_CADETS
-from app.logic.reporting.options.group_order import get_group_order_from_stored_or_df
-from app.logic.reporting.options.arrangements import get_reporting_options
+from app.logic.reporting.options.group_order import get_group_order_from_stored_or_df, clear_group_order_in_storage
+from app.logic.reporting.options.reporting_options import get_reporting_options
+from app.logic.reporting.options.arrangement_state import clear_arrangement_in_state
 from app.objects.events import Event
 
-from app.reporting.allocation_report import (
+from app.backend.reporting.allocation_report import (
     specific_parameters_for_allocation_report,
     AdditionalParametersForAllocationReport,
 )
-from app.reporting.process_stages.create_column_pdf_report_from_df import create_column_pdf_report_from_df_and_return_filename
+from app.backend.reporting.process_stages.create_column_pdf_report_from_df import create_column_pdf_report_from_df_and_return_filename
 
 def get_group_allocation_report_additional_parameters_from_form_and_save(
     interface: abstractInterface,
@@ -40,7 +41,21 @@ def get_group_allocation_report_additional_parameters_from_form(
 def save_additional_parameters_for_allocation(
     interface: abstractInterface, parameters: AdditionalParametersForAllocationReport
 ):
+    save_show_full_names_parameter(interface=interface, parameters=parameters)
+    save_unallocated_parameter_and_reset_group_order_and_arrangement_if_required(interface=interface, parameters=parameters)
+
+def save_show_full_names_parameter(interface: abstractInterface, parameters: AdditionalParametersForAllocationReport):
     interface.set_persistent_value(SHOW_FULL_NAMES, parameters.display_full_names)
+
+def save_unallocated_parameter_and_reset_group_order_and_arrangement_if_required(interface: abstractInterface, parameters: AdditionalParametersForAllocationReport):
+    original_parameters = load_additional_parameters_for_allocation_report(interface)
+    original_inclusion_of_unallocated = original_parameters.include_unallocated_cadets
+    currently_required_unallocated = parameters.include_unallocated_cadets
+
+    if original_inclusion_of_unallocated!=currently_required_unallocated:
+        clear_group_order_in_storage(interface=interface)
+        clear_arrangement_in_state(interface=interface)
+
     interface.set_persistent_value(
         INCLUDE_UNALLOCATED_CADETS, parameters.include_unallocated_cadets
     )

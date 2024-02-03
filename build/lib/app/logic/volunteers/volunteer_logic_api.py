@@ -10,36 +10,35 @@ from app.logic.volunteers.edit_volunteer import display_form_edit_individual_vol
 from app.logic.volunteers.edit_cadet_connections import display_form_edit_cadet_volunteer_connections,post_form_edit_cadet_volunteer_connections
 
 class VolunteerLogicApi(AbstractLogicApi):
-    def get_displayed_form_given_form_name(self, form_name: str):
-        if form_name == INITIAL_STATE:
-            return get_form_view_of_volunteers(self.interface)
-        elif form_name== ADD_VOLUNTEER_STAGE:
-            return display_form_add_volunteer(self.interface)
-        elif form_name==VIEW_INDIVIDUAL_VOLUNTEER_STAGE:
-            return display_form_view_individual_volunteer(self.interface)
-        elif form_name==DELETE_VOLUNTEER_STAGE:
-            return display_form_delete_individual_volunteer(self.interface)
-        elif form_name==EDIT_VOLUNTEER_STAGE:
-            return display_form_edit_individual_volunteer(self.interface)
-        elif form_name==EDIT_CONNECTIONS_STAGE:
-            return display_form_edit_cadet_volunteer_connections(self.interface)
-        else:
-            raise Exception("Form name %s not recognised" % form_name)
+    @property
+    def dict_of_display_forms(self) -> dict:
+        return {
+        INITIAL_STATE:
+            get_form_view_of_volunteers,
+        ADD_VOLUNTEER_STAGE:
+            display_form_add_volunteer,
+        VIEW_INDIVIDUAL_VOLUNTEER_STAGE:
+           display_form_view_individual_volunteer,
+        DELETE_VOLUNTEER_STAGE:
+            display_form_delete_individual_volunteer,
+        EDIT_VOLUNTEER_STAGE:
+            display_form_edit_individual_volunteer,
+        EDIT_CONNECTIONS_STAGE:
+            display_form_edit_cadet_volunteer_connections,
+        }
 
-    def get_posted_form_given_form_name_without_checking_for_redirection(
-        self, form_name: str
-    ) -> Form:
-        if form_name == INITIAL_STATE:
-            return post_form_view_of_volunteers(self.interface)
-        elif form_name == ADD_VOLUNTEER_STAGE:
-            return post_form_add_volunteer(self.interface)
-        elif form_name == VIEW_INDIVIDUAL_VOLUNTEER_STAGE:
-            return post_form_view_individual_volunteer(self.interface)
-        elif form_name == DELETE_VOLUNTEER_STAGE:
-            return post_form_delete_individual_volunteer(self.interface)
-        elif form_name == EDIT_VOLUNTEER_STAGE:
-            return post_form_edit_individual_volunteer(self.interface)
-        elif form_name == EDIT_CONNECTIONS_STAGE:
-            return post_form_edit_cadet_volunteer_connections(self.interface)
-        else:
-            raise Exception("Form name %s not recognised" % form_name)
+    @property
+    def dict_of_posted_forms(self) -> dict:
+        return {INITIAL_STATE:
+            post_form_view_of_volunteers,
+        ADD_VOLUNTEER_STAGE:
+            post_form_add_volunteer,
+        VIEW_INDIVIDUAL_VOLUNTEER_STAGE:
+             post_form_view_individual_volunteer,
+        DELETE_VOLUNTEER_STAGE:
+             post_form_delete_individual_volunteer,
+        EDIT_VOLUNTEER_STAGE:
+             post_form_edit_individual_volunteer,
+        EDIT_CONNECTIONS_STAGE:
+            post_form_edit_cadet_volunteer_connections}
+

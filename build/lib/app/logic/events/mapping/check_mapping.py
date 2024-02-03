@@ -1,10 +1,10 @@
-from app.backend.map_wa_fields import get_wa_field_mapping_dict
+from app.backend.wa_import.map_wa_fields import get_wa_field_mapping_dict
 from app.objects.abstract_objects.abstract_text import bold
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.abstract_interface import abstractInterface
 from app.logic.events.events_in_state import get_event_from_state
-from app.backend.load_wa_file import does_raw_event_file_exist, load_raw_wa_file
-from app.backend.load_wa_file import (
+from app.backend.wa_import.load_wa_file import does_raw_event_file_exist, load_raw_wa_file
+from app.backend.wa_import.load_wa_file import (
     get_staged_file_raw_event_filename,
 )
 from app.objects.events import Event

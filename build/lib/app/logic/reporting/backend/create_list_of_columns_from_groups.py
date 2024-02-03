@@ -1,10 +1,10 @@
 import numpy as np
 
-from app.reporting.process_stages.optimise_column_layout import (
+from app.backend.reporting.process_stages.optimise_column_layout import (
     _generate_list_of_all_possible_indices,
     _find_best_list_of_indices,
 )
-from app.reporting.process_stages.strings_columns_groups import (
+from app.backend.reporting.process_stages.strings_columns_groups import (
     ListtOfColumns,
     ListOfGroupsOfMarkedUpStrings,
     create_columns_from_list_of_groups_of_marked_up_str_with_passed_list,
@@ -12,10 +12,10 @@ from app.reporting.process_stages.strings_columns_groups import (
 from app.logic.reporting.backend.TODELETE import (
     ReportingOptionsForSpecificGroupsInReport,
 )
-from app.reporting.arrangement.arrangement_order import (
+from app.backend.reporting.arrangement.arrangement_order import (
     ArrangementOfColumns,
 )
-from app.reporting.arrangement.arrangement_methods import (
+from app.backend.reporting.arrangement.arrangement_methods import (
     ARRANGE_OPTIMISE,
     ARRANGE_PASSED_LIST,
     ARRANGE_RECTANGLE,

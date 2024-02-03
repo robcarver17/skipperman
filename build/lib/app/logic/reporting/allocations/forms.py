@@ -11,13 +11,13 @@ from app.logic.reporting.allocations.processes import (
     load_additional_parameters_for_allocation_report
 )
 from app.logic.reporting.constants import SHOW_FULL_NAMES, INCLUDE_UNALLOCATED_CADETS
-from app.logic.reporting.options.arrangements import get_stored_arrangement
+from app.logic.reporting.options.arrangement_state import get_stored_arrangement
 from app.logic.reporting.options.print_options import (
     get_saved_print_options,
     report_print_options_as_list_of_lines,
 )
-from app.reporting.arrangement.arrange_options import describe_arrangement
-from app.reporting.allocation_report import AdditionalParametersForAllocationReport, specific_parameters_for_allocation_report
+from app.backend.reporting.arrangement.arrange_options import describe_arrangement
+from app.backend.reporting.allocation_report import AdditionalParametersForAllocationReport, specific_parameters_for_allocation_report
 
 
 def reporting_options_form_for_group_additional_parameters(
@@ -32,7 +32,7 @@ def reporting_options_form_for_group_additional_parameters(
                 default_is_yes=additional_parameters.display_full_names,
             ),
             yes_no_radio(
-                input_label="Include unallocated cadets?",
+                input_label="Include unallocated group_allocations? (Changing will reset group order and arrangement)",
                 input_name=INCLUDE_UNALLOCATED_CADETS,
                 default_is_yes=additional_parameters.include_unallocated_cadets,
             ),
@@ -77,8 +77,8 @@ def explain_additional_parameters(
     else:
         name_str = "Display initial and surname only"
     if additional_parameters.include_unallocated_cadets:
-        alloc_str = "Include all cadets, even those not allocated to groups"
+        alloc_str = "Include all group_allocations, even those not allocated to groups"
     else:
-        alloc_str = "Exclude unallocated cadets"
+        alloc_str = "Exclude unallocated group_allocations"
 
     return ListOfLines([name_str, alloc_str])

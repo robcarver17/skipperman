@@ -9,7 +9,7 @@ from app.objects.food import FoodRequirements, OTHER_IN_FOOD_REQUIRED
 from app.objects.mapped_wa_event_with_ids import RowStatus, all_possible_status
 
 
-def get_availability_checkbox(availability: DaySelector, event: Event, input_name: str, input_label = "") -> checkboxInput:
+def get_availability_checkbox(availability: DaySelector, event: Event, input_name: str, input_label = "", line_break: bool = False) -> checkboxInput:
     possible_days = event.weekdays_in_event()
     dict_of_labels = dict([(day.name, day.name) for day in possible_days])
     dict_of_checked = dict([(day.name, availability.get(day, False)) for day in possible_days])
@@ -17,7 +17,8 @@ def get_availability_checkbox(availability: DaySelector, event: Event, input_nam
     return checkboxInput(dict_of_labels=dict_of_labels,
                   dict_of_checked=dict_of_checked,
                   input_name=input_name,
-                  input_label=input_label)
+                  input_label=input_label,
+                         line_break=line_break)
 
 
 def get_availablity_from_form(interface: abstractInterface, event: Event, input_name: str) -> DaySelector:
@@ -36,19 +37,23 @@ def get_availablity_from_form(interface: abstractInterface, event: Event, input_
 
 
 def get_food_requirements_input(existing_food_requirements: FoodRequirements, checkbox_input_name: str, other_input_name: str,
-                                checkbox_input_label = "", other_input_label = "") -> ListOfLines:
+                                checkbox_input_label = "", other_input_label = "",
+                                line_break: bool = False) -> ListOfLines:
+
     checkbox, other_input = get_food_requirements_input_as_tuple(
         existing_food_requirements=existing_food_requirements,
         checkbox_input_name=checkbox_input_name,
         other_input_name=other_input_name,
         other_input_label=other_input_label,
-        checkbox_input_label=checkbox_input_label
+        checkbox_input_label=checkbox_input_label,
+        line_break=line_break
     )
 
     return ListOfLines([checkbox, other_input])
 
 def get_food_requirements_input_as_tuple(existing_food_requirements: FoodRequirements, checkbox_input_name: str, other_input_name: str,
-                                checkbox_input_label = "", other_input_label = ""):
+                                checkbox_input_label = "", other_input_label = "",
+                                         line_break: bool = False):
 
     existing_food_requirements_as_dict = existing_food_requirements.as_dict()
     existing_food_requirements_other = existing_food_requirements_as_dict.pop(OTHER_IN_FOOD_REQUIRED)
@@ -61,7 +66,8 @@ def get_food_requirements_input_as_tuple(existing_food_requirements: FoodRequire
     checkbox = checkboxInput(dict_of_labels=dict_of_labels,
                   dict_of_checked=dict_of_checked,
                   input_name=checkbox_input_name,
-                  input_label=checkbox_input_label)
+                  input_label=checkbox_input_label,
+                             line_break=line_break)
 
     other_input = textInput(input_label=other_input_label,
                             input_name=other_input_name,

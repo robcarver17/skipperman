@@ -1,6 +1,6 @@
 from app.logic.abstract_interface import abstractInterface
 from app.logic.volunteers.constants import VOLUNTEER
-from app.backend.volunteers import get_volunteer_from_list_of_volunteers, get_volunteer_from_volunteer_id
+from app.backend.volunteers.volunteers import get_volunteer_from_list_of_volunteers, get_volunteer_from_volunteer_id
 from app.objects.volunteers import Volunteer
 
 

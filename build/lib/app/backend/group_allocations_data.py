@@ -1,15 +1,15 @@
 from typing import Dict
 from dataclasses import dataclass
 
-from app.backend.cadet_event_allocations import get_list_of_cadets_in_master_event, load_allocation_for_event
-from app.backend.previous_allocations import allocation_for_cadet_in_previous_events, \
-    list_of_events_excluding_one_event, get_dict_of_allocations_for_events_and_list_of_cadets
-from app.data_access.configuration.configuration import UNALLOCATED_GROUP
-from app.backend.load_and_save_wa_mapped_events import (
+from app.backend.group_allocations.cadet_event_allocations import get_list_of_cadets_in_master_event, load_allocation_for_event
+from app.backend.group_allocations.previous_allocations import allocation_for_cadet_in_previous_events, \
+    get_dict_of_allocations_for_events_and_list_of_cadets
+from app.data_access.configuration.configuration import UNALLOCATED_GROUP_NAME
+from app.backend.wa_import.load_and_save_wa_mapped_events import (
     load_master_event,
 )
 from app.objects.cadets import ListOfCadets, Cadet
-from app.objects.events import Event
+from app.objects.events import Event, list_of_events_excluding_one_event
 from app.objects.groups import ListOfCadetIdsWithGroups
 
 from app.objects.master_event import MasterEvent
@@ -40,12 +40,12 @@ class AllocationData:
         previous_allocation = self.previous_groups_as_list(cadet)
         previous_allocation.reverse() ## last event first when considering
         for allocation in previous_allocation:
-            if allocation == UNALLOCATED_GROUP:
+            if allocation == UNALLOCATED_GROUP_NAME:
                 continue
             else:
                 return allocation
 
-        return UNALLOCATED_GROUP
+        return UNALLOCATED_GROUP_NAME
 
     def get_current_group(self, cadet: Cadet):
         try:

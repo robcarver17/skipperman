@@ -3,12 +3,12 @@ from typing import Union
 from app.objects.abstract_objects.abstract_form import Form, NewForm, textInput, checkboxInput
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-from app.logic.abstract_logic_api import initial_state_form
+from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.logic.abstract_interface import (
     abstractInterface,
 )
 from app.logic.volunteers.constants import *
-from app.backend.volunteers import get_dict_of_existing_skills, save_skills_for_volunteer, save_volunteer_details
+from app.backend.volunteers.volunteers import get_dict_of_existing_skills, save_skills_for_volunteer, save_volunteer_details
 from app.logic.volunteers.volunteer_state import get_volunteer_from_state
 from app.logic.volunteers.add_volunteer import get_volunteer_from_form
 from app.objects.volunteers import Volunteer
@@ -49,6 +49,7 @@ def form_to_edit_individual_volunteer(volunteer: Volunteer,
         ])
     ])
 
+
 def core_volunteer_form_entries(volunteer: Volunteer) -> ListOfLines:
     first_name = textInput(
         input_label="First name", input_name=FIRST_NAME, value=volunteer.first_name
@@ -77,11 +78,10 @@ def post_form_edit_individual_volunteer(
         return NewForm(VIEW_INDIVIDUAL_VOLUNTEER_STAGE)
     elif button==SAVE_BUTTON_LABEL:
         modify_volunteer_given_form_contents(interface=interface)
-        ## have to go home as name might have change
-        return initial_state_form
+        return NewForm(VIEW_INDIVIDUAL_VOLUNTEER_STAGE)
 
     else:
-        raise Exception("Button %s not recognised" % button)
+        return button_error_and_back_to_initial_state_form(interface)
 
 def modify_volunteer_given_form_contents(interface: abstractInterface):
     original_volunteer = get_volunteer_from_state(interface)
@@ -110,3 +110,5 @@ def get_dict_of_skills_from_form(interface: abstractInterface, volunteer: Volunt
             existing_skills[skill_name] = False
 
     return existing_skills
+
+

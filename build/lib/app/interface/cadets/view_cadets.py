@@ -2,7 +2,7 @@ from app.web.cadets.constants import sort_buttons, ADD_CADET_BUTTON_LABEL
 from app.web.flask.state_for_action import StateDataForAction
 from app.web.html.html import Html, ListOfHtml
 from app.web.html.forms import form_html_wrapper, html_button
-from app.backend.cadets import get_list_of_cadets, SORT_BY_SURNAME
+from app.backend.group_allocations import get_list_of_cadets, SORT_BY_SURNAME
 
 add_button = html_button(ADD_CADET_BUTTON_LABEL)
 

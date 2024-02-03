@@ -18,7 +18,8 @@ from app.logic.reporting.constants import (
     PREPEND_GROUP_NAME,
 )
 from app.objects.constants import missing_data
-from app.reporting.options_and_parameters.print_options import PrintOptions, get_default_filename_for_report
+from app.backend.reporting.options_and_parameters.print_options import PrintOptions
+from app.logic.reporting.options.print_options import get_default_filename_for_report
 
 
 def get_saved_print_options(

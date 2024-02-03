@@ -10,6 +10,7 @@ from app.logic.volunteers.edit_volunteer import display_form_edit_individual_vol
 from app.logic.volunteers.edit_cadet_connections import display_form_edit_cadet_volunteer_connections,post_form_edit_cadet_volunteer_connections
 
 class VolunteerLogicApi(AbstractLogicApi):
+    @property
     def dict_of_display_forms(self) -> dict:
         return {
         INITIAL_STATE:
@@ -26,6 +27,7 @@ class VolunteerLogicApi(AbstractLogicApi):
             display_form_edit_cadet_volunteer_connections,
         }
 
+    @property
     def dict_of_posted_forms(self) -> dict:
         return {INITIAL_STATE:
             post_form_view_of_volunteers,

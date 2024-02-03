@@ -1,5 +1,5 @@
 from typing import Union
-from app.backend.volunteer_allocation import any_volunteers_at_event_for_cadet, \
+from app.backend.volunteers.volunteer_allocation import any_volunteers_at_event_for_cadet, \
     have_volunteers_been_processed_at_event_for_cadet
 from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import get_and_save_next_cadet_id, \
     reset_current_cadet_id_store
@@ -12,7 +12,7 @@ from app.logic.abstract_interface import (
 
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.constants import *
-from app.backend.update_master_event_data import get_row_in_master_event_for_cadet_id
+from app.backend.wa_import.update_master_event_data import get_row_in_master_event_for_cadet_id
 
 from app.objects.events import Event
 from app.objects.constants import NoMoreData
@@ -41,7 +41,8 @@ def display_form_volunteer_extraction_from_master_records_looping(
     except NoMoreData:
         print("Finished looping")
         return form_with_message_and_finished_button(
-            "Finished importing WA data", interface=interface
+            "Finished importing WA data", interface=interface,
+            set_stage_name_to_go_to_on_button_press=VIEW_EVENT_STAGE
         )
 
     print("Current cadet id is %s" % cadet_id)

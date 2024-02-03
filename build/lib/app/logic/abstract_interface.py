@@ -8,9 +8,11 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     YES, NO,
 )
-from app.objects.abstract_objects.abstract_buttons import finished_button, Button
+from app.objects.abstract_objects.abstract_buttons import FINISHED_BUTTON_LABEL, Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 
+
+finished_button = Button(FINISHED_BUTTON_LABEL)
 
 class abstractInterface(object):
     def log_error(self, error_message: str):
@@ -21,6 +23,15 @@ class abstractInterface(object):
 
     def print_logs(self) -> ListOfLines:
         raise NotImplemented
+
+    def set_where_finished_button_should_lead_to(self, stage_name: str):
+        self.set_persistent_value(FINISHED_BUTTON_LABEL, stage_name)
+
+    def get_where_finished_button_should_lead_to(self, default: str)-> str:
+        return self.get_persistent_value(FINISHED_BUTTON_LABEL, default=default)
+
+    def clear_where_finished_button_should_lead_to(self):
+        return self.clear_persistent_value(FINISHED_BUTTON_LABEL)
 
     def get_persistent_value(self, key, default=missing_data):
         return self.persistent_store.get(key, default)
@@ -96,8 +107,22 @@ def get_file_from_interface(file_label: str, interface: abstractInterface):
 
 def form_with_message_and_finished_button(
     message: str, interface: abstractInterface,
-        button: Button = finished_button
+        button: Button = finished_button,
+        set_stage_name_to_go_to_on_button_press: str = arg_not_passed,
+        log_error: str = arg_not_passed,
+        log_msg: str = arg_not_passed
+
 ) -> Form:
+    if log_error is not arg_not_passed:
+        interface.log_error(log_error)
+    elif log_msg is not arg_not_passed:
+        interface.log_message(log_msg)
+
+    if set_stage_name_to_go_to_on_button_press is not arg_not_passed:
+        interface.set_where_finished_button_should_lead_to(set_stage_name_to_go_to_on_button_press)
+    else:
+        interface.clear_where_finished_button_should_lead_to()
+
     return form_with_content_and_finished_button(content = Line(message), interface=interface, button=button)
 
 def form_with_content_and_finished_button(
@@ -115,3 +140,4 @@ def form_with_content_and_finished_button(
             ]
         )
     )
+

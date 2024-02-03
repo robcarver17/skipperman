@@ -4,7 +4,7 @@ from typing import List
 from app.logic.reporting.backend.TODELETE import (
     ReportingOptionsForSpecificGroupsInReport,
 )
-from app.reporting.process_stages.strings_columns_groups import (
+from app.backend.reporting.process_stages.strings_columns_groups import (
     ListOfGroupsOfMarkedUpStrings,
     create_columns_from_list_of_groups_of_marked_up_str_with_passed_list,
 )

@@ -33,12 +33,10 @@ class Event(GenericSkipperManObjectWithIds):
         return self.event_description
 
     def __eq__(self, other):
-        return (self.event_name == other.event_name) and (
-            self.event_year == other.event_year
-        )
+        return (self.event_description == other.event_description)
 
     def __hash__(self):
-        return hash(self.event_name + "_" + str(self.event_year))
+        return hash(self.event_description)
 
     @property
     def verbose_repr(self):
@@ -89,6 +87,10 @@ class Event(GenericSkipperManObjectWithIds):
         weekdays_covered = self.weekdays_in_event()
         return DaySelector(dict([(day, day in weekdays_covered) for day in all_possible_days]))
 
+    def first_day(self):
+        ## relies on ordering
+        return self.weekdays_in_event()[0]
+
     def weekdays_in_event(self) -> List[Day]:
         date_list = self.dates_in_event()
         weekdays = [day_given_datetime(some_day) for some_day in date_list]
@@ -117,8 +119,24 @@ class ListOfEvents(GenericListOfObjectsWithIds):
         return Event
 
     @property
-    def list_of_event_names(self) -> list:
-        return [event.event_name for event in self]
+    def list_of_event_descriptions(self) -> list:
+        return [event.event_description for event in self]
+
+    def event_with_description(self, event_description: str) -> Event:
+        list_of_descriptions = self.list_of_event_descriptions
+        idx = list_of_descriptions.index(event_description)
+
+        return self[idx]
+
+    def sort_by(self, sort_by: str):
+        if sort_by == SORT_BY_START_DSC:
+            return self.sort_by_start_date_desc()
+        elif sort_by == SORT_BY_START_ASC:
+            return self.sort_by_start_date_asc()
+        elif sort_by == SORT_BY_NAME:
+            return self.sort_by_name()
+        else:
+            raise Exception("can't sort event list by %s" % sort_by)
 
     def sort_by_start_date_asc(self):
         return ListOfEvents(sorted(self, key=lambda x: x.start_date))
@@ -157,3 +175,24 @@ class ListOfEvents(GenericListOfObjectsWithIds):
         )
 
         return ListOfEvents(joint_list_of_similar_events)
+
+
+SORT_BY_START_ASC = "Sort by start date, ascending"
+SORT_BY_NAME = "Sort by event name"
+SORT_BY_START_DSC = "Sort by start date, descending"
+
+
+def list_of_events_excluding_one_event(list_of_events: ListOfEvents,
+                                       event_to_exclude: Event,
+                                       sort_by: str = SORT_BY_START_ASC,
+                                       only_past: bool = True) -> ListOfEvents:
+
+
+    if only_past:
+        list_of_events = ListOfEvents([event for event in list_of_events if event.start_date<event_to_exclude.start_date])
+    else:
+        list_of_events.pop_with_id(event_to_exclude.id)
+
+    list_of_events = list_of_events.sort_by(sort_by)
+
+    return list_of_events

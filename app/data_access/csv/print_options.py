@@ -1,6 +1,4 @@
-import pandas as pd
-
-from app.reporting.options_and_parameters.print_options import PrintOptions
+from app.backend.reporting.options_and_parameters.print_options import PrintOptions
 from app.data_access.csv.generic_csv_data import GenericCsvData
 from app.data_access.classes.print_options import DataListOfPrintOptions
 

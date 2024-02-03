@@ -2,7 +2,7 @@ from typing import Union
 
 import pandas as pd
 
-from app.logic.abstract_logic_api import initial_state_form
+from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_form import Form, NewForm, File
 from app.objects.abstract_objects.abstract_tables import Table
 from app.objects.abstract_objects.abstract_buttons import Button
@@ -12,16 +12,19 @@ from app.logic.abstract_interface import abstractInterface
 from app.logic.forms.reorder_form import reorder_table, reorderFormInterface, list_of_button_names_given_group_order
 from app.logic.forms.reorder_matrix import reorder_matrix, reorderMatrixInterface, list_of_button_values_given_list_of_entries
 
-from app.logic.reporting.options.arrangements import save_arrangement, \
-    modify_arrangement_given_change_in_group_order, get_arrangement_of_rows_from_storage_or_derive_from_method, \
-    modify_arrangement_options_given_custom_list, augment_order_of_groups_with_sizes, get_reporting_options
+from app.logic.reporting.options.arrangements import get_arrangement_of_rows_from_storage_or_derive_from_method
+from app.logic.reporting.options.reporting_options import augment_order_of_groups_with_sizes, get_reporting_options
+from app.logic.reporting.options.arrangement_state import save_arrangement, \
+    modify_arrangement_given_change_in_group_order, modify_arrangement_options_given_custom_list
 from app.logic.reporting.options.group_order import save_group_order_to_storage
 
-from app.reporting.arrangement.arrange_options import dict_of_arrangements_that_reorder
-from app.reporting.options_and_parameters.report_type_specific_parameters import SpecificParametersForTypeOfReport
-from app.reporting.options_and_parameters.report_options import ReportingOptions
+from app.backend.reporting.arrangement.arrange_options import dict_of_arrangements_that_reorder
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import SpecificParametersForTypeOfReport
+from app.backend.reporting.options_and_parameters.report_options import ReportingOptions
 
-def form_for_group_arrangement_options(interface: abstractInterface, specific_parameters_for_type_of_report: SpecificParametersForTypeOfReport, df: pd.DataFrame) -> ListOfLines:
+def form_for_group_arrangement_options(interface: abstractInterface,
+                                       specific_parameters_for_type_of_report: SpecificParametersForTypeOfReport,
+                                       df: pd.DataFrame) -> ListOfLines:
 
     reporting_options = get_reporting_options(interface=interface,
                                               specific_parameters_for_type_of_report=specific_parameters_for_type_of_report,
@@ -98,12 +101,11 @@ def post_form_for_group_arrangement_options(
                                               specific_parameters_for_type_of_report=specific_parameters_for_type_of_report,
                                               df=df)
 
-    last_button_pressed = interface.last_button_pressed()
-    print("last button %s" % last_button_pressed)
-
     list_of_arrangement_descriptions_on_buttons = list(dict_of_arrangements_that_reorder.keys())
     list_of_buttons_for_changing_group_order = get_list_of_buttons_changing_group_order(reporting_options)
     list_of_buttons_changing_matrix_shape = get_list_of_buttons_changing_matrix_shape(reporting_options=reporting_options)
+
+    last_button_pressed = interface.last_button_pressed()
 
     if last_button_pressed in list_of_arrangement_descriptions_on_buttons:
         return change_arrangement_given_method_and_current_order_save_and_return_form_again(interface=interface, current_form_name=current_form_name,reporting_options=reporting_options)
@@ -117,17 +119,14 @@ def post_form_for_group_arrangement_options(
                                                                     reporting_options=reporting_options)
 
     else:
-        interface.log_error("Button %s not recognised" % last_button_pressed)
-        return initial_state_form
+        return button_error_and_back_to_initial_state_form(interface)
 
 
 def change_arrangement_given_method_and_current_order_save_and_return_form_again(interface: abstractInterface, current_form_name: str,
                                                                                  reporting_options: ReportingOptions) -> NewForm:
     arrangment_method_name = interface.last_button_pressed()
     arrangement_options = reporting_options.arrangement
-    print("new arrangement %s" % arrangment_method_name)
     arrangement_options.change_arrangement_options_given_new_method_name(arrangment_method_name=arrangment_method_name)
-    print("Arrangement options %s" % arrangement_options)
     save_arrangement(arrangement_options=arrangement_options, interface=interface)
 
     return NewForm(current_form_name)

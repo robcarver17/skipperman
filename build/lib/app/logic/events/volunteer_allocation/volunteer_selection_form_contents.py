@@ -1,6 +1,6 @@
 from app.backend.cadets import cadet_from_id
-from app.backend.volunteer_allocation import get_list_of_relevant_voluteers
-from app.backend.volunteers import get_list_of_volunteers, SORT_BY_SURNAME
+from app.backend.volunteers.volunteer_allocation import get_list_of_relevant_voluteers
+from app.backend.volunteers.volunteers import get_list_of_volunteers, SORT_BY_SURNAME
 from app.logic.abstract_interface import abstractInterface
 from app.logic.events.constants import CHECK_VOLUNTEER_BUTTON_LABEL, FINAL_VOLUNTEER_ADD_BUTTON_LABEL, \
     SKIP_VOLUNTEER_BUTTON_LABEL, SEE_SIMILAR_VOLUNTEER_ONLY_LABEL, SEE_ALL_VOLUNTEER_BUTTON_LABEL
@@ -98,3 +98,5 @@ def get_list_of_volunteer_buttons(volunteer: Volunteer, cadet_id: str, see_all_v
 def get_dict_of_volunteer_names_and_volunteers():
     list_of_volunteers = get_list_of_volunteers()
     return dict([(str(volunteer), volunteer) for volunteer in list_of_volunteers])
+
+

@@ -1,3 +1,5 @@
+from copy import copy
+
 from app.data_access.configuration.configuration import MIN_CADET_AGE, MAX_CADET_AGE, SIMILARITY_LEVEL_TO_WARN_NAME, \
     SIMILARITY_LEVEL_TO_WARN_DATE
 from app.data_access.data import data
@@ -16,12 +18,16 @@ def get_list_of_cadets_as_str(list_of_cadets = arg_not_passed) -> list:
     return [str(cadet) for cadet in list_of_cadets]
 
 
-def get_list_of_cadets_as_str_similar_to_name_first(object_with_name) -> list:
-    list_of_cadets_similar_to_first = get_list_of_cadets_similar_to_name_first(object_with_name)
+def get_list_of_cadets_as_str_similar_to_name_first(object_with_name, from_list_of_cadets: ListOfCadets = arg_not_passed) -> list:
+    list_of_cadets_similar_to_first = get_list_of_cadets_similar_to_name_first(object_with_name, from_list_of_cadets=from_list_of_cadets)
     return [str(cadet) for cadet in list_of_cadets_similar_to_first]
 
-def get_list_of_cadets_similar_to_name_first(object_with_name) -> list:
-    list_of_cadets = get_list_of_cadets(sort_by=SORT_BY_SURNAME)
+def get_list_of_cadets_similar_to_name_first(object_with_name, from_list_of_cadets: ListOfCadets = arg_not_passed) -> ListOfCadets:
+    if from_list_of_cadets is arg_not_passed:
+        from_list_of_cadets = get_list_of_cadets(sort_by=SORT_BY_SURNAME)
+
+    list_of_cadets = copy(from_list_of_cadets)
+
     similar_cadets = list_of_cadets.similar_surnames(object_with_name)
     similar_cadets = similar_cadets.sort_by_firstname()
 
@@ -121,8 +127,8 @@ def warning_for_similar_cadets(cadet: Cadet) -> str:
         similar_cadets_str = ", ".join(
             [str(other_cadet) for other_cadet in similar_cadets]
         )
-        ## Some similar cadets, let's see if it's a match
-        return "Following cadets look awfully similar:\n %s" % similar_cadets_str
+        ## Some similar group_allocations, let's see if it's a match
+        return "Following group_allocations look awfully similar:\n %s" % similar_cadets_str
     else:
         return ""
 

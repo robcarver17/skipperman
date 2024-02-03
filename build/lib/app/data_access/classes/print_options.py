@@ -1,4 +1,4 @@
-from app.reporting.options_and_parameters.print_options import PrintOptions
+from app.backend.reporting.options_and_parameters.print_options import PrintOptions
 
 
 class DataListOfPrintOptions(object):

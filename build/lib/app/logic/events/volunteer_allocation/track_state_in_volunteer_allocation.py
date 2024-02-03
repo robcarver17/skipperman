@@ -1,9 +1,9 @@
-from app.backend.load_and_save_wa_mapped_events import load_master_event
-from app.backend.update_master_event_data import get_row_in_master_event_for_cadet_id
+from app.backend.wa_import.load_and_save_wa_mapped_events import load_master_event
+from app.backend.wa_import.update_master_event_data import get_row_in_master_event_for_cadet_id
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.abstract_interface import abstractInterface
-from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer, \
-    get_relevant_information_for_volunteer
+from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer
+from app.backend.volunteers.volunter_relevant_information import get_relevant_information_for_volunteer
 from app.objects.constants import missing_data, NoMoreData
 from app.objects.events import Event
 from app.objects.field_list import LIST_OF_VOLUNTEER_FIELDS
@@ -91,15 +91,6 @@ def get_volunteer_index(interface:abstractInterface) -> int:
 def clear_volunteer_index(interface: abstractInterface):
     interface.clear_persistent_value(VOLUNTEER_INDEX)
 
-ALLOCATED_VOLUNTEER_ID = "allocated_volunteer_id"
-def get_allocated_volunteer_id(interface: abstractInterface):
-    return interface.get_persistent_value(ALLOCATED_VOLUNTEER_ID)
-
-def save_allocated_volunteer_id(interface: abstractInterface, id:str):
-    interface.set_persistent_value(ALLOCATED_VOLUNTEER_ID, id)
-
-def clear_allocated_volunteer_id(interface: abstractInterface):
-    interface.clear_persistent_value(ALLOCATED_VOLUNTEER_ID)
 
 
 def get_relevant_information_for_current_volunteer(interface: abstractInterface) -> RelevantInformationForVolunteer:

@@ -2,17 +2,15 @@ from typing import Union
 
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.logic.abstract_interface import abstractInterface
-from app.logic.abstract_logic_api import initial_state_form
-from app.logic.events.constants import (
-    UPLOAD_FILE_BUTTON_LABEL,
-    WA_IMPORT_SUBSTAGE_IN_VIEW_EVENT_STAGE,
-)
+from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
+from app.logic.events.constants import *
 from app.logic.events.import_wa.upload_event_file import (
     get_form_for_wa_upload_with_prompt,
     upload_wa_file_and_save_as_raw_event_with_mapping,
 )
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.events import Event
+from app.web.html.forms import BACK_BUTTON_LABEL
 
 
 def display_form_update_existing_event(
@@ -38,9 +36,10 @@ def post_form_uupdate_existing_event(
     ## check button pressed (can only be upload or back - anything else treat as back as must be an error)
     if button_pressed == UPLOAD_FILE_BUTTON_LABEL:
         return respond_to_uploaded_file_when_updating(interface)
+    elif button_pressed==BACK_BUTTON_LABEL:
+        return NewForm(VIEW_EVENT_STAGE)
     else:
-        interface.log_error("Uknown button %s pressed" % button_pressed)
-        return initial_state_form
+        button_error_and_back_to_initial_state_form(interface)
 
 
 def respond_to_uploaded_file_when_updating(
@@ -51,6 +50,6 @@ def respond_to_uploaded_file_when_updating(
     except Exception as e:
         ## revert to view events
         interface.log_error("Problem with file upload %s" % e)
-        return initial_state_form
+        return NewForm(VIEW_EVENT_STAGE)
 
     return NewForm(WA_IMPORT_SUBSTAGE_IN_VIEW_EVENT_STAGE)

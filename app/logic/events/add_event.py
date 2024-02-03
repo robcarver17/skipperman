@@ -22,9 +22,9 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm,
     textInput, dateInput, radioInput,
 )
-from app.objects.abstract_objects.abstract_buttons import cancel_button, Button
+from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
-from app.logic.abstract_logic_api import initial_state_form
+from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 
 dict_of_event_types = dict(
     [(event_type, event_type) for event_type in list_of_event_types]
@@ -51,9 +51,10 @@ def post_form_view_for_add_event(
     elif last_button_pressed == FINAL_ADD_BUTTON_LABEL:
         return process_form_when_event_verified(interface)
 
-    else:
-        interface.log_error("Unknown button %s shouldn't happen" % last_button_pressed)
+    elif last_button_pressed == CANCEL_BUTTON_LABEL:
         return initial_state_form
+    else:
+        button_error_and_back_to_initial_state_form(interface)
 
 
 @dataclass
@@ -107,6 +108,7 @@ def get_add_event_form_with_information_passed(
 def get_footer_buttons(form_is_blank: bool):
     final_submit = Button(FINAL_ADD_BUTTON_LABEL)
     check_submit = Button(CHECK_BUTTON_LABEL)
+    cancel_button = Button(CANCEL_BUTTON_LABEL)
     if form_is_blank:
         return Line([cancel_button,  check_submit])
     else:

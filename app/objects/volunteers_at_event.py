@@ -7,6 +7,7 @@ from app.objects.groups import Group
 from app.objects.food import FoodRequirements, no_food_requirements
 from app.objects.day_selectors import DaySelector, day_selector_stored_format_from_text, day_selector_to_text_in_stored_format, NO_DAYS_SELECTED
 from app.objects.constants import missing_data
+from app.objects.utils import clean_up_dict_with_nans
 
 ## Must match arguments in dataclass below
 LIST_KEY = 'list_of_associated_cadet_id'
@@ -27,8 +28,12 @@ class VolunteerAtEvent(GenericSkipperManObject):
 
     @classmethod
     def from_dict(cls, dict_with_str):
+        dict_with_str = clean_up_dict_with_nans(dict_with_str)
         list_of_cadet_ids_as_str = str(dict_with_str[LIST_KEY])
-        list_of_cadet_ids = list_of_cadet_ids_as_str.split(",")
+        if len(list_of_cadet_ids_as_str)==0:
+            list_of_cadet_ids =[]
+        else:
+            list_of_cadet_ids = list_of_cadet_ids_as_str.split(",")
 
         food_requirements_as_str  =dict_with_str[FOOD_REQUIRED_KEY]
         food_requirements = FoodRequirements.from_str(food_requirements_as_str)
@@ -41,9 +46,9 @@ class VolunteerAtEvent(GenericSkipperManObject):
 
         return cls(
             volunteer_id=str(dict_with_str['volunteer_id']),
-            preferred_duties=dict_with_str['preferred_duties'],
-            same_or_different=dict_with_str['same_or_different'],
-            any_other_information=dict_with_str['any_other_information'],
+            preferred_duties=str(dict_with_str['preferred_duties']),
+            same_or_different=str(dict_with_str['same_or_different']),
+            any_other_information=str(dict_with_str['any_other_information']),
             list_of_associated_cadet_id=list_of_cadet_ids,
             food_requirements=food_requirements,
             availablity=availability
@@ -68,22 +73,6 @@ class VolunteerAtEvent(GenericSkipperManObject):
 
         return as_dict
 
-    """
-    @property
-    def location(self):
-        if self.role in LAKE_VOLUNTEER_ROLES:
-            return LAKE
-        elif self.role in RIVER_VOLUNTEER_ROLES:
-            return RIVER
-        elif not self.group == "":
-            group = Group(self.group)
-            if group.is_lake_training():
-                return LAKE
-            elif group.is_race_group() or group.is_river_training():
-                return RIVER
-
-        return OTHER
-    """
 
 
 class ListOfVolunteersAtEvent(GenericListOfObjects):
@@ -111,7 +100,7 @@ class ListOfVolunteersAtEvent(GenericListOfObjects):
         if idx_of_volunteer_at_event is missing_data:
             pass
         else:
-            self.pop(idx_of_volunteer_at_event)
+            del(self[idx_of_volunteer_at_event])
 
     def remove_cadet_id_association_from_volunteer(self, cadet_id: str, volunteer_id:str):
         volunteer_at_event = self.volunteer_at_event_with_id(volunteer_id)
@@ -144,6 +133,13 @@ class ListOfVolunteersAtEvent(GenericListOfObjects):
     def list_of_volunteer_ids(self) -> list:
         return [object.volunteer_id for object in self]
 
+    def add_volunteer_with_just_id(self, volunteer_id: str, availability: DaySelector):
+        if volunteer_id in self.list_of_volunteer_ids:
+            return
+        new_volunteer = VolunteerAtEvent(volunteer_id=volunteer_id, availablity=availability,
+                         list_of_associated_cadet_id=[])
+        self.append(new_volunteer)
+
     def add_potentially_new_volunteer_with_cadet_association(self, volunteer_at_event: VolunteerAtEvent):
         existing_volunteer_at_event = self.volunteer_at_event_with_id(volunteer_id=volunteer_at_event.volunteer_id)
         if existing_volunteer_at_event is missing_data:
@@ -151,16 +147,32 @@ class ListOfVolunteersAtEvent(GenericListOfObjects):
         else:
             add_cadet_association_to_existing_volunteer(existing_volunteer_at_event=existing_volunteer_at_event, new_volunteer_at_event=volunteer_at_event)
 
+    def add_cadet_id_to_existing_volunteer(self, volunteer_id: str, cadet_id: str):
+        existing_volunteer_at_event = self.volunteer_at_event_with_id(volunteer_id=volunteer_id)
+        add_cadet_association_to_existing_volunteer_with_cadet_id(existing_volunteer_at_event=existing_volunteer_at_event, cadet_id=cadet_id)
+
+    def sort_by_list_of_volunteer_ids(self, list_of_ids) -> 'ListOfVolunteersAtEvent':
+        new_list_of_volunteers_at_event = [self.volunteer_at_event_with_id(id) for id in list_of_ids]
+        new_list_of_volunteers_at_event = [volunteer_at_event for volunteer_at_event in new_list_of_volunteers_at_event
+                                           if volunteer_at_event is not missing_data]
+
+        return ListOfVolunteersAtEvent(new_list_of_volunteers_at_event)
+
 def add_cadet_association_to_existing_volunteer(existing_volunteer_at_event: VolunteerAtEvent, new_volunteer_at_event: VolunteerAtEvent):
     try:
         assert len(new_volunteer_at_event.list_of_associated_cadet_id)==1
     except:
         raise Exception("A new volunteer at an event can only have one cadet associated with them")
     cadet_id = new_volunteer_at_event.list_of_associated_cadet_id[0]
+    add_cadet_association_to_existing_volunteer_with_cadet_id(existing_volunteer_at_event=existing_volunteer_at_event,
+                                                              cadet_id=cadet_id)
+
+def add_cadet_association_to_existing_volunteer_with_cadet_id(existing_volunteer_at_event: VolunteerAtEvent, cadet_id: str):
     if cadet_id in existing_volunteer_at_event.list_of_associated_cadet_id:
         pass
     else:
         existing_volunteer_at_event.list_of_associated_cadet_id.append(cadet_id)
+
 
 @dataclass
 class CadetWithoutVolunteerAtEvent(GenericSkipperManObject):

@@ -8,21 +8,21 @@ from app.logic.reporting.backend.TODELETE import (
     ReportingOptions,
     adjust_reporting_options_to_reflect_passed_dataframe,
 )
-from app.reporting.options_and_parameters.marked_up_list_from_df_parameters import \
+from app.backend.reporting.options_and_parameters import \
     MarkedUpListFromDfParametersWithActualGroupOrder
-from app.logic.reporting.options.arrangements import save_arrangement
-from app.reporting.options_and_parameters.report_type_specific_parameters import (
+from app.logic.reporting.options.arrangement_state import save_arrangement
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
     SpecificParametersForTypeOfReport,
 )
-from app.reporting.arrangement.arrangement_order import (
+from app.backend.reporting.arrangement.arrangement_order import (
     ArrangementOfColumns,
 )
-from app.reporting.arrangement.arrange_options import ArrangeGroupsOptions
-from app.reporting.options_and_parameters.print_options import PrintOptions
-from app.reporting.process_stages.create_list_of_columns_from_groups import (
+from app.backend.reporting.arrangement.arrange_options import ArrangeGroupsOptions
+from app.backend.reporting.options_and_parameters.print_options import PrintOptions
+from app.backend.reporting.process_stages.create_list_of_columns_from_groups import (
     create_arrangement_from_list_of_groups_of_marked_up_str,
 )
-from app.reporting.process_stages.create_list_of_groups_from_df import (
+from app.backend.reporting.process_stages.create_list_of_groups_from_df import (
     create_list_of_group_of_marked_up_str_from_df,
     get_grouped_df,
 )

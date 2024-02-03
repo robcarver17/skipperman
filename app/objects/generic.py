@@ -31,7 +31,7 @@ class GenericSkipperManObject:
         return hash(str_dict_repr)
 
     @classmethod
-    def create_null(cls):
+    def create_empty(cls):
         list_of_attributes = get_list_of_attributes(cls)
         dict_of_nones = dict([(attribute, None) for attribute in list_of_attributes])
 
@@ -52,12 +52,12 @@ class GenericSkipperManObject:
 
         return ",".join(as_list_of_str)
 
-    def as_df(self) -> pd.DataFrame:
+    def to_df_of_str(self) -> pd.DataFrame:
         as_str_dict = self.as_str_dict()
         return pd.DataFrame({KEYS: as_str_dict.keys(), VALUES: as_str_dict.values()})
 
     @classmethod
-    def from_df(self, df: pd.DataFrame):
+    def from_df_of_str(self, df: pd.DataFrame):
         new_df = df.drop(KEYS, axis=1)
         new_df.index = df[KEYS]
         as_dict = new_df.squeeze().to_dict()

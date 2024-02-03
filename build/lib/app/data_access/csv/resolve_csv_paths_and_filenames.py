@@ -8,7 +8,7 @@ def get_path_and_filename_for_named_csv_file(
     generic_name_of_file_required: str,
     additional_file_identifiers: tuple = arg_not_passed,
 ):
-    ## returns eg 'cadets', 'cadet_master_list.csv'
+    ## returns eg 'group_allocations', 'cadet_master_list.csv'
     if additional_file_identifiers is arg_not_passed:
         additional_file_identifiers = ()
 
@@ -90,5 +90,5 @@ _dict_of_filenames_and_paths = dict(
 list_of_volunteer_skills=("volunteers", "list_of_volunteers_skills.csv"),
 list_of_cadet_volunteer_associations=("volunteers", "list_of_cadet_volunteer_associations.csv"),
 list_of_volunteers_at_event=("volunteers_at_event", "list_of_volunteers_at_event_%s.csv"),
-list_of_cadets_without_volunteers_at_event=("volunteers_at_event", "list_of_cadets_without_volunteers_at_event.csv")
-)
+list_of_cadets_without_volunteers_at_event=("volunteers_at_event", "list_of_cadets_without_volunteers_at_event.csv"),
+list_of_volunteers_in_roles_at_event=("volunteers_at_event", "list_of_volunteers_in_roles_at_event_%s.csv"))

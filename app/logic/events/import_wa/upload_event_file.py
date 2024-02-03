@@ -7,24 +7,24 @@ from app.objects.abstract_objects.abstract_form import (
     fileInput,
 )
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
-from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, back_button, Button
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL,  Button
 from app.logic.abstract_interface import (
     abstractInterface,
     form_with_message_and_finished_button,
 )
-from app.logic.abstract_logic_api import initial_state_form
+from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.logic.events.constants import (
     WA_FILE,
     UPLOAD_FILE_BUTTON_LABEL,
     VIEW_EVENT_STAGE,
 )
-from app.backend.load_wa_file import (
+from app.backend.wa_import.load_wa_file import (
     save_staged_file_of_raw_event_upload_with_event_id,
     verify_and_return_uploaded_wa_event_file,
     save_uploaded_wa_as_local_file,
     check_local_file_is_valid_wa_file,
 )
-from app.backend.map_wa_files import verify_file_has_correct_wa_id
+from app.backend.wa_import.map_wa_files import verify_file_has_correct_wa_id
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.events import Event
 
@@ -54,6 +54,7 @@ def get_form_for_wa_upload_with_prompt(prompt: str) -> Form:
 
 def get_upload_buttons():
     upload = Button(UPLOAD_FILE_BUTTON_LABEL)
+    back_button = Button(BACK_BUTTON_LABEL)
 
     return Line([back_button, upload])
 
@@ -68,9 +69,7 @@ def post_form_upload_event_file(interface: abstractInterface) -> Union[Form, New
     elif button_pressed == BACK_BUTTON_LABEL:
         return NewForm(VIEW_EVENT_STAGE)
     else:
-        interface.log_error("Uknown button %s pressed" % button_pressed)
-        return initial_state_form
-
+        button_error_and_back_to_initial_state_form(interface)
 
 def respond_to_uploaded_file(interface: abstractInterface) -> Union[Form, NewForm]:
     try:
@@ -81,7 +80,8 @@ def respond_to_uploaded_file(interface: abstractInterface) -> Union[Form, NewFor
         return initial_state_form
 
     return form_with_message_and_finished_button(
-        "Uploaded file successfully", interface=interface
+        "Uploaded file successfully", interface=interface,
+        set_stage_name_to_go_to_on_button_press=VIEW_EVENT_STAGE
     )
 
 

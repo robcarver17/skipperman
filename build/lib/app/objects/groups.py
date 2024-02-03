@@ -1,19 +1,18 @@
-## table of groups
-## we have groups for each event? No need, too complicated
-## So can hard code all groups in configuration
+
+from typing import List
 import pandas as pd
 
 from app.data_access.configuration.configuration import (
-    LAKE_TRAINING_GROUPS,
-    RIVER_TRAINING_GROUPS,
-    MG_GROUPS,
-    ALL_GROUPS,
-    UNALLOCATED_GROUP,
+    LAKE_TRAINING_GROUP_NAMES,
+    RIVER_TRAINING_GROUP_NAMES,
+    MG_GROUP_NAMES,
+    ALL_GROUPS_NAMES,
+    UNALLOCATED_GROUP_NAME,
 )
 from app.objects.cadets import Cadet, ListOfCadets
 from dataclasses import dataclass
-
-from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds
+from app.objects.constants import missing_data
+from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds, GenericSkipperManObject, GenericListOfObjects
 
 LAKE_TRAINING = "Lake training"
 RIVER_TRAINING = "River training"
@@ -21,9 +20,10 @@ MG = "MG"
 
 
 class Group:
+
     def __init__(self, group_name: str):
         try:
-            assert group_name in ALL_GROUPS
+            assert group_name in ALL_GROUPS_NAMES
         except:
             raise Exception(
                 "Group %s is not a valid group name - correct or add to configuration"
@@ -32,28 +32,39 @@ class Group:
 
         self._group_name = group_name
 
+    def __eq__(self, other):
+        if type(other) is str:
+            return self.group_name==other
+
+        return self.group_name == other.group_name
+
+    def __hash__(self):
+        return hash(self.group_name)
+
+    def __str__(self):
+        return self.group_name
+
     def __repr__(self):
         return self.group_name
 
-    def __lt__(self, other):
-        return self.group_name<other.group_name
-
+    def __lt__(self, other: 'Group'):
+        return index_group(self)<index_group(other)
 
     @classmethod
     def create_unallocated(cls):
-        return cls(UNALLOCATED_GROUP)
+        return cls(UNALLOCATED_GROUP_NAME)
 
     @property
     def is_unallocated(self):
-        return self.group_name == UNALLOCATED_GROUP
+        return self.group_name == UNALLOCATED_GROUP_NAME
 
     @property
     def group_name(self):
         return self._group_name
 
     def type_of_group(self):
-        if self.create_unallocated:
-            return UNALLOCATED_GROUP
+        if self.is_unallocated:
+            return UNALLOCATED_GROUP_NAME
         elif self.is_lake_training():
             return LAKE_TRAINING
         elif self.is_river_training():
@@ -67,13 +78,20 @@ class Group:
             )
 
     def is_lake_training(self) -> bool:
-        return self.group_name in LAKE_TRAINING_GROUPS
+        return self.group_name in LAKE_TRAINING_GROUP_NAMES
 
     def is_river_training(self) -> bool:
-        return self.group_name in RIVER_TRAINING_GROUPS
+        return self.group_name in RIVER_TRAINING_GROUP_NAMES
 
     def is_race_group(self) -> bool:
-        return self.group_name in MG_GROUPS
+        return self.group_name in MG_GROUP_NAMES
+
+GROUP_UNALLOCATED = Group.create_unallocated()
+GROUP_UNALLOCATED_TEXT = "Unallocated"
+
+def index_group(group: Group):
+    all_groups = ALL_GROUPS_NAMES + [GROUP_UNALLOCATED_TEXT]
+    return all_groups.index(group)
 
 
 @dataclass
@@ -81,10 +99,6 @@ class CadetIdWithGroup(GenericSkipperManObjectWithIds):
     cadet_id: str
     group: Group
 
-
-
-
-NOT_ALLOCATED = Group.create_unallocated()
 
 
 class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
@@ -114,7 +128,7 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
 
     def add_unallocated_cadet(self, cadet: Cadet):
         cadet_id = cadet.id
-        self.append(CadetIdWithGroup(cadet_id=cadet_id, group=NOT_ALLOCATED))
+        self.append(CadetIdWithGroup(cadet_id=cadet_id, group=GROUP_UNALLOCATED))
 
     def update_group_for_cadet(self, cadet: Cadet, chosen_group: Group):
         if self.cadet_is_allocated_to_group(cadet):
@@ -163,7 +177,7 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
         try:
             item = self.item_with_cadet_id(cadet_id)
         except:
-            return NOT_ALLOCATED
+            return GROUP_UNALLOCATED
 
         return item.group
 
@@ -191,14 +205,39 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
         new_list = sorted(self, key=lambda x: x.group, reverse=False)
         return ListOfCadetIdsWithGroups(new_list)
 
+
+## Following used for reporting, must match field names below
+CADET_NAME = "cadet" #### FIXME USED IN REPORTING DELETE
+GROUP_STR_NAME = "group"#### FIXME USED IN REPORTING DELETE
+
 @dataclass
-class CadetWithGroup(GenericSkipperManObjectWithIds):
+class CadetWithGroup(GenericSkipperManObject):
     ## For display purposes, can't store
     cadet: Cadet
     group: Group
 
+    @property
+    def cadet_name_initials_only(self) -> str:
+        return self.cadet.initial_and_surname
 
-class ListOfCadetsWithGroup(GenericListOfObjectsWithIds):
+    @property
+    def cadet_full_name(self) -> str:
+        return self.cadet.name
+
+    def as_str_dict(self, display_full_names: bool = True) -> dict:
+        if display_full_names:
+            cadet_name = self.cadet_full_name
+        else:
+            cadet_name = self.cadet_name_initials_only
+
+        group_name = str(self.group)
+
+        return {
+            CADET_NAME: cadet_name,
+             GROUP_STR_NAME: group_name
+        }
+
+class ListOfCadetsWithGroup(GenericListOfObjects):
     def _object_class_contained(self):
         return CadetWithGroup
 
@@ -221,3 +260,5 @@ class ListOfCadetsWithGroup(GenericListOfObjectsWithIds):
         ]
 
         return pd.DataFrame(list_of_dicts)
+
+

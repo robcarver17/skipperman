@@ -6,12 +6,14 @@ from app.backend.cadets import get_list_of_cadets
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line
-from app.logic.abstract_logic_api import initial_state_form
+from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.logic.abstract_interface import (
     abstractInterface,
 )
 from app.logic.cadets.constants import *
 from app.logic.cadets.add_cadet import get_add_cadet_form_with_information_passed, CadetAndVerificationText, get_cadet_from_form
+from app.objects.constants import NoButtonPressed
+
 
 def display_form_edit_individual_cadet(
     interface: abstractInterface,
@@ -24,6 +26,7 @@ def display_form_edit_individual_cadet(
             "Cadet selected no longer in list- someone else has deleted or file corruption?"
         )
         return initial_state_form
+
     footer_buttons = Line([Button(CANCEL_BUTTON_LABEL), Button(SAVE_BUTTON_LABEL)])
     cadet_and_text = CadetAndVerificationText(
         cadet=cadet,
@@ -47,7 +50,9 @@ def post_form_edit_individual_cadet(
         ## We can't go to view individual cadet or we'd get a cadet not found error
         return initial_state_form
     else:
-        raise Exception("Button %s not recognised" % button)
+        button_error_and_back_to_initial_state_form(interface)
+
+
 
 def modify_cadet_given_form_contents(interface: abstractInterface):
     original_cadet = get_cadet_from_state(interface)

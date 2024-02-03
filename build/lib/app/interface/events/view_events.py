@@ -1,6 +1,6 @@
 from app.web.flask.state_for_action import StateDataForAction
-from app.logic.events.constants import SORT_BY_START_DSC
-from app.logic.events.events_in_state import get_list_of_events
+from app.backend.events import get_list_of_events
+from app.objects.events import SORT_BY_START_DSC
 
 from app.web.html.forms import form_html_wrapper, html_button
 from app.web.html.html import Html, ListOfHtml

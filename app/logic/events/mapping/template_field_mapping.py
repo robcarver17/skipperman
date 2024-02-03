@@ -1,5 +1,5 @@
 from typing import Union
-from app.backend.read_and_write_mapping_files import (
+from app.backend.wa_import.read_and_write_mapping_files import (
     get_list_of_templates,
     write_field_mapping_for_event,
     get_template,
@@ -12,7 +12,7 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_buttons import cancel_button, Button
+from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.abstract_logic_api import initial_state_form
@@ -20,7 +20,8 @@ from app.logic.events.constants import (
     UPLOAD_TEMPLATE_BUTTON_LABEL,
     WA_UPLOAD_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE,
     DOWNLOAD_MAPPING_BUTTON_LABEL,
-    WA_DOWNLOAD_EVENT_TEMPLATE_MAPPING_IN_VIEW_EVENT_STAGE,
+    WA_DOWNLOAD_EVENT_TEMPLATE_MAPPING_IN_VIEW_EVENT_STAGE, WA_FIELD_MAPPING_IN_VIEW_EVENT_STAGE,
+
 )
 
 
@@ -54,6 +55,7 @@ def display_form_for_choose_template_field_mapping(interface: abstractInterface)
 
     return Form(contents_of_form)
 
+cancel_button = Button(CANCEL_BUTTON_LABEL)
 
 def display_list_of_templates_with_buttons() -> ListOfLines:
     list_of_templates = get_list_of_templates()
@@ -68,8 +70,10 @@ def post_form_for_choose_template_field_mapping(
         return NewForm(WA_UPLOAD_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE)
     elif last_button_pressed == DOWNLOAD_MAPPING_BUTTON_LABEL:
         return NewForm(WA_DOWNLOAD_EVENT_TEMPLATE_MAPPING_IN_VIEW_EVENT_STAGE)
-    ## should be a template
+    elif last_button_pressed == CANCEL_BUTTON_LABEL:
+        return NewForm(WA_FIELD_MAPPING_IN_VIEW_EVENT_STAGE)
     else:
+        ## should be a template
         return post_form_when_template_chosen(interface)
 
 def post_form_when_template_chosen(interface: abstractInterface,
@@ -91,6 +95,7 @@ def post_form_when_template_chosen(interface: abstractInterface,
     return form_with_message_and_finished_button(
         "Selected mapping template %s for event %s" % (template_name, str(event)),
         interface=interface,
+        set_stage_name_to_go_to_on_button_press=WA_FIELD_MAPPING_IN_VIEW_EVENT_STAGE
     )
 
 

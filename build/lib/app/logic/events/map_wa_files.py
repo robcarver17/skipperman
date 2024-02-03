@@ -1,7 +1,7 @@
 from app.data_access.data import data
 from app.objects.events import Event
-from app.backend.load_wa_file import get_event_id_from_wa_df, load_raw_wa_file
-from app.logic.events.events_in_state import get_event_from_id
+from app.backend.wa_import.load_wa_file import get_event_id_from_wa_df, load_raw_wa_file
+from app.backend.events import get_event_from_id
 from app.objects.constants import FileError
 
 

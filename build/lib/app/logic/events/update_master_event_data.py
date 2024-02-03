@@ -1,5 +1,5 @@
 from app.web.flask.flash import flash_log
-from app.backend.load_and_save_wa_mapped_events import (
+from app.backend.wa_import.load_and_save_wa_mapped_events import (
     load_master_event,
     save_master_event,
     load_existing_mapped_wa_event_with_ids,
@@ -11,7 +11,7 @@ from app.objects.master_event import (
 from app.objects.mapped_wa_event_with_ids import (
     RowInMappedWAEventWithId,
     MappedWAEventWithIDs, cancelled_status, active_status, deleted_status, )
-from app.backend.cadets import cadet_name_from_id
+from app.backend.group_allocations import cadet_name_from_id
 from app.objects.events import Event
 from app.objects.constants import NoMoreData
 

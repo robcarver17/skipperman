@@ -3,7 +3,7 @@ from app.web.events.view_events import display_view_of_events
 from app.web.flask.flash import flash_error, flash_log
 from app.web.flask.state_for_action import StateDataForAction
 
-from app.backend.load_wa_file import (
+from app.backend.wa_import.load_wa_file import (
     delete_raw_event_upload_with_event_id,
 )
 

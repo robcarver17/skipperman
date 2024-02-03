@@ -26,7 +26,7 @@ MAP_TO_TEMPLATE_BUTTON_LABEL = "Use template mapping"
 UPLOAD_TEMPLATE_BUTTON_LABEL = "Upload a new template"
 UPLOAD_MAPPING_BUTTON_LABEL = "Upload new mapping .csv file"
 DOWNLOAD_MAPPING_BUTTON_LABEL = "Download a mapping .csv file to edit (which you can then upload)"
-CLONE_EVENT_BUTTON_LABEL = "Clone the mapping for an existing event"
+CLONE_EVENT_MAPPING_BUTTON_LABEL = "Clone the mapping for an existing event"
 
 # specific event; backend
 ALLOCATE_CADETS_BUTTON_LABEL = "Allocate cadets to groups"
@@ -45,7 +45,7 @@ USE_DATA_IN_FORM_BUTTON_LABEL = (
 )
 
 # allocation
-UPDATE_ALLOCATION_BUTTON_LABEL = "Update group allocation as shown above"
+UPDATE_ALLOCATION_BUTTON_LABEL = "Save group allocation"
 
 ## Volunteers
 CHECK_VOLUNTEER_BUTTON_LABEL = "Check volunteer details entered"
@@ -53,6 +53,9 @@ FINAL_VOLUNTEER_ADD_BUTTON_LABEL = "Yes - these details are correct - add this n
 SEE_ALL_VOLUNTEER_BUTTON_LABEL = "Choose from all existing volunteers"
 SEE_SIMILAR_VOLUNTEER_ONLY_LABEL = "See similar volunteers only"
 SKIP_VOLUNTEER_BUTTON_LABEL = "Skip - no volunteer to add for this cadet"
+
+## Volunteer roles
+EDIT_VOLUNTEER_ROLES_BUTTON_LABEL = "Volunteer rota"
 
 ############
 ## Stages ##
@@ -105,6 +108,12 @@ ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE = "Allocate_cadets_in_View_event_stage"
 
 EDIT_CADET_REGISTRATION_DATA_IN_VIEW_EVENT_STAGE = "Edit_registration_details_in_view_event_stage"
 
+EDIT_VOLUNTEER_ROTA_EVENT_STAGE = "Edit_volunteer_rota_in_view_event_stage"
+EDIT_VOLUNTEER_DETAILS_FROM_ROTA_EVENT_STAGE = "Edit_volunteer_details_from_rota_in_view_event_stage"
+EDIT_CADET_CONNECTIONS_FROM_ROTA_EVENT_STAGE = "Edit_cadet_connections_from_rota_in_view_event_stage"
+EDIT_VOLUNTEER_SKILLS_FROM_ROTA_EVENT_STAGE = "Edit_volunteer_skills_from_rota_in_view_event_stage"
+ADD_NEW_VOLUNTEER_TO_ROTA_EVENT_STAGE ="Add_new_volunteer_to_rota_event_stage"
+
 ## constants.py in session data
 EVENT = "event"
 ROW_IN_EVENT_DATA = "row_in_event_data"
@@ -123,6 +132,3 @@ SORT_ORDER = "sort_order"
 ## field names row
 ROW_STATUS = "row_status"
 ATTENDANCE = "attendance"
-SORT_BY_START_ASC = "Sort by start date, ascending"
-SORT_BY_START_DSC = "Sort by start date, descending"
-SORT_BY_NAME = "Sort by event name"

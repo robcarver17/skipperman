@@ -2,7 +2,7 @@ import datetime
 import pandas as pd
 
 # from app.logic import_wa edit_provided_cadet_details
-from app.backend.load_and_save_wa_mapped_events import (
+from app.backend.wa_import.load_and_save_wa_mapped_events import (
     load_mapped_wa_event_with_no_ids,
     save_mapped_wa_event_with_no_ids,
 )
@@ -10,7 +10,7 @@ from app.objects.cadets import Cadet
 from app.objects.field_list import CADET_SURNAME, CADET_DATE_OF_BIRTH, CADET_FIRST_NAME
 from app.objects.constants import NoMoreData
 
-from app.backend.load_and_save_wa_mapped_events import (
+from app.backend.wa_import.load_and_save_wa_mapped_events import (
     load_existing_mapped_wa_event_with_ids,
     save_mapped_wa_event_with_ids,
 )
@@ -184,9 +184,9 @@ def check_for_possible_duplicate_cadet_or_add_if_required(
         )
 
         if len(similar_cadets) > 0:
-            ## Some similar cadets, let's see if it's a match
+            ## Some similar group_allocations, let's see if it's a match
             web.message(
-                "Looks like cadet %s is very similar to some existing cadets. \n Select an existing cadet [options 1... upwards], or choose the cadet from the WA file [0] if this cadet is not in the list shown and is really new."
+                "Looks like cadet %s is very similar to some existing group_allocations. \n Select an existing cadet [options 1... upwards], or choose the cadet from the WA file [0] if this cadet is not in the list shown and is really new."
                 % cadet_from_mapped_data
             )
             similar_cadets.insert(0, cadet_from_mapped_data)

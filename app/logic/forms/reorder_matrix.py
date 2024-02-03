@@ -3,7 +3,7 @@ from app.objects.abstract_objects.abstract_text import up_arrow, down_arrow, \
     right_arrow, left_arrow
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line
-from app.reporting.arrangement.arrangement_order import (
+from app.backend.reporting.arrangement.arrangement_order import (
     ArrangementOfRows,
     EMPTY,
     ArrangementOfColumns,

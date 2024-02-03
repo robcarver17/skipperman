@@ -11,12 +11,12 @@ from app.logic.events.constants import (
 )
 
 from app.logic.events.events_in_state import get_event_from_state
-from app.backend.add_cadet_ids_to_mapped_wa_event_data import (
+from app.backend.wa_import.add_cadet_ids_to_mapped_wa_event_data import (
     get_first_unmapped_row_for_event,
     add_row_data_with_id_included_and_delete_from_unmapped_data,
     get_cadet_data_from_row_of_mapped_data_no_checks,
 )
-from app.backend.load_and_save_wa_mapped_events import (
+from app.backend.wa_import.load_and_save_wa_mapped_events import (
     load_existing_mapped_wa_event_with_ids,
 )
 from app.logic.events.import_wa.get_or_select_cadet_forms import (

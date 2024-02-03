@@ -1,10 +1,10 @@
 from typing import List
 import pandas as pd
 
-from app.reporting.options_and_parameters.marked_up_list_from_df_parameters import \
+from app.backend.reporting.options_and_parameters import \
     MarkedUpListFromDfParametersWithActualGroupOrder
 
-from app.reporting.process_stages.strings_columns_groups import (
+from app.backend.reporting.process_stages.strings_columns_groups import (
     ListOfGroupsOfMarkedUpStrings,
     GroupOfMarkedUpString,
     MarkedUpString,

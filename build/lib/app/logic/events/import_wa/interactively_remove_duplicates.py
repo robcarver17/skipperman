@@ -8,18 +8,18 @@ from app.logic.events.constants import WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_S
 
 from app.logic.events.events_in_state import get_event_from_state
 
-from app.backend.load_and_save_wa_mapped_events import (
+from app.backend.wa_import.load_and_save_wa_mapped_events import (
 load_existing_mapped_wa_event_with_ids
 )
 
-from app.backend.update_master_event_data import remove_duplicated_row_from_mapped_wa_event_data
+from app.backend.wa_import.update_master_event_data import remove_duplicated_row_from_mapped_wa_event_data
 
 from app.objects.constants import  NoMoreData
 
 def display_form_interactively_remove_duplicates_during_import(
     interface: abstractInterface
 ) -> Union[Form, NewForm]:
-    print("Now removing duplicate cadets")
+    print("Now removing duplicate group_allocations")
     input("Press enter to continue")
 
     try:
@@ -71,7 +71,7 @@ def interactively_remove_specific_duplicates_from_wa_file(interface: abstractInt
 
                 ListOfLines(
                     [
-                        "Following cadets duplicated in WA file (probably cancel and re-entry)",
+                        "Following group_allocations duplicated in WA file (probably cancel and re-entry)",
                         _______________,
                         duplicate_rows,
                         _______________,

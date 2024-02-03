@@ -1,10 +1,10 @@
 from typing import Union
 from dataclasses import dataclass
 
-from app.reporting.arrangement.group_order import GroupOrder
+from app.backend.reporting.arrangement.group_order import GroupOrder
 from app.objects.constants import arg_not_passed
-from app.reporting.arrangement.arrangement_order import ArrangementOfColumns
-from app.reporting.arrangement.arrangement_methods import (
+from app.backend.reporting.arrangement.arrangement_order import ArrangementOfColumns
+from app.backend.reporting.arrangement.arrangement_methods import (
     ArrangementMethod,
     ARRANGE_PASSED_LIST,
     ARRANGE_RECTANGLE,

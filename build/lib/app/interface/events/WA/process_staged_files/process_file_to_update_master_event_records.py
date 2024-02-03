@@ -14,10 +14,10 @@ from app.web.events.constants import (
     USE_NEW_DATA, USE_DATA_IN_FORM, USE_ORIGINAL_DATA
 )
 
-from app.backend.load_and_save_wa_mapped_events import (
+from app.backend.wa_import.load_and_save_wa_mapped_events import (
     load_master_event
 )
-from app.backend.update_master_event_data import \
+from app.backend.wa_import.update_master_event_data import \
     report_on_missing_data_from_mapped_wa_event_data_and_save_to_master_event, get_row_from_event_file_with_ids, \
     add_new_row_to_master_event_data
 
@@ -31,7 +31,7 @@ def process_file_to_update_master_event_records(state_data: StateDataForAction)-
     input("Press enter to continue")
 
     event = get_event_from_state(state_data)
-    print("Now updating cadets which are missing")
+    print("Now updating group_allocations which are missing")
     report_on_missing_data_from_mapped_wa_event_data_and_save_to_master_event(event)
 
     return process_updates_to_master_event_data(state_data)

@@ -1,8 +1,7 @@
-from typing import List
 from dataclasses import dataclass
 
 from app.backend.cadets import get_list_of_cadets, cadet_from_id_with_passed_list
-from app.backend.load_and_save_wa_mapped_events import load_master_event
+from app.backend.wa_import.load_and_save_wa_mapped_events import load_master_event
 from app.backend.form_utils import get_food_requirements_input_as_tuple, get_availability_checkbox
 from app.logic.events.constants import ROW_STATUS
 from app.backend.form_utils import dropdown_input_for_status_change
@@ -106,15 +105,16 @@ def get_status_button(current_status: RowStatus, cadet_id: str)-> dropDownInput:
 def get_days_attending_field(attendance: DaySelector, cadet_id: str, event: Event) -> checkboxInput:
     return get_availability_checkbox(availability=attendance,
                               event=event,
-                              input_name = input_name_from_column_name_and_cadet_id(DAYS_ATTENDING, cadet_id=cadet_id)
-                              )
+                              input_name = input_name_from_column_name_and_cadet_id(DAYS_ATTENDING, cadet_id=cadet_id),
+                              line_break=True)
 
 def get_food_preference_fields(food_requirements: FoodRequirements, cadet_id: str):
     checkbox_food_preference, other_input_food_preference = get_food_requirements_input_as_tuple(
         existing_food_requirements=food_requirements,
         checkbox_input_name=input_name_from_column_name_and_cadet_id(FOOD_REQUIRED_CHECKBOX_FORM_NAME,
                                                                      cadet_id=cadet_id),
-        other_input_name=input_name_from_column_name_and_cadet_id(FOOD_REQUIRED_OTHER_FORM_NAME,cadet_id=cadet_id)
+        other_input_name=input_name_from_column_name_and_cadet_id(FOOD_REQUIRED_OTHER_FORM_NAME,cadet_id=cadet_id),
+        line_break=True
     )
     return checkbox_food_preference, other_input_food_preference
 

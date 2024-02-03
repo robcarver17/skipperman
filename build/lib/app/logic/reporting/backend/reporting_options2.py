@@ -6,10 +6,10 @@ from app.logic.reporting.backend.TODELETE import (
     ReportingOptions,
     adjust_reporting_options_to_reflect_passed_dataframe,
 )
-from app.reporting.options_and_parameters.report_type_specific_parameters import (
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
     SpecificParametersForTypeOfReport,
 )
-from app.reporting.arrangement.arrange_options import ArrangeGroupsOptions
+from app.backend.reporting.arrangement.arrange_options import ArrangeGroupsOptions
 
 
 def get_saved_report_options_bespoke_for_df(

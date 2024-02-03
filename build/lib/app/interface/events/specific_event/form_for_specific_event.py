@@ -19,7 +19,7 @@ from app.logic.events.view_events import (
     is_wa_mapping_setup_for_event,
     is_wa_field_mapping_setup_for_event,
 )
-from app.backend.load_wa_file import does_raw_event_file_exist
+from app.backend.wa_import.load_wa_file import does_raw_event_file_exist
 from app.objects.events import Event
 
 

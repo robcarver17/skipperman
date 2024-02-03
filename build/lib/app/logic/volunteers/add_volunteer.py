@@ -2,9 +2,9 @@ from copy import copy
 from dataclasses import dataclass
 from typing import Union
 
-from app.backend.volunteers import add_new_verified_volunteer, \
+from app.backend.volunteers.volunteers import add_new_verified_volunteer, \
     verify_volunteer_and_warn
-from app.logic.abstract_logic_api import initial_state_form
+from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.objects.volunteers import Volunteer, default_volunteer
 
 from app.objects.abstract_objects.abstract_form import (
@@ -12,7 +12,7 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm,
     textInput,
 )
-from app.objects.abstract_objects.abstract_buttons import cancel_button, Button
+from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.abstract_interface import abstractInterface, form_with_message_and_finished_button
 from app.logic.volunteers.constants import *
@@ -20,21 +20,15 @@ from app.logic.volunteers.constants import *
 def display_form_add_volunteer(    interface: abstractInterface
 ) -> Form:
     ## Called by logic API only once, subsequently we are responding to button presses
-    return present_form_add_volunteer_and_respond_to_input(interface=interface, first_time_displayed=True)
+    return get_add_volunteer_form(interface=interface, first_time_displayed=True)
+
 
 def post_form_add_volunteer(interface: abstractInterface) -> Union[Form, NewForm]:
     ## Called by Logic API when buttons pressed
-    return present_form_add_volunteer_and_respond_to_input(interface=interface, first_time_displayed=False)
-
-
-def present_form_add_volunteer_and_respond_to_input(    interface: abstractInterface, first_time_displayed: bool = True
-) -> Form:
-
-    if first_time_displayed:
-        ## hasn't been displayed before, will have no defaults
-        return get_add_volunteer_form(interface=interface, first_time_displayed=True)
 
     last_button_pressed = interface.last_button_pressed()
+    if last_button_pressed == CANCEL_BUTTON_LABEL:
+        return initial_state_form
 
     if last_button_pressed == CHECK_BUTTON_LABEL:
         ## verify results, display form again
@@ -44,10 +38,7 @@ def present_form_add_volunteer_and_respond_to_input(    interface: abstractInter
         return process_form_when_volunteer_verified(interface)
 
     else:
-        interface.log_error(
-            "Uknown button pressed %s - shouldn't happen!" % last_button_pressed
-        )
-        return initial_state_form
+        return button_error_and_back_to_initial_state_form(interface)
 
 
 
@@ -153,6 +144,7 @@ def process_form_when_volunteer_verified(
         )
         return initial_state_form
 
+
     return form_with_message_and_finished_button(
         "Added volunteer %s" % str(volunteer), interface=interface
     )
@@ -168,6 +160,7 @@ def add_volunteer_from_form_to_data(interface) -> Volunteer:
 def get_footer_buttons_for_add_volunteer_form(form_is_empty: bool) -> Line:
     final_submit = Button(FINAL_ADD_BUTTON_LABEL)
     check_submit = Button(CHECK_BUTTON_LABEL)
+    cancel_button = Button(CANCEL_BUTTON_LABEL)
     if form_is_empty:
         return Line([cancel_button, check_submit])
     else:

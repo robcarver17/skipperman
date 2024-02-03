@@ -8,16 +8,16 @@ from app.web.events.constants import (
 WA_INTERACTIVELY_REMOVE_SPECIFIC_DUPLICATES_FROM_WA_FILE
 )
 from app.web.events.WA.process_staged_files.process_file_to_update_master_event_records import process_file_to_update_master_event_records
-from app.backend.load_and_save_wa_mapped_events import (
+from app.backend.wa_import.load_and_save_wa_mapped_events import (
 load_existing_mapped_wa_event_with_ids
 )
 
-from app.backend.update_master_event_data import remove_duplicated_row_from_mapped_wa_event_data
+from app.backend.wa_import.update_master_event_data import remove_duplicated_row_from_mapped_wa_event_data
 
 from app.objects.constants import  NoMoreData
 
 def process_file_with_ids_to_remove_duplicate_cadets(state_data: StateDataForAction)-> Html:
-    print("Now removing duplicate cadets")
+    print("Now removing duplicate group_allocations")
     input("Press enter to continue")
 
     try:
@@ -67,7 +67,7 @@ def interactively_remove_specific_duplicates_from_wa_file(state_data: StateDataF
     return form_wrapper.wrap_around(
         html_joined_list_as_paragraphs(
             [
-                "Following cadets duplicated in WA file (probably cancel and re-entry)",
+                "Following group_allocations duplicated in WA file (probably cancel and re-entry)",
                 html_list_of_rows,
                 "Choose the row to keep (others will be ignored)",
                 html_buttons

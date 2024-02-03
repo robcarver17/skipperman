@@ -18,7 +18,7 @@ def display_view_for_specific_event(state_data: StateDataForAction):
     try:
         confirm_event_exists(event_selected)
     except:
-        state_data.reset_to_initial_stage()  ## on refresh will go back to view cadets
+        state_data.reset_to_initial_stage()  ## on refresh will go back to view group_allocations
         return html_error(
             "Event %s no longer in list- someone else has deleted or file corruption?"
             % event_selected

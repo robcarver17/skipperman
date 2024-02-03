@@ -1,8 +1,9 @@
 from typing import Union
 
+from app.backend.volunteers.volunteer_rota_summary import get_summary_list_of_roles_and_groups_for_events
 from app.data_access.data import data
-from app.backend.map_wa_files import is_wa_file_mapping_setup_for_event
-from app.backend.summarise_allocations_data import summarise_allocations_for_event
+from app.backend.wa_import.map_wa_files import is_wa_file_mapping_setup_for_event
+from app.backend.group_allocations.summarise_allocations_data import summarise_allocations_for_event
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm
@@ -10,10 +11,10 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button
 from app.logic.abstract_interface import abstractInterface
-from app.logic.abstract_logic_api import initial_state_form
+from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 
 from app.logic.events.constants import *
-from app.backend.load_wa_file import does_raw_event_file_exist
+from app.backend.wa_import.load_wa_file import does_raw_event_file_exist
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.events import Event
 
@@ -32,11 +33,20 @@ def get_event_form_for_event(
 ) -> Union[Form, NewForm]:
     event_description = event.verbose_repr
     allocations = summarise_allocations_for_event(event)
+    rota = get_summary_list_of_roles_and_groups_for_events(event)
     buttons = get_event_buttons(event, interface=interface)
 
-    lines_in_form = ListOfLines([event_description, _______________,buttons,_______________])+allocations
+    lines_in_form = (ListOfLines(
+                    [
+                        event_description,
+                        _______________,buttons,_______________])+
+                     allocations+
+
+                     [_______________,
+                      rota])
 
     return Form(lines_in_form)
+
 
 
 def get_event_buttons(event: Event, interface: abstractInterface) -> Line:
@@ -57,6 +67,7 @@ def get_event_buttons(event: Event, interface: abstractInterface) -> Line:
 
     cadet_allocation = Button(ALLOCATE_CADETS_BUTTON_LABEL)
     edit_registration = Button(EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON)
+    volunteer_rota = Button(EDIT_VOLUNTEER_ROLES_BUTTON_LABEL)
 
     wa_import_done = is_wa_file_mapping_setup_for_event(event=event) ## have we done an import already (sets up event mapping)
     field_mapping_done = is_wa_field_mapping_setup_for_event(event=event) ## have set up field mapping
@@ -82,7 +93,7 @@ def get_event_buttons(event: Event, interface: abstractInterface) -> Line:
 
     ## both done, we can update the WA file and do cadet backend / other editing
     if wa_import_done and field_mapping_done and not raw_event_file_exists:
-        return Line([back_button, wa_update, cadet_allocation, wa_modify_field_mapping, edit_registration])
+        return Line([back_button, wa_update, cadet_allocation, wa_modify_field_mapping, edit_registration, volunteer_rota])
 
     interface.log_error(
         "Something went wrong; contact support [wa_import_done=%s, field_mapping_done=%s, raw_event_file_exists=%s]"
@@ -115,12 +126,13 @@ def post_form_view_individual_event(
 
     elif last_button_pressed==EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON:
         return NewForm(EDIT_CADET_REGISTRATION_DATA_IN_VIEW_EVENT_STAGE)
+    elif last_button_pressed==EDIT_VOLUNTEER_ROLES_BUTTON_LABEL:
+        return NewForm(EDIT_VOLUNTEER_ROTA_EVENT_STAGE)
 
     elif last_button_pressed == BACK_BUTTON_LABEL:
         return initial_state_form
     else:
-        interface.log_error("Don't recognise button %s" % last_button_pressed)
-        return initial_state_form
+        button_error_and_back_to_initial_state_form(interface)
 
 
 def row_of_form_for_event_with_buttons(event) -> Line:

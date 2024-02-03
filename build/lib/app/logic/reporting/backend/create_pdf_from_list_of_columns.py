@@ -1,8 +1,8 @@
 import os
 
 from app.data_access.configuration.configuration import REPORTING_SUBDIRECTORY
-from app.reporting.process_stages.strings_columns_groups import ListtOfColumns
-from app.reporting.process_stages.pdf_layout import PdfLayout
+from app.backend.reporting.process_stages.strings_columns_groups import ListtOfColumns
+from app.backend.reporting.process_stages import PdfLayout
 from app.logic.reporting.backend.TODELETE import (
     ReportingOptionsForSpecificGroupsInReport,
 )

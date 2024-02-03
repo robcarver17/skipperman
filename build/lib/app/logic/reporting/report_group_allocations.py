@@ -2,20 +2,20 @@ from typing import Union
 
 import pandas as pd
 
-from app.logic.reporting.options.arrangements import get_stored_arrangement, save_arrangement, \
-    create_arrangement_from_order_and_algo_and_save, augment_order_of_groups_with_sizes
+from app.logic.reporting.options.arrangements import create_arrangement_from_order_and_algo_and_save
+from app.logic.reporting.options.reporting_options import augment_order_of_groups_with_sizes
+from app.logic.reporting.options.arrangement_state import get_stored_arrangement, save_arrangement
 from app.logic.reporting.options.group_order import get_group_order_from_stored_or_df, get_stored_group_order, \
     save_group_order_to_storage
 from app.logic.reporting.options.print_options import get_saved_print_options, save_print_options, \
     report_print_options_as_list_of_lines, get_print_options_from_main_option_form_fields, \
     report_print_options_as_form_contents
-from app.reporting.process_stages.create_column_pdf_report_from_df import create_column_pdf_report_from_df_and_return_filename
+from app.backend.reporting.process_stages.create_column_pdf_report_from_df import create_column_pdf_report_from_df_and_return_filename
 
+from app.objects.groups import CADET_NAME, GROUP_STR_NAME
+from app.data_access.configuration.configuration import ALL_GROUPS_NAMES
 
-from app.objects.field_list import CADET_NAME, GROUP_STR_NAME
-from app.data_access.configuration.configuration import ALL_GROUPS
-
-from app.reporting.options_and_parameters.report_type_specific_parameters import SpecificParametersForTypeOfReport
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import SpecificParametersForTypeOfReport
 
 from app.objects.abstract_objects.abstract_form import Form, NewForm, yes_no_radio, \
     File
@@ -26,15 +26,15 @@ from app.logic.forms.reorder_form import reorder_table, reorderFormInterface
 from app.logic.forms.reorder_matrix import reorder_matrix, reorderMatrixInterface
 from app.logic.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form
-from app.logic.events.events_in_state import get_event_from_state, confirm_event_exists, update_state_for_specific_event_given_event_name
+from app.logic.events.events_in_state import get_event_from_state, update_state_for_specific_event_given_event_description
+from app.backend.events import confirm_event_exists_given_description
 from app.logic.events.allocation.backend import get_df_for_reporting_allocations_with_flags
 
 from app.logic.reporting.constants import *
 from app.logic.events.view_events import display_list_of_events_with_buttons
 
-from app.objects.reporting_options import describe_arrangement
-from app.reporting.arrangement.arrangement_methods import ARRANGE_PASSED_LIST, POSSIBLE_ARRANGEMENTS_NOT_PASSING
-from app.reporting.arrangement.arrange_options import describe_arrangement
+from app.backend.reporting.arrangement.arrangement_methods import ARRANGE_PASSED_LIST, POSSIBLE_ARRANGEMENTS_NOT_PASSING
+from app.backend.reporting.arrangement.arrange_options import describe_arrangement
 
 REPORT_NAME = "Allocation report"
 
@@ -60,14 +60,14 @@ def post_form_report_group_allocation(interface: abstractInterface) -> Union[For
     if event_name_selected == BACK_BUTTON_LABEL:
         return initial_state_form
     try:
-        confirm_event_exists(event_name_selected)
+        confirm_event_exists_given_description(event_name_selected)
     except:
         interface.log_error("Event %s no longer in list- someone else has deleted or file corruption?"
             % event_name_selected)
         return initial_state_form
 
     ## so whilst we are in this stage, we know which event we are talking about
-    update_state_for_specific_event_given_event_name(
+    update_state_for_specific_event_given_event_description(
         interface=interface, event_selected=event_name_selected)
 
     return NewForm(REPORT_ADDITIONAL_OPTIONS_FOR_ALLOCATION_REPORT)
@@ -113,7 +113,7 @@ def post_form_for_report_group_allocation_options(interface:abstractInterface)->
 default_markuplist_from_df_options_for_group_allocation = SpecificParametersForTypeOfReport(
     entry_columns=[CADET_NAME],
     group_by_column=GROUP_STR_NAME,
-    passed_group_order=ALL_GROUPS,
+    passed_group_order=ALL_GROUPS_NAMES,
 )
 
 def display_form_for_report_group_allocation_generic_options(interface:abstractInterface) -> Union[Form, NewForm]:

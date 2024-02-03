@@ -123,8 +123,7 @@ def get_html_for_element_in_line(
             default_label=element_in_line.default_label,
         )
     elif type(element_in_line) is checkboxInput:
-        return html_checkbox_input(input_name=element_in_line.input_name,
-                                   dict_of_labels=element_in_line.dict_of_labels,
+        return html_checkbox_input(input_name=element_in_line.input_name, dict_of_labels=element_in_line.dict_of_labels,
                                    dict_of_checked=element_in_line.dict_of_checked,
                                    input_label=element_in_line.input_name)
 

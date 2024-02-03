@@ -1,5 +1,5 @@
 from typing import Union
-from app.backend.cadets import cadet_name_from_id
+from app.backend.group_allocations import cadet_name_from_id
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.logic.abstract_interface import (
     abstractInterface,
@@ -15,7 +15,7 @@ from app.logic.events.constants import (
 
 from app.logic.events.events_in_state import get_event_from_state
 
-from app.backend.load_and_save_wa_mapped_events import load_master_event
+from app.backend.wa_import.load_and_save_wa_mapped_events import load_master_event
 from app.logic.events.update_master.update_existing_master_event_data_forms import (
     display_form_for_update_to_existing_row_of_event_data,
 )
@@ -23,13 +23,13 @@ from app.logic.events.update_master.update_master_from_form_entries import updat
     update_mapped_wa_event_data_with_form_data
 from app.logic.events.update_master.track_cadet_id_in_master_file_update import get_current_cadet_id
 
-from app.backend.update_master_event_data import (
+from app.backend.wa_import.update_master_event_data import (
     get_row_of_master_event_from_mapped_row_with_idx_and_status,
     add_new_row_to_master_event_data,
     update_row_in_master_event_data, any_important_difference_between_rows, get_row_in_mapped_event_for_cadet_id,
     get_row_in_master_event_for_cadet_id,
 )
-from app.backend.load_and_save_wa_mapped_events import (
+from app.backend.wa_import.load_and_save_wa_mapped_events import (
     load_existing_mapped_wa_event_with_ids,
 )
 from app.objects.events import Event

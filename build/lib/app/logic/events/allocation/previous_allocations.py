@@ -4,7 +4,7 @@ from app.data_access.data import data
 from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.events import Event, ListOfEvents
 from app.objects.groups import ListOfCadetIdsWithGroups, Group
-from app.data_access.configuration.configuration import UNALLOCATED_GROUP
+from app.data_access.configuration.configuration import UNALLOCATED_GROUP_NAME
 
 
 def list_of_events_excluding_one_event(event_to_exclude: Event) -> ListOfEvents:
@@ -36,7 +36,7 @@ def group_for_cadet_and_event(cadet: Cadet, event: Event, previous_allocations_a
     try:
         group = allocations_for_event.item_with_cadet_id(cadet_id).group
     except:
-        group = UNALLOCATED_GROUP
+        group = UNALLOCATED_GROUP_NAME
 
     return group
 

@@ -1,18 +1,20 @@
 from typing import Union
 
-
+from app.backend.volunteers.volunteer_rota_data import get_all_roles_across_past_events_for_volunteer_id_as_dict
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-from app.logic.abstract_logic_api import initial_state_form
+from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.logic.abstract_interface import (
     abstractInterface,
 )
-from app.backend.volunteers import get_dict_of_existing_skills, get_connected_cadets
+from app.backend.volunteers.volunteers import get_dict_of_existing_skills, get_connected_cadets
 from app.logic.volunteers.volunteer_state import get_volunteer_from_state
 from app.logic.volunteers.constants import *
 
 from app.objects.volunteers import Volunteer
+from app.objects.events import SORT_BY_START_DSC
+
 
 def display_form_view_individual_volunteer(
     interface: abstractInterface,
@@ -36,7 +38,7 @@ def display_form_view_individual_volunteer(
 def display_form_for_selected_volunteer(
     volunteer: Volunteer, interface: abstractInterface
 ) -> Form:
-    #lines_of_allocations = list_of_lines_with_allocations(volunteer)
+    lines_of_allocations = list_of_lines_with_allocations_and_roles(volunteer)
 
     connected = lines_for_connected_cadets(volunteer)
     skills = list_of_skills(volunteer)
@@ -45,21 +47,24 @@ def display_form_for_selected_volunteer(
         ListOfLines([
             str(volunteer),
             _______________,
+            lines_of_allocations,
+            _______________,
             skills,
             _______________,
             connected,
-            #lines_of_allocations,
             _______________,
             buttons
         ])
     )
 
 def list_of_lines_with_allocations_and_roles(volunteer: Volunteer) -> ListOfLines:
-    #dict_of_allocations = get_dict_of_all_event_allocations_for_single_volunteer(cadet)
-    #return ListOfLines(["Events helping at:", _______________]+
-    #    ["%s: %s" % (str(event), group) for event, group in dict_of_allocations.items()]
-    #)
-    pass
+    dict_of_roles =get_all_roles_across_past_events_for_volunteer_id_as_dict(volunteer_id=volunteer.id,
+                                                      sort_by=SORT_BY_START_DSC)
+
+    return ListOfLines(["Events helping at:", _______________]+
+        ["%s: %s" % (str(event), role) for event, role in dict_of_roles.items()]
+    )
+
 
 def list_of_skills(volunteer: Volunteer) -> ListOfLines:
     skills = get_dict_of_existing_skills(volunteer)
@@ -98,4 +103,4 @@ def post_form_view_individual_volunteer(
     elif button==EDIT_CADET_CONNECTIONS_BUTTON_LABEL:
         return NewForm(EDIT_CONNECTIONS_STAGE)
     else:
-        raise NotImplemented("Button not recognised")
+        return button_error_and_back_to_initial_state_form(interface)

@@ -1,6 +1,6 @@
 # BUTTONS
 
-GROUP_ALLOCATION_REPORT_BUTTON_LABEL = "Event group backend"
+GROUP_ALLOCATION_REPORT_BUTTON_LABEL = "Group allocation at event"
 SAVE_THESE_OPTIONS_BUTTON_LABEL = "Save these options"
 USE_THESE_OPTIONS_BUTTON_LABEL = "Use these options"
 CREATE_REPORT_BUTTON_LABEL = "Create report with these options"
@@ -25,7 +25,7 @@ CHANGE_PRINT_OPTIONS_IN_GROUP_ALLOCATION_STATE = (
 
 # FIELDS
 SHOW_FULL_NAMES = "Show_full_names"
-INCLUDE_UNALLOCATED_CADETS = "Include unallocated cadets"
+INCLUDE_UNALLOCATED_CADETS = "Include unallocated group_allocations"
 PAGE_ALIGNMENT = "page_alignment"
 FONT = "font"
 PAGE_SIZE = "page_size"

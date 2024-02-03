@@ -8,7 +8,7 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.abstract_interface import abstractInterface
-from app.backend.volunteers import get_list_of_volunteers, SORT_BY_SURNAME, SORT_BY_FIRSTNAME
+from app.backend.volunteers.volunteers import get_list_of_volunteers, SORT_BY_SURNAME, SORT_BY_FIRSTNAME
 from app.logic.volunteers.volunteer_state import update_state_for_specific_volunteer_given_volunteer_as_str
 from app.logic.volunteers.constants import *
 
@@ -16,7 +16,12 @@ add_button = Button(ADD_VOLUNTEER_BUTTON_LABEL)
 all_sort_types = [SORT_BY_SURNAME, SORT_BY_FIRSTNAME]
 sort_buttons = Line([Button(sort_by) for sort_by in all_sort_types])
 
-def display_form_view_of_volunteers(sort_order=SORT_BY_SURNAME) -> Form:
+def display_form_view_of_volunteers(interface: abstractInterface) -> Form:
+    ## simple wrap function as display can only take interface
+
+    return get_form_view_of_volunteers(sort_order=SORT_BY_SURNAME)
+
+def get_form_view_of_volunteers(sort_order: str=SORT_BY_SURNAME) -> Form:
     list_of_volunteers_with_buttons = display_list_of_volunteers_with_buttons(
         sort_order=sort_order
     )
@@ -48,7 +53,7 @@ def post_form_view_of_volunteers(interface: abstractInterface) -> Union[Form, Ne
     elif button_pressed in all_sort_types:
         ## no change to stage required, just sort order
         sort_order = interface.last_button_pressed()
-        return display_form_view_of_volunteers(sort_order=sort_order)
+        return get_form_view_of_volunteers(sort_order=sort_order)
 
     else:  ## must be a volunteer redirect:
         volunteer_selected = interface.last_button_pressed()

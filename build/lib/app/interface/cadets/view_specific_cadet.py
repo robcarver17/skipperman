@@ -2,7 +2,7 @@ from app.web.cadets.constants import CADET, VIEW_INDIVIDUAL_CADET_STAGE
 from app.web.flask.state_for_action import StateDataForAction
 from app.web.html.html import Html
 from app.web.flask.flash import html_error
-from app.backend.cadets import get_list_of_cadets
+from app.backend.group_allocations import get_list_of_cadets
 
 from app.objects.cadets import Cadet
 
@@ -17,7 +17,7 @@ def display_view_for_specific_cadet(state_data: StateDataForAction):
     try:
         confirm_cadet_exists(cadet_selected)
     except:
-        state_data.clear_session_data_for_action_and_reset_stage()  ## on refresh will go back to view cadets
+        state_data.clear_session_data_for_action_and_reset_stage()  ## on refresh will go back to view group_allocations
         return html_error(
             "Cadet %s no longer in list- someone else has deleted or file corruption?"
             % cadet_selected

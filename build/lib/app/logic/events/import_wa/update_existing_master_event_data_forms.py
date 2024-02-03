@@ -15,17 +15,17 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
-from app.backend.update_master_event_data import (
+from app.backend.wa_import.update_master_event_data import (
     new_status_and_status_message,
     update_row_in_master_event_data,
     NO_STATUS_CHANGE,
 )
-from app.backend.load_and_save_wa_mapped_events import (
+from app.backend.wa_import.load_and_save_wa_mapped_events import (
     load_master_event,
     load_existing_mapped_wa_event_with_ids,
 )
 
-from app.backend.cadets import cadet_name_from_id
+from app.backend.group_allocations import cadet_name_from_id
 from app.objects.constants import DuplicateCadets
 from app.objects.events import Event
 from app.objects.master_event import (

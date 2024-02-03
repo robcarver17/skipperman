@@ -3,14 +3,14 @@ from typing import Union
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.logic.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form
-from app.logic.events.constants import WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE
-from app.backend.load_wa_file import (
+from app.logic.events.constants import WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE, VIEW_EVENT_STAGE
+from app.backend.wa_import.load_wa_file import (
     delete_raw_event_upload_with_event_id,
     get_staged_file_raw_event_filename,
 )
-from app.backend.map_wa_fields import map_wa_fields_in_df_for_event
-from app.backend.map_wa_files import verify_and_if_required_add_wa_mapping
-from app.backend.update_mapped_wa_event_data_with_cadet_ids import (
+from app.backend.wa_import.map_wa_fields import map_wa_fields_in_df_for_event
+from app.backend.wa_import.map_wa_files import verify_and_if_required_add_wa_mapping
+from app.backend.wa_import.update_mapped_wa_event_data_with_cadet_ids import (
     update_and_save_mapped_wa_event_data_with_and_without_ids,
 )
 from app.logic.events.events_in_state import get_event_from_state

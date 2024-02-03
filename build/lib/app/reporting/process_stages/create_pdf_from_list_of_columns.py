@@ -1,9 +1,9 @@
 import os
 
 from app.data_access.configuration.configuration import REPORTING_SUBDIRECTORY
-from app.reporting.process_stages.strings_columns_groups import ListtOfColumns
-from app.reporting.process_stages.pdf_layout import PdfLayout
-from app.reporting.options_and_parameters.report_options import ReportingOptions
+from app.backend.reporting.process_stages.strings_columns_groups import ListtOfColumns
+from app.backend.reporting.process_stages import PdfLayout
+from app.backend.reporting.options_and_parameters.report_options import ReportingOptions
 
 home_directory = os.path.expanduser("~")
 reporting_directory = os.path.join(home_directory, REPORTING_SUBDIRECTORY)

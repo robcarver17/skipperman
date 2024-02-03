@@ -5,7 +5,7 @@ from app.objects.field_list import LIST_OF_VOLUNTEER_FIELDS, REGISTERED_BY_FIRST
     DAYS_ATTENDING, VOLUNTEER_STATUS, NAME_KEY_IN_VOLUNTEER_FIELDS_DICT, FOOD_PREFERENCE_KEY_IN_VOLUNTEER_FIELDS_DICT, DUTIES_KEY_IN_VOLUNTEER_FIELDS_DICT, AVAILABILITY_KEY_IN_VOLUNTEER_FIELDS_DICT, WEEKEND_AVAILABILITY_KEY_IN_VOLUNTEER_FIELDS_DICT,SAME_OR_VARIED_KEY_IN_VOLUNTEER_FIELDS_DICT, ANY_OTHER_INFORMATION
 
 from app.objects.master_event import RowInMasterEvent
-from app.backend.cadets import get_list_of_cadets, get_cadet_from_id
+from app.backend.group_allocations import get_list_of_cadets, get_cadet_from_id
 
 from app.objects.constants import missing_data
 from app.objects.volunteers import Volunteer

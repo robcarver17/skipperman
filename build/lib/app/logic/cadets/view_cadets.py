@@ -17,11 +17,16 @@ from app.logic.cadets.cadet_state_storage import update_state_for_specific_cadet
 from app.backend.cadets import get_list_of_cadets, SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, SORT_BY_DOB_DSC
 
 
-def display_form_view_of_cadets(sort_order=SORT_BY_SURNAME) -> Form:
+def display_form_view_of_cadets(interface: abstractInterface) -> Form:
+    print("display view of cadets")
+    return display_form_view_of_cadets_with_sort_order_passed(
+        sort_order=SORT_BY_SURNAME
+    )
+
+def display_form_view_of_cadets_with_sort_order_passed(sort_order=SORT_BY_SURNAME) -> Form:
     list_of_cadets_with_buttons = display_list_of_cadets_with_buttons(
         sort_order=sort_order
     )
-
     form_contents = ListOfLines(
         [
             main_menu_button,
@@ -49,7 +54,7 @@ def post_form_view_of_cadets(interface: abstractInterface) -> Union[Form, NewFor
     elif button_pressed in all_sort_types:
         ## no change to stage required, just sort order
         sort_order = interface.last_button_pressed()
-        return display_form_view_of_cadets(sort_order=sort_order)
+        return display_form_view_of_cadets_with_sort_order_passed(sort_order)
 
     else:  ## must be a cadet redirect:
         cadet_selected = interface.last_button_pressed()

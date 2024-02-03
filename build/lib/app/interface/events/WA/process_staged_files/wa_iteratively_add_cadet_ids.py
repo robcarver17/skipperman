@@ -24,17 +24,17 @@ from app.web.events.constants import (
     SEE_SIMILAR_CADETS_ONLY_LABEL,
 )
 
-from app.backend.add_cadet_ids_to_mapped_wa_event_data import (
+from app.backend.wa_import.add_cadet_ids_to_mapped_wa_event_data import (
     get_first_unmapped_row_for_event,
     add_row_data_with_id_included_and_delete_from_unmapped_data,
     get_cadet_data_from_row_of_mapped_data_no_checks,
 )
-from app.backend.cadets import get_list_of_cadets
+from app.backend.group_allocations import get_list_of_cadets
 
 from app.objects.mapped_wa_event_no_ids import RowInMappedWAEventNoId
 from app.objects.cadets import Cadet
 
-header_text = "Looks like a new cadet in the WA entry file. You can edit them and then add them to the existing list of cadets, or choose an existing cadet instead (avoid creating duplicates!)"
+header_text = "Looks like a new cadet in the WA entry file. You can edit them and then add them to the existing list of group_allocations, or choose an existing cadet instead (avoid creating duplicates!)"
 
 
 def process_rows_of_unmapped_data_and_proceed_to_process_file_with_ids(

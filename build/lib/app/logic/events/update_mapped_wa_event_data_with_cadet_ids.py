@@ -1,4 +1,4 @@
-from app.backend.load_and_save_wa_mapped_events import (
+from app.backend.wa_import.load_and_save_wa_mapped_events import (
     load_existing_mapped_wa_event_with_ids,
     save_mapped_wa_event_with_ids,
     save_mapped_wa_event_with_no_ids,
@@ -53,7 +53,7 @@ def remove_deleted_cadets_from_event(
     ## Cadets that were in previous file and now missing
     ## Shouldn't happen except for a WA bug
     ## We remove from here, they will be marked as status deleted in next step
-    ## If they re-appear then they will be treated as new cadets here, but assuming
+    ## If they re-appear then they will be treated as new group_allocations here, but assuming
     ##   ID is correctly matched any prior data will be kept
     #
     missing_timestamps = existing_timestamps_that_are_missing_from_mapped_wa_event_data(

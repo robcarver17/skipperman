@@ -1,4 +1,4 @@
-from app.backend.load_and_save_wa_mapped_events import load_master_event, load_existing_mapped_wa_event_with_ids
+from app.backend.wa_import.load_and_save_wa_mapped_events import load_master_event, load_existing_mapped_wa_event_with_ids
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.abstract_interface import abstractInterface
 from app.objects.constants import missing_data, NoMoreData

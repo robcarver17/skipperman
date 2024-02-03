@@ -11,7 +11,7 @@ from app.objects.abstract_objects.abstract_tables import Table
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button
 from app.logic.abstract_interface import abstractInterface
-from app.logic.abstract_logic_api import initial_state_form
+from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.logic.cadets.view_cadets import sort_buttons, all_sort_types
 from app.backend.cadets import SORT_BY_SURNAME
 from app.logic.events.constants import *
@@ -37,33 +37,30 @@ def display_form_edit_registration_details_given_event_and_sort_order(
 ) -> Union[Form, NewForm]:
 
     table = get_registration_details_inner_form_for_event(event, sort_order=sort_order)
-    buttons = buttons_for_registration_form()
 
     return Form(
         ListOfLines(
             [
                 "Registration details for %s" % event,
-                "(Excludes allocation and volunteer information; plus cadet name/DOB - edit in the appropriate places)",
-
+                "(Excludes group allocation and volunteer information; plus cadet name/DOB - edit in the appropriate places)",
+                "*CHECK FOOD PREFERENCES - autocompleted and may not be accurate*",
                 _______________,
+                back_button,
                 "Always save before sorting - sorting will lose any edits",
                 sort_buttons,
                 _______________,
-                buttons,
+
+                save_button,
                 table,
-                buttons
+                save_button,
+                back_button
 
             ]
         )
     )
 
-
-def buttons_for_registration_form() -> Line:
-    return Line([
-      Button(BACK_BUTTON_LABEL),
-        Button(SAVE_CHANGES)
-    ])
-
+save_button = Button(SAVE_CHANGES, big=True)
+back_button = Button(BACK_BUTTON_LABEL)
 
 def get_registration_details_inner_form_for_event(
     event: Event,
@@ -76,6 +73,8 @@ def get_registration_details_inner_form_for_event(
                      for row_in_event in registration_details.master_event_details]
 
     return Table([top_row]+rows_in_table)
+
+
 
 
 def post_form_edit_registration_details(
@@ -102,6 +101,4 @@ def post_form_edit_registration_details(
         return display_form_edit_registration_details(interface)
 
     else:
-        interface.log_error("Don't recognise button %s" % last_button_pressed)
-        return initial_state_form
-
+        button_error_and_back_to_initial_state_form(interface)

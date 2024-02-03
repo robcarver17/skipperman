@@ -89,7 +89,7 @@ volunteer_locations:
     - "Ramp"
 volunteer_roles:
   - "SI"
-  - "SKipper"
+  - "Skipper"
   - "Deputy skipper"
   - "DI"
   - "Coach"
@@ -99,6 +99,7 @@ volunteer_roles:
   - "Drone"
   - "Ramp lead"
   - "Ramp"
+  - "River first aid"
   - "Galley"
   - "Galley lead"
   - "River safety lead"
@@ -107,4 +108,8 @@ volunteer_roles:
   - "Lake safety helm"
   - "Lake safety crew"
   - "Lake helper"
-  - "On site and not volunteering"
+volunteers_requiring_group:
+  - "DI"
+  - "Coach"
+  - "AI"
+  - "Lake helper"

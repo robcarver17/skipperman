@@ -1,12 +1,13 @@
 from app.data_access.data import data
 from app.backend.volunteers import list_of_similar_volunteers
+from app.logic.events.events_in_state import get_event_given_id
 from app.objects.constants import missing_data
 from app.objects.events import Event
 from app.objects.utils import union_of_x_and_y
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.volunteers_at_event import VolunteerAtEvent, ListOfCadetsWithoutVolunteersAtEvent
-from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer, \
-    get_volunteer_at_event_from_relevant_information
+from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer
+from app.backend.volunteers.volunter_relevant_information import get_volunteer_at_event_from_relevant_information
 from app.backend.cadets import cadet_name_from_id
 
 
@@ -73,13 +74,14 @@ def get_list_of_volunteers_associated_with_cadet(cadet_id: str) -> list:
 def remove_volunteer_and_cadet_association(cadet_id: str, volunteer_id: str, event: Event):
     volunteers_at_event_data = data.data_list_of_volunteers_at_event.read(event_id=event.id)
     volunteers_at_event_data.remove_cadet_id_association_from_volunteer(cadet_id=cadet_id, volunteer_id=volunteer_id)
+    data.data_list_of_volunteers_at_event.write(event_id=event.id, list_of_volunteers_at_event=volunteers_at_event_data)
 
 def delete_volunteer_with_id_at_event(volunteer_id: str, event: Event):
     volunteers_at_event_data = data.data_list_of_volunteers_at_event.read(event_id=event.id)
     volunteers_at_event_data.remove_volunteer_with_id(volunteer_id=volunteer_id)
+    data.data_list_of_volunteers_at_event.write(event_id=event.id, list_of_volunteers_at_event=volunteers_at_event_data)
 
-
-def add_volunteer_and_cadet_association(cadet_id:str, volunteer_id: str, event_id: str, relevant_information: RelevantInformationForVolunteer):
+def add_volunteer_and_cadet_association_for_potential_new_volunteer(cadet_id:str, volunteer_id: str, event_id: str, relevant_information: RelevantInformationForVolunteer):
 
     volunteers_at_event_data = data.data_list_of_volunteers_at_event.read(event_id=event_id)
     volunteer_at_event = get_volunteer_at_event_from_relevant_information(
@@ -88,6 +90,23 @@ def add_volunteer_and_cadet_association(cadet_id:str, volunteer_id: str, event_i
         volunteer_id=volunteer_id
     )
     volunteers_at_event_data.add_potentially_new_volunteer_with_cadet_association(volunteer_at_event)
+    data.data_list_of_volunteers_at_event.write(volunteers_at_event_data, event_id=event_id)
+
+
+def add_volunteer_and_cadet_association_for_existing_volunteer(cadet_id:str, volunteer_id: str, event_id: str):
+
+    volunteers_at_event_data = data.data_list_of_volunteers_at_event.read(event_id=event_id)
+    volunteers_at_event_data.add_cadet_id_to_existing_volunteer(volunteer_id=volunteer_id, cadet_id=cadet_id)
+    data.data_list_of_volunteers_at_event.write(volunteers_at_event_data, event_id=event_id)
+
+def add_volunteer_to_event_with_just_id(volunteer_id: str, event_id: str):
+    volunteers_at_event_data = data.data_list_of_volunteers_at_event.read(event_id=event_id)
+    event = get_event_given_id(event_id)
+    availability = event.day_selector_with_covered_days() ## assume available all days in event
+
+    volunteers_at_event_data.add_volunteer_with_just_id(volunteer_id,
+                                                        availability=availability)
+
     data.data_list_of_volunteers_at_event.write(volunteers_at_event_data, event_id=event_id)
 
 def mark_cadet_as_been_processed_if_no_volunteers_available(cadet_id: str, event:Event):
@@ -125,9 +144,9 @@ def get_string_of_other_associated_cadets_for_event(event: Event, volunteer_id:s
     associated_cadets_without_this_cadet_names = [cadet_name_from_id(other_cadet_id) for other_cadet_id in associated_cadets_without_this_cadet]
     associated_cadets_without_this_cadet_names_str = ", ".join(associated_cadets_without_this_cadet_names)
 
-    return "(Other registered cadets associated with this volunteer: "+associated_cadets_without_this_cadet_names_str
+    return "(Other registered group_allocations associated with this volunteer: "+associated_cadets_without_this_cadet_names_str
 
-def get_volunteer_at_event(volunteer_id: str, event: Event):
+def get_volunteer_at_event(volunteer_id: str, event: Event) -> VolunteerAtEvent:
     volunteers_at_event_data = data.data_list_of_volunteers_at_event.read(event_id=event.id)
     volunteer_at_event = volunteers_at_event_data.volunteer_at_event_with_id(volunteer_id)
     if volunteer_at_event is missing_data:

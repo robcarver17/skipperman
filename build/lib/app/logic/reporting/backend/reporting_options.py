@@ -1,15 +1,12 @@
 import pandas as pd
-from dataclasses import dataclass
-from typing import List
 
-from app.reporting.arrangement.group_order import get_group_order_from_df_given_report_parameters
-from app.reporting.options_and_parameters.marked_up_list_from_df_parameters import \
+from app.backend.reporting.arrangement.group_order import get_group_order_from_df_given_report_parameters
+from app.backend.reporting.options_and_parameters import \
     MarkedUpListFromDfParametersWithActualGroupOrder
-from app.reporting.options_and_parameters.report_type_specific_parameters import (
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
     SpecificParametersForTypeOfReport,
 )
-from app.reporting.arrangement.arrange_options import ArrangeGroupsOptions
-from app.reporting.options_and_parameters.print_options import PrintOptions
+from app.backend.reporting.options_and_parameters.print_options import PrintOptions
 
 
 ### Bring everything together

@@ -1,6 +1,6 @@
 import datetime
 from enum import Enum
-from typing import Dict
+from typing import Dict, List
 
 Day = Enum("Day", [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday", "Sunday"])
 
@@ -25,6 +25,21 @@ class DaySelector(Dict[Day, bool]):
                 return False
 
         return True
+
+    def days_available(self) -> List[Day]:
+        return [day
+                    for day in all_possible_days
+                if self.available_on_day(day)]
+
+    def available_on_day(self, day: Day):
+        return self.get(day, False)
+
+    def make_unavailable_on_day(self, day: Day):
+        self[day] = False
+
+    def make_available_on_day(self, day: Day):
+        self[day] = True
+
 
 ALL_DAYS_SELECTED = dict([(day, True) for day in all_possible_days])
 NO_DAYS_SELECTED = dict([(day, False) for day in all_possible_days])

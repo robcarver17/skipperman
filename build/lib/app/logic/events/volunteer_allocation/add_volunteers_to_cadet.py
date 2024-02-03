@@ -1,15 +1,15 @@
-from app.backend.cadets import cadet_from_id
-from app.backend.volunteers import add_volunteer_connection_to_cadet_in_master_list_of_volunteers
 from app.logic.events.events_in_state import get_event_from_state
-from app.objects.relevant_information_for_volunteers import     get_volunteer_from_relevant_information
-from app.backend.volunteers import get_list_of_volunteers
+from app.backend.volunteers.volunter_relevant_information import get_volunteer_from_relevant_information
+from app.backend.volunteers.volunteers import get_list_of_volunteers
 from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import clear_volunteer_index, \
-    get_and_save_next_volunteer_index, get_current_cadet_id, save_allocated_volunteer_id, get_relevant_information_for_current_volunteer
-from app.backend.volunteer_allocation import add_volunteer_and_cadet_association
+    get_and_save_next_volunteer_index, get_current_cadet_id,  get_relevant_information_for_current_volunteer
+from app.backend.volunteers.volunteer_allocation import add_volunteer_and_cadet_association_for_potential_new_volunteer
 from typing import Union
+
+from app.logic.volunteers.volunteer_state import update_state_with_volunteer_id
 from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer
 from app.logic.events.constants import *
-from app.backend.volunteer_allocation import mark_cadet_as_been_processed_if_no_volunteers_available
+from app.backend.volunteers.volunteer_allocation import mark_cadet_as_been_processed_if_no_volunteers_available
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.logic.abstract_interface import abstractInterface
 from app.objects.events import Event
@@ -65,13 +65,13 @@ def process_update_when_volunteer_matched(interface: abstractInterface, voluntee
                                           cadet_id: str, event: Event) -> Union[Form, NewForm]:
 
     print("Adding volunteer %s against cadet %s for event %s" % (str(volunteer), cadet_id, str(event)))
-    add_volunteer_and_cadet_association(volunteer_id=volunteer.id,
-                                        cadet_id=cadet_id,
-                                        event_id=event.id,
-                                        relevant_information=relevant_information,
-                                        )
+    add_volunteer_and_cadet_association_for_potential_new_volunteer(volunteer_id=volunteer.id,
+                                                                    cadet_id=cadet_id,
+                                                                    event_id=event.id,
+                                                                    relevant_information=relevant_information,
+                                                                    )
     ## so we can do the details
-    save_allocated_volunteer_id(interface=interface, id=volunteer.id)
+    update_state_with_volunteer_id(interface=interface, volunteer_id=volunteer.id)
 
     return NewForm(WA_VOLUNTEER_EXTRACTION_ADD_DETAILS_IN_VIEW_EVENT_STAGE)
 

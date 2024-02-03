@@ -44,7 +44,7 @@ class flaskInterface(abstractInterface):
         self.set_persistent_value("_logs", logs)
 
     def get_persistent_value(self, key, default=missing_data):
-        return self.session_data.get_value(key, default=missing_data)
+        return self.session_data.get_value(key, default=default)
 
     def set_persistent_value(self, key, value):
         self.session_data.set_value(key, value)

@@ -1,4 +1,4 @@
-from app.backend.update_master_event_data import new_status_and_status_message, NO_STATUS_CHANGE
+from app.backend.wa_import.update_master_event_data import new_status_and_status_message, NO_STATUS_CHANGE
 from app.objects.abstract_objects.abstract_form import dropDownInput
 from app.logic.events.constants import (
     ROW_STATUS,

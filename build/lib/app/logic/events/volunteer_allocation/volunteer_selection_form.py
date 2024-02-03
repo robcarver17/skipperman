@@ -7,7 +7,7 @@ from app.objects.relevant_information_for_volunteers import RelevantInformationF
 from app.backend.volunteers import get_list_of_volunteers, SORT_BY_SURNAME, list_of_similar_volunteers, \
     verify_volunteer_and_warn
 from app.logic.volunteers.add_volunteer import VolunteerAndVerificationText, get_add_volunteer_form_with_information_passed, verify_form_with_volunteer_details
-from app.backend.cadets import get_list_of_cadets, get_cadet_from_id
+from app.backend.group_allocations import get_list_of_cadets, get_cadet_from_id
 
 from app.objects.volunteers import Volunteer
 from app.objects.constants import arg_not_passed
@@ -38,7 +38,7 @@ def get_add_or_select_existing_volunteert_form(
             volunteer=volunteer, verification_text=verification_text
         )
 
-    ## First time, don't include final or all cadets
+    ## First time, don't include final or all group_allocations
     footer_buttons = get_footer_buttons_add_or_select_existing_volunteer_form(
         volunteer=volunteer,
         see_all_volunteers=see_all_volunteers,

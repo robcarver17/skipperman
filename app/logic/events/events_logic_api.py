@@ -67,8 +67,13 @@ from app.logic.events.volunteer_allocation.confirm_volunteer_details import disp
 from app.logic.events.volunteer_allocation.volunteer_selection import display_form_volunteer_selection_for_cadet_at_event, post_form_volunteer_selection_for_cadet_at_event
 
 from app.logic.events.registration_details.edit_registration_details import display_form_edit_registration_details, post_form_edit_registration_details
-from app.logic.events.constants import *
+from app.logic.events.volunteer_rota.display_main_rota_page import display_form_view_for_volunteer_rota, post_form_view_for_volunteer_rota
+from app.logic.events.volunteer_rota.edit_volunteer_details_from_rota import post_form_confirm_volunteer_details_from_rota, display_form_confirm_volunteer_details_from_rota
+from app.logic.events.volunteer_rota.edit_cadet_connections_for_event_from_rota import display_form_edit_cadet_connections_from_rota, post_form_edit_cadet_connections_from_rota
 
+from app.logic.events.constants import *
+from app.logic.events.volunteer_rota.edit_volunteer_skills_from_rota import display_form_edit_individual_volunteer_skills_from_rota, post_form_edit_individual_volunteer_skills_from_rota
+from app.logic.events.volunteer_rota.add_volunteer_to_rota import display_form_add_new_volunteer_to_rota_at_event, post_form_add_new_volunteer_to_rota_at_event
 
 class EventLogicApi(AbstractLogicApi):
     @property
@@ -98,9 +103,14 @@ class EventLogicApi(AbstractLogicApi):
                 WA_VOLUNTEER_EXTRACTION_ADD_DETAILS_IN_VIEW_EVENT_STAGE: display_form_confirm_volunteer_details,
 
                 WA_UPDATE_SUBSTAGE_IN_VIEW_EVENT_STAGE: display_form_update_existing_event,
+
                 ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE: display_form_allocate_cadets,
-                EDIT_CADET_REGISTRATION_DATA_IN_VIEW_EVENT_STAGE: display_form_edit_registration_details
-                }
+                EDIT_CADET_REGISTRATION_DATA_IN_VIEW_EVENT_STAGE: display_form_edit_registration_details,
+                EDIT_VOLUNTEER_ROTA_EVENT_STAGE: display_form_view_for_volunteer_rota,
+                EDIT_VOLUNTEER_DETAILS_FROM_ROTA_EVENT_STAGE: display_form_confirm_volunteer_details_from_rota,
+                EDIT_CADET_CONNECTIONS_FROM_ROTA_EVENT_STAGE: display_form_edit_cadet_connections_from_rota,
+                EDIT_VOLUNTEER_SKILLS_FROM_ROTA_EVENT_STAGE: display_form_edit_individual_volunteer_skills_from_rota,
+                ADD_NEW_VOLUNTEER_TO_ROTA_EVENT_STAGE: display_form_add_new_volunteer_to_rota_at_event}
 
     @property
     def dict_of_posted_forms(self) -> dict:
@@ -155,6 +165,10 @@ class EventLogicApi(AbstractLogicApi):
         EDIT_CADET_REGISTRATION_DATA_IN_VIEW_EVENT_STAGE:
             post_form_edit_registration_details,
 
-
+        EDIT_VOLUNTEER_ROTA_EVENT_STAGE: post_form_view_for_volunteer_rota,
+        EDIT_VOLUNTEER_DETAILS_FROM_ROTA_EVENT_STAGE: post_form_confirm_volunteer_details_from_rota,
+        EDIT_CADET_CONNECTIONS_FROM_ROTA_EVENT_STAGE: post_form_edit_cadet_connections_from_rota,
+        EDIT_VOLUNTEER_SKILLS_FROM_ROTA_EVENT_STAGE: post_form_edit_individual_volunteer_skills_from_rota,
+        ADD_NEW_VOLUNTEER_TO_ROTA_EVENT_STAGE: post_form_add_new_volunteer_to_rota_at_event
         }
 

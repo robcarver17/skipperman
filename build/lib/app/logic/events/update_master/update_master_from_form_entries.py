@@ -1,5 +1,5 @@
 from app.backend.form_utils import get_availablity_from_form, get_status_from_form
-from app.backend.update_master_event_data import update_row_in_master_event_data, \
+from app.backend.wa_import.update_master_event_data import update_row_in_master_event_data, \
     get_row_in_mapped_event_for_cadet_id
 from app.logic.events.constants import ROW_STATUS, ATTENDANCE
 from app.logic.events.events_in_state import get_event_from_state

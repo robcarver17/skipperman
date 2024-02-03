@@ -1,4 +1,4 @@
-from app.backend.cadets import get_list_of_cadets
+from app.backend.group_allocations import get_list_of_cadets
 from app.logic.abstract_interface import abstractInterface
 from app.data_access.data import data
 from app.objects.constants import arg_not_passed

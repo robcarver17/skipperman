@@ -9,9 +9,9 @@ from app.web.events.WA.utils import (
 
 from app.web.flask.state_for_action import StateDataForAction
 
-from app.backend.load_wa_file import get_staged_file_raw_event_filename
-from app.backend.map_wa_fields import map_wa_fields_in_df_for_event
-from app.backend.update_mapped_wa_event_data_with_cadet_ids import (
+from app.backend.wa_import.load_wa_file import get_staged_file_raw_event_filename
+from app.backend.wa_import.map_wa_fields import map_wa_fields_in_df_for_event
+from app.backend.wa_import.update_mapped_wa_event_data_with_cadet_ids import (
     update_and_save_mapped_wa_event_data_with_and_without_ids,
 )
 

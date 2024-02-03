@@ -32,14 +32,14 @@ WA_FIELD_MAPPING_BUTTON_LABEL = "Set up mapping of Wild Apricot fields"
 WA_IMPORT_BUTTON_LABEL = "Import data from uploaded Wild Apricot file"
 WA_UPDATE_BUTTON_LABEL = "Upload and update Wild Apricot data from export file"
 
-# Iterative adding of cadets
+# Iterative adding of group_allocations
 CHECK_CADET_BUTTON_LABEL = "Check cadet details entered"
 FINAL_CADET_ADD_BUTTON_LABEL = "Yes - these details are correct - add this new cadet"
-SEE_ALL_CADETS_BUTTON_LABEL = "Choose from all existing cadets"
-SEE_SIMILAR_CADETS_ONLY_LABEL = "See similar cadets only"
+SEE_ALL_CADETS_BUTTON_LABEL = "Choose from all existing group_allocations"
+SEE_SIMILAR_CADETS_ONLY_LABEL = "See similar group_allocations only"
 #
 # specific event; backend
-ALLOCATE_CADETS_BUTTON_LABEL = "Allocate cadets to groups"
+ALLOCATE_CADETS_BUTTON_LABEL = "Allocate group_allocations to groups"
 
 UPLOAD_FILE_BUTTON_LABEL = "Upload selected file"
 

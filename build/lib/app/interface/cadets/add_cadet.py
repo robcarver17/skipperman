@@ -28,7 +28,7 @@ from app.web.cadets.constants import (
 )
 from app.web.cadets.view_cadets import display_view_of_cadets
 
-from app.backend.cadets import verify_cadet_and_warn
+from app.backend.group_allocations import verify_cadet_and_warn
 from app.logic.events.volunteer_allocation.confirm_volunteer_details import add_new_verified_cadet
 from app.objects.cadets import Cadet, default_cadet
 

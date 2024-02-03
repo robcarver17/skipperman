@@ -1,5 +1,5 @@
 from app.data_access.data import data
-from app.backend.load_and_save_wa_mapped_events import load_master_event
+from app.backend.wa_import.load_and_save_wa_mapped_events import load_master_event
 from app.logic.events.constants import CADET_ID
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.abstract_interface import abstractInterface

@@ -2,10 +2,10 @@ from app.data_access.data import data
 from app.logic.events.allocation.backend import (
     load_allocation_for_event,
 )
-from app.backend.load_and_save_wa_mapped_events import (
+from app.backend.wa_import.load_and_save_wa_mapped_events import (
     load_master_event,
 )
-from app.backend.cadets import get_list_of_cadets, cadet_from_id_with_passed_list
+from app.backend.group_allocations import get_list_of_cadets, cadet_from_id_with_passed_list
 from app.objects.cadets import ListOfCadets
 from app.objects.events import Event
 from app.objects.groups import ListOfCadetIdsWithGroups, ListOfCadetsWithGroup
@@ -129,7 +129,7 @@ def get_list_of_cadets_with_groups(
             )
         )
     except:
-        raise Exception("Cadets in backend missing from master list of cadets")
+        raise Exception("Cadets in backend missing from master list of group_allocations")
 
     return list_of_cadet_with_groups
 

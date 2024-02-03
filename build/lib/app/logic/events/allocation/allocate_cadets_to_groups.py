@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Union
 
 
-from app.data_access.configuration.configuration import ALL_GROUPS, UNALLOCATED_GROUP
+from app.data_access.configuration.configuration import ALL_GROUPS_NAMES, UNALLOCATED_GROUP_NAME
 from app.logic.abstract_logic_api import initial_state_form
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -12,14 +12,14 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_tables import RowInTable, Table
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, back_button, Button
-from app.backend.summarise_allocations_data import summarise_allocations_for_event, reorder_list_of_cadets_by_allocated_group
+from app.backend.group_allocations.summarise_allocations_data import summarise_allocations_for_event, reorder_list_of_cadets_by_allocated_group
 from app.logic.abstract_interface import (
     abstractInterface,
 )
-from app.backend.cadet_event_allocations import get_list_of_cadets_in_master_event, get_current_allocations, \
+from app.backend.group_allocations.cadet_event_allocations import get_list_of_cadets_in_master_event, get_current_allocations, \
     save_current_allocations_for_event
-from app.backend.previous_allocations import allocation_for_cadet_in_previous_events, get_dict_of_allocations_for_events_and_list_of_cadets, list_of_events_excluding_one_event
-from app.backend.load_and_save_wa_mapped_events import load_master_event
+from app.backend.group_allocations.previous_allocations import allocation_for_cadet_in_previous_events, get_dict_of_allocations_for_events_and_list_of_cadets
+from app.backend.wa_import.load_and_save_wa_mapped_events import load_master_event
 
 from app.logic.events.constants import (
     ALLOCATION,
@@ -29,7 +29,7 @@ from app.logic.events.constants import (
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.groups import ListOfCadetIdsWithGroups, Group
-from app.objects.events import Event
+from app.objects.events import Event, list_of_events_excluding_one_event
 from app.objects.master_event import MasterEvent
 
 
@@ -65,12 +65,12 @@ class AllocationData:
         previous_allocation = self.previous_groups_as_list(cadet)
         previous_allocation.reverse() ## last event first when considering
         for allocation in previous_allocation:
-            if allocation == UNALLOCATED_GROUP:
+            if allocation == UNALLOCATED_GROUP_NAME:
                 continue
             else:
                 return allocation
 
-        return UNALLOCATED_GROUP
+        return UNALLOCATED_GROUP_NAME
 
     def get_current_group(self, cadet: Cadet):
         try:
@@ -146,7 +146,7 @@ def create_field_name_for_cadet_allocation(cadet: Cadet):
 
 
 def dict_of_groups():
-    return dict([(group, group) for group in ALL_GROUPS])
+    return dict([(group, group) for group in ALL_GROUPS_NAMES])
 
 
 def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewForm]:

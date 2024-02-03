@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import List
 
 from app.data_access.configuration.configuration import APPROX_WIDTH_TO_HEIGHT_RATIO
-from app.reporting.arrangement.arrangement_order import ArrangementOfColumns
+from app.backend.reporting.arrangement.arrangement_order import ArrangementOfColumns
 
 
 @dataclass

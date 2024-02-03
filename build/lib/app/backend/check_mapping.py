@@ -1,7 +1,7 @@
 
-from app.backend.map_wa_fields import get_wa_field_mapping_dict
-from app.backend.load_wa_file import does_raw_event_file_exist, load_raw_wa_file
-from app.backend.load_wa_file import (
+from app.backend.wa_import.map_wa_fields import get_wa_field_mapping_dict
+from app.backend.wa_import.load_wa_file import does_raw_event_file_exist, load_raw_wa_file
+from app.backend.wa_import.load_wa_file import (
     get_staged_file_raw_event_filename,
 )
 

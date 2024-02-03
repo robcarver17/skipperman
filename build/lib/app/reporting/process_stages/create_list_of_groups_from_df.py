@@ -1,10 +1,10 @@
 from typing import List
 import pandas as pd
 
-from app.reporting.options_and_parameters.marked_up_list_from_df_parameters import \
+from app.backend.reporting.options_and_parameters import \
     MarkedUpListFromDfParametersWithActualGroupOrder
 
-from app.reporting.process_stages.strings_columns_groups import (
+from app.backend.reporting.process_stages.strings_columns_groups import (
     ListOfGroupsOfMarkedUpStrings,
     GroupOfMarkedUpString,
     MarkedUpString,
@@ -47,6 +47,7 @@ def _create_marked_up_str_for_group(
     grouped_df: pd.core.groupby.generic.DataFrameGroupBy,
     marked_up_list_from_df_parameters: MarkedUpListFromDfParametersWithActualGroupOrder,
 ) -> GroupOfMarkedUpString:
+
     subset_group = grouped_df.get_group(group)
     subset_group_as_list = list(subset_group.iterrows())
 

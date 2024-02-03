@@ -10,7 +10,7 @@ from app.logic.events.constants import (
     SEE_SIMILAR_CADETS_ONLY_LABEL,
 )
 
-from app.backend.cadets import get_list_of_cadets, SORT_BY_FIRSTNAME, verify_cadet_and_warn, list_of_similar_cadets
+from app.backend.group_allocations import get_list_of_cadets, SORT_BY_FIRSTNAME, verify_cadet_and_warn, list_of_similar_cadets
 from app.logic.cadets.add_cadet import verify_form_with_cadet_details, get_add_cadet_form_with_information_passed, CadetAndVerificationText
 
 from app.objects.cadets import Cadet
@@ -29,7 +29,7 @@ def get_add_or_select_existing_cadet_form(interface: abstractInterface,
         verification_text = verify_cadet_and_warn(cadet)
         cadet_and_text = CadetAndVerificationText(cadet=cadet ,verification_text=verification_text)
 
-    ## First time, don't include final or all cadets
+    ## First time, don't include final or all group_allocations
     footer_buttons = get_footer_buttons_add_or_select_existing_cadets_form(cadet, see_all_cadets=see_all_cadets,
                                                                                 include_final_button=include_final_button)
     # Custom header text
@@ -67,7 +67,7 @@ def get_list_of_cadet_buttons(cadet: Cadet, see_all_cadets: bool = False) -> Lin
         list_of_cadets = get_list_of_cadets(sort_by=SORT_BY_FIRSTNAME)
         extra_button = SEE_SIMILAR_CADETS_ONLY_LABEL
     else:
-        ## similar cadets with option to see more
+        ## similar group_allocations with option to see more
         list_of_cadets = list_of_similar_cadets(cadet)
         extra_button = SEE_ALL_CADETS_BUTTON_LABEL
 

@@ -1,4 +1,4 @@
-from app.backend.update_master_event_data import get_dict_of_diffs_where_significant_values_changed, \
+from app.backend.wa_import.update_master_event_data import get_dict_of_diffs_where_significant_values_changed, \
     get_list_of_field_names_from_dict_of_dict_diffs
 from app.objects.abstract_objects.abstract_form import construct_form_field_given_field_name
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line

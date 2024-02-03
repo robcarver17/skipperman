@@ -45,19 +45,20 @@ WILD_APRICOT_FILE_TYPES = configuration["wild_apricot_file_types"]
 MAX_FILE_SIZE = configuration["max_file_size"]
 UPLOAD_EXTENSIONS = configuration["upload_extensions"]
 ## GROUPS
-LAKE_TRAINING_GROUPS = configuration["lake_training_groups"]
-RIVER_TRAINING_GROUPS = configuration["river_training_groups"]
-MG_GROUPS = configuration["mg_groups"]
-UNALLOCATED_GROUP = configuration["unallocated"]
+LAKE_TRAINING_GROUP_NAMES = configuration["lake_training_groups"]
+RIVER_TRAINING_GROUP_NAMES = configuration["river_training_groups"]
+MG_GROUP_NAMES = configuration["mg_groups"]
+UNALLOCATED_GROUP_NAME = configuration["unallocated"]
 
-ALL_GROUPS = (
-    LAKE_TRAINING_GROUPS + RIVER_TRAINING_GROUPS + MG_GROUPS + [UNALLOCATED_GROUP]
+ALL_GROUPS_NAMES = (
+        LAKE_TRAINING_GROUP_NAMES + RIVER_TRAINING_GROUP_NAMES + MG_GROUP_NAMES + [UNALLOCATED_GROUP_NAME]
 )
 
 # VOLUNTEERS
 VOLUNTEER_SKILLS = configuration['volunteer_skills']
 VOLUNTEER_LOCATIONS = configuration['volunteer_locations']
 VOLUNTEER_ROLES = configuration['volunteer_roles']
+VOLUNTEERS_REQUIRING_GROUP = configuration['volunteers_requiring_group']
 
 LAKE = 'Lake'
 RIVER = 'River'

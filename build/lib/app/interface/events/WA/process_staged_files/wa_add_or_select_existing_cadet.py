@@ -6,7 +6,7 @@ from app.web.events.constants import (
 )
 from app.web.html.forms import html_button
 from app.web.html.html import html_joined_list, html_joined_list_as_lines, Html
-from app.backend.cadets import get_list_of_cadets, SORT_BY_FIRSTNAME, verify_cadet_and_warn, list_of_similar_cadets
+from app.backend.group_allocations import get_list_of_cadets, SORT_BY_FIRSTNAME, verify_cadet_and_warn, list_of_similar_cadets
 
 from app.web.flask.state_for_action import StateDataForAction
 from app.web.html.html import html_bold, Html
@@ -36,7 +36,7 @@ def get_add_or_select_existing_cadet_form(state_data: StateDataForAction,
     else:
         verification_text = verify_cadet_and_warn(cadet)
 
-    ## First time, don't include final or all cadets
+    ## First time, don't include final or all group_allocations
     footer_buttons_html = get_footer_buttons_add_or_select_existing_cadets_form(cadet, see_all_cadets=see_all_cadets,
                                                                                 include_final_button=include_final_button)
     # Custom header text
@@ -76,7 +76,7 @@ def get_html_list_of_cadet_buttons(cadet: Cadet, see_all_cadets: bool = False):
         list_of_cadets = get_list_of_cadets(sort_by=SORT_BY_FIRSTNAME)
         extra_button = html_button(SEE_SIMILAR_CADETS_ONLY_LABEL)
     else:
-        ## similar cadets with option to see more
+        ## similar group_allocations with option to see more
         list_of_cadets = list_of_similar_cadets(cadet)
         extra_button = html_button(SEE_ALL_CADETS_BUTTON_LABEL)
 

@@ -19,7 +19,7 @@ from app.logic.events.update_master.update_existing_master_event_data_forms impo
 from app.logic.events.update_master.update_master_from_form_entries import update_mapped_wa_event_data_with_new_data, \
     update_mapped_wa_event_data_with_form_data
 
-from app.backend.update_master_event_data import (
+from app.backend.wa_import.update_master_event_data import (
     add_new_row_to_master_event_data,
     update_row_in_master_event_data, is_cadet_already_in_master_data, is_cadet_present_in_mapped_event_data,
     any_important_difference_between_rows, get_row_in_mapped_event_for_cadet_id, get_row_in_master_event_for_cadet_id,

@@ -3,13 +3,13 @@ import pandas as pd
 from app.logic.reporting.backend.TODELETE import (
     ReportingOptionsForSpecificGroupsInReport,
 )
-from app.reporting.process_stages.create_list_of_groups_from_df import (
+from app.backend.reporting.process_stages.create_list_of_groups_from_df import (
     create_list_of_group_of_marked_up_str_from_df,
 )
-from app.reporting.process_stages.create_list_of_columns_from_groups import (
+from app.backend.reporting.process_stages.create_list_of_columns_from_groups import (
     create_columns_from_list_of_groups_of_marked_up_str,
 )
-from app.reporting.process_stages.create_pdf_from_list_of_columns import (
+from app.backend.reporting.process_stages.create_pdf_from_list_of_columns import (
     create_pdf_from_list_of_columns_and_return_filename,
 )
 

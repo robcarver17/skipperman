@@ -13,7 +13,7 @@ from app.logic.events import (
 def change_allocated_cadets(data_and_interface: DataAndInterface):
 
     event = choose_event(
-        "Choose event to allocate cadets for", data_and_interface=data_and_interface
+        "Choose event to allocate group_allocations for", data_and_interface=data_and_interface
     )
 
     list_of_cadets_with_groups = load_allocation_for_event(

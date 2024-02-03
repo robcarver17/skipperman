@@ -4,9 +4,10 @@ from app.logic.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import (
     NewForm,
     Form,
-)
-from app.objects.abstract_objects.abstract_buttons import button_label_requires_going_back
 
+)
+from app.objects.abstract_objects.abstract_buttons import is_finished_button
+from app.objects.constants import NoButtonPressed
 INITIAL_STATE = "Initial form"
 
 
@@ -16,8 +17,10 @@ class AbstractLogicApi:
 
     def get_form(self) -> Form:
         if self.interface.is_posted_form:
+            print("posted form")
             return self.get_posted_form()
         else:
+            print("displayed form")
             return self.get_displayed_form()
 
     def get_displayed_form(self) -> Form:
@@ -28,24 +31,36 @@ class AbstractLogicApi:
         return form
 
     def get_posted_form(self) -> Form:
-        interface = self.interface
-        last_button_pressed = interface.last_button_pressed()
-        print("Button pressed %s" % last_button_pressed)
-        if button_label_requires_going_back(last_button_pressed):
-            form = self.get_posted_form_going_back_to_initial_state()
+        finished_button_pressed = self.finished_button_pressed()
+
+        if finished_button_pressed:
+            form = self.get_posted_form_with_finished_button_pressed()
         else:
             form = self.get_posted_form_standard_buttons()
 
         return form
 
-    def get_posted_form_going_back_to_initial_state(self) -> Form:
-        form = self.get_displayed_form_given_form_name_and_reset_state_if_required(
-            INITIAL_STATE
-        )
+    def finished_button_pressed(self) -> bool:
+        interface = self.interface
+        try:
+            last_button_pressed = interface.last_button_pressed()
+        except NoButtonPressed:
+            return False
+
+        print("Button pressed %s" % last_button_pressed)
+
+        return is_finished_button(last_button_pressed)
+
+    def get_posted_form_with_finished_button_pressed(self) -> Form:
+
+        new_form = self.interface.get_where_finished_button_should_lead_to(default=INITIAL_STATE)
+        print("Finished button form going to %s" % new_form)
+        self.interface.clear_where_finished_button_should_lead_to() ## to avoid problems
+
+        form = self.redirect_to_new_form(NewForm(new_form))
 
         return form
 
-    ## Special buttons
     def get_posted_form_standard_buttons(self) -> Form:
         form_name = self.form_name
         print("Getting posted form for %s" % form_name)
@@ -71,7 +86,7 @@ class AbstractLogicApi:
         form = posted_forms_as_dict.get(form_name, None)
         if form is None:
             self.interface.log_error("Internal error, form name %s not recognised" % form_name)
-            return self.get_posted_form_going_back_to_initial_state()
+            return self.get_posted_form_with_finished_button_pressed()
 
         form_contents = form(self.interface)
 
@@ -80,7 +95,7 @@ class AbstractLogicApi:
     def get_displayed_form_given_form_name_and_reset_state_if_required(
         self, form_name: str
     ) -> Form:
-        ## We never have redirection issues here
+        ## We should never have redirection issues here
         if form_name is INITIAL_STATE:
             self.interface.clear_persistent_data_for_action_and_reset_to_initial_stage_form()
 
@@ -95,13 +110,15 @@ class AbstractLogicApi:
     def get_displayed_form_given_form_name(
         self, form_name: str
     ) -> Union[Form, NewForm]:
+        print("get_displayed_form_given_form_name %s" % form_name)
         display_forms_as_dict = self.dict_of_display_forms
-        form = display_forms_as_dict.get(form_name, None)
-        if form is None:
+        form_function = display_forms_as_dict.get(form_name, None)
+        if form_function is None:
+            print("Form %s not recognised" % form_name)
             self.interface.log_error("Internal error, form name %s not recognised" % form_name)
-            return self.get_posted_form_going_back_to_initial_state()
+            return self.get_posted_form_with_finished_button_pressed()
 
-        form_contents = form(self.interface)
+        form_contents = form_function(self.interface)
 
         return form_contents
 
@@ -125,8 +142,9 @@ class AbstractLogicApi:
             form_name = INITIAL_STATE
         else:
             form_name = self.interface.form_name
-
+        print("form name %s" % form_name)
         return form_name
+
 
     @property
     def dict_of_display_forms(self) -> dict:
@@ -137,3 +155,13 @@ class AbstractLogicApi:
         return {}
 
 initial_state_form = NewForm(INITIAL_STATE)
+
+
+def button_error_and_back_to_initial_state_form(interface: abstractInterface) -> NewForm:
+    try:
+        button = interface.last_button_pressed()
+        interface.log_error("Button %s not recognised!" % button)
+    except NoButtonPressed:
+        interface.log_error("No button pressed!")
+
+    return initial_state_form

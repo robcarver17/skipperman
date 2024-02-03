@@ -6,7 +6,7 @@ from app.logic.events.constants import *
 from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import get_current_cadet_id
 from app.backend.cadets import cadet_name_from_id
 from app.logic.events.events_in_state import get_event_from_state
-from app.backend.volunteer_allocation import volunteer_ids_associated_with_cadet_at_specific_event, \
+from app.backend.volunteers.volunteer_allocation import volunteer_ids_associated_with_cadet_at_specific_event, \
     remove_volunteer_and_cadet_association, delete_volunteer_with_id_at_event, \
     get_volunteer_name_and_associated_cadets_for_event
 

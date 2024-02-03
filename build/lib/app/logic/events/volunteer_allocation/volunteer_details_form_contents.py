@@ -1,9 +1,7 @@
 from app.backend.cadets import cadet_name_from_id, cadet_from_id
 from app.backend.form_utils import get_food_requirements_input, get_availability_checkbox
-from app.backend.volunteers import is_cadet_already_connected_to_volunteer_in_volunteer_list
+from app.backend.volunteers.volunteers import is_cadet_already_connected_to_volunteer_in_volunteer_list
 from app.logic.abstract_interface import abstractInterface
-from app.logic.events.volunteer_allocation.volunteer_details_form_contents import FOOD_REQUIREMENTS, OTHER_FOOD, \
-    AVAILABILITY, MAKE_CADET_CONNECTION, MAKE_CADET_CONNECTION_LABEL
 from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import get_volunteer_index, \
     get_current_cadet_id
 from app.objects.abstract_objects.abstract_form import checkboxInput
@@ -89,3 +87,10 @@ def get_availability_checkbox_for_volunteer_at_event(volunteer_at_event: Volunte
                                      event=event,
                                      input_name=AVAILABILITY,
                                      input_label="Confirm availability for volunteer:")
+
+
+FOOD_REQUIREMENTS="food_requirements"
+OTHER_FOOD = "other_food_required"
+AVAILABILITY = "availability"
+MAKE_CADET_CONNECTION = "connection"
+MAKE_CADET_CONNECTION_LABEL="Connect"

@@ -8,7 +8,7 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm,
     textInput, dateInput,
 )
-from app.objects.abstract_objects.abstract_buttons import cancel_button, Button
+from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.cadets.constants import (
     CHECK_BUTTON_LABEL,
@@ -23,30 +23,30 @@ from app.logic.abstract_interface import (
     abstractInterface,
     form_with_message_and_finished_button,
 )
-from app.logic.abstract_logic_api import initial_state_form
+from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 
 
 def display_form_add_cadet(
-    interface: abstractInterface, first_time_displayed: bool = True
+    interface: abstractInterface
 ) -> Union[Form, NewForm]:
-    last_button_pressed = interface.last_button_pressed()
-    if first_time_displayed:
-        ## hasn't been displayed before, will have no defaults
-        return get_add_cadet_form(interface=interface, first_time_displayed=True)
 
-    elif last_button_pressed == CHECK_BUTTON_LABEL:
+    return get_add_cadet_form(interface=interface, first_time_displayed=True)
+
+
+def post_form_add_cadets(interface: abstractInterface) -> Union[Form, NewForm]:
+    last_button_pressed = interface.last_button_pressed()
+
+    if last_button_pressed == CHECK_BUTTON_LABEL:
         ## verify results, display form again
         return get_add_cadet_form(interface=interface, first_time_displayed=False)
 
     elif last_button_pressed == FINAL_ADD_BUTTON_LABEL:
         return process_form_when_cadet_verified(interface)
 
-    else:
-        interface.log_error(
-            "Uknown button pressed %s - shouldn't happen!" % last_button_pressed
-        )
+    elif last_button_pressed==CANCEL_BUTTON_LABEL:
         return initial_state_form
-
+    else:
+        button_error_and_back_to_initial_state_form(interface)
 
 @dataclass
 class CadetAndVerificationText:
@@ -63,8 +63,6 @@ default_cadet_and_text = CadetAndVerificationText(
 )
 
 
-def post_form_add_cadets(interface: abstractInterface) -> Union[Form, NewForm]:
-    return display_form_add_cadet(interface, first_time_displayed=False)
 
 
 def get_add_cadet_form(
@@ -177,6 +175,7 @@ def add_cadet_from_form_to_data(interface) -> Cadet:
 def get_footer_buttons_for_add_cadet_form(form_is_empty: bool) -> Line:
     final_submit = Button(FINAL_ADD_BUTTON_LABEL)
     check_submit = Button(CHECK_BUTTON_LABEL)
+    cancel_button = Button(CANCEL_BUTTON_LABEL)
     if form_is_empty:
         return Line([cancel_button, check_submit])
     else:

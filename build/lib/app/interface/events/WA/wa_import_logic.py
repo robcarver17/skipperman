@@ -5,8 +5,8 @@ from app.data_access.uploads_and_downloads import get_next_valid_upload_file_nam
 from app.web.events.constants import WA_FILE
 from app.web.events.utils import get_event_from_state
 from app.web.flask.state_for_action import StateDataForAction
-from app.backend.load_wa_file import save_staged_file_of_raw_event_upload_with_event_id, load_raw_wa_file, get_event_id_from_wa_df
-from app.backend.map_wa_files import verify_and_if_required_add_wa_mapping
+from app.backend.wa_import.load_wa_file import save_staged_file_of_raw_event_upload_with_event_id, load_raw_wa_file, get_event_id_from_wa_df
+from app.backend.wa_import.map_wa_files import verify_and_if_required_add_wa_mapping
 from app.objects.constants import NoFileUploaded, FileError
 
 

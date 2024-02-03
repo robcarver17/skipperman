@@ -49,6 +49,9 @@ def post_form_delete_individual_cadet(
         return initial_state_form
     if button==CANCEL_BUTTON_LABEL:
         return NewForm(VIEW_INDIVIDUAL_CADET_STAGE)
+
     elif button==SURE_DELETE_BUTTON_LABEL:
         delete_a_cadet(cadet)
+        ## Cadet gone missing so back to list of all cadets
+        ## Cadet gone missing so back to list of all cadets
         return initial_state_form

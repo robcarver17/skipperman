@@ -3,7 +3,7 @@ from app.data_access.data import data
 from app.objects.events import Event
 from app.objects.wa_field_mapping import ListOfWAFieldMappings
 from app.objects.mapped_wa_event_no_ids import MappedWAEventNoIDs
-from app.backend.load_wa_file import load_raw_wa_file
+from app.backend.wa_import.load_wa_file import load_raw_wa_file
 
 
 def map_wa_fields_in_df_for_event(event: Event, filename: str) -> MappedWAEventNoIDs:

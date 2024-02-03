@@ -12,13 +12,16 @@ class SessionDataForAction(object):
 
     def reset_to_initial_stage(self):
         self.stage = INITIAL_STAGE
+        print("stage now %s" % INITIAL_STAGE)
 
     @property
     def is_initial_stage(self) -> bool:
         return self.stage == INITIAL_STAGE
 
     def get_value(self, key, default=missing_data):
-        return self.other_data.get(key, missing_data)
+        result = self.other_data.get(key,default)
+
+        return result
 
     def set_value(self, key, value):
         other_data = self.other_data
@@ -30,7 +33,7 @@ class SessionDataForAction(object):
         try:
             other_data.pop(key)
         except:
-            print("%s not in persistent storage")
+            print("%s not in persistent storage" % key)
 
     def list_of_keys_with_persistent_values(self) -> list:
         other_data = self.other_data
@@ -48,16 +51,24 @@ class SessionDataForAction(object):
 
     @property
     def stage(self):
-        return self.state_data_as_dict_from_session.get("stage", INITIAL_STAGE)
+        print("sessoin dict %s" % str(self.state_data_as_dict_from_session))
+        stage = self.state_data_as_dict_from_session.get("stage", INITIAL_STAGE)
+        return stage
 
     @stage.setter
     def stage(self, new_stage: str):
+        print("sessoin dict %s" % str(self.state_data_as_dict_from_session))
         state_data_as_dict_from_session = self.state_data_as_dict_from_session
+        print("sessoin dict %s" % str(self.state_data_as_dict_from_session))
+
         state_data_as_dict_from_session["stage"] = new_stage
         self.update_session_dict_for_action(state_data_as_dict_from_session)
 
+        print("sessoin dict %s" % str(self.state_data_as_dict_from_session))
+
     def update_session_dict_for_action(self, new_dict: dict):
         _update_session_dict_for_action(action_name=self.action_name, new_dict=new_dict)
+
 
     @property
     def state_data_as_dict_from_session(self) -> dict:

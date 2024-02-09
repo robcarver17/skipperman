@@ -51,42 +51,50 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Basic - to do:
   
-- REMOVE the horrible allocation, instead filter allocations through prism of master event data 
+- allocate safety boats 
 - report on a volunteer rota
-
-- edit event (warnings especially days!), delete event (many warnings!)
-- all pdf reports should have csv counterparts
-- identify if events have food, merch, etc so don't get irrelevant fields coming up
+- edit event (warnings especially days!)
 - maintain ticksheets, print and record ticks
 - print roll call lists and contact details
-- allocate resources such as club dinghies and safety boats
+- allocate resources such as club dinghies
 - import a set of members from WA to populate a list of cadets or volunteers
+  
+- all pdf reports should have csv counterparts
+
+- think carefully about how to handle events with no cadets, volunteers etc
+- two types of clothing event: as part of training event, or social only seperate
+- two types of food event: as part of training event, or social only seperate
+- manage social event with food only (Social)
+
+- create a report of cadets 
 - allocate and maintain colour groups (CW)
 - print spotter sheets (CW and racing events)
 - maintain and report on tickets for gala dinner, include additional gala dinner invites eg sponsors, plus ones (CW)
 - maintain and report on wristbands (CW)
 - create a report of cadets and their ages for fancy dress (CW)
-- create a report of cadets 
 - create a report of t-shirts and other merch required (CW)
 - create a report of polo shirts required (CW)
 - create a report of RYA logbooks/certficates required (CW)
-- users and passwords (skipper, deputy, instructors)
-- view all linked information for event
+  
+- users and passwords (skipper, deputy, instructors) 
 - upload/download all data as zip
 - regular backups on all writes; include roll back function
 - editable user sailing groups, volunteer roles, skills
 - clean up eg old data, uploaded files, staged files
+- move all dangerous deletes to special area: , delete event (many warnings!), delete cadet, delete volunteer
+  
 
 ### Future / wishlist / nice to have:
 
 - nicer CSS
-- maintain lists of past, present and future cadet committee members
+- maintain lists of past, present and future cadet committee members (CW)
 - create a list of key volunteers to invite to curry evening
 - instructor facing interface to update ticks on a GUI
 - instructor facing interface for roll call
 - create a report of birthdays during an event
 - maintain a list of key volunteers and thank yous (CW)
-- manage orders for hoodies (CW)
+- - manage orders for hoodies (CW)
+
 - anything that is displayed on screen can be exported to .csv eg reg details, volunteer rota (and imported...???)
 
 

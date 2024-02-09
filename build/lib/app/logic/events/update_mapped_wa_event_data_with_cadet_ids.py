@@ -1,8 +1,5 @@
-from app.backend.wa_import.load_and_save_wa_mapped_events import (
-    load_existing_mapped_wa_event_with_ids,
-    save_mapped_wa_event_with_ids,
-    save_mapped_wa_event_with_no_ids,
-)
+from app.backend.data.mapped_events import save_mapped_wa_event_with_ids, load_existing_mapped_wa_event_with_ids, \
+    save_mapped_wa_event_with_no_ids
 
 from app.objects.events import Event
 from app.objects.mapped_wa_event_no_ids import MappedWAEventNoIDs

@@ -1,4 +1,4 @@
-from app.backend.wa_import.map_wa_fields import get_wa_field_mapping_dict
+from app.backend.data.field_mapping import get_field_mapping_for_event
 from app.objects.abstract_objects.abstract_text import bold
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.abstract_interface import abstractInterface
@@ -33,7 +33,7 @@ def list_of_warnings_about_fields(
 ) -> ListOfLines:
     wa_as_df = load_raw_wa_file(filename)
     # Set up WA event mapping fields
-    wa_field_mapping = get_wa_field_mapping_dict(event=event)
+    wa_field_mapping = get_field_mapping_for_event(event=event)
 
     fields_in_wa_file = list(wa_as_df.columns)
     in_mapping_not_in_wa_file = wa_field_mapping.wa_fields_missing_from_list(

@@ -50,6 +50,12 @@ class Group:
     def __lt__(self, other: 'Group'):
         return index_group(self)<index_group(other)
 
+    def as_str_replace_unallocated_with_empty(self)-> str:
+        if self.is_unallocated:
+            return ""
+        else:
+            return self.group_name
+
     @classmethod
     def create_unallocated(cls):
         return cls(UNALLOCATED_GROUP_NAME)
@@ -130,6 +136,10 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
         cadet_id = cadet.id
         self.append(CadetIdWithGroup(cadet_id=cadet_id, group=GROUP_UNALLOCATED))
 
+    def remove_cadet_with_id_from_allocation(self, cadet_id: str):
+        idx = self.index_of_item_with_cadet_id(cadet_id)
+        __ = self.pop(idx)
+
     def update_group_for_cadet(self, cadet: Cadet, chosen_group: Group):
         if self.cadet_is_allocated_to_group(cadet):
             self._update_group_for_existing_cadet(
@@ -189,13 +199,18 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
             return False
 
     def item_with_cadet_id(self, cadet_id: str) -> CadetIdWithGroup:
+        idx = self.index_of_item_with_cadet_id(cadet_id)
+        return self[idx]
+
+    def index_of_item_with_cadet_id(self, cadet_id: str) -> int:
         list_of_cadet_ids = self.list_of_ids
         try:
             idx = list_of_cadet_ids.index(cadet_id)
         except ValueError:
             raise Exception("Cadet %s not found" % cadet_id)
 
-        return self[idx]
+        return idx
+
 
     @property
     def list_of_ids(self) -> list:

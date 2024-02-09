@@ -95,7 +95,7 @@ def process_update_to_existing_cadet_in_event_data(
             cadet_id=cadet_id, event=event
         )
     except DuplicateCadets:
-        interface.log_message(
+        interface.log_error(
             "ACTION REQUIRED: Cadet %s appears more than once in WA file with an active registration - ignoring all registrations for now - go to WA and cancel one of the registrations please!"
             % cadet_name_from_id(cadet_id)
         )
@@ -122,7 +122,7 @@ def process_update_to_cadet_new_to_master_data(
             cadet_id=cadet_id, event=event
         )
     except DuplicateCadets:
-        interface.log_message(
+        interface.log_error(
             "ACTION REQUIRED: Cadet %s appears more than once in WA file with an active registration - ignoring for now - go to WA and cancel one of the registrations please!"
             % cadet_name_from_id(cadet_id)
         )

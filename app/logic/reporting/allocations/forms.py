@@ -46,7 +46,7 @@ def get_text_explaining_various_options_for_allocations_report(
     interface: abstractInterface,
 ) -> Tuple[ListOfLines, ListOfLines, ListOfLines]:
     additional_parameters = load_additional_parameters_for_allocation_report(interface)
-    additional_options_as_text = explain_additional_parameters(additional_parameters)
+    additional_options_as_text = explain_additional_parameters_for_allocation_report(additional_parameters)
 
     print_options = get_saved_print_options(report_type=specific_parameters_for_allocation_report.report_type, interface=interface)
     print_options_as_text = report_print_options_as_list_of_lines(print_options)
@@ -69,7 +69,7 @@ def get_text_explaining_various_options_for_allocations_report(
     return additional_options_as_text, print_options_as_text, arrangement_and_order_text
 
 
-def explain_additional_parameters(
+def explain_additional_parameters_for_allocation_report(
     additional_parameters: AdditionalParametersForAllocationReport,
 ) -> ListOfLines:
     if additional_parameters.display_full_names:

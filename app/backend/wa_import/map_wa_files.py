@@ -1,4 +1,4 @@
-from app.data_access.data import data
+from app.backend.data.event_mapping import load_wa_event_mapping, save_wa_event_mapping
 from app.objects.events import Event
 from app.backend.wa_import.load_wa_file import (
     get_event_id_from_wa_df,
@@ -38,7 +38,7 @@ def confirm_correct_wa_mapping_and_return_true_if_new_event(
     event: Event, wa_id: str
 ) -> bool:
     event_id = event.id
-    wa_event_mapping = data.data_wa_event_mapping.read()
+    wa_event_mapping = load_wa_event_mapping()
 
     event_is_already_in_mapping_list = wa_event_mapping.is_event_in_mapping_list(
         event_id
@@ -77,16 +77,14 @@ def confirm_correct_wa_mapping_and_return_true_if_new_event(
 
 def add_wa_to_event_mapping(event: Event, wa_id: str):
     event_id = event.id
-    wa_event_mapping = data.data_wa_event_mapping.read()
+    wa_event_mapping = load_wa_event_mapping()
     wa_event_mapping.add_event(event_id=event_id, wa_id=wa_id)
-    data.data_wa_event_mapping.write(
-        wa_event_mapping,
-    )
+    save_wa_event_mapping(wa_event_mapping)
 
 
 def is_wa_file_mapping_setup_for_event(event: Event) -> bool:
     event_id = event.id
-    wa_event_mapping = data.data_wa_event_mapping.read()
+    wa_event_mapping = load_wa_event_mapping()
 
     event_is_already_in_mapping_list = wa_event_mapping.is_event_in_mapping_list(
         event_id

@@ -2,7 +2,7 @@ from typing import Union
 
 from app.data_access.data import data
 from app.logic.cadets.cadet_state_storage import get_cadet_from_state
-from app.backend.cadets import get_list_of_cadets
+from app.backend.cadets import get_sorted_list_of_cadets
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line
@@ -58,7 +58,7 @@ def modify_cadet_given_form_contents(interface: abstractInterface):
     original_cadet = get_cadet_from_state(interface)
     cadet_details = get_cadet_from_form(interface)
     cadet_details.id = original_cadet.id
-    list_of_cadets = get_list_of_cadets()
+    list_of_cadets = get_sorted_list_of_cadets()
     list_of_cadets.replace_with_new_object(cadet_details)
 
     data.data_list_of_cadets.write(list_of_cadets)

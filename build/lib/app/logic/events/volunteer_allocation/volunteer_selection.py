@@ -52,6 +52,8 @@ def get_add_or_select_existing_volunteers_form(
         volunteer_and_text = VolunteerAndVerificationText(
             volunteer=volunteer, verification_text=verification_text
         )
+        if len(verification_text)==0:
+            include_final_button = True
 
     cadet_id =get_current_cadet_id(interface)
     ## First time, don't include final or all group_allocations

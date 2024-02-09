@@ -4,7 +4,7 @@ from app.backend.cadets import cadet_name_from_id
 from app.logic.abstract_interface import abstractInterface
 from app.objects.master_event import MasterEvent, RowInMasterEvent
 from app.objects.events import Event
-from app.backend.wa_import.update_master_event_data import save_master_event
+from app.backend.data.mapped_events import save_master_event
 from app.backend.form_utils import get_availablity_from_form, get_status_from_form, get_food_requirements_from_form
 
 from app.logic.events.registration_details.registration_details_form import get_registration_data, \

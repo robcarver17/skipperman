@@ -1,10 +1,11 @@
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
-from app.backend.group_allocations.cadet_event_allocations import get_unallocated_cadets, load_allocation_for_event
+from app.backend.group_allocations.cadet_event_allocations import get_unallocated_cadets
+from app.backend.data.group_allocations import load_raw_allocation_for_event
 from app.objects.groups import ListOfCadetIdsWithGroups
 from app.objects.cadets import ListOfCadets
 from app.objects.events import Event
 def summarise_allocations_for_event(event) -> ListOfLines:
-    list_of_cadet_ids_with_groups = load_allocation_for_event(event)
+    list_of_cadet_ids_with_groups = load_raw_allocation_for_event(event)
 
     total_in_each_group_as_dict = list_of_cadet_ids_with_groups.total_in_each_group_as_dict()
     total_in_each_group_as_dict["Unallocated"] = count_unallocated_cadets(event=event, list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups)

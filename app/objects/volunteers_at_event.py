@@ -1,7 +1,6 @@
 from copy import copy
 from dataclasses import dataclass
 
-from app.data_access.configuration.configuration import VOLUNTEER_ROLES, LAKE, RIVER, OTHER, LAKE_VOLUNTEER_ROLES, RIVER_VOLUNTEER_ROLES
 from app.objects.generic import GenericSkipperManObject, get_class_instance_from_str_dict, GenericListOfObjects
 from app.objects.groups import Group
 from app.objects.food import FoodRequirements, no_food_requirements

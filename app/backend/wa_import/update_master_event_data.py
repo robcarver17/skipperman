@@ -1,8 +1,4 @@
-from app.backend.wa_import.load_and_save_wa_mapped_events import (
-    load_master_event,
-    save_master_event,
-    load_existing_mapped_wa_event_with_ids,
-)
+from app.backend.data.mapped_events import load_master_event, save_master_event, load_existing_mapped_wa_event_with_ids
 
 from app.objects.master_event import (
     get_row_of_master_event_from_mapped_row_with_idx_and_status,
@@ -103,12 +99,12 @@ def update_row_in_master_event_data(
         "Updating event %s with existing row new values %s"
         % (str(event), str(new_row_in_mapped_wa_event_with_status))
     )
-
     master_event.update_row(
         row_of_mapped_wa_event_data_with_id_and_status=new_row_in_mapped_wa_event_with_status
     )
 
     save_master_event(event=event, master_event=master_event)
+
 
 
 def is_cadet_already_in_master_data(event: Event, cadet_id: str) -> bool:

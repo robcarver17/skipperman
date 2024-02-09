@@ -15,7 +15,7 @@ from app.logic.events.constants import (
 
 from app.logic.events.events_in_state import get_event_from_state
 
-from app.backend.wa_import.load_and_save_wa_mapped_events import load_master_event
+from app.backend.data.mapped_events import load_master_event, load_existing_mapped_wa_event_with_ids
 from app.logic.events.update_master.update_existing_master_event_data_forms import (
     display_form_for_update_to_existing_row_of_event_data,
 )
@@ -28,9 +28,6 @@ from app.backend.wa_import.update_master_event_data import (
     add_new_row_to_master_event_data,
     update_row_in_master_event_data, any_important_difference_between_rows, get_row_in_mapped_event_for_cadet_id,
     get_row_in_master_event_for_cadet_id,
-)
-from app.backend.wa_import.load_and_save_wa_mapped_events import (
-    load_existing_mapped_wa_event_with_ids,
 )
 from app.objects.events import Event
 from app.objects.mapped_wa_event_with_ids import RowInMappedWAEventWithId

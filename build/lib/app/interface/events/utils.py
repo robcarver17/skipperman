@@ -1,13 +1,13 @@
 from app.web.events.constants import EVENT
 from app.web.flask.state_for_action import StateDataForAction
 from app.objects.events import Event
-from app.backend.events import get_list_of_events
+from app.backend.events import get_sorted_list_of_events
 from app.web.html.forms import html_button
 from app.web.html.html import Html
 
 
 def confirm_event_exists(event_selected):
-    list_of_events = get_list_of_events()
+    list_of_events = get_sorted_list_of_events()
     list_of_events_as_str = [str(event) for event in list_of_events]
     assert event_selected in list_of_events_as_str
 
@@ -27,7 +27,7 @@ def get_specific_event_str_from_state(state_data: StateDataForAction) -> str:
 
 
 def get_event_from_list_of_events(event_selected: str) -> Event:
-    list_of_events = get_list_of_events()
+    list_of_events = get_sorted_list_of_events()
     list_of_events_as_str = [str(event) for event in list_of_events]
 
     event_idx = list_of_events_as_str.index(event_selected)

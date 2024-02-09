@@ -1,13 +1,12 @@
 from typing import Dict
 from dataclasses import dataclass
 
-from app.backend.group_allocations.cadet_event_allocations import get_list_of_cadets_in_master_event, load_allocation_for_event
+from app.backend.group_allocations.cadet_event_allocations import get_list_of_cadets_in_master_event
+from app.backend.data.group_allocations import load_raw_allocation_for_event
 from app.backend.group_allocations.previous_allocations import allocation_for_cadet_in_previous_events, \
     get_dict_of_allocations_for_events_and_list_of_cadets
 from app.data_access.configuration.configuration import UNALLOCATED_GROUP_NAME
-from app.backend.wa_import.load_and_save_wa_mapped_events import (
-    load_master_event,
-)
+from app.backend.data.mapped_events import load_master_event
 from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.events import Event, list_of_events_excluding_one_event
 from app.objects.groups import ListOfCadetIdsWithGroups
@@ -60,7 +59,7 @@ class AllocationData:
 
 
 def get_allocation_data(event: Event) -> AllocationData:
-    current_allocation_for_event = load_allocation_for_event(event)
+    current_allocation_for_event = load_raw_allocation_for_event(event)
     master_event_data = load_master_event(event)
     unsorted_list_of_cadets = get_list_of_cadets_in_master_event(event)
     list_of_cadets = reorder_list_of_cadets_by_allocated_group(list_of_cadets=unsorted_list_of_cadets, current_allocation_for_event=current_allocation_for_event)

@@ -1,6 +1,6 @@
-from app.backend.cadets import get_list_of_cadets
-from app.backend.wa_import.load_and_save_wa_mapped_events import load_master_event
-from app.data_access.data import data
+from app.backend.cadets import get_sorted_list_of_cadets
+from app.backend.data.group_allocations import load_raw_allocation_for_event
+from app.backend.data.mapped_events import load_master_event
 from app.objects.cadets import ListOfCadets
 from app.objects.constants import arg_not_passed
 from app.objects.events import Event
@@ -27,7 +27,7 @@ def get_list_of_cadets_in_master_event(
 
 
 def get_list_of_cadets_given_list_of_ids(list_of_cadet_ids: list) -> ListOfCadets:
-    master_list_of_cadets = get_list_of_cadets()
+    master_list_of_cadets = get_sorted_list_of_cadets()
     list_of_cadets = ListOfCadets.subset_from_list_of_ids(
         master_list_of_cadets, list_of_ids=list_of_cadet_ids
     )
@@ -49,16 +49,6 @@ def get_list_of_cadet_ids_at_event(
     )
 
     return list_of_cadet_ids
-
-
-
-
-def save_current_allocations_for_event(
-    event: Event, list_of_cadets_with_groups: ListOfCadetIdsWithGroups
-):
-    data.data_list_of_cadets_with_groups.write_groups_for_event(
-        event_id=event.id, list_of_cadets_with_groups=list_of_cadets_with_groups
-    )
 
 
 def get_unallocated_cadets(
@@ -86,7 +76,7 @@ def get_unallocated_cadets(
 def get_list_of_cadets_with_groups(
     list_of_cadet_ids_with_groups,
 ) -> ListOfCadetsWithGroup:
-    list_of_cadets = get_list_of_cadets()
+    list_of_cadets = get_sorted_list_of_cadets()
 
     try:
         list_of_cadet_with_groups = (
@@ -101,13 +91,18 @@ def get_list_of_cadets_with_groups(
     return list_of_cadet_with_groups
 
 
+
 def load_allocation_for_event(event: Event) -> ListOfCadetIdsWithGroups:
-    event_id = event.id
 
-    list_of_cadets_with_groups = (
-        data.data_list_of_cadets_with_groups.read_groups_for_event(event_id)
-    )
+    list_of_cadets_with_groups = load_raw_allocation_for_event(event)
+    master_event_data = load_master_event(event)
+    list_of_active_cadet_ids_at_event = master_event_data.list_of_cadet_ids_with_given_status(exclude_cancelled=True, exclude_deleted=True, exclude_active=False)
 
-    return list_of_cadets_with_groups
+    list_of_allocated_cadets_with_groups = [cadet_with_group for cadet_with_group in list_of_cadets_with_groups
+                                            if cadet_with_group.cadet_id in list_of_active_cadet_ids_at_event]
+
+    return ListOfCadetIdsWithGroups(list_of_allocated_cadets_with_groups)
+
+
 
 

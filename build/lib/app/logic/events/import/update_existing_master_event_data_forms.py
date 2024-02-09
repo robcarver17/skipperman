@@ -8,7 +8,7 @@ from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
 from app.backend.wa_import.update_master_event_data import new_status_and_status_message, update_row_in_master_event_data, \
     get_row_from_event_file_with_ids, NO_STATUS_CHANGE
-from app.backend.wa_import.load_and_save_wa_mapped_events import load_master_event
+from app.backend.data.mapped_events import load_master_event
 
 from app.backend.group_allocations import cadet_name_from_id
 from app.objects.constants import NoMoreData, missing_data

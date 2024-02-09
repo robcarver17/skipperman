@@ -8,7 +8,7 @@ from app.objects.abstract_objects.abstract_form import (
     dropDownInput,
 )
 from app.objects.abstract_objects.abstract_tables import RowInTable, Table
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
 from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button
 from app.backend.group_allocations.summarise_allocations_data import summarise_allocations_for_event
 from app.logic.abstract_interface import (
@@ -17,12 +17,13 @@ from app.logic.abstract_interface import (
 from app.backend.group_allocations.group_allocations_data import (
     AllocationData, get_allocation_data,
 )
-from app.backend.group_allocations.cadet_event_allocations import save_current_allocations_for_event
+from app.backend.data.group_allocations import save_current_allocations_for_event
 
 from app.logic.events.constants import (
     ALLOCATION,
     UPDATE_ALLOCATION_BUTTON_LABEL,
     VIEW_EVENT_STAGE,
+ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE
 )
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.cadets import Cadet
@@ -36,10 +37,10 @@ def display_form_allocate_cadets(interface: abstractInterface) -> Union[Form, Ne
     inner_form = get_inner_form_for_cadet_allocation(event)
     back_button= Button(BACK_BUTTON_LABEL)
 
-    return Form(
-        allocations +
-        ListOfLines([
-            _______________,
+    return Form(ListOfLines(["Allocated cadets to groups in %s" % str(event), _______________,
+                            allocations,
+
+                    _______________,
             back_button,
                      _______________,
                      update_button,
@@ -130,7 +131,7 @@ def do_allocation_for_cadets_in_form(interface: abstractInterface):
                 "Couldn't allocate group to %s error code %s" % (str(cadet), str(e))
             )
 
-    return NewForm(VIEW_EVENT_STAGE)
+    return NewForm(ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE)
 
 
 def do_allocation_for_cadet_at_event(

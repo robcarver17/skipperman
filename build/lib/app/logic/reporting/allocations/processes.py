@@ -1,7 +1,7 @@
 import pandas as pd
 
-from app.backend.group_allocations.cadet_event_allocations import get_unallocated_cadets, get_list_of_cadets_with_groups, \
-    load_allocation_for_event
+from app.backend.group_allocations.cadet_event_allocations import get_unallocated_cadets, get_list_of_cadets_with_groups
+from app.backend.data.group_allocations import load_raw_allocation_for_event
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_form import File
 from app.logic.abstract_interface import abstractInterface
@@ -120,7 +120,7 @@ def get_df_for_reporting_allocations_with_flags(
     ##   is a waiting list cadet unallocated, or allocated with a * against their name?
     ##   at some point report would include club boats
 
-    list_of_cadet_ids_with_groups = load_allocation_for_event(event=event)
+    list_of_cadet_ids_with_groups = load_raw_allocation_for_event(event=event)
     if include_unallocated_cadets:
         unallocated_cadets = get_unallocated_cadets(
             event=event,

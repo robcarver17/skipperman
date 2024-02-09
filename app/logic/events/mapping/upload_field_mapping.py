@@ -1,7 +1,4 @@
-from app.backend.wa_import.read_and_write_mapping_files import (
-    write_field_mapping_for_event,
-    read_mapping_from_csv_file_object,
-)
+from app.backend.data.field_mapping import write_field_mapping_for_event, read_mapping_from_csv_file_object
 from app.logic.abstract_interface import (
     abstractInterface,
     get_file_from_interface,
@@ -21,9 +18,10 @@ from app.logic.events.constants import UPLOAD_FILE_BUTTON_LABEL, MAPPING_FILE, W
 def display_form_for_upload_custom_field_mapping(interface: abstractInterface):
     buttons = get_upload_buttons()
     file_select_field = fileInput(input_name=MAPPING_FILE, accept=".csv")
+    event = get_event_from_state(interface)
 
     list_of_lines = ListOfLines(
-        ["Choose .csv file to upload for field mapping", file_select_field, buttons]
+        ["Choose .csv file to upload for field mapping of event %s" % str(event), file_select_field, buttons]
     )
 
     return Form(list_of_lines)

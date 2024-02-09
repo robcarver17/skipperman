@@ -1,7 +1,9 @@
 import pandas as pd
 
-from app.backend.group_allocations.cadet_event_allocations import get_unallocated_cadets, get_list_of_cadets_with_groups, \
+from app.backend.group_allocations.cadet_event_allocations import get_unallocated_cadets, \
+    get_list_of_cadets_with_groups, \
     load_allocation_for_event
+from app.backend.data.group_allocations import load_raw_allocation_for_event
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_form import File
 from app.logic.abstract_interface import abstractInterface

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from app.backend.cadets import get_list_of_cadets, cadet_from_id_with_passed_list
-from app.backend.wa_import.load_and_save_wa_mapped_events import load_master_event
+from app.backend.cadets import get_sorted_list_of_cadets, cadet_from_id_with_passed_list
+from app.backend.data.mapped_events import load_master_event
 from app.backend.form_utils import get_food_requirements_input_as_tuple, get_availability_checkbox
 from app.logic.events.constants import ROW_STATUS
 from app.backend.form_utils import dropdown_input_for_status_change
@@ -34,7 +34,7 @@ class RegistrationDetailsForEvent:
 
 def get_registration_data(event: Event, sort_order: str = arg_not_passed) -> RegistrationDetailsForEvent:
     master_event_details = load_master_event(event)
-    list_of_cadets = get_list_of_cadets(sort_by=sort_order)
+    list_of_cadets = get_sorted_list_of_cadets(sort_by=sort_order)
     master_event_details = master_event_details.sort_given_superset_of_cadet_ids(list_of_cadets.list_of_ids)
     all_columns = get_list_of_columns_excluding_special_fields(master_event_details)
 

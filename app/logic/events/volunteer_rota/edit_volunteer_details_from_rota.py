@@ -1,5 +1,6 @@
 from app.backend.form_utils import get_availablity_from_form, get_food_requirements_from_form
-from app.backend.volunteers.volunteer_allocation import get_volunteer_at_event, get_volunteer_from_id, delete_volunteer_with_id_at_event
+from app.backend.volunteers.volunteer_allocation import get_volunteer_at_event, get_volunteer_from_id
+from app.backend.data.volunteer_allocation import delete_volunteer_with_id_at_event
 from app.logic.abstract_interface import abstractInterface
 from app.logic.events.constants import SAVE_CHANGES, EDIT_VOLUNTEER_ROTA_EVENT_STAGE
 from app.logic.events.events_in_state import get_event_from_state

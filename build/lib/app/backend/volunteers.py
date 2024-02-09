@@ -1,4 +1,4 @@
-from app.backend.cadets import get_list_of_cadets
+from app.backend.cadets import get_sorted_list_of_cadets
 from app.data_access.data import data
 from app.objects.cadets import Cadet
 from app.objects.constants import arg_not_passed
@@ -44,7 +44,7 @@ def get_dict_of_existing_skills(volunteer: Volunteer)-> dict:
 
 def get_connected_cadets(volunteer: Volunteer) -> list:
     existing_connections = data.data_list_of_cadet_volunteer_associations.read()
-    list_of_cadets = get_list_of_cadets()
+    list_of_cadets = get_sorted_list_of_cadets()
 
     connected_ids = existing_connections.list_of_connections_for_volunteer(volunteer.id)
     connected_cadets = [list_of_cadets.object_with_id(id) for id in connected_ids]

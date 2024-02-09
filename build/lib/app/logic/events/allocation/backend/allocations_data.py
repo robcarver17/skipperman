@@ -1,8 +1,6 @@
 from app.data_access.data import data
-from app.backend.group_allocations.cadet_event_allocations import load_allocation_for_event
-from app.backend.wa_import.load_and_save_wa_mapped_events import (
-    load_master_event,
-)
+from app.backend.data.group_allocations import load_raw_allocation_for_event
+from app.backend.data.mapped_events import load_master_event
 from app.backend.group_allocations import get_list_of_cadets, cadet_from_id_with_passed_list
 from app.objects.cadets import ListOfCadets
 from app.objects.events import Event
@@ -141,7 +139,7 @@ def get_df_for_reporting_allocations_with_flags(
     ##   is a waiting list cadet unallocated, or allocated with a * against their name?
     ##   at some point report would include club boats
 
-    list_of_cadet_ids_with_groups = load_allocation_for_event(event=event)
+    list_of_cadet_ids_with_groups = load_raw_allocation_for_event(event=event)
     if include_unallocated_cadets:
         unallocated_cadets = get_unallocated_cadets(
             event=event,

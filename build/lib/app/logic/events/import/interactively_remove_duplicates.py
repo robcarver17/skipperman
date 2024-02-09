@@ -8,9 +8,7 @@ from app.logic.events.constants import WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_S
 
 from app.logic.events.events_in_state import get_event_from_state
 
-from app.backend.wa_import.load_and_save_wa_mapped_events import (
-load_existing_mapped_wa_event_with_ids
-)
+from app.backend.data.mapped_events import load_existing_mapped_wa_event_with_ids
 
 from app.backend.wa_import.update_master_event_data import remove_duplicated_row_from_mapped_wa_event_data
 

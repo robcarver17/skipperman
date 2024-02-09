@@ -1,6 +1,6 @@
 from typing import Union
 from app.logic.events.events_in_state import update_state_for_specific_event_given_event_description
-from app.backend.events import get_list_of_events, confirm_event_exists_given_description
+from app.backend.events import get_sorted_list_of_events, confirm_event_exists_given_description
 from app.objects.events import SORT_BY_START_ASC, SORT_BY_NAME, SORT_BY_START_DSC
 
 from app.objects.abstract_objects.abstract_form import (
@@ -65,7 +65,7 @@ def action_when_event_button_clicked(interface: abstractInterface) -> NewForm:
 
 
 def display_list_of_events_with_buttons(sort_by=SORT_BY_START_DSC) -> ListOfLines:
-    list_of_events = get_list_of_events(sort_by=sort_by)
+    list_of_events = get_sorted_list_of_events(sort_by=sort_by)
     list_of_event_descriptions = list_of_events.list_of_event_descriptions
     list_with_buttons = [Line(Button(event_description)) for event_description in list_of_event_descriptions]
 

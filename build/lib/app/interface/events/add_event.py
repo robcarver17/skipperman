@@ -32,7 +32,8 @@ from app.web.events.constants import (
 )
 
 from app.web.events.view_events import display_view_of_events
-from app.backend.events import verify_event_and_warn, add_new_verified_event
+from app.backend.events import verify_event_and_warn
+from app.backend.data.events import add_new_verified_event
 from app.objects.events import Event, default_event, list_of_event_types, EventType
 
 dict_of_event_types = dict(

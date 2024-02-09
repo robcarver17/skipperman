@@ -1,10 +1,12 @@
 from dataclasses import dataclass
 from typing import List, Dict
 
-from app.backend.events import get_list_of_events
-from app.backend.group_allocations.cadet_event_allocations import load_allocation_for_event, get_unallocated_cadets
-from app.backend.volunteers.volunteer_allocation import get_volunteer_at_event, update_volunteer_at_event, \
-    get_volunteer_data_for_event
+import app.backend.data.volunteer_rota
+from app.backend.events import get_sorted_list_of_events
+from app.backend.group_allocations.cadet_event_allocations import get_unallocated_cadets
+from app.backend.data.group_allocations import load_raw_allocation_for_event
+from app.backend.volunteers.volunteer_allocation import get_volunteer_at_event
+from app.backend.data.volunteer_allocation import get_list_of_volunteers_at_event, update_volunteer_at_event
 from app.backend.volunteers import get_list_of_volunteers
 from app.objects.cadets import ListOfCadets
 from app.objects.constants import missing_data
@@ -84,11 +86,11 @@ def sort_volunteer_data_for_event_by_day_sort_order(
     return ListOfVolunteersAtEvent(list_of_volunteers)
 
 def get_data_to_be_stored(event: Event) -> DataToBeStoredWhilstConstructingTableBody:
-    list_of_cadet_ids_with_groups = load_allocation_for_event(event=event)
+    list_of_cadet_ids_with_groups = load_raw_allocation_for_event(event=event)
     unallocated_cadets_at_event = get_unallocated_cadets(event=event, list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups)
     volunteer_skills = get_all_skills_from_data()
     volunteers_in_roles_at_event = get_volunteers_in_role_at_event(event)
-    list_of_volunteers_at_event = get_volunteer_data_for_event(event)
+    list_of_volunteers_at_event = get_list_of_volunteers_at_event(event)
     dict_of_volunteers_with_last_roles = get_dict_of_volunteers_with_last_roles(list_of_volunteers_at_event.list_of_volunteer_ids,
                                                                                 avoid_event=event)
 
@@ -116,7 +118,7 @@ def get_dict_of_volunteers_with_last_roles(list_of_volunteer_ids: List[str], avo
 
 
 def get_last_role_for_volunteer_id(volunteer_id: str, avoid_event: Event) -> str:
-    all_previous_events = get_list_of_events(SORT_BY_START_ASC) ## latest last
+    all_previous_events = get_sorted_list_of_events(SORT_BY_START_ASC) ## latest last
     all_previous_events.pop_with_id(avoid_event.id)
     roles = [get_role_for_event_and_volunteer_id(volunteer_id, event) for event in all_previous_events]
     roles = [role for role in roles if role is not missing_data]
@@ -208,7 +210,7 @@ def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(eve
                                                                              day: Day):
 
     volunteers_in_roles_data = data.data_list_of_volunteers_in_roles_at_event.read(event_id=event.id)
-    volunteers_in_roles_data.copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
+    app.backend.data.volunteer_rota.copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
         volunteer_id=volunteer_id,
         day=day,
         list_of_all_days=days_at_event_when_volunteer_available(event=event, volunteer_id=volunteer_id)

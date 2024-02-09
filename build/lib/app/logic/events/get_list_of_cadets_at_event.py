@@ -1,7 +1,5 @@
 from app.logic.data import DataAndInterface
-from app.backend.wa_import.load_and_save_wa_mapped_events import (
-    load_master_event,
-)
+from app.backend.data.mapped_events import load_master_event
 from app.logic.cadets.load_and_save_master_list_of_cadets import (
     load_master_list_of_cadets,
 )

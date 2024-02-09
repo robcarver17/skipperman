@@ -39,11 +39,16 @@ def get_event_form_for_event(
     lines_in_form = (ListOfLines(
                     [
                         event_description,
-                        _______________,buttons,_______________])+
-                     allocations+
-
-                     [_______________,
-                      rota])
+                        _______________,
+                        buttons,
+                        _______________,
+                        "Group allocations:",
+                        _______________,
+                     allocations,
+                     _______________,
+                    "Volunteer rota:",
+                      _______________,
+                      rota]))
 
     return Form(lines_in_form)
 

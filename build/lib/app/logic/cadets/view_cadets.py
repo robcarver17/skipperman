@@ -14,7 +14,7 @@ from app.objects.abstract_objects.abstract_buttons import main_menu_button, Butt
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.abstract_interface import abstractInterface
 from app.logic.cadets.cadet_state_storage import update_state_for_specific_cadet
-from app.backend.cadets import get_list_of_cadets, SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, SORT_BY_DOB_DSC
+from app.backend.cadets import get_sorted_list_of_cadets, SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, SORT_BY_DOB_DSC
 
 
 def display_form_view_of_cadets(interface: abstractInterface) -> Form:
@@ -63,7 +63,7 @@ def post_form_view_of_cadets(interface: abstractInterface) -> Union[Form, NewFor
 
 
 def display_list_of_cadets_with_buttons(sort_order=SORT_BY_SURNAME) -> ListOfLines:
-    list_of_cadets = get_list_of_cadets(sort_by=sort_order)
+    list_of_cadets = get_sorted_list_of_cadets(sort_by=sort_order)
 
     list_with_buttons = [
         row_of_form_for_cadets_with_buttons(cadet) for cadet in list_of_cadets

@@ -1,4 +1,4 @@
-from app.backend.wa_import.load_and_save_wa_mapped_events import load_master_event
+from app.backend.data.mapped_events import load_master_event
 from app.backend.wa_import.update_master_event_data import get_row_in_master_event_for_cadet_id
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.abstract_interface import abstractInterface

@@ -1,8 +1,8 @@
 from typing import Union
 
 from app.backend.group_allocations.cadet_event_allocations import get_list_of_cadets_in_master_event
-from app.backend.volunteers.volunteer_allocation import get_volunteer_at_event, get_volunteer_from_id, \
-   remove_volunteer_and_cadet_association, \
+from app.backend.volunteers.volunteer_allocation import get_volunteer_at_event, get_volunteer_from_id
+from app.backend.data.volunteer_allocation import remove_volunteer_and_cadet_association_at_event, \
     add_volunteer_and_cadet_association_for_existing_volunteer
 
 from app.backend.cadets import cadet_from_id, get_cadet_from_list_of_cadets
@@ -83,9 +83,9 @@ def delete_event_connection_given_form(interface: abstractInterface):
     volunteer_id = get_volunteer_id_selected_from_state(interface)
     event = get_event_from_state(interface)
     print("Remove %s %s %s" % (cadet.id, volunteer_id, str(event)))
-    remove_volunteer_and_cadet_association(cadet_id=cadet.id,
-                                           volunteer_id=volunteer_id,
-                                           event=event)
+    remove_volunteer_and_cadet_association_at_event(cadet_id=cadet.id,
+                                                    volunteer_id=volunteer_id,
+                                                    event=event)
 
 
 def add_event_connection_from_form(interface: abstractInterface):

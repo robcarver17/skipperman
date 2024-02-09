@@ -1,3 +1,4 @@
+import app.backend.data.volunteer_allocation
 from app.data_access.data import data
 from app.backend.volunteers import list_of_similar_volunteers
 from app.logic.events.events_in_state import get_event_given_id
@@ -157,5 +158,5 @@ def get_volunteer_at_event(volunteer_id: str, event: Event) -> VolunteerAtEvent:
 
 def update_volunteer_at_event(volunteer_at_event: VolunteerAtEvent, event: Event):
     volunteers_at_event_data = data.data_list_of_volunteers_at_event.read(event_id=event.id)
-    volunteers_at_event_data.update_volunteer_at_event(volunteer_at_event)
+    app.backend.data.volunteer_allocation.update_volunteer_at_event(volunteer_at_event)
     data.data_list_of_volunteers_at_event.write(volunteers_at_event_data, event_id=event.id)

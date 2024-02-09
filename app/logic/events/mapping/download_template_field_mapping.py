@@ -1,8 +1,5 @@
 from typing import Union
-from app.backend.wa_import.read_and_write_mapping_files import (
-    get_template,
-    write_mapping_to_temp_csv_file_and_return_filename
-)
+from app.backend.data.field_mapping import get_template, write_mapping_to_temp_csv_file_and_return_filename
 from app.logic.abstract_interface import abstractInterface
 from app.logic.events.constants import WA_SELECT_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE
 from app.objects.abstract_objects.abstract_form import (

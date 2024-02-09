@@ -1,9 +1,5 @@
 from typing import Union
-from app.backend.wa_import.read_and_write_mapping_files import (
-    get_list_of_templates,
-    write_field_mapping_for_event,
-    get_template,
-)
+from app.backend.data.field_mapping import write_field_mapping_for_event, get_list_of_templates, get_template
 from app.logic.abstract_interface import (
     abstractInterface,
     form_with_message_and_finished_button,
@@ -30,16 +26,16 @@ def display_form_for_choose_template_field_mapping(interface: abstractInterface)
     if len(list_of_templates_with_buttons) == 0:
         contents_of_form = ListOfLines(
             [
-                cancel_button,
-                "Click to upload a new template",
+                "Click to upload a new template for mapping fields",
                 _______________,
                 Button(UPLOAD_TEMPLATE_BUTTON_LABEL),
+                cancel_button,
             ]
         )
     else:
         contents_of_form = ListOfLines(
             [
-                cancel_button,
+                "Event field mapping - using templates",
                 _______________,
                 "Choose template to use, or...",
                 list_of_templates_with_buttons,
@@ -50,6 +46,8 @@ def display_form_for_choose_template_field_mapping(interface: abstractInterface)
                 "... download a template to edit in excel then upload",
                 _______________,
                 Button(DOWNLOAD_MAPPING_BUTTON_LABEL),
+                _______________,
+                cancel_button,
             ]
         )
 

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import List
 from statistics import mode
 
-from app.data_access.configuration.configuration import VOLUNTEER_ROLES, LAKE, RIVER, OTHER, LAKE_VOLUNTEER_ROLES, RIVER_VOLUNTEER_ROLES, VOLUNTEERS_REQUIRING_GROUP
+from app.data_access.configuration.configuration import VOLUNTEER_ROLES, VOLUNTEERS_REQUIRING_GROUP
 from app.objects.generic import GenericSkipperManObject, get_class_instance_from_str_dict, GenericListOfObjects, _transform_class_dict_into_str_dict
 from app.objects.groups import Group, GROUP_UNALLOCATED, index_group
 from app.objects.day_selectors import Day
@@ -24,19 +24,6 @@ class VolunteerInRoleAtEvent(GenericSkipperManObject):
     @property
     def role_and_group(self):
         return RoleAndGroup(role=self.role, group=self.group)
-
-    @property
-    def location(self):
-        if self.role in LAKE_VOLUNTEER_ROLES:
-            return LAKE
-        elif self.role in RIVER_VOLUNTEER_ROLES:
-            return RIVER
-        elif self.group.is_lake_training():
-            return LAKE
-        elif self.group.is_race_group() or self.group.is_river_training():
-            return RIVER
-        else:
-            return OTHER
 
     @property
     def requires_group(self):

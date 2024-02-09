@@ -6,10 +6,7 @@ from app.logic.events.constants import ROW_IN_EVENT_DATA, USE_ORIGINAL_DATA_BUTT
 
 from app.logic.events.events_in_state import get_event_from_state
 
-from app.backend.wa_import.load_and_save_wa_mapped_events import (
-    load_master_event
-
-)
+from app.backend.data.mapped_events import load_master_event
 from app.logic.events.update_existing_master_event_data_forms import display_form_for_update_to_existing_row_of_event_data,increment_and_save_id_in_event_data, update_mapped_wa_event_data_with_form_data, update_mapped_wa_event_data_with_new_data
 
 from app.backend.wa_import.update_master_event_data import \

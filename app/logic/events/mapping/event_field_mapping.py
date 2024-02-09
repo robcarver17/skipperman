@@ -12,9 +12,7 @@ from app.logic.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
-from app.backend.wa_import.read_and_write_mapping_files import (
-    get_field_mapping_for_event,
-)
+from app.backend.data.field_mapping import get_field_mapping_for_event
 from app.backend.wa_import.check_mapping import check_field_mapping
 from app.backend.wa_import.map_wa_files import is_wa_file_mapping_setup_for_event
 from app.objects.events import Event
@@ -39,19 +37,23 @@ def display_form_event_field_mapping_existing_mapping(
     check_mapping_lines = check_field_mapping(event)
     warning_text = warning_text_for_mapping(event)
 
-    pre_existing_lines = ListOfLines(
+    return Form(ListOfLines(
         [
-            "Mapping already set up:",
+            "Mapping already set up for %s" % str(event),
             _______________,
-            pre_existing_text,
+            warning_text,
+            "Press %s to keep existing, or choose another option to change (see diagnostic information below)" % BACK_BUTTON_LABEL,
+            mapping_buttons(),
+               _______________,
+            "Current field mapping:",
+               pre_existing_text,
             _______________,
-            ".... press %s to keep existing, or continue to change (see diagnostic information below). %s"
-            % (BACK_BUTTON_LABEL, warning_text),
-            _______________,
+            check_mapping_lines
 
         ]
+
     )
-    return Form(ListOfLines([pre_existing_lines, _______________, mapping_buttons(), _______________, check_mapping_lines]))
+    )
 
 def warning_text_for_mapping(event: Event) -> str:
     wa_import_done = is_wa_file_mapping_setup_for_event(event=event)

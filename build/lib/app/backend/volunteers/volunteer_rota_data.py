@@ -1,10 +1,12 @@
 from dataclasses import dataclass
 from typing import Dict, List
 
-from app.backend.events import get_list_of_events
-from app.backend.group_allocations.cadet_event_allocations import load_allocation_for_event, get_unallocated_cadets
-from app.backend.volunteers.volunteer_allocation import get_volunteer_data_for_event
-from app.data_access.data import data
+from app.backend.events import get_sorted_list_of_events
+from app.backend.group_allocations.cadet_event_allocations import get_unallocated_cadets, \
+    load_allocation_for_event
+from app.backend.data.volunteers import  get_list_of_volunteer_skills
+from app.backend.data.volunteer_rota import get_volunteers_in_role_at_event
+from app.backend.data.volunteer_allocation import get_list_of_volunteers_at_event
 
 from app.objects.cadets import ListOfCadets
 from app.objects.constants import missing_data, arg_not_passed
@@ -66,9 +68,10 @@ class DataToBeStoredWhilstConstructingTableBody:
 def get_data_to_be_stored(event: Event) -> DataToBeStoredWhilstConstructingTableBody:
     list_of_cadet_ids_with_groups = load_allocation_for_event(event=event)
     unallocated_cadets_at_event = get_unallocated_cadets(event=event, list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups)
-    volunteer_skills = get_all_skills_from_data()
+    volunteer_skills = get_list_of_volunteer_skills()
     volunteers_in_roles_at_event = get_volunteers_in_role_at_event(event)
-    list_of_volunteers_at_event = get_volunteer_data_for_event(event)
+    list_of_volunteers_at_event = get_list_of_volunteers_at_event(event)
+
     dict_of_volunteers_with_last_roles = get_dict_of_volunteers_with_last_roles(list_of_volunteers_at_event.list_of_volunteer_ids,
                                                                                 avoid_event=event)
 
@@ -81,12 +84,6 @@ def get_data_to_be_stored(event: Event) -> DataToBeStoredWhilstConstructingTable
         list_of_volunteers_at_event=list_of_volunteers_at_event,
         dict_of_volunteers_with_last_roles=dict_of_volunteers_with_last_roles
     )
-
-
-def get_all_skills_from_data()-> ListOfVolunteerSkills:
-    skills = data.data_list_of_volunteer_skills.read()
-
-    return skills
 
 
 def get_dict_of_volunteers_with_last_roles(list_of_volunteer_ids: List[str], avoid_event: Event) -> Dict[str, str]:
@@ -117,7 +114,7 @@ def get_all_roles_across_past_events_for_volunteer_id_as_list(volunteer_id: str,
     return list(roles_as_dict.values())
 
 def get_all_roles_across_past_events_for_volunteer_id_as_dict(volunteer_id: str, sort_by = SORT_BY_START_ASC, avoid_event: Event = arg_not_passed) -> dict:
-    list_of_events = get_list_of_events(sort_by)
+    list_of_events = get_sorted_list_of_events(sort_by)
     if avoid_event is arg_not_passed:
         pass ## can't exclude so do everything
     else:
@@ -140,5 +137,3 @@ def get_role_for_event_and_volunteer_id(volunteer_id: str, event: Event) -> str:
     return role
 
 
-def get_volunteers_in_role_at_event(event: Event) -> ListOfVolunteersInRoleAtEvent:
-    return data.data_list_of_volunteers_in_roles_at_event.read(event_id=event.id)

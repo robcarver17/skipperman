@@ -39,6 +39,20 @@ class Event(GenericSkipperManObjectWithIds):
         return hash(self.event_description)
 
     @property
+    def invalid(self) -> bool:
+        invalid_reason = self.invalid_reason()
+
+        return len(invalid_reason)>0
+
+    def invalid_reason(self) -> str:
+        try:
+            assert self.duration<8
+        except:
+            return "Length of event greater than 7 days"
+
+        return ""
+
+    @property
     def verbose_repr(self):
         return "%s from %s to %s, type %s" % (
             self.event_name,

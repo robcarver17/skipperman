@@ -2,9 +2,7 @@ from app.data_access.data import data
 from app.logic.events.allocation.backend import (
     load_allocation_for_event,
 )
-from app.backend.wa_import.load_and_save_wa_mapped_events import (
-    load_master_event,
-)
+from app.backend.data.mapped_events import load_master_event
 from app.backend.group_allocations import get_list_of_cadets, cadet_from_id_with_passed_list
 from app.objects.cadets import ListOfCadets
 from app.objects.events import Event

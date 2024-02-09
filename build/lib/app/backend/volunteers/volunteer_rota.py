@@ -1,8 +1,9 @@
 from typing import List
 
+import app.backend.data.volunteer_rota
 from app.backend.volunteers.volunteer_allocation import days_at_event_when_volunteer_available
 from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingTableBody
-from app.backend.volunteers.volunteers import get_list_of_volunteers
+from app.backend.data.volunteers import get_sorted_list_of_volunteers
 from app.objects.constants import missing_data
 from app.objects.events import Event
 from app.objects.groups import Group, ALL_GROUPS_NAMES, GROUP_UNALLOCATED_TEXT
@@ -17,7 +18,7 @@ from app.data_access.data import data
 
 
 def sort_volunteer_data_for_event_by_name_sort_order(volunteers_at_event: ListOfVolunteersAtEvent, sort_order) -> ListOfVolunteersAtEvent:
-    list_of_volunteers = get_list_of_volunteers(sort_by=sort_order)
+    list_of_volunteers = get_sorted_list_of_volunteers(sort_by=sort_order)
     ## this works because if an ID is missing we just ignore it
     return volunteers_at_event.sort_by_list_of_volunteer_ids(list_of_volunteers.list_of_ids)
 
@@ -102,7 +103,7 @@ def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(eve
                                                                              day: Day):
 
     volunteers_in_roles_data = data.data_list_of_volunteers_in_roles_at_event.read(event_id=event.id)
-    volunteers_in_roles_data.copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
+    app.backend.data.volunteer_rota.copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
         volunteer_id=volunteer_id,
         day=day,
         list_of_all_days=days_at_event_when_volunteer_available(event=event, volunteer_id=volunteer_id)

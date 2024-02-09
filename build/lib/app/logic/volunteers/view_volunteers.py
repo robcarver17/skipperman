@@ -8,7 +8,7 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.abstract_interface import abstractInterface
-from app.backend.volunteers.volunteers import get_list_of_volunteers, SORT_BY_SURNAME, SORT_BY_FIRSTNAME
+from app.backend.data.volunteers import SORT_BY_SURNAME, SORT_BY_FIRSTNAME, get_sorted_list_of_volunteers
 from app.logic.volunteers.volunteer_state import update_state_for_specific_volunteer_given_volunteer_as_str
 from app.logic.volunteers.constants import *
 
@@ -62,7 +62,7 @@ def post_form_view_of_volunteers(interface: abstractInterface) -> Union[Form, Ne
 
 
 def display_list_of_volunteers_with_buttons(sort_order=SORT_BY_SURNAME) -> ListOfLines:
-    list_of_volunteers = get_list_of_volunteers(sort_by=sort_order)
+    list_of_volunteers = get_sorted_list_of_volunteers(sort_by=sort_order)
 
     list_with_buttons = [
         row_of_form_for_volunteer_with_buttons(volunteer) for volunteer in list_of_volunteers

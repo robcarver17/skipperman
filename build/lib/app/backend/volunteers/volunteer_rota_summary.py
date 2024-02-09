@@ -2,7 +2,7 @@ from typing import List
 
 import pandas as pd
 
-from app.backend.volunteers.volunteer_rota_data import get_volunteers_in_role_at_event
+from app.backend.data.volunteer_rota import get_volunteers_in_role_at_event
 from app.data_access.configuration.configuration import VOLUNTEER_ROLES, ALL_GROUPS_NAMES
 from app.objects.day_selectors import Day
 from app.objects.events import Event

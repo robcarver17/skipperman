@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from typing import Union
 
-from app.backend.events import verify_event_and_warn, add_new_verified_event
+from app.backend.events import verify_event_and_warn
+from app.backend.data.events import add_new_verified_event
 from app.logic.events.constants import (
     EVENT_NAME,
     EVENT_START_DATE,

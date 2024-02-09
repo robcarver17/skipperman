@@ -2,18 +2,12 @@ import datetime
 import pandas as pd
 
 # from app.logic import_wa edit_provided_cadet_details
-from app.backend.wa_import.load_and_save_wa_mapped_events import (
-    load_mapped_wa_event_with_no_ids,
-    save_mapped_wa_event_with_no_ids,
-)
 from app.objects.cadets import Cadet
 from app.objects.field_list import CADET_SURNAME, CADET_DATE_OF_BIRTH, CADET_FIRST_NAME
 from app.objects.constants import NoMoreData
 
-from app.backend.wa_import.load_and_save_wa_mapped_events import (
-    load_existing_mapped_wa_event_with_ids,
-    save_mapped_wa_event_with_ids,
-)
+from app.backend.data.mapped_events import save_mapped_wa_event_with_ids, load_existing_mapped_wa_event_with_ids, \
+    save_mapped_wa_event_with_no_ids, load_mapped_wa_event_with_no_ids
 from app.objects.mapped_wa_event_with_ids import (
     RowInMappedWAEventWithId,
     RowInMappedWAEventNoId,

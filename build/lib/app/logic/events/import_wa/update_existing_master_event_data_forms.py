@@ -20,10 +20,7 @@ from app.backend.wa_import.update_master_event_data import (
     update_row_in_master_event_data,
     NO_STATUS_CHANGE,
 )
-from app.backend.wa_import.load_and_save_wa_mapped_events import (
-    load_master_event,
-    load_existing_mapped_wa_event_with_ids,
-)
+from app.backend.data.mapped_events import load_master_event, load_existing_mapped_wa_event_with_ids
 
 from app.backend.group_allocations import cadet_name_from_id
 from app.objects.constants import DuplicateCadets

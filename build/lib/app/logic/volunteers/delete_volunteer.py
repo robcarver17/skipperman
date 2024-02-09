@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.backend.volunteers.volunteers import delete_a_volunteer
+from app.backend.data.volunteers import delete_a_volunteer
 from app.logic.volunteers.volunteer_state import get_volunteer_from_state
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import Button

@@ -1,8 +1,8 @@
-from app.backend.volunteers.volunteers import add_volunteer_connection_to_cadet_in_master_list_of_volunteers
+from app.backend.data.volunteers import add_volunteer_connection_to_cadet_in_master_list_of_volunteers
 from app.backend.form_utils import get_food_requirements_from_form, \
     get_availablity_from_form
-from app.backend.volunteers.volunteer_allocation import get_volunteer_from_id, update_volunteer_at_event, \
-    update_volunteer_food_at_event, update_volunteer_availability_at_event
+from app.backend.volunteers.volunteer_allocation import get_volunteer_from_id, update_volunteer_food_at_event, update_volunteer_availability_at_event
+from app.backend.data.volunteer_allocation import update_volunteer_at_event
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import  \
     get_relevant_information_for_current_volunteer, get_current_cadet_id

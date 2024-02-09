@@ -16,10 +16,10 @@ from app.backend.group_allocations.summarise_allocations_data import summarise_a
 from app.logic.abstract_interface import (
     abstractInterface,
 )
-from app.backend.group_allocations.cadet_event_allocations import get_list_of_cadets_in_master_event, get_current_allocations, \
-    save_current_allocations_for_event
+from app.backend.group_allocations.cadet_event_allocations import get_list_of_cadets_in_master_event, get_current_allocations
+from app.backend.data.group_allocations import save_current_allocations_for_event
 from app.backend.group_allocations.previous_allocations import allocation_for_cadet_in_previous_events, get_dict_of_allocations_for_events_and_list_of_cadets
-from app.backend.wa_import.load_and_save_wa_mapped_events import load_master_event
+from app.backend.data.mapped_events import load_master_event
 
 from app.logic.events.constants import (
     ALLOCATION,

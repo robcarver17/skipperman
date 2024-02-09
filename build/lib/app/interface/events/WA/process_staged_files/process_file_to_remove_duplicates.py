@@ -8,9 +8,7 @@ from app.web.events.constants import (
 WA_INTERACTIVELY_REMOVE_SPECIFIC_DUPLICATES_FROM_WA_FILE
 )
 from app.web.events.WA.process_staged_files.process_file_to_update_master_event_records import process_file_to_update_master_event_records
-from app.backend.wa_import.load_and_save_wa_mapped_events import (
-load_existing_mapped_wa_event_with_ids
-)
+from app.backend.data.mapped_events import load_existing_mapped_wa_event_with_ids
 
 from app.backend.wa_import.update_master_event_data import remove_duplicated_row_from_mapped_wa_event_data
 

@@ -1,5 +1,5 @@
 from app.web.flask.state_for_action import StateDataForAction
-from app.backend.events import get_list_of_events
+from app.backend.events import get_sorted_list_of_events
 from app.objects.events import SORT_BY_START_DSC
 
 from app.web.html.forms import form_html_wrapper, html_button
@@ -31,7 +31,7 @@ def display_view_of_events(
 
 
 def display_list_of_events_with_buttons(sort_by=SORT_BY_START_DSC) -> Html:
-    list_of_events = get_list_of_events(sort_by=sort_by)
+    list_of_events = get_sorted_list_of_events(sort_by=sort_by)
 
     list_with_buttons = [
         row_of_form_for_event_with_buttons(event) for event in list_of_events

@@ -1,9 +1,8 @@
 from copy import copy
 from typing import Union
 
-from app.backend.volunteers.volunteers import  get_list_of_volunteers, SORT_BY_FIRSTNAME
-from app.backend.volunteers.volunteer_allocation import  \
-    add_volunteer_to_event_with_just_id, get_volunteer_data_for_event
+from app.backend.data.volunteers import get_list_of_volunteers_at_event, SORT_BY_FIRSTNAME, get_sorted_list_of_volunteers
+from app.backend.data.volunteer_allocation import get_list_of_volunteers_at_event, add_volunteer_to_event_with_just_id
 from app.logic.abstract_interface import abstractInterface
 from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
@@ -84,7 +83,7 @@ def action_when_specific_volunteer_selected_for_rota(name_of_volunteer: str, int
 
 def action_when_volunteer_known_for_rota(volunteer: Volunteer, interface: abstractInterface) -> Union[Form, NewForm]:
     event = get_event_from_state(interface)
-    add_volunteer_to_event_with_just_id(volunteer_id=volunteer.id, event_id=event.id)
+    add_volunteer_to_event_with_just_id(volunteer_id=volunteer.id, event=event)
 
     return NewForm(EDIT_VOLUNTEER_ROTA_EVENT_STAGE)
 
@@ -122,10 +121,10 @@ def get_list_of_volunteer_buttons_in_rota(event: Event) -> Line:
     return volunteer_buttons_line
 
 def get_list_of_volunteers_except_those_already_at_event(event: Event):
-    volunteers_at_event =get_volunteer_data_for_event(event)
+    volunteers_at_event =get_list_of_volunteers_at_event(event)
     volunteers_at_event_ids = volunteers_at_event.list_of_volunteer_ids
 
-    master_list_of_volunteers = get_list_of_volunteers(SORT_BY_FIRSTNAME)
+    master_list_of_volunteers = get_sorted_list_of_volunteers(SORT_BY_FIRSTNAME)
     list_of_volunteers = copy(master_list_of_volunteers)
     for id in volunteers_at_event_ids:
         list_of_volunteers.pop_with_id(id)

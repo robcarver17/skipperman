@@ -20,7 +20,7 @@ from app.web.events.constants import (
     SEE_SIMILAR_CADETS_ONLY_LABEL,
 )
 
-from app.logic.cadets.view_cadets import get_list_of_cadets
+from app.logic.cadets.view_cadets import get_sorted_list_of_cadets
 
 from app.objects.cadets import Cadet
 from app.objects.constants import arg_not_passed
@@ -73,7 +73,7 @@ def get_html_list_of_main_buttons(include_final_button: bool):
 
 def get_html_list_of_cadet_buttons(cadet: Cadet, see_all_cadets: bool = False):
     if see_all_cadets:
-        list_of_cadets = get_list_of_cadets(sort_by=SORT_BY_FIRSTNAME)
+        list_of_cadets = get_sorted_list_of_cadets(sort_by=SORT_BY_FIRSTNAME)
         extra_button = html_button(SEE_SIMILAR_CADETS_ONLY_LABEL)
     else:
         ## similar group_allocations with option to see more

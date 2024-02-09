@@ -128,7 +128,7 @@ def warning_for_similar_cadets(cadet: Cadet) -> str:
             [str(other_cadet) for other_cadet in similar_cadets]
         )
         ## Some similar group_allocations, let's see if it's a match
-        return "Following group_allocations look awfully similar:\n %s" % similar_cadets_str
+        return "Following cadets look awfully similar:\n %s" % similar_cadets_str
     else:
         return ""
 

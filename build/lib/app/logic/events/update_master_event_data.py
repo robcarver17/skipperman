@@ -1,10 +1,6 @@
 from app.web.flask.flash import flash_log
-from app.backend.wa_import.load_and_save_wa_mapped_events import (
-    load_master_event,
-    save_master_event,
-    load_existing_mapped_wa_event_with_ids,
-    save_mapped_wa_event_with_ids
-)
+from app.backend.data.mapped_events import load_master_event, save_master_event, save_mapped_wa_event_with_ids, \
+    load_existing_mapped_wa_event_with_ids
 from app.objects.master_event import (
     MasterEvent, get_row_of_master_event_from_mapped_row_with_idx_and_status, RowInMasterEvent,
 )

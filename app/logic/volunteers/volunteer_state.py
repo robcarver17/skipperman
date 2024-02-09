@@ -19,4 +19,4 @@ def get_volunteer_from_state(interface: abstractInterface) -> Volunteer:
 
 
 def get_volunteer_id_selected_from_state(interface: abstractInterface) -> str:
-    return interface.get_persistent_value(VOLUNTEER)
+    return str(interface.get_persistent_value(VOLUNTEER))

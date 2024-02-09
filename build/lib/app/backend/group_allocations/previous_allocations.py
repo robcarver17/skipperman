@@ -1,18 +1,17 @@
 from typing import Dict
-from app.data_access.data import data
 from app.objects.cadets import Cadet
 from app.objects.events import Event
-from app.objects.groups import ListOfCadetIdsWithGroups, Group
-from app.data_access.configuration.configuration import UNALLOCATED_GROUP_NAME
-
+from app.objects.groups import ListOfCadetIdsWithGroups, Group, GROUP_UNALLOCATED
+from app.backend.group_allocations.cadet_event_allocations import load_allocation_for_event
+from app.backend.events import get_sorted_list_of_events
 
 def get_dict_of_allocations_for_events_and_list_of_cadets(list_of_events: list) -> Dict[Event, ListOfCadetIdsWithGroups]:
-    allocations_as_dict = dict([(event, allocation_for_event(event)) for event in list_of_events])
+    allocations_as_dict = dict([(event, load_allocation_for_event(event)) for event in list_of_events])
 
     return allocations_as_dict
 
 def get_dict_of_all_event_allocations_for_single_cadet(cadet: Cadet) -> Dict[Event, Group]:
-    list_of_events = data.data_list_of_events.read()
+    list_of_events = get_sorted_list_of_events()
     previous_allocations_as_dict = get_dict_of_allocations_for_events_and_list_of_cadets(list_of_events)
     list_of_previous_groups = allocation_for_cadet_in_previous_events(cadet=cadet, previous_allocations_as_dict=previous_allocations_as_dict)
 
@@ -23,8 +22,6 @@ def get_dict_of_all_event_allocations_for_single_cadet(cadet: Cadet) -> Dict[Eve
 
     return dict_of_previous
 
-def allocation_for_event(event: Event) ->ListOfCadetIdsWithGroups:
-    return data.data_list_of_cadets_with_groups.read_groups_for_event(event.id)
 
 
 def allocation_for_cadet_in_previous_events(cadet: Cadet, previous_allocations_as_dict: Dict[Event, ListOfCadetIdsWithGroups]):
@@ -40,7 +37,7 @@ def group_for_cadet_and_event(cadet: Cadet, event: Event, previous_allocations_a
     try:
         group = allocations_for_event.item_with_cadet_id(cadet_id).group
     except:
-        group = UNALLOCATED_GROUP_NAME
+        group = GROUP_UNALLOCATED
 
     return group
 

@@ -1,4 +1,4 @@
-from app.backend.events import get_list_of_events
+from app.backend.events import get_sorted_list_of_events
 from app.logic.events.constants import EVENT
 from app.logic.abstract_interface import abstractInterface
 from app.objects.events import Event
@@ -10,7 +10,7 @@ def get_event_from_state(interface: abstractInterface) -> Event:
     return get_event_given_id(id)
 
 def get_event_given_id(id: str) -> Event:
-    list_of_events = get_list_of_events()
+    list_of_events = get_sorted_list_of_events()
     print("list of events %s" % str(list_of_events))
     return list_of_events.has_id(id)
 
@@ -20,7 +20,7 @@ def get_event_id_from_state(interface: abstractInterface) -> str:
 
 
 def get_event_from_list_of_events_given_event_description(event_description: str) -> Event:
-    list_of_events = get_list_of_events()
+    list_of_events = get_sorted_list_of_events()
 
     return list_of_events.event_with_description(event_description)
 

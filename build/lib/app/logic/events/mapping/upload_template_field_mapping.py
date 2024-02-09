@@ -1,6 +1,6 @@
 from app.logic.events.constants import TEMPLATE_NAME, MAPPING_FILE, UPLOAD_FILE_BUTTON_LABEL, \
     WA_SELECT_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE
-from app.backend.wa_import.read_and_write_mapping_files import read_mapping_from_csv_file_object, write_template
+from app.backend.data.field_mapping import write_template, read_mapping_from_csv_file_object
 from app.objects.abstract_objects.abstract_form import textInput, fileInput, Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines

@@ -1,5 +1,5 @@
 from app.backend.group_allocations import get_list_of_cadets
-from app.backend.wa_import.load_and_save_wa_mapped_events import load_master_event
+from app.backend.data.mapped_events import load_master_event
 from app.data_access.data import data
 from app.objects.cadets import ListOfCadets
 from app.objects.constants import arg_not_passed

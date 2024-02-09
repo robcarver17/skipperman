@@ -12,7 +12,9 @@ from app.logic.abstract_interface import (
     abstractInterface,
 )
 from app.logic.volunteers.constants import *
-from app.backend.volunteers.volunteers import get_connected_cadets, delete_connection_in_data, add_volunteer_connection_to_cadet_in_master_list_of_volunteers
+from app.backend.volunteers.volunteers import get_connected_cadets
+from app.backend.data.volunteers import delete_connection_in_data, \
+    add_volunteer_connection_to_cadet_in_master_list_of_volunteers
 from app.logic.volunteers.volunteer_state import get_volunteer_from_state
 from app.objects.volunteers import Volunteer
 from app.objects.cadets import Cadet, ListOfCadets

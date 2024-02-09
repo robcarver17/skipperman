@@ -8,7 +8,8 @@ from app.logic.abstract_interface import (
     abstractInterface,
 )
 from app.logic.volunteers.constants import *
-from app.backend.volunteers.volunteers import get_dict_of_existing_skills, save_skills_for_volunteer, save_volunteer_details
+from app.backend.volunteers.volunteers import get_dict_of_existing_skills
+from app.backend.data.volunteers import save_skills_for_volunteer, update_existing_volunteer
 from app.logic.volunteers.volunteer_state import get_volunteer_from_state
 from app.logic.volunteers.add_volunteer import get_volunteer_from_form
 from app.objects.volunteers import Volunteer
@@ -92,7 +93,7 @@ def modify_volunteer_given_form_contents(interface: abstractInterface):
 def get_and_save_core_volunteer_details_from_form(interface: abstractInterface, original_volunteer: Volunteer):
     volunteer_details_from_form = get_volunteer_from_form(interface)
     volunteer_details_from_form.id = original_volunteer.id ## won't be in form
-    save_volunteer_details(volunteer_details_from_form)
+    update_existing_volunteer(volunteer_details_from_form)
 
 
 def get_and_save_volunteer_skills_from_form(interface: abstractInterface, volunteer: Volunteer):

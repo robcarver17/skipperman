@@ -50,12 +50,8 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 
 ### Basic - to do:
-
-- BUG - UPDATE NO LONGER WORKING PROPERLY!
-  - click on cadet displaying previous events should ignore unallocated
-  - don't allow events without mapping to appear in clone mapping list
-  - don't show event for group allocation if allocation not done
   
+- REMOVE the horrible allocation, instead filter allocations through prism of master event data 
 - report on a volunteer rota
 
 - edit event (warnings especially days!), delete event (many warnings!)

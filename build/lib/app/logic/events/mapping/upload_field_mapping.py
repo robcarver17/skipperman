@@ -1,5 +1,5 @@
 from app.backend.data.field_mapping import write_field_mapping_for_event, read_mapping_from_csv_file_object
-from app.logic.abstract_interface import (
+from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
     get_file_from_interface,
     form_with_message_and_finished_button,
@@ -11,7 +11,6 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.logic.events.events_in_state import get_event_from_state
-from app.logic.abstract_logic_api import initial_state_form
 from app.logic.events.constants import UPLOAD_FILE_BUTTON_LABEL, MAPPING_FILE, WA_FIELD_MAPPING_IN_VIEW_EVENT_STAGE
 
 

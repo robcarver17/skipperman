@@ -1,6 +1,6 @@
 from typing import Union
 from app.backend.data.field_mapping import write_field_mapping_for_event, get_list_of_templates, get_template
-from app.logic.abstract_interface import (
+from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
     form_with_message_and_finished_button,
 )
@@ -23,6 +23,7 @@ from app.logic.events.constants import (
 
 def display_form_for_choose_template_field_mapping(interface: abstractInterface):
     list_of_templates_with_buttons = display_list_of_templates_with_buttons()
+    event = get_event_from_state(interface)
     if len(list_of_templates_with_buttons) == 0:
         contents_of_form = ListOfLines(
             [
@@ -35,7 +36,7 @@ def display_form_for_choose_template_field_mapping(interface: abstractInterface)
     else:
         contents_of_form = ListOfLines(
             [
-                "Event field mapping - using templates",
+                "Event field mapping - using templates - for event %s" % str(event),
                 _______________,
                 "Choose template to use, or...",
                 list_of_templates_with_buttons,

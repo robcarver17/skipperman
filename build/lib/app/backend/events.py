@@ -1,7 +1,7 @@
 import datetime
 
+from app.backend.data.events import get_list_of_all_events
 from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME, SIMILARITY_LEVEL_TO_WARN_DATE
-from app.data_access.data import data
 
 from app.objects.events import Event, ListOfEvents,  SORT_BY_START_DSC
 
@@ -29,7 +29,7 @@ def verify_event_and_warn(event: Event) -> str:
 
 
 def warning_for_similar_events(event: Event) -> str:
-    existing_events = data.data_list_of_events.read()
+    existing_events = get_sorted_list_of_events()
     similar_events = existing_events.similar_events(
         event,
         name_threshold=SIMILARITY_LEVEL_TO_WARN_NAME,
@@ -45,24 +45,28 @@ def warning_for_similar_events(event: Event) -> str:
         return ""
 
 
-def add_new_verified_event(event: Event):
-    data.data_list_of_events.add(event)
 
 
-def get_list_of_events(sort_by=SORT_BY_START_DSC) -> ListOfEvents:
-    list_of_events = data.data_list_of_events.read()
+def get_sorted_list_of_events(sort_by=SORT_BY_START_DSC) -> ListOfEvents:
+    list_of_events = get_list_of_all_events()
     list_of_events = list_of_events.sort_by(sort_by)
 
     return list_of_events
 
+def list_of_previously_used_event_names() -> list:
+    list_of_events = get_list_of_all_events()
+    event_names = [event.event_name for event in list_of_events]
+    return list(set(event_names))
+
+
 
 def get_event_from_id(id: str) -> Event:
-    list_of_events = data.data_list_of_events.read()
+    list_of_events = get_list_of_all_events()
     return list_of_events.has_id(id)
 
 
 def confirm_event_exists_given_description(event_description):
-    list_of_events = get_list_of_events()
+    list_of_events = get_list_of_all_events()
 
     ## fails if missing
     __ = list_of_events.event_with_description(event_description)

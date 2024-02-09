@@ -56,7 +56,6 @@ ALL_GROUPS_NAMES = (
 
 # VOLUNTEERS
 VOLUNTEER_SKILLS = configuration['volunteer_skills']
-
 VOLUNTEER_TEAMS = configuration['volunteer_teams']
 
 VOLUNTEER_ROLES = []

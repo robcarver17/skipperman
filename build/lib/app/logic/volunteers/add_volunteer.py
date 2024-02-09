@@ -14,7 +14,7 @@ from app.objects.abstract_objects.abstract_form import (
 )
 from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-from app.logic.abstract_interface import abstractInterface, form_with_message_and_finished_button
+from app.objects.abstract_objects.abstract_interface import abstractInterface, form_with_message_and_finished_button
 from app.logic.volunteers.constants import *
 
 def display_form_add_volunteer(    interface: abstractInterface

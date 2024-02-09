@@ -7,7 +7,7 @@ from app.objects.abstract_objects.abstract_form import (
     yes_no_radio, textInput, radioInput,
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.reporting.constants import (
     REPORT_TITLE,
     REPORT_FILENAME,

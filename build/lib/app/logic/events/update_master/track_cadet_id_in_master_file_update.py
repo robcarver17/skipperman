@@ -1,6 +1,6 @@
 from app.backend.data.mapped_events import load_master_event, load_existing_mapped_wa_event_with_ids
 from app.logic.events.events_in_state import get_event_from_state
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.constants import missing_data, NoMoreData
 from app.objects.events import Event
 from app.objects.utils import union_of_x_and_y

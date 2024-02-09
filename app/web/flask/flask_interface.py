@@ -1,5 +1,5 @@
 from app.objects.abstract_objects.abstract_lines import ListOfLines
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.web.flask.flash import flash_error
 
 from app.web.flask.session_data_for_action import (

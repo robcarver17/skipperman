@@ -1,5 +1,5 @@
-from app.logic.abstract_interface import abstractInterface
-from app.logic.events.constants import ROW_STATUS
+from app.objects.abstract_objects.abstract_interface import abstractInterface
+
 from app.objects.abstract_objects.abstract_form import checkboxInput, textInput, dropDownInput
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.constants import arg_not_passed

@@ -1,7 +1,7 @@
 from app.objects.abstract_objects.abstract_form import Form
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.logic.events.constants import (
     CHECK_CADET_BUTTON_LABEL,

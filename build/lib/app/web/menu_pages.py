@@ -14,11 +14,18 @@ from app.web.html.html import (
     html_unordered_list_menu_class_wrapper,
 )
 from app.web.html.master_layout import master_layout_html
-from app.web.menu_define import menu_definition
 from app.web.flask.session_data_for_action import (
     clear_session_data_for_all_actions,
 )
 
+
+menu_definition = {
+    "Cadets": "view_master_list_of_cadets",
+    "Volunteers": "view_list_of_volunteers",
+    "Events": "view_list_of_events",
+    "Reports": "view_possible_reports",
+    "Configuration": "view_configuration"
+}
 
 ### Returns HTML for a menu page
 def generate_menu_page_html(menu_option: str = HOME) -> str:

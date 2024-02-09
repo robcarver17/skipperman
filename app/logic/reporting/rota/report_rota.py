@@ -2,7 +2,6 @@ from typing import Union
 
 from app.logic.reporting.allocations.forms import (
     reporting_options_form_for_group_additional_parameters,
-    get_text_explaining_various_options_for_allocations_report,
 )
 from app.logic.reporting.allocations.processes import (
     get_group_allocation_report_additional_parameters_from_form_and_save,
@@ -27,7 +26,7 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_text import bold
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, CANCEL_BUTTON_LABEL, Button
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.logic.events.events_in_state import get_event_from_state, update_state_for_specific_event_given_event_description
 from app.backend.events import confirm_event_exists_given_description

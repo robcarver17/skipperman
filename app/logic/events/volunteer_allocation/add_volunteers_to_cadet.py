@@ -11,7 +11,7 @@ from app.objects.relevant_information_for_volunteers import RelevantInformationF
 from app.logic.events.constants import *
 from app.backend.volunteers.volunteer_allocation import mark_cadet_as_been_processed_if_no_volunteers_available
 from app.objects.abstract_objects.abstract_form import Form, NewForm
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event
 from app.objects.volunteers import Volunteer
 from app.objects.constants import missing_data

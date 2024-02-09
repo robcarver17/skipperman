@@ -1,4 +1,4 @@
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.reporting.options.arrangement_state import save_arrangement
 
 from app.backend.reporting.arrangement.arrangement_order import ArrangementOfColumns, ArrangementOfRows

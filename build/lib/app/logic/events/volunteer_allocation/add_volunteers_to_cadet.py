@@ -11,7 +11,7 @@ from app.objects.relevant_information_for_volunteers import RelevantInformationF
 from app.logic.events.constants import *
 from app.backend.volunteers.volunteer_allocation import mark_cadet_as_been_processed_if_no_volunteers_available
 from app.objects.abstract_objects.abstract_form import Form, NewForm
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event
 from app.objects.volunteers import Volunteer
 from app.objects.constants import missing_data
@@ -67,7 +67,7 @@ def process_update_when_volunteer_matched(interface: abstractInterface, voluntee
     print("Adding volunteer %s against cadet %s for event %s" % (str(volunteer), cadet_id, str(event)))
     add_volunteer_and_cadet_association_for_potential_new_volunteer(volunteer_id=volunteer.id,
                                                                     cadet_id=cadet_id,
-                                                                    event_id=event.id,
+                                                                    event=event,
                                                                     relevant_information=relevant_information,
                                                                     )
     ## so we can do the details

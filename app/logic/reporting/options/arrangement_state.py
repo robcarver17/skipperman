@@ -1,7 +1,7 @@
 from app.backend.reporting.arrangement.arrange_options import ArrangeGroupsOptions
 from app.backend.reporting.arrangement.arrangement_methods import DEFAULT_ARRANGEMENT_NAME, ArrangementMethod
 from app.backend.reporting.arrangement.arrangement_order import ArrangementOfColumns
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.reporting.constants import ARRANGE_GROUP_LAYOUT_METHOD, ARRANGE_GROUP_LAYOUT_ORDER
 from app.objects.constants import missing_data
 

@@ -1,20 +1,15 @@
 from typing import List
 
-import app.backend.data.volunteer_rota
-from app.backend.volunteers.volunteer_allocation import days_at_event_when_volunteer_available
 from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingTableBody
 from app.backend.data.volunteers import get_sorted_list_of_volunteers
 from app.objects.constants import missing_data
-from app.objects.events import Event
 from app.objects.groups import Group, ALL_GROUPS_NAMES, GROUP_UNALLOCATED_TEXT
 from app.objects.volunteers_at_event import VolunteerAtEvent, ListOfVolunteersAtEvent
 from app.objects.volunteers import Volunteer
-from app.objects.volunteers_in_roles import VolunteerInRoleAtEvent, VOLUNTEER_ROLES, \
+from app.objects.volunteers_in_roles import VOLUNTEER_ROLES, \
     NO_ROLE_SET
 
 from app.objects.day_selectors import Day
-
-from app.data_access.data import data
 
 
 def sort_volunteer_data_for_event_by_name_sort_order(volunteers_at_event: ListOfVolunteersAtEvent, sort_order) -> ListOfVolunteersAtEvent:
@@ -78,36 +73,4 @@ def dict_of_roles_for_dropdown():
     return dict_of_roles
 
 
-def update_role_at_event_for_volunteer_on_day(volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
-                                    new_role: str,
-                                     event: Event):
-
-    volunteers_in_roles_data = data.data_list_of_volunteers_in_roles_at_event.read(event_id=event.id)
-    volunteers_in_roles_data.update_volunteer_in_role_on_day(volunteer_in_role_at_event=volunteer_in_role_at_event_on_day,
-                                                             new_role=new_role)
-    data.data_list_of_volunteers_in_roles_at_event.write(event_id=event.id,
-                                                         list_of_volunteers_in_roles_at_event=volunteers_in_roles_data)
-
-
-def update_group_at_event_for_volunteer_on_day(volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
-                                               new_group: str,
-                                              event: Event):
-    volunteers_in_roles_data = data.data_list_of_volunteers_in_roles_at_event.read(event_id=event.id)
-    volunteers_in_roles_data.update_volunteer_in_group_on_day(volunteer_in_role_at_event=volunteer_in_role_at_event_on_day,
-                                                              new_group=new_group)
-    data.data_list_of_volunteers_in_roles_at_event.write(event_id=event.id,
-                                                         list_of_volunteers_in_roles_at_event=volunteers_in_roles_data)
-
-def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(event: Event,
-                                                                             volunteer_id: str,
-                                                                             day: Day):
-
-    volunteers_in_roles_data = data.data_list_of_volunteers_in_roles_at_event.read(event_id=event.id)
-    app.backend.data.volunteer_rota.copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
-        volunteer_id=volunteer_id,
-        day=day,
-        list_of_all_days=days_at_event_when_volunteer_available(event=event, volunteer_id=volunteer_id)
-    )
-    data.data_list_of_volunteers_in_roles_at_event.write(event_id=event.id,
-                                                         list_of_volunteers_in_roles_at_event=volunteers_in_roles_data)
 

@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.constants import arg_not_passed
 from app.objects.day_selectors import Day
 

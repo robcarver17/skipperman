@@ -1,14 +1,14 @@
 from typing import Union
 
 from app.backend.group_allocations.cadet_event_allocations import get_list_of_cadets_in_master_event
-from app.backend.volunteers.volunteer_allocation import get_volunteer_at_event, get_volunteer_from_id
+from app.backend.volunteers.volunteer_allocation import get_volunteer_from_id
 from app.backend.data.volunteer_allocation import remove_volunteer_and_cadet_association_at_event, \
-    add_volunteer_and_cadet_association_for_existing_volunteer
+    add_volunteer_and_cadet_association_for_existing_volunteer, get_volunteer_at_event
 
 from app.backend.cadets import cadet_from_id, get_cadet_from_list_of_cadets
 
 
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.logic.events.constants import EDIT_VOLUNTEER_ROTA_EVENT_STAGE
 from app.logic.events.events_in_state import get_event_from_state

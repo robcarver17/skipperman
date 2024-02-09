@@ -1,4 +1,3 @@
-import pandas as pd
 from app.data_access.csv.generic_csv_data import GenericCsvData
 
 from app.data_access.classes.volunteers import *

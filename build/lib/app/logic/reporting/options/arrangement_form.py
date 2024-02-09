@@ -2,15 +2,15 @@ from typing import Union
 
 import pandas as pd
 
-from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
+from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_form import Form, NewForm, File
 from app.objects.abstract_objects.abstract_tables import Table
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.logic.forms.reorder_form import reorder_table, reorderFormInterface, list_of_button_names_given_group_order
-from app.logic.forms.reorder_matrix import reorder_matrix, reorderMatrixInterface, list_of_button_values_given_list_of_entries
+from app.backend.forms.reorder_form import reorder_table, reorderFormInterface, list_of_button_names_given_group_order
+from app.backend.forms.reorder_matrix import reorder_matrix, reorderMatrixInterface, list_of_button_values_given_list_of_entries
 
 from app.logic.reporting.options.arrangements import get_arrangement_of_rows_from_storage_or_derive_from_method
 from app.logic.reporting.options.reporting_options import augment_order_of_groups_with_sizes, get_reporting_options

@@ -1,5 +1,5 @@
 from typing import Union
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.volunteers.constants import BACK_BUTTON_LABEL, SAVE_BUTTON_LABEL
 from app.logic.events.constants import *
 from app.logic.volunteers.edit_volunteer import get_and_save_volunteer_skills_from_form, skills_form_entries

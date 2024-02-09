@@ -56,16 +56,16 @@ ALL_GROUPS_NAMES = (
 
 # VOLUNTEERS
 VOLUNTEER_SKILLS = configuration['volunteer_skills']
-VOLUNTEER_LOCATIONS = configuration['volunteer_locations']
-VOLUNTEER_ROLES = configuration['volunteer_roles']
+VOLUNTEER_TEAMS = configuration['volunteer_teams']
+
+VOLUNTEER_ROLES = []
+for team in VOLUNTEER_TEAMS.values():
+    for role in team:
+        if role not in VOLUNTEER_ROLES: ## avoids duplication eg deputy skipper while preserving order
+            VOLUNTEER_ROLES.append(role)
+
 VOLUNTEERS_REQUIRING_GROUP = configuration['volunteers_requiring_group']
 
-LAKE = 'Lake'
-RIVER = 'River'
-OTHER = 'Other'
-
-LAKE_VOLUNTEER_ROLES = VOLUNTEER_LOCATIONS[LAKE]
-RIVER_VOLUNTEER_ROLES = VOLUNTEER_LOCATIONS[RIVER]
 
 ## Page sizes - not configured in yaml as won't need changing
 A4_PAGESIZE = "A4"

@@ -8,10 +8,10 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm
 )
 from app.objects.abstract_objects.abstract_tables import Table
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button
-from app.logic.abstract_interface import abstractInterface
-from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
+from app.objects.abstract_objects.abstract_interface import abstractInterface
+from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.cadets.view_cadets import sort_buttons, all_sort_types
 from app.backend.cadets import SORT_BY_SURNAME
 from app.logic.events.constants import *

@@ -129,6 +129,15 @@ class MasterEvent(MappedWAEventWithIDs):
         # in place replacement
         self[idx] = row_of_mapped_wa_event_data_with_id_and_status
 
+    def list_of_active_cadet_ids(
+        self,
+    ) -> list:
+        return self.list_of_cadet_ids_with_given_status(
+            exclude_cancelled= True,
+            exclude_active= False,
+        exclude_deleted = True,
+        )
+
     def list_of_cadet_ids_with_given_status(
         self,
         exclude_cancelled: bool = True,
@@ -151,11 +160,11 @@ class MasterEvent(MappedWAEventWithIDs):
     ) -> "MasterEvent":
         new_subset = copy(self)
         if exclude_active:
-            new_subset = [row for row in self if row.status is not active_status]
+            new_subset = [row for row in new_subset if row.status is not active_status]
         if exclude_deleted:
-            new_subset = [row for row in self if row.status is not deleted_status]
+            new_subset = [row for row in new_subset  if row.status is not deleted_status]
         if exclude_cancelled:
-            new_subset = [row for row in self if row.status is not cancelled_status]
+            new_subset = [row for row in new_subset if row.status is not cancelled_status]
 
         return MasterEvent(new_subset)
 

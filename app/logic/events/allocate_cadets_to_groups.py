@@ -8,10 +8,10 @@ from app.objects.abstract_objects.abstract_form import (
     dropDownInput,
 )
 from app.objects.abstract_objects.abstract_tables import RowInTable, Table
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button
 from app.backend.group_allocations.summarise_allocations_data import summarise_allocations_for_event
-from app.logic.abstract_interface import (
+from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 from app.backend.group_allocations.group_allocations_data import (
@@ -80,7 +80,7 @@ def get_top_row(allocation_data: AllocationData) -> RowInTable:
 def get_row_for_cadet(cadet: Cadet, allocation_data: AllocationData) -> RowInTable:
     previous_groups_as_list = allocation_data.previous_groups_as_list_of_str(cadet)
     drop_down_input_field = get_dropdown_input_for_cadet(cadet=cadet, allocation_data=allocation_data)
-
+    ## FIX ME ADD RYA LEVELS AND EXPERIENCE, DAYS AVAILABLE, BOATS, DOUBLE HANDED CREW, PREFERRED GROUP
     return RowInTable(
         [str(cadet)]+
 

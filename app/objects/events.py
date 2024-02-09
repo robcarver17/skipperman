@@ -13,20 +13,26 @@ from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObj
 from app.objects.constants import arg_not_passed
 from app.objects.day_selectors import day_given_datetime, all_possible_days, Day, DaySelector
 
-EventType = Enum(
-    "EventType", ["Training", "Racing", "TrainingAndRacing", "Social", "Merchandise"]
-)
-list_of_event_types = [e.name for e in EventType]
 
-# WA_event_id: int  ## does this need to be here?
-
+## VALUES OF THIS DICT *MUST* MATCH VALUES BELOW
+DICT_OF_NAMES_AND_ATTRIBUTES_CHECKBOX = {
+'Cadets': 'contains_cadets',
+'Groups to which cadets can be allocated': 'contains_groups',
+'Volunteers': 'contains_volunteers',
+"Food requirements (catering supplied)": 'contains_food',
+"Clothing sizes (merchandise)": 'contains_clothing'
+}
 
 @dataclass
 class Event(GenericSkipperManObjectWithIds):
     event_name: str  ## has to be preselected
     start_date: datetime.date
     end_date: datetime.date
-    event_type: EventType
+    contains_cadets: bool = True
+    contains_groups: bool = True
+    contains_volunteers: bool = True
+    contains_clothing: bool = False
+    contains_food: bool = True
     id: str = arg_not_passed
 
     def __repr__(self):
@@ -37,6 +43,35 @@ class Event(GenericSkipperManObjectWithIds):
 
     def __hash__(self):
         return hash(self.event_description)
+
+    @classmethod
+    def from_date_length_and_name_only(cls, event_name: str, start_date: datetime.date, duration: int):
+        if duration<1:
+            end_date = start_date
+        else:
+            end_date = add_days(start_date, duration-1)
+
+        return cls(event_name=event_name,
+                   start_date=start_date,
+                   end_date=end_date)
+
+    def details_as_list_of_str(self):
+        elements = []
+        if self.contains_food:
+            elements.append("Food requirements")
+        if self.contains_clothing:
+            elements.append("Clothing sizes")
+        if self.contains_volunteers:
+            elements.append("Volunteers in a rota")
+        if self.contains_groups:
+            elements.append("Groups requiring allocation")
+        if self.contains_cadets:
+            elements.append("Cadets")
+        elements = ", ".join(elements)
+
+        return [self.event_description,
+                "From %s to %s, %d days, covering %s" % (str(self.start_date), str(self.end_date), self.duration, self.weekdays_in_event_as_str()),
+                "Has the following elements: %s" % elements]
 
     @property
     def invalid(self) -> bool:
@@ -52,14 +87,6 @@ class Event(GenericSkipperManObjectWithIds):
 
         return ""
 
-    @property
-    def verbose_repr(self):
-        return "%s from %s to %s, type %s" % (
-            self.event_name,
-            self._start_of_event_as_str,
-            self._end_of_event_as_str,
-            self.event_type_as_str,
-        )
 
     @property
     def event_description(self) -> str:
@@ -93,10 +120,6 @@ class Event(GenericSkipperManObjectWithIds):
         end_date = self.end_date
         return transform_date_into_str(end_date)
 
-    @property
-    def event_type_as_str(self) -> str:
-        return self.event_type.name
-
     def day_selector_with_covered_days(self) -> DaySelector:
         weekdays_covered = self.weekdays_in_event()
         return DaySelector(dict([(day, day in weekdays_covered) for day in all_possible_days]))
@@ -104,6 +127,12 @@ class Event(GenericSkipperManObjectWithIds):
     def first_day(self):
         ## relies on ordering
         return self.weekdays_in_event()[0]
+
+    def weekdays_in_event_as_str(self) -> str:
+        weekdays_in_event = self.weekdays_in_event()
+        names_of_days = [day.name for day in weekdays_in_event]
+
+        return ", ".join(names_of_days)
 
     def weekdays_in_event(self) -> List[Day]:
         date_list = self.dates_in_event()
@@ -119,11 +148,16 @@ class Event(GenericSkipperManObjectWithIds):
             some_date+=datetime.timedelta(days=1)
         return date_list
 
+
+def add_days(some_date: datetime.date, duration: int) -> datetime.date:
+    return some_date + datetime.timedelta(days=duration)
+
+today = datetime.datetime.today().date()
+
 default_event = Event(
-    start_date=datetime.datetime.now(),
-    end_date=datetime.datetime.now(),
-    event_name="",
-    event_type=EventType.Training,
+    start_date=today,
+    end_date=add_days(today, 1),
+    event_name=""
 )
 
 

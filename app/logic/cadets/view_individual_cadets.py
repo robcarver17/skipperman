@@ -5,7 +5,7 @@ from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
-from app.logic.abstract_interface import (
+from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 from app.backend.group_allocations.previous_allocations import get_dict_of_all_event_allocations_for_single_cadet

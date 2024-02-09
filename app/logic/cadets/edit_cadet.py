@@ -7,12 +7,11 @@ from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
-from app.logic.abstract_interface import (
+from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 from app.logic.cadets.constants import *
 from app.logic.cadets.add_cadet import get_add_cadet_form_with_information_passed, CadetAndVerificationText, get_cadet_from_form
-from app.objects.constants import NoButtonPressed
 
 
 def display_form_edit_individual_cadet(

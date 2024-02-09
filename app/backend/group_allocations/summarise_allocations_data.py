@@ -15,7 +15,7 @@ def summarise_allocations_for_event(event: Event) -> PandasDFTable:
 
     master_event_data = load_master_event(event)
     availability_dict = dict([(cadet_id, master_event_data.get_row_with_id(cadet_id).attendance)
-                              for cadet_id in master_event_data.list_of_cadet_ids])
+                              for cadet_id in master_event_data.list_of_active_cadet_ids()])
 
     groups = get_sorted_groups_plus_unalloacted(list_of_cadet_ids_with_groups)
     rows = [get_row_for_group(group=group,

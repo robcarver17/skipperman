@@ -23,6 +23,7 @@ app/backend/data/events.py
 app/backend/data/field_mapping.py
 app/backend/data/group_allocations.py
 app/backend/data/mapped_events.py
+app/backend/data/resources.py
 app/backend/data/volunteer_allocation.py
 app/backend/data/volunteer_rota.py
 app/backend/data/volunteers.py
@@ -31,6 +32,14 @@ app/backend/data/../../../example_data/events/list_of_events.csv
 app/backend/data/../../../example_data/field_mapping_templates/template_field_map_cadet_week.csv
 app/backend/data/../../../example_data/field_mapping_templates/template_field_map_for_training_weekend.csv
 app/backend/data/../../data_access/configuration/configuration.yaml
+app/backend/forms/__init__.py
+app/backend/forms/reorder_form.py
+app/backend/forms/reorder_matrix.py
+app/backend/forms/../../../example_data/cadets/cadet_master_list.csv
+app/backend/forms/../../../example_data/events/list_of_events.csv
+app/backend/forms/../../../example_data/field_mapping_templates/template_field_map_cadet_week.csv
+app/backend/forms/../../../example_data/field_mapping_templates/template_field_map_for_training_weekend.csv
+app/backend/forms/../../data_access/configuration/configuration.yaml
 app/backend/group_allocations/__init__.py
 app/backend/group_allocations/cadet_event_allocations.py
 app/backend/group_allocations/group_allocations_data.py
@@ -129,6 +138,7 @@ app/data_access/classes/list_of_events.py
 app/data_access/classes/mapped_wa_event.py
 app/data_access/classes/master_list_of_cadets.py
 app/data_access/classes/print_options.py
+app/data_access/classes/resources.py
 app/data_access/classes/volunteers.py
 app/data_access/classes/wa_event_mapping.py
 app/data_access/classes/wa_field_mapping.py
@@ -152,6 +162,7 @@ app/data_access/csv/mapped_wa_event.py
 app/data_access/csv/master_list_of_cadets.py
 app/data_access/csv/print_options.py
 app/data_access/csv/resolve_csv_paths_and_filenames.py
+app/data_access/csv/resources.py
 app/data_access/csv/utils.py
 app/data_access/csv/volunteers.py
 app/data_access/csv/wa_event_mapping.py
@@ -162,7 +173,6 @@ app/data_access/csv/../../../example_data/field_mapping_templates/template_field
 app/data_access/csv/../../../example_data/field_mapping_templates/template_field_map_for_training_weekend.csv
 app/data_access/csv/../configuration/configuration.yaml
 app/logic/__init__.py
-app/logic/abstract_interface.py
 app/logic/abstract_logic_api.py
 app/logic/../../example_data/cadets/cadet_master_list.csv
 app/logic/../../example_data/events/list_of_events.csv
@@ -183,6 +193,14 @@ app/logic/cadets/../../../example_data/events/list_of_events.csv
 app/logic/cadets/../../../example_data/field_mapping_templates/template_field_map_cadet_week.csv
 app/logic/cadets/../../../example_data/field_mapping_templates/template_field_map_for_training_weekend.csv
 app/logic/cadets/../../data_access/configuration/configuration.yaml
+app/logic/configuration/__init__.py
+app/logic/configuration/config_logic_api.py
+app/logic/configuration/view_main_config_page.py
+app/logic/configuration/../../../example_data/cadets/cadet_master_list.csv
+app/logic/configuration/../../../example_data/events/list_of_events.csv
+app/logic/configuration/../../../example_data/field_mapping_templates/template_field_map_cadet_week.csv
+app/logic/configuration/../../../example_data/field_mapping_templates/template_field_map_for_training_weekend.csv
+app/logic/configuration/../../data_access/configuration/configuration.yaml
 app/logic/events/__init__.py
 app/logic/events/add_event.py
 app/logic/events/allocate_cadets_to_groups.py
@@ -268,14 +286,6 @@ app/logic/events/volunteer_rota/../../../../example_data/events/list_of_events.c
 app/logic/events/volunteer_rota/../../../../example_data/field_mapping_templates/template_field_map_cadet_week.csv
 app/logic/events/volunteer_rota/../../../../example_data/field_mapping_templates/template_field_map_for_training_weekend.csv
 app/logic/events/volunteer_rota/../../../data_access/configuration/configuration.yaml
-app/logic/forms/__init__.py
-app/logic/forms/reorder_form.py
-app/logic/forms/reorder_matrix.py
-app/logic/forms/../../../example_data/cadets/cadet_master_list.csv
-app/logic/forms/../../../example_data/events/list_of_events.csv
-app/logic/forms/../../../example_data/field_mapping_templates/template_field_map_cadet_week.csv
-app/logic/forms/../../../example_data/field_mapping_templates/template_field_map_for_training_weekend.csv
-app/logic/forms/../../data_access/configuration/configuration.yaml
 app/logic/reporting/__init__.py
 app/logic/reporting/constants.py
 app/logic/reporting/reporting_logic_api.py
@@ -331,6 +341,7 @@ app/logic/volunteers/../../../example_data/field_mapping_templates/template_fiel
 app/logic/volunteers/../../data_access/configuration/configuration.yaml
 app/objects/__init__.py
 app/objects/cadets.py
+app/objects/club_dinghies.py
 app/objects/constants.py
 app/objects/day_selectors.py
 app/objects/events.py
@@ -341,6 +352,7 @@ app/objects/groups.py
 app/objects/mapped_wa_event_no_ids.py
 app/objects/mapped_wa_event_with_ids.py
 app/objects/master_event.py
+app/objects/patrol_boats.py
 app/objects/relevant_information_for_volunteers.py
 app/objects/utils.py
 app/objects/volunteers.py
@@ -356,6 +368,7 @@ app/objects/../data_access/configuration/configuration.yaml
 app/objects/abstract_objects/__init__.py
 app/objects/abstract_objects/abstract_buttons.py
 app/objects/abstract_objects/abstract_form.py
+app/objects/abstract_objects/abstract_interface.py
 app/objects/abstract_objects/abstract_lines.py
 app/objects/abstract_objects/abstract_tables.py
 app/objects/abstract_objects/abstract_text.py

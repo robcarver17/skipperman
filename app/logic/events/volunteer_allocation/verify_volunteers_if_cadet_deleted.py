@@ -1,6 +1,6 @@
-from typing import Dict, Tuple
+from typing import Dict
 
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import Form, NewForm, checkboxInput
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines

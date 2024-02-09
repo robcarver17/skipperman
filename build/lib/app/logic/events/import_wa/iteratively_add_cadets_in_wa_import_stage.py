@@ -1,7 +1,7 @@
 from typing import Union
 
 from app.objects.abstract_objects.abstract_form import Form, NewForm
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.events.constants import (
     WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE,
     CHECK_CADET_BUTTON_LABEL,

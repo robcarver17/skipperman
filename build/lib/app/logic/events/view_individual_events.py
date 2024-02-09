@@ -10,7 +10,7 @@ from app.objects.abstract_objects.abstract_form import (
 )
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 
 from app.logic.events.constants import *
@@ -31,24 +31,49 @@ def display_form_view_individual_event(
 def get_event_form_for_event(
     event: Event, interface: abstractInterface
 ) -> Union[Form, NewForm]:
-    event_description = event.verbose_repr
-    allocations = summarise_allocations_for_event(event)
-    rota = get_summary_list_of_roles_and_groups_for_events(event)
+    event_description = event.details_as_list_of_str()
+
+    if event.contains_groups:
+        allocations = summarise_allocations_for_event(event)
+        allocations_lines = ListOfLines([        "Group allocations:",
+                    _______________,
+                    allocations])
+
+    else:
+        allocations_lines = ""
+
+    if event.contains_volunteers:
+        rota = get_summary_list_of_roles_and_groups_for_events(event)
+        rota_lines =   ListOfLines([
+                    "Volunteer rota:",
+                      _______________,
+                      rota])
+    else:
+        rota_lines = ""
+
+    if event.contains_cadets:
+        ## FIXME SUMMARISE CADET NUMBERS
+        pass
+
+    if event.contains_food:
+        ## FIXME SUMMARISE FOOD NUMBERS
+        pass
+
+    if event.contains_clothing:
+        ## FIXME SUMMARISE CLOTHING NUMBERS
+        pass
+
     buttons = get_event_buttons(event, interface=interface)
 
     lines_in_form = (ListOfLines(
                     [
-                        event_description,
+                        ListOfLines(event_description),
                         _______________,
                         buttons,
                         _______________,
-                        "Group allocations:",
-                        _______________,
-                     allocations,
-                     _______________,
-                    "Volunteer rota:",
-                      _______________,
-                      rota]))
+                        allocations_lines,
+                        rota_lines
+]))
 
     return Form(lines_in_form)
 
@@ -70,13 +95,10 @@ def get_event_buttons(event: Event, interface: abstractInterface) -> Line:
     )  ## does upload and import_wa, assuming no staged file
     back_button = Button(BACK_BUTTON_LABEL)
 
-    cadet_allocation = Button(ALLOCATE_CADETS_BUTTON_LABEL)
-    edit_registration = Button(EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON)
-    volunteer_rota = Button(EDIT_VOLUNTEER_ROLES_BUTTON_LABEL)
-
     wa_import_done = is_wa_file_mapping_setup_for_event(event=event) ## have we done an import already (sets up event mapping)
     field_mapping_done = is_wa_field_mapping_setup_for_event(event=event) ## have set up field mapping
     raw_event_file_exists = does_raw_event_file_exist(event.id) ## is there a staging file waiting to be uploaded
+
 
     print(
         "[wa_import_done=%s, field_mapping_done=%s, raw_event_file_exists=%s]"
@@ -98,13 +120,28 @@ def get_event_buttons(event: Event, interface: abstractInterface) -> Line:
 
     ## both done, we can update the WA file and do cadet backend / other editing
     if wa_import_done and field_mapping_done and not raw_event_file_exists:
-        return Line([back_button, wa_update, cadet_allocation, wa_modify_field_mapping, edit_registration, volunteer_rota])
+        event_specific_buttons = get_event_specific_buttons(event)
+        return Line([back_button, wa_update, wa_modify_field_mapping]+event_specific_buttons )
 
     interface.log_error(
         "Something went wrong; contact support [wa_import_done=%s, field_mapping_done=%s, raw_event_file_exists=%s]"
         % (str(wa_import_done), str(field_mapping_done), str(raw_event_file_exists))
     )
     return Line([back_button])
+
+def get_event_specific_buttons(event: Event) -> list:
+    group_allocation = Button(ALLOCATE_CADETS_BUTTON_LABEL)
+    edit_registration = Button(EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON)
+    volunteer_rota = Button(EDIT_VOLUNTEER_ROLES_BUTTON_LABEL)
+    event_specific_buttons = []
+    if event.contains_cadets:
+        event_specific_buttons.append(edit_registration)
+    if event.contains_groups:
+        event_specific_buttons.append(group_allocation)
+    if event.contains_volunteers:
+        event_specific_buttons.append(volunteer_rota)
+    return event_specific_buttons
+
 
 
 def post_form_view_individual_event(

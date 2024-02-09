@@ -2,7 +2,7 @@ from typing import Union
 from app.backend.cadets import cadet_name_from_id
 from app.logic.events.update_master.track_cadet_id_in_master_file_update import get_and_save_next_cadet_id_in_event_data
 from app.objects.abstract_objects.abstract_form import Form, NewForm
-from app.logic.abstract_interface import (
+from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 from app.logic.abstract_logic_api import initial_state_form

@@ -1,9 +1,9 @@
 from copy import copy
 from typing import Union
 
-from app.backend.data.volunteers import get_list_of_volunteers_at_event, SORT_BY_FIRSTNAME, get_sorted_list_of_volunteers
+from app.backend.data.volunteers import  SORT_BY_FIRSTNAME, get_sorted_list_of_volunteers
 from app.backend.data.volunteer_allocation import get_list_of_volunteers_at_event, add_volunteer_to_event_with_just_id
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_allocation.volunteer_selection_form_contents import \

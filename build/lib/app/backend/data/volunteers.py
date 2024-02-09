@@ -34,7 +34,7 @@ def save_skills_for_volunteer(volunteer: Volunteer, dict_of_skills: dict):
 
 
 def update_existing_volunteer(volunteer: Volunteer):
-    list_of_volunteers = get_list_of_volunteers()
+    list_of_volunteers = get_sorted_list_of_volunteers()
     index = list_of_volunteers.index_of_id(volunteer.id)
     list_of_volunteers[index] = volunteer
     save_list_of_volunteers(list_of_volunteers)
@@ -67,7 +67,7 @@ def get_all_volunteers()-> ListOfVolunteers:
     return data.data_list_of_volunteers.read()
 
 
-def get_list_of_volunteers(sort_by: str = arg_not_passed) -> ListOfVolunteers:
+def get_sorted_list_of_volunteers(sort_by: str = arg_not_passed) -> ListOfVolunteers:
     master_list = get_all_volunteers()
     if sort_by is arg_not_passed:
         return master_list

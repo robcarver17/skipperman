@@ -1,6 +1,10 @@
-from app.backend.volunteers.volunteer_allocation import delete_role_at_event_for_volunteer_on_all_days
+from typing import List
+
+from app.backend.data.volunteer_allocation import get_volunteer_at_event
+from app.backend.data.volunteer_rota import delete_role_at_event_for_volunteer_on_all_days
 from app.backend.volunteers.volunter_relevant_information import get_volunteer_at_event_from_relevant_information
 from app.data_access.data import data
+from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer
 from app.objects.volunteers_at_event import ListOfVolunteersAtEvent, ListOfCadetsWithoutVolunteersAtEvent, \
@@ -78,3 +82,13 @@ def update_volunteer_at_event(volunteer_at_event: VolunteerAtEvent, event: Event
     list_of_volunteers_at_event = get_list_of_volunteers_at_event(event)
     list_of_volunteers_at_event.update_volunteer_at_event(volunteer_at_event)
     save_list_of_volunteers_at_event(event=event, list_of_volunteers_at_event=list_of_volunteers_at_event)
+
+
+def days_at_event_when_volunteer_available(event: Event,
+                                                                             volunteer_id: str) -> List[Day]:
+    volunteer_at_event = get_volunteer_at_event(volunteer_id=volunteer_id, event=event)
+    all_days = [day
+                    for day in event.weekdays_in_event()
+                        if volunteer_at_event.availablity.available_on_day(day)]
+
+    return all_days

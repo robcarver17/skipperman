@@ -119,10 +119,6 @@ EVENT = "event"
 ROW_IN_EVENT_DATA = "row_in_event_data"
 
 # field names
-EVENT_NAME = "event_name"
-EVENT_START_DATE = "event_start_date"
-EVENT_END_DATE = "event_end_date"
-EVENT_TYPE = "event_type"
 WA_FILE = "file"
 MAPPING_FILE = "file"
 TEMPLATE_NAME = "template_name"

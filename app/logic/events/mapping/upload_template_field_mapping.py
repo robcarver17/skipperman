@@ -4,7 +4,7 @@ from app.backend.data.field_mapping import write_template, read_mapping_from_csv
 from app.objects.abstract_objects.abstract_form import textInput, fileInput, Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
-from app.logic.abstract_interface import abstractInterface, get_file_from_interface, \
+from app.objects.abstract_objects.abstract_interface import abstractInterface, get_file_from_interface, \
     form_with_message_and_finished_button
 
 empty_name = ""

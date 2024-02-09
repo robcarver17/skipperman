@@ -1,6 +1,6 @@
 from typing import Union
 from dataclasses import dataclass
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import (
     NewForm,
     Form,

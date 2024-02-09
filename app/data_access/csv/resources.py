@@ -1,0 +1,61 @@
+from app.data_access.csv.generic_csv_data import GenericCsvData
+
+from app.data_access.classes.resources import *
+
+LIST_OF_PATROL_BOATS_FILE_ID = "list_of_patrol_boats"
+LIST_OF_CLUB_DINGHIES_FILE_ID = "list_of_club_dinghies"
+LIST_OF_PATROL_BOATS_AND_VOLUNTEERS_FILE_ID = "list_of_patrol_boats_and_volunteers_at_event"
+LIST_OF_CLUB_DINGHIES_AND_CADETS_FILE_ID = "list_of_club_dinghies_with_cadets_at_event"
+
+
+class CsvDataListOfPatrolBoats(GenericCsvData, DataListOfPatrolBoats):
+
+    def read(self) -> ListOfPatrolBoats:
+        list_of_boats = self.read_and_return_object_of_type(ListOfPatrolBoats, file_identifier=LIST_OF_PATROL_BOATS_FILE_ID)
+
+        return list_of_boats
+
+    def write(self, list_of_boats: ListOfPatrolBoats):
+        self.write_object(list_of_boats, file_identifier=LIST_OF_PATROL_BOATS_FILE_ID)
+
+
+class CsvDataListOfClubDinghies(GenericCsvData, DataListOfClubDinghies):
+
+    def read(self) -> ListOfClubDinghies:
+        list_of_boats = self.read_and_return_object_of_type(ListOfClubDinghies,
+                                                            file_identifier=LIST_OF_CLUB_DINGHIES_FILE_ID)
+
+        return list_of_boats
+
+    def write(self, list_of_boats: ListOfClubDinghies):
+        self.write_object(list_of_boats, file_identifier=LIST_OF_CLUB_DINGHIES_FILE_ID)
+
+
+class CsvDataListOfVolunteersAtEventWithPatrolBoats(GenericCsvData, DataListOfVolunteersAtEventWithPatrolBoats):
+
+    def read(self, event_id: str) -> ListOfVolunteersAtEventWithPatrolBoats:
+        people_and_boats = self.read_and_return_object_of_type(ListOfVolunteersAtEventWithPatrolBoats,
+                                                                          file_identifier=LIST_OF_PATROL_BOATS_AND_VOLUNTEERS_FILE_ID,
+                                                                          additional_file_identifiers=event_id)
+
+        return people_and_boats
+
+    def write(self, people_and_boats: ListOfVolunteersAtEventWithPatrolBoats, event_id: str):
+        self.write_object(people_and_boats,
+                          file_identifier=LIST_OF_PATROL_BOATS_AND_VOLUNTEERS_FILE_ID,
+                          additional_file_identifiers=event_id)
+
+
+class CsvDataListOfCadetAtEventWithClubDinghies(GenericCsvData, DataListOfCadetAtEventWithClubDinghies):
+
+    def read(self, event_id: str) -> ListOfCadetAtEventWithClubDinghies:
+        people_and_boats = self.read_and_return_object_of_type(ListOfCadetAtEventWithClubDinghies,
+                                                                          file_identifier=LIST_OF_CLUB_DINGHIES_AND_CADETS_FILE_ID,
+                                                                          additional_file_identifiers=event_id)
+
+        return people_and_boats
+
+    def write(self, people_and_boats: ListOfCadetAtEventWithClubDinghies, event_id: str):
+        self.write_object(people_and_boats,
+                          file_identifier=LIST_OF_CLUB_DINGHIES_AND_CADETS_FILE_ID,
+                          additional_file_identifiers=event_id)

@@ -4,7 +4,7 @@ from app.backend.volunteers.volunteer_allocation import any_volunteers_at_event_
 from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import get_and_save_next_cadet_id, \
     reset_current_cadet_id_store
 from app.objects.abstract_objects.abstract_form import Form, NewForm
-from app.logic.abstract_interface import (
+from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
     form_with_message_and_finished_button,
 

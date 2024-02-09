@@ -1,7 +1,7 @@
 from app.backend.volunteers.volunteer_allocation import volunteer_ids_associated_with_cadet_at_specific_event
 from app.backend.volunteers.volunteers import get_volunteer_from_volunteer_id
 from app.backend.cadets import cadet_name_from_id
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.master_event import MasterEvent, RowInMasterEvent
 from app.objects.events import Event
 from app.backend.data.mapped_events import save_master_event

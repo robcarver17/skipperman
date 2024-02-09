@@ -1,7 +1,7 @@
 from app.backend.data.volunteer_rota import copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days
 from app.backend.volunteers.volunteer_allocation import make_volunteer_available_on_day
 from app.backend.volunteers.volunteer_rota_data import get_data_to_be_stored
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.events.constants import EDIT_VOLUNTEER_DETAILS_FROM_ROTA_EVENT_STAGE, \
     EDIT_CADET_CONNECTIONS_FROM_ROTA_EVENT_STAGE, EDIT_VOLUNTEER_SKILLS_FROM_ROTA_EVENT_STAGE
 from app.logic.events.events_in_state import get_event_from_state

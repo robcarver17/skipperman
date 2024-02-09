@@ -90,5 +90,10 @@ _dict_of_filenames_and_paths = dict(
 list_of_volunteer_skills=("volunteers", "list_of_volunteers_skills.csv"),
 list_of_cadet_volunteer_associations=("volunteers", "list_of_cadet_volunteer_associations.csv"),
 list_of_volunteers_at_event=("volunteers", "list_of_volunteers_at_event_%s.csv"),
-list_of_cadets_without_volunteers_at_event=("volunteers", "list_of_cadets_without_volunteers_at_event.csv"),
-list_of_volunteers_in_roles_at_event=("volunteers", "list_of_volunteers_in_roles_at_event_%s.csv"))
+list_of_cadets_without_volunteers_at_event=("volunteers", "list_of_cadets_without_volunteers_at_all_events.csv"),
+list_of_volunteers_in_roles_at_event=("volunteers", "list_of_volunteers_in_roles_at_event_%s.csv"),
+list_of_patrol_boats = ("lists", "list_of_patrol_boats.csv"),
+list_of_club_dinghies = ("lists", "list_of_club_dinghies.csv"),
+list_of_patrol_boats_and_volunteers_at_event = ("volunteers", "list_of_patrol_boats_and_volunteers_at_event_%s.csv"),
+list_of_club_dinghies_with_cadets_at_event =("cadets", "list_of_club_dinghies_with_cadets_at_event_%s.csv")
+)

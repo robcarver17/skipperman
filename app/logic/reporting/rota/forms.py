@@ -2,7 +2,7 @@ from typing import Tuple
 
 from app.backend.reporting.allocation_report import specific_parameters_for_allocation_report
 from app.backend.reporting.arrangement.arrange_options import describe_arrangement
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.reporting.allocations.forms import explain_additional_parameters_for_allocation_report
 from app.logic.reporting.allocations.processes import load_additional_parameters_for_allocation_report, \
     get_group_order_for_allocation_report

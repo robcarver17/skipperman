@@ -3,7 +3,7 @@ from app.backend.data.volunteer_rota import update_role_at_event_for_volunteer_o
     update_group_at_event_for_volunteer_on_day
 from app.backend.volunteers.volunteer_allocation import make_volunteer_unavailable_on_day
 from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingTableBody
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_rota.render_volunteer_table import input_name_for_role_and_volunteer, \
     input_name_for_group_and_volunteer

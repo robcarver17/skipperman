@@ -10,7 +10,7 @@ from app.data_access.uploads_and_downloads import (
     staging_directory,
     get_next_valid_upload_file_name,
 )
-from app.logic.abstract_interface import (
+from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
     get_file_from_interface,
 )

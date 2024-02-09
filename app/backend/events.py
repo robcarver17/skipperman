@@ -53,6 +53,10 @@ def get_sorted_list_of_events(sort_by=SORT_BY_START_DSC) -> ListOfEvents:
 
     return list_of_events
 
+def list_of_previously_used_event_names() -> list:
+    list_of_events = get_list_of_all_events()
+    event_names = [event.event_name for event in list_of_events]
+    return list(set(event_names))
 
 
 

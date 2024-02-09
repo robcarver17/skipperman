@@ -14,7 +14,7 @@ from app.logic.events.constants import (
     ADD_EVENT_STAGE,
     VIEW_EVENT_STAGE,
 )
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 def display_form_view_of_events( interface: abstractInterface):
     return display_form_view_of_events_sort_order_passed(sort_by=SORT_BY_START_DSC, interface=interface)

@@ -20,7 +20,7 @@ from app.logic.cadets.constants import (
 )
 
 from app.objects.cadets import Cadet, default_cadet
-from app.logic.abstract_interface import (
+from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
     form_with_message_and_finished_button,
 )

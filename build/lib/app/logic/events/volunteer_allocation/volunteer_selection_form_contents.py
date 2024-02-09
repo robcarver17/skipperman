@@ -1,7 +1,7 @@
 from app.backend.cadets import cadet_from_id
 from app.backend.volunteers.volunteer_allocation import get_list_of_relevant_voluteers
 from app.backend.data.volunteers import SORT_BY_SURNAME, get_sorted_list_of_volunteers
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.events.constants import CHECK_VOLUNTEER_BUTTON_LABEL, FINAL_VOLUNTEER_ADD_BUTTON_LABEL, \
     SKIP_VOLUNTEER_BUTTON_LABEL, SEE_SIMILAR_VOLUNTEER_ONLY_LABEL, SEE_ALL_VOLUNTEER_BUTTON_LABEL
 from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import \

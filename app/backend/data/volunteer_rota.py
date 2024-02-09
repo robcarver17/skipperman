@@ -1,4 +1,4 @@
-from app.backend.volunteers.volunteer_allocation import days_at_event_when_volunteer_available
+from app.backend.data.volunteer_allocation import days_at_event_when_volunteer_available
 from app.data_access.data import data
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -55,3 +55,12 @@ def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(eve
         list_of_all_days=days_at_event_when_volunteer_available(event=event, volunteer_id=volunteer_id)
     )
     save_volunteers_in_role_at_event(event=event, list_of_volunteers_in_roles_at_event=list_of_volunteers_in_roles_at_event)
+
+
+def delete_role_at_event_for_volunteer_on_all_days(volunteer_id: str,
+                                     event: Event):
+
+    for day in event.weekdays_in_event():
+        delete_role_at_event_for_volunteer_on_day(volunteer_id=volunteer_id,
+                                                  day=day,
+                                                  event=event)

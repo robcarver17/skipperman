@@ -1,6 +1,6 @@
 from app.backend.cadets import get_cadet_from_list_of_cadets
 from app.logic.cadets.constants import CADET
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
 
 

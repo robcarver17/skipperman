@@ -1,15 +1,14 @@
 from typing import List
 
 from app.backend.data.volunteer_rota import delete_role_at_event_for_volunteer_on_day
-from app.backend.data.volunteers import get_list_of_volunteers_at_event, get_all_volunteers, \
+from app.backend.data.volunteers import  get_all_volunteers, \
     get_list_of_cadet_volunteer_associations
 from app.backend.data.volunteer_allocation import get_list_of_volunteers_at_event, \
     get_list_of_cadets_without_volunteers_at_all_events, mark_cadet_as_been_processed_with_no_volunteers_available, \
-    update_volunteer_at_event
+    update_volunteer_at_event, get_volunteer_at_event
 from app.backend.cadets import cadet_name_from_id
 
 from app.backend.volunteers.volunteers import list_of_similar_volunteers
-from app.objects.constants import missing_data
 from app.objects.day_selectors import Day, DaySelector
 from app.objects.events import Event
 from app.objects.food import FoodRequirements
@@ -121,19 +120,11 @@ def list_of_other_cadets_for_volunteer_at_event_apart_from_this_one(event: Event
 
     return associated_cadets_without_this_cadet
 
-def get_volunteer_at_event(volunteer_id: str, event: Event) -> VolunteerAtEvent:
-    volunteers_at_event_data = get_list_of_volunteers_at_event(event)
-    volunteer_at_event = volunteers_at_event_data.volunteer_at_event_with_id(volunteer_id)
-    if volunteer_at_event is missing_data:
-        raise Exception("Weirdly volunteer with id %s is no longer in event %s" % (volunteer_id, event))
-
-    return volunteer_at_event
-
 
 def update_volunteer_food_at_event(volunteer_at_event: VolunteerAtEvent, event: Event, food_requirements: FoodRequirements):
     existing_volunteer_at_event = get_volunteer_at_event(volunteer_id=volunteer_at_event.volunteer_id, event=event)
     existing_volunteer_at_event.food_requirements = food_requirements
-    update_volunteer_at_event(volunteer_at_event=volunteer_at_event, event=event)
+    update_volunteer_at_event(volunteer_at_event=existing_volunteer_at_event, event=event)
 
 def update_volunteer_availability_at_event(volunteer_at_event: VolunteerAtEvent, event: Event, availability: DaySelector):
     for day in event.weekdays_in_event():
@@ -157,20 +148,3 @@ def make_volunteer_unavailable_on_day(volunteer_id: str, event: Event, day: Day)
     delete_role_at_event_for_volunteer_on_day(volunteer_id=volunteer_id, event=event, day=day)
 
 
-def days_at_event_when_volunteer_available(event: Event,
-                                                                             volunteer_id: str) -> List[Day]:
-    volunteer_at_event = get_volunteer_at_event(volunteer_id=volunteer_id, event=event)
-    all_days = [day
-                    for day in event.weekdays_in_event()
-                        if volunteer_at_event.availablity.available_on_day(day)]
-
-    return all_days
-
-
-def delete_role_at_event_for_volunteer_on_all_days(volunteer_id: str,
-                                     event: Event):
-
-    for day in event.weekdays_in_event():
-        delete_role_at_event_for_volunteer_on_day(volunteer_id=volunteer_id,
-                                                  day=day,
-                                                  event=event)

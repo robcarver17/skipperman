@@ -1,35 +1,28 @@
 from dataclasses import dataclass
 from typing import Union
 
-from app.backend.events import verify_event_and_warn
+from app.backend.events import verify_event_and_warn, list_of_previously_used_event_names
 from app.backend.data.events import add_new_verified_event
 from app.logic.events.constants import (
-    EVENT_NAME,
-    EVENT_START_DATE,
-    EVENT_END_DATE,
-    EVENT_TYPE,
     CHECK_BUTTON_LABEL,
     FINAL_ADD_BUTTON_LABEL,
 )
 
-from app.objects.events import Event, default_event, list_of_event_types, EventType
+from app.objects.events import Event, default_event, DICT_OF_NAMES_AND_ATTRIBUTES_CHECKBOX
 
-from app.logic.abstract_interface import (
+from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
     form_with_message_and_finished_button,
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
-    textInput, dateInput, radioInput,
+    textInput, dateInput, checkboxInput,
+intInput
 )
 from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
-
-dict_of_event_types = dict(
-    [(event_type, event_type) for event_type in list_of_event_types]
-)
 
 
 def display_form_view_for_add_event(interface: abstractInterface) -> Form:
@@ -60,12 +53,12 @@ def post_form_view_for_add_event(
 
 @dataclass
 class EventAndVerificationText:
-    event: Event = (default_event,)
+    event: Event = default_event
     verification_text: str = ("",)
 
     @property
     def is_default(self) -> bool:
-        return self.event is default_event
+        return self.event == default_event
 
 
 event_and_text_if_first_time = EventAndVerificationText(
@@ -76,7 +69,6 @@ event_and_text_if_first_time = EventAndVerificationText(
 def get_add_event_form(
     interface: abstractInterface, first_time_displayed: bool = True
 ) -> Form:
-    print("First time display? %s" % str(first_time_displayed))
     if first_time_displayed:
         return get_add_event_form_with_information_passed(event_and_text_if_first_time)
     else:
@@ -87,17 +79,20 @@ def get_add_event_form(
 def get_add_event_form_with_information_passed(
     event_and_text: EventAndVerificationText,
 ) -> Form:
-    print(event_and_text)
-    header_text = Line("Add a new event. Do not duplicate!")
-    verification_line = Line(event_and_text.verification_text)
+    header_text = Line("Add a new event. Do not duplicate! (can only have one event with a specific name in a given year, so include months in training weekends eg June Training, or include a number in a series eg Feva Training 1)")
+    previous_events =  list_of_previously_used_event_names()
+    previous_events_text = "Previously used event names: %s" % ", ".join(previous_events)
 
     form_entries = form_fields_for_add_event(event=event_and_text.event)
     form_is_blank = event_and_text.is_default
+    verification_line = Line(event_and_text.verification_text)
     footer_buttons = get_footer_buttons(form_is_blank)
 
     list_of_elements_inside_form = ListOfLines(
         [
             header_text,
+            previous_events_text,
+            _______________,
             form_entries,
             verification_line,
             footer_buttons,
@@ -129,26 +124,38 @@ def form_fields_for_add_event(event: Event = default_event) -> ListOfLines:
         input_name=EVENT_START_DATE,
         value=event.start_date,
     )
-    end_date = dateInput(
-        input_label="End date",
-        input_name=EVENT_END_DATE,
-        value=event.end_date,
+    days = intInput(
+        input_label="Length in days",
+        input_name=EVENT_LENGTH_DAYS,
+        value=event.duration,
     )
-    event_type = radioInput(
-        input_label="Type of event",
-        input_name=EVENT_TYPE,
-        default_label=event.event_type_as_str,
-        dict_of_options=dict_of_event_types,
+    dict_of_checked = dict([(label,
+                             getattr(event, get_event_attribute_given_label(label))
+                             )
+                            for label in list_of_possible_checkbox_labels])
+
+    event_type = checkboxInput(
+        input_label="Event contains",
+        input_name=EVENT_CONTAINS,
+        dict_of_labels=dict_of_labels,
+        dict_of_checked=dict_of_checked
     )
 
     list_of_form_entries = [
         event_name,
         start_date,
-        end_date,
+        days,
         event_type,
     ]
 
     return ListOfLines(list_of_form_entries)
+
+list_of_possible_checkbox_labels = (DICT_OF_NAMES_AND_ATTRIBUTES_CHECKBOX.keys())
+def get_event_attribute_given_label(label):
+    return DICT_OF_NAMES_AND_ATTRIBUTES_CHECKBOX[label]
+
+dict_of_labels = dict([(label, label) for label in list_of_possible_checkbox_labels])
+
 
 
 def process_form_when_checking_event(
@@ -171,24 +178,33 @@ def process_form_when_checking_event(
 def get_event_from_form(interface) -> Event:
     event_name = interface.value_from_form(EVENT_NAME)
     start_date = interface.value_from_form(EVENT_START_DATE, value_is_date=True)
-    end_date = interface.value_from_form(EVENT_END_DATE, value_is_date=True)
-    event_type = EventType[interface.value_from_form(EVENT_TYPE)]
+    duration= int(interface.value_from_form(EVENT_LENGTH_DAYS))
 
-    event = Event(
+    list_of_contained_labels_set_to_true = interface.value_of_multiple_options_from_form(EVENT_CONTAINS)
+
+    event = Event.from_date_length_and_name_only(
         event_name=event_name,
-        event_type=event_type,
         start_date=start_date,
-        end_date=end_date,
+        duration=duration
     )
 
-    print("Event is %s" % str(event))
+    add_list_of_contains_flags_to_event(event=event, list_of_contained_labels_set_to_true=list_of_contained_labels_set_to_true)
+
+    print(event.details_as_list_of_str())
 
     return event
 
+def add_list_of_contains_flags_to_event(event: Event, list_of_contained_labels_set_to_true: list):
+    for event_label in list_of_possible_checkbox_labels:
+        if event_label in list_of_contained_labels_set_to_true:
+            setattr(event, get_event_attribute_given_label(event_label), True)
+        else:
+            setattr(event, get_event_attribute_given_label(event_label), False)
 
 def process_form_when_event_verified(interface: abstractInterface) -> Form:
     try:
         event = get_event_from_form(interface)
+        print("ffrom form %s" % event)
         add_new_verified_event(event)
     except Exception as e:
         ## should never happen as we have to be verified to get here, but still
@@ -202,3 +218,7 @@ def process_form_when_event_verified(interface: abstractInterface) -> Form:
     )
 
 
+EVENT_NAME = "event_name"
+EVENT_START_DATE = "event_start_date"
+EVENT_LENGTH_DAYS = "event_length_days"
+EVENT_CONTAINS = "event_contains"

@@ -6,7 +6,7 @@ from app.backend.reporting.options_and_parameters.report_options import Reportin
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import \
     SpecificParametersForTypeOfReport
 from app.backend.reporting.process_stages.create_list_of_groups_from_df import get_grouped_df
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.reporting.options.arrangement_state import get_stored_arrangement
 from app.logic.reporting.options.group_order import get_group_order_from_stored_or_df
 from app.logic.reporting.options.print_options import get_saved_print_options

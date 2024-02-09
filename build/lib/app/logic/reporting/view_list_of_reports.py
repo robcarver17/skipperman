@@ -7,16 +7,19 @@ from app.objects.abstract_objects.abstract_form import (
 )
 from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.reporting.constants import (
     GROUP_ALLOCATION_REPORT_STAGE,
     GROUP_ALLOCATION_REPORT_BUTTON_LABEL,
+ROTA_REPORT_BUTTON_LABEL,
+ROTA_REPORT_STAGE
 )
 from app.objects.constants import missing_data
 
 ## MODIFY THIS TO ADD MORE REPORTS
 DICT_OF_REPORT_LABELS_AND_STAGES ={
-    GROUP_ALLOCATION_REPORT_BUTTON_LABEL: GROUP_ALLOCATION_REPORT_STAGE
+    GROUP_ALLOCATION_REPORT_BUTTON_LABEL: GROUP_ALLOCATION_REPORT_STAGE,
+    ROTA_REPORT_BUTTON_LABEL: ROTA_REPORT_STAGE
 }
 
 list_of_report_labels=list(DICT_OF_REPORT_LABELS_AND_STAGES.keys())

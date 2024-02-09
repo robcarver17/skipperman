@@ -1,6 +1,6 @@
 from app.backend.events import get_sorted_list_of_events
 from app.logic.events.constants import EVENT
-from app.logic.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event
 
 

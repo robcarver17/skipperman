@@ -1,10 +1,9 @@
-from copy import copy
+
 from dataclasses import dataclass
 
-from app.objects.generic import GenericSkipperManObject, get_class_instance_from_str_dict, GenericListOfObjects
-from app.objects.groups import Group
+from app.objects.generic import GenericSkipperManObject,  GenericListOfObjects
 from app.objects.food import FoodRequirements, no_food_requirements
-from app.objects.day_selectors import DaySelector, day_selector_stored_format_from_text, day_selector_to_text_in_stored_format, NO_DAYS_SELECTED
+from app.objects.day_selectors import DaySelector, day_selector_stored_format_from_text, day_selector_to_text_in_stored_format
 from app.objects.constants import missing_data
 from app.objects.utils import clean_up_dict_with_nans
 

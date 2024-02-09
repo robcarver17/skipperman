@@ -1,8 +1,8 @@
 from copy import copy
 
+from app.backend.data.cadets import get_list_of_all_cadets
 from app.data_access.configuration.configuration import MIN_CADET_AGE, MAX_CADET_AGE, SIMILARITY_LEVEL_TO_WARN_NAME, \
     SIMILARITY_LEVEL_TO_WARN_DATE
-from app.data_access.data import data
 from app.objects.cadets import Cadet, ListOfCadets, is_cadet_age_surprising
 from app.objects.constants import arg_not_passed
 
@@ -14,7 +14,7 @@ def confirm_cadet_exists(cadet_selected):
 
 def get_list_of_cadets_as_str(list_of_cadets = arg_not_passed) -> list:
     if list_of_cadets is arg_not_passed:
-        list_of_cadets = get_list_of_cadets()
+        list_of_cadets = get_sorted_list_of_cadets()
     return [str(cadet) for cadet in list_of_cadets]
 
 
@@ -24,7 +24,7 @@ def get_list_of_cadets_as_str_similar_to_name_first(object_with_name, from_list_
 
 def get_list_of_cadets_similar_to_name_first(object_with_name, from_list_of_cadets: ListOfCadets = arg_not_passed) -> ListOfCadets:
     if from_list_of_cadets is arg_not_passed:
-        from_list_of_cadets = get_list_of_cadets(sort_by=SORT_BY_SURNAME)
+        from_list_of_cadets = get_sorted_list_of_cadets(sort_by=SORT_BY_SURNAME)
 
     list_of_cadets = copy(from_list_of_cadets)
 
@@ -41,15 +41,15 @@ def get_list_of_cadets_similar_to_name_first(object_with_name, from_list_of_cade
 
 
 def get_cadet_from_list_of_cadets(cadet_selected: str) -> Cadet:
-    list_of_cadets = get_list_of_cadets()
+    list_of_cadets = get_sorted_list_of_cadets()
     list_of_cadets_as_str = get_list_of_cadets_as_str(list_of_cadets=list_of_cadets)
 
     cadet_idx = list_of_cadets_as_str.index(cadet_selected)
     return list_of_cadets[cadet_idx]
 
 
-def get_list_of_cadets(sort_by: str = arg_not_passed) -> ListOfCadets:
-    master_list = data.data_list_of_cadets.read()
+def get_sorted_list_of_cadets(sort_by: str = arg_not_passed) -> ListOfCadets:
+    master_list = get_list_of_all_cadets()
     if sort_by is arg_not_passed:
         return master_list
     if sort_by == SORT_BY_SURNAME:
@@ -86,7 +86,7 @@ def cadet_name_from_id(cadet_id: str) -> str:
 
 
 def cadet_from_id(cadet_id: str) -> Cadet:
-    list_of_cadets = get_list_of_cadets()
+    list_of_cadets = get_sorted_list_of_cadets()
 
     cadet = cadet_from_id_with_passed_list(cadet_id=cadet_id,
                                            list_of_cadets=list_of_cadets)
@@ -115,9 +115,6 @@ def verify_cadet_and_warn(cadet: Cadet) -> str:
 
     return warn_text
 
-def add_new_verified_cadet(cadet: Cadet):
-    data.data_list_of_cadets.add(cadet)
-
 
 
 def warning_for_similar_cadets(cadet: Cadet) -> str:
@@ -135,7 +132,7 @@ def warning_for_similar_cadets(cadet: Cadet) -> str:
 
 def list_of_similar_cadets(cadet: Cadet) -> list:
     print("Checking for similar %s" % cadet)
-    existing_cadets = data.data_list_of_cadets.read()
+    existing_cadets = get_list_of_all_cadets()
     similar_cadets = existing_cadets.similar_cadets(
         cadet,
         name_threshold=SIMILARITY_LEVEL_TO_WARN_NAME,
@@ -145,7 +142,3 @@ def list_of_similar_cadets(cadet: Cadet) -> list:
     return similar_cadets
 
 
-def delete_a_cadet(cadet: Cadet):
-    all_cadets = data.data_list_of_cadets.read()
-    all_cadets.pop_with_id(cadet.id)
-    data.data_list_of_cadets.write(all_cadets)

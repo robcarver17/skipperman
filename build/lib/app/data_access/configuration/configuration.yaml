@@ -75,39 +75,37 @@ volunteer_skills:
   - "First aid"
   - "DBS"
   - "SI"
-volunteer_locations:
+## first line is always lead, rest are members
+volunteer_teams:
+  Management:
+    - "Skipper"
+    - "Deputy skipper"
+  Instructors:
+    - "SI"
+    - "DI"
+    - "AI"
+    - "Coach"
   Lake:
     - "Deputy skipper"
     - "Lake safety helm"
     - "Lake safety crew"
     - "Lake helper"
-  River:
+    - "Lake first aid"
+  Ramp:
+    - "Ramp lead"
+    - "Ramp first aid"
+    - "Ramp"
+  Safety:
     - "River safety lead"
     - "River safety helm"
     - "River safety crew"
-    - "Ramp lead"
-    - "Ramp"
-volunteer_roles:
-  - "SI"
-  - "Skipper"
-  - "Deputy skipper"
-  - "DI"
-  - "Coach"
-  - "AI"
-  - "Admin"
-  - "Photo"
-  - "Drone"
-  - "Ramp lead"
-  - "Ramp"
-  - "River first aid"
-  - "Galley"
-  - "Galley lead"
-  - "River safety lead"
-  - "River safety helm"
-  - "River safety crew"
-  - "Lake safety helm"
-  - "Lake safety crew"
-  - "Lake helper"
+  Galley:
+    - "Galley lead"
+    - "Galley"
+    - "Lake Galley"
+  Admin:
+    - "Admin"
+    - "Photo"
 volunteers_requiring_group:
   - "DI"
   - "Coach"

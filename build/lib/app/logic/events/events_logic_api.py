@@ -42,7 +42,7 @@ from app.logic.events.import_wa.import_wa_file import (
     display_form_import_event_file,
     post_form_import_event_file,
 )
-from app.logic.events.import_wa.iteratively_add_cadets_in_wa_import_stage import (
+from app.logic.events.cadets_at_event.iteratively_add_cadets_in_wa_import_stage import (
     display_form_iteratively_add_cadets_during_import,
     post_form_iteratively_add_cadets_during_import,
 )
@@ -53,6 +53,8 @@ from app.logic.events.import_wa.update_existing_event import (
     display_form_update_existing_event,
     post_form_uupdate_existing_event,
 )
+
+from app.logic.events.import_wa.import_controller import import_controller, post_import_controller
 
 from app.logic.events.allocate_cadets_to_groups import (
     display_form_allocate_cadets,
@@ -90,6 +92,8 @@ class EventLogicApi(AbstractLogicApi):
                 WA_UPLOAD_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE: display_form_for_upload_template_field_mapping,
                 WA_DOWNLOAD_EVENT_TEMPLATE_MAPPING_IN_VIEW_EVENT_STAGE: display_form_for_download_template_field_mapping,
                 WA_IMPORT_SUBSTAGE_IN_VIEW_EVENT_STAGE: display_form_import_event_file,
+
+                WA_UPDATE_CONTROLLER_IN_VIEW_EVENT_STAGE: import_controller,
                 WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE: display_form_iteratively_add_cadets_during_import,
                 WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE: display_form_interactively_update_master_records,
 
@@ -139,6 +143,10 @@ class EventLogicApi(AbstractLogicApi):
 
         WA_IMPORT_SUBSTAGE_IN_VIEW_EVENT_STAGE:
             post_form_import_event_file,
+
+        WA_UPDATE_CONTROLLER_IN_VIEW_EVENT_STAGE:
+            post_import_controller,
+
         WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE:
             post_form_iteratively_add_cadets_during_import,
         WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE:

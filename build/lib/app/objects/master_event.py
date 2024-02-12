@@ -4,18 +4,13 @@ from typing import List
 
 import pandas as pd
 
-from app.objects.mapped_wa_event_no_ids import RowInMappedWAEventNoId
-from app.objects.mapped_wa_event_with_ids import (
-    RowInMappedWAEventWithId,
-    MappedWAEventWithIDs,
-    RowStatus,
-    cancelled_status,
-    active_status,
-    deleted_status,
-    get_status_from_row_of_mapped_wa_event_data,
-    get_attendance_selection_from_event_row,
-    get_cadet_food_requirements_from_row_of_mapped_wa_event_data
+from app.objects.mapped_wa_event import RowInMappedWAEvent, MappedWAEvent
+from app.objects.mapped_wa_event_deltas import (
+    RowInMappedWAEventDeltaRow,
+
 )
+from app.objects.cadet_at_event import RowStatus, cancelled_status, active_status, deleted_status, \
+    get_attendance_selection_from_event_row, get_status_from_row_of_mapped_wa_event_data
 from app.objects.events import Event
 from app.objects.day_selectors import DaySelector, day_selector_stored_format_from_text, day_selector_to_text_in_stored_format
 from app.objects.food import FoodRequirements
@@ -29,7 +24,7 @@ FOOD_REQUIREMENTS = "food_requirements"
 @dataclass
 class RowInMasterEvent:
     cadet_id: str
-    data_in_row: RowInMappedWAEventNoId
+    data_in_row: RowInMappedWAEvent
     attendance: DaySelector
     status: RowStatus
     food_requirements: FoodRequirements
@@ -42,7 +37,7 @@ class RowInMasterEvent:
 
     @classmethod
     def from_row_in_mapped_wa_event_with_id(
-        cls, row_in_mapped_wa_event_with_id: RowInMappedWAEventWithId, status: RowStatus,
+        cls, row_in_mapped_wa_event_with_id: RowInMappedWAEventDeltaRow, status: RowStatus,
             attendance: DaySelector,
             food_requirements: FoodRequirements
     ):
@@ -74,7 +69,7 @@ class RowInMasterEvent:
         return cls(
             cadet_id=cadet_id,
             status=status,
-            data_in_row=RowInMappedWAEventNoId.from_external_dict(some_dict),
+            data_in_row=RowInMappedWAEvent.from_external_dict(some_dict),
             attendance=attendance,
             food_requirements=food_requirements
         )
@@ -87,7 +82,7 @@ class RowInMasterEvent:
         return self.status == deleted_status
 
 
-class MasterEvent(MappedWAEventWithIDs):
+class MasterEvent(MappedWAEvent):
     def __init__(self, list_of_rows: List[RowInMasterEvent]):
         super().__init__(list_of_rows)
 
@@ -194,8 +189,11 @@ class MasterEvent(MappedWAEventWithIDs):
         new_master_event_list = [self.get_row_with_id(cadet_id) for cadet_id in list_of_ids if self.is_cadet_id_in_event(cadet_id)]
         return MasterEvent(new_master_event_list)
 
+def get_row_of_master_event_from_mapped_row_with_idx_and_status(*args, **kwargs):
+    pass
+"""
 def get_row_of_master_event_from_mapped_row_with_idx_and_status(
-    row_in_mapped_wa_event_with_id: RowInMappedWAEventWithId,
+    row_in_mapped_wa_event_with_id: RowInMappedWAEventDeltaRow,
         event: Event
 ) -> RowInMasterEvent:
 
@@ -213,3 +211,4 @@ def get_row_of_master_event_from_mapped_row_with_idx_and_status(
 
     return row_of_mapped_wa_event_data_with_status
 
+"""

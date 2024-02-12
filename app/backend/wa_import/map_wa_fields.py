@@ -3,11 +3,11 @@ import pandas as pd
 from app.backend.data.field_mapping import get_field_mapping_for_event
 from app.objects.events import Event
 from app.objects.wa_field_mapping import ListOfWAFieldMappings
-from app.objects.mapped_wa_event_no_ids import MappedWAEventNoIDs
+from app.objects.mapped_wa_event import MappedWAEvent
 from app.backend.wa_import.load_wa_file import load_raw_wa_file
 
 
-def map_wa_fields_in_df_for_event(event: Event, filename: str) -> MappedWAEventNoIDs:
+def map_wa_fields_in_df_for_event(event: Event, filename: str) -> MappedWAEvent:
     wa_as_df = load_raw_wa_file(filename)
     # Set up WA event mapping fields
     wa_field_mapping = get_field_mapping_for_event(event=event)
@@ -25,7 +25,7 @@ def map_wa_fields_in_df_for_event(event: Event, filename: str) -> MappedWAEventN
 def map_wa_fields_in_df(
     wa_as_df: pd.DataFrame,
     wa_field_mapping: ListOfWAFieldMappings,
-) -> MappedWAEventNoIDs:
+) -> MappedWAEvent:
 
     fields_in_wa_file = list(wa_as_df.columns)
     matching_wa_fields = wa_field_mapping.matching_wa_fields(fields_in_wa_file)
@@ -34,7 +34,7 @@ def map_wa_fields_in_df(
         my_fieldname = wa_field_mapping.skipperman_field_given_wa_field(wa_fieldname)
         dict_of_mapped_data[my_fieldname] = wa_as_df[wa_fieldname]
 
-    mapped_wa_event_data = MappedWAEventNoIDs.from_dict(dict_of_mapped_data)
+    mapped_wa_event_data = MappedWAEvent.from_dict(dict_of_mapped_data)
 
     return mapped_wa_event_data
 

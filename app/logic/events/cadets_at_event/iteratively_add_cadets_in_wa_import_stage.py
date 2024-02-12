@@ -2,28 +2,24 @@ from typing import Union
 
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.events.constants import (
-    WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE,
-    CHECK_CADET_BUTTON_LABEL,
-    FINAL_CADET_ADD_BUTTON_LABEL,
-    SEE_ALL_CADETS_BUTTON_LABEL,
-    SEE_SIMILAR_CADETS_ONLY_LABEL,
-)
-
+from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
+from app.logic.events.import_wa.shared_state_tracking_and_data import get_and_save_next_row_id_in_event_data, get_current_row_id
 from app.backend.wa_import.add_cadet_ids_to_mapped_wa_event_data import (
-    get_first_unmapped_row_for_event,
+    get_delta_row_for_event_given_id,
     add_row_data_with_id_included_and_delete_from_unmapped_data,
     get_cadet_data_from_row_of_mapped_data_no_checks,
 )
 from app.backend.data.mapped_events import load_existing_mapped_wa_event_with_ids
-from app.logic.events.import_wa.get_or_select_cadet_forms import (
+from app.backend.data.cadets_at_event import load_cadets_at_event, load_identified_cadets_at_event
+from app.logic.events.cadets_at_event.get_or_select_cadet_forms import (
     get_add_or_select_existing_cadet_form,
 )
 from app.backend.cadets import confirm_cadet_exists, get_cadet_from_list_of_cadets, get_sorted_list_of_cadets
 from app.logic.cadets.add_cadet import add_cadet_from_form_to_data
 from app.objects.constants import NoMoreData
-from app.objects.mapped_wa_event_no_ids import RowInMappedWAEventNoId
+from app.objects.mapped_wa_event import RowInMappedWAEvent
+from app.objects.mapped_wa_event_deltas import RowInMappedWAEventDeltaRow
 from app.objects.cadets import Cadet
 
 
@@ -34,20 +30,27 @@ def display_form_iteratively_add_cadets_during_import(
     print("Looping through allocating IDs on WA file without IDs")
 
     try:
-        next_row = get_first_unmapped_row_for_event(event)
+        row_id = get_and_save_next_row_id_in_event_data(interface)
+        next_row = get_delta_row_for_event_given_id(event=event, row_id=row_id)
         print("On row %s" % str(next_row))
         return process_next_row(next_row=next_row, interface=interface)
     except NoMoreData:
-        print("Finished looping through allocating IDs")
+        print("Finished looping through allocating Cadet IDs")
         print("%s" % str(load_existing_mapped_wa_event_with_ids(event)))
-        return NewForm(WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE)
+        return NewForm(WA_UPDATE_CONTROLLER_IN_VIEW_EVENT_STAGE)
 
 
 def process_next_row(
-    next_row: RowInMappedWAEventNoId, interface: abstractInterface
+    next_row: RowInMappedWAEventDeltaRow, interface: abstractInterface
 ) -> Form:
+    ### Possiblities
+    ##
+    if row_already_identified_with_cadet(next_row=next_row, interface=interface):
+        print("Row id %s already identified with a cadet")
+        return display_form_iteratively_add_cadets_during_import(interface)
+
     try:
-        cadet = get_cadet_data_from_row_of_mapped_data_no_checks(next_row)
+        cadet = get_cadet_data_from_row_of_mapped_data_no_checks(next_row.data_in_row)
     except Exception as e:
         ## Mapping has gone badly wrong, or date field corrupted
         raise Exception(
@@ -56,6 +59,12 @@ def process_next_row(
         )
     return process_next_row_with_cadet_from_row(cadet=cadet,
                                                 interface=interface)
+
+def row_already_identified_with_cadet(    next_row: RowInMappedWAEventDeltaRow, interface: abstractInterface)-> bool:
+    event = get_event_from_state(interface)
+    identified_cadets = load_identified_cadets_at_event(event)
+    return next_row.row_id in identified_cadets.list_of_row_ids()
+
 
 def process_next_row_with_cadet_from_row(
     interface: abstractInterface,
@@ -75,7 +84,7 @@ def process_next_row_with_cadet_from_row(
 
 def process_row_when_cadet_matched(interface: abstractInterface, cadet: Cadet) -> Form:
     event = get_event_from_state(interface)
-    next_row = get_first_unmapped_row_for_event(event)
+
     print("adding matched row %s with id %s" % (str(next_row), cadet.id))
     add_row_data_with_id_included_and_delete_from_unmapped_data(
         event=event, new_row=next_row, cadet_id=cadet.id

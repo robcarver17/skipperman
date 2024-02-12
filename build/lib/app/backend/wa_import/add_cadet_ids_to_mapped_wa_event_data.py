@@ -6,11 +6,11 @@ from app.objects.cadets import Cadet
 from app.objects.field_list import CADET_SURNAME, CADET_DATE_OF_BIRTH, CADET_FIRST_NAME
 from app.objects.constants import NoMoreData
 
-from app.backend.data.mapped_events import save_mapped_wa_event_with_ids, load_existing_mapped_wa_event_with_ids, \
-    save_mapped_wa_event_with_no_ids, load_mapped_wa_event_with_no_ids
-from app.objects.mapped_wa_event_with_ids import (
-    RowInMappedWAEventWithId,
-    RowInMappedWAEventNoId,
+from app.backend.data.mapped_events import save_mapped_wa_event_delta_rows, load_existing_mapped_wa_event_with_ids, \
+    save_mapped_wa_event_with_no_ids, load_mapped_wa_event
+from app.objects.mapped_wa_event_deltas import (
+    RowInMappedWAEventDeltaRow,
+    RowInMappedWAEvent,
 )
 from app.objects.events import Event
 
@@ -24,11 +24,11 @@ def get_first_unmapped_row_for_event(event: Event):
 
 
 def load_unmapped_rows_for_event(event: Event):
-    return load_mapped_wa_event_with_no_ids(event)
+    return load_mapped_wa_event(event)
 
 
 def get_cadet_data_from_row_of_mapped_data_no_checks(
-    row_of_mapped_data: RowInMappedWAEventNoId,
+    row_of_mapped_data: RowInMappedWAEvent,
 ) -> Cadet:
     first_name = row_of_mapped_data[CADET_FIRST_NAME]
     second_name = row_of_mapped_data[CADET_SURNAME]
@@ -59,9 +59,9 @@ def _translate_df_timestamp_to_datetime(df_timestamp) -> datetime.date:
 
 
 def add_row_data_with_id_included_and_delete_from_unmapped_data(
-    event: Event, new_row: RowInMappedWAEventNoId, cadet_id: str
+    event: Event, new_row: RowInMappedWAEvent, cadet_id: str
 ):
-    new_row_with_cadet_id = RowInMappedWAEventWithId.from_row_without_id(
+    new_row_with_cadet_id = RowInMappedWAEventDeltaRow.from_row_without_id(
         cadet_id=cadet_id, data_in_row=new_row
     )
     existing_mapped_wa_event_with_ids = load_existing_mapped_wa_event_with_ids(
@@ -71,7 +71,7 @@ def add_row_data_with_id_included_and_delete_from_unmapped_data(
     existing_mapped_wa_event_with_ids.add_row(new_row_with_cadet_id)
 
     delete_first_unmapped_row_for_event(event)
-    save_mapped_wa_event_with_ids(
+    save_mapped_wa_event_delta_rows(
         mapped_wa_event_data_with_ids=existing_mapped_wa_event_with_ids, event=event
     )
 

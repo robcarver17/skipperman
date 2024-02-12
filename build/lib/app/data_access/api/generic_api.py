@@ -1,15 +1,12 @@
-from app.data_access.classes.master_list_of_cadets import DataListOfCadets
+from app.data_access.classes.cadets import DataListOfCadets, DataListOfCadetsWithGroups
 from app.data_access.classes.list_of_events import DataListOfEvents
 from app.data_access.classes.wa_event_mapping import DataWAEventMapping
 from app.data_access.classes.wa_field_mapping import DataWAFieldMapping
 from app.data_access.classes.mapped_wa_event import (
-    DataMappedWAEventWithIDs,
+    DataMappedWAEventDeltaRows,
     DataMasterEvent,
 )
-from app.data_access.classes.cadets_with_groups_for_event import (
-    DataListOfCadetsWithGroups,
-)
-from app.data_access.classes.mapped_wa_event import DataMappedWAEventWithNoIDs
+from app.data_access.classes.mapped_wa_event import DataMappedWAEvent
 from app.data_access.classes.print_options import DataListOfPrintOptions
 from app.data_access.classes.volunteers import DataListOfVolunteers, DataListOfVolunteersAtEvent, DataListOfVolunteerSkills, DataListOfCadetVolunteerAssociations, DataListOfCadetsWithoutVolunteersAtEvent, DataListOfVolunteersInRolesAtEvent
 from app.data_access.classes.resources import *
@@ -33,11 +30,11 @@ class GenericDataApi(object):
         raise NotImplemented
 
     @property
-    def data_mapped_wa_event_with_no_ids(self) -> DataMappedWAEventWithNoIDs:
+    def data_mapped_wa_event(self) -> DataMappedWAEvent:
         raise NotImplemented
 
     @property
-    def data_mapped_wa_event_with_cadet_ids(self) -> DataMappedWAEventWithIDs:
+    def data_mapped_wa_event_with_deltas(self) -> DataMappedWAEventDeltaRows:
         raise NotImplemented
 
     @property

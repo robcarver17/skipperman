@@ -244,3 +244,14 @@ def list_of_events_excluding_one_event(list_of_events: ListOfEvents,
     list_of_events = list_of_events.sort_by(sort_by)
 
     return list_of_events
+
+
+CADETS = "cadets"
+VOLUNTEERS = "volunteers"
+GROUP_ALLOCATION = "groups" ## null, doesn't do anything
+FOOD = "food"
+CLOTHING = "clothing"
+
+
+def get_event_attribute_given_container(container_name: str) -> str:
+    return "contains_"+container_name

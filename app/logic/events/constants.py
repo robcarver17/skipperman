@@ -84,6 +84,9 @@ WA_DOWNLOAD_EVENT_TEMPLATE_MAPPING_IN_VIEW_EVENT_STAGE = (
 WA_UPLOAD_SUBSTAGE_IN_VIEW_EVENT_STAGE = "WA_upload_substage_in_View_event_stage"
 WA_IMPORT_SUBSTAGE_IN_VIEW_EVENT_STAGE = "WA_import_substage_in_View_event_stage"
 WA_UPDATE_SUBSTAGE_IN_VIEW_EVENT_STAGE = "WA_update_substage_in_View_event_stage"
+
+WA_UPDATE_CONTROLLER_IN_VIEW_EVENT_STAGE = "WA_update_controller_in_view_event_stage"
+
 WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE = (
     "WA_add_cadet_ids_in_interation_in_view_event_stage"
 )

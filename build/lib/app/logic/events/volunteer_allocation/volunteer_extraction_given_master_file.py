@@ -16,7 +16,7 @@ from app.backend.wa_import.update_master_event_data import get_row_in_master_eve
 
 from app.objects.events import Event
 from app.objects.constants import NoMoreData
-from app.objects.mapped_wa_event_with_ids import deleted_status, cancelled_status
+from app.objects.cadet_at_event import cancelled_status, deleted_status
 
 
 def display_form_volunteer_extraction_from_master_records_initalise_loop(

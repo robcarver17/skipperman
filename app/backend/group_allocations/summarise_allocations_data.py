@@ -11,6 +11,8 @@ from app.backend.data.mapped_events import load_master_event
 from app.objects.groups import Group, GROUP_UNALLOCATED, ALL_GROUPS_NAMES
 
 def summarise_allocations_for_event(event: Event) -> PandasDFTable:
+    ## FIXME
+    return PandasDFTable()
     list_of_cadet_ids_with_groups = load_allocation_for_event(event)
 
     master_event_data = load_master_event(event)

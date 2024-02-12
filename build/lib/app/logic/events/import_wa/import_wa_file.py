@@ -3,7 +3,7 @@ from typing import Union
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form
-from app.logic.events.constants import WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE
+from app.logic.events.constants import WA_UPDATE_CONTROLLER_IN_VIEW_EVENT_STAGE
 from app.backend.wa_import.load_wa_file import (
     delete_raw_event_upload_with_event_id,
     get_staged_file_raw_event_filename,
@@ -11,7 +11,7 @@ from app.backend.wa_import.load_wa_file import (
 from app.backend.wa_import.map_wa_fields import map_wa_fields_in_df_for_event
 from app.backend.wa_import.map_wa_files import verify_and_if_required_add_wa_mapping
 from app.backend.wa_import.update_mapped_wa_event_data_with_cadet_ids import (
-    update_and_save_mapped_wa_event_data_with_and_without_ids,
+    create_deltas_of_mapped_event_data, messaging_for_delta_rows,
 )
 from app.logic.events.events_in_state import get_event_from_state
 
@@ -19,6 +19,8 @@ from app.logic.events.events_in_state import get_event_from_state
 def display_form_import_event_file(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
+    return process_wa_staged_file_already_uploaded(interface)
+    ## FIX ME
     try:
         ## deletes staged file if works ok
         return process_wa_staged_file_already_uploaded(interface)
@@ -47,15 +49,19 @@ def process_wa_staged_file_already_uploaded(interface: abstractInterface) -> New
     ## do field mapping
     mapped_wa_event_data = map_wa_fields_in_df_for_event(event=event, filename=filename)
     print("mapped data %s" % mapped_wa_event_data)
-    list_of_messages = update_and_save_mapped_wa_event_data_with_and_without_ids(
+
+    ## Create delta rows so we know what needs updating
+    delta_rows = create_deltas_of_mapped_event_data(
         event=event, mapped_wa_event_data=mapped_wa_event_data
     )
+    list_of_messages = messaging_for_delta_rows(delta_rows)
+
     send_logs_to_interface(list_of_messages=list_of_messages, interface=interface)
 
     print("Deleting staging file no longer needed")
     delete_staged_file_for_current_event(interface)
 
-    return NewForm(WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE)
+    return NewForm(WA_UPDATE_CONTROLLER_IN_VIEW_EVENT_STAGE)
 
 def send_logs_to_interface(list_of_messages: list, interface: abstractInterface):
     for message in list_of_messages:

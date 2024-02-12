@@ -1,6 +1,7 @@
 from app.logic.abstract_logic_api import AbstractLogicApi, INITIAL_STATE
 
 from app.logic.configuration.view_main_config_page import display_form_main_config_page, post_form_main_config_page
+from app.logic.configuration.constants import *
 
 class ConfigLogicApi(AbstractLogicApi):
     @property

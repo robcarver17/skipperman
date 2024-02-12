@@ -1,6 +1,6 @@
 import pandas as pd
 from app.data_access.csv.generic_csv_data import GenericCsvData
-from app.data_access.classes.master_list_of_cadets import DataListOfCadets
+from app.data_access.classes.cadets import DataListOfCadets
 
 from app.objects.cadets import ListOfCadets
 

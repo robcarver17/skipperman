@@ -12,7 +12,7 @@ from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
 from app.objects.field_list import FIELDS_TO_EDIT_IN_EDIT_VIEW, FIELDS_VIEW_ONLY_IN_EDIT_VIEW, \
     FIELDS_WITH_INTEGERS
-from app.objects.mapped_wa_event_with_ids import RowStatus
+from app.objects.cadet_at_event import RowStatus
 from app.objects.master_event import RowInMasterEvent, MasterEvent
 from app.objects.constants import arg_not_passed
 from app.objects.food import FoodRequirements

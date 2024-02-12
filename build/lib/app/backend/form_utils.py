@@ -6,7 +6,7 @@ from app.objects.constants import arg_not_passed
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
 from app.objects.food import FoodRequirements, OTHER_IN_FOOD_REQUIRED
-from app.objects.mapped_wa_event_with_ids import RowStatus, all_possible_status
+from app.objects.cadet_at_event import RowStatus, all_possible_status
 
 
 def get_availability_checkbox(availability: DaySelector, event: Event, input_name: str, input_label = "", line_break: bool = False) -> checkboxInput:

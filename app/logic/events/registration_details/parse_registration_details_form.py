@@ -13,7 +13,8 @@ from app.logic.events.registration_details.registration_details_form import get_
 
 from app.objects.field_list import FIELDS_WITH_INTEGERS, FIELDS_AS_STR
 from app.objects.day_selectors import DaySelector
-from app.objects.mapped_wa_event_with_ids import RowStatus, deleted_status, cancelled_status
+from app.objects.cadet_at_event import RowStatus, cancelled_status, deleted_status
+
 
 def parse_registration_details_from_form(interface: abstractInterface, event: Event):
     master_event = get_registration_details_from_form(interface=interface, event=event)

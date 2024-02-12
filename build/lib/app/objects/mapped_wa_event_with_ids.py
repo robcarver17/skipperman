@@ -14,9 +14,9 @@ from app.objects.day_selectors import DaySelector, weekend_day_selector_from_tex
 from app.objects.field_list import PAYMENT_STATUS, WEEKEND_DAYS_ATTENDING_INPUT, \
     ALL_DAYS_ATTENDING_INPUT, CADET_FOOD_PREFERENCE
 
-from app.objects.mapped_wa_event_no_ids import (
-    RowInMappedWAEventNoId,
-    extract_list_of_entry_timestamps_from_existing_wa_event
+from app.objects.mapped_wa_event import (
+    RowInMappedWAEvent,
+    extract_list_of_row_ids_from_existing_wa_event
 )
 from app.objects.constants import NoCadets, DuplicateCadets
 
@@ -35,7 +35,7 @@ CADET_ID = "cadet_id" ## must match
 @dataclass
 class RowInMappedWAEventWithId:
     cadet_id: str
-    data_in_row: RowInMappedWAEventNoId
+    data_in_row: RowInMappedWAEvent
 
     def get_data_attribute_or_missing_data(self, attr_name: str):
         return self.data_in_row.get(attr_name, missing_data)
@@ -47,7 +47,7 @@ class RowInMappedWAEventWithId:
         return data_in_row_as_dict
 
     @classmethod
-    def from_row_without_id(cls, cadet_id: str, data_in_row: RowInMappedWAEventNoId):
+    def from_row_without_id(cls, cadet_id: str, data_in_row: RowInMappedWAEvent):
         as_dict = data_in_row.as_dict()
         as_dict[CADET_ID] = cadet_id
 
@@ -60,7 +60,7 @@ class RowInMappedWAEventWithId:
 
         return cls(
             cadet_id=cadet_id,
-            data_in_row=RowInMappedWAEventNoId.from_external_dict(some_dict),
+            data_in_row=RowInMappedWAEvent.from_external_dict(some_dict),
         )
 
     @property
@@ -130,7 +130,7 @@ class MappedWAEventWithIDs(list):
 
     def list_of_timestamps(self) -> list:
         ## ignore type warning works
-        return extract_list_of_entry_timestamps_from_existing_wa_event(self)
+        return extract_list_of_row_ids_from_existing_wa_event(self)
 
     def update_data_in_row_with_timestamp(self, data: dict, timestamp):
         current_row = self.get_row_with_timestamp(timestamp)

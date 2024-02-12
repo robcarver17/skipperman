@@ -4,12 +4,10 @@ from app.objects.master_event import (
     get_row_of_master_event_from_mapped_row_with_idx_and_status,
     RowInMasterEvent,
 )
-from app.objects.mapped_wa_event_with_ids import (
-    RowInMappedWAEventWithId,
-    cancelled_status,
-    active_status,
-    deleted_status,
+from app.objects.mapped_wa_event_deltas import (
+    RowInMappedWAEventDeltaRow,
 )
+from app.objects.cadet_at_event import cancelled_status, active_status, deleted_status
 from app.backend.cadets import cadet_name_from_id
 from app.objects.events import Event
 from app.objects.constants import NoMoreData, DuplicateCadets
@@ -17,7 +15,7 @@ from app.objects.constants import NoMoreData, DuplicateCadets
 
 def get_row_from_event_file_with_ids(
     event: Event, row_idx: int
-) -> RowInMappedWAEventWithId:
+) -> RowInMappedWAEventDeltaRow:
     mapped_wa_event_data_with_cadet_ids = load_existing_mapped_wa_event_with_ids(event)
     try:
         return mapped_wa_event_data_with_cadet_ids[row_idx]
@@ -26,7 +24,7 @@ def get_row_from_event_file_with_ids(
 
 
 def add_new_row_to_master_event_data(
-    event: Event, row_in_mapped_wa_event_with_id: RowInMappedWAEventWithId
+    event: Event, row_in_mapped_wa_event_with_id: RowInMappedWAEventDeltaRow
 ):
     row_of_master_event = get_row_of_master_event_from_mapped_row_with_idx_and_status(
         row_in_mapped_wa_event_with_id=row_in_mapped_wa_event_with_id,
@@ -135,7 +133,7 @@ def any_important_difference_between_rows(
 
 def get_row_in_mapped_event_for_cadet_id(
     event: Event, cadet_id: str
-) -> RowInMappedWAEventWithId:
+) -> RowInMappedWAEventDeltaRow:
     mapped_event = load_existing_mapped_wa_event_with_ids(event)
     try:
         relevant_row = mapped_event.get_unique_row_with_cadet_id_(cadet_id)

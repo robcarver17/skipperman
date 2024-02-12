@@ -26,7 +26,7 @@ from app.backend.wa_import.update_master_event_data import (
 )
 from app.objects.events import Event
 from app.objects.constants import NoMoreData, DuplicateCadets
-from app.objects.mapped_wa_event_with_ids import RowInMappedWAEventWithId
+from app.objects.mapped_wa_event_deltas import RowInMappedWAEventDeltaRow
 from app.objects.master_event import RowInMasterEvent, get_row_of_master_event_from_mapped_row_with_idx_and_status
 
 
@@ -159,7 +159,7 @@ def process_update_to_deleted_cadet(
 
 def process_update_to_existing_row_of_event_data(
     interface: abstractInterface,
-    row_in_mapped_wa_event_with_id: RowInMappedWAEventWithId,
+    row_in_mapped_wa_event_with_id: RowInMappedWAEventDeltaRow,
     existing_row_in_master_event: RowInMasterEvent,
         event: Event
 ) -> Form:

@@ -128,13 +128,19 @@ class ListOfCadetsAtEvent(GenericListOfObjectsWithIds):
         cadet_at_event.status = deleted_status
         cadet_at_event.changed = True
 
+    def mark_cadet_as_unchanged(self, cadet_id: str):
+        cadet_at_event = self.cadet_at_event_or_missing_data(cadet_id)
+        if cadet_at_event is missing_data:
+            raise Exception("Cadet not in event to mark as deleted")
+        cadet_at_event.changed = False
+
     def cadet_at_event_or_missing_data(self, cadet_id):
         if self.is_cadet_id_in_event(cadet_id):
             return self.cadet_at_event(cadet_id)
         else:
             return missing_data
 
-    def cadet_at_event(self, cadet_id):
+    def cadet_at_event(self, cadet_id) -> CadetAtEvent:
         cadet = self.object_with_id(cadet_id)
         return cadet
 

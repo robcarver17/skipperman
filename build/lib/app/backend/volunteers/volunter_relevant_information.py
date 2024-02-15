@@ -1,12 +1,17 @@
 from app.backend.cadets import cadet_from_id
+from app.backend.data.cadets_at_event import cadet_id_at_event_given_row_id
+from app.objects.cadets import default_cadet
 from app.objects.constants import missing_data
 from app.objects.day_selectors import DaySelector, any_day_selector_from_short_form_text
+from app.objects.cadet_at_event import get_attendance_selection_from_event_row
+
+from app.objects.events import Event
 from app.objects.field_list import LIST_OF_VOLUNTEER_FIELDS, NAME_KEY_IN_VOLUNTEER_FIELDS_DICT, \
     REGISTERED_BY_FIRST_NAME, VOLUNTEER_STATUS, ANY_OTHER_INFORMATION, AVAILABILITY_KEY_IN_VOLUNTEER_FIELDS_DICT, \
     WEEKEND_AVAILABILITY_KEY_IN_VOLUNTEER_FIELDS_DICT, DUTIES_KEY_IN_VOLUNTEER_FIELDS_DICT, \
     SAME_OR_VARIED_KEY_IN_VOLUNTEER_FIELDS_DICT, FOOD_PREFERENCE_KEY_IN_VOLUNTEER_FIELDS_DICT
 from app.objects.food import guess_food_requirements_from_food_field
-from app.objects.OLDmaster_event import RowInMasterEvent
+from app.objects.mapped_wa_event import RowInMappedWAEvent
 from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer, \
     RelevantInformationForVolunteerIdentification, RelevantInformationForVolunteerAvailability, \
     RelevantInformationForVolunteerDetails
@@ -14,31 +19,38 @@ from app.objects.volunteers import Volunteer
 from app.objects.volunteers_at_event import VolunteerAtEvent
 
 
-def get_relevant_information_for_volunteer(row_in_master_event: RowInMasterEvent, volunteer_index: int) -> RelevantInformationForVolunteer:
+def get_relevant_information_for_volunteer(row_in_mapped_event: RowInMappedWAEvent, volunteer_index: int, event: Event) -> RelevantInformationForVolunteer:
     return RelevantInformationForVolunteer(
-        identify = get_identification_information_for_volunteer(row_in_master_event=row_in_master_event, volunteer_index=volunteer_index),
-        availability=get_availability_information_for_volunteer(row_in_master_event=row_in_master_event, volunteer_index=volunteer_index),
-        details=get_details_information_for_volunteer(row_in_master_event=row_in_master_event, volunteer_index=volunteer_index)
+        identify = get_identification_information_for_volunteer(row_in_mapped_event=row_in_mapped_event, volunteer_index=volunteer_index, event=event),
+        availability=get_availability_information_for_volunteer(row_in_mapped_event=row_in_mapped_event, volunteer_index=volunteer_index, event=event),
+        details=get_details_information_for_volunteer(row_in_mapped_event=row_in_mapped_event, volunteer_index=volunteer_index)
     )
 
 
-def get_identification_information_for_volunteer(row_in_master_event: RowInMasterEvent, volunteer_index: int) -> RelevantInformationForVolunteerIdentification:
+def get_identification_information_for_volunteer(row_in_mapped_event: RowInMappedWAEvent, volunteer_index: int, event: Event) -> RelevantInformationForVolunteerIdentification:
+
     dict_of_fields_for_volunteer = LIST_OF_VOLUNTEER_FIELDS[volunteer_index]
     name_key = dict_of_fields_for_volunteer[NAME_KEY_IN_VOLUNTEER_FIELDS_DICT]
-    cadet_id=row_in_master_event.cadet_id
-    cadet =cadet_from_id(cadet_id)
+
+    try:
+        cadet_id=cadet_id_at_event_given_row_id(event=event, row_id=row_in_mapped_event.row_id)
+        cadet =cadet_from_id(cadet_id)
+    except:
+        ## Won't always have cadets maybe in the future
+        cadet = default_cadet
+        cadet_id = missing_data
 
     return RelevantInformationForVolunteerIdentification(
         cadet_id=cadet_id,
         cadet_surname=cadet.surname,
-        passed_name=row_in_master_event.get_item(name_key),
-        registered_by_firstname= row_in_master_event.get_item(REGISTERED_BY_FIRST_NAME),
-        self_declared_status=row_in_master_event.get_item(VOLUNTEER_STATUS),
-        any_other_information=row_in_master_event.get_item(ANY_OTHER_INFORMATION)
+        passed_name=row_in_mapped_event.get_item(name_key),
+        registered_by_firstname= row_in_mapped_event.get_item(REGISTERED_BY_FIRST_NAME),
+        self_declared_status=row_in_mapped_event.get_item(VOLUNTEER_STATUS),
+        any_other_information=row_in_mapped_event.get_item(ANY_OTHER_INFORMATION)
     )
 
 
-def get_availability_information_for_volunteer(row_in_master_event: RowInMasterEvent, volunteer_index: int) -> RelevantInformationForVolunteerAvailability:
+def get_availability_information_for_volunteer(row_in_mapped_event: RowInMappedWAEvent, volunteer_index: int, event: Event) -> RelevantInformationForVolunteerAvailability:
 
     dict_of_fields_for_volunteer = LIST_OF_VOLUNTEER_FIELDS[volunteer_index]
     day_available_key = dict_of_fields_for_volunteer[AVAILABILITY_KEY_IN_VOLUNTEER_FIELDS_DICT]
@@ -46,24 +58,26 @@ def get_availability_information_for_volunteer(row_in_master_event: RowInMasterE
     preferred_duties_key = dict_of_fields_for_volunteer[DUTIES_KEY_IN_VOLUNTEER_FIELDS_DICT]
     same_or_different_key = dict_of_fields_for_volunteer[SAME_OR_VARIED_KEY_IN_VOLUNTEER_FIELDS_DICT]
 
+    cadet_availability = get_attendance_selection_from_event_row(event=event, row=row_in_mapped_event) ## will cover all days
+
     return RelevantInformationForVolunteerAvailability(
-        cadet_availability=row_in_master_event.attendance,
-        day_availability=row_in_master_event.get_item(day_available_key, missing_data),
-        weekend_availability=row_in_master_event.get_item(weekend_available_key,missing_data),
-        any_other_information=row_in_master_event.get_item(ANY_OTHER_INFORMATION),
-        preferred_duties=row_in_master_event.get_item(preferred_duties_key),
-        same_or_different=row_in_master_event.get_item(same_or_different_key)
+        cadet_availability=cadet_availability,
+        day_availability=row_in_mapped_event.get_item(day_available_key, missing_data),
+        weekend_availability=row_in_mapped_event.get_item(weekend_available_key,missing_data),
+        any_other_information=row_in_mapped_event.get_item(ANY_OTHER_INFORMATION),
+        preferred_duties=row_in_mapped_event.get_item(preferred_duties_key),
+        same_or_different=row_in_mapped_event.get_item(same_or_different_key)
     )
 
 
-def get_details_information_for_volunteer(row_in_master_event: RowInMasterEvent, volunteer_index: int) -> RelevantInformationForVolunteerDetails:
+def get_details_information_for_volunteer(row_in_mapped_event: RowInMappedWAEvent, volunteer_index: int) -> RelevantInformationForVolunteerDetails:
 
     dict_of_fields_for_volunteer = LIST_OF_VOLUNTEER_FIELDS[volunteer_index]
     food_preference_key = dict_of_fields_for_volunteer[FOOD_PREFERENCE_KEY_IN_VOLUNTEER_FIELDS_DICT]
 
     return RelevantInformationForVolunteerDetails(
-        food_preference=row_in_master_event.get_item(food_preference_key),
-        any_other_information=row_in_master_event.get_item(ANY_OTHER_INFORMATION)
+        food_preference=row_in_mapped_event.get_item(food_preference_key),
+        any_other_information=row_in_mapped_event.get_item(ANY_OTHER_INFORMATION)
     )
 
 
@@ -85,21 +99,6 @@ def get_volunteer_from_relevant_information(relevant_information_for_id: Relevan
     return Volunteer(first_name=first_name, surname=surname)
 
 
-def get_volunteer_at_event_from_relevant_information(relevant_information: RelevantInformationForVolunteer,
-                                                     cadet_id: str, volunteer_id: str) -> VolunteerAtEvent:
-    availability = suggested_volunteer_availability(relevant_information.availability)
-    food_requirements = guess_food_requirements_from_food_field(relevant_information.details.food_preference)
-    ## availability can be changed and food at next stage
-
-    volunteer_at_event = VolunteerAtEvent(volunteer_id=volunteer_id,
-                                          availablity=availability,
-                                          list_of_associated_cadet_id=[cadet_id],
-                                          preferred_duties=relevant_information.availability.preferred_duties,
-                                          same_or_different=relevant_information.availability.same_or_different,
-                                          any_other_information=relevant_information.details.any_other_information,
-                                          food_requirements=food_requirements)
-
-    return volunteer_at_event
 
 
 def suggested_volunteer_availability(relevant_information: RelevantInformationForVolunteerAvailability)-> DaySelector:

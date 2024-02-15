@@ -9,8 +9,7 @@ from app.logic.events.volunteer_allocation.volunteer_identification import proce
 from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
 from app.backend.volunteers.volunter_relevant_information import get_volunteer_from_relevant_information
-from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import get_current_cadet_id, \
-    get_relevant_information_for_current_volunteer
+from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import get_relevant_information_for_current_volunteer
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.logic.volunteers.add_volunteer import VolunteerAndVerificationText, get_add_volunteer_form_with_information_passed, verify_form_with_volunteer_details

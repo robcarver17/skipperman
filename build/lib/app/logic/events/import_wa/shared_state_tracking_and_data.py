@@ -23,8 +23,7 @@ def get_and_save_next_row_id_in_mapped_event_data(interface: abstractInterface) 
 
 
 def get_first_row_id_in_event_data(interface: abstractInterface) -> str:
-    event = get_event_from_state(interface)
-    list_of_ids = list_of_row_ids_in_mapped_event_data(event)
+    list_of_ids = list_of_row_ids_in_mapped_event_data(interface)
     id = list_of_ids[0]
 
     print("Getting first ID %s from list %s " % (id, list_of_ids))
@@ -35,8 +34,7 @@ def get_first_row_id_in_event_data(interface: abstractInterface) -> str:
 def get_next_row_id_in_event_data(
     interface: abstractInterface, current_id: str
 ) -> str:
-    event = get_event_from_state(interface)
-    list_of_ids = list_of_row_ids_in_mapped_event_data(event)
+    list_of_ids = list_of_row_ids_in_mapped_event_data(interface)
     current_index = list_of_ids.index(current_id)
     new_index = current_index+1
 
@@ -48,7 +46,9 @@ def get_next_row_id_in_event_data(
     return new_id
 
 
-def list_of_row_ids_in_mapped_event_data(event: Event) -> list:
+def list_of_row_ids_in_mapped_event_data(interface: abstractInterface) -> list:
+    event = get_event_from_state(interface)
+
     event_delta = load_mapped_wa_event(event)
 
     all_ids = event_delta.list_of_row_ids()
@@ -62,5 +62,5 @@ def get_current_row_id(interface: abstractInterface) -> str:
 def save_new_row_id(interface: abstractInterface, new_id):
     interface.set_persistent_value(ROW_ID, new_id)
 
-
-MISSING_VALUE = object()
+def reset_row_id(interface: abstractInterface):
+    interface.clear_persistent_value(ROW_ID)

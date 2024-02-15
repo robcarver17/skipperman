@@ -11,9 +11,6 @@ from app.backend.wa_import.load_wa_file import (
 from app.backend.data.mapped_events import save_mapped_wa_event
 from app.backend.wa_import.map_wa_fields import map_wa_fields_in_df_for_event
 from app.backend.wa_import.map_wa_files import verify_and_if_required_add_wa_mapping
-from app.backend.wa_import.delta_and_mapped_events import (
-    create_deltas_of_mapped_event_data, messaging_for_delta_rows,
-)
 from app.logic.events.events_in_state import get_event_from_state
 
 

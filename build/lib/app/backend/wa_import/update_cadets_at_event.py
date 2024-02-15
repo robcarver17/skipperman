@@ -162,3 +162,15 @@ def new_status_and_status_message(        new_cadet_at_event: CadetAtEvent,
         )
 
     return new_status, status_message
+
+def has_cadet_at_event_changed(cadet_id: str, event: Event) -> bool:
+    list_of_cadets_at_event = load_cadets_at_event(event)
+    cadet = list_of_cadets_at_event.cadet_at_event(cadet_id)
+
+    return cadet.changed
+
+def mark_cadet_at_event_as_unchanged(cadet_id: str, event: Event):
+    list_of_cadets_at_event = load_cadets_at_event(event)
+    list_of_cadets_at_event.mark_cadet_as_unchanged(cadet_id)
+    save_cadets_at_event(list_of_cadets_at_event=list_of_cadets_at_event, event=event)
+

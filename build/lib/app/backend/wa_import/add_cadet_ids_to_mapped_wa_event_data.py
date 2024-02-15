@@ -1,16 +1,13 @@
 import datetime
 import pandas as pd
 
-# from app.logic import_wa edit_provided_cadet_details
 from app.objects.cadets import Cadet
 from app.objects.field_list import CADET_SURNAME, CADET_DATE_OF_BIRTH, CADET_FIRST_NAME
 
 from app.backend.data.cadets_at_event import load_identified_cadets_at_event, save_identified_cadets_at_event
 
-from app.objects.mapped_wa_event_deltas import (
-    RowInMappedWAEvent,
-)
 from app.objects.events import Event
+from app.objects.mapped_wa_event import RowInMappedWAEvent
 
 
 def get_cadet_data_from_row_of_mapped_data_no_checks(

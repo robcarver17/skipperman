@@ -65,8 +65,8 @@ from app.logic.events.volunteer_allocation.volunteer_identification import \
     display_form_volunteer_identification_from_mapped_event_data, post_form_volunteer_identification_looping, \
     identify_volunteers_in_specific_row_loop, \
     post_form_add_volunteers_to_cadet_loop
-from app.logic.events.volunteer_rota.verify_volunteers_if_cadet_deleted import \
-    post_form_volunteer_extraction_from_master_records_if_cadet_is_deleted_or_cancelled
+from app.logic.events.volunteer_rota.verify_volunteers_if_cadet_at_event_changed import \
+    post_form_volunteer_rota_check_changed_cadet_loop, volunteer_rota_check_changed_cadet_loop, volunteer_rota_initialise_changed_cadet_loop
 from app.logic.events.volunteer_allocation.add_volunteers_to_event import loop_over_volunteers_identified_in_event, post_form_confirm_volunteer_details, initialise_loop_over_volunteers_identifed_in_event
 from app.logic.events.volunteer_allocation.volunteer_selection import display_form_volunteer_selection_at_event, post_form_volunteer_selection
 
@@ -101,7 +101,7 @@ class EventLogicApi(AbstractLogicApi):
 
                 WA_VOLUNTEER_IDENITIFICATION_INITIALISE_IN_VIEW_EVENT_STAGE: display_form_volunteer_identification_initalise_loop,
                 WA_VOLUNTEER_IDENITIFICATION_LOOP_IN_VIEW_EVENT_STAGE: display_form_volunteer_identification_from_mapped_event_data,
-                #WA_VOLUNTEER_EXTRACTION_MISSING_CADET_IN_VIEW_EVENT_STAGE: display_form_volunteer_extraction_from_master_records_if_cadet_is_deleted_or_cancelled,
+
 
                 WA_IDENTIFY_VOLUNTEERS_IN_SPECIFIC_ROW_LOOP_IN_VIEW_EVENT_STAGE: identify_volunteers_in_specific_row_loop,
 
@@ -114,6 +114,10 @@ class EventLogicApi(AbstractLogicApi):
 
                 ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE: display_form_allocate_cadets,
                 EDIT_CADET_REGISTRATION_DATA_IN_VIEW_EVENT_STAGE: display_form_edit_registration_details,
+
+                VOLUNTEER_ROTA_INITIALISE_LOOP_IN_VIEW_EVENT_STAGE: volunteer_rota_initialise_changed_cadet_loop,
+                VOLUNTEER_ROTA_CHECK_LOOP_IN_VIEW_EVENT_STAGE: volunteer_rota_check_changed_cadet_loop,
+
                 EDIT_VOLUNTEER_ROTA_EVENT_STAGE: display_form_view_for_volunteer_rota,
                 EDIT_VOLUNTEER_DETAILS_FROM_ROTA_EVENT_STAGE: display_form_confirm_volunteer_details_from_rota,
                 EDIT_CADET_CONNECTIONS_FROM_ROTA_EVENT_STAGE: display_form_edit_cadet_connections_from_rota,
@@ -160,9 +164,7 @@ class EventLogicApi(AbstractLogicApi):
             post_form_volunteer_identification_initialise,
 
         WA_VOLUNTEER_IDENITIFICATION_LOOP_IN_VIEW_EVENT_STAGE: post_form_volunteer_identification_looping,
-        WA_VOLUNTEER_EXTRACTION_MISSING_CADET_IN_VIEW_EVENT_STAGE: post_form_volunteer_extraction_from_master_records_if_cadet_is_deleted_or_cancelled,
         WA_VOLUNTEER_IDENTIFICATION_SELECTION_IN_VIEW_EVENT_STAGE: post_form_volunteer_selection,
-
 
         WA_IDENTIFY_VOLUNTEERS_IN_SPECIFIC_ROW_LOOP_IN_VIEW_EVENT_STAGE: post_form_add_volunteers_to_cadet_loop,
 
@@ -176,6 +178,9 @@ class EventLogicApi(AbstractLogicApi):
 
         EDIT_CADET_REGISTRATION_DATA_IN_VIEW_EVENT_STAGE:
             post_form_edit_registration_details,
+
+
+        VOLUNTEER_ROTA_CHECK_LOOP_IN_VIEW_EVENT_STAGE: post_form_volunteer_rota_check_changed_cadet_loop,
 
         EDIT_VOLUNTEER_ROTA_EVENT_STAGE: post_form_view_for_volunteer_rota,
         EDIT_VOLUNTEER_DETAILS_FROM_ROTA_EVENT_STAGE: post_form_confirm_volunteer_details_from_rota,

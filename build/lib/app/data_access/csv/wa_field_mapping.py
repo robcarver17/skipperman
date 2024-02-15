@@ -1,10 +1,9 @@
 from typing import List
 from app.data_access.csv.generic_csv_data import GenericCsvData
+from app.data_access.csv.resolve_csv_paths_and_filenames import FIELD_MAPPING_FILE_ID, TEMPLATES_FIELD_MAPPING_FILE_ID
 from app.objects.wa_field_mapping import ListOfWAFieldMappings
 from app.data_access.classes.wa_field_mapping import DataWAFieldMapping
 
-FIELD_MAPPING_FILE_ID = "wa_field_mapping"
-TEMPLATES_FIELD_MAPPING_FILE_ID  = "wa_field_mapping_templates"
 
 class CsvDataWAFieldMapping(GenericCsvData, DataWAFieldMapping):
     def read(self, event_id: str) -> ListOfWAFieldMappings:

@@ -1,6 +1,7 @@
 import pandas as pd
 from app.data_access.csv.generic_csv_data import GenericCsvData
-from app.objects.utils import transform_df_to_str, transform_df_from_dates_to_str, transform_df_from_str_to_dates
+from app.data_access.csv.resolve_csv_paths_and_filenames import MAPPED_WA_EVENT_FILE_ID
+from app.objects.utils import transform_df_from_dates_to_str, transform_df_from_str_to_dates
 
 from app.objects.mapped_wa_event import MappedWAEvent
 from app.data_access.classes.mapped_wa_event import (
@@ -33,7 +34,7 @@ class CsvDataMappedWAEvent(GenericCsvData, DataMappedWAEvent):
 
     def path_and_filename_for_eventid(self, event_id: str):
         return self.get_path_and_filename_for_named_csv_file(
-            "mapped_wa_event", additional_file_identifiers=event_id
+            MAPPED_WA_EVENT_FILE_ID, additional_file_identifiers=event_id
         )
 
 

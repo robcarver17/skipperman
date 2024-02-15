@@ -261,12 +261,11 @@ app/logic/events/registration_details/../../../../example_data/field_mapping_tem
 app/logic/events/registration_details/../../../../example_data/field_mapping_templates/template_field_map_for_training_weekend.csv
 app/logic/events/registration_details/../../../data_access/configuration/configuration.yaml
 app/logic/events/volunteer_allocation/__init__.py
-app/logic/events/volunteer_allocation/add_volunteers_to_cadet.py
-app/logic/events/volunteer_allocation/confirm_volunteer_details.py
+app/logic/events/volunteer_allocation/add_volunteer_to_event_form_contents.py
+app/logic/events/volunteer_allocation/add_volunteers_process_form.py
+app/logic/events/volunteer_allocation/add_volunteers_to_event.py
 app/logic/events/volunteer_allocation/track_state_in_volunteer_allocation.py
-app/logic/events/volunteer_allocation/verify_volunteers_if_cadet_deleted.py
-app/logic/events/volunteer_allocation/volunteer_details_form_contents.py
-app/logic/events/volunteer_allocation/volunteer_extraction_given_master_file.py
+app/logic/events/volunteer_allocation/volunteer_identification.py
 app/logic/events/volunteer_allocation/volunteer_selection.py
 app/logic/events/volunteer_allocation/volunteer_selection_form_contents.py
 app/logic/events/volunteer_allocation/../../../../example_data/cadets/cadet_master_list.csv
@@ -284,6 +283,7 @@ app/logic/events/volunteer_rota/parse_data_fields_in_rota.py
 app/logic/events/volunteer_rota/parse_volunteer_table.py
 app/logic/events/volunteer_rota/render_volunteer_table.py
 app/logic/events/volunteer_rota/rota_state.py
+app/logic/events/volunteer_rota/verify_volunteers_if_cadet_at_event_changed.py
 app/logic/events/volunteer_rota/volunteer_table_buttons.py
 app/logic/events/volunteer_rota/../../../../example_data/cadets/cadet_master_list.csv
 app/logic/events/volunteer_rota/../../../../example_data/events/list_of_events.csv
@@ -343,7 +343,6 @@ app/logic/volunteers/../../../example_data/events/list_of_events.csv
 app/logic/volunteers/../../../example_data/field_mapping_templates/template_field_map_cadet_week.csv
 app/logic/volunteers/../../../example_data/field_mapping_templates/template_field_map_for_training_weekend.csv
 app/logic/volunteers/../../data_access/configuration/configuration.yaml
-app/objects/OLDmaster_event.py
 app/objects/__init__.py
 app/objects/cadet_at_event.py
 app/objects/cadets.py

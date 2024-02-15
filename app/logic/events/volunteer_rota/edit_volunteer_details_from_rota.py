@@ -76,15 +76,8 @@ def update_volunteer_at_event_from_rota_with_form_contents_and_return_true_if_ok
         interface.log_error("No days selected for volunteer at event")
         return False
 
-    update_volunteer_at_event_with_new_availability(event=event,
-                                                             volunteer_id=volunteer_id,
-                                                             availability=availability)
+    update_volunteer_availability_at_event(volunteer_id=volunteer_id, availability=availability, event=event)
 
     return True
 
 
-def update_volunteer_at_event_with_new_availability(volunteer_id: str, event: Event,
-                                                             availability: DaySelector):
-
-    volunteer_at_event = get_volunteer_at_event(volunteer_id=volunteer_id, event=event)
-    update_volunteer_availability_at_event(volunteer_at_event=volunteer_at_event, availability=availability, event=event)

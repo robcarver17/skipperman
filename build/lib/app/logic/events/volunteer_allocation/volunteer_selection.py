@@ -9,8 +9,7 @@ from app.logic.events.volunteer_allocation.volunteer_identification import proce
 from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
 from app.backend.volunteers.volunter_relevant_information import get_volunteer_from_relevant_information
-from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import get_current_cadet_id, \
-    get_relevant_information_for_current_volunteer
+from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import get_relevant_information_for_current_volunteer
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.logic.volunteers.add_volunteer import VolunteerAndVerificationText, get_add_volunteer_form_with_information_passed, verify_form_with_volunteer_details
@@ -22,8 +21,8 @@ from app.objects.constants import arg_not_passed
 from app.objects.volunteers import Volunteer
 
 
-#WA_VOLUNTEER_EXTRACTION_SELECTION_IN_VIEW_EVENT_STAGE
-def display_form_volunteer_selection_for_cadet_at_event(interface: abstractInterface):
+#WA_VOLUNTEER_IDENTIFICATION_SELECTION_IN_VIEW_EVENT_STAGE
+def display_form_volunteer_selection_at_event(interface: abstractInterface):
     relevant_information = get_relevant_information_for_current_volunteer(interface)
     volunteer = get_volunteer_from_relevant_information(relevant_information.identify)
 
@@ -39,6 +38,7 @@ def get_add_or_select_existing_volunteers_form(
     see_all_volunteers: bool,
     include_final_button: bool,
     volunteer: Volunteer = arg_not_passed,
+
 ) -> Form:
     print("Generating add/select volunteer form")
     print("Passed volunteer %s" % str(volunteer))
@@ -55,7 +55,7 @@ def get_add_or_select_existing_volunteers_form(
         if len(verification_text)==0:
             include_final_button = True
 
-    cadet_id =get_current_cadet_id(interface)
+    cadet_id = get_cadet_id_or_missing_data_for_current_row(interface)
     ## First time, don't include final or all group_allocations
     footer_buttons = get_footer_buttons_add_or_select_existing_volunteer_form(
         volunteer=volunteer,
@@ -72,9 +72,14 @@ def get_add_or_select_existing_volunteers_form(
         header_text=header_text,
     )
 
+def get_cadet_id_or_missing_data_for_current_row(interface: abstractInterface):
+    relevant_information = get_relevant_information_for_current_volunteer(interface)
 
-### POST: WA_VOLUNTEER_EXTRACTION_SELECTION_IN_VIEW_EVENT_STAGE
-def post_form_volunteer_selection_for_cadet_at_event(interface: abstractInterface) -> Union[Form, NewForm]:
+    return relevant_information.identify.cadet_id
+
+
+### POST: WA_VOLUNTEER_IDENTIFICATION_SELECTION_IN_VIEW_EVENT_STAGE
+def post_form_volunteer_selection(interface: abstractInterface) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
     if button_pressed==CHECK_VOLUNTEER_BUTTON_LABEL or button_pressed==SEE_SIMILAR_VOLUNTEER_ONLY_LABEL:
         return get_add_or_select_existing_volunteers_form(interface=interface,
@@ -112,14 +117,10 @@ def action_when_specific_volunteer_selected(name_of_volunteer: str, interface: a
 
 def action_when_volunteer_known(volunteer: Volunteer, interface: abstractInterface) -> Union[Form, NewForm]:
     event = get_event_from_state(interface)
-    cadet_id = get_current_cadet_id(interface)
-    relevant_information = get_relevant_information_for_current_volunteer(interface)
 
     return process_identification_when_volunteer_matched(volunteer=volunteer,
                                                          interface=interface,
-                                                         event=event,
-                                                         cadet_id=cadet_id,
-                                                         relevant_information=relevant_information)
+                                                         event=event)
 
 def action_when_skipping_volunteer() -> NewForm:
     return NewForm(WA_IDENTIFY_VOLUNTEERS_IN_SPECIFIC_ROW_LOOP_IN_VIEW_EVENT_STAGE)

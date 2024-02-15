@@ -1,11 +1,8 @@
 from app.data_access.csv.generic_csv_data import GenericCsvData
 
 from app.data_access.classes.resources import *
-
-LIST_OF_PATROL_BOATS_FILE_ID = "list_of_patrol_boats"
-LIST_OF_CLUB_DINGHIES_FILE_ID = "list_of_club_dinghies"
-LIST_OF_PATROL_BOATS_AND_VOLUNTEERS_FILE_ID = "list_of_patrol_boats_and_volunteers_at_event"
-LIST_OF_CLUB_DINGHIES_AND_CADETS_FILE_ID = "list_of_club_dinghies_with_cadets_at_event"
+from app.data_access.csv.resolve_csv_paths_and_filenames import LIST_OF_PATROL_BOATS_FILE_ID, \
+    LIST_OF_CLUB_DINGHIES_FILE_ID, LIST_OF_PATROL_BOATS_AND_VOLUNTEERS_FILE_ID, LIST_OF_CLUB_DINGHIES_AND_CADETS_FILE_ID
 
 
 class CsvDataListOfPatrolBoats(GenericCsvData, DataListOfPatrolBoats):
@@ -35,8 +32,8 @@ class CsvDataListOfVolunteersAtEventWithPatrolBoats(GenericCsvData, DataListOfVo
 
     def read(self, event_id: str) -> ListOfVolunteersAtEventWithPatrolBoats:
         people_and_boats = self.read_and_return_object_of_type(ListOfVolunteersAtEventWithPatrolBoats,
-                                                                          file_identifier=LIST_OF_PATROL_BOATS_AND_VOLUNTEERS_FILE_ID,
-                                                                          additional_file_identifiers=event_id)
+                                                               file_identifier=LIST_OF_PATROL_BOATS_AND_VOLUNTEERS_FILE_ID,
+                                                               additional_file_identifiers=event_id)
 
         return people_and_boats
 
@@ -50,8 +47,8 @@ class CsvDataListOfCadetAtEventWithClubDinghies(GenericCsvData, DataListOfCadetA
 
     def read(self, event_id: str) -> ListOfCadetAtEventWithClubDinghies:
         people_and_boats = self.read_and_return_object_of_type(ListOfCadetAtEventWithClubDinghies,
-                                                                          file_identifier=LIST_OF_CLUB_DINGHIES_AND_CADETS_FILE_ID,
-                                                                          additional_file_identifiers=event_id)
+                                                               file_identifier=LIST_OF_CLUB_DINGHIES_AND_CADETS_FILE_ID,
+                                                               additional_file_identifiers=event_id)
 
         return people_and_boats
 

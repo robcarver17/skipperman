@@ -168,8 +168,9 @@ def post_form_view_individual_event(
 
     elif last_button_pressed==EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON:
         return NewForm(EDIT_CADET_REGISTRATION_DATA_IN_VIEW_EVENT_STAGE)
+
     elif last_button_pressed==EDIT_VOLUNTEER_ROLES_BUTTON_LABEL:
-        return NewForm(EDIT_VOLUNTEER_ROTA_EVENT_STAGE)
+        return NewForm(VOLUNTEER_ROTA_INITIALISE_LOOP_IN_VIEW_EVENT_STAGE) ## check rota before going to form
 
     elif last_button_pressed == BACK_BUTTON_LABEL:
         return initial_state_form

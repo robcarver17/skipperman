@@ -35,6 +35,7 @@ class IdentifiedVolunteerAtEvent(GenericSkipperManObject):
         return RowIDAndIndex(row_id=self.row_id, volunteer_index=self.volunteer_index)
 
 class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
+    @property
     def _object_class_contained(self):
         return IdentifiedVolunteerAtEvent
 

@@ -76,7 +76,7 @@ def process_volunteer_updates_for_cadet_in_event_data(
 
 def iterative_process_volunteer_updates_to_master_event_data_when_cadet_deleted_or_cancelled(event: Event, cadet_id: str, interface: abstractInterface)-> Union[Form, NewForm]:
     if any_volunteers_at_event_for_cadet(event=event, cadet_id=cadet_id):
-        return NewForm(WA_VOLUNTEER_EXTRACTION_MISSING_CADET_IN_VIEW_EVENT_STAGE)
+        return NewForm(VOLUNTEER_ROTA_CHECK_LOOP_IN_VIEW_EVENT_STAGE)
     else:
         ## fine move on, next volunteer
         return display_form_volunteer_extraction_from_master_records_looping(interface)

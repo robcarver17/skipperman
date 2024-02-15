@@ -142,12 +142,12 @@ def list_of_other_cadets_for_volunteer_at_event_apart_from_this_one(event: Event
     return associated_cadets_without_this_cadet
 
 
-def update_volunteer_availability_at_event(volunteer_at_event: VolunteerAtEvent, event: Event, availability: DaySelector):
+def update_volunteer_availability_at_event(volunteer_id:str, event: Event, availability: DaySelector):
     for day in event.weekdays_in_event():
         if availability.available_on_day(day):
-            make_volunteer_available_on_day(volunteer_id=volunteer_at_event.volunteer_id, event=event, day=day)
+            make_volunteer_available_on_day(volunteer_id=volunteer_id, event=event, day=day)
         else:
-            make_volunteer_unavailable_on_day(volunteer_id=volunteer_at_event.volunteer_id, event=event, day=day)
+            make_volunteer_unavailable_on_day(volunteer_id=volunteer_id, event=event, day=day)
 
 def make_volunteer_available_on_day(volunteer_id: str, event: Event, day: Day):
     volunteer_at_event = get_volunteer_at_event(volunteer_id=volunteer_id, event=event)
@@ -204,4 +204,5 @@ def update_volunteer_at_event_with_associated_cadet_id(list_of_associated_cadet_
     for cadet_id in list_of_associated_cadet_id:
         if cadet_id not in currently_associated_cadets:
             list_of_volunteers_at_event.add_cadet_id_to_existing_volunteer(cadet_id=cadet_id, volunteer_id=volunteer_id)
+
 

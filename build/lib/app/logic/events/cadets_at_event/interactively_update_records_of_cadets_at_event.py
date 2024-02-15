@@ -7,6 +7,7 @@ from app.backend.wa_import.update_cadets_at_event import is_cadet_already_at_eve
 from app.logic.abstract_logic_api import initial_state_form
 
 from app.logic.events.cadets_at_event.track_cadet_id_in_master_file_update import get_and_save_next_cadet_id_in_event_data
+from app.logic.events.import_wa.shared_state_tracking_and_data import reset_row_id
 
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import (
@@ -34,7 +35,10 @@ from app.objects.mapped_wa_event import RowInMappedWAEvent
 def display_form_interactively_update_cadets_at_event(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
-    ## might seem pointless, but this function has a more meaningful name
+    ## rest of the time is a post call
+
+    reset_row_id(interface)
+
     return iterative_process_updates_to_cadets_at_event(interface=interface)
 
 def iterative_process_updates_to_cadets_at_event(

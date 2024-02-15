@@ -3,7 +3,6 @@ from app.backend.data.cadets_at_event import load_cadets_at_event
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.constants import missing_data, NoMoreData
-from app.objects.events import Event
 from app.objects.utils import union_of_x_and_y
 
 CADET_ID_AT_EVENT = "cadetid_at_event"

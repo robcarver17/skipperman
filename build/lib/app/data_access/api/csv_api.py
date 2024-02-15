@@ -1,4 +1,5 @@
 from app.data_access.api.generic_api import GenericDataApi
+from app.data_access.classes.volunteers import DataListOfIdentifiedVolunteersAtEvent
 from app.data_access.csv.cadets import CsvDataListOfCadets, CsvDataListOfCadetsWithGroups, CsvDataListOfCadetsAtEvent, CsvDataListOfIdentifiedCadetsAtEvent
 from app.data_access.csv.list_of_events import CsvDataListOfEvents
 from app.data_access.csv.wa_event_mapping import CsvDataWAEventMapping
@@ -7,7 +8,7 @@ from app.data_access.csv.mapped_wa_event import (
     CsvDataMappedWAEvent,
 )
 from app.data_access.csv.print_options import csvDataListOfPrintOptions
-from app.data_access.csv.volunteers import CsvDataListOfVolunteers, CsvDataListOfVolunteerSkills, CsvDataListOfCadetVolunteerAssociations, CsvDataListOfVolunteersAtEvent, CsvDataListOfCadetsWithoutVolunteersAtEvent, CsvDataListOfVolunteersInRolesAtEvent
+from app.data_access.csv.volunteers import CsvDataListOfVolunteers, CsvDataListOfVolunteerSkills, CsvDataListOfCadetVolunteerAssociations, CsvDataListOfVolunteersAtEvent, CsvDataListOfIdentifiedVolunteersAtEvent, CsvDataListOfVolunteersInRolesAtEvent
 from app.data_access.csv.resources import CsvDataListOfPatrolBoats, CsvDataListOfVolunteersAtEventWithPatrolBoats, CsvDataListOfClubDinghies, CsvDataListOfCadetAtEventWithClubDinghies
 
 class CsvDataApi(GenericDataApi):
@@ -78,8 +79,8 @@ class CsvDataApi(GenericDataApi):
         return CsvDataListOfVolunteersAtEvent(master_data_path=self.master_data_path)
 
     @property
-    def data_list_of_cadets_without_volunteers_at_event(self) -> CsvDataListOfCadetsWithoutVolunteersAtEvent:
-        return CsvDataListOfCadetsWithoutVolunteersAtEvent(master_data_path=self.master_data_path)
+    def data_list_of_identified_volunteers_at_event(self) -> DataListOfIdentifiedVolunteersAtEvent:
+        return CsvDataListOfIdentifiedVolunteersAtEvent(master_data_path=self.master_data_path)
 
     @property
     def data_list_of_volunteers_in_roles_at_event(self) -> CsvDataListOfVolunteersInRolesAtEvent:

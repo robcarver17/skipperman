@@ -77,5 +77,5 @@ def post_form_volunteer_extraction_from_master_records_if_cadet_is_deleted_or_ca
             delete_volunteer_with_id_at_event(volunteer_id=volunteer_id, event=event)
 
     ## next cadet
-    return NewForm(WA_VOLUNTEER_EXTRACTION_LOOP_IN_VIEW_EVENT_STAGE)
+    return NewForm(WA_VOLUNTEER_IDENITIFICATION_LOOP_IN_VIEW_EVENT_STAGE)
 

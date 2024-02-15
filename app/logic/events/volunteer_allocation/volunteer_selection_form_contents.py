@@ -8,6 +8,8 @@ from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation i
     get_relevant_information_for_current_volunteer, get_volunteer_index
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
+from app.objects.abstract_objects.abstract_text import bold
+from app.objects.constants import missing_data
 from app.objects.utils import similar
 from app.objects.volunteers import Volunteer
 
@@ -34,7 +36,7 @@ def get_header_text_for_volunteer_selection_form(interface: abstractInterface,
 
     header_text =ListOfLines([
         introduction,
-        cadet_warning,
+        bold(cadet_warning),
         _______________,
         status_text,
         other_information,
@@ -48,7 +50,7 @@ def get_header_text_for_volunteer_selection_form(interface: abstractInterface,
 
 def get_footer_buttons_add_or_select_existing_volunteer_form(
     volunteer:Volunteer,
-        cadet_id: str,
+        cadet_id: str, ## could be missing_data
         see_all_volunteers: bool = False, include_final_button: bool = False,
 
 ) -> ListOfLines:
@@ -76,14 +78,16 @@ def get_list_of_main_buttons(include_final_button: bool) -> Line:
     return main_buttons
 
 
-def get_list_of_volunteer_buttons(volunteer: Volunteer, cadet_id: str, see_all_volunteers: bool = False) -> ListOfLines:
+def get_list_of_volunteer_buttons(volunteer: Volunteer, cadet_id: str, ## could be missing data
+                                  see_all_volunteers: bool = False) -> ListOfLines:
+
+
     if see_all_volunteers:
         list_of_volunteers = get_sorted_list_of_volunteers(SORT_BY_SURNAME)
         extra_button_text = SEE_SIMILAR_VOLUNTEER_ONLY_LABEL
     else:
         ## similar volunteers with option to see more
         list_of_volunteers = get_list_of_relevant_voluteers(volunteer=volunteer, cadet_id=cadet_id)
-
         extra_button_text = SEE_ALL_VOLUNTEER_BUTTON_LABEL
 
     volunteer_buttons_line = Line([Button(volunteer.name) for volunteer in list_of_volunteers])

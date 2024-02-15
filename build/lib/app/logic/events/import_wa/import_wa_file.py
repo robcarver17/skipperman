@@ -8,9 +8,10 @@ from app.backend.wa_import.load_wa_file import (
     delete_raw_event_upload_with_event_id,
     get_staged_file_raw_event_filename,
 )
+from app.backend.data.mapped_events import save_mapped_wa_event
 from app.backend.wa_import.map_wa_fields import map_wa_fields_in_df_for_event
 from app.backend.wa_import.map_wa_files import verify_and_if_required_add_wa_mapping
-from app.backend.wa_import.update_mapped_wa_event_data_with_cadet_ids import (
+from app.backend.wa_import.delta_and_mapped_events import (
     create_deltas_of_mapped_event_data, messaging_for_delta_rows,
 )
 from app.logic.events.events_in_state import get_event_from_state
@@ -50,18 +51,14 @@ def process_wa_staged_file_already_uploaded(interface: abstractInterface) -> New
     mapped_wa_event_data = map_wa_fields_in_df_for_event(event=event, filename=filename)
     print("mapped data %s" % mapped_wa_event_data)
 
-    ## Create delta rows so we know what needs updating
-    delta_rows = create_deltas_of_mapped_event_data(
-        event=event, mapped_wa_event_data=mapped_wa_event_data
-    )
-    list_of_messages = messaging_for_delta_rows(delta_rows)
-
-    send_logs_to_interface(list_of_messages=list_of_messages, interface=interface)
+    save_mapped_wa_event(mapped_wa_event_data=mapped_wa_event_data, event=event)
 
     print("Deleting staging file no longer needed")
     delete_staged_file_for_current_event(interface)
 
     return NewForm(WA_UPDATE_CONTROLLER_IN_VIEW_EVENT_STAGE)
+
+
 
 def send_logs_to_interface(list_of_messages: list, interface: abstractInterface):
     for message in list_of_messages:

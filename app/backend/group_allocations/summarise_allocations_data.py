@@ -3,21 +3,19 @@ from typing import Dict, List
 import pandas as pd
 
 from app.backend.group_allocations.cadet_event_allocations import get_unallocated_cadets, load_allocation_for_event
+from app.backend.data.cadets_at_event import load_cadets_at_event
 from app.objects.day_selectors import DaySelector, Day
 from app.objects.groups import ListOfCadetIdsWithGroups
 from app.objects.events import Event
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
-from app.backend.data.mapped_events import load_master_event
 from app.objects.groups import Group, GROUP_UNALLOCATED, ALL_GROUPS_NAMES
 
 def summarise_allocations_for_event(event: Event) -> PandasDFTable:
-    ## FIXME
-    return PandasDFTable()
     list_of_cadet_ids_with_groups = load_allocation_for_event(event)
 
-    master_event_data = load_master_event(event)
-    availability_dict = dict([(cadet_id, master_event_data.get_row_with_id(cadet_id).attendance)
-                              for cadet_id in master_event_data.list_of_active_cadet_ids()])
+    cadets_at_event = load_cadets_at_event(event)
+    availability_dict = dict([(cadet.id, cadet.availability)
+                              for cadet in cadets_at_event.list_of_active_cadets_at_event()])
 
     groups = get_sorted_groups_plus_unalloacted(list_of_cadet_ids_with_groups)
     rows = [get_row_for_group(group=group,

@@ -1,8 +1,8 @@
 from app.backend.reporting.options_and_parameters.print_options import PrintOptions
 from app.data_access.csv.generic_csv_data import GenericCsvData
 from app.data_access.classes.print_options import DataListOfPrintOptions
+from app.data_access.csv.resolve_csv_paths_and_filenames import PRINT_OPTIONS_FILE_ID
 
-PRINT_OPTIONS_FILE_ID = "print_options"
 
 class csvDataListOfPrintOptions(DataListOfPrintOptions, GenericCsvData):
     def read_for_report(self, report_name: str) -> PrintOptions:

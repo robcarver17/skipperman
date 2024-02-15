@@ -12,11 +12,11 @@ from app.objects.abstract_objects.abstract_interface import (
 
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.constants import *
-from app.backend.wa_import.update_master_event_data import get_row_in_master_event_for_cadet_id
+from app.backend.wa_import.update_cadets_at_event import get_row_in_master_event_for_cadet_id
 
 from app.objects.events import Event
 from app.objects.constants import NoMoreData
-from app.objects.cadet_at_event import cancelled_status, deleted_status
+from app.objects.OLDmaster_event import cancelled_status, deleted_status
 
 
 def display_form_volunteer_extraction_from_master_records_initalise_loop(
@@ -89,7 +89,7 @@ def iterative_process_volunteer_updates_to_master_event_data_when_cadet_is_activ
         return display_form_volunteer_extraction_from_master_records_looping(interface)
     else:
         ## required to ensure we begin from VOLUNTEER1, then go to VOLUNTEER2
-        return NewForm(WA_VOLUNTEER_EXTRACTION_ADD_VOLUNTEERS_TO_CADET_INIT_IN_VIEW_EVENT_STAGE)
+        return NewForm(WA_IDENTIFY_VOLUNTEERS_IN_SPECIFIC_ROW_INIT_IN_VIEW_EVENT_STAGE)
 
 
 def post_form_volunteer_extraction_initialise_from_master_records(

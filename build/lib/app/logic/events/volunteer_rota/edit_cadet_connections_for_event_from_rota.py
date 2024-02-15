@@ -1,7 +1,7 @@
 from typing import Union
 
-from app.backend.group_allocations.cadet_event_allocations import get_list_of_cadets_in_master_event
-from app.backend.volunteers.volunteer_allocation import get_volunteer_from_id
+from app.backend.group_allocations.cadet_event_allocations import get_list_of_cadets_at_event
+from app.backend.volunteers.volunteers import get_volunteer_from_id
 from app.backend.data.volunteer_allocation import remove_volunteer_and_cadet_association_at_event, \
     add_volunteer_and_cadet_association_for_existing_volunteer, get_volunteer_at_event
 
@@ -35,7 +35,7 @@ def display_form_edit_cadet_connections_from_rota(interface: abstractInterface):
         "Following are connected cadets for volunteer %s at event %s - add or modify if required" % (
         volunteer.name, str(event))])
 
-    list_of_cadets_at_event = get_list_of_cadets_in_master_event(event)
+    list_of_cadets_at_event = get_list_of_cadets_at_event(event)
 
     form = form_to_edit_connections(volunteer=volunteer, connected_cadets=connected_cadets,
                                     from_list_of_cadets=list_of_cadets_at_event,

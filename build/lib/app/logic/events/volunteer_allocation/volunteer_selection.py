@@ -4,7 +4,7 @@ from app.logic.events.volunteer_allocation.volunteer_selection_form_contents imp
     get_header_text_for_volunteer_selection_form, get_footer_buttons_add_or_select_existing_volunteer_form, \
     get_dict_of_volunteer_names_and_volunteers
 from app.logic.volunteers.add_volunteer import add_volunteer_from_form_to_data
-from app.logic.events.volunteer_allocation.add_volunteers_to_cadet import process_update_when_volunteer_matched
+from app.logic.events.volunteer_allocation.volunteer_identification import process_identification_when_volunteer_matched
 
 from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
@@ -115,14 +115,14 @@ def action_when_volunteer_known(volunteer: Volunteer, interface: abstractInterfa
     cadet_id = get_current_cadet_id(interface)
     relevant_information = get_relevant_information_for_current_volunteer(interface)
 
-    return process_update_when_volunteer_matched(volunteer=volunteer,
-                                          interface=interface,
-                                          event=event,
-                                          cadet_id=cadet_id,
-                                          relevant_information=relevant_information)
+    return process_identification_when_volunteer_matched(volunteer=volunteer,
+                                                         interface=interface,
+                                                         event=event,
+                                                         cadet_id=cadet_id,
+                                                         relevant_information=relevant_information)
 
 def action_when_skipping_volunteer() -> NewForm:
-    return NewForm(WA_VOLUNTEER_EXTRACTION_ADD_VOLUNTEERS_TO_CADET_LOOP_IN_VIEW_EVENT_STAGE)
+    return NewForm(WA_IDENTIFY_VOLUNTEERS_IN_SPECIFIC_ROW_LOOP_IN_VIEW_EVENT_STAGE)
 
 
 

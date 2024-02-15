@@ -14,12 +14,10 @@ from app.objects.abstract_objects.abstract_form import NewForm, Form
 def import_controller(interface: abstractInterface) -> Union[Form, NewForm]:
     event = get_event_from_state(interface)
 
-    return form_with_message_and_finished_button("deltas created", interface=interface)
-
     try:
         next_import = next_import_required_for_event(event=event, interface=interface)
     except NoMoreData:
-        ### FIXME DELETE DELTA FILES
+
         return form_with_message_and_finished_button(
             "Finished importing WA data", interface=interface,
             set_stage_name_to_go_to_on_button_press=VIEW_EVENT_STAGE
@@ -32,11 +30,16 @@ def import_controller(interface: abstractInterface) -> Union[Form, NewForm]:
 def post_import_controller(interface):
     raise Exception("Should never get here")
 
-ORDERED_LIST_OF_POSSIBLE_IMPORTS = [CADETS, VOLUNTEERS, GROUP_ALLOCATION, FOOD, CLOTHING]
+## order matters, as other things rely on cadets
+## Group allocation doesn't appear here
+ORDERED_LIST_OF_POSSIBLE_IMPORTS = [CADETS]
+
+#ORDERED_LIST_OF_POSSIBLE_IMPORTS = [CADETS, VOLUNTEERS, #GROUP_ALLOCATION,
+#                                     FOOD, CLOTHING]
 
 IMPORTS_AND_FORM_NAMES = {
     CADETS: WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE,
-    VOLUNTEERS: WA_VOLUNTEER_EXTRACTION_INITIALISE_IN_VIEW_EVENT_STAGE
+    VOLUNTEERS: WA_VOLUNTEER_IDENITIFICATION_INITIALISE_IN_VIEW_EVENT_STAGE
 }
 
 NO_IMPORT_DONE_YET_INDEX = -1

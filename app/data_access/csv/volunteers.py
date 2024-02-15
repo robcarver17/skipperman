@@ -1,10 +1,12 @@
 from app.data_access.csv.generic_csv_data import GenericCsvData
 
 from app.data_access.classes.volunteers import *
-from app.objects.volunteers_at_event import ListOfVolunteersAtEvent
+from app.data_access.csv.resolve_csv_paths_and_filenames import LIST_OF_VOLUNTEERS_FILE_ID, \
+    LIST_OF_VOLUNTEER_SKILLS_FILE_ID, LIST_OF_VOLUNTEER_ASSOCIATIONS_FILE_ID, LIST_OF_VOLUNTEERS_AT_EVENT_FILE_ID, \
+    LIST_OF_IDENTIFIED_VOLUNTEERS_AT_EVENT_FILE_ID, LIST_OF_VOLUNTEERS_IN_ROLES_FILE_ID
+from app.objects.volunteers_at_event import ListOfVolunteersAtEvent, ListOfIdentifiedVolunteersAtEvent
 from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent
 
-LIST_OF_VOLUNTEERS_FILE_ID = "list_of_volunteers"
 
 class CsvDataListOfVolunteers(GenericCsvData, DataListOfVolunteers):
 
@@ -16,7 +18,6 @@ class CsvDataListOfVolunteers(GenericCsvData, DataListOfVolunteers):
     def write(self, list_of_volunteers: ListOfVolunteers):
         self.write_object(list_of_volunteers, file_identifier=LIST_OF_VOLUNTEERS_FILE_ID)
 
-LIST_OF_VOLUNTEER_SKILLS_FILE_ID = "list_of_volunteer_skills"
 
 class CsvDataListOfVolunteerSkills(GenericCsvData, DataListOfVolunteerSkills):
 
@@ -28,7 +29,6 @@ class CsvDataListOfVolunteerSkills(GenericCsvData, DataListOfVolunteerSkills):
     def write(self, list_of_volunteer_skills: ListOfVolunteerSkills):
         self.write_object(list_of_volunteer_skills, file_identifier=LIST_OF_VOLUNTEER_SKILLS_FILE_ID)
 
-LIST_OF_VOLUNTEER_ASSOCIATIONS_FILE_ID ="list_of_cadet_volunteer_associations"
 
 class CsvDataListOfCadetVolunteerAssociations(GenericCsvData, DataListOfCadetVolunteerAssociations):
 
@@ -42,7 +42,6 @@ class CsvDataListOfCadetVolunteerAssociations(GenericCsvData, DataListOfCadetVol
         self.write_object(list_of_cadet_volunteer_associations, file_identifier=LIST_OF_VOLUNTEER_ASSOCIATIONS_FILE_ID)
 
 
-LIST_OF_VOLUNTEERS_AT_EVENT_FILE_ID = "list_of_volunteers_at_event"
 
 class CsvDataListOfVolunteersAtEvent(GenericCsvData, DataListOfVolunteersAtEvent):
 
@@ -58,27 +57,27 @@ class CsvDataListOfVolunteersAtEvent(GenericCsvData, DataListOfVolunteersAtEvent
                           file_identifier=LIST_OF_VOLUNTEERS_AT_EVENT_FILE_ID,
                           additional_file_identifiers=event_id)
 
-LIST_OF_CADETS_WITHOUT_VOLUNTEERS_AT_EVENT_FILE_ID = "list_of_cadets_without_volunteers_at_event"
 
-class CsvDataListOfCadetsWithoutVolunteersAtEvent(GenericCsvData, DataListOfCadetsWithoutVolunteersAtEvent):
+class CsvDataListOfIdentifiedVolunteersAtEvent(GenericCsvData, DataListOfIdentifiedVolunteersAtEvent):
 
-    def read(self) -> ListOfCadetsWithoutVolunteersAtEvent:
-        return self.read_and_return_object_of_type(ListOfCadetsWithoutVolunteersAtEvent,
-                                                    file_identifier=LIST_OF_CADETS_WITHOUT_VOLUNTEERS_AT_EVENT_FILE_ID)
-
-
-    def write(self, list_of_cadets_without_volunteers_at_event: ListOfCadetsWithoutVolunteersAtEvent):
-        self.write_object(list_of_cadets_without_volunteers_at_event,
-                          file_identifier=LIST_OF_CADETS_WITHOUT_VOLUNTEERS_AT_EVENT_FILE_ID)
+    def read(self, event_id: str) -> ListOfIdentifiedVolunteersAtEvent:
+        return self.read_and_return_object_of_type(ListOfIdentifiedVolunteersAtEvent,
+                                                   file_identifier=LIST_OF_IDENTIFIED_VOLUNTEERS_AT_EVENT_FILE_ID,
+                                                   additional_file_identifiers=event_id)
 
 
-LIST_OF_VOLUNTEERS_IN_ROLES_FILE_ID = "list_of_volunteers_in_roles_at_event"
+    def write(self, list_of_identified_volunteers_at_event: ListOfIdentifiedVolunteersAtEvent, event_id: str):
+        self.write_object(list_of_identified_volunteers_at_event,
+                          file_identifier=LIST_OF_IDENTIFIED_VOLUNTEERS_AT_EVENT_FILE_ID,
+                          additional_file_identifiers=event_id)
+
+
 
 class CsvDataListOfVolunteersInRolesAtEvent(GenericCsvData, DataListOfVolunteersInRolesAtEvent):
     def read(self, event_id: str) -> ListOfVolunteersInRoleAtEvent:
         list_of_volunteers_in_roles_at_event = self.read_and_return_object_of_type(ListOfVolunteersInRoleAtEvent,
-                                                                          file_identifier=LIST_OF_VOLUNTEERS_IN_ROLES_FILE_ID,
-                                                                          additional_file_identifiers=event_id)
+                                                                                   file_identifier=LIST_OF_VOLUNTEERS_IN_ROLES_FILE_ID,
+                                                                                   additional_file_identifiers=event_id)
 
         return list_of_volunteers_in_roles_at_event
 

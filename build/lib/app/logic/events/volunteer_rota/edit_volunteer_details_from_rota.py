@@ -1,14 +1,14 @@
 from app.backend.form_utils import get_availablity_from_form, get_food_requirements_from_form
-from app.backend.volunteers.volunteer_allocation import get_volunteer_from_id
+from app.backend.volunteers.volunteers import get_volunteer_from_id
 from app.backend.data.volunteer_allocation import delete_volunteer_with_id_at_event, get_volunteer_at_event
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.events.constants import SAVE_CHANGES, EDIT_VOLUNTEER_ROTA_EVENT_STAGE
 from app.logic.events.events_in_state import get_event_from_state
-from app.logic.events.volunteer_allocation.confirm_volunteer_details import \
+from app.logic.events.volunteer_rota.edit_volunteer_details_from_rota import \
     update_volunteer_at_event_with_new_food_and_availability
-from app.logic.events.volunteer_allocation.volunteer_details_form_contents import \
-    get_food_requirements_input_for_volunteer_at_event, get_availability_checkbox_for_volunteer_at_event, AVAILABILITY, \
+from app.logic.events.volunteer_allocation.add_volunteer_to_event_form_contents import \
+    get_food_requirements_input_for_volunteer_at_event, get_availability_checkbox_for_volunteer_at_event_based_on_relevant_information, AVAILABILITY, \
     FOOD_REQUIREMENTS, OTHER_FOOD
 from app.logic.volunteers.volunteer_state import get_volunteer_id_selected_from_state
 from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL
@@ -25,7 +25,7 @@ def display_form_confirm_volunteer_details_from_rota(interface: abstractInterfac
     volunteer = get_volunteer_from_id(volunteer_id)
 
     food_requirements_input = get_food_requirements_input_for_volunteer_at_event(volunteer_at_event)
-    available_checkbox = get_availability_checkbox_for_volunteer_at_event(volunteer_at_event=volunteer_at_event, event=event)
+    available_checkbox = get_availability_checkbox_for_volunteer_at_event_based_on_relevant_information(volunteer_at_event=volunteer_at_event, event=event)
 
     return Form(ListOfLines([
         "Following are details for volunteer %s at event %s" % (volunteer.name, str(event)),

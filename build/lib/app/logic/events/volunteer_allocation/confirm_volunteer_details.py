@@ -1,15 +1,16 @@
 from app.backend.data.volunteers import add_volunteer_connection_to_cadet_in_master_list_of_volunteers
 from app.backend.form_utils import get_food_requirements_from_form, \
     get_availablity_from_form
-from app.backend.volunteers.volunteer_allocation import get_volunteer_from_id, update_volunteer_food_at_event, update_volunteer_availability_at_event
+from app.backend.volunteers.volunteer_allocation import update_volunteer_food_at_event, update_volunteer_availability_at_event
+from app.backend.volunteers.volunteers import get_volunteer_from_id
 from app.backend.data.volunteer_allocation import get_volunteer_at_event
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import  \
     get_relevant_information_for_current_volunteer, get_current_cadet_id
 from app.backend.cadets import cadet_from_id
-from app.logic.events.volunteer_allocation.volunteer_details_form_contents import get_header_text, \
+from app.logic.events.volunteer_allocation.add_volunteer_to_event_form_contents import get_header_text, \
     get_connection_checkbox, get_food_requirements_text, get_food_requirements_input_for_volunteer_at_event, \
-    get_availablity_text, get_availability_checkbox_for_volunteer_at_event, FOOD_REQUIREMENTS, OTHER_FOOD, AVAILABILITY, \
+    get_availablity_text, get_availability_checkbox_for_volunteer_at_event_based_on_relevant_information, FOOD_REQUIREMENTS, OTHER_FOOD, AVAILABILITY, \
     MAKE_CADET_CONNECTION, MAKE_CADET_CONNECTION_LABEL
 from app.logic.events.constants import *
 from app.logic.volunteers.volunteer_state import get_volunteer_id_selected_from_state
@@ -38,7 +39,7 @@ def display_form_confirm_volunteer_details(interface: abstractInterface):
     food_requirements_text = get_food_requirements_text(relevant_information)
     food_requirements_input = get_food_requirements_input_for_volunteer_at_event(volunteer_at_event)
     available_text = get_availablity_text(relevant_information)
-    available_checkbox = get_availability_checkbox_for_volunteer_at_event(volunteer_at_event=volunteer_at_event, event=event)
+    available_checkbox = get_availability_checkbox_for_volunteer_at_event_based_on_relevant_information(volunteer_at_event=volunteer_at_event, event=event)
 
 
     other_information = relevant_information.details.any_other_information
@@ -107,7 +108,7 @@ def update_volunteer_at_event_with_new_food_and_availability(volunteer_id: str, 
 
 def continue_to_next_volunteer():
     ## Now loop to next volunteer for cadet
-    return NewForm(WA_VOLUNTEER_EXTRACTION_ADD_VOLUNTEERS_TO_CADET_LOOP_IN_VIEW_EVENT_STAGE)
+    return NewForm(WA_IDENTIFY_VOLUNTEERS_IN_SPECIFIC_ROW_LOOP_IN_VIEW_EVENT_STAGE)
 
 
 

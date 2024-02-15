@@ -1,5 +1,5 @@
 from app.backend.form_utils import get_availability_checkbox, dropdown_input_for_status_change
-from app.backend.wa_import.update_master_event_data import new_status_and_status_message, NO_STATUS_CHANGE
+from app.backend.wa_import.update_cadets_at_event import new_status_and_status_message, NO_STATUS_CHANGE
 from app.logic.events.constants import (
     USE_NEW_DATA_BUTTON_LABEL,
     USE_ORIGINAL_DATA_BUTTON_LABEL,
@@ -10,7 +10,7 @@ from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 
 from app.backend.cadets import cadet_name_from_id
-from app.objects.master_event import (
+from app.objects.OLDmaster_event import (
     RowInMasterEvent,
 )
 from app.objects.events import Event

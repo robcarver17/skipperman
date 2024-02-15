@@ -6,7 +6,7 @@ from app.objects.field_list import LIST_OF_VOLUNTEER_FIELDS, NAME_KEY_IN_VOLUNTE
     WEEKEND_AVAILABILITY_KEY_IN_VOLUNTEER_FIELDS_DICT, DUTIES_KEY_IN_VOLUNTEER_FIELDS_DICT, \
     SAME_OR_VARIED_KEY_IN_VOLUNTEER_FIELDS_DICT, FOOD_PREFERENCE_KEY_IN_VOLUNTEER_FIELDS_DICT
 from app.objects.food import guess_food_requirements_from_food_field
-from app.objects.master_event import RowInMasterEvent
+from app.objects.OLDmaster_event import RowInMasterEvent
 from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer, \
     RelevantInformationForVolunteerIdentification, RelevantInformationForVolunteerAvailability, \
     RelevantInformationForVolunteerDetails

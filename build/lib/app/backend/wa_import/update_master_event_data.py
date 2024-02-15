@@ -1,13 +1,12 @@
-from app.backend.data.mapped_events import load_master_event, save_master_event, load_existing_mapped_wa_event_with_ids
+from app.backend.data.mapped_events import load_master_event, save_master_event, load_existing_mapped_wa_event
 
-from app.objects.master_event import (
+from app.objects.OLDmaster_event import (
     get_row_of_master_event_from_mapped_row_with_idx_and_status,
-    RowInMasterEvent,
+    RowInMasterEvent, cancelled_status, active_status, deleted_status,
 )
 from app.objects.mapped_wa_event_deltas import (
     RowInMappedWAEventDeltaRow,
 )
-from app.objects.cadet_at_event import cancelled_status, active_status, deleted_status
 from app.backend.cadets import cadet_name_from_id
 from app.objects.events import Event
 from app.objects.constants import NoMoreData, DuplicateCadets
@@ -16,7 +15,7 @@ from app.objects.constants import NoMoreData, DuplicateCadets
 def get_row_from_event_file_with_ids(
     event: Event, row_idx: int
 ) -> RowInMappedWAEventDeltaRow:
-    mapped_wa_event_data_with_cadet_ids = load_existing_mapped_wa_event_with_ids(event)
+    mapped_wa_event_data_with_cadet_ids = load_existing_mapped_wa_event(event)
     try:
         return mapped_wa_event_data_with_cadet_ids[row_idx]
     except IndexError:
@@ -113,7 +112,7 @@ def is_cadet_already_in_master_data(event: Event, cadet_id: str) -> bool:
 
 
 def is_cadet_present_in_mapped_event_data(event: Event, cadet_id: str) -> bool:
-    mapped_event = load_existing_mapped_wa_event_with_ids(event)
+    mapped_event = load_existing_mapped_wa_event(event)
     cadet_present = mapped_event.is_cadet_id_in_event(cadet_id)
 
     return cadet_present
@@ -134,7 +133,7 @@ def any_important_difference_between_rows(
 def get_row_in_mapped_event_for_cadet_id(
     event: Event, cadet_id: str
 ) -> RowInMappedWAEventDeltaRow:
-    mapped_event = load_existing_mapped_wa_event_with_ids(event)
+    mapped_event = load_existing_mapped_wa_event(event)
     try:
         relevant_row = mapped_event.get_unique_row_with_cadet_id_(cadet_id)
     except DuplicateCadets:

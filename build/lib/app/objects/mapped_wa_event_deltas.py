@@ -83,28 +83,48 @@ class RowInMappedWAEventDeltaRow:
         )
 
 
-class MappedWAEventListOfDeltaRows(list):
+class MappedWAEventListOfDeltaRows(MappedWAEvent):
     def __init__(self, list_of_rows: List[RowInMappedWAEventDeltaRow]):
         super().__init__(list_of_rows)
 
     def __repr__(self):
         return str(self.to_df())
 
+
+    def all_row_ids_sorted_by_type(self):
+        return self.new_row_ids+self.deleted_row_ids+self.changed_row_ids+self.unchanged_row_ids
+
     @property
     def count_of_changed(self) -> int:
-        return sum([row for row in self if row.is_changed_row])
+        return len(self.changed_row_ids)
+
+    @property
+    def changed_row_ids(self) -> list:
+        return [row.row_id for row in self if row.is_changed_row]
 
     @property
     def count_of_new(self) -> int:
-        return sum([row for row in self if row.is_changed_row])
+        return len(self.new_row_ids)
+
+    @property
+    def new_row_ids(self) -> list:
+        return [row.row_id for row in self if row.is_new_row]
 
     @property
     def count_of_deleted(self) -> int:
-        return sum([row for row in self if row.is_deleted_row])
+        return len(self.deleted_row_ids)
+
+    @property
+    def deleted_row_ids(self) -> list:
+        return [row.row_id for row in self if row.is_deleted_row]
 
     @property
     def count_of_unchanged(self) -> int:
-        return sum([row for row in self if row.is_unchanged_row])
+        return len(self.unchanged_row_ids)
+
+    @property
+    def unchanged_row_ids(self) -> list:
+        return [row.row_id for row in self if row.is_unchanged_row]
 
 
     @classmethod
@@ -130,8 +150,8 @@ from app.objects.utils import in_x_not_in_y, in_both_x_and_y
 def create_list_of_delta_rows(original_event: MappedWAEvent,
                               new_event: MappedWAEvent) -> MappedWAEventListOfDeltaRows:
 
-    list_of_ids_in_original = original_event.list_of_ids()
-    list_of_ids_in_new = new_event.list_of_ids()
+    list_of_ids_in_original = original_event.list_of_row_ids()
+    list_of_ids_in_new = new_event.list_of_row_ids()
 
     deleted_row_ids = in_x_not_in_y(x=list_of_ids_in_original, y=list_of_ids_in_new)
     new_row_ids = in_x_not_in_y(x=list_of_ids_in_new, y=list_of_ids_in_original)

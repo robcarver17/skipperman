@@ -17,7 +17,7 @@ def import_controller(interface: abstractInterface) -> Union[Form, NewForm]:
     try:
         next_import = next_import_required_for_event(event=event, interface=interface)
     except NoMoreData:
-        ### FIXME DELETE ALL DELTA FILES
+        ## FIXME CLEAR ALL 'Changed' flags eg cadets, volunteers and so on
         return form_with_message_and_finished_button(
             "Finished importing WA data", interface=interface,
             set_stage_name_to_go_to_on_button_press=VIEW_EVENT_STAGE
@@ -32,12 +32,14 @@ def post_import_controller(interface):
 
 ## order matters, as other things rely on cadets
 ## Group allocation doesn't appear here
-ORDERED_LIST_OF_POSSIBLE_IMPORTS = [CADETS, VOLUNTEERS, #GROUP_ALLOCATION,
-                                     FOOD, CLOTHING]
+ORDERED_LIST_OF_POSSIBLE_IMPORTS = [CADETS, VOLUNTEERS]
+
+#ORDERED_LIST_OF_POSSIBLE_IMPORTS = [CADETS, VOLUNTEERS, #GROUP_ALLOCATION,
+#                                     FOOD, CLOTHING]
 
 IMPORTS_AND_FORM_NAMES = {
     CADETS: WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE,
-    VOLUNTEERS: WA_VOLUNTEER_EXTRACTION_INITIALISE_IN_VIEW_EVENT_STAGE
+    VOLUNTEERS: WA_VOLUNTEER_IDENITIFICATION_INITIALISE_IN_VIEW_EVENT_STAGE
 }
 
 NO_IMPORT_DONE_YET_INDEX = -1

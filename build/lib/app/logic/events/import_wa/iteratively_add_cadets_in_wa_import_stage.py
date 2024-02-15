@@ -3,7 +3,7 @@ from typing import Union
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.events.constants import (
-    WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE,
+    WA_UPDATE_CADETS_AT_EVENT_IN_VIEW_EVENT_STAGE,
     CHECK_CADET_BUTTON_LABEL,
     FINAL_CADET_ADD_BUTTON_LABEL,
     SEE_ALL_CADETS_BUTTON_LABEL,
@@ -12,11 +12,10 @@ from app.logic.events.constants import (
 
 from app.logic.events.events_in_state import get_event_from_state
 from app.backend.wa_import.add_cadet_ids_to_mapped_wa_event_data import (
-    get_delta_row_for_event_given_id,
-    add_row_data_with_id_included_and_delete_from_unmapped_data,
+    add_identified_cadet_and_row,
     get_cadet_data_from_row_of_mapped_data_no_checks,
 )
-from app.backend.data.mapped_events import load_existing_mapped_wa_event_with_ids
+from app.backend.data.mapped_events import load_existing_mapped_wa_event, get_row_in_mapped_event_data_given_id
 from app.logic.events.cadets_at_event.get_or_select_cadet_forms import (
     get_add_or_select_existing_cadet_form,
 )
@@ -34,13 +33,13 @@ def display_form_iteratively_add_cadets_during_import(
     print("Looping through allocating IDs on WA file without IDs")
 
     try:
-        next_row = get_delta_row_for_event_given_id(event)
+        next_row = get_row_in_mapped_event_data_given_id(event)
         print("On row %s" % str(next_row))
         return process_next_row(next_row=next_row, interface=interface)
     except NoMoreData:
         print("Finished looping through allocating IDs")
-        print("%s" % str(load_existing_mapped_wa_event_with_ids(event)))
-        return NewForm(WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE)
+        print("%s" % str(load_existing_mapped_wa_event(event)))
+        return NewForm(WA_UPDATE_CADETS_AT_EVENT_IN_VIEW_EVENT_STAGE)
 
 
 def process_next_row(
@@ -75,9 +74,9 @@ def process_next_row_with_cadet_from_row(
 
 def process_row_when_cadet_matched(interface: abstractInterface, cadet: Cadet) -> Form:
     event = get_event_from_state(interface)
-    next_row = get_delta_row_for_event_given_id(event)
+    next_row = get_row_in_mapped_event_data_given_id(event)
     print("adding matched row %s with id %s" % (str(next_row), cadet.id))
-    add_row_data_with_id_included_and_delete_from_unmapped_data(
+    add_identified_cadet_and_row(
         event=event, new_row=next_row, cadet_id=cadet.id
     )
     ## run recursively until no more data

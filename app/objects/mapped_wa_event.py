@@ -1,8 +1,8 @@
 import datetime
 from typing import List
 import pandas as pd
+from enum import Enum
 
-from app.logic.events.import_wa.shared_state_tracking_and_data import MISSING_VALUE
 from app.objects.utils import (
     clean_up_dict_with_nans,
     transform_df_from_str_to_dates,
@@ -10,6 +10,16 @@ transform_datetime_into_str
 )
 
 from app.objects.field_list import REGISTRATION_DATE, REGISTERED_BY_LAST_NAME, REGISTERED_BY_FIRST_NAME
+
+from app.data_access.configuration.configuration import ACTIVE_STATUS, CANCELLED_STATUS
+from app.objects.constants import missing_data
+from app.objects.field_list import PAYMENT_STATUS
+
+RegistrationStatus = Enum("RowStatus", ["Cancelled", "Active", "Deleted"])
+cancelled_status = RegistrationStatus.Cancelled
+active_status = RegistrationStatus.Active
+deleted_status = RegistrationStatus.Deleted
+all_possible_status = [cancelled_status, active_status, deleted_status]
 
 
 def unique_row_identifier(registration_date: datetime.datetime, registered_by_last_name: str, registered_by_first_name: str) -> str:
@@ -26,8 +36,8 @@ class RowInMappedWAEvent(dict):
         my_keys = list(set(list(self.keys())))
 
         for key in my_keys:
-            other_value = other.get(key, MISSING_VALUE)
-            if other_value is MISSING_VALUE:
+            other_value = other.get(key,  missing_data)
+            if other_value is missing_data:
                 return False
             my_value = self.get(key)
 
@@ -58,6 +68,10 @@ class RowInMappedWAEvent(dict):
                                      registered_by_last_name=self.registered_by_last_name)
 
     @property
+    def registration_status(self) -> RegistrationStatus:
+        return get_status_from_row_of_mapped_wa_event_data(self)
+
+    @property
     def registration_date(self):
         return self[REGISTRATION_DATE]
 
@@ -68,6 +82,42 @@ class RowInMappedWAEvent(dict):
     @property
     def registered_by_last_name(self):
         return self[REGISTERED_BY_LAST_NAME]
+
+
+
+def get_status_from_row_of_mapped_wa_event_data(
+    row_of_mapped_wa_event_data: RowInMappedWAEvent,
+) -> RegistrationStatus:
+    status_str = get_status_str_from_row_of_mapped_wa_event_data(
+        row_of_mapped_wa_event_data
+    )
+    if status_str in ACTIVE_STATUS:
+        return active_status
+
+    if status_str in CANCELLED_STATUS:
+        return cancelled_status
+
+    raise Exception(
+        "WA has used a status of %s in the mapped field %s, not recognised, update configuration.py"
+        % (status_str, PAYMENT_STATUS)
+    )
+
+
+def get_status_str_from_row_of_mapped_wa_event_data(
+    row_of_mapped_wa_event_data: RowInMappedWAEvent,
+) -> str:
+    status_field = row_of_mapped_wa_event_data.get_item(
+        PAYMENT_STATUS, missing_data
+    )
+    if status_field is missing_data:
+        raise Exception(
+            "Can't get status of entry because field %s is missing from mapping; check your field mapping"
+            % PAYMENT_STATUS
+        )
+
+    return status_field
+
+
 
 
 class MappedWAEvent(list):
@@ -86,11 +136,18 @@ class MappedWAEvent(list):
 
         return subset[0]
 
-    def list_of_ids(self) -> list:
+    def list_of_row_ids(self) -> list:
         return extract_list_of_row_ids_from_existing_wa_event(self)
 
-    def subset_with_id(self, list_of_timestamps: list) -> "MappedWAEvent":
-        subset = [row for row in self if row.row_id in list_of_timestamps]
+    def active_registrations_only(self) -> "MappedWAEvent":
+        return self.subset_on_status(active_status)
+
+    def subset_on_status(self, status: RegistrationStatus) -> "MappedWAEvent":
+        subset= [row for row in self if row.registration_status == status]
+        return MappedWAEvent(subset)
+
+    def subset_with_id(self, list_of_row_ids: list) -> "MappedWAEvent":
+        subset = [row for row in self if row.row_id in list_of_row_ids]
         return MappedWAEvent(subset)
 
     @classmethod
@@ -129,3 +186,6 @@ def extract_list_of_row_ids_from_existing_wa_event(
     ]
 
     return list_of_timestamps
+
+
+

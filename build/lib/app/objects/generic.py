@@ -100,10 +100,10 @@ def _transform_class_dict_into_str_dict(
 
     for attribute_name in list_of_attributes:
         attribute = getattr(some_class_instance, attribute_name)
-        class_dict[attribute_name] = _transform_class_instance_into_string(attribute)
+        class_dict[attribute_name] = transform_class_instance_into_string(attribute)
 
 
-def _transform_class_instance_into_string(class_instance):
+def transform_class_instance_into_string(class_instance):
     if isinstance(class_instance, datetime.date):
         return transform_date_into_str(class_instance)
     elif isinstance(class_instance, datetime.datetime):
@@ -129,14 +129,14 @@ def get_class_instance_from_str_dict(some_class, dict_with_str: dict):
 
     for attribute, object_class in dict_of_attributes.items():
         string = dict_with_str[attribute]
-        dict_with_str[attribute] = _transform_string_into_class_instance(
+        dict_with_str[attribute] = transform_string_into_class_instance(
             object_class, string
         )
 
     return some_class(**dict_with_str)
 
 
-def _transform_string_into_class_instance(object_class, string):
+def transform_string_into_class_instance(object_class, string):
     if object_class is datetime.date:
         return transform_str_into_date(string)
     elif object_class is datetime.datetime:

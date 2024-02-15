@@ -1,70 +1,14 @@
-from app.backend.data.mapped_events import load_master_event
-from app.backend.wa_import.update_master_event_data import get_row_in_master_event_for_cadet_id
+from app.backend.data.mapped_events import get_row_in_mapped_event_data_given_id
+from app.backend.volunteers.volunteer_allocation import list_of_unique_volunteer_ids_in_identified_event_data
+
 from app.logic.events.events_in_state import get_event_from_state
+from app.logic.events.import_wa.shared_state_tracking_and_data import get_current_row_id
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer
 from app.backend.volunteers.volunter_relevant_information import get_relevant_information_for_volunteer
 from app.objects.constants import missing_data, NoMoreData
 from app.objects.events import Event
 from app.objects.field_list import LIST_OF_VOLUNTEER_FIELDS
-
-CADET_ID = "cadet_id"
-
-def get_and_save_next_cadet_id(interface: abstractInterface) -> str:
-    current_id = get_current_cadet_id(interface)
-    if current_id is missing_data:
-        new_id = get_first_cadet_id_in_event_data(interface)
-    else:
-        new_id = get_next_cadet_id_in_event_data(
-            interface=interface, current_id=current_id
-        )
-
-    interface.set_persistent_value(CADET_ID, new_id)
-
-    return new_id
-
-
-def get_first_cadet_id_in_event_data(interface: abstractInterface) -> str:
-    event = get_event_from_state(interface)
-    list_of_ids = list_of_cadet_ids_in_master_data(event)
-    first_cadet_id = list_of_ids[0]
-
-    print("Getting first ID %s from list %s " % (first_cadet_id, list_of_ids))
-
-    return first_cadet_id
-
-
-def get_next_cadet_id_in_event_data(
-    interface: abstractInterface, current_id: str
-) -> str:
-    event = get_event_from_state(interface)
-    list_of_ids = list_of_cadet_ids_in_master_data(event)
-    current_index = list_of_ids.index(current_id)
-
-    try:
-        new_id = list_of_ids[current_index + 1]
-    except:
-        raise NoMoreData
-
-    return new_id
-
-
-def list_of_cadet_ids_in_master_data(event: Event) -> list:
-    master_event = load_master_event(event)
-    master_ids = master_event.list_of_cadet_ids
-    master_ids.sort()
-
-    return master_ids
-
-
-def get_current_cadet_id(interface: abstractInterface) -> str:
-    cadet_id = interface.get_persistent_value(CADET_ID, default=missing_data)
-
-    return cadet_id
-
-
-def reset_current_cadet_id_store(interface: abstractInterface):
-    interface.clear_persistent_value(CADET_ID)
 
 
 number_of_volunteers_allowed = len(LIST_OF_VOLUNTEER_FIELDS)
@@ -94,13 +38,82 @@ def clear_volunteer_index(interface: abstractInterface):
 
 
 def get_relevant_information_for_current_volunteer(interface: abstractInterface) -> RelevantInformationForVolunteer:
-    cadet_id = get_current_cadet_id(interface)
+    row_id = get_current_row_id(interface)
     volunteer_index = get_volunteer_index(interface)
     event = get_event_from_state(interface)
-    row_in_master_event = get_row_in_master_event_for_cadet_id(
-        event=event, cadet_id=cadet_id
+    relevant_information = get_relevant_information_for_volunteer_given_details(
+        row_id=row_id,
+        volunteer_index=volunteer_index,
+        event=event
     )
 
-    relevant_information = get_relevant_information_for_volunteer(row_in_master_event=row_in_master_event, volunteer_index=volunteer_index)
 
     return relevant_information
+
+def get_relevant_information_for_volunteer_given_details(
+    row_id: str,
+        volunteer_index: int,
+        event: Event
+) -> RelevantInformationForVolunteer:
+
+    row_in_mapped_event = get_row_in_mapped_event_data_given_id(event=event, row_id=row_id)
+
+    relevant_information = get_relevant_information_for_volunteer(row_in_mapped_event=row_in_mapped_event, volunteer_index=volunteer_index, event=event)
+
+    return relevant_information
+
+
+
+VOLUNTEER_AT_EVENT_ID = "vol_at_ev_id"
+
+
+def get_and_save_next_volunteer_id_in_mapped_event_data(interface: abstractInterface) -> str:
+    current_id = get_current_volunteer_id_at_event(interface)
+    if current_id is missing_data:
+        new_id = get_first_volunteer_id_in_identified_event_data(interface)
+    else:
+        new_id = get_next_volunteer_id_in_identified_event_data(
+            interface=interface, current_id=current_id
+        )
+
+    save_new_volunteer_id_at_event(interface=interface, new_id=new_id)
+
+    return new_id
+
+
+def get_first_volunteer_id_in_identified_event_data(interface: abstractInterface) -> str:
+
+    list_of_ids = list_of_unique_volunteer_ids_in_identified_event_data(interface)
+    id = list_of_ids[0]
+
+    print("Getting first ID %s from list %s " % (id, list_of_ids))
+
+    return id
+
+
+def get_next_volunteer_id_in_identified_event_data(
+    interface: abstractInterface, current_id: str
+) -> str:
+    list_of_ids = list_of_unique_volunteer_ids_in_identified_event_data(interface)
+    current_index = list_of_ids.index(current_id)
+    new_index = current_index+1
+
+    try:
+        new_id = list_of_ids[new_index]
+    except:
+        raise NoMoreData
+
+    return new_id
+
+
+def get_current_volunteer_id_at_event(interface: abstractInterface) -> str:
+    return interface.get_persistent_value(VOLUNTEER_AT_EVENT_ID , default=missing_data)
+
+def  save_new_volunteer_id_at_event(interface: abstractInterface, new_id):
+    interface.set_persistent_value(VOLUNTEER_AT_EVENT_ID, new_id)
+
+def reset_new_volunteer_id_at_event(interface: abstractInterface):
+    interface.clear_persistent_value(VOLUNTEER_AT_EVENT_ID)
+
+
+

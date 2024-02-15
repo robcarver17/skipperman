@@ -34,7 +34,7 @@ def display_form_add_volunteers_to_cadet_loop(interface: abstractInterface) -> U
         ## This is so we don't bother processing them again next tinme
         mark_cadet_as_been_processed_if_no_volunteers_available(cadet_id=cadet_id, event=event)
 
-        return NewForm(WA_VOLUNTEER_EXTRACTION_LOOP_IN_VIEW_EVENT_STAGE)
+        return NewForm(WA_VOLUNTEER_IDENITIFICATION_LOOP_IN_VIEW_EVENT_STAGE)
 
     return add_specific_volunteer_for_cadet_at_event(interface=interface, volunteer_index=volunteer_index)
 
@@ -51,7 +51,7 @@ def add_specific_volunteer_for_cadet_at_event(interface: abstractInterface, volu
 
     if matched_volunteer_with_id is missing_data:
         print("Volunteer %s not matched" % str(volunteer))
-        return NewForm(WA_VOLUNTEER_EXTRACTION_SELECTION_IN_VIEW_EVENT_STAGE)
+        return NewForm(WA_VOLUNTEER_IDENTIFICATION_SELECTION_IN_VIEW_EVENT_STAGE)
 
     print("Volunteer %s matched id is %s" % (str(volunteer), matched_volunteer_with_id.id))
     return process_update_when_volunteer_matched(
@@ -73,7 +73,7 @@ def process_update_when_volunteer_matched(interface: abstractInterface, voluntee
     ## so we can do the details
     update_state_with_volunteer_id(interface=interface, volunteer_id=volunteer.id)
 
-    return NewForm(WA_VOLUNTEER_EXTRACTION_ADD_DETAILS_IN_VIEW_EVENT_STAGE)
+    return NewForm(VOLUNTEER_DETAILS_LOOP_IN_VIEW_EVENT_STAGE)
 
 
 

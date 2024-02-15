@@ -74,18 +74,6 @@ class RowInMappedWAEventWithId:
 
 
 
-def get_attendance_selection_from_event_row(
-        row: RowInMappedWAEventWithId, event: Event) -> DaySelector:
-
-    row_as_dict = row.data_in_row.as_dict()
-
-    if WEEKEND_DAYS_ATTENDING_INPUT in row_as_dict.keys():
-        return weekend_day_selector_from_text(row_as_dict[WEEKEND_DAYS_ATTENDING_INPUT])
-
-    elif ALL_DAYS_ATTENDING_INPUT in row_as_dict.keys():
-        return any_day_selector_from_short_form_text(row_as_dict[WEEKEND_DAYS_ATTENDING_INPUT])
-
-    return event.day_selector_with_covered_days()
 
 
 def get_status_from_row_of_mapped_wa_event_data(

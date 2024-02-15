@@ -1,5 +1,7 @@
+"""
 from copy import copy
 from dataclasses import dataclass
+from enum import Enum
 from typing import List
 
 import pandas as pd
@@ -9,25 +11,16 @@ from app.objects.mapped_wa_event_deltas import (
     RowInMappedWAEventDeltaRow,
 
 )
-from app.objects.cadet_at_event import RowStatus, cancelled_status, active_status, deleted_status, \
-    get_attendance_selection_from_event_row, get_status_from_row_of_mapped_wa_event_data
-from app.objects.events import Event
 from app.objects.day_selectors import DaySelector, day_selector_stored_format_from_text, day_selector_to_text_in_stored_format
 from app.objects.food import FoodRequirements
-from app.objects.constants import missing_data
 
-CADET_ID = "cadet_id" ## must match
-STATUS_FIELD = "status"
-ATTENDANCE = "attendance"
-FOOD_REQUIREMENTS = "food_requirements"
+ROW_ID = "row_id" ## must match
+
 
 @dataclass
 class RowInMasterEvent:
-    cadet_id: str
+    row_id: str
     data_in_row: RowInMappedWAEvent
-    attendance: DaySelector
-    status: RowStatus
-    food_requirements: FoodRequirements
 
     def get_item(self, key, default=""):
         return self.data_in_row.get_item(key, default=default)
@@ -36,35 +29,25 @@ class RowInMasterEvent:
         self.data_in_row[key] = new_value
 
     @classmethod
-    def from_row_in_mapped_wa_event_with_id(
-        cls, row_in_mapped_wa_event_with_id: RowInMappedWAEventDeltaRow, status: RowStatus,
-            attendance: DaySelector,
-            food_requirements: FoodRequirements
+    def from_row_in_mapped_wa_event(
+        cls, row_in_mapped_wa_event: RowInMappedWAEvent
     ):
         return cls(
-            data_in_row=row_in_mapped_wa_event_with_id.data_in_row,
-            cadet_id=row_in_mapped_wa_event_with_id.cadet_id,
-            status=status,
-            attendance=attendance,
-            food_requirements=food_requirements
+        row_id=row_in_mapped_wa_event.row_id,
+            data_in_row=row_in_mapped_wa_event
         )
 
     def as_dict(self):
         data_in_row_as_dict = self.data_in_row.as_dict()
         data_in_row_as_dict.update(
-            {CADET_ID: self.cadet_id, STATUS_FIELD: self.status.name,
-             ATTENDANCE: day_selector_to_text_in_stored_format(self.attendance),
-             FOOD_REQUIREMENTS: self.food_requirements.to_str()
+            {ROW_ID: self.row_id
              }
         )
         return data_in_row_as_dict
 
     @classmethod
     def from_dict(cls, some_dict: dict):
-        cadet_id = str(some_dict.pop(CADET_ID))
-        status = RowStatus[some_dict.pop(STATUS_FIELD)]
-        attendance = day_selector_stored_format_from_text(some_dict.pop(ATTENDANCE))
-        food_requirements = FoodRequirements.from_str(some_dict.pop(FOOD_REQUIREMENTS))
+        row_id = str(some_dict.pop(ROW_ID))
 
         return cls(
             cadet_id=cadet_id,
@@ -173,15 +156,15 @@ class MasterEvent(MappedWAEvent):
         return row.status is deleted_status
 
     def mark_cadet_as_cancelled(self, cadet_id: str):
-        self.change_status_of_row(cadet_id=cadet_id, new_status=RowStatus.Cancelled)
+        self.change_status_of_row(cadet_id=cadet_id, new_status=RegistrationStatus.Cancelled)
 
     def mark_cadet_as_active(self, cadet_id: str):
-        self.change_status_of_row(cadet_id=cadet_id, new_status=RowStatus.Active)
+        self.change_status_of_row(cadet_id=cadet_id, new_status=RegistrationStatus.Active)
 
     def mark_cadet_as_deleted(self, cadet_id: str):
-        self.change_status_of_row(cadet_id=cadet_id, new_status=RowStatus.Deleted)
+        self.change_status_of_row(cadet_id=cadet_id, new_status=RegistrationStatus.Deleted)
 
-    def change_status_of_row(self, cadet_id: str, new_status: RowStatus):
+    def change_status_of_row(self, cadet_id: str, new_status: RegistrationStatus):
         relevant_row = self.get_row_with_id(cadet_id)
         relevant_row.status = new_status
 
@@ -191,7 +174,7 @@ class MasterEvent(MappedWAEvent):
 
 def get_row_of_master_event_from_mapped_row_with_idx_and_status(*args, **kwargs):
     pass
-"""
+
 def get_row_of_master_event_from_mapped_row_with_idx_and_status(
     row_in_mapped_wa_event_with_id: RowInMappedWAEventDeltaRow,
         event: Event
@@ -210,5 +193,22 @@ def get_row_of_master_event_from_mapped_row_with_idx_and_status(
     )
 
     return row_of_mapped_wa_event_data_with_status
+
+
+
+def get_attendance_selection_from_event_row(
+        row: RowInMappedWAEvent, event: Event) -> DaySelector:
+
+    row_as_dict = row.as_dict()
+
+    if WEEKEND_DAYS_ATTENDING_INPUT in row_as_dict.keys():
+        return weekend_day_selector_from_text(row_as_dict[WEEKEND_DAYS_ATTENDING_INPUT])
+
+    elif ALL_DAYS_ATTENDING_INPUT in row_as_dict.keys():
+        return any_day_selector_from_short_form_text(row_as_dict[WEEKEND_DAYS_ATTENDING_INPUT])
+
+    return event.day_selector_with_covered_days()
+
+
 
 """

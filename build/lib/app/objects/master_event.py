@@ -1,5 +1,6 @@
 from copy import copy
 from dataclasses import dataclass
+from enum import Enum
 from typing import List
 
 import pandas as pd
@@ -9,17 +10,20 @@ from app.objects.mapped_wa_event_deltas import (
     RowInMappedWAEventDeltaRow,
 
 )
-from app.objects.cadet_at_event import RowStatus, cancelled_status, active_status, deleted_status, \
-    get_attendance_selection_from_event_row, get_status_from_row_of_mapped_wa_event_data
-from app.objects.events import Event
 from app.objects.day_selectors import DaySelector, day_selector_stored_format_from_text, day_selector_to_text_in_stored_format
 from app.objects.food import FoodRequirements
-from app.objects.constants import missing_data
 
 CADET_ID = "cadet_id" ## must match
 STATUS_FIELD = "status"
 ATTENDANCE = "attendance"
 FOOD_REQUIREMENTS = "food_requirements"
+
+RowStatus = Enum("RowStatus", ["Cancelled", "Active", "Deleted"])
+
+cancelled_status = RowStatus.Cancelled
+active_status = RowStatus.Active
+deleted_status = RowStatus.Deleted
+all_possible_status = [cancelled_status, active_status, deleted_status]
 
 @dataclass
 class RowInMasterEvent:
@@ -210,5 +214,57 @@ def get_row_of_master_event_from_mapped_row_with_idx_and_status(
     )
 
     return row_of_mapped_wa_event_data_with_status
+
+
+
+def get_attendance_selection_from_event_row(
+        row: RowInMappedWAEvent, event: Event) -> DaySelector:
+
+    row_as_dict = row.as_dict()
+
+    if WEEKEND_DAYS_ATTENDING_INPUT in row_as_dict.keys():
+        return weekend_day_selector_from_text(row_as_dict[WEEKEND_DAYS_ATTENDING_INPUT])
+
+    elif ALL_DAYS_ATTENDING_INPUT in row_as_dict.keys():
+        return any_day_selector_from_short_form_text(row_as_dict[WEEKEND_DAYS_ATTENDING_INPUT])
+
+    return event.day_selector_with_covered_days()
+
+
+
+
+def get_status_from_row_of_mapped_wa_event_data(
+    row_of_mapped_wa_event_data: RowInMappedWAEvent,
+) -> RowStatus:
+    status_str = get_status_str_from_row_of_mapped_wa_event_data(
+        row_of_mapped_wa_event_data
+    )
+    if status_str in ACTIVE_STATUS:
+        return active_status
+
+    if status_str in CANCELLED_STATUS:
+        return cancelled_status
+
+    raise Exception(
+        "WA has used a status of %s in the mapped field %s, not recognised, update configuration.py"
+        % (status_str, PAYMENT_STATUS)
+    )
+
+
+def get_status_str_from_row_of_mapped_wa_event_data(
+    row_of_mapped_wa_event_data: RowInMappedWAEvent,
+) -> str:
+    status_field = row_of_mapped_wa_event_data.get_item(
+        PAYMENT_STATUS, missing_data
+    )
+    if status_field is missing_data:
+        raise Exception(
+            "Can't get status of entry because field %s is missing from mapping; check your field mapping"
+            % PAYMENT_STATUS
+        )
+
+    return status_field
+
+
 
 """

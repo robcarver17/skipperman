@@ -90,8 +90,8 @@ WA_UPDATE_CONTROLLER_IN_VIEW_EVENT_STAGE = "WA_update_controller_in_view_event_s
 WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE = (
     "WA_add_cadet_ids_in_interation_in_view_event_stage"
 )
-WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE = (
-    "WA_process_rows_in_interation_in_view_event_stage"
+WA_UPDATE_CADETS_AT_EVENT_IN_VIEW_EVENT_STAGE = (
+    "WA_update_cadets_at_event_view_event_stage"
 )
 
 WA_VOLUNTEER_EXTRACTION_INITIALISE_IN_VIEW_EVENT_STAGE = "WA_extract_volunteer_information_initialise_in_view_event_stage"

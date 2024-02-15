@@ -1,5 +1,5 @@
 from app.backend.data.mapped_events import load_master_event
-from app.backend.wa_import.update_master_event_data import get_row_in_master_event_for_cadet_id
+from app.backend.wa_import.update_cadets_at_event import get_row_in_master_event_for_cadet_id
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer

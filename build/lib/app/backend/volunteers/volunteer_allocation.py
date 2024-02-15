@@ -3,7 +3,7 @@ from typing import List
 from app.backend.data.volunteer_rota import delete_role_at_event_for_volunteer_on_day
 from app.backend.data.volunteers import  get_all_volunteers, \
     get_list_of_cadet_volunteer_associations
-from app.backend.data.volunteer_allocation import get_list_of_volunteers_at_event, \
+from app.backend.data.volunteer_allocation import load_list_of_volunteers_at_event, \
     get_list_of_cadets_without_volunteers_at_all_events, mark_cadet_as_been_processed_with_no_volunteers_available, \
     update_volunteer_at_event, get_volunteer_at_event
 from app.backend.cadets import cadet_name_from_id
@@ -43,7 +43,7 @@ def get_list_of_cadets_without_volunteers_at_event(event: Event) -> list:
 
 
 def volunteer_ids_associated_with_cadet_at_specific_event(event: Event, cadet_id: str) -> list:
-    volunteer_data = get_list_of_volunteers_at_event(event)
+    volunteer_data = load_list_of_volunteers_at_event(event)
     volunteer_ids = volunteer_data.list_of_volunteer_ids_associated_with_cadet_id(cadet_id)
 
     return volunteer_ids

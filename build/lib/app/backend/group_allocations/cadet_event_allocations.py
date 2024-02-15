@@ -1,13 +1,13 @@
 from app.backend.cadets import get_sorted_list_of_cadets
 from app.backend.data.group_allocations import load_raw_allocation_for_event
-from app.backend.data.mapped_events import load_master_event
+from app.backend.data.cadets_at_event import load_cadets_at_event
 from app.objects.cadets import ListOfCadets
 from app.objects.constants import arg_not_passed
 from app.objects.events import Event
 from app.objects.groups import ListOfCadetIdsWithGroups, ListOfCadetsWithGroup
 
 
-def get_list_of_cadets_in_master_event(
+def get_list_of_cadets_at_event(
     event: Event
 ) -> ListOfCadets:
     list_of_cadet_ids = get_list_of_cadet_ids_at_event(
@@ -33,8 +33,8 @@ def get_list_of_cadets_given_list_of_ids(list_of_cadet_ids: list) -> ListOfCadet
 def get_list_of_cadet_ids_at_event(
     event: Event
 ) -> list:
-    master_event = load_master_event(event)
-    list_of_cadet_ids = master_event.list_of_active_cadet_ids(
+    cadets_of_event = load_cadets_at_event(event)
+    list_of_cadet_ids = cadets_of_event.list_of_active_cadet_ids(
     )
 
     return list_of_cadet_ids
@@ -47,7 +47,7 @@ def get_unallocated_cadets(
     if list_of_cadet_ids_with_groups is arg_not_passed:
         list_of_cadet_ids_with_groups = load_allocation_for_event(event=event)
 
-    list_of_cadets_in_event = get_list_of_cadets_in_master_event(
+    list_of_cadets_in_event = get_list_of_cadets_at_event(
         event=event
     )
 
@@ -81,8 +81,7 @@ def get_list_of_cadets_with_groups(
 def load_allocation_for_event(event: Event) -> ListOfCadetIdsWithGroups:
 
     list_of_cadets_with_groups = load_raw_allocation_for_event(event)
-    master_event_data = load_master_event(event)
-    list_of_active_cadet_ids_at_event = master_event_data.list_of_active_cadet_ids()
+    list_of_active_cadet_ids_at_event = get_list_of_cadet_ids_at_event(event)
 
     list_of_allocated_cadets_with_groups = [cadet_with_group for cadet_with_group in list_of_cadets_with_groups
                                             if cadet_with_group.cadet_id in list_of_active_cadet_ids_at_event]

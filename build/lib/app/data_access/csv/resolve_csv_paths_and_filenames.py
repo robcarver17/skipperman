@@ -76,11 +76,15 @@ _dict_of_filenames_and_paths = dict(
     wa_field_mapping=("event_field_mapping", "wa_field_mapping_for_event_%s.csv"),
     wa_field_mapping_templates=("event_field_mapping_templates", "%s.csv"),
     mapped_wa_event=("mapped_events", "mapped_wa_event_%s.csv"),
-    mapped_wa_event_delta_rows=("mapped_events", "mapped_wa_event_with_delta_rows_%s.csv"),
-    master_event=(
-        "mapped_events",
-        "master_event_%s.csv",
+    mapped_wa_event_delta_rows=("delta_files", "mapped_wa_event_with_delta_rows_%s.csv"),
+    cadets_at_event=(
+        "cadets",
+        "cadets_at_event_%s.csv",
     ),
+identified_cadets_at_event=(
+    "cadets",
+    "identified_cadets_at_event_%s.csv"
+),
     cadets_with_groups_for_event=(
         "cadets",
         "cadets_with_groups_for_event_%s.csv",

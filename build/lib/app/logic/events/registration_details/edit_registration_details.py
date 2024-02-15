@@ -42,7 +42,7 @@ def display_form_edit_registration_details_given_event_and_sort_order(
         ListOfLines(
             [
                 "Registration details for %s" % event,
-                "(Excludes group allocation and volunteer information; plus cadet name/DOB - edit in the appropriate places)",
+                "(Excludes group allocation and volunteer information; plus cadet name/DOB - edit in the appropriate places / also food and clothing)",
                 "*CHECK FOOD PREFERENCES - autocompleted and may not be accurate*",
                 _______________,
                 back_button,
@@ -69,8 +69,8 @@ def get_registration_details_inner_form_for_event(
     registration_details = get_registration_data(event=event, sort_order=sort_order)
     top_row = get_top_row_for_table_of_registration_details(all_columns=registration_details.all_columns_excluding_special_fields)
     rows_in_table = [
-        row_for_cadet_in_event(row_in_event=row_in_event, registration_details=registration_details)
-                     for row_in_event in registration_details.master_event_details]
+        row_for_cadet_in_event( registration_details=registration_details, cadet_at_event=cadet_at_event)
+                     for cadet_at_event in registration_details.cadets_at_event]
 
     return Table([top_row]+rows_in_table)
 

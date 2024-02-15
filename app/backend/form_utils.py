@@ -6,7 +6,7 @@ from app.objects.constants import arg_not_passed
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
 from app.objects.food import FoodRequirements, OTHER_IN_FOOD_REQUIRED
-from app.objects.cadet_at_event import RowStatus, all_possible_status
+from app.objects.mapped_wa_event import RegistrationStatus, all_possible_status
 
 
 def get_availability_checkbox(availability: DaySelector, event: Event, input_name: str, input_label = "", line_break: bool = False) -> checkboxInput:
@@ -97,9 +97,9 @@ def get_food_requirements_from_form(interface: abstractInterface, checkbox_input
 
 all_status_names = [row_status.name for row_status in all_possible_status]
 
-def dropdown_input_for_status_change( input_name: str,
-                                     default_status: RowStatus = arg_not_passed,
-                                        input_label: str = "Status",
+def dropdown_input_for_status_change(input_name: str,
+                                     default_status: RegistrationStatus = arg_not_passed,
+                                     input_label: str = "Status",
                                      dict_of_options: dict = arg_not_passed) -> dropDownInput:
 
     if default_status is arg_not_passed:
@@ -118,6 +118,6 @@ def dropdown_input_for_status_change( input_name: str,
         dict_of_options=dict_of_options
         )
 
-def get_status_from_form(interface: abstractInterface, input_name: str) -> RowStatus:
+def get_status_from_form(interface: abstractInterface, input_name: str) -> RegistrationStatus:
     row_status_as_str = interface.value_from_form(input_name)
-    return RowStatus[row_status_as_str]
+    return RegistrationStatus[row_status_as_str]

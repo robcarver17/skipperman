@@ -1,4 +1,4 @@
-from app.backend.data.mapped_events import load_master_event, load_existing_mapped_wa_event_with_ids
+from app.backend.data.mapped_events import load_master_event, load_existing_mapped_wa_event
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.constants import missing_data, NoMoreData
@@ -50,7 +50,7 @@ def get_next_cadet_id_in_event_data(
 
 def list_of_cadet_ids_in_master_and_mapped_data(event: Event) -> list:
     master_event = load_master_event(event)
-    mapped_event = load_existing_mapped_wa_event_with_ids(event)
+    mapped_event = load_existing_mapped_wa_event(event)
 
     master_ids = master_event.list_of_cadet_ids
     mapped_ids = mapped_event.list_of_cadet_ids

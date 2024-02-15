@@ -12,8 +12,7 @@ from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
 from app.objects.field_list import FIELDS_TO_EDIT_IN_EDIT_VIEW, FIELDS_VIEW_ONLY_IN_EDIT_VIEW, \
     FIELDS_WITH_INTEGERS
-from app.objects.cadet_at_event import RowStatus
-from app.objects.master_event import RowInMasterEvent, MasterEvent
+from app.objects.OLDmaster_event import RowInMasterEvent, MasterEvent, RegistrationStatus
 from app.objects.constants import arg_not_passed
 from app.objects.food import FoodRequirements
 
@@ -35,7 +34,7 @@ class RegistrationDetailsForEvent:
 def get_registration_data(event: Event, sort_order: str = arg_not_passed) -> RegistrationDetailsForEvent:
     master_event_details = load_master_event(event)
     list_of_cadets = get_sorted_list_of_cadets(sort_by=sort_order)
-    master_event_details = master_event_details.sort_given_superset_of_cadet_ids(list_of_cadets.list_of_ids)
+    master_event_details = master_event_details.sort_given_subset_of_cadet_ids(list_of_cadets.list_of_ids)
     all_columns = get_list_of_columns_excluding_special_fields(master_event_details)
 
     return RegistrationDetailsForEvent(
@@ -96,7 +95,7 @@ def get_columns_to_view(row_in_event: RowInMasterEvent) -> list:
     return columns_to_view
 
 
-def get_status_button(current_status: RowStatus, cadet_id: str)-> dropDownInput:
+def get_status_button(current_status: RegistrationStatus, cadet_id: str)-> dropDownInput:
     return dropdown_input_for_status_change(input_label="",
                                             input_name=input_name_from_column_name_and_cadet_id(ROW_STATUS, cadet_id),
                                             default_status=current_status

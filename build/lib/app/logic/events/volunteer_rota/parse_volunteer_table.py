@@ -76,7 +76,7 @@ def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str
 
     volunteer_id, day =    from_copy_button_to_volunteer_id_and_day(copy_button)
     event = get_event_from_state(interface)
-    list_of_volunteers_at_event = get_list_of_volunteers_at_event(event)
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
     volunteer_at_event = list_of_volunteers_at_event.volunteer_at_event_with_id(volunteer_id)
     data_to_be_stored = get_data_to_be_stored(event)
 
@@ -97,7 +97,7 @@ def update_if_make_available_button_pressed(interface: abstractInterface, unavai
 
 def update_if_save_button_pressed_in_rota_page(interface: abstractInterface):
     event = get_event_from_state(interface)
-    list_of_volunteers_at_event = get_list_of_volunteers_at_event(event)
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
     data_to_be_stored = get_data_to_be_stored(event)
 
     for volunteer_at_event in list_of_volunteers_at_event:

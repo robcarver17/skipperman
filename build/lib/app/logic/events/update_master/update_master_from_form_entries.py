@@ -1,12 +1,12 @@
 from app.backend.form_utils import get_availablity_from_form, get_status_from_form
-from app.backend.wa_import.update_master_event_data import update_row_in_master_event_data, \
+from app.backend.wa_import.update_cadets_at_event import update_row_in_master_event_data, \
     get_row_in_mapped_event_for_cadet_id
 from app.logic.events.constants import ROW_STATUS, ATTENDANCE
 from app.logic.events.events_in_state import get_event_from_state
-from app.logic.events.update_master.track_cadet_id_in_master_file_update import get_current_cadet_id
+from app.logic.events.cadets_at_event.track_cadet_id_in_master_file_update import get_current_cadet_id_at_event
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event
-from app.objects.master_event import RowInMasterEvent, get_row_of_master_event_from_mapped_row_with_idx_and_status
+from app.objects.OLDmaster_event import RowInMasterEvent, get_row_of_master_event_from_mapped_row_with_idx_and_status
 
 
 def update_mapped_wa_event_data_with_new_data(interface: abstractInterface):
@@ -36,7 +36,7 @@ def update_mapped_wa_event_data_with_form_data(interface: abstractInterface):
 def get_new_row_in_mapped_wa_event_from_state_data(
     interface: abstractInterface, event: Event
 ) -> RowInMasterEvent:
-    cadet_id = get_current_cadet_id(interface)
+    cadet_id = get_current_cadet_id_at_event(interface)
 
     row_in_mapped_wa_event_with_id = get_row_in_mapped_event_for_cadet_id(
         event, cadet_id=cadet_id

@@ -52,7 +52,7 @@ def add_volunteer_and_cadet_association_for_potential_new_volunteer(cadet_id:str
         cadet_id=cadet_id,
         volunteer_id=volunteer_id
     )
-    list_of_volunteers_at_event.add_potentially_new_volunteer_with_cadet_association(volunteer_at_event)
+    list_of_volunteers_at_event.add_new_volunteer(volunteer_at_event)
     save_list_of_volunteers_at_event(event=event, list_of_volunteers_at_event=list_of_volunteers_at_event)
 
 

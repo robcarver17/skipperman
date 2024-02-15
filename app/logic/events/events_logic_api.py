@@ -42,12 +42,12 @@ from app.logic.events.import_wa.import_wa_file import (
     display_form_import_event_file,
     post_form_import_event_file,
 )
-from app.logic.events.cadets_at_event.iteratively_add_cadets_in_wa_import_stage import (
-    display_form_iteratively_add_cadets_during_import,
-    post_form_iteratively_add_cadets_during_import,
+from app.logic.events.cadets_at_event.iteratively_add_cadet_ids_in_wa_import_stage import (
+    display_form_add_cadet_ids_during_import,
+    post_form_add_cadet_ids_during_import,
 )
-from app.logic.events.update_master.interactively_update_master_records import (
-    display_form_interactively_update_master_records, post_form_interactively_update_master_records,
+from app.logic.events.cadets_at_event.interactively_update_records_of_cadets_at_event import (
+    display_form_interactively_update_cadets_at_event, post_form_interactively_update_cadets_at_event,
 )
 from app.logic.events.import_wa.update_existing_event import (
     display_form_update_existing_event,
@@ -60,13 +60,15 @@ from app.logic.events.allocate_cadets_to_groups import (
     display_form_allocate_cadets,
     post_form_allocate_cadets,
 )
-from app.logic.events.volunteer_allocation.volunteer_extraction_given_master_file import display_form_volunteer_extraction_from_master_records_initalise_loop, post_form_volunteer_extraction_initialise_from_master_records, display_form_volunteer_extraction_from_master_records_looping, post_form_volunteer_extraction_from_master_records_looping
-from app.logic.events.volunteer_allocation.verify_volunteers_if_cadet_deleted import display_form_volunteer_extraction_from_master_records_if_cadet_is_deleted_or_cancelled, post_form_volunteer_extraction_from_master_records_if_cadet_is_deleted_or_cancelled
-from app.logic.events.volunteer_allocation.add_volunteers_to_cadet import \
-    display_form_add_volunteers_to_cadet_initialise, post_form_add_volunteers_to_cadet_initialise, \
-    display_form_add_volunteers_to_cadet_loop, post_form_add_volunteers_to_cadet_loop
-from app.logic.events.volunteer_allocation.confirm_volunteer_details import display_form_confirm_volunteer_details, post_form_confirm_volunteer_details
-from app.logic.events.volunteer_allocation.volunteer_selection import display_form_volunteer_selection_for_cadet_at_event, post_form_volunteer_selection_for_cadet_at_event
+from app.logic.events.volunteer_allocation.volunteer_identification import \
+    display_form_volunteer_identification_initalise_loop, post_form_volunteer_identification_initialise, \
+    display_form_volunteer_identification_from_mapped_event_data, post_form_volunteer_identification_looping, \
+    identify_volunteers_in_specific_row_loop, \
+    post_form_add_volunteers_to_cadet_loop
+from app.logic.events.volunteer_rota.verify_volunteers_if_cadet_deleted import \
+    post_form_volunteer_extraction_from_master_records_if_cadet_is_deleted_or_cancelled
+from app.logic.events.volunteer_allocation.add_volunteers_to_event import loop_over_volunteers_identified_in_event, post_form_confirm_volunteer_details, initialise_loop_over_volunteers_identifed_in_event
+from app.logic.events.volunteer_allocation.volunteer_selection import display_form_volunteer_selection_at_event, post_form_volunteer_selection
 
 from app.logic.events.registration_details.edit_registration_details import display_form_edit_registration_details, post_form_edit_registration_details
 from app.logic.events.volunteer_rota.display_main_rota_page import display_form_view_for_volunteer_rota, post_form_view_for_volunteer_rota
@@ -94,17 +96,19 @@ class EventLogicApi(AbstractLogicApi):
                 WA_IMPORT_SUBSTAGE_IN_VIEW_EVENT_STAGE: display_form_import_event_file,
 
                 WA_UPDATE_CONTROLLER_IN_VIEW_EVENT_STAGE: import_controller,
-                WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE: display_form_iteratively_add_cadets_during_import,
-                WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE: display_form_interactively_update_master_records,
+                WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE: display_form_add_cadet_ids_during_import,
+                WA_UPDATE_CADETS_AT_EVENT_IN_VIEW_EVENT_STAGE: display_form_interactively_update_cadets_at_event,
 
-                WA_VOLUNTEER_EXTRACTION_INITIALISE_IN_VIEW_EVENT_STAGE: display_form_volunteer_extraction_from_master_records_initalise_loop,
-                WA_VOLUNTEER_EXTRACTION_LOOP_IN_VIEW_EVENT_STAGE: display_form_volunteer_extraction_from_master_records_looping,
-                WA_VOLUNTEER_EXTRACTION_MISSING_CADET_IN_VIEW_EVENT_STAGE: display_form_volunteer_extraction_from_master_records_if_cadet_is_deleted_or_cancelled,
-                WA_VOLUNTEER_EXTRACTION_ADD_VOLUNTEERS_TO_CADET_INIT_IN_VIEW_EVENT_STAGE: display_form_add_volunteers_to_cadet_initialise,
-                WA_VOLUNTEER_EXTRACTION_ADD_VOLUNTEERS_TO_CADET_LOOP_IN_VIEW_EVENT_STAGE: display_form_add_volunteers_to_cadet_loop,
+                WA_VOLUNTEER_IDENITIFICATION_INITIALISE_IN_VIEW_EVENT_STAGE: display_form_volunteer_identification_initalise_loop,
+                WA_VOLUNTEER_IDENITIFICATION_LOOP_IN_VIEW_EVENT_STAGE: display_form_volunteer_identification_from_mapped_event_data,
+                #WA_VOLUNTEER_EXTRACTION_MISSING_CADET_IN_VIEW_EVENT_STAGE: display_form_volunteer_extraction_from_master_records_if_cadet_is_deleted_or_cancelled,
 
-                WA_VOLUNTEER_EXTRACTION_SELECTION_IN_VIEW_EVENT_STAGE:display_form_volunteer_selection_for_cadet_at_event,
-                WA_VOLUNTEER_EXTRACTION_ADD_DETAILS_IN_VIEW_EVENT_STAGE: display_form_confirm_volunteer_details,
+                WA_IDENTIFY_VOLUNTEERS_IN_SPECIFIC_ROW_LOOP_IN_VIEW_EVENT_STAGE: identify_volunteers_in_specific_row_loop,
+
+                WA_VOLUNTEER_IDENTIFICATION_SELECTION_IN_VIEW_EVENT_STAGE:display_form_volunteer_selection_at_event,
+
+                VOLUNTEER_DETAILS_INITIALISE_IN_VIEW_EVENT_STAGE: initialise_loop_over_volunteers_identifed_in_event,
+                VOLUNTEER_DETAILS_LOOP_IN_VIEW_EVENT_STAGE: loop_over_volunteers_identified_in_event,
 
                 WA_UPDATE_SUBSTAGE_IN_VIEW_EVENT_STAGE: display_form_update_existing_event,
 
@@ -148,21 +152,21 @@ class EventLogicApi(AbstractLogicApi):
             post_import_controller,
 
         WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE:
-            post_form_iteratively_add_cadets_during_import,
-        WA_PROCESS_ROWS_ITERATION_IN_VIEW_EVENT_STAGE:
-            post_form_interactively_update_master_records,
+            post_form_add_cadet_ids_during_import,
+        WA_UPDATE_CADETS_AT_EVENT_IN_VIEW_EVENT_STAGE:
+            post_form_interactively_update_cadets_at_event,
 
-        WA_VOLUNTEER_EXTRACTION_INITIALISE_IN_VIEW_EVENT_STAGE:
-            post_form_volunteer_extraction_initialise_from_master_records,
+        WA_VOLUNTEER_IDENITIFICATION_INITIALISE_IN_VIEW_EVENT_STAGE:
+            post_form_volunteer_identification_initialise,
 
-        WA_VOLUNTEER_EXTRACTION_LOOP_IN_VIEW_EVENT_STAGE: post_form_volunteer_extraction_from_master_records_looping,
+        WA_VOLUNTEER_IDENITIFICATION_LOOP_IN_VIEW_EVENT_STAGE: post_form_volunteer_identification_looping,
         WA_VOLUNTEER_EXTRACTION_MISSING_CADET_IN_VIEW_EVENT_STAGE: post_form_volunteer_extraction_from_master_records_if_cadet_is_deleted_or_cancelled,
-        WA_VOLUNTEER_EXTRACTION_SELECTION_IN_VIEW_EVENT_STAGE: post_form_volunteer_selection_for_cadet_at_event,
-        WA_VOLUNTEER_EXTRACTION_ADD_VOLUNTEERS_TO_CADET_INIT_IN_VIEW_EVENT_STAGE: post_form_add_volunteers_to_cadet_initialise,
+        WA_VOLUNTEER_IDENTIFICATION_SELECTION_IN_VIEW_EVENT_STAGE: post_form_volunteer_selection,
 
-        WA_VOLUNTEER_EXTRACTION_ADD_VOLUNTEERS_TO_CADET_LOOP_IN_VIEW_EVENT_STAGE: post_form_add_volunteers_to_cadet_loop,
 
-        WA_VOLUNTEER_EXTRACTION_ADD_DETAILS_IN_VIEW_EVENT_STAGE: post_form_confirm_volunteer_details,
+        WA_IDENTIFY_VOLUNTEERS_IN_SPECIFIC_ROW_LOOP_IN_VIEW_EVENT_STAGE: post_form_add_volunteers_to_cadet_loop,
+
+        VOLUNTEER_DETAILS_LOOP_IN_VIEW_EVENT_STAGE: post_form_confirm_volunteer_details,
 
             WA_UPDATE_SUBSTAGE_IN_VIEW_EVENT_STAGE:
             post_form_uupdate_existing_event,

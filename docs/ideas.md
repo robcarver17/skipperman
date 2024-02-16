@@ -51,6 +51,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Basic - to do:
   
+- don't allow duplicate templates and delete templates allowed
 - allocate safety boats 
 - report on a volunteer rota
 - edit event (warnings especially days!)

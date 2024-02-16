@@ -16,7 +16,8 @@ WA_IMPORT_BUTTON_LABEL = "Import data from uploaded Wild Apricot file"
 WA_UPDATE_BUTTON_LABEL = "Upload and update Wild Apricot data from export file"
 
 # Iterative adding of cadets
-CHECK_CADET_BUTTON_LABEL = "Check cadet details entered"
+DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL = "I have double checked the cadet details entered - let me add this cadet"
+CHECK_CADET_FOR_ME_BUTTON_LABEL = "Please check the details again for me before I add"
 FINAL_CADET_ADD_BUTTON_LABEL = "Yes - these details are correct - add this new cadet"
 SEE_ALL_CADETS_BUTTON_LABEL = "Choose from all existing cadets"
 SEE_SIMILAR_CADETS_ONLY_LABEL = "See similar cadets only"
@@ -48,7 +49,8 @@ USE_DATA_IN_FORM_BUTTON_LABEL = (
 UPDATE_ALLOCATION_BUTTON_LABEL = "Save group allocation"
 
 ## Volunteers
-CHECK_VOLUNTEER_BUTTON_LABEL = "Check volunteer details entered"
+CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL = "I have double checked the volunteer details entered - allow me to add"
+CHECK_FOR_ME_VOLUNTEER_BUTTON_LABEL = "Please check these volunteer details for me"
 FINAL_VOLUNTEER_ADD_BUTTON_LABEL = "Yes - these details are correct - add this new volunteer"
 SEE_ALL_VOLUNTEER_BUTTON_LABEL = "Choose from all existing volunteers"
 SEE_SIMILAR_VOLUNTEER_ONLY_LABEL = "See similar volunteers only"
@@ -57,64 +59,6 @@ SKIP_VOLUNTEER_BUTTON_LABEL = "Skip - no volunteer to add for this cadet"
 ## Volunteer roles
 EDIT_VOLUNTEER_ROLES_BUTTON_LABEL = "Volunteer rota"
 
-############
-## Stages ##
-############
-
-ADD_EVENT_STAGE = "Add_event_stage"
-VIEW_EVENT_STAGE = "View_event_stage"
-
-WA_FIELD_MAPPING_IN_VIEW_EVENT_STAGE = "WA_field_mapping_in_View_event_stage"
-
-WA_SELECT_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE = (
-    "WA_select_template_in_view_event_stage"
-)
-WA_UPLOAD_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE = (
-    "WA_upload_template_in_view_event_stage"
-)
-
-WA_CLONE_EVENT_MAPPING_IN_VIEW_EVENT_STAGE = "WA_clone_event_in_view_event_stage"
-WA_UPLOAD_EVENT_MAPPING_IN_VIEW_EVENT_STAGE = (
-    "WA_upload_event_mapping_in_view_event_stage"
-)
-WA_DOWNLOAD_EVENT_TEMPLATE_MAPPING_IN_VIEW_EVENT_STAGE = (
-    "WA_download_event_mapping_in_view_event_stage"
-)
-
-WA_UPLOAD_SUBSTAGE_IN_VIEW_EVENT_STAGE = "WA_upload_substage_in_View_event_stage"
-WA_IMPORT_SUBSTAGE_IN_VIEW_EVENT_STAGE = "WA_import_substage_in_View_event_stage"
-WA_UPDATE_SUBSTAGE_IN_VIEW_EVENT_STAGE = "WA_update_substage_in_View_event_stage"
-
-WA_UPDATE_CONTROLLER_IN_VIEW_EVENT_STAGE = "WA_update_controller_in_view_event_stage"
-
-WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE = (
-    "WA_add_cadet_ids_in_interation_in_view_event_stage"
-)
-WA_UPDATE_CADETS_AT_EVENT_IN_VIEW_EVENT_STAGE = (
-    "WA_update_cadets_at_event_view_event_stage"
-)
-
-WA_VOLUNTEER_IDENITIFICATION_INITIALISE_IN_VIEW_EVENT_STAGE = "WA_extract_volunteer_information_initialise_in_view_event_stage"
-WA_VOLUNTEER_IDENITIFICATION_LOOP_IN_VIEW_EVENT_STAGE = "WA_extract_volunteer_information_loop_in_view_event_stage"
-WA_IDENTIFY_VOLUNTEERS_IN_SPECIFIC_ROW_LOOP_IN_VIEW_EVENT_STAGE = "WA_extract_volunteer_information_add_volunteers_loop_in_view_event_stage"
-WA_VOLUNTEER_IDENTIFICATION_SELECTION_IN_VIEW_EVENT_STAGE = "WA_extract_volunteer_information_selection_in_view_event_stage"
-
-VOLUNTEER_DETAILS_INITIALISE_IN_VIEW_EVENT_STAGE = "volunteer_details_initialise_in_view_event_stage"
-VOLUNTEER_DETAILS_LOOP_IN_VIEW_EVENT_STAGE = "volunteer_details_loop_in_view_event_stage"
-
-VOLUNTEER_ROTA_INITIALISE_LOOP_IN_VIEW_EVENT_STAGE = "volunteer_rota_initialise_loop_in_view_event_stage"
-VOLUNTEER_ROTA_CHECK_LOOP_IN_VIEW_EVENT_STAGE = "volunteer_rota_check_loop_in_view_event_stage"
-
-
-ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE = "Allocate_cadets_in_View_event_stage"
-
-EDIT_CADET_REGISTRATION_DATA_IN_VIEW_EVENT_STAGE = "Edit_registration_details_in_view_event_stage"
-
-EDIT_VOLUNTEER_ROTA_EVENT_STAGE = "Edit_volunteer_rota_in_view_event_stage"
-EDIT_VOLUNTEER_DETAILS_FROM_ROTA_EVENT_STAGE = "Edit_volunteer_details_from_rota_in_view_event_stage"
-EDIT_CADET_CONNECTIONS_FROM_ROTA_EVENT_STAGE = "Edit_cadet_connections_from_rota_in_view_event_stage"
-EDIT_VOLUNTEER_SKILLS_FROM_ROTA_EVENT_STAGE = "Edit_volunteer_skills_from_rota_in_view_event_stage"
-ADD_NEW_VOLUNTEER_TO_ROTA_EVENT_STAGE ="Add_new_volunteer_to_rota_event_stage"
 
 ## constants.py in session data
 EVENT = "event"

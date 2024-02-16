@@ -32,7 +32,7 @@ def volunteer_rota_initialise_changed_cadet_loop(interface: abstractInterface)->
 
     clear_cadet_id_for_rota_at_event(interface)
 
-    return NewForm(VOLUNTEER_ROTA_CHECK_LOOP_IN_VIEW_EVENT_STAGE)
+    return interface.get_new_display_form_given_function(volunteer_rota_check_changed_cadet_loop)
 
 
 # VOLUNTEER_ROTA_CHECK_LOOP_IN_VIEW_EVENT_STAGE
@@ -41,12 +41,12 @@ def volunteer_rota_check_changed_cadet_loop(interface: abstractInterface) -> Uni
         cadet_id = get_and_save_next_cadet_id_in_event_data(interface)
     except NoMoreData:
         ## main volunteer rota form
-        return goto_main_rota_form()
+        return goto_main_rota_form(interface)
 
     return check_cadet_in_loop(interface=interface, cadet_id=cadet_id)
 
-def goto_main_rota_form():
-    return NewForm(EDIT_VOLUNTEER_ROTA_EVENT_STAGE)
+def goto_main_rota_form(interface:abstractInterface)-> NewForm:
+    return interface.get_new_display_form_given_function(volunteer_rota_initialise_changed_cadet_loop)
 
 
 def check_cadet_in_loop(interface: abstractInterface, cadet_id: str) -> Union[Form, NewForm]:
@@ -56,10 +56,10 @@ def check_cadet_in_loop(interface: abstractInterface, cadet_id: str) -> Union[Fo
     if cadet_has_changed:
         return display_form_volunteer_rota_check_changed_cadet_loop(interface=interface, cadet_id=cadet_id)
     else:
-        return goto_next_cadet_in_loop()
+        return goto_next_cadet_in_loop(interface)
 
-def goto_next_cadet_in_loop() -> NewForm:
-    return NewForm(VOLUNTEER_ROTA_CHECK_LOOP_IN_VIEW_EVENT_STAGE)  ## next cadet
+def goto_next_cadet_in_loop(interface: abstractInterface) -> NewForm:
+    return interface.get_new_display_form_given_function(volunteer_rota_check_changed_cadet_loop)
 
 def display_form_volunteer_rota_check_changed_cadet_loop(interface: abstractInterface, cadet_id: str) -> Form:
     event = get_event_from_state(interface)
@@ -150,7 +150,7 @@ def post_form_volunteer_rota_check_changed_cadet_loop(interface: abstractInterfa
     event = get_event_from_state(interface)
     mark_cadet_at_event_as_unchanged(cadet_id=cadet_id, event=event)
     ## next cadet
-    return goto_next_cadet_in_loop()
+    return goto_next_cadet_in_loop(interface)
 
 def modify_specific_volunteer_when_cadet_changed(interface: abstractInterface, volunteer_id: str, cadet_id: str):
 

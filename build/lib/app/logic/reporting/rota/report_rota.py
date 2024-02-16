@@ -32,7 +32,7 @@ from app.logic.events.events_in_state import get_event_from_state, update_state_
 from app.backend.events import confirm_event_exists_given_description
 
 from app.logic.reporting.constants import *
-from app.logic.events.view_events import display_list_of_events_with_buttons
+from app.logic.events.ENTRY_view_events import display_list_of_events_with_buttons
 
 
 # GROUP_ALLOCATION_REPORT_STAGE

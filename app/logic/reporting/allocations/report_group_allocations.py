@@ -33,7 +33,7 @@ from app.logic.events.events_in_state import get_event_from_state, update_state_
 from app.backend.events import confirm_event_exists_given_description
 
 from app.logic.reporting.constants import *
-from app.logic.events.view_events import display_list_of_events_with_buttons
+from app.logic.events.ENTRY_view_events import display_list_of_events_with_buttons
 
 
 # GROUP_ALLOCATION_REPORT_STAGE
@@ -52,7 +52,7 @@ def post_form_report_group_allocation(
 ) -> Union[Form, NewForm]:
     last_button = interface.last_button_pressed()
     if last_button == BACK_BUTTON_LABEL:
-        return initial_state_form
+        return interface.get_new_display_form_for_parent_of_function(display_form_report_group_allocation)
 
     event_name_selected = last_button
     try:
@@ -69,7 +69,7 @@ def post_form_report_group_allocation(
         interface=interface, event_description=event_name_selected
     )
 
-    return NewForm(GENERIC_OPTIONS_IN_GROUP_ALLOCATION_STATE)
+    return interface.get_new_display_form_given_function(display_form_for_report_group_allocation_generic_options)
 
 
 # GENERIC_OPTIONS_IN_GROUP_ALLOCATION_STATE
@@ -112,25 +112,28 @@ def post_form_for_report_group_allocation_generic_options(
     interface: abstractInterface,
 ) -> Union[Form, NewForm, File]:
     last_button_pressed = interface.last_button_pressed()
+    previous_form = interface.get_new_display_form_for_parent_of_function(display_form_for_report_group_allocation_generic_options)
     if last_button_pressed == CREATE_REPORT_BUTTON_LABEL:
         return create_report(interface)
 
     elif last_button_pressed == MODIFY_PRINT_OPTIONS_BUTTON_LABEL:
-        return NewForm(CHANGE_PRINT_OPTIONS_IN_GROUP_ALLOCATION_STATE)
+        return interface.get_new_display_form_given_function(display_form_for_report_group_allocation_print_options)
 
     elif last_button_pressed == CHANGE_GROUP_LAYOUT_BUTTON:
-        return NewForm(CHANGE_GROUP_LAYOUT_IN_GROUP_ALLOCATION_STATE)
+        return interface.get_new_display_form_given_function(display_form_for_group_arrangement_options_allocation_report)
 
     elif last_button_pressed == MODIFY_ADDITIONAL_OPTIONS_BUTTON_LABEL:
-        return NewForm(REPORT_ADDITIONAL_OPTIONS_FOR_ALLOCATION_REPORT)
+        return interface.get_new_display_form_given_function(display_form_for_report_group_additional_options)
 
     elif last_button_pressed == BACK_BUTTON_LABEL:
         # otherwise event/report specific data like filenames is remembered; also group order which could break everything if persisted
         # note if the report type was persistently stored we'd need to keep it here but it is not
         interface.clear_persistent_data_except_specified_fields([])
-        return NewForm(GROUP_ALLOCATION_REPORT_STAGE)
+        return previous_form
+
     elif last_button_pressed == CANCEL_BUTTON_LABEL:
         return initial_state_form
+
     else:
         button_error_and_back_to_initial_state_form(interface)
 
@@ -159,20 +162,26 @@ def display_form_for_report_group_additional_options(
     )
 
 
-def post_form_for_report_group_allocation_options(
+def post_form_for_report_group_additional_options(
     interface: abstractInterface,
 ) -> Union[Form, NewForm, File]:
     last_button_pressed = interface.last_button_pressed()
+    previous_form = interface.get_new_display_form_for_parent_of_function(display_form_for_report_group_allocation_generic_options)
+
     if last_button_pressed == BACK_BUTTON_LABEL:
-        return NewForm(GENERIC_OPTIONS_IN_GROUP_ALLOCATION_STATE)
+        return previous_form
+
     elif  last_button_pressed== CREATE_REPORT_BUTTON_LABEL:
         get_group_allocation_report_additional_parameters_from_form_and_save(interface)
         return create_report(interface)
+
     elif last_button_pressed == SAVE_THESE_OPTIONS_BUTTON_LABEL:
         get_group_allocation_report_additional_parameters_from_form_and_save(interface)
-        return NewForm(GENERIC_OPTIONS_IN_GROUP_ALLOCATION_STATE)
+        return previous_form
+
     elif last_button_pressed == CANCEL_BUTTON_LABEL:
         return initial_state_form
+
     else:
         button_error_and_back_to_initial_state_form(interface)
 
@@ -209,20 +218,26 @@ def post_form_for_report_group_allocation_print_options(
     interface: abstractInterface,
 ) -> Union[Form, NewForm, File]:
     last_button_pressed = interface.last_button_pressed()
+    previous_form = interface.get_new_display_form_for_parent_of_function(display_form_for_report_group_allocation_print_options)
 
     if last_button_pressed == BACK_BUTTON_LABEL:
-        return NewForm(GENERIC_OPTIONS_IN_GROUP_ALLOCATION_STATE)
+        return previous_form
+
     elif last_button_pressed == CANCEL_BUTTON_LABEL:
         return initial_state_form
 
+    #saving
     print_options = get_print_options_from_main_option_form_fields(interface)
     save_print_options(
         report_type=specific_parameters_for_allocation_report.report_type, print_options=print_options, interface=interface
     )
     if last_button_pressed == CREATE_REPORT_BUTTON_LABEL:
         return create_report(interface)
+
     elif last_button_pressed == SAVE_THESE_OPTIONS_BUTTON_LABEL:
-        return NewForm(GENERIC_OPTIONS_IN_GROUP_ALLOCATION_STATE)
+        ## already saved
+        return previous_form
+
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
@@ -252,11 +267,14 @@ def post_form_for_group_arrangement_options_allocation_report(
         interface: abstractInterface,
 ) -> Union[NewForm, Form, File]:
     last_button_pressed = interface.last_button_pressed()
+    previous_form = interface.get_new_display_form_for_parent_of_function(display_form_for_group_arrangement_options_allocation_report)
 
     if last_button_pressed == CREATE_REPORT_BUTTON_LABEL:
         return create_report(interface)
+
     elif last_button_pressed == BACK_BUTTON_LABEL:
-        return NewForm(GENERIC_OPTIONS_IN_GROUP_ALLOCATION_STATE)
+        return previous_form
+
     elif last_button_pressed == CANCEL_BUTTON_LABEL:
         return initial_state_form
     else:

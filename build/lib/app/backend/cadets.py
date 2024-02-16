@@ -38,10 +38,14 @@ def get_list_of_cadets_similar_to_name_first(object_with_name, from_list_of_cade
 
     return ListOfCadets(first_lot+list_of_cadets)
 
+def get_cadet_from_id(cadet_id: str) -> Cadet:
+    list_of_cadets = get_list_of_all_cadets()
+
+    return list_of_cadets.object_with_id(cadet_id)
 
 
 def get_cadet_from_list_of_cadets(cadet_selected: str) -> Cadet:
-    list_of_cadets = get_sorted_list_of_cadets()
+    list_of_cadets = get_list_of_all_cadets()
     list_of_cadets_as_str = get_list_of_cadets_as_str(list_of_cadets=list_of_cadets)
 
     cadet_idx = list_of_cadets_as_str.index(cadet_selected)

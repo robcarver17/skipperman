@@ -4,7 +4,7 @@ from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.logic.events.constants import (
-    CHECK_CADET_BUTTON_LABEL,
+    DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL,
     FINAL_CADET_ADD_BUTTON_LABEL,
     SEE_ALL_CADETS_BUTTON_LABEL,
     SEE_SIMILAR_CADETS_ONLY_LABEL,
@@ -72,7 +72,7 @@ def get_footer_buttons_add_or_select_existing_cadets_form(
 
 
 def get_list_of_main_buttons(include_final_button: bool) -> Line:
-    check = Button(CHECK_CADET_BUTTON_LABEL)
+    check = Button(DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL)
     add = Button(FINAL_CADET_ADD_BUTTON_LABEL)
 
     if include_final_button:

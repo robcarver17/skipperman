@@ -13,10 +13,10 @@ from app.objects.abstract_objects.abstract_form import textInput, dateInput, rad
 
 DEBUG =False
 
-def process_abstract_form_to_html(form: Form, interface: flaskInterface) -> Html:
+def process_abstract_form_to_html(form: Form, current_url: str) -> Html:
     print("Abstract form %s" % str(form))
     html_inside_form = get_html_inside_form(form)
-    form = form_html_wrapper(interface.current_url)
+    form = form_html_wrapper(current_url)
 
     return form.wrap_around(html_inside_form)
 

@@ -1,6 +1,6 @@
-from app.logic.abstract_logic_api import AbstractLogicApi, INITIAL_STATE
+from app.logic.abstract_logic_api import LogicApi, INITIAL_STATE
 
-from app.logic.cadets.view_cadets import (
+from app.logic.cadets.ENTRY_view_cadets import (
     display_form_view_of_cadets,
     post_form_view_of_cadets,
 )
@@ -14,9 +14,9 @@ from app.logic.cadets.delete_cadet import display_form_delete_individual_cadet, 
 from app.logic.cadets.constants import *
 
 
-class CadetLogicApi(AbstractLogicApi):
+class CadetLogicApi(LogicApi):
     @property
-    def dict_of_display_forms(self) -> dict:
+    def display_form_name_function_mapping(self) -> dict:
         return {
         INITIAL_STATE: display_form_view_of_cadets,
         VIEW_INDIVIDUAL_CADET_STAGE: display_form_view_individual_cadet,
@@ -26,7 +26,7 @@ class CadetLogicApi(AbstractLogicApi):
         }
 
     @property
-    def dict_of_posted_forms(self) -> dict:
+    def post_form_name_function_mapping(self) -> dict:
         return {INITIAL_STATE: post_form_view_of_cadets,
         ADD_CADET_STAGE: post_form_add_cadets,
         VIEW_INDIVIDUAL_CADET_STAGE: post_form_view_individual_cadet,

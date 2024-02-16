@@ -1,6 +1,9 @@
 from typing import Union
+
+from app.logic.events.add_event import display_form_view_for_add_event
 from app.logic.events.events_in_state import update_state_for_specific_event_given_event_description
 from app.backend.events import get_sorted_list_of_events, confirm_event_exists_given_description
+from app.logic.events.view_individual_events import display_form_view_individual_event
 from app.objects.events import SORT_BY_START_ASC, SORT_BY_NAME, SORT_BY_START_DSC
 
 from app.objects.abstract_objects.abstract_form import (
@@ -11,8 +14,6 @@ from app.objects.abstract_objects.abstract_buttons import main_menu_button, Butt
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.events.constants import (
     ADD_EVENT_BUTTON_LABEL,
-    ADD_EVENT_STAGE,
-    VIEW_EVENT_STAGE,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -43,7 +44,7 @@ def display_form_view_of_events_sort_order_passed( interface: abstractInterface,
 def post_form_view_of_events(interface: abstractInterface) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
     if button_pressed == ADD_EVENT_BUTTON_LABEL:
-        return NewForm(ADD_EVENT_STAGE)
+        return interface.get_new_display_form_given_function(display_form_view_for_add_event)
     elif button_pressed in all_sort_types:
         ## no change to stage required
         sort_by = interface.last_button_pressed()
@@ -61,7 +62,7 @@ def action_when_event_button_clicked(interface: abstractInterface) -> NewForm:
     update_state_for_specific_event_given_event_description(
         interface=interface, event_description=event_description_selected)
 
-    return NewForm(VIEW_EVENT_STAGE)
+    return interface.get_new_display_form_given_function(display_form_view_individual_event)
 
 
 def display_list_of_events_with_buttons(sort_by=SORT_BY_START_DSC) -> ListOfLines:

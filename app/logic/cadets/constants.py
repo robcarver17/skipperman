@@ -15,8 +15,3 @@ SURNAME = "surname"
 DOB = "date_of_birth"
 CADET = "Selected_Cadet"
 
-## stage names
-ADD_CADET_STAGE = "add_cadet_stage"
-VIEW_INDIVIDUAL_CADET_STAGE = "view_individual_cadet_stage"
-EDIT_INDIVIDUAL_CADET_STAGE = "edit_individual_cadet_stage"
-DELETE_INDIVIDUAL_CADET_STAGE = "delete_individual_cadet_stage"

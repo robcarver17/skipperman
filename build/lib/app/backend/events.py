@@ -2,6 +2,7 @@ import datetime
 
 from app.backend.data.events import get_list_of_all_events
 from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME, SIMILARITY_LEVEL_TO_WARN_DATE
+from app.data_access.data import data
 
 from app.objects.events import Event, ListOfEvents,  SORT_BY_START_DSC
 
@@ -72,3 +73,13 @@ def confirm_event_exists_given_description(event_description):
     __ = list_of_events.event_with_description(event_description)
 
 
+def is_wa_field_mapping_setup_for_event(event: Event) -> bool:
+    try:
+        wa_mapping_dict = data.data_wa_field_mapping.read(event.id)
+
+        if len(wa_mapping_dict) == 0:
+            return False
+        else:
+            return True
+    except:
+        return False

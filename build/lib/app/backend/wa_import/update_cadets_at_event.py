@@ -1,6 +1,6 @@
 from app.backend.cadets import cadet_name_from_id
 from app.backend.data.mapped_events import load_mapped_wa_event
-from app.backend.data.cadets_at_event import load_cadets_at_event, save_cadets_at_event
+from app.backend.data.cadets_at_event import load_cadets_at_event, save_cadets_at_event, load_identified_cadets_at_event
 from app.backend.data.cadets_at_event import load_identified_cadets_at_event
 from app.objects.cadet_at_event import CadetAtEvent, get_cadet_at_event_from_row_in_mapped_event
 from app.objects.constants import DuplicateCadets, missing_data
@@ -43,9 +43,8 @@ def get_all_rows_in_mapped_event_for_cadet_id(event: Event, cadet_id:str)-> Mapp
     mapped_data = load_mapped_wa_event(event)
 
     list_of_row_ids = identified_cadets.list_of_row_ids_matching_cadet_id(cadet_id)
-    mapped_data.subset_with_id(list_of_row_ids)
-
-    return mapped_data
+    relevant_rows =mapped_data.subset_with_id(list_of_row_ids)
+    return relevant_rows
 
 def add_new_cadet_to_event(
         event: Event, row_in_mapped_wa_event: RowInMappedWAEvent,
@@ -174,3 +173,12 @@ def mark_cadet_at_event_as_unchanged(cadet_id: str, event: Event):
     list_of_cadets_at_event.mark_cadet_as_unchanged(cadet_id)
     save_cadets_at_event(list_of_cadets_at_event=list_of_cadets_at_event, event=event)
 
+
+def cadet_ids_in_mapped_data(event: Event) -> list:
+    identified_cadets = load_identified_cadets_at_event(event)
+    mapped_event = load_mapped_wa_event(event)
+
+    row_ids = mapped_event.list_of_row_ids()
+    list_of_cadet_ids = [identified_cadets.cadet_id_given_row_id(row_id) for row_id in row_ids]
+
+    return list_of_cadet_ids

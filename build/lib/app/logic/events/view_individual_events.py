@@ -1,9 +1,17 @@
 from typing import Union
 
+from app.backend.events import is_wa_field_mapping_setup_for_event
 from app.backend.volunteers.volunteer_rota_summary import get_summary_list_of_roles_and_groups_for_events
-from app.data_access.data import data
 from app.backend.wa_import.map_wa_files import is_wa_file_mapping_setup_for_event
 from app.backend.group_allocations.summarise_allocations_data import summarise_allocations_for_event
+from app.logic.events.allocate_cadets_to_groups import display_form_allocate_cadets
+from app.logic.events.import_wa.import_wa_file import display_form_import_event_file
+from app.logic.events.import_wa.update_existing_event import display_form_update_existing_event
+from app.logic.events.import_wa.upload_event_file import display_form_upload_event_file
+from app.logic.events.mapping.event_field_mapping import display_form_event_field_mapping
+from app.logic.events.registration_details.edit_registration_details import display_form_edit_registration_details
+from app.logic.events.volunteer_rota.verify_volunteers_if_cadet_at_event_changed import \
+    volunteer_rota_initialise_changed_cadet_loop
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm
@@ -11,7 +19,7 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
+from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 
 from app.logic.events.constants import *
 from app.backend.wa_import.load_wa_file import does_raw_event_file_exist
@@ -151,29 +159,29 @@ def post_form_view_individual_event(
 
     last_button_pressed = interface.last_button_pressed()
     if last_button_pressed == WA_UPLOAD_BUTTON_LABEL:
-        return NewForm(WA_UPLOAD_SUBSTAGE_IN_VIEW_EVENT_STAGE)
+        return interface.get_new_display_form_given_function(display_form_upload_event_file)
 
     elif last_button_pressed in [WA_FIELD_MAPPING_BUTTON_LABEL, WA_MODIFY_FIELD_MAPPING_BUTTON_LABEL, WA_CHECK_FIELD_MAPPING_BUTTON_LABEL]:
         ## same form, but contents will be different
-        return NewForm(WA_FIELD_MAPPING_IN_VIEW_EVENT_STAGE)
+        return interface.get_new_display_form_given_function(display_form_event_field_mapping)
 
     elif last_button_pressed == WA_IMPORT_BUTTON_LABEL:
-        return NewForm(WA_IMPORT_SUBSTAGE_IN_VIEW_EVENT_STAGE)
+        return interface.get_new_display_form_given_function(display_form_import_event_file)
 
     elif last_button_pressed == WA_UPDATE_BUTTON_LABEL:
-        return NewForm(WA_UPDATE_SUBSTAGE_IN_VIEW_EVENT_STAGE)
+        return interface.get_new_display_form_given_function(display_form_update_existing_event)
 
     elif last_button_pressed == ALLOCATE_CADETS_BUTTON_LABEL:
-        return NewForm(ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE)
+        return interface.get_new_display_form_given_function(display_form_allocate_cadets)
 
     elif last_button_pressed==EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON:
-        return NewForm(EDIT_CADET_REGISTRATION_DATA_IN_VIEW_EVENT_STAGE)
+        return interface.get_new_display_form_given_function(display_form_edit_registration_details)
 
     elif last_button_pressed==EDIT_VOLUNTEER_ROLES_BUTTON_LABEL:
-        return NewForm(VOLUNTEER_ROTA_INITIALISE_LOOP_IN_VIEW_EVENT_STAGE) ## check rota before going to form
+        return interface.get_new_display_form_given_function(volunteer_rota_initialise_changed_cadet_loop) ## check rota before going to form
 
     elif last_button_pressed == BACK_BUTTON_LABEL:
-        return initial_state_form
+        return interface.get_new_display_form_for_parent_of_function(display_form_view_individual_event)
     else:
         button_error_and_back_to_initial_state_form(interface)
 
@@ -182,13 +190,3 @@ def row_of_form_for_event_with_buttons(event) -> Line:
     return Line(Button(str(event)))
 
 
-def is_wa_field_mapping_setup_for_event(event: Event) -> bool:
-    try:
-        wa_mapping_dict = data.data_wa_field_mapping.read(event.id)
-
-        if len(wa_mapping_dict) == 0:
-            return False
-        else:
-            return True
-    except:
-        return False

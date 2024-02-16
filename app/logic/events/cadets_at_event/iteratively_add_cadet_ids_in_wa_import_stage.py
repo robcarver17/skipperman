@@ -4,6 +4,8 @@ from typing import Union
 from app.backend.data.mapped_events import get_row_in_mapped_event_data_given_id
 from app.backend.data.cadets_at_event import  load_identified_cadets_at_event
 from app.backend.cadets import confirm_cadet_exists, get_cadet_from_list_of_cadets, get_list_of_all_cadets
+from app.logic.events.cadets_at_event.interactively_update_records_of_cadets_at_event import \
+    display_form_interactively_update_cadets_at_event
 
 from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
@@ -49,7 +51,7 @@ def iteratively_add_cadet_ids_during_import(
         print("Finished looping through allocating Cadet IDs")
 
         ## don't return to controller as need to update cadet data now
-        return NewForm(WA_UPDATE_CADETS_AT_EVENT_IN_VIEW_EVENT_STAGE)
+        return interface.get_new_display_form_given_function(display_form_interactively_update_cadets_at_event)
 
 
 def process_next_row(
@@ -126,8 +128,9 @@ def post_form_add_cadet_ids_during_import(
 ) -> Union[Form, NewForm]:
     last_button_pressed = interface.last_button_pressed()
     if (
-        last_button_pressed == CHECK_CADET_BUTTON_LABEL
+        last_button_pressed == DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL
         or last_button_pressed == SEE_SIMILAR_CADETS_ONLY_LABEL
+        or last_button_pressed == CHECK_CADET_FOR_ME_BUTTON_LABEL
     ):
         ## verify results already in form, display form again, allow final this time
         return get_add_or_select_existing_cadet_form(

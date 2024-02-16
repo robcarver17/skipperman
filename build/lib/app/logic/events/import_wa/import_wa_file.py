@@ -1,9 +1,9 @@
 from typing import Union
 
+from app.logic.events.import_wa.import_controller import import_controller
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form
-from app.logic.events.constants import WA_UPDATE_CONTROLLER_IN_VIEW_EVENT_STAGE
 from app.backend.wa_import.load_wa_file import (
     delete_raw_event_upload_with_event_id,
     get_staged_file_raw_event_filename,
@@ -53,7 +53,7 @@ def process_wa_staged_file_already_uploaded(interface: abstractInterface) -> New
     print("Deleting staging file no longer needed")
     delete_staged_file_for_current_event(interface)
 
-    return NewForm(WA_UPDATE_CONTROLLER_IN_VIEW_EVENT_STAGE)
+    return interface.get_new_display_form_given_function(import_controller)
 
 
 

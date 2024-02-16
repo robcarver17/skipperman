@@ -11,11 +11,6 @@ EDIT_CADET_CONNECTIONS_BUTTON_LABEL = "Add/modify connections to cadets"
 ADD_CONNECTION_BUTTON_LABEL = "Add connection"
 DELETE_CONNECTION_BUTTON_LABEL = "Delete connection"
 
-ADD_VOLUNTEER_STAGE = "add_volunteer_stage"
-VIEW_INDIVIDUAL_VOLUNTEER_STAGE = "view_individual_volunteer_stage"
-DELETE_VOLUNTEER_STAGE = "delete_volunteer_stage"
-EDIT_VOLUNTEER_STAGE = "edit_volunteer_stage"
-EDIT_CONNECTIONS_STAGE = "edit_cadet_volunteer_connections_stage"
 
 VOLUNTEER="volunteer"
 FIRST_NAME = "first_name"

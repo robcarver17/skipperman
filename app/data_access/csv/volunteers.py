@@ -66,8 +66,8 @@ class CsvDataListOfIdentifiedVolunteersAtEvent(GenericCsvData, DataListOfIdentif
                                                    additional_file_identifiers=event_id)
 
 
-    def write(self, list_of_identified_volunteers_at_event: ListOfIdentifiedVolunteersAtEvent, event_id: str):
-        self.write_object(list_of_identified_volunteers_at_event,
+    def write(self, list_of_identified_volunteers: ListOfIdentifiedVolunteersAtEvent, event_id: str):
+        self.write_object(list_of_identified_volunteers,
                           file_identifier=LIST_OF_IDENTIFIED_VOLUNTEERS_AT_EVENT_FILE_ID,
                           additional_file_identifiers=event_id)
 

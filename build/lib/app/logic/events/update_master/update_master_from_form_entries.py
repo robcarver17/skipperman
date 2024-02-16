@@ -3,7 +3,7 @@ from app.backend.wa_import.update_cadets_at_event import update_row_in_master_ev
     get_row_in_mapped_event_for_cadet_id
 from app.logic.events.constants import ROW_STATUS, ATTENDANCE
 from app.logic.events.events_in_state import get_event_from_state
-from app.logic.events.cadets_at_event.track_cadet_id_in_master_file_update import get_current_cadet_id_at_event
+from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing import get_current_cadet_id_at_event
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event
 from app.objects.OLDmaster_event import RowInMasterEvent, get_row_of_master_event_from_mapped_row_with_idx_and_status

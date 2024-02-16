@@ -42,7 +42,7 @@ def display_form_volunteer_extraction_from_master_records_looping(
         print("Finished looping")
         return form_with_message_and_finished_button(
             "Finished importing WA data", interface=interface,
-            set_stage_name_to_go_to_on_button_press=VIEW_EVENT_STAGE
+            DEPRECATEset_stage_name_to_go_to_on_button_press=VIEW_EVENT_STAGE
         )
 
     print("Current cadet id is %s" % cadet_id)

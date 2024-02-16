@@ -3,16 +3,18 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
     form_with_message_and_finished_button,
 )
-from app.logic.events.constants import WA_FIELD_MAPPING_IN_VIEW_EVENT_STAGE
-from app.logic.events.view_individual_events import is_wa_field_mapping_setup_for_event
 from app.objects.abstract_objects.abstract_form import (
-    Form, NewForm,
+    Form
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
 from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
+
 from app.logic.events.events_in_state import get_event_from_state, get_event_from_list_of_events_given_event_description
-from app.backend.events import confirm_event_exists_given_description, get_sorted_list_of_events
+
 from app.logic.abstract_logic_api import initial_state_form
+
+from app.backend.events import confirm_event_exists_given_description, get_sorted_list_of_events, \
+    is_wa_field_mapping_setup_for_event
 from app.objects.events import ListOfEvents, SORT_BY_START_DSC, Event
 
 
@@ -56,7 +58,7 @@ def get_list_of_events_with_field_mapping(exclude_event: Event) -> ListOfEvents:
 
 def post_form_for_clone_event_field_mapping(interface: abstractInterface):
     if interface.last_button_pressed()==CANCEL_BUTTON_LABEL:
-        return NewForm(WA_FIELD_MAPPING_IN_VIEW_EVENT_STAGE)
+        return interface.get_new_display_form_for_parent_of_function(display_form_for_clone_event_field_mapping)
 
     event_description_selected = interface.last_button_pressed()
     current_event = get_event_from_state(interface)
@@ -85,7 +87,7 @@ def post_form_for_clone_event_field_mapping(interface: abstractInterface):
         "Mapping copied from event %s to %s"
         % (event_description_selected, str(current_event)),
         interface=interface,
-        set_stage_name_to_go_to_on_button_press=WA_FIELD_MAPPING_IN_VIEW_EVENT_STAGE
+        function_whose_parent_go_to_on_button_press=display_form_for_clone_event_field_mapping
     )
 
 

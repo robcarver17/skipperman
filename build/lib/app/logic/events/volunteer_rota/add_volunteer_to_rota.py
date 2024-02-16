@@ -3,8 +3,9 @@ from typing import Union
 
 from app.backend.data.volunteers import  SORT_BY_FIRSTNAME, get_sorted_list_of_volunteers
 from app.backend.data.volunteer_allocation import load_list_of_volunteers_at_event, add_volunteer_to_event_with_just_id
+from app.logic.events.constants import CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL, FINAL_VOLUNTEER_ADD_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.events.constants import *
+
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_allocation.volunteer_selection_form_contents import \
     get_dict_of_volunteer_names_and_volunteers
@@ -53,14 +54,14 @@ def get_add_or_select_existing_volunteers_form_in_volunteer_rota(
 
 def post_form_add_new_volunteer_to_rota_at_event(interface: abstractInterface) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
-    if button_pressed==CHECK_VOLUNTEER_BUTTON_LABEL:
+    if button_pressed==CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL:
         return get_add_or_select_existing_volunteers_form_in_volunteer_rota(interface=interface,
                                                                             first_time_display=False
                                                                             )
     elif button_pressed==FINAL_VOLUNTEER_ADD_BUTTON_LABEL:
         return action_when_new_volunteer_to_be_added_from_rota(interface)
     elif button_pressed==BACK_BUTTON_LABEL:
-        return NewForm(EDIT_VOLUNTEER_ROTA_EVENT_STAGE)
+        return interface.get_new_display_form_for_parent_of_function(display_form_add_new_volunteer_to_rota_at_event)
     else:
         name_of_volunteer = button_pressed
         return action_when_specific_volunteer_selected_for_rota(name_of_volunteer=name_of_volunteer, interface=interface)
@@ -85,7 +86,7 @@ def action_when_volunteer_known_for_rota(volunteer: Volunteer, interface: abstra
     event = get_event_from_state(interface)
     add_volunteer_to_event_with_just_id(volunteer_id=volunteer.id, event=event)
 
-    return NewForm(EDIT_VOLUNTEER_ROTA_EVENT_STAGE)
+    return interface.get_new_display_form_for_parent_of_function(display_form_add_new_volunteer_to_rota_at_event)
 
 def get_footer_buttons_add_or_select_existing_volunteer_for_rota(
         event: Event,
@@ -101,7 +102,7 @@ def get_footer_buttons_add_or_select_existing_volunteer_for_rota(
 
 
 def get_list_of_main_buttons_in_rota(include_final_button: bool) -> Line:
-    check = Button(CHECK_VOLUNTEER_BUTTON_LABEL)
+    check = Button(CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL)
     add = Button(FINAL_VOLUNTEER_ADD_BUTTON_LABEL)
     back = Button(BACK_BUTTON_LABEL)
 

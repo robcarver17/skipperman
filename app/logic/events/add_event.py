@@ -46,7 +46,7 @@ def post_form_view_for_add_event(
         return process_form_when_event_verified(interface)
 
     elif last_button_pressed == CANCEL_BUTTON_LABEL:
-        return initial_state_form
+        return interface.get_new_display_form_for_parent_of_function(display_form_view_for_add_event)
     else:
         button_error_and_back_to_initial_state_form(interface)
 
@@ -214,7 +214,8 @@ def process_form_when_event_verified(interface: abstractInterface) -> Form:
         return initial_state_form
 
     return form_with_message_and_finished_button(
-        "Added event %s" % str(event), interface=interface
+        "Added event %s" % str(event), interface=interface,
+        function_whose_parent_go_to_on_button_press=display_form_view_for_add_event
     )
 
 

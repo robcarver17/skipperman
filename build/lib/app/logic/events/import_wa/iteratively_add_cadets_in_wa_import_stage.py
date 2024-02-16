@@ -4,7 +4,7 @@ from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.events.constants import (
     WA_UPDATE_CADETS_AT_EVENT_IN_VIEW_EVENT_STAGE,
-    CHECK_CADET_BUTTON_LABEL,
+    DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL,
     FINAL_CADET_ADD_BUTTON_LABEL,
     SEE_ALL_CADETS_BUTTON_LABEL,
     SEE_SIMILAR_CADETS_ONLY_LABEL,
@@ -101,7 +101,7 @@ def post_form_iteratively_add_cadets_during_import(
 ) -> Union[Form, NewForm]:
     last_button_pressed = interface.last_button_pressed()
     if (
-        last_button_pressed == CHECK_CADET_BUTTON_LABEL
+        last_button_pressed == DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL
         or last_button_pressed == SEE_SIMILAR_CADETS_ONLY_LABEL
     ):
         ## verify results already in form, display form again, allow final this time

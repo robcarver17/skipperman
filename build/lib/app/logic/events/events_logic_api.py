@@ -1,6 +1,6 @@
-from app.logic.abstract_logic_api import AbstractLogicApi, INITIAL_STATE
+from app.logic.abstract_logic_api import LogicApi, INITIAL_STATE
 
-from app.logic.events.view_events import (
+from app.logic.events.ENTRY_view_events import (
     display_form_view_of_events,
     post_form_view_of_events,
 )
@@ -79,9 +79,9 @@ from app.logic.events.constants import *
 from app.logic.events.volunteer_rota.edit_volunteer_skills_from_rota import display_form_edit_individual_volunteer_skills_from_rota, post_form_edit_individual_volunteer_skills_from_rota
 from app.logic.events.volunteer_rota.add_volunteer_to_rota import display_form_add_new_volunteer_to_rota_at_event, post_form_add_new_volunteer_to_rota_at_event
 
-class EventLogicApi(AbstractLogicApi):
+class EventLogicApi(LogicApi):
     @property
-    def dict_of_display_forms(self) -> dict:
+    def display_form_name_function_mapping(self) -> dict:
         return {INITIAL_STATE:display_form_view_of_events,
                 ADD_EVENT_STAGE: display_form_view_for_add_event,
                 VIEW_EVENT_STAGE: display_form_view_individual_event,
@@ -125,7 +125,7 @@ class EventLogicApi(AbstractLogicApi):
                 ADD_NEW_VOLUNTEER_TO_ROTA_EVENT_STAGE: display_form_add_new_volunteer_to_rota_at_event}
 
     @property
-    def dict_of_posted_forms(self) -> dict:
+    def post_form_name_function_mapping(self) -> dict:
         return {
         INITIAL_STATE:
             post_form_view_of_events,

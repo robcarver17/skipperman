@@ -43,11 +43,10 @@ def post_form_edit_individual_cadet(
     ## placeholder, not currently used
     button = interface.last_button_pressed()
     if button==CANCEL_BUTTON_LABEL:
-        return NewForm(VIEW_INDIVIDUAL_CADET_STAGE)
+        return interface.get_new_display_form_for_parent_of_function(display_form_edit_individual_cadet)
     elif button==SAVE_BUTTON_LABEL:
         modify_cadet_given_form_contents(interface)
-        ## We can't go to view individual cadet or we'd get a cadet not found error
-        return initial_state_form
+        return interface.get_new_display_form_for_parent_of_function(display_form_edit_individual_cadet)
     else:
         button_error_and_back_to_initial_state_form(interface)
 

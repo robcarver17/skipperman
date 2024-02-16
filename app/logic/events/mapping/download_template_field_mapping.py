@@ -1,16 +1,14 @@
 from typing import Union
-from app.backend.data.field_mapping import get_template, write_mapping_to_temp_csv_file_and_return_filename
+from app.backend.data.field_mapping import get_template, write_mapping_to_temp_csv_file_and_return_filename, \
+    get_list_of_templates
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.events.constants import WA_SELECT_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE
 from app.objects.abstract_objects.abstract_form import (
     Form,
     File, NewForm, )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
 from app.logic.abstract_logic_api import initial_state_form
-from app.logic.events.mapping.template_field_mapping import (
-    display_list_of_templates_with_buttons,
-)
+
 
 
 def display_form_for_download_template_field_mapping(interface: abstractInterface):
@@ -38,7 +36,7 @@ def post_form_for_download_template_field_mapping(
     template_name = interface.last_button_pressed()
 
     if template_name == CANCEL_BUTTON_LABEL:
-        return NewForm(WA_SELECT_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE)
+        return interface.get_new_display_form_for_parent_of_function(display_form_for_download_template_field_mapping)
 
     try:
         mapping = get_template(template_name)
@@ -51,3 +49,8 @@ def post_form_for_download_template_field_mapping(
 
     filename = write_mapping_to_temp_csv_file_and_return_filename(mapping)
     return File(filename)
+
+## repeats but avoids circular
+def display_list_of_templates_with_buttons() -> ListOfLines:
+    list_of_templates = get_list_of_templates()
+    return ListOfLines([Button(template_name) for template_name in list_of_templates])

@@ -7,7 +7,7 @@ from app.backend.cadets import get_list_of_cadets_as_str_similar_to_name_first, 
 from app.objects.abstract_objects.abstract_form import Form, NewForm, dropDownInput
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-from app.logic.abstract_logic_api import initial_state_form
+from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
@@ -104,11 +104,18 @@ def post_form_edit_cadet_volunteer_connections(
     button = interface.last_button_pressed()
     ### Buttons are back; delete button for individual cadet connection; add to add a new connection
     if button==BACK_BUTTON_LABEL:
-        return NewForm(VIEW_INDIVIDUAL_VOLUNTEER_STAGE)
+        return interface.get_new_display_form_for_parent_of_function(display_form_edit_cadet_volunteer_connections)
     elif button==ADD_CONNECTION_BUTTON_LABEL:
         add_connection_from_form(interface)
         ## might want to do more
         return display_form_edit_cadet_volunteer_connections(interface)
+
+    return post_form_edit_cadet_volunteer_connections_when_delete_button_pressed(interface)
+
+def post_form_edit_cadet_volunteer_connections_when_delete_button_pressed(
+        interface: abstractInterface,
+) -> Union[Form, NewForm]:
+    button = interface.last_button_pressed()
 
     volunteer = get_volunteer_from_state(interface)
     connected_cadets = get_connected_cadets(volunteer)
@@ -119,7 +126,8 @@ def post_form_edit_cadet_volunteer_connections(
         ## might want to do more
         return display_form_edit_cadet_volunteer_connections(interface)
     else:
-        raise Exception("Weirdly named button pressed")
+        return button_error_and_back_to_initial_state_form(interface)
+
 
 def get_list_of_delete_cadet_buttons(connected_cadets: list):
 

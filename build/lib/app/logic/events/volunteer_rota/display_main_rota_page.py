@@ -1,7 +1,9 @@
 from typing import Union
 
 from app.backend.volunteers.volunteer_rota_summary import get_summary_list_of_roles_and_groups_for_events
+from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.events.constants import *
+from app.logic.events.volunteer_rota.add_volunteer_to_rota import display_form_add_new_volunteer_to_rota_at_event
 
 from app.logic.events.volunteer_rota.parse_volunteer_table import *
 from app.logic.events.volunteer_rota.rota_state import save_sorts_to_state, get_sorts_from_state
@@ -13,7 +15,7 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.events.events_in_state import get_event_from_state
-from app.logic.volunteers.view_volunteers import all_sort_types as all_volunteer_name_sort_types
+from app.logic.volunteers.ENTRY_view_volunteers import all_sort_types as all_volunteer_name_sort_types
 from app.logic.events.volunteer_rota.render_volunteer_table import get_volunteer_table
 
 ADD_NEW_VOLUNTEER_BUTTON_LABEL = "Add new volunteer to rota"
@@ -78,7 +80,7 @@ def post_form_view_for_volunteer_rota(
 
 
     if last_button_pressed==BACK_BUTTON_LABEL:
-        return NewForm(VIEW_EVENT_STAGE)
+        return interface.get_new_display_form_for_parent_of_function(display_form_view_for_volunteer_rota)
 
 
     ## sort options
@@ -94,11 +96,12 @@ def post_form_view_for_volunteer_rota(
 
     ## Actions which result in new forms
     elif last_button_pressed==ADD_NEW_VOLUNTEER_BUTTON_LABEL:
-        return NewForm(ADD_NEW_VOLUNTEER_TO_ROTA_EVENT_STAGE)
+        return interface.get_new_display_form_given_function(display_form_add_new_volunteer_to_rota_at_event)
 
     elif last_button_pressed in get_list_of_volunteer_name_buttons(interface):
         return action_if_volunteer_button_pressed(interface=interface,
                                                   volunteer_button=last_button_pressed)
+
     elif last_button_pressed in get_all_location_buttons(interface):
         return action_if_location_button_pressed(interface=interface, location_button=last_button_pressed)
 
@@ -120,7 +123,8 @@ def post_form_view_for_volunteer_rota(
 
     ## exception
     else:
-        raise Exception("Button not known!")
+        return button_error_and_back_to_initial_state_form(interface)
+
 
 
 

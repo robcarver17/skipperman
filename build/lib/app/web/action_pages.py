@@ -36,9 +36,9 @@ def generate_action_page_html(action_name: str) -> Union[Html, Response]:
 def from_abstract_to_laid_out_html(
     abstract_form_for_action: Form, action_name: str
 ) -> Html:
-    interface = flaskInterface(action_name)
+    interface = flaskInterface(action_name=action_name)
     html_code_for_action = process_abstract_form_to_html(
-        abstract_form_for_action, interface=interface
+        abstract_form_for_action, current_url=interface.current_url
     )
 
     html_code_for_action_in_layout = add_standard_layout_and_buttons_to_action_code(

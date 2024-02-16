@@ -11,35 +11,6 @@ MODIFY_PRINT_OPTIONS_BUTTON_LABEL = "Modify printing options"
 CHANGE_GROUP_LAYOUT_BUTTON = "Change group layout"
 MODIFY_ADDITIONAL_OPTIONS_BUTTON_LABEL = "Modify report specific options"
 
-# STAGES
-
-GROUP_ALLOCATION_REPORT_STAGE = "group_allocation_report"
-ROTA_REPORT_STAGE = "rota_report"
-
-## GROUP ALLOCATION
-
-GENERIC_OPTIONS_IN_GROUP_ALLOCATION_STATE = "generic_options_in_group_allocation_state"
-REPORT_ADDITIONAL_OPTIONS_FOR_ALLOCATION_REPORT = (
-    "report_additional_options_in_group_allocation_state"
-)
-CHANGE_GROUP_LAYOUT_IN_GROUP_ALLOCATION_STATE = (
-    "change_group_layout_in_group_allocation_state"
-)
-CHANGE_PRINT_OPTIONS_IN_GROUP_ALLOCATION_STATE = (
-    "change_print_options_in_group_allocation_state"
-)
-
-## ROTA
-GENERIC_OPTIONS_IN_ROTA_REPORT_STATE = "generic_options_in_rota_report_state"
-REPORT_ADDITIONAL_OPTIONS_FOR_ROTA_REPORT_STATE = (
-    "rota_report_additional_options_in_state"
-)
-CHANGE_GROUP_LAYOUT_IN_ROTA_REPORT_STATE = (
-    "change_group_layout_in_rota_report_state"
-)
-CHANGE_PRINT_OPTIONS_IN_ROTA_REPORT_STATE = (
-    "change_print_options_in_rota_report_state"
-)
 
 # FIELDS
 SHOW_FULL_NAMES = "Show_full_names"

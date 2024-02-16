@@ -15,8 +15,7 @@ from app.objects.abstract_objects.abstract_interface import (
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.logic.events.constants import (
     WA_FILE,
-    UPLOAD_FILE_BUTTON_LABEL,
-    VIEW_EVENT_STAGE,
+    UPLOAD_FILE_BUTTON_LABEL
 )
 from app.backend.wa_import.load_wa_file import (
     save_staged_file_of_raw_event_upload_with_event_id,
@@ -67,7 +66,7 @@ def post_form_upload_event_file(interface: abstractInterface) -> Union[Form, New
     if button_pressed == UPLOAD_FILE_BUTTON_LABEL:
         return respond_to_uploaded_file(interface)
     elif button_pressed == BACK_BUTTON_LABEL:
-        return NewForm(VIEW_EVENT_STAGE)
+        return interface.get_new_display_form_for_parent_of_function(display_form_upload_event_file)
     else:
         button_error_and_back_to_initial_state_form(interface)
 
@@ -81,7 +80,7 @@ def respond_to_uploaded_file(interface: abstractInterface) -> Union[Form, NewFor
 
     return form_with_message_and_finished_button(
         "Uploaded file successfully", interface=interface,
-        set_stage_name_to_go_to_on_button_press=VIEW_EVENT_STAGE
+        function_whose_parent_go_to_on_button_press=display_form_upload_event_file
     )
 
 

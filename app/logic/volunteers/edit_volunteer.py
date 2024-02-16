@@ -75,12 +75,13 @@ def post_form_edit_individual_volunteer(
 ) -> Union[Form, NewForm]:
     ## placeholder, not currently used
     button = interface.last_button_pressed()
+    previous_page_form =interface.get_new_display_form_for_parent_of_function(display_form_edit_individual_volunteer)
+
     if button==CANCEL_BUTTON_LABEL:
-        return NewForm(VIEW_INDIVIDUAL_VOLUNTEER_STAGE)
+        return previous_page_form
     elif button==SAVE_BUTTON_LABEL:
         modify_volunteer_given_form_contents(interface=interface)
-        return NewForm(VIEW_INDIVIDUAL_VOLUNTEER_STAGE)
-
+        return previous_page_form
     else:
         return button_error_and_back_to_initial_state_form(interface)
 

@@ -1,6 +1,6 @@
 from typing import Union
 from app.backend.cadets import cadet_name_from_id
-from app.logic.events.cadets_at_event.track_cadet_id_in_master_file_update import get_and_save_next_cadet_id_in_event_data
+from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing import get_and_save_next_cadet_id_in_event_data
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,

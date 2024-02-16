@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Callable
 from dataclasses import dataclass
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import (
@@ -7,12 +7,14 @@ from app.objects.abstract_objects.abstract_form import (
 
 )
 from app.objects.abstract_objects.abstract_buttons import is_finished_button
-from app.objects.constants import NoButtonPressed
+from app.objects.abstract_objects.form_function_mapping import FormNameFunctionNameMapping, MissingFormName, DisplayAndPostFormFunctionMaps
+from app.objects.constants import NoButtonPressed, arg_not_passed
+
 INITIAL_STATE = "Initial form"
 
 
 @dataclass
-class AbstractLogicApi:
+class LogicApi:
     interface: abstractInterface
 
     def get_form(self) -> Form:
@@ -82,13 +84,15 @@ class AbstractLogicApi:
     def get_posted_form_given_form_name_without_checking_for_redirection(
         self, form_name: str
     ) -> Union[Form, NewForm]:
-        posted_forms_as_dict = self.dict_of_posted_forms
-        form = posted_forms_as_dict.get(form_name, None)
-        if form is None:
+        post_forms_mapping = self.post_form_name_function_mapping
+        try:
+            form_function = post_forms_mapping.get_function_for_form_name(form_name)
+        except MissingFormName:
+            print("Form %s not recognised" % form_name)
             self.interface.log_error("Internal error, form name %s not recognised" % form_name)
             return self.get_posted_form_with_finished_button_pressed()
 
-        form_contents = form(self.interface)
+        form_contents = form_function(self.interface)
 
         return form_contents
 
@@ -111,9 +115,10 @@ class AbstractLogicApi:
         self, form_name: str
     ) -> Union[Form, NewForm]:
         print("get_displayed_form_given_form_name %s" % form_name)
-        display_forms_as_dict = self.dict_of_display_forms
-        form_function = display_forms_as_dict.get(form_name, None)
-        if form_function is None:
+        display_forms_mapping = self.display_form_name_function_mapping
+        try:
+            form_function = display_forms_mapping.get_function_for_form_name(form_name)
+        except MissingFormName:
             print("Form %s not recognised" % form_name)
             self.interface.log_error("Internal error, form name %s not recognised" % form_name)
             return self.get_posted_form_with_finished_button_pressed()
@@ -145,14 +150,22 @@ class AbstractLogicApi:
         print("form name %s" % form_name)
         return form_name
 
+    @property
+    def display_form_name_function_mapping(self) -> FormNameFunctionNameMapping:
+        return self.display_and_post_form_function_maps.display_mappings
 
     @property
-    def dict_of_display_forms(self) -> dict:
-        return {}
+    def post_form_name_function_mapping(self) -> FormNameFunctionNameMapping:
+        return self.display_and_post_form_function_maps.post_mappings
 
     @property
-    def dict_of_posted_forms(self) -> dict:
-        return {}
+    def display_and_post_form_function_maps(self)-> DisplayAndPostFormFunctionMaps:
+
+        mapping = self.interface.display_and_post_form_function_maps
+        if mapping is arg_not_passed:
+            raise Exception("You need to pass a mapping into interface")
+
+        return mapping
 
 initial_state_form = NewForm(INITIAL_STATE)
 

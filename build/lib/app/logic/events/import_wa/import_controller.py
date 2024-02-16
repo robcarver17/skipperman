@@ -1,7 +1,11 @@
-from typing import List, Union
+from typing import List, Union, Callable
 
+from app.logic.events.cadets_at_event.iteratively_add_cadet_ids_in_wa_import_stage import \
+    display_form_add_cadet_ids_during_import
 from app.logic.events.events_in_state import get_event_from_state
-from app.logic.events.constants import *
+
+from app.logic.events.volunteer_allocation.volunteer_identification import \
+    display_form_volunteer_identification_initalise_loop
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface, form_with_message_and_finished_button
 from app.objects.events import Event, CADETS, VOLUNTEERS, GROUP_ALLOCATION, FOOD, CLOTHING, \
@@ -17,34 +21,34 @@ def import_controller(interface: abstractInterface) -> Union[Form, NewForm]:
     try:
         next_import = next_import_required_for_event(event=event, interface=interface)
     except NoMoreData:
-
+        ## FIXME CLEAR ALL 'Changed' flags eg cadets, volunteers and so on
         return form_with_message_and_finished_button(
             "Finished importing WA data", interface=interface,
-            set_stage_name_to_go_to_on_button_press=VIEW_EVENT_STAGE
+            function_whose_parent_go_to_on_button_press=import_controller
         )
 
-    form_name = IMPORTS_AND_FORM_NAMES[next_import]
+    function = IMPORTS_AND_FUNCTION_NAMES[next_import]
 
-    return NewForm(form_name)
+    return interface.get_new_display_form_given_function(function)
 
 def post_import_controller(interface):
     raise Exception("Should never get here")
 
 ## order matters, as other things rely on cadets
 ## Group allocation doesn't appear here
-ORDERED_LIST_OF_POSSIBLE_IMPORTS = [CADETS]
+ORDERED_LIST_OF_POSSIBLE_IMPORTS = [CADETS, VOLUNTEERS]
 
 #ORDERED_LIST_OF_POSSIBLE_IMPORTS = [CADETS, VOLUNTEERS, #GROUP_ALLOCATION,
 #                                     FOOD, CLOTHING]
 
-IMPORTS_AND_FORM_NAMES = {
-    CADETS: WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE,
-    VOLUNTEERS: WA_VOLUNTEER_IDENITIFICATION_INITIALISE_IN_VIEW_EVENT_STAGE
+IMPORTS_AND_FUNCTION_NAMES = {
+    CADETS: display_form_add_cadet_ids_during_import,
+    VOLUNTEERS: display_form_volunteer_identification_initalise_loop
 }
 
 NO_IMPORT_DONE_YET_INDEX = -1
 
-def next_import_required_for_event(event: Event, interface: abstractInterface):
+def next_import_required_for_event(event: Event, interface: abstractInterface) -> str:
     all_imports_required = imports_required_given_event(event)
     index_of_next_import = return_and_increment_import_state_index(interface)
     try:

@@ -4,10 +4,9 @@ from app.backend.wa_import.update_cadets_at_event import is_cadet_already_at_eve
     get_row_in_mapped_event_for_cadet_id_active_registration_only, add_new_cadet_to_event, \
     get_cadet_at_event_for_cadet_id, mark_cadet_at_event_as_deleted, \
     get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active, any_important_difference_between_cadets_at_event
-from app.logic.abstract_logic_api import initial_state_form
 
-from app.logic.events.cadets_at_event.track_cadet_id_in_master_file_update import get_and_save_next_cadet_id_in_event_data
-from app.logic.events.import_wa.shared_state_tracking_and_data import reset_row_id
+from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing import \
+    get_and_save_next_cadet_id_in_event_data, clear_cadet_id_at_event
 
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import (
@@ -15,7 +14,7 @@ from app.objects.abstract_objects.abstract_interface import (
 )
 from app.logic.events.constants import (
     USE_ORIGINAL_DATA_BUTTON_LABEL, USE_NEW_DATA_BUTTON_LABEL,
-    USE_DATA_IN_FORM_BUTTON_LABEL, WA_UPDATE_CONTROLLER_IN_VIEW_EVENT_STAGE
+    USE_DATA_IN_FORM_BUTTON_LABEL
 )
 
 from app.logic.events.events_in_state import get_event_from_state
@@ -37,7 +36,7 @@ def display_form_interactively_update_cadets_at_event(
 ) -> Union[Form, NewForm]:
     ## rest of the time is a post call
 
-    reset_row_id(interface)
+    clear_cadet_id_at_event(interface)
 
     return iterative_process_updates_to_cadets_at_event(interface=interface)
 
@@ -52,8 +51,7 @@ def iterative_process_updates_to_cadets_at_event(
         cadet_id = get_and_save_next_cadet_id_in_event_data(interface)
     except NoMoreData:
         print("Finished looping")
-        ## All imports done, back to controller
-        return NewForm(WA_UPDATE_CONTROLLER_IN_VIEW_EVENT_STAGE)
+        return finished_looping_return_to_controller(interface)
 
     print("Current cadet id is %s" % cadet_id)
 
@@ -72,7 +70,7 @@ def process_update_to_cadet_data(
     cadet_present_in_mapped_event_data = is_cadet_in_mapped_data(
         event=event, cadet_id=cadet_id
     )
-
+    print("STATUS ID %s already at event %s in mapped data %s" % (cadet_id, str(cadet_already_at_event), str(cadet_present_in_mapped_event_data)))
     if cadet_present_in_mapped_event_data and cadet_already_at_event:
         return process_update_to_existing_cadet_in_event_data(
             event=event, cadet_id=cadet_id, interface=interface
@@ -90,8 +88,8 @@ def process_update_to_cadet_data(
             event=event, cadet_id=cadet_id, interface=interface
         )
     else:
-        interface.log_error("Cadet ID %d was next ID but now can't find in any file?" % cadet_id)
-        return initial_state_form
+        interface.log_error("Cadet ID %s was next ID but now can't find in any file?" % cadet_id)
+        return goto_next_cadet(interface)
 
 
 def process_update_to_cadet_new_to_event(
@@ -109,7 +107,7 @@ def process_update_to_cadet_new_to_event(
             "ACTION REQUIRED: Cadet %s appears more than once in WA file with an active registration - ignoring for now - go to WA and cancel one of the registrations please!"
             % cadet_name_from_id(cadet_id)
         )
-        return iterative_process_updates_to_cadets_at_event(interface)
+        return goto_next_cadet(interface)
 
     if relevant_row is missing_data:
         ## There is a new row, but it's cancelled already so ignore it
@@ -120,8 +118,7 @@ def process_update_to_cadet_new_to_event(
         cadet_id=cadet_id
     )
 
-    return iterative_process_updates_to_cadets_at_event(interface)
-
+    return goto_next_cadet(interface)
 
 
 def process_update_to_deleted_cadet(
@@ -140,7 +137,7 @@ def process_update_to_deleted_cadet(
     else:
         print("Cadet %s already marked as deleted" % cadet_name_from_id(cadet_id))
 
-    return iterative_process_updates_to_cadets_at_event(interface)
+    return goto_next_cadet(interface)
 
 
 
@@ -157,7 +154,7 @@ def process_update_to_existing_cadet_in_event_data(
             "ACTION REQUIRED: Cadet %s appears more than once in WA file with an active registration - ignoring all registrations for now - go to WA and cancel one of the registrations please!"
             % cadet_name_from_id(cadet_id)
         )
-        return iterative_process_updates_to_cadets_at_event(interface)
+        return goto_next_cadet(interface)
 
     existing_cadet_at_event = get_cadet_at_event_for_cadet_id(
         event=event, cadet_id=cadet_id
@@ -215,6 +212,11 @@ def post_form_interactively_update_cadets_at_event(
         print("Updating from form data")
         update_cadets_at_event_with_form_data(interface)
 
+    return goto_next_cadet(interface)
+
+
+def finished_looping_return_to_controller(interface: abstractInterface)-> NewForm:
+    return interface.get_new_display_form_for_parent_of_function(display_form_interactively_update_cadets_at_event)
+
+def goto_next_cadet(interface: abstractInterface):
     return iterative_process_updates_to_cadets_at_event(interface)
-
-

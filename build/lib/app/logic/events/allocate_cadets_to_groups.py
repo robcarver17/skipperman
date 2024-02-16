@@ -22,8 +22,6 @@ from app.backend.data.group_allocations import save_current_allocations_for_even
 from app.logic.events.constants import (
     ALLOCATION,
     UPDATE_ALLOCATION_BUTTON_LABEL,
-    VIEW_EVENT_STAGE,
-ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE
 )
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.cadets import Cadet
@@ -109,7 +107,7 @@ dict_of_all_possible_groups_for_dropdown_input= dict([(group, group) for group i
 def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
     if interface.last_button_pressed() == BACK_BUTTON_LABEL:
-        return NewForm(VIEW_EVENT_STAGE)
+        return interface.get_new_display_form_for_parent_of_function(display_form_allocate_cadets)
     else:
         return do_allocation_for_cadets_in_form(interface)
 
@@ -131,7 +129,7 @@ def do_allocation_for_cadets_in_form(interface: abstractInterface):
                 "Couldn't allocate group to %s error code %s" % (str(cadet), str(e))
             )
 
-    return NewForm(ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE)
+    return interface.get_new_display_form_given_function(display_form_allocate_cadets)
 
 
 def do_allocation_for_cadet_at_event(

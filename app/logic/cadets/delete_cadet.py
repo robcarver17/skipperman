@@ -48,7 +48,7 @@ def post_form_delete_individual_cadet(
         )
         return initial_state_form
     if button==CANCEL_BUTTON_LABEL:
-        return NewForm(VIEW_INDIVIDUAL_CADET_STAGE)
+        return interface.get_new_display_form_for_parent_of_function(display_form_delete_individual_cadet)
 
     elif button==SURE_DELETE_BUTTON_LABEL:
         delete_a_cadet(cadet)

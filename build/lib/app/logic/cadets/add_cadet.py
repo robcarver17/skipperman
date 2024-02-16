@@ -45,7 +45,7 @@ def post_form_add_cadets(interface: abstractInterface) -> Union[Form, NewForm]:
         return process_form_when_cadet_verified(interface)
 
     elif last_button_pressed==CANCEL_BUTTON_LABEL:
-        return initial_state_form
+        return interface.get_new_display_form_for_parent_of_function(display_form_add_cadet)
     else:
         button_error_and_back_to_initial_state_form(interface)
 
@@ -162,7 +162,8 @@ def process_form_when_cadet_verified(
         return initial_state_form
 
     return form_with_message_and_finished_button(
-        "Added cadet %s" % str(cadet), interface=interface
+        "Added cadet %s" % str(cadet), interface=interface,
+        function_whose_parent_go_to_on_button_press=display_form_add_cadet
     )
 
 

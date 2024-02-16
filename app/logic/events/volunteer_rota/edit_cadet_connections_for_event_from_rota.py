@@ -10,7 +10,6 @@ from app.backend.cadets import cadet_from_id, get_cadet_from_list_of_cadets
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.logic.events.constants import EDIT_VOLUNTEER_ROTA_EVENT_STAGE
 from app.logic.events.events_in_state import get_event_from_state
 
 from app.logic.volunteers.constants import BACK_BUTTON_LABEL, ADD_CONNECTION_BUTTON_LABEL, CONNECTION
@@ -61,7 +60,7 @@ def post_form_edit_cadet_connections_from_rota(
     button = interface.last_button_pressed()
     ### Buttons are back; delete button for individual cadet connection; add to add a new connection
     if button==BACK_BUTTON_LABEL:
-        return NewForm(EDIT_VOLUNTEER_ROTA_EVENT_STAGE)
+        return interface.get_new_display_form_for_parent_of_function(display_form_edit_cadet_connections_from_rota)
     elif button==ADD_CONNECTION_BUTTON_LABEL:
         add_event_connection_from_form(interface)
         ## might want to do more

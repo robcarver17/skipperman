@@ -1,6 +1,9 @@
 from typing import Union
 
 from app.backend.volunteers.volunteer_rota_data import get_all_roles_across_past_events_for_volunteer_id_as_dict
+from app.logic.volunteers.delete_volunteer import display_form_delete_individual_volunteer
+from app.logic.volunteers.edit_cadet_connections import display_form_edit_cadet_volunteer_connections
+from app.logic.volunteers.edit_volunteer import display_form_edit_individual_volunteer
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
@@ -95,12 +98,12 @@ def post_form_view_individual_volunteer(
     ## placeholder, not currently used
     button = interface.last_button_pressed()
     if button==BACK_BUTTON_LABEL:
-        return initial_state_form
+        return interface.get_new_display_form_for_parent_of_function(display_form_view_individual_volunteer)
     elif button==DELETE_BUTTON_LABEL:
-        return NewForm(DELETE_VOLUNTEER_STAGE)
+        return interface.get_new_display_form_given_function(display_form_delete_individual_volunteer)
     elif button==EDIT_BUTTON_LABEL:
-        return NewForm(EDIT_VOLUNTEER_STAGE)
+        return interface.get_new_display_form_given_function(display_form_edit_individual_volunteer)
     elif button==EDIT_CADET_CONNECTIONS_BUTTON_LABEL:
-        return NewForm(EDIT_CONNECTIONS_STAGE)
+        return interface.get_new_display_form_given_function(display_form_edit_cadet_volunteer_connections)
     else:
         return button_error_and_back_to_initial_state_form(interface)

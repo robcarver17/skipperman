@@ -35,6 +35,7 @@ class IdentifiedVolunteerAtEvent(GenericSkipperManObject):
         return RowIDAndIndex(row_id=self.row_id, volunteer_index=self.volunteer_index)
 
 class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
+    @property
     def _object_class_contained(self):
         return IdentifiedVolunteerAtEvent
 
@@ -46,8 +47,6 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
         volunteer_ids = [item.volunteer_id for item in self]
         return list(set(volunteer_ids))
 
-    def append(self, other: IdentifiedVolunteerAtEvent):
-        self.add(row_id=other.row_id, volunteer_id=other.volunteer_id, volunteer_index = other.volunteer_index)
 
     def list_of_row_ids_and_indices(self) -> List[RowIDAndIndex]:
         return [item.row_and_index for item in self]

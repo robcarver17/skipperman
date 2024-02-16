@@ -1,11 +1,11 @@
-from app.backend.data.mapped_events import load_mapped_wa_event
 from app.backend.data.cadets_at_event import load_cadets_at_event
+from app.backend.wa_import.update_cadets_at_event import cadet_ids_in_mapped_data
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.constants import missing_data, NoMoreData
 from app.objects.utils import union_of_x_and_y
 
-CADET_ID_AT_EVENT = "cadetid_at_event"
+CADET_ID_AT_EVENT = "cadet_id_at_event"
 
 
 def get_and_save_next_cadet_id_in_event_data(interface: abstractInterface) -> str:
@@ -25,7 +25,7 @@ def get_first_cadet_id_in_event_data(interface: abstractInterface) -> str:
     list_of_ids = list_of_cadet_ids_at_event_and_in_mapped_data(interface)
     id = list_of_ids[0]
 
-    print("Getting first ID %s from list %s " % (id, list_of_ids))
+    print("Getting first Cadet ID %s from list %s " % (id, list_of_ids))
 
     return id
 
@@ -49,10 +49,9 @@ def list_of_cadet_ids_at_event_and_in_mapped_data(interface:abstractInterface) -
     event = get_event_from_state(interface)
 
     cadets_at_event = load_cadets_at_event(event)
-    mapped_event = load_mapped_wa_event(event)
 
     existing_ids = cadets_at_event.list_of_cadet_ids()
-    mapped_ids = mapped_event.list_of_row_ids()
+    mapped_ids = cadet_ids_in_mapped_data(event)
 
     all_ids = union_of_x_and_y(existing_ids, mapped_ids)
     all_ids.sort() ## MUST be sorted otherwise can go horribly wrong
@@ -67,3 +66,6 @@ def get_current_cadet_id_at_event(interface: abstractInterface) -> str:
 
 def save_cadet_id_at_event(interface: abstractInterface, cadet_id: str):
     interface.set_persistent_value(CADET_ID_AT_EVENT, cadet_id)
+
+def clear_cadet_id_at_event(interface: abstractInterface):
+    interface.clear_persistent_value(CADET_ID_AT_EVENT)

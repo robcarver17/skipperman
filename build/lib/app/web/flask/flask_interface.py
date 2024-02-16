@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.web.flask.flash import flash_error
@@ -17,9 +19,8 @@ from app.objects.constants import (
 from flask import request
 
 
+@dataclass
 class flaskInterface(abstractInterface):
-    def __init__(self, action_name: str):
-        self._action_name = action_name
 
     def log_error(self, error_message: str):
         flash_error(error_message)
@@ -122,9 +123,6 @@ class flaskInterface(abstractInterface):
         print("inside state")
         return uploaded_file(input_name)
 
-    @property
-    def action_name(self) -> str:
-        return self._action_name
 
 
 def is_website_post() -> bool:

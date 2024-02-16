@@ -6,7 +6,7 @@ from app.backend.wa_import.update_cadets_at_event import get_row_in_mapped_event
     update_availability_of_existing_cadet_at_event
 from app.logic.events.constants import ROW_STATUS, ATTENDANCE
 from app.logic.events.events_in_state import get_event_from_state
-from app.logic.events.cadets_at_event.track_cadet_id_in_master_file_update import get_current_cadet_id_at_event
+from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing import get_current_cadet_id_at_event
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadet_at_event import CadetAtEvent, get_cadet_at_event_from_row_in_mapped_event
 from app.objects.day_selectors import DaySelector

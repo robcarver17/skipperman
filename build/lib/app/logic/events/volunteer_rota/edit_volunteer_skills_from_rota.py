@@ -1,7 +1,7 @@
 from typing import Union
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.volunteers.constants import BACK_BUTTON_LABEL, SAVE_BUTTON_LABEL
-from app.logic.events.constants import *
+
 from app.logic.volunteers.edit_volunteer import get_and_save_volunteer_skills_from_form, skills_form_entries
 from app.logic.volunteers.volunteer_state import get_volunteer_from_state
 
@@ -48,7 +48,7 @@ def post_form_edit_individual_volunteer_skills_from_rota(
     else:
         raise Exception("Button %s not recognised" % button)
 
-    return NewForm(EDIT_VOLUNTEER_ROTA_EVENT_STAGE)
+    return interface.get_new_display_form_for_parent_of_function(display_form_edit_individual_volunteer_skills_from_rota)
 
 def modify_volunteer_from_rota_given_form_contents(interface: abstractInterface):
     volunteer = get_volunteer_from_state(interface)

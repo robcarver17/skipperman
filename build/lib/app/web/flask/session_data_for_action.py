@@ -51,20 +51,15 @@ class SessionDataForAction(object):
 
     @property
     def stage(self):
-        print("sessoin dict %s" % str(self.state_data_as_dict_from_session))
         stage = self.state_data_as_dict_from_session.get("stage", INITIAL_STAGE)
         return stage
 
     @stage.setter
     def stage(self, new_stage: str):
-        print("sessoin dict %s" % str(self.state_data_as_dict_from_session))
         state_data_as_dict_from_session = self.state_data_as_dict_from_session
-        print("sessoin dict %s" % str(self.state_data_as_dict_from_session))
 
         state_data_as_dict_from_session["stage"] = new_stage
         self.update_session_dict_for_action(state_data_as_dict_from_session)
-
-        print("sessoin dict %s" % str(self.state_data_as_dict_from_session))
 
     def update_session_dict_for_action(self, new_dict: dict):
         _update_session_dict_for_action(action_name=self.action_name, new_dict=new_dict)
@@ -90,7 +85,6 @@ def _get_session_data_dict_for_action(action_name: str) -> dict:
     all_action_state_data = _get_all_action_state_data_from_session()
     if action_name not in all_action_state_data:
         all_action_state_data[action_name] = {}
-    print(all_action_state_data[action_name])
     return all_action_state_data[action_name]
 
 

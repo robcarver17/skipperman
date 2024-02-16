@@ -12,7 +12,7 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines, ___________
 from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
-from app.logic.cadets.view_cadets import sort_buttons, all_sort_types
+from app.logic.cadets.ENTRY_view_cadets import sort_buttons, all_sort_types
 from app.backend.cadets import SORT_BY_SURNAME
 from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
@@ -87,7 +87,7 @@ def post_form_edit_registration_details(
     last_button_pressed = interface.last_button_pressed()
 
     if interface.last_button_pressed() == BACK_BUTTON_LABEL:
-        return NewForm(VIEW_EVENT_STAGE)
+        return interface.get_new_display_form_for_parent_of_function(display_form_edit_registration_details)
 
     elif last_button_pressed in all_sort_types:
         ## no change to stage required, just sort order

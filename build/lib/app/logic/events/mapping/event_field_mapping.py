@@ -1,5 +1,8 @@
 from typing import Union
 
+from app.logic.events.mapping.clone_field_mapping import display_form_for_clone_event_field_mapping
+from app.logic.events.mapping.template_field_mapping import display_form_for_choose_template_field_mapping
+from app.logic.events.mapping.upload_field_mapping import display_form_for_upload_custom_field_mapping
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -113,12 +116,12 @@ def post_form_event_field_mapping(interface: abstractInterface) -> Union[Form, N
 
     button_pressed = interface.last_button_pressed()
     if button_pressed == MAP_TO_TEMPLATE_BUTTON_LABEL:
-        return NewForm(WA_SELECT_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE)
+        return interface.get_new_display_form_given_function(display_form_for_choose_template_field_mapping)
     elif button_pressed == CLONE_EVENT_MAPPING_BUTTON_LABEL:
-        return NewForm(WA_CLONE_EVENT_MAPPING_IN_VIEW_EVENT_STAGE)
+        return interface.get_new_display_form_given_function(display_form_for_clone_event_field_mapping)
     elif button_pressed == UPLOAD_MAPPING_BUTTON_LABEL:
-        return NewForm(WA_UPLOAD_EVENT_MAPPING_IN_VIEW_EVENT_STAGE)
+        return interface.get_new_display_form_given_function(display_form_for_upload_custom_field_mapping)
     elif button_pressed == BACK_BUTTON_LABEL:
-        return NewForm(VIEW_EVENT_STAGE)
+        return interface.get_new_display_form_for_parent_of_function(display_form_event_field_mapping)
     else:
         button_error_and_back_to_initial_state_form(interface)

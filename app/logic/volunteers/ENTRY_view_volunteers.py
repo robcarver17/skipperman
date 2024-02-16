@@ -1,5 +1,7 @@
 from typing import Union
 
+from app.logic.volunteers.add_volunteer import display_form_add_volunteer
+from app.logic.volunteers.view_individual_volunteer import display_form_view_individual_volunteer
 from app.objects.volunteers import Volunteer
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -48,7 +50,7 @@ def get_form_view_of_volunteers(sort_order: str=SORT_BY_SURNAME) -> Form:
 def post_form_view_of_volunteers(interface: abstractInterface) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
     if button_pressed == ADD_VOLUNTEER_BUTTON_LABEL:
-        return NewForm(ADD_VOLUNTEER_STAGE)
+        return interface.get_new_display_form_given_function(display_form_add_volunteer)
 
     elif button_pressed in all_sort_types:
         ## no change to stage required, just sort order
@@ -58,7 +60,7 @@ def post_form_view_of_volunteers(interface: abstractInterface) -> Union[Form, Ne
     else:  ## must be a volunteer redirect:
         volunteer_selected = interface.last_button_pressed()
         update_state_for_specific_volunteer_given_volunteer_as_str(interface=interface, volunteer_selected=volunteer_selected)
-        return NewForm(VIEW_INDIVIDUAL_VOLUNTEER_STAGE)
+        return interface.get_new_display_form_given_function(display_form_view_individual_volunteer)
 
 
 def display_list_of_volunteers_with_buttons(sort_order=SORT_BY_SURNAME) -> ListOfLines:

@@ -115,7 +115,7 @@ def post_form_iteratively_add_cadets_during_import(
 ) -> Union[Form, NewForm]:
     last_button_pressed = interface.last_button_pressed()
     if (
-        last_button_pressed == CHECK_CADET_BUTTON_LABEL
+        last_button_pressed == DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL
         or last_button_pressed == SEE_SIMILAR_CADETS_ONLY_LABEL
     ):
         ## verify results already in form, display form again, allow final this time

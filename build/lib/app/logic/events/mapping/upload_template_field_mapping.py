@@ -1,5 +1,4 @@
-from app.logic.events.constants import TEMPLATE_NAME, MAPPING_FILE, UPLOAD_FILE_BUTTON_LABEL, \
-    WA_SELECT_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE
+from app.logic.events.constants import TEMPLATE_NAME, MAPPING_FILE, UPLOAD_FILE_BUTTON_LABEL
 from app.backend.data.field_mapping import write_template, read_mapping_from_csv_file_object
 from app.objects.abstract_objects.abstract_form import textInput, fileInput, Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
@@ -38,8 +37,9 @@ cancel_button = Button(CANCEL_BUTTON_LABEL)
 
 def post_form_for_upload_template_field_mapping(interface: abstractInterface):
     last_button = interface.last_button_pressed()
+    previous_form = interface.get_new_display_form_for_parent_of_function(display_form_for_upload_template_field_mapping)
     if last_button == CANCEL_BUTTON_LABEL:
-        return NewForm(WA_SELECT_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE)
+        return previous_form
 
     template_name = interface.value_from_form(TEMPLATE_NAME)
     if len(template_name) < 4:
@@ -57,5 +57,5 @@ def post_form_for_upload_template_field_mapping(interface: abstractInterface):
 
     return form_with_message_and_finished_button(
         "Uploaded new template %s" % (template_name), interface=interface,
-        set_stage_name_to_go_to_on_button_press=WA_SELECT_MAPPING_TEMPLATE_IN_VIEW_EVENT_STAGE
+        function_whose_parent_go_to_on_button_press=display_form_for_upload_template_field_mapping
     )

@@ -1,3 +1,6 @@
+from dataclasses import dataclass
+from typing import Callable
+
 from app.objects.constants import (
     missing_data,
     NoFileUploaded,
@@ -6,15 +9,19 @@ from app.objects.constants import (
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,
-    YES, NO,
+    YES, NO, NewForm,
 )
 from app.objects.abstract_objects.abstract_buttons import FINISHED_BUTTON_LABEL, Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-
+from app.objects.abstract_objects.form_function_mapping import DisplayAndPostFormFunctionMaps
 
 finished_button = Button(FINISHED_BUTTON_LABEL)
 
-class abstractInterface(object):
+@dataclass
+class abstractInterface:
+    display_and_post_form_function_maps: DisplayAndPostFormFunctionMaps = arg_not_passed
+    action_name: str = ""
+
     def log_error(self, error_message: str):
         raise NotImplemented
 
@@ -92,6 +99,14 @@ class abstractInterface(object):
     def uploaded_file(self, input_name: str = "file"):
         raise NoFileUploaded
 
+    def get_new_display_form_given_function(self, func: Callable) -> NewForm:
+        form_name = self.display_and_post_form_function_maps.display_mappings.get_form_name_for_function(func)
+        return NewForm(form_name)
+
+    def get_new_display_form_for_parent_of_function(self, func: Callable) -> NewForm:
+        form_name = self.display_and_post_form_function_maps.display_mappings.get_form_name_for_parent_of_function(func)
+        return NewForm(form_name)
+
 
 def get_file_from_interface(file_label: str, interface: abstractInterface):
     try:
@@ -108,7 +123,8 @@ def get_file_from_interface(file_label: str, interface: abstractInterface):
 def form_with_message_and_finished_button(
     message: str, interface: abstractInterface,
         button: Button = finished_button,
-        set_stage_name_to_go_to_on_button_press: str = arg_not_passed,
+        DEPRECATEset_stage_name_to_go_to_on_button_press: str = arg_not_passed,
+        function_whose_parent_go_to_on_button_press: Callable = arg_not_passed,
         log_error: str = arg_not_passed,
         log_msg: str = arg_not_passed
 
@@ -118,8 +134,12 @@ def form_with_message_and_finished_button(
     elif log_msg is not arg_not_passed:
         interface.log_message(log_msg)
 
-    if set_stage_name_to_go_to_on_button_press is not arg_not_passed:
-        interface.set_where_finished_button_should_lead_to(set_stage_name_to_go_to_on_button_press)
+
+    if function_whose_parent_go_to_on_button_press is not arg_not_passed:
+        stage_name= interface.get_new_display_form_for_parent_of_function(function_whose_parent_go_to_on_button_press)
+        interface.set_where_finished_button_should_lead_to(stage_name.form_name)
+    elif DEPRECATEset_stage_name_to_go_to_on_button_press is not arg_not_passed:
+            interface.set_where_finished_button_should_lead_to(DEPRECATEset_stage_name_to_go_to_on_button_press)
     else:
         interface.clear_where_finished_button_should_lead_to()
 

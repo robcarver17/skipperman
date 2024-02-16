@@ -1,5 +1,6 @@
 from typing import Union
 
+from app.logic.events.import_wa.import_wa_file import display_form_import_event_file
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
@@ -37,7 +38,7 @@ def post_form_uupdate_existing_event(
     if button_pressed == UPLOAD_FILE_BUTTON_LABEL:
         return respond_to_uploaded_file_when_updating(interface)
     elif button_pressed==BACK_BUTTON_LABEL:
-        return NewForm(VIEW_EVENT_STAGE)
+        return interface.get_new_display_form_for_parent_of_function(display_form_update_existing_event)
     else:
         button_error_and_back_to_initial_state_form(interface)
 
@@ -50,6 +51,6 @@ def respond_to_uploaded_file_when_updating(
     except Exception as e:
         ## revert to view events
         interface.log_error("Problem with file upload %s" % e)
-        return NewForm(VIEW_EVENT_STAGE)
+        return interface.get_new_display_form_for_parent_of_function(display_form_update_existing_event)
 
-    return NewForm(WA_IMPORT_SUBSTAGE_IN_VIEW_EVENT_STAGE)
+    return interface.get_new_display_form_given_function(display_form_import_event_file)

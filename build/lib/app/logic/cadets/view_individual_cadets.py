@@ -1,15 +1,17 @@
 from typing import Union
 
 from app.logic.cadets.cadet_state_storage import get_cadet_from_state
+from app.logic.cadets.delete_cadet import display_form_delete_individual_cadet
+from app.logic.cadets.edit_cadet import display_form_edit_individual_cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
+from app.logic.abstract_logic_api import initial_state_form
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 from app.backend.group_allocations.previous_allocations import get_dict_of_all_event_allocations_for_single_cadet
-from app.logic.cadets.constants import EDIT_BUTTON_LABEL, DELETE_BUTTON_LABEL, BACK_BUTTON_LABEL, EDIT_INDIVIDUAL_CADET_STAGE, DELETE_INDIVIDUAL_CADET_STAGE
+from app.logic.cadets.constants import EDIT_BUTTON_LABEL, DELETE_BUTTON_LABEL, BACK_BUTTON_LABEL
 from app.objects.cadets import Cadet
 
 
@@ -38,11 +40,11 @@ def post_form_view_individual_cadet(
     if button==BACK_BUTTON_LABEL:
         return initial_state_form
     elif button==DELETE_BUTTON_LABEL:
-        return NewForm(DELETE_INDIVIDUAL_CADET_STAGE)
+        return interface.get_new_display_form_given_function(display_form_delete_individual_cadet)
     elif button==EDIT_BUTTON_LABEL:
-        return NewForm(EDIT_INDIVIDUAL_CADET_STAGE)
+        return interface.get_new_display_form_given_function(display_form_edit_individual_cadet)
     else:
-        button_error_and_back_to_initial_state_form(interface)
+        return interface.get_new_display_form_for_parent_of_function(display_form_view_individual_cadet)
 
 
 def display_form_for_selected_cadet(

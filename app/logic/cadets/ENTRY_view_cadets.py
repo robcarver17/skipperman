@@ -1,10 +1,10 @@
 from typing import Union
 
+from app.logic.cadets.add_cadet import display_form_add_cadet
 from app.logic.cadets.constants import (
-    VIEW_INDIVIDUAL_CADET_STAGE,
-    ADD_CADET_STAGE,
     ADD_CADET_BUTTON_LABEL,
 )
+from app.logic.cadets.view_individual_cadets import display_form_view_individual_cadet
 from app.objects.cadets import Cadet
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -14,7 +14,8 @@ from app.objects.abstract_objects.abstract_buttons import main_menu_button, Butt
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.cadets.cadet_state_storage import update_state_for_specific_cadet
-from app.backend.cadets import get_sorted_list_of_cadets, SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, SORT_BY_DOB_DSC
+from app.backend.cadets import get_sorted_list_of_cadets, SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, \
+    SORT_BY_DOB_DSC, get_cadet_from_list_of_cadets
 
 
 def display_form_view_of_cadets(interface: abstractInterface) -> Form:
@@ -46,10 +47,11 @@ def display_form_view_of_cadets_with_sort_order_passed(sort_order=SORT_BY_SURNAM
     return form
 
 
+
 def post_form_view_of_cadets(interface: abstractInterface) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
     if button_pressed == ADD_CADET_BUTTON_LABEL:
-        return NewForm(ADD_CADET_STAGE)
+        return interface.get_new_display_form_given_function(display_form_add_cadet)
 
     elif button_pressed in all_sort_types:
         ## no change to stage required, just sort order
@@ -58,8 +60,9 @@ def post_form_view_of_cadets(interface: abstractInterface) -> Union[Form, NewFor
 
     else:  ## must be a cadet redirect:
         cadet_selected = interface.last_button_pressed()
-        update_state_for_specific_cadet(interface=interface, cadet_selected=cadet_selected)
-        return NewForm(VIEW_INDIVIDUAL_CADET_STAGE)
+        cadet = get_cadet_from_list_of_cadets(cadet_selected)
+        update_state_for_specific_cadet(interface=interface, cadet_id_selected=cadet.id)
+        return interface.get_new_display_form_given_function(display_form_view_individual_cadet)
 
 
 def display_list_of_cadets_with_buttons(sort_order=SORT_BY_SURNAME) -> ListOfLines:

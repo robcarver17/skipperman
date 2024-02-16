@@ -1,6 +1,7 @@
 from typing import Tuple
 
-from app.backend.reporting.allocation_report import specific_parameters_for_allocation_report
+from app.backend.reporting.allocation_report import specific_parameters_for_allocation_report, \
+    AdditionalParametersForAllocationReport
 from app.backend.reporting.arrangement.arrange_options import describe_arrangement
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.reporting.allocations.forms import explain_additional_parameters_for_allocation_report
@@ -39,7 +40,7 @@ def get_text_explaining_various_options_for_rota_report(
     return additional_options_as_text, print_options_as_text, arrangement_and_order_text
 
 def explain_additional_parameters_for_rota_report(
-    additional_parameters: AdditionalParametersForAllocationReport,
+    additional_parameters: AdditionalParametersForAllocationReport, ## should be rota
 ) -> ListOfLines:
     if additional_parameters.display_full_names:
         name_str = "Display cadet full names"

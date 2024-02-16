@@ -43,12 +43,10 @@ def loop_over_volunteers_identified_in_event(interface: abstractInterface) -> Un
     try:
         get_and_save_next_volunteer_id_in_mapped_event_data(interface)
     except NoMoreData:
-        return return_to_controller()
+        return return_to_controller(interface)
 
     return display_form_for_volunteer_details(interface)
 
-def return_to_controller() -> NewForm:
-    return NewForm(WA_UPDATE_CONTROLLER_IN_VIEW_EVENT_STAGE)
 
 def process_identified_volunteer_at_event(interface: abstractInterface) -> Union[Form, NewForm]:
     volunteer_id = get_current_volunteer_id_at_event(interface)
@@ -58,9 +56,10 @@ def process_identified_volunteer_at_event(interface: abstractInterface) -> Union
     if already_added:
         action_when_volunteer_already_at_event(event=event, volunteer_id=volunteer_id)
         ## Next volunteer
-        return NewForm(VOLUNTEER_DETAILS_LOOP_IN_VIEW_EVENT_STAGE)
+        return next_volunteer(interface)
     else:
         return display_form_for_volunteer_details(interface)
+
 
 def action_when_volunteer_already_at_event(event: Event, volunteer_id: str):
     ## If a new volunteer is added
@@ -134,10 +133,10 @@ def post_form_confirm_volunteer_details(interface: abstractInterface):
     form_ok = add_volunteer_at_event_with_form_contents_and_return_true_if_ok(interface)
     if not form_ok:
         return display_form_for_volunteer_details(interface)
-    return continue_to_next_volunteer()
+    return next_volunteer(interface)
 
-def continue_to_next_volunteer():
-    ## Now loop to next volunteer in event
-    return NewForm(VOLUNTEER_DETAILS_LOOP_IN_VIEW_EVENT_STAGE)
+def return_to_controller(interface: abstractInterface) -> NewForm:
+    return interface.get_new_display_form_for_parent_of_function(initialise_loop_over_volunteers_identifed_in_event)
 
-
+def next_volunteer(interface: abstractInterface)-> NewForm:
+    return interface.get_new_display_form_given_function(loop_over_volunteers_identified_in_event)

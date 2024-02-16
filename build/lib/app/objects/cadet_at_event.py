@@ -19,6 +19,7 @@ class IdentifiedCadetAtEvent(GenericSkipperManObject):
     cadet_id: str
 
 class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
+    @property
     def _object_class_contained(self):
         return IdentifiedCadetAtEvent
 
@@ -45,7 +46,7 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
 
         matching_item = matching[0]
 
-        return matching_item.cadet_id
+        return str(matching_item.cadet_id)
 
     def list_of_row_ids_matching_cadet_id(self, cadet_id: str)-> List[str]:
         return [item.row_id for item in self if item.cadet_id == cadet_id]
@@ -159,7 +160,7 @@ class ListOfCadetsAtEvent(GenericListOfObjectsWithIds):
         return self.list_of_cadet_ids()
 
     def list_of_cadet_ids(self) -> List[str]:
-        return [item.cadet_id for item in self]
+        return [str(item.cadet_id) for item in self]
 
     def add(self, cadet_at_event: CadetAtEvent):
         if self.is_cadet_id_in_event(cadet_at_event.cadet_id):

@@ -38,7 +38,10 @@ def display_form_interactively_update_cadets_at_event(
 
     clear_cadet_id_at_event(interface)
 
-    return iterative_process_updates_to_cadets_at_event(interface=interface)
+    return goto_next_cadet(interface)
+
+def goto_next_cadet(interface: abstractInterface):
+    return interface.get_new_display_form_given_function(iterative_process_updates_to_cadets_at_event)
 
 def iterative_process_updates_to_cadets_at_event(
     interface: abstractInterface
@@ -111,7 +114,7 @@ def process_update_to_cadet_new_to_event(
 
     if relevant_row is missing_data:
         ## There is a new row, but it's cancelled already so ignore it
-        return iterative_process_updates_to_cadets_at_event(interface)
+        return goto_next_cadet(interface)
 
     add_new_cadet_to_event(
         event=event, row_in_mapped_wa_event=relevant_row,
@@ -218,5 +221,3 @@ def post_form_interactively_update_cadets_at_event(
 def finished_looping_return_to_controller(interface: abstractInterface)-> NewForm:
     return interface.get_new_display_form_for_parent_of_function(display_form_interactively_update_cadets_at_event)
 
-def goto_next_cadet(interface: abstractInterface):
-    return iterative_process_updates_to_cadets_at_event(interface)

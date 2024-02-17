@@ -59,10 +59,14 @@ def post_form_view_of_cadets(interface: abstractInterface) -> Union[Form, NewFor
         return display_form_view_of_cadets_with_sort_order_passed(sort_order)
 
     else:  ## must be a cadet redirect:
-        cadet_selected = interface.last_button_pressed()
-        cadet = get_cadet_from_list_of_cadets(cadet_selected)
-        update_state_for_specific_cadet(interface=interface, cadet_id_selected=cadet.id)
-        return interface.get_new_display_form_given_function(display_form_view_individual_cadet)
+        return form_for_view_individual_cadet(interface)
+
+def form_for_view_individual_cadet(interface: abstractInterface)-> NewForm:
+    cadet_selected = interface.last_button_pressed()
+    cadet = get_cadet_from_list_of_cadets(cadet_selected)
+    update_state_for_specific_cadet(interface=interface, cadet_id_selected=cadet.id)
+
+    return interface.get_new_display_form_given_function(display_form_view_individual_cadet)
 
 
 def display_list_of_cadets_with_buttons(sort_order=SORT_BY_SURNAME) -> ListOfLines:

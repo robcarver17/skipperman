@@ -50,7 +50,7 @@ def get_form_view_of_volunteers(sort_order: str=SORT_BY_SURNAME) -> Form:
 def post_form_view_of_volunteers(interface: abstractInterface) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
     if button_pressed == ADD_VOLUNTEER_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_add_volunteer)
+        return add_volunteer_form(interface)
 
     elif button_pressed in all_sort_types:
         ## no change to stage required, just sort order
@@ -58,9 +58,16 @@ def post_form_view_of_volunteers(interface: abstractInterface) -> Union[Form, Ne
         return get_form_view_of_volunteers(sort_order=sort_order)
 
     else:  ## must be a volunteer redirect:
-        volunteer_selected = interface.last_button_pressed()
-        update_state_for_specific_volunteer_given_volunteer_as_str(interface=interface, volunteer_selected=volunteer_selected)
-        return interface.get_new_display_form_given_function(display_form_view_individual_volunteer)
+        return view_specific_volunteer_form(interface)
+
+def add_volunteer_form(interface:abstractInterface):
+    return interface.get_new_display_form_given_function(display_form_add_volunteer)
+
+def view_specific_volunteer_form(interface:abstractInterface):
+    volunteer_selected = interface.last_button_pressed()
+    update_state_for_specific_volunteer_given_volunteer_as_str(interface=interface,
+                                                               volunteer_selected=volunteer_selected)
+    return interface.get_new_display_form_given_function(display_form_view_individual_volunteer)
 
 
 def display_list_of_volunteers_with_buttons(sort_order=SORT_BY_SURNAME) -> ListOfLines:

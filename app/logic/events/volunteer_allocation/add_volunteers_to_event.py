@@ -33,7 +33,7 @@ from app.objects.relevant_information_for_volunteers import RelevantInformationF
 def initialise_loop_over_volunteers_identifed_in_event(interface: abstractInterface)  -> Union[Form, NewForm]:
     reset_new_volunteer_id_at_event(interface)
 
-    return loop_over_volunteers_identified_in_event(interface)
+    return next_volunteer(interface)
 
 ##  Next, compare identified volunteers with volunteers allocated to event - if new then add volunteer at event with volunteer details
 ###  Note, for availability show the user the availability for all connected cadets and relevant rows in case it's different....?

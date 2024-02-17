@@ -28,7 +28,7 @@ def post_form_add_volunteer(interface: abstractInterface) -> Union[Form, NewForm
 
     last_button_pressed = interface.last_button_pressed()
     if last_button_pressed == CANCEL_BUTTON_LABEL:
-        return interface.get_new_display_form_for_parent_of_function(display_form_add_volunteer)
+        return previous_form(interface)
 
     if last_button_pressed == CHECK_BUTTON_LABEL:
         ## verify results, display form again
@@ -40,6 +40,8 @@ def post_form_add_volunteer(interface: abstractInterface) -> Union[Form, NewForm
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
+def previous_form(interface: abstractInterface):
+    return interface.get_new_display_form_for_parent_of_function(display_form_add_volunteer)
 
 
 def get_add_volunteer_form(    interface: abstractInterface, first_time_displayed: bool = True) -> Form:

@@ -61,10 +61,11 @@ def post_form_add_new_volunteer_to_rota_at_event(interface: abstractInterface) -
     elif button_pressed==FINAL_VOLUNTEER_ADD_BUTTON_LABEL:
         return action_when_new_volunteer_to_be_added_from_rota(interface)
     elif button_pressed==BACK_BUTTON_LABEL:
-        return interface.get_new_display_form_for_parent_of_function(display_form_add_new_volunteer_to_rota_at_event)
+        return previous_form(interface)
     else:
         name_of_volunteer = button_pressed
         return action_when_specific_volunteer_selected_for_rota(name_of_volunteer=name_of_volunteer, interface=interface)
+
 
 
 def action_when_new_volunteer_to_be_added_from_rota(interface: abstractInterface) -> Union[Form, NewForm]:
@@ -86,7 +87,7 @@ def action_when_volunteer_known_for_rota(volunteer: Volunteer, interface: abstra
     event = get_event_from_state(interface)
     add_volunteer_to_event_with_just_id(volunteer_id=volunteer.id, event=event)
 
-    return interface.get_new_display_form_for_parent_of_function(display_form_add_new_volunteer_to_rota_at_event)
+    return previous_form(interface)
 
 def get_footer_buttons_add_or_select_existing_volunteer_for_rota(
         event: Event,
@@ -131,3 +132,6 @@ def get_list_of_volunteers_except_those_already_at_event(event: Event):
         list_of_volunteers.pop_with_id(id)
 
     return list_of_volunteers
+
+def previous_form(interface: abstractInterface):
+    return interface.get_new_display_form_for_parent_of_function(display_form_add_new_volunteer_to_rota_at_event)

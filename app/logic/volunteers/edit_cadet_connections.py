@@ -104,13 +104,17 @@ def post_form_edit_cadet_volunteer_connections(
     button = interface.last_button_pressed()
     ### Buttons are back; delete button for individual cadet connection; add to add a new connection
     if button==BACK_BUTTON_LABEL:
-        return interface.get_new_display_form_for_parent_of_function(display_form_edit_cadet_volunteer_connections)
+        return previous_form(interface)
     elif button==ADD_CONNECTION_BUTTON_LABEL:
         add_connection_from_form(interface)
         ## might want to do more
         return display_form_edit_cadet_volunteer_connections(interface)
 
     return post_form_edit_cadet_volunteer_connections_when_delete_button_pressed(interface)
+
+def previous_form(interface: abstractInterface):
+    return interface.get_new_display_form_for_parent_of_function(display_form_edit_cadet_volunteer_connections)
+
 
 def post_form_edit_cadet_volunteer_connections_when_delete_button_pressed(
         interface: abstractInterface,

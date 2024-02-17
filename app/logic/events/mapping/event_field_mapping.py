@@ -116,12 +116,25 @@ def post_form_event_field_mapping(interface: abstractInterface) -> Union[Form, N
 
     button_pressed = interface.last_button_pressed()
     if button_pressed == MAP_TO_TEMPLATE_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_for_choose_template_field_mapping)
+        return template_mapping_form(interface)
     elif button_pressed == CLONE_EVENT_MAPPING_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_for_clone_event_field_mapping)
+        return clone_mapping_form(interface)
     elif button_pressed == UPLOAD_MAPPING_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_for_upload_custom_field_mapping)
+        return custom_mapping_form(interface)
     elif button_pressed == BACK_BUTTON_LABEL:
-        return interface.get_new_display_form_for_parent_of_function(display_form_event_field_mapping)
+        return previous_form(interface)
     else:
         button_error_and_back_to_initial_state_form(interface)
+
+
+def template_mapping_form(interface: abstractInterface)-> NewForm:
+    return interface.get_new_display_form_given_function(display_form_for_choose_template_field_mapping)
+
+def clone_mapping_form(interface: abstractInterface)-> NewForm:
+    return interface.get_new_display_form_given_function(display_form_for_clone_event_field_mapping)
+
+def custom_mapping_form(interface: abstractInterface)-> NewForm:
+    return interface.get_new_display_form_given_function(display_form_for_upload_custom_field_mapping)
+
+def previous_form(interface: abstractInterface)-> NewForm:
+    return interface.get_new_display_form_for_parent_of_function(display_form_event_field_mapping)

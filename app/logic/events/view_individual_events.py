@@ -159,29 +159,29 @@ def post_form_view_individual_event(
 
     last_button_pressed = interface.last_button_pressed()
     if last_button_pressed == WA_UPLOAD_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_upload_event_file)
+        return form_to_upload_event_file(interface)
 
     elif last_button_pressed in [WA_FIELD_MAPPING_BUTTON_LABEL, WA_MODIFY_FIELD_MAPPING_BUTTON_LABEL, WA_CHECK_FIELD_MAPPING_BUTTON_LABEL]:
         ## same form, but contents will be different
-        return interface.get_new_display_form_given_function(display_form_event_field_mapping)
+        return form_to_do_field_mapping(interface)
 
     elif last_button_pressed == WA_IMPORT_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_import_event_file)
+        return form_to_do_import_event(interface)
 
     elif last_button_pressed == WA_UPDATE_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_update_existing_event)
+        return form_to_do_update_event(interface)
 
     elif last_button_pressed == ALLOCATE_CADETS_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_allocate_cadets)
+        return form_to_do_cadet_allocation(interface)
 
     elif last_button_pressed==EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON:
-        return interface.get_new_display_form_given_function(display_form_edit_registration_details)
+        return form_to_edit_registration_details(interface)
 
     elif last_button_pressed==EDIT_VOLUNTEER_ROLES_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(volunteer_rota_initialise_changed_cadet_loop) ## check rota before going to form
+        return form_to_do_volunteer_rota(interface)
 
     elif last_button_pressed == BACK_BUTTON_LABEL:
-        return interface.get_new_display_form_for_parent_of_function(display_form_view_individual_event)
+        return previous_form(interface)
     else:
         button_error_and_back_to_initial_state_form(interface)
 
@@ -189,4 +189,35 @@ def post_form_view_individual_event(
 def row_of_form_for_event_with_buttons(event) -> Line:
     return Line(Button(str(event)))
 
+
+def form_to_upload_event_file(interface: abstractInterface):
+    return interface.get_new_display_form_given_function(display_form_upload_event_file)
+
+
+def form_to_do_field_mapping(interface: abstractInterface):
+    return interface.get_new_display_form_given_function(display_form_event_field_mapping)
+
+
+def form_to_do_import_event(interface: abstractInterface):
+    return interface.get_new_display_form_given_function(display_form_import_event_file)
+
+
+def form_to_do_update_event(interface: abstractInterface):
+    return interface.get_new_display_form_given_function(display_form_update_existing_event)
+
+
+def form_to_do_cadet_allocation(interface: abstractInterface):
+    return interface.get_new_display_form_given_function(display_form_allocate_cadets)
+
+
+def form_to_edit_registration_details(interface: abstractInterface):
+    return interface.get_new_display_form_given_function(display_form_edit_registration_details)
+
+
+def form_to_do_volunteer_rota(interface: abstractInterface):
+    return interface.get_new_display_form_given_function(volunteer_rota_initialise_changed_cadet_loop) ## check rota before going to form
+
+
+def previous_form(interface: abstractInterface):
+    return interface.get_new_display_form_for_parent_of_function(display_form_view_individual_event)
 

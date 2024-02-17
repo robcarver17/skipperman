@@ -87,7 +87,7 @@ def post_form_edit_registration_details(
     last_button_pressed = interface.last_button_pressed()
 
     if interface.last_button_pressed() == BACK_BUTTON_LABEL:
-        return interface.get_new_display_form_for_parent_of_function(display_form_edit_registration_details)
+        return previous_form(interface)
 
     elif last_button_pressed in all_sort_types:
         ## no change to stage required, just sort order
@@ -102,3 +102,6 @@ def post_form_edit_registration_details(
 
     else:
         button_error_and_back_to_initial_state_form(interface)
+
+def previous_form(interface: abstractInterface):
+    return interface.get_new_display_form_for_parent_of_function(display_form_edit_registration_details)

@@ -51,7 +51,7 @@ from app.logic.events.cadets_at_event.interactively_update_records_of_cadets_at_
 )
 from app.logic.events.import_wa.update_existing_event import (
     display_form_update_existing_event,
-    post_form_uupdate_existing_event,
+    post_form_update_existing_event,
 )
 
 from app.logic.events.import_wa.import_controller import import_controller, post_import_controller
@@ -171,7 +171,7 @@ class EventLogicApi(LogicApi):
         VOLUNTEER_DETAILS_LOOP_IN_VIEW_EVENT_STAGE: post_form_confirm_volunteer_details,
 
             WA_UPDATE_SUBSTAGE_IN_VIEW_EVENT_STAGE:
-            post_form_uupdate_existing_event,
+            post_form_update_existing_event,
 
         ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE:
             post_form_allocate_cadets,

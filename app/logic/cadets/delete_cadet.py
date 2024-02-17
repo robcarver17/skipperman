@@ -48,10 +48,13 @@ def post_form_delete_individual_cadet(
         )
         return initial_state_form
     if button==CANCEL_BUTTON_LABEL:
-        return interface.get_new_display_form_for_parent_of_function(display_form_delete_individual_cadet)
+        return previous_form(interface)
 
     elif button==SURE_DELETE_BUTTON_LABEL:
         delete_a_cadet(cadet)
         ## Cadet gone missing so back to list of all cadets
         ## Cadet gone missing so back to list of all cadets
         return initial_state_form
+
+def previous_form(interface:abstractInterface):
+    return interface.get_new_display_form_for_parent_of_function(display_form_delete_individual_cadet)

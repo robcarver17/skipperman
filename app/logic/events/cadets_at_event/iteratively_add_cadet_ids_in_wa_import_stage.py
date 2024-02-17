@@ -49,9 +49,11 @@ def iteratively_add_cadet_ids_during_import(
         return process_next_row(next_row=next_row, interface=interface)
     except NoMoreData:
         print("Finished looping through allocating Cadet IDs")
-
         ## don't return to controller as need to update cadet data now
-        return interface.get_new_display_form_given_function(display_form_interactively_update_cadets_at_event)
+        return go_to_update_cadet_data_form(interface)
+
+def go_to_update_cadet_data_form(interface: abstractInterface):
+    return interface.get_new_display_form_given_function(display_form_interactively_update_cadets_at_event)
 
 
 def process_next_row(

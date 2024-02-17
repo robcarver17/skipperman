@@ -98,12 +98,28 @@ def post_form_view_individual_volunteer(
     ## placeholder, not currently used
     button = interface.last_button_pressed()
     if button==BACK_BUTTON_LABEL:
-        return interface.get_new_display_form_for_parent_of_function(display_form_view_individual_volunteer)
+        return previous_form(interface)
     elif button==DELETE_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_delete_individual_volunteer)
+        return delete_volunteer_form(interface)
     elif button==EDIT_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_edit_individual_volunteer)
+        return edit_volunteer_form(interface)
     elif button==EDIT_CADET_CONNECTIONS_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_edit_cadet_volunteer_connections)
+        return edit_connections_form(interface)
     else:
         return button_error_and_back_to_initial_state_form(interface)
+
+
+def previous_form(interface: abstractInterface)-> NewForm:
+    return interface.get_new_display_form_for_parent_of_function(display_form_view_individual_volunteer)
+
+
+def delete_volunteer_form(interface: abstractInterface) -> NewForm:
+    return interface.get_new_display_form_given_function(display_form_delete_individual_volunteer)
+
+
+def edit_volunteer_form(interface: abstractInterface) -> NewForm:
+    return interface.get_new_display_form_given_function(display_form_edit_individual_volunteer)
+
+
+def edit_connections_form(interface: abstractInterface) -> NewForm:
+    return interface.get_new_display_form_given_function(display_form_edit_cadet_volunteer_connections)

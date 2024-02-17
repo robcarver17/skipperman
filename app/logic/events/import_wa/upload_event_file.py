@@ -66,9 +66,12 @@ def post_form_upload_event_file(interface: abstractInterface) -> Union[Form, New
     if button_pressed == UPLOAD_FILE_BUTTON_LABEL:
         return respond_to_uploaded_file(interface)
     elif button_pressed == BACK_BUTTON_LABEL:
-        return interface.get_new_display_form_for_parent_of_function(display_form_upload_event_file)
+        return previous_form(interface)
     else:
         button_error_and_back_to_initial_state_form(interface)
+
+def previous_form(interface: abstractInterface) -> NewForm:
+    return interface.get_new_display_form_for_parent_of_function(display_form_upload_event_file)
 
 def respond_to_uploaded_file(interface: abstractInterface) -> Union[Form, NewForm]:
     try:

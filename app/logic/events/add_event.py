@@ -29,27 +29,6 @@ def display_form_view_for_add_event(interface: abstractInterface) -> Form:
     return post_form_view_for_add_event(interface=interface, first_time_displayed=True)
 
 
-def post_form_view_for_add_event(
-    interface: abstractInterface, first_time_displayed: bool = False
-) -> Union[Form, NewForm]:
-    if first_time_displayed:
-        ## hasn't been displayed before, will have no defaults
-        return get_add_event_form(interface=interface, first_time_displayed=True)
-
-    last_button_pressed = interface.last_button_pressed()
-
-    if last_button_pressed == CHECK_BUTTON_LABEL:
-        ## verify results, display form again
-        return get_add_event_form(interface=interface, first_time_displayed=False)
-
-    elif last_button_pressed == FINAL_ADD_BUTTON_LABEL:
-        return process_form_when_event_verified(interface)
-
-    elif last_button_pressed == CANCEL_BUTTON_LABEL:
-        return interface.get_new_display_form_for_parent_of_function(display_form_view_for_add_event)
-    else:
-        button_error_and_back_to_initial_state_form(interface)
-
 
 @dataclass
 class EventAndVerificationText:
@@ -157,6 +136,28 @@ def get_event_attribute_given_label(label):
 dict_of_labels = dict([(label, label) for label in list_of_possible_checkbox_labels])
 
 
+def post_form_view_for_add_event(
+    interface: abstractInterface, first_time_displayed: bool = False
+) -> Union[Form, NewForm]:
+    if first_time_displayed:
+        ## hasn't been displayed before, will have no defaults
+        return get_add_event_form(interface=interface, first_time_displayed=True)
+
+    last_button_pressed = interface.last_button_pressed()
+
+    if last_button_pressed == CHECK_BUTTON_LABEL:
+        ## verify results, display form again
+        return get_add_event_form(interface=interface, first_time_displayed=False)
+
+    elif last_button_pressed == FINAL_ADD_BUTTON_LABEL:
+        return process_form_when_event_verified(interface)
+
+    elif last_button_pressed == CANCEL_BUTTON_LABEL:
+        return previous_form(interface)
+    else:
+        button_error_and_back_to_initial_state_form(interface)
+
+
 
 def process_form_when_checking_event(
     interface: abstractInterface,
@@ -223,3 +224,6 @@ EVENT_NAME = "event_name"
 EVENT_START_DATE = "event_start_date"
 EVENT_LENGTH_DAYS = "event_length_days"
 EVENT_CONTAINS = "event_contains"
+
+def previous_form(interface: abstractInterface):
+    return interface.get_new_display_form_for_parent_of_function(display_form_view_for_add_event)

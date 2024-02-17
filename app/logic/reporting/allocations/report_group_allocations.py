@@ -113,17 +113,18 @@ def post_form_for_report_group_allocation_generic_options(
 ) -> Union[Form, NewForm, File]:
     last_button_pressed = interface.last_button_pressed()
     previous_form = interface.get_new_display_form_for_parent_of_function(display_form_for_report_group_allocation_generic_options)
+
     if last_button_pressed == CREATE_REPORT_BUTTON_LABEL:
         return create_report(interface)
 
     elif last_button_pressed == MODIFY_PRINT_OPTIONS_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_for_report_group_allocation_print_options)
+        return print_option_form(interface)
 
     elif last_button_pressed == CHANGE_GROUP_LAYOUT_BUTTON:
-        return interface.get_new_display_form_given_function(display_form_for_group_arrangement_options_allocation_report)
+        return layout_option_form(interface)
 
     elif last_button_pressed == MODIFY_ADDITIONAL_OPTIONS_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_for_report_group_additional_options)
+        return additional_options_form(interface)
 
     elif last_button_pressed == BACK_BUTTON_LABEL:
         # otherwise event/report specific data like filenames is remembered; also group order which could break everything if persisted
@@ -136,6 +137,19 @@ def post_form_for_report_group_allocation_generic_options(
 
     else:
         button_error_and_back_to_initial_state_form(interface)
+
+
+def print_option_form(interface: abstractInterface):
+    return interface.get_new_display_form_given_function(display_form_for_report_group_allocation_print_options)
+
+
+def layout_option_form(interface: abstractInterface):
+    return interface.get_new_display_form_given_function(display_form_for_group_arrangement_options_allocation_report)
+
+
+def additional_options_form(interface: abstractInterface):
+    return interface.get_new_display_form_given_function(display_form_for_report_group_additional_options)
+
 
 # REPORT_ADDITIONAL_OPTIONS_FOR_ALLOCATION_REPORT
 def display_form_for_report_group_additional_options(

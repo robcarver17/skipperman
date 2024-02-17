@@ -32,7 +32,7 @@ def volunteer_rota_initialise_changed_cadet_loop(interface: abstractInterface)->
 
     clear_cadet_id_for_rota_at_event(interface)
 
-    return interface.get_new_display_form_given_function(volunteer_rota_check_changed_cadet_loop)
+    return goto_next_cadet_in_loop(interface)
 
 
 # VOLUNTEER_ROTA_CHECK_LOOP_IN_VIEW_EVENT_STAGE

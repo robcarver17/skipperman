@@ -80,8 +80,7 @@ def post_form_view_for_volunteer_rota(
 
 
     if last_button_pressed==BACK_BUTTON_LABEL:
-        return interface.get_new_display_form_for_parent_of_function(display_form_view_for_volunteer_rota)
-
+        return previous_form(interface)
 
     ## sort options
     elif last_button_pressed in all_volunteer_name_sort_types:
@@ -93,10 +92,9 @@ def post_form_view_for_volunteer_rota(
         save_sorts_to_state(interface=interface, sort_by_day=sort_by_day)
         return display_form_view_for_volunteer_rota(interface)
 
-
     ## Actions which result in new forms
     elif last_button_pressed==ADD_NEW_VOLUNTEER_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_add_new_volunteer_to_rota_at_event)
+        return add_new_volunteer_form(interface)
 
     elif last_button_pressed in get_list_of_volunteer_name_buttons(interface):
         return action_if_volunteer_button_pressed(interface=interface,
@@ -125,7 +123,10 @@ def post_form_view_for_volunteer_rota(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
+def add_new_volunteer_form(interface :abstractInterface):
+    return interface.get_new_display_form_given_function(display_form_add_new_volunteer_to_rota_at_event)
 
-
+def previous_form(interface: abstractInterface):
+    return interface.get_new_display_form_for_parent_of_function(display_form_view_for_volunteer_rota)
 
 

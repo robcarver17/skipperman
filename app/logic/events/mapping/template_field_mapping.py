@@ -65,16 +65,26 @@ def post_form_for_choose_template_field_mapping(
 ) -> Union[Form, NewForm]:
     last_button_pressed = interface.last_button_pressed()
     if last_button_pressed == UPLOAD_TEMPLATE_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_for_upload_template_field_mapping)
+        return upload_template_form(interface)
 
     elif last_button_pressed == DOWNLOAD_MAPPING_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_for_download_template_field_mapping)
+        return download_template_form(interface)
 
     elif last_button_pressed == CANCEL_BUTTON_LABEL:
-        return interface.get_new_display_form_for_parent_of_function(display_form_for_choose_template_field_mapping)
+        return previous_form(interface)
     else:
         ## should be a template
         return post_form_when_template_chosen(interface)
+
+def previous_form(interface: abstractInterface):
+    return interface.get_new_display_form_for_parent_of_function(display_form_for_choose_template_field_mapping)
+
+def upload_template_form(interface: abstractInterface):
+    return interface.get_new_display_form_given_function(display_form_for_upload_template_field_mapping)
+
+def download_template_form(interface: abstractInterface):
+    return interface.get_new_display_form_given_function(display_form_for_download_template_field_mapping)
+
 
 def post_form_when_template_chosen(interface: abstractInterface,
 ) -> Union[Form, NewForm]:

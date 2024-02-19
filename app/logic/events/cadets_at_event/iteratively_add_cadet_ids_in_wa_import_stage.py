@@ -33,12 +33,9 @@ def display_form_add_cadet_ids_during_import(
     ## rest of the time is post
     reset_row_id(interface)
 
-    return goto_next_row(interface)
+    return add_cadet_ids_on_next_row(interface)
 
-def goto_next_row(interface):
-    return interface.get_new_form_given_function(iteratively_add_cadet_ids_during_import)
-
-def iteratively_add_cadet_ids_during_import(
+def add_cadet_ids_on_next_row(
             interface: abstractInterface,
     ) -> Union[Form, NewForm]:
 
@@ -64,7 +61,7 @@ def process_next_row(
     row_id_has_identified_cadet = is_row_already_identified_with_cadet(next_row=next_row, interface=interface)
     if row_id_has_identified_cadet:
         print("Row id %s already identified with a cadet")
-        return goto_next_row(interface)
+        return add_cadet_ids_on_next_row(interface)
 
     try:
         cadet = get_cadet_data_from_row_of_mapped_data_no_checks(next_row)
@@ -109,7 +106,7 @@ def process_row_when_cadet_matched(interface: abstractInterface, cadet: Cadet) -
         event=event, row_id=row_id, cadet_id=cadet.id
     )
     ## run recursively until no more data
-    return goto_next_row(interface)
+    return add_cadet_ids_on_next_row(interface)
 
 
 def process_row_when_cadet_unmatched(

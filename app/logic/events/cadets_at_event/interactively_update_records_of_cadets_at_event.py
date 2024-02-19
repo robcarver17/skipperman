@@ -38,12 +38,10 @@ def display_form_interactively_update_cadets_at_event(
 
     clear_cadet_id_at_event(interface)
 
-    return goto_next_cadet(interface)
+    return process_next_cadet_at_event(interface)
 
-def goto_next_cadet(interface: abstractInterface):
-    return interface.get_new_form_given_function(iterative_process_updates_to_cadets_at_event)
 
-def iterative_process_updates_to_cadets_at_event(
+def process_next_cadet_at_event(
     interface: abstractInterface
 ) -> Union[Form, NewForm]:
 
@@ -92,7 +90,7 @@ def process_update_to_cadet_data(
         )
     else:
         interface.log_error("Cadet ID %s was next ID but now can't find in any file?" % cadet_id)
-        return goto_next_cadet(interface)
+        return process_next_cadet_at_event(interface)
 
 
 def process_update_to_cadet_new_to_event(
@@ -110,18 +108,18 @@ def process_update_to_cadet_new_to_event(
             "ACTION REQUIRED: Cadet %s appears more than once in WA file with an active registration - ignoring for now - go to WA and cancel one of the registrations please!"
             % cadet_name_from_id(cadet_id)
         )
-        return goto_next_cadet(interface)
+        return process_next_cadet_at_event(interface)
 
     if relevant_row is missing_data:
         ## There is a new row, but it's cancelled already so ignore it
-        return goto_next_cadet(interface)
+        return process_next_cadet_at_event(interface)
 
     add_new_cadet_to_event(
         event=event, row_in_mapped_wa_event=relevant_row,
         cadet_id=cadet_id
     )
 
-    return goto_next_cadet(interface)
+    return process_next_cadet_at_event(interface)
 
 
 def process_update_to_deleted_cadet(
@@ -140,7 +138,7 @@ def process_update_to_deleted_cadet(
     else:
         print("Cadet %s already marked as deleted" % cadet_name_from_id(cadet_id))
 
-    return goto_next_cadet(interface)
+    return process_next_cadet_at_event(interface)
 
 
 
@@ -157,7 +155,7 @@ def process_update_to_existing_cadet_in_event_data(
             "ACTION REQUIRED: Cadet %s appears more than once in WA file with an active registration - ignoring all registrations for now - go to WA and cancel one of the registrations please!"
             % cadet_name_from_id(cadet_id)
         )
-        return goto_next_cadet(interface)
+        return process_next_cadet_at_event(interface)
 
     existing_cadet_at_event = get_cadet_at_event_for_cadet_id(
         event=event, cadet_id=cadet_id
@@ -191,7 +189,7 @@ def process_update_to_existing_cadet_at_event(
     ):
         ## nothing to do
         print("No change to %s" % (str(existing_cadet_at_event)))
-        return iterative_process_updates_to_cadets_at_event(interface)
+        return process_next_cadet_at_event(interface)
     else:
         print("Data has changed displaying form")
         return display_form_for_update_to_existing_cadet_at_event(
@@ -215,7 +213,7 @@ def post_form_interactively_update_cadets_at_event(
         print("Updating from form data")
         update_cadets_at_event_with_form_data(interface)
 
-    return goto_next_cadet(interface)
+    return process_next_cadet_at_event(interface)
 
 
 def finished_looping_return_to_controller(interface: abstractInterface)-> NewForm:

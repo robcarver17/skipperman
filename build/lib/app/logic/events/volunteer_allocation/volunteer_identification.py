@@ -8,10 +8,10 @@ from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.import_wa.shared_state_tracking_and_data import get_and_save_next_row_id_in_mapped_event_data, \
     reset_row_id, get_current_row_id
 from app.logic.events.volunteer_allocation.add_volunteers_to_event import \
-    initialise_loop_over_volunteers_identifed_in_event
+    display_add_volunteers_to_event
 from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import clear_volunteer_index, \
     get_and_save_next_volunteer_index, get_relevant_information_for_current_volunteer, get_volunteer_index
-from app.logic.events.volunteer_allocation.volunteer_selection import display_form_volunteer_selection_at_event
+from app.logic.events.volunteer_allocation.volunteer_identification import display_form_volunteer_selection_at_event
 from app.logic.volunteers.volunteer_state import update_state_with_volunteer_id
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import (
@@ -120,7 +120,7 @@ def process_identification_when_volunteer_matched(interface: abstractInterface, 
 
 
 def goto_add_identified_volunteers_to_event(interface: abstractInterface)-> NewForm:
-    return interface.get_new_form_given_function(initialise_loop_over_volunteers_identifed_in_event)
+    return interface.get_new_form_given_function(display_add_volunteers_to_event)
 
 
 ### UNUSED POST FORMS - JUST IN CASE

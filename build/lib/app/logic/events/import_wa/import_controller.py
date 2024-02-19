@@ -5,7 +5,7 @@ from app.logic.events.cadets_at_event.iteratively_add_cadet_ids_in_wa_import_sta
 from app.logic.events.events_in_state import get_event_from_state
 
 from app.logic.events.volunteer_allocation.volunteer_identification import \
-    display_form_volunteer_identification_initalise_loop
+    display_form_volunteer_identification
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface, form_with_message_and_finished_button
 from app.objects.events import Event, CADETS, VOLUNTEERS, GROUP_ALLOCATION, FOOD, CLOTHING, \
@@ -42,7 +42,7 @@ ORDERED_LIST_OF_POSSIBLE_IMPORTS = [CADETS, VOLUNTEERS]
 
 IMPORTS_AND_FUNCTION_NAMES = {
     CADETS: display_form_add_cadet_ids_during_import,
-    VOLUNTEERS: display_form_volunteer_identification_initalise_loop
+    VOLUNTEERS: display_form_volunteer_identification
 }
 
 NO_IMPORT_DONE_YET_INDEX = -1

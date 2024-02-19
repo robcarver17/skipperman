@@ -11,7 +11,7 @@ from app.logic.events.import_wa.upload_event_file import display_form_upload_eve
 from app.logic.events.mapping.event_field_mapping import display_form_event_field_mapping
 from app.logic.events.registration_details.edit_registration_details import display_form_edit_registration_details
 from app.logic.events.volunteer_rota.verify_volunteers_if_cadet_at_event_changed import \
-    volunteer_rota_initialise_changed_cadet_loop
+    display_form_volunteer_rota_check
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm
@@ -215,9 +215,9 @@ def form_to_edit_registration_details(interface: abstractInterface):
 
 
 def form_to_do_volunteer_rota(interface: abstractInterface):
-    return interface.get_new_form_given_function(volunteer_rota_initialise_changed_cadet_loop) ## check rota before going to form
+    return interface.get_new_form_given_function(display_form_volunteer_rota_check) ## check rota before going to form
 
 
 def previous_form(interface: abstractInterface):
-    return interface.get_new_display_form_for_parent_of_function(display_form_view_individual_event)
+    return interface.get_new_display_form_for_parent_of_function(post_form_view_individual_event)
 

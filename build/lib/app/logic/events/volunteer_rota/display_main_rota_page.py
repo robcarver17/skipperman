@@ -21,7 +21,6 @@ from app.logic.events.volunteer_rota.render_volunteer_table import get_volunteer
 ADD_NEW_VOLUNTEER_BUTTON_LABEL = "Add new volunteer to rota"
 
 def display_form_view_for_volunteer_rota(interface: abstractInterface) -> Form:
-    #### FIXME STAB THROUGH CHANGED CADETS FIRSTS
     sort_by_volunteer_name, sort_by_day = get_sorts_from_state(interface)
     event =get_event_from_state(interface)
     title = "Volunteer rota for event %s" % str(event)

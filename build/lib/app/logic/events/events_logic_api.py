@@ -62,14 +62,13 @@ from app.logic.events.allocate_cadets_to_groups import (
     post_form_allocate_cadets,
 )
 from app.logic.events.volunteer_allocation.volunteer_identification import \
-    display_form_volunteer_identification_initalise_loop, post_form_volunteer_identification_initialise, \
-    display_form_volunteer_identification_from_mapped_event_data, post_form_volunteer_identification_looping, \
-    identify_volunteers_in_specific_row_loop, \
-    post_form_add_volunteers_to_cadet_loop
+    display_form_volunteer_identification, post_form_volunteer_identification, \
+    process_volunteer_on_next_row_of_event_data, post_form_volunteer_identification_looping, \
+    next_volunteer_in_current_row, \
+    post_form_add_volunteers_to_cadet_loop, display_form_volunteer_selection_at_event, post_form_volunteer_identification
 from app.logic.events.volunteer_rota.verify_volunteers_if_cadet_at_event_changed import \
-    post_form_volunteer_rota_check_changed_cadet_loop, volunteer_rota_check_changed_cadet_loop, volunteer_rota_initialise_changed_cadet_loop
-from app.logic.events.volunteer_allocation.add_volunteers_to_event import loop_over_volunteers_identified_in_event, post_form_confirm_volunteer_details, initialise_loop_over_volunteers_identifed_in_event
-from app.logic.events.volunteer_allocation.volunteer_selection import display_form_volunteer_selection_at_event, post_form_volunteer_selection
+    post_form_volunteer_rota_check, next_cadet_in_loop, display_form_volunteer_rota_check
+from app.logic.events.volunteer_allocation.add_volunteers_to_event import next_volunteer_in_event, post_form_add_volunteers_to_event, display_add_volunteers_to_event
 
 from app.logic.events.registration_details.edit_registration_details import display_form_edit_registration_details, post_form_edit_registration_details
 from app.logic.events.volunteer_rota.display_main_rota_page import display_form_view_for_volunteer_rota, post_form_view_for_volunteer_rota
@@ -100,24 +99,24 @@ class EventLogicApi(LogicApi):
                 WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE: display_form_add_cadet_ids_during_import,
                 WA_UPDATE_CADETS_AT_EVENT_IN_VIEW_EVENT_STAGE: display_form_interactively_update_cadets_at_event,
 
-                WA_VOLUNTEER_IDENITIFICATION_INITIALISE_IN_VIEW_EVENT_STAGE: display_form_volunteer_identification_initalise_loop,
-                WA_VOLUNTEER_IDENITIFICATION_LOOP_IN_VIEW_EVENT_STAGE: display_form_volunteer_identification_from_mapped_event_data,
+                WA_VOLUNTEER_IDENITIFICATION_INITIALISE_IN_VIEW_EVENT_STAGE: display_form_volunteer_identification,
+                WA_VOLUNTEER_IDENITIFICATION_LOOP_IN_VIEW_EVENT_STAGE: process_volunteer_on_next_row_of_event_data,
 
 
-                WA_IDENTIFY_VOLUNTEERS_IN_SPECIFIC_ROW_LOOP_IN_VIEW_EVENT_STAGE: identify_volunteers_in_specific_row_loop,
+                WA_IDENTIFY_VOLUNTEERS_IN_SPECIFIC_ROW_LOOP_IN_VIEW_EVENT_STAGE: next_volunteer_in_current_row,
 
                 WA_VOLUNTEER_IDENTIFICATION_SELECTION_IN_VIEW_EVENT_STAGE:display_form_volunteer_selection_at_event,
 
-                VOLUNTEER_DETAILS_INITIALISE_IN_VIEW_EVENT_STAGE: initialise_loop_over_volunteers_identifed_in_event,
-                VOLUNTEER_DETAILS_LOOP_IN_VIEW_EVENT_STAGE: loop_over_volunteers_identified_in_event,
+                VOLUNTEER_DETAILS_INITIALISE_IN_VIEW_EVENT_STAGE: display_add_volunteers_to_event,
+                VOLUNTEER_DETAILS_LOOP_IN_VIEW_EVENT_STAGE: next_volunteer_in_event,
 
                 WA_UPDATE_SUBSTAGE_IN_VIEW_EVENT_STAGE: display_form_update_existing_event,
 
                 ALLOCATE_CADETS_IN_VIEW_EVENT_STAGE: display_form_allocate_cadets,
                 EDIT_CADET_REGISTRATION_DATA_IN_VIEW_EVENT_STAGE: display_form_edit_registration_details,
 
-                VOLUNTEER_ROTA_INITIALISE_LOOP_IN_VIEW_EVENT_STAGE: volunteer_rota_initialise_changed_cadet_loop,
-                VOLUNTEER_ROTA_CHECK_LOOP_IN_VIEW_EVENT_STAGE: volunteer_rota_check_changed_cadet_loop,
+                VOLUNTEER_ROTA_INITIALISE_LOOP_IN_VIEW_EVENT_STAGE: display_form_volunteer_rota_check,
+                VOLUNTEER_ROTA_CHECK_LOOP_IN_VIEW_EVENT_STAGE: next_cadet_in_loop,
 
                 EDIT_VOLUNTEER_ROTA_EVENT_STAGE: display_form_view_for_volunteer_rota,
                 EDIT_VOLUNTEER_DETAILS_FROM_ROTA_EVENT_STAGE: display_form_confirm_volunteer_details_from_rota,
@@ -162,14 +161,14 @@ class EventLogicApi(LogicApi):
             post_form_interactively_update_cadets_at_event,
 
         WA_VOLUNTEER_IDENITIFICATION_INITIALISE_IN_VIEW_EVENT_STAGE:
-            post_form_volunteer_identification_initialise,
+            post_form_volunteer_identification,
 
         WA_VOLUNTEER_IDENITIFICATION_LOOP_IN_VIEW_EVENT_STAGE: post_form_volunteer_identification_looping,
-        WA_VOLUNTEER_IDENTIFICATION_SELECTION_IN_VIEW_EVENT_STAGE: post_form_volunteer_selection,
+        WA_VOLUNTEER_IDENTIFICATION_SELECTION_IN_VIEW_EVENT_STAGE: post_form_volunteer_identification,
 
         WA_IDENTIFY_VOLUNTEERS_IN_SPECIFIC_ROW_LOOP_IN_VIEW_EVENT_STAGE: post_form_add_volunteers_to_cadet_loop,
 
-        VOLUNTEER_DETAILS_LOOP_IN_VIEW_EVENT_STAGE: post_form_confirm_volunteer_details,
+        VOLUNTEER_DETAILS_LOOP_IN_VIEW_EVENT_STAGE: post_form_add_volunteers_to_event,
 
             WA_UPDATE_SUBSTAGE_IN_VIEW_EVENT_STAGE:
             post_form_update_existing_event,
@@ -181,7 +180,7 @@ class EventLogicApi(LogicApi):
             post_form_edit_registration_details,
 
 
-        VOLUNTEER_ROTA_CHECK_LOOP_IN_VIEW_EVENT_STAGE: post_form_volunteer_rota_check_changed_cadet_loop,
+        VOLUNTEER_ROTA_CHECK_LOOP_IN_VIEW_EVENT_STAGE: post_form_volunteer_rota_check,
 
         EDIT_VOLUNTEER_ROTA_EVENT_STAGE: post_form_view_for_volunteer_rota,
         EDIT_VOLUNTEER_DETAILS_FROM_ROTA_EVENT_STAGE: post_form_confirm_volunteer_details_from_rota,

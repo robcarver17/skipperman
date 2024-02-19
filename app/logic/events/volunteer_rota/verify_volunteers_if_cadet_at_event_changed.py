@@ -15,6 +15,8 @@ from app.logic.events.volunteer_rota.rota_state import clear_cadet_id_for_rota_a
 from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.constants import NoMoreData
+from app.logic.events.volunteer_rota.display_main_rota_page import display_form_view_for_volunteer_rota, post_form_view_for_volunteer_rota
+
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import Form, NewForm, checkboxInput
@@ -28,15 +30,15 @@ INCLUDE_VOLUNTEER = "include"
 
 
 # VOLUNTEER_ROTA_INITIALISE_LOOP_IN_VIEW_EVENT_STAGE
-def volunteer_rota_initialise_changed_cadet_loop(interface: abstractInterface)-> NewForm:
+def display_form_volunteer_rota_check(interface: abstractInterface)-> NewForm:
 
     clear_cadet_id_for_rota_at_event(interface)
 
-    return goto_next_cadet_in_loop(interface)
+    return next_cadet_in_loop(interface)
 
 
 # VOLUNTEER_ROTA_CHECK_LOOP_IN_VIEW_EVENT_STAGE
-def volunteer_rota_check_changed_cadet_loop(interface: abstractInterface) -> Union[Form, NewForm]:
+def next_cadet_in_loop(interface: abstractInterface) -> Union[Form, NewForm]:
     try:
         cadet_id = get_and_save_next_cadet_id_in_event_data(interface)
     except NoMoreData:
@@ -46,7 +48,7 @@ def volunteer_rota_check_changed_cadet_loop(interface: abstractInterface) -> Uni
     return check_cadet_in_loop(interface=interface, cadet_id=cadet_id)
 
 def goto_main_rota_form(interface:abstractInterface)-> NewForm:
-    return interface.get_new_form_given_function(volunteer_rota_initialise_changed_cadet_loop)
+    return interface.get_new_form_given_function(display_form_view_for_volunteer_rota)
 
 
 def check_cadet_in_loop(interface: abstractInterface, cadet_id: str) -> Union[Form, NewForm]:
@@ -56,10 +58,8 @@ def check_cadet_in_loop(interface: abstractInterface, cadet_id: str) -> Union[Fo
     if cadet_has_changed:
         return display_form_volunteer_rota_check_changed_cadet_loop(interface=interface, cadet_id=cadet_id)
     else:
-        return goto_next_cadet_in_loop(interface)
+        return next_cadet_in_loop(interface)
 
-def goto_next_cadet_in_loop(interface: abstractInterface) -> NewForm:
-    return interface.get_new_form_given_function(volunteer_rota_check_changed_cadet_loop)
 
 def display_form_volunteer_rota_check_changed_cadet_loop(interface: abstractInterface, cadet_id: str) -> Form:
     event = get_event_from_state(interface)
@@ -140,7 +140,7 @@ def get_dict_of_relevant_volunteer_names_and_association_cadets_with_id_values(i
                 zip(list_of_relevant_volunteer_names_and_other_cadets, list_of_volunteers_ids))
 
 
-def post_form_volunteer_rota_check_changed_cadet_loop(interface: abstractInterface)-> NewForm:
+def post_form_volunteer_rota_check(interface: abstractInterface)-> NewForm:
     cadet_id=get_current_cadet_id_for_rota_at_event(interface)
 
     dict_of_relevant_volunteers_with_ids = get_dict_of_relevant_volunteer_names_and_association_cadets_with_id_values(interface=interface, cadet_id=cadet_id)
@@ -150,7 +150,7 @@ def post_form_volunteer_rota_check_changed_cadet_loop(interface: abstractInterfa
     event = get_event_from_state(interface)
     mark_cadet_at_event_as_unchanged(cadet_id=cadet_id, event=event)
     ## next cadet
-    return goto_next_cadet_in_loop(interface)
+    return next_cadet_in_loop(interface)
 
 def modify_specific_volunteer_when_cadet_changed(interface: abstractInterface, volunteer_id: str, cadet_id: str):
 

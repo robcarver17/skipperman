@@ -38,13 +38,9 @@ def post_form_update_existing_event(
     if button_pressed == UPLOAD_FILE_BUTTON_LABEL:
         return respond_to_uploaded_file_when_updating(interface)
     elif button_pressed==BACK_BUTTON_LABEL:
-        return interface.get_new_display_form_for_parent_of_function(display_form_update_existing_event)
+        return previous_form(interface)
     else:
         button_error_and_back_to_initial_state_form(interface)
-
-def previous_form(interface: abstractInterface):
-    return interface.get_new_display_form_for_parent_of_function(display_form_update_existing_event)
-
 
 def respond_to_uploaded_file_when_updating(
     interface: abstractInterface,
@@ -60,3 +56,9 @@ def respond_to_uploaded_file_when_updating(
 
 def import_event_file(interface: abstractInterface):
     return interface.get_new_form_given_function(display_form_import_event_file)
+
+
+
+def previous_form(interface: abstractInterface):
+    return interface.get_new_display_form_for_parent_of_function(post_form_update_existing_event)
+

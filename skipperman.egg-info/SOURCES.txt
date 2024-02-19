@@ -265,7 +265,6 @@ app/logic/events/volunteer_allocation/add_volunteers_process_form.py
 app/logic/events/volunteer_allocation/add_volunteers_to_event.py
 app/logic/events/volunteer_allocation/track_state_in_volunteer_allocation.py
 app/logic/events/volunteer_allocation/volunteer_identification.py
-app/logic/events/volunteer_allocation/volunteer_selection.py
 app/logic/events/volunteer_allocation/volunteer_selection_form_contents.py
 app/logic/events/volunteer_allocation/../../../../example_data/cadets/cadet_master_list.csv
 app/logic/events/volunteer_allocation/../../../../example_data/events/list_of_events.csv

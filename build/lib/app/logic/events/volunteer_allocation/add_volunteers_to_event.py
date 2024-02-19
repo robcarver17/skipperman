@@ -26,15 +26,12 @@ from app.objects.events import Event
 from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer
 
 
-def initialise_loop_over_volunteers_identifed_in_event(interface: abstractInterface)  -> Union[Form, NewForm]:
+def display_add_volunteers_to_event(interface: abstractInterface)  -> Union[Form, NewForm]:
     reset_new_volunteer_id_at_event(interface)
 
-    return next_volunteer(interface)
+    return next_volunteer_in_event(interface)
 
-def next_volunteer(interface: abstractInterface)-> NewForm:
-    return interface.get_new_form_given_function(loop_over_volunteers_identified_in_event)
-
-def loop_over_volunteers_identified_in_event(interface: abstractInterface) -> Union[Form, NewForm]:
+def next_volunteer_in_event(interface: abstractInterface) -> Union[Form, NewForm]:
 
     try:
         get_and_save_next_volunteer_id_in_mapped_event_data(interface)
@@ -53,7 +50,7 @@ def process_identified_volunteer_at_event(interface: abstractInterface) -> Union
     if already_added:
         action_when_volunteer_already_at_event(event=event, volunteer_id=volunteer_id)
         ## Next volunteer
-        return next_volunteer(interface)
+        return next_volunteer_in_event(interface)
     else:
         return display_form_for_volunteer_details(interface)
 
@@ -127,12 +124,12 @@ def get_list_of_relevant_information(volunteer_id: str, event: Event) -> List[Re
 
     return list_of_relevant_information
 
-def post_form_confirm_volunteer_details(interface: abstractInterface):
+def post_form_add_volunteers_to_event(interface: abstractInterface):
     form_ok = add_volunteer_at_event_with_form_contents_and_return_true_if_ok(interface)
     if not form_ok:
         return display_form_for_volunteer_details(interface)
-    return next_volunteer(interface)
+    return next_volunteer_in_event(interface)
 
 def return_to_controller(interface: abstractInterface) -> NewForm:
-    return interface.get_new_display_form_for_parent_of_function(initialise_loop_over_volunteers_identifed_in_event)
+    return interface.get_new_display_form_for_parent_of_function(display_add_volunteers_to_event)
 

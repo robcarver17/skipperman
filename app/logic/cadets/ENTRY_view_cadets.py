@@ -51,7 +51,7 @@ def display_form_view_of_cadets_with_sort_order_passed(sort_order=SORT_BY_SURNAM
 def post_form_view_of_cadets(interface: abstractInterface) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
     if button_pressed == ADD_CADET_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_add_cadet)
+        return interface.get_new_form_given_function(display_form_add_cadet)
 
     elif button_pressed in all_sort_types:
         ## no change to stage required, just sort order
@@ -66,7 +66,7 @@ def form_for_view_individual_cadet(interface: abstractInterface)-> NewForm:
     cadet = get_cadet_from_list_of_cadets(cadet_selected)
     update_state_for_specific_cadet(interface=interface, cadet_id_selected=cadet.id)
 
-    return interface.get_new_display_form_given_function(display_form_view_individual_cadet)
+    return interface.get_new_form_given_function(display_form_view_individual_cadet)
 
 
 def display_list_of_cadets_with_buttons(sort_order=SORT_BY_SURNAME) -> ListOfLines:

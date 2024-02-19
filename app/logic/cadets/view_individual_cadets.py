@@ -73,10 +73,10 @@ def post_form_view_individual_cadet(
         return return_to_previous_form(interface)
 
 def form_for_delete_cadet(interface: abstractInterface)->NewForm:
-    return interface.get_new_display_form_given_function(display_form_delete_individual_cadet)
+    return interface.get_new_form_given_function(display_form_delete_individual_cadet)
 
 def form_for_edit_cadet(interface: abstractInterface)->NewForm:
-    return interface.get_new_display_form_given_function(display_form_edit_individual_cadet)
+    return interface.get_new_form_given_function(display_form_edit_individual_cadet)
 
 
 def return_to_previous_form(interface: abstractInterface)->NewForm:

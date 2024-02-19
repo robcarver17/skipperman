@@ -1,4 +1,4 @@
-from typing import Union, Callable
+from typing import Union
 from dataclasses import dataclass
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import (
@@ -7,10 +7,9 @@ from app.objects.abstract_objects.abstract_form import (
 
 )
 from app.objects.abstract_objects.abstract_buttons import is_finished_button
-from app.objects.abstract_objects.form_function_mapping import FormNameFunctionNameMapping, MissingFormName, DisplayAndPostFormFunctionMaps
+from app.objects.abstract_objects.form_function_mapping import FormNameFunctionNameMapping, MissingFormName, \
+    DisplayAndPostFormFunctionMaps, INITIAL_STATE
 from app.objects.constants import NoButtonPressed, arg_not_passed
-
-INITIAL_STATE = "Initial form"
 
 
 @dataclass
@@ -84,9 +83,8 @@ class LogicApi:
     def get_posted_form_given_form_name_without_checking_for_redirection(
         self, form_name: str
     ) -> Union[Form, NewForm]:
-        post_forms_mapping = self.post_form_name_function_mapping
         try:
-            form_function = post_forms_mapping.get_function_for_form_name(form_name)
+            form_function = self.display_and_post_form_function_maps.get_function_for_form_name(form_name=form_name, is_display=False)
         except MissingFormName:
             print("Form %s not recognised" % form_name)
             self.interface.log_error("Internal error, form name %s not recognised" % form_name)
@@ -115,9 +113,8 @@ class LogicApi:
         self, form_name: str
     ) -> Union[Form, NewForm]:
         print("get_displayed_form_given_form_name %s" % form_name)
-        display_forms_mapping = self.display_form_name_function_mapping
         try:
-            form_function = display_forms_mapping.get_function_for_form_name(form_name)
+            form_function = self.display_and_post_form_function_maps.get_function_for_form_name(form_name=form_name, is_display=True)
         except MissingFormName:
             print("Form %s not recognised" % form_name)
             self.interface.log_error("Internal error, form name %s not recognised" % form_name)
@@ -149,14 +146,6 @@ class LogicApi:
             form_name = self.interface.form_name
         print("form name %s" % form_name)
         return form_name
-
-    @property
-    def display_form_name_function_mapping(self) -> FormNameFunctionNameMapping:
-        return self.display_and_post_form_function_maps.display_mappings
-
-    @property
-    def post_form_name_function_mapping(self) -> FormNameFunctionNameMapping:
-        return self.display_and_post_form_function_maps.post_mappings
 
     @property
     def display_and_post_form_function_maps(self)-> DisplayAndPostFormFunctionMaps:

@@ -75,7 +75,7 @@ all_sort_types = [SORT_BY_START_ASC, SORT_BY_START_DSC, SORT_BY_NAME]
 sort_buttons = Line([Button(sortby) for sortby in all_sort_types])
 
 def form_for_add_event(interface: abstractInterface):
-    return interface.get_new_display_form_given_function(display_form_view_for_add_event)
+    return interface.get_new_form_given_function(display_form_view_for_add_event)
 
 def form_for_view_event(interface: abstractInterface):
-    return interface.get_new_display_form_given_function(display_form_view_individual_event)
+    return interface.get_new_form_given_function(display_form_view_individual_event)

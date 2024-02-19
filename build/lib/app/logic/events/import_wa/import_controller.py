@@ -21,7 +21,6 @@ def import_controller(interface: abstractInterface) -> Union[Form, NewForm]:
     try:
         next_import = next_import_required_for_event(event=event, interface=interface)
     except NoMoreData:
-        ## FIXME CLEAR ALL 'Changed' flags eg cadets, volunteers and so on
         return form_with_message_and_finished_button(
             "Finished importing WA data", interface=interface,
             function_whose_parent_go_to_on_button_press=import_controller
@@ -29,7 +28,7 @@ def import_controller(interface: abstractInterface) -> Union[Form, NewForm]:
 
     function = IMPORTS_AND_FUNCTION_NAMES[next_import]
 
-    return interface.get_new_display_form_given_function(function)
+    return interface.get_new_form_given_function(function)
 
 def post_import_controller(interface):
     raise Exception("Should never get here")

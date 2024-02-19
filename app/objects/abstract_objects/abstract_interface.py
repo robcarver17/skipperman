@@ -99,12 +99,12 @@ class abstractInterface:
     def uploaded_file(self, input_name: str = "file"):
         raise NoFileUploaded
 
-    def get_new_display_form_given_function(self, func: Callable) -> NewForm:
-        form_name = self.display_and_post_form_function_maps.display_mappings.get_form_name_for_function(func)
+    def get_new_form_given_function(self, func: Callable) -> NewForm:
+        form_name = self.display_and_post_form_function_maps.get_form_name_for_function(func)
         return NewForm(form_name)
 
     def get_new_display_form_for_parent_of_function(self, func: Callable) -> NewForm:
-        form_name = self.display_and_post_form_function_maps.display_mappings.get_form_name_for_parent_of_function(func)
+        form_name = self.display_and_post_form_function_maps.get_display_form_name_for_parent_of_function(func)
         return NewForm(form_name)
 
 

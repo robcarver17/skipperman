@@ -36,7 +36,7 @@ def display_form_add_cadet_ids_during_import(
     return goto_next_row(interface)
 
 def goto_next_row(interface):
-    return interface.get_new_display_form_given_function(iteratively_add_cadet_ids_during_import)
+    return interface.get_new_form_given_function(iteratively_add_cadet_ids_during_import)
 
 def iteratively_add_cadet_ids_during_import(
             interface: abstractInterface,
@@ -181,4 +181,4 @@ def process_form_when_existing_cadet_chosen(interface: abstractInterface) -> For
     return process_row_when_cadet_matched(interface=interface, cadet=cadet)
 
 def go_to_update_cadet_data_form(interface: abstractInterface):
-    return interface.get_new_display_form_given_function(display_form_interactively_update_cadets_at_event)
+    return interface.get_new_form_given_function(display_form_interactively_update_cadets_at_event)

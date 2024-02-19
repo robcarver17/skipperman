@@ -43,13 +43,15 @@ def post_form_edit_individual_cadet(
     ## placeholder, not currently used
     button = interface.last_button_pressed()
     if button==CANCEL_BUTTON_LABEL:
-        return interface.get_new_display_form_for_parent_of_function(display_form_edit_individual_cadet)
+        return previous_form(interface)
     elif button==SAVE_BUTTON_LABEL:
         modify_cadet_given_form_contents(interface)
-        return interface.get_new_display_form_for_parent_of_function(display_form_edit_individual_cadet)
+        return previous_form(interface)
     else:
         button_error_and_back_to_initial_state_form(interface)
 
+def previous_form(interface: abstractInterface):
+    return interface.get_new_display_form_for_parent_of_function(display_form_edit_individual_cadet)
 
 
 def modify_cadet_given_form_contents(interface: abstractInterface):

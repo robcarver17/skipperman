@@ -132,7 +132,7 @@ def do_allocation_for_cadets_in_form(interface: abstractInterface):
                 "Couldn't allocate group to %s error code %s" % (str(cadet), str(e))
             )
 
-    return interface.get_new_display_form_given_function(display_form_allocate_cadets)
+    return interface.get_new_form_given_function(display_form_allocate_cadets)
 
 
 def do_allocation_for_cadet_at_event(

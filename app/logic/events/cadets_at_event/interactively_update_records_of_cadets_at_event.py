@@ -41,7 +41,7 @@ def display_form_interactively_update_cadets_at_event(
     return goto_next_cadet(interface)
 
 def goto_next_cadet(interface: abstractInterface):
-    return interface.get_new_display_form_given_function(iterative_process_updates_to_cadets_at_event)
+    return interface.get_new_form_given_function(iterative_process_updates_to_cadets_at_event)
 
 def iterative_process_updates_to_cadets_at_event(
     interface: abstractInterface

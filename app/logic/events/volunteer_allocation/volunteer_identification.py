@@ -42,7 +42,7 @@ def display_form_volunteer_identification_initalise_loop(
     return next_row_of_volunteers(interface)
 
 def next_row_of_volunteers(interface: abstractInterface)-> NewForm:
-    return interface.get_new_display_form_given_function(display_form_volunteer_identification_from_mapped_event_data)
+    return interface.get_new_form_given_function(display_form_volunteer_identification_from_mapped_event_data)
 
 
 # WA_VOLUNTEER_IDENITIFICATION_LOOP_IN_VIEW_EVENT_STAGE
@@ -67,7 +67,7 @@ def identify_volunteers_in_specific_row_initialise(interface: abstractInterface)
 
 
 def next_volunteer_in_row(interface:abstractInterface)-> NewForm:
-    return interface.get_new_display_form_given_function(identify_volunteers_in_specific_row_loop)
+    return interface.get_new_form_given_function(identify_volunteers_in_specific_row_loop)
 
 #WA_IDENTIFY_VOLUNTEERS_IN_SPECIFIC_ROW_LOOP_IN_VIEW_EVENT_STAGE
 def identify_volunteers_in_specific_row_loop(interface: abstractInterface) -> Union[Form, NewForm]:
@@ -99,7 +99,7 @@ def add_specific_volunteer_at_event(interface: abstractInterface)-> Union[Form,N
     )
 
 def display_volunteer_selection_form(interface: abstractInterface):
-    return interface.get_new_display_form_given_function(display_form_volunteer_selection_at_event)  ## different file
+    return interface.get_new_form_given_function(display_form_volunteer_selection_at_event)  ## different file
 
 
 def process_identification_when_volunteer_matched(interface: abstractInterface, volunteer: Volunteer,
@@ -120,7 +120,7 @@ def process_identification_when_volunteer_matched(interface: abstractInterface, 
 
 
 def goto_add_identified_volunteers_to_event(interface: abstractInterface)-> NewForm:
-    return interface.get_new_display_form_given_function(initialise_loop_over_volunteers_identifed_in_event)
+    return interface.get_new_form_given_function(initialise_loop_over_volunteers_identifed_in_event)
 
 
 ### UNUSED POST FORMS - JUST IN CASE

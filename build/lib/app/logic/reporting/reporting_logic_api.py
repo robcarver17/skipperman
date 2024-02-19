@@ -1,4 +1,5 @@
-from app.logic.abstract_logic_api import LogicApi, INITIAL_STATE
+from app.logic.abstract_logic_api import LogicApi
+from app.objects.abstract_objects.form_function_mapping import INITIAL_STATE
 from app.logic.reporting.ENTRY_view_list_of_reports import (
     display_form_view_of_reports,
     post_form_view_of_reports,

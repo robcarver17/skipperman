@@ -60,7 +60,7 @@ def post_form_edit_cadet_connections_from_rota(
     button = interface.last_button_pressed()
     ### Buttons are back; delete button for individual cadet connection; add to add a new connection
     if button==BACK_BUTTON_LABEL:
-        return interface.get_new_display_form_for_parent_of_function(display_form_edit_cadet_connections_from_rota)
+        return previous_form(interface)
     elif button==ADD_CONNECTION_BUTTON_LABEL:
         add_event_connection_from_form(interface)
         ## might want to do more
@@ -76,6 +76,8 @@ def post_form_edit_cadet_connections_from_rota(
     else:
         raise Exception("Weirdly named button %s pressed" % button)
 
+def previous_form(interface: abstractInterface):
+    return interface.get_new_display_form_for_parent_of_function(display_form_edit_cadet_connections_from_rota)
 
 def delete_event_connection_given_form(interface: abstractInterface):
     cadet = get_cadet_connection_to_delete_from_form(interface)

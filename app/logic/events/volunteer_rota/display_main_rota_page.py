@@ -124,7 +124,7 @@ def post_form_view_for_volunteer_rota(
         return button_error_and_back_to_initial_state_form(interface)
 
 def add_new_volunteer_form(interface :abstractInterface):
-    return interface.get_new_display_form_given_function(display_form_add_new_volunteer_to_rota_at_event)
+    return interface.get_new_form_given_function(display_form_add_new_volunteer_to_rota_at_event)
 
 def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(display_form_view_for_volunteer_rota)

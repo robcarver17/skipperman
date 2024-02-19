@@ -49,10 +49,13 @@ def post_form_delete_individual_volunteer(
         return initial_state_form
 
     if button==CANCEL_BUTTON_LABEL:
-        return interface.get_new_display_form_for_parent_of_function(display_form_delete_individual_volunteer)
+        return previous_form(interface)
     elif button==SURE_DELETE_BUTTON_LABEL:
         delete_a_volunteer(volunteer)
         ## volunteer now missing so can't go to parent
         return initial_state_form
     else:
         button_error_and_back_to_initial_state_form(interface)
+
+def previous_form(interface: abstractInterface):
+    return interface.get_new_display_form_for_parent_of_function(display_form_delete_individual_volunteer)

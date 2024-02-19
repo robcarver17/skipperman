@@ -56,7 +56,7 @@ def process_wa_staged_file_already_uploaded(interface: abstractInterface) -> New
     return import_controller_form(interface)
 
 def import_controller_form(interface: abstractInterface):
-    return interface.get_new_display_form_given_function(import_controller)
+    return interface.get_new_form_given_function(import_controller)
 
 
 def send_logs_to_interface(list_of_messages: list, interface: abstractInterface):

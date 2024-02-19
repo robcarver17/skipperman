@@ -1,4 +1,4 @@
-from app.logic.abstract_logic_api import LogicApi, INITIAL_STATE
+from app.logic.abstract_logic_api import LogicApi
 
 from app.logic.events.ENTRY_view_events import (
     display_form_view_of_events,
@@ -44,7 +44,7 @@ from app.logic.events.import_wa.import_wa_file import (
 )
 from app.logic.events.cadets_at_event.iteratively_add_cadet_ids_in_wa_import_stage import (
     display_form_add_cadet_ids_during_import,
-    post_form_add_cadet_ids_during_import,
+    post_form_add_cadet_ids_during_import, iteratively_add_cadet_ids_during_import,
 )
 from app.logic.events.cadets_at_event.interactively_update_records_of_cadets_at_event import (
     display_form_interactively_update_cadets_at_event, post_form_interactively_update_cadets_at_event,
@@ -77,11 +77,17 @@ from app.logic.events.volunteer_rota.edit_cadet_connections_for_event_from_rota 
 
 from app.logic.events.volunteer_rota.edit_volunteer_skills_from_rota import display_form_edit_individual_volunteer_skills_from_rota, post_form_edit_individual_volunteer_skills_from_rota
 from app.logic.events.volunteer_rota.add_volunteer_to_rota import display_form_add_new_volunteer_to_rota_at_event, post_form_add_new_volunteer_to_rota_at_event
-from app.objects.abstract_objects.form_function_mapping import FormNameFunctionNameMapping, DisplayAndPostFormFunctionMaps
+from app.objects.abstract_objects.form_function_mapping import FormNameFunctionNameMapping, \
+    DisplayAndPostFormFunctionMaps, INITIAL_STATE
 
 ############
 ## Stages ##
 ############
+
+"""
+These are only used to ensure we have the right mapping in this file to both display and post stages; names stored in state so should be
+meaningful for diagnostic
+"""
 
 ADD_EVENT_STAGE = "Add_event_stage"
 VIEW_EVENT_STAGE = "View_event_stage"
@@ -115,7 +121,7 @@ WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE = (
 WA_UPDATE_CADETS_AT_EVENT_IN_VIEW_EVENT_STAGE = (
     "WA_update_cadets_at_event_view_event_stage"
 )
-
+WA_ITERATED_CADET_IDS = "WA_iterate_cadet_ids"
 WA_VOLUNTEER_IDENITIFICATION_INITIALISE_IN_VIEW_EVENT_STAGE = "WA_extract_volunteer_information_initialise_in_view_event_stage"
 WA_VOLUNTEER_IDENITIFICATION_LOOP_IN_VIEW_EVENT_STAGE = "WA_extract_volunteer_information_loop_in_view_event_stage"
 WA_IDENTIFY_VOLUNTEERS_IN_SPECIFIC_ROW_LOOP_IN_VIEW_EVENT_STAGE = "WA_extract_volunteer_information_add_volunteers_loop_in_view_event_stage"
@@ -155,6 +161,7 @@ event_function_mapping= DisplayAndPostFormFunctionMaps(
 
                 WA_UPDATE_CONTROLLER_IN_VIEW_EVENT_STAGE: import_controller,
                 WA_ADD_CADET_IDS_ITERATION_IN_VIEW_EVENT_STAGE: display_form_add_cadet_ids_during_import,
+                WA_ITERATED_CADET_IDS: iteratively_add_cadet_ids_during_import,
                 WA_UPDATE_CADETS_AT_EVENT_IN_VIEW_EVENT_STAGE: display_form_interactively_update_cadets_at_event,
 
                 WA_VOLUNTEER_IDENITIFICATION_INITIALISE_IN_VIEW_EVENT_STAGE: display_form_volunteer_identification_initalise_loop,

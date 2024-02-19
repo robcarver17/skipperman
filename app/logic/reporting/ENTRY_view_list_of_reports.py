@@ -48,4 +48,4 @@ def post_form_view_of_reports(interface: abstractInterface) -> Union[Form, NewFo
         interface.log_error("Report name %s missing from dict contact support" % button_pressed)
         return initial_state_form
 
-    return interface.get_new_display_form_given_function(report_function)
+    return interface.get_new_form_given_function(report_function)

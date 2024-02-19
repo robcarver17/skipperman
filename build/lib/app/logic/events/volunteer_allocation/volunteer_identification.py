@@ -39,7 +39,10 @@ def display_form_volunteer_identification_initalise_loop(
     ## this only happens once, the rest of the time is a post call
     reset_row_id(interface)
 
-    return display_form_volunteer_identification_from_mapped_event_data(interface)
+    return next_row_of_volunteers(interface)
+
+def next_row_of_volunteers(interface: abstractInterface)-> NewForm:
+    return interface.get_new_form_given_function(display_form_volunteer_identification_from_mapped_event_data)
 
 
 # WA_VOLUNTEER_IDENITIFICATION_LOOP_IN_VIEW_EVENT_STAGE
@@ -56,15 +59,15 @@ def display_form_volunteer_identification_from_mapped_event_data(
 
     return identify_volunteers_in_specific_row_initialise(interface=interface)
 
-def goto_add_identified_volunteers_to_event(interface: abstractInterface)-> NewForm:
-    return interface.get_new_display_form_given_function(initialise_loop_over_volunteers_identifed_in_event)
 
 
-def identify_volunteers_in_specific_row_initialise(interface: abstractInterface) -> Form:
+def identify_volunteers_in_specific_row_initialise(interface: abstractInterface) -> NewForm:
     clear_volunteer_index(interface)
+    return next_volunteer_in_row(interface)
 
-    return identify_volunteers_in_specific_row_loop(interface)
 
+def next_volunteer_in_row(interface:abstractInterface)-> NewForm:
+    return interface.get_new_form_given_function(identify_volunteers_in_specific_row_loop)
 
 #WA_IDENTIFY_VOLUNTEERS_IN_SPECIFIC_ROW_LOOP_IN_VIEW_EVENT_STAGE
 def identify_volunteers_in_specific_row_loop(interface: abstractInterface) -> Union[Form, NewForm]:
@@ -75,8 +78,6 @@ def identify_volunteers_in_specific_row_loop(interface: abstractInterface) -> Un
 
     return add_specific_volunteer_at_event(interface=interface)
 
-def next_row_of_volunteers(interface: abstractInterface)-> NewForm:
-    return interface.get_new_display_form_given_function(display_form_volunteer_identification_from_mapped_event_data)
 
 def add_specific_volunteer_at_event(interface: abstractInterface)-> Union[Form,NewForm]:
     event = get_event_from_state(interface)
@@ -89,13 +90,16 @@ def add_specific_volunteer_at_event(interface: abstractInterface)-> Union[Form,N
 
     if matched_volunteer_with_id is missing_data:
         print("Volunteer %s not matched" % str(volunteer))
-        return interface.get_new_display_form_given_function(display_form_volunteer_selection_at_event) ## different file
+        return display_volunteer_selection_form(interface)
 
     print("Volunteer %s matched id is %s" % (str(volunteer), matched_volunteer_with_id.id))
     return process_identification_when_volunteer_matched(
         interface=interface, volunteer = matched_volunteer_with_id,
         event=event
     )
+
+def display_volunteer_selection_form(interface: abstractInterface):
+    return interface.get_new_form_given_function(display_form_volunteer_selection_at_event)  ## different file
 
 
 def process_identification_when_volunteer_matched(interface: abstractInterface, volunteer: Volunteer,
@@ -113,9 +117,10 @@ def process_identification_when_volunteer_matched(interface: abstractInterface, 
 
     return next_volunteer_in_row(interface)
 
-def next_volunteer_in_row(interface:abstractInterface)-> NewForm:
-    return interface.get_new_display_form_given_function(identify_volunteers_in_specific_row_loop)
 
+
+def goto_add_identified_volunteers_to_event(interface: abstractInterface)-> NewForm:
+    return interface.get_new_form_given_function(initialise_loop_over_volunteers_identifed_in_event)
 
 
 ### UNUSED POST FORMS - JUST IN CASE
@@ -146,4 +151,5 @@ def post_form_add_volunteers_to_cadet_loop(interface: abstractInterface) -> Form
     interface.log_error("Post form should not be reached - contact support")
     return form_with_message_and_finished_button("Post form should not be reached - contact support",
                                                  interface=interface)
+
 

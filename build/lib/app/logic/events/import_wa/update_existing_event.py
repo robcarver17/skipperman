@@ -28,7 +28,7 @@ def get_form_for_wa_upload(event: Event) -> Union[Form, NewForm]:
     )
 
 
-def post_form_uupdate_existing_event(
+def post_form_update_existing_event(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
@@ -42,6 +42,9 @@ def post_form_uupdate_existing_event(
     else:
         button_error_and_back_to_initial_state_form(interface)
 
+def previous_form(interface: abstractInterface):
+    return interface.get_new_display_form_for_parent_of_function(display_form_update_existing_event)
+
 
 def respond_to_uploaded_file_when_updating(
     interface: abstractInterface,
@@ -51,6 +54,9 @@ def respond_to_uploaded_file_when_updating(
     except Exception as e:
         ## revert to view events
         interface.log_error("Problem with file upload %s" % e)
-        return interface.get_new_display_form_for_parent_of_function(display_form_update_existing_event)
+        return previous_form(interface)
 
-    return interface.get_new_display_form_given_function(display_form_import_event_file)
+    return import_event_file(interface)
+
+def import_event_file(interface: abstractInterface):
+    return interface.get_new_form_given_function(display_form_import_event_file)

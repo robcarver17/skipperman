@@ -69,7 +69,7 @@ def post_form_report_rota(
         interface=interface, event_description=event_name_selected
     )
 
-    return interface.get_new_display_form_given_function(display_form_for_rota_report_generic_options)
+    return interface.get_new_form_given_function(display_form_for_rota_report_generic_options)
 
 
 # GENERIC_OPTIONS_IN_ROTA_REPORT_STATE
@@ -117,13 +117,13 @@ def post_form_for_rota_report_generic_options(
         return create_report(interface)
 
     elif last_button_pressed == MODIFY_PRINT_OPTIONS_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_for_rota_report_print_options)
+        return interface.get_new_form_given_function(display_form_for_rota_report_print_options)
 
     elif last_button_pressed == CHANGE_GROUP_LAYOUT_BUTTON:
-        return interface.get_new_display_form_given_function(display_form_for_group_arrangement_options_rota_report)
+        return interface.get_new_form_given_function(display_form_for_group_arrangement_options_rota_report)
 
     elif last_button_pressed == MODIFY_ADDITIONAL_OPTIONS_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_for_rota_report_additional_options)
+        return interface.get_new_form_given_function(display_form_for_rota_report_additional_options)
 
     elif last_button_pressed == BACK_BUTTON_LABEL:
         # otherwise event/report specific data like filenames is remembered; also group order which could break everything if persisted

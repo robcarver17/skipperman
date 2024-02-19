@@ -17,6 +17,7 @@ from app.logic.reporting.options.print_options import (
 )
 
 from app.backend.reporting.allocation_report import specific_parameters_for_allocation_report
+from app.logic.reporting.rota.forms import get_text_explaining_various_options_for_rota_report
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -51,7 +52,7 @@ def post_form_report_rota(
 ) -> Union[Form, NewForm]:
     last_button = interface.last_button_pressed()
     if last_button == BACK_BUTTON_LABEL:
-        return initial_state_form
+        return interface.get_new_display_form_for_parent_of_function(display_form_report_rota)
 
     event_name_selected = last_button
     try:
@@ -68,7 +69,7 @@ def post_form_report_rota(
         interface=interface, event_description=event_name_selected
     )
 
-    return NewForm(GENERIC_OPTIONS_IN_ROTA_REPORT_STATE)
+    return interface.get_new_form_given_function(display_form_for_rota_report_generic_options)
 
 
 # GENERIC_OPTIONS_IN_ROTA_REPORT_STATE
@@ -113,22 +114,22 @@ def post_form_for_rota_report_generic_options(
 ) -> Union[Form, NewForm, File]:
     last_button_pressed = interface.last_button_pressed()
     if last_button_pressed == CREATE_REPORT_BUTTON_LABEL:
-        return create_report(interface) ## FIXME CHECK
+        return create_report(interface)
 
     elif last_button_pressed == MODIFY_PRINT_OPTIONS_BUTTON_LABEL:
-        return NewForm(CHANGE_PRINT_OPTIONS_IN_ROTA_REPORT_STATE)
+        return interface.get_new_form_given_function(display_form_for_rota_report_print_options)
 
     elif last_button_pressed == CHANGE_GROUP_LAYOUT_BUTTON:
-        return NewForm(CHANGE_GROUP_LAYOUT_IN_ROTA_REPORT_STATE)
+        return interface.get_new_form_given_function(display_form_for_group_arrangement_options_rota_report)
 
     elif last_button_pressed == MODIFY_ADDITIONAL_OPTIONS_BUTTON_LABEL:
-        return NewForm(REPORT_ADDITIONAL_OPTIONS_FOR_ROTA_REPORT_STATE)
+        return interface.get_new_form_given_function(display_form_for_rota_report_additional_options)
 
     elif last_button_pressed == BACK_BUTTON_LABEL:
         # otherwise event/report specific data like filenames is remembered; also group order which could break everything if persisted
         # note if the report type was persistently stored we'd need to keep it here but it is not
         interface.clear_persistent_data_except_specified_fields([])
-        return NewForm(ROTA_REPORT_STAGE)
+        return interface.get_new_display_form_for_parent_of_function(display_form_for_rota_report_generic_options)
 
     elif last_button_pressed == CANCEL_BUTTON_LABEL:
         return initial_state_form
@@ -165,16 +166,22 @@ def post_form_for_rota_report_additional_options(
     interface: abstractInterface,
 ) -> Union[Form, NewForm, File]:
     last_button_pressed = interface.last_button_pressed()
+    previous_form = interface.get_new_display_form_for_parent_of_function(display_form_for_rota_report_additional_options)
+
     if last_button_pressed == BACK_BUTTON_LABEL:
-        return NewForm(GENERIC_OPTIONS_IN_GROUP_ALLOCATION_STATE)
+        return previous_form
+
     elif  last_button_pressed== CREATE_REPORT_BUTTON_LABEL:
         get_group_allocation_report_additional_parameters_from_form_and_save(interface)
         return create_report(interface)
+
     elif last_button_pressed == SAVE_THESE_OPTIONS_BUTTON_LABEL:
         get_group_allocation_report_additional_parameters_from_form_and_save(interface)
-        return NewForm(GENERIC_OPTIONS_IN_GROUP_ALLOCATION_STATE)
+        return previous_form
+
     elif last_button_pressed == CANCEL_BUTTON_LABEL:
         return initial_state_form
+
     else:
         button_error_and_back_to_initial_state_form(interface)
 
@@ -213,8 +220,10 @@ def post_form_for_rota_report_print_options(
 ) -> Union[Form, NewForm, File]:
     last_button_pressed = interface.last_button_pressed()
 
+    previous_form = interface.get_new_display_form_for_parent_of_function(display_form_for_rota_report_print_options)
     if last_button_pressed == BACK_BUTTON_LABEL:
-        return NewForm(GENERIC_OPTIONS_IN_GROUP_ALLOCATION_STATE)
+        return previous_form
+
     elif last_button_pressed == CANCEL_BUTTON_LABEL:
         return initial_state_form
 
@@ -224,8 +233,10 @@ def post_form_for_rota_report_print_options(
     )
     if last_button_pressed == CREATE_REPORT_BUTTON_LABEL:
         return create_report(interface)
+
     elif last_button_pressed == SAVE_THESE_OPTIONS_BUTTON_LABEL:
-        return NewForm(GENERIC_OPTIONS_IN_GROUP_ALLOCATION_STATE)
+        return previous_form
+
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
@@ -256,11 +267,14 @@ def post_form_for_group_arrangement_options_rota_report(
         interface: abstractInterface,
 ) -> Union[NewForm, Form, File]:
     last_button_pressed = interface.last_button_pressed()
+    previous_form = interface.get_new_display_form_for_parent_of_function(display_form_for_group_arrangement_options_rota_report)
 
     if last_button_pressed == CREATE_REPORT_BUTTON_LABEL:
         return create_report(interface)
+
     elif last_button_pressed == BACK_BUTTON_LABEL:
-        return NewForm(GENERIC_OPTIONS_IN_GROUP_ALLOCATION_STATE)
+        return previous_form
+
     elif last_button_pressed == CANCEL_BUTTON_LABEL:
         return initial_state_form
     else:

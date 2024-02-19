@@ -44,7 +44,7 @@ def display_form_view_of_events_sort_order_passed( interface: abstractInterface,
 def post_form_view_of_events(interface: abstractInterface) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
     if button_pressed == ADD_EVENT_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_view_for_add_event)
+        return form_for_add_event(interface)
     elif button_pressed in all_sort_types:
         ## no change to stage required
         sort_by = interface.last_button_pressed()
@@ -52,17 +52,15 @@ def post_form_view_of_events(interface: abstractInterface) -> Union[Form, NewFor
     else:  ## must be an event
         return action_when_event_button_clicked(interface)
 
+
+
 def action_when_event_button_clicked(interface: abstractInterface) -> NewForm:
     event_description_selected = interface.last_button_pressed()
-    print("selected %s" % event_description_selected)
-
     confirm_event_exists_given_description(event_description_selected)
-    ## so whilst we are in this stage, we know which event we are talking about
-    print("updating state for %s" % event_description_selected)
     update_state_for_specific_event_given_event_description(
         interface=interface, event_description=event_description_selected)
 
-    return interface.get_new_display_form_given_function(display_form_view_individual_event)
+    return form_for_view_event(interface)
 
 
 def display_list_of_events_with_buttons(sort_by=SORT_BY_START_DSC) -> ListOfLines:
@@ -75,3 +73,9 @@ def display_list_of_events_with_buttons(sort_by=SORT_BY_START_DSC) -> ListOfLine
 
 all_sort_types = [SORT_BY_START_ASC, SORT_BY_START_DSC, SORT_BY_NAME]
 sort_buttons = Line([Button(sortby) for sortby in all_sort_types])
+
+def form_for_add_event(interface: abstractInterface):
+    return interface.get_new_form_given_function(display_form_view_for_add_event)
+
+def form_for_view_event(interface: abstractInterface):
+    return interface.get_new_form_given_function(display_form_view_individual_event)

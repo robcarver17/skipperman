@@ -26,26 +26,23 @@ from app.objects.events import Event
 from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer
 
 
-## once a volunteer is added, generate a form to capture / confirm availabilty and food preferences
-
-## THIS IS NOT ROLE ALLOCATION
-#VOLUNTEER_DETAILS_INITIALISE_IN_VIEW_EVENT_STAGE
 def initialise_loop_over_volunteers_identifed_in_event(interface: abstractInterface)  -> Union[Form, NewForm]:
     reset_new_volunteer_id_at_event(interface)
 
-    return loop_over_volunteers_identified_in_event(interface)
+    return next_volunteer(interface)
 
-##  Next, compare identified volunteers with volunteers allocated to event - if new then add volunteer at event with volunteer details
-###  Note, for availability show the user the availability for all connected cadets and relevant rows in case it's different....?
+def next_volunteer(interface: abstractInterface)-> NewForm:
+    return interface.get_new_form_given_function(loop_over_volunteers_identified_in_event)
 
-#VOLUNTEER_DETAILS_LOOP_IN_VIEW_EVENT_STAGE
 def loop_over_volunteers_identified_in_event(interface: abstractInterface) -> Union[Form, NewForm]:
+
     try:
         get_and_save_next_volunteer_id_in_mapped_event_data(interface)
     except NoMoreData:
         return return_to_controller(interface)
+    ## FIXME WHAT IF VOLUNTEER ALREADY THERE?
 
-    return display_form_for_volunteer_details(interface)
+    return process_identified_volunteer_at_event(interface)
 
 
 def process_identified_volunteer_at_event(interface: abstractInterface) -> Union[Form, NewForm]:
@@ -68,6 +65,7 @@ def action_when_volunteer_already_at_event(event: Event, volunteer_id: str):
     update_volunteer_at_event_with_associated_cadet_id(list_of_associated_cadet_id=list_of_associated_cadet_id,
                                                        volunteer_id=volunteer_id,
                                                        event=event)
+
 
 
 def display_form_for_volunteer_details(interface: abstractInterface)-> Form:
@@ -138,5 +136,3 @@ def post_form_confirm_volunteer_details(interface: abstractInterface):
 def return_to_controller(interface: abstractInterface) -> NewForm:
     return interface.get_new_display_form_for_parent_of_function(initialise_loop_over_volunteers_identifed_in_event)
 
-def next_volunteer(interface: abstractInterface)-> NewForm:
-    return interface.get_new_display_form_given_function(loop_over_volunteers_identified_in_event)

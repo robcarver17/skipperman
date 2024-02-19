@@ -114,12 +114,12 @@ def previous_form(interface: abstractInterface)-> NewForm:
 
 
 def delete_volunteer_form(interface: abstractInterface) -> NewForm:
-    return interface.get_new_display_form_given_function(display_form_delete_individual_volunteer)
+    return interface.get_new_form_given_function(display_form_delete_individual_volunteer)
 
 
 def edit_volunteer_form(interface: abstractInterface) -> NewForm:
-    return interface.get_new_display_form_given_function(display_form_edit_individual_volunteer)
+    return interface.get_new_form_given_function(display_form_edit_individual_volunteer)
 
 
 def edit_connections_form(interface: abstractInterface) -> NewForm:
-    return interface.get_new_display_form_given_function(display_form_edit_cadet_volunteer_connections)
+    return interface.get_new_form_given_function(display_form_edit_cadet_volunteer_connections)

@@ -32,21 +32,6 @@ def display_form_view_individual_cadet(
     )
 
 
-def post_form_view_individual_cadet(
-    interface: abstractInterface,
-) -> Union[Form, NewForm]:
-    ## placeholder, not currently used
-    button = interface.last_button_pressed()
-    if button==BACK_BUTTON_LABEL:
-        return initial_state_form
-    elif button==DELETE_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_delete_individual_cadet)
-    elif button==EDIT_BUTTON_LABEL:
-        return interface.get_new_display_form_given_function(display_form_edit_individual_cadet)
-    else:
-        return interface.get_new_display_form_for_parent_of_function(display_form_view_individual_cadet)
-
-
 def display_form_for_selected_cadet(
     cadet: Cadet
 ) -> Form:
@@ -72,3 +57,27 @@ def buttons_for_cadet_form() -> Line:
     return Line([Button(BACK_BUTTON_LABEL), Button(EDIT_BUTTON_LABEL), Button(DELETE_BUTTON_LABEL)])
 
 
+
+def post_form_view_individual_cadet(
+    interface: abstractInterface,
+) -> Union[Form, NewForm]:
+    ## placeholder, not currently used
+    button = interface.last_button_pressed()
+    if button==BACK_BUTTON_LABEL:
+        return initial_state_form
+    elif button==DELETE_BUTTON_LABEL:
+        return form_for_delete_cadet(interface)
+    elif button==EDIT_BUTTON_LABEL:
+        return form_for_edit_cadet(interface)
+    else:
+        return return_to_previous_form(interface)
+
+def form_for_delete_cadet(interface: abstractInterface)->NewForm:
+    return interface.get_new_form_given_function(display_form_delete_individual_cadet)
+
+def form_for_edit_cadet(interface: abstractInterface)->NewForm:
+    return interface.get_new_form_given_function(display_form_edit_individual_cadet)
+
+
+def return_to_previous_form(interface: abstractInterface)->NewForm:
+    return interface.get_new_display_form_for_parent_of_function(display_form_view_individual_cadet)

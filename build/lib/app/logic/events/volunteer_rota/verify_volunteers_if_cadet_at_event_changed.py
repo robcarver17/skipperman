@@ -32,7 +32,7 @@ def volunteer_rota_initialise_changed_cadet_loop(interface: abstractInterface)->
 
     clear_cadet_id_for_rota_at_event(interface)
 
-    return interface.get_new_display_form_given_function(volunteer_rota_check_changed_cadet_loop)
+    return goto_next_cadet_in_loop(interface)
 
 
 # VOLUNTEER_ROTA_CHECK_LOOP_IN_VIEW_EVENT_STAGE
@@ -46,7 +46,7 @@ def volunteer_rota_check_changed_cadet_loop(interface: abstractInterface) -> Uni
     return check_cadet_in_loop(interface=interface, cadet_id=cadet_id)
 
 def goto_main_rota_form(interface:abstractInterface)-> NewForm:
-    return interface.get_new_display_form_given_function(volunteer_rota_initialise_changed_cadet_loop)
+    return interface.get_new_form_given_function(volunteer_rota_initialise_changed_cadet_loop)
 
 
 def check_cadet_in_loop(interface: abstractInterface, cadet_id: str) -> Union[Form, NewForm]:
@@ -59,7 +59,7 @@ def check_cadet_in_loop(interface: abstractInterface, cadet_id: str) -> Union[Fo
         return goto_next_cadet_in_loop(interface)
 
 def goto_next_cadet_in_loop(interface: abstractInterface) -> NewForm:
-    return interface.get_new_display_form_given_function(volunteer_rota_check_changed_cadet_loop)
+    return interface.get_new_form_given_function(volunteer_rota_check_changed_cadet_loop)
 
 def display_form_volunteer_rota_check_changed_cadet_loop(interface: abstractInterface, cadet_id: str) -> Form:
     event = get_event_from_state(interface)

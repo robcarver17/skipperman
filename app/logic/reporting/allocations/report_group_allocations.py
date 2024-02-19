@@ -69,7 +69,7 @@ def post_form_report_group_allocation(
         interface=interface, event_description=event_name_selected
     )
 
-    return interface.get_new_display_form_given_function(display_form_for_report_group_allocation_generic_options)
+    return interface.get_new_form_given_function(display_form_for_report_group_allocation_generic_options)
 
 
 # GENERIC_OPTIONS_IN_GROUP_ALLOCATION_STATE
@@ -140,15 +140,15 @@ def post_form_for_report_group_allocation_generic_options(
 
 
 def print_option_form(interface: abstractInterface):
-    return interface.get_new_display_form_given_function(display_form_for_report_group_allocation_print_options)
+    return interface.get_new_form_given_function(display_form_for_report_group_allocation_print_options)
 
 
 def layout_option_form(interface: abstractInterface):
-    return interface.get_new_display_form_given_function(display_form_for_group_arrangement_options_allocation_report)
+    return interface.get_new_form_given_function(display_form_for_group_arrangement_options_allocation_report)
 
 
 def additional_options_form(interface: abstractInterface):
-    return interface.get_new_display_form_given_function(display_form_for_report_group_additional_options)
+    return interface.get_new_form_given_function(display_form_for_report_group_additional_options)
 
 
 # REPORT_ADDITIONAL_OPTIONS_FOR_ALLOCATION_REPORT

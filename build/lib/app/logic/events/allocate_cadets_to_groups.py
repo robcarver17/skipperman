@@ -107,9 +107,12 @@ dict_of_all_possible_groups_for_dropdown_input= dict([(group, group) for group i
 def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
     if interface.last_button_pressed() == BACK_BUTTON_LABEL:
-        return interface.get_new_display_form_for_parent_of_function(display_form_allocate_cadets)
+        return previous_form(interface)
     else:
         return do_allocation_for_cadets_in_form(interface)
+
+def previous_form(interface: abstractInterface):
+    return interface.get_new_display_form_for_parent_of_function(display_form_allocate_cadets)
 
 def do_allocation_for_cadets_in_form(interface: abstractInterface):
     event = get_event_from_state(interface)
@@ -129,7 +132,7 @@ def do_allocation_for_cadets_in_form(interface: abstractInterface):
                 "Couldn't allocate group to %s error code %s" % (str(cadet), str(e))
             )
 
-    return interface.get_new_display_form_given_function(display_form_allocate_cadets)
+    return interface.get_new_form_given_function(display_form_allocate_cadets)
 
 
 def do_allocation_for_cadet_at_event(

@@ -59,4 +59,4 @@ def respond_to_uploaded_file_when_updating(
     return import_event_file(interface)
 
 def import_event_file(interface: abstractInterface):
-    return interface.get_new_display_form_given_function(display_form_import_event_file)
+    return interface.get_new_form_given_function(display_form_import_event_file)

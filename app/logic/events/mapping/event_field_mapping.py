@@ -128,13 +128,13 @@ def post_form_event_field_mapping(interface: abstractInterface) -> Union[Form, N
 
 
 def template_mapping_form(interface: abstractInterface)-> NewForm:
-    return interface.get_new_display_form_given_function(display_form_for_choose_template_field_mapping)
+    return interface.get_new_form_given_function(display_form_for_choose_template_field_mapping)
 
 def clone_mapping_form(interface: abstractInterface)-> NewForm:
-    return interface.get_new_display_form_given_function(display_form_for_clone_event_field_mapping)
+    return interface.get_new_form_given_function(display_form_for_clone_event_field_mapping)
 
 def custom_mapping_form(interface: abstractInterface)-> NewForm:
-    return interface.get_new_display_form_given_function(display_form_for_upload_custom_field_mapping)
+    return interface.get_new_form_given_function(display_form_for_upload_custom_field_mapping)
 
 def previous_form(interface: abstractInterface)-> NewForm:
     return interface.get_new_display_form_for_parent_of_function(display_form_event_field_mapping)

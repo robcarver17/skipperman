@@ -28,7 +28,7 @@ def import_controller(interface: abstractInterface) -> Union[Form, NewForm]:
 
     function = IMPORTS_AND_FUNCTION_NAMES[next_import]
 
-    return interface.get_new_display_form_given_function(function)
+    return interface.get_new_form_given_function(function)
 
 def post_import_controller(interface):
     raise Exception("Should never get here")

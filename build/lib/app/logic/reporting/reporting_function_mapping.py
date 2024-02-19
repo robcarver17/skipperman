@@ -1,4 +1,3 @@
-from app.logic.abstract_logic_api import  INITIAL_STATE
 from app.logic.reporting.ENTRY_view_list_of_reports import (
     display_form_view_of_reports,
     post_form_view_of_reports,
@@ -6,8 +5,8 @@ from app.logic.reporting.ENTRY_view_list_of_reports import (
 from app.logic.reporting.rota.report_rota import *
 
 from app.logic.reporting.allocations.report_group_allocations import *
-from app.objects.abstract_objects.form_function_mapping import FormNameFunctionNameMapping, DisplayAndPostFormFunctionMaps
-
+from app.objects.abstract_objects.form_function_mapping import FormNameFunctionNameMapping, \
+    DisplayAndPostFormFunctionMaps, INITIAL_STATE
 
 # STAGES
 

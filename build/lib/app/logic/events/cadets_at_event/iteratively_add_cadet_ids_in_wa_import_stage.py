@@ -33,7 +33,10 @@ def display_form_add_cadet_ids_during_import(
     ## rest of the time is post
     reset_row_id(interface)
 
-    return iteratively_add_cadet_ids_during_import(interface)
+    return goto_next_row(interface)
+
+def goto_next_row(interface):
+    return interface.get_new_form_given_function(iteratively_add_cadet_ids_during_import)
 
 def iteratively_add_cadet_ids_during_import(
             interface: abstractInterface,
@@ -49,9 +52,8 @@ def iteratively_add_cadet_ids_during_import(
         return process_next_row(next_row=next_row, interface=interface)
     except NoMoreData:
         print("Finished looping through allocating Cadet IDs")
-
         ## don't return to controller as need to update cadet data now
-        return interface.get_new_display_form_given_function(display_form_interactively_update_cadets_at_event)
+        return go_to_update_cadet_data_form(interface)
 
 
 def process_next_row(
@@ -62,18 +64,18 @@ def process_next_row(
     row_id_has_identified_cadet = is_row_already_identified_with_cadet(next_row=next_row, interface=interface)
     if row_id_has_identified_cadet:
         print("Row id %s already identified with a cadet")
-        return iteratively_add_cadet_ids_during_import(interface)
+        return goto_next_row(interface)
 
     try:
         cadet = get_cadet_data_from_row_of_mapped_data_no_checks(next_row)
+        return process_next_row_with_cadet_from_row(cadet=cadet,
+                                                    interface=interface)
     except Exception as e:
         ## Mapping has gone badly wrong, or date field corrupted
         raise Exception(
             "Error code %s cannot identify cadet from row %s: file maybe corrupt or does not actually contain cadets - re-upload or change event configuration"
             % (str(e), str(next_row)),
         )
-    return process_next_row_with_cadet_from_row(cadet=cadet,
-                                                interface=interface)
 
 def is_row_already_identified_with_cadet(next_row: RowInMappedWAEvent, interface: abstractInterface)-> bool:
     event = get_event_from_state(interface)
@@ -107,7 +109,7 @@ def process_row_when_cadet_matched(interface: abstractInterface, cadet: Cadet) -
         event=event, row_id=row_id, cadet_id=cadet.id
     )
     ## run recursively until no more data
-    return iteratively_add_cadet_ids_during_import(interface)
+    return goto_next_row(interface)
 
 
 def process_row_when_cadet_unmatched(
@@ -177,3 +179,6 @@ def process_form_when_existing_cadet_chosen(interface: abstractInterface) -> For
     cadet = get_cadet_from_list_of_cadets(cadet_selected)
 
     return process_row_when_cadet_matched(interface=interface, cadet=cadet)
+
+def go_to_update_cadet_data_form(interface: abstractInterface):
+    return interface.get_new_form_given_function(display_form_interactively_update_cadets_at_event)

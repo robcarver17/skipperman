@@ -31,7 +31,7 @@ def action_if_volunteer_button_pressed(interface: abstractInterface, volunteer_b
     volunteer_id = volunteer_name_buttons_dict[volunteer_button]
     update_state_with_volunteer_id(interface=interface, volunteer_id=volunteer_id)
 
-    return interface.get_new_display_form_given_function(display_form_confirm_volunteer_details_from_rota)
+    return interface.get_new_form_given_function(display_form_confirm_volunteer_details_from_rota)
 
 def get_all_day_sort_buttons(interface:abstractInterface):
     event = get_event_from_state(interface)
@@ -67,14 +67,14 @@ def action_if_location_button_pressed(interface: abstractInterface, location_but
     volunteer_id = from_location_button_to_volunteer_id(location_button)
     update_state_with_volunteer_id(interface=interface, volunteer_id=volunteer_id)
 
-    return interface.get_new_display_form_given_function(display_form_edit_cadet_connections_from_rota)
+    return interface.get_new_form_given_function(display_form_edit_cadet_connections_from_rota)
 
 
 def action_if_volunteer_skills_button_pressed(interface: abstractInterface, volunteer_skills_button: str) -> NewForm:
     volunteer_id = from_skills_button_to_volunteer_id(volunteer_skills_button)
     update_state_with_volunteer_id(interface=interface, volunteer_id=volunteer_id)
 
-    return interface.get_new_display_form_given_function(display_form_edit_individual_volunteer_skills_from_rota)
+    return interface.get_new_form_given_function(display_form_edit_individual_volunteer_skills_from_rota)
 
 def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str):
 

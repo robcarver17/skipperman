@@ -32,7 +32,7 @@ def initialise_loop_over_volunteers_identifed_in_event(interface: abstractInterf
     return next_volunteer(interface)
 
 def next_volunteer(interface: abstractInterface)-> NewForm:
-    return interface.get_new_display_form_given_function(loop_over_volunteers_identified_in_event)
+    return interface.get_new_form_given_function(loop_over_volunteers_identified_in_event)
 
 def loop_over_volunteers_identified_in_event(interface: abstractInterface) -> Union[Form, NewForm]:
 

@@ -80,10 +80,10 @@ def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(display_form_for_choose_template_field_mapping)
 
 def upload_template_form(interface: abstractInterface):
-    return interface.get_new_display_form_given_function(display_form_for_upload_template_field_mapping)
+    return interface.get_new_form_given_function(display_form_for_upload_template_field_mapping)
 
 def download_template_form(interface: abstractInterface):
-    return interface.get_new_display_form_given_function(display_form_for_download_template_field_mapping)
+    return interface.get_new_form_given_function(display_form_for_download_template_field_mapping)
 
 
 def post_form_when_template_chosen(interface: abstractInterface,

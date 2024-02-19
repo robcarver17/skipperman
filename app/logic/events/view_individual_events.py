@@ -191,31 +191,31 @@ def row_of_form_for_event_with_buttons(event) -> Line:
 
 
 def form_to_upload_event_file(interface: abstractInterface):
-    return interface.get_new_display_form_given_function(display_form_upload_event_file)
+    return interface.get_new_form_given_function(display_form_upload_event_file)
 
 
 def form_to_do_field_mapping(interface: abstractInterface):
-    return interface.get_new_display_form_given_function(display_form_event_field_mapping)
+    return interface.get_new_form_given_function(display_form_event_field_mapping)
 
 
 def form_to_do_import_event(interface: abstractInterface):
-    return interface.get_new_display_form_given_function(display_form_import_event_file)
+    return interface.get_new_form_given_function(display_form_import_event_file)
 
 
 def form_to_do_update_event(interface: abstractInterface):
-    return interface.get_new_display_form_given_function(display_form_update_existing_event)
+    return interface.get_new_form_given_function(display_form_update_existing_event)
 
 
 def form_to_do_cadet_allocation(interface: abstractInterface):
-    return interface.get_new_display_form_given_function(display_form_allocate_cadets)
+    return interface.get_new_form_given_function(display_form_allocate_cadets)
 
 
 def form_to_edit_registration_details(interface: abstractInterface):
-    return interface.get_new_display_form_given_function(display_form_edit_registration_details)
+    return interface.get_new_form_given_function(display_form_edit_registration_details)
 
 
 def form_to_do_volunteer_rota(interface: abstractInterface):
-    return interface.get_new_display_form_given_function(volunteer_rota_initialise_changed_cadet_loop) ## check rota before going to form
+    return interface.get_new_form_given_function(volunteer_rota_initialise_changed_cadet_loop) ## check rota before going to form
 
 
 def previous_form(interface: abstractInterface):

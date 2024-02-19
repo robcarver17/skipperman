@@ -36,7 +36,7 @@ def post_form_for_download_template_field_mapping(
     template_name = interface.last_button_pressed()
 
     if template_name == CANCEL_BUTTON_LABEL:
-        return interface.get_new_display_form_for_parent_of_function(display_form_for_download_template_field_mapping)
+        return previous_form(interface)
 
     try:
         mapping = get_template(template_name)
@@ -49,6 +49,10 @@ def post_form_for_download_template_field_mapping(
 
     filename = write_mapping_to_temp_csv_file_and_return_filename(mapping)
     return File(filename)
+
+def previous_form(interface: abstractInterface):
+    return interface.get_new_display_form_for_parent_of_function(display_form_for_download_template_field_mapping)
+
 
 ## repeats but avoids circular
 def display_list_of_templates_with_buttons() -> ListOfLines:

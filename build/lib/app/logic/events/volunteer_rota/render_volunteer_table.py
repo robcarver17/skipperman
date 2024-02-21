@@ -40,7 +40,7 @@ def get_top_row_for_table(event: Event) -> RowInTable:
     buttons_for_days_at_event_as_str = get_buttons_for_days_at_event(event)
 
     return RowInTable([
-        "Volunteer (click to edit food/days)",
+        "Volunteer (click to edit days available)",
         "Cadet location (click to edit connections)",
         "Preferred duties",
         "Same/different preference",

@@ -2,6 +2,8 @@ from app.backend.data.cadets_at_event import save_cadets_at_event
 from app.backend.volunteers.volunteer_allocation import volunteer_ids_associated_with_cadet_at_specific_event
 from app.backend.volunteers.volunteers import get_volunteer_from_volunteer_id
 from app.backend.cadets import cadet_name_from_id
+from app.backend.wa_import.update_cadets_at_event import update_availability_of_existing_cadet_at_event, \
+    update_status_of_existing_cadet_at_event, update_data_row_for_existing_cadet_at_event
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadet_at_event import ListOfCadetsAtEvent, CadetAtEvent
 from app.objects.events import Event
@@ -17,11 +19,6 @@ from app.objects.mapped_wa_event import RegistrationStatus, cancelled_status, de
 
 
 def parse_registration_details_from_form(interface: abstractInterface, event: Event):
-    cadets_at_event = get_registration_details_from_form(interface=interface, event=event)
-    print(cadets_at_event)
-    save_cadets_at_event(event=event, list_of_cadets_at_event=cadets_at_event)
-
-def get_registration_details_from_form(interface: abstractInterface, event: Event) -> ListOfCadetsAtEvent:
     ## This loads the existing data
     registration_data = get_registration_data(event=event)
 
@@ -30,9 +27,6 @@ def get_registration_details_from_form(interface: abstractInterface, event: Even
         get_registration_details_for_row_in_form_and_alter_registration_data(interface=interface, registration_data=registration_data,
                                                                              original_cadet_in_data = cadet_in_data)
 
-    ## this is what is updated
-
-    return registration_data.cadets_at_event
 
 def get_registration_details_for_row_in_form_and_alter_registration_data(interface: abstractInterface,
                                                                          original_cadet_in_data: CadetAtEvent,
@@ -41,7 +35,7 @@ def get_registration_details_for_row_in_form_and_alter_registration_data(interfa
     get_special_fields_from_form_and_alter_registration_data(
         interface=interface,
         original_cadet_in_data=original_cadet_in_data,
-        registration_data=registration_data
+        event = registration_data.event
     )
 
     get_other_fields_from_form_and_alter_registration_data(
@@ -51,48 +45,54 @@ def get_registration_details_for_row_in_form_and_alter_registration_data(interfa
     )
 
 
-def get_special_fields_from_form_and_alter_registration_data(interface: abstractInterface, original_cadet_in_data: CadetAtEvent, registration_data: RegistrationDetailsForEvent):
+def get_special_fields_from_form_and_alter_registration_data(interface: abstractInterface, original_cadet_in_data: CadetAtEvent, event: Event):
     get_days_attending_for_row_in_form_and_alter_registration_data(interface=interface,
                                                                    original_cadet_in_data=original_cadet_in_data,
-                                                                   registration_details=registration_data)
+                                                                   event=event)
     get_cadet_event_status_for_row_in_form_and_alter_registration_data(interface=interface,
                                                                        original_cadet_in_data=original_cadet_in_data,
-                                                                       registration_details=registration_data)
+                                                                       event=event)
 
 
 def get_days_attending_for_row_in_form_and_alter_registration_data(interface: abstractInterface,
                                                                    original_cadet_in_data: CadetAtEvent,
-                                                                    registration_details: RegistrationDetailsForEvent):
+                                                                    event: Event):
+
+
     new_attendance = get_availablity_from_form(
         interface=interface,
         input_name=input_name_from_column_name_and_cadet_id(
             DAYS_ATTENDING,
             cadet_id=original_cadet_in_data.cadet_id
         ),
-        event = registration_details.event
+        event = event
     )
     original_attendance = original_cadet_in_data.availability
-    log_alert_for_attendance_change(original_attendance=original_attendance,
-                                    new_attendance = new_attendance,
-                                    cadet_id = original_cadet_in_data.cadet_id,
-                                    event = registration_details.event,
-                                    interface=interface)
-
-    original_cadet_in_data.attendance = new_attendance
+    if new_attendance == original_attendance:
+        return
+    else:
+        update_availability_of_existing_cadet_at_event(event=event, cadet_id=original_cadet_in_data.cadet_id, new_availabilty=new_attendance)
+        log_alert_for_attendance_change(interface=interface, new_attendance=new_attendance, cadet_id=original_cadet_in_data.cadet_id,
+                                        event=event, original_attendance=original_attendance)
 
 
 def get_cadet_event_status_for_row_in_form_and_alter_registration_data(interface: abstractInterface,
                                                                        original_cadet_in_data: CadetAtEvent,
-                                                                       registration_details: RegistrationDetailsForEvent):
+                                                                       event: Event):
 
     new_status = get_status_from_form(interface=interface, input_name=input_name_from_column_name_and_cadet_id(
         column_name=ROW_STATUS,
         cadet_id=original_cadet_in_data.cadet_id
     ))
-    log_alert_for_status_change(interface=interface, original_status=original_cadet_in_data.status,
-                                new_status=new_status, cadet_id=original_cadet_in_data.cadet_id,
-                                event=registration_details.event)
-    original_cadet_in_data.status = new_status
+    original_status = original_cadet_in_data.status
+
+    if original_status == new_status:
+        return
+    else:
+        update_status_of_existing_cadet_at_event(cadet_id=original_cadet_in_data.cadet_id, event=event, new_status=new_status)
+        log_alert_for_status_change(interface=interface, new_status=new_status, original_status=original_status,
+                                    cadet_id=original_cadet_in_data.cadet_id, event=event)
+
 
 
 def get_other_fields_from_form_and_alter_registration_data(interface: abstractInterface, original_cadet_in_data: CadetAtEvent, registration_data: RegistrationDetailsForEvent):
@@ -104,17 +104,22 @@ def get_other_fields_from_form_and_alter_registration_data(interface: abstractIn
                 column_name=column_name,
                 interface=interface,
                 original_cadet_in_data=original_cadet_in_data,
+                event = registration_data.event
             )
 
 
 def get_registration_details_for_row_and_column_name_in_form_and_alter_registration_data(column_name: str, interface: abstractInterface,
-                                                                                         original_cadet_in_data: CadetAtEvent):
+                                                                                         original_cadet_in_data: CadetAtEvent,
+                                                                                         event: Event):
     cadet_id = original_cadet_in_data.cadet_id
     input_name = input_name_from_column_name_and_cadet_id(column_name=column_name, cadet_id=cadet_id)
 
     form_value = interface.value_from_form(input_name)
+    data_in_row = original_cadet_in_data.data_in_row
+    data_in_row[column_name] = typecast_input_of_column(column_name=column_name, value=form_value)
 
-    original_cadet_in_data.data_in_row[column_name] = typecast_input_of_column(column_name=column_name, value=form_value)
+    update_data_row_for_existing_cadet_at_event(new_data_in_row=data_in_row, cadet_id=original_cadet_in_data.cadet_id,
+                                                event = event)
 
 def typecast_input_of_column(column_name:str, value):
     if column_name in FIELDS_AS_STR:
@@ -166,7 +171,8 @@ def log_alert_for_volunteers(interface: abstractInterface,
     volunteer_list_as_str = ", ".join(volunteer_names)
 
     if len(list_of_volunteer_ids) == 0:
-        volunteer_list_as_str = "No volunteers associated with cadet"
+        # no warning needed
+        return
 
     interface.log_error(warning_str+" "+volunteer_list_as_str)
 

@@ -63,6 +63,7 @@ def get_cadet_at_event_for_cadet_id(event: Event, cadet_id: str) -> CadetAtEvent
 def mark_cadet_at_event_as_deleted(event: Event, cadet_id: str):
     existing_cadets_at_event = load_cadets_at_event(event)
     existing_cadets_at_event.mark_cadet_as_deleted(cadet_id)
+    existing_cadets_at_event.mark_cadet_as_changed(cadet_id)
     save_cadets_at_event(event=event, list_of_cadets_at_event=existing_cadets_at_event)
 
 def get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(event: Event, cadet_id: str) -> RowInMappedWAEvent:
@@ -94,6 +95,11 @@ def update_status_of_existing_cadet_at_event(event: Event, cadet_id:str, new_sta
 def update_availability_of_existing_cadet_at_event(event: Event, cadet_id:str, new_availabilty: DaySelector):
     existing_cadets_at_event = load_cadets_at_event(event)
     existing_cadets_at_event.update_availability_of_existing_cadet_at_event(cadet_id=cadet_id, new_availabilty=new_availabilty)
+    save_cadets_at_event(event=event, list_of_cadets_at_event=existing_cadets_at_event)
+
+def update_data_row_for_existing_cadet_at_event(event: Event, cadet_id:str, new_data_in_row: RowInMappedWAEvent):
+    existing_cadets_at_event = load_cadets_at_event(event)
+    existing_cadets_at_event.update_data_row_for_existing_cadet_at_event(cadet_id=cadet_id, new_data_in_row=new_data_in_row)
     save_cadets_at_event(event=event, list_of_cadets_at_event=existing_cadets_at_event)
 
 
@@ -170,7 +176,11 @@ def has_cadet_at_event_changed(cadet_id: str, event: Event) -> bool:
 
 def mark_cadet_at_event_as_unchanged(cadet_id: str, event: Event):
     list_of_cadets_at_event = load_cadets_at_event(event)
-    list_of_cadets_at_event.mark_cadet_as_unchanged(cadet_id)
+    try:
+        list_of_cadets_at_event.mark_cadet_as_unchanged(cadet_id)
+    except:
+        print("Couldn't mark cadet id %s at event as unchanged might cause weird behaviour" % cadet_id)
+
     save_cadets_at_event(list_of_cadets_at_event=list_of_cadets_at_event, event=event)
 
 

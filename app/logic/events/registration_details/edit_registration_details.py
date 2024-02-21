@@ -43,7 +43,7 @@ def display_form_edit_registration_details_given_event_and_sort_order(
             [
                 "Registration details for %s" % event,
                 "(Excludes group allocation and volunteer information; plus cadet name/DOB - edit in the appropriate places / also food and clothing)",
-                "*CHECK FOOD PREFERENCES - autocompleted and may not be accurate*",
+
                 _______________,
                 back_button,
                 "Always save before sorting - sorting will lose any edits",

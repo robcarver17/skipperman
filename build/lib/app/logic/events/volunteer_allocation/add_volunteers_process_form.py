@@ -3,7 +3,7 @@ from typing import List
 from app.backend.form_utils import get_availablity_from_form
 from app.backend.volunteers.volunteer_allocation import \
     get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet, \
-    add_volunteer_at_event
+    add_volunteer_at_event, mark_all_cadets_associated_with_volunteer_at_event_as_no_longer_changed
 from app.backend.volunteers.volunteers import add_list_of_cadet_connections_to_volunteer
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_allocation.add_volunteer_to_event_form_contents import AVAILABILITY, \
@@ -39,6 +39,12 @@ def add_volunteer_at_event_with_form_contents_and_return_true_if_ok(interface: a
 
     add_list_of_cadet_connections_to_volunteer(volunteer_id=volunteer_id,
                                                list_of_connected_cadet_ids=list_of_cadet_ids_to_permanently_connect)
+
+    try:
+        mark_all_cadets_associated_with_volunteer_at_event_as_no_longer_changed(event=event, volunteer_id=volunteer_id)
+    except:
+        ## corner case if only cadets involved are cancelled at entry point
+        pass
 
     return True
 

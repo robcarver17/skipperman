@@ -1,7 +1,10 @@
+import sys
 from typing import Union
 
 from app.backend.data.volunteers import get_sorted_list_of_volunteers
-from app.backend.volunteers.volunteer_allocation import add_identified_volunteer, mark_volunteer_as_skipped
+from app.backend.volunteers.volunteer_allocation import add_identified_volunteer, mark_volunteer_as_skipped, \
+    volunteer_for_this_row_and_index_already_identified
+from app.backend.volunteers.volunteers import verify_volunteer_and_warn
 from app.backend.volunteers.volunter_relevant_information import get_volunteer_from_relevant_information
 
 from app.logic.events.events_in_state import get_event_from_state
@@ -11,20 +14,20 @@ from app.logic.events.volunteer_allocation.add_volunteers_to_event import \
     display_add_volunteers_to_event
 from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import clear_volunteer_index, \
     get_and_save_next_volunteer_index, get_relevant_information_for_current_volunteer, get_volunteer_index
-from app.logic.events.volunteer_allocation.volunteer_identification import display_form_volunteer_selection_at_event
-from app.logic.volunteers.volunteer_state import update_state_with_volunteer_id
+from app.logic.events.volunteer_allocation.volunteer_selection_form_contents import \
+    volunteer_name_is_similar_to_cadet_name, get_footer_buttons_add_or_select_existing_volunteer_form, \
+    get_header_text_for_volunteer_selection_form, get_dict_of_volunteer_names_and_volunteers
+from app.logic.volunteers.add_volunteer import verify_form_with_volunteer_details, VolunteerAndVerificationText, \
+    get_add_volunteer_form_with_information_passed, add_volunteer_from_form_to_data
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
-    form_with_message_and_finished_button,
-
 )
 
 from app.logic.events.constants import *
 
-from app.objects.constants import NoMoreData, missing_data
+from app.objects.constants import NoMoreData, missing_data, arg_not_passed
 from app.objects.events import Event
-from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer
 from app.objects.volunteers import Volunteer
 
 
@@ -32,54 +35,62 @@ from app.objects.volunteers import Volunteer
 ### Identified volunteer data object with row_id (include row data, volunteer index)
 
 
-#WA_VOLUNTEER_IDENITIFICATION_INITIALISE_IN_VIEW_EVENT_STAGE
-def display_form_volunteer_identification_initalise_loop(
+def display_form_volunteer_identification(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     ## this only happens once, the rest of the time is a post call
+    print(sys._getframe().f_code.co_name)
+    print("Reset volunteer row ID")
     reset_row_id(interface)
 
-    return next_row_of_volunteers(interface)
+    return process_volunteer_on_next_row_of_event_data(interface)
 
-def next_row_of_volunteers(interface: abstractInterface)-> NewForm:
-    return interface.get_new_form_given_function(display_form_volunteer_identification_from_mapped_event_data)
-
-
-# WA_VOLUNTEER_IDENITIFICATION_LOOP_IN_VIEW_EVENT_STAGE
-def display_form_volunteer_identification_from_mapped_event_data(
+def process_volunteer_on_next_row_of_event_data(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     print("Looping through identifying master event data volunteers")
-
+    print(sys._getframe().f_code.co_name)
     try:
         get_and_save_next_row_id_in_mapped_event_data(interface)
     except NoMoreData:
         print("Finished looping - next stage is to add details")
-        goto_add_identified_volunteers_to_event(interface)
+        return goto_add_identified_volunteers_to_event(interface)
 
     return identify_volunteers_in_specific_row_initialise(interface=interface)
 
 
 
 def identify_volunteers_in_specific_row_initialise(interface: abstractInterface) -> NewForm:
+    print(sys._getframe().f_code.co_name)
+    print("Clearing volunteer index")
     clear_volunteer_index(interface)
-    return next_volunteer_in_row(interface)
+    return next_volunteer_in_current_row(interface)
 
 
-def next_volunteer_in_row(interface:abstractInterface)-> NewForm:
-    return interface.get_new_form_given_function(identify_volunteers_in_specific_row_loop)
-
-#WA_IDENTIFY_VOLUNTEERS_IN_SPECIFIC_ROW_LOOP_IN_VIEW_EVENT_STAGE
-def identify_volunteers_in_specific_row_loop(interface: abstractInterface) -> Union[Form, NewForm]:
+def next_volunteer_in_current_row(interface: abstractInterface) -> Union[Form, NewForm]:
+    print(sys._getframe().f_code.co_name)
     try:
+        print("next volunteer index")
         get_and_save_next_volunteer_index(interface)
     except NoMoreData:
-        return next_row_of_volunteers(interface)
+        return process_volunteer_on_next_row_of_event_data(interface)
 
-    return add_specific_volunteer_at_event(interface=interface)
+    if current_volunteer_already_identified(interface):
+        return next_volunteer_in_current_row(interface)
+    else:
+        return add_specific_volunteer_at_event(interface=interface)
+
+def current_volunteer_already_identified(interface: abstractInterface):
+    current_row_id = get_current_row_id(interface)
+    current_index =  get_volunteer_index(interface)
+    event = get_event_from_state(interface)
+
+    return volunteer_for_this_row_and_index_already_identified(event=event, row_id=current_row_id, volunteer_index=current_index)
 
 
 def add_specific_volunteer_at_event(interface: abstractInterface)-> Union[Form,NewForm]:
+
+    print(sys._getframe().f_code.co_name)
     event = get_event_from_state(interface)
 
     relevant_information = get_relevant_information_for_current_volunteer(interface)
@@ -90,7 +101,7 @@ def add_specific_volunteer_at_event(interface: abstractInterface)-> Union[Form,N
 
     if matched_volunteer_with_id is missing_data:
         print("Volunteer %s not matched" % str(volunteer))
-        return display_volunteer_selection_form(interface)
+        return display_volunteer_selection_form(interface=interface, volunteer=volunteer)
 
     print("Volunteer %s matched id is %s" % (str(volunteer), matched_volunteer_with_id.id))
     return process_identification_when_volunteer_matched(
@@ -98,58 +109,157 @@ def add_specific_volunteer_at_event(interface: abstractInterface)-> Union[Form,N
         event=event
     )
 
-def display_volunteer_selection_form(interface: abstractInterface):
-    return interface.get_new_form_given_function(display_form_volunteer_selection_at_event)  ## different file
-
 
 def process_identification_when_volunteer_matched(interface: abstractInterface, volunteer: Volunteer,
                                                    event: Event) -> Union[Form, NewForm]:
-
+    print(sys._getframe().f_code.co_name)
     current_row_id = get_current_row_id(interface)
     current_index =  get_volunteer_index(interface)
 
-    print("Adding volunteer %s as identified for event %s" % (str(volunteer), str(event)))
+    print("Adding volunteer %s as identified for event %s, row_id %s, volunteer index %d" % (str(volunteer), str(event), current_row_id, current_index))
     add_identified_volunteer(volunteer_id=volunteer.id,
                                 event=event,
                                 row_id = current_row_id,
                              volunteer_index = int(current_index))
 
 
-    return next_volunteer_in_row(interface)
+    return next_volunteer_in_current_row(interface)
+
+def display_volunteer_selection_form(interface: abstractInterface, volunteer: Volunteer):
+    print(sys._getframe().f_code.co_name)
+    return get_add_or_select_existing_volunteers_form(interface=interface,
+                                                                        see_all_volunteers=False,
+                                                                        first_time= True,
+                                                                        volunteer=volunteer
+                                                                        )
+
+
+
+def get_add_or_select_existing_volunteers_form(
+    interface: abstractInterface,
+    see_all_volunteers: bool,
+    first_time: bool,
+    volunteer: Volunteer = arg_not_passed,
+
+) -> Form:
+    print(sys._getframe().f_code.co_name)
+    print("Generating add/select volunteer form")
+    print("Passed volunteer %s" % str(volunteer))
+    if volunteer is arg_not_passed:
+        ## Form has been filled in, this isn't our first rodeo, get from form
+        volunteer_and_text = verify_form_with_volunteer_details(interface=interface)
+        volunteer = volunteer_and_text.volunteer
+        include_final_button = True
+    else:
+        ## Volunteer details from WA passed through
+        verification_text = verify_volunteer_and_warn(volunteer)
+        volunteer_and_text = VolunteerAndVerificationText(
+            volunteer=volunteer, verification_text=verification_text
+        )
+        could_be_cadet_not_volunteer = (
+            volunteer_name_is_similar_to_cadet_name(interface=interface, volunteer=volunteer))
+
+        verification_issues = len(verification_text) > 0
+
+        if could_be_cadet_not_volunteer or verification_issues:
+            if first_time:
+                include_final_button = False
+            else:
+                include_final_button = True
+        else:
+            include_final_button = True
+
+    cadet_id = get_cadet_id_or_missing_data_for_current_row(interface)
+    ## First time, don't include final or all group_allocations
+    footer_buttons = get_footer_buttons_add_or_select_existing_volunteer_form(
+        volunteer=volunteer,
+        see_all_volunteers=see_all_volunteers,
+        include_final_button=include_final_button,
+        cadet_id=cadet_id,
+    )
+    header_text = get_header_text_for_volunteer_selection_form(interface=interface,
+                                                               volunteer=volunteer)
+
+    return get_add_volunteer_form_with_information_passed(
+        volunteer_and_text=volunteer_and_text,
+        footer_buttons=footer_buttons,
+        header_text=header_text,
+    )
+
+
+def get_cadet_id_or_missing_data_for_current_row(interface: abstractInterface):
+    relevant_information = get_relevant_information_for_current_volunteer(interface)
+
+    return relevant_information.identify.cadet_id
+
+
+def post_form_volunteer_identification(interface: abstractInterface) -> Union[Form, NewForm]:
+    print(sys._getframe().f_code.co_name)
+    button_pressed = interface.last_button_pressed()
+    if button_pressed in[CHECK_FOR_ME_VOLUNTEER_BUTTON_LABEL, CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL, SEE_SIMILAR_VOLUNTEER_ONLY_LABEL]:
+        return get_add_or_select_existing_volunteers_form(interface=interface,
+                                                                            see_all_volunteers=False,
+                                                                            first_time=False
+                                                                            )
+    elif button_pressed==FINAL_VOLUNTEER_ADD_BUTTON_LABEL:
+        return action_when_new_volunteer_to_be_added(interface)
+
+    elif button_pressed==SKIP_VOLUNTEER_BUTTON_LABEL:
+        ## next volunteer
+        return action_when_skipping_volunteer(interface)
+
+    elif button_pressed==SEE_ALL_VOLUNTEER_BUTTON_LABEL:
+        return get_add_or_select_existing_volunteers_form(interface=interface,
+                                                                            see_all_volunteers=True,
+                                                                            first_time=False
+                                                                            )
+    else:
+        name_of_volunteer = button_pressed
+        return action_when_specific_volunteer_selected(name_of_volunteer=name_of_volunteer, interface=interface)
+
+
+def action_when_new_volunteer_to_be_added(interface: abstractInterface) -> Union[Form, NewForm]:
+    print(sys._getframe().f_code.co_name)
+    volunteer = add_volunteer_from_form_to_data(interface)
+    event = get_event_from_state(interface)
+
+    return process_identification_when_volunteer_matched(interface=interface, volunteer=volunteer, event=event)
+
+
+def action_when_skipping_volunteer(interface: abstractInterface) -> NewForm:
+    print(sys._getframe().f_code.co_name)
+    event = get_event_from_state(interface)
+    current_row_id = get_current_row_id(interface)
+    current_index = get_volunteer_index(interface)
+
+    print("Skipping volunteer row %s id %d as identified for event %s" % (str(current_row_id), current_index, str(event)))
+
+    mark_volunteer_as_skipped(
+        event=event,
+        row_id=current_row_id,
+        volunteer_index=int(current_index))
+
+    return  next_volunteer_in_current_row(interface)
+
+
+def action_when_specific_volunteer_selected(name_of_volunteer: str, interface: abstractInterface) -> Union[Form, NewForm]:
+    print(sys._getframe().f_code.co_name)
+    dict_of_volunteer_names_and_volunteers= get_dict_of_volunteer_names_and_volunteers()
+    volunteer = dict_of_volunteer_names_and_volunteers.get(name_of_volunteer, None)
+    event = get_event_from_state(interface)
+    if volunteer is None:
+        raise Exception("Volunteer %s has gone missing!" % name_of_volunteer)
+
+    return process_identification_when_volunteer_matched(interface=interface, volunteer=volunteer, event=event)
+
+
+
+
 
 
 
 def goto_add_identified_volunteers_to_event(interface: abstractInterface)-> NewForm:
+    print(sys._getframe().f_code.co_name)
     return interface.get_new_form_given_function(display_add_volunteers_to_event)
-
-
-### UNUSED POST FORMS - JUST IN CASE
-
-def post_form_volunteer_identification_initialise(
-    interface: abstractInterface,
-
-) -> Union[Form, NewForm]:
-    interface.log_error("Post form should not be reached - contact support")
-
-    return form_with_message_and_finished_button("Post form should not be reached - contact support", interface=interface)
-
-def post_form_volunteer_identification_looping(
-            interface: abstractInterface,
-    ) -> Union[Form, NewForm]:
-        interface.log_error("Post form should not be reached - contact support")
-        return form_with_message_and_finished_button("Post form should not be reached - contact support",
-                                                     interface=interface)
-def post_form_add_volunteers_to_cadet_initialise(interface: abstractInterface) -> Form:
-    # should never be reached
-    interface.log_error("Post form should not be reached - contact support")
-    return form_with_message_and_finished_button("Post form should not be reached - contact support",
-                                                 interface=interface)
-
-
-def post_form_add_volunteers_to_cadet_loop(interface: abstractInterface) -> Form:
-    # should never be reached
-    interface.log_error("Post form should not be reached - contact support")
-    return form_with_message_and_finished_button("Post form should not be reached - contact support",
-                                                 interface=interface)
 
 

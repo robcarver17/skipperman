@@ -33,7 +33,7 @@ class RegistrationDetailsForEvent:
 def get_registration_data(event: Event, sort_order: str = arg_not_passed) -> RegistrationDetailsForEvent:
     cadets_at_event = load_cadets_at_event(event)
     list_of_cadets = get_sorted_list_of_cadets(sort_by=sort_order)
-    cadets_at_event = cadets_at_event.sort_given_subset_of_cadet_ids(list_of_cadets.list_of_ids)
+    cadets_at_event = cadets_at_event.subset_given_cadet_ids(list_of_cadets.list_of_ids)
     all_columns = get_list_of_columns_excluding_special_fields(cadets_at_event)
 
     return RegistrationDetailsForEvent(
@@ -45,10 +45,12 @@ def get_registration_data(event: Event, sort_order: str = arg_not_passed) -> Reg
 
 
 def get_list_of_columns_excluding_special_fields(cadets_at_event:ListOfCadetsAtEvent) -> list:
-    top_row = cadets_at_event[0] ## should all be the same
+    first_cadet =cadets_at_event[0]
+    top_row = first_cadet.data_in_row ## should all be the same
     all_columns = get_columns_to_edit(top_row) + get_columns_to_view(top_row)
 
     return all_columns
+
 
 
 def get_top_row_for_table_of_registration_details(all_columns: list)-> RowInTable:

@@ -2,7 +2,8 @@ from typing import Union, List
 
 from app.backend.volunteers.volunteer_allocation import list_of_identified_volunteers_with_volunteer_id, \
     get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet, \
-    update_volunteer_at_event_with_associated_cadet_id
+    update_volunteer_at_event_with_associated_cadet_id, \
+    mark_all_cadets_associated_with_volunteer_at_event_as_no_longer_changed
 from app.backend.volunteers.volunteers import get_volunteer_from_id
 from app.backend.data.volunteer_allocation import is_volunteer_already_at_event
 from app.logic.events.events_in_state import get_event_from_state
@@ -37,9 +38,9 @@ def next_volunteer_in_event(interface: abstractInterface) -> Union[Form, NewForm
         get_and_save_next_volunteer_id_in_mapped_event_data(interface)
     except NoMoreData:
         return return_to_controller(interface)
-    ## FIXME WHAT IF VOLUNTEER ALREADY THERE?
 
     return process_identified_volunteer_at_event(interface)
+
 
 
 def process_identified_volunteer_at_event(interface: abstractInterface) -> Union[Form, NewForm]:
@@ -63,13 +64,15 @@ def action_when_volunteer_already_at_event(event: Event, volunteer_id: str):
                                                        volunteer_id=volunteer_id,
                                                        event=event)
 
+    mark_all_cadets_associated_with_volunteer_at_event_as_no_longer_changed(event=event, volunteer_id=volunteer_id)
 
 
 def display_form_for_volunteer_details(interface: abstractInterface)-> Form:
 
     volunteer_id = get_current_volunteer_id_at_event(interface)
-    volunteer = get_volunteer_from_id(volunteer_id)
     event =get_event_from_state(interface)
+
+    volunteer = get_volunteer_from_id(volunteer_id)
 
     list_of_relevant_information = get_list_of_relevant_information(volunteer_id=volunteer_id, event=event)
 
@@ -89,7 +92,6 @@ def display_form_for_volunteer_details(interface: abstractInterface)-> Form:
 
     available_text = get_availablity_text(list_of_relevant_information=list_of_relevant_information)
     available_checkbox = get_availability_checkbox_for_volunteer_at_event_based_on_relevant_information(list_of_relevant_information=list_of_relevant_information, event=event)
-
 
     return Form(ListOfLines([
         header_text,
@@ -128,6 +130,8 @@ def post_form_add_volunteers_to_event(interface: abstractInterface):
     form_ok = add_volunteer_at_event_with_form_contents_and_return_true_if_ok(interface)
     if not form_ok:
         return display_form_for_volunteer_details(interface)
+
+
     return next_volunteer_in_event(interface)
 
 def return_to_controller(interface: abstractInterface) -> NewForm:

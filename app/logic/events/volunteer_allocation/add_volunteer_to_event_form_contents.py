@@ -24,7 +24,10 @@ def get_header_text(event: Event, volunteer: Volunteer) -> Line:
                                                                                                                       event=event)
     cadet_names = [cadet_name_from_id(cadet_id) for cadet_id in list_of_cadet_ids]
     volunteer_name = volunteer.name
-    cadet_names_text = ", ".join(cadet_names)
+    if len(cadet_names)==0:
+        cadet_names_text = "(No active cadets - must all be cancelled)"
+    else:
+        cadet_names_text = ", ".join(cadet_names)
 
     header_text = "Details for volunteer %s - related to following cadets at event: %s" % (volunteer_name, cadet_names_text)
 
@@ -62,12 +65,7 @@ def get_availablity_text( list_of_relevant_information: List[RelevantInformation
     return all_available
 
 def get_availablity_text_for_single_entry(relevant_information: RelevantInformationForVolunteer) -> ListOfLines:
-    cadet_id = relevant_information.identify.cadet_id
-    if cadet_id is missing_data:
-        cadet_name = "(no cadet)"
-    else:
-        cadet_name = cadet_name_from_id(cadet_id)
-
+    cadet_name = get_cadet_name_from_relevant_information(relevant_information)
     availability_info = relevant_information.availability
     available_text = ListOfLines(["Availability for volunteer in form when registered with cadet %s" % cadet_name])
     if availability_info.day_availability is not missing_data:
@@ -81,6 +79,14 @@ def get_availablity_text_for_single_entry(relevant_information: RelevantInformat
 
     return available_text
 
+def get_cadet_name_from_relevant_information(relevant_information: RelevantInformationForVolunteer) -> str:
+    cadet_id = relevant_information.identify.cadet_id
+    if cadet_id is missing_data:
+        cadet_name = "(no cadet)"
+    else:
+        cadet_name = cadet_name_from_id(cadet_id)
+
+    return cadet_name
 
 def get_availability_checkbox_for_volunteer_at_event_based_on_relevant_information(list_of_relevant_information: List[RelevantInformationForVolunteer], event: Event):
     relevant_information_to_use = list_of_relevant_information[0]
@@ -92,7 +98,7 @@ def get_availability_checkbox_for_volunteer_at_event_based_on_relevant_informati
 
 
 def get_any_other_information_text(list_of_relevant_information: List[RelevantInformationForVolunteer]) -> ListOfLines:
-    other_information = ListOfLines(["Other information in form:"])
+    other_information = ListOfLines(["Other information in form: (for each cadet entered with)"])
     for relevant_information in list_of_relevant_information:
         other_information.append(Line(relevant_information.details.any_other_information))
 

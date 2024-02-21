@@ -81,7 +81,7 @@ class CadetAtEvent(GenericSkipperManObjectWithIds):
         status_as_str = dict_with_str.pop(STATUS_KEY)
         status =RegistrationStatus[status_as_str]
 
-        cadet_id = dict_with_str.pop(CADET_ID)
+        cadet_id = str(dict_with_str.pop(CADET_ID))
 
         changed_str = dict_with_str.pop(CHANGED)
         changed = transform_string_into_class_instance(bool, changed_str)
@@ -132,8 +132,15 @@ class ListOfCadetsAtEvent(GenericListOfObjectsWithIds):
     def mark_cadet_as_unchanged(self, cadet_id: str):
         cadet_at_event = self.cadet_at_event_or_missing_data(cadet_id)
         if cadet_at_event is missing_data:
-            raise Exception("Cadet not in event to mark as deleted")
+            raise Exception("Cadet not in event to mark as unchanged")
         cadet_at_event.changed = False
+
+    def mark_cadet_as_changed(self, cadet_id: str):
+        cadet_at_event = self.cadet_at_event_or_missing_data(cadet_id)
+        if cadet_at_event is missing_data:
+            raise Exception("Cadet not in event to mark as deleted")
+        cadet_at_event.changed = True
+
 
     def cadet_at_event_or_missing_data(self, cadet_id):
         if self.is_cadet_id_in_event(cadet_id):
@@ -142,8 +149,8 @@ class ListOfCadetsAtEvent(GenericListOfObjectsWithIds):
             return missing_data
 
     def cadet_at_event(self, cadet_id) -> CadetAtEvent:
-        cadet = self.object_with_id(cadet_id)
-        return cadet
+        idx = self.idx_of_items_with_cadet_id(cadet_id)
+        return self[idx]
 
     def idx_of_items_with_cadet_id(self, cadet_id: str):
         list_of_cadet_ids= self.list_of_cadet_ids()
@@ -168,7 +175,7 @@ class ListOfCadetsAtEvent(GenericListOfObjectsWithIds):
         cadet_at_event.changed = True
         self.append(cadet_at_event)
 
-    def sort_given_subset_of_cadet_ids(self, list_of_ids: List[str]):
+    def subset_given_cadet_ids(self, list_of_ids: List[str]):
         new_list = [self.cadet_at_event_or_missing_data(cadet_id) for cadet_id in list_of_ids if self.is_cadet_id_in_event(cadet_id)]
         return ListOfCadetsAtEvent(new_list)
 
@@ -176,7 +183,9 @@ class ListOfCadetsAtEvent(GenericListOfObjectsWithIds):
         existing_cadet_idx = self.idx_of_items_with_cadet_id(new_cadet_at_event.cadet_id)
         if existing_cadet_idx is missing_data:
             raise Exception("Can't replace cadet id %s not in data" % new_cadet_at_event.cadet_id)
+
         self[existing_cadet_idx] = new_cadet_at_event
+        self.mark_cadet_as_changed(new_cadet_at_event.cadet_id)
 
     def update_status_of_existing_cadet_at_event(self, cadet_id:str, new_status: RegistrationStatus):
         existing_cadet_idx = self.idx_of_items_with_cadet_id(cadet_id)
@@ -184,14 +193,27 @@ class ListOfCadetsAtEvent(GenericListOfObjectsWithIds):
             raise Exception("Can't replace cadet id %s not in data" % cadet_id)
         existing_cadet_at_event = self[existing_cadet_idx]
         existing_cadet_at_event.status = new_status
+
         self[existing_cadet_idx] = existing_cadet_at_event
+        self.mark_cadet_as_changed(cadet_id)
 
     def update_availability_of_existing_cadet_at_event(self, cadet_id:str, new_availabilty: DaySelector):
         existing_cadet_idx = self.idx_of_items_with_cadet_id(cadet_id)
         if existing_cadet_idx is missing_data:
             raise Exception("Can't replace cadet id %s not in data" % cadet_id)
         existing_cadet_at_event = self[existing_cadet_idx]
-        existing_cadet_at_event.availabilty = new_availabilty
+        existing_cadet_at_event.availability = new_availabilty
+
+        self[existing_cadet_idx] = existing_cadet_at_event
+        self.mark_cadet_as_changed(cadet_id)
+
+    def update_data_row_for_existing_cadet_at_event(self, cadet_id:str, new_data_in_row: RowInMappedWAEvent):
+        ## DO NOT MARK AS CHANGED - ONLY APPLIES TO AVAILABLILITY AND STATUS FIELDS
+        existing_cadet_idx = self.idx_of_items_with_cadet_id(cadet_id)
+        if existing_cadet_idx is missing_data:
+            raise Exception("Can't replace cadet id %s not in data" % cadet_id)
+        existing_cadet_at_event = self[existing_cadet_idx]
+        existing_cadet_at_event.data_in_row = new_data_in_row
         self[existing_cadet_idx] = existing_cadet_at_event
 
 

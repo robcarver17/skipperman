@@ -95,7 +95,7 @@ TEMPLATES_FIELD_MAPPING_FILE_ID  = "wa_field_mapping_templates"
 
 
 _dict_of_filenames_and_paths = {
-    LIST_OF_CADETS_FILE_ID:("lists", "cadet_master_list.csv"),
+    LIST_OF_CADETS_FILE_ID:("lists", "list_of_cadets.csv"),
     EVENT_FILE_IDENTIFIER:("lists", "list_of_events.csv"),
 EVENT_MAPPING_FILE_ID:("mapped_events", "wa_event_mapping.csv"),
     FIELD_MAPPING_FILE_ID:("event_field_mapping", "wa_field_mapping_for_event_%s.csv"),
@@ -117,7 +117,8 @@ IDENTIFIED_CADETS_AT_EVENT_ID: (
 LIST_OF_VOLUNTEERS_FILE_ID:("lists", "list_of_volunteers.csv"),
 LIST_OF_VOLUNTEER_SKILLS_FILE_ID:("lists", "list_of_volunteers_skills.csv"),
 LIST_OF_VOLUNTEER_ASSOCIATIONS_FILE_ID :("lists", "list_of_cadet_volunteer_associations.csv"),
-LIST_OF_IDENTIFIED_VOLUNTEERS_AT_EVENT_FILE_ID:("mapped_events", "list_of_volunteers_at_event_%s.csv"),
+LIST_OF_IDENTIFIED_VOLUNTEERS_AT_EVENT_FILE_ID:("mapped_events", "list_of_identified_volunteers_at_event_%s.csv"),
+LIST_OF_VOLUNTEERS_AT_EVENT_FILE_ID: ("mapped_events", "list_of_volunteers_at_event_%s.csv"),
 LIST_OF_VOLUNTEERS_IN_ROLES_FILE_ID:("mapped_events", "list_of_volunteers_in_roles_at_event_%s.csv"),
 LIST_OF_PATROL_BOATS_FILE_ID :("lists", "list_of_patrol_boats.csv"),
 LIST_OF_CLUB_DINGHIES_FILE_ID :("lists", "list_of_club_dinghies.csv"),

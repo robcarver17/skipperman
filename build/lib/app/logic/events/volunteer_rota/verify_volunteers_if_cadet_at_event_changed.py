@@ -3,6 +3,7 @@ from typing import Dict, Union
 from app.backend.data.volunteer_allocation import remove_volunteer_and_cadet_association_at_event, \
     delete_volunteer_with_id_at_event, get_volunteer_at_event
 from app.backend.cadets import cadet_name_from_id
+from app.backend.volunteers.volunteers import get_volunteer_from_id
 from app.backend.wa_import.update_cadets_at_event import mark_cadet_at_event_as_unchanged, has_cadet_at_event_changed, \
     get_cadet_at_event_for_cadet_id
 from app.backend.volunteers.volunteer_allocation import volunteer_ids_associated_with_cadet_at_specific_event, \
@@ -54,12 +55,16 @@ def goto_main_rota_form(interface:abstractInterface)-> NewForm:
 def check_cadet_in_loop(interface: abstractInterface, cadet_id: str) -> Union[Form, NewForm]:
     event = get_event_from_state(interface)
     cadet_has_changed = has_cadet_at_event_changed(cadet_id=cadet_id, event=event)
+    are_any_volunteers_associated_with_cadet_at_event = any_volunteers_associated_with_cadet_at_event(cadet_id=cadet_id, interface=interface)
 
-    if cadet_has_changed:
+    if cadet_has_changed and are_any_volunteers_associated_with_cadet_at_event:
         return display_form_volunteer_rota_check_changed_cadet_loop(interface=interface, cadet_id=cadet_id)
     else:
         return next_cadet_in_loop(interface)
 
+def any_volunteers_associated_with_cadet_at_event(cadet_id: str, interface: abstractInterface):
+    dict_of_relevant_volunteers = get_dict_of_relevant_volunteer_names_and_association_cadets_with_id_values(interface=interface, cadet_id=cadet_id)
+    return len(dict_of_relevant_volunteers)>0
 
 def display_form_volunteer_rota_check_changed_cadet_loop(interface: abstractInterface, cadet_id: str) -> Form:
     event = get_event_from_state(interface)
@@ -96,11 +101,12 @@ def get_volunteer_form_line(interface: abstractInterface, volunteer_and_others: 
         ## must be availability change
         volunteer_at_event = get_volunteer_at_event(event=event, volunteer_id=volunteer_id)
         current_availability = volunteer_at_event.availablity
+        volunteer_name = get_volunteer_from_id(volunteer_id)
 
         return get_availability_checkbox(
             availability=current_availability,
             event=event,
-            input_label="Update availability for volunteer",
+            input_label="Update availability for volunteer %s :" % volunteer_name,
             input_name=form_name_given_volunteer_and_type(type=AVAILABILITY_NAME, volunteer_id=volunteer_id)
         )
     else:
@@ -173,11 +179,14 @@ def modify_specific_volunteer_availability_when_cadet_changed(interface: abstrac
 
 def modify_specific_volunteer_linkage_at_event_when_cadet_changed(interface: abstractInterface, volunteer_id: str, cadet_id: str):
     event = get_event_from_state(interface)
-    include_volunteer = form_name_given_volunteer_and_type(volunteer_id=volunteer_id, type=INCLUSION_NAME)
     current_cadet_is_active = is_current_cadet_active_at_event(cadet_id=cadet_id, event=event)
     assert not current_cadet_is_active
 
-    if include_volunteer:
+    volunteer_is_included = INCLUDE_VOLUNTEER in interface.value_of_multiple_options_from_form(form_name_given_volunteer_and_type(
+        volunteer_id=volunteer_id, type=INCLUSION_NAME
+    ))
+
+    if volunteer_is_included:
         remove_volunteer_and_cadet_association_at_event(volunteer_id=volunteer_id, cadet_id=cadet_id, event=event)
     else:
         delete_volunteer_with_id_at_event(volunteer_id=volunteer_id, event=event)

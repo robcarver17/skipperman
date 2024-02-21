@@ -29,7 +29,11 @@ def get_and_save_next_volunteer_index(interface: abstractInterface) -> int:
     return volunteer_index
 
 def get_volunteer_index(interface:abstractInterface) -> int:
-    return interface.get_persistent_value(VOLUNTEER_INDEX)
+    index =  interface.get_persistent_value(VOLUNTEER_INDEX, default=missing_data)
+    if index is missing_data:
+        return missing_data
+    else:
+        return int(index)
 
 
 def clear_volunteer_index(interface: abstractInterface):
@@ -40,6 +44,7 @@ def clear_volunteer_index(interface: abstractInterface):
 def get_relevant_information_for_current_volunteer(interface: abstractInterface) -> RelevantInformationForVolunteer:
     row_id = get_current_row_id(interface)
     volunteer_index = get_volunteer_index(interface)
+    print("Row id %s volunteer index %d" % (row_id, volunteer_index))
     event = get_event_from_state(interface)
     relevant_information = get_relevant_information_for_volunteer_given_details(
         row_id=row_id,
@@ -57,7 +62,7 @@ def get_relevant_information_for_volunteer_given_details(
 ) -> RelevantInformationForVolunteer:
 
     row_in_mapped_event = get_row_in_mapped_event_data_given_id(event=event, row_id=row_id)
-
+    print("row %s" % str(row_in_mapped_event))
     relevant_information = get_relevant_information_for_volunteer(row_in_mapped_event=row_in_mapped_event, volunteer_index=volunteer_index, event=event)
 
     return relevant_information

@@ -100,7 +100,7 @@ def process_update_to_cadet_new_to_event(
     print("New row in master data for cadet with id %s" % cadet_id)
 
     try:
-        relevant_row = get_row_in_mapped_event_for_cadet_id_active_registration_only(
+        relevant_row = get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
             cadet_id=cadet_id, event=event
         )
     except DuplicateCadets:
@@ -110,9 +110,6 @@ def process_update_to_cadet_new_to_event(
         )
         return process_next_cadet_at_event(interface)
 
-    if relevant_row is missing_data:
-        ## There is a new row, but it's cancelled already so ignore it
-        return process_next_cadet_at_event(interface)
 
     add_new_cadet_to_event(
         event=event, row_in_mapped_wa_event=relevant_row,

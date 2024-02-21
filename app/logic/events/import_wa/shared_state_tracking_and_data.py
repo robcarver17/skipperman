@@ -43,6 +43,9 @@ def get_next_row_id_in_event_data(
     except:
         raise NoMoreData
 
+    print("Getting next ID %s (index %d) from list %s was %s (index %d)" % (new_id, new_index, list_of_ids, current_id, current_index))
+
+
     return new_id
 
 

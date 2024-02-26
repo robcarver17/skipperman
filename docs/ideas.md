@@ -52,7 +52,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for racing event:
   
-- don't allow duplicate templates and delete templates allowed
+
 - allocate safety boats 
 - report on a volunteer rota
 - import a set of members from WA to populate a list of cadets
@@ -94,6 +94,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
   ### General required before handover to Jonny:
 
+- don't allow duplicate templates and delete templates allowed
 - edit event (warnings especially days!)
 - all pdf reports should have csv counterparts
 - anything that is displayed on screen can be exported to .csv eg reg details, volunteer rota (and imported...???)

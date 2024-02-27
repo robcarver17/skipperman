@@ -54,6 +54,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
   
 
 - allocate safety boats 
+- allow list of boats/dinghies/etc to be reordered
 - report on a volunteer rota
 - import a set of members from WA to populate a list of cadets
 

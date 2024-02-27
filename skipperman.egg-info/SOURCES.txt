@@ -93,6 +93,7 @@ app/backend/reporting/process_stages/../../../../example_data/field_mapping_temp
 app/backend/reporting/process_stages/../../../../example_data/field_mapping_templates/template_field_map_for_training_weekend.csv
 app/backend/reporting/process_stages/../../../data_access/configuration/configuration.yaml
 app/backend/volunteers/__init__.py
+app/backend/volunteers/patrol_boats.py
 app/backend/volunteers/volunteer_allocation.py
 app/backend/volunteers/volunteer_rota.py
 app/backend/volunteers/volunteer_rota_data.py
@@ -191,12 +192,12 @@ app/logic/cadets/../../../example_data/events/list_of_events.csv
 app/logic/cadets/../../../example_data/field_mapping_templates/template_field_map_cadet_week.csv
 app/logic/cadets/../../../example_data/field_mapping_templates/template_field_map_for_training_weekend.csv
 app/logic/cadets/../../data_access/configuration/configuration.yaml
+app/logic/configuration/ENTRY_view_main_config_page.py
 app/logic/configuration/__init__.py
 app/logic/configuration/club_dinghies.py
 app/logic/configuration/config_function_mapping.py
-app/logic/configuration/constants.py
+app/logic/configuration/generic_list_modifier.py
 app/logic/configuration/patrol_boats.py
-app/logic/configuration/view_main_config_page.py
 app/logic/configuration/../../../example_data/cadets/cadet_master_list.csv
 app/logic/configuration/../../../example_data/events/list_of_events.csv
 app/logic/configuration/../../../example_data/field_mapping_templates/template_field_map_cadet_week.csv
@@ -250,6 +251,15 @@ app/logic/events/mapping/../../../../example_data/events/list_of_events.csv
 app/logic/events/mapping/../../../../example_data/field_mapping_templates/template_field_map_cadet_week.csv
 app/logic/events/mapping/../../../../example_data/field_mapping_templates/template_field_map_for_training_weekend.csv
 app/logic/events/mapping/../../../data_access/configuration/configuration.yaml
+app/logic/events/patrol_boats/__init__.py
+app/logic/events/patrol_boats/allocate_patrol_boats.py
+app/logic/events/patrol_boats/parse_patrol_boat_table.py
+app/logic/events/patrol_boats/render_patrol_boat_table.py
+app/logic/events/patrol_boats/../../../../example_data/cadets/cadet_master_list.csv
+app/logic/events/patrol_boats/../../../../example_data/events/list_of_events.csv
+app/logic/events/patrol_boats/../../../../example_data/field_mapping_templates/template_field_map_cadet_week.csv
+app/logic/events/patrol_boats/../../../../example_data/field_mapping_templates/template_field_map_for_training_weekend.csv
+app/logic/events/patrol_boats/../../../data_access/configuration/configuration.yaml
 app/logic/events/registration_details/__init__.py
 app/logic/events/registration_details/edit_registration_details.py
 app/logic/events/registration_details/parse_registration_details_form.py
@@ -277,6 +287,7 @@ app/logic/events/volunteer_rota/display_main_rota_page.py
 app/logic/events/volunteer_rota/edit_cadet_connections_for_event_from_rota.py
 app/logic/events/volunteer_rota/edit_volunteer_details_from_rota.py
 app/logic/events/volunteer_rota/edit_volunteer_skills_from_rota.py
+app/logic/events/volunteer_rota/form_elements_verify_volunteers_if_cadet_at_event_changed.py
 app/logic/events/volunteer_rota/parse_data_fields_in_rota.py
 app/logic/events/volunteer_rota/parse_volunteer_table.py
 app/logic/events/volunteer_rota/render_volunteer_table.py

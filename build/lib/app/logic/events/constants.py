@@ -59,6 +59,7 @@ SKIP_VOLUNTEER_BUTTON_LABEL = "Skip - no volunteer to add for this cadet"
 ## Volunteer roles
 EDIT_VOLUNTEER_ROLES_BUTTON_LABEL = "Volunteer rota"
 
+PATROL_BOAT_ALLOCATION_BUTTON_LABEL = "Allocate patrol boats"
 
 ## constants.py in session data
 EVENT = "event"

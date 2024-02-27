@@ -52,6 +52,7 @@ def process_next_cadet_at_event(
         cadet_id = get_and_save_next_cadet_id_in_event_data(interface)
     except NoMoreData:
         print("Finished looping")
+        clear_cadet_id_at_event(interface)
         return finished_looping_return_to_controller(interface)
 
     print("Current cadet id is %s" % cadet_id)

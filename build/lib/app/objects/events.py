@@ -70,7 +70,7 @@ class Event(GenericSkipperManObjectWithIds):
         elements = ", ".join(elements)
 
         return [self.event_description,
-                "From %s to %s, %d days, covering %s" % (str(self.start_date), str(self.end_date), self.duration, self.weekdays_in_event_as_str()),
+                "From %s to %s, %d days, covering %s" % (str(self.start_date), str(self.end_date), self.duration, self.weekdays_in_event_as_single_string()),
                 "Has the following elements: %s" % elements]
 
     @property
@@ -128,11 +128,16 @@ class Event(GenericSkipperManObjectWithIds):
         ## relies on ordering
         return self.weekdays_in_event()[0]
 
-    def weekdays_in_event_as_str(self) -> str:
+    def weekdays_in_event_as_single_string(self) -> str:
+        names_of_days = self.weekdays_in_event_as_list_of_string()
+
+        return ", ".join(names_of_days)
+
+    def weekdays_in_event_as_list_of_string(self) -> List[str]:
         weekdays_in_event = self.weekdays_in_event()
         names_of_days = [day.name for day in weekdays_in_event]
 
-        return ", ".join(names_of_days)
+        return names_of_days
 
     def weekdays_in_event(self) -> List[Day]:
         date_list = self.dates_in_event()

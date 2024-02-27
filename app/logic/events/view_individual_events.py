@@ -12,6 +12,8 @@ from app.logic.events.mapping.event_field_mapping import display_form_event_fiel
 from app.logic.events.registration_details.edit_registration_details import display_form_edit_registration_details
 from app.logic.events.volunteer_rota.verify_volunteers_if_cadet_at_event_changed import \
     display_form_volunteer_rota_check
+from app.logic.events.patrol_boats.allocate_patrol_boats import display_form_view_for_patrol_boat_allocation
+
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm
@@ -101,7 +103,9 @@ def get_event_buttons(event: Event, interface: abstractInterface) -> Line:
     wa_update = Button(
         WA_UPDATE_BUTTON_LABEL
     )  ## does upload and import_wa, assuming no staged file
+
     back_button = Button(BACK_BUTTON_LABEL)
+
 
     wa_import_done = is_wa_file_mapping_setup_for_event(event=event) ## have we done an import already (sets up event mapping)
     field_mapping_done = is_wa_field_mapping_setup_for_event(event=event) ## have set up field mapping
@@ -141,13 +145,19 @@ def get_event_specific_buttons(event: Event) -> list:
     group_allocation = Button(ALLOCATE_CADETS_BUTTON_LABEL)
     edit_registration = Button(EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON)
     volunteer_rota = Button(EDIT_VOLUNTEER_ROLES_BUTTON_LABEL)
+    patrol_boat_allocation = Button(PATROL_BOAT_ALLOCATION_BUTTON_LABEL)
     event_specific_buttons = []
     if event.contains_cadets:
         event_specific_buttons.append(edit_registration)
     if event.contains_groups:
         event_specific_buttons.append(group_allocation)
     if event.contains_volunteers:
-        event_specific_buttons.append(volunteer_rota)
+        event_specific_buttons+=[volunteer_rota, patrol_boat_allocation]
+    if event.contains_food:
+        pass
+    if event.contains_clothing:
+        pass
+
     return event_specific_buttons
 
 
@@ -179,6 +189,9 @@ def post_form_view_individual_event(
 
     elif last_button_pressed==EDIT_VOLUNTEER_ROLES_BUTTON_LABEL:
         return form_to_do_volunteer_rota(interface)
+
+    elif last_button_pressed==PATROL_BOAT_ALLOCATION_BUTTON_LABEL:
+        return form_to_allocate_patrol_boats(interface)
 
     elif last_button_pressed == BACK_BUTTON_LABEL:
         return previous_form(interface)
@@ -216,6 +229,10 @@ def form_to_edit_registration_details(interface: abstractInterface):
 
 def form_to_do_volunteer_rota(interface: abstractInterface):
     return interface.get_new_form_given_function(display_form_volunteer_rota_check) ## check rota before going to form
+
+
+def form_to_allocate_patrol_boats(interface: abstractInterface):
+    return interface.get_new_form_given_function(display_form_view_for_patrol_boat_allocation)
 
 
 def previous_form(interface: abstractInterface):

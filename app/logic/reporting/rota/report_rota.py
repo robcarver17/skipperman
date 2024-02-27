@@ -281,7 +281,7 @@ def post_form_for_group_arrangement_options_rota_report(
         ## Changing arrangement
         df = get_df_for_reporting_allocations(interface)
         return post_form_for_group_arrangement_options(interface=interface,
-                                                       current_form_name=CHANGE_GROUP_LAYOUT_IN_GROUP_ALLOCATION_STATE,
+                                                       current_form_function=display_form_for_group_arrangement_options_rota_report,
                                                        df=df,
                                                        specific_parameters_for_type_of_report=specific_parameters_for_allocation_report)
 

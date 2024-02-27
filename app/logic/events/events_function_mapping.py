@@ -1,4 +1,3 @@
-from app.logic.abstract_logic_api import LogicApi
 
 from app.logic.events.ENTRY_view_events import (
     display_form_view_of_events,
@@ -73,6 +72,8 @@ from app.logic.events.volunteer_rota.edit_cadet_connections_for_event_from_rota 
 
 from app.logic.events.volunteer_rota.edit_volunteer_skills_from_rota import display_form_edit_individual_volunteer_skills_from_rota, post_form_edit_individual_volunteer_skills_from_rota
 from app.logic.events.volunteer_rota.add_volunteer_to_rota import display_form_add_new_volunteer_to_rota_at_event, post_form_add_new_volunteer_to_rota_at_event
+from app.logic.events.patrol_boats.allocate_patrol_boats import display_form_view_for_patrol_boat_allocation, post_form_view_for_patrol_boat_allocation
+
 from app.objects.abstract_objects.form_function_mapping import   DisplayAndPostFormFunctionMaps, NestedDictOfMappings
 
 event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_functions(
@@ -94,6 +95,7 @@ event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_func
                                     (display_form_edit_cadet_connections_from_rota, post_form_edit_cadet_connections_from_rota):0,
                                     (display_form_edit_individual_volunteer_skills_from_rota, post_form_edit_individual_volunteer_skills_from_rota):0
                                 },
+                            (display_form_view_for_patrol_boat_allocation, post_form_view_for_patrol_boat_allocation):0,
                             (display_form_update_existing_event, post_form_update_existing_event): 0,
 
                             (display_form_event_field_mapping, post_form_event_field_mapping):

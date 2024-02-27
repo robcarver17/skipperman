@@ -10,7 +10,7 @@ from app.logic.events.cadets_at_event.interactively_update_records_of_cadets_at_
 from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.import_wa.shared_state_tracking_and_data import get_and_save_next_row_id_in_mapped_event_data, \
-    get_current_row_id, reset_row_id
+    get_current_row_id, clear_row_in_state
 from app.backend.wa_import.add_cadet_ids_to_mapped_wa_event_data import (
     add_identified_cadet_and_row,
     get_cadet_data_from_row_of_mapped_data_no_checks,
@@ -31,7 +31,7 @@ def display_form_add_cadet_ids_during_import(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     ## rest of the time is post
-    reset_row_id(interface)
+    clear_row_in_state(interface)
 
     return add_cadet_ids_on_next_row(interface)
 

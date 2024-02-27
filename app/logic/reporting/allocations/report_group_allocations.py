@@ -40,7 +40,7 @@ from app.logic.events.ENTRY_view_events import display_list_of_events_with_butto
 def display_form_report_group_allocation(interface: abstractInterface) -> Form:
     list_of_events = display_list_of_events_with_buttons()
     lines_inside_form = ListOfLines(
-        [back_button, _______________, "Select event:", _______________, list_of_events]
+        [back_button, _______________,"Group allocation report",_______________, "Select event:", _______________, list_of_events]
     )
 
     return Form(lines_inside_form)
@@ -52,7 +52,7 @@ def post_form_report_group_allocation(
 ) -> Union[Form, NewForm]:
     last_button = interface.last_button_pressed()
     if last_button == BACK_BUTTON_LABEL:
-        return interface.get_new_display_form_for_parent_of_function(display_form_report_group_allocation)
+        return interface.get_new_display_form_for_parent_of_function(post_form_report_group_allocation)
 
     event_name_selected = last_button
     try:
@@ -112,7 +112,7 @@ def post_form_for_report_group_allocation_generic_options(
     interface: abstractInterface,
 ) -> Union[Form, NewForm, File]:
     last_button_pressed = interface.last_button_pressed()
-    previous_form = interface.get_new_display_form_for_parent_of_function(display_form_for_report_group_allocation_generic_options)
+    previous_form = interface.get_new_display_form_for_parent_of_function(post_form_for_report_group_allocation_generic_options)
 
     if last_button_pressed == CREATE_REPORT_BUTTON_LABEL:
         return create_report(interface)
@@ -180,7 +180,7 @@ def post_form_for_report_group_additional_options(
     interface: abstractInterface,
 ) -> Union[Form, NewForm, File]:
     last_button_pressed = interface.last_button_pressed()
-    previous_form = interface.get_new_display_form_for_parent_of_function(display_form_for_report_group_allocation_generic_options)
+    previous_form = interface.get_new_display_form_for_parent_of_function(post_form_for_report_group_additional_options)
 
     if last_button_pressed == BACK_BUTTON_LABEL:
         return previous_form
@@ -232,7 +232,7 @@ def post_form_for_report_group_allocation_print_options(
     interface: abstractInterface,
 ) -> Union[Form, NewForm, File]:
     last_button_pressed = interface.last_button_pressed()
-    previous_form = interface.get_new_display_form_for_parent_of_function(display_form_for_report_group_allocation_print_options)
+    previous_form = interface.get_new_display_form_for_parent_of_function(post_form_for_report_group_allocation_print_options)
 
     if last_button_pressed == BACK_BUTTON_LABEL:
         return previous_form
@@ -281,7 +281,7 @@ def post_form_for_group_arrangement_options_allocation_report(
         interface: abstractInterface,
 ) -> Union[NewForm, Form, File]:
     last_button_pressed = interface.last_button_pressed()
-    previous_form = interface.get_new_display_form_for_parent_of_function(display_form_for_group_arrangement_options_allocation_report)
+    previous_form = interface.get_new_display_form_for_parent_of_function(post_form_for_group_arrangement_options_allocation_report)
 
     if last_button_pressed == CREATE_REPORT_BUTTON_LABEL:
         return create_report(interface)
@@ -295,7 +295,7 @@ def post_form_for_group_arrangement_options_allocation_report(
         ## Changing arrangement
         df = get_df_for_reporting_allocations(interface)
         return post_form_for_group_arrangement_options(interface=interface,
-                                                       current_form_name=CHANGE_GROUP_LAYOUT_IN_GROUP_ALLOCATION_STATE,
+                                                       current_form_function=display_form_for_group_arrangement_options_allocation_report,
                                                        df=df,
                                                        specific_parameters_for_type_of_report=specific_parameters_for_allocation_report)
 

@@ -1,5 +1,6 @@
 from app.backend.cadets import cadet_from_id
 from app.backend.data.cadets_at_event import cadet_id_at_event_given_row_id
+from app.backend.data.mapped_events import get_row_in_mapped_event_data_given_id
 from app.objects.cadets import default_cadet
 from app.objects.constants import missing_data
 from app.objects.day_selectors import DaySelector, any_day_selector_from_short_form_text
@@ -14,7 +15,7 @@ from app.objects.food import guess_food_requirements_from_food_field
 from app.objects.mapped_wa_event import RowInMappedWAEvent
 from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer, \
     RelevantInformationForVolunteerIdentification, RelevantInformationForVolunteerAvailability, \
-    RelevantInformationForVolunteerDetails
+    RelevantInformationForVolunteerDetails, missing_relevant_information
 from app.objects.volunteers import Volunteer
 from app.objects.volunteers_at_event import VolunteerAtEvent
 
@@ -66,7 +67,8 @@ def get_availability_information_for_volunteer(row_in_mapped_event: RowInMappedW
         weekend_availability=row_in_mapped_event.get_item(weekend_available_key,missing_data),
         any_other_information=row_in_mapped_event.get_item(ANY_OTHER_INFORMATION),
         preferred_duties=row_in_mapped_event.get_item(preferred_duties_key),
-        same_or_different=row_in_mapped_event.get_item(same_or_different_key)
+        same_or_different=row_in_mapped_event.get_item(same_or_different_key),
+        row_status=row_in_mapped_event.registration_status
     )
 
 
@@ -114,3 +116,21 @@ def suggested_volunteer_availability(relevant_information: RelevantInformationFo
         return cadet_availability
     else:
         raise Exception("No availability information at all for volunteer!")
+
+
+def get_relevant_information_for_volunteer_given_details(
+    row_id: str,
+        volunteer_index: int,
+        event: Event
+) -> RelevantInformationForVolunteer:
+    print("Getting relevant information for row_id %s vol index %d" % (row_id, volunteer_index))
+
+    row_in_mapped_event = get_row_in_mapped_event_data_given_id(event=event, row_id=row_id)
+    if row_in_mapped_event is missing_data:
+        print("For row_id %s vol index %d the relevant information was missing: might be okay?" % (row_id, volunteer_index))
+        return missing_relevant_information
+
+    print("row %s" % str(row_in_mapped_event))
+    relevant_information = get_relevant_information_for_volunteer(row_in_mapped_event=row_in_mapped_event, volunteer_index=volunteer_index, event=event)
+
+    return relevant_information

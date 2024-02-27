@@ -1,3 +1,5 @@
+from typing import List
+
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.objects.abstract_objects.abstract_form import checkboxInput, textInput, dropDownInput
@@ -100,16 +102,22 @@ all_status_names = [row_status.name for row_status in all_possible_status]
 def dropdown_input_for_status_change(input_name: str,
                                      default_status: RegistrationStatus = arg_not_passed,
                                      input_label: str = "Status",
-                                     dict_of_options: dict = arg_not_passed) -> dropDownInput:
+                                     allowable_status: List[RegistrationStatus]= arg_not_passed
+                                     ) -> dropDownInput:
+
 
     if default_status is arg_not_passed:
         default_label = arg_not_passed
     else:
         default_label = default_status.name
 
-    if dict_of_options is arg_not_passed:
-        dict_of_options = dict(
-            [(status_name, status_name) for status_name in all_status_names])
+    if allowable_status is arg_not_passed:
+        allowable_status_names = all_status_names
+    else:
+        allowable_status_names = [status.name for status in allowable_status]
+
+    dict_of_options = dict(
+         [(status_name, status_name) for status_name in allowable_status_names])
 
     return dropDownInput(
         input_label=input_label,

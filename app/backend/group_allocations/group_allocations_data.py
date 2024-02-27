@@ -80,7 +80,7 @@ def reorder_list_of_cadets_by_allocated_group(list_of_cadets: ListOfCadets, curr
     print("full list %s" % str(list_of_cadets))
     print("current allocation %s" % current_allocation_for_event)
     sorted_by_group = current_allocation_for_event.sort_by_group()
-    sorted_list_of_ids = sorted_by_group.list_of_row_ids
+    sorted_list_of_ids = sorted_by_group.list_of_ids
     unallocated_cadets = (
         current_allocation_for_event.cadets_in_list_not_allocated_to_group(
             list_of_cadets

@@ -1,13 +1,11 @@
-from app.backend.data.mapped_events import get_row_in_mapped_event_data_given_id
-from app.backend.volunteers.volunteer_allocation import list_of_unique_volunteer_ids_in_identified_event_data
+from app.backend.data.volunteer_allocation import load_list_of_identified_volunteers_at_event
 
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.import_wa.shared_state_tracking_and_data import get_current_row_id
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer
-from app.backend.volunteers.volunter_relevant_information import get_relevant_information_for_volunteer
+from app.backend.volunteers.volunter_relevant_information import get_relevant_information_for_volunteer_given_details
 from app.objects.constants import missing_data, NoMoreData
-from app.objects.events import Event
 from app.objects.field_list import LIST_OF_VOLUNTEER_FIELDS
 
 
@@ -54,19 +52,6 @@ def get_relevant_information_for_current_volunteer(interface: abstractInterface)
 
 
     return relevant_information
-
-def get_relevant_information_for_volunteer_given_details(
-    row_id: str,
-        volunteer_index: int,
-        event: Event
-) -> RelevantInformationForVolunteer:
-
-    row_in_mapped_event = get_row_in_mapped_event_data_given_id(event=event, row_id=row_id)
-    print("row %s" % str(row_in_mapped_event))
-    relevant_information = get_relevant_information_for_volunteer(row_in_mapped_event=row_in_mapped_event, volunteer_index=volunteer_index, event=event)
-
-    return relevant_information
-
 
 
 VOLUNTEER_AT_EVENT_ID = "vol_at_ev_id"
@@ -117,8 +102,13 @@ def get_current_volunteer_id_at_event(interface: abstractInterface) -> str:
 def  save_new_volunteer_id_at_event(interface: abstractInterface, new_id):
     interface.set_persistent_value(VOLUNTEER_AT_EVENT_ID, new_id)
 
-def reset_new_volunteer_id_at_event(interface: abstractInterface):
+def clear_volunteer_id_at_event_in_state(interface: abstractInterface):
     interface.clear_persistent_value(VOLUNTEER_AT_EVENT_ID)
 
 
+def list_of_unique_volunteer_ids_in_identified_event_data(interface: abstractInterface) -> list:
+    event = get_event_from_state(interface)
+    all_volunteers_at_event = load_list_of_identified_volunteers_at_event(event)
+    all_ids = all_volunteers_at_event.unique_list_of_volunteer_ids()
 
+    return all_ids

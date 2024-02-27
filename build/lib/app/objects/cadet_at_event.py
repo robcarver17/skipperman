@@ -48,6 +48,15 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
 
         return str(matching_item.cadet_id)
 
+    def list_of_row_ids_given_cadet_id(self, cadet_id: str) -> List[str]:
+        matching = [item.row_id for item in self if item.cadet_id == cadet_id]
+        if len(matching)==0:
+            raise missing_data
+        elif len(matching)>1:
+            raise Exception("Can't have same row_id more than once")
+
+        return matching
+
     def list_of_row_ids_matching_cadet_id(self, cadet_id: str)-> List[str]:
         return [item.row_id for item in self if item.cadet_id == cadet_id]
 

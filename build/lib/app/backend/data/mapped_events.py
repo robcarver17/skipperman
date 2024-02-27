@@ -1,4 +1,5 @@
 from app.data_access.data import data
+from app.objects.constants import missing_data
 from app.objects.events import Event
 from app.objects.mapped_wa_event import MappedWAEvent, RowInMappedWAEvent
 
@@ -20,4 +21,9 @@ def load_mapped_wa_event(
 
 def get_row_in_mapped_event_data_given_id(event: Event, row_id: str) -> RowInMappedWAEvent:
     mapped_data = load_mapped_wa_event(event)
-    return mapped_data.get_row_with_rowid(row_id)
+    try:
+        row_data = mapped_data.get_row_with_rowid(row_id)
+    except:
+        return missing_data
+
+    return row_data

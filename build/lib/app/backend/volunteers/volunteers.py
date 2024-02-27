@@ -93,3 +93,7 @@ def add_list_of_cadet_connections_to_volunteer(
 def get_volunteer_from_id(volunteer_id) -> Volunteer:
     list_of_all_volunteers = get_all_volunteers()
     return list_of_all_volunteers.object_with_id(volunteer_id)
+
+def get_volunteer_name_from_id(volunteer_id) -> str:
+    volunteer = get_volunteer_from_id(volunteer_id)
+    return volunteer.name

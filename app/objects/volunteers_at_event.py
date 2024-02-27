@@ -90,6 +90,17 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
 
         return matching_item.volunteer_id
 
+    def list_of_volunteer_ids_given_list_of_row_ids_excluding_unallocated(self, list_of_row_ids: List[str]) -> List[str]:
+        list_of_volunteer_ids = []
+        for row_id in list_of_row_ids:
+            list_of_volunteer_ids += self.list_of_volunteer_ids_given_row_id_excluding_unallocated(row_id)
+
+        return list_of_volunteer_ids
+
+    def list_of_volunteer_ids_given_row_id_excluding_unallocated(self, row_id: str) -> List[str]:
+        matching = [item.volunteer_id for item in self if item.row_id == row_id and item.is_allocated]
+
+        return matching
 
 
 ## Must match arguments in dataclass below

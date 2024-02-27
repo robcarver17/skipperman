@@ -8,8 +8,10 @@ from app.backend.volunteers.volunter_relevant_information import suggested_volun
 from app.objects.abstract_objects.abstract_form import checkboxInput, textInput
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.objects.constants import missing_data
+from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
-from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer
+from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer, \
+    ListOfRelevantInformationForVolunteer, missing_relevant_information
 from app.objects.volunteers import Volunteer
 
 
@@ -57,7 +59,7 @@ def get_connection_checkbox(event: Event, volunteer: Volunteer) -> Union[checkbo
 
 
 
-def get_availablity_text( list_of_relevant_information: List[RelevantInformationForVolunteer]) -> ListOfLines:
+def get_availablity_text( list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> ListOfLines:
     all_available = ListOfLines()
     for relevant_information in list_of_relevant_information:
         all_available = all_available+get_availablity_text_for_single_entry(relevant_information)
@@ -65,6 +67,10 @@ def get_availablity_text( list_of_relevant_information: List[RelevantInformation
     return all_available
 
 def get_availablity_text_for_single_entry(relevant_information: RelevantInformationForVolunteer) -> ListOfLines:
+
+    if relevant_information is missing_relevant_information:
+        return ListOfLines("")
+
     cadet_name = get_cadet_name_from_relevant_information(relevant_information)
     availability_info = relevant_information.availability
     available_text = ListOfLines(["Availability for volunteer in form when registered with cadet %s" % cadet_name])
@@ -80,61 +86,110 @@ def get_availablity_text_for_single_entry(relevant_information: RelevantInformat
     return available_text
 
 def get_cadet_name_from_relevant_information(relevant_information: RelevantInformationForVolunteer) -> str:
+    NO_CADET= "(no cadet)"
+    if relevant_information is missing_relevant_information:
+        return NO_CADET
     cadet_id = relevant_information.identify.cadet_id
     if cadet_id is missing_data:
-        cadet_name = "(no cadet)"
-    else:
-        cadet_name = cadet_name_from_id(cadet_id)
+        return NO_CADET
+
+    cadet_name = cadet_name_from_id(cadet_id)
 
     return cadet_name
 
-def get_availability_checkbox_for_volunteer_at_event_based_on_relevant_information(list_of_relevant_information: List[RelevantInformationForVolunteer], event: Event):
-    relevant_information_to_use = list_of_relevant_information[0]
-    availability = suggested_volunteer_availability(relevant_information_to_use.availability)
+def get_availability_checkbox_for_volunteer_at_event_based_on_relevant_information(list_of_relevant_information: ListOfRelevantInformationForVolunteer, event: Event):
+    availability = first_valid_availability(list_of_relevant_information, event=event)
     return get_availability_checkbox(availability=availability,
                                      event=event,
                                      input_name=AVAILABILITY,
                                      input_label="Confirm availability for volunteer:")
 
+def first_valid_availability(list_of_relevant_information: ListOfRelevantInformationForVolunteer, event: Event) -> DaySelector:
+    for relevant_information in list_of_relevant_information:
+        try:
+            return suggested_volunteer_availability(relevant_information.availability)
+        except:
+            continue
 
-def get_any_other_information_text(list_of_relevant_information: List[RelevantInformationForVolunteer]) -> ListOfLines:
+    return event.day_selector_with_covered_days()
+
+def get_any_other_information_text(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> ListOfLines:
+
     other_information = ListOfLines(["Other information in form: (for each cadet entered with)"])
     for relevant_information in list_of_relevant_information:
-        other_information.append(Line(relevant_information.details.any_other_information))
+        try:
+            other_information.append(Line(relevant_information.details.any_other_information))
+        except:
+            pass
 
     return other_information
 
-def get_any_other_information_input(list_of_relevant_information: List[RelevantInformationForVolunteer]) -> textInput:
+def get_any_other_information_input(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> textInput:
     return textInput(
         input_name=ANY_OTHER_INFORMATION,
         input_label="Enter any information relevant to volunteer rota duties (or diet, if catering provided)",
-        value=list_of_relevant_information[0].details.any_other_information
+        value=first_valid_other_information(list_of_relevant_information)
     )
 
-def get_preferred_duties_text(list_of_relevant_information: List[RelevantInformationForVolunteer]) -> ListOfLines:
+def first_valid_other_information(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> str:
+    for relevant_information in list_of_relevant_information:
+        try:
+            return relevant_information.details.any_other_information
+        except:
+            continue
+
+    return ""
+
+
+def get_preferred_duties_text(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> ListOfLines:
     preferred_duties = ListOfLines(["Preferred duties in form (for each cadet registered with):"])
     for relevant_information in list_of_relevant_information:
-        preferred_duties.append(Line(relevant_information.availability.preferred_duties))
+        try:
+            preferred_duties.append(Line(relevant_information.availability.preferred_duties))
+        except:
+            continue
 
     return preferred_duties
 
-def get_preferred_duties_input(list_of_relevant_information: List[RelevantInformationForVolunteer]) -> textInput:
+def get_preferred_duties_input(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> textInput:
     return textInput(
         input_name=PREFERRED_DUTIES,
         input_label="Enter preferred duties",
-        value=list_of_relevant_information[0].availability.preferred_duties
+        value=first_valid_preferred_duties(list_of_relevant_information)
     )
 
-def get_same_or_different_text(list_of_relevant_information: List[RelevantInformationForVolunteer]) -> ListOfLines:
+def first_valid_preferred_duties(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> str:
+    for relevant_information in list_of_relevant_information:
+        try:
+            return relevant_information.availability.preferred_duties
+        except:
+            continue
+
+    return ""
+
+
+def get_same_or_different_text(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> ListOfLines:
     same_or_different = ListOfLines(["Same or different duties in form (for each cadet registered with):"])
     for relevant_information in list_of_relevant_information:
-        same_or_different.append(Line(relevant_information.availability.same_or_different))
+        try:
+            same_or_different.append(Line(relevant_information.availability.same_or_different))
+        except:
+            continue
 
     return same_or_different
 
-def  get_same_or_different_input(list_of_relevant_information: List[RelevantInformationForVolunteer]) -> textInput:
+def get_same_or_different_input(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> textInput:
     return textInput(
         input_name=SAME_OR_DIFFERENT,
         input_label="Enter same or different preference",
-        value=list_of_relevant_information[0].availability.same_or_different
+        value=first_valid_same_or_different(list_of_relevant_information)
     )
+
+def first_valid_same_or_different(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> str:
+    for relevant_information in list_of_relevant_information:
+        try:
+            return relevant_information.availability.same_or_different
+        except:
+            continue
+
+    return ""

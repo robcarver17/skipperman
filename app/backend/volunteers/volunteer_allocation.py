@@ -1,6 +1,7 @@
-from typing import List
+from typing import List, Dict
 
-from app.backend.data.cadets_at_event import load_identified_cadets_at_event, load_cadets_at_event
+from app.backend.data.cadets_at_event import load_identified_cadets_at_event, load_cadets_at_event, \
+    list_of_row_ids_at_event_given_cadet_id
 from app.backend.data.volunteer_rota import delete_role_at_event_for_volunteer_on_day
 from app.backend.data.volunteer_allocation import save_list_of_volunteers_at_event
 from app.backend.data.volunteers import  get_all_volunteers, \
@@ -11,15 +12,16 @@ from app.backend.data.volunteer_allocation import load_list_of_volunteers_at_eve
 
 from app.backend.cadets import cadet_name_from_id
 from app.backend.volunteers.volunteers import list_of_similar_volunteers
-from app.backend.wa_import.update_cadets_at_event import mark_cadet_at_event_as_unchanged
+from app.backend.wa_import.update_cadets_at_event import mark_cadet_at_event_as_unchanged, \
+    get_cadet_at_event_for_cadet_id
+from app.backend.volunteers.volunter_relevant_information import get_relevant_information_for_volunteer_given_details
 
-from app.logic.events.events_in_state import get_event_from_state
-from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.constants import missing_data
 from app.objects.day_selectors import Day, DaySelector
 from app.objects.events import Event
+from app.objects.relevant_information_for_volunteers import ListOfRelevantInformationForVolunteer
 #from app.objects.food import FoodRequirements
-from app.objects.utils import union_of_x_and_y
+from app.objects.utils import union_of_x_and_y, in_x_not_in_y
 from app.objects.volunteers import Volunteer
 from app.objects.volunteers_at_event import VolunteerAtEvent, ListOfIdentifiedVolunteersAtEvent
 
@@ -165,16 +167,6 @@ def make_volunteer_unavailable_on_day(volunteer_id: str, event: Event, day: Day)
     delete_role_at_event_for_volunteer_on_day(volunteer_id=volunteer_id, event=event, day=day)
 
 
-def list_of_unique_volunteer_ids_in_identified_event_data(interface: abstractInterface) -> list:
-    event = get_event_from_state(interface)
-    all_volunteers_at_event = load_list_of_identified_volunteers_at_event(event)
-    all_ids = all_volunteers_at_event.unique_list_of_volunteer_ids()
-
-    return all_ids
-
-
-
-
 def get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet(event: Event, volunteer_id: str) -> List[str]:
     identified_cadets = load_identified_cadets_at_event(event)
     cadets_at_event = load_cadets_at_event(event)
@@ -197,16 +189,6 @@ def get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified
 
     return list_of_active_cadet_ids_for_volunteer
 
-def update_volunteer_at_event_with_associated_cadet_id(list_of_associated_cadet_id: List[str],
-                                                       volunteer_id:str,
-                                                       event: Event):
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
-
-    currently_associated_cadet_ids = get_list_of_associated_cadet_id_for_volunteer_at_event(event=event, volunteer_id=volunteer_id)
-
-    for cadet_id in list_of_associated_cadet_id:
-        if cadet_id not in currently_associated_cadet_ids:
-            list_of_volunteers_at_event.add_cadet_id_to_existing_volunteer(cadet_id=cadet_id, volunteer_id=volunteer_id)
 
 
 def mark_all_cadets_associated_with_volunteer_at_event_as_no_longer_changed(event: Event, volunteer_id: str):
@@ -216,8 +198,7 @@ def mark_all_cadets_associated_with_volunteer_at_event_as_no_longer_changed(even
         mark_cadet_at_event_as_unchanged(cadet_id=cadet_id, event=event)
 
 def get_list_of_associated_cadet_id_for_volunteer_at_event(event: Event, volunteer_id: str)-> List[str]:
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
-    volunteer_at_event = list_of_volunteers_at_event.volunteer_at_event_with_id(volunteer_id)
+    volunteer_at_event = get_volunteer_at_event_with_id(event=event, volunteer_id=volunteer_id)
     currently_associated_cadet_ids = volunteer_at_event.list_of_associated_cadet_id
 
     return currently_associated_cadet_ids
@@ -228,3 +209,79 @@ def volunteer_for_this_row_and_index_already_identified(event: Event, row_id: st
     
     volunteer_id= list_of_volunteers.volunteer_id_given_row_id_and_index(row_id=row_id, volunteer_index=volunteer_index)
     return volunteer_id is not missing_data
+
+
+def update_cadet_connections_when_cadet_already_at_event(event: Event, volunteer_id: str):
+    list_of_associated_cadet_id = get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet(
+        event=event, volunteer_id=volunteer_id)
+
+    currently_associated_cadet_ids = get_list_of_associated_cadet_id_for_volunteer_at_event(event=event, volunteer_id=volunteer_id)
+    new_cadet_ids = in_x_not_in_y(x=list_of_associated_cadet_id, y=currently_associated_cadet_ids)
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
+
+    for cadet_id in new_cadet_ids:
+        print("Adding association with cadet %s to existing volunteer %s" % (cadet_id, volunteer_id))
+        list_of_volunteers_at_event.add_cadet_id_to_existing_volunteer(cadet_id=cadet_id, volunteer_id=volunteer_id)
+        mark_cadet_at_event_as_unchanged(cadet_id=cadet_id, event=event)
+
+
+def get_volunteer_at_event_with_id(event: Event, volunteer_id: str) -> VolunteerAtEvent:
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
+    volunteer_at_event = list_of_volunteers_at_event.volunteer_at_event_with_id(volunteer_id)
+
+    return volunteer_at_event
+
+
+def are_all_connected_cadets_cancelled_or_deleted(volunteer_id: str, event: Event)-> bool:
+
+    list_of_relevant_information = get_list_of_relevant_information(volunteer_id=volunteer_id, event=event)
+
+    return list_of_relevant_information.all_cancelled_or_deleted()
+
+
+def is_current_cadet_active_at_event(cadet_id: str, event: Event)-> bool:
+    cadet_at_event = get_cadet_at_event_for_cadet_id(event=event, cadet_id=cadet_id)
+
+    return cadet_at_event.is_active()
+
+
+def get_dict_of_relevant_volunteer_names_and_association_cadets_with_id_values(
+                                                                               cadet_id: str, event: Event) \
+        -> Dict[str, str]:
+
+    ## list of volunteers at event
+    list_of_volunteers_ids = volunteer_ids_associated_with_cadet_at_specific_event(event=event, cadet_id=cadet_id)
+    list_of_relevant_volunteer_names_and_other_cadets = [get_volunteer_name_and_associated_cadets_for_event(
+        event=event, volunteer_id=volunteer_id, cadet_id=cadet_id) for volunteer_id in list_of_volunteers_ids
+    ]
+
+    return dict([volunteer_and_any_other_cadets, id] for volunteer_and_any_other_cadets, id in
+                zip(list_of_relevant_volunteer_names_and_other_cadets, list_of_volunteers_ids))
+
+
+def any_volunteers_associated_with_cadet_at_event(cadet_id: str, event:Event):
+    dict_of_relevant_volunteers = get_dict_of_relevant_volunteer_names_and_association_cadets_with_id_values(
+         cadet_id=cadet_id, event=event)
+    return len(dict_of_relevant_volunteers)>0
+
+
+def list_of_volunteers_for_cadet_identified(cadet_id: str, event: Event) -> List[str]:
+    list_of_identified_volunteers_at_event = load_list_of_identified_volunteers_at_event(event=event)
+
+    list_of_row_ids= list_of_row_ids_at_event_given_cadet_id(cadet_id=cadet_id, event=event)
+    list_of_volunteer_ids=list_of_identified_volunteers_at_event.list_of_volunteer_ids_given_list_of_row_ids_excluding_unallocated(list_of_row_ids)
+
+    return list_of_volunteer_ids
+
+
+def get_list_of_relevant_information(volunteer_id: str, event: Event) -> ListOfRelevantInformationForVolunteer:
+
+    list_of_identified_volunteers = list_of_identified_volunteers_with_volunteer_id(volunteer_id=volunteer_id, event=event) ## can appear more than once
+
+    list_of_relevant_information = [get_relevant_information_for_volunteer_given_details(
+        row_id=identified_volunteer.row_id,
+        volunteer_index=identified_volunteer.volunteer_index,
+        event=event
+            ) for identified_volunteer in list_of_identified_volunteers]
+
+    return ListOfRelevantInformationForVolunteer(list_of_relevant_information)

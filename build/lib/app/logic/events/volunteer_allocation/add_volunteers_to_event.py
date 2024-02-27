@@ -1,18 +1,16 @@
-from typing import Union, List
+from typing import Union
 
 from app.backend.volunteers.volunteer_allocation import list_of_identified_volunteers_with_volunteer_id, \
-    get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet, \
-    update_volunteer_at_event_with_associated_cadet_id, \
-    mark_all_cadets_associated_with_volunteer_at_event_as_no_longer_changed
+    update_cadet_connections_when_cadet_already_at_event, are_all_connected_cadets_cancelled_or_deleted
 from app.backend.volunteers.volunteers import get_volunteer_from_id
 from app.backend.data.volunteer_allocation import is_volunteer_already_at_event
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_allocation.add_volunteers_process_form import \
     add_volunteer_at_event_with_form_contents_and_return_true_if_ok
 from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import \
-    reset_new_volunteer_id_at_event, \
-    get_and_save_next_volunteer_id_in_mapped_event_data, get_current_volunteer_id_at_event, \
-    get_relevant_information_for_volunteer_given_details
+    clear_volunteer_id_at_event_in_state, \
+    get_and_save_next_volunteer_id_in_mapped_event_data, get_current_volunteer_id_at_event
+from app.backend.volunteers.volunter_relevant_information import get_relevant_information_for_volunteer_given_details
 from app.logic.events.volunteer_allocation.add_volunteer_to_event_form_contents import get_header_text, \
     get_connection_checkbox, get_availablity_text, get_availability_checkbox_for_volunteer_at_event_based_on_relevant_information, \
     get_any_other_information_text, get_any_other_information_input, get_preferred_duties_text, \
@@ -24,11 +22,11 @@ from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.objects.constants import NoMoreData
 from app.objects.events import Event
-from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer
+from app.objects.relevant_information_for_volunteers import ListOfRelevantInformationForVolunteer
 
 
 def display_add_volunteers_to_event(interface: abstractInterface)  -> Union[Form, NewForm]:
-    reset_new_volunteer_id_at_event(interface)
+    clear_volunteer_id_at_event_in_state(interface)
 
     return next_volunteer_in_event(interface)
 
@@ -37,9 +35,11 @@ def next_volunteer_in_event(interface: abstractInterface) -> Union[Form, NewForm
     try:
         get_and_save_next_volunteer_id_in_mapped_event_data(interface)
     except NoMoreData:
+        clear_volunteer_id_at_event_in_state(interface)
         return return_to_controller(interface)
 
     return process_identified_volunteer_at_event(interface)
+
 
 
 
@@ -47,30 +47,21 @@ def process_identified_volunteer_at_event(interface: abstractInterface) -> Union
     volunteer_id = get_current_volunteer_id_at_event(interface)
     event =get_event_from_state(interface)
     already_added = is_volunteer_already_at_event(volunteer_id=volunteer_id, event=event)
+    all_cancelled = are_all_connected_cadets_cancelled_or_deleted(volunteer_id=volunteer_id, event=event)
 
-    if already_added:
-        action_when_volunteer_already_at_event(event=event, volunteer_id=volunteer_id)
-        ## Next volunteer
+    if all_cancelled:
+        ### We don't add a volunteer here
+        ### But we also don't auto delete, in case the volunteer staying on has other associated cadets. If a volunteer does already exist, then the cancellation will be picked up when we next look at the volunteer rota
+        return next_volunteer_in_event(interface)
+    elif already_added:
+        update_cadet_connections_when_cadet_already_at_event(event=event, volunteer_id=volunteer_id)
         return next_volunteer_in_event(interface)
     else:
-        return display_form_for_volunteer_details(interface)
+        ## this volunteer is new at this event
+        return display_form_for_volunteer_details( volunteer_id=volunteer_id, event=event)
 
 
-def action_when_volunteer_already_at_event(event: Event, volunteer_id: str):
-    ## If a new volunteer is added
-    list_of_associated_cadet_id = get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet(
-        event=event, volunteer_id=volunteer_id)
-    update_volunteer_at_event_with_associated_cadet_id(list_of_associated_cadet_id=list_of_associated_cadet_id,
-                                                       volunteer_id=volunteer_id,
-                                                       event=event)
-
-    mark_all_cadets_associated_with_volunteer_at_event_as_no_longer_changed(event=event, volunteer_id=volunteer_id)
-
-
-def display_form_for_volunteer_details(interface: abstractInterface)-> Form:
-
-    volunteer_id = get_current_volunteer_id_at_event(interface)
-    event =get_event_from_state(interface)
+def display_form_for_volunteer_details( volunteer_id: str, event: Event)-> Form:
 
     volunteer = get_volunteer_from_id(volunteer_id)
 
@@ -114,7 +105,8 @@ def display_form_for_volunteer_details(interface: abstractInterface)-> Form:
     ]))
 
 
-def get_list_of_relevant_information(volunteer_id: str, event: Event) -> List[RelevantInformationForVolunteer]:
+def get_list_of_relevant_information(volunteer_id: str, event: Event) -> ListOfRelevantInformationForVolunteer:
+
 
     list_of_identified_volunteers = list_of_identified_volunteers_with_volunteer_id(volunteer_id=volunteer_id, event=event) ## can appear more than once
 
@@ -124,13 +116,14 @@ def get_list_of_relevant_information(volunteer_id: str, event: Event) -> List[Re
         event=event
             ) for identified_volunteer in list_of_identified_volunteers]
 
-    return list_of_relevant_information
+    return ListOfRelevantInformationForVolunteer(list_of_relevant_information)
 
 def post_form_add_volunteers_to_event(interface: abstractInterface):
     form_ok = add_volunteer_at_event_with_form_contents_and_return_true_if_ok(interface)
     if not form_ok:
-        return display_form_for_volunteer_details(interface)
-
+        volunteer_id = get_current_volunteer_id_at_event(interface)
+        event = get_event_from_state(interface)
+        return display_form_for_volunteer_details(volunteer_id=volunteer_id, event=event)
 
     return next_volunteer_in_event(interface)
 

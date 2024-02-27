@@ -65,5 +65,5 @@ def get_current_row_id(interface: abstractInterface) -> str:
 def save_new_row_id(interface: abstractInterface, new_id):
     interface.set_persistent_value(ROW_ID, new_id)
 
-def reset_row_id(interface: abstractInterface):
+def clear_row_in_state(interface: abstractInterface):
     interface.clear_persistent_value(ROW_ID)

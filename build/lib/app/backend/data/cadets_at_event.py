@@ -1,3 +1,5 @@
+from typing import List
+
 from app.data_access.data import data
 from app.objects.events import Event
 
@@ -8,6 +10,13 @@ def cadet_id_at_event_given_row_id(event: Event, row_id: str) -> str:
     cadet_id = identified_cadets_at_event.cadet_id_given_row_id(row_id=row_id)
 
     return cadet_id
+
+def list_of_row_ids_at_event_given_cadet_id(event: Event, cadet_id: str) -> List[str]:
+    identified_cadets_at_event = load_identified_cadets_at_event(event)
+    list_of_row_ids = identified_cadets_at_event.list_of_row_ids_given_cadet_id(cadet_id)
+
+    return list_of_row_ids
+
 
 def load_cadets_at_event(event: Event) -> ListOfCadetsAtEvent:
     return data.data_cadets_at_event.read(event_id=event.id)

@@ -1,6 +1,8 @@
 from dataclasses import dataclass
+from typing import List
 
 from app.objects.day_selectors import DaySelector
+from app.objects.mapped_wa_event import RegistrationStatus, cancelled_status, deleted_status
 
 
 @dataclass
@@ -26,6 +28,7 @@ class RelevantInformationForVolunteerAvailability:
     preferred_duties: str ## information only
     same_or_different: str ## information only
     any_other_information: str ## information only - double counted as required twice
+    row_status: RegistrationStatus
 
 
 @dataclass
@@ -34,4 +37,24 @@ class RelevantInformationForVolunteer:
     availability: RelevantInformationForVolunteerAvailability
     details: RelevantInformationForVolunteerDetails
 
+missing_relevant_information = object()
 
+class ListOfRelevantInformationForVolunteer(list):
+    def __init__(self, list_of_relevant_information: List[RelevantInformationForVolunteer]):
+        super().__init__(list_of_relevant_information)
+
+    def all_cancelled_or_deleted(self) -> bool:
+        cancelled_or_deleted= [get_row_status_cancelled_or_deleted_from_relevant_information(
+            relevant_information
+        ) for relevant_information in self]
+
+        return all(cancelled_or_deleted)
+
+def get_row_status_cancelled_or_deleted_from_relevant_information(relevant_information: RelevantInformationForVolunteer)-> bool:
+    if relevant_information is missing_relevant_information:
+        return True
+
+    row_status = relevant_information.availability.row_status
+    cancelled_or_deleted = row_status in [cancelled_status, deleted_status]
+
+    return cancelled_or_deleted

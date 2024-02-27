@@ -9,7 +9,7 @@ from app.backend.volunteers.volunter_relevant_information import get_volunteer_f
 
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.import_wa.shared_state_tracking_and_data import get_and_save_next_row_id_in_mapped_event_data, \
-    reset_row_id, get_current_row_id
+    clear_row_in_state, get_current_row_id
 from app.logic.events.volunteer_allocation.add_volunteers_to_event import \
     display_add_volunteers_to_event
 from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import clear_volunteer_index, \
@@ -41,7 +41,7 @@ def display_form_volunteer_identification(
     ## this only happens once, the rest of the time is a post call
     print(sys._getframe().f_code.co_name)
     print("Reset volunteer row ID")
-    reset_row_id(interface)
+    clear_row_in_state(interface)
 
     return process_volunteer_on_next_row_of_event_data(interface)
 
@@ -53,6 +53,7 @@ def process_volunteer_on_next_row_of_event_data(
     try:
         get_and_save_next_row_id_in_mapped_event_data(interface)
     except NoMoreData:
+        clear_row_in_state(interface)
         print("Finished looping - next stage is to add details")
         return goto_add_identified_volunteers_to_event(interface)
 
@@ -73,6 +74,7 @@ def next_volunteer_in_current_row(interface: abstractInterface) -> Union[Form, N
         print("next volunteer index")
         get_and_save_next_volunteer_index(interface)
     except NoMoreData:
+        clear_volunteer_index(interface)
         return process_volunteer_on_next_row_of_event_data(interface)
 
     if current_volunteer_already_identified(interface):

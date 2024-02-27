@@ -176,11 +176,7 @@ def has_cadet_at_event_changed(cadet_id: str, event: Event) -> bool:
 
 def mark_cadet_at_event_as_unchanged(cadet_id: str, event: Event):
     list_of_cadets_at_event = load_cadets_at_event(event)
-    try:
-        list_of_cadets_at_event.mark_cadet_as_unchanged(cadet_id)
-    except:
-        print("Couldn't mark cadet id %s at event as unchanged might cause weird behaviour" % cadet_id)
-
+    list_of_cadets_at_event.mark_cadet_as_unchanged(cadet_id)
     save_cadets_at_event(list_of_cadets_at_event=list_of_cadets_at_event, event=event)
 
 

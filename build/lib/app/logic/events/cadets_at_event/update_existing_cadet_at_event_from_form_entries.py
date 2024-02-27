@@ -15,19 +15,19 @@ from app.objects.mapped_wa_event import RegistrationStatus, cancelled_status, ac
 
 
 def update_cadets_at_event_with_form_data(interface: abstractInterface):
-    update_cadets_at_event(interface, use_form_data=True)
+    new_cadet_at_event = get_new_cadet_from_mapped_event_and_optionally_form(interface, use_form_data=True)
+    update_cadets_at_event(interface=interface, new_cadet_at_event=new_cadet_at_event)
 
 def update_cadets_at_event_with_new_data(interface: abstractInterface):
-    update_cadets_at_event(interface, use_form_data=False)
+    new_cadet_at_event = get_new_cadet_from_mapped_event_and_optionally_form(interface, use_form_data=False)
+    update_cadets_at_event(interface=interface, new_cadet_at_event=new_cadet_at_event)
 
-def update_cadets_at_event(interface: abstractInterface, use_form_data: bool = True):
+def update_cadets_at_event(interface: abstractInterface, new_cadet_at_event: CadetAtEvent):
     event = get_event_from_state(interface)
     existing_cadet_at_event = get_existing_cadet_at_event_from_state(interface)
     original_status = existing_cadet_at_event.status
     original_attendance = existing_cadet_at_event.availability
 
-
-    new_cadet_at_event = get_new_cadet_from_mapped_event_and_optionally_form(interface, use_form_data=use_form_data)
     new_status = new_cadet_at_event.status
     new_attendance = new_cadet_at_event.availability
 
@@ -46,6 +46,9 @@ def update_cadets_at_event(interface: abstractInterface, use_form_data: bool = T
     elif status_unchanged:
         if availability_changed:
             update_availability_of_existing_cadet_at_event(event=event, new_availabilty = new_cadet_at_event.availability, cadet_id=new_cadet_at_event.cadet_id)
+        else:
+            ## Neithier status or availability has changed - shouldn't happen, but heigh ho
+            pass
     else:
         interface.log_error("For new cadet %s status change from %s to %s don't know how to handle" % (str(new_cadet_at_event),
                                                                                                        original_status.name, new_status.name))

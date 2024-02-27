@@ -41,6 +41,7 @@ def add_volunteer_at_event_with_form_contents_and_return_true_if_ok(interface: a
                                                list_of_connected_cadet_ids=list_of_cadet_ids_to_permanently_connect)
 
     try:
+        ## Might cause annoying behaviour if some cadets at event for volunteer are cancelled and others aren't but just have to do manual checks
         mark_all_cadets_associated_with_volunteer_at_event_as_no_longer_changed(event=event, volunteer_id=volunteer_id)
     except:
         ## corner case if only cadets involved are cancelled at entry point

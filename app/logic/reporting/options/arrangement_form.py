@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Callable
 
 import pandas as pd
 
@@ -91,7 +91,7 @@ def get_reorder_matrix_form_element(interface: abstractInterface, reporting_opti
 
 def post_form_for_group_arrangement_options(
     interface: abstractInterface,
-    current_form_name: str,
+    current_form_function: Callable,
     specific_parameters_for_type_of_report: SpecificParametersForTypeOfReport,
     df: pd.DataFrame
 
@@ -108,30 +108,30 @@ def post_form_for_group_arrangement_options(
     last_button_pressed = interface.last_button_pressed()
 
     if last_button_pressed in list_of_arrangement_descriptions_on_buttons:
-        return change_arrangement_given_method_and_current_order_save_and_return_form_again(interface=interface, current_form_name=current_form_name,reporting_options=reporting_options)
+        return change_arrangement_given_method_and_current_order_save_and_return_form_again(interface=interface, current_form_function=current_form_function,reporting_options=reporting_options)
 
     elif last_button_pressed in list_of_buttons_for_changing_group_order:
-        return change_group_order_and_arrangement_save_and_return_form_again(interface=interface,current_form_name=current_form_name,
+        return change_group_order_and_arrangement_save_and_return_form_again(interface=interface,current_form_function=current_form_function,
                                                                              reporting_options=reporting_options)
 
     elif last_button_pressed in list_of_buttons_changing_matrix_shape:
-        return change_arrangement_matrix_save_and_return_form_again(interface=interface, current_form_name=current_form_name,
+        return change_arrangement_matrix_save_and_return_form_again(interface=interface, current_form_function=current_form_function,
                                                                     reporting_options=reporting_options)
 
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
 
-def change_arrangement_given_method_and_current_order_save_and_return_form_again(interface: abstractInterface, current_form_name: str,
+def change_arrangement_given_method_and_current_order_save_and_return_form_again(interface: abstractInterface, current_form_function: Callable,
                                                                                  reporting_options: ReportingOptions) -> NewForm:
     arrangment_method_name = interface.last_button_pressed()
     arrangement_options = reporting_options.arrangement
     arrangement_options.change_arrangement_options_given_new_method_name(arrangment_method_name=arrangment_method_name)
     save_arrangement(arrangement_options=arrangement_options, interface=interface)
 
-    return NewForm(current_form_name)
+    return interface.get_new_form_given_function(current_form_function)
 
-def change_group_order_and_arrangement_save_and_return_form_again(interface: abstractInterface, current_form_name: str,
+def change_group_order_and_arrangement_save_and_return_form_again(interface: abstractInterface, current_form_function: Callable,
                                                                                  reporting_options: ReportingOptions) -> NewForm:
     ## Change in order of list
     group_order = reporting_options.group_order
@@ -146,9 +146,9 @@ def change_group_order_and_arrangement_save_and_return_form_again(interface: abs
     new_order = reorder_form_interface.new_order_of_list()
     save_group_order_to_storage(interface=interface, groups_in_order=new_order)
 
-    return NewForm(current_form_name)
+    return interface.get_new_form_given_function(current_form_function)
 
-def change_arrangement_matrix_save_and_return_form_again(interface: abstractInterface, current_form_name: str,
+def change_arrangement_matrix_save_and_return_form_again(interface: abstractInterface, current_form_function: Callable,
                                                                                  reporting_options: ReportingOptions) -> NewForm:
     ## Matrix update
 
@@ -156,7 +156,7 @@ def change_arrangement_matrix_save_and_return_form_again(interface: abstractInte
     new_arrangement_of_columns = reorder_matrix_interface.new_arrangement()
     modify_arrangement_options_given_custom_list(interface=interface, new_arrangement_of_columns=new_arrangement_of_columns)
 
-    return NewForm(current_form_name)
+    return interface.get_new_form_given_function(current_form_function)
 
 def get_order_matrix_interface(interface: abstractInterface,reporting_options: ReportingOptions) -> reorderMatrixInterface:
     arrangement_options = reporting_options.arrangement

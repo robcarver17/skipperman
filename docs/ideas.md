@@ -49,25 +49,37 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - allocate volunteers to a rota
 
 
-### Basic - to do:
+
+### Required for racing event:
   
-- don't allow duplicate templates and delete templates allowed
+
 - allocate safety boats 
+- allow list of boats/dinghies/etc to be reordered
 - report on a volunteer rota
-- edit event (warnings especially days!)
-- maintain ticksheets, print and record ticks
-- print roll call lists and contact details
-- allocate resources such as club dinghies
-- import a set of members from WA to populate a list of cadets or volunteers
-  
-- all pdf reports should have csv counterparts
+- import a set of members from WA to populate a list of cadets
+
+
+### Required for social event:
 
 - think carefully about how to handle events with no cadets, volunteers etc
-- two types of clothing event: as part of training event, or social only seperate
 - two types of food event: as part of training event, or social only seperate
 - manage social event with food only (Social)
 
-- create a report of cadets 
+
+### Required for training event:
+
+- maintain ticksheets, print and record ticks
+- print roll call lists and contact details
+- allocate resources such as club dinghies
+- users and passwords (skipper, deputy, instructors) 
+- regular backups on all writes; include roll back function
+- birthdays during an event - splash on event screen
+   
+
+### Required for cadet week:
+
+
+- two types of clothing event: as part of training event, or social only seperate
 - allocate and maintain colour groups (CW)
 - print spotter sheets (CW and racing events)
 - maintain and report on tickets for gala dinner, include additional gala dinner invites eg sponsors, plus ones (CW)
@@ -76,27 +88,30 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - create a report of t-shirts and other merch required (CW)
 - create a report of polo shirts required (CW)
 - create a report of RYA logbooks/certficates required (CW)
+- maintain a list of key volunteers and thank yous (CW)
+- manage orders for hoodies (CW)
+- maintain lists of past, present, potential and future cadet committee members (CW)
   
-- users and passwords (skipper, deputy, instructors) 
+
+  ### General required before handover to Jonny:
+
+- don't allow duplicate templates and delete templates allowed
+- edit event (warnings especially days!)
+- all pdf reports should have csv counterparts
+- anything that is displayed on screen can be exported to .csv eg reg details, volunteer rota (and imported...???)
 - upload/download all data as zip
-- regular backups on all writes; include roll back function
-- editable user sailing groups, volunteer roles, skills
 - clean up eg old data, uploaded files, staged files
 - move all dangerous deletes to special area: , delete event (many warnings!), delete cadet, delete volunteer
-  
+- editable user sailing groups, volunteer roles, skills
+- create a list of key volunteers to invite to curry evening
+- create a report of cadets 
+
 
 ### Future / wishlist / nice to have:
 
 - nicer CSS
-- maintain lists of past, present and future cadet committee members (CW)
-- create a list of key volunteers to invite to curry evening
 - instructor facing interface to update ticks on a GUI
 - instructor facing interface for roll call
-- create a report of birthdays during an event
-- maintain a list of key volunteers and thank yous (CW)
-- - manage orders for hoodies (CW)
-
-- anything that is displayed on screen can be exported to .csv eg reg details, volunteer rota (and imported...???)
 
 
 ## Business objects

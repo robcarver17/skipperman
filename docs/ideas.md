@@ -52,11 +52,14 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for racing event:
   
-
-- allocate safety boats 
+- allocate safety boats
+- copy roles between volunteers on volunteer rota
 - allow list of boats/dinghies/etc to be reordered
+- allocate resources such as club dinghies
 - report on a volunteer rota
 - import a set of members from WA to populate a list of cadets
+- users and passwords (skipper, deputy, instructors) 
+- regular backups on all writes; include roll back function
 
 
 ### Required for social event:
@@ -70,9 +73,6 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 - maintain ticksheets, print and record ticks
 - print roll call lists and contact details
-- allocate resources such as club dinghies
-- users and passwords (skipper, deputy, instructors) 
-- regular backups on all writes; include roll back function
 - birthdays during an event - splash on event screen
    
 

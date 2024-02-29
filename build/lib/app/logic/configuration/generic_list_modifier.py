@@ -8,6 +8,7 @@ from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _____
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
+from app.objects.abstract_objects.abstract_text import up_pointer, down_pointer, up_arrow, down_arrow
 
 ADD_ENTRY_TEXT_FIELD = "add_entry_text_field"
 SAVE_ENTRY_BUTTON_LABEL = "Save edits to existing or add new entry"
@@ -41,8 +42,18 @@ def rows_for_existing_entries(existing_list: list) -> ListOfLines:
 
 def get_row_for_existing_entry(entry) -> Line:
     return Line(
-        [ text_box_for_entry(entry), Button(button_str_for_deletion(entry))]
+        [ text_box_for_entry(entry), Button(button_str_for_deletion(entry)), up_button_for_entry(entry), down_button_for_entry(entry)]
     )
+
+def up_button_for_entry(entry):
+    return Button(label=up_arrow, value = generic_button_name_given_direction("UP", entry))
+
+def down_button_for_entry(entry):
+    return Button(label=down_arrow, value = generic_button_name_given_direction("UP", entry))
+
+
+def generic_button_name_given_direction(direction: str, entry):
+    return direction+"_"+str(entry)
 
 def text_box_for_entry(entry)-> textInput:
     return textInput(

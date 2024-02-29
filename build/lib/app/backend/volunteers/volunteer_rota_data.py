@@ -4,8 +4,8 @@ from typing import Dict, List
 from app.backend.events import get_sorted_list_of_events
 from app.backend.group_allocations.cadet_event_allocations import get_unallocated_cadets, \
     load_allocation_for_event
-from app.backend.data.volunteers import  get_list_of_volunteer_skills
-from app.backend.data.volunteer_rota import get_volunteers_in_role_at_event
+from app.backend.data.volunteers import  load_list_of_volunteer_skills
+from app.backend.data.volunteer_rota import load_volunteers_in_role_at_event
 from app.backend.data.volunteer_allocation import load_list_of_volunteers_at_event
 
 from app.objects.cadets import ListOfCadets
@@ -68,8 +68,8 @@ class DataToBeStoredWhilstConstructingTableBody:
 def get_data_to_be_stored(event: Event) -> DataToBeStoredWhilstConstructingTableBody:
     list_of_cadet_ids_with_groups = load_allocation_for_event(event=event)
     unallocated_cadets_at_event = get_unallocated_cadets(event=event, list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups)
-    volunteer_skills = get_list_of_volunteer_skills()
-    volunteers_in_roles_at_event = get_volunteers_in_role_at_event(event)
+    volunteer_skills = load_list_of_volunteer_skills()
+    volunteers_in_roles_at_event = load_volunteers_in_role_at_event(event)
     list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
 
     dict_of_volunteers_with_last_roles = get_dict_of_volunteers_with_last_roles(list_of_volunteers_at_event.list_of_volunteer_ids,
@@ -130,7 +130,7 @@ def get_all_roles_across_past_events_for_volunteer_id_as_dict(volunteer_id: str,
 
 
 def get_role_for_event_and_volunteer_id(volunteer_id: str, event: Event) -> str:
-    volunteer_data = get_volunteers_in_role_at_event(event)
+    volunteer_data = load_volunteers_in_role_at_event(event)
     role = volunteer_data.most_common_role_at_event_for_volunteer(volunteer_id=volunteer_id)
     if role==NO_ROLE_SET:
         return missing_data

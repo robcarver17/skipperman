@@ -4,16 +4,8 @@ from fpdf import FPDF
 import numpy as np
 
 from app.backend.reporting.options_and_parameters.print_options import PrintOptions
-from app.data_access.configuration.configuration import (
-    ALL_PAGESIZE,
-    ALL_FONTS,
-    UNIT_MM,
-    MM_PER_POINT_OF_FONT_SIZE,
-    APPROX_WIDTH_TO_HEIGHT_RATIO,
-    TITLE_MULTIPLIER,
-    LINE_GAP_AS_PERCENTAGE_OF_CHARACTER_HEIGHT,
-    MAX_FONT_SIZE
-)
+from app.data_access.configuration.fixed import ALL_PAGESIZE, ALL_FONTS, UNIT_MM, MM_PER_POINT_OF_FONT_SIZE, \
+    APPROX_WIDTH_TO_HEIGHT_RATIO, TITLE_MULTIPLIER, LINE_GAP_AS_PERCENTAGE_OF_CHARACTER_HEIGHT, MAX_FONT_SIZE
 from app.backend.reporting.process_stages.strings_columns_groups import (
     ListtOfColumns,
     MarkedUpString,

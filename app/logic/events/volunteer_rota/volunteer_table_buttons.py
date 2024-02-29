@@ -1,10 +1,10 @@
-from typing import Tuple
+from typing import Tuple, Callable
 
 from app.backend.data.volunteer_allocation import load_list_of_volunteers_at_event
 from app.backend.volunteers.volunteer_rota import get_cadet_location_string, \
     str_dict_skills
 from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingTableBody
-from app.backend.volunteers.volunteers import get_volunteer_from_volunteer_id
+from app.backend.volunteers.volunteers import get_volunteer_from_id
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -14,8 +14,11 @@ from app.objects.volunteers_in_roles import VolunteerInRoleAtEvent
 
 
 def get_location_button(data_to_be_stored: DataToBeStoredWhilstConstructingTableBody,
-                                   volunteer_at_event: VolunteerAtEvent) -> Button:
+                                   volunteer_at_event: VolunteerAtEvent,
+                        hide_buttons:bool) -> Button:
     location = get_cadet_location_string(data_to_be_stored=data_to_be_stored, volunteer_at_event=volunteer_at_event)
+    if hide_buttons:
+        return location
 
     return Button(label=location,
                   value=location_button_name_from_volunteer_id(volunteer_at_event.volunteer_id))
@@ -26,9 +29,13 @@ def location_button_name_from_volunteer_id(volunteer_id: str) -> str:
 
 
 def get_skills_button(volunteer: Volunteer,
-                      data_to_be_stored: DataToBeStoredWhilstConstructingTableBody
+                      data_to_be_stored: DataToBeStoredWhilstConstructingTableBody,
+                      hide_buttons: bool
                       )-> Button:
-    return Button(label = str_dict_skills(volunteer=volunteer, data_to_be_stored=data_to_be_stored),
+    skill_label =  str_dict_skills(volunteer=volunteer, data_to_be_stored=data_to_be_stored)
+    if hide_buttons:
+        return skill_label
+    return Button(label = skill_label,
                   value = skills_button_name_from_volunteer_id(volunteer_id=volunteer.id))
 
 
@@ -60,28 +67,104 @@ def from_skills_button_to_volunteer_id(skills_button_name: str) -> str:
     return volunteer_id
 
 
+
 def get_dict_of_volunteer_name_buttons_and_volunteer_ids(event: Event)-> dict:
     list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
     list_of_volunteer_ids = list_of_volunteers_at_event.list_of_volunteer_ids
 
     return dict([(
-        get_volunteer_from_volunteer_id(volunteer_id).name,
+        get_volunteer_from_id(volunteer_id).name,
         volunteer_id)
             for volunteer_id in list_of_volunteer_ids])
 
 
-def get_unavailable_button_value_for_volunteer_on_day(volunteer_id: str,
-                                                day: Day) -> str:
-    return "UNAVAILABLE_%s_%s" % (volunteer_id, day.name)
 
 
 def from_unavailable_button_value_to_volunteer_and_day(button_value:str) -> Tuple[str, Day]:
-    __, volunteer_id, day_name = button_value.split("_")
+    __, volunteer_id, day = from_generic_button_to_volunteer_id_and_day(button_value)
 
-    return volunteer_id, Day[day_name]
+    return volunteer_id, day
+
+## BUTTON VALUES FOR VOLUNTEER IN ROLE
 
 
-def get_list_of_unavailable_button_values(event: Event) -> list:
+def copy_button_value_for_volunteer_in_role_on_day(volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent) -> str:
+    return copy_button_value_for_volunteer_id_and_day(volunteer_in_role_at_event_on_day.volunteer_id, volunteer_in_role_at_event_on_day.day)
+
+
+
+def unavailable_button_value_for_volunteer_in_role_on_day(
+        volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent
+    ) ->str:
+    return unavailable_button_value_for_volunteer_id_and_day(volunteer_id=volunteer_in_role_at_event_on_day.volunteer_id,
+                                                      day=volunteer_in_role_at_event_on_day.day)
+
+def remove_role_button_value_for_volunteer_in_role_on_day(
+        volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent
+    ) ->str:
+
+    return remove_role_button_value_for_volunteer_id_and_day(volunteer_id=volunteer_in_role_at_event_on_day.volunteer_id,
+                                                      day=volunteer_in_role_at_event_on_day.day)
+
+
+## BUTTON VALUES FOR ID/DAY
+
+def make_available_button_value_for_volunteer_on_day(volunteer_id: str,
+                                                     day: Day) -> str:
+    return generic_button_value_for_volunteer_id_and_day(button_type="MakeAvailable",
+                                                         volunteer_id=volunteer_id,
+                                                         day=day)
+
+def copy_button_value_for_volunteer_id_and_day(volunteer_id: str, day: Day) -> str:
+    return generic_button_value_for_volunteer_id_and_day(button_type="COPY", volunteer_id=volunteer_id, day=day)
+
+
+def remove_role_button_value_for_volunteer_id_and_day(volunteer_id: str, day: Day) -> str:
+    return generic_button_value_for_volunteer_id_and_day(button_type="RemoveRole", volunteer_id=volunteer_id, day=day)
+
+def unavailable_button_value_for_volunteer_id_and_day(volunteer_id: str, day: Day) -> str:
+    return generic_button_value_for_volunteer_id_and_day(button_type="UNAVAILABLE", volunteer_id=volunteer_id, day=day)
+
+def generic_button_value_for_volunteer_id_and_day(button_type: str, volunteer_id: str, day: Day) -> str:
+    return "%s_%s_%s" % (button_type, volunteer_id, day.name)
+
+
+## FROM
+
+def from_known_button_to_volunteer_id_and_day(copy_button_text: str) -> Tuple[str, Day]:
+    __, id, day = from_generic_button_to_volunteer_id_and_day(copy_button_text)
+
+    return id, day
+
+def from_generic_button_to_volunteer_id_and_day(button_text: str) -> Tuple[str,str, Day]:
+    button_type, id, day_name = button_text.split("_")
+
+    return button_type, id, Day[day_name]
+
+
+def get_list_of_make_available_button_values(event: Event) -> list:
+    ## Strictly speaking this will include buttons that aren't visible, but quicker and easier trhan checking
+    return get_list_of_generic_button_values_across_days_and_volunteers(event=event,
+                                                                        value_function=make_available_button_value_for_volunteer_on_day)
+
+
+
+def get_list_of_copy_buttons(event: Event):
+    return get_list_of_generic_button_values_across_days_and_volunteers(event=event,
+                                                                        value_function=copy_button_value_for_volunteer_id_and_day)
+
+
+
+def get_list_of_remove_role_buttons(event: Event):
+    return get_list_of_generic_button_values_across_days_and_volunteers(event=event,
+                                                                        value_function=remove_role_button_value_for_volunteer_id_and_day)
+
+def get_list_of_make_unavailable_buttons(event: Event):
+    return get_list_of_generic_button_values_across_days_and_volunteers(event=event,
+                                                                        value_function=unavailable_button_value_for_volunteer_id_and_day)
+
+
+def get_list_of_generic_button_values_across_days_and_volunteers(event: Event, value_function: Callable) -> list:
     ## Strictly speaking this will include buttons that aren't visible, but quicker and easier trhan checking
     list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
     list_of_volunteer_ids = list_of_volunteers_at_event.list_of_volunteer_ids
@@ -90,36 +173,18 @@ def get_list_of_unavailable_button_values(event: Event) -> list:
     all_button_values =[]
     for id in list_of_volunteer_ids:
         for day in list_of_days:
-            all_button_values.append(get_unavailable_button_value_for_volunteer_on_day(volunteer_id=id, day=day))
+            all_button_values.append(value_function(volunteer_id=id, day=day))
 
     return all_button_values
 
-def copy_button_value_for_volunteer_in_role_on_day(volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent) -> str:
-    return copy_button_value_for_volunteer_id_and_day(volunteer_in_role_at_event_on_day.volunteer_id, volunteer_in_role_at_event_on_day.day)
-
-def copy_button_value_for_volunteer_id_and_day(volunteer_id: str, day: Day) -> str:
-    return "COPY_%s_%s" % (volunteer_id, day.name)
-
-def from_copy_button_to_volunteer_id_and_day(copy_button_text: str) -> Tuple[str, Day]:
-    __, id, day_name = copy_button_text.split("_")
-
-    return id, Day[day_name]
-
-def get_list_of_copy_buttons(event: Event):
-    all_buttons = []
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
-    list_of_volunteer_ids = list_of_volunteers_at_event.list_of_volunteer_ids
-    for day in event.weekdays_in_event():
-        for id in list_of_volunteer_ids:
-            all_buttons.append(copy_button_value_for_volunteer_id_and_day(id, day))
-
-    return all_buttons
 
 
-def get_buttons_for_days_at_event(event: Event):
-    buttons_for_days_at_event_as_str = [button_for_day(day) for day in event.weekdays_in_event()]
-    return buttons_for_days_at_event_as_str
-
+### SORT BUTTONS
+def get_buttons_for_days_at_event(event: Event, hide_buttons: bool):
+    if hide_buttons:
+        return event.weekdays_in_event_as_list_of_string()
+    else:
+        return [button_for_day(day) for day in event.weekdays_in_event()]
 
 def button_for_day(day:Day) -> Button:
     return Button(day.name, value=button_value_for_day(day))

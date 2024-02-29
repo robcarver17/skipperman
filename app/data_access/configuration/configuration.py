@@ -57,6 +57,9 @@ ALL_GROUPS_NAMES = (
 # VOLUNTEERS
 VOLUNTEER_SKILLS = configuration['volunteer_skills']
 VOLUNTEER_TEAMS = configuration['volunteer_teams']
+VOLUNTEERS_REQUIRING_BOATS = configuration['volunteers_requiring_boats']
+VOLUNTEERS_SKILL_FOR_PB2 = configuration['power_boat_skills'][0]
+
 
 VOLUNTEER_ROLES = []
 for team in VOLUNTEER_TEAMS.values():
@@ -68,29 +71,3 @@ VOLUNTEERS_REQUIRING_GROUP = configuration['volunteers_requiring_group']
 
 
 ## Page sizes - not configured in yaml as won't need changing
-A4_PAGESIZE = "A4"
-A3_PAGESIZE = "A3"
-ALL_PAGESIZE = [A3_PAGESIZE, A4_PAGESIZE]
-DEFAULT_PAGESIZE = A4_PAGESIZE
-ALL_FONTS = ["Courier", "Helvetica", "Arial", "Times"]
-DEFAULT_FONT = "Arial"
-UNIT_MM = "mm"
-WIDTH = "width"
-HEIGHT = "height"
-PAGESIZE_MM = {
-    A4_PAGESIZE: {WIDTH: 210, HEIGHT: 297},
-    A3_PAGESIZE: {WIDTH: 297, HEIGHT: 420},
-}
-MM_PER_POINT_OF_FONT_SIZE = 0.353  ## DO NOT CHANGE THIS IS STANDARD
-APPROX_WIDTH_TO_HEIGHT_RATIO = (
-    0.6  ## DO NOT CHANGE: Exact value will depend on font used and letters
-)
-TITLE_MULTIPLIER = (
-    2  ## how much bigger titles are than everything else, has to be integer
-)
-EDGE_MARGIN_MM = 10  ## change if you like but bear in mind printable area
-COLUMN_GAP_MM = 10  ## change if you like but bear in mind readability / efficiency
-LINE_GAP_AS_PERCENTAGE_OF_CHARACTER_HEIGHT = (
-    0.2  ## change if you like but bear in mind readability / efficiency
-)
-MAX_FONT_SIZE = 18

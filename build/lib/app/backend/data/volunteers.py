@@ -9,7 +9,7 @@ def add_new_verified_volunteer(volunteer: Volunteer):
 
 
 def delete_a_volunteer(volunteer):
-    list_of_volunteers= get_all_volunteers()
+    list_of_volunteers= load_all_volunteers()
     list_of_volunteers.pop_with_id(volunteer.id)
     save_list_of_volunteers(list_of_volunteers)
 
@@ -28,7 +28,7 @@ def add_volunteer_connection_to_cadet_in_master_list_of_volunteers(cadet: Cadet,
 
 
 def save_skills_for_volunteer(volunteer: Volunteer, dict_of_skills: dict):
-    all_skills = get_list_of_volunteer_skills()
+    all_skills = load_list_of_volunteer_skills()
     all_skills.replace_skills_for_volunteer_with_new_skills_dict(volunteer_id=volunteer.id, dict_of_skills=dict_of_skills)
     save_list_of_volunteer_skills(all_skills)
 
@@ -51,7 +51,7 @@ def save_list_of_cadet_volunteer_associations(list_of_cadet_volunteer_associatio
     data.data_list_of_cadet_volunteer_associations.write(list_of_cadet_volunteer_associations)
 
 
-def get_list_of_volunteer_skills()-> ListOfVolunteerSkills:
+def load_list_of_volunteer_skills()-> ListOfVolunteerSkills:
     skills = data.data_list_of_volunteer_skills.read()
 
     return skills
@@ -63,12 +63,12 @@ def save_list_of_volunteer_skills(list_of_volunteer_skills: ListOfVolunteerSkill
 SORT_BY_SURNAME = "Sort by surname"
 SORT_BY_FIRSTNAME = "Sort by first name"
 
-def get_all_volunteers()-> ListOfVolunteers:
+def load_all_volunteers()-> ListOfVolunteers:
     return data.data_list_of_volunteers.read()
 
 
 def get_sorted_list_of_volunteers(sort_by: str = arg_not_passed) -> ListOfVolunteers:
-    master_list = get_all_volunteers()
+    master_list = load_all_volunteers()
     if sort_by is arg_not_passed:
         return master_list
     if sort_by == SORT_BY_SURNAME:

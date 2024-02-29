@@ -1,6 +1,6 @@
 from app.backend.data.cadets_at_event import save_cadets_at_event
 from app.backend.volunteers.volunteer_allocation import volunteer_ids_associated_with_cadet_at_specific_event
-from app.backend.volunteers.volunteers import get_volunteer_from_volunteer_id
+from app.backend.volunteers.volunteers import get_volunteer_from_id
 from app.backend.cadets import cadet_name_from_id
 from app.backend.wa_import.update_cadets_at_event import update_availability_of_existing_cadet_at_event, \
     update_status_of_existing_cadet_at_event, update_data_row_for_existing_cadet_at_event
@@ -167,7 +167,7 @@ def log_alert_for_volunteers(interface: abstractInterface,
 
     list_of_volunteer_ids = volunteer_ids_associated_with_cadet_at_specific_event(event=event, cadet_id=cadet_id)
 
-    volunteer_names = [get_volunteer_from_volunteer_id(volunteer_id).name for volunteer_id in list_of_volunteer_ids]
+    volunteer_names = [get_volunteer_from_id(volunteer_id).name for volunteer_id in list_of_volunteer_ids]
     volunteer_list_as_str = ", ".join(volunteer_names)
 
     if len(list_of_volunteer_ids) == 0:

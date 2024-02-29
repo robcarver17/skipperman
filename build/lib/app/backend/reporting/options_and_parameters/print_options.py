@@ -1,15 +1,7 @@
 from dataclasses import dataclass
 
-from app.data_access.configuration.configuration import (
-    A4_PAGESIZE,
-    UNIT_MM,
-    TITLE_MULTIPLIER,
-    HEIGHT,
-    WIDTH,
-    PAGESIZE_MM,
-    EDGE_MARGIN_MM,
-    COLUMN_GAP_MM,
-)
+from app.data_access.configuration.fixed import A4_PAGESIZE, UNIT_MM, WIDTH, HEIGHT, PAGESIZE_MM, TITLE_MULTIPLIER, \
+    EDGE_MARGIN_MM, COLUMN_GAP_MM
 from app.objects.generic import GenericSkipperManObject
 
 

@@ -1,10 +1,12 @@
-from typing import Dict
+from typing import Dict, List
 
 from dataclasses import dataclass
 
 from app.data_access.configuration.configuration import (
     SIMILARITY_LEVEL_TO_WARN_NAME,
-VOLUNTEER_SKILLS
+    VOLUNTEER_SKILLS,
+    VOLUNTEERS_REQUIRING_BOATS,
+    VOLUNTEERS_SKILL_FOR_PB2
 )
 from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds, GenericListOfObjects, GenericSkipperManObject
 from app.objects.utils import similar
@@ -125,11 +127,27 @@ class VolunteerSkill(GenericSkipperManObject):
     volunteer_id: str
     skill: str
 
+    @property
+    def boat_related_skill(self) -> bool:
+        return self.skill == VOLUNTEERS_SKILL_FOR_PB2
+
 class ListOfVolunteerSkills(GenericListOfObjects):
 
     @property
     def _object_class_contained(self):
         return VolunteerSkill
+
+    def add_boat_related_skill_for_volunteer(self, volunteer_id: str):
+        self.add_skill_for_id(VOLUNTEERS_SKILL_FOR_PB2, volunteer_id=volunteer_id)
+
+    def remove_boat_related_skill_for_volunteer(self, volunteer_id: str):
+        self.delete_skill_for_id(volunteer_id=volunteer_id, skill_name=VOLUNTEERS_SKILL_FOR_PB2)
+
+    def volunteer_id_has_boat_related_skills(self, volunteer_id: str) -> bool:
+        return volunteer_id in self.list_of_volunteer_ids_with_boat_related_skill()
+
+    def list_of_volunteer_ids_with_boat_related_skill(self) -> List[str]:
+        return list(set([item.volunteer_id for item in self if item.boat_related_skill]))
 
     def dict_of_skills_for_volunteer_id(self, volunteer_id: str) -> Dict[str, bool]:
         skills_held = self.skills_for_volunteer_id(volunteer_id)

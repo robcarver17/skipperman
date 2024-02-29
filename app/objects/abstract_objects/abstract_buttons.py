@@ -1,5 +1,7 @@
 from dataclasses import dataclass
+from typing import Union
 
+from app.objects.abstract_objects.abstract_text import Arrow, Pointer, Symbol
 from app.objects.constants import arg_not_passed
 
 MAIN_MENU_BUTTON_LABEL = "Main menu"
@@ -14,7 +16,7 @@ def is_finished_button(button_value: str) -> bool:
 
 @dataclass
 class Button:
-    label: str
+    label: Union[str, 'Line', Arrow, Pointer, Symbol]
     value: str = arg_not_passed
     big: bool = False
 

@@ -3,7 +3,9 @@ from app.objects.abstract_objects.abstract_buttons import main_menu_button, Butt
 from app.objects.abstract_objects.abstract_form import *
 from app.objects.abstract_objects.abstract_tables import PandasDFTable, ElementsInTable, RowInTable, Table
 from app.objects.abstract_objects.abstract_text import Text, Arrow, up_arrow, down_arrow, \
-    right_arrow, left_arrow
+    right_arrow, left_arrow, up_down_arrow, left_right_arrow, Pointer, Symbol, reg_tm_symbol, copyright_symbol, \
+    up_pointer, down_pointer, left_pointer, right_pointer, lightning_symbol, circle_up_arrow_symbol, umbrella_symbol, \
+    at_symbol
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.web.html.html import *
 from app.web.html.url import INDEX_URL
@@ -79,10 +81,17 @@ def get_html_for_element_in_line(
         fileInput,
         PandasDFTable,
         Table,
+        Arrow
     ]
 ) -> Html:
     if type(element_in_line) is str:
         return Html(element_in_line)
+    elif type(element_in_line) is Arrow:
+        return Html(arrow_text(element_in_line))
+    elif type(element_in_line) is Pointer:
+        return Html(pointer_text(element_in_line))
+    elif type(element_in_line) is Symbol:
+        return Html(symbol_text(element_in_line))
     elif type(element_in_line) is Text:
         return get_html_for_text(element_in_line)
     elif type(element_in_line) is Button:
@@ -145,24 +154,61 @@ def get_html_for_button(button: Button) -> Html:
         return html_link("Main menu", INDEX_URL)
     else:
         return html_button(
-            button_text=button_text(button.label),
+            button_text=get_html_button_text(button.label),
             button_value=button.value,
             big_button = button.big
         )
 
+def get_html_button_text(button_text) -> Html:
+    if type(button_text) is Line:
+        return get_html_for_line(button_text)
+    else:
+        return get_html_for_element_in_line(button_text)
 
-def button_text(button_text: Union[str, Arrow]) -> str:
-    if type(button_text) is Arrow:
-        if button_text == up_arrow:
-            return "&uarr;"
-        elif button_text == down_arrow:
-            return "&darr;"
-        elif button_text == right_arrow:
-            return "&rarr;"
-        elif button_text == left_arrow:
-            return "&larr;"
+def arrow_text(arrow: Arrow) -> str:
+    if arrow == up_arrow:
+        return "&uarr;"
+    elif arrow == down_arrow:
+        return "&darr;"
+    elif arrow == right_arrow:
+        return "&rarr;"
+    elif arrow == left_arrow:
+        return "&larr;"
+    elif arrow == up_down_arrow:
+        return "&varr;"
+    elif arrow == left_right_arrow:
+        return "&harr;"
 
-    return button_text
+    else:
+        raise Exception("arrow %s not known" % str(arrow))
+
+def pointer_text(pointer: Pointer)-> str:
+    if pointer==up_pointer:
+        return '&#9757;'
+    elif pointer==down_pointer:
+        return '&#9759;'
+    elif pointer==left_pointer:
+        return '&#9754;'
+    elif pointer==right_pointer:
+        return '&#9755;'
+    else:
+        raise Exception("pointer %s not known" % str(pointer))
+
+def symbol_text(symbol: Symbol)-> str:
+    if symbol == copyright_symbol:
+        return '&copy;'
+    elif symbol ==reg_tm_symbol:
+        return '&reg;'
+    elif symbol==lightning_symbol:
+        return '&#9735;'
+    elif symbol==circle_up_arrow_symbol:
+        return '&#9954;'
+    elif symbol==umbrella_symbol:
+        return "&#9730;"
+    elif symbol==at_symbol:
+        return "&commat;"
+    else:
+        raise Exception("symbol %s not known" % str(symbol))
 
 
 def get_html_for_text(text: Text) -> Html:
@@ -204,6 +250,9 @@ def get_html_for_table_element(table_element: ElementsInTable) -> Html:
 
     if type(contents) is Line:
         html_contents = get_html_for_line(contents)
+
+    elif type(contents) is ListOfLines:
+        html_contents = get_html_for_list_of_lines(contents)
     else:
         html_contents = get_html_for_element_in_line(contents)
 

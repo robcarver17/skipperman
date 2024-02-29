@@ -6,12 +6,10 @@ from app.objects.events import Event
 
 def get_event_from_state(interface: abstractInterface) -> Event:
     id = get_event_id_from_state(interface)
-    print("id %s" % id)
     return get_event_given_id(id)
 
 def get_event_given_id(id: str) -> Event:
     list_of_events = get_sorted_list_of_events()
-    print("list of events %s" % str(list_of_events))
     return list_of_events.has_id(id)
 
 

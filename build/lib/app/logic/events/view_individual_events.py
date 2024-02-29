@@ -1,6 +1,7 @@
 from typing import Union
 
 from app.backend.events import is_wa_field_mapping_setup_for_event
+from app.backend.volunteers.patrol_boats import get_summary_list_of_boat_allocations_for_events
 from app.backend.volunteers.volunteer_rota_summary import get_summary_list_of_roles_and_groups_for_events
 from app.backend.wa_import.map_wa_files import is_wa_file_mapping_setup_for_event
 from app.backend.group_allocations.summarise_allocations_data import summarise_allocations_for_event
@@ -45,7 +46,8 @@ def get_event_form_for_event(
 
     if event.contains_groups:
         allocations = summarise_allocations_for_event(event)
-        allocations_lines = ListOfLines([        "Group allocations:",
+        allocations_lines = ListOfLines([ _______________,
+                    "Group allocations:",
                     _______________,
                     allocations])
 
@@ -54,12 +56,20 @@ def get_event_form_for_event(
 
     if event.contains_volunteers:
         rota = get_summary_list_of_roles_and_groups_for_events(event)
+        boat_allocation_table = get_summary_list_of_boat_allocations_for_events(event)
         rota_lines =   ListOfLines([
+                     _______________,
                     "Volunteer rota:",
                       _______________,
-                      rota])
+                      rota,
+                    _______________,
+                    _______________,
+                    "Patrol boats, number of crew:",
+                    boat_allocation_table])
+
     else:
         rota_lines = ""
+
 
     if event.contains_cadets:
         ## FIXME SUMMARISE CADET NUMBERS

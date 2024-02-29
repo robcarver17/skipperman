@@ -4,7 +4,7 @@ from app.backend.data.cadets_at_event import load_identified_cadets_at_event, lo
     list_of_row_ids_at_event_given_cadet_id
 from app.backend.data.volunteer_rota import delete_role_at_event_for_volunteer_on_day
 from app.backend.data.volunteer_allocation import save_list_of_volunteers_at_event
-from app.backend.data.volunteers import  get_all_volunteers, \
+from app.backend.data.volunteers import  load_all_volunteers, \
     get_list_of_cadet_volunteer_associations
 from app.backend.data.volunteer_allocation import load_list_of_volunteers_at_event, \
     load_list_of_identified_volunteers_at_event, save_list_of_identified_volunteers_at_event,\
@@ -86,7 +86,7 @@ def get_list_of_relevant_voluteers(volunteer: Volunteer,
 def get_list_of_volunteers_associated_with_cadet(cadet_id: str) -> list:
     list_of_cadet_volunteer_associations = get_list_of_cadet_volunteer_associations()
     list_of_associated_ids = list_of_cadet_volunteer_associations.list_of_volunteer_ids_associated_with_cadet_id(cadet_id=cadet_id)
-    list_of_all_volunteers = get_all_volunteers()
+    list_of_all_volunteers = load_all_volunteers()
 
     list_of_volunteers_associated_with_cadet = [list_of_all_volunteers.object_with_id(volunteer_id) for volunteer_id in list_of_associated_ids]
 
@@ -104,7 +104,7 @@ def mark_volunteer_as_skipped(
 
 
 def get_volunteer_name_and_associated_cadets_for_event(event: Event, volunteer_id:str, cadet_id:str) -> str:
-    list_of_all_volunteers = get_all_volunteers()
+    list_of_all_volunteers = load_all_volunteers()
 
     name = str(list_of_all_volunteers.object_with_id(volunteer_id))
     other_cadets = get_string_of_other_associated_cadets_for_event(event=event,

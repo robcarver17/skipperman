@@ -1,5 +1,8 @@
-from app.backend.data.volunteer_rota import copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days
-from app.backend.volunteers.volunteer_allocation import make_volunteer_available_on_day
+from app.backend.data.volunteer_rota import copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days, \
+    remove_role_at_event_for_volunteer_on_day
+from app.backend.volunteers.volunteer_allocation import make_volunteer_available_on_day, \
+    make_volunteer_unavailable_on_day
+from app.backend.volunteers.volunteer_rota import get_volunteer_with_role_at_event_on_day
 from app.backend.volunteers.volunteer_rota_data import get_data_to_be_stored
 from app.logic.events.volunteer_rota.edit_cadet_connections_for_event_from_rota import \
     display_form_edit_cadet_connections_from_rota
@@ -7,6 +10,7 @@ from app.logic.events.volunteer_rota.edit_volunteer_details_from_rota import \
     display_form_confirm_volunteer_details_from_rota
 from app.logic.events.volunteer_rota.edit_volunteer_skills_from_rota import \
     display_form_edit_individual_volunteer_skills_from_rota
+from app.logic.events.volunteer_rota.swapping import get_list_of_swap_buttons
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_rota.parse_data_fields_in_rota import update_details_from_form_for_volunteer_at_event, \
@@ -53,15 +57,28 @@ def get_all_skill_buttons(interface: abstractInterface):
 
 
 
-def get_all_unavailable_buttons(interface: abstractInterface):
+def get_all_make_available_buttons(interface: abstractInterface):
     event =get_event_from_state(interface)
-    all_buttons = get_list_of_unavailable_button_values(event)
+    all_buttons = get_list_of_make_available_button_values(event)
 
     return all_buttons
 
 def get_all_copy_buttons(interface: abstractInterface):
     event = get_event_from_state(interface)
     return get_list_of_copy_buttons(event)
+
+def get_all_swap_buttons(interface: abstractInterface):
+    event = get_event_from_state(interface)
+    return get_list_of_swap_buttons(event)
+
+def get_all_remove_role_buttons(interface: abstractInterface):
+    event = get_event_from_state(interface)
+    return get_list_of_remove_role_buttons(event)
+
+def get_all_make_unavailable_buttons(interface: abstractInterface):
+    event = get_event_from_state(interface)
+    return get_list_of_make_unavailable_buttons(event)
+
 
 def action_if_location_button_pressed(interface: abstractInterface, location_button: str) -> NewForm:
     volunteer_id = from_location_button_to_volunteer_id(location_button)
@@ -78,7 +95,7 @@ def action_if_volunteer_skills_button_pressed(interface: abstractInterface, volu
 
 def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str):
 
-    volunteer_id, day =    from_copy_button_to_volunteer_id_and_day(copy_button)
+    volunteer_id, day =    from_known_button_to_volunteer_id_and_day(copy_button)
     event = get_event_from_state(interface)
     list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
     volunteer_at_event = list_of_volunteers_at_event.volunteer_at_event_with_id(volunteer_id)
@@ -94,10 +111,25 @@ def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str
     copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(event=event,
                     volunteer_id=volunteer_id, day=day)
 
-def update_if_make_available_button_pressed(interface: abstractInterface, unavailable_button: str):
-    volunteer_id, day =  from_unavailable_button_value_to_volunteer_and_day(unavailable_button)
+def update_if_make_available_button_pressed(interface: abstractInterface, available_button: str):
+    volunteer_id, day =  from_known_button_to_volunteer_id_and_day(available_button)
     event = get_event_from_state(interface)
     make_volunteer_available_on_day(volunteer_id=volunteer_id, event=event, day=day)
+
+
+def update_if_make_unavailable_button_pressed(interface: abstractInterface, unavailable_button: str):
+    volunteer_id, day =  from_known_button_to_volunteer_id_and_day(unavailable_button)
+    event = get_event_from_state(interface)
+    make_volunteer_unavailable_on_day(volunteer_id=volunteer_id,
+                                      event=event,
+                                      day=day)
+
+def update_if_remove_role_button_pressed(interface: abstractInterface, remove_button: str):
+    volunteer_id, day =  from_known_button_to_volunteer_id_and_day(remove_button)
+    event = get_event_from_state(interface)
+    current_volunteer = get_volunteer_with_role_at_event_on_day(event=event, volunteer_id=volunteer_id, day=day)
+    remove_role_at_event_for_volunteer_on_day(event=event, volunteer_in_role_at_event_on_day=current_volunteer)
+
 
 def update_if_save_button_pressed_in_rota_page(interface: abstractInterface):
     event = get_event_from_state(interface)

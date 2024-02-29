@@ -35,7 +35,8 @@ def post_form_config_club_dinghies_page(interface: abstractInterface) -> Union[F
         header_text=header_text,
         deleting_function=delete_club_dinghy_given_string_and_return_list,
         adding_function=add_new_club_dinghy_given_string_and_return_list,
-        modifying_function=modify_club_dinghy_given_string_and_return_list
+        modifying_function=modify_club_dinghy_given_string_and_return_list,
+        re_order_function=re_order_club_dinghy_and_return_list
     )
     if generic_list_output is BACK_BUTTON_PRESSED:
         return interface.get_new_display_form_for_parent_of_function(post_form_config_club_dinghies_page)
@@ -43,3 +44,6 @@ def post_form_config_club_dinghies_page(interface: abstractInterface) -> Union[F
         return button_error_and_back_to_initial_state_form(interface)
     else:
         return generic_list_output
+
+def re_order_club_dinghy_and_return_list(direction: str, selected_entry_name:str):
+    pass

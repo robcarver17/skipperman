@@ -36,6 +36,7 @@ app/backend/data/../../data_access/configuration/configuration.yaml
 app/backend/forms/__init__.py
 app/backend/forms/reorder_form.py
 app/backend/forms/reorder_matrix.py
+app/backend/forms/swaps.py
 app/backend/forms/../../../example_data/cadets/cadet_master_list.csv
 app/backend/forms/../../../example_data/events/list_of_events.csv
 app/backend/forms/../../../example_data/field_mapping_templates/template_field_map_cadet_week.csv
@@ -150,6 +151,7 @@ app/data_access/classes/../configuration/configuration.yaml
 app/data_access/configuration/__init__.py
 app/data_access/configuration/configuration.py
 app/data_access/configuration/configuration.yaml
+app/data_access/configuration/fixed.py
 app/data_access/configuration/../../../example_data/cadets/cadet_master_list.csv
 app/data_access/configuration/../../../example_data/events/list_of_events.csv
 app/data_access/configuration/../../../example_data/field_mapping_templates/template_field_map_cadet_week.csv
@@ -253,8 +255,13 @@ app/logic/events/mapping/../../../../example_data/field_mapping_templates/templa
 app/logic/events/mapping/../../../data_access/configuration/configuration.yaml
 app/logic/events/patrol_boats/__init__.py
 app/logic/events/patrol_boats/allocate_patrol_boats.py
+app/logic/events/patrol_boats/copying.py
+app/logic/events/patrol_boats/elements_in_patrol_boat_table.py
 app/logic/events/patrol_boats/parse_patrol_boat_table.py
+app/logic/events/patrol_boats/patrol_boat_buttons.py
+app/logic/events/patrol_boats/patrol_boat_dropdowns.py
 app/logic/events/patrol_boats/render_patrol_boat_table.py
+app/logic/events/patrol_boats/swapping.py
 app/logic/events/patrol_boats/../../../../example_data/cadets/cadet_master_list.csv
 app/logic/events/patrol_boats/../../../../example_data/events/list_of_events.csv
 app/logic/events/patrol_boats/../../../../example_data/field_mapping_templates/template_field_map_cadet_week.csv
@@ -292,6 +299,7 @@ app/logic/events/volunteer_rota/parse_data_fields_in_rota.py
 app/logic/events/volunteer_rota/parse_volunteer_table.py
 app/logic/events/volunteer_rota/render_volunteer_table.py
 app/logic/events/volunteer_rota/rota_state.py
+app/logic/events/volunteer_rota/swapping.py
 app/logic/events/volunteer_rota/verify_volunteers_if_cadet_at_event_changed.py
 app/logic/events/volunteer_rota/volunteer_table_buttons.py
 app/logic/events/volunteer_rota/../../../../example_data/cadets/cadet_master_list.csv

@@ -44,6 +44,9 @@ class Event(GenericSkipperManObjectWithIds):
     def __hash__(self):
         return hash(self.event_description)
 
+    def __len__(self):
+        return self.duration
+
     @classmethod
     def from_date_length_and_name_only(cls, event_name: str, start_date: datetime.date, duration: int):
         if duration<1:

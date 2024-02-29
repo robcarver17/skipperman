@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.backend.data.resources import get_list_of_patrol_boats, delete_patrol_boat_given_string_and_return_list, add_new_patrol_boat_given_string_and_return_list, modify_patrol_boat_given_string_and_return_list
+from app.backend.data.resources import load_list_of_patrol_boats, delete_patrol_boat_given_string_and_return_list, add_new_patrol_boat_given_string_and_return_list, modify_patrol_boat_given_string_and_return_list
 
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.logic.configuration.generic_list_modifier import display_form_edit_generic_list, post_form_edit_generic_list, BACK_BUTTON_PRESSED, BUTTON_NOT_KNOWN
@@ -15,7 +15,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 header_text = ListOfLines(["List of club patrol boats: add, edit or delete"])
 
 def display_form_config_patrol_boats_page(interface: abstractInterface) -> Form:
-    list_of_boats = get_list_of_patrol_boats()
+    list_of_boats = load_list_of_patrol_boats()
 
     return display_form_edit_generic_list(
         existing_list=list_of_boats,
@@ -24,7 +24,7 @@ def display_form_config_patrol_boats_page(interface: abstractInterface) -> Form:
 
 
 def post_form_config_patrol_boats_page(interface: abstractInterface) -> Union[Form, NewForm]:
-    list_of_boats = get_list_of_patrol_boats()
+    list_of_boats = load_list_of_patrol_boats()
 
     generic_list_output = post_form_edit_generic_list(
         existing_list=list_of_boats,
@@ -32,7 +32,8 @@ def post_form_config_patrol_boats_page(interface: abstractInterface) -> Union[Fo
         header_text=header_text,
         deleting_function=delete_patrol_boat_given_string_and_return_list,
         adding_function=add_new_patrol_boat_given_string_and_return_list,
-        modifying_function=modify_patrol_boat_given_string_and_return_list
+        modifying_function=modify_patrol_boat_given_string_and_return_list,
+        re_order_function=re_order_patrol_boat_and_return_list
     )
     if generic_list_output is BACK_BUTTON_PRESSED:
         return interface.get_new_display_form_for_parent_of_function(post_form_config_patrol_boats_page)
@@ -40,3 +41,6 @@ def post_form_config_patrol_boats_page(interface: abstractInterface) -> Union[Fo
         return button_error_and_back_to_initial_state_form(interface)
     else:
         return generic_list_output
+
+def re_order_patrol_boat_and_return_list(direction: str, selected_entry_name:str):
+    pass

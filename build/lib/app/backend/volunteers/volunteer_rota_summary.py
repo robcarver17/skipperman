@@ -2,7 +2,7 @@ from typing import List
 
 import pandas as pd
 
-from app.backend.data.volunteer_rota import get_volunteers_in_role_at_event
+from app.backend.data.volunteer_rota import load_volunteers_in_role_at_event
 from app.data_access.configuration.configuration import VOLUNTEER_ROLES, ALL_GROUPS_NAMES
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -15,7 +15,7 @@ def get_summary_list_of_roles_and_groups_for_events(event: Event) -> PandasDFTab
 
 
 def get_summary_list_of_roles_and_groups_for_events_as_pd_df(event: Event) -> pd.DataFrame:
-    volunteers_in_roles_at_event = get_volunteers_in_role_at_event(event)
+    volunteers_in_roles_at_event = load_volunteers_in_role_at_event(event)
     days_at_event = event.weekdays_in_event()
     all_day_summaries = []
     for day in days_at_event:

@@ -1,6 +1,6 @@
 import datetime
 
-from app.data_access.configuration.configuration import ALL_PAGESIZE, ALL_FONTS
+from app.data_access.configuration.fixed import ALL_PAGESIZE, ALL_FONTS
 from app.data_access.data import data
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_form import (

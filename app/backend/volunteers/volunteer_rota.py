@@ -1,16 +1,45 @@
 from typing import List
 
-from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingTableBody
+from app.backend.data.volunteer_rota import save_volunteers_in_role_at_event
+from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingTableBody, load_volunteers_in_role_at_event
 from app.backend.data.volunteers import get_sorted_list_of_volunteers
 from app.objects.constants import missing_data
+from app.objects.events import Event
 from app.objects.groups import Group, ALL_GROUPS_NAMES, GROUP_UNALLOCATED_TEXT
 from app.objects.volunteers_at_event import VolunteerAtEvent, ListOfVolunteersAtEvent
 from app.objects.volunteers import Volunteer
 from app.objects.volunteers_in_roles import VOLUNTEER_ROLES, \
-    NO_ROLE_SET
+    NO_ROLE_SET, VolunteerInRoleAtEvent
 
 from app.objects.day_selectors import Day
 
+
+def update_role_at_event_for_volunteer_on_day_at_event(event: Event,
+                                                       day: Day,
+                                                       volunteer_id: str,
+                                                       new_role: str):
+
+    volunteer_in_role_at_event_on_day =  VolunteerInRoleAtEvent(day=day, volunteer_id=volunteer_id)
+
+    list_of_volunteers_in_roles_at_event = load_volunteers_in_role_at_event(event)
+    list_of_volunteers_in_roles_at_event.update_volunteer_in_role_on_day(volunteer_in_role_at_event=volunteer_in_role_at_event_on_day,
+                                                             new_role=new_role)
+    save_volunteers_in_role_at_event(event=event, list_of_volunteers_in_roles_at_event=list_of_volunteers_in_roles_at_event)
+
+
+def get_volunteer_role_at_event_on_day(event: Event, volunteer_id: str, day: Day) -> str:
+    volunteer_in_role = get_volunteer_with_role_at_event_on_day(event=event, day=day, volunteer_id=volunteer_id)
+    if volunteer_in_role is missing_data:
+        return missing_data
+
+    return volunteer_in_role.role
+
+
+def get_volunteer_with_role_at_event_on_day(event: Event, volunteer_id: str, day: Day) -> VolunteerInRoleAtEvent:
+    volunteers_in_roles_at_event= load_volunteers_in_role_at_event(event)
+    volunteer_in_role = volunteers_in_roles_at_event.member_matching_volunteer_id_and_day(volunteer_id=volunteer_id, day=day)
+
+    return volunteer_in_role
 
 def sort_volunteer_data_for_event_by_name_sort_order(volunteers_at_event: ListOfVolunteersAtEvent, sort_order) -> ListOfVolunteersAtEvent:
     list_of_volunteers = get_sorted_list_of_volunteers(sort_by=sort_order)
@@ -72,5 +101,80 @@ def dict_of_roles_for_dropdown():
 
     return dict_of_roles
 
+def boat_related_role_str_on_day_for_volunteer_id(day: Day, event: Event, volunteer_id: str)-> str:
+    volunteers_in_role_at_event = load_volunteers_in_role_at_event(event)
+    volunteer_on_day = volunteers_in_role_at_event.member_matching_volunteer_id_and_day(volunteer_id=volunteer_id, day=day, return_empty_if_missing=False)
+    if volunteer_on_day is missing_data:
+        return ""
+    elif volunteer_on_day.requires_boat:
+        return volunteer_on_day.role
+    else:
+        return ""
 
 
+
+
+def is_possible_to_copy_roles_for_non_grouped_roles_only(event: Event, volunteer_id:str) -> bool:
+    ## Only possible if: none of the roles require a group, and all the roles don't currently match
+
+    volunteers_with_roles_in_event_including_missing_data = [get_volunteer_with_role_at_event_on_day(volunteer_id=volunteer_id,
+                                                                               day=day, event=event)
+                                        for day in event.weekdays_in_event()]
+
+    all_volunteer_positions = [volunteer_with_role for volunteer_with_role in volunteers_with_roles_in_event_including_missing_data
+                               if volunteer_with_role is not missing_data]
+
+    all_roles = [volunteer_with_role.role for volunteer_with_role in all_volunteer_positions]
+
+    if len(all_roles)==0:
+        ## nothing to copy
+        return False
+
+    all_roles_match = len(set(all_roles))<=1
+
+    roles_require_groups = [volunteer_with_role.requires_group for volunteer_with_role in all_volunteer_positions]
+    at_least_one_role_require_group = any(roles_require_groups)
+
+    ## copy not possible if all roles the same, or at least one requires a group
+    if all_roles_match or at_least_one_role_require_group:
+        return False
+    else:
+        return True
+
+
+def is_possible_to_swap_roles_on_one_day_for_non_grouped_roles_only(event: Event, volunteer_id:str, day: Day) -> bool:
+    ## Only possible if: none of the roles require a group, and all the roles don't currently match
+
+    volunteer_with_role = get_volunteer_with_role_at_event_on_day(volunteer_id=volunteer_id,
+                                                                               day=day, event=event)
+
+    return not volunteer_with_role.requires_group
+
+
+def swap_roles_for_volunteers_in_allocation(event: Event,
+                                                                           original_day: Day,
+                                                                           original_volunteer_id: str,
+                                                                           day_to_swap_with: Day,
+                                                                           volunteer_id_to_swap_with: str):
+    volunteers_in_role_at_event = load_volunteers_in_role_at_event(event)
+    volunteers_in_role_at_event.swap_roles_for_volunteers_in_allocation(
+            original_volunteer_id=original_volunteer_id,
+        original_day=original_day,
+        day_to_swap_with=day_to_swap_with,
+        volunteer_id_to_swap_with=volunteer_id_to_swap_with
+    )
+    save_volunteers_in_role_at_event(event=event, list_of_volunteers_in_roles_at_event=volunteers_in_role_at_event)
+
+def swap_and_groups_for_volunteers_in_allocation(event: Event,
+                                                                           original_day: Day,
+                                                                           original_volunteer_id: str,
+                                                                           day_to_swap_with: Day,
+                                                                           volunteer_id_to_swap_with: str):
+    volunteers_in_role_at_event = load_volunteers_in_role_at_event(event)
+    volunteers_in_role_at_event.swap_roles_and_groups_for_volunteers_in_allocation(
+            original_volunteer_id=original_volunteer_id,
+        original_day=original_day,
+        day_to_swap_with=day_to_swap_with,
+        volunteer_id_to_swap_with=volunteer_id_to_swap_with
+    )
+    save_volunteers_in_role_at_event(event=event, list_of_volunteers_in_roles_at_event=volunteers_in_role_at_event)

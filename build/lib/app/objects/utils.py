@@ -89,6 +89,15 @@ def clean_up_dict_with_nans(some_dict) -> dict:
             pass
     return some_dict
 
+def clean_up_dict_with_weird_floats_for_id(some_dict) -> dict:
+    for key, value in some_dict.items():
+        if key == "id":
+            some_dict[key] = make_id_as_int_str(value)
+
+    return some_dict
+
+def make_id_as_int_str(value: str)->str:
+    return str(int(float(value)))
 
 def list_duplicate_indices(seq):
     tally = defaultdict(list)
@@ -188,3 +197,16 @@ def union_of_x_and_y(x: list,y: list) -> list:
 
 DATE_STR = "%Y/%m/%d"
 DATETIME_STR = "%Y/%m/%d %H:%M:%S.%f"
+
+
+def dict_as_single_str(some_dict: dict) -> str:
+    single_list = ["%s:%s" % (key, value) for key, value in some_dict.items()]
+    return ",".join(single_list)
+
+
+def from_single_str_to_dict(single_str: str)->dict:
+    entries = single_str.split(",")
+    output_dict = dict([
+        entry.split(":") for entry in entries
+    ])
+    return output_dict

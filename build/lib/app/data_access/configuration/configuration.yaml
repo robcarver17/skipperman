@@ -75,6 +75,9 @@ volunteer_skills:
   - "First aid"
   - "DBS"
   - "SI"
+#
+power_boat_skills:
+  - "PB2"
 ## first line is always lead, rest are members
 volunteer_teams:
   Management:
@@ -110,4 +113,14 @@ volunteers_requiring_group:
   - "DI"
   - "Coach"
   - "AI"
+  - "Lake helper"
+volunteers_requiring_boats:
+  - "DI"
+  - "Coach"
+  - "AI"
+  - "River safety lead"
+  - "River safety helm"
+  - "River safety crew"
+  - "Lake safety helm"
+  - "Lake safety crew"
   - "Lake helper"

@@ -4,7 +4,7 @@ from typing import Union, List
 import pandas as pd
 
 from app.objects.abstract_objects.abstract_buttons import Button
-from app.objects.abstract_objects.abstract_lines import Line
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
 
 class PandasDFTable(pd.DataFrame):
@@ -13,7 +13,7 @@ class PandasDFTable(pd.DataFrame):
 
 @dataclass
 class ElementsInTable:
-    contents: Union[Line, Button, str, float]
+    contents: Union[Line, Button, str, float, ListOfLines]
     heading: bool = False
 
 

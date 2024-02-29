@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import List
 from statistics import mode
 
-from app.data_access.configuration.configuration import VOLUNTEER_ROLES, VOLUNTEERS_REQUIRING_GROUP
+from app.data_access.configuration.configuration import VOLUNTEER_ROLES, VOLUNTEERS_REQUIRING_GROUP, VOLUNTEERS_REQUIRING_BOATS
 from app.objects.generic import GenericSkipperManObject, get_class_instance_from_str_dict, GenericListOfObjects, _transform_class_dict_into_str_dict
 from app.objects.groups import Group, GROUP_UNALLOCATED, index_group
 from app.objects.day_selectors import Day
@@ -28,6 +28,10 @@ class VolunteerInRoleAtEvent(GenericSkipperManObject):
     @property
     def requires_group(self):
         return self.role in VOLUNTEERS_REQUIRING_GROUP
+
+    @property
+    def requires_boat(self):
+        return self.role in VOLUNTEERS_REQUIRING_BOATS
 
     @property
     def no_role_set(self) -> bool:
@@ -74,6 +78,55 @@ class ListOfVolunteersInRoleAtEvent(GenericListOfObjects):
     def _object_class_contained(self):
         return VolunteerInRoleAtEvent
 
+    def swap_roles_for_volunteers_in_allocation(self,
+                original_day: Day,
+                original_volunteer_id: str,
+                day_to_swap_with: Day,
+                volunteer_id_to_swap_with: str):
+
+        original_volunteer = self.member_matching_volunteer_id_and_day(
+            volunteer_id=original_volunteer_id,
+            day=original_day, return_empty_if_missing=False)
+        original_volunteer_role = copy(original_volunteer.role)
+
+        volunteer_to_swap_with = self.member_matching_volunteer_id_and_day(
+            volunteer_id=volunteer_id_to_swap_with,
+            day=day_to_swap_with, return_empty_if_missing=False)
+        volunteer_to_swap_with_role = copy(volunteer_to_swap_with.role)
+
+        self.update_volunteer_in_role_on_day_to_actual_role(original_volunteer, new_role=volunteer_to_swap_with_role)
+        self.update_volunteer_in_role_on_day_to_actual_role(volunteer_to_swap_with, new_role=original_volunteer_role)
+
+    def swap_roles_and_groups_for_volunteers_in_allocation(self,
+                                                original_day: Day,
+                                                original_volunteer_id: str,
+                                                day_to_swap_with: Day,
+                                                volunteer_id_to_swap_with: str):
+
+        original_volunteer = self.member_matching_volunteer_id_and_day(
+            volunteer_id=original_volunteer_id,
+            day=original_day, return_empty_if_missing=False)
+        original_volunteer_group_name = copy(original_volunteer.group.group_name)
+        original_volunteer_role = copy(original_volunteer.role)
+
+        volunteer_to_swap_with = self.member_matching_volunteer_id_and_day(
+            volunteer_id=volunteer_id_to_swap_with,
+            day=day_to_swap_with, return_empty_if_missing=False)
+        volunteer_to_swap_with_group_name = copy(volunteer_to_swap_with.group.group_name)
+        volunteer_to_swap_with_role = copy(volunteer_to_swap_with.role)
+
+        self.update_volunteer_in_role_on_day_to_actual_role(original_volunteer, new_role=volunteer_to_swap_with_role)
+        self.update_volunteer_in_group_on_day(original_volunteer, new_group=volunteer_to_swap_with_group_name)
+
+        self.update_volunteer_in_role_on_day_to_actual_role(volunteer_to_swap_with, new_role=original_volunteer_role)
+        self.update_volunteer_in_group_on_day(volunteer_to_swap_with, new_group=original_volunteer_group_name)
+
+    def list_of_volunteer_ids_in_boat_related_role_on_day(self, day: Day)-> List[str]:
+        return list(set([item.volunteer_id for item in self if item.day == day and item.requires_boat]))
+
+    def list_of_volunteer_ids_in_boat_related_role_on_any_day(self)-> List[str]:
+        return list(set([item.volunteer_id for item in self if item.requires_boat]))
+
     def list_of_roles_and_groups_at_event_for_day(self, day: Day) -> List[RoleAndGroup]:
         return [volunteer_with_role.role_and_group for volunteer_with_role in self if volunteer_with_role.day == day]
 
@@ -108,7 +161,7 @@ class ListOfVolunteersInRoleAtEvent(GenericListOfObjects):
             self.replace_or_add_volunteer_in_group_on_day_with_copy(day=other_day,
                                                                     volunteer_in_role_at_event=volunteer_with_role)
 
-    def member_matching_volunteer_id_and_day(self, volunteer_id: str, day: Day, return_empty_if_missing: bool = True):
+    def member_matching_volunteer_id_and_day(self, volunteer_id: str, day: Day, return_empty_if_missing: bool = True) -> VolunteerInRoleAtEvent:
         list_of_matches = [volunteer_with_role for volunteer_with_role in self if volunteer_with_role.volunteer_id == volunteer_id
                            and volunteer_with_role.day==day]
 

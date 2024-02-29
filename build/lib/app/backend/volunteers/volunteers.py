@@ -1,33 +1,31 @@
 from typing import List
 
 from app.backend.cadets import get_sorted_list_of_cadets, cadet_from_id
-from app.backend.data.volunteers import get_sorted_list_of_volunteers, get_list_of_volunteer_skills, \
+from app.backend.data.volunteers import get_sorted_list_of_volunteers, load_list_of_volunteer_skills, save_list_of_volunteer_skills,\
     get_list_of_cadet_volunteer_associations, add_volunteer_connection_to_cadet_in_master_list_of_volunteers, \
-    get_all_volunteers
+    load_all_volunteers
+from app.data_access.configuration.configuration import VOLUNTEERS_SKILL_FOR_PB2
 from app.objects.constants import arg_not_passed
 from app.objects.volunteers import Volunteer
 
 
 def get_list_of_volunteers_as_str(list_of_volunteers = arg_not_passed) -> list:
     if list_of_volunteers is arg_not_passed:
-        list_of_volunteers = get_sorted_list_of_volunteers()
+        list_of_volunteers = load_all_volunteers()
     return [str(volunteer) for volunteer in list_of_volunteers]
 
 
 def get_volunteer_from_list_of_volunteers(volunteer_selected: str) -> Volunteer:
-    list_of_volunteers = get_sorted_list_of_volunteers()
+    list_of_volunteers = load_all_volunteers()
     list_of_volunteers_as_str = get_list_of_volunteers_as_str(list_of_volunteers=list_of_volunteers)
 
     idx = list_of_volunteers_as_str.index(volunteer_selected)
     return list_of_volunteers[idx]
 
-def get_volunteer_from_volunteer_id(volunteer_id: str) -> Volunteer:
-    list_of_volunteers = get_sorted_list_of_volunteers()
-    return list_of_volunteers.object_with_id(volunteer_id)
 
 
 def get_dict_of_existing_skills(volunteer: Volunteer)-> dict:
-    all_skills = get_list_of_volunteer_skills()
+    all_skills = load_list_of_volunteer_skills()
     return all_skills.dict_of_skills_for_volunteer_id(volunteer_id=volunteer.id)
 
 
@@ -90,10 +88,33 @@ def add_list_of_cadet_connections_to_volunteer(
                                                                        cadet=cadet)
 
 
-def get_volunteer_from_id(volunteer_id) -> Volunteer:
-    list_of_all_volunteers = get_all_volunteers()
-    return list_of_all_volunteers.object_with_id(volunteer_id)
+def get_volunteer_from_id(volunteer_id: str) -> Volunteer:
+    list_of_volunteers = get_sorted_list_of_volunteers()
+    return list_of_volunteers.object_with_id(volunteer_id)
+
+def get_volunteer_from_name(volunteer_name:str) -> Volunteer:
+    list_of_volunteers = get_sorted_list_of_volunteers()
 
 def get_volunteer_name_from_id(volunteer_id) -> str:
     volunteer = get_volunteer_from_id(volunteer_id)
     return volunteer.name
+
+def boat_related_skill_str(volunteer_id: str) -> str:
+    if boat_related_skill_for_volunteer(volunteer_id):
+        return VOLUNTEERS_SKILL_FOR_PB2
+    else:
+        return ""
+
+def boat_related_skill_for_volunteer(volunteer_id: str) -> bool:
+    skills =load_list_of_volunteer_skills()
+    return skills.volunteer_id_has_boat_related_skills(volunteer_id)
+
+def add_boat_related_skill_for_volunteer(volunteer_id: str):
+    skills =load_list_of_volunteer_skills()
+    skills.add_boat_related_skill_for_volunteer(volunteer_id)
+    save_list_of_volunteer_skills(skills)
+
+def remove_boat_related_skill_for_volunteer(volunteer_id: str):
+    skills =load_list_of_volunteer_skills()
+    skills.remove_boat_related_skill_for_volunteer(volunteer_id)
+    save_list_of_volunteer_skills(skills)

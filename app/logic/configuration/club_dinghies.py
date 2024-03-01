@@ -1,6 +1,9 @@
-from typing import Union
+from typing import Union, List
 
-from app.backend.data.resources import get_list_of_club_dinghies, add_new_club_dinghy_given_string_and_return_list, modify_club_dinghy_given_string_and_return_list, delete_club_dinghy_given_string_and_return_list
+from app.backend.data.resources import get_list_of_club_dinghies, add_new_club_dinghy_given_string_and_return_list, \
+    modify_club_dinghy_given_string_and_return_list, delete_club_dinghy_given_string_and_return_list, \
+    save_list_of_club_dinghies
+from app.backend.forms.reorder_form import modify_list_given_button_name
 
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.configuration.generic_list_modifier import display_form_edit_generic_list, post_form_edit_generic_list, BACK_BUTTON_PRESSED, BUTTON_NOT_KNOWN
@@ -10,6 +13,7 @@ from app.objects.abstract_objects.abstract_form import (
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
+from app.objects.club_dinghies import ClubDinghy, ListOfClubDinghies
 
 header_text = ListOfLines(["List of club dinghies: add, edit or delete"])
 
@@ -36,7 +40,7 @@ def post_form_config_club_dinghies_page(interface: abstractInterface) -> Union[F
         deleting_function=delete_club_dinghy_given_string_and_return_list,
         adding_function=add_new_club_dinghy_given_string_and_return_list,
         modifying_function=modify_club_dinghy_given_string_and_return_list,
-        re_order_function=re_order_club_dinghy_and_return_list
+        save_function=save_from_ordinary_list_of_club_dinghies
     )
     if generic_list_output is BACK_BUTTON_PRESSED:
         return interface.get_new_display_form_for_parent_of_function(post_form_config_club_dinghies_page)
@@ -45,5 +49,5 @@ def post_form_config_club_dinghies_page(interface: abstractInterface) -> Union[F
     else:
         return generic_list_output
 
-def re_order_club_dinghy_and_return_list(direction: str, selected_entry_name:str):
-    pass
+def save_from_ordinary_list_of_club_dinghies(list_of_dinghies: List[ClubDinghy]):
+    save_list_of_club_dinghies(ListOfClubDinghies(list_of_dinghies))

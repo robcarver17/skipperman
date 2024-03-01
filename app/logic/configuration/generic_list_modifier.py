@@ -1,6 +1,7 @@
 from copy import copy
 from typing import Union, List, Callable, Tuple
 
+from app.backend.forms.reorder_form import UP, DOWN, get_button_name_to_move_in_list, modify_list_given_button_name
 from app.objects.abstract_objects.abstract_form import Form, NewForm, textInput
 from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
@@ -44,23 +45,12 @@ def get_row_for_existing_entry(entry) -> Line:
         [ text_box_for_entry(entry), Button(button_str_for_deletion(entry)), up_button_for_entry(entry), down_button_for_entry(entry)]
     )
 
-UP='UP'
-DOWN='DOWN'
 def up_button_for_entry(entry):
-    return Button(label=up_arrow, value = generic_button_name_given_direction(UP, entry))
+    return Button(label=up_arrow, value = get_button_name_to_move_in_list(str(entry), UP))
 
 def down_button_for_entry(entry):
-    return Button(label=down_arrow, value = generic_button_name_given_direction(DOWN, entry))
+    return Button(label=down_arrow, value =get_button_name_to_move_in_list(str(entry), DOWN))
 
-
-def generic_button_name_given_direction(direction: str, entry):
-    return direction+"_"+str(entry)
-
-def direction_and_entry_name_given_button_name(button_name:str) -> Tuple[str, str]:
-    splitter = button_name.split("_")
-    direction, entry_name = splitter
-
-    return direction, entry_name
 
 def text_box_for_entry(entry)-> textInput:
     return textInput(
@@ -99,7 +89,7 @@ def post_form_edit_generic_list(
         adding_function: Callable,
         deleting_function: Callable,
         modifying_function: Callable,
-        re_order_function: Callable
+        save_function: Callable
 ) -> Union[Form, NewForm, object]:
 
     button = interface.last_button_pressed()
@@ -118,7 +108,7 @@ def post_form_edit_generic_list(
                                                                        existing_list=existing_list)
     elif button in list_of_arrow_buttons:
         updated_list = reorder_list_given_form_and_return_updated_list(interface=interface,
-                                                                        re_order_function=re_order_function,
+                                                                        save_function=save_function,
                                                                        existing_list=existing_list)
     else:
         return BUTTON_NOT_KNOWN
@@ -132,8 +122,8 @@ def get_list_of_delete_entry_buttons(existing_list: list):
 
 def get_list_of_arrow_buttons(existing_list: list):
 
-    return [generic_button_name_given_direction(UP, entry) for entry in existing_list]+\
-            [generic_button_name_given_direction(DOWN, entry) for entry in existing_list]
+    return [get_button_name_to_move_in_list(entry, UP) for entry in existing_list]+\
+            [get_button_name_to_move_in_list(entry, DOWN) for entry in existing_list]
 
 
 def add_new_entry_and_edits_from_form_and_return_updated_list(interface: abstractInterface,
@@ -205,17 +195,29 @@ def delete_entry_given_form_and_return_updated_list(interface: abstractInterface
     return new_list
 
 def reorder_list_given_form_and_return_updated_list(interface: abstractInterface,
-                                                    re_order_function: Callable,
+                                                    save_function: Callable,
                                                     existing_list: list,
                                                     ) -> list:
-
-    direction, selected_entry_name = direction_and_entry_name_given_button_name(interface.last_button_pressed())
+    new_list = re_order_return_list(interface.last_button_pressed(), existing_list=existing_list)
+    save_function(new_list)
+    """
     try:
-        new_list = re_order_function(direction=direction, selected_entry_name=selected_entry_name)
+        new_list = re_order_return_list(interface.last_button_pressed(), existing_list=existing_list)
+        save_function(new_list)
     except Exception as e:
         interface.log_error("Error when reordering entry %s: " % str(e))
         new_list = copy(existing_list)
-
+    """
     return new_list
 
+### CAN JUST PASS LOAD/SAVE FUNCTIONS
+def re_order_return_list(button_name: str, existing_list: list):
+    current_list_of_str = [str(item) for item in existing_list]
+    new_list_of_str_ordered = modify_list_given_button_name(button_name=button_name,
+                                             current_order=current_list_of_str)
+
+    new_list_idx = [current_list_of_str.index(str_item) for str_item in new_list_of_str_ordered]
+    new_list= [existing_list[idx] for idx in new_list_idx]
+
+    return new_list
 

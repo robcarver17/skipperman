@@ -47,6 +47,8 @@ def get_list_of_club_dinghies() -> ListOfClubDinghies:
 
     return list_of_boats
 
+
+
 def save_list_of_club_dinghies(list_of_boats: ListOfClubDinghies):
     data.data_List_of_club_dinghies.write(list_of_boats)
 

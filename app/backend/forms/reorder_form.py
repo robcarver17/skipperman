@@ -26,8 +26,8 @@ class reorderFormInterface:
 
 
 def list_of_button_names_given_group_order(current_order:list) -> list:
-    up_buttons = [get_button_name(label, UP) for label in current_order]
-    down_buttons = [get_button_name(label,DOWN) for label in current_order]
+    up_buttons = [get_button_name_to_move_in_list(label, UP) for label in current_order]
+    down_buttons = [get_button_name_to_move_in_list(label, DOWN) for label in current_order]
 
     return up_buttons+down_buttons
 
@@ -35,14 +35,15 @@ def modify_list_given_button_name(current_order: list, button_name: str) -> list
     index, other_index = indices_to_swap_given_button_name(
         current_order=current_order, button_name=button_name
     )
+    new_order = copy(current_order)
 
     current_elmement = copy(current_order[index])
     other_element = copy(current_order[other_index])
 
-    current_order[other_index] = current_elmement
-    current_order[index] = other_element
+    new_order[other_index] = current_elmement
+    new_order[index] = other_element
 
-    return current_order
+    return new_order
 
 
 def indices_to_swap_given_button_name(
@@ -95,8 +96,8 @@ DIVIDER = "_"  ##
 def row_in_reorder_form(
     element_in_list: str, list_index: int, starting_list: list
 ) -> RowInTable:
-    up_button = Button(up_arrow, value=get_button_name(element_in_list, UP))
-    down_button = Button(down_arrow, value=get_button_name(element_in_list, DOWN))
+    up_button = Button(up_arrow, value=get_button_name_to_move_in_list(element_in_list, UP))
+    down_button = Button(down_arrow, value=get_button_name_to_move_in_list(element_in_list, DOWN))
 
     if list_index == 0:
         return RowInTable([element_in_list, down_button])
@@ -106,5 +107,5 @@ def row_in_reorder_form(
         return RowInTable([element_in_list, up_button, down_button])
 
 
-def get_button_name(label, direction):
+def get_button_name_to_move_in_list(label, direction):
     return "%s%s%s" % (label, DIVIDER, direction)

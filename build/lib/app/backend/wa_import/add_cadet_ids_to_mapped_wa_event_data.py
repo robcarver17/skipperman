@@ -2,7 +2,7 @@ import datetime
 import pandas as pd
 
 from app.objects.cadets import Cadet
-from app.objects.field_list import CADET_SURNAME, CADET_DATE_OF_BIRTH, CADET_FIRST_NAME
+from app.data_access.configuration.field_list import CADET_SURNAME, CADET_DATE_OF_BIRTH, CADET_FIRST_NAME
 
 from app.backend.data.cadets_at_event import load_identified_cadets_at_event, save_identified_cadets_at_event
 

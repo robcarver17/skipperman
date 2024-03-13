@@ -3,17 +3,13 @@ from typing import List
 
 import pandas as pd
 
-from app.objects.food import FoodRequirements, guess_food_requirements_from_food_field
 from app.objects.utils import clean_up_dict_with_nans
 from app.objects.constants import missing_data
-from app.objects.field_list import CADET_FOOD_PREFERENCE
 
 from app.objects.mapped_wa_event import (
     RowInMappedWAEvent,
-    extract_list_of_row_ids_from_existing_wa_event,
-MappedWAEvent
+    MappedWAEvent
 )
-from app.objects.constants import NoCadets, DuplicateCadets
 
 CHANGED_ROW = "changed_row"
 DELETED_ROW = "deleted_row"

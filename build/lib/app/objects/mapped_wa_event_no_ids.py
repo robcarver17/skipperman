@@ -6,8 +6,7 @@ from app.objects.utils import (
     transform_df_from_str_to_dates
 )
 
-from app.objects.field_list import REGISTRATION_DATE
-from app.objects.constants import arg_not_passed
+from app.data_access.configuration.field_list import REGISTRATION_DATE
 
 
 # can't use generic methods here as based on dataclasses

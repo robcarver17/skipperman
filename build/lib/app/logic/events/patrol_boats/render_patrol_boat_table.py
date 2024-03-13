@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.backend.data.resources import load_list_of_boats_at_event
+from app.backend.data.resources import load_list_of_patrol_boats_at_event
 from app.backend.forms.swaps import is_ready_to_swap
 from app.logic.events.patrol_boats.elements_in_patrol_boat_table import \
     get_existing_allocation_elements_for_day_and_boat, get_unique_list_of_volunteer_ids_for_skills_checkboxes, \
@@ -72,7 +72,7 @@ def get_body_of_patrol_boat_table_at_event( interface:abstractInterface, event: 
     data_to_be_stored = ""
 
     #list_of_boats_at_event = get_list_of_boats_at_event(data_to_be_stored)
-    list_of_boats_at_event= load_list_of_boats_at_event(event)
+    list_of_boats_at_event= load_list_of_patrol_boats_at_event(event)
 
     other_rows = [get_row_for_boat_at_event(
                                                  boat_at_event = boat_at_event,

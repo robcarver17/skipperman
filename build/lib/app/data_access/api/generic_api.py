@@ -1,11 +1,12 @@
-from app.data_access.classes.cadets import DataListOfCadets, DataListOfCadetsWithGroups, DataListOfCadetsAtEvent, DataListOfIdentifiedCadetsAtEvent
+from app.data_access.classes.cadets import *
 from app.data_access.classes.list_of_events import DataListOfEvents
 from app.data_access.classes.wa_event_mapping import DataWAEventMapping
 from app.data_access.classes.wa_field_mapping import DataWAFieldMapping
 from app.data_access.classes.mapped_wa_event import DataMappedWAEvent
 from app.data_access.classes.print_options import DataListOfPrintOptions
-from app.data_access.classes.volunteers import DataListOfVolunteers, DataListOfVolunteersAtEvent, DataListOfVolunteerSkills, DataListOfCadetVolunteerAssociations, DataListOfIdentifiedVolunteersAtEvent, DataListOfVolunteersInRolesAtEvent
+from app.data_access.classes.volunteers import *
 from app.data_access.classes.resources import *
+from app.data_access.classes.dinghies_at_events import *
 
 class GenericDataApi(object):
     ## FOLLOWING SHOULD BE OVERWRITTEN BY SPECIFIC CLASSES
@@ -89,5 +90,13 @@ class GenericDataApi(object):
         raise NotImplemented
 
     @property
-    def data_list_of_volunteers_at_event_with_club_dinghies(self) -> DataListOfCadetAtEventWithClubDinghies:
+    def data_list_of_cadets_at_event_with_club_dinghies(self) -> DataListOfCadetAtEventWithClubDinghies:
+        raise NotImplemented
+
+    @property
+    def data_list_of_dinghies(self) -> ListOfDinghies:
+        raise NotImplemented
+
+    @property
+    def data_list_of_cadets_with_dinghies_at_event(self) -> ListOfCadetAtEventWithDinghies:
         raise NotImplemented

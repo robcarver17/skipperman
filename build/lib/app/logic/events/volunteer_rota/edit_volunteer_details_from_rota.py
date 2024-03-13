@@ -1,4 +1,4 @@
-from app.backend.form_utils import get_availablity_from_form, get_availability_checkbox
+from app.backend.forms.form_utils import get_availablity_from_form, get_availability_checkbox
 from app.backend.volunteers.volunteer_allocation import    update_volunteer_availability_at_event
 from app.backend.volunteers.volunteers import get_volunteer_from_id
 from app.backend.data.volunteer_allocation import delete_volunteer_with_id_at_event, get_volunteer_at_event

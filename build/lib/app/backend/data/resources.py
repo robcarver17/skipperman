@@ -1,5 +1,6 @@
 from typing import List
 
+from app.objects.dinghies import ListOfDinghies
 from app.objects.events import Event
 from app.objects.patrol_boats import ListOfPatrolBoats, ListOfVolunteersAtEventWithPatrolBoats, PatrolBoat, VolunteerAtEventWithPatrolBoat
 from app.objects.club_dinghies import ListOfClubDinghies, ListOfCadetAtEventWithClubDinghies, ClubDinghy, CadetAtEventWithClubDinghy
@@ -42,32 +43,42 @@ def modify_patrol_boat_given_string_and_return_list(existing_value_as_str:str, n
     return list_of_patrol_boats
 
 
-def get_list_of_club_dinghies() -> ListOfClubDinghies:
+def load_list_of_club_dinghies() -> ListOfClubDinghies:
     list_of_boats = data.data_List_of_club_dinghies.read()
 
     return list_of_boats
 
 
-
 def save_list_of_club_dinghies(list_of_boats: ListOfClubDinghies):
     data.data_List_of_club_dinghies.write(list_of_boats)
 
+
+def load_list_of_cadets_at_event_with_club_dinghies(event: Event) -> ListOfCadetAtEventWithClubDinghies:
+    cadets_with_dinghies = data.data_list_of_cadets_at_event_with_club_dinghies.read(event_id=event.id)
+
+    return cadets_with_dinghies
+
+def save_list_of_cadets_at_event_with_club_dinghies(event: Event, cadets_with_club_dinghies_at_event:ListOfCadetAtEventWithClubDinghies):
+    data.data_list_of_cadets_at_event_with_club_dinghies.write(event_id=event.id, people_and_boats=cadets_with_club_dinghies_at_event)
+
+
+
 def add_new_club_dinghy_given_string_and_return_list(new_boat_name: str) -> ListOfClubDinghies:
-    list_of_boats = get_list_of_club_dinghies()
+    list_of_boats = load_list_of_club_dinghies()
     list_of_boats.add(new_boat_name)
     save_list_of_club_dinghies(list_of_boats)
 
     return list_of_boats
 
 def delete_club_dinghy_given_string_and_return_list(boat_name: str) -> ListOfClubDinghies:
-    list_of_boats = get_list_of_club_dinghies()
+    list_of_boats = load_list_of_club_dinghies()
     list_of_boats.delete_given_name(boat_name)
     save_list_of_club_dinghies(list_of_boats)
 
     return list_of_boats
 
 def modify_club_dinghy_given_string_and_return_list(existing_value_as_str:str, new_value_as_str:str) -> ListOfClubDinghies:
-    list_of_boats = get_list_of_club_dinghies()
+    list_of_boats = load_list_of_club_dinghies()
     list_of_boats.delete_given_name(existing_value_as_str)
     list_of_boats.add(new_value_as_str)
     save_list_of_club_dinghies(list_of_boats)
@@ -77,11 +88,11 @@ def modify_club_dinghy_given_string_and_return_list(existing_value_as_str:str, n
 
 def get_list_of_boats_excluding_boats_already_at_event(event: Event) -> ListOfPatrolBoats:
     list_of_all_patrol_boats = load_list_of_patrol_boats()
-    list_of_patrol_boats_at_event = load_list_of_boats_at_event(event)
+    list_of_patrol_boats_at_event = load_list_of_patrol_boats_at_event(event)
 
     return ListOfPatrolBoats(in_x_not_in_y(x=list_of_all_patrol_boats, y=list_of_patrol_boats_at_event))
 
-def load_list_of_boats_at_event(event: Event) -> ListOfPatrolBoats:
+def load_list_of_patrol_boats_at_event(event: Event) -> ListOfPatrolBoats:
     volunteers_with_boats_at_event = load_list_of_voluteers_at_event_with_patrol_boats(event)
     list_of_all_patrol_boats = load_list_of_patrol_boats()
 
@@ -96,3 +107,37 @@ def save_list_of_voluteers_at_event_with_patrol_boats(event: Event, volunteers_w
     data.data_list_of_volunteers_at_event_with_patrol_boats.write(event_id=event.id,
                                                                   people_and_boats=volunteers_with_boats_at_event)
 
+
+def load_list_of_boat_classes() -> ListOfDinghies:
+    list_of_boats = data.data_list_of_dinghies.read()
+
+    return list_of_boats
+
+
+def save_list_of_boat_classes(list_of_boats: ListOfDinghies):
+    data.data_list_of_dinghies.write(list_of_boats)
+
+
+def add_new_boat_class_given_string_and_return_list(new_boat_name: str) -> ListOfDinghies:
+    list_of_boats = load_list_of_boat_classes()
+    list_of_boats.add(new_boat_name)
+    save_list_of_boat_classes(list_of_boats)
+
+    return list_of_boats
+
+
+def delete_boat_class_given_string_and_return_list(boat_name: str) -> ListOfDinghies:
+    list_of_boats = load_list_of_boat_classes()
+    list_of_boats.delete_given_name(boat_name)
+    save_list_of_boat_classes(list_of_boats)
+
+    return list_of_boats
+
+
+def modify_boat_class_given_string_and_return_list(existing_value_as_str:str, new_value_as_str:str) -> ListOfDinghies:
+    list_of_boats = load_list_of_boat_classes()
+    list_of_boats.delete_given_name(existing_value_as_str)
+    list_of_boats.add(new_value_as_str)
+    save_list_of_boat_classes(list_of_boats)
+
+    return list_of_boats

@@ -13,7 +13,7 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines, ___________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.patrol_boats import PatrolBoat, ListOfPatrolBoats
 
-header_text = ListOfLines(["List of club patrol boats: add, edit or delete"])
+header_text = ListOfLines(["List of club patrol boats: add, edit or delete, or re-order"])
 
 def display_form_config_patrol_boats_page(interface: abstractInterface) -> Form:
     list_of_boats = load_list_of_patrol_boats()

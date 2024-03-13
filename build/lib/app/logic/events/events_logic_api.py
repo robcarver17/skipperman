@@ -57,13 +57,12 @@ from app.logic.events.import_wa.update_existing_event import (
 
 from app.logic.events.import_wa.import_controller import import_controller, post_import_controller
 
-from app.logic.events.allocate_cadets_to_groups import (
+from app.logic.events.group_allocation.allocate_cadets_to_groups import (
     display_form_allocate_cadets,
     post_form_allocate_cadets,
 )
 from app.logic.events.volunteer_allocation.volunteer_identification import \
-    display_form_volunteer_identification, post_form_volunteer_identification, \
-    process_volunteer_on_next_row_of_event_data, post_form_volunteer_identification_looping, \
+    display_form_volunteer_identification, process_volunteer_on_next_row_of_event_data, post_form_volunteer_identification_looping, \
     next_volunteer_in_current_row, \
     post_form_add_volunteers_to_cadet_loop, display_form_volunteer_selection_at_event, post_form_volunteer_identification
 from app.logic.events.volunteer_rota.verify_volunteers_if_cadet_at_event_changed import \
@@ -75,7 +74,6 @@ from app.logic.events.volunteer_rota.display_main_rota_page import display_form_
 from app.logic.events.volunteer_rota.edit_volunteer_details_from_rota import post_form_confirm_volunteer_details_from_rota, display_form_confirm_volunteer_details_from_rota
 from app.logic.events.volunteer_rota.edit_cadet_connections_for_event_from_rota import display_form_edit_cadet_connections_from_rota, post_form_edit_cadet_connections_from_rota
 
-from app.logic.events.constants import *
 from app.logic.events.volunteer_rota.edit_volunteer_skills_from_rota import display_form_edit_individual_volunteer_skills_from_rota, post_form_edit_individual_volunteer_skills_from_rota
 from app.logic.events.volunteer_rota.add_volunteer_to_rota import display_form_add_new_volunteer_to_rota_at_event, post_form_add_new_volunteer_to_rota_at_event
 

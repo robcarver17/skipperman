@@ -1,19 +1,19 @@
-from app.backend.data.cadets_at_event import save_cadets_at_event
 from app.backend.volunteers.volunteer_allocation import volunteer_ids_associated_with_cadet_at_specific_event
 from app.backend.volunteers.volunteers import get_volunteer_from_id
 from app.backend.cadets import cadet_name_from_id
 from app.backend.wa_import.update_cadets_at_event import update_availability_of_existing_cadet_at_event, \
     update_status_of_existing_cadet_at_event, update_data_row_for_existing_cadet_at_event
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.cadet_at_event import ListOfCadetsAtEvent, CadetAtEvent
+from app.objects.cadet_at_event import CadetAtEvent
 from app.objects.events import Event
-from app.backend.form_utils import get_availablity_from_form, get_status_from_form
+from app.backend.forms.form_utils import get_availablity_from_form, get_status_from_form, \
+    input_name_from_column_name_and_cadet_id
 
 from app.logic.events.registration_details.registration_details_form import get_registration_data, \
-    RegistrationDetailsForEvent, input_name_from_column_name_and_cadet_id, _column_can_be_edited,\
+    RegistrationDetailsForEvent, _column_can_be_edited,\
  ROW_STATUS, DAYS_ATTENDING
 
-from app.objects.field_list import FIELDS_WITH_INTEGERS, FIELDS_AS_STR
+from app.data_access.configuration.field_list_groups import FIELDS_WITH_INTEGERS, FIELDS_AS_STR
 from app.objects.day_selectors import DaySelector
 from app.objects.mapped_wa_event import RegistrationStatus, cancelled_status, deleted_status
 

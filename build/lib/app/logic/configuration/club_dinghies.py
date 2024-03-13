@@ -1,6 +1,6 @@
 from typing import Union, List
 
-from app.backend.data.resources import get_list_of_club_dinghies, add_new_club_dinghy_given_string_and_return_list, \
+from app.backend.data.resources import load_list_of_club_dinghies, add_new_club_dinghy_given_string_and_return_list, \
     modify_club_dinghy_given_string_and_return_list, delete_club_dinghy_given_string_and_return_list, \
     save_list_of_club_dinghies
 from app.backend.forms.reorder_form import modify_list_given_button_name
@@ -21,7 +21,7 @@ header_text = ListOfLines(["List of club dinghies: add, edit or delete"])
 
 
 def display_form_config_club_dinghies_page(interface: abstractInterface) -> Form:
-    list_of_boats = get_list_of_club_dinghies()
+    list_of_boats = load_list_of_club_dinghies()
 
     return display_form_edit_generic_list(
         existing_list=list_of_boats,
@@ -31,7 +31,7 @@ def display_form_config_club_dinghies_page(interface: abstractInterface) -> Form
 
 
 def post_form_config_club_dinghies_page(interface: abstractInterface) -> Union[Form, NewForm]:
-    list_of_boats = get_list_of_club_dinghies()
+    list_of_boats = load_list_of_club_dinghies()
 
     generic_list_output = post_form_edit_generic_list(
         existing_list=list_of_boats,

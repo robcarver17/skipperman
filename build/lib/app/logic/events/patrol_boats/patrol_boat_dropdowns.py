@@ -1,7 +1,7 @@
 from typing import List, Dict, Tuple, Union
 
 from app.backend.data.resources import get_list_of_boats_excluding_boats_already_at_event, \
-    from_patrol_boat_name_to_boat, load_list_of_boats_at_event
+    from_patrol_boat_name_to_boat, load_list_of_patrol_boats_at_event
 from app.backend.volunteers.patrol_boats import \
     get_sorted_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day
 from app.backend.volunteers.volunteer_rota import boat_related_role_str_on_day_for_volunteer_id, \
@@ -119,7 +119,7 @@ def from_dropdown_for_volunteer_to_volunteer_name(dropdown_element: str) -> str:
 
 
 def get_list_of_dropdown_names_for_adding_volunteers(event: Event) -> List[str]:
-    list_of_boats_at_event= load_list_of_boats_at_event(event)
+    list_of_boats_at_event= load_list_of_patrol_boats_at_event(event)
 
     list_of_names = []
     for boat_at_event in list_of_boats_at_event:

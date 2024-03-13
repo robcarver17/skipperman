@@ -1,6 +1,6 @@
 from typing import List
 
-from app.backend.form_utils import get_availablity_from_form
+from app.backend.forms.form_utils import get_availablity_from_form
 from app.backend.volunteers.volunteer_allocation import \
     get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet, \
     add_volunteer_at_event, mark_all_cadets_associated_with_volunteer_at_event_as_no_longer_changed

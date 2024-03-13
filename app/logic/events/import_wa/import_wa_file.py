@@ -46,6 +46,9 @@ def process_wa_staged_file_already_uploaded(interface: abstractInterface) -> New
 
     ## do field mapping
     mapped_wa_event_data = map_wa_fields_in_df_for_event(event=event, filename=filename)
+
+    ## remove empty status
+    mapped_wa_event_data = mapped_wa_event_data.remove_empty_status()
     print("mapped data %s" % mapped_wa_event_data)
 
     save_mapped_wa_event(mapped_wa_event_data=mapped_wa_event_data, event=event)

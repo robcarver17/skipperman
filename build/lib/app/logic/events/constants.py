@@ -24,9 +24,7 @@ SEE_SIMILAR_CADETS_ONLY_LABEL = "See similar cadets only"
 #
 # Field mapping
 MAP_TO_TEMPLATE_BUTTON_LABEL = "Use template mapping"
-UPLOAD_TEMPLATE_BUTTON_LABEL = "Upload a new template"
 UPLOAD_MAPPING_BUTTON_LABEL = "Upload new mapping .csv file"
-DOWNLOAD_MAPPING_BUTTON_LABEL = "Download a mapping .csv file to edit (which you can then upload)"
 CLONE_EVENT_MAPPING_BUTTON_LABEL = "Clone the mapping for an existing event"
 
 # specific event; backend
@@ -75,3 +73,7 @@ SORT_ORDER = "sort_order"
 ## field names row
 ROW_STATUS = "row_status"
 ATTENDANCE = "attendance"
+CLUB_BOAT="club_boat"
+PARTNER="partner"
+BOAT_CLASS="boat_class"
+SAIL_NUMBER="sail_number"

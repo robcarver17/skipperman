@@ -6,8 +6,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer
 from app.backend.volunteers.volunter_relevant_information import get_relevant_information_for_volunteer_given_details
 from app.objects.constants import missing_data, NoMoreData
-from app.objects.field_list import LIST_OF_VOLUNTEER_FIELDS
-
+from app.data_access.configuration.field_list_groups import LIST_OF_VOLUNTEER_FIELDS
 
 number_of_volunteers_allowed = len(LIST_OF_VOLUNTEER_FIELDS)
 VOLUNTEER_INDEX = 'volunteer_index'

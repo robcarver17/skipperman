@@ -65,4 +65,4 @@ def write_mapping_to_temp_csv_file_and_return_filename(mapping: ListOfWAFieldMap
 
 
 def temp_mapping_file_name() -> str:
-    return os.path.join(staging_directory, "temp_mapping_file")
+    return os.path.join(staging_directory, "temp_mapping_file.csv")

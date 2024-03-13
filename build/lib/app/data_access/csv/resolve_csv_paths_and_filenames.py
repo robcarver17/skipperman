@@ -78,6 +78,8 @@ MAPPED_WA_EVENT_FILE_ID = "mapped_wa_event"
 PRINT_OPTIONS_FILE_ID = "print_options"
 LIST_OF_PATROL_BOATS_FILE_ID = "list_of_patrol_boats"
 LIST_OF_CLUB_DINGHIES_FILE_ID = "list_of_club_dinghies"
+LIST_OF_DINGHIES_FILE_ID = "list_of_dinghies"
+LIST_OF_CADETS_WITH_DINGHIES_AT_EVENT_FILE_ID = "list_of_cadets_with_dinghies"
 LIST_OF_PATROL_BOATS_AND_VOLUNTEERS_FILE_ID = "list_of_patrol_boats_and_volunteers_at_event"
 LIST_OF_CLUB_DINGHIES_AND_CADETS_FILE_ID = "list_of_club_dinghies_with_cadets_at_event"
 LIST_OF_VOLUNTEERS_FILE_ID = "list_of_volunteers"
@@ -123,4 +125,6 @@ LIST_OF_VOLUNTEERS_IN_ROLES_FILE_ID:("mapped_events", "list_of_volunteers_in_rol
 LIST_OF_PATROL_BOATS_FILE_ID :("lists", "list_of_patrol_boats.csv"),
 LIST_OF_CLUB_DINGHIES_FILE_ID :("lists", "list_of_club_dinghies.csv"),
 LIST_OF_PATROL_BOATS_AND_VOLUNTEERS_FILE_ID: ("mapped_events", "list_of_patrol_boats_and_volunteers_at_event_%s.csv"),
-LIST_OF_CLUB_DINGHIES_AND_CADETS_FILE_ID :("mapped_events", "list_of_club_dinghies_with_cadets_at_event_%s.csv")}
+LIST_OF_CLUB_DINGHIES_AND_CADETS_FILE_ID :("mapped_events", "list_of_club_dinghies_with_cadets_at_event_%s.csv"),
+LIST_OF_DINGHIES_FILE_ID: ("lists", "list_of_dinghies.csv"),
+LIST_OF_CADETS_WITH_DINGHIES_AT_EVENT_FILE_ID: ("mapped_events", "list_of_cadets_with_dinghies_at_event_%s.csv")}

@@ -1,7 +1,7 @@
-from typing import List, Union
+from typing import Union
 
-from app.backend.cadets import cadet_name_from_id, cadet_from_id
-from app.backend.form_utils import  get_availability_checkbox
+from app.backend.cadets import cadet_name_from_id
+from app.backend.forms.form_utils import  get_availability_checkbox
 from app.backend.volunteers.volunteers import is_cadet_already_connected_to_volunteer_in_volunteer_list
 from app.backend.volunteers.volunteer_allocation import get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet
 from app.backend.volunteers.volunter_relevant_information import suggested_volunteer_availability

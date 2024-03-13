@@ -1,5 +1,5 @@
-from app.objects.club_dinghies import ListOfClubDinghies,  ListOfCadetAtEventWithClubDinghies
 from app.objects.patrol_boats import  ListOfPatrolBoats,  ListOfVolunteersAtEventWithPatrolBoats
+from app.objects.club_dinghies import ListOfClubDinghies,  ListOfCadetAtEventWithClubDinghies
 
 class DataListOfClubDinghies(object):
     def read(self) -> ListOfClubDinghies:

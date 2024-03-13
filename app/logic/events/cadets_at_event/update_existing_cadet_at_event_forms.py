@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.backend.form_utils import get_availability_checkbox, dropdown_input_for_status_change
+from app.backend.forms.form_utils import get_availability_checkbox, dropdown_input_for_status_change
 from app.backend.wa_import.update_cadets_at_event import new_status_and_status_message, NO_STATUS_CHANGE
 from app.logic.events.constants import (
     USE_NEW_DATA_BUTTON_LABEL,

@@ -55,7 +55,7 @@ from app.logic.events.import_wa.update_existing_event import (
 
 from app.logic.events.import_wa.import_controller import import_controller, post_import_controller
 
-from app.logic.events.allocate_cadets_to_groups import (
+from app.logic.events.group_allocation.allocate_cadets_to_groups import (
     display_form_allocate_cadets,
     post_form_allocate_cadets,
 )

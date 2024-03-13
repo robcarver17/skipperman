@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from app.backend.form_utils import get_availablity_from_form, get_status_from_form
+from app.backend.forms.form_utils import get_availablity_from_form, get_status_from_form
 from app.backend.wa_import.update_cadets_at_event import get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active, \
     get_cadet_at_event_for_cadet_id, replace_existing_cadet_at_event, update_status_of_existing_cadet_at_event, \
     update_availability_of_existing_cadet_at_event

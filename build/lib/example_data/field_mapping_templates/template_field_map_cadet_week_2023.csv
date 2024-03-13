@@ -9,17 +9,17 @@ Adult Helper 2 Food Preferences/Allergies,volunteer2_food_preference
 Adult Helper 2 Full Name,volunteer2_name
 Adult helper 2 preferred duties,volunteer2_duties
 Adult helper 2: Would you rather do the same type of duty all week or varied?,volunteer2_same_or_varied
-Alternative club boat if available,desired_club_boat_if_available
+Alternative club boat if available,desired_boat
 Cadet Any other information about this cadet including medical conditions?,any_other_information
 Cadet Can you swim at least 25 metres?,cadet_swim_25m
 Cadet Date of Birth,cadet_date_of_birth
 Cadet Do you have a suitable buoyancy aid?,cadet_bouyancy_aid
-Cadet Do you have your own boat?,cadet_own_boat_yes_or_no
+Cadet Do you have your own boat?,cadet_boat_ownership_status
 Cadet First Name,cadet_first_name
 Cadet Food Preferences/Allergies,cadet_food_preference
 Cadet Last Name,cadet_second_name
-Cadet Own Boat Class,cadet_own_boat_class
-Cadet Own Boat Sail Number,cadet_own_boat_sail_number
+Cadet Own Boat Class,cadet_boat_class
+Cadet Own Boat Sail Number,cadet_boat_sail_number
 Cadet Tee Shirt Size,cadet_t_shirt_size
 Can you or someone else volunteer as an adult helper?,volunteer_status
 Email for Club Communications,registered_by_email

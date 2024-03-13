@@ -10,6 +10,7 @@ from app.data_access.csv.mapped_wa_event import (
 from app.data_access.csv.print_options import csvDataListOfPrintOptions
 from app.data_access.csv.volunteers import CsvDataListOfVolunteers, CsvDataListOfVolunteerSkills, CsvDataListOfCadetVolunteerAssociations, CsvDataListOfVolunteersAtEvent, CsvDataListOfIdentifiedVolunteersAtEvent, CsvDataListOfVolunteersInRolesAtEvent
 from app.data_access.csv.resources import CsvDataListOfPatrolBoats, CsvDataListOfVolunteersAtEventWithPatrolBoats, CsvDataListOfClubDinghies, CsvDataListOfCadetAtEventWithClubDinghies
+from app.data_access.csv.dinghies_at_events import CsvDataListOfCadetAtEventWithDinghies, CsvDataListOfDinghies
 
 class CsvDataApi(GenericDataApi):
     def __init__(self, master_data_path: str):
@@ -99,5 +100,13 @@ class CsvDataApi(GenericDataApi):
         return CsvDataListOfVolunteersAtEventWithPatrolBoats(master_data_path=self.master_data_path)
 
     @property
-    def data_list_of_volunteers_at_event_with_club_dinghies(self) -> CsvDataListOfCadetAtEventWithClubDinghies:
+    def data_list_of_cadets_at_event_with_club_dinghies(self) -> CsvDataListOfCadetAtEventWithClubDinghies:
         return CsvDataListOfCadetAtEventWithClubDinghies(master_data_path=self.master_data_path)
+
+    @property
+    def data_list_of_cadets_with_dinghies_at_event(self) -> CsvDataListOfCadetAtEventWithDinghies:
+        return CsvDataListOfCadetAtEventWithDinghies(master_data_path=self.master_data_path)
+
+    @property
+    def data_list_of_dinghies(self) -> CsvDataListOfDinghies:
+        return CsvDataListOfDinghies(self.master_data_path)

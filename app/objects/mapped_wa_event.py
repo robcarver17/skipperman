@@ -9,16 +9,17 @@ from app.objects.utils import (
 transform_datetime_into_str
 )
 
-from app.objects.field_list import REGISTRATION_DATE, REGISTERED_BY_LAST_NAME, REGISTERED_BY_FIRST_NAME
+from app.data_access.configuration.field_list import REGISTRATION_DATE, REGISTERED_BY_LAST_NAME, REGISTERED_BY_FIRST_NAME
 
 from app.data_access.configuration.configuration import ACTIVE_STATUS, CANCELLED_STATUS
 from app.objects.constants import missing_data
-from app.objects.field_list import PAYMENT_STATUS
+from app.data_access.configuration.field_list import PAYMENT_STATUS
 
-RegistrationStatus = Enum("RowStatus", ["Cancelled", "Active", "Deleted"])
+RegistrationStatus = Enum("RowStatus", ["Cancelled", "Active", "Deleted", "Empty"])
 cancelled_status = RegistrationStatus.Cancelled
 active_status = RegistrationStatus.Active
 deleted_status = RegistrationStatus.Deleted
+empty_status = RegistrationStatus.Empty
 all_possible_status = [cancelled_status, active_status, deleted_status]
 
 
@@ -97,6 +98,9 @@ def get_status_from_row_of_mapped_wa_event_data(
     if status_str in CANCELLED_STATUS:
         return cancelled_status
 
+    if status_str=="":
+        return empty_status
+
     raise Exception(
         "WA has used a status of %s in the mapped field %s, not recognised, update configuration.py"
         % (status_str, PAYMENT_STATUS)
@@ -138,6 +142,14 @@ class MappedWAEvent(list):
 
     def list_of_row_ids(self) -> list:
         return extract_list_of_row_ids_from_existing_wa_event(self)
+
+    def remove_empty_status(self) -> "MappedWAEvent":
+        return self.remove_status(empty_status)
+
+    def remove_status(self, status_to_remove: RegistrationStatus) -> "MappedWAEvent":
+        subset= [row for row in self if not row.registration_status == status_to_remove]
+        return MappedWAEvent(subset)
+
 
     def active_registrations_only(self) -> "MappedWAEvent":
         return self.subset_on_status(active_status)

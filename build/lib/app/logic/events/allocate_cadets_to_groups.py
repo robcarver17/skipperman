@@ -53,7 +53,7 @@ update_button = Button(UPDATE_ALLOCATION_BUTTON_LABEL, big=True)
 
 def get_inner_form_for_cadet_allocation(event: Event) -> Table:
     allocation_data = get_allocation_data(event)
-    list_of_cadets = allocation_data.list_of_cadets
+    list_of_cadets = allocation_data.list_of_cadets_in_event
 
     return Table(
         [get_top_row(allocation_data=allocation_data)]+
@@ -88,7 +88,7 @@ def get_row_for_cadet(cadet: Cadet, allocation_data: AllocationData) -> RowInTab
     )
 
 def get_dropdown_input_for_cadet(cadet: Cadet, allocation_data: AllocationData) -> dropDownInput:
-    current_group = allocation_data.get_current_group(cadet)
+    current_group = allocation_data.get_current_group_name(cadet)
     drop_down_input_field = dropDownInput(
                 input_name=create_field_name_for_cadet_allocation(cadet),
                 input_label="Select group:",
@@ -117,7 +117,7 @@ def previous_form(interface: abstractInterface):
 def do_allocation_for_cadets_in_form(interface: abstractInterface):
     event = get_event_from_state(interface)
     allocation_data = get_allocation_data(event)
-    list_of_cadets = allocation_data.list_of_cadets
+    list_of_cadets = allocation_data.list_of_cadets_in_event
     for cadet in list_of_cadets:
         try:
             do_allocation_for_cadet_at_event(

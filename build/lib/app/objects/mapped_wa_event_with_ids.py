@@ -9,18 +9,13 @@ from app.objects.food import FoodRequirements, guess_food_requirements_from_food
 from app.objects.utils import clean_up_dict_with_nans
 from app.data_access.configuration.configuration import ACTIVE_STATUS, CANCELLED_STATUS
 from app.objects.constants import missing_data
-from app.objects.day_selectors import DaySelector, weekend_day_selector_from_text, \
-    any_day_selector_from_short_form_text
-from app.objects.field_list import PAYMENT_STATUS, WEEKEND_DAYS_ATTENDING_INPUT, \
-    ALL_DAYS_ATTENDING_INPUT, CADET_FOOD_PREFERENCE
+from app.data_access.configuration.field_list import PAYMENT_STATUS, CADET_FOOD_PREFERENCE
 
 from app.objects.mapped_wa_event import (
     RowInMappedWAEvent,
     extract_list_of_row_ids_from_existing_wa_event
 )
 from app.objects.constants import NoCadets, DuplicateCadets
-
-from app.objects.events import Event
 
 RowStatus = Enum("RowStatus", ["Cancelled", "Active", "Deleted"])
 

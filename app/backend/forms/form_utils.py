@@ -129,3 +129,7 @@ def dropdown_input_for_status_change(input_name: str,
 def get_status_from_form(interface: abstractInterface, input_name: str) -> RegistrationStatus:
     row_status_as_str = interface.value_from_form(input_name)
     return RegistrationStatus[row_status_as_str]
+
+
+def input_name_from_column_name_and_cadet_id(column_name: str, cadet_id: str) -> str:
+    return "%s-%s" % (column_name, cadet_id)

@@ -7,17 +7,16 @@ from app.objects.day_selectors import DaySelector, any_day_selector_from_short_f
 from app.objects.cadet_at_event import get_attendance_selection_from_event_row
 
 from app.objects.events import Event
-from app.objects.field_list import LIST_OF_VOLUNTEER_FIELDS, NAME_KEY_IN_VOLUNTEER_FIELDS_DICT, \
-    REGISTERED_BY_FIRST_NAME, VOLUNTEER_STATUS, ANY_OTHER_INFORMATION, AVAILABILITY_KEY_IN_VOLUNTEER_FIELDS_DICT, \
-    WEEKEND_AVAILABILITY_KEY_IN_VOLUNTEER_FIELDS_DICT, DUTIES_KEY_IN_VOLUNTEER_FIELDS_DICT, \
-    SAME_OR_VARIED_KEY_IN_VOLUNTEER_FIELDS_DICT, FOOD_PREFERENCE_KEY_IN_VOLUNTEER_FIELDS_DICT
-from app.objects.food import guess_food_requirements_from_food_field
+from app.data_access.configuration.field_list import REGISTERED_BY_FIRST_NAME, VOLUNTEER_STATUS, ANY_OTHER_INFORMATION
+from app.data_access.configuration.field_list_groups import NAME_KEY_IN_VOLUNTEER_FIELDS_DICT, \
+    AVAILABILITY_KEY_IN_VOLUNTEER_FIELDS_DICT, WEEKEND_AVAILABILITY_KEY_IN_VOLUNTEER_FIELDS_DICT, \
+    DUTIES_KEY_IN_VOLUNTEER_FIELDS_DICT, SAME_OR_VARIED_KEY_IN_VOLUNTEER_FIELDS_DICT, \
+    FOOD_PREFERENCE_KEY_IN_VOLUNTEER_FIELDS_DICT, LIST_OF_VOLUNTEER_FIELDS
 from app.objects.mapped_wa_event import RowInMappedWAEvent
 from app.objects.relevant_information_for_volunteers import RelevantInformationForVolunteer, \
     RelevantInformationForVolunteerIdentification, RelevantInformationForVolunteerAvailability, \
     RelevantInformationForVolunteerDetails, missing_relevant_information
 from app.objects.volunteers import Volunteer
-from app.objects.volunteers_at_event import VolunteerAtEvent
 
 
 def get_relevant_information_for_volunteer(row_in_mapped_event: RowInMappedWAEvent, volunteer_index: int, event: Event) -> RelevantInformationForVolunteer:

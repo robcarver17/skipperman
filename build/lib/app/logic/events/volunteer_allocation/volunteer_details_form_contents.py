@@ -1,5 +1,5 @@
 from app.backend.cadets import cadet_name_from_id, cadet_from_id
-from app.backend.form_utils import get_food_requirements_input, get_availability_checkbox
+from app.backend.forms.form_utils import get_food_requirements_input, get_availability_checkbox
 from app.backend.volunteers.volunteers import is_cadet_already_connected_to_volunteer_in_volunteer_list
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import get_volunteer_index, \

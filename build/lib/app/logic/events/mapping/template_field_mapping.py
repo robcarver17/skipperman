@@ -1,5 +1,7 @@
 from typing import Union
-from app.backend.data.field_mapping import write_field_mapping_for_event, get_list_of_templates, get_template
+from app.backend.data.field_mapping import write_field_mapping_for_event, get_list_of_templates, get_template, \
+    temp_mapping_file_name
+from app.data_access.configuration.field_list_groups import ALL_FIELDS_AS_PD_SERIES
 from app.logic.events.mapping.download_template_field_mapping import display_form_for_download_template_field_mapping
 from app.logic.events.mapping.upload_template_field_mapping import display_form_for_upload_template_field_mapping
 from app.objects.abstract_objects.abstract_interface import (
@@ -8,17 +10,16 @@ from app.objects.abstract_objects.abstract_interface import (
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,
-    NewForm,
+    NewForm, File,
 )
 from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.abstract_logic_api import initial_state_form
-from app.logic.events.constants import (
-    UPLOAD_TEMPLATE_BUTTON_LABEL,
-    DOWNLOAD_MAPPING_BUTTON_LABEL,
-)
 
+UPLOAD_TEMPLATE_BUTTON_LABEL = "Upload a new template"
+DOWNLOAD_MAPPING_BUTTON_LABEL = "Download a mapping .csv file to edit (which you can then upload)"
+DOWNLOAD_FIELD_NAMES_BUTTON_LANEL = "Download a .csv file of field names to use in creating a mapping file"
 
 def display_form_for_choose_template_field_mapping(interface: abstractInterface):
     list_of_templates_with_buttons = display_list_of_templates_with_buttons()
@@ -26,9 +27,10 @@ def display_form_for_choose_template_field_mapping(interface: abstractInterface)
     if len(list_of_templates_with_buttons) == 0:
         contents_of_form = ListOfLines(
             [
-                "Click to upload a new template for mapping fields",
+                "Click to upload a new template for mapping fields, or to download a file of field names",
                 _______________,
                 Button(UPLOAD_TEMPLATE_BUTTON_LABEL),
+                Button(DOWNLOAD_FIELD_NAMES_BUTTON_LANEL),
                 cancel_button,
             ]
         )
@@ -46,6 +48,8 @@ def display_form_for_choose_template_field_mapping(interface: abstractInterface)
                 "... download a template to edit in excel then upload",
                 _______________,
                 Button(DOWNLOAD_MAPPING_BUTTON_LABEL),
+                ".... download a list of field names to use in creating a template",
+                Button(DOWNLOAD_FIELD_NAMES_BUTTON_LANEL),
                 _______________,
                 cancel_button,
             ]
@@ -62,13 +66,16 @@ def display_list_of_templates_with_buttons() -> ListOfLines:
 
 def post_form_for_choose_template_field_mapping(
     interface: abstractInterface,
-) -> Union[Form, NewForm]:
+) -> Union[Form, NewForm, File]:
     last_button_pressed = interface.last_button_pressed()
     if last_button_pressed == UPLOAD_TEMPLATE_BUTTON_LABEL:
         return upload_template_form(interface)
 
     elif last_button_pressed == DOWNLOAD_MAPPING_BUTTON_LABEL:
         return download_template_form(interface)
+
+    elif last_button_pressed == DOWNLOAD_FIELD_NAMES_BUTTON_LANEL:
+        return download_field_names_form(interface)
 
     elif last_button_pressed == CANCEL_BUTTON_LABEL:
         return previous_form(interface)
@@ -84,6 +91,13 @@ def upload_template_form(interface: abstractInterface):
 
 def download_template_form(interface: abstractInterface):
     return interface.get_new_form_given_function(display_form_for_download_template_field_mapping)
+
+def download_field_names_form(interface: abstractInterface):
+    df_of_fields = ALL_FIELDS_AS_PD_SERIES
+    filename = temp_mapping_file_name()
+    df_of_fields.to_csv(filename, index=False)
+
+    return File(filename)
 
 
 def post_form_when_template_chosen(interface: abstractInterface,

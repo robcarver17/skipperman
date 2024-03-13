@@ -1,6 +1,6 @@
 from typing import List, Tuple, Callable
 
-from app.backend.data.resources import load_list_of_boats_at_event
+from app.backend.data.resources import load_list_of_patrol_boats_at_event
 from app.backend.volunteers.patrol_boats import get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day
 from app.data_access.configuration.fixed import REMOVE_SHORTHAND
 from app.objects.abstract_objects.abstract_buttons import Button
@@ -42,7 +42,7 @@ def from_delete_button_name_to_boat_name(button_name:str)->str:
 
 
 def list_of_delete_buttons_in_patrol_boat_table(event: Event)-> List[str]:
-    list_of_boats_at_event = load_list_of_boats_at_event(event)
+    list_of_boats_at_event = load_list_of_patrol_boats_at_event(event)
     return [delete_button_for_boat(boat_at_event) for boat_at_event in list_of_boats_at_event]
 
 

@@ -57,6 +57,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
   
 - allocate resources such as club dinghies
 - report on a volunteer rota
+- spotter sheets
 - import a set of members from WA to populate a list of cadets
 - users and passwords (skipper, deputy, instructors) 
 - regular backups on all writes; include roll back function
@@ -74,6 +75,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - maintain ticksheets, print and record ticks
 - print roll call lists and contact details
 - birthdays during an event - splash on event screen
+
    
 
 ### Required for cadet week:

@@ -55,14 +55,13 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for racing event:
   
-- sort group allocation table different ways
-- summary table of club boat allocation
 - add * for boat allocation to group report
 - report on a volunteer rota
 - spotter sheets
 - import a set of members from WA to populate a list of cadets
 - users and passwords (skipper, deputy, instructors) 
 - regular backups on all writes; include roll back function
+- populate with last years data
 
 
 ### Required for social event:

@@ -108,7 +108,8 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - move all dangerous deletes to special area: , delete event (many warnings!), delete cadet, delete volunteer
 - editable user sailing groups, volunteer roles, skills
 - create a list of key volunteers to invite to curry evening
-- create a report of cadets 
+- create a report of cadets
+- dropdown list of previous event names
 
 
 ### Future / wishlist / nice to have:

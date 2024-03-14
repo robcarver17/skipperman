@@ -55,7 +55,9 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for racing event:
   
-- allocate resources such as club dinghies
+- sort group allocation table different ways
+- summary table of club boat allocation
+- add * for boat allocation to group report
 - report on a volunteer rota
 - spotter sheets
 - import a set of members from WA to populate a list of cadets

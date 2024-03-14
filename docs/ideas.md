@@ -55,7 +55,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for racing event:
   
-- add * for boat allocation to group report
+- option to include racing in event 
 - report on a volunteer rota
 - spotter sheets
 - import a set of members from WA to populate a list of cadets
@@ -73,6 +73,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for training event:
 
+- add * for boat allocation to group report
 - maintain ticksheets, print and record ticks
 - print roll call lists and contact details
 - birthdays during an event - splash on event screen

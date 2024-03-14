@@ -110,7 +110,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - create a list of key volunteers to invite to curry evening
 - create a report of cadets
 - dropdown list of previous event names
-
+- clear description of field names
 
 ### Future / wishlist / nice to have:
 

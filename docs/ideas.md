@@ -55,11 +55,11 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for racing event:
   
+- import a set of members from WA to populate a list of cadets
 - phantom volunteer issue
 - test split out functionality include message
 - report on a volunteer rota
 - spotter sheets
-- import a set of members from WA to populate a list of cadets
 - users and passwords (skipper, deputy, instructors) 
 - regular backups on all writes; include roll back function
 - populate with last years data
@@ -101,6 +101,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
   ### General required before handover to Jonny:
 
 - don't allow duplicate templates and delete templates allowed
+- template for import of list of cadets
 - edit event (warnings especially days!)
 - all pdf reports should have csv counterparts
 - anything that is displayed on screen can be exported to .csv eg reg details, volunteer rota (and imported...???)

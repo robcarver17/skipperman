@@ -18,8 +18,7 @@ from app.logic.events.events_in_state import get_event_from_state
 from app.logic.abstract_logic_api import initial_state_form
 
 UPLOAD_TEMPLATE_BUTTON_LABEL = "Upload a new template"
-DOWNLOAD_MAPPING_BUTTON_LABEL = "Download a mapping .csv file to edit (which you can then upload)"
-DOWNLOAD_FIELD_NAMES_BUTTON_LANEL = "Download a .csv file of field names to use in creating a mapping file"
+
 
 def display_form_for_choose_template_field_mapping(interface: abstractInterface):
     list_of_templates_with_buttons = display_list_of_templates_with_buttons()
@@ -27,10 +26,9 @@ def display_form_for_choose_template_field_mapping(interface: abstractInterface)
     if len(list_of_templates_with_buttons) == 0:
         contents_of_form = ListOfLines(
             [
-                "Click to upload a new template for mapping fields, or to download a file of field names",
+                "Click to upload a new template for mapping fields",
                 _______________,
                 Button(UPLOAD_TEMPLATE_BUTTON_LABEL),
-                Button(DOWNLOAD_FIELD_NAMES_BUTTON_LANEL),
                 cancel_button,
             ]
         )
@@ -42,14 +40,8 @@ def display_form_for_choose_template_field_mapping(interface: abstractInterface)
                 "Choose template to use, or...",
                 list_of_templates_with_buttons,
                 _______________,
-                "... or upload a new one, or...",
+                "... or upload a new one",
                 Button(UPLOAD_TEMPLATE_BUTTON_LABEL),
-                _______________,
-                "... download a template to edit in excel then upload",
-                _______________,
-                Button(DOWNLOAD_MAPPING_BUTTON_LABEL),
-                ".... download a list of field names to use in creating a template",
-                Button(DOWNLOAD_FIELD_NAMES_BUTTON_LANEL),
                 _______________,
                 cancel_button,
             ]
@@ -71,12 +63,6 @@ def post_form_for_choose_template_field_mapping(
     if last_button_pressed == UPLOAD_TEMPLATE_BUTTON_LABEL:
         return upload_template_form(interface)
 
-    elif last_button_pressed == DOWNLOAD_MAPPING_BUTTON_LABEL:
-        return download_template_form(interface)
-
-    elif last_button_pressed == DOWNLOAD_FIELD_NAMES_BUTTON_LANEL:
-        return download_field_names_form(interface)
-
     elif last_button_pressed == CANCEL_BUTTON_LABEL:
         return previous_form(interface)
     else:
@@ -88,17 +74,6 @@ def previous_form(interface: abstractInterface):
 
 def upload_template_form(interface: abstractInterface):
     return interface.get_new_form_given_function(display_form_for_upload_template_field_mapping)
-
-def download_template_form(interface: abstractInterface):
-    return interface.get_new_form_given_function(display_form_for_download_template_field_mapping)
-
-def download_field_names_form(interface: abstractInterface):
-    df_of_fields = ALL_FIELDS_AS_PD_SERIES
-    filename = temp_mapping_file_name()
-    df_of_fields.to_csv(filename, index=False)
-
-    return File(filename)
-
 
 def post_form_when_template_chosen(interface: abstractInterface,
 ) -> Union[Form, NewForm]:

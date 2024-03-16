@@ -7,7 +7,7 @@ import pandas as pd
 
 from app.objects.food import FoodRequirements, guess_food_requirements_from_food_field
 from app.objects.utils import clean_up_dict_with_nans
-from app.data_access.configuration.configuration import ACTIVE_STATUS, CANCELLED_STATUS
+from app.data_access.configuration.configuration import WA_ACTIVE_STATUS, WA_CANCELLED_STATUS
 from app.objects.constants import missing_data
 from app.data_access.configuration.field_list import PAYMENT_STATUS, CADET_FOOD_PREFERENCE
 
@@ -77,10 +77,10 @@ def get_status_from_row_of_mapped_wa_event_data(
     status_str = get_status_str_from_row_of_mapped_wa_event_data(
         row_of_mapped_wa_event_data
     )
-    if status_str in ACTIVE_STATUS:
+    if status_str in WA_ACTIVE_STATUS:
         return active_status
 
-    if status_str in CANCELLED_STATUS:
+    if status_str in WA_CANCELLED_STATUS:
         return cancelled_status
 
     raise Exception(

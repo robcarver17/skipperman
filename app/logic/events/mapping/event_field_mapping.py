@@ -1,6 +1,7 @@
 from typing import Union
 
 from app.logic.events.mapping.clone_field_mapping import display_form_for_clone_event_field_mapping
+from app.logic.events.mapping.create_mapping import display_form_for_create_custom_field_mapping
 from app.logic.events.mapping.template_field_mapping import display_form_for_choose_template_field_mapping
 from app.logic.events.mapping.upload_field_mapping import display_form_for_upload_custom_field_mapping
 from app.objects.abstract_objects.abstract_form import (
@@ -106,7 +107,7 @@ def mapping_buttons() -> Line:
             Button(BACK_BUTTON_LABEL),
             Button(MAP_TO_TEMPLATE_BUTTON_LABEL),
             Button(CLONE_EVENT_MAPPING_BUTTON_LABEL),
-            Button(UPLOAD_MAPPING_BUTTON_LABEL),
+            Button(CREATE_MAPPING_BUTTON_LABEL)
         ]
     )
 
@@ -119,10 +120,10 @@ def post_form_event_field_mapping(interface: abstractInterface) -> Union[Form, N
         return template_mapping_form(interface)
     elif button_pressed == CLONE_EVENT_MAPPING_BUTTON_LABEL:
         return clone_mapping_form(interface)
-    elif button_pressed == UPLOAD_MAPPING_BUTTON_LABEL:
-        return custom_mapping_form(interface)
     elif button_pressed == BACK_BUTTON_LABEL:
         return previous_form(interface)
+    elif button_pressed == CREATE_MAPPING_BUTTON_LABEL:
+        return create_mapping_form(interface)
     else:
         button_error_and_back_to_initial_state_form(interface)
 
@@ -133,8 +134,10 @@ def template_mapping_form(interface: abstractInterface)-> NewForm:
 def clone_mapping_form(interface: abstractInterface)-> NewForm:
     return interface.get_new_form_given_function(display_form_for_clone_event_field_mapping)
 
-def custom_mapping_form(interface: abstractInterface)-> NewForm:
-    return interface.get_new_form_given_function(display_form_for_upload_custom_field_mapping)
+
+def create_mapping_form(interface: abstractInterface)-> NewForm:
+    return interface.get_new_form_given_function(display_form_for_create_custom_field_mapping)
+
 
 def previous_form(interface: abstractInterface)-> NewForm:
     return interface.get_new_display_form_for_parent_of_function(display_form_event_field_mapping)

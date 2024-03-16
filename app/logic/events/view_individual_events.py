@@ -44,10 +44,14 @@ def get_event_form_for_event(
 ) -> Union[Form, NewForm]:
     event_description = event.details_as_list_of_str()
 
-    if event.contains_groups:
+    if event.contains_cadets:
+        if event.contains_groups:
+            description = "Boat details and group allocations"
+        else:
+            description = "Boat details and allocations"
         allocations = summarise_allocations_for_event(event)
         allocations_lines = ListOfLines([ _______________,
-                    "Group allocations:",
+                    description,
                     _______________,
                     allocations])
 
@@ -153,14 +157,17 @@ def get_event_buttons(event: Event, interface: abstractInterface) -> Line:
 
 def get_event_specific_buttons(event: Event) -> list:
     group_allocation = Button(ALLOCATE_CADETS_BUTTON_LABEL)
+    modify_cadet_boats = Button(MODIFY_CADET_BOATS_BUTTON_LABEL)
     edit_registration = Button(EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON)
     volunteer_rota = Button(EDIT_VOLUNTEER_ROLES_BUTTON_LABEL)
     patrol_boat_allocation = Button(PATROL_BOAT_ALLOCATION_BUTTON_LABEL)
     event_specific_buttons = []
     if event.contains_cadets:
         event_specific_buttons.append(edit_registration)
-    if event.contains_groups:
-        event_specific_buttons.append(group_allocation)
+        if event.contains_groups:
+            event_specific_buttons.append(group_allocation)
+        else:
+            event_specific_buttons.append(modify_cadet_boats) ## Still do sails etc even if not groups
     if event.contains_volunteers:
         event_specific_buttons+=[volunteer_rota, patrol_boat_allocation]
     if event.contains_food:
@@ -191,7 +198,7 @@ def post_form_view_individual_event(
     elif last_button_pressed == WA_UPDATE_BUTTON_LABEL:
         return form_to_do_update_event(interface)
 
-    elif last_button_pressed == ALLOCATE_CADETS_BUTTON_LABEL:
+    elif last_button_pressed in [ALLOCATE_CADETS_BUTTON_LABEL, MODIFY_CADET_BOATS_BUTTON_LABEL]:
         return form_to_do_cadet_allocation(interface)
 
     elif last_button_pressed==EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON:

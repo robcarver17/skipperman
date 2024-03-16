@@ -59,6 +59,7 @@ from app.logic.events.group_allocation.allocate_cadets_to_groups import (
     display_form_allocate_cadets,
     post_form_allocate_cadets,
 )
+from app.logic.events.group_allocation.add_cadet_partner import display_add_cadet_partner, post_form_add_cadet_partner
 from app.logic.events.volunteer_allocation.volunteer_identification import \
     display_form_volunteer_identification, post_form_volunteer_identification
 from app.logic.events.volunteer_rota.verify_volunteers_if_cadet_at_event_changed import \
@@ -75,6 +76,7 @@ from app.logic.events.volunteer_rota.add_volunteer_to_rota import display_form_a
 from app.logic.events.patrol_boats.allocate_patrol_boats import display_form_view_for_patrol_boat_allocation, post_form_view_for_patrol_boat_allocation
 
 from app.objects.abstract_objects.form_function_mapping import   DisplayAndPostFormFunctionMaps, NestedDictOfMappings
+from app.logic.events.mapping.create_mapping import display_form_for_create_custom_field_mapping, post_form_for_create_custom_field_mapping
 
 event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_functions(
     NestedDictOfMappings(
@@ -84,7 +86,10 @@ event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_func
                     (display_form_view_for_add_event, post_form_view_for_add_event):0,
                     (display_form_view_individual_event, post_form_view_individual_event):
                         {
-                            (display_form_upload_event_file, post_form_upload_event_file): 0,
+                            (display_form_upload_event_file, post_form_upload_event_file):
+                                {
+                                (display_add_cadet_partner, post_form_add_cadet_partner):0
+                                },
                             (display_form_allocate_cadets, post_form_allocate_cadets):0,
                             (display_form_edit_registration_details, post_form_edit_registration_details):0,
                             (display_form_volunteer_rota_check, post_form_volunteer_rota_check):0,
@@ -103,11 +108,14 @@ event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_func
                                     (display_form_for_choose_template_field_mapping, post_form_for_choose_template_field_mapping):
                                         {
                                             (display_form_for_upload_template_field_mapping, post_form_for_upload_template_field_mapping):0,
-                                            (display_form_for_download_template_field_mapping, post_form_for_download_template_field_mapping):0,
+
                                         },
                                     (display_form_for_clone_event_field_mapping, post_form_for_clone_event_field_mapping):0,
-                                    (display_form_for_upload_custom_field_mapping, post_form_for_upload_custom_field_mapping):0,
-
+                                    (display_form_for_create_custom_field_mapping, post_form_for_create_custom_field_mapping):
+                                        {
+                                            (display_form_for_download_template_field_mapping, post_form_for_download_template_field_mapping):0,
+                                            (display_form_for_upload_custom_field_mapping, post_form_for_upload_custom_field_mapping):0,
+                                        },
                                 },
                             (display_form_import_event_file, post_form_import_event_file): 0,
                             (import_controller, post_import_controller):

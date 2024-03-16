@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from app.backend.cadets import get_sorted_list_of_cadets, cadet_from_id_with_passed_list
-from app.backend.forms.form_utils import get_availability_checkbox
+from app.backend.forms.form_utils import get_availability_checkbox, input_name_from_column_name_and_cadet_id
 from app.backend.forms.form_utils import dropdown_input_for_status_change
 from app.backend.data.cadets_at_event import load_cadets_at_event
 
@@ -16,7 +16,7 @@ from app.data_access.configuration.field_list_groups import FIELDS_WITH_INTEGERS
     FIELDS_TO_EDIT_IN_EDIT_VIEW
 from app.objects.constants import arg_not_passed
 from app.objects.mapped_wa_event import RowInMappedWAEvent, RegistrationStatus, cancelled_status, active_status, \
-    deleted_status
+    deleted_status, manual_add_status
 
 DAYS_ATTENDING = "days_attending_field"
 
@@ -100,6 +100,8 @@ def get_status_button(current_status: RegistrationStatus, cadet_id: str)-> dropD
         allowable_status = [cancelled_status, active_status]
     elif current_status == deleted_status:
         allowable_status = [cancelled_status, active_status, deleted_status]
+    elif current_status == manual_add_status:
+        allowable_status = [cancelled_status, manual_add_status]
     else:
         raise Exception("Status %s not recognised" % str(current_status))
 
@@ -111,15 +113,9 @@ def get_status_button(current_status: RegistrationStatus, cadet_id: str)-> dropD
 
 def get_days_attending_field(attendance: DaySelector, cadet_id: str, event: Event) -> checkboxInput:
     return get_availability_checkbox(availability=attendance,
-                              event=event,
-                              input_name = input_name_from_column_name_and_cadet_id(DAYS_ATTENDING, cadet_id=cadet_id),
-                              line_break=True)
-
-
-
-
-def input_name_from_column_name_and_cadet_id(column_name: str, cadet_id: str) -> str:
-    return "%s-%s" % (column_name, cadet_id)
+                                     event=event,
+                                     input_name = input_name_from_column_name_and_cadet_id(DAYS_ATTENDING, cadet_id=cadet_id),
+                                     line_break=True)
 
 
 def form_item_for_key_value_pair_in_row_data(column_name: str, cadet_at_event: CadetAtEvent):

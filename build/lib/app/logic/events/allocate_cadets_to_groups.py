@@ -53,7 +53,7 @@ update_button = Button(UPDATE_ALLOCATION_BUTTON_LABEL, big=True)
 
 def get_inner_form_for_cadet_allocation(event: Event) -> Table:
     allocation_data = get_allocation_data(event)
-    list_of_cadets = allocation_data.list_of_cadets_in_event
+    list_of_cadets = allocation_data.list_of_cadets_in_event_active_only
 
     return Table(
         [get_top_row(allocation_data=allocation_data)]+
@@ -117,7 +117,7 @@ def previous_form(interface: abstractInterface):
 def do_allocation_for_cadets_in_form(interface: abstractInterface):
     event = get_event_from_state(interface)
     allocation_data = get_allocation_data(event)
-    list_of_cadets = allocation_data.list_of_cadets_in_event
+    list_of_cadets = allocation_data.list_of_cadets_in_event_active_only
     for cadet in list_of_cadets:
         try:
             do_allocation_for_cadet_at_event(

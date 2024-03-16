@@ -34,8 +34,8 @@ MAX_CADET_AGE = configuration["maximium_cadet_age"]
 
 ## WA
 ## Status of payment_status, used to determine cadet status
-ACTIVE_STATUS = configuration["wild_apricot_payment_fields_which_are_active_status"]
-CANCELLED_STATUS = configuration[
+WA_ACTIVE_STATUS = configuration["wild_apricot_payment_fields_which_are_active_status"]
+WA_CANCELLED_STATUS = configuration[
     "wild_apricot_payment_fields_which_are_cancelled_status"
 ]
 WILD_APRICOT_EVENT_ID = configuration["wild_apricot_event_id"]

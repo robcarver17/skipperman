@@ -14,6 +14,7 @@ class DataListOfCadets(object):
         list_of_cadets.append(cadet)
 
         self.write(list_of_cadets)
+        return cadet
 
     def read(self) -> ListOfCadets:
         raise NotImplemented

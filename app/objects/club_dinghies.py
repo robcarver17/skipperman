@@ -71,6 +71,13 @@ class ListOfCadetAtEventWithClubDinghies(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return CadetAtEventWithClubDinghy
 
+    def unique_sorted_list_of_dinghy_ids(self, sorted_list_of_all_dinghies: ListOfClubDinghies):
+        list_of_dinghies_here = [object.club_dinghy_id for object in self]
+        list_of_dinghies_here = list(set(list_of_dinghies_here))
+        sorted_list = [dinghy.id for dinghy in sorted_list_of_all_dinghies if dinghy.id in list_of_dinghies_here]
+
+        return sorted_list
+
     def delete_allocation_for_cadet(self, cadet_id: str):
         ## allowed to fail
         try:
@@ -101,5 +108,7 @@ class ListOfCadetAtEventWithClubDinghies(GenericListOfObjectsWithIds):
 
         return list_of_items[0]
 
+    def list_of_cadet_ids(self): ##should be unique
+        return [item.cadet_id for item in self]
 
 NO_BOAT = ''

@@ -38,6 +38,7 @@ class GenericSkipperManObject:
         return cls(**dict_of_nones)
 
 
+
     @classmethod
     def from_str(cls, object_as_str: str):
         as_list_of_str = object_as_str.split(",")

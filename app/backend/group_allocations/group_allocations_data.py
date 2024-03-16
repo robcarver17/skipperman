@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from app.backend.group_allocations.group_allocation_info import get_group_allocation_info, \
     GroupAllocationInfo
 from app.backend.events import get_sorted_list_of_events
-from app.backend.group_allocations.cadet_event_allocations import get_list_of_cadets_at_event, \
+from app.backend.group_allocations.cadet_event_allocations import get_list_of_active_cadets_at_event, \
     load_allocation_for_event
 from app.backend.group_allocations.previous_allocations import allocation_for_cadet_in_previous_events, \
     get_dict_of_allocations_for_events_and_list_of_cadets
@@ -15,14 +15,15 @@ from app.data_access.configuration.field_list import CADET_GROUP_PREFERENCE, DES
 from app.backend.data.resources import load_list_of_club_dinghies, load_list_of_cadets_at_event_with_club_dinghies
 from app.backend.data.resources import load_list_of_boat_classes
 from app.backend.data.cadets_at_event import load_list_of_cadets_at_event_with_dinghies
+from app.data_access.configuration.field_list_groups import GROUP_ALLOCATION_FIELDS_TO_IGNORE_WHEN_RACING_ONLY
 
 from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.constants import missing_data
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event, list_of_events_excluding_one_event, SORT_BY_START_ASC
 from app.objects.groups import ListOfCadetIdsWithGroups, Group
-from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies, ListOfClubDinghies
-from app.objects.dinghies import ListOfDinghies, ListOfCadetAtEventWithDinghies, NO_PARTNER_REQUIRED, NOT_ALLOCATED
+from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies, ListOfClubDinghies, NO_BOAT
+from app.objects.dinghies import ListOfDinghies, ListOfCadetAtEventWithDinghies, no_partnership, NO_PARTNER_REQUIRED
 from app.objects.utils import similar
 
 from app.objects.cadet_at_event import ListOfCadetsAtEvent
@@ -32,8 +33,8 @@ from app.objects.cadet_at_event import ListOfCadetsAtEvent
 class AllocationData:
     event: Event
     current_allocation_for_event: ListOfCadetIdsWithGroups
-    cadets_at_event: ListOfCadetsAtEvent
-    list_of_cadets_in_event: ListOfCadets
+    cadets_at_event_including_non_active: ListOfCadetsAtEvent
+    list_of_cadets_in_event_active_only: ListOfCadets
     list_of_all_cadets: ListOfCadets
     previous_allocations_as_dict: Dict[Event, ListOfCadetIdsWithGroups]
     group_allocation_info: GroupAllocationInfo
@@ -45,10 +46,9 @@ class AllocationData:
     def get_two_handed_partner_name_for_cadet(self, cadet: Cadet) -> str:
         partner_id = self.get_two_handed_partner_id_for_cadet(cadet)
 
-        if partner_id in [NO_PARTNER_REQUIRED, NOT_ALLOCATED]:
+        if no_partnership(partner_id):
             return partner_id
-
-        cadet = self.list_of_cadets_in_event.object_with_id(partner_id)
+        cadet = self.list_of_cadets_in_event_active_only.object_with_id(partner_id)
         if cadet is missing_data:
             raise Exception("Cadet partnet with ID %s not found" % partner_id)
 
@@ -58,6 +58,8 @@ class AllocationData:
         partner_id = self.list_of_cadets_at_event_with_dinghies.cadet_partner_id_for_cadet_id(cadet_id=cadet.id)
         if partner_id is missing_data:
             return NO_PARTNER_REQUIRED
+
+        return partner_id
 
     def get_sail_number_for_boat(self, cadet: Cadet)-> str:
         sail_number_from_data = self.get_sail_number_for_boat_from_data(cadet)
@@ -101,10 +103,20 @@ class AllocationData:
 
     def get_current_club_boat_name(self, cadet: Cadet)-> str:
         dinghy_id = self.list_of_club_boats_allocated.dinghy_for_cadet_id(cadet.id)
+        if dinghy_id is missing_data:
+            return NO_BOAT
         return self.list_of_club_boats.name_given_id(dinghy_id)
 
     def group_info_fields(self):
-        return self.group_allocation_info.visible_field_names
+        visible_field_names =  self.group_allocation_info.visible_field_names
+        if not self.event.contains_groups:
+            try:
+                for field in GROUP_ALLOCATION_FIELDS_TO_IGNORE_WHEN_RACING_ONLY:
+                    visible_field_names.remove(field)
+            except:
+                pass
+
+        return visible_field_names
 
     def group_info_dict_for_cadet_as_ordered_list(self, cadet: Cadet):
         info_dict = self.group_allocation_info.get_allocation_info_for_cadet(cadet)
@@ -112,12 +124,17 @@ class AllocationData:
         return [info_dict.get(field_name, "") for field_name in self.group_info_fields()]
 
     def previous_event_names(self) -> list:
+        if not self.event.contains_groups:
+            return []
+
         previous_events = self.previous_allocations_as_dict.keys()
         event_names = [str(event) for event in previous_events]
 
         return event_names
 
     def previous_groups_as_list_of_str(self, cadet: Cadet) -> list:
+        if not self.event.contains_groups:
+            return []
         previous_groups_as_list = self.previous_groups_as_list(cadet)
         return [x.as_str_replace_unallocated_with_empty() for x in previous_groups_as_list]
 
@@ -148,11 +165,11 @@ class AllocationData:
         return current_allocation
 
     def cadet_availability_at_event(self, cadet: Cadet)-> DaySelector:
-        cadet_at_event =  self.cadets_at_event.cadet_at_event(cadet_id=cadet.id)
+        cadet_at_event =  self.cadets_at_event_including_non_active.cadet_at_event(cadet_id=cadet.id)
         return cadet_at_event.availability
 
     def list_of_names_of_cadets_at_event_excluding_cadet(self, cadet: Cadet) -> List[str]:
-        ids_at_event = self.cadets_at_event.list_of_cadet_ids()
+        ids_at_event = self.list_of_cadets_in_event_active_only.list_of_ids
         ids_at_event_excluding_cadet = [id for id in ids_at_event if not id==cadet.id]
         names = [self.list_of_all_cadets.object_with_id(id).name for id in ids_at_event_excluding_cadet]
         names.sort()
@@ -191,15 +208,14 @@ def similarity_score_and_best_option_against_boat_names_for_one_name(option: str
 
 def get_allocation_data(event: Event) -> AllocationData:
     current_allocation_for_event = load_allocation_for_event(event)
-    cadets_at_event = load_cadets_at_event(event)
-    unsorted_list_of_cadets = get_list_of_cadets_at_event(event)
-    list_of_cadets = reorder_list_of_cadets_by_allocated_group(list_of_cadets=unsorted_list_of_cadets, current_allocation_for_event=current_allocation_for_event)
+    cadets_at_event_including_non_active = load_cadets_at_event(event)
+    list_of_cadets_in_event_active_only = get_list_of_active_cadets_at_event(event)
     list_of_events = get_sorted_list_of_events()
     list_of_previous_events = list_of_events_excluding_one_event(list_of_events=list_of_events,event_to_exclude=event, only_past=True, sort_by=SORT_BY_START_ASC)
     previous_allocations_as_dict = get_dict_of_allocations_for_events_and_list_of_cadets(list_of_events=list_of_previous_events)
     list_of_all_cadets = get_list_of_all_cadets()
 
-    group_allocation_info = get_group_allocation_info(cadets_at_event=cadets_at_event)
+    group_allocation_info = get_group_allocation_info(cadets_at_event_including_non_active)
 
     list_of_dinghies = load_list_of_boat_classes()
     list_of_club_boats = load_list_of_club_dinghies()
@@ -209,8 +225,8 @@ def get_allocation_data(event: Event) -> AllocationData:
     return AllocationData(
         event=event,
         current_allocation_for_event=current_allocation_for_event,
-        cadets_at_event=cadets_at_event,
-        list_of_cadets_in_event=list_of_cadets,
+        cadets_at_event_including_non_active=cadets_at_event_including_non_active,
+        list_of_cadets_in_event_active_only=list_of_cadets_in_event_active_only,
         previous_allocations_as_dict=previous_allocations_as_dict,
         group_allocation_info=group_allocation_info,
         list_of_dinghies=list_of_dinghies,
@@ -221,21 +237,7 @@ def get_allocation_data(event: Event) -> AllocationData:
     )
 
 
-def reorder_list_of_cadets_by_allocated_group(list_of_cadets: ListOfCadets, current_allocation_for_event: ListOfCadetIdsWithGroups)-> ListOfCadets:
-    sorted_by_group = current_allocation_for_event.sort_by_group()
-    sorted_list_of_ids = sorted_by_group.list_of_ids
-    unallocated_cadets = (
-        current_allocation_for_event.cadets_in_list_not_allocated_to_group(
-            list_of_cadets
-        )
-    )
-    unallocated_ids = unallocated_cadets.list_of_ids
-    joint_ids = sorted_list_of_ids+unallocated_ids ## sorted, then unallocated
-
-    return ListOfCadets.subset_from_list_of_ids(list_of_cadets, list_of_ids=joint_ids)
-
 
 ## only return if not all empty values
-
 
 

@@ -56,6 +56,7 @@ wild_apricot_payment_fields_which_are_active_status:
   - "Partially paid"
   - "Paid"
   - "Unpaid"
+  - "Free"
 wild_apricot_payment_fields_which_are_cancelled_status:
   - "Canceled"
   - "Cancelled"

@@ -1,7 +1,7 @@
 import datetime
 import pandas as pd
 
-from app.objects.cadets import Cadet
+from app.objects.cadets import Cadet, DEFAULT_DATE_OF_BIRTH
 from app.data_access.configuration.field_list import CADET_SURNAME, CADET_DATE_OF_BIRTH, CADET_FIRST_NAME
 
 from app.backend.data.cadets_at_event import load_identified_cadets_at_event, save_identified_cadets_at_event
@@ -13,14 +13,17 @@ from app.objects.mapped_wa_event import RowInMappedWAEvent
 def get_cadet_data_from_row_of_mapped_data_no_checks(
     row_of_mapped_data: RowInMappedWAEvent,
 ) -> Cadet:
-    first_name = row_of_mapped_data[CADET_FIRST_NAME]
-    second_name = row_of_mapped_data[CADET_SURNAME]
-    dob = row_of_mapped_data[CADET_DATE_OF_BIRTH]
-    dob_as_date = _translate_df_timestamp_to_datetime(dob)
+    first_name = row_of_mapped_data.get(CADET_FIRST_NAME,'')
+    second_name = row_of_mapped_data.get(CADET_SURNAME,'')
+    dob = row_of_mapped_data.get(CADET_DATE_OF_BIRTH, None)
+    if dob is None:
+        dob_as_date = DEFAULT_DATE_OF_BIRTH
+    else:
+        dob_as_date = _translate_df_timestamp_to_datetime(dob)
 
     return Cadet(
-        first_name=first_name.strip(),
-        surname=second_name.strip(),
+        first_name=first_name.strip().title(),
+        surname=second_name.strip().title(),
         date_of_birth=dob_as_date,
     )
 

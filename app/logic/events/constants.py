@@ -26,9 +26,11 @@ SEE_SIMILAR_CADETS_ONLY_LABEL = "See similar cadets only"
 MAP_TO_TEMPLATE_BUTTON_LABEL = "Use template mapping"
 UPLOAD_MAPPING_BUTTON_LABEL = "Upload new mapping .csv file"
 CLONE_EVENT_MAPPING_BUTTON_LABEL = "Clone the mapping for an existing event"
+CREATE_MAPPING_BUTTON_LABEL = "Create your own mapping file"
 
 # specific event; backend
-ALLOCATE_CADETS_BUTTON_LABEL = "Allocate cadets to groups"
+ALLOCATE_CADETS_BUTTON_LABEL = "Allocate cadets to groups, modify boat information"
+MODIFY_CADET_BOATS_BUTTON_LABEL = "View/modify cadet boat information"
 
 # specific event; edit
 EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON = "View/edit registration data"
@@ -64,7 +66,6 @@ EVENT = "event"
 ROW_IN_EVENT_DATA = "row_in_event_data"
 
 # field names
-WA_FILE = "file"
 MAPPING_FILE = "file"
 TEMPLATE_NAME = "template_name"
 ALLOCATION = "allocation"

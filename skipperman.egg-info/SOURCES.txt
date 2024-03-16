@@ -24,6 +24,7 @@ app/backend/forms/__init__.py
 app/backend/forms/form_utils.py
 app/backend/forms/reorder_form.py
 app/backend/forms/reorder_matrix.py
+app/backend/forms/summarys.py
 app/backend/forms/swaps.py
 app/backend/forms/../../data_access/configuration/configuration.yaml
 app/backend/group_allocations/__init__.py
@@ -32,6 +33,7 @@ app/backend/group_allocations/cadet_event_allocations.py
 app/backend/group_allocations/group_allocation_info.py
 app/backend/group_allocations/group_allocations_data.py
 app/backend/group_allocations/previous_allocations.py
+app/backend/group_allocations/sorting.py
 app/backend/group_allocations/summarise_allocations_data.py
 app/backend/group_allocations/../../data_access/configuration/configuration.yaml
 app/backend/reporting/__init__.py
@@ -71,6 +73,7 @@ app/backend/volunteers/../../data_access/configuration/configuration.yaml
 app/backend/wa_import/__init__.py
 app/backend/wa_import/add_cadet_ids_to_mapped_wa_event_data.py
 app/backend/wa_import/check_mapping.py
+app/backend/wa_import/convert_helm_crew_data.py
 app/backend/wa_import/load_wa_file.py
 app/backend/wa_import/map_wa_fields.py
 app/backend/wa_import/map_wa_files.py
@@ -153,6 +156,7 @@ app/logic/events/cadets_at_event/update_existing_cadet_at_event_forms.py
 app/logic/events/cadets_at_event/update_existing_cadet_at_event_from_form_entries.py
 app/logic/events/cadets_at_event/../../../data_access/configuration/configuration.yaml
 app/logic/events/group_allocation/__init__.py
+app/logic/events/group_allocation/add_cadet_partner.py
 app/logic/events/group_allocation/allocate_cadets_to_groups.py
 app/logic/events/group_allocation/parse_allocation_form.py
 app/logic/events/group_allocation/render_allocation_form.py
@@ -166,6 +170,7 @@ app/logic/events/import_wa/upload_event_file.py
 app/logic/events/import_wa/../../../data_access/configuration/configuration.yaml
 app/logic/events/mapping/__init__.py
 app/logic/events/mapping/clone_field_mapping.py
+app/logic/events/mapping/create_mapping.py
 app/logic/events/mapping/download_field_names.py
 app/logic/events/mapping/download_template_field_mapping.py
 app/logic/events/mapping/event_field_mapping.py

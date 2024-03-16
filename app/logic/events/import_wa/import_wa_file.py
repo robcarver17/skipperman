@@ -1,5 +1,6 @@
 from typing import Union
 
+from app.backend.wa_import.convert_helm_crew_data import convert_mapped_wa_event_potentially_with_joined_rows
 from app.logic.events.import_wa.import_controller import import_controller
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -45,11 +46,12 @@ def process_wa_staged_file_already_uploaded(interface: abstractInterface) -> New
     verify_and_if_required_add_wa_mapping(filename=filename, event=event)
 
     ## do field mapping
-    mapped_wa_event_data = map_wa_fields_in_df_for_event(event=event, filename=filename)
+    mapped_wa_event_data_raw = map_wa_fields_in_df_for_event(event=event, filename=filename)
 
     ## remove empty status
-    mapped_wa_event_data = mapped_wa_event_data.remove_empty_status()
-    print("mapped data %s" % mapped_wa_event_data)
+    mapped_wa_event_data_without_empty = mapped_wa_event_data_raw.remove_empty_status()
+
+    mapped_wa_event_data = convert_mapped_wa_event_potentially_with_joined_rows(mapped_wa_event_data_without_empty)
 
     save_mapped_wa_event(mapped_wa_event_data=mapped_wa_event_data, event=event)
 

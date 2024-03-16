@@ -4,6 +4,7 @@ from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.logic.events.constants import (
+    CHECK_CADET_FOR_ME_BUTTON_LABEL,
     DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL,
     FINAL_CADET_ADD_BUTTON_LABEL,
     SEE_ALL_CADETS_BUTTON_LABEL,
@@ -21,10 +22,12 @@ from app.objects.cadets import Cadet
 from app.objects.constants import arg_not_passed
 
 
+
 def get_add_or_select_existing_cadet_form(
     interface: abstractInterface,
     see_all_cadets: bool,
     include_final_button: bool,
+    header_text: str,
     cadet: Cadet = arg_not_passed, ## Is passed only on first iteration when cadet is from data not form
 ) -> Form:
     print("Generating add/select cadet form")
@@ -50,7 +53,7 @@ def get_add_or_select_existing_cadet_form(
         include_final_button=include_final_button,
     )
     # Custom header text
-    header_text = "Looks like a new cadet in the WA entry file. You can edit them, check their details and then add, or choose an existing cadet instead (avoid creating duplicates! If the existing cadet details are wrong, select them for now and edit later)"
+
     return get_add_cadet_form_with_information_passed(
         cadet_and_text=cadet_and_text,
         footer_buttons=footer_buttons,
@@ -72,13 +75,13 @@ def get_footer_buttons_add_or_select_existing_cadets_form(
 
 
 def get_list_of_main_buttons(include_final_button: bool) -> Line:
-    check = Button(DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL)
+    checked_ok = Button(DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL)
     add = Button(FINAL_CADET_ADD_BUTTON_LABEL)
-
+    check_for_me = Button(CHECK_CADET_FOR_ME_BUTTON_LABEL)
     if include_final_button:
-        main_buttons = Line([check, add])
+        main_buttons = Line([check_for_me, add])
     else:
-        main_buttons = Line(check)
+        main_buttons = Line(checked_ok)
 
     return main_buttons
 

@@ -34,7 +34,7 @@ def post_import_controller(interface):
     raise Exception("Should never get here")
 
 ## order matters, as other things rely on cadets
-## Group allocation doesn't appear here
+## Group allocation doesn't appear here since not done as an import
 ORDERED_LIST_OF_POSSIBLE_IMPORTS = [CADETS, VOLUNTEERS]
 
 #ORDERED_LIST_OF_POSSIBLE_IMPORTS = [CADETS, VOLUNTEERS, #GROUP_ALLOCATION,

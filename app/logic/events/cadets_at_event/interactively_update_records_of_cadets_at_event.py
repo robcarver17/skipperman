@@ -127,14 +127,17 @@ def process_update_to_deleted_cadet(
     existing_cadet_at_event = get_cadet_at_event_for_cadet_id(
         event=event, cadet_id=cadet_id
     )
-    if not existing_cadet_at_event.is_deleted():
+
+    if existing_cadet_at_event.is_deleted() or existing_cadet_at_event.is_manual_add():
+        print("Cadet %s already marked as deleted" % cadet_name_from_id(cadet_id))
+    elif not existing_cadet_at_event.is_manual_add():
+        print("Cadet %s was added manually so won't be in new WA import" % cadet_name_from_id(cadet_id))
+    else:
         interface.log_message(
             "Cadet %s was in WA event data, now appears to be missing or cancelled in latest file - marked as deleted"
             % cadet_name_from_id(cadet_id)
         )
         mark_cadet_at_event_as_deleted(cadet_id=cadet_id, event=event)
-    else:
-        print("Cadet %s already marked as deleted" % cadet_name_from_id(cadet_id))
 
     return process_next_cadet_at_event(interface)
 

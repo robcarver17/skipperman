@@ -16,7 +16,7 @@ from app.data_access.configuration.field_list_groups import FIELDS_WITH_INTEGERS
     FIELDS_TO_EDIT_IN_EDIT_VIEW
 from app.objects.constants import arg_not_passed
 from app.objects.mapped_wa_event import RowInMappedWAEvent, RegistrationStatus, cancelled_status, active_status, \
-    deleted_status
+    deleted_status, manual_add_status
 
 DAYS_ATTENDING = "days_attending_field"
 
@@ -100,6 +100,8 @@ def get_status_button(current_status: RegistrationStatus, cadet_id: str)-> dropD
         allowable_status = [cancelled_status, active_status]
     elif current_status == deleted_status:
         allowable_status = [cancelled_status, active_status, deleted_status]
+    elif current_status == manual_add_status:
+        allowable_status = [cancelled_status, manual_add_status]
     else:
         raise Exception("Status %s not recognised" % str(current_status))
 

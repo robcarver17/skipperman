@@ -8,7 +8,7 @@ from app.logic.events.constants import (
     FINAL_ADD_BUTTON_LABEL,
 )
 
-from app.objects.events import Event, default_event, DICT_OF_NAMES_AND_ATTRIBUTES_CHECKBOX
+from app.objects.events import Event, default_event, DICT_OF_NAMES_AND_ATTRIBUTES_CHECKBOX, EXAMPLES_OF_EVENTS
 
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
@@ -125,6 +125,7 @@ def form_fields_for_add_event(event: Event = default_event) -> ListOfLines:
         start_date,
         days,
         event_type,
+        EXAMPLES_OF_EVENTS
     ]
 
     return ListOfLines(list_of_form_entries)

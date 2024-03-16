@@ -14,7 +14,7 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
     get_file_from_interface,
 )
-from app.logic.events.constants import WA_FILE
+from app.backend.wa_import.load_wa_file import WA_FILE
 from app.objects.constants import NoValidFile, NoValidID, FileError
 
 

@@ -9,7 +9,7 @@ from app.data_access.configuration.configuration import (
 )
 from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds
 from app.objects.utils import transform_date_into_str, similar
-from app.objects.constants import arg_not_passed, DAYS_IN_YEAR
+from app.objects.constants import arg_not_passed, DAYS_IN_YEAR, missing_data
 from app.objects.utils import union_of_x_and_y
 
 @dataclass
@@ -27,11 +27,12 @@ class Cadet(GenericSkipperManObjectWithIds):
         )
 
     def __eq__(self, other):
-        return (
-            (self.first_name == other.first_name)
-            and (self.surname == other.surname)
-            and (self.date_of_birth == other.date_of_birth)
-        )
+        return \
+            self.has_same_name(other)\
+            and self.date_of_birth == other.date_of_birth
+
+    def has_same_name(self, other):
+        return self.first_name==other.first_name and self.surname == other.surname
 
     def __hash__(self):
         return hash(
@@ -68,9 +69,34 @@ class Cadet(GenericSkipperManObjectWithIds):
     def similarity_dob(self, other_cadet: "Cadet") -> float:
         return similar(self._date_of_birth_as_str, other_cadet._date_of_birth_as_str)
 
+multiple_matches = object()
 
 class ListOfCadets(GenericListOfObjectsWithIds):
-    def matching_cadet(self, cadet: Cadet) -> Cadet:
+    def matching_cadet(self, cadet: Cadet, exact_match_required: bool = False) -> Cadet:
+        exact_match = [cadet_in_list for cadet_in_list in self if cadet==cadet_in_list]
+        if len(exact_match)==1:
+            return exact_match[0]
+        elif len(exact_match)>1:
+            raise Exception("Multiple matching cadets found!")
+
+        ### no exact matches required
+        if exact_match_required:
+            return missing_data
+        else:
+            return self.matching_cadets_on_name_only(cadet)
+
+    def matching_cadets_on_name_only(self, cadet: Cadet) -> Cadet:
+        names_match = [cadet_in_list for cadet_in_list in self if cadet.has_same_name(cadet_in_list)]
+
+        if len(names_match)>1:
+            ## multiple matches, as good as missing data
+            return missing_data
+        elif len(names_match)==0:
+            return missing_data
+
+        return names_match[0]
+
+    def exact_match(self, cadet: Cadet) -> Cadet:
         return self[self.index(cadet)]
 
     def sort_by_surname(self):
@@ -128,6 +154,14 @@ class ListOfCadets(GenericListOfObjectsWithIds):
 
         return ListOfCadets(similar_surnames)
 
+    def id_given_name(self, name: str):
+        ids = [cadet.id for cadet in self if cadet.name==name]
+        if len(ids)==0:
+            return missing_data
+        if len(ids)>1:
+            raise Exception("Can't have multiple cadets with same name")
+
+        return ids[0]
 
 def is_cadet_age_surprising(cadet: Cadet):
     age = cadet.approx_age_years()
@@ -135,8 +169,11 @@ def is_cadet_age_surprising(cadet: Cadet):
     return age < MIN_CADET_AGE or age > MAX_CADET_AGE
 
 
+DEFAULT_DATE_OF_BIRTH = datetime.date(1970,1,1)
+
 default_cadet = Cadet(
     first_name=" ",
     surname=" ",
-    date_of_birth=datetime.date.today() - datetime.timedelta(days=8 * 365),
+    date_of_birth=DEFAULT_DATE_OF_BIRTH
 )
+

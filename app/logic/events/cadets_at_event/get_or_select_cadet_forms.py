@@ -22,10 +22,12 @@ from app.objects.cadets import Cadet
 from app.objects.constants import arg_not_passed
 
 
+
 def get_add_or_select_existing_cadet_form(
     interface: abstractInterface,
     see_all_cadets: bool,
     include_final_button: bool,
+    header_text: str,
     cadet: Cadet = arg_not_passed, ## Is passed only on first iteration when cadet is from data not form
 ) -> Form:
     print("Generating add/select cadet form")
@@ -51,7 +53,7 @@ def get_add_or_select_existing_cadet_form(
         include_final_button=include_final_button,
     )
     # Custom header text
-    header_text = "Looks like a new cadet in the WA entry file. You can edit them, check their details and then add, or choose an existing cadet instead (avoid creating duplicates! If the existing cadet details are wrong, select them for now and edit later)"
+
     return get_add_cadet_form_with_information_passed(
         cadet_and_text=cadet_and_text,
         footer_buttons=footer_buttons,

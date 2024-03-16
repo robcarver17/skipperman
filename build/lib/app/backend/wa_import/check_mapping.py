@@ -47,12 +47,13 @@ def list_of_warnings_about_fields(
         fields_in_wa_file
     )
     expected_not_in_mapping = in_x_not_in_y(ALL_FIELDS_EXPECTED_IN_WA_FILE_MAPPING, wa_field_mapping.list_of_skipperman_fields)
+    unknown_fields = in_x_not_in_y(wa_field_mapping.list_of_skipperman_fields, ALL_FIELDS_EXPECTED_IN_WA_FILE_MAPPING)
 
     output = []
     if len(in_mapping_not_in_wa_file)>0:
         in_mapping_not_in_wa_file_as_lines = [Line("-" + x) for x in in_mapping_not_in_wa_file]
         output.append(Line(bold(
-            "Following fields are missing from WA file; may cause problems later: ")))
+            "Following expected fields in the mapping file are missing from WA file; may cause problems later: ")))
         output+=in_mapping_not_in_wa_file_as_lines
         output.append(_______________)
 
@@ -66,8 +67,15 @@ def list_of_warnings_about_fields(
     if len(expected_not_in_mapping) > 0:
         expected_not_in_mapping_as_lines = [Line("-" + x) for x in expected_not_in_mapping]
         output.append(bold(
-            "Following internal fields are not defined in mapping file, might be OK depending on event type: "))
+            "Following internal skipperman fields are not defined in mapping file, might be OK depending on event type: "))
         output+=expected_not_in_mapping_as_lines
+        output.append(_______________)
+
+    if len(unknown_fields)>0:
+        unknown_as_lines = [Line("-" + x) for x in unknown_fields]
+        output.append(bold(
+            "Following skipperman internal fields defined in mapping file are unknown to skipperman - will not be used (typo?):"))
+        output+=unknown_as_lines
         output.append(_______________)
 
     if len(output)==0:

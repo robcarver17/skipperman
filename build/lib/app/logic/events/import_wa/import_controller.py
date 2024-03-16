@@ -1,5 +1,7 @@
 from typing import List, Union, Callable
 
+from app.logic.events.cadets_at_event.refactor_rows_for_racing_event import \
+    display_form_split_cadets_during_import
 from app.logic.events.cadets_at_event.iteratively_add_cadet_ids_in_wa_import_stage import \
     display_form_add_cadet_ids_during_import
 from app.logic.events.events_in_state import get_event_from_state
@@ -34,14 +36,14 @@ def post_import_controller(interface):
     raise Exception("Should never get here")
 
 ## order matters, as other things rely on cadets
-## Group allocation doesn't appear here
+## Group allocation doesn't appear here since not done as an import
 ORDERED_LIST_OF_POSSIBLE_IMPORTS = [CADETS, VOLUNTEERS]
 
 #ORDERED_LIST_OF_POSSIBLE_IMPORTS = [CADETS, VOLUNTEERS, #GROUP_ALLOCATION,
 #                                     FOOD, CLOTHING]
 
 IMPORTS_AND_FUNCTION_NAMES = {
-    CADETS: display_form_add_cadet_ids_during_import,
+    CADETS: display_form_split_cadets_during_import,
     VOLUNTEERS: display_form_volunteer_identification
 }
 

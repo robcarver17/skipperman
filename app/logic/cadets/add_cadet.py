@@ -173,7 +173,7 @@ def process_form_when_cadet_verified(
 
 def add_cadet_from_form_to_data(interface) -> Cadet:
     cadet = get_cadet_from_form(interface)
-    add_new_verified_cadet(cadet)
+    cadet = add_new_verified_cadet(cadet)
 
     return cadet
 

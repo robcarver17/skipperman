@@ -102,7 +102,8 @@ def get_availability_checkbox_for_volunteer_at_event_based_on_relevant_informati
     return get_availability_checkbox(availability=availability,
                                      event=event,
                                      input_name=AVAILABILITY,
-                                     input_label="Confirm availability for volunteer:")
+                                     input_label="Confirm availability for volunteer:",
+                                     include_all=True)
 
 def first_valid_availability(list_of_relevant_information: ListOfRelevantInformationForVolunteer, event: Event) -> DaySelector:
     for relevant_information in list_of_relevant_information:

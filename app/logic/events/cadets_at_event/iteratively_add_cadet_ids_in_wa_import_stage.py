@@ -20,7 +20,7 @@ from app.logic.events.cadets_at_event.get_or_select_cadet_forms import (
 )
 from app.logic.cadets.add_cadet import add_cadet_from_form_to_data
 
-from app.objects.constants import NoMoreData
+from app.objects.constants import NoMoreData, missing_data
 from app.objects.mapped_wa_event import RowInMappedWAEvent
 from app.objects.cadets import Cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm
@@ -31,9 +31,10 @@ def display_form_add_cadet_ids_during_import(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     ## rest of the time is post
-    clear_row_in_state(interface)
 
+    clear_row_in_state(interface)
     return add_cadet_ids_on_next_row(interface)
+
 
 def add_cadet_ids_on_next_row(
             interface: abstractInterface,
@@ -67,7 +68,8 @@ def process_next_row(
     try:
         cadet = get_cadet_data_from_row_of_mapped_data_no_checks(next_row)
         return process_next_row_with_cadet_from_row(cadet=cadet,
-                                                    interface=interface)
+                                                    interface=interface,
+                                                    next_row=next_row)
     except Exception as e:
         ## Mapping has gone badly wrong, or date field corrupted
         raise Exception(
@@ -85,18 +87,20 @@ def is_row_already_identified_with_cadet(next_row: RowInMappedWAEvent, interface
 
 def process_next_row_with_cadet_from_row(
     interface: abstractInterface,
-    cadet: Cadet
+    cadet: Cadet,
+    next_row: RowInMappedWAEvent
 ) -> Form:
     list_of_cadets = get_list_of_all_cadets()
-    if cadet in list_of_cadets:
-        matched_cadet_with_id = list_of_cadets.matching_cadet(cadet)
+    matched_cadet_with_id = list_of_cadets.matching_cadet(cadet)
+
+    if matched_cadet_with_id is missing_data:
+        print("Cadet %s not matched" % str(cadet))
+        return process_row_when_cadet_unmatched(interface=interface, cadet=cadet)
+    else:
         print("Cadet %s matched id is %s" % (str(cadet), matched_cadet_with_id.id))
         return process_row_when_cadet_matched(
             interface=interface, cadet=matched_cadet_with_id
         )
-    else:
-        print("Cadet %s not matched" % str(cadet))
-        return process_row_when_cadet_unmatched(interface=interface, cadet=cadet)
 
 
 def process_row_when_cadet_matched(interface: abstractInterface, cadet: Cadet) -> Form:
@@ -111,7 +115,7 @@ def process_row_when_cadet_matched(interface: abstractInterface, cadet: Cadet) -
 
 
 def process_row_when_cadet_unmatched(
-    interface: abstractInterface, cadet: Cadet
+    interface: abstractInterface, cadet: Cadet,
 ) -> Form:
     ## Need to display a form with 'verification' text'
 
@@ -120,12 +124,22 @@ def process_row_when_cadet_unmatched(
         interface=interface,
         see_all_cadets=False,
         include_final_button=False,
+        header_text=header_text_for_form(interface)
     )
+
+def header_text_for_form(interface: abstractInterface)-> str:
+    row_id = get_current_row_id(interface)
+    event =get_event_from_state(interface)
+    next_row = get_row_in_mapped_event_data_given_id(event=event, row_id=row_id)
+    default_header_text = "Looks like a new cadet in the WA entry file. You can edit them, check their details and then add, or choose an existing cadet instead (avoid creating duplicates! If the existing cadet details are wrong, select them for now and edit later) \n\n Row details are: \n%s"
+
+    return default_header_text % next_row
 
 
 def post_form_add_cadet_ids_during_import(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
+    header_text = header_text_for_form(interface)
     last_button_pressed = interface.last_button_pressed()
     if (
         last_button_pressed == DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL
@@ -134,13 +148,15 @@ def post_form_add_cadet_ids_during_import(
     ):
         ## verify results already in form, display form again, allow final this time
         return get_add_or_select_existing_cadet_form(
-            interface=interface, include_final_button=True, see_all_cadets=False
+            interface=interface, include_final_button=True, see_all_cadets=False,
+            header_text=header_text
         )
 
     elif last_button_pressed == SEE_ALL_CADETS_BUTTON_LABEL:
         ## verify results already in form, display form again, allow final this time
         return get_add_or_select_existing_cadet_form(
-            interface=interface, include_final_button=True, see_all_cadets=True
+            interface=interface, include_final_button=True, see_all_cadets=True,
+            header_text = header_text
         )
 
     elif last_button_pressed == FINAL_CADET_ADD_BUTTON_LABEL:

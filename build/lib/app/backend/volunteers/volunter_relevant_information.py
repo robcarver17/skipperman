@@ -18,6 +18,7 @@ from app.objects.relevant_information_for_volunteers import RelevantInformationF
     RelevantInformationForVolunteerDetails, missing_relevant_information
 from app.objects.volunteers import Volunteer
 
+NO_VOLUNTEER_IN_FORM = "NO_VOLUNTEER_IN_FORM"
 
 def get_relevant_information_for_volunteer(row_in_mapped_event: RowInMappedWAEvent, volunteer_index: int, event: Event) -> RelevantInformationForVolunteer:
     return RelevantInformationForVolunteer(
@@ -43,10 +44,10 @@ def get_identification_information_for_volunteer(row_in_mapped_event: RowInMappe
     return RelevantInformationForVolunteerIdentification(
         cadet_id=cadet_id,
         cadet_surname=cadet.surname,
-        passed_name=row_in_mapped_event.get_item(name_key),
-        registered_by_firstname= row_in_mapped_event.get_item(REGISTERED_BY_FIRST_NAME),
-        self_declared_status=row_in_mapped_event.get_item(VOLUNTEER_STATUS),
-        any_other_information=row_in_mapped_event.get_item(ANY_OTHER_INFORMATION)
+        passed_name=row_in_mapped_event.get_item(name_key, default=NO_VOLUNTEER_IN_FORM),
+        registered_by_firstname= row_in_mapped_event.get_item(REGISTERED_BY_FIRST_NAME, default=NO_VOLUNTEER_IN_FORM),
+        self_declared_status=row_in_mapped_event.get_item(VOLUNTEER_STATUS, default=NO_VOLUNTEER_IN_FORM),
+        any_other_information=row_in_mapped_event.get_item(ANY_OTHER_INFORMATION, default=NO_VOLUNTEER_IN_FORM)
     )
 
 
@@ -65,8 +66,8 @@ def get_availability_information_for_volunteer(row_in_mapped_event: RowInMappedW
         day_availability=row_in_mapped_event.get_item(day_available_key, missing_data),
         weekend_availability=row_in_mapped_event.get_item(weekend_available_key,missing_data),
         any_other_information=row_in_mapped_event.get_item(ANY_OTHER_INFORMATION),
-        preferred_duties=row_in_mapped_event.get_item(preferred_duties_key),
-        same_or_different=row_in_mapped_event.get_item(same_or_different_key),
+        preferred_duties=row_in_mapped_event.get_item(preferred_duties_key, default=NO_VOLUNTEER_IN_FORM),
+        same_or_different=row_in_mapped_event.get_item(same_or_different_key, default=NO_VOLUNTEER_IN_FORM),
         row_status=row_in_mapped_event.registration_status
     )
 
@@ -82,9 +83,14 @@ def get_details_information_for_volunteer(row_in_mapped_event: RowInMappedWAEven
     )
 
 
+no_volunteer_in_position_at_form =object()
+
 def get_volunteer_from_relevant_information(relevant_information_for_id: RelevantInformationForVolunteerIdentification) -> Volunteer:
     first_name = ""
     surname = ""
+    if relevant_information_for_id.passed_name == NO_VOLUNTEER_IN_FORM:
+        return no_volunteer_in_position_at_form
+
     if relevant_information_for_id.passed_name!="":
         split_name =relevant_information_for_id.passed_name.split(" ")
         first_name = split_name[0]
@@ -97,7 +103,7 @@ def get_volunteer_from_relevant_information(relevant_information_for_id: Relevan
     if first_name=="": ## assume it's who registered
         first_name = relevant_information_for_id.registered_by_firstname
 
-    return Volunteer(first_name=first_name, surname=surname)
+    return Volunteer(first_name=first_name.strip().title(), surname=surname.strip().title())
 
 
 

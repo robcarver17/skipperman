@@ -10,7 +10,7 @@ from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObj
     GenericSkipperManObject, transform_string_into_class_instance, transform_class_instance_into_string
 
 from app.objects.utils import clean_up_dict_with_nans
-from app.objects.mapped_wa_event import RowInMappedWAEvent, RegistrationStatus, deleted_status, active_status
+from app.objects.mapped_wa_event import RowInMappedWAEvent, RegistrationStatus, deleted_status, active_status, manual_add_status
 
 
 @dataclass
@@ -75,10 +75,13 @@ class CadetAtEvent(GenericSkipperManObjectWithIds):
 
 
     def is_active(self):
-        return self.status == active_status
+        return self.status in [active_status, manual_add_status]
 
     def is_deleted(self):
         return self.status == deleted_status
+
+    def is_manual_add(self):
+        return self.status == manual_add_status
 
     @classmethod
     def from_dict(cls, dict_with_str):

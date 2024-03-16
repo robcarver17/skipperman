@@ -8,9 +8,9 @@ def delete_a_cadet(cadet: Cadet):
     save_list_of_cadets(list_of_cadets=all_cadets)
 
 
-def add_new_verified_cadet(cadet: Cadet):
-    data.data_list_of_cadets.add(cadet)
-
+def add_new_verified_cadet(cadet: Cadet) -> Cadet:
+    cadet_with_id = data.data_list_of_cadets.add(cadet)
+    return cadet_with_id
 
 def save_list_of_cadets(list_of_cadets: ListOfCadets):
     data.data_list_of_cadets.write(list_of_cadets)

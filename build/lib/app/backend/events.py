@@ -21,10 +21,17 @@ def verify_event_and_warn(event: Event) -> str:
     if event.duration > 8:
         warn_text += "Event is more than a week long. "
 
+    if event.contains_groups and not event.contains_cadets:
+        warn_text +="Event with training groups must also have cadets. "
+
+    if event.contains_volunteers and not event.contains_cadets:
+        warn_text +="Event with volunteers must also have cadets (may change in future version). "
+
     warn_text += warning_for_similar_events(event=event)
 
     if len(warn_text) > 0:
         warn_text = "DOUBLE CHECK BEFORE ADDING: " + warn_text
+
 
     return warn_text
 
@@ -83,3 +90,7 @@ def is_wa_field_mapping_setup_for_event(event: Event) -> bool:
             return True
     except:
         return False
+
+
+
+

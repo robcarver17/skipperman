@@ -17,11 +17,13 @@ from app.objects.day_selectors import day_given_datetime, all_possible_days, Day
 ## VALUES OF THIS DICT *MUST* MATCH VALUES BELOW
 DICT_OF_NAMES_AND_ATTRIBUTES_CHECKBOX = {
 'Cadets': 'contains_cadets',
-'Groups to which cadets can be allocated': 'contains_groups',
+'Training groups to which cadets can be allocated': 'contains_groups',
 'Volunteers': 'contains_volunteers',
 "Food requirements (catering supplied)": 'contains_food',
 "Clothing sizes (merchandise)": 'contains_clothing'
 }
+
+EXAMPLES_OF_EVENTS = "Examples: Cadet week - check all. Cadet week hoodies - check merch only. Racing event eg Reid Scott- check Cadets, Volunteers. Training weekend = check Cadets, Training groups, Volunteers. Social event eg easter supper - check Food only"
 
 @dataclass
 class Event(GenericSkipperManObjectWithIds):
@@ -32,7 +34,7 @@ class Event(GenericSkipperManObjectWithIds):
     contains_groups: bool = True
     contains_volunteers: bool = True
     contains_clothing: bool = False
-    contains_food: bool = True
+    contains_food: bool = False
     id: str = arg_not_passed
 
     def __repr__(self):
@@ -46,6 +48,10 @@ class Event(GenericSkipperManObjectWithIds):
 
     def __len__(self):
         return self.duration
+
+    @property
+    def reg_splitting_allowed(self):
+        return self.contains_cadets and not self.contains_groups
 
     @classmethod
     def from_date_length_and_name_only(cls, event_name: str, start_date: datetime.date, duration: int):
@@ -87,6 +93,12 @@ class Event(GenericSkipperManObjectWithIds):
             assert self.duration<8
         except:
             return "Length of event greater than 7 days"
+
+        if self.contains_groups and not self.contains_cadets:
+            return "An event with training groups must also contain cadets"
+
+        if self.contains_volunteers and not self.contains_cadets:
+            return "An event with volunteers must also contain cadets (Possible fix in the future)"
 
         return ""
 

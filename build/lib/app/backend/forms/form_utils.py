@@ -10,11 +10,13 @@ from app.objects.events import Event
 from app.objects.food import FoodRequirements, OTHER_IN_FOOD_REQUIRED
 from app.objects.mapped_wa_event import RegistrationStatus, all_possible_status
 
-
-def get_availability_checkbox(availability: DaySelector, event: Event, input_name: str, input_label = "", line_break: bool = False) -> checkboxInput:
+ALL_AVAILABLE = 'Select all'
+def get_availability_checkbox(availability: DaySelector, event: Event, input_name: str, input_label = "", line_break: bool = False, include_all: bool = False) -> checkboxInput:
     possible_days = event.weekdays_in_event()
     dict_of_labels = dict([(day.name, day.name) for day in possible_days])
     dict_of_checked = dict([(day.name, availability.get(day, False)) for day in possible_days])
+    if include_all:
+        dict_of_labels[ALL_AVAILABLE] = ALL_AVAILABLE
 
     return checkboxInput(dict_of_labels=dict_of_labels,
                   dict_of_checked=dict_of_checked,
@@ -28,8 +30,10 @@ def get_availablity_from_form(interface: abstractInterface, event: Event, input_
     list_of_days_ticked_in_form = interface.value_of_multiple_options_from_form(input_name)
     possible_days = event.weekdays_in_event()
     day_selector = DaySelector({})
+    all_ticked = ALL_AVAILABLE in list_of_days_ticked_in_form
+
     for day in possible_days:
-        if day.name in list_of_days_ticked_in_form:
+        if day.name in list_of_days_ticked_in_form or all_ticked:
             day_selector[day] = True
         else:
             day_selector[day] = False

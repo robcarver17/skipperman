@@ -50,12 +50,11 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - allocate safety boats
 - copy roles between volunteers on volunteer rota
 - allow list of boats/dinghies/etc to be reordered
-
+- import a set of members from WA to populate a list of cadets
 
 
 ### Required for racing event:
   
-- import a set of members from WA to populate a list of cadets
 - phantom volunteer issue
 - test split out functionality include message
 - report on a volunteer rota

@@ -55,13 +55,12 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for racing event:
   
-- phantom volunteer issue
-- test split out functionality include message
 - report on a volunteer rota
 - spotter sheets
 - users and passwords (skipper, deputy, instructors) 
 - regular backups on all writes; include roll back function
 - populate with last years data
+- all buttons should save first
 
 
 ### Required for social event:

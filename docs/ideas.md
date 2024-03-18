@@ -50,19 +50,16 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - allocate safety boats
 - copy roles between volunteers on volunteer rota
 - allow list of boats/dinghies/etc to be reordered
-
+- import a set of members from WA to populate a list of cadets
 
 
 ### Required for racing event:
   
-- phantom volunteer issue
-- test split out functionality include message
 - report on a volunteer rota
 - spotter sheets
-- import a set of members from WA to populate a list of cadets
 - users and passwords (skipper, deputy, instructors) 
 - regular backups on all writes; include roll back function
-- populate with last years data
+- all buttons should save first
 
 
 ### Required for social event:
@@ -74,7 +71,9 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for training event:
 
+- backfill all last years events
 - add * for boat allocation to group report
+- handle waiting lists
 - maintain ticksheets, print and record ticks
 - print roll call lists and contact details
 - birthdays during an event - splash on event screen
@@ -101,6 +100,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
   ### General required before handover to Jonny:
 
 - don't allow duplicate templates and delete templates allowed
+- template for import of list of cadets
 - edit event (warnings especially days!)
 - all pdf reports should have csv counterparts
 - anything that is displayed on screen can be exported to .csv eg reg details, volunteer rota (and imported...???)

@@ -5,12 +5,11 @@ from app.backend.reporting.process_stages.optimise_column_layout import (
     _find_best_list_of_indices,
 )
 from app.backend.reporting.process_stages.strings_columns_groups import (
-    ListtOfColumns,
-    ListOfGroupsOfMarkedUpStrings,
-    create_columns_from_list_of_groups_of_marked_up_str_with_passed_list,
+    PageWithColumns,
+    create_list_of_pages_with_columns_from_list_of_pages_and_arrangements, ListOfPages, Page, ListOfPagesWithColumns,
 )
 from app.backend.reporting.arrangement.arrangement_order import (
-    ArrangementOfColumns,
+    ArrangementOfColumns, ListOfArrangementOfColumns,
 )
 from app.backend.reporting.options_and_parameters.report_options import ReportingOptions
 from app.backend.reporting.arrangement.arrangement_methods import (
@@ -20,25 +19,32 @@ from app.backend.reporting.arrangement.arrangement_methods import (
 )
 from app.backend.reporting.options_and_parameters.print_options import PrintOptions
 
-def create_columns_from_list_of_groups_of_marked_up_str(
-    list_of_groups_of_marked_up_str: ListOfGroupsOfMarkedUpStrings,
-        reporting_options: ReportingOptions
-) -> ListtOfColumns:
-    arrangement_of_columns = create_arrangement_from_list_of_groups_of_marked_up_str(
-        list_of_groups_of_marked_up_str=list_of_groups_of_marked_up_str,
-        reporting_options=reporting_options
+def create_list_of_pages_with_columns_from_list_of_pages(list_of_pages: ListOfPages,
+                                      reporting_options: ReportingOptions) -> ListOfPagesWithColumns:
+    list_of_arrangement_of_columns = create_arrangement_from_list_of_pages(list_of_pages=list_of_pages,
+                                                                   reporting_options=reporting_options)
+
+    list_of_pages_with_columns =  create_list_of_pages_with_columns_from_list_of_pages_and_arrangements(
+        list_of_pages=list_of_pages,
+        list_of_arrangement_of_columns=list_of_arrangement_of_columns,
     )
 
-    return create_columns_from_list_of_groups_of_marked_up_str_with_passed_list(
-        list_of_groups_of_marked_up_str=list_of_groups_of_marked_up_str,
-        arrangement_of_columns=arrangement_of_columns,
-    )
+    return list_of_pages_with_columns
 
 
-def create_arrangement_from_list_of_groups_of_marked_up_str(
-    list_of_groups_of_marked_up_str: ListOfGroupsOfMarkedUpStrings,
-    reporting_options: ReportingOptions
-) -> ArrangementOfColumns:
+def create_arrangement_from_list_of_pages(list_of_pages: ListOfPages,
+                                          reporting_options: ReportingOptions) -> ListOfArrangementOfColumns:
+
+    list_of_arrangements_of_columns = [
+        create_arrangement_from_pages(page, reporting_options=reporting_options)
+        for page in list_of_pages
+    ]
+
+    return ListOfArrangementOfColumns(list_of_arrangements_of_columns)
+
+def create_arrangement_from_pages(page: Page,
+                                              reporting_options: ReportingOptions) -> ArrangementOfColumns:
+
     arrangement_options = reporting_options.arrangement
     print_options = reporting_options.print_options
 
@@ -48,27 +54,25 @@ def create_arrangement_from_list_of_groups_of_marked_up_str(
 
     elif arrangement_method is ARRANGE_RECTANGLE:
         return get_order_of_indices_even_sizing(
-            list_of_groups_of_marked_up_str=list_of_groups_of_marked_up_str,
+            page=page,
             print_options=print_options,
         )
 
     elif arrangement_method is ARRANGE_OPTIMISE:
         return get_optimal_size_indices(
             print_options=print_options,
-            list_of_groups_of_marked_up_str=list_of_groups_of_marked_up_str,
+            page=page,
         )
     else:
         raise Exception("Arrangement %s not recognised" % arrangement_method)
 
 
-
-
 def get_order_of_indices_even_sizing(
-    list_of_groups_of_marked_up_str: ListOfGroupsOfMarkedUpStrings,
+    page: Page,
     print_options: PrintOptions,
 ) -> ArrangementOfColumns:
     landscape = print_options.landscape
-    group_count = len(list_of_groups_of_marked_up_str)
+    group_count = len(page)
 
     return get_order_of_indices_even_sizing_with_parameters(
         group_count=group_count, landscape=landscape
@@ -107,17 +111,17 @@ def get_order_of_indices_even_sizing_with_parameters(
 
 def get_optimal_size_indices(
     print_options: PrintOptions,
-    list_of_groups_of_marked_up_str: ListOfGroupsOfMarkedUpStrings,
+    page: Page,
 ) -> ArrangementOfColumns:
     ## want to get ratio as close as possible to h/w ratio which will come from paper size
     ## generate all possible combinations and test
 
-    group_count = len(list_of_groups_of_marked_up_str)
+    group_count = len(page)
     series_of_possible_indices = _generate_list_of_all_possible_indices(group_count)
 
     best_list_of_indices = _find_best_list_of_indices(
         series_of_possible_indices=series_of_possible_indices,
-        list_of_groups_of_marked_up_str=list_of_groups_of_marked_up_str,
+        page=page,
         print_options=print_options,
     )
 

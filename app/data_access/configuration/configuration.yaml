@@ -89,10 +89,15 @@ volunteer_teams:
     - "DI"
     - "AI"
     - "Coach"
-  Lake:
+  Bridge:
+    - "Bridge lead"
+    - "Bridge"
+  Lake safety:
     - "Deputy skipper"
     - "Lake safety helm"
     - "Lake safety crew"
+  Lake helpers:
+    - "Deputy skipper"
     - "Lake helper"
     - "Lake first aid"
   Ramp:

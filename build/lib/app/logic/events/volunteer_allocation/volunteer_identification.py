@@ -27,6 +27,7 @@ from app.objects.abstract_objects.abstract_interface import (
 from app.logic.events.constants import *
 
 from app.objects.constants import NoMoreData, missing_data, arg_not_passed
+from app.objects.relevant_information_for_volunteers import missing_relevant_information
 from app.objects.volunteers import Volunteer
 
 
@@ -87,8 +88,8 @@ def current_volunteer_already_identified(interface: abstractInterface):
 
 def add_specific_volunteer_at_event(interface: abstractInterface)-> Union[Form,NewForm]:
     relevant_information = get_relevant_information_for_current_volunteer(interface)
-    volunteer = get_volunteer_from_relevant_information(relevant_information.identify)
-    if volunteer is no_volunteer_in_position_at_form:
+    volunteer = get_volunteer_from_relevant_information(relevant_information)
+    if volunteer is missing_relevant_information:
         return next_volunteer_in_current_row(interface)
 
     return add_passed_volunteer_at_event(interface=interface, volunteer=volunteer)

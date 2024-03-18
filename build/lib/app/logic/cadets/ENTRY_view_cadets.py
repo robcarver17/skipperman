@@ -2,8 +2,9 @@ from typing import Union
 
 from app.logic.cadets.add_cadet import display_form_add_cadet
 from app.logic.cadets.constants import (
-    ADD_CADET_BUTTON_LABEL,
+    ADD_CADET_BUTTON_LABEL, IMPORT_CADETS_FROM_WA_FILE
 )
+from app.logic.cadets.import_cadets import display_form_import_cadets
 from app.logic.cadets.view_individual_cadets import display_form_view_individual_cadet
 from app.objects.cadets import Cadet
 from app.objects.abstract_objects.abstract_form import (
@@ -36,7 +37,7 @@ def display_form_view_of_cadets_with_sort_order_passed(sort_order=SORT_BY_SURNAM
             _______________,
             Line("Click on any cadet to view/edit/delete"),
             _______________,
-            add_button,
+            Line([add_button,import_button]),
             _______________,
             list_of_cadets_with_buttons,
         ]
@@ -52,6 +53,9 @@ def post_form_view_of_cadets(interface: abstractInterface) -> Union[Form, NewFor
     button_pressed = interface.last_button_pressed()
     if button_pressed == ADD_CADET_BUTTON_LABEL:
         return interface.get_new_form_given_function(display_form_add_cadet)
+
+    if button_pressed == IMPORT_CADETS_FROM_WA_FILE:
+        return interface.get_new_form_given_function(display_form_import_cadets)
 
     elif button_pressed in all_sort_types:
         ## no change to stage required, just sort order
@@ -87,7 +91,7 @@ all_sort_types = [SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, SORT_BY_D
 
 
 add_button = Button(ADD_CADET_BUTTON_LABEL)
-
+import_button = Button(IMPORT_CADETS_FROM_WA_FILE)
 sort_buttons = Line([Button(sort_by) for sort_by in all_sort_types])
 
 

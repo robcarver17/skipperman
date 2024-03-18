@@ -1,4 +1,4 @@
-from typing import Union, Callable
+from typing import Union, Callable, List, Dict
 
 import pandas as pd
 
@@ -24,11 +24,11 @@ from app.backend.reporting.options_and_parameters.report_options import Reportin
 
 def form_for_group_arrangement_options(interface: abstractInterface,
                                        specific_parameters_for_type_of_report: SpecificParametersForTypeOfReport,
-                                       df: pd.DataFrame) -> ListOfLines:
+                                       dict_of_df: Dict[str, pd.DataFrame]) -> ListOfLines:
 
     reporting_options = get_reporting_options(interface=interface,
                                               specific_parameters_for_type_of_report=specific_parameters_for_type_of_report,
-                                              df=df)
+                                              dict_of_df=dict_of_df)
     reorder_list_form = get_reorder_list_of_groups_form_element(reporting_options)
     auto_layout_buttons = get_auto_layout_buttons_form_element()
     reorder_matrix_form = get_reorder_matrix_form_element(interface=interface, reporting_options=reporting_options)
@@ -93,13 +93,13 @@ def post_form_for_group_arrangement_options(
     interface: abstractInterface,
     current_form_function: Callable,
     specific_parameters_for_type_of_report: SpecificParametersForTypeOfReport,
-    df: pd.DataFrame
+    dict_of_df: Dict[str, pd.DataFrame]
 
 ) -> Union[NewForm, Form, File]:
 
     reporting_options = get_reporting_options(interface=interface,
                                               specific_parameters_for_type_of_report=specific_parameters_for_type_of_report,
-                                              df=df)
+                                              dict_of_df=dict_of_df)
 
     list_of_arrangement_descriptions_on_buttons = list(dict_of_arrangements_that_reorder.keys())
     list_of_buttons_for_changing_group_order = get_list_of_buttons_changing_group_order(reporting_options)

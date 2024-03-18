@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from app.data_access.configuration.configuration import (
     SIMILARITY_LEVEL_TO_WARN_NAME,
     VOLUNTEER_SKILLS,
-    VOLUNTEERS_REQUIRING_BOATS,
     VOLUNTEERS_SKILL_FOR_PB2
 )
 from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds, GenericListOfObjects, GenericSkipperManObject

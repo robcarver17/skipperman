@@ -74,6 +74,7 @@ app/backend/wa_import/__init__.py
 app/backend/wa_import/add_cadet_ids_to_mapped_wa_event_data.py
 app/backend/wa_import/check_mapping.py
 app/backend/wa_import/convert_helm_crew_data.py
+app/backend/wa_import/import_cadets.py
 app/backend/wa_import/load_wa_file.py
 app/backend/wa_import/map_wa_fields.py
 app/backend/wa_import/map_wa_files.py
@@ -129,6 +130,8 @@ app/logic/cadets/cadet_state_storage.py
 app/logic/cadets/constants.py
 app/logic/cadets/delete_cadet.py
 app/logic/cadets/edit_cadet.py
+app/logic/cadets/import_cadets.py
+app/logic/cadets/iterate_over_import_cadets_in_uploaded_file.py
 app/logic/cadets/view_individual_cadets.py
 app/logic/cadets/../../data_access/configuration/configuration.yaml
 app/logic/configuration/ENTRY_view_main_config_page.py
@@ -236,6 +239,7 @@ app/logic/reporting/options/reporting_options.py
 app/logic/reporting/options/../../../data_access/configuration/configuration.yaml
 app/logic/reporting/rota/__init__.py
 app/logic/reporting/rota/forms.py
+app/logic/reporting/rota/processes.py
 app/logic/reporting/rota/report_rota.py
 app/logic/reporting/rota/../../../data_access/configuration/configuration.yaml
 app/logic/volunteers/ENTRY_view_volunteers.py

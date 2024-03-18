@@ -86,11 +86,12 @@ event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_func
                     (display_form_view_for_add_event, post_form_view_for_add_event):0,
                     (display_form_view_individual_event, post_form_view_individual_event):
                         {
-                            (display_form_upload_event_file, post_form_upload_event_file):
+                            (display_form_upload_event_file, post_form_upload_event_file):0,
+                            (display_form_allocate_cadets, post_form_allocate_cadets):
                                 {
-                                (display_add_cadet_partner, post_form_add_cadet_partner):0
-                                },
-                            (display_form_allocate_cadets, post_form_allocate_cadets):0,
+                                    (display_add_cadet_partner, post_form_add_cadet_partner): 0
+                                }
+                            ,
                             (display_form_edit_registration_details, post_form_edit_registration_details):0,
                             (display_form_volunteer_rota_check, post_form_volunteer_rota_check):0,
                             (display_form_view_for_volunteer_rota, post_form_view_for_volunteer_rota):

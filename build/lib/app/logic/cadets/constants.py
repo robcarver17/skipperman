@@ -1,6 +1,7 @@
 ###  buttons
 ADD_CADET_BUTTON_LABEL = "Add cadet"
 CHECK_BUTTON_LABEL = "Check details entered"
+IMPORT_CADETS_FROM_WA_FILE = "Import cadets from WA file"
 FINAL_ADD_BUTTON_LABEL = "Yes - these details are correct - add to data"
 BACK_BUTTON_LABEL = "Back"
 EDIT_BUTTON_LABEL = "Edit"

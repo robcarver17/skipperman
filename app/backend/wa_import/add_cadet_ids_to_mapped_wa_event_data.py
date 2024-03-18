@@ -21,9 +21,9 @@ def get_cadet_data_from_row_of_mapped_data_no_checks(
     else:
         dob_as_date = _translate_df_timestamp_to_datetime(dob)
 
-    return Cadet(
-        first_name=first_name.strip().title(),
-        surname=second_name.strip().title(),
+    return Cadet.new(
+        first_name=first_name,
+        surname=second_name,
         date_of_birth=dob_as_date,
     )
 

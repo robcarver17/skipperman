@@ -3,7 +3,7 @@ from typing import Union
 
 from app.backend.data.mapped_events import get_row_in_mapped_event_data_given_id
 from app.backend.data.cadets_at_event import  load_identified_cadets_at_event
-from app.backend.cadets import confirm_cadet_exists, get_cadet_from_list_of_cadets, get_list_of_all_cadets
+from app.backend.cadets import confirm_cadet_exists, get_cadet_from_list_of_cadets, load_list_of_all_cadets
 from app.logic.events.cadets_at_event.interactively_update_records_of_cadets_at_event import \
     display_form_interactively_update_cadets_at_event
 
@@ -90,7 +90,7 @@ def process_next_row_with_cadet_from_row(
     cadet: Cadet,
     next_row: RowInMappedWAEvent
 ) -> Form:
-    list_of_cadets = get_list_of_all_cadets()
+    list_of_cadets = load_list_of_all_cadets()
     matched_cadet_with_id = list_of_cadets.matching_cadet(cadet)
 
     if matched_cadet_with_id is missing_data:

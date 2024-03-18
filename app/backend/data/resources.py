@@ -89,8 +89,10 @@ def modify_club_dinghy_given_string_and_return_list(existing_value_as_str:str, n
 def get_list_of_boats_excluding_boats_already_at_event(event: Event) -> ListOfPatrolBoats:
     list_of_all_patrol_boats = load_list_of_patrol_boats()
     list_of_patrol_boats_at_event = load_list_of_patrol_boats_at_event(event)
+    boats_not_already_at_event = in_x_not_in_y(x=list_of_all_patrol_boats, y=list_of_patrol_boats_at_event)
+    sorted_boats_not_already_at_event = [boat for boat in list_of_all_patrol_boats if boat in boats_not_already_at_event]
 
-    return ListOfPatrolBoats(in_x_not_in_y(x=list_of_all_patrol_boats, y=list_of_patrol_boats_at_event))
+    return ListOfPatrolBoats(sorted_boats_not_already_at_event)
 
 def load_list_of_patrol_boats_at_event(event: Event) -> ListOfPatrolBoats:
     volunteers_with_boats_at_event = load_list_of_voluteers_at_event_with_patrol_boats(event)

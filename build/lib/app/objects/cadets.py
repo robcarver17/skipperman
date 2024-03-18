@@ -8,7 +8,7 @@ from app.data_access.configuration.configuration import (
     SIMILARITY_LEVEL_TO_WARN_NAME,
 )
 from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds
-from app.objects.utils import transform_date_into_str, similar
+from app.objects.utils import transform_date_into_str, similar, transform_str_or_datetime_into_date
 from app.objects.constants import arg_not_passed, DAYS_IN_YEAR, missing_data
 from app.objects.utils import union_of_x_and_y
 
@@ -19,10 +19,17 @@ class Cadet(GenericSkipperManObjectWithIds):
     date_of_birth: datetime.date
     id: str = arg_not_passed
 
+    @classmethod
+    def new(cls, first_name: str, surname: str, date_of_birth: datetime.date, id: str = arg_not_passed):
+        return cls(first_name=first_name.strip(" ").title(),
+                   surname=surname.strip(" ".title()),
+                   date_of_birth=transform_str_or_datetime_into_date(date_of_birth),
+                   id=id)
+
     def __repr__(self):
         return "%s %s (%s)" % (
-            self.first_name.title(),
-            self.surname.title(),
+            self.first_name,
+            self.surname,
             str(self.date_of_birth),
         )
 
@@ -34,10 +41,16 @@ class Cadet(GenericSkipperManObjectWithIds):
     def has_same_name(self, other):
         return self.first_name==other.first_name and self.surname == other.surname
 
+
     def __hash__(self):
         return hash(
             self.first_name + "_" + self.surname + "_" + self._date_of_birth_as_str
         )
+
+    def replace_all_attributes_except_id_with_those_from_new_cadet(self, new_cadet: 'Cadet'):
+        self.first_name = new_cadet.first_name
+        self.surname = new_cadet.surname
+        self.date_of_birth = new_cadet.date_of_birth
 
     def approx_age_years(self, at_date: datetime.date = arg_not_passed) -> float:
         if at_date is arg_not_passed:
@@ -48,12 +61,12 @@ class Cadet(GenericSkipperManObjectWithIds):
 
     @property
     def name(self):
-        return self.first_name.title() + " " + self.surname.title()
+        return self.first_name + " " + self.surname
 
     @property
     def initial_and_surname(self):
         initial = self.first_name[0].upper()
-        return "%s. %s" % (initial, self.surname.title())
+        return "%s. %s" % (initial, self.surname)
 
     @property
     def _date_of_birth_as_str(self) -> str:
@@ -72,14 +85,25 @@ class Cadet(GenericSkipperManObjectWithIds):
 multiple_matches = object()
 
 class ListOfCadets(GenericListOfObjectsWithIds):
-    def matching_cadet(self, cadet: Cadet) -> Cadet:
-        exact_match = [cadet_in_list for cadet_in_list in self if cadet==cadet_in_list]
-        names_match = [cadet_in_list for cadet_in_list in self if cadet.has_same_name(cadet_in_list)]
+    def replace_cadet_with_id_with_new_cadet_details(self, existing_cadet_id: str, new_cadet: Cadet):
+        existing_cadet = self.object_with_id(existing_cadet_id)
+        existing_cadet.replace_all_attributes_except_id_with_those_from_new_cadet(new_cadet)
 
+    def matching_cadet(self, cadet: Cadet, exact_match_required: bool = False) -> Cadet:
+        exact_match = [cadet_in_list for cadet_in_list in self if cadet==cadet_in_list]
         if len(exact_match)==1:
             return exact_match[0]
         elif len(exact_match)>1:
             raise Exception("Multiple matching cadets found!")
+
+        ### no exact matches required
+        if exact_match_required:
+            return missing_data
+        else:
+            return self.matching_cadets_on_name_only(cadet)
+
+    def matching_cadets_on_name_only(self, cadet: Cadet) -> Cadet:
+        names_match = [cadet_in_list for cadet_in_list in self if cadet.has_same_name(cadet_in_list)]
 
         if len(names_match)>1:
             ## multiple matches, as good as missing data

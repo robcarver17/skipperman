@@ -5,7 +5,7 @@ from app.logic.reporting.allocations.forms import (
 )
 from app.logic.reporting.allocations.processes import (
     get_group_allocation_report_additional_parameters_from_form_and_save,
-    get_df_for_reporting_allocations,
+    get_dict_of_df_for_reporting_allocations,
     create_report
 )
 from app.logic.reporting.options.arrangement_form import form_for_group_arrangement_options, \
@@ -243,7 +243,7 @@ def post_form_for_rota_report_print_options(
 
 #CHANGE_GROUP_LAYOUT_IN_ROTA_REPORT_STATE
 def display_form_for_group_arrangement_options_rota_report(interface: abstractInterface) -> Form:
-    df = get_df_for_reporting_allocations(interface)
+    df = get_dict_of_df_for_reporting_allocations(interface)
 
     form_for_arrangement_options = form_for_group_arrangement_options(interface=interface,
                                                                       df=df,
@@ -279,7 +279,7 @@ def post_form_for_group_arrangement_options_rota_report(
         return initial_state_form
     else:
         ## Changing arrangement
-        df = get_df_for_reporting_allocations(interface)
+        dict_of_df = get_dict_of_df_for_reporting_allocations(interface)
         return post_form_for_group_arrangement_options(interface=interface,
                                                        current_form_function=display_form_for_group_arrangement_options_rota_report,
                                                        df=df,

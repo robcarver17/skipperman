@@ -1,3 +1,5 @@
+from typing import List, Dict
+
 import pandas as pd
 from dataclasses import dataclass
 from app.backend.reporting.arrangement.arrange_options import ArrangeGroupsOptions
@@ -14,6 +16,6 @@ class ReportingOptions:
     specific_parameters: SpecificParametersForTypeOfReport
     marked_up_list_from_df_parameters: MarkedUpListFromDfParametersWithActualGroupOrder
     arrangement: ArrangeGroupsOptions
-    df: pd.DataFrame
+    dict_of_df: Dict[str, pd.DataFrame]
 
 

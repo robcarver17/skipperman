@@ -3,7 +3,7 @@ from typing import Union
 
 from app.backend.data.mapped_events import load_existing_mapped_wa_event, get_row_in_mapped_event_data_given_id
 from app.backend.data.cadets_at_event import  load_identified_cadets_at_event
-from app.backend.cadets import confirm_cadet_exists, get_cadet_from_list_of_cadets, get_list_of_all_cadets
+from app.backend.cadets import confirm_cadet_exists, get_cadet_from_list_of_cadets, load_list_of_all_cadets
 
 from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
@@ -74,7 +74,7 @@ def process_next_row_with_cadet_from_row(
     interface: abstractInterface,
     cadet: Cadet
 ) -> Form:
-    list_of_cadets = get_list_of_all_cadets()
+    list_of_cadets = load_list_of_all_cadets()
     if cadet in list_of_cadets:
         matched_cadet_with_id = list_of_cadets.matching_cadet(cadet)
         print("Cadet %s matched id is %s" % (str(cadet), matched_cadet_with_id.id))

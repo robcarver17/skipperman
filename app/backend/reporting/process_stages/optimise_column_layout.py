@@ -4,8 +4,7 @@ from dataclasses import dataclass
 from typing import List
 
 from app.backend.reporting.process_stages.strings_columns_groups import (
-    ListOfGroupsOfMarkedUpStrings,
-    create_columns_from_list_of_groups_of_marked_up_str_with_passed_list,
+     Page, create_columns_from_page,
 )
 
 
@@ -85,12 +84,12 @@ def remaining_from_passed_list_given_group(passed_list: list, group: list):
 
 def _find_best_list_of_indices(
     series_of_possible_indices: List[ArrangementOfColumns],
-    list_of_groups_of_marked_up_str: ListOfGroupsOfMarkedUpStrings,
+    page: Page,
     print_options: PrintOptions,
 ) -> ArrangementOfColumns:
     tracking_errors = [
         _tracking_error_for_list_of_indices(
-            list_of_groups_of_marked_up_str=list_of_groups_of_marked_up_str,
+            page=page,
             order_list_of_indices=order_list_of_indices,
             print_options=print_options,
         )
@@ -105,12 +104,12 @@ def _find_best_list_of_indices(
 
 def _tracking_error_for_list_of_indices(
     order_list_of_indices: ArrangementOfColumns,
-    list_of_groups_of_marked_up_str: ListOfGroupsOfMarkedUpStrings,
+    page: Page,
     print_options: PrintOptions,
 ) -> float:
     list_of_columns = (
-        create_columns_from_list_of_groups_of_marked_up_str_with_passed_list(
-            list_of_groups_of_marked_up_str=list_of_groups_of_marked_up_str,
+        create_columns_from_page(
+            page=page,
             arrangement_of_columns=order_list_of_indices,
         )
     )

@@ -1,6 +1,6 @@
 from copy import copy
 
-from app.backend.data.cadets import get_list_of_all_cadets
+from app.backend.data.cadets import load_list_of_all_cadets
 from app.data_access.configuration.configuration import MIN_CADET_AGE, MAX_CADET_AGE, SIMILARITY_LEVEL_TO_WARN_NAME, \
     SIMILARITY_LEVEL_TO_WARN_DATE
 from app.objects.cadets import Cadet, ListOfCadets, is_cadet_age_surprising
@@ -39,13 +39,13 @@ def get_list_of_cadets_similar_to_name_first(object_with_name, from_list_of_cade
     return ListOfCadets(first_lot+list_of_cadets)
 
 def get_cadet_from_id(cadet_id: str) -> Cadet:
-    list_of_cadets = get_list_of_all_cadets()
+    list_of_cadets = load_list_of_all_cadets()
 
     return list_of_cadets.object_with_id(cadet_id)
 
 
 def get_cadet_from_list_of_cadets(cadet_selected: str) -> Cadet:
-    list_of_cadets = get_list_of_all_cadets()
+    list_of_cadets = load_list_of_all_cadets()
     list_of_cadets_as_str = get_list_of_cadets_as_str(list_of_cadets=list_of_cadets)
 
     cadet_idx = list_of_cadets_as_str.index(cadet_selected)
@@ -53,7 +53,7 @@ def get_cadet_from_list_of_cadets(cadet_selected: str) -> Cadet:
 
 
 def get_sorted_list_of_cadets(sort_by: str = arg_not_passed) -> ListOfCadets:
-    master_list = get_list_of_all_cadets()
+    master_list = load_list_of_all_cadets()
     if sort_by is arg_not_passed:
         return master_list
     if sort_by == SORT_BY_SURNAME:
@@ -122,7 +122,7 @@ def verify_cadet_and_warn(cadet: Cadet) -> str:
 
 
 def warning_for_similar_cadets(cadet: Cadet) -> str:
-    similar_cadets = list_of_similar_cadets(cadet)
+    similar_cadets = get_list_of_similar_cadets(cadet)
 
     if len(similar_cadets) > 0:
         similar_cadets_str = ", ".join(
@@ -134,15 +134,13 @@ def warning_for_similar_cadets(cadet: Cadet) -> str:
         return ""
 
 
-def list_of_similar_cadets(cadet: Cadet) -> list:
+def get_list_of_similar_cadets(cadet: Cadet) -> list:
     print("Checking for similar %s" % cadet)
-    existing_cadets = get_list_of_all_cadets()
+    existing_cadets = load_list_of_all_cadets()
     similar_cadets = existing_cadets.similar_cadets(
-        cadet,
-        name_threshold=SIMILARITY_LEVEL_TO_WARN_NAME,
-        dob_threshold=SIMILARITY_LEVEL_TO_WARN_DATE,
+        cadet
     )
-
+    print("Similar: %s" % cadet)
     return similar_cadets
 
 

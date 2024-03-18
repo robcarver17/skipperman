@@ -3,7 +3,7 @@ import pandas as pd
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.reporting.constants import GROUP_ORDER
 from app.objects.constants import missing_data
-from app.backend.reporting.arrangement.group_order import get_group_order_from_df_given_report_parameters, GroupOrder
+from app.backend.reporting.arrangement.group_order import get_group_order_from_dict_of_df_given_report_parameters, GroupOrder
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import SpecificParametersForTypeOfReport
 
 
@@ -15,7 +15,7 @@ def get_group_order_from_stored_or_df(
     groups = get_stored_group_order(interface)
     if groups is missing_data:
 
-        groups_if_not_stored = get_group_order_from_df_given_report_parameters(
+        groups_if_not_stored = get_group_order_from_dict_of_df_given_report_parameters(
             df=df,
             specific_parameters_for_type_of_report=specific_parameters_for_type_of_report,
         )

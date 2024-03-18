@@ -14,7 +14,7 @@ from app.objects.utils import (
     transform_date_into_str,
     transform_datetime_into_str,
     transform_str_into_datetime,
-    transform_str_into_date,
+    transform_str_or_datetime_into_date,
     clean_up_dict_with_nans, clean_up_dict_with_weird_floats_for_id
 )
 
@@ -140,7 +140,7 @@ def get_class_instance_from_str_dict(some_class, dict_with_str: dict):
 
 def transform_string_into_class_instance(object_class, string):
     if object_class is datetime.date:
-        return transform_str_into_date(string)
+        return transform_str_or_datetime_into_date(string)
     elif object_class is datetime.datetime:
         return transform_str_into_datetime(string)
     elif type(object_class) is EnumMeta:

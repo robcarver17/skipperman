@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import List, Dict
 
 from app.backend.data.resources import load_list_of_cadets_at_event_with_club_dinghies, load_list_of_club_dinghies, save_list_of_cadets_at_event_with_club_dinghies, load_list_of_boat_classes
-from app.backend.data.cadets import get_list_of_all_cadets
+from app.backend.data.cadets import load_list_of_all_cadets
 from app.backend.forms.summarys import summarise_generic_counts_for_event
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.cadets import Cadet
@@ -87,7 +87,7 @@ def convert_single_input_to_cadet_at_event(update: CadetWithDinghyInputs) -> Cad
     )
 
 def get_two_handed_partner_id_from_name(two_handed_partner_name: str):
-    list_of_cadets =get_list_of_all_cadets()
+    list_of_cadets =load_list_of_all_cadets()
     if no_partnership(two_handed_partner_name):
         two_handed_partner_id = two_handed_partner_name
     else:

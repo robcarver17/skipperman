@@ -1,5 +1,6 @@
 from copy import copy
 from dataclasses import dataclass
+from typing import List
 
 import numpy as np
 
@@ -129,3 +130,6 @@ def pad_columns_to_square(arrangement: ArrangementOfColumns):
         new_arrangement.append(column + add_items)
 
     return ArrangementOfColumns(new_arrangement)
+
+class ListOfArrangementOfColumns(List[ArrangementOfColumns]):
+    pass

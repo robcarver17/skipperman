@@ -11,7 +11,7 @@ from app.logic.events.constants import (
     SEE_SIMILAR_CADETS_ONLY_LABEL,
 )
 
-from app.backend.cadets import get_sorted_list_of_cadets, SORT_BY_FIRSTNAME, verify_cadet_and_warn, list_of_similar_cadets
+from app.backend.cadets import get_sorted_list_of_cadets, SORT_BY_FIRSTNAME, verify_cadet_and_warn, get_list_of_similar_cadets
 from app.logic.cadets.add_cadet import (
     verify_form_with_cadet_details,
     get_add_cadet_form_with_information_passed,
@@ -29,6 +29,7 @@ def get_add_or_select_existing_cadet_form(
     include_final_button: bool,
     header_text: str,
     cadet: Cadet = arg_not_passed, ## Is passed only on first iteration when cadet is from data not form
+    extra_buttons: Line = arg_not_passed
 ) -> Form:
     print("Generating add/select cadet form")
     print("Passed cadet %s" % str(cadet))
@@ -51,6 +52,7 @@ def get_add_or_select_existing_cadet_form(
         cadet=cadet,
         see_all_cadets=see_all_cadets,
         include_final_button=include_final_button,
+        extra_buttons=extra_buttons
     )
     # Custom header text
 
@@ -61,9 +63,14 @@ def get_add_or_select_existing_cadet_form(
     )
 
 
+
+
 def get_footer_buttons_add_or_select_existing_cadets_form(
-    cadet: Cadet, see_all_cadets: bool = False, include_final_button: bool = False
+    cadet: Cadet, see_all_cadets: bool = False, include_final_button: bool = False,
+        extra_buttons: Line = arg_not_passed
 ) -> ListOfLines:
+    if extra_buttons is arg_not_passed:
+        extra_buttons = Line([])
     print("Get buttons for %s" % str(cadet))
     main_buttons = get_list_of_main_buttons(include_final_button)
 
@@ -71,7 +78,7 @@ def get_footer_buttons_add_or_select_existing_cadets_form(
         cadet=cadet, see_all_cadets=see_all_cadets
     )
 
-    return ListOfLines([main_buttons, cadet_buttons])
+    return ListOfLines([main_buttons, extra_buttons, cadet_buttons])
 
 
 def get_list_of_main_buttons(include_final_button: bool) -> Line:
@@ -92,7 +99,7 @@ def get_list_of_cadet_buttons(cadet: Cadet, see_all_cadets: bool = False) -> Lin
         extra_button = SEE_SIMILAR_CADETS_ONLY_LABEL
     else:
         ## similar cadets with option to see more
-        list_of_cadets = list_of_similar_cadets(cadet)
+        list_of_cadets = get_list_of_similar_cadets(cadet)
         extra_button = SEE_ALL_CADETS_BUTTON_LABEL
 
     all_labels = [extra_button] + list_of_cadets

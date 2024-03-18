@@ -45,9 +45,9 @@ def get_identification_information_for_volunteer(row_in_mapped_event: RowInMappe
         cadet_id=cadet_id,
         cadet_surname=cadet.surname,
         passed_name=row_in_mapped_event.get_item(name_key, default=NO_VOLUNTEER_IN_FORM),
-        registered_by_firstname= row_in_mapped_event.get_item(REGISTERED_BY_FIRST_NAME, default=NO_VOLUNTEER_IN_FORM),
-        self_declared_status=row_in_mapped_event.get_item(VOLUNTEER_STATUS, default=NO_VOLUNTEER_IN_FORM),
-        any_other_information=row_in_mapped_event.get_item(ANY_OTHER_INFORMATION, default=NO_VOLUNTEER_IN_FORM)
+        registered_by_firstname= row_in_mapped_event.get_item(REGISTERED_BY_FIRST_NAME, default=''),
+        self_declared_status=row_in_mapped_event.get_item(VOLUNTEER_STATUS, default=''),
+        any_other_information=row_in_mapped_event.get_item(ANY_OTHER_INFORMATION, default='')
     )
 
 
@@ -65,9 +65,9 @@ def get_availability_information_for_volunteer(row_in_mapped_event: RowInMappedW
         cadet_availability=cadet_availability,
         day_availability=row_in_mapped_event.get_item(day_available_key, missing_data),
         weekend_availability=row_in_mapped_event.get_item(weekend_available_key,missing_data),
-        any_other_information=row_in_mapped_event.get_item(ANY_OTHER_INFORMATION),
-        preferred_duties=row_in_mapped_event.get_item(preferred_duties_key, default=NO_VOLUNTEER_IN_FORM),
-        same_or_different=row_in_mapped_event.get_item(same_or_different_key, default=NO_VOLUNTEER_IN_FORM),
+        any_other_information=row_in_mapped_event.get_item(ANY_OTHER_INFORMATION, ''),
+        preferred_duties=row_in_mapped_event.get_item(preferred_duties_key, ''),
+        same_or_different=row_in_mapped_event.get_item(same_or_different_key, ''),
         row_status=row_in_mapped_event.registration_status
     )
 
@@ -78,18 +78,25 @@ def get_details_information_for_volunteer(row_in_mapped_event: RowInMappedWAEven
     food_preference_key = dict_of_fields_for_volunteer[FOOD_PREFERENCE_KEY_IN_VOLUNTEER_FIELDS_DICT]
 
     return RelevantInformationForVolunteerDetails(
-        food_preference=row_in_mapped_event.get_item(food_preference_key),
-        any_other_information=row_in_mapped_event.get_item(ANY_OTHER_INFORMATION)
+        food_preference=row_in_mapped_event.get_item(food_preference_key, ''),
+        any_other_information=row_in_mapped_event.get_item(ANY_OTHER_INFORMATION, '')
     )
 
 
 no_volunteer_in_position_at_form =object()
 
-def get_volunteer_from_relevant_information(relevant_information_for_id: RelevantInformationForVolunteerIdentification) -> Volunteer:
+def get_volunteer_from_relevant_information(relevant_information_for_volunteer: RelevantInformationForVolunteer) -> Volunteer:
+    if relevant_information_for_volunteer is missing_relevant_information:
+        return missing_relevant_information
+    relevant_information_for_id = relevant_information_for_volunteer.identify
+    if minimum_volunteer_information_is_missing(relevant_information_for_id):
+        return missing_relevant_information
+
+    return infer_volunteer_from_provided_information(relevant_information_for_id)
+
+def infer_volunteer_from_provided_information(relevant_information_for_id: RelevantInformationForVolunteerIdentification)-> Volunteer:
     first_name = ""
     surname = ""
-    if relevant_information_for_id.passed_name == NO_VOLUNTEER_IN_FORM:
-        return no_volunteer_in_position_at_form
 
     if relevant_information_for_id.passed_name!="":
         split_name =relevant_information_for_id.passed_name.split(" ")
@@ -106,6 +113,8 @@ def get_volunteer_from_relevant_information(relevant_information_for_id: Relevan
     return Volunteer(first_name=first_name.strip().title(), surname=surname.strip().title())
 
 
+def minimum_volunteer_information_is_missing(relevant_information_for_id: RelevantInformationForVolunteerIdentification):
+    return relevant_information_for_id.passed_name == NO_VOLUNTEER_IN_FORM
 
 
 def suggested_volunteer_availability(relevant_information: RelevantInformationForVolunteerAvailability)-> DaySelector:

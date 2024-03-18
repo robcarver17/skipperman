@@ -7,26 +7,27 @@ from app.backend.reporting.options_and_parameters.print_options import PrintOpti
 from app.data_access.configuration.fixed import ALL_PAGESIZE, ALL_FONTS, UNIT_MM, MM_PER_POINT_OF_FONT_SIZE, \
     APPROX_WIDTH_TO_HEIGHT_RATIO, TITLE_MULTIPLIER, LINE_GAP_AS_PERCENTAGE_OF_CHARACTER_HEIGHT, MAX_FONT_SIZE
 from app.backend.reporting.process_stages.strings_columns_groups import (
-    ListtOfColumns,
+    PageWithColumns,
     MarkedUpString,
 )
 
 
 @dataclass
 class PdfLayout:
-    list_of_columns: ListtOfColumns
+    page: PageWithColumns
     print_options: PrintOptions
 
-    def add_page(self):
+    def add_page(self, page: PageWithColumns):
         margin = self.edge_margin_measurement_units
         pdf = self.pdf
         pdf.set_margins(left=margin, top=margin)
         pdf.set_auto_page_break(0)
         pdf.add_page()
+        pdf.current_page = page
+
 
     def add_title_to_page(self):
-        if not self.has_title:
-            return
+        title_str = self.title_str
         pdf = self.pdf
         pdf.set_font(self.font, "", self._title_font_size())
         margin = self.edge_margin_measurement_units
@@ -34,7 +35,7 @@ class PdfLayout:
         pdf.cell(
             w=self._title_area_width_measurement_units(),
             h=self._title_area_height_measurement_units(),
-            txt=self.title_str,
+            txt=title_str,
             ln=0,
             align="C",
         )
@@ -167,7 +168,7 @@ class PdfLayout:
         return width_per_character * column_width_this_column_in_characters
 
     def _list_of_column_widths_in_characters(self) -> list:
-        return self.list_of_columns.list_of_column_widths()
+        return self.page.list_of_column_widths()
 
     def _line_height_measurement_units(self) -> float:
         ## different from self._height_required_per_line_measurement_units() as uses exact font size
@@ -293,13 +294,13 @@ class PdfLayout:
 
     def _total_characters_required_across_all_columns(self) -> float:
         ## excludes gaps
-        return self.list_of_columns.width_in_characters_excluding_gaps(
+        return self.page.width_in_characters_excluding_gaps(
             equalise_columns=self.equalise_column_width
         )
 
     def _lines_required_on_page(self) -> int:
         height_of_title_in_characters = self._lines_required_for_title()
-        return self.list_of_columns.height_in_characters(
+        return self.page.height_in_characters(
             height_of_title_in_characters=height_of_title_in_characters
         )
 
@@ -326,17 +327,13 @@ class PdfLayout:
         return self.print_options.page_height_in_measurement_units()
 
     def _max_column_width_in_characters(self) -> int:
-        return self.list_of_columns.max_column_width()
+        return self.page.max_column_width()
 
     def _max_column_height_in_characters_including_gaps(self) -> int:
-        return self.list_of_columns.max_column_height_in_lines_including_gaps()
+        return self.page.max_column_height_in_lines_including_gaps()
 
     def _number_of_columns(self) -> int:
-        return self.list_of_columns.number_of_columns
-
-    @property
-    def has_title(self):
-        return not len(self.title_str) == 0
+        return self.page.number_of_columns
 
     @property
     def pdf(self):
@@ -348,6 +345,23 @@ class PdfLayout:
             self._pdf = pdf
 
         return pdf
+
+    @property
+    def title_str(self) -> str:
+        title_str_this_page = self.current_page_title_str
+        master_title = self.print_options.title_str
+
+        title_str = master_title+" "+ title_str_this_page
+
+        return title_str
+
+    @property
+    def current_page_title_str(self) -> str:
+        current_page = getattr(self, 'current_page', None)
+        if current_page is None:
+            return ''
+        title_str_this_page = self.current_page.title_str
+        return title_str_this_page
 
     @property
     def edge_margin_measurement_units(self):
@@ -364,10 +378,6 @@ class PdfLayout:
     @property
     def landscape(self) -> bool:
         return self.print_options.landscape
-
-    @property
-    def title_str(self) -> str:
-        return self.print_options.title_str
 
     @property
     def equalise_column_width(self) -> bool:

@@ -149,7 +149,7 @@ def get_cadet_from_form(interface: abstractInterface) -> Cadet:
     surname = interface.value_from_form(SURNAME).strip().title()
     date_of_birth = interface.value_from_form(DOB, value_is_date=True)
 
-    return Cadet(first_name=first_name, surname=surname, date_of_birth=date_of_birth)
+    return Cadet.new(first_name=first_name, surname=surname, date_of_birth=date_of_birth)
 
 
 def process_form_when_cadet_verified(

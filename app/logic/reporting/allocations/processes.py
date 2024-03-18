@@ -1,3 +1,5 @@
+from typing import List, Dict
+
 import pandas as pd
 
 from app.backend.group_allocations.cadet_event_allocations import get_unallocated_cadets, \
@@ -77,33 +79,43 @@ def load_additional_parameters_for_allocation_report(
 
 
 def get_group_order_for_allocation_report(interface: abstractInterface) -> list:
-    df = get_df_for_reporting_allocations(interface)
+    dict_of_df = get_dict_of_df_for_reporting_allocations(interface)
     order_of_groups = get_group_order_from_stored_or_df(
         interface=interface,
         specific_parameters_for_type_of_report=specific_parameters_for_allocation_report,
-        df=df,
+        dict_of_df=dict_of_df,
     )
 
     return order_of_groups
 
 
-def get_df_for_reporting_allocations(interface: abstractInterface) -> pd.DataFrame:
+def get_dict_of_df_for_reporting_allocations(interface: abstractInterface) -> Dict[str, pd.DataFrame]:
     event = get_event_from_state(interface)
     additional_parameters = load_additional_parameters_for_allocation_report(interface)
-    df = get_df_for_reporting_allocations_with_flags(
+
+    dict_of_df = get_dict_of_df_for_reporting_allocations_given_event_and_state(
+        event=event,
+        additional_parameters=additional_parameters
+    )
+
+    return dict_of_df
+
+def get_dict_of_df_for_reporting_allocations_given_event_and_state(event: Event, additional_parameters: AdditionalParametersForAllocationReport)->  Dict[str, pd.DataFrame]:
+    dict_of_df = get_dict_of_df_for_reporting_allocations_with_flags(
         event=event,
         include_unallocated_cadets=additional_parameters.include_unallocated_cadets,
         display_full_names=additional_parameters.display_full_names,
     )
 
-    return df
+    return dict_of_df
 
 
 def create_report(interface: abstractInterface) -> File:
     print("Creating report")
-    df = get_df_for_reporting_allocations(interface)
-    reporting_options = get_reporting_options(df=df, specific_parameters_for_type_of_report=specific_parameters_for_allocation_report,
-                                           interface=interface)
+    dict_of_df = get_dict_of_df_for_reporting_allocations(interface)
+    reporting_options = get_reporting_options(interface=interface,
+                                              specific_parameters_for_type_of_report=specific_parameters_for_allocation_report,
+                                              dict_of_df=dict_of_df)
     print("Reporting options %s" % reporting_options)
     filename = create_column_pdf_report_from_df_and_return_filename(
         reporting_options=reporting_options
@@ -112,11 +124,11 @@ def create_report(interface: abstractInterface) -> File:
     return File(filename)
 
 
-def get_df_for_reporting_allocations_with_flags(
+def get_dict_of_df_for_reporting_allocations_with_flags(
     event: Event,
     display_full_names: bool = False,
     include_unallocated_cadets: bool = False,
-):
+) -> Dict[str, pd.DataFrame]:
     ## NOTE DOESN'T DEAL WITH WAITING LISTS
     ##   is a waiting list cadet unallocated, or allocated with a * against their name?
     ##   at some point report would include club boats
@@ -134,4 +146,4 @@ def get_df_for_reporting_allocations_with_flags(
     )
     df = list_of_cadets_with_groups.to_df_of_str(display_full_names=display_full_names)
 
-    return df
+    return {"": df}

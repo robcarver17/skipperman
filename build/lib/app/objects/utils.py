@@ -1,6 +1,7 @@
 from collections import defaultdict
 import datetime
 import math
+from typing import Union
 from dataclasses import dataclass
 
 import pandas as pd
@@ -153,11 +154,11 @@ def transform_df_from_str_to_dates(df: pd.DataFrame):
 
 def transform_df_column_from_str_to_dates(df: pd.DataFrame, date_series_name: str):
     date_series = getattr(df, date_series_name)
-    date_series = [transform_str_into_date(date_str) for date_str in date_series]
+    date_series = [transform_str_or_datetime_into_date(date_str) for date_str in date_series]
     setattr(df, date_series_name, date_series)
 
 
-def transform_str_into_date(date_string: str) -> datetime.date:
+def transform_str_or_datetime_into_date(date_string: Union[str, datetime.date, datetime.datetime]) -> datetime.date:
     if isinstance(date_string, datetime.date):
         return date_string
     elif isinstance(date_string, datetime.datetime):

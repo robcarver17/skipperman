@@ -7,7 +7,7 @@ from app.data_access.configuration.fixed import COPY_SYMBOL2, SWAP_SHORTHAND1, S
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.events.patrol_boats.parse_patrol_boat_table import *
 from app.logic.events.patrol_boats.render_patrol_boat_table import get_patrol_boat_table, \
-    get_patrol_boat_driver_and_crew_table
+    get_patrol_boat_driver_and_crew_qualifications_table
 from app.logic.events.patrol_boats.patrol_boat_buttons import *
 from app.logic.events.patrol_boats.patrol_boat_dropdowns import ADD_NEW_BOAT_BUTTON_LABEL
 from app.logic.events.patrol_boats.swapping import get_all_swap_buttons_for_boat_allocation, \
@@ -33,7 +33,7 @@ def display_form_view_for_patrol_boat_allocation(interface: abstractInterface) -
 
     summary_of_boat_allocations =  get_summary_list_of_boat_allocations_for_events(event)
     patrol_boat_driver_and_crew_table = (
-        get_patrol_boat_driver_and_crew_table(event))
+        get_patrol_boat_driver_and_crew_qualifications_table(event))
     patrol_boat_table = get_patrol_boat_table(event=event, interface=interface)
 
     footer_buttons = get_footer_buttons_for_boat_allocation()

@@ -66,7 +66,6 @@ EVENT = "event"
 ROW_IN_EVENT_DATA = "row_in_event_data"
 
 # field names
-WA_FILE = "file"
 MAPPING_FILE = "file"
 TEMPLATE_NAME = "template_name"
 ALLOCATION = "allocation"

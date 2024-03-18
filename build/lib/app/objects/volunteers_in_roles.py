@@ -11,6 +11,7 @@ from app.objects.constants import missing_data
 
 NO_ROLE_SET = "No role allocated"
 
+
 ## must match below
 DAY_KEY = "day"
 GROUP_KEY = "group"
@@ -37,9 +38,19 @@ class VolunteerInRoleAtEvent(GenericSkipperManObject):
     def no_role_set(self) -> bool:
         return self.role == NO_ROLE_SET
 
+
 def index_of_role(role: str):
     combined_roles = VOLUNTEER_ROLES+[NO_ROLE_SET]
     return combined_roles.index(role)
+
+
+@dataclass
+class VolunteerInRoleAtEventWithTeamName(GenericSkipperManObject):
+    volunteer_in_role_at_event: VolunteerInRoleAtEvent
+    team_name: str
+
+
+
 
 ## Not saved, used purely for sorting purposes
 @dataclass

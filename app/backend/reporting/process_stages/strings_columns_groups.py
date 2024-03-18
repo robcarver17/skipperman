@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import List
 
 from app.data_access.configuration.fixed import APPROX_WIDTH_TO_HEIGHT_RATIO
-from app.backend.reporting.arrangement.arrangement_order import ArrangementOfColumns
+from app.backend.reporting.arrangement.arrangement_order import ArrangementOfColumns, ListOfArrangementOfColumns
 
 
 @dataclass
@@ -38,6 +38,13 @@ class GroupOfMarkedUpString(List[MarkedUpString]):
 class ListOfGroupsOfMarkedUpStrings(List[GroupOfMarkedUpString]):
     pass
 
+class Page(List[GroupOfMarkedUpString]):
+    def __init__(self, list_of_marked_up_string: List[GroupOfMarkedUpString], title_str: str = ""):
+        super().__init__(list_of_marked_up_string)
+        self.title_str = title_str
+
+class ListOfPages(List[Page]):
+    pass
 
 class Column(ListOfGroupsOfMarkedUpStrings):
     def number_of_lines_including_gaps(self) -> int:
@@ -52,7 +59,16 @@ class Column(ListOfGroupsOfMarkedUpStrings):
         return max(group_widths)
 
 
-class ListtOfColumns(List[Column]):
+
+class PageWithColumns(List[Column]):
+    def __init__(self, list_of_columns: List[Column], title_str: str = ""):
+        super().__init__(list_of_columns)
+        self.title_str = title_str
+
+    @property
+    def has_title(self):
+        return len(self.title_str)>0
+
     def list_of_column_widths(self) -> List[int]:
         widths_of_each_column = [list_of_groups.max_width() for list_of_groups in self]
         return widths_of_each_column
@@ -114,31 +130,52 @@ class ListtOfColumns(List[Column]):
         return len(self)
 
 
-def create_columns_from_list_of_groups_of_marked_up_str_with_passed_list(
-    list_of_groups_of_marked_up_str: ListOfGroupsOfMarkedUpStrings,
-    arrangement_of_columns: ArrangementOfColumns,
-) -> ListtOfColumns:
+class ListOfPagesWithColumns(List[PageWithColumns]):
+    pass
+
+
+def create_list_of_pages_with_columns_from_list_of_pages_and_arrangements(
+    list_of_pages: ListOfPages,
+    list_of_arrangement_of_columns: ListOfArrangementOfColumns,
+) -> ListOfPagesWithColumns:
     ## is passed list list of str?
-    list_of_columns = ListtOfColumns(
+
+    list_of_pages_with_columns = [
+        create_columns_from_page(
+            page = page,
+            arrangement_of_columns=arrangement_of_columns
+        )
+        for page, arrangement_of_columns in zip(list_of_pages, list_of_arrangement_of_columns)
+    ]
+
+    return ListOfPagesWithColumns(list_of_pages_with_columns)
+
+
+def create_columns_from_page(
+    page: Page,
+    arrangement_of_columns: ArrangementOfColumns,
+) -> PageWithColumns:
+    ## is passed list list of str?
+    list_of_columns = PageWithColumns(
         [
             _create_single_column_from_list_of_groups_of_marked_up_str_given_order(
-                list_of_groups_of_marked_up_str=list_of_groups_of_marked_up_str,
+                page=page,
                 order_list_of_index_for_column=order_list_of_index_for_column,
             )
             for order_list_of_index_for_column in arrangement_of_columns
         ]
     )
 
-    return list_of_columns
+    return PageWithColumns(list_of_columns, title_str=page.title_str)
 
 
 def _create_single_column_from_list_of_groups_of_marked_up_str_given_order(
-    list_of_groups_of_marked_up_str: ListOfGroupsOfMarkedUpStrings,
+    page: Page,
     order_list_of_index_for_column: List[int],
 ) -> Column:
     return Column(
         [
-            list_of_groups_of_marked_up_str[index]
+            page[index]
             for index in order_list_of_index_for_column
         ]
     )

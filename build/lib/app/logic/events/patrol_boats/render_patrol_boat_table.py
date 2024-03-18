@@ -19,7 +19,7 @@ from app.objects.abstract_objects.abstract_text import bold
 from app.objects.patrol_boats import PatrolBoat
 
 
-def get_patrol_boat_driver_and_crew_table(event: Event) -> Table:
+def get_patrol_boat_driver_and_crew_qualifications_table(event: Event) -> Table:
     volunteer_ids = get_unique_list_of_volunteer_ids_for_skills_checkboxes(event)
 
     return Table([

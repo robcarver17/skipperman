@@ -51,7 +51,12 @@ class abstractInterface:
 
     @property
     def persistent_store(self) -> dict:
-        raise NotImplemented
+        store = getattr(self, '_store', None)
+        if store is None:
+            store = dict()
+            self._store = store
+
+        return store
 
     @property
     def is_initial_stage_form(self) -> bool:

@@ -59,7 +59,6 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - spotter sheets
 - users and passwords (skipper, deputy, instructors) 
 - regular backups on all writes; include roll back function
-- populate with last years data
 - all buttons should save first
 
 
@@ -74,6 +73,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 - backfill all last years events
 - add * for boat allocation to group report
+- handle waiting lists
 - maintain ticksheets, print and record ticks
 - print roll call lists and contact details
 - birthdays during an event - splash on event screen

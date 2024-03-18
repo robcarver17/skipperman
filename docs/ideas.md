@@ -73,6 +73,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for training event:
 
+- backfill all last years events
 - add * for boat allocation to group report
 - maintain ticksheets, print and record ticks
 - print roll call lists and contact details

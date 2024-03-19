@@ -55,6 +55,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for racing event:
   
+- add ability to put internal notes against volunteers / cadets
 - report on a volunteer rota
 - spotter sheets
 - users and passwords (skipper, deputy, instructors) 

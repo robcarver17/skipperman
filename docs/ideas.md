@@ -55,10 +55,9 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for racing event:
   
-- add ability to put internal notes against volunteers / cadets
-- report on a volunteer rota
  - make reporting selective on event contents
-- spotter sheets
+- add ability to put internal notes against volunteers / cadets
+- spotter sheets (excel)
 - users and passwords (skipper, deputy, instructors) 
 - regular backups on all writes; include roll back function
 - all buttons should save first

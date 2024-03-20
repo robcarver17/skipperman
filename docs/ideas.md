@@ -51,11 +51,11 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - copy roles between volunteers on volunteer rota
 - allow list of boats/dinghies/etc to be reordered
 - import a set of members from WA to populate a list of cadets
+- report on a volunteer rota
 
 
 ### Required for racing event:
   
- - make reporting selective on event contents
 - add ability to put internal notes against volunteers / cadets
 - spotter sheets (excel)
 - users and passwords (skipper, deputy, instructors) 

@@ -72,6 +72,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for training event:
 
+- allow selection of group subset in reporting arrangement
 - backfill all last years events
 - add * for boat allocation to group report
 - handle waiting lists (new state)

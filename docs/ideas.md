@@ -74,7 +74,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 - backfill all last years events
 - add * for boat allocation to group report
-- handle waiting lists
+- handle waiting lists (new state)
 - maintain ticksheets, print and record ticks
 - print roll call lists and contact details
 - birthdays during an event - splash on event screen

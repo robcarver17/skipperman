@@ -56,7 +56,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for racing event:
   
-- if no availability, ticked don't add volunteer
+- WEIRD registraition effects
 - spotter sheets (excel)
 - users and passwords (skipper, deputy, instructors) 
 - regular backups on all writes; include roll back function

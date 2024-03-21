@@ -1,37 +1,64 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Union, Tuple
+
+import pandas as pd
 
 from app.data_access.configuration.fixed import APPROX_WIDTH_TO_HEIGHT_RATIO
 from app.backend.reporting.arrangement.arrangement_order import ArrangementOfColumns, ListOfArrangementOfColumns
+from app.objects.constants import arg_not_passed
 
 
 @dataclass
 class MarkedUpString:
     string: str
+    original_contents_as_series: pd.Series
     italics: bool = False
     bold: bool = False
     underline: bool = False
 
     @classmethod
-    def bodytext(cls, string):
-        return cls(string=string, bold=False, italics=False, underline=False)
+    def bodytext(cls, row: Union[str, pd.Series], entry_columns: List[str] = arg_not_passed, group: str = arg_not_passed,
+                                                         prepend_group_name: bool = False):
+        string, original_contents_as_series = from_row_and_columns_to_string_and_original_contents(row=row,entry_columns=entry_columns, group=group, prepend_group_name=prepend_group_name)
+        return cls(string=string, original_contents_as_series=original_contents_as_series, bold=False, italics=False, underline=False)
 
     @classmethod
-    def header(cls, string):
-        return cls(string=string, bold=True, italics=False, underline=True)
+    def header(cls, row: Union[str, pd.Series], entry_columns: List[str] = arg_not_passed, group: str = arg_not_passed,
+                                                         prepend_group_name: bool = False,):
+        string, original_contents_as_series = from_row_and_columns_to_string_and_original_contents(row=row,entry_columns=entry_columns, group=group, prepend_group_name=prepend_group_name)
+        return cls(string=string, bold=True, italics=False, underline=True, original_contents_as_series=original_contents_as_series)
 
     @classmethod
-    def keyvalue(cls, string):
-        return cls(string=string, bold=True, italics=False, underline=False)
+    def keyvalue(cls, row: Union[str, pd.Series], entry_columns: List[str] = arg_not_passed, group: str = arg_not_passed,
+                                                         prepend_group_name: bool = False,):
+        string, original_contents_as_series = from_row_and_columns_to_string_and_original_contents(row=row,entry_columns=entry_columns, group=group, prepend_group_name=prepend_group_name)
+        return cls(string=string, bold=True, italics=False, underline=False, original_contents_as_series=original_contents_as_series)
 
     @property
     def width(self) -> int:
         return len(self.string)
 
+def from_row_and_columns_to_string_and_original_contents(row: Union[str, pd.Series], entry_columns: List[str] = arg_not_passed, group: str = arg_not_passed,
+                                                         prepend_group_name: bool = False,) -> Tuple[str, pd.Series]:
+    if type(row) is str:
+        string =row
+        return string, pd.Series(dict(text=string))
+
+    original_contents_as_series = pd.Series(dict([(column_name, row[column_name]) for column_name in entry_columns]))
+    original_contents_as_list = original_contents_as_series.to_list()
+    string = " ".join(original_contents_as_list)
+    if prepend_group_name:
+        string = "%s: %s" % (group, string)
+
+    return string, original_contents_as_series
+
 
 class GroupOfMarkedUpString(List[MarkedUpString]):
     def max_width(self) -> int:
         line_widths = [marked_up_string.width for marked_up_string in self]
+        if len(self)==0:
+            return 0
+
         return max(line_widths)
 
 

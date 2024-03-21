@@ -68,8 +68,7 @@ def process_next_row(
     try:
         cadet = get_cadet_data_from_row_of_mapped_data_no_checks(next_row)
         return process_next_row_with_cadet_from_row(cadet=cadet,
-                                                    interface=interface,
-                                                    next_row=next_row)
+                                                    interface=interface)
     except Exception as e:
         ## Mapping has gone badly wrong, or date field corrupted
         raise Exception(
@@ -88,7 +87,6 @@ def is_row_already_identified_with_cadet(next_row: RowInMappedWAEvent, interface
 def process_next_row_with_cadet_from_row(
     interface: abstractInterface,
     cadet: Cadet,
-    next_row: RowInMappedWAEvent
 ) -> Form:
     list_of_cadets = load_list_of_all_cadets()
     matched_cadet_with_id = list_of_cadets.matching_cadet(cadet)

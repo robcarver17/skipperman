@@ -104,7 +104,7 @@ def post_form_view_for_volunteer_rota(
     if last_button_pressed==BACK_BUTTON_LABEL:
         return previous_form(interface)
 
-    ## sort options
+    ## sort shared
     elif last_button_pressed in all_volunteer_name_sort_types:
         save_sorts_to_state(interface=interface, sort_by_volunteer_name=last_button_pressed)
         return display_form_view_for_volunteer_rota(interface=interface)

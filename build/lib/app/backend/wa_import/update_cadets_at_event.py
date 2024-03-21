@@ -97,6 +97,11 @@ def update_availability_of_existing_cadet_at_event(event: Event, cadet_id:str, n
     existing_cadets_at_event.update_availability_of_existing_cadet_at_event(cadet_id=cadet_id, new_availabilty=new_availabilty)
     save_cadets_at_event(event=event, list_of_cadets_at_event=existing_cadets_at_event)
 
+def update_notes_for_existing_cadet_at_event(event: Event, cadet_id:str, new_notes: str):
+    existing_cadets_at_event = load_cadets_at_event(event)
+    existing_cadets_at_event.update_notes_for_existing_cadet_at_event(cadet_id=cadet_id, new_notes=new_notes)
+    save_cadets_at_event(event=event, list_of_cadets_at_event=existing_cadets_at_event)
+
 def update_data_row_for_existing_cadet_at_event(event: Event, cadet_id:str, new_data_in_row: RowInMappedWAEvent):
     existing_cadets_at_event = load_cadets_at_event(event)
     existing_cadets_at_event.update_data_row_for_existing_cadet_at_event(cadet_id=cadet_id, new_data_in_row=new_data_in_row)
@@ -136,7 +141,7 @@ def new_status_and_status_message(        new_cadet_at_event: CadetAtEvent,
 
     cadet = cadet_name_from_id(new_cadet_at_event.cadet_id)
 
-    ## Don't need all options as new_status can't be deleted
+    ## Don't need all shared as new_status can't be deleted
     if old_status == cancelled_status and new_status == active_status:
         status_message = (
                 "Cadet %s was cancelled; now active so probably new registration"

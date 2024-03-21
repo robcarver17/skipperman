@@ -40,8 +40,6 @@ def get_availablity_from_form(interface: abstractInterface, event: Event, input_
 
     return day_selector
 
-
-
 def get_food_requirements_input(existing_food_requirements: FoodRequirements, checkbox_input_name: str, other_input_name: str,
                                 checkbox_input_label = "", other_input_label = "",
                                 line_break: bool = False) -> ListOfLines:

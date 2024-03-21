@@ -1,7 +1,7 @@
 import datetime
 from enum import Enum
 from typing import Dict, List
-
+from app.objects.generic import from_bool_to_str, from_str_to_bool
 Day = Enum("Day", [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday", "Sunday"])
 
 all_possible_days =list(Day.__members__.values())
@@ -25,6 +25,27 @@ class DaySelector(Dict[Day, bool]):
                 return False
 
         return True
+
+    def as_str(self)-> str:
+        items_as_str = ["%s:%s" % (day.name, from_bool_to_str(selection)) for day,selection in self.items()]
+        return ",".join(items_as_str)
+
+    @classmethod
+    def from_str(cls, string:str):
+        if len(string)==0:
+            return cls({})
+        individual_items = string.split(",")
+        key_value_pairs = [
+            item.split(":") for item in individual_items
+        ]
+        dict_of_pairs = dict(
+            [
+                (Day[day_name], from_str_to_bool(bool_str))
+                for day_name,bool_str in key_value_pairs
+            ]
+        )
+
+        return cls(dict_of_pairs)
 
     def days_available(self) -> List[Day]:
         return [day

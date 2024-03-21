@@ -24,6 +24,7 @@ def generate_action_page_html(action_name: str) -> Union[Html, Response]:
     )
 
     if type(abstract_form_for_action) is File:
+        print("Generating file %s" % abstract_form_for_action.path_and_filename)
         return send_file(abstract_form_for_action.path_and_filename, as_attachment=True)
 
     html_code_for_action_in_layout = from_abstract_to_laid_out_html(

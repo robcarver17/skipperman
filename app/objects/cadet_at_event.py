@@ -65,12 +65,15 @@ STATUS_KEY = "status"
 AVAILABILITY = "availability"
 CADET_ID = "cadet_id"
 CHANGED = "changed"
+NOTES = "notes"
+
 @dataclass
 class CadetAtEvent(GenericSkipperManObjectWithIds):
     cadet_id: str
     availability: DaySelector
     status: RegistrationStatus
     data_in_row: RowInMappedWAEvent
+    notes: str = ''
     changed: bool  = False
 
 
@@ -99,12 +102,15 @@ class CadetAtEvent(GenericSkipperManObjectWithIds):
         changed_str = dict_with_str.pop(CHANGED)
         changed = transform_string_into_class_instance(bool, changed_str)
 
+        notes = dict_with_str.pop(NOTES)
+
         return cls(
             cadet_id=cadet_id,
             availability=availability,
             status=status,
             data_in_row=RowInMappedWAEvent.from_external_dict(dict_with_str),
-            changed=changed
+            changed=changed,
+            notes=notes
         )
 
 
@@ -112,11 +118,13 @@ class CadetAtEvent(GenericSkipperManObjectWithIds):
         as_dict = self.data_in_row.as_dict()
         status_as_str = self.status.name
         available_as_str = day_selector_to_text_in_stored_format(self.availability)
+        notes = self.notes
 
         as_dict[STATUS_KEY] = status_as_str
         as_dict[AVAILABILITY] = available_as_str
         as_dict[CADET_ID] = self.cadet_id
         as_dict[CHANGED] = transform_class_instance_into_string(self.changed)
+        as_dict[NOTES] = notes
 
         return as_dict
 
@@ -220,6 +228,16 @@ class ListOfCadetsAtEvent(GenericListOfObjectsWithIds):
         self[existing_cadet_idx] = existing_cadet_at_event
         self.mark_cadet_as_changed(cadet_id)
 
+    def update_notes_for_existing_cadet_at_event(self, cadet_id: str, new_notes: str):
+        existing_cadet_idx = self.idx_of_items_with_cadet_id(cadet_id)
+        if existing_cadet_idx is missing_data:
+            raise Exception("Can't replace cadet id %s not in data" % cadet_id)
+        existing_cadet_at_event = self[existing_cadet_idx]
+        existing_cadet_at_event.notes = new_notes
+
+        self[existing_cadet_idx] = existing_cadet_at_event
+        self.mark_cadet_as_changed(cadet_id)
+
     def update_data_row_for_existing_cadet_at_event(self, cadet_id:str, new_data_in_row: RowInMappedWAEvent):
         ## DO NOT MARK AS CHANGED - ONLY APPLIES TO AVAILABLILITY AND STATUS FIELDS
         existing_cadet_idx = self.idx_of_items_with_cadet_id(cadet_id)
@@ -245,7 +263,7 @@ def get_cadet_at_event_from_row_in_mapped_event(
         status=status,
         availability=availability,
         data_in_row=row_in_mapped_wa_event,
-
+        notes=''
     )
 
 def get_attendance_selection_from_event_row(

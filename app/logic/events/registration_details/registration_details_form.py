@@ -19,7 +19,7 @@ from app.objects.mapped_wa_event import RowInMappedWAEvent, RegistrationStatus, 
     deleted_status, manual_add_status
 
 DAYS_ATTENDING = "days_attending_field"
-
+NOTES = "Notes"
 @dataclass
 class RegistrationDetailsForEvent:
     event: Event
@@ -55,7 +55,7 @@ def get_list_of_columns_excluding_special_fields(cadets_at_event:ListOfCadetsAtE
 
 
 def get_top_row_for_table_of_registration_details(all_columns: list)-> RowInTable:
-    return RowInTable(["Cadet", "Status", "Attending"]+all_columns)
+    return RowInTable(["Cadet", "Status", "Attending", "Notes"]+all_columns)
 
 
 def row_for_cadet_in_event(cadet_at_event: CadetAtEvent, registration_details: RegistrationDetailsForEvent) -> RowInTable:
@@ -64,10 +64,11 @@ def row_for_cadet_in_event(cadet_at_event: CadetAtEvent, registration_details: R
 
     status_button = get_status_button(cadet_at_event.status, cadet_id=cadet_id)
     days_attending_field = get_days_attending_field(cadet_at_event.availability, cadet_id=cadet_id, event=registration_details.event)
+    notes_field = get_notes_field(cadet_at_event.notes, cadet_id=cadet_id)
 
     other_columns = get_list_of_column_forms_excluding_reserved_fields(cadet_at_event=cadet_at_event, registration_details=registration_details)
 
-    return RowInTable([str(cadet), status_button, days_attending_field]+other_columns)
+    return RowInTable([str(cadet), status_button, days_attending_field, notes_field]+other_columns)
 
 
 def get_list_of_column_forms_excluding_reserved_fields(cadet_at_event: CadetAtEvent, registration_details: RegistrationDetailsForEvent) -> list:
@@ -117,6 +118,12 @@ def get_days_attending_field(attendance: DaySelector, cadet_id: str, event: Even
                                      input_name = input_name_from_column_name_and_cadet_id(DAYS_ATTENDING, cadet_id=cadet_id),
                                      line_break=True)
 
+def get_notes_field(notes: str, cadet_id: str) -> textInput:
+    return textInput(
+        input_name=input_name_from_column_name_and_cadet_id(column_name=NOTES, cadet_id=cadet_id),
+        input_label="",
+        value=notes
+    )
 
 def form_item_for_key_value_pair_in_row_data(column_name: str, cadet_at_event: CadetAtEvent):
     current_value = cadet_at_event.data_in_row[column_name]

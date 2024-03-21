@@ -1,3 +1,4 @@
+from app.backend.data.volunteer_allocation import update_volunteer_notes_at_event
 from app.backend.volunteers.volunteer_rota import MAKE_UNAVAILABLE
 from app.backend.data.volunteer_rota import update_role_at_event_for_volunteer_on_day, \
     update_group_at_event_for_volunteer_on_day
@@ -6,7 +7,7 @@ from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConst
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_rota.render_volunteer_table import input_name_for_role_and_volunteer, \
-    input_name_for_group_and_volunteer
+    input_name_for_group_and_volunteer, input_name_for_notes_and_volunteer
 from app.objects.day_selectors import Day
 from app.objects.volunteers_at_event import VolunteerAtEvent
 from app.objects.volunteers_in_roles import VolunteerInRoleAtEvent
@@ -23,6 +24,8 @@ def update_details_from_form_for_volunteer_at_event(interface: abstractInterface
             day=day,
             volunteer_at_event=volunteer_at_event
         )
+
+    update_notes_for_volunteer_at_event_from_form(interface=interface, volunteer_at_event=volunteer_at_event)
 
 def update_details_from_form_for_volunteer_given_specific_day_at_event(interface: abstractInterface,
                                                                    volunteer_at_event: VolunteerAtEvent,
@@ -101,3 +104,11 @@ def update_group_from_form_for_volunteer_on_day_at_event(interface: abstractInte
         event=event,
         new_group=new_group_from_form
     )
+
+def update_notes_for_volunteer_at_event_from_form(interface: abstractInterface, volunteer_at_event: VolunteerAtEvent):
+    event = get_event_from_state(interface)
+    new_notes = interface.value_from_form( input_name_for_notes_and_volunteer(volunteer_at_event))
+    existing_notes = volunteer_at_event.notes
+    if new_notes==existing_notes:
+        return
+    update_volunteer_notes_at_event(event=event, volunteer_id=volunteer_at_event.volunteer_id, new_notes=new_notes)

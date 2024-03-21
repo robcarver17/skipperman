@@ -8,6 +8,7 @@ from app.objects.generic import GenericSkipperManObject
 @dataclass
 class PrintOptions(GenericSkipperManObject):
     filename: str = ""
+    output_pdf: bool = True
     title_str: str = ""
     page_size: str = A4_PAGESIZE
     font: str = "Arial"
@@ -17,6 +18,13 @@ class PrintOptions(GenericSkipperManObject):
     prepend_group_name: bool = False
     equalise_column_width: bool = True
     landscape: bool = True
+
+    @property
+    def filename_with_extension(self):
+        if self.output_pdf:
+            return self.filename+".pdf"
+        else:
+            return self.filename+".xlsx"
 
     @classmethod
     def create_empty(cls):

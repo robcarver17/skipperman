@@ -45,7 +45,8 @@ def add_volunteer_at_event(event: Event,volunteer_id: str,list_of_associated_cad
                                                              availability: DaySelector,
                                                        preferred_duties: str,
                                 same_or_different: str,
-                                any_other_information: str
+                                any_other_information: str,
+                           notes: str
     ):
     list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
     volunteer_at_event = VolunteerAtEvent(
@@ -54,7 +55,8 @@ def add_volunteer_at_event(event: Event,volunteer_id: str,list_of_associated_cad
         list_of_associated_cadet_id=list_of_associated_cadet_id,
         preferred_duties=preferred_duties,
         same_or_different=same_or_different,
-        any_other_information=any_other_information
+        any_other_information=any_other_information,
+        notes=notes
     )
     list_of_volunteers_at_event.add_new_volunteer(volunteer_at_event)
 

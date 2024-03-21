@@ -20,6 +20,7 @@ MAKE_CADET_CONNECTION = "connection"
 ANY_OTHER_INFORMATION = "any_other_information"
 PREFERRED_DUTIES= "preferred_duties"
 SAME_OR_DIFFERENT = "same_or_different"
+NOTES = "Notes"
 
 def get_header_text(event: Event, volunteer: Volunteer) -> Line:
     list_of_cadet_ids = get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet(volunteer_id=volunteer.id,
@@ -102,7 +103,7 @@ def get_availability_checkbox_for_volunteer_at_event_based_on_relevant_informati
     return get_availability_checkbox(availability=availability,
                                      event=event,
                                      input_name=AVAILABILITY,
-                                     input_label="Confirm availability for volunteer:",
+                                     input_label="Confirm availability for volunteer (leave all blank if not volunteering at all):",
                                      include_all=True)
 
 def first_valid_availability(list_of_relevant_information: ListOfRelevantInformationForVolunteer, event: Event) -> DaySelector:
@@ -125,21 +126,6 @@ def get_any_other_information_text(list_of_relevant_information: ListOfRelevantI
 
     return other_information
 
-def get_any_other_information_input(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> textInput:
-    return textInput(
-        input_name=ANY_OTHER_INFORMATION,
-        input_label="Enter any information relevant to volunteer rota duties (or diet, if catering provided)",
-        value=first_valid_other_information(list_of_relevant_information)
-    )
-
-def first_valid_other_information(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> str:
-    for relevant_information in list_of_relevant_information:
-        try:
-            return relevant_information.details.any_other_information
-        except:
-            continue
-
-    return ""
 
 
 def get_preferred_duties_text(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> ListOfLines:
@@ -184,6 +170,13 @@ def get_same_or_different_input(list_of_relevant_information: ListOfRelevantInfo
         input_name=SAME_OR_DIFFERENT,
         input_label="Enter same or different preference",
         value=first_valid_same_or_different(list_of_relevant_information)
+    )
+
+def get_notes_input_for_volunteer_at_event(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> textInput:
+    return textInput(
+        input_name=NOTES,
+        input_label="Enter any notes about volunteer (can be edited later)",
+        value = ''
     )
 
 def first_valid_same_or_different(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> str:

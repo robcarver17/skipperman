@@ -2,7 +2,8 @@ from app.backend.volunteers.volunteer_allocation import volunteer_ids_associated
 from app.backend.volunteers.volunteers import get_volunteer_from_id
 from app.backend.cadets import cadet_name_from_id
 from app.backend.wa_import.update_cadets_at_event import update_availability_of_existing_cadet_at_event, \
-    update_status_of_existing_cadet_at_event, update_data_row_for_existing_cadet_at_event
+    update_status_of_existing_cadet_at_event, update_data_row_for_existing_cadet_at_event, \
+    update_notes_for_existing_cadet_at_event
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadet_at_event import CadetAtEvent
 from app.objects.events import Event
@@ -11,7 +12,7 @@ from app.backend.forms.form_utils import get_availablity_from_form, get_status_f
 
 from app.logic.events.registration_details.registration_details_form import get_registration_data, \
     RegistrationDetailsForEvent, _column_can_be_edited,\
- ROW_STATUS, DAYS_ATTENDING
+ ROW_STATUS, DAYS_ATTENDING, NOTES
 
 from app.data_access.configuration.field_list_groups import FIELDS_WITH_INTEGERS, FIELDS_AS_STR
 from app.objects.day_selectors import DaySelector
@@ -52,7 +53,9 @@ def get_special_fields_from_form_and_alter_registration_data(interface: abstract
     get_cadet_event_status_for_row_in_form_and_alter_registration_data(interface=interface,
                                                                        original_cadet_in_data=original_cadet_in_data,
                                                                        event=event)
-
+    get_cadet_notes_for_row_in_form_and_alter_registration_data(interface=interface,
+                                                                       original_cadet_in_data=original_cadet_in_data,
+                                                                       event=event)
 
 def get_days_attending_for_row_in_form_and_alter_registration_data(interface: abstractInterface,
                                                                    original_cadet_in_data: CadetAtEvent,
@@ -93,7 +96,18 @@ def get_cadet_event_status_for_row_in_form_and_alter_registration_data(interface
         log_alert_for_status_change(interface=interface, new_status=new_status, original_status=original_status,
                                     cadet_id=original_cadet_in_data.cadet_id, event=event)
 
-
+def get_cadet_notes_for_row_in_form_and_alter_registration_data(interface: abstractInterface,
+                                                                       original_cadet_in_data: CadetAtEvent,
+                                                                       event: Event):
+    new_notes = interface.value_from_form(input_name_from_column_name_and_cadet_id(
+        column_name=NOTES,
+        cadet_id=original_cadet_in_data.cadet_id
+    ))
+    original_notes = original_cadet_in_data.notes
+    if original_notes == new_notes:
+        return
+    else:
+        update_notes_for_existing_cadet_at_event(cadet_id=original_cadet_in_data.cadet_id, event=event, new_notes=new_notes)
 
 def get_other_fields_from_form_and_alter_registration_data(interface: abstractInterface, original_cadet_in_data: CadetAtEvent, registration_data: RegistrationDetailsForEvent):
     all_columns = registration_data.all_columns_excluding_special_fields

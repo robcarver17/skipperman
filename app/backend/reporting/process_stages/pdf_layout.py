@@ -14,16 +14,41 @@ from app.backend.reporting.process_stages.strings_columns_groups import (
 
 @dataclass
 class PdfLayout:
-    page: PageWithColumns
     print_options: PrintOptions
 
     def add_page(self, page: PageWithColumns):
-        margin = self.edge_margin_measurement_units
+        self.setup_page(page)
+        add_page_contents_to_pdf_layout(self,page)
+        self.clear_page()
+
+    def setup_page(self, page: PageWithColumns):
+        self.page = page
+
+        ## set up page in pdf
         pdf = self.pdf
+        margin = self.edge_margin_measurement_units
         pdf.set_margins(left=margin, top=margin)
         pdf.set_auto_page_break(0)
         pdf.add_page()
-        pdf.current_page = page
+
+
+    @property
+    def page(self)-> PageWithColumns:
+        page = getattr(self, "_page", None)
+        if page is None:
+            raise Exception("Need to add a page")
+
+        return page
+
+    @page.setter
+    def page(self, page: PageWithColumns):
+        self._page = page
+
+    def clear_page(self):
+        try:
+            del(self._page)
+        except:
+            pass
 
 
     def add_title_to_page(self):
@@ -357,10 +382,7 @@ class PdfLayout:
 
     @property
     def current_page_title_str(self) -> str:
-        current_page = getattr(self, 'current_page', None)
-        if current_page is None:
-            return ''
-        title_str_this_page = self.current_page.title_str
+        title_str_this_page = self.page.title_str
         return title_str_this_page
 
     @property
@@ -411,3 +433,21 @@ def get_style_for_marked_up_text(marked_up_text: MarkedUpString) -> str:
         style += "U"
 
     return style
+
+
+def add_page_contents_to_pdf_layout(pdf_layout: PdfLayout, page: PageWithColumns):
+    pdf_layout.add_title_to_page()
+
+    for column_number, column in enumerate(page):
+        line_number = 0
+        for group in column:
+            for marked_up_text in group:
+                pdf_layout.put_text_on_page(
+                    column_number=column_number,
+                    line_number=line_number,
+                    marked_up_text=marked_up_text,
+                )
+                line_number += 1
+
+            ## end of group, add extra line
+            line_number += 1

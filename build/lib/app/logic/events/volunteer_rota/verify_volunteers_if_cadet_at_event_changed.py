@@ -1,9 +1,10 @@
-from typing import Union, List
+from typing import Union
 
-from app.backend.volunteers.volunteers import get_volunteer_name_from_id
 from app.backend.wa_import.update_cadets_at_event import mark_cadet_at_event_as_unchanged, has_cadet_at_event_changed
 from app.backend.volunteers.volunteer_allocation import       any_volunteers_associated_with_cadet_at_event
 from app.logic.events.volunteer_rota.form_elements_verify_volunteers_if_cadet_at_event_changed import *
+from app.logic.events.volunteer_rota.form_elements_verify_volunteers_if_cadet_at_event_changed import \
+    get_list_of_volunteer_names_relating_to_changed_cadet
 
 from app.logic.events.volunteer_rota.rota_state import clear_cadet_id_for_rota_at_event, \
     get_and_save_next_cadet_id_in_event_data, get_current_cadet_id_for_rota_at_event
@@ -82,31 +83,16 @@ def flag_new_cadet_without_volunteers_and_loop_to_next_cadet(interface: abstract
     cadet_id = get_current_cadet_id_for_rota_at_event(interface)
     cadet_name = cadet_name_from_id(cadet_id)
     list_of_volunteer_names_relating_to_changed_cadet = get_list_of_volunteer_names_relating_to_changed_cadet(interface)
-    list_of_volunteer_names_relating_to_changed_cadet = ", ".join(list_of_volunteer_names_relating_to_changed_cadet)
-    interface.log_error("Cadet %s has active registration but no volunteers added - manually add volunteers: %s" %
-                        (cadet_name, list_of_volunteer_names_relating_to_changed_cadet))
+    if len(list_of_volunteer_names_relating_to_changed_cadet)>0:
+        list_of_volunteer_names_relating_to_changed_cadet = ", ".join(list_of_volunteer_names_relating_to_changed_cadet)
+        interface.log_error("Cadet %s has active registration but no volunteers added - consider manually adding volunteers: %s " %
+                            (cadet_name, list_of_volunteer_names_relating_to_changed_cadet))
 
     event = get_event_from_state(interface)
     mark_cadet_at_event_as_unchanged(cadet_id=cadet_id, event=event)
 
     return next_cadet_in_loop(interface)
 
-
-
-def get_list_of_volunteer_names_relating_to_changed_cadet(interface: abstractInterface) -> List[str]:
-    ## when added will be removed from list so only need to keep returning first value until exhausted
-    list_of_ids = list_of_volunteer_ids_to_modify_only_changed_cadets(interface)
-    list_of_names = [get_volunteer_name_from_id(id) for id in list_of_ids]
-
-    return list_of_names
-
-
-def list_of_volunteer_ids_to_modify_only_changed_cadets(interface: abstractInterface) -> List[str]:
-    ###
-    cadet_id = get_current_cadet_id_for_rota_at_event(interface)
-    event = get_event_from_state(interface)
-    list_of_volunteer_ids_not_added = list_of_volunteers_for_cadet_identified(cadet_id=cadet_id, event=event)
-    return list_of_volunteer_ids_not_added
 
 def post_form_volunteer_rota_check(interface: abstractInterface)-> NewForm:
     cadet_id=get_current_cadet_id_for_rota_at_event(interface)

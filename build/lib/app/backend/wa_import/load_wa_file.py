@@ -10,38 +10,19 @@ from app.data_access.uploads_and_downloads import (
     staging_directory,
     get_next_valid_upload_file_name,
 )
+from app.data_access.xls_and_csv import load_spreadsheet_file
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
     get_file_from_interface,
 )
-from app.objects.constants import NoValidFile, NoValidID, FileError
+from app.objects.constants import NoValidID, FileError
 
 
 def load_raw_wa_file(wa_filename: str) -> pd.DataFrame:
-    wa_as_df = load_raw_wa_file_from_spreadsheet(wa_filename)
+    wa_as_df = load_spreadsheet_file(wa_filename)
     wa_as_df = wa_as_df.fillna("")
 
     return wa_as_df
-
-
-def load_raw_wa_file_from_spreadsheet(wa_filename: str) -> pd.DataFrame:
-    engine_types = ["csv", "xlrd"]
-    error_str = (
-        "Filename %s is not as expected- are you sure this is a WA export file? Errors: "
-        % wa_filename
-    )
-    for engine in engine_types:
-        try:
-            if engine == "csv":
-                wa_as_df = pd.read_csv(wa_filename, parse_dates=True)
-            else:
-                wa_as_df = pd.read_excel(wa_filename, engine=engine, parse_dates=True)
-            return wa_as_df
-        except Exception as e:
-            error = "Error %s using engine %s. " % (str(e), engine)
-            error_str += error
-
-    raise NoValidFile(error_str)
 
 
 def get_event_id_from_wa_df(wa_as_df: pd.DataFrame) -> str:

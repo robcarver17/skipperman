@@ -85,7 +85,7 @@ def flag_new_cadet_without_volunteers_and_loop_to_next_cadet(interface: abstract
     list_of_volunteer_names_relating_to_changed_cadet = get_list_of_volunteer_names_relating_to_changed_cadet(interface)
     if len(list_of_volunteer_names_relating_to_changed_cadet)>0:
         list_of_volunteer_names_relating_to_changed_cadet = ", ".join(list_of_volunteer_names_relating_to_changed_cadet)
-        interface.log_error("Cadet %s has active registration but no volunteers added - manually add volunteers: %s" %
+        interface.log_error("Cadet %s has active registration but no volunteers added - consider manually adding volunteers: %s " %
                             (cadet_name, list_of_volunteer_names_relating_to_changed_cadet))
 
     event = get_event_from_state(interface)

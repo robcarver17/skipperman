@@ -34,7 +34,7 @@ def get_saved_print_options(
         report_title=print_options.title_str, interface=interface
     )
 
-    print("Loaded saved print options %s" % str(print_options))
+    print("Loaded saved print shared %s" % str(print_options))
     return print_options
 
 
@@ -64,7 +64,7 @@ def get_report_filename_from_storage_or_use_default(
 def save_print_options(
     report_type: str, interface: abstractInterface, print_options: PrintOptions
 ):
-    print("Saving print options %s" % str(print_options))
+    print("Saving print shared %s" % str(print_options))
     interface.set_persistent_value(REPORT_TITLE, print_options.title_str)
     interface.set_persistent_value(REPORT_FILENAME, print_options.filename)
 
@@ -97,7 +97,7 @@ def get_print_options_from_main_option_form_fields(
     interface: abstractInterface,
 ) -> PrintOptions:
     ## doesn't get order or arrangement
-    print("Getting print options")
+    print("Getting print shared")
     page_alignment = interface.value_from_form(PAGE_ALIGNMENT)
     font = interface.value_from_form(FONT)
     page_size = interface.value_from_form(PAGE_SIZE)
@@ -122,7 +122,7 @@ def get_print_options_from_main_option_form_fields(
     print_options.prepend_group_name = prepend_group_name
     print_options.first_value_in_group_is_key = highlight_first_value_as_key
 
-    print("Print options from form %s" % str(print_options))
+    print("Print shared from form %s" % str(print_options))
     return print_options
 
 
@@ -191,7 +191,7 @@ def get_saved_print_options_and_create_form(
 
     return ListOfLines(
         [
-            "%s: Select print options for %s" % (report_type, report_for),
+            "%s: Select print shared for %s" % (report_type, report_for),
             _______________,
             report_options_within_form,
         ]

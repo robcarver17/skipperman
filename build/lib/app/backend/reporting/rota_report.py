@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Dict
 
 import pandas as pd
 
@@ -9,39 +9,95 @@ from app.backend.data.resources import load_list_of_patrol_boats, load_list_of_v
 from app.data_access.configuration.configuration import ALL_GROUPS_NAMES, VOLUNTEER_TEAMS
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.groups import CADET_NAME, GROUP_STR_NAME
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
     SpecificParametersForTypeOfReport,
 )
 from app.objects.volunteers import ListOfVolunteers
 from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent, VolunteerInRoleAtEventWithTeamName, \
     VolunteerInRoleAtEvent
+from app.objects.day_selectors import DaySelector
+
+"""
+Examples:
+
+SI: Steve Humphrey
+RCL: Nikki Taylor - Oppie MG  (Mini rib 2)
+DI: Rob Haigh - Jollies
+AI: Somebody (Jollies)
+
+Lake safety lead: Jonny Garlick
+Driver: asdf (Lake jaffa 1)
+Crew: asdf (Lake jaffa 1)
+Driver: asdf (Lake jaffa 2)
+Crew: asdf (Lake jaffa 2)
+
+River safety lead: Russ Lee
+Driver: Russ Lee (Grey RIB)
+Crew: asdf (Grey RIB)
+Driver: assaer (Red RIB)
+Crew: asaer (Red RIB)
+
+Galley lead: David Cakebread
+Galley: asdf
+Galley: asdf
+
+Lake helpers: Jonny Garlick
+Lake helper: asdfasfd - Jollies
+Lake first aid: aswer
+Lake galley: qwerw
+
+Admin: laura
+Admin: lorna
+
+
+
+"""
+
+def text_given_role(role: str)-> str:
+    return role+":"
+
+def text_given_group(group: str) -> str:
+    return "- %s" % group
+
+def text_given_boat(boat: str) -> str:
+    return "(%s)" % boat
+
+TEAM_NAME = "Team name"
+ROLE = "Role"
+VOLUNTEER = "Volunteer"
+GROUP = "Group"
+BOAT = "Boat"
+DEFAULT_SORT_TEAM= 'Default'
+
+## Sort by doesn't affect lead role which remains in place
+SORT_BY_DICT = {
+    'Default': [ROLE],
+    'Instructors': [GROUP, ROLE],
+    'Lake safety': [BOAT, ROLE],
+    'Lake helpers': [GROUP, ROLE],
+    'Safety': [BOAT, ROLE]
+}
+
+def get_sort_order_for_team_name(team_name: str)-> List[str]:
+    order = SORT_BY_DICT.get(team_name, None)
+    if order is None:
+        return SORT_BY_DICT[DEFAULT_SORT_TEAM]
+    else:
+        return order
+
 
 specific_parameters_for_volunteer_report = SpecificParametersForTypeOfReport(
-    entry_columns=[CADET_NAME],
-    group_by_column=GROUP_STR_NAME,
-    passed_group_order=ALL_GROUPS_NAMES,
+    entry_columns=[ROLE, VOLUNTEER, GROUP, BOAT],
+    group_by_column=TEAM_NAME,
+    passed_group_order=VOLUNTEER_TEAMS,
     report_type="Volunteer rota report"
 )
 
 
 @dataclass
 class AdditionalParametersForVolunteerReport:
-    days_to_show: bool
-    include_unallocated_cadets: bool
+    days_to_show: DaySelector
 
-
-"""
-What is the dataframe
-
-Groups are Role, but we also want to sort by group
-
-For instructors we ideally want a matrix
-
-Need to know who leads are
-
-
-"""
 
 
 
@@ -62,19 +118,34 @@ class Team(List[ GroupOfRolesWithinTeam]):
         if len(first_set_of_roles)==0:
             # no leader
             return pd.Series()
-        leaders_as_list_of_series
+        #leaders_as_list_of_series
 
 
 def dataframe_for_team(team: Team, all_volunteers: ListOfVolunteers,):
     pass
 
 def get_df_for_reporting_volunteers_with_flags(
-    event: Event
-):
+    event: Event,
+    days_to_show: DaySelector
+) -> Dict[str, pd.DataFrame]:
 
     volunteers_in_role_at_event =  load_volunteers_in_role_at_event(event)
     list_of_volunteers_and_roles_by_team = dict()
 
+def get_raw_data_for_reporting_volunteers_with_flags(
+        event: Event,
+        days_to_show: DaySelector
+) -> Dict[str, pd.DataFrame]:
+
+    list_of_days = days_to_show.days_available()
+
+    dict_of_raw = {}
+    for day in list_of_days:
+        day_name = day.name
+        df = get_df_for_reporting_volunteers_for_day(event=event, day=day)
+        dict_of_raw[day_name] = df
+
+    return dict_of_raw
 
 def get_df_for_reporting_volunteers_for_day(
         event: Event,
@@ -88,6 +159,7 @@ def get_df_for_reporting_volunteers_for_day(
             team_name=team_name, day=day)
         list_of_volunteers_and_roles_by_team[team_name] = volunteers_and_roles_within_team
 
+    return list_of_volunteers_and_roles_by_team
 
 def get_list_of_volunteers_and_roles_within_team_for_day(day: Day,
                                                  volunteers_in_role_at_event: ListOfVolunteersInRoleAtEvent,

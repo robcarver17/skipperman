@@ -26,6 +26,8 @@ def get_group_order_from_df_given_report_parameters(
     df: pd.DataFrame,
     specific_parameters_for_type_of_report: SpecificParametersForTypeOfReport,
 )-> List[str]:
+    if len(df)==0:
+        return []
     grouped_df = df.groupby(specific_parameters_for_type_of_report.group_by_column)
     list_of_groups = list(grouped_df.groups.keys())
 

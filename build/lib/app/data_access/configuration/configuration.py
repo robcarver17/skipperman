@@ -42,8 +42,6 @@ WILD_APRICOT_EVENT_ID = configuration["wild_apricot_event_id"]
 WILD_APRICOT_FILE_TYPES = configuration["wild_apricot_file_types"]
 #
 # File handling
-MAX_FILE_SIZE = configuration["max_file_size"]
-UPLOAD_EXTENSIONS = configuration["upload_extensions"]
 ## GROUPS
 LAKE_TRAINING_GROUP_NAMES = configuration["lake_training_groups"]
 RIVER_TRAINING_GROUP_NAMES = configuration["river_training_groups"]
@@ -71,3 +69,5 @@ VOLUNTEERS_REQUIRING_GROUP = configuration['volunteers_requiring_group']
 
 
 ## Page sizes - not configured in yaml as won't need changing
+MAX_FILE_SIZE = configuration["max_file_size"]
+UPLOAD_EXTENSIONS = configuration["upload_extensions"]

@@ -112,16 +112,19 @@ def transform_class_instance_into_string(class_instance):
     elif isinstance(class_instance, enum.Enum):
         return class_instance.name
     elif isinstance(class_instance, bool):
-        if class_instance:
-            return TRUE
-        else:
-            return FALSE
+        return from_bool_to_str(class_instance)
     else:
         return str(class_instance)
 
 
 TRUE = "TRUE_VALUE"
 FALSE = "FALSE_VALUE"
+
+def from_bool_to_str(class_instance:bool)-> str:
+    if class_instance:
+        return TRUE
+    else:
+        return FALSE
 
 
 def get_class_instance_from_str_dict(some_class, dict_with_str: dict):
@@ -146,11 +149,13 @@ def transform_string_into_class_instance(object_class, string):
     elif type(object_class) is EnumMeta:
         return object_class[string]
     elif object_class is bool:
-        return string == TRUE
+        return from_str_to_bool(string)
 
     ## this will work for non strings eg floats
     return object_class(string)
 
+def from_str_to_bool(string: str)-> bool:
+    return string == TRUE
 
 class GenericListOfObjects(list):
     def __init__(self, list_of_objects: List[GenericSkipperManObject]):

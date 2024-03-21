@@ -22,7 +22,7 @@ class Cadet(GenericSkipperManObjectWithIds):
     @classmethod
     def new(cls, first_name: str, surname: str, date_of_birth: datetime.date, id: str = arg_not_passed):
         return cls(first_name=first_name.strip(" ").title(),
-                   surname=surname.strip(" ".title()),
+                   surname=surname.strip(" ").title(),
                    date_of_birth=transform_str_or_datetime_into_date(date_of_birth),
                    id=id)
 

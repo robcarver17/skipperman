@@ -87,31 +87,31 @@ volunteer_teams:
   Instructors:
     - "SI"
     - "DI"
-    - "AI"
     - "Coach"
+    - "AI"
   Bridge:
     - "Bridge lead"
     - "Bridge"
   Lake safety:
     - "Deputy skipper"
-    - "Lake safety helm"
-    - "Lake safety crew"
+    - "Lake helm"
+    - "Lake crew"
   Lake helpers:
     - "Deputy skipper"
     - "Lake helper"
-    - "Lake first aid"
+    - "Lake 1st aid"
+    - "Lake Galley"
   Ramp:
     - "Ramp lead"
-    - "Ramp first aid"
+    - "Ramp 1st aid"
     - "Ramp"
-  Safety:
+  River safety:
     - "River safety lead"
-    - "River safety helm"
-    - "River safety crew"
+    - "River helm"
+    - "River crew"
   Galley:
     - "Galley lead"
     - "Galley"
-    - "Lake Galley"
   Admin:
     - "Admin"
     - "Photo"
@@ -125,8 +125,7 @@ volunteers_requiring_boats:
   - "Coach"
   - "AI"
   - "River safety lead"
-  - "River safety helm"
-  - "River safety crew"
-  - "Lake safety helm"
-  - "Lake safety crew"
-  - "Lake helper"
+  - "River helm"
+  - "River crew"
+  - "Lake helm"
+  - "Lake crew"

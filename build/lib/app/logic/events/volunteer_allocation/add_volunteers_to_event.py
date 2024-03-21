@@ -1,20 +1,21 @@
 from typing import Union
 
-from app.backend.volunteers.volunteer_allocation import list_of_identified_volunteers_with_volunteer_id, \
-    update_cadet_connections_when_cadet_already_at_event, are_all_connected_cadets_cancelled_or_deleted
+from app.backend.volunteers.volunteer_allocation import update_cadet_connections_when_cadet_already_at_event, are_all_connected_cadets_cancelled_or_deleted, \
+    get_list_of_relevant_information
 from app.backend.volunteers.volunteers import get_volunteer_from_id
 from app.backend.data.volunteer_allocation import is_volunteer_already_at_event
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_allocation.add_volunteers_process_form import \
-    add_volunteer_at_event_with_form_contents_and_return_true_if_ok
+    add_volunteer_at_event_with_form_contents
 from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import \
     clear_volunteer_id_at_event_in_state, \
     get_and_save_next_volunteer_id_in_mapped_event_data, get_current_volunteer_id_at_event
-from app.backend.volunteers.volunter_relevant_information import get_relevant_information_for_volunteer_given_details
 from app.logic.events.volunteer_allocation.add_volunteer_to_event_form_contents import get_header_text, \
-    get_connection_checkbox, get_availablity_text, get_availability_checkbox_for_volunteer_at_event_based_on_relevant_information, \
-    get_any_other_information_text, get_any_other_information_input, get_preferred_duties_text, \
-    get_preferred_duties_input, get_same_or_different_text, get_same_or_different_input
+    get_connection_checkbox, get_availablity_text, \
+    get_availability_checkbox_for_volunteer_at_event_based_on_relevant_information, \
+    get_any_other_information_text, get_preferred_duties_text, \
+    get_preferred_duties_input, get_same_or_different_text, get_same_or_different_input, \
+    get_notes_input_for_volunteer_at_event
 from app.logic.events.constants import *
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -22,7 +23,6 @@ from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.objects.constants import NoMoreData
 from app.objects.events import Event
-from app.objects.relevant_information_for_volunteers import ListOfRelevantInformationForVolunteer
 
 
 def display_add_volunteers_to_event(interface: abstractInterface)  -> Union[Form, NewForm]:
@@ -73,7 +73,6 @@ def display_form_for_volunteer_details( volunteer_id: str, event: Event)-> Form:
                                                   event=event)
 
     any_other_information_text  = get_any_other_information_text(list_of_relevant_information=list_of_relevant_information)
-    any_other_information_input  = get_any_other_information_input(list_of_relevant_information=list_of_relevant_information)
 
     preferred_duties_text  = get_preferred_duties_text(list_of_relevant_information=list_of_relevant_information)
     preferred_duties_input  = get_preferred_duties_input(list_of_relevant_information=list_of_relevant_information)
@@ -84,6 +83,8 @@ def display_form_for_volunteer_details( volunteer_id: str, event: Event)-> Form:
     available_text = get_availablity_text(list_of_relevant_information=list_of_relevant_information)
     available_checkbox = get_availability_checkbox_for_volunteer_at_event_based_on_relevant_information(list_of_relevant_information=list_of_relevant_information, event=event)
 
+    notes_input = get_notes_input_for_volunteer_at_event(list_of_relevant_information)
+
     return Form(ListOfLines([
         header_text,
         _______________,
@@ -93,7 +94,6 @@ def display_form_for_volunteer_details( volunteer_id: str, event: Event)-> Form:
         available_checkbox,
         _______________,
         any_other_information_text,
-        any_other_information_input,
         _______________,
         preferred_duties_text,
         preferred_duties_input,
@@ -101,25 +101,14 @@ def display_form_for_volunteer_details( volunteer_id: str, event: Event)-> Form:
         same_or_different_text,
         same_or_different_input,
         _______________,
+        notes_input,
+        _______________,
         Button(SAVE_CHANGES)
     ]))
 
 
-def get_list_of_relevant_information(volunteer_id: str, event: Event) -> ListOfRelevantInformationForVolunteer:
-
-
-    list_of_identified_volunteers = list_of_identified_volunteers_with_volunteer_id(volunteer_id=volunteer_id, event=event) ## can appear more than once
-
-    list_of_relevant_information = [get_relevant_information_for_volunteer_given_details(
-        row_id=identified_volunteer.row_id,
-        volunteer_index=identified_volunteer.volunteer_index,
-        event=event
-            ) for identified_volunteer in list_of_identified_volunteers]
-
-    return ListOfRelevantInformationForVolunteer(list_of_relevant_information)
-
 def post_form_add_volunteers_to_event(interface: abstractInterface):
-    form_ok = add_volunteer_at_event_with_form_contents_and_return_true_if_ok(interface)
+    form_ok = add_volunteer_at_event_with_form_contents(interface)
     if not form_ok:
         volunteer_id = get_current_volunteer_id_at_event(interface)
         event = get_event_from_state(interface)

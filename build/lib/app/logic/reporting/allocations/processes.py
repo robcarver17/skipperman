@@ -9,16 +9,16 @@ from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_form import File
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.reporting.constants import SHOW_FULL_NAMES, INCLUDE_UNALLOCATED_CADETS
-from app.logic.reporting.options.group_order import get_group_order_from_stored_or_df, clear_group_order_in_storage
-from app.logic.reporting.options.reporting_options import get_reporting_options
-from app.logic.reporting.options.arrangement_state import clear_arrangement_in_state
+from app.logic.reporting.shared.group_order import get_group_order_from_stored_or_df, clear_group_order_in_storage
+from app.logic.reporting.shared.reporting_options import get_reporting_options
+from app.logic.reporting.shared.arrangement_state import clear_arrangement_in_state
 from app.objects.events import Event
 
-from app.backend.reporting.allocation_report import (
+from app.backend.reporting.allocation_report.allocation_report import (
     specific_parameters_for_allocation_report,
     AdditionalParametersForAllocationReport,
 )
-from app.backend.reporting.process_stages.create_column_pdf_report_from_df import create_column_pdf_report_from_df_and_return_filename
+from app.backend.reporting.process_stages.create_column_report_from_df import create_column_report_from_df_and_return_filename
 
 def get_group_allocation_report_additional_parameters_from_form_and_save(
     interface: abstractInterface,
@@ -116,8 +116,8 @@ def create_report(interface: abstractInterface) -> File:
     reporting_options = get_reporting_options(interface=interface,
                                               specific_parameters_for_type_of_report=specific_parameters_for_allocation_report,
                                               dict_of_df=dict_of_df)
-    print("Reporting options %s" % reporting_options)
-    filename = create_column_pdf_report_from_df_and_return_filename(
+    print("Reporting shared %s" % reporting_options)
+    filename = create_column_report_from_df_and_return_filename(
         reporting_options=reporting_options
     )
 

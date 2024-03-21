@@ -106,7 +106,7 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
 ## Must match arguments in dataclass below
 LIST_KEY = 'list_of_associated_cadet_id'
 AVAILABILITY_KEY = 'availablity'
-
+NOTES= 'notes'
 
 @dataclass
 class VolunteerAtEvent(GenericSkipperManObject):
@@ -116,7 +116,7 @@ class VolunteerAtEvent(GenericSkipperManObject):
     preferred_duties: str = "" ## information only
     same_or_different:  str = ""  ## information only
     any_other_information:  str = ""  ## information only - double counted as required twice
-
+    notes: str = ""
 
     @classmethod
     def from_dict(cls, dict_with_str):
@@ -140,7 +140,8 @@ class VolunteerAtEvent(GenericSkipperManObject):
             same_or_different=str(dict_with_str['same_or_different']),
             any_other_information=str(dict_with_str['any_other_information']),
             list_of_associated_cadet_id=list_of_cadet_ids,
-            availablity=availability
+            availablity=availability,
+            notes=dict_with_str['notes']
         )
 
 
@@ -187,6 +188,10 @@ class ListOfVolunteersAtEvent(GenericListOfObjects):
             pass
         else:
             del(self[idx_of_volunteer_at_event])
+
+    def update_volunteer_notes_at_event(self, volunteer_id: str, new_notes: str):
+        volunteer_at_event = self.volunteer_at_event_with_id(volunteer_id)
+        volunteer_at_event.notes = new_notes
 
     def remove_cadet_id_association_from_volunteer(self, cadet_id: str, volunteer_id:str):
         volunteer_at_event = self.volunteer_at_event_with_id(volunteer_id)

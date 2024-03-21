@@ -55,7 +55,7 @@ def new_status_and_status_message(
 
     cadet = cadet_name_from_id(existing_row_in_master_event.cadet_id)
 
-    ## Don't need all options as new_status can't be deleted
+    ## Don't need all shared as new_status can't be deleted
     if old_status == cancelled_status and new_status == active_status:
         status_message = (
             "Cadet %s was cancelled; now active so probably new registration"

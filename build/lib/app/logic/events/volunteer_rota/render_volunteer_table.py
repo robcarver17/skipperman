@@ -18,7 +18,7 @@ from app.objects.abstract_objects.abstract_lines import Line
 
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.abstract_objects.abstract_buttons import Button
-from app.objects.abstract_objects.abstract_form import dropDownInput
+from app.objects.abstract_objects.abstract_form import dropDownInput, textInput
 
 from app.objects.events import Event
 from app.objects.volunteers_at_event import VolunteerAtEvent
@@ -57,7 +57,8 @@ def get_top_row_for_table(event: Event, hide_buttons: bool) -> RowInTable:
         "Skills",
         "Previous role"
     ]+buttons_for_days_at_event_as_str+
-    ["Other information from registration"]
+    ["Notes",
+     "Other information from registration"]
                       )
 
 
@@ -117,6 +118,7 @@ def get_row_for_volunteer_at_event(data_to_be_stored: DataToBeStoredWhilstConstr
     preferred = volunteer_at_event.preferred_duties
     same_different = volunteer_at_event.same_or_different
     other_information = volunteer_at_event.any_other_information
+    notes = get_notes_input(volunteer_at_event=volunteer_at_event)
     skills_button = get_skills_button(volunteer=volunteer, data_to_be_stored=data_to_be_stored, hide_buttons=hide_buttons)
     previous = data_to_be_stored.dict_of_volunteers_with_last_roles[volunteer_at_event.volunteer_id]
 
@@ -136,7 +138,7 @@ def get_row_for_volunteer_at_event(data_to_be_stored: DataToBeStoredWhilstConstr
         skills_button,
         previous
     ]+day_inputs+
-    [other_information])
+    [notes, other_information])
 
 
 
@@ -241,3 +243,15 @@ def input_name_for_group_and_volunteer(volunteer_in_role_at_event_on_day: Volunt
     return "GROUP_%s_%s" % (volunteer_in_role_at_event_on_day.volunteer_id,
                             volunteer_in_role_at_event_on_day.day.name)
 
+
+
+
+def get_notes_input(volunteer_at_event: VolunteerAtEvent) -> textInput:
+    return textInput(
+        value=volunteer_at_event.notes,
+        input_name=input_name_for_notes_and_volunteer(volunteer_at_event),
+        input_label=""
+    )
+
+def input_name_for_notes_and_volunteer(volunteer_at_event: VolunteerAtEvent) -> str:
+    return "NOTES_%s" % (volunteer_at_event.volunteer_id)

@@ -4,8 +4,8 @@ from app.backend.reporting.process_stages.create_list_of_groups_from_df import (
 from app.backend.reporting.process_stages.create_list_of_columns_from_groups import (
     create_list_of_pages_with_columns_from_list_of_pages
 )
-from app.backend.reporting.process_stages.create_pdf_from_list_of_columns import (
-    create_pdf_from_list_of_columns_and_return_filename,
+from app.backend.reporting.process_stages.create_file_from_list_of_columns import (
+    create_report_from_list_of_columns_and_return_filename,
 )
 from app.backend.reporting.options_and_parameters.report_options import ReportingOptions
 
@@ -18,8 +18,8 @@ def create_column_pdf_report_from_df_and_return_filename(reporting_options: Repo
     list_of_pages_with_columns = create_list_of_pages_with_columns_from_list_of_pages(list_of_pages=list_of_groups_of_marked_up_str,
                                                         reporting_options=reporting_options)
     print("Columns %s" % list_of_pages_with_columns)
-    print("Print options %s" % reporting_options.print_options)
-    filename = create_pdf_from_list_of_columns_and_return_filename(
+    print("Print shared %s" % reporting_options.print_options)
+    filename = create_report_from_list_of_columns_and_return_filename(
         list_of_pages_with_columns=list_of_pages_with_columns, reporting_options=reporting_options
     )
 

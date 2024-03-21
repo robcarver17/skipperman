@@ -39,6 +39,10 @@ def delete_volunteer_with_id_at_event(volunteer_id: str, event: Event):
     save_list_of_volunteers_at_event(event=event, list_of_volunteers_at_event=list_of_volunteers_at_event)
 
 
+def update_volunteer_notes_at_event(event: Event, volunteer_id: str, new_notes: str):
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
+    list_of_volunteers_at_event.update_volunteer_notes_at_event(volunteer_id=volunteer_id, new_notes=new_notes)
+    save_list_of_volunteers_at_event(event=event, list_of_volunteers_at_event=list_of_volunteers_at_event)
 
 
 

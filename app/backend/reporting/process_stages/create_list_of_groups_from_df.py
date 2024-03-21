@@ -51,6 +51,7 @@ def get_dict_of_grouped_df(
     dict_of_df: Dict[str, pd.DataFrame],
     marked_up_list_from_df_parameters: MarkedUpListFromDfParametersWithActualGroupOrder,
 ) -> Dict[str, pd.core.groupby.generic.DataFrameGroupBy]:
+
     group_by_column = marked_up_list_from_df_parameters.group_by_column
     if group_by_column is arg_not_passed:
         return dict_of_df
@@ -61,12 +62,22 @@ def get_dict_of_grouped_df(
                                          group_by_column =group_by_column ))
                                for key, df in dict_of_df.items()])
 
+    dict_of_grouped_df = dict([
+                            (key,
+                             grouped_df)
+                               for key, grouped_df in dict_of_grouped_df.items()
+    if grouped_df is not EMPTY_DF])
+
+
     return dict_of_grouped_df
 
+EMPTY_DF = object()
 def get_grouped_df(
     df: pd.DataFrame,
     group_by_column: str
 ) -> pd.core.groupby.generic.DataFrameGroupBy:
+    if len(df)==0:
+        return EMPTY_DF
 
     grouped_df = df.groupby(group_by_column )
 
@@ -79,7 +90,12 @@ def _create_marked_up_str_for_group(
     marked_up_list_from_df_parameters: MarkedUpListFromDfParametersWithActualGroupOrder,
 ) -> GroupOfMarkedUpString:
 
-    subset_group = grouped_df.get_group(group)
+    try:
+        subset_group = grouped_df.get_group(group)
+    except KeyError:
+        ## possible with multiple pages that not all groups on each page
+        return GroupOfMarkedUpString([])
+
     subset_group_as_list = list(subset_group.iterrows())
 
     if len(subset_group_as_list)==0:
@@ -126,10 +142,7 @@ def create_marked_string_from_row(
     keyvalue: bool = False,
     prepend_group_name: bool = False,
 ) -> MarkedUpString:
-    entry = " ".join([row[column_name] for column_name in entry_columns])
-    if prepend_group_name:
-        entry = "%s: %s" % (group, entry)
     if keyvalue:
-        return MarkedUpString.keyvalue(entry)
+        return MarkedUpString.keyvalue(row=row, group=group, prepend_group_name=prepend_group_name, entry_columns=entry_columns)
     else:
-        return MarkedUpString.bodytext(entry)
+        return MarkedUpString.bodytext(row=row, group=group, prepend_group_name=prepend_group_name, entry_columns=entry_columns)

@@ -11,13 +11,13 @@ from app.logic.reporting.allocations.processes import (
     load_additional_parameters_for_allocation_report
 )
 from app.logic.reporting.constants import SHOW_FULL_NAMES, INCLUDE_UNALLOCATED_CADETS
-from app.logic.reporting.options.arrangement_state import get_stored_arrangement
-from app.logic.reporting.options.print_options import (
+from app.logic.reporting.shared.arrangement_state import get_stored_arrangement
+from app.logic.reporting.shared.print_options import (
     get_saved_print_options,
     report_print_options_as_list_of_lines,
 )
 from app.backend.reporting.arrangement.arrange_options import describe_arrangement
-from app.backend.reporting.allocation_report import AdditionalParametersForAllocationReport, specific_parameters_for_allocation_report
+from app.backend.reporting.allocation_report.allocation_report import AdditionalParametersForAllocationReport, specific_parameters_for_allocation_report
 
 
 def reporting_options_form_for_group_additional_parameters(

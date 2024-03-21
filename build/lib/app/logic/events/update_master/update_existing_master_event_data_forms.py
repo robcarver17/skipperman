@@ -107,7 +107,7 @@ def get_line_in_form_for_status_change(
                 dropdown_input_for_status_change(
                     input_label="%s: select status" % status_message,
                     default_status=new_status,
-                input_name=ROW_STATUS) ## no dict passed, so all options will be on the table
+                input_name=ROW_STATUS) ## no dict passed, so all shared will be on the table
 
                 ]
         )

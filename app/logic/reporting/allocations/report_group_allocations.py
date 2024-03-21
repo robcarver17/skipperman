@@ -7,17 +7,18 @@ from app.logic.reporting.allocations.forms import (
 from app.logic.reporting.allocations.processes import (
     get_group_allocation_report_additional_parameters_from_form_and_save,
     get_dict_of_df_for_reporting_allocations,
-    create_report
+    create_allocation_report
 )
-from app.logic.reporting.options.arrangement_form import form_for_group_arrangement_options, \
+from app.logic.reporting.shared.arrangement_form import form_for_group_arrangement_options, \
     post_form_for_group_arrangement_options
-from app.logic.reporting.options.print_options import (
+from app.logic.reporting.shared.event_lists import display_list_of_events_with_buttons_criteria_matched
+from app.logic.reporting.shared.print_options import (
     save_print_options,
     get_print_options_from_main_option_form_fields,
     get_saved_print_options_and_create_form,
 )
 
-from app.backend.reporting.allocation_report import specific_parameters_for_allocation_report
+from app.backend.reporting.allocation_report.allocation_report import specific_parameters_for_allocation_report
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -33,19 +34,22 @@ from app.logic.events.events_in_state import get_event_from_state, update_state_
 from app.backend.events import confirm_event_exists_given_description
 
 from app.logic.reporting.constants import *
-from app.logic.events.ENTRY_view_events import display_list_of_events_with_buttons
 
 
 # GROUP_ALLOCATION_REPORT_STAGE
 def display_form_report_group_allocation(interface: abstractInterface) -> Form:
-    list_of_events = display_list_of_events_with_buttons()
+    list_of_events = display_list_of_events_with_buttons_criteria_matched(
+        requires_group_allocations=True
+    )
     lines_inside_form = ListOfLines(
-        [back_button, _______________,"Group allocation report",_______________, "Select event:", _______________, list_of_events]
+        [back_button, _______________,"Group allocation report",_______________, "Select event (only events with groups are shown):", _______________, list_of_events]
     )
 
     return Form(lines_inside_form)
 
 back_button = Button(BACK_BUTTON_LABEL)
+
+
 
 def post_form_report_group_allocation(
     interface: abstractInterface,
@@ -90,7 +94,7 @@ def display_form_for_report_group_allocation_generic_options(
                 cancel_button,
                 back_button,
                 _______________,
-                bold("Allocation report: Select reporting options for %s" % str(event)),
+                bold("Allocation report: Select reporting shared for %s" % str(event)),
                 _______________,
                 additional_options_as_text,
                 Button(MODIFY_ADDITIONAL_OPTIONS_BUTTON_LABEL),
@@ -115,7 +119,7 @@ def post_form_for_report_group_allocation_generic_options(
     previous_form = interface.get_new_display_form_for_parent_of_function(post_form_for_report_group_allocation_generic_options)
 
     if last_button_pressed == CREATE_REPORT_BUTTON_LABEL:
-        return create_report(interface)
+        return create_allocation_report(interface)
 
     elif last_button_pressed == MODIFY_PRINT_OPTIONS_BUTTON_LABEL:
         return print_option_form(interface)
@@ -166,7 +170,7 @@ def display_form_for_report_group_additional_options(
                 cancel_button,
                 back_button,
                 _______________,
-                "Allocation report: Select reporting options for %s" % str(event),
+                "Allocation report: Select reporting shared for %s" % str(event),
                 _______________,
                 reporting_options_this_report,
                 _______________,
@@ -187,7 +191,7 @@ def post_form_for_report_group_additional_options(
 
     elif  last_button_pressed== CREATE_REPORT_BUTTON_LABEL:
         get_group_allocation_report_additional_parameters_from_form_and_save(interface)
-        return create_report(interface)
+        return create_allocation_report(interface)
 
     elif last_button_pressed == SAVE_THESE_OPTIONS_BUTTON_LABEL:
         get_group_allocation_report_additional_parameters_from_form_and_save(interface)
@@ -246,7 +250,7 @@ def post_form_for_report_group_allocation_print_options(
         report_type=specific_parameters_for_allocation_report.report_type, print_options=print_options, interface=interface
     )
     if last_button_pressed == CREATE_REPORT_BUTTON_LABEL:
-        return create_report(interface)
+        return create_allocation_report(interface)
 
     elif last_button_pressed == SAVE_THESE_OPTIONS_BUTTON_LABEL:
         ## already saved
@@ -284,7 +288,7 @@ def post_form_for_group_arrangement_options_allocation_report(
     previous_form = interface.get_new_display_form_for_parent_of_function(post_form_for_group_arrangement_options_allocation_report)
 
     if last_button_pressed == CREATE_REPORT_BUTTON_LABEL:
-        return create_report(interface)
+        return create_allocation_report(interface)
 
     elif last_button_pressed == BACK_BUTTON_LABEL:
         return previous_form

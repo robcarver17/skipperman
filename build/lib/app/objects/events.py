@@ -23,6 +23,7 @@ DICT_OF_NAMES_AND_ATTRIBUTES_CHECKBOX = {
 "Clothing sizes (merchandise)": 'contains_clothing'
 }
 
+
 EXAMPLES_OF_EVENTS = "Examples: Cadet week - check all. Cadet week hoodies - check merch only. Racing event eg Reid Scott- check Cadets, Volunteers. Training weekend = check Cadets, Training groups, Volunteers. Social event eg easter supper - check Food only"
 
 @dataclass

@@ -17,7 +17,7 @@ def display_form_main_config_page(interface: abstractInterface) -> Form:
     lines_inside_form = ListOfLines(
         [
             main_menu_button,
-            "Select options to modify",
+            "Select shared to modify",
             _______________,
             Button(CLUB_DINGHIES_BUTTON_LABEL),
             Button(PATROL_BOATS_BUTTON_LABEL)

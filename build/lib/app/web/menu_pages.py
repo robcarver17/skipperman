@@ -68,7 +68,7 @@ def parse_menu_option_into_html(
         list_of_html_to_return.append(html_link(string=HOME, url=INDEX_URL))
 
     for name_of_option, contents_of_option in current_menu_definition.items():
-        # cycle through options at this level
+        # cycle through shared at this level
         if type(contents_of_option) is str:
             ## Nothing inside this, must be an action: return an action rather than menu link
             link_this_option = get_action_url(contents_of_option)

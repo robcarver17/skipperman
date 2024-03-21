@@ -52,6 +52,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - allow list of boats/dinghies/etc to be reordered
 - import a set of members from WA to populate a list of cadets
 - report on a volunteer rota
+- reports can now be sent to .xls/.csv files
 
 
 ### Required for racing event:

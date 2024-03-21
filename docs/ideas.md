@@ -104,7 +104,6 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - don't allow duplicate templates and delete templates allowed
 - template for import of list of cadets
 - edit event (warnings especially days!)
-- all pdf reports should have csv counterparts
 - anything that is displayed on screen can be exported to .csv eg reg details, volunteer rota (and imported...???)
 - upload/download all data as zip
 - clean up eg old data, uploaded files, staged files

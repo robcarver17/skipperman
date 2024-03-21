@@ -57,11 +57,13 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for racing event:
   
-- WEIRD registraition effects
-- spotter sheets (excel)
 - users and passwords (skipper, deputy, instructors) 
+- clear up reporting so uses common code
+- spotter sheets  report
+- link to google sheets for pb2 / instructors
 - regular backups on all writes; include roll back function
 - all buttons should save first
+- clear old reports for event (remove rednedant permalinks)
 
 
 ### Required for social event:
@@ -88,7 +90,6 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 - two types of clothing event: as part of training event, or social only seperate
 - allocate and maintain colour groups (CW)
-- print spotter sheets (CW and racing events)
 - maintain and report on tickets for gala dinner, include additional gala dinner invites eg sponsors, plus ones (CW)
 - maintain and report on wristbands (CW)
 - create a report of cadets and their ages for fancy dress (CW)

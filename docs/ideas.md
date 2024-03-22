@@ -57,8 +57,6 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for racing event:
   
-- clear up reporting so uses common code
-- reporting do nice tabulation in pdf stylee
 - spotter sheets  report
 - link to google sheets for pb2 / instructors
 - regular backups on all writes; include roll back function

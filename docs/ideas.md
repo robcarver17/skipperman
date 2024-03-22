@@ -58,7 +58,6 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 ### Required for racing event:
   
 - spotter sheets  report
-- link to google sheets for pb2 / instructors
 - regular backups on all writes; include roll back function
 - all buttons should save first
 - clear old reports for event (remove rednedant permalinks)

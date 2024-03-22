@@ -57,7 +57,6 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for racing event:
   
-- users and passwords (skipper, deputy, instructors) 
 - clear up reporting so uses common code
 - reporting do nice tabulation in pdf stylee
 - spotter sheets  report
@@ -81,6 +80,8 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - add * for boat allocation to group report
 - handle waiting lists (new state)
 - maintain ticksheets, print and record ticks
+- ticksheet level security
+- key report links for instructors on landing page
 - print roll call lists and contact details
 - birthdays during an event - splash on event screen
 

@@ -57,9 +57,9 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for racing event:
   
-- spotter sheets  report
+- spotter sheets report
 - regular backups on all writes; include roll back function
-- all buttons should save first
+- all buttons should save first (start with volunteer / boat allocation)
 - clear old reports for event (remove rednedant permalinks)
 
 
@@ -72,13 +72,15 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for training event:
 
+- GDPR document
+- instructor login (send link to create, link to specific volunteer name)
+- ticksheet level security
+- key report links for instructors on landing page
+- maintain ticksheets, print and record ticks
 - allow selection of group subset in reporting arrangement
 - backfill all last years events
 - add * for boat allocation to group report
 - handle waiting lists (new state)
-- maintain ticksheets, print and record ticks
-- ticksheet level security
-- key report links for instructors on landing page
 - print roll call lists and contact details
 - birthdays during an event - splash on event screen
 

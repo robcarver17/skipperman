@@ -75,6 +75,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - GDPR document
 - instructor login (send link to create, link to specific volunteer name)
 - ticksheet level security
+- refactor reporting so uses common data model
 - key report links for instructors on landing page
 - maintain ticksheets, print and record ticks
 - allow selection of group subset in reporting arrangement

@@ -53,15 +53,16 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - import a set of members from WA to populate a list of cadets
 - report on a volunteer rota
 - reports can now be sent to .xls/.csv files
+- spotter sheets report
+- report to public weblink is optional and puts report in different place
+- filter volunteer sheets on qualification
 
 
 ### Required for racing event:
   
-- spotter sheets report
-- report to public weblink is optional and puts report in different place
-- filter volunteer sheets on qualification
-- regular backups on all writes; include roll back function
-- all buttons should save first (start with volunteer / boat allocation)
+
+- regular backups on all writes; include roll back function (showing user who did edits)
+- all buttons should save first 
 - clear old reports for event (remove rednedant permalinks)
 
 
@@ -75,6 +76,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 ### Required for training event:
 
 - GDPR document
+- filter volunteer sheet on available days
 - instructor login (send link to create, link to specific volunteer name)
 - ticksheet level security
 - refactor reporting so uses common data model

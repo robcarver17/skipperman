@@ -61,9 +61,8 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 ### Required for racing event:
   
 
-- regular backups on all writes; include roll back function (showing user who did edits)
-- all buttons should save first 
-- clear old reports for event (remove rednedant permalinks)
+- regular backups on all writes; include roll back function (showing user who did edits) UTILITIES MENU
+- clear old reports for event (remove rednedant permalinks) UTILITIES MENU
 - basic level of niceness
 
 

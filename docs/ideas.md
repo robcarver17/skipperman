@@ -56,13 +56,11 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - spotter sheets report
 - report to public weblink is optional and puts report in different place
 - filter volunteer sheets on qualification
+- regular backups on all writes; include roll back function (showing user who did edits) UTILITIES MENU
 
 
 ### Required for racing event:
   
-
-- regular backups on all writes; include roll back function (showing user who did edits) UTILITIES MENU
-- clear old reports for event (remove rednedant permalinks) UTILITIES MENU
 - basic level of niceness
 
 
@@ -73,23 +71,29 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - manage social event with food only (Social)
 
 
-### Required for training event:
+### Required for training event (ASAP):
+
+- record qualification data and backfill
+- backfill Cadet week data
+- maintain ticksheets, print and record ticks
+- backfill ticksheet data
+- add * for boat allocation to group report
+- filter volunteer sheet on available days
+- allow selection of group subset in reporting arrangement
+- print roll call lists and contact details
+- registration report with literally everything
+- birthdays during an event - splash on event screen
+
+### Required for training event (Can wait):
 
 - GDPR document
-- filter volunteer sheet on available days
-- instructor login (send link to create, link to specific volunteer name)
+- instructor login (send link to create, link users to specific volunteer name)
 - ticksheet level security
 - refactor reporting so uses common data model
 - key report links for instructors on landing page
-- maintain ticksheets, print and record ticks
-- allow selection of group subset in reporting arrangement
-- backfill all last years events
-- add * for boat allocation to group report
 - handle waiting lists (new state)
-- print roll call lists and contact details
-- birthdays during an event - splash on event screen
-- registration report
-   
+- clear old reports for event (remove rednedant permalinks) and other temp directories UTILITIES MENU
+
 
 ### Required for cadet week:
 

@@ -58,6 +58,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 ### Required for racing event:
   
 - spotter sheets report
+- report to public weblink is optional and puts report in different place
 - filter volunteer sheets on qualification
 - regular backups on all writes; include roll back function
 - all buttons should save first (start with volunteer / boat allocation)

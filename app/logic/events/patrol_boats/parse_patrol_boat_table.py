@@ -77,7 +77,7 @@ def update_if_delete_boat_button_pressed(interface: abstractInterface, delete_bu
         interface.log_error("Error deleting patrol boat %s: %s" % (patrol_boat_name, str(e)))
 
 
-def update_if_save_button_pressed_in_allocation_page(interface: abstractInterface):
+def update_data_from_form_entries_in_allocation_page(interface: abstractInterface):
     ## Any added volunteers
     update_skills_checkbox(interface)
     update_role_dropdowns(interface)
@@ -87,10 +87,12 @@ def update_adding_volunteers_to_specific_boats_and_days(interface: abstractInter
     event = get_event_from_state(interface)
     list_of_names = get_list_of_dropdown_names_for_adding_volunteers(event)
     for dropdown_name in list_of_names:
-        update_adding_volunteers_to_specific_boats_and_days_for_a_given_dropdown_name(dropdown_name=dropdown_name,
-                                                                                      event=event,
-                                                                                      interface=interface)
-
+        try:
+            update_adding_volunteers_to_specific_boats_and_days_for_a_given_dropdown_name(dropdown_name=dropdown_name,
+                                                                                          event=event,
+                                                                                          interface=interface)
+        except Exception as e:
+            print("Error %s when updating for dropdown %s" % (str(e), dropdown_name))
 
 def update_adding_volunteers_to_specific_boats_and_days_for_a_given_dropdown_name(interface: abstractInterface, dropdown_name: str, event: Event):
     print("DROPDOWN NAME %s" % dropdown_name)
@@ -136,12 +138,15 @@ def update_role_dropdowns(interface: abstractInterface):
     for day in event.weekdays_in_event():
         list_of_volunteer_ids = get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(day=day, event=event)
         for volunteer_id in list_of_volunteer_ids:
-            update_role_dropdown_for_volunteer_on_day(
-                interface=interface,
-                event=event,
-                day=day,
-                volunteer_id=volunteer_id
-            )
+            try:
+                update_role_dropdown_for_volunteer_on_day(
+                    interface=interface,
+                    event=event,
+                    day=day,
+                    volunteer_id=volunteer_id
+                )
+            except Exception as e:
+                print("Error %s updating role dropdown for %s" % (str(e), volunteer_id))
 
 def update_role_dropdown_for_volunteer_on_day(interface: abstractInterface, volunteer_id: str, event: Event, day: Day):
     role_selected =which_volunteer_role_selected_in_boat_allocation(interface=interface, volunteer_id=volunteer_id, day=day)

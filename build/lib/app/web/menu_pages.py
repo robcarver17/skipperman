@@ -1,3 +1,6 @@
+from app.web.flask.flash import get_html_of_flashed_messages
+from app.web.flask.security import get_access_group_for_current_user, get_username, authenticated_user
+from app.web.html.login_and_out import login_link_html_code, logout_link_html_code
 from app.web.html.url import HOME, INDEX_URL, get_menu_url, get_action_url
 from app.web.html.html import (
     Html,
@@ -17,33 +20,37 @@ from app.web.html.master_layout import master_layout_html
 from app.web.flask.session_data_for_action import (
     clear_session_data_for_all_actions,
 )
+from app.web.menu_define import menu_definition, menu_security_dict
 
 
-menu_definition = {
-    "Cadets": "view_master_list_of_cadets",
-    "Volunteers": "view_list_of_volunteers",
-    "Events": "view_list_of_events",
-    "Reports": "view_possible_reports",
-    "Configuration": "view_configuration"
-}
 
 ### Returns HTML for a menu page
 def generate_menu_page_html(menu_option: str = HOME) -> str:
     ## We do this so on subsequently entering a particular action we have no state saved
     clear_session_data_for_all_actions()
 
-    html_code_for_menu = generate_menu_html(menu_option)
-    html_code_for_menu_inside_layout = master_layout_html.wrap_around(
-        html_code_for_menu
-    )
 
+    ## hide if logged out EXCEPT public
+    if authenticated_user():
+        html_code_for_menu = generate_menu_html(menu_option)
+    else:
+        html_code_for_menu = "Login to see options"
+
+
+    login_or_out_code = login_or_out()
+    messages = get_html_of_flashed_messages()
+
+    html_code_for_menu_inside_layout = master_layout_html.wrap_around(
+        messages+html_code_for_menu+login_or_out_code
+    )
     return html_code_for_menu_inside_layout
 
 
 def generate_menu_html(menu_option: str = HOME) -> Html:
+    logged_in_as =html_container_wrapper.wrap_around("Logged in as %s" % get_username())
     inner_html_menu_code = generate_menu_inner_html(menu_option)
 
-    return menu_layout_html_wrapper.wrap_around(inner_html_menu_code)
+    return logged_in_as+ menu_layout_html_wrapper.wrap_around(inner_html_menu_code)
 
 
 def generate_menu_inner_html(menu_option: str) -> Html:
@@ -71,10 +78,13 @@ def parse_menu_option_into_html(
         # cycle through shared at this level
         if type(contents_of_option) is str:
             ## Nothing inside this, must be an action: return an action rather than menu link
-            link_this_option = get_action_url(contents_of_option)
-            html_this_option = html_link_in_list_item(
-                string=name_of_option, url=link_this_option
-            )
+            if can_action_be_seen(contents_of_option):
+                link_this_option = get_action_url(contents_of_option)
+                html_this_option = html_link_in_list_item(
+                    string=name_of_option, url=link_this_option
+                )
+            else:
+                html_this_option=""
         else:
             ## it's a dict, so we have submenus
             option_with_underscores = name_of_option.replace(" ", "_")
@@ -122,3 +132,20 @@ menu_layout_html_wrapper = HtmlWrapper(
         )
     )
 )
+
+def login_or_out() -> Html:
+
+    if authenticated_user():
+        return logout_link_html_code
+    else:
+        return login_link_html_code
+
+
+def can_action_be_seen(action_name):
+    list_of_allowed_groups = menu_security_dict.get(action_name, None)
+    if list_of_allowed_groups is None:
+        raise Exception("menu_security_dict doesn't include %s" % action_name)
+
+    group = get_access_group_for_current_user()
+    print("is %s in %s" % (group.name, str(list_of_allowed_groups)))
+    return group in list_of_allowed_groups

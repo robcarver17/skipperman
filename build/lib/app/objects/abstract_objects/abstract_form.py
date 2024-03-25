@@ -10,6 +10,13 @@ class Form(list):
     def __repr__(self):
         return "Form: contents %s" % super().__repr__()
 
+@dataclass
+class Link:
+    string: str
+    url: str
+    open_new_window: bool = False
+
+
 
 
 @dataclass
@@ -86,6 +93,12 @@ class File:
 
 @dataclass
 class textInput(Input):
+    input_label: str
+    input_name: str
+    value: str = arg_not_passed
+
+@dataclass
+class passwordInput(Input):
     input_label: str
     input_name: str
     value: str = arg_not_passed

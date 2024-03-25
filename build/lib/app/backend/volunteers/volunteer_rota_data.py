@@ -19,6 +19,12 @@ from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent, Volun
 
 
 @dataclass
+class RotaSortsAndFilters:
+    sort_by_volunteer_name: str
+    sort_by_day: Day
+    skills_filter: dict
+
+@dataclass
 class DataToBeStoredWhilstConstructingTableBody:
     event: Event
     list_of_cadet_ids_with_groups: ListOfCadetIdsWithGroups
@@ -27,6 +33,16 @@ class DataToBeStoredWhilstConstructingTableBody:
     volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent
     list_of_volunteers_at_event: ListOfVolunteersAtEvent
     dict_of_volunteers_with_last_roles: Dict[str, str]
+
+    def filtered_list_of_volunteers_at_event(self, sorts_and_filters: RotaSortsAndFilters) -> ListOfVolunteersAtEvent:
+        skills_filter = sorts_and_filters.skills_filter
+        original_list = self.list_of_volunteers_at_event
+        volunteer_skills = self.volunteer_skills
+        new_list = ListOfVolunteersAtEvent([volunteer for volunteer in original_list if filter_volunteer(
+            volunteer, skills_filter=skills_filter, volunteer_skills=volunteer_skills
+        )])
+
+        return new_list
 
     def group_given_cadet_id(self, cadet_id):
         try:
@@ -63,6 +79,18 @@ class DataToBeStoredWhilstConstructingTableBody:
         all_roles_match = len(set(all_roles))<=1
 
         return all_roles_match and all_groups_match
+
+def filter_volunteer(volunteer_at_event: VolunteerInRoleAtEvent, skills_filter: dict,     volunteer_skills: ListOfVolunteerSkills)-> bool:
+    volunteer_skills = volunteer_skills.skills_for_volunteer_id(volunteer_id=volunteer_at_event.volunteer_id)
+    if not any(skills_filter.values()):
+        ## nothing to filter on
+        return True
+
+    required_skill_present = [skill_name for skill_name, filter_by_this_skill in skills_filter.items()
+                              if filter_by_this_skill and skill_name in volunteer_skills]
+
+    return any(required_skill_present)
+
 
 
 def get_data_to_be_stored(event: Event) -> DataToBeStoredWhilstConstructingTableBody:
@@ -135,5 +163,6 @@ def get_role_for_event_and_volunteer_id(volunteer_id: str, event: Event) -> str:
     if role==NO_ROLE_SET:
         return missing_data
     return role
+
 
 

@@ -1,7 +1,5 @@
 # BUTTONS
 
-GROUP_ALLOCATION_REPORT_BUTTON_LABEL = "Group allocation at event"
-ROTA_REPORT_BUTTON_LABEL = "Volunteer rota at event"
 
 SAVE_THESE_OPTIONS_BUTTON_LABEL = "Save these print options"
 CREATE_REPORT_BUTTON_LABEL = "Create report with these options"
@@ -12,8 +10,6 @@ MODIFY_ADDITIONAL_OPTIONS_BUTTON_LABEL = "Modify report specific options"
 
 
 # FIELDS
-SHOW_FULL_NAMES = "Show_full_names"
-INCLUDE_UNALLOCATED_CADETS = "Include unallocated group_allocations"
 PAGE_ALIGNMENT = "page_alignment"
 FONT = "font"
 PAGE_SIZE = "page_size"
@@ -27,3 +23,4 @@ GROUP_ORDER = "group_order"
 ARRANGE_GROUP_LAYOUT_METHOD = "arrange_group_method"
 ARRANGE_GROUP_LAYOUT_ORDER = "arrange_group_order"
 OUTPUT_PDF = "output_pdf"
+PUBLIC = "public"

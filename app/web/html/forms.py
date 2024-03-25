@@ -47,6 +47,18 @@ def html_form_text_input(
         '%s: <input type="text" name="%s" %s />' % (input_label, input_name, value_html)
     )
 
+def html_form_password_input(
+    input_label: str, input_name: str, value: str = arg_not_passed
+):
+    if value is not arg_not_passed:
+        value_html = 'value="%s"' % value
+    else:
+        value_html = ""
+
+    return Html(
+        '%s: <input type="password" name="%s" %s />' % (input_label, input_name, value_html)
+    )
+
 
 def html_date_input(
     input_label: str,

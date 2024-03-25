@@ -12,6 +12,9 @@ from app.backend.reporting.process_stages.strings_columns_groups import (
 from app.objects.constants import arg_not_passed
 
 
+class ListOfDfRowsFromSubset(list):
+    pass
+
 def create_list_of_pages_from_dict_of_df(
     dict_of_df: Dict[str, pd.DataFrame],
     marked_up_list_from_df_parameters: MarkedUpListFromDfParametersWithActualGroupOrder,
@@ -90,26 +93,30 @@ def _create_marked_up_str_for_group(
     marked_up_list_from_df_parameters: MarkedUpListFromDfParametersWithActualGroupOrder,
 ) -> GroupOfMarkedUpString:
 
-    try:
-        subset_group = grouped_df.get_group(group)
-    except KeyError:
-        ## possible with multiple pages that not all groups on each page
-        return GroupOfMarkedUpString([])
+    subset_group_as_list = subset_list_for_group(group=group, grouped_df=grouped_df)
 
-    subset_group_as_list = list(subset_group.iterrows())
+    group_of_marked_up_str = group_of_marked_up_str_from_subset_list_for_group(
+        subset_group_as_list=subset_group_as_list,
+        marked_up_list_from_df_parameters=marked_up_list_from_df_parameters,
+        group=group
+    )
 
-    if len(subset_group_as_list)==0:
-        return GroupOfMarkedUpString([])
+    return group_of_marked_up_str
 
+
+def group_of_marked_up_str_from_subset_list_for_group(group: str,
+                                                     subset_group_as_list: ListOfDfRowsFromSubset,
+                                                      marked_up_list_from_df_parameters: MarkedUpListFromDfParametersWithActualGroupOrder) \
+                                                    -> GroupOfMarkedUpString:
     group_of_marked_up_str = GroupOfMarkedUpString()
     _add_groupname_inplace_to_list_for_this_group_if_required(
         group=group,
         group_of_marked_up_str=group_of_marked_up_str,
         marked_up_list_from_df_parameters=marked_up_list_from_df_parameters,
     )
-
+    dict_of_max_length = dict_of_max_length_by_column_name_across_list(subset_group_as_list=subset_group_as_list, entry_columns=marked_up_list_from_df_parameters.entry_columns)
     for index, row in enumerate(subset_group_as_list):
-        __, row_entries = row
+        __, row_entries = row ## weird pandas thing
         prepend_group_name = marked_up_list_from_df_parameters.prepend_group_name
         keyvalue = (
             marked_up_list_from_df_parameters.first_value_in_group_is_key and index == 0
@@ -120,11 +127,46 @@ def _create_marked_up_str_for_group(
             keyvalue=keyvalue,
             prepend_group_name=prepend_group_name,
             group=group,
+            dict_of_max_length=dict_of_max_length
         )
         group_of_marked_up_str.append(marked_string)
 
     return group_of_marked_up_str
 
+def dict_of_max_length_by_column_name_across_list(subset_group_as_list: ListOfDfRowsFromSubset, entry_columns: List[str]) -> Dict[str, int]:
+    dict_of_max_length = dict(
+        [
+            (column_name, max_length_for_column_name_across_list(subset_group_as_list=subset_group_as_list, column_name=column_name))
+            for column_name in entry_columns
+        ]
+    )
+
+    return dict_of_max_length
+
+
+def max_length_for_column_name_across_list(subset_group_as_list: ListOfDfRowsFromSubset, column_name: str) -> int:
+    max_length = 0
+    for index, row in enumerate(subset_group_as_list):
+        __, row_entries = row ## weird pandas thing
+        item = row_entries[column_name]
+        len_item = len(item)
+        if len_item>max_length:
+            max_length=len_item
+
+    return max_length
+
+def subset_list_for_group(    group: str,
+    grouped_df: pd.core.groupby.generic.DataFrameGroupBy,
+) -> ListOfDfRowsFromSubset:
+    try:
+        subset_group = grouped_df.get_group(group)
+    except KeyError:
+        ## possible with multiple pages that not all groups on each page
+        return ListOfDfRowsFromSubset()
+
+    subset_group_as_list = ListOfDfRowsFromSubset(subset_group.iterrows())
+
+    return subset_group_as_list
 
 def _add_groupname_inplace_to_list_for_this_group_if_required(
     group: str,
@@ -139,10 +181,11 @@ def create_marked_string_from_row(
     row: pd.Series,
     entry_columns: List[str],
     group: str,
+    dict_of_max_length: Dict[str, int],
     keyvalue: bool = False,
     prepend_group_name: bool = False,
 ) -> MarkedUpString:
     if keyvalue:
-        return MarkedUpString.keyvalue(row=row, group=group, prepend_group_name=prepend_group_name, entry_columns=entry_columns)
+        return MarkedUpString.keyvalue(row=row, group=group, prepend_group_name=prepend_group_name, entry_columns=entry_columns, dict_of_max_length=dict_of_max_length)
     else:
-        return MarkedUpString.bodytext(row=row, group=group, prepend_group_name=prepend_group_name, entry_columns=entry_columns)
+        return MarkedUpString.bodytext(row=row, group=group, prepend_group_name=prepend_group_name, entry_columns=entry_columns, dict_of_max_length=dict_of_max_length)

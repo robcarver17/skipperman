@@ -3,45 +3,28 @@
 # When deploying on public server *always* edit this (just mash the keyboard)
 #
 secret_key: "jasldjflsahdfsah"
-# Groups
-# Order matters as used in backend
-# DO NOT CHANGE GROUP NAMES - instead keep the old ones, and add new if required
-# FIXME Consider moving to user editable file
-#
-lake_training_groups:
-  - "Sprites"
-  - "Topper on the lake"
-  - "Vimto"
-  - "Fanta"
-  - "Jolly sailors"
-  - "Lilt"
-river_training_groups:
-  - "Quest beginners"
-  - "Quest intermediate"
-  - "Oppie-over-the-wall"
-  - "Oppie Tango"
-  - "Topper/Tera in the hole"
-  - "Topper/Tera Tango"
-  - "Seamanship"
-  - "Day sailing"
-  - "Spinnaker training"
-mg_groups:
-  - "Oppie MG"
-  - "Topper MG"
-  - "Feva MG"
-  - "Laser MG"
-  - "GH/Double handed MG"
-unallocated: "Unallocated"
 #
 #
 #
 #
+public_web_path: "https://bsccadetskipper.pythonanywhere.com/public/"
 datapath: "skipperman_data" ## directory in users home directory where data stored; only change for test purposes
-reporting_subdirectory: "Reports"
-uploads: "uploads" ## directory in users home directory where uploads are stored; only change for test purposes
+backuppath: "skipperman_backup"
+userdata: "skipperman_user_data" ## special directory for username and password hashes (plus maybe user specific config)
+download_subdirectory: "Downloads" ## also used for reports
+public_reporting_subdirectory: "public" ## make sure mapped and exposed in pythonanywhere
+uploads: "uploads" ## directory in users home directory where uploads are temporarily stored; only change for test purposes
 staging: "staging" ## staging directory
-# Filtering cadet inputs
 #
+#
+## needs to be large enough to upload a zip with everything
+max_file_size: 2100000 # ~2mb
+upload_extensions: ".csv, .xls, .zip"
+number_of_backups_to_keep: 50
+#
+#
+#
+# Filtering cadet inputs
 similarity_level_to_warn_when_comparing_names: 0.85 # change if too many/too few similars coming through
 similarity_level_to_warn_when_comparing_dates: 0.9 # probably shouldn't change
 
@@ -63,11 +46,7 @@ wild_apricot_payment_fields_which_are_cancelled_status:
 wild_apricot_event_id: "Event ID"
 wild_apricot_file_types: ".csv, .xls"
 #
-## needs to be large enough to upload a zip with everything
-max_file_size: 2100000 # ~2mb
-upload_extensions: ".csv, .xls, .zip"
-#
-#
+# FIXME Consider moving to user editable file
 volunteer_skills:
   - "DI"
   - "RCL2"
@@ -129,3 +108,34 @@ volunteers_requiring_boats:
   - "River crew"
   - "Lake helm"
   - "Lake crew"
+# FIXME Consider moving to user editable file
+# Groups
+# Order matters as used in backend
+# DO NOT CHANGE GROUP NAMES - instead keep the old ones, and add new if required
+lake_training_groups:
+  - "Sprites"
+  - "Topper on the lake"
+  - "Vimto"
+  - "Fanta"
+  - "Jolly sailors"
+  - "Lilt"
+river_training_groups:
+  - "Quest beginners"
+  - "Quest intermediate"
+  - "Oppie-over-the-wall"
+  - "Oppie Tango"
+  - "Topper/Tera in the hole"
+  - "Topper/Tera Tango"
+  - "Seamanship"
+  - "Day sailing"
+  - "Spinnaker training"
+mg_groups:
+  - "Oppie MG"
+  - "Topper MG"
+  - "Feva MG"
+  - "Laser MG"
+  - "GH/Double handed MG"
+unallocated: "Unallocated"
+#
+#
+weblink_for_qualifications: "https://docs.google.com/spreadsheets/d/1a0ov-KN8zzG2mdFQCfLK-I6AD1tLihU-z_3tPF2vlV4/edit?usp=sharing"

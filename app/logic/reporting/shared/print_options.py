@@ -1,5 +1,3 @@
-import datetime
-
 from app.data_access.configuration.fixed import ALL_PAGESIZE, ALL_FONTS
 from app.data_access.data import data
 from app.logic.events.events_in_state import get_event_from_state
@@ -19,9 +17,11 @@ from app.logic.reporting.constants import (
     GROUP_NAME_AS_HEADER,
     FIRST_VALUE_IN_GROUP_IS_KEY,
     PREPEND_GROUP_NAME, OUTPUT_PDF,
+PUBLIC
 )
 from app.objects.constants import missing_data
-from app.backend.reporting.options_and_parameters.print_options import PrintOptions
+from app.backend.reporting.options_and_parameters.print_options import PrintOptions, default_report_title_and_filename, \
+    get_default_filename_for_report
 
 
 def get_saved_print_options(
@@ -44,8 +44,8 @@ def get_report_title_from_storage_or_use_default(
 ) -> str:
     title = interface.get_persistent_value(REPORT_TITLE)
     if title is missing_data:
-        event_name = get_event_from_state(interface)
-        title = "%s: %s" % (report_type, event_name)
+        event = get_event_from_state(interface)
+        title = default_report_title_and_filename(event=event, report_type=report_type)
         interface.set_persistent_value(REPORT_TITLE, title)
 
     return title
@@ -60,6 +60,7 @@ def get_report_filename_from_storage_or_use_default(
         interface.set_persistent_value(REPORT_FILENAME, filename)
 
     return filename
+
 
 
 def save_print_options(
@@ -79,8 +80,10 @@ def report_print_options_as_list_of_lines(print_options: PrintOptions) -> ListOf
     landscape_str = "Landscape" if print_options.landscape else "Portrait"
     output_pdf = print_options.output_pdf
     output_pdf_str = "Output to .pdf file" if output_pdf else "Output to .csv file"
-
+    public = print_options.publish_to_public
+    public_str = "Output to public directory with shareable web link" if public else "Save in private directory"
     output_pdf_line = Line(output_pdf_str)
+    public_pdf_line = Line(public_str)
 
     if output_pdf:
         pdf_only = ListOfLines(
@@ -105,6 +108,7 @@ def report_print_options_as_list_of_lines(print_options: PrintOptions) -> ListOf
     )
     return ListOfLines(
         output_pdf_line+
+        public_pdf_line+
         pdf_only+
         generic
     )
@@ -127,7 +131,7 @@ def get_print_options_from_main_option_form_fields(
         FIRST_VALUE_IN_GROUP_IS_KEY
     )
     prepend_group_name = interface.true_if_radio_was_yes(PREPEND_GROUP_NAME)
-
+    public = interface.true_if_radio_was_yes(PUBLIC)
     print_options = PrintOptions()
 
     print_options.landscape = page_alignment == LANDSCAPE
@@ -140,6 +144,7 @@ def get_print_options_from_main_option_form_fields(
     print_options.include_group_as_header = group_name_as_header
     print_options.prepend_group_name = prepend_group_name
     print_options.first_value_in_group_is_key = highlight_first_value_as_key
+    print_options.publish_to_public = public
 
     print("Print shared from form %s" % str(print_options))
     return print_options
@@ -158,6 +163,12 @@ def report_print_options_as_form_contents(print_options: PrintOptions) -> ListOf
                 input_name=OUTPUT_PDF,
                 dict_of_options={PDF:PDF, CSV: CSV},
                 default_label=output_to_str,
+            ),
+            _______________,
+
+            yes_no_radio(
+                input_label="Output to public with shareable web link (ensure no private information!)",
+                input_name=PUBLIC
             ),
             _______________,
             _______________,
@@ -245,9 +256,4 @@ PORTRAIT = "Portrait"
 PDF = "pdf"
 CSV = "csv"
 
-def get_default_filename_for_report(default_title: str) -> str:
-    default_file_name = default_title.replace(" ", "_")
-    timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
-    default_file_name = "%s_%s" % (default_file_name, timestamp)
 
-    return default_file_name

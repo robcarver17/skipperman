@@ -4,7 +4,7 @@ from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.objects.events import ListOfEvents, Event
 from app.backend.data.volunteer_rota import load_volunteers_in_role_at_event
-from app.backend.data.group_allocations import load_raw_allocation_for_event
+from app.backend.data.group_allocations import load_list_of_cadets_with_allocated_groups_at_event
 from app.backend.data.cadets_at_event import load_list_of_cadets_at_event_with_dinghies
 
 def display_list_of_events_with_buttons_criteria_matched(**kwargs) -> ListOfLines:
@@ -47,7 +47,7 @@ def event_has_groups(event: Event):
     if not event.contains_groups:
         return False
 
-    if len(load_raw_allocation_for_event(event))==0:
+    if len(load_list_of_cadets_with_allocated_groups_at_event(event))==0:
         return False
 
     return True

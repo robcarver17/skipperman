@@ -12,6 +12,9 @@ from app.objects.utils import similar
 from app.objects.constants import arg_not_passed
 from app.objects.constants import missing_data
 
+
+
+
 @dataclass
 class Volunteer(GenericSkipperManObjectWithIds):
     first_name: str

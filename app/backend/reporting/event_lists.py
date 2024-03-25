@@ -4,7 +4,7 @@ from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.objects.events import ListOfEvents, Event
 from app.backend.data.volunteer_rota import load_volunteers_in_role_at_event
-from app.backend.data.group_allocations import load_raw_allocation_for_event
+from app.backend.data.group_allocations import load_list_of_cadets_with_allocated_groups_at_event
 from app.backend.data.cadets_at_event import load_list_of_cadets_at_event_with_dinghies
 
 def display_list_of_events_with_buttons_criteria_matched(**kwargs) -> ListOfLines:
@@ -14,6 +14,31 @@ def display_list_of_events_with_buttons_criteria_matched(**kwargs) -> ListOfLine
     list_with_buttons = [Line(Button(event_description)) for event_description in list_of_event_descriptions]
 
     return ListOfLines(list_with_buttons)
+
+
+def describe_criteria(requires_volunteers: bool = False, requires_group_allocations: bool = False,
+                           requires_cadets_and_boats: bool = False,
+                           requires_food: bool = False,
+                           requires_merch: bool = False) -> str:
+    description = []
+    if requires_volunteers:
+        description.append('volunteers')
+
+    if requires_group_allocations:
+        description.append('groups')
+    if requires_cadets_and_boats:
+        description.append('cadets with boats')
+    if requires_food:
+        description.append('food requirements')
+    if requires_merch:
+        description.append('merchandise')
+
+    if len(description)==0:
+        return ""
+
+    description_as_single_str = ", ".join(description)
+    return "(only events with information about %s are shown)" % description_as_single_str
+
 
 def event_matches_criteria(event: Event, requires_volunteers: bool = False, requires_group_allocations: bool = False,
                            requires_cadets_and_boats: bool = False,
@@ -47,7 +72,7 @@ def event_has_groups(event: Event):
     if not event.contains_groups:
         return False
 
-    if len(load_raw_allocation_for_event(event))==0:
+    if len(load_list_of_cadets_with_allocated_groups_at_event(event))==0:
         return False
 
     return True

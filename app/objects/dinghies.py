@@ -87,6 +87,10 @@ class CadetAtEventWithDinghy(GenericSkipperManObject):
     sail_number: str
     partner_cadet_id: str = NO_PARTNER_REQUIRED
 
+    def has_partner(self):
+        return valid_partnership(self.partner_cadet_id)
+
+
 UNCHANGED = "unchanged"
 WAS_INVALID_NOW_INVALID_CHANGED= "invalid_changed"
 WAS_INVALID_NOW_VALID = "was_invalid_now_valid"

@@ -3,6 +3,9 @@ from app.logic.events.events_function_mapping import event_function_mapping
 from app.logic.reporting.reporting_function_mapping import reporting_function_mapping
 from app.logic.volunteers.volunteer_function_mapping import volunteer_function_mapping
 from app.logic.configuration.config_function_mapping import config_function_mapping
+from app.logic.instructors.instructor_function_mapping import instructor_function_mapping
+from app.logic.administration.admin_function_mapping import admin_function_mapping
+from app.logic.utilities.utilities_function_mapping import utilities_function_mapping
 
 from app.web.flask.flask_interface import flaskInterface
 from app.objects.abstract_objects.abstract_form import Form, form_with_message, File
@@ -63,3 +66,15 @@ class SiteActions:
     @property
     def view_configuration(self) -> DisplayAndPostFormFunctionMaps:
         return config_function_mapping
+
+    @property
+    def view_for_instructors(self) -> DisplayAndPostFormFunctionMaps:
+        return instructor_function_mapping
+
+    @property
+    def administration(self) -> DisplayAndPostFormFunctionMaps:
+        return admin_function_mapping
+
+    @property
+    def view_utilities(self) -> DisplayAndPostFormFunctionMaps:
+        return utilities_function_mapping

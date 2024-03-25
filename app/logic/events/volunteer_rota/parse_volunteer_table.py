@@ -4,12 +4,15 @@ from app.backend.volunteers.volunteer_allocation import make_volunteer_available
     make_volunteer_unavailable_on_day
 from app.backend.volunteers.volunteer_rota import get_volunteer_with_role_at_event_on_day
 from app.backend.volunteers.volunteer_rota_data import get_data_to_be_stored
+from app.data_access.configuration.configuration import VOLUNTEER_SKILLS
 from app.logic.events.volunteer_rota.edit_cadet_connections_for_event_from_rota import \
     display_form_edit_cadet_connections_from_rota
 from app.logic.events.volunteer_rota.edit_volunteer_details_from_rota import \
     display_form_confirm_volunteer_details_from_rota
 from app.logic.events.volunteer_rota.edit_volunteer_skills_from_rota import \
     display_form_edit_individual_volunteer_skills_from_rota
+from app.logic.events.volunteer_rota.render_volunteer_table import SKILLS_FILTER
+from app.logic.events.volunteer_rota.rota_state import save_skills_filter_to_state
 from app.logic.events.volunteer_rota.swapping import get_list_of_swap_buttons
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.events.events_in_state import get_event_from_state
@@ -19,6 +22,14 @@ from app.logic.events.volunteer_rota.volunteer_table_buttons import *
 from app.logic.volunteers.volunteer_state import update_state_with_volunteer_id
 from app.objects.abstract_objects.abstract_form import NewForm
 
+
+def update_volunteer_skills_filter(interface: abstractInterface):
+    ticked_skills = interface.value_of_multiple_options_from_form(SKILLS_FILTER)
+    dict_of_skills = dict([
+        (skill, skill in ticked_skills)
+        for skill in VOLUNTEER_SKILLS
+    ])
+    save_skills_filter_to_state(interface=interface, dict_of_skills=dict_of_skills)
 
 def get_list_of_volunteer_name_buttons(interface: abstractInterface)-> list:
     event = get_event_from_state(interface)
@@ -131,16 +142,20 @@ def update_if_remove_role_button_pressed(interface: abstractInterface, remove_bu
     remove_role_at_event_for_volunteer_on_day(event=event, volunteer_in_role_at_event_on_day=current_volunteer)
 
 
-def update_if_save_button_pressed_in_rota_page(interface: abstractInterface):
+def save_all_information_in_rota_page(interface: abstractInterface):
     event = get_event_from_state(interface)
     list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
     data_to_be_stored = get_data_to_be_stored(event)
 
     for volunteer_at_event in list_of_volunteers_at_event:
-        update_details_from_form_for_volunteer_at_event(
-            interface=interface,
-            volunteer_at_event=volunteer_at_event,
-            data_to_be_stored=data_to_be_stored
-        )
+        try:
+            update_details_from_form_for_volunteer_at_event(
+                interface=interface,
+                volunteer_at_event=volunteer_at_event,
+                data_to_be_stored=data_to_be_stored
+            )
+        except Exception as e:
+            ## perfectly fine if
+            print("Skipping update of %s error returned %s most probably gone misisng" % (str(volunteer_at_event), str(e)))
 
 

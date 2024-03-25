@@ -91,6 +91,7 @@ LIST_OF_VOLUNTEERS_IN_ROLES_FILE_ID = "list_of_volunteers_in_roles_at_event"
 EVENT_MAPPING_FILE_ID = "wa_event_mapping"
 FIELD_MAPPING_FILE_ID = "wa_field_mapping"
 TEMPLATES_FIELD_MAPPING_FILE_ID  = "wa_field_mapping_templates"
+USERLIST_FILE_ID = "userlist"
 
 ## MODIFY THE FOLLOWING LINES TO CHANGE WHERE FILES LIVE AND THEIR
 ## THE FIRST ITEM IN EACH TUPLE IS THE PATH, THE SECOND IS THE FILENAME
@@ -127,4 +128,5 @@ LIST_OF_CLUB_DINGHIES_FILE_ID :("lists", "list_of_club_dinghies.csv"),
 LIST_OF_PATROL_BOATS_AND_VOLUNTEERS_FILE_ID: ("mapped_events", "list_of_patrol_boats_and_volunteers_at_event_%s.csv"),
 LIST_OF_CLUB_DINGHIES_AND_CADETS_FILE_ID :("mapped_events", "list_of_club_dinghies_with_cadets_at_event_%s.csv"),
 LIST_OF_DINGHIES_FILE_ID: ("lists", "list_of_dinghies.csv"),
-LIST_OF_CADETS_WITH_DINGHIES_AT_EVENT_FILE_ID: ("mapped_events", "list_of_cadets_with_dinghies_at_event_%s.csv")}
+LIST_OF_CADETS_WITH_DINGHIES_AT_EVENT_FILE_ID: ("mapped_events", "list_of_cadets_with_dinghies_at_event_%s.csv"),
+USERLIST_FILE_ID: ("secure", "userlist.csv")}

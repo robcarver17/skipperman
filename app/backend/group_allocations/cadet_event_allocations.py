@@ -1,5 +1,5 @@
 from app.backend.cadets import get_sorted_list_of_cadets
-from app.backend.data.group_allocations import load_raw_allocation_for_event
+from app.backend.data.group_allocations import load_list_of_cadets_with_allocated_groups_at_event
 from app.backend.data.cadets_at_event import load_cadets_at_event
 from app.objects.cadets import ListOfCadets
 from app.objects.constants import arg_not_passed
@@ -80,7 +80,7 @@ def get_list_of_cadets_with_groups(
 
 def load_allocation_for_event(event: Event) -> ListOfCadetIdsWithGroups:
 
-    list_of_cadets_with_groups = load_raw_allocation_for_event(event)
+    list_of_cadets_with_groups = load_list_of_cadets_with_allocated_groups_at_event(event)
     list_of_active_cadet_ids_at_event = get_list_of_active_cadet_ids_at_event(event)
 
     list_of_allocated_cadets_with_groups = [cadet_with_group for cadet_with_group in list_of_cadets_with_groups

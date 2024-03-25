@@ -1,10 +1,11 @@
-from app.data_access.configuration.configuration import UPLOADS, STAGING
+from app.data_access.configuration.configuration import UPLOADS, STAGING, DOWNLOAD_DIRECTORY
 from app.data_access.file_access import get_files_in_directory
 import os
 
 home_directory = os.path.expanduser("~")
 upload_directory = os.path.join(home_directory, UPLOADS)
 staging_directory = os.path.join(home_directory, STAGING)
+download_directory = os.path.join(home_directory, DOWNLOAD_DIRECTORY)
 try:
     os.mkdir(upload_directory)
 except:
@@ -14,6 +15,12 @@ try:
     os.mkdir(staging_directory)
 except:
     pass
+
+try:
+    os.mkdir(download_directory)
+except:
+    pass
+
 
 
 def get_next_valid_upload_file_name(file_marker: str):

@@ -1,6 +1,6 @@
-from typing import Tuple
-
 from app.backend.data.cadets_at_event import load_cadets_at_event
+from app.backend.volunteers.volunteer_rota_data import RotaSortsAndFilters
+from app.data_access.configuration.configuration import VOLUNTEER_SKILLS
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.constants import arg_not_passed, missing_data, NoMoreData
@@ -9,6 +9,30 @@ from app.objects.day_selectors import Day
 SORT_BY_VOLUNTEER_NAME = "Sort_volunteer_name"
 SORT_BY_DAY = "Sort_by_day"
 
+
+
+SKILLS_FILTER = "skills_filter"
+def get_skills_filter_from_state(interface: abstractInterface):
+    skills_dict = get_skills_filter_dict_or_default_from_state(interface)
+
+    return skills_dict
+
+def get_skills_filter_dict_or_default_from_state(interface: abstractInterface) -> dict:
+    skills_dict = interface.get_persistent_value(SKILLS_FILTER, default=default_skills_dict)
+    skills_dict = ensure_filter_has_all_skills(skills_dict)
+
+    return skills_dict
+
+default_skills_dict = dict([(skill, False) for skill in VOLUNTEER_SKILLS])
+
+def ensure_filter_has_all_skills(skills_dict: dict) -> dict:
+    for skill in VOLUNTEER_SKILLS:
+        if not skill in skills_dict.keys():
+            skills_dict[skill] = False
+    return skills_dict
+
+def save_skills_filter_to_state(interface: abstractInterface, dict_of_skills: bool):
+    interface.set_persistent_value(SKILLS_FILTER, dict_of_skills)
 
 def save_sorts_to_state(interface: abstractInterface,
                         sort_by_volunteer_name: str = arg_not_passed,
@@ -25,7 +49,7 @@ def save_sorts_to_state(interface: abstractInterface,
         interface.clear_persistent_value(SORT_BY_DAY)
 
 
-def get_sorts_from_state(interface: abstractInterface) -> Tuple[str, Day]:
+def get_sorts_and_filters_from_state(interface: abstractInterface) -> RotaSortsAndFilters:
     sort_by_volunteer_name = interface.get_persistent_value(SORT_BY_VOLUNTEER_NAME, arg_not_passed)
     sort_by_day_name = interface.get_persistent_value(SORT_BY_DAY, arg_not_passed)
     print("SORTY %s isit %s" % (sort_by_day_name, str(sort_by_day_name is arg_not_passed)))
@@ -33,8 +57,9 @@ def get_sorts_from_state(interface: abstractInterface) -> Tuple[str, Day]:
         sort_by_day = arg_not_passed
     else:
         sort_by_day = Day[sort_by_day_name]
+    skills_dict = get_skills_filter_from_state(interface)
 
-    return sort_by_volunteer_name, sort_by_day
+    return RotaSortsAndFilters(skills_filter=skills_dict, sort_by_volunteer_name=sort_by_volunteer_name, sort_by_day=sort_by_day)
 
 
 ### State of cadet

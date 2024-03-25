@@ -7,6 +7,7 @@ from app.data_access.classes.print_options import DataListOfPrintOptions
 from app.data_access.classes.volunteers import *
 from app.data_access.classes.resources import *
 from app.data_access.classes.dinghies_at_events import *
+from app.data_access.classes.users import *
 
 class GenericDataApi(object):
     ## FOLLOWING SHOULD BE OVERWRITTEN BY SPECIFIC CLASSES
@@ -94,9 +95,13 @@ class GenericDataApi(object):
         raise NotImplemented
 
     @property
-    def data_list_of_dinghies(self) -> ListOfDinghies:
+    def data_list_of_dinghies(self) -> DataListOfDinghies:
         raise NotImplemented
 
     @property
-    def data_list_of_cadets_with_dinghies_at_event(self) -> ListOfCadetAtEventWithDinghies:
+    def data_list_of_cadets_with_dinghies_at_event(self) -> DataListOfCadetAtEventWithDinghies:
+        raise NotImplemented
+
+    @property
+    def data_list_of_users(self) -> DataListOfSkipperManUsers:
         raise NotImplemented

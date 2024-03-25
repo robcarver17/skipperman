@@ -86,26 +86,3 @@ def get_dict_of_df_for_reporting_rota_given_event_and_state(event: Event, additi
     return dict_of_df
 
 
-def create_rota_report(interface: abstractInterface) -> File:
-    print("Creating report")
-    dict_of_df = get_dict_of_df_for_reporting_rota(interface)
-    reporting_options = get_reporting_options(interface=interface,
-                                              specific_parameters_for_type_of_report=specific_parameters_for_volunteer_report,
-                                              dict_of_df=dict_of_df)
-    print("Reporting shared %s" % reporting_options)
-    filename = create_column_report_from_df_and_return_filename(
-        reporting_options=reporting_options
-    )
-
-    return File(filename)
-
-def get_group_order_for_volunteer_report(interface: abstractInterface) -> list:
-    dict_of_df = get_dict_of_df_for_reporting_rota(interface)
-    order_of_groups = get_group_order_from_stored_or_df(
-        interface=interface,
-        specific_parameters_for_type_of_report=specific_parameters_for_volunteer_report,
-        dict_of_df=dict_of_df,
-    )
-
-    return order_of_groups
-

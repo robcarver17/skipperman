@@ -17,7 +17,7 @@ from app.objects.abstract_objects.abstract_interface import (
 from app.backend.group_allocations.group_allocations_data import (
     AllocationData, get_allocation_data,
 )
-from app.backend.data.group_allocations import save_current_allocations_for_event
+from app.backend.data.group_allocations import save_list_of_cadets_with_allocated_groups_for_event
 
 from app.logic.events.constants import (
     ALLOCATION,
@@ -149,7 +149,7 @@ def do_allocation_for_cadet_at_event(
     allocation_data.current_allocation_for_event.update_group_for_cadet(
         cadet=cadet, chosen_group=chosen_group
     )
-    save_current_allocations_for_event(
+    save_list_of_cadets_with_allocated_groups_for_event(
         list_of_cadets_with_groups=allocation_data.current_allocation_for_event,
         event=event,
     )

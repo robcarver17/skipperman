@@ -3,8 +3,7 @@ import os
 import pandas as pd
 
 from app.data_access.data import data
-from app.data_access.uploads_and_downloads import staging_directory
-from app.objects.events import Event
+from app.data_access.uploads_and_downloads import download_directory
 from app.objects.wa_field_mapping import ListOfWAFieldMappings
 
 
@@ -65,4 +64,4 @@ def write_mapping_to_temp_csv_file_and_return_filename(mapping: ListOfWAFieldMap
 
 
 def temp_mapping_file_name() -> str:
-    return os.path.join(staging_directory, "temp_mapping_file.csv")
+    return os.path.join(download_directory, "temp_mapping_file.csv")

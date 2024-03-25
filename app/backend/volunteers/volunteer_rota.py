@@ -1,9 +1,10 @@
 from typing import List
 
 from app.backend.data.volunteer_rota import save_volunteers_in_role_at_event
-from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingTableBody, load_volunteers_in_role_at_event
+from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingTableBody, \
+    load_volunteers_in_role_at_event, RotaSortsAndFilters
 from app.backend.data.volunteers import get_sorted_list_of_volunteers
-from app.objects.constants import missing_data
+from app.objects.constants import missing_data, arg_not_passed
 from app.objects.events import Event
 from app.objects.groups import Group, ALL_GROUPS_NAMES, GROUP_UNALLOCATED_TEXT
 from app.objects.volunteers_at_event import VolunteerAtEvent, ListOfVolunteersAtEvent
@@ -178,3 +179,22 @@ def swap_and_groups_for_volunteers_in_allocation(event: Event,
         volunteer_id_to_swap_with=volunteer_id_to_swap_with
     )
     save_volunteers_in_role_at_event(event=event, list_of_volunteers_in_roles_at_event=volunteers_in_role_at_event)
+
+
+def get_sorted_and_filtered_list_of_volunteers_at_event(
+        data_to_be_stored: DataToBeStoredWhilstConstructingTableBody,
+        sorts_and_filters: RotaSortsAndFilters,
+    ):
+
+    list_of_volunteers_at_event = data_to_be_stored.filtered_list_of_volunteers_at_event(sorts_and_filters)
+
+    if sorts_and_filters.sort_by_volunteer_name is not arg_not_passed:
+        list_of_volunteers_at_event = sort_volunteer_data_for_event_by_name_sort_order(
+            list_of_volunteers_at_event, sort_order=sorts_and_filters.sort_by_volunteer_name)
+    elif sorts_and_filters.sort_by_day is not arg_not_passed:
+        print("SORTBY %s" % sorts_and_filters.sort_by_day.name)
+        list_of_volunteers_at_event = sort_volunteer_data_for_event_by_day_sort_order(
+            list_of_volunteers_at_event, sort_by_day=sorts_and_filters.sort_by_day,
+            data_to_be_stored=data_to_be_stored)
+
+    return list_of_volunteers_at_event

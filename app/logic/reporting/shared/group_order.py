@@ -2,11 +2,23 @@ from typing import List, Dict
 
 import pandas as pd
 
+from app.logic.reporting.shared.report_generator import ReportGenerator
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.reporting.constants import GROUP_ORDER
 from app.objects.constants import missing_data
 from app.backend.reporting.arrangement.group_order import get_group_order_from_dict_of_df_given_report_parameters, GroupOrder
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import SpecificParametersForTypeOfReport
+
+
+def get_group_order_for_generic_report(interface: abstractInterface, report_generator: ReportGenerator) -> list:
+    dict_of_df = report_generator.get_dict_of_df(interface)
+    order_of_groups = get_group_order_from_stored_or_df(
+        interface=interface,
+        specific_parameters_for_type_of_report=report_generator.specific_parameters_for_type_of_report,
+        dict_of_df=dict_of_df,
+    )
+
+    return order_of_groups
 
 
 def get_group_order_from_stored_or_df(

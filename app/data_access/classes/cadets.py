@@ -4,18 +4,6 @@ from app.objects.groups import ListOfCadetIdsWithGroups
 
 
 class DataListOfCadets(object):
-    def add(self, cadet: Cadet):
-        list_of_cadets = self.read()
-        if cadet in list_of_cadets:
-            raise Exception("Cadet %s already in list of existing cadets" % str(cadet))
-
-        cadet_id = list_of_cadets.next_id()
-        cadet.id = cadet_id
-        list_of_cadets.append(cadet)
-
-        self.write(list_of_cadets)
-        return cadet
-
     def read(self) -> ListOfCadets:
         raise NotImplemented
 

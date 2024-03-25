@@ -25,6 +25,7 @@ border:1px solid #FF0000;
 </style>
 """
 
+
 master_wrapper = html_doc_wrapper(
     Html(
         """
@@ -33,6 +34,7 @@ master_wrapper = html_doc_wrapper(
     """ % style
     )
 )
+
 
 
 master_layout_html = HtmlWrapper(
@@ -44,7 +46,8 @@ master_layout_html = HtmlWrapper(
                         html_h1_logo_wrapper.wrap_around(
                             Html("Skipperman: BSC Cadet Skipper Management System")
                         )
-                    )
+                    )+
+                    '<meta name="viewport" content = "width=device_width ; initial_scale=1.0;"'
                 ),
                 Html("%s"),  ## body
             ]

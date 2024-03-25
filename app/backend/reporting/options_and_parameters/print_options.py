@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 
+from app.data_access.configuration.configuration import PUBLIC_WEB_PATH
 from app.data_access.configuration.fixed import A4_PAGESIZE, UNIT_MM, WIDTH, HEIGHT, PAGESIZE_MM, TITLE_MULTIPLIER, \
     EDGE_MARGIN_MM, COLUMN_GAP_MM
+from app.objects.events import Event
 from app.objects.generic import GenericSkipperManObject
 
 
@@ -18,6 +20,7 @@ class PrintOptions(GenericSkipperManObject):
     prepend_group_name: bool = False
     equalise_column_width: bool = True
     landscape: bool = True
+    publish_to_public: bool = False
 
     @property
     def filename_with_extension(self):
@@ -85,3 +88,16 @@ class PrintOptions(GenericSkipperManObject):
         return orientation
 
 
+def default_report_title_and_filename(event: Event, report_type: str) -> str:
+    return "%s: %s" % (report_type, event.event_name)
+
+
+def get_default_filename_for_report(default_title: str) -> str:
+    default_file_name = default_title.replace(" ", "_")
+    default_file_name = default_file_name.replace(":", "_")
+
+    return default_file_name
+
+
+def web_pathname_of_report(filename_with_extension: str):
+    return PUBLIC_WEB_PATH+filename_with_extension

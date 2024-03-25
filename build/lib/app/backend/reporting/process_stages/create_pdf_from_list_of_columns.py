@@ -1,12 +1,12 @@
 import os
 
-from app.data_access.configuration.configuration import REPORTING_SUBDIRECTORY
+from app.data_access.configuration.configuration import DOWNLOAD_DIRECTORY
 from app.backend.reporting.process_stages.strings_columns_groups import PageWithColumns, ListOfPagesWithColumns
 from app.backend.reporting.process_stages.pdf_layout import PdfLayout, add_page_contents_to_pdf_layout
 from app.backend.reporting.options_and_parameters.report_options import ReportingOptions
 
 home_directory = os.path.expanduser("~")
-reporting_directory = os.path.join(home_directory, REPORTING_SUBDIRECTORY)
+reporting_directory = os.path.join(home_directory, DOWNLOAD_DIRECTORY)
 try:
     os.mkdir(reporting_directory)
 except:

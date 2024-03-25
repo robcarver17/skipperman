@@ -2,6 +2,7 @@ from typing import Union
 
 from app.backend.forms.swaps import is_ready_to_swap
 from app.backend.volunteers.patrol_boats import get_summary_list_of_boat_allocations_for_events
+from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
 from app.data_access.configuration.fixed import COPY_SYMBOL2, SWAP_SHORTHAND1, SWAP_SHORTHAND2, COPY_SYMBOL1, \
     BOAT_SHORTHAND, ROLE_SHORTHAND, BOAT_AND_ROLE_SHORTHAND
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
@@ -15,7 +16,7 @@ from app.logic.events.patrol_boats.swapping import get_all_swap_buttons_for_boat
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
-    NewForm,
+    NewForm, Link,
 )
 from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -73,8 +74,11 @@ def get_save_button(interface: abstractInterface) -> Union[Button, str]:
     else:
         return Button(SAVE_CHANGES_BUTTON_LABEL, big=True)
 
+link = Link(url=
+            WEBLINK_FOR_QUALIFICATIONS, string="Qualifications table", open_new_window=True)
 
-instructions_qual_table = ListOfLines(["Tick to specify that a volunteer has PB2 (check - don't assume)"])
+
+instructions_qual_table = ListOfLines([Line(["Tick to specify that a volunteer has PB2 (check don't assume: ", link, " )"])])
 instructions_table = ListOfLines([Line(["Save changes after non button actions. Key for buttons - Copy: ",
                                         COPY_SYMBOL1, COPY_SYMBOL2,
                                         " , Swap: ", SWAP_SHORTHAND1, SWAP_SHORTHAND2, ", ",
@@ -100,15 +104,15 @@ def post_form_view_for_patrol_boat_allocation(
     if last_button_pressed==BACK_BUTTON_LABEL:
         return previous_form(interface)
 
-    elif last_button_pressed==SAVE_CHANGES_BUTTON_LABEL:
-        update_if_save_button_pressed_in_allocation_page(interface)
+    update_data_from_form_entries_in_allocation_page(interface)
+    if last_button_pressed==SAVE_CHANGES_BUTTON_LABEL:
+        pass
 
     elif last_button_pressed == ADD_NEW_BOAT_BUTTON_LABEL:
         update_adding_boat(interface)
 
     elif (last_button_pressed in
           get_all_delete_buttons_for_patrol_boat_table(interface)):
-        print("a delete button")
         update_if_delete_boat_button_pressed(interface=interface, delete_button=last_button_pressed)
 
     elif last_button_pressed in get_all_delete_volunteer_buttons_for_patrol_boat_table(interface):

@@ -70,8 +70,13 @@ html_h1_logo_wrapper = HtmlWrapper('<h1 class="logo">%s</h1>')
 
 
 ## Links
-def html_link(string: str, url: str):
-    return Html('<a href="%s">%s</a>' % (url, string))
+def html_link(string: str, url: str, open_new_window: bool = False):
+    if open_new_window:
+        target = 'target = "_blank"'
+    else:
+        target = ''
+
+    return Html('<a href="%s" %s>  %s</a>' % (url, target, string))
 
 
 def html_link_in_list_item(string: str, url: str):

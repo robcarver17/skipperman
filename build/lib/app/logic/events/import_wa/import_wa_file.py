@@ -18,8 +18,6 @@ from app.logic.events.events_in_state import get_event_from_state
 def display_form_import_event_file(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
-    return process_wa_staged_file_already_uploaded(interface)
-    ## FIX ME
     try:
         ## deletes staged file if works ok
         return process_wa_staged_file_already_uploaded(interface)

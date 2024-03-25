@@ -26,3 +26,5 @@ def get_files_in_directory(mypath: str):
         f for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))
     ]
     return onlyfiles
+
+

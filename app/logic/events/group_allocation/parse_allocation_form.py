@@ -1,6 +1,6 @@
 from typing import List
 
-from app.backend.data.group_allocations import save_current_allocations_for_event
+from app.backend.data.group_allocations import save_list_of_cadets_with_allocated_groups_for_event
 from app.backend.forms.form_utils import input_name_from_column_name_and_cadet_id, get_availablity_from_form
 from app.backend.group_allocations.boat_allocation import update_club_boat_allocation_for_cadet_at_event, \
     update_boat_info_for_cadets_at_event, CadetWithDinghyInputs
@@ -19,6 +19,7 @@ def update_data_given_allocation_form(interface: abstractInterface):
     allocation_data = get_allocation_data(event)
     list_of_cadets = allocation_data.list_of_cadets_in_event_active_only
     for cadet in list_of_cadets:
+
         if event.contains_groups:
             do_allocation_for_cadet_at_event(
                 interface=interface,
@@ -39,39 +40,55 @@ def do_allocation_for_cadet_at_event(
     interface: abstractInterface,
 ):
     event = get_event_from_state(interface)
-    allocation_str = interface.value_from_form(
-        input_name_from_column_name_and_cadet_id(ALLOCATION, cadet_id=cadet.id)
-    )
-    print("Allocation %s for cadet %s" % (allocation_str, str(cadet)))
+    try:
+        allocation_str = interface.value_from_form(
+            input_name_from_column_name_and_cadet_id(ALLOCATION, cadet_id=cadet.id)
+        )
+        print("Allocation %s for cadet %s" % (allocation_str, str(cadet)))
+    except Exception as e:
+        ## could be normal if cadet has vanished
+        print("Exception %s whilst updating %s" % (str(e), cadet.name))
+        return
+    
     chosen_group = Group(allocation_str)
     allocation_data.current_allocation_for_event.update_group_for_cadet(
         cadet=cadet, chosen_group=chosen_group
     )
-    save_current_allocations_for_event(
+    save_list_of_cadets_with_allocated_groups_for_event(
         list_of_cadets_with_groups=allocation_data.current_allocation_for_event,
         event=event,
     )
 
 def update_attendance_data_for_cadet_in_form(interface: abstractInterface, cadet: Cadet):
     event = get_event_from_state(interface)
-    new_attendance = get_availablity_from_form(
-        interface=interface,
-        input_name=input_name_from_column_name_and_cadet_id(
-            ATTENDANCE,
-            cadet_id=cadet.id
-        ),
-        event = event
-    )
+    try:
+        new_attendance = get_availablity_from_form(
+            interface=interface,
+            input_name=input_name_from_column_name_and_cadet_id(
+                ATTENDANCE,
+                cadet_id=cadet.id
+            ),
+            event = event
+        )
+    except Exception as e:
+        print("Error %s whilst updating attendance for %s" % (str(e), cadet.name))
+        return
+    
     update_availability_of_existing_cadet_at_event(event=event, cadet_id=cadet.id, new_availabilty=new_attendance)
 
 def update_club_boat_for_cadet_in_form(interface: abstractInterface, cadet: Cadet):
     event = get_event_from_state(interface)
-    boat_name = interface.value_from_form(
-        input_name_from_column_name_and_cadet_id(
-            cadet_id=cadet.id,
-            column_name=CLUB_BOAT
+    try:
+        boat_name = interface.value_from_form(
+            input_name_from_column_name_and_cadet_id(
+                cadet_id=cadet.id,
+                column_name=CLUB_BOAT
+            )
         )
-    )
+    except Exception as e:
+        print("Error %s whilst updating club boat for %s" % (str(e), cadet.name))
+        return
+
 
     update_club_boat_allocation_for_cadet_at_event(boat_name = boat_name, cadet_id=cadet.id, event=event)
 
@@ -88,8 +105,11 @@ def get_list_of_updates(interface: abstractInterface, allocation_data: Allocatio
     list_of_updates = []
     list_of_cadets = allocation_data.list_of_cadets_in_event_active_only
     for cadet in list_of_cadets:
-        update_for_cadet = get_update_for_cadet(interface=interface, cadet=cadet)
-        list_of_updates.append(update_for_cadet)
+        try:
+            update_for_cadet = get_update_for_cadet(interface=interface, cadet=cadet)
+            list_of_updates.append(update_for_cadet)
+        except Exception as e:
+            print("Error %s whilst updating boat updates for %s" % (str(e), cadet.name))
 
     return list_of_updates
 

@@ -3,58 +3,68 @@ from typing import List, Union
 
 from app.backend.forms.swaps import is_ready_to_swap
 from app.backend.volunteers.volunteer_rota import dict_of_groups_for_dropdown, \
-    dict_of_roles_for_dropdown, sort_volunteer_data_for_event_by_name_sort_order, \
-    sort_volunteer_data_for_event_by_day_sort_order
-from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingTableBody, get_data_to_be_stored
+    dict_of_roles_for_dropdown, get_sorted_and_filtered_list_of_volunteers_at_event
+from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingTableBody, get_data_to_be_stored, \
+    RotaSortsAndFilters
 from app.backend.volunteers.volunteers import get_volunteer_from_id
-from app.data_access.configuration.fixed import COPY_SYMBOL1, COPY_SYMBOL2, SWAP_SHORTHAND1, SWAP_SHORTHAND2, \
-    NOT_AVAILABLE_SHORTHAND, AVAILABLE_SHORTHAND
+from app.data_access.configuration.configuration import VOLUNTEER_SKILLS
+from app.data_access.configuration.fixed import COPY_SYMBOL1, NOT_AVAILABLE_SHORTHAND, AVAILABLE_SHORTHAND
+from app.logic.events.volunteer_rota.rota_state import get_skills_filter_from_state
 from app.logic.events.volunteer_rota.volunteer_table_buttons import get_location_button, get_skills_button, \
     make_available_button_value_for_volunteer_on_day, copy_button_value_for_volunteer_in_role_on_day, \
     get_buttons_for_days_at_event, unavailable_button_value_for_volunteer_in_role_on_day, remove_role_button_value_for_volunteer_in_role_on_day
-from app.logic.events.volunteer_rota.swapping import swap_button_value_for_volunteer_in_role_on_day, get_swap_button
+from app.logic.events.volunteer_rota.swapping import get_swap_button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line
 
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.abstract_objects.abstract_buttons import Button
-from app.objects.abstract_objects.abstract_form import dropDownInput, textInput
+from app.objects.abstract_objects.abstract_form import dropDownInput, textInput, checkboxInput
 
 from app.objects.events import Event
 from app.objects.volunteers_at_event import VolunteerAtEvent
 from app.objects.day_selectors import Day
 from app.objects.volunteers_in_roles import VolunteerInRoleAtEvent
 
-from app.objects.constants import arg_not_passed
+SKILLS_FILTER = "skills_filter"
+
+def get_volunteer_skills_filter(interface: abstractInterface):
+    dict_of_labels = dict([(skill, skill) for skill in VOLUNTEER_SKILLS])
+    dict_of_checked = get_skills_filter_from_state(interface)
+    return checkboxInput(input_label="Filter for volunteers with these skills",
+                         dict_of_checked=dict_of_checked,
+                         dict_of_labels=dict_of_labels,
+                         input_name=SKILLS_FILTER,
+                         line_break=True)
+
 
 def get_volunteer_table(event: Event,
                         interface: abstractInterface,
-                        sort_by_volunteer_name: str=arg_not_passed,
-                        sort_by_day: Day=arg_not_passed
+                        sorts_and_filters: RotaSortsAndFilters
                         )-> Table:
     hide_buttons = is_ready_to_swap(interface)
 
-    top_row = get_top_row_for_table(event=event, hide_buttons=hide_buttons)
+    top_row = get_top_row_for_table(event=event, hide_buttons=hide_buttons, interface=interface)
     other_rows = get_body_of_table_at_event(event=event,
                                             interface=interface,
                                             hide_buttons=hide_buttons,
-                                            sort_by_volunteer_name=sort_by_volunteer_name,
-                                            sort_by_day=sort_by_day)
+                                            sorts_and_filters=sorts_and_filters)
 
     return Table(
         [top_row]+other_rows
     )
 
 
-def get_top_row_for_table(event: Event, hide_buttons: bool) -> RowInTable:
+def get_top_row_for_table(interface: abstractInterface, event: Event, hide_buttons: bool) -> RowInTable:
     buttons_for_days_at_event_as_str = get_buttons_for_days_at_event(event=event, hide_buttons=hide_buttons)
+    skills = "" if hide_buttons else get_volunteer_skills_filter(interface)
 
     return RowInTable([
         "Volunteer (click to edit days available)",
         "Cadet location (click to edit connections)",
         "Preferred duties",
         "Same/different preference",
-        "Skills",
+        skills,
         "Previous role"
     ]+buttons_for_days_at_event_as_str+
     ["Notes",
@@ -64,17 +74,16 @@ def get_top_row_for_table(event: Event, hide_buttons: bool) -> RowInTable:
 
 def get_body_of_table_at_event(event: Event,
                                interface: abstractInterface,
-                               hide_buttons: bool = False,
-                               sort_by_volunteer_name: str=arg_not_passed,
-                               sort_by_day: Day=arg_not_passed
+                               sorts_and_filters: RotaSortsAndFilters,
+                               hide_buttons: bool = False
+
                                ) -> List[RowInTable]:
 
     data_to_be_stored = get_data_to_be_stored(event)
 
-    list_of_volunteers_at_event = get_sorted_list_of_volunteers_at_event(
+    list_of_volunteers_at_event = get_sorted_and_filtered_list_of_volunteers_at_event(
         data_to_be_stored=data_to_be_stored,
-        sort_by_day=sort_by_day,
-        sort_by_volunteer_name=sort_by_volunteer_name
+        sorts_and_filters=sorts_and_filters
     )
 
     other_rows = [get_row_for_volunteer_at_event(hide_buttons=hide_buttons,
@@ -86,24 +95,6 @@ def get_body_of_table_at_event(event: Event,
 
     return other_rows
 
-def get_sorted_list_of_volunteers_at_event(
-        data_to_be_stored: DataToBeStoredWhilstConstructingTableBody,
-        sort_by_volunteer_name: str=arg_not_passed,
-                               sort_by_day: Day=arg_not_passed
-                                ):
-
-    list_of_volunteers_at_event = data_to_be_stored.list_of_volunteers_at_event
-
-    if sort_by_volunteer_name is not arg_not_passed:
-        list_of_volunteers_at_event = sort_volunteer_data_for_event_by_name_sort_order(
-            list_of_volunteers_at_event, sort_order=sort_by_volunteer_name)
-    elif sort_by_day is not arg_not_passed:
-        print("SORTBY %s" % sort_by_day.name)
-        list_of_volunteers_at_event = sort_volunteer_data_for_event_by_day_sort_order(
-            list_of_volunteers_at_event, sort_by_day=sort_by_day,
-            data_to_be_stored=data_to_be_stored)
-
-    return list_of_volunteers_at_event
 
 def get_row_for_volunteer_at_event(data_to_be_stored: DataToBeStoredWhilstConstructingTableBody,
                                    volunteer_at_event: VolunteerAtEvent,

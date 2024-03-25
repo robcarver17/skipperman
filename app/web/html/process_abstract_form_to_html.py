@@ -81,7 +81,9 @@ def get_html_for_element_in_line(
         fileInput,
         PandasDFTable,
         Table,
-        Arrow
+        Arrow,
+        passwordInput,
+        Link
     ]
 ) -> Html:
     if type(element_in_line) is str:
@@ -96,8 +98,16 @@ def get_html_for_element_in_line(
         return get_html_for_text(element_in_line)
     elif type(element_in_line) is Button:
         return get_html_for_button(element_in_line)
+    elif type(element_in_line) is Link:
+        return get_html_for_link(element_in_line)
     elif type(element_in_line) is textInput:
         return html_form_text_input(
+            input_label=element_in_line.input_label,
+            input_name=element_in_line.input_name,
+            value=element_in_line.value,
+        )
+    elif type(element_in_line) is passwordInput:
+        return html_form_password_input(
             input_label=element_in_line.input_label,
             input_name=element_in_line.input_name,
             value=element_in_line.value,
@@ -263,3 +273,6 @@ def get_html_for_table_element(table_element: ElementsInTable) -> Html:
         wrapper = html_table_element_wrapper
 
     return wrapper.wrap_around(html_contents)
+
+def get_html_for_link(link: Link):
+    return  html_link(url=link.url, string=link.string, open_new_window=link.open_new_window)

@@ -8,7 +8,6 @@ from app.backend.group_allocations.cadet_event_allocations import get_unallocate
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_form import File
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.reporting.constants import SHOW_FULL_NAMES, INCLUDE_UNALLOCATED_CADETS
 from app.logic.reporting.shared.group_order import get_group_order_from_stored_or_df, clear_group_order_in_storage
 from app.logic.reporting.shared.reporting_options import get_reporting_options
 from app.logic.reporting.shared.arrangement_state import clear_arrangement_in_state
@@ -77,18 +76,6 @@ def load_additional_parameters_for_allocation_report(
         include_unallocated_cadets=include_unallocated_cadets,
     )
 
-
-def get_group_order_for_allocation_report(interface: abstractInterface) -> list:
-    dict_of_df = get_dict_of_df_for_reporting_allocations(interface)
-    order_of_groups = get_group_order_from_stored_or_df(
-        interface=interface,
-        specific_parameters_for_type_of_report=specific_parameters_for_allocation_report,
-        dict_of_df=dict_of_df,
-    )
-
-    return order_of_groups
-
-
 def get_dict_of_df_for_reporting_allocations(interface: abstractInterface) -> Dict[str, pd.DataFrame]:
     event = get_event_from_state(interface)
     additional_parameters = load_additional_parameters_for_allocation_report(interface)
@@ -110,18 +97,6 @@ def get_dict_of_df_for_reporting_allocations_given_event_and_state(event: Event,
     return dict_of_df
 
 
-def create_allocation_report(interface: abstractInterface) -> File:
-    print("Creating report")
-    dict_of_df = get_dict_of_df_for_reporting_allocations(interface)
-    reporting_options = get_reporting_options(interface=interface,
-                                              specific_parameters_for_type_of_report=specific_parameters_for_allocation_report,
-                                              dict_of_df=dict_of_df)
-    print("Reporting shared %s" % reporting_options)
-    filename = create_column_report_from_df_and_return_filename(
-        reporting_options=reporting_options
-    )
-
-    return File(filename)
 
 
 def get_dict_of_df_for_reporting_allocations_with_flags(
@@ -147,3 +122,7 @@ def get_dict_of_df_for_reporting_allocations_with_flags(
     df = list_of_cadets_with_groups.to_df_of_str(display_full_names=display_full_names)
 
     return {"": df}
+
+
+SHOW_FULL_NAMES = "Show_full_names"
+INCLUDE_UNALLOCATED_CADETS = "Include unallocated group_allocations"

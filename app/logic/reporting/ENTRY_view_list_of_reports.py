@@ -3,6 +3,7 @@ from typing import Union
 from app.logic.abstract_logic_api import initial_state_form
 from app.logic.reporting.allocations.report_group_allocations import display_form_report_group_allocation
 from app.logic.reporting.rota.report_rota import display_form_report_rota
+from app.logic.reporting.boats.report_boats import display_form_report_boat
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -10,16 +11,17 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.reporting.constants import (
-    GROUP_ALLOCATION_REPORT_BUTTON_LABEL,
-ROTA_REPORT_BUTTON_LABEL,
-)
 from app.objects.constants import missing_data
+
+GROUP_ALLOCATION_REPORT_BUTTON_LABEL = "Group allocation at event"
+ROTA_REPORT_BUTTON_LABEL = "Volunteer rota at event"
+BOATS_REPORT_BUTTON_LABEL = "Boats and sailors (spotter sheet) at event"
 
 ## MODIFY THIS TO ADD MORE REPORTS
 DICT_OF_REPORT_LABELS_AND_STAGES ={
     GROUP_ALLOCATION_REPORT_BUTTON_LABEL: display_form_report_group_allocation,
-    ROTA_REPORT_BUTTON_LABEL: display_form_report_rota
+    ROTA_REPORT_BUTTON_LABEL: display_form_report_rota,
+    BOATS_REPORT_BUTTON_LABEL: display_form_report_boat
 }
 
 list_of_report_labels=list(DICT_OF_REPORT_LABELS_AND_STAGES.keys())

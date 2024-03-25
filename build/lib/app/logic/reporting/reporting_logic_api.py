@@ -20,7 +20,7 @@ class ReportingLogicApi(LogicApi):
                 REPORT_ADDITIONAL_OPTIONS_FOR_ALLOCATION_REPORT:
                      display_form_for_report_group_additional_options,
                 GENERIC_OPTIONS_IN_GROUP_ALLOCATION_STATE:
-                     display_form_for_report_group_allocation_generic_options,
+                     display_form_for_report_group_allocation_all_options,
                 CHANGE_GROUP_LAYOUT_IN_GROUP_ALLOCATION_STATE:
                      display_form_for_group_arrangement_options_allocation_report,
                 CHANGE_PRINT_OPTIONS_IN_GROUP_ALLOCATION_STATE:
@@ -29,7 +29,7 @@ class ReportingLogicApi(LogicApi):
                 ROTA_REPORT_STAGE:
                     display_form_report_rota,
             GENERIC_OPTIONS_IN_ROTA_REPORT_STATE:
-                    display_form_for_rota_report_generic_options,
+                    display_form_for_rota_report_all_options,
             REPORT_ADDITIONAL_OPTIONS_FOR_ROTA_REPORT_STATE:
                 display_form_for_rota_report_additional_options,
             CHANGE_GROUP_LAYOUT_IN_ROTA_REPORT_STATE:
@@ -47,7 +47,7 @@ class ReportingLogicApi(LogicApi):
          GROUP_ALLOCATION_REPORT_STAGE:
              post_form_report_group_allocation,
          GENERIC_OPTIONS_IN_GROUP_ALLOCATION_STATE:
-             post_form_for_report_group_allocation_generic_options,
+             post_form_for_report_group_allocation_all_options,
          REPORT_ADDITIONAL_OPTIONS_FOR_ALLOCATION_REPORT:
              post_form_for_report_group_additional_options,
          CHANGE_GROUP_LAYOUT_IN_GROUP_ALLOCATION_STATE:
@@ -58,7 +58,7 @@ class ReportingLogicApi(LogicApi):
             ROTA_REPORT_STAGE:
                 post_form_report_rota,
             GENERIC_OPTIONS_IN_ROTA_REPORT_STATE:
-                post_form_for_rota_report_generic_options,
+                post_form_for_rota_report_all_options,
             REPORT_ADDITIONAL_OPTIONS_FOR_ROTA_REPORT_STATE:
                 post_form_for_rota_report_additional_options,
             CHANGE_GROUP_LAYOUT_IN_ROTA_REPORT_STATE:

@@ -85,8 +85,20 @@ class Cadet(GenericSkipperManObjectWithIds):
 multiple_matches = object()
 
 class ListOfCadets(GenericListOfObjectsWithIds):
+    def add(self, cadet: Cadet):
+        if cadet in self:
+            raise Exception("Cadet %s already in list of existing cadets" % str(cadet))
+
+        cadet_id = self.next_id()
+        cadet.id = cadet_id
+        self.append(cadet)
+
+
+    def cadet_with_id(self, cadet_id: str) -> Cadet:
+        return self.object_with_id(cadet_id)
+
     def replace_cadet_with_id_with_new_cadet_details(self, existing_cadet_id: str, new_cadet: Cadet):
-        existing_cadet = self.object_with_id(existing_cadet_id)
+        existing_cadet = self.cadet_with_id(existing_cadet_id)
         existing_cadet.replace_all_attributes_except_id_with_those_from_new_cadet(new_cadet)
 
     def matching_cadet(self, cadet: Cadet, exact_match_required: bool = False) -> Cadet:

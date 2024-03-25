@@ -56,7 +56,8 @@ setup(
         "PyYAML>=5.4",
         "fpdf>=1.7",
         "flask>=2.0.0",
-        "openpyxl>3.0"
+        "openpyxl>3.0",
+        "flask-security>=0.6"
     ],
     tests_require=["nose", "flake8"],
     extras_require=dict(),

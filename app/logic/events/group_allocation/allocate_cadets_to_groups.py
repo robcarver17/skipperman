@@ -3,6 +3,8 @@ from typing import Union
 
 from app.backend.forms.reorder_form import list_of_button_names_given_group_order, reorderFormInterface
 from app.backend.group_allocations.sorting import DEFAULT_SORT_ORDER, SORT_GROUP
+from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
+from app.logic.events.constants import UPDATE_ALLOCATION_BUTTON_LABEL
 from app.logic.events.group_allocation.add_cadet_partner import display_add_cadet_partner
 from app.logic.events.group_allocation.render_allocation_form import display_form_allocate_cadets_at_event, \
     list_of_all_add_partner_buttons, cadet_id_given_partner_button
@@ -41,7 +43,9 @@ def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewFo
     if last_button == BACK_BUTTON_LABEL:
         return previous_form(interface)
 
-    elif was_add_partner_button(interface):
+    update_data_given_allocation_form(interface)
+
+    if was_add_partner_button(interface):
         ### SAVE CADET ID TO GET PARTNER FOR
         ## DISPLAY NEW FORM
         cadet_id = cadet_id_given_partner_button(last_button)
@@ -49,11 +53,13 @@ def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewFo
         return interface.get_new_form_given_function(display_add_cadet_partner)
 
     elif was_reorder_sort_button(interface):
-        update_data_given_allocation_form(interface)
         change_sort_order_and_save(interface)
+    elif last_button == UPDATE_ALLOCATION_BUTTON_LABEL:
+        ## already saved
+        pass
+    else:
+        return button_error_and_back_to_initial_state_form(interface)
 
-    ## Just save button
-    update_data_given_allocation_form(interface)
 
     return interface.get_new_form_given_function(display_form_allocate_cadets)
 

@@ -17,10 +17,18 @@ SECRET_KEY = configuration["secret_key"]
 
 ### directories
 DATAPATH = configuration["datapath"]
+BACKUP_DATA =configuration["backuppath"]
+USER_DATA = configuration["userdata"]
 UPLOADS = configuration["uploads"]
 STAGING = configuration["staging"]
-REPORTING_SUBDIRECTORY = configuration["reporting_subdirectory"]
+DOWNLOAD_DIRECTORY = configuration["download_subdirectory"]
+PUBLIC_REPORTING_SUBDIRECTORY = configuration["public_reporting_subdirectory"]
 
+NUMBER_OF_BACKUPS = configuration["number_of_backups_to_keep"]
+
+## links
+WEBLINK_FOR_QUALIFICATIONS = configuration["weblink_for_qualifications"]
+PUBLIC_WEB_PATH = configuration["public_web_path"]
 
 SIMILARITY_LEVEL_TO_WARN_NAME = configuration[
     "similarity_level_to_warn_when_comparing_names"

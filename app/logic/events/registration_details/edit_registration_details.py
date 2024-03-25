@@ -89,19 +89,20 @@ def post_form_edit_registration_details(
     if interface.last_button_pressed() == BACK_BUTTON_LABEL:
         return previous_form(interface)
 
-    elif last_button_pressed in all_sort_types:
+    parse_registration_details_from_form(interface=interface, event=event)
+
+    if last_button_pressed in all_sort_types:
         ## no change to stage required, just sort order
         sort_order = interface.last_button_pressed()
         interface.set_persistent_value(SORT_ORDER, sort_order)
 
-        return display_form_edit_registration_details(interface)
-
     elif last_button_pressed==SAVE_CHANGES:
-        parse_registration_details_from_form(interface=interface, event=event)
-        return display_form_edit_registration_details(interface)
-
+        pass
     else:
         button_error_and_back_to_initial_state_form(interface)
+
+    return display_form_edit_registration_details(interface)
+
 
 def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(display_form_edit_registration_details)

@@ -9,7 +9,9 @@ def delete_a_cadet(cadet: Cadet):
 
 
 def add_new_verified_cadet(cadet: Cadet) -> Cadet:
-    cadet_with_id = data.data_list_of_cadets.add(cadet)
+    all_cadets = load_list_of_all_cadets()
+    cadet_with_id = all_cadets.add(cadet)
+    save_list_of_cadets(all_cadets)
     return cadet_with_id
 
 def save_list_of_cadets(list_of_cadets: ListOfCadets):

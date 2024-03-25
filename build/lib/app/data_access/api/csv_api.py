@@ -11,102 +11,118 @@ from app.data_access.csv.print_options import csvDataListOfPrintOptions
 from app.data_access.csv.volunteers import CsvDataListOfVolunteers, CsvDataListOfVolunteerSkills, CsvDataListOfCadetVolunteerAssociations, CsvDataListOfVolunteersAtEvent, CsvDataListOfIdentifiedVolunteersAtEvent, CsvDataListOfVolunteersInRolesAtEvent
 from app.data_access.csv.resources import CsvDataListOfPatrolBoats, CsvDataListOfVolunteersAtEventWithPatrolBoats, CsvDataListOfClubDinghies, CsvDataListOfCadetAtEventWithClubDinghies
 from app.data_access.csv.dinghies_at_events import CsvDataListOfCadetAtEventWithDinghies, CsvDataListOfDinghies
+from app.data_access.csv.users import CsvDataListOfSkipperManUsers
 
 class CsvDataApi(GenericDataApi):
-    def __init__(self, master_data_path: str):
+    def __init__(self, master_data_path: str, user_data_path: str, backup_data_path: str):
         self._master_data_path = master_data_path
+        self._user_data_path = user_data_path
+        self._backup_data_path = backup_data_path
 
     @property
     def data_list_of_cadets(self):
-        return CsvDataListOfCadets(master_data_path=self.master_data_path)
+        return CsvDataListOfCadets(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
 
     @property
     def data_list_of_events(self):
-        return CsvDataListOfEvents(master_data_path=self.master_data_path)
+        return CsvDataListOfEvents(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
 
     @property
     def data_wa_event_mapping(self) -> CsvDataWAEventMapping:
-        return CsvDataWAEventMapping(master_data_path=self.master_data_path)
+        return CsvDataWAEventMapping(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
 
     @property
     def data_wa_field_mapping(self) -> CsvDataWAFieldMapping:
-        return CsvDataWAFieldMapping(master_data_path=self.master_data_path)
+        return CsvDataWAFieldMapping(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
 
     @property
     def data_mapped_wa_event(self) -> CsvDataMappedWAEvent:
-        return CsvDataMappedWAEvent(master_data_path=self.master_data_path)
+        return CsvDataMappedWAEvent(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
 
 
     @property
     def data_identified_cadets_at_event(
         self,
     ) -> CsvDataListOfIdentifiedCadetsAtEvent:
-        return CsvDataListOfIdentifiedCadetsAtEvent(master_data_path=self.master_data_path)
+        return CsvDataListOfIdentifiedCadetsAtEvent(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
 
     @property
     def data_cadets_at_event(
         self,
     ) -> CsvDataListOfCadetsAtEvent:
-        return CsvDataListOfCadetsAtEvent(master_data_path=self.master_data_path)
+        return CsvDataListOfCadetsAtEvent(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
 
     @property
     def data_list_of_cadets_with_groups(
         self,
     ) -> CsvDataListOfCadetsWithGroups:
-        return CsvDataListOfCadetsWithGroups(master_data_path=self.master_data_path)
+        return CsvDataListOfCadetsWithGroups(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
 
     @property
     def data_print_options(self) -> csvDataListOfPrintOptions:
-        return csvDataListOfPrintOptions(master_data_path=self.master_data_path)
+        return csvDataListOfPrintOptions(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
+
+
+    @property
+    def data_list_of_volunteers(self) -> CsvDataListOfVolunteers:
+        return CsvDataListOfVolunteers(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
+
+    @property
+    def data_list_of_volunteer_skills(self) -> CsvDataListOfVolunteerSkills:
+        return CsvDataListOfVolunteerSkills(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
+
+    @property
+    def data_list_of_cadet_volunteer_associations(self) -> CsvDataListOfCadetVolunteerAssociations:
+        return CsvDataListOfCadetVolunteerAssociations(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
+
+    @property
+    def data_list_of_volunteers_at_event(self) -> CsvDataListOfVolunteersAtEvent:
+        return CsvDataListOfVolunteersAtEvent(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
+
+    @property
+    def data_list_of_identified_volunteers_at_event(self) -> DataListOfIdentifiedVolunteersAtEvent:
+        return CsvDataListOfIdentifiedVolunteersAtEvent(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
+
+    @property
+    def data_list_of_volunteers_in_roles_at_event(self) -> CsvDataListOfVolunteersInRolesAtEvent:
+        return CsvDataListOfVolunteersInRolesAtEvent(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
+
+    @property
+    def data_list_of_patrol_boats(self) -> CsvDataListOfPatrolBoats:
+        return CsvDataListOfPatrolBoats(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
+
+    @property
+    def data_List_of_club_dinghies(self) -> CsvDataListOfClubDinghies:
+        return CsvDataListOfClubDinghies(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
+
+    @property
+    def data_list_of_volunteers_at_event_with_patrol_boats(self) -> CsvDataListOfVolunteersAtEventWithPatrolBoats:
+        return CsvDataListOfVolunteersAtEventWithPatrolBoats(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
+
+    @property
+    def data_list_of_cadets_at_event_with_club_dinghies(self) -> CsvDataListOfCadetAtEventWithClubDinghies:
+        return CsvDataListOfCadetAtEventWithClubDinghies(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
+
+    @property
+    def data_list_of_cadets_with_dinghies_at_event(self) -> CsvDataListOfCadetAtEventWithDinghies:
+        return CsvDataListOfCadetAtEventWithDinghies(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
+
+    @property
+    def data_list_of_dinghies(self) -> CsvDataListOfDinghies:
+        return CsvDataListOfDinghies(self.master_data_path, backup_data_path=self.backup_data_path)
+
+    @property
+    def data_list_of_users(self) -> CsvDataListOfSkipperManUsers:
+        return CsvDataListOfSkipperManUsers(self.user_data_path, backup_data_path=self.backup_data_path)
 
     @property
     def master_data_path(self) -> str:
         return self._master_data_path
 
     @property
-    def data_list_of_volunteers(self) -> CsvDataListOfVolunteers:
-        return CsvDataListOfVolunteers(master_data_path=self.master_data_path)
+    def user_data_path(self) -> str:
+        return self._user_data_path
 
     @property
-    def data_list_of_volunteer_skills(self) -> CsvDataListOfVolunteerSkills:
-        return CsvDataListOfVolunteerSkills(master_data_path=self.master_data_path)
-
-    @property
-    def data_list_of_cadet_volunteer_associations(self) -> CsvDataListOfCadetVolunteerAssociations:
-        return CsvDataListOfCadetVolunteerAssociations(master_data_path=self.master_data_path)
-
-    @property
-    def data_list_of_volunteers_at_event(self) -> CsvDataListOfVolunteersAtEvent:
-        return CsvDataListOfVolunteersAtEvent(master_data_path=self.master_data_path)
-
-    @property
-    def data_list_of_identified_volunteers_at_event(self) -> DataListOfIdentifiedVolunteersAtEvent:
-        return CsvDataListOfIdentifiedVolunteersAtEvent(master_data_path=self.master_data_path)
-
-    @property
-    def data_list_of_volunteers_in_roles_at_event(self) -> CsvDataListOfVolunteersInRolesAtEvent:
-        return CsvDataListOfVolunteersInRolesAtEvent(master_data_path=self.master_data_path)
-
-    @property
-    def data_list_of_patrol_boats(self) -> CsvDataListOfPatrolBoats:
-        return CsvDataListOfPatrolBoats(master_data_path=self.master_data_path)
-
-    @property
-    def data_List_of_club_dinghies(self) -> CsvDataListOfClubDinghies:
-        return CsvDataListOfClubDinghies(master_data_path=self.master_data_path)
-
-    @property
-    def data_list_of_volunteers_at_event_with_patrol_boats(self) -> CsvDataListOfVolunteersAtEventWithPatrolBoats:
-        return CsvDataListOfVolunteersAtEventWithPatrolBoats(master_data_path=self.master_data_path)
-
-    @property
-    def data_list_of_cadets_at_event_with_club_dinghies(self) -> CsvDataListOfCadetAtEventWithClubDinghies:
-        return CsvDataListOfCadetAtEventWithClubDinghies(master_data_path=self.master_data_path)
-
-    @property
-    def data_list_of_cadets_with_dinghies_at_event(self) -> CsvDataListOfCadetAtEventWithDinghies:
-        return CsvDataListOfCadetAtEventWithDinghies(master_data_path=self.master_data_path)
-
-    @property
-    def data_list_of_dinghies(self) -> CsvDataListOfDinghies:
-        return CsvDataListOfDinghies(self.master_data_path)
+    def backup_data_path(self) -> str:
+        return self._backup_data_path

@@ -19,7 +19,7 @@ APPROX_WIDTH_TO_HEIGHT_RATIO = (
     0.6  ## DO NOT CHANGE: Exact value will depend on font used and letters
 )
 TITLE_MULTIPLIER = (
-    2  ## how much bigger titles are than everything else, has to be integer
+    1.44  ## how much bigger titles are than everything else, has to be integer
 )
 EDGE_MARGIN_MM = 10  ## change if you like but bear in mind printable area
 COLUMN_GAP_MM = 10  ## change if you like but bear in mind readability / efficiency

@@ -2,6 +2,7 @@ from typing import Union
 
 from app.backend.forms.swaps import is_ready_to_swap
 from app.backend.volunteers.patrol_boats import get_summary_list_of_boat_allocations_for_events
+from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
 from app.data_access.configuration.fixed import COPY_SYMBOL2, SWAP_SHORTHAND1, SWAP_SHORTHAND2, COPY_SYMBOL1, \
     BOAT_SHORTHAND, ROLE_SHORTHAND, BOAT_AND_ROLE_SHORTHAND
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
@@ -15,7 +16,7 @@ from app.logic.events.patrol_boats.swapping import get_all_swap_buttons_for_boat
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
-    NewForm,
+    NewForm, Link,
 )
 from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -32,7 +33,7 @@ def display_form_view_for_patrol_boat_allocation(interface: abstractInterface) -
     title = "Patrol boat allocation for event %s" % str(event)
 
     summary_of_boat_allocations =  get_summary_list_of_boat_allocations_for_events(event)
-    patrol_boat_driver_and_crew_table = (
+    patrol_boat_driver_and_crew_qualifications_table = (
         get_patrol_boat_driver_and_crew_qualifications_table(event))
     patrol_boat_table = get_patrol_boat_table(event=event, interface=interface)
 
@@ -49,7 +50,7 @@ def display_form_view_for_patrol_boat_allocation(interface: abstractInterface) -
                 _______________,
                 _______________,
                 instructions_qual_table,
-                patrol_boat_driver_and_crew_table,
+                patrol_boat_driver_and_crew_qualifications_table,
                 _______________,
                 _______________,
                 footer_buttons,
@@ -73,8 +74,11 @@ def get_save_button(interface: abstractInterface) -> Union[Button, str]:
     else:
         return Button(SAVE_CHANGES_BUTTON_LABEL, big=True)
 
+link = Link(url=
+            WEBLINK_FOR_QUALIFICATIONS, string="Qualifications table", open_new_window=True)
 
-instructions_qual_table = ListOfLines(["Tick to specify that a volunteer has PB2 (check - don't assume)"])
+
+instructions_qual_table = ListOfLines([Line(["Tick to specify that a volunteer has PB2 (check don't assume: ", link, " )"])])
 instructions_table = ListOfLines([Line(["Save changes after non button actions. Key for buttons - Copy: ",
                                         COPY_SYMBOL1, COPY_SYMBOL2,
                                         " , Swap: ", SWAP_SHORTHAND1, SWAP_SHORTHAND2, ", ",
@@ -101,7 +105,7 @@ def post_form_view_for_patrol_boat_allocation(
         return previous_form(interface)
 
     elif last_button_pressed==SAVE_CHANGES_BUTTON_LABEL:
-        update_if_save_button_pressed_in_allocation_page(interface)
+        update_data_from_form_entries_in_allocation_page(interface)
 
     elif last_button_pressed == ADD_NEW_BOAT_BUTTON_LABEL:
         update_adding_boat(interface)

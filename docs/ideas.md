@@ -53,15 +53,15 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - import a set of members from WA to populate a list of cadets
 - report on a volunteer rota
 - reports can now be sent to .xls/.csv files
+- spotter sheets report
+- report to public weblink is optional and puts report in different place
+- filter volunteer sheets on qualification
+- regular backups on all writes; include roll back function (showing user who did edits) UTILITIES MENU
 
 
 ### Required for racing event:
   
-- WEIRD registraition effects
-- spotter sheets (excel)
-- users and passwords (skipper, deputy, instructors) 
-- regular backups on all writes; include roll back function
-- all buttons should save first
+- basic level of niceness
 
 
 ### Required for social event:
@@ -71,24 +71,35 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - manage social event with food only (Social)
 
 
-### Required for training event:
+### Required for training event (ASAP):
 
-- allow selection of group subset in reporting arrangement
-- backfill all last years events
-- add * for boat allocation to group report
-- handle waiting lists (new state)
+- record qualification data and backfill
+- backfill Cadet week data
 - maintain ticksheets, print and record ticks
+- backfill ticksheet data
+- add * for boat allocation to group report
+- filter volunteer sheet on available days
+- allow selection of group subset in reporting arrangement
 - print roll call lists and contact details
+- registration report with literally everything
 - birthdays during an event - splash on event screen
 
-   
+### Required for training event (Can wait):
+
+- GDPR document
+- instructor login (send link to create, link users to specific volunteer name)
+- ticksheet level security
+- refactor reporting so uses common data model
+- key report links for instructors on landing page
+- handle waiting lists (new state)
+- clear old reports for event (remove rednedant permalinks) and other temp directories UTILITIES MENU
+
 
 ### Required for cadet week:
 
 
 - two types of clothing event: as part of training event, or social only seperate
 - allocate and maintain colour groups (CW)
-- print spotter sheets (CW and racing events)
 - maintain and report on tickets for gala dinner, include additional gala dinner invites eg sponsors, plus ones (CW)
 - maintain and report on wristbands (CW)
 - create a report of cadets and their ages for fancy dress (CW)

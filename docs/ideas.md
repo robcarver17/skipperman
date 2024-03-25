@@ -64,6 +64,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - regular backups on all writes; include roll back function (showing user who did edits)
 - all buttons should save first 
 - clear old reports for event (remove rednedant permalinks)
+- basic level of niceness
 
 
 ### Required for social event:
@@ -88,7 +89,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - handle waiting lists (new state)
 - print roll call lists and contact details
 - birthdays during an event - splash on event screen
-
+- registration report
    
 
 ### Required for cadet week:

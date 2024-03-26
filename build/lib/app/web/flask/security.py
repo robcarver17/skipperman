@@ -20,7 +20,10 @@ no_user = ''
 
 
 def authenticated_user():
-    return current_user.is_authenticated
+    try:
+        return current_user.is_authenticated
+    except:
+        return False
 
 
 class FlaskUser(UserMixin):

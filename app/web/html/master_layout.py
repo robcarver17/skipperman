@@ -1,56 +1,23 @@
-from app.web.html.html import (
-    Html,
-    HtmlWrapper,
-    html_doc_wrapper,
-    html_header_wrapper,
-    html_h1_logo_wrapper,
-    html_container_wrapper,
-    html_joined_list_as_paragraphs,
+from app.web.html.heading import get_html_header
+from app.web.html.components import (
+    ListOfHtml, Html,
 )
-
-## applies to all pages
-## FIXME: Does CSS even work?
-
-style=""""
-    <style type=")text/css" media="screen">
-
-table{
-border-collapse:collapse;
-border:1px solid #FF0000;
-}
-
-table td{
-border:1px solid #FF0000;
-}
-</style>
-"""
-
-
-master_wrapper = html_doc_wrapper(
-    Html(
-        """
-    <title>Skipperman</title>
-    %s
-    """ % style
-    )
-)
+from app.web.html.page import HtmlPage, HtmlHead,  SingleMetaElement, ListOfHtmlElements, SingleStyleLink
 
 
 
-master_layout_html = HtmlWrapper(
-    master_wrapper.wrap_around(
-        html_joined_list_as_paragraphs(
-            [
-                html_header_wrapper.wrap_around(
-                    html_container_wrapper.wrap_around(
-                        html_h1_logo_wrapper.wrap_around(
-                            Html("Skipperman: BSC Cadet Skipper Management System")
-                        )
-                    )+
-                    '<meta name="viewport" content = "width=device_width ; initial_scale=1.0;"'
-                ),
-                Html("%s"),  ## body
-            ]
-        )
-    )
-)
+
+
+def get_master_layout():
+    links = ListOfHtmlElements([SingleStyleLink("/static/w3.css"), SingleStyleLink("/static/w3-theme-black.css"),
+                                SingleStyleLink("/static/font-awesome.min.css")])
+    meta = ListOfHtmlElements(
+        [SingleMetaElement(parameter='name', equal_to='viewport', content='width=device_width ; initial_scale=1.0;')])
+    html_head = HtmlHead(title='Skipperman', meta=meta, style_links=links)
+    html_header = get_html_header()
+    html_page_master_layout = HtmlPage(head=html_head, header = ListOfHtml([ html_header]), body=ListOfHtml([]), footer=ListOfHtml(["test"]))
+
+    return html_page_master_layout
+
+html_page_master_layout = get_master_layout()
+

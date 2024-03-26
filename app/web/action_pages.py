@@ -1,11 +1,11 @@
 from typing import Union
 from app.web.action_hooks import SiteActions
 from app.objects.abstract_objects.abstract_form import File, Form
-from app.web.html.html import (
+from app.web.html.components import (
     Html,
     html_joined_list_as_paragraphs,
 )
-from app.web.html.master_layout import master_layout_html
+from app.web.html.master_layout import get_master_layout
 from app.web.html.process_abstract_form_to_html import (
     process_abstract_form_to_html,
 )
@@ -31,7 +31,10 @@ def generate_action_page_html(action_name: str) -> Union[Html, Response]:
         abstract_form_for_action=abstract_form_for_action, action_name=action_name
     )
 
-    return html_code_for_action_in_layout
+    html_page_master_layout= get_master_layout()
+    html_page_master_layout.body.append(html_code_for_action_in_layout)
+
+    return html_page_master_layout.as_html()
 
 
 def from_abstract_to_laid_out_html(
@@ -54,8 +57,5 @@ def add_standard_layout_and_buttons_to_action_code(html_code_for_action: Html) -
     html_code_with_buttons = html_joined_list_as_paragraphs(
         [flash_html, html_code_for_action]
     )
-    html_code_for_action_in_layout = master_layout_html.wrap_around(
-        html_code_with_buttons
-    )
 
-    return html_code_for_action_in_layout
+    return html_code_with_buttons

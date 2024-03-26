@@ -1,7 +1,7 @@
 from typing import Callable
 import datetime
 
-from app.web.html.html import Html, HtmlWrapper
+from app.web.html.components import Html, HtmlWrapper
 from app.objects.constants import arg_not_passed
 
 

@@ -1,5 +1,5 @@
 from flask import flash, get_flashed_messages
-from app.web.html.html import (
+from app.web.html.components import (
     HtmlWrapper,
     Html,
     horizontal_line,

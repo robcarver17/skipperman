@@ -68,6 +68,7 @@ html_container_wrapper = HtmlWrapper('<div class="container">%s</div>')
 
 html_h1_logo_wrapper = HtmlWrapper('<h1 class="logo">%s</h1>')
 
+html_title_wrapper = HtmlWrapper('<title>%s</title>')
 
 ## Links
 def html_link(string: str, url: str, open_new_window: bool = False):
@@ -77,6 +78,9 @@ def html_link(string: str, url: str, open_new_window: bool = False):
         target = ''
 
     return Html('<a href="%s" %s>  %s</a>' % (url, target, string))
+
+def rel_stylesheet_link(url: str):
+    return Html('<link rel="stylesheet" href="%s">' % (url))
 
 
 def html_link_in_list_item(string: str, url: str):

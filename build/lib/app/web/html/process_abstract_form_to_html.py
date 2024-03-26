@@ -7,7 +7,7 @@ from app.objects.abstract_objects.abstract_text import Text, Arrow, up_arrow, do
     up_pointer, down_pointer, left_pointer, right_pointer, lightning_symbol, circle_up_arrow_symbol, umbrella_symbol, \
     at_symbol
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
-from app.web.html.html import *
+from app.web.html.components import *
 from app.web.html.url import INDEX_URL
 from app.web.flask.flask_interface import flaskInterface
 from app.web.html.forms import *

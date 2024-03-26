@@ -1,8 +1,7 @@
 from app.web.flask.flash import get_html_of_flashed_messages
 from app.web.flask.security import get_access_group_for_current_user, get_username, authenticated_user
-from app.web.html.login_and_out import login_link_html_code, logout_link_html_code
 from app.web.html.url import HOME, INDEX_URL, get_menu_url, get_action_url
-from app.web.html.html import (
+from app.web.html.components import (
     Html,
     html_link,
     html_link_in_list_item,
@@ -10,13 +9,13 @@ from app.web.html.html import (
     HtmlWrapper,
     ListOfHtml,
 )
-from app.web.html.html import (
+from app.web.html.components import (
     html_container_wrapper,
     html_strong_wraper,
     html_nav_wrapper,
     html_unordered_list_menu_class_wrapper,
 )
-from app.web.html.master_layout import master_layout_html
+from app.web.html.master_layout import get_master_layout
 from app.web.flask.session_data_for_action import (
     clear_session_data_for_all_actions,
 )
@@ -37,13 +36,15 @@ def generate_menu_page_html(menu_option: str = HOME) -> str:
         html_code_for_menu = "Login to see options"
 
 
-    login_or_out_code = login_or_out()
     messages = get_html_of_flashed_messages()
 
-    html_code_for_menu_inside_layout = master_layout_html.wrap_around(
-        messages+html_code_for_menu+login_or_out_code
-    )
-    return html_code_for_menu_inside_layout
+    html_code_for_menu_inside_layout = \
+        messages+html_code_for_menu
+
+    html_page_master_layout= get_master_layout()
+    html_page_master_layout.body.append(html_code_for_menu_inside_layout)
+
+    return html_page_master_layout.as_html()
 
 
 def generate_menu_html(menu_option: str = HOME) -> Html:
@@ -133,12 +134,6 @@ menu_layout_html_wrapper = HtmlWrapper(
     )
 )
 
-def login_or_out() -> Html:
-
-    if authenticated_user():
-        return logout_link_html_code
-    else:
-        return login_link_html_code
 
 
 def can_action_be_seen(action_name):

@@ -1,6 +1,9 @@
-from app.web.html.html import html_container_wrapper, html_link
 from app.web.html.url import LOGIN_URL,LOGOUT_URL
+from app.web.flask.security import get_username
 
-login_link_html_code=html_container_wrapper.wrap_around(html_link('Login', '/%s' % LOGIN_URL))
-logout_link_html_code=html_container_wrapper.wrap_around(html_link('Logout', '/%s' % LOGOUT_URL))
+def get_login_link_html_code():
+    return '<a href="/%s" class="w3-bar-item w3-button w3-padding-16">Login</a>' % LOGIN_URL
+
+def get_logout_link_html_code():
+    return '<a href="/%s" class="w3-bar-item w3-button w3-padding-16">User %s; Logout</a>' % (LOGOUT_URL, get_username())
 

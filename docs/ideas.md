@@ -64,7 +64,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - basic level of niceness
 - double check write on save behaviour
 - full test of everything
-
+- change password / forgot password (needs email, link users to specific volunteer name)
 
 ### Required for social event:
 
@@ -89,7 +89,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 ### Required for training event (Can wait):
 
 - GDPR document
-- instructor login (send link to create, link users to specific volunteer name)
+- instructor login (send link to create)
 - ticksheet level security
 - refactor reporting so uses common data model
 - key report links for instructors on landing page

@@ -60,9 +60,11 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 
 ### Required for racing event:
-  
+
+- saving backups is broken
 - basic level of niceness
 - double check write on save behaviour
+- delete all data (admin)
 - full test of everything
 - change password / forgot password (needs email, link users to specific volunteer name)
 

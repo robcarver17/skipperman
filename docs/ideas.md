@@ -62,6 +62,8 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 ### Required for racing event:
   
 - basic level of niceness
+- double check write on save behaviour
+- full test of everything
 
 
 ### Required for social event:

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Union
+from typing import Union, List
 
 from app.objects.abstract_objects.abstract_text import Arrow, Pointer, Symbol
 from app.objects.constants import arg_not_passed
@@ -22,7 +22,7 @@ class Button:
     tile: bool = False
     nav_button: bool = False
 
-class ButtonBar(list[Button]):
+class ButtonBar(List[Button]):
     def __repr__(self):
         return "ButtonBar contents %s" % str(super().__repr__())
 

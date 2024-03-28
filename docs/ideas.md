@@ -61,7 +61,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for racing event:
 
-- saving backups is broken
+- sail numbers add flating point
 - double check write on save behaviour
 - delete all data (admin)
 - backfill all volunteer skills

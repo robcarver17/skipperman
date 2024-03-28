@@ -61,6 +61,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for racing event:
 
+- make patrol boats pretty
 - sail numbers add flating point
 - double check write on save behaviour
 - delete all data (admin)

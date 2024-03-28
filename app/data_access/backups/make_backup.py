@@ -3,7 +3,8 @@ import os.path
 import shutil
 import subprocess
 
-from app.data_access.backups.access import get_oldest_backup_number, get_backup_directory, due_for_another_backup, create_timestamp_file
+from app.data_access.backups.access import get_oldest_backup_number, get_backup_directory, due_for_another_backup, \
+    create_timestamp_file
 from app.data_access.configuration.configuration import NUMBER_OF_BACKUPS
 
 def make_backup_if_due(backup_data_path:str, master_data_path: str):
@@ -40,9 +41,17 @@ def move_backup_to_previous_backup(backup_number: int, datapath:str):
 
 
 def simlink_copy_first_backup(datapath):
-    backup_dir = get_backup_directory(backup_number=0, datapath=datapath)
+
+    backup_from = get_backup_directory(backup_number=0, datapath=datapath)
     backup_to = get_backup_directory(backup_number=1, datapath=datapath)
-    subprocess.run(["cp","-al",backup_dir, backup_to])
+    try:
+        shutil.rmtree(backup_to)
+    except:
+        ## will fail if really first time
+        passf
+    os.system('cp -al %s %s' % (backup_from, backup_to))
+    #subprocess.run(["cp","-al",backup_from, backup_to], cwd=datapath)
+
 
 def make_first_backup(backup_data_path: str, master_data_path: str):
     backup_directory_for_this_backup = get_backup_directory(backup_number=0, datapath=backup_data_path)

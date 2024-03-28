@@ -17,7 +17,7 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL
+from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________, DetailListOfLines
 from app.objects.abstract_objects.abstract_form import Link
 from app.logic.events.events_in_state import get_event_from_state
@@ -43,7 +43,7 @@ def display_form_view_for_volunteer_rota(interface: abstractInterface) -> Form:
     return Form(
         ListOfLines(
             [
-                ButtonBar([])
+                ButtonBar(['']),
                 title,
                 _______________,
                 _______________,

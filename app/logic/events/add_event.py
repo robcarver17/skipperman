@@ -7,6 +7,7 @@ from app.logic.events.constants import (
     CHECK_BUTTON_LABEL,
     FINAL_ADD_BUTTON_LABEL,
 )
+from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.events import Event, default_event, DICT_OF_NAMES_AND_ATTRIBUTES_CHECKBOX, EXAMPLES_OF_EVENTS
 
@@ -20,7 +21,7 @@ from app.objects.abstract_objects.abstract_form import (
     textInput, dateInput, checkboxInput,
 intInput
 )
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
+from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 
@@ -58,19 +59,14 @@ def get_add_event_form(
 def get_add_event_form_with_information_passed(
     event_and_text: EventAndVerificationText,
 ) -> Form:
-    header_text = Line("Add a new event. Do not duplicate! (can only have one event with a specific name in a given year, so include months in training weekends eg June Training, or include a number in a series eg Feva Training 1)")
-    previous_events =  list_of_previously_used_event_names()
-    previous_events_text = "Previously used event names: %s" % ", ".join(previous_events)
 
     form_entries = form_fields_for_add_event(event=event_and_text.event)
     form_is_blank = event_and_text.is_default
     verification_line = Line(event_and_text.verification_text)
     footer_buttons = get_footer_buttons(form_is_blank)
-
     list_of_elements_inside_form = ListOfLines(
         [
-            header_text,
-            previous_events_text,
+            Heading("Add a new event", centred=True, size=4),
             _______________,
             form_entries,
             verification_line,
@@ -80,14 +76,24 @@ def get_add_event_form_with_information_passed(
 
     return Form(list_of_elements_inside_form)
 
+def get_heading_text():
+    header_text = "Do not duplicate event names! (can only have one event with a specific name in a given year, so include months in training weekends eg June Training, or include a number in a series eg Feva Training 1)."
+    previous_events =  list_of_previously_used_event_names()
+    previous_events_text = " Previously used event names: %s" % ", ".join(previous_events)
+
+    heading = Heading(header_text+ previous_events_text, size=6, centred=False)
+
+    return heading
+
+
 def get_footer_buttons(form_is_blank: bool):
-    final_submit = Button(FINAL_ADD_BUTTON_LABEL)
-    check_submit = Button(CHECK_BUTTON_LABEL)
-    cancel_button = Button(CANCEL_BUTTON_LABEL)
+    final_submit = Button(FINAL_ADD_BUTTON_LABEL, nav_button=True)
+    check_submit = Button(CHECK_BUTTON_LABEL, nav_button=True)
+    cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
     if form_is_blank:
-        return Line([cancel_button,  check_submit])
+        return ButtonBar([cancel_button,  check_submit])
     else:
-        return Line([cancel_button, check_submit, final_submit])
+        return ButtonBar([cancel_button, check_submit, final_submit])
 
 
 
@@ -98,6 +104,8 @@ def form_fields_for_add_event(event: Event = default_event) -> ListOfLines:
         input_name=EVENT_NAME,
         value=event.event_name,
     )
+    heading = get_heading_text()
+
     start_date = dateInput(
         input_label="Start date",
         input_name=EVENT_START_DATE,
@@ -122,13 +130,15 @@ def form_fields_for_add_event(event: Event = default_event) -> ListOfLines:
 
     list_of_form_entries = [
         event_name,
+        heading,
         start_date,
         days,
+        _______________,
         event_type,
-        EXAMPLES_OF_EVENTS
+        Heading(EXAMPLES_OF_EVENTS, size=6, centred=False)
     ]
 
-    return ListOfLines(list_of_form_entries)
+    return ListOfLines(list_of_form_entries).add_Lines()
 
 list_of_possible_checkbox_labels = (DICT_OF_NAMES_AND_ATTRIBUTES_CHECKBOX.keys())
 def get_event_attribute_given_label(label):

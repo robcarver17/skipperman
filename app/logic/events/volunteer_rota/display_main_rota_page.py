@@ -18,18 +18,19 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm,
 )
 from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________, DetailListOfLines
 from app.objects.abstract_objects.abstract_form import Link
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.volunteers.ENTRY_view_volunteers import all_sort_types as all_volunteer_name_sort_types
 from app.logic.events.volunteer_rota.render_volunteer_table import get_volunteer_table
+from app.objects.abstract_objects.abstract_text import Heading
 
 ADD_NEW_VOLUNTEER_BUTTON_LABEL = "Add new volunteer to rota"
 
 def display_form_view_for_volunteer_rota(interface: abstractInterface) -> Form:
     sorts_and_filters = get_sorts_and_filters_from_state(interface)
     event =get_event_from_state(interface)
-    title = "Volunteer rota for event %s" % str(event)
+    title = Heading("Volunteer rota for event %s" % str(event), centred=True, size=4)
     summary_of_filled_roles =  get_summary_list_of_roles_and_groups_for_events(event)
     volunteer_table_with_day_reordering = get_volunteer_table(event=event,
                                                               interface=interface,
@@ -42,10 +43,12 @@ def display_form_view_for_volunteer_rota(interface: abstractInterface) -> Form:
     return Form(
         ListOfLines(
             [
+                ButtonBar([])
                 title,
                 _______________,
                 _______________,
-                summary_of_filled_roles,
+                DetailListOfLines(ListOfLines([
+                summary_of_filled_roles]), name='Summary'),
                 _______________,
                 instructions,
                 _______________,

@@ -5,7 +5,7 @@ from app.logic.volunteers.delete_volunteer import display_form_delete_individual
 from app.logic.volunteers.edit_cadet_connections import display_form_edit_cadet_volunteer_connections
 from app.logic.volunteers.edit_volunteer import display_form_edit_individual_volunteer
 from app.objects.abstract_objects.abstract_form import Form, NewForm
-from app.objects.abstract_objects.abstract_buttons import Button
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_interface import (
@@ -63,6 +63,8 @@ def display_form_for_selected_volunteer(
 def list_of_lines_with_allocations_and_roles(volunteer: Volunteer) -> ListOfLines:
     dict_of_roles =get_all_roles_across_past_events_for_volunteer_id_as_dict(volunteer_id=volunteer.id,
                                                       sort_by=SORT_BY_START_DSC)
+    if len(dict_of_roles)==0:
+        return ListOfLines([])
 
     return ListOfLines(["Events helping at:", _______________]+
         ["%s: %s" % (str(event), role) for event, role in dict_of_roles.items()]
@@ -75,8 +77,8 @@ def list_of_skills(volunteer: Volunteer) -> ListOfLines:
     skills_not_held = [skill for skill, skill_held in skills.items() if not skill_held]
 
     return ListOfLines([
-        "Skills held: %s" % ", ".join(skills_held),
-        "Skills missing: %s" % ", ".join(skills_not_held),
+        Line("Skills held: %s" % ", ".join(skills_held)),
+        Line("Skills missing: %s" % ", ".join(skills_not_held)),
     ])
 
 def lines_for_connected_cadets(volunteer: Volunteer) -> Line:
@@ -88,8 +90,8 @@ def lines_for_connected_cadets(volunteer: Volunteer) -> Line:
         "Connected to: %s" % ", ".join(cadets_as_str)
     )
 
-def buttons_for_volunteer_form() -> Line:
-    return Line([Button(BACK_BUTTON_LABEL), Button(EDIT_BUTTON_LABEL), Button(DELETE_BUTTON_LABEL), Button(EDIT_CADET_CONNECTIONS_BUTTON_LABEL)])
+def buttons_for_volunteer_form() -> ButtonBar:
+    return ButtonBar([Button(BACK_BUTTON_LABEL, nav_button=True), Button(EDIT_BUTTON_LABEL, nav_button=True),  Button(EDIT_CADET_CONNECTIONS_BUTTON_LABEL, nav_button=True)])
 
 
 def post_form_view_individual_volunteer(

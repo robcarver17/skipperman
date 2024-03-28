@@ -8,14 +8,15 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm
 )
 from app.objects.abstract_objects.abstract_tables import Table
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
-from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button, ButtonBar
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.cadets.ENTRY_view_cadets import sort_buttons, all_sort_types
 from app.backend.cadets import SORT_BY_SURNAME
 from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
+from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import Event
 
 
@@ -41,26 +42,26 @@ def display_form_edit_registration_details_given_event_and_sort_order(
     return Form(
         ListOfLines(
             [
-                "Registration details for %s" % event,
-                "(Excludes group allocation and volunteer information; plus cadet name/DOB - edit in the appropriate places / also food and clothing)",
+                Line(Heading("Registration details for %s" % event, centred=True, size=4)),
+                Line(Heading(
+                    "(Excludes group allocation and volunteer information; plus cadet name/DOB - edit in the appropriate places / also food and clothing)",
+                centred = True, size =6)),
 
                 _______________,
-                back_button,
-                "Always save before sorting - sorting will lose any edits",
-                sort_buttons,
+                nav_buttons,
+               sort_buttons,
                 _______________,
 
-                save_button,
                 table,
-                save_button,
-                back_button
 
             ]
         )
     )
 
-save_button = Button(SAVE_CHANGES, big=True)
-back_button = Button(BACK_BUTTON_LABEL)
+save_button = Button(SAVE_CHANGES, nav_button=True)
+back_button = Button(BACK_BUTTON_LABEL, nav_button=True)
+
+nav_buttons = ButtonBar([back_button, save_button])
 
 def get_registration_details_inner_form_for_event(
     event: Event,
@@ -72,7 +73,7 @@ def get_registration_details_inner_form_for_event(
         row_for_cadet_in_event( registration_details=registration_details, cadet_at_event=cadet_at_event)
                      for cadet_at_event in registration_details.cadets_at_event]
 
-    return Table([top_row]+rows_in_table)
+    return Table([top_row]+rows_in_table, has_row_headings=True, has_column_headings=True)
 
 
 

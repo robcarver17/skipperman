@@ -12,11 +12,12 @@ from app.backend.group_allocations.summarise_allocations_data import summarise_a
 from app.data_access.configuration.configuration import ALL_GROUPS_NAMES
 from app.logic.events.constants import UPDATE_ALLOCATION_BUTTON_LABEL, ALLOCATION, ATTENDANCE, CLUB_BOAT, BOAT_CLASS, SAIL_NUMBER, PARTNER
 from app.logic.events.events_in_state import get_event_from_state
-from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL
+from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL, ButtonBar
 from app.objects.abstract_objects.abstract_form import Form, NewForm, dropDownInput, checkboxInput, textInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, DetailListOfLines
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
+from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.cadets import Cadet
 from app.objects.club_dinghies import NO_BOAT
 from app.objects.constants import missing_data
@@ -40,32 +41,40 @@ def display_form_allocate_cadets_at_event( event: Event, sort_order: list) -> Un
     classes = summarise_class_attendance_for_event(event)
 
     inner_form = get_inner_form_for_cadet_allocation(event, sort_order=sort_order)
-    back_button= Button(BACK_BUTTON_LABEL)
     sort_button_table = sort_buttons_for_allocation_table(sort_order)
+    nav_bar = ButtonBar([back_button, update_button])
 
-    return Form(ListOfLines(["Cadets in %s - scroll down to modify" % str(event), _______________,
+    return Form(ListOfLines([
+                ButtonBar([back_button]),
+                    Heading("Cadets in %s " % str(event), size=4), _______________,
+        _______________,
+                DetailListOfLines(ListOfLines([
+                    _______________,
                             allocations,
+                    _______________,
                              "Allocated club dinghies:",
                              club_dinghies,
+                    _______________,
                              "Classes",
                              classes,
-                    _______________,
-                    back_button,
+                    _______________]), "Summary"),
+                    DetailListOfLines(ListOfLines([
                     _______________,
                     "Specify order that table is sorted in:",
-                    sort_button_table,
+                    sort_button_table]), "Sort order"),
                      _______________,
-                     update_button,
+                     nav_bar,
                     star_indicator,
                     inner_form,
-                     update_button,
-                     _______________,
-                     back_button
+                    _______________,
+                    nav_bar
                     ])
     )
 
 
-update_button = Button(UPDATE_ALLOCATION_BUTTON_LABEL, big=True)
+update_button = Button(UPDATE_ALLOCATION_BUTTON_LABEL, nav_button=True)
+back_button = Button(BACK_BUTTON_LABEL, nav_button=True)
+
 
 def sort_buttons_for_allocation_table(sort_order: list) -> Table:
     return reorder_table(sort_order)
@@ -80,7 +89,7 @@ def get_inner_form_for_cadet_allocation(event: Event, sort_order: list) -> Table
         [
             get_row_for_cadet(cadet=cadet, allocation_data=allocation_data)
             for cadet in list_of_cadets
-        ]
+        ], has_column_headings=True, has_row_headings=True
     )
 
 

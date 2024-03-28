@@ -13,7 +13,7 @@ def explain_additional_parameters_for_rota_report(interface: abstractInterface,
     additional_parameters: AdditionalParametersForVolunteerReport, ## should be rota
 ) -> ListOfLines:
 
-    return ListOfLines(["Report covers the following days: %s" % str(additional_parameters.days_to_show)])
+    return ListOfLines(["Report covers the following days: %s" % str(additional_parameters.days_to_show)]).add_Lines()
 
 def reporting_options_form_for_rota_additional_parameters(
     interface: abstractInterface,
@@ -33,5 +33,6 @@ def reporting_options_form_for_rota_additional_parameters(
             _______________,
         ]
     )
-    return my_options
+
+    return my_options.add_Lines()
 

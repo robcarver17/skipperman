@@ -42,16 +42,12 @@ def home():
     return generate_menu_page_html()
 
 
-@app.route("/%s/<menu_option>" % MENU_PREFIX)
-def menu(menu_option):
-    return generate_menu_page_html(menu_option)
-
-
 @app.route("/%s/<action_option>" % ACTION_PREFIX, methods=["GET", "POST"])
 @login_required
 def action(action_option):
     if not authenticated_user():
         ## belt and braces on security
+        print("USER NOT LOGGED IN")
         return generate_menu_page_html()
 
     return generate_action_page_html(action_option)

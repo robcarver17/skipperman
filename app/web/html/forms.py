@@ -19,7 +19,7 @@ HTML_BUTTON_NAME = "action"
 
 
 
-def html_button(button_text, button_value=arg_not_passed, big_button: bool = False):
+def html_button(button_text, button_value=arg_not_passed, big_button: bool = False, menu_tile = False, nav_button = False):
     button_name = HTML_BUTTON_NAME
     if button_value == arg_not_passed:
         button_value = button_text
@@ -29,10 +29,19 @@ def html_button(button_text, button_value=arg_not_passed, big_button: bool = Fal
     else:
         size = ""
 
+    if menu_tile:
+        style_str = ' class = "wbig-btn w3-theme" '
+    elif nav_button:
+        style_str = 'class = "w3-btn w3-dark-grey"'
+    else:
+        style_str = ''
+
     return Html(
-        '<button name="%s" type="submit" value="%s" %s>%s</button>'
-        % (button_name, button_value, size, button_text)
+        '<button %s name="%s" type="submit" value="%s" %s>%s</button>'
+        % (style_str, button_name, button_value, size, button_text)
     )
+
+
 
 
 def html_form_text_input(

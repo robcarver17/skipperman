@@ -7,7 +7,7 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_buttons import  Button
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.volunteers.constants import *
@@ -20,11 +20,11 @@ def display_form_view_of_snapshots(interface: abstractInterface) -> Form:
 
     form_contents = ListOfLines(
         [
-            Button(BACK_BUTTON_LABEL),
-            _______________,
-            list_of_buttons,
+            ButtonBar([Button(BACK_BUTTON_LABEL, nav_button=True)]),
             _______________,
             Line("Click on any snapshot to restore - WILL OVERWRITE ALL CHANGES SINCE THEN!"),
+            _______________,
+            list_of_buttons,
 
         ]
     )
@@ -45,7 +45,7 @@ def post_form_view_of_snapshots(interface: abstractInterface) -> Union[Form, New
 
 def list_of_snapshot_buttons():
     all_labels = get_all_snapshot_labels()
-    return ListOfLines([Button(name) for name in all_labels])
+    return ListOfLines([Line(Button(name)) for name in all_labels])
 
 def get_all_snapshot_labels():
     backup_path = data.backup_data_path

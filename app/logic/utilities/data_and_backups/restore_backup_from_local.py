@@ -7,7 +7,7 @@ import shutil
 from typing import Union
 
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
-from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button, ButtonBar
 from app.objects.abstract_objects.abstract_form import fileInput, Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface, get_file_from_interface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
@@ -18,8 +18,8 @@ UPLOAD_FILE_BUTTON_LABEL = "Upload file - will delete all existing data - be *VE
 def display_form_for_upload_backup(interface: abstractInterface):
 
     buttons = get_upload_buttons()
-    prompt = "Choose file. Must be a zip file with the correct directory structure. Wrong file will result in messed up data with no recourse except restoring!"
-    input_field = fileInput(input_name=ZIPPED_FILE, accept=".zip")
+    prompt = Line("Choose file. Must be a zip file with the correct directory structure. Wrong file will result in messed up data with no recourse except restoring!")
+    input_field = Line(fileInput(input_name=ZIPPED_FILE, accept=".zip"))
 
     list_of_lines = ListOfLines([prompt, input_field, buttons])
 
@@ -27,10 +27,10 @@ def display_form_for_upload_backup(interface: abstractInterface):
 
 
 def get_upload_buttons():
-    upload = Button(UPLOAD_FILE_BUTTON_LABEL)
-    back_button = Button(BACK_BUTTON_LABEL)
+    upload = Button(UPLOAD_FILE_BUTTON_LABEL, nav_button=True)
+    back_button = Button(BACK_BUTTON_LABEL, nav_button=True)
 
-    return Line([back_button, upload])
+    return ButtonBar([back_button, upload])
 
 
 def post_form_upload_backup_file(interface: abstractInterface) -> Union[Form, NewForm]:

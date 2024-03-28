@@ -8,8 +8,8 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
+from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button, ButtonBar
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
@@ -17,15 +17,16 @@ CLUB_DINGHIES_BUTTON_LABEL = "Club dinghies"
 PATROL_BOATS_BUTTON_LABEL = "Patrol boats"
 BOAT_CLASSES_BUTTON_LABEL = "Boat classes"
 
+nav_buttons = ButtonBar([main_menu_button])
+config_option_buttons = Line([Button(CLUB_DINGHIES_BUTTON_LABEL, tile=True),
+                              Button(PATROL_BOATS_BUTTON_LABEL, tile = True),
+                              Button(BOAT_CLASSES_BUTTON_LABEL, tile=True)])
+
 def display_form_main_config_page(interface: abstractInterface) -> Form:
     lines_inside_form = ListOfLines(
         [
-            main_menu_button,
-            "Select shared to modify",
-            _______________,
-            Button(CLUB_DINGHIES_BUTTON_LABEL),
-            Button(PATROL_BOATS_BUTTON_LABEL),
-            Button(BOAT_CLASSES_BUTTON_LABEL)
+            nav_buttons,
+            config_option_buttons
         ]
     )
 

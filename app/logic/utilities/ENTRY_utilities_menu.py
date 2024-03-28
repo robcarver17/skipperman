@@ -7,8 +7,8 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
+from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button, ButtonBar
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.constants import missing_data
 
@@ -20,7 +20,9 @@ DICT_OF_MENU_OPTIONS ={
 }
 
 list_of_menu_labels=list(DICT_OF_MENU_OPTIONS.keys())
-list_of_menu_buttons = ListOfLines([Button(label) for label in list_of_menu_labels])
+list_of_menu_buttons = Line([Button(label, tile=True) for label in list_of_menu_labels])
+
+nav_buttons = ButtonBar([main_menu_button])
 
 def function_given_pressed_button_label(label) -> str:
     return DICT_OF_MENU_OPTIONS.get(label, missing_data)
@@ -28,11 +30,9 @@ def function_given_pressed_button_label(label) -> str:
 def display_form_utilities_menu(interface: abstractInterface) -> Form:
     lines_inside_form = ListOfLines(
         [
-            main_menu_button,
-            _______________,
-            "Select option:",
-            _______________]+
+            nav_buttons,
             list_of_menu_buttons
+            ]
     )
 
     return Form(lines_inside_form)

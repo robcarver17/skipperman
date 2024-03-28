@@ -64,7 +64,7 @@ def get_reorder_list_of_groups_form_element(
 
 def get_auto_layout_buttons_form_element() -> Line:
     auto_layout_buttons = Line(
-        ["Click to auto-layout based on group order above"]
+        ["Click to auto-layout based on group order above:  "]
         + [
             Button(arrangement_description)
             for arrangement_description in dict_of_arrangements_that_reorder.keys()

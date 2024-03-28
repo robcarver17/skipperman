@@ -2,8 +2,8 @@ from typing import Union
 
 from app.objects.abstract_objects.abstract_form import Form, NewForm, textInput, passwordInput, dropDownInput
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-from app.objects.abstract_objects.abstract_text import bold
-from app.objects.abstract_objects.abstract_buttons import Button
+from app.objects.abstract_objects.abstract_text import bold, Heading
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar
 from app.objects.users_and_security import ListOfSkipperManUsers, SkipperManUser, ADMIN_GROUP, ALL_GROUPS
 from app.backend.data.security import load_all_users
 
@@ -15,14 +15,16 @@ def display_form_edit_list_of_users(
     existing_list_of_users: ListOfSkipperManUsers
 ) -> Union[Form, NewForm]:
 
-    header_text= "List of current skipperman users; edit name, enter new password, modify access, delete (carefully!) or add new user. Passwords are not shown, but can be changed by entering new values."
+    header_text= Heading("List of current skipperman users; edit name, enter new password, modify access, delete (carefully!) or add new user. Passwords are not shown, but can be changed by entering new values.", centred=False, size=4)
     existing_entries = rows_for_existing_list_of_users(existing_list_of_users)
     new_entries = row_for_new_user()
     warning = warning_text()
-    footer_buttons = Line([Button(BACK_BUTTON_LABEL), Button(SAVE_ENTRY_BUTTON_LABEL)])
+    nav_buttons = ButtonBar([Button(BACK_BUTTON_LABEL, nav_button=True)])
+    footer_buttons = ButtonBar([Button(SAVE_ENTRY_BUTTON_LABEL, nav_button=True)])
 
     return Form([
         ListOfLines([
+            nav_buttons,
             header_text,
             warning,
             _______________,
@@ -38,7 +40,7 @@ new_user = user = SkipperManUser('', '', ADMIN_GROUP)
 
 def warning_text():
     if no_admin_users():
-        return bold("*** AT LEAST ONE USER MUST HAVE ADMIN RIGHTS - ADD A NEW USER OR EDIT AN EXISTING USER TO REFLECT THIS ***")
+        return Line(bold("*** AT LEAST ONE USER MUST HAVE ADMIN RIGHTS - ADD A NEW USER OR EDIT AN EXISTING USER TO REFLECT THIS ***"))
     else:
         return ""
 
@@ -59,7 +61,7 @@ def rows_for_existing_list_of_users(existing_list_of_users: ListOfSkipperManUser
 
 def get_row_for_existing_user(user: SkipperManUser) -> Line:
     return Line(
-        [ "Username: "+user.username, text_box_for_password(user),text_box_for_password(user, True),  dropdown_for_group(user), button_for_deletion(user)
+        [ "Username: %s  " % user.username, text_box_for_password(user),text_box_for_password(user, True),  dropdown_for_group(user), button_for_deletion(user)
             ],
     )
 
@@ -80,10 +82,10 @@ def text_box_for_username(user: SkipperManUser)-> textInput:
 def text_box_for_password(user: SkipperManUser, confirm = False)-> textInput:
     if confirm:
         name = PASSWORD_CONFIRM
-        label = "Confirm password"
+        label = "   Confirm password"
     else:
         name = PASSWORD
-        label = "New password"
+        label = "   New password"
     return textInput(value='',
                      input_label=label,
                      input_name=name_for_user_and_input_type(user, name))
@@ -94,7 +96,7 @@ def dropdown_for_group(user: SkipperManUser) -> dropDownInput:
     default_label=user.group.name,
         dict_of_options=user_group_options_as_dict,
         input_name=name_for_user_and_input_type(user,GROUP),
-        input_label="Access group "
+        input_label="   Access group "
     )
 
 

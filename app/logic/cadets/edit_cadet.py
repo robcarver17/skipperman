@@ -4,7 +4,7 @@ from app.data_access.data import data
 from app.logic.cadets.cadet_state_storage import get_cadet_from_state
 from app.backend.cadets import get_sorted_list_of_cadets
 from app.objects.abstract_objects.abstract_form import Form, NewForm
-from app.objects.abstract_objects.abstract_buttons import Button
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_interface import (
@@ -26,7 +26,7 @@ def display_form_edit_individual_cadet(
         )
         return initial_state_form
 
-    footer_buttons = Line([Button(CANCEL_BUTTON_LABEL), Button(SAVE_BUTTON_LABEL)])
+    footer_buttons = ButtonBar([Button(CANCEL_BUTTON_LABEL, nav_button=True), Button(SAVE_BUTTON_LABEL, nav_button=True)])
     cadet_and_text = CadetAndVerificationText(
         cadet=cadet,
         verification_text=""

@@ -19,9 +19,9 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm,
     File,
 )
-from app.objects.abstract_objects.abstract_text import bold
+from app.objects.abstract_objects.abstract_text import bold, Heading
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, CANCEL_BUTTON_LABEL, Button
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, CANCEL_BUTTON_LABEL, Button, ButtonBar
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.logic.events.events_in_state import get_event_from_state, update_state_for_specific_event_given_event_description
@@ -36,19 +36,21 @@ def display_initial_generic_report_form(report_generator: ReportGenerator) -> Fo
         **event_criteria
     )
     criteria_description  =describe_criteria(**event_criteria)
+
+    nav_bar = ButtonBar([back_button])
+
+    heading = Heading("Select event for %s %s:" % (report_generator.name, criteria_description), centred=True, size=4)
     lines_inside_form = ListOfLines(
-        [back_button,
+        [nav_bar,
          _______________,
-         report_generator.name,
-         _______________,
-         "Select event %s:" %  criteria_description,
+        heading,
          _______________,
          list_of_events]
     )
 
     return Form(lines_inside_form)
 
-back_button = Button(BACK_BUTTON_LABEL)
+back_button = Button(BACK_BUTTON_LABEL, nav_button=True)
 
 
 
@@ -92,27 +94,28 @@ def display_form_for_generic_report_all_options(
         arrangement_and_order_text,
     ) = get_text_explaining_various_options_for_generic_report(interface=interface, report_generator=report_generator)
 
+    navbar = ButtonBar([back_button, create_report_button])
 
     link =weblink_for_report(interface=interface, report_generator=report_generator)
     return Form(
         ListOfLines(
             [
-                cancel_button,
-                back_button,
+                navbar,
                 _______________,
-                bold("%s: Reporting options for %s" % (report_generator.name, str(event))),
+                Heading("%s: Reporting options for %s" % (report_generator.name, str(event)), size=4, centred=True),
+                link,
                 _______________,
+                ButtonBar([                Button(MODIFY_ADDITIONAL_OPTIONS_BUTTON_LABEL, nav_button=True)]),
+                bold("Specific options for this report"),
                 additional_options_as_text,
-                Button(MODIFY_ADDITIONAL_OPTIONS_BUTTON_LABEL),
                 _______________,
+                ButtonBar([                Button(MODIFY_PRINT_OPTIONS_BUTTON_LABEL, nav_button=True)]),
+                link,
                 print_options_as_text,
-                Button(MODIFY_PRINT_OPTIONS_BUTTON_LABEL),
                 _______________,
+                ButtonBar([                Button(CHANGE_GROUP_LAYOUT_BUTTON, nav_button=True)]),
                 arrangement_and_order_text,
-                Button(CHANGE_GROUP_LAYOUT_BUTTON),
                 _______________,
-                Button(CREATE_REPORT_BUTTON_LABEL),
-                link
             ]
         )
     )
@@ -125,7 +128,7 @@ def weblink_for_report(interface: abstractInterface, report_generator: ReportGen
     else:
         return ""
 
-cancel_button = Button(CANCEL_BUTTON_LABEL)
+create_report_button = Button(CREATE_REPORT_BUTTON_LABEL, nav_button=True)
 
 def post_form_for_generic_report_all_options(
     interface: abstractInterface,
@@ -183,18 +186,19 @@ def display_form_for_generic_report_additional_options(
     return Form(
         ListOfLines(
             [
-                cancel_button,
-                back_button,
+                ButtonBar([back_button]),
                 _______________,
-                "%s: Select additional parameters for %s" % (report_generator.name, str(event)),
+                Heading("%s: Select additional parameters for %s" % (report_generator.name, str(event)), centred=False, size=6),
                 _______________,
                 reporting_options_this_report,
                 _______________,
-                Line([Button(SAVE_THESE_OPTIONS_BUTTON_LABEL), Button(CREATE_REPORT_BUTTON_LABEL)])
+                ButtonBar([create_report_button, save_button]),
+
             ]
         )
     )
 
+save_button = Button(SAVE_THESE_OPTIONS_BUTTON_LABEL, nav_button=True)
 
 def post_form_for_generic_report_additional_options(
     interface: abstractInterface,
@@ -236,17 +240,15 @@ def display_form_for_generic_report_print_options(
     return Form(
         ListOfLines(
             [
-                cancel_button,
+                ButtonBar([back_button,  save_button])
+                ,
+                _______________])+
+                form_of_print_options+
+        ListOfLines(
+            [
                 _______________,
-                form_of_print_options,
-                _______________,
-                Line(
-                    [
-                        back_button,
-                        Button(SAVE_THESE_OPTIONS_BUTTON_LABEL),
-                        Button(CREATE_REPORT_BUTTON_LABEL),
-                    ]
-                ),
+                ButtonBar([ save_button, create_report_button]),
+
             ]
         )
     )
@@ -290,14 +292,15 @@ def display_form_for_generic_report_arrangement_options(interface: abstractInter
     form_for_arrangement_options = form_for_group_arrangement_options(interface=interface,
                                                                       dict_of_df=dict_of_df,
                                                                       specific_parameters_for_type_of_report=report_generator.specific_parameters_for_type_of_report)
-
+    event = get_event_from_state(interface)
     return Form(
         ListOfLines(
             [
-                cancel_button,
+                ButtonBar([back_button]),
+                Heading("%s: Arrange layout for %s" % (report_generator.name, str(event)), centred=False, size=6),
                 form_for_arrangement_options,
+                ButtonBar([create_report_button]),
                 _______________,
-                Line([back_button, Button(CREATE_REPORT_BUTTON_LABEL)]),
             ]
         )
     )

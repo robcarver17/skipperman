@@ -1,7 +1,7 @@
 from app.logic.events.constants import TEMPLATE_NAME, MAPPING_FILE, UPLOAD_FILE_BUTTON_LABEL
 from app.backend.data.field_mapping import write_template, read_mapping_from_csv_file_object
 from app.objects.abstract_objects.abstract_form import textInput, fileInput, Form, NewForm
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
+from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.objects.abstract_objects.abstract_interface import abstractInterface, get_file_from_interface, \
     form_with_message_and_finished_button
@@ -18,9 +18,9 @@ def display_form_for_upload_template_field_mapping(interface: abstractInterface)
 
     list_of_lines = ListOfLines(
         [
-            "Choose .csv file to upload as a mapping template, providing template name",
-            template_name_field,
-            file_select_field,
+            Line("Choose .csv file to upload as a mapping template, providing template name"),
+            Line(template_name_field),
+            Line(file_select_field),
             buttons,
         ]
     )
@@ -29,11 +29,12 @@ def display_form_for_upload_template_field_mapping(interface: abstractInterface)
 
 
 def get_upload_buttons_for_template():
-    upload = Button(UPLOAD_FILE_BUTTON_LABEL)
 
-    return Line([cancel_button, upload])
+    return ButtonBar([cancel_button, upload_button])
 
-cancel_button = Button(CANCEL_BUTTON_LABEL)
+
+upload_button = Button(UPLOAD_FILE_BUTTON_LABEL, nav_button=True)
+cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
 
 def post_form_for_upload_template_field_mapping(interface: abstractInterface):
     last_button = interface.last_button_pressed()

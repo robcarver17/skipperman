@@ -20,13 +20,14 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm
 )
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button, ButtonBar
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 
 from app.logic.events.constants import *
 from app.backend.wa_import.load_wa_file import does_raw_event_file_exist
 from app.logic.events.events_in_state import get_event_from_state
+from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import Event
 
 
@@ -43,36 +44,36 @@ def get_event_form_for_event(
     event: Event, interface: abstractInterface
 ) -> Union[Form, NewForm]:
     event_description = event.details_as_list_of_str()
+    event_description = ListOfLines([Line([Heading(item,centred=True, size=5)]) for item in event_description])
 
+    allocations_lines = ""
     if event.contains_cadets:
         if event.contains_groups:
             description = "Boat details and group allocations"
         else:
             description = "Boat details and allocations"
         allocations = summarise_allocations_for_event(event)
-        allocations_lines = ListOfLines([ _______________,
-                    description,
-                    _______________,
-                    allocations])
+        if len(allocations)>0:
+            allocations_lines = ListOfLines([ _______________,
+                        description,
+                        _______________,
+                        allocations])
 
-    else:
-        allocations_lines = ""
 
+    rota_lines = ""
     if event.contains_volunteers:
         rota = get_summary_list_of_roles_and_groups_for_events(event)
         boat_allocation_table = get_summary_list_of_boat_allocations_for_events(event)
-        rota_lines =   ListOfLines([
-                     _______________,
-                    "Volunteer rota:",
-                      _______________,
-                      rota,
-                    _______________,
-                    _______________,
-                    "Patrol boats, number of crew:",
-                    boat_allocation_table])
-
-    else:
-        rota_lines = ""
+        if len(boat_allocation_table)>0:
+            rota_lines =   ListOfLines([
+                         _______________,
+                        "Volunteer rota:",
+                          _______________,
+                          rota,
+                        _______________,
+                        _______________,
+                        "Patrol boats, number of crew:",
+                        boat_allocation_table])
 
 
     if event.contains_cadets:
@@ -103,22 +104,29 @@ def get_event_form_for_event(
 
 
 
-def get_event_buttons(event: Event, interface: abstractInterface) -> Line:
+def get_event_buttons(event: Event, interface: abstractInterface) -> ButtonBar:
     wa_initial_upload = Button(
-        WA_UPLOAD_BUTTON_LABEL
+        WA_UPLOAD_BUTTON_LABEL,
+        nav_button=True
     )  ## uploads and creates staging file
     wa_create_field_mapping = Button(
-        WA_FIELD_MAPPING_BUTTON_LABEL
+        WA_FIELD_MAPPING_BUTTON_LABEL,
+        nav_button=True
     )  ## does field mapping from staged file
-    wa_check_field_mapping = Button(WA_CHECK_FIELD_MAPPING_BUTTON_LABEL)
-    wa_modify_field_mapping = Button(WA_MODIFY_FIELD_MAPPING_BUTTON_LABEL)
+    wa_check_field_mapping = Button(WA_CHECK_FIELD_MAPPING_BUTTON_LABEL,
+        nav_button=True)
+    wa_modify_field_mapping = Button(WA_MODIFY_FIELD_MAPPING_BUTTON_LABEL,
+        nav_button=True)
 
-    wa_import = Button(WA_IMPORT_BUTTON_LABEL)  ## does import_wa given a staged file
+    wa_import = Button(WA_IMPORT_BUTTON_LABEL,
+        nav_button=True)  ## does import_wa given a staged file
     wa_update = Button(
-        WA_UPDATE_BUTTON_LABEL
+        WA_UPDATE_BUTTON_LABEL,
+        nav_button=True
     )  ## does upload and import_wa, assuming no staged file
 
-    back_button = Button(BACK_BUTTON_LABEL)
+    back_button = Button(BACK_BUTTON_LABEL,
+        nav_button=True)
 
 
     wa_import_done = is_wa_file_mapping_setup_for_event(event=event) ## have we done an import already (sets up event mapping)
@@ -132,35 +140,35 @@ def get_event_buttons(event: Event, interface: abstractInterface) -> Line:
     )
 
     if not wa_import_done and not field_mapping_done and not raw_event_file_exists:
-        return Line([back_button, wa_initial_upload])
+        return ButtonBar([back_button, wa_initial_upload])
 
     if not wa_import_done and field_mapping_done and not raw_event_file_exists:
         ## probably done mapping manually, need to do initial upload
-        return Line([back_button, wa_initial_upload])
+        return ButtonBar([back_button, wa_initial_upload])
 
     if not wa_import_done and not field_mapping_done and raw_event_file_exists:
-        return Line([back_button, wa_create_field_mapping])
+        return ButtonBar([back_button, wa_create_field_mapping])
 
     if not wa_import_done and field_mapping_done and raw_event_file_exists:
-        return Line([back_button, wa_import, wa_check_field_mapping])
+        return ButtonBar([back_button, wa_import, wa_check_field_mapping])
 
     ## both done, we can update the WA file and do cadet backend / other editing
     if wa_import_done and field_mapping_done and not raw_event_file_exists:
         event_specific_buttons = get_event_specific_buttons(event)
-        return Line([back_button, wa_update, wa_modify_field_mapping]+event_specific_buttons )
+        return ButtonBar([back_button, wa_update, wa_modify_field_mapping]+event_specific_buttons )
 
     interface.log_error(
         "Something went wrong; contact support [wa_import_done=%s, field_mapping_done=%s, raw_event_file_exists=%s]"
         % (str(wa_import_done), str(field_mapping_done), str(raw_event_file_exists))
     )
-    return Line([back_button])
+    return ButtonBar([back_button])
 
 def get_event_specific_buttons(event: Event) -> list:
-    group_allocation = Button(ALLOCATE_CADETS_BUTTON_LABEL)
-    modify_cadet_boats = Button(MODIFY_CADET_BOATS_BUTTON_LABEL)
-    edit_registration = Button(EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON)
-    volunteer_rota = Button(EDIT_VOLUNTEER_ROLES_BUTTON_LABEL)
-    patrol_boat_allocation = Button(PATROL_BOAT_ALLOCATION_BUTTON_LABEL)
+    group_allocation = Button(ALLOCATE_CADETS_BUTTON_LABEL, nav_button=True)
+    modify_cadet_boats = Button(MODIFY_CADET_BOATS_BUTTON_LABEL, nav_button=True)
+    edit_registration = Button(EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON, nav_button=True)
+    volunteer_rota = Button(EDIT_VOLUNTEER_ROLES_BUTTON_LABEL, nav_button=True)
+    patrol_boat_allocation = Button(PATROL_BOAT_ALLOCATION_BUTTON_LABEL, nav_button=True)
     event_specific_buttons = []
     if event.contains_cadets:
         event_specific_buttons.append(edit_registration)

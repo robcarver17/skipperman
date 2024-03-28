@@ -8,14 +8,14 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
+from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button, ButtonBar
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.constants import missing_data
 
-GROUP_ALLOCATION_REPORT_BUTTON_LABEL = "Group allocation at event"
-ROTA_REPORT_BUTTON_LABEL = "Volunteer rota at event"
-BOATS_REPORT_BUTTON_LABEL = "Boats and sailors (spotter sheet) at event"
+GROUP_ALLOCATION_REPORT_BUTTON_LABEL = "Group allocation for event"
+ROTA_REPORT_BUTTON_LABEL = "Volunteer rota for event"
+BOATS_REPORT_BUTTON_LABEL = "Spotter sheet for event"
 
 ## MODIFY THIS TO ADD MORE REPORTS
 DICT_OF_REPORT_LABELS_AND_STAGES ={
@@ -25,22 +25,21 @@ DICT_OF_REPORT_LABELS_AND_STAGES ={
 }
 
 list_of_report_labels=list(DICT_OF_REPORT_LABELS_AND_STAGES.keys())
-list_of_report_buttons = ListOfLines([Button(label) for label in list_of_report_labels])
+list_of_report_buttons = Line([Button(label, tile=True) for label in list_of_report_labels])
+
+nav_buttons = ButtonBar([main_menu_button])
 
 def function_given_pressed_button_label(label) -> str:
     return DICT_OF_REPORT_LABELS_AND_STAGES.get(label, missing_data)
 
 def display_form_view_of_reports(interface: abstractInterface) -> Form:
-    lines_inside_form = ListOfLines(
-        [
-            main_menu_button,
-            _______________,
-            "Select report to run:",
-            _______________]+
-            list_of_report_buttons
-    )
-
-    return Form(lines_inside_form)
+    print(nav_buttons)
+    print(list_of_report_buttons)
+    print(nav_buttons+list_of_report_buttons)
+    print(Form(ListOfLines([nav_buttons,
+        list_of_report_buttons])))
+    return Form(ListOfLines([nav_buttons,
+        list_of_report_buttons]))
 
 
 def post_form_view_of_reports(interface: abstractInterface) -> Union[Form, NewForm]:

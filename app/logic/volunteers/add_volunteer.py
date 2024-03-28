@@ -12,7 +12,7 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm,
     textInput,
 )
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
+from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface, form_with_message_and_finished_button
 from app.logic.volunteers.constants import *
@@ -159,14 +159,14 @@ def add_volunteer_from_form_to_data(interface) -> Volunteer:
     return volunteer
 
 
-def get_footer_buttons_for_add_volunteer_form(form_is_empty: bool) -> Line:
-    final_submit = Button(FINAL_ADD_BUTTON_LABEL)
-    check_submit = Button(CHECK_BUTTON_LABEL)
-    cancel_button = Button(CANCEL_BUTTON_LABEL)
+def get_footer_buttons_for_add_volunteer_form(form_is_empty: bool) -> ButtonBar:
+    final_submit = Button(FINAL_ADD_BUTTON_LABEL, nav_button=True)
+    check_submit = Button(CHECK_BUTTON_LABEL, nav_button=True)
+    cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
     if form_is_empty:
-        return Line([cancel_button, check_submit])
+        return ButtonBar([cancel_button, check_submit])
     else:
-        return Line([cancel_button, check_submit, final_submit])
+        return ButtonBar([cancel_button, check_submit, final_submit])
 
 
 

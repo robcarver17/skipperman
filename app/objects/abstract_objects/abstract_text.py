@@ -16,6 +16,11 @@ def bold(text):
 def emphasis(text):
     return Text(text, emphasis=True)
 
+@dataclass
+class Heading:
+    text: str
+    centred: bool = True
+    size: int= 1
 
 class Input:
     input_name: str

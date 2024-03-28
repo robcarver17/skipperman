@@ -4,7 +4,7 @@ from app.logic.cadets.cadet_state_storage import get_cadet_from_state
 from app.logic.cadets.delete_cadet import display_form_delete_individual_cadet
 from app.logic.cadets.edit_cadet import display_form_edit_individual_cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm
-from app.objects.abstract_objects.abstract_buttons import Button
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.abstract_logic_api import initial_state_form
 from app.objects.abstract_objects.abstract_interface import (
@@ -50,11 +50,11 @@ def display_form_for_selected_cadet(
 def list_of_lines_with_allocations(cadet: Cadet) -> ListOfLines:
     dict_of_allocations = get_dict_of_all_event_allocations_for_single_cadet(cadet)
     return ListOfLines(["Events registered at:", _______________]+
-        ["%s: %s" % (str(event), group) for event, group in dict_of_allocations.items()]
+        [Line("%s: %s" % (str(event), group)) for event, group in dict_of_allocations.items()]
     )
 
 def buttons_for_cadet_form() -> Line:
-    return Line([Button(BACK_BUTTON_LABEL), Button(EDIT_BUTTON_LABEL), Button(DELETE_BUTTON_LABEL)])
+    return ButtonBar([Button(BACK_BUTTON_LABEL, nav_button=True), Button(EDIT_BUTTON_LABEL, nav_button=True)])
 
 
 

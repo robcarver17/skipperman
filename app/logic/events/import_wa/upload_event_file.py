@@ -7,7 +7,7 @@ from app.objects.abstract_objects.abstract_form import (
     fileInput,
 )
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
-from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL,  Button
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button, ButtonBar
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
     form_with_message_and_finished_button,
@@ -45,16 +45,16 @@ def get_form_for_wa_upload_with_prompt(prompt: str) -> Form:
     buttons = get_upload_buttons()
     input_field = fileInput(input_name=WA_FILE, accept=WILD_APRICOT_FILE_TYPES)
 
-    list_of_lines = ListOfLines([prompt, input_field, buttons])
+    list_of_lines = ListOfLines([Line(prompt), Line(input_field), buttons])
 
     return Form(list_of_lines)
 
 
 def get_upload_buttons():
-    upload = Button(UPLOAD_FILE_BUTTON_LABEL)
-    back_button = Button(BACK_BUTTON_LABEL)
+    upload = Button(UPLOAD_FILE_BUTTON_LABEL, nav_button=True)
+    back_button = Button(BACK_BUTTON_LABEL, nav_button=True)
 
-    return Line([back_button, upload])
+    return ButtonBar([back_button, upload])
 
 
 def post_form_upload_event_file(interface: abstractInterface) -> Union[Form, NewForm]:

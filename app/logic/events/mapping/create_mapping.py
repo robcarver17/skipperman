@@ -1,4 +1,3 @@
-from ctypes import Union
 
 import pandas as pd
 
@@ -10,7 +9,7 @@ from app.logic.events.constants import UPLOAD_MAPPING_BUTTON_LABEL
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.mapping.download_template_field_mapping import display_form_for_download_template_field_mapping
 from app.logic.events.mapping.upload_field_mapping import display_form_for_upload_custom_field_mapping
-from app.objects.abstract_objects.abstract_buttons import Button, CANCEL_BUTTON_LABEL, BACK_BUTTON_LABEL
+from app.objects.abstract_objects.abstract_buttons import Button, CANCEL_BUTTON_LABEL, BACK_BUTTON_LABEL, ButtonBar
 from app.objects.abstract_objects.abstract_form import Form, NewForm, File
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
@@ -26,24 +25,22 @@ def display_form_for_create_custom_field_mapping(interface: abstractInterface):
         [
             "Tools to create mapping for event %s" % str(event),
             _______________,
-            Button(DOWNLOAD_MAPPING_BUTTON_LABEL),
-            Button(DOWNLOAD_FIELD_NAMES_BUTTON_LANEL),
+            ButtonBar([cancel_button, Button(DOWNLOAD_MAPPING_BUTTON_LABEL, nav_button=True),
+            Button(DOWNLOAD_FIELD_NAMES_BUTTON_LANEL, nav_button=True),
             wa_field_button,
-            Button(UPLOAD_MAPPING_BUTTON_LABEL),
-            _______________,
-            cancel_button,
+            Button(UPLOAD_MAPPING_BUTTON_LABEL, nav_button=True)]),
         ]
     )
 
 
     return Form(contents_of_form)
 
-cancel_button = Button(BACK_BUTTON_LABEL)
+cancel_button = Button(BACK_BUTTON_LABEL, nav_button=True)
 
 def get_wa_field_download_button(interface: abstractInterface):
     try:
         get_wa_file_from_staging(interface)
-        return Button(DOWNLOAD_DEFINED_LIST_BUTTON_LABEL)
+        return Button(DOWNLOAD_DEFINED_LIST_BUTTON_LABEL, nav_button=True)
     except:
         return ''
 

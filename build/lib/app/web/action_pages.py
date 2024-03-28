@@ -9,7 +9,6 @@ from app.web.html.master_layout import get_master_layout
 from app.web.html.process_abstract_form_to_html import (
     process_abstract_form_to_html,
 )
-from app.web.flask.flash import get_html_of_flashed_messages
 from app.web.flask.flask_interface import flaskInterface
 from flask import send_file, Response
 
@@ -53,9 +52,8 @@ def from_abstract_to_laid_out_html(
 
 
 def add_standard_layout_and_buttons_to_action_code(html_code_for_action: Html) -> Html:
-    flash_html = get_html_of_flashed_messages()
     html_code_with_buttons = html_joined_list_as_paragraphs(
-        [flash_html, html_code_for_action]
+        [html_code_for_action]
     )
 
     return html_code_with_buttons

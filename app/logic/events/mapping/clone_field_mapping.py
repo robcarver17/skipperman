@@ -7,7 +7,7 @@ from app.objects.abstract_objects.abstract_form import (
     Form
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
+from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar
 
 from app.logic.events.events_in_state import get_event_from_state, get_event_from_list_of_events_given_event_description
 
@@ -19,15 +19,6 @@ from app.objects.events import ListOfEvents, SORT_BY_START_DSC, Event
 
 
 def display_form_for_clone_event_field_mapping(interface: abstractInterface):
-    contents_of_inner_form = inner_form_for_clone_field_mapping(interface)
-    form = Form(ListOfLines([
-        cancel_button,
-        contents_of_inner_form
-    ]))
-
-    return form
-
-def inner_form_for_clone_field_mapping(interface: abstractInterface) -> ListOfLines:
     current_event = get_event_from_state(interface)
     list_of_events_with_buttons = display_list_of_events_with_field_mapping_buttons(exclude_event=current_event)
     if len(list_of_events_with_buttons)==0:
@@ -35,7 +26,8 @@ def inner_form_for_clone_field_mapping(interface: abstractInterface) -> ListOfLi
     else:
         return ListOfLines(
         [
-            "Choose event to clone event field mapping for %s" % str(current_event),
+            ButtonBar([cancel_button]),
+            Line("Choose event to clone event field mapping for %s" % str(current_event)),
             _______________,
             list_of_events_with_buttons,
         ]

@@ -19,7 +19,11 @@ class Button:
     label: Union[str, 'Line', Arrow, Pointer, Symbol]
     value: str = arg_not_passed
     big: bool = False
+    tile: bool = False
+    nav_button: bool = False
 
-
+class ButtonBar(list[Button]):
+    def __repr__(self):
+        return "ButtonBar contents %s" % str(super().__repr__())
 
 main_menu_button = Button(MAIN_MENU_BUTTON_LABEL)

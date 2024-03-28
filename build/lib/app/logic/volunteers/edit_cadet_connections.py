@@ -5,7 +5,7 @@ from app.objects.constants import arg_not_passed
 
 from app.backend.cadets import get_list_of_cadets_as_str_similar_to_name_first, get_cadet_from_list_of_cadets
 from app.objects.abstract_objects.abstract_form import Form, NewForm, dropDownInput
-from app.objects.abstract_objects.abstract_buttons import Button
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_interface import (
@@ -37,8 +37,8 @@ def display_form_edit_cadet_volunteer_connections(
 
 
 header_text =ListOfLines([
-"Edit volunteer and cadet connections (used to avoid putting group_allocations/parents together and to find volunteers):",
-"Note: This will not automatically connect volunteers and group_allocations in events, nor will deleting a connection remove the connection in an event"])
+Line("Edit volunteer and cadet connections (used to avoid putting group_allocations/parents together and to find volunteers):"),
+Line("Note: This will not automatically connect volunteers and group_allocations in events, nor will deleting a connection remove the connection in an event")])
 
 def form_to_edit_connections(volunteer: Volunteer,
                              connected_cadets: List[Cadet],
@@ -49,7 +49,7 @@ def form_to_edit_connections(volunteer: Volunteer,
 
     existing_entries = rows_for_existing_entries(connected_cadets=connected_cadets)
     new_entries = row_for_new_entries(volunteer=volunteer, from_list_of_cadets=from_list_of_cadets)
-    footer_buttons = Line([Button(BACK_BUTTON_LABEL)])
+    footer_buttons = ButtonBar([Button(BACK_BUTTON_LABEL, nav_button=True)])
 
     return Form([
         ListOfLines([

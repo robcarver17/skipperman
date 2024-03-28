@@ -1,9 +1,15 @@
+
 import os.path
 import shutil
 import subprocess
 
-from app.data_access.backups.access import get_oldest_backup_number, get_backup_directory
+from app.data_access.backups.access import get_oldest_backup_number, get_backup_directory, due_for_another_backup, create_timestamp_file
 from app.data_access.configuration.configuration import NUMBER_OF_BACKUPS
+
+def make_backup_if_due(backup_data_path:str, master_data_path: str):
+    due = due_for_another_backup(backup_data_path)
+    if due:
+        make_backup(backup_data_path=backup_data_path, master_data_path=master_data_path)
 
 def make_backup(backup_data_path:str, master_data_path: str):
     remove_oldest_backup_if_too_old(backup_data_path)
@@ -16,11 +22,10 @@ def make_backup(backup_data_path:str, master_data_path: str):
     make_first_backup(backup_data_path=backup_data_path, master_data_path=master_data_path)
 
 
-
 def remove_oldest_backup_if_too_old(backup_data_path):
     oldest = get_oldest_backup_number(backup_data_path)
     if (oldest+2)>NUMBER_OF_BACKUPS: ## plus 1 because zero indexing, plus another so we end with the right number
-        delete_backup_number(backup_number=oldest, datapath=backup_data_path)
+        delete_backup_number(backup_number=oldest, backup_data_path=backup_data_path)
 
 
 def delete_backup_number(backup_number: int, backup_data_path: str):
@@ -40,23 +45,10 @@ def simlink_copy_first_backup(datapath):
     subprocess.run(["cp","-al",backup_dir, backup_to])
 
 def make_first_backup(backup_data_path: str, master_data_path: str):
-    backup_dir = get_backup_directory(backup_number=0, datapath=backup_data_path)
+    backup_directory_for_this_backup = get_backup_directory(backup_number=0, datapath=backup_data_path)
     try:
-        os.mkdir(backup_dir)
+        os.mkdir(backup_directory_for_this_backup)
     except:
         pass
-    subprocess.run(["rsync","-a","--delete", "%s/"% master_data_path,   "%s/" % backup_dir])
-
-    """
-    "rm -rf backup.3"
-    mv backup.2 backup.3
-    mv backup.1 backup.2
-    cp -al backup.0 backup.1
-    rsync -a --delete source_directory/  backup.0/
-    
-        shutil.copytree(temp_dir, master_data_path, dirs_exist_ok=True)
-    interface.log_message("Deleting temporary directory")
-    shutil.rmtree(temp_dir)
-
-    
-    """
+    subprocess.run(["rsync","-a","--delete", "%s/"% master_data_path,   "%s/" % backup_directory_for_this_backup])
+    create_timestamp_file(backup_directory_for_this_backup)

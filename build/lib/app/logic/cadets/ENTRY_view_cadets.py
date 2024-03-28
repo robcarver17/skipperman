@@ -11,12 +11,19 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button
+from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.cadets.cadet_state_storage import update_state_for_specific_cadet
 from app.backend.cadets import get_sorted_list_of_cadets, SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, \
     SORT_BY_DOB_DSC, get_cadet_from_list_of_cadets
+
+all_sort_types = [SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, SORT_BY_DOB_DSC]
+
+
+add_button = Button(ADD_CADET_BUTTON_LABEL, nav_button=True)
+import_button = Button(IMPORT_CADETS_FROM_WA_FILE, nav_button=True)
+sort_buttons = Line([Button(sort_by, nav_button=True) for sort_by in all_sort_types])
 
 
 def display_form_view_of_cadets(interface: abstractInterface) -> Form:
@@ -25,19 +32,21 @@ def display_form_view_of_cadets(interface: abstractInterface) -> Form:
         sort_order=SORT_BY_SURNAME
     )
 
+
+nav_buttons = ButtonBar([main_menu_button, add_button,import_button])
+sort_buttons = ButtonBar(sort_buttons)
+
 def display_form_view_of_cadets_with_sort_order_passed(sort_order=SORT_BY_SURNAME) -> Form:
     list_of_cadets_with_buttons = display_list_of_cadets_with_buttons(
         sort_order=sort_order
     )
     form_contents = ListOfLines(
         [
-            main_menu_button,
+            nav_buttons,
             _______________,
             sort_buttons,
             _______________,
-            Line("Click on any cadet to view/edit/delete"),
-            _______________,
-            Line([add_button,import_button]),
+            "Click on any cadet to view / edit",
             _______________,
             list_of_cadets_with_buttons,
         ]
@@ -85,13 +94,5 @@ def display_list_of_cadets_with_buttons(sort_order=SORT_BY_SURNAME) -> ListOfLin
 
 def row_of_form_for_cadets_with_buttons(cadet: Cadet) -> Line:
     return Line([Button(str(cadet))])
-
-
-all_sort_types = [SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, SORT_BY_DOB_DSC]
-
-
-add_button = Button(ADD_CADET_BUTTON_LABEL)
-import_button = Button(IMPORT_CADETS_FROM_WA_FILE)
-sort_buttons = Line([Button(sort_by) for sort_by in all_sort_types])
 
 

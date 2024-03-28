@@ -22,7 +22,7 @@ def explain_additional_parameters_for_boat_report(interface: abstractInterface,
 
     full_names = "Display sailors full names" if additional_parameters.display_full_names else "Show only initials and surnames"
 
-    return ListOfLines([full_names, lake_text, river_text, unallocated])
+    return ListOfLines([full_names, lake_text, river_text, unallocated]).add_Lines()
 
 def reporting_options_form_for_boat_additional_parameters(
     interface: abstractInterface,
@@ -47,5 +47,6 @@ def reporting_options_form_for_boat_additional_parameters(
             _______________,
         ]
     )
+    my_options = my_options.add_Lines()
     return my_options
 

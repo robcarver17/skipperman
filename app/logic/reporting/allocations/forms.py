@@ -3,7 +3,7 @@ from typing import Tuple
 from app.objects.abstract_objects.abstract_form import (
     yes_no_radio,
 )
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.reporting.allocations.processes import (
     load_additional_parameters_for_allocation_report, SHOW_FULL_NAMES, INCLUDE_UNALLOCATED_CADETS
@@ -30,7 +30,7 @@ def reporting_options_form_for_group_additional_parameters(
             _______________,
         ]
     )
-    return my_options
+    return my_options.add_Lines()
 
 
 def explain_additional_parameters_for_allocation_report(interface: abstractInterface,
@@ -45,4 +45,4 @@ def explain_additional_parameters_for_allocation_report(interface: abstractInter
     else:
         alloc_str = "Exclude unallocated group_allocations"
 
-    return ListOfLines([name_str, alloc_str])
+    return ListOfLines([Line(name_str), Line(alloc_str)])

@@ -6,7 +6,7 @@ from app.objects.abstract_objects.abstract_form import (
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_text import bold
+from app.objects.abstract_objects.abstract_text import bold, Heading
 from app.logic.reporting.constants import (
     REPORT_TITLE,
     REPORT_FILENAME,
@@ -106,12 +106,15 @@ def report_print_options_as_list_of_lines(print_options: PrintOptions) -> ListOf
             "Prepend group name to all entries: %s" % print_options.prepend_group_name,
         ]
     )
-    return ListOfLines(
+    output = ListOfLines(
         output_pdf_line+
         public_pdf_line+
         pdf_only+
         generic
     )
+
+    return  output.add_Lines()
+
 
 
 def get_print_options_from_main_option_form_fields(
@@ -154,7 +157,7 @@ def report_print_options_as_form_contents(print_options: PrintOptions) -> ListOf
     landscape_str = LANDSCAPE if print_options.landscape else PORTRAIT
     output_to_str = PDF if print_options.output_pdf else CSV
 
-    return ListOfLines(
+    print_options_form =  ListOfLines(
         [
             _______________,
 
@@ -231,6 +234,7 @@ def report_print_options_as_form_contents(print_options: PrintOptions) -> ListOf
 
         ]
     )
+    return print_options_form.add_Lines()
 
 
 def get_saved_print_options_and_create_form(
@@ -241,11 +245,11 @@ def get_saved_print_options_and_create_form(
 
     return ListOfLines(
         [
-            "Select print options for %s %s" % (report_type, report_for),
-            _______________,
+            Heading("%s: Select additional parameters for %s" % (report_type, report_for), centred=False,
+                    size=5),
             report_options_within_form,
         ]
-    )
+    ).add_Lines()
 
 
 all_pagesize_as_dict = dict([(pagesize, pagesize) for pagesize in ALL_PAGESIZE])

@@ -3,6 +3,9 @@ from typing import List
 
 import pandas as pd
 
+from app.objects.abstract_objects.abstract_text import Heading
+from app.web.html.url import get_action_url
+
 
 ## primitives
 class Html(str):
@@ -64,7 +67,13 @@ html_line_wrapper = HtmlWrapper("%s<br />")
 
 html_header_wrapper = HtmlWrapper("<header>%s</header>")
 html_nav_wrapper = HtmlWrapper("<nav>%s</nav>")
-html_container_wrapper = HtmlWrapper('<div class="container">%s</div>')
+html_container_wrapper = HtmlWrapper('<div class="w3-container">%s</div>')
+
+def get_detail_wrapper(summary_text: str, open_detail: bool = False):
+    open_str = 'open="yes"' if open_detail else ''
+    return HtmlWrapper('<details '+open_str+'><summary>'+summary_text+'</summary>%s</details>')
+
+html_bar_wrapper = HtmlWrapper('<div class="w3-bar w3-grey">%s</div>')
 
 html_h1_logo_wrapper = HtmlWrapper('<h1 class="logo">%s</h1>')
 
@@ -83,18 +92,6 @@ def rel_stylesheet_link(url: str):
     return Html('<link rel="stylesheet" href="%s">' % (url))
 
 
-def html_link_in_list_item(string: str, url: str):
-    return html_list_item_wrapper.wrap_around(html_link(string=string, url=url))
-
-
-def html_link_with_nested_list(string: str, url: str, nested_list_to_wrap: Html):
-    html_for_link = html_link(string=string, url=url)
-    nested_list_html = html_unordered_list_wrapper.wrap_around(nested_list_to_wrap)
-    html_link_and_nested_link = ListOfHtml([html_for_link, nested_list_html]).join()
-
-    return html_list_item_wrapper.wrap_around(html_link_and_nested_link)
-
-
 ## common usage
 empty_html = Html("")
 horizontal_line = Html("<hr />")
@@ -110,10 +107,38 @@ def html_doc_wrapper(head_material: Html) -> HtmlWrapper:
 
 
 def html_from_pandas_table(table: pd.DataFrame) -> Html:
+    table.style
     return Html(table.to_html())
 
-
-html_table_wrappper = HtmlWrapper('<table border="1"> %s </table>')
-html_table_row_wrapper = HtmlWrapper("<tr>%s</tr>")
+html_table_wrappper = HtmlWrapper('<table class="w3-table w3-striped w3-bordered"> %s </table>')
+html_table_row_wrapper = HtmlWrapper('<tr >%s</tr>')
+html_table_heading_row_wrapper = HtmlWrapper('<tr class="w3-theme">%s</tr>')
 html_table_element_wrapper = HtmlWrapper("<td>%s</td>")
-html_table_heading_wrapper = HtmlWrapper("<th>%s</th>")
+html_table_heading_wrapper = HtmlWrapper('<th>%s</th>')
+
+def get_html_for_heading(heading: Heading):
+    if heading.centred:
+        centring = 'class="w3-center"'
+    else:
+        centring = ''
+    heading_size = 'h%d' % heading.size
+    string = heading.text
+
+    heading_text = '<%s %s">%s</%s>' % (heading_size, centring, string, heading_size)
+
+    return html_container_wrapper.wrap_around(heading_text)
+
+
+def menu_item_for_action(label, action_name):
+    return menu_item_with_link(url=get_action_url(action_name), label=label)
+
+def menu_item_with_link(label, url):
+    return  """
+    '<a class = "wbig-btn w3-theme"  href="%s"> %s </a>' 
+    """ %  (url, label)
+
+
+def small_button_with_link(label, url):
+    return  """
+    '<a class = "w3-btn w3-dark-grey"  href="%s"> %s </a>' 
+    """ %  (url, label)

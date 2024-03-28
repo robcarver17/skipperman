@@ -7,17 +7,18 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button
+from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.backend.data.volunteers import SORT_BY_SURNAME, SORT_BY_FIRSTNAME, get_sorted_list_of_volunteers
 from app.logic.volunteers.volunteer_state import update_state_for_specific_volunteer_given_volunteer_as_str
 from app.logic.volunteers.constants import *
 
-add_button = Button(ADD_VOLUNTEER_BUTTON_LABEL)
+add_button = Button(ADD_VOLUNTEER_BUTTON_LABEL, nav_button=True)
 all_sort_types = [SORT_BY_SURNAME, SORT_BY_FIRSTNAME]
-sort_buttons = Line([Button(sort_by) for sort_by in all_sort_types])
+sort_buttons = ButtonBar([Button(sort_by, nav_button=True) for sort_by in all_sort_types])
 
+nav_buttons = ButtonBar([main_menu_button, add_button])
 def display_form_view_of_volunteers(interface: abstractInterface) -> Form:
     ## simple wrap function as display can only take interface
 
@@ -30,13 +31,11 @@ def get_form_view_of_volunteers(sort_order: str=SORT_BY_SURNAME) -> Form:
 
     form_contents = ListOfLines(
         [
-            main_menu_button,
+            nav_buttons,
             _______________,
             sort_buttons,
             _______________,
-            Line("Click on any volunteer to view/edit/delete"),
-            _______________,
-            add_button,
+            Line("Click on any volunteer to view/edit"),
             _______________,
             list_of_volunteers_with_buttons,
         ]

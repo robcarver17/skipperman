@@ -1,12 +1,12 @@
 from typing import Union
-from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button
+from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button, ButtonBar
 from app.objects.abstract_objects.abstract_form import *
 from app.objects.abstract_objects.abstract_tables import PandasDFTable, ElementsInTable, RowInTable, Table
 from app.objects.abstract_objects.abstract_text import Text, Arrow, up_arrow, down_arrow, \
     right_arrow, left_arrow, up_down_arrow, left_right_arrow, Pointer, Symbol, reg_tm_symbol, copyright_symbol, \
     up_pointer, down_pointer, left_pointer, right_pointer, lightning_symbol, circle_up_arrow_symbol, umbrella_symbol, \
-    at_symbol
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
+    at_symbol, Heading
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, DetailListOfLines
 from app.web.html.components import *
 from app.web.html.url import INDEX_URL
 from app.web.flask.flask_interface import flaskInterface
@@ -40,11 +40,14 @@ def get_html_for_element_in_form(element) -> Html:
         html_this_element = get_html_for_line(line=element)
     elif type(element) is ListOfLines:
         html_this_element = get_html_for_list_of_lines(list_of_lines=element)
+    elif type(element) is DetailListOfLines:
+        html_this_element = get_html_for_detail_list_of_lines(list_of_lines=element)
+    elif type(element) is ButtonBar:
+        html_this_element = html_bar_wrapper.wrap_around(get_html_for_line(element))
     else:
         ## Single line
-        html_this_element = html_line_wrapper.wrap_around(
-            get_html_for_element_in_line(element)
-        )
+        html_this_element = get_html_for_element_in_line(element)
+
 
     return html_this_element
 
@@ -53,14 +56,22 @@ def get_html_for_list_of_lines(list_of_lines: ListOfLines) -> Html:
     list_of_html_for_each_lines = [
         get_html_for_element_in_form(line) for line in list_of_lines
     ]
+    all_html = " ".join(list_of_html_for_each_lines)
+    return html_container_wrapper.wrap_around(all_html)
 
-    return Html(" ".join(list_of_html_for_each_lines))
+def get_html_for_detail_list_of_lines(list_of_lines: DetailListOfLines) -> Html:
+    list_of_html_for_each_lines = [
+        get_html_for_element_in_form(line) for line in list_of_lines.list_of_lines
+    ]
+    all_html = " ".join(list_of_html_for_each_lines)
+    detail_wrapper =get_detail_wrapper(list_of_lines.name)
+    return detail_wrapper.wrap_around(all_html)
 
 
 def get_html_for_line(line: Line) -> Html:
     return html_line_wrapper.wrap_around(
         Html(
-            " ".join(
+            "".join(
                 [
                     get_html_for_element_in_line(element_in_line)
                     for element_in_line in line
@@ -83,7 +94,8 @@ def get_html_for_element_in_line(
         Table,
         Arrow,
         passwordInput,
-        Link
+        Link,
+        Heading
     ]
 ) -> Html:
     if type(element_in_line) is str:
@@ -152,6 +164,8 @@ def get_html_for_element_in_line(
         return html_from_pandas_table(element_in_line)
     elif type(element_in_line) is Table:
         return get_html_for_table(element_in_line)
+    if type(element_in_line) is Heading:
+        return get_html_for_heading(element_in_line)
     else:
         raise Exception(
             "Type %s of object %s not recognised!"
@@ -161,12 +175,14 @@ def get_html_for_element_in_line(
 
 def get_html_for_button(button: Button) -> Html:
     if button == main_menu_button:
-        return html_link("Main menu", INDEX_URL)
+        return small_button_with_link("Main menu", url=INDEX_URL)
     else:
         return html_button(
             button_text=get_html_button_text(button.label),
             button_value=button.value,
-            big_button = button.big
+            big_button = button.big,
+            menu_tile=button.tile,
+            nav_button=button.nav_button
         )
 
 def get_html_button_text(button_text) -> Html:
@@ -234,14 +250,15 @@ def get_html_for_table(table: Table) -> Html:
     if DEBUG:
         print("parsing table")
     html_for_rows_in_list = [
-        get_html_for_table_row(table_row) for table_row in table.get_rows()
+        get_html_for_table_row(table_row, is_heading= table_row.is_heading_row) for table_row in table.get_rows()
     ]
     html_for_rows = " ".join(html_for_rows_in_list)
+
 
     return html_table_wrappper.wrap_around(html_for_rows)
 
 
-def get_html_for_table_row(table_row: RowInTable) -> Html:
+def get_html_for_table_row(table_row: RowInTable, is_heading: bool = False) -> Html:
     if DEBUG:
         print("parsing row %s" % str(table_row))
     html_for_elements_in_list = [
@@ -249,8 +266,10 @@ def get_html_for_table_row(table_row: RowInTable) -> Html:
         for table_element in table_row.get_elements()
     ]
     html_for_row = " ".join(html_for_elements_in_list)
-
-    return html_table_row_wrapper.wrap_around(html_for_row)
+    if is_heading:
+        return html_table_heading_row_wrapper.wrap_around(html_for_row)
+    else:
+        return html_table_row_wrapper.wrap_around(html_for_row)
 
 
 def get_html_for_table_element(table_element: ElementsInTable) -> Html:
@@ -276,3 +295,4 @@ def get_html_for_table_element(table_element: ElementsInTable) -> Html:
 
 def get_html_for_link(link: Link):
     return  html_link(url=link.url, string=link.string, open_new_window=link.open_new_window)
+

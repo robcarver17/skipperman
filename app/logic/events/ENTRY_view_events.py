@@ -10,7 +10,7 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button
+from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.events.constants import (
     ADD_EVENT_BUTTON_LABEL,
@@ -22,17 +22,13 @@ def display_form_view_of_events( interface: abstractInterface):
 
 def display_form_view_of_events_sort_order_passed( interface: abstractInterface, sort_by: str = SORT_BY_START_DSC):
     list_of_events_with_buttons = display_list_of_events_with_buttons(sort_by=sort_by)
-    add_button = Button(ADD_EVENT_BUTTON_LABEL)
+    navbar = ButtonBar([main_menu_button, add_button])
 
     contents_of_form = ListOfLines(
         [
-            main_menu_button,
+            navbar,
             _______________,
             sort_buttons,
-            _______________,
-            "Click on any event to view/edit/delete/upload/allocate/anything else",
-            _______________,
-            add_button,
             _______________,
             list_of_events_with_buttons,
         ]
@@ -40,6 +36,7 @@ def display_form_view_of_events_sort_order_passed( interface: abstractInterface,
 
     return Form(contents_of_form)
 
+add_button = Button(ADD_EVENT_BUTTON_LABEL, nav_button=True)
 
 def post_form_view_of_events(interface: abstractInterface) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
@@ -63,16 +60,16 @@ def action_when_event_button_clicked(interface: abstractInterface) -> NewForm:
     return form_for_view_event(interface)
 
 
-def display_list_of_events_with_buttons(sort_by=SORT_BY_START_DSC) -> ListOfLines:
+def display_list_of_events_with_buttons(sort_by=SORT_BY_START_DSC) -> Line:
     list_of_events = get_sorted_list_of_events(sort_by=sort_by)
     list_of_event_descriptions = list_of_events.list_of_event_descriptions
-    list_with_buttons = [Line(Button(event_description)) for event_description in list_of_event_descriptions]
+    list_with_buttons = [Button(event_description, tile=True) for event_description in list_of_event_descriptions]
 
-    return ListOfLines(list_with_buttons)
+    return Line(list_with_buttons)
 
 
 all_sort_types = [SORT_BY_START_ASC, SORT_BY_START_DSC, SORT_BY_NAME]
-sort_buttons = Line([Button(sortby) for sortby in all_sort_types])
+sort_buttons = ButtonBar([Button(sortby, nav_button=True) for sortby in all_sort_types])
 
 def form_for_add_event(interface: abstractInterface):
     return interface.get_new_form_given_function(display_form_view_for_add_event)

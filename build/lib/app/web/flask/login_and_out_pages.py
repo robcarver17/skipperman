@@ -4,10 +4,8 @@ from flask import request, render_template
 from flask_login import login_user, logout_user
 
 from app.objects.users_and_security import default_admin_user_if_none_defined
-from app.web.flask.flash import flash_error, flash_log, get_html_of_flashed_messages
+from app.web.flask.flash import flash_error, flash_log
 from app.web.flask.security import get_all_flask_users, get_username
-from app.web.html.forms import html_form_text_input, html_form_password_input, html_button
-from app.web.html.components import html_line_wrapper, HtmlWrapper, html_container_wrapper, Html
 from app.web.menu_pages import generate_menu_page_html
 
 

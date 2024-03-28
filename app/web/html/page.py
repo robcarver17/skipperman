@@ -2,8 +2,7 @@ from dataclasses import dataclass
 
 from app.objects.constants import arg_not_passed
 from app.web.html.components import ListOfHtml, Html, html_title_wrapper, html_header_wrapper, html_doc_wrapper, \
-    html_link, rel_stylesheet_link
-
+    html_link, rel_stylesheet_link, empty_html
 
 
 @dataclass
@@ -46,15 +45,15 @@ class HtmlHead:
     def as_html(self):
         title = html_title_wrapper.wrap_around(self.title)
         if self.meta is arg_not_passed:
-            meta= Html('')
+            meta= empty_html
         else:
             meta = self.meta.as_html()
         if self.specific_style is arg_not_passed:
-            specific_style = Html('')
+            specific_style =empty_html
         else:
             specific_style = self.specific_style
         if self.style_links is arg_not_passed:
-            style_links = Html('')
+            style_links = empty_html
         else:
             style_links = self.style_links.as_html()
 

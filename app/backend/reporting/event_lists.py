@@ -11,7 +11,7 @@ def display_list_of_events_with_buttons_criteria_matched(**kwargs) -> ListOfLine
     list_of_events = get_sorted_list_of_events(sort_by=SORT_BY_START_DSC)
     list_of_events = ListOfEvents([event for event in list_of_events if event_matches_criteria(event, **kwargs)])
     list_of_event_descriptions = list_of_events.list_of_event_descriptions
-    list_with_buttons = [Line(Button(event_description)) for event_description in list_of_event_descriptions]
+    list_with_buttons = [Line(Button(event_description, tile=True)) for event_description in list_of_event_descriptions]
 
     return ListOfLines(list_with_buttons)
 

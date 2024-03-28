@@ -1,4 +1,4 @@
-from app.web.html.heading import get_html_header
+from app.web.html.heading import get_html_header, get_flash_block
 from app.web.html.components import (
     ListOfHtml, Html,
 )
@@ -15,7 +15,8 @@ def get_master_layout():
         [SingleMetaElement(parameter='name', equal_to='viewport', content='width=device_width ; initial_scale=1.0;')])
     html_head = HtmlHead(title='Skipperman', meta=meta, style_links=links)
     html_header = get_html_header()
-    html_page_master_layout = HtmlPage(head=html_head, header = ListOfHtml([ html_header]), body=ListOfHtml([]), footer=ListOfHtml(["test"]))
+    flash_block = get_flash_block()
+    html_page_master_layout = HtmlPage(head=html_head, header = ListOfHtml([ html_header]), body=ListOfHtml([flash_block]), footer=ListOfHtml([]))
 
     return html_page_master_layout
 

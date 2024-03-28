@@ -12,7 +12,7 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines, ___________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.dinghies import Dinghy, ListOfDinghies
 
-header_text = ListOfLines(["List of boat classes: add, edit or delete; re-order"])
+header_text = "List of boat classes: add, edit, re-order"
 
 
 

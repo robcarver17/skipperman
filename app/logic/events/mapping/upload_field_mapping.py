@@ -8,7 +8,7 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     fileInput, NewForm,
 )
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
+from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.constants import UPLOAD_FILE_BUTTON_LABEL, MAPPING_FILE
@@ -20,18 +20,21 @@ def display_form_for_upload_custom_field_mapping(interface: abstractInterface):
     event = get_event_from_state(interface)
 
     list_of_lines = ListOfLines(
-        ["Choose .csv file to upload for field mapping of event %s" % str(event), file_select_field, buttons]
+        [Line("Choose .csv file to upload for field mapping of event %s" % str(event)),
+         Line(file_select_field),
+         buttons]
     )
 
     return Form(list_of_lines)
 
 
 def get_upload_buttons():
-    upload = Button(UPLOAD_FILE_BUTTON_LABEL)
 
-    return Line([cancel_button, upload])
+    return ButtonBar([cancel_button, upload_button])
 
-cancel_button = Button(CANCEL_BUTTON_LABEL)
+cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
+upload_button = Button(UPLOAD_FILE_BUTTON_LABEL, nav_button=True)
+
 
 def post_form_for_upload_custom_field_mapping(interface: abstractInterface):
     previous_form = interface.get_new_display_form_for_parent_of_function(display_form_for_upload_custom_field_mapping)

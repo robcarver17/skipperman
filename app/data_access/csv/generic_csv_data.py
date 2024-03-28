@@ -1,4 +1,4 @@
-from app.data_access.backups.make_backup import make_backup
+from app.data_access.backups.make_backup import  make_backup_if_due
 from app.objects.constants import arg_not_passed
 import pandas as pd
 from app.data_access.csv.resolve_csv_paths_and_filenames import (
@@ -22,7 +22,7 @@ class GenericCsvData(object):
             pass
 
     def snapshot(self):
-        make_backup(backup_data_path=self._backup_data_path, master_data_path=self._master_data_path)
+        make_backup_if_due(backup_data_path=self._backup_data_path, master_data_path=self._master_data_path)
 
     def get_path_and_filename_for_named_csv_file(
         self,

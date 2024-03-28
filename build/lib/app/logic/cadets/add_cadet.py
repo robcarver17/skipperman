@@ -9,7 +9,7 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm,
     textInput, dateInput,
 )
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
+from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.cadets.constants import (
     CHECK_BUTTON_LABEL,
@@ -88,7 +88,7 @@ def get_add_cadet_form(
 
 
 def get_add_cadet_form_with_information_passed(
-    footer_buttons: Union[Line, ListOfLines],
+    footer_buttons: Union[Line, ListOfLines, ButtonBar],
     header_text: str = "Add a new cadet",
     cadet_and_text: CadetAndVerificationText = default_cadet_and_text,
 ) -> Form:
@@ -178,13 +178,13 @@ def add_cadet_from_form_to_data(interface) -> Cadet:
     return cadet
 
 
-def get_footer_buttons_for_add_cadet_form(form_is_empty: bool) -> Line:
-    final_submit = Button(FINAL_ADD_BUTTON_LABEL)
-    check_submit = Button(CHECK_BUTTON_LABEL)
-    cancel_button = Button(CANCEL_BUTTON_LABEL)
+def get_footer_buttons_for_add_cadet_form(form_is_empty: bool) -> ButtonBar:
+    final_submit = Button(FINAL_ADD_BUTTON_LABEL, nav_button=True)
+    check_submit = Button(CHECK_BUTTON_LABEL, nav_button=True)
+    cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
     if form_is_empty:
-        return Line([cancel_button, check_submit])
+        return ButtonBar([cancel_button, check_submit])
     else:
-        return Line([cancel_button, check_submit, final_submit])
+        return ButtonBar([cancel_button, check_submit, final_submit])
 
 

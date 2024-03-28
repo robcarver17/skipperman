@@ -15,7 +15,7 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines, ___________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.club_dinghies import ClubDinghy, ListOfClubDinghies
 
-header_text = ListOfLines(["List of club dinghies: add, edit or delete"])
+header_text = "List of club dinghies: add, edit or re-order"
 
 
 

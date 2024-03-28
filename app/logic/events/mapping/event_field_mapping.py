@@ -10,7 +10,7 @@ from app.objects.abstract_objects.abstract_form import (
 )
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL,  Button
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button, ButtonBar
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
@@ -19,6 +19,7 @@ from app.logic.events.events_in_state import get_event_from_state
 from app.backend.data.field_mapping import get_field_mapping_for_event
 from app.backend.wa_import.check_mapping import check_field_mapping
 from app.backend.wa_import.map_wa_files import is_wa_file_mapping_setup_for_event
+from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import Event
 
 def display_form_event_field_mapping(
@@ -43,11 +44,11 @@ def display_form_event_field_mapping_existing_mapping(
 
     return Form(ListOfLines(
         [
-            "Mapping already set up for %s" % str(event),
-            _______________,
-            warning_text,
-            "Press %s to keep existing, or choose another option to change (see diagnostic information below)" % BACK_BUTTON_LABEL,
             mapping_buttons(),
+            Heading("Mapping already set up for %s" % str(event), centred=True, size=4),
+            _______________,
+            Heading(warning_text, centred=False, size=6),
+            Line("Press %s to keep existing, or choose another option to change (see diagnostic information below)" % BACK_BUTTON_LABEL),
                _______________,
             "Current field mapping:",
                pre_existing_text,
@@ -101,13 +102,13 @@ def text_for_pre_existing_mapping(interface: abstractInterface) -> PandasDFTable
     return PandasDFTable(mapping.to_df())
 
 
-def mapping_buttons() -> Line:
-    return Line(
+def mapping_buttons() -> ButtonBar:
+    return ButtonBar(
         [
-            Button(BACK_BUTTON_LABEL),
-            Button(MAP_TO_TEMPLATE_BUTTON_LABEL),
-            Button(CLONE_EVENT_MAPPING_BUTTON_LABEL),
-            Button(CREATE_MAPPING_BUTTON_LABEL)
+            Button(BACK_BUTTON_LABEL, nav_button=True),
+            Button(MAP_TO_TEMPLATE_BUTTON_LABEL, nav_button=True),
+            Button(CLONE_EVENT_MAPPING_BUTTON_LABEL, nav_button=True),
+            Button(CREATE_MAPPING_BUTTON_LABEL, nav_button=True)
         ]
     )
 

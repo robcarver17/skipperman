@@ -3,28 +3,32 @@ from typing import Union, List, Callable, Tuple
 
 from app.backend.forms.reorder_form import UP, DOWN, get_button_name_to_move_in_list, modify_list_given_button_name
 from app.objects.abstract_objects.abstract_form import Form, NewForm, textInput
-from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL
+from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
-from app.objects.abstract_objects.abstract_text import up_pointer, down_pointer, up_arrow, down_arrow
+from app.objects.abstract_objects.abstract_text import up_pointer, down_pointer, up_arrow, down_arrow, Heading
 
 ADD_ENTRY_TEXT_FIELD = "add_entry_text_field"
 SAVE_ENTRY_BUTTON_LABEL = "Save edits to existing or add new entry"
 
+
+
 def display_form_edit_generic_list(
     existing_list: list,
-        header_text: ListOfLines
+        header_text: str
 ) -> Union[Form, NewForm]:
 
     existing_entries = rows_for_existing_entries(existing_list)
     new_entries = row_for_new_entries()
-    footer_buttons = Line([Button(BACK_BUTTON_LABEL), Button(SAVE_ENTRY_BUTTON_LABEL)])
+    navbar = ButtonBar([Button(BACK_BUTTON_LABEL, nav_button=True)])
+    footer_buttons = ButtonBar([ Button(SAVE_ENTRY_BUTTON_LABEL, nav_button=True)])
 
     return Form([
         ListOfLines([
-            header_text,
+            navbar,
+            Heading(header_text, centred=True, size=4),
             _______________,
             existing_entries,
             new_entries,
@@ -42,7 +46,7 @@ def rows_for_existing_entries(existing_list: list) -> ListOfLines:
 
 def get_row_for_existing_entry(entry) -> Line:
     return Line(
-        [ text_box_for_entry(entry), Button(button_str_for_deletion(entry)), up_button_for_entry(entry), down_button_for_entry(entry)]
+        [ text_box_for_entry(entry), up_button_for_entry(entry), down_button_for_entry(entry)]
     )
 
 def up_button_for_entry(entry):

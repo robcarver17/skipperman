@@ -35,7 +35,7 @@ def get_volunteer_skills_filter(interface: abstractInterface):
                          dict_of_checked=dict_of_checked,
                          dict_of_labels=dict_of_labels,
                          input_name=SKILLS_FILTER,
-                         line_break=True)
+                         line_break=False)
 
 
 def get_volunteer_table(event: Event,
@@ -51,20 +51,20 @@ def get_volunteer_table(event: Event,
                                             sorts_and_filters=sorts_and_filters)
 
     return Table(
-        [top_row]+other_rows
+        [top_row]+other_rows,
+        has_column_headings=True, has_row_headings=True
     )
 
 
 def get_top_row_for_table(interface: abstractInterface, event: Event, hide_buttons: bool) -> RowInTable:
     buttons_for_days_at_event_as_str = get_buttons_for_days_at_event(event=event, hide_buttons=hide_buttons)
-    skills = "" if hide_buttons else get_volunteer_skills_filter(interface)
 
     return RowInTable([
         "Volunteer (click to edit days available)",
         "Cadet location (click to edit connections)",
         "Preferred duties",
         "Same/different preference",
-        skills,
+        "Skills",
         "Previous role"
     ]+buttons_for_days_at_event_as_str+
     ["Notes",

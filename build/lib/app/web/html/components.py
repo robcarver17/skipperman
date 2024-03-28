@@ -69,8 +69,9 @@ html_header_wrapper = HtmlWrapper("<header>%s</header>")
 html_nav_wrapper = HtmlWrapper("<nav>%s</nav>")
 html_container_wrapper = HtmlWrapper('<div class="w3-container">%s</div>')
 
-def get_detail_wrapper(summary_text: str):
-    return HtmlWrapper('<details open="yes"><summary>'+summary_text+'</summary>%s</details>')
+def get_detail_wrapper(summary_text: str, open_detail: bool = False):
+    open_str = 'open="yes"' if open_detail else ''
+    return HtmlWrapper('<details '+open_str+'><summary>'+summary_text+'</summary>%s</details>')
 
 html_bar_wrapper = HtmlWrapper('<div class="w3-bar w3-grey">%s</div>')
 

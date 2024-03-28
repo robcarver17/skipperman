@@ -5,13 +5,13 @@
 from app.objects.users_and_security import ADMIN_GROUP, SKIPPER_GROUP, INSTRUCTOR_GROUP
 
 menu_definition = {
-    "Cadets": "view_master_list_of_cadets",
-    "Volunteers": "view_list_of_volunteers",
     "Events": "view_list_of_events",
     "Reports": "view_possible_reports",
+    "Cadets": "view_master_list_of_cadets",
+    "Volunteers": "view_list_of_volunteers",
+    "Skipperman for instructors": "view_for_instructors",
     "Configuration": "view_configuration",
     "Utilities": "view_utilities",
-    "Instructors": "view_for_instructors",
     "Administration": "administration"
 }
 menu_security_dict = {"view_master_list_of_cadets": [ADMIN_GROUP, SKIPPER_GROUP],

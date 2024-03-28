@@ -17,31 +17,40 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
+from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL, ButtonBar
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________, DetailListOfLines
 from app.objects.abstract_objects.abstract_form import Link
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.volunteers.ENTRY_view_volunteers import all_sort_types as all_volunteer_name_sort_types
-from app.logic.events.volunteer_rota.render_volunteer_table import get_volunteer_table
+from app.logic.events.volunteer_rota.render_volunteer_table import get_volunteer_table, get_volunteer_skills_filter
+from app.objects.abstract_objects.abstract_text import Heading
 
 ADD_NEW_VOLUNTEER_BUTTON_LABEL = "Add new volunteer to rota"
 
 def display_form_view_for_volunteer_rota(interface: abstractInterface) -> Form:
     sorts_and_filters = get_sorts_and_filters_from_state(interface)
     event =get_event_from_state(interface)
-    title = "Volunteer rota for event %s" % str(event)
+    title = Heading("Volunteer rota for event %s" % str(event), centred=True, size=4)
     summary_of_filled_roles =  get_summary_list_of_roles_and_groups_for_events(event)
+    if len(summary_of_filled_roles) > 0:
+        summary_of_filled_roles = DetailListOfLines(ListOfLines([
+                summary_of_filled_roles]), name='Summary')
+    else:
+        summary_of_filled_roles=""
+
     volunteer_table_with_day_reordering = get_volunteer_table(event=event,
                                                               interface=interface,
                                                               sorts_and_filters=sorts_and_filters)
 
-    save_button = get_saved_button(interface)
+    header_buttons = get_header_buttons_for_rota(interface)
     by_name_sort_buttons = get_volunteer_name_sort_buttons(interface)
     footer_buttons = get_footer_buttons_for_rota(interface)
+    skills = get_skills_filter(interface)
 
     return Form(
         ListOfLines(
             [
+                header_buttons,
                 title,
                 _______________,
                 _______________,
@@ -49,12 +58,12 @@ def display_form_view_for_volunteer_rota(interface: abstractInterface) -> Form:
                 _______________,
                 instructions,
                 _______________,
-                by_name_sort_buttons,
+
                 footer_buttons,
+                by_name_sort_buttons,
+                skills,
                 _______________,
-                save_button,
                 volunteer_table_with_day_reordering,
-                save_button,
                 _______________,
                 footer_buttons
             ]
@@ -70,7 +79,7 @@ def get_saved_button(interface: abstractInterface):
 def get_volunteer_name_sort_buttons(interface: abstractInterface):
     if is_ready_to_swap(interface):
         return ""
-    return Line([Button(sort_by) for sort_by in all_volunteer_name_sort_types])
+    return ButtonBar([Button(sort_by, nav_button=True) for sort_by in all_volunteer_name_sort_types])
 
 
 link = Link(url=WEBLINK_FOR_QUALIFICATIONS, string="See qualifications table", open_new_window=True)
@@ -78,25 +87,36 @@ link = Link(url=WEBLINK_FOR_QUALIFICATIONS, string="See qualifications table", o
 instructions = ListOfLines(["Always click SAVE after making any non button change",
                             Line(["Key for buttons - Copy: ",
                                         COPY_SYMBOL1, COPY_SYMBOL2,
-                                        " , Swap: ", SWAP_SHORTHAND1, SWAP_SHORTHAND2, ", ",
-                                        'Raincheck: make unavailable: ', NOT_AVAILABLE_SHORTHAND ,
-                                        'Available, but role undefined', AVAILABLE_SHORTHAND]),
+                                        " ; Swap: ", SWAP_SHORTHAND1, SWAP_SHORTHAND2, ", ",
+                                        '; Raincheck: make unavailable: ', NOT_AVAILABLE_SHORTHAND ,
+                                        '; Available, but role undefined', AVAILABLE_SHORTHAND]),
 
                             "Click on any day to sort by group and role, or sort volunteers by name",
                             "Click on volunteer names to edit food requirements and days attending, or remove from event. Click on location to see and edit connected cadets. Click on skills to edit volunteer skills.",
                             "Click on 'unavailable' days to make a volunteer available. Select role = unavailable to make a volunteer unavailable",
                             "Save after selecting role to see group allocations where relevant.",
                             "You can copy roles/groups to other days to avoid tiresome re-entry",
-                            link])
+                            link]).add_Lines()
+
+def get_skills_filter(interface: abstractInterface):
+    skills = "" if is_ready_to_swap(interface) else get_volunteer_skills_filter(interface)
+    return skills
+
+def get_header_buttons_for_rota(interface: abstractInterface):
+    if is_ready_to_swap(interface):
+        return ""
+    return \
+        ButtonBar([Button(BACK_BUTTON_LABEL, nav_button=True)])
 
 
 
 def get_footer_buttons_for_rota(interface: abstractInterface):
     if is_ready_to_swap(interface):
         return ""
-    return Line([
-        Button(ADD_NEW_VOLUNTEER_BUTTON_LABEL),
-        Button(BACK_BUTTON_LABEL)
+    return ButtonBar([
+        Button(ADD_NEW_VOLUNTEER_BUTTON_LABEL, nav_button=True),
+        Button(BACK_BUTTON_LABEL, nav_button=True),
+        Button(SAVE_CHANGES, nav_button=True)
     ])
 
 def post_form_view_for_volunteer_rota(

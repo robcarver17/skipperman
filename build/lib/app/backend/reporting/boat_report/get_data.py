@@ -40,6 +40,7 @@ def get_df_for_day_of_boat_report(day: Day, data_required: RequiredDataForReport
                    is_cadet_id_valid_for_report(cadet_id=cadet_id, additional_parameters=additional_parameters, data_required=data_required)]
 
     df=pd.DataFrame(list_of_row)
+    df = df.sort_values(by=BOAT_CLASS)
 
     return df
 

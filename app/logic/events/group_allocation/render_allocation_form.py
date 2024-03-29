@@ -177,6 +177,7 @@ def get_days_attending_field(cadet: Cadet, allocation_data: AllocationData)-> ch
 
 def get_dropdown_input_for_club_boat_allocation(cadet: Cadet, allocation_data: AllocationData) -> dropDownInput:
     current_club_boat = allocation_data.get_current_club_boat_name(cadet)
+    dict_of_club_dinghies_for_dropdown_input = get_list_of_club_dinghies_for_dropdown()
     drop_down_input_field = dropDownInput(
                 input_name=input_name_from_column_name_and_cadet_id(CLUB_BOAT, cadet_id=cadet.id),
                 input_label="",
@@ -185,15 +186,18 @@ def get_dropdown_input_for_club_boat_allocation(cadet: Cadet, allocation_data: A
             )
     return drop_down_input_field
 
-club_dinghies = load_list_of_club_dinghies()
-dict_of_club_dinghies_for_dropdown_input = {NO_BOAT: NO_BOAT}
-dict_of_all_possible_club_boats= dict([(dinghy.name, dinghy.name) for dinghy in club_dinghies])
-dict_of_club_dinghies_for_dropdown_input.update(dict_of_all_possible_club_boats)
+def get_list_of_club_dinghies_for_dropdown():
+    club_dinghies = load_list_of_club_dinghies()
+    dict_of_club_dinghies_for_dropdown_input = {NO_BOAT: NO_BOAT}
+    dict_of_all_possible_club_boats= dict([(dinghy.name, dinghy.name) for dinghy in club_dinghies])
+    dict_of_club_dinghies_for_dropdown_input.update(dict_of_all_possible_club_boats)
 
+    return dict_of_club_dinghies_for_dropdown_input
 
 
 def get_dropdown_input_for_boat_class_allocation(cadet: Cadet, allocation_data: AllocationData) -> dropDownInput:
     current_boat_class = allocation_data.get_name_of_class_of_boat(cadet)
+    dict_of_all_possible_boat_classes = get_dict_of_boat_classes()
     drop_down_input_field = dropDownInput(
                 input_name=input_name_from_column_name_and_cadet_id(BOAT_CLASS, cadet_id=cadet.id),
                 input_label="",
@@ -202,8 +206,10 @@ def get_dropdown_input_for_boat_class_allocation(cadet: Cadet, allocation_data: 
             )
     return drop_down_input_field
 
-boat_classes = load_list_of_boat_classes()
-dict_of_all_possible_boat_classes= dict([(dinghy.name, dinghy.name) for dinghy in boat_classes])
+def get_dict_of_boat_classes():
+    boat_classes = load_list_of_boat_classes()
+    dict_of_all_possible_boat_classes= dict([(dinghy.name, dinghy.name) for dinghy in boat_classes])
+    return dict_of_all_possible_boat_classes
 
 def get_sail_number_field(cadet: Cadet, allocation_data: AllocationData)-> textInput:
     current_number = allocation_data.get_sail_number_for_boat(cadet)

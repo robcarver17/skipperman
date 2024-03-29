@@ -180,7 +180,7 @@ def process_form_when_verified_cadet_to_be_added(interface: abstractInterface) -
 
 def process_form_when_existing_cadet_chosen(interface: abstractInterface) -> Form:
     cadet_selected = interface.last_button_pressed()
-
+    print(cadet_selected)
     try:
         confirm_cadet_exists(cadet_selected)
     except:
@@ -189,7 +189,7 @@ def process_form_when_existing_cadet_chosen(interface: abstractInterface) -> For
         )
 
     cadet = get_cadet_from_list_of_cadets(cadet_selected)
-
+    print(str(cadet))
     return process_row_when_cadet_matched(interface=interface, cadet=cadet)
 
 def go_to_update_cadet_data_form(interface: abstractInterface):

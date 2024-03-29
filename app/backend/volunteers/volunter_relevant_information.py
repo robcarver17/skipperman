@@ -129,7 +129,8 @@ def suggested_volunteer_availability(relevant_information: RelevantInformationFo
     elif cadet_availability is not missing_data:
         return cadet_availability
     else:
-        raise Exception("No availability information at all for volunteer!")
+        ## assume all
+        raise Exception("No availability information")
 
 
 def get_relevant_information_for_volunteer_given_details(

@@ -48,7 +48,7 @@ def simlink_copy_first_backup(datapath):
         shutil.rmtree(backup_to)
     except:
         ## will fail if really first time
-        passf
+        pass
     os.system('cp -al %s %s' % (backup_from, backup_to))
     #subprocess.run(["cp","-al",backup_from, backup_to], cwd=datapath)
 

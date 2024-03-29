@@ -107,13 +107,19 @@ def get_availability_checkbox_for_volunteer_at_event_based_on_relevant_informati
                                      include_all=True)
 
 def first_valid_availability(list_of_relevant_information: ListOfRelevantInformationForVolunteer, event: Event) -> DaySelector:
+    availabilty = event.day_selector_with_covered_days()
+
     for relevant_information in list_of_relevant_information:
         try:
-            return suggested_volunteer_availability(relevant_information.availability)
+            availabilty = suggested_volunteer_availability(relevant_information.availability)
+            break
         except:
             continue
 
-    return event.day_selector_with_covered_days()
+    if len(availabilty.days_available())==0:
+        availabilty = event.day_selector_with_covered_days()
+
+    return availabilty
 
 def get_any_other_information_text(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> ListOfLines:
 

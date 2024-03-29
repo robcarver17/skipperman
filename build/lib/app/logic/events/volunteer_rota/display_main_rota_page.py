@@ -98,8 +98,10 @@ instructions = ListOfLines(["Always click SAVE after making any non button chang
                             "You can copy roles/groups to other days to avoid tiresome re-entry",
                             link]).add_Lines()
 
+FILTER_SKILLS = "Apply filter"
 def get_skills_filter(interface: abstractInterface):
     skills = "" if is_ready_to_swap(interface) else get_volunteer_skills_filter(interface)
+    skills = Line([skills, Button(FILTER_SKILLS, nav_button=True)])
     return skills
 
 def get_header_buttons_for_rota(interface: abstractInterface):
@@ -172,7 +174,7 @@ def post_form_view_for_volunteer_rota(
     elif last_button_pressed in get_all_remove_role_buttons(interface):
         update_if_remove_role_button_pressed(interface=interface, remove_button=last_button_pressed)
 
-    elif last_button_pressed==SAVE_CHANGES:
+    elif last_button_pressed in [SAVE_CHANGES, FILTER_SKILLS]:
         ## already saved
         pass
     ## exception

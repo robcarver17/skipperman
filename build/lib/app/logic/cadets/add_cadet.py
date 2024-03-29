@@ -173,7 +173,9 @@ def process_form_when_cadet_verified(
 
 def add_cadet_from_form_to_data(interface) -> Cadet:
     cadet = get_cadet_from_form(interface)
+    print("cadet from form to be added: %s" % str(cadet))
     cadet = add_new_verified_cadet(cadet)
+    print("returning %s" % str(cadet))
 
     return cadet
 

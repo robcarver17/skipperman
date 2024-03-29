@@ -93,6 +93,7 @@ class ListOfCadets(GenericListOfObjectsWithIds):
         cadet.id = cadet_id
         self.append(cadet)
 
+        return cadet
 
     def cadet_with_id(self, cadet_id: str) -> Cadet:
         return self.object_with_id(cadet_id)

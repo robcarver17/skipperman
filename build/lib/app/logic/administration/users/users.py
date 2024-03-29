@@ -23,6 +23,7 @@ def post_form_security(interface: abstractInterface) -> Union[Form, NewForm]:
     if last_button in deleted_buttons:
         delete_user_from_user_list(last_button)
     if last_button in email_buttons:
+        print("Email button pressed %s" % last_button)
         reset_link = generate_reset_link_for_user_name(last_button=last_button, interface=interface)
         interface.log_error("Reset link for user is %s" % reset_link)
 

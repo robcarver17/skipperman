@@ -98,6 +98,12 @@ class textInput(Input):
     value: str = arg_not_passed
 
 @dataclass
+class emailInput(Input):
+    input_label: str
+    input_name: str
+    value: str = arg_not_passed
+
+@dataclass
 class passwordInput(Input):
     input_label: str
     input_name: str

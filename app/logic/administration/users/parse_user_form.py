@@ -1,10 +1,13 @@
 from dataclasses import dataclass
 
+from app.backend.volunteers.volunteers import get_volunteer_from_list_of_volunteers
+
 from app.backend.data.security import add_user, already_in_list, delete_username_from_user_list, load_all_users, \
-    change_password_for_user, modify_user_group
+    change_password_for_user, modify_user_group, generate_reset_link
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.administration.users.render_users_form import USERNAME, PASSWORD, PASSWORD_CONFIRM, GROUP, name_for_user_and_input_type, \
-    new_user, username_from_deletion_button
+from app.logic.administration.users.render_users_form import USERNAME, PASSWORD, PASSWORD_CONFIRM, GROUP, \
+    name_for_user_and_input_type, \
+    new_user, username_from_deletion_button, EMAIL, VOLUNTEER, username_from_email_button
 from app.objects.users_and_security import SkipperManUser, UserGroup
 
 
@@ -14,6 +17,8 @@ class SkipperManUserFromForm:
     password: str
     confirm_password: str
     group: UserGroup
+    email: str
+    volunteer_id: str
 
 
 
@@ -21,6 +26,13 @@ def delete_user_from_user_list(last_button: str):
     username = username_from_deletion_button(last_button)
 
     delete_username_from_user_list(username)
+
+def generate_reset_link_for_user_name(last_button: str, interface: abstractInterface):
+    username = username_from_email_button(last_button)
+
+    url_list = generate_reset_link(username=username, interface=interface)
+
+    return url_list
 
 
 def save_changes_in_security_form(interface: abstractInterface):
@@ -55,7 +67,9 @@ def add_user_with_values_from_form(user_values: SkipperManUserFromForm):
     user = SkipperManUser.create(
         username=user_values.username,
         password=user_values.password,
-        group=user_values.group
+        group=user_values.group,
+        email_address=user_values.email,
+        volunteer_id=user_values.volunteer_id
     )
 
     add_user(user)
@@ -94,12 +108,17 @@ def get_user_values_from_values_in_form(interface: abstractInterface, user: Skip
         username = interface.value_from_form(name_for_user_and_input_type(user, USERNAME))
     else:
         username = user.username
+    email = interface.value_from_form(name_for_user_and_input_type(user, EMAIL))
+    volunteer_name= interface.value_from_form(name_for_user_and_input_type(user, VOLUNTEER))
+    volunteer = get_volunteer_from_list_of_volunteers(volunteer_name)
 
     return SkipperManUserFromForm(
         username = username,
         password = interface.value_from_form(name_for_user_and_input_type(user, PASSWORD)),
         confirm_password = interface.value_from_form(name_for_user_and_input_type(user, PASSWORD_CONFIRM)),
-        group =  group
+        group =  group,
+        email=email,
+        volunteer_id=volunteer.id
     )
 
 def is_user_valid_text(user_values: SkipperManUserFromForm):

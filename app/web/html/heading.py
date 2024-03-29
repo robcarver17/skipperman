@@ -1,7 +1,7 @@
 from app.web.flask.flash import get_html_of_flashed_messages
 from app.web.flask.security import authenticated_user
 from app.web.html.components import Html, html_joined_list_as_lines, horizontal_line
-from app.web.html.login_and_out import get_login_link_html_code, get_logout_link_html_code, get_username_banner
+from app.web.html.login_and_out import get_login_link_html_code, get_logout_and_chanage_password_link_html_code, get_username_banner
 
 
 def get_html_header():
@@ -23,7 +23,7 @@ def get_html_header():
 def login_or_out() -> Html:
 
     if authenticated_user():
-        return get_logout_link_html_code()
+        return get_logout_and_chanage_password_link_html_code()
     else:
         return get_login_link_html_code()
 

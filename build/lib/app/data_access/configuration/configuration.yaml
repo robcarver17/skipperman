@@ -8,6 +8,7 @@ secret_key: "jasldjflsahdfsah"
 #
 #
 public_web_path: "https://bsccadetskipper.pythonanywhere.com/public/"
+homepage: "https://bsccadetskipper.pythonanywhere.com/"
 datapath: "skipperman_data" ## directory in users home directory where data stored; only change for test purposes
 backuppath: "skipperman_backup"
 userdata: "skipperman_user_data" ## special directory for username and password hashes (plus maybe user specific config)

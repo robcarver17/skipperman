@@ -1,4 +1,8 @@
 from typing import Dict
+import random
+import string
+
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.data_access.data import data
 from app.objects.users_and_security import ListOfSkipperManUsers, SkipperManUser
@@ -38,3 +42,18 @@ def modify_user_group(username: str, new_group:str):
     all_users = load_all_users()
     all_users.modify_user_group(username, new_group=new_group)
     save_all_users(all_users)
+
+def generate_reset_link(interface: abstractInterface, username: str):
+    ## generate randomness
+    new_password = get_random_string(15)
+    change_password_for_user(username, new_password=new_password)
+    url_list = interface.url_for_password_reset(username=username, new_password=new_password)
+    print("Changed password for %s, link is %s" % (username, str(url_list)))
+    return url_list
+
+
+def get_random_string(length):
+    # choose from all lowercase letter
+    letters = string.ascii_lowercase
+    result_str = ''.join(random.choice(letters) for i in range(length))
+    return result_str

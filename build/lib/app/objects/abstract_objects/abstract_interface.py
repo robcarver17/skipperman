@@ -107,6 +107,8 @@ class abstractInterface:
         form_name = self.display_and_post_form_function_maps.get_display_form_name_for_parent_of_function(func)
         return NewForm(form_name)
 
+    def url_for_password_reset(self, username: str, new_password: str):
+        raise NotImplemented
 
 def get_file_from_interface(file_label: str, interface: abstractInterface):
     try:

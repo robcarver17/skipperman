@@ -20,11 +20,13 @@ class SkipperManUser(GenericSkipperManObject):
     username: str
     password_hash: str
     group: UserGroup
+    email_address: str
+    volunteer_id: str
 
     @classmethod
-    def create(cls, username: str, password: str, group: UserGroup):
+    def create(cls, username: str, password: str, group: UserGroup, email_address: str, volunteer_id: str):
         hash = generate_password_hash(password)
-        return cls(username=username, password_hash=hash, group=group)
+        return cls(username=username, password_hash=hash, group=group,email_address=email_address, volunteer_id=volunteer_id)
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
@@ -32,9 +34,10 @@ class SkipperManUser(GenericSkipperManObject):
 #
 
 
-
-default_admin_user_if_none_defined = SkipperManUser('default', generate_password_hash('default'), group=ADMIN_GROUP)
-default_user_if_not_logged_in = SkipperManUser('public', 'public', group=PUBLIC_GROUP)
+NO_VOLUNTEER_ID = '-1'
+default_admin_user_if_none_defined = SkipperManUser('default', generate_password_hash('default'), group=ADMIN_GROUP, email_address='',
+                                                    volunteer_id=NO_VOLUNTEER_ID)
+default_user_if_not_logged_in = SkipperManUser('public', 'public', group=PUBLIC_GROUP,email_address='', volunteer_id=NO_VOLUNTEER_ID)
 
 class ListOfSkipperManUsers(GenericListOfObjects):
     @property

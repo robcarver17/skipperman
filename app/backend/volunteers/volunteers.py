@@ -92,8 +92,6 @@ def get_volunteer_from_id(volunteer_id: str) -> Volunteer:
     list_of_volunteers = get_sorted_list_of_volunteers()
     return list_of_volunteers.object_with_id(volunteer_id)
 
-def get_volunteer_from_name(volunteer_name:str) -> Volunteer:
-    list_of_volunteers = get_sorted_list_of_volunteers()
 
 def get_volunteer_name_from_id(volunteer_id) -> str:
     volunteer = get_volunteer_from_id(volunteer_id)

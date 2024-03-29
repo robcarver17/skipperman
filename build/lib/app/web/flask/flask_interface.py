@@ -1,5 +1,8 @@
 from dataclasses import dataclass
 
+import flask
+
+from app.data_access.configuration.configuration import HOMEPAGE
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.web.flask.flash import flash_error
@@ -9,14 +12,14 @@ from app.web.flask.session_data_for_action import (
     clear_session_data_for_action,
 )
 from app.web.html.forms import HTML_BUTTON_NAME, html_as_date
-from app.web.html.url import get_action_url
+from app.web.html.url import get_action_url, LINK_LOGIN
 from app.objects.constants import (
     NoFileUploaded,
     missing_data,
     arg_not_passed,
     NoButtonPressed,
 )
-from flask import request
+from flask import request, url_for
 
 
 @dataclass
@@ -106,6 +109,15 @@ class flaskInterface(abstractInterface):
         return uploaded_file(input_name)
 
 
+    def url_for_password_reset(self,username: str, new_password: str):
+        url =self.main_url()
+        print(url)
+
+        return '%s%s/?username=%s&password=%s' % (url, LINK_LOGIN,username, new_password)
+
+
+    def main_url(self):
+        return flask.request.host_url
 
 def is_website_post() -> bool:
     return request.method == "POST"

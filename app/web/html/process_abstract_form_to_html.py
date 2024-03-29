@@ -86,6 +86,7 @@ def get_html_for_element_in_line(
         str,
         Button,
         textInput,
+            emailInput,
         intInput,
         radioInput,
         dateInput,
@@ -114,6 +115,12 @@ def get_html_for_element_in_line(
         return get_html_for_link(element_in_line)
     elif type(element_in_line) is textInput:
         return html_form_text_input(
+            input_label=element_in_line.input_label,
+            input_name=element_in_line.input_name,
+            value=element_in_line.value,
+        )
+    elif type(element_in_line) is emailInput:
+        return html_form_email_input(
             input_label=element_in_line.input_label,
             input_name=element_in_line.input_name,
             value=element_in_line.value,

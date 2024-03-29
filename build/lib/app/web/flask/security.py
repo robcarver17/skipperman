@@ -44,7 +44,8 @@ def as_flask_user(skipper_man_user: SkipperManUser) -> FlaskUser:
     return FlaskUser(skipper_man_user.username, password_hash=skipper_man_user.password_hash, group=skipper_man_user.group)
 
 def check_password(flask_user: FlaskUser, password: str):
-    skipperman_user = SkipperManUser(username=flask_user.username, password_hash=flask_user.password_hash, group=UserGroup[flask_user.group_name])
+    skipperman_user = SkipperManUser(username=flask_user.username, password_hash=flask_user.password_hash, group=UserGroup[flask_user.group_name],
+                                     email_address='', volunteer_id='')
     return skipperman_user.check_password(password)
 
 def as_dict_of_flask_users(list_of_users: ListOfSkipperManUsers) -> Dict[str, FlaskUser]:

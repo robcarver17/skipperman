@@ -25,24 +25,6 @@ class flaskInterface(abstractInterface):
     def log_error(self, error_message: str):
         flash_error(error_message)
 
-    def log_message(self, log_message: str):
-        logs = self.logs
-        logs.append(log_message)
-        self.logs = logs
-
-    def print_logs(self) -> ListOfLines:
-        return ListOfLines(self.logs)
-
-    @property
-    def logs(self) -> list:
-        logs = self.get_persistent_value("_logs")
-        if logs is missing_data:
-            return []
-        return logs
-
-    @logs.setter
-    def logs(self, logs: list):
-        self.set_persistent_value("_logs", logs)
 
     def get_persistent_value(self, key, default=missing_data):
         return self.session_data.get_value(key, default=default)

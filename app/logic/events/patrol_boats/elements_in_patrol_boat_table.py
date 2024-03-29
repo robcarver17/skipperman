@@ -71,10 +71,11 @@ def get_existing_allocation_elements_for_volunteer_day_and_boat(
                                                   boat_at_event=boat_at_event)
 
     return Line([
-        name,
+        name, ' ',
         role_dropdown]+
         copy_buttons+
-        swap_buttons+[
+        swap_buttons+[' ']+
+                [
         remove_volunteer_button])
 
 

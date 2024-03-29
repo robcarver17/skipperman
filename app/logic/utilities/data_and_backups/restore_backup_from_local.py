@@ -61,17 +61,12 @@ def process_uploaded_zip_file(interface: abstractInterface, file):
     temp_filename = os.path.join(download_directory, "tempzipfile.zip")
     file.save(temp_filename)
     temp_dir = os.path.join(download_directory, "temp")
-    interface.log_message("Creating temporary directory")
     try:
         os.mkdir(temp_dir)
     except:
         pass
-    interface.log_message("Unpacking zip file")
     shutil.unpack_archive(temp_filename, temp_dir)
-    interface.log_message("Deleting existing data")
     shutil.rmtree(master_data_path)
-    interface.log_message("Copying over data from temporary director")
     shutil.copytree(temp_dir, master_data_path, dirs_exist_ok=True)
-    interface.log_message("Deleting temporary directory")
     shutil.rmtree(temp_dir)
-    interface.log_message("Restore backup done")
+    interface.log_error("Restore backup done")

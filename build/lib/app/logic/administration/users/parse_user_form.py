@@ -78,7 +78,7 @@ def modify_password_if_changed(interface: abstractInterface, user: SkipperManUse
         interface.log_error("Cannot change password as fields don't match!")
 
     change_password_for_user(user.username, new_password = user_values_from_form.password)
-    interface.log_message("Changed password for %s" % user.username)
+    interface.log_error("Changed password for %s" % user.username)
 
 def modify_group_if_changed( user: SkipperManUser, user_values_from_form: SkipperManUserFromForm):
     if user.group == user_values_from_form.group:

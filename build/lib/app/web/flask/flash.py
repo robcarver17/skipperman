@@ -30,7 +30,7 @@ def get_html_block_for_flash(category_filter: str, html_transform: Callable) -> 
 
     return all_items_as_html
 
-html_error_wraparound = HtmlWrapper('<h2 class="error">%s</h2>')  ## FIXME ADD CSS
+html_error_wraparound = HtmlWrapper('<h4 class="error">%s</h4>')
 
 
 def html_error(html_str: str):

@@ -25,11 +25,6 @@ class abstractInterface:
     def log_error(self, error_message: str):
         raise NotImplemented
 
-    def log_message(self, log_message: str):
-        raise NotImplemented
-
-    def print_logs(self) -> ListOfLines:
-        raise NotImplemented
 
     def set_where_finished_button_should_lead_to(self, stage_name: str):
         self.set_persistent_value(FINISHED_BUTTON_LABEL, stage_name)
@@ -137,8 +132,7 @@ def form_with_message_and_finished_button(
     if log_error is not arg_not_passed:
         interface.log_error(log_error)
     elif log_msg is not arg_not_passed:
-        interface.log_message(log_msg)
-
+        interface.log_error(log_msg)
 
     if function_whose_parent_go_to_on_button_press is not arg_not_passed:
         stage_name= interface.get_new_display_form_for_parent_of_function(function_whose_parent_go_to_on_button_press)
@@ -157,7 +151,6 @@ def form_with_content_and_finished_button(
     return Form(
         ListOfLines(
             [
-                interface.print_logs(),
                 _______________,
                 content,
                 _______________,

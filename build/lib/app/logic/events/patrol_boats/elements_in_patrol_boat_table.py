@@ -43,7 +43,8 @@ def get_existing_allocation_elements_for_day_and_boat( interface:abstractInterfa
             event=event,
             day=day,
             volunteer_id=volunteer_id,
-            interface=interface
+            interface=interface,
+            boat_at_event=boat_at_event
         ) for volunteer_id in list_of_volunteer_ids
     ])
 
@@ -53,7 +54,9 @@ def get_existing_allocation_elements_for_volunteer_day_and_boat(
                                                  day: Day,
                                                 event: Event,
                                                 volunteer_id: str,
+                                                boat_at_event: PatrolBoat,
                                                  ) -> Line:
+
     in_swap_state = is_ready_to_swap(interface)
     name = get_volunteer_name_from_id(volunteer_id)
     role_dropdown = volunteer_boat_role_dropdown(volunteer_id=volunteer_id, event=event, day=day, in_swap_state=in_swap_state)
@@ -64,13 +67,15 @@ def get_existing_allocation_elements_for_volunteer_day_and_boat(
         copy_buttons = get_copy_buttons_for_boat_allocation(volunteer_id=volunteer_id, event=event, day=day)
         remove_volunteer_button = get_remove_volunteer_button(day=day, volunteer_id=volunteer_id)
 
-    swap_buttons = get_swap_buttons_for_boat_rota(volunteer_id=volunteer_id, event=event, day=day, interface=interface)
+    swap_buttons = get_swap_buttons_for_boat_rota(volunteer_id=volunteer_id, event=event, day=day, interface=interface,
+                                                  boat_at_event=boat_at_event)
 
     return Line([
-        name,
+        name, ' ',
         role_dropdown]+
         copy_buttons+
-        swap_buttons+[
+        swap_buttons+[' ']+
+                [
         remove_volunteer_button])
 
 

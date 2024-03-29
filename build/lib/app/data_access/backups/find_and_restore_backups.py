@@ -22,6 +22,9 @@ def restore_backup(backup_diff: int, datapath: str):
         raise Exception("Can't restore non existent backup %d" % backup_diff)
 
     backup_dir = get_backup_directory(backup_number=backup_diff, datapath=datapath)
-    shutil.rmtree(master_data_path)
+    delete_all_master_data()
     shutil.copytree(backup_dir, master_data_path, dirs_exist_ok=True)
     delete_timestamp_file(master_data_path)
+
+def delete_all_master_data():
+    shutil.rmtree(master_data_path)

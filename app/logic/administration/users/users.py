@@ -1,7 +1,7 @@
 from typing import Union
 
-from app.logic.administration.parse_user_form import delete_user_from_user_list, save_changes_in_security_form
-from app.logic.administration.render_users_form import display_form_edit_list_of_users, list_of_deletion_buttons_names, BACK_BUTTON_LABEL, SAVE_ENTRY_BUTTON_LABEL
+from app.logic.administration.users.parse_user_form import delete_user_from_user_list, save_changes_in_security_form
+from app.logic.administration.users.render_users_form import display_form_edit_list_of_users, list_of_deletion_buttons_names, BACK_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.backend.data.security import load_all_users

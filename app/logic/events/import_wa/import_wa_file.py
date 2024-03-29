@@ -64,7 +64,7 @@ def import_controller_form(interface: abstractInterface):
 
 def send_logs_to_interface(list_of_messages: list, interface: abstractInterface):
     for message in list_of_messages:
-        interface.log_message(message)
+        interface.log_error(message)
 
 def delete_staged_file_for_current_event(interface: abstractInterface):
     event = get_event_from_state(interface)

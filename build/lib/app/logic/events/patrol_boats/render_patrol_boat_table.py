@@ -39,7 +39,8 @@ def get_patrol_boat_table( interface:abstractInterface, event: Event) -> Table:
         bottom_row = get_bottom_row_for_patrol_boat_table(event)
 
     return Table(
-        [top_row]+other_rows+[bottom_row]
+        [top_row]+other_rows+[bottom_row],
+        has_column_headings=True
     )
 
 
@@ -104,7 +105,7 @@ def get_row_for_boat_at_event( interface:abstractInterface,
     ) for day in event.weekdays_in_event()]
 
     return RowInTable([
-        Line([boat_name, delete_button])
+        ListOfLines([boat_name, delete_button]).add_Lines()
     ]+day_inputs)
 
 

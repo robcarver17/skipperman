@@ -62,11 +62,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 ### Required for racing event:
 
 - random issues with volunteer changes, fix
-- include counts of reg numbers entered/cancelled
-- deselect all box for availablity
-- sail numbers without decimals
 - remember if opened details or not
-- list of non volunteers
 
 ### Required for social event:
 
@@ -79,6 +75,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 - record qualification data and backfill
 - backfill Cadet week data
+- list of non volunteers
 
 - maintain ticksheets, print and record ticks
 - backfill ticksheet data

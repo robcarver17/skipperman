@@ -62,7 +62,6 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 ### Required for racing event:
 
 - random issues with volunteer changes, fix
-- remember if opened details or not
 
 ### Required for social event:
 

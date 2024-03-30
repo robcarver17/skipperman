@@ -56,7 +56,8 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - spotter sheets report
 - report to public weblink is optional and puts report in different place
 - filter volunteer sheets on qualification
-- regular backups on all writes; include roll back function (showing user who did edits) UTILITIES MENU
+- regular backups; include roll back function 
+- record qualification data 
 
 
 ### Required for racing event:
@@ -73,9 +74,9 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for training event (ASAP):
 
-- record qualification data and backfill
+- change how we deal with duplicates
 - list of non volunteers
-
+- ability to make other information field shorter
 - maintain ticksheets, print and record ticks
 - backfill ticksheet data
 - add * for boat allocation to group report

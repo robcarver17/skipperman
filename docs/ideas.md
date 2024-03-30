@@ -62,6 +62,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 ### Required for racing event:
 
 - random issues with volunteer changes, fix
+- are volunteers with existing connections shown in pick list?
 
 ### Required for social event:
 
@@ -73,7 +74,6 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 ### Required for training event (ASAP):
 
 - record qualification data and backfill
-- backfill Cadet week data
 - list of non volunteers
 
 - maintain ticksheets, print and record ticks

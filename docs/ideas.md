@@ -75,11 +75,11 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for training event (ASAP):
 
+- add * for boat allocation to group report
 - list of non volunteers
 - ability to make other information field shorter
 - maintain ticksheets, print and record ticks
 - backfill ticksheet data
-- add * for boat allocation to group report
 - filter volunteer sheet on available days
 - allow selection of group subset in reporting arrangement
 - print roll call lists and contact details

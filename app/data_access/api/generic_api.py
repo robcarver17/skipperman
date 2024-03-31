@@ -8,6 +8,7 @@ from app.data_access.classes.volunteers import *
 from app.data_access.classes.resources import *
 from app.data_access.classes.dinghies_at_events import *
 from app.data_access.classes.users import *
+from app.data_access.classes.qualifications import *
 
 class GenericDataApi(object):
     ## FOLLOWING SHOULD BE OVERWRITTEN BY SPECIFIC CLASSES
@@ -104,4 +105,12 @@ class GenericDataApi(object):
 
     @property
     def data_list_of_users(self) -> DataListOfSkipperManUsers:
+        raise NotImplemented
+
+    @property
+    def data_list_of_qualifications(self) -> DataListOfQualifications:
+        raise NotImplemented
+
+    @property
+    def data_list_of_cadets_with_qualifications(self) -> DataListOfCadetsWithQualifications:
         raise NotImplemented

@@ -269,7 +269,6 @@ def any_volunteers_associated_with_cadet_at_event(cadet_id: str, event:Event):
 
 def list_of_volunteers_for_cadet_identified(cadet_id: str, event: Event) -> List[str]:
     list_of_identified_volunteers_at_event = load_list_of_identified_volunteers_at_event(event=event)
-
     list_of_row_ids= list_of_row_ids_at_event_given_cadet_id(cadet_id=cadet_id, event=event)
     list_of_volunteer_ids=list_of_identified_volunteers_at_event.list_of_volunteer_ids_given_list_of_row_ids_excluding_unallocated(list_of_row_ids)
 

@@ -1,6 +1,7 @@
 from typing import Union
 
 from app.backend.events import is_wa_field_mapping_setup_for_event
+from app.backend.group_allocations.summarise_registration_data import summarise_registrations_for_event
 from app.backend.volunteers.patrol_boats import get_summary_list_of_boat_allocations_for_events
 from app.backend.volunteers.volunteer_rota_summary import get_summary_list_of_roles_and_groups_for_events
 from app.backend.wa_import.map_wa_files import is_wa_file_mapping_setup_for_event
@@ -46,6 +47,8 @@ def get_event_form_for_event(
     event_description = event.details_as_list_of_str()
     event_description = ListOfLines([Line([Heading(item,centred=True, size=5)]) for item in event_description])
 
+    summarise_registrations = summarise_registrations_for_event(event)
+
     allocations_lines = ""
     if event.contains_cadets:
         if event.contains_groups:
@@ -76,9 +79,6 @@ def get_event_form_for_event(
                         boat_allocation_table])
 
 
-    if event.contains_cadets:
-        ## FIXME SUMMARISE CADET NUMBERS
-        pass
 
     if event.contains_food:
         ## FIXME SUMMARISE FOOD NUMBERS
@@ -96,8 +96,9 @@ def get_event_form_for_event(
                         _______________,
                         buttons,
                         _______________,
+                        summarise_registrations,
                         allocations_lines,
-                        rota_lines
+                        rota_lines,
 ]))
 
     return Form(lines_in_form)

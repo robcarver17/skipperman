@@ -16,6 +16,7 @@ app/backend/data/events.py
 app/backend/data/field_mapping.py
 app/backend/data/group_allocations.py
 app/backend/data/mapped_events.py
+app/backend/data/qualification.py
 app/backend/data/resources.py
 app/backend/data/security.py
 app/backend/data/volunteer_allocation.py
@@ -37,6 +38,7 @@ app/backend/group_allocations/group_allocations_data.py
 app/backend/group_allocations/previous_allocations.py
 app/backend/group_allocations/sorting.py
 app/backend/group_allocations/summarise_allocations_data.py
+app/backend/group_allocations/summarise_registration_data.py
 app/backend/group_allocations/../../data_access/configuration/configuration.yaml
 app/backend/reporting/__init__.py
 app/backend/reporting/event_lists.py
@@ -117,6 +119,7 @@ app/data_access/classes/dinghies_at_events.py
 app/data_access/classes/list_of_events.py
 app/data_access/classes/mapped_wa_event.py
 app/data_access/classes/print_options.py
+app/data_access/classes/qualifications.py
 app/data_access/classes/resources.py
 app/data_access/classes/users.py
 app/data_access/classes/volunteers.py
@@ -136,6 +139,7 @@ app/data_access/csv/generic_csv_data.py
 app/data_access/csv/list_of_events.py
 app/data_access/csv/mapped_wa_event.py
 app/data_access/csv/print_options.py
+app/data_access/csv/qualifications.py
 app/data_access/csv/resolve_csv_paths_and_filenames.py
 app/data_access/csv/resources.py
 app/data_access/csv/users.py
@@ -178,6 +182,7 @@ app/logic/configuration/config_function_mapping.py
 app/logic/configuration/dinghies.py
 app/logic/configuration/generic_list_modifier.py
 app/logic/configuration/patrol_boats.py
+app/logic/configuration/qualifications.py
 app/logic/configuration/../../data_access/configuration/configuration.yaml
 app/logic/events/ENTRY_view_events.py
 app/logic/events/__init__.py
@@ -326,6 +331,7 @@ app/objects/groups.py
 app/objects/mapped_wa_event.py
 app/objects/patrol_boats.py
 app/objects/person_with_food_at_event.py
+app/objects/qualifications.py
 app/objects/relevant_information_for_volunteers.py
 app/objects/users_and_security.py
 app/objects/utils.py

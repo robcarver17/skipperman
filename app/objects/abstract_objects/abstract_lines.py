@@ -41,3 +41,4 @@ _______________ = Line("             ")
 class DetailListOfLines:
     list_of_lines: ListOfLines
     name: str = "Detail"
+    open: bool = False

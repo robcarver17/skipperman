@@ -12,6 +12,7 @@ from app.data_access.csv.volunteers import CsvDataListOfVolunteers, CsvDataListO
 from app.data_access.csv.resources import CsvDataListOfPatrolBoats, CsvDataListOfVolunteersAtEventWithPatrolBoats, CsvDataListOfClubDinghies, CsvDataListOfCadetAtEventWithClubDinghies
 from app.data_access.csv.dinghies_at_events import CsvDataListOfCadetAtEventWithDinghies, CsvDataListOfDinghies
 from app.data_access.csv.users import CsvDataListOfSkipperManUsers
+from app.data_access.csv.qualifications import CsvDataListOfQualifications, CsvListOfCadetsWithQualifications
 
 class CsvDataApi(GenericDataApi):
     def __init__(self, master_data_path: str, user_data_path: str, backup_data_path: str):
@@ -112,6 +113,14 @@ class CsvDataApi(GenericDataApi):
         return CsvDataListOfDinghies(self.master_data_path, backup_data_path=self.backup_data_path)
 
     @property
+    def data_list_of_qualifications(self) -> CsvDataListOfQualifications:
+        return CsvDataListOfQualifications(self.master_data_path, backup_data_path=self.backup_data_path)
+
+    @property
+    def data_list_of_cadets_with_qualifications(self) -> CsvListOfCadetsWithQualifications:
+        return CsvListOfCadetsWithQualifications(self.master_data_path, backup_data_path=self.backup_data_path)
+
+    @property
     def data_list_of_users(self) -> CsvDataListOfSkipperManUsers:
         return CsvDataListOfSkipperManUsers(self.user_data_path, backup_data_path=self.backup_data_path)
 
@@ -126,3 +135,4 @@ class CsvDataApi(GenericDataApi):
     @property
     def backup_data_path(self) -> str:
         return self._backup_data_path
+

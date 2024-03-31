@@ -1,5 +1,8 @@
 from typing import Union, List
 
+
+from app.objects.utils import make_id_as_int_str
+
 from app.backend.data.resources import load_list_of_club_dinghies, load_list_of_boat_classes
 from app.backend.forms.form_utils import input_name_from_column_name_and_cadet_id, get_availability_checkbox
 from app.backend.forms.reorder_form import reorder_table
@@ -24,21 +27,17 @@ from app.objects.constants import missing_data
 from app.objects.events import Event
 from app.objects.dinghies import NO_PARTNERSHIP_LIST
 
+NOTES = "Notes"
+
 def display_form_allocate_cadets_at_event( event: Event, sort_order: list) -> Union[Form, NewForm]:
     if event.contains_groups:
-        allocations = summarise_allocations_for_event(event)
         star_indicator = "* indicates only compulsory for racing / river training with spotter sheets"
     elif event.reg_splitting_allowed:
-        allocations = "No groups in event- racing only"
         star_indicator = ""
-
     else:
-        ##shouldn't happen, but ok
-        allocations = ""
         star_indicator = ""
 
-    club_dinghies = summarise_club_boat_allocations_for_event(event)
-    classes = summarise_class_attendance_for_event(event)
+    allocations_and_class_summary = get_allocations_and_classes_detail(event=event)
 
     inner_form = get_inner_form_for_cadet_allocation(event, sort_order=sort_order)
     sort_button_table = sort_buttons_for_allocation_table(sort_order)
@@ -47,21 +46,12 @@ def display_form_allocate_cadets_at_event( event: Event, sort_order: list) -> Un
     return Form(ListOfLines([
                 ButtonBar([back_button]),
                     Heading("Cadets in %s " % str(event), size=4), _______________,
-        _______________,
-                DetailListOfLines(ListOfLines([
                     _______________,
-                            allocations,
-                    _______________,
-                             "Allocated club dinghies:",
-                             club_dinghies,
-                    _______________,
-                             "Classes",
-                             classes,
-                    _______________]), "Summary"),
+                    allocations_and_class_summary,
                     DetailListOfLines(ListOfLines([
                     _______________,
                     "Specify order that table is sorted in:",
-                    sort_button_table]), "Sort order"),
+                    sort_button_table]), "Sort order", open=True),
                      _______________,
                      nav_bar,
                     star_indicator,
@@ -70,6 +60,31 @@ def display_form_allocate_cadets_at_event( event: Event, sort_order: list) -> Un
                     nav_bar
                     ])
     )
+
+
+def get_allocations_and_classes_detail( event: Event)-> DetailListOfLines:
+    if event.contains_groups:
+        allocations = summarise_allocations_for_event(event)
+    elif event.reg_splitting_allowed:
+        allocations = "No groups in event- racing only"
+    else:
+        ##shouldn't happen, but ok
+        allocations = ""
+
+    club_dinghies = summarise_club_boat_allocations_for_event(event)
+    classes = summarise_class_attendance_for_event(event)
+    return DetailListOfLines(ListOfLines([
+        _______________,
+        allocations,
+        _______________,
+        "Allocated club dinghies:",
+        club_dinghies,
+        _______________,
+        "Classes",
+        classes,
+        _______________]), "Summary", open=False)
+
+
 
 
 update_button = Button(UPDATE_ALLOCATION_BUTTON_LABEL, nav_button=True)
@@ -106,13 +121,13 @@ def get_top_row(allocation_data: AllocationData) -> RowInTable:
                          "Allocate: Club boat",
                          "Allocate: Class of boat"+star,
                          "Edit: Sail number"+star,
-                         "Allocate: Two handed partner"
-                         ]
+                         "Allocate: Two handed partner",
+                         "Notes"]
 
     ## ensure if we add columns for cadet, add in padding and column names here
     return RowInTable([
         "" ## cadet name
-    ]+previous_event_names_in_list+info_field_names+input_field_names
+    ]+previous_event_names_in_list+info_field_names+["Official qualification"]+input_field_names
                       )
 
 
@@ -120,17 +135,18 @@ def get_row_for_cadet(cadet: Cadet, allocation_data: AllocationData) -> RowInTab
     previous_groups_as_list = allocation_data.previous_groups_as_list_of_str(cadet)
     previous_group_info = allocation_data.group_info_dict_for_cadet_as_ordered_list(cadet)
     input_fields = get_input_fields_for_cadet(cadet, allocation_data)
+    qualification = allocation_data.get_highest_qualification_for_cadet(cadet)
 
-    ## FIX ME ADD RYA LEVELS AND EXPERIENCE
     return RowInTable(
             [str(cadet)]+
             previous_groups_as_list
-            +previous_group_info+
+            +previous_group_info+[qualification]+
             input_fields
         )
 
 
 def get_input_fields_for_cadet(cadet: Cadet, allocation_data: AllocationData) -> list:
+    notes_field = get_notes_field(cadet=cadet, allocation_data=allocation_data)
     group_allocation_field = get_dropdown_input_for_group_allocation(cadet=cadet, allocation_data=allocation_data)
     days_attending_field = get_days_attending_field(cadet=cadet, allocation_data=allocation_data)
     dropdown_input_for_club_boat_allocation = get_dropdown_input_for_club_boat_allocation(cadet=cadet, allocation_data=allocation_data)
@@ -144,6 +160,7 @@ def get_input_fields_for_cadet(cadet: Cadet, allocation_data: AllocationData) ->
                          dropdown_input_for_boat_class_allocation,
                          sail_number_field,
                          dropdown_input_for_partner_allocation,
+                        notes_field
                          ]
 
     return input_fields
@@ -163,6 +180,16 @@ def get_dropdown_input_for_group_allocation(cadet: Cadet, allocation_data: Alloc
         return "Racing"
 
 dict_of_all_possible_groups_for_dropdown_input= dict([(group, group) for group in ALL_GROUPS_NAMES])
+
+def get_notes_field(cadet: Cadet, allocation_data: AllocationData):
+    cadet_at_event = allocation_data.cadets_at_event_including_non_active.cadet_at_event(cadet.id)
+
+    return textInput(
+        input_name=input_name_from_column_name_and_cadet_id(column_name=NOTES, cadet_id=cadet.id),
+        input_label="",
+        value=cadet_at_event.notes
+    )
+
 
 
 def get_days_attending_field(cadet: Cadet, allocation_data: AllocationData)-> checkboxInput:
@@ -212,7 +239,7 @@ def get_dict_of_boat_classes():
     return dict_of_all_possible_boat_classes
 
 def get_sail_number_field(cadet: Cadet, allocation_data: AllocationData)-> textInput:
-    current_number = allocation_data.get_sail_number_for_boat(cadet)
+    current_number = make_id_as_int_str(allocation_data.get_sail_number_for_boat(cadet))
     sail_number_field = textInput(
         input_name=input_name_from_column_name_and_cadet_id(cadet_id=cadet.id, column_name=SAIL_NUMBER),
         value=current_number,
@@ -252,7 +279,7 @@ def okay_to_have_partner_button(cadet_id: str, allocation_data: AllocationData)-
     return registration_split_allowed and boat_exists
 
 def boat_already_exists_for_cadet(cadet_id: str, allocation_data: AllocationData)-> bool:
-    is_missing = allocation_data.list_of_cadets_at_event_with_dinghies.object_with_cadet_id(cadet_id) == missing_data
+    is_missing = allocation_data.list_of_cadets_at_event_with_dinghies.object_with_cadet_id(cadet_id) is missing_data
 
     return not is_missing
 

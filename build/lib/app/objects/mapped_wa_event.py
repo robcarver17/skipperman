@@ -222,6 +222,15 @@ class MappedWAEvent(list):
         return cls([])
 
 
+def summarise_status(mapped_event: MappedWAEvent) -> dict:
+    all_status = {}
+    for row in mapped_event:
+        status = row.registration_status
+        current_count = all_status.get(status.name, 0)
+        current_count+=1
+        all_status[status.name] = current_count
+
+    return all_status
 
 def extract_list_of_row_ids_from_existing_wa_event(
     existing_mapped_wa_event_with_ids: MappedWAEvent,

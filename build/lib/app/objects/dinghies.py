@@ -2,8 +2,10 @@
 from dataclasses import dataclass
 from typing import List
 
+from app.objects.utils import make_id_as_int_str
+
 from app.objects.constants import missing_data, arg_not_passed
-from app.objects.generic import GenericSkipperManObjectWithIds, GenericSkipperManObject, GenericListOfObjectsWithIds
+from app.objects.generic import GenericSkipperManObjectWithIds, GenericSkipperManObject, GenericListOfObjectsWithIds, clean_up_dict_with_weird_floats_for_id
 
 @dataclass
 class Dinghy(GenericSkipperManObjectWithIds):
@@ -89,6 +91,13 @@ class CadetAtEventWithDinghy(GenericSkipperManObject):
 
     def has_partner(self):
         return valid_partnership(self.partner_cadet_id)
+
+    def __eq__(self, other):
+        sail_number = make_id_as_int_str(self.sail_number)
+        other_sail_number = make_id_as_int_str(other.sail_number)
+
+        return self.cadet_id == other.cadet_id and self.boat_class_id == other.boat_class_id and sail_number == other_sail_number and self.partner_cadet_id == other.partner_cadet_id
+
 
 
 UNCHANGED = "unchanged"
@@ -255,6 +264,7 @@ def compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values(new
     updated_list = ListOfCadetAtEventWithDinghies([])
     for potentially_updated_cadet_at_event in new_list:
         cadet_in_existing_list = existing_list.object_with_cadet_id(potentially_updated_cadet_at_event.cadet_id)
+        print("Has %s changed? It was %s" % (str(potentially_updated_cadet_at_event), str(cadet_in_existing_list)))
 
         already_in_a_changed_partnership = is_cadet_already_in_changed_partnership(updated_list=updated_list, potentially_updated_cadet_at_event=potentially_updated_cadet_at_event)
         if already_in_a_changed_partnership:

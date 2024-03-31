@@ -173,6 +173,7 @@ def get_list_of_volunteer_names_relating_to_changed_cadet(interface: abstractInt
 def list_of_volunteer_ids_to_modify_only_changed_cadets(interface: abstractInterface) -> List[str]:
     ###
     cadet_id = get_current_cadet_id_for_rota_at_event(interface)
+    print("CADET ID MODIFIED %s" % cadet_id)
     event = get_event_from_state(interface)
     list_of_volunteer_ids_not_added = list_of_volunteers_for_cadet_identified(cadet_id=cadet_id, event=event)
     return list_of_volunteer_ids_not_added

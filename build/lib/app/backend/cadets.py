@@ -3,6 +3,7 @@ from copy import copy
 from app.backend.data.cadets import load_list_of_all_cadets
 from app.data_access.configuration.configuration import MIN_CADET_AGE, MAX_CADET_AGE, SIMILARITY_LEVEL_TO_WARN_NAME, \
     SIMILARITY_LEVEL_TO_WARN_DATE
+from app.data_access.data import data
 from app.objects.cadets import Cadet, ListOfCadets, is_cadet_age_surprising
 from app.objects.constants import arg_not_passed
 
@@ -144,3 +145,8 @@ def get_list_of_similar_cadets(cadet: Cadet) -> list:
     return similar_cadets
 
 
+def modify_cadet(new_cadet_details: Cadet):
+    list_of_cadets = get_sorted_list_of_cadets()
+    list_of_cadets.replace_with_new_object(new_cadet_details)
+
+    data.data_list_of_cadets.write(list_of_cadets)

@@ -20,7 +20,7 @@ from app.logic.events.constants import *
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_buttons import Button
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
 from app.objects.constants import NoMoreData
 from app.objects.events import Event
 
@@ -90,29 +90,30 @@ def display_form_for_volunteer_details( volunteer_id: str, event: Event)-> Form:
         _______________,
         connection_checkbox,
         _______________,
-        available_text,
+        available_text.add_Lines(),
         available_checkbox,
         _______________,
         any_other_information_text,
         _______________,
-        preferred_duties_text,
+        preferred_duties_text.add_Lines(),
         preferred_duties_input,
         _______________,
-        same_or_different_text,
+        same_or_different_text.add_Lines(),
         same_or_different_input,
         _______________,
         notes_input,
         _______________,
-        Button(SAVE_CHANGES)
+        Line([Button(SAVE_CHANGES),Button(DO_NOT_ADD_VOLUNTEER_LABEL)])
     ]))
 
+DO_NOT_ADD_VOLUNTEER_LABEL = "This volunteer is not available at this event"
 
 def post_form_add_volunteers_to_event(interface: abstractInterface):
-    form_ok = add_volunteer_at_event_with_form_contents(interface)
-    if not form_ok:
-        volunteer_id = get_current_volunteer_id_at_event(interface)
-        event = get_event_from_state(interface)
-        return display_form_for_volunteer_details(volunteer_id=volunteer_id, event=event)
+    last_button = interface.last_button_pressed()
+    if last_button == SAVE_CHANGES:
+        add_volunteer_at_event_with_form_contents(interface)
+    else:
+        pass
 
     return next_volunteer_in_event(interface)
 

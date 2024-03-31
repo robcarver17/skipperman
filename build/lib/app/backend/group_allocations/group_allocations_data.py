@@ -15,6 +15,7 @@ from app.data_access.configuration.field_list import CADET_GROUP_PREFERENCE, DES
 from app.backend.data.resources import load_list_of_club_dinghies, load_list_of_cadets_at_event_with_club_dinghies
 from app.backend.data.resources import load_list_of_boat_classes
 from app.backend.data.cadets_at_event import load_list_of_cadets_at_event_with_dinghies
+from app.backend.data.qualification import load_list_of_cadets_with_qualifications, highest_qualification_for_cadet
 from app.data_access.configuration.field_list_groups import GROUP_ALLOCATION_FIELDS_TO_IGNORE_WHEN_RACING_ONLY
 
 from app.objects.cadets import ListOfCadets, Cadet
@@ -25,7 +26,7 @@ from app.objects.groups import ListOfCadetIdsWithGroups, Group
 from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies, ListOfClubDinghies, NO_BOAT
 from app.objects.dinghies import ListOfDinghies, ListOfCadetAtEventWithDinghies, no_partnership, NO_PARTNER_REQUIRED
 from app.objects.utils import similar
-
+from app.objects.qualifications import ListOfCadetsWithQualifications
 from app.objects.cadet_at_event import ListOfCadetsAtEvent
 
 
@@ -42,6 +43,10 @@ class AllocationData:
     list_of_cadets_at_event_with_dinghies: ListOfCadetAtEventWithDinghies
     list_of_club_boats: ListOfClubDinghies
     list_of_dinghies: ListOfDinghies
+    list_of_cadets_with_qualifications: ListOfCadetsWithQualifications
+
+    def get_highest_qualification_for_cadet(self, cadet: Cadet) -> str:
+        return highest_qualification_for_cadet(cadet)
 
     def get_two_handed_partner_name_for_cadet(self, cadet: Cadet) -> str:
         partner_id = self.get_two_handed_partner_id_for_cadet(cadet)
@@ -136,8 +141,9 @@ class AllocationData:
         if not self.event.contains_groups:
             return []
         previous_groups_as_list = self.previous_groups_as_list(cadet)
-        return [x.as_str_replace_unallocated_with_empty() for x in previous_groups_as_list]
+        previous_groups_as_list= [x.as_str_replace_unallocated_with_empty() for x in previous_groups_as_list]
 
+        return previous_groups_as_list
 
     def previous_groups_as_list(self, cadet: Cadet) -> List[Group]:
         return allocation_for_cadet_in_previous_events(cadet=cadet,previous_allocations_as_dict=self.previous_allocations_as_dict)
@@ -160,7 +166,7 @@ class AllocationData:
             ).group.group_name
 
         except:
-            current_allocation = self.get_last_group_name(cadet)
+            current_allocation = UNALLOCATED_GROUP_NAME
 
         return current_allocation
 
@@ -212,6 +218,8 @@ def get_allocation_data(event: Event) -> AllocationData:
     list_of_cadets_in_event_active_only = get_list_of_active_cadets_at_event(event)
     list_of_events = get_sorted_list_of_events()
     list_of_previous_events = list_of_events_excluding_one_event(list_of_events=list_of_events,event_to_exclude=event, only_past=True, sort_by=SORT_BY_START_ASC)
+    if len(list_of_previous_events)>3:
+        list_of_previous_events = list_of_previous_events[-3:]
     previous_allocations_as_dict = get_dict_of_allocations_for_events_and_list_of_cadets(list_of_events=list_of_previous_events)
     list_of_all_cadets = load_list_of_all_cadets()
 
@@ -221,6 +229,7 @@ def get_allocation_data(event: Event) -> AllocationData:
     list_of_club_boats = load_list_of_club_dinghies()
     list_of_club_boats_allocated = load_list_of_cadets_at_event_with_club_dinghies(event)
     list_of_cadets_at_event_with_dinghies = load_list_of_cadets_at_event_with_dinghies(event)
+    list_of_cadets_with_qualifications= load_list_of_cadets_with_qualifications()
 
     return AllocationData(
         event=event,
@@ -233,7 +242,8 @@ def get_allocation_data(event: Event) -> AllocationData:
         list_of_club_boats=list_of_club_boats,
         list_of_club_boats_allocated=list_of_club_boats_allocated,
         list_of_cadets_at_event_with_dinghies=list_of_cadets_at_event_with_dinghies,
-        list_of_all_cadets=list_of_all_cadets
+        list_of_all_cadets=list_of_all_cadets,
+        list_of_cadets_with_qualifications=list_of_cadets_with_qualifications
     )
 
 

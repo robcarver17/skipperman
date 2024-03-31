@@ -1,18 +1,22 @@
 from typing import Union
 
-from app.data_access.data import data
+from app.backend.data.qualification import list_of_named_qualifications_for_cadet, get_list_of_qualification_names, \
+    update_qualifications_for_cadet
+from app.objects.cadets import Cadet
+
 from app.logic.cadets.cadet_state_storage import get_cadet_from_state
-from app.backend.cadets import get_sorted_list_of_cadets
-from app.objects.abstract_objects.abstract_form import Form, NewForm
+from app.backend.cadets import modify_cadet
+from app.objects.abstract_objects.abstract_form import Form, NewForm, checkboxInput
 from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar
-from app.objects.abstract_objects.abstract_lines import Line
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 from app.logic.cadets.constants import *
-from app.logic.cadets.add_cadet import get_add_cadet_form_with_information_passed, CadetAndVerificationText, get_cadet_from_form
+from app.logic.cadets.add_cadet import CadetAndVerificationText, get_cadet_from_form, form_fields_for_add_cadet
 
+QUALIFICATIONS = "Qualifications"
 
 def display_form_edit_individual_cadet(
     interface: abstractInterface,
@@ -31,11 +35,42 @@ def display_form_edit_individual_cadet(
         cadet=cadet,
         verification_text=""
     )
-    form = get_add_cadet_form_with_information_passed(footer_buttons=footer_buttons,
-                                                      cadet_and_text=cadet_and_text,
-                                                      header_text="Edit existing cadet")
 
-    return form
+    form_fields = form_fields_for_add_cadet(cadet_and_text.cadet)
+    qualifications = checkbox_for_qualifications(cadet)
+
+    list_of_lines_inside_form = ListOfLines(
+        [
+            "Edit cadet",
+            _______________,
+            form_fields,
+            qualifications,
+            _______________,
+            cadet_and_text.verification_text,
+            _______________,
+            footer_buttons,
+        ]
+    )
+
+    return Form(list_of_lines_inside_form)
+
+def checkbox_for_qualifications(cadet: Cadet)-> checkboxInput:
+    qualifications = list_of_named_qualifications_for_cadet(cadet)
+    all_qualifications = get_list_of_qualification_names()
+    dict_of_labels = dict([(qual,qual) for qual in all_qualifications])
+    dict_of_checked = {}
+    for qual in all_qualifications:
+        if qual in qualifications:
+            dict_of_checked[qual]=True
+        else:
+            dict_of_checked[qual]= False
+
+    return checkboxInput(
+        input_label="Qualifications:",
+        input_name=QUALIFICATIONS,
+        dict_of_labels=dict_of_labels,
+        dict_of_checked=dict_of_checked,
+    )
 
 def post_form_edit_individual_cadet(
     interface: abstractInterface,
@@ -55,10 +90,17 @@ def previous_form(interface: abstractInterface):
 
 
 def modify_cadet_given_form_contents(interface: abstractInterface):
+    modify_cadet_data_given_form_contents(interface)
+    modify_qualifications(interface)
+
+def modify_cadet_data_given_form_contents(interface: abstractInterface):
     original_cadet = get_cadet_from_state(interface)
     cadet_details = get_cadet_from_form(interface)
     cadet_details.id = original_cadet.id
-    list_of_cadets = get_sorted_list_of_cadets()
-    list_of_cadets.replace_with_new_object(cadet_details)
+    modify_cadet(cadet_details)
 
-    data.data_list_of_cadets.write(list_of_cadets)
+
+def modify_qualifications(interface: abstractInterface):
+    cadet = get_cadet_from_state(interface)
+    list_of_qualification_names_for_this_cadet = interface.value_of_multiple_options_from_form(QUALIFICATIONS)
+    update_qualifications_for_cadet(cadet=cadet, list_of_qualification_names_for_this_cadet=list_of_qualification_names_for_this_cadet)

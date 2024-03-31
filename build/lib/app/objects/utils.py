@@ -88,13 +88,22 @@ def clean_up_dict_with_nans(some_dict) -> dict:
 
 def clean_up_dict_with_weird_floats_for_id(some_dict) -> dict:
     for key, value in some_dict.items():
-        if key == "id":
+        key_is_id = key=="id"
+        key_contains_id = "_id" in key
+        key_is_row_id = key == "row_id" ## special event row id, FIXME orrible hack
+        if key_is_row_id:
+            continue
+        elif key_is_id or key_contains_id:
             some_dict[key] = make_id_as_int_str(value)
 
     return some_dict
 
 def make_id_as_int_str(value: str)->str:
-    return str(int(float(value)))
+    try:
+        return str(int(float(value)))
+    except:
+        ## actually a string
+        return value
 
 def list_duplicate_indices(seq):
     tally = defaultdict(list)

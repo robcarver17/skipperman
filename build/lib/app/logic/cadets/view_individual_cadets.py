@@ -1,5 +1,6 @@
 from typing import Union
 
+from app.backend.data.qualification import list_of_named_qualifications_for_cadet
 from app.logic.cadets.cadet_state_storage import get_cadet_from_state
 from app.logic.cadets.delete_cadet import display_form_delete_individual_cadet
 from app.logic.cadets.edit_cadet import display_form_edit_individual_cadet
@@ -36,12 +37,15 @@ def display_form_for_selected_cadet(
     cadet: Cadet
 ) -> Form:
     lines_of_allocations = list_of_lines_with_allocations(cadet)
+    qualifications = list_of_named_qualifications_for_cadet(cadet)
+    qualifications = ", ".join(qualifications)
     buttons = buttons_for_cadet_form()
     return Form(
         ListOfLines([
             str(cadet),
             _______________,
             lines_of_allocations,
+            Line("Qualifications: %s" % qualifications),
             _______________,
             buttons
         ])
@@ -53,7 +57,7 @@ def list_of_lines_with_allocations(cadet: Cadet) -> ListOfLines:
         [Line("%s: %s" % (str(event), group)) for event, group in dict_of_allocations.items()]
     )
 
-def buttons_for_cadet_form() -> Line:
+def buttons_for_cadet_form() -> ButtonBar:
     return ButtonBar([Button(BACK_BUTTON_LABEL, nav_button=True), Button(EDIT_BUTTON_LABEL, nav_button=True)])
 
 

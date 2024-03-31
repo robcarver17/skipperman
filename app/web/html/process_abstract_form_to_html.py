@@ -14,9 +14,11 @@ from app.web.html.forms import *
 from app.objects.abstract_objects.abstract_form import textInput, dateInput, radioInput, checkboxInput
 
 DEBUG =False
+TERSE = False
 
 def process_abstract_form_to_html(form: Form, current_url: str) -> Html:
-    print("Abstract form %s" % str(form))
+    if TERSE:
+        print("Abstract form %s" % str(form))
     html_inside_form = get_html_inside_form(form)
     form = form_html_wrapper(current_url)
 
@@ -64,7 +66,7 @@ def get_html_for_detail_list_of_lines(list_of_lines: DetailListOfLines) -> Html:
         get_html_for_element_in_form(line) for line in list_of_lines.list_of_lines
     ]
     all_html = " ".join(list_of_html_for_each_lines)
-    detail_wrapper =get_detail_wrapper(list_of_lines.name)
+    detail_wrapper =get_detail_wrapper(list_of_lines.name, open_detail=list_of_lines.open)
     return detail_wrapper.wrap_around(all_html)
 
 

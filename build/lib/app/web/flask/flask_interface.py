@@ -72,14 +72,12 @@ class flaskInterface(abstractInterface):
         return is_website_post()
 
     def value_from_form(self, key: str, value_is_date: bool = False):
-        print("Getting value %s" % key)
         try:
             value = get_value_from_form(key)
         except:
             raise Exception("Value %s not found in form" % key)
         if value_is_date:
             value = html_as_date(value)
-        print("Value is %s" % str(value))
 
         return value
 
@@ -135,7 +133,7 @@ def get_last_button_pressed(button_name: str = arg_not_passed) -> str:
         button_name = HTML_BUTTON_NAME
     print("Testing press of %s" % button_name)
     try:
-        return request.form[button_name]
+        return request.form.get(button_name, '')
     except:
         raise NoButtonPressed
 

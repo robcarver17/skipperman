@@ -1,3 +1,5 @@
+from typing import List
+
 from app.backend.cadets import cadet_name_from_id
 from app.backend.data.volunteer_allocation import get_volunteer_at_event, \
     remove_volunteer_and_cadet_association_at_event, delete_volunteer_with_id_at_event
@@ -5,11 +7,12 @@ from app.backend.forms.form_utils import get_availability_checkbox, get_availabl
 from app.backend.volunteers.volunteer_allocation import \
     get_dict_of_relevant_volunteer_names_and_association_cadets_with_id_values, \
     any_other_cadets_for_volunteer_at_event_apart_from_this_one, update_volunteer_availability_at_event, \
-    is_current_cadet_active_at_event
-from app.backend.volunteers.volunteers import get_volunteer_from_id
+    is_current_cadet_active_at_event, list_of_volunteers_for_cadet_identified
+from app.backend.volunteers.volunteers import get_volunteer_from_id, get_volunteer_name_from_id
 from app.backend.wa_import.update_cadets_at_event import get_cadet_at_event_for_cadet_id
 from app.logic.events.constants import SAVE_CHANGES
 from app.logic.events.events_in_state import get_event_from_state
+from app.logic.events.volunteer_rota.rota_state import get_current_cadet_id_for_rota_at_event
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_form import Form, checkboxInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -158,3 +161,19 @@ def  save_type_of_form_displayed_for_volunteer_update(interface: abstractInterfa
 
 def clear_type_of_form_displayed_for_volunteer_update(interface: abstractInterface):
     interface.set_persistent_value(VOLUNTEER_UPDATE_FORM_TYPE, UPDATE_TYPE_UNKNONW)
+
+
+def get_list_of_volunteer_names_relating_to_changed_cadet(interface: abstractInterface) -> List[str]:
+    list_of_ids = list_of_volunteer_ids_to_modify_only_changed_cadets(interface)
+    list_of_names = [get_volunteer_name_from_id(id) for id in list_of_ids]
+
+    return list_of_names
+
+
+def list_of_volunteer_ids_to_modify_only_changed_cadets(interface: abstractInterface) -> List[str]:
+    ###
+    cadet_id = get_current_cadet_id_for_rota_at_event(interface)
+    print("CADET ID MODIFIED %s" % cadet_id)
+    event = get_event_from_state(interface)
+    list_of_volunteer_ids_not_added = list_of_volunteers_for_cadet_identified(cadet_id=cadet_id, event=event)
+    return list_of_volunteer_ids_not_added

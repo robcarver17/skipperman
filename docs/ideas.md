@@ -64,6 +64,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 - random issues with volunteer changes, fix
 - are volunteers with existing connections shown in pick list?
+- issues with duplicates
 
 ### Required for social event:
 
@@ -74,7 +75,6 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for training event (ASAP):
 
-- change how we deal with duplicates
 - list of non volunteers
 - ability to make other information field shorter
 - maintain ticksheets, print and record ticks

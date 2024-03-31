@@ -46,7 +46,7 @@ def list_of_named_qualifications_for_cadet(cadet: Cadet) -> list[str]:
 
     return list_of_names
 
-def list_of_qualification_ids_for_cadet(cadet: Cadet) -> list[str]:
+def list_of_qualification_ids_for_cadet(cadet: Cadet) -> List[str]:
     list_of_cadets_with_qualifications = load_list_of_cadets_with_qualifications()
     list_of_ids = list_of_cadets_with_qualifications.list_of_qualification_ids_for_cadet(cadet_id=cadet.id)
     return list_of_ids

@@ -6,7 +6,7 @@ from app.objects.abstract_objects.abstract_text import Text, Arrow, up_arrow, do
     right_arrow, left_arrow, up_down_arrow, left_right_arrow, Pointer, Symbol, reg_tm_symbol, copyright_symbol, \
     up_pointer, down_pointer, left_pointer, right_pointer, lightning_symbol, circle_up_arrow_symbol, umbrella_symbol, \
     at_symbol, Heading
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, DetailListOfLines
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, DetailListOfLines, DetailLine
 from app.web.html.components import *
 from app.web.html.url import INDEX_URL
 from app.web.flask.flask_interface import flaskInterface
@@ -69,6 +69,11 @@ def get_html_for_detail_list_of_lines(list_of_lines: DetailListOfLines) -> Html:
     detail_wrapper =get_detail_wrapper(list_of_lines.name, open_detail=list_of_lines.open)
     return detail_wrapper.wrap_around(all_html)
 
+def get_html_for_detail_line(line: DetailLine) -> Html:
+    line_html = line.string
+    detail_wrapper =get_detail_wrapper(line.name, open_detail=line.open)
+    return detail_wrapper.wrap_around(line_html)
+
 
 def get_html_for_line(line: Line) -> Html:
     return html_line_wrapper.wrap_around(
@@ -98,7 +103,8 @@ def get_html_for_element_in_line(
         Arrow,
         passwordInput,
         Link,
-        Heading
+        Heading,
+        DetailLine
     ]
 ) -> Html:
     if type(element_in_line) is str:
@@ -173,8 +179,11 @@ def get_html_for_element_in_line(
         return html_from_pandas_table(element_in_line)
     elif type(element_in_line) is Table:
         return get_html_for_table(element_in_line)
-    if type(element_in_line) is Heading:
+    elif type(element_in_line) is DetailLine:
+        return get_html_for_detail_line(element_in_line)
+    elif type(element_in_line) is Heading:
         return get_html_for_heading(element_in_line)
+
     else:
         raise Exception(
             "Type %s of object %s not recognised!"

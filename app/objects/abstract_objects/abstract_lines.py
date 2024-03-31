@@ -42,3 +42,9 @@ class DetailListOfLines:
     list_of_lines: ListOfLines
     name: str = "Detail"
     open: bool = False
+
+@dataclass
+class DetailLine:
+    string: str
+    name: str = "Detail"
+    open: bool = False

@@ -39,14 +39,14 @@ def modify_qualification_given_string_and_return_list(existing_value_as_str:str,
 
     return list_of_qualifications
 
-def list_of_named_qualifications_for_cadet(cadet: Cadet) -> list[str]:
+def list_of_named_qualifications_for_cadet(cadet: Cadet) -> List[str]:
     list_of_ids = list_of_qualification_ids_for_cadet(cadet)
     list_of_qualification = load_list_of_qualifications()
     list_of_names= [list_of_qualification.name_given_id(id) for id in list_of_ids]
 
     return list_of_names
 
-def list_of_qualification_ids_for_cadet(cadet: Cadet) -> list[str]:
+def list_of_qualification_ids_for_cadet(cadet: Cadet) -> List[str]:
     list_of_cadets_with_qualifications = load_list_of_cadets_with_qualifications()
     list_of_ids = list_of_cadets_with_qualifications.list_of_qualification_ids_for_cadet(cadet_id=cadet.id)
     return list_of_ids
@@ -69,7 +69,7 @@ def load_list_of_cadets_with_qualifications() -> ListOfCadetsWithQualifications:
 def save_list_of_cadets_with_qualifications(list_of_cadets_with_qualifications: ListOfCadetsWithQualifications):
     data.data_list_of_cadets_with_qualifications.write(list_of_cadets_with_qualifications)
 
-def update_qualifications_for_cadet(cadet: Cadet, list_of_qualification_names_for_this_cadet: list[str]):
+def update_qualifications_for_cadet(cadet: Cadet, list_of_qualification_names_for_this_cadet: List[str]):
     list_of_cadets_with_qualifications = load_list_of_cadets_with_qualifications()
     list_of_qualifications = load_list_of_qualifications()
     list_of_qualification_ids = [list_of_qualifications.id_given_name(qual_name) for qual_name in list_of_qualification_names_for_this_cadet]

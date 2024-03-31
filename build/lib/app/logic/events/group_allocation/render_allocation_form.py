@@ -18,7 +18,8 @@ from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL, ButtonBar
 from app.objects.abstract_objects.abstract_form import Form, NewForm, dropDownInput, checkboxInput, textInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, DetailListOfLines
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, DetailListOfLines, Line, \
+    DetailLine
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.cadets import Cadet
@@ -134,6 +135,7 @@ def get_top_row(allocation_data: AllocationData) -> RowInTable:
 def get_row_for_cadet(cadet: Cadet, allocation_data: AllocationData) -> RowInTable:
     previous_groups_as_list = allocation_data.previous_groups_as_list_of_str(cadet)
     previous_group_info = allocation_data.group_info_dict_for_cadet_as_ordered_list(cadet)
+    previous_group_info  = [make_long_thing_detail_box(field) for field in previous_group_info ]
     input_fields = get_input_fields_for_cadet(cadet, allocation_data)
     qualification = allocation_data.get_highest_qualification_for_cadet(cadet)
 
@@ -144,6 +146,11 @@ def get_row_for_cadet(cadet: Cadet, allocation_data: AllocationData) -> RowInTab
             input_fields
         )
 
+def make_long_thing_detail_box(some_string:str):
+    if len(some_string)>100:
+        return DetailLine(string=some_string, name="Detail")
+    else:
+        return some_string
 
 def get_input_fields_for_cadet(cadet: Cadet, allocation_data: AllocationData) -> list:
     notes_field = get_notes_field(cadet=cadet, allocation_data=allocation_data)

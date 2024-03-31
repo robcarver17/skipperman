@@ -39,7 +39,7 @@ def modify_qualification_given_string_and_return_list(existing_value_as_str:str,
 
     return list_of_qualifications
 
-def list_of_named_qualifications_for_cadet(cadet: Cadet) -> list[str]:
+def list_of_named_qualifications_for_cadet(cadet: Cadet) -> List[str]:
     list_of_ids = list_of_qualification_ids_for_cadet(cadet)
     list_of_qualification = load_list_of_qualifications()
     list_of_names= [list_of_qualification.name_given_id(id) for id in list_of_ids]

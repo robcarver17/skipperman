@@ -60,11 +60,6 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - record qualification data 
 
 
-### Required for racing event:
-
-- random issues with volunteer changes, fix
-- are volunteers with existing connections shown in pick list?
-- issues with duplicates
 
 ### Required for social event:
 
@@ -75,9 +70,12 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for training event (ASAP):
 
-- add * for boat allocation to group report
+- report of qualified people
+- put group count on report
+- random issues with volunteer changes, fix
+- are volunteers with existing connections shown in pick list?
+- issues with duplicates
 - list of non volunteers
-- ability to make other information field shorter
 - maintain ticksheets, print and record ticks
 - backfill ticksheet data
 - filter volunteer sheet on available days

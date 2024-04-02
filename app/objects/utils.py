@@ -153,11 +153,11 @@ def transform_datetime_into_str(date: datetime.datetime) -> str:
 def transform_df_from_str_to_dates(df: pd.DataFrame):
     if len(df) == 0:
         return df
-    field_with_dates = in_both_x_and_y(list(df.columns), FIELDS_WITH_DATES)
-    field_with_datetimes = in_both_x_and_y(list(df.columns), FIELDS_WITH_DATETIMES)
-    for field in field_with_dates:
-        transform_df_column_from_str_to_dates(df=df, date_series_name=field)
-    for field in field_with_datetimes:
+    fields_with_dates = in_both_x_and_y(list(df.columns), FIELDS_WITH_DATES)
+    fields_with_datetimes = in_both_x_and_y(list(df.columns), FIELDS_WITH_DATETIMES)
+    for date_series_name in fields_with_dates:
+        transform_df_column_from_str_to_dates(df=df, date_series_name=date_series_name)
+    for field in fields_with_datetimes:
         transform_df_column_from_str_to_datetimes(df=df, date_series_name=field)
 
 

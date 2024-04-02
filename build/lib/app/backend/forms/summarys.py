@@ -58,6 +58,16 @@ def get_count_on_day_for_group(list_of_ids_for_group: list,
                                availability_dict: Dict[str, DaySelector],
                                day: Day) -> int:
 
-    present = [1 for id in list_of_ids_for_group if availability_dict[id].available_on_day(day)]
+    present = [available_on_day(id, availability_dict=availability_dict, day=day) for id in list_of_ids_for_group ]
 
     return sum(present)
+
+def available_on_day(id: str, availability_dict: Dict[str, DaySelector],
+                               day: Day) -> int:
+    availability_for_id = availability_dict.get(id, None)
+    if availability_for_id is None:
+        return 0
+    if availability_for_id.available_on_day(day):
+        return 1
+    else:
+        return 0

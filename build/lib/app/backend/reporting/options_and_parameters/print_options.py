@@ -21,6 +21,7 @@ class PrintOptions(GenericSkipperManObject):
     equalise_column_width: bool = True
     landscape: bool = True
     publish_to_public: bool = False
+    include_size_of_group_if_header: bool = False
 
     @property
     def filename_with_extension(self):

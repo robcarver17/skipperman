@@ -17,7 +17,7 @@ from app.logic.reporting.constants import (
     GROUP_NAME_AS_HEADER,
     FIRST_VALUE_IN_GROUP_IS_KEY,
     PREPEND_GROUP_NAME, OUTPUT_PDF,
-PUBLIC
+    PUBLIC, IF_HEADER_INCLUDE_SIZE
 )
 from app.objects.constants import missing_data
 from app.backend.reporting.options_and_parameters.print_options import PrintOptions, default_report_title_and_filename, \
@@ -104,6 +104,7 @@ def report_print_options_as_list_of_lines(print_options: PrintOptions) -> ListOf
             "Filename: %s" % print_options.filename_with_extension,
             "Put group name as header: %s" % print_options.include_group_as_header,
             "Prepend group name to all entries: %s" % print_options.prepend_group_name,
+            "If prepending, include size of group: %s" % print_options.include_size_of_group_if_header
         ]
     )
     output = ListOfLines(
@@ -134,6 +135,7 @@ def get_print_options_from_main_option_form_fields(
         FIRST_VALUE_IN_GROUP_IS_KEY
     )
     prepend_group_name = interface.true_if_radio_was_yes(PREPEND_GROUP_NAME)
+    include_size_of_group_if_header = interface.true_if_radio_was_yes(IF_HEADER_INCLUDE_SIZE)
     public = interface.true_if_radio_was_yes(PUBLIC)
     print_options = PrintOptions()
 
@@ -148,6 +150,7 @@ def get_print_options_from_main_option_form_fields(
     print_options.prepend_group_name = prepend_group_name
     print_options.first_value_in_group_is_key = highlight_first_value_as_key
     print_options.publish_to_public = public
+    print_options.include_size_of_group_if_header =include_size_of_group_if_header
 
     print("Print shared from form %s" % str(print_options))
     return print_options
@@ -224,6 +227,11 @@ def report_print_options_as_form_contents(print_options: PrintOptions) -> ListOf
                 input_label="Put group name as header",
                 input_name=GROUP_NAME_AS_HEADER,
                 default_is_yes=print_options.include_group_as_header,
+            ),
+            yes_no_radio(
+                input_label="If group name is header, include size of group",
+                input_name=IF_HEADER_INCLUDE_SIZE,
+                default_is_yes=print_options.include_size_of_group_if_header,
             ),
             yes_no_radio(
                 input_label="Prepend group name to all entries",

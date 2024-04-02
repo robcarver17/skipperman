@@ -3,11 +3,10 @@ from typing import List
 import pandas as pd
 
 from app.backend.data.volunteer_allocation import load_list_of_volunteers_at_event
+from app.backend.data.volunteer_rota import load_volunteers_in_role_at_event
+from app.backend.data.volunteers import load_list_of_volunteer_skills
 from app.backend.volunteers.volunteer_rota import get_volunteer_role_at_event_on_day
 from app.data_access.configuration.configuration import VOLUNTEER_ROLES
-from app.backend.volunteers.patrol_boats import add_to_list_of_ids, get_list_of_volunteer_ids_with_boat_skills, \
-    get_volunteer_ids_in_boat_related_roles_on_day_of_event, \
-    get_volunteer_ids_in_boat_related_roles_on_any_day_of_event, get_all_volunteer_ids_allocated_to_any_boat_or_day
 
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.constants import missing_data
@@ -15,7 +14,8 @@ from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.backend.data.resources import load_list_of_voluteers_at_event_with_patrol_boats, save_list_of_voluteers_at_event_with_patrol_boats, load_list_of_patrol_boats
 from app.objects.patrol_boats import PatrolBoat
-from app.objects.utils import in_x_not_in_y
+from app.objects.utils import in_x_not_in_y, in_both_x_and_y
+from app.objects.volunteers import Volunteer
 
 
 def get_summary_list_of_boat_allocations_for_events(event: Event) -> PandasDFTable:
@@ -218,3 +218,55 @@ def get_boat_name_allocated_to_volunteer_on_day_at_event(event: Event, day: Day,
     boat = boats.object_with_id(patrol_boat_id)
 
     return boat.name
+
+
+def add_to_list_of_ids(list_of_ids_to_draw_from: List[str],
+                       list_of_existing_ids: List[str],
+                       list_to_add_from: List[str]):
+
+    potential_new_ids = in_both_x_and_y(list_of_ids_to_draw_from, list_to_add_from)
+    new_ids_excluding_already_in = in_x_not_in_y(x=potential_new_ids, y=list_of_existing_ids)
+
+    list_of_existing_ids+=new_ids_excluding_already_in
+
+
+def get_list_of_volunteer_ids_with_boat_skills()-> List[str]:
+    volunteer_skills = load_list_of_volunteer_skills()
+    list_of_volunteer_ids_with_boat_skills = volunteer_skills.list_of_volunteer_ids_with_boat_related_skill()
+
+    return list_of_volunteer_ids_with_boat_skills
+
+
+def get_volunteer_ids_in_boat_related_roles_on_day_of_event(event: Event, day: Day) -> List[str]:
+    volunteers_in_role_at_event = load_volunteers_in_role_at_event(event)
+    volunteer_ids_in_boat_related_roles_on_day_of_event = volunteers_in_role_at_event.list_of_volunteer_ids_in_boat_related_role_on_day(day)
+
+    return volunteer_ids_in_boat_related_roles_on_day_of_event
+
+
+def get_volunteer_ids_in_boat_related_roles_on_any_day_of_event(event: Event) -> List[str]:
+    volunteers_in_role_at_event = load_volunteers_in_role_at_event(event)
+    volunteer_ids_in_boat_related_roles_on_any_day_of_event = volunteers_in_role_at_event.list_of_volunteer_ids_in_boat_related_role_on_any_day()
+
+    return volunteer_ids_in_boat_related_roles_on_any_day_of_event
+
+
+def get_all_volunteer_ids_allocated_to_any_boat_or_day(
+                                                               event: Event):
+
+    list_of_voluteers_at_event_with_patrol_boats = load_list_of_voluteers_at_event_with_patrol_boats(event)
+    return list_of_voluteers_at_event_with_patrol_boats.list_of_all_volunteer_ids_at_event()
+
+
+def allocate_volunteer_to_boat_at_event_on_day(volunteer: Volunteer,
+                                                  event: Event,
+                                                  day: Day,
+                                                  patrol_boat: PatrolBoat):
+
+    list_of_voluteers_at_event_with_patrol_boats = load_list_of_voluteers_at_event_with_patrol_boats(event)
+    list_of_voluteers_at_event_with_patrol_boats.add_volunteer_with_boat(
+        volunteer_id=volunteer.id,
+        day=day,
+        patrol_boat_id=patrol_boat.id
+    )
+    save_list_of_voluteers_at_event_with_patrol_boats(event=event, volunteers_with_boats_at_event=list_of_voluteers_at_event_with_patrol_boats)

@@ -15,6 +15,7 @@ class MarkedUpListFromDfParametersWithActualGroupOrder:
     first_value_in_group_is_key: bool = False
     prepend_group_name: bool = False
     group_by_column: str = arg_not_passed
+    include_size_of_group_if_header: bool = False
 
 
 def create_parameters_to_create_marked_up_list_from_df(
@@ -30,5 +31,6 @@ def create_parameters_to_create_marked_up_list_from_df(
             actual_group_order=group_order,
             include_group_as_header=print_options.include_group_as_header,
             first_value_in_group_is_key=print_options.first_value_in_group_is_key,
-            prepend_group_name=print_options.prepend_group_name
+            prepend_group_name=print_options.prepend_group_name,
+            include_size_of_group_if_header = print_options.include_size_of_group_if_header
         )

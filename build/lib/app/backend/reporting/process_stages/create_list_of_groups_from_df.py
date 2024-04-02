@@ -113,6 +113,7 @@ def group_of_marked_up_str_from_subset_list_for_group(group: str,
         group=group,
         group_of_marked_up_str=group_of_marked_up_str,
         marked_up_list_from_df_parameters=marked_up_list_from_df_parameters,
+        size_of_group = len(subset_group_as_list)
     )
     dict_of_max_length = dict_of_max_length_by_column_name_across_list(subset_group_as_list=subset_group_as_list, entry_columns=marked_up_list_from_df_parameters.entry_columns)
     for index, row in enumerate(subset_group_as_list):
@@ -172,9 +173,14 @@ def _add_groupname_inplace_to_list_for_this_group_if_required(
     group: str,
     group_of_marked_up_str: GroupOfMarkedUpString,
     marked_up_list_from_df_parameters: MarkedUpListFromDfParametersWithActualGroupOrder,
+    size_of_group: int
 ):
     if marked_up_list_from_df_parameters.include_group_as_header:
-        group_of_marked_up_str.append(MarkedUpString.header(group))
+        group_name = group
+        if marked_up_list_from_df_parameters.include_size_of_group_if_header:
+            group_name = group_name + "(%d)" % size_of_group
+
+        group_of_marked_up_str.append(MarkedUpString.header(group_name))
 
 
 def create_marked_string_from_row(

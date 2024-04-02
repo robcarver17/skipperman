@@ -28,7 +28,7 @@ def display_form_for_choose_template_field_mapping(interface: abstractInterface)
             [
                 "Click to upload a new template for mapping fields",
                 _______________,
-                Button(UPLOAD_TEMPLATE_BUTTON_LABEL, nav_button=True),
+                Button(UPLOAD_TEMPLATE_BUTTON_LABEL),
                 cancel_button,
             ]
         )

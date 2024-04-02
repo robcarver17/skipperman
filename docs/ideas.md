@@ -71,7 +71,8 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 ### Required for training event (ASAP):
 
 - report of qualified people
-- - random issues with volunteer changes, fix
+- put group count on report
+- random issues with volunteer changes, fix
 - are volunteers with existing connections shown in pick list?
 - issues with duplicates
 - list of non volunteers

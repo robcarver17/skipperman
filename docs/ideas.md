@@ -70,11 +70,9 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for training event (ASAP):
 
-- report of qualified people
 - random issues with volunteer changes, fix
 - are volunteers with existing connections shown in pick list?
 - issues with duplicates
-- list of non volunteers
 - maintain ticksheets, print and record ticks
 - backfill ticksheet data
 - filter volunteer sheet on available days
@@ -92,11 +90,12 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - key report links for instructors on landing page
 - handle waiting lists (new state)
 - clear old reports for event (remove rednedant permalinks) and other temp directories UTILITIES MENU
+- report of qualified people
 
 
 ### Required for cadet week:
 
-
+- list of non volunteers with cadet ages, previous groups
 - two types of clothing event: as part of training event, or social only seperate
 - allocate and maintain colour groups (CW)
 - maintain and report on tickets for gala dinner, include additional gala dinner invites eg sponsors, plus ones (CW)

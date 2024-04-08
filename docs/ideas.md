@@ -72,6 +72,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 - random issues with volunteer changes, fix
 - are volunteers with existing connections shown in pick list?
+- volunteers in patrol boat picklists should be available on that day
 - issues with duplicates
 - maintain ticksheets, print and record ticks
 - backfill ticksheet data

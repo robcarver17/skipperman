@@ -70,26 +70,26 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for training event (ASAP):
 
-- random issues with volunteer changes, fix
-- are volunteers with existing connections shown in pick list?
-- volunteers in patrol boat picklists should be available on that day
-- issues with duplicates
-- maintain ticksheets, print and record ticks
-- backfill ticksheet data
-- filter volunteer sheet on available days
-- allow selection of group subset in reporting arrangement
+- volunteers in patrol boat picklists should only be available on that day
 - print roll call lists and contact details
-- registration report with literally everything
-- birthdays during an event - splash on event screen
 
 ### Required for training event (Can wait):
 
+- filter volunteer sheet on available days (only volunteers available on a given day)
+- allow selection of group subset in reporting when doing arrangement of groups
+- issues with duplicates on registration - fix when writing data model
+- random issues with volunteer changes, fix
+- ignore cadet name on import (use for test cadets - need to be able to avoid on reimport)
+- print and record ticksheet entries
+- registration report with literally everything on it
+- birthdays during an event - splash on event screen
+- seperate health field which gets reported to instructors
 - GDPR document
 - instructor login (send link to create)
 - ticksheet level security
 - refactor reporting so uses common data model
 - key report links for instructors on landing page
-- handle waiting lists (new state)
+- waiting list - change unallocated status name
 - clear old reports for event (remove rednedant permalinks) and other temp directories UTILITIES MENU
 - report of qualified people
 

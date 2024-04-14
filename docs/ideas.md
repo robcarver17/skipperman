@@ -61,26 +61,26 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 
 
-### Required for social event:
-
-- think carefully about how to handle events with no cadets, volunteers etc
-- two types of food event: as part of training event, or social only seperate
-- manage social event with food only (Social)
 
 
 ### Required for training event (ASAP):
 
 - volunteers in patrol boat picklists should only be available on that day
+- print ticksheets from python interface
 - print roll call lists and contact details
 
 ### Required for training event (Can wait):
 
-- filter volunteer sheet on available days (only volunteers available on a given day)
-- allow selection of group subset in reporting when doing arrangement of groups
 - issues with duplicates on registration - fix when writing data model
-- random issues with volunteer changes, fix
-- ignore cadet name on import (use for test cadets - need to be able to avoid on reimport)
-- print and record ticksheet entries
+- random issues with volunteer changes, fix when writing data model
+- filter volunteer sheet on available days (only volunteers available on a given day)
+- store of previous events volunteer role / cadet allocation to speed up loading 
+- click on cadet name to see previous groups
+- click on volunteer name to see previous events
+- allow selection of group subset in reporting when doing arrangement of groups
+- ignore cadet name on import (use for test cadets - need to be able to avoid on reimport as we do for volunteers)
+- print ticksheets from menu
+- record ticksheet entries
 - registration report with literally everything on it
 - birthdays during an event - splash on event screen
 - seperate health field which gets reported to instructors
@@ -91,7 +91,13 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - key report links for instructors on landing page
 - waiting list - change unallocated status name
 - clear old reports for event (remove rednedant permalinks) and other temp directories UTILITIES MENU
-- report of qualified people
+- report of qualified people who are available
+
+### Required for social event:
+
+- think carefully about how to handle events with no cadets, volunteers etc
+- two types of food event: as part of training event, or social only seperate
+- manage social event with food only (Social)
 
 
 ### Required for cadet week:
@@ -119,11 +125,13 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - upload/download all data as zip
 - clean up eg old data, uploaded files, staged files
 - move all dangerous deletes to special area: , delete event (many warnings!), delete cadet, delete volunteer
+- merge cadet / merge volunteer
 - editable user sailing groups, volunteer roles, skills
 - create a list of key volunteers to invite to curry evening
 - create a report of cadets
 - dropdown list of previous event names
 - clear description of field names
+- instructions
 
 ### Future / wishlist / nice to have:
 

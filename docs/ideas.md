@@ -65,7 +65,6 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for training event (ASAP):
 
-- volunteers in patrol boat picklists should only be available on that day
 - print ticksheets from python interface
 - print roll call lists and contact details
 

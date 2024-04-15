@@ -102,7 +102,8 @@ def day_selector_to_text_in_stored_format(day_selector: DaySelector) -> str:
     day_text_as_list = [inverse_selection_dict[day_selected] for day_selected, attending in day_selector.items() if attending]
     return ",".join(day_text_as_list)
 
-class ListOfDaySelectors(list[DaySelector]):
+class ListOfDaySelectors(List[DaySelector]):
+
     def as_pd_data_frame(self) -> pd.DataFrame:
         list_of_dicts = [from_day_selector_to_dict_for_pd(day_selector) for day_selector in self]
         df = pd.DataFrame(list_of_dicts)

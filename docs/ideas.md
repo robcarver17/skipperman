@@ -58,14 +58,11 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - filter volunteer sheets on qualification
 - regular backups; include roll back function 
 - record qualification data 
-
-
-
+- record ticksheet data
 
 
 ### Required for training event (ASAP):
 
-- print ticksheets from python interface
 - print roll call lists and contact details
 
 ### Required for training event (Can wait):

@@ -58,8 +58,36 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - filter volunteer sheets on qualification
 - regular backups; include roll back function 
 - record qualification data 
+- record ticksheet data
 
 
+### Required for training event (ASAP):
+
+- print roll call lists and contact details
+
+### Required for training event (Can wait):
+
+- issues with duplicates on registration - fix when writing data model
+- random issues with volunteer changes, fix when writing data model
+- filter volunteer sheet on available days (only volunteers available on a given day)
+- store of previous events volunteer role / cadet allocation to speed up loading 
+- click on cadet name to see previous groups
+- click on volunteer name to see previous events
+- allow selection of group subset in reporting when doing arrangement of groups
+- ignore cadet name on import (use for test cadets - need to be able to avoid on reimport as we do for volunteers)
+- print ticksheets from menu
+- record ticksheet entries
+- registration report with literally everything on it
+- birthdays during an event - splash on event screen
+- seperate health field which gets reported to instructors
+- GDPR document
+- instructor login (send link to create)
+- ticksheet level security
+- refactor reporting so uses common data model
+- key report links for instructors on landing page
+- waiting list - change unallocated status name
+- clear old reports for event (remove rednedant permalinks) and other temp directories UTILITIES MENU
+- report of qualified people who are available
 
 ### Required for social event:
 
@@ -68,36 +96,9 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - manage social event with food only (Social)
 
 
-### Required for training event (ASAP):
-
-- report of qualified people
-- put group count on report
-- random issues with volunteer changes, fix
-- are volunteers with existing connections shown in pick list?
-- issues with duplicates
-- list of non volunteers
-- maintain ticksheets, print and record ticks
-- backfill ticksheet data
-- filter volunteer sheet on available days
-- allow selection of group subset in reporting arrangement
-- print roll call lists and contact details
-- registration report with literally everything
-- birthdays during an event - splash on event screen
-
-### Required for training event (Can wait):
-
-- GDPR document
-- instructor login (send link to create)
-- ticksheet level security
-- refactor reporting so uses common data model
-- key report links for instructors on landing page
-- handle waiting lists (new state)
-- clear old reports for event (remove rednedant permalinks) and other temp directories UTILITIES MENU
-
-
 ### Required for cadet week:
 
-
+- list of non volunteers with cadet ages, previous groups
 - two types of clothing event: as part of training event, or social only seperate
 - allocate and maintain colour groups (CW)
 - maintain and report on tickets for gala dinner, include additional gala dinner invites eg sponsors, plus ones (CW)
@@ -120,11 +121,13 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - upload/download all data as zip
 - clean up eg old data, uploaded files, staged files
 - move all dangerous deletes to special area: , delete event (many warnings!), delete cadet, delete volunteer
+- merge cadet / merge volunteer
 - editable user sailing groups, volunteer roles, skills
 - create a list of key volunteers to invite to curry evening
 - create a report of cadets
 - dropdown list of previous event names
 - clear description of field names
+- instructions
 
 ### Future / wishlist / nice to have:
 

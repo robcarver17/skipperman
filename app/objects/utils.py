@@ -221,3 +221,7 @@ def from_single_str_to_dict(single_str: str)->dict:
         entry.split(":") for entry in entries
     ])
     return output_dict
+
+
+def flatten(xss):
+    return [x for xs in xss for x in xs]

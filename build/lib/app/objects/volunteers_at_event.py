@@ -4,7 +4,8 @@ from typing import List
 
 from app.objects.generic import GenericSkipperManObject,  GenericListOfObjects
 from app.objects.food import FoodRequirements, no_food_requirements
-from app.objects.day_selectors import DaySelector, day_selector_stored_format_from_text, day_selector_to_text_in_stored_format
+from app.objects.day_selectors import DaySelector, day_selector_stored_format_from_text, \
+    day_selector_to_text_in_stored_format, Day
 from app.objects.constants import missing_data
 from app.objects.utils import clean_up_dict_with_nans
 
@@ -160,7 +161,8 @@ class VolunteerAtEvent(GenericSkipperManObject):
 
         return as_dict
 
-
+    def available_on_day(self, day: Day) -> bool:
+        return self.availablity.available_on_day(day)
 
 class ListOfVolunteersAtEvent(GenericListOfObjects):
     @property
@@ -247,6 +249,10 @@ class ListOfVolunteersAtEvent(GenericListOfObjects):
         new_list_of_volunteers_at_event = [volunteer_at_event for volunteer_at_event in new_list_of_volunteers_at_event
                                            if volunteer_at_event is not missing_data]
 
+        return ListOfVolunteersAtEvent(new_list_of_volunteers_at_event)
+
+    def list_of_volunteers_available_on_given_day(self, day: Day) -> 'ListOfVolunteersAtEvent':
+        new_list_of_volunteers_at_event = [volunteer for volunteer in self if volunteer.available_on_day(day)]
         return ListOfVolunteersAtEvent(new_list_of_volunteers_at_event)
 
 def add_cadet_association_to_existing_volunteer(existing_volunteer_at_event: VolunteerAtEvent, new_volunteer_at_event: VolunteerAtEvent):

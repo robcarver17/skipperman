@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from app.backend.data.cadets import load_list_of_all_cadets
-from app.backend.data.group_allocations import load_list_of_cadets_with_allocated_groups_at_event
+from app.backend.data.group_allocations_old import load_list_of_cadets_with_allocated_groups_at_event
 from app.backend.data.cadets_at_event import load_list_of_cadets_at_event_with_dinghies, load_cadets_at_event
 from app.backend.data.resources import load_list_of_boat_classes, load_list_of_club_dinghies, load_list_of_cadets_at_event_with_club_dinghies
 

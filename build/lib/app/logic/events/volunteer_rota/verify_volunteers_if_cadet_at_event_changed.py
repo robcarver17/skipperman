@@ -20,9 +20,11 @@ from app.objects.events import Event
 # VOLUNTEER_ROTA_INITIALISE_LOOP_IN_VIEW_EVENT_STAGE
 def display_form_volunteer_rota_check(interface: abstractInterface)-> NewForm:
     interface.log_error("SKIPPING ROTA CHECK FOR NOW - NEEDS FIXING!")
-    #clear_cadet_id_for_rota_at_event(interface)
-    # return next_cadet_in_loop(interface)
     return goto_main_rota_form(interface)
+    #clear_cadet_id_for_rota_at_event(interface)
+
+    #return next_cadet_in_loop(interface)
+
 
 
 

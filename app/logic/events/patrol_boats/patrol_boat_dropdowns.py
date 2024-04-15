@@ -41,7 +41,7 @@ def get_list_of_boat_names_excluding_boats_already_at_event(event: Event) -> Lis
     return [str(boat) for boat in list_of_boats_excluding_boats_already_at_event]
 
 
-def get_allocation_dropdown_elements_to_add_volunteer_for_day_and_boat(boat_at_event: PatrolBoat,
+def get_allocation_dropdown_elements_to_add_volunteer_for_day_and_boat(
                                                               day: Day,
                                                               event: Event
                                                               ) -> Dict[str,str]:
@@ -50,7 +50,6 @@ def get_allocation_dropdown_elements_to_add_volunteer_for_day_and_boat(boat_at_e
         get_sorted_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day(
             event = event,
             day = day,
-            boat_at_event = boat_at_event
         )
 
     dropdown_elements = [from_volunteer_id_to_dropdown_element(
@@ -160,7 +159,6 @@ def get_allocation_dropdown_to_add_volunteer_for_day_and_boat(boat_at_event: Pat
                                                               ) -> Line:
 
     dict_of_options = get_allocation_dropdown_elements_to_add_volunteer_for_day_and_boat(
-        boat_at_event=boat_at_event,
         day=day,
         event=event
     )

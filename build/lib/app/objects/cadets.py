@@ -85,6 +85,9 @@ class Cadet(GenericSkipperManObjectWithIds):
 multiple_matches = object()
 
 class ListOfCadets(GenericListOfObjectsWithIds):
+    def list_of_names(self):
+        return [cadet.name for cadet in self]
+
     def add(self, cadet: Cadet):
         if cadet in self:
             raise Exception("Cadet %s already in list of existing cadets" % str(cadet))
@@ -134,6 +137,9 @@ class ListOfCadets(GenericListOfObjectsWithIds):
 
     def sort_by_firstname(self):
         return ListOfCadets(sorted(self, key=lambda x: x.first_name))
+
+    def sort_by_name(self):
+        return ListOfCadets(sorted(self, key=lambda x: x.name))
 
     def sort_by_dob_asc(self):
         return ListOfCadets(sorted(self, key=lambda x: x.date_of_birth))

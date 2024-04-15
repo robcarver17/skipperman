@@ -1,5 +1,5 @@
 from app.backend.cadets import get_sorted_list_of_cadets
-from app.backend.data.group_allocations import load_list_of_cadets_with_allocated_groups_at_event
+from app.backend.data.group_allocations_old import load_list_of_cadets_with_allocated_groups_at_event
 from app.backend.data.cadets_at_event import load_cadets_at_event
 from app.objects.cadets import ListOfCadets
 from app.objects.constants import arg_not_passed

@@ -149,7 +149,7 @@ INCLUDE_UNALLOCATED_CADETS = "Include unallocated group_allocations"
 CLUB_BOAT_ASTERIX = "Asterix for club boats"
 
 
-
+## FIXME FOLLOWING SHOULD BEIN BACKEND
 def add_club_boat_asterix(list_of_cadets_with_groups, event: Event):
     list_of_cadets_at_event_with_club_dinghies = load_list_of_cadets_at_event_with_club_dinghies(event)
 

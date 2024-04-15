@@ -1,6 +1,29 @@
+from typing import List
+
+from app.data_access.storage_layer.api import DataApi
 from app.data_access.data import data
 from app.objects.cadets import Cadet, ListOfCadets
 
+class CadetData():
+    def __init__(self, data_api: DataApi):
+        self.data_api = data_api
+
+    def reorder_list_of_cadet_ids_by_cadet_name(self, list_of_cadet_ids: List[str]):
+        list_of_cadets = self.get_list_of_cadets_given_list_of_cadet_ids(list_of_cadet_ids)
+        list_of_cadets.sort_by_name()
+
+        return list_of_cadets.list_of_ids
+
+    def get_list_of_cadet_names_given_list_of_cadet_ids(self,  list_of_cadet_ids: List[str]):
+        list_of_cadets = self.get_list_of_cadets_given_list_of_cadet_ids(list_of_cadet_ids)
+        return list_of_cadets.list_of_names()
+
+    def get_list_of_cadets_given_list_of_cadet_ids(self, list_of_cadet_ids: List[str]) -> ListOfCadets:
+        list_of_cadets = self.data_api.list_of_cadets
+        return ListOfCadets.subset_from_list_of_ids(full_list=list_of_cadets, list_of_ids=list_of_cadet_ids)
+
+
+### OLD BELOW TO DELETE
 
 def delete_a_cadet(cadet: Cadet):
     all_cadets = load_list_of_all_cadets()

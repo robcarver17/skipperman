@@ -1,6 +1,9 @@
 import datetime
 from enum import Enum
 from typing import Dict, List
+
+import pandas as pd
+
 from app.objects.generic import from_bool_to_str, from_str_to_bool
 Day = Enum("Day", [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday", "Sunday"])
 
@@ -98,4 +101,20 @@ def day_selector_to_text_in_stored_format(day_selector: DaySelector) -> str:
     ## internal format is as per any day selector
     day_text_as_list = [inverse_selection_dict[day_selected] for day_selected, attending in day_selector.items() if attending]
     return ",".join(day_text_as_list)
+
+class ListOfDaySelectors(list[DaySelector]):
+    def as_pd_data_frame(self) -> pd.DataFrame:
+        list_of_dicts = [from_day_selector_to_dict_for_pd(day_selector) for day_selector in self]
+        df = pd.DataFrame(list_of_dicts)
+        df = df.fillna("N/A")
+
+        return df
+
+def from_day_selector_to_dict_for_pd(day_selector: DaySelector) -> dict:
+    as_dict = {}
+    for key in day_selector.keys():
+        if day_selector[key]:
+            as_dict[key.name] = "[  ]"
+
+    return as_dict
 

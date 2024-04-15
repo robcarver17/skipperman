@@ -12,7 +12,7 @@ from app.data_access.csv.volunteers import CsvDataListOfVolunteers, CsvDataListO
 from app.data_access.csv.resources import CsvDataListOfPatrolBoats, CsvDataListOfVolunteersAtEventWithPatrolBoats, CsvDataListOfClubDinghies, CsvDataListOfCadetAtEventWithClubDinghies
 from app.data_access.csv.dinghies_at_events import CsvDataListOfCadetAtEventWithDinghies, CsvDataListOfDinghies
 from app.data_access.csv.users import CsvDataListOfSkipperManUsers
-from app.data_access.csv.qualifications import CsvDataListOfQualifications, CsvListOfCadetsWithQualifications
+from app.data_access.csv.qualifications import CsvDataListOfQualifications, CsvListOfCadetsWithQualifications, CsvDataListOfCadetsWithTickListItems, CsvDataListOfTickSheetItems, CsvDataListOfTickSubStages
 
 class CsvDataApi(GenericDataApi):
     def __init__(self, master_data_path: str, user_data_path: str, backup_data_path: str):
@@ -120,9 +120,26 @@ class CsvDataApi(GenericDataApi):
     def data_list_of_cadets_with_qualifications(self) -> CsvListOfCadetsWithQualifications:
         return CsvListOfCadetsWithQualifications(self.master_data_path, backup_data_path=self.backup_data_path)
 
+
+    @property
+    def data_list_of_tick_sub_stages(self) -> CsvDataListOfTickSubStages:
+        return CsvDataListOfTickSubStages(self.master_data_path, backup_data_path=self.backup_data_path)
+
+    @property
+    def data_list_of_tick_sheet_items(self) -> CsvDataListOfTickSheetItems:
+        return CsvDataListOfTickSheetItems(self.master_data_path, backup_data_path=self.backup_data_path)
+
+    @property
+    def data_list_of_cadets_with_tick_list_items(self) -> CsvDataListOfCadetsWithTickListItems:
+        return CsvDataListOfCadetsWithTickListItems(self.master_data_path, backup_data_path=self.backup_data_path)
+
+    #### USERS
+
     @property
     def data_list_of_users(self) -> CsvDataListOfSkipperManUsers:
         return CsvDataListOfSkipperManUsers(self.user_data_path, backup_data_path=self.backup_data_path)
+
+    ## PATHS
 
     @property
     def master_data_path(self) -> str:

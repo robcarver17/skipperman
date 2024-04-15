@@ -18,3 +18,4 @@ class AdditionalParametersForAllocationReport:
     display_full_names: bool
     include_unallocated_cadets: bool
     add_asterix_for_club_boats: bool
+

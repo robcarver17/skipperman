@@ -1,5 +1,9 @@
 from typing import List
 
+from app.objects.constants import missing_data
+
+from app.data_access.storage_layer.api import DataApi
+
 from app.objects.dinghies import ListOfDinghies
 from app.objects.events import Event
 from app.objects.patrol_boats import ListOfPatrolBoats, ListOfVolunteersAtEventWithPatrolBoats, PatrolBoat, VolunteerAtEventWithPatrolBoat
@@ -7,6 +11,17 @@ from app.objects.club_dinghies import ListOfClubDinghies, ListOfCadetAtEventWith
 
 from app.data_access.data import data
 from app.objects.utils import in_x_not_in_y
+
+class ClubDinghies():
+    def __init__(self, data_api: DataApi):
+        self.data_api = data_api
+
+    def list_of_club_dinghies_bool_for_list_of_cadet_ids(self, list_of_cadet_ids: List[str]) ->List[bool]:
+        list_of_cadets_at_event_with_club_dinghies = self.data_api.list_of_cadets_at_event_with_club_dinghies
+        index_of_cadet_ids_in_list = [list_of_cadets_at_event_with_club_dinghies.dinghy_for_cadet_id(cadet_id=cadet_id,
+                                                                                                     default=None) for cadet_id in list_of_cadet_ids]
+        list_of_true_false = [ cadet_at_event_with_dinghy is not None for cadet_at_event_with_dinghy in index_of_cadet_ids_in_list]
+        return list_of_true_false
 
 def from_patrol_boat_name_to_boat(boat_name: str) -> PatrolBoat:
     list_of_patrol_boats = load_list_of_patrol_boats()

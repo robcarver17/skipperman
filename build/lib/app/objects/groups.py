@@ -112,6 +112,11 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return CadetIdWithGroup
 
+    def list_of_cadet_ids_in_group(self, group: Group) -> List[str]:
+        ids = [item.cadet_id for item in self if item.group == group]
+
+        return ids
+
     def total_in_each_group_as_dict(self) -> dict:
         list_of_groups = self.unique_list_of_groups()
         total_by_group = dict([(str(group),0) for group in list_of_groups])

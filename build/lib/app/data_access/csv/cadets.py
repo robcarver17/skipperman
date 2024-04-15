@@ -32,7 +32,7 @@ class CsvDataListOfCadetsWithGroups(GenericCsvData, DataListOfCadetsWithGroups):
         return list_of_cadets_with_groups
 
     def write_groups_for_event(
-        self, event_id: str, list_of_cadets_with_groups: ListOfCadetIdsWithGroups
+        self, list_of_cadets_with_groups: ListOfCadetIdsWithGroups, event_id: str
     ):
         self.write_object(list_of_cadets_with_groups,
                           file_identifier=CADETS_WITH_GROUPS_ID,

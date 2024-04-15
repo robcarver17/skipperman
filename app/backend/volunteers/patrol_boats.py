@@ -1,3 +1,4 @@
+from app.backend.data.volunteers import get_sorted_list_of_volunteers
 from typing import List
 
 import pandas as pd
@@ -15,7 +16,7 @@ from app.objects.events import Event
 from app.backend.data.resources import load_list_of_voluteers_at_event_with_patrol_boats, save_list_of_voluteers_at_event_with_patrol_boats, load_list_of_patrol_boats
 from app.objects.patrol_boats import PatrolBoat
 from app.objects.utils import in_x_not_in_y, in_both_x_and_y
-from app.objects.volunteers import Volunteer
+from app.objects.volunteers import Volunteer, ListOfVolunteers
 
 
 def get_summary_list_of_boat_allocations_for_events(event: Event) -> PandasDFTable:
@@ -105,7 +106,6 @@ def get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(
 def get_sorted_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day(
             event: Event,
             day: Day,
-            boat_at_event: PatrolBoat
         ) -> List[str]:
 
 
@@ -114,7 +114,7 @@ def get_sorted_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats
         day=day
     )
 
-    sorted_volunteer_ids = sort_volunteer_ids_by_role_and_skills(
+    sorted_volunteer_ids = sort_volunteer_ids_by_role_and_skills_and_then_name(
         volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day = volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day,
         day=day,
         event=event
@@ -128,44 +128,56 @@ def get_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_giv
 
     volunteer_ids_already_allocated = get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(event=event, day=day)
     list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
-    list_of_volunteer_ids_at_event = list_of_volunteers_at_event.list_of_volunteer_ids
+    list_of_volunteers_at_event_on_given_day = list_of_volunteers_at_event.list_of_volunteers_available_on_given_day(day=day)
+    list_of_volunteer_ids_at_event_on_given_day= list_of_volunteers_at_event_on_given_day.list_of_volunteer_ids
 
     volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day = in_x_not_in_y(
-        x=list_of_volunteer_ids_at_event,
+        x=list_of_volunteer_ids_at_event_on_given_day,
         y=volunteer_ids_already_allocated
     )
 
     return volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day
 
-def sort_volunteer_ids_by_role_and_skills(volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day: List[str],
-                                          event: Event,
-                                          day: Day) -> List[str]:
+
+## FIXME trouble?
+sorted_list_of_volunteers= get_sorted_list_of_volunteers()
+
+def sort_volunteer_ids_by_role_and_skills_and_then_name(volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day: List[str],
+                                                        event: Event,
+                                                        day: Day) -> List[str]:
 
     sorted_list_of_ids = []
+
     volunteer_ids_in_boat_related_roles_on_day_of_event= get_volunteer_ids_in_boat_related_roles_on_day_of_event(event=event, day=day)
     add_to_list_of_ids(list_of_ids_to_draw_from=volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day,
                        list_of_existing_ids=sorted_list_of_ids,
-                       list_to_add_from=volunteer_ids_in_boat_related_roles_on_day_of_event)
+                       list_to_add_from=volunteer_ids_in_boat_related_roles_on_day_of_event,
+                       sorted_list_of_volunteers=sorted_list_of_volunteers)
 
     volunteer_ids_in_boat_related_roles_on_any_day_of_event= get_volunteer_ids_in_boat_related_roles_on_any_day_of_event(event)
     add_to_list_of_ids(list_of_ids_to_draw_from=volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day,
                        list_of_existing_ids=sorted_list_of_ids,
-                       list_to_add_from=volunteer_ids_in_boat_related_roles_on_any_day_of_event)
+                       list_to_add_from=volunteer_ids_in_boat_related_roles_on_any_day_of_event,
+                       sorted_list_of_volunteers=sorted_list_of_volunteers)
 
     all_volunteer_ids_allocated_to_any_boat_or_day = get_all_volunteer_ids_allocated_to_any_boat_or_day(event)
     add_to_list_of_ids(list_of_ids_to_draw_from=volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day,
                        list_of_existing_ids=sorted_list_of_ids,
-                       list_to_add_from=all_volunteer_ids_allocated_to_any_boat_or_day)
+                       list_to_add_from=all_volunteer_ids_allocated_to_any_boat_or_day,
+                       sorted_list_of_volunteers=sorted_list_of_volunteers)
 
     list_of_volunteer_ids_with_boat_skills = get_list_of_volunteer_ids_with_boat_skills()
     add_to_list_of_ids(list_of_ids_to_draw_from=volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day,
                        list_of_existing_ids=sorted_list_of_ids,
-                       list_to_add_from=list_of_volunteer_ids_with_boat_skills)
+                       list_to_add_from=list_of_volunteer_ids_with_boat_skills,
+                       sorted_list_of_volunteers=sorted_list_of_volunteers)
 
     ## Everyone else
+
     add_to_list_of_ids(list_of_ids_to_draw_from=volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day,
                        list_of_existing_ids=sorted_list_of_ids,
-                       list_to_add_from=volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day)
+                       list_to_add_from=volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day,
+                       sorted_list_of_volunteers=sorted_list_of_volunteers)
 
     return sorted_list_of_ids
 
@@ -222,13 +234,22 @@ def get_boat_name_allocated_to_volunteer_on_day_at_event(event: Event, day: Day,
 
 def add_to_list_of_ids(list_of_ids_to_draw_from: List[str],
                        list_of_existing_ids: List[str],
-                       list_to_add_from: List[str]):
+                       list_to_add_from: List[str],
+                       sorted_list_of_volunteers: ListOfVolunteers):
 
     potential_new_ids = in_both_x_and_y(list_of_ids_to_draw_from, list_to_add_from)
     new_ids_excluding_already_in = in_x_not_in_y(x=potential_new_ids, y=list_of_existing_ids)
+    sorted_new_ids_excluding_already_in = sort_list_of_volunteer_ids_as_per_list_of_volunteers(list_of_volunteer_ids=new_ids_excluding_already_in,
+                                                                                               sorted_list_of_volunteers=sorted_list_of_volunteers)
 
-    list_of_existing_ids+=new_ids_excluding_already_in
+    list_of_existing_ids+=sorted_new_ids_excluding_already_in
 
+
+def sort_list_of_volunteer_ids_as_per_list_of_volunteers(list_of_volunteer_ids: List[str],
+                                                         sorted_list_of_volunteers: ListOfVolunteers):
+
+    sorted_subset_list_of_volunteers = ListOfVolunteers.subset_from_list_of_ids(full_list=sorted_list_of_volunteers, list_of_ids=list_of_volunteer_ids)
+    return sorted_subset_list_of_volunteers.list_of_ids
 
 def get_list_of_volunteer_ids_with_boat_skills()-> List[str]:
     volunteer_skills = load_list_of_volunteer_skills()

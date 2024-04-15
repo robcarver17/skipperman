@@ -99,10 +99,10 @@ class ListOfCadetAtEventWithClubDinghies(GenericListOfObjectsWithIds):
 
         return self.index(idx[0])
 
-    def dinghy_for_cadet_id(self, cadet_id:str) -> str:
+    def dinghy_for_cadet_id(self, cadet_id:str, default = missing_data) -> str:
         list_of_items = [item.club_dinghy_id for item in self if item.cadet_id == cadet_id]
         if len(list_of_items)==0:
-            return missing_data
+            return default
         if len(list_of_items)>1:
             raise Exception("Can only have one dinghy per cadet")
 

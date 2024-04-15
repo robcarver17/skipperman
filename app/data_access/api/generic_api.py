@@ -114,3 +114,20 @@ class GenericDataApi(object):
     @property
     def data_list_of_cadets_with_qualifications(self) -> DataListOfCadetsWithQualifications:
         raise NotImplemented
+
+    @property
+    def data_list_of_tick_sub_stages(self) -> DataListOfTickSubStages:
+        raise NotImplemented
+
+    @property
+    def data_list_of_tick_sheet_items(self) -> DataListOfTickSheetItems:
+        raise NotImplemented
+
+    @property
+    def data_list_of_cadets_with_tick_list_items(self) -> DataListOfCadetsWithTickListItems:
+        raise NotImplemented
+
+
+REQUIRES_EVENT = [
+
+]

@@ -74,6 +74,11 @@ class ListOfCadetsWithQualifications(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return CadetWithQualification
 
+    def does_cadet_id_have_qualification(self, cadet_id: str, qualification_id: str):
+        list_of_qualification_ids = self.list_of_qualification_ids_for_cadet(cadet_id)
+
+        return qualification_id in list_of_qualification_ids
+
     def list_of_qualification_ids_for_cadet(self, cadet_id: str):
         matching = [item.qualification_id for item in self if item.cadet_id ==cadet_id]
         return matching

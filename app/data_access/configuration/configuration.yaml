@@ -84,6 +84,7 @@ volunteer_teams:
   Ramp:
     - "Ramp lead"
     - "Ramp 1st aid"
+    - "Ramp spotter"
     - "Ramp"
   River safety:
     - "River safety lead"
@@ -121,6 +122,8 @@ lake_training_groups:
   - "Jolly sailors"
   - "Lilt"
 river_training_groups:
+  - "Oppie peer group B"
+  - "Oppie peer group A"
   - "Quest beginners"
   - "Quest intermediate"
   - "Oppie-over-the-wall"

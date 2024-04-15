@@ -5,7 +5,7 @@ from app.objects.events import Event
 
 from app.objects.utils import make_id_as_int_str
 
-from app.backend.data.group_allocations import save_list_of_cadets_with_allocated_groups_for_event
+from app.backend.data.group_allocations_old import save_list_of_cadets_with_allocated_groups_for_event
 from app.backend.forms.form_utils import input_name_from_column_name_and_cadet_id, get_availablity_from_form
 from app.backend.group_allocations.boat_allocation import update_club_boat_allocation_for_cadet_at_event, \
     update_boat_info_for_cadets_at_event, CadetWithDinghyInputs

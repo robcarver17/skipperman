@@ -89,6 +89,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - clear old reports for event (remove rednedant permalinks) and other temp directories UTILITIES MENU
 - report of qualified people who are available
 - set maximum allowable / target for each role
+- put shareable files up like instructors documents; manage shared files eg deleete
 
 ### Required for social event:
 

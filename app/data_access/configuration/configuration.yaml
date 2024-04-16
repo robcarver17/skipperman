@@ -79,11 +79,11 @@ volunteer_teams:
   Lake helpers:
     - "Deputy skipper"
     - "Lake helper"
-    - "Lake 1st aid"
+    - "Lake welfare"
     - "Lake Galley"
   Ramp:
     - "Ramp lead"
-    - "Ramp 1st aid"
+    - "Ramp welfare"
     - "Ramp spotter"
     - "Ramp"
   River safety:

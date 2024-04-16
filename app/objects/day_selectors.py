@@ -72,11 +72,11 @@ def no_days_selected(day_selector: DaySelector, possible_days: list):
     return not any([day_selector.get(day, False) for day in possible_days])
 
 def weekend_day_selector_from_text(text: str) -> DaySelector: ## we read WA files like this but don't write them internally
-    if text=="Saturday only":
+    if "Saturday only" in text:
         return DaySelector({Day.Saturday: True, Day.Sunday: False})
-    elif text=="Sunday only":
+    elif "Sunday only" in text:
         return DaySelector({Day.Saturday: False, Day.Sunday: True})
-    elif text == "Both days":
+    elif "Both days" in text:
         return DaySelector({Day.Saturday: True, Day.Sunday: True})
     raise Exception("Day selection text %s not recognised" % text)
 

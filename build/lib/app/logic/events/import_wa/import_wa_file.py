@@ -18,6 +18,8 @@ from app.logic.events.events_in_state import get_event_from_state
 def display_form_import_event_file(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
+    return process_wa_staged_file_already_uploaded(interface)
+    """
     try:
         ## deletes staged file if works ok
         return process_wa_staged_file_already_uploaded(interface)
@@ -27,7 +29,7 @@ def display_form_import_event_file(
         interface.log_error("Problem with file import_wa %s try uploading again" % e)
 
         return initial_state_form
-
+    """
 
 def post_form_import_event_file(interface: abstractInterface) -> Union[Form, NewForm]:
     interface.log_error("Shouldn't get to post on import_wa event file!")

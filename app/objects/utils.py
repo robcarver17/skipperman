@@ -173,11 +173,21 @@ def transform_str_or_datetime_into_date(date_string: Union[str, datetime.date, d
     elif isinstance(date_string, datetime.datetime):
         return date_string.date()
 
+    return transform_str_into_date(date_string)
+
+def transform_str_into_date(date_string: str) -> datetime.date:
+
     try:
         return datetime.datetime.strptime(date_string, DATE_STR).date()
     except:
-        str_as_datetime = transform_str_into_datetime(date_string)
-        return str_as_datetime.date()
+        pass
+
+    try:
+        return transform_str_into_datetime(date_string)
+    except:
+        pass
+
+    return datetime.datetime(1970,1,1)
 
 
 def transform_df_column_from_str_to_datetimes(df: pd.DataFrame, date_series_name: str):

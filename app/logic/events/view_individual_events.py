@@ -158,6 +158,11 @@ def get_event_buttons(event: Event, interface: abstractInterface) -> ButtonBar:
         event_specific_buttons = get_event_specific_buttons(event)
         return ButtonBar([back_button, wa_update, wa_modify_field_mapping]+event_specific_buttons )
 
+    if wa_import_done and field_mapping_done and raw_event_file_exists:
+        ## shouldn't really happen
+        event_specific_buttons = get_event_specific_buttons(event)
+        return ButtonBar([back_button, wa_update, wa_modify_field_mapping]+event_specific_buttons )
+
     interface.log_error(
         "Something went wrong; contact support [wa_import_done=%s, field_mapping_done=%s, raw_event_file_exists=%s]"
         % (str(wa_import_done), str(field_mapping_done), str(raw_event_file_exists))

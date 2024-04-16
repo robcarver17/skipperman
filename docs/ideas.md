@@ -88,6 +88,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - waiting list - change unallocated status name
 - clear old reports for event (remove rednedant permalinks) and other temp directories UTILITIES MENU
 - report of qualified people who are available
+- set maximum allowable / target for each role
 
 ### Required for social event:
 

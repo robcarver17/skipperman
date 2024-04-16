@@ -67,6 +67,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for training event (Can wait):
 
+- remove 'smart' volunteer finding when no first or surname found
 - issues with duplicates on registration - fix when writing data model
 - random issues with volunteer changes, fix when writing data model
 - filter volunteer sheet on available days (only volunteers available on a given day)

@@ -59,9 +59,9 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - regular backups; include roll back function 
 - record qualification data 
 - record ticksheet data
-- print roll call lists and contact details
+- print roll call lists
 
-### Bug fixes
+### Bug fixes before next event import
 
 - removing volunteer should also remove associated role ID
 - cope with volunteer that already exists if manually added
@@ -77,6 +77,8 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for training event (Can wait):
 
+- add health to ticksheets
+- add contact details and health to roll call report
 - multiple filter: filter volunteer sheet on available days (only volunteers available on a given day), only volunteers available and unallocated on a given day, only volunteers with certain skills
 - store of previous events volunteer role / cadet allocation to speed up loading 
 - click on cadet name to see previous groups

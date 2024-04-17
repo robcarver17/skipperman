@@ -1,9 +1,11 @@
 from typing import List
 
+from app.backend.data.cadets import CadetData
+
 from app.data_access.storage_layer.api import DataApi
 
 from app.data_access.data import data
-from app.objects.cadets import Cadet
+from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.day_selectors import ListOfDaySelectors
 from app.objects.events import Event
 
@@ -17,9 +19,17 @@ class CadetsAtEvent():
     def set_event(self, event: Event):
         self.data_api.event =event
 
-    def list_of_active_cadet_ids_at_event(self):
+    def list_of_active_cadets_at_event(self) -> ListOfCadets:
+        active_ids = self.list_of_active_cadet_ids_at_event()
+        list_of_cadets = self.cadet_data.get_list_of_cadets_given_list_of_cadet_ids(active_ids)
+
+        return list_of_cadets
+
+    def list_of_active_cadet_ids_at_event(self) -> List[str]:
         list_of_cadets_at_event = self.data_api.list_of_cadets_at_event
-        return list_of_cadets_at_event.list_of_active_cadets_at_event()
+        active_cadets_at_event = list_of_cadets_at_event.list_of_active_cadets_at_event()
+
+        return active_cadets_at_event.list_of_cadet_ids()
 
     def get_attendance_matrix_for_list_of_cadet_ids_at_event(self, list_of_cadet_ids: List[str]) -> ListOfDaySelectors:
         ### ALL CADETS mus tbe active
@@ -28,6 +38,10 @@ class CadetsAtEvent():
         list_of_availability = ListOfDaySelectors([cadet_at_event.availability for cadet_at_event in subset_list])
 
         return list_of_availability
+
+    @property
+    def cadet_data(self):
+        return CadetData(self.data_api)
 
 def cadet_id_at_event_given_row_id(event: Event, row_id: str) -> str:
     identified_cadets_at_event = load_identified_cadets_at_event(event)

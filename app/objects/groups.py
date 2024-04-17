@@ -1,6 +1,7 @@
 
 from typing import List
 import pandas as pd
+from app.objects.utils import in_x_not_in_y
 
 from app.data_access.configuration.configuration import (
     LAKE_TRAINING_GROUP_NAMES,
@@ -173,13 +174,20 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
             cadet_id = cadet.id
             self.append(CadetIdWithGroup(cadet_id=cadet_id, group=chosen_group))
 
-    def cadets_in_list_not_allocated_to_group(
+    def cadet_ids_in_passed_list_not_allocated_to_any_group(self,
+                                                            list_of_cadet_ids: List[str]):
+        my_ids = self.list_of_ids
+        ids_in_list_not_given_group = in_x_not_in_y(x=list_of_cadet_ids, y=my_ids)
+
+        return ids_in_list_not_given_group
+
+    def cadets_in_passed_list_not_allocated_to_any_group(
         self, list_of_cadets: ListOfCadets
     ) -> ListOfCadets:
         my_ids = self.list_of_ids
         list_ids = list_of_cadets.list_of_ids
 
-        ids_in_list_not_given_group = list(set(list_ids).difference(set(my_ids)))
+        ids_in_list_not_given_group = in_x_not_in_y(x=list_ids, y=my_ids)
 
         return list_of_cadets.subset_from_list_of_ids(
             full_list=list_of_cadets, list_of_ids=ids_in_list_not_given_group
@@ -260,6 +268,9 @@ class CadetWithGroup(GenericSkipperManObject):
 class ListOfCadetsWithGroup(GenericListOfObjects):
     def _object_class_contained(self):
         return CadetWithGroup
+
+    def list_of_cadets(self) -> ListOfCadets:
+        return ListOfCadets([cadet_with_group.cadet for cadet_with_group in self])
 
     @classmethod
     def from_list_of_cadets_and_list_of_allocations(

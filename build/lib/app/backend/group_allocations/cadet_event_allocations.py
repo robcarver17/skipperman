@@ -52,7 +52,7 @@ def get_unallocated_cadets(
     )
 
     unallocated_cadets = (
-        list_of_cadet_ids_with_groups.cadets_in_list_not_allocated_to_group(
+        list_of_cadet_ids_with_groups.cadets_in_passed_list_not_allocated_to_any_group(
             list_of_cadets_in_event
         )
     )

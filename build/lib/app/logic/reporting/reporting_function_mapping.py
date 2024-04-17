@@ -41,7 +41,7 @@ reporting_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_
                         (display_form_for_boat_report_print_options, post_form_for_boat_report_print_options):0
                     }
             },
-            (display_form_report_rollcall, post_form_report_rollcarll): {
+            (display_form_report_rollcall, post_form_report_rollcall): {
                 (display_form_for_rollcall_report_all_options,
                  post_form_for_rollcall_report_all_options):
                     {
@@ -50,7 +50,7 @@ reporting_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_
                         (display_form_for_group_arrangement_options_rollcall_report,
                          post_form_for_group_arrangement_options_rollcall_report): 0,
                         (display_form_for_rollcall_report_print_options,
-                         post_form_for_rota_report_print_options): 0
+                         post_form_for_rollcall_report_print_options): 0
 
                     }
             },

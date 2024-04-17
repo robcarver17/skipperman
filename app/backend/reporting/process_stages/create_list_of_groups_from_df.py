@@ -13,7 +13,11 @@ from app.objects.constants import arg_not_passed
 
 
 class ListOfDfRowsFromSubset(list):
-    pass
+    @property
+    def columns(self):
+        if len(self)==0:
+            return []
+        return list(self[0][1].keys())
 
 def create_list_of_pages_from_dict_of_df(
     dict_of_df: Dict[str, pd.DataFrame],
@@ -115,7 +119,7 @@ def group_of_marked_up_str_from_subset_list_for_group(group: str,
         marked_up_list_from_df_parameters=marked_up_list_from_df_parameters,
         size_of_group = len(subset_group_as_list)
     )
-    dict_of_max_length = dict_of_max_length_by_column_name_across_list(subset_group_as_list=subset_group_as_list, entry_columns=marked_up_list_from_df_parameters.entry_columns)
+    dict_of_max_length = dict_of_max_length_by_column_name_across_list(subset_group_as_list=subset_group_as_list)
     for index, row in enumerate(subset_group_as_list):
         __, row_entries = row ## weird pandas thing
         prepend_group_name = marked_up_list_from_df_parameters.prepend_group_name
@@ -124,7 +128,6 @@ def group_of_marked_up_str_from_subset_list_for_group(group: str,
         )
         marked_string = create_marked_string_from_row(
             row_entries,
-            entry_columns=marked_up_list_from_df_parameters.entry_columns,
             keyvalue=keyvalue,
             prepend_group_name=prepend_group_name,
             group=group,
@@ -134,7 +137,11 @@ def group_of_marked_up_str_from_subset_list_for_group(group: str,
 
     return group_of_marked_up_str
 
-def dict_of_max_length_by_column_name_across_list(subset_group_as_list: ListOfDfRowsFromSubset, entry_columns: List[str]) -> Dict[str, int]:
+def dict_of_max_length_by_column_name_across_list(subset_group_as_list: ListOfDfRowsFromSubset) -> Dict[str, int]:
+    if len(subset_group_as_list)==0:
+        return {}
+
+    entry_columns = subset_group_as_list.columns ## should all be the same, joy of itterows
     dict_of_max_length = dict(
         [
             (column_name, max_length_for_column_name_across_list(subset_group_as_list=subset_group_as_list, column_name=column_name))
@@ -185,13 +192,12 @@ def _add_groupname_inplace_to_list_for_this_group_if_required(
 
 def create_marked_string_from_row(
     row: pd.Series,
-    entry_columns: List[str],
     group: str,
     dict_of_max_length: Dict[str, int],
     keyvalue: bool = False,
     prepend_group_name: bool = False,
 ) -> MarkedUpString:
     if keyvalue:
-        return MarkedUpString.keyvalue(row=row, group=group, prepend_group_name=prepend_group_name, entry_columns=entry_columns, dict_of_max_length=dict_of_max_length)
+        return MarkedUpString.keyvalue(row=row, group=group, prepend_group_name=prepend_group_name,  dict_of_max_length=dict_of_max_length)
     else:
-        return MarkedUpString.bodytext(row=row, group=group, prepend_group_name=prepend_group_name, entry_columns=entry_columns, dict_of_max_length=dict_of_max_length)
+        return MarkedUpString.bodytext(row=row, group=group, prepend_group_name=prepend_group_name,  dict_of_max_length=dict_of_max_length)

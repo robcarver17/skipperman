@@ -17,30 +17,30 @@ class MarkedUpString:
     underline: bool = False
 
     @classmethod
-    def bodytext(cls, row: Union[str, pd.Series], entry_columns: List[str] = arg_not_passed, group: str = arg_not_passed,
+    def bodytext(cls, row: Union[str, pd.Series],  group: str = arg_not_passed,
                                                          prepend_group_name: bool = False,dict_of_max_length: Dict[str, int] = arg_not_passed):
         string, original_contents_as_series = (
-            from_row_and_columns_to_string_and_original_contents(row=row,entry_columns=entry_columns,
+            from_row_and_columns_to_string_and_original_contents(row=row,
                                                                  group=group, prepend_group_name=prepend_group_name,
                                                                  dict_of_max_length=dict_of_max_length))
         return cls(string=string, original_contents_as_series=original_contents_as_series, bold=False, italics=False, underline=False)
 
     @classmethod
-    def header(cls, row: Union[str, pd.Series], entry_columns: List[str] = arg_not_passed, group: str = arg_not_passed,
+    def header(cls, row: Union[str, pd.Series],  group: str = arg_not_passed,
                                                          prepend_group_name: bool = False,dict_of_max_length: Dict[str, int] = arg_not_passed):
 
         string, original_contents_as_series = (
-            from_row_and_columns_to_string_and_original_contents(row=row,entry_columns=entry_columns, group=group,
+            from_row_and_columns_to_string_and_original_contents(row=row, group=group,
                                                                  prepend_group_name=prepend_group_name,
                                                                  dict_of_max_length=dict_of_max_length))
         return cls(string=string, bold=True, italics=False, underline=True, original_contents_as_series=original_contents_as_series)
 
     @classmethod
-    def keyvalue(cls, row: Union[str, pd.Series], entry_columns: List[str] = arg_not_passed, group: str = arg_not_passed,
+    def keyvalue(cls, row: Union[str, pd.Series],  group: str = arg_not_passed,
                                                          prepend_group_name: bool = False,
                                                         dict_of_max_length: Dict[str, int] = arg_not_passed):
         string, original_contents_as_series = (
-            from_row_and_columns_to_string_and_original_contents(row=row,entry_columns=entry_columns,
+            from_row_and_columns_to_string_and_original_contents(row=row,
                                                                  group=group, prepend_group_name=prepend_group_name,
                                                                  dict_of_max_length=dict_of_max_length))
         return cls(string=string, bold=True, italics=False, underline=False, original_contents_as_series=original_contents_as_series)
@@ -49,12 +49,12 @@ class MarkedUpString:
     def width(self) -> int:
         return len(self.string)
 
-def from_row_and_columns_to_string_and_original_contents(row: Union[str, pd.Series], entry_columns: List[str] = arg_not_passed, group: str = arg_not_passed,
+def from_row_and_columns_to_string_and_original_contents(row: Union[str, pd.Series],  group: str = arg_not_passed,
                                                          prepend_group_name: bool = False, dict_of_max_length: Dict[str, int] = arg_not_passed) -> Tuple[str, pd.Series]:
     if type(row) is str:
         string =row
         return string, pd.Series(dict(text=string))
-    original_contents_as_dict = dict([(column_name, row[column_name]) for column_name in entry_columns])
+    original_contents_as_dict = row.to_dict()
     original_contents_as_dict = reformat_to_max_length_padding(original_contents_as_dict=original_contents_as_dict, dict_of_max_length=dict_of_max_length)
     original_contents_as_series = pd.Series(original_contents_as_dict)
     original_contents_as_list = original_contents_as_series.to_list()

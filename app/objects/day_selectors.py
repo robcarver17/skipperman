@@ -113,9 +113,9 @@ class ListOfDaySelectors(List[DaySelector]):
 
 def from_day_selector_to_dict_for_pd(day_selector: DaySelector) -> dict:
     as_dict = {}
-    for key in day_selector.keys():
-        if day_selector[key]:
-            as_dict[key.name] = "[  ]"
+    for day in all_possible_days:
+        if day_selector.available_on_day(day):
+            as_dict[day.name] = "[  ]"
 
     return as_dict
 

@@ -34,7 +34,7 @@ def team_leader_role_for_team(team: str)-> str:
 
 
 specific_parameters_for_volunteer_report = SpecificParametersForTypeOfReport(
-    entry_columns=[ROLE, VOLUNTEER, GROUP, BOAT],
+#    entry_columns=[ROLE, VOLUNTEER, GROUP, BOAT],
     group_by_column=TEAM_NAME,
     passed_group_order=VOLUNTEER_TEAMS,
     report_type="Volunteer rota report"

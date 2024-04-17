@@ -6,7 +6,7 @@ from app.backend.reporting.options_and_parameters.report_type_specific_parameter
 )
 
 specific_parameters_for_rollcall_report = SpecificParametersForTypeOfReport(
-    entry_columns=[CADET_NAME],
+#    entry_columns=[CADET_NAME],
     group_by_column=GROUP_STR_NAME,
     passed_group_order=ALL_GROUPS_NAMES,
     report_type="Rollcall report"

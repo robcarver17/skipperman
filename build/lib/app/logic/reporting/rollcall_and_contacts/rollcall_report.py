@@ -29,7 +29,7 @@ def display_form_report_rollcall(interface: abstractInterface) -> Form:
     return display_initial_generic_report_form(report_generator=rollcall_report_generator)
 
 
-def post_form_report_rollcarll(
+def post_form_report_rollcall(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     return post_form_initial_generic_report(interface=interface, report_generator=rollcall_report_generator)
@@ -92,7 +92,7 @@ def post_form_for_group_arrangement_options_rollcall_report(
 
 rollcall_report_generator = ReportGenerator(
                                     name="Role call, Emergency contact, health details report",
-                                    event_criteria=dict(),
+                                    event_criteria=dict(requires_cadets_and_boats = True),
                                     specific_parameters_for_type_of_report = specific_parameters_for_rollcall_report,
                                     initial_display_form_function=display_form_report_rollcall,
                                     all_options_display_form_function=display_form_for_rollcall_report_all_options,

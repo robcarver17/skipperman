@@ -12,7 +12,7 @@ SAIL_NUMBER = 'Sail number'
 CLUB_BOAT = 'Club boat'
 
 specific_parameters_for_boat_report = SpecificParametersForTypeOfReport(
-    entry_columns=[FIRST_CADET, SECOND_CADET, GROUP, BOAT_CLASS, SAIL_NUMBER, CLUB_BOAT],
+#    entry_columns=[FIRST_CADET, SECOND_CADET, GROUP, BOAT_CLASS, SAIL_NUMBER, CLUB_BOAT],
     group_by_column=GROUP,
     passed_group_order=ALL_GROUPS_NAMES,
     report_type="Sailors with boats report"

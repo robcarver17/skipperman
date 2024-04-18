@@ -63,14 +63,12 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Bug fixes before next event import
 
-- removing volunteer should also remove associated role ID
+- issues with duplicates on registration - fix when writing data model - THINK OK CHECK
+- random issues with volunteer changes, fix when writing data model - CHECK BACK FOR CADET CHANGES
+- removing volunteer should also remove associated role ID, or apply strict filters?
+- removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
 - cope with volunteer that already exists if manually added
-- remove 'smart' volunteer finding when no first or surname found
-- issues with duplicates on registration - fix when writing data model
-- random issues with volunteer changes, fix when writing data model
-- ignore cadet name on import (use for test cadets - need to be able to avoid on reimport as we do for volunteers)
 - refactor reporting so uses common data model
-- change event upload so doesn't store old files
 - seperate health field which gets reported to instructors (seperate out different types of notes)
 - waiting list - change unallocated status name
 

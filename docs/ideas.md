@@ -78,6 +78,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - add health to ticksheets
 - add contact details and health to roll call report
 - multiple filter: filter volunteer sheet on available days (only volunteers available on a given day), only volunteers available and unallocated on a given day, only volunteers with certain skills
+- sort volunteer by cadet location
 - store of previous events volunteer role / cadet allocation to speed up loading 
 - click on cadet name to see previous groups
 - click on volunteer name to see previous events

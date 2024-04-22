@@ -76,7 +76,6 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 ### Required for training event (Can wait):
 
 - sign in sheet multiple columns
-- allow multiple days / different allocations
 - add health to ticksheets
 - add contact details and health to roll call report
 - multiple filter: filter volunteer sheet on available days (only volunteers available on a given day), only volunteers available and unallocated on a given day, only volunteers with certain skills
@@ -99,6 +98,8 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - power boat only volunteer rota
 - memorise whether summary buttons pressed
 - memorise group orders and arrangements for reports (can deal with missing groups)
+- allow multiple days / different allocations. Availability change will break two handed partners.
+
 
 ### Required for social event:
 

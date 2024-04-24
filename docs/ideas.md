@@ -63,23 +63,23 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Bug fixes before next event import
 
-- removing volunteer should also remove associated role ID
+- issues with duplicates on registration - fix when writing data model - THINK OK CHECK
+- random issues with volunteer changes, fix when writing data model - CHECK BACK FOR CADET CHANGES
+- removing volunteer should also remove associated role ID, or apply strict filters?
+- removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
 - cope with volunteer that already exists if manually added
-- remove 'smart' volunteer finding when no first or surname found
-- issues with duplicates on registration - fix when writing data model
-- random issues with volunteer changes, fix when writing data model
-- ignore cadet name on import (use for test cadets - need to be able to avoid on reimport as we do for volunteers)
 - refactor reporting so uses common data model
-- change event upload so doesn't store old files
 - seperate health field which gets reported to instructors (seperate out different types of notes)
 - waiting list - change unallocated status name
 
 
 ### Required for training event (Can wait):
 
+- sign in sheet multiple columns
 - add health to ticksheets
 - add contact details and health to roll call report
 - multiple filter: filter volunteer sheet on available days (only volunteers available on a given day), only volunteers available and unallocated on a given day, only volunteers with certain skills
+- sort volunteer by cadet location
 - store of previous events volunteer role / cadet allocation to speed up loading 
 - click on cadet name to see previous groups
 - click on volunteer name to see previous events
@@ -98,6 +98,8 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - power boat only volunteer rota
 - memorise whether summary buttons pressed
 - memorise group orders and arrangements for reports (can deal with missing groups)
+- allow multiple days / different allocations. Availability change will break two handed partners.
+
 
 ### Required for social event:
 

@@ -9,9 +9,9 @@ from app.web.html.master_layout import get_master_layout
 from app.web.html.process_abstract_form_to_html import (
     process_abstract_form_to_html,
 )
-from app.web.flask.flask_interface import flaskInterface
+from app.web.flask.flask_interface import flaskInterface, get_current_url_from_action_name
 from flask import send_file, Response
-
+from app.data_access.data import data_api
 
 ### Returns HTML for an 'action', non menu page
 def generate_action_page_html(action_name: str) -> Union[Html, Response]:
@@ -39,9 +39,9 @@ def generate_action_page_html(action_name: str) -> Union[Html, Response]:
 def from_abstract_to_laid_out_html(
     abstract_form_for_action: Form, action_name: str
 ) -> Html:
-    interface = flaskInterface(action_name=action_name)
+    current_url = get_current_url_from_action_name(action_name=action_name)
     html_code_for_action = process_abstract_form_to_html(
-        abstract_form_for_action, current_url=interface.current_url
+        abstract_form_for_action, current_url=current_url
     )
 
     html_code_for_action_in_layout = add_standard_layout_and_buttons_to_action_code(

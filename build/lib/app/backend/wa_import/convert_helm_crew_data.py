@@ -1,13 +1,13 @@
 import datetime
 from copy import copy
 
-from app.backend.data.cadets_at_event import load_list_of_cadets_at_event_with_dinghies, load_cadets_at_event, \
+from app.backend.data.cadets_at_event import load_list_of_cadets_at_event_with_dinghies, DEPRECATED_load_cadets_at_event, \
     get_cadet_at_event
-from app.backend.data.mapped_events import save_mapped_wa_event, load_mapped_wa_event
+from app.backend.data.mapped_events import DEPRECCATE_save_mapped_wa_event, DEPRECATE_load_mapped_wa_event
 from app.backend.group_allocations.boat_allocation import update_boat_info_for_updated_cadets_at_event
-from app.backend.wa_import.add_cadet_ids_to_mapped_wa_event_data import add_identified_cadet_and_row
-from app.backend.wa_import.update_cadets_at_event import get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active, \
-    add_new_cadet_to_event
+from app.backend.wa_import.add_cadet_ids_to_mapped_wa_event_data import DEPRECATE_add_identified_cadet_and_row
+from app.backend.wa_import.update_cadets_at_event import DEPRECATED_get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active, \
+    DEPRECATE_add_new_cadet_to_event
 from app.data_access.configuration.field_list import HELM_SURNAME, HELM_FIRST_NAME, CREW_SURNAME, CREW_FIRST_NAME, CADET_FIRST_NAME, CADET_SURNAME, CADET_DOUBLE_HANDED_PARTNER
 
 from app.objects.cadets import Cadet, DEFAULT_DATE_OF_BIRTH
@@ -66,11 +66,11 @@ def add_matched_partner_cadet_with_duplicate_registration_to_wa_mapped_data(orig
                                                                             event: Event):
 
     new_row = add_new_row_to_wa_event_data_and_return_row(original_cadet=original_cadet, new_cadet=new_cadet, event=event)
-    add_identified_cadet_and_row(
+    DEPRECATE_add_identified_cadet_and_row(
         event=event, row_id=new_row.row_id, cadet_id=new_cadet.id
     )
 
-    add_new_cadet_to_event(
+    DEPRECATE_add_new_cadet_to_event(
         event=event, row_in_mapped_wa_event=new_row,
         cadet_id=new_cadet.id
     )
@@ -80,14 +80,14 @@ def add_matched_partner_cadet_with_duplicate_registration_to_wa_mapped_data(orig
 def add_new_row_to_wa_event_data_and_return_row(original_cadet: Cadet,
                                                                             new_cadet: Cadet,
                                                                             event: Event) -> RowInMappedWAEvent:
-    mapped_wa_event_data = load_mapped_wa_event(event)
-    existing_row = get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
+    mapped_wa_event_data = DEPRECATE_load_mapped_wa_event(event)
+    existing_row = DEPRECATED_get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
         cadet_id=original_cadet.id, event=event
     )
     new_row = modify_row_to_clone_for_new_cadet_partner(original_cadet=original_cadet, new_cadet=new_cadet, existing_row=existing_row)
 
     mapped_wa_event_data.append(new_row)
-    save_mapped_wa_event(mapped_wa_event_data=mapped_wa_event_data, event=event)
+    DEPRECCATE_save_mapped_wa_event(mapped_wa_event_data=mapped_wa_event_data, event=event)
 
     return new_row
 

@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Callable
 
+from app.data_access.storage_layer.api import DataLayer
+
 from app.objects.constants import (
     missing_data,
     NoFileUploaded,
@@ -19,12 +21,15 @@ finished_button = Button(FINISHED_BUTTON_LABEL)
 
 @dataclass
 class abstractInterface:
+    data: DataLayer
     display_and_post_form_function_maps: DisplayAndPostFormFunctionMaps = arg_not_passed
     action_name: str = ""
 
+    def save_stored_items(self):
+        self.data.save_stored_items()
+
     def log_error(self, error_message: str):
         raise NotImplemented
-
 
     def set_where_finished_button_should_lead_to(self, stage_name: str):
         self.set_persistent_value(FINISHED_BUTTON_LABEL, stage_name)

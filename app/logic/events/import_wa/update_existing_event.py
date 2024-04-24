@@ -7,7 +7,7 @@ from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_
 from app.logic.events.constants import *
 from app.logic.events.import_wa.upload_event_file import (
     get_form_for_wa_upload_with_prompt,
-    upload_wa_file_and_save_as_raw_event_with_mapping,
+    verify_uploaded_wa_file_and_save_as_staged_file,
 )
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.events import Event
@@ -46,7 +46,7 @@ def respond_to_uploaded_file_when_updating(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     try:
-        upload_wa_file_and_save_as_raw_event_with_mapping(interface)
+        verify_uploaded_wa_file_and_save_as_staged_file(interface)
     except Exception as e:
         ## revert to view events
         interface.log_error("Problem with file upload %s" % e)

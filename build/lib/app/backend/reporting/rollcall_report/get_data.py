@@ -1,7 +1,9 @@
 from typing import Dict
 
 import pandas as pd
-from app.backend.data.cadets_at_event import CadetsAtEvent
+from app.objects.abstract_objects.abstract_interface import abstractInterface
+
+from app.backend.data.cadets_at_event import CadetsAtEventData
 
 from app.backend.group_allocations.cadet_event_allocations import load_allocation_for_event, get_unallocated_cadets, \
     get_list_of_cadets_with_groups
@@ -9,7 +11,7 @@ from app.backend.reporting.rollcall_report.configuration import AdditionalParame
 from app.logic.reporting.allocations.processes import add_club_boat_asterix
 from app.objects.events import Event
 
-from app.data_access.storage_layer.api import DataApi
+from app.data_access.storage_layer.api import DataLayer
 from app.data_access.storage_layer.store import Store
 
 from app.backend.data.group_allocations import GroupAllocations
@@ -30,6 +32,7 @@ def get_dict_of_df_for_reporting_rollcalls_given_event_and_parameters(event: Eve
 
 
 def get_dict_of_df_for_reporting_rollcalls_with_flags(
+    interface: abstractInterface,
     event: Event,
     display_full_names: bool = False,
     include_unallocated_cadets: bool = False,
@@ -38,21 +41,19 @@ def get_dict_of_df_for_reporting_rollcalls_with_flags(
         include_health_data: bool = True
 ) -> Dict[str, pd.DataFrame]:
 
-    ## FIXME NOT LIKE THIS
-    data_api = DataApi(store)
+    data_api = interface.data
     group_allocations = GroupAllocations(data_api)
-    cadets_at_event_data = CadetsAtEvent(data_api)
-    data_api.event = event
+    cadets_at_event_data = CadetsAtEventData(data_api)
 
-    list_of_cadets_with_groups = group_allocations.get_list_of_cadets_with_group_at_event(include_unallocated_cadets=include_unallocated_cadets)
+    list_of_cadets_with_groups = group_allocations.get_list_of_cadets_with_group_at_event(event=event, include_unallocated_cadets=include_unallocated_cadets)
 
     df = list_of_cadets_with_groups.to_df_of_str(display_full_names=display_full_names)
 
     ## add availabilty
     list_of_cadets = list_of_cadets_with_groups.list_of_cadets()
     list_of_cadet_ids = list_of_cadets.list_of_ids
-    attendance_data = cadets_at_event_data.get_attendance_matrix_for_list_of_cadet_ids_at_event(
-        list_of_cadet_ids)
+    attendance_data = cadets_at_event_data.get_attendance_matrix_for_list_of_cadet_ids_at_event(event=event,
+        list_of_cadet_ids=list_of_cadet_ids)
     attendance_data_df = attendance_data.as_pd_data_frame()
 
     df = pd.concat([df, attendance_data_df], axis=1)

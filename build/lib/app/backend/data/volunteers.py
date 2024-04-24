@@ -1,11 +1,11 @@
-from app.data_access.data import data
+from app.data_access.data import DEPRECATED_data
 from app.objects.cadets import Cadet
 from app.objects.constants import arg_not_passed
 from app.objects.volunteers import ListOfVolunteerSkills, ListOfVolunteers, Volunteer, ListOfCadetVolunteerAssociations
 
 
 def add_new_verified_volunteer(volunteer: Volunteer):
-    data.data_list_of_volunteers.add(volunteer)
+    DEPRECATED_data.data_list_of_volunteers.add(volunteer)
 
 
 def delete_a_volunteer(volunteer):
@@ -16,7 +16,7 @@ def delete_a_volunteer(volunteer):
 
 
 def delete_connection_in_data(cadet: Cadet, volunteer: Volunteer):
-    existing_connections = data.data_list_of_cadet_volunteer_associations.read()
+    existing_connections = DEPRECATED_data.data_list_of_cadet_volunteer_associations.read()
     existing_connections.delete(cadet_id=cadet.id, volunteer_id=volunteer.id)
     save_list_of_cadet_volunteer_associations(existing_connections)
 
@@ -43,28 +43,28 @@ def update_existing_volunteer(volunteer: Volunteer):
 
 
 def get_list_of_cadet_volunteer_associations() -> ListOfCadetVolunteerAssociations:
-    list_of_cadet_volunteer_associations = data.data_list_of_cadet_volunteer_associations.read()
+    list_of_cadet_volunteer_associations = DEPRECATED_data.data_list_of_cadet_volunteer_associations.read()
 
     return list_of_cadet_volunteer_associations
 
 def save_list_of_cadet_volunteer_associations(list_of_cadet_volunteer_associations:ListOfCadetVolunteerAssociations):
-    data.data_list_of_cadet_volunteer_associations.write(list_of_cadet_volunteer_associations)
+    DEPRECATED_data.data_list_of_cadet_volunteer_associations.write(list_of_cadet_volunteer_associations)
 
 
 def load_list_of_volunteer_skills()-> ListOfVolunteerSkills:
-    skills = data.data_list_of_volunteer_skills.read()
+    skills = DEPRECATED_data.data_list_of_volunteer_skills.read()
 
     return skills
 
 def save_list_of_volunteer_skills(list_of_volunteer_skills: ListOfVolunteerSkills):
-    data.data_list_of_volunteer_skills.write(list_of_volunteer_skills)
+    DEPRECATED_data.data_list_of_volunteer_skills.write(list_of_volunteer_skills)
 
 
 SORT_BY_SURNAME = "Sort by surname"
 SORT_BY_FIRSTNAME = "Sort by first name"
 
 def load_all_volunteers()-> ListOfVolunteers:
-    return data.data_list_of_volunteers.read()
+    return DEPRECATED_data.data_list_of_volunteers.read()
 
 
 def get_sorted_list_of_volunteers(sort_by: str = arg_not_passed) -> ListOfVolunteers:
@@ -79,4 +79,4 @@ def get_sorted_list_of_volunteers(sort_by: str = arg_not_passed) -> ListOfVolunt
         return master_list
 
 def save_list_of_volunteers(list_of_volunteers: ListOfVolunteers):
-    data.data_list_of_volunteers.write(list_of_volunteers)
+    DEPRECATED_data.data_list_of_volunteers.write(list_of_volunteers)

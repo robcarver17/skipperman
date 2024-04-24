@@ -4,7 +4,7 @@ from app.backend.wa_import.convert_helm_crew_data import from_partner_name_to_ca
     add_matched_partner_cadet_with_duplicate_registration_to_wa_mapped_data, \
     get_registered_two_handed_partner_name_for_cadet_at_event
 from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing import get_current_cadet_id_at_event, clear_cadet_id_at_event
-from app.backend.cadets import confirm_cadet_exists, get_cadet_from_list_of_cadets,  get_cadet_from_id
+from app.backend.cadets import DEPRECATE_confirm_cadet_exists, DEPRECATE_get_cadet_from_list_of_cadets,  DEPRECATE_get_cadet_from_id
 
 from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
@@ -89,13 +89,13 @@ def process_form_when_existing_cadet_chosen_as_partner(interface: abstractInterf
     cadet_selected = interface.last_button_pressed()
 
     try:
-        confirm_cadet_exists(cadet_selected)
+        DEPRECATE_confirm_cadet_exists(cadet_selected)
     except:
         raise Exception(
             "Cadet selected no longer exists - file corruption or someone deleted?",
         )
 
-    cadet = get_cadet_from_list_of_cadets(cadet_selected)
+    cadet = DEPRECATE_get_cadet_from_list_of_cadets(cadet_selected)
 
     return add_matched_partner_cadet_with_duplicate_registration(interface=interface, new_cadet=cadet)
 
@@ -115,7 +115,7 @@ def return_to_allocation_pages(interface: abstractInterface) -> NewForm:
 def get_primary_cadet_and_partner_name(interface: abstractInterface) -> Tuple[Cadet, Cadet]:
     event = get_event_from_state(interface)
     cadet_id = get_current_cadet_id_at_event(interface)
-    primary_cadet = get_cadet_from_id(cadet_id)
+    primary_cadet = DEPRECATE_get_cadet_from_id(cadet_id)
     partner_name = get_registered_two_handed_partner_name_for_cadet_at_event(cadet=primary_cadet, event=event)
     partner_cadet = from_partner_name_to_cadet(partner_name)
 

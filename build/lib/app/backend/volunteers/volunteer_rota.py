@@ -3,7 +3,7 @@ from typing import List
 from app.backend.data.volunteer_rota import save_volunteers_in_role_at_event
 from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingTableBody, \
     load_volunteers_in_role_at_event, RotaSortsAndFilters
-from app.backend.data.volunteers import get_sorted_list_of_volunteers
+from app.backend.data.volunteers import DEPRECATED_get_sorted_list_of_volunteers
 from app.objects.constants import missing_data, arg_not_passed
 from app.objects.events import Event
 from app.objects.groups import Group, ALL_GROUPS_NAMES, GROUP_UNALLOCATED_TEXT
@@ -43,7 +43,7 @@ def get_volunteer_with_role_at_event_on_day(event: Event, volunteer_id: str, day
     return volunteer_in_role
 
 def sort_volunteer_data_for_event_by_name_sort_order(volunteers_at_event: ListOfVolunteersAtEvent, sort_order) -> ListOfVolunteersAtEvent:
-    list_of_volunteers = get_sorted_list_of_volunteers(sort_by=sort_order)
+    list_of_volunteers = DEPRECATED_get_sorted_list_of_volunteers(sort_by=sort_order)
     ## this works because if an ID is missing we just ignore it
     return volunteers_at_event.sort_by_list_of_volunteer_ids(list_of_volunteers.list_of_ids)
 

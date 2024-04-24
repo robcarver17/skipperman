@@ -1,8 +1,8 @@
 from typing import List
 
-from app.backend.cadets import get_sorted_list_of_cadets, cadet_from_id
-from app.backend.data.volunteers import get_sorted_list_of_volunteers, load_list_of_volunteer_skills, save_list_of_volunteer_skills,\
-    get_list_of_cadet_volunteer_associations, add_volunteer_connection_to_cadet_in_master_list_of_volunteers, \
+from app.backend.cadets import DEPRECATE_get_sorted_list_of_cadets, DEPRECATED_cadet_from_id
+from app.backend.data.volunteers import DEPRECATED_get_sorted_list_of_volunteers, load_list_of_volunteer_skills, save_list_of_volunteer_skills,\
+    DEPRECATE_get_list_of_cadet_volunteer_associations, add_volunteer_connection_to_cadet_in_master_list_of_volunteers, \
     load_all_volunteers
 from app.data_access.configuration.configuration import VOLUNTEERS_SKILL_FOR_PB2
 from app.objects.constants import arg_not_passed
@@ -30,8 +30,8 @@ def get_dict_of_existing_skills(volunteer: Volunteer)-> dict:
 
 
 def get_connected_cadets(volunteer: Volunteer) -> list:
-    existing_connections = get_list_of_cadet_volunteer_associations()
-    list_of_cadets = get_sorted_list_of_cadets()
+    existing_connections = DEPRECATE_get_list_of_cadet_volunteer_associations()
+    list_of_cadets = DEPRECATE_get_sorted_list_of_cadets()
 
     connected_ids = existing_connections.list_of_connections_for_volunteer(volunteer.id)
     connected_cadets = [list_of_cadets.object_with_id(id) for id in connected_ids]
@@ -39,7 +39,7 @@ def get_connected_cadets(volunteer: Volunteer) -> list:
 
 
 def list_of_similar_volunteers(volunteer: Volunteer) -> list:
-    existing_volunteers = get_sorted_list_of_volunteers()
+    existing_volunteers = DEPRECATED_get_sorted_list_of_volunteers()
     similar_volunteers = existing_volunteers.similar_volunteers(
         volunteer=volunteer
     )
@@ -74,7 +74,7 @@ def verify_volunteer_and_warn(volunteer: Volunteer) -> str:
     return warn_text
 
 def is_cadet_already_connected_to_volunteer_in_volunteer_list(cadet_id: str, volunteer: Volunteer) -> bool:
-    existing_connections = get_list_of_cadet_volunteer_associations()
+    existing_connections = DEPRECATE_get_list_of_cadet_volunteer_associations()
     return cadet_id in existing_connections.list_of_connections_for_volunteer(volunteer.id)
 
 
@@ -83,13 +83,13 @@ def add_list_of_cadet_connections_to_volunteer(
                                                            list_of_connected_cadet_ids: List[str]):
     volunteer =get_volunteer_from_id(volunteer_id)
     for cadet_id in list_of_connected_cadet_ids:
-        cadet = cadet_from_id(cadet_id)
+        cadet = DEPRECATED_cadet_from_id(cadet_id)
         add_volunteer_connection_to_cadet_in_master_list_of_volunteers(volunteer=volunteer,
                                                                        cadet=cadet)
 
 
 def get_volunteer_from_id(volunteer_id: str) -> Volunteer:
-    list_of_volunteers = get_sorted_list_of_volunteers()
+    list_of_volunteers = DEPRECATED_get_sorted_list_of_volunteers()
     return list_of_volunteers.object_with_id(volunteer_id)
 
 

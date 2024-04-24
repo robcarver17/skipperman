@@ -1,6 +1,6 @@
 from typing import List
 
-from app.data_access.data import data
+from app.data_access.data import DEPRECATED_data
 from app.objects.constants import missing_data
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -8,17 +8,17 @@ from app.objects.volunteers_at_event import ListOfVolunteersAtEvent, ListOfIdent
     VolunteerAtEvent
 
 def load_list_of_identified_volunteers_at_event(event: Event) -> ListOfIdentifiedVolunteersAtEvent:
-    return data.data_list_of_identified_volunteers_at_event.read(event_id=event.id)
+    return DEPRECATED_data.data_list_of_identified_volunteers_at_event.read(event_id=event.id)
 
 def save_list_of_identified_volunteers_at_event(event: Event, list_of_volunteers: ListOfIdentifiedVolunteersAtEvent):
-    data.data_list_of_identified_volunteers_at_event.write(list_of_identified_volunteers=list_of_volunteers, event_id=event.id)
+    DEPRECATED_data.data_list_of_identified_volunteers_at_event.write(list_of_identified_volunteers=list_of_volunteers, event_id=event.id)
 
 def load_list_of_volunteers_at_event(event: Event)-> ListOfVolunteersAtEvent:
-    return data.data_list_of_volunteers_at_event.read(event_id=event.id)
+    return DEPRECATED_data.data_list_of_volunteers_at_event.read(event_id=event.id)
 
 
 def save_list_of_volunteers_at_event(event: Event, list_of_volunteers_at_event: ListOfVolunteersAtEvent):
-    data.data_list_of_volunteers_at_event.write(event_id=event.id, list_of_volunteers_at_event=list_of_volunteers_at_event)
+    DEPRECATED_data.data_list_of_volunteers_at_event.write(event_id=event.id, list_of_volunteers_at_event=list_of_volunteers_at_event)
 
 
 

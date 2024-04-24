@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import List, Dict
 
 from app.backend.data.resources import load_list_of_cadets_at_event_with_club_dinghies, load_list_of_club_dinghies, save_list_of_cadets_at_event_with_club_dinghies, load_list_of_boat_classes
-from app.backend.data.cadets import load_list_of_all_cadets
+from app.backend.data.cadets import DEPRECATE_load_list_of_all_cadets
 from app.backend.forms.summarys import summarise_generic_counts_for_event
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.cadets import Cadet
@@ -11,7 +11,7 @@ from app.objects.day_selectors import DaySelector, Day
 from app.objects.events import Event
 from app.objects.club_dinghies import NO_BOAT
 from app.backend.data.cadets_at_event import load_list_of_cadets_at_event_with_dinghies, \
-    save_list_of_cadets_at_event_with_dinghies, load_cadets_at_event
+    save_list_of_cadets_at_event_with_dinghies, DEPRECATED_load_cadets_at_event
 from app.objects.dinghies import no_partnership, CadetAtEventWithDinghy, ListOfCadetAtEventWithDinghies, \
     compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values
 from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies
@@ -87,7 +87,7 @@ def convert_single_input_to_cadet_at_event(update: CadetWithDinghyInputs) -> Cad
     )
 
 def get_two_handed_partner_id_from_name(two_handed_partner_name: str):
-    list_of_cadets =load_list_of_all_cadets()
+    list_of_cadets =DEPRECATE_load_list_of_all_cadets()
     if no_partnership(two_handed_partner_name):
         two_handed_partner_id = two_handed_partner_name
     else:
@@ -108,7 +108,7 @@ def summarise_club_boat_allocations_for_event(event: Event) -> PandasDFTable:
     all_club_dinghies = load_list_of_club_dinghies()
     list_of_dinghy_ids = cadets_with_club_dinghies_at_event.unique_sorted_list_of_dinghy_ids(all_club_dinghies)
     row_names = [all_club_dinghies.name_given_id(id) for id in list_of_dinghy_ids]
-    cadets_at_event = load_cadets_at_event(event)
+    cadets_at_event = DEPRECATED_load_cadets_at_event(event)
     availability_dict = dict([(cadet.cadet_id, cadet.availability)
                               for cadet in cadets_at_event.list_of_active_cadets_at_event()])
 
@@ -143,7 +143,7 @@ def summarise_class_attendance_for_event(event: Event) -> PandasDFTable:
     all_boat_classes = load_list_of_boat_classes()
     list_of_boat_class_ids = cadets_with_dinghies_at_event.unique_sorted_list_of_boat_class_ids(all_boat_classes)
     row_names = [all_boat_classes.name_given_id(id) for id in list_of_boat_class_ids]
-    cadets_at_event = load_cadets_at_event(event)
+    cadets_at_event = DEPRECATED_load_cadets_at_event(event)
     availability_dict = dict([(cadet.cadet_id, cadet.availability)
                               for cadet in cadets_at_event.list_of_active_cadets_at_event()])
 

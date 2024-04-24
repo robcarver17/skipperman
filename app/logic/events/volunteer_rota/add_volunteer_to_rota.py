@@ -1,14 +1,14 @@
 from copy import copy
 from typing import Union
 
-from app.backend.data.volunteers import  SORT_BY_FIRSTNAME, get_sorted_list_of_volunteers
-from app.backend.data.volunteer_allocation import load_list_of_volunteers_at_event, add_volunteer_to_event_with_just_id
+from app.backend.data.volunteers import  SORT_BY_FIRSTNAME, DEPRECATED_get_sorted_list_of_volunteers
+from app.backend.data.volunteer_allocation import DEPRECATED_load_list_of_volunteers_at_event, add_volunteer_to_event_with_just_id
 from app.logic.events.constants import CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL, FINAL_VOLUNTEER_ADD_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_allocation.volunteer_selection_form_contents import \
-    get_dict_of_volunteer_names_and_volunteers
+    DEPRECATE_get_dict_of_volunteer_names_and_volunteers
 from app.logic.volunteers.add_volunteer import verify_form_with_volunteer_details, VolunteerAndVerificationText, \
     get_add_volunteer_form_with_information_passed, add_volunteer_from_form_to_data
 from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL
@@ -75,7 +75,7 @@ def action_when_new_volunteer_to_be_added_from_rota(interface: abstractInterface
 
 
 def action_when_specific_volunteer_selected_for_rota(name_of_volunteer: str, interface: abstractInterface) -> Union[Form, NewForm]:
-    dict_of_volunteer_names_and_volunteers= get_dict_of_volunteer_names_and_volunteers()
+    dict_of_volunteer_names_and_volunteers= DEPRECATE_get_dict_of_volunteer_names_and_volunteers()
     volunteer = dict_of_volunteer_names_and_volunteers.get(name_of_volunteer, None)
     if volunteer is None:
         raise Exception("Volunteer %s has gone missing!" % name_of_volunteer)
@@ -123,10 +123,10 @@ def get_list_of_volunteer_buttons_in_rota(event: Event) -> Line:
     return volunteer_buttons_line
 
 def get_list_of_volunteers_except_those_already_at_event(event: Event):
-    volunteers_at_event =load_list_of_volunteers_at_event(event)
+    volunteers_at_event =DEPRECATED_load_list_of_volunteers_at_event(event)
     volunteers_at_event_ids = volunteers_at_event.list_of_volunteer_ids
 
-    master_list_of_volunteers = get_sorted_list_of_volunteers(SORT_BY_FIRSTNAME)
+    master_list_of_volunteers = DEPRECATED_get_sorted_list_of_volunteers(SORT_BY_FIRSTNAME)
     list_of_volunteers = copy(master_list_of_volunteers)
     for id in volunteers_at_event_ids:
         list_of_volunteers.pop_with_id(id)

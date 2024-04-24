@@ -11,7 +11,7 @@ from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.volunteers.constants import *
-from app.data_access.data import data
+from app.data_access.data import DEPRECATED_data
 
 def display_form_view_of_snapshots(interface: abstractInterface) -> Form:
     list_of_buttons = list_of_snapshot_buttons(
@@ -48,7 +48,7 @@ def list_of_snapshot_buttons():
     return ListOfLines([Line(Button(name)) for name in all_labels])
 
 def get_all_snapshot_labels():
-    backup_path = data.backup_data_path
+    backup_path = DEPRECATED_data.backup_data_path
     dict_of_snapshots = dict_of_backups_with_datetimes(backup_path)
     return ["%d Backed up on %s" % (backupid, str(backup_datetime)) for backupid, backup_datetime in dict_of_snapshots.items()]
 
@@ -58,7 +58,7 @@ def from_button_name_to_backup_id(button_pressed: str) -> int:
     return int(splitter[0])
 
 def restore_snapshot_given_button_pressed(button_pressed: str, interface: abstractInterface) -> NewForm:
-    backup_path = data.backup_data_path
+    backup_path = DEPRECATED_data.backup_data_path
     backup_id = from_button_name_to_backup_id(button_pressed)
     try:
         restore_backup(backup_diff=backup_id, datapath=backup_path)

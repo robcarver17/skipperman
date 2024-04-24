@@ -1,16 +1,17 @@
 import pandas as pd
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.field_mapping import get_field_mapping_for_event
+from app.backend.data.field_mapping import DEPRECATE_get_field_mapping_for_event, get_field_mapping_for_event
 from app.objects.events import Event
 from app.objects.wa_field_mapping import ListOfWAFieldMappings
 from app.objects.mapped_wa_event import MappedWAEvent
 from app.backend.wa_import.load_wa_file import load_raw_wa_file
 
 
-def map_wa_fields_in_df_for_event(event: Event, filename: str) -> MappedWAEvent:
+def map_wa_fields_in_df_for_event(interface: abstractInterface, event: Event, filename: str) -> MappedWAEvent:
     wa_as_df = load_raw_wa_file(filename)
     # Set up WA event mapping fields
-    wa_field_mapping = get_field_mapping_for_event(event=event)
+    wa_field_mapping = get_field_mapping_for_event(event=event, interface=interface)
 
     # Do the field mapping
     # need to think about what happens if a field is missing

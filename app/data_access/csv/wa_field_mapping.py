@@ -12,7 +12,7 @@ class CsvDataWAFieldMapping(GenericCsvData, DataWAFieldMapping):
                                                             additional_file_identifiers=event_id)
         return field_mapping
 
-    def write(self, event_id: str, wa_field_mapping: ListOfWAFieldMappings):
+    def write(self, wa_field_mapping: ListOfWAFieldMappings, event_id: str):
         self.write_object(wa_field_mapping,
                           file_identifier=FIELD_MAPPING_FILE_ID,
                           additional_file_identifiers=event_id)
@@ -25,7 +25,7 @@ class CsvDataWAFieldMapping(GenericCsvData, DataWAFieldMapping):
 
         return mapping_template
 
-    def write_template(self, template_name: str, wa_field_mapping: ListOfWAFieldMappings):
+    def write_template(self, wa_field_mapping: ListOfWAFieldMappings, template_name: str):
         self.write_object(wa_field_mapping,
                           file_identifier=TEMPLATES_FIELD_MAPPING_FILE_ID,
                           additional_file_identifiers=template_name)

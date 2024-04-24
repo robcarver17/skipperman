@@ -1,5 +1,5 @@
 from app.backend.data.volunteer_allocation import days_at_event_when_volunteer_available
-from app.data_access.data import data
+from app.data_access.data import DEPRECATED_data
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.volunteers_in_roles import VolunteerInRoleAtEvent, ListOfVolunteersInRoleAtEvent, NO_ROLE_SET
@@ -17,12 +17,12 @@ def delete_role_at_event_for_volunteer_on_day(volunteer_id: str, day: Day,
 
 
 def load_volunteers_in_role_at_event(event: Event) -> ListOfVolunteersInRoleAtEvent:
-    return data.data_list_of_volunteers_in_roles_at_event.read(event_id=event.id)
+    return DEPRECATED_data.data_list_of_volunteers_in_roles_at_event.read(event_id=event.id)
 
 
 def save_volunteers_in_role_at_event(event: Event, list_of_volunteers_in_roles_at_event:ListOfVolunteersInRoleAtEvent):
-    data.data_list_of_volunteers_in_roles_at_event.write(event_id=event.id,
-                                                         list_of_volunteers_in_roles_at_event=list_of_volunteers_in_roles_at_event)
+    DEPRECATED_data.data_list_of_volunteers_in_roles_at_event.write(event_id=event.id,
+                                                                    list_of_volunteers_in_roles_at_event=list_of_volunteers_in_roles_at_event)
 
 
 def update_role_at_event_for_volunteer_on_day(volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,

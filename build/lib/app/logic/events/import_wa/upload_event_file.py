@@ -1,3 +1,4 @@
+import os
 from typing import Union
 
 from app.data_access.configuration.configuration import WILD_APRICOT_FILE_TYPES
@@ -19,7 +20,7 @@ from app.logic.events.constants import (
 from app.backend.wa_import.load_wa_file import (
     save_staged_file_of_raw_event_upload_with_event_id,
     verify_and_return_uploaded_wa_event_file,
-    save_uploaded_wa_as_local_file,
+    save_uploaded_wa_as_local_temp_file,
     check_local_file_is_valid_wa_file, WA_FILE,
 )
 from app.backend.wa_import.map_wa_files import verify_file_has_correct_wa_id
@@ -74,7 +75,7 @@ def previous_form(interface: abstractInterface) -> NewForm:
 
 def respond_to_uploaded_file(interface: abstractInterface) -> Union[Form, NewForm]:
     try:
-        upload_wa_file_and_save_as_raw_event_with_mapping(interface)
+        verify_uploaded_wa_file_and_save_as_staged_file(interface)
     except Exception as e:
         ## revert to view events
         interface.log_error("Problem with file upload %s" % e)
@@ -86,21 +87,27 @@ def respond_to_uploaded_file(interface: abstractInterface) -> Union[Form, NewFor
     )
 
 
-def upload_wa_file_and_save_as_raw_event_with_mapping(interface: abstractInterface):
-    local_filename = verify_and_save_uploaded_wa_event_file(interface)
-    event = get_event_from_state(interface)
-    verify_file_has_correct_wa_id(filename=local_filename, event=event)
-    save_staged_file_of_raw_event_upload_with_event_id(
-        local_filename, event_id=event.id
-    )
+def verify_uploaded_wa_file_and_save_as_staged_file(interface: abstractInterface):
+    temp_filename = verify_and_save_uploaded_wa_event_file_as_temporary_file(interface)
+    try:
+        event = get_event_from_state(interface)
+        verify_file_has_correct_wa_id(interface=interface, filename=temp_filename, event=event)
+        save_staged_file_of_raw_event_upload_with_event_id(
+            temp_filename, event_id=event.id
+        )
+    except Exception as e:
+        os.remove(temp_filename)
+        raise e
+
+    os.remove(temp_filename)
 
 
-def verify_and_save_uploaded_wa_event_file(interface: abstractInterface) -> str:
+def verify_and_save_uploaded_wa_event_file_as_temporary_file(interface: abstractInterface) -> str:
     ## returns local filename, ensuring we don't overwrite
     ## does not check is a valid WA file
     ## not associated with event so just given incremental filename
     file = verify_and_return_uploaded_wa_event_file(interface)
-    new_filename = save_uploaded_wa_as_local_file(file)
-    check_local_file_is_valid_wa_file(new_filename)
+    temp_filename = save_uploaded_wa_as_local_temp_file(file)
+    check_local_file_is_valid_wa_file(temp_filename)
 
-    return new_filename
+    return temp_filename

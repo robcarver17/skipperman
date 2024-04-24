@@ -2,8 +2,7 @@ from dataclasses import dataclass
 from copy import copy
 from typing import Union
 
-from app.backend.cadets import verify_cadet_and_warn
-from app.backend.data.cadets import add_new_verified_cadet
+from app.backend.cadets import verify_cadet_and_warn, add_new_verified_cadet
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -133,7 +132,7 @@ def verify_form_with_cadet_details(
 ) -> CadetAndVerificationText:
     try:
         cadet = get_cadet_from_form(interface)
-        verify_text = verify_cadet_and_warn(cadet=cadet)
+        verify_text = verify_cadet_and_warn(cadet=cadet, interface=interface)
     except Exception as e:
         cadet = copy(default)
         verify_text = (
@@ -171,14 +170,14 @@ def process_form_when_cadet_verified(
     )
 
 
-def add_cadet_from_form_to_data(interface) -> Cadet:
+
+def add_cadet_from_form_to_data(interface: abstractInterface) -> Cadet:
     cadet = get_cadet_from_form(interface)
     print("cadet from form to be added: %s" % str(cadet))
-    cadet = add_new_verified_cadet(cadet)
+    cadet = add_new_verified_cadet(interface=interface, cadet=cadet)
     print("returning %s" % str(cadet))
 
     return cadet
-
 
 def get_footer_buttons_for_add_cadet_form(form_is_empty: bool) -> ButtonBar:
     final_submit = Button(FINAL_ADD_BUTTON_LABEL, nav_button=True)

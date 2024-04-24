@@ -1,7 +1,7 @@
 from typing import Union
 
-from app.backend.cadets import get_cadet_from_list_of_cadets
-from app.backend.data.cadets import add_new_verified_cadet
+from app.backend.cadets import DEPRECATE_get_cadet_from_list_of_cadets
+from app.backend.data.cadets import DEPRECATE_add_new_verified_cadet
 from app.backend.wa_import.import_cadets import remove_temp_file, get_current_cadet_from_temp_file, get_temp_cadet_file, \
     are_there_no_similar_cadets, does_identical_cadet_exist_in_data, replace_cadet_with_id_with_new_cadet_details
 from app.logic.cadets.add_cadet import  get_cadet_from_form
@@ -52,7 +52,7 @@ def process_current_cadet_id_in_temp_file(interface: abstractInterface, cadet_id
 
 def process_when_cadet_to_be_added(interface: abstractInterface, cadet: Cadet)-> Form:
     print("Adding new cadet %s" % cadet)
-    add_new_verified_cadet(cadet)
+    DEPRECATE_add_new_verified_cadet(cadet)
     return next_iteration_over_rows_in_temp_cadet_file(interface)
 
 SKIP_CADET_BUTTON_LABEL = "Skip - do not add this cadet"
@@ -110,7 +110,7 @@ def post_verify_adding_cadet_from_list_form(    interface: abstractInterface,
 def replace_selected_cadet_with_new_cadet(interface):
     new_cadet = get_cadet_from_form(interface)
     cadet_selected = interface.last_button_pressed()
-    existing_cadet = get_cadet_from_list_of_cadets(cadet_selected)
+    existing_cadet = DEPRECATE_get_cadet_from_list_of_cadets(cadet_selected)
 
     replace_cadet_with_id_with_new_cadet_details(existing_cadet_id = existing_cadet.id, new_cadet=new_cadet)
 

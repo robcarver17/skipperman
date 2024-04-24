@@ -1,9 +1,9 @@
 from typing import Union
-from app.backend.cadets import cadet_name_from_id
-from app.backend.wa_import.update_cadets_at_event import is_cadet_already_at_event, is_cadet_in_mapped_data, \
-    get_row_in_mapped_event_for_cadet_id_active_registration_only, add_new_cadet_to_event, \
-    get_cadet_at_event_for_cadet_id, mark_cadet_at_event_as_deleted, \
-    get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active, any_important_difference_between_cadets_at_event
+from app.backend.cadets import  cadet_name_from_id
+from app.backend.wa_import.update_cadets_at_event import     \
+    any_important_difference_between_cadets_at_event, \
+    is_cadet_with_id_already_at_event, get_cadet_at_event_for_cadet_id, \
+    get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active, add_new_cadet_to_event
 
 from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing import \
     get_and_save_next_cadet_id_in_event_data, clear_cadet_id_at_event
@@ -27,7 +27,7 @@ from app.logic.events.cadets_at_event.update_existing_cadet_at_event_from_form_e
 from app.objects.cadet_at_event import CadetAtEvent, get_cadet_at_event_from_row_in_mapped_event
 
 from app.objects.events import Event
-from app.objects.constants import NoMoreData, DuplicateCadets, missing_data
+from app.objects.constants import NoMoreData, DuplicateCadets
 from app.objects.mapped_wa_event import RowInMappedWAEvent
 
 
@@ -66,32 +66,21 @@ def process_next_cadet_at_event(
 def process_update_to_cadet_data(
     interface: abstractInterface, event: Event, cadet_id: str
 ) -> Form:
-    cadet_already_at_event = is_cadet_already_at_event(
+    cadet_already_at_event = is_cadet_with_id_already_at_event(
+        interface=interface,
         event=event, cadet_id=cadet_id
     )
-    cadet_present_in_mapped_event_data = is_cadet_in_mapped_data(
-        event=event, cadet_id=cadet_id
-    )
-    print("STATUS ID %s already at event %s in mapped data %s" % (cadet_id, str(cadet_already_at_event), str(cadet_present_in_mapped_event_data)))
-    if cadet_present_in_mapped_event_data and cadet_already_at_event:
+
+    print("STATUS: ID %s already at event %s" % (cadet_id, str(cadet_already_at_event)))
+    if cadet_already_at_event:
         return process_update_to_existing_cadet_in_event_data(
             event=event, cadet_id=cadet_id, interface=interface
         )
-    elif (
-        cadet_present_in_mapped_event_data and not cadet_already_at_event
-    ):
+    else:
         return process_update_to_cadet_new_to_event(
             event=event, cadet_id=cadet_id, interface=interface
         )
-    elif (
-        cadet_already_at_event and not cadet_present_in_mapped_event_data
-    ):
-        return process_update_to_deleted_cadet(
-            event=event, cadet_id=cadet_id, interface=interface
-        )
-    else:
-        interface.log_error("Cadet ID %s was next ID but now can't find in any file?" % cadet_id)
-        return process_next_cadet_at_event(interface)
+
 
 
 def process_update_to_cadet_new_to_event(
@@ -102,42 +91,34 @@ def process_update_to_cadet_new_to_event(
 
     try:
         relevant_row = get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
-            cadet_id=cadet_id, event=event
+            interface=interface,
+            cadet_id=cadet_id, event=event,
+            raise_error_on_duplicate=True
         )
     except DuplicateCadets:
         interface.log_error(
-            "ACTION REQUIRED: Cadet %s appears more than once in WA file with an active registration - ignoring for now - go to WA and cancel one of the registrations please!"
-            % cadet_name_from_id(cadet_id)
+            "ACTION REQUIRED: Cadet %s appears more than once in WA file with an active registration - using the first registration found - go to WA and cancel all but one of the registrations please, and then check details here are correct!"
+            % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
+        )
+        relevant_row = get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
+            interface=interface,
+            cadet_id=cadet_id, event=event,
+            raise_error_on_duplicate=False
+        )
+    except NoMoreData:
+        interface.log_error(
+            "ACTION REQUIRED: Cadet %s vanished from WA mapping file - contact support"
+            % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
         )
         return process_next_cadet_at_event(interface)
 
 
     add_new_cadet_to_event(
+        interface=interface,
         event=event, row_in_mapped_wa_event=relevant_row,
         cadet_id=cadet_id
     )
-
-    return process_next_cadet_at_event(interface)
-
-
-def process_update_to_deleted_cadet(
-        interface: abstractInterface, event: Event, cadet_id: str
-) -> Form:
-
-    existing_cadet_at_event = get_cadet_at_event_for_cadet_id(
-        event=event, cadet_id=cadet_id
-    )
-
-    if existing_cadet_at_event.is_deleted():
-        print("Cadet %s already marked as deleted" % cadet_name_from_id(cadet_id))
-    elif existing_cadet_at_event.is_manual_add():
-        print("Cadet %s was added manually so won't be in new WA import" % cadet_name_from_id(cadet_id))
-    else:
-        interface.log_error(
-            "Cadet %s was in WA event data, now appears to be missing or cancelled in latest file - marked as deleted"
-            % cadet_name_from_id(cadet_id)
-        )
-        mark_cadet_at_event_as_deleted(cadet_id=cadet_id, event=event)
+    interface.save_stored_items()
 
     return process_next_cadet_at_event(interface)
 
@@ -149,16 +130,26 @@ def process_update_to_existing_cadet_in_event_data(
 
     try:
         relevant_row = get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
-            cadet_id=cadet_id, event=event
+            interface=interface,
+            cadet_id=cadet_id, event=event,
+            raise_error_on_duplicate=True
         )
     except DuplicateCadets:
         interface.log_error(
-            "ACTION REQUIRED: Cadet %s appears more than once in WA file with an active registration - ignoring all registrations for now - go to WA and cancel one of the registrations please!"
-            % cadet_name_from_id(cadet_id)
+            "ACTION REQUIRED: Cadet %s appears more than once in WA file with multiple active registrations - ignoring any possible changes made to registration - go to WA and cancel one of the registrations please!"
+            % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
+        )
+        return process_next_cadet_at_event(interface)
+    except NoMoreData:
+        ## No rows match cadet ID, so deleted
+        interface.log_error(
+            "Cadet %s was in WA event data, now appears to be missing in latest file - possible data corruption of WA output or manual hacking - no WA changes will be reflected in data"
+            % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
         )
         return process_next_cadet_at_event(interface)
 
     existing_cadet_at_event = get_cadet_at_event_for_cadet_id(
+        interface=interface,
         event=event, cadet_id=cadet_id
     )
 
@@ -168,6 +159,8 @@ def process_update_to_existing_cadet_in_event_data(
         existing_cadet_at_event =existing_cadet_at_event,
         event=event
     )
+
+
 
 
 def process_update_to_existing_cadet_at_event(
@@ -204,7 +197,7 @@ def post_form_interactively_update_cadets_at_event(
     last_button_pressed = interface.last_button_pressed()
     if last_button_pressed == USE_ORIGINAL_DATA_BUTTON_LABEL:
         ## nothing to do, no change to master file
-        print("Using original data")
+        print("Using original data - doing nothing")
     elif last_button_pressed == USE_NEW_DATA_BUTTON_LABEL:
         print("using new data")
         update_cadets_at_event_with_new_data(interface)

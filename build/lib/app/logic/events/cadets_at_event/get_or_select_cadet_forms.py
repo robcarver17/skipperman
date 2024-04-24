@@ -11,7 +11,8 @@ from app.logic.events.constants import (
     SEE_SIMILAR_CADETS_ONLY_LABEL,
 )
 
-from app.backend.cadets import get_sorted_list_of_cadets, SORT_BY_FIRSTNAME, verify_cadet_and_warn, get_list_of_similar_cadets
+from app.backend.cadets import  SORT_BY_FIRSTNAME,  \
+     verify_cadet_and_warn, get_sorted_list_of_cadets, get_list_of_similar_cadets
 from app.logic.cadets.add_cadet import (
     verify_form_with_cadet_details,
     get_add_cadet_form_with_information_passed,
@@ -39,7 +40,7 @@ def get_add_or_select_existing_cadet_form(
         cadet = cadet_and_text.cadet
     else:
         ## Cadet details as in WA passed through, uese these
-        verification_text = verify_cadet_and_warn(cadet)
+        verification_text = verify_cadet_and_warn(cadet=cadet, interface=interface)
         cadet_and_text = CadetAndVerificationText(
             cadet=cadet, verification_text=verification_text
         )
@@ -49,6 +50,7 @@ def get_add_or_select_existing_cadet_form(
 
     ## First time, don't include final or all cadets
     footer_buttons = get_footer_buttons_add_or_select_existing_cadets_form(
+        interface=interface,
         cadet=cadet,
         see_all_cadets=see_all_cadets,
         include_final_button=include_final_button,
@@ -66,6 +68,7 @@ def get_add_or_select_existing_cadet_form(
 
 
 def get_footer_buttons_add_or_select_existing_cadets_form(
+        interface: abstractInterface,
     cadet: Cadet, see_all_cadets: bool = False, include_final_button: bool = False,
         extra_buttons: Line = arg_not_passed
 ) -> ListOfLines:
@@ -74,7 +77,7 @@ def get_footer_buttons_add_or_select_existing_cadets_form(
     print("Get buttons for %s" % str(cadet))
     main_buttons = get_list_of_main_buttons(include_final_button)
 
-    cadet_buttons = get_list_of_cadet_buttons(
+    cadet_buttons = get_list_of_cadet_buttons(interface=interface,
         cadet=cadet, see_all_cadets=see_all_cadets
     )
 
@@ -93,13 +96,13 @@ def get_list_of_main_buttons(include_final_button: bool) -> Line:
     return main_buttons
 
 
-def get_list_of_cadet_buttons(cadet: Cadet, see_all_cadets: bool = False) -> Line:
+def get_list_of_cadet_buttons(interface: abstractInterface, cadet: Cadet, see_all_cadets: bool = False) -> Line:
     if see_all_cadets:
-        list_of_cadets = get_sorted_list_of_cadets(sort_by=SORT_BY_FIRSTNAME)
+        list_of_cadets = get_sorted_list_of_cadets(interface=interface, sort_by=SORT_BY_FIRSTNAME)
         extra_button = SEE_SIMILAR_CADETS_ONLY_LABEL
     else:
         ## similar cadets with option to see more
-        list_of_cadets = get_list_of_similar_cadets(cadet)
+        list_of_cadets = get_list_of_similar_cadets(interface=interface, cadet=cadet)
         extra_button = SEE_ALL_CADETS_BUTTON_LABEL
 
     all_labels = [extra_button] + list_of_cadets

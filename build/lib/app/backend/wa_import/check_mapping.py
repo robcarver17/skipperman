@@ -1,4 +1,4 @@
-from app.backend.data.field_mapping import get_field_mapping_for_event
+from app.backend.data.field_mapping import DEPRECATE_get_field_mapping_for_event
 from app.backend.wa_import.load_wa_file import does_raw_event_file_exist, load_raw_wa_file
 from app.backend.wa_import.load_wa_file import (
     get_staged_file_raw_event_filename,
@@ -37,7 +37,7 @@ def list_of_warnings_about_fields(
 ) -> ListOfLines:
     wa_as_df = load_raw_wa_file(filename)
     # Set up WA event mapping fields
-    wa_field_mapping = get_field_mapping_for_event(event=event)
+    wa_field_mapping = DEPRECATE_get_field_mapping_for_event(event=event)
 
     fields_in_wa_file = list(wa_as_df.columns)
     in_mapping_not_in_wa_file = wa_field_mapping.wa_fields_missing_from_list(

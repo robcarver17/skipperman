@@ -1,6 +1,6 @@
-from app.backend.cadets import cadet_from_id
-from app.backend.data.cadets_at_event import cadet_id_at_event_given_row_id
-from app.backend.data.mapped_events import get_row_in_mapped_event_data_given_id
+from app.backend.cadets import DEPRECATED_cadet_from_id
+from app.backend.data.cadets_at_event import DEPRECATE_cadet_id_at_event_given_row_id
+from app.backend.data.mapped_events import DEPRECATE_get_row_in_mapped_event_data_given_id
 from app.objects.cadets import default_cadet
 from app.objects.constants import missing_data
 from app.objects.day_selectors import DaySelector, any_day_selector_from_short_form_text
@@ -34,8 +34,8 @@ def get_identification_information_for_volunteer(row_in_mapped_event: RowInMappe
     name_key = dict_of_fields_for_volunteer[NAME_KEY_IN_VOLUNTEER_FIELDS_DICT]
 
     try:
-        cadet_id=cadet_id_at_event_given_row_id(event=event, row_id=row_in_mapped_event.row_id)
-        cadet =cadet_from_id(cadet_id)
+        cadet_id=DEPRECATE_cadet_id_at_event_given_row_id(event=event, row_id=row_in_mapped_event.row_id)
+        cadet =DEPRECATED_cadet_from_id(cadet_id)
     except:
         ## Won't always have cadets maybe in the future
         cadet = default_cadet
@@ -140,7 +140,7 @@ def get_relevant_information_for_volunteer_given_details(
 ) -> RelevantInformationForVolunteer:
     print("Getting relevant information for row_id %s vol index %d" % (row_id, volunteer_index))
 
-    row_in_mapped_event = get_row_in_mapped_event_data_given_id(event=event, row_id=row_id)
+    row_in_mapped_event = DEPRECATE_get_row_in_mapped_event_data_given_id(event=event, row_id=row_id)
     if row_in_mapped_event is missing_data:
         print("For row_id %s vol index %d the relevant information was missing: might be okay?" % (row_id, volunteer_index))
         return missing_relevant_information

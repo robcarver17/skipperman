@@ -6,7 +6,7 @@ from app.backend.group_allocations.cadet_event_allocations import get_unallocate
     load_allocation_for_event
 from app.backend.data.volunteers import  load_list_of_volunteer_skills
 from app.backend.data.volunteer_rota import load_volunteers_in_role_at_event
-from app.backend.data.volunteer_allocation import load_list_of_volunteers_at_event
+from app.backend.data.volunteer_allocation import DEPRECATED_load_list_of_volunteers_at_event
 
 from app.objects.cadets import ListOfCadets
 from app.objects.constants import missing_data, arg_not_passed
@@ -98,7 +98,7 @@ def get_data_to_be_stored(event: Event) -> DataToBeStoredWhilstConstructingTable
     unallocated_cadets_at_event = get_unallocated_cadets(event=event, list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups)
     volunteer_skills = load_list_of_volunteer_skills()
     volunteers_in_roles_at_event = load_volunteers_in_role_at_event(event)
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
+    list_of_volunteers_at_event = DEPRECATED_load_list_of_volunteers_at_event(event)
 
     dict_of_volunteers_with_last_roles = get_dict_of_volunteers_with_last_roles(list_of_volunteers_at_event.list_of_volunteer_ids,
                                                                                 avoid_event=event)

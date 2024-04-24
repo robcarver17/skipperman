@@ -8,30 +8,27 @@ from app.objects.utils import in_both_x_and_y
 from app.objects.events import Event
 
 from app.objects.groups import ListOfCadetIdsWithGroups, Group, ListOfCadetsWithGroup
-from app.backend.data.cadets_at_event import CadetsAtEvent
+from app.backend.data.cadets_at_event import CadetsAtEventData
 from app.backend.data.cadets import CadetData
-from app.data_access.storage_layer.api import DataApi
+from app.data_access.storage_layer.api import DataLayer
 
 class GroupAllocations():
-    def __init__(self, data_api: DataApi):
+    def __init__(self, data_api: DataLayer):
         self.data_api = data_api
 
-    def set_event(self, event:Event):
-        self.data_api.event = event
 
-
-    def get_list_of_cadets_with_group_at_event(self, include_unallocated_cadets: bool = True)-> ListOfCadetsWithGroup:
+    def get_list_of_cadets_with_group_at_event(self, event: Event, include_unallocated_cadets: bool = True)-> ListOfCadetsWithGroup:
         if include_unallocated_cadets:
-            list_of_cadet_ids_with_groups = self.active_cadet_ids_at_event_with_allocations_including_unallocated_cadets()
+            list_of_cadet_ids_with_groups = self.active_cadet_ids_at_event_with_allocations_including_unallocated_cadets(event)
         else:
-            list_of_cadet_ids_with_groups = self.active_cadet_ids_at_event_with_allocations()
+            list_of_cadet_ids_with_groups = self.active_cadet_ids_at_event_with_allocations(event)
 
         return self.get_list_of_cadets_with_group_given_list_of_cadets_with_ids_and_groups(list_of_cadet_ids_with_groups)
 
     def get_list_of_cadets_with_group_given_list_of_cadets_with_ids_and_groups(self,
                                                                                list_of_cadet_ids_with_groups: ListOfCadetIdsWithGroups,
                                                                                ) -> ListOfCadetsWithGroup:
-        list_of_cadets = self.data_api.list_of_cadets
+        list_of_cadets = self.data_api.get_list_of_cadets()
 
         try:
             list_of_cadet_with_groups = (
@@ -45,26 +42,26 @@ class GroupAllocations():
 
         return list_of_cadet_with_groups
 
-    def active_cadet_ids_at_event_with_allocations_including_unallocated_cadets(self) -> ListOfCadetIdsWithGroups:
-        list_of_cadet_ids_with_groups = self.active_cadet_ids_at_event_with_allocations()
-        unallocated_cadets = self.unallocated_cadets_at_event()
+    def active_cadet_ids_at_event_with_allocations_including_unallocated_cadets(self, event: Event) -> ListOfCadetIdsWithGroups:
+        list_of_cadet_ids_with_groups = self.active_cadet_ids_at_event_with_allocations(event)
+        unallocated_cadets = self.unallocated_cadets_at_event(event)
         list_of_cadet_ids_with_groups.add_list_of_unallocated_cadets(unallocated_cadets)
 
         return list_of_cadet_ids_with_groups
 
-    def active_cadet_ids_at_event_with_allocations(self) -> ListOfCadetIdsWithGroups:
+    def active_cadet_ids_at_event_with_allocations(self, event: Event) -> ListOfCadetIdsWithGroups:
 
-        list_of_cadets_with_groups = self.list_of_cadets_with_groups
-        list_of_active_cadet_ids_at_event = self.cadets_at_event_data.list_of_active_cadet_ids_at_event()
+        list_of_cadets_with_groups = self.list_of_cadets_with_groups_at_event(event)
+        list_of_active_cadet_ids_at_event = self.cadets_at_event_data.list_of_active_cadet_ids_at_event(event)
 
         list_of_allocated_cadets_with_groups = [cadet_with_group for cadet_with_group in list_of_cadets_with_groups
                                                 if cadet_with_group.cadet_id in list_of_active_cadet_ids_at_event]
 
         return ListOfCadetIdsWithGroups(list_of_allocated_cadets_with_groups)
 
-    def unallocated_cadets_at_event(self) -> ListOfCadets:
-        list_of_cadets_in_groups_at_event = self.list_of_cadets_with_groups
-        list_of_active_cadets_at_event = self.list_of_active_cadets_at_event()
+    def unallocated_cadets_at_event(self, event: Event) -> ListOfCadets:
+        list_of_cadets_in_groups_at_event = self.list_of_cadets_with_groups_at_event(event)
+        list_of_active_cadets_at_event = self.list_of_active_cadets_at_event(event)
 
         unallocated_cadet_ids = (
             list_of_cadets_in_groups_at_event.cadets_in_passed_list_not_allocated_to_any_group(
@@ -73,21 +70,20 @@ class GroupAllocations():
         )
         return unallocated_cadet_ids
 
-    def list_of_cadet_ids_in_a_specific_group_if_cadet_active_at_event(self, group: Group):
-        list_of_cadets_with_groups = self.list_of_cadets_with_groups
+    def list_of_cadet_ids_in_a_specific_group_if_cadet_active_at_event(self, event: Event, group: Group):
+        list_of_cadets_with_groups = self.list_of_cadets_with_groups_at_event(event)
         list_of_cadet_ids_in_group= list_of_cadets_with_groups.list_of_cadet_ids_in_group(group)
-        list_of_active_cadet_ids_at_event = self.cadets_at_event_data.list_of_active_cadet_ids_at_event()
+        list_of_active_cadet_ids_at_event = self.cadets_at_event_data.list_of_active_cadet_ids_at_event(event)
 
         return in_both_x_and_y(list_of_active_cadet_ids_at_event, list_of_cadet_ids_in_group)
 
-    def list_of_active_cadets_at_event(self) -> ListOfCadets:
-        return self.cadets_at_event_data.list_of_active_cadets_at_event()
+    def list_of_active_cadets_at_event(self, event: Event) -> ListOfCadets:
+        return self.cadets_at_event_data.list_of_active_cadets_at_event(event)
+
+    def list_of_cadets_with_groups_at_event(self, event: Event) -> ListOfCadetIdsWithGroups:
+        return self.data_api.get_list_of_cadets_with_groups_at_event(event)
 
     @property
-    def list_of_cadets_with_groups(self) -> ListOfCadetIdsWithGroups:
-        return self.data_api.list_of_cadets_with_groups
-
-    @property
-    def cadets_at_event_data(self) ->CadetsAtEvent:
-        return CadetsAtEvent(data_api=self.data_api)
+    def cadets_at_event_data(self) ->CadetsAtEventData:
+        return CadetsAtEventData(data_api=self.data_api)
 

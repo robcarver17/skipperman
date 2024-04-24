@@ -4,15 +4,15 @@ import string
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.data_access.data import data
+from app.data_access.data import DEPRECATED_data
 from app.objects.users_and_security import ListOfSkipperManUsers, SkipperManUser
 
 
 def load_all_users()-> ListOfSkipperManUsers:
-    return data.data_list_of_users.read()
+    return DEPRECATED_data.data_list_of_users.read()
 
 def save_all_users(list_of_users: ListOfSkipperManUsers):
-    return data.data_list_of_users.write(list_of_users)
+    return DEPRECATED_data.data_list_of_users.write(list_of_users)
 
 
 def add_user(user: SkipperManUser):

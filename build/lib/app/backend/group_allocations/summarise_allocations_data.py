@@ -2,7 +2,7 @@ from typing import List
 
 from app.backend.forms.summarys import summarise_generic_counts_for_event
 from app.backend.group_allocations.cadet_event_allocations import get_unallocated_cadets, load_allocation_for_event
-from app.backend.data.cadets_at_event import load_cadets_at_event
+from app.backend.data.cadets_at_event import DEPRECATED_load_cadets_at_event
 from app.objects.groups import ListOfCadetIdsWithGroups
 from app.objects.events import Event
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
@@ -10,7 +10,7 @@ from app.objects.groups import Group, GROUP_UNALLOCATED, ALL_GROUPS_NAMES
 
 def summarise_allocations_for_event(event: Event) -> PandasDFTable:
     list_of_cadet_ids_with_groups = load_allocation_for_event(event)
-    cadets_at_event = load_cadets_at_event(event)
+    cadets_at_event = DEPRECATED_load_cadets_at_event(event)
     availability_dict = dict([(cadet.cadet_id, cadet.availability)
                               for cadet in cadets_at_event.list_of_active_cadets_at_event()])
     groups = get_sorted_groups_plus_unalloacted(list_of_cadet_ids_with_groups)

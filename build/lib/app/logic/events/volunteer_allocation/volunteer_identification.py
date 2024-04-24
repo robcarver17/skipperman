@@ -1,9 +1,9 @@
 from typing import Union
 
-from app.backend.data.volunteers import get_sorted_list_of_volunteers
+from app.backend.data.volunteers import DEPRECATED_get_sorted_list_of_volunteers
 from app.backend.volunteers.volunteer_allocation import add_identified_volunteer, mark_volunteer_as_skipped, \
     volunteer_for_this_row_and_index_already_identified
-from app.backend.volunteers.volunteers import verify_volunteer_and_warn
+from app.backend.volunteers.volunteers import DEPRECATE_verify_volunteer_and_warn
 from app.backend.volunteers.volunter_relevant_information import get_volunteer_from_relevant_information, \
     no_volunteer_in_position_at_form
 
@@ -16,7 +16,7 @@ from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation i
     get_and_save_next_volunteer_index, get_relevant_information_for_current_volunteer, get_volunteer_index
 from app.logic.events.volunteer_allocation.volunteer_selection_form_contents import \
     volunteer_name_is_similar_to_cadet_name, get_footer_buttons_add_or_select_existing_volunteer_form, \
-    get_header_text_for_volunteer_selection_form, get_dict_of_volunteer_names_and_volunteers
+    get_header_text_for_volunteer_selection_form, DEPRECATE_get_dict_of_volunteer_names_and_volunteers
 from app.logic.volunteers.add_volunteer import verify_form_with_volunteer_details, VolunteerAndVerificationText, \
     get_add_volunteer_form_with_information_passed, add_volunteer_from_form_to_data
 from app.objects.abstract_objects.abstract_form import Form, NewForm
@@ -96,7 +96,7 @@ def add_specific_volunteer_at_event(interface: abstractInterface)-> Union[Form,N
 
 def add_passed_volunteer_at_event(interface: abstractInterface, volunteer: Volunteer) -> Union[Form, NewForm]:
 
-    list_of_volunteers = get_sorted_list_of_volunteers()
+    list_of_volunteers = DEPRECATED_get_sorted_list_of_volunteers()
     matched_volunteer_with_id = list_of_volunteers.matching_volunteer(volunteer)
 
     if matched_volunteer_with_id is missing_data:
@@ -149,7 +149,7 @@ def get_add_or_select_existing_volunteers_form(
         include_final_button = True
     else:
         ## Volunteer details from WA passed through
-        verification_text = verify_volunteer_and_warn(volunteer)
+        verification_text = DEPRECATE_verify_volunteer_and_warn(volunteer)
         volunteer_and_text = VolunteerAndVerificationText(
             volunteer=volunteer, verification_text=verification_text
         )
@@ -236,7 +236,7 @@ def action_when_skipping_volunteer(interface: abstractInterface) -> NewForm:
 
 
 def action_when_specific_volunteer_selected(name_of_volunteer: str, interface: abstractInterface) -> Union[Form, NewForm]:
-    dict_of_volunteer_names_and_volunteers= get_dict_of_volunteer_names_and_volunteers()
+    dict_of_volunteer_names_and_volunteers= DEPRECATE_get_dict_of_volunteer_names_and_volunteers()
     volunteer = dict_of_volunteer_names_and_volunteers.get(name_of_volunteer, None)
     if volunteer is None:
         raise Exception("Volunteer %s has gone missing!" % name_of_volunteer)

@@ -1,4 +1,4 @@
-from app.backend.data.field_mapping import get_field_mapping_for_event, write_field_mapping_for_event
+from app.backend.data.field_mapping import DEPRECATE_get_field_mapping_for_event, write_field_mapping_for_event
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
     form_with_message_and_finished_button,
@@ -65,7 +65,7 @@ def post_form_for_clone_event_field_mapping(interface: abstractInterface):
 
     event = get_event_from_list_of_events_given_event_description(event_description_selected)
     try:
-        mapping = get_field_mapping_for_event(event=event)
+        mapping = DEPRECATE_get_field_mapping_for_event(event=event)
         assert len(mapping)>0
     except:
         interface.log_error(

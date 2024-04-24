@@ -1,6 +1,6 @@
 from typing import Tuple, Callable
 
-from app.backend.data.volunteer_allocation import load_list_of_volunteers_at_event
+from app.backend.data.volunteer_allocation import DEPRECATED_load_list_of_volunteers_at_event
 from app.backend.volunteers.volunteer_rota import get_cadet_location_string, \
     str_dict_skills
 from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingTableBody
@@ -44,13 +44,13 @@ def skills_button_name_from_volunteer_id(volunteer_id: str) -> str:
 
 
 def list_of_all_location_button_names(event: Event):
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
+    list_of_volunteers_at_event = DEPRECATED_load_list_of_volunteers_at_event(event)
     return [location_button_name_from_volunteer_id(volunteer_at_event.volunteer_id)
             for volunteer_at_event in list_of_volunteers_at_event]
 
 
 def list_of_all_skills_buttons(event: Event):
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
+    list_of_volunteers_at_event = DEPRECATED_load_list_of_volunteers_at_event(event)
     return [skills_button_name_from_volunteer_id(volunteer_at_event.volunteer_id)
             for volunteer_at_event in list_of_volunteers_at_event]
 
@@ -69,7 +69,7 @@ def from_skills_button_to_volunteer_id(skills_button_name: str) -> str:
 
 
 def get_dict_of_volunteer_name_buttons_and_volunteer_ids(event: Event)-> dict:
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
+    list_of_volunteers_at_event = DEPRECATED_load_list_of_volunteers_at_event(event)
     list_of_volunteer_ids = list_of_volunteers_at_event.list_of_volunteer_ids
 
     return dict([(
@@ -166,7 +166,7 @@ def get_list_of_make_unavailable_buttons(event: Event):
 
 def get_list_of_generic_button_values_across_days_and_volunteers(event: Event, value_function: Callable) -> list:
     ## Strictly speaking this will include buttons that aren't visible, but quicker and easier trhan checking
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
+    list_of_volunteers_at_event = DEPRECATED_load_list_of_volunteers_at_event(event)
     list_of_volunteer_ids = list_of_volunteers_at_event.list_of_volunteer_ids
     list_of_days = event.weekdays_in_event()
 

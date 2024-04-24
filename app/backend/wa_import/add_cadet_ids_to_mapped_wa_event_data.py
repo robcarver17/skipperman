@@ -1,10 +1,12 @@
 import datetime
 import pandas as pd
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.objects.cadets import Cadet, DEFAULT_DATE_OF_BIRTH
 from app.data_access.configuration.field_list import CADET_SURNAME, CADET_DATE_OF_BIRTH, CADET_FIRST_NAME
 
-from app.backend.data.cadets_at_event import load_identified_cadets_at_event, save_identified_cadets_at_event
+from app.backend.data.cadets_at_event import DEPERCATE_load_identified_cadets_at_event, DEPRECATE_save_identified_cadets_at_event, \
+    CadetsAtEventData
 
 from app.objects.events import Event
 from app.objects.mapped_wa_event import RowInMappedWAEvent
@@ -44,11 +46,31 @@ def _translate_df_timestamp_to_datetime(df_timestamp) -> datetime.date:
     )
 
 
-def add_identified_cadet_and_row(
+def DEPRECATE_add_identified_cadet_and_row(
     event: Event, row_id: str, cadet_id: str
 ):
 
-    list_of_cadets_at_event = load_identified_cadets_at_event(event)
+    list_of_cadets_at_event = DEPERCATE_load_identified_cadets_at_event(event)
     list_of_cadets_at_event.add(row_id=row_id, cadet_id=cadet_id)
-    save_identified_cadets_at_event(list_of_cadets_at_event=list_of_cadets_at_event, event=event)
+    DEPRECATE_save_identified_cadets_at_event(list_of_cadets_at_event=list_of_cadets_at_event, event=event)
 
+def add_identified_cadet_and_row(
+        interface: abstractInterface,
+    event: Event, row_id: str, cadet_id: str
+):
+    cadets_at_event_data = CadetsAtEventData(interface.data)
+    cadets_at_event_data.add_identified_cadet_and_row(event=event, row_id=row_id, cadet_id=cadet_id)
+
+def mark_row_as_skip_cadet(
+        interface: abstractInterface,
+    event: Event, row_id: str
+):
+    cadets_at_event_data = CadetsAtEventData(interface.data)
+    cadets_at_event_data.mark_row_as_skip_cadet(event=event, row_id=row_id)
+
+
+def is_row_in_event_already_identified_with_cadet(row: RowInMappedWAEvent, interface: abstractInterface, event: Event)-> bool:
+    cadets_at_event_data = CadetsAtEventData(interface.data)
+    row_id_has_identified_cadet =  cadets_at_event_data.row_has_identified_cadet_including_test_cadets(row=row, event=event)
+
+    return row_id_has_identified_cadet

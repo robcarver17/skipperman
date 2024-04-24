@@ -104,6 +104,7 @@ app/backend/wa_import/import_cadets.py
 app/backend/wa_import/load_wa_file.py
 app/backend/wa_import/map_wa_fields.py
 app/backend/wa_import/map_wa_files.py
+app/backend/wa_import/process_wa_file.py
 app/backend/wa_import/update_cadets_at_event.py
 app/backend/wa_import/../../data_access/configuration/configuration.yaml
 app/data_access/__init__.py

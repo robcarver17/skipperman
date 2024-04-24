@@ -5,13 +5,13 @@ from app.objects.events import Event
 
 from app.objects.groups import Group
 
-from app.data_access.storage_layer.api import DataApi
+from app.data_access.storage_layer.api import DataLayer
 from app.objects.ticks import ListOfCadetsWithTickListItems, ListOfTickSheetItems, ListOfTickSubStages, LabelledTickSheetWithCadetIds
 from app.objects.cadets import ListOfCadets
 from app.objects.qualifications import ListOfQualifications
 from app.backend.data.group_allocations import GroupAllocations
 from app.backend.data.cadets import CadetData
-from app.backend.data.cadets_at_event import CadetsAtEvent
+from app.backend.data.cadets_at_event import CadetsAtEventData
 from app.backend.data.resources import ClubDinghies
 
 ### Pass list of cadets (which in turn could be derived from group for event)
@@ -50,13 +50,11 @@ def write_ticksheet_to_excel(labelled_ticksheet:LabelledTickSheetWithCadetIds, f
 
 
 class TickSheets():
-    def __init__(self, data_api: DataApi):
+    def __init__(self, data_api: DataLayer):
         self.data_api = data_api
 
-    def set_event(self, event: Event):
-        self.data_api.event =event
-
-    def get_labelled_ticksheet_df_for_group_at_event(self, group: Group,
+    def get_labelled_ticksheet_df_for_group_at_event(self,event: Event,
+                                                     group: Group,
                                                         qualification_stage_id: str,
                                                      include_attendance_columns: bool = True,
                                                      add_header: bool = True,
@@ -65,9 +63,10 @@ class TickSheets():
                                                      medical_notes: bool = True) -> pd.DataFrame:
 
 
-        list_of_cadet_ids = self.group_allocations.list_of_cadet_ids_in_a_specific_group_if_cadet_active_at_event(group)
+        list_of_cadet_ids = self.group_allocations.list_of_cadet_ids_in_a_specific_group_if_cadet_active_at_event(event=event, group=group)
 
-        labelled_ticksheet = self.get_labelled_ticksheet_df_for_list_of_cadet_ids(list_of_cadet_ids=list_of_cadet_ids, qualification_stage_id=qualification_stage_id,
+        labelled_ticksheet = self.get_labelled_ticksheet_df_for_list_of_cadet_ids(list_of_cadet_ids=list_of_cadet_ids,
+                                                                                  qualification_stage_id=qualification_stage_id,
                                                                                   group=group)
 
         if add_header:
@@ -85,7 +84,7 @@ class TickSheets():
                                                         list_of_cadet_ids: List[str],
                                                         qualification_stage_id: str) -> LabelledTickSheetWithCadetIds:
 
-        full_tick_sheet = self.data_api.list_of_cadets_with_tick_list_items
+        full_tick_sheet = self.data_api.get_list_of_cadets_with_tick_list_items()
         list_of_tick_sheet_items_for_this_qualification = self.list_of_tick_sheet_items_for_this_qualification(qualification_stage_id)
         ordered_list_of_cadet_ids = self.cadet_data.reorder_list_of_cadet_ids_by_cadet_name(list_of_cadet_ids)
 
@@ -98,7 +97,7 @@ class TickSheets():
         list_of_tick_item_names = list_of_tick_sheet_items_for_this_qualification.list_of_item_names()
         list_of_substage_names = self.list_of_substage_names_give_list_of_tick_sheet_items(list_of_tick_sheet_items_for_this_qualification)
 
-        qualification_name = self.data_api.list_of_qualifications.name_given_id(qualification_stage_id)
+        qualification_name = self.data_api.get_list_of_qualifications().name_given_id(qualification_stage_id)
         group_name = group.group_name
 
         labelled_ticksheet= tick_sheet.df_replacing_id_with_ordered_label_list(
@@ -117,13 +116,13 @@ class TickSheets():
         return self.list_of_substage_names_given_list_of_ids(list_of_substage_ids)
 
     def list_of_substage_names_given_list_of_ids(self, list_of_substage_ids: List[str]):
-        list_of_tick_sub_stages = self.data_api.list_of_tick_sub_stages
+        list_of_tick_sub_stages = self.data_api.get_list_of_tick_sub_stages()
         list_of_names = [list_of_tick_sub_stages.name_given_id(id) for id in list_of_substage_ids]
 
         return list_of_names
 
     def list_of_tick_sheet_items_for_this_qualification(self, qualification_stage_id: str) -> ListOfTickSheetItems:
-        list_of_tick_sheet_items = self.data_api.list_of_tick_sheet_items
+        list_of_tick_sheet_items = self.data_api.get_list_of_tick_sheet_items()
         list_of_tick_sheet_items_for_this_qualification = list_of_tick_sheet_items.subset_for_qualification_stage_id(qualification_stage_id)
 
         return list_of_tick_sheet_items_for_this_qualification
@@ -131,7 +130,7 @@ class TickSheets():
     def add_full_rows_where_cadet_has_qualifications(self,  tick_sheet: ListOfCadetsWithTickListItems, qualification_stage_id: str) -> ListOfCadetsWithTickListItems:
         list_of_cadet_ids = tick_sheet.list_of_cadet_ids
         has_qualifications_dict = dict([(cadet_id,
-                                    self.data_api.list_of_cadets_with_qualifications.does_cadet_id_have_qualification(cadet_id, qualification_id=qualification_stage_id))
+                                    self.data_api.get_list_of_cadets_with_qualifications().does_cadet_id_have_qualification(cadet_id, qualification_id=qualification_stage_id))
                                     for cadet_id in list_of_cadet_ids])
 
         tick_sheet.add_full_rows_inplace_where_cadet_has_qualifications(has_qualifications_dict)
@@ -165,8 +164,8 @@ class TickSheets():
         return CadetData(data_api=self.data_api)
 
     @property
-    def cadets_at_event_data(self) -> CadetsAtEvent:
-        return CadetsAtEvent(data_api=self.data_api)
+    def cadets_at_event_data(self) -> CadetsAtEventData:
+        return CadetsAtEventData(data_api=self.data_api)
 
     @property
     def club_dinghies(self) -> ClubDinghies:

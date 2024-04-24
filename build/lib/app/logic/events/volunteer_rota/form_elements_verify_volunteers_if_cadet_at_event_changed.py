@@ -1,6 +1,6 @@
 from typing import List
 
-from app.backend.cadets import cadet_name_from_id
+from app.backend.cadets import DEPRECATED_cadet_name_from_id
 from app.backend.data.volunteer_allocation import get_volunteer_at_event, \
     remove_volunteer_and_cadet_association_at_event, delete_volunteer_with_id_at_event
 from app.backend.forms.form_utils import get_availability_checkbox, get_availablity_from_form
@@ -9,7 +9,7 @@ from app.backend.volunteers.volunteer_allocation import \
     any_other_cadets_for_volunteer_at_event_apart_from_this_one, update_volunteer_availability_at_event, \
     is_current_cadet_active_at_event, list_of_volunteers_for_cadet_identified
 from app.backend.volunteers.volunteers import get_volunteer_from_id, get_volunteer_name_from_id
-from app.backend.wa_import.update_cadets_at_event import get_cadet_at_event_for_cadet_id
+from app.backend.wa_import.update_cadets_at_event import DEPRECATE_get_cadet_at_event_for_cadet_id
 from app.logic.events.constants import SAVE_CHANGES
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_rota.rota_state import get_current_cadet_id_for_rota_at_event
@@ -21,8 +21,8 @@ from app.objects.events import Event
 
 
 def display_form_volunteer_rota_check_changed_cadet_when_availability_changed(cadet_id: str, event: Event, interface: abstractInterface) -> Form:
-    cadet_at_event = get_cadet_at_event_for_cadet_id(cadet_id=cadet_id, event=event)
-    cadet_name = cadet_name_from_id(cadet_id)
+    cadet_at_event = DEPRECATE_get_cadet_at_event_for_cadet_id(cadet_id=cadet_id, event=event)
+    cadet_name = DEPRECATED_cadet_name_from_id(cadet_id)
     cadet_availability_as_str = str(cadet_at_event.availability)
     save_type_of_form_displayed_for_volunteer_update(interface=interface,
                                                      new_type=UPDATE_AVAILABLE)
@@ -40,8 +40,8 @@ def display_form_volunteer_rota_check_changed_cadet_when_availability_changed(ca
 def display_form_volunteer_rota_check_changed_cadet_when_status_changed_to_deleted_or_cancelled( cadet_id: str,
                                                                                                 event: Event,
                                                                                                  interface: abstractInterface) -> Form:
-    cadet_at_event = get_cadet_at_event_for_cadet_id(cadet_id=cadet_id, event=event)
-    cadet_name = cadet_name_from_id(cadet_id)
+    cadet_at_event = DEPRECATE_get_cadet_at_event_for_cadet_id(cadet_id=cadet_id, event=event)
+    cadet_name = DEPRECATED_cadet_name_from_id(cadet_id)
     cadet_status_as_str = cadet_at_event.status.name
 
     list_of_volunteer_form_lines = get_list_of_volunteer_form_lines_changing_status_to_deleted_or_cancelled(

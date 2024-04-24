@@ -12,11 +12,20 @@ from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObj
 from app.objects.utils import clean_up_dict_with_nans
 from app.objects.mapped_wa_event import RowInMappedWAEvent, RegistrationStatus, deleted_status, active_status, manual_add_status
 
+SKIP_TEST_CADET_ID = str(-9999)
 
 @dataclass
 class IdentifiedCadetAtEvent(GenericSkipperManObject):
     row_id: str
     cadet_id: str
+
+    @property
+    def is_test_cadet(self):
+        return self.cadet_id==SKIP_TEST_CADET_ID
+
+    @classmethod
+    def test_cadet(cls, row_id: str):
+        return cls(cadet_id=SKIP_TEST_CADET_ID, row_id=row_id)
 
 class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
     @property
@@ -26,39 +35,57 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
     def __add__(self, other: IdentifiedCadetAtEvent):
         self.add(row_id=other.row_id, cadet_id=other.cadet_id)
 
-    def list_of_row_ids(self):
+    def is_cadet_with_id_in_identified_list(self, cadet_id) -> bool:
+        list_of_row_ids = self.list_of_row_ids_given_cadet_id(cadet_id)
+        missing = list_of_row_ids is missing_data
+        return not missing
+
+    def row_has_identified_cadet_including_test_cadets(self, row_id:str):
+        return row_id in self.list_of_row_ids_including_test_cadets()
+
+    def list_of_row_ids_including_test_cadets(self):
         return [item.row_id for item in self]
 
     def add(self, row_id: str, cadet_id: str):
         try:
-            assert row_id not in self.list_of_row_ids()
+            assert row_id not in self.list_of_row_ids_including_test_cadets()
         except:
             raise Exception("Row ID can't appear more than once")
 
         self.append(IdentifiedCadetAtEvent(row_id=row_id, cadet_id=cadet_id))
 
+    def add_cadet_to_skip(self, row_id: str):
+        try:
+            assert row_id not in self.list_of_row_ids_including_test_cadets()
+        except:
+            raise Exception("Row ID can't appear more than once")
+
+        self.append(IdentifiedCadetAtEvent.test_cadet(row_id=row_id))
+
     def cadet_id_given_row_id(self, row_id: str) -> str:
         matching = [item for item in self if item.row_id == row_id]
         if len(matching)==0:
-            raise missing_data
+            return missing_data
         elif len(matching)>1:
             raise Exception("Can't have same row_id more than once")
 
         matching_item = matching[0]
+        cadet_id = str(matching_item.cadet_id)
 
-        return str(matching_item.cadet_id)
+        if cadet_id==SKIP_TEST_CADET_ID:
+            return missing_data
+
+        return cadet_id
 
     def list_of_row_ids_given_cadet_id(self, cadet_id: str) -> List[str]:
         matching = [item.row_id for item in self if item.cadet_id == cadet_id]
         if len(matching)==0:
-            raise missing_data
+            return missing_data
         elif len(matching)>1:
             raise Exception("Can't have same row_id more than once")
 
         return matching
 
-    def list_of_row_ids_matching_cadet_id(self, cadet_id: str)-> List[str]:
-        return [item.row_id for item in self if item.cadet_id == cadet_id]
 
 ## following must match attributes
 STATUS_KEY = "status"
@@ -66,6 +93,7 @@ AVAILABILITY = "availability"
 CADET_ID = "cadet_id"
 CHANGED = "changed"
 NOTES = "notes"
+HEALTH = "health"
 
 @dataclass
 class CadetAtEvent(GenericSkipperManObjectWithIds):
@@ -74,6 +102,7 @@ class CadetAtEvent(GenericSkipperManObjectWithIds):
     status: RegistrationStatus
     data_in_row: RowInMappedWAEvent
     notes: str = ''
+    health: str = ''
     changed: bool  = False
 
 
@@ -102,7 +131,8 @@ class CadetAtEvent(GenericSkipperManObjectWithIds):
         changed_str = dict_with_str.pop(CHANGED)
         changed = transform_string_into_class_instance(bool, changed_str)
 
-        notes = dict_with_str.pop(NOTES)
+        notes = dict_with_str.pop(NOTES, '')
+        health = dict_with_str.pop(HEALTH, '')
 
         return cls(
             cadet_id=cadet_id,
@@ -110,7 +140,8 @@ class CadetAtEvent(GenericSkipperManObjectWithIds):
             status=status,
             data_in_row=RowInMappedWAEvent.from_external_dict(dict_with_str),
             changed=changed,
-            notes=notes
+            notes=notes,
+            health=health
         )
 
 
@@ -119,12 +150,14 @@ class CadetAtEvent(GenericSkipperManObjectWithIds):
         status_as_str = self.status.name
         available_as_str = day_selector_to_text_in_stored_format(self.availability)
         notes = self.notes
+        health = self.health
 
         as_dict[STATUS_KEY] = status_as_str
         as_dict[AVAILABILITY] = available_as_str
         as_dict[CADET_ID] = self.cadet_id
         as_dict[CHANGED] = transform_class_instance_into_string(self.changed)
         as_dict[NOTES] = notes
+        as_dict[HEALTH] = health
 
         return as_dict
 
@@ -263,7 +296,9 @@ def get_cadet_at_event_from_row_in_mapped_event(
         status=status,
         availability=availability,
         data_in_row=row_in_mapped_wa_event,
-        notes=''
+        changed=False,
+        notes='',
+        health=''
     )
 
 def get_attendance_selection_from_event_row(

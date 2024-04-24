@@ -2,6 +2,7 @@ import os
 import shutil
 
 import pandas as pd
+
 from app.data_access.configuration.configuration import (
     WILD_APRICOT_EVENT_ID,
     WILD_APRICOT_FILE_TYPES,
@@ -97,11 +98,8 @@ def verify_and_return_uploaded_wa_event_file(interface: abstractInterface):
     return file
 
 
-def save_uploaded_wa_as_local_file(file) -> str:
-    new_filename = get_next_valid_upload_file_name(
-        "WA_file"
-    )  ## don't need to use this anywhere else so can hard code
-
+def save_uploaded_wa_as_local_temp_file(file) -> str:
+    new_filename = get_next_valid_upload_file_name("temp_wa_file")
     try:
         file.save(new_filename)
     except Exception as e:
@@ -122,3 +120,5 @@ def check_local_file_is_valid_wa_file(new_filename: str):
 
 
 WA_FILE = "file"
+
+

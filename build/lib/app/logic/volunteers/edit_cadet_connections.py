@@ -3,7 +3,7 @@ from typing import Union, List
 
 from app.objects.constants import arg_not_passed
 
-from app.backend.cadets import get_list_of_cadets_as_str_similar_to_name_first, get_cadet_from_list_of_cadets
+from app.backend.cadets import get_list_of_cadets_as_str_similar_to_name_first, DEPRECATE_get_cadet_from_list_of_cadets
 from app.objects.abstract_objects.abstract_form import Form, NewForm, dropDownInput
 from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
@@ -79,7 +79,7 @@ def button_str_for_deletion(cadet: Cadet):
 
 def cadet_from_button_str(button_str: str) -> Cadet:
     cadet_selected = " ".join(button_str.split(" ")[1:])
-    return get_cadet_from_list_of_cadets(cadet_selected)
+    return DEPRECATE_get_cadet_from_list_of_cadets(cadet_selected)
 
 def row_for_new_entries(volunteer: Volunteer, from_list_of_cadets: ListOfCadets = arg_not_passed) -> Line:
     list_of_cadets_as_str =get_list_of_cadets_as_str_similar_to_name_first(volunteer,
@@ -143,7 +143,7 @@ def add_connection_from_form(interface: abstractInterface):
     if selected_cadet_as_str == CADET_FILLER:
         interface.log_error("You have to select a cadet from the dropdown before adding")
         return
-    selected_cadet = get_cadet_from_list_of_cadets(selected_cadet_as_str)
+    selected_cadet = DEPRECATE_get_cadet_from_list_of_cadets(selected_cadet_as_str)
     add_volunteer_connection_to_cadet_in_master_list_of_volunteers(cadet=selected_cadet, volunteer=volunteer)
 
 

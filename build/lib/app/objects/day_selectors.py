@@ -29,6 +29,9 @@ class DaySelector(Dict[Day, bool]):
 
         return True
 
+    def intersect_with(self, other: 'DaySelector') -> List[Day]:
+        return [day for day in self.days_available() if other.available_on_day(day)]
+
     def as_str(self)-> str:
         items_as_str = ["%s:%s" % (day.name, from_bool_to_str(selection)) for day,selection in self.items()]
         return ",".join(items_as_str)

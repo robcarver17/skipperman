@@ -1,9 +1,8 @@
-from app.backend.data.cadets_at_event import load_cadets_at_event
-from app.backend.wa_import.update_cadets_at_event import cadet_ids_in_mapped_data
+from app.backend.wa_import.update_cadets_at_event import list_of_cadet_ids_at_event_and_in_mapped_data_for_event
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.constants import missing_data, NoMoreData
-from app.objects.utils import union_of_x_and_y
+
 
 CADET_ID_AT_EVENT = "cadet_id_at_event"
 
@@ -47,14 +46,7 @@ def get_next_cadet_id_in_event_data(
 
 def list_of_cadet_ids_at_event_and_in_mapped_data(interface:abstractInterface) -> list:
     event = get_event_from_state(interface)
-
-    cadets_at_event = load_cadets_at_event(event)
-
-    existing_ids = cadets_at_event.list_of_cadet_ids()
-    mapped_ids = cadet_ids_in_mapped_data(event)
-
-    all_ids = union_of_x_and_y(existing_ids, mapped_ids)
-    all_ids.sort() ## MUST be sorted otherwise can go horribly wrong
+    all_ids = list_of_cadet_ids_at_event_and_in_mapped_data_for_event(interface=interface, event=event)
 
     return all_ids
 

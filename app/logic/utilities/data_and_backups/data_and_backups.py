@@ -8,7 +8,7 @@ from app.objects.abstract_objects.abstract_form import Form, NewForm, File
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button, ButtonBar
-from app.data_access.data import data
+from app.data_access.data import DEPRECATED_data
 from app.data_access.backups.make_backup import make_backup
 
 
@@ -47,5 +47,5 @@ def post_form_data_and_backups(interface: abstractInterface) -> Union[NewForm, F
         return button_error_and_back_to_initial_state_form(interface)
 
 def make_backup_given_data(interface: abstractInterface):
-    make_backup(backup_data_path=data.backup_data_path, master_data_path=data.master_data_path)
+    make_backup(backup_data_path=DEPRECATED_data.backup_data_path, master_data_path=DEPRECATED_data.master_data_path)
     interface.log_error("Data snapshotted for future retrieval")

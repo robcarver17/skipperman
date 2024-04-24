@@ -3,6 +3,8 @@ from app.data_access.configuration.configuration import DATAPATH
 from app.data_access.api.csv_api import CsvDataApi
 from app.data_access.user_data import user_data_path
 from app.data_access.backups.backup_data import backup_data_path
+from app.data_access.storage_layer.api import DataLayer
+from app.data_access.storage_layer.store import Store
 import os
 
 home_directory = os.path.expanduser("~")
@@ -20,4 +22,10 @@ def make_data():
     return CsvDataApi(master_data_path=master_data_path, user_data_path=user_data_path, backup_data_path=backup_data_path)
 
 
-data = make_data()
+underling_data_api = make_data()
+
+DEPRECATED_data = underling_data_api ## FIXME REMOVE AT SOME POINT
+
+## Only one of these
+store = Store()
+data_api = DataLayer(store=store, underlying_data=underling_data_api)

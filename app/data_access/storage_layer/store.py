@@ -38,7 +38,7 @@ class Store(dict):
         storage_item = StorageItem(contents=contents, data_access_method=data_access_method, changed=True)
         self[data_access_method.key] = storage_item
 
-    def close_and_save(self):
+    def save_stored_items(self):
         ## write only changed items
         for key, storage_item in self.items():
             self._save_to_data_from_store_if_changed(key)
@@ -50,17 +50,21 @@ class Store(dict):
 
         return storage_item
 
-    def _read_from_data(self, data_access_method: DataAccessMethod):
-        return data_access_method.read_method(**data_access_method.method_kwargs)
 
     def _save_to_data_from_store_if_changed(self, key):
         storage_item = self.get_storage_item(key)
         if not storage_item.changed:
             return
         contents = storage_item.contents
-        data_access_write_method = storage_item.data_access_method.write_method
-        kwargs = storage_item.data_access_method.method_kwargs
+        self._write_to_data(contents, data_access_method=storage_item.data_access_method)
 
+    def _read_from_data(self, data_access_method: DataAccessMethod):
+        return data_access_method.read_method(**data_access_method.method_kwargs)
+
+    def _write_to_data(self, contents, data_access_method: DataAccessMethod):
+        data_access_write_method = data_access_method.write_method
+        kwargs =data_access_method.method_kwargs
+        print("Writing %s to %s with %s" % (str(contents), str(data_access_write_method), str(kwargs)))
         data_access_write_method(contents, **kwargs)
 
     def get_storage_item(self, key) -> StorageItem:

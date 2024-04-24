@@ -2,7 +2,7 @@ from typing import Union
 
 from app.backend.volunteers.volunteers import get_volunteer_name_from_id
 
-from app.backend.data.volunteers import get_sorted_list_of_volunteers, SORT_BY_FIRSTNAME
+from app.backend.data.volunteers import DEPRECATED_get_sorted_list_of_volunteers, SORT_BY_FIRSTNAME
 
 from app.objects.abstract_objects.abstract_form import Form, NewForm, textInput, passwordInput, dropDownInput, \
     emailInput
@@ -110,7 +110,7 @@ def text_box_for_email(user: SkipperManUser) -> textInput:
                      input_name=name_for_user_and_input_type(user, EMAIL))
 
 def dropdown_for_volunteer(user: SkipperManUser) -> dropDownInput:
-    volunteers = get_sorted_list_of_volunteers(SORT_BY_FIRSTNAME)
+    volunteers = DEPRECATED_get_sorted_list_of_volunteers(SORT_BY_FIRSTNAME)
     dict_of_volunteers = dict([(volunteer.name, volunteer.name) for volunteer in volunteers])
     try:
         name = get_volunteer_name_from_id(user.volunteer_id)

@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
-from app.backend.cadets import get_sorted_list_of_cadets, cadet_from_id_with_passed_list
+from app.backend.cadets import DEPRECATE_get_sorted_list_of_cadets, cadet_from_id_with_passed_list
 from app.backend.forms.form_utils import get_availability_checkbox, input_name_from_column_name_and_cadet_id
 from app.backend.forms.form_utils import dropdown_input_for_status_change
-from app.backend.data.cadets_at_event import load_cadets_at_event
+from app.backend.data.cadets_at_event import DEPRECATED_load_cadets_at_event
 
 from app.logic.events.constants import ROW_STATUS
 from app.objects.abstract_objects.abstract_form import dropDownInput, checkboxInput, textInput, intInput
@@ -32,8 +32,8 @@ class RegistrationDetailsForEvent:
         return [ROW_STATUS, DAYS_ATTENDING]
 
 def get_registration_data(event: Event, sort_order: str = arg_not_passed) -> RegistrationDetailsForEvent:
-    cadets_at_event = load_cadets_at_event(event)
-    list_of_cadets = get_sorted_list_of_cadets(sort_by=sort_order)
+    cadets_at_event = DEPRECATED_load_cadets_at_event(event)
+    list_of_cadets = DEPRECATE_get_sorted_list_of_cadets(sort_by=sort_order)
     cadets_at_event = cadets_at_event.subset_given_cadet_ids(list_of_cadets.list_of_ids)
     all_columns = get_list_of_columns_excluding_special_fields(cadets_at_event)
 

@@ -10,7 +10,7 @@ class csvDataListOfPrintOptions(DataListOfPrintOptions, GenericCsvData):
                                                             additional_file_identifiers=report_name)
         return print_options
 
-    def write_for_report(self, report_name: str, print_options: PrintOptions):
+    def write_for_report(self,  print_options: PrintOptions, report_name: str):
         self.write_object(print_options, file_identifier=PRINT_OPTIONS_FILE_ID,
                           additional_file_identifiers=report_name)
 

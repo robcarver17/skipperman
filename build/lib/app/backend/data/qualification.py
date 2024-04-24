@@ -4,14 +4,14 @@ from app.objects.cadets import Cadet
 
 from app.objects.qualifications import ListOfQualifications, ListOfCadetsWithQualifications, Qualification, CadetWithQualification
 
-from app.data_access.data import data
+from app.data_access.data import DEPRECATED_data
 
 
 def load_list_of_qualifications() -> ListOfQualifications:
-    return data.data_list_of_qualifications.read()
+    return DEPRECATED_data.data_list_of_qualifications.read()
 
 def save_list_of_qualifications(list_of_qualifications: ListOfQualifications):
-    data.data_list_of_qualifications.write(list_of_qualifications)
+    DEPRECATED_data.data_list_of_qualifications.write(list_of_qualifications)
 
 def get_list_of_qualification_names():
     list_of_quals = load_list_of_qualifications()
@@ -63,11 +63,11 @@ def highest_qualification_for_cadet(cadet: Cadet) -> str:
 
 
 def load_list_of_cadets_with_qualifications() -> ListOfCadetsWithQualifications:
-    return data.data_list_of_cadets_with_qualifications.read()
+    return DEPRECATED_data.data_list_of_cadets_with_qualifications.read()
 
 
 def save_list_of_cadets_with_qualifications(list_of_cadets_with_qualifications: ListOfCadetsWithQualifications):
-    data.data_list_of_cadets_with_qualifications.write(list_of_cadets_with_qualifications)
+    DEPRECATED_data.data_list_of_cadets_with_qualifications.write(list_of_cadets_with_qualifications)
 
 def update_qualifications_for_cadet(cadet: Cadet, list_of_qualification_names_for_this_cadet: List[str]):
     list_of_cadets_with_qualifications = load_list_of_cadets_with_qualifications()

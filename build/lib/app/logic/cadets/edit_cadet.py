@@ -81,6 +81,7 @@ def post_form_edit_individual_cadet(
         return previous_form(interface)
     elif button==SAVE_BUTTON_LABEL:
         modify_cadet_given_form_contents(interface)
+        interface.save_stored_items()
         return previous_form(interface)
     else:
         button_error_and_back_to_initial_state_form(interface)
@@ -95,9 +96,8 @@ def modify_cadet_given_form_contents(interface: abstractInterface):
 
 def modify_cadet_data_given_form_contents(interface: abstractInterface):
     original_cadet = get_cadet_from_state(interface)
-    cadet_details = get_cadet_from_form(interface)
-    cadet_details.id = original_cadet.id
-    modify_cadet(cadet_details)
+    new_cadet = get_cadet_from_form(interface)
+    modify_cadet(interface=interface, cadet_id = original_cadet.id, new_cadet = new_cadet)
 
 
 def modify_qualifications(interface: abstractInterface):

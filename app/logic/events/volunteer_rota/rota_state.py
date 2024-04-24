@@ -1,4 +1,4 @@
-from app.backend.data.cadets_at_event import load_cadets_at_event
+from app.backend.data.cadets_at_event import DEPRECATED_load_cadets_at_event
 from app.backend.volunteers.volunteer_rota_data import RotaSortsAndFilters
 from app.data_access.configuration.configuration import VOLUNTEER_SKILLS
 from app.logic.events.events_in_state import get_event_from_state
@@ -106,7 +106,7 @@ def get_next_cadet_id_for_rota_in_event_data(
 def list_of_cadet_ids_at_event_including_cancelled_and_deleted(interface:abstractInterface) -> list:
     event = get_event_from_state(interface)
 
-    cadets_at_event = load_cadets_at_event(event)
+    cadets_at_event = DEPRECATED_load_cadets_at_event(event)
 
     cadet_ids = cadets_at_event.list_of_cadet_ids()
 

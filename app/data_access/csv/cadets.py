@@ -52,7 +52,7 @@ class CsvDataListOfCadetsAtEvent(GenericCsvData, DataListOfCadetsAtEvent):
         return list_of_cadets
 
     def write(
-        self, event_id: str, list_of_cadets_at_event: ListOfCadetsAtEvent
+        self, list_of_cadets_at_event: ListOfCadetsAtEvent, event_id: str
     ):
         self.write_object(list_of_cadets_at_event,
                           file_identifier=CADETS_AT_EVENT_ID,
@@ -71,7 +71,7 @@ class CsvDataListOfIdentifiedCadetsAtEvent(GenericCsvData, DataListOfIdentifiedC
         return list_of_cadets
 
     def write(
-        self, event_id: str, list_of_cadets_at_event: ListOfIdentifiedCadetsAtEvent
+        self, list_of_cadets_at_event: ListOfIdentifiedCadetsAtEvent, event_id: str
     ):
         self.write_object(list_of_cadets_at_event,
                           file_identifier=IDENTIFIED_CADETS_AT_EVENT_ID,

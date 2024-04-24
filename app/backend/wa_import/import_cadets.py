@@ -2,10 +2,10 @@ import os
 
 import pandas as pd
 
-from app.backend.cadets import get_list_of_similar_cadets
-from app.backend.data.cadets import load_list_of_all_cadets, save_list_of_cadets
+from app.backend.cadets import DEPRECATE_get_list_of_similar_cadets
+from app.backend.data.cadets import DEPRECATE_load_list_of_all_cadets, save_list_of_cadets
 from app.backend.wa_import.load_wa_file import get_staged_adhoc_filename, verify_and_return_uploaded_wa_event_file, \
-    save_uploaded_wa_as_local_file, load_raw_wa_file
+    save_uploaded_wa_as_local_temp_file, load_raw_wa_file
 from app.data_access.csv.generic_csv_data import read_object_of_type, write_object
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet, ListOfCadets
@@ -30,7 +30,7 @@ def get_temp_cadet_file() -> ListOfCadets:
     return read_object_of_type(ListOfCadets, temp_list_of_cadets_file_name)
 
 def does_identical_cadet_exist_in_data(cadet: Cadet):
-    all_existing_cadets = load_list_of_all_cadets()
+    all_existing_cadets = DEPRECATE_load_list_of_all_cadets()
     matching = all_existing_cadets.matching_cadet(cadet, exact_match_required=True)
     no_matching = matching is missing_data
 
@@ -38,7 +38,7 @@ def does_identical_cadet_exist_in_data(cadet: Cadet):
 
 
 def are_there_no_similar_cadets(cadet: Cadet):
-    return len(get_list_of_similar_cadets(cadet))==0
+    return len(DEPRECATE_get_list_of_similar_cadets(cadet))==0
 
 
 FIRST_NAME_IN_WA_FILE = 'First name'
@@ -63,7 +63,7 @@ def create_temp_file_with_list_of_cadets(interface: abstractInterface):
 
 def create_local_file_from_uploaded_and_return_filename(interface:abstractInterface)->str:
     original_file = verify_and_return_uploaded_wa_event_file(interface)
-    original_filename = save_uploaded_wa_as_local_file(original_file)
+    original_filename = save_uploaded_wa_as_local_temp_file(original_file)
 
     return original_filename
 
@@ -76,6 +76,6 @@ def read_imported_list_of_cadets(filename)-> ListOfCadets:
 
 
 def replace_cadet_with_id_with_new_cadet_details(existing_cadet_id: str, new_cadet: Cadet):
-    list_of_cadets =load_list_of_all_cadets()
+    list_of_cadets =DEPRECATE_load_list_of_all_cadets()
     list_of_cadets.replace_cadet_with_id_with_new_cadet_details(existing_cadet_id=existing_cadet_id, new_cadet=new_cadet)
     save_list_of_cadets(list_of_cadets)

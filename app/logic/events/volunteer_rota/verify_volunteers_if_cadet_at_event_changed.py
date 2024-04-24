@@ -84,7 +84,7 @@ def check_changed_cadet_in_loop(interface: abstractInterface, cadet_id: str, eve
 
 def flag_new_cadet_without_volunteers_and_loop_to_next_cadet(interface: abstractInterface) -> Form:
     cadet_id = get_current_cadet_id_for_rota_at_event(interface)
-    cadet_name = cadet_name_from_id(cadet_id)
+    cadet_name = DEPRECATED_cadet_name_from_id(cadet_id)
     list_of_volunteer_names_relating_to_changed_cadet = get_list_of_volunteer_names_relating_to_changed_cadet(interface)
     if len(list_of_volunteer_names_relating_to_changed_cadet)>0:
         list_of_volunteer_names_relating_to_changed_cadet = ", ".join(list_of_volunteer_names_relating_to_changed_cadet)

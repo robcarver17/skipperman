@@ -1,9 +1,9 @@
-from app.backend.data.volunteers import get_sorted_list_of_volunteers
+from app.backend.data.volunteers import DEPRECATED_get_sorted_list_of_volunteers
 from typing import List
 
 import pandas as pd
 
-from app.backend.data.volunteer_allocation import load_list_of_volunteers_at_event
+from app.backend.data.volunteer_allocation import DEPRECATED_load_list_of_volunteers_at_event
 from app.backend.data.volunteer_rota import load_volunteers_in_role_at_event
 from app.backend.data.volunteers import load_list_of_volunteer_skills
 from app.backend.volunteers.volunteer_rota import get_volunteer_role_at_event_on_day
@@ -127,7 +127,7 @@ def get_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_giv
                                                                                        day: Day):
 
     volunteer_ids_already_allocated = get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(event=event, day=day)
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event)
+    list_of_volunteers_at_event = DEPRECATED_load_list_of_volunteers_at_event(event)
     list_of_volunteers_at_event_on_given_day = list_of_volunteers_at_event.list_of_volunteers_available_on_given_day(day=day)
     list_of_volunteer_ids_at_event_on_given_day= list_of_volunteers_at_event_on_given_day.list_of_volunteer_ids
 
@@ -140,7 +140,7 @@ def get_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_giv
 
 
 ## FIXME trouble?
-sorted_list_of_volunteers= get_sorted_list_of_volunteers()
+sorted_list_of_volunteers= DEPRECATED_get_sorted_list_of_volunteers()
 
 def sort_volunteer_ids_by_role_and_skills_and_then_name(volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day: List[str],
                                                         event: Event,

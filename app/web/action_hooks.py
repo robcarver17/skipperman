@@ -11,7 +11,7 @@ from app.web.flask.flask_interface import flaskInterface
 from app.objects.abstract_objects.abstract_form import Form, form_with_message, File
 from app.objects.abstract_objects.form_function_mapping import DisplayAndPostFormFunctionMaps
 from app.logic.abstract_logic_api import LogicApi
-
+from app.data_access.data import data_api
 
 class MissingMethod(Exception):
     pass
@@ -39,7 +39,7 @@ class SiteActions:
         except AttributeError:
             raise MissingMethod
 
-        interface = flaskInterface(action_name=action_name, display_and_post_form_function_maps=form_mapping)
+        interface = flaskInterface(action_name=action_name, display_and_post_form_function_maps=form_mapping, data=data_api)
 
         return LogicApi(interface)
 

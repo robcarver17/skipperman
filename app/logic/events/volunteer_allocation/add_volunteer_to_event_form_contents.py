@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.backend.cadets import cadet_name_from_id
+from app.backend.cadets import DEPRECATED_cadet_name_from_id
 from app.backend.forms.form_utils import  get_availability_checkbox
 from app.backend.volunteers.volunteers import is_cadet_already_connected_to_volunteer_in_volunteer_list
 from app.backend.volunteers.volunteer_allocation import get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet
@@ -25,7 +25,7 @@ NOTES = "Notes"
 def get_header_text(event: Event, volunteer: Volunteer) -> Line:
     list_of_cadet_ids = get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet(volunteer_id=volunteer.id,
                                                                                                                       event=event)
-    cadet_names = [cadet_name_from_id(cadet_id) for cadet_id in list_of_cadet_ids]
+    cadet_names = [DEPRECATED_cadet_name_from_id(cadet_id) for cadet_id in list_of_cadet_ids]
     volunteer_name = volunteer.name
     if len(cadet_names)==0:
         cadet_names_text = "(No active cadets - must all be cancelled)"
@@ -47,7 +47,7 @@ def get_connection_checkbox(event: Event, volunteer: Volunteer) -> Union[checkbo
         return ""
 
     connection_checkbox = checkboxInput(
-        dict_of_labels=dict([(cadet_id,cadet_name_from_id(cadet_id)) for cadet_id in list_of_cadet_ids]),
+        dict_of_labels=dict([(cadet_id, DEPRECATED_cadet_name_from_id(cadet_id)) for cadet_id in list_of_cadet_ids]),
         dict_of_checked=dict([(cadet_id,True) for cadet_id in list_of_cadet_ids]),
         input_name=MAKE_CADET_CONNECTION,
         input_label="Tick to permanently connect cadet with volunteer in main volunteer list (leave blank if not usually connected):"
@@ -94,7 +94,7 @@ def get_cadet_name_from_relevant_information(relevant_information: RelevantInfor
     if cadet_id is missing_data:
         return NO_CADET
 
-    cadet_name = cadet_name_from_id(cadet_id)
+    cadet_name = DEPRECATED_cadet_name_from_id(cadet_id)
 
     return cadet_name
 

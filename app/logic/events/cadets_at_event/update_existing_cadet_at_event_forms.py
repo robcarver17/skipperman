@@ -11,7 +11,7 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 
-from app.backend.cadets import cadet_name_from_id
+from app.backend.cadets import DEPRECATED_cadet_name_from_id, cadet_name_from_id
 from app.objects.cadet_at_event import CadetAtEvent
 from app.objects.events import Event
 

@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import flask
 
 from app.data_access.configuration.configuration import HOMEPAGE
+from app.data_access.data import data_api
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.web.flask.flash import flash_error
@@ -147,3 +148,8 @@ def uploaded_file(input_name: str = "file"):
 
         raise NoFileUploaded()
     return file
+
+
+def get_current_url_from_action_name(action_name:str) -> str:
+    interface = flaskInterface(action_name=action_name, data=data_api)
+    return interface.current_url

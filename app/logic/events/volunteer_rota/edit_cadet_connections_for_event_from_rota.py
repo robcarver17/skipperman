@@ -5,7 +5,7 @@ from app.backend.volunteers.volunteers import get_volunteer_from_id
 from app.backend.data.volunteer_allocation import remove_volunteer_and_cadet_association_at_event, \
     add_volunteer_and_cadet_association_for_existing_volunteer, get_volunteer_at_event
 
-from app.backend.cadets import cadet_from_id, get_cadet_from_list_of_cadets
+from app.backend.cadets import DEPRECATED_cadet_from_id, DEPRECATE_get_cadet_from_list_of_cadets
 
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -49,7 +49,7 @@ def list_of_connected_cadets(interface: abstractInterface):
     cadet_ids = volunteer_at_event.list_of_associated_cadet_id
 
 
-    connected_cadets = ListOfCadets([cadet_from_id(cadet_id) for cadet_id in cadet_ids])
+    connected_cadets = ListOfCadets([DEPRECATED_cadet_from_id(cadet_id) for cadet_id in cadet_ids])
 
     return connected_cadets
 
@@ -96,7 +96,7 @@ def add_event_connection_from_form(interface: abstractInterface):
         interface.log_error("You have to select a cadet from the dropdown before adding")
         return
     volunteer_id = get_volunteer_id_selected_from_state(interface)
-    selected_cadet = get_cadet_from_list_of_cadets(selected_cadet_as_str)
+    selected_cadet = DEPRECATE_get_cadet_from_list_of_cadets(selected_cadet_as_str)
     event = get_event_from_state(interface)
     add_volunteer_and_cadet_association_for_existing_volunteer(volunteer_id=volunteer_id,
                                                                cadet_id=selected_cadet.id,

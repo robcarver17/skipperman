@@ -1,6 +1,6 @@
-from app.backend.cadets import get_sorted_list_of_cadets
+from app.backend.cadets import DEPRECATE_get_sorted_list_of_cadets
 from app.backend.data.group_allocations_old import load_list_of_cadets_with_allocated_groups_at_event
-from app.backend.data.cadets_at_event import load_cadets_at_event
+from app.backend.data.cadets_at_event import DEPRECATED_load_cadets_at_event
 from app.objects.cadets import ListOfCadets
 from app.objects.constants import arg_not_passed
 from app.objects.events import Event
@@ -22,7 +22,7 @@ def get_list_of_active_cadets_at_event(
 
 
 def get_list_of_cadets_given_list_of_ids(list_of_cadet_ids: list) -> ListOfCadets:
-    master_list_of_cadets = get_sorted_list_of_cadets()
+    master_list_of_cadets = DEPRECATE_get_sorted_list_of_cadets()
     list_of_cadets = ListOfCadets.subset_from_list_of_ids(
         master_list_of_cadets, list_of_ids=list_of_cadet_ids
     )
@@ -33,7 +33,7 @@ def get_list_of_cadets_given_list_of_ids(list_of_cadet_ids: list) -> ListOfCadet
 def get_list_of_active_cadet_ids_at_event(
     event: Event
 ) -> list:
-    cadets_of_event = load_cadets_at_event(event)
+    cadets_of_event = DEPRECATED_load_cadets_at_event(event)
     list_of_cadet_ids = cadets_of_event.list_of_active_cadet_ids(
     )
 
@@ -62,7 +62,7 @@ def get_unallocated_cadets(
 def get_list_of_cadets_with_groups(
     list_of_cadet_ids_with_groups,
 ) -> ListOfCadetsWithGroup:
-    list_of_cadets = get_sorted_list_of_cadets()
+    list_of_cadets = DEPRECATE_get_sorted_list_of_cadets()
 
     try:
         list_of_cadet_with_groups = (

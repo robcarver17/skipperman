@@ -16,7 +16,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
-from app.backend.data.field_mapping import get_field_mapping_for_event
+from app.backend.data.field_mapping import DEPRECATE_get_field_mapping_for_event
 from app.backend.wa_import.check_mapping import check_field_mapping
 from app.backend.wa_import.map_wa_files import is_wa_file_mapping_setup_for_event
 from app.objects.abstract_objects.abstract_text import Heading
@@ -85,7 +85,7 @@ def display_form_event_field_mapping_no_existing_mapping(
 def does_event_already_have_mapping(interface: abstractInterface):
     event = get_event_from_state(interface)
     try:
-        mapping = get_field_mapping_for_event(event)
+        mapping = DEPRECATE_get_field_mapping_for_event(event)
         assert len(mapping)>0
         return True
     except:
@@ -95,7 +95,7 @@ def does_event_already_have_mapping(interface: abstractInterface):
 def text_for_pre_existing_mapping(interface: abstractInterface) -> PandasDFTable:
     event = get_event_from_state(interface)
     try:
-        mapping = get_field_mapping_for_event(event)
+        mapping = DEPRECATE_get_field_mapping_for_event(event)
     except:
         return PandasDFTable()
 

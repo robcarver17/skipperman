@@ -9,8 +9,8 @@ from app.backend.group_allocations.cadet_event_allocations import get_list_of_ac
 from app.backend.group_allocations.previous_allocations import allocation_for_cadet_in_previous_events, \
     get_dict_of_allocations_for_events_and_list_of_cadets
 from app.data_access.configuration.configuration import UNALLOCATED_GROUP_NAME
-from app.backend.data.cadets_at_event import load_cadets_at_event
-from app.backend.data.cadets import load_list_of_all_cadets
+from app.backend.data.cadets_at_event import DEPRECATED_load_cadets_at_event
+from app.backend.data.cadets import DEPRECATE_load_list_of_all_cadets
 from app.data_access.configuration.field_list import CADET_GROUP_PREFERENCE, DESIRED_BOAT, CADET_BOAT_CLASS, CADET_BOAT_SAIL_NUMBER
 from app.backend.data.resources import load_list_of_club_dinghies, load_list_of_cadets_at_event_with_club_dinghies
 from app.backend.data.resources import load_list_of_boat_classes
@@ -214,14 +214,14 @@ def similarity_score_and_best_option_against_boat_names_for_one_name(option: str
 
 def get_allocation_data(event: Event) -> AllocationData:
     current_allocation_for_event = load_allocation_for_event(event)
-    cadets_at_event_including_non_active = load_cadets_at_event(event)
+    cadets_at_event_including_non_active = DEPRECATED_load_cadets_at_event(event)
     list_of_cadets_in_event_active_only = get_list_of_active_cadets_at_event(event)
     list_of_events = get_sorted_list_of_events()
     list_of_previous_events = list_of_events_excluding_one_event(list_of_events=list_of_events,event_to_exclude=event, only_past=True, sort_by=SORT_BY_START_ASC)
     if len(list_of_previous_events)>3:
         list_of_previous_events = list_of_previous_events[-3:]
     previous_allocations_as_dict = get_dict_of_allocations_for_events_and_list_of_cadets(list_of_events=list_of_previous_events)
-    list_of_all_cadets = load_list_of_all_cadets()
+    list_of_all_cadets = DEPRECATE_load_list_of_all_cadets()
 
     group_allocation_info = get_group_allocation_info(cadets_at_event_including_non_active)
 

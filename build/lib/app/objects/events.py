@@ -136,6 +136,10 @@ class Event(GenericSkipperManObjectWithIds):
         end_date = self.end_date
         return transform_date_into_str(end_date)
 
+    def days_in_event_overlap_with_selected_days(self, day_selector: DaySelector) -> List[Day]:
+        my_day_selector = self.day_selector_with_covered_days()
+        return day_selector.intersect_with(my_day_selector)
+
     def day_selector_with_covered_days(self) -> DaySelector:
         weekdays_covered = self.weekdays_in_event()
         return DaySelector(dict([(day, day in weekdays_covered) for day in all_possible_days]))

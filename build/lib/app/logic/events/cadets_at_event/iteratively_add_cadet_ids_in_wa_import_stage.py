@@ -1,9 +1,13 @@
 from typing import Union
 
+from app.objects.abstract_objects.abstract_buttons import Button
 
-from app.backend.data.mapped_events import get_row_in_mapped_event_data_given_id
-from app.backend.data.cadets_at_event import  load_identified_cadets_at_event
-from app.backend.cadets import confirm_cadet_exists, get_cadet_from_list_of_cadets, load_list_of_all_cadets
+from app.objects.abstract_objects.abstract_lines import Line
+
+from app.backend.data.mapped_events import \
+    get_row_in_mapped_event_data_given_id
+from app.backend.cadets import  \
+    get_matching_cadet_with_id_or_missing_data, confirm_cadet_exists, get_cadet_from_list_of_cadets
 from app.logic.events.cadets_at_event.interactively_update_records_of_cadets_at_event import \
     display_form_interactively_update_cadets_at_event
 
@@ -12,8 +16,8 @@ from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.import_wa.shared_state_tracking_and_data import get_and_save_next_row_id_in_mapped_event_data, \
     get_current_row_id, clear_row_in_state
 from app.backend.wa_import.add_cadet_ids_to_mapped_wa_event_data import (
-    add_identified_cadet_and_row,
-    get_cadet_data_from_row_of_mapped_data_no_checks,
+    get_cadet_data_from_row_of_mapped_data_no_checks, add_identified_cadet_and_row,
+    is_row_in_event_already_identified_with_cadet, mark_row_as_skip_cadet,
 )
 from app.logic.events.cadets_at_event.get_or_select_cadet_forms import (
     get_add_or_select_existing_cadet_form,
@@ -45,9 +49,9 @@ def add_cadet_ids_on_next_row(
 
     try:
         row_id = get_and_save_next_row_id_in_mapped_event_data(interface)
-        next_row = get_row_in_mapped_event_data_given_id(event=event, row_id=row_id)
+        next_row = get_row_in_mapped_event_data_given_id(interface=interface, event=event, row_id=row_id)
         print("On row %s" % str(next_row))
-        return process_next_row(next_row=next_row, interface=interface)
+        return process_current_row(row=next_row, interface=interface)
     except NoMoreData:
         print("Finished looping through allocating Cadet IDs")
         clear_row_in_state(interface)
@@ -55,31 +59,30 @@ def add_cadet_ids_on_next_row(
         return go_to_update_cadet_data_form(interface)
 
 
-def process_next_row(
-    next_row: RowInMappedWAEvent, interface: abstractInterface
+def process_current_row(
+    row: RowInMappedWAEvent, interface: abstractInterface
 ) -> Form:
     ### NOTE: In theory we only need to deal with new rows, but no harm in doing all of them
     ##
-    row_id_has_identified_cadet = is_row_already_identified_with_cadet(next_row=next_row, interface=interface)
+    row_id_has_identified_cadet = is_row_already_identified_with_cadet(row=row, interface=interface)
     if row_id_has_identified_cadet:
         print("Row id %s already identified with a cadet")
         return add_cadet_ids_on_next_row(interface)
 
     try:
-        cadet = get_cadet_data_from_row_of_mapped_data_no_checks(next_row)
+        cadet = get_cadet_data_from_row_of_mapped_data_no_checks(row)
         return process_next_row_with_cadet_from_row(cadet=cadet,
                                                     interface=interface)
     except Exception as e:
         ## Mapping has gone badly wrong, or date field corrupted
         raise Exception(
             "Error code %s cannot identify cadet from row %s: file maybe corrupt or does not actually contain cadets - re-upload or change event configuration"
-            % (str(e), str(next_row)),
+            % (str(e), str(row)),
         )
 
-def is_row_already_identified_with_cadet(next_row: RowInMappedWAEvent, interface: abstractInterface)-> bool:
+def is_row_already_identified_with_cadet(row: RowInMappedWAEvent, interface: abstractInterface)-> bool:
     event = get_event_from_state(interface)
-    identified_cadets = load_identified_cadets_at_event(event)
-    row_id_has_identified_cadet =  next_row.row_id in identified_cadets.list_of_row_ids()
+    row_id_has_identified_cadet =  is_row_in_event_already_identified_with_cadet(interface=interface, row=row, event=event)
 
     return row_id_has_identified_cadet
 
@@ -88,8 +91,7 @@ def process_next_row_with_cadet_from_row(
     interface: abstractInterface,
     cadet: Cadet,
 ) -> Form:
-    list_of_cadets = load_list_of_all_cadets()
-    matched_cadet_with_id = list_of_cadets.matching_cadet(cadet)
+    matched_cadet_with_id = get_matching_cadet_with_id_or_missing_data(interface=interface, cadet=cadet)
 
     if matched_cadet_with_id is missing_data:
         print("Cadet %s not matched" % str(cadet))
@@ -106,8 +108,10 @@ def process_row_when_cadet_matched(interface: abstractInterface, cadet: Cadet) -
     row_id = get_current_row_id(interface)
     print("adding matched row %s with id %s" % (row_id, cadet.id))
     add_identified_cadet_and_row(
+        interface=interface,
         event=event, row_id=row_id, cadet_id=cadet.id
     )
+    interface.save_stored_items()
     ## run recursively until no more data
     return add_cadet_ids_on_next_row(interface)
 
@@ -122,13 +126,14 @@ def process_row_when_cadet_unmatched(
         interface=interface,
         see_all_cadets=False,
         include_final_button=False,
+        extra_buttons=extra_buttons,
         header_text=header_text_for_form(interface)
     )
 
 def header_text_for_form(interface: abstractInterface)-> str:
     row_id = get_current_row_id(interface)
     event =get_event_from_state(interface)
-    next_row = get_row_in_mapped_event_data_given_id(event=event, row_id=row_id)
+    next_row = get_row_in_mapped_event_data_given_id(event=event, row_id=row_id, interface=interface)
     default_header_text = "Looks like a new cadet in the WA entry file. You can edit them, check their details and then add, or choose an existing cadet instead (avoid creating duplicates! If the existing cadet details are wrong, select them for now and edit later) \n\n Row details are: \n%s"
 
     return default_header_text % next_row
@@ -147,19 +152,24 @@ def post_form_add_cadet_ids_during_import(
         ## verify results already in form, display form again, allow final this time
         return get_add_or_select_existing_cadet_form(
             interface=interface, include_final_button=True, see_all_cadets=False,
-            header_text=header_text
+            header_text=header_text,
+            extra_buttons=extra_buttons
         )
 
     elif last_button_pressed == SEE_ALL_CADETS_BUTTON_LABEL:
         ## verify results already in form, display form again, allow final this time
         return get_add_or_select_existing_cadet_form(
             interface=interface, include_final_button=True, see_all_cadets=True,
-            header_text = header_text
+            header_text = header_text,
+            extra_buttons=extra_buttons
         )
 
     elif last_button_pressed == FINAL_CADET_ADD_BUTTON_LABEL:
         # no need to reset stage
         return process_form_when_verified_cadet_to_be_added(interface)
+
+    elif last_button_pressed == TEST_CADET_SKIP_BUTTON_LABEL:
+        return process_form_when_skipping_cadet(interface)
 
     else:
         ## must be an existing cadet that has been selected
@@ -174,23 +184,37 @@ def process_form_when_verified_cadet_to_be_added(interface: abstractInterface) -
         raise Exception(
             "Problem adding cadet to data code %s CONTACT SUPPORT" % str(e),
         )
+    ## no need to save will be done next
 
     return process_row_when_cadet_matched(interface=interface, cadet=cadet)
 
+def process_form_when_skipping_cadet(interface: abstractInterface)-> Form:
+    event = get_event_from_state(interface)
+    row_id = get_current_row_id(interface)
+    print("adding skip row %s" % (row_id))
+
+    mark_row_as_skip_cadet(event=event, row_id=row_id, interface=interface)
+
+    interface.save_stored_items()
+    ## run recursively until no more data
+    return add_cadet_ids_on_next_row(interface)
 
 def process_form_when_existing_cadet_chosen(interface: abstractInterface) -> Form:
     cadet_selected = interface.last_button_pressed()
     print(cadet_selected)
     try:
-        confirm_cadet_exists(cadet_selected)
+        confirm_cadet_exists(interface=interface, cadet_selected=cadet_selected)
     except:
         raise Exception(
             "Cadet selected no longer exists - file corruption or someone deleted?",
         )
 
-    cadet = get_cadet_from_list_of_cadets(cadet_selected)
+    cadet = get_cadet_from_list_of_cadets(interface=interface, cadet_selected=cadet_selected)
     print(str(cadet))
     return process_row_when_cadet_matched(interface=interface, cadet=cadet)
 
 def go_to_update_cadet_data_form(interface: abstractInterface):
     return interface.get_new_form_given_function(display_form_interactively_update_cadets_at_event)
+
+TEST_CADET_SKIP_BUTTON_LABEL = "Skip: this is a test entry"
+extra_buttons = Line(Button(TEST_CADET_SKIP_BUTTON_LABEL))

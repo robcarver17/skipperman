@@ -63,14 +63,12 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Bug fixes before next event import
 
-- issues with duplicates on registration - fix when writing data model - THINK OK CHECK
-- random issues with volunteer changes, fix when writing data model - CHECK BACK FOR CADET CHANGES
-- removing volunteer should also remove associated role ID, or apply strict filters?
+- removing volunteer should also remove associated role ID, boat allocation, or apply strict filters?
+-  multiple filter: filter volunteer sheet on available days (only volunteers available on a given day), only volunteers available and unallocated on a given day, only volunteers with certain skills
+- sort volunteer by cadet location
 - removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
-- cope with volunteer that already exists if manually added
-- refactor reporting so uses common data model
-- seperate health field which gets reported to instructors (seperate out different types of notes)
-- waiting list - change unallocated status name
+- data model for volunteer rota, boats and group allocation
+- click on volunteer name to see previous events
 
 
 ### Required for training event (Can wait):
@@ -78,8 +76,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - sign in sheet multiple columns
 - add health to ticksheets
 - add contact details and health to roll call report
-- multiple filter: filter volunteer sheet on available days (only volunteers available on a given day), only volunteers available and unallocated on a given day, only volunteers with certain skills
-- sort volunteer by cadet location
+- refactor reporting so uses common data model 
 - store of previous events volunteer role / cadet allocation to speed up loading 
 - click on cadet name to see previous groups
 - click on volunteer name to see previous events

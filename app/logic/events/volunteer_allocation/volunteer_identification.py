@@ -6,6 +6,7 @@ from app.backend.volunteers.volunteer_allocation import add_identified_volunteer
 from app.backend.volunteers.volunteers import DEPRECATE_verify_volunteer_and_warn, verify_volunteer_and_warn
 from app.backend.volunteers.volunter_relevant_information import get_volunteer_from_relevant_information, \
     no_volunteer_in_position_at_form
+from app.backend.wa_import.import_cadets import is_cadet_marked_as_test_cadet_to_skip_in_for_row_in_mapped_data
 
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.import_wa.shared_state_tracking_and_data import get_and_save_next_row_id_in_mapped_event_data, \
@@ -61,12 +62,17 @@ def process_volunteer_on_next_row_of_event_data(
 
 
 def identify_volunteers_in_specific_row_initialise(interface: abstractInterface) -> NewForm:
+    test_row = is_cadet_marked_as_test_cadet_to_skip_in_for_current_row_in_mapped_data(interface)
+    if test_row:
+        return process_volunteer_on_next_row_of_event_data(interface)
+
     print("Clearing volunteer index")
     clear_volunteer_index(interface)
     return next_volunteer_in_current_row(interface)
 
 
 def next_volunteer_in_current_row(interface: abstractInterface) -> Union[Form, NewForm]:
+
     try:
         print("next volunteer index")
         get_and_save_next_volunteer_index(interface)
@@ -86,6 +92,12 @@ def current_volunteer_already_identified(interface: abstractInterface):
 
     return volunteer_for_this_row_and_index_already_identified(interface=interface, event=event, row_id=current_row_id, volunteer_index=current_index)
 
+def is_cadet_marked_as_test_cadet_to_skip_in_for_current_row_in_mapped_data(interface: abstractInterface):
+    current_row_id = get_current_row_id(interface)
+    event = get_event_from_state(interface)
+    return is_cadet_marked_as_test_cadet_to_skip_in_for_row_in_mapped_data(interface=interface,
+                                                                    row_id=current_row_id,
+                                                                    event=event)
 
 def add_specific_volunteer_at_event(interface: abstractInterface)-> Union[Form,NewForm]:
     relevant_information = get_relevant_information_for_current_volunteer(interface)
@@ -160,8 +172,7 @@ def get_add_or_select_existing_volunteers_form(
         include_final_button=include_final_button,
         cadet_id=cadet_id,
     )
-    header_text = get_header_text_for_volunteer_selection_form(interface=interface,
-                                                               volunteer=volunteer)
+    header_text = get_header_text_for_volunteer_selection_form(interface=interface)
 
     return get_add_volunteer_form_with_information_passed(
         volunteer_and_text=volunteer_and_text,
@@ -177,23 +188,47 @@ def get_volunteer_text_and_final_button(
 ) -> Tuple[VolunteerAndVerificationText, bool]:
     if volunteer is arg_not_passed:
         ## Form has been filled in so a button has been pressed, this isn't our first rodeo, get volunteer from form
-        volunteer_and_text = verify_form_with_volunteer_details(interface=interface)
-        include_final_button = True
+        return get_volunteer_text_and_final_button_when_volunteer_has_come_from_form(interface)
     else:
-        ## Volunteer details from WA passed through
-        verification_text = verify_volunteer_and_warn(interface=interface, volunteer=volunteer)
-        volunteer_and_text = VolunteerAndVerificationText(
-            volunteer=volunteer, verification_text=verification_text
-        )
+        return get_volunteer_text_and_final_button_when_volunteer_has_come_from_data(interface=interface, volunteer=volunteer, first_time=first_time)
 
-        verification_issues = len(verification_text) > 0
+def get_volunteer_text_and_final_button_when_volunteer_has_come_from_form(
+    interface: abstractInterface,
 
-        if verification_issues and first_time:
-            include_final_button = False
-        else:
-            include_final_button = True
+) -> Tuple[VolunteerAndVerificationText, bool]:
+    ## Form has been filled in so a button has been pressed, this isn't our first rodeo, get volunteer from form
+    volunteer_and_text = verify_form_with_volunteer_details(interface=interface)
+    include_final_button = True
 
     return volunteer_and_text, include_final_button
+
+
+def get_volunteer_text_and_final_button_when_volunteer_has_come_from_data(
+    interface: abstractInterface,
+    first_time: bool,
+    volunteer: Volunteer = arg_not_passed,
+
+) -> Tuple[VolunteerAndVerificationText, bool]:
+
+    verification_text = verify_volunteer_and_warn(interface=interface, volunteer=volunteer)
+    could_be_cadet_not_volunteer = (
+        volunteer_name_is_similar_to_cadet_name(interface=interface, volunteer=volunteer))
+    if could_be_cadet_not_volunteer:
+        verification_text += "Volunteer name is similar to cadet name - are you sure this is actually a volunteer and not a cadet?"
+
+    verification_issues = len(verification_text) > 0
+
+    if verification_issues and first_time:
+        include_final_button = False
+    else:
+        include_final_button = True
+
+    volunteer_and_text = VolunteerAndVerificationText(
+        volunteer=volunteer, verification_text=verification_text
+    )
+
+    return volunteer_and_text, include_final_button
+
 
 def get_cadet_id_or_missing_data_for_current_row(interface: abstractInterface):
     relevant_information = get_relevant_information_for_current_volunteer(interface)
@@ -238,7 +273,7 @@ def action_when_skipping_volunteer(interface: abstractInterface) -> NewForm:
 
     print("Skipping volunteer row %s id %d as identified for event %s" % (str(current_row_id), current_index, str(event)))
 
-    mark_volunteer_as_skipped(
+    mark_volunteer_as_skipped(interface=interface,
         event=event,
         row_id=current_row_id,
         volunteer_index=int(current_index))
@@ -247,15 +282,12 @@ def action_when_skipping_volunteer(interface: abstractInterface) -> NewForm:
 
 
 def action_when_specific_volunteer_selected(name_of_volunteer: str, interface: abstractInterface) -> Union[Form, NewForm]:
-    dict_of_volunteer_names_and_volunteers= get_dict_of_volunteer_names_and_volunteers()
+    dict_of_volunteer_names_and_volunteers= get_dict_of_volunteer_names_and_volunteers(interface)
     volunteer = dict_of_volunteer_names_and_volunteers.get(name_of_volunteer, None)
     if volunteer is None:
         raise Exception("Volunteer %s has gone missing!" % name_of_volunteer)
 
     return process_identification_when_volunteer_matched(interface=interface, volunteer=volunteer)
-
-
-
 
 
 

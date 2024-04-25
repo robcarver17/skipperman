@@ -1,5 +1,7 @@
 from typing import Union
 
+from app.objects.abstract_objects.abstract_interface import abstractInterface
+
 from app.backend.forms.form_utils import get_availability_checkbox, dropdown_input_for_status_change
 from app.backend.wa_import.update_cadets_at_event import new_status_and_status_message, NO_STATUS_CHANGE
 from app.logic.events.constants import (
@@ -11,17 +13,18 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 
-from app.backend.cadets import DEPRECATED_cadet_name_from_id, cadet_name_from_id
+from app.backend.cadets import  cadet_name_from_id
 from app.objects.cadet_at_event import CadetAtEvent
 from app.objects.events import Event
 
 def display_form_for_update_to_existing_cadet_at_event(
+        interface: abstractInterface,
         new_cadet_at_event: CadetAtEvent,
                                                         existing_cadet_at_event: CadetAtEvent,
                                                        event: Event) -> Form:
     overall_message = (
         "There have been important changes for event registration information about cadet %s"
-        % cadet_name_from_id(existing_cadet_at_event.cadet_id)
+        % cadet_name_from_id(interface=interface, cadet_id=existing_cadet_at_event.cadet_id)
     )
 
     status_change_field = get_line_in_form_for_status_change(

@@ -26,7 +26,11 @@ def add_new_verified_event(event: Event):
     DEPRECATED_data.data_list_of_events.add(event)
 
 
-def get_list_of_all_events() -> ListOfEvents:
+def DEPRECATED_get_list_of_all_events() -> ListOfEvents:
     list_of_events = DEPRECATED_data.data_list_of_events.read()
 
     return list_of_events
+
+def get_list_of_all_events(interface: abstractInterface) -> ListOfEvents:
+    event_data =EventData(interface.data)
+    return event_data.list_of_events

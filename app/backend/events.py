@@ -1,6 +1,6 @@
 import datetime
 
-from app.backend.data.events import get_list_of_all_events
+from app.backend.data.events import DEPRECATED_get_list_of_all_events
 from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME, SIMILARITY_LEVEL_TO_WARN_DATE
 from app.data_access.data import DEPRECATED_data
 
@@ -56,25 +56,25 @@ def warning_for_similar_events(event: Event) -> str:
 
 
 def get_sorted_list_of_events(sort_by=SORT_BY_START_DSC) -> ListOfEvents:
-    list_of_events = get_list_of_all_events()
+    list_of_events = DEPRECATED_get_list_of_all_events()
     list_of_events = list_of_events.sort_by(sort_by)
 
     return list_of_events
 
 def list_of_previously_used_event_names() -> list:
-    list_of_events = get_list_of_all_events()
+    list_of_events = DEPRECATED_get_list_of_all_events()
     event_names = [event.event_name for event in list_of_events]
     return list(set(event_names))
 
 
 
 def DEPRECATE_get_event_from_id(id: str) -> Event:
-    list_of_events = get_list_of_all_events()
+    list_of_events = DEPRECATED_get_list_of_all_events()
     return list_of_events.has_id(id)
 
 
 def confirm_event_exists_given_description(event_description):
-    list_of_events = get_list_of_all_events()
+    list_of_events = DEPRECATED_get_list_of_all_events()
 
     ## fails if missing
     __ = list_of_events.event_with_description(event_description)

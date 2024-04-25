@@ -6,7 +6,7 @@ from app.backend.volunteers.patrol_boats import \
     get_sorted_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day
 from app.backend.volunteers.volunteer_rota import boat_related_role_str_on_day_for_volunteer_id, \
     get_volunteer_role_at_event_on_day, dict_of_roles_for_dropdown
-from app.backend.volunteers.volunteers import get_volunteer_name_from_id, boat_related_skill_str, \
+from app.backend.volunteers.volunteers import DEPRECATED_get_volunteer_name_from_id, boat_related_skill_str, \
     get_volunteer_from_list_of_volunteers
 
 from app.objects.abstract_objects.abstract_buttons import Button
@@ -95,7 +95,7 @@ def from_allocation_dropdown_input_name_to_boat_name_and_day_name(dropdown_input
 
 
 def from_volunteer_id_to_dropdown_element(volunteer_id: str, event: Event, day: Day)-> str:
-    name = get_volunteer_name_from_id(volunteer_id)
+    name = DEPRECATED_get_volunteer_name_from_id(volunteer_id)
     skill_str = boat_related_skill_str(volunteer_id)
     if len(skill_str)>0:
         skill_str = " (%s)" % skill_str

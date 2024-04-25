@@ -11,8 +11,8 @@ from app.logic.events.constants import (
     SEE_SIMILAR_CADETS_ONLY_LABEL,
 )
 
-from app.backend.cadets import  SORT_BY_FIRSTNAME,  \
-     verify_cadet_and_warn, get_sorted_list_of_cadets, get_list_of_similar_cadets
+from app.backend.cadets import verify_cadet_and_warn, get_sorted_list_of_cadets, get_list_of_similar_cadets
+from app.backend.data.cadets import SORT_BY_FIRSTNAME
 from app.logic.cadets.add_cadet import (
     verify_form_with_cadet_details,
     get_add_cadet_form_with_information_passed,

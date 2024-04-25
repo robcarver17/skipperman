@@ -11,7 +11,7 @@ from app.backend.group_allocations.boat_allocation import update_club_boat_alloc
     update_boat_info_for_cadets_at_event, CadetWithDinghyInputs
 from app.backend.group_allocations.group_allocations_data import get_allocation_data, AllocationData
 from app.backend.wa_import.update_cadets_at_event import DEPRECATED_update_availability_of_existing_cadet_at_event, \
-    update_notes_for_existing_cadet_at_event
+    DEPRECATED_update_notes_for_existing_cadet_at_event
 
 from app.logic.events.constants import ALLOCATION, ATTENDANCE, CLUB_BOAT, SAIL_NUMBER, PARTNER, BOAT_CLASS
 from app.logic.events.events_in_state import get_event_from_state
@@ -114,7 +114,7 @@ def get_cadet_notes_for_row_in_form_and_alter_registration_data(interface: abstr
     if original_notes == new_notes:
         return
     else:
-        update_notes_for_existing_cadet_at_event(cadet_id=cadet.id, event=event, new_notes=new_notes)
+        DEPRECATED_update_notes_for_existing_cadet_at_event(cadet_id=cadet.id, event=event, new_notes=new_notes)
 
 
 def update_boat_info_for_all_cadets_in_form(interface: abstractInterface, allocation_data: AllocationData):

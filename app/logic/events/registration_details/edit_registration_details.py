@@ -13,7 +13,7 @@ from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, But
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.cadets.ENTRY_view_cadets import sort_buttons, all_sort_types
-from app.backend.cadets import SORT_BY_SURNAME
+from app.backend.data.cadets import SORT_BY_SURNAME
 from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_text import Heading
@@ -29,15 +29,17 @@ def display_form_edit_registration_details(
 
     return display_form_edit_registration_details_given_event_and_sort_order(
         event=event,
-        sort_order=sort_order
+        sort_order=sort_order,
+        interface=interface
     )
 
 def display_form_edit_registration_details_given_event_and_sort_order(
+        interface:abstractInterface,
         event: Event,
         sort_order: str
 ) -> Union[Form, NewForm]:
 
-    table = get_registration_details_inner_form_for_event(event, sort_order=sort_order)
+    table = get_registration_details_inner_form_for_event(interface=interface, event=event, sort_order=sort_order)
 
     return Form(
         ListOfLines(
@@ -64,10 +66,11 @@ back_button = Button(BACK_BUTTON_LABEL, nav_button=True)
 nav_buttons = ButtonBar([back_button, save_button])
 
 def get_registration_details_inner_form_for_event(
+        interface: abstractInterface,
     event: Event,
         sort_order: str
 ) -> Table:
-    registration_details = get_registration_data(event=event, sort_order=sort_order)
+    registration_details = get_registration_data(event=event, sort_order=sort_order, interface=interface)
     top_row = get_top_row_for_table_of_registration_details(all_columns=registration_details.all_columns_excluding_special_fields)
     rows_in_table = [
         row_for_cadet_in_event( registration_details=registration_details, cadet_at_event=cadet_at_event)

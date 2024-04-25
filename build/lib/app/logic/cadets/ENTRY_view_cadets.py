@@ -15,8 +15,8 @@ from app.objects.abstract_objects.abstract_buttons import main_menu_button, Butt
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.cadets.cadet_state_storage import update_state_for_specific_cadet
-from app.backend.cadets import SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, \
-    SORT_BY_DOB_DSC, get_cadet_from_list_of_cadets, get_sorted_list_of_cadets
+from app.backend.cadets import get_cadet_from_list_of_cadets, get_sorted_list_of_cadets
+from app.backend.data.cadets import SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, SORT_BY_DOB_DSC
 
 all_sort_types = [SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, SORT_BY_DOB_DSC]
 

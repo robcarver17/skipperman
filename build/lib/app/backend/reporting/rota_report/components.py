@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import pandas as pd
 
 from app.backend.data.volunteer_rota import load_volunteers_in_role_at_event
-from app.backend.data.volunteers import load_all_volunteers
+from app.backend.data.volunteers import DEPRECATE_load_all_volunteers
 from app.backend.data.resources import load_list_of_patrol_boats, load_list_of_voluteers_at_event_with_patrol_boats
 from app.backend.reporting.rota_report.configuration import TEAM_NAME, ROLE, VOLUNTEER, GROUP, BOAT
 from app.objects.constants import missing_data
@@ -22,7 +22,7 @@ class DataForDfConstruction:
 
     @classmethod
     def construct_for_event(cls, event):
-        all_volunteers = load_all_volunteers()
+        all_volunteers = DEPRECATE_load_all_volunteers()
         all_patrol_boats = load_list_of_patrol_boats()
         all_volunteers_and_boats = load_list_of_voluteers_at_event_with_patrol_boats(event)
         volunteers_in_role_at_event = load_volunteers_in_role_at_event(event)

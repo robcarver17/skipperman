@@ -169,6 +169,10 @@ class ListOfVolunteersAtEvent(GenericListOfObjects):
     def _object_class_contained(self):
         return VolunteerAtEvent
 
+    def is_volunteer_already_at_event(self, volunteer_id: str):
+        all_ids = self.list_of_volunteer_ids
+        return str(volunteer_id) in all_ids
+
     def list_of_volunteer_ids_associated_with_cadet_id(self, cadet_id: str):
         list_of_volunteers = self.list_of_volunteers_associated_with_cadet_id(cadet_id)
         return list_of_volunteers.list_of_volunteer_ids
@@ -224,7 +228,7 @@ class ListOfVolunteersAtEvent(GenericListOfObjects):
 
     @property
     def list_of_volunteer_ids(self) -> list:
-        return [object.volunteer_id for object in self]
+        return [str(object.volunteer_id) for object in self]
 
     def add_volunteer_with_just_id(self, volunteer_id: str, availability: DaySelector):
         if volunteer_id in self.list_of_volunteer_ids:

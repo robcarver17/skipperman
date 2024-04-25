@@ -14,7 +14,7 @@ from app.objects.abstract_objects.abstract_interface import (
 from app.logic.volunteers.constants import *
 from app.backend.volunteers.volunteers import get_connected_cadets
 from app.backend.data.volunteers import delete_connection_in_data, \
-    add_volunteer_connection_to_cadet_in_master_list_of_volunteers
+    DEPRECATE_add_volunteer_connection_to_cadet_in_master_list_of_volunteers
 from app.logic.volunteers.volunteer_state import get_volunteer_from_state
 from app.objects.volunteers import Volunteer
 from app.objects.cadets import Cadet, ListOfCadets
@@ -144,7 +144,7 @@ def add_connection_from_form(interface: abstractInterface):
         interface.log_error("You have to select a cadet from the dropdown before adding")
         return
     selected_cadet = DEPRECATE_get_cadet_from_list_of_cadets(selected_cadet_as_str)
-    add_volunteer_connection_to_cadet_in_master_list_of_volunteers(cadet=selected_cadet, volunteer=volunteer)
+    DEPRECATE_add_volunteer_connection_to_cadet_in_master_list_of_volunteers(cadet=selected_cadet, volunteer=volunteer)
 
 
 def delete_connection_given_form(interface: abstractInterface):

@@ -29,6 +29,9 @@ class DataLayer():
         self.store = store
         self.data = underlying_data
 
+    def clear_stored_items(self):
+        self.store.clear_stored_items()
+
     def save_stored_items(self):
         self.store.save_stored_items()
 
@@ -153,111 +156,111 @@ class DataLayer():
 
 
 def get_data_access_for_list_of_cadets(data: GenericDataApi) -> DataAccessMethod:
-    return  DataAccessMethod.from_individual_methods(
+    return  DataAccessMethod(key="list_of_cadets",
             read_method=data.data_list_of_cadets.read,
             write_method=data.data_list_of_cadets.write)
 
 
 def get_data_access_for_list_of_cadets_with_tick_list_items(data: GenericDataApi) -> DataAccessMethod:
-    return  DataAccessMethod.from_individual_methods(
+    return  DataAccessMethod("list_of_cadets_with_tick_list_items",
     data.data_list_of_cadets_with_tick_list_items.read,
     data.data_list_of_cadets_with_tick_list_items.write
     )
 
 def get_data_access_for_list_of_qualifications(data: GenericDataApi) -> DataAccessMethod:
-    return  DataAccessMethod.from_individual_methods(
+    return  DataAccessMethod("list_of_qualifications",
     data.data_list_of_qualifications.read,
     data.data_list_of_qualifications.write
     )
 
 def get_data_access_for_list_of_substages(data: GenericDataApi) -> DataAccessMethod:
-    return DataAccessMethod.from_individual_methods(
+    return DataAccessMethod("list_of_substages",
     data.data_list_of_tick_sub_stages.read,
     data.data_list_of_tick_sub_stages.write
     )
 
 def get_data_access_for_list_of_tick_sheet_items(data: GenericDataApi) -> DataAccessMethod:
-    return DataAccessMethod.from_individual_methods(
+    return DataAccessMethod("list_of_tick_sheet_items",
 data.data_list_of_tick_sheet_items.read,
     data.data_list_of_tick_sheet_items.write
 )
 
 def get_data_access_for_list_of_events(data: GenericDataApi) -> DataAccessMethod:
-    return DataAccessMethod.from_individual_methods(
+    return DataAccessMethod("list_of_events",
     data.data_list_of_events.read,
     data.data_list_of_events.write
 )
 
 
 def get_data_access_for_list_of_cadets_with_qualifications(data: GenericDataApi) -> DataAccessMethod:
-    return DataAccessMethod.from_individual_methods(
+    return DataAccessMethod("list_of_cadets_with_qualifications",
     data.data_list_of_cadets_with_qualifications.read,
     data.data_list_of_cadets_with_qualifications.write
 )
 
 def get_data_access_for_cadets_with_groups(data: GenericDataApi, event_id: str) -> DataAccessMethod:
-    return DataAccessMethod.from_individual_methods(
+    return DataAccessMethod("cadets_with_groups",
     data.data_list_of_cadets_with_groups.read_groups_for_event,
     data.data_list_of_cadets_with_groups.write_groups_for_event, event_id=event_id)
 
 def get_data_access_for_cadets_at_event(data: GenericDataApi, event_id: str) -> DataAccessMethod:
-    return DataAccessMethod.from_individual_methods(
+    return DataAccessMethod("cadets_at_event",
     read_method=data.data_cadets_at_event.read,
     write_method=data.data_cadets_at_event.write, event_id=event_id)
 
 
 def get_data_access_for_identified_cadets_at_event(data: GenericDataApi, event_id: str) -> DataAccessMethod:
-    return DataAccessMethod.from_individual_methods(
+    return DataAccessMethod("identified_cadets_at_event",
     read_method=data.data_identified_cadets_at_event.read,
     write_method=data.data_identified_cadets_at_event.write, event_id=event_id)
 
 
 def get_data_access_for_identified_volunteers_at_event(data: GenericDataApi, event_id: str) -> DataAccessMethod:
-    return DataAccessMethod.from_individual_methods(
+    return DataAccessMethod("identified_volunteers_at_event",
     read_method=data.data_list_of_identified_volunteers_at_event.read,
     write_method=data.data_list_of_identified_volunteers_at_event.write,
         event_id=event_id)
 
 def get_data_access_for_volunteers_at_event(data: GenericDataApi, event_id: str) -> DataAccessMethod:
-    return DataAccessMethod.from_individual_methods(
+    return DataAccessMethod("volunteers_at_event",
     read_method=data.data_list_of_volunteers_at_event.read,
     write_method=data.data_list_of_volunteers_at_event.write, event_id=event_id)
 
 
 def get_data_access_for_wa_field_mapping_at_event(data: GenericDataApi, event_id: str) -> DataAccessMethod:
-    return DataAccessMethod.from_individual_methods(
+    return DataAccessMethod("wa_field_mapping_at_event",
     read_method=data.data_wa_field_mapping.read,
     write_method=data.data_wa_field_mapping.write, event_id=event_id)
 
 
 def get_data_access_for_mapped_wa_event(data: GenericDataApi, event_id: str) -> DataAccessMethod:
-    return DataAccessMethod.from_individual_methods(
+    return DataAccessMethod("mapped_wa_event",
     read_method=data.data_mapped_wa_event.read,
     write_method=data.data_mapped_wa_event.write,
     event_id=event_id)
 
 def get_data_access_for_list_of_cadets_at_event_with_club_dinghies(data: GenericDataApi, event_id: str) -> DataAccessMethod:
-    return DataAccessMethod.from_individual_methods(
+    return DataAccessMethod("list_of_cadets_at_event_with_club_dinghies",
     read_method=data.data_list_of_cadets_at_event_with_club_dinghies.read,
     write_method=data.data_list_of_cadets_at_event_with_club_dinghies.write,
     event_id=event_id
 )
 
 def get_data_access_for_wa_event_mapping(data: GenericDataApi):
-    return DataAccessMethod.from_individual_methods(
+    return DataAccessMethod("wa_event_mapping",
         read_method=data.data_wa_event_mapping.read,
         write_method=data.data_wa_event_mapping.write
     )
 
 def get_data_access_for_list_of_volunteers(data: GenericDataApi) -> DataAccessMethod:
-    return DataAccessMethod.from_individual_methods(
+    return DataAccessMethod("list_of_volunteers",
         read_method=data.data_list_of_volunteers.read,
-        write_method=data.data_list_of_volunteers.write
+        write_method=data.data_list_of_volunteers.write,
     )
 
 def get_data_access_for_list_of_cadet_volunteer_associations(data: GenericDataApi) -> DataAccessMethod:
-    return DataAccessMethod.from_individual_methods(
+    return DataAccessMethod("list_of_cadet_volunteer_associations",
         read_method=data.data_list_of_cadet_volunteer_associations.read,
-        write_method=data.data_list_of_cadet_volunteer_associations.write
+        write_method=data.data_list_of_cadet_volunteer_associations.write,
     )
 

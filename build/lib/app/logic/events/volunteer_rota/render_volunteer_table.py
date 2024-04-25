@@ -6,7 +6,7 @@ from app.backend.volunteers.volunteer_rota import dict_of_groups_for_dropdown, \
     dict_of_roles_for_dropdown, get_sorted_and_filtered_list_of_volunteers_at_event
 from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingTableBody, get_data_to_be_stored, \
     RotaSortsAndFilters
-from app.backend.volunteers.volunteers import get_volunteer_from_id
+from app.backend.volunteers.volunteers import DEPRECATED_get_volunteer_from_id
 from app.data_access.configuration.configuration import VOLUNTEER_SKILLS
 from app.data_access.configuration.fixed import COPY_SYMBOL1, NOT_AVAILABLE_SHORTHAND, AVAILABLE_SHORTHAND
 from app.logic.events.volunteer_rota.rota_state import get_skills_filter_from_state
@@ -101,7 +101,7 @@ def get_row_for_volunteer_at_event(data_to_be_stored: DataToBeStoredWhilstConstr
                                    interface: abstractInterface,
                                    hide_buttons:bool= False) -> RowInTable:
 
-    volunteer = get_volunteer_from_id(volunteer_at_event.volunteer_id)
+    volunteer = DEPRECATED_get_volunteer_from_id(volunteer_at_event.volunteer_id)
     volunteer_name = volunteer.name
 
     name_button =  volunteer_name if hide_buttons else Button(volunteer_name)

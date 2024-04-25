@@ -1,4 +1,4 @@
-from app.backend.data.volunteer_allocation import DEPRECATED_load_list_of_identified_volunteers_at_event
+from app.backend.data.volunteer_allocation import     VolunteerAllocationData
 
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.import_wa.shared_state_tracking_and_data import get_current_row_id
@@ -44,6 +44,7 @@ def get_relevant_information_for_current_volunteer(interface: abstractInterface)
     print("Row id %s volunteer index %d" % (row_id, volunteer_index))
     event = get_event_from_state(interface)
     relevant_information = get_relevant_information_for_volunteer_in_event_at_row_and_index(
+        interface=interface,
         row_id=row_id,
         volunteer_index=volunteer_index,
         event=event
@@ -107,7 +108,8 @@ def clear_volunteer_id_at_event_in_state(interface: abstractInterface):
 
 def list_of_unique_volunteer_ids_in_identified_event_data(interface: abstractInterface) -> list:
     event = get_event_from_state(interface)
-    all_volunteers_at_event = DEPRECATED_load_list_of_identified_volunteers_at_event(event)
+    volunteer_allocation_data = VolunteerAllocationData(interface.data)
+    all_volunteers_at_event = volunteer_allocation_data.load_list_of_identified_volunteers_at_event(event)
     all_ids = all_volunteers_at_event.unique_list_of_volunteer_ids()
 
     return all_ids

@@ -56,6 +56,11 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return Volunteer
 
+    def add(self, volunteer: Volunteer):
+        volunteer_id = self.next_id()
+        volunteer.id = volunteer_id
+        self.append(volunteer)
+
     def matching_volunteer(self, volunteer: Volunteer) -> Volunteer:
         try:
             return self[self.index(volunteer)]

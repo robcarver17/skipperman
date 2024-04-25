@@ -25,6 +25,9 @@ class abstractInterface:
     display_and_post_form_function_maps: DisplayAndPostFormFunctionMaps = arg_not_passed
     action_name: str = ""
 
+    def clear_stored_items(self):
+        self.data.clear_stored_items()
+
     def save_stored_items(self):
         self.data.save_stored_items()
 

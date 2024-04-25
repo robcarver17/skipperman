@@ -1,5 +1,7 @@
 from typing import List
 
+from app.objects.constants import missing_data
+
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.objects.mapped_wa_event import RowInMappedWAEvent, MappedWAEvent, RegistrationStatus
@@ -17,6 +19,7 @@ from app.objects.events import Event
 from app.objects.cadet_at_event import ListOfCadetsAtEvent, ListOfIdentifiedCadetsAtEvent, CadetAtEvent, \
     get_cadet_at_event_from_row_in_mapped_event
 from app.objects.dinghies import ListOfCadetAtEventWithDinghies
+from app.objects.cadet_at_event import active_status
 
 def cadet_id_at_event_given_row_id(interface: abstractInterface, event: Event, row_id: str) -> str:
     cadet_data = CadetsAtEventData(interface.data)
@@ -25,9 +28,51 @@ def cadet_id_at_event_given_row_id(interface: abstractInterface, event: Event, r
     return cadet_id
 
 
+
 class CadetsAtEventData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
+
+    ### UPDATES
+    def mark_cadet_at_event_as_unchanged(self, cadet_id: str, event: Event):
+        list_of_cadets_at_event = self.get_list_of_cadets_at_event(event)
+        list_of_cadets_at_event.mark_cadet_as_unchanged(cadet_id)
+        self.save_list_of_cadets_at_event(list_of_cadets_at_event=list_of_cadets_at_event, event=event)
+
+    def mark_row_as_skip_cadet(self, event: Event, row_id: str):
+        identified_cadets = self.get_list_of_identified_cadets_at_event(event)
+        identified_cadets.add_cadet_to_skip(row_id=row_id)
+        self.save_list_of_identified_cadets_at_event(event=event, list_of_identified_cadets_at_event=identified_cadets)
+
+    def add_identified_cadet_and_row(self, event: Event, row_id: str, cadet_id: str):
+        identified_cadets = self.get_list_of_identified_cadets_at_event(event)
+        identified_cadets.add(row_id=row_id, cadet_id=cadet_id)
+        self.save_list_of_identified_cadets_at_event(event=event, list_of_identified_cadets_at_event=identified_cadets)
+
+    def update_data_row_for_existing_cadet_at_event(self, event: Event, cadet_id: str,
+                                                    new_data_in_row: RowInMappedWAEvent):
+
+        existing_cadets_at_event = self.get_list_of_cadets_at_event(event)
+        existing_cadets_at_event.update_data_row_for_existing_cadet_at_event(cadet_id=cadet_id,
+                                                                             new_data_in_row=new_data_in_row)
+        self.save_list_of_cadets_at_event(list_of_cadets_at_event=existing_cadets_at_event, event=event)
+
+
+    def update_notes_for_existing_cadet_at_event(self, event: Event, cadet_id: str,
+                                                 new_notes: str):
+
+        existing_cadets_at_event = self.get_list_of_cadets_at_event(event)
+        existing_cadets_at_event.update_notes_for_existing_cadet_at_event(cadet_id=cadet_id, new_notes=new_notes)
+        self.save_list_of_cadets_at_event(list_of_cadets_at_event=existing_cadets_at_event, event=event)
+
+
+    def update_health_for_existing_cadet_at_event(self, event: Event, cadet_id: str,
+                                                 new_health: str):
+
+        existing_cadets_at_event = self.get_list_of_cadets_at_event(event)
+        existing_cadets_at_event.update_health_for_existing_cadet_at_event(cadet_id=cadet_id, new_health=new_health)
+        self.save_list_of_cadets_at_event(list_of_cadets_at_event=existing_cadets_at_event, event=event)
+
 
     def update_availability_of_existing_cadet_at_event(self, event: Event, cadet_id: str,
                                                        new_availabilty: DaySelector):
@@ -42,8 +87,17 @@ class CadetsAtEventData():
                                                                          new_status: RegistrationStatus):
 
         existing_cadets_at_event = self.get_list_of_cadets_at_event(event)
+        print("update %s to %s" % (cadet_id, new_status.name))
         existing_cadets_at_event.update_status_of_existing_cadet_at_event(cadet_id=cadet_id,
                                                                       new_status=new_status)
+        self.save_list_of_cadets_at_event(list_of_cadets_at_event=existing_cadets_at_event, event=event)
+
+
+    def update_status_of_existing_cadet_at_event_to_active(self, event: Event, cadet_id: str):
+
+        existing_cadets_at_event = self.get_list_of_cadets_at_event(event)
+        existing_cadets_at_event.update_status_of_existing_cadet_at_event(cadet_id=cadet_id,
+                                                                      new_status=active_status)
         self.save_list_of_cadets_at_event(list_of_cadets_at_event=existing_cadets_at_event, event=event)
 
     def replace_existing_cadet_at_event(self, new_cadet_at_event: CadetAtEvent, event: Event):
@@ -63,12 +117,21 @@ class CadetsAtEventData():
         existing_cadets_at_event.add(cadet_at_event)
         self.save_list_of_cadets_at_event(event=event, list_of_cadets_at_event=existing_cadets_at_event)
 
+    ### GETS
+    def get_sorted_list_of_cadets_at_event(self, event: Event, sort_by: str) -> ListOfCadetsAtEvent:
+        cadets_at_event = self.get_list_of_cadets_at_event(event)
+        list_of_cadets = self.cadet_data.get_sorted_list_of_cadets(sort_by=sort_by)
+        cadets_at_event = cadets_at_event.subset_given_cadet_ids(list_of_cadets.list_of_ids)
+
+        return cadets_at_event
+
+
     def get_all_rows_in_mapped_event_for_cadet_id(self, event: Event, cadet_id: str) ->  MappedWAEvent:
 
         identified_cadets = self.get_list_of_identified_cadets_at_event(event)
         mapped_event_data = self.get_mapped_wa_data_for_event(event)
 
-        list_of_row_ids = identified_cadets.list_of_row_ids_given_cadet_id(cadet_id)
+        list_of_row_ids = identified_cadets.list_of_row_ids_given_cadet_id_allowing_duplicates(cadet_id)
         relevant_rows =mapped_event_data.subset_with_id(list_of_row_ids)
 
         return relevant_rows
@@ -78,6 +141,8 @@ class CadetsAtEventData():
         row_ids = mapped_event_data.get_list_of_row_ids_for_event(event)
         list_of_cadet_ids = [self.identifed_cadet_id_given_row_id_at_event(row_id=row_id, event=event) for
                              row_id in row_ids]
+        list_of_cadet_ids = [cadet_id for cadet_id in list_of_cadet_ids if cadet_id is not missing_data]
+
 
         return list_of_cadet_ids
 
@@ -98,15 +163,6 @@ class CadetsAtEventData():
         identified_cadets = self.get_list_of_identified_cadets_at_event(event)
         return identified_cadets.cadet_id_given_row_id(row_id)
 
-    def mark_row_as_skip_cadet(self, event: Event, row_id: str):
-        identified_cadets = self.get_list_of_identified_cadets_at_event(event)
-        identified_cadets.add_cadet_to_skip(row_id=row_id)
-        self.save_list_of_identified_cadets_at_event(event=event, list_of_identified_cadets_at_event=identified_cadets)
-
-    def add_identified_cadet_and_row(self, event: Event, row_id: str, cadet_id: str):
-        identified_cadets = self.get_list_of_identified_cadets_at_event(event)
-        identified_cadets.add(row_id=row_id, cadet_id=cadet_id)
-        self.save_list_of_identified_cadets_at_event(event=event, list_of_identified_cadets_at_event=identified_cadets)
 
     def row_has_identified_cadet_including_test_cadets(self, row: RowInMappedWAEvent, event: Event) -> bool:
         identified_cadets = self.get_list_of_identified_cadets_at_event(event)
@@ -118,6 +174,12 @@ class CadetsAtEventData():
         list_of_cadets = self.cadet_data.get_list_of_cadets_given_list_of_cadet_ids(active_ids)
 
         return list_of_cadets
+
+    def list_of_cadet_ids_at_event_including_cancelled_and_deleted(self, event: Event):
+        list_of_cadets_at_event = self.get_list_of_cadets_at_event(event)
+
+        return list_of_cadets_at_event.list_of_cadet_ids()
+
 
     def list_of_active_cadet_ids_at_event(self, event: Event) -> List[str]:
         list_of_cadets_at_event = self.get_list_of_cadets_at_event(event)
@@ -168,9 +230,10 @@ def DEPRECATE_cadet_id_at_event_given_row_id(event: Event, row_id: str) -> str:
     return cadet_id
 
 
-def list_of_row_ids_at_event_given_cadet_id(event: Event, cadet_id: str) -> List[str]:
-    identified_cadets_at_event = DEPERCATE_load_identified_cadets_at_event(event)
-    list_of_row_ids = identified_cadets_at_event.list_of_row_ids_given_cadet_id(cadet_id)
+def list_of_row_ids_at_event_given_cadet_id(interface: abstractInterface, event: Event, cadet_id: str) -> List[str]:
+    cadets_at_event_data = CadetsAtEventData(interface.data)
+    identified_cadets_at_event = cadets_at_event_data.get_list_of_identified_cadets_at_event(event)
+    list_of_row_ids = identified_cadets_at_event.list_of_unique_row_id_given_cadet_id(cadet_id)
 
     return list_of_row_ids
 

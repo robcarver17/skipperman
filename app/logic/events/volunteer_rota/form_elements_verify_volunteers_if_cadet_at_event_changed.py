@@ -1,15 +1,13 @@
 from typing import List
 
-from app.backend.cadets import DEPRECATED_cadet_name_from_id
-from app.backend.data.volunteer_allocation import get_volunteer_at_event, \
-    remove_volunteer_and_cadet_association_at_event, delete_volunteer_with_id_at_event
+from app.backend.cadets import  cadet_name_from_id
+from app.backend.data.volunteer_allocation import     remove_volunteer_and_cadet_association_at_event, delete_volunteer_with_id_at_event, get_volunteer_at_event
 from app.backend.forms.form_utils import get_availability_checkbox, get_availablity_from_form
-from app.backend.volunteers.volunteer_allocation import \
-    get_dict_of_relevant_volunteer_names_and_association_cadets_with_id_values, \
-    any_other_cadets_for_volunteer_at_event_apart_from_this_one, update_volunteer_availability_at_event, \
-    is_current_cadet_active_at_event, list_of_volunteers_for_cadet_identified
-from app.backend.volunteers.volunteers import get_volunteer_from_id, get_volunteer_name_from_id
-from app.backend.wa_import.update_cadets_at_event import DEPRECATE_get_cadet_at_event_for_cadet_id
+from app.backend.volunteers.volunteer_allocation import     any_other_cadets_for_volunteer_at_event_apart_from_this_one, update_volunteer_availability_at_event, \
+    is_current_cadet_active_at_event, list_of_volunteers_for_cadet_identified, \
+    get_dict_of_relevant_volunteer_names_and_association_cadets_with_id_values
+from app.backend.volunteers.volunteers import   get_volunteer_from_id, get_volunteer_name_from_id
+from app.backend.wa_import.update_cadets_at_event import  get_cadet_at_event_for_cadet_id
 from app.logic.events.constants import SAVE_CHANGES
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_rota.rota_state import get_current_cadet_id_for_rota_at_event
@@ -21,15 +19,15 @@ from app.objects.events import Event
 
 
 def display_form_volunteer_rota_check_changed_cadet_when_availability_changed(cadet_id: str, event: Event, interface: abstractInterface) -> Form:
-    cadet_at_event = DEPRECATE_get_cadet_at_event_for_cadet_id(cadet_id=cadet_id, event=event)
-    cadet_name = DEPRECATED_cadet_name_from_id(cadet_id)
+    cadet_at_event = get_cadet_at_event_for_cadet_id(interface=interface, cadet_id=cadet_id, event=event)
+    cadet_name = cadet_name_from_id(interface=interface, cadet_id=cadet_id)
     cadet_availability_as_str = str(cadet_at_event.availability)
     save_type_of_form_displayed_for_volunteer_update(interface=interface,
                                                      new_type=UPDATE_AVAILABLE)
-    list_of_volunteer_form_lines = get_list_of_volunteer_form_lines_changing_availability(cadet_id=cadet_id, event=event)
+    list_of_volunteer_form_lines = get_list_of_volunteer_form_lines_changing_availability(cadet_id=cadet_id, event=event, interface=interface)
 
     return Form(ListOfLines([
-        "Registration for cadet %s has been modified recently, availability is now %s" % (
+        "Registration for cadet %s has been modified recently, availability is now %s " % (
         cadet_name, cadet_availability_as_str),
         "Modify availability for volunteers if appropriate",
         list_of_volunteer_form_lines,
@@ -40,11 +38,11 @@ def display_form_volunteer_rota_check_changed_cadet_when_availability_changed(ca
 def display_form_volunteer_rota_check_changed_cadet_when_status_changed_to_deleted_or_cancelled( cadet_id: str,
                                                                                                 event: Event,
                                                                                                  interface: abstractInterface) -> Form:
-    cadet_at_event = DEPRECATE_get_cadet_at_event_for_cadet_id(cadet_id=cadet_id, event=event)
-    cadet_name = DEPRECATED_cadet_name_from_id(cadet_id)
+    cadet_at_event = get_cadet_at_event_for_cadet_id(interface=interface, cadet_id=cadet_id, event=event)
+    cadet_name = cadet_name_from_id(interface=interface, cadet_id=cadet_id)
     cadet_status_as_str = cadet_at_event.status.name
 
-    list_of_volunteer_form_lines = get_list_of_volunteer_form_lines_changing_status_to_deleted_or_cancelled(
+    list_of_volunteer_form_lines = get_list_of_volunteer_form_lines_changing_status_to_deleted_or_cancelled(interface=interface,
                                                                                                             cadet_id=cadet_id,
                                                                                                             event=event)
 
@@ -52,7 +50,7 @@ def display_form_volunteer_rota_check_changed_cadet_when_status_changed_to_delet
                                                      new_type=UPDATE_WHEN_DELETED_OR_CANCELLED)
 
     return Form(ListOfLines([
-        "Registration for cadet %s has been modified recently, status is now %s" % (cadet_name, cadet_status_as_str),
+        "Registration for cadet %s has been modified recently, status is now %s  " % (cadet_name, cadet_status_as_str),
         "Select voluteers that are still available",
         list_of_volunteer_form_lines,
         Button(SAVE_CHANGES)
@@ -61,21 +59,26 @@ def display_form_volunteer_rota_check_changed_cadet_when_status_changed_to_delet
 
 
 
-def get_list_of_volunteer_form_lines_changing_availability(cadet_id: str, event: Event) -> ListOfLines:
-    dict_of_relevant_volunteers = get_dict_of_relevant_volunteer_names_and_association_cadets_with_id_values(
+def get_list_of_volunteer_form_lines_changing_availability(interface: abstractInterface, cadet_id: str, event: Event) -> ListOfLines:
+    dict_of_relevant_volunteers =get_dict_of_relevant_volunteer_names_and_association_cadets_with_id_values(
+        interface=interface,
         cadet_id=cadet_id, event=event)
-    list_of_volunteer_lines = [get_volunteer_form_line_changing_availability(event=event,
-                                                       volunteer_id=volunteer_id)
+    list_of_volunteer_lines = [get_volunteer_form_line_changing_availability(interface=interface,
+                                                                             event=event,
+                                                                            volunteer_id=volunteer_id)
                                for volunteer_and_others, volunteer_id in dict_of_relevant_volunteers.items()
                                ]
 
     return ListOfLines(list_of_volunteer_lines)
 
 
-def get_list_of_volunteer_form_lines_changing_status_to_deleted_or_cancelled( cadet_id: str, event: Event) -> ListOfLines:
+def get_list_of_volunteer_form_lines_changing_status_to_deleted_or_cancelled(interface: abstractInterface, cadet_id: str, event: Event) -> ListOfLines:
     dict_of_relevant_volunteers = get_dict_of_relevant_volunteer_names_and_association_cadets_with_id_values(
+        interface=interface,
         cadet_id=cadet_id, event=event)
-    list_of_volunteer_lines = [get_volunteer_form_line_changing_status_to_deleted_or_cancelled(event=event,
+    list_of_volunteer_lines = [get_volunteer_form_line_changing_status_to_deleted_or_cancelled(
+                                                        interface=interface,
+                                                        event=event,
                                                        volunteer_and_others=volunteer_and_others,
                                                        volunteer_id=volunteer_id,
                                                        cadet_id=cadet_id)
@@ -85,23 +88,26 @@ def get_list_of_volunteer_form_lines_changing_status_to_deleted_or_cancelled( ca
     return ListOfLines(list_of_volunteer_lines)
 
 
-def get_volunteer_form_line_changing_availability( volunteer_id: str, event: Event) -> checkboxInput:
-    volunteer_at_event = get_volunteer_at_event(event=event, volunteer_id=volunteer_id)
+def get_volunteer_form_line_changing_availability(interface: abstractInterface, volunteer_id: str, event: Event) -> checkboxInput:
+    volunteer_at_event = get_volunteer_at_event(interface=interface, event=event, volunteer_id=volunteer_id)
     current_availability = volunteer_at_event.availablity
-    volunteer_name = get_volunteer_from_id(volunteer_id)
+    volunteer_name = get_volunteer_from_id(interface=interface, volunteer_id=volunteer_id)
 
     return get_availability_checkbox(
         availability=current_availability,
         event=event,
-        input_label="Update availability for volunteer %s :" % volunteer_name,
+        input_label="Update availability for volunteer %s: " % volunteer_name,
         input_name=form_name_given_volunteer_and_type(type=AVAILABILITY_NAME, volunteer_id=volunteer_id)
     )
 
 
-def get_volunteer_form_line_changing_status_to_deleted_or_cancelled(event: Event, volunteer_and_others: str, volunteer_id: str, cadet_id: str) -> checkboxInput:
+def get_volunteer_form_line_changing_status_to_deleted_or_cancelled(
+        interface: abstractInterface,
+        event: Event, volunteer_and_others: str, volunteer_id: str, cadet_id: str) -> checkboxInput:
 
     ## checkbox is True only if other cadets
-    has_other_cadets = any_other_cadets_for_volunteer_at_event_apart_from_this_one(volunteer_id=volunteer_id,
+    has_other_cadets = any_other_cadets_for_volunteer_at_event_apart_from_this_one(interface=interface,
+                                                                                   volunteer_id=volunteer_id,
                                                                                    event=event,
                                                                                    cadet_id=cadet_id)
     relevant_volunteers_as_dict_checked = {INCLUDE_VOLUNTEER: has_other_cadets}
@@ -131,7 +137,7 @@ def modify_specific_volunteer_availability_when_cadet_changed(interface: abstrac
 
 def modify_specific_volunteer_linkage_at_event_when_cadet_changed(interface: abstractInterface, volunteer_id: str, cadet_id: str):
     event = get_event_from_state(interface)
-    current_cadet_is_active = is_current_cadet_active_at_event(cadet_id=cadet_id, event=event)
+    current_cadet_is_active = is_current_cadet_active_at_event(interface=interface, cadet_id=cadet_id, event=event)
     assert not current_cadet_is_active
 
     volunteer_is_included = INCLUDE_VOLUNTEER in interface.value_of_multiple_options_from_form(
@@ -165,7 +171,7 @@ def clear_type_of_form_displayed_for_volunteer_update(interface: abstractInterfa
 
 def get_list_of_volunteer_names_relating_to_changed_cadet(interface: abstractInterface) -> List[str]:
     list_of_ids = list_of_volunteer_ids_to_modify_only_changed_cadets(interface)
-    list_of_names = [get_volunteer_name_from_id(id) for id in list_of_ids]
+    list_of_names = [get_volunteer_name_from_id(interface=interface, volunteer_id=id) for id in list_of_ids]
 
     return list_of_names
 
@@ -173,7 +179,6 @@ def get_list_of_volunteer_names_relating_to_changed_cadet(interface: abstractInt
 def list_of_volunteer_ids_to_modify_only_changed_cadets(interface: abstractInterface) -> List[str]:
     ###
     cadet_id = get_current_cadet_id_for_rota_at_event(interface)
-    print("CADET ID MODIFIED %s" % cadet_id)
     event = get_event_from_state(interface)
-    list_of_volunteer_ids_not_added = list_of_volunteers_for_cadet_identified(cadet_id=cadet_id, event=event)
+    list_of_volunteer_ids_not_added = list_of_volunteers_for_cadet_identified(interface=interface, cadet_id=cadet_id, event=event)
     return list_of_volunteer_ids_not_added

@@ -154,7 +154,8 @@ def process_form_when_volunteer_verified(
 
 def add_volunteer_from_form_to_data(interface) -> Volunteer:
     volunteer = get_volunteer_from_form(interface)
-    add_new_verified_volunteer(volunteer)
+    add_new_verified_volunteer(volunteer=volunteer, interface=interface)
+    interface.save_stored_items()
 
     return volunteer
 

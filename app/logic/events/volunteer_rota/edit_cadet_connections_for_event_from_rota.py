@@ -1,9 +1,9 @@
 from typing import Union
 
 from app.backend.group_allocations.cadet_event_allocations import get_list_of_active_cadets_at_event
-from app.backend.volunteers.volunteers import get_volunteer_from_id
+from app.backend.volunteers.volunteers import DEPRECATED_get_volunteer_from_id
 from app.backend.data.volunteer_allocation import remove_volunteer_and_cadet_association_at_event, \
-    add_volunteer_and_cadet_association_for_existing_volunteer, get_volunteer_at_event
+    add_volunteer_and_cadet_association_for_existing_volunteer, DEPRECATE_get_volunteer_at_event
 
 from app.backend.cadets import DEPRECATED_cadet_from_id, DEPRECATE_get_cadet_from_list_of_cadets
 
@@ -27,7 +27,7 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines
 def display_form_edit_cadet_connections_from_rota(interface: abstractInterface):
     volunteer_id = get_volunteer_id_selected_from_state(interface) ## NEEDS TO BE SET
     event =get_event_from_state(interface)
-    volunteer = get_volunteer_from_id(volunteer_id)
+    volunteer = DEPRECATED_get_volunteer_from_id(volunteer_id)
     connected_cadets = list_of_connected_cadets(interface)
 
     header_text = ListOfLines([
@@ -45,7 +45,7 @@ def display_form_edit_cadet_connections_from_rota(interface: abstractInterface):
 def list_of_connected_cadets(interface: abstractInterface):
     volunteer_id = get_volunteer_id_selected_from_state(interface) ## NEEDS TO BE SET
     event =get_event_from_state(interface)
-    volunteer_at_event = get_volunteer_at_event(volunteer_id=volunteer_id, event=event)
+    volunteer_at_event = DEPRECATE_get_volunteer_at_event(volunteer_id=volunteer_id, event=event)
     cadet_ids = volunteer_at_event.list_of_associated_cadet_id
 
 

@@ -1,5 +1,7 @@
 from typing import List
 
+from app.objects.constants import arg_not_passed
+
 from app.data_access.storage_layer.api import DataLayer
 from app.data_access.data import DEPRECATED_data
 from app.objects.cadets import Cadet, ListOfCadets
@@ -8,6 +10,21 @@ from app.objects.cadets import Cadet, ListOfCadets
 class CadetData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
+
+    def get_sorted_list_of_cadets(self, sort_by: str = arg_not_passed) -> ListOfCadets:
+        master_list = self.get_list_of_cadets()
+        if sort_by is arg_not_passed:
+            return master_list
+        if sort_by == SORT_BY_SURNAME:
+            return master_list.sort_by_surname()
+        elif sort_by == SORT_BY_FIRSTNAME:
+            return master_list.sort_by_firstname()
+        elif sort_by == SORT_BY_DOB_ASC:
+            return master_list.sort_by_dob_asc()
+        elif sort_by == SORT_BY_DOB_DSC:
+            return master_list.sort_by_dob_desc()
+        else:
+            return master_list
 
     def get_cadet_from_list_of_cadets_given_str_of_cadet(self, cadet_selected:str) -> Cadet:
         list_of_cadets = self.get_list_of_cadets()
@@ -106,3 +123,7 @@ def DEPRECATE_load_list_of_all_cadets() -> ListOfCadets:
     return DEPRECATED_data.data_list_of_cadets.read()
 
 
+SORT_BY_SURNAME = "Sort by surname"
+SORT_BY_FIRSTNAME = "Sort by first name"
+SORT_BY_DOB_ASC = "Sort by date of birth, ascending"
+SORT_BY_DOB_DSC = "Sort by date of birth, descending"

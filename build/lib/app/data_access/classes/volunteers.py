@@ -6,16 +6,6 @@ from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent
 
 
 class DataListOfVolunteers(object):
-    def add(self, volunteer: Volunteer):
-        list_of_volunteers = self.read()
-        if volunteer in list_of_volunteers:
-            raise Exception("Volunteer %s already in list of existing volunteers" % str(volunteer))
-
-        volunteer_id = list_of_volunteers.next_id()
-        volunteer.id = volunteer_id
-        list_of_volunteers.append(volunteer)
-        self.write(list_of_volunteers)
-
     def read(self) -> ListOfVolunteers:
         raise NotImplemented
 

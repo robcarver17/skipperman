@@ -2,7 +2,7 @@ from copy import copy
 from dataclasses import dataclass
 from typing import Union
 
-from app.backend.volunteers.volunteers import DEPRECATE_verify_volunteer_and_warn
+from app.backend.volunteers.volunteers import DEPRECATE_verify_volunteer_and_warn, verify_volunteer_and_warn
 from app.backend.data.volunteers import add_new_verified_volunteer
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.objects.volunteers import Volunteer, default_volunteer
@@ -115,7 +115,7 @@ def verify_form_with_volunteer_details(
 ) -> VolunteerAndVerificationText:
     try:
         volunteer = get_volunteer_from_form(interface)
-        verify_text = DEPRECATE_verify_volunteer_and_warn(volunteer)
+        verify_text = verify_volunteer_and_warn(interface=interface, volunteer=volunteer)
     except Exception as e:
         volunteer = copy(default)
         verify_text = (
@@ -154,7 +154,8 @@ def process_form_when_volunteer_verified(
 
 def add_volunteer_from_form_to_data(interface) -> Volunteer:
     volunteer = get_volunteer_from_form(interface)
-    add_new_verified_volunteer(volunteer)
+    add_new_verified_volunteer(volunteer=volunteer, interface=interface)
+    interface.save_stored_items()
 
     return volunteer
 

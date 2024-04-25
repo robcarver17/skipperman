@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.backend.volunteers.volunteers import get_volunteer_name_from_id
+from app.backend.volunteers.volunteers import DEPRECATED_get_volunteer_name_from_id
 
 from app.backend.data.volunteers import DEPRECATED_get_sorted_list_of_volunteers, SORT_BY_FIRSTNAME
 
@@ -113,7 +113,7 @@ def dropdown_for_volunteer(user: SkipperManUser) -> dropDownInput:
     volunteers = DEPRECATED_get_sorted_list_of_volunteers(SORT_BY_FIRSTNAME)
     dict_of_volunteers = dict([(volunteer.name, volunteer.name) for volunteer in volunteers])
     try:
-        name = get_volunteer_name_from_id(user.volunteer_id)
+        name = DEPRECATED_get_volunteer_name_from_id(user.volunteer_id)
     except:
         name = ''
 

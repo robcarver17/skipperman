@@ -1,8 +1,8 @@
 from typing import Union
 
-from app.backend.volunteers.volunteer_allocation import update_cadet_connections_when_cadet_already_at_event, are_all_connected_cadets_cancelled_or_deleted, \
-    get_list_of_relevant_information
-from app.backend.volunteers.volunteers import get_volunteer_from_id
+from app.backend.volunteers.volunteer_allocation import update_cadet_connections_when_volunteer_already_at_event, are_all_connected_cadets_cancelled_or_deleted, \
+    DEPRECATED_get_list_of_relevant_information
+from app.backend.volunteers.volunteers import DEPRECATED_get_volunteer_from_id
 from app.backend.data.volunteer_allocation import is_volunteer_already_at_event
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_allocation.add_volunteers_process_form import \
@@ -54,7 +54,7 @@ def process_identified_volunteer_at_event(interface: abstractInterface) -> Union
         ### But we also don't auto delete, in case the volunteer staying on has other associated cadets. If a volunteer does already exist, then the cancellation will be picked up when we next look at the volunteer rota
         return next_volunteer_in_event(interface)
     elif already_added:
-        update_cadet_connections_when_cadet_already_at_event(event=event, volunteer_id=volunteer_id)
+        update_cadet_connections_when_volunteer_already_at_event(event=event, volunteer_id=volunteer_id)
         return next_volunteer_in_event(interface)
     else:
         ## this volunteer is new at this event
@@ -63,9 +63,9 @@ def process_identified_volunteer_at_event(interface: abstractInterface) -> Union
 
 def display_form_for_volunteer_details( volunteer_id: str, event: Event)-> Form:
 
-    volunteer = get_volunteer_from_id(volunteer_id)
+    volunteer = DEPRECATED_get_volunteer_from_id(volunteer_id)
 
-    list_of_relevant_information = get_list_of_relevant_information(volunteer_id=volunteer_id, event=event)
+    list_of_relevant_information = DEPRECATED_get_list_of_relevant_information(volunteer_id=volunteer_id, event=event)
 
     header_text = get_header_text(event=event, volunteer=volunteer)
 

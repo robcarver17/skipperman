@@ -36,7 +36,7 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
         self.add(row_id=other.row_id, cadet_id=other.cadet_id)
 
     def is_cadet_with_id_in_identified_list(self, cadet_id) -> bool:
-        list_of_row_ids = self.list_of_row_ids_given_cadet_id(cadet_id)
+        list_of_row_ids = self.list_of_unique_row_id_given_cadet_id(cadet_id)
         missing = list_of_row_ids is missing_data
         return not missing
 
@@ -77,12 +77,17 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
 
         return cadet_id
 
-    def list_of_row_ids_given_cadet_id(self, cadet_id: str) -> List[str]:
+    def list_of_unique_row_id_given_cadet_id(self, cadet_id: str) -> List[str]:
         matching = [item.row_id for item in self if item.cadet_id == cadet_id]
         if len(matching)==0:
             return missing_data
         elif len(matching)>1:
             raise Exception("Can't have same row_id more than once")
+
+        return matching
+
+    def list_of_row_ids_given_cadet_id_allowing_duplicates(self, cadet_id: str) -> List[str]:
+        matching = [item.row_id for item in self if item.cadet_id == cadet_id]
 
         return matching
 
@@ -226,7 +231,6 @@ class ListOfCadetsAtEvent(GenericListOfObjectsWithIds):
     def add(self, cadet_at_event: CadetAtEvent):
         if self.is_cadet_id_in_event(cadet_at_event.cadet_id):
             raise Exception("Cadet already exists!")
-        cadet_at_event.changed = True
         self.append(cadet_at_event)
 
     def subset_given_cadet_ids(self, list_of_ids: List[str]):
@@ -268,6 +272,15 @@ class ListOfCadetsAtEvent(GenericListOfObjectsWithIds):
         existing_cadet_at_event = self[existing_cadet_idx]
         existing_cadet_at_event.notes = new_notes
 
+        self[existing_cadet_idx] = existing_cadet_at_event
+        self.mark_cadet_as_changed(cadet_id)
+
+    def update_health_for_existing_cadet_at_event(self, cadet_id: str, new_health: str):
+        existing_cadet_idx = self.idx_of_items_with_cadet_id(cadet_id)
+        if existing_cadet_idx is missing_data:
+            raise Exception("Can't replace cadet id %s not in data" % cadet_id)
+        existing_cadet_at_event = self[existing_cadet_idx]
+        existing_cadet_at_event.health = new_health
         self[existing_cadet_idx] = existing_cadet_at_event
         self.mark_cadet_as_changed(cadet_id)
 

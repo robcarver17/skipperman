@@ -1,5 +1,7 @@
 from typing import List
 
+from app.objects.abstract_objects.abstract_interface import abstractInterface
+
 from app.data_access.storage_layer.api import DataLayer
 
 from app.data_access.data import DEPRECATED_data
@@ -13,6 +15,39 @@ from app.objects.volunteers_at_event import ListOfVolunteersAtEvent, ListOfIdent
 class VolunteerAllocationData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
+
+    def volunteer_ids_associated_with_cadet_at_specific_event(self, event: Event,
+                                                              cadet_id: str) -> List[str]:
+        volunteer_data = self.load_list_of_volunteers_at_event(event)
+        volunteer_ids = volunteer_data.list_of_volunteer_ids_associated_with_cadet_id(cadet_id)
+
+        return volunteer_ids
+
+    def add_volunteer_at_event(self, event: Event, volunteer_at_event: VolunteerAtEvent):
+        list_of_volunteers_at_event = self.load_list_of_volunteers_at_event(event)
+        list_of_volunteers_at_event.add_new_volunteer(volunteer_at_event)
+        self.save_list_of_volunteers_at_event(list_of_volunteers_at_event=list_of_volunteers_at_event, event=event)
+
+    def add_cadet_id_to_existing_volunteer(self, event: Event,
+                                                                      volunteer_id: str,
+                                                                      cadet_id: str):
+
+        list_of_volunteers_at_event = self.load_list_of_volunteers_at_event(event)
+        list_of_volunteers_at_event.add_cadet_id_to_existing_volunteer(cadet_id=cadet_id, volunteer_id=volunteer_id)
+        self.save_list_of_volunteers_at_event(event=event, list_of_volunteers_at_event=list_of_volunteers_at_event)
+
+    def is_volunteer_already_at_event(self, event: Event, volunteer_id: str):
+        list_of_volunteers_at_event = self.load_list_of_volunteers_at_event(event)
+        return list_of_volunteers_at_event.is_volunteer_already_at_event(volunteer_id)
+
+    def mark_volunteer_as_skipped(self,
+                                  event: Event,
+                                  row_id: str,
+                                  volunteer_index: int):
+
+        list_of_identified_volunteers_at_event = self.load_list_of_identified_volunteers_at_event(event)
+        list_of_identified_volunteers_at_event.identified_as_processed_not_allocated(row_id=row_id, volunteer_index=volunteer_index)
+        self.save_list_of_identified_volunteers_at_event(event=event, list_of_volunteers=list_of_identified_volunteers_at_event)
 
     def add_identified_volunteer(self,
         volunteer_id: str,
@@ -46,6 +81,10 @@ class VolunteerAllocationData():
 
 def DEPRECATED_load_list_of_identified_volunteers_at_event(event: Event) -> ListOfIdentifiedVolunteersAtEvent:
     return DEPRECATED_data.data_list_of_identified_volunteers_at_event.read(event_id=event.id)
+
+def load_list_of_identified_volunteers_at_event(interface: abstractInterface, event: Event) -> ListOfIdentifiedVolunteersAtEvent:
+    volunteer_allocation_data = VolunteerAllocationData(interface.data)
+    return volunteer_allocation_data.load_list_of_identified_volunteers_at_event(event)
 
 def DEPRECATED_save_list_of_identified_volunteers_at_event(event: Event, list_of_volunteers: ListOfIdentifiedVolunteersAtEvent):
     DEPRECATED_data.data_list_of_identified_volunteers_at_event.write(list_of_identified_volunteers=list_of_volunteers, event_id=event.id)
@@ -109,7 +148,7 @@ def update_volunteer_at_event(volunteer_at_event: VolunteerAtEvent, event: Event
 
 def days_at_event_when_volunteer_available(event: Event,
                                                                              volunteer_id: str) -> List[Day]:
-    volunteer_at_event = get_volunteer_at_event(volunteer_id=volunteer_id, event=event)
+    volunteer_at_event = DEPRECATE_get_volunteer_at_event(volunteer_id=volunteer_id, event=event)
     all_days = [day
                     for day in event.weekdays_in_event()
                         if volunteer_at_event.availablity.available_on_day(day)]
@@ -117,7 +156,7 @@ def days_at_event_when_volunteer_available(event: Event,
     return all_days
 
 
-def get_volunteer_at_event(volunteer_id: str, event: Event) -> VolunteerAtEvent:
+def DEPRECATE_get_volunteer_at_event(volunteer_id: str, event: Event) -> VolunteerAtEvent:
     volunteers_at_event_data = DEPRECATED_load_list_of_volunteers_at_event(event)
     volunteer_at_event = volunteers_at_event_data.volunteer_at_event_with_id(volunteer_id)
     if volunteer_at_event is missing_data:
@@ -125,7 +164,16 @@ def get_volunteer_at_event(volunteer_id: str, event: Event) -> VolunteerAtEvent:
 
     return volunteer_at_event
 
-def is_volunteer_already_at_event(volunteer_id: str, event: Event) -> bool:
-    volunteers_at_event_data = DEPRECATED_load_list_of_volunteers_at_event(event)
+def get_volunteer_at_event(interface: abstractInterface, volunteer_id: str, event: Event) -> VolunteerAtEvent:
+    volunteers_at_event_data = VolunteerAllocationData(interface.data)
+    list_of_volunteers = volunteers_at_event_data.load_list_of_volunteers_at_event(event)
+    volunteer_at_event = list_of_volunteers.volunteer_at_event_with_id(volunteer_id)
+    if volunteer_at_event is missing_data:
+        raise Exception("Weirdly volunteer with id %s is no longer in event %s" % (volunteer_id, event))
 
-    return volunteer_id in volunteers_at_event_data.list_of_volunteer_ids
+    return volunteer_at_event
+
+def is_volunteer_already_at_event(interface: abstractInterface, volunteer_id: str, event: Event) -> bool:
+    volunteers_at_event_data = VolunteerAllocationData(interface.data)
+    return volunteers_at_event_data.is_volunteer_already_at_event(volunteer_id=volunteer_id, event=event)
+

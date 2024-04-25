@@ -10,14 +10,12 @@ from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation i
     get_relevant_information_for_current_volunteer, get_volunteer_index
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
-from app.objects.abstract_objects.abstract_text import bold
-from app.objects.constants import missing_data
 from app.objects.utils import similar
 from app.objects.volunteers import Volunteer
 
 
-def get_header_text_for_volunteer_selection_form(interface: abstractInterface,
-                                                 volunteer: Volunteer) -> ListOfLines:
+def get_header_text_for_volunteer_selection_form(interface: abstractInterface) -> ListOfLines:
+
     # Custom header text
     relevant_information = get_relevant_information_for_current_volunteer(interface)
     relevant_information_for_identification = relevant_information.identify
@@ -28,18 +26,12 @@ def get_header_text_for_volunteer_selection_form(interface: abstractInterface,
         status_text = "Registration volunteer status in form: %s" % status_text
 
     volunteer_index=get_volunteer_index(interface)
-    cadet = DEPRECATED_cadet_from_id(relevant_information_for_identification.cadet_id)
+    cadet = cadet_from_id(interface=interface, cadet_id=relevant_information_for_identification.cadet_id)
 
     introduction = "Looks like a potential new volunteer in the WA entry file for cadet: %s, volunteer number %d" % (str(cadet), volunteer_index+1)
 
-    if volunteer_name_is_similar_to_cadet_name(interface=interface, volunteer=volunteer):
-        cadet_warning= (" ** LOOKS LIKE CADET NAME INSTEAD OF VOLUNTEER NAME IN FORM- BEST TO SKIP **")
-    else:
-        cadet_warning = ""
-
     header_text =ListOfLines([
         introduction,
-        bold(cadet_warning),
         _______________,
         status_text,
         other_information,

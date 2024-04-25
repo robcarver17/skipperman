@@ -68,6 +68,9 @@ def get_identification_information_for_volunteer(interface: abstractInterface, r
     try:
         cadet_id=cadet_id_at_event_given_row_id(interface=interface, event=event, row_id=row_in_mapped_event.row_id)
         cadet =cadet_from_id(interface=interface, cadet_id=cadet_id)
+        if cadet is missing_data:
+            cadet = default_cadet
+            cadet_id = missing_data
     except:
         ## Won't always have cadets maybe in the future
         cadet = default_cadet
@@ -186,6 +189,7 @@ def get_relevant_information_for_volunteer_in_event_at_row_and_index(
     relevant_information = get_relevant_information_for_volunteer(interface=interface, row_in_mapped_event=row_in_mapped_event, volunteer_index=volunteer_index, event=event)
 
     return relevant_information
+
 
 def DEPRECATED_get_relevant_information_for_volunteer_in_event_at_row_and_index(
     row_id: str,

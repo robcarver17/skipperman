@@ -1,9 +1,13 @@
-from typing import Union
+from typing import Union, List
 
-from app.backend.cadets import DEPRECATED_cadet_name_from_id
+from app.objects.abstract_objects.abstract_interface import abstractInterface
+
+from app.backend.cadets import DEPRECATED_cadet_name_from_id, cadet_name_from_id
 from app.backend.forms.form_utils import  get_availability_checkbox
-from app.backend.volunteers.volunteers import is_cadet_already_connected_to_volunteer_in_volunteer_list
-from app.backend.volunteers.volunteer_allocation import get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet
+from app.backend.volunteers.volunteers import \
+    are_all_cadet_ids_in_list_already_connection_to_volunteer
+from app.backend.volunteers.volunteer_allocation import \
+    get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet
 from app.backend.volunteers.volunter_relevant_information import suggested_volunteer_availability
 from app.objects.abstract_objects.abstract_form import checkboxInput, textInput
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
@@ -22,33 +26,53 @@ PREFERRED_DUTIES= "preferred_duties"
 SAME_OR_DIFFERENT = "same_or_different"
 NOTES = "Notes"
 
-def get_header_text(event: Event, volunteer: Volunteer) -> Line:
-    list_of_cadet_ids = get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet(volunteer_id=volunteer.id,
-                                                                                                                      event=event)
-    cadet_names = [DEPRECATED_cadet_name_from_id(cadet_id) for cadet_id in list_of_cadet_ids]
+def get_header_text(interface: abstractInterface, event: Event, volunteer: Volunteer) -> Line:
     volunteer_name = volunteer.name
-    if len(cadet_names)==0:
-        cadet_names_text = "(No active cadets - must all be cancelled)"
-    else:
-        cadet_names_text = ", ".join(cadet_names)
-
+    cadet_names_text= get_cadet_names_text_given_identified_volunteer(interface=interface, event=event, volunteer=volunteer)
     header_text = "Details for volunteer %s - related to following cadets at event: %s" % (volunteer_name, cadet_names_text)
 
     return Line(header_text)
 
 
-def get_connection_checkbox(event: Event, volunteer: Volunteer) -> Union[checkboxInput, str]:
+def get_cadet_names_text_given_identified_volunteer(interface: abstractInterface, event: Event, volunteer: Volunteer) -> str:
+    cadet_names = get_list_of_active_associated_cadet_names_in_mapped_event_data_given_identified_volunteer(
+        interface=interface,
+        event=event,
+        volunteer=volunteer
+    )
+
+    if len(cadet_names)==0:
+        cadet_names_text = "(No active cadets - must all be cancelled)"
+    else:
+        cadet_names_text = ", ".join(cadet_names)
+
+    return cadet_names_text
+
+
+def get_list_of_active_associated_cadet_names_in_mapped_event_data_given_identified_volunteer(interface: abstractInterface, event: Event, volunteer: Volunteer) -> List[str]:
     list_of_cadet_ids = get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet(volunteer_id=volunteer.id,
-                                                                                                                      event=event)
+                                                                                                                                   event=event,
+                                                                                                                         interface=interface)
+    cadet_names = [cadet_name_from_id(interface=interface, cadet_id=cadet_id) for cadet_id in list_of_cadet_ids]
 
-    list_of_already_connected = [is_cadet_already_connected_to_volunteer_in_volunteer_list(volunteer=volunteer, cadet_id=cadet_id) for cadet_id in list_of_cadet_ids]
+    return cadet_names
 
-    if all(list_of_already_connected):
+def get_connection_checkbox(interface: abstractInterface, event: Event, volunteer: Volunteer) -> Union[checkboxInput, str]:
+    list_of_cadet_ids = get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet(interface=interface,
+                                                                                                                         volunteer_id=volunteer.id,
+                                                                                                                                   event=event)
+
+    already_all_connected = are_all_cadet_ids_in_list_already_connection_to_volunteer(interface=interface, volunteer=volunteer, list_of_cadet_ids=list_of_cadet_ids)
+
+    if already_all_connected:
         return ""
 
+    dict_of_labels =dict([(cadet_id, cadet_name_from_id(cadet_id=cadet_id, interface=interface)) for cadet_id in list_of_cadet_ids])
+    dict_of_checked = dict([(cadet_id,True) for cadet_id in list_of_cadet_ids]) ## we assume we want to connect by default
+
     connection_checkbox = checkboxInput(
-        dict_of_labels=dict([(cadet_id, DEPRECATED_cadet_name_from_id(cadet_id)) for cadet_id in list_of_cadet_ids]),
-        dict_of_checked=dict([(cadet_id,True) for cadet_id in list_of_cadet_ids]),
+        dict_of_labels=dict_of_labels,
+        dict_of_checked=dict_of_checked,
         input_name=MAKE_CADET_CONNECTION,
         input_label="Tick to permanently connect cadet with volunteer in main volunteer list (leave blank if not usually connected):"
     )

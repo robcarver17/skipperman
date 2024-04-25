@@ -1,9 +1,11 @@
 from dataclasses import dataclass
 
-from app.backend.cadets import DEPRECATE_get_sorted_list_of_cadets, cadet_from_id_with_passed_list
+from app.objects.abstract_objects.abstract_interface import abstractInterface
+
+from app.backend.cadets import  cadet_from_id_with_passed_list, load_list_of_all_cadets
 from app.backend.forms.form_utils import get_availability_checkbox, input_name_from_column_name_and_cadet_id
 from app.backend.forms.form_utils import dropdown_input_for_status_change
-from app.backend.data.cadets_at_event import DEPRECATED_load_cadets_at_event
+from app.backend.data.cadets_at_event import  CadetsAtEventData
 
 from app.logic.events.constants import ROW_STATUS
 from app.objects.abstract_objects.abstract_form import dropDownInput, checkboxInput, textInput, intInput
@@ -20,6 +22,7 @@ from app.objects.mapped_wa_event import RowInMappedWAEvent, RegistrationStatus, 
 
 DAYS_ATTENDING = "days_attending_field"
 NOTES = "Notes"
+HEALTH = "Health"
 @dataclass
 class RegistrationDetailsForEvent:
     event: Event
@@ -31,11 +34,12 @@ class RegistrationDetailsForEvent:
         ## order not important
         return [ROW_STATUS, DAYS_ATTENDING]
 
-def get_registration_data(event: Event, sort_order: str = arg_not_passed) -> RegistrationDetailsForEvent:
-    cadets_at_event = DEPRECATED_load_cadets_at_event(event)
-    list_of_cadets = DEPRECATE_get_sorted_list_of_cadets(sort_by=sort_order)
-    cadets_at_event = cadets_at_event.subset_given_cadet_ids(list_of_cadets.list_of_ids)
+
+
+def get_registration_data(interface: abstractInterface, event: Event, sort_order: str = arg_not_passed) -> RegistrationDetailsForEvent:
+    cadets_at_event = get_sorted_list_of_cadets_at_event(interface=interface, event=event, sort_order=sort_order)
     all_columns = get_list_of_columns_excluding_special_fields(cadets_at_event)
+    list_of_cadets = load_list_of_all_cadets(interface)
 
     return RegistrationDetailsForEvent(
         cadets_at_event=cadets_at_event,
@@ -44,6 +48,9 @@ def get_registration_data(event: Event, sort_order: str = arg_not_passed) -> Reg
         all_columns_excluding_special_fields=all_columns
     )
 
+def get_sorted_list_of_cadets_at_event(interface: abstractInterface, event: Event, sort_order: str):
+    cadets_at_event_data = CadetsAtEventData(interface.data)
+    return cadets_at_event_data.get_sorted_list_of_cadets_at_event(event=event, sort_by=sort_order)
 
 def get_list_of_columns_excluding_special_fields(cadets_at_event:ListOfCadetsAtEvent) -> list:
     first_cadet =cadets_at_event[0]
@@ -55,7 +62,7 @@ def get_list_of_columns_excluding_special_fields(cadets_at_event:ListOfCadetsAtE
 
 
 def get_top_row_for_table_of_registration_details(all_columns: list)-> RowInTable:
-    return RowInTable(["Cadet", "Status", "Attending", "Notes"]+all_columns)
+    return RowInTable(["Cadet", "Status", "Attending", "Health", "Notes"]+all_columns)
 
 
 def row_for_cadet_in_event(cadet_at_event: CadetAtEvent, registration_details: RegistrationDetailsForEvent) -> RowInTable:
@@ -64,11 +71,12 @@ def row_for_cadet_in_event(cadet_at_event: CadetAtEvent, registration_details: R
 
     status_button = get_status_button(cadet_at_event.status, cadet_id=cadet_id)
     days_attending_field = get_days_attending_field(cadet_at_event.availability, cadet_id=cadet_id, event=registration_details.event)
+    health_field = get_health_field(cadet_at_event.health, cadet_id=cadet_id)
     notes_field = get_notes_field(cadet_at_event.notes, cadet_id=cadet_id)
 
     other_columns = get_list_of_column_forms_excluding_reserved_fields(cadet_at_event=cadet_at_event, registration_details=registration_details)
 
-    return RowInTable([str(cadet), status_button, days_attending_field, notes_field]+other_columns)
+    return RowInTable([str(cadet), status_button, days_attending_field, health_field, notes_field]+other_columns)
 
 
 def get_list_of_column_forms_excluding_reserved_fields(cadet_at_event: CadetAtEvent, registration_details: RegistrationDetailsForEvent) -> list:
@@ -124,6 +132,14 @@ def get_notes_field(notes: str, cadet_id: str) -> textInput:
         input_label="",
         value=notes
     )
+
+def get_health_field(notes: str, cadet_id: str) -> textInput:
+    return textInput(
+        input_name=input_name_from_column_name_and_cadet_id(column_name=HEALTH, cadet_id=cadet_id),
+        input_label="",
+        value=notes
+    )
+
 
 def form_item_for_key_value_pair_in_row_data(column_name: str, cadet_at_event: CadetAtEvent):
     current_value = cadet_at_event.data_in_row[column_name]

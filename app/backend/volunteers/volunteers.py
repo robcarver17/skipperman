@@ -1,15 +1,12 @@
 from typing import List
 
-from app.logic.events.volunteer_allocation.volunteer_selection_form_contents import \
-    volunteer_name_is_similar_to_cadet_name
-
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.cadets import DEPRECATE_get_sorted_list_of_cadets, DEPRECATED_cadet_from_id
+from app.backend.cadets import DEPRECATE_get_sorted_list_of_cadets,  cadet_from_id
 from app.backend.data.volunteers import DEPRECATED_get_sorted_list_of_volunteers, load_list_of_volunteer_skills, \
     save_list_of_volunteer_skills, \
-    DEPRECATE_get_list_of_cadet_volunteer_associations, add_volunteer_connection_to_cadet_in_master_list_of_volunteers, \
-    load_all_volunteers, VolunteerData
+    DEPRECATE_get_list_of_cadet_volunteer_associations, \
+    DEPRECATE_load_all_volunteers, VolunteerData
 from app.data_access.configuration.configuration import VOLUNTEERS_SKILL_FOR_PB2
 from app.objects.constants import arg_not_passed
 from app.objects.volunteers import Volunteer
@@ -17,12 +14,12 @@ from app.objects.volunteers import Volunteer
 
 def get_list_of_volunteers_as_str(list_of_volunteers = arg_not_passed) -> list:
     if list_of_volunteers is arg_not_passed:
-        list_of_volunteers = load_all_volunteers()
+        list_of_volunteers = DEPRECATE_load_all_volunteers()
     return [str(volunteer) for volunteer in list_of_volunteers]
 
 
 def get_volunteer_from_list_of_volunteers(volunteer_selected: str) -> Volunteer:
-    list_of_volunteers = load_all_volunteers()
+    list_of_volunteers = DEPRECATE_load_all_volunteers()
     list_of_volunteers_as_str = get_list_of_volunteers_as_str(list_of_volunteers=list_of_volunteers)
 
     idx = list_of_volunteers_as_str.index(volunteer_selected)
@@ -105,38 +102,56 @@ def verify_volunteer_and_warn(interface: abstractInterface, volunteer: Volunteer
         warn_text += "First name seems too short. "
     warn_text += warning_for_similar_volunteers(interface=interface, volunteer=volunteer)
 
-    could_be_cadet_not_volunteer = (
-        volunteer_name_is_similar_to_cadet_name(interface=interface, volunteer=volunteer))
-    if could_be_cadet_not_volunteer:
-        warn_text+="Volunteer name is similar to cadet name - are you sure this is actually a volunteer and not a cadet?"
-
     if len(warn_text) > 0:
         warn_text = "DOUBLE CHECK BEFORE ADDING: " + warn_text
 
     return warn_text
 
-def is_cadet_already_connected_to_volunteer_in_volunteer_list(cadet_id: str, volunteer: Volunteer) -> bool:
-    existing_connections = DEPRECATE_get_list_of_cadet_volunteer_associations()
-    return cadet_id in existing_connections.list_of_connections_for_volunteer(volunteer.id)
+
+def are_all_cadet_ids_in_list_already_connection_to_volunteer(interface:abstractInterface, volunteer: Volunteer, list_of_cadet_ids: List[str]) -> bool:
+    list_of_already_connected = [is_cadet_already_connected_to_volunteer_in_volunteer_list(interface=interface, volunteer=volunteer, cadet_id=cadet_id) for cadet_id in list_of_cadet_ids]
+
+    return all(list_of_already_connected)
 
 
-def add_list_of_cadet_connections_to_volunteer(
+def is_cadet_already_connected_to_volunteer_in_volunteer_list(interface:abstractInterface, cadet_id: str, volunteer: Volunteer) -> bool:
+    volunteer_data = VolunteerData(interface.data)
+    return volunteer_data.is_cadet_already_connected_to_volunteer_in_volunteer_list(cadet_id=cadet_id, volunteer=volunteer)
+
+
+
+def add_list_of_cadet_connections_to_volunteer(interface: abstractInterface,
                                                            volunteer_id: str,
                                                            list_of_connected_cadet_ids: List[str]):
-    volunteer =get_volunteer_from_id(volunteer_id)
+
+    volunteer_data = VolunteerData(interface.data)
+
+    volunteer = get_volunteer_from_id(interface=interface, volunteer_id=volunteer_id)
     for cadet_id in list_of_connected_cadet_ids:
-        cadet = DEPRECATED_cadet_from_id(cadet_id)
-        add_volunteer_connection_to_cadet_in_master_list_of_volunteers(volunteer=volunteer,
-                                                                       cadet=cadet)
+        cadet = cadet_from_id(interface=interface, cadet_id=cadet_id)
+        volunteer_data.add_volunteer_connection_to_cadet_in_master_list_of_volunteers(cadet=cadet, volunteer=volunteer)
 
 
-def get_volunteer_from_id(volunteer_id: str) -> Volunteer:
+def DEPRECATED_get_volunteer_from_id(volunteer_id: str) -> Volunteer:
     list_of_volunteers = DEPRECATED_get_sorted_list_of_volunteers()
     return list_of_volunteers.object_with_id(volunteer_id)
 
 
-def get_volunteer_name_from_id(volunteer_id) -> str:
-    volunteer = get_volunteer_from_id(volunteer_id)
+from app.backend.data.volunteers import get_sorted_list_of_volunteers
+
+def get_volunteer_name_from_id(interface: abstractInterface, volunteer_id: str) -> str:
+    volunteer = get_volunteer_from_id(interface=interface, volunteer_id=volunteer_id)
+    return volunteer.name
+
+
+def get_volunteer_from_id(interface: abstractInterface, volunteer_id: str) -> Volunteer:
+    volunteer_data= VolunteerData(interface.data)
+    list_of_volunteers = volunteer_data.get_list_of_volunteers()
+    return list_of_volunteers.object_with_id(volunteer_id)
+
+
+def DEPRECATED_get_volunteer_name_from_id(volunteer_id) -> str:
+    volunteer = DEPRECATED_get_volunteer_from_id(volunteer_id)
     return volunteer.name
 
 def boat_related_skill_str(volunteer_id: str) -> str:

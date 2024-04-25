@@ -143,7 +143,7 @@ def process_update_to_existing_cadet_in_event_data(
     except NoMoreData:
         ## No rows match cadet ID, so deleted
         interface.log_error(
-            "Cadet %s was in WA event data, now appears to be missing or cancelled in latest file - possible data corruption of WA output or manual hacking - no WA changes will be reflected in data"
+            "Cadet %s was in WA event data, now appears to be missing in latest file - possible data corruption of WA output or manual hacking - no WA changes will be reflected in data"
             % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
         )
         return process_next_cadet_at_event(interface)
@@ -185,6 +185,7 @@ def process_update_to_existing_cadet_at_event(
         return process_next_cadet_at_event(interface)
     else:
         return display_form_for_update_to_existing_cadet_at_event(
+            interface=interface,
             new_cadet_at_event=new_cadet_at_event,
             existing_cadet_at_event=existing_cadet_at_event,
             event=event)

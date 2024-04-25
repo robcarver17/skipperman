@@ -1,8 +1,9 @@
 from typing import Union
 
-from app.backend.volunteers.volunteer_allocation import update_cadet_connections_when_cadet_already_at_event, are_all_connected_cadets_cancelled_or_deleted, \
-    get_list_of_relevant_information
-from app.backend.volunteers.volunteers import get_volunteer_from_id
+from app.backend.volunteers.volunteer_allocation import update_cadet_connections_when_volunteer_already_at_event, \
+    are_all_connected_cadets_cancelled_or_deleted, \
+    DEPRECATED_get_list_of_relevant_information, get_list_of_relevant_information
+from app.backend.volunteers.volunteers import DEPRECATED_get_volunteer_from_id
 from app.backend.data.volunteer_allocation import is_volunteer_already_at_event
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_allocation.add_volunteers_process_form import \
@@ -46,30 +47,33 @@ def next_volunteer_in_event(interface: abstractInterface) -> Union[Form, NewForm
 def process_identified_volunteer_at_event(interface: abstractInterface) -> Union[Form, NewForm]:
     volunteer_id = get_current_volunteer_id_at_event(interface)
     event =get_event_from_state(interface)
-    already_added = is_volunteer_already_at_event(volunteer_id=volunteer_id, event=event)
-    all_cancelled = are_all_connected_cadets_cancelled_or_deleted(volunteer_id=volunteer_id, event=event)
+    already_added = is_volunteer_already_at_event(interface=interface, volunteer_id=volunteer_id, event=event)
+    all_cancelled = are_all_connected_cadets_cancelled_or_deleted(interface=interface, volunteer_id=volunteer_id, event=event)
 
     if all_cancelled:
         ### We don't add a volunteer here
         ### But we also don't auto delete, in case the volunteer staying on has other associated cadets. If a volunteer does already exist, then the cancellation will be picked up when we next look at the volunteer rota
         return next_volunteer_in_event(interface)
     elif already_added:
-        update_cadet_connections_when_cadet_already_at_event(event=event, volunteer_id=volunteer_id)
+        update_cadet_connections_when_volunteer_already_at_event(interface=interface, event=event, volunteer_id=volunteer_id)
+        interface.save_stored_items()
+
         return next_volunteer_in_event(interface)
     else:
         ## this volunteer is new at this event
-        return display_form_for_volunteer_details( volunteer_id=volunteer_id, event=event)
+        return display_form_for_volunteer_details(interface=interface, volunteer_id=volunteer_id, event=event)
 
 
-def display_form_for_volunteer_details( volunteer_id: str, event: Event)-> Form:
+def display_form_for_volunteer_details(interface: abstractInterface, volunteer_id: str, event: Event)-> Form:
 
-    volunteer = get_volunteer_from_id(volunteer_id)
+    volunteer = DEPRECATED_get_volunteer_from_id(volunteer_id)
 
-    list_of_relevant_information = get_list_of_relevant_information(volunteer_id=volunteer_id, event=event)
+    list_of_relevant_information = get_list_of_relevant_information(volunteer_id=volunteer_id, event=event, interface=interface)
 
-    header_text = get_header_text(event=event, volunteer=volunteer)
+    header_text = get_header_text(event=event, volunteer=volunteer, interface=interface)
 
-    connection_checkbox = get_connection_checkbox( volunteer=volunteer,
+    connection_checkbox = get_connection_checkbox(interface=interface,
+                                                  volunteer=volunteer,
                                                   event=event)
 
     any_other_information_text  = get_any_other_information_text(list_of_relevant_information=list_of_relevant_information)

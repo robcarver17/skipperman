@@ -4,7 +4,7 @@ from app.backend.data.volunteer_allocation import DEPRECATED_load_list_of_volunt
 from app.backend.volunteers.volunteer_rota import get_cadet_location_string, \
     str_dict_skills
 from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingTableBody
-from app.backend.volunteers.volunteers import get_volunteer_from_id
+from app.backend.volunteers.volunteers import DEPRECATED_get_volunteer_from_id
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -73,7 +73,7 @@ def get_dict_of_volunteer_name_buttons_and_volunteer_ids(event: Event)-> dict:
     list_of_volunteer_ids = list_of_volunteers_at_event.list_of_volunteer_ids
 
     return dict([(
-        get_volunteer_from_id(volunteer_id).name,
+        DEPRECATED_get_volunteer_from_id(volunteer_id).name,
         volunteer_id)
             for volunteer_id in list_of_volunteer_ids])
 

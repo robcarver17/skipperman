@@ -5,7 +5,7 @@ from typing import List
 from app.backend.volunteers.patrol_boats import \
     get_volunteer_ids_allocated_to_patrol_boat_at_event_on_days_sorted_by_role, \
     get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day
-from app.backend.volunteers.volunteers import get_volunteer_name_from_id, boat_related_skill_for_volunteer
+from app.backend.volunteers.volunteers import DEPRECATED_get_volunteer_name_from_id, boat_related_skill_for_volunteer
 from app.logic.events.patrol_boats.patrol_boat_buttons import get_remove_volunteer_button
 from app.logic.events.patrol_boats.copying import get_copy_buttons_for_boat_allocation, \
     get_copy_button_for_boat_copy_in_boat_rota, get_copy_button_for_role_in_boat_rota, \
@@ -25,7 +25,7 @@ from app.objects.patrol_boats import PatrolBoat
 def get_volunteer_row_to_select_skill(
         volunteer_id: str,
         ) -> RowInTable:
-    name = get_volunteer_name_from_id(volunteer_id)
+    name = DEPRECATED_get_volunteer_name_from_id(volunteer_id)
     skill_box = volunteer_boat_skill_checkbox(volunteer_id=volunteer_id)
 
     return RowInTable([name, skill_box])
@@ -58,7 +58,7 @@ def get_existing_allocation_elements_for_volunteer_day_and_boat(
                                                  ) -> Line:
 
     in_swap_state = is_ready_to_swap(interface)
-    name = get_volunteer_name_from_id(volunteer_id)
+    name = DEPRECATED_get_volunteer_name_from_id(volunteer_id)
     role_dropdown = volunteer_boat_role_dropdown(volunteer_id=volunteer_id, event=event, day=day, in_swap_state=in_swap_state)
     if in_swap_state:
         copy_buttons =[]

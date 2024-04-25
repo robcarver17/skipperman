@@ -1,7 +1,7 @@
 from app.backend.forms.form_utils import get_availablity_from_form, get_availability_checkbox
 from app.backend.volunteers.volunteer_allocation import    update_volunteer_availability_at_event
-from app.backend.volunteers.volunteers import get_volunteer_from_id
-from app.backend.data.volunteer_allocation import delete_volunteer_with_id_at_event, get_volunteer_at_event
+from app.backend.volunteers.volunteers import DEPRECATED_get_volunteer_from_id
+from app.backend.data.volunteer_allocation import delete_volunteer_with_id_at_event, DEPRECATE_get_volunteer_at_event
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.events.constants import SAVE_CHANGES
@@ -20,8 +20,8 @@ DELETE_VOLUNTEER_FROM_EVENT_BUTTON_LABEL = "Remove volunteer from event"
 def display_form_confirm_volunteer_details_from_rota(interface: abstractInterface):
     volunteer_id = get_volunteer_id_selected_from_state(interface) ## NEEDS TO BE SET
     event =get_event_from_state(interface)
-    volunteer_at_event = get_volunteer_at_event(volunteer_id=volunteer_id, event=event)
-    volunteer = get_volunteer_from_id(volunteer_id)
+    volunteer_at_event = DEPRECATE_get_volunteer_at_event(volunteer_id=volunteer_id, event=event)
+    volunteer = DEPRECATED_get_volunteer_from_id(volunteer_id)
 
     available_checkbox = get_availability_checkbox_for_volunteer_at_event(volunteer_at_event=volunteer_at_event, event=event)
 

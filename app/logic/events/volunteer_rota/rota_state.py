@@ -1,4 +1,4 @@
-from app.backend.data.cadets_at_event import DEPRECATED_load_cadets_at_event
+from app.backend.data.cadets_at_event import CadetsAtEventData
 from app.backend.volunteers.volunteer_rota_data import RotaSortsAndFilters
 from app.data_access.configuration.configuration import VOLUNTEER_SKILLS
 from app.logic.events.events_in_state import get_event_from_state
@@ -105,13 +105,10 @@ def get_next_cadet_id_for_rota_in_event_data(
 
 def list_of_cadet_ids_at_event_including_cancelled_and_deleted(interface:abstractInterface) -> list:
     event = get_event_from_state(interface)
+    cadets_at_event_data = CadetsAtEventData(interface.data)
+    cadet_ids_at_event = cadets_at_event_data.list_of_cadet_ids_at_event_including_cancelled_and_deleted(event)
 
-    cadets_at_event = DEPRECATED_load_cadets_at_event(event)
-
-    cadet_ids = cadets_at_event.list_of_cadet_ids()
-
-    return cadet_ids
-
+    return cadet_ids_at_event
 
 def get_current_cadet_id_for_rota_at_event(interface: abstractInterface) -> str:
     cadet_id = interface.get_persistent_value(CADET_ID_IN_ROTA_AT_EVENT, default=missing_data)

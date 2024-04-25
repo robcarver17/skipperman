@@ -4,12 +4,14 @@ import pandas as pd
 
 from app.backend.cadets import DEPRECATE_get_list_of_similar_cadets
 from app.backend.data.cadets import DEPRECATE_load_list_of_all_cadets, save_list_of_cadets
+from app.backend.data.cadets_at_event import CadetsAtEventData
 from app.backend.wa_import.load_wa_file import get_staged_adhoc_filename, verify_and_return_uploaded_wa_event_file, \
     save_uploaded_wa_as_local_temp_file, load_raw_wa_file
 from app.data_access.csv.generic_csv_data import read_object_of_type, write_object
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.constants import missing_data
+from app.objects.events import Event
 
 
 def remove_temp_file():
@@ -79,3 +81,13 @@ def replace_cadet_with_id_with_new_cadet_details(existing_cadet_id: str, new_cad
     list_of_cadets =DEPRECATE_load_list_of_all_cadets()
     list_of_cadets.replace_cadet_with_id_with_new_cadet_details(existing_cadet_id=existing_cadet_id, new_cadet=new_cadet)
     save_list_of_cadets(list_of_cadets)
+
+
+def is_cadet_marked_as_test_cadet_to_skip_in_for_row_in_mapped_data(
+        interface: abstractInterface,
+    row_id: str,
+        event: Event
+) -> bool:
+    cadets_at_event_data = CadetsAtEventData(interface.data)
+    cadet_id = cadets_at_event_data.identifed_cadet_id_given_row_id_at_event(event=event, row_id=row_id)
+    return cadet_id is missing_data

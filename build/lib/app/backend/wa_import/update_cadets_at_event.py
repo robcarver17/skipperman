@@ -47,7 +47,7 @@ def DEPRECATED_get_all_rows_in_mapped_event_for_cadet_id(event: Event, cadet_id:
     identified_cadets = DEPERCATE_load_identified_cadets_at_event(event)
     mapped_data = DEPRECATE_load_mapped_wa_event(event)
 
-    list_of_row_ids = identified_cadets.list_of_row_ids_given_cadet_id(cadet_id)
+    list_of_row_ids = identified_cadets.list_of_unique_row_id_given_cadet_id(cadet_id)
     relevant_rows =mapped_data.subset_with_id(list_of_row_ids)
     return relevant_rows
 
@@ -135,9 +135,13 @@ def DEPRECATED_update_status_of_existing_cadet_at_event(event: Event, cadet_id:s
     existing_cadets_at_event.update_status_of_existing_cadet_at_event(cadet_id=cadet_id, new_status=new_status)
     save_cadets_at_event(event=event, list_of_cadets_at_event=existing_cadets_at_event)
 
-def update_status_of_existing_cadet_at_event(interface: abstractInterface, event: Event, cadet_id:str, new_status: RegistrationStatus):
+def update_status_of_existing_cadet_at_event_to_cancelled_or_deleted(interface: abstractInterface, event: Event, cadet_id:str, new_status: RegistrationStatus):
     cadets_at_event_data = CadetsAtEventData(interface.data)
     cadets_at_event_data.update_status_of_existing_cadet_at_event_to_cancelled_or_deleted(event=event, cadet_id=cadet_id, new_status=new_status)
+
+def update_status_of_existing_cadet_at_event_to_active(interface: abstractInterface, event: Event, cadet_id:str):
+    cadets_at_event_data = CadetsAtEventData(interface.data)
+    cadets_at_event_data.update_status_of_existing_cadet_at_event_to_active(event=event, cadet_id=cadet_id)
 
 def DEPRECATED_update_availability_of_existing_cadet_at_event(event: Event, cadet_id:str, new_availabilty: DaySelector):
     existing_cadets_at_event = DEPRECATED_load_cadets_at_event(event)
@@ -149,15 +153,24 @@ def update_availability_of_existing_cadet_at_event(interface: abstractInterface,
     cadets_at_event_data = CadetsAtEventData(interface.data)
     cadets_at_event_data.update_availability_of_existing_cadet_at_event(cadet_id=cadet_id, new_availabilty=new_availabilty, event=event)
 
-def update_notes_for_existing_cadet_at_event(event: Event, cadet_id:str, new_notes: str):
+def DEPRECATED_update_notes_for_existing_cadet_at_event(event: Event, cadet_id:str, new_notes: str):
     existing_cadets_at_event = DEPRECATED_load_cadets_at_event(event)
     existing_cadets_at_event.update_notes_for_existing_cadet_at_event(cadet_id=cadet_id, new_notes=new_notes)
     save_cadets_at_event(event=event, list_of_cadets_at_event=existing_cadets_at_event)
 
-def update_data_row_for_existing_cadet_at_event(event: Event, cadet_id:str, new_data_in_row: RowInMappedWAEvent):
-    existing_cadets_at_event = DEPRECATED_load_cadets_at_event(event)
-    existing_cadets_at_event.update_data_row_for_existing_cadet_at_event(cadet_id=cadet_id, new_data_in_row=new_data_in_row)
-    save_cadets_at_event(event=event, list_of_cadets_at_event=existing_cadets_at_event)
+def update_notes_for_existing_cadet_at_event(interface: abstractInterface, event: Event, cadet_id:str, new_notes: str):
+    cadets_at_event_data = CadetsAtEventData(interface.data)
+    cadets_at_event_data.update_notes_for_existing_cadet_at_event(cadet_id=cadet_id, new_notes=new_notes, event=event)
+
+def update_health_for_existing_cadet_at_event(interface: abstractInterface, event: Event, cadet_id:str, new_health: str):
+    cadets_at_event_data = CadetsAtEventData(interface.data)
+    cadets_at_event_data.update_health_for_existing_cadet_at_event(cadet_id=cadet_id, new_health=new_health, event=event)
+
+
+def update_data_row_for_existing_cadet_at_event(interface: abstractInterface, event: Event, cadet_id:str, new_data_in_row: RowInMappedWAEvent):
+    cadets_at_event_data = CadetsAtEventData(interface.data)
+    cadets_at_event_data.update_data_row_for_existing_cadet_at_event(event=event, cadet_id=cadet_id, new_data_in_row=new_data_in_row)
+
 
 
 def any_important_difference_between_cadets_at_event(
@@ -225,26 +238,31 @@ def new_status_and_status_message(        new_cadet_at_event: CadetAtEvent,
 
     return new_status, status_message
 
-def has_cadet_at_event_changed(cadet_id: str, event: Event) -> bool:
-    list_of_cadets_at_event = DEPRECATED_load_cadets_at_event(event)
+def has_cadet_at_event_changed(interface: abstractInterface, cadet_id: str, event: Event) -> bool:
+    cadets_at_event_data = CadetsAtEventData(interface.data)
+    list_of_cadets_at_event = cadets_at_event_data.get_list_of_cadets_at_event(event)
     cadet = list_of_cadets_at_event.cadet_at_event(cadet_id)
 
     return cadet.changed
 
-def mark_cadet_at_event_as_unchanged(cadet_id: str, event: Event):
+def DEPRECATE_mark_cadet_at_event_as_unchanged(cadet_id: str, event: Event):
     list_of_cadets_at_event = DEPRECATED_load_cadets_at_event(event)
     list_of_cadets_at_event.mark_cadet_as_unchanged(cadet_id)
     save_cadets_at_event(list_of_cadets_at_event=list_of_cadets_at_event, event=event)
 
+def mark_cadet_at_event_as_unchanged(interface:abstractInterface, cadet_id: str, event: Event):
+    cadet_data = CadetsAtEventData(interface.data)
+    cadet_data.mark_cadet_at_event_as_unchanged(cadet_id=cadet_id ,event=event)
 
 
 def list_of_cadet_ids_at_event_and_in_mapped_data_for_event(interface:abstractInterface, event: Event) -> list:
     cadets_event_data = CadetsAtEventData(interface.data)
 
-    existing_ids = cadets_event_data.identified_cadet_ids_in_mapped_data(event)
+    existing_ids = cadets_event_data.list_of_all_cadet_ids_at_event(event)
     mapped_ids = cadets_event_data.identified_cadet_ids_in_mapped_data(event)
 
     all_ids = union_of_x_and_y(existing_ids, mapped_ids)
+
     all_ids.sort() ## MUST be sorted otherwise can go horribly wrong
 
     return all_ids

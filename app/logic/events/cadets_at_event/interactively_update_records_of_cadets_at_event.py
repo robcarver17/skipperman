@@ -185,6 +185,7 @@ def process_update_to_existing_cadet_at_event(
         return process_next_cadet_at_event(interface)
     else:
         return display_form_for_update_to_existing_cadet_at_event(
+            interface=interface,
             new_cadet_at_event=new_cadet_at_event,
             existing_cadet_at_event=existing_cadet_at_event,
             event=event)

@@ -2,7 +2,8 @@ from copy import copy
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.cadets import DEPRECATE_load_list_of_all_cadets, CadetData
+from app.backend.data.cadets import DEPRECATE_load_list_of_all_cadets, CadetData, SORT_BY_SURNAME, SORT_BY_FIRSTNAME, \
+    SORT_BY_DOB_ASC, SORT_BY_DOB_DSC
 from app.data_access.configuration.configuration import MIN_CADET_AGE, MAX_CADET_AGE
 from app.objects.cadets import Cadet, ListOfCadets, is_cadet_age_surprising
 from app.objects.constants import arg_not_passed
@@ -91,25 +92,8 @@ def DEPRECATE_get_sorted_list_of_cadets(sort_by: str = arg_not_passed) -> ListOf
 
 
 def get_sorted_list_of_cadets(interface: abstractInterface, sort_by: str = arg_not_passed) -> ListOfCadets:
-    master_list = load_list_of_all_cadets(interface)
-    if sort_by is arg_not_passed:
-        return master_list
-    if sort_by == SORT_BY_SURNAME:
-        return master_list.sort_by_surname()
-    elif sort_by == SORT_BY_FIRSTNAME:
-        return master_list.sort_by_firstname()
-    elif sort_by == SORT_BY_DOB_ASC:
-        return master_list.sort_by_dob_asc()
-    elif sort_by == SORT_BY_DOB_DSC:
-        return master_list.sort_by_dob_desc()
-    else:
-        return master_list
-
-
-SORT_BY_SURNAME = "Sort by surname"
-SORT_BY_FIRSTNAME = "Sort by first name"
-SORT_BY_DOB_ASC = "Sort by date of birth, ascending"
-SORT_BY_DOB_DSC = "Sort by date of birth, descending"
+    cadet_data = CadetData(interface.data)
+    return cadet_data.get_sorted_list_of_cadets(sort_by)
 
 
 def cadet_from_id_with_passed_list(
@@ -129,8 +113,7 @@ def DEPRECATED_cadet_name_from_id(cadet_id: str) -> str:
 
 
 def cadet_name_from_id(interface: abstractInterface, cadet_id: str) -> str:
-    cadet_data = CadetData(interface.data)
-    cadet = cadet_data.get_cadet_with_id_(cadet_id)
+    cadet = cadet_from_id(interface=interface, cadet_id=cadet_id)
 
     return cadet.name
 
@@ -142,6 +125,11 @@ def DEPRECATED_cadet_from_id(cadet_id: str) -> Cadet:
 
     return cadet
 
+def cadet_from_id(interface: abstractInterface, cadet_id: str) -> Cadet:
+    cadet_data = CadetData(interface.data)
+    cadet = cadet_data.get_cadet_with_id_(cadet_id)
+
+    return cadet
 
 
 

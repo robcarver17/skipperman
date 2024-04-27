@@ -1,10 +1,12 @@
 from dataclasses import dataclass
 from typing import Dict, List
 
+from app.objects.abstract_objects.abstract_interface import abstractInterface
+
 from app.backend.events import get_sorted_list_of_events
-from app.backend.group_allocations.cadet_event_allocations import DEPRECATE_get_list_of_cadets_unallocated_to_group_at_event, \
-    DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only
-from app.backend.data.volunteers import  DEPRECATE_load_list_of_volunteer_skills
+from app.backend.group_allocations.cadet_event_allocations import \
+    load_list_of_cadets_ids_with_group_allocations_active_cadets_only, get_list_of_cadets_unallocated_to_group_at_event
+from app.backend.data.volunteers import  load_list_of_volunteer_skills
 from app.backend.data.volunteer_rota import DEPRECATE_load_volunteers_in_role_at_event
 from app.backend.data.volunteer_allocation import DEPRECATED_load_list_of_volunteers_at_event
 
@@ -42,7 +44,7 @@ def get_explanation_of_sorts_and_filters(sorts_and_filters: RotaSortsAndFilters)
     return sort_by
 
 @dataclass
-class DataToBeStoredWhilstConstructingTableBody:
+class DataToBeStoredWhilstConstructingVolunteerRotaPage:
     event: Event
     list_of_cadet_ids_with_groups: ListOfCadetIdsWithGroups
     unallocated_cadets_at_event: ListOfCadets
@@ -165,17 +167,17 @@ def filter_volunteer_by_availability_on_given_day(volunteer_at_event: VolunteerA
         return available and unallocated
 
 
-def get_data_to_be_stored(event: Event) -> DataToBeStoredWhilstConstructingTableBody:
-    list_of_cadet_ids_with_groups = DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only(event=event)
-    unallocated_cadets_at_event = DEPRECATE_get_list_of_cadets_unallocated_to_group_at_event(event=event, list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups)
-    volunteer_skills = DEPRECATE_load_list_of_volunteer_skills()
+def get_data_to_be_stored_for_volunteer_rota_page(interface: abstractInterface, event: Event) -> DataToBeStoredWhilstConstructingVolunteerRotaPage:
+    list_of_cadet_ids_with_groups = load_list_of_cadets_ids_with_group_allocations_active_cadets_only(event=event, interface=interface)
+    unallocated_cadets_at_event = get_list_of_cadets_unallocated_to_group_at_event(event=event, interface=interface)
+    volunteer_skills = load_list_of_volunteer_skills(interface)
     volunteers_in_roles_at_event = DEPRECATE_load_volunteers_in_role_at_event(event)
     list_of_volunteers_at_event = DEPRECATED_load_list_of_volunteers_at_event(event)
 
     dict_of_volunteers_with_last_roles = get_dict_of_volunteers_with_last_roles(list_of_volunteers_at_event.list_of_volunteer_ids,
                                                                                 avoid_event=event)
 
-    return DataToBeStoredWhilstConstructingTableBody(
+    return DataToBeStoredWhilstConstructingVolunteerRotaPage(
         event=event,
         list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups,
         unallocated_cadets_at_event=unallocated_cadets_at_event,

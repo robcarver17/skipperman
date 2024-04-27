@@ -106,6 +106,7 @@ def post_form_view_for_volunteer_rota(
     elif last_button_pressed in get_all_skill_buttons(interface):
         return action_if_volunteer_skills_button_pressed(interface=interface, volunteer_skills_button=last_button_pressed)
 
+
     ## Updates to form, display form again
     if last_button_pressed in get_all_make_available_buttons(interface):
         update_if_make_available_button_pressed(available_button=last_button_pressed, interface=interface)

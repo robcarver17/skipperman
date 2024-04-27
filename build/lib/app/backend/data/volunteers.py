@@ -62,6 +62,13 @@ class VolunteerData():
         return self.data_api.save_list_of_cadet_volunteer_associations(list_of_associations)
 
 
+    def get_list_of_volunteer_skills(self) -> ListOfVolunteerSkills:
+        return self.data_api.get_list_of_volunteer_skills()
+
+    def save_list_of_volunteer_skills(self, list_of_volunteer_skills: ListOfVolunteerSkills):
+        return self.data_api.save_list_of_volunteer_skills(list_of_volunteer_skills)
+
+
 
 def add_new_verified_volunteer(interface: abstractInterface, volunteer: Volunteer):
     volunteer_data= VolunteerData(interface.data)
@@ -89,7 +96,7 @@ def DEPRECATE_add_volunteer_connection_to_cadet_in_master_list_of_volunteers(cad
 
 
 def save_skills_for_volunteer(volunteer: Volunteer, dict_of_skills: dict):
-    all_skills = load_list_of_volunteer_skills()
+    all_skills = DEPRECATE_load_list_of_volunteer_skills()
     all_skills.replace_skills_for_volunteer_with_new_skills_dict(volunteer_id=volunteer.id, dict_of_skills=dict_of_skills)
     save_list_of_volunteer_skills(all_skills)
 
@@ -112,10 +119,15 @@ def save_list_of_cadet_volunteer_associations(list_of_cadet_volunteer_associatio
     DEPRECATED_data.data_list_of_cadet_volunteer_associations.write(list_of_cadet_volunteer_associations)
 
 
-def load_list_of_volunteer_skills()-> ListOfVolunteerSkills:
+def DEPRECATE_load_list_of_volunteer_skills()-> ListOfVolunteerSkills:
     skills = DEPRECATED_data.data_list_of_volunteer_skills.read()
 
     return skills
+
+def load_list_of_volunteer_skills(interface: abstractInterface)-> ListOfVolunteerSkills:
+    volunteer_data = VolunteerData(interface.data)
+    return volunteer_data.get_list_of_volunteer_skills()
+
 
 def save_list_of_volunteer_skills(list_of_volunteer_skills: ListOfVolunteerSkills):
     DEPRECATED_data.data_list_of_volunteer_skills.write(list_of_volunteer_skills)

@@ -5,10 +5,8 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.events import get_sorted_list_of_events
 from app.backend.group_allocations.cadet_event_allocations import \
-    DEPRECATE_get_list_of_cadets_unallocated_to_group_at_event, \
-    DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only, \
     load_list_of_cadets_ids_with_group_allocations_active_cadets_only, get_list_of_cadets_unallocated_to_group_at_event
-from app.backend.data.volunteers import DEPRECATE_load_list_of_volunteer_skills, load_list_of_volunteer_skills
+from app.backend.data.volunteers import  load_list_of_volunteer_skills
 from app.backend.data.volunteer_rota import DEPRECATE_load_volunteers_in_role_at_event
 from app.backend.data.volunteer_allocation import DEPRECATED_load_list_of_volunteers_at_event
 

@@ -22,7 +22,7 @@ from app.objects.events import ListOfEvents
 from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies
 from app.objects.qualifications import ListOfCadetsWithQualifications
 from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent
-
+from app.objects.volunteers import ListOfVolunteerSkills
 
 class DataLayer():
     def __init__(self, store: Store, underlying_data: GenericDataApi):
@@ -161,6 +161,14 @@ class DataLayer():
         data_access_for_list_of_volunteers_in_roles_at_event  = get_data_access_for_list_of_volunteers_in_roles_at_event(self.data, event_id=event.id)
         return self.store.write(list_of_volunteers_in_role_at_event, data_access_method=data_access_for_list_of_volunteers_in_roles_at_event)
 
+    def get_list_of_volunteer_skills(self)-> ListOfVolunteerSkills:
+        data_access_for_list_of_volunteer_skills =get_data_access_for_list_of_volunteer_skills(self.data)
+        return self.store.read(data_access_for_list_of_volunteer_skills)
+
+    def save_list_of_volunteer_skills(self, list_of_volunteer_skills : ListOfVolunteerSkills):
+        data_access_for_list_of_volunteer_skills =get_data_access_for_list_of_volunteer_skills(self.data)
+        self.store.write(list_of_volunteer_skills, data_access_method=data_access_for_list_of_volunteer_skills)
+
 
 def get_data_access_for_list_of_cadets(data: GenericDataApi) -> DataAccessMethod:
     return  DataAccessMethod(key="list_of_cadets",
@@ -276,4 +284,10 @@ def get_data_access_for_list_of_volunteers_in_roles_at_event(data: GenericDataAp
         read_method=data.data_list_of_volunteers_in_roles_at_event.read,
         write_method=data.data_list_of_volunteers_in_roles_at_event.write,
         event_id = event_id
+    )
+
+def get_data_access_for_list_of_volunteer_skills(data: GenericDataApi) -> DataAccessMethod:
+    return DataAccessMethod("list_of_volunteer_skills",
+        read_method=data.data_list_of_volunteer_skills.read,
+        write_method=data.data_list_of_volunteer_skills.write,
     )

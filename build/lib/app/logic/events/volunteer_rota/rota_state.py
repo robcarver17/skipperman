@@ -57,6 +57,7 @@ def save_sorts_to_state(interface: abstractInterface,
         interface.clear_persistent_value(SORT_BY_DAY)
 
     if sort_by_location:
+        interface.log_error("Sort by cadet location not yet implemented, sorry")
         interface.set_persistent_value(SORT_BY_CADET_LOCATION, True)
     else:
         interface.clear_persistent_value(SORT_BY_CADET_LOCATION)

@@ -62,11 +62,11 @@ class VolunteerData():
         return self.data_api.save_list_of_cadet_volunteer_associations(list_of_associations)
 
 
-    def get_list_ofvolunteer_skills(self) -> ListOfVolunteerSkills:
-        return self.data_api
+    def get_list_of_volunteer_skills(self) -> ListOfVolunteerSkills:
+        return self.data_api.get_list_of_volunteer_skills()
 
-    def save_list_of_cadet_volunteer_associations(self, list_of_volunteer_skills: ListOfVolunteerSkills):
-        return self.data_api
+    def save_list_of_volunteer_skills(self, list_of_volunteer_skills: ListOfVolunteerSkills):
+        return self.data_api.save_list_of_volunteer_skills(list_of_volunteer_skills)
 
 
 
@@ -126,7 +126,7 @@ def DEPRECATE_load_list_of_volunteer_skills()-> ListOfVolunteerSkills:
 
 def load_list_of_volunteer_skills(interface: abstractInterface)-> ListOfVolunteerSkills:
     volunteer_data = VolunteerData(interface.data)
-    return volunteer_data.get_list_ofvolunteer_skills()
+    return volunteer_data.get_list_of_volunteer_skills()
 
 
 def save_list_of_volunteer_skills(list_of_volunteer_skills: ListOfVolunteerSkills):

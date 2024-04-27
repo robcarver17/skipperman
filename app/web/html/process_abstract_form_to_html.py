@@ -13,8 +13,8 @@ from app.web.flask.flask_interface import flaskInterface
 from app.web.html.forms import *
 from app.objects.abstract_objects.abstract_form import textInput, dateInput, radioInput, checkboxInput
 
-DEBUG =True
-TERSE = True
+DEBUG =False
+TERSE = False
 
 def process_abstract_form_to_html(form: Form, current_url: str) -> Html:
     if TERSE:

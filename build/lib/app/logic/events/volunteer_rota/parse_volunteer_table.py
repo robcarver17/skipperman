@@ -3,7 +3,7 @@ from app.backend.data.volunteer_rota import copy_across_duties_for_volunteer_at_
 from app.backend.volunteers.volunteer_allocation import make_volunteer_available_on_day, \
     make_volunteer_unavailable_on_day
 from app.backend.volunteers.volunteer_rota import get_volunteer_with_role_at_event_on_day
-from app.backend.volunteers.volunteer_rota_data import get_data_to_be_stored
+from app.backend.volunteers.volunteer_rota_data import get_data_to_be_stored_for_volunteer_rota_page
 from app.data_access.configuration.configuration import VOLUNTEER_SKILLS
 from app.logic.events.volunteer_rota.edit_cadet_connections_for_event_from_rota import \
     display_form_edit_cadet_connections_from_rota
@@ -11,8 +11,9 @@ from app.logic.events.volunteer_rota.edit_volunteer_details_from_rota import \
     display_form_confirm_volunteer_details_from_rota
 from app.logic.events.volunteer_rota.edit_volunteer_skills_from_rota import \
     display_form_edit_individual_volunteer_skills_from_rota
-from app.logic.events.volunteer_rota.render_volunteer_table import SKILLS_FILTER
-from app.logic.events.volunteer_rota.rota_state import save_skills_filter_to_state
+from app.logic.events.volunteer_rota.elements_in_volunteer_rota_page import SKILLS_FILTER, \
+    get_available_filter_name_for_day, from_filter_entry_to_option
+from app.logic.events.volunteer_rota.rota_state import save_skills_filter_to_state, save_availablity_filter_to_state
 from app.logic.events.volunteer_rota.swapping import get_list_of_swap_buttons
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.events.events_in_state import get_event_from_state
@@ -30,6 +31,24 @@ def update_volunteer_skills_filter(interface: abstractInterface):
         for skill in VOLUNTEER_SKILLS
     ])
     save_skills_filter_to_state(interface=interface, dict_of_skills=dict_of_skills)
+
+def update_volunteer_availability_filter(interface: abstractInterface):
+    event = get_event_from_state(interface)
+    availabilty_filter_dict = dict(
+        [
+            (day.name, update_volunteer_availability_for_day(interface=interface, day=day))
+            for day in event.weekdays_in_event()
+        ]
+    )
+
+    save_availablity_filter_to_state(interface=interface, availability_filter_dict=availabilty_filter_dict)
+
+def update_volunteer_availability_for_day(interface: abstractInterface, day: Day) -> str:
+    form_entry_name =get_available_filter_name_for_day(day)
+    form_value = interface.value_from_form(form_entry_name)
+    option_chosen = from_filter_entry_to_option(form_value)
+    return option_chosen
+
 
 def get_list_of_volunteer_name_buttons(interface: abstractInterface)-> list:
     event = get_event_from_state(interface)
@@ -110,7 +129,7 @@ def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str
     event = get_event_from_state(interface)
     list_of_volunteers_at_event = DEPRECATED_load_list_of_volunteers_at_event(event)
     volunteer_at_event = list_of_volunteers_at_event.volunteer_at_event_with_id(volunteer_id)
-    data_to_be_stored = get_data_to_be_stored(event)
+    data_to_be_stored = get_data_to_be_stored_for_volunteer_rota_page(event)
 
     update_details_from_form_for_volunteer_given_specific_day_at_event(
         interface=interface,
@@ -145,7 +164,7 @@ def update_if_remove_role_button_pressed(interface: abstractInterface, remove_bu
 def save_all_information_in_rota_page(interface: abstractInterface):
     event = get_event_from_state(interface)
     list_of_volunteers_at_event = DEPRECATED_load_list_of_volunteers_at_event(event)
-    data_to_be_stored = get_data_to_be_stored(event)
+    data_to_be_stored = get_data_to_be_stored_for_volunteer_rota_page(event)
 
     for volunteer_at_event in list_of_volunteers_at_event:
         try:

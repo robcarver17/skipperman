@@ -12,7 +12,7 @@ from app.backend.data.cadets_at_event import CadetsAtEventData
 from app.backend.data.cadets import CadetData
 from app.data_access.storage_layer.api import DataLayer
 
-class GroupAllocations():
+class GroupAllocationsData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
 

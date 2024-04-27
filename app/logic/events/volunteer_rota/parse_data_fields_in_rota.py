@@ -3,7 +3,7 @@ from app.backend.volunteers.volunteer_rota import MAKE_UNAVAILABLE
 from app.backend.data.volunteer_rota import update_role_at_event_for_volunteer_on_day, \
     update_group_at_event_for_volunteer_on_day
 from app.backend.volunteers.volunteer_allocation import make_volunteer_unavailable_on_day
-from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingTableBody
+from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingVolunteerRotaPage
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_rota.render_volunteer_table import input_name_for_role_and_volunteer, \
@@ -14,7 +14,7 @@ from app.objects.volunteers_in_roles import VolunteerInRoleAtEvent
 
 
 def update_details_from_form_for_volunteer_at_event(interface: abstractInterface, volunteer_at_event: VolunteerAtEvent,
-                                                    data_to_be_stored: DataToBeStoredWhilstConstructingTableBody):
+                                                    data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage):
     event = get_event_from_state(interface)
     days_at_event = event.weekdays_in_event()
     for day in days_at_event:
@@ -30,7 +30,7 @@ def update_details_from_form_for_volunteer_at_event(interface: abstractInterface
 def update_details_from_form_for_volunteer_given_specific_day_at_event(interface: abstractInterface,
                                                                    volunteer_at_event: VolunteerAtEvent,
                                                            day: Day,
-                                                           data_to_be_stored: DataToBeStoredWhilstConstructingTableBody
+                                                           data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage
                                                            ):
 
     volunteer_in_role_at_event_on_day = data_to_be_stored.volunteer_in_role_at_event_on_day(

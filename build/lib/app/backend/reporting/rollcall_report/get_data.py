@@ -5,7 +5,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.data.cadets_at_event import CadetsAtEventData
 
-from app.backend.group_allocations.cadet_event_allocations import load_allocation_for_event, get_unallocated_cadets, \
+from app.backend.group_allocations.cadet_event_allocations import DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only, DEPRECATE_get_list_of_cadets_unallocated_to_group_at_event, \
     get_list_of_cadets_with_groups
 from app.backend.reporting.rollcall_report.configuration import AdditionalParametersForRollcallReport
 from app.logic.reporting.allocations.processes import add_club_boat_asterix
@@ -14,7 +14,7 @@ from app.objects.events import Event
 from app.data_access.storage_layer.api import DataLayer
 from app.data_access.storage_layer.store import Store
 
-from app.backend.data.group_allocations import GroupAllocations
+from app.backend.data.group_allocations import GroupAllocationsData
 
 store = Store()
 
@@ -42,7 +42,7 @@ def get_dict_of_df_for_reporting_rollcalls_with_flags(
 ) -> Dict[str, pd.DataFrame]:
 
     data_api = interface.data
-    group_allocations = GroupAllocations(data_api)
+    group_allocations = GroupAllocationsData(data_api)
     cadets_at_event_data = CadetsAtEventData(data_api)
 
     list_of_cadets_with_groups = group_allocations.get_list_of_cadets_with_group_at_event(event=event, include_unallocated_cadets=include_unallocated_cadets)

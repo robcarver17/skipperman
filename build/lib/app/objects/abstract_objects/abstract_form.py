@@ -120,3 +120,9 @@ class dateInput(Input):
 DEFAULT_LABEL = "__!_!__canbeanythingunlikely to be used"
 YES = "Yes"
 NO = "No"
+
+
+@dataclass
+class MaterialAroundTable:
+    before_table: ListOfLines
+    after_table: ListOfLines

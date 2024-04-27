@@ -4,8 +4,8 @@ from typing import List
 import pandas as pd
 
 from app.backend.data.volunteer_allocation import DEPRECATED_load_list_of_volunteers_at_event
-from app.backend.data.volunteer_rota import load_volunteers_in_role_at_event
-from app.backend.data.volunteers import load_list_of_volunteer_skills
+from app.backend.data.volunteer_rota import DEPRECATE_load_volunteers_in_role_at_event
+from app.backend.data.volunteers import DEPRECATE_load_list_of_volunteer_skills
 from app.backend.volunteers.volunteer_rota import get_volunteer_role_at_event_on_day
 from app.data_access.configuration.configuration import VOLUNTEER_ROLES
 
@@ -252,21 +252,21 @@ def sort_list_of_volunteer_ids_as_per_list_of_volunteers(list_of_volunteer_ids: 
     return sorted_subset_list_of_volunteers.list_of_ids
 
 def get_list_of_volunteer_ids_with_boat_skills()-> List[str]:
-    volunteer_skills = load_list_of_volunteer_skills()
+    volunteer_skills = DEPRECATE_load_list_of_volunteer_skills()
     list_of_volunteer_ids_with_boat_skills = volunteer_skills.list_of_volunteer_ids_with_boat_related_skill()
 
     return list_of_volunteer_ids_with_boat_skills
 
 
 def get_volunteer_ids_in_boat_related_roles_on_day_of_event(event: Event, day: Day) -> List[str]:
-    volunteers_in_role_at_event = load_volunteers_in_role_at_event(event)
+    volunteers_in_role_at_event = DEPRECATE_load_volunteers_in_role_at_event(event)
     volunteer_ids_in_boat_related_roles_on_day_of_event = volunteers_in_role_at_event.list_of_volunteer_ids_in_boat_related_role_on_day(day)
 
     return volunteer_ids_in_boat_related_roles_on_day_of_event
 
 
 def get_volunteer_ids_in_boat_related_roles_on_any_day_of_event(event: Event) -> List[str]:
-    volunteers_in_role_at_event = load_volunteers_in_role_at_event(event)
+    volunteers_in_role_at_event = DEPRECATE_load_volunteers_in_role_at_event(event)
     volunteer_ids_in_boat_related_roles_on_any_day_of_event = volunteers_in_role_at_event.list_of_volunteer_ids_in_boat_related_role_on_any_day()
 
     return volunteer_ids_in_boat_related_roles_on_any_day_of_event

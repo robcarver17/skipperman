@@ -136,7 +136,7 @@ def get_string_of_other_associated_cadets_for_event(interface: abstractInterface
                                                   for other_cadet_id in associated_cadets_without_this_cadet]
     associated_cadets_without_this_cadet_names_str = ", ".join(associated_cadets_without_this_cadet_names)
 
-    return "(Other registered group_allocations associated with this volunteer: "+associated_cadets_without_this_cadet_names_str
+    return "(Other registered group_allocations associated with this volunteer: "+associated_cadets_without_this_cadet_names_str+" )"
 
 def DEPRECATE_get_string_of_other_associated_cadets_for_event(event: Event, volunteer_id:str, cadet_id:str) -> str:
     associated_cadets_without_this_cadet = DEPRECATE_get_list_of_other_cadets_for_volunteer_at_event_apart_from_this_one(
@@ -151,7 +151,7 @@ def DEPRECATE_get_string_of_other_associated_cadets_for_event(event: Event, volu
     associated_cadets_without_this_cadet_names = [DEPRECATED_cadet_name_from_id(other_cadet_id) for other_cadet_id in associated_cadets_without_this_cadet]
     associated_cadets_without_this_cadet_names_str = ", ".join(associated_cadets_without_this_cadet_names)
 
-    return "(Other registered group_allocations associated with this volunteer: "+associated_cadets_without_this_cadet_names_str
+    return "(Other registered group_allocations associated with this volunteer: "+associated_cadets_without_this_cadet_names_str+" )"
 
 def any_other_cadets_for_volunteer_at_event_apart_from_this_one(interface: abstractInterface, event: Event, volunteer_id:str, cadet_id:str) -> bool:
     associated_cadets_without_this_cadet = get_list_of_other_cadets_for_volunteer_at_event_apart_from_this_one(

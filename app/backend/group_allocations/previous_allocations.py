@@ -2,11 +2,11 @@ from typing import Dict
 from app.objects.cadets import Cadet
 from app.objects.events import Event
 from app.objects.groups import ListOfCadetIdsWithGroups, Group, GROUP_UNALLOCATED
-from app.backend.group_allocations.cadet_event_allocations import load_allocation_for_event
+from app.backend.group_allocations.cadet_event_allocations import DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only
 from app.backend.events import get_sorted_list_of_events
 
 def get_dict_of_allocations_for_events_and_list_of_cadets(list_of_events: list) -> Dict[Event, ListOfCadetIdsWithGroups]:
-    allocations_as_dict = dict([(event, load_allocation_for_event(event)) for event in list_of_events])
+    allocations_as_dict = dict([(event, DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only(event)) for event in list_of_events])
 
     return allocations_as_dict
 

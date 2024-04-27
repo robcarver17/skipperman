@@ -18,6 +18,8 @@ from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _____
 from app.objects.abstract_objects.form_function_mapping import DisplayAndPostFormFunctionMaps
 
 finished_button = Button(FINISHED_BUTTON_LABEL)
+DISPLAY="DISPFLAG_%s"
+SET= "1"
 
 @dataclass
 class abstractInterface:
@@ -42,6 +44,17 @@ class abstractInterface:
 
     def clear_where_finished_button_should_lead_to(self):
         return self.clear_persistent_value(FINISHED_BUTTON_LABEL)
+
+    def display_flag_set(self, flag_key):
+        value = self.get_persistent_value(DISPLAY % flag_key, default=False)
+        return value == SET
+
+    def set_display_flag(self, flag_key, set_to:bool):
+        key = DISPLAY % flag_key
+        if set_to:
+            self.set_persistent_value(key, SET)
+        else:
+            self.clear_persistent_value(key)
 
     def get_persistent_value(self, key, default=missing_data):
         return self.persistent_store.get(key, default)

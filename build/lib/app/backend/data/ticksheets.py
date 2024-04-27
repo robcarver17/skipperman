@@ -9,7 +9,7 @@ from app.data_access.storage_layer.api import DataLayer
 from app.objects.ticks import ListOfCadetsWithTickListItems, ListOfTickSheetItems, ListOfTickSubStages, LabelledTickSheetWithCadetIds
 from app.objects.cadets import ListOfCadets
 from app.objects.qualifications import ListOfQualifications
-from app.backend.data.group_allocations import GroupAllocations
+from app.backend.data.group_allocations import GroupAllocationsData
 from app.backend.data.cadets import CadetData
 from app.backend.data.cadets_at_event import CadetsAtEventData
 from app.backend.data.resources import ClubDinghies
@@ -156,8 +156,8 @@ class TickSheets():
 
 
     @property
-    def group_allocations(self) -> GroupAllocations:
-        return GroupAllocations(data_api=self.data_api)
+    def group_allocations(self) -> GroupAllocationsData:
+        return GroupAllocationsData(data_api=self.data_api)
 
     @property
     def cadet_data(self)-> CadetData:

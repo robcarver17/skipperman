@@ -3,7 +3,7 @@ from typing import List
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.cadets import DEPRECATE_get_sorted_list_of_cadets,  cadet_from_id
-from app.backend.data.volunteers import DEPRECATED_get_sorted_list_of_volunteers, load_list_of_volunteer_skills, \
+from app.backend.data.volunteers import DEPRECATED_get_sorted_list_of_volunteers, DEPRECATE_load_list_of_volunteer_skills, \
     save_list_of_volunteer_skills, \
     DEPRECATE_get_list_of_cadet_volunteer_associations, \
     DEPRECATE_load_all_volunteers, VolunteerData
@@ -28,7 +28,7 @@ def get_volunteer_from_list_of_volunteers(volunteer_selected: str) -> Volunteer:
 
 
 def get_dict_of_existing_skills(volunteer: Volunteer)-> dict:
-    all_skills = load_list_of_volunteer_skills()
+    all_skills = DEPRECATE_load_list_of_volunteer_skills()
     return all_skills.dict_of_skills_for_volunteer_id(volunteer_id=volunteer.id)
 
 
@@ -161,15 +161,15 @@ def boat_related_skill_str(volunteer_id: str) -> str:
         return ""
 
 def boat_related_skill_for_volunteer(volunteer_id: str) -> bool:
-    skills =load_list_of_volunteer_skills()
+    skills =DEPRECATE_load_list_of_volunteer_skills()
     return skills.volunteer_id_has_boat_related_skills(volunteer_id)
 
 def add_boat_related_skill_for_volunteer(volunteer_id: str):
-    skills =load_list_of_volunteer_skills()
+    skills =DEPRECATE_load_list_of_volunteer_skills()
     skills.add_boat_related_skill_for_volunteer(volunteer_id)
     save_list_of_volunteer_skills(skills)
 
 def remove_boat_related_skill_for_volunteer(volunteer_id: str):
-    skills =load_list_of_volunteer_skills()
+    skills =DEPRECATE_load_list_of_volunteer_skills()
     skills.remove_boat_related_skill_for_volunteer(volunteer_id)
     save_list_of_volunteer_skills(skills)

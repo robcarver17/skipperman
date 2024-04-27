@@ -2,10 +2,10 @@ from dataclasses import dataclass
 from typing import Dict, List
 
 from app.backend.events import get_sorted_list_of_events
-from app.backend.group_allocations.cadet_event_allocations import get_unallocated_cadets, \
-    load_allocation_for_event
-from app.backend.data.volunteers import  load_list_of_volunteer_skills
-from app.backend.data.volunteer_rota import load_volunteers_in_role_at_event
+from app.backend.group_allocations.cadet_event_allocations import DEPRECATE_get_list_of_cadets_unallocated_to_group_at_event, \
+    DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only
+from app.backend.data.volunteers import  DEPRECATE_load_list_of_volunteer_skills
+from app.backend.data.volunteer_rota import DEPRECATE_load_volunteers_in_role_at_event
 from app.backend.data.volunteer_allocation import DEPRECATED_load_list_of_volunteers_at_event
 
 from app.objects.cadets import ListOfCadets
@@ -14,8 +14,9 @@ from app.objects.day_selectors import Day
 from app.objects.events import Event, SORT_BY_START_ASC, list_of_events_excluding_one_event
 from app.objects.groups import ListOfCadetIdsWithGroups, GROUP_UNALLOCATED
 from app.objects.volunteers import ListOfVolunteerSkills
-from app.objects.volunteers_at_event import ListOfVolunteersAtEvent
-from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent, VolunteerInRoleAtEvent, NO_ROLE_SET
+from app.objects.volunteers_at_event import ListOfVolunteersAtEvent, VolunteerAtEvent
+from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent, VolunteerInRoleAtEvent, NO_ROLE_SET, \
+    FILTER_ALL, FILTER_AVAILABLE, FILTER_UNALLOC_AVAILABLE, FILTER_ALLOC_AVAILABLE, FILTER_UNAVAILABLE
 
 
 @dataclass
@@ -23,6 +24,22 @@ class RotaSortsAndFilters:
     sort_by_volunteer_name: str
     sort_by_day: Day
     skills_filter: dict
+    availability_filter: dict
+    sort_by_location: bool
+
+def get_explanation_of_sorts_and_filters(sorts_and_filters: RotaSortsAndFilters):
+    sort_by =""
+    if sorts_and_filters.sort_by_volunteer_name is not arg_not_passed:
+        sort_by+="Sorting by volunteer name (%s). " % sorts_and_filters.sort_by_volunteer_name
+    if sorts_and_filters.sort_by_day is not arg_not_passed:
+        sort_by+="Sorting by day %s. " % sorts_and_filters.sort_by_day.name
+    if sorts_and_filters.sort_by_location:
+        sort_by+="Sort by cadet location"
+
+    sort_by+="Availability filter %s. " % str(sorts_and_filters.availability_filter)
+    sort_by+="Skills filter %s" % str(sorts_and_filters.skills_filter)
+
+    return sort_by
 
 @dataclass
 class DataToBeStoredWhilstConstructingTableBody:
@@ -38,8 +55,12 @@ class DataToBeStoredWhilstConstructingTableBody:
         skills_filter = sorts_and_filters.skills_filter
         original_list = self.list_of_volunteers_at_event
         volunteer_skills = self.volunteer_skills
+        availability_filter_dict = sorts_and_filters.availability_filter
+        list_of_volunteers_in_roles_at_event = self.volunteers_in_roles_at_event
+
         new_list = ListOfVolunteersAtEvent([volunteer for volunteer in original_list if filter_volunteer(
-            volunteer, skills_filter=skills_filter, volunteer_skills=volunteer_skills
+            volunteer, list_of_volunteers_in_roles_at_event=list_of_volunteers_in_roles_at_event, skills_filter=skills_filter, volunteer_skills=volunteer_skills,
+            availability_filter_dict=availability_filter_dict
         )])
 
         return new_list
@@ -80,7 +101,19 @@ class DataToBeStoredWhilstConstructingTableBody:
 
         return all_roles_match and all_groups_match
 
-def filter_volunteer(volunteer_at_event: VolunteerInRoleAtEvent, skills_filter: dict,     volunteer_skills: ListOfVolunteerSkills)-> bool:
+def filter_volunteer(volunteer_at_event: VolunteerAtEvent,
+                     list_of_volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent,
+                     skills_filter: dict,     volunteer_skills: ListOfVolunteerSkills,
+                     availability_filter_dict: dict)-> bool:
+
+    filter_by_skills = filter_volunteer_by_skills(volunteer_at_event=volunteer_at_event, skills_filter=skills_filter, volunteer_skills=volunteer_skills)
+    filter_by_availability = filter_volunteer_by_availability(volunteer_at_event=volunteer_at_event,
+                                                              list_of_volunteers_in_roles_at_event=list_of_volunteers_in_roles_at_event,
+                                                              availability_filter_dict=availability_filter_dict)
+
+    return filter_by_skills and filter_by_availability
+
+def filter_volunteer_by_skills(volunteer_at_event: VolunteerAtEvent, skills_filter: dict,     volunteer_skills: ListOfVolunteerSkills,)-> bool:
     volunteer_skills = volunteer_skills.skills_for_volunteer_id(volunteer_id=volunteer_at_event.volunteer_id)
     if not any(skills_filter.values()):
         ## nothing to filter on
@@ -91,13 +124,52 @@ def filter_volunteer(volunteer_at_event: VolunteerInRoleAtEvent, skills_filter: 
 
     return any(required_skill_present)
 
+def filter_volunteer_by_availability(volunteer_at_event: VolunteerAtEvent,
+                    list_of_volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent,
+                     availability_filter_dict: dict)-> bool:
+
+    filter_by_day = [filter_volunteer_by_availability_on_given_day(
+        volunteer_at_event=volunteer_at_event,
+       list_of_volunteers_in_roles_at_event=list_of_volunteers_in_roles_at_event,
+        day = Day[name_of_day],
+        availability_filter=availability_filter
+    )
+    for name_of_day, availability_filter in availability_filter_dict.items()
+    ]
+
+    return all(filter_by_day)
+
+def filter_volunteer_by_availability_on_given_day(volunteer_at_event: VolunteerAtEvent,
+                                    list_of_volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent,
+                                     day: Day,
+                                      availability_filter: str) -> bool:
+
+    if availability_filter==FILTER_ALL:
+        return True ## no filtering
+
+    role_today = list_of_volunteers_in_roles_at_event.member_matching_volunteer_id_and_day(volunteer_at_event.volunteer_id,
+                                                                                           day=day,
+                                                                                           return_empty_if_missing=True)
+
+    unallocated = role_today.no_role_set
+    allocated = not unallocated
+    available =volunteer_at_event.available_on_day(day)
+
+    if availability_filter == FILTER_AVAILABLE:
+        return available
+    elif availability_filter==FILTER_UNAVAILABLE:
+        return not available
+    elif availability_filter == FILTER_ALLOC_AVAILABLE:
+        return available and allocated
+    elif availability_filter== FILTER_UNALLOC_AVAILABLE:
+        return available and unallocated
 
 
 def get_data_to_be_stored(event: Event) -> DataToBeStoredWhilstConstructingTableBody:
-    list_of_cadet_ids_with_groups = load_allocation_for_event(event=event)
-    unallocated_cadets_at_event = get_unallocated_cadets(event=event, list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups)
-    volunteer_skills = load_list_of_volunteer_skills()
-    volunteers_in_roles_at_event = load_volunteers_in_role_at_event(event)
+    list_of_cadet_ids_with_groups = DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only(event=event)
+    unallocated_cadets_at_event = DEPRECATE_get_list_of_cadets_unallocated_to_group_at_event(event=event, list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups)
+    volunteer_skills = DEPRECATE_load_list_of_volunteer_skills()
+    volunteers_in_roles_at_event = DEPRECATE_load_volunteers_in_role_at_event(event)
     list_of_volunteers_at_event = DEPRECATED_load_list_of_volunteers_at_event(event)
 
     dict_of_volunteers_with_last_roles = get_dict_of_volunteers_with_last_roles(list_of_volunteers_at_event.list_of_volunteer_ids,
@@ -158,7 +230,7 @@ def get_all_roles_across_past_events_for_volunteer_id_as_dict(volunteer_id: str,
 
 
 def get_role_for_event_and_volunteer_id(volunteer_id: str, event: Event) -> str:
-    volunteer_data = load_volunteers_in_role_at_event(event)
+    volunteer_data = DEPRECATE_load_volunteers_in_role_at_event(event)
     role = volunteer_data.most_common_role_at_event_for_volunteer(volunteer_id=volunteer_id)
     if role==NO_ROLE_SET:
         return missing_data

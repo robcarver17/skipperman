@@ -5,7 +5,7 @@ from app.objects.constants import missing_data
 from app.objects.day_selectors import DaySelector, day_selector_stored_format_from_text, \
     day_selector_to_text_in_stored_format, weekend_day_selector_from_text, any_day_selector_from_short_form_text
 from app.objects.events import Event
-from app.data_access.configuration.field_list import WEEKEND_DAYS_ATTENDING_INPUT, ALL_DAYS_ATTENDING_INPUT
+from app.data_access.configuration.field_list import WEEKEND_DAYS_ATTENDING_INPUT, ALL_DAYS_ATTENDING_INPUT, CADET_HEALTH
 from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds, GenericListOfObjects, \
     GenericSkipperManObject, transform_string_into_class_instance, transform_class_instance_into_string
 
@@ -303,6 +303,7 @@ def get_cadet_at_event_from_row_in_mapped_event(
 
     status = row_in_mapped_wa_event.registration_status
     availability = get_attendance_selection_from_event_row(row_in_mapped_wa_event, event=event)
+    health = get_health_from_event_row(row_in_mapped_wa_event)
 
     return CadetAtEvent(
         cadet_id=cadet_id,
@@ -311,7 +312,7 @@ def get_cadet_at_event_from_row_in_mapped_event(
         data_in_row=row_in_mapped_wa_event,
         changed=False,
         notes='',
-        health=''
+        health=health
     )
 
 def get_attendance_selection_from_event_row(
@@ -326,3 +327,6 @@ def get_attendance_selection_from_event_row(
         return any_day_selector_from_short_form_text(row_as_dict[WEEKEND_DAYS_ATTENDING_INPUT])
 
     return event.day_selector_with_covered_days()
+
+def get_health_from_event_row(row: RowInMappedWAEvent):
+    return row.get_item(CADET_HEALTH, '')

@@ -8,9 +8,9 @@ from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies
 
 from app.objects.groups import CadetWithGroup
 
-from app.backend.group_allocations.cadet_event_allocations import get_unallocated_cadets, \
+from app.backend.group_allocations.cadet_event_allocations import DEPRECATE_get_list_of_cadets_unallocated_to_group_at_event, \
     get_list_of_cadets_with_groups, \
-    load_allocation_for_event
+    DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only
 from app.backend.data.resources import load_list_of_cadets_at_event_with_club_dinghies
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -125,9 +125,9 @@ def get_dict_of_df_for_reporting_allocations_with_flags(
     ##   is a waiting list cadet unallocated, or allocated with a * against their name?
     ##   at some point report would include club boats
 
-    list_of_cadet_ids_with_groups = load_allocation_for_event(event=event)
+    list_of_cadet_ids_with_groups = DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only(event=event)
     if include_unallocated_cadets:
-        unallocated_cadets = get_unallocated_cadets(
+        unallocated_cadets = DEPRECATE_get_list_of_cadets_unallocated_to_group_at_event(
             event=event,
             list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups,
         )

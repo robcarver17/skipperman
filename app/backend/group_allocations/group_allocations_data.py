@@ -5,7 +5,7 @@ from app.backend.group_allocations.group_allocation_info import get_group_alloca
     GroupAllocationInfo
 from app.backend.events import get_sorted_list_of_events
 from app.backend.group_allocations.cadet_event_allocations import get_list_of_active_cadets_at_event, \
-    load_allocation_for_event
+    DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only
 from app.backend.group_allocations.previous_allocations import allocation_for_cadet_in_previous_events, \
     get_dict_of_allocations_for_events_and_list_of_cadets
 from app.data_access.configuration.configuration import UNALLOCATED_GROUP_NAME
@@ -213,7 +213,7 @@ def similarity_score_and_best_option_against_boat_names_for_one_name(option: str
 
 
 def get_allocation_data(event: Event) -> AllocationData:
-    current_allocation_for_event = load_allocation_for_event(event)
+    current_allocation_for_event = DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only(event)
     cadets_at_event_including_non_active = DEPRECATED_load_cadets_at_event(event)
     list_of_cadets_in_event_active_only = get_list_of_active_cadets_at_event(event)
     list_of_events = get_sorted_list_of_events()

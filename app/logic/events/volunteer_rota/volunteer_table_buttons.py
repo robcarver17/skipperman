@@ -3,7 +3,7 @@ from typing import Tuple, Callable
 from app.backend.data.volunteer_allocation import DEPRECATED_load_list_of_volunteers_at_event
 from app.backend.volunteers.volunteer_rota import get_cadet_location_string, \
     str_dict_skills
-from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingTableBody
+from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingVolunteerRotaPage
 from app.backend.volunteers.volunteers import DEPRECATED_get_volunteer_from_id
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.day_selectors import Day
@@ -13,8 +13,8 @@ from app.objects.volunteers_at_event import VolunteerAtEvent
 from app.objects.volunteers_in_roles import VolunteerInRoleAtEvent
 
 
-def get_location_button(data_to_be_stored: DataToBeStoredWhilstConstructingTableBody,
-                                   volunteer_at_event: VolunteerAtEvent,
+def get_location_button(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
+                        volunteer_at_event: VolunteerAtEvent,
                         hide_buttons:bool) -> Button:
     location = get_cadet_location_string(data_to_be_stored=data_to_be_stored, volunteer_at_event=volunteer_at_event)
     if hide_buttons:
@@ -29,7 +29,7 @@ def location_button_name_from_volunteer_id(volunteer_id: str) -> str:
 
 
 def get_skills_button(volunteer: Volunteer,
-                      data_to_be_stored: DataToBeStoredWhilstConstructingTableBody,
+                      data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
                       hide_buttons: bool
                       )-> Button:
     skill_label =  str_dict_skills(volunteer=volunteer, data_to_be_stored=data_to_be_stored)

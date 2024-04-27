@@ -37,6 +37,7 @@ CADET_WANTS_MG= "Wants MG"
 CADET_GROUP_PREFERENCE = "Preferred group"
 CADET_HIGHEST_QUALIFICATION = "Highest qualification"
 CADET_PREVIOUS_EXPERIENCE = "Previous experience"
+CADET_HEALTH = "Cadet Health"
 
 CADET_T_SHIRT_SIZE = "Cadet t-shirt size"
 

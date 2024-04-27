@@ -4,12 +4,10 @@ from typing import List, Union
 from app.backend.forms.swaps import is_ready_to_swap
 from app.backend.volunteers.volunteer_rota import dict_of_groups_for_dropdown, \
     dict_of_roles_for_dropdown, get_sorted_and_filtered_list_of_volunteers_at_event
-from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingTableBody, get_data_to_be_stored, \
+from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingVolunteerRotaPage, get_data_to_be_stored_for_volunteer_rota_page, \
     RotaSortsAndFilters
 from app.backend.volunteers.volunteers import DEPRECATED_get_volunteer_from_id
-from app.data_access.configuration.configuration import VOLUNTEER_SKILLS
 from app.data_access.configuration.fixed import COPY_SYMBOL1, NOT_AVAILABLE_SHORTHAND, AVAILABLE_SHORTHAND
-from app.logic.events.volunteer_rota.rota_state import get_skills_filter_from_state
 from app.logic.events.volunteer_rota.volunteer_table_buttons import get_location_button, get_skills_button, \
     make_available_button_value_for_volunteer_on_day, copy_button_value_for_volunteer_in_role_on_day, \
     get_buttons_for_days_at_event, unavailable_button_value_for_volunteer_in_role_on_day, remove_role_button_value_for_volunteer_in_role_on_day
@@ -26,16 +24,7 @@ from app.objects.volunteers_at_event import VolunteerAtEvent
 from app.objects.day_selectors import Day
 from app.objects.volunteers_in_roles import VolunteerInRoleAtEvent
 
-SKILLS_FILTER = "skills_filter"
 
-def get_volunteer_skills_filter(interface: abstractInterface):
-    dict_of_labels = dict([(skill, skill) for skill in VOLUNTEER_SKILLS])
-    dict_of_checked = get_skills_filter_from_state(interface)
-    return checkboxInput(input_label="Filter for volunteers with these skills",
-                         dict_of_checked=dict_of_checked,
-                         dict_of_labels=dict_of_labels,
-                         input_name=SKILLS_FILTER,
-                         line_break=False)
 
 
 def get_volunteer_table(event: Event,
@@ -44,7 +33,7 @@ def get_volunteer_table(event: Event,
                         )-> Table:
     hide_buttons = is_ready_to_swap(interface)
 
-    top_row = get_top_row_for_table(event=event, hide_buttons=hide_buttons, interface=interface)
+    top_row = get_top_row_for_table(event=event, hide_buttons=hide_buttons)
     other_rows = get_body_of_table_at_event(event=event,
                                             interface=interface,
                                             hide_buttons=hide_buttons,
@@ -56,7 +45,7 @@ def get_volunteer_table(event: Event,
     )
 
 
-def get_top_row_for_table(interface: abstractInterface, event: Event, hide_buttons: bool) -> RowInTable:
+def get_top_row_for_table(event: Event, hide_buttons: bool) -> RowInTable:
     buttons_for_days_at_event_as_str = get_buttons_for_days_at_event(event=event, hide_buttons=hide_buttons)
 
     return RowInTable([
@@ -67,7 +56,7 @@ def get_top_row_for_table(interface: abstractInterface, event: Event, hide_butto
         "Skills",
         "Previous role"
     ]+buttons_for_days_at_event_as_str+
-    ["Notes",
+    ["Volunteer notes",
      "Other information from registration"]
                       )
 
@@ -79,7 +68,7 @@ def get_body_of_table_at_event(event: Event,
 
                                ) -> List[RowInTable]:
 
-    data_to_be_stored = get_data_to_be_stored(event)
+    data_to_be_stored = get_data_to_be_stored_for_volunteer_rota_page(event)
 
     list_of_volunteers_at_event = get_sorted_and_filtered_list_of_volunteers_at_event(
         data_to_be_stored=data_to_be_stored,
@@ -96,7 +85,7 @@ def get_body_of_table_at_event(event: Event,
     return other_rows
 
 
-def get_row_for_volunteer_at_event(data_to_be_stored: DataToBeStoredWhilstConstructingTableBody,
+def get_row_for_volunteer_at_event(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
                                    volunteer_at_event: VolunteerAtEvent,
                                    interface: abstractInterface,
                                    hide_buttons:bool= False) -> RowInTable:
@@ -134,11 +123,11 @@ def get_row_for_volunteer_at_event(data_to_be_stored: DataToBeStoredWhilstConstr
 
 
 def get_allocation_inputs_for_day_and_volunteer(volunteer_at_event: VolunteerAtEvent,
-                                                 day: Day,
-                                                data_to_be_stored: DataToBeStoredWhilstConstructingTableBody,
+                                                day: Day,
+                                                data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
                                                 hide_buttons: bool,
                                                 interface: abstractInterface
-                                                 ) -> Line:
+                                                ) -> Line:
 
     volunteer_available_on_day = volunteer_at_event.availablity.available_on_day(day)
     volunteer_in_role_at_event_on_day = data_to_be_stored.volunteer_in_role_at_event_on_day(
@@ -163,7 +152,7 @@ def get_allocation_inputs_for_day_and_volunteer(volunteer_at_event: VolunteerAtE
 
 
 def get_allocation_inputs_for_day_and_volunteer_when_available(volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
-                                                data_to_be_stored: DataToBeStoredWhilstConstructingTableBody,
+                                                               data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
                                                                interface: abstractInterface,
                                                                hide_buttons: bool) -> Line:
 
@@ -246,3 +235,5 @@ def get_notes_input(volunteer_at_event: VolunteerAtEvent) -> textInput:
 
 def input_name_for_notes_and_volunteer(volunteer_at_event: VolunteerAtEvent) -> str:
     return "NOTES_%s" % (volunteer_at_event.volunteer_id)
+
+

@@ -97,6 +97,7 @@ volunteer_teams:
     - "Admin"
     - "Photo"
 volunteers_requiring_group:
+  - "SI"
   - "DI"
   - "Coach"
   - "AI"

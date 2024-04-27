@@ -3,7 +3,7 @@ from app.backend.events import get_sorted_list_of_events, SORT_BY_START_DSC
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.objects.events import ListOfEvents, Event
-from app.backend.data.volunteer_rota import load_volunteers_in_role_at_event
+from app.backend.data.volunteer_rota import DEPRECATE_load_volunteers_in_role_at_event
 from app.backend.data.group_allocations_old import load_list_of_cadets_with_allocated_groups_at_event
 from app.backend.data.cadets_at_event import load_list_of_cadets_at_event_with_dinghies
 
@@ -63,7 +63,7 @@ def event_has_volunteers(event: Event):
     if not event.contains_volunteers:
         return False
 
-    if len(load_volunteers_in_role_at_event(event))==0:
+    if len(DEPRECATE_load_volunteers_in_role_at_event(event))==0:
         return False
 
     return True

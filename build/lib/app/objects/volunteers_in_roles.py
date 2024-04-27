@@ -89,6 +89,9 @@ class ListOfVolunteersInRoleAtEvent(GenericListOfObjects):
     def _object_class_contained(self):
         return VolunteerInRoleAtEvent
 
+    def list_if_volunteer_id_in_list_of_ids(self, list_of_ids: List[str]) -> 'ListOfVolunteersInRoleAtEvent':
+        return ListOfVolunteersInRoleAtEvent([volunteer for volunteer in self if volunteer.volunteer_id in list_of_ids])
+
     def swap_roles_for_volunteers_in_allocation(self,
                 original_day: Day,
                 original_volunteer_id: str,
@@ -240,3 +243,12 @@ class ListOfVolunteersInRoleAtEvent(GenericListOfObjects):
         else:
             existing_member.group = volunteer_in_role_at_event.group
             existing_member.role = volunteer_in_role_at_event.role
+
+
+FILTER_ALL = "All"
+FILTER_AVAILABLE = "Available"
+FILTER_UNALLOC_AVAILABLE = "Unallocated+Available"
+FILTER_ALLOC_AVAILABLE = "Allocated+Available"
+FILTER_UNAVAILABLE = "Unavailable"
+FILTER_OPTIONS = [FILTER_ALL, FILTER_AVAILABLE, FILTER_UNALLOC_AVAILABLE, FILTER_ALLOC_AVAILABLE, FILTER_UNAVAILABLE]
+

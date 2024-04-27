@@ -21,7 +21,7 @@ from app.objects.groups import ListOfCadetIdsWithGroups
 from app.objects.events import ListOfEvents
 from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies
 from app.objects.qualifications import ListOfCadetsWithQualifications
-
+from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent
 
 
 class DataLayer():
@@ -153,6 +153,13 @@ class DataLayer():
         data_access_for_volunteers_at_event = get_data_access_for_volunteers_at_event(self.data, event_id=event.id)
         self.store.write(list_of_volunteers_at_event, data_access_method=data_access_for_volunteers_at_event)
 
+    def get_list_of_volunteers_in_roles_at_event(self, event:Event) -> ListOfVolunteersInRoleAtEvent:
+        data_access_for_list_of_volunteers_in_roles_at_event  = get_data_access_for_list_of_volunteers_in_roles_at_event(self.data, event_id=event.id)
+        return self.store.read(data_access_method=data_access_for_list_of_volunteers_in_roles_at_event)
+
+    def save_list_of_volunteers_in_roles_at_event(self, event:Event, list_of_volunteers_in_role_at_event: ListOfVolunteersInRoleAtEvent):
+        data_access_for_list_of_volunteers_in_roles_at_event  = get_data_access_for_list_of_volunteers_in_roles_at_event(self.data, event_id=event.id)
+        return self.store.write(list_of_volunteers_in_role_at_event, data_access_method=data_access_for_list_of_volunteers_in_roles_at_event)
 
 
 def get_data_access_for_list_of_cadets(data: GenericDataApi) -> DataAccessMethod:
@@ -264,3 +271,9 @@ def get_data_access_for_list_of_cadet_volunteer_associations(data: GenericDataAp
         write_method=data.data_list_of_cadet_volunteer_associations.write,
     )
 
+def get_data_access_for_list_of_volunteers_in_roles_at_event(data: GenericDataApi, event_id:str) -> DataAccessMethod:
+    return DataAccessMethod("list_of_cadet_volunteer_associations",
+        read_method=data.data_list_of_volunteers_in_roles_at_event.read,
+        write_method=data.data_list_of_volunteers_in_roles_at_event.write,
+        event_id = event_id
+    )

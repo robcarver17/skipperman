@@ -1,8 +1,9 @@
 from typing import List
 
 import pandas as pd
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.volunteer_rota import load_volunteers_in_role_at_event
+from app.backend.data.volunteer_rota import get_volunteers_in_role_at_event_with_active_allocations
 from app.data_access.configuration.configuration import VOLUNTEER_ROLES, ALL_GROUPS_NAMES
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -10,12 +11,18 @@ from app.objects.groups import GROUP_UNALLOCATED_TEXT, Group
 from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent, NO_ROLE_SET, RoleAndGroup
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 
-def get_summary_list_of_roles_and_groups_for_events(event: Event) -> PandasDFTable:
-    return PandasDFTable(get_summary_list_of_roles_and_groups_for_events_as_pd_df(event))
+def get_summary_list_of_roles_and_groups_for_events(interface: abstractInterface, event: Event) -> PandasDFTable:
+    return PandasDFTable(get_summary_list_of_roles_and_groups_for_events_as_pd_df(interface=interface, event=event))
 
 
-def get_summary_list_of_roles_and_groups_for_events_as_pd_df(event: Event) -> pd.DataFrame:
-    volunteers_in_roles_at_event = load_volunteers_in_role_at_event(event)
+def get_summary_list_of_roles_and_groups_for_events_as_pd_df(interface: abstractInterface, event: Event) -> pd.DataFrame:
+    all_day_summaries= list_of_day_summaries_for_roles_at_event(interface=interface, event=event)
+    single_df = from_list_of_day_summaries_to_single_df(all_day_summaries=all_day_summaries, event=event)
+
+    return single_df
+
+def list_of_day_summaries_for_roles_at_event(interface: abstractInterface, event: Event) -> List[pd.DataFrame]:
+    volunteers_in_roles_at_event = get_volunteers_in_role_at_event_with_active_allocations(event=event, interface=interface)
     days_at_event = event.weekdays_in_event()
     all_day_summaries = []
     for day in days_at_event:
@@ -25,13 +32,15 @@ def get_summary_list_of_roles_and_groups_for_events_as_pd_df(event: Event) -> pd
         )
         all_day_summaries.append(this_day_summary)
 
-    single_df= pd.concat(all_day_summaries, axis=1)
+    return all_day_summaries
 
+def from_list_of_day_summaries_to_single_df(all_day_summaries: List[pd.DataFrame], event: Event) -> pd.DataFrame:
+    days_at_event = event.weekdays_in_event()
+    single_df= pd.concat(all_day_summaries, axis=1)
     single_df = single_df.loc[~(single_df==0).all(axis=1)] ## missing values
     single_df.columns = [day.name for day in days_at_event]
 
     return single_df
-
 
 def get_summary_of_roles_and_groups_for_events_on_day(
                                                       day: Day,

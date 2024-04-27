@@ -21,13 +21,12 @@ from app.objects.events import Event
 
 # VOLUNTEER_ROTA_INITIALISE_LOOP_IN_VIEW_EVENT_STAGE
 def display_form_volunteer_rota_check(interface: abstractInterface)-> NewForm:
-    #interface.log_error("SKIPPING ROTA CHECK FOR NOW - NEEDS FIXING!")
-    #return goto_main_rota_form(interface)
-    clear_cadet_id_for_rota_at_event(interface)
+    #clear_cadet_id_for_rota_at_event(interface)
 
-    return next_cadet_in_loop(interface)
+    #return next_cadet_in_loop(interface)
 
-
+    interface.log_error("Auto check of volunteer rota availability changes not working - needs fixing at some point")
+    return goto_main_rota_form(interface)
 
 
 # VOLUNTEER_ROTA_CHECK_LOOP_IN_VIEW_EVENT_STAGE

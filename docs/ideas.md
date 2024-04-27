@@ -64,9 +64,9 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 ### Bug fixes before next event import
 
 - removing volunteer should also remove associated role ID, boat allocation, or apply strict filters?
--  multiple filter: filter volunteer sheet on available days (only volunteers available on a given day), only volunteers available and unallocated on a given day, only volunteers with certain skills
 - sort volunteer by cadet location
 - removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
+- volunteer rota still not doing change check properly
 - data model for volunteer rota, boats and group allocation
 - click on volunteer name to see previous events
 

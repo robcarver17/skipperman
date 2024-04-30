@@ -27,7 +27,7 @@ The back-end, and as much as possible of the front-end, will be in Python. Partl
 
 ### Useability and interface
 
-Skipperman needs to be useable by non-technical people. Hence, Skipperman will have two interfaces; a CLI interface that will be used to ensure that back end development can occur concurrently with front end and so that the current cadet skipper can get immediate value from the product, and a GUI for non technical users. 
+Skipperman needs to be useable by non-technical people. Hence, Skipperman will have a GUI for non technical users, but with a seperation of functions so the data can be directly used from a python command line if you know the right function calls. 
 
 A key design decision is how the GUI is implemented and deployed; a web front end seems the most logical solution, but should this be local or cloud hosted?
 
@@ -61,44 +61,49 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - record ticksheet data
 - print roll call lists
 
-### Bug fixes before next event import
+### Functionality / bug fixes 
 
-- removing volunteer should also remove associated role ID, boat allocation, or apply strict filters?
-- sort volunteer by cadet location
 - removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
-- volunteer rota still not doing change check properly
-- data model for volunteer rota, boats and group allocation
-- click on volunteer name to see previous events
+- data model for volunteer rota (finish), boats and group allocation
 
-
-### Required for training event (Can wait):
-
+### Required for May training event:
+- record ticksheet entries
 - sign in sheet multiple columns
 - add health to ticksheets
-- add contact details and health to roll call report
 - refactor reporting so uses common data model 
+
+### Required for June training event:
+- add contact details and health to roll call report
+
 - store of previous events volunteer role / cadet allocation to speed up loading 
 - click on cadet name to see previous groups
+- allow multiple days / different allocations. Availability change will break two handed partners.
+
+- role summary also does DI/AI by group (only on volunteer page)
 - click on volunteer name to see previous events
-- role summary also does DI/AI by group
-- over 12 volunteer has to be identified multiple times
-- cadet connections includes groups
+- add new volunteer from volunteer rota page should include skills filter
+- cadet connections inside volunteer rota includes groups
+- set maximum allowable / target for each role
+- sort volunteer by cadet location
+
+- over 12 volunteer has to be identified multiple times on input
+- volunteer rota still not doing change check properly
+
 - allow selection of group subset in reporting when doing arrangement of groups
-- print ticksheets from menu
-- record ticksheet entries
+
 - registration report with literally everything on it
+- power boat only volunteer rota
 - birthdays during an event - splash on event screen
-- GDPR document
+
 - instructor login (send link to create)
 - ticksheet level security
 - key report links for instructors on landing page
+- print ticksheets from menu
+
 - clear old reports for event (remove rednedant permalinks) and other temp directories UTILITIES MENU
-- set maximum allowable / target for each role
 - put shareable files up like instructors documents; manage shared files eg deleete
-- power boat only volunteer rota
 - memorise whether summary buttons pressed
-- memorise group orders and arrangements for reports (can deal with missing groups)
-- allow multiple days / different allocations. Availability change will break two handed partners.
+- memorise group orders and arrangements for reports (can deal with different / missing groups)
 
 
 ### Required for social event:
@@ -126,6 +131,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
   ### General required before handover to Jonny:
 
+- create a list of key volunteers to invite to curry evening
 - don't allow duplicate templates and delete templates allowed
 - template download for import of list of cadets
 - edit event (warnings especially days!)
@@ -134,47 +140,22 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - clean up eg old data, uploaded files, staged files
 - move all dangerous deletes to special admin area: , delete event (should never have to do this: many warnings!), delete cadet, delete volunteer
 - merge cadet / merge volunteer
-- editable user sailing groups, volunteer roles, skills
-- create a list of key volunteers to invite to curry evening
+- editable user sailing groups, volunteer roles, skills - everything
 - create a report of cadets
 - dropdown list of previous event names
 - clear description of field names
 - instructions
+- GDPR document
+- tests
 
 ### Future / wishlist / nice to have:
 
 - nicer CSS
 - instructor facing interface to update ticks on a GUI
-- instructor facing interface for roll call
+- instructor facing interface for roll call ticks
 
 
-## Business objects
 
-- Cadets
-- Volunteers
-- People
-- Events
-- Ticksheet
-- Boats
-
-
-## Tables
-
-- Cadets
-- Event configuration
-- Tick sheets
-- Cadets at Events
-- Volunteers at events (rotas)
-
-
-## Security and GDPR
-
-'Real' underyling data won't be available to the development team so a set of fake data will be created for testing purposes.
-
-## Random thoughts
-
-
-Whilst merging in lists of potential new cadets or volunteers, need to avoid accidental duplicates use [fuzzy](https://github.com/seatgeek/thefuzz) or similar.
 
 ## A few questions - Sam
 ### Q:How is data storage going to work? Are we going to do cloud storage? Otherwise we would have a different copy for each user that then would need merging.

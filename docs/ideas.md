@@ -80,6 +80,9 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - store of previous events volunteer role / cadet allocation to speed up loading 
 - click on cadet name to see previous groups
 - click on volunteer name to see previous events
+- role summary also does DI/AI by group
+- over 12 volunteer has to be identified multiple times
+- cadet connections includes groups
 - allow selection of group subset in reporting when doing arrangement of groups
 - print ticksheets from menu
 - record ticksheet entries

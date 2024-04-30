@@ -1,3 +1,5 @@
+from typing import List
+
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.data_access.storage_layer.api import DataLayer
@@ -11,6 +13,34 @@ from app.objects.volunteers import ListOfVolunteerSkills, ListOfVolunteers, Volu
 class VolunteerData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
+
+    def get_volunteer_from_list_of_volunteers_given_name(self, volunteer_name: str) -> Volunteer:
+        list_of_volunteers = self.get_list_of_volunteers()
+        list_of_volunteers_as_str = [volunteer.name for volunteer in list_of_volunteers]
+
+        idx = list_of_volunteers_as_str.index(volunteer_name)
+
+        return list_of_volunteers[idx]
+
+    def add_boat_related_skill_for_volunteer(self, volunteer_id: str):
+        skills = self.get_list_of_volunteer_skills()
+        skills.add_boat_related_skill_for_volunteer(volunteer_id)
+        self.save_list_of_volunteer_skills(skills)
+
+    def remove_boat_related_skill_for_volunteer(self, volunteer_id: str):
+        skills = self.get_list_of_volunteer_skills()
+        skills.remove_boat_related_skill_for_volunteer(volunteer_id)
+        self.save_list_of_volunteer_skills(skills)
+
+    def get_list_of_volunteer_ids_with_boat_skills(self ) -> List[str]:
+        volunteer_skills = self.get_list_of_volunteer_skills()
+        list_of_volunteer_ids_with_boat_skills = volunteer_skills.list_of_volunteer_ids_with_boat_related_skill()
+
+        return list_of_volunteer_ids_with_boat_skills
+
+    def boat_related_skill_for_volunteer(self, volunteer_id: str) -> bool:
+        skills = self.get_list_of_volunteer_skills()
+        return skills.volunteer_id_has_boat_related_skills(volunteer_id)
 
     def add_volunteer_connection_to_cadet_in_master_list_of_volunteers(self, cadet: Cadet,
                                                                        volunteer: Volunteer):

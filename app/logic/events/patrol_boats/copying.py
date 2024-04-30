@@ -1,5 +1,7 @@
 from typing import Union, List
 
+from app.objects.abstract_objects.abstract_interface import abstractInterface
+
 from app.backend.volunteers.patrol_boats import volunteer_is_on_same_boat_for_all_days
 from app.backend.volunteers.volunteer_rota import is_possible_to_copy_roles_for_non_grouped_roles_only
 from app.data_access.configuration.fixed import COPY_SYMBOL1, BOAT_SHORTHAND, BOAT_AND_ROLE_SHORTHAND, ROLE_SHORTHAND
@@ -15,42 +17,46 @@ COPY_BOTH_BUTTON_LABEL = Line([COPY_SYMBOL1, BOAT_AND_ROLE_SHORTHAND])
 COPY_ROLE_BUTTON_LABEL = Line([COPY_SYMBOL1, ROLE_SHORTHAND])
 
 
-def get_copy_buttons_for_boat_allocation(day: Day,
+def get_copy_buttons_for_boat_allocation(interface: abstractInterface,
+                                         day: Day,
                                          event: Event,
                                          volunteer_id: str)-> list:
-    copy_boat_button = get_copy_button_for_boat_copy_in_boat_rota(volunteer_id=volunteer_id, event=event, day=day)
-    copy_both_button = get_copy_button_for_role_and_boat_in_rota(volunteer_id=volunteer_id, event=event, day=day)
-    copy_role_button = get_copy_button_for_role_in_boat_rota(volunteer_id=volunteer_id, event=event, day=day)
+    copy_boat_button = get_copy_button_for_boat_copy_in_boat_rota(interface=interface, volunteer_id=volunteer_id, event=event, day=day)
+    copy_both_button = get_copy_button_for_role_and_boat_in_rota(interface=interface, volunteer_id=volunteer_id, event=event, day=day)
+    copy_role_button = get_copy_button_for_role_in_boat_rota(interface=interface, volunteer_id=volunteer_id, event=event, day=day)
 
     return [copy_boat_button, copy_role_button, copy_both_button]
 
 
-def get_copy_button_for_boat_copy_in_boat_rota(day: Day,
+def get_copy_button_for_boat_copy_in_boat_rota(interface: abstractInterface,
+                                               day: Day,
                                                event: Event,
                                                volunteer_id: str) -> Union[Button,str]:
 
-    copy_button_name = copy_button_name_for_boat_copy_in_boat_at_event_on_day(day=day,
-                                                                              volunteer_id=volunteer_id,
-                                                                              )
 
-    if is_possible_to_copy_boat_allocation(event=event, volunteer_id=volunteer_id):
+    if is_possible_to_copy_boat_allocation(interface=interface, event=event, volunteer_id=volunteer_id):
+        copy_button_name = copy_button_name_for_boat_copy_in_boat_at_event_on_day(day=day,
+                                                                                  volunteer_id=volunteer_id,
+                                                                                  )
         return Button(
             label=COPY_BOAT_BUTTON_LABEL,
             value=copy_button_name
         )
+
     else:
         return ""
 
 
-def get_copy_button_for_role_in_boat_rota(day: Day,
+def get_copy_button_for_role_in_boat_rota(interface: abstractInterface,
+                                          day: Day,
                                                 event: Event,
                                                 volunteer_id: str) -> Union[Button,str]:
 
-    copy_button_name = copy_button_name_for_volunteer_role_in_boat_at_event_on_day(day=day,
-                                                                         volunteer_id=volunteer_id,
-                                                                         )
 
-    if is_possible_to_copy_roles_for_non_grouped_roles_only(event=event, volunteer_id=volunteer_id):
+    if is_possible_to_copy_roles_for_non_grouped_roles_only(interface=interface, event=event, volunteer_id=volunteer_id):
+        copy_button_name = copy_button_name_for_volunteer_role_in_boat_at_event_on_day(day=day,
+                                                                                       volunteer_id=volunteer_id,
+                                                                                       )
 
         return Button(
             label=COPY_ROLE_BUTTON_LABEL,
@@ -60,7 +66,8 @@ def get_copy_button_for_role_in_boat_rota(day: Day,
         return ""
 
 
-def get_copy_button_for_role_and_boat_in_rota( day: Day,
+def get_copy_button_for_role_and_boat_in_rota(interface: abstractInterface,
+                                              day: Day,
                                                 event: Event,
                                                 volunteer_id: str) -> Union[Button,str]:
 
@@ -68,7 +75,7 @@ def get_copy_button_for_role_and_boat_in_rota( day: Day,
                                                                                          volunteer_id=volunteer_id,
                                                                                          )
 
-    if is_possible_to_copy_boat_and_role_allocation(event=event, volunteer_id=volunteer_id):
+    if is_possible_to_copy_boat_and_role_allocation(interface=interface, event=event, volunteer_id=volunteer_id):
         return Button(
             label=COPY_BOTH_BUTTON_LABEL,
             value=copy_button_name
@@ -77,18 +84,23 @@ def get_copy_button_for_role_and_boat_in_rota( day: Day,
         return ""
 
 
-def is_possible_to_copy_boat_allocation(event: Event,
+def is_possible_to_copy_boat_allocation(interface: abstractInterface,
+                                        event: Event,
                                                 volunteer_id: str):
-    copy_button_required = not volunteer_is_on_same_boat_for_all_days(
+    on_same_boat_for_all_days = volunteer_is_on_same_boat_for_all_days(
+        interface=interface,
         volunteer_id=volunteer_id, event=event)
+
+    copy_button_required = not on_same_boat_for_all_days
 
     return copy_button_required
 
 
-def is_possible_to_copy_boat_and_role_allocation(event: Event,
+def is_possible_to_copy_boat_and_role_allocation(interface: abstractInterface,
+                                                 event: Event,
                                                 volunteer_id: str):
-    boat_possible = is_possible_to_copy_boat_allocation(event=event, volunteer_id=volunteer_id)
-    role_possible = is_possible_to_copy_roles_for_non_grouped_roles_only(event=event, volunteer_id=volunteer_id)
+    boat_possible = is_possible_to_copy_boat_allocation(interface=interface, event=event, volunteer_id=volunteer_id)
+    role_possible = is_possible_to_copy_roles_for_non_grouped_roles_only(interface=interface, event=event, volunteer_id=volunteer_id)
 
     return boat_possible and role_possible
 
@@ -119,28 +131,29 @@ def copy_button_name_for_both_volunteer_role_and_boat_at_event_on_day(day: Day,
                                                                      volunteer_id=volunteer_id)
 
 
-def get_list_of_all_types_of_copy_buttons(event: Event)-> List[str]:
-    return get_list_of_all_copy_boat_buttons_for_boat_allocation(event)+\
-            get_list_of_all_copy_role_buttons_for_boat_allocation(event)+\
-            get_list_of_all_copy_both_buttons_for_boat_allocation(event)
+def get_list_of_all_types_of_copy_buttons(interface: abstractInterface, event: Event)-> List[str]:
+    return get_list_of_all_copy_boat_buttons_for_boat_allocation(interface=interface, event=event)+\
+            get_list_of_all_copy_role_buttons_for_boat_allocation(interface=interface, event=event)+\
+            get_list_of_all_copy_both_buttons_for_boat_allocation(interface=interface, event=event)
 
 
-def get_list_of_all_copy_boat_buttons_for_boat_allocation(event:Event)-> List[str]:
+def get_list_of_all_copy_boat_buttons_for_boat_allocation(interface: abstractInterface,event:Event)-> List[str]:
     return get_list_of_generic_buttons_for_each_volunteer_day_combo(
-        event=event,
+        interface=interface, event=event,
         button_name_function=copy_button_name_for_boat_copy_in_boat_at_event_on_day
     )
 
 
-def get_list_of_all_copy_role_buttons_for_boat_allocation(event:Event)-> List[str]:
+def get_list_of_all_copy_role_buttons_for_boat_allocation(interface: abstractInterface,event:Event)-> List[str]:
     return get_list_of_generic_buttons_for_each_volunteer_day_combo(
+        interface=interface,
         event=event,
         button_name_function=copy_button_name_for_volunteer_role_in_boat_at_event_on_day
     )
 
 
-def get_list_of_all_copy_both_buttons_for_boat_allocation(event:Event)-> List[str]:
+def get_list_of_all_copy_both_buttons_for_boat_allocation(interface: abstractInterface,event:Event)-> List[str]:
     return get_list_of_generic_buttons_for_each_volunteer_day_combo(
-        event=event,
+        interface=interface, event=event,
         button_name_function=copy_button_name_for_both_volunteer_role_and_boat_at_event_on_day
     )

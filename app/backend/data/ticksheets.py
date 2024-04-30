@@ -12,7 +12,7 @@ from app.objects.qualifications import ListOfQualifications
 from app.backend.data.group_allocations import GroupAllocationsData
 from app.backend.data.cadets import CadetData
 from app.backend.data.cadets_at_event import CadetsAtEventData
-from app.backend.data.resources import ClubDinghies
+from app.backend.data.resources import ClubDinghiesData
 
 ### Pass list of cadets (which in turn could be derived from group for event)
 ### Also pass qualification required
@@ -168,5 +168,5 @@ class TickSheets():
         return CadetsAtEventData(data_api=self.data_api)
 
     @property
-    def club_dinghies(self) -> ClubDinghies:
-        return ClubDinghies(data_api=self.data_api)
+    def club_dinghies(self) -> ClubDinghiesData:
+        return ClubDinghiesData(data_api=self.data_api)

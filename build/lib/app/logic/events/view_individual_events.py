@@ -66,7 +66,7 @@ def get_event_form_for_event(
     rota_lines = ""
     if event.contains_volunteers:
         rota = get_summary_list_of_roles_and_groups_for_events(interface=interface, event=event)
-        boat_allocation_table = get_summary_list_of_boat_allocations_for_events(event)
+        boat_allocation_table = get_summary_list_of_boat_allocations_for_events(interface=interface, event=event)
         if len(boat_allocation_table)>0:
             rota_lines =   ListOfLines([
                          _______________,

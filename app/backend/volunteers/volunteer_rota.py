@@ -1,46 +1,70 @@
+from dataclasses import dataclass
 from typing import List, Union
 
-from app.backend.data.volunteer_rota import save_volunteers_in_role_at_event
+from app.backend.volunteers.volunteers import get_volunteer_name_from_id
+
+from app.objects.abstract_objects.abstract_interface import abstractInterface
+
+from app.backend.data.volunteer_rota import save_volunteers_in_role_at_event, VolunteerRotaData, \
+    get_volunteer_roles, update_role_at_event_for_volunteer_on_day
+from app.data_access.configuration.configuration import VOLUNTEER_ROLES
 from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingVolunteerRotaPage, \
     DEPRECATE_load_volunteers_in_role_at_event, RotaSortsAndFilters
+
 from app.backend.data.volunteers import DEPRECATED_get_sorted_list_of_volunteers
 from app.objects.constants import missing_data, arg_not_passed
 from app.objects.events import Event
 from app.objects.groups import Group, ALL_GROUPS_NAMES, GROUP_UNALLOCATED_TEXT
 from app.objects.volunteers_at_event import VolunteerAtEvent, ListOfVolunteersAtEvent
 from app.objects.volunteers import Volunteer
-from app.objects.volunteers_in_roles import VOLUNTEER_ROLES, \
-    NO_ROLE_SET, VolunteerInRoleAtEvent
+from app.objects.volunteers_in_roles import NO_ROLE_SET, VolunteerInRoleAtEvent
 
 from app.objects.day_selectors import Day
 
+@dataclass
+class SwapData:
+    event: Event
+    original_day: Day
+    day_to_swap_with: Day
+    swap_boats: bool
+    swap_roles: bool
+    volunteer_id_to_swap_with: str
+    original_volunteer_id: str
 
-def update_role_at_event_for_volunteer_on_day_at_event(event: Event,
+def update_role_at_event_for_volunteer_on_day_at_event(interface: abstractInterface,
+                                                       event: Event,
                                                        day: Day,
                                                        volunteer_id: str,
                                                        new_role: str):
 
     volunteer_in_role_at_event_on_day =  VolunteerInRoleAtEvent(day=day, volunteer_id=volunteer_id)
-
-    list_of_volunteers_in_roles_at_event = DEPRECATE_load_volunteers_in_role_at_event(event)
-    list_of_volunteers_in_roles_at_event.update_volunteer_in_role_on_day(volunteer_in_role_at_event=volunteer_in_role_at_event_on_day,
-                                                             new_role=new_role)
-    save_volunteers_in_role_at_event(event=event, list_of_volunteers_in_roles_at_event=list_of_volunteers_in_roles_at_event)
+    update_role_at_event_for_volunteer_on_day(interface=interface, event=event, volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day,
+                                              new_role=new_role)
 
 
-def get_volunteer_role_at_event_on_day(event: Event, volunteer_id: str, day: Day) -> str:
-    volunteer_in_role = get_volunteer_with_role_at_event_on_day(event=event, day=day, volunteer_id=volunteer_id)
+def DEPRECATE_get_volunteer_role_at_event_on_day(event: Event, volunteer_id: str, day: Day) -> str:
+    volunteer_in_role = DEPRECATE_get_volunteer_with_role_at_event_on_day(event=event, day=day, volunteer_id=volunteer_id)
     if volunteer_in_role is missing_data:
         return missing_data
 
     return volunteer_in_role.role
 
+def get_volunteer_role_at_event_on_day(interface: abstractInterface, event: Event, volunteer_id: str, day: Day) -> str:
+    volunteer_role_data = VolunteerRotaData(interface.data)
+    return volunteer_role_data.get_volunteer_role_at_event_on_day(event=event, volunteer_id=volunteer_id, day=day)
 
-def get_volunteer_with_role_at_event_on_day(event: Event, volunteer_id: str, day: Day) -> VolunteerInRoleAtEvent:
+def get_volunteer_with_role_at_event_on_day(interface: abstractInterface, event: Event, volunteer_id: str, day: Day) -> VolunteerInRoleAtEvent:
+    volunteer_role_data = VolunteerRotaData(interface.data)
+    return volunteer_role_data.get_volunteer_with_role_at_event_on_day(event=event, volunteer_id=volunteer_id, day=day)
+
+
+def DEPRECATE_get_volunteer_with_role_at_event_on_day(event: Event, volunteer_id: str, day: Day) -> VolunteerInRoleAtEvent:
     volunteers_in_roles_at_event= DEPRECATE_load_volunteers_in_role_at_event(event)
     volunteer_in_role = volunteers_in_roles_at_event.member_matching_volunteer_id_and_day(volunteer_id=volunteer_id, day=day)
 
     return volunteer_in_role
+
+
 
 def sort_volunteer_data_for_event_by_name_sort_order(volunteers_at_event: ListOfVolunteersAtEvent, sort_order) -> ListOfVolunteersAtEvent:
     list_of_volunteers = DEPRECATED_get_sorted_list_of_volunteers(sort_by=sort_order)
@@ -95,16 +119,26 @@ def dict_of_groups_for_dropdown():
     return dict_of_groups
 
 MAKE_UNAVAILABLE = "* UNAVAILABLE *"
-def dict_of_roles_for_dropdown():
-    dict_of_roles = {role:role for role in VOLUNTEER_ROLES}
+def dict_of_roles_for_dropdown(interface: abstractInterface):
+    volunteer_roles = get_volunteer_roles(interface)
+    dict_of_roles = {role:role for role in volunteer_roles}
     dict_of_roles[NO_ROLE_SET] = NO_ROLE_SET
     dict_of_roles[MAKE_UNAVAILABLE] = MAKE_UNAVAILABLE
 
     return dict_of_roles
 
-def boat_related_role_str_on_day_for_volunteer_id(day: Day, event: Event, volunteer_id: str)-> str:
-    volunteers_in_role_at_event = DEPRECATE_load_volunteers_in_role_at_event(event)
-    volunteer_on_day = volunteers_in_role_at_event.member_matching_volunteer_id_and_day(volunteer_id=volunteer_id, day=day, return_empty_if_missing=False)
+def DEPRECATE_dict_of_roles_for_dropdown():
+    volunteer_roles = VOLUNTEER_ROLES
+    dict_of_roles = {role:role for role in volunteer_roles}
+    dict_of_roles[NO_ROLE_SET] = NO_ROLE_SET
+    dict_of_roles[MAKE_UNAVAILABLE] = MAKE_UNAVAILABLE
+
+    return dict_of_roles
+
+
+def boat_related_role_str_on_day_for_volunteer_id(interface: abstractInterface, day: Day, event: Event, volunteer_id: str)-> str:
+    volunteer_rota = VolunteerRotaData(interface.data)
+    volunteer_on_day = volunteer_rota.get_volunteer_with_role_at_event_on_day(event=event, day=day, volunteer_id=volunteer_id)
     if volunteer_on_day is missing_data:
         return ""
     elif volunteer_on_day.requires_boat:
@@ -113,58 +147,77 @@ def boat_related_role_str_on_day_for_volunteer_id(day: Day, event: Event, volunt
         return ""
 
 
-
-
-def is_possible_to_copy_roles_for_non_grouped_roles_only(event: Event, volunteer_id:str) -> bool:
+def is_possible_to_copy_roles_for_non_grouped_roles_only(interface: abstractInterface, event: Event, volunteer_id:str) -> bool:
     ## Only possible if: none of the roles require a group, and all the roles don't currently match
 
-    volunteers_with_roles_in_event_including_missing_data = [get_volunteer_with_role_at_event_on_day(volunteer_id=volunteer_id,
-                                                                               day=day, event=event)
-                                        for day in event.weekdays_in_event()]
-
-    all_volunteer_positions = [volunteer_with_role for volunteer_with_role in volunteers_with_roles_in_event_including_missing_data
-                               if volunteer_with_role is not missing_data]
+    all_volunteer_positions = get_list_of_volunteer_with_role_across_days_for_volunteer_at_event(
+        interface=interface,
+        event=event,
+        volunteer_id=volunteer_id
+    )
 
     all_roles = [volunteer_with_role.role for volunteer_with_role in all_volunteer_positions]
 
-    if len(all_roles)==0:
-        ## nothing to copy
-        return False
-
+    no_roles_to_copy = len(all_roles)==0
     all_roles_match = len(set(all_roles))<=1
 
     roles_require_groups = [volunteer_with_role.requires_group for volunteer_with_role in all_volunteer_positions]
     at_least_one_role_require_group = any(roles_require_groups)
 
-    ## copy not possible if all roles the same, or at least one requires a group
-    if all_roles_match or at_least_one_role_require_group:
+    ## copy not possible if all roles the same, or at least one requires a group, or nothing to copy
+    if all_roles_match or at_least_one_role_require_group or no_roles_to_copy:
         return False
     else:
         return True
 
 
-def is_possible_to_swap_roles_on_one_day_for_non_grouped_roles_only(event: Event, volunteer_id:str, day: Day) -> bool:
+def get_list_of_volunteer_with_role_across_days_for_volunteer_at_event(interface: abstractInterface, event: Event, volunteer_id:str) ->\
+    List[VolunteerInRoleAtEvent]:
     ## Only possible if: none of the roles require a group, and all the roles don't currently match
 
-    volunteer_with_role = get_volunteer_with_role_at_event_on_day(volunteer_id=volunteer_id,
-                                                                               day=day, event=event)
+    volunteers_with_roles_in_event_including_missing_data = [get_volunteer_with_role_at_event_on_day(interface=interface,
+                                                                                                     volunteer_id=volunteer_id,
+                                                                                                    day=day, event=event)
+                                                             for day in event.weekdays_in_event()]
 
-    return not volunteer_with_role.requires_group
+    all_volunteer_positions = [volunteer_with_role for volunteer_with_role in volunteers_with_roles_in_event_including_missing_data
+                               if volunteer_with_role is not missing_data]
+
+    return all_volunteer_positions
+
+def is_possible_to_swap_roles_on_one_day_for_non_grouped_roles_only(interface: abstractInterface,
+                                                                    event: Event,
+                                                                    volunteer_id:str,
+                                                                    day: Day) -> bool:
+    ## Only possible if: none of the roles require a group, and all the roles don't currently match
+
+    volunteer_with_role = get_volunteer_with_role_at_event_on_day(interface=interface,
+                                                                  volunteer_id=volunteer_id,
+                                                                            day=day, event=event)
+    role_requires_group = volunteer_with_role.requires_group
+    possible_to_swap = not role_requires_group
+
+    return possible_to_swap
 
 
-def swap_roles_for_volunteers_in_allocation(event: Event,
-                                                                           original_day: Day,
-                                                                           original_volunteer_id: str,
-                                                                           day_to_swap_with: Day,
-                                                                           volunteer_id_to_swap_with: str):
-    volunteers_in_role_at_event = DEPRECATE_load_volunteers_in_role_at_event(event)
-    volunteers_in_role_at_event.swap_roles_for_volunteers_in_allocation(
-            original_volunteer_id=original_volunteer_id,
-        original_day=original_day,
-        day_to_swap_with=day_to_swap_with,
-        volunteer_id_to_swap_with=volunteer_id_to_swap_with
-    )
-    save_volunteers_in_role_at_event(event=event, list_of_volunteers_in_roles_at_event=volunteers_in_role_at_event)
+
+
+def swap_roles_for_volunteers_in_allocation(interface: abstractInterface,
+                                            swap_data: SwapData):
+
+    volunteer_rota_data = VolunteerRotaData(interface.data)
+    try:
+        volunteer_rota_data.swap_roles_for_volunteers_in_allocation(
+            event=swap_data.event,
+            original_volunteer_id=swap_data.original_volunteer_id,
+            volunteer_id_to_swap_with=swap_data.volunteer_id_to_swap_with,
+            day_to_swap_with=swap_data.day_to_swap_with,
+            original_day=swap_data.original_day
+        )
+    except Exception as e:
+        first_name = get_volunteer_name_from_id(interface=interface, volunteer_id=swap_data.original_volunteer_id)
+        second_name = get_volunteer_name_from_id(interface=interface, volunteer_id=swap_data.volunteer_id_to_swap_with)
+        interface.log_error("Swap roles of %s and %s failed on day %s, error %s" % (first_name, second_name, swap_data.day_to_swap_with.name, str(e)))
 
 def swap_and_groups_for_volunteers_in_allocation(event: Event,
                                                                            original_day: Day,
@@ -225,3 +278,5 @@ def sort_volunteer_data_for_event_by_location(list_of_volunteers_at_event: ListO
                                               data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage)-> ListOfVolunteersAtEvent:
     ## FIX ME TO IMPLEMENT
     return list_of_volunteers_at_event
+
+

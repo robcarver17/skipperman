@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from app.backend.volunteers.volunteers import get_volunteer_from_list_of_volunteers
+from app.backend.volunteers.volunteers import DEPRECATE_get_volunteer_from_list_of_volunteers
 
 from app.backend.data.security import add_user, already_in_list, delete_username_from_user_list, load_all_users, \
     change_password_for_user, modify_user_group, generate_reset_link
@@ -110,7 +110,7 @@ def get_user_values_from_values_in_form(interface: abstractInterface, user: Skip
         username = user.username
     email = interface.value_from_form(name_for_user_and_input_type(user, EMAIL))
     volunteer_name= interface.value_from_form(name_for_user_and_input_type(user, VOLUNTEER))
-    volunteer = get_volunteer_from_list_of_volunteers(volunteer_name)
+    volunteer = DEPRECATE_get_volunteer_from_list_of_volunteers(volunteer_name)
 
     return SkipperManUserFromForm(
         username = username,

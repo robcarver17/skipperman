@@ -12,18 +12,22 @@ from app.objects.constants import arg_not_passed
 from app.objects.volunteers import Volunteer
 
 
-def get_list_of_volunteers_as_str(list_of_volunteers = arg_not_passed) -> list:
+def DEPRECATE_get_list_of_volunteers_as_str(list_of_volunteers = arg_not_passed) -> list:
     if list_of_volunteers is arg_not_passed:
         list_of_volunteers = DEPRECATE_load_all_volunteers()
     return [str(volunteer) for volunteer in list_of_volunteers]
 
 
-def get_volunteer_from_list_of_volunteers(volunteer_selected: str) -> Volunteer:
+def DEPRECATE_get_volunteer_from_list_of_volunteers(volunteer_selected: str) -> Volunteer:
     list_of_volunteers = DEPRECATE_load_all_volunteers()
-    list_of_volunteers_as_str = get_list_of_volunteers_as_str(list_of_volunteers=list_of_volunteers)
+    list_of_volunteers_as_str = DEPRECATE_get_list_of_volunteers_as_str(list_of_volunteers=list_of_volunteers)
 
     idx = list_of_volunteers_as_str.index(volunteer_selected)
     return list_of_volunteers[idx]
+
+def get_volunteer_from_list_of_volunteers_given_volunteer_name(interface: abstractInterface, volunteer_name: str) -> Volunteer:
+    volunteer_data = VolunteerData(interface.data)
+    return volunteer_data.get_volunteer_from_list_of_volunteers_given_name(volunteer_name=volunteer_name)
 
 
 
@@ -154,22 +158,27 @@ def DEPRECATED_get_volunteer_name_from_id(volunteer_id) -> str:
     volunteer = DEPRECATED_get_volunteer_from_id(volunteer_id)
     return volunteer.name
 
-def boat_related_skill_str(volunteer_id: str) -> str:
-    if boat_related_skill_for_volunteer(volunteer_id):
+def boat_related_skill_str(interface: abstractInterface, volunteer_id: str) -> str:
+    if boat_related_skill_for_volunteer(interface=interface, volunteer_id=volunteer_id):
         return VOLUNTEERS_SKILL_FOR_PB2
     else:
         return ""
 
-def boat_related_skill_for_volunteer(volunteer_id: str) -> bool:
+def DEPRECATE_boat_related_skill_for_volunteer(volunteer_id: str) -> bool:
     skills =DEPRECATE_load_list_of_volunteer_skills()
     return skills.volunteer_id_has_boat_related_skills(volunteer_id)
 
-def add_boat_related_skill_for_volunteer(volunteer_id: str):
+def boat_related_skill_for_volunteer(interface: abstractInterface, volunteer_id: str) -> bool:
+    volunteer_data = VolunteerData(interface.data)
+    return volunteer_data.boat_related_skill_for_volunteer(volunteer_id)
+
+def add_boat_related_skill_for_volunteer(interface: abstractInterface, volunteer_id: str):
+    volunteer_data = VolunteerData(interface.data)
     skills =DEPRECATE_load_list_of_volunteer_skills()
     skills.add_boat_related_skill_for_volunteer(volunteer_id)
     save_list_of_volunteer_skills(skills)
 
-def remove_boat_related_skill_for_volunteer(volunteer_id: str):
+def remove_boat_related_skill_for_volunteer(interface: abstractInterface, volunteer_id: str):
     skills =DEPRECATE_load_list_of_volunteer_skills()
     skills.remove_boat_related_skill_for_volunteer(volunteer_id)
     save_list_of_volunteer_skills(skills)

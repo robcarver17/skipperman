@@ -5,16 +5,15 @@ from app.objects.abstract_objects.abstract_tables import PandasDFTable, Elements
 from app.objects.abstract_objects.abstract_text import Text, Arrow, up_arrow, down_arrow, \
     right_arrow, left_arrow, up_down_arrow, left_right_arrow, Pointer, Symbol, reg_tm_symbol, copyright_symbol, \
     up_pointer, down_pointer, left_pointer, right_pointer, lightning_symbol, circle_up_arrow_symbol, umbrella_symbol, \
-    at_symbol, Heading
+    at_symbol
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, DetailListOfLines, DetailLine
 from app.web.html.components import *
 from app.web.html.url import INDEX_URL
-from app.web.flask.flask_interface import flaskInterface
 from app.web.html.forms import *
 from app.objects.abstract_objects.abstract_form import textInput, dateInput, radioInput, checkboxInput
 
-DEBUG =True
-TERSE = True
+DEBUG =False
+TERSE = False
 
 def process_abstract_form_to_html(form: Form, current_url: str) -> Html:
     if TERSE:

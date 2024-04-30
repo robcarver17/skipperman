@@ -1,7 +1,6 @@
 import yaml
 from app.data_access.file_access import get_relative_pathname_from_list
 
-
 ## IMPORTANT: In the unlikely event we move the config file, this needs changing
 configuration_file = get_relative_pathname_from_list(
     ["app", "data_access", "configuration", "configuration.yaml"]
@@ -67,16 +66,22 @@ VOLUNTEER_TEAMS = configuration['volunteer_teams']
 VOLUNTEERS_REQUIRING_BOATS = configuration['volunteers_requiring_boats']
 VOLUNTEERS_SKILL_FOR_PB2 = configuration['power_boat_skills'][0]
 
-
-VOLUNTEER_ROLES = []
-for team in VOLUNTEER_TEAMS.values():
-    for role in team:
-        if role not in VOLUNTEER_ROLES: ## avoids duplication eg deputy skipper while preserving order
-            VOLUNTEER_ROLES.append(role)
-
 VOLUNTEERS_REQUIRING_GROUP = configuration['volunteers_requiring_group']
 
 
 ## Page sizes - not configured in yaml as won't need changing
 MAX_FILE_SIZE = configuration["max_file_size"]
 UPLOAD_EXTENSIONS = configuration["upload_extensions"]
+
+
+def DEPRECATE_get_volunteer_roles():
+    ## FIXME REPLACE WITH CONFIGURABLE FILE in backend
+    volunteer_roles = []
+    for team in VOLUNTEER_TEAMS.values():
+        for role in team:
+            if role not in volunteer_roles:  ## avoids duplication eg deputy skipper while preserving order
+                volunteer_roles.append(role)
+
+    return volunteer_roles
+
+VOLUNTEER_ROLES = DEPRECATE_get_volunteer_roles()

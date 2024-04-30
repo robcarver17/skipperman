@@ -3,7 +3,8 @@ from typing import List, Union
 
 from app.backend.forms.swaps import is_ready_to_swap
 from app.backend.volunteers.volunteer_rota import dict_of_groups_for_dropdown, \
-    dict_of_roles_for_dropdown, get_sorted_and_filtered_list_of_volunteers_at_event
+    dict_of_roles_for_dropdown, get_sorted_and_filtered_list_of_volunteers_at_event, \
+    DEPRECATE_dict_of_roles_for_dropdown
 from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingVolunteerRotaPage, get_data_to_be_stored_for_volunteer_rota_page, \
     RotaSortsAndFilters
 from app.backend.volunteers.volunteers import DEPRECATED_get_volunteer_from_id
@@ -199,7 +200,7 @@ def get_allocation_input_for_role(volunteer_in_role_at_event_on_day: VolunteerIn
     return dropDownInput(
         input_label = "",
         input_name=input_name_for_role_and_volunteer(volunteer_in_role_at_event_on_day),
-        dict_of_options=dict_of_roles_for_dropdown(),
+        dict_of_options=DEPRECATE_dict_of_roles_for_dropdown(),
         default_label=volunteer_in_role_at_event_on_day.role
     )
 

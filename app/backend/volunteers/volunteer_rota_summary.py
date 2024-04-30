@@ -4,7 +4,7 @@ import pandas as pd
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.data.volunteer_rota import get_volunteers_in_role_at_event_with_active_allocations
-from app.data_access.configuration.configuration import VOLUNTEER_ROLES, ALL_GROUPS_NAMES
+from app.data_access.configuration.configuration import ALL_GROUPS_NAMES, VOLUNTEER_ROLES
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.groups import GROUP_UNALLOCATED_TEXT, Group

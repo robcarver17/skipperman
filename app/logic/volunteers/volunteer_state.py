@@ -1,11 +1,11 @@
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.volunteers.constants import VOLUNTEER
-from app.backend.volunteers.volunteers import get_volunteer_from_list_of_volunteers, DEPRECATED_get_volunteer_from_id
+from app.backend.volunteers.volunteers import DEPRECATE_get_volunteer_from_list_of_volunteers, DEPRECATED_get_volunteer_from_id
 from app.objects.volunteers import Volunteer
 
 
 def update_state_for_specific_volunteer_given_volunteer_as_str(interface: abstractInterface, volunteer_selected: str):
-    volunteer = get_volunteer_from_list_of_volunteers(volunteer_selected)
+    volunteer = DEPRECATE_get_volunteer_from_list_of_volunteers(volunteer_selected)
     update_state_with_volunteer_id(interface=interface, volunteer_id=volunteer.id)
 
 

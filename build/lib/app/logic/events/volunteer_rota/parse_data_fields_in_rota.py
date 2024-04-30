@@ -83,7 +83,7 @@ def update_role_for_volunteer_on_day_at_event(interface: abstractInterface,
         return
 
     event = get_event_from_state(interface)
-    update_role_at_event_for_volunteer_on_day(volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day,
+    update_role_at_event_for_volunteer_on_day(interface=interface, volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day,
                                               new_role=new_role_from_form, event=event)
 
 def update_group_from_form_for_volunteer_on_day_at_event(interface: abstractInterface,

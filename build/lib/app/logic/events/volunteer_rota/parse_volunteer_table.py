@@ -1,8 +1,8 @@
-from app.backend.data.volunteer_rota import copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days, \
+from app.backend.data.volunteer_rota import DEPRECATE_copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days, \
     remove_role_at_event_for_volunteer_on_day
 from app.backend.volunteers.volunteer_allocation import make_volunteer_available_on_day, \
     make_volunteer_unavailable_on_day
-from app.backend.volunteers.volunteer_rota import get_volunteer_with_role_at_event_on_day
+from app.backend.volunteers.volunteer_rota import DEPRECATE_get_volunteer_with_role_at_event_on_day
 from app.backend.volunteers.volunteer_rota_data import get_data_to_be_stored_for_volunteer_rota_page
 from app.data_access.configuration.configuration import VOLUNTEER_SKILLS
 from app.logic.events.volunteer_rota.edit_cadet_connections_for_event_from_rota import \
@@ -138,8 +138,8 @@ def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str
         data_to_be_stored=data_to_be_stored
     )
     print("copying volunteer id %s day %s" % (volunteer_id, day.name))
-    copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(event=event,
-                    volunteer_id=volunteer_id, day=day)
+    DEPRECATE_copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(event=event,
+                                                                                       volunteer_id=volunteer_id, day=day)
 
 def update_if_make_available_button_pressed(interface: abstractInterface, available_button: str):
     volunteer_id, day =  from_known_button_to_volunteer_id_and_day(available_button)
@@ -157,7 +157,7 @@ def update_if_make_unavailable_button_pressed(interface: abstractInterface, unav
 def update_if_remove_role_button_pressed(interface: abstractInterface, remove_button: str):
     volunteer_id, day =  from_known_button_to_volunteer_id_and_day(remove_button)
     event = get_event_from_state(interface)
-    current_volunteer = get_volunteer_with_role_at_event_on_day(event=event, volunteer_id=volunteer_id, day=day)
+    current_volunteer = DEPRECATE_get_volunteer_with_role_at_event_on_day(event=event, volunteer_id=volunteer_id, day=day)
     remove_role_at_event_for_volunteer_on_day(event=event, volunteer_in_role_at_event_on_day=current_volunteer)
 
 

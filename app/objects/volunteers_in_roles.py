@@ -3,8 +3,9 @@ from dataclasses import dataclass
 from typing import List
 from statistics import mode
 
-from app.data_access.configuration.configuration import VOLUNTEER_ROLES, VOLUNTEERS_REQUIRING_GROUP, VOLUNTEERS_REQUIRING_BOATS
-from app.objects.generic import GenericSkipperManObject, get_class_instance_from_str_dict, GenericListOfObjects, _transform_class_dict_into_str_dict
+from app.data_access.configuration.configuration import VOLUNTEERS_REQUIRING_GROUP, VOLUNTEERS_REQUIRING_BOATS, \
+    VOLUNTEER_ROLES
+from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
 from app.objects.groups import Group, GROUP_UNALLOCATED, index_group
 from app.objects.day_selectors import Day
 from app.objects.constants import missing_data
@@ -40,7 +41,7 @@ class VolunteerInRoleAtEvent(GenericSkipperManObject):
 
 
 def index_of_role(role: str):
-    combined_roles = VOLUNTEER_ROLES+[NO_ROLE_SET]
+    combined_roles = VOLUNTEER_ROLES + [NO_ROLE_SET]
     return combined_roles.index(role)
 
 
@@ -251,4 +252,5 @@ FILTER_UNALLOC_AVAILABLE = "Unallocated+Available"
 FILTER_ALLOC_AVAILABLE = "Allocated+Available"
 FILTER_UNAVAILABLE = "Unavailable"
 FILTER_OPTIONS = [FILTER_ALL, FILTER_AVAILABLE, FILTER_UNALLOC_AVAILABLE, FILTER_ALLOC_AVAILABLE, FILTER_UNAVAILABLE]
+
 

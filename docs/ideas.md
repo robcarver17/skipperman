@@ -80,7 +80,6 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - allow multiple days / different allocations. Availability change will break two handed partners.
 
 - role summary also does DI/AI by group (only on volunteer page)
-- click on volunteer name to see previous events
 - add new volunteer from volunteer rota page should include skills filter
 - cadet connections inside volunteer rota includes groups
 - set maximum allowable / target for each role

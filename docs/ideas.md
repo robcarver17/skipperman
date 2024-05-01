@@ -61,30 +61,28 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - record ticksheet data
 - print roll call lists
 
-### Functionality / bug fixes 
+### Functionality / bug fixes for volunteer rota
 
-- removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
-- data model for volunteer rota (finish), boats and group allocation
+- data model for volunteer rota (finish)
+ - role summary also does DI/AI by group (only on volunteer page)
+ - set maximum allowable / target for each role
 
 ### Required for May training event:
 - record ticksheet entries
 - sign in sheet multiple columns
 - add health to ticksheets
+- data model for boats and group allocation
 - refactor reporting so uses common data model 
 
 ### Required for June training event:
+
 - add contact details and health to roll call report
 
 - store of previous events volunteer role / cadet allocation to speed up loading 
 - click on cadet name to see previous groups
 - allow multiple days / different allocations. Availability change will break two handed partners.
 
-- role summary also does DI/AI by group (only on volunteer page)
-- add new volunteer from volunteer rota page should include skills filter
-- cadet connections inside volunteer rota includes groups
-- set maximum allowable / target for each role
-- sort volunteer by cadet location
-
+- removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
 - over 12 volunteer has to be identified multiple times on input
 - volunteer rota still not doing change check properly
 
@@ -114,7 +112,8 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for cadet week:
 
-- list of non volunteers with cadet ages, previous groups
+- list of non volunteers with cadet ages
+- sort volunteer list by cadet location
 - two types of clothing event: as part of training event, or social only seperate
 - allocate and maintain colour groups (CW)
 - maintain and report on tickets for gala dinner, include additional gala dinner invites eg sponsors, plus ones (CW)
@@ -130,6 +129,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
   ### General required before handover to Jonny:
 
+- add new volunteer from volunteer rota page should include skills filter
 - create a list of key volunteers to invite to curry evening
 - don't allow duplicate templates and delete templates allowed
 - template download for import of list of cadets

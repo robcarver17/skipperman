@@ -61,15 +61,9 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - record ticksheet data
 - print roll call lists
 
-### Functionality / bug fixes for volunteer rota
-
-- data model for volunteer rota (finish)
- - role summary also does DI/AI by group (only on volunteer page)
- - set maximum allowable / target for each role
 
 ### Required for May training event:
 - record ticksheet entries
-- sign in sheet multiple columns
 - add health to ticksheets
 - data model for boats and group allocation
 - refactor reporting so uses common data model 
@@ -129,6 +123,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
   ### General required before handover to Jonny:
 
+ - set maximum allowable / target for each volunteer role
 - add new volunteer from volunteer rota page should include skills filter
 - create a list of key volunteers to invite to curry evening
 - don't allow duplicate templates and delete templates allowed

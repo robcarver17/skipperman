@@ -13,7 +13,8 @@ import pandas as pd
 from app.backend.data.volunteer_rota import get_volunteer_roles, \
     VolunteerRotaData
 
-from app.backend.volunteers.volunteer_rota import DEPRECATE_get_volunteer_role_at_event_on_day, SwapData
+from app.backend.volunteers.volunteer_rota import  SwapData, \
+    get_volunteer_role_at_event_on_day
 
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.day_selectors import Day
@@ -86,7 +87,7 @@ def sort_list_of_volunteer_ids_for_day_and_event_by_role(interface: abstractInte
     new_list = []
     for role in volunteer_roles:
         list_of_volunteer_ids_for_this_role = [volunteer_id for volunteer_id in list_of_volunteer_ids
-                                               if DEPRECATE_get_volunteer_role_at_event_on_day(day=day, volunteer_id=volunteer_id, event=event) == role
+                                               if get_volunteer_role_at_event_on_day(interface=interface, day=day, volunteer_id=volunteer_id, event=event) == role
                                                ]
         new_list+=list_of_volunteer_ids_for_this_role
 
@@ -308,7 +309,6 @@ def add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts(i
                                                                            day=boat_day_volunteer.day,
                                                                            patrol_boat_id=boat_day_volunteer.boat.id)
         except Exception as e:
-            name = get_volunteer_name_from_id(interface=interface, volunteer_id=boat_day_volunteer.volunteer_id)
-            interface.log_error("Can't add volunteer %s to boat; error %s" % (name, str(e)))
+            interface.log_error("Can't add volunteer %s to boat %s on day %s; error %s" % (str(boat_day_volunteer.volunteer), str(boat_day_volunteer.boat), boat_day_volunteer.day.name, str(e)))
 
     patrol_boat_data.save_list_of_voluteers_at_event_with_patrol_boats(list_of_volunteers_at_event_with_patrol_boats=list_of_volunteers_at_event_with_boats, event=event)

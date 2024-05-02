@@ -6,10 +6,9 @@ from app.backend.volunteers.volunteers import get_volunteer_name_from_id
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.data.volunteer_rota import save_volunteers_in_role_at_event, VolunteerRotaData, \
-    get_volunteer_roles, update_role_at_event_for_volunteer_on_day
+    get_volunteer_roles, update_role_at_event_for_volunteer_on_day, get_volunteers_in_role_at_event_with_active_allocations
 from app.data_access.configuration.configuration import VOLUNTEER_ROLES
-from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingVolunteerRotaPage, \
-    DEPRECATE_load_volunteers_in_role_at_event, RotaSortsAndFilters
+from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingVolunteerRotaPage,  RotaSortsAndFilters
 
 from app.backend.data.volunteers import DEPRECATED_get_sorted_list_of_volunteers
 from app.objects.constants import missing_data, arg_not_passed
@@ -42,13 +41,6 @@ def update_role_at_event_for_volunteer_on_day_at_event(interface: abstractInterf
                                               new_role=new_role)
 
 
-def DEPRECATE_get_volunteer_role_at_event_on_day(event: Event, volunteer_id: str, day: Day) -> str:
-    volunteer_in_role = DEPRECATE_get_volunteer_with_role_at_event_on_day(event=event, day=day, volunteer_id=volunteer_id)
-    if volunteer_in_role is missing_data:
-        return missing_data
-
-    return volunteer_in_role.role
-
 def get_volunteer_role_at_event_on_day(interface: abstractInterface, event: Event, volunteer_id: str, day: Day) -> str:
     volunteer_role_data = VolunteerRotaData(interface.data)
     return volunteer_role_data.get_volunteer_role_at_event_on_day(event=event, volunteer_id=volunteer_id, day=day)
@@ -58,11 +50,6 @@ def get_volunteer_with_role_at_event_on_day(interface: abstractInterface, event:
     return volunteer_role_data.get_volunteer_with_role_at_event_on_day(event=event, volunteer_id=volunteer_id, day=day)
 
 
-def DEPRECATE_get_volunteer_with_role_at_event_on_day(event: Event, volunteer_id: str, day: Day) -> VolunteerInRoleAtEvent:
-    volunteers_in_roles_at_event= DEPRECATE_load_volunteers_in_role_at_event(event)
-    volunteer_in_role = volunteers_in_roles_at_event.member_matching_volunteer_id_and_day(volunteer_id=volunteer_id, day=day)
-
-    return volunteer_in_role
 
 
 
@@ -112,7 +99,7 @@ def str_dict_skills(volunteer: Volunteer, data_to_be_stored: DataToBeStoredWhils
 
     return ", ".join(list_of_skills)
 
-def dict_of_groups_for_dropdown():
+def dict_of_groups_for_dropdown(interface: abstractInterface): ## Future proof to when groups come from files
     dict_of_groups = {group:group for group in ALL_GROUPS_NAMES}
     dict_of_groups[GROUP_UNALLOCATED_TEXT]= GROUP_UNALLOCATED_TEXT
 
@@ -219,19 +206,19 @@ def swap_roles_for_volunteers_in_allocation(interface: abstractInterface,
         second_name = get_volunteer_name_from_id(interface=interface, volunteer_id=swap_data.volunteer_id_to_swap_with)
         interface.log_error("Swap roles of %s and %s failed on day %s, error %s" % (first_name, second_name, swap_data.day_to_swap_with.name, str(e)))
 
-def swap_and_groups_for_volunteers_in_allocation(event: Event,
+def swap_and_groups_for_volunteers_in_allocation(interface:abstractInterface,
+                                                                            event: Event,
                                                                            original_day: Day,
                                                                            original_volunteer_id: str,
                                                                            day_to_swap_with: Day,
                                                                            volunteer_id_to_swap_with: str):
-    volunteers_in_role_at_event = DEPRECATE_load_volunteers_in_role_at_event(event)
-    volunteers_in_role_at_event.swap_roles_and_groups_for_volunteers_in_allocation(
-            original_volunteer_id=original_volunteer_id,
-        original_day=original_day,
-        day_to_swap_with=day_to_swap_with,
-        volunteer_id_to_swap_with=volunteer_id_to_swap_with
-    )
-    save_volunteers_in_role_at_event(event=event, list_of_volunteers_in_roles_at_event=volunteers_in_role_at_event)
+    volunteer_rota_data = VolunteerRotaData(interface.data)
+    volunteer_rota_data.swap_and_groups_for_volunteers_in_allocation(event=event,
+                                                                     original_day=original_day,
+                                                                     day_to_swap_with=day_to_swap_with,
+                                                                     original_volunteer_id=original_volunteer_id,
+                                                                     volunteer_id_to_swap_with=volunteer_id_to_swap_with)
+
 
 
 def get_sorted_and_filtered_list_of_volunteers_at_event(

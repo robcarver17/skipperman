@@ -1,3 +1,5 @@
+from typing import List
+
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.cadets import DEPRECATE_get_sorted_list_of_cadets
@@ -8,7 +10,15 @@ from app.objects.cadets import ListOfCadets
 from app.objects.constants import arg_not_passed
 from app.objects.events import Event
 from app.objects.groups import ListOfCadetIdsWithGroups, ListOfCadetsWithGroup
+from app.objects.groups import Group
+from app.backend.data.group_allocations import GroupAllocationsData
 
+def get_list_of_groups_at_event_given_list_of_cadets(interface: abstractInterface,
+                                                        event: Event,
+                                                        list_of_cadets: ListOfCadets) -> List[Group]:
+
+    group_allocation_data = GroupAllocationsData(interface.data)
+    return group_allocation_data.get_list_of_groups_at_event_given_list_of_cadets(event=event, list_of_cadets=list_of_cadets)
 
 def get_list_of_active_cadets_at_event(
     event: Event

@@ -3,7 +3,8 @@ from typing import Union, List
 
 from app.objects.constants import arg_not_passed
 
-from app.backend.cadets import get_list_of_cadets_as_str_similar_to_name_first, DEPRECATE_get_cadet_from_list_of_cadets
+from app.backend.cadets import get_list_of_cadets_as_str_similar_to_name_first, DEPRECATE_get_cadet_from_list_of_cadets, \
+    get_sorted_list_of_cadets, get_list_of_cadets_similar_to_name_first, cadet_from_id
 from app.objects.abstract_objects.abstract_form import Form, NewForm, dropDownInput
 from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
@@ -14,7 +15,7 @@ from app.objects.abstract_objects.abstract_interface import (
 from app.logic.volunteers.constants import *
 from app.backend.volunteers.volunteers import get_connected_cadets
 from app.backend.data.volunteers import delete_connection_in_data, \
-    DEPRECATE_add_volunteer_connection_to_cadet_in_master_list_of_volunteers
+    DEPRECATE_add_volunteer_connection_to_cadet_in_master_list_of_volunteers, SORT_BY_SURNAME
 from app.logic.volunteers.volunteer_state import get_volunteer_from_state
 from app.objects.volunteers import Volunteer
 from app.objects.cadets import Cadet, ListOfCadets
@@ -31,7 +32,9 @@ def display_form_edit_cadet_volunteer_connections(
         )
         return initial_state_form
     connected_cadets = get_connected_cadets(volunteer)
-    form = form_to_edit_connections(volunteer=volunteer, connected_cadets=connected_cadets, text=header_text)
+    from_list_of_cadets = get_sorted_list_of_cadets(interface=interface, sort_by=SORT_BY_SURNAME)
+
+    form = form_to_edit_connections(volunteer=volunteer, connected_cadets=connected_cadets, text=header_text, from_list_of_cadets=from_list_of_cadets)
 
     return form
 
@@ -41,14 +44,14 @@ Line("Edit volunteer and cadet connections (used to avoid putting group_allocati
 Line("Note: This will not automatically connect volunteers and group_allocations in events, nor will deleting a connection remove the connection in an event")])
 
 def form_to_edit_connections(volunteer: Volunteer,
-                             connected_cadets: List[Cadet],
+                             connected_cadets: ListOfCadets,
                                 text: ListOfLines,
-                             from_list_of_cadets: ListOfCadets = arg_not_passed,
+                             from_list_of_cadets: ListOfCadets,
 
         ) -> Form:
 
     existing_entries = rows_for_existing_entries(connected_cadets=connected_cadets)
-    new_entries = row_for_new_entries(volunteer=volunteer, from_list_of_cadets=from_list_of_cadets)
+    new_entries = row_for_new_entries(volunteer=volunteer, connected_cadets=connected_cadets, from_list_of_cadets=from_list_of_cadets)
     footer_buttons = ButtonBar([Button(BACK_BUTTON_LABEL, nav_button=True)])
 
     return Form([
@@ -81,11 +84,16 @@ def cadet_from_button_str(button_str: str) -> Cadet:
     cadet_selected = " ".join(button_str.split(" ")[1:])
     return DEPRECATE_get_cadet_from_list_of_cadets(cadet_selected)
 
-def row_for_new_entries(volunteer: Volunteer, from_list_of_cadets: ListOfCadets = arg_not_passed) -> Line:
-    list_of_cadets_as_str =get_list_of_cadets_as_str_similar_to_name_first(volunteer,
-                                                                           from_list_of_cadets=from_list_of_cadets)
-    list_of_cadets_as_str.insert(0, CADET_FILLER)
-    dict_of_options = dict([(cadet_str, cadet_str) for cadet_str in list_of_cadets_as_str])
+def row_for_new_entries(volunteer: Volunteer, connected_cadets: ListOfCadets, from_list_of_cadets: ListOfCadets) -> Line:
+
+    list_of_cadets_to_pick_from = from_list_of_cadets.excluding_cadets_from_other_list(list_of_cadets=connected_cadets)
+    list_of_cadets_similar_to_name_first = get_list_of_cadets_similar_to_name_first(object_with_name=volunteer,
+                                                                               from_list_of_cadets=list_of_cadets_to_pick_from)
+
+    dict_of_options = dict([( from_cadet_to_string_in_dropdown(cadet), cadet.id) for cadet in list_of_cadets_similar_to_name_first])
+    filler_row = {CADET_FILLER: CADET_FILLER}
+    dict_of_options = {**filler_row, **dict_of_options}
+
     drop_down = dropDownInput(input_label="Add new connection",
                               default_label=CADET_FILLER,
                               dict_of_options=dict_of_options,
@@ -93,7 +101,8 @@ def row_for_new_entries(volunteer: Volunteer, from_list_of_cadets: ListOfCadets 
                               )
     return Line([drop_down, Button(ADD_CONNECTION_BUTTON_LABEL)])
 
-
+def from_cadet_to_string_in_dropdown(cadet: Cadet) -> str:
+    return str(cadet)
 
 CADET_FILLER = "Choose cadet from dropdown and hit add to add connection"
 
@@ -139,11 +148,11 @@ def get_list_of_delete_cadet_buttons(connected_cadets: list):
 
 def add_connection_from_form(interface: abstractInterface):
     volunteer = get_volunteer_from_state(interface)
-    selected_cadet_as_str = interface.value_from_form(CONNECTION)
-    if selected_cadet_as_str == CADET_FILLER:
+    selected_cadet_id = interface.value_from_form(CONNECTION)
+    if selected_cadet_id == CADET_FILLER:
         interface.log_error("You have to select a cadet from the dropdown before adding")
         return
-    selected_cadet = DEPRECATE_get_cadet_from_list_of_cadets(selected_cadet_as_str)
+    selected_cadet = cadet_from_id(interface=interface, cadet_id=selected_cadet_id)
     DEPRECATE_add_volunteer_connection_to_cadet_in_master_list_of_volunteers(cadet=selected_cadet, volunteer=volunteer)
 
 

@@ -22,6 +22,34 @@ class VolunteerRotaData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
 
+
+    def delete_role_at_event_for_volunteer_on_day(self,
+                                                  volunteer_id: str, day: Day,
+                                                  event: Event):
+        volunteer_in_role_at_event_on_day = VolunteerInRoleAtEvent(volunteer_id=volunteer_id,
+                                                                   day=day)
+
+        list_of_volunteers_in_roles_at_event = self.get_list_of_volunteers_in_roles_at_event(event)
+        list_of_volunteers_in_roles_at_event.delete_volunteer_in_role_at_event_on_day(
+            volunteer_in_role_at_event=volunteer_in_role_at_event_on_day)
+        self.save_list_of_volunteers_in_roles_at_event(list_of_volunteers_in_role_at_event=list_of_volunteers_in_roles_at_event, event=event)
+
+    def swap_and_groups_for_volunteers_in_allocation(self,
+                                                     event: Event,
+                                                     original_day: Day,
+                                                     original_volunteer_id: str,
+                                                     day_to_swap_with: Day,
+                                                     volunteer_id_to_swap_with: str):
+
+        volunteers_in_role_at_event = self.get_list_of_volunteers_in_roles_at_event(event)
+        volunteers_in_role_at_event.swap_roles_and_groups_for_volunteers_in_allocation(
+            original_volunteer_id=original_volunteer_id,
+            original_day=original_day,
+            day_to_swap_with=day_to_swap_with,
+            volunteer_id_to_swap_with=volunteer_id_to_swap_with
+        )
+        self.save_list_of_volunteers_in_roles_at_event(list_of_volunteers_in_role_at_event=volunteers_in_role_at_event, event=event)
+
     def swap_roles_for_volunteers_in_allocation(self,
                                                 event: Event,
                                                 original_volunteer_id: str,
@@ -49,6 +77,17 @@ class VolunteerRotaData():
             day=day,
             list_of_all_days=days_at_event_when_volunteer_available(event=event, volunteer_id=volunteer_id)
         )
+        self.save_list_of_volunteers_in_roles_at_event(list_of_volunteers_in_role_at_event=list_of_volunteers_in_roles_at_event, event=event)
+
+    def update_group_at_event_for_volunteer_on_day(self,
+                                                   volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
+                                                   new_group: str,
+                                                   event: Event):
+
+        list_of_volunteers_in_roles_at_event = self.get_list_of_volunteers_in_roles_at_event(event)
+        list_of_volunteers_in_roles_at_event.update_volunteer_in_group_on_day(
+            volunteer_in_role_at_event=volunteer_in_role_at_event_on_day,
+            new_group=new_group)
         self.save_list_of_volunteers_in_roles_at_event(list_of_volunteers_in_role_at_event=list_of_volunteers_in_roles_at_event, event=event)
 
     def update_role_at_event_for_volunteer_on_day_at_event(self,
@@ -114,8 +153,9 @@ class VolunteerRotaData():
     def volunteer_allocation_data(self) -> VolunteerAllocationData:
         return VolunteerAllocationData(self.data_api)
 
-def delete_role_at_event_for_volunteer_on_day(volunteer_id: str, day: Day,
-                                     event: Event):
+
+def DEPRECATE_delete_role_at_event_for_volunteer_on_day(volunteer_id: str, day: Day,
+                                                        event: Event):
     volunteer_in_role_at_event_on_day = VolunteerInRoleAtEvent(volunteer_id=volunteer_id,
                                                                day=day)
 
@@ -123,6 +163,14 @@ def delete_role_at_event_for_volunteer_on_day(volunteer_id: str, day: Day,
     list_of_volunteers_in_roles_at_event.delete_volunteer_in_role_at_event_on_day(volunteer_in_role_at_event=volunteer_in_role_at_event_on_day)
     save_volunteers_in_role_at_event(event=event,
                                                          list_of_volunteers_in_roles_at_event=list_of_volunteers_in_roles_at_event)
+
+
+def delete_role_at_event_for_volunteer_on_day(interface: abstractInterface,
+                                              volunteer_id: str, day: Day,
+                                                        event: Event):
+
+    volunteer_rota_data = VolunteerRotaData(interface.data)
+    volunteer_rota_data.delete_role_at_event_for_volunteer_on_day(event=event, day=day, volunteer_id=volunteer_id)
 
 
 def DEPRECATE_load_volunteers_in_role_at_event(event: Event) -> ListOfVolunteersInRoleAtEvent:
@@ -151,36 +199,15 @@ def update_role_at_event_for_volunteer_on_day(interface: abstractInterface,
     )
 
 
-def remove_role_at_event_for_volunteer_on_day(volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
-                                     event: Event):
-
-
-    list_of_volunteers_in_roles_at_event = DEPRECATE_load_volunteers_in_role_at_event(event)
-    list_of_volunteers_in_roles_at_event.delete_volunteer_in_role_at_event_on_day(volunteer_in_role_at_event_on_day)
-    save_volunteers_in_role_at_event(event=event, list_of_volunteers_in_roles_at_event=list_of_volunteers_in_roles_at_event)
-
-
-
-def update_group_at_event_for_volunteer_on_day(volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
+def update_group_at_event_for_volunteer_on_day(interface: abstractInterface,
+                                               volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
                                                new_group: str,
                                               event: Event):
-    list_of_volunteers_in_roles_at_event = DEPRECATE_load_volunteers_in_role_at_event(event)
-    list_of_volunteers_in_roles_at_event.update_volunteer_in_group_on_day(volunteer_in_role_at_event=volunteer_in_role_at_event_on_day,
-                                                              new_group=new_group)
-    save_volunteers_in_role_at_event(event=event, list_of_volunteers_in_roles_at_event=list_of_volunteers_in_roles_at_event)
+    volunteer_rota_data = VolunteerRotaData(interface.data)
+    volunteer_rota_data.update_group_at_event_for_volunteer_on_day(event=event,
+                                                                   volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day,
+                                                                   new_group=new_group)
 
-
-def DEPRECATE_copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(event: Event,
-                                                                                       volunteer_id: str,
-                                                                                       day: Day):
-
-    list_of_volunteers_in_roles_at_event = DEPRECATE_load_volunteers_in_role_at_event(event)
-    list_of_volunteers_in_roles_at_event.copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
-        volunteer_id=volunteer_id,
-        day=day,
-        list_of_all_days=days_at_event_when_volunteer_available(event=event, volunteer_id=volunteer_id)
-    )
-    save_volunteers_in_role_at_event(event=event, list_of_volunteers_in_roles_at_event=list_of_volunteers_in_roles_at_event)
 
 def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(interface: abstractInterface,
                     event: Event,
@@ -202,9 +229,9 @@ def delete_role_at_event_for_volunteer_on_all_days(volunteer_id: str,
                                      event: Event):
 
     for day in event.weekdays_in_event():
-        delete_role_at_event_for_volunteer_on_day(volunteer_id=volunteer_id,
-                                                  day=day,
-                                                  event=event)
+        DEPRECATE_delete_role_at_event_for_volunteer_on_day(volunteer_id=volunteer_id,
+                                                            day=day,
+                                                            event=event)
 
 
 def get_volunteer_roles(interface: abstractInterface):

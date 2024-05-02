@@ -236,8 +236,8 @@ app/logic/events/mapping/template_field_mapping.py
 app/logic/events/mapping/upload_field_mapping.py
 app/logic/events/mapping/upload_template_field_mapping.py
 app/logic/events/mapping/../../../data_access/configuration/configuration.yaml
+app/logic/events/patrol_boats/ENTRY_allocate_patrol_boats.py
 app/logic/events/patrol_boats/__init__.py
-app/logic/events/patrol_boats/allocate_patrol_boats.py
 app/logic/events/patrol_boats/copying.py
 app/logic/events/patrol_boats/elements_in_patrol_boat_table.py
 app/logic/events/patrol_boats/parse_patrol_boat_table.py
@@ -259,9 +259,9 @@ app/logic/events/volunteer_allocation/track_state_in_volunteer_allocation.py
 app/logic/events/volunteer_allocation/volunteer_identification.py
 app/logic/events/volunteer_allocation/volunteer_selection_form_contents.py
 app/logic/events/volunteer_allocation/../../../data_access/configuration/configuration.yaml
+app/logic/events/volunteer_rota/ENTRY1_display_main_rota_page.py
 app/logic/events/volunteer_rota/__init__.py
 app/logic/events/volunteer_rota/add_volunteer_to_rota.py
-app/logic/events/volunteer_rota/display_main_rota_page.py
 app/logic/events/volunteer_rota/edit_cadet_connections_for_event_from_rota.py
 app/logic/events/volunteer_rota/edit_volunteer_details_from_rota.py
 app/logic/events/volunteer_rota/edit_volunteer_skills_from_rota.py
@@ -353,6 +353,7 @@ app/objects/patrol_boats.py
 app/objects/person_with_food_at_event.py
 app/objects/qualifications.py
 app/objects/relevant_information_for_volunteers.py
+app/objects/roles.py
 app/objects/ticks.py
 app/objects/users_and_security.py
 app/objects/utils.py

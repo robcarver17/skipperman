@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 from app.backend.group_allocations.group_allocation_info import get_group_allocation_info, \
     GroupAllocationInfo
-from app.backend.events import get_sorted_list_of_events
+from app.backend.events import DEPRECATE_get_sorted_list_of_events
 from app.backend.group_allocations.cadet_event_allocations import get_list_of_active_cadets_at_event, \
     DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only
 from app.backend.group_allocations.previous_allocations import allocation_for_cadet_in_previous_events, \
@@ -216,7 +216,7 @@ def get_allocation_data(event: Event) -> AllocationData:
     current_allocation_for_event = DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only(event)
     cadets_at_event_including_non_active = DEPRECATED_load_cadets_at_event(event)
     list_of_cadets_in_event_active_only = get_list_of_active_cadets_at_event(event)
-    list_of_events = get_sorted_list_of_events()
+    list_of_events = DEPRECATE_get_sorted_list_of_events()
     list_of_previous_events = list_of_events_excluding_one_event(list_of_events=list_of_events,event_to_exclude=event, only_past=True, sort_by=SORT_BY_START_ASC)
     if len(list_of_previous_events)>3:
         list_of_previous_events = list_of_previous_events[-3:]

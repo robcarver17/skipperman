@@ -4,8 +4,8 @@ from typing import List
 from statistics import mode
 
 from app.data_access.configuration.configuration import VOLUNTEERS_REQUIRING_GROUP, VOLUNTEERS_REQUIRING_BOATS, \
-    VOLUNTEER_ROLES
-from app.objects.generic import GenericSkipperManObject, get_class_instance_from_str_dict, GenericListOfObjects, _transform_class_dict_into_str_dict
+    VOLUNTEER_ROLES, VOLUNTEER_TEAMS
+from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
 from app.objects.groups import Group, GROUP_UNALLOCATED, index_group
 from app.objects.day_selectors import Day
 from app.objects.constants import missing_data
@@ -16,6 +16,11 @@ NO_ROLE_SET = "No role allocated"
 ## must match below
 DAY_KEY = "day"
 GROUP_KEY = "group"
+
+def list_of_volunteer_teams():
+    return list(VOLUNTEER_TEAMS.keys())
+
+
 @dataclass
 class VolunteerInRoleAtEvent(GenericSkipperManObject):
     volunteer_id: str
@@ -26,6 +31,10 @@ class VolunteerInRoleAtEvent(GenericSkipperManObject):
     @property
     def role_and_group(self):
         return RoleAndGroup(role=self.role, group=self.group)
+
+    @property
+    def first_team_and_group(self):
+        return TeamAndGroup(team =self.list_of_teams[0], group=self.group)
 
     @property
     def requires_group(self):
@@ -39,11 +48,25 @@ class VolunteerInRoleAtEvent(GenericSkipperManObject):
     def no_role_set(self) -> bool:
         return self.role == NO_ROLE_SET
 
+    @property
+    def list_of_teams(self) -> List[str]:
+        return teams_given_role(self.role)
+
+def teams_given_role(role: str, teams: dict = VOLUNTEER_TEAMS) -> List[str]:
+    if role == NO_ROLE_SET:
+        return [NO_ROLE_SET]
+    all_teams = [team_name for team_name, team_members in teams.items() if role in team_members]
+
+    return all_teams
 
 def index_of_role(role: str):
-    combined_roles = VOLUNTEER_ROLES+[NO_ROLE_SET]
+    combined_roles = VOLUNTEER_ROLES + [NO_ROLE_SET]
     return combined_roles.index(role)
 
+
+def index_of_team(role: str):
+    combined_teams = VOLUNTEER_TEAMS + [NO_ROLE_SET]
+    return combined_teams.index(role)
 
 @dataclass
 class VolunteerInRoleAtEventWithTeamName(GenericSkipperManObject):
@@ -84,6 +107,40 @@ class RoleAndGroup(GenericSkipperManObject):
         other_group_index = index_group(other.group)
 
         return group_index<other_group_index
+
+
+@dataclass
+class TeamAndGroup(GenericSkipperManObject):
+    team: str = NO_ROLE_SET
+    group: Group = GROUP_UNALLOCATED
+
+    def __repr__(self):
+        if self.group == GROUP_UNALLOCATED:
+            return self.team
+        else:
+            return "%s (%s)" % (self.team, self.group)
+
+    def __eq__(self, other):
+        return self.__hash__() == other.__hash__()
+
+    def __hash__(self):
+        return hash("%s_%s" % (self.team, self.group.group_name))
+
+    def __lt__(self, other):
+        team_index = index_of_team(self.team)
+        other_team_index = index_of_team(other.team)
+
+        if team_index < other_team_index:
+            return True
+        elif team_index > other_team_index:
+            return False
+
+        group_index = index_group(self.group)
+        other_group_index = index_group(other.group)
+
+        return group_index<other_group_index
+
+
 
 class ListOfVolunteersInRoleAtEvent(GenericListOfObjects):
     @property
@@ -144,6 +201,10 @@ class ListOfVolunteersInRoleAtEvent(GenericListOfObjects):
 
     def list_of_roles_and_groups_at_event_for_day(self, day: Day) -> List[RoleAndGroup]:
         return [volunteer_with_role.role_and_group for volunteer_with_role in self if volunteer_with_role.day == day]
+
+
+    def list_of_first_teams_and_groups_at_event_for_day(self, day: Day) -> List[RoleAndGroup]:
+        return [volunteer_with_role.first_team_and_group for volunteer_with_role in self if volunteer_with_role.day == day]
 
     def most_common_role_at_event_for_volunteer(self, volunteer_id: str) -> str:
         ## crazy that mode works with strings
@@ -252,4 +313,5 @@ FILTER_UNALLOC_AVAILABLE = "Unallocated+Available"
 FILTER_ALLOC_AVAILABLE = "Allocated+Available"
 FILTER_UNAVAILABLE = "Unavailable"
 FILTER_OPTIONS = [FILTER_ALL, FILTER_AVAILABLE, FILTER_UNALLOC_AVAILABLE, FILTER_ALLOC_AVAILABLE, FILTER_UNAVAILABLE]
+
 

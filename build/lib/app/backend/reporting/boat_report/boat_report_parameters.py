@@ -25,3 +25,4 @@ class AdditionalParametersForBoatReport:
     exclude_lake_groups: bool
     exclude_river_training_groups: bool
     exclude_unallocated_groups: bool
+    in_out_columns: bool

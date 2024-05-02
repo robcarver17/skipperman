@@ -3,7 +3,8 @@ from typing import Union
 from app.backend.events import is_wa_field_mapping_setup_for_event
 from app.backend.group_allocations.summarise_registration_data import summarise_registrations_for_event
 from app.backend.volunteers.patrol_boats import get_summary_list_of_boat_allocations_for_events
-from app.backend.volunteers.volunteer_rota_summary import get_summary_list_of_roles_and_groups_for_events
+from app.backend.volunteers.volunteer_rota_summary import get_summary_list_of_roles_and_groups_for_events, \
+    get_summary_list_of_teams_and_groups_for_events
 from app.backend.wa_import.map_wa_files import is_wa_file_mapping_setup_for_event
 from app.backend.group_allocations.summarise_allocations_data import summarise_allocations_for_event
 from app.logic.events.group_allocation.allocate_cadets_to_groups import display_form_allocate_cadets
@@ -14,7 +15,7 @@ from app.logic.events.mapping.event_field_mapping import display_form_event_fiel
 from app.logic.events.registration_details.edit_registration_details import display_form_edit_registration_details
 from app.logic.events.volunteer_rota.verify_volunteers_if_cadet_at_event_changed import \
     display_form_volunteer_rota_check
-from app.logic.events.patrol_boats.allocate_patrol_boats import display_form_view_for_patrol_boat_allocation
+from app.logic.events.patrol_boats.ENTRY_allocate_patrol_boats import display_form_view_for_patrol_boat_allocation
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -65,7 +66,7 @@ def get_event_form_for_event(
 
     rota_lines = ""
     if event.contains_volunteers:
-        rota = get_summary_list_of_roles_and_groups_for_events(interface=interface, event=event)
+        rota = get_summary_list_of_teams_and_groups_for_events(interface=interface, event=event)
         boat_allocation_table = get_summary_list_of_boat_allocations_for_events(interface=interface, event=event)
         if len(boat_allocation_table)>0:
             rota_lines =   ListOfLines([

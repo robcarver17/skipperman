@@ -12,7 +12,7 @@ from app.logic.events.volunteer_rota.rota_state import clear_cadet_id_for_rota_a
     get_and_save_next_cadet_id_in_event_data, get_current_cadet_id_for_rota_at_event
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.constants import NoMoreData
-from app.logic.events.volunteer_rota.display_main_rota_page import display_form_view_for_volunteer_rota
+from app.logic.events.volunteer_rota.ENTRY1_display_main_rota_page import display_form_view_for_volunteer_rota
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import Form, NewForm

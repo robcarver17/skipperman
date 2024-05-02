@@ -101,7 +101,8 @@ def update_if_swap_button_pressed_and_ready_to_swap(interface: abstractInterface
     if day_to_swap_with==original_day and volunteer_id_to_swap_with==original_volunteer_id:
         pass
     else:
-        swap_and_groups_for_volunteers_in_allocation(original_day=original_day,
+        swap_and_groups_for_volunteers_in_allocation(interface=interface,
+                                                     original_day=original_day,
                                                 event=event,
                                                 day_to_swap_with=day_to_swap_with,
                                                 volunteer_id_to_swap_with=volunteer_id_to_swap_with,

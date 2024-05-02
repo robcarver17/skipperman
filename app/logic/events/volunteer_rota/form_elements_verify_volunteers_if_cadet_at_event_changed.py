@@ -1,11 +1,11 @@
 from typing import List
 
 from app.backend.cadets import  cadet_name_from_id
-from app.backend.data.volunteer_allocation import     remove_volunteer_and_cadet_association_at_event, delete_volunteer_with_id_at_event, get_volunteer_at_event
+from app.backend.data.volunteer_allocation import     DEPRECATE_remove_volunteer_and_cadet_association_at_event, DEPRECATE_delete_volunteer_with_id_at_event, get_volunteer_at_event
 from app.backend.forms.form_utils import get_availability_checkbox, get_availablity_from_form
-from app.backend.volunteers.volunteer_allocation import     any_other_cadets_for_volunteer_at_event_apart_from_this_one, update_volunteer_availability_at_event, \
+from app.backend.volunteers.volunteer_allocation import any_other_cadets_for_volunteer_at_event_apart_from_this_one, \
     is_current_cadet_active_at_event, list_of_volunteers_for_cadet_identified, \
-    get_dict_of_relevant_volunteer_names_and_association_cadets_with_id_values
+    get_dict_of_relevant_volunteer_names_and_association_cadets_with_id_values, update_volunteer_availability_at_event
 from app.backend.volunteers.volunteers import   get_volunteer_from_id, get_volunteer_name_from_id
 from app.backend.wa_import.update_cadets_at_event import  get_cadet_at_event_for_cadet_id
 from app.logic.events.constants import SAVE_CHANGES
@@ -133,7 +133,7 @@ def modify_specific_volunteer_availability_when_cadet_changed(interface: abstrac
     availability = get_availablity_from_form(interface=interface, event=event, input_name=
                                              form_name_given_volunteer_and_type(volunteer_id=volunteer_id, type=AVAILABILITY_NAME))
 
-    update_volunteer_availability_at_event(volunteer_id=volunteer_id, availability=availability, event=event)
+    update_volunteer_availability_at_event(interface=interface,volunteer_id=volunteer_id, availability=availability, event=event)
 
 def modify_specific_volunteer_linkage_at_event_when_cadet_changed(interface: abstractInterface, volunteer_id: str, cadet_id: str):
     event = get_event_from_state(interface)
@@ -146,9 +146,9 @@ def modify_specific_volunteer_linkage_at_event_when_cadet_changed(interface: abs
     ))
 
     if volunteer_is_included:
-        remove_volunteer_and_cadet_association_at_event(volunteer_id=volunteer_id, cadet_id=cadet_id, event=event)
+        DEPRECATE_remove_volunteer_and_cadet_association_at_event(volunteer_id=volunteer_id, cadet_id=cadet_id, event=event)
     else:
-        delete_volunteer_with_id_at_event(volunteer_id=volunteer_id, event=event)
+        DEPRECATE_delete_volunteer_with_id_at_event(volunteer_id=volunteer_id, event=event)
 
 VOLUNTEER_UPDATE_FORM_TYPE ="volunteer_update_form_type"
 

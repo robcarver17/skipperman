@@ -1,12 +1,15 @@
 from typing import List
 
-from app.backend.volunteers.volunteer_rota_summary import get_summary_list_of_roles_and_groups_for_events
+from app.backend.volunteers.volunteer_rota_data import get_explanation_of_sorts_and_filters
+
+from app.backend.volunteers.volunteer_rota_summary import get_summary_list_of_roles_and_groups_for_events, \
+    get_summary_list_of_teams_and_groups_for_events
 from app.data_access.configuration.configuration import VOLUNTEER_SKILLS, WEBLINK_FOR_QUALIFICATIONS
 from app.data_access.configuration.fixed import COPY_SYMBOL1, COPY_SYMBOL2, SWAP_SHORTHAND1, SWAP_SHORTHAND2, \
     NOT_AVAILABLE_SHORTHAND, AVAILABLE_SHORTHAND
 from app.logic.events.constants import SAVE_CHANGES
 
-from app.logic.events.volunteer_rota.rota_state import get_skills_filter_from_state
+from app.logic.events.volunteer_rota.rota_state import get_skills_filter_from_state, get_sorts_and_filters_from_state
 from app.objects.volunteers_in_roles import FILTER_OPTIONS
 
 from app.backend.forms.swaps import is_ready_to_swap
@@ -24,6 +27,9 @@ def get_filters_and_buttons(interface: abstractInterface, event: Event) -> Mater
     if is_ready_to_swap(interface):
         return MaterialAroundTable(null_list_of_lines, null_list_of_lines)
 
+    sorts_and_filters = get_sorts_and_filters_from_state(interface)
+    explain_all_sorts_and_filters = get_explanation_of_sorts_and_filters(sorts_and_filters)
+
     sort_buttons = get_all_volunteer_sort_buttons()
     action_buttons = get_action_buttons_for_rota()
     skills_filter = get_volunteer_skills_filter(interface)
@@ -31,10 +37,11 @@ def get_filters_and_buttons(interface: abstractInterface, event: Event) -> Mater
     before_table =  ListOfLines(
             [
                 action_buttons,
-                sort_buttons,
                 skills_filter,
                 availablility_filter,
                 Line([filter_button,clear_filter_button]),
+                sort_buttons,
+                Line([explain_all_sorts_and_filters]),
                 _______________])
 
     after_table = ListOfLines([
@@ -118,26 +125,40 @@ def get_summary_table(interface: abstractInterface, event: Event):
     summary_of_filled_roles =  get_summary_list_of_roles_and_groups_for_events(event=event, interface=interface)
     if len(summary_of_filled_roles) > 0:
         summary_of_filled_roles = DetailListOfLines(ListOfLines([
-                summary_of_filled_roles]), name='Summary')
+                summary_of_filled_roles]), name='Summary by role / group')
+    else:
+        summary_of_filled_roles=""
+
+    return summary_of_filled_roles
+
+def get_summary_group_table(interface: abstractInterface, event: Event):
+    summary_of_filled_roles =  get_summary_list_of_teams_and_groups_for_events(event=event, interface=interface)
+    if len(summary_of_filled_roles) > 0:
+        summary_of_filled_roles = DetailListOfLines(ListOfLines([
+                summary_of_filled_roles]), name='Summary by team/ group')
     else:
         summary_of_filled_roles=""
 
     return summary_of_filled_roles
 
 
+
+
 link = Link(url=WEBLINK_FOR_QUALIFICATIONS, string="See qualifications table", open_new_window=True)
-instructions = ListOfLines(["Always click SAVE after making any non button change",
+instructions = ListOfLines(["BACK will cancel any changes you make; any other button will save them",
                             Line(["Key for buttons - Copy: ",
                                         COPY_SYMBOL1, COPY_SYMBOL2,
                                         " ; Swap: ", SWAP_SHORTHAND1, SWAP_SHORTHAND2, ", ",
                                         '; Raincheck: make unavailable: ', NOT_AVAILABLE_SHORTHAND ,
                                         '; Available, but role undefined', AVAILABLE_SHORTHAND]),
 
-                            "Click on any day to sort by group and role, or sort volunteers by name",
-                            "Click on volunteer names to edit food requirements and days attending, or remove from event. Click on location to see and edit connected cadets. Click on skills to edit volunteer skills.",
+                            "Click on any day column heading to sort by group and role, or sort volunteers by name, or by the location of their cadet(s)",
+                            "Click on volunteer names to see roles done at previous events, edit days attending, or remove from event. Click on location to see and edit connected cadets. Click on skills to edit volunteer skills.",
                             "Click on 'unavailable' days to make a volunteer available. Select role = unavailable to make a volunteer unavailable",
-                            "Save after selecting role to see group allocations where relevant.",
+                            "Save after selecting role to see possible group allocations where relevant.",
                             "You can copy roles/groups to other days to avoid tiresome re-entry",
+                            "Enter any relevant notes, eg will arrive late etc",
+                            "Click on summary triangle tabs above to see count of volunteers allocated so far",
                             link]).add_Lines()
 
 ADD_NEW_VOLUNTEER_BUTTON_LABEL = "Add new volunteer to rota"

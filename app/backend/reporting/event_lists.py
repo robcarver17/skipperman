@@ -1,5 +1,5 @@
 
-from app.backend.events import get_sorted_list_of_events, SORT_BY_START_DSC
+from app.backend.events import DEPRECATE_get_sorted_list_of_events, SORT_BY_START_DSC
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.objects.events import ListOfEvents, Event
@@ -8,7 +8,7 @@ from app.backend.data.group_allocations_old import load_list_of_cadets_with_allo
 from app.backend.data.cadets_at_event import load_list_of_cadets_at_event_with_dinghies
 
 def display_list_of_events_with_buttons_criteria_matched(**kwargs) -> ListOfLines:
-    list_of_events = get_sorted_list_of_events(sort_by=SORT_BY_START_DSC)
+    list_of_events = DEPRECATE_get_sorted_list_of_events(sort_by=SORT_BY_START_DSC)
     list_of_events = ListOfEvents([event for event in list_of_events if event_matches_criteria(event, **kwargs)])
     list_of_event_descriptions = list_of_events.list_of_event_descriptions
     list_with_buttons = [Line(Button(event_description, tile=True)) for event_description in list_of_event_descriptions]

@@ -22,6 +22,10 @@ class VolunteerData():
 
         return list_of_volunteers[idx]
 
+    def get_dict_of_existing_skills(self, volunteer: Volunteer) -> dict:
+        all_skills = self.get_list_of_volunteer_skills()
+        return all_skills.dict_of_skills_for_volunteer_id(volunteer_id=volunteer.id)
+
     def add_boat_related_skill_for_volunteer(self, volunteer_id: str):
         skills = self.get_list_of_volunteer_skills()
         skills.add_boat_related_skill_for_volunteer(volunteer_id)
@@ -31,6 +35,12 @@ class VolunteerData():
         skills = self.get_list_of_volunteer_skills()
         skills.remove_boat_related_skill_for_volunteer(volunteer_id)
         self.save_list_of_volunteer_skills(skills)
+
+    def save_skills_for_volunteer(self, volunteer: Volunteer, dict_of_skills: dict):
+        all_skills = self.get_list_of_volunteer_skills()
+        all_skills.replace_skills_for_volunteer_with_new_skills_dict(volunteer_id=volunteer.id,
+                                                                     dict_of_skills=dict_of_skills)
+        self.save_list_of_volunteer_skills(all_skills)
 
     def get_list_of_volunteer_ids_with_boat_skills(self ) -> List[str]:
         volunteer_skills = self.get_list_of_volunteer_skills()
@@ -77,6 +87,17 @@ class VolunteerData():
     def matching_volunteer_or_missing_data(self, volunteer: Volunteer) -> Volunteer:
         list_of_volunteers = self.get_list_of_volunteers()
         return list_of_volunteers.matching_volunteer(volunteer)
+
+    def get_sorted_list_of_volunteers(self, sort_by: str = arg_not_passed) -> ListOfVolunteers:
+        master_list = self.get_list_of_volunteers()
+        if sort_by is arg_not_passed:
+            return master_list
+        if sort_by == SORT_BY_SURNAME:
+            return master_list.sort_by_surname()
+        elif sort_by == SORT_BY_FIRSTNAME:
+            return master_list.sort_by_firstname()
+        else:
+            return master_list
 
     def get_list_of_volunteers(self) -> ListOfVolunteers:
         list_of_volunteers = self.data_api.get_list_of_volunteers()
@@ -125,10 +146,9 @@ def DEPRECATE_add_volunteer_connection_to_cadet_in_master_list_of_volunteers(cad
 
 
 
-def save_skills_for_volunteer(volunteer: Volunteer, dict_of_skills: dict):
-    all_skills = DEPRECATE_load_list_of_volunteer_skills()
-    all_skills.replace_skills_for_volunteer_with_new_skills_dict(volunteer_id=volunteer.id, dict_of_skills=dict_of_skills)
-    save_list_of_volunteer_skills(all_skills)
+def save_skills_for_volunteer(interface: abstractInterface, volunteer: Volunteer, dict_of_skills: dict):
+    volunteer_data = VolunteerData(interface.data)
+    volunteer_data.save_skills_for_volunteer(volunteer=volunteer, dict_of_skills=dict_of_skills)
 
 
 def update_existing_volunteer(volunteer: Volunteer):
@@ -183,15 +203,7 @@ def DEPRECATED_get_sorted_list_of_volunteers(sort_by: str = arg_not_passed) -> L
 
 def get_sorted_list_of_volunteers(interface: abstractInterface, sort_by: str = arg_not_passed) -> ListOfVolunteers:
     volunteer_data = VolunteerData(interface.data)
-    master_list = volunteer_data.get_list_of_volunteers()
-    if sort_by is arg_not_passed:
-        return master_list
-    if sort_by == SORT_BY_SURNAME:
-        return master_list.sort_by_surname()
-    elif sort_by == SORT_BY_FIRSTNAME:
-        return master_list.sort_by_firstname()
-    else:
-        return master_list
+    return volunteer_data.get_sorted_list_of_volunteers(sort_by)
 
 def load_all_volunteers(interface:abstractInterface)-> ListOfVolunteers:
     volunteer_data = VolunteerData(interface.data)

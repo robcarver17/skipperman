@@ -1,5 +1,7 @@
 from typing import List
 
+from app.objects.cadets import ListOfCadets
+
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.cadets import DEPRECATE_get_sorted_list_of_cadets,  cadet_from_id
@@ -31,18 +33,22 @@ def get_volunteer_from_list_of_volunteers_given_volunteer_name(interface: abstra
 
 
 
-def get_dict_of_existing_skills(volunteer: Volunteer)-> dict:
+def DEPRECATE_get_dict_of_existing_skills(volunteer: Volunteer)-> dict:
     all_skills = DEPRECATE_load_list_of_volunteer_skills()
     return all_skills.dict_of_skills_for_volunteer_id(volunteer_id=volunteer.id)
 
+def get_dict_of_existing_skills(interface: abstractInterface, volunteer: Volunteer)-> dict:
+    volunteer_data = VolunteerData(interface.data)
+    return volunteer_data.get_dict_of_existing_skills(volunteer)
 
-def get_connected_cadets(volunteer: Volunteer) -> list:
+
+def get_connected_cadets(volunteer: Volunteer) -> ListOfCadets:
     existing_connections = DEPRECATE_get_list_of_cadet_volunteer_associations()
     list_of_cadets = DEPRECATE_get_sorted_list_of_cadets()
 
     connected_ids = existing_connections.list_of_connections_for_volunteer(volunteer.id)
     connected_cadets = [list_of_cadets.object_with_id(id) for id in connected_ids]
-    return connected_cadets
+    return ListOfCadets(connected_cadets)
 
 
 def DEPRECATE_list_of_similar_volunteers(volunteer: Volunteer) -> list:

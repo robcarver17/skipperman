@@ -213,9 +213,9 @@ class GenericListOfObjectsWithIds(GenericListOfObjects):
 
     @classmethod
     def subset_from_list_of_ids(
-        cls, full_list: "GenericListOfObjectsWithIds", list_of_ids: list
+        cls, full_list: "GenericListOfObjectsWithIds", list_of_ids: List[str]
     ):
-        subset_list = [full_list.has_id(id) for id in list_of_ids]
+        subset_list = [full_list.has_id(id) for id in full_list.list_of_ids if id in list_of_ids]
 
         return cls(subset_list)
 

@@ -1,6 +1,8 @@
 import datetime
 
-from app.backend.data.events import DEPRECATED_get_list_of_all_events
+from app.objects.abstract_objects.abstract_interface import abstractInterface
+
+from app.backend.data.events import DEPRECATED_get_list_of_all_events, get_list_of_all_events
 from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME, SIMILARITY_LEVEL_TO_WARN_DATE
 from app.data_access.data import DEPRECATED_data
 
@@ -37,7 +39,7 @@ def verify_event_and_warn(event: Event) -> str:
 
 
 def warning_for_similar_events(event: Event) -> str:
-    existing_events = get_sorted_list_of_events()
+    existing_events = DEPRECATE_get_sorted_list_of_events()
     similar_events = existing_events.similar_events(
         event,
         name_threshold=SIMILARITY_LEVEL_TO_WARN_NAME,
@@ -55,11 +57,18 @@ def warning_for_similar_events(event: Event) -> str:
 
 
 
-def get_sorted_list_of_events(sort_by=SORT_BY_START_DSC) -> ListOfEvents:
+def DEPRECATE_get_sorted_list_of_events(sort_by=SORT_BY_START_DSC) -> ListOfEvents:
     list_of_events = DEPRECATED_get_list_of_all_events()
     list_of_events = list_of_events.sort_by(sort_by)
 
     return list_of_events
+
+def get_sorted_list_of_events(interface: abstractInterface, sort_by=SORT_BY_START_DSC) -> ListOfEvents:
+    list_of_events = get_list_of_all_events(interface)
+    list_of_events = list_of_events.sort_by(sort_by)
+
+    return list_of_events
+
 
 def list_of_previously_used_event_names() -> list:
     list_of_events = DEPRECATED_get_list_of_all_events()

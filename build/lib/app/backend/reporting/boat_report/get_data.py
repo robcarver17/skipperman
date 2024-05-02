@@ -75,13 +75,26 @@ def row_of_data_for_cadet_id(cadet_id: str,
                                                                                             data_required=data_required,
                                                                                     )
 
-    return pd.Series({FIRST_CADET: first_cadet_name,
+    row_for_cadet = pd.Series({FIRST_CADET: first_cadet_name,
             SECOND_CADET: second_cadet_name,
             GROUP: group.group_name,
             BOAT_CLASS:boat_class,
             SAIL_NUMBER: sail_number,
             CLUB_BOAT: club_boat_flag})
 
+    if additional_parameters.in_out_columns:
+        in_out_columns = pd.Series({RAMP: MARKER,LAUNCH: MARKER,  IN1: MARKER, OUT1: MARKER, IN2: MARKER})
+        row_for_cadet = pd.concat([row_for_cadet, in_out_columns])
+
+    return row_for_cadet
+
+LAUNCH = 'Launch'
+RAMP = 'Ramp'
+IN1 = 'Return'
+OUT1 = 'Re-launch'
+IN2 = 'Final return'
+
+MARKER = ' [   ] '
 
 def get_first_cadet_name(cadet_id: str, data_required: RequiredDataForReport,
                                                     additional_parameters:AdditionalParametersForBoatReport) -> str:
@@ -155,6 +168,8 @@ def get_boat_class_sail_number_and_club_boat_flag(cadet_id: str, data_required: 
         boat_name = data_required.list_of_boat_classes.name_given_id(boat_class_id)
     else:
         boat_name = sail_number = ""
+
+    boat_name = boat_name[:10]
 
     club_boat_id = data_required.list_of_cadets_at_event_with_club_dinghies.dinghy_for_cadet_id(cadet_id)
     if club_boat_id is missing_data:

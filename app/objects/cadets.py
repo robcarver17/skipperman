@@ -8,7 +8,7 @@ from app.data_access.configuration.configuration import (
     SIMILARITY_LEVEL_TO_WARN_NAME,
 )
 from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds
-from app.objects.utils import transform_date_into_str, similar, transform_str_or_datetime_into_date
+from app.objects.utils import transform_date_into_str, similar, transform_str_or_datetime_into_date, in_x_not_in_y
 from app.objects.constants import arg_not_passed, DAYS_IN_YEAR, missing_data
 from app.objects.utils import union_of_x_and_y
 
@@ -84,7 +84,12 @@ class Cadet(GenericSkipperManObjectWithIds):
 
 multiple_matches = object()
 
+
 class ListOfCadets(GenericListOfObjectsWithIds):
+    def excluding_cadets_from_other_list(self, list_of_cadets: 'ListOfCadets'):
+        list_of_ids = in_x_not_in_y(self.list_of_ids, list_of_cadets.list_of_ids)
+        return self.subset_from_list_of_ids(self, list_of_ids)
+
     def list_of_names(self):
         return [cadet.name for cadet in self]
 

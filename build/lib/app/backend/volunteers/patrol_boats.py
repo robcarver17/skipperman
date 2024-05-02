@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+from app.backend.volunteers.volunteers import get_volunteer_name_from_id
+
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.data.volunteers import get_sorted_list_of_volunteers, \
@@ -8,17 +10,16 @@ from typing import List
 
 import pandas as pd
 
-from app.backend.data.volunteer_rota import DEPRECATE_load_volunteers_in_role_at_event, get_volunteer_roles, \
+from app.backend.data.volunteer_rota import get_volunteer_roles, \
     VolunteerRotaData
-from app.backend.data.volunteers import DEPRECATE_load_list_of_volunteer_skills
-from app.backend.volunteers.volunteer_rota import DEPRECATE_get_volunteer_role_at_event_on_day
+
+from app.backend.volunteers.volunteer_rota import  SwapData, \
+    get_volunteer_role_at_event_on_day
 
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.backend.data.resources import DEPRECATE_load_list_of_voluteers_at_event_with_patrol_boats, \
-    save_list_of_voluteers_at_event_with_patrol_boats, DEPRECATED_load_list_of_patrol_boats, load_list_of_patrol_boats, \
-    PatrolBoatsData
+from app.backend.data.resources import DEPRECATE_load_list_of_voluteers_at_event_with_patrol_boats,    PatrolBoatsData
 from app.objects.patrol_boats import PatrolBoat
 from app.objects.utils import in_x_not_in_y, in_both_x_and_y
 from app.objects.volunteers import Volunteer, ListOfVolunteers
@@ -56,12 +57,6 @@ def get_summary_list_of_boat_allocations_for_day_by_boat( day: Day, list_of_volu
 def add_named_boat_to_event_with_no_allocation(interface: abstractInterface, name_of_boat_added: str, event: Event):
     patrol_boat_data = PatrolBoatsData(interface.data)
     patrol_boat_data.add_named_boat_to_event_with_no_allocation(name_of_boat_added=name_of_boat_added, event=event)
-    list_of_voluteers_at_event_with_patrol_boats = DEPRECATE_load_list_of_voluteers_at_event_with_patrol_boats(event)
-    list_of_patrol_boats = DEPRECATED_load_list_of_patrol_boats()
-    patrol_boat_id = list_of_patrol_boats.id_given_name(name_of_boat_added)
-    list_of_voluteers_at_event_with_patrol_boats.add_unallocated_boat(patrol_boat_id=patrol_boat_id)
-    save_list_of_voluteers_at_event_with_patrol_boats(event=event,
-                                                      volunteers_with_boats_at_event=list_of_voluteers_at_event_with_patrol_boats)
 
 
 def remove_patrol_boat_and_all_associated_volunteer_connections_from_event(interface: abstractInterface, event: Event, patrol_boat_name: str):
@@ -92,7 +87,7 @@ def sort_list_of_volunteer_ids_for_day_and_event_by_role(interface: abstractInte
     new_list = []
     for role in volunteer_roles:
         list_of_volunteer_ids_for_this_role = [volunteer_id for volunteer_id in list_of_volunteer_ids
-                                               if DEPRECATE_get_volunteer_role_at_event_on_day(day=day, volunteer_id=volunteer_id, event=event) == role
+                                               if get_volunteer_role_at_event_on_day(interface=interface, day=day, volunteer_id=volunteer_id, event=event) == role
                                                ]
         new_list+=list_of_volunteer_ids_for_this_role
 
@@ -204,26 +199,26 @@ def volunteer_is_on_same_boat_for_all_days(interface: abstractInterface,
     return patrol_boat_data.volunteer_is_on_same_boat_for_all_days(event=event, volunteer_id=volunteer_id)
 
 
-def copy_across_allocation_of_boats_at_event(event: Event, day: Day, volunteer_id: str):
-    list_of_voluteers_at_event_with_patrol_boats = DEPRECATE_load_list_of_voluteers_at_event_with_patrol_boats(event)
-    list_of_voluteers_at_event_with_patrol_boats.copy_across_allocation_of_boats_at_event(day=day, volunteer_id=volunteer_id, event=event)
-    save_list_of_voluteers_at_event_with_patrol_boats(event=event, volunteers_with_boats_at_event=list_of_voluteers_at_event_with_patrol_boats)
+def copy_across_allocation_of_boats_at_event(interface: abstractInterface, event: Event, day: Day, volunteer_id: str):
+    patrol_boat_data = PatrolBoatsData(interface.data)
+    try:
+        patrol_boat_data.copy_across_allocation_of_boats_at_event(event=event, day=day, volunteer_id=volunteer_id)
+    except Exception as e:
+        name = get_volunteer_name_from_id(interface=interface, volunteer_id=volunteer_id)
+        interface.log_error("Can't copy across boat data for %s on %s, error %s, conflicting change made?" % (name, day.name, str()))
 
 
-def swap_boats_for_volunteers_in_allocation(event: Event,
-                                                                           original_day: Day,
-                                                                           original_volunteer_id: str,
-                                                                           day_to_swap_with: Day,
-                                                                           volunteer_id_to_swap_with: str):
 
-    list_of_voluteers_at_event_with_patrol_boats = DEPRECATE_load_list_of_voluteers_at_event_with_patrol_boats(event)
-    list_of_voluteers_at_event_with_patrol_boats.swap_boats_for_volunteers_in_allocation(
-        original_volunteer_id=original_volunteer_id,
-        volunteer_id_to_swap_with=volunteer_id_to_swap_with,
-        day_to_swap_with=day_to_swap_with,
-        original_day=original_day
-    )
-    save_list_of_voluteers_at_event_with_patrol_boats(event=event, volunteers_with_boats_at_event=list_of_voluteers_at_event_with_patrol_boats)
+def swap_boats_for_volunteers_in_allocation(interface: abstractInterface,
+                                            swap_data: SwapData):
+    patrol_boat_data = PatrolBoatsData(interface.data)
+    patrol_boat_data.swap_boats_for_volunteers_in_allocation(
+        event=swap_data.event,
+        original_volunteer_id=swap_data.original_volunteer_id,
+        volunteer_id_to_swap_with=swap_data.volunteer_id_to_swap_with,
+        day_to_swap_with=swap_data.day_to_swap_with,
+        original_day=swap_data.original_day)
+
 
 def get_boat_name_allocated_to_volunteer_on_day_at_event(interface: abstractInterface, event: Event, day: Day, volunteer_id: str) -> str:
     patrol_boat_data = PatrolBoatsData(interface.data)
@@ -305,11 +300,15 @@ class ListOfBoatDayVolunteer(list):
 
 
 def add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts(interface: abstractInterface, list_of_volunteer_additions_to_boats: ListOfBoatDayVolunteer, event: Event):
-    ## FIX ME CONFLICTS
+
     patrol_boat_data =PatrolBoatsData(interface.data)
     list_of_volunteers_at_event_with_boats = patrol_boat_data.get_list_of_voluteers_at_event_with_patrol_boats(event)
-    for adv in list_of_volunteer_additions_to_boats:
-        list_of_volunteers_at_event_with_boats.add_volunteer_with_boat(volunteer_id=adv.volunteer.id,
-                                                                       day=adv.day,
-                                                                       patrol_boat_id=adv.boat.id)
+    for boat_day_volunteer in list_of_volunteer_additions_to_boats:
+        try:
+            list_of_volunteers_at_event_with_boats.add_volunteer_with_boat(volunteer_id= boat_day_volunteer.volunteer.id,
+                                                                           day=boat_day_volunteer.day,
+                                                                           patrol_boat_id=boat_day_volunteer.boat.id)
+        except Exception as e:
+            interface.log_error("Can't add volunteer %s to boat %s on day %s; error %s" % (str(boat_day_volunteer.volunteer), str(boat_day_volunteer.boat), boat_day_volunteer.day.name, str(e)))
+
     patrol_boat_data.save_list_of_voluteers_at_event_with_patrol_boats(list_of_volunteers_at_event_with_patrol_boats=list_of_volunteers_at_event_with_boats, event=event)

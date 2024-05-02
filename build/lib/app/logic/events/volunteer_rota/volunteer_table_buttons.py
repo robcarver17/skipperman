@@ -1,10 +1,15 @@
 from typing import Tuple, Callable
 
-from app.backend.data.volunteer_allocation import DEPRECATED_load_list_of_volunteers_at_event
+from app.objects.abstract_objects.abstract_lines import Line
+
+from app.objects.abstract_objects.abstract_interface import abstractInterface
+
+from app.backend.data.volunteer_allocation import DEPRECATED_load_list_of_volunteers_at_event, \
+    load_list_of_volunteers_at_event
 from app.backend.volunteers.volunteer_rota import get_cadet_location_string, \
     str_dict_skills
 from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingVolunteerRotaPage
-from app.backend.volunteers.volunteers import DEPRECATED_get_volunteer_from_id
+from app.backend.volunteers.volunteers import DEPRECATED_get_volunteer_from_id, get_volunteer_from_id
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -15,9 +20,9 @@ from app.objects.volunteers_in_roles import VolunteerInRoleAtEvent
 
 def get_location_button(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
                         volunteer_at_event: VolunteerAtEvent,
-                        hide_buttons:bool) -> Button:
+                        ready_to_swap:bool) -> Button:
     location = get_cadet_location_string(data_to_be_stored=data_to_be_stored, volunteer_at_event=volunteer_at_event)
-    if hide_buttons:
+    if ready_to_swap:
         return location
 
     return Button(label=location,
@@ -30,10 +35,10 @@ def location_button_name_from_volunteer_id(volunteer_id: str) -> str:
 
 def get_skills_button(volunteer: Volunteer,
                       data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
-                      hide_buttons: bool
+                      ready_to_swap: bool
                       )-> Button:
     skill_label =  str_dict_skills(volunteer=volunteer, data_to_be_stored=data_to_be_stored)
-    if hide_buttons:
+    if ready_to_swap:
         return skill_label
     return Button(label = skill_label,
                   value = skills_button_name_from_volunteer_id(volunteer_id=volunteer.id))
@@ -68,12 +73,12 @@ def from_skills_button_to_volunteer_id(skills_button_name: str) -> str:
 
 
 
-def get_dict_of_volunteer_name_buttons_and_volunteer_ids(event: Event)-> dict:
-    list_of_volunteers_at_event = DEPRECATED_load_list_of_volunteers_at_event(event)
+def get_dict_of_volunteer_name_buttons_and_volunteer_ids(interface: abstractInterface, event: Event)-> dict:
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event=event, interface=interface)
     list_of_volunteer_ids = list_of_volunteers_at_event.list_of_volunteer_ids
 
     return dict([(
-        DEPRECATED_get_volunteer_from_id(volunteer_id).name,
+        get_volunteer_from_id(interface=interface, volunteer_id=volunteer_id).name,
         volunteer_id)
             for volunteer_id in list_of_volunteer_ids])
 
@@ -180,11 +185,11 @@ def get_list_of_generic_button_values_across_days_and_volunteers(event: Event, v
 
 
 ### SORT BUTTONS
-def get_buttons_for_days_at_event(event: Event, hide_buttons: bool):
-    if hide_buttons:
+def get_buttons_for_days_at_event(event: Event, ready_to_swap: bool):
+    if ready_to_swap:
         return event.weekdays_in_event_as_list_of_string()
     else:
-        return [button_for_day(day) for day in event.weekdays_in_event()]
+        return [Line(["Sort by", button_for_day(day)]) for day in event.weekdays_in_event()]
 
 def button_for_day(day:Day) -> Button:
     return Button(day.name, value=button_value_for_day(day))

@@ -60,6 +60,7 @@ volunteer_skills:
 power_boat_skills:
   - "PB2"
 ## first line is always lead, rest are members
+## List more important teams first
 volunteer_teams:
   Management:
     - "Skipper"

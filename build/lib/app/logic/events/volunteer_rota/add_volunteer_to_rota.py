@@ -1,14 +1,12 @@
-from copy import copy
 from typing import Union
 
-from app.backend.data.volunteers import  SORT_BY_FIRSTNAME, DEPRECATED_get_sorted_list_of_volunteers
-from app.backend.data.volunteer_allocation import DEPRECATED_load_list_of_volunteers_at_event, add_volunteer_to_event_with_just_id
+from app.backend.data.volunteer_allocation import add_volunteer_to_event_with_just_id
+from app.backend.volunteers.volunteer_allocation import get_list_of_volunteers_except_those_already_at_event
 from app.logic.events.constants import CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL, FINAL_VOLUNTEER_ADD_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.logic.events.events_in_state import get_event_from_state
-from app.logic.events.volunteer_allocation.volunteer_selection_form_contents import \
-    DEPRECATE_get_dict_of_volunteer_names_and_volunteers
+from app.logic.events.volunteer_allocation.volunteer_selection_form_contents import  get_dict_of_volunteer_names_and_volunteers
 from app.logic.volunteers.add_volunteer import verify_form_with_volunteer_details, VolunteerAndVerificationText, \
     get_add_volunteer_form_with_information_passed, add_volunteer_from_form_to_data
 from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL
@@ -16,7 +14,7 @@ from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.objects.events import Event
 from app.objects.volunteers import Volunteer, default_volunteer
-
+from app.objects.abstract_objects.abstract_lines import _______________
 
 
 def display_form_add_new_volunteer_to_rota_at_event(interface: abstractInterface) -> Union[Form, NewForm]:
@@ -40,6 +38,7 @@ def get_add_or_select_existing_volunteers_form_in_volunteer_rota(
 
     event = get_event_from_state(interface)
     footer_buttons = get_footer_buttons_add_or_select_existing_volunteer_for_rota(
+        interface=interface,
         include_final_button=include_final_button,
         event=event
     )
@@ -75,7 +74,7 @@ def action_when_new_volunteer_to_be_added_from_rota(interface: abstractInterface
 
 
 def action_when_specific_volunteer_selected_for_rota(name_of_volunteer: str, interface: abstractInterface) -> Union[Form, NewForm]:
-    dict_of_volunteer_names_and_volunteers= DEPRECATE_get_dict_of_volunteer_names_and_volunteers()
+    dict_of_volunteer_names_and_volunteers= get_dict_of_volunteer_names_and_volunteers(interface)
     volunteer = dict_of_volunteer_names_and_volunteers.get(name_of_volunteer, None)
     if volunteer is None:
         raise Exception("Volunteer %s has gone missing!" % name_of_volunteer)
@@ -85,24 +84,25 @@ def action_when_specific_volunteer_selected_for_rota(name_of_volunteer: str, int
 
 def action_when_volunteer_known_for_rota(volunteer: Volunteer, interface: abstractInterface) -> Union[Form, NewForm]:
     event = get_event_from_state(interface)
-    add_volunteer_to_event_with_just_id(volunteer_id=volunteer.id, event=event)
+    add_volunteer_to_event_with_just_id(interface=interface, volunteer_id=volunteer.id, event=event)
 
     return previous_form(interface)
 
 def get_footer_buttons_add_or_select_existing_volunteer_for_rota(
+interface: abstractInterface,
         event: Event,
     include_final_button: bool = False,
 
 ) -> ListOfLines:
     main_buttons = get_list_of_main_buttons_in_rota(include_final_button)
 
-    volunteer_buttons = get_list_of_volunteer_buttons_in_rota(event
+    volunteer_buttons = get_list_of_volunteer_buttons_in_rota(interface=interface, event=event
     )
 
-    return ListOfLines([main_buttons, volunteer_buttons])
+    return ListOfLines([main_buttons,_______________, volunteer_buttons])
 
 
-def get_list_of_main_buttons_in_rota(include_final_button: bool) -> Line:
+def get_list_of_main_buttons_in_rota( include_final_button: bool) -> Line:
     check = Button(CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL)
     add = Button(FINAL_VOLUNTEER_ADD_BUTTON_LABEL)
     back = Button(BACK_BUTTON_LABEL)
@@ -115,23 +115,13 @@ def get_list_of_main_buttons_in_rota(include_final_button: bool) -> Line:
     return main_buttons
 
 
-def get_list_of_volunteer_buttons_in_rota(event: Event) -> Line:
-    list_of_volunteers = get_list_of_volunteers_except_those_already_at_event(event)
+def get_list_of_volunteer_buttons_in_rota(interface: abstractInterface, event: Event) -> Line:
+    list_of_volunteers = get_list_of_volunteers_except_those_already_at_event(interface=interface, event=event)
 
     volunteer_buttons_line = Line([Button(volunteer.name) for volunteer in list_of_volunteers])
 
     return volunteer_buttons_line
 
-def get_list_of_volunteers_except_those_already_at_event(event: Event):
-    volunteers_at_event =DEPRECATED_load_list_of_volunteers_at_event(event)
-    volunteers_at_event_ids = volunteers_at_event.list_of_volunteer_ids
-
-    master_list_of_volunteers = DEPRECATED_get_sorted_list_of_volunteers(SORT_BY_FIRSTNAME)
-    list_of_volunteers = copy(master_list_of_volunteers)
-    for id in volunteers_at_event_ids:
-        list_of_volunteers.pop_with_id(id)
-
-    return list_of_volunteers
 
 def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(display_form_add_new_volunteer_to_rota_at_event)

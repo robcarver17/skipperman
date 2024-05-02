@@ -11,7 +11,7 @@ from app.logic.abstract_logic_api import initial_state_form, button_error_and_ba
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
-from app.backend.volunteers.volunteers import get_dict_of_existing_skills, get_connected_cadets
+from app.backend.volunteers.volunteers import DEPRECATE_get_dict_of_existing_skills, get_connected_cadets
 from app.logic.volunteers.volunteer_state import get_volunteer_from_state
 from app.logic.volunteers.constants import *
 
@@ -41,7 +41,7 @@ def display_form_view_individual_volunteer(
 def display_form_for_selected_volunteer(
     volunteer: Volunteer, interface: abstractInterface
 ) -> Form:
-    lines_of_allocations = list_of_lines_with_allocations_and_roles(volunteer)
+    lines_of_allocations = list_of_lines_with_allocations_and_roles(interface=interface, volunteer=volunteer)
 
     connected = lines_for_connected_cadets(volunteer)
     skills = list_of_skills(volunteer)
@@ -60,8 +60,9 @@ def display_form_for_selected_volunteer(
         ])
     )
 
-def list_of_lines_with_allocations_and_roles(volunteer: Volunteer) -> ListOfLines:
-    dict_of_roles =get_all_roles_across_past_events_for_volunteer_id_as_dict(volunteer_id=volunteer.id,
+def list_of_lines_with_allocations_and_roles(interface: abstractInterface, volunteer: Volunteer) -> ListOfLines:
+    dict_of_roles =get_all_roles_across_past_events_for_volunteer_id_as_dict(
+        interface=interface, volunteer_id=volunteer.id,
                                                       sort_by=SORT_BY_START_DSC)
     if len(dict_of_roles)==0:
         return ListOfLines([])
@@ -72,7 +73,7 @@ def list_of_lines_with_allocations_and_roles(volunteer: Volunteer) -> ListOfLine
 
 
 def list_of_skills(volunteer: Volunteer) -> ListOfLines:
-    skills = get_dict_of_existing_skills(volunteer)
+    skills = DEPRECATE_get_dict_of_existing_skills(volunteer)
     skills_held = [skill for skill, skill_held in skills.items() if skill_held]
     skills_not_held = [skill for skill, skill_held in skills.items() if not skill_held]
 

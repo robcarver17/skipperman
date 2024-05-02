@@ -7,8 +7,8 @@ from app.backend.events import get_sorted_list_of_events
 from app.backend.group_allocations.cadet_event_allocations import \
     load_list_of_cadets_ids_with_group_allocations_active_cadets_only, get_list_of_cadets_unallocated_to_group_at_event
 from app.backend.data.volunteers import  load_list_of_volunteer_skills
-from app.backend.data.volunteer_rota import DEPRECATE_load_volunteers_in_role_at_event
-from app.backend.data.volunteer_allocation import DEPRECATED_load_list_of_volunteers_at_event
+from app.backend.data.volunteer_rota import   get_volunteers_in_role_at_event_with_active_allocations
+from app.backend.data.volunteer_allocation import  load_list_of_volunteers_at_event
 
 from app.objects.cadets import ListOfCadets
 from app.objects.constants import missing_data, arg_not_passed
@@ -29,6 +29,8 @@ class RotaSortsAndFilters:
     availability_filter: dict
     sort_by_location: bool
 
+
+
 def get_explanation_of_sorts_and_filters(sorts_and_filters: RotaSortsAndFilters):
     sort_by =""
     if sorts_and_filters.sort_by_volunteer_name is not arg_not_passed:
@@ -36,12 +38,25 @@ def get_explanation_of_sorts_and_filters(sorts_and_filters: RotaSortsAndFilters)
     if sorts_and_filters.sort_by_day is not arg_not_passed:
         sort_by+="Sorting by day %s. " % sorts_and_filters.sort_by_day.name
     if sorts_and_filters.sort_by_location:
-        sort_by+="Sort by cadet location"
+        sort_by+="Sort by cadet location. "
 
-    sort_by+="Availability filter %s. " % str(sorts_and_filters.availability_filter)
-    sort_by+="Skills filter %s" % str(sorts_and_filters.skills_filter)
+    sort_by+="Availability filter: %s  " % str(sorts_and_filters.availability_filter)
+    sort_by+=explain_filter(sorts_and_filters.skills_filter, "Skills filter")
 
     return sort_by
+
+def explain_filter(filter: Dict[str,bool], prepend_text: str) -> str:
+    true_only_str = dict_elements_only_true(filter)
+    if len(true_only_str)==0:
+        return ""
+    else:
+        return "%s: %s" % (prepend_text, true_only_str)
+
+def dict_elements_only_true(some_dict: Dict[str, bool]) -> str:
+    true_only = [key for key, value in some_dict.items() if value]
+    true_only = ", ".join(true_only)
+
+    return true_only
 
 @dataclass
 class DataToBeStoredWhilstConstructingVolunteerRotaPage:
@@ -61,7 +76,8 @@ class DataToBeStoredWhilstConstructingVolunteerRotaPage:
         list_of_volunteers_in_roles_at_event = self.volunteers_in_roles_at_event
 
         new_list = ListOfVolunteersAtEvent([volunteer for volunteer in original_list if filter_volunteer(
-            volunteer, list_of_volunteers_in_roles_at_event=list_of_volunteers_in_roles_at_event, skills_filter=skills_filter, volunteer_skills=volunteer_skills,
+            volunteer, list_of_volunteers_in_roles_at_event=list_of_volunteers_in_roles_at_event,
+            skills_filter=skills_filter, volunteer_skills=volunteer_skills,
             availability_filter_dict=availability_filter_dict
         )])
 
@@ -171,10 +187,11 @@ def get_data_to_be_stored_for_volunteer_rota_page(interface: abstractInterface, 
     list_of_cadet_ids_with_groups = load_list_of_cadets_ids_with_group_allocations_active_cadets_only(event=event, interface=interface)
     unallocated_cadets_at_event = get_list_of_cadets_unallocated_to_group_at_event(event=event, interface=interface)
     volunteer_skills = load_list_of_volunteer_skills(interface)
-    volunteers_in_roles_at_event = DEPRECATE_load_volunteers_in_role_at_event(event)
-    list_of_volunteers_at_event = DEPRECATED_load_list_of_volunteers_at_event(event)
+    volunteers_in_roles_at_event = get_volunteers_in_role_at_event_with_active_allocations(event=event, interface=interface)
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event=event, interface=interface)
 
-    dict_of_volunteers_with_last_roles = get_dict_of_volunteers_with_last_roles(list_of_volunteers_at_event.list_of_volunteer_ids,
+    dict_of_volunteers_with_last_roles = get_dict_of_volunteers_with_last_roles(interface=interface,
+                                                                                list_of_volunteer_ids=list_of_volunteers_at_event.list_of_volunteer_ids,
                                                                                 avoid_event=event)
 
     return DataToBeStoredWhilstConstructingVolunteerRotaPage(
@@ -188,15 +205,16 @@ def get_data_to_be_stored_for_volunteer_rota_page(interface: abstractInterface, 
     )
 
 
-def get_dict_of_volunteers_with_last_roles(list_of_volunteer_ids: List[str], avoid_event: Event) -> Dict[str, str]:
+def get_dict_of_volunteers_with_last_roles(interface: abstractInterface, list_of_volunteer_ids: List[str], avoid_event: Event) -> Dict[str, str]:
     return dict([
-        (volunteer_id, get_last_role_for_volunteer_id(volunteer_id=volunteer_id, avoid_event=avoid_event))
+        (volunteer_id, get_last_role_for_volunteer_id(interface=interface, volunteer_id=volunteer_id, avoid_event=avoid_event))
         for volunteer_id in list_of_volunteer_ids
     ])
 
 
-def get_last_role_for_volunteer_id(volunteer_id: str, avoid_event: Event = arg_not_passed) -> str:
+def get_last_role_for_volunteer_id(interface: abstractInterface, volunteer_id: str, avoid_event: Event = arg_not_passed) -> str:
     roles = get_all_roles_across_past_events_for_volunteer_id_as_list(
+        interface=interface,
         volunteer_id=volunteer_id,
         avoid_event=avoid_event,
         sort_by=SORT_BY_START_ASC
@@ -207,16 +225,17 @@ def get_last_role_for_volunteer_id(volunteer_id: str, avoid_event: Event = arg_n
     return roles[-1] ## most recent role
 
 
-def get_all_roles_across_past_events_for_volunteer_id_as_list(volunteer_id: str, sort_by = SORT_BY_START_ASC, avoid_event: Event = arg_not_passed) -> list:
+def get_all_roles_across_past_events_for_volunteer_id_as_list(interface: abstractInterface, volunteer_id: str, sort_by = SORT_BY_START_ASC, avoid_event: Event = arg_not_passed) -> list:
     roles_as_dict = get_all_roles_across_past_events_for_volunteer_id_as_dict(
+        interface=interface,
         volunteer_id=volunteer_id,
         sort_by=sort_by,
         avoid_event=avoid_event
     )
     return list(roles_as_dict.values())
 
-def get_all_roles_across_past_events_for_volunteer_id_as_dict(volunteer_id: str, sort_by = SORT_BY_START_ASC, avoid_event: Event = arg_not_passed) -> dict:
-    list_of_events = get_sorted_list_of_events(sort_by)
+def get_all_roles_across_past_events_for_volunteer_id_as_dict(interface: abstractInterface, volunteer_id: str, sort_by = SORT_BY_START_ASC, avoid_event: Event = arg_not_passed) -> dict:
+    list_of_events = get_sorted_list_of_events(interface=interface, sort_by=sort_by)
     if avoid_event is arg_not_passed:
         pass ## can't exclude so do everything
     else:
@@ -225,14 +244,14 @@ def get_all_roles_across_past_events_for_volunteer_id_as_dict(volunteer_id: str,
                                                                  sort_by=sort_by,
                                                                  only_past=True)
 
-    roles = [get_role_for_event_and_volunteer_id(volunteer_id, event) for event in list_of_events]
+    roles = [get_role_for_event_and_volunteer_id(interface=interface, event=event, volunteer_id=volunteer_id) for event in list_of_events]
     roles_dict = dict([(event, role) for event, role in zip(list_of_events, roles) if role is not missing_data])
 
     return roles_dict
 
 
-def get_role_for_event_and_volunteer_id(volunteer_id: str, event: Event) -> str:
-    volunteer_data = DEPRECATE_load_volunteers_in_role_at_event(event)
+def get_role_for_event_and_volunteer_id(interface: abstractInterface, volunteer_id: str, event: Event) -> str:
+    volunteer_data = get_volunteers_in_role_at_event_with_active_allocations(interface=interface, event=event)
     role = volunteer_data.most_common_role_at_event_for_volunteer(volunteer_id=volunteer_id)
     if role==NO_ROLE_SET:
         return missing_data

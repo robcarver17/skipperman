@@ -1,17 +1,19 @@
+from copy import copy
 from typing import List, Dict
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.data.cadets_at_event import DEPERCATE_load_identified_cadets_at_event, DEPRECATED_load_cadets_at_event, \
     list_of_row_ids_at_event_given_cadet_id, CadetsAtEventData
-from app.backend.data.volunteer_rota import delete_role_at_event_for_volunteer_on_day
+from app.backend.data.volunteer_rota import DEPRECATE_delete_role_at_event_for_volunteer_on_day, \
+    delete_role_at_event_for_volunteer_on_day
 from app.backend.data.volunteer_allocation import DEPRECATED_save_list_of_volunteers_at_event, VolunteerAllocationData, \
-    get_volunteer_at_event, load_list_of_identified_volunteers_at_event
+    get_volunteer_at_event, load_list_of_identified_volunteers_at_event, DEPRECATED_load_list_of_volunteers_at_event
 from app.backend.data.volunteers import DEPRECATE_load_all_volunteers, \
-     VolunteerData
+    VolunteerData, DEPRECATED_get_sorted_list_of_volunteers, SORT_BY_FIRSTNAME
 from app.backend.data.volunteer_allocation import DEPRECATED_load_list_of_volunteers_at_event, \
     DEPRECATED_load_list_of_identified_volunteers_at_event, \
-    update_volunteer_at_event, DEPRECATE_get_volunteer_at_event
+    DEPRECATE_update_volunteer_at_event, DEPRECATE_get_volunteer_at_event
 
 from app.backend.cadets import DEPRECATED_cadet_name_from_id, cadet_name_from_id
 from app.backend.volunteers.volunteers import  list_of_similar_volunteers
@@ -27,7 +29,7 @@ from app.objects.events import Event
 from app.objects.relevant_information_for_volunteers import ListOfRelevantInformationForVolunteer
 #from app.objects.food import FoodRequirements
 from app.objects.utils import union_of_x_and_y, in_x_not_in_y
-from app.objects.volunteers import Volunteer
+from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.volunteers_at_event import VolunteerAtEvent, ListOfIdentifiedVolunteersAtEvent
 
 
@@ -178,26 +180,28 @@ def DEPRECATE_get_list_of_other_cadets_for_volunteer_at_event_apart_from_this_on
     return associated_cadets_without_this_cadet
 
 
-def update_volunteer_availability_at_event(volunteer_id:str, event: Event, availability: DaySelector):
+
+def update_volunteer_availability_at_event(interface: abstractInterface, volunteer_id:str, event: Event, availability: DaySelector):
     for day in event.weekdays_in_event():
         if availability.available_on_day(day):
-            make_volunteer_available_on_day(volunteer_id=volunteer_id, event=event, day=day)
+            make_volunteer_available_on_day(interface=interface, volunteer_id=volunteer_id, event=event, day=day)
         else:
-            make_volunteer_unavailable_on_day(volunteer_id=volunteer_id, event=event, day=day)
-
-def make_volunteer_available_on_day(volunteer_id: str, event: Event, day: Day):
-    volunteer_at_event = DEPRECATE_get_volunteer_at_event(volunteer_id=volunteer_id, event=event)
-    volunteer_at_event.availablity.make_available_on_day(day)
-    update_volunteer_at_event(volunteer_at_event=volunteer_at_event, event=event)
+            make_volunteer_unavailable_on_day(interface=interface,volunteer_id=volunteer_id, event=event, day=day)
 
 
-def make_volunteer_unavailable_on_day(volunteer_id: str, event: Event, day: Day):
-    volunteer_at_event = DEPRECATE_get_volunteer_at_event(volunteer_id=volunteer_id, event=event)
-    volunteer_at_event.availablity.make_unavailable_on_day(day)
-    update_volunteer_at_event(volunteer_at_event=volunteer_at_event, event=event)
 
+def make_volunteer_available_on_day(interface: abstractInterface, volunteer_id: str, event: Event, day: Day):
+    volunteer_allocation_data = VolunteerAllocationData(interface.data)
+    volunteer_allocation_data.make_volunteer_available_on_day(event=event, day=day, volunteer_id=volunteer_id)
+
+def make_volunteer_unavailable_on_day(interface: abstractInterface, volunteer_id: str, event: Event, day: Day):
+    volunteer_allocation_data = VolunteerAllocationData(interface.data)
+    volunteer_allocation_data.make_volunteer_unavailable_on_day(event=event,
+                                                                day=day,
+                                                                volunteer_id=volunteer_id
+                                                                )
     ## also delete any associated roles for tidyness
-    delete_role_at_event_for_volunteer_on_day(volunteer_id=volunteer_id, event=event, day=day)
+    delete_role_at_event_for_volunteer_on_day(interface=interface, volunteer_id=volunteer_id, event=event, day=day)
 
 
 def DEPRECATE_get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet(event: Event, volunteer_id: str) -> List[str]:
@@ -423,3 +427,9 @@ def get_list_of_relevant_information(interface: abstractInterface, volunteer_id:
             ) for identified_volunteer in list_of_identified_volunteers]
 
     return ListOfRelevantInformationForVolunteer(list_of_relevant_information)
+
+
+def get_list_of_volunteers_except_those_already_at_event(interface: abstractInterface, event: Event) -> ListOfVolunteers:
+    volunteer_data = VolunteerAllocationData(interface.data)
+    return volunteer_data.get_sorted_list_of_volunteers_except_those_already_at_event(event, SORT_BY_FIRSTNAME)
+

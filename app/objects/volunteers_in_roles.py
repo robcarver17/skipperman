@@ -4,7 +4,7 @@ from typing import List
 from statistics import mode
 
 from app.data_access.configuration.configuration import VOLUNTEERS_REQUIRING_GROUP, VOLUNTEERS_REQUIRING_BOATS, \
-    VOLUNTEER_ROLES, VOLUNTEER_TEAMS
+    VOLUNTEER_ROLES, VOLUNTEER_TEAMS, SI_ROLE, INSTRUCTOR_TEAM
 from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
 from app.objects.groups import Group, GROUP_UNALLOCATED, index_group
 from app.objects.day_selectors import Day
@@ -51,6 +51,13 @@ class VolunteerInRoleAtEvent(GenericSkipperManObject):
     @property
     def list_of_teams(self) -> List[str]:
         return teams_given_role(self.role)
+
+    def senior_instructor(self) -> bool:
+        return self.role == SI_ROLE
+
+    def in_instructor_team(self):
+        return self.role in INSTRUCTOR_TEAM
+
 
 def teams_given_role(role: str, teams: dict = VOLUNTEER_TEAMS) -> List[str]:
     if role == NO_ROLE_SET:

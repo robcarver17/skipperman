@@ -68,6 +68,11 @@ VOLUNTEERS_SKILL_FOR_PB2 = configuration['power_boat_skills'][0]
 
 VOLUNTEERS_REQUIRING_GROUP = configuration['volunteers_requiring_group']
 
+INSTRUCTOR_TEAM_NAME = configuration['instructor_team']
+INSTRUCTOR_TEAM = VOLUNTEER_TEAMS[INSTRUCTOR_TEAM_NAME]
+SI_ROLE = configuration['senior_instructor']
+
+### si at an event can see all groups
 
 ## Page sizes - not configured in yaml as won't need changing
 MAX_FILE_SIZE = configuration["max_file_size"]

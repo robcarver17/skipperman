@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from app.backend.volunteers.volunteers import DEPRECATE_get_volunteer_from_list_of_volunteers
 
 from app.backend.data.security import add_user, already_in_list, delete_username_from_user_list, load_all_users, \
-    change_password_for_user, modify_user_group, generate_reset_link
+    change_password_for_user, DEPRECATE_modify_user_group, generate_reset_link
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.administration.users.render_users_form import USERNAME, PASSWORD, PASSWORD_CONFIRM, GROUP, \
     name_for_user_and_input_type, \
@@ -98,7 +98,7 @@ def modify_group_if_changed( user: SkipperManUser, user_values_from_form: Skippe
     if user.group == user_values_from_form.group:
         return
 
-    modify_user_group(user.username, new_group=user_values_from_form.group)
+    DEPRECATE_modify_user_group(user.username, new_group=user_values_from_form.group)
 
 
 def get_user_values_from_values_in_form(interface: abstractInterface, user: SkipperManUser, username_field_present: bool = False) -> SkipperManUserFromForm:

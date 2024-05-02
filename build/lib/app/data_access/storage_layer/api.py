@@ -1,3 +1,4 @@
+from app.objects.users_and_security import ListOfSkipperManUsers
 from app.objects.volunteers import ListOfVolunteers, ListOfCadetVolunteerAssociations
 
 from app.objects.volunteers_at_event import ListOfIdentifiedVolunteersAtEvent, ListOfVolunteersAtEvent
@@ -186,6 +187,19 @@ class DataLayer():
         data_access_for_list_of_patrol_boats=get_data_access_for_list_of_patrol_boats(self.data)
         self.store.write(list_of_patrol_boats, data_access_method=data_access_for_list_of_patrol_boats)
 
+    def get_list_of_users(self) -> ListOfSkipperManUsers:
+        data_access_for_list_of_users =get_data_access_for_list_of_users(self.data)
+        return self.store.read(data_access_for_list_of_users)
+
+    def save_list_of_users(self, list_of_users:ListOfSkipperManUsers):
+        data_access_for_list_of_users =get_data_access_for_list_of_users(self.data)
+        self.store.write(list_of_users, data_access_method=data_access_for_list_of_users)
+
+def get_data_access_for_list_of_users(data: GenericDataApi) -> DataAccessMethod:
+    return  DataAccessMethod(key="list_of_users",
+            read_method=data.data_list_of_users.read,
+            write_method=data.data_list_of_users.write
+    )
 
 
 def get_data_access_for_list_of_cadets(data: GenericDataApi) -> DataAccessMethod:

@@ -1,6 +1,8 @@
 from typing import Union
 
-from app.objects.abstract_objects.abstract_form import Form, NewForm, textInput, checkboxInput
+from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
+
+from app.objects.abstract_objects.abstract_form import Form, NewForm, textInput, checkboxInput, Link
 from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
@@ -35,6 +37,7 @@ def form_to_edit_individual_volunteer(volunteer: Volunteer,
 
     core_entries = core_volunteer_form_entries(volunteer)
     skills_entries = DEPRECATE_skills_form_entries(volunteer)
+    link = Link(url=WEBLINK_FOR_QUALIFICATIONS, string="See qualifications table", open_new_window=True)
 
     footer_buttons = ButtonBar([Button(CANCEL_BUTTON_LABEL, nav_button=True), Button(SAVE_BUTTON_LABEL, nav_button=True)])
 
@@ -45,6 +48,7 @@ def form_to_edit_individual_volunteer(volunteer: Volunteer,
             core_entries,
             _______________,
             skills_entries,
+            link,
             _______________,
             _______________,
             footer_buttons

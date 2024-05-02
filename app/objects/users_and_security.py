@@ -30,6 +30,13 @@ class SkipperManUser(GenericSkipperManObject):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def is_instructor(self):
+        return self.group == INSTRUCTOR_GROUP
+
+    def is_skipper_or_admin(self):
+        return self.group in [SKIPPER_GROUP, ADMIN_GROUP]
+
 #
 #
 
@@ -37,7 +44,7 @@ class SkipperManUser(GenericSkipperManObject):
 NO_VOLUNTEER_ID = '-1'
 default_admin_user_if_none_defined = SkipperManUser('default', generate_password_hash('default'), group=ADMIN_GROUP, email_address='',
                                                     volunteer_id=NO_VOLUNTEER_ID)
-default_user_if_not_logged_in = SkipperManUser('public', 'public', group=PUBLIC_GROUP,email_address='', volunteer_id=NO_VOLUNTEER_ID)
+default_user_if_not_logged_in = SkipperManUser('public', 'public', group=PUBLIC_GROUP, email_address='', volunteer_id=NO_VOLUNTEER_ID)
 
 class ListOfSkipperManUsers(GenericListOfObjects):
     @property
@@ -88,11 +95,8 @@ class ListOfSkipperManUsers(GenericListOfObjects):
     def list_of_usernames_excludes_default(self):
         return [user.username for user in self]
 
-    def list_of_users(self):
-        if len(self)>0:
-            return self
-        else:
-            return [default_admin_user_if_none_defined, default_user_if_not_logged_in]
+    def list_of_users(self) -> 'ListOfSkipperManUsers':
+        return add_defaults_to_list_of_users(self)
 
     def at_least_one_admin_user(self):
         ## doesn't use list of users
@@ -100,4 +104,8 @@ class ListOfSkipperManUsers(GenericListOfObjects):
         return len(admin)>0
 
 
-
+def add_defaults_to_list_of_users(list_of_users: ListOfSkipperManUsers) -> ListOfSkipperManUsers:
+    if len(list_of_users) > 0:
+        return list_of_users
+    else:
+        return ListOfSkipperManUsers([default_admin_user_if_none_defined, default_user_if_not_logged_in])

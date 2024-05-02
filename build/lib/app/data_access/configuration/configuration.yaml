@@ -59,6 +59,8 @@ volunteer_skills:
 #
 power_boat_skills:
   - "PB2"
+instructor_team: "Instructors" ## must match below
+senior_instructor: "SI" ## must match below
 ## first line is always lead, rest are members
 ## List more important teams first
 volunteer_teams:
@@ -97,12 +99,14 @@ volunteer_teams:
   Admin:
     - "Admin"
     - "Photo"
+## Must match above
 volunteers_requiring_group:
   - "SI"
   - "DI"
   - "Coach"
   - "AI"
   - "Lake helper"
+## Must match above
 volunteers_requiring_boats:
   - "DI"
   - "Coach"

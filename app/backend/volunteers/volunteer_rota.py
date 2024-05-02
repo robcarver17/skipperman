@@ -1,12 +1,12 @@
 from dataclasses import dataclass
-from typing import List, Union
+from typing import List
 
 from app.backend.volunteers.volunteers import get_volunteer_name_from_id
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.volunteer_rota import save_volunteers_in_role_at_event, VolunteerRotaData, \
-    get_volunteer_roles, update_role_at_event_for_volunteer_on_day, get_volunteers_in_role_at_event_with_active_allocations
+from app.backend.data.volunteer_rota import VolunteerRotaData, \
+    get_volunteer_roles, update_role_at_event_for_volunteer_on_day
 from app.data_access.configuration.configuration import VOLUNTEER_ROLES
 from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingVolunteerRotaPage,  RotaSortsAndFilters
 

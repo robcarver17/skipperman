@@ -131,6 +131,9 @@ class abstractInterface:
     def url_for_password_reset(self, username: str, new_password: str):
         raise NotImplemented
 
+    def get_current_logged_in_username(self) -> str:
+        raise NotImplemented
+
 def get_file_from_interface(file_label: str, interface: abstractInterface):
     try:
         file = interface.uploaded_file(file_label)

@@ -7,6 +7,7 @@ from app.data_access.data import data_api
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.web.flask.flash import flash_error
+from app.web.flask.security import get_username
 
 from app.web.flask.session_data_for_action import (
     SessionDataForAction,
@@ -117,6 +118,9 @@ class flaskInterface(abstractInterface):
 
     def main_url(self):
         return flask.request.host_url
+
+    def get_current_logged_in_username(self) -> str:
+        return get_username()
 
 def is_website_post() -> bool:
     return request.method == "POST"

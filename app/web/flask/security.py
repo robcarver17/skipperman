@@ -59,9 +59,10 @@ def as_dict_of_flask_users(list_of_users: ListOfSkipperManUsers) -> Dict[str, Fl
     )
 
 def get_all_flask_users():
-    all_users_from_data = load_all_users()
-    all_flask_users = as_dict_of_flask_users(all_users_from_data)
+    all_skipperman_users_from_data = load_all_users()
+    all_flask_users = as_dict_of_flask_users(all_skipperman_users_from_data)
 
     return all_flask_users
 
 all_flask_users=""
+

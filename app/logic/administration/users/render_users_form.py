@@ -13,7 +13,6 @@ from app.objects.users_and_security import ListOfSkipperManUsers, SkipperManUser
     NO_VOLUNTEER_ID
 from app.backend.data.security import load_all_users
 
-
 BACK_BUTTON_LABEL = "Back (cancel changes)"
 SAVE_ENTRY_BUTTON_LABEL =  "Save edits to existing or add new entry"
 

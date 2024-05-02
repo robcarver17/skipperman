@@ -41,11 +41,12 @@ def generate_menu_html() -> Html:
 
 
 def filter_menu_for_user_permissions(menu_definition: dict):
-    for url_ref, url in menu_definition.items():
-        if not can_action_be_seen(url):
-            menu_definition.pop(url_ref)
+    new_menu = dict([
+        (url_ref, url) for url_ref, url in menu_definition.items()
+        if can_action_be_seen(url)
+    ])
 
-    return menu_definition
+    return new_menu
 
 def can_action_be_seen(action_name):
     list_of_allowed_groups = menu_security_dict.get(action_name, None)

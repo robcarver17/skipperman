@@ -1,12 +1,13 @@
 import datetime
 
+from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.data.events import DEPRECATED_get_list_of_all_events, get_list_of_all_events
 from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME, SIMILARITY_LEVEL_TO_WARN_DATE
 from app.data_access.data import DEPRECATED_data
 
-from app.objects.events import Event, ListOfEvents,  SORT_BY_START_DSC
+from app.objects.events import Event, ListOfEvents, SORT_BY_START_DSC, SORT_BY_START_ASC, SORT_BY_NAME
 
 
 def verify_event_and_warn(event: Event) -> str:
@@ -101,5 +102,5 @@ def is_wa_field_mapping_setup_for_event(event: Event) -> bool:
         return False
 
 
-
-
+all_sort_types_for_event_list = [SORT_BY_START_ASC, SORT_BY_START_DSC, SORT_BY_NAME]
+sort_buttons_for_event_list = ButtonBar([Button(sortby, nav_button=True) for sortby in all_sort_types_for_event_list])

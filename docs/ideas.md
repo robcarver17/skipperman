@@ -139,7 +139,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - clean up eg old data, uploaded files, staged files
 - move all dangerous deletes to special admin area: , delete event (should never have to do this: many warnings!), delete cadet, delete volunteer
 - merge cadet / merge volunteer
-- editable user sailing groups, volunteer roles, skills - everything
+- editable user sailing groups, volunteer roles, skills: but plain text file so can replace configuration
 - create a report of cadets
 - dropdown list of previous event names
 - clear description of field names

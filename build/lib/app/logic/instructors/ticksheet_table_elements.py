@@ -37,31 +37,47 @@ def user_can_award_qualifications(interface):
 
     can_award_qualificaiton= can_see_all_groups_and_award_qualifications(interface=interface, event=event, volunteer_id=volunteer_id)
 
-    if can_award_qualificaiton:
-        qual_line = 'Click on cadet name to award qualification or take qualification away'
-    else:
-        qual_line = ''
+    return can_award_qualificaiton
 
-    return qual_line
+def get_cadet_button_instructions(interface) -> str:
+    volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser(interface)
+    event = get_event_from_state(interface)
+
+    can_award_qualificaiton= can_see_all_groups_and_award_qualifications(interface=interface, event=event, volunteer_id=volunteer_id)
+    state = get_edit_state_of_ticksheet(interface)
+
+    if state == NO_EDIT_STATE:
+        return 'Cadets with qualification in brackets are already qualified'
+
+    if can_award_qualificaiton:
+        cadet_button_instructions  = 'Click on cadet name to award qualification (will set all the ticks to full) or take qualification away. Click on buttons next to cadet to change all ticks to that state, without changing qualification status.'
+    else:
+        if state == EDIT_CHECKBOX_STATE:
+            cadet_button_instructions  = 'Click on cadet name to set all ticks to full for that cadet. Cadets with qualification in brackets are already qualified and you cannot change their tick status.'
+        else:
+            cadet_button_instructions  = 'Click on cadet name to set all ticks to full for that cadet. Click other buttons next to cadet to set to other tick status. Cadets with qualification in brackets are already qualified and you cannot change their ticks.'
+
+    return cadet_button_instructions
+
 
 def get_instructions_for_ticksheet(interface: abstractInterface) -> ListOfLines:
-    can_award_qualificaiton = user_can_award_qualifications(interface)
+    cadet_button_instructions = get_cadet_button_instructions(interface)
 
     state = get_edit_state_of_ticksheet(interface)
     if state ==EDIT_CHECKBOX_STATE:
         return ListOfLines([
-            'Check boxes to apply or disapply full ticks. Click on button next to cadet name to fill in all ticks, click on column heading to fill in that tick for all cadets',
-            can_award_qualificaiton,
+            'Click checkboxes to apply or disapply full ticks',
+            cadet_button_instructions,
+            'Click on column heading to fill in that tick for all cadets',
             'If you want to apply half ticks or N/A then save and choose dropdown edit. An existing half tick or N/A cannot be edited here',
             "Don't forget to press save when done. Pressing Back will lose your changes.",
             "You need to save before you can print."
         ]).add_Lines()
     elif state==EDIT_DROPDOWN_STATE:
         return ListOfLines([
-            'Choose the tick option in each cell.",'
-            'Click on the buttons next to cadet name to mark all ticks with appropriate marking',
+            'Choose the tick option in each cell.',
+            cadet_button_instructions ,
             'Click on the buttons next to each column heading to fill in that tick for all cadets',
-            can_award_qualificaiton,
             "If you want to apply full ticks only press save and then choose checkbox ticking -it's quicker!",
             "Don't forget to press save when done. Pressing Back will lose your changes.",
             "You need to save before you can print."
@@ -69,7 +85,8 @@ def get_instructions_for_ticksheet(interface: abstractInterface) -> ListOfLines:
     elif state == NO_EDIT_STATE:
         return ListOfLines([
             'Select dropdown edit if you want to include n/a, ',
-            'Select checkbox edit just to do full ticks - this is quicker'
+            'Select checkbox edit just to do full ticks - this is quicker',
+            cadet_button_instructions
         ]).add_Lines()
 
     raise Exception("State %s uknown" % state)

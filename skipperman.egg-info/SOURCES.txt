@@ -280,6 +280,7 @@ app/logic/events/volunteer_rota/volunteer_table_buttons.py
 app/logic/events/volunteer_rota/../../../data_access/configuration/configuration.yaml
 app/logic/instructors/ENTRY_choose_event.py
 app/logic/instructors/__init__.py
+app/logic/instructors/buttons.py
 app/logic/instructors/choose_group.py
 app/logic/instructors/choose_level.py
 app/logic/instructors/instructor_function_mapping.py

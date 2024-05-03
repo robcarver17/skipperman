@@ -19,6 +19,14 @@ class QualificationData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
 
+    def list_of_cadet_ids_with_qualification(self, qualification: Qualification) -> List[str]:
+        list_of_qualification_ids_for_cadet = self.get_list_of_cadets_with_qualifications()
+        return list_of_qualification_ids_for_cadet.list_of_cadet_ids_with_qualification(qualification_id = qualification.id)
+
+    def does_cadet_id_have_qualification(self, cadet_id, qualification_id: str)-> bool:
+        list_of_qualification_ids_for_cadet = self.get_list_of_cadets_with_qualifications()
+
+        return list_of_qualification_ids_for_cadet.does_cadet_id_have_qualification(cadet_id=cadet_id, qualification_id=qualification_id)
 
     def get_qualification_given_name(self, name: str) -> Qualification:
         list_of_qualifications = self.load_list_of_qualifications()
@@ -34,6 +42,8 @@ class QualificationData():
     def load_list_of_qualifications(self) -> ListOfQualifications:
         return self.data_api.get_list_of_qualifications()
 
+    def get_list_of_cadets_with_qualifications(self) -> ListOfCadetsWithQualifications:
+        return self.data_api.get_list_of_cadets_with_qualifications()
 
 def load_list_of_qualifications() -> ListOfQualifications:
     return DEPRECATED_data.data_list_of_qualifications.read()

@@ -165,7 +165,7 @@ half_tick = Tick.Half
 not_applicable_tick = Tick.NotApplicable
 no_tick = Tick.NoTick
 
-tick_strings_dict = {full_tick: "X", half_tick: ".", not_applicable_tick: "n/a", no_tick: "[  ]"}
+tick_strings_dict = {full_tick: "X", half_tick: "1/2", not_applicable_tick: "N A", no_tick: "[  ]"}
 string_ticks_dict = {v: k for k, v in tick_strings_dict.items()}
 
 @dataclass
@@ -200,11 +200,11 @@ class DictOfTicksWithItem(dict):
         return cls(as_dict)
 
     def aligned_to_list_of_tick_list_items(self, list_of_tick_list_items: List[str]):
-        as_dict = dict([(tick_item_id, self[tick_item_id]) for tick_item_id in list_of_tick_list_items])
+        as_dict = dict([(tick_item_id, self.get(tick_item_id, no_tick)) for tick_item_id in list_of_tick_list_items])
         return DictOfTicksWithItem(as_dict)
 
     def as_dict_of_str_aligned_to_list_of_tick_list_items(self, list_of_tick_list_items: List[str]):
-        return dict([(tick_item_id, tick_as_str(self[tick_item_id])) for tick_item_id in list_of_tick_list_items])
+        return dict([(tick_item_id, tick_as_str(self.get(tick_item_id, no_tick))) for tick_item_id in list_of_tick_list_items])
 
     @classmethod
     def from_dict_of_str(cls, dict_of_str):
@@ -261,6 +261,9 @@ class ListOfCadetsWithTickListItems(GenericListOfObjects):
     def to_df_of_str(self) -> pd.DataFrame:
         return list_of_cadets_with_tick_list_items_as_df(self)
 
+    def append(self, __object):
+        raise Exception("Can't append use add or modify specific tick")
+
     @classmethod
     def from_df_of_str(cls, df: pd.DataFrame):
         list_of_cadets_with_tick_list_items = from_df_to_list_of_cadets_with_tick_list_items(df)
@@ -294,6 +297,11 @@ class ListOfCadetsWithTickListItems(GenericListOfObjects):
 
     def subset_and_order_from_list_of_tick_sheet_items(self, list_of_tick_sheet_items: ListOfTickSheetItems)-> 'ListOfCadetsWithTickListItems':
         list_of_tick_sheet_item_ids = list_of_tick_sheet_items.list_of_ids
+        new_tick_list = self.subset_and_order_from_list_of_item_ids(list_of_tick_sheet_item_ids)
+
+        return new_tick_list
+
+    def subset_and_order_from_list_of_item_ids(self, list_of_tick_sheet_item_ids: List[str])-> 'ListOfCadetsWithTickListItems':
         new_list = [cadet_with_ticks.aligned_to_list_of_tick_list_items(list_of_tick_sheet_item_ids) for cadet_with_ticks in self]
 
         new_tick_list = ListOfCadetsWithTickListItems(new_list)
@@ -305,7 +313,7 @@ class ListOfCadetsWithTickListItems(GenericListOfObjects):
             list_of_tick_item_names: List[str],
             list_of_substage_names: List[str],
             qualification_name: str= "",
-                                                group_name: str = ""
+            group_name: str = ""
         ) -> LabelledTickSheetWithCadetIds:
 
             df = self.to_df_of_str()
@@ -316,7 +324,7 @@ class ListOfCadetsWithTickListItems(GenericListOfObjects):
 
             return LabelledTickSheetWithCadetIds(df=df, list_of_cadet_ids=list_of_cadet_ids, qualification_name=qualification_name, group_name=group_name)
 
-    def list_of_tick_list_items(self) -> List[str]:
+    def list_of_tick_list_item_ids(self) -> List[str]:
         first_cadet = self[0]
         tick_list_items = first_cadet.list_of_tick_item_ids
 
@@ -326,6 +334,55 @@ class ListOfCadetsWithTickListItems(GenericListOfObjects):
         for cadet_with_tick_list in self:
             if has_qualifications_dict[str(cadet_with_tick_list.cadet_id)]:
                 cadet_with_tick_list.add_all_ticks_inplace()
+
+    def add_or_modify_specific_tick_return_new_ticksheet(self, new_tick: Tick, cadet_id: str,
+                                                         item_id: str)  -> 'ListOfCadetsWithTickListItems':
+
+        if cadet_id in self.list_of_cadet_ids:
+            return self._add_or_modify_specific_tick_where_cadet_in_existing_list(new_tick=new_tick,
+                                                                           cadet_id=cadet_id,
+                                                                           item_id=item_id)
+        else:
+            return self._add_new_cadet_with_tick(new_tick=new_tick, cadet_id=cadet_id, item_id=item_id)
+
+    def _add_or_modify_specific_tick_where_cadet_in_existing_list(self, new_tick: Tick, cadet_id: str,
+                                    item_id: str)  -> 'ListOfCadetsWithTickListItems':
+
+        new_ticksheet = self._ensure_existing_cadets_have_potentially_new_item_id(item_id)
+        existing_idx = new_ticksheet.index_of_cadet_id(cadet_id)
+        existing_cadet_with_tick_list_items =new_ticksheet[existing_idx]
+
+        existing_cadet_with_tick_list_items.dict_of_ticks_with_items[item_id] = new_tick
+        new_ticksheet[existing_idx] = existing_cadet_with_tick_list_items
+
+        return new_ticksheet
+
+    def _add_new_cadet_with_tick(self, new_tick: Tick, cadet_id: str,
+                                    item_id: str)  -> 'ListOfCadetsWithTickListItems':
+
+        new_ticksheet = self._ensure_existing_cadets_have_potentially_new_item_id(item_id)
+        dict_of_ticks_with_items = DictOfTicksWithItem({item_id: new_tick})
+
+        cadet_with_tick_list_items =CadetWithTickListItems(cadet_id=cadet_id,
+                               dict_of_ticks_with_items=dict_of_ticks_with_items)
+
+        cadet_with_aligned_tick_list_items = cadet_with_tick_list_items.aligned_to_list_of_tick_list_items(
+            new_ticksheet.list_of_tick_list_item_ids()
+        )
+
+        new_ticksheet+=ListOfCadetsWithTickListItems([cadet_with_aligned_tick_list_items])
+
+        return new_ticksheet
+
+    def _ensure_existing_cadets_have_potentially_new_item_id(self, item_id:str) -> 'ListOfCadetsWithTickListItems':
+        list_of_tick_list_item_ids = self.list_of_tick_list_item_ids()
+        if item_id in list_of_tick_list_item_ids:
+            return self
+
+        list_of_tick_list_item_ids.append(item_id)
+        list_of_tick_list_item_ids.sort()
+
+        return self.subset_and_order_from_list_of_item_ids(list_of_tick_list_item_ids)
 
 def empty_row_given_non_empty_tick_list(cadet_id: str, list_of_cadets_with_tick_list_items: ListOfCadetsWithTickListItems) -> CadetWithTickListItems:
     try:
@@ -341,7 +398,7 @@ def empty_row_given_non_empty_tick_list(cadet_id: str, list_of_cadets_with_tick_
 
 def list_of_cadets_with_tick_list_items_as_df(list_of_cadets_with_tick_list_items: ListOfCadetsWithTickListItems)-> pd.DataFrame:
 
-    list_of_tick_list_items = list_of_cadets_with_tick_list_items.list_of_tick_list_items()
+    list_of_tick_list_items = list_of_cadets_with_tick_list_items.list_of_tick_list_item_ids()
     list_of_cadets_with_tick_list_items_as_dict_of_str = [
         cadet_with_tick_list_items.as_dict_of_str_aligned_to_list_of_tick_list_items(
             list_of_tick_list_items

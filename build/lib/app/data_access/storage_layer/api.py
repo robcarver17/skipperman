@@ -62,6 +62,11 @@ class DataLayer():
         data_access_for_list_of_cadets_with_tick_list_items = get_data_access_for_list_of_cadets_with_tick_list_items(self.data)
         return self.store.read(data_access_for_list_of_cadets_with_tick_list_items)
 
+    def save_list_of_cadets_with_tick_list_items(self, list_of_cadets_with_tick_list_items: ListOfCadetsWithTickListItems):
+        data_access_for_list_of_cadets_with_tick_list_items = get_data_access_for_list_of_cadets_with_tick_list_items(
+            self.data)
+        self.store.write(list_of_cadets_with_tick_list_items, data_access_method=data_access_for_list_of_cadets_with_tick_list_items)
+
     def get_list_of_qualifications(self) -> ListOfQualifications:
         data_access_for_list_of_qualifications = get_data_access_for_list_of_qualifications(self.data)
         return self.store.read(data_access_for_list_of_qualifications)

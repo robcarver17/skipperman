@@ -1,7 +1,8 @@
 from typing import Union
 
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
-from app.logic.instructors.parse_ticksheet_table import save_ticksheet_edits
+from app.logic.instructors.buttons import get_list_of_all_tick_related_button_names
+from app.logic.instructors.parse_ticksheet_table import save_ticksheet_edits, action_if_macro_tick_button_pressed
 
 from app.logic.instructors.render_ticksheet_table import get_ticksheet_table
 from app.logic.instructors.ticksheet_table_elements import get_buttons_for_ticksheet, get_instructions_for_ticksheet, \
@@ -13,7 +14,8 @@ from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 
-from app.logic.instructors.state_storage import get_group_from_state, get_qualification_from_state, set_edit_state_of_ticksheet, get_edit_state_of_ticksheet, EDIT_CHECKBOX_STATE, EDIT_DROPDOWN_STATE, NO_EDIT_STATE
+from app.logic.instructors.state_storage import get_group_from_state, get_qualification_from_state, set_edit_state_of_ticksheet, \
+    EDIT_CHECKBOX_STATE, EDIT_DROPDOWN_STATE, NO_EDIT_STATE
 
 from app.logic.events.events_in_state import get_event_from_state
 
@@ -69,6 +71,8 @@ def post_form_view_ticksheets_for_event_and_group(interface: abstractInterface) 
     ### IF STATE EDIT, SAVE EDITS HERE
     save_ticksheet_edits(interface)
 
+    list_of_tick_buttons = get_list_of_all_tick_related_button_names(interface)
+
     ## Edit state has to change
     if button_pressed == EDIT_DROPDOWN_BUTTON_LABEL:
         set_edit_state_of_ticksheet(interface=interface, state=EDIT_DROPDOWN_STATE)
@@ -84,6 +88,8 @@ def post_form_view_ticksheets_for_event_and_group(interface: abstractInterface) 
         pass
 
     ## SPECIAL BUTTONS: qualification, all ticks, all column
+    elif button_pressed in list_of_tick_buttons:
+        action_if_macro_tick_button_pressed(interface=interface, button_pressed=button_pressed)
 
     else:
         return button_error_and_back_to_initial_state_form(interface)

@@ -1,6 +1,7 @@
 from typing import Union
 
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
+from app.logic.instructors.parse_ticksheet_table import save_ticksheet_edits
 
 from app.logic.instructors.render_ticksheet_table import get_ticksheet_table
 from app.logic.instructors.ticksheet_table_elements import get_buttons_for_ticksheet, get_instructions_for_ticksheet, \
@@ -66,9 +67,7 @@ def post_form_view_ticksheets_for_event_and_group(interface: abstractInterface) 
         return previous_form(interface)
 
     ### IF STATE EDIT, SAVE EDITS HERE
-    state = get_edit_state_of_ticksheet(interface)
-    if state in [EDIT_DROPDOWN_STATE, EDIT_CHECKBOX_STATE]:
-        save_ticksheet_edits(interface)
+    save_ticksheet_edits(interface)
 
     ## Edit state has to change
     if button_pressed == EDIT_DROPDOWN_BUTTON_LABEL:
@@ -78,7 +77,7 @@ def post_form_view_ticksheets_for_event_and_group(interface: abstractInterface) 
         set_edit_state_of_ticksheet(interface=interface, state=EDIT_CHECKBOX_STATE)
 
     elif button_pressed == SAVE_BUTTON_LABEL:
-        ## already save, but need to change state
+        ## already save, but need to change state back to not editing
         set_edit_state_of_ticksheet(interface=interface, state=NO_EDIT_STATE)
 
     elif button_pressed == PRINT_BUTTON_LABEL:
@@ -97,5 +96,3 @@ def post_form_view_ticksheets_for_event_and_group(interface: abstractInterface) 
 def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(post_form_view_ticksheets_for_event_and_group)
 
-def save_ticksheet_edits(interface: abstractInterface):
-    pass

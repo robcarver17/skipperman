@@ -1,18 +1,19 @@
+from dataclasses import dataclass
 from typing import List
 
 import pandas as pd
+from app.backend.data.qualification import QualificationData
 
 from app.backend.data.security import SUPERUSER
 from app.backend.data.ticksheets import TickSheetsData
 from app.backend.data.volunteer_rota import VolunteerRotaData
 from app.backend.events import get_sorted_list_of_events
-from app.backend.ticks_and_qualifications.ticksheets import TickSheetDataWithExtraInfo
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event, ListOfEvents
 from app.objects.groups import Group
 from app.backend.data.group_allocations import GroupAllocationsData
 from app.objects.qualifications import Qualification
-from app.objects.ticks import LabelledTickSheetWithCadetIds
+from app.objects.ticks import LabelledTickSheetWithCadetIds, ListOfCadetsWithTickListItems, ListOfTickSheetItems
 
 
 def get_list_of_groups_volunteer_id_can_see(interface: abstractInterface, event: Event, volunteer_id: str) -> List[Group]:
@@ -74,6 +75,7 @@ def write_ticksheet_to_excel(labelled_ticksheet:LabelledTickSheetWithCadetIds, f
 
 def get_ticksheet_data(interface: abstractInterface, event: Event, group: Group, qualification: Qualification):
     tick_sheet_data = TickSheetsData(interface.data)
+    qualifications_data = QualificationData(interface.data)
     tick_sheet = tick_sheet_data.get_ticksheet_for_cadets_in_group_at_event_for_qualification(event=event, group=group, qualification_stage_id=qualification.id)
 
     list_of_tick_sheet_items_for_this_qualification = tick_sheet_data.list_of_tick_sheet_items_for_this_qualification(
@@ -81,8 +83,29 @@ def get_ticksheet_data(interface: abstractInterface, event: Event, group: Group,
     list_of_substage_names = tick_sheet_data.list_of_substage_names_give_list_of_tick_sheet_items(
         list_of_tick_sheet_items_for_this_qualification)
 
+    list_of_cadet_ids_with_qualification = qualifications_data.list_of_cadet_ids_with_qualification(qualification)
+
     return TickSheetDataWithExtraInfo(
         tick_sheet=tick_sheet,
+        qualification=qualification,
         list_of_substage_names=list_of_substage_names,
-        list_of_tick_sheet_items_for_this_qualification=list_of_tick_sheet_items_for_this_qualification
+        list_of_tick_sheet_items_for_this_qualification=list_of_tick_sheet_items_for_this_qualification,
+        list_of_cadet_ids_with_qualification=list_of_cadet_ids_with_qualification,
     )
+
+
+@dataclass
+class TickSheetDataWithExtraInfo:
+    tick_sheet: ListOfCadetsWithTickListItems
+    qualification: Qualification
+    list_of_substage_names: List[str]
+    list_of_tick_sheet_items_for_this_qualification: ListOfTickSheetItems
+    list_of_cadet_ids_with_qualification: List[str]
+
+
+def cadet_is_already_qualified(ticksheet_data: TickSheetDataWithExtraInfo,
+                                   cadet_id: str) -> bool:
+
+    already_qualified = cadet_id in ticksheet_data.list_of_cadet_ids_with_qualification
+
+    return already_qualified

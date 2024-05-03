@@ -1,39 +1,32 @@
 from typing import List
 
 import pandas as pd
+from app.backend.data.qualification import QualificationData
+
 from app.objects.events import Event
 
 from app.objects.groups import Group
 
 from app.data_access.storage_layer.api import DataLayer
-from app.objects.ticks import ListOfCadetsWithTickListItems, ListOfTickSheetItems, LabelledTickSheetWithCadetIds
+from app.objects.ticks import ListOfCadetsWithTickListItems, ListOfTickSheetItems, LabelledTickSheetWithCadetIds, Tick
 from app.backend.data.group_allocations import GroupAllocationsData
 from app.backend.data.cadets import CadetData
 from app.backend.data.cadets_at_event import CadetsAtEventData
 from app.backend.data.resources import ClubDinghiesData
+from app.objects.ticks import CadetWithTickListItems
 
-### Pass list of cadets (which in turn could be derived from group for event)
-### Also pass qualification required
-### How do we know which qualification is required?
-##
-## Have a specific ticksheets page
-## Choose event / group (limited to instructors or skipper)
-###  For the instructor page will have list of cadets with current qual, and % qual in others
-##   For the skipper page,
-##
-
-## For now, only output excel ticksheets to saved page
-## For now, reporting only done via python
-##
-## Future: self generation, pdf files (by converting excel file)
-##  https://stackoverflow.com/questions/49182766/rotate-cells-text-when-using-pd-dataframe-to-excel
-##
-##
 
 
 class TickSheetsData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
+
+    def add_or_modify_specific_tick(self, new_tick: Tick, cadet_id: str,
+                                    item_id: str):
+
+        full_tick_sheet = self.get_list_of_cadets_with_tick_list_items()
+        full_tick_sheet = full_tick_sheet.add_or_modify_specific_tick_return_new_ticksheet(cadet_id=cadet_id, item_id=item_id, new_tick=new_tick)
+        self.save_list_of_cadets_with_tick_list_items(full_tick_sheet)
 
     def get_labelled_ticksheet_df_for_group_at_event(self,event: Event,
                                                      group: Group,
@@ -93,9 +86,9 @@ class TickSheetsData():
                                                                      group: Group,
                                                                      qualification_stage_id: str) -> ListOfCadetsWithTickListItems:
 
-        list_of_cadet_ids = self.group_allocations.list_of_cadet_ids_in_a_specific_group_if_cadet_active_at_event(event=event, group=group)
+        list_of_cadet_ids = self.group_allocation_data.list_of_cadet_ids_in_a_specific_group_if_cadet_active_at_event(event=event, group=group)
 
-        full_tick_sheet = self.data_api.get_list_of_cadets_with_tick_list_items()
+        full_tick_sheet = self.get_list_of_cadets_with_tick_list_items()
         list_of_tick_sheet_items_for_this_qualification = self.list_of_tick_sheet_items_for_this_qualification(qualification_stage_id)
         ordered_list_of_cadet_ids = self.cadet_data.reorder_list_of_cadet_ids_by_cadet_name(list_of_cadet_ids)
 
@@ -128,7 +121,7 @@ class TickSheetsData():
     def add_full_rows_where_cadet_has_qualifications(self,  tick_sheet: ListOfCadetsWithTickListItems, qualification_stage_id: str) -> ListOfCadetsWithTickListItems:
         list_of_cadet_ids = tick_sheet.list_of_cadet_ids
         has_qualifications_dict = dict([(cadet_id,
-                                    self.data_api.get_list_of_cadets_with_qualifications().does_cadet_id_have_qualification(cadet_id, qualification_id=qualification_stage_id))
+                                    self.qualification_data.does_cadet_id_have_qualification(cadet_id=cadet_id, qualification_id=qualification_stage_id))
                                     for cadet_id in list_of_cadet_ids])
 
         tick_sheet.add_full_rows_inplace_where_cadet_has_qualifications(has_qualifications_dict)
@@ -152,9 +145,19 @@ class TickSheetsData():
 
         return labelled_tick_sheet
 
+    def get_list_of_cadets_with_tick_list_items(self) -> ListOfCadetsWithTickListItems:
+        return self.data_api.get_list_of_cadets_with_tick_list_items()
+
+
+    def save_list_of_cadets_with_tick_list_items(self, list_of_cadets_with_tick_list_items: ListOfCadetsWithTickListItems):
+        self.data_api.save_list_of_cadets_with_tick_list_items(list_of_cadets_with_tick_list_items)
 
     @property
-    def group_allocations(self) -> GroupAllocationsData:
+    def qualification_data(self) ->  QualificationData:
+        return QualificationData(self.data_api)
+
+    @property
+    def group_allocation_data(self) -> GroupAllocationsData:
         return GroupAllocationsData(data_api=self.data_api)
 
     @property

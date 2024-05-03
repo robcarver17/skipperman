@@ -15,13 +15,16 @@ class DataAccessMethod:
     method_kwargs: dict
 
     def __init__(self, key, read_method: Callable, write_method: Callable, **kwargs):
-        self.key = key
+
         self.read_method = read_method
         self.write_method = write_method
         if len(kwargs)==0:
             self.method_kwargs = {}
         else:
             self.method_kwargs = kwargs
+            key+=str(kwargs)
+
+        self.key = key
 
 @dataclass
 class StorageItem:

@@ -6,6 +6,34 @@ from app.objects.qualifications import ListOfQualifications, ListOfCadetsWithQua
 
 from app.data_access.data import DEPRECATED_data
 
+from typing import List
+
+from app.objects.constants import arg_not_passed
+
+from app.data_access.storage_layer.api import DataLayer
+from app.data_access.data import DEPRECATED_data
+from app.objects.cadets import Cadet, ListOfCadets
+
+
+class QualificationData():
+    def __init__(self, data_api: DataLayer):
+        self.data_api = data_api
+
+
+    def get_qualification_given_name(self, name: str) -> Qualification:
+        list_of_qualifications = self.load_list_of_qualifications()
+        idx = list_of_qualifications.idx_given_name(name)
+        return list_of_qualifications[idx]
+
+
+    def get_qualification_given_id(self, id: str) -> Qualification:
+        list_of_qualifications = self.load_list_of_qualifications()
+
+        return list_of_qualifications.object_with_id(id)
+
+    def load_list_of_qualifications(self) -> ListOfQualifications:
+        return self.data_api.get_list_of_qualifications()
+
 
 def load_list_of_qualifications() -> ListOfQualifications:
     return DEPRECATED_data.data_list_of_qualifications.read()

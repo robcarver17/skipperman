@@ -282,8 +282,11 @@ app/logic/instructors/ENTRY_choose_event.py
 app/logic/instructors/__init__.py
 app/logic/instructors/choose_group.py
 app/logic/instructors/choose_level.py
-app/logic/instructors/components.py
 app/logic/instructors/instructor_function_mapping.py
+app/logic/instructors/parse_ticksheet_table.py
+app/logic/instructors/render_ticksheet_table.py
+app/logic/instructors/state_storage.py
+app/logic/instructors/ticksheet_table_elements.py
 app/logic/instructors/view_ticksheets.py
 app/logic/instructors/../../data_access/configuration/configuration.yaml
 app/logic/reporting/ENTRY_view_list_of_reports.py

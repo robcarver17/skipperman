@@ -27,3 +27,10 @@ class ButtonBar(List[Button]):
         return "ButtonBar contents %s" % str(super().__repr__())
 
 main_menu_button = Button(MAIN_MENU_BUTTON_LABEL)
+
+
+def get_nav_bar_with_just_back_button() -> ButtonBar:
+    back_button = Button(BACK_BUTTON_LABEL,
+                         nav_button=True)
+
+    return ButtonBar([back_button])

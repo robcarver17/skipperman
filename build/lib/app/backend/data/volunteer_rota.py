@@ -1,6 +1,6 @@
 from typing import List
 
-from app.objects.groups import Group
+from app.objects.groups import Group, order_list_of_groups
 
 from app.backend.volunteers.volunteers import get_volunteer_name_from_id
 
@@ -18,24 +18,25 @@ from app.data_access.data import DEPRECATED_data
 from app.objects.constants import missing_data
 from app.objects.day_selectors import Day
 from app.objects.events import Event
+from app.objects.groups import Group
 
 
 class VolunteerRotaData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
 
-    def is_senior_instructor(self, event: Event, volunteer_id:str):
-        all_roles = [self.get_volunteer_with_role_at_event_on_day(event=event, day=day, volunteer_id=volunteer_id) for day in event.weekdays_in_event()]
-        is_si = [role for role in all_roles if role.senior_instructor()]
-
-        return is_si
+    def is_senior_instructor(self, event: Event, volunteer_id:str) -> bool:
+        all_roles = [self.get_volunteer_with_role_at_event_on_day(event=event, day=day, volunteer_id=volunteer_id)
+                     for day in event.weekdays_in_event()]
+        is_si = [role.senior_instructor() for role in all_roles ]
+        return any(is_si)
 
     def get_list_of_groups_volunteer_is_instructor_for(self, event: Event, volunteer_id:str) -> List[Group]:
         all_roles = [self.get_volunteer_with_role_at_event_on_day(event=event, day=day, volunteer_id=volunteer_id) for day in event.weekdays_in_event()]
         all_valid_groups = [role.group for role in all_roles if role.in_instructor_team()]
         all_valid_groups = list(set(all_valid_groups))
 
-        return all_valid_groups
+        return order_list_of_groups(all_valid_groups)
 
 
     def delete_role_at_event_for_volunteer_on_day(self,

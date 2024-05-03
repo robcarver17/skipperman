@@ -180,6 +180,12 @@ def tick_from_str(some_str:str) -> Tick:
     return string_ticks_dict[some_str]
 
 class DictOfTicksWithItem(dict):
+    def list_of_ticks(self) -> List[Tick]:
+        return list(self.values())
+
+    def list_of_item_ids(self) -> List[Tick]:
+        return list(self.keys())
+
     def add_all_ticks_inplace(self):
         for tick_item_id in self.keys():
             self[tick_item_id] = full_tick
@@ -357,3 +363,5 @@ def from_df_to_list_of_cadets_with_tick_list_items(df: pd.DataFrame) -> ListOfCa
 
     return ListOfCadetsWithTickListItems(list_of_cadets_with_tick_lists)
 
+
+list_of_tick_options = [no_tick, half_tick, full_tick, not_applicable_tick]

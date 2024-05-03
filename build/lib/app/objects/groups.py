@@ -96,10 +96,14 @@ class Group:
 GROUP_UNALLOCATED = Group.create_unallocated()
 GROUP_UNALLOCATED_TEXT = "Unallocated"
 
+ALL_GROUPS = [Group(group) for group in ALL_GROUPS_NAMES]
+
 def index_group(group: Group):
     all_groups = ALL_GROUPS_NAMES + [GROUP_UNALLOCATED_TEXT]
     return all_groups.index(group)
 
+def order_list_of_groups(list_of_groups: List[Group]) -> List[Group]:
+    return [group for group in ALL_GROUPS if group in list_of_groups]
 
 @dataclass
 class CadetIdWithGroup(GenericSkipperManObjectWithIds):

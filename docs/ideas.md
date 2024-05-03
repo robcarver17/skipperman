@@ -64,6 +64,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for May training event:
 - record ticksheet entries
+- print ticksheets from menu
 - add health to ticksheets
 - data model for boats and group allocation
 - refactor reporting so uses common data model 
@@ -89,7 +90,6 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - instructor login (send link to create)
 - ticksheet level security
 - key report links for instructors on landing page
-- print ticksheets from menu
 
 - clear old reports for event (remove rednedant permalinks) and other temp directories UTILITIES MENU
 - put shareable files up like instructors documents; manage shared files eg deleete
@@ -106,6 +106,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for cadet week:
 
+- with skipper access only - grant qualification from ticksheet screen
 - list of non volunteers with cadet ages
 - sort volunteer list by cadet location
 - two types of clothing event: as part of training event, or social only seperate

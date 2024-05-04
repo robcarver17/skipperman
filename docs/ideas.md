@@ -64,53 +64,74 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - print ticksheets from menu
 - ticksheet level security
 - add health to ticksheets
+- instructor login
 
 
-### Required for May training event:
-- data model for boats and group allocation
+
+
+### Required for training events:
+
+
+
+REPORTING:
 - refactor reporting so uses common data model 
-
-### Required for June training event:
-
-- phone friendly ticksheet
 - add contact details and health to roll call report
+- registration report with literally everything on it
+- power boat only volunteer rota
+- memorise group orders and arrangements for reports (can deal with different / missing groups)
 
-- store of previous events volunteer role / cadet allocation to speed up loading 
+MISC:
+- go through all cadets and backfill qualifications
+- GDPR document
+- birthdays during an event - splash on event screen
+
+
+TICKSHEETS:
+- phone friendly ticksheet
+- allow selection of group subset in reporting when doing arrangement of groups
+- key report links for instructors on event landing page
+
+
+USERS:
+- datamodel
+- remove emails, link options; tidy up userlist on web
+
+BOATS AND GROUPS:
+- data model
+- store of previous events  cadet allocation to speed up loading 
 - click on cadet name to see previous groups
 - allow multiple days / different allocations. Availability change will break two handed partners.
 
+VOLUNTEER ROTA:
+- sort volunteer list by cadet location
+- store of previous events volunteer role to speed up loading
+- removing volunteer / availability should also remove related information
+
+CADET / VOLUNTEER LIST / CONFIGURATION
+- data model
+
+IMPORT:
 - removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
 - over 12 volunteer has to be identified multiple times on input
 - volunteer rota still not doing change check properly
 
-- allow selection of group subset in reporting when doing arrangement of groups
+REGISTRATION DETAILS:
+- removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
 
-- registration report with literally everything on it
-- power boat only volunteer rota
-- birthdays during an event - splash on event screen
 
-- instructor login (send link to create)
-- key report links for instructors on landing page
 
+ADMIN:
 - clear old reports for event (remove rednedant permalinks) and other temp directories UTILITIES MENU
 - put shareable files up like instructors documents; manage shared files eg deleete
-- memorise whether summary buttons pressed
-- memorise group orders and arrangements for reports (can deal with different / missing groups)
 
 
-### Required for social event:
-
-- think carefully about how to handle events with no cadets, volunteers etc
-- two types of food event: as part of training event, or social only seperate
-- manage social event with food only (Social)
 
 
 ### Required for cadet week:
 
-- with skipper access only - grant qualification from ticksheet screen and log date
+- with skipper access only - grant qualification from ticksheet screen and log date when awarded
 - report of qualifications awarded by date
 - list of non volunteers with cadet ages
-- sort volunteer list by cadet location
 - two types of clothing event: as part of training event, or social only seperate
 - allocate and maintain colour groups (CW)
 - maintain and report on tickets for gala dinner, include additional gala dinner invites eg sponsors, plus ones (CW)
@@ -126,24 +147,31 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
   ### General required before handover to Jonny:
 
- - set maximum allowable / target for each volunteer role
+- check competely removal of old data model
+- editable user sailing groups, volunteer roles, skills: but plain text file so can replace configuration
+- memorise whether summary buttons pressed
+- set maximum allowable / target for each volunteer role
 - add new volunteer from volunteer rota page should include skills filter
 - create a list of key volunteers to invite to curry evening
 - don't allow duplicate templates and delete templates allowed
 - template download for import of list of cadets
 - edit event (warnings especially days!)
 - anything that is displayed on screen can be exported to .csv eg reg details, volunteer rota (and imported...???)
-- upload/download all data as zip
 - clean up eg old data, uploaded files, staged files
 - move all dangerous deletes to special admin area: , delete event (should never have to do this: many warnings!), delete cadet, delete volunteer
 - merge cadet / merge volunteer
-- editable user sailing groups, volunteer roles, skills: but plain text file so can replace configuration
 - create a report of cadets
-- dropdown list of previous event names
+- dropdown list of previous event names when creating event
 - clear description of field names
 - instructions
-- GDPR document
 - tests
+
+### Required for social event:
+
+- think carefully about how to handle events with no cadets, volunteers etc
+- two types of food event: as part of training event, or social only seperate
+- manage social event with food only (Social)
+
 
 ### Future / wishlist / nice to have:
 

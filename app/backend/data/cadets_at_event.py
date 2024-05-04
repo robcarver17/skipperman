@@ -74,6 +74,7 @@ class CadetsAtEventData():
         self.save_list_of_cadets_at_event(list_of_cadets_at_event=existing_cadets_at_event, event=event)
 
 
+
     def update_availability_of_existing_cadet_at_event(self, event: Event, cadet_id: str,
                                                        new_availabilty: DaySelector):
 
@@ -199,6 +200,19 @@ class CadetsAtEventData():
         list_of_availability = ListOfDaySelectors([cadet_at_event.availability for cadet_at_event in subset_list])
 
         return list_of_availability
+
+    def get_health_notes_for_list_of_cadet_ids_at_event(self, event: Event, list_of_cadet_ids: List[str])-> List[str]:
+        list_of_cadets_at_event = self.get_list_of_cadets_at_event(event)
+        subset_list = list_of_cadets_at_event.subset_given_cadet_ids(list_of_cadet_ids)
+
+        health_notes = []
+        for cadet_at_event in subset_list:
+            health_for_cadet = cadet_at_event.health
+            if len(health_for_cadet)==0:
+                health_for_cadet='none'
+            health_notes.append(health_for_cadet)
+
+        return health_notes
 
     def get_list_of_identified_cadets_at_event(self, event: Event)-> ListOfIdentifiedCadetsAtEvent:
         return self.data_api.get_list_of_identified_cadets_at_event(event)

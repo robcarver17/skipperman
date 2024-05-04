@@ -18,6 +18,7 @@ class LabelledTickSheetWithCadetIds:
     qualification_name: str = ""
     group_name: str = ""
 
+
     def from_existing_replace_df(self, new_df: pd.DataFrame):
         return LabelledTickSheetWithCadetIds(
             df = new_df,
@@ -52,6 +53,21 @@ class LabelledTickSheetWithCadetIds:
             new_df = pd.concat([attendance, qual_column, self.df], axis=1)
 
         return self.from_existing_replace_df(new_df)
+
+    def add_health_notes(self, health_notes: List[str]):
+        print(health_notes)
+        health_multindex = pd.MultiIndex.from_tuples([('', 'Medical notes')])
+        if self.cadets_in_columns:
+            health_row = pd.DataFrame(health_notes, index=health_multindex, columns=self.df.columns)
+            print(health_row)
+            new_df = pd.concat([ self.df, health_row], axis=0)
+        else:
+            health_column = pd.DataFrame(health_notes, index=self.df.index, columns=health_multindex)
+            print(health_column)
+            new_df = pd.concat([ self.df, health_column], axis=1)
+
+        return self.from_existing_replace_df(new_df)
+
 
     def add_qualification_and_group_header(self):
         qual_multindex = pd.MultiIndex.from_tuples([('%s:' % self.qualification_name.upper(), self.group_name)])

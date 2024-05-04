@@ -35,7 +35,7 @@ class TickSheetsData():
                                                      add_header: bool = True,
                                                      sailors_in_columns:bool = True,
                                                      asterix_club_boats: bool = True,
-                                                     medical_notes: bool = True) -> pd.DataFrame:
+                                                     medical_notes: bool = True) -> LabelledTickSheetWithCadetIds:
 
 
 
@@ -46,11 +46,15 @@ class TickSheetsData():
         if add_header:
             labelled_ticksheet = labelled_ticksheet.add_qualification_and_group_header()
         if include_attendance_columns:
-            labelled_ticksheet = self.add_attendance_data(labelled_ticksheet)
+            labelled_ticksheet = self.add_attendance_data(event=event, labelled_ticksheet=labelled_ticksheet)
         if asterix_club_boats:
-            labelled_ticksheet = self.add_club_boats(labelled_ticksheet)
+            labelled_ticksheet = self.add_club_boats(event=event, labelled_ticksheet=labelled_ticksheet)
+        if medical_notes:
+            labelled_ticksheet = self.add_medical_notes(event=event, labelled_ticksheet=labelled_ticksheet)
+
         if sailors_in_columns:
             labelled_ticksheet = labelled_ticksheet.transpose()
+
 
         return labelled_ticksheet
 
@@ -129,17 +133,25 @@ class TickSheetsData():
         return tick_sheet
 
 
-    def add_attendance_data(self,  labelled_ticksheet:LabelledTickSheetWithCadetIds) -> LabelledTickSheetWithCadetIds:
+    def add_attendance_data(self,  event: Event, labelled_ticksheet:LabelledTickSheetWithCadetIds) -> LabelledTickSheetWithCadetIds:
         list_of_cadet_ids = labelled_ticksheet.list_of_cadet_ids
-        attendance_data = self.cadets_at_event_data.get_attendance_matrix_for_list_of_cadet_ids_at_event(list_of_cadet_ids)
+        attendance_data = self.cadets_at_event_data.get_attendance_matrix_for_list_of_cadet_ids_at_event(event=event, list_of_cadet_ids=list_of_cadet_ids)
 
         labelled_tick_sheet = labelled_ticksheet.add_attendance_data(attendance_data)
 
         return labelled_tick_sheet
 
+    def add_medical_notes(self,  event: Event, labelled_ticksheet:LabelledTickSheetWithCadetIds) -> LabelledTickSheetWithCadetIds:
+        list_of_cadet_ids = labelled_ticksheet.list_of_cadet_ids
+        health_notes = self.cadets_at_event_data.get_health_notes_for_list_of_cadet_ids_at_event(event=event, list_of_cadet_ids=list_of_cadet_ids)
 
-    def add_club_boats(self,  labelled_ticksheet:LabelledTickSheetWithCadetIds) -> LabelledTickSheetWithCadetIds:
-        list_of_club_boat_bool = self.club_dinghies.list_of_club_dinghies_bool_for_list_of_cadet_ids(list_of_cadet_ids=labelled_ticksheet.list_of_cadet_ids)
+        labelled_tick_sheet = labelled_ticksheet.add_health_notes(health_notes)
+
+        return labelled_tick_sheet
+
+
+    def add_club_boats(self, event: Event, labelled_ticksheet:LabelledTickSheetWithCadetIds) -> LabelledTickSheetWithCadetIds:
+        list_of_club_boat_bool = self.club_dinghies.list_of_club_dinghies_bool_for_list_of_cadet_ids(list_of_cadet_ids=labelled_ticksheet.list_of_cadet_ids, event=event)
 
         labelled_tick_sheet = labelled_ticksheet.add_club_boat_asterix(list_of_club_boat_bool)
 

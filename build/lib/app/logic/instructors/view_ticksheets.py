@@ -4,6 +4,7 @@ from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_
 from app.logic.instructors.buttons import get_list_of_all_tick_related_button_names
 from app.logic.instructors.parse_ticksheet_table import save_ticksheet_edits
 from app.logic.instructors.parse_macro_buttons_in_ticksheets import action_if_macro_tick_button_pressed
+from app.logic.instructors.print_ticksheet import download_labelled_ticksheet_and_return_file
 
 from app.logic.instructors.render_ticksheet_table import get_ticksheet_table
 from app.logic.instructors.ticksheet_table_elements import get_buttons_for_ticksheet, get_instructions_for_ticksheet, \
@@ -22,7 +23,7 @@ from app.logic.events.events_in_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
-    NewForm,
+    NewForm, File,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -63,7 +64,7 @@ def display_form_view_ticksheets_for_event_and_group(interface: abstractInterfac
 
 
 
-def post_form_view_ticksheets_for_event_and_group(interface: abstractInterface) -> Union[Form, NewForm]:
+def post_form_view_ticksheets_for_event_and_group(interface: abstractInterface) -> Union[Form, NewForm, File]:
     button_pressed = interface.last_button_pressed()
     if button_pressed == BACK_BUTTON_LABEL:
         ## DOES NOT SAVE
@@ -87,7 +88,7 @@ def post_form_view_ticksheets_for_event_and_group(interface: abstractInterface) 
         set_edit_state_of_ticksheet(interface=interface, state=NO_EDIT_STATE)
 
     elif button_pressed == PRINT_BUTTON_LABEL:
-        pass
+        return download_labelled_ticksheet_and_return_file(interface)
 
     ## SPECIAL BUTTONS: qualification, all ticks, all column
     elif button_pressed in list_of_tick_buttons:

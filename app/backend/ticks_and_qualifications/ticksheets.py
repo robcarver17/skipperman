@@ -8,6 +8,8 @@ from app.backend.data.security import SUPERUSER
 from app.backend.data.ticksheets import TickSheetsData
 from app.backend.data.volunteer_rota import VolunteerRotaData
 from app.backend.events import get_sorted_list_of_events
+from app.logic.events.events_in_state import get_event_from_state
+from app.logic.instructors.state_storage import get_group_from_state, get_qualification_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event, ListOfEvents
 from app.objects.groups import Group
@@ -109,3 +111,17 @@ def cadet_is_already_qualified(ticksheet_data: TickSheetDataWithExtraInfo,
     already_qualified = cadet_id in ticksheet_data.list_of_cadet_ids_with_qualification
 
     return already_qualified
+
+
+def get_ticksheet_data_from_state(interface: abstractInterface)-> TickSheetDataWithExtraInfo:
+    event = get_event_from_state(interface)
+    group = get_group_from_state(interface)
+    qualification = get_qualification_from_state(interface)
+
+    ticksheet_data = get_ticksheet_data(
+        interface=interface,
+        event=event,
+        group=group,
+        qualification=qualification
+    )
+    return ticksheet_data

@@ -66,7 +66,7 @@ def checkbox_for_qualifications(cadet: Cadet)-> checkboxInput:
             dict_of_checked[qual]= False
 
     return checkboxInput(
-        input_label="Qualifications:",
+        input_label="Qualifications (use ticksheets to add, only remove here if errors made)",
         input_name=QUALIFICATIONS,
         dict_of_labels=dict_of_labels,
         dict_of_checked=dict_of_checked,

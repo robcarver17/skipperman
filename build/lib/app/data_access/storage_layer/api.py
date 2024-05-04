@@ -91,6 +91,11 @@ class DataLayer():
         data_access_for_list_of_cadets_with_qualifications = get_data_access_for_list_of_cadets_with_qualifications(self.data)
         return self.store.read(data_access_for_list_of_cadets_with_qualifications)
 
+    def save_list_of_cadets_with_qualifications(self, list_of_cadets_with_qualifications: ListOfCadetsWithQualifications):
+        data_access_for_list_of_cadets_with_qualifications = get_data_access_for_list_of_cadets_with_qualifications(
+            self.data)
+        self.store.write(list_of_cadets_with_qualifications, data_access_method=data_access_for_list_of_cadets_with_qualifications)
+
     def get_wa_event_mapping(self) -> ListOfWAEventMaps:
         data_access_for_wa_event_mapping= get_data_access_for_wa_event_mapping(self.data)
         return self.store.read(data_access_for_wa_event_mapping)

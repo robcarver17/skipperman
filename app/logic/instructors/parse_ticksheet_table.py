@@ -1,24 +1,14 @@
 from typing import Union
 
-from app.backend.ticks_and_qualifications.ticksheets import get_ticksheet_data, TickSheetDataWithExtraInfo
+from app.backend.ticks_and_qualifications.ticksheets import TickSheetDataWithExtraInfo, \
+    get_ticksheet_data_from_state
 from app.backend.data.ticksheets import TickSheetsData
-from app.logic.instructors.buttons import get_axis_tick_type_id_from_button_name, from_tick_label_to_tick, item_id_axis, \
-    cadet_id_axis, qual_label, disqual_leable
 from app.logic.instructors.render_ticksheet_table import get_tick_from_dropdown_or_none, get_tick_from_checkbox_or_none
 
-from app.objects.qualifications import Qualification
-
-from app.objects.groups import Group
-
-from app.objects.events import Event
-
-from app.logic.instructors.state_storage import get_group_from_state, get_qualification_from_state, \
-    get_edit_state_of_ticksheet, NO_EDIT_STATE, EDIT_DROPDOWN_STATE, EDIT_CHECKBOX_STATE
-
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.instructors.state_storage import get_edit_state_of_ticksheet, NO_EDIT_STATE, EDIT_DROPDOWN_STATE, EDIT_CHECKBOX_STATE
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.ticks import DictOfTicksWithItem, Tick, not_applicable_tick, half_tick
+from app.objects.ticks import DictOfTicksWithItem, Tick
 
 
 def save_ticksheet_edits(interface: abstractInterface):
@@ -26,28 +16,7 @@ def save_ticksheet_edits(interface: abstractInterface):
     if state == NO_EDIT_STATE:
         return
 
-    event = get_event_from_state(interface)
-    group = get_group_from_state(interface)
-    qualification = get_qualification_from_state(interface)
-
-    save_ticksheet_table_edits(interface=interface,
-                               event=event,
-                               group=group,
-                               qualification=qualification
-                               )
-
-def save_ticksheet_table_edits(event: Event,
-                        group: Group,
-                        qualification: Qualification,
-                        interface: abstractInterface
-                        ):
-    ticksheet_data = get_ticksheet_data(
-        interface=interface,
-        event=event,
-        group=group,
-        qualification=qualification
-    )
-
+    ticksheet_data = get_ticksheet_data_from_state(interface)
     save_ticksheet_table_edits_given_data(interface=interface, ticksheet_data=ticksheet_data)
 
 
@@ -76,18 +45,29 @@ def save_ticksheet_edits_for_dict_of_tick_item( interface: abstractInterface, ca
         get_and_save_ticksheet_edits_for_specific_tick(interface=interface, current_tick=current_tick, item_id=item_id, cadet_id=cadet_id)
 
 def get_and_save_ticksheet_edits_for_specific_tick(interface: abstractInterface, current_tick: Tick, cadet_id: str, item_id: str):
-    tick_or_none = get_ticksheet_edits_for_specific_tick_or_none(interface=interface,
+    new_tick_or_none = get_ticksheet_edits_for_specific_tick_or_none(interface=interface,
                                                                  cadet_id=cadet_id,
                                                                  item_id=item_id)
 
-    if tick_or_none is None:
+    apply_ticksheet_edits_for_specific_tick(
+        interface=interface,
+        cadet_id=cadet_id,
+        item_id=item_id,
+        new_tick_or_none=new_tick_or_none,
+        current_tick=current_tick
+    )
+
+
+def apply_ticksheet_edits_for_specific_tick(interface: abstractInterface, current_tick: Tick, new_tick_or_none: Union[Tick, None], cadet_id: str, item_id: str):
+    if new_tick_or_none is None:
         return
 
-    new_tick = tick_or_none
+    new_tick = new_tick_or_none
     if new_tick == current_tick:
         return
 
     save_ticksheet_edits_for_specific_tick(interface=interface, cadet_id=cadet_id, item_id=item_id, new_tick=new_tick)
+
 
 def get_ticksheet_edits_for_specific_tick_or_none(interface: abstractInterface, cadet_id: str, item_id: str) -> Union[Tick, None]:
     state = get_edit_state_of_ticksheet(interface)
@@ -106,33 +86,4 @@ def save_ticksheet_edits_for_specific_tick(interface: abstractInterface, new_tic
     ticksheet_data.add_or_modify_specific_tick(cadet_id=cadet_id, item_id=item_id, new_tick=new_tick)
 
 
-def action_if_macro_tick_button_pressed(interface: abstractInterface, button_pressed: str):
-    axis, tick_type, id =  get_axis_tick_type_id_from_button_name(button_pressed)
-    if axis == item_id_axis:
-        action_if_item_tick_button_pressed(interface=interface, tick_type=tick_type, item_id=id)
-    elif axis == cadet_id_axis:
-        action_if_cadet_tick_button_pressed(interface=interface, tick_type=tick_type, cadet_id=id)
-
-def action_if_cadet_tick_button_pressed(interface: abstractInterface, tick_type: str, cadet_id: str):
-    if tick_type==qual_label:
-        action_if_cadet_apply_qualification_button_pressed(interface=interface, cadet_id=cadet_id)
-    elif tick_type==disqual_leable:
-        action_if_cadet_remove_qualification_button_pressed(interface=interface, cadet_id=cadet_id)
-    else:
-        tick = from_tick_label_to_tick(tick_type)
-        action_if_cadet_tick_level_button_pressed(interface=interface ,tick=tick, cadet_id=cadet_id)
-
-def action_if_cadet_apply_qualification_button_pressed(interface: abstractInterface,  cadet_id: str):
-    pass
-
-def action_if_cadet_remove_qualification_button_pressed(interface: abstractInterface,  cadet_id: str):
-    pass
-
-def action_if_cadet_tick_level_button_pressed(interface: abstractInterface, tick: Tick, cadet_id: str):
-    pass
-
-
-def action_if_item_tick_button_pressed(interface: abstractInterface, tick_type: str, item_id: str):
-    tick = from_tick_label_to_tick(tick_type)
-    pass
 

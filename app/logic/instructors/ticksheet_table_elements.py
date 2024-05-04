@@ -49,13 +49,18 @@ def get_cadet_button_instructions(interface) -> str:
     if state == NO_EDIT_STATE:
         return 'Cadets with qualification in brackets are already qualified'
 
+    cadet_button_instructions=''
     if can_award_qualificaiton:
-        cadet_button_instructions  = 'Click on cadet name to award qualification (will set all the ticks to full) or take qualification away. Click on buttons next to cadet to change all ticks to that state, without changing qualification status.'
+        cadet_button_instructions  += 'Click on cadet name to award qualification (will set all the ticks to full) or take qualification away. '
+        if state == EDIT_CHECKBOX_STATE:
+            cadet_button_instructions  += 'Click on relevant button to set all ticks to full for that cadet without changing qualification status (not possible if cadet already has qualification)'
+        else:
+            cadet_button_instructions  += 'Click other buttons next to cadet to set all their ticks to the relevant level without changing qualification status (not possible if cadet already has qualification) '
     else:
         if state == EDIT_CHECKBOX_STATE:
-            cadet_button_instructions  = 'Click on cadet name to set all ticks to full for that cadet. Cadets with qualification in brackets are already qualified and you cannot change their tick status.'
+            cadet_button_instructions  += 'Click on cadet name to set all ticks to full for that cadet. Cadets with qualification in brackets are already qualified and you cannot change their tick status.'
         else:
-            cadet_button_instructions  = 'Click on cadet name to set all ticks to full for that cadet. Click other buttons next to cadet to set to other tick status. Cadets with qualification in brackets are already qualified and you cannot change their ticks.'
+            cadet_button_instructions  += 'Click on cadet name to set all ticks to full for that cadet. Click other buttons next to cadet to set to other tick status. Cadets with qualification in brackets are already qualified and you cannot change their ticks.'
 
     return cadet_button_instructions
 
@@ -77,7 +82,7 @@ def get_instructions_for_ticksheet(interface: abstractInterface) -> ListOfLines:
         return ListOfLines([
             'Choose the tick option in each cell.',
             cadet_button_instructions ,
-            'Click on the buttons next to each column heading to fill in that tick for all cadets',
+            'Click on column heading to fill in that tick for all cadets. Click on the buttons next to each column heading to change to that tick for all cadets',
             "If you want to apply full ticks only press save and then choose checkbox ticking -it's quicker!",
             "Don't forget to press save when done. Pressing Back will lose your changes.",
             "You need to save before you can print."

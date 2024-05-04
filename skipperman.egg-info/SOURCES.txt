@@ -85,6 +85,7 @@ app/backend/reporting/rota_report/generate_dataframe_dict_for_rota_report.py
 app/backend/reporting/rota_report/teams.py
 app/backend/reporting/rota_report/../../../data_access/configuration/configuration.yaml
 app/backend/ticks_and_qualifications/__init__.py
+app/backend/ticks_and_qualifications/qualifications.py
 app/backend/ticks_and_qualifications/ticksheets.py
 app/backend/ticks_and_qualifications/../../data_access/configuration/configuration.yaml
 app/backend/transfer/__init__.py
@@ -284,7 +285,9 @@ app/logic/instructors/buttons.py
 app/logic/instructors/choose_group.py
 app/logic/instructors/choose_level.py
 app/logic/instructors/instructor_function_mapping.py
+app/logic/instructors/parse_macro_buttons_in_ticksheets.py
 app/logic/instructors/parse_ticksheet_table.py
+app/logic/instructors/print_ticksheet.py
 app/logic/instructors/render_ticksheet_table.py
 app/logic/instructors/state_storage.py
 app/logic/instructors/ticksheet_table_elements.py

@@ -19,6 +19,17 @@ class QualificationData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
 
+    def apply_qualification_to_cadet(self, cadet_id: str, qualification: Qualification):
+        list_of_cadets_with_qualifications = self.get_list_of_cadets_with_qualifications()
+        list_of_cadets_with_qualifications.apply_qualification_to_cadet(cadet_id=cadet_id, qualification_id=qualification.id)
+        save_list_of_cadets_with_qualifications(list_of_cadets_with_qualifications)
+
+    def remove_qualification_from_cadet(self, cadet_id: str, qualification: Qualification):
+        list_of_cadets_with_qualifications = self.get_list_of_cadets_with_qualifications()
+        list_of_cadets_with_qualifications.remove_qualification_from_cadet(cadet_id=cadet_id, qualification_id=qualification.id)
+        save_list_of_cadets_with_qualifications(list_of_cadets_with_qualifications)
+
+
     def list_of_cadet_ids_with_qualification(self, qualification: Qualification) -> List[str]:
         list_of_qualification_ids_for_cadet = self.get_list_of_cadets_with_qualifications()
         return list_of_qualification_ids_for_cadet.list_of_cadet_ids_with_qualification(qualification_id = qualification.id)
@@ -44,6 +55,10 @@ class QualificationData():
 
     def get_list_of_cadets_with_qualifications(self) -> ListOfCadetsWithQualifications:
         return self.data_api.get_list_of_cadets_with_qualifications()
+
+    def save_list_of_cadets_with_qualifications(self, list_of_cadets_with_qualifications: ListOfCadetsWithQualifications):
+        self.data_api.save_list_of_cadets_with_qualifications(list_of_cadets_with_qualifications)
+
 
 def load_list_of_qualifications() -> ListOfQualifications:
     return DEPRECATED_data.data_list_of_qualifications.read()

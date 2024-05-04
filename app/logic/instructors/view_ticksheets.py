@@ -2,7 +2,8 @@ from typing import Union
 
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.instructors.buttons import get_list_of_all_tick_related_button_names
-from app.logic.instructors.parse_ticksheet_table import save_ticksheet_edits, action_if_macro_tick_button_pressed
+from app.logic.instructors.parse_ticksheet_table import save_ticksheet_edits
+from app.logic.instructors.parse_macro_buttons_in_ticksheets import action_if_macro_tick_button_pressed
 
 from app.logic.instructors.render_ticksheet_table import get_ticksheet_table
 from app.logic.instructors.ticksheet_table_elements import get_buttons_for_ticksheet, get_instructions_for_ticksheet, \
@@ -65,7 +66,8 @@ def display_form_view_ticksheets_for_event_and_group(interface: abstractInterfac
 def post_form_view_ticksheets_for_event_and_group(interface: abstractInterface) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
     if button_pressed == BACK_BUTTON_LABEL:
-        ## no change to stage required
+        ## DOES NOT SAVE
+        set_edit_state_of_ticksheet(interface=interface, state=NO_EDIT_STATE)
         return previous_form(interface)
 
     ### IF STATE EDIT, SAVE EDITS HERE

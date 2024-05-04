@@ -2,7 +2,8 @@ from typing import List, Dict
 
 from app.logic.instructors.ticksheet_table_elements import user_can_award_qualifications
 
-from app.logic.instructors.buttons import get_cadet_buttons_at_start_of_row_in_edit_state
+from app.logic.instructors.buttons import get_cadet_buttons_at_start_of_row_in_edit_state, \
+    get_button_or_label_for_tickitem_name
 from app.backend.cadets import cadet_from_id
 from app.backend.ticks_and_qualifications.ticksheets import get_ticksheet_data, TickSheetDataWithExtraInfo, \
     cadet_is_already_qualified
@@ -32,7 +33,7 @@ def get_ticksheet_table(event: Event,
         qualification=qualification
     )
 
-    top_rows = get_top_two_rows_for_table(ticksheet_data)
+    top_rows = get_top_two_rows_for_table(interface=interface, ticksheet_data=ticksheet_data)
     other_rows = get_body_of_table(interface=interface,
                                    ticksheet_data=ticksheet_data)
 
@@ -42,7 +43,7 @@ def get_ticksheet_table(event: Event,
     )
 
 
-def get_top_two_rows_for_table(ticksheet_data: TickSheetDataWithExtraInfo) -> List[RowInTable]:
+def get_top_two_rows_for_table(interface: abstractInterface, ticksheet_data: TickSheetDataWithExtraInfo) -> List[RowInTable]:
     list_of_tick_list_items =ticksheet_data.list_of_tick_sheet_items_for_this_qualification
     list_of_substage_names = ticksheet_data.list_of_substage_names
 
@@ -55,15 +56,15 @@ def get_top_two_rows_for_table(ticksheet_data: TickSheetDataWithExtraInfo) -> Li
         else:
             subheading = ""
 
+        tick_item_button_or_label = get_button_or_label_for_tickitem_name(interface=interface, tick_item = tick_item)
+
         first_row.append(subheading)
-        second_row.append(tick_item.name)
+        second_row.append(tick_item_button_or_label)
 
     first_row = RowInTable(first_row)
     second_row = RowInTable(second_row)
 
     return [first_row, second_row]
-
-
 
 
 def get_body_of_table(interface: abstractInterface, ticksheet_data: TickSheetDataWithExtraInfo,
@@ -123,8 +124,7 @@ def get_rest_of_row_in_table_for_dict_of_tick_item( interface: abstractInterface
 
 def get_cell_in_table_for_tick( interface: abstractInterface,tick: Tick, cadet_id: str,item_id: str, already_qualified: bool):
     state = get_edit_state_of_ticksheet(interface)
-    user_cannot_modify_if_cadet_qualified = not user_can_award_qualifications(interface)
-    if user_cannot_modify_if_cadet_qualified and already_qualified:
+    if already_qualified:
         return get_cell_in_table_for_view_only(tick)
     if state==NO_EDIT_STATE:
         return get_cell_in_table_for_view_only(tick)

@@ -74,6 +74,17 @@ class ListOfCadetsWithQualifications(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return CadetWithQualification
 
+    def apply_qualification_to_cadet(self, cadet_id: str, qualification_id: str):
+        if self.does_cadet_id_have_qualification(cadet_id=cadet_id, qualification_id=qualification_id):
+            return
+        self.append(CadetWithQualification(cadet_id=cadet_id, qualification_id=qualification_id))
+
+
+    def remove_qualification_from_cadet(self, cadet_id: str, qualification_id: str):
+        for item in self:
+            if item.cadet_id == cadet_id and item.qualification_id == qualification_id:
+                self.remove(item)
+
     def list_of_cadet_ids_with_qualification(self, qualification_id: str) -> List[str]:
         return [item.cadet_id for item in self if item.qualification_id==qualification_id]
 

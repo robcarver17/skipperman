@@ -72,6 +72,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for June training event:
 
+- phone friendly ticksheet
 - add contact details and health to roll call report
 
 - store of previous events volunteer role / cadet allocation to speed up loading 

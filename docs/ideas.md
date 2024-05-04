@@ -1,7 +1,7 @@
 # SKIPPERMAN - Blackwater Sailing Club Cadet Skipper Managemet System
 
 
-SKIPPERMAN will be a piece of software to ease the admin burden on the cadet skipper and their team, which is considerable and involves lots of manual hacking of spreadsheets. 
+SKIPPERMAN is a piece of software to ease the admin burden on the cadet skipper and their team, which is considerable and historically involves lots of manual hacking of spreadsheets. 
 
 
 
@@ -60,12 +60,13 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - record qualification data 
 - record ticksheet data
 - print roll call lists
+- record ticksheet entries
+- print ticksheets from menu
+- ticksheet level security
+- add health to ticksheets
 
 
 ### Required for May training event:
-- record ticksheet entries
-- print ticksheets from menu
-- add health to ticksheets
 - data model for boats and group allocation
 - refactor reporting so uses common data model 
 
@@ -88,7 +89,6 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - birthdays during an event - splash on event screen
 
 - instructor login (send link to create)
-- ticksheet level security
 - key report links for instructors on landing page
 
 - clear old reports for event (remove rednedant permalinks) and other temp directories UTILITIES MENU
@@ -106,7 +106,8 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for cadet week:
 
-- with skipper access only - grant qualification from ticksheet screen
+- with skipper access only - grant qualification from ticksheet screen and log date
+- report of qualifications awarded by date
 - list of non volunteers with cadet ages
 - sort volunteer list by cadet location
 - two types of clothing event: as part of training event, or social only seperate

@@ -17,7 +17,7 @@ NO_ROLE_SET = "No role allocated"
 DAY_KEY = "day"
 GROUP_KEY = "group"
 
-def list_of_volunteer_teams():
+def get_list_of_volunteer_teams():
     return list(VOLUNTEER_TEAMS.keys())
 
 
@@ -64,6 +64,9 @@ def teams_given_role(role: str, teams: dict = VOLUNTEER_TEAMS) -> List[str]:
         return [NO_ROLE_SET]
     all_teams = [team_name for team_name, team_members in teams.items() if role in team_members]
 
+    if len(all_teams)==0:
+        return [NO_ROLE_SET]
+    
     return all_teams
 
 def index_of_role(role: str):

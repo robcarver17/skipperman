@@ -13,7 +13,10 @@ def explain_additional_parameters_for_rota_report(interface: abstractInterface,
     additional_parameters: AdditionalParametersForVolunteerReport, ## should be rota
 ) -> ListOfLines:
 
-    return ListOfLines(["Report covers the following days: %s" % str(additional_parameters.days_to_show)]).add_Lines()
+    days =  "Report covers the following days: %s" % str(additional_parameters.days_to_show)
+    boats =  "Sort by power boats and exclude volunteers not on boats" if additional_parameters.power_boats_only else "Include all volunteers"
+
+    return ListOfLines([days, boats]).add_Lines()
 
 def reporting_options_form_for_rota_additional_parameters(
     interface: abstractInterface,

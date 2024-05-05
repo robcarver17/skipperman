@@ -9,7 +9,7 @@ from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.groups import GROUP_UNALLOCATED_TEXT, Group
 from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent, NO_ROLE_SET, RoleAndGroup, TeamAndGroup, \
-    list_of_volunteer_teams
+    get_list_of_volunteer_teams
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 
 def get_summary_list_of_roles_and_groups_for_events(interface: abstractInterface, event: Event) -> PandasDFTable:
@@ -95,7 +95,7 @@ def get_summary_of_teams_and_groups_for_events_on_day(
                                                       volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent) -> pd.DataFrame:
 
     list_of_teams_and_groups = volunteers_in_roles_at_event.list_of_first_teams_and_groups_at_event_for_day(day)
-    all_teams = list_of_volunteer_teams()+[NO_ROLE_SET] ## ordered, doesn't include unallocated do those last
+    all_teams = get_list_of_volunteer_teams() + [NO_ROLE_SET] ## ordered, doesn't include unallocated do those last
     all_group_names = [GROUP_UNALLOCATED_TEXT]+ALL_GROUPS_NAMES ## ordered, doesn't include unallocated we put these first
 
     summary_dict = {}

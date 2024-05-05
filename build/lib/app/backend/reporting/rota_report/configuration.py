@@ -44,3 +44,4 @@ specific_parameters_for_volunteer_report = SpecificParametersForTypeOfReport(
 @dataclass
 class AdditionalParametersForVolunteerReport:
     days_to_show: DaySelector
+    power_boats_only: bool = False

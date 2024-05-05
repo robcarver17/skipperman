@@ -16,8 +16,9 @@ from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 
-from app.logic.instructors.state_storage import get_group_from_state, get_qualification_from_state, set_edit_state_of_ticksheet, \
-    EDIT_CHECKBOX_STATE, EDIT_DROPDOWN_STATE, NO_EDIT_STATE
+from app.logic.instructors.state_storage import get_group_from_state, get_qualification_from_state, \
+    set_edit_state_of_ticksheet, \
+    EDIT_CHECKBOX_STATE, EDIT_DROPDOWN_STATE, NO_EDIT_STATE, get_edit_state_of_ticksheet
 
 from app.logic.events.events_in_state import get_event_from_state
 
@@ -67,9 +68,14 @@ def display_form_view_ticksheets_for_event_and_group(interface: abstractInterfac
 def post_form_view_ticksheets_for_event_and_group(interface: abstractInterface) -> Union[Form, NewForm, File]:
     button_pressed = interface.last_button_pressed()
     if button_pressed == BACK_BUTTON_LABEL:
-        ## DOES NOT SAVE
-        set_edit_state_of_ticksheet(interface=interface, state=NO_EDIT_STATE)
-        return previous_form(interface)
+        state = get_edit_state_of_ticksheet(interface)
+        if state == NO_EDIT_STATE:
+            ## DOES NOT SAVE
+            return previous_form(interface)
+        else:
+            ## DOES NOT SAVE
+            set_edit_state_of_ticksheet(interface=interface, state=NO_EDIT_STATE)
+            return display_form_view_ticksheets_for_event_and_group(interface)
 
     ### IF STATE EDIT, SAVE EDITS HERE
     save_ticksheet_edits(interface)

@@ -82,7 +82,6 @@ REPORTING:
 
 MISC:
 - go through all cadets and backfill qualifications
-- GDPR document
 - birthdays during an event - splash on event screen
 
 
@@ -123,7 +122,7 @@ REGISTRATION DETAILS:
 ADMIN:
 - clear old reports for event (remove rednedant permalinks) and other temp directories UTILITIES MENU
 - put shareable files up like instructors documents; manage shared files eg deleete
-
+- wipe health and phone numbers
 
 
 
@@ -143,7 +142,13 @@ ADMIN:
 - maintain a list of key volunteers and thank yous (CW)
 - manage orders for hoodies (CW)
 - maintain lists of past, present, potential and future cadet committee members (CW)
-  
+
+  ### Required for social event:
+
+- think carefully about how to handle events with no cadets, volunteers etc
+- two types of food event: as part of training event, or social only seperate
+- manage social event with food only (Social)
+
 
   ### General required before handover to Jonny:
 
@@ -164,13 +169,7 @@ ADMIN:
 - dropdown list of previous event names when creating event
 - clear description of field names
 - instructions
-- tests
 
-### Required for social event:
-
-- think carefully about how to handle events with no cadets, volunteers etc
-- two types of food event: as part of training event, or social only seperate
-- manage social event with food only (Social)
 
 
 ### Future / wishlist / nice to have:

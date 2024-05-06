@@ -1,4 +1,5 @@
 import os
+from copy import copy
 
 import pandas as pd
 from app.objects.abstract_objects.abstract_form import File
@@ -99,4 +100,8 @@ def align_center(x):
 def temp_file_name(event: Event,
                            group: Group,
                            qualification_stage_id: str) -> str:
-    return os.path.join(download_directory, "ticksheet_%s_%s_%s.xlsx"% (event.id, group.group_name, qualification_stage_id))
+    use_group_name = copy(group.group_name)
+    use_group_name = use_group_name.replace('/', '_')
+    filename= os.path.join(download_directory, "ticksheet_%s_%s_%s.xlsx"% (event.id, use_group_name, qualification_stage_id))
+
+    return filename

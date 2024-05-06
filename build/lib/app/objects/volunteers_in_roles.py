@@ -66,7 +66,7 @@ def teams_given_role(role: str, teams: dict = VOLUNTEER_TEAMS) -> List[str]:
 
     if len(all_teams)==0:
         return [NO_ROLE_SET]
-    
+
     return all_teams
 
 def index_of_role(role: str):

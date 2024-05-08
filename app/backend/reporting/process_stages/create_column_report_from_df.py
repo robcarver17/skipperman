@@ -17,8 +17,6 @@ def create_column_report_from_df_and_return_filename(reporting_options: Reportin
     )
     list_of_pages_with_columns = create_list_of_pages_with_columns_from_list_of_pages(list_of_pages=list_of_groups_of_marked_up_str,
                                                         reporting_options=reporting_options)
-    print("Columns %s" % list_of_pages_with_columns)
-    print("Print shared %s" % reporting_options.print_options)
     filename = create_report_from_list_of_columns_and_return_filename(
         list_of_pages_with_columns=list_of_pages_with_columns, reporting_options=reporting_options
     )

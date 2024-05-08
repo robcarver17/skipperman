@@ -6,8 +6,6 @@ from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.reporting.boat_report.get_data import get_dict_of_df_for_boat_report
-from app.logic.reporting.shared.group_order import  clear_group_order_in_storage
-from app.logic.reporting.shared.arrangement_state import clear_arrangement_in_state
 
 from app.backend.reporting.boat_report.boat_report_parameters import  AdditionalParametersForBoatReport
 
@@ -50,7 +48,7 @@ def save_additional_parameters_for_boat_report(
 ):
     save_show_full_names_parameter(interface=interface, parameters=parameters)
     save_include_in_out_parameter(interface=interface, parameters=parameters)
-    save_group_exclusion_parameters_and_reset_group_order_and_arrangement_if_required(interface=interface, parameters=parameters)
+    save_group_exclusion_parameters(interface=interface, parameters=parameters)
 
 def save_show_full_names_parameter(interface: abstractInterface, parameters: AdditionalParametersForBoatReport):
     interface.set_persistent_value(DISPLAY_FULL_NAMES, parameters.display_full_names)
@@ -58,33 +56,7 @@ def save_show_full_names_parameter(interface: abstractInterface, parameters: Add
 def save_include_in_out_parameter(interface: abstractInterface, parameters: AdditionalParametersForBoatReport):
     interface.set_persistent_value(INCLUDE_IN_OUT, parameters.display_full_names)
 
-def save_group_exclusion_parameters_and_reset_group_order_and_arrangement_if_required(interface: abstractInterface, parameters: AdditionalParametersForBoatReport):
-
-    if any_changes_in_exclusion_pattern(interface=interface, parameters=parameters):
-        clear_group_order_in_storage(interface=interface)
-        clear_arrangement_in_state(interface=interface)
-
-    save_exclusion_paramters(interface=interface, parameters=parameters)
-
-def any_changes_in_exclusion_pattern(interface: abstractInterface, parameters: AdditionalParametersForBoatReport):
-    original_parameters = load_additional_parameters_for_boat_report(interface)
-
-    original_exclusion_of_unallocated = original_parameters.exclude_unallocated_groups
-    current_exclusion_of_unallocated = parameters.exclude_unallocated_groups
-
-    original_exclusion_of_lake = original_parameters.exclude_lake_groups
-    current_exclusion_of_lake = parameters.exclude_lake_groups
-
-    original_exclusion_of_river_training = original_parameters.exclude_river_training_groups
-    current_exclusion_of_river_training = parameters.exclude_river_training_groups
-
-    unallocated_change = original_exclusion_of_unallocated != current_exclusion_of_unallocated
-    lake_change = original_exclusion_of_lake != current_exclusion_of_lake
-    river_change = original_exclusion_of_river_training != current_exclusion_of_river_training
-
-    return unallocated_change or lake_change or river_change
-
-def save_exclusion_paramters(interface: abstractInterface, parameters: AdditionalParametersForBoatReport):
+def save_group_exclusion_parameters(interface: abstractInterface, parameters: AdditionalParametersForBoatReport):
     interface.set_persistent_value(
         EXCLUDE_UNALLOCATED, parameters.exclude_unallocated_groups
     )
@@ -120,6 +92,7 @@ def get_dict_of_df_for_reporting_boats(interface: abstractInterface) -> Dict[str
     additional_parameters = load_additional_parameters_for_boat_report(interface)
 
     dict_of_df = get_dict_of_df_for_boat_report(
+        interface=interface,
         event=event,
         additional_parameters=additional_parameters
     )

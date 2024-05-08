@@ -295,7 +295,7 @@ def save_list_of_club_dinghies(list_of_boats: ListOfClubDinghies):
     DEPRECATED_data.data_List_of_club_dinghies.write(list_of_boats)
 
 
-def load_list_of_cadets_at_event_with_club_dinghies(event: Event) -> ListOfCadetAtEventWithClubDinghies:
+def DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies(event: Event) -> ListOfCadetAtEventWithClubDinghies:
     cadets_with_dinghies = DEPRECATED_data.data_list_of_cadets_at_event_with_club_dinghies.read(event_id=event.id)
 
     return cadets_with_dinghies

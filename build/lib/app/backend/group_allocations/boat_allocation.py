@@ -2,7 +2,7 @@ import pandas as pd
 from dataclasses import dataclass
 from typing import List, Dict
 
-from app.backend.data.resources import load_list_of_cadets_at_event_with_club_dinghies, load_list_of_club_dinghies, save_list_of_cadets_at_event_with_club_dinghies, load_list_of_boat_classes
+from app.backend.data.resources import DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies, load_list_of_club_dinghies, save_list_of_cadets_at_event_with_club_dinghies, load_list_of_boat_classes
 from app.backend.data.cadets import DEPRECATE_load_list_of_all_cadets
 from app.backend.forms.summarys import summarise_generic_counts_for_event
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
@@ -17,7 +17,7 @@ from app.objects.dinghies import no_partnership, CadetAtEventWithDinghy, ListOfC
 from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies
 
 def update_club_boat_allocation_for_cadet_at_event(boat_name: str, cadet_id: str, event: Event):
-    cadets_with_club_dinghies_at_event = load_list_of_cadets_at_event_with_club_dinghies(event)
+    cadets_with_club_dinghies_at_event = DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies(event)
     if boat_name==NO_BOAT:
         cadets_with_club_dinghies_at_event.delete_allocation_for_cadet(cadet_id)
     else:
@@ -104,7 +104,7 @@ def get_boat_class_id_from_name(boat_class_name:str):
 
 
 def summarise_club_boat_allocations_for_event(event: Event) -> PandasDFTable:
-    cadets_with_club_dinghies_at_event = load_list_of_cadets_at_event_with_club_dinghies(event)
+    cadets_with_club_dinghies_at_event = DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies(event)
     all_club_dinghies = load_list_of_club_dinghies()
     list_of_dinghy_ids = cadets_with_club_dinghies_at_event.unique_sorted_list_of_dinghy_ids(all_club_dinghies)
     row_names = [all_club_dinghies.name_given_id(id) for id in list_of_dinghy_ids]

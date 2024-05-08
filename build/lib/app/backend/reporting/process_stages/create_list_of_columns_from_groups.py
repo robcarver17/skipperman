@@ -13,7 +13,6 @@ from app.backend.reporting.arrangement.arrangement_order import (
 )
 from app.backend.reporting.options_and_parameters.report_options import ReportingOptions
 from app.backend.reporting.arrangement.arrangement_methods import (
-    ARRANGE_OPTIMISE,
     ARRANGE_PASSED_LIST,
     ARRANGE_RECTANGLE,
 )
@@ -47,22 +46,18 @@ def create_arrangement_from_pages(page: Page,
 
     arrangement_options = reporting_options.arrangement
     print_options = reporting_options.print_options
-
     arrangement_method = arrangement_options.arrangement_method
+
+    print(arrangement_method)
     if arrangement_method is ARRANGE_PASSED_LIST:
         return arrangement_options.arrangement_of_columns
 
-    elif arrangement_method is ARRANGE_RECTANGLE:
+    elif arrangement_method ==ARRANGE_RECTANGLE:
         return get_order_of_indices_even_sizing(
             page=page,
             print_options=print_options,
         )
 
-    elif arrangement_method is ARRANGE_OPTIMISE:
-        return get_optimal_size_indices(
-            print_options=print_options,
-            page=page,
-        )
     else:
         raise Exception("Arrangement %s not recognised" % arrangement_method)
 
@@ -115,10 +110,10 @@ def get_optimal_size_indices(
 ) -> ArrangementOfColumns:
     ## want to get ratio as close as possible to h/w ratio which will come from paper size
     ## generate all possible combinations and test
-
+    print("optimisting....")
     group_count = len(page)
     series_of_possible_indices = _generate_list_of_all_possible_indices(group_count)
-
+    print("Consider %d options" % len(series_of_possible_indices))
     best_list_of_indices = _find_best_list_of_indices(
         series_of_possible_indices=series_of_possible_indices,
         page=page,

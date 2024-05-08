@@ -12,7 +12,7 @@ from app.data_access.configuration.configuration import UNALLOCATED_GROUP_NAME
 from app.backend.data.cadets_at_event import DEPRECATED_load_cadets_at_event
 from app.backend.data.cadets import DEPRECATE_load_list_of_all_cadets
 from app.data_access.configuration.field_list import CADET_GROUP_PREFERENCE, DESIRED_BOAT, CADET_BOAT_CLASS, CADET_BOAT_SAIL_NUMBER
-from app.backend.data.resources import load_list_of_club_dinghies, load_list_of_cadets_at_event_with_club_dinghies
+from app.backend.data.resources import load_list_of_club_dinghies, DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies
 from app.backend.data.resources import load_list_of_boat_classes
 from app.backend.data.cadets_at_event import load_list_of_cadets_at_event_with_dinghies
 from app.backend.data.qualification import load_list_of_cadets_with_qualifications, highest_qualification_for_cadet
@@ -227,7 +227,7 @@ def get_allocation_data(event: Event) -> AllocationData:
 
     list_of_dinghies = load_list_of_boat_classes()
     list_of_club_boats = load_list_of_club_dinghies()
-    list_of_club_boats_allocated = load_list_of_cadets_at_event_with_club_dinghies(event)
+    list_of_club_boats_allocated = DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies(event)
     list_of_cadets_at_event_with_dinghies = load_list_of_cadets_at_event_with_dinghies(event)
     list_of_cadets_with_qualifications= load_list_of_cadets_with_qualifications()
 

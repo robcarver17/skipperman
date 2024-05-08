@@ -1,10 +1,11 @@
 from typing import List
 
 import pandas as pd
+from app.data_access.configuration.configuration import VOLUNTEER_ROLES, ALL_GROUPS_NAMES
 
 from app.backend.reporting.rota_report.components import DataForDfConstruction, df_row_for_volunteer_in_role_at_event
 from app.backend.reporting.rota_report.configuration import DEFAULT_SORT_TEAM, SORT_BY_DICT, \
-    TEAMS_WITH_DUPLICATE_LEADERS, team_leader_role_for_team
+    TEAMS_WITH_DUPLICATE_LEADERS, team_leader_role_for_team, BOAT, ROLE, GROUP
 from app.objects.volunteers_in_roles import VolunteerInRoleAtEventWithTeamName
 
 
@@ -59,11 +60,16 @@ def get_sorted_df_for_rest_of_team(data_for_df: DataForDfConstruction, team: Tea
         return pd.DataFrame()
 
     as_df = pd.DataFrame(list_of_rest_of_team)
-    sort_order = get_sort_order_for_team(team)
+    sort_order_list = get_sort_order_for_team(team)
+    for sort_order in sort_order_list:
+        if sort_order== ROLE:
+            as_df = sort_df_by_role(df_for_reporting_volunteers_for_day=as_df, data_for_df=data_for_df)
+        elif sort_order == GROUP:
+            as_df = sort_df_by_group(df_for_reporting_volunteers_for_day=as_df, data_for_df=data_for_df)
+        elif sort_order == BOAT:
+            as_df = sort_df_by_power_boat(as_df, data_for_df=data_for_df)
 
-    sorted_df = as_df.sort_values(sort_order)
-
-    return sorted_df
+    return as_df
 
 
 def combine_and_drop_initial_duplicates(leaders_df: pd.DataFrame, others_df: pd.DataFrame) -> pd.DataFrame:
@@ -113,3 +119,50 @@ def list_of_volunteers_in_leadership_position(team: Team) -> List[VolunteerInRol
     matching_volunteers = [volunteer for volunteer in team if volunteer.volunteer_in_role_at_event.role == lead_role]
 
     return matching_volunteers
+
+
+def sort_df_by_power_boat(df_for_reporting_volunteers_for_day: pd.DataFrame,
+                                      data_for_df: DataForDfConstruction,
+                          include_no_power_boat: bool = True) -> pd.DataFrame:
+    all_boats_in_order = data_for_df.all_patrol_boats
+    new_df = pd.DataFrame()
+    for boat in all_boats_in_order:
+        subset_df = df_for_reporting_volunteers_for_day[df_for_reporting_volunteers_for_day[BOAT] == boat.name]
+        new_df = pd.concat([new_df, subset_df], axis=0)
+        df_for_reporting_volunteers_for_day = df_for_reporting_volunteers_for_day[df_for_reporting_volunteers_for_day[BOAT]!=boat.name]
+
+    if include_no_power_boat:
+        new_df = pd.concat([new_df, df_for_reporting_volunteers_for_day], axis=0)
+
+    return new_df
+
+
+def sort_df_by_role(df_for_reporting_volunteers_for_day: pd.DataFrame,
+                                      data_for_df: DataForDfConstruction,
+                          include_no_role: bool = True) -> pd.DataFrame:
+    all_roles_in_order = VOLUNTEER_ROLES
+    new_df = pd.DataFrame()
+    for role in all_roles_in_order:
+        subset_df = df_for_reporting_volunteers_for_day[df_for_reporting_volunteers_for_day[ROLE] == role]
+        new_df = pd.concat([new_df, subset_df], axis=0)
+        df_for_reporting_volunteers_for_day = df_for_reporting_volunteers_for_day[df_for_reporting_volunteers_for_day[ROLE]!=role]
+
+    if include_no_role:
+        new_df = pd.concat([new_df, df_for_reporting_volunteers_for_day], axis=0)
+
+    return new_df
+
+def sort_df_by_group(df_for_reporting_volunteers_for_day: pd.DataFrame,
+                                      data_for_df: DataForDfConstruction,
+                          include_no_group: bool = True) -> pd.DataFrame:
+    all_groups = ALL_GROUPS_NAMES
+    new_df = pd.DataFrame()
+    for group in all_groups:
+        subset_df = df_for_reporting_volunteers_for_day[df_for_reporting_volunteers_for_day[GROUP] == group]
+        new_df = pd.concat([new_df, subset_df], axis=0)
+        df_for_reporting_volunteers_for_day = df_for_reporting_volunteers_for_day[df_for_reporting_volunteers_for_day[GROUP]!=group]
+
+    if include_no_group:
+        new_df = pd.concat([new_df, df_for_reporting_volunteers_for_day], axis=0)
+
+    return new_df

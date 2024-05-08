@@ -56,6 +56,8 @@ RIVER_TRAINING_GROUP_NAMES = configuration["river_training_groups"]
 MG_GROUP_NAMES = configuration["mg_groups"]
 UNALLOCATED_GROUP_NAME = configuration["unallocated"]
 
+
+
 ALL_GROUPS_NAMES = (
         LAKE_TRAINING_GROUP_NAMES + RIVER_TRAINING_GROUP_NAMES + MG_GROUP_NAMES + [UNALLOCATED_GROUP_NAME]
 )
@@ -63,14 +65,32 @@ ALL_GROUPS_NAMES = (
 # VOLUNTEERS
 VOLUNTEER_SKILLS = configuration['volunteer_skills']
 VOLUNTEER_TEAMS = configuration['volunteer_teams']
-VOLUNTEERS_REQUIRING_BOATS = configuration['volunteers_requiring_boats']
+VOLUNTEERS_REQUIRING_BOATS_DICT = configuration['volunteers_requiring_boats']
 VOLUNTEERS_SKILL_FOR_PB2 = configuration['power_boat_skills'][0]
+
+
+VOLUNTEERS_REQUIRING_BOATS_ON_LAKE = VOLUNTEERS_REQUIRING_BOATS_DICT['lake']
+VOLUNTEERS_REQUIRING_BOATS_ON_RIVER = VOLUNTEERS_REQUIRING_BOATS_DICT['river']
+VOLUNTEERS_REQUIRING_BOATS_GROUP_DEPENDENT = VOLUNTEERS_REQUIRING_BOATS_DICT['group_dependent']
+
+def get_volunteers_requiring_boats():
+    all_volunteers = []
+    for set_of_volunteers in VOLUNTEERS_REQUIRING_BOATS_DICT.values():
+        all_volunteers.append(set_of_volunteers)
+
+    return all_volunteers
+
+VOLUNTEERS_REQUIRING_BOATS = get_volunteers_requiring_boats()
+
 
 VOLUNTEERS_REQUIRING_GROUP = configuration['volunteers_requiring_group']
 
 INSTRUCTOR_TEAM_NAME = configuration['instructor_team']
 INSTRUCTOR_TEAM = VOLUNTEER_TEAMS[INSTRUCTOR_TEAM_NAME]
 SI_ROLE = configuration['senior_instructor']
+
+RIVER_SAFETY = 'River safety'
+LAKE_SAFETY = 'Lake safety'
 
 ### si at an event can see all groups
 

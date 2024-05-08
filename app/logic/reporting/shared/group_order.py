@@ -1,53 +1,71 @@
-from typing import List, Dict
+from typing import Dict
 
 import pandas as pd
 
-from app.logic.reporting.shared.report_generator import ReportGenerator
+from app.backend.reporting.options_and_parameters.report_options import ReportingOptions
+from app.backend.reporting.process_stages.create_list_of_columns_from_groups import \
+    get_order_of_indices_even_sizing_with_parameters
+
+from app.backend.reporting.arrangement.arrange_options import ArrangementOptionsAndGroupOrder
+
+from app.logic.reporting.shared.arrangement_state import get_stored_arrangement_and_group_order
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.reporting.constants import GROUP_ORDER
-from app.objects.constants import missing_data
-from app.backend.reporting.arrangement.group_order import get_group_order_from_dict_of_df_given_report_parameters, GroupOrder
+from app.backend.reporting.arrangement.group_order import GroupOrder, get_group_order_excluding_missing_groups, \
+    get_groups_in_dict_missing_from_group_order, get_groups_in_group_order_missing_from_dict
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import SpecificParametersForTypeOfReport
 
 
-def get_group_order_for_generic_report(interface: abstractInterface, report_generator: ReportGenerator) -> list:
-    dict_of_df = report_generator.get_dict_of_df(interface)
-    order_of_groups = get_group_order_from_stored_or_df(
-        interface=interface,
-        specific_parameters_for_type_of_report=report_generator.specific_parameters_for_type_of_report,
-        dict_of_df=dict_of_df,
-    )
-
-    return order_of_groups
-
-
-def get_group_order_from_stored_or_df(
+def get_arrangement_options_and_group_order_from_stored_or_defaults(
     interface: abstractInterface,
     specific_parameters_for_type_of_report: SpecificParametersForTypeOfReport,
-    dict_of_df: Dict[str, pd.DataFrame],
-) -> GroupOrder:
-    groups = get_stored_group_order(interface)
-    if groups is missing_data:
-
-        groups_if_not_stored = get_group_order_from_dict_of_df_given_report_parameters(
-            dict_of_df=dict_of_df,
+    dict_of_df: Dict[str, pd.DataFrame]
+) -> ArrangementOptionsAndGroupOrder:
+    arrangement_options_and_group_order = get_stored_arrangement_and_group_order(interface=interface, report_type=specific_parameters_for_type_of_report.report_type)
+    if arrangement_options_and_group_order.is_empty():
+        print("Empty arrangement, creating new one")
+        arrangement_options_and_group_order= get_arrangement_options_from_df_and_specific_parameters(
             specific_parameters_for_type_of_report=specific_parameters_for_type_of_report,
+            dict_of_df=dict_of_df
         )
-        save_group_order_to_storage(
-            interface=interface, groups_in_order=groups_if_not_stored
-        )
-        return groups_if_not_stored
-    else:
-        return GroupOrder(groups)
+
+    return arrangement_options_and_group_order
 
 
-def get_stored_group_order(interface: abstractInterface) -> list:
-    groups = interface.get_persistent_value(GROUP_ORDER)
-    return groups
+def get_arrangement_options_from_df_and_specific_parameters(
+    specific_parameters_for_type_of_report: SpecificParametersForTypeOfReport,
+    dict_of_df: Dict[str, pd.DataFrame]
+) -> ArrangementOptionsAndGroupOrder:
+
+    default_group_order = GroupOrder(specific_parameters_for_type_of_report.passed_group_order)
+    filtered_group_order = get_group_order_excluding_missing_groups(dict_of_df=dict_of_df, group_order=default_group_order,
+                                                                    specific_parameters_for_type_of_report=specific_parameters_for_type_of_report)
+
+    arrangement_of_columns = get_order_of_indices_even_sizing_with_parameters(len(filtered_group_order), landscape=True) ## only approximate
+
+    return ArrangementOptionsAndGroupOrder.from_group_order_and_column_arrangements(
+        group_order=filtered_group_order,
+        arrangement_of_columns=arrangement_of_columns
+    )
 
 
-def save_group_order_to_storage(interface: abstractInterface, groups_in_order: list):
-    interface.set_persistent_value(GROUP_ORDER, groups_in_order)
 
-def clear_group_order_in_storage(interface: abstractInterface):
-    interface.clear_persistent_value(GROUP_ORDER)
+def get_missing_groups(reporting_options: ReportingOptions)-> GroupOrder:
+    group_order = reporting_options.arrange_options_and_group_order.group_order
+    dict_of_df = reporting_options.dict_of_df
+    specific_parameters = reporting_options.specific_parameters
+
+    missing_groups = get_groups_in_dict_missing_from_group_order(dict_of_df=dict_of_df,
+                                                                 group_order=group_order,
+                                                                 specific_parameters_for_type_of_report=specific_parameters)
+    return GroupOrder(missing_groups)
+
+def get_empty_groups(reporting_options: ReportingOptions)-> GroupOrder:
+    group_order = reporting_options.arrange_options_and_group_order.group_order
+    dict_of_df = reporting_options.dict_of_df
+    specific_parameters = reporting_options.specific_parameters
+
+    empty_groups = get_groups_in_group_order_missing_from_dict(dict_of_df=dict_of_df,
+                                                                 group_order=group_order,
+                                                                 specific_parameters_for_type_of_report=specific_parameters)
+    return GroupOrder(empty_groups)

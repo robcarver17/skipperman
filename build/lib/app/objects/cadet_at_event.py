@@ -5,7 +5,8 @@ from app.objects.constants import missing_data
 from app.objects.day_selectors import DaySelector, day_selector_stored_format_from_text, \
     day_selector_to_text_in_stored_format, weekend_day_selector_from_text, any_day_selector_from_short_form_text
 from app.objects.events import Event
-from app.data_access.configuration.field_list import WEEKEND_DAYS_ATTENDING_INPUT, ALL_DAYS_ATTENDING_INPUT, CADET_HEALTH
+from app.data_access.configuration.field_list import WEEKEND_DAYS_ATTENDING_INPUT, ALL_DAYS_ATTENDING_INPUT, \
+    CADET_HEALTH, RESPONSIBLE_ADULT_NUMBER, RESPONSIBLE_ADULT_NAME
 from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds, GenericListOfObjects, \
     GenericSkipperManObject, transform_string_into_class_instance, transform_class_instance_into_string
 
@@ -110,6 +111,14 @@ class CadetAtEvent(GenericSkipperManObjectWithIds):
     health: str = ''
     changed: bool  = False
 
+    def emergency_contact(self):
+        contact = self.get_item_from_data(RESPONSIBLE_ADULT_NUMBER, '')
+        contact_name = self.get_item_from_data(RESPONSIBLE_ADULT_NAME, '')
+
+        return "%s (%s)" % (contact_name, str(contact))
+
+    def get_item_from_data(self, key_name, default=''):
+        return self.data_in_row.get_item(key_name, default=default)
 
     def is_active(self):
         return self.status in [active_status, manual_add_status]

@@ -1,7 +1,8 @@
 from typing import Union
 
 from app.backend.events import is_wa_field_mapping_setup_for_event
-from app.backend.group_allocations.summarise_registration_data import summarise_registrations_for_event
+from app.backend.group_allocations.summarise_registration_data import summarise_registrations_for_event, \
+    identify_birthdays
 from app.backend.volunteers.patrol_boats import get_summary_list_of_boat_allocations_for_events
 from app.backend.volunteers.volunteer_rota_summary import get_summary_list_of_roles_and_groups_for_events, \
     get_summary_list_of_teams_and_groups_for_events
@@ -45,7 +46,11 @@ def display_form_view_individual_event(
 def get_event_form_for_event(
     event: Event, interface: abstractInterface
 ) -> Union[Form, NewForm]:
+
+    birthdays = identify_birthdays(interface=interface, event=event)
+
     event_description = event.details_as_list_of_str()
+    event_description = event_description + birthdays
     event_description = ListOfLines([Line([Heading(item,centred=True, size=5)]) for item in event_description])
 
     summarise_registrations = summarise_registrations_for_event(event)

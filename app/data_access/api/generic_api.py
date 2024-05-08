@@ -3,7 +3,7 @@ from app.data_access.classes.list_of_events import DataListOfEvents
 from app.data_access.classes.wa_event_mapping import DataWAEventMapping
 from app.data_access.classes.wa_field_mapping import DataWAFieldMapping
 from app.data_access.classes.mapped_wa_event import DataMappedWAEvent
-from app.data_access.classes.print_options import DataListOfPrintOptions
+from app.data_access.classes.print_options import DataListOfPrintOptions, DataListOfArrangementAndGroupOrderOptions
 from app.data_access.classes.volunteers import *
 from app.data_access.classes.resources import *
 from app.data_access.classes.dinghies_at_events import *
@@ -53,6 +53,11 @@ class GenericDataApi(object):
 
     @property
     def data_print_options(self) -> DataListOfPrintOptions:
+        raise NotImplemented
+
+
+    @property
+    def data_arrangement_and_group_order_options(self) -> DataListOfArrangementAndGroupOrderOptions:
         raise NotImplemented
 
     @property

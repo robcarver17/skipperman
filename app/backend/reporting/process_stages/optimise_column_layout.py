@@ -123,4 +123,6 @@ def _tracking_error_for_list_of_indices(
         height_of_title_in_characters=height_of_title_in_characters,
     )
 
-    return abs(optimal_ratio - actual_ratio)
+    tracking = abs(optimal_ratio - actual_ratio)
+    print(tracking)
+    return tracking

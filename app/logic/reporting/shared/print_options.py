@@ -1,3 +1,4 @@
+from app.backend.data.options import OptionsData
 from app.data_access.configuration.fixed import ALL_PAGESIZE, ALL_FONTS
 from app.data_access.data import DEPRECATED_data
 from app.logic.events.events_in_state import get_event_from_state
@@ -27,7 +28,8 @@ from app.backend.reporting.options_and_parameters.print_options import PrintOpti
 def get_saved_print_options(
     report_type: str, interface: abstractInterface
 ) -> PrintOptions:
-    print_options = DEPRECATED_data.data_print_options.read_for_report(report_type)
+    options_data = OptionsData(interface.data)
+    print_options = options_data.get_print_options(report_type)
     print_options.title_str = get_report_title_from_storage_or_use_default(
         report_type=report_type, interface=interface
     )
@@ -71,9 +73,8 @@ def save_print_options(
     interface.set_persistent_value(REPORT_FILENAME, print_options.filename)
 
     ## although title and filename are written here as well they are never used
-    DEPRECATED_data.data_print_options.write_for_report(
-        report_name=report_type, print_options=print_options
-    )
+    options_data = OptionsData(interface.data)
+    options_data.save_print_options(print_options=print_options, report_name=report_type)
 
 
 def report_print_options_as_list_of_lines(print_options: PrintOptions) -> ListOfLines:

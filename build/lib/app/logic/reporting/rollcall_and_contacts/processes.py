@@ -6,8 +6,6 @@ import pandas as pd
 
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.reporting.shared.group_order import clear_group_order_in_storage
-from app.logic.reporting.shared.arrangement_state import clear_arrangement_in_state
 
 from app.backend.reporting.rollcall_report.configuration import AdditionalParametersForRollcallReport
 
@@ -47,7 +45,7 @@ def save_additional_parameters_for_rollcall(
     save_club_boat_asterix_parameter(interface=interface, parameters=parameters)
     save_emergency_contact_parameter(interface=interface, parameters=parameters)
     save_include_health_details_parameter(interface=interface, parameters=parameters)
-    save_unallocated_parameter_and_reset_group_order_and_arrangement_if_required(interface=interface, parameters=parameters)
+    save_unallocated_parameter(interface=interface, parameters=parameters)
 
 def save_show_full_names_parameter(interface: abstractInterface, parameters: AdditionalParametersForRollcallReport):
     interface.set_persistent_value(SHOW_FULL_NAMES, parameters.display_full_names)
@@ -55,14 +53,7 @@ def save_show_full_names_parameter(interface: abstractInterface, parameters: Add
 def save_club_boat_asterix_parameter(interface: abstractInterface, parameters: AdditionalParametersForRollcallReport):
     interface.set_persistent_value(CLUB_BOAT_ASTERIX, parameters.add_asterix_for_club_boats)
 
-def save_unallocated_parameter_and_reset_group_order_and_arrangement_if_required(interface: abstractInterface, parameters: AdditionalParametersForRollcallReport):
-    original_parameters = load_additional_parameters_for_rollcall_report(interface)
-    original_inclusion_of_unallocated = original_parameters.include_unallocated_cadets
-    currently_required_unallocated = parameters.include_unallocated_cadets
-
-    if original_inclusion_of_unallocated!=currently_required_unallocated:
-        clear_group_order_in_storage(interface=interface)
-        clear_arrangement_in_state(interface=interface)
+def save_unallocated_parameter(interface: abstractInterface, parameters: AdditionalParametersForRollcallReport):
 
     interface.set_persistent_value(
         INCLUDE_UNALLOCATED_CADETS, parameters.include_unallocated_cadets
@@ -101,6 +92,7 @@ def get_dict_of_df_for_reporting_rollcalls(interface: abstractInterface) -> Dict
     additional_parameters = load_additional_parameters_for_rollcall_report(interface)
 
     dict_of_df = get_dict_of_df_for_reporting_rollcalls_given_event_and_parameters(
+        interface=interface,
         event=event,
         additional_parameters=additional_parameters
     )

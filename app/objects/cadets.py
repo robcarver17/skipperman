@@ -82,6 +82,9 @@ class Cadet(GenericSkipperManObjectWithIds):
     def similarity_dob(self, other_cadet: "Cadet") -> float:
         return similar(self._date_of_birth_as_str, other_cadet._date_of_birth_as_str)
 
+    def day_and_month_of_birth_matches_other_data(self, other_date: datetime.date):
+        return self.date_of_birth.day == other_date.day and self.date_of_birth.month == other_date.month
+
 multiple_matches = object()
 
 

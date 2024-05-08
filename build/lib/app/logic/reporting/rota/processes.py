@@ -9,7 +9,7 @@ from app.backend.reporting.rota_report.generate_dataframe_dict_for_rota_report i
 from app.backend.forms.form_utils import get_availablity_from_form
 
 from app.logic.events.events_in_state import get_event_from_state
-from app.logic.reporting.shared.group_order import get_group_order_from_stored_or_df
+from app.logic.reporting.shared.group_order import get_arrangement_options_and_group_order_from_stored_or_defaults
 from app.logic.reporting.shared.reporting_options import get_reporting_options
 from app.objects.abstract_objects.abstract_form import File
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -19,7 +19,7 @@ from app.objects.events import Event
 
 
 DAYS_TO_SHOW = "DaysToShow"
-
+BOATS = "boats"
 def load_additional_parameters_for_rota_report(
     interface: abstractInterface,
 ) -> AdditionalParametersForVolunteerReport:
@@ -30,8 +30,11 @@ def load_additional_parameters_for_rota_report(
     else:
         days_to_show = DaySelector.from_str(days_to_show_str)
 
+    boats = interface.get_persistent_value(BOATS, default=False)
+
     return AdditionalParametersForVolunteerReport(
-        days_to_show=days_to_show
+        days_to_show=days_to_show,
+        power_boats_only=boats
     )
 
 
@@ -50,19 +53,29 @@ def get_rota_report_additional_parameters_from_form(
                                              interface=interface,
                                              input_name=DAYS_TO_SHOW)
 
+    boats = interface.true_if_radio_was_yes(
+        BOATS
+    )
+
+
     return AdditionalParametersForVolunteerReport(
-        days_to_show=days_to_show)
+        days_to_show=days_to_show, power_boats_only=boats)
 
 
 def save_additional_parameters_for_rota(
     interface: abstractInterface, parameters: AdditionalParametersForVolunteerReport
 ):
     save_days_to_show_parameter(interface=interface, parameters=parameters)
+    save_patrol_boat_parameter(interface=interface, parameters=parameters)
 
 
 def save_days_to_show_parameter(interface: abstractInterface, parameters: AdditionalParametersForVolunteerReport):
     days_to_show_as_str = parameters.days_to_show.as_str()
     interface.set_persistent_value(DAYS_TO_SHOW, days_to_show_as_str)
+
+def save_patrol_boat_parameter(interface: abstractInterface, parameters: AdditionalParametersForVolunteerReport):
+    boats = parameters.power_boats_only
+    interface.set_persistent_value(BOATS, boats)
 
 
 def get_dict_of_df_for_reporting_rota(interface: abstractInterface) -> Dict[str, pd.DataFrame]:
@@ -72,15 +85,18 @@ def get_dict_of_df_for_reporting_rota(interface: abstractInterface) -> Dict[str,
     dict_of_df = get_dict_of_df_for_reporting_rota_given_event_and_state(
 
         event=event,
-        additional_parameters=additional_parameters
+        additional_parameters=additional_parameters,
+        interface=interface
     )
 
     return dict_of_df
 
-def get_dict_of_df_for_reporting_rota_given_event_and_state(event: Event, additional_parameters: AdditionalParametersForVolunteerReport)->  Dict[str, pd.DataFrame]:
+def get_dict_of_df_for_reporting_rota_given_event_and_state(interface: abstractInterface, event: Event, additional_parameters: AdditionalParametersForVolunteerReport)->  Dict[str, pd.DataFrame]:
     dict_of_df = get_df_for_reporting_volunteers_with_flags(
         event=event,
-        days_to_show=additional_parameters.days_to_show
+        days_to_show=additional_parameters.days_to_show,
+        power_boats_only =additional_parameters.power_boats_only,
+        interface=interface
     )
 
     return dict_of_df

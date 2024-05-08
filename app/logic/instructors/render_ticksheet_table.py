@@ -1,15 +1,14 @@
 from typing import List, Dict
 
-from app.logic.instructors.ticksheet_table_elements import user_can_award_qualifications
-
 from app.logic.instructors.buttons import get_cadet_buttons_at_start_of_row_in_edit_state, \
-    get_button_or_label_for_tickitem_name
+    get_button_or_label_for_tickitem_name, get_select_cadet_button_when_in_no_edit_mode
 from app.backend.cadets import cadet_from_id
 from app.backend.ticks_and_qualifications.ticksheets import get_ticksheet_data, TickSheetDataWithExtraInfo, \
     cadet_is_already_qualified
 
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
-from app.logic.instructors.state_storage import get_edit_state_of_ticksheet, NO_EDIT_STATE, EDIT_CHECKBOX_STATE, EDIT_DROPDOWN_STATE
+from app.logic.instructors.state_storage import get_edit_state_of_ticksheet, NO_EDIT_STATE, EDIT_CHECKBOX_STATE, \
+    EDIT_DROPDOWN_STATE, return_true_if_a_cadet_id_been_set, get_cadet_id_from_state
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import checkboxInput, dropDownInput
@@ -70,22 +69,31 @@ def get_top_two_rows_for_table(interface: abstractInterface, ticksheet_data: Tic
 def get_body_of_table(interface: abstractInterface, ticksheet_data: TickSheetDataWithExtraInfo,
                       ) -> List[RowInTable]:
 
-    list_of_cadet_ids = ticksheet_data.tick_sheet.list_of_cadet_ids
-    return [get_row_for_cadet_in_ticksheet(interface=interface,ticksheet_data=ticksheet_data,cadet_id=cadet_id)
+    has_an_id_been_set = return_true_if_a_cadet_id_been_set(interface)
+    if has_an_id_been_set:
+        cadet_id = get_cadet_id_from_state(interface)
+        list_of_cadet_ids = [cadet_id]
+    else:
+        list_of_cadet_ids = ticksheet_data.tick_sheet.list_of_cadet_ids
+
+    return [get_row_for_cadet_in_ticksheet(interface=interface,ticksheet_data=ticksheet_data,cadet_id=cadet_id,
+                                           has_an_id_been_set=has_an_id_been_set)
                                             for cadet_id in list_of_cadet_ids]
 
 
 def get_row_for_cadet_in_ticksheet(
                                    interface: abstractInterface,
                                     ticksheet_data: TickSheetDataWithExtraInfo,
-                                   cadet_id: str) -> RowInTable:
+                                   cadet_id: str,
+                                    has_an_id_been_set: bool) -> RowInTable:
 
     idx = ticksheet_data.tick_sheet.index_of_cadet_id(cadet_id)
     relevant_row = ticksheet_data.tick_sheet[idx]
     dict_of_tick_items = relevant_row.dict_of_ticks_with_items
 
     already_qualified= cadet_is_already_qualified(ticksheet_data=ticksheet_data, cadet_id=cadet_id)
-    first_cell_in_row = get_cadet_cell_at_start_of_row(interface=interface, ticksheet_data=ticksheet_data, cadet_id=cadet_id, already_qualified=already_qualified)
+    first_cell_in_row = get_cadet_cell_at_start_of_row(interface=interface, ticksheet_data=ticksheet_data, cadet_id=cadet_id, already_qualified=already_qualified,
+                                                       has_an_id_been_set=has_an_id_been_set)
     rest_of_row = get_rest_of_row_in_table_for_dict_of_tick_item(interface=interface, dict_of_ticks_with_items=dict_of_tick_items, cadet_id=cadet_id, already_qualified=already_qualified)
 
     return RowInTable([first_cell_in_row]+rest_of_row)
@@ -93,7 +101,8 @@ def get_row_for_cadet_in_ticksheet(
 def get_cadet_cell_at_start_of_row(interface: abstractInterface,
                                     ticksheet_data: TickSheetDataWithExtraInfo,
                                    cadet_id: str,
-                                   already_qualified: bool) -> list:
+                                   already_qualified: bool,
+                                   has_an_id_been_set: bool) -> list:
 
     cadet = cadet_from_id(interface=interface, cadet_id=cadet_id)
     cadet_name = cadet.name
@@ -108,7 +117,7 @@ def get_cadet_cell_at_start_of_row(interface: abstractInterface,
     is_no_edit_state = state == NO_EDIT_STATE
 
     if is_no_edit_state:
-        return cadet_label
+        return get_select_cadet_button_when_in_no_edit_mode(cadet_id=cadet_id, cadet_label=cadet_label, has_an_id_been_set=has_an_id_been_set)
     else:
         return get_cadet_buttons_at_start_of_row_in_edit_state(interface=interface,
                                                                cadet_id=cadet_id,

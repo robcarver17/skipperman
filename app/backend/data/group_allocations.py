@@ -70,7 +70,7 @@ class GroupAllocationsData():
 
     def active_cadet_ids_at_event_with_allocations(self, event: Event) -> ListOfCadetIdsWithGroups:
 
-        list_of_cadets_with_groups = self.list_of_cadets_with_groups_at_event(event)
+        list_of_cadets_with_groups = self.list_of_cadet_ids_with_groups_at_event(event)
         list_of_active_cadet_ids_at_event = self.cadets_at_event_data.list_of_active_cadet_ids_at_event(event)
 
         list_of_allocated_cadets_with_groups = [cadet_with_group for cadet_with_group in list_of_cadets_with_groups
@@ -79,7 +79,7 @@ class GroupAllocationsData():
         return ListOfCadetIdsWithGroups(list_of_allocated_cadets_with_groups)
 
     def unallocated_cadets_at_event(self, event: Event) -> ListOfCadets:
-        list_of_cadets_in_groups_at_event = self.list_of_cadets_with_groups_at_event(event)
+        list_of_cadets_in_groups_at_event = self.list_of_cadet_ids_with_groups_at_event(event)
         list_of_active_cadets_at_event = self.list_of_active_cadets_at_event(event)
 
         unallocated_cadet_ids = (
@@ -90,7 +90,7 @@ class GroupAllocationsData():
         return unallocated_cadet_ids
 
     def list_of_cadet_ids_in_a_specific_group_if_cadet_active_at_event(self, event: Event, group: Group):
-        list_of_cadets_with_groups = self.list_of_cadets_with_groups_at_event(event)
+        list_of_cadets_with_groups = self.list_of_cadet_ids_with_groups_at_event(event)
         list_of_cadet_ids_in_group= list_of_cadets_with_groups.list_of_cadet_ids_in_group(group)
         list_of_active_cadet_ids_at_event = self.cadets_at_event_data.list_of_active_cadet_ids_at_event(event)
 
@@ -99,7 +99,7 @@ class GroupAllocationsData():
     def list_of_active_cadets_at_event(self, event: Event) -> ListOfCadets:
         return self.cadets_at_event_data.list_of_active_cadets_at_event(event)
 
-    def list_of_cadets_with_groups_at_event(self, event: Event) -> ListOfCadetIdsWithGroups:
+    def list_of_cadet_ids_with_groups_at_event(self, event: Event) -> ListOfCadetIdsWithGroups:
         return self.data_api.get_list_of_cadets_with_groups_at_event(event)
 
     @property

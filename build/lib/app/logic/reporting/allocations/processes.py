@@ -11,11 +11,9 @@ from app.objects.groups import CadetWithGroup
 from app.backend.group_allocations.cadet_event_allocations import DEPRECATE_get_list_of_cadets_unallocated_to_group_at_event, \
     get_list_of_cadets_with_groups, \
     DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only
-from app.backend.data.resources import load_list_of_cadets_at_event_with_club_dinghies
+from app.backend.data.resources import DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.reporting.shared.group_order import get_group_order_from_stored_or_df, clear_group_order_in_storage
-from app.logic.reporting.shared.arrangement_state import clear_arrangement_in_state
 from app.objects.events import Event
 
 from app.backend.reporting.allocation_report.allocation_report import (
@@ -52,7 +50,7 @@ def save_additional_parameters_for_allocation(
 ):
     save_show_full_names_parameter(interface=interface, parameters=parameters)
     save_club_boat_asterix_parameter(interface=interface, parameters=parameters)
-    save_unallocated_parameter_and_reset_group_order_and_arrangement_if_required(interface=interface, parameters=parameters)
+    save_unallocated_parameter(interface=interface, parameters=parameters)
 
 def save_show_full_names_parameter(interface: abstractInterface, parameters: AdditionalParametersForAllocationReport):
     interface.set_persistent_value(SHOW_FULL_NAMES, parameters.display_full_names)
@@ -60,14 +58,7 @@ def save_show_full_names_parameter(interface: abstractInterface, parameters: Add
 def save_club_boat_asterix_parameter(interface: abstractInterface, parameters: AdditionalParametersForAllocationReport):
     interface.set_persistent_value(CLUB_BOAT_ASTERIX, parameters.add_asterix_for_club_boats)
 
-def save_unallocated_parameter_and_reset_group_order_and_arrangement_if_required(interface: abstractInterface, parameters: AdditionalParametersForAllocationReport):
-    original_parameters = load_additional_parameters_for_allocation_report(interface)
-    original_inclusion_of_unallocated = original_parameters.include_unallocated_cadets
-    currently_required_unallocated = parameters.include_unallocated_cadets
-
-    if original_inclusion_of_unallocated!=currently_required_unallocated:
-        clear_group_order_in_storage(interface=interface)
-        clear_arrangement_in_state(interface=interface)
+def save_unallocated_parameter(interface: abstractInterface, parameters: AdditionalParametersForAllocationReport):
 
     interface.set_persistent_value(
         INCLUDE_UNALLOCATED_CADETS, parameters.include_unallocated_cadets
@@ -151,7 +142,7 @@ CLUB_BOAT_ASTERIX = "Asterix for club boats"
 
 ## FIXME FOLLOWING SHOULD BEIN BACKEND
 def add_club_boat_asterix(list_of_cadets_with_groups, event: Event):
-    list_of_cadets_at_event_with_club_dinghies = load_list_of_cadets_at_event_with_club_dinghies(event)
+    list_of_cadets_at_event_with_club_dinghies = DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies(event)
 
     for cadet_with_group in list_of_cadets_with_groups:
         add_club_boat_asterix_to_cadet(cadet_with_group=cadet_with_group, list_of_cadets_at_event_with_club_dinghies=list_of_cadets_at_event_with_club_dinghies)

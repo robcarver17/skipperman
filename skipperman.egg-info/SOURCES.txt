@@ -17,6 +17,7 @@ app/backend/data/field_mapping.py
 app/backend/data/group_allocations.py
 app/backend/data/group_allocations_old.py
 app/backend/data/mapped_events.py
+app/backend/data/options.py
 app/backend/data/qualification.py
 app/backend/data/resources.py
 app/backend/data/security.py

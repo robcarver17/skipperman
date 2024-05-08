@@ -7,7 +7,7 @@ from app.data_access.csv.wa_field_mapping import CsvDataWAFieldMapping
 from app.data_access.csv.mapped_wa_event import (
     CsvDataMappedWAEvent,
 )
-from app.data_access.csv.print_options import csvDataListOfPrintOptions
+from app.data_access.csv.print_options import csvDataListOfPrintOptions, csvDataListOfArrangementOptions
 from app.data_access.csv.volunteers import CsvDataListOfVolunteers, CsvDataListOfVolunteerSkills, CsvDataListOfCadetVolunteerAssociations, CsvDataListOfVolunteersAtEvent, CsvDataListOfIdentifiedVolunteersAtEvent, CsvDataListOfVolunteersInRolesAtEvent
 from app.data_access.csv.resources import CsvDataListOfPatrolBoats, CsvDataListOfVolunteersAtEventWithPatrolBoats, CsvDataListOfClubDinghies, CsvDataListOfCadetAtEventWithClubDinghies
 from app.data_access.csv.dinghies_at_events import CsvDataListOfCadetAtEventWithDinghies, CsvDataListOfDinghies
@@ -62,6 +62,10 @@ class CsvDataApi(GenericDataApi):
     @property
     def data_print_options(self) -> csvDataListOfPrintOptions:
         return csvDataListOfPrintOptions(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
+
+    @property
+    def data_arrangement_and_group_order_options(self) -> csvDataListOfArrangementOptions:
+        return csvDataListOfArrangementOptions(master_data_path=self.master_data_path, backup_data_path=self.backup_data_path)
 
 
     @property

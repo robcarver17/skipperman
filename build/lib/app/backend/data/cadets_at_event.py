@@ -1,5 +1,6 @@
 from typing import List
 
+from app.data_access.configuration.field_list import RESPONSIBLE_ADULT_NAME, RESPONSIBLE_ADULT_NUMBER
 from app.objects.constants import missing_data
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -213,6 +214,18 @@ class CadetsAtEventData():
             health_notes.append(health_for_cadet)
 
         return health_notes
+
+
+    def get_emergency_contact_for_list_of_cadet_ids_at_event(self, event: Event, list_of_cadet_ids: List[str])-> List[str]:
+        list_of_cadets_at_event = self.get_list_of_cadets_at_event(event)
+        subset_list = list_of_cadets_at_event.subset_given_cadet_ids(list_of_cadet_ids)
+
+        list_of_contacts = []
+        for cadet_at_event in subset_list:
+            contact =cadet_at_event.emergency_contact()
+            list_of_contacts.append(contact)
+
+        return list_of_contacts
 
     def get_list_of_identified_cadets_at_event(self, event: Event)-> ListOfIdentifiedCadetsAtEvent:
         return self.data_api.get_list_of_identified_cadets_at_event(event)

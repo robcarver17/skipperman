@@ -7,7 +7,7 @@ from app.backend.reporting.options_and_parameters.marked_up_list_from_df_paramet
 
 from app.backend.reporting.process_stages.strings_columns_groups import (
     GroupOfMarkedUpString,
-    MarkedUpString, Page, ListOfPages,
+    MarkedUpString, Page, ListOfPages, EMPTY_GROUP,
 )
 from app.objects.constants import arg_not_passed
 
@@ -49,7 +49,10 @@ def create_page_from_df(grouped_df: pd.core.groupby.generic.DataFrameGroupBy,
             grouped_df=grouped_df,
             marked_up_list_from_df_parameters=marked_up_list_from_df_parameters,
         )
-        page.append(group_of_marked_up_str)
+        if group_of_marked_up_str is EMPTY_GROUP:
+            continue
+        else:
+            page.append(group_of_marked_up_str)
 
     return page
 
@@ -113,6 +116,9 @@ def group_of_marked_up_str_from_subset_list_for_group(group: str,
                                                       marked_up_list_from_df_parameters: MarkedUpListFromDfParametersWithActualGroupOrder) \
                                                     -> GroupOfMarkedUpString:
     group_of_marked_up_str = GroupOfMarkedUpString()
+    if len(subset_group_as_list)==0:
+        return EMPTY_GROUP
+
     _add_groupname_inplace_to_list_for_this_group_if_required(
         group=group,
         group_of_marked_up_str=group_of_marked_up_str,

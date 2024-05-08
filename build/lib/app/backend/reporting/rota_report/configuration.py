@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import \
     SpecificParametersForTypeOfReport
-from app.data_access.configuration.configuration import VOLUNTEER_TEAMS
+from app.data_access.configuration.configuration import VOLUNTEER_TEAMS, LAKE_TRAINING_GROUP_NAMES
 from app.objects.day_selectors import DaySelector
 
 TEAM_NAME = "Team name"
@@ -13,12 +13,13 @@ BOAT = "Boat"
 DEFAULT_SORT_TEAM= 'Default'
 SORT_BY_DICT = {
     'Default': [ROLE],
-    'Instructors': [GROUP, ROLE],
-    'Lake safety': [BOAT, ROLE],
-    'Lake helpers': [GROUP, ROLE],
-    'River safety': [BOAT, ROLE]
+    'Instructors': [ ROLE, GROUP],
+    'Lake safety': [ ROLE, BOAT],
+    'Lake helpers': [ROLE, GROUP],
+    'River safety': [ROLE, BOAT]
 }
 TEAMS_WITH_DUPLICATE_LEADERS = ['River safety', 'Lake safety']
+
 
 
 def list_of_teams() -> list:

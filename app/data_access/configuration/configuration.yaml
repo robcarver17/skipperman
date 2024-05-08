@@ -108,14 +108,17 @@ volunteers_requiring_group:
   - "Lake helper"
 ## Must match above
 volunteers_requiring_boats:
-  - "DI"
-  - "Coach"
-  - "AI"
-  - "River safety lead"
-  - "River helm"
-  - "River crew"
-  - "Lake helm"
-  - "Lake crew"
+  group_dependent:
+    - "DI"
+    - "Coach"
+    - "AI"
+  river:
+    - "River safety lead"
+    - "River helm"
+    - "River crew"
+  lake:
+    - "Lake helm"
+    - "Lake crew"
 # FIXME Consider moving to user editable file
 # Groups
 # Order matters as used in backend

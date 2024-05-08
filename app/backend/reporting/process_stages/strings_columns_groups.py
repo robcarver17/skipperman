@@ -84,6 +84,7 @@ class GroupOfMarkedUpString(List[MarkedUpString]):
 
         return max(line_widths)
 
+EMPTY_GROUP = GroupOfMarkedUpString([])
 
 class ListOfGroupsOfMarkedUpStrings(List[GroupOfMarkedUpString]):
     pass
@@ -105,6 +106,8 @@ class Column(ListOfGroupsOfMarkedUpStrings):
 
     def max_width(self) -> int:
         group_widths = [group.max_width() for group in self]
+        if len(group_widths)==0:
+            return 0
 
         return max(group_widths)
 
@@ -188,7 +191,6 @@ def create_list_of_pages_with_columns_from_list_of_pages_and_arrangements(
     list_of_pages: ListOfPages,
     list_of_arrangement_of_columns: ListOfArrangementOfColumns,
 ) -> ListOfPagesWithColumns:
-    ## is passed list list of str?
 
     list_of_pages_with_columns = [
         create_columns_from_page(
@@ -206,15 +208,16 @@ def create_columns_from_page(
     arrangement_of_columns: ArrangementOfColumns,
 ) -> PageWithColumns:
     ## is passed list list of str?
-    list_of_columns = PageWithColumns(
-        [
-            _create_single_column_from_list_of_groups_of_marked_up_str_given_order(
-                page=page,
-                order_list_of_index_for_column=order_list_of_index_for_column,
-            )
-            for order_list_of_index_for_column in arrangement_of_columns
-        ]
-    )
+    list_of_columns  = []
+    for order_list_of_index_for_column in arrangement_of_columns:
+        single_column = _create_single_column_from_list_of_groups_of_marked_up_str_given_order(
+            page=page,
+            order_list_of_index_for_column=order_list_of_index_for_column,
+        )
+        if len(single_column)==0:
+            continue
+        else:
+            list_of_columns.append(single_column)
 
     return PageWithColumns(list_of_columns, title_str=page.title_str)
 
@@ -223,9 +226,16 @@ def _create_single_column_from_list_of_groups_of_marked_up_str_given_order(
     page: Page,
     order_list_of_index_for_column: List[int],
 ) -> Column:
+    column_as_list = []
+    for index in order_list_of_index_for_column:
+        try:
+            column_as_list.append(page[index])
+        except IndexError:
+            ## missing from this page that's fine
+            continue
+
     return Column(
-        [
-            page[index]
-            for index in order_list_of_index_for_column
-        ]
+        column_as_list
     )
+
+

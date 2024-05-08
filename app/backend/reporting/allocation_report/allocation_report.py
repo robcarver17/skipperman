@@ -1,6 +1,13 @@
 from dataclasses import dataclass
+
+from app.backend.data.resources import DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies, ClubDinghiesData
 from app.data_access.configuration.configuration import ALL_GROUPS_NAMES
-from app.objects.groups import CADET_NAME, GROUP_STR_NAME
+from app.objects.abstract_objects.abstract_interface import abstractInterface
+from app.objects.cadets import Cadet
+from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies
+from app.objects.constants import missing_data
+from app.objects.events import Event
+from app.objects.groups import CADET_NAME, GROUP_STR_NAME, CadetWithGroup
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
     SpecificParametersForTypeOfReport,
 )
@@ -19,3 +26,21 @@ class AdditionalParametersForAllocationReport:
     include_unallocated_cadets: bool
     add_asterix_for_club_boats: bool
 
+
+
+def add_club_boat_asterix(interface: abstractInterface, list_of_cadets_with_groups, event: Event):
+    club_dinghy_data = ClubDinghiesData(interface.data)
+    list_of_cadets_at_event_with_club_dinghies =     club_dinghy_data.get_list_of_cadets_at_event_with_club_dinghies(event)
+
+    for cadet_with_group in list_of_cadets_with_groups:
+        add_club_boat_asterix_to_cadet(cadet_with_group=cadet_with_group, list_of_cadets_at_event_with_club_dinghies=list_of_cadets_at_event_with_club_dinghies)
+
+    return list_of_cadets_with_groups
+
+
+def add_club_boat_asterix_to_cadet(cadet_with_group: CadetWithGroup, list_of_cadets_at_event_with_club_dinghies: ListOfCadetAtEventWithClubDinghies) -> CadetWithGroup:
+    cadet = cadet_with_group.cadet
+    cadet_id = cadet.id
+    dinghy=list_of_cadets_at_event_with_club_dinghies.dinghy_for_cadet_id(cadet_id)
+    if dinghy is not missing_data:
+        cadet_with_group.cadet = Cadet(first_name=cadet.first_name, surname=cadet.surname+"*", date_of_birth=cadet.date_of_birth, id=cadet_id)

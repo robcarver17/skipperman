@@ -5,26 +5,49 @@ from typing import List
 import numpy as np
 
 
+
+MARK_AS_DELETE = -9999
+@dataclass
+class IndicesToSwap:
+    idx1: int
+    idx2: int
+
+    @classmethod
+    def create_delete_index(cls, idx):
+        return cls(MARK_AS_DELETE, idx)
+
+    @property
+    def is_delete_index(self):
+        return self.idx1==MARK_AS_DELETE
+
+    def index_to_delete(self):
+        assert self.is_delete_index
+        return self.idx2
+
+
 class GenericArrangement(list):
+    @classmethod
+    def from_str(cls, the_string:str):
+        return cls(eval(the_string))
+
+    def as_str(self):
+        return str(self)
+
+    def remove_empty_elements(self):
+        while True:
+            empty = [i for i in range(len(self)) if len(self[i])==0]
+            if len(empty)==0:
+                return
+            self.pop(empty[0])
+
     def as_matrix(self) -> np.matrix:
         arrangement = copy(self)
-        return np.matrix(self)
+        return np.matrix(arrangement)
 
     @classmethod
     def from_matrix(cls, matrix: np.matrix):
         return cls(matrix.tolist())
 
-    def swap_indices(self, indices: tuple):
-        idx1, idx2 = indices
-        new_version = copy(self)
-        for i in range(len(self)):
-            for j in range(len(self[i])):
-                old = self[i][j]
-                if old == idx1:
-                    new_version[i][j] = idx2
-                if old == idx2:
-                    new_version[i][j] = idx1
-        return new_version
 
 
 class ArrangementOfRows(GenericArrangement):
@@ -42,6 +65,56 @@ EMPTY = -1
 
 
 class ArrangementOfColumns(GenericArrangement):
+    def swap_or_delete_indices(self, indices_to_swap: IndicesToSwap):
+        if indices_to_swap.is_delete_index:
+            return self.delete_value_given_indices(indices_to_swap)
+        else:
+            return self.swap_indices(indices_to_swap)
+
+    def swap_indices(self, indices_to_swap: IndicesToSwap):
+        idx1 = indices_to_swap.idx1
+        idx2 = indices_to_swap.idx2
+
+        new_version = copy(self)
+        for i in range(len(self)):
+            for j in range(len(self[i])):
+                old = self[i][j]
+                if old == idx1:
+                    new_version[i][j] = idx2
+                if old == idx2:
+                    new_version[i][j] = idx1
+        return new_version
+
+    def delete_value_given_indices(self, indices_to_swap: IndicesToSwap):
+        value_to_delete = indices_to_swap.index_to_delete()
+        self.remove_value_and_reset_indices(value_to_delete)
+        return self
+
+    def remove_value_and_reset_indices(self, value):
+        try:
+            self.remove_value(value)
+        except IndexError:
+            ## already missing nothing to do
+            pass
+
+        ## Always need to do this though
+        self.reset_indices(value)
+
+    def remove_value(self, value):
+        current_position = self.position_of_value(value)
+        self.remove_value_from_current_column(current_position)
+
+    def reset_indices(self, value):
+        for i in range(len(self)):
+            column = self[i]
+            for j in range(len(column)):
+                cell = self[i][j]
+                if cell<value:
+                    continue
+                ## can't be equal so must be higher
+                cell= cell- 1
+                self[i][j] = cell
+
     def left(self, value):
         current_index = self.position_of_value(value)
         if current_index.column == 0:
@@ -90,6 +163,14 @@ class ArrangementOfColumns(GenericArrangement):
         if len(current_column) == 0:
             self.pop(position.column)
 
+    def insert_value_at_top_left(self, value):
+        if len(self)==0:
+            self.insert(0,[value])
+            return
+
+        self.insert_value_in_new_column(value, 0, 0)
+
+
     def insert_value_in_new_column(self, value, new_column_idx, row_idx):
         current_column = self[new_column_idx]
         current_column.insert(row_idx, value)
@@ -133,3 +214,4 @@ def pad_columns_to_square(arrangement: ArrangementOfColumns):
 
 class ListOfArrangementOfColumns(List[ArrangementOfColumns]):
     pass
+

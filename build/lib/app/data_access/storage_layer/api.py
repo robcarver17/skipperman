@@ -1,3 +1,7 @@
+from app.backend.reporting.arrangement.arrange_options import ArrangeGroupsOptions, ArrangementOptionsAndGroupOrder
+
+from app.backend.reporting.options_and_parameters.print_options import PrintOptions
+
 from app.objects.users_and_security import ListOfSkipperManUsers
 from app.objects.volunteers import ListOfVolunteers, ListOfCadetVolunteerAssociations
 
@@ -103,6 +107,24 @@ class DataLayer():
     def save_wa_event_mapping(self, list_of_wa_event_maps:ListOfWAEventMaps):
         data_access_for_wa_event_mapping= get_data_access_for_wa_event_mapping(self.data)
         return self.store.write(list_of_wa_event_maps, data_access_method=data_access_for_wa_event_mapping)
+
+    def get_print_options(self, report_name: str) -> PrintOptions:
+        data_access_for_print_options = get_data_access_for_print_options(self.data, report_name=report_name)
+        return self.store.read(data_access_for_print_options)
+
+    def save_print_options(self, print_options: PrintOptions, report_name: str):
+        data_access_for_print_options = get_data_access_for_print_options(self.data, report_name=report_name)
+        self.store.write(print_options, data_access_method=data_access_for_print_options)
+
+    def get_arrange_group_options(self, report_name: str) -> ArrangementOptionsAndGroupOrder:
+        data_access_for_arrangements_options = get_data_access_for_arrangement_and_group_order_options(self.data, report_name=report_name)
+        return self.store.read(data_access_for_arrangements_options)
+
+    def save_arrange_group_options(self, arrange_group_options: ArrangementOptionsAndGroupOrder, report_name: str):
+        data_access_for_arrangements_options = get_data_access_for_arrangement_and_group_order_options(self.data, report_name=report_name)
+        self.store.write(arrange_group_options, data_access_method=data_access_for_arrangements_options)
+
+
 
     #### EVENT SPECIFIC
     def get_field_mapping_for_event(self, event: Event) -> ListOfWAFieldMappings:
@@ -347,4 +369,16 @@ def get_data_access_for_list_of_patrol_boats(data: GenericDataApi) -> DataAccess
         read_method=data.data_list_of_patrol_boats.read,
         write_method=data.data_list_of_patrol_boats.write,
     )
+
+def get_data_access_for_print_options(data: GenericDataApi, report_name: str) -> DataAccessMethod:
+    return DataAccessMethod('print_options',
+                            read_method=data.data_print_options.read_for_report,
+                            write_method=data.data_print_options.write_for_report,
+                            report_name=report_name)
+
+def get_data_access_for_arrangement_and_group_order_options(data: GenericDataApi, report_name: str) -> DataAccessMethod:
+    return DataAccessMethod('arrangement_options',
+                            read_method=data.data_arrangement_and_group_order_options.read_for_report,
+                            write_method=data.data_arrangement_and_group_order_options.write_for_report,
+                            report_name=report_name)
 

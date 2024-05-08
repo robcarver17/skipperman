@@ -76,6 +76,7 @@ LIST_OF_CADETS_FILE_ID = "cadet_master_list"
 EVENT_FILE_IDENTIFIER = "list_of_events"
 MAPPED_WA_EVENT_FILE_ID = "mapped_wa_event"
 PRINT_OPTIONS_FILE_ID = "print_options"
+ARRANGEMENT_OPTIONS_FILE_ID = "arrangement_options"
 LIST_OF_PATROL_BOATS_FILE_ID = "list_of_patrol_boats"
 LIST_OF_CLUB_DINGHIES_FILE_ID = "list_of_club_dinghies"
 LIST_OF_DINGHIES_FILE_ID = "list_of_dinghies"
@@ -123,6 +124,7 @@ IDENTIFIED_CADETS_AT_EVENT_ID: (
         "cadets_with_groups_for_event_%s.csv",
     ),
     PRINT_OPTIONS_FILE_ID :("lists", "print_options_for_report_%s.csv"),
+    ARRANGEMENT_OPTIONS_FILE_ID: ("lists", "arrangement_options_for_report_%s.csv"),
 LIST_OF_VOLUNTEERS_FILE_ID:("lists", "list_of_volunteers.csv"),
 LIST_OF_VOLUNTEER_SKILLS_FILE_ID:("lists", "list_of_volunteers_skills.csv"),
 LIST_OF_VOLUNTEER_ASSOCIATIONS_FILE_ID :("lists", "list_of_cadet_volunteer_associations.csv"),

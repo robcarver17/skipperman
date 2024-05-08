@@ -13,6 +13,9 @@ def create_generic_report(interface: abstractInterface, report_generator: Report
     reporting_options = get_reporting_options(interface=interface,
                                               specific_parameters_for_type_of_report=report_generator.specific_parameters_for_type_of_report,
                                               dict_of_df=dict_of_df)
+    print("a3 %s "  % str(reporting_options.arrangement))
+    reporting_options.filter_arrangement_options_in_place_to_remove_non_existent_groups()
+    print("a4 %s " % str(reporting_options.arrangement))
     print("Reporting options %s" % reporting_options)
     filename = create_column_report_from_df_and_return_filename(
         reporting_options=reporting_options

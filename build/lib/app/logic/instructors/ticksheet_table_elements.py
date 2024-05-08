@@ -2,9 +2,6 @@ from app.logic.events.events_in_state import get_event_from_state
 
 from app.backend.data.security import get_volunteer_id_of_logged_in_user_or_superuser
 from app.backend.ticks_and_qualifications.ticksheets import can_see_all_groups_and_award_qualifications
-from app.objects.groups import Group
-
-from app.objects.events import Event
 
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
@@ -13,23 +10,29 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_buttons import Button
 
 from app.logic.instructors.state_storage import get_edit_state_of_ticksheet, EDIT_CHECKBOX_STATE, EDIT_DROPDOWN_STATE, \
-    NO_EDIT_STATE, get_group_from_state
+    NO_EDIT_STATE, return_true_if_a_cadet_id_been_set
 
 EDIT_DROPDOWN_BUTTON_LABEL = "Edit using dropdown (allows entry of full ticks, half ticks, N/A)"
 EDIT_CHECKBOX_BUTTON_LABEL = "Edit using checkboxes (allows entry of full ticks only)"
 SAVE_BUTTON_LABEL = "Save changes"
 PRINT_BUTTON_LABEL = "Print ticksheet to excel file"
+SHOW_ALL_CADETS_BUTTON_LABEL = "Show all cadets"
 
 
 def get_buttons_for_ticksheet(interface: abstractInterface) -> Line:
+    cadet_id_set = return_true_if_a_cadet_id_been_set(interface)
     state = get_edit_state_of_ticksheet(interface)
+
     if state in [EDIT_CHECKBOX_STATE, EDIT_DROPDOWN_STATE]:
         return Line([Button(SAVE_BUTTON_LABEL)])
 
-    elif state == NO_EDIT_STATE:
-        return Line([Button(EDIT_CHECKBOX_BUTTON_LABEL), Button(EDIT_DROPDOWN_BUTTON_LABEL), Button(PRINT_BUTTON_LABEL)])
+    assert state == NO_EDIT_STATE
+    list_of_options =[Button(EDIT_CHECKBOX_BUTTON_LABEL), Button(EDIT_DROPDOWN_BUTTON_LABEL), Button(PRINT_BUTTON_LABEL)]
 
-    raise Exception("State %s uknown" % state)
+    if cadet_id_set:
+        list_of_options.append(Button(SHOW_ALL_CADETS_BUTTON_LABEL))
+
+    return Line(list_of_options)
 
 def user_can_award_qualifications(interface):
     volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser(interface)

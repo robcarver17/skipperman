@@ -4,15 +4,26 @@ from app.backend.ticks_and_qualifications.ticksheets import get_ticksheet_data
 
 from app.logic.events.events_in_state import get_event_from_state
 
-from app.objects.abstract_objects.abstract_lines import ListOfLines
+from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 
 from app.logic.instructors.state_storage import get_edit_state_of_ticksheet, EDIT_DROPDOWN_STATE, NO_EDIT_STATE, \
-    get_group_from_state, get_qualification_from_state, EDIT_CHECKBOX_STATE
+    get_group_from_state, get_qualification_from_state, set_cadet_id_in_state
 from app.logic.instructors.ticksheet_table_elements import user_can_award_qualifications
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.ticks import no_tick, full_tick, half_tick, not_applicable_tick, Tick, TickSheetItem
 
+def get_select_cadet_button_when_in_no_edit_mode(cadet_id: str, cadet_label: str, has_an_id_been_set: bool) -> Union[ListOfLines, str]:
+    if has_an_id_been_set:
+        return cadet_label
+
+    return ListOfLines(
+        [Line([
+            Button(label=cadet_label, value=get_name_of_select_cadet_button(cadet_id=cadet_id))
+            ]
+        )
+    ]
+    )
 
 def get_button_or_label_for_tickitem_name(interface: abstractInterface, tick_item: TickSheetItem) -> Union[ListOfLines, str]:
     state = get_edit_state_of_ticksheet(interface)
@@ -132,6 +143,11 @@ def get_name_of_qualify_disqualify_for_cadet_button(cadet_id: str, already_quali
         label = qual_label
     return get_name_of_generic_button(cadet_id_axis, label, cadet_id)
 
+def get_name_of_select_cadet_button(cadet_id: str):
+    return "%s_%s" % (select_cadet_axis, cadet_id)
+
+def cadet_id_when_selected_from_button_label(label: str):
+    return label.split("_")[1]
 
 def get_name_of_tick_all_for_cadet_button(cadet_id: str):
     return get_name_of_generic_button(cadet_id_axis, full_label, cadet_id)
@@ -161,9 +177,6 @@ def get_name_of_tick_na_for_item_button(item_id: str):
     return get_name_of_generic_button(item_id_axis, na_label, item_id)
 
 
-def get_name_of_tick_notick_for_item_button(item_id: str):
-    return get_name_of_generic_button(item_id_axis, no_tick_label, item_id)
-
 
 def get_name_of_generic_button(axis: str, tick_type: str, id: str):
     return "%s_%s_%s" % (axis, tick_type, id)
@@ -178,6 +191,7 @@ qual_label = "tBqQUAL"
 disqual_leable = "tBqDISQUAL"
 item_id_axis = "tBiITEM"
 cadet_id_axis = "tBiCADET"
+select_cadet_axis = "scCadet"
 
 full_label = full_tick.name
 half_label = half_tick.name
@@ -218,6 +232,22 @@ def get_list_of_all_tick_related_button_names(interface: abstractInterface)  -> 
 
     return all_buttons
 
+def get_list_of_all_possible_select_cadet_buttons(interface: abstractInterface) ->List[str]:
+    event = get_event_from_state(interface)
+    group = get_group_from_state(interface)
+    qualification = get_qualification_from_state(interface)
+
+    ticksheet_data = get_ticksheet_data(
+        interface=interface,
+        event=event,
+        group=group,
+        qualification=qualification
+    )
+
+    list_of_cadet_ids = ticksheet_data.tick_sheet.list_of_cadet_ids
+
+    return [get_name_of_select_cadet_button(cadet_id) for cadet_id in list_of_cadet_ids]
+
 def list_of_all_possible_buttons_for_cadet_id(cadet_id: str) -> List[str]:
     all_buttons_for_cadet = [get_name_of_generic_button(
         axis=cadet_id_axis,
@@ -239,4 +269,6 @@ def list_of_all_possible_buttons_for_item_id(item_id: str) -> List[str]:
 
     return all_buttons_for_item
 
-
+def set_cadet_id(interface: abstractInterface, button_pressed: str):
+    cadet_id = cadet_id_when_selected_from_button_label(button_pressed)
+    set_cadet_id_in_state(interface=interface, cadet_id=cadet_id)

@@ -1,6 +1,7 @@
 from typing import Dict, List, Tuple
 
 import pandas as pd
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.reporting.boat_report.boat_report_parameters import AdditionalParametersForBoatReport, FIRST_CADET, \
     SECOND_CADET, GROUP, BOAT_CLASS, SAIL_NUMBER, CLUB_BOAT
@@ -14,8 +15,8 @@ from app.objects.events import Event
 from app.objects.groups import UNALLOCATED_GROUP_NAME, Group
 
 
-def get_dict_of_df_for_boat_report(event: Event, additional_parameters:AdditionalParametersForBoatReport)-> Dict[str, pd.DataFrame]:
-    data_required = get_data_required_for_event(event)
+def get_dict_of_df_for_boat_report(interface: abstractInterface, event: Event, additional_parameters:AdditionalParametersForBoatReport)-> Dict[str, pd.DataFrame]:
+    data_required = get_data_required_for_event(interface=interface, event=event)
     days_in_event = event.weekdays_in_event()
 
     if not event.contains_groups:

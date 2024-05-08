@@ -1,10 +1,8 @@
 from dataclasses import dataclass
 
 import pandas as pd
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.volunteer_rota import DEPRECATE_load_volunteers_in_role_at_event
-from app.backend.data.volunteers import DEPRECATE_load_all_volunteers
-from app.backend.data.resources import DEPRECATED_load_list_of_patrol_boats, DEPRECATE_load_list_of_voluteers_at_event_with_patrol_boats
 from app.backend.reporting.rota_report.configuration import TEAM_NAME, ROLE, VOLUNTEER, GROUP, BOAT
 from app.objects.constants import missing_data
 from app.objects.groups import GROUP_UNALLOCATED
@@ -12,6 +10,9 @@ from app.objects.patrol_boats import ListOfPatrolBoats, ListOfVolunteersAtEventW
 from app.objects.volunteers import ListOfVolunteers
 from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent, VolunteerInRoleAtEventWithTeamName
 
+from app.backend.data.resources import PatrolBoatsData
+from app.backend.data.volunteers import VolunteerData
+from app.backend.data.volunteer_rota import VolunteerRotaData
 
 @dataclass
 class DataForDfConstruction:
@@ -21,11 +22,15 @@ class DataForDfConstruction:
     volunteers_in_role_at_event: ListOfVolunteersInRoleAtEvent
 
     @classmethod
-    def construct_for_event(cls, event):
-        all_volunteers = DEPRECATE_load_all_volunteers()
-        all_patrol_boats = DEPRECATED_load_list_of_patrol_boats()
-        all_volunteers_and_boats = DEPRECATE_load_list_of_voluteers_at_event_with_patrol_boats(event)
-        volunteers_in_role_at_event = DEPRECATE_load_volunteers_in_role_at_event(event)
+    def construct_for_event(cls, event, interface: abstractInterface):
+        volunteer_data = VolunteerData(interface.data)
+        patrol_boat_data = PatrolBoatsData(interface.data)
+        volunteers_in_role = VolunteerRotaData(interface.data)
+
+        all_volunteers = volunteer_data.get_list_of_volunteers()
+        all_patrol_boats = patrol_boat_data.get_list_of_patrol_boats()
+        all_volunteers_and_boats = patrol_boat_data.get_list_of_voluteers_at_event_with_patrol_boats(event)
+        volunteers_in_role_at_event = volunteers_in_role.get_list_of_volunteers_in_roles_at_event(event)
 
         return cls(
             all_volunteers=all_volunteers,
@@ -55,7 +60,7 @@ def get_team_name_string(volunteer_in_role_at_event_with_team_name: VolunteerInR
     return volunteer_in_role_at_event_with_team_name.team_name ## not printed
 
 def get_role_string(volunteer_in_role_at_event_with_team_name: VolunteerInRoleAtEventWithTeamName)-> str:
-    return  text_given_role(volunteer_in_role_at_event_with_team_name.volunteer_in_role_at_event.role)
+    return  volunteer_in_role_at_event_with_team_name.volunteer_in_role_at_event.role
 
 def get_volunteer_string(volunteer_in_role_at_event_with_team_name: VolunteerInRoleAtEventWithTeamName, data_for_df: DataForDfConstruction)-> str:
     volunteer_id = volunteer_in_role_at_event_with_team_name.volunteer_in_role_at_event.volunteer_id
@@ -73,9 +78,7 @@ def get_group_string(volunteer_in_role_at_event_with_team_name: VolunteerInRoleA
     if group is GROUP_UNALLOCATED:
         return ''
 
-    group_str = text_given_group(group.group_name)
-
-    return group_str
+    return group.group_name
 
 def get_boat_string(volunteer_in_role_at_event_with_team_name: VolunteerInRoleAtEventWithTeamName, data_for_df: DataForDfConstruction) -> str:
 
@@ -98,18 +101,7 @@ def get_boat_string_if_boat_allocated(boat_id_for_volunteer: str,
     boat = all_boats.object_with_id(boat_id_for_volunteer)
     boat_name = boat.name
 
-    boat_str = text_given_boat(boat_name)
-
-    return boat_str
+    return boat_name
 
 
-
-def text_given_role(role: str)-> str:
-    return role+":"
-
-def text_given_group(group: str) -> str:
-    return "- %s" % group
-
-def text_given_boat(boat: str) -> str:
-    return "(%s)" % boat
 

@@ -80,11 +80,12 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 MISC:
 - go through all cadets and backfill qualifications
 
-IMPORT:
-- removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
-- over 12 volunteer has to be identified multiple times on input
-- volunteer rota still not doing change check properly
 
+VOLUNTEER ROTA:
+- sort volunteer list by cadet location
+- set maximum allowable / target for each volunteer role
+- store of previous events volunteer role to speed up loading
+- removing volunteer / availability should also remove related information
 
 BOATS AND GROUPS:
 - data model
@@ -92,10 +93,13 @@ BOATS AND GROUPS:
 - store of previous events  cadet allocation to speed up loading 
 - click on cadet name to see previous groups
 
-VOLUNTEER ROTA:
-- sort volunteer list by cadet location
-- store of previous events volunteer role to speed up loading
-- removing volunteer / availability should also remove related information
+IMPORT:
+- removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
+- volunteer rota still not doing change check properly
+
+REGISTRATION DETAILS:
+- removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
+
 
 USERS:
 - datamodel
@@ -106,8 +110,6 @@ CADET / VOLUNTEER LIST / CONFIGURATION
 - data model
 
 
-REGISTRATION DETAILS:
-- removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
 
 
 
@@ -153,7 +155,6 @@ UNCLASSIFIED:
 - check competely removal of old data model
 - editable user sailing groups, volunteer roles, skills: but plain text file so can replace configuration
 - memorise whether summary buttons pressed
-- set maximum allowable / target for each volunteer role
 - add new volunteer from volunteer rota page should include skills filter
 - create a list of key volunteers to invite to curry evening
 - don't allow duplicate templates and delete templates allowed

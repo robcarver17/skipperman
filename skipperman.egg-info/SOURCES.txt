@@ -11,6 +11,7 @@ app/backend/data/__init__.py
 app/backend/data/cadets.py
 app/backend/data/cadets_at_event.py
 app/backend/data/data_for_event.py
+app/backend/data/dinghies.py
 app/backend/data/event_mapping.py
 app/backend/data/events.py
 app/backend/data/field_mapping.py
@@ -18,8 +19,8 @@ app/backend/data/group_allocations.py
 app/backend/data/group_allocations_old.py
 app/backend/data/mapped_events.py
 app/backend/data/options.py
+app/backend/data/patrol_boats.py
 app/backend/data/qualification.py
-app/backend/data/resources.py
 app/backend/data/security.py
 app/backend/data/ticksheets.py
 app/backend/data/volunteer_allocation.py
@@ -219,9 +220,9 @@ app/logic/events/cadets_at_event/track_cadet_id_in_state_when_importing.py
 app/logic/events/cadets_at_event/update_existing_cadet_at_event_forms.py
 app/logic/events/cadets_at_event/update_existing_cadet_at_event_from_form_entries.py
 app/logic/events/cadets_at_event/../../../data_access/configuration/configuration.yaml
+app/logic/events/group_allocation/ENTRY_allocate_cadets_to_groups.py
 app/logic/events/group_allocation/__init__.py
 app/logic/events/group_allocation/add_cadet_partner.py
-app/logic/events/group_allocation/allocate_cadets_to_groups.py
 app/logic/events/group_allocation/parse_allocation_form.py
 app/logic/events/group_allocation/render_allocation_form.py
 app/logic/events/group_allocation/../../../data_access/configuration/configuration.yaml

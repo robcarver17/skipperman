@@ -113,7 +113,7 @@ def get_second_cadet_name_popping_if_required(cadet_id: str, data_required: Requ
                                                     cadet_ids_at_event_on_day: List[str]):
     display_full_names = additional_parameters.display_full_names
     second_cadet_name = ""
-    first_cadet_with_dinghy = data_required.list_of_cadets_at_event_with_dinghies.object_with_cadet_id(cadet_id)
+    first_cadet_with_dinghy = data_required.list_of_cadets_at_event_with_dinghies.DEPRECATE_object_with_cadet_id(cadet_id)
     if first_cadet_with_dinghy is not missing_data:
         if first_cadet_with_dinghy.has_partner():
             second_cadet_id = first_cadet_with_dinghy.partner_cadet_id
@@ -162,7 +162,7 @@ def is_group_valid_for_report(group: Group, additional_parameters:AdditionalPara
 
 def get_boat_class_sail_number_and_club_boat_flag(cadet_id: str, data_required: RequiredDataForReport) -> Tuple[str,str,str]:
 
-    first_cadet_with_dinghy = data_required.list_of_cadets_at_event_with_dinghies.object_with_cadet_id(cadet_id)
+    first_cadet_with_dinghy = data_required.list_of_cadets_at_event_with_dinghies.DEPRECATE_object_with_cadet_id(cadet_id)
     if first_cadet_with_dinghy is not missing_data:
         boat_class_id = first_cadet_with_dinghy.boat_class_id
         sail_number = first_cadet_with_dinghy.sail_number
@@ -172,7 +172,7 @@ def get_boat_class_sail_number_and_club_boat_flag(cadet_id: str, data_required: 
 
     boat_name = boat_name[:10]
 
-    club_boat_id = data_required.list_of_cadets_at_event_with_club_dinghies.dinghy_for_cadet_id(cadet_id)
+    club_boat_id = data_required.list_of_cadets_at_event_with_club_dinghies.DEPRECATE_dinghy_for_cadet_id(cadet_id)
     if club_boat_id is missing_data:
         club_boat_flag = ""
     else:

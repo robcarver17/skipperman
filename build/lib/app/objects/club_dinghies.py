@@ -1,6 +1,8 @@
 
 from dataclasses import dataclass
 
+from app.objects.day_selectors import Day
+
 from app.objects.constants import missing_data, arg_not_passed
 from app.objects.generic import GenericSkipperManObjectWithIds, GenericSkipperManObject, GenericListOfObjectsWithIds
 
@@ -65,6 +67,7 @@ class ListOfClubDinghies(GenericListOfObjectsWithIds):
 class CadetAtEventWithClubDinghy(GenericSkipperManObject):
     cadet_id: str
     club_dinghy_id: str
+    day: Day
 
 class ListOfCadetAtEventWithClubDinghies(GenericListOfObjectsWithIds):
     @property
@@ -78,7 +81,7 @@ class ListOfCadetAtEventWithClubDinghies(GenericListOfObjectsWithIds):
 
         return sorted_list
 
-    def delete_allocation_for_cadet(self, cadet_id: str):
+    def DEPRECATE_delete_allocation_for_cadet(self, cadet_id: str):
         ## allowed to fail
         try:
             idx = self.idx_of_item_with_cadet_id(cadet_id)
@@ -86,9 +89,18 @@ class ListOfCadetAtEventWithClubDinghies(GenericListOfObjectsWithIds):
         except:
             return
 
-    def update_allocation_for_cadet(self, cadet_id: str, club_dinghy_id: str):
-        self.delete_allocation_for_cadet(cadet_id)
-        self.append(CadetAtEventWithClubDinghy(cadet_id=cadet_id, club_dinghy_id=club_dinghy_id))
+    def update_allocation_for_cadet_on_day(self, cadet_id: str, day: Day, club_dinghy_id: str):
+        self.delete_allocation_for_cadet_on_day(cadet_id=cadet_id, day=day)
+        self.append(CadetAtEventWithClubDinghy(cadet_id=cadet_id, club_dinghy_id=club_dinghy_id, day=day))
+
+    def delete_allocation_for_cadet_on_day(self, cadet_id: str, day: Day):
+        ## allowed to fail
+        idx = self.index_of_item_for_cadet_id_on_day(cadet_id=cadet_id, day=day)
+        if idx is missing_data:
+            return
+
+        self.pop(idx)
+
 
     def idx_of_item_with_cadet_id(self, cadet_id: str):
         idx = [item for item in self if item.cadet_id == cadet_id]
@@ -99,7 +111,7 @@ class ListOfCadetAtEventWithClubDinghies(GenericListOfObjectsWithIds):
 
         return self.index(idx[0])
 
-    def dinghy_for_cadet_id(self, cadet_id:str, default = missing_data) -> str:
+    def DEPRECATE_dinghy_for_cadet_id(self, cadet_id:str, default = missing_data) -> str:
         list_of_items = [item.club_dinghy_id for item in self if item.cadet_id == cadet_id]
         if len(list_of_items)==0:
             return default
@@ -108,7 +120,36 @@ class ListOfCadetAtEventWithClubDinghies(GenericListOfObjectsWithIds):
 
         return list_of_items[0]
 
-    def list_of_cadet_ids(self): ##should be unique
-        return [item.cadet_id for item in self]
+    def dinghy_for_cadet_id_on_day\
+                    (self, cadet_id:str, day: Day, default = missing_data) -> str:
+        item = self.item_for_cadet_id_on_day(cadet_id=cadet_id, day=day, default=missing_data)
+        if item is missing_data:
+            return default
+
+        return item.club_dinghy_id
+
+
+
+    def index_of_item_for_cadet_id_on_day\
+                    (self, cadet_id:str, day: Day) -> int:
+
+        item = self.item_for_cadet_id_on_day(cadet_id=cadet_id, day=day, default=missing_data)
+        if item is missing_data:
+            return missing_data
+
+        return self.index(item)
+
+    def item_for_cadet_id_on_day\
+                    (self, cadet_id:str, day: Day, default = missing_data) -> CadetAtEventWithClubDinghy:
+        list_of_items = [item for item in self if item.cadet_id == cadet_id and item.day == day]
+        if len(list_of_items)==0:
+            return default
+        if len(list_of_items)>1:
+            raise Exception("Can only have one dinghy per cadet")
+
+        return list_of_items[0]
+
+    def list_of_unique_cadet_ids(self): ##should be unique
+        return list(set([item.cadet_id for item in self]))
 
 NO_BOAT = ''

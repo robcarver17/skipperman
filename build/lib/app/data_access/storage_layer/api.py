@@ -24,7 +24,8 @@ from app.objects.cadets import ListOfCadets
 from app.objects.qualifications import ListOfQualifications
 from app.objects.groups import ListOfCadetIdsWithGroups
 from app.objects.events import ListOfEvents
-from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies
+from app.objects.dinghies import ListOfCadetAtEventWithDinghies, ListOfDinghies
+from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies, ListOfClubDinghies
 from app.objects.qualifications import ListOfCadetsWithQualifications
 from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent,ListOfTargetForRoleAtEvent
 from app.objects.volunteers import ListOfVolunteerSkills
@@ -42,6 +43,22 @@ class DataLayer():
         self.store.save_stored_items()
 
     ## Just a long list of getters and setters
+    def get_list_of_club_dinghies(self) -> ListOfClubDinghies:
+        data_access_for_list_of_club_dinghies = get_data_access_for_list_of_club_dinghies(self.data)
+        return self.store.read(data_access_for_list_of_club_dinghies)
+
+    def save_list_of_club_dinghies(self, list_of_club_dinghies: ListOfClubDinghies):
+        data_access_for_list_of_club_dinghies = get_data_access_for_list_of_club_dinghies(self.data)
+        self.store.write(list_of_club_dinghies, data_access_method=data_access_for_list_of_club_dinghies)
+
+    def get_list_of_dinghies(self) ->ListOfDinghies:
+        data_access_for_list_of_dinghies = get_data_access_for_list_of_dinghies(self.data)
+        return self.store.read(data_access_for_list_of_dinghies)
+
+    def save_list_of_dinghies(self, list_of_dinghies: ListOfDinghies):
+        data_access_for_list_of_dinghies = get_data_access_for_list_of_dinghies(self.data)
+        self.store.write(list_of_dinghies, data_access_method=data_access_for_list_of_dinghies)
+
     def get_list_of_events(self) -> ListOfEvents:
         data_access_for_list_of_events = get_data_access_for_list_of_events(self.data)
         return self.store.read(data_access_for_list_of_events)
@@ -147,10 +164,28 @@ class DataLayer():
         data_access_for_list_of_cadets_at_event_with_club_dinghies = get_data_access_for_list_of_cadets_at_event_with_club_dinghies(self.data, event_id=event.id)
         return self.store.read(data_access_for_list_of_cadets_at_event_with_club_dinghies)
 
+    def save_list_of_cadets_at_event_with_club_dinghies(self, event: Event, list_of_cadets_at_event_with_club_dinghies: ListOfCadetAtEventWithClubDinghies):
+        data_access_for_list_of_cadets_at_event_with_club_dinghies = get_data_access_for_list_of_cadets_at_event_with_club_dinghies(self.data, event_id=event.id)
+        self.store.write(list_of_cadets_at_event_with_club_dinghies, data_access_method=data_access_for_list_of_cadets_at_event_with_club_dinghies)
+
+
+    def get_list_of_cadets_at_event_with_dinghies(self, event: Event) -> ListOfCadetAtEventWithDinghies:
+        data_access_for_list_of_cadets_at_event_with_dinghies = get_data_access_for_list_of_cadets_at_event_with_dinghies(self.data, event_id=event.id)
+        return self.store.read(data_access_for_list_of_cadets_at_event_with_dinghies)
+
+    def save_list_of_cadets_at_event_with_dinghies(self, event: Event, list_of_cadets_at_event_with_dinghies: ListOfCadetAtEventWithDinghies):
+        data_access_for_list_of_cadets_at_event_with_dinghies = get_data_access_for_list_of_cadets_at_event_with_dinghies(self.data, event_id=event.id)
+        self.store.write(list_of_cadets_at_event_with_dinghies, data_access_method=data_access_for_list_of_cadets_at_event_with_dinghies)
+
     def get_list_of_cadets_with_groups_at_event(self, event: Event) -> ListOfCadetIdsWithGroups:
         data_access_for_cadets_with_groups = get_data_access_for_cadets_with_groups(self.data, event_id=event.id)
 
         return self.store.read(data_access_for_cadets_with_groups)
+
+    def save_list_of_cadets_with_groups_at_event(self, event: Event, list_of_cadets_with_groups_at_event: ListOfCadetIdsWithGroups):
+        data_access_for_cadets_with_groups = get_data_access_for_cadets_with_groups(self.data, event_id=event.id)
+
+        self.store.write(list_of_cadets_with_groups_at_event, data_access_method=data_access_for_cadets_with_groups)
 
     def get_list_of_cadets_at_event(self, event: Event) -> ListOfCadetsAtEvent:
         data_access_for_cadets_at_event = get_data_access_for_cadets_at_event(self.data, event_id=event.id)
@@ -334,6 +369,16 @@ def get_data_access_for_list_of_cadets_at_event_with_club_dinghies(data: Generic
     event_id=event_id
 )
 
+
+
+
+def get_data_access_for_list_of_cadets_at_event_with_dinghies(data: GenericDataApi, event_id: str) -> DataAccessMethod:
+    return DataAccessMethod("list_of_cadets_with_dinghies_at_event",
+    read_method=data.data_list_of_cadets_with_dinghies_at_event.read,
+    write_method=data.data_list_of_cadets_with_dinghies_at_event.write,
+    event_id=event_id
+)
+
 def get_data_access_for_wa_event_mapping(data: GenericDataApi):
     return DataAccessMethod("wa_event_mapping",
         read_method=data.data_wa_event_mapping.read,
@@ -399,3 +444,15 @@ def get_data_access_for_arrangement_and_group_order_options(data: GenericDataApi
                             write_method=data.data_arrangement_and_group_order_options.write_for_report,
                             report_name=report_name)
 
+
+def get_data_access_for_list_of_dinghies(data: GenericDataApi) -> DataAccessMethod:
+    return DataAccessMethod("list_of_dinghies",
+    read_method=data.data_list_of_dinghies.read,
+    write_method=data.data_list_of_dinghies.write,
+)
+
+def get_data_access_for_list_of_club_dinghies(data: GenericDataApi) -> DataAccessMethod:
+    return DataAccessMethod("list_of_club_dinghies",
+    read_method=data.data_List_of_club_dinghies.read,
+    write_method=data.data_List_of_club_dinghies.write,
+)

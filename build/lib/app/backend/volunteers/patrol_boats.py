@@ -19,7 +19,7 @@ from app.backend.volunteers.volunteer_rota import  SwapData, \
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.backend.data.resources import DEPRECATE_load_list_of_voluteers_at_event_with_patrol_boats,    PatrolBoatsData
+from app.backend.data.patrol_boats import DEPRECATE_load_list_of_voluteers_at_event_with_patrol_boats,    PatrolBoatsData
 from app.objects.patrol_boats import PatrolBoat
 from app.objects.utils import in_x_not_in_y, in_both_x_and_y
 from app.objects.volunteers import Volunteer, ListOfVolunteers

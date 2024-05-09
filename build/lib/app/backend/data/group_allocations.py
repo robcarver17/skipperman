@@ -64,7 +64,7 @@ class GroupAllocationsData():
     def active_cadet_ids_at_event_with_allocations_including_unallocated_cadets(self, event: Event) -> ListOfCadetIdsWithGroups:
         list_of_cadet_ids_with_groups = self.active_cadet_ids_at_event_with_allocations(event)
         unallocated_cadets = self.unallocated_cadets_at_event(event)
-        list_of_cadet_ids_with_groups.add_list_of_unallocated_cadets(unallocated_cadets)
+        list_of_cadet_ids_with_groups.add_list_of_unallocated_cadets_on_day(unallocated_cadets)
 
         return list_of_cadet_ids_with_groups
 

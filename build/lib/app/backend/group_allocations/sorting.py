@@ -25,13 +25,14 @@ def sorted_active_cadets(allocation_data: AllocationData, sort_order: list = arg
     return list_of_active_cadets_from_sorted_df
 
 def get_active_cadets_as_data_frame(allocation_data: AllocationData)-> pd.DataFrame:
+    day = allocation_data.event.weekdays_in_event()[0]
     active_cadets = allocation_data.list_of_cadets_in_event_active_only
     first_names = [cadet.first_name for cadet in active_cadets]
     surnames = [cadet.surname for cadet in active_cadets]
-    groups = [allocation_data.get_current_group_name(cadet) for cadet in active_cadets]
-    club_boats = [allocation_data.get_current_club_boat_name(cadet) for cadet in active_cadets]
-    boat_classes = [allocation_data.get_name_of_class_of_boat(cadet) for cadet in active_cadets]
-    partners = [allocation_data.get_two_handed_partner_name_for_cadet(cadet) for cadet in active_cadets]
+    groups =[allocation_data.get_current_group_name_for_day(cadet=cadet, day=day) for cadet in active_cadets]
+    club_boats = [allocation_data.get_current_club_boat_name_on_day(cadet, day=day) for cadet in active_cadets]
+    boat_classes = [allocation_data.get_name_of_class_of_boat_on_day(cadet, day=day) for cadet in active_cadets]
+    partners = [allocation_data.get_two_handed_partner_name_for_cadet_on_day(cadet, day=day) for cadet in active_cadets]
     df_as_dict = {
         CADET: active_cadets,
         SORT_FIRST_NAME: first_names,

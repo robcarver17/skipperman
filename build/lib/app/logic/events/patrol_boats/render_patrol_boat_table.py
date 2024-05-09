@@ -1,6 +1,6 @@
 from typing import List
 
-from app.backend.data.resources import  load_list_of_patrol_boats_at_event
+from app.backend.data.dinghies import load_list_of_patrol_boats_at_event
 from app.backend.forms.swaps import is_ready_to_swap
 from app.backend.volunteers.patrol_boats import get_summary_list_of_boat_allocations_for_events
 from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS

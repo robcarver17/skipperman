@@ -2,7 +2,7 @@ from typing import List, Tuple, Callable
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.resources import  load_list_of_patrol_boats_at_event
+from app.backend.data.dinghies import load_list_of_patrol_boats_at_event
 from app.backend.volunteers.patrol_boats import get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day
 from app.data_access.configuration.fixed import REMOVE_SHORTHAND
 from app.objects.abstract_objects.abstract_buttons import Button

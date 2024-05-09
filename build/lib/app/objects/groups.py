@@ -1,6 +1,8 @@
 
 from typing import List
 import pandas as pd
+from app.objects.day_selectors import Day, ALL_POSSIBLE_DAYS
+
 from app.objects.utils import in_x_not_in_y
 
 from app.data_access.configuration.configuration import (
@@ -112,6 +114,7 @@ def order_list_of_groups(list_of_groups: List[Group]) -> List[Group]:
 class CadetIdWithGroup(GenericSkipperManObjectWithIds):
     cadet_id: str
     group: Group
+    day: Day
 
 
 
@@ -122,6 +125,11 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
 
     def list_of_cadet_ids_in_group(self, group: Group) -> List[str]:
         ids = [item.cadet_id for item in self if item.group == group]
+
+        return ids
+
+    def list_of_cadet_ids_in_group_on_day(self, group: Group, day: Day) -> List[str]:
+        ids = [item.cadet_id for item in self if item.group == group and item.day == day]
 
         return ids
 
@@ -142,44 +150,46 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
         list_of_groups = [cadet_id_with_group.group for cadet_id_with_group in self]
         return list_of_groups
 
-    def add_list_of_unallocated_cadets(self, list_of_unallocated_cadets: ListOfCadets):
-        [self.add_unallocated_cadet(cadet) for cadet in list_of_unallocated_cadets]
+    def add_list_of_unallocated_cadets_on_day(self, list_of_unallocated_cadets: ListOfCadets, day: Day):
+        [self.add_unallocated_cadet(cadet, day) for cadet in list_of_unallocated_cadets]
 
-    def add_unallocated_cadet(self, cadet: Cadet):
+    def add_unallocated_cadet(self, cadet: Cadet, day: Day):
         cadet_id = cadet.id
-        self.append(CadetIdWithGroup(cadet_id=cadet_id, group=GROUP_UNALLOCATED))
+        self.append(CadetIdWithGroup(cadet_id=cadet_id, group=GROUP_UNALLOCATED, day=day))
 
     def remove_cadet_with_id_from_allocation(self, cadet_id: str):
-        idx = self.index_of_item_with_cadet_id(cadet_id)
+        idx = self.DEPRECATE_index_of_item_with_cadet_id(cadet_id)
         __ = self.pop(idx)
 
-    def update_group_for_cadet(self, cadet: Cadet, chosen_group: Group):
-        if self.cadet_is_allocated_to_group(cadet):
-            self._update_group_for_existing_cadet(
-                cadet=cadet, chosen_group=chosen_group
+
+    def update_group_for_cadet_on_day(self, cadet: Cadet, day: Day, chosen_group: Group):
+        if self.cadet_is_allocated_to_group_on_day(cadet=cadet,day=day):
+            self._update_group_for_existing_cadet_on_day(
+                cadet=cadet, chosen_group=chosen_group, day=day
             )
         else:
-            self._update_group_for_new_cadet(cadet=cadet, chosen_group=chosen_group)
+            self._update_group_for_new_cadet(cadet=cadet, chosen_group=chosen_group, day=day)
 
-    def _update_group_for_existing_cadet(self, cadet: Cadet, chosen_group: Group):
+    def _update_group_for_existing_cadet_on_day(self, cadet: Cadet, day: Day, chosen_group: Group):
         cadet_id = cadet.id
-        list_of_ids = self.list_of_ids
-        idx = list_of_ids.index(cadet_id)
-        if self[idx].group == chosen_group:
+        item_with_cadet_id_and_day = self.item_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
+        idx = self.index(item_with_cadet_id_and_day)
+        if item_with_cadet_id_and_day.group == chosen_group:
             pass
         if chosen_group.is_unallocated:
             ## don't store group as unallocated instead remove entirely
             self.pop(idx)
         else:
-            self[idx] = CadetIdWithGroup(cadet_id=cadet_id, group=chosen_group)
+            self[idx] = CadetIdWithGroup(cadet_id=cadet_id, group=chosen_group, day=day)
 
-    def _update_group_for_new_cadet(self, cadet: Cadet, chosen_group: Group):
+
+    def _update_group_for_new_cadet(self, cadet: Cadet, chosen_group: Group, day: Day):
         if chosen_group.is_unallocated:
             ## don't store group as unallocated
             return
         else:
             cadet_id = cadet.id
-            self.append(CadetIdWithGroup(cadet_id=cadet_id, group=chosen_group))
+            self.append(CadetIdWithGroup(cadet_id=cadet_id, group=chosen_group, day=day))
 
     def cadet_ids_in_passed_list_not_allocated_to_any_group(self,
                                                             list_of_cadet_ids: List[str]):
@@ -211,18 +221,32 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
 
         return item.group
 
-    def cadet_is_allocated_to_group(self, cadet: Cadet) -> bool:
-        try:
-            self.item_with_cadet_id(cadet_id=cadet.id)
-            return True
-        except:
-            return False
+    def group_for_cadet_id_on_day(self, cadet_id: str, day: Day) -> Group:
+        item = self.item_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
+        if item is missing_data:
+            return GROUP_UNALLOCATED
+
+        return item.group
+
+    def cadet_is_allocated_to_group_on_day(self, cadet: Cadet, day: Day) -> bool:
+        item = self.item_with_cadet_id_on_day(cadet_id=cadet.id, day=day)
+        return not item is missing_data
 
     def item_with_cadet_id(self, cadet_id: str) -> CadetIdWithGroup:
-        idx = self.index_of_item_with_cadet_id(cadet_id)
+        idx = self.DEPRECATE_index_of_item_with_cadet_id(cadet_id)
         return self[idx]
 
-    def index_of_item_with_cadet_id(self, cadet_id: str) -> int:
+
+    def item_with_cadet_id_on_day(self, cadet_id: str, day: Day) -> CadetIdWithGroup:
+        items = [item for item in self if item.cadet_id==cadet_id and item.day == day]
+        if len(items)==0:
+            return missing_data
+        elif len(items)>1:
+            raise Exception("dupilicate groups")
+        else:
+            return items[0]
+
+    def DEPRECATE_index_of_item_with_cadet_id(self, cadet_id: str) -> int:
         list_of_cadet_ids = self.list_of_ids
         try:
             idx = list_of_cadet_ids.index(cadet_id)

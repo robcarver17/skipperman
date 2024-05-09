@@ -1,6 +1,8 @@
 from typing import Union, List
 
-from app.backend.data.resources import load_list_of_boat_classes, modify_boat_class_given_string_and_return_list, delete_boat_class_given_string_and_return_list, add_new_boat_class_given_string_and_return_list, save_list_of_boat_classes
+from app.backend.data.dinghies import load_list_of_boat_classes, save_list_of_boat_classes, \
+    add_new_boat_class_given_string_and_return_list, delete_boat_class_given_string_and_return_list, \
+    modify_boat_class_given_string_and_return_list
 
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.configuration.generic_list_modifier import display_form_edit_generic_list, post_form_edit_generic_list, BACK_BUTTON_PRESSED, BUTTON_NOT_KNOWN

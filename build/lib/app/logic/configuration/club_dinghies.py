@@ -1,8 +1,8 @@
 from typing import Union, List
 
-from app.backend.data.resources import load_list_of_club_dinghies, add_new_club_dinghy_given_string_and_return_list, \
-    modify_club_dinghy_given_string_and_return_list, delete_club_dinghy_given_string_and_return_list, \
-    save_list_of_club_dinghies
+from app.backend.data.dinghies import load_list_of_club_dinghies, save_list_of_club_dinghies, \
+    add_new_club_dinghy_given_string_and_return_list, delete_club_dinghy_given_string_and_return_list, \
+    modify_club_dinghy_given_string_and_return_list
 from app.backend.forms.reorder_form import modify_list_given_button_name
 
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form

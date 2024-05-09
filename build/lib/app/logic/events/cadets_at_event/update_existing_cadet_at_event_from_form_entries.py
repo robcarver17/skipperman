@@ -68,7 +68,7 @@ def update_cadet_at_event_when_status_unchanged(interface: abstractInterface,
     if availability_unchanged:
         ## Neithier status or availability has changed - shouldn't happen, but heigh ho
         print(
-            "Code identified major change for cadet %s but nothing appears to have happened, probably use entering original values in form for some reason" % str(existing_cadet_at_event))
+            "Code identified major change for cadet %s but nothing appears to have happened, probably user entering original values in form for some reason" % str(existing_cadet_at_event))
         return
 
     days_available = event.days_in_event_overlap_with_selected_days(new_availability)

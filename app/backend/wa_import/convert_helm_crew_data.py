@@ -1,13 +1,22 @@
 import datetime
 from copy import copy
 
-from app.backend.data.cadets_at_event import load_list_of_cadets_at_event_with_dinghies, DEPRECATED_load_cadets_at_event, \
-    get_cadet_at_event
+from app.backend.data.group_allocations import GroupAllocationsData
+
+from app.backend.group_allocations.group_allocations_data import AllocationData
+
+from app.backend.data.dinghies import DinghiesData
+
+from app.objects.day_selectors import Day
+
+from app.objects.abstract_objects.abstract_interface import abstractInterface
+
+from app.backend.data.cadets_at_event import  CadetsAtEventData
 from app.backend.data.mapped_events import DEPRECCATE_save_mapped_wa_event, DEPRECATE_load_mapped_wa_event
-from app.backend.group_allocations.boat_allocation import update_boat_info_for_updated_cadets_at_event
-from app.backend.wa_import.add_cadet_ids_to_mapped_wa_event_data import DEPRECATE_add_identified_cadet_and_row
-from app.backend.wa_import.update_cadets_at_event import DEPRECATED_get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active, \
-    DEPRECATE_add_new_cadet_to_event
+from app.backend.group_allocations.boat_allocation import   update_boat_info_for_updated_cadets_at_event
+from app.backend.wa_import.add_cadet_ids_to_mapped_wa_event_data import     add_identified_cadet_and_row
+from app.backend.wa_import.update_cadets_at_event import \
+    DEPRECATED_get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active,  add_new_cadet_to_event
 from app.data_access.configuration.field_list import HELM_SURNAME, HELM_FIRST_NAME, CREW_SURNAME, CREW_FIRST_NAME, CADET_FIRST_NAME, CADET_SURNAME, CADET_DOUBLE_HANDED_PARTNER
 
 from app.objects.cadets import Cadet, DEFAULT_DATE_OF_BIRTH
@@ -61,21 +70,42 @@ def from_partner_name_to_cadet(partner_name: str) -> Cadet:
 
     return Cadet(first_name=first_name, surname=second_name, date_of_birth=DEFAULT_DATE_OF_BIRTH)
 
-def add_matched_partner_cadet_with_duplicate_registration_to_wa_mapped_data(original_cadet: Cadet,
+def add_matched_partner_cadet_with_duplicate_registration_to_wa_mapped_data(interface: abstractInterface,
+                                                                original_cadet: Cadet,
                                                                             new_cadet: Cadet,
+                                                                            day: Day,
                                                                             event: Event):
 
     new_row = add_new_row_to_wa_event_data_and_return_row(original_cadet=original_cadet, new_cadet=new_cadet, event=event)
-    DEPRECATE_add_identified_cadet_and_row(
+    add_identified_cadet_and_row(
+        interface=interface,
         event=event, row_id=new_row.row_id, cadet_id=new_cadet.id
     )
 
-    DEPRECATE_add_new_cadet_to_event(
+    add_new_cadet_to_event(
+        interface=interface,
         event=event, row_in_mapped_wa_event=new_row,
         cadet_id=new_cadet.id
     )
+    add_two_handed_partnership_on_day_for_new_cadet_when_have_dinghy_for_existing_cadet(interface=interface, event=event,
+                                                                                        day=day,
+                                                                                        original_cadet=original_cadet, new_cadet=new_cadet)
 
-    add_two_handed_partnership_for_new_cadet_when_have_dinghy_for_existing_cadet(event=event, original_cadet=original_cadet, new_cadet=new_cadet)
+    add_new_cadet_to_group_on_day(interface=interface, new_cadet=new_cadet, original_cadet=original_cadet, day=day, event=event)
+
+def add_new_cadet_to_group_on_day(interface: abstractInterface, original_cadet: Cadet,
+                                  new_cadet: Cadet,
+                                  day: Day,
+                                  event: Event):
+
+    cadets_at_event_data = GroupAllocationsData(interface.data)
+    cadets_at_event =cadets_at_event_data.active_cadet_ids_at_event_with_allocations_including_unallocated_cadets(event)
+    group = cadets_at_event.group_for_cadet_id_on_day(cadet_id=original_cadet.id, day=day)
+    cadets_at_event_data.add_or_upate_group_for_cadet_on_day(event=event,
+                                                             cadet=new_cadet,
+                                                             day=day,
+                                                             group=group)
+
 
 def add_new_row_to_wa_event_data_and_return_row(original_cadet: Cadet,
                                                                             new_cadet: Cadet,
@@ -104,18 +134,25 @@ def modify_row_to_clone_for_new_cadet_partner(original_cadet: Cadet,
 
     return new_row
 
-def add_two_handed_partnership_for_new_cadet_when_have_dinghy_for_existing_cadet(event: Event, original_cadet: Cadet, new_cadet: Cadet, ):
+
+def add_two_handed_partnership_on_day_for_new_cadet_when_have_dinghy_for_existing_cadet(interface: abstractInterface, day: Day, event: Event, original_cadet: Cadet, new_cadet: Cadet, ):
     ## We only need to include the original cadet as will copy over
-    list_of_cadets_at_event_with_dinghies=load_list_of_cadets_at_event_with_dinghies(event)
-    original_cadet_with_dinghy = list_of_cadets_at_event_with_dinghies.object_with_cadet_id(original_cadet.id)
+    dinghys_data = DinghiesData(interface.data)
+    list_of_cadets_at_event_with_dinghies=dinghys_data.get_list_of_cadets_at_event_with_dinghies(event)
+    original_cadet_with_dinghy = list_of_cadets_at_event_with_dinghies.object_with_cadet_id_on_day(cadet_id=original_cadet.id,
+                                                                                                   day=day)
     assert original_cadet_with_dinghy is not missing_data
 
     original_cadet_with_dinghy.partner_cadet_id = new_cadet.id
 
-    list_of_updated_cadets = ListOfCadetAtEventWithDinghies([original_cadet_with_dinghy])
+    list_of_updated_cadets = ListOfCadetAtEventWithDinghies([original_cadet_with_dinghy]) ## ignore phantom type error
 
-    update_boat_info_for_updated_cadets_at_event(event=event, list_of_updated_cadets=list_of_updated_cadets)
+    update_boat_info_for_updated_cadets_at_event(event=event, list_of_updated_cadets=list_of_updated_cadets, interface=interface)
 
-def get_registered_two_handed_partner_name_for_cadet_at_event(event: Event, cadet: Cadet) -> str:
-    cadet_at_event = get_cadet_at_event(event=event, cadet=cadet)
+
+
+
+def get_registered_two_handed_partner_name_for_cadet_at_event(interface: abstractInterface, event: Event, cadet: Cadet) -> str:
+    cadets_at_event_data = CadetsAtEventData(interface.data)
+    cadet_at_event = cadets_at_event_data.get_list_of_cadets_at_event(event).cadet_at_event_or_missing_data(cadet_id=cadet.id)
     return cadet_at_event.data_in_row.get(CADET_DOUBLE_HANDED_PARTNER, '')

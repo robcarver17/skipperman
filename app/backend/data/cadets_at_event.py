@@ -194,6 +194,14 @@ class CadetsAtEventData():
 
         return list_of_cadets_at_event.list_of_cadet_ids()
 
+    def get_availability_dict_for_active_cadet_ids_at_event(self, event: Event):
+        list_of_cadets_at_event = self.get_list_of_cadets_at_event(event)
+        active_cadets_at_event = list_of_cadets_at_event.list_of_active_cadets_at_event()
+
+        return dict([(cadet.cadet_id, cadet.availability)
+              for cadet in active_cadets_at_event])
+
+
     def get_attendance_matrix_for_list_of_cadet_ids_at_event(self, list_of_cadet_ids: List[str], event: Event) -> ListOfDaySelectors:
         ### ALL CADETS mus tbe active
         list_of_cadets_at_event = self.get_list_of_cadets_at_event(event)
@@ -268,11 +276,6 @@ def list_of_row_ids_at_event_given_cadet_id(interface: abstractInterface, event:
 def DEPRECATED_load_cadets_at_event(event: Event) -> ListOfCadetsAtEvent:
     return DEPRECATED_data.data_cadets_at_event.read(event_id=event.id)
 
-
-def get_cadet_at_event(event: Event, cadet: Cadet)-> CadetAtEvent:
-    cadets_at_event = DEPRECATED_load_cadets_at_event(event)
-
-    return cadets_at_event.cadet_at_event_or_missing_data(cadet_id=cadet.id)
 
 def save_cadets_at_event(event: Event , list_of_cadets_at_event: ListOfCadetsAtEvent):
     return DEPRECATED_data.data_cadets_at_event.write(list_of_cadets_at_event=list_of_cadets_at_event, event_id=event.id)

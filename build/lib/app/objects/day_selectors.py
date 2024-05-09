@@ -10,6 +10,8 @@ Day = Enum("Day", [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Satu
 all_possible_days =list(Day.__members__.values())
 ## we keep the original format, but dynamically add this to data frames on import
 
+ALL_POSSIBLE_DAYS = object()
+
 def day_given_datetime(some_day: datetime.date) -> Day:
     return all_possible_days[some_day.weekday()]
 

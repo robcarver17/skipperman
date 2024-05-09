@@ -12,7 +12,7 @@ from app.objects.ticks import ListOfCadetsWithTickListItems, ListOfTickSheetItem
 from app.backend.data.group_allocations import GroupAllocationsData
 from app.backend.data.cadets import CadetData
 from app.backend.data.cadets_at_event import CadetsAtEventData
-from app.backend.data.resources import ClubDinghiesData
+from app.backend.data.dinghies import DinghiesData
 from app.objects.ticks import CadetWithTickListItems
 
 
@@ -181,5 +181,5 @@ class TickSheetsData():
         return CadetsAtEventData(data_api=self.data_api)
 
     @property
-    def club_dinghies(self) -> ClubDinghiesData:
-        return ClubDinghiesData(data_api=self.data_api)
+    def club_dinghies(self) -> DinghiesData:
+        return DinghiesData(data_api=self.data_api)

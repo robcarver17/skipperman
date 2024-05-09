@@ -2,6 +2,8 @@
 from dataclasses import dataclass
 from typing import List
 
+from app.objects.day_selectors import Day
+
 from app.objects.utils import make_id_as_int_str
 
 from app.objects.constants import missing_data, arg_not_passed
@@ -87,6 +89,7 @@ class CadetAtEventWithDinghy(GenericSkipperManObject):
     cadet_id: str
     boat_class_id: str
     sail_number: str
+    day: Day
     partner_cadet_id: str = NO_PARTNER_REQUIRED
 
     def has_partner(self):
@@ -112,65 +115,75 @@ class ListOfCadetAtEventWithDinghies(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return CadetAtEventWithDinghy
 
-    def update_boat_info_for_cadet_and_partner_at_event(
+    def DEPRECATE_update_boat_info_for_cadet_and_partner_at_event(
+        self,
+        cadet_at_event_with_dinghy: CadetAtEventWithDinghy
+    ):
+        raise
+
+    def update_boat_info_for_cadet_and_partner_at_event_on_day(
         self,
         cadet_at_event_with_dinghy: CadetAtEventWithDinghy
     ):
         cadet_id = cadet_at_event_with_dinghy.cadet_id
-        self.update_boat_for_cadet(
+        self.update_boat_for_cadet_on_day(
             cadet_id=cadet_id,
             sail_number=cadet_at_event_with_dinghy.sail_number,
-            boat_class_id=cadet_at_event_with_dinghy.boat_class_id
+            boat_class_id=cadet_at_event_with_dinghy.boat_class_id,
+            day=cadet_at_event_with_dinghy.day
         )
         self.modify_two_handed_partnership(cadet_id=cadet_id,
+                                            day=cadet_at_event_with_dinghy.day,
                                            new_two_handed_partner_id=cadet_at_event_with_dinghy.partner_cadet_id)
 
-    def modify_two_handed_partnership(self,  cadet_id: str,  new_two_handed_partner_id: str):
-        how_changed = self.how_has_partnership_id_changed(cadet_id=cadet_id, new_two_handed_partner_id=new_two_handed_partner_id)
+
+    def modify_two_handed_partnership(self,  cadet_id: str,  new_two_handed_partner_id: str, day: Day):
+        how_changed = self.how_has_partnership_id_changed(cadet_id=cadet_id, new_two_handed_partner_id=new_two_handed_partner_id, day=day)
         if how_changed==UNCHANGED:
             pass
         elif how_changed==WAS_INVALID_NOW_INVALID_CHANGED:
             ## change only this cadet, change of state from singlehanded to not allocated or reverse
-            self.add_two_handed_partner_to_existing_cadet(cadet_id=cadet_id, partner_id=new_two_handed_partner_id)
+            self.add_two_handed_partner_to_existing_cadet(cadet_id=cadet_id, partner_id=new_two_handed_partner_id, day=day)
         elif how_changed==WAS_VALID_NOW_VALID_CHANGED:
-            self.remove_two_handed_partner_from_existing_partner_of_cadet(cadet_id)
-            self.create_two_handed_partnership(cadet_id, new_two_handed_partner_id)
+            self.remove_two_handed_partner_from_existing_partner_of_cadet(cadet_id=cadet_id, day=day)
+            self.create_two_handed_partnership(cadet_id=cadet_id, new_two_handed_partner_id=new_two_handed_partner_id, day=day)
         elif how_changed == WAS_VALID_NOW_INVALID:
-            self.remove_two_handed_partner_from_existing_partner_of_cadet(cadet_id)
-            self.remove_two_handed_partner_from_existing_cadet(cadet_id)
+            self.remove_two_handed_partner_from_existing_partner_of_cadet(cadet_id=cadet_id, day=day)
+            self.remove_two_handed_partner_from_existing_cadet(cadet_id=cadet_id, day=day)
         elif how_changed == WAS_INVALID_NOW_VALID:
-            self.create_two_handed_partnership(cadet_id, new_two_handed_partner_id)
+            self.create_two_handed_partnership(cadet_id=cadet_id, new_two_handed_partner_id=new_two_handed_partner_id, day=day)
         else:
             raise Exception("Shouldn't get here!")
 
-    def create_two_handed_partnership(self, cadet_id: str,  new_two_handed_partner_id: str):
-        self.add_two_handed_partner_to_existing_cadet(cadet_id=cadet_id, partner_id=new_two_handed_partner_id)
+    def create_two_handed_partnership(self, cadet_id: str,  new_two_handed_partner_id: str, day: Day):
+        self.add_two_handed_partner_to_existing_cadet(cadet_id=cadet_id, partner_id=new_two_handed_partner_id, day=day)
 
         ## second cadet might not exist, this ensures they do
-        first_cadet = self.object_with_cadet_id(cadet_id)
-        self.update_boat_for_cadet(first_cadet.partner_cadet_id, sail_number=first_cadet.sail_number, boat_class_id=first_cadet.boat_class_id)
-        self.add_two_handed_partner_to_existing_cadet(cadet_id=new_two_handed_partner_id, partner_id=cadet_id)
+        first_cadet = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
+        self.update_boat_for_cadet_on_day(cadet_id=first_cadet.partner_cadet_id, sail_number=first_cadet.sail_number, boat_class_id=first_cadet.boat_class_id,
+                                          day=day)
+        self.add_two_handed_partner_to_existing_cadet(cadet_id=new_two_handed_partner_id, partner_id=cadet_id, day=day)
 
-    def add_two_handed_partner_to_existing_cadet(self, cadet_id, partner_id):
-        cadet_in_data = self.object_with_cadet_id(cadet_id)
+    def add_two_handed_partner_to_existing_cadet(self, cadet_id, partner_id, day: Day):
+        cadet_in_data = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
         cadet_in_data.partner_cadet_id = partner_id
 
-    def remove_two_handed_partner_from_existing_partner_of_cadet(self, cadet_id):
-        cadet_in_data = self.object_with_cadet_id(cadet_id)
+    def remove_two_handed_partner_from_existing_partner_of_cadet(self, cadet_id, day: Day):
+        cadet_in_data = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
         partner_id = cadet_in_data.partner_cadet_id
-        self.clear_boat_details_from_existing_cadet_id(partner_id)
+        self.clear_boat_details_from_existing_cadet_id(partner_id, day=day)
 
-    def clear_boat_details_from_existing_cadet_id(self, cadet_id: str):
-        idx=self.idx_of_item_with_cadet_id(cadet_id)
+    def clear_boat_details_from_existing_cadet_id(self, cadet_id: str, day: Day):
+        idx=self.idx_of_item_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
         self.pop(idx)
 
-    def remove_two_handed_partner_from_existing_cadet(self, cadet_id):
-        cadet_in_data = self.object_with_cadet_id(cadet_id)
+    def remove_two_handed_partner_from_existing_cadet(self, cadet_id, day: Day):
+        cadet_in_data = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
         cadet_in_data.partner_cadet_id = NOT_ALLOCATED ## Assumption is we will be allocating to someone else. Boat details will remain
 
-    def how_has_partnership_id_changed(self, cadet_id: str,  new_two_handed_partner_id: str) -> str:
+    def how_has_partnership_id_changed(self, cadet_id: str,  new_two_handed_partner_id: str, day: Day) -> str:
         ## Changes only apply to the first cadet
-        original_cadet = self.object_with_cadet_id(cadet_id)
+        original_cadet = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
         original_partner_id = original_cadet.partner_cadet_id
 
         if original_partner_id == new_two_handed_partner_id:
@@ -191,24 +204,24 @@ class ListOfCadetAtEventWithDinghies(GenericListOfObjectsWithIds):
             raise Exception("Shouldn't get here")
 
 
-    def update_boat_for_cadet(self, cadet_id: str, boat_class_id: str, sail_number: str):
-        object_with_id = self.object_with_cadet_id(cadet_id)
+    def update_boat_for_cadet_on_day(self, cadet_id: str, boat_class_id: str, sail_number: str, day: Day):
+        object_with_id = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
         if object_with_id is missing_data:
-            self.add_boat_for_no_existing_cadet(cadet_id=cadet_id, boat_class_id=boat_class_id, sail_number=sail_number)
+            self.add_boat_for_no_existing_cadet(cadet_id=cadet_id, boat_class_id=boat_class_id, sail_number=sail_number, day=day)
         else:
             object_with_id.boat_class_id = boat_class_id
             object_with_id.sail_number = sail_number
 
-    def add_boat_for_no_existing_cadet(self, cadet_id: str, boat_class_id: str, sail_number: str):
-        self.append(CadetAtEventWithDinghy(cadet_id=cadet_id, boat_class_id=boat_class_id, sail_number=sail_number))
+    def add_boat_for_no_existing_cadet(self, cadet_id: str, boat_class_id: str, sail_number: str, day: Day):
+        self.append(CadetAtEventWithDinghy(cadet_id=cadet_id, boat_class_id=boat_class_id, sail_number=sail_number, day=day))
 
-    def object_with_cadet_id(self, cadet_id: str) -> CadetAtEventWithDinghy:
-        idx = self.idx_of_item_with_cadet_id(cadet_id)
+    def DEPRECATE_object_with_cadet_id(self, cadet_id: str) -> CadetAtEventWithDinghy:
+        idx = self.DEPRECATE_idx_of_item_with_cadet_id(cadet_id)
         if idx is missing_data:
             return missing_data
         return self[idx]
 
-    def idx_of_item_with_cadet_id(self, cadet_id: str):
+    def DEPRECATE_idx_of_item_with_cadet_id(self, cadet_id: str):
         idx = [item for item in self if item.cadet_id == cadet_id]
         if len(idx)==0:
             return missing_data
@@ -217,7 +230,14 @@ class ListOfCadetAtEventWithDinghies(GenericListOfObjectsWithIds):
 
         return self.index(idx[0])
 
-    def cadet_partner_id_for_cadet_id(self, cadet_id:str) -> str:
+    def idx_of_item_with_cadet_id_on_day(self, cadet_id: str, day: Day):
+        item = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
+        if item is missing_data:
+            return missing_data
+
+        return self.index(item)
+
+    def DEPRECATE_cadet_partner_id_for_cadet_id(self, cadet_id:str) -> str:
         list_of_items = [item.partner_cadet_id for item in self if item.cadet_id == cadet_id]
         if len(list_of_items)==0:
             return missing_data
@@ -226,17 +246,39 @@ class ListOfCadetAtEventWithDinghies(GenericListOfObjectsWithIds):
 
         return list_of_items[0]
 
+    def cadet_partner_id_for_cadet_id_on_day(self, cadet_id:str, day: Day) -> str:
+        item = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
+        if item is missing_data:
+            return missing_data
 
-    def sail_number_for_cadet_id(self, cadet_id:str) -> str:
-        list_of_items = [item.sail_number for item in self if item.cadet_id == cadet_id]
+        return item.partner_cadet_id
+
+    def sail_number_for_cadet_id(self, cadet_id:str, day: Day) -> str:
+        item = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
+        if item is missing_data:
+            return missing_data
+
+        return item.sail_number
+
+    def dinghy_id_for_cadet_id_on_day(self, cadet_id: str, day: Day) -> str:
+        item = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
+        if item is missing_data:
+            return missing_data
+
+        return item.boat_class_id
+
+
+    def object_with_cadet_id_on_day(self, cadet_id: str, day: Day) -> CadetAtEventWithDinghy:
+        list_of_items = [item for item in self if item.cadet_id == cadet_id and item.day==day]
         if len(list_of_items)==0:
             return missing_data
         if len(list_of_items)>1:
-            raise Exception("Can only have one dinghy per cadet")
+            raise Exception("Can only have one dinghy per cadet per day")
 
         return list_of_items[0]
 
-    def boat_class_id_for_cadet_id(self, cadet_id:str) -> str:
+
+    def DEPRECATE_boat_class_id_for_cadet_id(self, cadet_id:str) -> str:
         list_of_items = [item.boat_class_id for item in self if item.cadet_id == cadet_id]
         if len(list_of_items)==0:
             return missing_data
@@ -245,9 +287,9 @@ class ListOfCadetAtEventWithDinghies(GenericListOfObjectsWithIds):
 
         return list_of_items[0]
 
-    def list_of_cadet_ids(self):
+    def unique_list_of_cadet_ids(self):
         ## unique
-        return [item.cadet_id for item in self]
+        return list(set([item.cadet_id for item in self]))
 
     def list_of_boat_class_ids(self):
         ## not unique
@@ -263,10 +305,12 @@ class ListOfCadetAtEventWithDinghies(GenericListOfObjectsWithIds):
 def compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values(new_list: ListOfCadetAtEventWithDinghies, existing_list: ListOfCadetAtEventWithDinghies):
     updated_list = ListOfCadetAtEventWithDinghies([])
     for potentially_updated_cadet_at_event in new_list:
-        cadet_in_existing_list = existing_list.object_with_cadet_id(potentially_updated_cadet_at_event.cadet_id)
+        cadet_in_existing_list = existing_list.object_with_cadet_id_on_day(cadet_id=potentially_updated_cadet_at_event.cadet_id,
+                                                                           day=potentially_updated_cadet_at_event.day)
         print("Has %s changed? It was %s" % (str(potentially_updated_cadet_at_event), str(cadet_in_existing_list)))
 
-        already_in_a_changed_partnership = is_cadet_already_in_changed_partnership(updated_list=updated_list, potentially_updated_cadet_at_event=potentially_updated_cadet_at_event)
+        already_in_a_changed_partnership = is_cadet_already_in_changed_partnership(updated_list=updated_list,
+                                                                                   potentially_updated_cadet_at_event=potentially_updated_cadet_at_event)
         if already_in_a_changed_partnership:
             continue
 

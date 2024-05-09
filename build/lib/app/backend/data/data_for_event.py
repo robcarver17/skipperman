@@ -5,7 +5,8 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.backend.data.cadets import DEPRECATE_load_list_of_all_cadets
 from app.backend.data.group_allocations_old import load_list_of_cadets_with_allocated_groups_at_event
 from app.backend.data.cadets_at_event import load_list_of_cadets_at_event_with_dinghies, DEPRECATED_load_cadets_at_event
-from app.backend.data.resources import load_list_of_boat_classes, load_list_of_club_dinghies, DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies
+from app.backend.data.dinghies import load_list_of_club_dinghies, \
+    DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies, load_list_of_boat_classes
 
 from app.objects.cadet_at_event import ListOfCadetsAtEvent
 from app.objects.cadets import ListOfCadets

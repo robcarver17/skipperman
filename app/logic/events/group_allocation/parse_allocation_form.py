@@ -1,17 +1,18 @@
 from typing import List
 
+from app.backend.data.group_allocations import GroupAllocationsData
+
+from app.objects.day_selectors import Day
+
 from app.logic.events.group_allocation.render_allocation_form import NOTES
 from app.objects.events import Event
 
-from app.objects.utils import make_id_as_int_str
-
-from app.backend.data.group_allocations_old import save_list_of_cadets_with_allocated_groups_for_event
-from app.backend.forms.form_utils import input_name_from_column_name_and_cadet_id, get_availablity_from_form
-from app.backend.group_allocations.boat_allocation import update_club_boat_allocation_for_cadet_at_event, \
+from app.backend.forms.form_utils import input_name_from_column_name_and_cadet_id_and_day, get_availablity_from_form
+from app.backend.group_allocations.boat_allocation import update_club_boat_allocation_for_cadet_at_event_on_day, \
     update_boat_info_for_cadets_at_event, CadetWithDinghyInputs
 from app.backend.group_allocations.group_allocations_data import get_allocation_data, AllocationData
-from app.backend.wa_import.update_cadets_at_event import DEPRECATED_update_availability_of_existing_cadet_at_event, \
-    DEPRECATED_update_notes_for_existing_cadet_at_event
+from app.backend.wa_import.update_cadets_at_event import update_availability_of_existing_cadet_at_event, \
+    update_notes_for_existing_cadet_at_event
 
 from app.logic.events.constants import ALLOCATION, ATTENDANCE, CLUB_BOAT, SAIL_NUMBER, PARTNER, BOAT_CLASS
 from app.logic.events.events_in_state import get_event_from_state
@@ -24,13 +25,12 @@ def update_data_given_allocation_form(interface: abstractInterface):
     event = get_event_from_state(interface)
     allocation_data = get_allocation_data(event)
     list_of_cadets = allocation_data.list_of_cadets_in_event_active_only
-    for cadet in list_of_cadets:
+    for cadet in list_of_cadets[:50]:
 
         if event.contains_groups:
             do_allocation_for_cadet_at_event(
                 interface=interface,
                 cadet=cadet,
-                allocation_data=allocation_data,
             )
         update_attendance_data_for_cadet_in_form(interface=interface, cadet=cadet)
         update_club_boat_for_cadet_in_form(interface=interface, cadet=cadet)
@@ -39,31 +39,45 @@ def update_data_given_allocation_form(interface: abstractInterface):
     ## has to be done in one go because of swaps
     update_boat_info_for_all_cadets_in_form(interface=interface, allocation_data=allocation_data)
 
+    interface.save_stored_items()
 
 
 def do_allocation_for_cadet_at_event(
     cadet: Cadet,
-    allocation_data: AllocationData,
     interface: abstractInterface,
+):
+    event = get_event_from_state(interface)
+    for day in event.weekdays_in_event():
+        do_allocation_for_cadet_at_event_on_day(
+            interface=interface,
+            cadet=cadet,
+            day=day,
+        )
+
+
+def do_allocation_for_cadet_at_event_on_day(
+        cadet: Cadet,
+        day: Day,
+        interface: abstractInterface,
 ):
     event = get_event_from_state(interface)
     try:
         allocation_str = interface.value_from_form(
-            input_name_from_column_name_and_cadet_id(ALLOCATION, cadet_id=cadet.id)
+            input_name_from_column_name_and_cadet_id_and_day(column_name=ALLOCATION, cadet_id=cadet.id,
+                                                             day=day)
         )
         print("Allocation %s for cadet %s" % (allocation_str, str(cadet)))
     except Exception as e:
         ## could be normal if cadet has vanished
         print("Exception %s whilst updating %s" % (str(e), cadet.name))
         return
-    
+
     chosen_group = Group(allocation_str)
-    allocation_data.current_allocation_for_event.update_group_for_cadet(
-        cadet=cadet, chosen_group=chosen_group
-    )
-    save_list_of_cadets_with_allocated_groups_for_event(
-        list_of_cadets_with_groups=allocation_data.current_allocation_for_event,
+
+    group_allocation_data =  GroupAllocationsData(interface.data)
+    group_allocation_data.add_or_upate_group_for_cadet_on_day(
         event=event,
+        cadet=cadet,day=day, group=chosen_group
     )
 
 def update_attendance_data_for_cadet_in_form(interface: abstractInterface, cadet: Cadet):
@@ -71,7 +85,7 @@ def update_attendance_data_for_cadet_in_form(interface: abstractInterface, cadet
     try:
         new_attendance = get_availablity_from_form(
             interface=interface,
-            input_name=input_name_from_column_name_and_cadet_id(
+            input_name=input_name_from_column_name_and_cadet_id_and_day(
                 ATTENDANCE,
                 cadet_id=cadet.id
             ),
@@ -81,15 +95,26 @@ def update_attendance_data_for_cadet_in_form(interface: abstractInterface, cadet
         print("Error %s whilst updating attendance for %s" % (str(e), cadet.name))
         return
     
-    DEPRECATED_update_availability_of_existing_cadet_at_event(event=event, cadet_id=cadet.id, new_availabilty=new_attendance)
+    update_availability_of_existing_cadet_at_event(interface=interface, event=event, cadet_id=cadet.id, new_availabilty=new_attendance)
 
 def update_club_boat_for_cadet_in_form(interface: abstractInterface, cadet: Cadet):
     event = get_event_from_state(interface)
+    for day in event.weekdays_in_event():
+        update_club_boat_for_cadet_on_day_in_form(
+            interface=interface,
+            event=event,
+            cadet=cadet,
+            day=day
+        )
+
+
+def update_club_boat_for_cadet_on_day_in_form(interface: abstractInterface, event: Event, day: Day, cadet: Cadet):
     try:
         boat_name = interface.value_from_form(
-            input_name_from_column_name_and_cadet_id(
+            input_name_from_column_name_and_cadet_id_and_day(
                 cadet_id=cadet.id,
-                column_name=CLUB_BOAT
+                column_name=CLUB_BOAT,
+                day=day
             )
         )
     except Exception as e:
@@ -97,7 +122,7 @@ def update_club_boat_for_cadet_in_form(interface: abstractInterface, cadet: Cade
         return
 
 
-    update_club_boat_allocation_for_cadet_at_event(boat_name = boat_name, cadet_id=cadet.id, event=event)
+    update_club_boat_allocation_for_cadet_at_event_on_day(interface=interface, boat_name = boat_name, cadet_id=cadet.id, event=event, day=day)
 
 
 def get_cadet_notes_for_row_in_form_and_alter_registration_data(interface: abstractInterface,
@@ -105,7 +130,7 @@ def get_cadet_notes_for_row_in_form_and_alter_registration_data(interface: abstr
                                                                        event: Event,
                                                                 allocation_data: AllocationData,
                                                                 ):
-    new_notes = interface.value_from_form(input_name_from_column_name_and_cadet_id(
+    new_notes = interface.value_from_form(input_name_from_column_name_and_cadet_id_and_day(
         column_name=NOTES,
         cadet_id=cadet.id
     ))
@@ -114,41 +139,51 @@ def get_cadet_notes_for_row_in_form_and_alter_registration_data(interface: abstr
     if original_notes == new_notes:
         return
     else:
-        DEPRECATED_update_notes_for_existing_cadet_at_event(cadet_id=cadet.id, event=event, new_notes=new_notes)
+        update_notes_for_existing_cadet_at_event(interface=interface, cadet_id=cadet.id, event=event, new_notes=new_notes)
 
 
 def update_boat_info_for_all_cadets_in_form(interface: abstractInterface, allocation_data: AllocationData):
     event = get_event_from_state(interface)
-    list_of_updates = get_list_of_updates(interface=interface, allocation_data=allocation_data)
+    for day in event.weekdays_in_event():
+        update_boat_info_for_all_cadets_in_form_on_day(interface=interface,
+                                                       allocation_data=allocation_data,
+                                                       day=day)
+
+def update_boat_info_for_all_cadets_in_form_on_day(interface: abstractInterface, allocation_data: AllocationData, day: Day):
+    event = get_event_from_state(interface)
+    list_of_updates = get_list_of_updates(interface=interface, allocation_data=allocation_data, day=day)
     update_boat_info_for_cadets_at_event(
+        interface=interface,
         event=event,list_of_updates=list_of_updates
     )
 
-def get_list_of_updates(interface: abstractInterface, allocation_data: AllocationData)-> List[CadetWithDinghyInputs]:
+
+def get_list_of_updates(interface: abstractInterface, allocation_data: AllocationData, day: Day)-> List[CadetWithDinghyInputs]:
     list_of_updates = []
     list_of_cadets = allocation_data.list_of_cadets_in_event_active_only
     for cadet in list_of_cadets:
         try:
-            update_for_cadet = get_update_for_cadet(interface=interface, cadet=cadet)
+            update_for_cadet = get_update_for_cadet(interface=interface, cadet=cadet, day=day)
             list_of_updates.append(update_for_cadet)
         except Exception as e:
             print("Error %s whilst updating boat updates for %s" % (str(e), cadet.name))
 
     return list_of_updates
 
-def get_update_for_cadet(interface: abstractInterface, cadet: Cadet) -> CadetWithDinghyInputs:
+def get_update_for_cadet(interface: abstractInterface, cadet: Cadet, day: Day) -> CadetWithDinghyInputs:
     sail_number = interface.value_from_form(
-        input_name_from_column_name_and_cadet_id(cadet_id=cadet.id, column_name=SAIL_NUMBER)
+        input_name_from_column_name_and_cadet_id_and_day(cadet_id=cadet.id, column_name=SAIL_NUMBER, day=day)
     )
     boat_class_name = interface.value_from_form(
-        input_name_from_column_name_and_cadet_id(cadet_id=cadet.id, column_name=BOAT_CLASS)
+        input_name_from_column_name_and_cadet_id_and_day(cadet_id=cadet.id, column_name=BOAT_CLASS, day=day)
     )
     two_handed_partner_name = interface.value_from_form(
-        input_name_from_column_name_and_cadet_id(cadet_id=cadet.id, column_name=PARTNER)
+        input_name_from_column_name_and_cadet_id_and_day(cadet_id=cadet.id, column_name=PARTNER, day=day)
     )
     return CadetWithDinghyInputs(
         sail_number=sail_number,
         boat_class_name=boat_class_name,
         two_handed_partner_name=two_handed_partner_name,
-        cadet_id=cadet.id
+        cadet_id=cadet.id,
+        day=day
     )

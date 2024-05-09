@@ -10,7 +10,7 @@ from app.objects.patrol_boats import ListOfPatrolBoats, ListOfVolunteersAtEventW
 from app.objects.volunteers import ListOfVolunteers
 from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent, VolunteerInRoleAtEventWithTeamName
 
-from app.backend.data.resources import PatrolBoatsData
+from app.backend.data.patrol_boats import PatrolBoatsData
 from app.backend.data.volunteers import VolunteerData
 from app.backend.data.volunteer_rota import VolunteerRotaData
 

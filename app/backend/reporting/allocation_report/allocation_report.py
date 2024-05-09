@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from app.backend.data.resources import DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies, ClubDinghiesData
+from app.backend.data.dinghies import DinghiesData, DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies
 from app.data_access.configuration.configuration import ALL_GROUPS_NAMES
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
@@ -29,7 +29,7 @@ class AdditionalParametersForAllocationReport:
 
 
 def add_club_boat_asterix(interface: abstractInterface, list_of_cadets_with_groups, event: Event):
-    club_dinghy_data = ClubDinghiesData(interface.data)
+    club_dinghy_data = DinghiesData(interface.data)
     list_of_cadets_at_event_with_club_dinghies =     club_dinghy_data.get_list_of_cadets_at_event_with_club_dinghies(event)
 
     for cadet_with_group in list_of_cadets_with_groups:
@@ -41,6 +41,6 @@ def add_club_boat_asterix(interface: abstractInterface, list_of_cadets_with_grou
 def add_club_boat_asterix_to_cadet(cadet_with_group: CadetWithGroup, list_of_cadets_at_event_with_club_dinghies: ListOfCadetAtEventWithClubDinghies) -> CadetWithGroup:
     cadet = cadet_with_group.cadet
     cadet_id = cadet.id
-    dinghy=list_of_cadets_at_event_with_club_dinghies.dinghy_for_cadet_id(cadet_id)
+    dinghy=list_of_cadets_at_event_with_club_dinghies.DEPRECATE_dinghy_for_cadet_id(cadet_id)
     if dinghy is not missing_data:
         cadet_with_group.cadet = Cadet(first_name=cadet.first_name, surname=cadet.surname+"*", date_of_birth=cadet.date_of_birth, id=cadet_id)

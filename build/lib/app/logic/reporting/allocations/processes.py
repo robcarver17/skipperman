@@ -1,23 +1,15 @@
-from typing import List, Dict
+from typing import Dict
 
-from app.objects.cadets import Cadet
+from app.backend.data.group_allocations import GroupAllocationsData
 
-from app.objects.constants import missing_data
 import pandas as pd
-from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies
 
-from app.objects.groups import CadetWithGroup
-
-from app.backend.group_allocations.cadet_event_allocations import DEPRECATE_get_list_of_cadets_unallocated_to_group_at_event, \
-    get_list_of_cadets_with_groups, \
-    DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only
-from app.backend.data.resources import DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event
 
 from app.backend.reporting.allocation_report.allocation_report import (
-    AdditionalParametersForAllocationReport,
+    AdditionalParametersForAllocationReport, add_club_boat_asterix,
 )
 
 def get_group_allocation_report_additional_parameters_from_form_and_save(
@@ -87,14 +79,16 @@ def get_dict_of_df_for_reporting_allocations(interface: abstractInterface) -> Di
     additional_parameters = load_additional_parameters_for_allocation_report(interface)
 
     dict_of_df = get_dict_of_df_for_reporting_allocations_given_event_and_state(
+        interface=interface,
         event=event,
         additional_parameters=additional_parameters
     )
 
     return dict_of_df
 
-def get_dict_of_df_for_reporting_allocations_given_event_and_state(event: Event, additional_parameters: AdditionalParametersForAllocationReport)->  Dict[str, pd.DataFrame]:
+def get_dict_of_df_for_reporting_allocations_given_event_and_state(interface: abstractInterface, event: Event, additional_parameters: AdditionalParametersForAllocationReport)->  Dict[str, pd.DataFrame]:
     dict_of_df = get_dict_of_df_for_reporting_allocations_with_flags(
+        interface=interface,
         event=event,
         include_unallocated_cadets=additional_parameters.include_unallocated_cadets,
         display_full_names=additional_parameters.display_full_names,
@@ -107,7 +101,8 @@ def get_dict_of_df_for_reporting_allocations_given_event_and_state(event: Event,
 
 
 def get_dict_of_df_for_reporting_allocations_with_flags(
-    event: Event,
+        interface: abstractInterface,
+        event: Event,
     display_full_names: bool = False,
     include_unallocated_cadets: bool = False,
     add_asterix_for_club_boats: bool = True
@@ -115,44 +110,20 @@ def get_dict_of_df_for_reporting_allocations_with_flags(
     ## NOTE DOESN'T DEAL WITH WAITING LISTS
     ##   is a waiting list cadet unallocated, or allocated with a * against their name?
     ##   at some point report would include club boats
+    group_allocations_data = GroupAllocationsData(interface.data)
 
-    list_of_cadet_ids_with_groups = DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only(event=event)
-    if include_unallocated_cadets:
-        unallocated_cadets = DEPRECATE_get_list_of_cadets_unallocated_to_group_at_event(
-            event=event,
-            list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups,
-        )
-        list_of_cadet_ids_with_groups.add_list_of_unallocated_cadets(unallocated_cadets)
-
-    list_of_cadets_with_groups = get_list_of_cadets_with_groups(
-        list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups,
-    )
+    list_of_cadets_with_groups = group_allocations_data.get_list_of_cadets_with_group_at_event(event=event, include_unallocated_cadets=include_unallocated_cadets)
     if add_asterix_for_club_boats:
-        list_of_cadets_with_groups = add_club_boat_asterix(list_of_cadets_with_groups=list_of_cadets_with_groups, event=event)
+        list_of_cadets_with_groups = add_club_boat_asterix(interface = interface, list_of_cadets_with_groups=list_of_cadets_with_groups, event=event)
 
     df = list_of_cadets_with_groups.to_df_of_str(display_full_names=display_full_names)
 
     return {"": df}
 
 
+
+
 SHOW_FULL_NAMES = "Show_full_names"
 INCLUDE_UNALLOCATED_CADETS = "Include unallocated group_allocations"
 CLUB_BOAT_ASTERIX = "Asterix for club boats"
-
-
-## FIXME FOLLOWING SHOULD BEIN BACKEND
-def add_club_boat_asterix(list_of_cadets_with_groups, event: Event):
-    list_of_cadets_at_event_with_club_dinghies = DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies(event)
-
-    for cadet_with_group in list_of_cadets_with_groups:
-        add_club_boat_asterix_to_cadet(cadet_with_group=cadet_with_group, list_of_cadets_at_event_with_club_dinghies=list_of_cadets_at_event_with_club_dinghies)
-
-    return list_of_cadets_with_groups
-
-def add_club_boat_asterix_to_cadet(cadet_with_group: CadetWithGroup, list_of_cadets_at_event_with_club_dinghies: ListOfCadetAtEventWithClubDinghies) -> CadetWithGroup:
-    cadet = cadet_with_group.cadet
-    cadet_id = cadet.id
-    dinghy=list_of_cadets_at_event_with_club_dinghies.dinghy_for_cadet_id(cadet_id)
-    if dinghy is not missing_data:
-        cadet_with_group.cadet = Cadet(first_name=cadet.first_name, surname=cadet.surname+"*", date_of_birth=cadet.date_of_birth)
 

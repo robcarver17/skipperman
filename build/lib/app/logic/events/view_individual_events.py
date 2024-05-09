@@ -8,7 +8,7 @@ from app.backend.volunteers.volunteer_rota_summary import get_summary_list_of_ro
     get_summary_list_of_teams_and_groups_for_events
 from app.backend.wa_import.map_wa_files import is_wa_file_mapping_setup_for_event
 from app.backend.group_allocations.summarise_allocations_data import summarise_allocations_for_event
-from app.logic.events.group_allocation.allocate_cadets_to_groups import display_form_allocate_cadets
+from app.logic.events.group_allocation.ENTRY_allocate_cadets_to_groups import display_form_allocate_cadets
 from app.logic.events.import_wa.import_wa_file import display_form_import_event_file
 from app.logic.events.import_wa.update_existing_event import display_form_update_existing_event
 from app.logic.events.import_wa.upload_event_file import display_form_upload_event_file
@@ -61,7 +61,7 @@ def get_event_form_for_event(
             description = "Boat details and group allocations"
         else:
             description = "Boat details and allocations"
-        allocations = summarise_allocations_for_event(event)
+        allocations = summarise_allocations_for_event(interface=interface, event=event)
         if len(allocations)>0:
             allocations_lines = ListOfLines([ _______________,
                         description,

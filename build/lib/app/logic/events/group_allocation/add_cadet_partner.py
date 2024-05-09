@@ -1,10 +1,12 @@
 from typing import Union, Tuple
 
+from app.objects.day_selectors import Day
+
 from app.backend.wa_import.convert_helm_crew_data import from_partner_name_to_cadet, \
     add_matched_partner_cadet_with_duplicate_registration_to_wa_mapped_data, \
     get_registered_two_handed_partner_name_for_cadet_at_event
 from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing import get_current_cadet_id_at_event, clear_cadet_id_at_event
-from app.backend.cadets import DEPRECATE_confirm_cadet_exists, DEPRECATE_get_cadet_from_list_of_cadets,  DEPRECATE_get_cadet_from_id
+from app.backend.cadets import  get_cadet_from_id, confirm_cadet_exists, get_cadet_from_list_of_cadets
 
 from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
@@ -89,21 +91,26 @@ def process_form_when_existing_cadet_chosen_as_partner(interface: abstractInterf
     cadet_selected = interface.last_button_pressed()
 
     try:
-        DEPRECATE_confirm_cadet_exists(cadet_selected)
+        confirm_cadet_exists(interface=interface, cadet_selected=cadet_selected)
     except:
         raise Exception(
             "Cadet selected no longer exists - file corruption or someone deleted?",
         )
 
-    cadet = DEPRECATE_get_cadet_from_list_of_cadets(cadet_selected)
+    cadet = get_cadet_from_list_of_cadets(cadet_selected=cadet_selected, interface=interface)
 
     return add_matched_partner_cadet_with_duplicate_registration(interface=interface, new_cadet=cadet)
 
 def add_matched_partner_cadet_with_duplicate_registration(interface: abstractInterface, new_cadet: Cadet) -> NewForm:
     primary_cadet, __ = get_primary_cadet_and_partner_name(interface)
     event = get_event_from_state(interface)
-    add_matched_partner_cadet_with_duplicate_registration_to_wa_mapped_data(event=event,
-                                                                            original_cadet=primary_cadet, new_cadet=new_cadet)
+    day = get_day_from_state(interface)
+    add_matched_partner_cadet_with_duplicate_registration_to_wa_mapped_data(interface=interface, event=event,
+                                                                            day=day,
+                                                                            original_cadet=primary_cadet, new_cadet=new_cadet
+                                                                            )
+    interface.save_stored_items()
+
     clear_cadet_id_at_event(interface)
 
     return return_to_allocation_pages(interface)
@@ -115,8 +122,16 @@ def return_to_allocation_pages(interface: abstractInterface) -> NewForm:
 def get_primary_cadet_and_partner_name(interface: abstractInterface) -> Tuple[Cadet, Cadet]:
     event = get_event_from_state(interface)
     cadet_id = get_current_cadet_id_at_event(interface)
-    primary_cadet = DEPRECATE_get_cadet_from_id(cadet_id)
-    partner_name = get_registered_two_handed_partner_name_for_cadet_at_event(cadet=primary_cadet, event=event)
+    primary_cadet = get_cadet_from_id(cadet_id=cadet_id, interface=interface)
+    partner_name = get_registered_two_handed_partner_name_for_cadet_at_event(interface=interface, cadet=primary_cadet, event=event)
     partner_cadet = from_partner_name_to_cadet(partner_name)
 
     return primary_cadet, partner_cadet
+
+DAY = 'day'
+
+def get_day_from_state(interface:abstractInterface) -> Day:
+    return Day[interface.get_persistent_value(DAY)]
+
+def set_day_in_state(interface: abstractInterface, day: Day):
+    interface.set_persistent_value(DAY, day.name)

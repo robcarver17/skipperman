@@ -10,7 +10,6 @@ from app.backend.reporting.options_and_parameters.report_type_specific_parameter
     SpecificParametersForTypeOfReport
 from app.backend.reporting.process_stages.create_list_of_groups_from_df import get_dict_of_grouped_df
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.reporting.shared.arrangement_state import get_stored_arrangement, get_stored_arrangement_and_group_order
 from app.logic.reporting.shared.group_order import get_arrangement_options_and_group_order_from_stored_or_defaults
 from app.logic.reporting.shared.print_options import get_saved_print_options
 

@@ -13,12 +13,13 @@ from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConst
 from app.backend.data.volunteers import DEPRECATED_get_sorted_list_of_volunteers
 from app.objects.constants import missing_data, arg_not_passed
 from app.objects.events import Event
-from app.objects.groups import Group, ALL_GROUPS_NAMES, GROUP_UNALLOCATED_TEXT
+from app.objects.groups import Group, ALL_GROUPS_NAMES, GROUP_UNALLOCATED_TEXT, sorted_locations
 from app.objects.volunteers_at_event import VolunteerAtEvent, ListOfVolunteersAtEvent
 from app.objects.volunteers import Volunteer
 from app.objects.volunteers_in_roles import NO_ROLE_SET, VolunteerInRoleAtEvent
 
 from app.objects.day_selectors import Day
+
 
 @dataclass
 class SwapData:
@@ -88,9 +89,9 @@ def get_cadet_location_string(data_to_be_stored: DataToBeStoredWhilstConstructin
 
 def str_type_of_group_given_list_of_groups(list_of_groups: List[Group]):
     types_of_groups = [group.type_of_group() for group in list_of_groups]
-    unique_list_of_groups = list(set(types_of_groups))
-
-    return ", ".join(unique_list_of_groups)
+    unique_list_of_group_locations = list(set(types_of_groups))
+    sorted_list_of_group_locations = sorted_locations(unique_list_of_group_locations)
+    return ", ".join(sorted_list_of_group_locations)
 
 def str_dict_skills(volunteer: Volunteer, data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage):
     list_of_skills = data_to_be_stored.list_of_skills_given_volunteer_id(volunteer.id)
@@ -263,7 +264,15 @@ def sort_list_of_volunteers_at_event(list_of_volunteers_at_event: ListOfVoluntee
 
 def sort_volunteer_data_for_event_by_location(list_of_volunteers_at_event: ListOfVolunteersAtEvent,
                                               data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage)-> ListOfVolunteersAtEvent:
-    ## FIX ME TO IMPLEMENT
-    return list_of_volunteers_at_event
+
+    list_of_locations = [get_cadet_location_string(data_to_be_stored=data_to_be_stored, volunteer_at_event=volunteer_at_event)
+                    for volunteer_at_event in list_of_volunteers_at_event]
+
+    locations_and_volunteers = zip(list_of_locations, list_of_volunteers_at_event)
+
+    sorted_by_location = sorted(locations_and_volunteers, key=lambda tup: tup[0])
+    sorted_list_of_volunteers = ListOfVolunteersAtEvent([location_and_volunteer[1] for location_and_volunteer in sorted_by_location])
+
+    return sorted_list_of_volunteers
 
 

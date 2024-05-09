@@ -26,7 +26,7 @@ from app.objects.groups import ListOfCadetIdsWithGroups
 from app.objects.events import ListOfEvents
 from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies
 from app.objects.qualifications import ListOfCadetsWithQualifications
-from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent
+from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent,ListOfTargetForRoleAtEvent
 from app.objects.volunteers import ListOfVolunteerSkills
 from app.objects.patrol_boats import ListOfPatrolBoats, ListOfVolunteersAtEventWithPatrolBoats
 
@@ -211,6 +211,15 @@ class DataLayer():
         data_access_for_list_of_volunteer_skills =get_data_access_for_list_of_volunteer_skills(self.data)
         self.store.write(list_of_volunteer_skills, data_access_method=data_access_for_list_of_volunteer_skills)
 
+    def get_list_of_targets_for_role_at_event(self, event: Event) -> ListOfTargetForRoleAtEvent:
+        data_access_for_list_of_targets_for_role_at_event = get_data_access_for_list_of_targets_for_role_at_event(self.data, event_id=event.id)
+        return self.store.read(data_access_for_list_of_targets_for_role_at_event)
+
+    def save_list_of_targets_for_role_at_event(self, list_of_targets_for_role_at_event: ListOfTargetForRoleAtEvent, event: Event):
+        data_access_for_list_of_targets_for_role_at_event = get_data_access_for_list_of_targets_for_role_at_event(
+            self.data, event_id=event.id)
+        self.store.write(list_of_targets_for_role_at_event, data_access_method=data_access_for_list_of_targets_for_role_at_event)
+
     def get_list_of_patrol_boats(self) -> ListOfPatrolBoats:
         data_access_for_list_of_patrol_boats=get_data_access_for_list_of_patrol_boats(self.data)
         return self.store.read(data_access_for_list_of_patrol_boats)
@@ -354,6 +363,14 @@ def get_data_access_for_list_of_voluteers_at_event_with_patrol_boats(data: Gener
     return DataAccessMethod("list_of_voluteers_at_event_with_patrol_boats",
         read_method=data.data_list_of_volunteers_at_event_with_patrol_boats.read,
         write_method=data.data_list_of_volunteers_at_event_with_patrol_boats.write,
+        event_id = event_id
+    )
+
+
+def get_data_access_for_list_of_targets_for_role_at_event(data: GenericDataApi, event_id: str) -> DataAccessMethod:
+    return DataAccessMethod("list_of_targets_for_role_at_event",
+        read_method=data.data_list_of_targets_for_role_at_event.read,
+        write_method=data.data_list_of_targets_for_role_at_event.write,
         event_id = event_id
     )
 

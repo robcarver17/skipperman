@@ -1,16 +1,65 @@
-from typing import List
+from dataclasses import dataclass
+from typing import List, Dict
 
 import pandas as pd
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.volunteer_rota import get_volunteers_in_role_at_event_with_active_allocations
+from app.backend.data.volunteer_rota import get_volunteers_in_role_at_event_with_active_allocations, VolunteerRotaData
 from app.data_access.configuration.configuration import ALL_GROUPS_NAMES, VOLUNTEER_ROLES, VOLUNTEER_TEAMS
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.groups import GROUP_UNALLOCATED_TEXT, Group
 from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent, NO_ROLE_SET, RoleAndGroup, TeamAndGroup, \
-    get_list_of_volunteer_teams
+    get_list_of_volunteer_teams, ListOfTargetForRoleAtEvent
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
+
+
+@dataclass
+class RowInTableWithActualAndTargetsForRole:
+    role: str
+    daily_counts: Dict[ Day, int]
+    target: int
+    worst_shortfall: int
+
+
+def get_list_of_actual_and_targets_for_roles_at_event(interface: abstractInterface, event: Event) -> List[RowInTableWithActualAndTargetsForRole]:
+    volunteers_in_roles_at_event = get_volunteers_in_role_at_event_with_active_allocations(event=event, interface=interface)
+    targets_at_event = get_volunteer_targets_at_event(interface=interface, event=event)
+
+    all_rows = [get_row_in_table_with_actual_and_targets_for_roles_at_event(event=event, role=role, volunteers_in_roles_at_event=volunteers_in_roles_at_event,
+                                                                 targets_at_event=targets_at_event)
+     for role in VOLUNTEER_ROLES]
+
+    return all_rows
+
+def get_volunteer_targets_at_event(interface: abstractInterface, event: Event) -> ListOfTargetForRoleAtEvent:
+    volunteer_data = VolunteerRotaData(interface.data)
+    return volunteer_data.get_list_of_targets_for_role_at_event(event)
+
+
+def get_row_in_table_with_actual_and_targets_for_roles_at_event(event: Event,
+                                                                role: str,
+                                                                volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent,
+                                                                targets_at_event: ListOfTargetForRoleAtEvent) -> RowInTableWithActualAndTargetsForRole:
+
+    daily_counts={}
+    for day in event.weekdays_in_event():
+        volunteer_count = [1 for volunteer in volunteers_in_roles_at_event if volunteer.role==role and volunteer.day == day]
+        total_count = sum(volunteer_count)
+        daily_counts[day] = total_count
+
+    min_count = min(daily_counts.values())
+    target = targets_at_event.get_target_for_role( role=role)
+    worst_shortfall = target - min_count
+
+    return RowInTableWithActualAndTargetsForRole(role=role, daily_counts=daily_counts, target=target, worst_shortfall=worst_shortfall)
+
+
+def save_new_volunteer_target(interface: abstractInterface, event: Event, role: str, target: int):
+    volunteer_data = VolunteerRotaData(interface.data)
+    volunteer_data.save_new_volunteer_target(event=event, role=role, target=target)
+
+####
 
 def get_summary_list_of_roles_and_groups_for_events(interface: abstractInterface, event: Event) -> PandasDFTable:
     return PandasDFTable(get_summary_list_of_roles_and_groups_for_events_as_pd_df(interface=interface, event=event))
@@ -126,3 +175,5 @@ def from_list_of_day_summaries_to_single_df(all_day_summaries: List[pd.DataFrame
     single_df.columns = [day.name for day in days_at_event]
 
     return single_df
+
+

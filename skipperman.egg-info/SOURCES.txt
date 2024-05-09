@@ -279,6 +279,7 @@ app/logic/events/volunteer_rota/rota_state.py
 app/logic/events/volunteer_rota/swapping.py
 app/logic/events/volunteer_rota/verify_volunteers_if_cadet_at_event_changed.py
 app/logic/events/volunteer_rota/volunteer_table_buttons.py
+app/logic/events/volunteer_rota/volunteer_targets.py
 app/logic/events/volunteer_rota/../../../data_access/configuration/configuration.yaml
 app/logic/instructors/ENTRY_choose_event.py
 app/logic/instructors/__init__.py

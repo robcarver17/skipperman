@@ -8,7 +8,7 @@ from app.data_access.csv.mapped_wa_event import (
     CsvDataMappedWAEvent,
 )
 from app.data_access.csv.print_options import csvDataListOfPrintOptions, csvDataListOfArrangementOptions
-from app.data_access.csv.volunteers import CsvDataListOfVolunteers, CsvDataListOfVolunteerSkills, CsvDataListOfCadetVolunteerAssociations, CsvDataListOfVolunteersAtEvent, CsvDataListOfIdentifiedVolunteersAtEvent, CsvDataListOfVolunteersInRolesAtEvent
+from app.data_access.csv.volunteers import CsvDataListOfVolunteers, CsvDataListOfVolunteerSkills, CsvDataListOfCadetVolunteerAssociations, CsvDataListOfVolunteersAtEvent, CsvDataListOfIdentifiedVolunteersAtEvent, CsvDataListOfVolunteersInRolesAtEvent, CsvDataListOfTargetForRoleAtEvent
 from app.data_access.csv.resources import CsvDataListOfPatrolBoats, CsvDataListOfVolunteersAtEventWithPatrolBoats, CsvDataListOfClubDinghies, CsvDataListOfCadetAtEventWithClubDinghies
 from app.data_access.csv.dinghies_at_events import CsvDataListOfCadetAtEventWithDinghies, CsvDataListOfDinghies
 from app.data_access.csv.users import CsvDataListOfSkipperManUsers
@@ -136,6 +136,11 @@ class CsvDataApi(GenericDataApi):
     @property
     def data_list_of_cadets_with_tick_list_items(self) -> CsvDataListOfCadetsWithTickListItems:
         return CsvDataListOfCadetsWithTickListItems(self.master_data_path, backup_data_path=self.backup_data_path)
+
+    @property
+    def data_list_of_targets_for_role_at_event(self) -> CsvDataListOfTargetForRoleAtEvent:
+        return CsvDataListOfTargetForRoleAtEvent(self.master_data_path, backup_data_path=self.backup_data_path)
+
 
     #### USERS
 

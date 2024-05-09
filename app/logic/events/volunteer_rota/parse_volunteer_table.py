@@ -1,4 +1,5 @@
 from app.backend.forms.swaps import is_ready_to_swap
+from app.logic.events.volunteer_rota.volunteer_targets import save_volunteer_targets
 
 from app.objects.volunteers_at_event import ListOfVolunteersAtEvent
 
@@ -160,7 +161,7 @@ def save_all_information_and_filter_state_in_rota_page(interface: abstractInterf
         return
 
     save_all_information_in_rota_page(interface)
-
+    save_volunteer_targets(interface)
     ### FILTERS
     update_volunteer_skills_filter(interface)
     update_volunteer_availability_filter(interface)

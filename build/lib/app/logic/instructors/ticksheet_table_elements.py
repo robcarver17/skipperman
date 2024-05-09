@@ -48,9 +48,13 @@ def get_cadet_button_instructions(interface) -> str:
 
     can_award_qualificaiton= can_see_all_groups_and_award_qualifications(interface=interface, event=event, volunteer_id=volunteer_id)
     state = get_edit_state_of_ticksheet(interface)
+    cadet_id_set = return_true_if_a_cadet_id_been_set(interface)
 
     if state == NO_EDIT_STATE:
-        return 'Cadets with qualification in brackets are already qualified'
+        if cadet_id_set:
+            return 'Cadets with qualifications in brackets are already qualified. Only one cadet displayed. Press "see all cadets" button to see more, or select edit mode'
+        else:
+            return 'Cadets with qualification in brackets are already qualified. Click on a cadet name to see only their ticksheet (useful for mobile).'
 
     cadet_button_instructions=''
     if can_award_qualificaiton:

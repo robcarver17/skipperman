@@ -87,6 +87,8 @@ LIST_OF_VOLUNTEERS_FILE_ID = "list_of_volunteers"
 LIST_OF_VOLUNTEER_SKILLS_FILE_ID = "list_of_volunteer_skills"
 LIST_OF_VOLUNTEER_ASSOCIATIONS_FILE_ID ="list_of_cadet_volunteer_associations"
 LIST_OF_VOLUNTEERS_AT_EVENT_FILE_ID = "list_of_volunteers_at_event"
+LIST_OF_VOLUNTEER_TARGETS_AT_EVENT_FILE_ID = "list_of_volunteer_targets_at_event"
+
 LIST_OF_IDENTIFIED_VOLUNTEERS_AT_EVENT_FILE_ID = "list_of_identified_volunteers_at_event"
 LIST_OF_VOLUNTEERS_IN_ROLES_FILE_ID = "list_of_volunteers_in_roles_at_event"
 LIST_OF_QUALIFICATIONS = "list_of_qualifications"
@@ -131,6 +133,7 @@ LIST_OF_VOLUNTEER_ASSOCIATIONS_FILE_ID :("lists", "list_of_cadet_volunteer_assoc
 LIST_OF_IDENTIFIED_VOLUNTEERS_AT_EVENT_FILE_ID:("mapped_events", "list_of_identified_volunteers_at_event_%s.csv"),
 LIST_OF_VOLUNTEERS_AT_EVENT_FILE_ID: ("mapped_events", "list_of_volunteers_at_event_%s.csv"),
 LIST_OF_VOLUNTEERS_IN_ROLES_FILE_ID:("mapped_events", "list_of_volunteers_in_roles_at_event_%s.csv"),
+LIST_OF_VOLUNTEER_TARGETS_AT_EVENT_FILE_ID: ("mapped_events", "list_of_volunteer_role_targets_at_event_%s.csv"),
 LIST_OF_PATROL_BOATS_FILE_ID :("lists", "list_of_patrol_boats.csv"),
 LIST_OF_CLUB_DINGHIES_FILE_ID :("lists", "list_of_club_dinghies.csv"),
 LIST_OF_PATROL_BOATS_AND_VOLUNTEERS_FILE_ID: ("mapped_events", "list_of_patrol_boats_and_volunteers_at_event_%s.csv"),

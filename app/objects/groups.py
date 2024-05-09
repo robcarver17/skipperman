@@ -19,6 +19,9 @@ LAKE_TRAINING = "Lake training"
 RIVER_TRAINING = "River training"
 MG = "MG"
 
+def sorted_locations(locations: List[str]):
+    order = [LAKE_TRAINING, RIVER_TRAINING, MG]
+    return [location for location in order if location in locations]
 
 class Group:
 

@@ -7,7 +7,7 @@ from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 
 from app.logic.instructors.state_storage import get_edit_state_of_ticksheet, EDIT_DROPDOWN_STATE, NO_EDIT_STATE, \
-    get_group_from_state, get_qualification_from_state, set_cadet_id_in_state
+    get_group_from_state, get_qualification_from_state, set_cadet_id_in_state, return_true_if_a_cadet_id_been_set
 from app.logic.instructors.ticksheet_table_elements import user_can_award_qualifications
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -26,8 +26,10 @@ def get_select_cadet_button_when_in_no_edit_mode(cadet_id: str, cadet_label: str
     )
 
 def get_button_or_label_for_tickitem_name(interface: abstractInterface, tick_item: TickSheetItem) -> Union[ListOfLines, str]:
+    has_an_id_been_set = return_true_if_a_cadet_id_been_set(interface)
+
     state = get_edit_state_of_ticksheet(interface)
-    if state==NO_EDIT_STATE:
+    if state==NO_EDIT_STATE or has_an_id_been_set:
         return tick_item.name
 
     full_tick_button_label = "%s (Full tick)" % tick_item.name

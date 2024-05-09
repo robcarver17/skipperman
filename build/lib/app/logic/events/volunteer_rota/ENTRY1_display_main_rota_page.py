@@ -11,6 +11,7 @@ from app.logic.events.volunteer_rota.parse_volunteer_table import *
 from app.logic.events.volunteer_rota.rota_state import save_sorts_to_state, get_sorts_and_filters_from_state, \
     clear_all_filters
 from app.logic.events.volunteer_rota.volunteer_table_buttons import from_day_button_value_to_day
+from app.logic.events.volunteer_rota.volunteer_targets import get_volunteer_targets_table_and_save_button
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm, )
@@ -31,6 +32,8 @@ def display_form_view_for_volunteer_rota(interface: abstractInterface) -> Form:
     title = Heading("Volunteer rota for event %s" % str(event), centred=True, size=4)
     summary_of_filled_roles =  get_summary_table(interface=interface, event=event)
     summary_group_table = get_summary_group_table(interface=interface, event=event)
+    targets = get_volunteer_targets_table_and_save_button(interface=interface, event=event
+                                                          )
     volunteer_table = get_volunteer_table(event=event,
                                                               interface=interface,
                                                               sorts_and_filters=sorts_and_filters)
@@ -48,6 +51,7 @@ def display_form_view_for_volunteer_rota(interface: abstractInterface) -> Form:
                 _______________,
                 summary_group_table,
                 _______________,
+                targets,
                 _______________,
                 instructions,
                 _______________,

@@ -103,11 +103,14 @@ def get_html_for_element_in_line(
         passwordInput,
         Link,
         Heading,
-        DetailLine
+        DetailLine,
+        int
     ]
 ) -> Html:
     if type(element_in_line) is str:
         return Html(element_in_line)
+    elif type(element_in_line) in [float, int]:
+        return Html(str(element_in_line))
     elif type(element_in_line) is Arrow:
         return Html(arrow_text(element_in_line))
     elif type(element_in_line) is Pointer:

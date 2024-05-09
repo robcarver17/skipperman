@@ -132,6 +132,9 @@ class GenericDataApi(object):
     def data_list_of_cadets_with_tick_list_items(self) -> DataListOfCadetsWithTickListItems:
         raise NotImplemented
 
+    @property
+    def data_list_of_targets_for_role_at_event(self) -> DataListOfTargetForRoleAtEvent:
+        raise  NotImplemented
 
 REQUIRES_EVENT = [
 

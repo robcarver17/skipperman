@@ -3,9 +3,10 @@ from app.data_access.csv.generic_csv_data import GenericCsvData
 from app.data_access.classes.volunteers import *
 from app.data_access.csv.resolve_csv_paths_and_filenames import LIST_OF_VOLUNTEERS_FILE_ID, \
     LIST_OF_VOLUNTEER_SKILLS_FILE_ID, LIST_OF_VOLUNTEER_ASSOCIATIONS_FILE_ID, LIST_OF_VOLUNTEERS_AT_EVENT_FILE_ID, \
-    LIST_OF_IDENTIFIED_VOLUNTEERS_AT_EVENT_FILE_ID, LIST_OF_VOLUNTEERS_IN_ROLES_FILE_ID
+    LIST_OF_IDENTIFIED_VOLUNTEERS_AT_EVENT_FILE_ID, LIST_OF_VOLUNTEERS_IN_ROLES_FILE_ID, \
+    LIST_OF_VOLUNTEER_TARGETS_AT_EVENT_FILE_ID
 from app.objects.volunteers_at_event import ListOfVolunteersAtEvent, ListOfIdentifiedVolunteersAtEvent
-from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent
+from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent, ListOfTargetForRoleAtEvent
 
 
 class CsvDataListOfVolunteers(GenericCsvData, DataListOfVolunteers):
@@ -84,4 +85,17 @@ class CsvDataListOfVolunteersInRolesAtEvent(GenericCsvData, DataListOfVolunteers
     def write(self, list_of_volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent, event_id: str):
         self.write_object(list_of_volunteers_in_roles_at_event,
                           file_identifier=LIST_OF_VOLUNTEERS_IN_ROLES_FILE_ID,
+                          additional_file_identifiers=event_id)
+
+class CsvDataListOfTargetForRoleAtEvent(GenericCsvData, DataListOfTargetForRoleAtEvent):
+    def read(self, event_id: str) -> ListOfTargetForRoleAtEvent:
+        return self.read_and_return_object_of_type(
+            ListOfTargetForRoleAtEvent,
+            file_identifier=LIST_OF_VOLUNTEER_TARGETS_AT_EVENT_FILE_ID,
+            additional_file_identifiers=event_id
+        )
+
+    def write(self, list_of_targets_for_roles_at_event: ListOfTargetForRoleAtEvent, event_id: str):
+        self.write_object(list_of_targets_for_roles_at_event,
+                          file_identifier=LIST_OF_VOLUNTEER_TARGETS_AT_EVENT_FILE_ID,
                           additional_file_identifiers=event_id)

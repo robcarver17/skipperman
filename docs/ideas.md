@@ -65,7 +65,10 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - ticksheet level security
 - add health to ticksheets
 - instructor login
-
+- power boat only volunteer rota
+- memorise group orders and arrangements for reports (can deal with different / missing groups)
+- add contact details and health to roll call report
+- phone friendly ticksheet
 
 
 
@@ -73,49 +76,40 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 
 
-REPORTING:
-- refactor reporting so uses common data model 
-- add contact details and health to roll call report
-- registration report with literally everything on it
-- power boat only volunteer rota
-- memorise group orders and arrangements for reports (can deal with different / missing groups)
 
 MISC:
 - go through all cadets and backfill qualifications
-- birthdays during an event - splash on event screen
 
 
-TICKSHEETS:
-- phone friendly ticksheet
-- allow selection of group subset in reporting when doing arrangement of groups
-- key report links for instructors on event landing page
+VOLUNTEER ROTA:
+- sort volunteer list by cadet location
+- set maximum allowable / target for each volunteer role
+- store of previous events volunteer role to speed up loading
+- removing volunteer / availability should also remove related information
+
+BOATS AND GROUPS:
+- data model
+- allow multiple days / different allocations. Availability change will break two handed partners.
+- store of previous events  cadet allocation to speed up loading 
+- click on cadet name to see previous groups
+
+IMPORT:
+- removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
+- volunteer rota still not doing change check properly
+
+REGISTRATION DETAILS:
+- removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
 
 
 USERS:
 - datamodel
 - remove emails, link options; tidy up userlist on web
 
-BOATS AND GROUPS:
-- data model
-- store of previous events  cadet allocation to speed up loading 
-- click on cadet name to see previous groups
-- allow multiple days / different allocations. Availability change will break two handed partners.
-
-VOLUNTEER ROTA:
-- sort volunteer list by cadet location
-- store of previous events volunteer role to speed up loading
-- removing volunteer / availability should also remove related information
 
 CADET / VOLUNTEER LIST / CONFIGURATION
 - data model
 
-IMPORT:
-- removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
-- over 12 volunteer has to be identified multiple times on input
-- volunteer rota still not doing change check properly
 
-REGISTRATION DETAILS:
-- removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
 
 
 
@@ -152,10 +146,15 @@ ADMIN:
 
   ### General required before handover to Jonny:
 
+
+REPORTING:
+- refactor reporting so uses common data model, and generally tidy up 
+- registration report with literally everything on it
+
+UNCLASSIFIED:
 - check competely removal of old data model
 - editable user sailing groups, volunteer roles, skills: but plain text file so can replace configuration
 - memorise whether summary buttons pressed
-- set maximum allowable / target for each volunteer role
 - add new volunteer from volunteer rota page should include skills filter
 - create a list of key volunteers to invite to curry evening
 - don't allow duplicate templates and delete templates allowed
@@ -169,6 +168,7 @@ ADMIN:
 - dropdown list of previous event names when creating event
 - clear description of field names
 - instructions
+- key report links for instructors on event landing page
 
 
 

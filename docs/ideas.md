@@ -74,24 +74,22 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for training events:
 
-
-
-
 MISC:
 - go through all cadets and backfill qualifications
 
 
-VOLUNTEER ROTA:
-- sort volunteer list by cadet location
-- set maximum allowable / target for each volunteer role
-- store of previous events volunteer role to speed up loading
-- removing volunteer / availability should also remove related information
-
 BOATS AND GROUPS:
 - data model
 - allow multiple days / different allocations. Availability change will break two handed partners.
+- changing day attendance will also affect club boat allocation, partnerships, dinghy allocation - or apply strict filters? 
 - store of previous events  cadet allocation to speed up loading 
 - click on cadet name to see previous groups
+
+
+VOLUNTEER ROTA:
+- store of previous events volunteer role to speed up loading
+- removing volunteer / availability should also remove related information
+
 
 IMPORT:
 - removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
@@ -99,7 +97,6 @@ IMPORT:
 
 REGISTRATION DETAILS:
 - removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
-
 
 USERS:
 - datamodel
@@ -113,10 +110,6 @@ CADET / VOLUNTEER LIST / CONFIGURATION
 
 
 
-ADMIN:
-- clear old reports for event (remove rednedant permalinks) and other temp directories UTILITIES MENU
-- put shareable files up like instructors documents; manage shared files eg deleete
-- wipe health and phone numbers
 
 
 
@@ -147,38 +140,44 @@ ADMIN:
   ### General required before handover to Jonny:
 
 
+ADMIN:
+- clear old reports for event (remove rednedant permalinks) and other temp directories UTILITIES MENU
+- put shareable files up like instructors documents; manage shared files eg deleete
+- wipe health and phone numbers
+
 REPORTING:
 - refactor reporting so uses common data model, and generally tidy up 
 - registration report with literally everything on it
-
-UNCLASSIFIED:
-- check competely removal of old data model
-- editable user sailing groups, volunteer roles, skills: but plain text file so can replace configuration
-- memorise whether summary buttons pressed
-- add new volunteer from volunteer rota page should include skills filter
 - create a list of key volunteers to invite to curry evening
-- don't allow duplicate templates and delete templates allowed
-- template download for import of list of cadets
-- edit event (warnings especially days!)
 - anything that is displayed on screen can be exported to .csv eg reg details, volunteer rota (and imported...???)
-- clean up eg old data, uploaded files, staged files
-- move all dangerous deletes to special admin area: , delete event (should never have to do this: many warnings!), delete cadet, delete volunteer
-- merge cadet / merge volunteer
 - create a report of cadets
-- dropdown list of previous event names when creating event
-- clear description of field names
+
+
+BACKEND:
+- check competely removal of old data model and any weird intermediate steps
+- editable user sailing groups, volunteer roles, skills: but plain text file so can replace configuration
+
+INTERFACE:
+- memorise whether summary buttons pressed
+- template download for import of list of cadets
 - instructions
 - key report links for instructors on event landing page
+- dropdown list of previous event names when creating event
+
+UNCLASSIFIED:
+
+- add new volunteer from volunteer rota page should include skills filter
+- don't allow duplicate mapping templates and delete templates allowed
+- merge cadet / merge volunteer
+- edit event (warnings especially days!)
 
 
+ADMIN AND DOCUMENTATION:
 
-### Future / wishlist / nice to have:
-
-- nicer CSS
-- instructor facing interface to update ticks on a GUI
-- instructor facing interface for roll call ticks
-
-
+- clean up eg old data, uploaded files, staged files
+- move all dangerous deletes to special admin area: , delete event (should never have to do this: many warnings!), delete cadet, delete volunteer
+- clear description of field names
+- code documentation
 
 
 ## A few questions - Sam

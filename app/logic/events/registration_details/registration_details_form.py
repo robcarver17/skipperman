@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.cadets import  cadet_from_id_with_passed_list, load_list_of_all_cadets
-from app.backend.forms.form_utils import get_availability_checkbox, input_name_from_column_name_and_cadet_id_and_day
+from app.backend.forms.form_utils import get_availability_checkbox, input_name_from_column_name_and_cadet_id
 from app.backend.forms.form_utils import dropdown_input_for_status_change
 from app.backend.data.cadets_at_event import  CadetsAtEventData
 
@@ -115,7 +115,7 @@ def get_status_button(current_status: RegistrationStatus, cadet_id: str)-> dropD
         raise Exception("Status %s not recognised" % str(current_status))
 
     return dropdown_input_for_status_change(input_label="",
-                                            input_name=input_name_from_column_name_and_cadet_id_and_day(ROW_STATUS, cadet_id),
+                                            input_name=input_name_from_column_name_and_cadet_id(ROW_STATUS, cadet_id),
                                             default_status=current_status,
                                             allowable_status=allowable_status
                                             )
@@ -123,19 +123,19 @@ def get_status_button(current_status: RegistrationStatus, cadet_id: str)-> dropD
 def get_days_attending_field(attendance: DaySelector, cadet_id: str, event: Event) -> checkboxInput:
     return get_availability_checkbox(availability=attendance,
                                      event=event,
-                                     input_name = input_name_from_column_name_and_cadet_id_and_day(DAYS_ATTENDING, cadet_id=cadet_id),
+                                     input_name = input_name_from_column_name_and_cadet_id(DAYS_ATTENDING, cadet_id=cadet_id),
                                      line_break=True)
 
 def get_notes_field(notes: str, cadet_id: str) -> textInput:
     return textInput(
-        input_name=input_name_from_column_name_and_cadet_id_and_day(column_name=NOTES, cadet_id=cadet_id),
+        input_name=input_name_from_column_name_and_cadet_id(column_name=NOTES, cadet_id=cadet_id),
         input_label="",
         value=notes
     )
 
 def get_health_field(notes: str, cadet_id: str) -> textInput:
     return textInput(
-        input_name=input_name_from_column_name_and_cadet_id_and_day(column_name=HEALTH, cadet_id=cadet_id),
+        input_name=input_name_from_column_name_and_cadet_id(column_name=HEALTH, cadet_id=cadet_id),
         input_label="",
         value=notes
     )
@@ -167,7 +167,7 @@ def form_item_for_key_value_pair_in_row_data_if_editable(column_name: str, curre
 def form_value_for_text_input(column_name: str,current_value, cadet_id: str):
     return textInput(
     input_label="",
-    input_name = input_name_from_column_name_and_cadet_id_and_day(column_name=column_name, cadet_id=cadet_id),
+    input_name = input_name_from_column_name_and_cadet_id(column_name=column_name, cadet_id=cadet_id),
     value=str(current_value)
 
     )
@@ -176,7 +176,7 @@ def form_value_for_text_input(column_name: str,current_value, cadet_id: str):
 def form_value_for_integer_input(column_name: str,current_value, cadet_id: str):
     return intInput(
     input_label="",
-    input_name = input_name_from_column_name_and_cadet_id_and_day(column_name=column_name, cadet_id=cadet_id),
+    input_name = input_name_from_column_name_and_cadet_id(column_name=column_name, cadet_id=cadet_id),
     value=int(current_value)
 
     )

@@ -3,7 +3,7 @@ from typing import List
 
 from app.objects.constants import missing_data
 from app.objects.day_selectors import DaySelector, day_selector_stored_format_from_text, \
-    day_selector_to_text_in_stored_format, weekend_day_selector_from_text, any_day_selector_from_short_form_text
+    day_selector_to_text_in_stored_format, weekend_day_selector_from_text, any_day_selector_from_short_form_text, Day
 from app.objects.events import Event
 from app.data_access.configuration.field_list import WEEKEND_DAYS_ATTENDING_INPUT, ALL_DAYS_ATTENDING_INPUT, \
     CADET_HEALTH, RESPONSIBLE_ADULT_NUMBER, RESPONSIBLE_ADULT_NAME
@@ -181,6 +181,9 @@ class ListOfCadetsAtEvent(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return CadetAtEvent
+
+    def subset_available_on_day(self, day: Day):
+        return ListOfCadetsAtEvent([cadet_at_event for cadet_at_event in self if cadet_at_event.availability.available_on_day(day)])
 
     def list_of_active_cadet_ids(self):
         new_list = self.list_of_active_cadets_at_event()

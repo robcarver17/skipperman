@@ -223,8 +223,10 @@ app/logic/events/cadets_at_event/../../../data_access/configuration/configuratio
 app/logic/events/group_allocation/ENTRY_allocate_cadets_to_groups.py
 app/logic/events/group_allocation/__init__.py
 app/logic/events/group_allocation/add_cadet_partner.py
+app/logic/events/group_allocation/input_fields.py
 app/logic/events/group_allocation/parse_allocation_form.py
 app/logic/events/group_allocation/render_allocation_form.py
+app/logic/events/group_allocation/store_state.py
 app/logic/events/group_allocation/../../../data_access/configuration/configuration.yaml
 app/logic/events/import_wa/__init__.py
 app/logic/events/import_wa/import_controller.py

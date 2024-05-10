@@ -1,7 +1,6 @@
 from typing import Union, Tuple
 
-from app.objects.day_selectors import Day
-
+from app.logic.events.group_allocation.store_state import get_day_from_state_or_none
 from app.backend.wa_import.convert_helm_crew_data import from_partner_name_to_cadet, \
     add_matched_partner_cadet_with_duplicate_registration_to_wa_mapped_data, \
     get_registered_two_handed_partner_name_for_cadet_at_event
@@ -104,7 +103,7 @@ def process_form_when_existing_cadet_chosen_as_partner(interface: abstractInterf
 def add_matched_partner_cadet_with_duplicate_registration(interface: abstractInterface, new_cadet: Cadet) -> NewForm:
     primary_cadet, __ = get_primary_cadet_and_partner_name(interface)
     event = get_event_from_state(interface)
-    day = get_day_from_state(interface)
+    day = get_day_from_state_or_none(interface)
     add_matched_partner_cadet_with_duplicate_registration_to_wa_mapped_data(interface=interface, event=event,
                                                                             day=day,
                                                                             original_cadet=primary_cadet, new_cadet=new_cadet
@@ -116,6 +115,7 @@ def add_matched_partner_cadet_with_duplicate_registration(interface: abstractInt
     return return_to_allocation_pages(interface)
 
 def return_to_allocation_pages(interface: abstractInterface) -> NewForm:
+
     return interface.get_new_display_form_for_parent_of_function(post_form_add_cadet_partner)
 
 
@@ -128,10 +128,3 @@ def get_primary_cadet_and_partner_name(interface: abstractInterface) -> Tuple[Ca
 
     return primary_cadet, partner_cadet
 
-DAY = 'day'
-
-def get_day_from_state(interface:abstractInterface) -> Day:
-    return Day[interface.get_persistent_value(DAY)]
-
-def set_day_in_state(interface: abstractInterface, day: Day):
-    interface.set_persistent_value(DAY, day.name)

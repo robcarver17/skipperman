@@ -1,4 +1,6 @@
 import pandas as pd
+from app.objects.day_selectors import Day
+
 from app.backend.group_allocations.group_allocations_data import AllocationData
 from app.objects.cadets import ListOfCadets
 from app.objects.constants import arg_not_passed
@@ -13,19 +15,23 @@ SORT_CLASS = 'Class'
 SORT_PARTNER = 'Partner'
 DEFAULT_SORT_ORDER = [SORT_GROUP, SORT_CLUBBOAT, SORT_CLASS, SORT_PARTNER, SORT_FIRST_NAME, SORT_SECOND_NAME]
 
-def sorted_active_cadets(allocation_data: AllocationData, sort_order: list = arg_not_passed) -> ListOfCadets:
+def sorted_active_cadets(allocation_data: AllocationData, day_or_none: Day = None, sort_order: list = arg_not_passed) -> ListOfCadets:
     if sort_order is arg_not_passed:
         return allocation_data.list_of_cadets_in_event_active_only
 
-    active_cadets_as_data_frame = get_active_cadets_as_data_frame(allocation_data)
+    active_cadets_as_data_frame = get_active_cadets_as_data_frame(allocation_data=allocation_data, day_or_none=day_or_none)
 
     sorted_active_cadets_df = get_sorted_active_cadets_df(active_cadets_as_data_frame, sort_order)
     list_of_active_cadets_from_sorted_df = get_list_of_active_cadets_from_sorted_df(sorted_active_cadets_df)
 
     return list_of_active_cadets_from_sorted_df
 
-def get_active_cadets_as_data_frame(allocation_data: AllocationData)-> pd.DataFrame:
-    day = allocation_data.event.weekdays_in_event()[0]
+def get_active_cadets_as_data_frame(allocation_data: AllocationData, day_or_none: Day = None)-> pd.DataFrame:
+    if day_or_none is None:
+        day = allocation_data.event.weekdays_in_event()[0]
+    else:
+        day = day_or_none
+
     active_cadets = allocation_data.list_of_cadets_in_event_active_only
     first_names = [cadet.first_name for cadet in active_cadets]
     surnames = [cadet.surname for cadet in active_cadets]
@@ -46,6 +52,8 @@ def get_active_cadets_as_data_frame(allocation_data: AllocationData)-> pd.DataFr
     active_cadets_as_data_frame = pd.DataFrame(df_as_dict)
 
     return active_cadets_as_data_frame
+
+
 
 def get_sorted_active_cadets_df(active_cadets_as_data_frame: pd.DataFrame, sort_order: list) -> pd.DataFrame:
     return active_cadets_as_data_frame.sort_values(sort_order)

@@ -11,6 +11,12 @@ from app.data_access.configuration.field_list_groups import FIELDS_WITH_DATES, F
 from dateutil.parser import parse
 
 
+from itertools import groupby
+
+def all_equal(iterable):
+    g = groupby(iterable)
+    return next(g, True) and not next(g, False)
+
 def data_object_as_dict(some_object) -> dict:
     list_of_attributes = get_list_of_attributes(some_object)
 

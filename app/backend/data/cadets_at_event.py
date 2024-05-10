@@ -14,7 +14,7 @@ from app.data_access.storage_layer.api import DataLayer
 
 from app.data_access.data import DEPRECATED_data
 from app.objects.cadets import Cadet, ListOfCadets
-from app.objects.day_selectors import ListOfDaySelectors, DaySelector
+from app.objects.day_selectors import ListOfDaySelectors, DaySelector, Day
 from app.objects.events import Event
 
 from app.objects.cadet_at_event import ListOfCadetsAtEvent, ListOfIdentifiedCadetsAtEvent, CadetAtEvent, \
@@ -79,10 +79,15 @@ class CadetsAtEventData():
     def update_availability_of_existing_cadet_at_event(self, event: Event, cadet_id: str,
                                                        new_availabilty: DaySelector):
 
-        ## FIXME: FUTURE CHANGE CONSIDER EFFECT ON TWO HANDED PARTNERS WITH DIFFERENT AVAILABILITY
         existing_cadets_at_event = self.get_list_of_cadets_at_event(event)
         existing_cadets_at_event.update_availability_of_existing_cadet_at_event(cadet_id=cadet_id,
                                                                             new_availabilty=new_availabilty)
+        self.save_list_of_cadets_at_event(list_of_cadets_at_event=existing_cadets_at_event, event=event)
+
+    def make_cadet_available_on_day(self, event: Event, cadet_id: str, day: Day):
+        existing_cadets_at_event = self.get_list_of_cadets_at_event(event)
+        cadet = existing_cadets_at_event.cadet_at_event(cadet_id)
+        cadet.availability.make_available_on_day(day)
         self.save_list_of_cadets_at_event(list_of_cadets_at_event=existing_cadets_at_event, event=event)
 
     def update_status_of_existing_cadet_at_event_to_cancelled_or_deleted(self, event: Event, cadet_id: str,

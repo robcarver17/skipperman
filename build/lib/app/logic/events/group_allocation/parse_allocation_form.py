@@ -4,10 +4,10 @@ from app.backend.data.group_allocations import GroupAllocationsData
 
 from app.objects.day_selectors import Day
 
-from app.logic.events.group_allocation.render_allocation_form import NOTES
+from app.logic.events.group_allocation.input_fields import NOTES
 from app.objects.events import Event
 
-from app.backend.forms.form_utils import input_name_from_column_name_and_cadet_id_and_day, get_availablity_from_form
+from app.backend.forms.form_utils import input_name_from_column_name_and_cadet_id, get_availablity_from_form
 from app.backend.group_allocations.boat_allocation import update_club_boat_allocation_for_cadet_at_event_on_day, \
     update_boat_info_for_cadets_at_event, CadetWithDinghyInputs
 from app.backend.group_allocations.group_allocations_data import get_allocation_data, AllocationData
@@ -63,8 +63,8 @@ def do_allocation_for_cadet_at_event_on_day(
     event = get_event_from_state(interface)
     try:
         allocation_str = interface.value_from_form(
-            input_name_from_column_name_and_cadet_id_and_day(column_name=ALLOCATION, cadet_id=cadet.id,
-                                                             day=day)
+            input_name_from_column_name_and_cadet_id(column_name=ALLOCATION, cadet_id=cadet.id,
+                                                     day=day)
         )
         print("Allocation %s for cadet %s" % (allocation_str, str(cadet)))
     except Exception as e:
@@ -85,7 +85,7 @@ def update_attendance_data_for_cadet_in_form(interface: abstractInterface, cadet
     try:
         new_attendance = get_availablity_from_form(
             interface=interface,
-            input_name=input_name_from_column_name_and_cadet_id_and_day(
+            input_name=input_name_from_column_name_and_cadet_id(
                 ATTENDANCE,
                 cadet_id=cadet.id
             ),
@@ -111,7 +111,7 @@ def update_club_boat_for_cadet_in_form(interface: abstractInterface, cadet: Cade
 def update_club_boat_for_cadet_on_day_in_form(interface: abstractInterface, event: Event, day: Day, cadet: Cadet):
     try:
         boat_name = interface.value_from_form(
-            input_name_from_column_name_and_cadet_id_and_day(
+            input_name_from_column_name_and_cadet_id(
                 cadet_id=cadet.id,
                 column_name=CLUB_BOAT,
                 day=day
@@ -130,7 +130,7 @@ def get_cadet_notes_for_row_in_form_and_alter_registration_data(interface: abstr
                                                                        event: Event,
                                                                 allocation_data: AllocationData,
                                                                 ):
-    new_notes = interface.value_from_form(input_name_from_column_name_and_cadet_id_and_day(
+    new_notes = interface.value_from_form(input_name_from_column_name_and_cadet_id(
         column_name=NOTES,
         cadet_id=cadet.id
     ))
@@ -172,13 +172,13 @@ def get_list_of_updates(interface: abstractInterface, allocation_data: Allocatio
 
 def get_update_for_cadet(interface: abstractInterface, cadet: Cadet, day: Day) -> CadetWithDinghyInputs:
     sail_number = interface.value_from_form(
-        input_name_from_column_name_and_cadet_id_and_day(cadet_id=cadet.id, column_name=SAIL_NUMBER, day=day)
+        input_name_from_column_name_and_cadet_id(cadet_id=cadet.id, column_name=SAIL_NUMBER, day=day)
     )
     boat_class_name = interface.value_from_form(
-        input_name_from_column_name_and_cadet_id_and_day(cadet_id=cadet.id, column_name=BOAT_CLASS, day=day)
+        input_name_from_column_name_and_cadet_id(cadet_id=cadet.id, column_name=BOAT_CLASS, day=day)
     )
     two_handed_partner_name = interface.value_from_form(
-        input_name_from_column_name_and_cadet_id_and_day(cadet_id=cadet.id, column_name=PARTNER, day=day)
+        input_name_from_column_name_and_cadet_id(cadet_id=cadet.id, column_name=PARTNER, day=day)
     )
     return CadetWithDinghyInputs(
         sail_number=sail_number,

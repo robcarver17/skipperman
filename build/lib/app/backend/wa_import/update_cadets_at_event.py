@@ -11,7 +11,7 @@ from app.backend.data.cadets_at_event import DEPRECATED_load_cadets_at_event, sa
 from app.backend.data.cadets_at_event import DEPERCATE_load_identified_cadets_at_event
 from app.objects.cadet_at_event import CadetAtEvent, get_cadet_at_event_from_row_in_mapped_event
 from app.objects.constants import DuplicateCadets, missing_data
-from app.objects.day_selectors import DaySelector
+from app.objects.day_selectors import DaySelector, Day
 from app.objects.events import Event
 from app.objects.mapped_wa_event import RowInMappedWAEvent, MappedWAEvent, cancelled_status, active_status, \
     deleted_status, RegistrationStatus
@@ -147,6 +147,10 @@ def DEPRECATED_update_availability_of_existing_cadet_at_event(event: Event, cade
     existing_cadets_at_event = DEPRECATED_load_cadets_at_event(event)
     existing_cadets_at_event.update_availability_of_existing_cadet_at_event(cadet_id=cadet_id, new_availabilty=new_availabilty)
     save_cadets_at_event(event=event, list_of_cadets_at_event=existing_cadets_at_event)
+
+def make_cadet_available_on_day(interface: abstractInterface, event: Event, cadet_id:str, day: Day):
+    cadets_at_event_data = CadetsAtEventData(interface.data)
+    cadets_at_event_data.make_cadet_available_on_day(event=event, cadet_id=cadet_id, day=day)
 
 
 def update_availability_of_existing_cadet_at_event(interface: abstractInterface, event: Event, cadet_id:str, new_availabilty: DaySelector):

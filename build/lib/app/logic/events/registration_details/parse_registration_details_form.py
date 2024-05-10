@@ -10,7 +10,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadet_at_event import CadetAtEvent
 from app.objects.events import Event
 from app.backend.forms.form_utils import get_availablity_from_form, get_status_from_form, \
-    input_name_from_column_name_and_cadet_id_and_day
+    input_name_from_column_name_and_cadet_id
 
 from app.logic.events.registration_details.registration_details_form import get_registration_data, \
     RegistrationDetailsForEvent, _column_can_be_edited,\
@@ -72,7 +72,7 @@ def get_days_attending_for_row_in_form_and_alter_registration_data(interface: ab
 
     new_attendance = get_availablity_from_form(
         interface=interface,
-        input_name=input_name_from_column_name_and_cadet_id_and_day(
+        input_name=input_name_from_column_name_and_cadet_id(
             DAYS_ATTENDING,
             cadet_id=original_cadet_in_data.cadet_id
         ),
@@ -92,7 +92,7 @@ def get_cadet_event_status_for_row_in_form_and_alter_registration_data(interface
                                                                        original_cadet_in_data: CadetAtEvent,
                                                                        event: Event):
 
-    new_status = get_status_from_form(interface=interface, input_name=input_name_from_column_name_and_cadet_id_and_day(
+    new_status = get_status_from_form(interface=interface, input_name=input_name_from_column_name_and_cadet_id(
         column_name=ROW_STATUS,
         cadet_id=original_cadet_in_data.cadet_id
     ))
@@ -123,7 +123,7 @@ def get_cadet_event_status_for_row_in_form_and_alter_registration_data(interface
 def get_cadet_notes_for_row_in_form_and_alter_registration_data(interface: abstractInterface,
                                                                        original_cadet_in_data: CadetAtEvent,
                                                                        event: Event):
-    new_notes = interface.value_from_form(input_name_from_column_name_and_cadet_id_and_day(
+    new_notes = interface.value_from_form(input_name_from_column_name_and_cadet_id(
         column_name=NOTES,
         cadet_id=original_cadet_in_data.cadet_id
     ))
@@ -136,7 +136,7 @@ def get_cadet_notes_for_row_in_form_and_alter_registration_data(interface: abstr
 def get_cadet_health_for_row_in_form_and_alter_registration_data(interface: abstractInterface,
                                                                        original_cadet_in_data: CadetAtEvent,
                                                                        event: Event):
-    new_health = interface.value_from_form(input_name_from_column_name_and_cadet_id_and_day(
+    new_health = interface.value_from_form(input_name_from_column_name_and_cadet_id(
         column_name=HEALTH,
         cadet_id=original_cadet_in_data.cadet_id
     ))
@@ -163,7 +163,7 @@ def get_registration_details_for_row_and_column_name_in_form_and_alter_registrat
                                                                                          original_cadet_in_data: CadetAtEvent,
                                                                                          event: Event):
     cadet_id = original_cadet_in_data.cadet_id
-    input_name = input_name_from_column_name_and_cadet_id_and_day(column_name=column_name, cadet_id=cadet_id)
+    input_name = input_name_from_column_name_and_cadet_id(column_name=column_name, cadet_id=cadet_id)
 
     form_value = interface.value_from_form(input_name)
     data_in_row = original_cadet_in_data.data_in_row

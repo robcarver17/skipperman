@@ -13,7 +13,7 @@ from app.web.html.forms import *
 from app.objects.abstract_objects.abstract_form import textInput, dateInput, radioInput, checkboxInput
 
 DEBUG =False
-TERSE = True
+TERSE = False
 
 def process_abstract_form_to_html(form: Form, current_url: str) -> Html:
     if TERSE:

@@ -246,7 +246,7 @@ def get_list_of_all_possible_select_cadet_buttons(interface: abstractInterface) 
         qualification=qualification
     )
 
-    list_of_cadet_ids = ticksheet_data.tick_sheet.list_of_unique_cadet_ids
+    list_of_cadet_ids = ticksheet_data.tick_sheet.list_of_cadet_ids
 
     return [get_name_of_select_cadet_button(cadet_id) for cadet_id in list_of_cadet_ids]
 

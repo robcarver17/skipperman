@@ -1,7 +1,7 @@
 
 from dataclasses import dataclass
 
-from app.objects.day_selectors import Day
+from app.objects.day_selectors import Day, all_possible_days
 
 from app.objects.constants import missing_data, arg_not_passed
 from app.objects.generic import GenericSkipperManObjectWithIds, GenericSkipperManObject, GenericListOfObjectsWithIds
@@ -127,6 +127,14 @@ class ListOfCadetAtEventWithClubDinghies(GenericListOfObjectsWithIds):
             return default
 
         return item.club_dinghy_id
+
+    def is_a_club_dinghy_allocated_for_cadet_id_on_any_day\
+                    (self, cadet_id:str) -> bool:
+        items = [self.item_for_cadet_id_on_day(cadet_id=cadet_id, day=day, default=missing_data) for day in all_possible_days]
+        items = [item for item in items if item is not missing_data]
+        any_allocated = len(items)>0
+
+        return any_allocated
 
 
 

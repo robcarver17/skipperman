@@ -143,14 +143,8 @@ def get_daily_input_field_headings(interface: abstractInterface, allocation_data
     if no_day_set_in_state(interface):
         return get_input_field_headings_for_day('All days', event_contains_groups=event.contains_groups)
     else:
-        input_field_names_over_days = []
-        for day in event.weekdays_in_event():
-            input_field_names_over_days += get_input_field_headings_for_day(
-                day_name=day.name,
-                event_contains_groups=event.contains_groups
-            )
-
-        return input_field_names_over_days
+        day = get_day_from_state_or_none(interface)
+        return get_input_field_headings_for_day(day.name, event_contains_groups=event.contains_groups)
 
 
 def get_input_field_headings_for_day(day_name:str, event_contains_groups: bool) -> list:

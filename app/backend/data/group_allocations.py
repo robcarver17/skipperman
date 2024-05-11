@@ -1,6 +1,8 @@
 from typing import List
 
 import pandas as pd
+from app.objects.cadet_at_event import ListOfCadetsAtEvent, CadetAtEvent
+
 from app.objects.constants import missing_data
 
 from app.objects.day_selectors import Day
@@ -20,7 +22,15 @@ class GroupAllocationsData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
 
-    def add_or_upate_group_for_cadet_on_day(self, event: Event, cadet: Cadet, group: Group, day: Day):
+    def add_or_upate_group_for_cadet_on_day_if_cadet_available_on_day(self, event: Event, cadet: Cadet, group: Group, day: Day):
+        cadet_at_event =self.cadet_at_event_or_missing_data(event, cadet_id=cadet.id)
+        if cadet_at_event is missing_data:
+            return
+        if not cadet_at_event.availability.available_on_day(day):
+            return
+        if not cadet_at_event.is_active():
+            return
+
         list_of_cadet_ids_with_groups = self.get_list_of_cadet_ids_with_groups_at_event(event)
         list_of_cadet_ids_with_groups.update_group_for_cadet_on_day(cadet=cadet, day=day, chosen_group=group)
         self.save_list_of_cadet_ids_with_groups_at_event(event=event, list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups)
@@ -105,6 +115,9 @@ class GroupAllocationsData():
         list_of_active_cadet_ids_at_event = self.cadets_at_event_data.list_of_active_cadet_ids_at_event(event)
 
         return in_both_x_and_y(list_of_active_cadet_ids_at_event, list_of_cadet_ids_in_group)
+
+    def cadet_at_event_or_missing_data(self, event: Event, cadet_id: str)-> CadetAtEvent:
+        return self.cadets_at_event_data.cadet_at_event_or_missing_data(event=event, cadet_id=cadet_id)
 
     def list_of_active_cadets_at_event(self, event: Event) -> ListOfCadets:
         return self.cadets_at_event_data.list_of_active_cadets_at_event(event)

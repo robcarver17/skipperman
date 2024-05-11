@@ -22,9 +22,9 @@ from app.objects.dinghies import no_partnership, CadetAtEventWithDinghy, ListOfC
     compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values
 from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies
 
-def update_club_boat_allocation_for_cadet_at_event_on_day(interface: abstractInterface, boat_name: str, cadet_id: str, event: Event, day: Day):
+def update_club_boat_allocation_for_cadet_at_event_on_day_if_cadet_available(interface: abstractInterface, boat_name: str, cadet_id: str, event: Event, day: Day):
     dinghy_data = DinghiesData(interface.data)
-    dinghy_data.update_club_boat_allocation_for_cadet_at_event_on_day(event=event,
+    dinghy_data.update_club_boat_allocation_for_cadet_at_event_on_day_if_cadet_available(event=event,
                                                                       day=day,
                                                                       cadet_id=cadet_id,
                                                                       boat_name=boat_name)
@@ -38,18 +38,19 @@ class CadetWithDinghyInputs:
     sail_number: str
     boat_class_name: str
     two_handed_partner_name: str
-    day: Day
 
 
 def update_boat_info_for_cadets_at_event(interface: abstractInterface,
                                          event: Event,
-                                         list_of_updates: List[CadetWithDinghyInputs]):
+                                         list_of_updates: List[CadetWithDinghyInputs],
+                                         day: Day):
 
     list_of_existing_cadets_at_event_with_dinghies=load_list_of_cadets_at_event_with_dinghies(event)
 
     list_of_potentially_updated_cadets_at_event = convert_list_of_inputs_to_list_of_cadet_at_event_objects(
         list_of_updates=list_of_updates,
-        interface=interface
+        interface=interface,
+        day=day
     )
 
     list_of_updated_cadets = compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values(
@@ -66,16 +67,17 @@ def update_boat_info_for_updated_cadets_at_event(interface: abstractInterface, e
                                                            list_of_updated_cadets: ListOfCadetAtEventWithDinghies):
 
     dinghies_data = DinghiesData(interface.data)
-    dinghies_data.update_boat_info_for_updated_cadets_at_event(event=event, list_of_updated_cadets=list_of_updated_cadets)
+    dinghies_data.update_boat_info_for_updated_cadets_at_event_where_cadets_available(event=event, list_of_updated_cadets=list_of_updated_cadets)
 
 
-def convert_list_of_inputs_to_list_of_cadet_at_event_objects(interface: abstractInterface, list_of_updates: List[CadetWithDinghyInputs])-> ListOfCadetAtEventWithDinghies:
+def convert_list_of_inputs_to_list_of_cadet_at_event_objects(interface: abstractInterface, list_of_updates: List[CadetWithDinghyInputs], day: Day)-> ListOfCadetAtEventWithDinghies:
     return ListOfCadetAtEventWithDinghies(
         [convert_single_input_to_cadet_at_event(update=update,
-                                                interface=interface) for update in list_of_updates]
+                                                interface=interface,
+                                                day=day) for update in list_of_updates]
     )
 
-def convert_single_input_to_cadet_at_event(interface: abstractInterface, update: CadetWithDinghyInputs) -> CadetAtEventWithDinghy:
+def convert_single_input_to_cadet_at_event(interface: abstractInterface, update: CadetWithDinghyInputs, day: Day) -> CadetAtEventWithDinghy:
     boat_class_id = get_boat_class_id_from_name(interface=interface, boat_class_name=update.boat_class_name)
     two_handed_partner_id = get_two_handed_partner_id_from_name(interface=interface, two_handed_partner_name=update.two_handed_partner_name)
 
@@ -84,7 +86,7 @@ def convert_single_input_to_cadet_at_event(interface: abstractInterface, update:
         boat_class_id=boat_class_id,
         partner_cadet_id=two_handed_partner_id,
         sail_number=update.sail_number,
-        day=update.day
+        day=day
     )
 
 def get_two_handed_partner_id_from_name(interface: abstractInterface, two_handed_partner_name: str):

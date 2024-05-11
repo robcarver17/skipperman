@@ -101,10 +101,10 @@ def add_new_cadet_to_group_on_day(interface: abstractInterface, original_cadet: 
     cadets_at_event_data = GroupAllocationsData(interface.data)
     cadets_at_event =cadets_at_event_data.active_cadet_ids_at_event_with_allocations_including_unallocated_cadets(event)
     group = cadets_at_event.group_for_cadet_id_on_day(cadet_id=original_cadet.id, day=day)
-    cadets_at_event_data.add_or_upate_group_for_cadet_on_day(event=event,
-                                                             cadet=new_cadet,
-                                                             day=day,
-                                                             group=group)
+    cadets_at_event_data.add_or_upate_group_for_cadet_on_day_if_cadet_available_on_day(event=event,
+                                                                                       cadet=new_cadet,
+                                                                                       day=day,
+                                                                                       group=group)
 
 
 def add_new_row_to_wa_event_data_and_return_row(original_cadet: Cadet,

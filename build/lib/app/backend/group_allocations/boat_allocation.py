@@ -66,7 +66,7 @@ def update_boat_info_for_updated_cadets_at_event(interface: abstractInterface, e
                                                            list_of_updated_cadets: ListOfCadetAtEventWithDinghies):
 
     dinghies_data = DinghiesData(interface.data)
-    dinghies_data.update_boat_info_for_updated_cadets_at_event(event=event, list_of_updated_cadets=list_of_updated_cadets)
+    dinghies_data.update_boat_info_for_updated_cadets_at_event_where_cadets_available(event=event, list_of_updated_cadets=list_of_updated_cadets)
 
 
 def convert_list_of_inputs_to_list_of_cadet_at_event_objects(interface: abstractInterface, list_of_updates: List[CadetWithDinghyInputs])-> ListOfCadetAtEventWithDinghies:

@@ -51,7 +51,7 @@ def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewFo
         return previous_form(interface)
 
     ## This also saves the stored data in interface otherwise we don't do it later if add partner button saved
-    #update_data_given_allocation_form(interface)
+    update_data_given_allocation_form(interface)
 
     if was_add_partner_button(interface):
         ### SAVE CADET ID TO GET PARTNER FOR

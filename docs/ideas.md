@@ -89,6 +89,7 @@ BOATS AND GROUPS:
 VOLUNTEER ROTA:
 - store of previous events volunteer role to speed up loading
 - removing volunteer / availability should also remove related information
+- location filter, location warning
 
 
 IMPORT:

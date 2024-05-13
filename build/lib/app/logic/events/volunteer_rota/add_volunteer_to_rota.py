@@ -85,6 +85,7 @@ def action_when_specific_volunteer_selected_for_rota(name_of_volunteer: str, int
 def action_when_volunteer_known_for_rota(volunteer: Volunteer, interface: abstractInterface) -> Union[Form, NewForm]:
     event = get_event_from_state(interface)
     add_volunteer_to_event_with_just_id(interface=interface, volunteer_id=volunteer.id, event=event)
+    interface.save_stored_items()
 
     return previous_form(interface)
 

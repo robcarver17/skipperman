@@ -81,6 +81,8 @@ MISC:
 BOATS AND GROUPS:
 - data model
 - allow multiple days / different allocations. Availability change will break two handed partners.
+- does reporting work with individual days - spotter sheet
+- group sort in allocation page doesn't work on individual days
 - changing day attendance will also affect club boat allocation, partnerships, dinghy allocation - or apply strict filters? 
 - store of previous events  cadet allocation to speed up loading 
 - click on cadet name to see previous groups

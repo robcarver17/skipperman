@@ -79,9 +79,6 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 MISC:
 - go through all cadets and backfill qualifications
 
-IMPORT:
-- volunteer rota still not doing change check properly - turn into dynamic check with warnings
-
 
 DATA_MODEL:
 - go through all code and apply data model

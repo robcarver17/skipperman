@@ -69,7 +69,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - memorise group orders and arrangements for reports (can deal with different / missing groups)
 - add contact details and health to roll call report
 - phone friendly ticksheet
-
+- allow multiple days / different allocations to boats, groups etc
 
 
 ### Required for training events:
@@ -80,12 +80,8 @@ MISC:
 
 BOATS AND GROUPS:
 - data model
-- allow multiple days / different allocations. Availability change will break two handed partners.
-- does reporting work with individual days - spotter sheet
-- group sort in allocation page doesn't work on individual days
 - changing day attendance will also affect club boat allocation, partnerships, dinghy allocation - or apply strict filters? 
 - store of previous events  cadet allocation to speed up loading 
-- click on cadet name to see previous groups
 
 
 VOLUNTEER ROTA:

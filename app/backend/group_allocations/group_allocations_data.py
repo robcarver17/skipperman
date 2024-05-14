@@ -9,7 +9,7 @@ from app.backend.events import DEPRECATE_get_sorted_list_of_events
 from app.backend.group_allocations.cadet_event_allocations import get_list_of_active_cadets_at_event, \
     DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only
 from app.backend.group_allocations.previous_allocations import allocation_for_cadet_in_previous_events, \
-    get_dict_of_allocations_for_events_and_list_of_cadets
+    get_dict_of_allocations_for_events_and_list_of_cadets, allocation_for_cadet_in_previous_events_as_dict
 from app.data_access.configuration.configuration import UNALLOCATED_GROUP_NAME
 from app.backend.data.cadets_at_event import DEPRECATED_load_cadets_at_event
 from app.backend.data.cadets import DEPRECATE_load_list_of_all_cadets
@@ -24,7 +24,7 @@ from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.constants import missing_data
 from app.objects.day_selectors import DaySelector, Day
 from app.objects.events import Event, list_of_events_excluding_one_event, SORT_BY_START_ASC
-from app.objects.groups import ListOfCadetIdsWithGroups, Group
+from app.objects.groups import ListOfCadetIdsWithGroups, Group, GROUP_UNALLOCATED
 from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies, ListOfClubDinghies, NO_BOAT
 from app.objects.dinghies import ListOfDinghies, ListOfCadetAtEventWithDinghies, no_partnership, NO_PARTNER_REQUIRED
 from app.objects.utils import similar, all_equal
@@ -239,25 +239,30 @@ class AllocationData:
 
         return [info_dict.get(field_name, "") for field_name in self.group_info_fields()]
 
-    def previous_event_names(self) -> list:
+    def previous_event_names(self, number_of_events: int = 3) -> list:
         if not self.event.contains_groups:
             return []
 
         previous_events = self.previous_allocations_as_dict.keys()
         event_names = [str(event) for event in previous_events]
 
-        return event_names
+        return event_names[-number_of_events:]
 
-    def previous_groups_as_list_of_str(self, cadet: Cadet) -> list:
+    def previous_groups_as_list_of_str(self, cadet: Cadet, number_of_events: int = 3) -> list:
         if not self.event.contains_groups:
             return []
-        previous_groups_as_list = self.previous_groups_as_list(cadet)
+        previous_groups_as_list = self.previous_groups_as_list(cadet, number_of_events=number_of_events)
         previous_groups_as_list= [x.as_str_replace_unallocated_with_empty() for x in previous_groups_as_list]
 
         return previous_groups_as_list
 
-    def previous_groups_as_list(self, cadet: Cadet) -> List[Group]:
-        return allocation_for_cadet_in_previous_events(cadet=cadet,previous_allocations_as_dict=self.previous_allocations_as_dict)
+    def previous_groups_as_list(self, cadet: Cadet, number_of_events: int = 3) -> List[Group]:
+        return allocation_for_cadet_in_previous_events(cadet=cadet,previous_allocations_as_dict=self.previous_allocations_as_dict)[-number_of_events:]
+
+    def previous_groups_as_dict(self, cadet: Cadet, number_of_events: int = 3) -> Dict[Event, Group]:
+        return allocation_for_cadet_in_previous_events_as_dict(cadet=cadet,previous_allocations_as_dict=self.previous_allocations_as_dict, number_of_events=number_of_events)
+
+
 
     def get_last_group_name(self, cadet: Cadet) -> str:
         previous_allocation = self.previous_groups_as_list(cadet)
@@ -272,7 +277,12 @@ class AllocationData:
 
 
     def get_current_group_name_for_day(self, cadet: Cadet, day: Day)-> str:
-        return self.current_allocation_for_event.group_for_cadet_id_on_day(cadet_id=cadet.id, day=day).group_name
+        group =self.current_allocation_for_event.group_for_cadet_id_on_day(cadet_id=cadet.id, day=day)
+        if group is GROUP_UNALLOCATED:
+            if not self.cadet_availability_at_event(cadet).available_on_day(day):
+                return "Not available"
+
+        return group.group_name
 
 
     def cadet_availability_at_event(self, cadet: Cadet)-> DaySelector:
@@ -316,8 +326,6 @@ def get_allocation_data(interface: abstractInterface, event: Event) -> Allocatio
     list_of_cadets_in_event_active_only = get_list_of_active_cadets_at_event(event)
     list_of_events = DEPRECATE_get_sorted_list_of_events()
     list_of_previous_events = list_of_events_excluding_one_event(list_of_events=list_of_events,event_to_exclude=event, only_past=True, sort_by=SORT_BY_START_ASC)
-    if len(list_of_previous_events)>3:
-        list_of_previous_events = list_of_previous_events[-3:]
     previous_allocations_as_dict = get_dict_of_allocations_for_events_and_list_of_cadets(list_of_events=list_of_previous_events)
     list_of_all_cadets = DEPRECATE_load_list_of_all_cadets()
 

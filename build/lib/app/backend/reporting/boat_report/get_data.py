@@ -34,11 +34,12 @@ def get_df_for_day_of_boat_report(day: Day, data_required: RequiredDataForReport
     cadet_ids_at_event_on_day = list_of_active_cadet_ids_on_day(day=day, data_required=data_required)
 
     list_of_row = [row_of_data_for_cadet_id(cadet_id=cadet_id,
+                                            day=day,
                                             additional_parameters=additional_parameters,
                                             data_required=data_required,
                                             cadet_ids_at_event_on_day=cadet_ids_at_event_on_day)
                    for cadet_id in cadet_ids_at_event_on_day if
-                   is_cadet_id_valid_for_report(cadet_id=cadet_id, additional_parameters=additional_parameters, data_required=data_required)]
+                   is_cadet_id_valid_for_report(cadet_id=cadet_id, day=day, additional_parameters=additional_parameters, data_required=data_required)]
 
     df=pd.DataFrame(list_of_row)
     df = df.sort_values(by=BOAT_CLASS)
@@ -53,11 +54,12 @@ def list_of_active_cadet_ids_on_day(day: Day, data_required: RequiredDataForRepo
     return cadet_ids_at_event_on_day
 
 def row_of_data_for_cadet_id(cadet_id: str,
+                             day: Day,
                              data_required: RequiredDataForReport,
                              additional_parameters:AdditionalParametersForBoatReport,
                              cadet_ids_at_event_on_day: List[str])-> pd.Series:
 
-    group = get_group(cadet_id=cadet_id, data_required=data_required)
+    group = get_group(cadet_id=cadet_id, data_required=data_required, day=day)
 
     first_cadet_name = get_first_cadet_name(
         cadet_id=cadet_id,
@@ -67,12 +69,14 @@ def row_of_data_for_cadet_id(cadet_id: str,
 
     second_cadet_name = get_second_cadet_name_popping_if_required(
         cadet_id=cadet_id,
+        day=day,
         data_required=data_required,
         additional_parameters=additional_parameters,
         cadet_ids_at_event_on_day=cadet_ids_at_event_on_day
     )
 
     boat_class, sail_number, club_boat_flag = get_boat_class_sail_number_and_club_boat_flag(cadet_id=cadet_id,
+                                                                                            day=day,
                                                                                             data_required=data_required,
                                                                                     )
 
@@ -109,11 +113,12 @@ def get_first_cadet_name(cadet_id: str, data_required: RequiredDataForReport,
     return first_cadet_name
 
 def get_second_cadet_name_popping_if_required(cadet_id: str, data_required: RequiredDataForReport,
+                                              day: Day,
                                                     additional_parameters:AdditionalParametersForBoatReport,
                                                     cadet_ids_at_event_on_day: List[str]):
     display_full_names = additional_parameters.display_full_names
     second_cadet_name = ""
-    first_cadet_with_dinghy = data_required.list_of_cadets_at_event_with_dinghies.DEPRECATE_object_with_cadet_id(cadet_id)
+    first_cadet_with_dinghy = data_required.list_of_cadets_at_event_with_dinghies.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
     if first_cadet_with_dinghy is not missing_data:
         if first_cadet_with_dinghy.has_partner():
             second_cadet_id = first_cadet_with_dinghy.partner_cadet_id
@@ -132,16 +137,17 @@ def get_second_cadet_name_popping_if_required(cadet_id: str, data_required: Requ
 
 
 
-def is_cadet_id_valid_for_report(cadet_id: str, data_required: RequiredDataForReport,
+def is_cadet_id_valid_for_report(cadet_id: str, day: Day, data_required: RequiredDataForReport,
                     additional_parameters:AdditionalParametersForBoatReport
                    ) -> bool:
-    group = get_group(cadet_id=cadet_id, data_required=data_required)
+    group = get_group(cadet_id=cadet_id, data_required=data_required, day=day)
 
     return is_group_valid_for_report(group=group, additional_parameters=additional_parameters)
 
-def get_group(cadet_id: str, data_required: RequiredDataForReport
+def get_group(cadet_id: str, data_required: RequiredDataForReport,
+day: Day,
                    ) -> Group:
-    group = data_required.list_of_cadet_ids_with_groups.group_for_cadet_id(cadet_id=cadet_id)
+    group = data_required.list_of_cadet_ids_with_groups.group_for_cadet_id_on_day(cadet_id=cadet_id, day=day)
 
     return group
 
@@ -160,9 +166,9 @@ def is_group_valid_for_report(group: Group, additional_parameters:AdditionalPara
 
     return True
 
-def get_boat_class_sail_number_and_club_boat_flag(cadet_id: str, data_required: RequiredDataForReport) -> Tuple[str,str,str]:
+def get_boat_class_sail_number_and_club_boat_flag(cadet_id: str, day: Day, data_required: RequiredDataForReport) -> Tuple[str,str,str]:
 
-    first_cadet_with_dinghy = data_required.list_of_cadets_at_event_with_dinghies.DEPRECATE_object_with_cadet_id(cadet_id)
+    first_cadet_with_dinghy = data_required.list_of_cadets_at_event_with_dinghies.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
     if first_cadet_with_dinghy is not missing_data:
         boat_class_id = first_cadet_with_dinghy.boat_class_id
         sail_number = first_cadet_with_dinghy.sail_number
@@ -172,7 +178,7 @@ def get_boat_class_sail_number_and_club_boat_flag(cadet_id: str, data_required: 
 
     boat_name = boat_name[:10]
 
-    club_boat_id = data_required.list_of_cadets_at_event_with_club_dinghies.DEPRECATE_dinghy_for_cadet_id(cadet_id)
+    club_boat_id = data_required.list_of_cadets_at_event_with_club_dinghies.dinghy_for_cadet_id_on_day(cadet_id=cadet_id, day=day)
     if club_boat_id is missing_data:
         club_boat_flag = ""
     else:

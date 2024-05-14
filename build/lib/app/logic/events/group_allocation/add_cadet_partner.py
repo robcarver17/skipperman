@@ -115,6 +115,7 @@ def add_matched_partner_cadet_with_duplicate_registration(interface: abstractInt
     return return_to_allocation_pages(interface)
 
 def return_to_allocation_pages(interface: abstractInterface) -> NewForm:
+    clear_cadet_id_at_event(interface)
 
     return interface.get_new_display_form_for_parent_of_function(post_form_add_cadet_partner)
 

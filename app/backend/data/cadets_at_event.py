@@ -175,6 +175,18 @@ class CadetsAtEventData():
         identified_cadets = self.get_list_of_identified_cadets_at_event(event)
         return identified_cadets.row_has_identified_cadet_including_test_cadets(row_id = row.row_id)
 
+    def list_of_active_cadets_available_on_day(self, event: Event, day: Day) -> ListOfCadets:
+        cadets_at_event = self.list_of_active_cadets_at_event_available_on_day(event=event,
+                                                                               day=day)
+        active_ids = cadets_at_event.list_of_cadet_ids()
+        list_of_cadets = self.cadet_data.get_list_of_cadets_given_list_of_cadet_ids(active_ids)
+
+        return list_of_cadets
+
+
+    def list_of_active_cadets_at_event_available_on_day(self, event: Event, day: Day) -> ListOfCadetsAtEvent:
+        list_of_cadets_at_event = self.get_list_of_cadets_at_event(event)
+        return list_of_cadets_at_event.active_and_available_on_day(day)
 
     def list_of_active_cadets_at_event(self, event: Event) -> ListOfCadets:
         active_ids = self.list_of_active_cadet_ids_at_event(event)

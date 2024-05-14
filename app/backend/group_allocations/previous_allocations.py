@@ -30,6 +30,15 @@ def allocation_for_cadet_in_previous_events(cadet: Cadet, previous_allocations_a
 
     return allocations
 
+def allocation_for_cadet_in_previous_events_as_dict(
+                                                    previous_allocations_as_dict: Dict[Event, ListOfCadetIdsWithGroups],
+                                                    cadet: Cadet, number_of_events: int = 3) -> Dict[Event, Group]:
+
+    list_of_events = list(previous_allocations_as_dict.keys())
+    list_of_events = list_of_events[-number_of_events:]
+    allocations = dict([(event, group_for_cadet_and_event(cadet=cadet, event=event, previous_allocations_as_dict=previous_allocations_as_dict)) for event in list_of_events])
+
+    return allocations
 
 def group_for_cadet_and_event(cadet: Cadet, event: Event, previous_allocations_as_dict: Dict[Event, ListOfCadetIdsWithGroups]) -> Group:
     cadet_id = cadet.id

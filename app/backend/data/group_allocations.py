@@ -3,9 +3,9 @@ from typing import List
 import pandas as pd
 from app.objects.cadet_at_event import ListOfCadetsAtEvent, CadetAtEvent
 
-from app.objects.constants import missing_data
+from app.objects.constants import missing_data, arg_not_passed
 
-from app.objects.day_selectors import Day
+from app.objects.day_selectors import Day, ListOfDaySelectors, DaySelector
 
 from app.objects.cadets import ListOfCadets, Cadet
 
@@ -21,6 +21,39 @@ from app.data_access.storage_layer.api import DataLayer
 class GroupAllocationsData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
+
+    def get_joint_attendance_matrix_for_cadet_ids_in_group_at_event(self, event: Event, group: Group, list_of_cadet_ids: List[str] = arg_not_passed):
+
+        if list_of_cadet_ids is arg_not_passed:
+            list_of_cadet_ids = self.list_of_cadet_ids_in_a_specific_group_if_cadet_active_at_event(event=event,
+                                                                                                    group=group
+                                                                                                    )
+        attendance_data = self.cadets_at_event_data.get_attendance_matrix_for_list_of_cadet_ids_at_event(event=event, list_of_cadet_ids=list_of_cadet_ids)
+        attendance_in_group = self.get_attendance_matrix_for_group(event=event, list_of_cadet_ids=list_of_cadet_ids, group=group)
+
+        joint_attendance = attendance_data.intersect(attendance_in_group)
+        joint_attendance = joint_attendance.align_with_list_of_days(event.weekdays_in_event())
+
+        return joint_attendance
+
+    def get_attendance_matrix_for_group(self, event: Event, group: Group, list_of_cadet_ids: List[str]) ->  ListOfDaySelectors:
+        list_of_selectors = [
+            self.day_selector_for_cadet_id_and_group_at_event(event=event, group=group, cadet_id=cadet_id)
+            for cadet_id in list_of_cadet_ids
+        ]
+
+        return ListOfDaySelectors(list_of_selectors)
+
+    def day_selector_for_cadet_id_and_group_at_event(self, event: Event, group: Group, cadet_id: str) -> DaySelector:
+        list_of_cadet_ids_with_groups = self.get_list_of_cadet_ids_with_groups_at_event(event)
+
+        return DaySelector(
+            dict([
+                (day,
+                 list_of_cadet_ids_with_groups.group_for_cadet_id_on_day(day=day, cadet_id=cadet_id)==group)
+                for day in event.weekdays_in_event()]
+            )
+        )
 
     def add_or_upate_group_for_cadet_on_day_if_cadet_available_on_day(self, event: Event, cadet: Cadet, group: Group, day: Day):
         cadet_at_event =self.cadet_at_event_or_missing_data(event, cadet_id=cadet.id)
@@ -55,13 +88,22 @@ class GroupAllocationsData():
 
         return order_list_of_groups(groups)
 
-    def get_list_of_cadets_with_group_at_event(self, event: Event, include_unallocated_cadets: bool = True)-> ListOfCadetsWithGroup:
+    def DEPRECATE_get_list_of_cadets_with_group_at_event(self, event: Event, include_unallocated_cadets: bool = True)-> ListOfCadetsWithGroup:
         if include_unallocated_cadets:
             list_of_cadet_ids_with_groups = self.active_cadet_ids_at_event_with_allocations_including_unallocated_cadets(event)
         else:
             list_of_cadet_ids_with_groups = self.active_cadet_ids_at_event_with_allocations(event)
 
         return self.get_list_of_cadets_with_group_given_list_of_cadets_with_ids_and_groups(list_of_cadet_ids_with_groups)
+
+    def get_list_of_cadets_with_group_by_day(self, event: Event, day: Day, include_unallocated_cadets: bool = True)-> ListOfCadetsWithGroup:
+        if include_unallocated_cadets:
+            list_of_cadet_ids_with_groups = self.active_cadet_ids_at_event_with_allocations_including_unallocated_cadets_on_day(event=event, day=day)
+        else:
+            list_of_cadet_ids_with_groups = self.active_cadet_ids_at_event_with_allocations_on_day(event=event, day=day)
+
+        return self.get_list_of_cadets_with_group_given_list_of_cadets_with_ids_and_groups(list_of_cadet_ids_with_groups)
+
 
     def get_list_of_cadets_with_group_given_list_of_cadets_with_ids_and_groups(self,
                                                                                list_of_cadet_ids_with_groups: ListOfCadetIdsWithGroups,
@@ -82,11 +124,33 @@ class GroupAllocationsData():
 
     def active_cadet_ids_at_event_with_allocations_including_unallocated_cadets(self, event: Event) -> ListOfCadetIdsWithGroups:
         list_of_cadet_ids_with_groups = self.active_cadet_ids_at_event_with_allocations(event)
+        return self.active_cadet_ids_at_event_for_unallocated_cadets(event=event, list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups)
+
+    def active_cadet_ids_at_event_for_unallocated_cadets(self, event: Event, list_of_cadet_ids_with_groups: ListOfCadetIdsWithGroups = arg_not_passed) -> ListOfCadetIdsWithGroups:
+        if list_of_cadet_ids_with_groups is arg_not_passed:
+            list_of_cadet_ids_with_groups = ListOfCadetIdsWithGroups([])
         unallocated_cadets = self.unallocated_cadets_at_event(event)
         for day in event.weekdays_in_event():
             list_of_cadet_ids_with_groups.add_list_of_unallocated_cadets_on_day(unallocated_cadets, day=day)
 
         return list_of_cadet_ids_with_groups
+
+
+    def active_cadet_ids_at_event_with_allocations_including_unallocated_cadets_on_day(self, event: Event, day: Day) -> ListOfCadetIdsWithGroups:
+        list_of_cadet_ids_with_groups = self.active_cadet_ids_at_event_with_allocations_on_day(event=event, day=day)
+        unallocated_cadets = self.unallocated_cadets_at_event_available_on_day(event=event, day=day)
+        list_of_cadet_ids_with_groups.add_list_of_unallocated_cadets_on_day(unallocated_cadets, day=day)
+
+        return list_of_cadet_ids_with_groups
+
+
+    def active_cadet_ids_with_groups_for_group_at_event(self, event: Event, group: Group) -> ListOfCadetIdsWithGroups:
+        cadet_ids = self.list_of_cadet_ids_in_a_specific_group_if_cadet_active_at_event(event=event, group=group)
+        list_of_cadets_with_groups = self.get_list_of_cadet_ids_with_groups_at_event(event)
+        list_of_allocated_cadets_with_groups_in_group = [cadet_with_group for cadet_with_group in list_of_cadets_with_groups
+                                                if cadet_with_group.cadet_id in cadet_ids and cadet_with_group.group == group]
+
+        return ListOfCadetIdsWithGroups(list_of_allocated_cadets_with_groups_in_group)
 
     def active_cadet_ids_at_event_with_allocations(self, event: Event) -> ListOfCadetIdsWithGroups:
 
@@ -97,6 +161,30 @@ class GroupAllocationsData():
                                                 if cadet_with_group.cadet_id in list_of_active_cadet_ids_at_event]
 
         return ListOfCadetIdsWithGroups(list_of_allocated_cadets_with_groups)
+
+
+    def active_cadet_ids_at_event_with_allocations_on_day(self, event: Event, day: Day) -> ListOfCadetIdsWithGroups:
+
+        list_of_cadets_with_groups = self.get_list_of_cadet_ids_with_groups_at_event_on_day(event=event, day=day)
+        list_of_active_cadet_ids_at_event = self.cadets_at_event_data.list_of_active_cadets_at_event_available_on_day(day=day, event=event
+                                                                                                                      ).list_of_cadet_ids()
+
+        list_of_allocated_cadets_with_groups = [cadet_with_group for cadet_with_group in list_of_cadets_with_groups
+                                                if cadet_with_group.cadet_id in list_of_active_cadet_ids_at_event]
+
+        return ListOfCadetIdsWithGroups(list_of_allocated_cadets_with_groups)
+
+    def unallocated_cadets_at_event_available_on_day(self, event: Event, day: Day) -> ListOfCadets:
+        list_of_cadets_in_groups_at_event_on_day = self.get_list_of_cadet_ids_with_groups_at_event_on_day(event=event, day=day)
+        list_of_active_cadets_at_event_on_day = self.list_of_active_cadets_at_event_on_day(event=event, day=day)
+
+        unallocated_cadet_ids = (
+            list_of_cadets_in_groups_at_event_on_day.cadets_in_passed_list_not_allocated_to_any_group(
+                list_of_cadets=list_of_active_cadets_at_event_on_day
+            )
+        )
+        return unallocated_cadet_ids
+
 
     def unallocated_cadets_at_event(self, event: Event) -> ListOfCadets:
         list_of_cadets_in_groups_at_event = self.get_list_of_cadet_ids_with_groups_at_event(event)
@@ -109,18 +197,30 @@ class GroupAllocationsData():
         )
         return unallocated_cadet_ids
 
-    def list_of_cadet_ids_in_a_specific_group_if_cadet_active_at_event(self, event: Event, group: Group):
+    def list_of_cadet_ids_in_a_specific_group_if_cadet_active_at_event(self, event: Event, group: Group) -> List[str]:
         list_of_cadets_with_groups = self.get_list_of_cadet_ids_with_groups_at_event(event)
-        list_of_cadet_ids_in_group= list_of_cadets_with_groups.list_of_cadet_ids_in_group(group)
+        list_of_cadet_ids_in_group= list_of_cadets_with_groups.unique_list_of_cadet_ids(group)
         list_of_active_cadet_ids_at_event = self.cadets_at_event_data.list_of_active_cadet_ids_at_event(event)
 
         return in_both_x_and_y(list_of_active_cadet_ids_at_event, list_of_cadet_ids_in_group)
+
+    def get_list_of_cadet_ids_with_groups_at_event_on_day(self, event: Event, day: Day) -> ListOfCadetIdsWithGroups:
+        list_of_cadet_id_with_group = self.get_list_of_cadet_ids_with_groups_at_event(event=event)
+
+        return list_of_cadet_id_with_group.subset_for_day(day)
+
+
 
     def cadet_at_event_or_missing_data(self, event: Event, cadet_id: str)-> CadetAtEvent:
         return self.cadets_at_event_data.cadet_at_event_or_missing_data(event=event, cadet_id=cadet_id)
 
     def list_of_active_cadets_at_event(self, event: Event) -> ListOfCadets:
         return self.cadets_at_event_data.list_of_active_cadets_at_event(event)
+
+    def list_of_active_cadets_at_event_on_day(self, event: Event, day: Day) -> ListOfCadets:
+        return self.cadets_at_event_data.list_of_active_cadets_available_on_day(event=event, day=day)
+
+
 
     def get_list_of_cadet_ids_with_groups_at_event(self, event: Event) -> ListOfCadetIdsWithGroups:
         return self.data_api.get_list_of_cadets_with_groups_at_event(event)

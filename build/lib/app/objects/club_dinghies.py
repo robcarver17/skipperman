@@ -81,14 +81,6 @@ class ListOfCadetAtEventWithClubDinghies(GenericListOfObjectsWithIds):
 
         return sorted_list
 
-    def DEPRECATE_delete_allocation_for_cadet(self, cadet_id: str):
-        ## allowed to fail
-        try:
-            idx = self.idx_of_item_with_cadet_id(cadet_id)
-            self.pop(idx)
-        except:
-            return
-
     def update_allocation_for_cadet_on_day(self, cadet_id: str, day: Day, club_dinghy_id: str):
         self.delete_allocation_for_cadet_on_day(cadet_id=cadet_id, day=day)
         self.append(CadetAtEventWithClubDinghy(cadet_id=cadet_id, club_dinghy_id=club_dinghy_id, day=day))
@@ -100,25 +92,6 @@ class ListOfCadetAtEventWithClubDinghies(GenericListOfObjectsWithIds):
             return
 
         self.pop(idx)
-
-
-    def idx_of_item_with_cadet_id(self, cadet_id: str):
-        idx = [item for item in self if item.cadet_id == cadet_id]
-        if len(idx)==0:
-            return missing_data
-        elif len(idx)>1:
-            raise Exception("Can only have one boat per cadet")
-
-        return self.index(idx[0])
-
-    def DEPRECATE_dinghy_for_cadet_id(self, cadet_id:str, default = missing_data) -> str:
-        list_of_items = [item.club_dinghy_id for item in self if item.cadet_id == cadet_id]
-        if len(list_of_items)==0:
-            return default
-        if len(list_of_items)>1:
-            raise Exception("Can only have one dinghy per cadet")
-
-        return list_of_items[0]
 
     def dinghy_for_cadet_id_on_day\
                     (self, cadet_id:str, day: Day, default = missing_data) -> str:

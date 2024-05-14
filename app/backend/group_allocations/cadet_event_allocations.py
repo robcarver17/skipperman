@@ -1,4 +1,6 @@
-from typing import List
+from typing import List, Dict
+
+from app.objects.day_selectors import Day
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -112,3 +114,6 @@ def load_list_of_cadets_ids_with_group_allocations_active_cadets_only(interface:
     group_allocations_data = GroupAllocationsData(interface.data)
     return group_allocations_data.active_cadet_ids_at_event_with_allocations(event)
 
+def count_of_cadet_ids_allocated_to_group_by_day(interface: abstractInterface, event: Event) -> Dict[Day, int]:
+    group_allocations_data = GroupAllocationsData(interface.data)
+    return group_allocations_data.active_cadet_ids_at_event_with_allocations(event).count_of_ids_by_day(event)

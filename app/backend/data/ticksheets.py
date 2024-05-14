@@ -46,7 +46,7 @@ class TickSheetsData():
         if add_header:
             labelled_ticksheet = labelled_ticksheet.add_qualification_and_group_header()
         if include_attendance_columns:
-            labelled_ticksheet = self.add_attendance_data(event=event, labelled_ticksheet=labelled_ticksheet)
+            labelled_ticksheet = self.add_attendance_data(event=event, group = group, labelled_ticksheet=labelled_ticksheet)
         if asterix_club_boats:
             labelled_ticksheet = self.add_club_boats(event=event, labelled_ticksheet=labelled_ticksheet)
         if medical_notes:
@@ -133,9 +133,11 @@ class TickSheetsData():
         return tick_sheet
 
 
-    def add_attendance_data(self,  event: Event, labelled_ticksheet:LabelledTickSheetWithCadetIds) -> LabelledTickSheetWithCadetIds:
+    def add_attendance_data(self,  event: Event, group: Group, labelled_ticksheet:LabelledTickSheetWithCadetIds) -> LabelledTickSheetWithCadetIds:
         list_of_cadet_ids = labelled_ticksheet.list_of_cadet_ids
-        attendance_data = self.cadets_at_event_data.get_attendance_matrix_for_list_of_cadet_ids_at_event(event=event, list_of_cadet_ids=list_of_cadet_ids)
+        attendance_data = self.group_allocation_data.get_joint_attendance_matrix_for_cadet_ids_in_group_at_event(event=event,
+                                                                                                                 list_of_cadet_ids=list_of_cadet_ids,
+                                                                                                                 group=group)
 
         labelled_tick_sheet = labelled_ticksheet.add_attendance_data(attendance_data)
 

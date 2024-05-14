@@ -41,6 +41,8 @@ def add_club_boat_asterix(interface: abstractInterface, list_of_cadets_with_grou
 def add_club_boat_asterix_to_cadet(cadet_with_group: CadetWithGroup, list_of_cadets_at_event_with_club_dinghies: ListOfCadetAtEventWithClubDinghies) -> CadetWithGroup:
     cadet = cadet_with_group.cadet
     cadet_id = cadet.id
-    dinghy=list_of_cadets_at_event_with_club_dinghies.DEPRECATE_dinghy_for_cadet_id(cadet_id)
+    day = cadet_with_group.day
+    dinghy=list_of_cadets_at_event_with_club_dinghies.dinghy_for_cadet_id_on_day(cadet_id=cadet.id, day=day)
+
     if dinghy is not missing_data:
         cadet_with_group.cadet = Cadet(first_name=cadet.first_name, surname=cadet.surname+"*", date_of_birth=cadet.date_of_birth, id=cadet_id)

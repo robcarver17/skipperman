@@ -138,7 +138,7 @@ class Event(GenericSkipperManObjectWithIds):
 
     def days_in_event_overlap_with_selected_days(self, day_selector: DaySelector) -> List[Day]:
         my_day_selector = self.day_selector_with_covered_days()
-        return day_selector.intersect_with(my_day_selector)
+        return day_selector.days_that_intersect_with(my_day_selector)
 
     def day_selector_with_covered_days(self) -> DaySelector:
         weekdays_covered = self.weekdays_in_event()

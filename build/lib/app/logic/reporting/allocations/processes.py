@@ -111,14 +111,18 @@ def get_dict_of_df_for_reporting_allocations_with_flags(
     ##   is a waiting list cadet unallocated, or allocated with a * against their name?
     ##   at some point report would include club boats
     group_allocations_data = GroupAllocationsData(interface.data)
+    dict_of_df = {}
+    for day in event.weekdays_in_event():
+        list_of_cadets_with_groups = group_allocations_data.get_list_of_cadets_with_group_by_day(event=event,
+                                                                                                 day=day,
+                                                                                                 include_unallocated_cadets=include_unallocated_cadets)
+        if add_asterix_for_club_boats:
+            list_of_cadets_with_groups = add_club_boat_asterix(interface = interface, list_of_cadets_with_groups=list_of_cadets_with_groups, event=event)
 
-    list_of_cadets_with_groups = group_allocations_data.get_list_of_cadets_with_group_at_event(event=event, include_unallocated_cadets=include_unallocated_cadets)
-    if add_asterix_for_club_boats:
-        list_of_cadets_with_groups = add_club_boat_asterix(interface = interface, list_of_cadets_with_groups=list_of_cadets_with_groups, event=event)
+        df = list_of_cadets_with_groups.to_df_of_str(display_full_names=display_full_names)
+        dict_of_df[day.name] = df
 
-    df = list_of_cadets_with_groups.to_df_of_str(display_full_names=display_full_names)
-
-    return {"": df}
+    return dict_of_df
 
 
 

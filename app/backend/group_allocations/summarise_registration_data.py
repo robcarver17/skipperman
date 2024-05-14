@@ -2,7 +2,9 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 
-from app.backend.group_allocations.cadet_event_allocations import DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only
+from app.backend.group_allocations.cadet_event_allocations import \
+    DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only, \
+    load_list_of_cadets_ids_with_group_allocations_active_cadets_only, count_of_cadet_ids_allocated_to_group_by_day
 
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 
@@ -14,7 +16,7 @@ from app.objects.mapped_wa_event import summarise_status
 from app.backend.data.mapped_events import DEPRECATE_load_mapped_wa_event
 
 
-def summarise_registrations_for_event(event: Event) -> ListOfLines:
+def summarise_registrations_for_event(interface: abstractInterface, event: Event) -> ListOfLines:
     summary_data = ListOfLines([])
     mapped_data = DEPRECATE_load_mapped_wa_event(event)
     status_dict = summarise_status(mapped_data)
@@ -25,8 +27,9 @@ def summarise_registrations_for_event(event: Event) -> ListOfLines:
         cadet_dict = {'Identified': len(identified_cadets), 'In event data': len(cadets_at_event), 'Active in event data': len(cadets_at_event.list_of_active_cadets_at_event()) }
 
         if event.contains_groups:
-            list_of_cadet_ids_with_groups = DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only(event)
-            cadet_dict['Allocated to group'] = len(list_of_cadet_ids_with_groups)
+            list_of_cadet_ids_with_groups = count_of_cadet_ids_allocated_to_group_by_day(interface=interface, event=event)
+            for day, count in list_of_cadet_ids_with_groups.items():
+                cadet_dict['Allocated to groups on %s' % day.name] =count
 
         summary_data.append(Line(print_dict_nicely("Cadet status", cadet_dict)))
 

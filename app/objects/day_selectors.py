@@ -31,7 +31,13 @@ class DaySelector(Dict[Day, bool]):
 
         return True
 
-    def intersect_with(self, other: 'DaySelector') -> List[Day]:
+    def align_with_list_of_days(self, list_of_days: List[Day]) -> 'DaySelector':
+        return DaySelector([(day, self.available_on_day(day)) for day in list_of_days])
+
+    def intersect(self, other: 'DaySelector') -> 'DaySelector':
+        return DaySelector([(day, True) for day in self.days_available() if other.available_on_day(day)])
+
+    def days_that_intersect_with(self, other: 'DaySelector') -> List[Day]:
         return [day for day in self.days_available() if other.available_on_day(day)]
 
     def as_str(self)-> str:
@@ -108,6 +114,12 @@ def day_selector_to_text_in_stored_format(day_selector: DaySelector) -> str:
     return ",".join(day_text_as_list)
 
 class ListOfDaySelectors(List[DaySelector]):
+
+    def align_with_list_of_days(self, list_of_days: List[Day])->'ListOfDaySelectors':
+        return ListOfDaySelectors([day_selector.align_with_list_of_days(list_of_days) for day_selector in self])
+
+    def intersect(self, other: 'ListOfDaySelectors'):
+        return ListOfDaySelectors([item_self.intersect(other_item) for item_self, other_item in zip(self, other)])
 
     def as_pd_data_frame(self) -> pd.DataFrame:
         list_of_dicts = [from_day_selector_to_dict_for_pd(day_selector) for day_selector in self]

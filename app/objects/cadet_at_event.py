@@ -182,6 +182,10 @@ class ListOfCadetsAtEvent(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return CadetAtEvent
 
+    def active_and_available_on_day(self, day: Day):
+        active = self.list_of_active_cadets_at_event()
+        return active.subset_available_on_day(day)
+
     def subset_available_on_day(self, day: Day):
         return ListOfCadetsAtEvent([cadet_at_event for cadet_at_event in self if cadet_at_event.availability.available_on_day(day)])
 

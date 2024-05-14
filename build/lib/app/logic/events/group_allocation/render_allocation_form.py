@@ -1,5 +1,9 @@
 from typing import Union
 
+from app.objects.constants import missing_data
+
+from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing import get_current_cadet_id_at_event
+
 from app.logic.events.group_allocation.input_fields import get_notes_field, get_days_attending_field, \
     make_long_thing_detail_box, get_input_fields_for_cadet, button_name_for_add_partner, RESET_DAY_BUTTON_LABEL, \
     make_cadet_available_button_name
@@ -122,19 +126,17 @@ def get_inner_form_for_cadet_allocation(interface: abstractInterface, event: Eve
         ], has_column_headings=True, has_row_headings=True
     )
 
-
+NUMBER_OF_PREVIOUS_EVENTS = 3
 
 def get_top_row(interface: abstractInterface, allocation_data: AllocationData) -> RowInTable:
-    previous_event_names_in_list = allocation_data.previous_event_names()
+    previous_event_names_in_list = allocation_data.previous_event_names(number_of_events=NUMBER_OF_PREVIOUS_EVENTS)
     info_field_names = allocation_data.group_info_fields()
 
     input_field_names_over_days =get_daily_input_field_headings(allocation_data=allocation_data, interface=interface)
 
-    input_field_names = ["Set: Availability"]+input_field_names_over_days+["Notes"]
-
     return RowInTable([
         "" ## cadet name
-    ]+previous_event_names_in_list+info_field_names+["Official qualification"]+input_field_names
+    , "Set Availability"]+previous_event_names_in_list+info_field_names+["Official qualification", "Notes"]+input_field_names_over_days
                       )
 
 
@@ -163,7 +165,8 @@ def get_input_field_headings_for_day(day_name:str, event_contains_groups: bool) 
 
 
 def get_row_for_cadet(interface: abstractInterface, cadet: Cadet, allocation_data: AllocationData) -> RowInTable:
-    previous_groups_as_list = allocation_data.previous_groups_as_list_of_str(cadet)
+    cell_for_cadet = get_cell_for_cadet(interface=interface, cadet=cadet, allocation_data=allocation_data)
+    previous_groups_as_list = allocation_data.previous_groups_as_list_of_str(cadet, number_of_events=NUMBER_OF_PREVIOUS_EVENTS)
     previous_group_info = allocation_data.group_info_dict_for_cadet_as_ordered_list(cadet)
     previous_group_info  = [make_long_thing_detail_box(field) for field in previous_group_info]
     input_fields = get_input_fields_for_cadet(interface=interface, cadet=cadet, allocation_data=allocation_data)
@@ -172,18 +175,47 @@ def get_row_for_cadet(interface: abstractInterface, cadet: Cadet, allocation_dat
     days_attending_field = get_days_attending_field(cadet=cadet, allocation_data=allocation_data)
 
     return RowInTable(
-            [str(cadet)]+
-            previous_groups_as_list
-            +previous_group_info+[qualification, days_attending_field]+
-            input_fields+[notes_field]
+        [cell_for_cadet, days_attending_field] +
+        previous_groups_as_list
+        + previous_group_info + [qualification, notes_field] +
+        input_fields
         )
 
+MAX_EVENTS_TO_SHOW = 12
 
-def list_of_all_add_partner_buttons(interface: abstractInterface):
+def get_cell_for_cadet(interface: abstractInterface, allocation_data: AllocationData, cadet: Cadet) -> Union[ListOfLines, Button]:
+    if this_cadet_has_been_clicked_on_already(interface=
+                                              interface, cadet=
+                                              cadet):
+        dict_of_groups = allocation_data.previous_groups_as_dict(cadet=cadet, number_of_events=MAX_EVENTS_TO_SHOW)
+        list_of_groups_as_str = ["%s: %s" % (str(event), group.group_name) for event, group in dict_of_groups.items()]
+        return ListOfLines([str(cadet), "Previous groups:-"]+list_of_groups_as_str).add_Lines()
+    else:
+        return Button(str(cadet), value=get_button_id_for_cadet(cadet.id))
+
+def this_cadet_has_been_clicked_on_already(interface: abstractInterface, cadet: Cadet):
+    cadet_id = get_current_cadet_id_at_event(interface)
+    if cadet_id is missing_data:
+        print("No stored cadet id")
+        return False
+    return cadet_id == cadet.id
+
+def get_button_id_for_cadet(id:str)-> str:
+    return "cadet_%s" % id
+
+def get_list_of_all_cadet_buttons(interface: abstractInterface):
+    list_of_cadets = get_list_of_all_cadets(interface)
+    return  [get_button_id_for_cadet(id) for id in list_of_cadets.list_of_ids]
+
+def cadet_id_from_cadet_button(button_str):
+    return button_str.split("_")[1]
+
+
+def get_list_of_all_add_partner_buttons(interface: abstractInterface):
     list_of_cadets = get_list_of_all_cadets(interface)
     return  [button_name_for_add_partner(cadet_id=id) for id in list_of_cadets.list_of_ids]
 
-def list_of_all_add_cadet_availability_buttons(interface: abstractInterface):
+def get_list_of_all_add_cadet_availability_buttons(interface: abstractInterface):
     list_of_cadets = get_list_of_all_cadets(interface)
 
     return  [make_cadet_available_button_name(cadet) for cadet in list_of_cadets]

@@ -115,11 +115,6 @@ class ListOfCadetAtEventWithDinghies(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return CadetAtEventWithDinghy
 
-    def DEPRECATE_update_boat_info_for_cadet_and_partner_at_event(
-        self,
-        cadet_at_event_with_dinghy: CadetAtEventWithDinghy
-    ):
-        raise
 
     def update_boat_info_for_cadet_and_partner_at_event_on_day(
         self,
@@ -215,20 +210,6 @@ class ListOfCadetAtEventWithDinghies(GenericListOfObjectsWithIds):
     def add_boat_for_no_existing_cadet(self, cadet_id: str, boat_class_id: str, sail_number: str, day: Day):
         self.append(CadetAtEventWithDinghy(cadet_id=cadet_id, boat_class_id=boat_class_id, sail_number=sail_number, day=day))
 
-    def DEPRECATE_object_with_cadet_id(self, cadet_id: str) -> CadetAtEventWithDinghy:
-        idx = self.DEPRECATE_idx_of_item_with_cadet_id(cadet_id)
-        if idx is missing_data:
-            return missing_data
-        return self[idx]
-
-    def DEPRECATE_idx_of_item_with_cadet_id(self, cadet_id: str):
-        idx = [item for item in self if item.cadet_id == cadet_id]
-        if len(idx)==0:
-            return missing_data
-        elif len(idx)>1:
-            raise Exception("Can only have one boat per cadet")
-
-        return self.index(idx[0])
 
     def idx_of_item_with_cadet_id_on_day(self, cadet_id: str, day: Day):
         item = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
@@ -237,14 +218,6 @@ class ListOfCadetAtEventWithDinghies(GenericListOfObjectsWithIds):
 
         return self.index(item)
 
-    def DEPRECATE_cadet_partner_id_for_cadet_id(self, cadet_id:str) -> str:
-        list_of_items = [item.partner_cadet_id for item in self if item.cadet_id == cadet_id]
-        if len(list_of_items)==0:
-            return missing_data
-        if len(list_of_items)>1:
-            raise Exception("Can only have one dinghy per cadet")
-
-        return list_of_items[0]
 
     def cadet_partner_id_for_cadet_id_on_day(self, cadet_id:str, day: Day) -> str:
         item = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
@@ -277,15 +250,6 @@ class ListOfCadetAtEventWithDinghies(GenericListOfObjectsWithIds):
 
         return list_of_items[0]
 
-
-    def DEPRECATE_boat_class_id_for_cadet_id(self, cadet_id:str) -> str:
-        list_of_items = [item.boat_class_id for item in self if item.cadet_id == cadet_id]
-        if len(list_of_items)==0:
-            return missing_data
-        if len(list_of_items)>1:
-            raise Exception("Can only have one dinghy per cadet")
-
-        return list_of_items[0]
 
     def unique_list_of_cadet_ids(self):
         ## unique

@@ -1,7 +1,9 @@
 
-from typing import List
+from typing import List, Dict
 import pandas as pd
-from app.objects.day_selectors import Day, ALL_POSSIBLE_DAYS
+from app.objects.events import Event
+
+from app.objects.day_selectors import Day, ALL_POSSIBLE_DAYS, ListOfDaySelectors, DaySelector
 
 from app.objects.utils import in_x_not_in_y
 
@@ -123,8 +125,24 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return CadetIdWithGroup
 
-    def list_of_cadet_ids_in_group(self, group: Group) -> List[str]:
-        ids = [item.cadet_id for item in self if item.group == group]
+
+    def count_of_ids_by_day(self, event: Event) -> Dict[Day, int]:
+        return dict(
+            [
+                (day,
+                 self.count_of_ids_for_day(day))
+                for day in event.weekdays_in_event()
+            ]
+        )
+
+    def count_of_ids_for_day(self, day: Day) -> int:
+        matches = [item for item in self if item.day==day]
+
+        return len(matches)
+
+
+    def unique_list_of_cadet_ids(self, group: Group) -> List[str]:
+        ids = list(set([item.cadet_id for item in self if item.group == group]))
 
         return ids
 
@@ -210,16 +228,6 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
             full_list=list_of_cadets, list_of_ids=ids_in_list_not_given_group
         )
 
-    def group_for_cadet(self, cadet: Cadet):
-        return self.group_for_cadet_id(cadet.id)
-
-    def group_for_cadet_id(self, cadet_id: str) -> Group:
-        try:
-            item = self.item_with_cadet_id(cadet_id)
-        except:
-            return GROUP_UNALLOCATED
-
-        return item.group
 
     def group_for_cadet_id_on_day(self, cadet_id: str, day: Day) -> Group:
         item = self.item_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
@@ -255,6 +263,8 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
 
         return idx
 
+    def subset_for_day(self, day: Day):
+        return [item for item in self if item.day == day]
 
     @property
     def list_of_ids(self) -> list:
@@ -274,6 +284,7 @@ class CadetWithGroup(GenericSkipperManObject):
     ## For display purposes, can't store
     cadet: Cadet
     group: Group
+    day: Day
 
     @property
     def cadet_name_initials_only(self) -> str:
@@ -303,13 +314,19 @@ class ListOfCadetsWithGroup(GenericListOfObjects):
     def list_of_cadets(self) -> ListOfCadets:
         return ListOfCadets([cadet_with_group.cadet for cadet_with_group in self])
 
+    def attendance_matrix(self) -> ListOfDaySelectors:
+        list_of_availability = ListOfDaySelectors([DaySelector({item.day: True}) for item in self])
+
+        return list_of_availability
+
     @classmethod
     def from_list_of_cadets_and_list_of_allocations(
         cls, list_of_cadets: ListOfCadets, list_of_allocations: ListOfCadetIdsWithGroups
     ):
         list_of_cadets_with_group = [
             CadetWithGroup(
-                cadet=list_of_cadets.has_id(allocation.cadet_id), group=allocation.group
+                cadet=list_of_cadets.has_id(allocation.cadet_id), group=allocation.group, day=allocation.day
+
             )
             for allocation in list_of_allocations
         ]
@@ -323,4 +340,5 @@ class ListOfCadetsWithGroup(GenericListOfObjects):
 
         return pd.DataFrame(list_of_dicts)
 
-
+    def list_of_cadet_ids(self) -> List[str]:
+        return [item.cadet.id for item in self]

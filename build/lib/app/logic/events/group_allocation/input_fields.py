@@ -49,7 +49,6 @@ def get_input_fields_for_cadet(interface: abstractInterface, cadet: Cadet, alloc
     if no_day_set_in_state(interface=interface):
         return get_input_fields_for_cadet_across_days(
             cadet=cadet,
-            day=dict,
             allocation_data=allocation_data
         )
     day = get_day_from_state_or_none(interface)
@@ -61,7 +60,7 @@ def get_input_fields_for_cadet(interface: abstractInterface, cadet: Cadet, alloc
         )
 
 
-def get_input_fields_for_cadet_across_days(cadet: Cadet, day: Day, allocation_data: AllocationData) -> list:
+def get_input_fields_for_cadet_across_days(cadet: Cadet,  allocation_data: AllocationData) -> list:
     group_allocation_field = get_dropdown_input_for_group_allocation_across_days(cadet=cadet, allocation_data=allocation_data)
     dropdown_input_for_club_boat_allocation = get_dropdown_input_for_club_boat_allocation_across_days(cadet=cadet, allocation_data=allocation_data)
     dropdown_input_for_boat_class_allocation =  get_dropdown_input_for_boat_class_allocation_across_days(cadet=cadet, allocation_data=allocation_data)

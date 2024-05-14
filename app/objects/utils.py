@@ -13,6 +13,9 @@ from dateutil.parser import parse
 
 from itertools import groupby
 
+def drop_duplicates_in_list_of_ids(list_of_ids: list):
+    return list(dict.fromkeys(list_of_ids))
+
 def all_equal(iterable):
     g = groupby(iterable)
     return next(g, True) and not next(g, False)

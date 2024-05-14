@@ -53,7 +53,7 @@ def get_event_form_for_event(
     event_description = event_description + birthdays
     event_description = ListOfLines([Line([Heading(item,centred=True, size=5)]) for item in event_description])
 
-    summarise_registrations = summarise_registrations_for_event(event)
+    summarise_registrations = summarise_registrations_for_event(interface=interface, event=event)
 
     allocations_lines = ""
     if event.contains_cadets:

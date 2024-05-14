@@ -1,4 +1,4 @@
-from app.backend.volunteers.volunteer_rota_data import  get_all_roles_across_past_events_for_volunteer_id_as_dict
+from app.backend.volunteers.volunteer_rota_data import  get_all_roles_across_recent_events_for_volunteer_id_as_dict
 
 from app.backend.forms.form_utils import get_availablity_from_form, get_availability_checkbox
 from app.backend.volunteers.volunteer_allocation import \
@@ -41,7 +41,7 @@ def display_form_confirm_volunteer_details_from_rota(interface: abstractInterfac
 
 
 def get_text_of_last_roles(interface: abstractInterface, volunteer_at_event: VolunteerAtEvent) -> Line:
-    all_roles_as_dict = get_all_roles_across_past_events_for_volunteer_id_as_dict(interface=interface, volunteer_id=volunteer_at_event.volunteer_id)
+    all_roles_as_dict = get_all_roles_across_recent_events_for_volunteer_id_as_dict(interface=interface, volunteer_id=volunteer_at_event.volunteer_id)
     text_as_list  = ['%s: %s' % (str(event), role)for event, role in all_roles_as_dict.items()]
 
     text =", ".join(text_as_list)

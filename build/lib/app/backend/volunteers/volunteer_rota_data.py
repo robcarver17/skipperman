@@ -213,7 +213,7 @@ def get_dict_of_volunteers_with_last_roles(interface: abstractInterface, list_of
 
 
 def get_last_role_for_volunteer_id(interface: abstractInterface, volunteer_id: str, avoid_event: Event = arg_not_passed) -> str:
-    roles = get_all_roles_across_past_events_for_volunteer_id_as_list(
+    roles = get_all_roles_across_recent_events_for_volunteer_id_as_list(
         interface=interface,
         volunteer_id=volunteer_id,
         avoid_event=avoid_event,
@@ -225,8 +225,8 @@ def get_last_role_for_volunteer_id(interface: abstractInterface, volunteer_id: s
     return roles[-1] ## most recent role
 
 
-def get_all_roles_across_past_events_for_volunteer_id_as_list(interface: abstractInterface, volunteer_id: str, sort_by = SORT_BY_START_ASC, avoid_event: Event = arg_not_passed) -> list:
-    roles_as_dict = get_all_roles_across_past_events_for_volunteer_id_as_dict(
+def get_all_roles_across_recent_events_for_volunteer_id_as_list(interface: abstractInterface, volunteer_id: str, sort_by = SORT_BY_START_ASC, avoid_event: Event = arg_not_passed) -> list:
+    roles_as_dict = get_all_roles_across_recent_events_for_volunteer_id_as_dict(
         interface=interface,
         volunteer_id=volunteer_id,
         sort_by=sort_by,
@@ -234,8 +234,11 @@ def get_all_roles_across_past_events_for_volunteer_id_as_list(interface: abstrac
     )
     return list(roles_as_dict.values())
 
-def get_all_roles_across_past_events_for_volunteer_id_as_dict(interface: abstractInterface, volunteer_id: str, sort_by = SORT_BY_START_ASC, avoid_event: Event = arg_not_passed) -> dict:
+HOW_MANY_EVENTS = 4 ## normally 3 but include last event
+
+def get_all_roles_across_recent_events_for_volunteer_id_as_dict(interface: abstractInterface, volunteer_id: str, sort_by = SORT_BY_START_ASC, avoid_event: Event = arg_not_passed) -> dict:
     list_of_events = get_sorted_list_of_events(interface=interface, sort_by=sort_by)
+    list_of_events = list_of_events[-HOW_MANY_EVENTS:]
     if avoid_event is arg_not_passed:
         pass ## can't exclude so do everything
     else:

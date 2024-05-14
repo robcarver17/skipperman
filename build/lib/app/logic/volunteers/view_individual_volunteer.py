@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.backend.volunteers.volunteer_rota_data import get_all_roles_across_past_events_for_volunteer_id_as_dict
+from app.backend.volunteers.volunteer_rota_data import get_all_roles_across_recent_events_for_volunteer_id_as_dict
 from app.logic.volunteers.delete_volunteer import display_form_delete_individual_volunteer
 from app.logic.volunteers.edit_cadet_connections import display_form_edit_cadet_volunteer_connections
 from app.logic.volunteers.edit_volunteer import display_form_edit_individual_volunteer
@@ -61,7 +61,7 @@ def display_form_for_selected_volunteer(
     )
 
 def list_of_lines_with_allocations_and_roles(interface: abstractInterface, volunteer: Volunteer) -> ListOfLines:
-    dict_of_roles =get_all_roles_across_past_events_for_volunteer_id_as_dict(
+    dict_of_roles =get_all_roles_across_recent_events_for_volunteer_id_as_dict(
         interface=interface, volunteer_id=volunteer.id,
                                                       sort_by=SORT_BY_START_DSC)
     if len(dict_of_roles)==0:

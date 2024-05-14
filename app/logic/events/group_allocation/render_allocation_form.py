@@ -1,4 +1,12 @@
-from typing import Union
+from typing import Union, Dict
+
+from app.objects.groups import Group
+
+from app.backend.data.events import get_list_of_all_events
+
+from app.backend.group_allocations.previous_allocations import allocation_for_cadet_in_previous_events_as_dict, \
+    DEPRECATE_get_dict_of_allocations_for_events_and_list_of_cadets, \
+    get_dict_of_allocations_for_events_and_list_of_cadets
 
 from app.objects.constants import missing_data
 
@@ -26,7 +34,9 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines, ___________
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.cadets import Cadet
-from app.objects.events import Event
+from app.objects.events import Event, list_of_events_excluding_one_event, SORT_BY_START_ASC
+from build.lib.app.backend.group_allocations.previous_allocations import \
+    DEPRECATE_get_dict_of_allocations_for_events_and_list_of_cadets
 
 
 def display_form_allocate_cadets_at_event(interface: abstractInterface, event: Event, sort_order: list) -> Union[Form, NewForm]:
@@ -165,7 +175,7 @@ def get_input_field_headings_for_day(day_name:str, event_contains_groups: bool) 
 
 
 def get_row_for_cadet(interface: abstractInterface, cadet: Cadet, allocation_data: AllocationData) -> RowInTable:
-    cell_for_cadet = get_cell_for_cadet(interface=interface, cadet=cadet, allocation_data=allocation_data)
+    cell_for_cadet = get_cell_for_cadet(interface=interface, cadet=cadet)
     previous_groups_as_list = allocation_data.previous_groups_as_list_of_str(cadet, number_of_events=NUMBER_OF_PREVIOUS_EVENTS)
     previous_group_info = allocation_data.group_info_dict_for_cadet_as_ordered_list(cadet)
     previous_group_info  = [make_long_thing_detail_box(field) for field in previous_group_info]
@@ -181,17 +191,30 @@ def get_row_for_cadet(interface: abstractInterface, cadet: Cadet, allocation_dat
         input_fields
         )
 
-MAX_EVENTS_TO_SHOW = 12
+MAX_EVENTS_TO_SHOW = 10
 
-def get_cell_for_cadet(interface: abstractInterface, allocation_data: AllocationData, cadet: Cadet) -> Union[ListOfLines, Button]:
+def get_cell_for_cadet(interface: abstractInterface, cadet: Cadet) -> Union[ListOfLines, Button]:
     if this_cadet_has_been_clicked_on_already(interface=
                                               interface, cadet=
                                               cadet):
-        dict_of_groups = allocation_data.previous_groups_as_dict(cadet=cadet, number_of_events=MAX_EVENTS_TO_SHOW)
+        dict_of_groups = previous_groups_as_dict(interface=interface, cadet=cadet, number_of_events=MAX_EVENTS_TO_SHOW)
+        dict_of_groups = dict([(key, value) for key, value in dict_of_groups.items() if not value.is_unallocated])
         list_of_groups_as_str = ["%s: %s" % (str(event), group.group_name) for event, group in dict_of_groups.items()]
         return ListOfLines([str(cadet), "Previous groups:-"]+list_of_groups_as_str).add_Lines()
     else:
         return Button(str(cadet), value=get_button_id_for_cadet(cadet.id))
+
+
+def previous_groups_as_dict(interface: abstractInterface, cadet: Cadet, number_of_events: int = 3) -> Dict[Event, Group]:
+    event = get_event_from_state(interface)
+    list_of_events = get_list_of_all_events(interface)
+    list_of_previous_events = list_of_events_excluding_one_event(list_of_events=list_of_events,event_to_exclude=event, only_past=True,
+                                                                 sort_by=SORT_BY_START_ASC)[-number_of_events:]
+    previous_allocations_as_dict = get_dict_of_allocations_for_events_and_list_of_cadets(interface=interface,
+                                                                                         list_of_events=list_of_previous_events)
+    return allocation_for_cadet_in_previous_events_as_dict(cadet=cadet, previous_allocations_as_dict=previous_allocations_as_dict,
+                                                           number_of_events=number_of_events)
+
 
 def this_cadet_has_been_clicked_on_already(interface: abstractInterface, cadet: Cadet):
     cadet_id = get_current_cadet_id_at_event(interface)

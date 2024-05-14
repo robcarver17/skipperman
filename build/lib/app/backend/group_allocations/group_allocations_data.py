@@ -9,11 +9,12 @@ from app.backend.events import DEPRECATE_get_sorted_list_of_events
 from app.backend.group_allocations.cadet_event_allocations import get_list_of_active_cadets_at_event, \
     DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only
 from app.backend.group_allocations.previous_allocations import allocation_for_cadet_in_previous_events, \
-    get_dict_of_allocations_for_events_and_list_of_cadets, allocation_for_cadet_in_previous_events_as_dict
+    DEPRECATE_get_dict_of_allocations_for_events_and_list_of_cadets, allocation_for_cadet_in_previous_events_as_dict
 from app.data_access.configuration.configuration import UNALLOCATED_GROUP_NAME
 from app.backend.data.cadets_at_event import DEPRECATED_load_cadets_at_event
 from app.backend.data.cadets import DEPRECATE_load_list_of_all_cadets
-from app.data_access.configuration.field_list import CADET_GROUP_PREFERENCE, DESIRED_BOAT, CADET_BOAT_CLASS, CADET_BOAT_SAIL_NUMBER
+from app.data_access.configuration.field_list import CADET_GROUP_PREFERENCE, DESIRED_BOAT, CADET_BOAT_CLASS, \
+    CADET_BOAT_SAIL_NUMBER, CADET_BOAT_OWNERSHIP_STATUS
 from app.backend.data.dinghies import load_list_of_club_dinghies, \
     DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies, load_list_of_boat_classes
 from app.backend.data.cadets_at_event import load_list_of_cadets_at_event_with_dinghies
@@ -219,9 +220,39 @@ class AllocationData:
     def get_current_club_boat_name_on_day(self, cadet: Cadet, day: Day)-> str:
         dinghy_id = self.list_of_club_boats_allocated.dinghy_for_cadet_id_on_day(cadet_id=cadet.id, day=day, default=missing_data)
         if dinghy_id is missing_data:
-            return NO_BOAT
+            ## Guess
+            return self.guess_if_club_boat_required(cadet=cadet, day=day)
 
         return self.list_of_club_boats.name_given_id(dinghy_id)
+
+    def guess_if_club_boat_required(self, cadet: Cadet, day: Day)-> str:
+        ## Guess
+        allocation_info = self.group_allocation_info.get_allocation_info_for_cadet(cadet)
+
+        boat_status= allocation_info.get(CADET_BOAT_OWNERSHIP_STATUS , '')
+        if 'club boat' in boat_status.lower():
+            return self.guess_current_club_boat_name_on_day(cadet=cadet, day=day)
+        else:
+            return NO_BOAT
+
+    def guess_current_club_boat_name_on_day(self, cadet: Cadet, day: Day) -> str:
+            ## Guess
+        allocation_info = self.group_allocation_info.get_allocation_info_for_cadet(cadet)
+
+        pref_group = allocation_info.get(CADET_GROUP_PREFERENCE, '')
+        boat_class = allocation_info.get(CADET_BOAT_CLASS, '')
+        pref_boat = allocation_info.get(DESIRED_BOAT, '')
+
+        allocated_group = self.get_current_group_name_for_day(cadet=cadet, day=day)
+
+        return guess_best_club_boat_name_given_list_of_possibly_matching_fields([
+            boat_class,
+            allocated_group,
+            pref_boat,
+            pref_group,
+        ])
+
+
 
     def group_info_fields(self):
         visible_field_names =  self.group_allocation_info.visible_field_names
@@ -289,6 +320,12 @@ class AllocationData:
         cadet_at_event =  self.cadets_at_event_including_non_active.cadet_at_event(cadet_id=cadet.id)
         return cadet_at_event.availability
 
+def guess_best_club_boat_name_given_list_of_possibly_matching_fields(list_of_options: List[str])-> str:
+    list_of_boats = load_list_of_club_dinghies()
+    list_of_names = list_of_boats.list_of_names()
+
+    return best_option_against_boat_names(list_of_names=list_of_names, list_of_options=list_of_options)
+
 
 def guess_best_boat_class_name_given_list_of_possibly_matching_fields(list_of_options: List[str])-> str:
     list_of_boats = load_list_of_boat_classes()
@@ -326,7 +363,7 @@ def get_allocation_data(interface: abstractInterface, event: Event) -> Allocatio
     list_of_cadets_in_event_active_only = get_list_of_active_cadets_at_event(event)
     list_of_events = DEPRECATE_get_sorted_list_of_events()
     list_of_previous_events = list_of_events_excluding_one_event(list_of_events=list_of_events,event_to_exclude=event, only_past=True, sort_by=SORT_BY_START_ASC)
-    previous_allocations_as_dict = get_dict_of_allocations_for_events_and_list_of_cadets(list_of_events=list_of_previous_events)
+    previous_allocations_as_dict = DEPRECATE_get_dict_of_allocations_for_events_and_list_of_cadets(list_of_events=list_of_previous_events)
     list_of_all_cadets = DEPRECATE_load_list_of_all_cadets()
 
     group_allocation_info = get_group_allocation_info(cadets_at_event_including_non_active)

@@ -264,7 +264,7 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
         return idx
 
     def subset_for_day(self, day: Day):
-        return [item for item in self if item.day == day]
+        return ListOfCadetIdsWithGroups([item for item in self if item.day == day])
 
     @property
     def list_of_ids(self) -> list:

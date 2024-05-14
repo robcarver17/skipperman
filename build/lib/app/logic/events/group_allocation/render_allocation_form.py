@@ -196,7 +196,6 @@ def get_cell_for_cadet(interface: abstractInterface, allocation_data: Allocation
 def this_cadet_has_been_clicked_on_already(interface: abstractInterface, cadet: Cadet):
     cadet_id = get_current_cadet_id_at_event(interface)
     if cadet_id is missing_data:
-        print("No stored cadet id")
         return False
     return cadet_id == cadet.id
 

@@ -71,7 +71,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - phone friendly ticksheet
 - allow multiple days / different allocations to boats, groups etc
 - cadet location warning
-
+- auto completes club boat
 
 ### Required for training events:
 

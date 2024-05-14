@@ -131,6 +131,7 @@ def post_form_view_for_volunteer_rota(
 
     interface.save_stored_items()
     interface.clear_stored_items()
+    warn_on_all_volunteers(interface)
 
     return display_form_view_for_volunteer_rota(interface=interface)
 
@@ -141,4 +142,8 @@ def add_new_volunteer_form(interface :abstractInterface):
 def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(display_form_view_for_volunteer_rota)
 
+def warn_on_all_volunteers(interface: abstractInterface):
+    list_of_volunteers_at_event = get_filtered_list_of_volunteers_at_event(interface)
 
+    for volunteer_at_event in list_of_volunteers_at_event:
+        warn_about_volunteer_at_event(interface=interface, volunteer_at_event=volunteer_at_event)

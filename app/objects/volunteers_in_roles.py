@@ -62,8 +62,9 @@ class VolunteerInRoleAtEvent(GenericSkipperManObject):
         return self.role in INSTRUCTOR_TEAM
 
     def on_lake(self):
-        if self.group.is_lake_training():
-            return True
+        if not self.group.is_unallocated:
+            if self.group.is_lake_training():
+                return True
 
         if "lake" in self.role.lower():
             return True
@@ -169,7 +170,7 @@ class ListOfVolunteersInRoleAtEvent(GenericListOfObjects):
         return VolunteerInRoleAtEvent
 
     def list_if_volunteer_id_in_list_of_ids(self, list_of_ids: List[str]) -> 'ListOfVolunteersInRoleAtEvent':
-        return ListOfVolunteersInRoleAtEvent([volunteer for volunteer in self if volunteer.volunteer_id in list_of_ids])
+        return ListOfVolunteersInRoleAtEvent([volunteer_in_role for volunteer_in_role in self if volunteer_in_role.volunteer_id in list_of_ids])
 
     def swap_roles_for_volunteers_in_allocation(self,
                 original_day: Day,

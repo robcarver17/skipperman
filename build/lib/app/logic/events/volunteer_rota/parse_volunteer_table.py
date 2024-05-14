@@ -7,7 +7,8 @@ from app.backend.data.volunteer_rota import delete_role_at_event_for_volunteer_o
     copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days
 from app.backend.volunteers.volunteer_allocation import     make_volunteer_unavailable_on_day, make_volunteer_available_on_day
 from app.backend.volunteers.volunteer_rota import get_sorted_and_filtered_list_of_volunteers_at_event, \
-    volunteer_has_lake_cadet, volunteer_is_on_lake
+    groups_for_volunteer, volunteer_is_on_lake, list_of_cadet_groups_associated_with_volunteer, \
+    lake_in_list_of_groups
 from app.backend.volunteers.volunteer_rota_data import get_data_to_be_stored_for_volunteer_rota_page
 from app.data_access.configuration.configuration import VOLUNTEER_SKILLS
 from app.logic.events.volunteer_rota.edit_cadet_connections_for_event_from_rota import \
@@ -172,6 +173,7 @@ def save_all_information_and_filter_state_in_rota_page(interface: abstractInterf
 def save_all_information_in_rota_page(interface: abstractInterface):
 
     list_of_volunteers_at_event = get_filtered_list_of_volunteers_at_event(interface)
+
     for volunteer_at_event in list_of_volunteers_at_event:
         try:
             update_details_from_form_for_volunteer_at_event(
@@ -182,19 +184,25 @@ def save_all_information_in_rota_page(interface: abstractInterface):
             ## perfectly fine if
             interface.log_error("Weird error updating volunteer %s: code %s" % (str(volunteer_at_event), str(e)))
 
-        warn_about_volunteer_at_event(interface=interface, volunteer_at_event=volunteer_at_event)
 
 def warn_about_volunteer_at_event(interface: abstractInterface,
                                   volunteer_at_event: VolunteerAtEvent):
     event = get_event_from_state(interface)
-    data_to_be_stored = get_data_to_be_stored_for_volunteer_rota_page(interface=interface, event=event)
 
-    has_lake_cadet =  volunteer_has_lake_cadet(data_to_be_stored=data_to_be_stored, volunteer_at_event=volunteer_at_event)
+    list_of_cadet_groups = list_of_cadet_groups_associated_with_volunteer(interface=interface,event=event, volunteer_at_event=volunteer_at_event)
+    has_lake_cadet = lake_in_list_of_groups(list_of_cadet_groups)
     is_lake_volunteer = volunteer_is_on_lake(interface=interface, volunteer_id = volunteer_at_event.volunteer_id, event=event)
+    volunteer = get_volunteer_from_id(interface, volunteer_at_event.volunteer_id)
 
     if has_lake_cadet and is_lake_volunteer:
-        volunteer = get_volunteer_from_id(interface, volunteer_at_event.volunteer_id)
         interface.log_error("Volunteer %s is in lake role, but has cadet at lake" % volunteer.name)
+
+    list_of_groups_for_volunteer = groups_for_volunteer(interface=interface, event=event, volunteer_id=volunteer_at_event.volunteer_id)
+    for group in list_of_groups_for_volunteer:
+        if group in list_of_cadet_groups:
+            if group.is_unallocated:
+                continue
+            interface.log_error("Volunteer %s and cadet are both in group %s" % (volunteer.name, group.group_name))
 
 
 def get_filtered_list_of_volunteers_at_event(interface: abstractInterface) -> ListOfVolunteersAtEvent:

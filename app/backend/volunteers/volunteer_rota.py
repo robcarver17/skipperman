@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import List
 
+from app.backend.data.group_allocations import GroupAllocationsData
+
 from app.backend.volunteers.volunteers import get_volunteer_name_from_id
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -78,8 +80,8 @@ def sort_volunteer_data_for_event_by_day_sort_order(
 
 
 def get_cadet_location_string(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage, volunteer_at_event: VolunteerAtEvent):
-    list_of_groups = list_of_cadet_groups_associated_with_volunteer(data_to_be_stored=data_to_be_stored,
-                                                                    volunteer_at_event=volunteer_at_event)
+    list_of_groups = REFACTOR_list_of_cadet_groups_associated_with_volunteer(data_to_be_stored=data_to_be_stored,
+                                                                             volunteer_at_event=volunteer_at_event)
     if len(list_of_groups)==0:
         return "x- no associated cadets -x" ## trick to get at end of sort
 
@@ -92,22 +94,7 @@ def str_type_of_group_given_list_of_groups(list_of_groups: List[Group]):
     sorted_list_of_group_locations = sorted_locations(unique_list_of_group_locations)
     return ", ".join(sorted_list_of_group_locations)
 
-def volunteer_has_lake_cadet(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage, volunteer_at_event: VolunteerAtEvent) -> bool:
-    list_of_groups = list_of_cadet_groups_associated_with_volunteer(data_to_be_stored=data_to_be_stored,
-                                                                    volunteer_at_event=volunteer_at_event)
 
-    return lake_in_list_of_groups(list_of_groups)
-
-def lake_in_list_of_groups(list_of_groups: List[Group]):
-    types_of_groups = [group.type_of_group() for group in list_of_groups]
-    return LAKE_TRAINING in types_of_groups
-
-def list_of_cadet_groups_associated_with_volunteer(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage, volunteer_at_event: VolunteerAtEvent) -> List[Group]:
-    list_of_cadet_ids = volunteer_at_event.list_of_associated_cadet_id
-    list_of_groups = [data_to_be_stored.group_given_cadet_id(cadet_id) for cadet_id in list_of_cadet_ids]
-    list_of_groups = [group for group in list_of_groups if group is not missing_data]
-
-    return list_of_groups
 
 def str_dict_skills(volunteer: Volunteer, data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage):
     list_of_skills = data_to_be_stored.list_of_skills_given_volunteer_id(volunteer.id)
@@ -295,3 +282,40 @@ def sort_volunteer_data_for_event_by_location(list_of_volunteers_at_event: ListO
 def volunteer_is_on_lake(interface: abstractInterface, event: Event, volunteer_id: str) -> bool:
     volunteer_rota_data = VolunteerRotaData(interface.data)
     return volunteer_rota_data.volunteer_is_on_lake(event=event, volunteer_id=volunteer_id)
+
+
+
+def list_of_cadet_groups_associated_with_volunteer(interface: abstractInterface, event: Event, volunteer_at_event: VolunteerAtEvent) -> List[Group]:
+    group_data = GroupAllocationsData(interface.data)
+    list_of_cadet_ids = volunteer_at_event.list_of_associated_cadet_id
+    list_of_groups = []
+    for cadet_id in list_of_cadet_ids:
+        list_of_groups_this_cadet = [group_data.get_list_of_cadet_ids_with_groups_at_event(event).group_for_cadet_id_on_day(cadet_id,day ) for day in event.weekdays_in_event()]
+        list_of_groups+=list_of_groups_this_cadet
+
+    list_of_groups = list(set(list_of_groups))
+    list_of_groups = [group for group in list_of_groups if group is not missing_data]
+
+    return list_of_groups
+
+
+def REFACTOR_list_of_cadet_groups_associated_with_volunteer(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage, volunteer_at_event: VolunteerAtEvent) -> List[Group]:
+    list_of_cadet_ids = volunteer_at_event.list_of_associated_cadet_id
+    list_of_groups = [data_to_be_stored.group_given_cadet_id(cadet_id) for cadet_id in list_of_cadet_ids]
+    list_of_groups = [group for group in list_of_groups if group is not missing_data]
+
+    return list_of_groups
+
+
+def lake_in_list_of_groups(list_of_groups: List[Group]):
+    types_of_groups = [group.type_of_group() for group in list_of_groups]
+    return LAKE_TRAINING in types_of_groups
+
+def groups_for_volunteer(interface: abstractInterface, event: Event, volunteer_id: str) -> List[Group]:
+    list_of_groups = [ get_volunteer_with_role_at_event_on_day(interface=interface,
+                                                                  volunteer_id=volunteer_id,
+                                                                            day=day, event=event).group
+                      for day in event.weekdays_in_event()]
+    list_of_groups = [group for group in list_of_groups if group is not missing_data]
+
+    return list(set(list_of_groups))

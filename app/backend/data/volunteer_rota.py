@@ -26,6 +26,12 @@ class VolunteerRotaData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
 
+    def volunteer_is_on_lake(self, event: Event, volunteer_id: str) -> bool:
+        list_of_volunteers = self.get_list_of_volunteers_in_roles_at_event(event)
+        subset_for_volunteer = list_of_volunteers.list_if_volunteer_id_in_list_of_ids([volunteer_id])
+
+        return any([volunteer_in_role.on_lake() for volunteer_in_role in subset_for_volunteer])
+
     def save_new_volunteer_target(self, event: Event, role: str, target: int):
         list_of_targets_for_role_at_event = self.get_list_of_targets_for_role_at_event(event=event)
         list_of_targets_for_role_at_event.set_target_for_role(role=role, target=target)

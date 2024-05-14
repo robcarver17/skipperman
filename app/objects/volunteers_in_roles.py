@@ -61,6 +61,14 @@ class VolunteerInRoleAtEvent(GenericSkipperManObject):
     def in_instructor_team(self):
         return self.role in INSTRUCTOR_TEAM
 
+    def on_lake(self):
+        if self.group.is_lake_training():
+            return True
+
+        if "lake" in self.role.lower():
+            return True
+
+        return False
 
 def teams_given_role(role: str, teams: dict = VOLUNTEER_TEAMS) -> List[str]:
     if role == NO_ROLE_SET:

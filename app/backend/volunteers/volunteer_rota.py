@@ -13,7 +13,7 @@ from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConst
 from app.backend.data.volunteers import DEPRECATED_get_sorted_list_of_volunteers
 from app.objects.constants import missing_data, arg_not_passed
 from app.objects.events import Event
-from app.objects.groups import Group, ALL_GROUPS_NAMES, GROUP_UNALLOCATED_TEXT, sorted_locations
+from app.objects.groups import Group, ALL_GROUPS_NAMES, GROUP_UNALLOCATED_TEXT, sorted_locations, LAKE_TRAINING
 from app.objects.volunteers_at_event import VolunteerAtEvent, ListOfVolunteersAtEvent
 from app.objects.volunteers import Volunteer
 from app.objects.volunteers_in_roles import NO_ROLE_SET, VolunteerInRoleAtEvent
@@ -78,11 +78,10 @@ def sort_volunteer_data_for_event_by_day_sort_order(
 
 
 def get_cadet_location_string(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage, volunteer_at_event: VolunteerAtEvent):
-    list_of_cadet_ids = volunteer_at_event.list_of_associated_cadet_id
-    if len(list_of_cadet_ids)==0:
-        return "No associated cadets"
-    list_of_groups = [data_to_be_stored.group_given_cadet_id(cadet_id) for cadet_id in list_of_cadet_ids]
-    list_of_groups = [group for group in list_of_groups if group is not missing_data]
+    list_of_groups = list_of_cadet_groups_associated_with_volunteer(data_to_be_stored=data_to_be_stored,
+                                                                    volunteer_at_event=volunteer_at_event)
+    if len(list_of_groups)==0:
+        return "x- no associated cadets -x" ## trick to get at end of sort
 
     return str_type_of_group_given_list_of_groups(list_of_groups)
 
@@ -92,6 +91,23 @@ def str_type_of_group_given_list_of_groups(list_of_groups: List[Group]):
     unique_list_of_group_locations = list(set(types_of_groups))
     sorted_list_of_group_locations = sorted_locations(unique_list_of_group_locations)
     return ", ".join(sorted_list_of_group_locations)
+
+def volunteer_has_lake_cadet(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage, volunteer_at_event: VolunteerAtEvent) -> bool:
+    list_of_groups = list_of_cadet_groups_associated_with_volunteer(data_to_be_stored=data_to_be_stored,
+                                                                    volunteer_at_event=volunteer_at_event)
+
+    return lake_in_list_of_groups(list_of_groups)
+
+def lake_in_list_of_groups(list_of_groups: List[Group]):
+    types_of_groups = [group.type_of_group() for group in list_of_groups]
+    return LAKE_TRAINING in types_of_groups
+
+def list_of_cadet_groups_associated_with_volunteer(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage, volunteer_at_event: VolunteerAtEvent) -> List[Group]:
+    list_of_cadet_ids = volunteer_at_event.list_of_associated_cadet_id
+    list_of_groups = [data_to_be_stored.group_given_cadet_id(cadet_id) for cadet_id in list_of_cadet_ids]
+    list_of_groups = [group for group in list_of_groups if group is not missing_data]
+
+    return list_of_groups
 
 def str_dict_skills(volunteer: Volunteer, data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage):
     list_of_skills = data_to_be_stored.list_of_skills_given_volunteer_id(volunteer.id)
@@ -276,3 +292,6 @@ def sort_volunteer_data_for_event_by_location(list_of_volunteers_at_event: ListO
     return sorted_list_of_volunteers
 
 
+def volunteer_is_on_lake(interface: abstractInterface, event: Event, volunteer_id: str) -> bool:
+    volunteer_rota_data = VolunteerRotaData(interface.data)
+    return volunteer_rota_data.volunteer_is_on_lake(event=event, volunteer_id=volunteer_id)

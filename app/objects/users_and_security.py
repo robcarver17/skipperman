@@ -1,3 +1,5 @@
+from random import choice
+import string
 from dataclasses import dataclass
 from enum import Enum
 
@@ -68,6 +70,10 @@ class ListOfSkipperManUsers(GenericListOfObjects):
         user = self.get_user_given_username(username)
         user.password_hash = generate_password_hash(new_password)
 
+    def modify_volunteer_id(self, username: str, new_id: str):
+        user = self.get_user_given_username(username)
+        user.volunteer_id = new_id
+
     def modify_user_group(self, username: str, new_group:str):
         user = self.get_user_given_username(username)
         user.group = new_group
@@ -109,3 +115,9 @@ def add_defaults_to_list_of_users(list_of_users: ListOfSkipperManUsers) -> ListO
         return list_of_users
     else:
         return ListOfSkipperManUsers([default_admin_user_if_none_defined, default_user_if_not_logged_in])
+
+def get_random_string(length: int) -> str:
+    # choose from all lowercase letter
+    letters = string.ascii_lowercase
+    result_str = ''.join(choice(letters) for i in range(length))
+    return result_str

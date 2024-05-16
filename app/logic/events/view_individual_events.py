@@ -14,8 +14,7 @@ from app.logic.events.import_wa.update_existing_event import display_form_update
 from app.logic.events.import_wa.upload_event_file import display_form_upload_event_file
 from app.logic.events.mapping.event_field_mapping import display_form_event_field_mapping
 from app.logic.events.registration_details.edit_registration_details import display_form_edit_registration_details
-from app.logic.events.volunteer_rota.verify_volunteers_if_cadet_at_event_changed import \
-    display_form_volunteer_rota_check
+from app.logic.events.volunteer_rota.ENTRY1_display_main_rota_page import display_form_view_for_volunteer_rota
 from app.logic.events.patrol_boats.ENTRY_allocate_patrol_boats import display_form_view_for_patrol_boat_allocation
 
 from app.objects.abstract_objects.abstract_form import (
@@ -265,7 +264,7 @@ def form_to_edit_registration_details(interface: abstractInterface):
 
 
 def form_to_do_volunteer_rota(interface: abstractInterface):
-    return interface.get_new_form_given_function(display_form_volunteer_rota_check) ## check rota before going to form
+    return interface.get_new_form_given_function(display_form_view_for_volunteer_rota) ## check rota before going to form
 
 
 def form_to_allocate_patrol_boats(interface: abstractInterface):

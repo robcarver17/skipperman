@@ -178,10 +178,10 @@ app/logic/administration/../../data_access/configuration/configuration.yaml
 app/logic/administration/data/__init__.py
 app/logic/administration/data/data.py
 app/logic/administration/data/../../../data_access/configuration/configuration.yaml
+app/logic/administration/users/ENTRY_users.py
 app/logic/administration/users/__init__.py
 app/logic/administration/users/parse_user_form.py
 app/logic/administration/users/render_users_form.py
-app/logic/administration/users/users.py
 app/logic/administration/users/../../../data_access/configuration/configuration.yaml
 app/logic/cadets/ENTRY_view_cadets.py
 app/logic/cadets/__init__.py
@@ -280,9 +280,9 @@ app/logic/events/volunteer_rota/parse_volunteer_table.py
 app/logic/events/volunteer_rota/render_volunteer_table.py
 app/logic/events/volunteer_rota/rota_state.py
 app/logic/events/volunteer_rota/swapping.py
-app/logic/events/volunteer_rota/verify_volunteers_if_cadet_at_event_changed.py
 app/logic/events/volunteer_rota/volunteer_table_buttons.py
 app/logic/events/volunteer_rota/volunteer_targets.py
+app/logic/events/volunteer_rota/warnings.py
 app/logic/events/volunteer_rota/../../../data_access/configuration/configuration.yaml
 app/logic/instructors/ENTRY_choose_event.py
 app/logic/instructors/__init__.py

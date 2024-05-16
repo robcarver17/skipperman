@@ -1,6 +1,5 @@
 from typing import Union
 
-from app.backend.volunteers.volunteer_rota_data import get_explanation_of_sorts_and_filters
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 
 from app.logic.events.constants import *
@@ -12,6 +11,7 @@ from app.logic.events.volunteer_rota.rota_state import save_sorts_to_state, get_
     clear_all_filters
 from app.logic.events.volunteer_rota.volunteer_table_buttons import from_day_button_value_to_day
 from app.logic.events.volunteer_rota.volunteer_targets import get_volunteer_targets_table_and_save_button
+from app.logic.events.volunteer_rota.warnings import warn_on_all_volunteers
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm, )
@@ -131,7 +131,7 @@ def post_form_view_for_volunteer_rota(
 
     interface.save_stored_items()
     interface.clear_stored_items()
-    warn_on_all_volunteers(interface)
+    warn_on_all_volunteers(interface) ## breaks if still stored state
 
     return display_form_view_for_volunteer_rota(interface=interface)
 
@@ -142,8 +142,3 @@ def add_new_volunteer_form(interface :abstractInterface):
 def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(display_form_view_for_volunteer_rota)
 
-def warn_on_all_volunteers(interface: abstractInterface):
-    list_of_volunteers_at_event = get_filtered_list_of_volunteers_at_event(interface)
-
-    for volunteer_at_event in list_of_volunteers_at_event:
-        warn_about_volunteer_at_event(interface=interface, volunteer_at_event=volunteer_at_event)

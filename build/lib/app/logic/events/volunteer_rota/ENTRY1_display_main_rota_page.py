@@ -1,6 +1,5 @@
 from typing import Union
 
-from app.backend.volunteers.volunteer_rota_data import get_explanation_of_sorts_and_filters
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 
 from app.logic.events.constants import *
@@ -12,6 +11,7 @@ from app.logic.events.volunteer_rota.rota_state import save_sorts_to_state, get_
     clear_all_filters
 from app.logic.events.volunteer_rota.volunteer_table_buttons import from_day_button_value_to_day
 from app.logic.events.volunteer_rota.volunteer_targets import get_volunteer_targets_table_and_save_button
+from app.logic.events.volunteer_rota.warnings import warn_about_volunteer_at_event
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm, )

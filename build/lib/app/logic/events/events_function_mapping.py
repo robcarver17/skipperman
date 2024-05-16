@@ -62,8 +62,6 @@ from app.logic.events.group_allocation.ENTRY_allocate_cadets_to_groups import (
 from app.logic.events.group_allocation.add_cadet_partner import display_add_cadet_partner, post_form_add_cadet_partner
 from app.logic.events.volunteer_allocation.volunteer_identification import \
     display_form_volunteer_identification, post_form_volunteer_identification
-from app.logic.events.volunteer_rota.verify_volunteers_if_cadet_at_event_changed import \
-    post_form_volunteer_rota_check, display_form_volunteer_rota_check
 from app.logic.events.volunteer_allocation.add_volunteers_to_event import post_form_add_volunteers_to_event, display_add_volunteers_to_event
 
 from app.logic.events.registration_details.edit_registration_details import display_form_edit_registration_details, post_form_edit_registration_details
@@ -93,7 +91,6 @@ event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_func
                                 }
                             ,
                             (display_form_edit_registration_details, post_form_edit_registration_details):0,
-                            (display_form_volunteer_rota_check, post_form_volunteer_rota_check):0,
                             (display_form_view_for_volunteer_rota, post_form_view_for_volunteer_rota):
                                 {
                                     (display_form_add_new_volunteer_to_rota_at_event, post_form_add_new_volunteer_to_rota_at_event):0,

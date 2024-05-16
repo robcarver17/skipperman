@@ -75,32 +75,22 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for training events:
 
-SPEED:
-- store of previous events  cadet allocation to speed up loading 
-- store of previous events volunteer role to speed up loading
-
 
 MISC:
 - go through all cadets and backfill qualifications
 
 
 DATA_MODEL:
+- go through all code and apply data model
 - data model
 - changing day attendance will also affect club boat allocation, partnerships, dinghy allocation - or apply strict filters? 
 - removing volunteer / availability should also remove related information
 - removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
 
 
-IMPORT:
-- volunteer rota still not doing change check properly
 
 USERS:
-- datamodel
 - remove emails, link options; tidy up userlist on web
-
-
-CADET / VOLUNTEER LIST / CONFIGURATION
-- data model
 
 
 

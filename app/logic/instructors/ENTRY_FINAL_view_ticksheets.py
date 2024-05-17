@@ -12,7 +12,8 @@ from app.logic.instructors.ticksheet_table_elements import get_buttons_for_ticks
     EDIT_CHECKBOX_BUTTON_LABEL, EDIT_DROPDOWN_BUTTON_LABEL, SAVE_BUTTON_LABEL, PRINT_BUTTON_LABEL, \
     SHOW_ALL_CADETS_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, \
-    get_nav_bar_with_just_back_button
+    get_nav_bar_with_just_back_button, get_nav_bar_with_just_main_menu_and_back_button, \
+    get_nav_bar_with_just_cancel_button, CANCEL_BUTTON_LABEL, Button, ButtonBar
 
 from app.objects.abstract_objects.abstract_text import Heading
 
@@ -31,12 +32,17 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
+
 def display_form_view_ticksheets_for_event_and_group(interface: abstractInterface) -> Form:
     ### options: print, edit, add qualifications (super users only)
     event = get_event_from_state(interface)
     group = get_group_from_state(interface)
     qualification = get_qualification_from_state(interface)
-    navbar = get_nav_bar_with_just_back_button()
+    if not_editing(interface):
+        navbar = get_nav_bar_with_just_main_menu_and_back_button()
+    else:
+        navbar = ButtonBar([Button(CANCEL_BUTTON_LABEL, nav_button=True), Button(SAVE_BUTTON_LABEL, nav_button=True)])
+
     buttons = get_buttons_for_ticksheet(interface)
     instructions = get_instructions_for_ticksheet(interface=interface)
 
@@ -66,18 +72,21 @@ def display_form_view_ticksheets_for_event_and_group(interface: abstractInterfac
     return Form(lines_inside_form)
 
 
+def not_editing(interface: abstractInterface):
+    state = get_edit_state_of_ticksheet(interface)
+    return state == NO_EDIT_STATE
+
 
 def post_form_view_ticksheets_for_event_and_group(interface: abstractInterface) -> Union[Form, NewForm, File]:
     button_pressed = interface.last_button_pressed()
-    if button_pressed == BACK_BUTTON_LABEL:
-        state = get_edit_state_of_ticksheet(interface)
-        if state == NO_EDIT_STATE:
-            ## DOES NOT SAVE
-            return previous_form(interface)
-        else:
-            ## DOES NOT SAVE
-            set_edit_state_of_ticksheet(interface=interface, state=NO_EDIT_STATE)
-            return display_form_view_ticksheets_for_event_and_group(interface)
+    if button_pressed == CANCEL_BUTTON_LABEL:
+        ## DOES NOT SAVE
+        set_edit_state_of_ticksheet(interface=interface, state=NO_EDIT_STATE)
+        return display_form_view_ticksheets_for_event_and_group(interface)
+
+    elif button_pressed == BACK_BUTTON_LABEL:
+        set_edit_state_of_ticksheet(interface=interface, state=NO_EDIT_STATE)
+        return previous_form(interface)
 
     ### IF STATE EDIT, SAVE EDITS HERE
     save_ticksheet_edits(interface)

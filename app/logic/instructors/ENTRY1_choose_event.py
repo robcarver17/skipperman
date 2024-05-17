@@ -18,7 +18,7 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines, ___________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.backend.data.security import  get_volunteer_id_of_logged_in_user_or_superuser, SUPERUSER
 from app.objects.events import SORT_BY_START_DSC
-from app.logic.instructors.choose_group import display_form_choose_group_for_event
+from app.logic.instructors.ENTRY2_choose_group import display_form_choose_group_for_event
 def display_form_main_instructors_page(interface: abstractInterface) -> Form:
     return display_form_main_instructors_page_sort_order_passed(interface=interface, sort_by=SORT_BY_START_DSC)
 

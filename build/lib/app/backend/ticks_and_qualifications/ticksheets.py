@@ -31,9 +31,9 @@ def get_list_of_groups_volunteer_id_can_see(interface: abstractInterface, event:
 def can_see_all_groups_and_award_qualifications(interface: abstractInterface, event: Event, volunteer_id: str) -> bool:
     volunteer_rota_data = VolunteerRotaData(interface.data)
     is_senior_instructor_at_event = volunteer_rota_data.is_senior_instructor(event=event, volunteer_id=volunteer_id)
-    superuser = volunteer_id == SUPERUSER
+    is_superuser = volunteer_id == SUPERUSER
 
-    return superuser or is_senior_instructor_at_event
+    return is_superuser or is_senior_instructor_at_event
 
 
 def get_list_of_all_groups_at_event(interface: abstractInterface, event: Event) -> List[Group]:

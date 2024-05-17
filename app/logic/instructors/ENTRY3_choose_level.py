@@ -2,7 +2,7 @@ from typing import Union
 
 from app.backend.data.qualification import QualificationData
 from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button, BACK_BUTTON_LABEL, \
-    get_nav_bar_with_just_back_button
+    get_nav_bar_with_just_main_menu_and_back_button
 
 from app.objects.abstract_objects.abstract_text import Heading
 
@@ -17,14 +17,14 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.instructors.view_ticksheets import display_form_view_ticksheets_for_event_and_group
+from app.logic.instructors.ENTRY_FINAL_view_ticksheets import display_form_view_ticksheets_for_event_and_group
 
 def display_form_choose_level_for_group_at_event(interface: abstractInterface) -> Form:
     event = get_event_from_state(interface)
     group = get_group_from_state(interface)
     level_buttons = get_level_buttons(interface=interface)
-    navbar = get_nav_bar_with_just_back_button()
-    header = Line(Heading("Tick sheets and reports for instructors: Event %s, group %s, select level" % (str(event), str(group)), centred=False, size=4))
+    navbar = get_nav_bar_with_just_main_menu_and_back_button()
+    header = Line(Heading("Tick sheets and reports for instructors: Event: %s, Group: %s; Select level" % (str(event), str(group)), centred=False, size=4))
     lines_inside_form = ListOfLines(
         [
             navbar,

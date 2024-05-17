@@ -24,7 +24,7 @@ def get_buttons_for_ticksheet(interface: abstractInterface) -> Line:
     state = get_edit_state_of_ticksheet(interface)
 
     if state in [EDIT_CHECKBOX_STATE, EDIT_DROPDOWN_STATE]:
-        return Line([Button(SAVE_BUTTON_LABEL)])
+        return Line([])
 
     assert state == NO_EDIT_STATE
     list_of_options =[Button(EDIT_CHECKBOX_BUTTON_LABEL), Button(EDIT_DROPDOWN_BUTTON_LABEL), Button(PRINT_BUTTON_LABEL)]

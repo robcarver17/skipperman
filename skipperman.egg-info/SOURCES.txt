@@ -284,11 +284,12 @@ app/logic/events/volunteer_rota/volunteer_table_buttons.py
 app/logic/events/volunteer_rota/volunteer_targets.py
 app/logic/events/volunteer_rota/warnings.py
 app/logic/events/volunteer_rota/../../../data_access/configuration/configuration.yaml
-app/logic/instructors/ENTRY_choose_event.py
+app/logic/instructors/ENTRY1_choose_event.py
+app/logic/instructors/ENTRY2_choose_group.py
+app/logic/instructors/ENTRY3_choose_level.py
+app/logic/instructors/ENTRY_FINAL_view_ticksheets.py
 app/logic/instructors/__init__.py
 app/logic/instructors/buttons.py
-app/logic/instructors/choose_group.py
-app/logic/instructors/choose_level.py
 app/logic/instructors/instructor_function_mapping.py
 app/logic/instructors/parse_macro_buttons_in_ticksheets.py
 app/logic/instructors/parse_ticksheet_table.py
@@ -296,7 +297,6 @@ app/logic/instructors/print_ticksheet.py
 app/logic/instructors/render_ticksheet_table.py
 app/logic/instructors/state_storage.py
 app/logic/instructors/ticksheet_table_elements.py
-app/logic/instructors/view_ticksheets.py
 app/logic/instructors/../../data_access/configuration/configuration.yaml
 app/logic/reporting/ENTRY_view_list_of_reports.py
 app/logic/reporting/__init__.py

@@ -3,7 +3,7 @@ from typing import Union,  Callable
 
 from app.backend.forms.reorder_form import UP, DOWN, get_button_name_to_move_in_list, modify_list_given_button_name
 from app.objects.abstract_objects.abstract_form import Form, NewForm, textInput
-from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import Button, BACK_CANCEL_BUTTON_LABEL, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
@@ -22,7 +22,7 @@ def display_form_edit_generic_list(
 
     existing_entries = rows_for_existing_entries(existing_list)
     new_entries = row_for_new_entries()
-    navbar = ButtonBar([Button(BACK_BUTTON_LABEL, nav_button=True)])
+    navbar = ButtonBar([Button(BACK_CANCEL_BUTTON_LABEL, nav_button=True)])
     footer_buttons = ButtonBar([ Button(SAVE_ENTRY_BUTTON_LABEL, nav_button=True)])
 
     return Form([
@@ -101,7 +101,7 @@ def post_form_edit_generic_list(
     list_of_delete_buttons = get_list_of_delete_entry_buttons(existing_list)
     list_of_arrow_buttons = get_list_of_arrow_buttons(existing_list)
 
-    if button==BACK_BUTTON_LABEL:
+    if button==BACK_CANCEL_BUTTON_LABEL:
         return BACK_BUTTON_PRESSED
 
     elif button==SAVE_ENTRY_BUTTON_LABEL:

@@ -7,6 +7,7 @@ from app.objects.constants import arg_not_passed
 MAIN_MENU_BUTTON_LABEL = "Main menu"
 CANCEL_BUTTON_LABEL = "Cancel"
 FINISHED_BUTTON_LABEL = "Finished"
+BACK_CANCEL_BUTTON_LABEL = "Back (Cancel changes)"
 BACK_BUTTON_LABEL = "Back"
 
 
@@ -34,6 +35,19 @@ def get_nav_bar_with_just_back_button() -> ButtonBar:
                          nav_button=True)
 
     return ButtonBar([back_button])
+
+def get_nav_bar_with_just_cancel_button() -> ButtonBar:
+    back_button = Button(CANCEL_BUTTON_LABEL,
+                         nav_button=True)
+
+    return ButtonBar([back_button])
+
+
+def get_nav_bar_with_just_main_menu_and_back_button() -> ButtonBar:
+    back_button = Button(BACK_BUTTON_LABEL,
+                         nav_button=True)
+
+    return ButtonBar([main_menu_button, back_button])
 
 
 EDIT_BUTTON_LABEL = "Edit"

@@ -1,3 +1,5 @@
+import shutil
+
 from app.data_access.api.generic_api import GenericDataApi
 from app.data_access.classes.volunteers import DataListOfIdentifiedVolunteersAtEvent
 from app.data_access.csv.cadets import CsvDataListOfCadets, CsvDataListOfCadetsWithGroups, CsvDataListOfCadetsAtEvent, CsvDataListOfIdentifiedCadetsAtEvent
@@ -162,3 +164,7 @@ class CsvDataApi(GenericDataApi):
     def backup_data_path(self) -> str:
         return self._backup_data_path
 
+
+    def delete_all_master_data(self, are_you_sure: bool =False):
+        if are_you_sure:
+            shutil.rmtree(self.master_data_path)

@@ -3,22 +3,22 @@ from typing import Union
 from app.backend.wa_import.load_wa_file import WA_FILE
 from app.data_access.configuration.configuration import WILD_APRICOT_FILE_TYPES
 from app.logic.cadets.iterate_over_import_cadets_in_uploaded_file import begin_iteration_over_rows_in_temp_cadet_file
-from app.backend.wa_import.import_cadets import create_temp_file_with_list_of_cadets
+from app.backend.wa_import.import_cadets import create_temp_file_with_list_of_cadets, \
+    DESCRIBE_ALL_FIELDS_IN_WA_CADET_LIST_FILE
 from app.objects.abstract_objects.abstract_form import Form, NewForm, fileInput
-from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, BACK_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
-from app.logic.cadets.constants import  BACK_BUTTON_LABEL
 
 UPLOAD_FILE_BUTTON_LABEL = "Upload file"
 
 def display_form_import_cadets(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
-    prompt=Line("File to upload (for now must have columns: First name	Last name	Date of Birth)")
+    prompt=Line("File to upload (for now must be a csv or xls with following columns: %s)" % DESCRIBE_ALL_FIELDS_IN_WA_CADET_LIST_FILE)
     buttons = get_upload_buttons()
     input_field = Line(fileInput(input_name=WA_FILE, accept=WILD_APRICOT_FILE_TYPES))
 
@@ -49,7 +49,11 @@ def previous_form(interface: abstractInterface) -> NewForm:
 
 
 def respond_to_uploaded_file(interface: abstractInterface) -> Union[Form, NewForm]:
-    create_temp_file_with_list_of_cadets(interface)
+    try:
+        create_temp_file_with_list_of_cadets(interface)
+    except Exception as e:
+        interface.log_error("Can't read file so not uploading cadets, error: %s" % str(e))
+        return previous_form(interface)
 
     return begin_iteration_over_rows_in_temp_cadet_file(interface)
 

@@ -81,7 +81,7 @@ def get_footer_buttons_add_or_select_existing_cadets_form(
         cadet=cadet, see_all_cadets=see_all_cadets
     )
 
-    return ListOfLines([main_buttons, extra_buttons, cadet_buttons])
+    return ListOfLines([main_buttons, extra_buttons, cadet_buttons]).add_Lines()
 
 
 def get_list_of_main_buttons(include_final_button: bool) -> Line:
@@ -96,15 +96,20 @@ def get_list_of_main_buttons(include_final_button: bool) -> Line:
     return main_buttons
 
 
-def get_list_of_cadet_buttons(interface: abstractInterface, cadet: Cadet, see_all_cadets: bool = False) -> Line:
+def get_list_of_cadet_buttons(interface: abstractInterface, cadet: Cadet, see_all_cadets: bool = False) -> ListOfLines:
     if see_all_cadets:
         list_of_cadets = get_sorted_list_of_cadets(interface=interface, sort_by=SORT_BY_FIRSTNAME)
+        msg = "Currently choosing from all cadets"
         extra_button = SEE_SIMILAR_CADETS_ONLY_LABEL
     else:
         ## similar cadets with option to see more
         list_of_cadets = get_list_of_similar_cadets(interface=interface, cadet=cadet)
+        msg = "Currently choosing from similar cadets only:"
         extra_button = SEE_ALL_CADETS_BUTTON_LABEL
 
-    all_labels = [extra_button] + list_of_cadets
+    return ListOfLines([Line([
 
-    return Line([Button(str(label)) for label in all_labels])
+    msg, Button(extra_button)]),
+        Line([Button(str(cadet)) for cadet in list_of_cadets])]
+
+    ).add_Lines()

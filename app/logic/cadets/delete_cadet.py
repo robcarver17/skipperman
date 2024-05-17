@@ -1,15 +1,16 @@
+
+
 from typing import Union
 
 from app.logic.cadets.cadet_state_storage import get_cadet_from_state
-from app.backend.data.cadets import delete_a_cadet
+from app.backend.data.cadets import DEPRECATE_delete_a_cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm
-from app.objects.abstract_objects.abstract_buttons import Button
+from app.objects.abstract_objects.abstract_buttons import Button, CANCEL_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.abstract_logic_api import initial_state_form
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
-from app.logic.cadets.constants import *
 
 
 def display_form_delete_individual_cadet(
@@ -26,7 +27,7 @@ def display_form_delete_individual_cadet(
 
     return Form(ListOfLines([
         "Delete cadet %s? Are you *really* sure? If they have been registered to an event will cause chaos!" % str(cadet),
-        "Might be better to edit instead",
+        "Might be better to edit or merge instead",
         _______________,
         Line([
             Button(SURE_DELETE_BUTTON_LABEL),
@@ -51,10 +52,13 @@ def post_form_delete_individual_cadet(
         return previous_form(interface)
 
     elif button==SURE_DELETE_BUTTON_LABEL:
-        delete_a_cadet(cadet)
+        DEPRECATE_delete_a_cadet(cadet)
         ## Cadet gone missing so back to list of all cadets
         ## Cadet gone missing so back to list of all cadets
         return initial_state_form
 
 def previous_form(interface:abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(display_form_delete_individual_cadet)
+
+
+SURE_DELETE_BUTTON_LABEL = "Sure you want to delete?"

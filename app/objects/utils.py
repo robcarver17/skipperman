@@ -1,9 +1,11 @@
 from collections import defaultdict
 import datetime
 import math
+from copy import copy
 from typing import Union
 from dataclasses import dataclass
 
+import numpy as np
 import pandas as pd
 from difflib import SequenceMatcher
 
@@ -12,6 +14,30 @@ from dateutil.parser import parse
 
 
 from itertools import groupby
+
+def list_of_list_max_wide_for_table_building(list_of_stuff: list, max_columns = 10) -> list:
+    use_max_colums = calculate_max_columns(list_of_stuff, max_columns=max_columns)
+    list_to_empty = copy(list_of_stuff)
+    new_list = []
+    while len(list_to_empty)>0:
+        this_row = []
+        for i in range(use_max_colums):
+            try:
+                this_row.append(list_to_empty.pop())
+            except IndexError:
+                break
+        new_list.append(this_row)
+
+    return new_list
+
+
+
+OPTIMAL_LINE_LENGTH = 20
+def calculate_max_columns(list_of_stuff: list, max_columns=10) -> int:
+    max_columns_to_use = max([min([int(np.floor(len(list_of_stuff)/ OPTIMAL_LINE_LENGTH)), max_columns]),1])
+    return max_columns_to_use
+
+
 
 def drop_duplicates_in_list_of_ids(list_of_ids: list):
     return list(dict.fromkeys(list_of_ids))

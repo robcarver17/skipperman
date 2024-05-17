@@ -34,3 +34,7 @@ def get_nav_bar_with_just_back_button() -> ButtonBar:
                          nav_button=True)
 
     return ButtonBar([back_button])
+
+
+EDIT_BUTTON_LABEL = "Edit"
+SAVE_BUTTON_LABEL = "Save"

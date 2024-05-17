@@ -61,7 +61,7 @@ def restore_snapshot_given_button_pressed(button_pressed: str, interface: abstra
     backup_path = DEPRECATED_data.backup_data_path
     backup_id = from_button_name_to_backup_id(button_pressed)
     try:
-        restore_backup(backup_diff=backup_id, datapath=backup_path)
+        restore_backup(interface=interface, backup_diff=backup_id, datapath=backup_path)
     except Exception as e:
         interface.log_error("Can't restore backup, error %s" % str(e))
 

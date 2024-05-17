@@ -188,7 +188,6 @@ app/logic/cadets/__init__.py
 app/logic/cadets/add_cadet.py
 app/logic/cadets/cadet_function_mapping.py
 app/logic/cadets/cadet_state_storage.py
-app/logic/cadets/constants.py
 app/logic/cadets/delete_cadet.py
 app/logic/cadets/edit_cadet.py
 app/logic/cadets/import_cadets.py

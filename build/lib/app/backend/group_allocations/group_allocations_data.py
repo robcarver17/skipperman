@@ -18,7 +18,8 @@ from app.data_access.configuration.field_list import CADET_GROUP_PREFERENCE, DES
 from app.backend.data.dinghies import load_list_of_club_dinghies, \
     DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies, load_list_of_boat_classes
 from app.backend.data.cadets_at_event import load_list_of_cadets_at_event_with_dinghies
-from app.backend.data.qualification import load_list_of_cadets_with_qualifications, highest_qualification_for_cadet
+from app.backend.data.qualification import DEPRECATE_highest_qualification_for_cadet
+from app.backend.ticks_and_qualifications.qualifications import load_list_of_cadets_with_qualifications
 from app.data_access.configuration.field_list_groups import GROUP_ALLOCATION_FIELDS_TO_IGNORE_WHEN_RACING_ONLY
 
 from app.objects.cadets import ListOfCadets, Cadet
@@ -151,7 +152,7 @@ class AllocationData:
         return list_of_cadets_at_event_available
 
     def get_highest_qualification_for_cadet(self, cadet: Cadet) -> str:
-        return highest_qualification_for_cadet(cadet)
+        return DEPRECATE_highest_qualification_for_cadet(cadet)
 
     def is_cadet_available_on_this_day(self, cadet: Cadet, day: Day) -> bool:
         availability = self.cadet_availability_at_event(cadet)

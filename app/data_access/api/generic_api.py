@@ -136,6 +136,9 @@ class GenericDataApi(object):
     def data_list_of_targets_for_role_at_event(self) -> DataListOfTargetForRoleAtEvent:
         raise  NotImplemented
 
+    def delete_all_master_data(self, are_you_sure: bool =False):
+        pass
+
 REQUIRES_EVENT = [
 
 ]

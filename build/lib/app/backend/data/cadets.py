@@ -49,6 +49,13 @@ class CadetData():
 
         return cadet
 
+    def replace_cadet_with_id_with_new_cadet_details(self, existing_cadet_id: str,
+                                                     new_cadet: Cadet):
+        list_of_cadets = self.get_list_of_cadets()
+        list_of_cadets.replace_cadet_with_id_with_new_cadet_details(existing_cadet_id=existing_cadet_id,
+                                                                    new_cadet=new_cadet)
+        self.save_list_of_cadets(list_of_cadets)
+
     def similar_cadets(self, cadet: Cadet):
         list_of_cadets = self.get_list_of_cadets()
         return list_of_cadets.similar_cadets(cadet)
@@ -102,20 +109,20 @@ def get_list_of_cadets_as_str(list_of_cadets: ListOfCadets) -> List[str]:
 
 ### OLD BELOW TO DELETE
 
-def delete_a_cadet(cadet: Cadet):
+def DEPRECATE_delete_a_cadet(cadet: Cadet):
     all_cadets = DEPRECATE_load_list_of_all_cadets()
     all_cadets.pop_with_id(cadet.id)
-    save_list_of_cadets(list_of_cadets=all_cadets)
+    DEPRECATE_save_list_of_cadets(list_of_cadets=all_cadets)
 
 
 def DEPRECATE_add_new_verified_cadet(cadet: Cadet) -> Cadet:
     all_cadets = DEPRECATE_load_list_of_all_cadets()
     cadet_with_id = all_cadets.add(cadet)
-    save_list_of_cadets(all_cadets)
+    DEPRECATE_save_list_of_cadets(all_cadets)
     return cadet_with_id
 
 
-def save_list_of_cadets(list_of_cadets: ListOfCadets):
+def DEPRECATE_save_list_of_cadets(list_of_cadets: ListOfCadets):
     DEPRECATED_data.data_list_of_cadets.write(list_of_cadets)
 
 

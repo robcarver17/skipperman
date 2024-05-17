@@ -2,8 +2,8 @@ import os
 
 import pandas as pd
 
-from app.backend.cadets import DEPRECATE_get_list_of_similar_cadets
-from app.backend.data.cadets import DEPRECATE_load_list_of_all_cadets, save_list_of_cadets
+from app.backend.cadets import DEPRECATE_get_list_of_similar_cadets, get_list_of_similar_cadets
+from app.backend.data.cadets import DEPRECATE_load_list_of_all_cadets, DEPRECATE_save_list_of_cadets, CadetData
 from app.backend.data.cadets_at_event import CadetsAtEventData
 from app.backend.wa_import.load_wa_file import get_staged_adhoc_filename, verify_and_return_uploaded_wa_event_file, \
     save_uploaded_wa_as_local_temp_file, load_raw_wa_file
@@ -31,22 +31,27 @@ def get_current_cadet_from_temp_file(cadet_id: str) -> Cadet:
 def get_temp_cadet_file() -> ListOfCadets:
     return read_object_of_type(ListOfCadets, temp_list_of_cadets_file_name)
 
-def does_identical_cadet_exist_in_data(cadet: Cadet):
-    all_existing_cadets = DEPRECATE_load_list_of_all_cadets()
+def does_identical_cadet_exist_in_data(interface: abstractInterface, cadet: Cadet):
+    cadet_data = CadetData(interface.data)
+    all_existing_cadets = cadet_data.get_list_of_cadets()
     matching = all_existing_cadets.matching_cadet(cadet, exact_match_required=True)
     no_matching = matching is missing_data
 
     return not no_matching
 
 
-def are_there_no_similar_cadets(cadet: Cadet):
-    return len(DEPRECATE_get_list_of_similar_cadets(cadet))==0
+def are_there_no_similar_cadets(interface: abstractInterface, cadet: Cadet) -> bool:
+    similar_cadets = get_list_of_similar_cadets(interface=interface, cadet=cadet)
+
+    return len(similar_cadets)==0
 
 
 FIRST_NAME_IN_WA_FILE = 'First name'
 SURNAME_IN_WA_FILE = 'Last name'
 DOB_IN_WA_FILE = 'Date of Birth'
 
+ALL_FIELDS_IN_WA_CADET_LIST_FILE = [FIRST_NAME_IN_WA_FILE, SURNAME_IN_WA_FILE, DOB_IN_WA_FILE]
+DESCRIBE_ALL_FIELDS_IN_WA_CADET_LIST_FILE = ", ".join(ALL_FIELDS_IN_WA_CADET_LIST_FILE)
 
 def cadet_from_row_in_imported_list(cadet_row: pd.Series, id: int) -> Cadet:
     first_name = cadet_row[FIRST_NAME_IN_WA_FILE]
@@ -58,7 +63,11 @@ def cadet_from_row_in_imported_list(cadet_row: pd.Series, id: int) -> Cadet:
 
 def create_temp_file_with_list_of_cadets(interface: abstractInterface):
     original_filename = create_local_file_from_uploaded_and_return_filename(interface)
-    as_list_of_cadets = read_imported_list_of_cadets(original_filename)
+    try:
+        as_list_of_cadets = read_imported_list_of_cadets(original_filename)
+    except KeyError as e:
+        raise KeyError("Reading file produced error %s - are you sure this is a valid file with the column headings %s?" % (e, DESCRIBE_ALL_FIELDS_IN_WA_CADET_LIST_FILE))
+
     write_object(as_list_of_cadets, path_and_filename=temp_list_of_cadets_file_name)
     os.remove(original_filename)
 
@@ -77,10 +86,9 @@ def read_imported_list_of_cadets(filename)-> ListOfCadets:
     return ListOfCadets(list_of_cadets)
 
 
-def replace_cadet_with_id_with_new_cadet_details(existing_cadet_id: str, new_cadet: Cadet):
-    list_of_cadets =DEPRECATE_load_list_of_all_cadets()
-    list_of_cadets.replace_cadet_with_id_with_new_cadet_details(existing_cadet_id=existing_cadet_id, new_cadet=new_cadet)
-    save_list_of_cadets(list_of_cadets)
+def replace_cadet_with_id_with_new_cadet_details(interface: abstractInterface, existing_cadet_id: str, new_cadet: Cadet):
+    cadet_data = CadetData(interface.data)
+    cadet_data.replace_cadet_with_id_with_new_cadet_details(existing_cadet_id=existing_cadet_id, new_cadet=new_cadet)
 
 
 def is_cadet_marked_as_test_cadet_to_skip_in_for_row_in_mapped_data(

@@ -10,13 +10,7 @@ from app.objects.abstract_objects.abstract_form import (
 )
 from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-from app.logic.cadets.constants import (
-    CHECK_BUTTON_LABEL,
-    FINAL_ADD_BUTTON_LABEL,
-    FIRST_NAME,
-    SURNAME,
-    DOB,
-)
+from app.logic.cadets.add_cadet import FIRST_NAME, SURNAME, DOB, CHECK_BUTTON_LABEL, FINAL_ADD_BUTTON_LABEL
 
 from app.objects.cadets import Cadet, default_cadet
 from app.objects.abstract_objects.abstract_interface import (

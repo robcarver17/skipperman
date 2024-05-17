@@ -18,7 +18,7 @@ class Dinghy(GenericSkipperManObjectWithIds):
         return self.name
 
 
-class ListOfDinghies(GenericListOfObjectsWithIds):
+class ListOfBoatClasses(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return Dinghy
@@ -262,7 +262,7 @@ class ListOfCadetAtEventWithDinghies(GenericListOfObjectsWithIds):
     def list_of_partner_ids_excluding_not_valid(self)-> List[str]:
         return [object.partner_cadet_id for object in self if valid_partnership(object.partner_cadet_id)]
 
-    def unique_sorted_list_of_boat_class_ids(self, all_boat_classes: ListOfDinghies) -> List[str]:
+    def unique_sorted_list_of_boat_class_ids(self, all_boat_classes: ListOfBoatClasses) -> List[str]:
         return [object.id for object in all_boat_classes if object.id in self.list_of_boat_class_ids()]
 
 

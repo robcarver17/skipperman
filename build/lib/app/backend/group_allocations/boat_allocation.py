@@ -2,14 +2,14 @@ import pandas as pd
 from dataclasses import dataclass
 from typing import List, Dict
 
-from app.backend.cadets import load_list_of_all_cadets
+from app.backend.cadets import load_list_of_all_cadets, DEPRECATE_load_list_of_all_cadets
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.dinghies import load_list_of_club_dinghies, \
+from app.backend.data.dinghies import DEPRECATE_load_list_of_club_dinghies, \
     DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies, save_list_of_cadets_at_event_with_club_dinghies, \
-    load_list_of_boat_classes, DinghiesData
-from app.backend.data.cadets import DEPRECATE_load_list_of_all_cadets
+    DinghiesData
+from app.backend.configuration import DEPRECATE_load_list_of_boat_classes
 from app.backend.forms.summarys import  summarise_generic_counts_for_event_over_days
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.cadets import Cadet
@@ -98,7 +98,7 @@ def get_two_handed_partner_id_from_name(interface: abstractInterface, two_handed
 
 def get_boat_class_id_from_name(interface: abstractInterface, boat_class_name:str):
     dinghy_data= DinghiesData(interface.data)
-    list_of_boats = dinghy_data.get_list_of_dinghies()
+    list_of_boats = dinghy_data.get_list_of_boat_classes()
     boat_class_id = list_of_boats.id_given_name(boat_class_name)
 
     return boat_class_id

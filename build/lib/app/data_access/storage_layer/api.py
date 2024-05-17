@@ -24,7 +24,7 @@ from app.objects.cadets import ListOfCadets
 from app.objects.qualifications import ListOfQualifications
 from app.objects.groups import ListOfCadetIdsWithGroups
 from app.objects.events import ListOfEvents
-from app.objects.dinghies import ListOfCadetAtEventWithDinghies, ListOfDinghies
+from app.objects.dinghies import ListOfCadetAtEventWithDinghies, ListOfBoatClasses
 from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies, ListOfClubDinghies
 from app.objects.qualifications import ListOfCadetsWithQualifications
 from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent,ListOfTargetForRoleAtEvent
@@ -51,11 +51,11 @@ class DataLayer():
         data_access_for_list_of_club_dinghies = get_data_access_for_list_of_club_dinghies(self.data)
         self.store.write(list_of_club_dinghies, data_access_method=data_access_for_list_of_club_dinghies)
 
-    def get_list_of_dinghies(self) ->ListOfDinghies:
+    def get_list_of_boat_classes(self) ->ListOfBoatClasses:
         data_access_for_list_of_dinghies = get_data_access_for_list_of_dinghies(self.data)
         return self.store.read(data_access_for_list_of_dinghies)
 
-    def save_list_of_dinghies(self, list_of_dinghies: ListOfDinghies):
+    def save_list_of_boat_classes(self, list_of_dinghies: ListOfBoatClasses):
         data_access_for_list_of_dinghies = get_data_access_for_list_of_dinghies(self.data)
         self.store.write(list_of_dinghies, data_access_method=data_access_for_list_of_dinghies)
 
@@ -91,6 +91,10 @@ class DataLayer():
     def get_list_of_qualifications(self) -> ListOfQualifications:
         data_access_for_list_of_qualifications = get_data_access_for_list_of_qualifications(self.data)
         return self.store.read(data_access_for_list_of_qualifications)
+
+    def save_list_of_qualifications(self, list_of_qualifications: ListOfQualifications):
+        data_access_for_list_of_qualifications = get_data_access_for_list_of_qualifications(self.data)
+        self.store.write(list_of_qualifications, data_access_method=data_access_for_list_of_qualifications)
 
     def get_list_of_tick_sub_stages(self) -> ListOfTickSubStages:
         data_access_for_list_of_substages = get_data_access_for_list_of_substages(self.data)

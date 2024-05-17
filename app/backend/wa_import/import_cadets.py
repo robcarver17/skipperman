@@ -2,8 +2,8 @@ import os
 
 import pandas as pd
 
-from app.backend.cadets import DEPRECATE_get_list_of_similar_cadets, get_list_of_similar_cadets
-from app.backend.data.cadets import DEPRECATE_load_list_of_all_cadets, DEPRECATE_save_list_of_cadets, CadetData
+from app.backend.cadets import  get_list_of_similar_cadets
+from app.backend.data.cadets import CadetData
 from app.backend.data.cadets_at_event import CadetsAtEventData
 from app.backend.wa_import.load_wa_file import get_staged_adhoc_filename, verify_and_return_uploaded_wa_event_file, \
     save_uploaded_wa_as_local_temp_file, load_raw_wa_file

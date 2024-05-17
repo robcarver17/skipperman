@@ -3,7 +3,6 @@ from typing import List
 from app.objects.constants import arg_not_passed
 
 from app.data_access.storage_layer.api import DataLayer
-from app.data_access.data import DEPRECATED_data
 from app.objects.cadets import Cadet, ListOfCadets
 
 
@@ -108,26 +107,6 @@ def get_list_of_cadets_as_str(list_of_cadets: ListOfCadets) -> List[str]:
 
 
 ### OLD BELOW TO DELETE
-
-def DEPRECATE_delete_a_cadet(cadet: Cadet):
-    all_cadets = DEPRECATE_load_list_of_all_cadets()
-    all_cadets.pop_with_id(cadet.id)
-    DEPRECATE_save_list_of_cadets(list_of_cadets=all_cadets)
-
-
-def DEPRECATE_add_new_verified_cadet(cadet: Cadet) -> Cadet:
-    all_cadets = DEPRECATE_load_list_of_all_cadets()
-    cadet_with_id = all_cadets.add(cadet)
-    DEPRECATE_save_list_of_cadets(all_cadets)
-    return cadet_with_id
-
-
-def DEPRECATE_save_list_of_cadets(list_of_cadets: ListOfCadets):
-    DEPRECATED_data.data_list_of_cadets.write(list_of_cadets)
-
-
-def DEPRECATE_load_list_of_all_cadets() -> ListOfCadets:
-    return DEPRECATED_data.data_list_of_cadets.read()
 
 
 SORT_BY_SURNAME = "Sort by surname"

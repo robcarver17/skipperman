@@ -1,8 +1,8 @@
 from typing import Union, List
 
-from app.backend.data.dinghies import load_list_of_boat_classes, save_list_of_boat_classes, \
+from app.backend.configuration import  save_list_of_boat_classes, \
     add_new_boat_class_given_string_and_return_list, delete_boat_class_given_string_and_return_list, \
-    modify_boat_class_given_string_and_return_list
+    modify_boat_class_given_string_and_return_list, load_list_of_boat_classes
 
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.configuration.generic_list_modifier import display_form_edit_generic_list, post_form_edit_generic_list, BACK_BUTTON_PRESSED, BUTTON_NOT_KNOWN
@@ -10,16 +10,15 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm
 )
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.dinghies import Dinghy, ListOfDinghies
+from app.objects.dinghies import Dinghy, ListOfBoatClasses
 
 header_text = "List of boat classes: add, edit, re-order"
 
 
 
 def display_form_config_boat_classes_page(interface: abstractInterface) -> Form:
-    list_of_boats = load_list_of_boat_classes()
+    list_of_boats = load_list_of_boat_classes(interface)
 
     return display_form_edit_generic_list(
         existing_list=list_of_boats,
@@ -29,7 +28,7 @@ def display_form_config_boat_classes_page(interface: abstractInterface) -> Form:
 
 
 def post_form_config_dinghies_page(interface: abstractInterface) -> Union[Form, NewForm]:
-    list_of_boats = load_list_of_boat_classes()
+    list_of_boats = load_list_of_boat_classes(interface)
 
     generic_list_output = post_form_edit_generic_list(
         existing_list=list_of_boats,
@@ -47,5 +46,5 @@ def post_form_config_dinghies_page(interface: abstractInterface) -> Union[Form, 
     else:
         return generic_list_output
 
-def save_from_ordinary_list_of_dinghies(list_of_dinghies: List[Dinghy]):
-    save_list_of_boat_classes(ListOfDinghies(list_of_dinghies))
+def save_from_ordinary_list_of_dinghies(interface: abstractInterface, new_list: List[Dinghy]):
+    save_list_of_boat_classes(interface=interface, list_of_boats=ListOfBoatClasses(new_list))

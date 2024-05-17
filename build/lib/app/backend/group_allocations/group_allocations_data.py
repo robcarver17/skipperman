@@ -12,11 +12,12 @@ from app.backend.group_allocations.previous_allocations import allocation_for_ca
     DEPRECATE_get_dict_of_allocations_for_events_and_list_of_cadets, allocation_for_cadet_in_previous_events_as_dict
 from app.data_access.configuration.configuration import UNALLOCATED_GROUP_NAME
 from app.backend.data.cadets_at_event import DEPRECATED_load_cadets_at_event
-from app.backend.data.cadets import DEPRECATE_load_list_of_all_cadets
+from app.backend.cadets import DEPRECATE_load_list_of_all_cadets
 from app.data_access.configuration.field_list import CADET_GROUP_PREFERENCE, DESIRED_BOAT, CADET_BOAT_CLASS, \
     CADET_BOAT_SAIL_NUMBER, CADET_BOAT_OWNERSHIP_STATUS
-from app.backend.data.dinghies import load_list_of_club_dinghies, \
-    DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies, load_list_of_boat_classes
+from app.backend.data.dinghies import DEPRECATE_load_list_of_club_dinghies, \
+    DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies
+from app.backend.configuration import DEPRECATE_load_list_of_boat_classes
 from app.backend.data.cadets_at_event import load_list_of_cadets_at_event_with_dinghies
 from app.backend.data.qualification import DEPRECATE_highest_qualification_for_cadet
 from app.backend.ticks_and_qualifications.qualifications import load_list_of_cadets_with_qualifications
@@ -28,7 +29,7 @@ from app.objects.day_selectors import DaySelector, Day
 from app.objects.events import Event, list_of_events_excluding_one_event, SORT_BY_START_ASC
 from app.objects.groups import ListOfCadetIdsWithGroups, Group, GROUP_UNALLOCATED
 from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies, ListOfClubDinghies, NO_BOAT
-from app.objects.dinghies import ListOfDinghies, ListOfCadetAtEventWithDinghies, no_partnership, NO_PARTNER_REQUIRED
+from app.objects.dinghies import ListOfBoatClasses, ListOfCadetAtEventWithDinghies, no_partnership, NO_PARTNER_REQUIRED
 from app.objects.utils import similar, all_equal
 from app.objects.qualifications import ListOfCadetsWithQualifications
 from app.objects.cadet_at_event import ListOfCadetsAtEvent
@@ -46,7 +47,7 @@ class AllocationData:
     list_of_club_boats_allocated: ListOfCadetAtEventWithClubDinghies
     list_of_cadets_at_event_with_dinghies: ListOfCadetAtEventWithDinghies
     list_of_club_boats: ListOfClubDinghies
-    list_of_dinghies: ListOfDinghies
+    list_of_dinghies: ListOfBoatClasses
     list_of_cadets_with_qualifications: ListOfCadetsWithQualifications
 
     def get_current_group_name_across_days_or_none_if_different(self, cadet: Cadet):
@@ -322,14 +323,14 @@ class AllocationData:
         return cadet_at_event.availability
 
 def guess_best_club_boat_name_given_list_of_possibly_matching_fields(list_of_options: List[str])-> str:
-    list_of_boats = load_list_of_club_dinghies()
+    list_of_boats = DEPRECATE_load_list_of_club_dinghies()
     list_of_names = list_of_boats.list_of_names()
 
     return best_option_against_boat_names(list_of_names=list_of_names, list_of_options=list_of_options)
 
 
 def guess_best_boat_class_name_given_list_of_possibly_matching_fields(list_of_options: List[str])-> str:
-    list_of_boats = load_list_of_boat_classes()
+    list_of_boats = DEPRECATE_load_list_of_boat_classes()
     list_of_names = list_of_boats.list_of_names()
 
     return best_option_against_boat_names(list_of_names=list_of_names, list_of_options=list_of_options)
@@ -369,8 +370,8 @@ def get_allocation_data(interface: abstractInterface, event: Event) -> Allocatio
 
     group_allocation_info = get_group_allocation_info(cadets_at_event_including_non_active)
 
-    list_of_dinghies = load_list_of_boat_classes()
-    list_of_club_boats = load_list_of_club_dinghies()
+    list_of_dinghies = DEPRECATE_load_list_of_boat_classes()
+    list_of_club_boats = DEPRECATE_load_list_of_club_dinghies()
     list_of_club_boats_allocated = DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies(event)
     list_of_cadets_at_event_with_dinghies = load_list_of_cadets_at_event_with_dinghies(event)
     list_of_cadets_with_qualifications= load_list_of_cadets_with_qualifications()

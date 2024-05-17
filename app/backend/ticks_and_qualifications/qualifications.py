@@ -1,12 +1,12 @@
 from typing import List
 
 from app.objects.cadets import Cadet
-from app.objects.qualifications import Qualification, ListOfCadetsWithQualifications, ListOfQualifications
+from app.objects.qualifications import Qualification, ListOfCadetsWithQualifications
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.data.qualification import QualificationData, DEPRECATE_load_list_of_qualifications, \
-    DEPRECATE_list_of_qualification_ids_for_cadet, DEPRECATE_save_list_of_qualifications
+    DEPRECATE_list_of_qualification_ids_for_cadet
 
 
 def apply_qualification_to_cadet(interface: abstractInterface, cadet_id:str, qualification: Qualification):
@@ -56,26 +56,3 @@ def get_list_of_all_qualification_names(interface: abstractInterface):
     return qualification_data.get_list_of_all_qualification_names()
 
 
-def add_new_qualification_given_string_and_return_list(new_qualification: str) -> ListOfQualifications:
-    list_of_qualifications = DEPRECATE_load_list_of_qualifications()
-    list_of_qualifications.add(new_qualification)
-    DEPRECATE_save_list_of_qualifications(list_of_qualifications)
-
-    return list_of_qualifications
-
-
-def delete_qualification_given_string_and_return_list(qualification: str) -> ListOfQualifications:
-    list_of_qualifications = DEPRECATE_load_list_of_qualifications()
-    list_of_qualifications.delete_given_name(qualification)
-    DEPRECATE_save_list_of_qualifications(list_of_qualifications)
-
-    return list_of_qualifications
-
-
-def modify_qualification_given_string_and_return_list(existing_value_as_str:str, new_value_as_str:str) -> ListOfQualifications:
-    list_of_qualifications = DEPRECATE_load_list_of_qualifications()
-    list_of_qualifications.delete_given_name(existing_value_as_str)
-    list_of_qualifications.add(new_value_as_str)
-    DEPRECATE_save_list_of_qualifications(list_of_qualifications)
-
-    return list_of_qualifications

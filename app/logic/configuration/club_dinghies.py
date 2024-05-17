@@ -1,9 +1,9 @@
 from typing import Union, List
 
-from app.backend.data.dinghies import load_list_of_club_dinghies, save_list_of_club_dinghies, \
+from app.backend.configuration import save_list_of_club_dinghies, load_list_of_club_dinghies, \
     add_new_club_dinghy_given_string_and_return_list, delete_club_dinghy_given_string_and_return_list, \
     modify_club_dinghy_given_string_and_return_list
-from app.backend.forms.reorder_form import modify_list_given_button_name
+from app.backend.data.dinghies import DEPRECATE_load_list_of_club_dinghies
 
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.configuration.generic_list_modifier import display_form_edit_generic_list, post_form_edit_generic_list, BACK_BUTTON_PRESSED, BUTTON_NOT_KNOWN
@@ -11,7 +11,6 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm
 )
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.club_dinghies import ClubDinghy, ListOfClubDinghies
 
@@ -21,7 +20,7 @@ header_text = "List of club dinghies: add, edit or re-order"
 
 
 def display_form_config_club_dinghies_page(interface: abstractInterface) -> Form:
-    list_of_boats = load_list_of_club_dinghies()
+    list_of_boats = load_list_of_club_dinghies(interface)
 
     return display_form_edit_generic_list(
         existing_list=list_of_boats,
@@ -31,7 +30,7 @@ def display_form_config_club_dinghies_page(interface: abstractInterface) -> Form
 
 
 def post_form_config_club_dinghies_page(interface: abstractInterface) -> Union[Form, NewForm]:
-    list_of_boats = load_list_of_club_dinghies()
+    list_of_boats = load_list_of_club_dinghies(interface)
 
     generic_list_output = post_form_edit_generic_list(
         existing_list=list_of_boats,
@@ -49,5 +48,5 @@ def post_form_config_club_dinghies_page(interface: abstractInterface) -> Union[F
     else:
         return generic_list_output
 
-def save_from_ordinary_list_of_club_dinghies(list_of_dinghies: List[ClubDinghy]):
-    save_list_of_club_dinghies(ListOfClubDinghies(list_of_dinghies))
+def save_from_ordinary_list_of_club_dinghies(interface: abstractInterface, new_list: List[ClubDinghy]):
+   save_list_of_club_dinghies(interface=interface, list_of_boats=ListOfClubDinghies(new_list))

@@ -1,8 +1,8 @@
 from typing import Union, List
 
-from app.backend.configuration import DEPRECATE_load_list_of_boat_classes, save_list_of_boat_classes, \
+from app.backend.configuration import  save_list_of_boat_classes, \
     add_new_boat_class_given_string_and_return_list, delete_boat_class_given_string_and_return_list, \
-    modify_boat_class_given_string_and_return_list
+    modify_boat_class_given_string_and_return_list, load_list_of_boat_classes
 
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.configuration.generic_list_modifier import display_form_edit_generic_list, post_form_edit_generic_list, BACK_BUTTON_PRESSED, BUTTON_NOT_KNOWN
@@ -18,7 +18,7 @@ header_text = "List of boat classes: add, edit, re-order"
 
 
 def display_form_config_boat_classes_page(interface: abstractInterface) -> Form:
-    list_of_boats = DEPRECATE_load_list_of_boat_classes()
+    list_of_boats = load_list_of_boat_classes(interface)
 
     return display_form_edit_generic_list(
         existing_list=list_of_boats,
@@ -28,7 +28,7 @@ def display_form_config_boat_classes_page(interface: abstractInterface) -> Form:
 
 
 def post_form_config_dinghies_page(interface: abstractInterface) -> Union[Form, NewForm]:
-    list_of_boats = DEPRECATE_load_list_of_boat_classes()
+    list_of_boats = load_list_of_boat_classes(interface)
 
     generic_list_output = post_form_edit_generic_list(
         existing_list=list_of_boats,

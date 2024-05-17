@@ -1,10 +1,10 @@
-from app.objects.dinghies import ListOfDinghies, ListOfCadetAtEventWithDinghies
+from app.objects.dinghies import ListOfBoatClasses, ListOfCadetAtEventWithDinghies
 
 class DataListOfDinghies(object):
-    def read(self) -> ListOfDinghies:
+    def read(self) -> ListOfBoatClasses:
         raise NotImplemented
 
-    def write(self, list_of_club_dinghies: ListOfDinghies):
+    def write(self, list_of_club_dinghies: ListOfBoatClasses):
         raise NotImplemented
 
 

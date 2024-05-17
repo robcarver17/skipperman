@@ -1,8 +1,9 @@
 from copy import copy
 
+from app.data_access.data import DEPRECATED_data
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.cadets import DEPRECATE_load_list_of_all_cadets, CadetData, SORT_BY_SURNAME, SORT_BY_FIRSTNAME, \
+from app.backend.data.cadets import CadetData, SORT_BY_SURNAME, SORT_BY_FIRSTNAME, \
     SORT_BY_DOB_ASC, SORT_BY_DOB_DSC
 from app.data_access.configuration.configuration import MIN_CADET_AGE, MAX_CADET_AGE
 from app.objects.cadets import Cadet, ListOfCadets, is_cadet_age_surprising
@@ -14,20 +15,10 @@ def add_new_verified_cadet(interface: abstractInterface, cadet: Cadet) -> Cadet:
 
     return cadet
 
-def DEPRECATE_confirm_cadet_exists(cadet_selected):
-    list_of_cadets_as_str = DEPRECATE_get_list_of_cadets_as_str()
-    assert cadet_selected in list_of_cadets_as_str
-
 
 def confirm_cadet_exists(interface: abstractInterface, cadet_selected: str):
     cadet_data = CadetData(interface.data)
     cadet_data.confirm_cadet_exists(cadet_selected)
-
-
-def DEPRECATE_get_list_of_cadets_as_str(list_of_cadets = arg_not_passed) -> list:
-    if list_of_cadets is arg_not_passed:
-        list_of_cadets = DEPRECATE_get_sorted_list_of_cadets()
-    return [str(cadet) for cadet in list_of_cadets]
 
 
 def get_list_of_cadets_as_str_similar_to_name_first(object_with_name, from_list_of_cadets: ListOfCadets) -> list:
@@ -47,45 +38,18 @@ def get_list_of_cadets_similar_to_name_first(object_with_name, from_list_of_cade
 
     return ListOfCadets(first_lot+list_of_cadets)
 
-def DEPRECATE_get_cadet_from_id(cadet_id: str) -> Cadet:
-    list_of_cadets = DEPRECATE_load_list_of_all_cadets()
-
-    return list_of_cadets.object_with_id(cadet_id)
-
 def get_cadet_from_id(interface: abstractInterface, cadet_id: str) -> Cadet:
     list_of_cadets = load_list_of_all_cadets(interface)
 
     return list_of_cadets.object_with_id(cadet_id)
 
 
-def DEPRECATE_get_cadet_from_list_of_cadets(cadet_selected: str) -> Cadet:
-    list_of_cadets = DEPRECATE_load_list_of_all_cadets()
-    list_of_cadets_as_str = DEPRECATE_get_list_of_cadets_as_str(list_of_cadets=list_of_cadets)
-
-    cadet_idx = list_of_cadets_as_str.index(cadet_selected)
-    return list_of_cadets[cadet_idx]
 
 def get_cadet_from_list_of_cadets(interface: abstractInterface, cadet_selected: str) -> Cadet:
     cadet_data = CadetData(interface.data)
     cadet = cadet_data.get_cadet_from_list_of_cadets_given_str_of_cadet(cadet_selected)
 
     return cadet
-
-
-def DEPRECATE_get_sorted_list_of_cadets(sort_by: str = arg_not_passed) -> ListOfCadets:
-    master_list = DEPRECATE_load_list_of_all_cadets()
-    if sort_by is arg_not_passed:
-        return master_list
-    if sort_by == SORT_BY_SURNAME:
-        return master_list.sort_by_surname()
-    elif sort_by == SORT_BY_FIRSTNAME:
-        return master_list.sort_by_firstname()
-    elif sort_by == SORT_BY_DOB_ASC:
-        return master_list.sort_by_dob_asc()
-    elif sort_by == SORT_BY_DOB_DSC:
-        return master_list.sort_by_dob_desc()
-    else:
-        return master_list
 
 
 def get_sorted_list_of_cadets(interface: abstractInterface, sort_by: str = arg_not_passed) -> ListOfCadets:
@@ -102,25 +66,12 @@ def cadet_from_id_with_passed_list(
 
 
 
-def DEPRECATED_cadet_name_from_id(cadet_id: str) -> str:
-    cadet = DEPRECATED_cadet_from_id(cadet_id)
-
-    return str(cadet)
-
-
 
 def cadet_name_from_id(interface: abstractInterface, cadet_id: str) -> str:
     cadet = cadet_from_id(interface=interface, cadet_id=cadet_id)
 
     return cadet.name
 
-def DEPRECATED_cadet_from_id(cadet_id: str) -> Cadet:
-    list_of_cadets = DEPRECATE_get_sorted_list_of_cadets()
-
-    cadet = cadet_from_id_with_passed_list(cadet_id=cadet_id,
-                                           list_of_cadets=list_of_cadets)
-
-    return cadet
 
 def cadet_from_id(interface: abstractInterface, cadet_id: str) -> Cadet:
     cadet_data = CadetData(interface.data)
@@ -165,15 +116,6 @@ def warning_for_similar_cadets(interface: abstractInterface, cadet: Cadet) -> st
         return ""
 
 
-def DEPRECATE_get_list_of_similar_cadets(cadet: Cadet) -> list:
-    print("Checking for similar %s" % cadet)
-    existing_cadets = DEPRECATE_load_list_of_all_cadets()
-    similar_cadets = existing_cadets.similar_cadets(
-        cadet
-    )
-    print("Similar: %s" % cadet)
-    return similar_cadets
-
 def get_list_of_similar_cadets(interface: abstractInterface, cadet: Cadet) -> list:
     cadet_data = CadetData(interface.data)
     return cadet_data.similar_cadets(cadet)
@@ -197,3 +139,53 @@ def load_list_of_all_cadets(interface: abstractInterface) -> ListOfCadets:
 def modify_cadet(interface: abstractInterface, cadet_id: str, new_cadet: Cadet):
     cadet_data = CadetData(interface.data)
     cadet_data.modify_cadet(cadet_id=cadet_id, new_cadet=new_cadet)
+
+
+def DEPRECATE_load_list_of_all_cadets() -> ListOfCadets:
+    return DEPRECATED_data.data_list_of_cadets.read()
+
+
+def DEPRECATE_get_sorted_list_of_cadets(sort_by: str = arg_not_passed) -> ListOfCadets:
+    master_list = DEPRECATE_load_list_of_all_cadets()
+    if sort_by is arg_not_passed:
+        return master_list
+    if sort_by == SORT_BY_SURNAME:
+        return master_list.sort_by_surname()
+    elif sort_by == SORT_BY_FIRSTNAME:
+        return master_list.sort_by_firstname()
+    elif sort_by == SORT_BY_DOB_ASC:
+        return master_list.sort_by_dob_asc()
+    elif sort_by == SORT_BY_DOB_DSC:
+        return master_list.sort_by_dob_desc()
+    else:
+        return master_list
+
+
+def DEPRECATE_get_cadet_from_list_of_cadets(cadet_selected: str) -> Cadet:
+    list_of_cadets = DEPRECATE_load_list_of_all_cadets()
+    list_of_cadets_as_str = DEPRECATE_get_list_of_cadets_as_str(list_of_cadets=list_of_cadets)
+
+    cadet_idx = list_of_cadets_as_str.index(cadet_selected)
+    return list_of_cadets[cadet_idx]
+
+
+def DEPRECATE_get_list_of_cadets_as_str(list_of_cadets = arg_not_passed) -> list:
+    if list_of_cadets is arg_not_passed:
+        list_of_cadets = DEPRECATE_get_sorted_list_of_cadets()
+    return [str(cadet) for cadet in list_of_cadets]
+
+
+def DEPRECATED_cadet_from_id(cadet_id: str) -> Cadet:
+    list_of_cadets = DEPRECATE_get_sorted_list_of_cadets()
+
+    cadet = cadet_from_id_with_passed_list(cadet_id=cadet_id,
+                                           list_of_cadets=list_of_cadets)
+
+    return cadet
+
+
+
+def DEPRECATED_cadet_name_from_id(cadet_id: str) -> str:
+    cadet = DEPRECATED_cadet_from_id(cadet_id)
+
+    return str(cadet)

@@ -1,6 +1,11 @@
 from typing import Union, List
 
-from app.backend.data.patrol_boats import DEPRECATED_load_list_of_patrol_boats, delete_patrol_boat_given_string_and_return_list, add_new_patrol_boat_given_string_and_return_list, modify_patrol_boat_given_string_and_return_list, save_list_of_patrol_boats
+from app.objects.qualifications import ListOfQualifications
+
+
+from app.backend.configuration import save_list_of_patrol_boats, add_new_patrol_boat_given_string_and_return_list, \
+    delete_patrol_boat_given_string_and_return_list, modify_patrol_boat_given_string_and_return_list, \
+    load_list_of_patrol_boats
 
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.logic.configuration.generic_list_modifier import display_form_edit_generic_list, post_form_edit_generic_list, BACK_BUTTON_PRESSED, BUTTON_NOT_KNOWN
@@ -8,15 +13,13 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm
 )
-from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button, BACK_BUTTON_LABEL
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.patrol_boats import PatrolBoat, ListOfPatrolBoats
 
 header_text = "List of club patrol boats: add, edit, or re-order"
 
 def display_form_config_patrol_boats_page(interface: abstractInterface) -> Form:
-    list_of_boats = DEPRECATED_load_list_of_patrol_boats()
+    list_of_boats = load_list_of_patrol_boats(interface)
 
     return display_form_edit_generic_list(
         existing_list=list_of_boats,
@@ -25,7 +28,7 @@ def display_form_config_patrol_boats_page(interface: abstractInterface) -> Form:
 
 
 def post_form_config_patrol_boats_page(interface: abstractInterface) -> Union[Form, NewForm]:
-    list_of_boats = DEPRECATED_load_list_of_patrol_boats()
+    list_of_boats = load_list_of_patrol_boats(interface)
 
     generic_list_output = post_form_edit_generic_list(
         existing_list=list_of_boats,
@@ -44,5 +47,6 @@ def post_form_config_patrol_boats_page(interface: abstractInterface) -> Union[Fo
         return generic_list_output
 
 
-def save_from_ordinary_list_of_patrol_boats(list_of_boats: List[PatrolBoat]):
-    save_list_of_patrol_boats(ListOfPatrolBoats(list_of_boats))
+def save_from_ordinary_list_of_patrol_boats(interface: abstractInterface, new_list: List[PatrolBoat]):
+    save_list_of_patrol_boats(interface=interface, list_of_boats=ListOfPatrolBoats(new_list))
+

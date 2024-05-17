@@ -13,7 +13,7 @@ from app.data_access.data import DEPRECATED_data
 from app.data_access.storage_layer.api import DataLayer
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies, ListOfClubDinghies, NO_BOAT
-from app.objects.dinghies import ListOfDinghies, ListOfCadetAtEventWithDinghies
+from app.objects.dinghies import ListOfBoatClasses, ListOfCadetAtEventWithDinghies
 from app.objects.events import Event
 from app.objects.patrol_boats import ListOfPatrolBoats
 
@@ -66,7 +66,7 @@ class DinghiesData():
             list_of_cadets_at_event_with_dinghies=list_of_cadets_at_event_with_dinghies, event=event)
 
     def sorted_list_of_names_of_dinghies_at_event(self, event: Event) -> List[str]:
-        all_boat_classes = self.get_list_of_dinghies()
+        all_boat_classes = self.get_list_of_boat_classes()
         list_of_boat_class_ids = self.unique_sorted_list_of_boat_class_ids_at_event(event)
 
         dinghy_names = [all_boat_classes.name_given_id(id) for id in list_of_boat_class_ids]
@@ -74,7 +74,7 @@ class DinghiesData():
         return dinghy_names
 
     def unique_sorted_list_of_boat_class_ids_at_event(self, event: Event) -> List[str]:
-        all_boat_classes = self.get_list_of_dinghies()
+        all_boat_classes = self.get_list_of_boat_classes()
         cadets_with_dinghies_at_event = self.get_list_of_cadets_at_event_with_dinghies(event)
         list_of_boat_class_ids = cadets_with_dinghies_at_event.unique_sorted_list_of_boat_class_ids(all_boat_classes)
 
@@ -116,6 +116,9 @@ class DinghiesData():
     def get_list_of_club_dinghies(self):
         return self.data_api.get_list_of_club_dinghies()
 
+    def save_list_of_club_dinghies(self, list_of_club_dinghies:  ListOfClubDinghies):
+        self.data_api.save_list_of_club_dinghies(list_of_club_dinghies)
+
     def get_list_of_cadets_at_event_with_dinghies(self, event: Event) -> ListOfCadetAtEventWithDinghies:
         return self.data_api.get_list_of_cadets_at_event_with_dinghies(event)
 
@@ -125,22 +128,23 @@ class DinghiesData():
             list_of_cadets_at_event_with_dinghies=list_of_cadets_at_event_with_dinghies, event=event
             )
 
-    def get_list_of_dinghies(self) -> ListOfDinghies:
-        return self.data_api.get_list_of_dinghies()
+    def get_list_of_boat_classes(self) -> ListOfBoatClasses:
+        return self.data_api.get_list_of_boat_classes()
+
+
+    def save_list_of_boat_classes(self, list_of_boat_classes: ListOfBoatClasses):
+        self.data_api.save_list_of_boat_classes(list_of_boat_classes)
 
     @property
     def cadets_at_event_data(self) -> CadetsAtEventData:
         return CadetsAtEventData(data_api=self.data_api)
 
 
-def load_list_of_club_dinghies() -> ListOfClubDinghies:
+def DEPRECATE_load_list_of_club_dinghies() -> ListOfClubDinghies:
     list_of_boats = DEPRECATED_data.data_List_of_club_dinghies.read()
 
     return list_of_boats
 
-
-def save_list_of_club_dinghies(list_of_boats: ListOfClubDinghies):
-    DEPRECATED_data.data_List_of_club_dinghies.write(list_of_boats)
 
 
 def DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies(event: Event) -> ListOfCadetAtEventWithClubDinghies:
@@ -155,32 +159,6 @@ def save_list_of_cadets_at_event_with_club_dinghies(event: Event,
                                                                           people_and_boats=cadets_with_club_dinghies_at_event)
 
 
-def add_new_club_dinghy_given_string_and_return_list(new_boat_name: str) -> ListOfClubDinghies:
-    list_of_boats = load_list_of_club_dinghies()
-    list_of_boats.add(new_boat_name)
-    save_list_of_club_dinghies(list_of_boats)
-
-    return list_of_boats
-
-
-def delete_club_dinghy_given_string_and_return_list(boat_name: str) -> ListOfClubDinghies:
-    list_of_boats = load_list_of_club_dinghies()
-    list_of_boats.delete_given_name(boat_name)
-    save_list_of_club_dinghies(list_of_boats)
-
-    return list_of_boats
-
-
-def modify_club_dinghy_given_string_and_return_list(existing_value_as_str: str,
-                                                    new_value_as_str: str) -> ListOfClubDinghies:
-    list_of_boats = load_list_of_club_dinghies()
-    list_of_boats.delete_given_name(existing_value_as_str)
-    list_of_boats.add(new_value_as_str)
-    save_list_of_club_dinghies(list_of_boats)
-
-    return list_of_boats
-
-
 def get_sorted_list_of_boats_excluding_boats_already_at_event(interface: abstractInterface,
                                                               event: Event) -> ListOfPatrolBoats:
     patrol_boat_data = PatrolBoatsData(interface.data)
@@ -192,36 +170,3 @@ def load_list_of_patrol_boats_at_event(interface: abstractInterface, event: Even
     return patrol_boat_data.list_of_unique_boats_at_event_including_unallocated(event)
 
 
-def load_list_of_boat_classes() -> ListOfDinghies:
-    list_of_boats = DEPRECATED_data.data_list_of_dinghies.read()
-
-    return list_of_boats
-
-
-def save_list_of_boat_classes(list_of_boats: ListOfDinghies):
-    DEPRECATED_data.data_list_of_dinghies.write(list_of_boats)
-
-
-def add_new_boat_class_given_string_and_return_list(new_boat_name: str) -> ListOfDinghies:
-    list_of_boats = load_list_of_boat_classes()
-    list_of_boats.add(new_boat_name)
-    save_list_of_boat_classes(list_of_boats)
-
-    return list_of_boats
-
-
-def delete_boat_class_given_string_and_return_list(boat_name: str) -> ListOfDinghies:
-    list_of_boats = load_list_of_boat_classes()
-    list_of_boats.delete_given_name(boat_name)
-    save_list_of_boat_classes(list_of_boats)
-
-    return list_of_boats
-
-
-def modify_boat_class_given_string_and_return_list(existing_value_as_str: str, new_value_as_str: str) -> ListOfDinghies:
-    list_of_boats = load_list_of_boat_classes()
-    list_of_boats.delete_given_name(existing_value_as_str)
-    list_of_boats.add(new_value_as_str)
-    save_list_of_boat_classes(list_of_boats)
-
-    return list_of_boats

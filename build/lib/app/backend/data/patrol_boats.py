@@ -2,8 +2,6 @@ from typing import List
 
 from app.objects.day_selectors import Day
 
-from app.objects.abstract_objects.abstract_interface import abstractInterface
-
 from app.objects.constants import missing_data
 
 from app.data_access.storage_layer.api import DataLayer
@@ -208,6 +206,9 @@ class PatrolBoatsData():
     def get_list_of_patrol_boats(self) -> ListOfPatrolBoats:
         return self.data_api.get_list_of_patrol_boats()
 
+    def save_list_of_patrol_boats(self, list_of_boats: ListOfPatrolBoats):
+        self.data_api.save_list_of_patrol_boats(list_of_boats)
+
     def get_list_of_voluteers_at_event_with_patrol_boats(self, event: Event) -> ListOfVolunteersAtEventWithPatrolBoats:
         return self.data_api.get_list_of_voluteers_at_event_with_patrol_boats(event)
 
@@ -233,39 +234,6 @@ def from_patrol_boat_name_to_boat(boat_name: str) -> PatrolBoat:
 
 def DEPRECATED_load_list_of_patrol_boats() -> ListOfPatrolBoats:
     list_of_patrol_boats = DEPRECATED_data.data_list_of_patrol_boats.read()
-
-    return list_of_patrol_boats
-
-def load_list_of_patrol_boats(interface: abstractInterface) -> ListOfPatrolBoats:
-    patrol_boat_data = PatrolBoatsData(interface.data)
-
-    list_of_patrol_boats = patrol_boat_data.get_list_of_patrol_boats()
-
-    return list_of_patrol_boats
-
-
-def save_list_of_patrol_boats(list_of_boats: ListOfPatrolBoats):
-    DEPRECATED_data.data_list_of_patrol_boats.write(list_of_boats=list_of_boats)
-
-def add_new_patrol_boat_given_string_and_return_list(new_boat_name: str) -> ListOfPatrolBoats:
-    list_of_patrol_boats = DEPRECATED_load_list_of_patrol_boats()
-    list_of_patrol_boats.add(new_boat_name)
-    save_list_of_patrol_boats(list_of_patrol_boats)
-
-    return list_of_patrol_boats
-
-def delete_patrol_boat_given_string_and_return_list(boat_name: str) -> ListOfPatrolBoats:
-    list_of_patrol_boats = DEPRECATED_load_list_of_patrol_boats()
-    list_of_patrol_boats.delete_given_name(boat_name)
-    save_list_of_patrol_boats(list_of_patrol_boats)
-
-    return list_of_patrol_boats
-
-def modify_patrol_boat_given_string_and_return_list(existing_value_as_str:str, new_value_as_str:str) -> ListOfPatrolBoats:
-    list_of_patrol_boats = DEPRECATED_load_list_of_patrol_boats()
-    list_of_patrol_boats.delete_given_name(existing_value_as_str)
-    list_of_patrol_boats.add(new_value_as_str)
-    save_list_of_patrol_boats(list_of_patrol_boats)
 
     return list_of_patrol_boats
 

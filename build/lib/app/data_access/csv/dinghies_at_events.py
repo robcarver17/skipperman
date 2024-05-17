@@ -6,12 +6,12 @@ from app.data_access.csv.resolve_csv_paths_and_filenames import LIST_OF_DINGHIES
 
 class CsvDataListOfDinghies(GenericCsvData, DataListOfDinghies):
 
-    def read(self) -> ListOfDinghies:
-        list_of_boats = self.read_and_return_object_of_type(ListOfDinghies, file_identifier=LIST_OF_DINGHIES_FILE_ID)
+    def read(self) -> ListOfBoatClasses:
+        list_of_boats = self.read_and_return_object_of_type(ListOfBoatClasses, file_identifier=LIST_OF_DINGHIES_FILE_ID)
 
         return list_of_boats
 
-    def write(self, list_of_boats: ListOfDinghies):
+    def write(self, list_of_boats: ListOfBoatClasses):
         self.write_object(list_of_boats, file_identifier=LIST_OF_DINGHIES_FILE_ID)
 
 

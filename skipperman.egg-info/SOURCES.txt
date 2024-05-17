@@ -5,6 +5,7 @@ setup.py
 app/__init__.py
 app/backend/__init__.py
 app/backend/cadets.py
+app/backend/configuration.py
 app/backend/events.py
 app/backend/../data_access/configuration/configuration.yaml
 app/backend/data/__init__.py
@@ -196,9 +197,9 @@ app/logic/cadets/view_individual_cadets.py
 app/logic/cadets/../../data_access/configuration/configuration.yaml
 app/logic/configuration/ENTRY_view_main_config_page.py
 app/logic/configuration/__init__.py
+app/logic/configuration/boat_classes.py
 app/logic/configuration/club_dinghies.py
 app/logic/configuration/config_function_mapping.py
-app/logic/configuration/dinghies.py
 app/logic/configuration/generic_list_modifier.py
 app/logic/configuration/patrol_boats.py
 app/logic/configuration/qualifications.py

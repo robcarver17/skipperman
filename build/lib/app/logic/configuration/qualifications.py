@@ -1,7 +1,7 @@
 from typing import Union, List
 
 from app.backend.data.qualification import DEPRECATE_load_list_of_qualifications, DEPRECATE_save_list_of_qualifications
-from app.backend.ticks_and_qualifications.qualifications import add_new_qualification_given_string_and_return_list, \
+from app.backend.configuration import add_new_qualification_given_string_and_return_list, \
     delete_qualification_given_string_and_return_list, modify_qualification_given_string_and_return_list
 
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form

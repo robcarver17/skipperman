@@ -80,6 +80,9 @@ class QualificationData():
     def load_list_of_qualifications(self) -> ListOfQualifications:
         return self.data_api.get_list_of_qualifications()
 
+    def save_list_of_qualifications(self, list_of_qualifications: ListOfQualifications):
+        self.data_api.save_list_of_qualifications(list_of_qualifications)
+
     def get_list_of_cadets_with_qualifications(self) -> ListOfCadetsWithQualifications:
         return self.data_api.get_list_of_cadets_with_qualifications()
 

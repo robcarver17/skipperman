@@ -1,5 +1,5 @@
 from copy import copy
-from typing import Union, List, Callable, Tuple
+from typing import Union,  Callable
 
 from app.backend.forms.reorder_form import UP, DOWN, get_button_name_to_move_in_list, modify_list_given_button_name
 from app.objects.abstract_objects.abstract_form import Form, NewForm, textInput
@@ -8,7 +8,7 @@ from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _____
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
-from app.objects.abstract_objects.abstract_text import up_pointer, down_pointer, up_arrow, down_arrow, Heading
+from app.objects.abstract_objects.abstract_text import  up_arrow, down_arrow, Heading
 
 ADD_ENTRY_TEXT_FIELD = "add_entry_text_field"
 SAVE_ENTRY_BUTTON_LABEL = "Save edits to existing or add new entry"
@@ -88,7 +88,7 @@ BUTTON_NOT_KNOWN = object()
 def post_form_edit_generic_list(
     interface: abstractInterface,
         existing_list: list,
-        header_text: ListOfLines,
+        header_text: str,
         ## functions need to take string and return new list of objects
         adding_function: Callable,
         deleting_function: Callable,
@@ -116,6 +116,8 @@ def post_form_edit_generic_list(
                                                                        existing_list=existing_list)
     else:
         return BUTTON_NOT_KNOWN
+
+    interface.save_stored_items()
 
     ## might want to do more
     return display_form_edit_generic_list(existing_list=updated_list, header_text=header_text)
@@ -157,7 +159,7 @@ def add_new_entry_from_form_and_return_updated_list(interface: abstractInterface
     if len(entry_to_add)>0:
         ## functions need to take string and return new list of objects
         try:
-            new_list = adding_function(entry_to_add)
+            new_list = adding_function(interface=interface, entry_to_add=entry_to_add)
             return new_list
         except Exception as e:
             interface.log_error("Error when adding new entry: %s" % str(e))
@@ -177,7 +179,7 @@ def add_edits_from_form_and_return_updated_list(interface: abstractInterface,
         if edited_value_str==existing_as_str:
             continue
         try:
-            new_list = modifying_function(existing_value_as_str = existing_as_str, new_value_as_str = edited_value_str)
+            new_list = modifying_function(interface=interface, existing_value_as_str = existing_as_str, new_value_as_str = edited_value_str)
         except Exception as e:
             interface.log_error("Error when modifying %s to %s: %s" % (existing_as_str, edited_value_str, str(e)))
 
@@ -191,7 +193,7 @@ def delete_entry_given_form_and_return_updated_list(interface: abstractInterface
 
     entry_to_delete = deleted_button_name_from_button_str(interface.last_button_pressed())
     try:
-        new_list = deleting_function(entry_to_delete)
+        new_list = deleting_function(interface=interface, entry_to_delete=entry_to_delete)
     except Exception as e:
         interface.log_error("Error when deleting entry %s: " % str(e))
         new_list = copy(existing_list)
@@ -202,19 +204,15 @@ def reorder_list_given_form_and_return_updated_list(interface: abstractInterface
                                                     save_function: Callable,
                                                     existing_list: list,
                                                     ) -> list:
-    new_list = re_order_return_list(interface.last_button_pressed(), existing_list=existing_list)
-    save_function(new_list)
-    """
     try:
-        new_list = re_order_return_list(interface.last_button_pressed(), existing_list=existing_list)
-        save_function(new_list)
+        new_list = re_order_return_list(button_name=interface.last_button_pressed(), existing_list=existing_list)
+        save_function(interface=interface, new_list=new_list)
     except Exception as e:
         interface.log_error("Error when reordering entry %s: " % str(e))
         new_list = copy(existing_list)
-    """
+
     return new_list
 
-### CAN JUST PASS LOAD/SAVE FUNCTIONS
 def re_order_return_list(button_name: str, existing_list: list):
     current_list_of_str = [str(item) for item in existing_list]
     new_list_of_str_ordered = modify_list_given_button_name(button_name=button_name,

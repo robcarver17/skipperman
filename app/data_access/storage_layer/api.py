@@ -1,3 +1,5 @@
+from typing import List
+
 from app.backend.reporting.arrangement.arrange_options import ArrangeGroupsOptions, ArrangementOptionsAndGroupOrder
 
 from app.backend.reporting.options_and_parameters.print_options import PrintOptions
@@ -79,13 +81,28 @@ class DataLayer():
         data_access_for_list_of_cadet_volunteer_associations=get_data_access_for_list_of_cadet_volunteer_associations(self.data)
         self.store.write(list_of_associations, data_access_method=data_access_for_list_of_cadet_volunteer_associations)
 
-    def get_list_of_cadets_with_tick_list_items(self) -> ListOfCadetsWithTickListItems:
-        data_access_for_list_of_cadets_with_tick_list_items = get_data_access_for_list_of_cadets_with_tick_list_items(self.data)
+    def DEPRECATE_get_list_of_cadets_with_tick_list_items(self) -> ListOfCadetsWithTickListItems:
+        data_access_for_list_of_cadets_with_tick_list_items = DEPRECATE_get_data_access_for_list_of_cadets_with_tick_list_items(self.data)
         return self.store.read(data_access_for_list_of_cadets_with_tick_list_items)
 
-    def save_list_of_cadets_with_tick_list_items(self, list_of_cadets_with_tick_list_items: ListOfCadetsWithTickListItems):
-        data_access_for_list_of_cadets_with_tick_list_items = get_data_access_for_list_of_cadets_with_tick_list_items(
-            self.data)
+    def get_list_of_cadets_with_tick_list_items_for_cadet_id(self, cadet_id: str) -> ListOfCadetsWithTickListItems:
+        data_access_for_list_of_cadets_with_tick_list_items = (
+            get_data_access_for_list_of_cadets_with_tick_list_items_for_cadet_id(self.data,
+                                                                                 cadet_id=cadet_id))
+        return self.store.read(data_access_for_list_of_cadets_with_tick_list_items)
+
+
+    def save_list_of_cadets_with_tick_list_items_for_cadet_id(self, list_of_cadets_with_tick_list_items: ListOfCadetsWithTickListItems):
+        cadet_id_list = list(set(list_of_cadets_with_tick_list_items.list_of_cadet_ids))
+        if len(cadet_id_list)==0:
+            return
+        elif len(cadet_id_list)>1:
+            raise Exception("Can only write one block of stuff ")
+        else:
+            cadet_id=cadet_id_list[0]
+
+        data_access_for_list_of_cadets_with_tick_list_items = get_data_access_for_list_of_cadets_with_tick_list_items_for_cadet_id(
+            self.data, cadet_id=cadet_id)
         self.store.write(list_of_cadets_with_tick_list_items, data_access_method=data_access_for_list_of_cadets_with_tick_list_items)
 
     def get_list_of_qualifications(self) -> ListOfQualifications:
@@ -288,11 +305,20 @@ def get_data_access_for_list_of_cadets(data: GenericDataApi) -> DataAccessMethod
             write_method=data.data_list_of_cadets.write)
 
 
-def get_data_access_for_list_of_cadets_with_tick_list_items(data: GenericDataApi) -> DataAccessMethod:
+def DEPRECATE_get_data_access_for_list_of_cadets_with_tick_list_items(data: GenericDataApi) -> DataAccessMethod:
     return  DataAccessMethod("list_of_cadets_with_tick_list_items",
     data.data_list_of_cadets_with_tick_list_items.read,
     data.data_list_of_cadets_with_tick_list_items.write
     )
+
+
+def get_data_access_for_list_of_cadets_with_tick_list_items_for_cadet_id(data: GenericDataApi, cadet_id: str) -> DataAccessMethod:
+    return  DataAccessMethod("list_of_cadets_with_tick_list_items_for_cadet_id",
+                             data.data_list_of_cadets_with_tick_list_items.read_for_cadet_id,
+                             data.data_list_of_cadets_with_tick_list_items.write_for_cadet_id,
+                             cadet_id=cadet_id
+                             )
+
 
 def get_data_access_for_list_of_qualifications(data: GenericDataApi) -> DataAccessMethod:
     return  DataAccessMethod("list_of_qualifications",

@@ -95,7 +95,9 @@ LIST_OF_QUALIFICATIONS = "list_of_qualifications"
 LIST_OF_CADETS_WITH_QUALIFICATIONS = "list_of_cadets_with_qualifications"
 LIST_OF_TICK_SUBSTAGES = "list_of_tick_sub_stages"
 LIST_OF_TICK_SHEET_ITEMS = "list_of_tick_sheet_items"
-LIST_OF_CADETS_WITH_TICK_LIST_ITEMS = "list_of_cadets_with_tick_list_items"
+DEPRECATE_LIST_OF_CADETS_WITH_TICK_LIST_ITEMS = "list_of_cadets_with_tick_list_items"
+LIST_OF_CADETS_WITH_TICK_LIST_ITEMS_FOR_EACH_CADET = "list_of_cadets_with_tick_list_items_for_cadet"
+
 
 EVENT_MAPPING_FILE_ID = "wa_event_mapping"
 FIELD_MAPPING_FILE_ID = "wa_field_mapping"
@@ -144,5 +146,6 @@ LIST_OF_QUALIFICATIONS: ("lists", "list_of_qualifications.csv"),
 LIST_OF_CADETS_WITH_QUALIFICATIONS: ("lists", "lists_of_cadets_with_qualifications.csv"),
 LIST_OF_TICK_SUBSTAGES: ("lists", "list_of_tick_substages.csv"),
 LIST_OF_TICK_SHEET_ITEMS:("lists", "list_of_tick_sheet_items.csv"),
-LIST_OF_CADETS_WITH_TICK_LIST_ITEMS: ("lists", "list_of_cadets_with_tick_list_items.csv"),
+DEPRECATE_LIST_OF_CADETS_WITH_TICK_LIST_ITEMS: ("lists", "list_of_cadets_with_tick_list_items.csv"),
+LIST_OF_CADETS_WITH_TICK_LIST_ITEMS_FOR_EACH_CADET: ("ticksheets", "tick_list_items_for_cadet_%s.csv"),
 USERLIST_FILE_ID: ("secure", "userlist.csv")}

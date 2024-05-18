@@ -295,6 +295,8 @@ class ListOfCadetsWithTickListItems(GenericListOfObjects):
     def list_of_cadet_ids(self):
         return [str(item.cadet_id) for item in self]
 
+
+
     def subset_from_list_of_cadet_ids(self, list_of_cadet_ids: List[str], generate_empty_row_if_missing: bool = True) -> 'ListOfCadetsWithTickListItems':
         ## generate empty ticksheet row for missing cadet
         new_ticksheet_list = []

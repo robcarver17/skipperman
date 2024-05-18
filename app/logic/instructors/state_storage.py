@@ -61,3 +61,8 @@ def set_cadet_id_in_state(interface: abstractInterface, cadet_id: str):
 
 def clear_cadet_id_in_state(interface: abstractInterface):
     interface.clear_persistent_value(CADET_ID)
+
+
+def not_editing(interface: abstractInterface):
+    state = get_edit_state_of_ticksheet(interface)
+    return state == NO_EDIT_STATE

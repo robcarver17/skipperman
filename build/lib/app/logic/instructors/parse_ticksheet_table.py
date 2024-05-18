@@ -1,19 +1,19 @@
 from typing import Union
 
-from app.backend.ticks_and_qualifications.ticksheets import TickSheetDataWithExtraInfo, \
-    get_ticksheet_data_from_state
+from app.backend.ticks_and_qualifications.ticksheets import TickSheetDataWithExtraInfo
+from app.logic.instructors.parse_ticksheet_table import get_ticksheet_data_from_state
 from app.backend.data.ticksheets import TickSheetsData
 from app.logic.instructors.render_ticksheet_table import get_tick_from_dropdown_or_none, get_tick_from_checkbox_or_none
 
-from app.logic.instructors.state_storage import get_edit_state_of_ticksheet, NO_EDIT_STATE, EDIT_DROPDOWN_STATE, EDIT_CHECKBOX_STATE
+from app.logic.instructors.state_storage import get_edit_state_of_ticksheet, NO_EDIT_STATE, EDIT_DROPDOWN_STATE, \
+    EDIT_CHECKBOX_STATE, not_editing
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.ticks import DictOfTicksWithItem, Tick
 
 
 def save_ticksheet_edits(interface: abstractInterface):
-    state = get_edit_state_of_ticksheet(interface)
-    if state == NO_EDIT_STATE:
+    if not_editing(interface):
         return
 
     ticksheet_data = get_ticksheet_data_from_state(interface)

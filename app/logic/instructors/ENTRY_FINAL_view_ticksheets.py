@@ -12,8 +12,8 @@ from app.logic.instructors.ticksheet_table_elements import get_buttons_for_ticks
     EDIT_CHECKBOX_BUTTON_LABEL, EDIT_DROPDOWN_BUTTON_LABEL, SAVE_BUTTON_LABEL, PRINT_BUTTON_LABEL, \
     SHOW_ALL_CADETS_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, \
-    get_nav_bar_with_just_back_button, get_nav_bar_with_just_main_menu_and_back_button, \
-    get_nav_bar_with_just_cancel_button, CANCEL_BUTTON_LABEL, Button, ButtonBar
+    get_nav_bar_with_just_main_menu_and_back_button, \
+    CANCEL_BUTTON_LABEL, Button, ButtonBar
 
 from app.objects.abstract_objects.abstract_text import Heading
 
@@ -21,7 +21,8 @@ from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _____
 
 from app.logic.instructors.state_storage import get_group_from_state, get_qualification_from_state, \
     set_edit_state_of_ticksheet, \
-    EDIT_CHECKBOX_STATE, EDIT_DROPDOWN_STATE, NO_EDIT_STATE, get_edit_state_of_ticksheet, clear_cadet_id_in_state
+    EDIT_CHECKBOX_STATE, EDIT_DROPDOWN_STATE, NO_EDIT_STATE, clear_cadet_id_in_state, \
+    not_editing
 
 from app.logic.events.events_in_state import get_event_from_state
 
@@ -72,11 +73,6 @@ def display_form_view_ticksheets_for_event_and_group(interface: abstractInterfac
     return Form(lines_inside_form)
 
 
-def not_editing(interface: abstractInterface):
-    state = get_edit_state_of_ticksheet(interface)
-    return state == NO_EDIT_STATE
-
-
 def post_form_view_ticksheets_for_event_and_group(interface: abstractInterface) -> Union[Form, NewForm, File]:
     button_pressed = interface.last_button_pressed()
     if button_pressed == CANCEL_BUTTON_LABEL:
@@ -86,6 +82,7 @@ def post_form_view_ticksheets_for_event_and_group(interface: abstractInterface) 
 
     elif button_pressed == BACK_BUTTON_LABEL:
         set_edit_state_of_ticksheet(interface=interface, state=NO_EDIT_STATE)
+        clear_cadet_id_in_state(interface)
         return previous_form(interface)
 
     ### IF STATE EDIT, SAVE EDITS HERE
@@ -128,4 +125,5 @@ def post_form_view_ticksheets_for_event_and_group(interface: abstractInterface) 
 
 def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(post_form_view_ticksheets_for_event_and_group)
+
 

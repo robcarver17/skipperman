@@ -2,7 +2,10 @@ from app.data_access.csv.generic_csv_data import GenericCsvData
 
 from app.data_access.classes.qualifications import *
 from app.objects.qualifications import ListOfQualifications, ListOfCadetsWithQualifications
-from app.data_access.csv.resolve_csv_paths_and_filenames import LIST_OF_QUALIFICATIONS, LIST_OF_CADETS_WITH_QUALIFICATIONS, LIST_OF_TICK_SHEET_ITEMS, LIST_OF_TICK_SUBSTAGES, LIST_OF_CADETS_WITH_TICK_LIST_ITEMS
+from app.data_access.csv.resolve_csv_paths_and_filenames import LIST_OF_QUALIFICATIONS, \
+    LIST_OF_CADETS_WITH_QUALIFICATIONS, LIST_OF_TICK_SHEET_ITEMS, LIST_OF_TICK_SUBSTAGES, \
+    DEPRECATE_LIST_OF_CADETS_WITH_TICK_LIST_ITEMS, LIST_OF_CADETS_WITH_TICK_LIST_ITEMS_FOR_EACH_CADET
+
 
 class CsvDataListOfQualifications(GenericCsvData, DataListOfQualifications):
 
@@ -55,10 +58,21 @@ class CsvDataListOfTickSheetItems(GenericCsvData, DataListOfTickSheetItems):
 class CsvDataListOfCadetsWithTickListItems(GenericCsvData, DataListOfCadetsWithTickListItems):
 
     def read(self) -> ListOfCadetsWithTickListItems:
-        list_of_cadets_with_tick_list_items = self.read_and_return_object_of_type(ListOfCadetsWithTickListItems, file_identifier=LIST_OF_CADETS_WITH_TICK_LIST_ITEMS)
+        list_of_cadets_with_tick_list_items = self.read_and_return_object_of_type(ListOfCadetsWithTickListItems, file_identifier=DEPRECATE_LIST_OF_CADETS_WITH_TICK_LIST_ITEMS)
 
         return list_of_cadets_with_tick_list_items
 
     def write(self, list_of_cadets_with_tick_list_items: ListOfCadetsWithTickListItems):
-        self.write_object(list_of_cadets_with_tick_list_items, file_identifier=LIST_OF_CADETS_WITH_TICK_LIST_ITEMS)
+        self.write_object(list_of_cadets_with_tick_list_items, file_identifier=DEPRECATE_LIST_OF_CADETS_WITH_TICK_LIST_ITEMS)
 
+    def read_for_cadet_id(self, cadet_id: str) -> ListOfCadetsWithTickListItems:
+        list_of_items_this_cadet = self.read_and_return_object_of_type(ListOfCadetsWithTickListItems,
+                                                                                  file_identifier=LIST_OF_CADETS_WITH_TICK_LIST_ITEMS_FOR_EACH_CADET,
+                                                                                  additional_file_identifiers=cadet_id)
+
+        return list_of_items_this_cadet
+
+    def write_for_cadet_id(self, list_of_cadets_with_tick_list_items: ListOfCadetsWithTickListItems, cadet_id: str):
+        ## Arguably we could get this from list_of_cadets_with_tick_list_items but it makese the API cleaner
+        self.write_object(list_of_cadets_with_tick_list_items, file_identifier=LIST_OF_CADETS_WITH_TICK_LIST_ITEMS_FOR_EACH_CADET,
+                          additional_file_identifiers=cadet_id)

@@ -24,7 +24,7 @@ class TickSheetsData():
     def add_or_modify_specific_tick(self, new_tick: Tick, cadet_id: str,
                                     item_id: str):
 
-        full_tick_sheet = self.get_list_of_cadets_with_tick_list_items()
+        full_tick_sheet = self.get_list_of_cadets_with_tick_list_items_for_list_of_cadets([cadet_id])
         full_tick_sheet = full_tick_sheet.add_or_modify_specific_tick_return_new_ticksheet(cadet_id=cadet_id, item_id=item_id, new_tick=new_tick)
         self.save_list_of_cadets_with_tick_list_items(full_tick_sheet)
 
@@ -92,7 +92,7 @@ class TickSheetsData():
 
         list_of_cadet_ids = self.group_allocation_data.list_of_cadet_ids_in_a_specific_group_if_cadet_active_at_event(event=event, group=group)
 
-        full_tick_sheet = self.get_list_of_cadets_with_tick_list_items()
+        full_tick_sheet = self.get_list_of_cadets_with_tick_list_items_for_list_of_cadets(list_of_cadet_ids=list_of_cadet_ids)
         list_of_tick_sheet_items_for_this_qualification = self.list_of_tick_sheet_items_for_this_qualification(qualification_stage_id)
         ordered_list_of_cadet_ids = self.cadet_data.reorder_list_of_cadet_ids_by_cadet_name(list_of_cadet_ids)
 
@@ -159,12 +159,21 @@ class TickSheetsData():
 
         return labelled_tick_sheet
 
-    def get_list_of_cadets_with_tick_list_items(self) -> ListOfCadetsWithTickListItems:
-        return self.data_api.get_list_of_cadets_with_tick_list_items()
+    def get_list_of_cadets_with_tick_list_items_for_list_of_cadets(self, list_of_cadet_ids: List[str]) -> ListOfCadetsWithTickListItems:
+        list_of_all_ticks = []
+        for cadet_id in list_of_cadet_ids:
+            ticks_this_cadet = self.get_list_of_cadets_with_tick_list_items_for_cadet_id(cadet_id)
+            list_of_all_ticks+=ticks_this_cadet
+
+        return ListOfCadetsWithTickListItems(list_of_all_ticks)
+
+    def get_list_of_cadets_with_tick_list_items_for_cadet_id(self, cadet_id) -> ListOfCadetsWithTickListItems:
+        return self.data_api.get_list_of_cadets_with_tick_list_items_for_cadet_id(cadet_id=cadet_id)
+
 
 
     def save_list_of_cadets_with_tick_list_items(self, list_of_cadets_with_tick_list_items: ListOfCadetsWithTickListItems):
-        self.data_api.save_list_of_cadets_with_tick_list_items(list_of_cadets_with_tick_list_items)
+        self.data_api.save_list_of_cadets_with_tick_list_items_for_cadet_id(list_of_cadets_with_tick_list_items)
 
     @property
     def qualification_data(self) ->  QualificationData:

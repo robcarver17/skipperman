@@ -227,10 +227,10 @@ def get_list_of_all_tick_related_button_names(interface: abstractInterface)  -> 
 
     all_buttons = []
     for cadet_id in list_of_cadet_ids:
-        all_buttons+=list_of_all_possible_buttons_for_cadet_id(cadet_id)
+        all_buttons+=list_of_all_possible_buttons_for_cadet_id_macro_ticks(cadet_id)
 
     for item_id in list_of_item_ids:
-        all_buttons+=list_of_all_possible_buttons_for_item_id(item_id)
+        all_buttons+=list_of_all_possible_buttons_for_item_id_macro_ticks(item_id)
 
     return all_buttons
 
@@ -250,7 +250,7 @@ def get_list_of_all_possible_select_cadet_buttons(interface: abstractInterface) 
 
     return [get_name_of_select_cadet_button(cadet_id) for cadet_id in list_of_cadet_ids]
 
-def list_of_all_possible_buttons_for_cadet_id(cadet_id: str) -> List[str]:
+def list_of_all_possible_buttons_for_cadet_id_macro_ticks(cadet_id: str) -> List[str]:
     all_buttons_for_cadet = [get_name_of_generic_button(
         axis=cadet_id_axis,
         tick_type=tick_type,
@@ -261,7 +261,7 @@ def list_of_all_possible_buttons_for_cadet_id(cadet_id: str) -> List[str]:
     return all_buttons_for_cadet
 
 
-def list_of_all_possible_buttons_for_item_id(item_id: str) -> List[str]:
+def list_of_all_possible_buttons_for_item_id_macro_ticks(item_id: str) -> List[str]:
     all_buttons_for_item = [get_name_of_generic_button(
         axis=item_id_axis,
         tick_type=tick_type,

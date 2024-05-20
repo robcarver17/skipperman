@@ -1,6 +1,5 @@
 from typing import List
 
-import pandas as pd
 from app.backend.data.qualification import QualificationData
 
 from app.objects.events import Event
@@ -10,11 +9,8 @@ from app.objects.groups import Group
 from app.data_access.storage_layer.api import DataLayer
 from app.objects.ticks import ListOfCadetsWithTickListItems, ListOfTickSheetItems, LabelledTickSheetWithCadetIds, Tick
 from app.backend.data.group_allocations import GroupAllocationsData
-from app.backend.data.cadets import CadetData
 from app.backend.data.cadets_at_event import CadetsAtEventData
 from app.backend.data.dinghies import DinghiesData
-from app.objects.ticks import CadetWithTickListItems
-
 
 
 class TickSheetsData():
@@ -105,10 +101,6 @@ class TickSheetsData():
     @property
     def group_allocation_data(self) -> GroupAllocationsData:
         return GroupAllocationsData(data_api=self.data_api)
-
-    @property
-    def cadet_data(self)-> CadetData:
-        return CadetData(data_api=self.data_api)
 
     @property
     def cadets_at_event_data(self) -> CadetsAtEventData:

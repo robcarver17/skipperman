@@ -38,6 +38,9 @@ def get_arrangement_options_and_group_order_text(interface: abstractInterface,  
 
     dict_of_df = report_generator.get_dict_of_df(interface)
 
+    if len(dict_of_df)==0:
+        return ListOfLines(["Report has no content - change filter or you might need to allocate groups or volunteers first to get results"])
+
     arrangement_options_and_group_order = get_arrangement_options_and_group_order_from_stored_or_defaults(
         interface=interface,
         specific_parameters_for_type_of_report=report_generator.specific_parameters_for_type_of_report,

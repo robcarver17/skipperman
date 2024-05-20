@@ -24,9 +24,12 @@ def get_dict_of_df_for_boat_report(interface: abstractInterface, event: Event, a
 
     dict_of_df = {}
     for day in days_in_event:
-        dict_of_df[day.name] = get_df_for_day_of_boat_report(day=day,
+        df = get_df_for_day_of_boat_report(day=day,
                                                              data_required=data_required,
                                                              additional_parameters=additional_parameters)
+
+        if len(df)>0:
+            dict_of_df[day.name] = df
 
     return dict_of_df
 
@@ -42,6 +45,9 @@ def get_df_for_day_of_boat_report(day: Day, data_required: RequiredDataForReport
                    is_cadet_id_valid_for_report(cadet_id=cadet_id, day=day, additional_parameters=additional_parameters, data_required=data_required)]
 
     df=pd.DataFrame(list_of_row)
+    if len(df)==0:
+        return pd.DataFrame()
+
     df = df.sort_values(by=BOAT_CLASS)
 
     return df

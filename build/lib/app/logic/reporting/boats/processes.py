@@ -75,7 +75,7 @@ def load_additional_parameters_for_boat_report(
     event =get_event_from_state(interface)
     display_full_names = interface.get_persistent_value(DISPLAY_FULL_NAMES, True)
     exclude_unallocated_groups = interface.get_persistent_value(
-        EXCLUDE_UNALLOCATED, True
+        EXCLUDE_UNALLOCATED, False
     )
     exclude_lake_groups = interface.get_persistent_value(EXCLUDE_LAKE, True)
     exclude_river_training_groups = interface.get_persistent_value(EXCLUDE_RIVER_TRAIN, False)

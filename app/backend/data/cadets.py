@@ -106,9 +106,6 @@ def get_list_of_cadets_as_str(list_of_cadets: ListOfCadets) -> List[str]:
     return [str(cadet) for cadet in list_of_cadets]
 
 
-### OLD BELOW TO DELETE
-
-
 SORT_BY_SURNAME = "Sort by surname"
 SORT_BY_FIRSTNAME = "Sort by first name"
 SORT_BY_DOB_ASC = "Sort by date of birth, ascending"

@@ -2,6 +2,8 @@ import os
 from copy import copy
 
 import pandas as pd
+
+from app.backend.ticks_and_qualifications.create_ticksheets import get_labelled_ticksheet_df_for_group_at_event
 from app.objects.abstract_objects.abstract_form import File
 
 from app.logic.events.events_in_state import get_event_from_state
@@ -24,7 +26,6 @@ def download_labelled_ticksheet_and_return_file(interface: abstractInterface) ->
     event = get_event_from_state(interface)
     group = get_group_from_state(interface)
     qualification = get_qualification_from_state(interface)
-    ## FIXME MAKE THESE CONFIGURABLE AT SOME POINT
     filename = download_labelled_ticksheet_and_return_filename(interface=interface,
                                                                event=event,
                                                                group=group,
@@ -36,12 +37,13 @@ def download_labelled_ticksheet_and_return_filename(interface: abstractInterface
                            event: Event,
                            group: Group,
                            qualification_stage_id: str,
-                           include_attendance_columns: bool = True,
+                                                    ## FIXME MAKE THESE CONFIGURABLE AT SOME POINT
+                            include_attendance_columns: bool = True,
                            add_header: bool = True,
                            sailors_in_columns: bool = True,
                            asterix_club_boats: bool = True,
                            medical_notes: bool = True):
-    labelled_ticksheet = get_labelled_ticksheet(
+    labelled_ticksheet = get_labelled_ticksheet_df_for_group_at_event(
         interface=interface,
         event=event,
         group=group,
@@ -57,29 +59,6 @@ def download_labelled_ticksheet_and_return_filename(interface: abstractInterface
 
     return filename
 
-def get_labelled_ticksheet(interface: abstractInterface,
-                           event: Event,
-                           group: Group,
-                           qualification_stage_id: str,
-                           include_attendance_columns: bool = True,
-                           add_header: bool = True,
-                           sailors_in_columns: bool = True,
-                           asterix_club_boats: bool = True,
-                           medical_notes: bool = True
-                           ):
-    ticksheets_data = TickSheetsData(interface.data)
-    labelled_ticksheet = ticksheets_data.get_labelled_ticksheet_df_for_group_at_event(
-        event=event,
-        group=group,
-        qualification_stage_id=qualification_stage_id,
-        include_attendance_columns=include_attendance_columns,
-        add_header=add_header,
-        sailors_in_columns=sailors_in_columns,
-        asterix_club_boats=asterix_club_boats,
-        medical_notes=medical_notes
-    )
-
-    return labelled_ticksheet
 
 def write_ticksheet_to_excel(labelled_ticksheet:LabelledTickSheetWithCadetIds, filename: str):
     title = labelled_ticksheet.qualification_name

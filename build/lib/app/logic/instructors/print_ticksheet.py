@@ -68,7 +68,7 @@ def get_labelled_ticksheet(interface: abstractInterface,
                            medical_notes: bool = True
                            ):
     ticksheets_data = TickSheetsData(interface.data)
-    labelled_ticksheet = ticksheets_data.get_labelled_ticksheet_df_for_group_at_event(
+    labelled_ticksheet = ticksheets_data.DEPRECATE_get_labelled_ticksheet_df_for_group_at_event(
         event=event,
         group=group,
         qualification_stage_id=qualification_stage_id,

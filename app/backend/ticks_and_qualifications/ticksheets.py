@@ -8,6 +8,8 @@ from app.backend.data.security import SUPERUSER
 from app.backend.data.ticksheets import TickSheetsData
 from app.backend.data.volunteer_rota import VolunteerRotaData
 from app.backend.events import get_sorted_list_of_events
+from app.backend.ticks_and_qualifications.create_ticksheets import \
+    get_ticksheet_for_cadets_in_group_at_event_for_qualification
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event, ListOfEvents
 from app.objects.groups import Group
@@ -57,7 +59,7 @@ def can_volunteer_id_see_event(interface: abstractInterface, event: Event, volun
 
 
 def align_center(x):
-    return ['text-align: center' for x in x]
+    return ['text-align: center' for _ in x]
 
 
 def write_ticksheet_to_excel(labelled_ticksheet:LabelledTickSheetWithCadetIds, filename: str):
@@ -77,7 +79,7 @@ def get_ticksheet_data(interface: abstractInterface, event: Event, group: Group,
     tick_sheet_data = TickSheetsData(interface.data)
     qualifications_data = QualificationData(interface.data)
 
-    tick_sheet = tick_sheet_data.get_ticksheet_for_cadets_in_group_at_event_for_qualification(event=event, group=group, qualification_stage_id=qualification.id)
+    tick_sheet = get_ticksheet_for_cadets_in_group_at_event_for_qualification(interface=interface, event=event, group=group, qualification_stage_id=qualification.id)
 
     list_of_tick_sheet_items_for_this_qualification = tick_sheet_data.list_of_tick_sheet_items_for_this_qualification(
         qualification.id)

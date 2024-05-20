@@ -29,16 +29,6 @@ def load_list_of_cadets_with_qualifications(interface: abstractInterface) -> Lis
     return qualification_data.get_list_of_cadets_with_qualifications()
 
 
-def highest_qualification_for_cadet(interface: abstractInterface, cadet: Cadet) -> str:
-    list_of_ids = DEPRECATE_list_of_qualification_ids_for_cadet(cadet)
-    list_of_qualification = DEPRECATE_load_list_of_qualifications() ## last is best
-    highest = ''
-    for qual in list_of_qualification:
-        if qual.id in list_of_ids:
-            highest = qual.name
-
-    return highest
-
 
 def list_of_qualification_ids_for_cadet(interface: abstractInterface, cadet: Cadet) -> List[str]:
     qualification_data = QualificationData(interface.data)

@@ -5,7 +5,6 @@ from app.objects.groups import Group
 from app.backend.data.events import get_list_of_all_events
 
 from app.backend.group_allocations.previous_allocations import allocation_for_cadet_in_previous_events_as_dict, \
-    DEPRECATE_get_dict_of_allocations_for_events_and_list_of_cadets, \
     get_dict_of_allocations_for_events_and_list_of_cadets
 
 from app.objects.constants import missing_data
@@ -35,8 +34,6 @@ from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.cadets import Cadet
 from app.objects.events import Event, list_of_events_excluding_one_event, SORT_BY_START_ASC
-from build.lib.app.backend.group_allocations.previous_allocations import \
-    DEPRECATE_get_dict_of_allocations_for_events_and_list_of_cadets
 
 
 def display_form_allocate_cadets_at_event(interface: abstractInterface, event: Event, sort_order: list) -> Union[Form, NewForm]:

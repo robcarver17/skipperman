@@ -77,7 +77,7 @@ def get_ticksheet_data(interface: abstractInterface, event: Event, group: Group,
     tick_sheet_data = TickSheetsData(interface.data)
     qualifications_data = QualificationData(interface.data)
 
-    tick_sheet = tick_sheet_data.get_ticksheet_for_cadets_in_group_at_event_for_qualification(event=event, group=group, qualification_stage_id=qualification.id)
+    tick_sheet = tick_sheet_data.DEPRECATE_get_ticksheet_for_cadets_in_group_at_event_for_qualification(event=event, group=group, qualification_stage_id=qualification.id)
 
     list_of_tick_sheet_items_for_this_qualification = tick_sheet_data.list_of_tick_sheet_items_for_this_qualification(
         qualification.id)

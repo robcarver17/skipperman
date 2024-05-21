@@ -4,11 +4,9 @@ from app.objects.abstract_objects.abstract_lines import Line
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.volunteer_allocation import DEPRECATED_load_list_of_volunteers_at_event, \
-    load_list_of_volunteers_at_event
-from app.backend.volunteers.volunteer_rota import get_cadet_location_string, \
-    str_dict_skills
-from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingVolunteerRotaPage
+from app.backend.volunteers.volunteer_rota import DEPRECATED_load_list_of_volunteers_at_event, load_list_of_volunteers_at_event
+from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingVolunteerRotaPage, \
+    get_cadet_location_string, str_dict_skills
 from app.backend.volunteers.volunteers import DEPRECATED_get_volunteer_from_id, get_volunteer_from_id
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.day_selectors import Day
@@ -189,7 +187,7 @@ def get_buttons_for_days_at_event(event: Event, ready_to_swap: bool):
     if ready_to_swap:
         return event.weekdays_in_event_as_list_of_string()
     else:
-        return [Line(["Sort by", button_for_day(day)]) for day in event.weekdays_in_event()]
+        return [Line([ button_for_day(day), "(click to sort group/role)"]) for day in event.weekdays_in_event()]
 
 def button_for_day(day:Day) -> Button:
     return Button(day.name, value=button_value_for_day(day))

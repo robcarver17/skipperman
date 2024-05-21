@@ -3,10 +3,9 @@ from typing import Union
 from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.volunteers.constants import BACK_BUTTON_LABEL, SAVE_BUTTON_LABEL
+from app.logic.volunteers.constants import CANCEL_BUTTON_LABEL, SAVE_BUTTON_LABEL
 
-from app.logic.volunteers.edit_volunteer import get_and_save_volunteer_skills_from_form, DEPRECATE_skills_form_entries, \
-    skills_form_entries
+from app.logic.volunteers.edit_volunteer import get_and_save_volunteer_skills_from_form,  skills_form_entries
 from app.logic.volunteers.volunteer_state import get_volunteer_from_state
 
 from app.objects.abstract_objects.abstract_buttons import Button
@@ -22,7 +21,7 @@ def display_form_edit_individual_volunteer_skills_from_rota(
     skills_entries = skills_form_entries(interface=interface, volunteer=volunteer)
     link = Link(url=WEBLINK_FOR_QUALIFICATIONS, string="See qualifications table", open_new_window=True)
 
-    footer_buttons = Line([Button(BACK_BUTTON_LABEL), Button(SAVE_BUTTON_LABEL)])
+    footer_buttons = Line([Button(CANCEL_BUTTON_LABEL), Button(SAVE_BUTTON_LABEL)])
 
     return Form([
         ListOfLines([
@@ -42,7 +41,7 @@ def post_form_edit_individual_volunteer_skills_from_rota(
 ) -> Union[Form, NewForm]:
     ## placeholder, not currently used
     button = interface.last_button_pressed()
-    if button==BACK_BUTTON_LABEL:
+    if button==CANCEL_BUTTON_LABEL:
         pass
     elif button==SAVE_BUTTON_LABEL:
         modify_volunteer_from_rota_given_form_contents(interface=interface)

@@ -1,55 +1,32 @@
 from typing import List
 
-from app.objects.cadets import ListOfCadets
+from app.objects.cadets import ListOfCadets, Cadet
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.cadets import DEPRECATE_get_sorted_list_of_cadets,  cadet_from_id
-from app.backend.data.volunteers import DEPRECATED_get_sorted_list_of_volunteers, DEPRECATE_load_list_of_volunteer_skills, \
-    save_list_of_volunteer_skills, \
-    DEPRECATE_get_list_of_cadet_volunteer_associations, \
+from app.backend.cadets import  cadet_from_id
+from app.backend.data.volunteers import DEPRECATED_get_sorted_list_of_volunteers, \
+    DEPRECATE_load_list_of_volunteer_skills, \
+    DEPRECATE_save_list_of_volunteer_skills, \
     DEPRECATE_load_all_volunteers, VolunteerData
 from app.data_access.configuration.configuration import VOLUNTEERS_SKILL_FOR_PB2
 from app.objects.constants import arg_not_passed
-from app.objects.volunteers import Volunteer
-
-
-def DEPRECATE_get_list_of_volunteers_as_str(list_of_volunteers = arg_not_passed) -> list:
-    if list_of_volunteers is arg_not_passed:
-        list_of_volunteers = DEPRECATE_load_all_volunteers()
-    return [str(volunteer) for volunteer in list_of_volunteers]
-
-
-def DEPRECATE_get_volunteer_from_list_of_volunteers(volunteer_selected: str) -> Volunteer:
-    list_of_volunteers = DEPRECATE_load_all_volunteers()
-    list_of_volunteers_as_str = DEPRECATE_get_list_of_volunteers_as_str(list_of_volunteers=list_of_volunteers)
-
-    idx = list_of_volunteers_as_str.index(volunteer_selected)
-    return list_of_volunteers[idx]
+from app.objects.volunteers import Volunteer, ListOfVolunteerSkills, ListOfVolunteers
 
 def get_volunteer_from_list_of_volunteers_given_volunteer_name(interface: abstractInterface, volunteer_name: str) -> Volunteer:
     volunteer_data = VolunteerData(interface.data)
     return volunteer_data.get_volunteer_from_list_of_volunteers_given_name(volunteer_name=volunteer_name)
 
 
-
-def DEPRECATE_get_dict_of_existing_skills(volunteer: Volunteer)-> dict:
-    all_skills = DEPRECATE_load_list_of_volunteer_skills()
-    return all_skills.dict_of_skills_for_volunteer_id(volunteer_id=volunteer.id)
-
 def get_dict_of_existing_skills(interface: abstractInterface, volunteer: Volunteer)-> dict:
     volunteer_data = VolunteerData(interface.data)
     return volunteer_data.get_dict_of_existing_skills(volunteer)
 
 
-def get_connected_cadets(volunteer: Volunteer) -> ListOfCadets:
-    existing_connections = DEPRECATE_get_list_of_cadet_volunteer_associations()
-    list_of_cadets = DEPRECATE_get_sorted_list_of_cadets()
+def get_connected_cadets(interface: abstractInterface, volunteer: Volunteer) -> ListOfCadets:
+    volunteer_data = VolunteerData(interface.data)
 
-    connected_ids = existing_connections.list_of_connections_for_volunteer(volunteer.id)
-    connected_cadets = [list_of_cadets.object_with_id(id) for id in connected_ids]
-    return ListOfCadets(connected_cadets)
-
+    return volunteer_data.get_connected_cadets(volunteer)
 
 def DEPRECATE_list_of_similar_volunteers(volunteer: Volunteer) -> list:
     existing_volunteers = DEPRECATED_get_sorted_list_of_volunteers()
@@ -147,8 +124,6 @@ def DEPRECATED_get_volunteer_from_id(volunteer_id: str) -> Volunteer:
     return list_of_volunteers.object_with_id(volunteer_id)
 
 
-from app.backend.data.volunteers import get_sorted_list_of_volunteers
-
 def get_volunteer_name_from_id(interface: abstractInterface, volunteer_id: str) -> str:
     volunteer = get_volunteer_from_id(interface=interface, volunteer_id=volunteer_id)
     return volunteer.name
@@ -178,13 +153,53 @@ def boat_related_skill_for_volunteer(interface: abstractInterface, volunteer_id:
     volunteer_data = VolunteerData(interface.data)
     return volunteer_data.boat_related_skill_for_volunteer(volunteer_id)
 
-def add_boat_related_skill_for_volunteer(interface: abstractInterface, volunteer_id: str):
+def DEPRECATEadd_boat_related_skill_for_volunteer(interface: abstractInterface, volunteer_id: str):
     volunteer_data = VolunteerData(interface.data)
     skills =DEPRECATE_load_list_of_volunteer_skills()
     skills.add_boat_related_skill_for_volunteer(volunteer_id)
-    save_list_of_volunteer_skills(skills)
+    DEPRECATE_save_list_of_volunteer_skills(skills)
 
-def remove_boat_related_skill_for_volunteer(interface: abstractInterface, volunteer_id: str):
+def DEPRECATE_remove_boat_related_skill_for_volunteer(interface: abstractInterface, volunteer_id: str):
     skills =DEPRECATE_load_list_of_volunteer_skills()
     skills.remove_boat_related_skill_for_volunteer(volunteer_id)
-    save_list_of_volunteer_skills(skills)
+    DEPRECATE_save_list_of_volunteer_skills(skills)
+
+
+def add_new_verified_volunteer(interface: abstractInterface, volunteer: Volunteer):
+    volunteer_data= VolunteerData(interface.data)
+    volunteer_data.add_new_volunteer(volunteer)
+
+
+def save_skills_for_volunteer(interface: abstractInterface, volunteer: Volunteer, dict_of_skills: dict):
+    volunteer_data = VolunteerData(interface.data)
+    volunteer_data.save_skills_for_volunteer(volunteer=volunteer, dict_of_skills=dict_of_skills)
+
+
+def load_list_of_volunteer_skills(interface: abstractInterface)-> ListOfVolunteerSkills:
+    volunteer_data = VolunteerData(interface.data)
+    return volunteer_data.get_list_of_volunteer_skills()
+
+
+def get_sorted_list_of_volunteers(interface: abstractInterface, sort_by: str = arg_not_passed) -> ListOfVolunteers:
+    volunteer_data = VolunteerData(interface.data)
+    return volunteer_data.get_sorted_list_of_volunteers(sort_by)
+
+
+def load_all_volunteers(interface:abstractInterface)-> ListOfVolunteers:
+    volunteer_data = VolunteerData(interface.data)
+    return volunteer_data.get_list_of_volunteers()
+
+
+def delete_connection_in_data(interface: abstractInterface, cadet: Cadet, volunteer: Volunteer):
+    volunteer_data = VolunteerData(interface.data)
+    volunteer_data.delete_connection_in_data(cadet=cadet, volunteer=volunteer)
+
+
+def add_volunteer_connection_to_cadet_in_master_list_of_volunteers(interface: abstractInterface, cadet: Cadet, volunteer: Volunteer):
+    volunteer_data = VolunteerData(interface.data)
+    volunteer_data.add_volunteer_connection_to_cadet_in_master_list_of_volunteers(cadet=cadet, volunteer=volunteer)
+
+
+def update_existing_volunteer(interface: abstractInterface, volunteer: Volunteer):
+    volunteer_data = VolunteerData(interface.data)
+    volunteer_data.update_existing_volunteer(volunteer)

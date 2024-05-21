@@ -101,6 +101,9 @@ class CadetAtEventWithDinghy(GenericSkipperManObject):
 
         return self.cadet_id == other.cadet_id and self.boat_class_id == other.boat_class_id and sail_number == other_sail_number and self.partner_cadet_id == other.partner_cadet_id
 
+    def clear_partner(self):
+        self.partner_cadet_id = NOT_ALLOCATED
+
 
 
 UNCHANGED = "unchanged"
@@ -174,7 +177,7 @@ class ListOfCadetAtEventWithDinghies(GenericListOfObjectsWithIds):
 
     def remove_two_handed_partner_from_existing_cadet(self, cadet_id, day: Day):
         cadet_in_data = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
-        cadet_in_data.partner_cadet_id = NOT_ALLOCATED ## Assumption is we will be allocating to someone else. Boat details will remain
+        cadet_in_data.clear_partner()
 
     def how_has_partnership_id_changed(self, cadet_id: str,  new_two_handed_partner_id: str, day: Day) -> str:
         ## Changes only apply to the first cadet

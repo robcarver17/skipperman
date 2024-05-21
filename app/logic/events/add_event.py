@@ -1,8 +1,7 @@
-from dataclasses import dataclass
 from typing import Union
 
-from app.backend.events import verify_event_and_warn, list_of_previously_used_event_names
-from app.backend.data.events import add_new_verified_event
+from app.backend.events import verify_event_and_warn, list_of_previously_used_event_names, EventAndVerificationText, \
+    event_and_text_if_first_time, add_new_verified_event
 from app.logic.events.constants import (
     CHECK_BUTTON_LABEL,
     FINAL_ADD_BUTTON_LABEL,
@@ -30,37 +29,22 @@ def display_form_view_for_add_event(interface: abstractInterface) -> Form:
     return post_form_view_for_add_event(interface=interface, first_time_displayed=True)
 
 
-
-@dataclass
-class EventAndVerificationText:
-    event: Event = default_event
-    verification_text: str = ("",)
-
-    @property
-    def is_default(self) -> bool:
-        return self.event == default_event
-
-
-event_and_text_if_first_time = EventAndVerificationText(
-    event=default_event, verification_text=""
-)
-
-
 def get_add_event_form(
     interface: abstractInterface, first_time_displayed: bool = True
 ) -> Form:
     if first_time_displayed:
-        return get_add_event_form_with_information_passed(event_and_text_if_first_time)
+        return get_add_event_form_with_information_passed(interface=interface, event_and_text=event_and_text_if_first_time)
     else:
         event_and_text = process_form_when_checking_event(interface)
-        return get_add_event_form_with_information_passed(event_and_text)
+        return get_add_event_form_with_information_passed(interface=interface, event_and_text=event_and_text)
 
 
 def get_add_event_form_with_information_passed(
+        interface: abstractInterface,
     event_and_text: EventAndVerificationText,
 ) -> Form:
 
-    form_entries = form_fields_for_add_event(event=event_and_text.event)
+    form_entries = form_fields_for_add_event(interface=interface, event=event_and_text.event)
     form_is_blank = event_and_text.is_default
     verification_line = Line(event_and_text.verification_text)
     footer_buttons = get_footer_buttons(form_is_blank)
@@ -76,9 +60,9 @@ def get_add_event_form_with_information_passed(
 
     return Form(list_of_elements_inside_form)
 
-def get_heading_text():
-    header_text = "Do not duplicate event names! (can only have one event with a specific name in a given year, so include months in training weekends eg June Training, or include a number in a series eg Feva Training 1)."
-    previous_events =  list_of_previously_used_event_names()
+def get_heading_text(interface: abstractInterface):
+    header_text = "Do not duplicate event names! (can only have one event with a specific name in a given year, so include months in training weekends eg June Training, or include a number in a series eg Feva Training 1. "
+    previous_events =  list_of_previously_used_event_names(interface)
     previous_events_text = " Previously used event names: %s" % ", ".join(previous_events)
 
     heading = Heading(header_text+ previous_events_text, size=6, centred=False)
@@ -97,14 +81,14 @@ def get_footer_buttons(form_is_blank: bool):
 
 
 
-def form_fields_for_add_event(event: Event = default_event) -> ListOfLines:
+def form_fields_for_add_event(interface: abstractInterface, event: Event = default_event) -> ListOfLines:
     print("event %s type %s" % (str(event), str(type(event))))
     event_name = textInput(
         input_label="Event name (do not include year, eg 'Cadet Week' not 'Cadet Week 2023')",
         input_name=EVENT_NAME,
         value=event.event_name,
     )
-    heading = get_heading_text()
+    heading = get_heading_text(interface)
 
     start_date = dateInput(
         input_label="Start date",
@@ -175,7 +159,7 @@ def process_form_when_checking_event(
 ) -> EventAndVerificationText:
     try:
         event = get_event_from_form(interface)
-        verify_text = verify_event_and_warn(event)
+        verify_text = verify_event_and_warn(interface=interface, event=event)
     except Exception as e:
         verify_text = (
             "Doesn't appear to be a valid event (wrong date time in old browser?) error code %s"
@@ -217,12 +201,13 @@ def process_form_when_event_verified(interface: abstractInterface) -> Form:
     try:
         event = get_event_from_form(interface)
         print("ffrom form %s" % event)
-        add_new_verified_event(event)
+        add_new_verified_event(interface=interface, event=event)
     except Exception as e:
         ## should never happen as we have to be verified to get here, but still
         interface.log_error(
             "Can't add this event, reason: %s, try again or consult support" % str(e)
         )
+        interface.save_stored_items()
         return initial_state_form
 
     return form_with_message_and_finished_button(

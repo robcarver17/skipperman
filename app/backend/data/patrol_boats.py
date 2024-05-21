@@ -70,6 +70,13 @@ class PatrolBoatsData():
 
         return patrol_boat_id
 
+    def delete_volunteer_with_id_at_event(self, volunteer_id: str, event: Event):
+
+        for day in event.weekdays_in_event():
+            self.remove_volunteer_from_patrol_boat_on_day_at_event(event=event,
+                                                                               volunteer_id=volunteer_id,
+                                                                               day=day)
+
     def remove_volunteer_from_patrol_boat_on_day_at_event(self, volunteer_id: str, day: Day,
                                                           event: Event):
 

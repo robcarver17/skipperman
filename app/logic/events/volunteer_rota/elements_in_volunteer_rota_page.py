@@ -14,7 +14,7 @@ from app.objects.volunteers_in_roles import FILTER_OPTIONS
 
 from app.backend.forms.swaps import is_ready_to_swap
 from app.logic.volunteers.ENTRY_view_volunteers import all_sort_types as all_volunteer_name_sort_types
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button, BACK_BUTTON_LABEL
+from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button, CANCEL_BUTTON_LABEL, main_menu_button
 from app.objects.abstract_objects.abstract_form import MaterialAroundTable, checkboxInput, Link, dropDownInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________, DetailListOfLines
@@ -31,28 +31,26 @@ def get_filters_and_buttons(interface: abstractInterface, event: Event) -> Mater
     explain_all_sorts_and_filters = get_explanation_of_sorts_and_filters(sorts_and_filters)
 
     sort_buttons = get_all_volunteer_sort_buttons()
-    action_buttons = get_action_buttons_for_rota()
     skills_filter = get_volunteer_skills_filter(interface)
-    availablility_filter = get_availability_for_volunteers_filter(interface=interface, event=event)
+    header_buttons = get_header_buttons_for_rota()
+    availablility_filter = get_availability_for_volunteers_filter( event=event)
     before_table =  ListOfLines(
             [
-                action_buttons,
+                ButtonBar([filter_button,clear_filter_button, '']+sort_buttons),
                 skills_filter,
                 availablility_filter,
-                Line([filter_button,clear_filter_button]),
-                sort_buttons,
-                Line([explain_all_sorts_and_filters]),
-                _______________])
+                explain_all_sorts_and_filters,
+                _______________]).add_Lines()
 
     after_table = ListOfLines([
-                action_buttons
+                header_buttons
             ])
 
     return MaterialAroundTable(before_table=before_table, after_table=after_table)
 
 
 
-def get_availability_for_volunteers_filter(interface: abstractInterface, event: Event) -> Line:
+def get_availability_for_volunteers_filter( event: Event) -> Line:
     days_in_event = event.weekdays_in_event()
     availability_filters = [get_available_filter_for_day(day=day) for day in days_in_event]
 
@@ -80,11 +78,11 @@ def from_filter_entry_to_option(filter_entry:str) ->str:
 null_list_of_lines = ListOfLines([_______________])
 
 
-def get_all_volunteer_sort_buttons() -> ButtonBar:
+def get_all_volunteer_sort_buttons():
     name_sort_buttons = get_volunteer_name_sort_buttons()
     cadet_location_sort = Button(SORT_BY_CADET_LOCATION, nav_button=True)
 
-    return ButtonBar([cadet_location_sort]+name_sort_buttons)
+    return [cadet_location_sort]+name_sort_buttons
 
 
 SORT_BY_CADET_LOCATION = "Sort by cadet location"
@@ -110,15 +108,10 @@ filter_button = Button(APPLY_FILTER_BUTTON_LABEL, nav_button=True)
 clear_filter_button = Button(CLEAR_FILTERS_BUTTON_LABEL, nav_button=True)
 
 def get_header_buttons_for_rota():
-    return ButtonBar([Button(BACK_BUTTON_LABEL, nav_button=True)])
+    return ButtonBar([Button(CANCEL_BUTTON_LABEL, nav_button=True), Button(SAVE_CHANGES, nav_button=True),
+                      Button(ADD_NEW_VOLUNTEER_BUTTON_LABEL, nav_button=True)])
 
 
-def get_action_buttons_for_rota():
-    return ButtonBar([
-        Button(ADD_NEW_VOLUNTEER_BUTTON_LABEL, nav_button=True),
-        Button(BACK_BUTTON_LABEL, nav_button=True),
-        Button(SAVE_CHANGES, nav_button=True)
-    ])
 
 
 def get_summary_table(interface: abstractInterface, event: Event):
@@ -145,7 +138,7 @@ def get_summary_group_table(interface: abstractInterface, event: Event):
 
 
 link = Link(url=WEBLINK_FOR_QUALIFICATIONS, string="See qualifications table", open_new_window=True)
-instructions = ListOfLines(["BACK will cancel any changes you make; any other button will save them",
+instructions = DetailListOfLines(ListOfLines(["CANCEL will cancel any changes you make; any other button will save them",
                             Line(["Key for buttons - Copy: ",
                                         COPY_SYMBOL1, COPY_SYMBOL2,
                                         " ; Swap: ", SWAP_SHORTHAND1, SWAP_SHORTHAND2, ", ",
@@ -156,9 +149,10 @@ instructions = ListOfLines(["BACK will cancel any changes you make; any other bu
                             "Click on volunteer names to see roles done at previous events, edit days attending, or remove from event. Click on location to see and edit connected cadets. Click on skills to edit volunteer skills.",
                             "Click on 'unavailable' days to make a volunteer available. Select role = unavailable to make a volunteer unavailable",
                             "Save after selecting role to see possible group allocations where relevant.",
-                            "You can copy roles/groups to other days to avoid tiresome re-entry",
                             "Enter any relevant notes, eg will arrive late etc",
+                            "Use filters to see certain categories of volunteer - skills or availability/allocation status",
                             "Click on summary triangle tabs above to see count of volunteers allocated so far",
-                            link]).add_Lines()
+                            link]).add_Lines(),
+                                 name="Instructions")
 
 ADD_NEW_VOLUNTEER_BUTTON_LABEL = "Add new volunteer to rota"

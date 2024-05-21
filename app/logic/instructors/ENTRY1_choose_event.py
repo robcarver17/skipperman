@@ -3,7 +3,7 @@ from typing import Union
 from app.logic.events.events_in_state import update_state_for_specific_event_given_event_description
 
 from app.backend.events import sort_buttons_for_event_list, all_sort_types_for_event_list, \
-    confirm_event_exists_given_description
+    DEPRECATE_confirm_event_exists_given_description, confirm_event_exists_given_description
 from app.backend.ticks_and_qualifications.ticksheets import get_list_of_events_entitled_to_see
 
 from app.objects.abstract_objects.abstract_text import Heading
@@ -54,7 +54,7 @@ def post_form_main_instructors_page(interface: abstractInterface) -> Union[Form,
 
 def action_when_event_button_clicked(interface: abstractInterface) -> NewForm:
     event_description_selected = interface.last_button_pressed()
-    confirm_event_exists_given_description(event_description_selected)
+    confirm_event_exists_given_description(interface=interface, event_description=event_description_selected)
     update_state_for_specific_event_given_event_description(
         interface=interface, event_description=event_description_selected)
 

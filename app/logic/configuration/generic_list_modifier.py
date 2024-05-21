@@ -11,7 +11,7 @@ from app.objects.abstract_objects.abstract_interface import (
 from app.objects.abstract_objects.abstract_text import  up_arrow, down_arrow, Heading
 
 ADD_ENTRY_TEXT_FIELD = "add_entry_text_field"
-SAVE_ENTRY_BUTTON_LABEL = "Save edits to existing or add new entry"
+SAVE_ENTRY_BUTTON_LABEL = "Save edits to existing and/or add new entry"
 
 
 

@@ -133,8 +133,13 @@ def process_row_when_cadet_unmatched(
 def header_text_for_form(interface: abstractInterface)-> str:
     row_id = get_current_row_id(interface)
     event =get_event_from_state(interface)
+    is_training = event.contains_groups
+    if is_training:
+        warn_text = 'NEED TO BE A MEMBER TO DO TRAINING EVENT - *Check they are a member* '
+    else:
+        warn_text=''
     next_row = get_row_in_mapped_event_data_given_id(event=event, row_id=row_id, interface=interface)
-    default_header_text = "Looks like a new cadet in the WA entry file. You can edit them, check their details and then add, or choose an existing cadet instead (avoid creating duplicates! If the existing cadet details are wrong, select them for now and edit later) \n\n Row details are: \n%s"
+    default_header_text = "Looks like a new cadet in the WA entry file. "+warn_text+"You can edit them, check their details and then add, or choose an existing cadet instead (avoid creating duplicates! If the existing cadet details are wrong, select them for now and edit later) \n\n Row details are: \n%s"
 
     return default_header_text % next_row
 
@@ -214,7 +219,8 @@ def process_form_when_existing_cadet_chosen(interface: abstractInterface) -> For
     return process_row_when_cadet_matched(interface=interface, cadet=cadet)
 
 def go_to_update_cadet_data_form(interface: abstractInterface):
+
     return interface.get_new_form_given_function(display_form_interactively_update_cadets_at_event)
 
-TEST_CADET_SKIP_BUTTON_LABEL = "Skip: this is a test entry"
+TEST_CADET_SKIP_BUTTON_LABEL = "Skip: this is a test entry (do not use if it is a real cadet name)"
 extra_buttons = Line(Button(TEST_CADET_SKIP_BUTTON_LABEL))

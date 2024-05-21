@@ -18,7 +18,7 @@ from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
 from app.backend.data.field_mapping import DEPRECATE_get_field_mapping_for_event
 from app.backend.wa_import.check_mapping import check_field_mapping
-from app.backend.wa_import.map_wa_files import is_wa_file_mapping_setup_for_event
+from app.backend.wa_import.map_wa_files import DEPRECATE_is_wa_file_mapping_setup_for_event
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import Event
 
@@ -61,7 +61,7 @@ def display_form_event_field_mapping_existing_mapping(
     )
 
 def warning_text_for_mapping(event: Event) -> str:
-    wa_import_done = is_wa_file_mapping_setup_for_event(event=event)
+    wa_import_done = DEPRECATE_is_wa_file_mapping_setup_for_event(event=event)
 
     if wa_import_done:
         warning_text = "*WARNING* WA import has already been done for this event. Changing the mapping could break things. DO NOT CHANGE UNLESS YOU ARE SURE."

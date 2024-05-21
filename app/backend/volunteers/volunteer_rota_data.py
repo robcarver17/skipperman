@@ -6,16 +6,16 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.backend.events import get_sorted_list_of_events
 from app.backend.group_allocations.cadet_event_allocations import \
     load_list_of_cadets_ids_with_group_allocations_active_cadets_only, get_list_of_cadets_unallocated_to_group_at_event
-from app.backend.data.volunteers import  load_list_of_volunteer_skills
-from app.backend.data.volunteer_rota import   get_volunteers_in_role_at_event_with_active_allocations
-from app.backend.data.volunteer_allocation import  load_list_of_volunteers_at_event
+from app.backend.volunteers.volunteers import load_list_of_volunteer_skills
+from app.backend.volunteers.volunteer_rota import load_list_of_volunteers_at_event, \
+    get_volunteers_in_role_at_event_with_active_allocations, sort_volunteer_data_for_event_by_name_sort_order
 
 from app.objects.cadets import ListOfCadets
 from app.objects.constants import missing_data, arg_not_passed
 from app.objects.day_selectors import Day
 from app.objects.events import Event, SORT_BY_START_ASC, list_of_events_excluding_one_event
-from app.objects.groups import ListOfCadetIdsWithGroups, GROUP_UNALLOCATED
-from app.objects.volunteers import ListOfVolunteerSkills
+from app.objects.groups import ListOfCadetIdsWithGroups, GROUP_UNALLOCATED, Group, sorted_locations
+from app.objects.volunteers import ListOfVolunteerSkills, Volunteer
 from app.objects.volunteers_at_event import ListOfVolunteersAtEvent, VolunteerAtEvent
 from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent, VolunteerInRoleAtEvent, NO_ROLE_SET, \
     FILTER_ALL, FILTER_AVAILABLE, FILTER_UNALLOC_AVAILABLE, FILTER_ALLOC_AVAILABLE, FILTER_UNAVAILABLE
@@ -32,18 +32,20 @@ class RotaSortsAndFilters:
 
 
 def get_explanation_of_sorts_and_filters(sorts_and_filters: RotaSortsAndFilters):
-    sort_by =""
+    explanation =""
     if sorts_and_filters.sort_by_volunteer_name is not arg_not_passed:
-        sort_by+="Sorting by volunteer name (%s). " % sorts_and_filters.sort_by_volunteer_name
+        explanation+="Sorting by: volunteer name (%s). " % sorts_and_filters.sort_by_volunteer_name
     if sorts_and_filters.sort_by_day is not arg_not_passed:
-        sort_by+="Sorting by day %s. " % sorts_and_filters.sort_by_day.name
+        explanation+="Sorting by: group / role on %s. " % sorts_and_filters.sort_by_day.name
     if sorts_and_filters.sort_by_location:
-        sort_by+="Sort by cadet location. "
+        explanation+="Sorting by: cadet location. "
 
-    sort_by+="Availability filter: %s  " % str(sorts_and_filters.availability_filter)
-    sort_by+=explain_filter(sorts_and_filters.skills_filter, "Skills filter")
+    explanation+=print_dict_nicely("Availability filter", sorts_and_filters.availability_filter)
+    explanation+=". "+explain_filter(sorts_and_filters.skills_filter, "Skills filter")
 
-    return sort_by
+    return explanation
+
+from app.objects.utils import print_dict_nicely
 
 def explain_filter(filter: Dict[str,bool], prepend_text: str) -> str:
     true_only_str = dict_elements_only_true(filter)
@@ -261,4 +263,106 @@ def get_role_for_event_and_volunteer_id(interface: abstractInterface, volunteer_
     return role
 
 
+def sort_volunteer_data_for_event_by_day_sort_order(
+            list_of_volunteers_at_event: ListOfVolunteersAtEvent,
+        sort_by_day: Day,
+        data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage) -> ListOfVolunteersAtEvent:
 
+    tuple_of_volunteers_at_event_and_roles = [(volunteer_at_event,
+                                                    data_to_be_stored.volunteer_in_role_at_event_on_day(
+                                                    volunteer_id=volunteer_at_event.volunteer_id, day=sort_by_day).role_and_group
+                                               )
+                            for volunteer_at_event in list_of_volunteers_at_event]
+
+    tuple_of_volunteers_at_event_and_roles.sort(key=lambda tup: tup[1])
+
+    list_of_volunteers = [volunteer_at_event for volunteer_at_event, __ in tuple_of_volunteers_at_event_and_roles]
+
+    return ListOfVolunteersAtEvent(list_of_volunteers)
+
+
+def get_cadet_location_string(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage, volunteer_at_event: VolunteerAtEvent):
+    list_of_groups = list_of_cadet_groups_associated_with_volunteer(data_to_be_stored=data_to_be_stored,
+                                                                    volunteer_at_event=volunteer_at_event)
+    if len(list_of_groups)==0:
+        return "x- no associated cadets -x" ## trick to get at end of sort
+
+    return str_type_of_group_given_list_of_groups(list_of_groups)
+
+
+def str_type_of_group_given_list_of_groups(list_of_groups: List[Group]):
+    types_of_groups = [group.type_of_group() for group in list_of_groups]
+    unique_list_of_group_locations = list(set(types_of_groups))
+    sorted_list_of_group_locations = sorted_locations(unique_list_of_group_locations)
+    return ", ".join(sorted_list_of_group_locations)
+
+
+def str_dict_skills(volunteer: Volunteer, data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage):
+    list_of_skills = data_to_be_stored.list_of_skills_given_volunteer_id(volunteer.id)
+    if len(list_of_skills)==0:
+        return "No skills recorded"
+
+    return ", ".join(list_of_skills)
+
+
+def get_sorted_and_filtered_list_of_volunteers_at_event(
+        data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
+        sorts_and_filters: RotaSortsAndFilters,
+    ) -> ListOfVolunteersAtEvent:
+
+    list_of_volunteers_at_event = data_to_be_stored.filtered_list_of_volunteers_at_event(sorts_and_filters)
+    sorted_list_of_volunteers_at_event = sort_list_of_volunteers_at_event(
+        list_of_volunteers_at_event=list_of_volunteers_at_event,
+        data_to_be_stored=data_to_be_stored,
+        sorts_and_filters=sorts_and_filters
+    )
+
+    return sorted_list_of_volunteers_at_event
+
+
+def sort_list_of_volunteers_at_event(list_of_volunteers_at_event: ListOfVolunteersAtEvent,
+                                     data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
+                                     sorts_and_filters: RotaSortsAndFilters)-> ListOfVolunteersAtEvent:
+
+    sort_by_location = sorts_and_filters.sort_by_location
+    if sort_by_location:
+        return sort_volunteer_data_for_event_by_location(
+            list_of_volunteers_at_event=list_of_volunteers_at_event,
+            data_to_be_stored=data_to_be_stored
+        )
+
+    sort_by_volunteer_name = sorts_and_filters.sort_by_volunteer_name
+    if sort_by_volunteer_name is not arg_not_passed:
+        return sort_volunteer_data_for_event_by_name_sort_order(
+            list_of_volunteers_at_event, sort_order=sort_by_volunteer_name)
+
+    sort_by_day = sorts_and_filters.sort_by_day
+    if sort_by_day is not arg_not_passed:
+        return sort_volunteer_data_for_event_by_day_sort_order(
+            list_of_volunteers_at_event, sort_by_day=sorts_and_filters.sort_by_day,
+            data_to_be_stored=data_to_be_stored)
+
+    return list_of_volunteers_at_event
+
+
+def sort_volunteer_data_for_event_by_location(list_of_volunteers_at_event: ListOfVolunteersAtEvent,
+                                              data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage)-> ListOfVolunteersAtEvent:
+
+    list_of_locations = [
+        get_cadet_location_string(data_to_be_stored=data_to_be_stored, volunteer_at_event=volunteer_at_event)
+        for volunteer_at_event in list_of_volunteers_at_event]
+
+    locations_and_volunteers = zip(list_of_locations, list_of_volunteers_at_event)
+
+    sorted_by_location = sorted(locations_and_volunteers, key=lambda tup: tup[0])
+    sorted_list_of_volunteers = ListOfVolunteersAtEvent([location_and_volunteer[1] for location_and_volunteer in sorted_by_location])
+
+    return sorted_list_of_volunteers
+
+
+def list_of_cadet_groups_associated_with_volunteer(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage, volunteer_at_event: VolunteerAtEvent) -> List[Group]:
+    list_of_cadet_ids = volunteer_at_event.list_of_associated_cadet_id
+    list_of_groups = [data_to_be_stored.group_given_cadet_id(cadet_id) for cadet_id in list_of_cadet_ids]
+    list_of_groups = [group for group in list_of_groups if group is not missing_data]
+
+    return list_of_groups

@@ -1,6 +1,5 @@
 import os
 
-from app.data_access.data import master_data_path
 from app.data_access.uploads_and_downloads import download_directory
 
 import shutil
@@ -58,6 +57,7 @@ def respond_to_uploaded_file(interface: abstractInterface) -> Union[Form, NewFor
     return previous_form(interface)
 
 def process_uploaded_zip_file(interface: abstractInterface, file):
+    master_data_path = interface.data.data.master_data_path
     temp_filename = os.path.join(download_directory, "tempzipfile.zip")
     file.save(temp_filename)
     temp_dir = os.path.join(download_directory, "temp")

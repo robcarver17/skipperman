@@ -1,10 +1,7 @@
-from app.backend.data.mapped_events import DEPRECATE_load_mapped_wa_event, DEPRECCATE_save_mapped_wa_event, \
-    MappedEventsData
+from app.backend.data.mapped_events import  MappedEventsData
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.constants import missing_data, NoMoreData
-from app.objects.events import Event
-from app.objects.mapped_wa_event import RowInMappedWAEvent
 
 ROW_ID = "row_id"
 
@@ -66,17 +63,3 @@ def save_new_row_id(interface: abstractInterface, new_id):
 
 def clear_row_in_state(interface: abstractInterface):
     interface.clear_persistent_value(ROW_ID)
-
-def remove_row_id_from_current_mapped_event(interface: abstractInterface, row_id: str):
-    event = get_event_from_state(interface)
-
-    event_data = DEPRECATE_load_mapped_wa_event(event)
-    event_data.pop_id(row_id)
-    DEPRECCATE_save_mapped_wa_event(event=event, mapped_wa_event_data=event_data)
-
-def add_rows_to_current_mapped_event(interface: abstractInterface, new_row: RowInMappedWAEvent):
-    event = get_event_from_state(interface)
-
-    event_data = DEPRECATE_load_mapped_wa_event(event)
-    event_data.append(new_row)
-    DEPRECCATE_save_mapped_wa_event(event=event, mapped_wa_event_data=event_data)

@@ -3,11 +3,10 @@ from app.logic.events.volunteer_rota.volunteer_targets import save_volunteer_tar
 
 from app.objects.volunteers_at_event import ListOfVolunteersAtEvent
 
-from app.backend.data.volunteer_rota import delete_role_at_event_for_volunteer_on_day, \
-    copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days
 from app.backend.volunteers.volunteer_allocation import     make_volunteer_unavailable_on_day, make_volunteer_available_on_day
-from app.backend.volunteers.volunteer_rota import get_sorted_and_filtered_list_of_volunteers_at_event
-from app.backend.volunteers.volunteer_rota_data import get_data_to_be_stored_for_volunteer_rota_page
+from app.backend.volunteers.volunteer_rota import delete_role_at_event_for_volunteer_on_day, copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days
+from app.backend.volunteers.volunteer_rota_data import get_data_to_be_stored_for_volunteer_rota_page, \
+    get_sorted_and_filtered_list_of_volunteers_at_event
 from app.data_access.configuration.configuration import VOLUNTEER_SKILLS
 from app.logic.events.volunteer_rota.edit_cadet_connections_for_event_from_rota import \
     display_form_edit_cadet_connections_from_rota

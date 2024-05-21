@@ -4,14 +4,14 @@ from app.backend.forms.form_utils import get_availablity_from_form, get_availabi
 from app.backend.volunteers.volunteer_allocation import \
     update_volunteer_availability_at_event
 from app.backend.volunteers.volunteers import get_volunteer_from_id
-from app.backend.data.volunteer_allocation import get_volunteer_at_event, delete_volunteer_with_id_at_event
+from app.backend.volunteers.volunteer_rota import delete_volunteer_with_id_at_event, get_volunteer_at_event
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.events.constants import SAVE_CHANGES
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_allocation.add_volunteer_to_event_form_contents import AVAILABILITY
 from app.logic.volunteers.volunteer_state import get_volunteer_id_selected_from_state
-from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL
+from app.objects.abstract_objects.abstract_buttons import Button, CANCEL_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
 from app.objects.day_selectors import no_days_selected
@@ -36,7 +36,7 @@ def display_form_confirm_volunteer_details_from_rota(interface: abstractInterfac
         _______________,
         Button(SAVE_CHANGES),
         Button(DELETE_VOLUNTEER_FROM_EVENT_BUTTON_LABEL),
-        Button(BACK_BUTTON_LABEL)
+        Button(CANCEL_BUTTON_LABEL)
     ]))
 
 
@@ -62,7 +62,7 @@ def get_availability_checkbox_for_volunteer_at_event(volunteer_at_event: Volunte
 
 def post_form_confirm_volunteer_details_from_rota(interface: abstractInterface):
     last_button = interface.last_button_pressed()
-    if last_button==BACK_BUTTON_LABEL:
+    if last_button==CANCEL_BUTTON_LABEL:
         pass
     elif last_button==DELETE_VOLUNTEER_FROM_EVENT_BUTTON_LABEL:
         delete_volunteer_from_event(interface)

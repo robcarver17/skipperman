@@ -13,6 +13,16 @@ class QualificationData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
 
+    def highest_name_of_qualification_for_cadet(self, cadet: Cadet) -> str:
+        list_of_ids = self.list_of_qualification_ids_for_cadet(cadet)
+        list_of_qualification = self.load_list_of_qualifications()
+        highest = ''
+        for qual in list_of_qualification:
+            if qual.id in list_of_ids:
+                highest = qual.name
+
+        return highest
+
     def list_of_named_qualifications_for_cadet(self, cadet: Cadet) -> List[str]:
         list_of_qualifications_for_cadet = self.list_of_qualifications_for_cadet(cadet)
         all_qualifications = self.load_list_of_qualifications()
@@ -112,15 +122,3 @@ def DEPRECATE_list_of_qualification_ids_for_cadet(cadet: Cadet) -> List[str]:
 
 def DEPRECATE_load_list_of_cadets_with_qualifications() -> ListOfCadetsWithQualifications:
     return DEPRECATED_data.data_list_of_cadets_with_qualifications.read()
-
-def DEPRECATE_highest_qualification_for_cadet(cadet: Cadet) -> str:
-    list_of_ids = DEPRECATE_list_of_qualification_ids_for_cadet(cadet)
-    list_of_qualification = DEPRECATE_load_list_of_qualifications() ## last is best
-    highest = ''
-    for qual in list_of_qualification:
-        if qual.id in list_of_ids:
-            highest = qual.name
-
-    return highest
-
-

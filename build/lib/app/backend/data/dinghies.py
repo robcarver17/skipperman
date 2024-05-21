@@ -22,6 +22,47 @@ class DinghiesData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
 
+    def remove_two_handed_partner_link_from_existing_cadet_on_day(self, event: Event, cadet_id: str, day: Day):
+        list_of_cadets_at_event_with_dinghies = self.get_list_of_cadets_at_event_with_dinghies(event)
+        cadet_with_boat_at_event = list_of_cadets_at_event_with_dinghies.object_with_cadet_id_on_day(cadet_id=cadet_id,
+                                                                                                                              day=day)
+        if not cadet_with_boat_at_event.has_partner():
+            return
+
+        partner_id = cadet_with_boat_at_event.partner_cadet_id
+        partner_with_boat_at_event = list_of_cadets_at_event_with_dinghies.object_with_cadet_id_on_day(cadet_id=partner_id,
+                                                                                                                    day=day)
+        partner_with_boat_at_event.clear_partner()
+        cadet_with_boat_at_event.clear_partner()
+
+        self.save_list_of_cadets_at_event_with_dinghies(list_of_cadets_at_event_with_dinghies=list_of_cadets_at_event_with_dinghies,
+                                                        event=event)
+
+    def remove_club_boat_allocation_for_cadet_on_day(self, event: Event,
+                                                     cadet_id: str,
+                                                     day: Day):
+
+        cadets_with_club_dinghies_at_event = self.get_list_of_cadets_at_event_with_club_dinghies(event)
+        cadets_with_club_dinghies_at_event.delete_allocation_for_cadet_on_day(cadet_id=cadet_id, day=day)
+        self.save_list_of_cadets_at_event_with_club_dinghies(
+            list_of_cadets_at_event_with_club_dinghies=cadets_with_club_dinghies_at_event,
+            event=event)
+
+    def remove_boat_and_partner_for_cadet_at_event(self, event: Event,
+                                                   cadet_id: str):
+
+        for day in event.weekdays_in_event():
+            self.remove_boat_and_partner_for_cadet_at_event_on_day(event=event, cadet_id=cadet_id, day=day)
+
+    def remove_boat_and_partner_for_cadet_at_event_on_day(self, event: Event,
+                                                   cadet_id: str, day: Day):
+
+        list_of_cadets_at_event_with_dinghies = self.get_list_of_cadets_at_event_with_dinghies(event)
+        list_of_cadets_at_event_with_dinghies.clear_boat_details_from_existing_cadet_id(day=day, cadet_id=cadet_id)
+        self.save_list_of_cadets_at_event_with_dinghies(list_of_cadets_at_event_with_dinghies=list_of_cadets_at_event_with_dinghies,
+                                                        event=event)
+
+
     def update_club_boat_allocation_for_cadet_at_event_on_day_if_cadet_available(self, boat_name: str,
                                                                                  cadet_id: str, event: Event, day: Day):
 
@@ -153,10 +194,13 @@ def DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies(event: Event) -> L
     return cadets_with_dinghies
 
 
-def save_list_of_cadets_at_event_with_club_dinghies(event: Event,
-                                                    cadets_with_club_dinghies_at_event: ListOfCadetAtEventWithClubDinghies):
-    DEPRECATED_data.data_list_of_cadets_at_event_with_club_dinghies.write(event_id=event.id,
-                                                                          people_and_boats=cadets_with_club_dinghies_at_event)
+def load_list_of_cadets_at_event_with_club_dinghies(interface: abstractInterface, event: Event) -> ListOfCadetAtEventWithClubDinghies:
+    dinghies_data = DinghiesData(interface.data)
+    cadets_with_dinghies = dinghies_data.get_list_of_cadets_at_event_with_club_dinghies(event)
+
+    return cadets_with_dinghies
+
+
 
 
 def get_sorted_list_of_boats_excluding_boats_already_at_event(interface: abstractInterface,

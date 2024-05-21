@@ -5,8 +5,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet, DEFAULT_DATE_OF_BIRTH
 from app.data_access.configuration.field_list import CADET_SURNAME, CADET_DATE_OF_BIRTH, CADET_FIRST_NAME
 
-from app.backend.data.cadets_at_event import DEPERCATE_load_identified_cadets_at_event, DEPRECATE_save_identified_cadets_at_event, \
-    CadetsAtEventData
+from app.backend.data.cadets_at_event import CadetsAtEventData
 
 from app.objects.events import Event
 from app.objects.mapped_wa_event import RowInMappedWAEvent
@@ -45,14 +44,6 @@ def _translate_df_timestamp_to_datetime(df_timestamp) -> datetime.date:
         % (str(df_timestamp), str(type(df_timestamp)))
     )
 
-
-def DEPRECATE_add_identified_cadet_and_row(
-    event: Event, row_id: str, cadet_id: str
-):
-
-    list_of_cadets_at_event = DEPERCATE_load_identified_cadets_at_event(event)
-    list_of_cadets_at_event.add(row_id=row_id, cadet_id=cadet_id)
-    DEPRECATE_save_identified_cadets_at_event(list_of_cadets_at_event=list_of_cadets_at_event, event=event)
 
 def add_identified_cadet_and_row(
         interface: abstractInterface,

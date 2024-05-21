@@ -2,10 +2,7 @@ from typing import Tuple
 
 from app.backend.forms.form_utils import get_availablity_from_form, get_status_from_form
 from app.backend.wa_import.update_cadets_at_event import \
-    DEPRECATED_get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active, \
-    DEPRECATE_get_cadet_at_event_for_cadet_id, replace_existing_cadet_at_event, \
-    DEPRECATED_update_status_of_existing_cadet_at_event, \
-    DEPRECATED_update_availability_of_existing_cadet_at_event, \
+    replace_existing_cadet_at_event_where_original_cadet_was_inactive, \
     get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active, \
     update_status_of_existing_cadet_at_event_to_cancelled_or_deleted, update_availability_of_existing_cadet_at_event, \
     get_cadet_at_event_for_cadet_id
@@ -35,20 +32,23 @@ def update_cadets_at_event(interface: abstractInterface, new_cadet_at_event: Cad
 
     new_status = new_cadet_at_event.status
 
-    new_registration_replacing_deleted_or_cancelled = original_status in [cancelled_status, deleted_status] and new_status == active_status
+    was_cancelled = original_status in [cancelled_status, deleted_status]
+
+    new_registration_replacing_deleted_or_cancelled = was_cancelled and new_status == active_status
     existing_registration_now_deleted_or_cancelled = new_status in [deleted_status, cancelled_status]
     status_unchanged = new_status == original_status
 
-
     if new_registration_replacing_deleted_or_cancelled:
         ## Replace entire original cadet, new registration
-        replace_existing_cadet_at_event(interface=interface, event=event, new_cadet_at_event = new_cadet_at_event)
+        replace_existing_cadet_at_event_where_original_cadet_was_inactive(interface=interface, event=event, new_cadet_at_event = new_cadet_at_event)
 
     elif existing_registration_now_deleted_or_cancelled:
         ## availability is a moot point
-        update_status_of_existing_cadet_at_event_to_cancelled_or_deleted(interface=interface, event=event, new_status = new_status, cadet_id=new_cadet_at_event.cadet_id)
+        update_status_of_existing_cadet_at_event_to_cancelled_or_deleted(interface=interface, event=event, new_status = new_status,
+                                                                         cadet_id=new_cadet_at_event.cadet_id)
 
     elif status_unchanged:
+        ## Must be an availability change
         update_cadet_at_event_when_status_unchanged(interface=interface, event=event, new_cadet_at_event=new_cadet_at_event, existing_cadet_at_event=existing_cadet_at_event)
 
     else:
@@ -56,14 +56,16 @@ def update_cadets_at_event(interface: abstractInterface, new_cadet_at_event: Cad
                                                                                                        original_status.name, new_status.name))
 
     interface.save_stored_items()
+    interface.clear_stored_items()
 
 def update_cadet_at_event_when_status_unchanged(interface: abstractInterface,
                                          event: Event, new_cadet_at_event: CadetAtEvent,
                                          existing_cadet_at_event: CadetAtEvent):
+
     original_availability = existing_cadet_at_event.availability
     new_availability = new_cadet_at_event.availability
 
-    availability_unchanged = not new_availability == original_availability
+    availability_unchanged = new_availability == original_availability
 
     if availability_unchanged:
         ## Neithier status or availability has changed - shouldn't happen, but heigh ho
@@ -111,7 +113,6 @@ def get_new_cadet_from_mapped_event_and_optionally_form(interface: abstractInter
 
     if use_form_data:
         update_cadet_at_event_with_form_data(interface=interface, new_cadet_at_event=new_cadet_at_event_from_mapped_event_data)
-
 
     return new_cadet_at_event_from_mapped_event_data
 

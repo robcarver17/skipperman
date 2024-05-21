@@ -1,11 +1,11 @@
 from typing import List
 
-from app.objects.abstract_objects.abstract_interface import abstractInterface
+from app.backend.data.cadets import CadetData
 
 from app.data_access.storage_layer.api import DataLayer
 
 from app.data_access.data import DEPRECATED_data
-from app.objects.cadets import Cadet
+from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.constants import arg_not_passed
 from app.objects.volunteers import ListOfVolunteerSkills, ListOfVolunteers, Volunteer, ListOfCadetVolunteerAssociations
 
@@ -13,6 +13,13 @@ from app.objects.volunteers import ListOfVolunteerSkills, ListOfVolunteers, Volu
 class VolunteerData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
+
+    def update_existing_volunteer(self, volunteer: Volunteer):
+
+        list_of_volunteers = self.get_list_of_volunteers()
+        index = list_of_volunteers.index_of_id(volunteer.id)
+        list_of_volunteers[index] = volunteer
+        self.save_list_of_volunteers(list_of_volunteers)
 
     def get_volunteer_from_list_of_volunteers_given_name(self, volunteer_name: str) -> Volunteer:
         list_of_volunteers = self.get_list_of_volunteers()
@@ -51,6 +58,20 @@ class VolunteerData():
     def boat_related_skill_for_volunteer(self, volunteer_id: str) -> bool:
         skills = self.get_list_of_volunteer_skills()
         return skills.volunteer_id_has_boat_related_skills(volunteer_id)
+
+    def delete_connection_in_data(self, cadet: Cadet, volunteer: Volunteer):
+
+        existing_connections = self.get_list_of_cadet_volunteer_associations()
+        existing_connections.delete(cadet_id=cadet.id, volunteer_id=volunteer.id)
+        self.save_list_of_cadet_volunteer_associations(existing_connections)
+
+    def get_connected_cadets(self, volunteer: Volunteer) -> ListOfCadets:
+        existing_connections = self.get_list_of_cadet_volunteer_associations()
+        list_of_cadets = self.get_list_of_cadets()
+
+        connected_ids = existing_connections.list_of_connections_for_volunteer(volunteer.id)
+        connected_cadets = [list_of_cadets.object_with_id(id) for id in connected_ids]
+        return ListOfCadets(connected_cadets)
 
     def add_volunteer_connection_to_cadet_in_master_list_of_volunteers(self, cadet: Cadet,
                                                                        volunteer: Volunteer):
@@ -99,6 +120,9 @@ class VolunteerData():
         else:
             return master_list
 
+    def get_list_of_cadets(self) -> ListOfCadets:
+        return self.cadet_data.get_list_of_cadets()
+
     def get_list_of_volunteers(self) -> ListOfVolunteers:
         list_of_volunteers = self.data_api.get_list_of_volunteers()
         return list_of_volunteers
@@ -119,53 +143,12 @@ class VolunteerData():
     def save_list_of_volunteer_skills(self, list_of_volunteer_skills: ListOfVolunteerSkills):
         return self.data_api.save_list_of_volunteer_skills(list_of_volunteer_skills)
 
+    @property
+    def cadet_data(self) -> CadetData:
+        return CadetData(self.data_api)
 
 
-def add_new_verified_volunteer(interface: abstractInterface, volunteer: Volunteer):
-    volunteer_data= VolunteerData(interface.data)
-    volunteer_data.add_new_volunteer(volunteer)
-
-
-def delete_a_volunteer(volunteer):
-    list_of_volunteers= DEPRECATE_load_all_volunteers()
-    list_of_volunteers.pop_with_id(volunteer.id)
-    save_list_of_volunteers(list_of_volunteers)
-
-
-
-def delete_connection_in_data(cadet: Cadet, volunteer: Volunteer):
-    existing_connections = DEPRECATED_data.data_list_of_cadet_volunteer_associations.read()
-    existing_connections.delete(cadet_id=cadet.id, volunteer_id=volunteer.id)
-    save_list_of_cadet_volunteer_associations(existing_connections)
-
-
-def DEPRECATE_add_volunteer_connection_to_cadet_in_master_list_of_volunteers(cadet: Cadet, volunteer: Volunteer):
-    existing_connections = DEPRECATE_get_list_of_cadet_volunteer_associations()
-    existing_connections.add(cadet_id=cadet.id, volunteer_id=volunteer.id)
-    save_list_of_cadet_volunteer_associations(existing_connections)
-
-
-
-def save_skills_for_volunteer(interface: abstractInterface, volunteer: Volunteer, dict_of_skills: dict):
-    volunteer_data = VolunteerData(interface.data)
-    volunteer_data.save_skills_for_volunteer(volunteer=volunteer, dict_of_skills=dict_of_skills)
-
-
-def update_existing_volunteer(volunteer: Volunteer):
-    list_of_volunteers = DEPRECATED_get_sorted_list_of_volunteers()
-    index = list_of_volunteers.index_of_id(volunteer.id)
-    list_of_volunteers[index] = volunteer
-    save_list_of_volunteers(list_of_volunteers)
-
-
-
-
-def DEPRECATE_get_list_of_cadet_volunteer_associations() -> ListOfCadetVolunteerAssociations:
-    list_of_cadet_volunteer_associations = DEPRECATED_data.data_list_of_cadet_volunteer_associations.read()
-
-    return list_of_cadet_volunteer_associations
-
-def save_list_of_cadet_volunteer_associations(list_of_cadet_volunteer_associations:ListOfCadetVolunteerAssociations):
+def DEPRECATE_save_list_of_cadet_volunteer_associations(list_of_cadet_volunteer_associations:ListOfCadetVolunteerAssociations):
     DEPRECATED_data.data_list_of_cadet_volunteer_associations.write(list_of_cadet_volunteer_associations)
 
 
@@ -174,12 +157,8 @@ def DEPRECATE_load_list_of_volunteer_skills()-> ListOfVolunteerSkills:
 
     return skills
 
-def load_list_of_volunteer_skills(interface: abstractInterface)-> ListOfVolunteerSkills:
-    volunteer_data = VolunteerData(interface.data)
-    return volunteer_data.get_list_of_volunteer_skills()
 
-
-def save_list_of_volunteer_skills(list_of_volunteer_skills: ListOfVolunteerSkills):
+def DEPRECATE_save_list_of_volunteer_skills(list_of_volunteer_skills: ListOfVolunteerSkills):
     DEPRECATED_data.data_list_of_volunteer_skills.write(list_of_volunteer_skills)
 
 
@@ -201,14 +180,6 @@ def DEPRECATED_get_sorted_list_of_volunteers(sort_by: str = arg_not_passed) -> L
     else:
         return master_list
 
-def get_sorted_list_of_volunteers(interface: abstractInterface, sort_by: str = arg_not_passed) -> ListOfVolunteers:
-    volunteer_data = VolunteerData(interface.data)
-    return volunteer_data.get_sorted_list_of_volunteers(sort_by)
 
-def load_all_volunteers(interface:abstractInterface)-> ListOfVolunteers:
-    volunteer_data = VolunteerData(interface.data)
-    return volunteer_data.get_list_of_volunteers()
-
-
-def save_list_of_volunteers(list_of_volunteers: ListOfVolunteers):
+def DEPRECATE_save_list_of_volunteers(list_of_volunteers: ListOfVolunteers):
     DEPRECATED_data.data_list_of_volunteers.write(list_of_volunteers)

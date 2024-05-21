@@ -2,9 +2,9 @@ from typing import Union
 
 from app.backend.volunteers.volunteer_allocation import update_cadet_connections_when_volunteer_already_at_event, \
     are_all_connected_cadets_cancelled_or_deleted, \
-    DEPRECATED_get_list_of_relevant_information, get_list_of_relevant_information
-from app.backend.volunteers.volunteers import DEPRECATED_get_volunteer_from_id
-from app.backend.data.volunteer_allocation import is_volunteer_already_at_event
+    get_list_of_relevant_information
+from app.backend.volunteers.volunteers import  get_volunteer_from_id
+from app.backend.volunteers.volunteer_rota import is_volunteer_already_at_event
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_allocation.add_volunteers_process_form import \
     add_volunteer_at_event_with_form_contents
@@ -16,7 +16,7 @@ from app.logic.events.volunteer_allocation.add_volunteer_to_event_form_contents 
     get_availability_checkbox_for_volunteer_at_event_based_on_relevant_information, \
     get_any_other_information_text, get_preferred_duties_text, \
     get_preferred_duties_input, get_same_or_different_text, get_same_or_different_input, \
-    get_notes_input_for_volunteer_at_event
+    get_notes_input_for_volunteer_at_event, get_any_self_declared_status_text
 from app.logic.events.constants import *
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -66,7 +66,7 @@ def process_identified_volunteer_at_event(interface: abstractInterface) -> Union
 
 def display_form_for_volunteer_details(interface: abstractInterface, volunteer_id: str, event: Event)-> Form:
 
-    volunteer = DEPRECATED_get_volunteer_from_id(volunteer_id)
+    volunteer = get_volunteer_from_id(interface=interface, volunteer_id=volunteer_id)
 
     list_of_relevant_information = get_list_of_relevant_information(volunteer_id=volunteer_id, event=event, interface=interface)
 
@@ -77,6 +77,7 @@ def display_form_for_volunteer_details(interface: abstractInterface, volunteer_i
                                                   event=event)
 
     any_other_information_text  = get_any_other_information_text(list_of_relevant_information=list_of_relevant_information)
+    status_text = get_any_self_declared_status_text(list_of_relevant_information=list_of_relevant_information)
 
     preferred_duties_text  = get_preferred_duties_text(list_of_relevant_information=list_of_relevant_information)
     preferred_duties_input  = get_preferred_duties_input(list_of_relevant_information=list_of_relevant_information)
@@ -84,7 +85,7 @@ def display_form_for_volunteer_details(interface: abstractInterface, volunteer_i
     same_or_different_text  = get_same_or_different_text(list_of_relevant_information=list_of_relevant_information)
     same_or_different_input  = get_same_or_different_input(list_of_relevant_information=list_of_relevant_information)
 
-    available_text = get_availablity_text(list_of_relevant_information=list_of_relevant_information)
+    available_text = get_availablity_text(interface=interface, list_of_relevant_information=list_of_relevant_information)
     available_checkbox = get_availability_checkbox_for_volunteer_at_event_based_on_relevant_information(list_of_relevant_information=list_of_relevant_information, event=event)
 
     notes_input = get_notes_input_for_volunteer_at_event(list_of_relevant_information)
@@ -93,6 +94,8 @@ def display_form_for_volunteer_details(interface: abstractInterface, volunteer_i
         header_text,
         _______________,
         connection_checkbox,
+        _______________,
+        status_text,
         _______________,
         available_text.add_Lines(),
         available_checkbox,

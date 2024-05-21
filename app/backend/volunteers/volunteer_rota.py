@@ -2,23 +2,24 @@ from dataclasses import dataclass
 from typing import List
 
 from app.backend.data.group_allocations import GroupAllocationsData
+from app.backend.data.volunteer_allocation import VolunteerAllocationData
 
 from app.backend.volunteers.volunteers import get_volunteer_name_from_id
+from app.data_access.data import DEPRECATED_data
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.data.volunteer_rota import VolunteerRotaData, \
-    get_volunteer_roles, update_role_at_event_for_volunteer_on_day
+    get_volunteer_roles
+from app.backend.data.patrol_boats import PatrolBoatsData
 from app.data_access.configuration.configuration import VOLUNTEER_ROLES
-from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingVolunteerRotaPage,  RotaSortsAndFilters
 
 from app.backend.data.volunteers import DEPRECATED_get_sorted_list_of_volunteers
-from app.objects.constants import missing_data, arg_not_passed
+from app.objects.constants import missing_data
 from app.objects.events import Event
-from app.objects.groups import Group, ALL_GROUPS_NAMES, GROUP_UNALLOCATED_TEXT, sorted_locations, LAKE_TRAINING
-from app.objects.volunteers_at_event import VolunteerAtEvent, ListOfVolunteersAtEvent
-from app.objects.volunteers import Volunteer
-from app.objects.volunteers_in_roles import NO_ROLE_SET, VolunteerInRoleAtEvent
+from app.objects.groups import Group, ALL_GROUPS_NAMES, GROUP_UNALLOCATED_TEXT, LAKE_TRAINING
+from app.objects.volunteers_at_event import VolunteerAtEvent, ListOfVolunteersAtEvent, ListOfIdentifiedVolunteersAtEvent
+from app.objects.volunteers_in_roles import NO_ROLE_SET, VolunteerInRoleAtEvent, ListOfVolunteersInRoleAtEvent
 
 from app.objects.day_selectors import Day
 
@@ -61,47 +62,6 @@ def sort_volunteer_data_for_event_by_name_sort_order(volunteers_at_event: ListOf
     ## this works because if an ID is missing we just ignore it
     return volunteers_at_event.sort_by_list_of_volunteer_ids(list_of_volunteers.list_of_ids)
 
-def sort_volunteer_data_for_event_by_day_sort_order(
-            list_of_volunteers_at_event: ListOfVolunteersAtEvent,
-        sort_by_day: Day,
-        data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage) -> ListOfVolunteersAtEvent:
-
-    tuple_of_volunteers_at_event_and_roles = [(volunteer_at_event,
-                                                    data_to_be_stored.volunteer_in_role_at_event_on_day(
-                                                    volunteer_id=volunteer_at_event.volunteer_id, day=sort_by_day).role_and_group
-                                               )
-                            for volunteer_at_event in list_of_volunteers_at_event]
-
-    tuple_of_volunteers_at_event_and_roles.sort(key=lambda tup: tup[1])
-
-    list_of_volunteers = [volunteer_at_event for volunteer_at_event, __ in tuple_of_volunteers_at_event_and_roles]
-
-    return ListOfVolunteersAtEvent(list_of_volunteers)
-
-
-def get_cadet_location_string(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage, volunteer_at_event: VolunteerAtEvent):
-    list_of_groups = REFACTOR_list_of_cadet_groups_associated_with_volunteer(data_to_be_stored=data_to_be_stored,
-                                                                             volunteer_at_event=volunteer_at_event)
-    if len(list_of_groups)==0:
-        return "x- no associated cadets -x" ## trick to get at end of sort
-
-    return str_type_of_group_given_list_of_groups(list_of_groups)
-
-
-def str_type_of_group_given_list_of_groups(list_of_groups: List[Group]):
-    types_of_groups = [group.type_of_group() for group in list_of_groups]
-    unique_list_of_group_locations = list(set(types_of_groups))
-    sorted_list_of_group_locations = sorted_locations(unique_list_of_group_locations)
-    return ", ".join(sorted_list_of_group_locations)
-
-
-
-def str_dict_skills(volunteer: Volunteer, data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage):
-    list_of_skills = data_to_be_stored.list_of_skills_given_volunteer_id(volunteer.id)
-    if len(list_of_skills)==0:
-        return "No skills recorded"
-
-    return ", ".join(list_of_skills)
 
 def dict_of_groups_for_dropdown(interface: abstractInterface): ## Future proof to when groups come from files
     dict_of_groups = {group:group for group in ALL_GROUPS_NAMES}
@@ -112,14 +72,6 @@ def dict_of_groups_for_dropdown(interface: abstractInterface): ## Future proof t
 MAKE_UNAVAILABLE = "* UNAVAILABLE *"
 def dict_of_roles_for_dropdown(interface: abstractInterface):
     volunteer_roles = get_volunteer_roles(interface)
-    dict_of_roles = {role:role for role in volunteer_roles}
-    dict_of_roles[NO_ROLE_SET] = NO_ROLE_SET
-    dict_of_roles[MAKE_UNAVAILABLE] = MAKE_UNAVAILABLE
-
-    return dict_of_roles
-
-def DEPRECATE_dict_of_roles_for_dropdown():
-    volunteer_roles = VOLUNTEER_ROLES
     dict_of_roles = {role:role for role in volunteer_roles}
     dict_of_roles[NO_ROLE_SET] = NO_ROLE_SET
     dict_of_roles[MAKE_UNAVAILABLE] = MAKE_UNAVAILABLE
@@ -224,61 +176,6 @@ def swap_and_groups_for_volunteers_in_allocation(interface:abstractInterface,
                                                                      volunteer_id_to_swap_with=volunteer_id_to_swap_with)
 
 
-
-def get_sorted_and_filtered_list_of_volunteers_at_event(
-        data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
-        sorts_and_filters: RotaSortsAndFilters,
-    ) -> ListOfVolunteersAtEvent:
-
-    list_of_volunteers_at_event = data_to_be_stored.filtered_list_of_volunteers_at_event(sorts_and_filters)
-    sorted_list_of_volunteers_at_event = sort_list_of_volunteers_at_event(
-        list_of_volunteers_at_event=list_of_volunteers_at_event,
-        data_to_be_stored=data_to_be_stored,
-        sorts_and_filters=sorts_and_filters
-    )
-
-    return sorted_list_of_volunteers_at_event
-
-def sort_list_of_volunteers_at_event(list_of_volunteers_at_event: ListOfVolunteersAtEvent,
-                                     data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
-                                     sorts_and_filters: RotaSortsAndFilters)-> ListOfVolunteersAtEvent:
-
-    sort_by_location = sorts_and_filters.sort_by_location
-    if sort_by_location:
-        return sort_volunteer_data_for_event_by_location(
-            list_of_volunteers_at_event=list_of_volunteers_at_event,
-            data_to_be_stored=data_to_be_stored
-        )
-
-    sort_by_volunteer_name = sorts_and_filters.sort_by_volunteer_name
-    if sort_by_volunteer_name is not arg_not_passed:
-        return sort_volunteer_data_for_event_by_name_sort_order(
-            list_of_volunteers_at_event, sort_order=sort_by_volunteer_name)
-
-    sort_by_day = sorts_and_filters.sort_by_day
-    if sort_by_day is not arg_not_passed:
-        return sort_volunteer_data_for_event_by_day_sort_order(
-            list_of_volunteers_at_event, sort_by_day=sorts_and_filters.sort_by_day,
-            data_to_be_stored=data_to_be_stored)
-
-    return list_of_volunteers_at_event
-
-
-
-def sort_volunteer_data_for_event_by_location(list_of_volunteers_at_event: ListOfVolunteersAtEvent,
-                                              data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage)-> ListOfVolunteersAtEvent:
-
-    list_of_locations = [get_cadet_location_string(data_to_be_stored=data_to_be_stored, volunteer_at_event=volunteer_at_event)
-                    for volunteer_at_event in list_of_volunteers_at_event]
-
-    locations_and_volunteers = zip(list_of_locations, list_of_volunteers_at_event)
-
-    sorted_by_location = sorted(locations_and_volunteers, key=lambda tup: tup[0])
-    sorted_list_of_volunteers = ListOfVolunteersAtEvent([location_and_volunteer[1] for location_and_volunteer in sorted_by_location])
-
-    return sorted_list_of_volunteers
-
-
 def volunteer_is_on_lake(interface: abstractInterface, event: Event, volunteer_id: str) -> bool:
     volunteer_rota_data = VolunteerRotaData(interface.data)
     return volunteer_rota_data.volunteer_is_on_lake(event=event, volunteer_id=volunteer_id)
@@ -299,14 +196,6 @@ def list_of_cadet_groups_associated_with_volunteer(interface: abstractInterface,
     return list_of_groups
 
 
-def REFACTOR_list_of_cadet_groups_associated_with_volunteer(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage, volunteer_at_event: VolunteerAtEvent) -> List[Group]:
-    list_of_cadet_ids = volunteer_at_event.list_of_associated_cadet_id
-    list_of_groups = [data_to_be_stored.group_given_cadet_id(cadet_id) for cadet_id in list_of_cadet_ids]
-    list_of_groups = [group for group in list_of_groups if group is not missing_data]
-
-    return list_of_groups
-
-
 def lake_in_list_of_groups(list_of_groups: List[Group]):
     types_of_groups = [group.type_of_group() for group in list_of_groups]
     return LAKE_TRAINING in types_of_groups
@@ -319,3 +208,141 @@ def groups_for_volunteer(interface: abstractInterface, event: Event, volunteer_i
     list_of_groups = [group for group in list_of_groups if group is not missing_data]
 
     return list(set(list_of_groups))
+
+
+def DEPRECATED_load_list_of_identified_volunteers_at_event(event: Event) -> ListOfIdentifiedVolunteersAtEvent:
+    return DEPRECATED_data.data_list_of_identified_volunteers_at_event.read(event_id=event.id)
+
+
+def load_list_of_identified_volunteers_at_event(interface: abstractInterface, event: Event) -> ListOfIdentifiedVolunteersAtEvent:
+    volunteer_allocation_data = VolunteerAllocationData(interface.data)
+    return volunteer_allocation_data.load_list_of_identified_volunteers_at_event(event)
+
+
+def DEPRECATED_load_list_of_volunteers_at_event(event: Event)-> ListOfVolunteersAtEvent:
+    return DEPRECATED_data.data_list_of_volunteers_at_event.read(event_id=event.id)
+
+
+def load_list_of_volunteers_at_event(interface:abstractInterface, event: Event)-> ListOfVolunteersAtEvent:
+    volunteer_allocation_data = VolunteerAllocationData(interface.data)
+    return volunteer_allocation_data.load_list_of_volunteers_at_event(event)
+
+
+def remove_volunteer_and_cadet_association_at_event(interface: abstractInterface, cadet_id: str, volunteer_id: str, event: Event):
+    volunteer_allocation_data = VolunteerAllocationData(interface.data)
+    volunteer_allocation_data.remove_volunteer_and_cadet_association_at_event(event=event, volunteer_id=volunteer_id, cadet_id=cadet_id)
+
+
+def delete_volunteer_with_id_at_event(interface: abstractInterface, volunteer_id: str, event: Event):
+    volunteer_allocation_data = VolunteerAllocationData(interface.data)
+    volunteer_allocation_data.delete_volunteer_with_id_at_event(event=event, volunteer_id=volunteer_id)
+
+    patrol_boat_data = PatrolBoatsData(interface.data)
+    patrol_boat_data.delete_volunteer_with_id_at_event(event=event, volunteer_id=volunteer_id)
+
+    delete_role_at_event_for_volunteer_on_all_days(interface=interface, volunteer_id=volunteer_id, event=event)
+
+
+def update_volunteer_notes_at_event(interface: abstractInterface, event: Event, volunteer_id: str, new_notes: str):
+    volunteer_allocation_data = VolunteerAllocationData(interface.data)
+    volunteer_allocation_data.update_volunteer_notes_at_event(event=event, volunteer_id=volunteer_id, new_notes=new_notes)
+
+
+def add_volunteer_and_cadet_association_for_existing_volunteer(interface: abstractInterface, cadet_id:str, volunteer_id: str, event: Event):
+    volunteer_allocation_data = VolunteerAllocationData(interface.data)
+    volunteer_allocation_data.add_volunteer_and_cadet_association_for_existing_volunteer(event=event, volunteer_id=volunteer_id, cadet_id=cadet_id)
+
+
+def add_volunteer_to_event_with_just_id(interface: abstractInterface, volunteer_id: str, event: Event):
+    volunteer_allocation_data = VolunteerAllocationData(interface.data)
+    volunteer_allocation_data.add_volunteer_to_event_with_just_id(event=event, volunteer_id=volunteer_id)
+
+
+
+
+def DEPRECATE_get_volunteer_at_event(volunteer_id: str, event: Event) -> VolunteerAtEvent:
+    volunteers_at_event_data = DEPRECATED_load_list_of_volunteers_at_event(event)
+    volunteer_at_event = volunteers_at_event_data.volunteer_at_event_with_id(volunteer_id)
+    if volunteer_at_event is missing_data:
+        raise Exception("Weirdly volunteer with id %s is no longer in event %s" % (volunteer_id, event))
+
+    return volunteer_at_event
+
+
+def get_volunteer_at_event(interface: abstractInterface, volunteer_id: str, event: Event) -> VolunteerAtEvent:
+    volunteers_at_event_data = VolunteerAllocationData(interface.data)
+    list_of_volunteers = volunteers_at_event_data.load_list_of_volunteers_at_event(event)
+    volunteer_at_event = list_of_volunteers.volunteer_at_event_with_id(volunteer_id)
+    if volunteer_at_event is missing_data:
+        raise Exception("Weirdly volunteer with id %s is no longer in event %s" % (volunteer_id, event))
+
+    return volunteer_at_event
+
+
+def is_volunteer_already_at_event(interface: abstractInterface, volunteer_id: str, event: Event) -> bool:
+    volunteers_at_event_data = VolunteerAllocationData(interface.data)
+    return volunteers_at_event_data.is_volunteer_already_at_event(volunteer_id=volunteer_id, event=event)
+
+
+def delete_role_at_event_for_volunteer_on_day(interface: abstractInterface,
+                                              volunteer_id: str, day: Day,
+                                                        event: Event):
+
+    volunteer_rota_data = VolunteerRotaData(interface.data)
+    volunteer_rota_data.delete_role_at_event_for_volunteer_on_day(event=event, day=day, volunteer_id=volunteer_id)
+
+def delete_role_at_event_for_volunteer_on_all_days(interface: abstractInterface,
+                                              volunteer_id: str,
+                                                        event: Event):
+
+    volunteer_rota_data = VolunteerRotaData(interface.data)
+    volunteer_rota_data.delete_role_at_event_for_volunteer_on_all_days(event=event, volunteer_id=volunteer_id)
+
+
+
+def DEPRECATE_load_volunteers_in_role_at_event(event: Event) -> ListOfVolunteersInRoleAtEvent:
+    return DEPRECATED_data.data_list_of_volunteers_in_roles_at_event.read(event_id=event.id)
+
+
+def get_volunteers_in_role_at_event_with_active_allocations(interface: abstractInterface, event: Event) -> ListOfVolunteersInRoleAtEvent:
+    volunteer_role_data = VolunteerRotaData(interface.data)
+    return volunteer_role_data.get_volunteers_in_role_at_event_who_are_also_allocated_to_event(event)
+
+
+def update_role_at_event_for_volunteer_on_day(interface: abstractInterface,
+                                              volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
+                                    new_role: str,
+                                     event: Event):
+
+    volunteer_rota_data=  VolunteerRotaData(interface.data)
+    volunteer_rota_data.update_role_at_event_for_volunteer_on_day_at_event(
+        event=event,
+        volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day,
+        new_role=new_role
+    )
+
+
+def update_group_at_event_for_volunteer_on_day(interface: abstractInterface,
+                                               volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
+                                               new_group: str,
+                                              event: Event):
+    volunteer_rota_data = VolunteerRotaData(interface.data)
+    volunteer_rota_data.update_group_at_event_for_volunteer_on_day(event=event,
+                                                                   volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day,
+                                                                   new_group=new_group)
+
+
+def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(interface: abstractInterface,
+                    event: Event,
+                                                                                       volunteer_id: str,
+                                                                                       day: Day):
+
+
+    volunteer_data = VolunteerRotaData(interface.data)
+    try:
+        volunteer_data.copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(event=event,
+                                                                                                day=day,
+                                                                                                volunteer_id=volunteer_id)
+    except Exception as e:
+        name = get_volunteer_name_from_id(interface=interface, volunteer_id=volunteer_id)
+        interface.log_error("Can't copy across role data for %s on %s, error %s, conflicting change made?" % (name, day.name, str(e)))

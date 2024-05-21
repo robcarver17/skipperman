@@ -4,6 +4,7 @@ from app.objects.day_selectors import Day
 from app.backend.group_allocations.group_allocations_data import AllocationData
 from app.objects.cadets import ListOfCadets
 from app.objects.constants import arg_not_passed
+from app.data_access.configuration.configuration import ALL_GROUPS_NAMES
 
 ## following double up as column headers in df
 CADET = 'Cadet'
@@ -28,9 +29,38 @@ def sorted_active_cadets(allocation_data: AllocationData, day_or_none: Day = Non
 
 def get_active_cadets_as_data_frame(allocation_data: AllocationData, day_or_none: Day = None)-> pd.DataFrame:
     if day_or_none is None:
-        day = allocation_data.event.weekdays_in_event()[0]
+        return get_active_cadets_as_data_frame_on_non_specified_day(allocation_data=allocation_data)
     else:
-        day = day_or_none
+        return get_active_cadets_as_data_frame_on_specific_day(allocation_data=allocation_data, day=day_or_none)
+
+
+def get_active_cadets_as_data_frame_on_non_specified_day(allocation_data: AllocationData)-> pd.DataFrame:
+
+    active_cadets = allocation_data.list_of_cadets_in_event_active_only
+    first_names = [cadet.first_name for cadet in active_cadets]
+    surnames = [cadet.surname for cadet in active_cadets]
+    groups =[allocation_data.get_most_common_group_name_across_days(cadet=cadet) for cadet in active_cadets]
+    club_boats = [allocation_data.get_most_common_club_boat_name_across_days(cadet) for cadet in active_cadets]
+    boat_classes = [allocation_data.get_most_common_boat_class_name_across_days(cadet) for cadet in active_cadets]
+    partners = [allocation_data.get_most_common_partner_name_across_days(cadet) for cadet in active_cadets]
+    df_as_dict = {
+        CADET: active_cadets,
+        SORT_FIRST_NAME: first_names,
+        SORT_SECOND_NAME: surnames,
+        SORT_GROUP: groups,
+        SORT_CLUBBOAT: club_boats,
+        SORT_CLASS: boat_classes,
+        SORT_PARTNER: partners
+    }
+
+    active_cadets_as_data_frame = pd.DataFrame(df_as_dict)
+    active_cadets_as_data_frame[SORT_GROUP] = pd.Categorical(active_cadets_as_data_frame[SORT_GROUP],
+                                                             ALL_GROUPS_NAMES)
+
+    return active_cadets_as_data_frame
+
+
+def get_active_cadets_as_data_frame_on_specific_day(allocation_data: AllocationData, day: Day)-> pd.DataFrame:
 
     active_cadets = allocation_data.list_of_cadets_in_event_active_only
     first_names = [cadet.first_name for cadet in active_cadets]
@@ -50,6 +80,8 @@ def get_active_cadets_as_data_frame(allocation_data: AllocationData, day_or_none
     }
 
     active_cadets_as_data_frame = pd.DataFrame(df_as_dict)
+    active_cadets_as_data_frame[SORT_GROUP] = pd.Categorical(active_cadets_as_data_frame[SORT_GROUP],
+                                                             ALL_GROUPS_NAMES)
 
     return active_cadets_as_data_frame
 

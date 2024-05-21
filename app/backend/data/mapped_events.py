@@ -4,7 +4,6 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.data_access.storage_layer.api import DataLayer
 
-from app.data_access.data import DEPRECATED_data
 from app.objects.constants import missing_data
 from app.objects.events import Event
 from app.objects.mapped_wa_event import MappedWAEvent, RowInMappedWAEvent
@@ -27,6 +26,11 @@ class MappedEventsData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
 
+    def add_row(self, event: Event, new_row: RowInMappedWAEvent):
+        mapped_wa_event_data = self.get_mapped_wa_event(event)
+        mapped_wa_event_data.append(new_row)
+        self.save_mapped_wa_event(event=event, mapped_wa_event_data=mapped_wa_event_data)
+
     def get_row_with_rowid(self, event: Event, row_id:str)  -> RowInMappedWAEvent:
         mapped_data = self.get_mapped_wa_event(event)
         try:
@@ -46,25 +50,11 @@ class MappedEventsData():
     def get_mapped_wa_event(self, event: Event) -> MappedWAEvent:
         return self.data_api.get_mapped_wa_event(event)
 
-def DEPRECCATE_save_mapped_wa_event(
-    mapped_wa_event_data: MappedWAEvent,
-    event: Event,
-):
-    DEPRECATED_data.data_mapped_wa_event.write(
-        mapped_wa_event=mapped_wa_event_data, event_id=event.id
-    )
 
-
-def DEPRECATE_load_mapped_wa_event(
+def load_mapped_wa_event(
+        interface: abstractInterface,
     event: Event,
 ) -> MappedWAEvent:
-    return DEPRECATED_data.data_mapped_wa_event.read(event.id)
+    mapped_events_data = MappedEventsData(interface.data)
+    return mapped_events_data.get_mapped_wa_event(event)
 
-def DEPRECATE_get_row_in_mapped_event_data_given_id(event: Event, row_id: str) -> RowInMappedWAEvent:
-    mapped_data = DEPRECATE_load_mapped_wa_event(event)
-    try:
-        row_data = mapped_data.get_row_with_rowid(row_id)
-    except:
-        return missing_data
-
-    return row_data

@@ -2,7 +2,7 @@ from typing import Union, List
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.cadets import DEPRECATED_cadet_name_from_id, cadet_name_from_id
+from app.backend.cadets import cadet_name_from_id
 from app.backend.forms.form_utils import  get_availability_checkbox
 from app.backend.volunteers.volunteers import \
     are_all_cadet_ids_in_list_already_connection_to_volunteer
@@ -84,19 +84,19 @@ def get_connection_checkbox(interface: abstractInterface, event: Event, voluntee
 
 
 
-def get_availablity_text( list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> ListOfLines:
+def get_availablity_text(interface: abstractInterface,  list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> ListOfLines:
     all_available = ListOfLines()
     for relevant_information in list_of_relevant_information:
-        all_available = all_available+get_availablity_text_for_single_entry(relevant_information)
+        all_available = all_available+get_availablity_text_for_single_entry(interface=interface, relevant_information=relevant_information)
 
     return all_available
 
-def get_availablity_text_for_single_entry(relevant_information: RelevantInformationForVolunteer) -> ListOfLines:
+def get_availablity_text_for_single_entry(interface: abstractInterface, relevant_information: RelevantInformationForVolunteer) -> ListOfLines:
 
     if relevant_information is missing_relevant_information:
         return ListOfLines("")
 
-    cadet_name = get_cadet_name_from_relevant_information(relevant_information)
+    cadet_name = get_cadet_name_from_relevant_information(interface=interface, relevant_information=relevant_information)
     availability_info = relevant_information.availability
     available_text = ListOfLines(["Availability for volunteer in form when registered with cadet %s" % cadet_name])
     if availability_info.day_availability is not missing_data:
@@ -110,7 +110,7 @@ def get_availablity_text_for_single_entry(relevant_information: RelevantInformat
 
     return available_text
 
-def get_cadet_name_from_relevant_information(relevant_information: RelevantInformationForVolunteer) -> str:
+def get_cadet_name_from_relevant_information(interface: abstractInterface, relevant_information: RelevantInformationForVolunteer) -> str:
     NO_CADET= "(no cadet)"
     if relevant_information is missing_relevant_information:
         return NO_CADET
@@ -118,7 +118,7 @@ def get_cadet_name_from_relevant_information(relevant_information: RelevantInfor
     if cadet_id is missing_data:
         return NO_CADET
 
-    cadet_name = DEPRECATED_cadet_name_from_id(cadet_id)
+    cadet_name = cadet_name_from_id(interface=interface, cadet_id=cadet_id)
 
     return cadet_name
 
@@ -147,26 +147,56 @@ def first_valid_availability(list_of_relevant_information: ListOfRelevantInforma
 
 def get_any_other_information_text(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> ListOfLines:
 
-    other_information = ListOfLines(["Other information in form: (for each cadet entered with)"])
+    list_of_other_information = ListOfLines(["Other information in form: (for each cadet entered with)"])
     for relevant_information in list_of_relevant_information:
         try:
-            other_information.append(Line(relevant_information.details.any_other_information))
+            other_information = relevant_information.details.any_other_information
+            if len(other_information)==0:
+                continue
+            list_of_other_information.append(Line(other_information))
         except:
             pass
 
-    return other_information
+    if len(list_of_other_information)==1:
+        return ListOfLines([''])
+
+    return list_of_other_information
+
+def get_any_self_declared_status_text(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> ListOfLines:
+
+    list_of_self_declared = ListOfLines(["Self declared status in form: (for each cadet entered with)"])
+    for relevant_information in list_of_relevant_information:
+
+        try:
+            self_declared = relevant_information.identify.self_declared_status
+            if len(self_declared)==0:
+                continue
+            list_of_self_declared.append(Line(self_declared))
+        except:
+            pass
+
+    if len(list_of_self_declared)==0:
+        return ListOfLines([''])
+
+    return list_of_self_declared
 
 
 
 def get_preferred_duties_text(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> ListOfLines:
-    preferred_duties = ListOfLines(["Preferred duties in form (for each cadet registered with):"])
+    list_of_preferred_duties = ListOfLines(["Preferred duties in form (for each cadet registered with):"])
     for relevant_information in list_of_relevant_information:
         try:
-            preferred_duties.append(Line(relevant_information.availability.preferred_duties))
+            duties = relevant_information.availability.preferred_duties
+            if len(duties)==0:
+                continue
+            list_of_preferred_duties.append(Line(duties))
         except:
             continue
 
-    return preferred_duties
+    if len(list_of_preferred_duties)==1:
+        return ListOfLines([''])
+
+    return list_of_preferred_duties
 
 def get_preferred_duties_input(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> textInput:
     return textInput(
@@ -178,6 +208,9 @@ def get_preferred_duties_input(list_of_relevant_information: ListOfRelevantInfor
 def first_valid_preferred_duties(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> str:
     for relevant_information in list_of_relevant_information:
         try:
+            duties = relevant_information.availability.preferred_duties
+            if len(duties)==0:
+                continue
             return relevant_information.availability.preferred_duties
         except:
             continue
@@ -186,14 +219,20 @@ def first_valid_preferred_duties(list_of_relevant_information: ListOfRelevantInf
 
 
 def get_same_or_different_text(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> ListOfLines:
-    same_or_different = ListOfLines(["Same or different duties in form (for each cadet registered with):"])
+    list_of_same_or_different = ListOfLines(["Same or different duties in form (for each cadet registered with):"])
     for relevant_information in list_of_relevant_information:
         try:
-            same_or_different.append(Line(relevant_information.availability.same_or_different))
+            same_or_different_text = relevant_information.availability.same_or_different
+            if len(same_or_different_text)==0:
+                continue
+            list_of_same_or_different.append(Line(same_or_different_text))
         except:
             continue
 
-    return same_or_different
+    if len(list_of_same_or_different)==1:
+        return ListOfLines([''])
+
+    return list_of_same_or_different
 
 def get_same_or_different_input(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> textInput:
     return textInput(
@@ -212,7 +251,11 @@ def get_notes_input_for_volunteer_at_event(list_of_relevant_information: ListOfR
 def first_valid_same_or_different(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> str:
     for relevant_information in list_of_relevant_information:
         try:
-            return relevant_information.availability.same_or_different
+            same_or_different_text = relevant_information.availability.same_or_different
+            if len(same_or_different_text) == 0:
+                continue
+
+            return same_or_different_text
         except:
             continue
 

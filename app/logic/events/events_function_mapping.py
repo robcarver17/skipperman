@@ -15,7 +15,7 @@ from app.logic.events.import_wa.upload_event_file import (
     display_form_upload_event_file,
     post_form_upload_event_file,
 )
-from app.logic.events.mapping.event_field_mapping import (
+from app.logic.events.mapping.ENTRY_event_field_mapping import (
     display_form_event_field_mapping,
     post_form_event_field_mapping,
 )

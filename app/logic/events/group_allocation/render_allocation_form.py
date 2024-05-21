@@ -2,7 +2,7 @@ from typing import Union, Dict
 
 from app.objects.groups import Group
 
-from app.backend.data.events import get_list_of_all_events
+from app.backend.events import get_list_of_all_events
 
 from app.backend.group_allocations.previous_allocations import allocation_for_cadet_in_previous_events_as_dict, \
     get_dict_of_allocations_for_events_and_list_of_cadets
@@ -22,11 +22,11 @@ from app.backend.group_allocations.boat_allocation import summarise_club_boat_al
     summarise_class_attendance_for_event
 from app.backend.group_allocations.group_allocations_data import get_allocation_data, AllocationData
 from app.backend.group_allocations.sorting import sorted_active_cadets
-from app.backend.group_allocations.summarise_allocations_data import summarise_allocations_for_event
+from app.backend.group_allocations.event_summarys import summarise_allocations_for_event
 
 from app.logic.events.constants import UPDATE_ALLOCATION_BUTTON_LABEL
 from app.logic.events.events_in_state import get_event_from_state
-from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import Button, CANCEL_BUTTON_LABEL, ButtonBar
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, DetailListOfLines, Line
@@ -50,19 +50,21 @@ def display_form_allocate_cadets_at_event(interface: abstractInterface, event: E
     sort_button_table = sort_buttons_for_allocation_table(sort_order)
     nav_bar = ButtonBar([back_button, update_button])
 
-    return Form(ListOfLines([
-                ButtonBar([back_button]),
-                    Heading("Cadets in %s " % str(event), size=4), _______________,
-                    _______________,
-                    allocations_and_class_summary,
-                    DetailListOfLines(ListOfLines([
+    sort_order_line =                     DetailListOfLines(ListOfLines([
                     _______________,
                     "Specify order that table is sorted in:",
-                    sort_button_table]), "Sort order", open=True),
+                    sort_button_table]), "Sort order", open=False)
+
+    return Form(ListOfLines([
+        nav_bar,
+            Heading("Cadets in %s " % str(event), size=4), _______________,
+                    _______________,
+                    allocations_and_class_summary,
+                    sort_order_line,
                      _______________,
-                    nav_bar,
-                    star_indicator,
+                    Line([star_indicator]),
                     day_dropdown,
+                    Line('Click on a cadet name to show all previous events'),
                     inner_form,
                     _______________,
                     nav_bar
@@ -114,7 +116,7 @@ def get_allocations_and_classes_detail(interface: abstractInterface, event: Even
 
 
 update_button = Button(UPDATE_ALLOCATION_BUTTON_LABEL, nav_button=True)
-back_button = Button(BACK_BUTTON_LABEL, nav_button=True)
+back_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
 
 
 def sort_buttons_for_allocation_table(sort_order: list) -> Table:

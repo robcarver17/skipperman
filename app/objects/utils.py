@@ -1,4 +1,5 @@
-from collections import defaultdict
+
+from collections import defaultdict, Counter
 import datetime
 import math
 from copy import copy
@@ -270,3 +271,14 @@ def from_single_str_to_dict(single_str: str)->dict:
 
 def flatten(xss):
     return [x for xs in xss for x in xs]
+
+
+def print_dict_nicely(label, some_dict:dict) -> str:
+    dict_str_list = ['%s: %s' % (key, value) for key, value in some_dict.items()]
+    dict_str_list = ", ".join(dict_str_list)
+
+    return label+"- "+dict_str_list
+
+
+def most_common(some_list: list):
+    return Counter(some_list).most_common(1)[0][0]

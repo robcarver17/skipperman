@@ -1,4 +1,4 @@
-from app.backend.data.field_mapping import write_field_mapping_for_event, read_mapping_from_csv_file_object
+from app.backend.wa_import.map_wa_fields import write_field_mapping_for_event, read_mapping_from_csv_file_object
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
     get_file_from_interface,
@@ -6,7 +6,7 @@ from app.objects.abstract_objects.abstract_interface import (
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,
-    fileInput, NewForm,
+    fileInput
 )
 from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
@@ -44,7 +44,9 @@ def post_form_for_upload_custom_field_mapping(interface: abstractInterface):
         file = get_file_from_interface(MAPPING_FILE, interface=interface)
         mapping = read_mapping_from_csv_file_object(file)
         event = get_event_from_state(interface)
-        write_field_mapping_for_event(event=event, new_mapping=mapping)
+        write_field_mapping_for_event(interface=interface, event=event, new_mapping=mapping)
+        interface.save_stored_items()
+
     except Exception as e:
         interface.log_error("Something went wrong uploading file %s" % str(e))
         return previous_form

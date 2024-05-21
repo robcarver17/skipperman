@@ -1,6 +1,5 @@
 from typing import Union
 
-from app.backend.data.volunteers import delete_a_volunteer
 from app.logic.volunteers.volunteer_state import get_volunteer_from_state
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import Button
@@ -51,7 +50,8 @@ def post_form_delete_individual_volunteer(
     if button==CANCEL_BUTTON_LABEL:
         return previous_form(interface)
     elif button==SURE_DELETE_BUTTON_LABEL:
-        delete_a_volunteer(volunteer)
+        #DEPRECATE_delete_a_volunteer(volunteer)
+        interface.log_error("DELETION NOT ALLOWED")
         ## volunteer now missing so can't go to parent
         return initial_state_form
     else:

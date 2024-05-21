@@ -190,9 +190,7 @@ def get_cadet_notes_for_row_in_form_and_alter_registration_data(interface: abstr
 
 
 def update_boat_info_for_all_cadets_in_form(interface: abstractInterface, allocation_data: AllocationData):
-    event = get_event_from_state(interface)
     if no_day_set_in_state(interface):
-        ### FIXME
         update_boat_info_for_all_cadets_in_form_across_days(interface=interface, allocation_data=allocation_data)
     else:
         day = get_day_from_state_or_none(interface)

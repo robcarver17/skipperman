@@ -9,7 +9,7 @@ from app.objects.abstract_objects.abstract_form import (
 )
 from app.objects.abstract_objects.abstract_tables import Table
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
-from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button, ButtonBar, CANCEL_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.cadets.ENTRY_view_cadets import sort_buttons, all_sort_types
@@ -44,24 +44,27 @@ def display_form_edit_registration_details_given_event_and_sort_order(
     return Form(
         ListOfLines(
             [
+                nav_buttons,
+                _______________,
                 Line(Heading("Registration details for %s" % event, centred=True, size=4)),
                 Line(Heading(
                     "(Excludes group allocation and volunteer information; plus cadet name/DOB - edit in the appropriate places / also food and clothing)",
                 centred = True, size =6)),
 
                 _______________,
-                nav_buttons,
                sort_buttons,
                 _______________,
 
                 table,
+                _______________,
+                nav_buttons,
 
             ]
         )
     )
 
 save_button = Button(SAVE_CHANGES, nav_button=True)
-back_button = Button(BACK_BUTTON_LABEL, nav_button=True)
+back_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
 
 nav_buttons = ButtonBar([back_button, save_button])
 
@@ -90,7 +93,7 @@ def post_form_edit_registration_details(
 
     last_button_pressed = interface.last_button_pressed()
 
-    if interface.last_button_pressed() == BACK_BUTTON_LABEL:
+    if interface.last_button_pressed() == CANCEL_BUTTON_LABEL:
         return previous_form(interface)
 
     parse_registration_details_from_form(interface=interface, event=event)

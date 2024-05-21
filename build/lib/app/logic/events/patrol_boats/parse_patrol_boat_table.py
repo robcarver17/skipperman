@@ -2,8 +2,6 @@ from typing import List, Union
 
 from app.backend.forms.swaps import is_ready_to_swap
 
-from app.backend.data.volunteer_rota import\
-    copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days
 from app.backend.volunteers.patrol_boats import add_named_boat_to_event_with_no_allocation, \
     remove_patrol_boat_and_all_associated_volunteer_connections_from_event, \
     remove_volunteer_from_patrol_boat_on_day_at_event, \
@@ -11,9 +9,10 @@ from app.backend.volunteers.patrol_boats import add_named_boat_to_event_with_no_
     get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day, \
     BoatDayVolunteer, NO_ADDITION_TO_MAKE, ListOfBoatDayVolunteer, \
     add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts
-from app.backend.volunteers.volunteer_rota import update_role_at_event_for_volunteer_on_day_at_event, get_volunteer_role_at_event_on_day
-from app.backend.volunteers.volunteers import add_boat_related_skill_for_volunteer, \
-    remove_boat_related_skill_for_volunteer, boat_related_skill_for_volunteer, get_volunteer_name_from_id
+from app.backend.volunteers.volunteer_rota import update_role_at_event_for_volunteer_on_day_at_event, \
+    get_volunteer_role_at_event_on_day, copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days
+from app.backend.volunteers.volunteers import DEPRECATEadd_boat_related_skill_for_volunteer, \
+    DEPRECATE_remove_boat_related_skill_for_volunteer, boat_related_skill_for_volunteer, get_volunteer_name_from_id
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.patrol_boats.elements_in_patrol_boat_table import  \
      get_unique_list_of_volunteer_ids_for_skills_checkboxes, \
@@ -143,9 +142,9 @@ def update_skills_checkbox_for_specific_volunteer_id(interface: abstractInterfac
         return
 
     if is_ticked:
-        add_boat_related_skill_for_volunteer(interface=interface, volunteer_id=volunteer_id)
+        DEPRECATEadd_boat_related_skill_for_volunteer(interface=interface, volunteer_id=volunteer_id)
     else:
-        remove_boat_related_skill_for_volunteer(interface=interface, volunteer_id=volunteer_id)
+        DEPRECATE_remove_boat_related_skill_for_volunteer(interface=interface, volunteer_id=volunteer_id)
 
 
 def update_role_dropdowns(interface: abstractInterface):

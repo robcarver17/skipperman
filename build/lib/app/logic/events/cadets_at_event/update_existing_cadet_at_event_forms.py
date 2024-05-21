@@ -28,6 +28,7 @@ def display_form_for_update_to_existing_cadet_at_event(
     )
 
     status_change_field = get_line_in_form_for_status_change(
+        interface=interface,
         new_cadet_at_event=new_cadet_at_event,
         existing_cadet_at_event=existing_cadet_at_event,
     )
@@ -90,10 +91,12 @@ def get_line_in_form_for_attendance_change(
 
 
 def get_line_in_form_for_status_change(
+        interface: abstractInterface,
         new_cadet_at_event: CadetAtEvent,
         existing_cadet_at_event: CadetAtEvent,
 ) -> Line:
     new_status, status_message = new_status_and_status_message(
+        interface=interface,
     new_cadet_at_event=new_cadet_at_event,
         existing_cadet_at_event=existing_cadet_at_event
         )

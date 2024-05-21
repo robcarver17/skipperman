@@ -1,6 +1,6 @@
 from app.logic.events.constants import TEMPLATE_NAME, MAPPING_FILE, UPLOAD_FILE_BUTTON_LABEL
-from app.backend.data.field_mapping import write_template, read_mapping_from_csv_file_object
-from app.objects.abstract_objects.abstract_form import textInput, fileInput, Form, NewForm
+from app.backend.wa_import.map_wa_fields import write_template, read_mapping_from_csv_file_object
+from app.objects.abstract_objects.abstract_form import textInput, fileInput, Form
 from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.objects.abstract_objects.abstract_interface import abstractInterface, get_file_from_interface, \
@@ -54,7 +54,9 @@ def post_form_for_upload_template_field_mapping(interface: abstractInterface):
         return display_form_for_upload_template_field_mapping(interface)
 
     print("template name %s, mapping %s" % (template_name, str(mapping)))
-    write_template(template_name=template_name, new_mapping=mapping)
+    write_template(template_name=template_name, new_mapping=mapping, interface=interface)
+    interface.save_stored_items()
+
 
     return form_with_message_and_finished_button(
         "Uploaded new template %s" % (template_name), interface=interface,

@@ -1,6 +1,6 @@
 from typing import Union
-from app.backend.data.field_mapping import get_template, write_mapping_to_temp_csv_file_and_return_filename, \
-    get_list_of_templates
+from app.backend.data.field_mapping import DEPRECATE_get_list_of_templates
+from app.backend.wa_import.map_wa_fields import get_template, write_mapping_to_temp_csv_file_and_return_filename
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -56,5 +56,5 @@ def previous_form(interface: abstractInterface):
 
 ## repeats but avoids circular
 def display_list_of_templates_with_buttons() -> ListOfLines:
-    list_of_templates = get_list_of_templates()
+    list_of_templates = DEPRECATE_get_list_of_templates()
     return ListOfLines([Button(template_name) for template_name in list_of_templates])

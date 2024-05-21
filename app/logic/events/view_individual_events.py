@@ -1,18 +1,16 @@
 from typing import Union
 
-from app.backend.events import is_wa_field_mapping_setup_for_event
-from app.backend.group_allocations.summarise_registration_data import summarise_registrations_for_event, \
-    identify_birthdays
+from app.backend.wa_import.map_wa_fields import     is_wa_field_mapping_setup_for_event
+from app.backend.group_allocations.event_summarys import summarise_registrations_for_event, \
+    identify_birthdays, summarise_allocations_for_event
 from app.backend.volunteers.patrol_boats import get_summary_list_of_boat_allocations_for_events
-from app.backend.volunteers.volunteer_rota_summary import get_summary_list_of_roles_and_groups_for_events, \
-    get_summary_list_of_teams_and_groups_for_events
-from app.backend.wa_import.map_wa_files import is_wa_file_mapping_setup_for_event
-from app.backend.group_allocations.summarise_allocations_data import summarise_allocations_for_event
+from app.backend.volunteers.volunteer_rota_summary import    get_summary_list_of_teams_and_groups_for_events
+from app.backend.wa_import.map_wa_files import   is_wa_file_mapping_setup_for_event
 from app.logic.events.group_allocation.ENTRY_allocate_cadets_to_groups import display_form_allocate_cadets
 from app.logic.events.import_wa.import_wa_file import display_form_import_event_file
 from app.logic.events.import_wa.update_existing_event import display_form_update_existing_event
 from app.logic.events.import_wa.upload_event_file import display_form_upload_event_file
-from app.logic.events.mapping.event_field_mapping import display_form_event_field_mapping
+from app.logic.events.mapping.ENTRY_event_field_mapping import display_form_event_field_mapping
 from app.logic.events.registration_details.edit_registration_details import display_form_edit_registration_details
 from app.logic.events.volunteer_rota.ENTRY1_display_main_rota_page import display_form_view_for_volunteer_rota
 from app.logic.events.patrol_boats.ENTRY_allocate_patrol_boats import display_form_view_for_patrol_boat_allocation
@@ -22,7 +20,7 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm
 )
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button, ButtonBar, main_menu_button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 
@@ -97,9 +95,9 @@ def get_event_form_for_event(
 
     lines_in_form = (ListOfLines(
                     [
-                        ListOfLines(event_description),
-                        _______________,
                         buttons,
+                        _______________,
+                        ListOfLines(event_description),
                         _______________,
                         summarise_registrations,
                         allocations_lines,
@@ -135,8 +133,8 @@ def get_event_buttons(event: Event, interface: abstractInterface) -> ButtonBar:
         nav_button=True)
 
 
-    wa_import_done = is_wa_file_mapping_setup_for_event(event=event) ## have we done an import already (sets up event mapping)
-    field_mapping_done = is_wa_field_mapping_setup_for_event(event=event) ## have set up field mapping
+    wa_import_done = is_wa_file_mapping_setup_for_event(interface=interface, event=event) ## have we done an import already (sets up event mapping)
+    field_mapping_done = is_wa_field_mapping_setup_for_event(interface=interface, event=event) ## have set up field mapping
     raw_event_file_exists = does_raw_event_file_exist(event.id) ## is there a staging file waiting to be uploaded
 
 
@@ -146,33 +144,33 @@ def get_event_buttons(event: Event, interface: abstractInterface) -> ButtonBar:
     )
 
     if not wa_import_done and not field_mapping_done and not raw_event_file_exists:
-        return ButtonBar([back_button, wa_initial_upload])
+        return ButtonBar([main_menu_button, back_button, wa_initial_upload])
 
     if not wa_import_done and field_mapping_done and not raw_event_file_exists:
         ## probably done mapping manually, need to do initial upload
-        return ButtonBar([back_button, wa_initial_upload])
+        return ButtonBar([main_menu_button, back_button, wa_initial_upload])
 
     if not wa_import_done and not field_mapping_done and raw_event_file_exists:
-        return ButtonBar([back_button, wa_create_field_mapping])
+        return ButtonBar([main_menu_button, back_button, wa_create_field_mapping])
 
     if not wa_import_done and field_mapping_done and raw_event_file_exists:
-        return ButtonBar([back_button, wa_import, wa_check_field_mapping])
+        return ButtonBar([main_menu_button, back_button, wa_import, wa_check_field_mapping])
 
     ## both done, we can update the WA file and do cadet backend / other editing
     if wa_import_done and field_mapping_done and not raw_event_file_exists:
         event_specific_buttons = get_event_specific_buttons(event)
-        return ButtonBar([back_button, wa_update, wa_modify_field_mapping]+event_specific_buttons )
+        return ButtonBar([main_menu_button, back_button, wa_update, wa_modify_field_mapping]+event_specific_buttons )
 
     if wa_import_done and field_mapping_done and raw_event_file_exists:
         ## shouldn't really happen
         event_specific_buttons = get_event_specific_buttons(event)
-        return ButtonBar([back_button, wa_update, wa_modify_field_mapping]+event_specific_buttons )
+        return ButtonBar([main_menu_button, back_button, wa_update, wa_modify_field_mapping]+event_specific_buttons )
 
     interface.log_error(
         "Something went wrong; contact support [wa_import_done=%s, field_mapping_done=%s, raw_event_file_exists=%s]"
         % (str(wa_import_done), str(field_mapping_done), str(raw_event_file_exists))
     )
-    return ButtonBar([back_button])
+    return ButtonBar([main_menu_button, back_button])
 
 def get_event_specific_buttons(event: Event) -> list:
     group_allocation = Button(ALLOCATE_CADETS_BUTTON_LABEL, nav_button=True)

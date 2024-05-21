@@ -1,6 +1,5 @@
-from typing import List
+from typing import List, Dict
 
-from app.data_access.configuration.field_list import RESPONSIBLE_ADULT_NAME, RESPONSIBLE_ADULT_NUMBER
 from app.objects.constants import missing_data
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -13,13 +12,12 @@ from app.backend.data.mapped_events import MappedEventsData
 from app.data_access.storage_layer.api import DataLayer
 
 from app.data_access.data import DEPRECATED_data
-from app.objects.cadets import Cadet, ListOfCadets
+from app.objects.cadets import ListOfCadets
 from app.objects.day_selectors import ListOfDaySelectors, DaySelector, Day
 from app.objects.events import Event
 
 from app.objects.cadet_at_event import ListOfCadetsAtEvent, ListOfIdentifiedCadetsAtEvent, CadetAtEvent, \
     get_cadet_at_event_from_row_in_mapped_event
-from app.objects.dinghies import ListOfCadetAtEventWithDinghies
 from app.objects.cadet_at_event import active_status
 
 def cadet_id_at_event_given_row_id(interface: abstractInterface, event: Event, row_id: str) -> str:
@@ -211,7 +209,7 @@ class CadetsAtEventData():
 
         return list_of_cadets_at_event.list_of_cadet_ids()
 
-    def get_availability_dict_for_active_cadet_ids_at_event(self, event: Event):
+    def get_availability_dict_for_active_cadet_ids_at_event(self, event: Event) -> Dict[str, DaySelector]:
         list_of_cadets_at_event = self.get_list_of_cadets_at_event(event)
         active_cadets_at_event = list_of_cadets_at_event.list_of_active_cadets_at_event()
 
@@ -293,6 +291,10 @@ def list_of_row_ids_at_event_given_cadet_id(interface: abstractInterface, event:
 def DEPRECATED_load_cadets_at_event(event: Event) -> ListOfCadetsAtEvent:
     return DEPRECATED_data.data_cadets_at_event.read(event_id=event.id)
 
+def load_cadets_at_event(interface: abstractInterface, event: Event) -> ListOfCadetsAtEvent:
+    cadets_at_event_data = CadetsAtEventData(interface.data)
+    return cadets_at_event_data.get_list_of_cadets_at_event(event)
+
 
 def save_cadets_at_event(event: Event , list_of_cadets_at_event: ListOfCadetsAtEvent):
     return DEPRECATED_data.data_cadets_at_event.write(list_of_cadets_at_event=list_of_cadets_at_event, event_id=event.id)
@@ -300,19 +302,8 @@ def save_cadets_at_event(event: Event , list_of_cadets_at_event: ListOfCadetsAtE
 def DEPERCATE_load_identified_cadets_at_event(event: Event) -> ListOfIdentifiedCadetsAtEvent:
     return DEPRECATED_data.data_identified_cadets_at_event.read(event_id=event.id)
 
-def DEPRECATE_save_identified_cadets_at_event(event: Event, list_of_cadets_at_event: ListOfIdentifiedCadetsAtEvent):
-    DEPRECATED_data.data_identified_cadets_at_event.write(list_of_cadets_at_event=list_of_cadets_at_event, event_id=event.id)
-
-
-def load_list_of_cadets_at_event_with_dinghies(event: Event) -> ListOfCadetAtEventWithDinghies:
-    cadets_with_dinghies = DEPRECATED_data.data_list_of_cadets_with_dinghies_at_event.read(event.id)
-
-    return cadets_with_dinghies
-
-def save_list_of_cadets_at_event_with_dinghies(event: Event,
-                                                    cadets_with_dinghies_at_event: ListOfCadetAtEventWithDinghies):
-
-    DEPRECATED_data.data_list_of_cadets_with_dinghies_at_event.write(event_id=event.id, people_and_boats=cadets_with_dinghies_at_event)
-
+def load_identified_cadets_at_event(interface: abstractInterface, event: Event) -> ListOfIdentifiedCadetsAtEvent:
+    cadets_at_event_data = CadetsAtEventData(interface.data)
+    return cadets_at_event_data.get_list_of_identified_cadets_at_event(event)
 
 

@@ -1,6 +1,8 @@
-from app.objects.abstract_objects.abstract_buttons import Button
+from copy import copy
+
+from app.backend.group_allocations.sorting import DEFAULT_SORT_ORDER, SORT_GROUP
+from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_lines import Line
 from app.objects.day_selectors import Day
 
 DAY = 'day'
@@ -21,3 +23,12 @@ def clear_day_in_state(interface: abstractInterface):
     interface.clear_persistent_value(DAY)
 
 
+SORT_ORDER = 'sort_order'
+
+
+def get_current_sort_order(interface: abstractInterface)-> list:
+    event = get_event_from_state(interface)
+    default_order = copy(DEFAULT_SORT_ORDER)
+    if not event.contains_groups:
+        default_order.remove(SORT_GROUP)
+    return interface.get_persistent_value(SORT_ORDER, default=DEFAULT_SORT_ORDER)

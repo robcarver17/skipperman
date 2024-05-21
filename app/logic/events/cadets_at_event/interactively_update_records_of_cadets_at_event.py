@@ -1,7 +1,7 @@
 from typing import Union
 from app.backend.cadets import  cadet_name_from_id
 from app.backend.wa_import.update_cadets_at_event import     \
-    any_important_difference_between_cadets_at_event, \
+    no_important_difference_between_cadets_at_event, \
     is_cadet_with_id_already_at_event, get_cadet_at_event_for_cadet_id, \
     get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active, add_new_cadet_to_event
 
@@ -103,7 +103,7 @@ def process_update_to_cadet_new_to_event(
         relevant_row = get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
             interface=interface,
             cadet_id=cadet_id, event=event,
-            raise_error_on_duplicate=False
+            raise_error_on_duplicate=False ## try again this time allowing duplicates
         )
     except NoMoreData:
         interface.log_error(
@@ -119,6 +119,7 @@ def process_update_to_cadet_new_to_event(
         cadet_id=cadet_id
     )
     interface.save_stored_items()
+    interface.clear_stored_items()
 
     return process_next_cadet_at_event(interface)
 
@@ -177,7 +178,7 @@ def process_update_to_existing_cadet_at_event(
         )
     )
 
-    if not any_important_difference_between_cadets_at_event(
+    if no_important_difference_between_cadets_at_event(
         new_cadet_at_event = new_cadet_at_event,
         existing_cadet_at_event=existing_cadet_at_event
     ):

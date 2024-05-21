@@ -1,9 +1,8 @@
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.cadets import DEPRECATED_cadet_from_id, cadet_from_id
-from app.backend.data.cadets_at_event import DEPRECATE_cadet_id_at_event_given_row_id, cadet_id_at_event_given_row_id
-from app.backend.data.mapped_events import DEPRECATE_get_row_in_mapped_event_data_given_id, \
-    get_row_in_mapped_event_data_given_id
+from app.backend.cadets import  cadet_from_id
+from app.backend.data.cadets_at_event import cadet_id_at_event_given_row_id
+from app.backend.data.mapped_events import   get_row_in_mapped_event_data_given_id
 from app.objects.cadets import default_cadet
 from app.objects.constants import missing_data
 from app.objects.day_selectors import DaySelector, any_day_selector_from_short_form_text
@@ -23,12 +22,6 @@ from app.objects.volunteers import Volunteer
 
 NO_VOLUNTEER_IN_FORM = "NO_VOLUNTEER_IN_FORM"
 
-def DEPRECATE_get_relevant_information_for_volunteer(row_in_mapped_event: RowInMappedWAEvent, volunteer_index: int, event: Event) -> RelevantInformationForVolunteer:
-    return RelevantInformationForVolunteer(
-        identify = DEPRECATE_get_identification_information_for_volunteer(row_in_mapped_event=row_in_mapped_event, volunteer_index=volunteer_index, event=event),
-        availability=get_availability_information_for_volunteer(row_in_mapped_event=row_in_mapped_event, volunteer_index=volunteer_index, event=event),
-        details=get_details_information_for_volunteer(row_in_mapped_event=row_in_mapped_event, volunteer_index=volunteer_index)
-    )
 
 def get_relevant_information_for_volunteer(interface: abstractInterface, row_in_mapped_event: RowInMappedWAEvent, volunteer_index: int, event: Event) -> RelevantInformationForVolunteer:
     return RelevantInformationForVolunteer(
@@ -38,27 +31,6 @@ def get_relevant_information_for_volunteer(interface: abstractInterface, row_in_
     )
 
 
-def DEPRECATE_get_identification_information_for_volunteer(row_in_mapped_event: RowInMappedWAEvent, volunteer_index: int, event: Event) -> RelevantInformationForVolunteerIdentification:
-
-    dict_of_fields_for_volunteer = LIST_OF_VOLUNTEER_FIELDS[volunteer_index]
-    name_key = dict_of_fields_for_volunteer[NAME_KEY_IN_VOLUNTEER_FIELDS_DICT]
-
-    try:
-        cadet_id=DEPRECATE_cadet_id_at_event_given_row_id(event=event, row_id=row_in_mapped_event.row_id)
-        cadet =DEPRECATED_cadet_from_id(cadet_id)
-    except:
-        ## Won't always have cadets maybe in the future
-        cadet = default_cadet
-        cadet_id = missing_data
-
-    return RelevantInformationForVolunteerIdentification(
-        cadet_id=cadet_id,
-        cadet_surname=cadet.surname,
-        passed_name=row_in_mapped_event.get_item(name_key, default=NO_VOLUNTEER_IN_FORM),
-        registered_by_firstname= row_in_mapped_event.get_item(REGISTERED_BY_FIRST_NAME, default=''),
-        self_declared_status=row_in_mapped_event.get_item(VOLUNTEER_STATUS, default=''),
-        any_other_information=row_in_mapped_event.get_item(ANY_OTHER_INFORMATION, default='')
-    )
 
 def get_identification_information_for_volunteer(interface: abstractInterface, row_in_mapped_event: RowInMappedWAEvent, volunteer_index: int, event: Event) -> RelevantInformationForVolunteerIdentification:
 
@@ -69,8 +41,7 @@ def get_identification_information_for_volunteer(interface: abstractInterface, r
         cadet_id=cadet_id_at_event_given_row_id(interface=interface, event=event, row_id=row_in_mapped_event.row_id)
         cadet =cadet_from_id(interface=interface, cadet_id=cadet_id)
         if cadet is missing_data:
-            cadet = default_cadet
-            cadet_id = missing_data
+            raise
     except:
         ## Won't always have cadets maybe in the future
         cadet = default_cadet
@@ -191,19 +162,3 @@ def get_relevant_information_for_volunteer_in_event_at_row_and_index(
     return relevant_information
 
 
-def DEPRECATED_get_relevant_information_for_volunteer_in_event_at_row_and_index(
-    row_id: str,
-        volunteer_index: int,
-        event: Event
-) -> RelevantInformationForVolunteer:
-    print("Getting relevant information for row_id %s vol index %d" % (row_id, volunteer_index))
-
-    row_in_mapped_event = DEPRECATE_get_row_in_mapped_event_data_given_id( event=event, row_id=row_id)
-    if row_in_mapped_event is missing_data:
-        print("For row_id %s vol index %d the relevant information was missing: might be okay?" % (row_id, volunteer_index))
-        return missing_relevant_information
-
-    print("row %s" % str(row_in_mapped_event))
-    relevant_information = DEPRECATE_get_relevant_information_for_volunteer(row_in_mapped_event=row_in_mapped_event, volunteer_index=volunteer_index, event=event)
-
-    return relevant_information

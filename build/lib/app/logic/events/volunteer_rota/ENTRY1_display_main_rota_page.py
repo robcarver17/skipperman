@@ -11,11 +11,11 @@ from app.logic.events.volunteer_rota.rota_state import save_sorts_to_state, get_
     clear_all_filters
 from app.logic.events.volunteer_rota.volunteer_table_buttons import from_day_button_value_to_day
 from app.logic.events.volunteer_rota.volunteer_targets import get_volunteer_targets_table_and_save_button
-from app.logic.events.volunteer_rota.warnings import warn_about_volunteer_at_event
+from app.logic.events.volunteer_rota.warnings import warn_on_all_volunteers
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm, )
-from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL
+from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.volunteers.ENTRY_view_volunteers import all_sort_types as all_volunteer_name_sort_types
@@ -34,6 +34,7 @@ def display_form_view_for_volunteer_rota(interface: abstractInterface) -> Form:
     summary_group_table = get_summary_group_table(interface=interface, event=event)
     targets = get_volunteer_targets_table_and_save_button(interface=interface, event=event
                                                           )
+    warnings = warn_on_all_volunteers(interface)
     volunteer_table = get_volunteer_table(event=event,
                                                               interface=interface,
                                                               sorts_and_filters=sorts_and_filters)
@@ -53,6 +54,8 @@ def display_form_view_for_volunteer_rota(interface: abstractInterface) -> Form:
                 _______________,
                 targets,
                 _______________,
+                warnings,
+                _______________,
                 instructions,
                 _______________,
                 material_around_table.before_table,
@@ -71,7 +74,7 @@ def post_form_view_for_volunteer_rota(
 
     last_button_pressed = interface.last_button_pressed()
 
-    if last_button_pressed==BACK_BUTTON_LABEL:
+    if last_button_pressed==CANCEL_BUTTON_LABEL:
         return previous_form(interface)
 
     ## Always do this unless we pressed back
@@ -131,7 +134,7 @@ def post_form_view_for_volunteer_rota(
 
     interface.save_stored_items()
     interface.clear_stored_items()
-    warn_on_all_volunteers(interface)
+
 
     return display_form_view_for_volunteer_rota(interface=interface)
 
@@ -142,8 +145,3 @@ def add_new_volunteer_form(interface :abstractInterface):
 def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(display_form_view_for_volunteer_rota)
 
-def warn_on_all_volunteers(interface: abstractInterface):
-    list_of_volunteers_at_event = get_filtered_list_of_volunteers_at_event(interface)
-
-    for volunteer_at_event in list_of_volunteers_at_event:
-        warn_about_volunteer_at_event(interface=interface, volunteer_at_event=volunteer_at_event)

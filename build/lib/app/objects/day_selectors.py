@@ -79,6 +79,8 @@ class DaySelector(Dict[Day, bool]):
 ALL_DAYS_SELECTED = dict([(day, True) for day in all_possible_days])
 NO_DAYS_SELECTED = dict([(day, False) for day in all_possible_days])
 
+EMPTY_DAY_SELECTOR= DaySelector(NO_DAYS_SELECTED)
+
 def no_days_selected(day_selector: DaySelector, possible_days: list):
     return not any([day_selector.get(day, False) for day in possible_days])
 

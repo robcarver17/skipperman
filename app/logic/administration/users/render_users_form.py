@@ -2,10 +2,9 @@ from typing import Union, List
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.volunteers.volunteers import  get_volunteer_name_from_id
+from app.backend.volunteers.volunteers import get_volunteer_name_from_id, get_sorted_list_of_volunteers
 
-from app.backend.data.volunteers import SORT_BY_FIRSTNAME, \
-    get_sorted_list_of_volunteers
+from app.backend.data.volunteers import SORT_BY_FIRSTNAME
 
 from app.objects.abstract_objects.abstract_form import Form, NewForm, textInput, dropDownInput, \
     emailInput

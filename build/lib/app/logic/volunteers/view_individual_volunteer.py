@@ -11,7 +11,7 @@ from app.logic.abstract_logic_api import initial_state_form, button_error_and_ba
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
-from app.backend.volunteers.volunteers import DEPRECATE_get_dict_of_existing_skills, get_connected_cadets
+from app.backend.volunteers.volunteers import get_connected_cadets, get_dict_of_existing_skills
 from app.logic.volunteers.volunteer_state import get_volunteer_from_state
 from app.logic.volunteers.constants import *
 
@@ -43,8 +43,8 @@ def display_form_for_selected_volunteer(
 ) -> Form:
     lines_of_allocations = list_of_lines_with_allocations_and_roles(interface=interface, volunteer=volunteer)
 
-    connected = lines_for_connected_cadets(volunteer)
-    skills = list_of_skills(volunteer)
+    connected = lines_for_connected_cadets(interface=interface, volunteer=volunteer)
+    skills = list_of_skills(interface=interface, volunteer=volunteer)
     buttons = buttons_for_volunteer_form()
     return Form(
         ListOfLines([
@@ -72,8 +72,8 @@ def list_of_lines_with_allocations_and_roles(interface: abstractInterface, volun
     )
 
 
-def list_of_skills(volunteer: Volunteer) -> ListOfLines:
-    skills = DEPRECATE_get_dict_of_existing_skills(volunteer)
+def list_of_skills(interface: abstractInterface, volunteer: Volunteer) -> ListOfLines:
+    skills = get_dict_of_existing_skills(interface=interface, volunteer=volunteer)
     skills_held = [skill for skill, skill_held in skills.items() if skill_held]
     skills_not_held = [skill for skill, skill_held in skills.items() if not skill_held]
 
@@ -82,8 +82,8 @@ def list_of_skills(volunteer: Volunteer) -> ListOfLines:
         Line("Skills missing: %s" % ", ".join(skills_not_held)),
     ])
 
-def lines_for_connected_cadets(volunteer: Volunteer) -> Line:
-    cadets = get_connected_cadets(volunteer)
+def lines_for_connected_cadets(interface: abstractInterface, volunteer: Volunteer) -> Line:
+    cadets = get_connected_cadets(interface=interface, volunteer=volunteer)
     cadets_as_str = [str(cadet) for cadet in cadets]
     if len(cadets)==0:
         return Line([])

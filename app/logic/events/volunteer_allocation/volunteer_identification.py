@@ -1,11 +1,9 @@
 from typing import Union, Tuple
 
-from app.backend.data.volunteers import DEPRECATED_get_sorted_list_of_volunteers, VolunteerData
 from app.backend.volunteers.volunteer_allocation import add_identified_volunteer, mark_volunteer_as_skipped, \
-    volunteer_for_this_row_and_index_already_identified
-from app.backend.volunteers.volunteers import DEPRECATE_verify_volunteer_and_warn, verify_volunteer_and_warn
-from app.backend.volunteers.volunter_relevant_information import get_volunteer_from_relevant_information, \
-    no_volunteer_in_position_at_form
+    volunteer_for_this_row_and_index_already_identified, matched_volunteer_or_missing_data
+from app.backend.volunteers.volunteers import  verify_volunteer_and_warn
+from app.backend.volunteers.volunter_relevant_information import get_volunteer_from_relevant_information
 from app.backend.wa_import.import_cadets import is_cadet_marked_as_test_cadet_to_skip_in_for_row_in_mapped_data
 
 from app.logic.events.events_in_state import get_event_from_state
@@ -17,8 +15,7 @@ from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation i
     get_and_save_next_volunteer_index, get_relevant_information_for_current_volunteer, get_volunteer_index
 from app.logic.events.volunteer_allocation.volunteer_selection_form_contents import \
     volunteer_name_is_similar_to_cadet_name, get_footer_buttons_add_or_select_existing_volunteer_form, \
-    get_header_text_for_volunteer_selection_form, DEPRECATE_get_dict_of_volunteer_names_and_volunteers, \
-    get_dict_of_volunteer_names_and_volunteers
+    get_header_text_for_volunteer_selection_form,  get_dict_of_volunteer_names_and_volunteers
 from app.logic.volunteers.add_volunteer import verify_form_with_volunteer_details, VolunteerAndVerificationText, \
     get_add_volunteer_form_with_information_passed, add_volunteer_from_form_to_data
 from app.objects.abstract_objects.abstract_form import Form, NewForm
@@ -108,9 +105,7 @@ def add_specific_volunteer_at_event(interface: abstractInterface)-> Union[Form,N
     return add_passed_volunteer_at_event(interface=interface, volunteer=volunteer)
 
 def add_passed_volunteer_at_event(interface: abstractInterface, volunteer: Volunteer) -> Union[Form, NewForm]:
-    volunteer_data = VolunteerData(interface.data)
-    matched_volunteer_with_id = volunteer_data.matching_volunteer_or_missing_data(volunteer)
-
+    matched_volunteer_with_id = matched_volunteer_or_missing_data(interface=interface, volunteer=volunteer)
     if matched_volunteer_with_id is missing_data:
         print("Volunteer %s not matched" % str(volunteer))
         return display_volunteer_selection_form(interface=interface, volunteer=volunteer)

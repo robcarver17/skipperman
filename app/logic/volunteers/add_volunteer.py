@@ -2,8 +2,7 @@ from copy import copy
 from dataclasses import dataclass
 from typing import Union
 
-from app.backend.volunteers.volunteers import DEPRECATE_verify_volunteer_and_warn, verify_volunteer_and_warn
-from app.backend.data.volunteers import add_new_verified_volunteer
+from app.backend.volunteers.volunteers import verify_volunteer_and_warn, add_new_verified_volunteer
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.objects.volunteers import Volunteer, default_volunteer
 

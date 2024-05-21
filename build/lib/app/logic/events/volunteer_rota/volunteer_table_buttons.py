@@ -4,11 +4,9 @@ from app.objects.abstract_objects.abstract_lines import Line
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.volunteer_allocation import DEPRECATED_load_list_of_volunteers_at_event, \
-    load_list_of_volunteers_at_event
-from app.backend.volunteers.volunteer_rota import get_cadet_location_string, \
-    str_dict_skills
-from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingVolunteerRotaPage
+from app.backend.volunteers.volunteer_rota import DEPRECATED_load_list_of_volunteers_at_event, load_list_of_volunteers_at_event
+from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingVolunteerRotaPage, \
+    get_cadet_location_string, str_dict_skills
 from app.backend.volunteers.volunteers import DEPRECATED_get_volunteer_from_id, get_volunteer_from_id
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.day_selectors import Day

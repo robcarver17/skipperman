@@ -71,13 +71,6 @@ def save_staged_file_of_raw_event_upload_with_event_id(
     new_filename = get_staged_file_raw_event_filename(event_id)
     shutil.copy(original_filename, new_filename)
 
-def save_staged_file_with_adhoc_name(
-    original_filename: str, adhoc_name: str
-):
-    print(original_filename)
-    new_filename = get_staged_adhoc_filename(adhoc_name)
-    shutil.copy(original_filename, new_filename)
-
 
 def get_staged_file_raw_event_filename(event_id: str):
     return os.path.join(staging_directory, "raw_event_%s" % event_id)

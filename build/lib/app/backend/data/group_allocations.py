@@ -1,7 +1,6 @@
 from typing import List
 
-import pandas as pd
-from app.objects.cadet_at_event import ListOfCadetsAtEvent, CadetAtEvent
+from app.objects.cadet_at_event import  CadetAtEvent
 
 from app.objects.constants import missing_data, arg_not_passed
 
@@ -15,7 +14,6 @@ from app.objects.events import Event
 
 from app.objects.groups import ListOfCadetIdsWithGroups, Group, ListOfCadetsWithGroup, order_list_of_groups
 from app.backend.data.cadets_at_event import CadetsAtEventData
-from app.backend.data.cadets import CadetData
 from app.data_access.storage_layer.api import DataLayer
 
 class GroupAllocationsData():
@@ -55,6 +53,15 @@ class GroupAllocationsData():
             )
         )
 
+    def remove_cadet_from_data(self, event: Event, cadet_id: str):
+        for day in event.weekdays_in_event():
+            self.remove_cadet_from_data_on_day(event=event, cadet_id=cadet_id, day=day)
+
+    def remove_cadet_from_data_on_day(self, event: Event, cadet_id: str, day: Day):
+        list_of_cadet_ids_with_groups = self.get_list_of_cadet_ids_with_groups_at_event(event)
+        list_of_cadet_ids_with_groups.remove_group_allocation_for_cadet_on_day(cadet_id=cadet_id, day=day)
+        self.save_list_of_cadet_ids_with_groups_at_event(event=event, list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups)
+
     def add_or_upate_group_for_cadet_on_day_if_cadet_available_on_day(self, event: Event, cadet: Cadet, group: Group, day: Day):
         cadet_at_event =self.cadet_at_event_or_missing_data(event, cadet_id=cadet.id)
         if cadet_at_event is missing_data:
@@ -65,7 +72,7 @@ class GroupAllocationsData():
             return
 
         list_of_cadet_ids_with_groups = self.get_list_of_cadet_ids_with_groups_at_event(event)
-        list_of_cadet_ids_with_groups.update_group_for_cadet_on_day(cadet=cadet, day=day, chosen_group=group)
+        list_of_cadet_ids_with_groups.update_group_for_cadet_on_day(cadet_id=cadet.id, day=day, chosen_group=group)
         self.save_list_of_cadet_ids_with_groups_at_event(event=event, list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups)
 
     def get_list_of_groups_at_event(self,
@@ -87,14 +94,6 @@ class GroupAllocationsData():
         groups = list(set(groups))
 
         return order_list_of_groups(groups)
-
-    def DEPRECATE_get_list_of_cadets_with_group_at_event(self, event: Event, include_unallocated_cadets: bool = True)-> ListOfCadetsWithGroup:
-        if include_unallocated_cadets:
-            list_of_cadet_ids_with_groups = self.active_cadet_ids_at_event_with_allocations_including_unallocated_cadets(event)
-        else:
-            list_of_cadet_ids_with_groups = self.active_cadet_ids_at_event_with_allocations(event)
-
-        return self.get_list_of_cadets_with_group_given_list_of_cadets_with_ids_and_groups(list_of_cadet_ids_with_groups)
 
     def get_list_of_cadets_with_group_by_day(self, event: Event, day: Day, include_unallocated_cadets: bool = True)-> ListOfCadetsWithGroup:
         if include_unallocated_cadets:

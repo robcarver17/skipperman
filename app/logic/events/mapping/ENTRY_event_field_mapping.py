@@ -3,22 +3,21 @@ from typing import Union
 from app.logic.events.mapping.clone_field_mapping import display_form_for_clone_event_field_mapping
 from app.logic.events.mapping.create_mapping import display_form_for_create_custom_field_mapping
 from app.logic.events.mapping.template_field_mapping import display_form_for_choose_template_field_mapping
-from app.logic.events.mapping.upload_field_mapping import display_form_for_upload_custom_field_mapping
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button, ButtonBar, main_menu_button
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
-from app.backend.data.field_mapping import DEPRECATE_get_field_mapping_for_event
+from app.backend.wa_import.map_wa_fields import get_field_mapping_for_event
 from app.backend.wa_import.check_mapping import check_field_mapping
-from app.backend.wa_import.map_wa_files import is_wa_file_mapping_setup_for_event
+from app.backend.wa_import.map_wa_files import     is_wa_file_mapping_setup_for_event
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import Event
 
@@ -38,9 +37,9 @@ def display_form_event_field_mapping_existing_mapping(
 
     event = get_event_from_state(interface)
 
-    pre_existing_text = text_for_pre_existing_mapping(interface)
-    check_mapping_lines = check_field_mapping(event)
-    warning_text = warning_text_for_mapping(event)
+    pre_existing_text = text_for_pre_existing_mapping(interface=interface, event=event)
+    check_mapping_lines = check_field_mapping(interface=interface,event=event)
+    warning_text = warning_text_for_mapping(interface=interface, event=event)
 
     return Form(ListOfLines(
         [
@@ -60,8 +59,8 @@ def display_form_event_field_mapping_existing_mapping(
     )
     )
 
-def warning_text_for_mapping(event: Event) -> str:
-    wa_import_done = is_wa_file_mapping_setup_for_event(event=event)
+def warning_text_for_mapping(interface: abstractInterface, event: Event) -> str:
+    wa_import_done = is_wa_file_mapping_setup_for_event(event=event, interface=interface)
 
     if wa_import_done:
         warning_text = "*WARNING* WA import has already been done for this event. Changing the mapping could break things. DO NOT CHANGE UNLESS YOU ARE SURE."
@@ -85,17 +84,16 @@ def display_form_event_field_mapping_no_existing_mapping(
 def does_event_already_have_mapping(interface: abstractInterface):
     event = get_event_from_state(interface)
     try:
-        mapping = DEPRECATE_get_field_mapping_for_event(event)
+        mapping = get_field_mapping_for_event(interface=interface, event=event)
         assert len(mapping)>0
         return True
     except:
         return False
 
 
-def text_for_pre_existing_mapping(interface: abstractInterface) -> PandasDFTable:
-    event = get_event_from_state(interface)
+def text_for_pre_existing_mapping(interface: abstractInterface, event: Event) -> PandasDFTable:
     try:
-        mapping = DEPRECATE_get_field_mapping_for_event(event)
+        mapping = get_field_mapping_for_event(interface=interface, event=event)
     except:
         return PandasDFTable()
 
@@ -104,7 +102,9 @@ def text_for_pre_existing_mapping(interface: abstractInterface) -> PandasDFTable
 
 def mapping_buttons() -> ButtonBar:
     return ButtonBar(
+
         [
+            main_menu_button,
             Button(BACK_BUTTON_LABEL, nav_button=True),
             Button(MAP_TO_TEMPLATE_BUTTON_LABEL, nav_button=True),
             Button(CLONE_EVENT_MAPPING_BUTTON_LABEL, nav_button=True),

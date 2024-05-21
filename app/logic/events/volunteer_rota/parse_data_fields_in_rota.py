@@ -1,8 +1,7 @@
 from app.objects.events import Event
 
-from app.backend.data.volunteer_allocation import update_volunteer_notes_at_event
-from app.backend.volunteers.volunteer_rota import MAKE_UNAVAILABLE, get_volunteer_with_role_at_event_on_day
-from app.backend.data.volunteer_rota import update_role_at_event_for_volunteer_on_day, \
+from app.backend.volunteers.volunteer_rota import MAKE_UNAVAILABLE, get_volunteer_with_role_at_event_on_day, \
+    update_volunteer_notes_at_event, update_role_at_event_for_volunteer_on_day, \
     update_group_at_event_for_volunteer_on_day
 from app.backend.volunteers.volunteer_allocation import make_volunteer_unavailable_on_day
 from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingVolunteerRotaPage

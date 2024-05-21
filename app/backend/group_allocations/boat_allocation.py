@@ -2,22 +2,17 @@ import pandas as pd
 from dataclasses import dataclass
 from typing import List, Dict
 
-from app.backend.cadets import load_list_of_all_cadets, DEPRECATE_load_list_of_all_cadets
+from app.backend.cadets import load_list_of_all_cadets
+from app.data_access.data import DEPRECATED_data
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.dinghies import DEPRECATE_load_list_of_club_dinghies, \
-    DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies, save_list_of_cadets_at_event_with_club_dinghies, \
-    DinghiesData
-from app.backend.configuration import DEPRECATE_load_list_of_boat_classes
+from app.backend.data.dinghies import    DinghiesData
 from app.backend.forms.summarys import  summarise_generic_counts_for_event_over_days
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
-from app.objects.cadets import Cadet
 from app.objects.day_selectors import DaySelector, Day
 from app.objects.events import Event
-from app.objects.club_dinghies import NO_BOAT
-from app.backend.data.cadets_at_event import load_list_of_cadets_at_event_with_dinghies, \
-    save_list_of_cadets_at_event_with_dinghies,  CadetsAtEventData
+from app.backend.data.cadets_at_event import CadetsAtEventData
 from app.objects.dinghies import no_partnership, CadetAtEventWithDinghy, ListOfCadetAtEventWithDinghies, \
     compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values
 from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies
@@ -45,7 +40,7 @@ def update_boat_info_for_cadets_at_event(interface: abstractInterface,
                                          list_of_updates: List[CadetWithDinghyInputs],
                                          day: Day):
 
-    list_of_existing_cadets_at_event_with_dinghies=load_list_of_cadets_at_event_with_dinghies(event)
+    list_of_existing_cadets_at_event_with_dinghies=load_list_of_cadets_at_event_with_dinghies(interface=interface, event=event)
 
     list_of_potentially_updated_cadets_at_event = convert_list_of_inputs_to_list_of_cadet_at_event_objects(
         list_of_updates=list_of_updates,
@@ -181,3 +176,15 @@ def get_relevant_cadet_ids_for_boat_class_id(group: str,
                              if cadets_with_dinghies_at_event.dinghy_id_for_cadet_id_on_day(cadet_id=cadet_id, day=day) == boat_class_id]
 
     return result_dict
+
+
+def DEPRECATE_load_list_of_cadets_at_event_with_dinghies(event: Event) -> ListOfCadetAtEventWithDinghies:
+    cadets_with_dinghies = DEPRECATED_data.data_list_of_cadets_with_dinghies_at_event.read(event.id)
+
+    return cadets_with_dinghies
+
+
+def load_list_of_cadets_at_event_with_dinghies(interface: abstractInterface, event: Event) -> ListOfCadetAtEventWithDinghies:
+    dinghies_data = DinghiesData(interface.data)
+    return dinghies_data.get_list_of_cadets_at_event_with_dinghies(event)
+

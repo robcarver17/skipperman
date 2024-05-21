@@ -1,7 +1,8 @@
 from typing import List
 
 from app.backend.cadets import  cadet_name_from_id
-from app.backend.data.volunteer_allocation import     DEPRECATE_remove_volunteer_and_cadet_association_at_event, DEPRECATE_delete_volunteer_with_id_at_event, get_volunteer_at_event
+from app.backend.data.volunteer_allocation import     DEPRECATE_remove_volunteer_and_cadet_association_at_event, DEPRECATE_delete_volunteer_with_id_at_event
+from app.backend.volunteers.volunteer_rota import get_volunteer_at_event
 from app.backend.forms.form_utils import get_availability_checkbox, get_availablity_from_form
 from app.backend.volunteers.volunteer_allocation import any_other_cadets_for_volunteer_at_event_apart_from_this_one, \
     is_current_cadet_active_at_event, list_of_volunteers_for_cadet_identified, \

@@ -39,10 +39,10 @@ SAVE_CHANGES = "Save changes"
 UPLOAD_FILE_BUTTON_LABEL = "Upload selected file"
 
 # update master event rows
-USE_ORIGINAL_DATA_BUTTON_LABEL = "Use original data that we already have"
+USE_ORIGINAL_DATA_BUTTON_LABEL = "Use original data that we already have (ignores subsequent changes in WA file)"
 USE_NEW_DATA_BUTTON_LABEL = "Use new data imported from latest WA file (recommended)"
 USE_DATA_IN_FORM_BUTTON_LABEL = (
-    "Use data as edited in form above (will be newest data from WA file if not edited)"
+    "Use data as edited in form above (will be newest data from WA file if no changes made in form)"
 )
 
 # allocation

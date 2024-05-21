@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.backend.data.volunteer_allocation import add_volunteer_to_event_with_just_id
+from app.backend.volunteers.volunteer_rota import add_volunteer_to_event_with_just_id
 from app.backend.volunteers.volunteer_allocation import get_list_of_volunteers_except_those_already_at_event
 from app.logic.events.constants import CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL, FINAL_VOLUNTEER_ADD_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_interface import abstractInterface

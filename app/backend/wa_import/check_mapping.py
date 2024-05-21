@@ -1,4 +1,6 @@
-from app.backend.data.field_mapping import DEPRECATE_get_field_mapping_for_event
+from app.objects.abstract_objects.abstract_interface import abstractInterface
+
+from app.backend.wa_import.map_wa_fields import get_field_mapping_for_event
 from app.backend.wa_import.load_wa_file import does_raw_event_file_exist, load_raw_wa_file
 from app.backend.wa_import.load_wa_file import (
     get_staged_file_raw_event_filename,
@@ -11,6 +13,7 @@ from app.objects.abstract_objects.abstract_text import bold
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 
 def check_field_mapping(
+        interface: abstractInterface,
     event: Event
 ) -> ListOfLines:
     if not does_raw_event_file_exist(event_id=event.id):
@@ -18,7 +21,7 @@ def check_field_mapping(
 
     ## get the raw event file
     filename = get_staged_file_raw_event_filename(event.id)
-    warning_list = list_of_warnings_about_fields(event, filename)
+    warning_list = list_of_warnings_about_fields(interface=interface, event=event, filename=filename)
 
     return warning_list
 
@@ -32,12 +35,13 @@ MAPPING_ADVICE_IF_IMPORT_DONE=ListOfLines([
         )
 
 def list_of_warnings_about_fields(
+        interface: abstractInterface,
     event: Event,
         filename: str,
 ) -> ListOfLines:
     wa_as_df = load_raw_wa_file(filename)
     # Set up WA event mapping fields
-    wa_field_mapping = DEPRECATE_get_field_mapping_for_event(event=event)
+    wa_field_mapping = get_field_mapping_for_event(event=event, interface=interface)
 
     fields_in_wa_file = list(wa_as_df.columns)
     in_mapping_not_in_wa_file = wa_field_mapping.wa_fields_missing_from_list(

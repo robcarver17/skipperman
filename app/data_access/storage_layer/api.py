@@ -65,6 +65,10 @@ class DataLayer():
         data_access_for_list_of_events = get_data_access_for_list_of_events(self.data)
         return self.store.read(data_access_for_list_of_events)
 
+    def save_list_of_events(self, list_of_events: ListOfEvents):
+        data_access_for_list_of_events = get_data_access_for_list_of_events(self.data)
+        self.store.write(list_of_events, data_access_method=data_access_for_list_of_events)
+
     def get_list_of_volunteers(self) -> ListOfVolunteers:
         data_access_for_list_of_volunteers = get_data_access_for_list_of_volunteers(self.data)
         return self.store.read(data_access_for_list_of_volunteers)
@@ -162,7 +166,20 @@ class DataLayer():
         data_access_for_arrangements_options = get_data_access_for_arrangement_and_group_order_options(self.data, report_name=report_name)
         self.store.write(arrange_group_options, data_access_method=data_access_for_arrangements_options)
 
+    def get_field_mapping_for_template(self, template_name: str) -> ListOfWAFieldMappings:
+        data_access_for_wa_field_mapping_templates = get_data_access_for_wa_field_mapping_templates(self.data, template_name=template_name)
+        return self.store.read(data_access_for_wa_field_mapping_templates)
 
+    def save_field_mapping_for_template(self, template_name: str, list_of_mappings: ListOfWAFieldMappings):
+        data_access_for_wa_field_mapping_templates = get_data_access_for_wa_field_mapping_templates(self.data, template_name=template_name)
+        self.store.write(list_of_mappings, data_access_method=data_access_for_wa_field_mapping_templates)
+
+    def get_list_of_field_mapping_template_names(self) -> List[str]:
+        data_access_for_list_of_wa_field_mapping_templates = get_data_access_for_list_of_wa_field_mapping_templates(self.data)
+        return self.store.read(data_access_method=data_access_for_list_of_wa_field_mapping_templates)
+
+    def _save_list_of_field_mapping_template_names_DO_NOT_USE(self):
+        raise
 
     #### EVENT SPECIFIC
     def get_field_mapping_for_event(self, event: Event) -> ListOfWAFieldMappings:
@@ -384,6 +401,20 @@ def get_data_access_for_wa_field_mapping_at_event(data: GenericDataApi, event_id
     return DataAccessMethod("wa_field_mapping_at_event",
     read_method=data.data_wa_field_mapping.read,
     write_method=data.data_wa_field_mapping.write, event_id=event_id)
+
+
+def get_data_access_for_wa_field_mapping_templates(data: GenericDataApi, template_name: str) -> DataAccessMethod:
+    return DataAccessMethod("wa_field_mapping_templates",
+    read_method=data.data_wa_field_mapping.get_template,
+    write_method=data.data_wa_field_mapping.write_template,
+    template_name =template_name)
+
+def get_data_access_for_list_of_wa_field_mapping_templates(data: GenericDataApi) -> DataAccessMethod:
+    return DataAccessMethod("wa_field_mapping_templates_list",
+    read_method=data.data_wa_field_mapping.get_list_of_templates,
+    write_method=object, ## not used
+    )
+
 
 
 def get_data_access_for_mapped_wa_event(data: GenericDataApi, event_id: str) -> DataAccessMethod:

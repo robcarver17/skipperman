@@ -1,4 +1,4 @@
-from app.backend.data.mapped_events import DEPRECCATE_save_mapped_wa_event, save_mapped_wa_event
+from app.backend.data.mapped_events import  save_mapped_wa_event
 from app.backend.wa_import.convert_helm_crew_data import convert_mapped_wa_event_potentially_with_joined_rows
 from app.backend.wa_import.map_wa_fields import map_wa_fields_in_df_for_event
 from app.backend.wa_import.map_wa_files import verify_and_if_required_add_wa_mapping

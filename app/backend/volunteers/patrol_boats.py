@@ -1,11 +1,10 @@
 from dataclasses import dataclass
 
-from app.backend.volunteers.volunteers import get_volunteer_name_from_id
+from app.backend.volunteers.volunteers import get_volunteer_name_from_id, get_sorted_list_of_volunteers
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.volunteers import get_sorted_list_of_volunteers, \
-    SORT_BY_FIRSTNAME, VolunteerData
+from app.backend.data.volunteers import SORT_BY_FIRSTNAME, VolunteerData
 from typing import List
 
 import pandas as pd

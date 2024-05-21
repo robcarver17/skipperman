@@ -37,6 +37,7 @@ def DEPRECATE_load_wa_event_mapping() -> ListOfWAEventMaps:
     return DEPRECATED_data.data_wa_event_mapping.read()
 
 
+
 def DEPRECATE_save_wa_event_mapping(wa_event_mapping: ListOfWAEventMaps):
     DEPRECATED_data.data_wa_event_mapping.write(
         wa_event_mapping,

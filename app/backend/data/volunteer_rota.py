@@ -1,12 +1,9 @@
 from typing import List
 
-from app.objects.groups import Group, order_list_of_groups
-
-from app.backend.volunteers.volunteers import get_volunteer_name_from_id
+from app.objects.groups import order_list_of_groups
 
 from app.data_access.configuration.configuration import VOLUNTEER_TEAMS
 
-from app.backend.data.volunteer_allocation import days_at_event_when_volunteer_available
 from app.backend.data.volunteer_allocation import VolunteerAllocationData
 from app.objects.volunteers_in_roles import VolunteerInRoleAtEvent, ListOfVolunteersInRoleAtEvent, \
     ListOfTargetForRoleAtEvent
@@ -15,7 +12,6 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.data_access.storage_layer.api import DataLayer
 
-from app.data_access.data import DEPRECATED_data
 from app.objects.constants import missing_data
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -50,6 +46,11 @@ class VolunteerRotaData():
 
         return order_list_of_groups(all_valid_groups)
 
+    def delete_role_at_event_for_volunteer_on_all_days(self,
+                                                       volunteer_id: str,
+                                                       event: Event):
+        for day in event.weekdays_in_event():
+            self.delete_role_at_event_for_volunteer_on_day(event=event, day=day, volunteer_id=volunteer_id)
 
     def delete_role_at_event_for_volunteer_on_day(self,
                                                   volunteer_id: str, day: Day,
@@ -103,9 +104,18 @@ class VolunteerRotaData():
         list_of_volunteers_in_roles_at_event.copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
             volunteer_id=volunteer_id,
             day=day,
-            list_of_all_days=days_at_event_when_volunteer_available(event=event, volunteer_id=volunteer_id)
+            list_of_all_days=self.days_at_event_when_volunteer_available(event=event, volunteer_id=volunteer_id)
         )
         self.save_list_of_volunteers_in_roles_at_event(list_of_volunteers_in_role_at_event=list_of_volunteers_in_roles_at_event, event=event)
+
+    def days_at_event_when_volunteer_available(self, event: Event,
+                                                         volunteer_id: str) -> List[Day]:
+        volunteer_at_event = self.volunteer_allocation_data.get_volunteer_at_this_event(event=event, volunteer_id=volunteer_id)
+        all_days = [day
+                    for day in event.weekdays_in_event()
+                    if volunteer_at_event.availablity.available_on_day(day)]
+
+        return all_days
 
     def update_group_at_event_for_volunteer_on_day(self,
                                                    volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
@@ -187,65 +197,6 @@ class VolunteerRotaData():
         return VolunteerAllocationData(self.data_api)
 
 
-
-
-def delete_role_at_event_for_volunteer_on_day(interface: abstractInterface,
-                                              volunteer_id: str, day: Day,
-                                                        event: Event):
-
-    volunteer_rota_data = VolunteerRotaData(interface.data)
-    volunteer_rota_data.delete_role_at_event_for_volunteer_on_day(event=event, day=day, volunteer_id=volunteer_id)
-
-
-def DEPRECATE_load_volunteers_in_role_at_event(event: Event) -> ListOfVolunteersInRoleAtEvent:
-    return DEPRECATED_data.data_list_of_volunteers_in_roles_at_event.read(event_id=event.id)
-
-def get_volunteers_in_role_at_event_with_active_allocations(interface: abstractInterface, event: Event) -> ListOfVolunteersInRoleAtEvent:
-    volunteer_role_data = VolunteerRotaData(interface.data)
-    return volunteer_role_data.get_volunteers_in_role_at_event_who_are_also_allocated_to_event(event)
-
-
-def update_role_at_event_for_volunteer_on_day(interface: abstractInterface,
-                                              volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
-                                    new_role: str,
-                                     event: Event):
-
-    volunteer_rota_data=  VolunteerRotaData(interface.data)
-    volunteer_rota_data.update_role_at_event_for_volunteer_on_day_at_event(
-        event=event,
-        volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day,
-        new_role=new_role
-    )
-
-
-def update_group_at_event_for_volunteer_on_day(interface: abstractInterface,
-                                               volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
-                                               new_group: str,
-                                              event: Event):
-    volunteer_rota_data = VolunteerRotaData(interface.data)
-    volunteer_rota_data.update_group_at_event_for_volunteer_on_day(event=event,
-                                                                   volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day,
-                                                                   new_group=new_group)
-
-
-def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(interface: abstractInterface,
-                    event: Event,
-                                                                                       volunteer_id: str,
-                                                                                       day: Day):
-
-
-    volunteer_data = VolunteerRotaData(interface.data)
-    try:
-        volunteer_data.copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(event=event,
-                                                                                                day=day,
-                                                                                                volunteer_id=volunteer_id)
-    except Exception as e:
-        name = get_volunteer_name_from_id(interface=interface, volunteer_id=volunteer_id)
-        interface.log_error("Can't copy across role data for %s on %s, error %s, conflicting change made?" % (name, day.name, str(e)))
-
-
-
-
 def get_volunteer_roles(interface: abstractInterface):
     ## FIXME REPLACE WITH CONFIGURABLE FILE
     volunteer_roles = []
@@ -255,3 +206,5 @@ def get_volunteer_roles(interface: abstractInterface):
                 volunteer_roles.append(role)
 
     return volunteer_roles
+
+

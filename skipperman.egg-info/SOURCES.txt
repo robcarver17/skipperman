@@ -38,12 +38,11 @@ app/backend/forms/../../data_access/configuration/configuration.yaml
 app/backend/group_allocations/__init__.py
 app/backend/group_allocations/boat_allocation.py
 app/backend/group_allocations/cadet_event_allocations.py
+app/backend/group_allocations/event_summarys.py
 app/backend/group_allocations/group_allocation_info.py
 app/backend/group_allocations/group_allocations_data.py
 app/backend/group_allocations/previous_allocations.py
 app/backend/group_allocations/sorting.py
-app/backend/group_allocations/summarise_allocations_data.py
-app/backend/group_allocations/summarise_registration_data.py
 app/backend/group_allocations/../../data_access/configuration/configuration.yaml
 app/backend/reporting/__init__.py
 app/backend/reporting/event_lists.py
@@ -236,11 +235,11 @@ app/logic/events/import_wa/shared_state_tracking_and_data.py
 app/logic/events/import_wa/update_existing_event.py
 app/logic/events/import_wa/upload_event_file.py
 app/logic/events/import_wa/../../../data_access/configuration/configuration.yaml
+app/logic/events/mapping/ENTRY_event_field_mapping.py
 app/logic/events/mapping/__init__.py
 app/logic/events/mapping/clone_field_mapping.py
 app/logic/events/mapping/create_mapping.py
 app/logic/events/mapping/download_template_field_mapping.py
-app/logic/events/mapping/event_field_mapping.py
 app/logic/events/mapping/template_field_mapping.py
 app/logic/events/mapping/upload_field_mapping.py
 app/logic/events/mapping/upload_template_field_mapping.py
@@ -275,7 +274,6 @@ app/logic/events/volunteer_rota/edit_cadet_connections_for_event_from_rota.py
 app/logic/events/volunteer_rota/edit_volunteer_details_from_rota.py
 app/logic/events/volunteer_rota/edit_volunteer_skills_from_rota.py
 app/logic/events/volunteer_rota/elements_in_volunteer_rota_page.py
-app/logic/events/volunteer_rota/form_elements_verify_volunteers_if_cadet_at_event_changed.py
 app/logic/events/volunteer_rota/parse_data_fields_in_rota.py
 app/logic/events/volunteer_rota/parse_volunteer_table.py
 app/logic/events/volunteer_rota/render_volunteer_table.py

@@ -1,3 +1,5 @@
+import shutil
+
 from app.data_access.classes.cadets import *
 from app.data_access.classes.list_of_events import DataListOfEvents
 from app.data_access.classes.wa_event_mapping import DataWAEventMapping
@@ -139,6 +141,18 @@ class GenericDataApi(object):
     def delete_all_master_data(self, are_you_sure: bool =False):
         pass
 
-REQUIRES_EVENT = [
 
-]
+    @property
+    def master_data_path(self) -> str:
+        raise NotImplemented
+
+    @property
+    def user_data_path(self) -> str:
+        raise NotImplemented
+
+
+    @property
+    def backup_data_path(self) -> str:
+        raise NotImplemented
+
+

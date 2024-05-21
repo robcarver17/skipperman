@@ -1,17 +1,21 @@
 import datetime
+import re
+from dataclasses import dataclass
 
 from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.events import DEPRECATED_get_list_of_all_events, get_list_of_all_events
+from app.backend.data.events import EventData
 from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME, SIMILARITY_LEVEL_TO_WARN_DATE
 from app.data_access.data import DEPRECATED_data
 
-from app.objects.events import Event, ListOfEvents, SORT_BY_START_DSC, SORT_BY_START_ASC, SORT_BY_NAME
+from app.objects.events import Event, ListOfEvents, SORT_BY_START_DSC, SORT_BY_START_ASC, SORT_BY_NAME, default_event
 
 
-def verify_event_and_warn(event: Event) -> str:
+def verify_event_and_warn(interface: abstractInterface, event: Event) -> str:
     warn_text = ""
+    if contains_2_more_digits(event.event_name):
+        warn_text+= "Looks like event name contains a year - don't do that! "
     if len(event.event_name) < 5:
         warn_text += "Event name seems a bit short. "
     if event.start_date < datetime.date.today():
@@ -30,7 +34,7 @@ def verify_event_and_warn(event: Event) -> str:
     if event.contains_volunteers and not event.contains_cadets:
         warn_text +="Event with volunteers must also have cadets (may change in future version). "
 
-    warn_text += warning_for_similar_events(event=event)
+    warn_text += warning_for_similar_events(interface=interface, event=event)
 
     if len(warn_text) > 0:
         warn_text = "DOUBLE CHECK BEFORE ADDING: " + warn_text
@@ -38,9 +42,11 @@ def verify_event_and_warn(event: Event) -> str:
 
     return warn_text
 
+def contains_2_more_digits(string: str) -> bool:
+    return len(re.findall(r'\d', string))>1
 
-def warning_for_similar_events(event: Event) -> str:
-    existing_events = DEPRECATE_get_sorted_list_of_events()
+def warning_for_similar_events(interface: abstractInterface, event: Event) -> str:
+    existing_events = get_sorted_list_of_events(interface)
     similar_events = existing_events.similar_events(
         event,
         name_threshold=SIMILARITY_LEVEL_TO_WARN_NAME,
@@ -71,36 +77,56 @@ def get_sorted_list_of_events(interface: abstractInterface, sort_by=SORT_BY_STAR
     return list_of_events
 
 
-def list_of_previously_used_event_names() -> list:
-    list_of_events = DEPRECATED_get_list_of_all_events()
+def list_of_previously_used_event_names(interface: abstractInterface) -> list:
+    list_of_events = get_list_of_all_events(interface)
     event_names = [event.event_name for event in list_of_events]
     return list(set(event_names))
 
 
 
-def DEPRECATE_get_event_from_id(id: str) -> Event:
-    list_of_events = DEPRECATED_get_list_of_all_events()
-    return list_of_events.has_id(id)
-
-
-def confirm_event_exists_given_description(event_description):
+def DEPRECATE_confirm_event_exists_given_description(event_description):
     list_of_events = DEPRECATED_get_list_of_all_events()
 
     ## fails if missing
     __ = list_of_events.event_with_description(event_description)
 
+def confirm_event_exists_given_description(interface: abstractInterface, event_description: str):
+    list_of_events = get_list_of_all_events(interface)
 
-def is_wa_field_mapping_setup_for_event(event: Event) -> bool:
-    try:
-        wa_mapping_dict = DEPRECATED_data.data_wa_field_mapping.read(event.id)
-
-        if len(wa_mapping_dict) == 0:
-            return False
-        else:
-            return True
-    except:
-        return False
+    ## fails if missing
+    __ = list_of_events.event_with_description(event_description)
 
 
 all_sort_types_for_event_list = [SORT_BY_START_ASC, SORT_BY_START_DSC, SORT_BY_NAME]
 sort_buttons_for_event_list = ButtonBar([Button(sortby, nav_button=True) for sortby in all_sort_types_for_event_list])
+
+
+@dataclass
+class EventAndVerificationText:
+    event: Event = default_event
+    verification_text: str = ("",)
+
+    @property
+    def is_default(self) -> bool:
+        return self.event == default_event
+
+
+event_and_text_if_first_time = EventAndVerificationText(
+    event=default_event, verification_text=""
+)
+
+
+def add_new_verified_event(interface: abstractInterface, event: Event):
+    event_data =EventData(interface.data)
+    event_data.add_event(event)
+
+
+def DEPRECATED_get_list_of_all_events() -> ListOfEvents:
+    list_of_events = DEPRECATED_data.data_list_of_events.read()
+
+    return list_of_events
+
+
+def get_list_of_all_events(interface: abstractInterface) -> ListOfEvents:
+    event_data =EventData(interface.data)
+    return event_data.list_of_events

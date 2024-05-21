@@ -3,9 +3,10 @@ from typing import List, Union
 
 from app.backend.forms.swaps import is_ready_to_swap
 from app.backend.volunteers.volunteer_rota import dict_of_groups_for_dropdown, \
-    dict_of_roles_for_dropdown, get_sorted_and_filtered_list_of_volunteers_at_event
-from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingVolunteerRotaPage, get_data_to_be_stored_for_volunteer_rota_page, \
-    RotaSortsAndFilters
+    dict_of_roles_for_dropdown
+from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingVolunteerRotaPage, \
+    get_data_to_be_stored_for_volunteer_rota_page, \
+    RotaSortsAndFilters, get_sorted_and_filtered_list_of_volunteers_at_event
 from app.backend.volunteers.volunteers import get_volunteer_from_id
 from app.data_access.configuration.fixed import COPY_SYMBOL1, NOT_AVAILABLE_SHORTHAND, AVAILABLE_SHORTHAND
 from app.logic.events.volunteer_rota.volunteer_table_buttons import get_location_button, get_skills_button, \

@@ -25,7 +25,7 @@ from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, CAN
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.logic.events.events_in_state import get_event_from_state, update_state_for_specific_event_given_event_description
-from app.backend.events import confirm_event_exists_given_description
+from app.backend.events import DEPRECATE_confirm_event_exists_given_description
 
 from app.logic.reporting.constants import *
 
@@ -65,7 +65,7 @@ def post_form_initial_generic_report(
 
     event_name_selected = last_button
     try:
-        confirm_event_exists_given_description(event_name_selected)
+        DEPRECATE_confirm_event_exists_given_description(event_name_selected)
     except:
         interface.log_error(
             "Event %s no longer in list- someone else has deleted or file corruption?"

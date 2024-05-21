@@ -195,6 +195,10 @@ class ListOfEvents(GenericListOfObjectsWithIds):
     def list_of_event_descriptions(self) -> list:
         return [event.event_description for event in self]
 
+    def add(self, event: Event):
+        event.id =self.next_id()
+        self.append(event)
+
     def event_with_description(self, event_description: str) -> Event:
         list_of_descriptions = self.list_of_event_descriptions
         idx = list_of_descriptions.index(event_description)

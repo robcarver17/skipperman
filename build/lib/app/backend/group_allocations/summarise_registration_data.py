@@ -3,27 +3,24 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 
 from app.backend.group_allocations.cadet_event_allocations import \
-    DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only, \
-    load_list_of_cadets_ids_with_group_allocations_active_cadets_only, count_of_cadet_ids_allocated_to_group_by_day
-
-from app.objects.abstract_objects.abstract_tables import PandasDFTable
+    count_of_cadet_ids_allocated_to_group_by_day
 
 from app.objects.events import Event
 
-from app.backend.data.cadets_at_event import DEPRECATED_load_cadets_at_event, DEPERCATE_load_identified_cadets_at_event, \
-    CadetsAtEventData
+from app.backend.data.cadets_at_event import CadetsAtEventData, load_identified_cadets_at_event, load_cadets_at_event
 from app.objects.mapped_wa_event import summarise_status
-from app.backend.data.mapped_events import DEPRECATE_load_mapped_wa_event
+from app.backend.data.mapped_events import load_mapped_wa_event
+from app.objects.utils import print_dict_nicely
 
 
 def summarise_registrations_for_event(interface: abstractInterface, event: Event) -> ListOfLines:
     summary_data = ListOfLines([])
-    mapped_data = DEPRECATE_load_mapped_wa_event(event)
+    mapped_data = load_mapped_wa_event(event=event, interface=interface)
     status_dict = summarise_status(mapped_data)
     summary_data.append(Line(print_dict_nicely("Registration status", status_dict)))
     if event.contains_cadets:
-        identified_cadets = DEPERCATE_load_identified_cadets_at_event(event)
-        cadets_at_event = DEPRECATED_load_cadets_at_event(event)
+        identified_cadets =load_identified_cadets_at_event(interface=interface, event=event)
+        cadets_at_event = load_cadets_at_event(interface=interface, event=event)
         cadet_dict = {'Identified': len(identified_cadets), 'In event data': len(cadets_at_event), 'Active in event data': len(cadets_at_event.list_of_active_cadets_at_event()) }
 
         if event.contains_groups:
@@ -36,11 +33,6 @@ def summarise_registrations_for_event(interface: abstractInterface, event: Event
 
     return summary_data
 
-def print_dict_nicely(label, some_dict:dict) -> str:
-    dict_str_list = ['%s: %s' % (key, value) for key, value in some_dict.items()]
-    dict_str_list = ", ".join(dict_str_list)
-
-    return label+"- "+dict_str_list
 
 def identify_birthdays(interface: abstractInterface, event: Event) -> list:
     cadets_at_event_data = CadetsAtEventData(interface.data)

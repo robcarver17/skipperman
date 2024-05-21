@@ -81,23 +81,15 @@ MISC:
 
 
 DATA_MODEL:
-- go through all code and apply data model
-- data model
-- changing day attendance will also affect club boat allocation, partnerships, dinghy allocation - or apply strict filters? 
+- go through all code and apply data model - VOLUNTEER ROTA, PATROL BOAT, REPORTS
 - removing volunteer / availability should also remove related information
-- removing cadet (change status to cancelled) should also remove club boat allocation, partnerships, dinghy allocation - or apply strict filters?
 
+- Button on volunteer rota to perform checks
+- volunteer rota sort by group/ check filtering works
 
+REPORTS
 
-USERS:
-- remove emails, link options; tidy up userlist on web
-
-
-
-
-
-
-
+- spotter sheet has cancelled cadet partners on
 
 ### Required for cadet week:
 
@@ -140,7 +132,8 @@ REPORTING:
 
 
 BACKEND:
-- check competely removal of old data model and any weird intermediate steps
+- check competely removal of old data model and any weird intermediate steps (allocation data object)
+- ensure clean seperation backend/data, data and logic
 - editable user sailing groups, volunteer roles, skills: but plain text file so can replace configuration
 
 INTERFACE:

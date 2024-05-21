@@ -187,9 +187,13 @@ class AllocationData:
 
         if no_partnership(partner_id):
             return partner_id
-        cadet = self.list_of_cadets_in_event_active_only.object_with_id(partner_id)
+        try:
+            cadet = self.list_of_cadets_in_event_active_only.object_with_id(partner_id)
+        except:
+            cadet = missing_data
+
         if cadet is missing_data:
-            raise Exception("Cadet partnet with ID %s not found" % partner_id)
+            return ''
 
         return cadet.name
 

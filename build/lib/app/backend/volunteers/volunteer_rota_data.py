@@ -32,18 +32,18 @@ class RotaSortsAndFilters:
 
 
 def get_explanation_of_sorts_and_filters(sorts_and_filters: RotaSortsAndFilters):
-    sort_by =""
+    explanation =""
     if sorts_and_filters.sort_by_volunteer_name is not arg_not_passed:
-        sort_by+="Sorting by volunteer name (%s). " % sorts_and_filters.sort_by_volunteer_name
+        explanation+="Sorting by: volunteer name (%s). " % sorts_and_filters.sort_by_volunteer_name
     if sorts_and_filters.sort_by_day is not arg_not_passed:
-        sort_by+="Sorting by day %s. " % sorts_and_filters.sort_by_day.name
+        explanation+="Sorting by: group / role on %s. " % sorts_and_filters.sort_by_day.name
     if sorts_and_filters.sort_by_location:
-        sort_by+="Sort by cadet location. "
+        explanation+="Sorting by: cadet location. "
 
-    sort_by+=print_dict_nicely("Availability filter", sorts_and_filters.availability_filter)
-    sort_by+=" "+explain_filter(sorts_and_filters.skills_filter, "Skills filter")
+    explanation+=print_dict_nicely("Availability filter", sorts_and_filters.availability_filter)
+    explanation+=". "+explain_filter(sorts_and_filters.skills_filter, "Skills filter")
 
-    return sort_by
+    return explanation
 
 from app.objects.utils import print_dict_nicely
 
@@ -282,8 +282,8 @@ def sort_volunteer_data_for_event_by_day_sort_order(
 
 
 def get_cadet_location_string(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage, volunteer_at_event: VolunteerAtEvent):
-    list_of_groups = REFACTOR_list_of_cadet_groups_associated_with_volunteer(data_to_be_stored=data_to_be_stored,
-                                                                             volunteer_at_event=volunteer_at_event)
+    list_of_groups = list_of_cadet_groups_associated_with_volunteer(data_to_be_stored=data_to_be_stored,
+                                                                    volunteer_at_event=volunteer_at_event)
     if len(list_of_groups)==0:
         return "x- no associated cadets -x" ## trick to get at end of sort
 
@@ -360,7 +360,7 @@ def sort_volunteer_data_for_event_by_location(list_of_volunteers_at_event: ListO
     return sorted_list_of_volunteers
 
 
-def REFACTOR_list_of_cadet_groups_associated_with_volunteer(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage, volunteer_at_event: VolunteerAtEvent) -> List[Group]:
+def list_of_cadet_groups_associated_with_volunteer(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage, volunteer_at_event: VolunteerAtEvent) -> List[Group]:
     list_of_cadet_ids = volunteer_at_event.list_of_associated_cadet_id
     list_of_groups = [data_to_be_stored.group_given_cadet_id(cadet_id) for cadet_id in list_of_cadet_ids]
     list_of_groups = [group for group in list_of_groups if group is not missing_data]

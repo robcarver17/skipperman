@@ -187,7 +187,7 @@ def get_buttons_for_days_at_event(event: Event, ready_to_swap: bool):
     if ready_to_swap:
         return event.weekdays_in_event_as_list_of_string()
     else:
-        return [Line(["Sort by", button_for_day(day)]) for day in event.weekdays_in_event()]
+        return [Line([ button_for_day(day), "(click to sort group/role)"]) for day in event.weekdays_in_event()]
 
 def button_for_day(day:Day) -> Button:
     return Button(day.name, value=button_value_for_day(day))

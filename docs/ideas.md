@@ -75,11 +75,11 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - cadet days warning
 - with skipper access only - grant qualification from ticksheet screen and log date when awarded
 - report of qualifications awarded by date
+- list of non volunteers with cadets who are too young or first event
 
 
 ### Required for cadet week:
 
-- list of non volunteers with cadet ages - ADD to warnings
 - two types of clothing event: as part of training event, or social only seperate
 - allocate and maintain colour groups (CW)
 - maintain and report on tickets for gala dinner, include additional gala dinner invites eg sponsors, plus ones (CW)

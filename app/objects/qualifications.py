@@ -1,4 +1,4 @@
-
+import datetime
 from dataclasses import dataclass
 from typing import List
 
@@ -68,6 +68,7 @@ class ListOfQualifications(GenericListOfObjectsWithIds):
 class CadetWithQualification(GenericSkipperManObject):
     cadet_id: str
     qualification_id: str
+    date: datetime.date
 
 class ListOfCadetsWithQualifications(GenericListOfObjectsWithIds):
     @property

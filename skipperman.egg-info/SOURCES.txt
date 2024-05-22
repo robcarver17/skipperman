@@ -310,6 +310,9 @@ app/logic/reporting/boats/forms.py
 app/logic/reporting/boats/processes.py
 app/logic/reporting/boats/report_boats.py
 app/logic/reporting/boats/../../../data_access/configuration/configuration.yaml
+app/logic/reporting/qualifications/__init__.py
+app/logic/reporting/qualifications/report_qualifications.py
+app/logic/reporting/qualifications/../../../data_access/configuration/configuration.yaml
 app/logic/reporting/rollcall_and_contacts/__init__.py
 app/logic/reporting/rollcall_and_contacts/forms.py
 app/logic/reporting/rollcall_and_contacts/processes.py

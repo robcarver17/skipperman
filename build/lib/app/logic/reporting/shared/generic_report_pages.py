@@ -21,7 +21,8 @@ from app.objects.abstract_objects.abstract_form import (
 )
 from app.objects.abstract_objects.abstract_text import bold, Heading
 from app.objects.abstract_objects.abstract_lines import  ListOfLines, _______________
-from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, CANCEL_BUTTON_LABEL, Button, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, CANCEL_BUTTON_LABEL, Button, ButtonBar, \
+    main_menu_button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.logic.events.events_in_state import get_event_from_state, update_state_for_specific_event_given_event_description
@@ -38,7 +39,7 @@ def display_initial_generic_report_form(interface: abstractInterface, report_gen
     )
     criteria_description  =describe_criteria(**event_criteria)
 
-    nav_bar = ButtonBar([back_button])
+    nav_bar = ButtonBar([main_menu_button, back_button])
 
     heading = Heading("Select event for %s %s:" % (report_generator.name, criteria_description), centred=True, size=4)
     lines_inside_form = ListOfLines(
@@ -95,7 +96,7 @@ def display_form_for_generic_report_all_options(
         arrangement_and_order_text,
     ) = get_text_explaining_various_options_for_generic_report(interface=interface, report_generator=report_generator)
 
-    navbar = ButtonBar([back_button, create_report_button])
+    navbar = ButtonBar([main_menu_button, back_button, create_report_button])
 
     link =weblink_for_report(interface=interface, report_generator=report_generator)
     return Form(
@@ -187,13 +188,12 @@ def display_form_for_generic_report_additional_options(
     return Form(
         ListOfLines(
             [
-                ButtonBar([back_button]),
+                ButtonBar([back_button, create_report_button, save_button]),
                 _______________,
                 Heading("%s: Select additional parameters for %s" % (report_generator.name, str(event)), centred=False, size=6),
                 _______________,
                 reporting_options_this_report,
                 _______________,
-                ButtonBar([create_report_button, save_button]),
 
             ]
         )
@@ -241,14 +241,13 @@ def display_form_for_generic_report_print_options(
     return Form(
         ListOfLines(
             [
-                ButtonBar([back_button,  save_button])
+                ButtonBar([back_button,  save_button, create_report_button])
                 ,
                 _______________])+
                 form_of_print_options+
         ListOfLines(
             [
                 _______________,
-                ButtonBar([ save_button, create_report_button]),
 
             ]
         )
@@ -297,10 +296,9 @@ def display_form_for_generic_report_arrangement_options(interface: abstractInter
     return Form(
         ListOfLines(
             [
-                ButtonBar([back_button]),
+                ButtonBar([back_button, create_report_button]),
                 Heading("%s: Arrange layout for %s" % (report_generator.name, str(event)), centred=False, size=6),
                 form_for_arrangement_options,
-                ButtonBar([create_report_button]),
                 _______________,
             ]
         )

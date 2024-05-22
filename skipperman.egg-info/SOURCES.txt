@@ -131,6 +131,7 @@ app/data_access/backups/../configuration/configuration.yaml
 app/data_access/classes/__init__.py
 app/data_access/classes/cadets.py
 app/data_access/classes/dinghies_at_events.py
+app/data_access/classes/food_and_clothing.py
 app/data_access/classes/list_of_events.py
 app/data_access/classes/mapped_wa_event.py
 app/data_access/classes/print_options.py
@@ -150,6 +151,7 @@ app/data_access/configuration/fixed.py
 app/data_access/csv/__init__.py
 app/data_access/csv/cadets.py
 app/data_access/csv/dinghies_at_events.py
+app/data_access/csv/food_and_clothing.py
 app/data_access/csv/generic_csv_data.py
 app/data_access/csv/list_of_events.py
 app/data_access/csv/mapped_wa_event.py
@@ -359,7 +361,9 @@ app/logic/volunteers/../../data_access/configuration/configuration.yaml
 app/objects/__init__.py
 app/objects/cadet_at_event.py
 app/objects/cadets.py
+app/objects/clothing.py
 app/objects/club_dinghies.py
+app/objects/committee.py
 app/objects/constants.py
 app/objects/day_selectors.py
 app/objects/dinghies.py

@@ -32,6 +32,9 @@ from app.objects.qualifications import ListOfCadetsWithQualifications
 from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent,ListOfTargetForRoleAtEvent
 from app.objects.volunteers import ListOfVolunteerSkills
 from app.objects.patrol_boats import ListOfPatrolBoats, ListOfVolunteersAtEventWithPatrolBoats
+from app.objects.committee import ListOfCadetsOnCommittee
+from app.objects.food import ListOfCadetsWithFoodRequirementsAtEvent, ListOfVolunteersWithFoodRequirementsAtEvent
+from app.objects.clothing import ListOfCadetsWithClothingAtEvent
 
 class DataLayer():
     def __init__(self, store: Store, underlying_data: GenericDataApi):
@@ -85,9 +88,6 @@ class DataLayer():
         data_access_for_list_of_cadet_volunteer_associations=get_data_access_for_list_of_cadet_volunteer_associations(self.data)
         self.store.write(list_of_associations, data_access_method=data_access_for_list_of_cadet_volunteer_associations)
 
-    def DEPRECATE_get_list_of_cadets_with_tick_list_items(self) -> ListOfCadetsWithTickListItems:
-        data_access_for_list_of_cadets_with_tick_list_items = DEPRECATE_get_data_access_for_list_of_cadets_with_tick_list_items(self.data)
-        return self.store.read(data_access_for_list_of_cadets_with_tick_list_items)
 
     def get_list_of_cadets_with_tick_list_items_for_cadet_id(self, cadet_id: str) -> ListOfCadetsWithTickListItems:
         data_access_for_list_of_cadets_with_tick_list_items = (
@@ -132,6 +132,16 @@ class DataLayer():
     def save_list_of_cadets(self, list_of_cadets:ListOfCadets):
         data_access_for_list_of_cadets = get_data_access_for_list_of_cadets(self.data)
         return self.store.write(list_of_cadets, data_access_method=data_access_for_list_of_cadets)
+
+    def get_list_of_cadets_on_committee(self)-> ListOfCadetsOnCommittee:
+        data_access_for_list_of_cadets_on_committee = get_data_access_for_list_of_cadets_on_committee(self.data)
+        return self.store.read(data_access_for_list_of_cadets_on_committee)
+
+    def save_list_of_cadets_on_committee(self, list_of_cadets_on_committee:ListOfCadetsOnCommittee):
+        data_access_for_list_of_cadets_on_committee = get_data_access_for_list_of_cadets_on_committee(self.data)
+        return self.store.write(list_of_cadets_on_committee, data_access_method=data_access_for_list_of_cadets_on_committee)
+
+
 
     def get_list_of_cadets_with_qualifications(self) -> ListOfCadetsWithQualifications:
         data_access_for_list_of_cadets_with_qualifications = get_data_access_for_list_of_cadets_with_qualifications(self.data)
@@ -293,6 +303,33 @@ class DataLayer():
             self.data, event_id=event.id)
         self.store.write(list_of_targets_for_role_at_event, data_access_method=data_access_for_list_of_targets_for_role_at_event)
 
+
+    def get_list_of_cadets_with_clothing_at_event(self, event: Event) -> ListOfCadetsWithClothingAtEvent:
+        data_access_for_cadets_with_clothing_at_event = get_data_access_for_cadets_with_clothing_at_event(self.data, event_id=event.id)
+        return self.store.read(data_access_for_cadets_with_clothing_at_event)
+
+    def save_list_of_cadets_with_clothing_at_event(self, list_of_cadets_with_clothing: ListOfCadetsWithClothingAtEvent, event: Event):
+        data_access_for_cadets_with_clothing_at_event = get_data_access_for_cadets_with_clothing_at_event(self.data, event_id=event.id)
+        self.store.write(list_of_cadets_with_clothing, data_access_method=data_access_for_cadets_with_clothing_at_event)
+
+
+    def get_list_of_cadets_with_food_at_event(self, event: Event) -> ListOfCadetsWithFoodRequirementsAtEvent:
+        data_access_for_cadets_with_food_at_event = get_data_access_for_cadets_with_food_at_event(self.data, event_id=event.id)
+        return self.store.read(data_access_for_cadets_with_food_at_event)
+
+    def save_list_of_cadets_with_food_at_event(self, list_of_cadets_with_food: ListOfCadetsWithFoodRequirementsAtEvent, event: Event):
+        data_access_for_cadets_with_food_at_event = get_data_access_for_cadets_with_food_at_event(self.data, event_id=event.id)
+        self.store.write(list_of_cadets_with_food, data_access_method=data_access_for_cadets_with_food_at_event)
+
+
+    def get_list_of_volunteers_with_food_at_event(self, event: Event) -> ListOfVolunteersWithFoodRequirementsAtEvent:
+        data_access_for_volunteers_with_food_at_event = get_data_access_for_volunteers_with_food_at_event(self.data, event_id=event.id)
+        return self.store.read(data_access_for_volunteers_with_food_at_event)
+
+    def save_list_of_volunteers_with_food_at_event(self, list_of_volunteers_with_food: ListOfVolunteersWithFoodRequirementsAtEvent, event: Event):
+        data_access_for_volunteers_with_food_at_event = get_data_access_for_volunteers_with_food_at_event(self.data, event_id=event.id)
+        self.store.write(list_of_volunteers_with_food, data_access_method=data_access_for_volunteers_with_food_at_event)
+
     def get_list_of_patrol_boats(self) -> ListOfPatrolBoats:
         data_access_for_list_of_patrol_boats=get_data_access_for_list_of_patrol_boats(self.data)
         return self.store.read(data_access_for_list_of_patrol_boats)
@@ -301,6 +338,10 @@ class DataLayer():
         data_access_for_list_of_patrol_boats=get_data_access_for_list_of_patrol_boats(self.data)
         self.store.write(list_of_patrol_boats, data_access_method=data_access_for_list_of_patrol_boats)
 
+
+
+
+    ### USERS
     def get_list_of_users(self) -> ListOfSkipperManUsers:
         data_access_for_list_of_users =get_data_access_for_list_of_users(self.data)
         return self.store.read(data_access_for_list_of_users)
@@ -321,12 +362,11 @@ def get_data_access_for_list_of_cadets(data: GenericDataApi) -> DataAccessMethod
             read_method=data.data_list_of_cadets.read,
             write_method=data.data_list_of_cadets.write)
 
+def get_data_access_for_list_of_cadets_on_committee(data: GenericDataApi) -> DataAccessMethod:
+    return  DataAccessMethod(key="list_of_cadets_on_committee",
+            read_method=data.data_list_of_cadets_on_committee.read,
+            write_method=data.data_list_of_cadets_on_committee.write)
 
-def DEPRECATE_get_data_access_for_list_of_cadets_with_tick_list_items(data: GenericDataApi) -> DataAccessMethod:
-    return  DataAccessMethod("list_of_cadets_with_tick_list_items",
-    data.data_list_of_cadets_with_tick_list_items.read,
-    data.data_list_of_cadets_with_tick_list_items.write
-    )
 
 
 def get_data_access_for_list_of_cadets_with_tick_list_items_for_cadet_id(data: GenericDataApi, cadet_id: str) -> DataAccessMethod:
@@ -396,6 +436,22 @@ def get_data_access_for_volunteers_at_event(data: GenericDataApi, event_id: str)
     read_method=data.data_list_of_volunteers_at_event.read,
     write_method=data.data_list_of_volunteers_at_event.write, event_id=event_id)
 
+
+def get_data_access_for_volunteers_with_food_at_event(data: GenericDataApi, event_id: str) -> DataAccessMethod:
+    return DataAccessMethod("volunteers_at_event_with_food",
+    read_method=data.data_list_of_volunteers_with_food_requirement_at_event.read,
+    write_method=data.data_list_of_volunteers_with_food_requirement_at_event.write, event_id=event_id)
+
+
+def get_data_access_for_cadets_with_food_at_event(data: GenericDataApi, event_id: str) -> DataAccessMethod:
+    return DataAccessMethod("cadets_at_event_with_food",
+    read_method=data.data_list_of_cadets_with_food_requirement_at_event.read,
+    write_method=data.data_list_of_cadets_with_food_requirement_at_event.write, event_id=event_id)
+
+def get_data_access_for_cadets_with_clothing_at_event(data: GenericDataApi, event_id: str) -> DataAccessMethod:
+    return DataAccessMethod("cadets_at_event_with_clothing",
+    read_method=data.data_list_of_cadets_with_clothing_at_event.read,
+    write_method=data.data_list_of_cadets_with_clothing_at_event.write, event_id=event_id)
 
 def get_data_access_for_wa_field_mapping_at_event(data: GenericDataApi, event_id: str) -> DataAccessMethod:
     return DataAccessMethod("wa_field_mapping_at_event",

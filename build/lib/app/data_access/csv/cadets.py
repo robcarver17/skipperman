@@ -1,12 +1,12 @@
 from app.data_access.csv.generic_csv_data import GenericCsvData
-from app.data_access.classes.cadets import DataListOfCadets, DataListOfCadetsWithGroups, DataListOfCadetsAtEvent, DataListOfIdentifiedCadetsAtEvent
+from app.data_access.classes.cadets import DataListOfCadets, DataListOfCadetsWithGroups, DataListOfCadetsAtEvent, DataListOfIdentifiedCadetsAtEvent, DataListOfCadetsOnCommitte
 from app.data_access.csv.resolve_csv_paths_and_filenames import IDENTIFIED_CADETS_AT_EVENT_ID, CADETS_AT_EVENT_ID, \
-    CADETS_WITH_GROUPS_ID, LIST_OF_CADETS_FILE_ID
+    CADETS_WITH_GROUPS_ID, LIST_OF_CADETS_FILE_ID, LIST_OF_CADETS_ON_COMMITTEE
 
 from app.objects.cadets import ListOfCadets
 from app.objects.groups import ListOfCadetIdsWithGroups
 from app.objects.cadet_at_event import ListOfCadetsAtEvent, ListOfIdentifiedCadetsAtEvent
-
+from app.objects.committee import ListOfCadetsOnCommittee
 
 class CsvDataListOfCadets(GenericCsvData, DataListOfCadets):
     def read(self) -> ListOfCadets:
@@ -17,6 +17,15 @@ class CsvDataListOfCadets(GenericCsvData, DataListOfCadets):
     def write(self, list_of_cadets: ListOfCadets):
         self.write_object(list_of_cadets, file_identifier=LIST_OF_CADETS_FILE_ID)
 
+
+class CsvDataListOfCadetsOnCommitte(GenericCsvData, DataListOfCadetsOnCommitte):
+    def read(self) -> ListOfCadetsOnCommittee:
+        list_of_cadets = self.read_and_return_object_of_type(ListOfCadetsOnCommittee, file_identifier=LIST_OF_CADETS_ON_COMMITTEE)
+
+        return list_of_cadets
+
+    def write(self, list_of_cadets: ListOfCadetsOnCommittee):
+        self.write_object(list_of_cadets, file_identifier=LIST_OF_CADETS_ON_COMMITTEE)
 
 
 

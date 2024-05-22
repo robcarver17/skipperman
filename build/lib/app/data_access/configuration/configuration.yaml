@@ -150,3 +150,10 @@ unallocated: "Unallocated"
 #
 #
 weblink_for_qualifications: "https://docs.google.com/spreadsheets/d/1a0ov-KN8zzG2mdFQCfLK-I6AD1tLihU-z_3tPF2vlV4/edit?usp=sharing"
+colour_groups:
+  - "Red"
+  - "Blue"
+  - "Gold"
+  - "Green"
+  - "Purple"
+  - "Silver"

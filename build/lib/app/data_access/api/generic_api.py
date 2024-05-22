@@ -11,11 +11,16 @@ from app.data_access.classes.resources import *
 from app.data_access.classes.dinghies_at_events import *
 from app.data_access.classes.users import *
 from app.data_access.classes.qualifications import *
+from app.data_access.classes.food_and_clothing import *
 
 class GenericDataApi(object):
     ## FOLLOWING SHOULD BE OVERWRITTEN BY SPECIFIC CLASSES
     @property
     def data_list_of_cadets(self) -> DataListOfCadets:
+        raise NotImplemented
+
+    @property
+    def data_list_of_cadets_on_committee(self) -> DataListOfCadetsOnCommitte:
         raise NotImplemented
 
     @property
@@ -137,6 +142,21 @@ class GenericDataApi(object):
     @property
     def data_list_of_targets_for_role_at_event(self) -> DataListOfTargetForRoleAtEvent:
         raise  NotImplemented
+
+    @property
+    def data_list_of_cadets_with_food_requirement_at_event(self) -> DataListOfCadetsWithFoodRequirementsAtEvent:
+        raise NotImplemented
+
+    @property
+    def data_list_of_volunteers_with_food_requirement_at_event(self) -> DataListOfVolunteersWithFoodRequirementsAtEvent:
+        raise NotImplemented
+
+    @property
+    def data_list_of_cadets_with_clothing_at_event(self) -> DataListOfCadetsWithClothingAtEvent:
+        raise NotImplemented
+
+
+    ## Specials
 
     def delete_all_master_data(self, are_you_sure: bool =False):
         pass

@@ -97,3 +97,5 @@ def DEPRECATE_get_volunteer_roles():
     return volunteer_roles
 
 VOLUNTEER_ROLES = DEPRECATE_get_volunteer_roles()
+
+COLOUR_GROUPS = configuration["colour_groups"]

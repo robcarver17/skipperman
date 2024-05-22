@@ -71,7 +71,10 @@ def file_from_generic(generic_name_of_file_required):
 
 IDENTIFIED_CADETS_AT_EVENT_ID= "identified_cadets_at_event"
 CADETS_AT_EVENT_ID= "cadets_at_event"
+LIST_OF_CADETS_ON_COMMITTEE = "cadets_on_committee"
+
 CADETS_WITH_GROUPS_ID= "cadets_with_groups_for_event"
+
 LIST_OF_CADETS_FILE_ID = "cadet_master_list"
 EVENT_FILE_IDENTIFIER = "list_of_events"
 MAPPED_WA_EVENT_FILE_ID = "mapped_wa_event"
@@ -95,9 +98,10 @@ LIST_OF_QUALIFICATIONS = "list_of_qualifications"
 LIST_OF_CADETS_WITH_QUALIFICATIONS = "list_of_cadets_with_qualifications"
 LIST_OF_TICK_SUBSTAGES = "list_of_tick_sub_stages"
 LIST_OF_TICK_SHEET_ITEMS = "list_of_tick_sheet_items"
-DEPRECATE_LIST_OF_CADETS_WITH_TICK_LIST_ITEMS = "list_of_cadets_with_tick_list_items"
 LIST_OF_CADETS_WITH_TICK_LIST_ITEMS_FOR_EACH_CADET = "list_of_cadets_with_tick_list_items_for_cadet"
-
+LIST_OF_CADETS_WITH_CLOTHING_AT_EVENT = "list_of_cadets_with_clothing_at_event"
+LIST_OF_CADETS_WITH_FOOD_AT_EVENT = "list_of_cadets_with_food_at_event"
+LIST_OF_VOLUNTEERS_WITH_FOOD_AT_EVENT = "list_of_volunteers_with_food_at_event"
 
 EVENT_MAPPING_FILE_ID = "wa_event_mapping"
 FIELD_MAPPING_FILE_ID = "wa_field_mapping"
@@ -110,6 +114,7 @@ USERLIST_FILE_ID = "userlist"
 
 _dict_of_filenames_and_paths = {
     LIST_OF_CADETS_FILE_ID:("lists", "list_of_cadets.csv"),
+    LIST_OF_CADETS_ON_COMMITTEE: ("lists", "list_of_cadets_on_committee.csv"),
     EVENT_FILE_IDENTIFIER:("lists", "list_of_events.csv"),
 EVENT_MAPPING_FILE_ID:("mapped_events", "wa_event_mapping.csv"),
     FIELD_MAPPING_FILE_ID:("event_field_mapping", "wa_field_mapping_for_event_%s.csv"),
@@ -146,6 +151,10 @@ LIST_OF_QUALIFICATIONS: ("lists", "list_of_qualifications.csv"),
 LIST_OF_CADETS_WITH_QUALIFICATIONS: ("lists", "lists_of_cadets_with_qualifications.csv"),
 LIST_OF_TICK_SUBSTAGES: ("lists", "list_of_tick_substages.csv"),
 LIST_OF_TICK_SHEET_ITEMS:("lists", "list_of_tick_sheet_items.csv"),
-DEPRECATE_LIST_OF_CADETS_WITH_TICK_LIST_ITEMS: ("lists", "list_of_cadets_with_tick_list_items.csv"),
 LIST_OF_CADETS_WITH_TICK_LIST_ITEMS_FOR_EACH_CADET: ("ticksheets", "tick_list_items_for_cadet_%s.csv"),
+LIST_OF_CADETS_WITH_CLOTHING_AT_EVENT: ("mapped_event", "list_of_cadets_with_clothing_at_event_%s"),
+LIST_OF_CADETS_WITH_FOOD_AT_EVENT: ("mapped_event", "list_of_cadets_with_food_at_event_%s"),
+LIST_OF_VOLUNTEERS_WITH_FOOD_AT_EVENT: ("mapped_event", "list_of_volunteers_with_food_at_event_%s"),
+
+
 USERLIST_FILE_ID: ("secure", "userlist.csv")}

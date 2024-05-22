@@ -2,6 +2,7 @@
 from dataclasses import dataclass
 from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
 
+OTHER_IN_FOOD_REQUIRED = "other"
 @dataclass
 class FoodRequirements(GenericSkipperManObject):
     other: str = ""

@@ -2,10 +2,14 @@ import datetime
 from dataclasses import dataclass
 from typing import List
 
+from app.objects.cadets import ListOfCadets
+
 from app.objects.utils import in_x_not_in_y
 
 from app.objects.constants import missing_data, arg_not_passed
-from app.objects.generic import GenericSkipperManObjectWithIds, GenericSkipperManObject, GenericListOfObjectsWithIds
+from app.objects.generic import GenericSkipperManObjectWithIds, GenericSkipperManObject, GenericListOfObjectsWithIds, \
+    GenericListOfObjects
+
 
 @dataclass
 class Qualification(GenericSkipperManObjectWithIds):
@@ -101,3 +105,32 @@ class ListOfCadetsWithQualifications(GenericListOfObjectsWithIds):
         matching = [item.qualification_id for item in self if item.cadet_id ==cadet_id]
         return matching
 
+
+
+@dataclass
+class NamedCadetWithQualification(GenericSkipperManObject):
+    cadet_name: str
+    qualification_name: str
+    date: datetime.date
+
+class ListOfNamedCadetsWithQualifications(GenericListOfObjects):
+    @property
+    def _object_class_contained(self):
+        return NamedCadetWithQualification
+
+    def sort_by_date(self):
+        return ListOfNamedCadetsWithQualifications(sorted(self, key = lambda object: object.date, reverse=True))
+
+    @classmethod
+    def from_id_lists(cls, list_of_qualifications: ListOfQualifications, list_of_cadets: ListOfCadets, list_of_cadets_with_qualifications: ListOfCadetsWithQualifications,
+                      ):
+
+        return ListOfNamedCadetsWithQualifications([
+            NamedCadetWithQualification(
+                cadet_name=list_of_cadets.cadet_with_id(cadet_id=cadet_with_qualification.cadet_id).name,
+                qualification_name=list_of_qualifications.name_given_id(cadet_with_qualification.qualification_id),
+                date=cadet_with_qualification.date
+            )
+
+            for cadet_with_qualification in list_of_cadets_with_qualifications
+        ])

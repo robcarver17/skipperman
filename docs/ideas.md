@@ -72,30 +72,14 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - allow multiple days / different allocations to boats, groups etc
 - cadet location warning
 - auto completes club boat
+- cadet days warning
+- with skipper access only - grant qualification from ticksheet screen and log date when awarded
+- report of qualifications awarded by date
 
-### Required for training events:
-
-
-MISC:
-- go through all cadets and backfill qualifications
-
-
-DATA_MODEL:
-- go through all code and apply data model - VOLUNTEER ROTA, PATROL BOAT, REPORTS
-- removing volunteer / availability should also remove related information
-
-- Button on volunteer rota to perform checks
-- volunteer rota sort by group/ check filtering works
-
-REPORTS
-
-- spotter sheet has cancelled cadet partners on
 
 ### Required for cadet week:
 
-- with skipper access only - grant qualification from ticksheet screen and log date when awarded
-- report of qualifications awarded by date
-- list of non volunteers with cadet ages
+- list of non volunteers with cadet ages - ADD to warnings
 - two types of clothing event: as part of training event, or social only seperate
 - allocate and maintain colour groups (CW)
 - maintain and report on tickets for gala dinner, include additional gala dinner invites eg sponsors, plus ones (CW)

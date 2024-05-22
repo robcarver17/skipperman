@@ -2,7 +2,7 @@ from typing import Tuple, Union
 
 from app.backend.forms.swaps import is_ready_to_swap, SwapButtonState, store_swap_state, get_swap_state
 from app.backend.volunteers.volunteer_rota import swap_roles_for_volunteers_in_allocation, \
-    swap_and_groups_for_volunteers_in_allocation
+    swap_roles_and_groups_for_volunteers_in_allocation
 from app.data_access.configuration.fixed import SWAP_SHORTHAND1, SWAP_SHORTHAND2
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_rota.volunteer_table_buttons import generic_button_value_for_volunteer_id_and_day, \
@@ -101,12 +101,12 @@ def update_if_swap_button_pressed_and_ready_to_swap(interface: abstractInterface
     if day_to_swap_with==original_day and volunteer_id_to_swap_with==original_volunteer_id:
         pass
     else:
-        swap_and_groups_for_volunteers_in_allocation(interface=interface,
-                                                     original_day=original_day,
-                                                event=event,
-                                                day_to_swap_with=day_to_swap_with,
-                                                volunteer_id_to_swap_with=volunteer_id_to_swap_with,
-                                                original_volunteer_id=original_volunteer_id)
+        swap_roles_and_groups_for_volunteers_in_allocation(interface=interface,
+                                                           original_day=original_day,
+                                                           event=event,
+                                                           day_to_swap_with=day_to_swap_with,
+                                                           volunteer_id_to_swap_with=volunteer_id_to_swap_with,
+                                                           original_volunteer_id=original_volunteer_id)
 
 
     revert_to_not_swapping_state(interface)

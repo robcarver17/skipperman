@@ -12,7 +12,7 @@ from app.logic.events.patrol_boats.elements_in_patrol_boat_table import \
 from app.logic.events.patrol_boats.patrol_boat_dropdowns import get_add_boat_dropdown, \
     get_allocation_dropdown_to_add_volunteer_for_day_and_boat
 from app.logic.events.patrol_boats.patrol_boat_buttons import delete_button_for_boat, DELETE_BOAT_BUTTON_LABEL
-from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, BACK_BUTTON_LABEL
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, CANCEL_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_form import Link
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, DetailListOfLines, _______________
@@ -24,6 +24,39 @@ from app.objects.patrol_boats import PatrolBoat
 
 
 SAVE_CHANGES_BUTTON_LABEL = "Save changes"
+
+def get_top_material_for_patrol_boat_form(interface: abstractInterface, event: Event) -> ListOfLines:
+    summary_of_boat_allocations =  get_summary_list_of_boat_allocations_for_events(interface=interface, event=event)
+    if len(summary_of_boat_allocations)==0:
+        summary_of_boat_allocations=""
+    else:
+        summary_of_boat_allocations = DetailListOfLines(
+            ListOfLines([summary_of_boat_allocations]), name='Summary'
+        )
+    patrol_boat_driver_and_crew_qualifications_table = (
+        get_patrol_boat_driver_and_crew_qualifications_table(interface=interface, event=event))
+    if len(patrol_boat_driver_and_crew_qualifications_table)==0:
+        patrol_boat_driver_and_crew_qualifications_table = ''
+    else:
+        patrol_boat_driver_and_crew_qualifications_table = DetailListOfLines(ListOfLines([
+            instructions_qual_table,
+            patrol_boat_driver_and_crew_qualifications_table
+        ]), name = "Qualifications")
+
+    return  ListOfLines(
+            [
+                _______________,
+                _______________,
+                summary_of_boat_allocations,
+                _______________,
+                _______________,
+                patrol_boat_driver_and_crew_qualifications_table,
+                _______________,
+                _______________,
+                instructions_text,
+             ]
+        )
+
 
 def get_patrol_boat_driver_and_crew_qualifications_table(interface: abstractInterface, event: Event) -> Table:
     volunteer_ids = get_unique_list_of_volunteer_ids_for_skills_checkboxes(event=event, interface=interface)
@@ -148,38 +181,6 @@ def get_allocation_inputs_for_day_and_boat( interface:abstractInterface,
     return ListOfLines(existing_elements+[add_volunteer_dropdown])
 
 
-def get_top_material_for_patrol_boat_form(interface: abstractInterface, event: Event) -> ListOfLines:
-    summary_of_boat_allocations =  get_summary_list_of_boat_allocations_for_events(interface=interface, event=event)
-    if len(summary_of_boat_allocations)==0:
-        summary_of_boat_allocations=""
-    else:
-        summary_of_boat_allocations = DetailListOfLines(
-            ListOfLines([summary_of_boat_allocations]), name='Summary'
-        )
-    patrol_boat_driver_and_crew_qualifications_table = (
-        get_patrol_boat_driver_and_crew_qualifications_table(interface=interface, event=event))
-    if len(patrol_boat_driver_and_crew_qualifications_table)==0:
-        patrol_boat_driver_and_crew_qualifications_table = ''
-    else:
-        patrol_boat_driver_and_crew_qualifications_table = DetailListOfLines(ListOfLines([
-            instructions_qual_table,
-            patrol_boat_driver_and_crew_qualifications_table
-        ]), name = "Qualifications")
-
-    return  ListOfLines(
-            [
-                _______________,
-                _______________,
-                summary_of_boat_allocations,
-                _______________,
-                _______________,
-                patrol_boat_driver_and_crew_qualifications_table,
-                _______________,
-                _______________,
-                instructions_text,
-             ]
-        )
-
 
 def get_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonBar:
     in_swap_state = is_ready_to_swap(interface)
@@ -195,7 +196,7 @@ def get_back_button_for_boat_allocation(interface: abstractInterface):
     if in_swap_state:
         return ""
     else:
-        return Button(BACK_BUTTON_LABEL, nav_button=True)
+        return Button(CANCEL_BUTTON_LABEL, nav_button=True)
 
 
 link = Link(url=

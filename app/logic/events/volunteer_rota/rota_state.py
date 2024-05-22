@@ -92,67 +92,6 @@ def get_sort_by_day_from_state(interface: abstractInterface) -> Union[str, Day, 
 
     return sort_by_day_or_location
 
-
-### State of cadet
-CADET_ID_IN_ROTA_AT_EVENT = "cadet_id_rota_at_event"
-
-
-def get_and_save_next_cadet_id_in_event_data(interface: abstractInterface) -> str:
-    current_id = get_current_cadet_id_for_rota_at_event(interface)
-    if current_id is missing_data:
-        new_id = get_first_cadet_id_for_rota_in_event_data(interface)
-    else:
-        new_id = get_next_cadet_id_for_rota_in_event_data(
-            interface=interface, current_id=current_id
-        )
-    save_cadet_id_for_rota_at_event(interface=interface, cadet_id=new_id)
-
-    return new_id
-
-
-def get_first_cadet_id_for_rota_in_event_data(interface: abstractInterface) -> str:
-    list_of_ids = list_of_cadet_ids_at_event_including_cancelled_and_deleted(interface)
-    id = list_of_ids[0]
-
-    print("Getting first ID %s from list %s " % (id, list_of_ids))
-
-    return id
-
-
-def get_next_cadet_id_for_rota_in_event_data(
-    interface: abstractInterface, current_id: str
-) -> str:
-    list_of_ids = list_of_cadet_ids_at_event_including_cancelled_and_deleted(interface)
-    current_index = list_of_ids.index(current_id)
-    new_index = current_index+1
-
-    try:
-        new_id = list_of_ids[new_index]
-    except:
-        raise NoMoreData
-
-    return new_id
-
-
-def list_of_cadet_ids_at_event_including_cancelled_and_deleted(interface:abstractInterface) -> list:
-    event = get_event_from_state(interface)
-    cadets_at_event_data = CadetsAtEventData(interface.data)
-    cadet_ids_at_event = cadets_at_event_data.list_of_cadet_ids_at_event_including_cancelled_and_deleted(event)
-
-    return cadet_ids_at_event
-
-def get_current_cadet_id_for_rota_at_event(interface: abstractInterface) -> str:
-    cadet_id = interface.get_persistent_value(CADET_ID_IN_ROTA_AT_EVENT, default=missing_data)
-
-    return cadet_id
-
-def save_cadet_id_for_rota_at_event(interface: abstractInterface, cadet_id: str):
-    interface.set_persistent_value(CADET_ID_IN_ROTA_AT_EVENT, cadet_id)
-
-def clear_cadet_id_for_rota_at_event(interface: abstractInterface):
-    interface.clear_persistent_value(CADET_ID_IN_ROTA_AT_EVENT)
-
-
 def clear_all_filters(interface: abstractInterface):
     interface.clear_persistent_value(SKILLS_FILTER)
     interface.clear_persistent_value(AVAILABILTY_FILTER)

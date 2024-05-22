@@ -63,12 +63,12 @@ class VolunteerRotaData():
             volunteer_in_role_at_event=volunteer_in_role_at_event_on_day)
         self.save_list_of_volunteers_in_roles_at_event(list_of_volunteers_in_role_at_event=list_of_volunteers_in_roles_at_event, event=event)
 
-    def swap_and_groups_for_volunteers_in_allocation(self,
-                                                     event: Event,
-                                                     original_day: Day,
-                                                     original_volunteer_id: str,
-                                                     day_to_swap_with: Day,
-                                                     volunteer_id_to_swap_with: str):
+    def swap_roles_and_groups_for_volunteers_in_allocation(self,
+                                                           event: Event,
+                                                           original_day: Day,
+                                                           original_volunteer_id: str,
+                                                           day_to_swap_with: Day,
+                                                           volunteer_id_to_swap_with: str):
 
         volunteers_in_role_at_event = self.get_list_of_volunteers_in_roles_at_event(event)
         volunteers_in_role_at_event.swap_roles_and_groups_for_volunteers_in_allocation(

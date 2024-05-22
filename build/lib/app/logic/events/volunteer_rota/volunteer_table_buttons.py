@@ -4,10 +4,10 @@ from app.objects.abstract_objects.abstract_lines import Line
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.volunteers.volunteer_rota import DEPRECATED_load_list_of_volunteers_at_event, load_list_of_volunteers_at_event
+from app.backend.volunteers.volunteer_rota import  load_list_of_volunteers_at_event
 from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingVolunteerRotaPage, \
     get_cadet_location_string, str_dict_skills
-from app.backend.volunteers.volunteers import DEPRECATED_get_volunteer_from_id, get_volunteer_from_id
+from app.backend.volunteers.volunteers import  get_volunteer_from_id
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -46,14 +46,14 @@ def skills_button_name_from_volunteer_id(volunteer_id: str) -> str:
     return "SKILL_%s" % volunteer_id
 
 
-def list_of_all_location_button_names(event: Event):
-    list_of_volunteers_at_event = DEPRECATED_load_list_of_volunteers_at_event(event)
+def list_of_all_location_button_names(interface: abstractInterface, event: Event):
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(interface=interface, event=event)
     return [location_button_name_from_volunteer_id(volunteer_at_event.volunteer_id)
             for volunteer_at_event in list_of_volunteers_at_event]
 
 
-def list_of_all_skills_buttons(event: Event):
-    list_of_volunteers_at_event = DEPRECATED_load_list_of_volunteers_at_event(event)
+def list_of_all_skills_buttons(interface: abstractInterface,event: Event):
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(interface=interface, event=event)
     return [skills_button_name_from_volunteer_id(volunteer_at_event.volunteer_id)
             for volunteer_at_event in list_of_volunteers_at_event]
 
@@ -145,31 +145,31 @@ def from_generic_button_to_volunteer_id_and_day(button_text: str) -> Tuple[str,s
     return button_type, id, Day[day_name]
 
 
-def get_list_of_make_available_button_values(event: Event) -> list:
+def get_list_of_make_available_button_values(interface: abstractInterface, event: Event) -> list:
     ## Strictly speaking this will include buttons that aren't visible, but quicker and easier trhan checking
-    return get_list_of_generic_button_values_across_days_and_volunteers(event=event,
+    return get_list_of_generic_button_values_across_days_and_volunteers(interface=interface, event=event,
                                                                         value_function=make_available_button_value_for_volunteer_on_day)
 
 
 
-def get_list_of_copy_buttons(event: Event):
-    return get_list_of_generic_button_values_across_days_and_volunteers(event=event,
+def get_list_of_copy_buttons(interface: abstractInterface, event: Event):
+    return get_list_of_generic_button_values_across_days_and_volunteers(interface=interface, event=event,
                                                                         value_function=copy_button_value_for_volunteer_id_and_day)
 
 
 
-def get_list_of_remove_role_buttons(event: Event):
-    return get_list_of_generic_button_values_across_days_and_volunteers(event=event,
+def get_list_of_remove_role_buttons(interface: abstractInterface, event: Event):
+    return get_list_of_generic_button_values_across_days_and_volunteers(interface=interface, event=event,
                                                                         value_function=remove_role_button_value_for_volunteer_id_and_day)
 
-def get_list_of_make_unavailable_buttons(event: Event):
-    return get_list_of_generic_button_values_across_days_and_volunteers(event=event,
+def get_list_of_make_unavailable_buttons(interface: abstractInterface, event: Event):
+    return get_list_of_generic_button_values_across_days_and_volunteers(interface=interface, event=event,
                                                                         value_function=unavailable_button_value_for_volunteer_id_and_day)
 
 
-def get_list_of_generic_button_values_across_days_and_volunteers(event: Event, value_function: Callable) -> list:
+def get_list_of_generic_button_values_across_days_and_volunteers(interface: abstractInterface, event: Event, value_function: Callable) -> list:
     ## Strictly speaking this will include buttons that aren't visible, but quicker and easier trhan checking
-    list_of_volunteers_at_event = DEPRECATED_load_list_of_volunteers_at_event(event)
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(interface=interface, event=event)
     list_of_volunteer_ids = list_of_volunteers_at_event.list_of_volunteer_ids
     list_of_days = event.weekdays_in_event()
 

@@ -153,16 +153,13 @@ def boat_related_skill_for_volunteer(interface: abstractInterface, volunteer_id:
     volunteer_data = VolunteerData(interface.data)
     return volunteer_data.boat_related_skill_for_volunteer(volunteer_id)
 
-def DEPRECATEadd_boat_related_skill_for_volunteer(interface: abstractInterface, volunteer_id: str):
+def add_boat_related_skill_for_volunteer(interface: abstractInterface, volunteer_id: str):
     volunteer_data = VolunteerData(interface.data)
-    skills =DEPRECATE_load_list_of_volunteer_skills()
-    skills.add_boat_related_skill_for_volunteer(volunteer_id)
-    DEPRECATE_save_list_of_volunteer_skills(skills)
+    volunteer_data.add_boat_related_skill_for_volunteer(volunteer_id)
 
-def DEPRECATE_remove_boat_related_skill_for_volunteer(interface: abstractInterface, volunteer_id: str):
-    skills =DEPRECATE_load_list_of_volunteer_skills()
-    skills.remove_boat_related_skill_for_volunteer(volunteer_id)
-    DEPRECATE_save_list_of_volunteer_skills(skills)
+def remove_boat_related_skill_for_volunteer(interface: abstractInterface, volunteer_id: str):
+    volunteer_data = VolunteerData(interface.data)
+    volunteer_data.remove_boat_related_skill_for_volunteer(volunteer_id)
 
 
 def add_new_verified_volunteer(interface: abstractInterface, volunteer: Volunteer):

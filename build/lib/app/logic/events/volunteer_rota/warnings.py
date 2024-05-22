@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.objects.day_selectors import NO_DAYS_SELECTED, EMPTY_DAY_SELECTOR
+from app.objects.day_selectors import EMPTY_DAY_SELECTOR
 
 from app.backend.cadets import cadet_from_id
 from app.backend.data.cadets_at_event import CadetsAtEventData

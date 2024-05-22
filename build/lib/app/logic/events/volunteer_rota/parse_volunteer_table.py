@@ -78,14 +78,14 @@ def get_all_day_sort_buttons(interface:abstractInterface):
 
 def get_all_location_buttons(interface: abstractInterface):
     event =get_event_from_state(interface)
-    all_location_buttons =list_of_all_location_button_names(event)
+    all_location_buttons =list_of_all_location_button_names(interface=interface, event=event)
 
     return all_location_buttons
 
 
 def get_all_skill_buttons(interface: abstractInterface):
     event =get_event_from_state(interface)
-    all_skill_buttons = list_of_all_skills_buttons(event=event)
+    all_skill_buttons = list_of_all_skills_buttons(interface=interface, event=event)
 
     return all_skill_buttons
 
@@ -93,25 +93,25 @@ def get_all_skill_buttons(interface: abstractInterface):
 
 def get_all_make_available_buttons(interface: abstractInterface):
     event =get_event_from_state(interface)
-    all_buttons = get_list_of_make_available_button_values(event)
+    all_buttons = get_list_of_make_available_button_values(interface=interface, event=event)
 
     return all_buttons
 
 def get_all_copy_buttons(interface: abstractInterface):
     event = get_event_from_state(interface)
-    return get_list_of_copy_buttons(event)
+    return get_list_of_copy_buttons(interface=interface, event=event)
 
 def get_all_swap_buttons(interface: abstractInterface):
     event = get_event_from_state(interface)
-    return get_list_of_swap_buttons(event)
+    return get_list_of_swap_buttons(interface=interface, event=event)
 
 def get_all_remove_role_buttons(interface: abstractInterface):
     event = get_event_from_state(interface)
-    return get_list_of_remove_role_buttons(event)
+    return get_list_of_remove_role_buttons(interface=interface, event=event)
 
 def get_all_make_unavailable_buttons(interface: abstractInterface):
     event = get_event_from_state(interface)
-    return get_list_of_make_unavailable_buttons(event)
+    return get_list_of_make_unavailable_buttons(interface=interface, event=event)
 
 
 def action_if_location_button_pressed(interface: abstractInterface, location_button: str) -> NewForm:
@@ -187,6 +187,7 @@ def get_filtered_list_of_volunteers_at_event(interface: abstractInterface) -> Li
     data_to_be_stored = get_data_to_be_stored_for_volunteer_rota_page(interface=interface, event=event)
     sorts_and_filters = get_sorts_and_filters_from_state(interface)
     list_of_volunteers_at_event = get_sorted_and_filtered_list_of_volunteers_at_event(
+        interface=interface,
         data_to_be_stored=data_to_be_stored,
         sorts_and_filters=sorts_and_filters
     )

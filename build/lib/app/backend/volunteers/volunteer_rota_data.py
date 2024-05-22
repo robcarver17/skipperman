@@ -306,12 +306,14 @@ def str_dict_skills(volunteer: Volunteer, data_to_be_stored: DataToBeStoredWhils
 
 
 def get_sorted_and_filtered_list_of_volunteers_at_event(
+        interface: abstractInterface,
         data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
         sorts_and_filters: RotaSortsAndFilters,
     ) -> ListOfVolunteersAtEvent:
 
     list_of_volunteers_at_event = data_to_be_stored.filtered_list_of_volunteers_at_event(sorts_and_filters)
     sorted_list_of_volunteers_at_event = sort_list_of_volunteers_at_event(
+        interface=interface,
         list_of_volunteers_at_event=list_of_volunteers_at_event,
         data_to_be_stored=data_to_be_stored,
         sorts_and_filters=sorts_and_filters
@@ -320,7 +322,8 @@ def get_sorted_and_filtered_list_of_volunteers_at_event(
     return sorted_list_of_volunteers_at_event
 
 
-def sort_list_of_volunteers_at_event(list_of_volunteers_at_event: ListOfVolunteersAtEvent,
+def sort_list_of_volunteers_at_event(interface: abstractInterface,
+        list_of_volunteers_at_event: ListOfVolunteersAtEvent,
                                      data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
                                      sorts_and_filters: RotaSortsAndFilters)-> ListOfVolunteersAtEvent:
 
@@ -334,7 +337,8 @@ def sort_list_of_volunteers_at_event(list_of_volunteers_at_event: ListOfVoluntee
     sort_by_volunteer_name = sorts_and_filters.sort_by_volunteer_name
     if sort_by_volunteer_name is not arg_not_passed:
         return sort_volunteer_data_for_event_by_name_sort_order(
-            list_of_volunteers_at_event, sort_order=sort_by_volunteer_name)
+            interface=interface, volunteers_at_event=list_of_volunteers_at_event,
+             sort_order=sort_by_volunteer_name)
 
     sort_by_day = sorts_and_filters.sort_by_day
     if sort_by_day is not arg_not_passed:

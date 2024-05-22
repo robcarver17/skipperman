@@ -11,8 +11,8 @@ from app.backend.volunteers.patrol_boats import add_named_boat_to_event_with_no_
     add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts
 from app.backend.volunteers.volunteer_rota import update_role_at_event_for_volunteer_on_day_at_event, \
     get_volunteer_role_at_event_on_day, copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days
-from app.backend.volunteers.volunteers import DEPRECATEadd_boat_related_skill_for_volunteer, \
-    DEPRECATE_remove_boat_related_skill_for_volunteer, boat_related_skill_for_volunteer, get_volunteer_name_from_id
+from app.backend.volunteers.volunteers import add_boat_related_skill_for_volunteer, \
+    remove_boat_related_skill_for_volunteer, boat_related_skill_for_volunteer, get_volunteer_name_from_id
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.patrol_boats.elements_in_patrol_boat_table import  \
      get_unique_list_of_volunteer_ids_for_skills_checkboxes, \
@@ -142,9 +142,9 @@ def update_skills_checkbox_for_specific_volunteer_id(interface: abstractInterfac
         return
 
     if is_ticked:
-        DEPRECATEadd_boat_related_skill_for_volunteer(interface=interface, volunteer_id=volunteer_id)
+        add_boat_related_skill_for_volunteer(interface=interface, volunteer_id=volunteer_id)
     else:
-        DEPRECATE_remove_boat_related_skill_for_volunteer(interface=interface, volunteer_id=volunteer_id)
+        remove_boat_related_skill_for_volunteer(interface=interface, volunteer_id=volunteer_id)
 
 
 def update_role_dropdowns(interface: abstractInterface):

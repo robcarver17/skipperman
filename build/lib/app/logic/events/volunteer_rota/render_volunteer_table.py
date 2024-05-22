@@ -72,6 +72,7 @@ def get_body_of_table_at_event(event: Event,
     data_to_be_stored = get_data_to_be_stored_for_volunteer_rota_page(interface=interface, event=event)
 
     list_of_volunteers_at_event = get_sorted_and_filtered_list_of_volunteers_at_event(
+        interface=interface,
         data_to_be_stored=data_to_be_stored,
         sorts_and_filters=sorts_and_filters
     )
@@ -233,7 +234,6 @@ def get_role_and_group_allocation_inputs_for_day_and_volunteer_in_role_when_avai
 
     role_already_set = not volunteer_in_role_at_event_on_day.no_role_set
     group_required_given_role = volunteer_in_role_at_event_on_day.requires_group
-
 
     all_elements = [role_input] ## always have this
 

@@ -7,8 +7,7 @@ from app.backend.data.cadets_at_event import \
     list_of_row_ids_at_event_given_cadet_id, CadetsAtEventData
 from app.backend.data.volunteer_allocation import VolunteerAllocationData
 from app.backend.data.volunteers import DEPRECATE_load_all_volunteers,    VolunteerData,  SORT_BY_FIRSTNAME
-from app.backend.volunteers.volunteer_rota import DEPRECATED_load_list_of_identified_volunteers_at_event, \
-    load_list_of_identified_volunteers_at_event, DEPRECATED_load_list_of_volunteers_at_event, \
+from app.backend.volunteers.volunteer_rota import     load_list_of_identified_volunteers_at_event, DEPRECATED_load_list_of_volunteers_at_event, \
     DEPRECATE_get_volunteer_at_event, get_volunteer_at_event, delete_role_at_event_for_volunteer_on_day
 
 from app.backend.cadets import DEPRECATED_cadet_name_from_id, cadet_name_from_id
@@ -35,11 +34,6 @@ def add_identified_volunteer(interface: abstractInterface,
     volunteer_allocation_data = VolunteerAllocationData(interface.data)
     volunteer_allocation_data.add_identified_volunteer(row_id=row_id, volunteer_index=volunteer_index, volunteer_id=volunteer_id, event=event)
 
-def DEPRECATE_list_of_identified_volunteers_with_volunteer_id(volunteer_id:str,
-                                                              event: Event) -> ListOfIdentifiedVolunteersAtEvent:
-
-    list_of_volunteers = DEPRECATED_load_list_of_identified_volunteers_at_event(event)
-    return list_of_volunteers.list_of_identified_volunteers_with_volunteer_id(volunteer_id)
 
 def list_of_identified_volunteers_with_volunteer_id(interface: abstractInterface,
                                                     volunteer_id:str,

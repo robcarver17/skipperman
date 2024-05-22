@@ -193,6 +193,7 @@ class AllocationData:
             cadet = missing_data
 
         if cadet is missing_data:
+            ## partner cadet has vanished
             return ''
 
         return cadet.name

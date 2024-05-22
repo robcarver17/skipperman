@@ -4,7 +4,7 @@ from typing import List
 from app.backend.data.group_allocations import GroupAllocationsData
 from app.backend.data.volunteer_allocation import VolunteerAllocationData
 
-from app.backend.volunteers.volunteers import get_volunteer_name_from_id
+from app.backend.volunteers.volunteers import get_volunteer_name_from_id, get_sorted_list_of_volunteers
 from app.data_access.data import DEPRECATED_data
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -12,9 +12,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.backend.data.volunteer_rota import VolunteerRotaData, \
     get_volunteer_roles
 from app.backend.data.patrol_boats import PatrolBoatsData
-from app.data_access.configuration.configuration import VOLUNTEER_ROLES
 
-from app.backend.data.volunteers import DEPRECATED_get_sorted_list_of_volunteers
 from app.objects.constants import missing_data
 from app.objects.events import Event
 from app.objects.groups import Group, ALL_GROUPS_NAMES, GROUP_UNALLOCATED_TEXT, LAKE_TRAINING
@@ -57,8 +55,8 @@ def get_volunteer_with_role_at_event_on_day(interface: abstractInterface, event:
 
 
 
-def sort_volunteer_data_for_event_by_name_sort_order(volunteers_at_event: ListOfVolunteersAtEvent, sort_order) -> ListOfVolunteersAtEvent:
-    list_of_volunteers = DEPRECATED_get_sorted_list_of_volunteers(sort_by=sort_order)
+def sort_volunteer_data_for_event_by_name_sort_order(interface: abstractInterface, volunteers_at_event: ListOfVolunteersAtEvent, sort_order) -> ListOfVolunteersAtEvent:
+    list_of_volunteers = get_sorted_list_of_volunteers(interface=interface, sort_by=sort_order)
     ## this works because if an ID is missing we just ignore it
     return volunteers_at_event.sort_by_list_of_volunteer_ids(list_of_volunteers.list_of_ids)
 
@@ -79,13 +77,16 @@ def dict_of_roles_for_dropdown(interface: abstractInterface):
     return dict_of_roles
 
 
-def boat_related_role_str_on_day_for_volunteer_id(interface: abstractInterface, day: Day, event: Event, volunteer_id: str)-> str:
+def boat_related_role_str_and_group_on_day_for_volunteer_id(interface: abstractInterface, day: Day, event: Event, volunteer_id: str)-> str:
     volunteer_rota = VolunteerRotaData(interface.data)
     volunteer_on_day = volunteer_rota.get_volunteer_with_role_at_event_on_day(event=event, day=day, volunteer_id=volunteer_id)
     if volunteer_on_day is missing_data:
         return ""
     elif volunteer_on_day.requires_boat:
-        return volunteer_on_day.role
+        if volunteer_on_day.group.is_unallocated:
+            return volunteer_on_day.role
+        else:
+            return "%s - %s" % (volunteer_on_day.group.group_name, volunteer_on_day.role)
     else:
         return ""
 
@@ -162,18 +163,18 @@ def swap_roles_for_volunteers_in_allocation(interface: abstractInterface,
         second_name = get_volunteer_name_from_id(interface=interface, volunteer_id=swap_data.volunteer_id_to_swap_with)
         interface.log_error("Swap roles of %s and %s failed on day %s, error %s" % (first_name, second_name, swap_data.day_to_swap_with.name, str(e)))
 
-def swap_and_groups_for_volunteers_in_allocation(interface:abstractInterface,
-                                                                            event: Event,
-                                                                           original_day: Day,
-                                                                           original_volunteer_id: str,
-                                                                           day_to_swap_with: Day,
-                                                                           volunteer_id_to_swap_with: str):
+def swap_roles_and_groups_for_volunteers_in_allocation(interface:abstractInterface,
+                                                       event: Event,
+                                                       original_day: Day,
+                                                       original_volunteer_id: str,
+                                                       day_to_swap_with: Day,
+                                                       volunteer_id_to_swap_with: str):
     volunteer_rota_data = VolunteerRotaData(interface.data)
-    volunteer_rota_data.swap_and_groups_for_volunteers_in_allocation(event=event,
-                                                                     original_day=original_day,
-                                                                     day_to_swap_with=day_to_swap_with,
-                                                                     original_volunteer_id=original_volunteer_id,
-                                                                     volunteer_id_to_swap_with=volunteer_id_to_swap_with)
+    volunteer_rota_data.swap_roles_and_groups_for_volunteers_in_allocation(event=event,
+                                                                           original_day=original_day,
+                                                                           day_to_swap_with=day_to_swap_with,
+                                                                           original_volunteer_id=original_volunteer_id,
+                                                                           volunteer_id_to_swap_with=volunteer_id_to_swap_with)
 
 
 def volunteer_is_on_lake(interface: abstractInterface, event: Event, volunteer_id: str) -> bool:
@@ -209,9 +210,6 @@ def groups_for_volunteer(interface: abstractInterface, event: Event, volunteer_i
 
     return list(set(list_of_groups))
 
-
-def DEPRECATED_load_list_of_identified_volunteers_at_event(event: Event) -> ListOfIdentifiedVolunteersAtEvent:
-    return DEPRECATED_data.data_list_of_identified_volunteers_at_event.read(event_id=event.id)
 
 
 def load_list_of_identified_volunteers_at_event(interface: abstractInterface, event: Event) -> ListOfIdentifiedVolunteersAtEvent:

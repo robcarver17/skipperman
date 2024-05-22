@@ -7,7 +7,7 @@ from app.backend.data.dinghies import get_sorted_list_of_boats_excluding_boats_a
     load_list_of_patrol_boats_at_event
 from app.backend.volunteers.patrol_boats import \
     get_sorted_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day
-from app.backend.volunteers.volunteer_rota import boat_related_role_str_on_day_for_volunteer_id, \
+from app.backend.volunteers.volunteer_rota import boat_related_role_str_and_group_on_day_for_volunteer_id, \
     dict_of_roles_for_dropdown, get_volunteer_role_at_event_on_day
 from app.backend.volunteers.volunteers import boat_related_skill_str, \
  get_volunteer_name_from_id, get_volunteer_from_list_of_volunteers_given_volunteer_name
@@ -106,7 +106,7 @@ def from_volunteer_id_to_dropdown_element(interface: abstractInterface, voluntee
     ### MUST BE IN BRACKETS OR WON'T WORK WITH GETTING VOLUNTEER NAME
     if len(skill_str)>0:
         skill_str = " (%s)" % skill_str
-    role_str = boat_related_role_str_on_day_for_volunteer_id(interface=interface, volunteer_id=volunteer_id, event=event, day=day)
+    role_str = boat_related_role_str_and_group_on_day_for_volunteer_id(interface=interface, volunteer_id=volunteer_id, event=event, day=day)
     if len(role_str)>0:
         role_str = " (%s)" % role_str
 

@@ -1,11 +1,7 @@
-import datetime
-from enum import Enum
-from typing import Dict
-from dataclasses import dataclass
-from app.objects.generic import GenericSkipperManObject
-from app.objects.volunteers import Volunteer
 
-OTHER_IN_FOOD_REQUIRED = "other" ## must match key below
+from dataclasses import dataclass
+from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
+
 @dataclass
 class FoodRequirements(GenericSkipperManObject):
     other: str = ""
@@ -44,3 +40,55 @@ def guess_food_requirements_from_food_field(food_field_str: str)-> FoodRequireme
         kosher=kosher,
         halal=halal
     )
+
+
+
+
+CADET_ID = "cadet_id"
+
+@dataclass
+class CadetWithFoodRequirementsAtEvent(GenericSkipperManObject):
+    cadet_id: str
+    food_requirements: FoodRequirements
+
+    def as_str_dict(self) ->dict:
+        food_required_as_dict = self.food_requirements.as_str_dict()
+        food_required_as_dict[CADET_ID] = self.cadet_id
+
+        return food_required_as_dict
+
+    @classmethod
+    def from_dict(cls, some_dict: dict) -> 'CadetWithFoodRequirementsAtEvent':
+        cadet_id = some_dict.pop(CADET_ID)
+        food_required = FoodRequirements.from_dict(some_dict)
+
+        return cls(cadet_id=cadet_id, food_requirements = food_required)
+
+class ListOfCadetsWithFoodRequirementsAtEvent(GenericListOfObjects):
+    def _object_class_contained(self):
+        return CadetWithFoodRequirementsAtEvent
+
+
+VOLUNTEER_ID = "volunteer_id"
+@dataclass
+class VolunteerWithFoodRequirementsAtEvent(GenericSkipperManObject):
+    volunteer_id: str
+    food_requirements: FoodRequirements
+
+
+    def as_str_dict(self) ->dict:
+        food_required_as_dict = self.food_requirements.as_str_dict()
+        food_required_as_dict[VOLUNTEER_ID] = self.volunteer_id
+
+        return food_required_as_dict
+
+    @classmethod
+    def from_dict(cls, some_dict: dict) -> 'VolunteerWithFoodRequirementsAtEvent':
+        volunteer_id = some_dict.pop(VOLUNTEER_ID)
+        food_required = FoodRequirements.from_dict(some_dict)
+
+        return cls(volunteer_id=volunteer_id, food_requirements = food_required)
+
+class ListOfVolunteersWithFoodRequirementsAtEvent(GenericListOfObjects):
+    def _object_class_contained(self):
+        return VolunteerWithFoodRequirementsAtEvent

@@ -36,8 +36,6 @@ def action_if_cadet_tick_button_pressed(interface: abstractInterface, tick_type:
 
 
 def action_if_cadet_apply_qualification_button_pressed(interface: abstractInterface,  cadet_id: str):
-    interface.log_error("Qualification awarding is locked for now")
-    return
 
     can_award_qualification = user_can_award_qualifications(interface)
     if not can_award_qualification:
@@ -48,9 +46,6 @@ def action_if_cadet_apply_qualification_button_pressed(interface: abstractInterf
 
 
 def action_if_cadet_remove_qualification_button_pressed(interface: abstractInterface,  cadet_id: str):
-    interface.log_error("Qualification awarding is locked for now")
-    return
-
     can_award_qualification = user_can_award_qualifications(interface)
     if not can_award_qualification:
         interface.log_error("User not allowed to remove qualifications!")

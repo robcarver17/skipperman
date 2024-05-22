@@ -78,7 +78,7 @@ class ListOfCadetsWithQualifications(GenericListOfObjectsWithIds):
     def apply_qualification_to_cadet(self, cadet_id: str, qualification_id: str):
         if self.does_cadet_id_have_qualification(cadet_id=cadet_id, qualification_id=qualification_id):
             return
-        self.append(CadetWithQualification(cadet_id=cadet_id, qualification_id=qualification_id))
+        self.append(CadetWithQualification(cadet_id=cadet_id, qualification_id=qualification_id, date=datetime.datetime.today()))
 
 
     def remove_qualification_from_cadet(self, cadet_id: str, qualification_id: str):
@@ -98,18 +98,3 @@ class ListOfCadetsWithQualifications(GenericListOfObjectsWithIds):
         matching = [item.qualification_id for item in self if item.cadet_id ==cadet_id]
         return matching
 
-    def update_for_cadet(self,cadet_id:str, list_of_qualification_ids:List[str]):
-        current_list = self.list_of_qualification_ids_for_cadet(cadet_id)
-        now_deleted = in_x_not_in_y(current_list, list_of_qualification_ids)
-        new_qualifications = in_x_not_in_y(list_of_qualification_ids, current_list)
-        self.drop(cadet_id, now_deleted=now_deleted)
-        self.add(cadet_id, new_qualifications=new_qualifications)
-
-    def drop(self, cadet_id: str, now_deleted: List[str]):
-        for item in self:
-            if item.cadet_id==cadet_id and item.qualification_id in now_deleted:
-                self.remove(item)
-
-    def add(self, cadet_id, new_qualifications: List[str]):
-        for qualification_id in new_qualifications:
-            self.append(CadetWithQualification(cadet_id=cadet_id, qualification_id=qualification_id))

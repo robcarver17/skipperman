@@ -17,10 +17,6 @@ def remove_qualification_from_cadet(interface: abstractInterface, cadet_id:str, 
     qualification_data.remove_qualification_from_cadet(cadet_id=cadet_id, qualification=qualification)
 
 
-def update_qualifications_for_cadet(interface: abstractInterface, cadet: Cadet, list_of_qualification_names_for_this_cadet: List[str]):
-    qualification_data = QualificationData(interface.data)
-    qualification_data.update_qualifications_for_cadet(cadet=cadet, list_of_qualification_names_for_this_cadet=list_of_qualification_names_for_this_cadet)
-
 
 def load_list_of_cadets_with_qualifications(interface: abstractInterface) -> ListOfCadetsWithQualifications:
     qualification_data = QualificationData(interface.data)

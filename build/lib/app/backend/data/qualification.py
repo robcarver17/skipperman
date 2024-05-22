@@ -33,16 +33,6 @@ class QualificationData():
 
         return list_of_qualifications
 
-    def update_qualifications_for_cadet(self, cadet: Cadet,
-                                        list_of_qualification_names_for_this_cadet: List[str]):
-
-        list_of_cadets_with_qualifications = self.get_list_of_cadets_with_qualifications()
-        list_of_qualifications = self.load_list_of_qualifications()
-        list_of_qualification_ids = [list_of_qualifications.id_given_name(qual_name) for qual_name in
-                                     list_of_qualification_names_for_this_cadet]
-        list_of_cadets_with_qualifications.update_for_cadet(cadet_id=cadet.id,
-                                                            list_of_qualification_ids=list_of_qualification_ids)
-        self.save_list_of_cadets_with_qualifications(list_of_cadets_with_qualifications)
 
     def apply_qualification_to_cadet(self, cadet_id: str, qualification: Qualification):
         list_of_cadets_with_qualifications = self.get_list_of_cadets_with_qualifications()

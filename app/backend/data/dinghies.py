@@ -9,7 +9,6 @@ from app.objects.constants import missing_data
 from app.objects.day_selectors import Day
 
 from app.backend.data.patrol_boats import PatrolBoatsData
-from app.data_access.data import DEPRECATED_data
 from app.data_access.storage_layer.api import DataLayer
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies, ListOfClubDinghies, NO_BOAT
@@ -180,18 +179,6 @@ class DinghiesData():
     def cadets_at_event_data(self) -> CadetsAtEventData:
         return CadetsAtEventData(data_api=self.data_api)
 
-
-def DEPRECATE_load_list_of_club_dinghies() -> ListOfClubDinghies:
-    list_of_boats = DEPRECATED_data.data_List_of_club_dinghies.read()
-
-    return list_of_boats
-
-
-
-def DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies(event: Event) -> ListOfCadetAtEventWithClubDinghies:
-    cadets_with_dinghies = DEPRECATED_data.data_list_of_cadets_at_event_with_club_dinghies.read(event_id=event.id)
-
-    return cadets_with_dinghies
 
 
 def load_list_of_cadets_at_event_with_club_dinghies(interface: abstractInterface, event: Event) -> ListOfCadetAtEventWithClubDinghies:

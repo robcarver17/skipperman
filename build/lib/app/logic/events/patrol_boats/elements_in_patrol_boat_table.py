@@ -4,15 +4,10 @@ from typing import List
 
 from app.backend.volunteers.patrol_boats import \
     get_volunteer_ids_allocated_to_patrol_boat_at_event_on_days_sorted_by_role, \
-    DEPRECATE_get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day, \
     get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day
-from app.backend.volunteers.volunteers import DEPRECATED_get_volunteer_name_from_id, \
-    DEPRECATE_boat_related_skill_for_volunteer, \
-    get_volunteer_name_from_id, boat_related_skill_for_volunteer
+from app.backend.volunteers.volunteers import  get_volunteer_name_from_id, boat_related_skill_for_volunteer
 from app.logic.events.patrol_boats.patrol_boat_buttons import get_remove_volunteer_button
-from app.logic.events.patrol_boats.copying import get_copy_buttons_for_boat_allocation, \
-    get_copy_button_for_boat_copy_in_boat_rota, get_copy_button_for_role_in_boat_rota, \
-    get_copy_button_for_role_and_boat_in_rota
+from app.logic.events.patrol_boats.copying import get_copy_buttons_for_boat_allocation
 from app.logic.events.patrol_boats.swapping import get_swap_buttons_for_boat_rota
 from app.logic.events.patrol_boats.patrol_boat_dropdowns import \
     volunteer_boat_role_dropdown

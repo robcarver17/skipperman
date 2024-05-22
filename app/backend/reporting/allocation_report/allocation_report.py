@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 
-from app.backend.data.dinghies import DinghiesData, DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies
+from app.backend.data.dinghies import DinghiesData
 from app.data_access.configuration.configuration import ALL_GROUPS_NAMES
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
 from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies
 from app.objects.constants import missing_data
 from app.objects.events import Event
-from app.objects.groups import CADET_NAME, GROUP_STR_NAME, CadetWithGroup
+from app.objects.groups import  GROUP_STR_NAME, CadetWithGroup
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
     SpecificParametersForTypeOfReport,
 )
@@ -38,7 +38,7 @@ def add_club_boat_asterix(interface: abstractInterface, list_of_cadets_with_grou
     return list_of_cadets_with_groups
 
 
-def add_club_boat_asterix_to_cadet(cadet_with_group: CadetWithGroup, list_of_cadets_at_event_with_club_dinghies: ListOfCadetAtEventWithClubDinghies) -> CadetWithGroup:
+def add_club_boat_asterix_to_cadet(cadet_with_group: CadetWithGroup, list_of_cadets_at_event_with_club_dinghies: ListOfCadetAtEventWithClubDinghies):
     cadet = cadet_with_group.cadet
     cadet_id = cadet.id
     day = cadet_with_group.day

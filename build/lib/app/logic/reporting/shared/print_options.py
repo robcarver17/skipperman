@@ -1,6 +1,5 @@
 from app.backend.data.options import OptionsData
 from app.data_access.configuration.fixed import ALL_PAGESIZE, ALL_FONTS
-from app.data_access.data import DEPRECATED_data
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_form import (
     yes_no_radio, textInput, radioInput,

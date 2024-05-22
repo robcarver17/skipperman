@@ -20,19 +20,20 @@ from app.objects.abstract_objects.abstract_form import (
     File,
 )
 from app.objects.abstract_objects.abstract_text import bold, Heading
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
+from app.objects.abstract_objects.abstract_lines import  ListOfLines, _______________
 from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, CANCEL_BUTTON_LABEL, Button, ButtonBar
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.logic.events.events_in_state import get_event_from_state, update_state_for_specific_event_given_event_description
-from app.backend.events import DEPRECATE_confirm_event_exists_given_description
+from app.backend.events import confirm_event_exists_given_description
 
 from app.logic.reporting.constants import *
 
 
-def display_initial_generic_report_form(report_generator: ReportGenerator) -> Form:
+def display_initial_generic_report_form(interface: abstractInterface, report_generator: ReportGenerator) -> Form:
     event_criteria= report_generator.event_criteria
     list_of_events = display_list_of_events_with_buttons_criteria_matched(
+        interface=interface,
         **event_criteria
     )
     criteria_description  =describe_criteria(**event_criteria)
@@ -65,7 +66,7 @@ def post_form_initial_generic_report(
 
     event_name_selected = last_button
     try:
-        DEPRECATE_confirm_event_exists_given_description(event_name_selected)
+        confirm_event_exists_given_description(interface=interface, event_description=event_name_selected)
     except:
         interface.log_error(
             "Event %s no longer in list- someone else has deleted or file corruption?"

@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from typing import List, Dict
 
 from app.backend.cadets import load_list_of_all_cadets
-from app.data_access.data import DEPRECATED_data
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -176,12 +175,6 @@ def get_relevant_cadet_ids_for_boat_class_id(group: str,
                              if cadets_with_dinghies_at_event.dinghy_id_for_cadet_id_on_day(cadet_id=cadet_id, day=day) == boat_class_id]
 
     return result_dict
-
-
-def DEPRECATE_load_list_of_cadets_at_event_with_dinghies(event: Event) -> ListOfCadetAtEventWithDinghies:
-    cadets_with_dinghies = DEPRECATED_data.data_list_of_cadets_with_dinghies_at_event.read(event.id)
-
-    return cadets_with_dinghies
 
 
 def load_list_of_cadets_at_event_with_dinghies(interface: abstractInterface, event: Event) -> ListOfCadetAtEventWithDinghies:

@@ -17,7 +17,6 @@ app/backend/data/event_mapping.py
 app/backend/data/events.py
 app/backend/data/field_mapping.py
 app/backend/data/group_allocations.py
-app/backend/data/group_allocations_old.py
 app/backend/data/mapped_events.py
 app/backend/data/options.py
 app/backend/data/patrol_boats.py
@@ -92,7 +91,6 @@ app/backend/ticks_and_qualifications/qualifications.py
 app/backend/ticks_and_qualifications/ticksheets.py
 app/backend/ticks_and_qualifications/../../data_access/configuration/configuration.yaml
 app/backend/transfer/__init__.py
-app/backend/transfer/input_old_tick_sheet.py
 app/backend/transfer/../../data_access/configuration/configuration.yaml
 app/backend/volunteers/__init__.py
 app/backend/volunteers/patrol_boats.py

@@ -54,7 +54,7 @@ CHECK_FOR_ME_VOLUNTEER_BUTTON_LABEL = "Please check these volunteer details for 
 FINAL_VOLUNTEER_ADD_BUTTON_LABEL = "Yes - these details are correct - add this new volunteer"
 SEE_ALL_VOLUNTEER_BUTTON_LABEL = "Choose from all existing volunteers"
 SEE_SIMILAR_VOLUNTEER_ONLY_LABEL = "See similar volunteers only"
-SKIP_VOLUNTEER_BUTTON_LABEL = "Skip - no volunteer to add for this cadet [Have to confirm this skip on every import: better to add unless it's actually a cadet]"
+SKIP_VOLUNTEER_BUTTON_LABEL = "Skip - this isn't a volunteers name"
 
 ## Volunteer roles
 EDIT_VOLUNTEER_ROLES_BUTTON_LABEL = "Volunteer rota"

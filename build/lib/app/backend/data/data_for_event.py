@@ -4,12 +4,12 @@ from app.backend.cadets import load_list_of_all_cadets
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.group_allocations_old import load_list_of_cadets_with_allocated_groups_at_event
-from app.backend.data.cadets_at_event import DEPRECATED_load_cadets_at_event
-from app.backend.group_allocations.boat_allocation import DEPRECATE_load_list_of_cadets_at_event_with_dinghies
-from app.backend.data.dinghies import DEPRECATE_load_list_of_club_dinghies, \
-    DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies
-from app.backend.configuration import DEPRECATE_load_list_of_boat_classes
+from app.backend.group_allocations.cadet_event_allocations import load_list_of_cadets_with_allocated_groups_at_event
+from app.backend.data.cadets_at_event import load_cadets_at_event
+from app.backend.group_allocations.boat_allocation import  load_list_of_cadets_at_event_with_dinghies
+from app.backend.data.dinghies import load_list_of_cadets_at_event_with_club_dinghies
+from app.backend.configuration import load_list_of_boat_classes, \
+    load_list_of_club_dinghies
 
 from app.objects.cadet_at_event import ListOfCadetsAtEvent
 from app.objects.cadets import ListOfCadets
@@ -33,13 +33,13 @@ class RequiredDataForReport:
     list_of_cadets_at_event_with_club_dinghies: ListOfCadetAtEventWithClubDinghies
 
 def get_data_required_for_event(interface: abstractInterface, event: Event) -> RequiredDataForReport:
-    list_of_cadets_at_event_with_dinghies = DEPRECATE_load_list_of_cadets_at_event_with_dinghies(event)
-    list_of_cadets_at_event=DEPRECATED_load_cadets_at_event(event)
-    list_of_boat_classes=DEPRECATE_load_list_of_boat_classes()
-    list_of_club_dinghies=DEPRECATE_load_list_of_club_dinghies()
-    list_of_cadet_ids_with_groups = load_list_of_cadets_with_allocated_groups_at_event(event)
+    list_of_cadets_at_event_with_dinghies = load_list_of_cadets_at_event_with_dinghies(interface=interface, event=event)
+    list_of_cadets_at_event=load_cadets_at_event(interface=interface, event=event)
+    list_of_boat_classes=load_list_of_boat_classes(interface)
+    list_of_club_dinghies=load_list_of_club_dinghies(interface)
+    list_of_cadet_ids_with_groups = load_list_of_cadets_with_allocated_groups_at_event(interface=interface, event=event)
     list_of_all_cadets = load_list_of_all_cadets(interface)
-    list_of_cadets_at_event_with_club_dinghies = DEPRECATE_load_list_of_cadets_at_event_with_club_dinghies(event)
+    list_of_cadets_at_event_with_club_dinghies = load_list_of_cadets_at_event_with_club_dinghies(interface=interface, event=event)
 
     return RequiredDataForReport(
         list_of_all_cadets=list_of_all_cadets,

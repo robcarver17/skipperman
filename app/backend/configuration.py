@@ -4,7 +4,6 @@ from app.backend.data.patrol_boats import PatrolBoatsData
 from app.backend.data.dinghies import DinghiesData
 from app.backend.data.qualification import QualificationData
 
-from app.data_access.data import DEPRECATED_data
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
@@ -50,11 +49,6 @@ def modify_club_dinghy_given_string_and_return_list(interface: abstractInterface
 
     return list_of_boats
 
-
-def DEPRECATE_load_list_of_boat_classes() -> ListOfBoatClasses:
-    list_of_boats = DEPRECATED_data.data_list_of_dinghies.read()
-
-    return list_of_boats
 
 def load_list_of_boat_classes(interface: abstractInterface) -> ListOfBoatClasses:
     dinghy_data = DinghiesData(interface.data)

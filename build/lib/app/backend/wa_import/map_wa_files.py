@@ -1,8 +1,7 @@
 from app.backend.data.events import get_event_from_id
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.event_mapping import DEPRECATE_load_wa_event_mapping, DEPRECATE_save_wa_event_mapping, \
-    EventMappingData
+from app.backend.data.event_mapping import    EventMappingData
 from app.objects.events import Event
 from app.backend.wa_import.load_wa_file import (
     get_event_id_from_wa_df,
@@ -84,17 +83,6 @@ def add_wa_to_event_mapping(interface: abstractInterface,  event: Event, wa_id: 
     wa_event_mapping  = EventMappingData(interface.data)
     event_id = event.id
     wa_event_mapping.add_event(event_id=event_id, wa_id=wa_id)
-
-
-def DEPRECATE_is_wa_file_mapping_setup_for_event(event: Event) -> bool:
-    event_id = event.id
-    wa_event_mapping = DEPRECATE_load_wa_event_mapping()
-
-    event_is_already_in_mapping_list = wa_event_mapping.is_event_in_mapping_list(
-        event_id
-    )
-
-    return event_is_already_in_mapping_list
 
 
 

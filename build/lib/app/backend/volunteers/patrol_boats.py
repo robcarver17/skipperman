@@ -18,7 +18,7 @@ from app.backend.volunteers.volunteer_rota import  SwapData, \
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.backend.data.patrol_boats import DEPRECATE_load_list_of_voluteers_at_event_with_patrol_boats,    PatrolBoatsData
+from app.backend.data.patrol_boats import    PatrolBoatsData
 from app.objects.patrol_boats import PatrolBoat
 from app.objects.utils import in_x_not_in_y, in_both_x_and_y
 from app.objects.volunteers import Volunteer, ListOfVolunteers
@@ -95,12 +95,6 @@ def sort_list_of_volunteer_ids_for_day_and_event_by_role(interface: abstractInte
 
     return new_list
 
-def DEPRECATE_get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(
-                                                               day: Day,
-                                                               event: Event):
-
-    list_of_voluteers_at_event_with_patrol_boats = DEPRECATE_load_list_of_voluteers_at_event_with_patrol_boats(event)
-    return list_of_voluteers_at_event_with_patrol_boats.list_of_volunteer_ids_assigned_to_any_boat_on_day(day=day)
 
 def get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(interface: abstractInterface,
                                                                day: Day,

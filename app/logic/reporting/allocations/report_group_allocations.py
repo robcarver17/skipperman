@@ -30,7 +30,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 # GROUP_ALLOCATION_REPORT_STAGE
 def display_form_report_group_allocation(interface: abstractInterface) -> Form:
-    return display_initial_generic_report_form(allocation_report_generator)
+    return display_initial_generic_report_form(interface=interface, report_generator=allocation_report_generator)
 
 
 def post_form_report_group_allocation(

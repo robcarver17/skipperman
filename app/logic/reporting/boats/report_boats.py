@@ -22,7 +22,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
 def display_form_report_boat(interface: abstractInterface) -> Form:
-    return display_initial_generic_report_form(report_generator=boat_report_generator)
+    return display_initial_generic_report_form(interface=interface, report_generator=boat_report_generator)
 
 
 def post_form_report_boat(

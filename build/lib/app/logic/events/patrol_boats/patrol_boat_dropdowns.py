@@ -81,13 +81,13 @@ def get_input_name_for_allocation_dropdown(boat_at_event: PatrolBoat,
     return "allocationDropDownAddBoat_%s_%s" % (boat_at_event.name, day.name)
 
 
-def from_allocation_dropdown_input_name_to_boat_and_day(dropdown_input_name: str) -> Tuple[PatrolBoat,
+def from_allocation_dropdown_input_name_to_boat_and_day(interface: abstractInterface, dropdown_input_name: str) -> Tuple[PatrolBoat,
                                                               Day]:
     boat_name, day_name = from_allocation_dropdown_input_name_to_boat_name_and_day_name(
         dropdown_input_name
     )
 
-    boat = from_patrol_boat_name_to_boat(boat_name)
+    boat = from_patrol_boat_name_to_boat(interface=interface, boat_name=boat_name)
     day = Day[day_name]
 
     return boat, day
@@ -103,6 +103,7 @@ def from_allocation_dropdown_input_name_to_boat_name_and_day_name(dropdown_input
 def from_volunteer_id_to_dropdown_element(interface: abstractInterface, volunteer_id: str, event: Event, day: Day)-> str:
     name = get_volunteer_name_from_id(interface=interface, volunteer_id=volunteer_id)
     skill_str = boat_related_skill_str(interface=interface, volunteer_id=volunteer_id)
+
     ### MUST BE IN BRACKETS OR WON'T WORK WITH GETTING VOLUNTEER NAME
     if len(skill_str)>0:
         skill_str = " (%s)" % skill_str

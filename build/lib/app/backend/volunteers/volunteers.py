@@ -5,10 +5,7 @@ from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.cadets import  cadet_from_id
-from app.backend.data.volunteers import DEPRECATED_get_sorted_list_of_volunteers, \
-    DEPRECATE_load_list_of_volunteer_skills, \
-    DEPRECATE_save_list_of_volunteer_skills, \
-    DEPRECATE_load_all_volunteers, VolunteerData
+from app.backend.data.volunteers import     VolunteerData
 from app.data_access.configuration.configuration import VOLUNTEERS_SKILL_FOR_PB2
 from app.objects.constants import arg_not_passed
 from app.objects.volunteers import Volunteer, ListOfVolunteerSkills, ListOfVolunteers
@@ -28,32 +25,12 @@ def get_connected_cadets(interface: abstractInterface, volunteer: Volunteer) -> 
 
     return volunteer_data.get_connected_cadets(volunteer)
 
-def DEPRECATE_list_of_similar_volunteers(volunteer: Volunteer) -> list:
-    existing_volunteers = DEPRECATED_get_sorted_list_of_volunteers()
-    similar_volunteers = existing_volunteers.similar_volunteers(
-        volunteer=volunteer
-    )
-
-    return similar_volunteers
-
 def list_of_similar_volunteers(interface: abstractInterface, volunteer: Volunteer) -> list:
     volunteer_data = VolunteerData(interface.data)
     similar_volunteers = volunteer_data.list_of_similar_volunteers(volunteer)
 
     return similar_volunteers
 
-
-def DEPRECATE_warning_for_similar_volunteers(volunteer: Volunteer) -> str:
-    similar_volunteers = DEPRECATE_list_of_similar_volunteers(volunteer)
-
-    if len(similar_volunteers) > 0:
-        similar_volunteers_str = ", ".join(
-            [str(other_volunteer) for other_volunteer in similar_volunteers]
-        )
-        ## Some similar volunteers, let's see if it's a match
-        return "Following existing volunteers look awfully similar:\n %s" % similar_volunteers_str
-    else:
-        return ""
 
 def warning_for_similar_volunteers(interface: abstractInterface, volunteer: Volunteer) -> str:
     similar_volunteers = list_of_similar_volunteers(interface=interface, volunteer=volunteer)
@@ -68,18 +45,6 @@ def warning_for_similar_volunteers(interface: abstractInterface, volunteer: Volu
         return ""
 
 
-def DEPRECATE_verify_volunteer_and_warn(volunteer: Volunteer) -> str:
-    warn_text = ""
-    if len(volunteer.surname) < 4:
-        warn_text += "Surname seems too short. "
-    if len(volunteer.first_name) < 4:
-        warn_text += "First name seems too short. "
-    warn_text += DEPRECATE_warning_for_similar_volunteers(volunteer)
-
-    if len(warn_text) > 0:
-        warn_text = "DOUBLE CHECK BEFORE ADDING: " + warn_text
-
-    return warn_text
 
 def verify_volunteer_and_warn(interface: abstractInterface, volunteer: Volunteer) -> str:
     warn_text = ""
@@ -119,10 +84,6 @@ def add_list_of_cadet_connections_to_volunteer(interface: abstractInterface,
         volunteer_data.add_volunteer_connection_to_cadet_in_master_list_of_volunteers(cadet=cadet, volunteer=volunteer)
 
 
-def DEPRECATED_get_volunteer_from_id(volunteer_id: str) -> Volunteer:
-    list_of_volunteers = DEPRECATED_get_sorted_list_of_volunteers()
-    return list_of_volunteers.object_with_id(volunteer_id)
-
 
 def get_volunteer_name_from_id(interface: abstractInterface, volunteer_id: str) -> str:
     volunteer = get_volunteer_from_id(interface=interface, volunteer_id=volunteer_id)
@@ -135,19 +96,11 @@ def get_volunteer_from_id(interface: abstractInterface, volunteer_id: str) -> Vo
     return list_of_volunteers.object_with_id(volunteer_id)
 
 
-def DEPRECATED_get_volunteer_name_from_id(volunteer_id) -> str:
-    volunteer = DEPRECATED_get_volunteer_from_id(volunteer_id)
-    return volunteer.name
-
 def boat_related_skill_str(interface: abstractInterface, volunteer_id: str) -> str:
     if boat_related_skill_for_volunteer(interface=interface, volunteer_id=volunteer_id):
         return VOLUNTEERS_SKILL_FOR_PB2
     else:
         return ""
-
-def DEPRECATE_boat_related_skill_for_volunteer(volunteer_id: str) -> bool:
-    skills =DEPRECATE_load_list_of_volunteer_skills()
-    return skills.volunteer_id_has_boat_related_skills(volunteer_id)
 
 def boat_related_skill_for_volunteer(interface: abstractInterface, volunteer_id: str) -> bool:
     volunteer_data = VolunteerData(interface.data)

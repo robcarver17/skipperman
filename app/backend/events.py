@@ -7,7 +7,6 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.data.events import EventData
 from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME, SIMILARITY_LEVEL_TO_WARN_DATE
-from app.data_access.data import DEPRECATED_data
 
 from app.objects.events import Event, ListOfEvents, SORT_BY_START_DSC, SORT_BY_START_ASC, SORT_BY_NAME, default_event
 
@@ -63,13 +62,6 @@ def warning_for_similar_events(interface: abstractInterface, event: Event) -> st
 
 
 
-
-def DEPRECATE_get_sorted_list_of_events(sort_by=SORT_BY_START_DSC) -> ListOfEvents:
-    list_of_events = DEPRECATED_get_list_of_all_events()
-    list_of_events = list_of_events.sort_by(sort_by)
-
-    return list_of_events
-
 def get_sorted_list_of_events(interface: abstractInterface, sort_by=SORT_BY_START_DSC) -> ListOfEvents:
     list_of_events = get_list_of_all_events(interface)
     list_of_events = list_of_events.sort_by(sort_by)
@@ -82,13 +74,6 @@ def list_of_previously_used_event_names(interface: abstractInterface) -> list:
     event_names = [event.event_name for event in list_of_events]
     return list(set(event_names))
 
-
-
-def DEPRECATE_confirm_event_exists_given_description(event_description):
-    list_of_events = DEPRECATED_get_list_of_all_events()
-
-    ## fails if missing
-    __ = list_of_events.event_with_description(event_description)
 
 def confirm_event_exists_given_description(interface: abstractInterface, event_description: str):
     list_of_events = get_list_of_all_events(interface)
@@ -119,12 +104,6 @@ event_and_text_if_first_time = EventAndVerificationText(
 def add_new_verified_event(interface: abstractInterface, event: Event):
     event_data =EventData(interface.data)
     event_data.add_event(event)
-
-
-def DEPRECATED_get_list_of_all_events() -> ListOfEvents:
-    list_of_events = DEPRECATED_data.data_list_of_events.read()
-
-    return list_of_events
 
 
 def get_list_of_all_events(interface: abstractInterface) -> ListOfEvents:

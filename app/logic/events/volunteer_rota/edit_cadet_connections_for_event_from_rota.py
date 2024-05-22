@@ -2,8 +2,7 @@ from typing import Union
 
 from app.objects.events import Event
 
-from app.backend.group_allocations.cadet_event_allocations import DEPRECATE_get_list_of_active_cadets_at_event, \
-    get_list_of_groups_at_event_given_list_of_cadets
+from app.backend.group_allocations.cadet_event_allocations import     get_list_of_groups_at_event_given_list_of_cadets, get_list_of_active_cadets_at_event
 from app.backend.volunteers.volunteers import get_volunteer_from_id
 from app.backend.volunteers.volunteer_rota import remove_volunteer_and_cadet_association_at_event, \
     add_volunteer_and_cadet_association_for_existing_volunteer, get_volunteer_at_event
@@ -38,7 +37,7 @@ def display_form_edit_cadet_connections_from_rota(interface: abstractInterface):
 
     header_text = ListOfLines([instruction_line, group_text])
 
-    list_of_cadets_at_event = DEPRECATE_get_list_of_active_cadets_at_event(event)
+    list_of_cadets_at_event = get_list_of_active_cadets_at_event(event=event, interface=interface)
 
     form = form_to_edit_connections(volunteer=volunteer, connected_cadets=connected_cadets,
                                     from_list_of_cadets=list_of_cadets_at_event,

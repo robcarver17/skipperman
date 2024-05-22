@@ -2,7 +2,6 @@ from app.objects.events import Event
 
 from app.data_access.storage_layer.api import DataLayer
 
-from app.data_access.data import DEPRECATED_data
 from app.objects.wa_event_mapping import ListOfWAEventMaps
 
 class EventMappingData():
@@ -32,13 +31,3 @@ class EventMappingData():
 
     def save_wa_mapping_data(self, list_of_wa_event_maps: ListOfWAEventMaps):
         return self.data_api.save_wa_event_mapping(list_of_wa_event_maps)
-
-def DEPRECATE_load_wa_event_mapping() -> ListOfWAEventMaps:
-    return DEPRECATED_data.data_wa_event_mapping.read()
-
-
-
-def DEPRECATE_save_wa_event_mapping(wa_event_mapping: ListOfWAEventMaps):
-    DEPRECATED_data.data_wa_event_mapping.write(
-        wa_event_mapping,
-    )

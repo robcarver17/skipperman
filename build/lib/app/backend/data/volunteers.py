@@ -4,7 +4,6 @@ from app.backend.data.cadets import CadetData
 
 from app.data_access.storage_layer.api import DataLayer
 
-from app.data_access.data import DEPRECATED_data
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.constants import arg_not_passed
 from app.objects.volunteers import ListOfVolunteerSkills, ListOfVolunteers, Volunteer, ListOfCadetVolunteerAssociations
@@ -148,38 +147,6 @@ class VolunteerData():
         return CadetData(self.data_api)
 
 
-def DEPRECATE_save_list_of_cadet_volunteer_associations(list_of_cadet_volunteer_associations:ListOfCadetVolunteerAssociations):
-    DEPRECATED_data.data_list_of_cadet_volunteer_associations.write(list_of_cadet_volunteer_associations)
-
-
-def DEPRECATE_load_list_of_volunteer_skills()-> ListOfVolunteerSkills:
-    skills = DEPRECATED_data.data_list_of_volunteer_skills.read()
-
-    return skills
-
-
-def DEPRECATE_save_list_of_volunteer_skills(list_of_volunteer_skills: ListOfVolunteerSkills):
-    DEPRECATED_data.data_list_of_volunteer_skills.write(list_of_volunteer_skills)
-
 
 SORT_BY_SURNAME = "Sort by surname"
 SORT_BY_FIRSTNAME = "Sort by first name"
-
-def DEPRECATE_load_all_volunteers()-> ListOfVolunteers:
-    return DEPRECATED_data.data_list_of_volunteers.read()
-
-
-def DEPRECATED_get_sorted_list_of_volunteers(sort_by: str = arg_not_passed) -> ListOfVolunteers:
-    master_list = DEPRECATE_load_all_volunteers()
-    if sort_by is arg_not_passed:
-        return master_list
-    if sort_by == SORT_BY_SURNAME:
-        return master_list.sort_by_surname()
-    elif sort_by == SORT_BY_FIRSTNAME:
-        return master_list.sort_by_firstname()
-    else:
-        return master_list
-
-
-def DEPRECATE_save_list_of_volunteers(list_of_volunteers: ListOfVolunteers):
-    DEPRECATED_data.data_list_of_volunteers.write(list_of_volunteers)

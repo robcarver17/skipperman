@@ -1,5 +1,7 @@
 from typing import List
 
+from app.objects.abstract_objects.abstract_interface import abstractInterface
+
 from app.objects.day_selectors import Day
 
 from app.objects.constants import missing_data
@@ -9,7 +11,6 @@ from app.data_access.storage_layer.api import DataLayer
 from app.objects.events import Event
 from app.objects.patrol_boats import ListOfPatrolBoats, ListOfVolunteersAtEventWithPatrolBoats, PatrolBoat
 
-from app.data_access.data import DEPRECATED_data
 from app.objects.utils import in_x_not_in_y, in_both_x_and_y
 from app.backend.data.volunteer_allocation import VolunteerAllocationData
 
@@ -70,6 +71,12 @@ class PatrolBoatsData():
 
         return patrol_boat_id
 
+    def from_patrol_boat_name_to_boat(self, boat_name: str) -> PatrolBoat:
+        list_of_patrol_boats = self.get_list_of_patrol_boats()
+        patrol_boat = list_of_patrol_boats.boat_given_name(boat_name)
+
+        return patrol_boat
+
     def delete_volunteer_with_id_at_event(self, volunteer_id: str, event: Event):
 
         for day in event.weekdays_in_event():
@@ -102,7 +109,7 @@ class PatrolBoatsData():
     def get_all_volunteer_ids_allocated_to_any_boat_or_day(self,
                                                            event: Event) -> List[str]:
 
-        list_of_voluteers_at_event_with_patrol_boats = DEPRECATE_load_list_of_voluteers_at_event_with_patrol_boats(event)
+        list_of_voluteers_at_event_with_patrol_boats = self.get_list_of_voluteers_at_event_with_patrol_boats(event)
         list_of_volunteer_ids_allocated_to_any_boat_or_day = list_of_voluteers_at_event_with_patrol_boats.list_of_all_volunteer_ids_at_event()
         list_of_volunteer_ids_at_event = self.load_list_of_volunteer_ids_at_event(event)
 
@@ -235,20 +242,9 @@ class PatrolBoatsData():
 
 
 
-def from_patrol_boat_name_to_boat(boat_name: str) -> PatrolBoat:
-    list_of_patrol_boats = DEPRECATED_load_list_of_patrol_boats()
-    return list_of_patrol_boats.boat_given_name(boat_name)
-
-def DEPRECATED_load_list_of_patrol_boats() -> ListOfPatrolBoats:
-    list_of_patrol_boats = DEPRECATED_data.data_list_of_patrol_boats.read()
-
-    return list_of_patrol_boats
-
-
-def DEPRECATE_load_list_of_voluteers_at_event_with_patrol_boats(event: Event) -> ListOfVolunteersAtEventWithPatrolBoats:
-    volunteers_with_boats_at_event = DEPRECATED_data.data_list_of_volunteers_at_event_with_patrol_boats.read(event_id=event.id)
-
-    return volunteers_with_boats_at_event
+def from_patrol_boat_name_to_boat(interface: abstractInterface, boat_name: str) -> PatrolBoat:
+    patrol_boat_data = PatrolBoatsData(interface.data)
+    return patrol_boat_data.from_patrol_boat_name_to_boat(boat_name)
 
 
 

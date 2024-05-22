@@ -117,7 +117,7 @@ def get_boat_day_volunteer_for_dropdown_name_or_none(interface: abstractInterfac
 
     if selected_dropdown == TOP_ROW_OF_VOLUNTEER_DROPDOWN:
         return NO_ADDITION_TO_MAKE
-    boat, day = from_allocation_dropdown_input_name_to_boat_and_day(dropdown_name)
+    boat, day = from_allocation_dropdown_input_name_to_boat_and_day(interface=interface, dropdown_input_name=dropdown_name)
 
     volunteer = from_selected_dropdown_to_volunteer(interface=interface, selected_dropdown=selected_dropdown)
     boat_day_volunteer = BoatDayVolunteer(boat=boat, day=day, volunteer=volunteer)

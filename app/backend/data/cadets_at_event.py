@@ -11,7 +11,6 @@ from app.backend.data.mapped_events import MappedEventsData
 
 from app.data_access.storage_layer.api import DataLayer
 
-from app.data_access.data import DEPRECATED_data
 from app.objects.cadets import ListOfCadets
 from app.objects.day_selectors import ListOfDaySelectors, DaySelector, Day
 from app.objects.events import Event
@@ -273,12 +272,6 @@ class CadetsAtEventData():
     def cadet_data(self) -> CadetData:
         return CadetData(self.data_api)
 
-def DEPRECATE_cadet_id_at_event_given_row_id(event: Event, row_id: str) -> str:
-    identified_cadets_at_event = DEPERCATE_load_identified_cadets_at_event(event)
-    cadet_id = identified_cadets_at_event.cadet_id_given_row_id(row_id=row_id)
-
-    return cadet_id
-
 
 def list_of_row_ids_at_event_given_cadet_id(interface: abstractInterface, event: Event, cadet_id: str) -> List[str]:
     cadets_at_event_data = CadetsAtEventData(interface.data)
@@ -288,19 +281,10 @@ def list_of_row_ids_at_event_given_cadet_id(interface: abstractInterface, event:
     return list_of_row_ids
 
 
-def DEPRECATED_load_cadets_at_event(event: Event) -> ListOfCadetsAtEvent:
-    return DEPRECATED_data.data_cadets_at_event.read(event_id=event.id)
-
 def load_cadets_at_event(interface: abstractInterface, event: Event) -> ListOfCadetsAtEvent:
     cadets_at_event_data = CadetsAtEventData(interface.data)
     return cadets_at_event_data.get_list_of_cadets_at_event(event)
 
-
-def save_cadets_at_event(event: Event , list_of_cadets_at_event: ListOfCadetsAtEvent):
-    return DEPRECATED_data.data_cadets_at_event.write(list_of_cadets_at_event=list_of_cadets_at_event, event_id=event.id)
-
-def DEPERCATE_load_identified_cadets_at_event(event: Event) -> ListOfIdentifiedCadetsAtEvent:
-    return DEPRECATED_data.data_identified_cadets_at_event.read(event_id=event.id)
 
 def load_identified_cadets_at_event(interface: abstractInterface, event: Event) -> ListOfIdentifiedCadetsAtEvent:
     cadets_at_event_data = CadetsAtEventData(interface.data)

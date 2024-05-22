@@ -5,9 +5,7 @@ from app.objects.qualifications import Qualification, ListOfCadetsWithQualificat
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.qualification import QualificationData, DEPRECATE_load_list_of_qualifications, \
-    DEPRECATE_list_of_qualification_ids_for_cadet
-
+from app.backend.data.qualification import QualificationData
 
 def apply_qualification_to_cadet(interface: abstractInterface, cadet_id:str, qualification: Qualification):
     qualification_data = QualificationData(interface.data)

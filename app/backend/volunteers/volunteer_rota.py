@@ -5,7 +5,6 @@ from app.backend.data.group_allocations import GroupAllocationsData
 from app.backend.data.volunteer_allocation import VolunteerAllocationData
 
 from app.backend.volunteers.volunteers import get_volunteer_name_from_id, get_sorted_list_of_volunteers
-from app.data_access.data import DEPRECATED_data
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -217,9 +216,6 @@ def load_list_of_identified_volunteers_at_event(interface: abstractInterface, ev
     return volunteer_allocation_data.load_list_of_identified_volunteers_at_event(event)
 
 
-def DEPRECATED_load_list_of_volunteers_at_event(event: Event)-> ListOfVolunteersAtEvent:
-    return DEPRECATED_data.data_list_of_volunteers_at_event.read(event_id=event.id)
-
 
 def load_list_of_volunteers_at_event(interface:abstractInterface, event: Event)-> ListOfVolunteersAtEvent:
     volunteer_allocation_data = VolunteerAllocationData(interface.data)
@@ -258,15 +254,6 @@ def add_volunteer_to_event_with_just_id(interface: abstractInterface, volunteer_
 
 
 
-def DEPRECATE_get_volunteer_at_event(volunteer_id: str, event: Event) -> VolunteerAtEvent:
-    volunteers_at_event_data = DEPRECATED_load_list_of_volunteers_at_event(event)
-    volunteer_at_event = volunteers_at_event_data.volunteer_at_event_with_id(volunteer_id)
-    if volunteer_at_event is missing_data:
-        raise Exception("Weirdly volunteer with id %s is no longer in event %s" % (volunteer_id, event))
-
-    return volunteer_at_event
-
-
 def get_volunteer_at_event(interface: abstractInterface, volunteer_id: str, event: Event) -> VolunteerAtEvent:
     volunteers_at_event_data = VolunteerAllocationData(interface.data)
     list_of_volunteers = volunteers_at_event_data.load_list_of_volunteers_at_event(event)
@@ -289,6 +276,11 @@ def delete_role_at_event_for_volunteer_on_day(interface: abstractInterface,
     volunteer_rota_data = VolunteerRotaData(interface.data)
     volunteer_rota_data.delete_role_at_event_for_volunteer_on_day(event=event, day=day, volunteer_id=volunteer_id)
 
+    ### and patrol boat data
+    patrol_boat_data = PatrolBoatsData(interface.data)
+    patrol_boat_data.remove_volunteer_from_patrol_boat_on_day_at_event(event=event, volunteer_id=volunteer_id, day=day)
+
+
 def delete_role_at_event_for_volunteer_on_all_days(interface: abstractInterface,
                                               volunteer_id: str,
                                                         event: Event):
@@ -298,8 +290,10 @@ def delete_role_at_event_for_volunteer_on_all_days(interface: abstractInterface,
 
 
 
-def DEPRECATE_load_volunteers_in_role_at_event(event: Event) -> ListOfVolunteersInRoleAtEvent:
-    return DEPRECATED_data.data_list_of_volunteers_in_roles_at_event.read(event_id=event.id)
+def load_volunteers_in_role_at_event(interface: abstractInterface, event: Event) -> ListOfVolunteersInRoleAtEvent:
+    volunteer_role_data = VolunteerRotaData(interface.data)
+    return volunteer_role_data.get_list_of_volunteers_in_roles_at_event(event)
+
 
 
 def get_volunteers_in_role_at_event_with_active_allocations(interface: abstractInterface, event: Event) -> ListOfVolunteersInRoleAtEvent:
@@ -308,6 +302,24 @@ def get_volunteers_in_role_at_event_with_active_allocations(interface: abstractI
 
 
 def update_role_at_event_for_volunteer_on_day(interface: abstractInterface,
+                                              volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
+                                    new_role: str,
+                                     event: Event):
+
+    if new_role is NO_ROLE_SET:
+        delete_role_at_event_for_volunteer_on_day(interface=interface,
+                                                  volunteer_id=volunteer_in_role_at_event_on_day.volunteer_id,
+                                                  event=event,
+                                                  day=volunteer_in_role_at_event_on_day.day)
+    else:
+        update_role_at_event_for_volunteer_on_day_if_switching_roles(
+            interface=interface,
+            volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day,
+            new_role=new_role,
+            event=event
+        )
+
+def update_role_at_event_for_volunteer_on_day_if_switching_roles(interface: abstractInterface,
                                               volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
                                     new_role: str,
                                      event: Event):

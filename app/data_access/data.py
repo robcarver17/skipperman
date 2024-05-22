@@ -24,8 +24,6 @@ def make_data():
 
 underling_data_api = make_data()
 
-DEPRECATED_data = underling_data_api ## FIXME REMOVE AT SOME POINT
-
 ## Only one of these
 store = Store()
 data_api = DataLayer(store=store, underlying_data=underling_data_api)

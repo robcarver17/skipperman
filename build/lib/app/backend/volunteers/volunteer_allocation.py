@@ -6,11 +6,12 @@ from app.backend.data.patrol_boats import PatrolBoatsData
 from app.backend.data.cadets_at_event import \
     list_of_row_ids_at_event_given_cadet_id, CadetsAtEventData
 from app.backend.data.volunteer_allocation import VolunteerAllocationData
-from app.backend.data.volunteers import DEPRECATE_load_all_volunteers,    VolunteerData,  SORT_BY_FIRSTNAME
-from app.backend.volunteers.volunteer_rota import     load_list_of_identified_volunteers_at_event, DEPRECATED_load_list_of_volunteers_at_event, \
-    DEPRECATE_get_volunteer_at_event, get_volunteer_at_event, delete_role_at_event_for_volunteer_on_day
+from app.backend.data.volunteers import     VolunteerData,  SORT_BY_FIRSTNAME
+from app.backend.volunteers.volunteer_rota import load_list_of_identified_volunteers_at_event, \
+     get_volunteer_at_event, delete_role_at_event_for_volunteer_on_day, \
+    load_list_of_volunteers_at_event
 
-from app.backend.cadets import DEPRECATED_cadet_name_from_id, cadet_name_from_id
+from app.backend.cadets import  cadet_name_from_id
 from app.backend.volunteers.volunteers import  list_of_similar_volunteers
 from app.backend.wa_import.update_cadets_at_event import   get_cadet_at_event_for_cadet_id
 from app.backend.volunteers.volunter_relevant_information import \
@@ -55,12 +56,6 @@ def add_volunteer_at_event(interface: abstractInterface,
 
 
 
-def DEPRECATE_volunteer_ids_associated_with_cadet_at_specific_event(event: Event, cadet_id: str) -> list:
-    volunteer_data = DEPRECATED_load_list_of_volunteers_at_event(event)
-    volunteer_ids = volunteer_data.list_of_volunteer_ids_associated_with_cadet_id(cadet_id)
-
-    return volunteer_ids
-
 def volunteer_ids_associated_with_cadet_at_specific_event(interface:abstractInterface, event: Event, cadet_id: str) -> list:
     volunteer_allocation_data = VolunteerAllocationData(interface.data)
     return volunteer_allocation_data.volunteer_ids_associated_with_cadet_at_specific_event(event=event, cadet_id=cadet_id)
@@ -96,15 +91,6 @@ def mark_volunteer_as_skipped(interface: abstractInterface,
     volunteer_data.mark_volunteer_as_skipped(row_id=row_id, volunteer_index=volunteer_index, event=event)
     interface.save_stored_items()
 
-def DEPRECATE_get_volunteer_name_and_associated_cadets_for_event(event: Event, volunteer_id:str, cadet_id:str) -> str:
-    list_of_all_volunteers = DEPRECATE_load_all_volunteers()
-
-    name = str(list_of_all_volunteers.object_with_id(volunteer_id))
-    other_cadets = DEPRECATE_get_string_of_other_associated_cadets_for_event(event=event,
-                                                                             volunteer_id=volunteer_id,
-                                                                             cadet_id=cadet_id)
-
-    return name+other_cadets
 
 def get_volunteer_name_and_associated_cadets_for_event(interface: abstractInterface, event: Event, volunteer_id:str, cadet_id:str) -> str:
     volunteer_data = VolunteerData(interface.data)
@@ -136,21 +122,6 @@ def get_string_of_other_associated_cadets_for_event(interface: abstractInterface
 
     return "(Other registered group_allocations associated with this volunteer: "+associated_cadets_without_this_cadet_names_str+" )"
 
-def DEPRECATE_get_string_of_other_associated_cadets_for_event(event: Event, volunteer_id:str, cadet_id:str) -> str:
-    associated_cadets_without_this_cadet = DEPRECATE_get_list_of_other_cadets_for_volunteer_at_event_apart_from_this_one(
-        event=event,
-        volunteer_id=volunteer_id,
-        cadet_id=cadet_id
-    )
-
-    if len(associated_cadets_without_this_cadet)==0:
-        return ("")
-
-    associated_cadets_without_this_cadet_names = [DEPRECATED_cadet_name_from_id(other_cadet_id) for other_cadet_id in associated_cadets_without_this_cadet]
-    associated_cadets_without_this_cadet_names_str = ", ".join(associated_cadets_without_this_cadet_names)
-
-    return "(Other registered group_allocations associated with this volunteer: "+associated_cadets_without_this_cadet_names_str+" )"
-
 def any_other_cadets_for_volunteer_at_event_apart_from_this_one(interface: abstractInterface, event: Event, volunteer_id:str, cadet_id:str) -> bool:
     associated_cadets_without_this_cadet = get_list_of_other_cadets_for_volunteer_at_event_apart_from_this_one(
         interface=interface,
@@ -163,13 +134,6 @@ def any_other_cadets_for_volunteer_at_event_apart_from_this_one(interface: abstr
 
 def get_list_of_other_cadets_for_volunteer_at_event_apart_from_this_one(interface: abstractInterface, event: Event, volunteer_id:str, cadet_id:str) -> List[str]:
     volunteer_at_event = get_volunteer_at_event(interface=interface, volunteer_id=volunteer_id, event=event)
-    associated_cadets = volunteer_at_event.list_of_associated_cadet_id
-    associated_cadets_without_this_cadet = [other_cadet_id for other_cadet_id in associated_cadets if other_cadet_id!=cadet_id]
-
-    return associated_cadets_without_this_cadet
-
-def DEPRECATE_get_list_of_other_cadets_for_volunteer_at_event_apart_from_this_one(event: Event, volunteer_id:str, cadet_id:str) -> List[str]:
-    volunteer_at_event = DEPRECATE_get_volunteer_at_event(volunteer_id=volunteer_id, event=event)
     associated_cadets = volunteer_at_event.list_of_associated_cadet_id
     associated_cadets_without_this_cadet = [other_cadet_id for other_cadet_id in associated_cadets if other_cadet_id!=cadet_id]
 
@@ -295,14 +259,9 @@ def update_cadet_connections_for_volunteer_with_list_of_cadet_ids(interface: abs
         volunteer_data.add_cadet_id_to_existing_volunteer(cadet_id=cadet_id, volunteer_id=volunteer_id, event=event)
 
 
-def DEPRECATE_get_volunteer_at_event_with_id(event: Event, volunteer_id: str) -> VolunteerAtEvent:
-    list_of_volunteers_at_event = DEPRECATED_load_list_of_volunteers_at_event(event)
-    volunteer_at_event = list_of_volunteers_at_event.volunteer_at_event_with_id(volunteer_id)
-
-    return volunteer_at_event
 
 def get_volunteer_at_event_with_id(interface: abstractInterface ,event: Event, volunteer_id: str) -> VolunteerAtEvent:
-    list_of_volunteers_at_event = DEPRECATED_load_list_of_volunteers_at_event(event)
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(interface=interface, event=event)
     volunteer_at_event = list_of_volunteers_at_event.volunteer_at_event_with_id(volunteer_id)
 
     return volunteer_at_event

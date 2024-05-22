@@ -1,11 +1,8 @@
-from app.objects.abstract_objects.abstract_interface import abstractInterface
-
 from app.objects.qualifications import ListOfQualifications, ListOfCadetsWithQualifications, Qualification
 
 from typing import List
 
 from app.data_access.storage_layer.api import DataLayer
-from app.data_access.data import DEPRECATED_data
 from app.objects.cadets import Cadet
 
 
@@ -98,27 +95,3 @@ class QualificationData():
 
     def save_list_of_cadets_with_qualifications(self, list_of_cadets_with_qualifications: ListOfCadetsWithQualifications):
         self.data_api.save_list_of_cadets_with_qualifications(list_of_cadets_with_qualifications)
-
-
-def DEPRECATE_load_list_of_qualifications() -> ListOfQualifications:
-    return DEPRECATED_data.data_list_of_qualifications.read()
-
-def DEPRECATE_save_list_of_qualifications(list_of_qualifications: ListOfQualifications):
-    DEPRECATED_data.data_list_of_qualifications.write(list_of_qualifications)
-
-
-def DEPRECATE_list_of_named_qualifications_for_cadet(interface: abstractInterface, cadet: Cadet) -> List[str]:
-    list_of_ids = DEPRECATE_list_of_qualification_ids_for_cadet(cadet)
-    list_of_qualification = DEPRECATE_load_list_of_qualifications()
-    list_of_names= [list_of_qualification.name_given_id(id) for id in list_of_ids]
-
-    return list_of_names
-
-
-def DEPRECATE_list_of_qualification_ids_for_cadet(cadet: Cadet) -> List[str]:
-    list_of_cadets_with_qualifications = DEPRECATE_load_list_of_cadets_with_qualifications()
-    list_of_ids = list_of_cadets_with_qualifications.list_of_qualification_ids_for_cadet(cadet_id=cadet.id)
-    return list_of_ids
-
-def DEPRECATE_load_list_of_cadets_with_qualifications() -> ListOfCadetsWithQualifications:
-    return DEPRECATED_data.data_list_of_cadets_with_qualifications.read()

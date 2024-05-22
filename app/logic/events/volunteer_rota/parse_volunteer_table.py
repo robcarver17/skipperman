@@ -154,6 +154,8 @@ def update_if_remove_role_button_pressed(interface: abstractInterface, remove_bu
     event = get_event_from_state(interface)
     delete_role_at_event_for_volunteer_on_day(interface=interface, event=event, day=day, volunteer_id=volunteer_id)
 
+
+
 def save_all_information_and_filter_state_in_rota_page(interface: abstractInterface):
     ready_to_swap = is_ready_to_swap(interface)
     if ready_to_swap:

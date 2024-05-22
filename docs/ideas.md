@@ -75,22 +75,35 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - cadet days warning
 - with skipper access only - grant qualification from ticksheet screen and log date when awarded
 - report of qualifications awarded by date
+- list of non volunteers with cadets who are too young or first event
 
 
 ### Required for cadet week:
 
-- list of non volunteers with cadet ages - ADD to warnings
 - two types of clothing event: as part of training event, or social only seperate
-- allocate and maintain colour groups (CW)
-- maintain and report on tickets for gala dinner, include additional gala dinner invites eg sponsors, plus ones (CW)
-- maintain and report on wristbands (CW)
-- create a report of cadets and their ages for fancy dress (CW)
+
+- allocate and maintain colour groups (CW) - as part of merchandise
 - create a report of t-shirts and other merch required (CW)
-- create a report of polo shirts required (CW)
-- create a report of RYA logbooks/certficates required (CW)
-- maintain a list of key volunteers and thank yous (CW)
-- manage orders for hoodies (CW)
+- maintain and report on child wristbands (CW) - SAME AS T-SHIRTS REPORT
+
+- create a food report with allergies and numbers (CW) - (FOOD ONLY EVENT FOR WRISTBANDS AND THEN COMBINE)
+
+- create a report of cadets and their ages for fancy dress (CW) - FROM A GENERIC CADETS AT EVENT REPORT WITH SELECT FIELDS
+
+- create a report of adult polo shirts required (CW) - FROM A GENERIC .CSV LIST OF VOLUNTEER REPORT WHERE CAN FILTER ON CERTAIN ROLES
+- maintain and report on adult wristbands (CW) - FROM A GENERIC .CSV  LIST OF VOLUNTEER REPORT WHERE CAN FILTER ON DAYS ATTENDING
+- maintain a list of key volunteers and thank yous (CW) - FROM A GENERIC .CSV LIST OF VOLUNTEER REPORT WHERE CAN FILTER ON CERTAIN ROLES
+
 - maintain lists of past, present, potential and future cadet committee members (CW)
+- Cadet committee polo shirts (CW) - FROM A GENERIC CADETS AT EVENT REPORT WITH SELECT FIELDS
+
+- create a report of RYA logbooks/certficates required (CW) EXPECTED QUALIFICATIONS FOR EVENT
+
+- manage orders for hoodies (CW)
+- maintain and report on tickets for gala dinner, include additional gala dinner invites eg sponsors, plus ones (CW)
+  (FOOD ONLY EVENT WITH NAME IMPORT FROM ANOTHER EVENT)    
+
+
 
   ### Required for social event:
 

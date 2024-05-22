@@ -75,6 +75,9 @@ class ListOfCadetsWithQualifications(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return CadetWithQualification
 
+    def sort_by_date(self):
+        return ListOfCadetsWithQualifications(sorted(self, key = lambda object: object.date, reverse=True))
+
     def apply_qualification_to_cadet(self, cadet_id: str, qualification_id: str):
         if self.does_cadet_id_have_qualification(cadet_id=cadet_id, qualification_id=qualification_id):
             return

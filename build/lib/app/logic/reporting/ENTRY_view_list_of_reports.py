@@ -5,6 +5,7 @@ from app.logic.reporting.allocations.report_group_allocations import display_for
 from app.logic.reporting.rota.report_rota import display_form_report_rota
 from app.logic.reporting.boats.report_boats import display_form_report_boat
 from app.logic.reporting.rollcall_and_contacts.rollcall_report import display_form_report_rollcall
+from app.logic.reporting.qualifications.report_qualifications import display_form_for_qualifications_report
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -19,13 +20,15 @@ GROUP_ALLOCATION_REPORT_BUTTON_LABEL = "Group allocation for event"
 ROTA_REPORT_BUTTON_LABEL = "Volunteer rota for event"
 BOATS_REPORT_BUTTON_LABEL = "Spotter sheet for event"
 ROLLCALL_REPORT_BUTTON_LABEL = "Rollcall, health and contacts for event"
+QUALIFICATIONS_REPORT_BUTTON_LABEL = "Qualifications achieved by cadets"
 
 ## MODIFY THIS TO ADD MORE REPORTS
 DICT_OF_REPORT_LABELS_AND_STAGES ={
     GROUP_ALLOCATION_REPORT_BUTTON_LABEL: display_form_report_group_allocation,
     ROTA_REPORT_BUTTON_LABEL: display_form_report_rota,
     BOATS_REPORT_BUTTON_LABEL: display_form_report_boat,
-    ROLLCALL_REPORT_BUTTON_LABEL: display_form_report_rollcall
+    ROLLCALL_REPORT_BUTTON_LABEL: display_form_report_rollcall,
+    QUALIFICATIONS_REPORT_BUTTON_LABEL: display_form_for_qualifications_report
 }
 
 list_of_report_labels=list(DICT_OF_REPORT_LABELS_AND_STAGES.keys())

@@ -1,4 +1,9 @@
+import os
 from typing import Union
+
+import pandas as pd
+from app.data_access.uploads_and_downloads import download_directory
+
 from app.backend.wa_import.map_wa_fields import get_list_of_templates, get_template, \
     write_mapping_to_temp_csv_file_and_return_filename
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -6,55 +11,51 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     File, NewForm, )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
+from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar, main_menu_button
 from app.logic.abstract_logic_api import initial_state_form
-
+from app.backend.data.qualification import QualificationData
 
 
 def display_form_for_qualifications_report(interface: abstractInterface):
-    list_of_templates_with_buttons = display_list_of_templates_with_buttons(interface)
-    if len(list_of_templates_with_buttons) == 0:
-        interface.log_error("Can't download a template when none uploaded")
-        return initial_state_form
-    else:
-        contents_of_form = ListOfLines(
-            [
-                cancel_button,
-                "Choose template to download and edit in excel",
-                _______________,
-                list_of_templates_with_buttons,
-            ]
-        )
+    contents_of_form = ListOfLines(
+        [
+            ButtonBar([main_menu_button, cancel_button, create_report]),
+            'nothing yet'
+        ]
+    )
 
     return Form(contents_of_form)
 
-cancel_button = Button(CANCEL_BUTTON_LABEL)
+MAKE_REPORT = "Download list of qualifications"
+cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
+create_report = Button(MAKE_REPORT, nav_button=True)
 
 def post_form_for_qualifications_report(
     interface: abstractInterface,
 ) -> Union[File, Form, NewForm]:
-    template_name = interface.last_button_pressed()
+    last_button = interface.last_button_pressed()
 
-    if template_name == CANCEL_BUTTON_LABEL:
+    if last_button == CANCEL_BUTTON_LABEL:
         return previous_form(interface)
-
-    try:
-        mapping = get_template(interface=interface, template_name=template_name)
-    except Exception as e:
-        interface.log_error(
-            "Template %s does not exist anymore? error code %s"
-            % (template_name, str(e))
-        )
-        return initial_state_form
-
-    filename = write_mapping_to_temp_csv_file_and_return_filename(mapping)
-    return File(filename)
+    elif last_button == MAKE_REPORT:
+        filename = write_qualifications_to_temp_csv_file_and_return_filename(interface)
+        return File(filename)
 
 def previous_form(interface: abstractInterface):
-    return interface.get_new_display_form_for_parent_of_function(display_form_for_download_template_field_mapping)
+    return interface.get_new_display_form_for_parent_of_function(post_form_for_qualifications_report)
 
 
-## repeats but avoids circular
-def display_list_of_templates_with_buttons(interface: abstractInterface) -> ListOfLines:
-    list_of_templates = get_list_of_templates(interface)
-    return ListOfLines([Button(template_name) for template_name in list_of_templates])
+def write_qualifications_to_temp_csv_file_and_return_filename(interface: abstractInterface) -> str:
+    qualification_data = QualificationData(interface.data)
+    list_of_qualifications= qualification_data.get_list_of_cadets_with_qualifications()
+    list_of_qualifications = list_of_qualifications.sort_by_date()
+    df_of_qualifications = list_of_qualifications.to_df_of_str()
+    filename = temp_file_name()
+
+    df_of_qualifications.to_csv(filename, index=False)
+
+    return filename
+
+
+def temp_file_name() -> str:
+    return os.path.join(download_directory, "temp_file.csv")

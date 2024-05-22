@@ -23,7 +23,6 @@ def display_form_for_qualifications_report(interface: abstractInterface):
     contents_of_form = ListOfLines(
         [
             ButtonBar([main_menu_button, cancel_button, create_report]),
-            'nothing yet'
         ]
     )
 

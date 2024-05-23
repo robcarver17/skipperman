@@ -187,6 +187,7 @@ app/logic/administration/users/../../../data_access/configuration/configuration.
 app/logic/cadets/ENTRY_view_cadets.py
 app/logic/cadets/__init__.py
 app/logic/cadets/add_cadet.py
+app/logic/cadets/cadet_committee.py
 app/logic/cadets/cadet_function_mapping.py
 app/logic/cadets/cadet_state_storage.py
 app/logic/cadets/delete_cadet.py

@@ -1,5 +1,7 @@
 from typing import Union
 
+from app.backend.data.cadets import CadetData
+
 from app.backend.ticks_and_qualifications.qualifications import sorted_list_of_named_qualifications_for_cadet
 from app.logic.cadets.cadet_state_storage import get_cadet_from_state
 from app.logic.cadets.delete_cadet import display_form_delete_individual_cadet
@@ -39,6 +41,7 @@ def display_form_for_selected_cadet(
 ) -> Form:
     lines_of_allocations = list_of_lines_with_allocations(interface=interface, cadet=cadet)
     qualifications_str = qualifications_line(interface=interface, cadet=cadet)
+    committee_str =get_committee_string(interface=interface, cadet=cadet)
     buttons = buttons_for_cadet_form()
     return Form(
         ListOfLines([
@@ -46,6 +49,7 @@ def display_form_for_selected_cadet(
             _______________,
             lines_of_allocations,
             qualifications_str,
+            committee_str,
             _______________,
             buttons
         ])
@@ -62,6 +66,13 @@ def qualifications_line(interface: abstractInterface, cadet: Cadet)-> Line:
     qualifications_str = ", ".join(qualifications)
 
     return Line(["Qualifications: %s" % qualifications_str])
+
+
+
+
+def get_committee_string(interface: abstractInterface, cadet: Cadet) -> Line:
+    cadet_data = CadetData(interface.data)
+    return Line(cadet_data.cadet_on_committee_status_str(cadet))
 
 def buttons_for_cadet_form() -> ButtonBar:
     return ButtonBar([Button(BACK_BUTTON_LABEL, nav_button=True), Button(EDIT_BUTTON_LABEL, nav_button=True)])

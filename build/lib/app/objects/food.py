@@ -66,6 +66,7 @@ class CadetWithFoodRequirementsAtEvent(GenericSkipperManObject):
         return cls(cadet_id=cadet_id, food_requirements = food_required)
 
 class ListOfCadetsWithFoodRequirementsAtEvent(GenericListOfObjects):
+    @property
     def _object_class_contained(self):
         return CadetWithFoodRequirementsAtEvent
 
@@ -91,5 +92,6 @@ class VolunteerWithFoodRequirementsAtEvent(GenericSkipperManObject):
         return cls(volunteer_id=volunteer_id, food_requirements = food_required)
 
 class ListOfVolunteersWithFoodRequirementsAtEvent(GenericListOfObjects):
+    @property
     def _object_class_contained(self):
         return VolunteerWithFoodRequirementsAtEvent

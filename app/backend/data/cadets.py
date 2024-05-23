@@ -1,14 +1,41 @@
+from datetime import datetime
 from typing import List
 
-from app.objects.constants import arg_not_passed
+from app.objects.constants import arg_not_passed, missing_data
 
 from app.data_access.storage_layer.api import DataLayer
 from app.objects.cadets import Cadet, ListOfCadets
+from app.objects.committee import CadetCommitteeMember, ListOfCadetsOnCommittee
 
 
 class CadetData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
+
+    def cadet_on_committee_status_str(self, cadet: Cadet) ->str:
+        list_of_committee_members = self.get_list_of_cadets_on_committee()
+        member = list_of_committee_members.cadet_committee_member_with_id(cadet.id)
+        if member is missing_data:
+            return "Not on cadet committee"
+
+        return member.status_string()
+
+    def elect_to_committee_with_dates(self, cadet: Cadet, date_term_start: datetime.date, date_term_end: datetime.date):
+        list_of_committee_members = self.get_list_of_cadets_on_committee()
+        list_of_committee_members.add_new_members(cadet_id=cadet.id,
+                                                  date_term_starts=date_term_start,
+                                                  date_term_ends=date_term_end)
+        self.save_list_of_cadets_on_committee(list_of_committee_members)
+
+    def deselect_from_committee(self, cadet: Cadet):
+        list_of_committee_members = self.get_list_of_cadets_on_committee()
+        list_of_committee_members.deselect_member(cadet_id=cadet.id)
+        self.save_list_of_cadets_on_committee(list_of_committee_members)
+
+    def reselect_to_committee(self, cadet: Cadet):
+        list_of_committee_members = self.get_list_of_cadets_on_committee()
+        list_of_committee_members.reselect_member(cadet_id=cadet.id)
+        self.save_list_of_cadets_on_committee(list_of_committee_members)
 
     def get_sorted_list_of_cadets(self, sort_by: str = arg_not_passed) -> ListOfCadets:
         master_list = self.get_list_of_cadets()
@@ -100,6 +127,12 @@ class CadetData():
 
     def save_list_of_cadets(self, list_of_cadets: ListOfCadets):
         self.data_api.save_list_of_cadets(list_of_cadets)
+
+    def get_list_of_cadets_on_committee(self) -> ListOfCadetsOnCommittee:
+        return self.data_api.get_list_of_cadets_on_committee()
+
+    def save_list_of_cadets_on_committee(self, list_of_cadets_on_committee: ListOfCadetsOnCommittee):
+        self.data_api.save_list_of_cadets_on_committee(list_of_cadets_on_committee)
 
 
 def get_list_of_cadets_as_str(list_of_cadets: ListOfCadets) -> List[str]:

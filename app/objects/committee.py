@@ -1,6 +1,6 @@
 
 from dataclasses import dataclass
-from datetime import datetime
+import datetime
 
 from app.objects.constants import missing_data
 
@@ -15,14 +15,29 @@ class CadetCommitteeMember(GenericSkipperManObject):
     deselected: bool = False
 
     def currently_active(self):
-        after_election = datetime.today()>=self.date_term_starts
-        before_end_of_term = datetime.today()<=self.date_term_ends
+        after_election = datetime.date.today()>=self.date_term_starts
+        before_end_of_term = datetime.date.today()<=self.date_term_ends
         not_deselected = not self.deselected
 
         return after_election and before_end_of_term and not_deselected
 
+    def status_string(self):
+        after_election = datetime.date.today()>=self.date_term_starts
+        before_end_of_term = datetime.date.today()<=self.date_term_ends
+        deselected = self.deselected
+
+        ## These strings form a neat sort order
+        if not after_election:
+            return "Elected but not yet serving on committee"
+        elif not before_end_of_term:
+            return "Past committee member"
+        elif deselected:
+            return "Deselected"
+        else:
+            return "Current committee member"
 
 class ListOfCadetsOnCommittee(GenericListOfObjects):
+    @property
     def _object_class_contained(self):
         return CadetCommitteeMember
 

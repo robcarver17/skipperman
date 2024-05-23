@@ -16,11 +16,13 @@ from app.objects.abstract_objects.form_function_mapping import   DisplayAndPostF
 from app.logic.cadets.import_cadets import display_form_import_cadets, post_form_import_cadets
 from app.logic.cadets.iterate_over_import_cadets_in_uploaded_file import display_verify_adding_cadet_from_list_form, \
     post_verify_adding_cadet_from_list_form
+from app.logic.cadets.cadet_committee import *
 
 nested_dict=NestedDictOfMappings(
     {(display_form_view_of_cadets, post_form_view_of_cadets): {
         (display_form_import_cadets, post_form_import_cadets):0,
         (display_verify_adding_cadet_from_list_form, post_verify_adding_cadet_from_list_form):0, ## returns to display cadets
+        (display_form_cadet_committee, post_form_cadet_committee):0,
         (display_form_add_cadet, post_form_add_cadets): '',
         (display_form_view_individual_cadet, post_form_view_individual_cadet):
             {

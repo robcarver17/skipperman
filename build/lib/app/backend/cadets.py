@@ -1,11 +1,16 @@
+import datetime
 from copy import copy
+from dataclasses import dataclass
+from typing import List
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.cadets import CadetData
+from app.backend.data.cadets import CadetData, SORT_BY_DOB_DSC, SORT_BY_DOB_ASC
 from app.data_access.configuration.configuration import MIN_CADET_AGE, MAX_CADET_AGE
 from app.objects.cadets import Cadet, ListOfCadets, is_cadet_age_surprising
-from app.objects.constants import arg_not_passed
+from app.objects.committee import CadetCommitteeMember
+from app.objects.constants import arg_not_passed, missing_data
+
 
 def add_new_verified_cadet(interface: abstractInterface, cadet: Cadet) -> Cadet:
     cadet_data = CadetData(interface.data)
@@ -139,4 +144,94 @@ def modify_cadet(interface: abstractInterface, cadet_id: str, new_cadet: Cadet):
     cadet_data.modify_cadet(cadet_id=cadet_id, new_cadet=new_cadet)
 
 
+def get_list_of_cadets_not_on_committee_ordered_by_age(interface: abstractInterface) -> ListOfCadets:
+    cadet_data = CadetData(interface.data)
+    all_cadets = get_sorted_list_of_cadets(interface=interface, sort_by=SORT_BY_DOB_ASC)
+    committee = cadet_data.get_list_of_cadets_on_committee()
 
+    list_of_cadets = ListOfCadets([cadet for cadet in all_cadets if cadet.id not in committee.list_of_cadet_ids()])
+
+    return list_of_cadets
+
+@dataclass
+class CadetOnCommitteeWithName:
+    cadet_on_committee: CadetCommitteeMember
+    cadet: Cadet
+
+    def __lt__(self, other):
+        if self.cadet_on_committee.status_string()<other.cadet_on_committee.status_string():
+            return True
+        elif self.cadet_on_committee.status_string()>other.cadet_on_committee.status_string():
+            return False
+
+        return self.cadet.name<other.cadet.name
+
+    @property
+    def cadet_id(self):
+        return self.cadet.id
+
+    @property
+    def deselected(self):
+        return self.cadet_on_committee.deselected
+
+
+class ListOfCadetsOnCommitteeWithName(List[CadetOnCommitteeWithName]):
+    pass
+
+def get_list_of_cadets_with_names_on_committee(interface: abstractInterface) -> ListOfCadetsOnCommitteeWithName:
+    cadet_data = CadetData(interface.data)
+    list_of_cadets = cadet_data.get_list_of_cadets()
+    list_of_committee_members = cadet_data.get_list_of_cadets_on_committee()
+    list_of_cadets_on_committee = [list_of_cadets.cadet_with_id(cadet_on_committee.cadet_id) for cadet_on_committee in list_of_committee_members]
+
+    list_of_cadets_on_committee = ListOfCadetsOnCommitteeWithName(
+        [
+            CadetOnCommitteeWithName(cadet=cadet, cadet_on_committee=cadet_on_committee)
+            for cadet, cadet_on_committee in zip(list_of_cadets_on_committee, list_of_committee_members)])
+
+    list_of_cadets_on_committee.sort()
+
+    return list_of_cadets_on_committee
+
+def get_list_of_cadets_not_on_committee_born_after_sept_first_in_year(interface: abstractInterface,
+                                                                      next_year_for_committee: int) -> ListOfCadets:
+
+    cadet_data = CadetData(interface.data)
+    list_of_cadets = cadet_data.get_list_of_cadets()
+    list_of_committee_members = cadet_data.get_list_of_cadets_on_committee()
+
+    list_of_cadets = [cadet for cadet in list_of_cadets if cadet.date_of_birth<datetime.date(next_year_for_committee-16,9,1)
+                        and cadet.date_of_birth>=datetime.date(next_year_for_committee-17, 9,1)
+                      and cadet.id not in list_of_committee_members.list_of_cadet_ids()]
+
+    return ListOfCadets(list_of_cadets).sort_by_dob_asc()
+
+def get_next_year_for_cadet_committee():
+    today = datetime.date.today()
+    if today.month<9:
+        return today.year
+    else:
+        return today.year+1
+
+
+def add_new_cadet_to_committee(interface: abstractInterface, cadet: Cadet, date_term_start: datetime.date, date_term_end: datetime.date):
+    cadet_data = CadetData(interface.data)
+    cadet_data.elect_to_committee_with_dates(cadet=cadet,
+                                             date_term_end=date_term_end,
+                                             date_term_start=date_term_start
+                                             )
+
+
+def toggle_selection_for_cadet_committee_member(interface: abstractInterface, cadet_id: str):
+    cadet_data = CadetData(interface.data)
+    cadet = cadet_data.get_cadet_with_id_(cadet_id)
+    committee_members = cadet_data.get_list_of_cadets_on_committee()
+    specific_member = committee_members.cadet_committee_member_with_id(cadet_id)
+    if specific_member is missing_data:
+        interface.log_error("Cadet %s is not on committee so can't be selected / deselected" % cadet)
+
+    currently_deselected = specific_member.deselected
+    if currently_deselected:
+        cadet_data.reselect_to_committee(cadet)
+    else:
+        cadet_data.deselect_from_committee(cadet)

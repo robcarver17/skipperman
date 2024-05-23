@@ -8,6 +8,7 @@ class CadetWithClothingAtEvent:
 
 
 class ListOfCadetsWithClothingAtEvent(GenericListOfObjects):
+    @property
     def _object_class_contained(self):
         return CadetWithClothingAtEvent
 

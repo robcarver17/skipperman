@@ -67,6 +67,7 @@ def write_object(object, path_and_filename: str):
 def read_object_of_type(object_type, path_and_filename):
     try:
         df = pd.read_csv(path_and_filename)
+        assert len(df)>0
     except:
         return object_type.create_empty()
 

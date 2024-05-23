@@ -76,11 +76,11 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - with skipper access only - grant qualification from ticksheet screen and log date when awarded
 - report of qualifications awarded by date
 - list of non volunteers with cadets who are too young or first event
+- maintain lists of past, present, potential and future cadet committee members (CW)
 
 
 ### Required for cadet week:
 
-- maintain lists of past, present, potential and future cadet committee members (CW)
 
 - put shareable files up like instructors documents; manage shared files eg deleete
 

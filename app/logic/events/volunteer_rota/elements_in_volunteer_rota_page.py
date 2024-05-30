@@ -103,13 +103,15 @@ def get_volunteer_skills_filter(interface: abstractInterface):
 SKILLS_FILTER = "skills_filter"
 APPLY_FILTER_BUTTON_LABEL = "Apply filters"
 CLEAR_FILTERS_BUTTON_LABEL = "Clear all filters"
+COPY_ALL_ROLES_BUTTON_LABEL = "Copy all roles across days (where possible)"
 
 filter_button = Button(APPLY_FILTER_BUTTON_LABEL, nav_button=True)
 clear_filter_button = Button(CLEAR_FILTERS_BUTTON_LABEL, nav_button=True)
 
 def get_header_buttons_for_rota():
     return ButtonBar([Button(CANCEL_BUTTON_LABEL, nav_button=True), Button(SAVE_CHANGES, nav_button=True),
-                      Button(ADD_NEW_VOLUNTEER_BUTTON_LABEL, nav_button=True)])
+                      Button(ADD_NEW_VOLUNTEER_BUTTON_LABEL, nav_button=True),
+                      Button(COPY_ALL_ROLES_BUTTON_LABEL, nav_button=True)])
 
 
 

@@ -6,7 +6,6 @@ from app.objects.volunteers_at_event import ListOfVolunteersAtEvent
 from app.backend.volunteers.volunteer_allocation import     make_volunteer_unavailable_on_day, make_volunteer_available_on_day
 from app.backend.volunteers.volunteer_rota import delete_role_at_event_for_volunteer_on_day, copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days
 from app.backend.volunteers.volunteer_rota_data import get_data_to_be_stored_for_volunteer_rota_page, \
-    get_sorted_and_filtered_list_of_volunteers_at_event
 from app.data_access.configuration.configuration import VOLUNTEER_SKILLS
 from app.logic.events.volunteer_rota.edit_cadet_connections_for_event_from_rota import \
     display_form_edit_cadet_connections_from_rota
@@ -15,9 +14,8 @@ from app.logic.events.volunteer_rota.edit_volunteer_details_from_rota import \
 from app.logic.events.volunteer_rota.edit_volunteer_skills_from_rota import \
     display_form_edit_individual_volunteer_skills_from_rota
 from app.logic.events.volunteer_rota.elements_in_volunteer_rota_page import SKILLS_FILTER, \
-    get_available_filter_name_for_day, from_filter_entry_to_option
-from app.logic.events.volunteer_rota.rota_state import save_skills_filter_to_state, save_availablity_filter_to_state, \
-    get_sorts_and_filters_from_state
+    get_available_filter_name_for_day, from_filter_entry_to_option, COPY_ALL_ROLES_BUTTON_LABEL
+from app.logic.events.volunteer_rota.rota_state import save_skills_filter_to_state, save_availablity_filter_to_state
 from app.logic.events.volunteer_rota.swapping import get_list_of_swap_buttons
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_rota.parse_data_fields_in_rota import update_details_from_form_for_volunteer_at_event
@@ -99,7 +97,7 @@ def get_all_make_available_buttons(interface: abstractInterface):
 
 def get_all_copy_buttons(interface: abstractInterface):
     event = get_event_from_state(interface)
-    return get_list_of_copy_buttons(interface=interface, event=event)
+    return get_list_of_copy_buttons(interface=interface, event=event)+[COPY_ALL_ROLES_BUTTON_LABEL]
 
 def get_all_swap_buttons(interface: abstractInterface):
     event = get_event_from_state(interface)
@@ -129,11 +127,32 @@ def action_if_volunteer_skills_button_pressed(interface: abstractInterface, volu
 
 def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str):
 
-    volunteer_id, day =    from_known_button_to_volunteer_id_and_day(copy_button)
+    if copy_button==COPY_ALL_ROLES_BUTTON_LABEL:
+        update_if_all_copy_button_pressed(interface=interface)
+    else:
+        update_if_individual_copy_button_pressed(interface=interface, copy_button=copy_button)
+
+
+def update_if_individual_copy_button_pressed(interface: abstractInterface, copy_button: str):
+    volunteer_id, day = from_known_button_to_volunteer_id_and_day(copy_button)
     event = get_event_from_state(interface)
 
     copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(interface=interface, event=event,
-                                                                                       volunteer_id=volunteer_id, day=day)
+                                                                             volunteer_id=volunteer_id, day=day)
+
+
+def update_if_all_copy_button_pressed(interface: abstractInterface):
+    list_of_volunteers_at_event = get_list_of_volunteers_at_event(interface)
+    event = get_event_from_state(interface)
+    for day in event.weekdays_in_event():
+        for volunteer_id in list_of_volunteers_at_event.list_of_volunteer_ids:
+            try:
+                copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(interface=interface, event=event,
+                                                                                         volunteer_id=volunteer_id, day=day)
+            except Exception as e:
+                print("Failed to copy duties error %s probably fine" % str(e))
+
+
 
 def update_if_make_available_button_pressed(interface: abstractInterface, available_button: str):
     volunteer_id, day =  from_known_button_to_volunteer_id_and_day(available_button)
@@ -170,8 +189,7 @@ def save_all_information_and_filter_state_in_rota_page(interface: abstractInterf
 
 
 def save_all_information_in_rota_page(interface: abstractInterface):
-
-    list_of_volunteers_at_event = get_filtered_list_of_volunteers_at_event(interface)
+    list_of_volunteers_at_event = get_list_of_volunteers_at_event(interface)
 
     for volunteer_at_event in list_of_volunteers_at_event:
         try:
@@ -181,17 +199,11 @@ def save_all_information_in_rota_page(interface: abstractInterface):
             )
         except Exception as e:
             ## perfectly fine if
-            interface.log_error("Weird error updating volunteer %s: code %s" % (str(volunteer_at_event), str(e)))
+            print("Can't volunteer %s: error code %s probably because was filtered out" % (str(volunteer_at_event), str(e)))
 
 
-def get_filtered_list_of_volunteers_at_event(interface: abstractInterface) -> ListOfVolunteersAtEvent:
+def get_list_of_volunteers_at_event(interface: abstractInterface) -> ListOfVolunteersAtEvent:
     event = get_event_from_state(interface)
     data_to_be_stored = get_data_to_be_stored_for_volunteer_rota_page(interface=interface, event=event)
-    sorts_and_filters = get_sorts_and_filters_from_state(interface)
-    list_of_volunteers_at_event = get_sorted_and_filtered_list_of_volunteers_at_event(
-        interface=interface,
-        data_to_be_stored=data_to_be_stored,
-        sorts_and_filters=sorts_and_filters
-    )
 
-    return list_of_volunteers_at_event
+    return data_to_be_stored.list_of_volunteers_at_event

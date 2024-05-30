@@ -355,4 +355,4 @@ def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(int
                                                                                                 volunteer_id=volunteer_id)
     except Exception as e:
         name = get_volunteer_name_from_id(interface=interface, volunteer_id=volunteer_id)
-        interface.log_error("Can't copy across role data for %s on %s, error %s, conflicting change made?" % (name, day.name, str(e)))
+        print("Can't copy across role data for %s on %s, error %s, conflicting change made?" % (name, day.name, str(e)))

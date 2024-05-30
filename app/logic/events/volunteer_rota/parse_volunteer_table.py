@@ -146,12 +146,8 @@ def update_if_all_copy_button_pressed(interface: abstractInterface):
     event = get_event_from_state(interface)
     for day in event.weekdays_in_event():
         for volunteer_id in list_of_volunteers_at_event.list_of_volunteer_ids:
-            try:
-                copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(interface=interface, event=event,
-                                                                                         volunteer_id=volunteer_id, day=day)
-            except Exception as e:
-                print("Failed to copy duties error %s probably fine" % str(e))
-
+            copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(interface=interface, event=event,
+                                                                                     volunteer_id=volunteer_id, day=day)
 
 
 def update_if_make_available_button_pressed(interface: abstractInterface, available_button: str):

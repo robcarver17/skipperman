@@ -149,14 +149,11 @@ def get_relevant_information_for_volunteer_in_event_at_row_and_index(
         volunteer_index: int,
         event: Event
 ) -> RelevantInformationForVolunteer:
-    print("Getting relevant information for row_id %s vol index %d" % (row_id, volunteer_index))
-
     row_in_mapped_event = get_row_in_mapped_event_data_given_id(interface=interface, event=event, row_id=row_id)
     if row_in_mapped_event is missing_data:
         print("For row_id %s vol index %d the relevant information was missing: might be okay?" % (row_id, volunteer_index))
         return missing_relevant_information
 
-    print("row %s" % str(row_in_mapped_event))
     relevant_information = get_relevant_information_for_volunteer(interface=interface, row_in_mapped_event=row_in_mapped_event, volunteer_index=volunteer_index, event=event)
 
     return relevant_information

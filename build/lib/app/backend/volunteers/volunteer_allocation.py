@@ -21,7 +21,7 @@ from app.objects.constants import missing_data
 from app.objects.day_selectors import Day, DaySelector
 from app.objects.events import Event
 from app.objects.relevant_information_for_volunteers import ListOfRelevantInformationForVolunteer
-#from app.objects.food import FoodRequirements
+#from app.objects.food_and_clothing import FoodRequirements
 from app.objects.utils import union_of_x_and_y, in_x_not_in_y
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.volunteers_at_event import VolunteerAtEvent, ListOfIdentifiedVolunteersAtEvent

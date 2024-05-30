@@ -152,9 +152,9 @@ LIST_OF_CADETS_WITH_QUALIFICATIONS: ("lists", "lists_of_cadets_with_qualificatio
 LIST_OF_TICK_SUBSTAGES: ("lists", "list_of_tick_substages.csv"),
 LIST_OF_TICK_SHEET_ITEMS:("lists", "list_of_tick_sheet_items.csv"),
 LIST_OF_CADETS_WITH_TICK_LIST_ITEMS_FOR_EACH_CADET: ("ticksheets", "tick_list_items_for_cadet_%s.csv"),
-LIST_OF_CADETS_WITH_CLOTHING_AT_EVENT: ("mapped_event", "list_of_cadets_with_clothing_at_event_%s"),
-LIST_OF_CADETS_WITH_FOOD_AT_EVENT: ("mapped_event", "list_of_cadets_with_food_at_event_%s"),
-LIST_OF_VOLUNTEERS_WITH_FOOD_AT_EVENT: ("mapped_event", "list_of_volunteers_with_food_at_event_%s"),
+LIST_OF_CADETS_WITH_CLOTHING_AT_EVENT: ("mapped_events", "list_of_cadets_with_clothing_at_event_%s"),
+LIST_OF_CADETS_WITH_FOOD_AT_EVENT: ("mapped_events", "list_of_cadets_with_food_at_event_%s"),
+LIST_OF_VOLUNTEERS_WITH_FOOD_AT_EVENT: ("mapped_events", "list_of_volunteers_with_food_at_event_%s"),
 
 
 USERLIST_FILE_ID: ("secure", "userlist.csv")}

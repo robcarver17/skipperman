@@ -34,7 +34,7 @@ FIELDS_VIEW_ONLY_IN_EDIT_VIEW = [
     REGISTRATION_INTERNAL_NOTES
 
 ]
-FIELDS_TO_EDIT_IN_EDIT_VIEW = [ ## excludes status, days attending, food preference since these are added afterwards
+FIELDS_TO_EDIT_IN_EDIT_VIEW = [ ## excludes status, days attending, food_and_clothing preference since these are added afterwards
     RESPONSIBLE_ADULT_NAME,
     RESPONSIBLE_ADULT_NUMBER,
     ]

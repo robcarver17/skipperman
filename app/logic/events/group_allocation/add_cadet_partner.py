@@ -1,5 +1,7 @@
 from typing import Union, Tuple
 
+from app.objects.abstract_objects.abstract_lines import ListOfLines
+
 from app.logic.events.group_allocation.store_state import get_day_from_state_or_none
 from app.backend.wa_import.convert_helm_crew_data import from_partner_name_to_cadet, \
     add_matched_partner_cadet_with_duplicate_registration_to_wa_mapped_data, \
@@ -36,9 +38,9 @@ def display_add_cadet_partner(
         header_text=header_text
     )
 
-def header_text_given_cadets(primary_cadet: Cadet, partner_cadet: Cadet)-> str:
+def header_text_given_cadets(primary_cadet: Cadet, partner_cadet: Cadet)-> ListOfLines:
     header_text_start = "Following is specified as partner in form for %s: %s - select an existing cadet, or add a new one (don't forget to get their date of birth correct if BSC member)"
-    return header_text_start % (primary_cadet.name, partner_cadet.name)
+    return ListOfLines([header_text_start % (primary_cadet.name, partner_cadet.name)])
 
 def post_form_add_cadet_partner(
     interface: abstractInterface,

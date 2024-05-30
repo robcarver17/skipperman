@@ -14,6 +14,8 @@ from app.logic.events.mapping.ENTRY_event_field_mapping import display_form_even
 from app.logic.events.registration_details.edit_registration_details import display_form_edit_registration_details
 from app.logic.events.volunteer_rota.ENTRY1_display_main_rota_page import display_form_view_for_volunteer_rota
 from app.logic.events.patrol_boats.ENTRY_allocate_patrol_boats import display_form_view_for_patrol_boat_allocation
+from app.logic.events.food_and_clothing.ENTRY_food import display_form_view_for_food_requirements
+from app.logic.events.clothing.ENTRY_clothing import display_form_view_for_clothing_requirements
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -178,6 +180,8 @@ def get_event_specific_buttons(event: Event) -> list:
     edit_registration = Button(EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON, nav_button=True)
     volunteer_rota = Button(EDIT_VOLUNTEER_ROLES_BUTTON_LABEL, nav_button=True)
     patrol_boat_allocation = Button(PATROL_BOAT_ALLOCATION_BUTTON_LABEL, nav_button=True)
+    food = Button(FOOD_BUTTON_LABEL, nav_button=True)
+    clothing = Button(CLOTHING_BUTTON_LABEL, nav_button=True)
     event_specific_buttons = []
     if event.contains_cadets:
         event_specific_buttons.append(edit_registration)
@@ -188,9 +192,9 @@ def get_event_specific_buttons(event: Event) -> list:
     if event.contains_volunteers:
         event_specific_buttons+=[volunteer_rota, patrol_boat_allocation]
     if event.contains_food:
-        pass
+        event_specific_buttons.append(food)
     if event.contains_clothing:
-        pass
+        event_specific_buttons.append(clothing)
 
     return event_specific_buttons
 
@@ -226,6 +230,12 @@ def post_form_view_individual_event(
 
     elif last_button_pressed==PATROL_BOAT_ALLOCATION_BUTTON_LABEL:
         return form_to_allocate_patrol_boats(interface)
+
+    elif last_button_pressed==FOOD_BUTTON_LABEL:
+        return form_to_allocate_food(interface)
+
+    elif last_button_pressed==CLOTHING_BUTTON_LABEL:
+        return form_to_do_clothing(interface)
 
     elif last_button_pressed == BACK_BUTTON_LABEL:
         return previous_form(interface)
@@ -267,6 +277,13 @@ def form_to_do_volunteer_rota(interface: abstractInterface):
 
 def form_to_allocate_patrol_boats(interface: abstractInterface):
     return interface.get_new_form_given_function(display_form_view_for_patrol_boat_allocation)
+
+def form_to_allocate_food(interface: abstractInterface):
+    return interface.get_new_form_given_function(display_form_view_for_food_requirements)
+
+def form_to_do_clothing(interface: abstractInterface):
+    return interface.get_new_form_given_function(display_form_view_for_clothing_requirements)
+
 
 
 def previous_form(interface: abstractInterface):

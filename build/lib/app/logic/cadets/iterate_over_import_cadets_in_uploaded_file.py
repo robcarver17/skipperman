@@ -13,7 +13,7 @@ from app.logic.events.constants import DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL,
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_lines import Line
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
 from app.objects.cadets import Cadet
 from app.objects.constants import NoMoreData
@@ -73,7 +73,7 @@ def display_verify_adding_cadet_from_list_form(interface: abstractInterface) -> 
         extra_buttons=extra_buttons
     )
 
-provided_header_text="Looks like an imported cadet is very similar to some existing cadets. Click on the existing cadet to replace with this addition (useful if date of birth is wrong), add cadet if really new, or press skip to ignore."
+provided_header_text=ListOfLines(["Looks like an imported cadet is very similar to some existing cadets. Click on the existing cadet to replace with this addition (useful if date of birth is wrong), add cadet if really new, or press skip to ignore."])
 extra_buttons = Line([Button(SKIP_CADET_BUTTON_LABEL)])
 
 def post_verify_adding_cadet_from_list_form(    interface: abstractInterface,

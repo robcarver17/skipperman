@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from copy import copy
 from typing import Union
 
+from app.objects.constants import arg_not_passed
+
 from app.backend.cadets import verify_cadet_and_warn, add_new_verified_cadet
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -78,18 +80,21 @@ def get_add_cadet_form(
             footer_buttons=footer_buttons,
         )
 
+default_header= ListOfLines(["Add a new cadet"])
 
 def get_add_cadet_form_with_information_passed(
     footer_buttons: Union[Line, ListOfLines, ButtonBar],
-    header_text: str = "Add a new cadet",
+    header_text: ListOfLines = arg_not_passed,
     cadet_and_text: CadetAndVerificationText = default_cadet_and_text,
 ) -> Form:
     print("add cadet form")
+    if header_text is arg_not_passed:
+        header_text = default_header
     form_fields = form_fields_for_add_cadet(cadet_and_text.cadet)
 
     list_of_lines_inside_form = ListOfLines(
-        [
-            header_text,
+
+            header_text+[
             _______________,
             form_fields,
             _______________,

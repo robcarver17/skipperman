@@ -1,5 +1,5 @@
 from app.objects.clothing import ListOfCadetsWithClothingAtEvent
-from app.objects.food import ListOfVolunteersWithFoodRequirementsAtEvent, ListOfCadetsWithFoodRequirementsAtEvent
+from app.objects.food import ListOfVolunteersWithFoodRequirementsAtEvent, ListOfCadetsWithFoodRequirementsAtEvent, ListOfPeopleWithFoodRequirementsAtEvent
 
 class DataListOfCadetsWithClothingAtEvent(object):
     def read(self,event_id:str) -> ListOfCadetsWithClothingAtEvent:
@@ -23,5 +23,14 @@ class DataListOfCadetsWithFoodRequirementsAtEvent(object):
         raise NotImplemented
 
     def write(self, list_of_cadets_with_food_requirements_at_event: ListOfCadetsWithFoodRequirementsAtEvent, event_id: str):
+        raise NotImplemented
+
+
+
+class DataListOfPeopleWithFoodRequirementsAtEvent(object):
+    def read(self, event_id: str) -> ListOfPeopleWithFoodRequirementsAtEvent:
+        raise NotImplemented
+
+    def write(self, list_of_people_with_food_requirements_at_event: ListOfPeopleWithFoodRequirementsAtEvent, event_id: str):
         raise NotImplemented
 

@@ -2,7 +2,7 @@ from typing import Union
 
 from app.objects.abstract_objects.abstract_buttons import Button
 
-from app.objects.abstract_objects.abstract_lines import Line
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
 from app.backend.data.mapped_events import \
     get_row_in_mapped_event_data_given_id
@@ -130,7 +130,7 @@ def process_row_when_cadet_unmatched(
         header_text=header_text_for_form(interface)
     )
 
-def header_text_for_form(interface: abstractInterface)-> str:
+def header_text_for_form(interface: abstractInterface)-> ListOfLines:
     row_id = get_current_row_id(interface)
     event =get_event_from_state(interface)
     is_training = event.contains_groups
@@ -141,7 +141,9 @@ def header_text_for_form(interface: abstractInterface)-> str:
     next_row = get_row_in_mapped_event_data_given_id(event=event, row_id=row_id, interface=interface)
     default_header_text = "Looks like a new cadet in the WA entry file. "+warn_text+"You can edit them, check their details and then add, or choose an existing cadet instead (avoid creating duplicates! If the existing cadet details are wrong, select them for now and edit later) \n\n Row details are: \n%s"
 
-    return default_header_text % next_row
+    return ListOfLines([
+
+    ]).add_Lines()
 
 
 def post_form_add_cadet_ids_during_import(

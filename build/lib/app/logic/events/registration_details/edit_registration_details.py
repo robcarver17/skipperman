@@ -48,7 +48,7 @@ def display_form_edit_registration_details_given_event_and_sort_order(
                 _______________,
                 Line(Heading("Registration details for %s" % event, centred=True, size=4)),
                 Line(Heading(
-                    "(Excludes group allocation and volunteer information; plus cadet name/DOB - edit in the appropriate places / also food and clothing)",
+                    "(Excludes group allocation and volunteer information; plus cadet name/DOB - edit in the appropriate places / also food_and_clothing and clothing)",
                 centred = True, size =6)),
 
                 _______________,

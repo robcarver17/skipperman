@@ -108,7 +108,7 @@ def suggested_cadets_for_next_committee(interface: abstractInterface) -> DetailL
     return DetailListOfLines(ListOfLines([
         "Following are in year 12 on 1st September %d:" % next_year_for_committee,
         _______________,
-    ]+[str(cadet) for cadet in list_of_cadets_not_on_committee_born_after_sept_first_in_year]+[_______________, "Not exhaustive - must have downloaded membership list from WA recently and may include lapsed members"]).add_Lines(), name="Suggested members")
+    ]+[str(cadet) for cadet in list_of_cadets_not_on_committee_born_after_sept_first_in_year]+[_______________, "Not exhaustive - must have downloaded membership list from WA recently and may include lapsed or non-members"]).add_Lines(), name="Suggested members")
 
 
 

@@ -28,7 +28,7 @@ def get_add_or_select_existing_cadet_form(
     interface: abstractInterface,
     see_all_cadets: bool,
     include_final_button: bool,
-    header_text: str,
+    header_text: ListOfLines,
     cadet: Cadet = arg_not_passed, ## Is passed only on first iteration when cadet is from data not form
     extra_buttons: Line = arg_not_passed
 ) -> Form:

@@ -11,9 +11,9 @@ FINAL_ADD_BUTTON_LABEL = "Yes - these details are correct - add to data"
 WA_UPLOAD_BUTTON_LABEL = "Upload initial Wild Apricot export file"
 WA_FIELD_MAPPING_BUTTON_LABEL = "Set up mapping of Wild Apricot fields"
 WA_CHECK_FIELD_MAPPING_BUTTON_LABEL = "Check mapping of Wild Apricot fields against uploaded file"
-WA_MODIFY_FIELD_MAPPING_BUTTON_LABEL = "Modify mapping of Wild Apricot fields (not recommended!)"
+WA_MODIFY_FIELD_MAPPING_BUTTON_LABEL = "Modify WA mapping (not recommended!)"
 WA_IMPORT_BUTTON_LABEL = "Import data from uploaded Wild Apricot file"
-WA_UPDATE_BUTTON_LABEL = "Upload and update Wild Apricot data from export file"
+WA_UPDATE_BUTTON_LABEL = "Update from WA export file"
 
 # Iterative adding of cadets
 DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL = "I have double checked the cadet details entered - let me add this cadet"
@@ -29,11 +29,11 @@ CLONE_EVENT_MAPPING_BUTTON_LABEL = "Clone the mapping for an existing event"
 CREATE_MAPPING_BUTTON_LABEL = "Create your own mapping file"
 
 # specific event; backend
-ALLOCATE_CADETS_BUTTON_LABEL = "Allocate cadets to groups, modify boat information"
-MODIFY_CADET_BOATS_BUTTON_LABEL = "View/modify cadet boat information"
+ALLOCATE_CADETS_BUTTON_LABEL = "Groups and cadet boats"
+MODIFY_CADET_BOATS_BUTTON_LABEL = "Cadet boats"
 
 # specific event; edit
-EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON = "View/edit registration data"
+EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON = "Registration data"
 SAVE_CHANGES = "Save changes"
 
 UPLOAD_FILE_BUTTON_LABEL = "Upload selected file"
@@ -57,9 +57,11 @@ SEE_SIMILAR_VOLUNTEER_ONLY_LABEL = "See similar volunteers only"
 SKIP_VOLUNTEER_BUTTON_LABEL = "Skip - this isn't a volunteers name"
 
 ## Volunteer roles
-EDIT_VOLUNTEER_ROLES_BUTTON_LABEL = "Volunteer rota"
+EDIT_VOLUNTEER_ROLES_BUTTON_LABEL = "Volunteers"
+PATROL_BOAT_ALLOCATION_BUTTON_LABEL = "Patrol boats"
 
-PATROL_BOAT_ALLOCATION_BUTTON_LABEL = "Allocate patrol boats"
+CLOTHING_BUTTON_LABEL = "Clothing"
+FOOD_BUTTON_LABEL = "Food"
 
 ## constants.py in session data
 EVENT = "event"

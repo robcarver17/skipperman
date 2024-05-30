@@ -31,7 +31,7 @@ def describe_criteria(requires_volunteers: bool = False, requires_group_allocati
     if requires_cadets_and_boats:
         description.append('cadets with boats')
     if requires_food:
-        description.append('food requirements')
+        description.append('food_and_clothing requirements')
     if requires_merch:
         description.append('merchandise')
 

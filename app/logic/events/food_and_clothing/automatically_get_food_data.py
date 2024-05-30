@@ -1,3 +1,5 @@
+from app.objects.relevant_information_for_volunteers import missing_relevant_information
+
 from app.backend.volunteers.volunteer_allocation import get_list_of_relevant_information
 
 from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import \

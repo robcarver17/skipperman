@@ -1,3 +1,4 @@
+from app.objects.abstract_objects.abstract_tables import Table
 
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.events.patrol_boats.parse_patrol_boat_table import *
@@ -30,6 +31,9 @@ def display_form_view_for_clothing_requirements(interface: abstractInterface) ->
             ]
         )
     )
+
+def get_clothing_table(interface: abstractInterface) -> Table:
+    pass
 
 def get_button_bar_for_clothing_required() -> ButtonBar:
     save_button = Button(SAVE_BUTTON_LABEL, nav_button=True)

@@ -94,5 +94,5 @@ def get_input_name_food_checkbox_for_volunteer(volunteer_id: str):
 
 ##
 def get_other_food_table(interface: abstractInterface) -> Table:
-    pass
+    return ''
 

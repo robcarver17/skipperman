@@ -1,16 +1,12 @@
-from datetime import datetime
-from typing import List
 
 from app.objects.volunteers_at_event import ListOfVolunteersAtEvent
 
 from app.objects.events import Event
 
-from app.objects.constants import arg_not_passed, missing_data
 
 from app.data_access.storage_layer.api import DataLayer
-from app.objects.cadets import Cadet, ListOfCadets
-from app.objects.committee import CadetCommitteeMember, ListOfCadetsOnCommittee
-from app.objects.food import ListOfCadetsWithFoodRequirementsAtEvent, FoodRequirements, ListOfVolunteersWithFoodRequirementsAtEvent
+from app.objects.cadets import ListOfCadets
+from app.objects.food import ListOfCadetsWithFoodRequirementsAtEvent, FoodRequirements, ListOfVolunteersWithFoodRequirementsAtEvent, ListOfPeopleWithFoodRequirementsAtEvent
 from app.backend.data.cadets_at_event import CadetsAtEventData
 from app.backend.data.volunteer_allocation import VolunteerAllocationData
 
@@ -77,6 +73,13 @@ class FoodData():
 
     def save_list_of_cadets_with_food_at_event(self, event: Event, list_of_cadets_with_food_requirements: ListOfCadetsWithFoodRequirementsAtEvent):
         self.data_api.save_list_of_cadets_with_food_at_event(list_of_cadets_with_food=list_of_cadets_with_food_requirements, event=event)
+
+
+    def get_list_of_people_with_food_at_event(self, event: Event) -> ListOfPeopleWithFoodRequirementsAtEvent:
+        return self.data_api.get_list_of_people_with_food_at_event(event)
+
+    def save_list_of_people_with_food_at_event(self, event: Event, list_of_people_with_food_requirements: ListOfPeopleWithFoodRequirementsAtEvent):
+        self.data_api.save_list_of_people_with_food_at_event(event=event, list_of_people_with_food=list_of_people_with_food_requirements)
 
     @property
     def cadets_at_event_data(self) -> CadetsAtEventData:

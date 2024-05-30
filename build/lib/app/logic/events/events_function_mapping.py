@@ -2,10 +2,6 @@ from app.logic.events.clothing.ENTRY_clothing import display_form_view_for_cloth
     post_form_view_for_clothing_requirements
 from app.logic.events.food_and_clothing.ENTRY_food import display_form_view_for_food_requirements, \
     post_form_view_for_food_requirements
-from app.logic.events.clothing.get_clothing_data_from_cadets import update_cadet_clothing_at_event, \
-    post_update_cadet_clothing_at_event_SHOULD_NEVER_BE_CALLED
-from app.logic.events.food_and_clothing.get_food_data_from_cadets import display_form_interactively_update_cadet_food_at_event, post_form_interactively_update_food_for_cadets_at_event
-from app.logic.events.food_and_clothing.get_food_data_from_volunteers import display_interactively_add_volunteer_food_to_event, post_form_add_volunteer_food_to_event
 from app.logic.events.ENTRY_view_events import (
     display_form_view_of_events,
     post_form_view_of_events,
@@ -133,11 +129,6 @@ event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_func
                                     (display_form_volunteer_identification, post_form_volunteer_identification):0,
                                     (display_add_volunteers_to_event,post_form_add_volunteers_to_event):0,
 
-                                    (display_form_interactively_update_cadet_food_at_event,
-                                     post_form_interactively_update_food_for_cadets_at_event):0,
-                                    (display_interactively_add_volunteer_food_to_event,
-                                     post_form_add_volunteer_food_to_event):0,
-                                    (update_cadet_clothing_at_event, post_update_cadet_clothing_at_event_SHOULD_NEVER_BE_CALLED):0
 
 }
 

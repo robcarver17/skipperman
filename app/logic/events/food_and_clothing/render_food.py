@@ -1,3 +1,5 @@
+from app.objects.events import Event
+
 from app.backend.volunteers.volunteers import get_volunteer_from_id
 
 from app.backend.cadets import get_cadet_from_id
@@ -9,11 +11,24 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.food import CadetWithFoodRequirementsAtEvent, VolunteerWithFoodRequirementsAtEvent
 
+GET_FOOD_FOR_CADETS = "Get food requirements for cadets from registration data"
+GET_FOOD_FOR_VOLUNTEERS = "Get food requirements for volunteers from registration data"
 
-def get_button_bar_for_food_required() -> ButtonBar:
+def get_button_bar_for_food_required(event: Event) -> ButtonBar:
     save_button = Button(SAVE_BUTTON_LABEL, nav_button=True)
     back_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
-    return ButtonBar([back_button, save_button])
+    cadet_button = Button(GET_FOOD_FOR_CADETS, nav_button=True)
+    volunteer_button = Button(GET_FOOD_FOR_VOLUNTEERS, nav_button=True)
+
+    button_bar = ButtonBar([back_button, save_button])
+
+    if event.contains_cadets:
+        button_bar.append(cadet_button)
+
+    if event.contains_volunteers:
+        button_bar.append(volunteer_button)
+
+    return button_bar
 
 
 def get_table_of_cadets_with_food(interface: abstractInterface) -> Table:

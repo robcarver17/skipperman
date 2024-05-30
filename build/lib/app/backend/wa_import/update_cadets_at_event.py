@@ -259,11 +259,14 @@ def mark_cadet_at_event_as_unchanged(interface:abstractInterface, cadet_id: str,
     cadet_data.mark_cadet_at_event_as_unchanged(cadet_id=cadet_id ,event=event)
 
 
-def list_of_cadet_ids_at_event_and_in_mapped_data_for_event(interface:abstractInterface, event: Event) -> list:
+def list_of_cadet_ids_at_event_and_in_mapped_data_for_event(interface:abstractInterface, event: Event, include_mapped_data: bool = True) -> list:
     cadets_event_data = CadetsAtEventData(interface.data)
 
     existing_ids = cadets_event_data.list_of_all_cadet_ids_at_event(event)
-    mapped_ids = cadets_event_data.identified_cadet_ids_in_mapped_data(event)
+    if include_mapped_data:
+        mapped_ids = cadets_event_data.identified_cadet_ids_in_mapped_data(event)
+    else:
+        mapped_ids = []
 
     all_ids = union_of_x_and_y(existing_ids, mapped_ids)
 

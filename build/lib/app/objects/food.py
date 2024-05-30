@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
+from app.objects.generic import GenericSkipperManObject, GenericListOfObjects, from_str_to_bool, from_bool_to_str
 
 OTHER_IN_FOOD_REQUIRED = "other"
 @dataclass
@@ -155,3 +155,43 @@ class ListOfVolunteersWithFoodRequirementsAtEvent(GenericListOfObjects):
 
     def filter_for_list_of_volunteer_ids(self, list_of_volunteer_ids: List[str]) -> 'ListOfVolunteersWithFoodRequirementsAtEvent':
         return ListOfVolunteersWithFoodRequirementsAtEvent([object for object in self if object.volunteer_id in list_of_volunteer_ids])
+
+
+PERSON_NAME = "name"
+CHILD = "child"
+MEAL = "meal_name"
+@dataclass
+class PersonWithFoodRequirementsAtEvent(GenericSkipperManObject):
+    name: str
+    food_requirements: FoodRequirements
+    meal_name: str = ''
+    child: bool = False
+
+    def as_str_dict(self) ->dict:
+        food_required_as_dict = self.food_requirements.as_str_dict()
+        food_required_as_dict[PERSON_NAME] = getattr(self, PERSON_NAME)
+        food_required_as_dict[CHILD] = from_bool_to_str(getattr(self, CHILD))
+        food_required_as_dict[MEAL] = getattr(self, MEAL)
+
+        return food_required_as_dict
+
+    @classmethod
+    def from_dict(cls, some_dict: dict) -> 'PersonWithFoodRequirementsAtEvent':
+        name = str(some_dict.pop(PERSON_NAME))
+        child = from_str_to_bool(some_dict.pop(CHILD))
+        meal = str(some_dict.pop(MEAL))
+        food_required = FoodRequirements.from_dict(some_dict)
+
+        return cls(name=name, food_requirements=food_required, child=child, meal_name=meal)
+
+
+class ListOfPeopleWithFoodRequirementsAtEvent(GenericListOfObjects):
+    @property
+    def _object_class_contained(self):
+        return PersonWithFoodRequirementsAtEvent
+
+    def subset_for_adults(self):
+        return ListOfPeopleWithFoodRequirementsAtEvent([object for object in self if not object.child])
+
+    def subset_for_children(self):
+        return ListOfPeopleWithFoodRequirementsAtEvent([object for object in self if object.child])

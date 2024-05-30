@@ -63,6 +63,10 @@ app/backend/reporting/boat_report/__init__.py
 app/backend/reporting/boat_report/boat_report_parameters.py
 app/backend/reporting/boat_report/get_data.py
 app/backend/reporting/boat_report/../../../data_access/configuration/configuration.yaml
+app/backend/reporting/food_report/__init__.py
+app/backend/reporting/food_report/food_report_parameters.py
+app/backend/reporting/food_report/get_data.py
+app/backend/reporting/food_report/../../../data_access/configuration/configuration.yaml
 app/backend/reporting/options_and_parameters/__init__.py
 app/backend/reporting/options_and_parameters/marked_up_list_from_df_parameters.py
 app/backend/reporting/options_and_parameters/print_options.py
@@ -231,8 +235,7 @@ app/logic/events/clothing/get_clothing_data_from_cadets.py
 app/logic/events/clothing/../../../data_access/configuration/configuration.yaml
 app/logic/events/food_and_clothing/ENTRY_food.py
 app/logic/events/food_and_clothing/__init__.py
-app/logic/events/food_and_clothing/get_food_data_from_cadets.py
-app/logic/events/food_and_clothing/get_food_data_from_volunteers.py
+app/logic/events/food_and_clothing/automatically_get_food_data.py
 app/logic/events/food_and_clothing/parse_food_data.py
 app/logic/events/food_and_clothing/render_food.py
 app/logic/events/food_and_clothing/../../../data_access/configuration/configuration.yaml
@@ -328,6 +331,9 @@ app/logic/reporting/boats/forms.py
 app/logic/reporting/boats/processes.py
 app/logic/reporting/boats/report_boats.py
 app/logic/reporting/boats/../../../data_access/configuration/configuration.yaml
+app/logic/reporting/food/__init__.py
+app/logic/reporting/food/report_food.py
+app/logic/reporting/food/../../../data_access/configuration/configuration.yaml
 app/logic/reporting/qualifications/__init__.py
 app/logic/reporting/qualifications/report_qualifications.py
 app/logic/reporting/qualifications/../../../data_access/configuration/configuration.yaml

@@ -17,6 +17,9 @@ from app.data_access.csv.dinghies_at_events import CsvDataListOfCadetAtEventWith
 from app.data_access.csv.users import CsvDataListOfSkipperManUsers
 from app.data_access.csv.qualifications import CsvDataListOfQualifications, CsvListOfCadetsWithQualifications, CsvDataListOfCadetsWithTickListItems, CsvDataListOfTickSheetItems, CsvDataListOfTickSubStages
 
+
+
+
 class CsvDataApi(GenericDataApi):
     def __init__(self, master_data_path: str, user_data_path: str, backup_data_path: str):
         self._master_data_path = master_data_path
@@ -156,6 +159,11 @@ class CsvDataApi(GenericDataApi):
     @property
     def data_list_of_volunteers_with_food_requirement_at_event(self) -> CsvDataListOfVolunteersWithFoodRequirementsAtEvent:
         return CsvDataListOfVolunteersWithFoodRequirementsAtEvent(self.master_data_path, backup_data_path=self.backup_data_path)
+
+
+    @property
+    def data_list_of_people_with_food_requirement_at_event(self) -> CsvDataListOfPeoplesWithFoodRequirementsAtEvent:
+        return CsvDataListOfPeoplesWithFoodRequirementsAtEvent(self.master_data_path, backup_data_path=self.backup_data_path)
 
     @property
     def data_list_of_cadets_with_clothing_at_event(self) -> CsvDataListOfCadetsWithClothingAtEvent:

@@ -62,15 +62,27 @@ class CadetObjectWithClothingAtEvent(GenericSkipperManObject):
     def has_colour(self):
         return not self.colour==UNALLOCATED_COLOUR
 
+    def as_dict(self) -> dict:
+        return dict(Name=self.cadet.name, Size=self.size, Colour = self.colour)
+
 class ListOfCadetObjectsWithClothingAtEvent(GenericListOfObjects):
     @property
     def _object_class_contained(self):
         return CadetObjectWithClothingAtEvent
 
+    def count_of_size_and_colour(self, size:str, colour:str)-> int:
+        return len([object for object in self if object.size==size and object.colour==colour])
+
     def colours(self):
         colours = [object.colour for object in self]
 
         return colours
+
+    def filter_for_colour(self, colour:str):
+        return ListOfCadetObjectsWithClothingAtEvent([object for object in self if object.colour == colour])
+
+    def remove_if_in_list_of_cadet_ids(self, list_of_cadet_ids: List[str]):
+        return ListOfCadetObjectsWithClothingAtEvent([object for object in self if object.cadet.id not in list_of_cadet_ids])
 
     def filter_for_surname(self, surname:str):
         return ListOfCadetObjectsWithClothingAtEvent([object for object in self if object.cadet.surname==surname])
@@ -135,6 +147,9 @@ class ListOfCadetObjectsWithClothingAtEvent(GenericListOfObjects):
         sizes = [object.size for object in self]
 
         return list(set(sizes))
+
+    def list_of_cadet_ids(self):
+        return [object.cadet.id for object in self]
 
 
 SORT_BY_SURNAME = "Sort by surname"

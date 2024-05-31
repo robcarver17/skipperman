@@ -5,10 +5,10 @@ setup.py
 app/__init__.py
 app/backend/__init__.py
 app/backend/cadets.py
+app/backend/clothing.py
 app/backend/configuration.py
 app/backend/events.py
 app/backend/food.py
-app/backend/merch.py
 app/backend/../data_access/configuration/configuration.yaml
 app/backend/data/__init__.py
 app/backend/data/cadets.py
@@ -232,6 +232,7 @@ app/logic/events/cadets_at_event/../../../data_access/configuration/configuratio
 app/logic/events/clothing/ENTRY_clothing.py
 app/logic/events/clothing/__init__.py
 app/logic/events/clothing/automatically_get_clothing_data_from_cadets.py
+app/logic/events/clothing/downloads.py
 app/logic/events/clothing/parse_clothing.py
 app/logic/events/clothing/render_clothing.py
 app/logic/events/clothing/../../../data_access/configuration/configuration.yaml

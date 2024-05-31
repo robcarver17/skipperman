@@ -25,6 +25,10 @@ CLEAR_ALL_COLOURS = "Clear all colour groups"
 
 GET_CLOTHING_FOR_CADETS = "Get clothing for cadets from registration data"
 
+EXPORT_COMMITTEE= "Download committee polo shirts spreadsheet"
+EXPORT_ALL = "Download spreadsheet of t-shirt sizes"
+EXPORT_COLOURS = "Download spreadsheet of colour teams"
+
 #### Sort by ... usual, plus sort by size, sort by colour
 #### Filter - show only current committee
 #### Auto colour
@@ -38,11 +42,13 @@ def get_button_bar_for_clothing(interface:abstractInterface, event: Event) -> Bu
 
     if are_we_showing_only_committee(interface):
         filter_button = Button(FILTER_ALL_BUTTON_LABEL, nav_button=True)
+        export_buttons = [Button(EXPORT_COMMITTEE, nav_button=True)]
     else:
         filter_button = Button(FILTER_COMMITTEE_BUTTON_LABEL, nav_button=True)
+        export_buttons = [Button(EXPORT_ALL, nav_button=True), Button(EXPORT_COLOURS, nav_button=True)]
 
 
-    button_bar = ButtonBar([back_button, save_button, filter_button, clear_button])
+    button_bar = ButtonBar([back_button, save_button, filter_button, clear_button]+export_buttons)
 
     if event.contains_cadets:
         button_bar.append(cadet_button)
@@ -53,8 +59,7 @@ def get_button_bar_for_clothing(interface:abstractInterface, event: Event) -> Bu
     return button_bar
 
 
-def get_clothing_table(interface: abstractInterface) -> Table:
-    event = get_event_from_state(interface)
+def get_clothing_table(interface: abstractInterface, event: Event) -> Table:
     sort_order  =get_sort_order(interface)
     only_committee = are_we_showing_only_committee(interface)
 

@@ -77,35 +77,32 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - report of qualifications awarded by date
 - list of non volunteers with cadets who are too young or first event
 - maintain lists of past, present, potential and future cadet committee members (CW)
+- copy all roles in cadet week rota
+- store clothing choices for cadets and colour teams
+- summary of colours and clothing sizes
+- cadet committee polo spreadsheet
+- create a report of t-shirts and sizes required
+- create a colour teams report
 
 
 ### Required for cadet week:
 
 
-- put shareable files up like instructors documents; manage shared files eg deleete
-
-- two types of clothing event: as part of training event, or social only seperate
-
-- allocate and maintain colour groups (CW) - as part of merchandise
-- create a report of t-shirts and other merch required (CW)
-- maintain and report on child wristbands (CW) - SAME AS T-SHIRTS REPORT
-
-- create a food report with allergies and numbers (CW) - (FOOD ONLY EVENT FOR WRISTBANDS AND THEN COMBINE WITH CW EVENT)
+- create a report of RYA logbooks/certficates required (CW) EXPECTED QUALIFICATIONS FOR EVENT
 
 - create a report of cadets and their ages for fancy dress (CW) - FROM A GENERIC CADETS AT EVENT REPORT WITH SELECT FIELDS
 
-- create a report of adult polo shirts required (CW) - FROM A GENERIC .CSV LIST OF VOLUNTEER REPORT WHERE CAN FILTER ON CERTAIN ROLES
-- maintain and report on adult wristbands (CW) - FROM A GENERIC .CSV  LIST OF VOLUNTEER REPORT WHERE CAN FILTER ON DAYS ATTENDING
-- maintain a list of key volunteers and thank yous (CW) - FROM A GENERIC .CSV LIST OF VOLUNTEER REPORT WHERE CAN FILTER ON CERTAIN ROLES
+- put shareable files up like instructors documents; manage shared files eg deleete
 
-- Cadet committee polo shirts (CW) - FROM A GENERIC CADETS AT EVENT REPORT WITH SELECT FIELDS
 
-- create a report of RYA logbooks/certficates required (CW) EXPECTED QUALIFICATIONS FOR EVENT
-
-- manage orders for hoodies (CW)
+- create a food report with allergies and numbers (CW) - (FOOD ONLY EVENT FOR WRISTBANDS AND THEN COMBINE WITH CW EVENT)
 - maintain and report on tickets for gala dinner, include additional gala dinner invites eg sponsors, plus ones (CW)
   (FOOD ONLY EVENT WITH NAME IMPORT FROM ANOTHER EVENT)    
+- maintain and report on adult wristbands (CW) - FROM A GENERIC .CSV  LIST OF VOLUNTEER REPORT WHERE CAN FILTER ON DAYS ATTENDING
 
+
+- two types of clothing event: as part of training event, or social only seperate
+- manage orders for hoodies (CW)
 
 
   ### Required for social event:

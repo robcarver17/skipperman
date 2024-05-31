@@ -193,6 +193,7 @@ def get_list_of_cadets_with_names_on_committee(interface: abstractInterface) -> 
 
     return list_of_cadets_on_committee
 
+
 def get_list_of_cadets_not_on_committee_born_after_sept_first_in_year(interface: abstractInterface,
                                                                       next_year_for_committee: int) -> ListOfCadets:
 

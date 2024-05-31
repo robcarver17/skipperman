@@ -231,7 +231,9 @@ app/logic/events/cadets_at_event/update_existing_cadet_at_event_from_form_entrie
 app/logic/events/cadets_at_event/../../../data_access/configuration/configuration.yaml
 app/logic/events/clothing/ENTRY_clothing.py
 app/logic/events/clothing/__init__.py
-app/logic/events/clothing/get_clothing_data_from_cadets.py
+app/logic/events/clothing/automatically_get_clothing_data_from_cadets.py
+app/logic/events/clothing/parse_clothing.py
+app/logic/events/clothing/render_clothing.py
 app/logic/events/clothing/../../../data_access/configuration/configuration.yaml
 app/logic/events/food_and_clothing/ENTRY_food.py
 app/logic/events/food_and_clothing/__init__.py

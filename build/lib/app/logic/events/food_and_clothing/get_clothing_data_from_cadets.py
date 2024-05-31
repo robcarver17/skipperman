@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.backend.merch import is_cadet_with_id_already_at_event_with_clothing, add_new_cadet_with_clothing_to_event
+from app.backend.clothing import is_cadet_with_id_already_at_event_with_clothing, add_new_cadet_with_clothing_to_event
 
 from app.backend.cadets import  cadet_name_from_id
 from app.backend.wa_import.update_cadets_at_event import        get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active

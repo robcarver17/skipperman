@@ -171,6 +171,15 @@ def get_html_for_element_in_line(
             dict_of_options=element_in_line.dict_of_options,
             default_label=element_in_line.default_label,
         )
+    elif type(element_in_line) is listInput:
+        return html_list_input(
+            input_label=element_in_line.input_label,
+            input_name=element_in_line.input_name,
+            list_of_options=element_in_line.list_of_options,
+            default_option=element_in_line.default_option,
+            list_name=element_in_line.list_name
+        )
+
     elif type(element_in_line) is checkboxInput:
         return html_checkbox_input(input_name=element_in_line.input_name, dict_of_labels=element_in_line.dict_of_labels,
                                    dict_of_checked=element_in_line.dict_of_checked,

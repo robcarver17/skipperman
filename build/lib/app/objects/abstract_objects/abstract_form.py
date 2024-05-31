@@ -28,12 +28,21 @@ def form_with_message(message: str) -> Form:
     return Form(ListOfLines([Line(message)]))
 
 
+
 @dataclass
 class radioInput(Input):
     input_label: str
     input_name: str
     dict_of_options: dict
     default_label: str = arg_not_passed
+
+@dataclass
+class listInput(Input):
+    input_label: str
+    input_name: str
+    list_of_options: list
+    list_name: str = arg_not_passed
+    default_option: str = ''
 
 
 def yes_no_radio(input_label, input_name, default_is_yes: bool = True) -> radioInput:

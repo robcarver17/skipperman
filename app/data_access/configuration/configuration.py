@@ -98,4 +98,4 @@ def DEPRECATE_get_volunteer_roles():
 
 VOLUNTEER_ROLES = DEPRECATE_get_volunteer_roles()
 
-COLOUR_GROUPS = configuration["colour_groups"]
+MINIMUM_COLOUR_GROUPS_TO_DISTRIBUTE = configuration['min_colour_groups_to_distribute']

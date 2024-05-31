@@ -121,6 +121,12 @@ class CadetData():
         list_of_cadets.replace_with_new_object(new_cadet)
         self.data_api.save_list_of_cadets(list_of_cadets)
 
+    def get_list_of_current_cadets_on_committee(self) -> ListOfCadetsOnCommittee:
+        committee = self.get_list_of_cadets_on_committee()
+
+        return committee.currently_active()
+
+
     def get_list_of_cadets(self) -> ListOfCadets:
         list_of_cadets = self.data_api.get_list_of_cadets()
         return list_of_cadets

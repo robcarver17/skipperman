@@ -111,6 +111,35 @@ def html_as_date(some_html: str) -> datetime.date:
 DEFAULT_LABEL = "__!_!__canbeanythingunlikely to be used"
 
 
+def html_list_input(
+        input_label: str,
+        input_name: str,
+        list_of_options: list,
+        list_name: str = arg_not_passed,
+        default_option: str=""
+    ):
+
+    if list_name is arg_not_passed:
+        list_name = input_name
+
+    if default_option is not arg_not_passed:
+        value_html = 'value="%s"' % default_option
+    else:
+        value_html = ""
+
+
+    options_as_list_of_str = ['<option>%s</option>' % option for option in list_of_options]
+    options_as_str = "".join(options_as_list_of_str)
+    data_list_as_str = '<datalist id="%s">%s</datalist>' % (list_name, options_as_str)
+
+
+    return Html(
+        '%s: <input type="text" name="%s" list="%s"  %s />%s' % (input_label, input_name, list_name, value_html, data_list_as_str)
+    )
+
+
+
+
 def html_dropdown_input(
     input_label: str,
     input_name: str,

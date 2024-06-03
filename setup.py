@@ -58,7 +58,8 @@ setup(
         "flask>=2.0.0",
         "openpyxl>3.0",
         "flask-security>=0.6",
-        "xlsxwriter>3.0"
+        "xlsxwriter>3.0",
+        "qrcode==7.4.2"
     ],
     tests_require=["nose", "flake8"],
     extras_require=dict(),

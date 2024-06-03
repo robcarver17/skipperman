@@ -6,7 +6,8 @@ from app.logic.reporting.rota.report_rota import *
 from app.logic.reporting.allocations.report_group_allocations import *
 from app.logic.reporting.boats.report_boats import *
 from app.logic.reporting.rollcall_and_contacts.rollcall_report import *
-from app.logic.reporting.qualifications.report_qualifications import *
+from app.logic.reporting.qualifications.ENTRY_report_qualifications import *
+from app.logic.reporting.qualifications.qualification_status import *
 
 from app.objects.abstract_objects.form_function_mapping import   DisplayAndPostFormFunctionMaps, NestedDictOfMappings
 
@@ -55,7 +56,9 @@ reporting_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_
 
                     }
             },
-            (display_form_for_qualifications_report,post_form_for_qualifications_report):0
+            (display_form_for_qualifications_report,post_form_for_qualifications_report): {
+                (display_form_for_qualification_status_report, post_form_for_qualification_status_report):0
+            }
 
         }
 

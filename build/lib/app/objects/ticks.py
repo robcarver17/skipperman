@@ -196,6 +196,14 @@ def tick_from_str(some_str:str) -> Tick:
     return string_ticks_dict[some_str]
 
 class DictOfTicksWithItem(dict):
+    def percentage_complete(self) -> float:
+        full_ticks = [1.0 for tick in self.list_of_ticks() if tick==full_tick ]
+        half_ticks = [0.5 for tick in self.list_of_ticks() if tick==half_tick]
+
+        total_Ticks = float(len(self.list_of_ticks()))
+
+        return (sum(full_ticks)+sum(half_ticks))/total_Ticks
+
     def list_of_ticks(self) -> List[Tick]:
         return list(self.values())
 

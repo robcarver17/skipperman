@@ -102,7 +102,7 @@ class abstractInterface:
     def value_from_form(self, key: str, value_is_date: bool = False):
         raise NotImplemented
 
-    def value_of_multiple_options_from_form(self, key: str) -> list:
+    def value_of_multiple_options_from_form(self, key: str, default=arg_not_passed) -> list:
         raise NotImplemented
 
     def true_if_radio_was_yes(self, input_label: str) -> bool:

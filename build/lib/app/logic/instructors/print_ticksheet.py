@@ -8,7 +8,7 @@ from app.logic.events.events_in_state import get_event_from_state
 
 from app.logic.instructors.state_storage import get_qualification_from_state, get_group_from_state
 
-from app.data_access.uploads_and_downloads import download_directory
+from app.data_access.file_access import download_directory
 
 from app.objects.events import Event
 

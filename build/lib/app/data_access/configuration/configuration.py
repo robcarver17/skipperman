@@ -1,5 +1,5 @@
 import yaml
-from app.data_access.file_access import get_relative_pathname_from_list
+from app.data_access.primitives import get_relative_pathname_from_list
 
 ## IMPORTANT: In the unlikely event we move the config file, this needs changing
 configuration_file = get_relative_pathname_from_list(
@@ -19,9 +19,10 @@ DATAPATH = configuration["datapath"]
 BACKUP_DATA =configuration["backuppath"]
 USER_DATA = configuration["userdata"]
 UPLOADS = configuration["uploads"]
-STAGING = configuration["staging"]
 DOWNLOAD_DIRECTORY = configuration["download_subdirectory"]
 PUBLIC_REPORTING_SUBDIRECTORY = configuration["public_reporting_subdirectory"]
+
+
 
 NUMBER_OF_BACKUPS = configuration["number_of_backups_to_keep"]
 

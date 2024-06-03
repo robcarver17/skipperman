@@ -1,7 +1,8 @@
 from typing import Union
 
 from app.logic.abstract_logic_api import initial_state_form
-from app.logic.utilities.data_and_backups.data_and_backups import display_form_data_and_backups
+from app.logic.utilities.data_and_backups.ENTRY_data_and_backups import display_form_data_and_backups
+from app.logic.utilities.files.ENTRY_files import display_form_file_management
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -13,10 +14,12 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.constants import missing_data
 
 DATA_AND_BACKUP = "Data: backup, upload, and restore"
+FILES= "File management"
 
 ## MODIFY THIS TO ADD MORE REPORTS
 DICT_OF_MENU_OPTIONS ={
-    DATA_AND_BACKUP: display_form_data_and_backups
+    DATA_AND_BACKUP: display_form_data_and_backups,
+    FILES: display_form_file_management
 }
 
 list_of_menu_labels=list(DICT_OF_MENU_OPTIONS.keys())

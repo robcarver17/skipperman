@@ -12,10 +12,9 @@ homepage: "https://bsccadetskipper.pythonanywhere.com/"
 datapath: "skipperman_data" ## directory in users home directory where data stored; only change for test purposes
 backuppath: "skipperman_backup"
 userdata: "skipperman_user_data" ## special directory for username and password hashes (plus maybe user specific config)
-download_subdirectory: "Downloads" ## also used for reports
+download_subdirectory: "Downloads" ## non public downloads
 public_reporting_subdirectory: "public" ## make sure mapped and exposed in pythonanywhere
 uploads: "uploads" ## directory in users home directory where uploads are temporarily stored; only change for test purposes
-staging: "staging" ## staging directory
 #
 #
 ## needs to be large enough to upload a zip with everything

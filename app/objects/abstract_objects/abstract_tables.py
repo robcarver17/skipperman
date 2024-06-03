@@ -65,3 +65,9 @@ class Table(list):
             )
 
         return rows
+
+@dataclass
+class DetailTable():
+    table: Table
+    name: str
+    open: bool = False

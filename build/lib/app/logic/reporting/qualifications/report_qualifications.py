@@ -1,76 +1,47 @@
-import os
 from typing import Union
 
-import pandas as pd
-from app.backend.data.cadets import CadetData
-
-from app.data_access.uploads_and_downloads import download_directory
-
-from app.backend.wa_import.map_wa_fields import get_list_of_templates, get_template, \
-    write_mapping_to_temp_csv_file_and_return_filename
+from app.logic.reporting.qualifications.achieved_qualifications import \
+    write_qualifications_to_temp_csv_file_and_return_filename
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import (
     Form,
     File, NewForm, )
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar, main_menu_button
-from app.logic.abstract_logic_api import initial_state_form
-from app.backend.data.qualification import QualificationData
-from app.objects.qualifications import ListOfNamedCadetsWithQualifications
+from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button, ButtonBar, main_menu_button
 
 
 def display_form_for_qualifications_report(interface: abstractInterface):
     contents_of_form = ListOfLines(
         [
-            ButtonBar([main_menu_button, cancel_button, create_report]),
+            ButtonBar([main_menu_button, cancel_button]),
+            Line([create_report_button, expected_report_button])
         ]
     )
 
     return Form(contents_of_form)
 
-MAKE_REPORT = "Download list of qualifications"
-cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
-create_report = Button(MAKE_REPORT, nav_button=True)
+MAKE_REPORT_BUTTON_LABEL = "Download list of qualifications"
+EXPECTED_REPORT_BUTTON_LABEL = "Expected qualifications at event"
+cancel_button = Button(BACK_BUTTON_LABEL, nav_button=True)
+create_report_button = Button(MAKE_REPORT_BUTTON_LABEL, tile=True) ## tile
+expected_report_button = Button(EXPECTED_REPORT_BUTTON_LABEL, tile=True) ## tile
 
 def post_form_for_qualifications_report(
     interface: abstractInterface,
 ) -> Union[File, Form, NewForm]:
     last_button = interface.last_button_pressed()
 
-    if last_button == CANCEL_BUTTON_LABEL:
+    if last_button == BACK_BUTTON_LABEL:
         return previous_form(interface)
-    elif last_button == MAKE_REPORT:
+    elif last_button == MAKE_REPORT_BUTTON_LABEL:
         filename = write_qualifications_to_temp_csv_file_and_return_filename(interface)
         return File(filename)
+    elif last_button== EXPECTED_REPORT_BUTTON_LABEL:
+        pass
+
 
 def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(post_form_for_qualifications_report)
 
 
 
-def write_qualifications_to_temp_csv_file_and_return_filename(interface: abstractInterface) -> str:
-    qualification_data = QualificationData(interface.data)
-    cadet_data = CadetData(interface.data)
-
-    list_of_cadets_with_qualification= qualification_data.get_list_of_cadets_with_qualifications()
-    list_of_qualifications = qualification_data.load_list_of_qualifications()
-    list_of_cadets = cadet_data.get_list_of_cadets()
-
-    list_of_cadet_names_with_qualifications = ListOfNamedCadetsWithQualifications.from_id_lists(
-        list_of_cadets_with_qualifications=list_of_cadets_with_qualification,
-        list_of_cadets=list_of_cadets,
-        list_of_qualifications=list_of_qualifications
-    )
-
-    list_of_cadet_names_with_qualifications = list_of_cadet_names_with_qualifications.sort_by_date()
-    df_of_qualifications = list_of_cadet_names_with_qualifications.to_df_of_str()
-
-    filename = temp_file_name()
-
-    df_of_qualifications.to_csv(filename, index=False)
-
-    return filename
-
-
-def temp_file_name() -> str:
-    return os.path.join(download_directory, "temp_file.csv")

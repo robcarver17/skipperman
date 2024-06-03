@@ -2,9 +2,11 @@ import os
 from typing import Union
 
 import pandas as pd
+from app.logic.events.ENTRY_view_events import display_list_of_events_with_buttons
+
 from app.backend.data.cadets import CadetData
 
-from app.data_access.uploads_and_downloads import download_directory
+from app.data_access.file_access import download_directory
 
 from app.backend.wa_import.map_wa_fields import get_list_of_templates, get_template, \
     write_mapping_to_temp_csv_file_and_return_filename
@@ -19,10 +21,14 @@ from app.backend.data.qualification import QualificationData
 from app.objects.qualifications import ListOfNamedCadetsWithQualifications
 
 
-def display_form_for_qualifications_report(interface: abstractInterface):
+def display_form_for_expected_qualifications_report(interface: abstractInterface):
+
+    ## LIST OF EVENTS AS TILES, THEN FROM THAT DOWNLOAD EXPECTED QUALIFICATIONS FOR EVENT
+    event_buttons = display_list_of_events_with_buttons(interface)
     contents_of_form = ListOfLines(
         [
-            ButtonBar([main_menu_button, cancel_button, create_report]),
+            ButtonBar([main_menu_button, cancel_button]),
+            event_buttons
         ]
     )
 
@@ -30,9 +36,9 @@ def display_form_for_qualifications_report(interface: abstractInterface):
 
 MAKE_REPORT = "Download list of qualifications"
 cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
-create_report = Button(MAKE_REPORT, nav_button=True)
 
-def post_form_for_qualifications_report(
+
+def post_form_for_expected_qualifications_report(
     interface: abstractInterface,
 ) -> Union[File, Form, NewForm]:
     last_button = interface.last_button_pressed()
@@ -44,7 +50,7 @@ def post_form_for_qualifications_report(
         return File(filename)
 
 def previous_form(interface: abstractInterface):
-    return interface.get_new_display_form_for_parent_of_function(post_form_for_qualifications_report)
+    return interface.get_new_display_form_for_parent_of_function(post_form_for_expected_qualifications_report)
 
 
 

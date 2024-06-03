@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 import flask
+from werkzeug.exceptions import RequestEntityTooLarge
 
 from app.data_access.configuration.configuration import HOMEPAGE
 from app.data_access.data import data_api
@@ -83,11 +84,14 @@ class flaskInterface(abstractInterface):
 
         return value
 
-    def value_of_multiple_options_from_form(self, key: str) -> list:
+    def value_of_multiple_options_from_form(self, key: str, default = arg_not_passed) -> list:
         try:
             list_of_values = get_list_from_form(key)
         except:
-            raise Exception("Value %s not found in form" % key)
+            if default is arg_not_passed:
+                raise Exception("Value %s not found in form" % key)
+            else:
+                return default
 
         return list_of_values
 
@@ -139,8 +143,10 @@ def get_last_button_pressed(button_name: str = arg_not_passed) -> str:
     print("Testing press of %s" % button_name)
     try:
         return request.form.get(button_name, '')
-    except:
-        raise NoButtonPressed
+    except RequestEntityTooLarge:
+        raise RequestEntityTooLarge
+
+    raise NoButtonPressed
 
 
 def uploaded_file(input_name: str = "file"):

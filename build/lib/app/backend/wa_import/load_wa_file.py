@@ -8,9 +8,9 @@ from app.data_access.configuration.configuration import (
     WILD_APRICOT_FILE_TYPES,
 )
 from app.data_access.uploads_and_downloads import (
-    staging_directory,
     get_next_valid_upload_file_name,
 )
+from app.data_access.file_access import upload_directory
 from app.data_access.xls_and_csv import load_spreadsheet_file
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
@@ -73,10 +73,10 @@ def save_staged_file_of_raw_event_upload_with_event_id(
 
 
 def get_staged_file_raw_event_filename(event_id: str):
-    return os.path.join(staging_directory, "raw_event_%s" % event_id)
+    return os.path.join(upload_directory, "raw_event_%s" % event_id)
 
 def get_staged_adhoc_filename(adhoc_name: str):
-    return os.path.join(staging_directory, "_%s" % adhoc_name)
+    return os.path.join(upload_directory, "_%s" % adhoc_name)
 
 
 def verify_and_return_uploaded_wa_event_file(interface: abstractInterface):

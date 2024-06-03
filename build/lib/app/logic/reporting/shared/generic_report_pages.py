@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.backend.reporting.options_and_parameters.print_options import web_pathname_of_report
+from app.data_access.file_access import web_pathname_of_file
 from app.logic.reporting.shared.arrangement_form import form_for_group_arrangement_options, \
     post_form_for_group_arrangement_options
 from app.logic.reporting.shared.create_report import create_generic_report
@@ -125,7 +125,7 @@ def display_form_for_generic_report_all_options(
 def weblink_for_report(interface: abstractInterface, report_generator: ReportGenerator) -> str:
     print_options = get_saved_print_options(report_type=report_generator.specific_parameters_for_type_of_report.report_type, interface=interface)
     if print_options.publish_to_public:
-        path = web_pathname_of_report(print_options.filename_with_extension)
+        path = web_pathname_of_file(print_options.filename_with_extension)
         return "Created report can be downloaded and will be found at %s" % path
     else:
         return ""

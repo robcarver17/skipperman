@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-from app.data_access.configuration.configuration import PUBLIC_WEB_PATH
 from app.data_access.configuration.fixed import A4_PAGESIZE, UNIT_MM, WIDTH, HEIGHT, PAGESIZE_MM, TITLE_MULTIPLIER, \
     EDGE_MARGIN_MM, COLUMN_GAP_MM
 from app.objects.events import Event
@@ -100,5 +99,3 @@ def get_default_filename_for_report(default_title: str) -> str:
     return default_file_name
 
 
-def web_pathname_of_report(filename_with_extension: str):
-    return PUBLIC_WEB_PATH+filename_with_extension

@@ -10,7 +10,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.data_access.storage_layer.api import DataLayer
 
 from app.data_access.data import DEPRECATED_data
-from app.data_access.uploads_and_downloads import download_directory
+from app.data_access.file_access import download_directory
 from app.objects.wa_field_mapping import ListOfWAFieldMappings
 
 

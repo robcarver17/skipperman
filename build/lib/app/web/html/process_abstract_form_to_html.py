@@ -1,7 +1,7 @@
 from typing import Union
 from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button, ButtonBar
 from app.objects.abstract_objects.abstract_form import *
-from app.objects.abstract_objects.abstract_tables import PandasDFTable, ElementsInTable, RowInTable, Table
+from app.objects.abstract_objects.abstract_tables import PandasDFTable, ElementsInTable, RowInTable, Table, DetailTable
 from app.objects.abstract_objects.abstract_text import Text, Arrow, up_arrow, down_arrow, \
     right_arrow, left_arrow, up_down_arrow, left_right_arrow, Pointer, Symbol, reg_tm_symbol, copyright_symbol, \
     up_pointer, down_pointer, left_pointer, right_pointer, lightning_symbol, circle_up_arrow_symbol, umbrella_symbol, \
@@ -43,6 +43,8 @@ def get_html_for_element_in_form(element) -> Html:
         html_this_element = get_html_for_list_of_lines(list_of_lines=element)
     elif type(element) is DetailListOfLines:
         html_this_element = get_html_for_detail_list_of_lines(list_of_lines=element)
+    elif type(element) is DetailTable:
+        html_this_element = get_html_for_detail_table(element)
     elif type(element) is ButtonBar:
         html_this_element = html_bar_wrapper.wrap_around(get_html_for_line(element))
     else:
@@ -73,6 +75,11 @@ def get_html_for_detail_line(line: DetailLine) -> Html:
     detail_wrapper =get_detail_wrapper(line.name, open_detail=line.open)
     return detail_wrapper.wrap_around(line_html)
 
+def get_html_for_detail_table(detail_table: DetailTable) -> Html:
+    table_html = get_html_for_table(detail_table.table)
+    detail_wrapper =get_detail_wrapper(detail_table.name, open_detail=detail_table.open)
+
+    return detail_wrapper.wrap_around(table_html)
 
 def get_html_for_line(line: Line) -> Html:
     return html_line_wrapper.wrap_around(

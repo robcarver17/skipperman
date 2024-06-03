@@ -2,7 +2,7 @@ import os
 
 import pandas as pd
 
-from app.data_access.uploads_and_downloads import download_directory
+from app.data_access.file_access import download_directory
 
 from app.objects.abstract_objects.abstract_form import File
 

@@ -85,47 +85,47 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - create a colour teams report
 - create a report of expected qualifications for event
 - put shareable files up like instructors documents; manage shared files eg deleete, generate QR codes
+- clear old reports for event (remove rednedant permalinks) and other temp directories UTILITIES MENU
+- only do volunteer check on import if disagreement between days
+- key report links for instructors on event landing page
 
 
 ### Required for cadet week:
 
+- create a report of cadets and their ages for fancy dress (CW) - FROM A GENERIC CADETS AT EVENT REPORT WITH SELECT FIELDS
+- registration report with literally everything on it
 
 - create a food report with allergies and numbers (CW) - (FOOD ONLY EVENT FOR WRISTBANDS AND THEN COMBINE WITH CW EVENT)
 - maintain and report on tickets for gala dinner, include additional gala dinner invites eg sponsors, plus ones (CW)
   (FOOD ONLY EVENT WITH NAME IMPORT FROM ANOTHER EVENT)    
 - maintain and report on adult wristbands (CW) - FROM A GENERIC .CSV  LIST OF VOLUNTEER REPORT WHERE CAN FILTER ON DAYS ATTENDING
+- two types of food event: as part of training event, or social only seperate
+- manage social event with food only (Social)
 
-- create a report of cadets and their ages for fancy dress (CW) - FROM A GENERIC CADETS AT EVENT REPORT WITH SELECT FIELDS
 
 - two types of clothing event: as part of training event, or social only seperate
 - manage orders for hoodies (CW)
 
 
-  ### Required for social event:
-
 - think carefully about how to handle events with no cadets, volunteers etc
-- two types of food event: as part of training event, or social only seperate
-- manage social event with food only (Social)
 
 
   ### General required before handover to Jonny:
 
 
 ADMIN:
-- clear old reports for event (remove rednedant permalinks) and other temp directories UTILITIES MENU
 - manage shared files eg deleete
 - wipe health and phone numbers
 
 REPORTING:
 - refactor reporting so uses common data model, and generally tidy up 
-- registration report with literally everything on it
 - create a list of key volunteers to invite to curry evening
 - anything that is displayed on screen can be exported to .csv eg reg details, volunteer rota (and imported...???)
 - create a report of cadets
 
 
 BACKEND:
-- check competely removal of old data model and any weird intermediate steps (allocation data object)
+- refactor weird intermediate steps (allocation data object)
 - ensure clean seperation backend/data, data and logic
 - editable user sailing groups, volunteer roles, skills: but plain text file so can replace configuration
 
@@ -133,7 +133,6 @@ INTERFACE:
 - memorise whether summary buttons pressed
 - template download for import of list of cadets
 - instructions
-- key report links for instructors on event landing page
 - dropdown list of previous event names when creating event
 
 UNCLASSIFIED:
@@ -146,7 +145,6 @@ UNCLASSIFIED:
 
 ADMIN AND DOCUMENTATION:
 
-- clean up eg old data, uploaded files, staged files
 - move all dangerous deletes to special admin area: , delete event (should never have to do this: many warnings!), delete cadet, delete volunteer
 - clear description of field names
 - code documentation

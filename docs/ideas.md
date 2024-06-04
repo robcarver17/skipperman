@@ -83,13 +83,12 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - cadet committee polo spreadsheet
 - create a report of t-shirts and sizes required
 - create a colour teams report
-- create a report of RYA logbooks/certficates required (CW) EXPECTED QUALIFICATIONS FOR EVENT
+- create a report of expected qualifications for event
+- put shareable files up like instructors documents; manage shared files eg deleete, generate QR codes
 
 
 ### Required for cadet week:
 
-
-- put shareable files up like instructors documents; manage shared files eg deleete
 
 - create a food report with allergies and numbers (CW) - (FOOD ONLY EVENT FOR WRISTBANDS AND THEN COMBINE WITH CW EVENT)
 - maintain and report on tickets for gala dinner, include additional gala dinner invites eg sponsors, plus ones (CW)

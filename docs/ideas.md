@@ -92,8 +92,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Required for cadet week:
 
-- create a report of cadets and their ages for fancy dress (CW) - FROM A GENERIC CADETS AT EVENT REPORT WITH SELECT FIELDS
-- registration report with literally everything on it
+- event report with literally everything on it
 
 - create a food report with allergies and numbers (CW) - (FOOD ONLY EVENT FOR WRISTBANDS AND THEN COMBINE WITH CW EVENT)
 - maintain and report on tickets for gala dinner, include additional gala dinner invites eg sponsors, plus ones (CW)

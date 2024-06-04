@@ -142,6 +142,16 @@ class DinghiesData():
             list_of_cadet_ids]
         return list_of_true_false
 
+    def name_of_club_dinghy_for_cadet_at_event_on_day_or_default(self, event: Event, cadet_id: str, day: Day, default=''):
+        cadets_with_club_dinghies_at_event = self.get_list_of_cadets_at_event_with_club_dinghies(event)
+        dinghy_id = cadets_with_club_dinghies_at_event.dinghy_for_cadet_id_on_day(cadet_id=cadet_id, day=day, default=None)
+
+        if dinghy_id is None:
+            return default
+
+        return self.get_list_of_club_dinghies().name_given_id(dinghy_id)
+
+
     def cadet_at_event_or_missing_data(self, event: Event, cadet_id: str) -> CadetAtEvent:
         return self.cadets_at_event_data.cadet_at_event_or_missing_data(event=event, cadet_id=cadet_id)
 

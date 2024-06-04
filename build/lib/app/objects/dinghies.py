@@ -244,10 +244,10 @@ class ListOfCadetAtEventWithDinghies(GenericListOfObjectsWithIds):
         return item.boat_class_id
 
 
-    def object_with_cadet_id_on_day(self, cadet_id: str, day: Day) -> CadetAtEventWithDinghy:
+    def object_with_cadet_id_on_day(self, cadet_id: str, day: Day, default= missing_data) -> CadetAtEventWithDinghy:
         list_of_items = [item for item in self if item.cadet_id == cadet_id and item.day==day]
         if len(list_of_items)==0:
-            return missing_data
+            return default
         if len(list_of_items)>1:
             raise Exception("Can only have one dinghy per cadet per day")
 

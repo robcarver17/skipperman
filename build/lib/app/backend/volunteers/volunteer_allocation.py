@@ -24,7 +24,7 @@ from app.objects.day_selectors import Day, DaySelector, union_across_day_selecto
 from app.objects.events import Event
 from app.objects.relevant_information_for_volunteers import ListOfRelevantInformationForVolunteer
 #from app.objects.food_and_clothing import FoodRequirements
-from app.objects.utils import union_of_x_and_y, in_x_not_in_y
+from app.objects.utils import union_of_x_and_y, in_x_not_in_y, we_are_not_the_same
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.volunteers_at_event import VolunteerAtEvent, ListOfIdentifiedVolunteersAtEvent
 
@@ -396,8 +396,6 @@ def is_volunteer_available_on_days_when_cadet_not_attending(volunteer_availabili
 
     return False
 
-def we_are_not_the_same(some_list: list) ->bool:
-    return len(set(some_list))>1
 
 def any_cadets_not_permanently_connected(interface: abstractInterface,  event: Event,volunteer_id: str)->bool:
     list_of_cadet_ids = get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet(interface=interface,

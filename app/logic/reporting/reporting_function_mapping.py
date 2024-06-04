@@ -8,7 +8,8 @@ from app.logic.reporting.boats.report_boats import *
 from app.logic.reporting.rollcall_and_contacts.rollcall_report import *
 from app.logic.reporting.qualifications.ENTRY_report_qualifications import *
 from app.logic.reporting.qualifications.qualification_status import *
-
+from app.logic.reporting.all_event_data.ENTRY_all_event_data import display_form_for_all_event_data_report, post_form_for_for_all_event_data_report
+from app.logic.reporting.data_dumps.ENTRY_data_dump import display_form_for_data_dump_report, post_form_for_data_dump_report
 from app.objects.abstract_objects.form_function_mapping import   DisplayAndPostFormFunctionMaps, NestedDictOfMappings
 
 
@@ -58,7 +59,9 @@ reporting_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_
             },
             (display_form_for_qualifications_report,post_form_for_qualifications_report): {
                 (display_form_for_qualification_status_report, post_form_for_qualification_status_report):0
-            }
+            },
+            (display_form_for_all_event_data_report, post_form_for_for_all_event_data_report):0,
+            (display_form_for_data_dump_report, post_form_for_data_dump_report):0
 
         }
 

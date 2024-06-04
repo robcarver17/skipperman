@@ -6,6 +6,8 @@ from app.logic.reporting.rota.report_rota import display_form_report_rota
 from app.logic.reporting.boats.report_boats import display_form_report_boat
 from app.logic.reporting.rollcall_and_contacts.rollcall_report import display_form_report_rollcall
 from app.logic.reporting.qualifications.ENTRY_report_qualifications import display_form_for_qualifications_report
+from app.logic.reporting.data_dumps.ENTRY_data_dump import display_form_for_data_dump_report
+from app.logic.reporting.all_event_data.ENTRY_all_event_data import display_form_for_all_event_data_report
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -21,6 +23,8 @@ ROTA_REPORT_BUTTON_LABEL = "Volunteer rota for event"
 BOATS_REPORT_BUTTON_LABEL = "Spotter sheet for event"
 ROLLCALL_REPORT_BUTTON_LABEL = "Rollcall/health/contacts for event"
 QUALIFICATIONS_REPORT_BUTTON_LABEL = "Cadet qualifications"
+DUMP_BUTTON_LABEL = "Data dumps"
+EVENT_DATA_BUTTON_LABEL = "All event data in giant spreadsheet"
 
 ## MODIFY THIS TO ADD MORE REPORTS
 DICT_OF_REPORT_LABELS_AND_STAGES ={
@@ -28,7 +32,9 @@ DICT_OF_REPORT_LABELS_AND_STAGES ={
     ROTA_REPORT_BUTTON_LABEL: display_form_report_rota,
     BOATS_REPORT_BUTTON_LABEL: display_form_report_boat,
     ROLLCALL_REPORT_BUTTON_LABEL: display_form_report_rollcall,
-    QUALIFICATIONS_REPORT_BUTTON_LABEL: display_form_for_qualifications_report
+    QUALIFICATIONS_REPORT_BUTTON_LABEL: display_form_for_qualifications_report,
+    EVENT_DATA_BUTTON_LABEL: display_form_for_all_event_data_report,
+    DUMP_BUTTON_LABEL: display_form_for_data_dump_report
 }
 
 list_of_report_labels=list(DICT_OF_REPORT_LABELS_AND_STAGES.keys())

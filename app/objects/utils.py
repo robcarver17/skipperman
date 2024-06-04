@@ -282,3 +282,7 @@ def print_dict_nicely(label, some_dict:dict) -> str:
 
 def most_common(some_list: list):
     return Counter(some_list).most_common(1)[0][0]
+
+
+def we_are_not_the_same(some_list: list) ->bool:
+    return len(set(some_list))>1

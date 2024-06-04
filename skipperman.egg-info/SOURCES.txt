@@ -50,6 +50,9 @@ app/backend/group_allocations/../../data_access/configuration/configuration.yaml
 app/backend/reporting/__init__.py
 app/backend/reporting/event_lists.py
 app/backend/reporting/../../data_access/configuration/configuration.yaml
+app/backend/reporting/all_event_data/__init__.py
+app/backend/reporting/all_event_data/all_event_data.py
+app/backend/reporting/all_event_data/../../../data_access/configuration/configuration.yaml
 app/backend/reporting/allocation_report/__init__.py
 app/backend/reporting/allocation_report/allocation_report.py
 app/backend/reporting/allocation_report/../../../data_access/configuration/configuration.yaml
@@ -325,6 +328,9 @@ app/logic/reporting/__init__.py
 app/logic/reporting/constants.py
 app/logic/reporting/reporting_function_mapping.py
 app/logic/reporting/../../data_access/configuration/configuration.yaml
+app/logic/reporting/all_event_data/ENTRY_all_event_data.py
+app/logic/reporting/all_event_data/__init__.py
+app/logic/reporting/all_event_data/../../../data_access/configuration/configuration.yaml
 app/logic/reporting/allocations/__init__.py
 app/logic/reporting/allocations/forms.py
 app/logic/reporting/allocations/processes.py
@@ -335,6 +341,9 @@ app/logic/reporting/boats/forms.py
 app/logic/reporting/boats/processes.py
 app/logic/reporting/boats/report_boats.py
 app/logic/reporting/boats/../../../data_access/configuration/configuration.yaml
+app/logic/reporting/data_dumps/ENTRY_data_dump.py
+app/logic/reporting/data_dumps/__init__.py
+app/logic/reporting/data_dumps/../../../data_access/configuration/configuration.yaml
 app/logic/reporting/food/__init__.py
 app/logic/reporting/food/report_food.py
 app/logic/reporting/food/../../../data_access/configuration/configuration.yaml

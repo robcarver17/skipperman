@@ -1,4 +1,8 @@
 import os
+from typing import Dict
+
+import pandas as pd
+from app.backend.reporting.options_and_parameters.print_options import PrintOptions
 
 from app.backend.reporting.process_stages.create_dict_of_df_from_list_of_pages_with_columns import \
     convert_list_of_pages_with_columns_to_dict_of_df
@@ -39,7 +43,7 @@ def create_pdf_report_from_list_of_columns_and_return_filename(
     for page in list_of_pages_with_columns:
         pdf_layout.add_page(page)
 
-    path_and_filename = get_path_and_filename(reporting_options, '.pdf')
+    path_and_filename = get_path_and_filename_for_report(print_options, '.pdf')
     pdf_layout.output_file(path_and_filename)
 
     return path_and_filename
@@ -50,13 +54,24 @@ def create_csv_report_from_list_of_columns_and_return_filename(
         reporting_options: ReportingOptions,
 ):
     dict_of_df= convert_list_of_pages_with_columns_to_dict_of_df(list_of_pages_with_columns)
-    path_and_filename_no_extension = get_path_and_filename(reporting_options, use_extension='')
+    path_and_filename_with_extension = create_csv_report_from_dict_of_df_and_return_filename(
+        dict_of_df=dict_of_df,
+        print_options=reporting_options.print_options
+    )
+
+    return path_and_filename_with_extension
+
+def create_csv_report_from_dict_of_df_and_return_filename(
+        dict_of_df: Dict[str, pd.DataFrame],
+        print_options: PrintOptions,
+):
+    path_and_filename_no_extension = get_path_and_filename_for_report(print_options, use_extension='')
     path_and_filename_with_extension = save_dict_of_df_as_spreadsheet_file(dict_of_df=dict_of_df, path_and_filename_no_extension=path_and_filename_no_extension)
 
     return path_and_filename_with_extension
 
-def get_path_and_filename(reporting_options: ReportingOptions, use_extension:str= ".pdf"):
-    print_options = reporting_options.print_options
+
+def get_path_and_filename_for_report(print_options: PrintOptions, use_extension:str= ".pdf"):
 
     filename = print_options.filename+use_extension
     public = print_options.publish_to_public

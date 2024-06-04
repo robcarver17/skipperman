@@ -1,4 +1,7 @@
+import os.path
 from typing import Union
+
+from app.data_access.file_access import get_files_in_directory, public_reporting_directory
 
 from app.logic.events.events_in_state import update_state_for_specific_event_given_event_description
 
@@ -10,10 +13,10 @@ from app.objects.abstract_objects.abstract_text import Heading
 from app.logic.events.ENTRY_view_events import display_given_list_of_events_with_buttons
 from app.objects.abstract_objects.abstract_form import (
     Form,
-    NewForm,
+    NewForm, File,
 )
-from app.objects.abstract_objects.abstract_buttons import main_menu_button, ButtonBar
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
+from app.objects.abstract_objects.abstract_buttons import main_menu_button, ButtonBar, Button
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line, DetailListOfLines
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.backend.data.security import  get_volunteer_id_of_logged_in_user_or_superuser
 from app.objects.events import SORT_BY_START_DSC
@@ -25,13 +28,26 @@ def display_form_main_instructors_page_sort_order_passed(interface: abstractInte
     event_buttons = get_event_buttons(interface=interface, sort_by=sort_by)
     navbar = ButtonBar([main_menu_button])
     sort_buttons = sort_buttons_for_event_list
-    header = Line(Heading("Tick sheets and reports for instructors: Select event", centred=False, size=4))
+    reports = list_of_all_files_in_public_directory_with_clickable_buttons()
+    header1= Line(Heading("Tick sheets and documents for instructors", centred=True, size=3))
+    header2= Line(Heading("Select report/document", centred=False, size=4))
+    header3 = Line(Heading("Select event to see ticksheet", centred=False, size=4))
+
+    report_detail =DetailListOfLines(ListOfLines([
+        _______________,
+        header2,
+        reports,
+        _______________,
+
+    ]), name="Click arrow to see downloadable documents")
+
     lines_inside_form = ListOfLines(
         [
             navbar,
             _______________,
-            header,
-            _______________,
+            header1,
+            report_detail,
+            header3,
             sort_buttons,
             _______________,
             event_buttons
@@ -41,12 +57,14 @@ def display_form_main_instructors_page_sort_order_passed(interface: abstractInte
 
     return Form(lines_inside_form)
 
-def post_form_main_instructors_page(interface: abstractInterface) -> Union[Form, NewForm]:
+def post_form_main_instructors_page(interface: abstractInterface) -> Union[Form, NewForm, File]:
     button_pressed = interface.last_button_pressed()
     if button_pressed in all_sort_types_for_event_list:
         ## no change to stage required
         sort_by = interface.last_button_pressed()
         return display_form_main_instructors_page_sort_order_passed(interface=interface, sort_by=sort_by)
+    elif button_pressed in list_of_file_buttons():
+        return File(os.path.join(public_reporting_directory, button_pressed))
     else:  ## must be an event
         return action_when_event_button_clicked(interface)
 
@@ -69,3 +87,18 @@ def get_event_buttons(interface: abstractInterface, sort_by: str) -> Line:
     list_of_events = get_list_of_events_entitled_to_see(interface=interface, volunteer_id=volunteer_id, sort_by=sort_by)
     return display_given_list_of_events_with_buttons(list_of_events)
 
+def list_of_all_files_in_public_directory_with_clickable_buttons() -> ListOfLines:
+    all_files = get_files_in_directory(public_reporting_directory)
+
+    return ListOfLines([
+        line_for_file_in_directory(
+                                   filename=filename)
+        for filename in all_files
+    ]).add_Lines()
+
+def line_for_file_in_directory(filename:str):
+    return Button(filename)
+
+def list_of_file_buttons():
+    all_files = get_files_in_directory(public_reporting_directory)
+    return all_files

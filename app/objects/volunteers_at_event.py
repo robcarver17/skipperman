@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from typing import List
 
 from app.objects.generic import GenericSkipperManObject,  GenericListOfObjects
-from app.objects.food import FoodRequirements, no_food_requirements
 from app.objects.day_selectors import DaySelector, day_selector_stored_format_from_text, \
     day_selector_to_text_in_stored_format, Day
 from app.objects.constants import missing_data

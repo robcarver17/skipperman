@@ -1,4 +1,5 @@
 import datetime
+from copy import copy
 from enum import Enum
 from typing import Dict, List
 
@@ -31,8 +32,15 @@ class DaySelector(Dict[Day, bool]):
 
         return True
 
+    def __hash__(self):
+        return hash("".join([day.name+str(selected) for day, selected in self.items()])
+                     )
+
     def align_with_list_of_days(self, list_of_days: List[Day]) -> 'DaySelector':
         return DaySelector([(day, self.available_on_day(day)) for day in list_of_days])
+
+    def union(self, other: 'DaySelector') -> 'DaySelector':
+        return DaySelector([(day, True) for day in all_possible_days if other.available_on_day(day) or self.available_on_day(day)])
 
     def intersect(self, other: 'DaySelector') -> 'DaySelector':
         return DaySelector([(day, True) for day in self.days_available() if other.available_on_day(day)])
@@ -74,6 +82,16 @@ class DaySelector(Dict[Day, bool]):
 
     def make_available_on_day(self, day: Day):
         self[day] = True
+
+def union_across_day_selectors(list_of_day_selectors: List[DaySelector])-> DaySelector:
+    copied_list = copy(list_of_day_selectors)
+    union_selector = copied_list.pop()
+    while len(copied_list)>0:
+        next_selector = copied_list.pop(
+        )
+        union_selector = union_selector.union(next_selector)
+
+    return union_selector
 
 
 ALL_DAYS_SELECTED = dict([(day, True) for day in all_possible_days])

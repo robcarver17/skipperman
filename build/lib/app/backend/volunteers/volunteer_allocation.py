@@ -1,5 +1,6 @@
 from typing import List, Dict, Union
 
+from app.data_access.configuration.configuration import UNABLE_TO_VOLUNTEER_KEYWORD
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.data.patrol_boats import PatrolBoatsData
@@ -12,13 +13,14 @@ from app.backend.volunteers.volunteer_rota import load_list_of_identified_volunt
     load_list_of_volunteers_at_event
 
 from app.backend.cadets import  cadet_name_from_id
-from app.backend.volunteers.volunteers import  list_of_similar_volunteers
+from app.backend.volunteers.volunteers import list_of_similar_volunteers, \
+    are_all_cadet_ids_in_list_already_connection_to_volunteer, get_volunteer_from_id
 from app.backend.wa_import.update_cadets_at_event import   get_cadet_at_event_for_cadet_id
 from app.backend.volunteers.volunter_relevant_information import \
-    get_relevant_information_for_volunteer_in_event_at_row_and_index
+    get_relevant_information_for_volunteer_in_event_at_row_and_index, suggested_volunteer_availability
 
 from app.objects.constants import missing_data
-from app.objects.day_selectors import Day, DaySelector
+from app.objects.day_selectors import Day, DaySelector, union_across_day_selectors
 from app.objects.events import Event
 from app.objects.relevant_information_for_volunteers import ListOfRelevantInformationForVolunteer
 #from app.objects.food_and_clothing import FoodRequirements
@@ -337,3 +339,90 @@ def matched_volunteer_or_missing_data(interface: abstractInterface, volunteer: V
     matched_volunteer_with_id = volunteer_data.matching_volunteer_or_missing_data(volunteer)
 
     return matched_volunteer_with_id
+
+
+NO_ISSUES_WITH_VOLUNTEER = ''
+def relevant_information_requires_clarification_or_cadets_not_permanently_connected(interface: abstractInterface,
+                                                                                    event: Event,
+                                                                                    list_of_relevant_information: ListOfRelevantInformationForVolunteer
+                                                                                    , volunteer_id: str) -> str:
+    issues = NO_ISSUES_WITH_VOLUNTEER
+
+    list_of_status = [relevant_information.identify.self_declared_status for relevant_information in  list_of_relevant_information]
+    list_of_preferred = [relevant_information.availability.preferred_duties for relevant_information in  list_of_relevant_information]
+    list_of_availability = [suggested_volunteer_availability(relevant_information.availability) for relevant_information in  list_of_relevant_information]
+    list_of_cadet_availability = [relevant_information.availability.cadet_availability for relevant_information in  list_of_relevant_information]
+
+    list_of_same_or_different = [relevant_information.availability.same_or_different for relevant_information in  list_of_relevant_information]
+
+    any_status_is_unable = any([status for status in list_of_status if UNABLE_TO_VOLUNTEER_KEYWORD in status.lower()])
+    availability_conflict = we_are_not_the_same(list_of_availability)
+    if availability_conflict:
+        ## cannot check so say false
+        cadet_vs_volunteer_availability_conflict = False
+    else:
+        volunteer_availability = list_of_availability[0] ## all the same
+        cadet_vs_volunteer_availability_conflict = is_volunteer_available_on_days_when_cadet_not_attending(
+            volunteer_availability=volunteer_availability,
+            list_of_cadet_availability=list_of_cadet_availability
+        )
+
+    preferred_conflict = we_are_not_the_same(list_of_preferred)
+    same_or_different_conflict = we_are_not_the_same(list_of_same_or_different)
+    cadets_not_connected = any_cadets_not_permanently_connected(interface=interface, event=event, volunteer_id=volunteer_id)
+
+    if any_status_is_unable:
+        issues+='Volunteer is unable to volunteer according to at least one registration. '
+    if availability_conflict:
+        issues+='Inconsistency between availability for cadet and volunteer across registrations. '
+    if cadet_vs_volunteer_availability_conflict:
+        issues+='Volunteer is available on days when cadet is not. '
+    if preferred_conflict:
+        issues+='Inconsistency on preferred duties across registrations. '
+    if same_or_different_conflict:
+        issues+='Inconsistency on same/different duties across registrations. '
+    if cadets_not_connected:
+        issues+='Volunteer is not currently permanently connected to all registered cadets. '
+
+    return issues
+
+def is_volunteer_available_on_days_when_cadet_not_attending(volunteer_availability : DaySelector,
+                                                            list_of_cadet_availability: List[DaySelector]) -> bool:
+
+    all_cadets_availability = union_across_day_selectors(list_of_cadet_availability)
+    for day in volunteer_availability.days_available():
+        if not all_cadets_availability.available_on_day(day):
+            return True
+
+    return False
+
+def we_are_not_the_same(some_list: list) ->bool:
+    return len(set(some_list))>1
+
+def any_cadets_not_permanently_connected(interface: abstractInterface,  event: Event,volunteer_id: str)->bool:
+    list_of_cadet_ids = get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet(interface=interface,
+                                                                                                                         volunteer_id=volunteer_id,
+                                                                                                                                   event=event)
+    volunteer = get_volunteer_from_id(interface=interface,volunteer_id=volunteer_id)
+
+    already_all_connected = are_all_cadet_ids_in_list_already_connection_to_volunteer(interface=interface, volunteer=volunteer, list_of_cadet_ids=list_of_cadet_ids)
+
+    return not already_all_connected
+
+def get_volunteer_at_event_from_list_of_relevant_information_with_no_conflicts(list_of_relevant_information: ListOfRelevantInformationForVolunteer, volunteer_id: str,
+                                                                               list_of_associated_cadet_id: List[str]) -> VolunteerAtEvent:
+    first_relevant_information = list_of_relevant_information[0] ## can use first as all the same - checked
+    return VolunteerAtEvent(
+        volunteer_id=volunteer_id,
+        availablity=suggested_volunteer_availability(first_relevant_information.availability),
+        list_of_associated_cadet_id=list_of_associated_cadet_id,
+        preferred_duties = first_relevant_information.availability.preferred_duties,
+        same_or_different=first_relevant_information.availability.same_or_different,
+        any_other_information =get_any_other_information_joint_string(list_of_relevant_information)
+    )
+
+def get_any_other_information_joint_string(list_of_relevant_information: ListOfRelevantInformationForVolunteer) -> str:
+    list_of_other_information = [relevant_information.availability.any_other_information for relevant_information in list_of_relevant_information]
+    unique_list = list(set(list_of_other_information))
+
+    return ". ".join(unique_list)

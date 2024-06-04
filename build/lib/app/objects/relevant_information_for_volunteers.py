@@ -39,7 +39,7 @@ class RelevantInformationForVolunteer:
 
 missing_relevant_information = object()
 
-class ListOfRelevantInformationForVolunteer(list):
+class ListOfRelevantInformationForVolunteer(List[RelevantInformationForVolunteer]):
     def __init__(self, list_of_relevant_information: List[RelevantInformationForVolunteer]):
         super().__init__(list_of_relevant_information)
 
@@ -49,6 +49,9 @@ class ListOfRelevantInformationForVolunteer(list):
         ) for relevant_information in self]
 
         return all(cancelled_or_deleted)
+
+
+
 
 def get_row_status_cancelled_or_deleted_from_relevant_information(relevant_information: RelevantInformationForVolunteer)-> bool:
     if relevant_information is missing_relevant_information:

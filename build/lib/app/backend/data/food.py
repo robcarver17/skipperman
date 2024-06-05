@@ -1,3 +1,4 @@
+from typing import List
 
 from app.objects.volunteers_at_event import ListOfVolunteersAtEvent
 
@@ -41,6 +42,12 @@ class FoodData():
         list_of_requirements =self.get_list_of_cadets_with_food_at_event(event)
         list_of_requirements.add_new_cadet_with_food_to_event(cadet_id=cadet_id, food_requirements=food_requirements)
         self.save_list_of_cadets_with_food_at_event(event=event, list_of_cadets_with_food_requirements=list_of_requirements)
+
+    def get_combined_list_of_food_requirement_items(self, event: Event) -> List[str]:
+        list_of_requirements_for_cadets =self.get_list_of_cadets_with_food_at_event(event).unique_list_of_food_requirements()
+        list_of_requirements_for_volunteers = self.get_list_of_volunteeers_with_food_at_event(event).unique_list_of_food_requirements()
+
+        return list(set(list_of_requirements_for_volunteers+list_of_requirements_for_cadets))
 
     def list_of_active_cadets_with_food_at_event(self, event: Event) -> ListOfCadetsWithFoodRequirementsAtEvent:
         list_of_requirements =self.get_list_of_cadets_with_food_at_event(event)

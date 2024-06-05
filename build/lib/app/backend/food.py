@@ -1,6 +1,14 @@
 from typing import Dict,  List
 
 import pandas as pd
+from app.backend.cadets import cadet_name_from_id
+
+from app.backend.volunteers.volunteers import get_volunteer_name_from_id
+
+from app.objects.volunteers import ListOfVolunteers
+
+from app.backend.data.volunteers import VolunteerData
+
 from app.objects.cadets import ListOfCadets
 
 from app.backend.data.cadets import CadetData
@@ -14,7 +22,8 @@ from app.backend.reporting.options_and_parameters.print_options import PrintOpti
 from app.backend.reporting.process_stages.create_file_from_list_of_columns import \
     create_csv_report_from_dict_of_df_and_return_filename
 
-from app.objects.food import FoodRequirements, ListOfCadetsWithFoodRequirementsAtEvent
+from app.objects.food import FoodRequirements, ListOfCadetsWithFoodRequirementsAtEvent, \
+    CadetWithFoodRequirementsAtEvent, VolunteerWithFoodRequirementsAtEvent
 
 from app.backend.data.food import FoodData
 from app.objects.events import Event
@@ -61,13 +70,16 @@ def update_volunteer_food_data(interface: abstractInterface, event: Event, volun
     food_data = FoodData(interface.data)
     food_data.change_food_requirements_for_volunteer(event=event, volunteer_id=volunteer_id, food_requirements=new_food_requirements)
 
-def summarise_food_data_by_day(interface: abstractInterface, event: Event) -> PandasDFTable:
+def summarise_food_data_by_day(interface: abstractInterface, event: Event, copy_index: bool = False) -> PandasDFTable:
     ## rows: cadets/ volunteers. columns: day and numbers
     row_for_volunteers = summarise_food_data_by_day_for_volunteers(interface=interface, event=event)
     row_for_cadets = summarise_food_data_by_day_for_cadets(interface=interface, event=event)
 
     df = pd.concat([row_for_cadets, row_for_volunteers], axis=0)
     df.loc['Total'] = df.sum(numeric_only=True, axis=0)
+
+    if copy_index:
+        df.insert(0, '', df.index)
 
     return PandasDFTable(df)
 
@@ -114,7 +126,7 @@ def bracket_to_str( age_window: List[int]):
 
 
 max_possible_age = 99
-age_brackets = [[0, 10], [11, 13], [14, 16], [16, max_possible_age]]
+age_brackets = [[0, 9], [10, 12], [13, 15], [16, max_possible_age]]
 
 
 def cadet_has_right_age_and_is_available_on_day(all_cadets: ListOfCadets, availability_dict: Dict[str, DaySelector],
@@ -218,28 +230,128 @@ def download_food_data_and_return_filename(interface: abstractInterface, event: 
 
 def get_food_data_for_download(interface: abstractInterface, event: Event) -> Dict[str, pd.DataFrame]:
 
-    return dict(summary=summarise_food_data_by_day(interface=interface, event=event),
+    return dict(summary=summarise_food_data_by_day(interface=interface, event=event, copy_index=True),
                 allergies = get_list_of_allergies_as_df(interface=interface, event=event),
                 volunteers = get_list_of_volunteers_with_food_as_df(interface=interface, event=event),
                 cadets = get_list_of_cadets_with_food_as_df(interface=interface, event=event))
 
 def get_list_of_allergies_as_df(interface: abstractInterface, event: Event) -> pd.DataFrame:
     ## List of allergies by group with total in brackets (pseudo data frame). List includes (Cadet or Volunteer) and if volunteer # of days. For catering.
-    return pd.DataFrame()
+    food_data = FoodData(interface.data)
+    list_of_food_requirements = food_data.get_combined_list_of_food_requirement_items(event)
+
+    list_of_required_df = []
+    for food_required_str in list_of_food_requirements:
+        list_of_required_df.append(get_allergy_list_as_df_for_cadets_and_volunteers(
+            interface=interface,
+            event=event,
+            food_required_str=food_required_str
+        ))
+
+    return pd.concat(list_of_required_df, axis=0)
+
+
+def get_allergy_list_as_df_for_cadets_and_volunteers(interface: abstractInterface, event: Event, food_required_str: str):
+
+    volunteer_df = get_allergy_list_as_df_for_volunteers(interface=interface, event=event, food_required_str=food_required_str)
+    cadet_df = get_allergy_list_as_df_for_cadets(interface=interface, event=event, food_required_str=food_required_str)
+    both_df = pd.concat([cadet_df, volunteer_df], axis=1)
+
+    header_line = pd.Series(dict(type='', name='%s (%d)' % (food_required_str, len(both_df))))
+
+    return pd.concat([header_line, both_df], axis=1)
+
+def get_allergy_list_as_df_for_volunteers(interface: abstractInterface, event: Event,
+                                                     food_required_str: str):
+    food_data = FoodData(interface.data)
+    volunteers_with_food = food_data.list_of_active_volunteers_with_food_at_event(event)
+    subset = volunteers_with_food.subset_matches_food_required_description(food_required_str)
+
+    list_of_names = [get_volunteer_name_from_id(interface=interface,
+                                                volunteer_id=volunteer_id) for volunteer_id in subset.list_of_volunteer_ids()]
+
+
+    df= pd.DataFrame(dict(type = ['Volunteer']*len(list_of_names), name = list_of_names))
+    df = df.sort_values('name')
+
+    return df
+
+def get_allergy_list_as_df_for_cadets(interface: abstractInterface, event: Event,
+                                                     food_required_str: str):
+    food_data = FoodData(interface.data)
+    cadets_with_food = food_data.list_of_active_cadets_with_food_at_event(event)
+    subset = cadets_with_food.subset_matches_food_required_description(food_required_str)
+
+    list_of_names = [cadet_name_from_id(interface=interface,
+                                                cadet_id=cadet_id)
+                     for cadet_id in subset.list_of_cadet_ids()]
+
+    df = pd.DataFrame(dict(type=['Cadet'] * len(list_of_names), name=list_of_names))
+    df = df.sort_values('name')
+
+    return df
+
 
 def get_list_of_volunteers_with_food_as_df(interface: abstractInterface, event: Event) -> pd.DataFrame:
     ## List of volunteer names grouped by how many days volunteering then alphabetical. List includes # of days. For wristband collection.
-    ## List of cadets for completeness (probably won't be used)
-    return pd.DataFrame()
+    food_data = FoodData(interface.data)
+    volunteer_data = VolunteerData(interface.data)
+    volunteer_allocation_data =VolunteerAllocationData(interface.data)
+    volunteers_with_food = food_data.list_of_active_volunteers_with_food_at_event(event)
+    availability_dict = dict([
+
+    (volunteer_id, volunteer_allocation_data.get_volunteer_at_this_event(event=event, volunteer_id=volunteer_id).availablity)
+        for volunteer_id in volunteers_with_food.list_of_volunteer_ids()])
+
+    df = pd.DataFrame([
+        row_for_volunteer_in_data(availability_dict=availability_dict,
+                                  list_of_volunteers=volunteer_data.get_list_of_volunteers(),
+                                  volunteer_with_food_at_event=volunteer_with_food_at_event)
+        for volunteer_with_food_at_event in volunteers_with_food
+    ])
+
+    df = df.sort_values('days_available')
+
+    return df
+
+def row_for_volunteer_in_data(availability_dict: Dict[str, DaySelector],
+                              list_of_volunteers: ListOfVolunteers,
+                              volunteer_with_food_at_event: VolunteerWithFoodRequirementsAtEvent) -> pd.Series:
+
+    volunteer = list_of_volunteers.has_id(volunteer_with_food_at_event.volunteer_id)
+    return pd.Series(dict(
+        name = volunteer.name,
+        food_requirement = volunteer_with_food_at_event.food_requirements.describe(),
+        days_available = len(availability_dict[volunteer_with_food_at_event.volunteer_id].days_available())
+    ))
 
 def get_list_of_cadets_with_food_as_df(interface: abstractInterface, event: Event) -> pd.DataFrame:
-    return pd.DataFrame()
+    ## List of cadets for completeness (probably won't be used)
+    food_data = FoodData(interface.data)
+    cadet_data = CadetData(interface.data)
+    all_cadets = cadet_data.get_list_of_cadets()
+
+    cadets_with_food = food_data.list_of_active_cadets_with_food_at_event(event)
+
+    df= pd.DataFrame([
+     row_for_cadet_in_table(all_cadets=all_cadets, cadet_with_food_requirements=cadet_with_food_requirements)
+        for cadet_with_food_requirements in cadets_with_food
+    ])
+    df = df.sort_values('name')
+
+    return df
+
+def row_for_cadet_in_table(all_cadets: ListOfCadets, cadet_with_food_requirements: CadetWithFoodRequirementsAtEvent) -> pd.Series:
+    cadet = all_cadets.cadet_with_id(cadet_with_food_requirements.cadet_id)
+    return pd.Series(dict(
+        name = cadet.name,
+        age = int(cadet.approx_age_years()),
+        food_requirement = cadet_with_food_requirements.food_requirements.describe()
+    ))
 
 def pseudo_reporting_options_for_food_data_export(event: Event) -> PrintOptions:
 
     print_options = PrintOptions(filename='food_data_%s' % event.event_name,
                                  publish_to_public=False,
-                                 output_pdf=False,
-                                 write_index=True)
-
+                                 output_pdf=False)
     return print_options

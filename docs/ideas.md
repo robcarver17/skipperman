@@ -89,15 +89,15 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - only do volunteer check on import if disagreement between days
 - key report links for instructors on event landing page
 - event report with literally everything on it
+- summarise food numbers for cadets & volunteers
 
 
 ### Required for cadet week:
 
-- summarise food numbers, allergies for cadets & volunteers
 - downloadable report with summaries, plus cadet&volunteer details
 
 
-  ### General required before handover to Jonny:
+### General required before handover to Jonny:
 
 ADMIN:
 - wipe all non essential information from stored data on past events
@@ -126,6 +126,7 @@ UNCLASSIFIED:
 - don't allow duplicate mapping templates and delete templates allowed
 - merge cadet / merge volunteer
 - edit event (warnings especially days!)
+- kick off manual import of cadets and volunteers from WA mapped data (include option to just import file)
 
 
 ADMIN AND DOCUMENTATION:

@@ -66,7 +66,8 @@ def create_csv_report_from_dict_of_df_and_return_filename(
         print_options: PrintOptions,
 ):
     path_and_filename_no_extension = get_path_and_filename_for_report(print_options, use_extension='')
-    path_and_filename_with_extension = save_dict_of_df_as_spreadsheet_file(dict_of_df=dict_of_df, path_and_filename_no_extension=path_and_filename_no_extension)
+    path_and_filename_with_extension = save_dict_of_df_as_spreadsheet_file(dict_of_df=dict_of_df, path_and_filename_no_extension=path_and_filename_no_extension,
+                                                                           write_index=print_options.write_index)
 
     return path_and_filename_with_extension
 

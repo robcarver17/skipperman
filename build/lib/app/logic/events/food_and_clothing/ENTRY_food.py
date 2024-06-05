@@ -1,3 +1,5 @@
+from app.backend.food import summarise_food_data_by_day
+
 from app.logic.events.food_and_clothing.automatically_get_food_data import \
     get_and_save_food_for_cadets_from_registration_data, get_and_save_food_for_volunteers_from_registration_data
 
@@ -14,7 +16,7 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm, File, )
 from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, SAVE_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, DetailListOfLines
 from app.logic.events.events_in_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_text import Heading
@@ -36,6 +38,12 @@ def display_form_view_for_food_requirements(interface: abstractInterface) -> For
     title = Heading("Food requirements for event %s" % str(event), centred=True, size=4)
 
     button_bar = get_button_bar_for_food_required(event)
+
+    summary_by_day = summarise_food_data_by_day(interface=interface, event=event)
+    summaries = DetailListOfLines(ListOfLines([
+        summary_by_day
+    ]), name='Summary')
+
     cadet_food_table = get_table_of_cadets_with_food(interface)
     volunteer_food_table = get_table_of_volunteers_with_food(interface)
     other_food_table = get_other_food_table(interface)
@@ -45,6 +53,8 @@ def display_form_view_for_food_requirements(interface: abstractInterface) -> For
             [
                 button_bar,
                 title,
+                _______________,
+                summaries,
                 _______________,
                 "Cadets:",
                 cadet_food_table,

@@ -5,7 +5,7 @@ from app.objects.events import Event
 
 from app.backend.cadets import get_cadet_from_id
 
-from app.backend.food import update_cadet_food_data, update_volunteer_food_data
+from app.backend.food import update_cadet_food_data, update_volunteer_food_data, download_food_data_and_return_filename
 from app.objects.food import CadetWithFoodRequirementsAtEvent, FoodRequirements, VolunteerWithFoodRequirementsAtEvent
 
 from app.logic.events.events_in_state import get_event_from_state
@@ -100,9 +100,8 @@ def update_volunteer_food_data_if_changed(interface: abstractInterface,
 
 
 def download_food_data(interface: abstractInterface) -> File:
-    pass
-    ## three sheets, summary, one for cadets, one for volunteers
-    ## Summary has numbers across cadets and volunteers / days, plus allergies, and list of other allergies
-    ## List of allergic by name
-    ## Cadets: show days and allergies, group, lake group. Sort by group
-    ## Volunteers: show # of days, days, allergies, role. Sort by #days, then role
+    event = get_event_from_state(interface)
+    filename = download_food_data_and_return_filename(interface=interface, event=event)
+    return File(filename)
+
+

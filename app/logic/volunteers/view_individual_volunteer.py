@@ -44,7 +44,7 @@ def display_form_for_selected_volunteer(
     lines_of_allocations = list_of_lines_with_allocations_and_roles(interface=interface, volunteer=volunteer)
 
     connected = lines_for_connected_cadets(interface=interface, volunteer=volunteer)
-    skills = list_of_skills(interface=interface, volunteer=volunteer)
+    skills = list_of_skills_as_list_of_lines(interface=interface, volunteer=volunteer)
     buttons = buttons_for_volunteer_form()
     return Form(
         ListOfLines([
@@ -72,7 +72,7 @@ def list_of_lines_with_allocations_and_roles(interface: abstractInterface, volun
     )
 
 
-def list_of_skills(interface: abstractInterface, volunteer: Volunteer) -> ListOfLines:
+def list_of_skills_as_list_of_lines(interface: abstractInterface, volunteer: Volunteer) -> ListOfLines:
     skills = get_dict_of_existing_skills(interface=interface, volunteer=volunteer)
     skills_held = [skill for skill, skill_held in skills.items() if skill_held]
     skills_not_held = [skill for skill, skill_held in skills.items() if not skill_held]
@@ -81,6 +81,8 @@ def list_of_skills(interface: abstractInterface, volunteer: Volunteer) -> ListOf
         Line("Skills held: %s" % ", ".join(skills_held)),
         Line("Skills missing: %s" % ", ".join(skills_not_held)),
     ])
+
+
 
 def lines_for_connected_cadets(interface: abstractInterface, volunteer: Volunteer) -> Line:
     cadets = get_connected_cadets(interface=interface, volunteer=volunteer)

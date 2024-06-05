@@ -145,14 +145,14 @@ class PatrolBoatsData():
 
 
     def get_boat_name_allocated_to_volunteer_on_day_at_event(self, event: Event, day: Day,
-                                                             volunteer_id: str) -> str:
+                                                             volunteer_id: str, default=missing_data) -> str:
         boat = self.get_boat_allocated_to_volunteer_on_day_at_event(
             event=event,
             day=day,
             volunteer_id=volunteer_id
         )
         if boat is missing_data:
-            return missing_data
+            return default
 
         return boat.name
 

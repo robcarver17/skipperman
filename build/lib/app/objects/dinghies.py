@@ -222,24 +222,24 @@ class ListOfCadetAtEventWithDinghies(GenericListOfObjectsWithIds):
         return self.index(item)
 
 
-    def cadet_partner_id_for_cadet_id_on_day(self, cadet_id:str, day: Day) -> str:
+    def cadet_partner_id_for_cadet_id_on_day(self, cadet_id:str, day: Day, default=missing_data) -> str:
         item = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
         if item is missing_data:
-            return missing_data
+            return default
 
         return item.partner_cadet_id
 
-    def sail_number_for_cadet_id(self, cadet_id:str, day: Day) -> str:
+    def sail_number_for_cadet_id(self, cadet_id:str, day: Day, default=missing_data) -> str:
         item = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
         if item is missing_data:
-            return missing_data
+            return default
 
         return item.sail_number
 
-    def dinghy_id_for_cadet_id_on_day(self, cadet_id: str, day: Day) -> str:
+    def dinghy_id_for_cadet_id_on_day(self, cadet_id: str, day: Day, default= missing_data) -> str:
         item = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
         if item is missing_data:
-            return missing_data
+            return default
 
         return item.boat_class_id
 

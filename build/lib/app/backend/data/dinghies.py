@@ -1,5 +1,7 @@
 from typing import List
 
+from app.backend.data.cadets import CadetData
+
 from app.objects.cadet_at_event import CadetAtEvent
 
 from app.backend.data.cadets_at_event import CadetsAtEventData
@@ -12,9 +14,11 @@ from app.backend.data.patrol_boats import PatrolBoatsData
 from app.data_access.storage_layer.api import DataLayer
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies, ListOfClubDinghies, NO_BOAT
-from app.objects.dinghies import ListOfBoatClasses, ListOfCadetAtEventWithDinghies
+from app.objects.dinghies import ListOfBoatClasses, ListOfCadetAtEventWithDinghies, NO_PARTNERSHIP_LIST
 from app.objects.events import Event
 from app.objects.patrol_boats import ListOfPatrolBoats
+
+
 
 
 class DinghiesData():
@@ -151,6 +155,35 @@ class DinghiesData():
 
         return self.get_list_of_club_dinghies().name_given_id(dinghy_id)
 
+    def name_of_boat_class_for_cadet_at_event_on_day_or_default(self, event: Event, cadet_id: str, day: Day, default=''):
+        cadets_with_dinghies_at_event = self.get_list_of_cadets_at_event_with_dinghies(event)
+        dinghy_id = cadets_with_dinghies_at_event.dinghy_id_for_cadet_id_on_day(cadet_id=cadet_id, day=day, default=None)
+
+        if dinghy_id is None:
+            return default
+
+        return self.get_list_of_boat_classes().name_given_id(dinghy_id)
+
+    def sail_number_for_cadet_at_event_on_day_or_default(self, event: Event, cadet_id: str, day: Day, default=''):
+        cadets_with_dinghies_at_event = self.get_list_of_cadets_at_event_with_dinghies(event)
+        sail_number = cadets_with_dinghies_at_event.sail_number_for_cadet_id(cadet_id=cadet_id, day=day, default=default)
+
+        return sail_number
+
+    def partner_name_for_cadet_at_event_on_day_or_default(self, event: Event, cadet_id: str, day: Day, default=''):
+        cadets_with_dinghies_at_event = self.get_list_of_cadets_at_event_with_dinghies(event)
+        partner_id = cadets_with_dinghies_at_event.cadet_partner_id_for_cadet_id_on_day(cadet_id=cadet_id, day=day, default=None)
+
+        if partner_id is None:
+            return default
+
+        if partner_id in NO_PARTNERSHIP_LIST:
+            return default
+
+        partner_cadet = self.cadet_data.get_list_of_cadets().cadet_with_id(partner_id)
+
+        return partner_cadet.name
+
 
     def cadet_at_event_or_missing_data(self, event: Event, cadet_id: str) -> CadetAtEvent:
         return self.cadets_at_event_data.cadet_at_event_or_missing_data(event=event, cadet_id=cadet_id)
@@ -189,7 +222,9 @@ class DinghiesData():
     def cadets_at_event_data(self) -> CadetsAtEventData:
         return CadetsAtEventData(data_api=self.data_api)
 
-
+    @property
+    def cadet_data(self) -> CadetData:
+        return CadetData(data_api=self.data_api)
 
 def load_list_of_cadets_at_event_with_club_dinghies(interface: abstractInterface, event: Event) -> ListOfCadetAtEventWithClubDinghies:
     dinghies_data = DinghiesData(interface.data)

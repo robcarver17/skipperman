@@ -155,13 +155,27 @@ class VolunteerRotaData():
         return volunteer_ids_in_boat_related_roles_on_any_day_of_event
 
     def get_volunteer_role_at_event_on_day(self, event: Event, volunteer_id: str,
-                                           day: Day) -> str:
+                                           day: Day, default = missing_data) -> str:
         volunteer_in_role = self.get_volunteer_with_role_at_event_on_day(event=event, day=day,
                                                                     volunteer_id=volunteer_id)
         if volunteer_in_role is missing_data:
-            return missing_data
+            return default
 
         return volunteer_in_role.role
+
+    def get_volunteer_group_name_at_event_on_day(self, event: Event, volunteer_id: str,
+                                                 day: Day, default_if_missing = '',
+                                                 default_if_unallocated = '') -> str:
+        volunteer_in_role = self.get_volunteer_with_role_at_event_on_day(event=event, day=day,
+                                                                    volunteer_id=volunteer_id)
+        if volunteer_in_role is missing_data:
+            return default_if_missing
+
+        group = volunteer_in_role.group
+        if group.is_unallocated:
+            return default_if_unallocated
+
+        return group.group_name
 
     def get_volunteer_with_role_at_event_on_day(self, event: Event, volunteer_id: str,
                                                 day: Day) -> VolunteerInRoleAtEvent:

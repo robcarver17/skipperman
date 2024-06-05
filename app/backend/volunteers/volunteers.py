@@ -17,7 +17,7 @@ def get_volunteer_from_list_of_volunteers_given_volunteer_name(interface: abstra
 
 def get_dict_of_existing_skills(interface: abstractInterface, volunteer: Volunteer)-> dict:
     volunteer_data = VolunteerData(interface.data)
-    return volunteer_data.get_dict_of_existing_skills(volunteer)
+    return volunteer_data.get_dict_of_existing_skills_for_volunteer(volunteer)
 
 
 def get_connected_cadets(interface: abstractInterface, volunteer: Volunteer) -> ListOfCadets:

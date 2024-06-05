@@ -56,6 +56,10 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
         volunteer_ids = [item.volunteer_id for item in self if item.is_allocated]
         return volunteer_ids
 
+    def list_of_volunteer_ids_including_unallocated(self):
+        volunteer_ids = [item.volunteer_id for item in self]
+        return volunteer_ids
+
 
     def list_of_row_ids_and_indices(self) -> List[RowIDAndIndex]:
         return [item.row_and_index for item in self]

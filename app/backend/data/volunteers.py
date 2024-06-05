@@ -28,9 +28,12 @@ class VolunteerData():
 
         return list_of_volunteers[idx]
 
-    def get_dict_of_existing_skills(self, volunteer: Volunteer) -> dict:
+    def get_dict_of_existing_skills_for_volunteer(self, volunteer: Volunteer) -> dict:
+        return self.get_dict_of_existing_skills_for_volunteer_id(volunteer_id=volunteer.id)
+
+    def get_dict_of_existing_skills_for_volunteer_id(self, volunteer_id: str) -> dict:
         all_skills = self.get_list_of_volunteer_skills()
-        return all_skills.dict_of_skills_for_volunteer_id(volunteer_id=volunteer.id)
+        return all_skills.dict_of_skills_for_volunteer_id(volunteer_id=volunteer_id)
 
     def add_boat_related_skill_for_volunteer(self, volunteer_id: str):
         skills = self.get_list_of_volunteer_skills()

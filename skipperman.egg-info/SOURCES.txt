@@ -51,7 +51,11 @@ app/backend/reporting/__init__.py
 app/backend/reporting/event_lists.py
 app/backend/reporting/../../data_access/configuration/configuration.yaml
 app/backend/reporting/all_event_data/__init__.py
+app/backend/reporting/all_event_data/all_event_cadet_data.py
+app/backend/reporting/all_event_data/all_event_clothing_and_food_data.py
 app/backend/reporting/all_event_data/all_event_data.py
+app/backend/reporting/all_event_data/all_event_volunteer_data.py
+app/backend/reporting/all_event_data/components.py
 app/backend/reporting/all_event_data/../../../data_access/configuration/configuration.yaml
 app/backend/reporting/allocation_report/__init__.py
 app/backend/reporting/allocation_report/allocation_report.py

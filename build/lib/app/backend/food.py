@@ -255,11 +255,11 @@ def get_allergy_list_as_df_for_cadets_and_volunteers(interface: abstractInterfac
 
     volunteer_df = get_allergy_list_as_df_for_volunteers(interface=interface, event=event, food_required_str=food_required_str)
     cadet_df = get_allergy_list_as_df_for_cadets(interface=interface, event=event, food_required_str=food_required_str)
-    both_df = pd.concat([cadet_df, volunteer_df], axis=1)
+    both_df = pd.concat([cadet_df, volunteer_df], axis=0)
 
     header_line = pd.Series(dict(type='', name='%s (%d)' % (food_required_str, len(both_df))))
 
-    return pd.concat([header_line, both_df], axis=1)
+    return pd.concat([header_line, both_df], axis=0)
 
 def get_allergy_list_as_df_for_volunteers(interface: abstractInterface, event: Event,
                                                      food_required_str: str):

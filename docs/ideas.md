@@ -88,37 +88,23 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - clear old reports for event (remove rednedant permalinks) and other temp directories UTILITIES MENU
 - only do volunteer check on import if disagreement between days
 - key report links for instructors on event landing page
+- event report with literally everything on it
 
 
 ### Required for cadet week:
 
-- event report with literally everything on it
-
-- create a food report with allergies and numbers (CW) - (FOOD ONLY EVENT FOR WRISTBANDS AND THEN COMBINE WITH CW EVENT)
-- maintain and report on tickets for gala dinner, include additional gala dinner invites eg sponsors, plus ones (CW)
-  (FOOD ONLY EVENT WITH NAME IMPORT FROM ANOTHER EVENT)    
-- maintain and report on adult wristbands (CW) - FROM A GENERIC .CSV  LIST OF VOLUNTEER REPORT WHERE CAN FILTER ON DAYS ATTENDING
-- two types of food event: as part of training event, or social only seperate
-- manage social event with food only (Social)
-
-
-- two types of clothing event: as part of training event, or social only seperate
-- manage orders for hoodies (CW)
-
-
-- think carefully about how to handle events with no cadets, volunteers etc
+- summarise food numbers, allergies for cadets & volunteers
+- downloadable report with summaries, plus cadet&volunteer details
 
 
   ### General required before handover to Jonny:
 
-
 ADMIN:
-- manage shared files eg deleete
-- wipe health and phone numbers
+- wipe all non essential information from stored data on past events
 
 REPORTING:
 - refactor reporting so uses common data model, and generally tidy up 
-- create a list of key volunteers to invite to curry evening
+- create a list of key volunteers to invite to curry evening (REPORT on volunteers)
 - anything that is displayed on screen can be exported to .csv eg reg details, volunteer rota (and imported...???)
 - create a report of cadets
 
@@ -147,6 +133,20 @@ ADMIN AND DOCUMENTATION:
 - move all dangerous deletes to special admin area: , delete event (should never have to do this: many warnings!), delete cadet, delete volunteer
 - clear description of field names
 - code documentation
+
+
+
+### Possible future plans
+
+- think carefully about how to handle events with no cadets, volunteers etc
+- generic 'ticketed' event selling multiple kinds of ticket eg hoodies, wristbands etc
+- create a food report with allergies and numbers for food only events; combine with 
+- maintain and report on tickets for gala dinner, include additional gala dinner invites eg sponsors, plus ones (CW)
+  (FOOD ONLY EVENT WITH NAME IMPORT FROM ANOTHER EVENT)    
+- two types of food event: as part of training event, or social only seperate
+- manage social event with food only (Social)
+- two types of clothing event: as part of training event, or social only seperate
+- manage orders for hoodies (CW)
 
 
 ## A few questions - Sam

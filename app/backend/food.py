@@ -114,7 +114,7 @@ def bracket_to_str( age_window: List[int]):
 
 
 max_possible_age = 99
-age_brackets = [[0, 10], [11, 13], [14, 16], [16, max_possible_age]]
+age_brackets = [[0, 9], [10, 12], [13, 15], [16, max_possible_age]]
 
 
 def cadet_has_right_age_and_is_available_on_day(all_cadets: ListOfCadets, availability_dict: Dict[str, DaySelector],

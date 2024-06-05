@@ -90,11 +90,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - key report links for instructors on event landing page
 - event report with literally everything on it
 - summarise food numbers for cadets & volunteers
-
-
-### Required for cadet week:
-
-- downloadable report with summaries, plus cadet&volunteer details
+- downloadable food report with summaries, plus cadet&volunteer details
 
 
 ### General required before handover to Jonny:

@@ -13,14 +13,16 @@ from app.objects.food import CadetWithFoodRequirementsAtEvent, VolunteerWithFood
 
 GET_FOOD_FOR_CADETS = "Get food requirements for cadets from registration data"
 GET_FOOD_FOR_VOLUNTEERS = "Get food requirements for volunteers from registration data"
+DOWNLOAD_FOOD = "Download food requirements to spreadsheet"
 
 def get_button_bar_for_food_required(event: Event) -> ButtonBar:
     save_button = Button(SAVE_BUTTON_LABEL, nav_button=True)
     back_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
     cadet_button = Button(GET_FOOD_FOR_CADETS, nav_button=True)
     volunteer_button = Button(GET_FOOD_FOR_VOLUNTEERS, nav_button=True)
+    download_button = Button(DOWNLOAD_FOOD, nav_button=True)
 
-    button_bar = ButtonBar([back_button, save_button])
+    button_bar = ButtonBar([back_button, save_button, download_button])
 
     if event.contains_cadets:
         button_bar.append(cadet_button)

@@ -1,16 +1,17 @@
 from app.logic.events.food_and_clothing.automatically_get_food_data import \
     get_and_save_food_for_cadets_from_registration_data, get_and_save_food_for_volunteers_from_registration_data
 
-from app.logic.events.food_and_clothing.parse_food_data import save_food_data_in_form
+from app.logic.events.food_and_clothing.parse_food_data import save_food_data_in_form, download_food_data
 from app.logic.events.food_and_clothing.render_food import get_button_bar_for_food_required, \
-    get_table_of_cadets_with_food, get_table_of_volunteers_with_food, get_other_food_table, GET_FOOD_FOR_CADETS, GET_FOOD_FOR_VOLUNTEERS
+    get_table_of_cadets_with_food, get_table_of_volunteers_with_food, get_other_food_table, GET_FOOD_FOR_CADETS, \
+    GET_FOOD_FOR_VOLUNTEERS, DOWNLOAD_FOOD
 
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.events.patrol_boats.parse_patrol_boat_table import *
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
-    NewForm, )
+    NewForm, File, )
 from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, SAVE_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
@@ -60,7 +61,7 @@ def display_form_view_for_food_requirements(interface: abstractInterface) -> For
 
 def post_form_view_for_food_requirements(
     interface: abstractInterface
-) -> Union[Form, NewForm]:
+) -> Union[Form, NewForm, File]:
 
     last_button_pressed = interface.last_button_pressed()
 
@@ -72,6 +73,8 @@ def post_form_view_for_food_requirements(
 
     if last_button_pressed==SAVE_BUTTON_LABEL:
         pass
+    elif last_button_pressed==DOWNLOAD_FOOD:
+        return download_food_data(interface)
     elif last_button_pressed==GET_FOOD_FOR_CADETS:
         get_and_save_food_for_cadets_from_registration_data(interface)
     elif last_button_pressed==GET_FOOD_FOR_VOLUNTEERS:
@@ -87,6 +90,5 @@ def post_form_view_for_food_requirements(
 
 def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(display_form_view_for_food_requirements)
-
 
 

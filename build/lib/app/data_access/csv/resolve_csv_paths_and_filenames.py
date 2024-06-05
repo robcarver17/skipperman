@@ -102,7 +102,7 @@ LIST_OF_CADETS_WITH_TICK_LIST_ITEMS_FOR_EACH_CADET = "list_of_cadets_with_tick_l
 LIST_OF_CADETS_WITH_CLOTHING_AT_EVENT = "list_of_cadets_with_clothing_at_event"
 LIST_OF_CADETS_WITH_FOOD_AT_EVENT = "list_of_cadets_with_food_at_event"
 LIST_OF_VOLUNTEERS_WITH_FOOD_AT_EVENT = "list_of_volunteers_with_food_at_event"
-LIST_OF_PEOPLE_WITH_FOOD_AT_EVENT = "list_of_people_with_food_at_event"
+
 
 EVENT_MAPPING_FILE_ID = "wa_event_mapping"
 FIELD_MAPPING_FILE_ID = "wa_field_mapping"
@@ -156,6 +156,5 @@ LIST_OF_CADETS_WITH_TICK_LIST_ITEMS_FOR_EACH_CADET: ("ticksheets", "tick_list_it
 LIST_OF_CADETS_WITH_CLOTHING_AT_EVENT: ("mapped_events", "list_of_cadets_with_clothing_at_event_%s"),
 LIST_OF_CADETS_WITH_FOOD_AT_EVENT: ("mapped_events", "list_of_cadets_with_food_at_event_%s"),
 LIST_OF_VOLUNTEERS_WITH_FOOD_AT_EVENT: ("mapped_events", "list_of_volunteers_with_food_at_event_%s"),
-LIST_OF_PEOPLE_WITH_FOOD_AT_EVENT: ("mapped_events", "list_of_people_with_food_at_event_%s"),
 
 USERLIST_FILE_ID: ("secure", "userlist.csv")}

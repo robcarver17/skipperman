@@ -1,7 +1,7 @@
 from app.data_access.csv.generic_csv_data import GenericCsvData
 
 from app.data_access.classes.food_and_clothing import *
-from app.data_access.csv.resolve_csv_paths_and_filenames import LIST_OF_CADETS_WITH_CLOTHING_AT_EVENT, LIST_OF_CADETS_WITH_FOOD_AT_EVENT, LIST_OF_VOLUNTEERS_WITH_FOOD_AT_EVENT, LIST_OF_PEOPLE_WITH_FOOD_AT_EVENT
+from app.data_access.csv.resolve_csv_paths_and_filenames import LIST_OF_CADETS_WITH_CLOTHING_AT_EVENT, LIST_OF_CADETS_WITH_FOOD_AT_EVENT, LIST_OF_VOLUNTEERS_WITH_FOOD_AT_EVENT
 
 
 
@@ -43,18 +43,4 @@ class CsvDataListOfVolunteersWithFoodRequirementsAtEvent(GenericCsvData, DataLis
     def write(self, list_of_volunteers_with_food: ListOfVolunteersWithFoodRequirementsAtEvent, event_id: str):
         self.write_object(list_of_volunteers_with_food,
                           file_identifier=LIST_OF_VOLUNTEERS_WITH_FOOD_AT_EVENT,
-                          additional_file_identifiers=event_id)
-
-
-class CsvDataListOfPeoplesWithFoodRequirementsAtEvent(GenericCsvData, DataListOfPeopleWithFoodRequirementsAtEvent):
-
-    def read(self, event_id: str) -> ListOfPeopleWithFoodRequirementsAtEvent:
-        return self.read_and_return_object_of_type(ListOfPeopleWithFoodRequirementsAtEvent,
-                                                               file_identifier=LIST_OF_PEOPLE_WITH_FOOD_AT_EVENT,
-                                                               additional_file_identifiers=event_id)
-
-
-    def write(self, list_of_people_with_food: ListOfPeopleWithFoodRequirementsAtEvent, event_id: str):
-        self.write_object(list_of_people_with_food,
-                          file_identifier=LIST_OF_PEOPLE_WITH_FOOD_AT_EVENT,
                           additional_file_identifiers=event_id)

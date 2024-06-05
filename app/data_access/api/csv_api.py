@@ -162,10 +162,6 @@ class CsvDataApi(GenericDataApi):
 
 
     @property
-    def data_list_of_people_with_food_requirement_at_event(self) -> CsvDataListOfPeoplesWithFoodRequirementsAtEvent:
-        return CsvDataListOfPeoplesWithFoodRequirementsAtEvent(self.master_data_path, backup_data_path=self.backup_data_path)
-
-    @property
     def data_list_of_cadets_with_clothing_at_event(self) -> CsvDataListOfCadetsWithClothingAtEvent:
         return CsvDataListOfCadetsWithClothingAtEvent(self.master_data_path, backup_data_path=self.backup_data_path)
 

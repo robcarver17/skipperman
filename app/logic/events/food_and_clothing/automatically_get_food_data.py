@@ -1,3 +1,5 @@
+from app.backend.volunteers.volunteers import get_volunteer_name_from_id
+
 from app.objects.relevant_information_for_volunteers import missing_relevant_information
 
 from app.backend.volunteers.volunteer_allocation import get_list_of_relevant_information
@@ -86,7 +88,7 @@ def process_update_to_cadet_food_data_given_registration_data(
     food_from_registration = relevant_row.get_item(CADET_FOOD_PREFERENCE, '')
     food_requirements = guess_food_requirements_from_food_field(food_from_registration)
     add_new_cadet_with_food_to_event(interface=interface, event=event, food_requirements=food_requirements, cadet_id=cadet_id)
-
+    interface.log_error("Added food for cadet %s to event" % cadet_name_from_id(interface=interface, cadet_id=cadet_id))
 
 
 def get_and_save_food_for_volunteers_from_registration_data(interface: abstractInterface):
@@ -121,6 +123,7 @@ def process_update_to_volunteer_food_data_if_new_to_event(
 
     food_requirements = guess_food_requirements_from_food_field(list_of_food_preferences_as_single_str)
     add_new_volunteer_with_food_to_event(interface=interface, event=event, food_requirements=food_requirements, volunteer_id=volunteer_id)
+    interface.log_error("Added food for volunteer %s to event" % get_volunteer_name_from_id(volunteer_id=volunteer_id, interface=interface))
 
 
 def get_volunteer_food_preferences_as_single_str(interface: abstractInterface, event: Event, volunteer_id: str) -> str:

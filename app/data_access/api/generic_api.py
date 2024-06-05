@@ -151,9 +151,6 @@ class GenericDataApi(object):
     def data_list_of_volunteers_with_food_requirement_at_event(self) -> DataListOfVolunteersWithFoodRequirementsAtEvent:
         raise NotImplemented
 
-    @property
-    def data_list_of_people_with_food_requirement_at_event(self) -> DataListOfPeopleWithFoodRequirementsAtEvent:
-        raise NotImplemented
 
     @property
     def data_list_of_cadets_with_clothing_at_event(self) -> DataListOfCadetsWithClothingAtEvent:

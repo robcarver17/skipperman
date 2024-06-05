@@ -63,7 +63,7 @@ class CadetObjectWithClothingAtEvent(GenericSkipperManObject):
         return not self.colour==UNALLOCATED_COLOUR
 
     def as_dict(self) -> dict:
-        return dict(Name=self.cadet.name, Size=self.size, Colour = self.colour)
+        return dict(Name=self.cadet.name, Age = int(self.cadet.approx_age_years()), Size=self.size, Colour = self.colour)
 
 class ListOfCadetObjectsWithClothingAtEvent(GenericListOfObjects):
     @property

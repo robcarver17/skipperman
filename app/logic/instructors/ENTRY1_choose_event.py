@@ -1,12 +1,16 @@
 import os.path
 from typing import Union
 
+from app.logic.reporting.qualifications.achieved_qualifications import \
+    write_qualifications_to_temp_csv_file_and_return_filename
+
 from app.data_access.file_access import get_files_in_directory, public_reporting_directory
 
 from app.logic.events.events_in_state import update_state_for_specific_event_given_event_description
 
 from app.backend.events import sort_buttons_for_event_list, all_sort_types_for_event_list,  confirm_event_exists_given_description
-from app.backend.ticks_and_qualifications.ticksheets import get_list_of_events_entitled_to_see
+from app.backend.ticks_and_qualifications.ticksheets import get_list_of_events_entitled_to_see, \
+    is_volunteer_SI_or_super_user
 
 from app.objects.abstract_objects.abstract_text import Heading
 
@@ -18,7 +22,7 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import main_menu_button, ButtonBar, Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line, DetailListOfLines
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.backend.data.security import  get_volunteer_id_of_logged_in_user_or_superuser
+from app.backend.data.security import get_volunteer_id_of_logged_in_user_or_superuser
 from app.objects.events import SORT_BY_START_DSC
 from app.logic.instructors.ENTRY2_choose_group import display_form_choose_group_for_event
 def display_form_main_instructors_page(interface: abstractInterface) -> Form:
@@ -26,7 +30,7 @@ def display_form_main_instructors_page(interface: abstractInterface) -> Form:
 
 def display_form_main_instructors_page_sort_order_passed(interface: abstractInterface,  sort_by: str) -> Form:
     event_buttons = get_event_buttons(interface=interface, sort_by=sort_by)
-    navbar = ButtonBar([main_menu_button])
+    navbar = get_nav_bar(interface=interface)
     sort_buttons = sort_buttons_for_event_list
     reports = list_of_all_files_in_public_directory_with_clickable_buttons()
     header1= Line(Heading("Tick sheets and documents for instructors", centred=True, size=3))
@@ -39,7 +43,7 @@ def display_form_main_instructors_page_sort_order_passed(interface: abstractInte
         reports,
         _______________,
 
-    ]), name="Click arrow to see downloadable documents")
+    ]), name="Click triangle to see downloadable documents")
 
     lines_inside_form = ListOfLines(
         [
@@ -57,6 +61,17 @@ def display_form_main_instructors_page_sort_order_passed(interface: abstractInte
 
     return Form(lines_inside_form)
 
+def get_nav_bar(interface: abstractInterface):
+    navbar = [main_menu_button]
+    if is_volunteer_SI_or_super_user(interface):
+        navbar.append(download_qualification_list_button)
+
+    return ButtonBar(navbar)
+
+DOWNLOAD_QUALIFICATION_LIST = 'Download qualification list'
+download_qualification_list_button = Button(DOWNLOAD_QUALIFICATION_LIST, nav_button=True)
+
+
 def post_form_main_instructors_page(interface: abstractInterface) -> Union[Form, NewForm, File]:
     button_pressed = interface.last_button_pressed()
     if button_pressed in all_sort_types_for_event_list:
@@ -65,6 +80,9 @@ def post_form_main_instructors_page(interface: abstractInterface) -> Union[Form,
         return display_form_main_instructors_page_sort_order_passed(interface=interface, sort_by=sort_by)
     elif button_pressed in list_of_file_buttons():
         return File(os.path.join(public_reporting_directory, button_pressed))
+    elif button_pressed == DOWNLOAD_QUALIFICATION_LIST:
+        filename = write_qualifications_to_temp_csv_file_and_return_filename(interface)
+        return File(filename)
     else:  ## must be an event
         return action_when_event_button_clicked(interface)
 

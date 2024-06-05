@@ -65,6 +65,7 @@ ALL_GROUPS_NAMES = (
 
 # VOLUNTEERS
 VOLUNTEER_SKILLS = configuration['volunteer_skills']
+SI_SKILL = configuration["SI_skill"]
 VOLUNTEER_TEAMS = configuration['volunteer_teams']
 VOLUNTEERS_SKILL_FOR_PB2 = configuration['power_boat_skills'][0]
 

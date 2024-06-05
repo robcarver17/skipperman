@@ -80,11 +80,6 @@ def already_in_list(interface: abstractInterface, username: str) -> bool:
     return user_data.already_in_list(username)
 
 
-def delete_username_from_user_list(username:str, interface: abstractInterface):
-    user_data = UserData(interface.data)
-    user_data.delete_username_from_user_list(username)
-
-
 def  change_password_for_user(username: str, new_password: str, interface: abstractInterface = arg_not_passed):
     if interface is arg_not_passed:
         interface = abstractInterface(default_data_api)

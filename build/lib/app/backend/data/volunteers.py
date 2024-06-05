@@ -1,6 +1,7 @@
 from typing import List
 
 from app.backend.data.cadets import CadetData
+from app.data_access.configuration.configuration import SI_SKILL
 
 from app.data_access.storage_layer.api import DataLayer
 
@@ -27,6 +28,10 @@ class VolunteerData():
         idx = list_of_volunteers_as_str.index(volunteer_name)
 
         return list_of_volunteers[idx]
+
+    def is_volunteer_id_SI(self, volunteer_id: str) -> bool:
+        dict_of_skills = self.get_dict_of_existing_skills_for_volunteer_id(volunteer_id)
+        return dict_of_skills.get(SI_SKILL, False)
 
     def get_dict_of_existing_skills_for_volunteer(self, volunteer: Volunteer) -> dict:
         return self.get_dict_of_existing_skills_for_volunteer_id(volunteer_id=volunteer.id)

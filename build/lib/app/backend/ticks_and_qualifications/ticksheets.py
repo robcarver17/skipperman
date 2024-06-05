@@ -4,16 +4,15 @@ from typing import List
 import pandas as pd
 
 from app.backend.data.cadets import CadetData
-from app.backend.data.cadets_at_event import CadetsAtEventData
-from app.backend.data.group_allocations import GroupAllocationsData
 from app.backend.data.qualification import QualificationData
 
-from app.backend.data.security import SUPERUSER
+from app.backend.data.security import SUPERUSER, UserData, get_volunteer_id_of_logged_in_user_or_superuser
 from app.backend.data.ticksheets import TickSheetsData
 from app.backend.data.volunteer_rota import VolunteerRotaData
 from app.backend.events import get_sorted_list_of_events
 from app.backend.ticks_and_qualifications.create_ticksheets import \
     get_ticksheet_for_cadets_in_group_at_event_for_qualification
+from app.backend.volunteers.volunteers import is_volunteer_SI
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event, ListOfEvents
 from app.objects.groups import Group
@@ -51,6 +50,14 @@ def get_list_of_events_entitled_to_see(interface: abstractInterface, volunteer_i
                                                                                            volunteer_id=volunteer_id)])
 
     return all_events
+
+
+def is_volunteer_SI_or_super_user(interface: abstractInterface):
+    volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser(interface)
+
+    if volunteer_id==SUPERUSER:
+        return True
+    return is_volunteer_SI(interface=interface, volunteer_id=volunteer_id)
 
 
 def can_volunteer_id_see_event(interface: abstractInterface, event: Event, volunteer_id: str):
@@ -195,3 +202,8 @@ def percentage_qualification_for_cadet_id_and_qualification_id(interface: abstra
     percentage_ticks_completed_as_number = int(100*percentage_ticks_completed)
 
     return "%d%%" % percentage_ticks_completed_as_number
+
+
+def delete_username_from_user_list(username:str, interface: abstractInterface):
+    user_data = UserData(interface.data)
+    user_data.delete_username_from_user_list(username)

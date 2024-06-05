@@ -2,8 +2,9 @@ from dataclasses import dataclass
 
 from app.backend.volunteers.volunteers import    get_volunteer_from_list_of_volunteers_given_volunteer_name
 
-from app.backend.data.security import add_user, already_in_list, delete_username_from_user_list, load_all_users, \
+from app.backend.data.security import add_user, already_in_list, load_all_users, \
     change_password_for_user, modify_user_group, generate_reset_message, modify_volunteer_id_for_user
+from app.backend.ticks_and_qualifications.ticksheets import delete_username_from_user_list
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.administration.users.render_users_form import USERNAME, PASSWORD, PASSWORD_CONFIRM, GROUP, \
     name_for_user_and_input_type, \

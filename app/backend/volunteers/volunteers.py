@@ -153,3 +153,9 @@ def add_volunteer_connection_to_cadet_in_master_list_of_volunteers(interface: ab
 def update_existing_volunteer(interface: abstractInterface, volunteer: Volunteer):
     volunteer_data = VolunteerData(interface.data)
     volunteer_data.update_existing_volunteer(volunteer)
+
+
+def is_volunteer_SI(interface: abstractInterface, volunteer_id: str):
+    volunteer_data = VolunteerData(interface.data)
+    return volunteer_data.is_volunteer_id_SI(volunteer_id)
+

@@ -104,7 +104,7 @@ class ListOfCadetsWithFoodRequirementsAtEvent(GenericListOfObjects):
         try:
             assert cadet_id not in self.list_of_cadet_ids()
         except:
-            raise ("Cadet already has food_and_clothing requirements")
+            raise ("Cadet already has food requirements")
 
         self.append(CadetWithFoodRequirementsAtEvent(cadet_id=cadet_id, food_requirements=food_requirements))
 
@@ -163,7 +163,7 @@ class ListOfVolunteersWithFoodRequirementsAtEvent(GenericListOfObjects):
         try:
             assert volunteer_id not in self.list_of_volunteer_ids()
         except:
-            raise ("Volunteer already has food_and_clothing requirements")
+            raise ("Volunteer already has food requirements")
 
         self.append(VolunteerWithFoodRequirementsAtEvent(volunteer_id=volunteer_id, food_requirements=food_requirements))
 

@@ -70,7 +70,7 @@ def display_form_for_volunteer_food_details(interface: abstractInterface, volunt
 
     button = Button(SAVE_BUTTON_LABEL)
 
-    message = "Select food_and_clothing requirements for volunteer %s, in form was %s" % (volunteer.name, list_of_food_preferences_as_single_str)
+    message = "Select food requirements for volunteer %s, in form was %s" % (volunteer.name, list_of_food_preferences_as_single_str)
 
     form = Form(
         ListOfLines(

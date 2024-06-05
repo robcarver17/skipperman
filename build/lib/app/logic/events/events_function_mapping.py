@@ -1,6 +1,6 @@
 from app.logic.events.clothing.ENTRY_clothing import display_form_view_for_clothing_requirements, \
     post_form_view_for_clothing_requirements
-from app.logic.events.food_and_clothing.ENTRY_food import display_form_view_for_food_requirements, \
+from app.logic.events.food.ENTRY_food import display_form_view_for_food_requirements, \
     post_form_view_for_food_requirements
 from app.logic.events.ENTRY_view_events import (
     display_form_view_of_events,

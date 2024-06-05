@@ -1,10 +1,10 @@
 from app.backend.food import summarise_food_data_by_day
 
-from app.logic.events.food_and_clothing.automatically_get_food_data import \
+from app.logic.events.food.automatically_get_food_data import \
     get_and_save_food_for_cadets_from_registration_data, get_and_save_food_for_volunteers_from_registration_data
 
-from app.logic.events.food_and_clothing.parse_food_data import save_food_data_in_form, download_food_data
-from app.logic.events.food_and_clothing.render_food import get_button_bar_for_food_required, \
+from app.logic.events.food.parse_food_data import save_food_data_in_form, download_food_data
+from app.logic.events.food.render_food import get_button_bar_for_food_required, \
     get_table_of_cadets_with_food, get_table_of_volunteers_with_food, get_other_food_table, GET_FOOD_FOR_CADETS, \
     GET_FOOD_FOR_VOLUNTEERS, DOWNLOAD_FOOD
 

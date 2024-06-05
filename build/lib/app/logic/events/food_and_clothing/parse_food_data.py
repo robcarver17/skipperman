@@ -12,7 +12,7 @@ from app.logic.events.events_in_state import get_event_from_state
 
 from app.backend.data.food import FoodData
 
-from app.logic.events.food_and_clothing.render_food import get_input_name_other_food_for_cadet, \
+from app.logic.events.food.render_food import get_input_name_other_food_for_cadet, \
     get_input_name_food_checkbox_for_cadet, get_input_name_other_food_for_volunteer, \
     get_input_name_food_checkbox_for_volunteer
 

@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.logic.events.food_and_clothing.get_food_data_from_volunteers import display_interactively_add_volunteer_food_to_event
+from app.logic.events.food.get_food_data_from_volunteers import display_interactively_add_volunteer_food_to_event
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 
 from app.objects.food import guess_food_requirements_from_food_field
@@ -135,7 +135,7 @@ def display_form_for_new_cadet_food_requirements(
 
     button = Button(SAVE_BUTTON_LABEL)
 
-    message = "Select food_and_clothing requirements for cadet %s, in form was %s" % (cadet_name, food_from_registration)
+    message = "Select food requirements for cadet %s, in form was %s" % (cadet_name, food_from_registration)
 
     form = Form(
         ListOfLines(

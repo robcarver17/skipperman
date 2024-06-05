@@ -278,7 +278,7 @@ def list_of_events_excluding_one_event(list_of_events: ListOfEvents,
 CADETS = "cadets"
 VOLUNTEERS = "volunteers"
 GROUP_ALLOCATION = "groups" ## null, doesn't do anything
-FOOD = "food_and_clothing"
+FOOD = "food"
 CLOTHING = "clothing"
 
 

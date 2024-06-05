@@ -14,7 +14,7 @@ from app.logic.events.mapping.ENTRY_event_field_mapping import display_form_even
 from app.logic.events.registration_details.edit_registration_details import display_form_edit_registration_details
 from app.logic.events.volunteer_rota.ENTRY1_display_main_rota_page import display_form_view_for_volunteer_rota
 from app.logic.events.patrol_boats.ENTRY_allocate_patrol_boats import display_form_view_for_patrol_boat_allocation
-from app.logic.events.food_and_clothing.ENTRY_food import display_form_view_for_food_requirements
+from app.logic.events.food.ENTRY_food import display_form_view_for_food_requirements
 from app.logic.events.clothing.ENTRY_clothing import display_form_view_for_clothing_requirements
 
 from app.objects.abstract_objects.abstract_form import (

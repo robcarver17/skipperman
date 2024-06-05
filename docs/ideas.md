@@ -97,7 +97,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - downloadable report with summaries, plus cadet&volunteer details
 
 
-  ### General required before handover to Jonny:
+### General required before handover to Jonny:
 
 ADMIN:
 - wipe all non essential information from stored data on past events

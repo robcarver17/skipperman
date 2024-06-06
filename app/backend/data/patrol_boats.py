@@ -2,7 +2,7 @@ from typing import List
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.objects.day_selectors import Day
+from app.objects.day_selectors import Day, DaySelector
 
 from app.objects.constants import missing_data
 
@@ -41,9 +41,10 @@ class PatrolBoatsData():
                                                  volunteer_id: str):
 
         list_of_voluteers_at_event_with_patrol_boats = self.get_list_of_voluteers_at_event_with_patrol_boats(event)
+        volunteer_availablility_at_event = self.volunteer_availablility_at_event(event=event, volunteer_id=volunteer_id)
         list_of_voluteers_at_event_with_patrol_boats.copy_across_allocation_of_boats_at_event(day=day,
                                                                                               volunteer_id=volunteer_id,
-                                                                                              event=event)
+                                                                                              volunteer_availablility_at_event=volunteer_availablility_at_event)
         self.save_list_of_voluteers_at_event_with_patrol_boats(list_of_volunteers_at_event_with_patrol_boats=list_of_voluteers_at_event_with_patrol_boats,
                                                                event=event)
 
@@ -216,6 +217,11 @@ class PatrolBoatsData():
             list_of_patrol_boats)
 
         return list_of_boats_at_event
+
+    def volunteer_availablility_at_event(self, event: Event, volunteer_id: str) -> DaySelector:
+        list_of_volunteers_at_event = self.get_list_of_volunteers_at_event(event)
+        volunteer_at_event = list_of_volunteers_at_event.volunteer_at_event_with_id(volunteer_id)
+        return volunteer_at_event.availablity
 
     def get_list_of_patrol_boats(self) -> ListOfPatrolBoats:
         return self.data_api.get_list_of_patrol_boats()

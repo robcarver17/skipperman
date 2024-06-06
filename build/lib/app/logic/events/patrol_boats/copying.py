@@ -1,9 +1,15 @@
 from typing import Union, List
 
+from app.backend.volunteers.patrol_boats import get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day, \
+    copy_across_allocation_of_boats_at_event
+
+from app.logic.events.events_in_state import get_event_from_state
+
+from app.backend.data.patrol_boats import PatrolBoatsData
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.volunteers.patrol_boats import volunteer_is_on_same_boat_for_all_days
-from app.backend.volunteers.volunteer_rota import is_possible_to_copy_roles_for_non_grouped_roles_only
+from app.backend.volunteers.volunteer_rota import is_possible_to_copy_roles_for_non_grouped_roles_only, \
+    copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days
 from app.data_access.configuration.fixed import COPY_SYMBOL1, BOAT_SHORTHAND, BOAT_AND_ROLE_SHORTHAND, ROLE_SHORTHAND
 from app.logic.events.patrol_boats.patrol_boat_buttons import generic_button_name_for_volunteer_in_boat_at_event_on_day, \
     get_list_of_generic_buttons_for_each_volunteer_day_combo
@@ -157,3 +163,32 @@ def get_list_of_all_copy_both_buttons_for_boat_allocation(interface: abstractInt
         interface=interface, event=event,
         button_name_function=copy_button_name_for_both_volunteer_role_and_boat_at_event_on_day
     )
+
+
+def volunteer_is_on_same_boat_for_all_days(interface: abstractInterface,
+        event: Event,
+                                           volunteer_id: str) -> bool:
+
+    patrol_boat_data = PatrolBoatsData(interface.data)
+    return patrol_boat_data.volunteer_is_on_same_boat_for_all_days(event=event, volunteer_id=volunteer_id)
+
+
+def copy_across_all_boats(interface: abstractInterface):
+    event = get_event_from_state(interface)
+    for day in event.weekdays_in_event():
+        list_of_volunteer_ids = get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(interface=interface, event=event, day=day)
+        for volunteer_id in list_of_volunteer_ids:
+            copy_across_allocation_of_boats_at_event(interface=interface, day=day, volunteer_id=volunteer_id, event=event)
+
+def copy_across_all_boats_and_roles(interface: abstractInterface):
+    event = get_event_from_state(interface)
+    print("Here")
+    for day in event.weekdays_in_event():
+        list_of_volunteer_ids = get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(interface=interface, event=event, day=day)
+        for volunteer_id in list_of_volunteer_ids:
+            copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
+                interface=interface,
+                event=event,
+                volunteer_id=volunteer_id, day=day)
+            copy_across_allocation_of_boats_at_event(interface=interface, day=day, volunteer_id=volunteer_id, event=event)
+

@@ -198,4 +198,3 @@ def update_if_delete_volunteer_button_pressed(interface: abstractInterface, dele
         name =get_volunteer_name_from_id(interface=interface,volunteer_id=volunteer_id)
         interface.log_error("Couldn't remove volunteer %s from rescue boat on day %s - perhaps a conflicting change was made? Error: %s" % (name, day.name, str(e)))
 
-

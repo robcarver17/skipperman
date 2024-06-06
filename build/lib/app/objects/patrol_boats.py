@@ -6,7 +6,8 @@ from app.objects.constants import missing_data, arg_not_passed
 from app.objects.events import Event
 from app.objects.generic import GenericSkipperManObjectWithIds, GenericSkipperManObject, GenericListOfObjectsWithIds
 from app.objects.utils import make_id_as_int_str
-from app.objects.day_selectors import Day
+from app.objects.day_selectors import Day, DaySelector
+
 
 @dataclass
 class PatrolBoat(GenericSkipperManObjectWithIds):
@@ -114,12 +115,12 @@ class ListOfVolunteersAtEventWithPatrolBoats(GenericListOfObjectsWithIds):
         self.add_volunteer_with_boat(volunteer_id=original_volunteer_id, day=original_day, patrol_boat_id=swapping_boat_id)
         self.add_volunteer_with_boat(volunteer_id=volunteer_id_to_swap_with, day=day_to_swap_with, patrol_boat_id=original_boat_id)
 
-    def copy_across_allocation_of_boats_at_event(self, volunteer_id: str, day: Day, event: Event):
+    def copy_across_allocation_of_boats_at_event(self, volunteer_id: str, day: Day, volunteer_availablility_at_event: DaySelector):
         current_boat_id = self.which_boat_id_is_volunteer_on_today(volunteer_id=volunteer_id, day=day)
         if current_boat_id is missing_data:
             raise Exception("Can't copy %s on day %s as not allocated" % (volunteer_id, day.name))
 
-        for other_day in event.weekdays_in_event():
+        for other_day in volunteer_availablility_at_event.days_available():
             if other_day==day:
                 continue
             self.remove_volunteer_from_patrol_boat_on_day_at_event(volunteer_id=volunteer_id, day=other_day)

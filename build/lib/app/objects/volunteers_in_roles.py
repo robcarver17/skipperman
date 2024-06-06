@@ -250,10 +250,8 @@ class ListOfVolunteersInRoleAtEvent(GenericListOfObjects):
             volunteer_id=volunteer_id,
             day=day
         )
-        print("Copying %s" % str(volunteer_with_role))
         new_list_of_days = copy(list_of_all_days)
         new_list_of_days.remove(day)
-
         for other_day in new_list_of_days:
 
             self.replace_or_add_volunteer_in_group_on_day_with_copy(day=other_day,

@@ -21,7 +21,6 @@ class PrintOptions(GenericSkipperManObject):
     landscape: bool = True
     publish_to_public: bool = False
     include_size_of_group_if_header: bool = False
-    write_index: bool = False ## only used by pseudo
 
     @property
     def filename_with_extension(self):

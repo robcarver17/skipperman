@@ -1,9 +1,11 @@
 
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
+from app.logic.events.patrol_boats.copying import copy_across_all_boats_and_roles, copy_across_all_boats
 from app.logic.events.patrol_boats.parse_patrol_boat_table import *
 from app.logic.events.patrol_boats.render_patrol_boat_table import get_patrol_boat_table, \
     get_top_material_for_patrol_boat_form, \
-    get_button_bar_for_patrol_boats,  SAVE_CHANGES_BUTTON_LABEL
+    get_button_bar_for_patrol_boats, SAVE_CHANGES_BUTTON_LABEL, COPY_ALL_BOATS_BUTTON_LABEL, \
+    COPY_BOATS_AND_ROLES_BUTTON_LABEL
 from app.logic.events.patrol_boats.patrol_boat_dropdowns import ADD_NEW_BOAT_BUTTON_LABEL
 from app.logic.events.patrol_boats.swapping import get_all_swap_buttons_for_boat_allocation, \
     update_if_swap_button_pressed
@@ -58,6 +60,10 @@ def post_form_view_for_patrol_boat_allocation(
 
     if last_button_pressed==SAVE_CHANGES_BUTTON_LABEL:
         pass
+    elif last_button_pressed==COPY_ALL_BOATS_BUTTON_LABEL:
+        copy_across_all_boats(interface)
+    elif last_button_pressed==COPY_BOATS_AND_ROLES_BUTTON_LABEL:
+        copy_across_all_boats_and_roles(interface)
 
     elif last_button_pressed == ADD_NEW_BOAT_BUTTON_LABEL:
         update_adding_boat(interface)

@@ -184,14 +184,6 @@ def remove_volunteer_from_patrol_boat_on_day_at_event(interface: abstractInterfa
     patrol_boat_data.remove_volunteer_from_patrol_boat_on_day_at_event(volunteer_id=volunteer_id, event=event, day=day)
 
 
-def volunteer_is_on_same_boat_for_all_days(interface: abstractInterface,
-        event: Event,
-                                           volunteer_id: str) -> bool:
-
-    patrol_boat_data = PatrolBoatsData(interface.data)
-    return patrol_boat_data.volunteer_is_on_same_boat_for_all_days(event=event, volunteer_id=volunteer_id)
-
-
 def copy_across_allocation_of_boats_at_event(interface: abstractInterface, event: Event, day: Day, volunteer_id: str):
     patrol_boat_data = PatrolBoatsData(interface.data)
     try:

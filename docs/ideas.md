@@ -93,6 +93,12 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - downloadable food report with summaries, plus cadet&volunteer details
 
 
+### Needed before CW2024
+
+- copy all for boats
+- volunteer filter not working properly
+- change the way regular saving is done
+
 ### General required before handover to Jonny:
 
 ADMIN:

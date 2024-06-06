@@ -91,7 +91,13 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - event report with literally everything on it
 - summarise food numbers for cadets & volunteers
 - downloadable food report with summaries, plus cadet&volunteer details
+- copy across for all boats
 
+
+### Needed before CW2024
+
+- volunteer filter not working properly
+- change the way regular saving is done
 
 ### General required before handover to Jonny:
 

@@ -1,13 +1,4 @@
 #
-# SECRET KEY
-# When deploying on public server *always* edit this (just mash the keyboard)
-#
-secret_key: "jasldjflsahdfsah"
-#
-#
-#
-#
-public_web_path: "https://bsccadetskipper.pythonanywhere.com/public/"
 homepage: "https://bsccadetskipper.pythonanywhere.com/"
 datapath: "skipperman_data" ## directory in users home directory where data stored; only change for test purposes
 backuppath: "skipperman_backup"

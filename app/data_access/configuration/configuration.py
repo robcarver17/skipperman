@@ -12,7 +12,6 @@ with open(configuration_file) as file_to_parse:
 
 ## Get everything from config as constants.py
 
-SECRET_KEY = configuration["secret_key"]
 
 ### directories
 DATAPATH = configuration["datapath"]
@@ -28,8 +27,9 @@ NUMBER_OF_BACKUPS = configuration["number_of_backups_to_keep"]
 
 ## links
 WEBLINK_FOR_QUALIFICATIONS = configuration["weblink_for_qualifications"]
-PUBLIC_WEB_PATH = configuration["public_web_path"]
 HOMEPAGE = configuration["homepage"]
+PUBLIC_WEB_PATH = "%s/%s/" % (HOMEPAGE, PUBLIC_REPORTING_SUBDIRECTORY)
+
 
 SIMILARITY_LEVEL_TO_WARN_NAME = configuration[
     "similarity_level_to_warn_when_comparing_names"

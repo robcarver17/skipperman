@@ -68,7 +68,7 @@ class ListOfSkipperManUsers(GenericListOfObjects):
 
     def change_password_for_user(self, username: str, new_password: str):
         user = self.get_user_given_username(username)
-        user.password_hash = generate_password_hash(new_password)
+        user.password_hash = generate_password_hash(new_password, method='scrypt:32768:8')
 
     def modify_volunteer_id(self, username: str, new_id: str):
         user = self.get_user_given_username(username)

@@ -3,7 +3,7 @@ from typing import Dict
 from flask_login import UserMixin, current_user
 
 
-from app.backend.data.security import load_all_users
+from app.backend.data.security import load_all_users, regenerate_password_hash
 from app.objects.users_and_security import SkipperManUser, ListOfSkipperManUsers, UserGroup
 
 USERNAME = 'var078' ### can be anything
@@ -44,8 +44,7 @@ def as_flask_user(skipper_man_user: SkipperManUser) -> FlaskUser:
     return FlaskUser(skipper_man_user.username, password_hash=skipper_man_user.password_hash, group=skipper_man_user.group)
 
 def check_password(flask_user: FlaskUser, password: str):
-    skipperman_user = SkipperManUser(username=flask_user.username, password_hash=flask_user.password_hash, group=UserGroup[flask_user.group_name],
-                                     email_address='', volunteer_id='')
+    skipperman_user = skipperman_user_from_flask_user(flask_user)
     return skipperman_user.check_password(password)
 
 def as_dict_of_flask_users(list_of_users: ListOfSkipperManUsers) -> Dict[str, FlaskUser]:
@@ -66,3 +65,10 @@ def get_all_flask_users():
 
 all_flask_users=""
 
+def regenerate_password_hash_for_flask_user(flask_user: FlaskUser, password: str):
+    skipperman_user = skipperman_user_from_flask_user(flask_user)
+    regenerate_password_hash(user=skipperman_user, password=password)
+
+def skipperman_user_from_flask_user(flask_user: FlaskUser) -> SkipperManUser:
+    return SkipperManUser(username=flask_user.username, password_hash=flask_user.password_hash, group=UserGroup[flask_user.group_name],
+                                     email_address='', volunteer_id='')

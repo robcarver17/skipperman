@@ -70,6 +70,9 @@ def load_all_users(interface: abstractInterface = arg_not_passed)-> ListOfSkippe
     user_data = UserData(data)
     return user_data.get_list_of_users()
 
+def regenerate_password_hash(user: SkipperManUser, user_entered_password: str, interface: abstractInterface = arg_not_passed):
+    user_data = UserData(interface.data)
+    user_data.change_password_for_user(username=user.username, new_password=user_entered_password)
 
 def add_user(interface: abstractInterface, user: SkipperManUser):
     user_data =UserData(interface.data)

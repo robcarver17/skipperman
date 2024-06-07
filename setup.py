@@ -57,7 +57,7 @@ setup(
         "fpdf>=1.7",
         "flask>=2.0.0",
         "openpyxl>3.0",
-        "flask-security>=0.6",
+        "flask-security==3.0",
         "xlsxwriter>3.0",
         "qrcode==7.4.2"
     ],

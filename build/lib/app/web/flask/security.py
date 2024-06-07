@@ -67,7 +67,7 @@ all_flask_users=""
 
 def regenerate_password_hash_for_flask_user(flask_user: FlaskUser, password: str):
     skipperman_user = skipperman_user_from_flask_user(flask_user)
-    regenerate_password_hash(user=skipperman_user, password=password)
+    regenerate_password_hash(user=skipperman_user, user_entered_password=password)
 
 def skipperman_user_from_flask_user(flask_user: FlaskUser) -> SkipperManUser:
     return SkipperManUser(username=flask_user.username, password_hash=flask_user.password_hash, group=UserGroup[flask_user.group_name],

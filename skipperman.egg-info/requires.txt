@@ -1,5 +1,5 @@
 PyYAML>=5.4
-flask-security>=0.6
+flask-security==3.0
 flask>=2.0.0
 fpdf>=1.7
 openpyxl>3.0

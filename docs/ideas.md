@@ -96,6 +96,9 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Needed before CW2024
 
+- click on cadet in group allocation also see rya %
+- rescue/instructor report only
+- cusotm font size in reports
 - volunteer filter not working properly
 - change the way regular saving is done
 

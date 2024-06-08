@@ -96,6 +96,8 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Needed before CW2024
 
+- cancel cowan not working
+- instructor logon not working?
 - click on cadet in group allocation also see rya %
 - rescue/instructor report only
 - cusotm font size in reports

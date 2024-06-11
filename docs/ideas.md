@@ -96,6 +96,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Needed before CW2024
 
+- previous roles should include groups for volunteers
 - cancel cowan not working
 - instructor logon not working?
 - issue with volunteer report CW2024
@@ -118,6 +119,8 @@ REPORTING:
 
 
 BACKEND:
+- update payment status from unpaid to paid
+- total paid amounts for annual report / xfer
 - refactor weird intermediate steps (allocation data object)
 - ensure clean seperation backend/data, data and logic
 - editable user sailing groups, volunteer roles, skills: but plain text file so can replace configuration

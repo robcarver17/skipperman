@@ -92,11 +92,10 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - summarise food numbers for cadets & volunteers
 - downloadable food report with summaries, plus cadet&volunteer details
 - copy across for all boats
-
+- show history of group allocation for volunteers
 
 ### Needed before CW2024
 
-- volunteer filter not working properly
 - click on cadet in group allocation also see rya %
 - instructor logon not working?
 - rescue/instructor report only

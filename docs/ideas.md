@@ -96,7 +96,6 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Needed before CW2024
 
-- previous roles should include groups for volunteers
 - volunteer filter not working properly
 - click on cadet in group allocation also see rya %
 - instructor logon not working?

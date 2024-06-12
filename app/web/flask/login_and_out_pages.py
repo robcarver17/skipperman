@@ -57,7 +57,13 @@ def login_link_page():
 
 def display_login_form():
     return render_template("login_page.html")
-    #return render_template("test.html")
+
+def display_login_form_on_user_error():
+    return render_template("login_page_user_error.html")
+
+def display_login_form_on_password_error():
+    return render_template("login_page_password_error.html")
+
 
 """
     print("login page")
@@ -79,14 +85,13 @@ def process_login(username: str, password: str):
     all_flask_users = get_all_flask_users()
     if username not in all_flask_users:
         print("User %s not known in %s" % (username, str(all_flask_users)))
-        flash_error("User %s not known" % username)
-        return display_login_form()
+        return display_login_form_on_user_error()
 
     user = all_flask_users[username]
 
     if not user.check_password(password):
-        flash_error("Password for user %s not recognised" % password)
-        return display_login_form()
+        print("Password for user %s not recognised" % password)
+        return display_login_form_on_password_error()
 
     login_user(user)
 

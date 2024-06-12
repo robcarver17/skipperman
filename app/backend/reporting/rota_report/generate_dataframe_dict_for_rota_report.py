@@ -26,6 +26,9 @@ power_boats_only: bool = False
     for day in list_of_days:
         day_name = day.name
         df_for_reporting_volunteers_for_day = get_df_for_reporting_volunteers_for_day(day=day, data_for_df=data_for_df)
+        if len(df_for_reporting_volunteers_for_day) == 0:
+            continue
+
         df_for_reporting_volunteers_for_day= apply_sorts_and_transforms_to_df(df_for_reporting_volunteers_for_day=df_for_reporting_volunteers_for_day, data_for_df=data_for_df, power_boats_only=power_boats_only)
         dict_of_df[day_name] = df_for_reporting_volunteers_for_day
 
@@ -95,6 +98,7 @@ def get_list_of_volunteers_doing_specific_role(day: Day,
 def apply_sorts_and_transforms_to_df(df_for_reporting_volunteers_for_day: pd.DataFrame,
                                       data_for_df: DataForDfConstruction,
                           power_boats_only: bool = True):
+
 
     if power_boats_only:
         df_for_reporting_volunteers_for_day = transform_df_into_power_boat_only(df_for_reporting_volunteers_for_day=df_for_reporting_volunteers_for_day,

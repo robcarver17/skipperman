@@ -174,7 +174,7 @@ class ListOfCadetAtEventWithDinghies(GenericListOfObjectsWithIds):
     def clear_boat_details_from_existing_cadet_id(self, cadet_id: str, day: Day):
         idx=self.idx_of_item_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
         if idx is missing_data:
-            return 
+            return
         self.pop(idx)
 
     def remove_two_handed_partner_from_existing_cadet(self, cadet_id, day: Day):

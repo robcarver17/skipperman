@@ -97,13 +97,11 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 ### Needed before CW2024
 
 - previous roles should include groups for volunteers
-- cancel cowan not working
-- instructor logon not working?
-- issue with volunteer report CW2024
+- volunteer filter not working properly
 - click on cadet in group allocation also see rya %
+- instructor logon not working?
 - rescue/instructor report only
 - cusotm font size in reports
-- volunteer filter not working properly
 - change the way regular saving is done
 
 ### General required before handover to Jonny:

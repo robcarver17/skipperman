@@ -96,8 +96,6 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Needed before CW2024
 
-- instructor logon not working?
-- rescue/instructor report only
 - cusotm font size in reports
 - change the way regular saving is done
 

@@ -29,7 +29,7 @@ def delete_user_from_user_list(interface: abstractInterface, last_button: str):
 
 def generate_reset_message_for_user_name(last_button: str, interface: abstractInterface):
     username = username_from_email_button(last_button)
-    generate_reset_message(username=username, interface=interface)
+    return generate_reset_message(username=username, interface=interface)
 
 
 def save_changes_in_security_form(interface: abstractInterface):

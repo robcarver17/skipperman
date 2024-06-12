@@ -105,7 +105,7 @@ def modify_volunteer_id_for_user(username: str, new_volunteer_id:str, interface:
 def generate_reset_message(username: str, interface: abstractInterface) -> str:
     ## generate randomness
     new_password = get_random_string(15)
-    new_password = change_password_for_user(interface=interface, username=username, new_password=new_password)
+    change_password_for_user(interface=interface, username=username, new_password=new_password)
     return "Message: Login to %s using username: %s password: %s" % (HOMEPAGE, username, new_password)
 
 

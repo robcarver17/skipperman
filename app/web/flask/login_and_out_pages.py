@@ -40,9 +40,9 @@ def change_password(password, confirm_password):
     username = get_username()
     try:
         change_password_for_user(username, new_password=password)
+        flash_error("Password changed")
     except Exception as e:
         flash_error("Couldn't change password error %s" % str(e))
-    flash_error("Password changed")
     return generate_menu_page_html()
 
 def display_change_password_page():

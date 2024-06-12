@@ -1,5 +1,6 @@
-from typing import Union, Dict
+from typing import Union, Dict, List
 
+from app.backend.ticks_and_qualifications.ticksheets import get_qualification_status_for_single_cadet_as_list_of_str
 from app.objects.groups import Group
 
 from app.backend.events import get_list_of_all_events
@@ -196,13 +197,22 @@ def get_cell_for_cadet(interface: abstractInterface, cadet: Cadet) -> Union[List
     if this_cadet_has_been_clicked_on_already(interface=
                                               interface, cadet=
                                               cadet):
-        dict_of_groups = previous_groups_as_dict(interface=interface, cadet=cadet, number_of_events=MAX_EVENTS_TO_SHOW)
-        dict_of_groups = dict([(key, value) for key, value in dict_of_groups.items() if not value.is_unallocated])
-        list_of_groups_as_str = ["%s: %s" % (str(event), group.group_name) for event, group in dict_of_groups.items()]
-        return ListOfLines([str(cadet), "Previous groups:-"]+list_of_groups_as_str).add_Lines()
+        return get_cell_for_cadet_that_is_clicked_on(interface=interface, cadet=cadet)
     else:
         return Button(str(cadet), value=get_button_id_for_cadet(cadet.id))
 
+def get_cell_for_cadet_that_is_clicked_on(interface: abstractInterface, cadet: Cadet) -> ListOfLines:
+    list_of_groups_as_str = get_list_of_previous_groups_as_str(interface=interface, cadet=cadet)
+    list_of_qualifications_as_str = get_qualification_status_for_single_cadet_as_list_of_str(interface=interface, cadet_id=cadet.id)
+
+    return ListOfLines([str(cadet), "Previous groups:-"]+list_of_groups_as_str+["Qualifications:-"]+list_of_qualifications_as_str).add_Lines()
+
+def get_list_of_previous_groups_as_str(interface: abstractInterface, cadet: Cadet) -> List[str]:
+    dict_of_groups = previous_groups_as_dict(interface=interface, cadet=cadet, number_of_events=MAX_EVENTS_TO_SHOW)
+    dict_of_groups = dict([(key, value) for key, value in dict_of_groups.items() if not value.is_unallocated])
+    list_of_groups_as_str = ["%s: %s" % (str(event), group.group_name) for event, group in dict_of_groups.items()]
+
+    return  list_of_groups_as_str
 
 def previous_groups_as_dict(interface: abstractInterface, cadet: Cadet, number_of_events: int = 3) -> Dict[Event, Group]:
     event = get_event_from_state(interface)

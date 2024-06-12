@@ -1,7 +1,8 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Dict
 
 import pandas as pd
+from app.objects.utils import print_dict_nicely
 
 from app.backend.data.cadets import CadetData
 from app.backend.data.qualification import QualificationData
@@ -149,10 +150,10 @@ def get_expected_qualifications_for_cadets_at_event(interface: abstractInterface
         cadet_ids_this_group = list(set(cadet_ids_this_group))
 
         list_of_expected_qualifications_for_group = [
-            get_expected_qualifications_for_single_cadet(interface=interface,
-                                                         cadet_id=cadet_id,
-                                                         group=group,
-                                                         list_of_qualifications=list_of_qualifications)
+            get_expected_qualifications_for_single_cadet_with_group(interface=interface,
+                                                                    cadet_id=cadet_id,
+                                                                    group=group,
+                                                                    list_of_qualifications=list_of_qualifications)
 
             for cadet_id in cadet_ids_this_group
             ]
@@ -165,15 +166,59 @@ def get_expected_qualifications_for_cadets_at_event(interface: abstractInterface
     return df
 
 
-def get_expected_qualifications_for_single_cadet(interface: abstractInterface, group: Group, cadet_id: str, list_of_qualifications: ListOfQualifications) -> list:
+def get_qualification_status_for_single_cadet_as_list_of_str(interface: abstractInterface, cadet_id: str) -> List[str]:
+    qualification_status_for_single_cadet_as_dict = get_qualification_status_for_single_cadet_as_dict(
+        interface=interface,
+        cadet_id=cadet_id
+    )
 
-    cadet_data = CadetData(interface.data)
+    list_of_qualificaitons= [report_on_status(qualification_name, percentage_str) for qualification_name, percentage_str in qualification_status_for_single_cadet_as_dict.items()]
+    list_of_qualificaitons = [item for item in list_of_qualificaitons if not no_progress(item)] ## exclude empty
 
-    list_of_cadets = cadet_data.get_list_of_cadets()
+    return list_of_qualificaitons
 
-    cadet = list_of_cadets.cadet_with_id(cadet_id)
-    tick_sheet_data = TickSheetsData(interface.data)
-    tick_sheet_data.get_list_of_cadets_with_tick_list_items_for_cadet_id(cadet_id)
+def no_progress(status_str):
+    return len(status_str)==0
+
+def report_on_status(qualification_name:str, percentage:str) -> str:
+    if percentage == QUALIFIED:
+        return qualification_name
+    elif percentage==EMPTY:
+        return ''
+    else:
+        return "%s: %s" % (qualification_name, percentage)
+
+def get_qualification_status_for_single_cadet_as_dict(interface: abstractInterface, cadet_id: str) -> Dict[str, str]:
+    qualification_data = QualificationData(interface.data)
+    list_of_qualifications = qualification_data.load_list_of_qualifications()
+
+    percentage_list = get_percentage_qualifications_for_single_cadet(
+        interface=interface,
+        cadet_id=cadet_id,
+        list_of_qualifications=list_of_qualifications
+    )
+
+    return dict([
+        (qualification.name, percentage_str)
+        for qualification, percentage_str in zip(list_of_qualifications, percentage_list)
+    ])
+
+
+from app.backend.cadets import cadet_name_from_id
+
+def get_expected_qualifications_for_single_cadet_with_group(interface: abstractInterface, group: Group, cadet_id: str, list_of_qualifications: ListOfQualifications) -> List[str]:
+
+    percentage_list = get_percentage_qualifications_for_single_cadet(
+        interface=interface,
+        cadet_id=cadet_id,
+        list_of_qualifications=list_of_qualifications
+    )
+
+
+    return [cadet_name_from_id(interface=interface, cadet_id=cadet_id), group.group_name]+ percentage_list
+
+
+def get_percentage_qualifications_for_single_cadet(interface: abstractInterface, cadet_id: str, list_of_qualifications: ListOfQualifications) -> List[str]:
 
     percentage_list = [percentage_qualification_for_cadet_id_and_qualification_id(interface=interface,
                                                                                   cadet_id=cadet_id,
@@ -181,7 +226,10 @@ def get_expected_qualifications_for_single_cadet(interface: abstractInterface, g
                        for qualification_id in list_of_qualifications.list_of_ids]
 
 
-    return [cadet.name, group.group_name]+ percentage_list
+    return percentage_list
+
+QUALIFIED = 'Qualified'
+EMPTY = "0%"
 
 def percentage_qualification_for_cadet_id_and_qualification_id(interface: abstractInterface, cadet_id:str, qualification_id: str) -> str:
     qualification_data = QualificationData(interface.data)
@@ -190,12 +238,12 @@ def percentage_qualification_for_cadet_id_and_qualification_id(interface: abstra
     qualifications_this_cadet = list_of_cadets_with_qualification.list_of_qualification_ids_for_cadet(cadet_id)
 
     if qualification_id in qualifications_this_cadet:
-        return 'Qualified'
+        return QUALIFIED
 
     tick_sheet_data = TickSheetsData(interface.data)
     tick_list = tick_sheet_data.get_list_of_cadets_with_tick_list_items_for_cadet_id(cadet_id)
     if len(tick_list)==0:
-        return "0%"
+        return EMPTY
     relevant_ids = tick_sheet_data.list_of_tick_sheet_items_for_this_qualification(qualification_id).list_of_ids
     tick_list_for_qualification = tick_list.subset_and_order_from_list_of_item_ids(relevant_ids)
     percentage_ticks_completed = tick_list_for_qualification[0].dict_of_ticks_with_items.percentage_complete()

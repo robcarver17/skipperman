@@ -1,6 +1,7 @@
 import secrets
 from flask import Flask
 from flask_login import LoginManager, login_required
+from werkzeug import Request
 
 from app.web.flask.security import get_all_flask_users, authenticated_user
 from app.web.flask.login_and_out_pages import login_page, process_logout, login_link_page, change_password_page
@@ -9,19 +10,21 @@ from app.web.action_pages import generate_action_page_html
 from app.web.html.url import INDEX_URL, ACTION_PREFIX, LOGIN_URL, LOGOUT_URL, CHANGE_PASSWORD
 from app.data_access.configuration.configuration import  MAX_FILE_SIZE
 
+#### SETUP
 SECRET_KEY = secrets.token_urlsafe(16)
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = SECRET_KEY
+app.secret_key =SECRET_KEY
 app.config["MAX_CONTENT_LENGTH"] = MAX_FILE_SIZE
 
-app.secret_key =SECRET_KEY
+Request.max_form_parts = 5000 # or whatever your max form size!
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_message = "You need to security to use skipperman"
 
-
+### ENTRY POINTS
 @login_manager.user_loader
 def load_user(user_id):
     all_flask_users = get_all_flask_users()

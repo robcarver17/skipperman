@@ -98,6 +98,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 - cusotm font size in reports
 - change the way regular saving is done
+- clear all volunteer allocations
 
 ### General required before handover to Jonny:
 

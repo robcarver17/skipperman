@@ -15,7 +15,7 @@ from app.data_access.configuration.configuration import WA_ACTIVE_STATUS, WA_CAN
 from app.objects.constants import missing_data
 from app.data_access.configuration.field_list import PAYMENT_STATUS
 
-RegistrationStatus = Enum("RowStatus", ["Cancelled", "Active", "Deleted", "Empty", "Manual"])
+RegistrationStatus = Enum("RegistrationStatus", ["Cancelled", "Active", "Deleted", "Empty", "Manual"])
 cancelled_status = RegistrationStatus.Cancelled
 active_status = RegistrationStatus.Active
 deleted_status = RegistrationStatus.Deleted

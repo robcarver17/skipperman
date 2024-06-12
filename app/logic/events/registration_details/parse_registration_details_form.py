@@ -103,6 +103,8 @@ def get_cadet_event_status_for_row_in_form_and_alter_registration_data(interface
     if original_status == new_status:
         return
     if new_status in [cancelled_status, deleted_status]:
+        print("Original cadet id %s" % original_cadet_in_data.cadet_id)
+        print("New status %s" % str(new_status))
         update_status_of_existing_cadet_at_event_to_cancelled_or_deleted(interface=interface,
                                                                          event=event,
                                                                          cadet_id=original_cadet_in_data.cadet_id,

@@ -9,7 +9,7 @@ from app.backend.data.dinghies import DinghiesData
 from app.objects.utils import union_of_x_and_y
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.constants import NoMoreData
+from app.objects.constants import NoMoreData, missing_data
 
 from app.backend.cadets import cadet_name_from_id
 from app.backend.data.cadets_at_event import  CadetsAtEventData
@@ -109,6 +109,9 @@ def remove_partner_and_log_if_present(interface: abstractInterface, event: Event
     cadet_with_boat_at_event = dinghies_data.get_list_of_cadets_at_event_with_dinghies(
         event).object_with_cadet_id_on_day(cadet_id=cadet_id,
                                            day=day)
+    if cadet_with_boat_at_event is missing_data:
+        return
+
     if cadet_with_boat_at_event.has_partner():
         partner_cadet_id = cadet_with_boat_at_event.partner_cadet_id
         partner_name = cadets_data.get_cadet_with_id_(partner_cadet_id).name

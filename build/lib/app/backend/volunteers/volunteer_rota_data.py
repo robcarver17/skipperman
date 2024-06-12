@@ -257,7 +257,7 @@ def get_all_roles_across_recent_events_for_volunteer_id_as_dict(interface: abstr
 
 def get_role_for_event_and_volunteer_id(interface: abstractInterface, volunteer_id: str, event: Event) -> str:
     volunteer_data = get_volunteers_in_role_at_event_with_active_allocations(interface=interface, event=event)
-    role = volunteer_data.most_common_role_at_event_for_volunteer(volunteer_id=volunteer_id)
+    role = volunteer_data.most_common_role_and_group_at_event_for_volunteer(volunteer_id=volunteer_id)
     if role==NO_ROLE_SET:
         return missing_data
     return role

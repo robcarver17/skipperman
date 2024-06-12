@@ -249,15 +249,15 @@ def get_all_roles_across_recent_events_for_volunteer_id_as_dict(interface: abstr
                                                                  sort_by=sort_by,
                                                                  only_past=True)
 
-    roles = [get_role_for_event_and_volunteer_id(interface=interface, event=event, volunteer_id=volunteer_id) for event in list_of_events]
+    roles = [get_role_and_group_for_event_and_volunteer_id(interface=interface, event=event, volunteer_id=volunteer_id) for event in list_of_events]
     roles_dict = dict([(event, role) for event, role in zip(list_of_events, roles) if role is not missing_data])
 
     return roles_dict
 
 
-def get_role_for_event_and_volunteer_id(interface: abstractInterface, volunteer_id: str, event: Event) -> str:
+def get_role_and_group_for_event_and_volunteer_id(interface: abstractInterface, volunteer_id: str, event: Event) -> str:
     volunteer_data = get_volunteers_in_role_at_event_with_active_allocations(interface=interface, event=event)
-    role = volunteer_data.most_common_role_at_event_for_volunteer(volunteer_id=volunteer_id)
+    role = volunteer_data.most_common_role_and_group_at_event_for_volunteer(volunteer_id=volunteer_id)
     if role==NO_ROLE_SET:
         return missing_data
     return role

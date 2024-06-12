@@ -228,18 +228,18 @@ class ListOfVolunteersInRoleAtEvent(GenericListOfObjects):
     def list_of_first_teams_and_groups_at_event_for_day(self, day: Day) -> List[RoleAndGroup]:
         return [volunteer_with_role.first_team_and_group for volunteer_with_role in self if volunteer_with_role.day == day]
 
-    def most_common_role_at_event_for_volunteer(self, volunteer_id: str) -> str:
+    def most_common_role_and_group_at_event_for_volunteer(self, volunteer_id: str) -> str:
         ## crazy that mode works with strings
-        all_roles = self.all_roles_for_a_specific_volunteer(volunteer_id)
+        all_roles = self.all_roles_and_groups_for_a_specific_volunteer(volunteer_id)
         if len(all_roles)==0:
             return NO_ROLE_SET
 
         return mode(all_roles)
 
-    def all_roles_for_a_specific_volunteer(self, volunteer_id: str)-> List[str]:
+    def all_roles_and_groups_for_a_specific_volunteer(self, volunteer_id: str)-> List[str]:
         list_of_matches = [volunteer_with_role for volunteer_with_role in self if volunteer_with_role.volunteer_id == volunteer_id]
 
-        return [volunteer_with_role.role for volunteer_with_role in list_of_matches]
+        return [str(volunteer_with_role.role_and_group) for volunteer_with_role in list_of_matches]
 
     def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(self,
         volunteer_id:str,

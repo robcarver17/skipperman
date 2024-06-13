@@ -94,11 +94,16 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - copy across for all boats
 - show history of group allocation for volunteers
 - custom font size in reports
+- read only mode?
+- apply triangle to other notes from registration in rota
+- click on 'previous role' to clone across all days in rota
+- 'copy all' needs to have hard copy and soft copy
+- 'copy first day' as a hard copy; 'copy blanks' as a soft copy
+
 
 ### Needed before CW2024
 
-- read only mode?
-- clear all volunteer allocations
+- hard/soft copies in patrol boats
 
 ### General required before handover to Jonny:
 

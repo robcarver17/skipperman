@@ -97,6 +97,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Needed before CW2024
 
+- read only mode?
 - clear all volunteer allocations
 
 ### General required before handover to Jonny:
@@ -119,7 +120,7 @@ BACKEND:
 - ensure clean seperation backend/data, data and logic
 - editable user sailing groups, volunteer roles, skills: but plain text file so can replace configuration
 - backup still not ideal; introduce checks, file locking ...
-- read only mode?
+
 
 INTERFACE:
 - memorise whether summary buttons pressed

@@ -210,10 +210,8 @@ def process_form_when_event_verified(interface: abstractInterface) -> Form:
         interface.save_stored_items()
         return initial_state_form
 
-    return form_with_message_and_finished_button(
-        "Added event %s" % str(event), interface=interface,
-        function_whose_parent_go_to_on_button_press=display_form_view_for_add_event
-    )
+    return form_with_message_and_finished_button("Added event %s" % str(event), interface=interface,
+                                                 function_whose_parent_go_to_on_button_press=display_form_view_for_add_event)
 
 
 EVENT_NAME = "event_name"

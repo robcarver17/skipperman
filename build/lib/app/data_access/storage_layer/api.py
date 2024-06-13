@@ -41,6 +41,12 @@ class DataLayer():
         self.store = store
         self.data = underlying_data
 
+    def due_for_another_data_backup(self):
+        return self.data.due_for_another_backup()
+
+    def make_data_backup(self):
+        self.data.make_backup()
+
     def clear_stored_items(self):
         self.store.clear_stored_items()
 

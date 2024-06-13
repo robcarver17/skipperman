@@ -162,10 +162,8 @@ def process_form_when_cadet_verified(
         )
         return initial_state_form
 
-    return form_with_message_and_finished_button(
-        "Added cadet %s" % str(cadet), interface=interface,
-        function_whose_parent_go_to_on_button_press=display_form_add_cadet
-    )
+    return form_with_message_and_finished_button("Added cadet %s" % str(cadet), interface=interface,
+                                                 function_whose_parent_go_to_on_button_press=display_form_add_cadet)
 
 
 

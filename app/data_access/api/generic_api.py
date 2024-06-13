@@ -15,6 +15,12 @@ from app.data_access.classes.food_and_clothing import *
 
 class GenericDataApi(object):
     ## FOLLOWING SHOULD BE OVERWRITTEN BY SPECIFIC CLASSES
+    def due_for_another_backup(self) -> bool:
+        return False
+
+    def make_backup(self):
+        raise Exception
+
     @property
     def data_list_of_cadets(self) -> DataListOfCadets:
         raise NotImplemented

@@ -21,11 +21,20 @@ finished_button = Button(FINISHED_BUTTON_LABEL)
 DISPLAY="DISPFLAG_%s"
 SET= "1"
 
+def finished_button_with_custom_label(label:str):
+    return Button(value=FINISHED_BUTTON_LABEL, label=label)
+
 @dataclass
 class abstractInterface:
     data: DataLayer
     display_and_post_form_function_maps: DisplayAndPostFormFunctionMaps = arg_not_passed
     action_name: str = ""
+
+    def due_for_another_data_backup(self):
+        return self.data.due_for_another_data_backup()
+
+    def make_data_backup(self):
+        self.data.make_data_backup()
 
     def clear_stored_items(self):
         self.data.clear_stored_items()
@@ -146,15 +155,9 @@ def get_file_from_interface(file_label: str, interface: abstractInterface):
     return file
 
 
-def form_with_message_and_finished_button(
-    message: str, interface: abstractInterface,
-        button: Button = finished_button,
-        DEPRECATEset_stage_name_to_go_to_on_button_press: str = arg_not_passed,
-        function_whose_parent_go_to_on_button_press: Callable = arg_not_passed,
-        log_error: str = arg_not_passed,
-        log_msg: str = arg_not_passed
-
-) -> Form:
+def form_with_message_and_finished_button(message: str, interface: abstractInterface, button: Button = finished_button,
+                                          function_whose_parent_go_to_on_button_press: Callable = arg_not_passed,
+                                          log_error: str = arg_not_passed, log_msg: str = arg_not_passed) -> Form:
     if log_error is not arg_not_passed:
         interface.log_error(log_error)
     elif log_msg is not arg_not_passed:
@@ -163,8 +166,6 @@ def form_with_message_and_finished_button(
     if function_whose_parent_go_to_on_button_press is not arg_not_passed:
         stage_name= interface.get_new_display_form_for_parent_of_function(function_whose_parent_go_to_on_button_press)
         interface.set_where_finished_button_should_lead_to(stage_name.form_name)
-    elif DEPRECATEset_stage_name_to_go_to_on_button_press is not arg_not_passed:
-            interface.set_where_finished_button_should_lead_to(DEPRECATEset_stage_name_to_go_to_on_button_press)
     else:
         interface.clear_where_finished_button_should_lead_to()
 

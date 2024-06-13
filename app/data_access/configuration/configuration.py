@@ -103,3 +103,4 @@ VOLUNTEER_ROLES = DEPRECATE_get_volunteer_roles()
 MINIMUM_COLOUR_GROUPS_TO_DISTRIBUTE = configuration['min_colour_groups_to_distribute']
 
 UNABLE_TO_VOLUNTEER_KEYWORD = "unable"
+HOURS_BETWEEN_BACKUPS = 4

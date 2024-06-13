@@ -75,12 +75,10 @@ def post_form_for_clone_event_field_mapping(interface: abstractInterface):
     write_field_mapping_for_event(interface=interface, event=current_event, new_mapping=mapping)
     interface.save_stored_items()
 
-    return form_with_message_and_finished_button(
-        "Mapping copied from event %s to %s"
-        % (event_description_selected, str(current_event)),
-        interface=interface,
-        function_whose_parent_go_to_on_button_press=display_form_for_clone_event_field_mapping
-    )
+    return form_with_message_and_finished_button("Mapping copied from event %s to %s"
+                                                 % (event_description_selected, str(current_event)),
+                                                 interface=interface,
+                                                 function_whose_parent_go_to_on_button_press=display_form_for_clone_event_field_mapping)
 
 
 cancel_button = Button(CANCEL_BUTTON_LABEL)

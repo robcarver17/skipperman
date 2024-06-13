@@ -1,6 +1,8 @@
 import shutil
 
 from app.data_access.api.generic_api import GenericDataApi
+from app.data_access.backups.access import due_for_another_backup
+from app.data_access.backups.make_backup import make_backup
 from app.data_access.classes.volunteers import DataListOfIdentifiedVolunteersAtEvent
 from app.data_access.csv.cadets import CsvDataListOfCadets, CsvDataListOfCadetsWithGroups, CsvDataListOfCadetsAtEvent, CsvDataListOfIdentifiedCadetsAtEvent, CsvDataListOfCadetsOnCommitte
 from app.data_access.csv.food_and_clothing import *
@@ -25,6 +27,12 @@ class CsvDataApi(GenericDataApi):
         self._master_data_path = master_data_path
         self._user_data_path = user_data_path
         self._backup_data_path = backup_data_path
+
+    def due_for_another_backup(self) -> bool:
+        return due_for_another_backup(self.backup_data_path)
+
+    def make_backup(self):
+        make_backup(backup_data_path=self.backup_data_path, master_data_path=self.master_data_path)
 
     @property
     def data_list_of_cadets(self):

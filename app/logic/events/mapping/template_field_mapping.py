@@ -91,9 +91,7 @@ def post_form_when_template_chosen(interface: abstractInterface,
     interface.save_stored_items()
 
     return form_with_message_and_finished_button(
-        "Selected mapping template %s for event %s" % (template_name, str(event)),
-        interface=interface,
-        function_whose_parent_go_to_on_button_press=display_form_for_choose_template_field_mapping
-    )
+        "Selected mapping template %s for event %s" % (template_name, str(event)), interface=interface,
+        function_whose_parent_go_to_on_button_press=display_form_for_choose_template_field_mapping)
 
 

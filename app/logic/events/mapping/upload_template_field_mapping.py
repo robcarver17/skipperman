@@ -58,7 +58,5 @@ def post_form_for_upload_template_field_mapping(interface: abstractInterface):
     interface.save_stored_items()
 
 
-    return form_with_message_and_finished_button(
-        "Uploaded new template %s" % (template_name), interface=interface,
-        function_whose_parent_go_to_on_button_press=display_form_for_upload_template_field_mapping
-    )
+    return form_with_message_and_finished_button("Uploaded new template %s" % (template_name), interface=interface,
+                                                 function_whose_parent_go_to_on_button_press=display_form_for_upload_template_field_mapping)

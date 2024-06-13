@@ -145,10 +145,8 @@ def process_form_when_volunteer_verified(
         )
         return initial_state_form
 
-    return form_with_message_and_finished_button(
-        "Added volunteer %s" % str(volunteer), interface=interface,
-        function_whose_parent_go_to_on_button_press=display_form_add_volunteer
-    )
+    return form_with_message_and_finished_button("Added volunteer %s" % str(volunteer), interface=interface,
+                                                 function_whose_parent_go_to_on_button_press=display_form_add_volunteer)
 
 
 def add_volunteer_from_form_to_data(interface) -> Volunteer:

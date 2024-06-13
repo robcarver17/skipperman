@@ -81,10 +81,8 @@ def respond_to_uploaded_file(interface: abstractInterface) -> Union[Form, NewFor
         interface.log_error("Problem with file upload %s" % e)
         return initial_state_form
 
-    return form_with_message_and_finished_button(
-        "Uploaded file successfully", interface=interface,
-        function_whose_parent_go_to_on_button_press=display_form_upload_event_file
-    )
+    return form_with_message_and_finished_button("Uploaded file successfully", interface=interface,
+                                                 function_whose_parent_go_to_on_button_press=display_form_upload_event_file)
 
 
 def verify_uploaded_wa_file_and_save_as_staged_file(interface: abstractInterface):

@@ -60,7 +60,5 @@ def post_form_to_replace_selected_files(interface: abstractInterface):
 
     clear_directory_and_filename(interface)
 
-    return form_with_message_and_finished_button(
-        "Uploaded replacement file %s" % (web_path), interface=interface,
-        function_whose_parent_go_to_on_button_press=display_form_to_replace_selected_files
-    )
+    return form_with_message_and_finished_button("Uploaded replacement file %s" % (web_path), interface=interface,
+                                                 function_whose_parent_go_to_on_button_press=display_form_to_replace_selected_files)

@@ -51,7 +51,5 @@ def post_form_for_upload_custom_field_mapping(interface: abstractInterface):
         interface.log_error("Something went wrong uploading file %s" % str(e))
         return previous_form
 
-    return form_with_message_and_finished_button(
-        "Uploaded new mapping for event %s" % str(event), interface=interface,
-        function_whose_parent_go_to_on_button_press=display_form_for_upload_custom_field_mapping
-    )
+    return form_with_message_and_finished_button("Uploaded new mapping for event %s" % str(event), interface=interface,
+                                                 function_whose_parent_go_to_on_button_press=display_form_for_upload_custom_field_mapping)

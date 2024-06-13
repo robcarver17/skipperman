@@ -1,6 +1,7 @@
 from typing import Union
 from dataclasses import dataclass
-from app.objects.abstract_objects.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface, form_with_message_and_finished_button, \
+   finished_button_with_custom_label
 from app.objects.abstract_objects.abstract_form import (
     NewForm,
     Form,
@@ -16,6 +17,7 @@ from app.objects.constants import NoButtonPressed, arg_not_passed
 class LogicApi:
     interface: abstractInterface
 
+
     def get_form(self) -> Form:
         if self.interface.is_posted_form:
             print("posted form")
@@ -26,6 +28,13 @@ class LogicApi:
 
     def get_displayed_form(self) -> Form:
         form_name = self.form_name
+
+        due_for_another_backup = self.interface.due_for_another_data_backup()
+        if due_for_another_backup:
+            return form_with_message_and_finished_button(interface=self.interface,
+                                                         message="Time to backup data",
+                                                         button=finished_button_with_custom_label("Press to do backup - might take a couple of minutes"))
+
         print("Getting displayed form for %s" % form_name)
         form = self.get_displayed_form_given_form_name(form_name)
 
@@ -53,6 +62,9 @@ class LogicApi:
         return is_finished_button(last_button_pressed)
 
     def get_posted_form_with_finished_button_pressed(self) -> Form:
+        if self.interface.due_for_another_data_backup():
+            print("Backing up")
+            self.interface.make_data_backup()
 
         new_form = self.interface.get_where_finished_button_should_lead_to(default=INITIAL_STATE)
         print("Finished button form going to %s" % new_form)

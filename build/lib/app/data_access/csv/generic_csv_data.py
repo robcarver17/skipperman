@@ -21,8 +21,6 @@ class GenericCsvData(object):
         except:
             pass
 
-    def snapshot(self):
-        make_backup_if_due(backup_data_path=self._backup_data_path, master_data_path=self._master_data_path)
 
     def get_path_and_filename_for_named_csv_file(
         self,
@@ -50,7 +48,7 @@ class GenericCsvData(object):
     def write_object(self, object, file_identifier: str, additional_file_identifiers=arg_not_passed):
         path_and_filename = self.get_path_and_filename_for_named_csv_file(file_identifier, additional_file_identifiers=additional_file_identifiers)
         write_object(object, path_and_filename)
-        self.snapshot()
+
 
     def get_list_of_csv_files_in_path_for_field_id(self, file_identifier: str) -> List[str]:
         path = self.path_for_field_id(file_identifier)

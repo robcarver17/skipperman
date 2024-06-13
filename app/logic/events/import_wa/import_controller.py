@@ -21,10 +21,8 @@ def import_controller(interface: abstractInterface) -> Union[Form, NewForm]:
     try:
         next_import = next_import_required_for_event(event=event, interface=interface)
     except NoMoreData:
-        return form_with_message_and_finished_button(
-            "Finished importing WA data", interface=interface,
-            function_whose_parent_go_to_on_button_press=import_controller
-        )
+        return form_with_message_and_finished_button("Finished importing WA data", interface=interface,
+                                                     function_whose_parent_go_to_on_button_press=import_controller)
 
     function = IMPORTS_AND_FUNCTION_NAMES[next_import]
     print("Next import %s" % str(function))

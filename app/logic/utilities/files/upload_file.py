@@ -69,7 +69,5 @@ def post_form_for_upload_public_file(interface: abstractInterface):
         interface.log_error("Something went wrong uploading file: error %s" % str(e))
         return display_form_for_upload_public_file(interface)
 
-    return form_with_message_and_finished_button(
-        "Uploaded new file %s" % (web_path), interface=interface,
-        function_whose_parent_go_to_on_button_press=display_form_for_upload_public_file
-    )
+    return form_with_message_and_finished_button("Uploaded new file %s" % (web_path), interface=interface,
+                                                 function_whose_parent_go_to_on_button_press=display_form_for_upload_public_file)

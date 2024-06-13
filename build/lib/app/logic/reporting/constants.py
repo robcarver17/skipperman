@@ -12,6 +12,7 @@ MODIFY_ADDITIONAL_OPTIONS_BUTTON_LABEL = "Modify report specific options"
 # FIELDS
 PAGE_ALIGNMENT = "page_alignment"
 FONT = "font"
+FONT_SIZE = "font_size"
 PAGE_SIZE = "page_size"
 EQUALISE_COLUMN_WIDTHS = "equalise"
 REPORT_TITLE = "report_title"

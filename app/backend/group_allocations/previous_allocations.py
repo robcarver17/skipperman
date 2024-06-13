@@ -10,7 +10,8 @@ from app.backend.events import  get_sorted_list_of_events
 
 
 def get_dict_of_allocations_for_events_and_list_of_cadets(interface: abstractInterface, list_of_events: list) -> Dict[Event, ListOfCadetIdsWithGroups]:
-    allocations_as_dict = dict([(event, load_list_of_cadets_ids_with_group_allocations_active_cadets_only(interface=interface, event=event)) for event in list_of_events])
+    allocations_as_dict = dict([(event,
+                                 load_list_of_cadets_ids_with_group_allocations_active_cadets_only(interface=interface, event=event)) for event in list_of_events])
 
     return allocations_as_dict
 

@@ -227,14 +227,18 @@ class PdfLayout:
         return self._font_size() * TITLE_MULTIPLIER
 
     def _font_size(self) -> int:
-        approx_font_size_from_width = self._approx_font_size_from_width_required()
-        approx_font_size_from_height = self._approx_font_size_from_height_required()
+        if self.print_options.auto_font_size:
+            approx_font_size_from_width = self._approx_font_size_from_width_required()
+            approx_font_size_from_height = self._approx_font_size_from_height_required()
 
-        max_possible_approx_font_size = min(
-            [approx_font_size_from_width, approx_font_size_from_height]
-        )
-        font_size = int(np.floor(max_possible_approx_font_size))
-        font_size = min([MAX_FONT_SIZE, font_size])
+            max_possible_approx_font_size = min(
+                [approx_font_size_from_width, approx_font_size_from_height]
+            )
+            font_size = int(np.floor(max_possible_approx_font_size))
+            font_size = min([MAX_FONT_SIZE, font_size])
+
+        else:
+            return self.print_options.font_size
 
         return font_size
 

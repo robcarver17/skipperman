@@ -53,24 +53,26 @@ class AllocationData:
     list_of_dinghies: ListOfBoatClasses
     list_of_cadets_with_qualifications: ListOfCadetsWithQualifications
 
-    def get_most_common_group_name_across_days(self, cadet: Cadet):
+    def get_most_common_group_name_across_days(self, cadet: Cadet) -> str:
         all_groups = list(remove_na_from_dict(self.get_group_names_across_days(cadet)).values())
-        return most_common(all_groups)
+        return most_common(all_groups, UNALLOCATED_GROUP_NAME)
 
     def get_most_common_club_boat_name_across_days(self, cadet: Cadet):
         all_boats_across_days = list(remove_na_from_dict(self.get_club_boat_names_across_days(cadet)).values())
-        return most_common(all_boats_across_days)
+        return most_common(all_boats_across_days, '')
 
     def get_most_common_partner_name_across_days(self, cadet: Cadet):
         all_names_across_days = list(remove_na_from_dict(self.get_two_handed_partners_across_days(cadet)).values())
-        return most_common(all_names_across_days)
+        return most_common(all_names_across_days, '')
 
     def get_most_common_boat_class_name_across_days(self, cadet: Cadet):
         all_boats_across_days = list(remove_na_from_dict(self.get_boat_class_names_across_days(cadet)).values())
-        return most_common(all_boats_across_days)
+        return most_common(all_boats_across_days, '')
 
     def get_current_group_name_across_days_or_none_if_different(self, cadet: Cadet):
         all_groups = list(remove_na_from_dict(self.get_group_names_across_days(cadet)).values())
+        if len(all_groups)==0:
+            return ''
         if all_equal(all_groups):
             return all_groups[0]
         else:
@@ -86,6 +88,8 @@ class AllocationData:
 
     def get_current_club_boat_name_across_days_or_none_if_different(self, cadet: Cadet):
         all_boats_across_days = list(remove_na_from_dict(self.get_club_boat_names_across_days(cadet)).values())
+        if len(all_boats_across_days)==0:
+            return ''
         if all_equal(all_boats_across_days):
             return all_boats_across_days[0]
         else:
@@ -100,6 +104,8 @@ class AllocationData:
 
     def get_current_boat_class_across_days_or_none_if_different(self, cadet: Cadet):
         all_boats_across_days = list(remove_na_from_dict(self.get_boat_class_names_across_days(cadet)).values())
+        if len(all_boats_across_days)==0:
+            return ''
         if all_equal(all_boats_across_days):
             return all_boats_across_days[0]
         else:
@@ -115,6 +121,8 @@ class AllocationData:
 
     def get_current_sail_number_across_days_or_none_if_different(self, cadet: Cadet):
         all_numbers_across_days = list(remove_na_from_dict(self.get_sail_numbers_across_days(cadet)).values())
+        if len(all_numbers_across_days)==0:
+            return ''
         if all_equal(all_numbers_across_days):
             return all_numbers_across_days[0]
         else:
@@ -130,6 +138,8 @@ class AllocationData:
 
     def get_two_handed_partner_name_for_cadet_across_days_or_none_if_different(self, cadet: Cadet):
         all_names_across_days = list(remove_na_from_dict(self.get_two_handed_partners_across_days(cadet)).values())
+        if len(all_names_across_days)==0:
+            return ''
         if all_equal(all_names_across_days):
             return all_names_across_days[0]
         else:

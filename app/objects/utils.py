@@ -280,7 +280,9 @@ def print_dict_nicely(label, some_dict:dict) -> str:
     return label+"- "+dict_str_list
 
 
-def most_common(some_list: list):
+def most_common(some_list: list, default = ''):
+    if len(some_list)==0:
+        return default
     return Counter(some_list).most_common(1)[0][0]
 
 

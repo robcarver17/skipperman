@@ -2,7 +2,7 @@ from app.backend.data.options import OptionsData
 from app.data_access.configuration.fixed import ALL_PAGESIZE, ALL_FONTS
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_form import (
-    yes_no_radio, textInput, radioInput,
+    yes_no_radio, textInput, radioInput, intInput,
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -17,7 +17,7 @@ from app.logic.reporting.constants import (
     GROUP_NAME_AS_HEADER,
     FIRST_VALUE_IN_GROUP_IS_KEY,
     PREPEND_GROUP_NAME, OUTPUT_PDF,
-    PUBLIC, IF_HEADER_INCLUDE_SIZE
+    PUBLIC, IF_HEADER_INCLUDE_SIZE, FONT_SIZE
 )
 from app.objects.constants import missing_data
 from app.backend.reporting.options_and_parameters.print_options import PrintOptions, default_report_title_and_filename, \
@@ -85,11 +85,17 @@ def report_print_options_as_list_of_lines(print_options: PrintOptions) -> ListOf
     output_pdf_line = Line(output_pdf_str)
     public_pdf_line = Line(public_str)
 
+    if print_options.auto_font_size:
+        font_size = "Automatic"
+    else:
+        font_size = print_options.auto_font_size
+
     if output_pdf:
         pdf_only = ListOfLines(
             [
                 "Alignment: %s" % landscape_str,
                 "Font: %s" % print_options.font,
+                "Font size: %s" % font_size,
                 "Page size: %s" % print_options.page_size,
                 "Equalise column widths: %s" % print_options.equalise_column_width,
                 "Report title: %s" % print_options.title_str,
@@ -126,6 +132,7 @@ def get_print_options_from_main_option_form_fields(
     page_alignment = interface.value_from_form(PAGE_ALIGNMENT)
     output_to = interface.value_from_form(OUTPUT_PDF)
     font = interface.value_from_form(FONT)
+    font_size = interface.value_from_form(FONT_SIZE)
     page_size = interface.value_from_form(PAGE_SIZE)
     equalise_column_widths = interface.true_if_radio_was_yes(EQUALISE_COLUMN_WIDTHS)
     title = interface.value_from_form(REPORT_TITLE)
@@ -137,6 +144,7 @@ def get_print_options_from_main_option_form_fields(
     prepend_group_name = interface.true_if_radio_was_yes(PREPEND_GROUP_NAME)
     include_size_of_group_if_header = interface.true_if_radio_was_yes(IF_HEADER_INCLUDE_SIZE)
     public = interface.true_if_radio_was_yes(PUBLIC)
+
     print_options = PrintOptions()
 
     print_options.landscape = page_alignment == LANDSCAPE
@@ -151,6 +159,7 @@ def get_print_options_from_main_option_form_fields(
     print_options.first_value_in_group_is_key = highlight_first_value_as_key
     print_options.publish_to_public = public
     print_options.include_size_of_group_if_header =include_size_of_group_if_header
+    print_options.font_size = int(font_size)
 
     print("Print shared from form %s" % str(print_options))
     return print_options
@@ -185,6 +194,11 @@ def report_print_options_as_form_contents(print_options: PrintOptions) -> ListOf
                 input_name=PAGE_ALIGNMENT,
                 dict_of_options={LANDSCAPE:LANDSCAPE, PORTRAIT:PORTRAIT},
                 default_label=landscape_str,
+            ),
+            intInput(
+                input_label='Font size (Set to zero for automatic sizing)',
+                input_name=FONT_SIZE,
+                value=print_options.font_size
             ),
             radioInput(
                 input_label="Font",

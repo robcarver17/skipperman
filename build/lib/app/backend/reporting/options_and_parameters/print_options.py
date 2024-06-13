@@ -1,10 +1,13 @@
 from dataclasses import dataclass
 
+from app.objects.constants import arg_not_passed
+
 from app.data_access.configuration.fixed import A4_PAGESIZE, UNIT_MM, WIDTH, HEIGHT, PAGESIZE_MM, TITLE_MULTIPLIER, \
     EDGE_MARGIN_MM, COLUMN_GAP_MM
 from app.objects.events import Event
 from app.objects.generic import GenericSkipperManObject
 
+AUTO_FONT_SIZE = 0
 
 @dataclass
 class PrintOptions(GenericSkipperManObject):
@@ -21,6 +24,11 @@ class PrintOptions(GenericSkipperManObject):
     landscape: bool = True
     publish_to_public: bool = False
     include_size_of_group_if_header: bool = False
+    font_size: int = AUTO_FONT_SIZE
+
+    @property
+    def auto_font_size(self) -> bool:
+        return self.font_size ==AUTO_FONT_SIZE
 
     @property
     def filename_with_extension(self):

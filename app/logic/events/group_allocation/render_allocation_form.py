@@ -216,14 +216,35 @@ def get_list_of_previous_groups_as_str(interface: abstractInterface, cadet: Cade
 
 def previous_groups_as_dict(interface: abstractInterface, cadet: Cadet, number_of_events: int = 3) -> Dict[Event, Group]:
     event = get_event_from_state(interface)
+
+    return previous_groups_as_dict_excluding_one_event(
+        interface=interface,
+        cadet=cadet,
+        event_to_exclude=event,
+        number_of_events=number_of_events
+    )
+
+def previous_groups_as_dict_excluding_one_event(interface: abstractInterface, cadet: Cadet, event_to_exclude: Event, number_of_events: int = 3) -> Dict[
+    Event, Group]:
+
+    previous_allocations_as_dict =dict_of_previous_allocations_excluding_one_event(
+        interface=interface,
+        event_to_exclude=event_to_exclude,
+        number_of_events=number_of_events
+    )
+    allocation_for_cadet = allocation_for_cadet_in_previous_events_as_dict(cadet=cadet, previous_allocations_as_dict=previous_allocations_as_dict,
+                                                           number_of_events=number_of_events)
+
+    return allocation_for_cadet
+
+def dict_of_previous_allocations_excluding_one_event(interface: abstractInterface,  event_to_exclude: Event, number_of_events: int = 3):
+
     list_of_events = get_list_of_all_events(interface)
-    list_of_previous_events = list_of_events_excluding_one_event(list_of_events=list_of_events,event_to_exclude=event, only_past=True,
+    list_of_previous_events = list_of_events_excluding_one_event(list_of_events=list_of_events,event_to_exclude=event_to_exclude, only_past=True,
                                                                  sort_by=SORT_BY_START_ASC)[-number_of_events:]
     previous_allocations_as_dict = get_dict_of_allocations_for_events_and_list_of_cadets(interface=interface,
                                                                                          list_of_events=list_of_previous_events)
-    return allocation_for_cadet_in_previous_events_as_dict(cadet=cadet, previous_allocations_as_dict=previous_allocations_as_dict,
-                                                           number_of_events=number_of_events)
-
+    return previous_allocations_as_dict
 
 def this_cadet_has_been_clicked_on_already(interface: abstractInterface, cadet: Cadet):
     cadet_id = get_current_cadet_id_at_event(interface)

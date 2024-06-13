@@ -7,9 +7,10 @@ from werkzeug import Request
 
 from app.web.flask.security import get_all_flask_users, authenticated_user
 from app.web.flask.login_and_out_pages import login_page, process_logout, login_link_page, change_password_page
+from app.web.html.read_only import toggle_read_only
 from app.web.menu_pages import generate_menu_page_html
 from app.web.action_pages import generate_action_page_html
-from app.web.html.url import INDEX_URL, ACTION_PREFIX, LOGIN_URL, LOGOUT_URL, CHANGE_PASSWORD
+from app.web.html.url import INDEX_URL, ACTION_PREFIX, LOGIN_URL, LOGOUT_URL, CHANGE_PASSWORD, TOGGLE_READ_ONLY
 from app.data_access.configuration.configuration import  MAX_FILE_SIZE
 
 #### SETUP
@@ -58,6 +59,14 @@ def login():
 @app.route("/%s/" % CHANGE_PASSWORD, methods=["GET", "POST"])
 def change_password():
     return change_password_page()
+
+
+@app.route("/%s/" % TOGGLE_READ_ONLY, methods=["GET"])
+def set_read_only():
+    toggle_read_only()
+    ## only possible from menu page
+    return generate_menu_page_html()
+
 
 
 @app.route("/%s/" % 'link_login', methods=["GET"])

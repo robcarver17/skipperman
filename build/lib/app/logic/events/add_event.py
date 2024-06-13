@@ -207,8 +207,9 @@ def process_form_when_event_verified(interface: abstractInterface) -> Form:
         interface.log_error(
             "Can't add this event, reason: %s, try again or consult support" % str(e)
         )
-        interface.save_stored_items()
         return initial_state_form
+
+    interface.save_stored_items()
 
     return form_with_message_and_finished_button("Added event %s" % str(event), interface=interface,
                                                  function_whose_parent_go_to_on_button_press=display_form_view_for_add_event)

@@ -25,7 +25,7 @@ def generate_menu_page_html() -> str:
     else:
         html_code_for_menu = ""
 
-    html_page_master_layout= get_master_layout()
+    html_page_master_layout= get_master_layout(menu_page = True)
     html_page_master_layout.body.append(html_code_for_menu)
 
     return html_page_master_layout.as_html()

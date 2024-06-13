@@ -1,11 +1,15 @@
+from app.data_access.data import data_api
+
+from app.web.flask.flask_interface import flaskInterface
+
 from app.web.flask.flash import get_html_of_flashed_messages
 from app.web.flask.security import authenticated_user
 from app.web.html.components import Html, html_joined_list_as_lines, horizontal_line
-from app.web.html.login_and_out import get_login_link_html_code, get_logout_and_chanage_password_link_html_code, get_username_banner
+from app.web.html.login_and_out import get_login_link_html_code, get_read_write_logout_and_chanage_password_link_html_code, get_username_banner
 
 
-def get_html_header():
-    login_or_out_code = login_or_out()
+def get_html_header(menu_page: bool):
+    login_or_out_code = html_code_depending_on_whether_logged_in(menu_page)
     username = get_username_banner()
     html_header = """
     <header class="w3-container w3-padding w3-orange" id="myHeader">
@@ -20,12 +24,13 @@ def get_html_header():
     return html_header
 
 
-def login_or_out() -> Html:
+def html_code_depending_on_whether_logged_in(menu_page: bool) -> Html:
 
     if authenticated_user():
-        return get_logout_and_chanage_password_link_html_code()
+        return get_read_write_logout_and_chanage_password_link_html_code(menu_page)
     else:
         return get_login_link_html_code()
+
 
 def get_flash_block():
     try:

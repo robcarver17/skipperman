@@ -467,6 +467,7 @@ app/web/html/login_and_out.py
 app/web/html/master_layout.py
 app/web/html/page.py
 app/web/html/process_abstract_form_to_html.py
+app/web/html/read_only.py
 app/web/html/url.py
 app/web/html/../../data_access/configuration/configuration.yaml
 skipperman.egg-info/PKG-INFO

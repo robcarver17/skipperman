@@ -143,6 +143,13 @@ class abstractInterface:
     def get_current_logged_in_username(self) -> str:
         raise NotImplemented
 
+    @property
+    def read_only(self)-> bool:
+        return False
+
+    def toggle_read_only(self):
+        raise NotImplemented
+
 def get_file_from_interface(file_label: str, interface: abstractInterface):
     try:
         file = interface.uploaded_file(file_label)

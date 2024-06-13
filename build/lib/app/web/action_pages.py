@@ -30,7 +30,7 @@ def generate_action_page_html(action_name: str) -> Union[Html, Response]:
         abstract_form_for_action=abstract_form_for_action, action_name=action_name
     )
 
-    html_page_master_layout= get_master_layout()
+    html_page_master_layout= get_master_layout(menu_page=False)
     html_page_master_layout.body.append(html_code_for_action_in_layout)
 
     return html_page_master_layout.as_html()

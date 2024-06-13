@@ -6,6 +6,7 @@ LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 LINK_LOGIN= 'link_login'
 CHANGE_PASSWORD = 'change_password'
+TOGGLE_READ_ONLY = 'toggle_read_only'
 def get_action_url(action_name: str):
     return "/%s/%s" % (ACTION_PREFIX, action_name)
 

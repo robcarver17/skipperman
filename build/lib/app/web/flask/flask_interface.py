@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 import flask
+from app.objects.generic import FALSE, TRUE
 from werkzeug.exceptions import RequestEntityTooLarge
 
 from app.data_access.configuration.configuration import HOMEPAGE
@@ -119,12 +120,31 @@ class flaskInterface(abstractInterface):
 
         return '%s%s/?username=%s&password=%s' % (url, LINK_LOGIN,username, new_password)
 
+    @property
+    def read_only(self)-> bool:
+        read_only =self.get_persistent_value(READ_ONLY_KEY, FALSE)
+
+        if read_only==FALSE:
+            return False
+        elif read_only==TRUE:
+            return True
+        else:
+            raise Exception
+
+    def toggle_read_only(self):
+        if self.read_only:
+            self.set_persistent_value(READ_ONLY_KEY, FALSE)
+        else:
+            self.set_persistent_value(READ_ONLY_KEY, TRUE)
 
     def main_url(self):
         return flask.request.host_url
 
     def get_current_logged_in_username(self) -> str:
         return get_username()
+
+READ_ONLY_KEY = '__read_only'
+
 
 def is_website_post() -> bool:
     return request.method == "POST"

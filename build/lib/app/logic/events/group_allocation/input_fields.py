@@ -8,7 +8,7 @@ from app.logic.events.group_allocation.store_state import no_day_set_in_state, g
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_form import textInput, checkboxInput, dropDownInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_lines import DetailLine, ListOfLines
+from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.cadets import Cadet
 from app.objects.club_dinghies import NO_BOAT
 from app.objects.constants import missing_data
@@ -35,13 +35,6 @@ def get_days_attending_field(cadet: Cadet, allocation_data: AllocationData)-> ch
                                                                                          cadet_id=cadet.id),
                                      line_break=True)
     return days_attending_field
-
-
-def make_long_thing_detail_box(some_string:str):
-    if len(some_string)>100:
-        return DetailLine(string=some_string, name="Detail")
-    else:
-        return some_string
 
 
 def get_input_fields_for_cadet(interface: abstractInterface, cadet: Cadet, allocation_data: AllocationData) -> list:

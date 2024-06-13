@@ -16,7 +16,8 @@ from app.objects.constants import missing_data
 from app.objects.events import Event
 from app.objects.groups import Group, ALL_GROUPS_NAMES, GROUP_UNALLOCATED_TEXT, LAKE_TRAINING
 from app.objects.volunteers_at_event import VolunteerAtEvent, ListOfVolunteersAtEvent, ListOfIdentifiedVolunteersAtEvent
-from app.objects.volunteers_in_roles import NO_ROLE_SET, VolunteerInRoleAtEvent, ListOfVolunteersInRoleAtEvent
+from app.objects.volunteers_in_roles import NO_ROLE_SET, VolunteerInRoleAtEvent, ListOfVolunteersInRoleAtEvent, \
+    RoleAndGroup
 
 from app.objects.day_selectors import Day
 
@@ -334,7 +335,7 @@ def update_role_at_event_for_volunteer_on_day_if_switching_roles(interface: abst
 
 def update_group_at_event_for_volunteer_on_day(interface: abstractInterface,
                                                volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
-                                               new_group: str,
+                                               new_group: Group,
                                               event: Event):
     volunteer_rota_data = VolunteerRotaData(interface.data)
     volunteer_rota_data.update_group_at_event_for_volunteer_on_day(event=event,
@@ -342,17 +343,66 @@ def update_group_at_event_for_volunteer_on_day(interface: abstractInterface,
                                                                    new_group=new_group)
 
 
+def update_role_and_group_at_event_for_volunteer_on_all_days_when_available(interface: abstractInterface,
+                                               volunteer_id: str,
+                                                new_role_and_group: RoleAndGroup,
+                                              event: Event):
+    volunteer_rota_data = VolunteerRotaData(interface.data)
+    volunteer_rota_data.update_role_and_group_at_event_for_volunteer_on_all_days_when_available(event=event,
+                                                                    volunteer_id=volunteer_id,
+                                                                   new_role_and_group=new_role_and_group)
+
+
+
 def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(interface: abstractInterface,
                     event: Event,
                                                                                        volunteer_id: str,
-                                                                                       day: Day):
+                                                                                       day: Day,
+                                                                             allow_replacement: bool = True):
 
 
     volunteer_data = VolunteerRotaData(interface.data)
     try:
         volunteer_data.copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(event=event,
                                                                                                 day=day,
-                                                                                                volunteer_id=volunteer_id)
+                                                                                                volunteer_id=volunteer_id,
+                                                                                                allow_replacement=allow_replacement)
     except Exception as e:
         name = get_volunteer_name_from_id(interface=interface, volunteer_id=volunteer_id)
         print("Can't copy across role data for %s on %s, error %s, conflicting change made?" % (name, day.name, str(e)))
+
+
+def copy_earliest_valid_role_and_overwrite_for_volunteer(interface: abstractInterface, event: Event, volunteer_id: str):
+    valid_day = get_day_with_earliest_valid_role_and_group_for_volunteer_or_none(interface=interface, event=event, volunteer_id=volunteer_id)
+    name = get_volunteer_name_from_id(interface=interface, volunteer_id=volunteer_id)
+    print("Valid day for volunteer %s is %s" % (name, str(valid_day)))
+    if valid_day is None:
+        return
+
+    copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(interface=interface, event=event,
+                                                                                     volunteer_id=volunteer_id, day=valid_day, allow_replacement=True)
+
+
+def copy_earliest_valid_role_to_all_empty_for_volunteer(interface: abstractInterface, event: Event, volunteer_id: str):
+    valid_day = get_day_with_earliest_valid_role_and_group_for_volunteer_or_none(interface=interface, event=event, volunteer_id=volunteer_id)
+    name = get_volunteer_name_from_id(interface=interface, volunteer_id=volunteer_id)
+    print("Valid day for volunteer %s is %s" % (name, str(valid_day)))
+    if valid_day is None:
+        return
+
+    copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(interface=interface, event=event,
+                                                                                     volunteer_id=volunteer_id, day=valid_day,
+                                                                             allow_replacement=False)
+
+def get_day_with_earliest_valid_role_and_group_for_volunteer_or_none(interface: abstractInterface, event: Event, volunteer_id: str)-> Day:
+    volunteer_data = VolunteerRotaData(interface.data)
+
+    for day in event.weekdays_in_event():
+        volunteer_with_role_and_group = volunteer_data.get_volunteer_with_role_at_event_on_day(event=event, volunteer_id=volunteer_id, day=day)
+        role_and_group = volunteer_with_role_and_group.role_and_group
+        if role_and_group.missing:
+            continue
+        else:
+            return day
+
+    return None

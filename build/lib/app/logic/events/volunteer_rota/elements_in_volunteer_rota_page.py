@@ -32,7 +32,7 @@ def get_filters_and_buttons(interface: abstractInterface, event: Event) -> Mater
 
     sort_buttons = get_all_volunteer_sort_buttons()
     skills_filter = get_volunteer_skills_filter(interface)
-    header_buttons = get_header_buttons_for_rota()
+    header_buttons = get_header_buttons_for_rota(interface)
     availablility_filter = get_availability_for_volunteers_filter( event=event)
     before_table =  ListOfLines(
             [
@@ -103,15 +103,22 @@ def get_volunteer_skills_filter(interface: abstractInterface):
 SKILLS_FILTER = "skills_filter"
 APPLY_FILTER_BUTTON_LABEL = "Apply filters"
 CLEAR_FILTERS_BUTTON_LABEL = "Clear all filters"
-COPY_ALL_ROLES_BUTTON_LABEL = "Copy all roles across days (where possible)"
+COPY_ALL_ROLES_BUTTON_LABEL = "Copy from earliest allocated role to empty roles across all days"
+COPY_ALL_FIRST_ROLE_BUTTON_LABEL = "Copy from earliest allocated role across all days, overwriting existing roles"
+
 
 filter_button = Button(APPLY_FILTER_BUTTON_LABEL, nav_button=True)
 clear_filter_button = Button(CLEAR_FILTERS_BUTTON_LABEL, nav_button=True)
 
-def get_header_buttons_for_rota():
-    return ButtonBar([Button(CANCEL_BUTTON_LABEL, nav_button=True), Button(SAVE_CHANGES, nav_button=True),
+def get_header_buttons_for_rota(interface: abstractInterface):
+    cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
+    if is_ready_to_swap(interface):
+        return ''
+    else:
+        return ButtonBar([cancel_button, Button(SAVE_CHANGES, nav_button=True),
                       Button(ADD_NEW_VOLUNTEER_BUTTON_LABEL, nav_button=True),
-                      Button(COPY_ALL_ROLES_BUTTON_LABEL, nav_button=True)])
+                      Button(COPY_ALL_ROLES_BUTTON_LABEL, nav_button=True),
+                          Button(COPY_ALL_FIRST_ROLE_BUTTON_LABEL, nav_button=True)])
 
 
 

@@ -6,7 +6,7 @@ from app.data_access.configuration.configuration import VOLUNTEER_TEAMS
 
 from app.backend.data.volunteer_allocation import VolunteerAllocationData
 from app.objects.volunteers_in_roles import VolunteerInRoleAtEvent, ListOfVolunteersInRoleAtEvent, \
-    ListOfTargetForRoleAtEvent
+    ListOfTargetForRoleAtEvent, RoleAndGroup
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -21,6 +21,7 @@ from app.objects.groups import Group
 class VolunteerRotaData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
+
 
     def volunteer_is_on_lake(self, event: Event, volunteer_id: str) -> bool:
         list_of_volunteers = self.get_list_of_volunteers_in_roles_at_event(event)
@@ -63,6 +64,23 @@ class VolunteerRotaData():
             volunteer_in_role_at_event=volunteer_in_role_at_event_on_day)
         self.save_list_of_volunteers_in_roles_at_event(list_of_volunteers_in_role_at_event=list_of_volunteers_in_roles_at_event, event=event)
 
+
+    def update_role_and_group_at_event_for_volunteer_on_all_days_when_available(self,
+                                                                                volunteer_id: str,
+                                                                                new_role_and_group: RoleAndGroup,
+                                                                                event: Event):
+        list_of_volunteers_in_roles_at_event = self.get_list_of_volunteers_in_roles_at_event(event)
+
+        for day in self.days_at_event_when_volunteer_available(event=event, volunteer_id=volunteer_id):
+            volunteer_in_role_at_event = list_of_volunteers_in_roles_at_event.member_matching_volunteer_id_and_day(volunteer_id=volunteer_id,
+                                                                                                                   day=day)
+            list_of_volunteers_in_roles_at_event.update_volunteer_in_role_on_day(volunteer_in_role_at_event=volunteer_in_role_at_event,
+                                                                                 new_role=new_role_and_group.role)
+            list_of_volunteers_in_roles_at_event.update_volunteer_in_group_on_day(volunteer_in_role_at_event=volunteer_in_role_at_event,
+                                                                                  new_group=new_role_and_group.group)
+
+        self.save_list_of_volunteers_in_roles_at_event(list_of_volunteers_in_role_at_event=list_of_volunteers_in_roles_at_event, event=event)
+
     def swap_roles_and_groups_for_volunteers_in_allocation(self,
                                                            event: Event,
                                                            original_day: Day,
@@ -98,13 +116,16 @@ class VolunteerRotaData():
     def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(self,
                                                                                  event: Event,
                                                                                  volunteer_id: str,
-                                                                                 day: Day):
+                                                                                 day: Day,
+                                                                                 allow_replacement: bool = True):
 
         list_of_volunteers_in_roles_at_event = self.get_list_of_volunteers_in_roles_at_event(event)
         list_of_volunteers_in_roles_at_event.copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
             volunteer_id=volunteer_id,
             day=day,
-            list_of_all_days=self.days_at_event_when_volunteer_available(event=event, volunteer_id=volunteer_id)
+            list_of_all_days=self.days_at_event_when_volunteer_available(event=event, volunteer_id=volunteer_id,
+                                                                         ),
+            allow_replacement=allow_replacement
         )
         self.save_list_of_volunteers_in_roles_at_event(list_of_volunteers_in_role_at_event=list_of_volunteers_in_roles_at_event, event=event)
 
@@ -119,7 +140,7 @@ class VolunteerRotaData():
 
     def update_group_at_event_for_volunteer_on_day(self,
                                                    volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
-                                                   new_group: str,
+                                                   new_group: Group,
                                                    event: Event):
 
         list_of_volunteers_in_roles_at_event = self.get_list_of_volunteers_in_roles_at_event(event)

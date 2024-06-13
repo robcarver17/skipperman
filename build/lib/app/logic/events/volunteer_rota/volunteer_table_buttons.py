@@ -1,4 +1,4 @@
-from typing import Tuple, Callable
+from typing import Tuple, Callable, Union
 
 from app.objects.abstract_objects.abstract_lines import Line
 
@@ -45,6 +45,23 @@ def get_skills_button(volunteer: Volunteer,
 def skills_button_name_from_volunteer_id(volunteer_id: str) -> str:
     return "SKILL_%s" % volunteer_id
 
+def copy_previous_role_button_or_blank(volunteer_at_event: VolunteerAtEvent,
+                                       data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
+                                       ready_to_swap: bool
+                                       )-> Union[Button, str]:
+    previous_role = data_to_be_stored.previous_role_and_group_for_volunteer(volunteer_at_event=volunteer_at_event)
+    if previous_role.missing:
+        return ''
+    if ready_to_swap:
+        return str(previous_role)
+
+    return Button(label = str(previous_role),
+                  value = copy_previous_role_button_name_from_volunteer_id(volunteer_at_event.volunteer_id))
+
+
+def copy_previous_role_button_name_from_volunteer_id(volunteer_id: str) -> str:
+    return "prevRoleCopy_%s" % volunteer_id
+
 
 def list_of_all_location_button_names(interface: abstractInterface, event: Event):
     list_of_volunteers_at_event = load_list_of_volunteers_at_event(interface=interface, event=event)
@@ -57,6 +74,10 @@ def list_of_all_skills_buttons(interface: abstractInterface,event: Event):
     return [skills_button_name_from_volunteer_id(volunteer_at_event.volunteer_id)
             for volunteer_at_event in list_of_volunteers_at_event]
 
+def list_of_all_copy_previous_roles_buttons(interface: abstractInterface, event: Event):
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(interface=interface, event=event)
+    return [copy_previous_role_button_name_from_volunteer_id(volunteer_at_event.volunteer_id)
+            for volunteer_at_event in list_of_volunteers_at_event]
 
 def from_location_button_to_volunteer_id(location_button_name: str) -> str:
     __, volunteer_id = location_button_name.split("_")
@@ -69,6 +90,12 @@ def from_skills_button_to_volunteer_id(skills_button_name: str) -> str:
 
     return volunteer_id
 
+
+def from_previous_role_copy_button_to_volunteer_id(previous_role_copy_button_name: str) -> str:
+    print("button %s" % previous_role_copy_button_name)
+    __, volunteer_id = previous_role_copy_button_name.split("_")
+
+    return volunteer_id
 
 
 def get_dict_of_volunteer_name_buttons_and_volunteer_ids(interface: abstractInterface, event: Event)-> dict:
@@ -152,7 +179,7 @@ def get_list_of_make_available_button_values(interface: abstractInterface, event
 
 
 
-def get_list_of_copy_buttons(interface: abstractInterface, event: Event):
+def get_list_of_copy_buttons_for_individual_volunteers(interface: abstractInterface, event: Event):
     return get_list_of_generic_button_values_across_days_and_volunteers(interface=interface, event=event,
                                                                         value_function=copy_button_value_for_volunteer_id_and_day)
 

@@ -69,7 +69,7 @@ def list_of_lines_with_allocations_and_roles(interface: abstractInterface, volun
 
     return ListOfLines(["Events helping at:", _______________]+
         ["%s: %s" % (str(event), role) for event, role in dict_of_roles.items()]
-    )
+    ).add_Lines()
 
 
 def list_of_skills_as_list_of_lines(interface: abstractInterface, volunteer: Volunteer) -> ListOfLines:

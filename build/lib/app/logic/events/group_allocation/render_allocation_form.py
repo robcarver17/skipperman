@@ -13,7 +13,7 @@ from app.objects.constants import missing_data
 from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing import get_current_cadet_id_at_event
 
 from app.logic.events.group_allocation.input_fields import get_notes_field, get_days_attending_field, \
-    make_long_thing_detail_box, get_input_fields_for_cadet, button_name_for_add_partner, RESET_DAY_BUTTON_LABEL, \
+    get_input_fields_for_cadet, button_name_for_add_partner, RESET_DAY_BUTTON_LABEL, \
     make_cadet_available_button_name
 from app.logic.events.group_allocation.store_state import  no_day_set_in_state, \
     get_day_from_state_or_none
@@ -30,7 +30,8 @@ from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_buttons import Button, CANCEL_BUTTON_LABEL, ButtonBar
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, DetailListOfLines, Line
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, DetailListOfLines, Line, \
+    make_long_thing_detail_box
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.cadets import Cadet

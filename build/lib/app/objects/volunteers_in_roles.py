@@ -130,6 +130,9 @@ class RoleAndGroup(GenericSkipperManObject):
 
         return group_index<other_group_index
 
+    @property
+    def missing(self):
+        return self.role==NO_ROLE_SET and self.group==GROUP_UNALLOCATED
 
 @dataclass
 class TeamAndGroup(GenericSkipperManObject):
@@ -228,23 +231,24 @@ class ListOfVolunteersInRoleAtEvent(GenericListOfObjects):
     def list_of_first_teams_and_groups_at_event_for_day(self, day: Day) -> List[RoleAndGroup]:
         return [volunteer_with_role.first_team_and_group for volunteer_with_role in self if volunteer_with_role.day == day]
 
-    def most_common_role_and_group_at_event_for_volunteer(self, volunteer_id: str) -> str:
+    def most_common_role_and_group_at_event_for_volunteer(self, volunteer_id: str) -> RoleAndGroup:
         ## crazy that mode works with strings
         all_roles = self.all_roles_and_groups_for_a_specific_volunteer(volunteer_id)
         if len(all_roles)==0:
-            return NO_ROLE_SET
+            return RoleAndGroup()
 
         return mode(all_roles)
 
-    def all_roles_and_groups_for_a_specific_volunteer(self, volunteer_id: str)-> List[str]:
+    def all_roles_and_groups_for_a_specific_volunteer(self, volunteer_id: str)-> List[RoleAndGroup]:
         list_of_matches = [volunteer_with_role for volunteer_with_role in self if volunteer_with_role.volunteer_id == volunteer_id]
 
-        return [str(volunteer_with_role.role_and_group) for volunteer_with_role in list_of_matches]
+        return [volunteer_with_role.role_and_group for volunteer_with_role in list_of_matches]
 
     def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(self,
         volunteer_id:str,
         day: Day,
-        list_of_all_days: List[Day]
+        list_of_all_days: List[Day],
+                                                                                 allow_replacement: bool = True
     ):
         volunteer_with_role = self.member_matching_volunteer_id_and_day(
             volunteer_id=volunteer_id,
@@ -255,7 +259,8 @@ class ListOfVolunteersInRoleAtEvent(GenericListOfObjects):
         for other_day in new_list_of_days:
 
             self.replace_or_add_volunteer_in_group_on_day_with_copy(day=other_day,
-                                                                    volunteer_in_role_at_event=volunteer_with_role)
+                                                                    volunteer_in_role_at_event=volunteer_with_role,
+                                                                    allow_replacement=allow_replacement)
 
     def member_matching_volunteer_id_and_day(self, volunteer_id: str, day: Day, return_empty_if_missing: bool = True) -> VolunteerInRoleAtEvent:
         list_of_matches = [volunteer_with_role for volunteer_with_role in self if volunteer_with_role.volunteer_id == volunteer_id
@@ -302,7 +307,7 @@ class ListOfVolunteersInRoleAtEvent(GenericListOfObjects):
 
 
     def update_volunteer_in_group_on_day(self, volunteer_in_role_at_event: VolunteerInRoleAtEvent,
-                                        new_group: str):
+                                        new_group: Group):
         existing_member = self.member_matching_volunteer_id_and_day(
             volunteer_id=volunteer_in_role_at_event.volunteer_id,
             day=volunteer_in_role_at_event.day, return_empty_if_missing=False)
@@ -313,7 +318,8 @@ class ListOfVolunteersInRoleAtEvent(GenericListOfObjects):
         else:
             existing_member.group = new_group
 
-    def replace_or_add_volunteer_in_group_on_day_with_copy(self, day: Day, volunteer_in_role_at_event: VolunteerInRoleAtEvent):
+    def replace_or_add_volunteer_in_group_on_day_with_copy(self, day: Day, volunteer_in_role_at_event: VolunteerInRoleAtEvent,
+                                                           allow_replacement: bool = True):
         existing_member = self.member_matching_volunteer_id_and_day(
             volunteer_id=volunteer_in_role_at_event.volunteer_id,
             day=day, return_empty_if_missing=False)
@@ -323,8 +329,15 @@ class ListOfVolunteersInRoleAtEvent(GenericListOfObjects):
             copied_volunteer_in_role_at_event.day = day
             self.append(copied_volunteer_in_role_at_event)
         else:
-            existing_member.group = volunteer_in_role_at_event.group
-            existing_member.role = volunteer_in_role_at_event.role
+            current_role = existing_member.role
+            no_role_set = current_role == NO_ROLE_SET
+            if allow_replacement or no_role_set:
+                existing_member.role = volunteer_in_role_at_event.role
+
+            current_group = existing_member.group
+            no_group_set = current_group.is_unallocated
+            if no_group_set or allow_replacement:
+                existing_member.group = volunteer_in_role_at_event.group
 
 
 FILTER_ALL = "All"

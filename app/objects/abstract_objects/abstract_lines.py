@@ -48,3 +48,10 @@ class DetailLine:
     string: str
     name: str = "Detail"
     open: bool = False
+
+
+def make_long_thing_detail_box(some_string:str):
+    if len(some_string)>100:
+        return DetailLine(string=some_string, name="Detail")
+    else:
+        return some_string

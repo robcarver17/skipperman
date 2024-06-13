@@ -36,10 +36,14 @@ class abstractInterface:
     def make_data_backup(self):
         self.data.make_data_backup()
 
-    def clear_stored_items(self):
+    def flush_cache_to_store(self):
+        self._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+        self._DONT_CALL_DIRECTLY_USE_FLUSH_clear_stored_items()
+
+    def _DONT_CALL_DIRECTLY_USE_FLUSH_clear_stored_items(self):
         self.data.clear_stored_items()
 
-    def save_stored_items(self):
+    def _DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items(self):
         if self.read_only:
             self.log_error("Read only mode - not saving changes")
             return

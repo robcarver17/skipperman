@@ -1,3 +1,5 @@
+from app.objects.groups import Group
+
 from app.objects.events import Event
 
 from app.backend.volunteers.volunteer_rota import MAKE_UNAVAILABLE, get_volunteer_with_role_at_event_on_day, \
@@ -94,7 +96,7 @@ def update_role_for_volunteer_on_day_at_event(interface: abstractInterface,
 def update_group_from_form_for_volunteer_on_day_at_event(interface: abstractInterface,
                                                         volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent):
     try:
-        new_group_from_form = interface.value_from_form(input_name_for_group_and_volunteer(volunteer_in_role_at_event_on_day))
+        new_group_from_form = Group(interface.value_from_form(input_name_for_group_and_volunteer(volunteer_in_role_at_event_on_day)))
     except:
         ## no group dropdown as not relevant or unavailable
         return

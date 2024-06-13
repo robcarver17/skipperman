@@ -39,7 +39,7 @@ def display_form_view_for_volunteer_rota(interface: abstractInterface) -> Form:
                                                               interface=interface,
                                                               sorts_and_filters=sorts_and_filters)
 
-    header_buttons = get_header_buttons_for_rota()
+    header_buttons = get_header_buttons_for_rota(interface)
     material_around_table = get_filters_and_buttons(interface=interface, event=event)
     form = Form(
         ListOfLines(

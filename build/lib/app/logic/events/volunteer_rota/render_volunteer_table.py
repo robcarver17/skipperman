@@ -11,10 +11,11 @@ from app.backend.volunteers.volunteers import get_volunteer_from_id
 from app.data_access.configuration.fixed import COPY_SYMBOL1, NOT_AVAILABLE_SHORTHAND, AVAILABLE_SHORTHAND
 from app.logic.events.volunteer_rota.volunteer_table_buttons import get_location_button, get_skills_button, \
     make_available_button_value_for_volunteer_on_day, copy_button_value_for_volunteer_in_role_on_day, \
-    get_buttons_for_days_at_event, unavailable_button_value_for_volunteer_in_role_on_day, remove_role_button_value_for_volunteer_in_role_on_day
+    get_buttons_for_days_at_event, unavailable_button_value_for_volunteer_in_role_on_day, \
+    remove_role_button_value_for_volunteer_in_role_on_day, copy_previous_role_button_or_blank
 from app.logic.events.volunteer_rota.swapping import get_swap_button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_lines import Line
+from app.objects.abstract_objects.abstract_lines import Line, make_long_thing_detail_box
 
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.abstract_objects.abstract_buttons import Button
@@ -55,7 +56,7 @@ def get_top_row_for_table(event: Event, ready_to_swap: bool) -> RowInTable:
         "Preferred duties",
         "Same/different preference",
         "Skills (click to edit)",
-        "Previous role"
+        "Previous role (click to copy over all days at this event)"
     ]+buttons_for_days_at_event_as_str+
     ["Volunteer notes (editable)",
      "Other information from registration"]
@@ -125,8 +126,9 @@ def get_first_part_of_row_for_volunteer_at_event(data_to_be_stored: DataToBeStor
     preferred = volunteer_at_event.preferred_duties
     same_different = volunteer_at_event.same_or_different
     skills_button = get_skills_button(volunteer=volunteer, data_to_be_stored=data_to_be_stored, ready_to_swap=ready_to_swap)
-    previous = data_to_be_stored.dict_of_volunteers_with_last_roles[volunteer_at_event.volunteer_id]
-
+    previous_role_copy_button = copy_previous_role_button_or_blank(volunteer_at_event=volunteer_at_event,
+                                                                   data_to_be_stored=data_to_be_stored,
+                                                                   ready_to_swap=ready_to_swap)
 
     return [
         name_button,
@@ -134,7 +136,7 @@ def get_first_part_of_row_for_volunteer_at_event(data_to_be_stored: DataToBeStor
         preferred,
         same_different,
         skills_button,
-        previous
+        previous_role_copy_button
     ]
 
 
@@ -146,7 +148,7 @@ def get_last_part_of_row_for_volunteer_at_event(
 
     if ready_to_swap:
         return ['', '']
-    other_information = volunteer_at_event.any_other_information
+    other_information = make_long_thing_detail_box(volunteer_at_event.any_other_information)
     notes = get_notes_input(volunteer_at_event=volunteer_at_event)
 
     return [notes, other_information]

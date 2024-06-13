@@ -17,8 +17,8 @@ from app.objects.events import Event, SORT_BY_START_ASC, list_of_events_excludin
 from app.objects.groups import ListOfCadetIdsWithGroups, GROUP_UNALLOCATED, Group, sorted_locations
 from app.objects.volunteers import ListOfVolunteerSkills, Volunteer
 from app.objects.volunteers_at_event import ListOfVolunteersAtEvent, VolunteerAtEvent
-from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent, VolunteerInRoleAtEvent, NO_ROLE_SET, \
-    FILTER_ALL, FILTER_AVAILABLE, FILTER_UNALLOC_AVAILABLE, FILTER_ALLOC_AVAILABLE, FILTER_UNAVAILABLE
+from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent, VolunteerInRoleAtEvent, \
+    FILTER_ALL, FILTER_AVAILABLE, FILTER_UNALLOC_AVAILABLE, FILTER_ALLOC_AVAILABLE, FILTER_UNAVAILABLE, RoleAndGroup
 
 
 @dataclass
@@ -68,7 +68,7 @@ class DataToBeStoredWhilstConstructingVolunteerRotaPage:
     volunteer_skills: ListOfVolunteerSkills
     volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent
     list_of_volunteers_at_event: ListOfVolunteersAtEvent
-    dict_of_volunteers_with_last_roles: Dict[str, str]
+    dict_of_volunteers_with_last_roles: Dict[str, RoleAndGroup]
 
     def filtered_list_of_volunteers_at_event(self, sorts_and_filters: RotaSortsAndFilters) -> ListOfVolunteersAtEvent:
         skills_filter = sorts_and_filters.skills_filter
@@ -102,7 +102,8 @@ class DataToBeStoredWhilstConstructingVolunteerRotaPage:
     def volunteer_in_role_at_event_on_day(self, volunteer_id: str, day: Day) -> VolunteerInRoleAtEvent:
         return self.volunteers_in_roles_at_event.member_matching_volunteer_id_and_day(volunteer_id=volunteer_id, day=day)
 
-
+    def previous_role_and_group_for_volunteer(self, volunteer_at_event: VolunteerAtEvent) -> RoleAndGroup:
+        return self.dict_of_volunteers_with_last_roles.get(volunteer_at_event.volunteer_id, RoleAndGroup())
 
     def all_roles_match_across_event(self, volunteer_id: str)->bool:
         availability = self.list_of_volunteers_at_event.volunteer_at_event_with_id(volunteer_id=volunteer_id).availablity
@@ -207,14 +208,14 @@ def get_data_to_be_stored_for_volunteer_rota_page(interface: abstractInterface, 
     )
 
 
-def get_dict_of_volunteers_with_last_roles(interface: abstractInterface, list_of_volunteer_ids: List[str], avoid_event: Event) -> Dict[str, str]:
+def get_dict_of_volunteers_with_last_roles(interface: abstractInterface, list_of_volunteer_ids: List[str], avoid_event: Event) -> Dict[str, RoleAndGroup]:
     return dict([
         (volunteer_id, get_last_role_for_volunteer_id(interface=interface, volunteer_id=volunteer_id, avoid_event=avoid_event))
         for volunteer_id in list_of_volunteer_ids
     ])
 
 
-def get_last_role_for_volunteer_id(interface: abstractInterface, volunteer_id: str, avoid_event: Event = arg_not_passed) -> str:
+def get_last_role_for_volunteer_id(interface: abstractInterface, volunteer_id: str, avoid_event: Event = arg_not_passed) -> RoleAndGroup:
     roles = get_all_roles_across_recent_events_for_volunteer_id_as_list(
         interface=interface,
         volunteer_id=volunteer_id,
@@ -222,12 +223,12 @@ def get_last_role_for_volunteer_id(interface: abstractInterface, volunteer_id: s
         sort_by=SORT_BY_START_ASC
     )
     if len(roles)==0:
-        return ""
+        return RoleAndGroup()
 
     return roles[-1] ## most recent role
 
 
-def get_all_roles_across_recent_events_for_volunteer_id_as_list(interface: abstractInterface, volunteer_id: str, sort_by = SORT_BY_START_ASC, avoid_event: Event = arg_not_passed) -> list:
+def get_all_roles_across_recent_events_for_volunteer_id_as_list(interface: abstractInterface, volunteer_id: str, sort_by = SORT_BY_START_ASC, avoid_event: Event = arg_not_passed) -> List[RoleAndGroup]:
     roles_as_dict = get_all_roles_across_recent_events_for_volunteer_id_as_dict(
         interface=interface,
         volunteer_id=volunteer_id,
@@ -236,11 +237,9 @@ def get_all_roles_across_recent_events_for_volunteer_id_as_list(interface: abstr
     )
     return list(roles_as_dict.values())
 
-HOW_MANY_EVENTS = 4 ## normally 3 but include last event
 
-def get_all_roles_across_recent_events_for_volunteer_id_as_dict(interface: abstractInterface, volunteer_id: str, sort_by = SORT_BY_START_ASC, avoid_event: Event = arg_not_passed) -> dict:
+def get_all_roles_across_recent_events_for_volunteer_id_as_dict(interface: abstractInterface, volunteer_id: str, sort_by = SORT_BY_START_ASC, avoid_event: Event = arg_not_passed) -> Dict[Event, RoleAndGroup]:
     list_of_events = get_sorted_list_of_events(interface=interface, sort_by=sort_by)
-    list_of_events = list_of_events[-HOW_MANY_EVENTS:]
     if avoid_event is arg_not_passed:
         pass ## can't exclude so do everything
     else:
@@ -249,18 +248,17 @@ def get_all_roles_across_recent_events_for_volunteer_id_as_dict(interface: abstr
                                                                  sort_by=sort_by,
                                                                  only_past=True)
 
-    roles = [get_role_for_event_and_volunteer_id(interface=interface, event=event, volunteer_id=volunteer_id) for event in list_of_events]
-    roles_dict = dict([(event, role) for event, role in zip(list_of_events, roles) if role is not missing_data])
+    list_of_roles_and_groups = [get_role_and_group_for_event_and_volunteer_id(interface=interface, event=event, volunteer_id=volunteer_id) for event in list_of_events]
+    roles_dict = dict([(event, role_and_group) for event, role_and_group in zip(list_of_events, list_of_roles_and_groups) if not role_and_group.missing])
 
     return roles_dict
 
 
-def get_role_for_event_and_volunteer_id(interface: abstractInterface, volunteer_id: str, event: Event) -> str:
+def get_role_and_group_for_event_and_volunteer_id(interface: abstractInterface, volunteer_id: str, event: Event) -> RoleAndGroup:
     volunteer_data = get_volunteers_in_role_at_event_with_active_allocations(interface=interface, event=event)
-    role = volunteer_data.most_common_role_and_group_at_event_for_volunteer(volunteer_id=volunteer_id)
-    if role==NO_ROLE_SET:
-        return missing_data
-    return role
+    role_and_group = volunteer_data.most_common_role_and_group_at_event_for_volunteer(volunteer_id=volunteer_id)
+
+    return role_and_group
 
 
 def sort_volunteer_data_for_event_by_day_sort_order(

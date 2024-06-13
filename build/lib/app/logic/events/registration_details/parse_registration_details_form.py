@@ -30,7 +30,7 @@ def parse_registration_details_from_form(interface: abstractInterface, event: Ev
         get_registration_details_for_row_in_form_and_alter_registration_data(interface=interface, registration_data=registration_data,
                                                                              original_cadet_in_data = cadet_in_data)
 
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
 def get_registration_details_for_row_in_form_and_alter_registration_data(interface: abstractInterface,
                                                                          original_cadet_in_data: CadetAtEvent,

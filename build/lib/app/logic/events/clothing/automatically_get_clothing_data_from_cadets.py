@@ -94,6 +94,6 @@ def process_new_cadet_clothing_requirements(
 
     clothing_size_from_registration = relevant_row.get_item(CADET_T_SHIRT_SIZE, '')
     add_new_cadet_with_clothing_to_event(interface=interface, event=event, cadet_id=cadet_id, size=clothing_size_from_registration)
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
     interface.log_error("Added clothing for cadet %s" % cadet_name_from_id(interface=interface, cadet_id=cadet_id))
 

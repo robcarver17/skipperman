@@ -71,6 +71,7 @@ def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewFo
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_clear_stored_items()
 
     return interface.get_new_form_given_function(display_form_allocate_cadets)
 
@@ -124,4 +125,4 @@ def make_cadet_available_on_current_day(interface: abstractInterface, add_availa
     event = get_event_from_state(interface)
 
     make_cadet_available_on_day(event=event, cadet_id=cadet_id, day=day, interface=interface)
-    interface.save_stored_items() ## need to do here as don't do in main function
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items() ## need to do here as don't do in main function

@@ -55,8 +55,8 @@ def update_cadets_at_event(interface: abstractInterface, new_cadet_at_event: Cad
         interface.log_error("For existing cadet %s status change from %s to %s don't know how to handle" % (str(new_cadet_at_event),
                                                                                                        original_status.name, new_status.name))
 
-    interface.save_stored_items()
-    interface.clear_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_clear_stored_items()
 
 def update_cadet_at_event_when_status_unchanged(interface: abstractInterface,
                                          event: Event, new_cadet_at_event: CadetAtEvent,

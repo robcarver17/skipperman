@@ -99,7 +99,7 @@ def flag_active_cadet_without_volunteers_and_loop_to_next_cadet(interface: abstr
 
     event = get_event_from_state(interface)
     mark_cadet_at_event_as_unchanged(interface=interface, cadet_id=cadet_id, event=event)
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return next_cadet_in_loop(interface)
 
@@ -140,7 +140,7 @@ def post_form_volunteer_rota_check_changed_cadet_when_availability_changed(
         modify_specific_volunteer_availability_when_cadet_changed(interface=interface, volunteer_id=volunteer_id)
 
     mark_cadet_at_event_as_unchanged(cadet_id=cadet_id, event=event, interface=interface)
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return next_cadet_in_loop(interface)
 
@@ -157,7 +157,7 @@ def post_form_volunteer_rota_check_changed_cadet_when_status_changed_to_deleted_
         modify_specific_volunteer_linkage_at_event_when_cadet_changed(interface=interface, volunteer_id=volunteer_id, cadet_id=cadet_id)
 
     mark_cadet_at_event_as_unchanged(cadet_id=cadet_id, event=event, interface=interface)
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return next_cadet_in_loop(interface)
 

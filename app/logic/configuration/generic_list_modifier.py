@@ -117,7 +117,7 @@ def post_form_edit_generic_list(
     else:
         return BUTTON_NOT_KNOWN
 
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     ## might want to do more
     return display_form_edit_generic_list(existing_list=updated_list, header_text=header_text)

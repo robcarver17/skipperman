@@ -83,7 +83,7 @@ def post_form_edit_cadet_connections_from_rota(
     else:
         raise Exception("Weirdly named button %s pressed" % button)
 
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return display_form_edit_cadet_connections_from_rota(interface)
 

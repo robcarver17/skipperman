@@ -88,7 +88,7 @@ def post_form_when_template_chosen(interface: abstractInterface,
 
     event = get_event_from_state(interface)
     write_field_mapping_for_event(interface=interface,event=event, new_mapping=mapping)
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return form_with_message_and_finished_button(
         "Selected mapping template %s for event %s" % (template_name, str(event)), interface=interface,

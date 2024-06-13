@@ -45,7 +45,7 @@ def post_form_for_upload_custom_field_mapping(interface: abstractInterface):
         mapping = read_mapping_from_csv_file_object(file)
         event = get_event_from_state(interface)
         write_field_mapping_for_event(interface=interface, event=event, new_mapping=mapping)
-        interface.save_stored_items()
+        interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     except Exception as e:
         interface.log_error("Something went wrong uploading file %s" % str(e))

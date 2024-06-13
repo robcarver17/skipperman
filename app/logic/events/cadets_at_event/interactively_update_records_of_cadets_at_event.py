@@ -118,8 +118,8 @@ def process_update_to_cadet_new_to_event(
         event=event, row_in_mapped_wa_event=relevant_row,
         cadet_id=cadet_id
     )
-    interface.save_stored_items()
-    interface.clear_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_clear_stored_items()
 
     return process_next_cadet_at_event(interface)
 

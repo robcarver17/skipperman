@@ -1,6 +1,7 @@
 import secrets
 from pathlib import Path
 
+from app.web.flask.session_data_for_action import clear_session_data_for_all_actions
 from flask import Flask, session
 from flask_login import LoginManager, login_required
 from werkzeug import Request
@@ -83,6 +84,8 @@ def logout():
 ## Two types of entry point:
 @app.route(INDEX_URL)
 def home():
+    ## We do this so on subsequently entering a particular action we have no state saved
+    clear_session_data_for_all_actions()
     return generate_menu_page_html()
 
 

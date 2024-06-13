@@ -91,7 +91,7 @@ def mark_volunteer_as_skipped(interface: abstractInterface,
 
     volunteer_data = VolunteerAllocationData(interface.data)
     volunteer_data.mark_volunteer_as_skipped(row_id=row_id, volunteer_index=volunteer_index, event=event)
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
 
 def get_volunteer_name_and_associated_cadets_for_event(interface: abstractInterface, event: Event, volunteer_id:str, cadet_id:str) -> str:

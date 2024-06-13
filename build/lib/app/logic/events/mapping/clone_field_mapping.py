@@ -73,7 +73,7 @@ def post_form_for_clone_event_field_mapping(interface: abstractInterface):
         return initial_state_form
 
     write_field_mapping_for_event(interface=interface, event=current_event, new_mapping=mapping)
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return form_with_message_and_finished_button("Mapping copied from event %s to %s"
                                                  % (event_description_selected, str(current_event)),

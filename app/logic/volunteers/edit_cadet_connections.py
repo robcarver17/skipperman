@@ -114,7 +114,7 @@ def post_form_edit_cadet_volunteer_connections(
         return previous_form(interface)
     elif button==ADD_CONNECTION_BUTTON_LABEL:
         add_connection_from_form(interface)
-        interface.save_stored_items()
+        interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
         ## might want to do more
         return display_form_edit_cadet_volunteer_connections(interface)
 
@@ -135,7 +135,7 @@ def post_form_edit_cadet_volunteer_connections_when_delete_button_pressed(
     list_of_delete_cadet_buttons = get_list_of_delete_cadet_buttons(connected_cadets)
     if button in list_of_delete_cadet_buttons:
         delete_connection_given_form(interface=interface)
-        interface.save_stored_items()
+        interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
         ## might want to do more
         return display_form_edit_cadet_volunteer_connections(interface)
     else:

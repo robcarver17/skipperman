@@ -162,8 +162,8 @@ def post_form_interactively_update_food_for_cadets_at_event(
     event = get_event_from_state(interface)
 
     add_new_cadet_with_food_to_event(interface=interface, event=event, food_requirements=food_requirements, cadet_id=cadet_id)
-    interface.save_stored_items()
-    interface.clear_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_clear_stored_items()
 
     return process_next_cadet_food_at_event(interface)
 

@@ -40,6 +40,9 @@ class abstractInterface:
         self.data.clear_stored_items()
 
     def save_stored_items(self):
+        if self.read_only:
+            self.log_error("Read only mode - not saving changes")
+            return
         self.data.save_stored_items()
 
     def log_error(self, error_message: str):
@@ -144,10 +147,7 @@ class abstractInterface:
         raise NotImplemented
 
     @property
-    def read_only(self)-> bool:
-        return False
-
-    def toggle_read_only(self):
+    def read_only(self):
         raise NotImplemented
 
 def get_file_from_interface(file_label: str, interface: abstractInterface):

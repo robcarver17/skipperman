@@ -58,7 +58,7 @@ def post_form_edit_individual_cadet(
         return previous_form(interface)
     elif button==SAVE_BUTTON_LABEL:
         modify_cadet_given_form_contents(interface)
-        interface.save_stored_items()
+        interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
         return previous_form(interface)
     else:
         button_error_and_back_to_initial_state_form(interface)

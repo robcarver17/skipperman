@@ -16,9 +16,6 @@ from app.web.menu_define import menu_definition, menu_security_dict
 
 ### Returns HTML for a menu page
 def generate_menu_page_html() -> str:
-    ## We do this so on subsequently entering a particular action we have no state saved
-    clear_session_data_for_all_actions()
-
     ## hide if logged out EXCEPT public
     if authenticated_user():
         html_code_for_menu = generate_menu_html()

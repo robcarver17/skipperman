@@ -29,7 +29,7 @@ def post_form_security(interface: abstractInterface) -> Union[Form, NewForm]:
 
     ## need to be careful here not to try updating deleted user
     save_changes_in_security_form(interface)
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return display_form_security(interface)
 

@@ -128,7 +128,7 @@ def post_form_cadet_committee(
     else:
         button_error_and_back_to_initial_state_form(interface)
 
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return display_form_cadet_committee(interface)
 

@@ -183,7 +183,7 @@ def change_arrangement_given_method_and_current_order_save_and_return_form_again
     save_arrangement_and_group_order(arrangement_and_group_options=arrange_options_and_group_order,
                                      interface=interface, report_type=reporting_options.specific_parameters.report_type)
 
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return interface.get_new_form_given_function(current_form_function)
 
@@ -203,7 +203,7 @@ def change_group_order_and_arrangement_save_and_return_form_again(interface: abs
                                                    new_group_order = new_group_order,
                                                    report_type=reporting_options.specific_parameters.report_type)
 
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return interface.get_new_form_given_function(current_form_function)
 
@@ -211,7 +211,7 @@ def remove_empty_from_group_order_and_arrangement_save_and_return_form_again(int
                                                                                  reporting_options: ReportingOptions) -> NewForm:
     empty_groups = get_empty_groups(reporting_options)
     remove_empty_groups_from_group_order_and_arrangement(interface=interface, empty_groups=empty_groups, reporting_options=reporting_options)
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return interface.get_new_form_given_function(current_form_function)
 
@@ -221,7 +221,7 @@ def add_missing_to_group_order_and_arrangement_save_and_return_form_again(interf
 
     missing_groups = get_missing_groups(reporting_options)
     add_missing_groups_to_group_order_and_arrangement(interface=interface, missing_groups=missing_groups, reporting_options=reporting_options)
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return interface.get_new_form_given_function(current_form_function)
 
@@ -235,7 +235,7 @@ def change_arrangement_matrix_save_and_return_form_again(interface: abstractInte
     new_arrangement_of_columns = reorder_matrix_interface.new_arrangement()
     modify_arrangement_options_given_custom_list(interface=interface, new_arrangement_of_columns=new_arrangement_of_columns, report_type=reporting_options.specific_parameters.report_type)
 
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return interface.get_new_form_given_function(current_form_function)
 

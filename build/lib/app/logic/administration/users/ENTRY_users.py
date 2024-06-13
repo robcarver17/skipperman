@@ -34,8 +34,8 @@ def post_form_security(interface: abstractInterface) -> Union[Form, NewForm]:
         reset_link = generate_reset_message_for_user_name(last_button=last_button, interface=interface)
         interface.log_error(reset_link)
 
-    interface.save_stored_items()
-    interface.clear_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_clear_stored_items()
 
     return display_form_security(interface)
 

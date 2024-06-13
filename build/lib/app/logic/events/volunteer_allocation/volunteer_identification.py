@@ -128,7 +128,7 @@ def process_identification_when_volunteer_matched(interface: abstractInterface, 
                                 event=event,
                                 row_id = current_row_id,
                              volunteer_index = int(current_index))
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return next_volunteer_in_current_row(interface)
 

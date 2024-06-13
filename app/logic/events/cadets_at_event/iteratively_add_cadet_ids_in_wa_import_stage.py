@@ -111,7 +111,7 @@ def process_row_when_cadet_matched(interface: abstractInterface, cadet: Cadet) -
         interface=interface,
         event=event, row_id=row_id, cadet_id=cadet.id
     )
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
     ## run recursively until no more data
     return add_cadet_ids_on_next_row(interface)
 
@@ -202,7 +202,7 @@ def process_form_when_skipping_cadet(interface: abstractInterface)-> Form:
 
     mark_row_as_skip_cadet(event=event, row_id=row_id, interface=interface)
 
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
     ## run recursively until no more data
     return add_cadet_ids_on_next_row(interface)
 

@@ -55,7 +55,7 @@ def next_iteration_over_rows_in_temp_cadet_file(interface: abstractInterface) ->
 def process_when_cadet_to_be_added(interface: abstractInterface, cadet: Cadet)-> Form:
     add_new_verified_cadet(interface=interface, cadet=cadet)
     interface.log_error("Added new cadet %s"% str(cadet))
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return next_iteration_over_rows_in_temp_cadet_file(interface)
 
@@ -117,7 +117,7 @@ def replace_selected_cadet_with_new_cadet(interface):
     existing_cadet = get_cadet_from_list_of_cadets(interface=interface, cadet_selected=cadet_selected)
 
     replace_cadet_with_id_with_new_cadet_details(interface=interface, existing_cadet_id = existing_cadet.id, new_cadet=new_cadet)
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return next_iteration_over_rows_in_temp_cadet_file(interface)
 
@@ -136,7 +136,7 @@ def process_form_when_verified_cadet_to_be_added(interface: abstractInterface) -
 
 def finishing_processing_file(interface: abstractInterface)-> NewForm:
     remove_temp_file()
-    interface.clear_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_clear_stored_items()
     clear_cadet_state(interface)
 
     return interface.get_new_display_form_for_parent_of_function(display_verify_adding_cadet_from_list_form)

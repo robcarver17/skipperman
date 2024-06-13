@@ -101,8 +101,8 @@ def post_form_add_volunteer_food_to_event(interface: abstractInterface):
     event = get_event_from_state(interface)
 
     add_new_volunteer_with_food_to_event(interface=interface, event=event, food_requirements=food_requirements, volunteer_id=volunteer_id)
-    interface.save_stored_items()
-    interface.clear_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_clear_stored_items()
 
 
     return next_volunteer_with_food_in_event(interface)

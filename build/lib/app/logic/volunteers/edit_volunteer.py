@@ -86,7 +86,7 @@ def post_form_edit_individual_volunteer(
         return previous_page_form
     elif button==SAVE_BUTTON_LABEL:
         modify_volunteer_given_form_contents(interface=interface)
-        interface.save_stored_items()
+        interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
         return previous_page_form
     else:
         return button_error_and_back_to_initial_state_form(interface)

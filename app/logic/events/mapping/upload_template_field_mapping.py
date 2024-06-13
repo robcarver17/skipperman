@@ -55,7 +55,7 @@ def post_form_for_upload_template_field_mapping(interface: abstractInterface):
 
     print("template name %s, mapping %s" % (template_name, str(mapping)))
     write_template(template_name=template_name, new_mapping=mapping, interface=interface)
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
 
     return form_with_message_and_finished_button("Uploaded new template %s" % (template_name), interface=interface,

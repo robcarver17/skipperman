@@ -37,7 +37,7 @@ def add_volunteer_at_event_with_form_contents(interface: abstractInterface):
                                                volunteer_id=volunteer_at_event.volunteer_id,
                                                list_of_connected_cadet_ids=list_of_cadet_ids_to_permanently_connect)
 
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
 
 def get_volunteer_at_event_from_form_contents(interface: abstractInterface):

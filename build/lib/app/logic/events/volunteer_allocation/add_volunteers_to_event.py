@@ -61,7 +61,7 @@ def process_identified_volunteer_at_event(interface: abstractInterface) -> Union
         return next_volunteer_in_event(interface)
     elif already_added:
         update_cadet_connections_when_volunteer_already_at_event(interface=interface, event=event, volunteer_id=volunteer_id)
-        interface.save_stored_items()
+        interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
         return next_volunteer_in_event(interface)
     else:
@@ -105,7 +105,7 @@ def process_new_volunteer_at_event_with_active_cadets_and_where_no_manual_interv
                            event=event,
                            volunteer_at_event=volunteer_at_event)
 
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
     return next_volunteer_in_event(interface)
 
 

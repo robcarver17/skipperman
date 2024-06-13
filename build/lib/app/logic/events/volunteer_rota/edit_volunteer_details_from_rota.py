@@ -73,7 +73,7 @@ def post_form_confirm_volunteer_details_from_rota(interface: abstractInterface):
     else:
         raise button_error_and_back_to_initial_state_form(interface)
 
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return go_back_to_parent_form(interface)
 

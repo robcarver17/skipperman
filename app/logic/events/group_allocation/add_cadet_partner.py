@@ -110,7 +110,7 @@ def add_matched_partner_cadet_with_duplicate_registration(interface: abstractInt
                                                                             day=day,
                                                                             original_cadet=primary_cadet, new_cadet=new_cadet
                                                                             )
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     clear_cadet_id_at_event(interface)
 

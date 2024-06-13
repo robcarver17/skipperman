@@ -1,18 +1,20 @@
+from flask import session
 
-from app.data_access.data import data_api
-from app.web.flask.flask_interface import flaskInterface
 from app.web.html.url import TOGGLE_READ_ONLY
 
-PSEUDO_ACTION_NAME_FOR_MENU = 'Menu'
-
-menu_interface = flaskInterface(data=data_api, action_name=PSEUDO_ACTION_NAME_FOR_MENU)
+SESSION_KEY_FOR_TOGGLE = "__read_only"
 
 
 def toggle_read_only():
-    menu_interface.toggle_read_only()
+    print(session)
+    if is_read_only():
+        session[SESSION_KEY_FOR_TOGGLE] = False
+    else:
+        session[SESSION_KEY_FOR_TOGGLE] = True
+    print(session)
 
 def read_only_or_not_html():
-    if menu_interface.read_only:
+    if is_read_only():
         inner_text = 'Read only: Click to change'
     else:
         inner_text = 'Click for read only'
@@ -20,3 +22,5 @@ def read_only_or_not_html():
     return '<a href="/%s" class="w3-bar-item w3-button w3-padding-16">%s</a>' % (TOGGLE_READ_ONLY, inner_text)
 
 
+def is_read_only():
+    return session.get(SESSION_KEY_FOR_TOGGLE, False)

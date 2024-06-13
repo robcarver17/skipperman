@@ -209,7 +209,7 @@ def process_form_when_event_verified(interface: abstractInterface) -> Form:
         )
         return initial_state_form
 
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return form_with_message_and_finished_button("Added event %s" % str(event), interface=interface,
                                                  function_whose_parent_go_to_on_button_press=display_form_view_for_add_event)

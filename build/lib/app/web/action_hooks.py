@@ -40,7 +40,7 @@ class SiteActions:
             raise MissingMethod
 
         interface = flaskInterface(action_name=action_name, display_and_post_form_function_maps=form_mapping, data=data_api)
-        interface.clear_stored_items() ## avoid caching issues
+        interface._DONT_CALL_DIRECTLY_USE_FLUSH_clear_stored_items() ## avoid caching issues
 
         return LogicApi(interface)
 

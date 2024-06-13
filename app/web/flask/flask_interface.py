@@ -16,6 +16,7 @@ from app.web.flask.session_data_for_action import (
     clear_session_data_for_action,
 )
 from app.web.html.forms import HTML_BUTTON_NAME, html_as_date
+from app.web.html.read_only import is_read_only
 from app.web.html.url import get_action_url, LINK_LOGIN
 from app.objects.constants import (
     NoFileUploaded,
@@ -120,28 +121,17 @@ class flaskInterface(abstractInterface):
 
         return '%s%s/?username=%s&password=%s' % (url, LINK_LOGIN,username, new_password)
 
-    @property
-    def read_only(self)-> bool:
-        read_only =self.get_persistent_value(READ_ONLY_KEY, FALSE)
-
-        if read_only==FALSE:
-            return False
-        elif read_only==TRUE:
-            return True
-        else:
-            raise Exception
-
-    def toggle_read_only(self):
-        if self.read_only:
-            self.set_persistent_value(READ_ONLY_KEY, FALSE)
-        else:
-            self.set_persistent_value(READ_ONLY_KEY, TRUE)
 
     def main_url(self):
         return flask.request.host_url
 
     def get_current_logged_in_username(self) -> str:
         return get_username()
+
+    @property
+    def read_only(self):
+        return is_read_only()
+
 
 READ_ONLY_KEY = '__read_only'
 

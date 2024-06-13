@@ -48,7 +48,7 @@ def post_form_edit_individual_volunteer_skills_from_rota(
     else:
         raise Exception("Button %s not recognised" % button)
 
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return previous_form(interface)
 

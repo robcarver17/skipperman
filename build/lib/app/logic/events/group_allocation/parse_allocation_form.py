@@ -40,7 +40,7 @@ def update_data_given_allocation_form(interface: abstractInterface):
     ## has to be done in one go because of swaps
     update_boat_info_for_all_cadets_in_form(interface=interface, allocation_data=allocation_data)
 
-    interface.save_stored_items()
+    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
 
 def do_allocation_for_cadet_at_event(

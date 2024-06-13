@@ -93,11 +93,10 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - downloadable food report with summaries, plus cadet&volunteer details
 - copy across for all boats
 - show history of group allocation for volunteers
+- custom font size in reports
 
 ### Needed before CW2024
 
-- cusotm font size in reports
-- change the way regular saving is done
 - clear all volunteer allocations
 
 ### General required before handover to Jonny:
@@ -110,6 +109,7 @@ REPORTING:
 - create a list of key volunteers to invite to curry evening (REPORT on volunteers)
 - anything that is displayed on screen can be exported to .csv eg reg details, volunteer rota (and imported...???)
 - create a report of cadets
+- reset various options to default values
 
 
 BACKEND:
@@ -118,6 +118,8 @@ BACKEND:
 - refactor weird intermediate steps (allocation data object)
 - ensure clean seperation backend/data, data and logic
 - editable user sailing groups, volunteer roles, skills: but plain text file so can replace configuration
+- backup still not ideal; introduce checks, file locking ...
+- read only mode?
 
 INTERFACE:
 - memorise whether summary buttons pressed

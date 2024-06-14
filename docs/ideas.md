@@ -99,11 +99,11 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - click on 'previous role' to clone across all days in rota
 - 'copy all' needs to have hard copy and soft copy
 - 'copy first day' as a hard copy; 'copy blanks' as a soft copy
-
+- hard/soft copies in patrol boats
 
 ### Needed before CW2024
 
-- hard/soft copies in patrol boats
+
 
 ### General required before handover to Jonny:
 

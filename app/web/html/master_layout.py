@@ -16,6 +16,6 @@ def get_master_layout(menu_page: bool = False):
     html_head = HtmlHead(title='Skipperman', meta=meta, style_links=links)
     html_header = get_html_header(menu_page=menu_page)
     flash_block = get_flash_block()
-    html_page_master_layout = HtmlPage(head=html_head, header = ListOfHtml([ html_header]), body=ListOfHtml([flash_block, '      <img src="https://bsccadetskipper.pythonanywhere.com/static/2Z9A9327.JPG">']), footer=ListOfHtml([]))
+    html_page_master_layout = HtmlPage(head=html_head, header = ListOfHtml([ html_header]), body=ListOfHtml([flash_block]), footer=ListOfHtml([]))
 
     return html_page_master_layout

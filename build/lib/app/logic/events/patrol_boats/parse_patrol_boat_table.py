@@ -5,10 +5,10 @@ from app.backend.forms.swaps import is_ready_to_swap
 from app.backend.volunteers.patrol_boats import add_named_boat_to_event_with_no_allocation, \
     remove_patrol_boat_and_all_associated_volunteer_connections_from_event, \
     remove_volunteer_from_patrol_boat_on_day_at_event, \
-    copy_across_allocation_of_boats_at_event, \
+    copy_across_earliest_allocation_of_boats_at_event, \
     get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day, \
     BoatDayVolunteer, NO_ADDITION_TO_MAKE, ListOfBoatDayVolunteer, \
-    add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts
+    add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts, copy_across_boats_at_event
 from app.backend.volunteers.volunteer_rota import update_role_at_event_for_volunteer_on_day_at_event, \
     get_volunteer_role_at_event_on_day, copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days
 from app.backend.volunteers.volunteers import add_boat_related_skill_for_volunteer, \
@@ -55,9 +55,10 @@ def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str
         raise Exception("button type %s not recognised" % copy_type)
 
     if copy_boat:
-        copy_across_allocation_of_boats_at_event(interface=interface, day=day, volunteer_id=volunteer_id, event=event)
+        copy_across_boats_at_event(interface=interface, day=day, volunteer_id=volunteer_id, event=event, allow_overwrite=True)
 
     if copy_role:
+        ### FIX ME CHECK OVERWRITE STATUS
         copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
             interface=interface,
             event=event,

@@ -188,12 +188,21 @@ def get_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonBar:
         return ButtonBar([])
     save_button = Button(SAVE_CHANGES_BUTTON_LABEL, nav_button=True)
     back_button = get_back_button_for_boat_allocation(interface)
-    return ButtonBar([back_button, save_button, copy_all_boats_button, copy_all_boats_and_roles_buttons])
+    return ButtonBar([back_button, save_button, copy_all_boats_button, copy_all_boats_and_roles_buttons, copyover_all_boats_button, copyover_all_boats_and_roles_buttons])
 
-COPY_ALL_BOATS_BUTTON_LABEL = "Copy all boats (where possible) across days"
-COPY_BOATS_AND_ROLES_BUTTON_LABEL = "Copy all boats and roles (where possible) across days"
+COPY_ALL_BOATS_BUTTON_LABEL = "Copy all boats from earliest allocated boat across days"
+COPYOVER_ALL_BOATS_BUTTON_LABEL = "Overwrite all boats from earliest allocated boat across days"
+COPY_BOATS_AND_ROLES_BUTTON_LABEL = "Copy all boats and roles from earliest allocated boat across days"
+COPYOVER_BOATS_AND_ROLES_BUTTON_LABEL = "Overwrite all boats and roles from earliest allocated boat across days"
+
+
+
 copy_all_boats_button = Button(COPY_ALL_BOATS_BUTTON_LABEL, nav_button=True)
+copyover_all_boats_button = Button(COPYOVER_ALL_BOATS_BUTTON_LABEL, nav_button=True)
+
 copy_all_boats_and_roles_buttons = Button(COPY_BOATS_AND_ROLES_BUTTON_LABEL, nav_button=True)
+copyover_all_boats_and_roles_buttons = Button(COPYOVER_BOATS_AND_ROLES_BUTTON_LABEL, nav_button=True)
+
 
 def get_back_button_for_boat_allocation(interface: abstractInterface):
     in_swap_state = is_ready_to_swap(interface)

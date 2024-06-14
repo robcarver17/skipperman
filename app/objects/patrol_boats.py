@@ -115,7 +115,7 @@ class ListOfVolunteersAtEventWithPatrolBoats(GenericListOfObjectsWithIds):
         self.add_volunteer_with_boat(volunteer_id=original_volunteer_id, day=original_day, patrol_boat_id=swapping_boat_id)
         self.add_volunteer_with_boat(volunteer_id=volunteer_id_to_swap_with, day=day_to_swap_with, patrol_boat_id=original_boat_id)
 
-    def copy_across_allocation_of_boats_at_event(self, volunteer_id: str, day: Day, volunteer_availablility_at_event: DaySelector):
+    def copy_across_allocation_of_boats_at_event(self, volunteer_id: str, day: Day, volunteer_availablility_at_event: DaySelector, allow_overwrite: bool = True):
         current_boat_id = self.which_boat_id_is_volunteer_on_today(volunteer_id=volunteer_id, day=day)
         if current_boat_id is missing_data:
             raise Exception("Can't copy %s on day %s as not allocated" % (volunteer_id, day.name))
@@ -123,8 +123,15 @@ class ListOfVolunteersAtEventWithPatrolBoats(GenericListOfObjectsWithIds):
         for other_day in volunteer_availablility_at_event.days_available():
             if other_day==day:
                 continue
-            self.remove_volunteer_from_patrol_boat_on_day_at_event(volunteer_id=volunteer_id, day=other_day)
-            self.add_volunteer_with_boat(volunteer_id=volunteer_id, patrol_boat_id=current_boat_id, day=other_day)
+            already_allocated = self.is_volunteer_already_on_a_boat_on_day(volunteer_id=volunteer_id, day=other_day)
+            if already_allocated:
+                if allow_overwrite:
+                    self.remove_volunteer_from_patrol_boat_on_day_at_event(volunteer_id=volunteer_id, day=other_day)
+                    self.add_volunteer_with_boat(volunteer_id=volunteer_id, patrol_boat_id=current_boat_id, day=other_day)
+                else:
+                    continue
+            else:
+                self.add_volunteer_with_boat(volunteer_id=volunteer_id, patrol_boat_id=current_boat_id, day=other_day)
 
     def volunteer_is_on_same_boat_for_all_days(self, volunteer_id: str, event: Event)-> bool:
         all_items = self.list_of_all_items_excluding_unallocated()

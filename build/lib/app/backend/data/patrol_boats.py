@@ -38,13 +38,14 @@ class PatrolBoatsData():
                                                                event=event)
 
     def copy_across_allocation_of_boats_at_event(self, event: Event, day: Day,
-                                                 volunteer_id: str):
+                                                 volunteer_id: str, allow_overwrite: bool = True):
 
         list_of_voluteers_at_event_with_patrol_boats = self.get_list_of_voluteers_at_event_with_patrol_boats(event)
         volunteer_availablility_at_event = self.volunteer_availablility_at_event(event=event, volunteer_id=volunteer_id)
         list_of_voluteers_at_event_with_patrol_boats.copy_across_allocation_of_boats_at_event(day=day,
                                                                                               volunteer_id=volunteer_id,
-                                                                                              volunteer_availablility_at_event=volunteer_availablility_at_event)
+                                                                                              volunteer_availablility_at_event=volunteer_availablility_at_event,
+                                                                                              allow_overwrite=allow_overwrite)
         self.save_list_of_voluteers_at_event_with_patrol_boats(list_of_volunteers_at_event_with_patrol_boats=list_of_voluteers_at_event_with_patrol_boats,
                                                                event=event)
 
@@ -198,6 +199,13 @@ class PatrolBoatsData():
 
         return in_both_x_and_y(list_of_volunteer_ids_at_event, list_of_volunteer_ids_assigned_to_boat_and_day)
 
+
+    def get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day(self,event: Event) -> List[str]:
+        list_of_ids = []
+        for day in event.weekdays_in_event():
+            list_of_ids+=self.get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(event=event, day=day)
+
+        return list(set(list_of_ids))
 
     def get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(self,
                                                                        event: Event,

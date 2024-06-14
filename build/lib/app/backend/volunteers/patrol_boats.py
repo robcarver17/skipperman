@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+from app.objects.constants import missing_data
+
 from app.backend.volunteers.volunteers import get_volunteer_name_from_id, get_sorted_list_of_volunteers
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -102,6 +104,10 @@ def get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(interface: ab
     patrol_boat_data = PatrolBoatsData(interface.data)
     return patrol_boat_data.get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(event=event, day=day)
 
+def get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day(interface: abstractInterface,
+                                                               event: Event) -> List[str]:
+    patrol_boat_data = PatrolBoatsData(interface.data)
+    return patrol_boat_data.get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day(event)
 
 def get_sorted_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day(
         interface: abstractInterface,
@@ -184,15 +190,30 @@ def remove_volunteer_from_patrol_boat_on_day_at_event(interface: abstractInterfa
     patrol_boat_data.remove_volunteer_from_patrol_boat_on_day_at_event(volunteer_id=volunteer_id, event=event, day=day)
 
 
-def copy_across_allocation_of_boats_at_event(interface: abstractInterface, event: Event, day: Day, volunteer_id: str):
+def copy_across_earliest_allocation_of_boats_at_event(interface: abstractInterface, event: Event, volunteer_id: str, allow_overwrite: bool):
+    earliest_day = earliest_day_with_boat_for_volunteer(interface=interface, event=event, volunteer_id=volunteer_id)
+    if earliest_day is None:
+        return
+    copy_across_boats_at_event(interface=interface, event=event, volunteer_id=volunteer_id, day=earliest_day, allow_overwrite=allow_overwrite)
+
+def copy_across_boats_at_event(interface: abstractInterface, event: Event, volunteer_id: str, day: Day, allow_overwrite: bool):
     patrol_boat_data = PatrolBoatsData(interface.data)
+
     try:
-        patrol_boat_data.copy_across_allocation_of_boats_at_event(event=event, day=day, volunteer_id=volunteer_id)
+        patrol_boat_data.copy_across_allocation_of_boats_at_event(event=event, day=day, volunteer_id=volunteer_id, allow_overwrite=allow_overwrite)
     except Exception as e:
         name = get_volunteer_name_from_id(interface=interface, volunteer_id=volunteer_id)
-        interface.log_error("Can't copy across boat data for %s on %s, error %s, conflicting change made?" % (name, day.name, str()))
+        interface.log_error("Can't copy across boat data for %s on %s, error %s, conflicting change made?" % (name, day.name, str(e)))
 
 
+def earliest_day_with_boat_for_volunteer(interface: abstractInterface, event: Event, volunteer_id: str) -> Day:
+    patrol_boat_data = PatrolBoatsData(interface.data)
+    for day in event.weekdays_in_event():
+        if patrol_boat_data.get_boat_allocated_to_volunteer_on_day_at_event(event=event, volunteer_id=volunteer_id, day=day) is missing_data:
+            continue
+        return day
+
+    return None
 
 def swap_boats_for_volunteers_in_allocation(interface: abstractInterface,
                                             swap_data: SwapData):

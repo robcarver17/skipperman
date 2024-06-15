@@ -7,3 +7,4 @@ openpyxl>=3.0.0
 flask-login==0.6.3
 qrcode==7.4.2
 flask-security==3.0
+markdown==3.6

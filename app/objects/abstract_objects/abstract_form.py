@@ -1,4 +1,5 @@
 import datetime
+from typing import Tuple
 
 from app.objects.abstract_objects.abstract_text import Input
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
@@ -10,14 +11,30 @@ class Form(list):
     def __repr__(self):
         return "Form: contents %s" % super().__repr__()
 
+    @property
+    def title(self) -> str:
+        return getattr(self, '_title', '')
+
+    @title.setter
+    def title(self, new_title: str):
+        setattr(self, '_title', new_title)
+
 @dataclass
 class Link:
     string: str
     url: str
     open_new_window: bool = False
 
+@dataclass
+class HelpLink:
+    text: str
+    help_page_name: str
 
-
+@dataclass
+class Image:
+    filename: str
+    px_height_width: Tuple[int, int] = arg_not_passed
+    ratio_size: int = arg_not_passed
 
 @dataclass
 class NewForm:

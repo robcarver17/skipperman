@@ -197,3 +197,8 @@ def form_with_content_and_finished_button(
         )
     )
 
+
+@dataclass
+class UrlsOfInterest:
+    current_url_for_action: str = arg_not_passed
+    image_directory: str = arg_not_passed

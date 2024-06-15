@@ -14,7 +14,8 @@ from app.objects.volunteers_in_roles import FILTER_OPTIONS
 
 from app.backend.forms.swaps import is_ready_to_swap
 from app.logic.volunteers.ENTRY_view_volunteers import all_sort_types as all_volunteer_name_sort_types
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button, CANCEL_BUTTON_LABEL, main_menu_button
+from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button, CANCEL_BUTTON_LABEL, main_menu_button, \
+    HelpButton
 from app.objects.abstract_objects.abstract_form import MaterialAroundTable, checkboxInput, Link, dropDownInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________, DetailListOfLines
@@ -118,7 +119,8 @@ def get_header_buttons_for_rota(interface: abstractInterface):
         return ButtonBar([cancel_button, Button(SAVE_CHANGES, nav_button=True),
                       Button(ADD_NEW_VOLUNTEER_BUTTON_LABEL, nav_button=True),
                       Button(COPY_ALL_ROLES_BUTTON_LABEL, nav_button=True),
-                          Button(COPY_ALL_FIRST_ROLE_BUTTON_LABEL, nav_button=True)])
+                          Button(COPY_ALL_FIRST_ROLE_BUTTON_LABEL, nav_button=True),
+                           HelpButton('events_volunteer_rota')])
 
 
 

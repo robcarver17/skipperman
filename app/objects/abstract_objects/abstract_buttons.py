@@ -23,6 +23,10 @@ class Button:
     tile: bool = False
     nav_button: bool = False
 
+@dataclass
+class HelpButton:
+    help_page: str
+
 class ButtonBar(List[Button]):
     def __repr__(self):
         return "ButtonBar contents %s" % str(super().__repr__())

@@ -9,9 +9,8 @@ from app.web.html.master_layout import get_master_layout
 from app.web.html.process_abstract_form_to_html import (
     process_abstract_form_to_html,
 )
-from app.web.flask.flask_interface import flaskInterface, get_current_url_from_action_name
+from app.web.flask.flask_interface import get_urls_of_interest
 from flask import send_file, Response
-from app.data_access.data import data_api
 
 ### Returns HTML for an 'action', non menu page
 def generate_action_page_html(action_name: str) -> Union[Html, Response]:
@@ -30,7 +29,8 @@ def generate_action_page_html(action_name: str) -> Union[Html, Response]:
         abstract_form_for_action=abstract_form_for_action, action_name=action_name
     )
 
-    html_page_master_layout= get_master_layout(menu_page=False)
+    html_page_master_layout= get_master_layout(include_read_only_toggle=False,
+                                               include_user_options=True)
     html_page_master_layout.body.append(html_code_for_action_in_layout)
 
     return html_page_master_layout.as_html()
@@ -39,9 +39,9 @@ def generate_action_page_html(action_name: str) -> Union[Html, Response]:
 def from_abstract_to_laid_out_html(
     abstract_form_for_action: Form, action_name: str
 ) -> Html:
-    current_url = get_current_url_from_action_name(action_name=action_name)
+    urls_of_interest = get_urls_of_interest(action_name)
     html_code_for_action = process_abstract_form_to_html(
-        abstract_form_for_action, current_url=current_url
+        abstract_form_for_action, urls_of_interest=urls_of_interest
     )
 
     html_code_for_action_in_layout = add_standard_layout_and_buttons_to_action_code(
@@ -57,3 +57,4 @@ def add_standard_layout_and_buttons_to_action_code(html_code_for_action: Html) -
     )
 
     return html_code_with_buttons
+

@@ -1,12 +1,13 @@
 from typing import Union
-from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button, ButtonBar, HelpButton
 from app.objects.abstract_objects.abstract_form import *
 from app.objects.abstract_objects.abstract_tables import PandasDFTable, ElementsInTable, RowInTable, Table, DetailTable
 from app.objects.abstract_objects.abstract_text import Text, Arrow, up_arrow, down_arrow, \
     right_arrow, left_arrow, up_down_arrow, left_right_arrow, Pointer, Symbol, reg_tm_symbol, copyright_symbol, \
     up_pointer, down_pointer, left_pointer, right_pointer, lightning_symbol, circle_up_arrow_symbol, umbrella_symbol, \
-    at_symbol
+    at_symbol, LinkToHeading
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, DetailListOfLines, DetailLine
+
 from app.web.html.components import *
 from app.web.html.url import INDEX_URL
 from app.web.html.forms import *
@@ -15,56 +16,57 @@ from app.objects.abstract_objects.abstract_form import textInput, dateInput, rad
 DEBUG =False
 TERSE = False
 
-def process_abstract_form_to_html(form: Form, current_url: str) -> Html:
+def process_abstract_form_to_html(form: Form, urls_of_interest: UrlsOfInterest) -> Html:
     if TERSE:
         print("Abstract form %s" % str(form))
-    html_inside_form = get_html_inside_form(form)
+    html_inside_form = get_html_inside_form(form=form, urls_of_interest=urls_of_interest)
+    current_url = urls_of_interest.current_url_for_action
     form = form_html_wrapper(current_url)
 
     return form.wrap_around(html_inside_form)
 
 
-def get_html_inside_form(form: Form) -> Html:
+def get_html_inside_form(form: Form, urls_of_interest: UrlsOfInterest) -> Html:
     return_html = ""
     for element in form:
-        html_this_element = get_html_for_element_in_form(element)
+        html_this_element = get_html_for_element_in_form(element=element, urls_of_interest=urls_of_interest)
         return_html = return_html + html_this_element
 
     return return_html
 
 
-def get_html_for_element_in_form(element) -> Html:
+def get_html_for_element_in_form(element, urls_of_interest: UrlsOfInterest) -> Html:
     if DEBUG:
         print("parsing %s type %s" % (str(element), type(element)))
     if type(element) is Line:
         ## non-nested, treat as line
-        html_this_element = get_html_for_line(line=element)
+        html_this_element = get_html_for_line(line=element, urls_of_interest=urls_of_interest)
     elif type(element) is ListOfLines:
-        html_this_element = get_html_for_list_of_lines(list_of_lines=element)
+        html_this_element = get_html_for_list_of_lines(list_of_lines=element, urls_of_interest=urls_of_interest)
     elif type(element) is DetailListOfLines:
-        html_this_element = get_html_for_detail_list_of_lines(list_of_lines=element)
+        html_this_element = get_html_for_detail_list_of_lines(list_of_lines=element, urls_of_interest=urls_of_interest)
     elif type(element) is DetailTable:
         html_this_element = get_html_for_detail_table(element)
     elif type(element) is ButtonBar:
-        html_this_element = html_bar_wrapper.wrap_around(get_html_for_line(element))
+        html_this_element = html_bar_wrapper.wrap_around(get_html_for_line(element, urls_of_interest=urls_of_interest))
     else:
         ## Single line
-        html_this_element = get_html_for_element_in_line(element)
+        html_this_element = get_html_for_element_in_line(element, urls_of_interest=urls_of_interest)
 
 
     return html_this_element
 
 
-def get_html_for_list_of_lines(list_of_lines: ListOfLines) -> Html:
+def get_html_for_list_of_lines(list_of_lines: ListOfLines, urls_of_interest: UrlsOfInterest = arg_not_passed) -> Html:
     list_of_html_for_each_lines = [
-        get_html_for_element_in_form(line) for line in list_of_lines
+        get_html_for_element_in_form(line, urls_of_interest=urls_of_interest) for line in list_of_lines
     ]
     all_html = " ".join(list_of_html_for_each_lines)
     return html_container_wrapper.wrap_around(all_html)
 
-def get_html_for_detail_list_of_lines(list_of_lines: DetailListOfLines) -> Html:
+def get_html_for_detail_list_of_lines(list_of_lines: DetailListOfLines, urls_of_interest: UrlsOfInterest) -> Html:
     list_of_html_for_each_lines = [
-        get_html_for_element_in_form(line) for line in list_of_lines.list_of_lines
+        get_html_for_element_in_form(line, urls_of_interest=urls_of_interest) for line in list_of_lines.list_of_lines
     ]
     all_html = " ".join(list_of_html_for_each_lines)
     detail_wrapper =get_detail_wrapper(list_of_lines.name, open_detail=list_of_lines.open)
@@ -81,17 +83,18 @@ def get_html_for_detail_table(detail_table: DetailTable) -> Html:
 
     return detail_wrapper.wrap_around(table_html)
 
-def get_html_for_line(line: Line) -> Html:
+def get_html_for_line(line: Line, urls_of_interest: UrlsOfInterest = arg_not_passed) -> Html:
     return html_line_wrapper.wrap_around(
         Html(
             "".join(
                 [
-                    get_html_for_element_in_line(element_in_line)
+                    get_html_for_element_in_line(element_in_line, urls_of_interest=urls_of_interest)
                     for element_in_line in line
                 ]
             )
         )
     )
+
 
 
 def get_html_for_element_in_line(
@@ -109,10 +112,12 @@ def get_html_for_element_in_line(
         Arrow,
         passwordInput,
         Link,
+        HelpLink,
         Heading,
         DetailLine,
+        Image,
         int
-    ]
+    ], urls_of_interest: UrlsOfInterest = arg_not_passed
 ) -> Html:
     if type(element_in_line) is str:
         return Html(element_in_line)
@@ -128,8 +133,16 @@ def get_html_for_element_in_line(
         return get_html_for_text(element_in_line)
     elif type(element_in_line) is Button:
         return get_html_for_button(element_in_line)
+    elif type(element_in_line) is HelpButton:
+        return get_html_for_help_button(element_in_line)
+
     elif type(element_in_line) is Link:
         return get_html_for_link(element_in_line)
+    elif type(element_in_line) is HelpLink:
+        return get_html_for_help_link(element_in_line)
+    elif type(element_in_line) is LinkToHeading:
+        return get_html_for_link_to_heading(element_in_line)
+
     elif type(element_in_line) is textInput:
         return html_form_text_input(
             input_label=element_in_line.input_label,
@@ -202,6 +215,9 @@ def get_html_for_element_in_line(
     elif type(element_in_line) is Heading:
         return get_html_for_heading(element_in_line)
 
+    elif type(element_in_line) is Image:
+        return get_html_image(element_in_line, urls_of_interest=urls_of_interest)
+
     else:
         raise Exception(
             "Type %s of object %s not recognised!"
@@ -221,11 +237,14 @@ def get_html_for_button(button: Button) -> Html:
             nav_button=button.nav_button
         )
 
-def get_html_button_text(button_text) -> Html:
+def get_html_for_help_button(help_button: HelpButton) -> Html:
+    return help_link_button(help_button.help_page)
+
+def get_html_button_text(button_text, urls_of_interest: UrlsOfInterest = arg_not_passed) -> Html:
     if type(button_text) is Line:
-        return get_html_for_line(button_text)
+        return get_html_for_line(button_text, urls_of_interest=urls_of_interest)
     else:
-        return get_html_for_element_in_line(button_text)
+        return get_html_for_element_in_line(button_text, urls_of_interest=urls_of_interest)
 
 def arrow_text(arrow: Arrow) -> str:
     if arrow == up_arrow:
@@ -332,3 +351,9 @@ def get_html_for_table_element(table_element: ElementsInTable) -> Html:
 def get_html_for_link(link: Link):
     return  html_link(url=link.url, string=link.string, open_new_window=link.open_new_window)
 
+def get_html_for_help_link(help_link: HelpLink):
+    return get_help_link(help_text=help_link.text, help_page_name=help_link.help_page_name)
+
+def get_html_for_link_to_heading(link_to_heading: LinkToHeading):
+    url = get_help_url(link_to_heading.help_page)
+    return html_link(url='%s#%s' % (url, link_to_heading.href), string=link_to_heading.link_text_to_show)

@@ -2,9 +2,13 @@
 from typing import List
 
 import pandas as pd
+from app.objects.constants import arg_not_passed
+
+from app.objects.abstract_objects.abstract_form import Image
+from app.objects.abstract_objects.abstract_interface import UrlsOfInterest
 
 from app.objects.abstract_objects.abstract_text import Heading
-from app.web.html.url import get_action_url
+from app.web.html.url import get_action_url, get_help_url
 
 
 ## primitives
@@ -124,10 +128,18 @@ def get_html_for_heading(heading: Heading):
     heading_size = 'h%d' % heading.size
     string = heading.text
 
-    heading_text = '<%s %s">%s</%s>' % (heading_size, centring, string, heading_size)
+    id_str = 'id = "%s"' % heading.href
+    heading_text = '<%s %s %s">%s</%s>' % (heading_size, centring, id_str, string, heading_size)
 
     return html_container_wrapper.wrap_around(heading_text)
 
+def help_link_button(help_page_name: str):
+    url = get_help_url(help_page_name)
+    return small_button_with_link(label="Help", url=url, open_new_window=True)
+
+def get_help_link(help_text: str, help_page_name: str):
+    url = get_help_url(help_page_name)
+    return html_link(url=url, string = help_text, open_new_window=False)
 
 def menu_item_for_action(label, action_name):
     return menu_item_with_link(url=get_action_url(action_name), label=label)
@@ -138,7 +150,42 @@ def menu_item_with_link(label, url):
     """ %  (url, label)
 
 
-def small_button_with_link(label, url):
+def small_button_with_link(label, url, open_new_window: bool = False):
+    if open_new_window:
+        target = 'target = "_blank"'
+    else:
+        target = ''
+
     return  """
-    '<a class = "w3-btn w3-dark-grey"  href="%s"> %s </a>' 
-    """ %  (url, label)
+    '<a class = "w3-btn w3-dark-grey"  href="%s" %s> %s </a>' 
+    """ %  (url, target, label)
+
+
+
+def get_html_image(image: Image, urls_of_interest: UrlsOfInterest):
+    return html_image_given_components(
+        image_directory=urls_of_interest.image_directory,
+        image=image
+    )
+
+def html_image_given_components( image_directory: str, image: Image):
+    passed_height_width= image.px_height_width is not arg_not_passed
+    passed_ratio_size = image.ratio_size is not arg_not_passed
+
+    if passed_height_width and passed_ratio_size:
+        print("Can't do both, choosing ratio")
+        auto_width = image.ratio_size
+        size_str = 'style = "height: %d%% width: %d%%; object-fit: contain"' % (auto_width, auto_width)
+    elif passed_ratio_size:
+        auto_width = image.ratio_size
+        size_str = 'style = "height: %d%% width: %d%%; object-fit: contain"' % (auto_width, auto_width)
+    elif passed_height_width:
+        height = image.px_height_width[0]
+        width = image.px_height_width[1]
+        size_str = 'height = "%d" width = "%d" ' % (height, width)
+    else:
+        size_str= ''
+
+    source_string ='src="%s/%s"' %(image_directory, image.filename)
+
+    return '<img %s %s >' % (source_string, size_str)

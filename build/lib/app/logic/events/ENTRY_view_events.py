@@ -9,9 +9,9 @@ from app.objects.events import SORT_BY_START_DSC, ListOfEvents
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
-    NewForm,
+    NewForm, Image,
 )
-from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button, ButtonBar, HelpButton
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.events.constants import (
     ADD_EVENT_BUTTON_LABEL,

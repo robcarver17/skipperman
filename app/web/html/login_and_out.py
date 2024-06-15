@@ -6,8 +6,8 @@ from app.web.flask.security import get_username
 def get_login_link_html_code():
     return '<a href="/%s" class="w3-bar-item w3-button w3-padding-16">Login</a>' % LOGIN_URL
 
-def get_read_write_logout_and_chanage_password_link_html_code(menu_page: bool):
-    if menu_page:
+def get_read_write_logout_and_chanage_password_link_html_code(include_read_only_toggle: bool):
+    if include_read_only_toggle:
         read_only_html_string = read_only_or_not_html()
     else:
         ## don't offer the option or will get messed up

@@ -1,13 +1,10 @@
 from dataclasses import dataclass
 
 import flask
-from app.objects.generic import FALSE, TRUE
 from werkzeug.exceptions import RequestEntityTooLarge
 
-from app.data_access.configuration.configuration import HOMEPAGE
 from app.data_access.data import data_api
-from app.objects.abstract_objects.abstract_lines import ListOfLines
-from app.objects.abstract_objects.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_interface import abstractInterface, UrlsOfInterest
 from app.web.flask.flash import flash_error
 from app.web.flask.security import get_username
 
@@ -17,14 +14,14 @@ from app.web.flask.session_data_for_action import (
 )
 from app.web.html.forms import HTML_BUTTON_NAME, html_as_date
 from app.web.html.read_only import is_read_only
-from app.web.html.url import get_action_url, LINK_LOGIN
+from app.web.html.url import get_action_url, LINK_LOGIN, STATIC_DIRECTORY
 from app.objects.constants import (
     NoFileUploaded,
     missing_data,
     arg_not_passed,
     NoButtonPressed,
 )
-from flask import request, url_for
+from flask import request
 
 
 @dataclass
@@ -170,6 +167,20 @@ def uploaded_file(input_name: str = "file"):
     return file
 
 
-def get_current_url_from_action_name(action_name:str) -> str:
+def get_urls_of_interest(action_name: str = arg_not_passed) -> UrlsOfInterest:
+    return UrlsOfInterest(
+        current_url_for_action=get_current_url_from_action_name(action_name),
+        image_directory=get_image_directory_url()
+    )
+
+def get_current_url_from_action_name(action_name:str = arg_not_passed) -> str:
+    if action_name is arg_not_passed:
+        return arg_not_passed
     interface = flaskInterface(action_name=action_name, data=data_api)
     return interface.current_url
+
+def get_image_directory_url():
+    abstractInterface = flaskInterface(data=data_api)
+    home_page =abstractInterface.main_url()
+    return "/"+STATIC_DIRECTORY
+

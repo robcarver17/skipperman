@@ -448,6 +448,7 @@ app/objects/abstract_objects/../../data_access/configuration/configuration.yaml
 app/web/__init__.py
 app/web/action_hooks.py
 app/web/action_pages.py
+app/web/documentation_pages.py
 app/web/menu_define.py
 app/web/menu_pages.py
 app/web/../data_access/configuration/configuration.yaml

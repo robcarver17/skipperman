@@ -1,5 +1,6 @@
 #
 homepage: "https://bsccadetskipper.pythonanywhere.com/"
+#homepage: http://127.0.0.1:5000/
 datapath: "skipperman_data" ## directory in users home directory where data stored; only change for test purposes
 backuppath: "skipperman_backup"
 userdata: "skipperman_user_data" ## special directory for username and password hashes (plus maybe user specific config)

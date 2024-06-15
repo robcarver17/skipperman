@@ -17,6 +17,8 @@ public_reporting_directory = os.path.join(home_directory, PUBLIC_REPORTING_SUBDI
 upload_directory = os.path.join(home_directory, UPLOADS)
 download_directory = os.path.join(home_directory, DOWNLOAD_DIRECTORY)
 
+skipperman_directory = os.path.join(home_directory, 'skipperman')
+docs_directory = os.path.join(skipperman_directory, 'docs')
 
 try:
     os.mkdir(public_reporting_directory)

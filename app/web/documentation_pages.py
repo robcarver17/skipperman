@@ -1,8 +1,10 @@
+import os.path
+
+from app.data_access.file_access import docs_directory
 from app.web.html.components import (
     Html,
 )
 from app.web.html.master_layout import get_master_layout
-from app.data_access.primitives import get_relative_pathname_from_list
 
 
 def generate_help_page_html(help_page_name: str) -> Html:
@@ -23,9 +25,7 @@ def get_help_text_as_html_from_markdown(help_page_name: str) -> str:
         return 'Cannot find help file reference for %s' % help_page_name
 
     ## IMPORTANT: In the unlikely event we move the config file, this needs changing
-    full_helper_file_with_path = get_relative_pathname_from_list(
-        [documentation_directory, helper_file_name]
-    )
+    full_helper_file_with_path = os.path.join(docs_directory, helper_file_name)
 
     try:
         with open(full_helper_file_with_path, "r", encoding="utf-8") as input_file:

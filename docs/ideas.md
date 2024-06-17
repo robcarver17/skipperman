@@ -103,8 +103,11 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 ### Needed before CW2024
 
-
-
+- hard copy button for volunteers
+- volunteer report in event order, not natural order
+- add rain check button even if no role
+- add volunteer initial button name is wrong
+- 
 ### General required before handover to Jonny:
 
 ADMIN:

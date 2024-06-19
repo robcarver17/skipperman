@@ -7,7 +7,7 @@ from app.backend.data.security import change_password_for_user
 from app.objects.users_and_security import default_admin_user_if_none_defined
 from app.web.flask.flash import flash_error, flash_log
 from app.web.flask.security import get_all_flask_users, get_username
-from app.web.menu_pages import generate_menu_page_html
+from app.web.menus.menu_pages import generate_menu_page_html
 
 
 # If using template these need to match

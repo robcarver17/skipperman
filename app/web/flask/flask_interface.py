@@ -12,9 +12,10 @@ from app.web.flask.session_data_for_action import (
     SessionDataForAction,
     clear_session_data_for_action,
 )
-from app.web.html.forms import HTML_BUTTON_NAME, html_as_date
+from app.web.html.forms import html_as_date
+from app.web.html.components import HTML_BUTTON_NAME
 from app.web.html.read_only import is_read_only
-from app.web.html.url import get_action_url, LINK_LOGIN, STATIC_DIRECTORY
+from app.web.html.url import get_action_url, LINK_LOGIN, STATIC_DIRECTORY, INDEX_URL
 from app.objects.constants import (
     NoFileUploaded,
     missing_data,
@@ -175,7 +176,7 @@ def get_urls_of_interest(action_name: str = arg_not_passed) -> UrlsOfInterest:
 
 def get_current_url_from_action_name(action_name:str = arg_not_passed) -> str:
     if action_name is arg_not_passed:
-        return arg_not_passed
+        return INDEX_URL
     interface = flaskInterface(action_name=action_name, data=data_api)
     return interface.current_url
 

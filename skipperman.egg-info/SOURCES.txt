@@ -187,6 +187,7 @@ app/data_access/storage_layer/store.py
 app/data_access/storage_layer/../configuration/configuration.yaml
 app/logic/__init__.py
 app/logic/abstract_logic_api.py
+app/logic/menu_define.py
 app/logic/../data_access/configuration/configuration.yaml
 app/logic/administration/ENTRY_view_admin_page.py
 app/logic/administration/__init__.py
@@ -446,12 +447,14 @@ app/objects/abstract_objects/abstract_text.py
 app/objects/abstract_objects/form_function_mapping.py
 app/objects/abstract_objects/../../data_access/configuration/configuration.yaml
 app/web/__init__.py
-app/web/action_hooks.py
-app/web/action_pages.py
-app/web/documentation_pages.py
-app/web/menu_define.py
-app/web/menu_pages.py
 app/web/../data_access/configuration/configuration.yaml
+app/web/actions/__init__.py
+app/web/actions/action_hooks.py
+app/web/actions/action_pages.py
+app/web/actions/../../data_access/configuration/configuration.yaml
+app/web/documentation/__init__.py
+app/web/documentation/documentation_pages.py
+app/web/documentation/../../data_access/configuration/configuration.yaml
 app/web/flask/__init__.py
 app/web/flask/flash.py
 app/web/flask/flask_interface.py
@@ -471,6 +474,9 @@ app/web/html/process_abstract_form_to_html.py
 app/web/html/read_only.py
 app/web/html/url.py
 app/web/html/../../data_access/configuration/configuration.yaml
+app/web/menus/__init__.py
+app/web/menus/menu_pages.py
+app/web/menus/../../data_access/configuration/configuration.yaml
 skipperman.egg-info/PKG-INFO
 skipperman.egg-info/SOURCES.txt
 skipperman.egg-info/dependency_links.txt

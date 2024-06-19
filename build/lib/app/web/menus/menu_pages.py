@@ -1,10 +1,17 @@
+from app.web.html.url import get_action_url
+
+from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
+
+from app.web.flask.flask_interface import get_urls_of_interest
+
+from app.objects.abstract_objects.abstract_form import Form
+from app.objects.abstract_objects.abstract_buttons import HelpButton, ButtonBar, Button
+
+from app.web.html.process_abstract_form_to_html import process_abstract_form_to_html, process_abstract_objects_to_html
+
 from app.web.flask.security import get_access_group_for_current_user, authenticated_user
 from app.web.html.components import (
-    Html,
-    menu_item_for_action,
-)
-from app.web.html.components import (
-    html_container_wrapper,
+    Html
 )
 from app.web.html.master_layout import get_master_layout
 from app.logic.menu_define import menu_definition, menu_security_dict
@@ -20,21 +27,45 @@ def generate_menu_page_html() -> str:
         html_code_for_menu = ""
 
     html_page_master_layout= get_master_layout(include_read_only_toggle=True,
-                                               include_user_options=True,
-                                               include_main_menu_help=True)
+                                               include_user_options=True)
     html_page_master_layout.body.append(html_code_for_menu)
 
     return html_page_master_layout.as_html()
 
 
 def generate_menu_html() -> Html:
+    urls_of_interest = get_urls_of_interest()
+
+    menu_as_form = get_menu_as_abstract_objects()
+    menu_as_html = process_abstract_objects_to_html(menu_as_form, urls_of_interest=urls_of_interest)
+
+    return menu_as_html
+
+def get_menu_as_abstract_objects() -> Form:
+    nav_bar = get_nav_bar_for_main_menu()
+    buttons = get_menu_buttons_for_actions()
+
+    return Form(ListOfLines(
+        [nav_bar,
+         buttons]
+    ).add_Lines()
+    )
+
+
+def get_nav_bar_for_main_menu() -> ButtonBar:
+    navbar = \
+                    ButtonBar([HelpButton('main-menu')])
+
+    return navbar
+
+
+def get_menu_buttons_for_actions() -> list:
     filtered_menu_definition = filter_menu_for_user_permissions(menu_definition)
-    button_text = ""
+    list_of_buttons = []
     for label, action_name in filtered_menu_definition.items():
-        button_text+= menu_item_for_action(label=label, action_name=action_name)
+        list_of_buttons.append(Button(label = label, tile=True, url = get_action_url(action_name)))
 
-    return html_container_wrapper.wrap_around(button_text)
-
+    return Line(list_of_buttons)
 
 def filter_menu_for_user_permissions(menu_definition: dict):
     new_menu = dict([

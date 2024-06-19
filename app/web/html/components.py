@@ -135,30 +135,9 @@ def get_html_for_heading(heading: Heading):
 
 def help_link_button(help_page_name: str):
     url = get_help_url(help_page_name)
-    return small_button_with_link(label="Help", url=url, open_new_window=True)
-
-def get_help_link(help_text: str, help_page_name: str):
-    url = get_help_url(help_page_name)
-    return html_link(url=url, string = help_text, open_new_window=False)
-
-def menu_item_for_action(label, action_name):
-    return menu_item_with_link(url=get_action_url(action_name), label=label)
-
-def menu_item_with_link(label, url):
-    return  """
-    '<a class = "wbig-btn w3-theme"  href="%s"> %s </a>' 
-    """ %  (url, label)
-
-
-def small_button_with_link(label, url, open_new_window: bool = False):
-    if open_new_window:
-        target = 'target = "_blank"'
-    else:
-        target = ''
-
-    return  """
-    '<a class = "w3-btn w3-dark-grey"  href="%s" %s> %s </a>' 
-    """ %  (url, target, label)
+    return html_button("Help",
+                       url=url, open_new_window=True,
+                       nav_button=True)
 
 
 
@@ -189,3 +168,53 @@ def html_image_given_components( image_directory: str, image: Image):
     source_string ='src="%s/%s"' %(image_directory, image.filename)
 
     return '<img %s %s >' % (source_string, size_str)
+
+
+HTML_BUTTON_NAME = "action"
+
+
+def html_button(button_text, button_value=arg_not_passed, big_button: bool = False, menu_tile = False, nav_button = False, url = '',
+                open_new_window: bool = False):
+
+    button_name = HTML_BUTTON_NAME
+    if button_value == arg_not_passed:
+        button_value = button_text
+    if big_button:
+        #size = 'style="font-size : 20px; width: 100%; height: 100px;"'
+        size = 'style="font-size : 20px"'
+    else:
+        size = ""
+
+    if menu_tile:
+        style_str = ' class = "wbig-btn w3-theme" '
+    elif nav_button:
+        style_str = 'class = "w3-btn w3-dark-grey"'
+    else:
+        style_str = ''
+
+
+    if url=='':
+        html = Html(
+            '<button %s name="%s" type="submit" value="%s" %s>%s</button>'
+            % (style_str, button_name, button_value, size, button_text)
+        )
+    else:
+        if open_new_window:
+            target = 'target = "_blank"'
+        else:
+            target = ''
+
+        html= Html( '<a  href="%s" %s> <button %s>%s</button>  </a>'  %  (url, target, style_str, button_text))
+    return html
+
+
+def small_button_with_link(label, url, open_new_window: bool = False):
+    ## Shouldn't really be required but button breaks for main menu
+    if open_new_window:
+        target = 'target = "_blank"'
+    else:
+        target = ''
+
+    return Html("""
+    '<a class = "w3-btn w3-dark-grey"  href="%s" %s> %s </a>' 
+    """ % (url, target, label))

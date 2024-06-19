@@ -1,6 +1,5 @@
 HOME = "Home"
 INDEX_URL = "/"
-MENU_PREFIX = "menu"
 ACTION_PREFIX = "action"
 HELP_PREFIX = "help"
 LOGIN_URL = 'login'
@@ -16,7 +15,3 @@ def get_help_url(help_page_name: str):
     if len(help_page_name)==0:
         return ''
     return "/%s/%s" % (HELP_PREFIX, help_page_name)
-
-def get_menu_url(menu_name: str):
-    return "/%s/%s" % (MENU_PREFIX, menu_name)
-

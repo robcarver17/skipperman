@@ -14,6 +14,7 @@ BACK_BUTTON_LABEL = "Back"
 def is_finished_button(button_value: str) -> bool:
     return button_value==FINISHED_BUTTON_LABEL
 
+MAIN_MENU = 'main_menu' ## Not actual index page
 
 @dataclass
 class Button:
@@ -22,6 +23,11 @@ class Button:
     big: bool = False
     tile: bool = False
     nav_button: bool = False
+    url: str = ''
+
+    @property
+    def url_is_main_menu(self):
+        return self.url==MAIN_MENU
 
 @dataclass
 class HelpButton:
@@ -31,7 +37,7 @@ class ButtonBar(List[Button]):
     def __repr__(self):
         return "ButtonBar contents %s" % str(super().__repr__())
 
-main_menu_button = Button(MAIN_MENU_BUTTON_LABEL)
+main_menu_button = Button(MAIN_MENU_BUTTON_LABEL, url = MAIN_MENU, nav_button=True)
 
 
 def get_nav_bar_with_just_back_button() -> ButtonBar:

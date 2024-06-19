@@ -1,5 +1,5 @@
 from typing import Union
-from app.web.action_hooks import SiteActions
+from app.web.actions.action_hooks import SiteActions
 from app.objects.abstract_objects.abstract_form import File, Form
 from app.web.html.components import (
     Html,

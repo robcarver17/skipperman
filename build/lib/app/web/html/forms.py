@@ -1,4 +1,3 @@
-from typing import Callable
 import datetime
 
 from app.web.html.components import Html, HtmlWrapper
@@ -15,33 +14,6 @@ def form_html_wrapper(current_url: str):
 
 
 ## Buttons
-HTML_BUTTON_NAME = "action"
-
-
-
-def html_button(button_text, button_value=arg_not_passed, big_button: bool = False, menu_tile = False, nav_button = False):
-    button_name = HTML_BUTTON_NAME
-    if button_value == arg_not_passed:
-        button_value = button_text
-    if big_button:
-        #size = 'style="font-size : 20px; width: 100%; height: 100px;"'
-        size = 'style="font-size : 20px"'
-    else:
-        size = ""
-
-    if menu_tile:
-        style_str = ' class = "wbig-btn w3-theme" '
-    elif nav_button:
-        style_str = 'class = "w3-btn w3-dark-grey"'
-    else:
-        style_str = ''
-
-    return Html(
-        '<button %s name="%s" type="submit" value="%s" %s>%s</button>'
-        % (style_str, button_name, button_value, size, button_text)
-    )
-
-
 
 
 def html_form_text_input(

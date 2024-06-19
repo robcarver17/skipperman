@@ -1,14 +1,15 @@
 from typing import Union
-from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button, ButtonBar, HelpButton
+from app.objects.abstract_objects.abstract_buttons import  Button, ButtonBar, HelpButton
 from app.objects.abstract_objects.abstract_form import *
 from app.objects.abstract_objects.abstract_tables import PandasDFTable, ElementsInTable, RowInTable, Table, DetailTable
 from app.objects.abstract_objects.abstract_text import Text, Arrow, up_arrow, down_arrow, \
     right_arrow, left_arrow, up_down_arrow, left_right_arrow, Pointer, Symbol, reg_tm_symbol, copyright_symbol, \
     up_pointer, down_pointer, left_pointer, right_pointer, lightning_symbol, circle_up_arrow_symbol, umbrella_symbol, \
-    at_symbol, LinkToHeading, outline_left_right_arrow
+    at_symbol, outline_left_right_arrow
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, DetailListOfLines, DetailLine
 
 from app.web.html.components import *
+from app.web.html.components import html_button, small_button_with_link
 from app.web.html.url import INDEX_URL
 from app.web.html.forms import *
 from app.objects.abstract_objects.abstract_form import textInput, dateInput, radioInput, checkboxInput
@@ -19,16 +20,16 @@ TERSE = False
 def process_abstract_form_to_html(form: Form, urls_of_interest: UrlsOfInterest) -> Html:
     if TERSE:
         print("Abstract form %s" % str(form))
-    html_inside_form = get_html_inside_form(form=form, urls_of_interest=urls_of_interest)
+    html_inside_form = process_abstract_objects_to_html(form, urls_of_interest=urls_of_interest)
     current_url = urls_of_interest.current_url_for_action
     form = form_html_wrapper(current_url)
 
     return form.wrap_around(html_inside_form)
 
 
-def get_html_inside_form(form: Form, urls_of_interest: UrlsOfInterest) -> Html:
+def process_abstract_objects_to_html(list_of_abstract_objects, urls_of_interest: UrlsOfInterest) -> Html:
     return_html = ""
-    for element in form:
+    for element in list_of_abstract_objects:
         html_this_element = get_html_for_element_in_form(element=element, urls_of_interest=urls_of_interest)
         return_html = return_html + html_this_element
 
@@ -138,10 +139,6 @@ def get_html_for_element_in_line(
 
     elif type(element_in_line) is Link:
         return get_html_for_link(element_in_line)
-    elif type(element_in_line) is HelpLink:
-        return get_html_for_help_link(element_in_line)
-    elif type(element_in_line) is LinkToHeading:
-        return get_html_for_link_to_heading(element_in_line)
 
     elif type(element_in_line) is textInput:
         return html_form_text_input(
@@ -226,16 +223,22 @@ def get_html_for_element_in_line(
 
 
 def get_html_for_button(button: Button) -> Html:
-    if button == main_menu_button:
-        return small_button_with_link("Main menu", url=INDEX_URL)
-    else:
-        return html_button(
-            button_text=get_html_button_text(button.label),
-            button_value=button.value,
-            big_button = button.big,
-            menu_tile=button.tile,
-            nav_button=button.nav_button
-        )
+
+    if button.url_is_main_menu:
+        return get_html_for_menu_button()
+
+    return html_button(
+        button_text=get_html_button_text(button.label),
+        button_value=button.value,
+        big_button = button.big,
+        menu_tile=button.tile,
+        nav_button=button.nav_button,
+        url = button.url
+    )
+
+def get_html_for_menu_button() -> Html:
+    return small_button_with_link(label="Main menu", url = INDEX_URL, open_new_window=False)
+
 
 def get_html_for_help_button(help_button: HelpButton) -> Html:
     return help_link_button(help_button.help_page)
@@ -352,10 +355,3 @@ def get_html_for_table_element(table_element: ElementsInTable) -> Html:
 
 def get_html_for_link(link: Link):
     return  html_link(url=link.url, string=link.string, open_new_window=link.open_new_window)
-
-def get_html_for_help_link(help_link: HelpLink):
-    return get_help_link(help_text=help_link.text, help_page_name=help_link.help_page_name)
-
-def get_html_for_link_to_heading(link_to_heading: LinkToHeading):
-    url = get_help_url(link_to_heading.help_page)
-    return html_link(url='%s#%s' % (url, link_to_heading.href), string=link_to_heading.link_text_to_show)

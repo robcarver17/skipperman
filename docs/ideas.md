@@ -105,6 +105,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 ### Needed before CW2024
 
 - overwrite / fill copy options for patrol boats
+- add PB2 () to patrol boats rendering
   
 ### General required before handover to Jonny:
 

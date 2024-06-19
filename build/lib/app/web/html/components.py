@@ -135,9 +135,7 @@ def get_html_for_heading(heading: Heading):
 
 def help_link_button(help_page_name: str):
     url = get_help_url(help_page_name)
-    return html_button("Help",
-                       url=url, open_new_window=True,
-                       nav_button=True)
+    return small_button_with_link(label="Help", url=url, open_new_window=True)
 
 
 

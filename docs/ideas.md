@@ -33,8 +33,8 @@ A key design decision is how the GUI is implemented and deployed; a web front en
 
 Skipperman also needs to be flexible enough so that it can cope with eg changes in WA event fields without rewriting code.
 
-
 ## A few questions - Sam
+
 ### Q:How is data storage going to work? Are we going to do cloud storage? Otherwise we would have a different copy for each user that then would need merging.
 
 A: Mostly this is single user, but the main exception would be the volunteer rotas where the skipper and deputy will work on these in colloboration so there might be a case for having a merge feature for this specific use case.

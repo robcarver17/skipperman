@@ -99,12 +99,11 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - click on 'previous role' to clone across all days in rota
 - 'copy all' needs to have hard copy and soft copy
 - 'copy first day' as a hard copy; 'copy blanks' as a soft copy
-- hard/soft copies in patrol boats
+- volunteer report in event order, not natural order
+
 
 ### Needed before CW2024
 
-- add volunteer initial button name is wrong
-- volunteer report in event order, not natural order
 - overwrite / fill copy options for patrol boats
   
 ### General required before handover to Jonny:

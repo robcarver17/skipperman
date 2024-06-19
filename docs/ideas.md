@@ -106,6 +106,7 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 
 - overwrite / fill copy options for patrol boats
 - add PB2 () to patrol boats rendering
+- exclude both copy buttons when one is superflous
   
 ### General required before handover to Jonny:
 

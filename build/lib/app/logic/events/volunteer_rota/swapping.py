@@ -3,7 +3,7 @@ from typing import Tuple, Union
 from app.backend.forms.swaps import is_ready_to_swap, SwapButtonState, store_swap_state, get_swap_state
 from app.backend.volunteers.volunteer_rota import swap_roles_for_volunteers_in_allocation, \
     swap_roles_and_groups_for_volunteers_in_allocation
-from app.data_access.configuration.fixed import SWAP_SHORTHAND1, SWAP_SHORTHAND2
+from app.data_access.configuration.fixed import SWAP_SHORTHAND, SWAP_SHORTHAND2
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_rota.volunteer_table_buttons import generic_button_value_for_volunteer_id_and_day, \
     get_list_of_generic_button_values_across_days_and_volunteers, from_known_button_to_volunteer_id_and_day
@@ -31,7 +31,7 @@ def get_swap_button(volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
                                             interface=interface)
     else:
 
-        return Button(label=Line([SWAP_SHORTHAND1, SWAP_SHORTHAND2]), value=swap_button_value_for_volunteer_in_role_on_day(
+        return Button(label=Line([SWAP_SHORTHAND, SWAP_SHORTHAND2]), value=swap_button_value_for_volunteer_in_role_on_day(
             volunteer_in_role_at_event_on_day
         ))
 

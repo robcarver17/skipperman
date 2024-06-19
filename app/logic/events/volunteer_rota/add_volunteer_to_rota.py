@@ -2,7 +2,8 @@ from typing import Union
 
 from app.backend.volunteers.volunteer_rota import add_volunteer_to_event_with_just_id
 from app.backend.volunteers.volunteer_allocation import get_list_of_volunteers_except_those_already_at_event
-from app.logic.events.constants import CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL, FINAL_VOLUNTEER_ADD_BUTTON_LABEL
+from app.logic.events.constants import CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL, FINAL_VOLUNTEER_ADD_BUTTON_LABEL, \
+    CHECK_FOR_ME_VOLUNTEER_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.logic.events.events_in_state import get_event_from_state
@@ -53,7 +54,7 @@ def get_add_or_select_existing_volunteers_form_in_volunteer_rota(
 
 def post_form_add_new_volunteer_to_rota_at_event(interface: abstractInterface) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
-    if button_pressed==CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL:
+    if button_pressed==CHECK_FOR_ME_VOLUNTEER_BUTTON_LABEL:
         return get_add_or_select_existing_volunteers_form_in_volunteer_rota(interface=interface,
                                                                             first_time_display=False
                                                                             )
@@ -85,7 +86,7 @@ def action_when_specific_volunteer_selected_for_rota(name_of_volunteer: str, int
 def action_when_volunteer_known_for_rota(volunteer: Volunteer, interface: abstractInterface) -> Union[Form, NewForm]:
     event = get_event_from_state(interface)
     add_volunteer_to_event_with_just_id(interface=interface, volunteer_id=volunteer.id, event=event)
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+    interface.flush_cache_to_store()
 
     return previous_form(interface)
 
@@ -104,14 +105,15 @@ interface: abstractInterface,
 
 
 def get_list_of_main_buttons_in_rota( include_final_button: bool) -> Line:
-    check = Button(CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL)
+    check_for_me = Button(CHECK_FOR_ME_VOLUNTEER_BUTTON_LABEL)
     add = Button(FINAL_VOLUNTEER_ADD_BUTTON_LABEL)
     back = Button(CANCEL_BUTTON_LABEL)
 
+
     if include_final_button:
-        main_buttons = Line([back, check,  add])
+        main_buttons = Line([back, check_for_me,  add])
     else:
-        main_buttons = Line([back, check])
+        main_buttons = Line([back, check_for_me])
 
     return main_buttons
 

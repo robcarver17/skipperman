@@ -8,14 +8,16 @@ from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConst
     get_data_to_be_stored_for_volunteer_rota_page, \
     RotaSortsAndFilters, get_sorted_and_filtered_list_of_volunteers_at_event
 from app.backend.volunteers.volunteers import get_volunteer_from_id
-from app.data_access.configuration.fixed import COPY_SYMBOL1, NOT_AVAILABLE_SHORTHAND, AVAILABLE_SHORTHAND
+from app.data_access.configuration.fixed import COPY_OVERWRITE_SYMBOL, COPY_FILL_SYMBOL, NOT_AVAILABLE_SHORTHAND, \
+   REMOVE_SHORTHAND
 from app.logic.events.volunteer_rota.volunteer_table_buttons import get_location_button, get_skills_button, \
-    make_available_button_value_for_volunteer_on_day, copy_button_value_for_volunteer_in_role_on_day, \
+    make_available_button_value_for_volunteer_on_day, copy_overwrite_button_value_for_volunteer_in_role_on_day, \
     get_buttons_for_days_at_event, unavailable_button_value_for_volunteer_in_role_on_day, \
-    remove_role_button_value_for_volunteer_in_role_on_day, copy_previous_role_button_or_blank
+    remove_role_button_value_for_volunteer_in_role_on_day, copy_previous_role_button_or_blank, \
+    copy_fill_button_value_for_volunteer_in_role_on_day
 from app.logic.events.volunteer_rota.swapping import get_swap_button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_lines import Line, make_long_thing_detail_box
+from app.objects.abstract_objects.abstract_lines import Line, make_long_thing_detail_box, ListOfLines
 
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.abstract_objects.abstract_buttons import Button
@@ -56,7 +58,7 @@ def get_top_row_for_table(event: Event, ready_to_swap: bool) -> RowInTable:
         "Preferred duties",
         "Same/different preference",
         "Skills (click to edit)",
-        "Previous role (click to copy over all days at this event)"
+        "Previous role (click to fill and overwrite over all days at this event)"
     ]+buttons_for_days_at_event_as_str+
     ["Volunteer notes (editable)",
      "Other information from registration"]
@@ -159,7 +161,7 @@ def get_allocation_inputs_for_day_and_volunteer(volunteer_at_event: VolunteerAtE
                                                 data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
                                                 ready_to_swap: bool,
                                                 interface: abstractInterface
-                                                ) -> Line:
+                                                ) -> ListOfLines:
 
     volunteer_available_on_day = volunteer_at_event.availablity.available_on_day(day)
     if volunteer_available_on_day:
@@ -181,7 +183,7 @@ def get_allocation_inputs_for_day_and_volunteer_when_available(volunteer_at_even
                                                 data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
                                                 ready_to_swap: bool,
                                                 interface: abstractInterface
-                                                ) -> Line:
+                                                ) -> ListOfLines:
 
     volunteer_in_role_at_event_on_day = data_to_be_stored.volunteer_in_role_at_event_on_day(
         day=day,
@@ -196,23 +198,23 @@ def get_allocation_inputs_for_day_and_volunteer_when_available(volunteer_at_even
 def get_allocation_inputs_for_day_and_volunteer_when_unavailable(volunteer_at_event: VolunteerAtEvent,
                                                 day: Day,
                                                 ready_to_swap: bool,
-                                                ) -> Line:
+                                                ) -> ListOfLines:
 
     if ready_to_swap:
-        return Line(["Unavailable"])
+        return ListOfLines(["Unavailable"])
     else:
         make_available_button = Button("Make available", value=make_available_button_value_for_volunteer_on_day(
             volunteer_id=volunteer_at_event.volunteer_id,
             day=day
         ))
-        return Line([make_available_button])
+        return ListOfLines([make_available_button])
 
 
 
 def get_allocation_inputs_for_day_and_volunteer_in_role_when_available(volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
                                                                data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
                                                                interface: abstractInterface,
-                                                               ready_to_swap: bool) -> Line:
+                                                               ready_to_swap: bool) -> ListOfLines:
 
     group_and_role_inputs = get_role_and_group_allocation_inputs_for_day_and_volunteer_in_role_when_available(
         interface=interface,
@@ -225,7 +227,7 @@ def get_allocation_inputs_for_day_and_volunteer_in_role_when_available(volunteer
         volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day,
         ready_to_swap=ready_to_swap
     )
-    return Line(group_and_role_inputs+buttons)
+    return ListOfLines([group_and_role_inputs,buttons]).add_Lines()
 
 def get_role_and_group_allocation_inputs_for_day_and_volunteer_in_role_when_available(volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
                                                                interface: abstractInterface,
@@ -255,7 +257,6 @@ def get_allocation_inputs_buttons_in_role_when_available(
 
     ## create the buttons
     make_unavailable_button = get_make_unavailable_button_for_volunteer(volunteer_in_role_at_event_on_day)
-    copy_button = get_copy_button_for_volunteer(volunteer_in_role_at_event_on_day)
     remove_role_button = get_remove_role_button_for_volunteer(volunteer_in_role_at_event_on_day)
     swap_button = get_swap_button(volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day,
                                   interface=interface)
@@ -273,21 +274,40 @@ def get_allocation_inputs_buttons_in_role_when_available(
         ## If hiding, then we're halfway through swapping and that's all we will see
         return [swap_button]
 
-    copy_button_required = not data_to_be_stored.all_roles_match_across_event(
-        volunteer_id=volunteer_in_role_at_event_on_day.volunteer_id)
-
-    all_buttons =[]
-    if copy_button_required:
-        all_buttons.append(copy_button)
-
+    all_buttons = get_copy_buttons_for_volunteer(data_to_be_stored=data_to_be_stored, volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day)
     all_buttons.append(swap_button)
     all_buttons.append(remove_role_button)
     all_buttons.append(make_unavailable_button)
 
     return all_buttons
 
-def get_copy_button_for_volunteer(        volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent) -> Button:
-    return Button(label=COPY_SYMBOL1, value=copy_button_value_for_volunteer_in_role_on_day(
+def get_copy_buttons_for_volunteer(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent):
+    any_copy_possible = not data_to_be_stored.all_roles_match_across_event(
+        volunteer_id=volunteer_in_role_at_event_on_day.volunteer_id)
+
+    copy_fill_possible = data_to_be_stored.volunteer_has_empty_available_days_without_role(volunteer_id=volunteer_in_role_at_event_on_day.volunteer_id)
+    copy_ovewrite_required =not data_to_be_stored.volunteer_has_at_least_one_day_in_role_and_all_roles_and_groups_match(volunteer_id=volunteer_in_role_at_event_on_day.volunteer_id)
+
+    overwrite_copy_button = get_overwrite_copy_button_for_volunteer(volunteer_in_role_at_event_on_day)
+    fill_copy_button = get_fill_copy_button_for_volunteer(volunteer_in_role_at_event_on_day)
+
+    all_buttons =[]
+    if any_copy_possible:
+        if copy_ovewrite_required:
+            all_buttons.append(overwrite_copy_button)
+        if copy_fill_possible:
+            all_buttons.append( fill_copy_button)
+
+    return all_buttons
+
+
+def get_overwrite_copy_button_for_volunteer(volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent) -> Button:
+    return Button(label=COPY_OVERWRITE_SYMBOL, value=copy_overwrite_button_value_for_volunteer_in_role_on_day(
+        volunteer_in_role_at_event_on_day
+    ))
+
+def get_fill_copy_button_for_volunteer(volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent) -> Button:
+    return Button(label=COPY_FILL_SYMBOL, value=copy_fill_button_value_for_volunteer_in_role_on_day(
         volunteer_in_role_at_event_on_day
     ))
 
@@ -298,7 +318,7 @@ def get_make_unavailable_button_for_volunteer(        volunteer_in_role_at_event
                                      ))
 
 def get_remove_role_button_for_volunteer(        volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent) -> Button:
-    return  Button(label=AVAILABLE_SHORTHAND, value=remove_role_button_value_for_volunteer_in_role_on_day(
+    return  Button(label=REMOVE_SHORTHAND, value=remove_role_button_value_for_volunteer_in_role_on_day(
         volunteer_in_role_at_event_on_day
     ))
 

@@ -133,6 +133,28 @@ class ListOfVolunteersAtEventWithPatrolBoats(GenericListOfObjectsWithIds):
             else:
                 self.add_volunteer_with_boat(volunteer_id=volunteer_id, patrol_boat_id=current_boat_id, day=other_day)
 
+
+    def volunteer_has_at_least_one_allocated_boat_which_matches_others(self, volunteer_id: str) -> bool:
+        all_items = self.list_of_all_items_excluding_unallocated()
+        list_of_boat_allocations = [item.patrol_boat_id for item in all_items if item.volunteer_id == volunteer_id]
+
+        if len(list_of_boat_allocations)==0:
+            return False
+
+        return list_of_boat_allocations.count(list_of_boat_allocations[0])==len(list_of_boat_allocations)
+
+    def volunteer_has_at_least_one_allocated_boat_and_empty_spaces_to_fill(self, volunteer_id: str,  volunteer_availablility_at_event: DaySelector)-> bool:
+        all_items = self.list_of_all_items_excluding_unallocated()
+        list_of_boat_allocations = [item.patrol_boat_id for item in all_items if item.volunteer_id == volunteer_id]
+        number_of_days_available_at_event = len(volunteer_availablility_at_event.days_available())
+        number_of_allocated_days =len(list_of_boat_allocations)
+        empty_spaces = number_of_days_available_at_event - number_of_allocated_days
+
+        at_least_one_boat = number_of_allocated_days>0
+        has_empty_spaces = empty_spaces>0
+
+        return at_least_one_boat and has_empty_spaces
+
     def volunteer_is_on_same_boat_for_all_days(self, volunteer_id: str, event: Event)-> bool:
         all_items = self.list_of_all_items_excluding_unallocated()
         list_of_boat_allocations = [item.patrol_boat_id for item in all_items if item.volunteer_id == volunteer_id]
@@ -176,7 +198,7 @@ class ListOfVolunteersAtEventWithPatrolBoats(GenericListOfObjectsWithIds):
 
     def add_volunteer_with_boat(self, volunteer_id: str, patrol_boat_id: str, day: Day):
         if self.is_volunteer_already_on_a_boat_on_day(volunteer_id=volunteer_id, day=day):
-            raise Exception("Volunteer can't be on more than one boat for a given day")
+            raise Exception("Volunteer cannot be on more than one boat for a given day")
 
         self.append(VolunteerAtEventWithPatrolBoat(
             volunteer_id=volunteer_id,

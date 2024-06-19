@@ -5,8 +5,8 @@ from app.backend.volunteers.volunteer_rota_data import get_explanation_of_sorts_
 from app.backend.volunteers.volunteer_rota_summary import get_summary_list_of_roles_and_groups_for_events, \
     get_summary_list_of_teams_and_groups_for_events
 from app.data_access.configuration.configuration import VOLUNTEER_SKILLS, WEBLINK_FOR_QUALIFICATIONS
-from app.data_access.configuration.fixed import COPY_SYMBOL1, COPY_SYMBOL2, SWAP_SHORTHAND1, SWAP_SHORTHAND2, \
-    NOT_AVAILABLE_SHORTHAND, AVAILABLE_SHORTHAND
+from app.data_access.configuration.fixed import COPY_OVERWRITE_SYMBOL, SWAP_SHORTHAND,  \
+    NOT_AVAILABLE_SHORTHAND, COPY_FILL_SYMBOL, REMOVE_SHORTHAND
 from app.logic.events.constants import SAVE_CHANGES
 
 from app.logic.events.volunteer_rota.rota_state import get_skills_filter_from_state, get_sorts_and_filters_from_state
@@ -104,8 +104,8 @@ def get_volunteer_skills_filter(interface: abstractInterface):
 SKILLS_FILTER = "skills_filter"
 APPLY_FILTER_BUTTON_LABEL = "Apply filters"
 CLEAR_FILTERS_BUTTON_LABEL = "Clear all filters"
-COPY_ALL_ROLES_BUTTON_LABEL = "Copy from earliest allocated role to empty roles across all days"
-COPY_ALL_FIRST_ROLE_BUTTON_LABEL = "Copy from earliest allocated role across all days, overwriting existing roles"
+COPY_ALL_ROLES_BUTTON_LABEL = "Copy from earliest allocated role to fill empty roles"
+COPY_ALL_FIRST_ROLE_BUTTON_LABEL = "Copy from earliest allocated role to fill empty and overwrite existing roles"
 
 
 filter_button = Button(APPLY_FILTER_BUTTON_LABEL, nav_button=True)
@@ -120,7 +120,7 @@ def get_header_buttons_for_rota(interface: abstractInterface):
                       Button(ADD_NEW_VOLUNTEER_BUTTON_LABEL, nav_button=True),
                       Button(COPY_ALL_ROLES_BUTTON_LABEL, nav_button=True),
                           Button(COPY_ALL_FIRST_ROLE_BUTTON_LABEL, nav_button=True),
-                           HelpButton('events_volunteer_rota')])
+                           HelpButton('volunteer_rota_help')])
 
 
 
@@ -149,21 +149,15 @@ def get_summary_group_table(interface: abstractInterface, event: Event):
 
 
 link = Link(url=WEBLINK_FOR_QUALIFICATIONS, string="See qualifications table", open_new_window=True)
-instructions = DetailListOfLines(ListOfLines(["CANCEL will cancel any changes you make; any other button will save them",
-                            Line(["Key for buttons - Copy: ",
-                                        COPY_SYMBOL1, COPY_SYMBOL2,
-                                        " ; Swap: ", SWAP_SHORTHAND1, SWAP_SHORTHAND2, ", ",
-                                        '; Raincheck: make unavailable: ', NOT_AVAILABLE_SHORTHAND ,
-                                        '; Available, but role undefined', AVAILABLE_SHORTHAND]),
+instructions =ListOfLines(["CANCEL will cancel any changes you make; any other button will save them",
+                            Line(["Key for buttons: Copy, fill and overwrite existing ",
+                                  COPY_OVERWRITE_SYMBOL,
+                                  " ; Copy and fill any unallocated days ",
+                                  COPY_FILL_SYMBOL,
+                                        " ; Swap ", SWAP_SHORTHAND,
+                                        ' ; Raincheck - make unavailable: ', NOT_AVAILABLE_SHORTHAND ,
+                                        ' ; Remove role - but keep as available ', REMOVE_SHORTHAND]),
 
-                            "Click on any day column heading to sort by group and role, or sort volunteers by name, or by the location of their cadet(s)",
-                            "Click on volunteer names to see roles done at previous events, edit days attending, or remove from event. Click on location to see and edit connected cadets. Click on skills to edit volunteer skills.",
-                            "Click on 'unavailable' days to make a volunteer available. Select role = unavailable to make a volunteer unavailable",
-                            "Save after selecting role to see possible group allocations where relevant.",
-                            "Enter any relevant notes, eg will arrive late etc",
-                            "Use filters to see certain categories of volunteer - skills or availability/allocation status",
-                            "Click on summary triangle tabs above to see count of volunteers allocated so far",
-                            link]).add_Lines(),
-                                 name="Instructions")
+                            link]).add_Lines()
 
 ADD_NEW_VOLUNTEER_BUTTON_LABEL = "Add new volunteer to rota"

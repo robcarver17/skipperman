@@ -4,15 +4,15 @@ from app.backend.data.dinghies import load_list_of_patrol_boats_at_event
 from app.backend.forms.swaps import is_ready_to_swap
 from app.backend.volunteers.patrol_boats import get_summary_list_of_boat_allocations_for_events
 from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
-from app.data_access.configuration.fixed import COPY_SYMBOL1, COPY_SYMBOL2, SWAP_SHORTHAND1, SWAP_SHORTHAND2, \
-    BOAT_SHORTHAND, ROLE_SHORTHAND, BOAT_AND_ROLE_SHORTHAND, REMOVE_SHORTHAND
+from app.data_access.configuration.fixed import COPY_OVERWRITE_SYMBOL, SWAP_SHORTHAND, SWAP_SHORTHAND2, \
+    BOAT_SHORTHAND, ROLE_SHORTHAND, BOAT_AND_ROLE_SHORTHAND, REMOVE_SHORTHAND, COPY_FILL_SYMBOL
 from app.logic.events.patrol_boats.elements_in_patrol_boat_table import \
     get_existing_allocation_elements_for_day_and_boat, get_unique_list_of_volunteer_ids_for_skills_checkboxes, \
     get_volunteer_row_to_select_skill
 from app.logic.events.patrol_boats.patrol_boat_dropdowns import get_add_boat_dropdown, \
     get_allocation_dropdown_to_add_volunteer_for_day_and_boat
 from app.logic.events.patrol_boats.patrol_boat_buttons import delete_button_for_boat, DELETE_BOAT_BUTTON_LABEL
-from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, CANCEL_BUTTON_LABEL
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, CANCEL_BUTTON_LABEL, HelpButton
 from app.objects.abstract_objects.abstract_form import Link
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, DetailListOfLines, _______________
@@ -188,13 +188,13 @@ def get_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonBar:
         return ButtonBar([])
     save_button = Button(SAVE_CHANGES_BUTTON_LABEL, nav_button=True)
     back_button = get_back_button_for_boat_allocation(interface)
-    return ButtonBar([back_button, save_button, copy_all_boats_button, copy_all_boats_and_roles_buttons, copyover_all_boats_button, copyover_all_boats_and_roles_buttons])
+    help_button = HelpButton('patrol_boat_help')
+    return ButtonBar([back_button, save_button, copy_all_boats_button, copy_all_boats_and_roles_buttons, copyover_all_boats_button, copyover_all_boats_and_roles_buttons, help_button])
 
-COPY_ALL_BOATS_BUTTON_LABEL = "Copy all boats from earliest allocated boat across days"
-COPYOVER_ALL_BOATS_BUTTON_LABEL = "Overwrite all boats from earliest allocated boat across days"
-COPY_BOATS_AND_ROLES_BUTTON_LABEL = "Copy all boats and roles from earliest allocated boat across days"
-COPYOVER_BOATS_AND_ROLES_BUTTON_LABEL = "Overwrite all boats and roles from earliest allocated boat across days"
-
+COPY_ALL_BOATS_BUTTON_LABEL = "Copy and fill all boats from earliest allocated boat across days"
+COPYOVER_ALL_BOATS_BUTTON_LABEL = "Copy, fill and overwrite all boats from earliest allocated boat"
+COPY_BOATS_AND_ROLES_BUTTON_LABEL = "Copy and fill all boats and roles from earliest allocated boat and role"
+COPYOVER_BOATS_AND_ROLES_BUTTON_LABEL = "Copy, fill and overwrite all boats and roles from earliest allocated boat and role"
 
 
 copy_all_boats_button = Button(COPY_ALL_BOATS_BUTTON_LABEL, nav_button=True)
@@ -215,10 +215,12 @@ def get_back_button_for_boat_allocation(interface: abstractInterface):
 link = Link(url=
             WEBLINK_FOR_QUALIFICATIONS, string="Qualifications table", open_new_window=True)
 instructions_qual_table = ListOfLines([Line(["Tick to specify that a volunteer has PB2 (check don't assume: ", link, " )"])])
-instructions_text = ListOfLines([Line(["Save changes after non button actions. Key for buttons - Copy: ",
-                                       COPY_SYMBOL1, COPY_SYMBOL2,
-                                        "; Swap: ", SWAP_SHORTHAND1, SWAP_SHORTHAND2, ", ",
+instructions_text = ListOfLines([Line(["Save changes after non button actions. Key for buttons: Copy, fill and overwrite existing ",
+                                  COPY_OVERWRITE_SYMBOL,
+                                  "; Copy and fill any unallocated days ",
+                                  COPY_FILL_SYMBOL,
+                                       "; Swap ", SWAP_SHORTHAND, " ; ",
                                        BOAT_SHORTHAND,' = boat, ',
                                        ROLE_SHORTHAND,' = role, ',
                                        BOAT_AND_ROLE_SHORTHAND,' = boat & role. '
-                                        '; Remove: ', REMOVE_SHORTHAND])])
+                                        '; Remove from boat: ', REMOVE_SHORTHAND])])

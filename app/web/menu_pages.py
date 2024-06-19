@@ -23,7 +23,8 @@ def generate_menu_page_html() -> str:
         html_code_for_menu = ""
 
     html_page_master_layout= get_master_layout(include_read_only_toggle=True,
-                                               include_user_options=True)
+                                               include_user_options=True,
+                                               include_main_menu_help=True)
     html_page_master_layout.body.append(html_code_for_menu)
 
     return html_page_master_layout.as_html()

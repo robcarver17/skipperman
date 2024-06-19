@@ -11,7 +11,7 @@ from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.patrol_boats.patrol_boat_buttons import get_list_of_generic_buttons_for_each_volunteer_day_combo, \
     generic_button_name_for_volunteer_in_boat_at_event_on_day, get_button_type_day_volunteer_id_given_button_str
 from app.data_access.configuration.fixed import BOAT_SHORTHAND, BOAT_AND_ROLE_SHORTHAND, \
-    SWAP_SHORTHAND1, SWAP_SHORTHAND2
+    SWAP_SHORTHAND, SWAP_SHORTHAND2
 
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -230,8 +230,8 @@ SWAP_BOATS = "SwapBoats"
 SWAP_BOTH = "SwapBoth"
 SWAP_ROLES = "SwapRoles"
 
-SWAP_BOATS_BUTTON_LABEL = Line([SWAP_SHORTHAND1, SWAP_SHORTHAND2, BOAT_SHORTHAND])
-SWAP_BOTH_BUTTON_LABEL = Line([SWAP_SHORTHAND1, SWAP_SHORTHAND2, BOAT_AND_ROLE_SHORTHAND])
+SWAP_BOATS_BUTTON_LABEL = Line([SWAP_SHORTHAND, SWAP_SHORTHAND2, BOAT_SHORTHAND])
+SWAP_BOTH_BUTTON_LABEL = Line([SWAP_SHORTHAND, SWAP_SHORTHAND2, BOAT_AND_ROLE_SHORTHAND])
 CANCEL_SWAP_BUTTON_LABEL = "SWAPPING - click to cancel"
 SWAP_WITH_BOATS_BUTTON_LABEL = "Swap boats with me"
 SWAP_WITH_BOTH_BUTTON_LABEL = "Swap role&boats with me"

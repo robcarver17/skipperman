@@ -24,7 +24,8 @@ from app.logic.events.patrol_boats.patrol_boat_dropdowns import TOP_ROW_OF_VOLUN
 from app.logic.events.patrol_boats.patrol_boat_buttons import from_delete_button_name_to_boat_name, \
     list_of_delete_buttons_in_patrol_boat_table, from_volunter_remove_button_name_to_volunteer_id_and_day, \
     get_all_remove_volunteer_button_names, get_button_type_day_volunteer_id_given_button_str
-from app.logic.events.patrol_boats.copying import COPY_BOAT, COPY_ROLE, COPY_BOTH, get_list_of_all_types_of_copy_buttons
+from app.logic.events.patrol_boats.copying import COPY_BOAT_OVERWRITE, COPY_ROLE_OVERWRITE, COPY_BOTH_OVERWRITE, \
+    get_list_of_all_types_of_copy_buttons, COPY_ROLE_FILL, COPY_BOAT_FILL, COPY_BOTH_FILL
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -39,30 +40,43 @@ def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str
     event = get_event_from_state(interface)
     copy_type, day, volunteer_id = get_button_type_day_volunteer_id_given_button_str(copy_button)
 
-    if copy_type==COPY_BOAT:
+    if copy_type==COPY_BOAT_OVERWRITE:
         copy_boat=True
         copy_role=False
-
-    elif copy_type==COPY_ROLE:
+        overwrite = True
+    elif copy_type == COPY_BOAT_FILL:
+        copy_boat=True
+        copy_role=False
+        overwrite = False
+    elif copy_type==COPY_ROLE_OVERWRITE:
         copy_boat=False
         copy_role=True
+        overwrite = True
+    elif copy_type == COPY_ROLE_FILL:
+        copy_boat=False
+        copy_role=True
+        overwrite = False
 
-    elif copy_type==COPY_BOTH:
+    elif copy_type==COPY_BOTH_OVERWRITE:
         copy_boat=True
         copy_role=True
+        overwrite = True
+    elif copy_type==COPY_BOTH_FILL:
+        copy_boat = True
+        copy_role = True
+        overwrite = False
 
     else:
         raise Exception("button type %s not recognised" % copy_type)
 
     if copy_boat:
-        copy_across_boats_at_event(interface=interface, day=day, volunteer_id=volunteer_id, event=event, allow_overwrite=True)
+        copy_across_boats_at_event(interface=interface, day=day, volunteer_id=volunteer_id, event=event, allow_overwrite=overwrite)
 
     if copy_role:
-        ### FIX ME CHECK OVERWRITE STATUS
         copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
             interface=interface,
             event=event,
-                    volunteer_id=volunteer_id, day=day)
+                    volunteer_id=volunteer_id, day=day, allow_replacement=overwrite)
 
 
 def get_all_delete_buttons_for_patrol_boat_table(interface: abstractInterface) -> List[str]:

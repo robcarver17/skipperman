@@ -179,6 +179,21 @@ class PatrolBoatsData():
                                                                                                           volunteer_id=volunteer_id)
         return patrol_boat_id
 
+    def volunteer_has_at_least_one_allocated_boat_which_matches_others(self,
+                                               event: Event,
+                                               volunteer_id: str) -> bool:
+
+        list_of_voluteers_at_event_with_patrol_boats = self.get_list_of_voluteers_at_event_with_patrol_boats(event)
+        return list_of_voluteers_at_event_with_patrol_boats.volunteer_has_at_least_one_allocated_boat_which_matches_others(volunteer_id)
+
+    def volunteer_has_at_least_one_allocated_boat_and_empty_spaces_to_fill(self,
+                                               event: Event,
+                                               volunteer_id: str) -> bool:
+
+        list_of_voluteers_at_event_with_patrol_boats = self.get_list_of_voluteers_at_event_with_patrol_boats(event)
+        volunteer_availablility_at_event = self.volunteer_availablility_at_event(event=event, volunteer_id=volunteer_id)
+        return list_of_voluteers_at_event_with_patrol_boats.volunteer_has_at_least_one_allocated_boat_and_empty_spaces_to_fill(
+            volunteer_id=volunteer_id, volunteer_availablility_at_event=volunteer_availablility_at_event)
 
     def volunteer_is_on_same_boat_for_all_days(self,
                                                event: Event,

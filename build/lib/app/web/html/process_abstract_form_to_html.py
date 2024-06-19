@@ -5,7 +5,7 @@ from app.objects.abstract_objects.abstract_tables import PandasDFTable, Elements
 from app.objects.abstract_objects.abstract_text import Text, Arrow, up_arrow, down_arrow, \
     right_arrow, left_arrow, up_down_arrow, left_right_arrow, Pointer, Symbol, reg_tm_symbol, copyright_symbol, \
     up_pointer, down_pointer, left_pointer, right_pointer, lightning_symbol, circle_up_arrow_symbol, umbrella_symbol, \
-    at_symbol, LinkToHeading
+    at_symbol, LinkToHeading, outline_left_right_arrow
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, DetailListOfLines, DetailLine
 
 from app.web.html.components import *
@@ -256,9 +256,11 @@ def arrow_text(arrow: Arrow) -> str:
     elif arrow == left_arrow:
         return "&larr;"
     elif arrow == up_down_arrow:
-        return "&varr;"
+        return "&#8693;"
     elif arrow == left_right_arrow:
-        return "&harr;"
+        return "&#8646;"
+    elif arrow == outline_left_right_arrow:
+        return "&#10234;"
 
     else:
         raise Exception("arrow %s not known" % str(arrow))

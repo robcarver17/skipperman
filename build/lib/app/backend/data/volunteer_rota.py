@@ -198,6 +198,34 @@ class VolunteerRotaData():
 
         return group.group_name
 
+    def  volunteer_has_at_least_one_allocated_role_which_matches_others(self, event: Event, volunteer_id: str) -> bool:
+        list_of_volunteers_in_roles = self.get_list_of_volunteers_in_roles_at_event_for_volunteer(
+            event=event, volunteer_id=volunteer_id
+        )
+        if len(list_of_volunteers_in_roles)==0:
+            return False
+        return list_of_volunteers_in_roles.count(list_of_volunteers_in_roles[0])==len(list_of_volunteers_in_roles)
+
+    def volunteer_has_at_least_one_allocated_role_and_empty_spaces_to_fill(self, event: Event, volunteer_id: str)-> bool:
+        list_of_volunteers_in_roles = self.get_list_of_volunteers_in_roles_at_event_for_volunteer(
+            event=event, volunteer_id=volunteer_id
+        )
+        available_days = self.days_at_event_when_volunteer_available(event=event, volunteer_id=volunteer_id)
+        empty_spaces = len(available_days) - len(list_of_volunteers_in_roles)
+        at_least_one_allocated = len(list_of_volunteers_in_roles)>0
+        has_empty_spaces = empty_spaces>0
+
+        return at_least_one_allocated and has_empty_spaces
+
+    def get_list_of_volunteers_in_roles_at_event_for_volunteer(self, event: Event, volunteer_id: str) -> List[VolunteerInRoleAtEvent]:
+
+        list_of_volunteers_in_roles = [ self.get_volunteer_with_role_at_event_on_day(event=event, day=day,
+                                                                    volunteer_id=volunteer_id) for day in event.weekdays_in_event()]
+        list_of_volunteers_in_roles = [volunteer_in_role for volunteer_in_role in list_of_volunteers_in_roles
+                                        if not volunteer_in_role.no_role_set]
+
+        return list_of_volunteers_in_roles
+
     def get_volunteer_with_role_at_event_on_day(self, event: Event, volunteer_id: str,
                                                 day: Day) -> VolunteerInRoleAtEvent:
         volunteers_in_roles_at_event = self.get_volunteers_in_role_at_event_who_are_also_allocated_to_event(event)

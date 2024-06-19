@@ -98,10 +98,15 @@ def get_all_copy_previous_role_buttons(interface: abstractInterface):
 
     return all_copy_previous_role_buttons
 
-def get_all_copy_individual_role_buttons(interface: abstractInterface):
+def get_all_copy_overwrite_individual_role_buttons(interface: abstractInterface):
     event =get_event_from_state(interface)
 
-    return get_list_of_copy_buttons_for_individual_volunteers(interface=interface, event=event)
+    return get_list_of_copy_overwrite_buttons_for_individual_volunteers(interface=interface, event=event)
+
+def get_all_copy_fill_individual_role_buttons(interface: abstractInterface):
+    event =get_event_from_state(interface)
+
+    return get_list_of_copy_fill_buttons_for_individual_volunteers(interface=interface, event=event)
 
 
 def get_all_make_available_buttons(interface: abstractInterface):
@@ -111,7 +116,8 @@ def get_all_make_available_buttons(interface: abstractInterface):
     return all_buttons
 
 def get_all_copy_buttons(interface: abstractInterface):
-    return get_all_copy_individual_role_buttons(interface)+[COPY_ALL_ROLES_BUTTON_LABEL, COPY_ALL_FIRST_ROLE_BUTTON_LABEL]+get_all_copy_previous_role_buttons(interface)
+    return get_all_copy_overwrite_individual_role_buttons(interface)+get_all_copy_fill_individual_role_buttons(interface)+\
+            [COPY_ALL_ROLES_BUTTON_LABEL, COPY_ALL_FIRST_ROLE_BUTTON_LABEL]+get_all_copy_previous_role_buttons(interface)
 
 def get_all_swap_buttons(interface: abstractInterface):
     event = get_event_from_state(interface)
@@ -147,18 +153,29 @@ def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str
         update_if_copy_first_role_and_overwrite_button_pressed(interface=interface)
     elif copy_button in get_all_copy_previous_role_buttons(interface=interface):
         update_if_copy_previous_role_button_pressed(interface=interface, copy_button=copy_button)
-    elif copy_button in get_all_copy_individual_role_buttons(interface):
-        update_if_individual_copy_button_pressed(interface=interface, copy_button=copy_button)
+    elif copy_button in get_all_copy_overwrite_individual_role_buttons(interface):
+        update_if_individual_copy_overwrite_button_pressed(interface=interface, copy_button=copy_button)
+    elif copy_button in get_all_copy_fill_individual_role_buttons(interface):
+        update_if_individual_copy_fill_button_pressed(interface=interface, copy_button=copy_button)
     else:
         raise Exception("can't handle button %s" % copy_button)
 
-def update_if_individual_copy_button_pressed(interface: abstractInterface, copy_button: str):
+def update_if_individual_copy_overwrite_button_pressed(interface: abstractInterface, copy_button: str):
     volunteer_id, day = from_known_button_to_volunteer_id_and_day(copy_button)
     event = get_event_from_state(interface)
 
     copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(interface=interface, event=event,
                                                                              volunteer_id=volunteer_id, day=day,
                                                                              allow_replacement=True)
+
+def update_if_individual_copy_fill_button_pressed(interface: abstractInterface, copy_button: str):
+    volunteer_id, day = from_known_button_to_volunteer_id_and_day(copy_button)
+    event = get_event_from_state(interface)
+
+    copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(interface=interface, event=event,
+                                                                             volunteer_id=volunteer_id, day=day,
+                                                                             allow_replacement=False)
+
 
 
 def update_if_copy_previous_role_button_pressed(interface: abstractInterface, copy_button: str):
@@ -172,7 +189,8 @@ def update_if_copy_previous_role_button_pressed(interface: abstractInterface, co
     update_role_and_group_at_event_for_volunteer_on_all_days_when_available(interface=interface,
                                                                             event=event,
                                                                             volunteer_id=volunteer_id,
-                                                                            new_role_and_group=previous_role_and_group)
+                                                                            new_role_and_group=previous_role_and_group,
+                                                                        )
 
 
 def update_if_copy_first_role_to_empty_roles_button_pressed(interface: abstractInterface):

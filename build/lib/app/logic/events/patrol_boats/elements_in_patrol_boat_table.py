@@ -58,6 +58,9 @@ def get_existing_allocation_elements_for_volunteer_day_and_boat(
                                                  ) -> Line:
 
     name = get_volunteer_name_from_id(interface=interface, volunteer_id=volunteer_id)
+    has_boat_skill = boat_related_skill_for_volunteer(interface=interface, volunteer_id=volunteer_id)
+    if has_boat_skill:
+        name = "%s (PB2)" % name
     role_dropdown = volunteer_boat_role_dropdown(interface=interface, volunteer_id=volunteer_id, event=event, day=day)
     buttons = get_buttons_for_volunteer_day_and_boat(interface=interface,
                                                      event=event,

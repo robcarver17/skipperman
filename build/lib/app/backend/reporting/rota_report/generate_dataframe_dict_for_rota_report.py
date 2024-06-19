@@ -20,8 +20,7 @@ def get_df_for_reporting_volunteers_with_flags(
 power_boats_only: bool = False
 ) -> Dict[str, pd.DataFrame]:
     data_for_df = DataForDfConstruction.construct_for_event(event=event, interface=interface)
-    list_of_days = days_to_show.days_available()
-
+    list_of_days = days_to_show.align_with_list_of_days(event.weekdays_in_event())
     dict_of_df = {}
     for day in list_of_days:
         day_name = day.name

@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from typing import Dict, List
-
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-
 from app.backend.events import get_sorted_list_of_events
 from app.backend.group_allocations.cadet_event_allocations import \
     load_list_of_cadets_ids_with_group_allocations_active_cadets_only, get_list_of_cadets_unallocated_to_group_at_event
@@ -121,6 +119,35 @@ class DataToBeStoredWhilstConstructingVolunteerRotaPage:
         all_roles_match = len(set(all_roles))<=1
 
         return all_roles_match and all_groups_match
+
+    def volunteer_has_empty_available_days_without_role(self, volunteer_id: str)->bool:
+        availability = self.list_of_volunteers_at_event.volunteer_at_event_with_id(volunteer_id=volunteer_id).availablity
+        all_volunteers_in_roles_at_event_including_no_role_set = [self.volunteer_in_role_at_event_on_day(volunteer_id=volunteer_id,
+                                                                                   day=day)
+                                            for day in availability.days_available()]
+        unallocated_roles = [volunteer_role for volunteer_role in all_volunteers_in_roles_at_event_including_no_role_set if
+                             volunteer_role.no_role_set]
+
+        return len(unallocated_roles)>0
+
+    def volunteer_has_at_least_one_day_in_role_and_all_roles_and_groups_match(self, volunteer_id: str)->bool:
+
+        availability = self.list_of_volunteers_at_event.volunteer_at_event_with_id(volunteer_id=volunteer_id).availablity
+        all_volunteers_in_roles_at_event_including_no_role_set = [self.volunteer_in_role_at_event_on_day(volunteer_id=volunteer_id,
+                                                                                   day=day)
+                                            for day in availability.days_available()]
+        allocated_roles = [volunteer_role.role_and_group for volunteer_role in all_volunteers_in_roles_at_event_including_no_role_set if
+                             not volunteer_role.no_role_set]
+
+
+        if len(allocated_roles)==0:
+            print("No roles, False")
+            return False
+
+        all_match =allocated_roles.count(allocated_roles[0])==len(allocated_roles)
+
+        return all_match
+
 
 def filter_volunteer(volunteer_at_event: VolunteerAtEvent,
                      list_of_volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent,

@@ -54,13 +54,14 @@ class Input:
     input_name: str
 
 
-Arrow = Enum("Arrow", ["Up", "Down", "Left", "Right", "UpDown","LeftRight"])
+Arrow = Enum("Arrow", ["Up", "Down", "Left", "Right", "UpDown","LeftRight", "OutlineLeftRight"])
 up_arrow = Arrow.Up
 down_arrow = Arrow.Down
 right_arrow = Arrow.Right
 left_arrow = Arrow.Left
 up_down_arrow = Arrow.UpDown
 left_right_arrow = Arrow.LeftRight
+outline_left_right_arrow = Arrow.OutlineLeftRight
 
 Symbol = Enum("Symbol", ["Copyright", "RegTradeMark", "Lightning","CircleUpArrow", "Umbrella", "At"])
 copyright_symbol = Symbol.Copyright

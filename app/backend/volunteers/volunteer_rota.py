@@ -350,7 +350,8 @@ def update_role_and_group_at_event_for_volunteer_on_all_days_when_available(inte
     volunteer_rota_data = VolunteerRotaData(interface.data)
     volunteer_rota_data.update_role_and_group_at_event_for_volunteer_on_all_days_when_available(event=event,
                                                                     volunteer_id=volunteer_id,
-                                                                   new_role_and_group=new_role_and_group)
+                                                                   new_role_and_group=new_role_and_group,
+                                                                                            )
 
 
 
@@ -406,3 +407,11 @@ def get_day_with_earliest_valid_role_and_group_for_volunteer_or_none(interface: 
             return day
 
     return None
+
+def volunteer_has_at_least_one_allocated_role_and_empty_spaces_to_fill(interface: abstractInterface, event: Event, volunteer_id: str)-> bool:
+    volunteer_data = VolunteerRotaData(interface.data)
+    return volunteer_data.volunteer_has_at_least_one_allocated_role_and_empty_spaces_to_fill(event=event, volunteer_id=volunteer_id)
+
+def volunteer_has_at_least_one_allocated_role_which_matches_others(interface: abstractInterface, event: Event, volunteer_id: str)-> bool:
+    volunteer_data = VolunteerRotaData(interface.data)
+    return volunteer_data. volunteer_has_at_least_one_allocated_role_which_matches_others(event=event, volunteer_id=volunteer_id)

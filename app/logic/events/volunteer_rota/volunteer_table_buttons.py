@@ -118,9 +118,11 @@ def from_unavailable_button_value_to_volunteer_and_day(button_value:str) -> Tupl
 ## BUTTON VALUES FOR VOLUNTEER IN ROLE
 
 
-def copy_button_value_for_volunteer_in_role_on_day(volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent) -> str:
-    return copy_button_value_for_volunteer_id_and_day(volunteer_in_role_at_event_on_day.volunteer_id, volunteer_in_role_at_event_on_day.day)
+def copy_overwrite_button_value_for_volunteer_in_role_on_day(volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent) -> str:
+    return copy_overwrite_button_value_for_volunteer_id_and_day(volunteer_in_role_at_event_on_day.volunteer_id, volunteer_in_role_at_event_on_day.day)
 
+def copy_fill_button_value_for_volunteer_in_role_on_day(volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent) -> str:
+    return copy_fill_button_value_for_volunteer_id_and_day(volunteer_in_role_at_event_on_day.volunteer_id, volunteer_in_role_at_event_on_day.day)
 
 
 def unavailable_button_value_for_volunteer_in_role_on_day(
@@ -145,8 +147,11 @@ def make_available_button_value_for_volunteer_on_day(volunteer_id: str,
                                                          volunteer_id=volunteer_id,
                                                          day=day)
 
-def copy_button_value_for_volunteer_id_and_day(volunteer_id: str, day: Day) -> str:
-    return generic_button_value_for_volunteer_id_and_day(button_type="COPY", volunteer_id=volunteer_id, day=day)
+def copy_overwrite_button_value_for_volunteer_id_and_day(volunteer_id: str, day: Day) -> str:
+    return generic_button_value_for_volunteer_id_and_day(button_type="COPYOVER", volunteer_id=volunteer_id, day=day)
+
+def copy_fill_button_value_for_volunteer_id_and_day(volunteer_id: str, day: Day) -> str:
+    return generic_button_value_for_volunteer_id_and_day(button_type="COPYFILL", volunteer_id=volunteer_id, day=day)
 
 
 def remove_role_button_value_for_volunteer_id_and_day(volunteer_id: str, day: Day) -> str:
@@ -179,10 +184,13 @@ def get_list_of_make_available_button_values(interface: abstractInterface, event
 
 
 
-def get_list_of_copy_buttons_for_individual_volunteers(interface: abstractInterface, event: Event):
+def get_list_of_copy_overwrite_buttons_for_individual_volunteers(interface: abstractInterface, event: Event):
     return get_list_of_generic_button_values_across_days_and_volunteers(interface=interface, event=event,
-                                                                        value_function=copy_button_value_for_volunteer_id_and_day)
+                                                                        value_function=copy_overwrite_button_value_for_volunteer_id_and_day)
 
+def get_list_of_copy_fill_buttons_for_individual_volunteers(interface: abstractInterface, event: Event):
+    return    get_list_of_generic_button_values_across_days_and_volunteers(interface=interface, event=event,
+                                                                 value_function=copy_fill_button_value_for_volunteer_id_and_day)
 
 
 def get_list_of_remove_role_buttons(interface: abstractInterface, event: Event):

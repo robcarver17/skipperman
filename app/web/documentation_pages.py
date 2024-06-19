@@ -18,9 +18,10 @@ def generate_help_page_html(help_page_name: str) -> Html:
 
 import markdown
 documentation_directory = "docs"
+md = markdown.Markdown(extensions=['toc'])
 
 def get_help_text_as_html_from_markdown(help_page_name: str) -> str:
-    helper_file_name = dict_of_helper_functions.get(help_page_name, None)
+    helper_file_name = "%s.md" % help_page_name
     if helper_file_name is None:
         return 'Cannot find help file reference for %s' % help_page_name
 
@@ -34,15 +35,12 @@ def get_help_text_as_html_from_markdown(help_page_name: str) -> str:
         return 'Cannot open help file %s' % full_helper_file_with_path
 
     try:
-        html = markdown.markdown(text)
+        html = md.convert(text)
     except Exception as e:
         return 'Error %s when processing markdown help file %s' % full_helper_file_with_path
 
     return html
 
-dict_of_helper_functions = {
-    'events_volunteer_rota': 'volunteer_rota_help.md'
-}
 
 
 

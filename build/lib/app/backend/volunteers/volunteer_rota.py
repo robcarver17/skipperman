@@ -91,8 +91,14 @@ def boat_related_role_str_and_group_on_day_for_volunteer_id(interface: abstractI
         return ""
 
 
-def is_possible_to_copy_roles_for_non_grouped_roles_only(interface: abstractInterface, event: Event, volunteer_id:str) -> bool:
+def is_possible_to_copy_roles_for_non_grouped_roles_only(interface: abstractInterface, event: Event, volunteer_id:str, day: Day) -> bool:
     ## Only possible if: none of the roles require a group, and all the roles don't currently match
+
+    role_today= get_volunteer_with_role_at_event_on_day(interface=interface,
+                                                                                                     volunteer_id=volunteer_id,
+                                                                                                    day=day, event=event)
+    if role_today.no_role_set:
+        return False
 
     all_volunteer_positions = get_list_of_volunteer_with_role_across_days_for_volunteer_at_event(
         interface=interface,

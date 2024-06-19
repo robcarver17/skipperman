@@ -100,13 +100,9 @@ Skipperman also needs to be flexible enough so that it can cope with eg changes 
 - 'copy all' needs to have hard copy and soft copy
 - 'copy first day' as a hard copy; 'copy blanks' as a soft copy
 - volunteer report in event order, not natural order
-
-
-### Needed before CW2024
-
 - overwrite / fill copy options for patrol boats
-- add PB2 () to patrol boats rendering
-- exclude both copy buttons when one is superflous
+
+
   
 ### General required before handover to Jonny:
 

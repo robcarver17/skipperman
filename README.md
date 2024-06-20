@@ -12,7 +12,7 @@ Version 1.00
 
 ## Use and documentation
 
-See [main menu gide](/docs/main-menu)
+See [main menu gide](/docs/main-menu.md)
 
 
 ## Release notes

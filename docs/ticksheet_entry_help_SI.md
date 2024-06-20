@@ -9,34 +9,42 @@ On entering the area you will see something like this:
 
 # Printing ticksheets
 
-The first thing you will probably want to do is print your ticksheet to excel (this actually downloads it, and there you can print it). You will probably want to tidy up the formatting a bit, possibly abbreviate medical notes, or import into your own format. Note: The * against a cadets name means they have booked a club boat. Note: As is the case now remember that health information is confidential and should only be retained for as long as required. Paper ticksheets must be returned to the cadet skipper or destroyed. Downloaded files should be deleted after the event.
+You may want to print the ticksheet to excel (this actually downloads it, and there you can print it). You will probably want to tidy up the formatting a bit, possibly abbreviate medical notes, or import into your own format. Note: The * against a cadets name means they have booked a club boat. Note: As is the case now remember that health information is confidential and should only be retained for as long as required. Paper ticksheets must be returned to the cadet skipper or destroyed. Downloaded files should be deleted after the event.
 
-# Entering ticks
+# Entering ticks and awarding qualifications
 
-You can also input your own ticks. There are two edit modes, ‘checkbox’ and ‘dropdown’. In checkbox mode you can only award full or no ticks. In dropdown mode you specify tick values using a dropdown menu; this allows you to aware Not Applicable (NA) or half ticks as well as the binary choice of full tick or no tick. A half-tick means you have introduced a given topic, but the cadet has not yet demonstrated it.
+There are two edit modes, ‘checkbox’ and ‘dropdown’. In checkbox mode you can only award full or no ticks. In dropdown mode you specify tick values using a dropdown menu; this allows you to aware Not Applicable (NA) or half ticks as well as the binary choice of full tick or no tick. A half-tick means you have introduced a given topic, but the cadet has not yet demonstrated it.
 
 ## Checkbox tick entry
 
-In checkbox mode you can only award full ticks, or reset an item to no ticks. You can also give a cadet all their ticks by clicking on their name, or give all your cadets a tick for a specific item by clicking on the relevant item. If nearly all your cadets got a specific item, then it’s quicker to award it to all of them and then remove it from the cadet who missed out.
+In checkbox mode you can only award full ticks, or reset an item to no ticks. You can also give a cadet all their ticks by clicking on the full tick button under their name, or give all your cadets a tick for a specific item by clicking on the relevant item. If nearly all your cadets got a specific item, then it’s quicker to award it to all of them and then remove it from the cadet who missed out.
 
-![ticksheet_entry2.png](/static/ticksheet_entry2.png)
+![ticksheet_entry_SI_1.png](/static/ticksheet_entry_SI_1.png)
 
 Note that if a half tick or N/A tick is awarded, then this can’t be edited to a full or no tick in checkbox mode - as is the case for David and ropework. You will need to go to dropdown mode. 
 
-Also, you can’t edit ticks if a cadet has already been awarded a given level. If a cadet already has this RYA level, then it will be shown in brackets after their name. Note that only senior instructors can award a given qualification; this won’t happen automatically once a cadet has all their ticks. 
+Clicking on a cadet name will award the RYA qualification for the relevant cadet, or remove the qualification (which clearly should only be done if there was an error and you clicked the wrong button). 
 
-When you are done just save your changes (pressing a button to award all ticks to a cadet or to all cadets for a specific item will also save changes). If you don’t want to save, press cancel and that will abandon everything you have done since you last saved.
+When you are done just save your changes (pressing a button to award/remove qualifications, or award all ticks to a cadet or to all cadets for a specific item will also save changes). If you don’t want to save, press cancel and that will abandon everything you have done since you last saved.
 
 
 ## Dropdown tick entry
 
-In dropdown mode you specify tick values using a dropdown menu; this allows you to award Not Applicable (NA) or half ticks as well as the binary choice of full tick or no tick. Clicking on a cadet name or item will award a full tick for all items for a given cadet, or all ticks for that item over all cadets. The other buttons next to the cadet and item name do the same, but for half ticks, NA ticks, and no ticks (which will remove all the ticks for a given cadet or item).
+In dropdown mode you specify tick values using a dropdown menu; this allows you to award Not Applicable (NA) or half ticks as well as the binary choice of full tick or no tick. Clicking on the buttons below a cadet name or item will award that tick level for all items for a given cadet, or set all ticks to that level for that item over all cadets. 
 
-![ticksheet_entry3.png](/static/ticksheet_entry3.png)
+![ticksheet_entry_SI2.png](\static\ticksheet_entry_SI2.png)
 
-Also, you can’t edit ticks if a cadet has already been awarded a given level. If a cadet already has this RYA level, then it will be shown in brackets after their name. Note that only senior instructors can award a given qualification; this won’t happen automatically once a cadet has all their ticks. 
+Clicking on a cadet name will award the RYA qualification for the relevant cadet, or remove the qualification (which clearly should only be done if there was an error and you clicked the wrong button). 
 
 When you are done just save your changes (pressing a button to award all ticks to a cadet or to all cadets for a specific item will also save changes). If you don’t want to save, press cancel and that will abandon everything you have done since you last saved.
+
+# Qualification awards
+
+Important notes:
+
+- you don’t need all the ticks selected to award a qualification. All the ticks will automatically be selected for you when you click the award button.
+- Qualifications that have already been awarded should not be withdrawn because you disagree with a previous decision - only in case of accident
+- if you withdraw a qualification from a cadet, then all their ticks will be wiped out. **So make sure you have a paper record before doing this**
 
 
 # Skipperman on mobile - individual cadet editing
@@ -47,7 +55,7 @@ It’s quite hard to see a big ticksheet on a phone. This isn’t so bad if you 
 
 All the other cadets have gone. I can now proceed with editing in the normal way, for example by clicking on ‘edit using checkboxes’
 
-![ticksheet_entry5.png](/static/ticksheet_entry5.png)
+![ticksheet_entry_SI3.png](/static/ticksheet_entry_SI3.png)
 
 I can easily scroll left and right to see and edit all of his ticks. Notice that the buttons at the top of the column that apply ticks to all cadets are now gone – with only one cadet these aren’t needed. 
 

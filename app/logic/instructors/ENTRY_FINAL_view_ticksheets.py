@@ -1,5 +1,8 @@
 from typing import Union
 
+from app.backend.data.security import get_volunteer_id_of_logged_in_user_or_superuser
+from app.backend.ticks_and_qualifications.ticksheets import can_see_all_groups_and_award_qualifications
+
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.instructors.buttons import get_list_of_all_tick_related_button_names, \
     get_list_of_all_possible_select_cadet_buttons, set_cadet_id
@@ -13,7 +16,7 @@ from app.logic.instructors.ticksheet_table_elements import get_buttons_for_ticks
     SHOW_ALL_CADETS_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, \
     get_nav_bar_with_just_main_menu_and_back_button, \
-    CANCEL_BUTTON_LABEL, Button, ButtonBar
+    CANCEL_BUTTON_LABEL, Button, ButtonBar, main_menu_button, HelpButton
 
 from app.objects.abstract_objects.abstract_text import Heading
 
@@ -39,14 +42,10 @@ def display_form_view_ticksheets_for_event_and_group(interface: abstractInterfac
     event = get_event_from_state(interface)
     group = get_group_from_state(interface)
     qualification = get_qualification_from_state(interface)
-    if not_editing(interface):
-        navbar = get_nav_bar_with_just_main_menu_and_back_button()
-    else:
-        navbar = ButtonBar([Button(CANCEL_BUTTON_LABEL, nav_button=True), Button(SAVE_BUTTON_LABEL, nav_button=True)])
 
     buttons = get_buttons_for_ticksheet(interface)
     instructions = get_instructions_for_ticksheet(interface=interface)
-
+    navbar = get_nav_bar(interface)
     ticksheet_table = get_ticksheet_table(interface=interface,
                                           event=event,
                                           qualification=qualification,
@@ -71,6 +70,24 @@ def display_form_view_ticksheets_for_event_and_group(interface: abstractInterfac
     )
 
     return Form(lines_inside_form)
+
+
+def get_nav_bar(interface: abstractInterface):
+    if not_editing(interface):
+        navbar = [main_menu_button, Button(BACK_BUTTON_LABEL, nav_button=True)]
+    else:
+        navbar = ButtonBar([Button(CANCEL_BUTTON_LABEL, nav_button=True), Button(SAVE_BUTTON_LABEL, nav_button=True)])
+
+    volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser(interface)
+    if can_see_all_groups_and_award_qualifications(interface=interface, event=get_event_from_state(interface), volunteer_id=volunteer_id):
+        help = HelpButton("ticksheet_entry_help_SI")
+    else:
+        help = HelpButton("ticksheet_entry_help")
+
+    navbar.append(help)
+
+    return ButtonBar(navbar)
+
 
 
 def post_form_view_ticksheets_for_event_and_group(interface: abstractInterface) -> Union[Form, NewForm, File]:

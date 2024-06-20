@@ -144,6 +144,10 @@ def is_possible_to_swap_roles_on_one_day_for_non_grouped_roles_only(interface: a
     volunteer_with_role = get_volunteer_with_role_at_event_on_day(interface=interface,
                                                                   volunteer_id=volunteer_id,
                                                                             day=day, event=event)
+
+    if volunteer_with_role.no_role_set:
+        return False
+
     role_requires_group = volunteer_with_role.requires_group
     possible_to_swap = not role_requires_group
 

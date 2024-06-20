@@ -19,7 +19,7 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm, File,
 )
-from app.objects.abstract_objects.abstract_buttons import main_menu_button, ButtonBar, Button
+from app.objects.abstract_objects.abstract_buttons import main_menu_button, ButtonBar, Button, HelpButton
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line, DetailListOfLines
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.backend.data.security import get_volunteer_id_of_logged_in_user_or_superuser
@@ -33,7 +33,7 @@ def display_form_main_instructors_page_sort_order_passed(interface: abstractInte
     navbar = get_nav_bar(interface=interface)
     sort_buttons = sort_buttons_for_event_list
     reports = list_of_all_files_in_public_directory_with_clickable_buttons()
-    header1= Line(Heading("Tick sheets and documents for instructors", centred=True, size=3))
+    header1= Line(get_heading(interface))
     header2= Line(Heading("Select report/document", centred=False, size=4))
     header3 = Line(Heading("Select event to see ticksheet", centred=False, size=4))
 
@@ -61,11 +61,23 @@ def display_form_main_instructors_page_sort_order_passed(interface: abstractInte
 
     return Form(lines_inside_form)
 
+def get_heading(interface: abstractInterface):
+    if is_volunteer_SI_or_super_user(interface):
+        text = "Tick sheets and documents for senior instructors and skippers"
+    else:
+        text = "Tick sheets and documents for instructors"
+
+    return Heading(text, centred=True, size=3)
+
 def get_nav_bar(interface: abstractInterface):
     navbar = [main_menu_button]
     if is_volunteer_SI_or_super_user(interface):
         navbar.append(download_qualification_list_button)
+        help = HelpButton("ticksheets_SI_skipper_help")
+    else:
+        help = HelpButton("ticksheets_help")
 
+    navbar.append(help)
     return ButtonBar(navbar)
 
 DOWNLOAD_QUALIFICATION_LIST = 'Download qualification list'

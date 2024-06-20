@@ -81,7 +81,7 @@ def get_copy_buttons_for_role_in_boat_rota(interface: abstractInterface,
                                            day: Day,
                                            event: Event,
                                            volunteer_id: str) -> List[Button]:
-    any_copy_possible = is_possible_to_copy_roles_for_non_grouped_roles_only(interface=interface, event=event, volunteer_id=volunteer_id)
+    any_copy_possible = is_possible_to_copy_roles_for_non_grouped_roles_only(interface=interface, event=event, volunteer_id=volunteer_id, day=day)
     copy_fill_possible = volunteer_has_at_least_one_allocated_role_and_empty_spaces_to_fill(interface=interface, event=event, volunteer_id=volunteer_id)
     overwrite_copy_required = not volunteer_has_at_least_one_allocated_role_which_matches_others(interface=interface, event=event, volunteer_id=volunteer_id)
     copy_overwrite_button_name = copy_overwrite_button_name_for_volunteer_role_in_boat_at_event_on_day(day=day,
@@ -114,7 +114,7 @@ def get_copy_buttons_for_role_and_boat_in_rota(interface: abstractInterface,
                                                event: Event,
                                                volunteer_id: str) -> List[Button]:
 
-    any_copy_possible = is_possible_to_copy_boat_and_role_allocation(interface=interface, event=event, volunteer_id=volunteer_id)
+    any_copy_possible = is_possible_to_copy_boat_and_role_allocation(interface=interface, event=event, volunteer_id=volunteer_id, day=day)
     fill_copy_possible = is_possible_to_copy_fill_boat_and_role_allocation(interface=interface, event=event, volunteer_id=volunteer_id)
     overwrite_copy_required = is_required_to_copy_overwrite_boat_and_role_allocation(interface=interface, event=event, volunteer_id=volunteer_id)
 
@@ -160,9 +160,10 @@ def is_possible_to_copy_boat_allocation(interface: abstractInterface,
 
 def is_possible_to_copy_boat_and_role_allocation(interface: abstractInterface,
                                                  event: Event,
-                                                volunteer_id: str):
+                                                volunteer_id: str,
+                                                 day: Day):
     boat_possible = is_possible_to_copy_boat_allocation(interface=interface, event=event, volunteer_id=volunteer_id)
-    role_possible = is_possible_to_copy_roles_for_non_grouped_roles_only(interface=interface, event=event, volunteer_id=volunteer_id)
+    role_possible = is_possible_to_copy_roles_for_non_grouped_roles_only(interface=interface, event=event, volunteer_id=volunteer_id, day=day)
 
     return boat_possible and role_possible
 

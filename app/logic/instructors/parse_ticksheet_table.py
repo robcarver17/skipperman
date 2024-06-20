@@ -66,6 +66,10 @@ def apply_ticksheet_edits_for_specific_tick(interface: abstractInterface, curren
     if new_tick == current_tick:
         return
 
+    print("APPLYING")
+    print(cadet_id)
+    print(item_id)
+    print(str(new_tick))
     save_ticksheet_edits_for_specific_tick(interface=interface, cadet_id=cadet_id, item_id=item_id, new_tick=new_tick)
 
 

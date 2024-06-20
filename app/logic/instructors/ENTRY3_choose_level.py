@@ -2,7 +2,7 @@ from typing import Union
 
 from app.backend.data.qualification import QualificationData
 from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button, BACK_BUTTON_LABEL, \
-    get_nav_bar_with_just_main_menu_and_back_button
+    get_nav_bar_with_just_main_menu_and_back_button, main_menu_button, HelpButton
 
 from app.objects.abstract_objects.abstract_text import Heading
 
@@ -23,7 +23,7 @@ def display_form_choose_level_for_group_at_event(interface: abstractInterface) -
     event = get_event_from_state(interface)
     group = get_group_from_state(interface)
     level_buttons = get_level_buttons(interface=interface)
-    navbar = get_nav_bar_with_just_main_menu_and_back_button()
+    navbar = get_nav_bar(interface)
     header = Line(Heading("Tick sheets and reports for instructors: Event: %s, Group: %s; Select level" % (str(event), str(group)), centred=False, size=4))
     lines_inside_form = ListOfLines(
         [
@@ -38,6 +38,13 @@ def display_form_choose_level_for_group_at_event(interface: abstractInterface) -
     )
 
     return Form(lines_inside_form)
+
+
+def get_nav_bar(interface: abstractInterface):
+    navbar = [main_menu_button, Button(BACK_BUTTON_LABEL, nav_button=True), HelpButton("ticksheets_levels_help")]
+
+    return ButtonBar(navbar)
+
 
 
 def get_level_buttons(interface: abstractInterface):

@@ -13,7 +13,8 @@ from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line, _______________
 
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button, BACK_BUTTON_LABEL,  main_menu_button
+from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button, BACK_BUTTON_LABEL, main_menu_button, \
+    HelpButton
 
 from app.logic.events.events_in_state import get_event_from_state
 
@@ -48,6 +49,11 @@ def get_nav_bar(interface: abstractInterface):
     volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser(interface)
     if can_see_all_groups_and_award_qualifications(interface=interface, event=get_event_from_state(interface), volunteer_id=volunteer_id):
         navbar.append(download_qualification_list_button)
+        help = HelpButton("ticksheets_choose_group_SI_skipper_help")
+    else:
+        help = HelpButton("ticksheets_choose_group_help")
+
+    navbar.append(help)
 
     return ButtonBar(navbar)
 

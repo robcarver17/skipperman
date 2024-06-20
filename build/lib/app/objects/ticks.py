@@ -386,11 +386,15 @@ class ListOfCadetsWithTickListItems(GenericListOfObjects):
     def _add_new_cadet_with_tick(self, new_tick: Tick, cadet_id: str,
                                     item_id: str)  -> 'ListOfCadetsWithTickListItems':
 
-        new_ticksheet = self._ensure_existing_cadets_have_potentially_new_item_id(item_id)
         dict_of_ticks_with_items = DictOfTicksWithItem({item_id: new_tick})
 
         cadet_with_tick_list_items =CadetWithTickListItems(cadet_id=cadet_id,
                                dict_of_ticks_with_items=dict_of_ticks_with_items)
+
+        if len(self)==0:
+            return ListOfCadetsWithTickListItems([cadet_with_tick_list_items])
+
+        new_ticksheet = self._ensure_existing_cadets_have_potentially_new_item_id(item_id)
 
         cadet_with_aligned_tick_list_items = cadet_with_tick_list_items.aligned_to_list_of_tick_list_items(
             new_ticksheet.list_of_tick_list_item_ids()

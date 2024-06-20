@@ -1,3 +1,7 @@
+# Recent
+ 
+- data no longer required can be deleted
+
 # Version 1.0
 
 - maintain a master list of cadets and events

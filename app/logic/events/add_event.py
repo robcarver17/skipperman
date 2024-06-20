@@ -18,7 +18,7 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
     textInput, dateInput, checkboxInput,
-intInput
+    intInput, listInput
 )
 from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
@@ -62,10 +62,8 @@ def get_add_event_form_with_information_passed(
 
 def get_heading_text(interface: abstractInterface):
     header_text = "Do not duplicate event names! (can only have one event with a specific name in a given year, so include months in training weekends eg June Training, or include a number in a series eg Feva Training 1. "
-    previous_events =  list_of_previously_used_event_names(interface)
-    previous_events_text = " Previously used event names: %s" % ", ".join(previous_events)
 
-    heading = Heading(header_text+ previous_events_text, size=6, centred=False)
+    heading = Heading(header_text, size=6, centred=False)
 
     return heading
 
@@ -82,11 +80,12 @@ def get_footer_buttons(form_is_blank: bool):
 
 
 def form_fields_for_add_event(interface: abstractInterface, event: Event = default_event) -> ListOfLines:
-    print("event %s type %s" % (str(event), str(type(event))))
-    event_name = textInput(
+    previous_events = list_of_previously_used_event_names(interface)
+    event_name = listInput(
         input_label="Event name (do not include year, eg 'Cadet Week' not 'Cadet Week 2023')",
         input_name=EVENT_NAME,
-        value=event.event_name,
+        default_option=event.event_name,
+        list_of_options=previous_events
     )
     heading = get_heading_text(interface)
 

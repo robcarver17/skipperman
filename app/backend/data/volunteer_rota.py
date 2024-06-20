@@ -1,5 +1,9 @@
 from typing import List
 
+from app.objects.volunteers_at_event import VolunteerAtEvent
+
+from app.objects.volunteers import Volunteer
+
 from app.objects.groups import order_list_of_groups
 
 from app.data_access.configuration.configuration import VOLUNTEER_TEAMS
@@ -35,13 +39,13 @@ class VolunteerRotaData():
         self.save_list_of_targets_for_role_at_event(event=event, list_of_targets_for_role_at_event=list_of_targets_for_role_at_event)
 
     def is_senior_instructor(self, event: Event, volunteer_id:str) -> bool:
-        all_roles = [self.get_volunteer_with_role_at_event_on_day(event=event, day=day, volunteer_id=volunteer_id)
+        all_roles = [self.get_volunteer_with_role_at_event_on_day_from_id(event=event, day=day, volunteer_id=volunteer_id)
                      for day in event.weekdays_in_event()]
         is_si = [role.senior_instructor() for role in all_roles ]
         return any(is_si)
 
     def get_list_of_groups_volunteer_is_instructor_for(self, event: Event, volunteer_id:str) -> List[Group]:
-        all_roles = [self.get_volunteer_with_role_at_event_on_day(event=event, day=day, volunteer_id=volunteer_id) for day in event.weekdays_in_event()]
+        all_roles = [self.get_volunteer_with_role_at_event_on_day_from_id(event=event, day=day, volunteer_id=volunteer_id) for day in event.weekdays_in_event()]
         all_valid_groups = [role.group for role in all_roles if role.in_instructor_team()]
         all_valid_groups = list(set(all_valid_groups))
 
@@ -175,10 +179,19 @@ class VolunteerRotaData():
 
         return volunteer_ids_in_boat_related_roles_on_any_day_of_event
 
-    def get_volunteer_role_at_event_on_day(self, event: Event, volunteer_id: str,
-                                           day: Day, default = missing_data) -> str:
-        volunteer_in_role = self.get_volunteer_with_role_at_event_on_day(event=event, day=day,
-                                                                    volunteer_id=volunteer_id)
+    def get_volunteer_with_role_at_event_on_day_for_volunteer_at_event(self, event: Event, volunteer_at_event: VolunteerAtEvent,
+                                                                       day: Day) -> VolunteerInRoleAtEvent:
+
+        return self.get_volunteer_with_role_at_event_on_day_from_id(
+            event=event,
+            volunteer_id=volunteer_at_event.volunteer_id,
+            day=day
+        )
+
+    def get_volunteer_role_at_event_on_day_for_volunteer_id(self, event: Event, volunteer_id: str,
+                                                            day: Day, default = missing_data) -> str:
+        volunteer_in_role = self.get_volunteer_with_role_at_event_on_day_from_id(event=event, day=day,
+                                                                                 volunteer_id=volunteer_id)
         if volunteer_in_role is missing_data:
             return default
 
@@ -187,8 +200,8 @@ class VolunteerRotaData():
     def get_volunteer_group_name_at_event_on_day(self, event: Event, volunteer_id: str,
                                                  day: Day, default_if_missing = '',
                                                  default_if_unallocated = '') -> str:
-        volunteer_in_role = self.get_volunteer_with_role_at_event_on_day(event=event, day=day,
-                                                                    volunteer_id=volunteer_id)
+        volunteer_in_role = self.get_volunteer_with_role_at_event_on_day_from_id(event=event, day=day,
+                                                                                 volunteer_id=volunteer_id)
         if volunteer_in_role is missing_data:
             return default_if_missing
 
@@ -219,15 +232,15 @@ class VolunteerRotaData():
 
     def get_list_of_volunteers_in_roles_at_event_for_volunteer(self, event: Event, volunteer_id: str) -> List[VolunteerInRoleAtEvent]:
 
-        list_of_volunteers_in_roles = [ self.get_volunteer_with_role_at_event_on_day(event=event, day=day,
-                                                                    volunteer_id=volunteer_id) for day in event.weekdays_in_event()]
+        list_of_volunteers_in_roles = [ self.get_volunteer_with_role_at_event_on_day_from_id(event=event, day=day,
+                                                                                             volunteer_id=volunteer_id) for day in event.weekdays_in_event()]
         list_of_volunteers_in_roles = [volunteer_in_role for volunteer_in_role in list_of_volunteers_in_roles
                                         if not volunteer_in_role.no_role_set]
 
         return list_of_volunteers_in_roles
 
-    def get_volunteer_with_role_at_event_on_day(self, event: Event, volunteer_id: str,
-                                                day: Day) -> VolunteerInRoleAtEvent:
+    def get_volunteer_with_role_at_event_on_day_from_id(self, event: Event, volunteer_id: str,
+                                                        day: Day) -> VolunteerInRoleAtEvent:
         volunteers_in_roles_at_event = self.get_volunteers_in_role_at_event_who_are_also_allocated_to_event(event)
         volunteer_in_role = volunteers_in_roles_at_event.member_matching_volunteer_id_and_day(volunteer_id=volunteer_id,
                                                                                               day=day)

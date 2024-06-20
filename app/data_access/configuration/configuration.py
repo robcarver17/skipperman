@@ -68,6 +68,7 @@ VOLUNTEER_SKILLS = configuration['volunteer_skills']
 SI_SKILL = configuration["SI_skill"]
 VOLUNTEER_TEAMS = configuration['volunteer_teams']
 VOLUNTEERS_SKILL_FOR_PB2 = configuration['power_boat_skills'][0]
+VOLUNTEER_SKILL_DICT = configuration['role_and_skills_required']
 
 VOLUNTEERS_REQUIRING_BOATS = configuration['volunteers_requiring_boats']
 

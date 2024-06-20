@@ -12,6 +12,7 @@ from app.logic.events.patrol_boats.elements_in_patrol_boat_table import \
 from app.logic.events.patrol_boats.patrol_boat_dropdowns import get_add_boat_dropdown, \
     get_allocation_dropdown_to_add_volunteer_for_day_and_boat
 from app.logic.events.patrol_boats.patrol_boat_buttons import delete_button_for_boat, DELETE_BOAT_BUTTON_LABEL
+from app.logic.events.patrol_boats.warnings import warn_on_all_volunteers_in_patrol_boats
 from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, CANCEL_BUTTON_LABEL, HelpButton
 from app.objects.abstract_objects.abstract_form import Link
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -42,7 +43,7 @@ def get_top_material_for_patrol_boat_form(interface: abstractInterface, event: E
             instructions_qual_table,
             patrol_boat_driver_and_crew_qualifications_table
         ]), name = "Qualifications")
-
+    warnings = warn_on_all_volunteers_in_patrol_boats(interface)
     return  ListOfLines(
             [
                 _______________,
@@ -51,6 +52,9 @@ def get_top_material_for_patrol_boat_form(interface: abstractInterface, event: E
                 _______________,
                 _______________,
                 patrol_boat_driver_and_crew_qualifications_table,
+                _______________,
+                _______________,
+                warnings,
                 _______________,
                 _______________,
                 instructions_text,

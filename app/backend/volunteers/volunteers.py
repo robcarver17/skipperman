@@ -104,7 +104,7 @@ def boat_related_skill_str(interface: abstractInterface, volunteer_id: str) -> s
 
 def boat_related_skill_for_volunteer(interface: abstractInterface, volunteer_id: str) -> bool:
     volunteer_data = VolunteerData(interface.data)
-    return volunteer_data.boat_related_skill_for_volunteer(volunteer_id)
+    return volunteer_data.boat_related_skill_for_volunteer_id(volunteer_id)
 
 def add_boat_related_skill_for_volunteer(interface: abstractInterface, volunteer_id: str):
     volunteer_data = VolunteerData(interface.data)

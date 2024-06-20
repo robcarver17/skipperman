@@ -67,6 +67,13 @@ Click on &#17;Qualifications to see the editable qualifications table:
 
 For every person on a boat, that shows you whether they have PB2 or not. You can add or remove PB2 qualifications by changing the tickbox and pressing Save. Don't assume someone has PB2 - always check the official spreadsheet via the link.
 
+# Warnings
+
+There are two types of checks that Skipperman will do, and you can see if there are any resulting warnings by clicking &#17;Warnings.
+
+- Does every boat have a qualified driver on?
+- Is every volunteer qualified for their role?
+
 # Copying
 
 I'd advise you to read about copying in the [volunteer rota](volunteer_rota_help#copying) before looking at copying here - they work in exactly the same way, except that for patrol boats we can copy boats, roles, or both.
@@ -120,3 +127,4 @@ Let's click on Jake as it's the most interesting:
 You can see how this is useful for moving safety crew between the lake and river.
 
 Remember by convention a 'helm' is just someone who has the relevant PB2 certificate so there can be more than one helm on a boat.
+

@@ -87,8 +87,8 @@ def get_skills_string(interface: abstractInterface,volunteer_id: str, default=''
 
 def get_role_group(interface: abstractInterface,volunteer_id: str, event: Event, default=''):
     volunteer_rota_data =VolunteerRotaData(interface.data)
-    role_dict = dict([(day, volunteer_rota_data.get_volunteer_role_at_event_on_day(event=event, day=day, volunteer_id=volunteer_id)+" "+\
-                volunteer_rota_data.get_volunteer_group_name_at_event_on_day(event=event, day=day, volunteer_id=volunteer_id,
+    role_dict = dict([(day, volunteer_rota_data.get_volunteer_role_at_event_on_day_for_volunteer_id(event=event, day=day, volunteer_id=volunteer_id) + " " + \
+                       volunteer_rota_data.get_volunteer_group_name_at_event_on_day(event=event, day=day, volunteer_id=volunteer_id,
                                                                              default_if_missing=default, default_if_unallocated=default))
                  for day in event.weekdays_in_event()])
 

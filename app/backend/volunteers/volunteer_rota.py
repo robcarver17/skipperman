@@ -45,11 +45,11 @@ def update_role_at_event_for_volunteer_on_day_at_event(interface: abstractInterf
 
 def get_volunteer_role_at_event_on_day(interface: abstractInterface, event: Event, volunteer_id: str, day: Day) -> str:
     volunteer_role_data = VolunteerRotaData(interface.data)
-    return volunteer_role_data.get_volunteer_role_at_event_on_day(event=event, volunteer_id=volunteer_id, day=day)
+    return volunteer_role_data.get_volunteer_role_at_event_on_day_for_volunteer_id(event=event, volunteer_id=volunteer_id, day=day)
 
 def get_volunteer_with_role_at_event_on_day(interface: abstractInterface, event: Event, volunteer_id: str, day: Day) -> VolunteerInRoleAtEvent:
     volunteer_role_data = VolunteerRotaData(interface.data)
-    return volunteer_role_data.get_volunteer_with_role_at_event_on_day(event=event, volunteer_id=volunteer_id, day=day)
+    return volunteer_role_data.get_volunteer_with_role_at_event_on_day_from_id(event=event, volunteer_id=volunteer_id, day=day)
 
 
 
@@ -79,7 +79,7 @@ def dict_of_roles_for_dropdown(interface: abstractInterface):
 
 def boat_related_role_str_and_group_on_day_for_volunteer_id(interface: abstractInterface, day: Day, event: Event, volunteer_id: str)-> str:
     volunteer_rota = VolunteerRotaData(interface.data)
-    volunteer_on_day = volunteer_rota.get_volunteer_with_role_at_event_on_day(event=event, day=day, volunteer_id=volunteer_id)
+    volunteer_on_day = volunteer_rota.get_volunteer_with_role_at_event_on_day_from_id(event=event, day=day, volunteer_id=volunteer_id)
     if volunteer_on_day is missing_data:
         return ""
     elif volunteer_on_day.requires_boat:
@@ -409,7 +409,7 @@ def get_day_with_earliest_valid_role_and_group_for_volunteer_or_none(interface: 
     volunteer_data = VolunteerRotaData(interface.data)
 
     for day in event.weekdays_in_event():
-        volunteer_with_role_and_group = volunteer_data.get_volunteer_with_role_at_event_on_day(event=event, volunteer_id=volunteer_id, day=day)
+        volunteer_with_role_and_group = volunteer_data.get_volunteer_with_role_at_event_on_day_from_id(event=event, volunteer_id=volunteer_id, day=day)
         role_and_group = volunteer_with_role_and_group.role_and_group
         if role_and_group.missing:
             continue

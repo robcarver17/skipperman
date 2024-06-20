@@ -43,7 +43,9 @@ To give someone a job, click on the down selection arrow next to 'No role alloca
 ***
 ***
 
-PS Skipperman doesn't currently check to see if someone is qualified to do this job. Note by convention a lake or river 'helm' is just someone who has the relevant PB2 certificate so there can be more than one helm on a boat.
+PS Skipperman won't check to see if someone is qualified to do this job when you allocate them to a role, but if you click on [warnings](#warnings) you can see if there are any apparently unqualified people. 
+
+Note by convention a lake or river 'helm' is just someone who has the relevant PB2 certificate so there can be more than one helm on a boat.
 
 
 ## Allocating a group
@@ -254,11 +256,11 @@ Click on the &#17; to expand them and see the hidden details.
 
 ## Summaries
 
-We can see two summaries of the numbers of volunteers allocated, one breaks down into very granular detail; the second sums up over teams and groups. The latter is probably more useful for seeing, for example, that there are the right number of AI/DI in total for a given group.
+Click on &#17;Summary by ..., and we can see two summaries of the numbers of volunteers allocated, one breaks down into very granular detail; the second sums up over teams and groups. The latter is probably more useful for seeing, for example, that there are the right number of AI/DI in total for a given group.
 
 ## Role numbers and targets
 
-It can be quite useful to have a target number in mind when allocating, so you don't forget to fill a specialise role like ramp welfare, or end up the wrong number of rescue boat crews and helm.
+It can be quite useful to have a target number in mind when allocating, so you don't forget to fill a specialist role like ramp welfare, or end up the wrong number of rescue boat crews and helm. Click on &#17;Role numbers and targets:
 
 ***
 ***
@@ -273,12 +275,12 @@ Usually the target is set by the cadet skipper or whoever is the principal organ
 
 ## Warnings
 
-Warnings are things that could be problematic for your volunteer rota. They come into the following categories:
+Warnings are things that could be problematic for your volunteer rota; to see them click &#17;Warnings. They come into the following categories:
 
-- A mismatch between cadet availability and volunteer availability - make
-- A volunteer without any connected cadets - this could be because they have agreed to help, but it could also be because the cadet has cancelled their registration and you haven't removed the volunteer - check.
+- A mismatch between cadet availability and volunteer availability - make sure the volunteer really can do those days and record in the notes.
+- A volunteer without any connected cadets - this could be because they have agreed to help, but it could also be because the cadet has cancelled their registration and you haven't removed the volunteer - check with the volunteer, and then record in the notes what they said.
 - Volunteers who are at the lake with one or more connected cadets, or worse still allocated to a sailing group that their cadet is in. Make sure you are happy with this.
-
+- Is every volunteer qualified for their role?
 
 # Misc
 

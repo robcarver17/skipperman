@@ -46,7 +46,6 @@ Important notes:
 - Qualifications that have already been awarded should not be withdrawn because you disagree with a previous decision - only in case of accident
 - if you withdraw a qualification from a cadet, then all their ticks will be wiped out. **So make sure you have a paper record before doing this**
 
-
 # Skipperman on mobile - individual cadet editing
 
 It’s quite hard to see a big ticksheet on a phone. This isn’t so bad if you are just applying ticks to all cadets at the same time, since you can scroll left and right across the column heading buttons that do this. But it’s hard to know when you are looking at a cadet who is halfway down a big list which ticks you are settting. So there is the facility to select a single cadet. You can’t do this whilst you are editing, only before you start. Let’s say I only want to do the ticks for David. I click on his name:

@@ -1,10 +1,10 @@
 from copy import copy
 from dataclasses import dataclass
-from typing import List
+from typing import List, Dict
 from statistics import mode
 
 from app.data_access.configuration.configuration import VOLUNTEERS_REQUIRING_GROUP, VOLUNTEERS_REQUIRING_BOATS, \
-    VOLUNTEER_ROLES, VOLUNTEER_TEAMS, SI_ROLE, INSTRUCTOR_TEAM
+    VOLUNTEER_ROLES, VOLUNTEER_TEAMS, SI_ROLE, INSTRUCTOR_TEAM, VOLUNTEER_SKILL_DICT
 from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
 from app.objects.groups import Group, GROUP_UNALLOCATED, index_group
 from app.objects.day_selectors import Day
@@ -70,6 +70,18 @@ class VolunteerInRoleAtEvent(GenericSkipperManObject):
             return True
 
         return False
+
+    def is_qualified_for_role(self, dict_of_skills: Dict[str, bool]) -> bool:
+        return is_qualified_for_role(role=self.role, dict_of_skills=dict_of_skills)
+
+def is_qualified_for_role(role: str, dict_of_skills: Dict[str, bool]) -> bool:
+    skills_required = VOLUNTEER_SKILL_DICT.get(role, [])
+    for skill_needed in skills_required:
+        has_skill = dict_of_skills.get(skill_needed, False)
+        if not has_skill:
+            return False
+
+    return True
 
 def teams_given_role(role: str, teams: dict = VOLUNTEER_TEAMS) -> List[str]:
     if role == NO_ROLE_SET:

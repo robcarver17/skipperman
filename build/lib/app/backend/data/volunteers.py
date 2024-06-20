@@ -62,7 +62,10 @@ class VolunteerData():
 
         return list_of_volunteer_ids_with_boat_skills
 
-    def boat_related_skill_for_volunteer(self, volunteer_id: str) -> bool:
+    def boat_related_skill_for_volunteer(self, volunteer: Volunteer) -> bool:
+        return self.boat_related_skill_for_volunteer_id(volunteer.id)
+
+    def boat_related_skill_for_volunteer_id(self, volunteer_id: str) -> bool:
         skills = self.get_list_of_volunteer_skills()
         return skills.volunteer_id_has_boat_related_skills(volunteer_id)
 
@@ -112,6 +115,10 @@ class VolunteerData():
         list_of_volunteers = self.get_list_of_volunteers()
         return list_of_volunteers.similar_volunteers(volunteer)
 
+    def volunteer_with_id(self, volunteer_id: str) -> Volunteer:
+        list_of_volunteers = self.get_list_of_volunteers()
+        return list_of_volunteers.object_with_id(volunteer_id)
+
     def matching_volunteer_or_missing_data(self, volunteer: Volunteer) -> Volunteer:
         list_of_volunteers = self.get_list_of_volunteers()
         return list_of_volunteers.matching_volunteer(volunteer)
@@ -126,6 +133,8 @@ class VolunteerData():
             return master_list.sort_by_firstname()
         else:
             return master_list
+
+
 
     def get_list_of_cadets(self) -> ListOfCadets:
         return self.cadet_data.get_list_of_cadets()

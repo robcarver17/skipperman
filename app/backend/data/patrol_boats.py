@@ -1,5 +1,9 @@
 from typing import List
 
+from app.objects.volunteers import Volunteer
+
+from app.backend.data.volunteers import VolunteerData
+
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.objects.day_selectors import Day, DaySelector
@@ -203,6 +207,29 @@ class PatrolBoatsData():
         return list_of_voluteers_at_event_with_patrol_boats.volunteer_is_on_same_boat_for_all_days(
             volunteer_id=volunteer_id, event=event)
 
+    def at_least_one_volunteer_on_boat_on_day_has_boat_skill(self, event: Event, patrol_boat: PatrolBoat, day: Day):
+        list_of_volunteers = self.list_of_volunteers_assigned_to_boat_and_day(event=event,
+                                                                              patrol_boat=patrol_boat,
+                                                                              day=day)
+        has_boat_skill = [self.boat_related_skill_for_volunteer(volunteer) for volunteer in list_of_volunteers]
+
+        return any(has_boat_skill)
+
+    def list_of_volunteers_assigned_to_boat_and_day(self, event: Event, patrol_boat: PatrolBoat, day: Day):
+        list_of_volunteer_ids_assigned_to_boat_and_day = self.list_of_volunteer_ids_assigned_to_boat_and_day(event=event,
+                                                                                                             day=day,
+                                                                                                             patrol_boat=patrol_boat,
+                                                                                                             )
+        list_of_volunteers = [self.get_volunteer_from_id(volunteer_id) for volunteer_id in list_of_volunteer_ids_assigned_to_boat_and_day]
+
+        return list_of_volunteers
+
+    def get_volunteer_from_id(self, volunteer_id) -> Volunteer:
+        return self.volunteer_data.volunteer_with_id(volunteer_id)
+
+    def boat_related_skill_for_volunteer(self, volunteer: Volunteer):
+        return self.volunteer_data.boat_related_skill_for_volunteer(volunteer)
+
     def list_of_volunteer_ids_assigned_to_boat_and_day(self, event: Event, patrol_boat: PatrolBoat, day: Day):
 
         list_of_voluteers_at_event_with_patrol_boats = self.get_list_of_voluteers_at_event_with_patrol_boats(event)
@@ -211,8 +238,9 @@ class PatrolBoatsData():
             day=day,
             patrol_boat=patrol_boat)
         list_of_volunteer_ids_at_event = self.load_list_of_volunteer_ids_at_event(event)
+        list_of_volunteer_ids_assigned_to_boat_and_day = in_both_x_and_y(list_of_volunteer_ids_at_event, list_of_volunteer_ids_assigned_to_boat_and_day)
 
-        return in_both_x_and_y(list_of_volunteer_ids_at_event, list_of_volunteer_ids_assigned_to_boat_and_day)
+        return list_of_volunteer_ids_assigned_to_boat_and_day
 
 
     def get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day(self,event: Event) -> List[str]:
@@ -268,6 +296,10 @@ class PatrolBoatsData():
     @property
     def volunteers_at_event_data(self) -> VolunteerAllocationData:
         return VolunteerAllocationData(self.data_api)
+
+    @property
+    def volunteer_data(self) -> VolunteerData:
+        return VolunteerData(self.data_api)
 
 
 

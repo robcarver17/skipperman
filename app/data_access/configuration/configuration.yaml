@@ -52,6 +52,28 @@ SI_skill: "SI"
 #
 power_boat_skills:
   - "PB2"
+#
+#
+role_and_skills_required:
+  SI:
+    - "SI"
+  Coach:
+    - "RCL2"
+  DI:
+    - "DI"
+  AI:
+    - "AI"
+  Ramp welfare:
+    - "First aid"
+  Lake welfare:
+    - "First aid"
+  Lake helm:
+    - "PB2"
+  River helm:
+    - "PB2"
+  River safety lead:
+    - "PB2"
+#
 instructor_team: "Instructors" ## must match below
 senior_instructor: "SI" ## must match below
 ## first line is always lead, rest are members

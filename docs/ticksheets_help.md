@@ -1,5 +1,7 @@
 The ticksheets and qualifications menu allows you give 'ticks' recording progress. Make sure you are not in [read only](main-menu#read-only) mode if you want to make changes - use read only mode for experimenting.
 
+[Guide to ticksheets and Qualifications](ticksheets_and_qualifications_guide)
+ 
 [TOC]
 
 # Overview
@@ -17,3 +19,5 @@ Click on  &#17;... to see downloadable documents. These are useful documents and
 ## Select an event
 
 Click on an event if you want to view, edit or print ticksheets.
+
+Next step: [Choosing a group](ticksheets_choose_group_help)

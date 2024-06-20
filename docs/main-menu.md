@@ -2,6 +2,10 @@
 
 [TOC]
 
+# Guides to using skipperman
+- [Ticksheets and Qualifications](ticksheets_and_qualifications_guide)
+
+
 # The skipperman home page
 
 ## Logging in
@@ -65,6 +69,3 @@ Never use the 'Back' button on your browser. Instead use the relevant buttons on
 
 The way that edits are made and saved can be slightly confusing. Where you have to type something, or enter a value in a dropdown menu, then clicking any button apart from cancel will save the edits (there is usually a specific save button, but any button will do). Where edits are made using buttons, then they are saved immediately. There is no 'undo'.
 
-# Guides to using skipperman
-
-## [Ticksheets and Qualifications](ticksheets_and_qualifications_guide)

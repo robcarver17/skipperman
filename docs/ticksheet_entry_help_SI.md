@@ -1,5 +1,9 @@
 The ticksheets and qualifications menu allows you give 'ticks' recording progress, and to award qualifications. Make sure you are not in [read only](main-menu#read-only) mode if you want to make changes - use read only mode for experimenting.
 
+[Guide to ticksheets and Qualifications](ticksheets_and_qualifications_guide)
+
+Previous step: [Choosing a qualification level](ticksheets_choose_levels_SI_skipper_help)
+
 [TOC]
 
 

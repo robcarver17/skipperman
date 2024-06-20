@@ -10,14 +10,14 @@ You can use Skipperman to print, view, edit ticksheets; and give qualifications 
 - [Initial ticksheet menu option](ticksheets_help) 
 - [Choosing a group](ticksheets_choose_group_help)
 - [Choosing a qualification level](ticksheets_levels_help)
-- [Viewing, printing, and entering ticks](ticksheet_entry_help_SI)
+- [Viewing, printing, and entering ticks](ticksheet_entry_help)
 
 
 ## Senior instructors and skippers:
 
 - [Initial ticksheet menu option - choosing an event](ticksheets_SI_skipper_help)
 - [Choosing a group](ticksheets_choose_group_SI_skipper_help)
-- [Choosing a qualification level](ticksheets_levels_help)
+- [Choosing a qualification level](ticksheets_choose_levels_SI_skipper_help)
 - [Viewing, printing, and entering ticks; and awarding qualifications](ticksheet_entry_help_SI)
 
 # Qualification reports (skippers and senior instructors only)

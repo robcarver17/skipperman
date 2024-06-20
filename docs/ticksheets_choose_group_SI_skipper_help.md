@@ -1,5 +1,8 @@
 The ticksheets and qualifications menu allows you give 'ticks' recording progress and award RYA qualifications. Make sure you are not in [read only](main-menu#read-only) mode if you want to make changes - use read only mode for experimenting.
 
+[Guide to ticksheets and Qualifications](ticksheets_and_qualifications_guide)
+
+Previous step: [Initial ticksheet menu option - choosing an event](ticksheets_SI_skipper_help)
 
 On entering the ticksheet area for a given event you will see a screen like this:
 
@@ -18,3 +21,5 @@ The percentages show the progress made towards getting all their ticks signed of
 # Select a group
 
 Click on a group event if you want to view, edit or print ticksheets; or award qualifications for cadets in that group.
+
+Next step: [Choosing a qualification level](ticksheets_choose_levels_SI_skipper_help)

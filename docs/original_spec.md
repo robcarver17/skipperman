@@ -1,9 +1,4 @@
-# SKIPPERMAN - Blackwater Sailing Club Cadet Skipper Managemet System
-
-
-SKIPPERMAN is a piece of software to ease the admin burden on the cadet skipper and their team, which is considerable and historically involves lots of manual hacking of spreadsheets. 
-
-
+# SKIPPERMAN - Blackwater Sailing Club Cadet Skipper Managemet System: Original spec
 
 ## Abbreviations
 

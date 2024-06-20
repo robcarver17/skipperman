@@ -1,14 +1,18 @@
-# Skipperman
+# 'SKIPPERMAN'
 
 Blackwater sailing club cadet skipper management system
 
 
 
-Version 0.01
+Version 1.00
  
 
-2023-09-13
+2024-06-20
 
+
+## Use and documentation
+
+See [main menu gide](/docs/main-menu)
 
 
 ## Release notes
@@ -19,9 +23,8 @@ See [DONE_TO_DO](CHANGELOG.md) for release notes, and future plans.
 ## Description
 
 
-## Use and documentation
+SKIPPERMAN is a piece of software to ease the admin burden on the cadet skipper and their team, which is considerable and historically involves lots of manual hacking of spreadsheets. 
 
-[Rough ideas](docs/ideas.md)
 
 ## Dependencies
 

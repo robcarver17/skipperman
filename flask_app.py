@@ -101,6 +101,7 @@ def action(action_option):
     return generate_action_page_html(action_option)
 
 @app.route("/%s/<help_page_name>" % HELP_PREFIX, methods=["GET", "POST"])
+@login_required
 def help(help_page_name):
     return generate_help_page_html(help_page_name)
 

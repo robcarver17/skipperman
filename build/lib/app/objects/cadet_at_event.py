@@ -111,6 +111,9 @@ class CadetAtEvent(GenericSkipperManObjectWithIds):
     health: str = ''
     changed: bool  = False
 
+    def clear_row_data(self):
+        self.data_in_row.clear_values()
+
     def emergency_contact(self):
         contact = self.get_item_from_data(RESPONSIBLE_ADULT_NUMBER, '')
         contact_name = self.get_item_from_data(RESPONSIBLE_ADULT_NAME, '')
@@ -299,6 +302,14 @@ class ListOfCadetsAtEvent(GenericListOfObjectsWithIds):
         existing_cadet_at_event.health = new_health
         self[existing_cadet_idx] = existing_cadet_at_event
         self.mark_cadet_as_changed(cadet_id)
+
+    def clear_data_row_for_existing_cadet_at_event(self, cadet_id: str):
+        existing_cadet_idx = self.idx_of_items_with_cadet_id(cadet_id)
+        if existing_cadet_idx is missing_data:
+            return
+        existing_cadet_at_event = self[existing_cadet_idx]
+        existing_cadet_at_event.clear_row_data()
+        self[existing_cadet_idx] = existing_cadet_at_event
 
     def update_data_row_for_existing_cadet_at_event(self, cadet_id:str, new_data_in_row: RowInMappedWAEvent):
         ## DO NOT MARK AS CHANGED - ONLY APPLIES TO AVAILABLILITY AND STATUS FIELDS

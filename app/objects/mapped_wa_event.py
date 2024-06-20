@@ -50,6 +50,11 @@ class RowInMappedWAEvent(dict):
 
         return True
 
+    def clear_values(self):
+        my_keys = (list(self.keys()))
+        for key in my_keys:
+            self[key] = ''
+
     def get_item(self, key, default=""):
         return self.get(key, default)
 

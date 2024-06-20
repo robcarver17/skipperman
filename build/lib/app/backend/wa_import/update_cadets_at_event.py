@@ -177,7 +177,7 @@ def update_notes_for_existing_cadet_at_event(interface: abstractInterface, event
 
 def update_health_for_existing_cadet_at_event(interface: abstractInterface, event: Event, cadet_id:str, new_health: str):
     cadets_at_event_data = CadetsAtEventData(interface.data)
-    cadets_at_event_data.update_health_for_existing_cadet_at_event(cadet_id=cadet_id, new_health=new_health, event=event)
+    cadets_at_event_data.update_health_for_existing_cadet_with_id_at_event(cadet_id=cadet_id, new_health=new_health, event=event)
 
 
 def update_data_row_for_existing_cadet_at_event(interface: abstractInterface, event: Event, cadet_id:str, new_data_in_row: RowInMappedWAEvent):

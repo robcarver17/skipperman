@@ -173,6 +173,10 @@ class Event(GenericSkipperManObjectWithIds):
             some_date+=datetime.timedelta(days=1)
         return date_list
 
+    def in_the_past(self) -> bool:
+        days = datetime.date.today() - self.end_date
+        return days.days>0
+
 
 def add_days(some_date: datetime.date, duration: int) -> datetime.date:
     return some_date + datetime.timedelta(days=duration)

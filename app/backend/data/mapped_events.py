@@ -26,6 +26,9 @@ class MappedEventsData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
 
+    def clear_mapped_event_data(self, event: Event):
+        self.data_api.save_mapped_wa_event(event=event, mapped_wa_event_data=MappedWAEvent([]))
+
     def add_row(self, event: Event, new_row: RowInMappedWAEvent):
         mapped_wa_event_data = self.get_mapped_wa_event(event)
         mapped_wa_event_data.append(new_row)

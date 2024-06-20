@@ -8,6 +8,7 @@ from app.objects.abstract_objects.form_function_mapping import   DisplayAndPostF
 from app.logic.utilities.data_and_backups.restore_backup_from_local import display_form_for_upload_backup, post_form_upload_backup_file
 from app.logic.utilities.files.upload_file import display_form_for_upload_public_file, post_form_for_upload_public_file
 from app.logic.utilities.files.replace_files import display_form_to_replace_selected_files, post_form_to_replace_selected_files
+from app.logic.utilities.cleaning.ENTRY_cleaning import display_form_for_event_cleaning, post_form_view_of_event_data_cleaning
 
 utilities_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_functions(
     NestedDictOfMappings(
@@ -21,8 +22,10 @@ utilities_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_
                 {
                     (display_form_for_upload_public_file, post_form_for_upload_public_file):0,
                     (display_form_to_replace_selected_files, post_form_to_replace_selected_files):0
-                }
-        }
+                },
+(display_form_for_event_cleaning, post_form_view_of_event_data_cleaning):0
+        },
+
 
     }
     )

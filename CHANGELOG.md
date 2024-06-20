@@ -1,4 +1,4 @@
-# Features added so far:
+# Version 1.0
 
 - maintain a master list of cadets and events
 - import a list of entries for a specific event from WA
@@ -60,3 +60,4 @@
 - hard/soft copies in patrol boats and volunteers
 - improve UI of copy/swap in patrol boats and volunteers
 - proper help pages
+- addditional warnings for patrol boats and volunteers

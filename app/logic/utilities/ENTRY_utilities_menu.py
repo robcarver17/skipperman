@@ -1,6 +1,7 @@
 from typing import Union
 
 from app.logic.abstract_logic_api import initial_state_form
+from app.logic.utilities.cleaning.ENTRY_cleaning import display_form_for_event_cleaning
 from app.logic.utilities.data_and_backups.ENTRY_data_and_backups import display_form_data_and_backups
 from app.logic.utilities.files.ENTRY_files import display_form_file_management
 
@@ -14,11 +15,13 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.constants import missing_data
 
 DATA_AND_BACKUP = "Data: backup, upload, and restore"
+DATA_CLEAN = "Delete sensitive data"
 FILES= "File management"
 
 ## MODIFY THIS TO ADD MORE REPORTS
 DICT_OF_MENU_OPTIONS ={
     DATA_AND_BACKUP: display_form_data_and_backups,
+    DATA_CLEAN: display_form_for_event_cleaning,
     FILES: display_form_file_management
 }
 

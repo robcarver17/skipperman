@@ -32,6 +32,20 @@ class CadetsAtEventData():
         self.data_api = data_api
 
     ### UPDATES
+    def clear_health_information(self, event: Event):
+        list_of_cadets_at_event = self.get_list_of_cadets_at_event(event)
+        list_of_ids = list_of_cadets_at_event.list_of_cadet_ids()
+
+        for id in list_of_ids:
+            self.update_health_for_existing_cadet_with_id_at_event(event=event, cadet_id=id, new_health='')
+
+    def clear_row_data(self, event: Event):
+        list_of_cadets_at_event = self.get_list_of_cadets_at_event(event)
+        list_of_ids = list_of_cadets_at_event.list_of_cadet_ids()
+
+        for id in list_of_ids:
+            self.clear_data_row_for_existing_cadet_at_event(event=event, cadet_id=id)
+
     def mark_cadet_at_event_as_unchanged(self, cadet_id: str, event: Event):
         list_of_cadets_at_event = self.get_list_of_cadets_at_event(event)
         list_of_cadets_at_event.mark_cadet_as_unchanged(cadet_id)
@@ -46,6 +60,15 @@ class CadetsAtEventData():
         identified_cadets = self.get_list_of_identified_cadets_at_event(event)
         identified_cadets.add(row_id=row_id, cadet_id=cadet_id)
         self.save_list_of_identified_cadets_at_event(event=event, list_of_identified_cadets_at_event=identified_cadets)
+
+
+    def clear_data_row_for_existing_cadet_at_event(self, event: Event, cadet_id: str):
+
+        existing_cadets_at_event = self.get_list_of_cadets_at_event(event)
+        existing_cadets_at_event.clear_data_row_for_existing_cadet_at_event(cadet_id=cadet_id)
+        self.save_list_of_cadets_at_event(list_of_cadets_at_event=existing_cadets_at_event, event=event)
+
+
 
     def update_data_row_for_existing_cadet_at_event(self, event: Event, cadet_id: str,
                                                     new_data_in_row: RowInMappedWAEvent):
@@ -64,8 +87,8 @@ class CadetsAtEventData():
         self.save_list_of_cadets_at_event(list_of_cadets_at_event=existing_cadets_at_event, event=event)
 
 
-    def update_health_for_existing_cadet_at_event(self, event: Event, cadet_id: str,
-                                                 new_health: str):
+    def update_health_for_existing_cadet_with_id_at_event(self, event: Event, cadet_id: str,
+                                                          new_health: str):
 
         existing_cadets_at_event = self.get_list_of_cadets_at_event(event)
         existing_cadets_at_event.update_health_for_existing_cadet_at_event(cadet_id=cadet_id, new_health=new_health)

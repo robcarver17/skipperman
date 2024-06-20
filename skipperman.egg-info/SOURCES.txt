@@ -5,6 +5,7 @@ setup.py
 app/__init__.py
 app/backend/__init__.py
 app/backend/cadets.py
+app/backend/cleaning.py
 app/backend/clothing.py
 app/backend/configuration.py
 app/backend/events.py
@@ -385,6 +386,9 @@ app/logic/utilities/ENTRY_utilities_menu.py
 app/logic/utilities/__init__.py
 app/logic/utilities/utilities_function_mapping.py
 app/logic/utilities/../../data_access/configuration/configuration.yaml
+app/logic/utilities/cleaning/ENTRY_cleaning.py
+app/logic/utilities/cleaning/__init__.py
+app/logic/utilities/cleaning/../../../data_access/configuration/configuration.yaml
 app/logic/utilities/data_and_backups/ENTRY_data_and_backups.py
 app/logic/utilities/data_and_backups/__init__.py
 app/logic/utilities/data_and_backups/make_backup.py

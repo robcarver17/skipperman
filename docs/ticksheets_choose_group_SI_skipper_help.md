@@ -7,7 +7,7 @@ On entering the ticksheet area for a given event you will see a screen like this
 
 It won't be exactly the same, as the groups shown might be different. 
 
-# Download qualification progress for registered cadets.
+# Download qualification progress for registered cadets
 
 Click on the download button and you will get a spreadsheet for all the cadets at the event:
 

@@ -55,7 +55,7 @@ python3 setup.py install # normal
 python3 setup.py install --user # avoids use of sudo
 ```
 
-There is a more complete installation guide [here](docs/installation.md)
+There is a more complete installation guide [here](docs/technical/installation.md)
 
 
 ## Licensing and legal stuff

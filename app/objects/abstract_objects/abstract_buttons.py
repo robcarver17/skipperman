@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Union, List
 
+from app.data_access.configuration.fixed import MAIN_MENU_KEYBOARD_SHORTCUT
 from app.objects.abstract_objects.abstract_text import Arrow, Pointer, Symbol
 from app.objects.constants import arg_not_passed
 
@@ -24,6 +25,7 @@ class Button:
     tile: bool = False
     nav_button: bool = False
     url: str = ''
+    shortcut: str = arg_not_passed
 
     @property
     def url_is_main_menu(self):
@@ -37,7 +39,9 @@ class ButtonBar(List[Button]):
     def __repr__(self):
         return "ButtonBar contents %s" % str(super().__repr__())
 
-main_menu_button = Button(MAIN_MENU_BUTTON_LABEL, url = MAIN_MENU, nav_button=True)
+main_menu_button = Button(MAIN_MENU_BUTTON_LABEL, url = MAIN_MENU, nav_button=True, shortcut=MAIN_MENU_KEYBOARD_SHORTCUT)
+
+
 
 
 def get_nav_bar_with_just_back_button() -> ButtonBar:

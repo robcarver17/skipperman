@@ -112,11 +112,11 @@ filter_button = Button(APPLY_FILTER_BUTTON_LABEL, nav_button=True)
 clear_filter_button = Button(CLEAR_FILTERS_BUTTON_LABEL, nav_button=True)
 
 def get_header_buttons_for_rota(interface: abstractInterface):
-    cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
     if is_ready_to_swap(interface):
         return ''
     else:
-        return ButtonBar([cancel_button, Button(SAVE_CHANGES, nav_button=True),
+        return ButtonBar([Button(CANCEL_BUTTON_LABEL, nav_button=True, shortcut='c'),
+                          Button(SAVE_CHANGES, nav_button=True, shortcut='s'),
                       Button(ADD_NEW_VOLUNTEER_BUTTON_LABEL, nav_button=True),
                       Button(COPY_ALL_ROLES_BUTTON_LABEL, nav_button=True),
                           Button(COPY_ALL_FIRST_ROLE_BUTTON_LABEL, nav_button=True),

@@ -3,6 +3,7 @@ from typing import Union
 from app.backend.data.cadets import CadetData
 
 from app.backend.ticks_and_qualifications.qualifications import sorted_list_of_named_qualifications_for_cadet
+from app.data_access.configuration.fixed import BACK_KEYBOARD_SHORTCUT
 from app.logic.cadets.cadet_state_storage import get_cadet_from_state
 from app.logic.cadets.delete_cadet import display_form_delete_individual_cadet
 from app.logic.cadets.edit_cadet import display_form_edit_individual_cadet
@@ -75,7 +76,9 @@ def get_committee_string(interface: abstractInterface, cadet: Cadet) -> Line:
     return Line(cadet_data.cadet_on_committee_status_str(cadet))
 
 def buttons_for_cadet_form() -> ButtonBar:
-    return ButtonBar([Button(BACK_BUTTON_LABEL, nav_button=True), Button(EDIT_BUTTON_LABEL, nav_button=True)])
+    return ButtonBar([Button(BACK_BUTTON_LABEL, nav_button=True, shortcut=BACK_KEYBOARD_SHORTCUT), Button(EDIT_BUTTON_LABEL, nav_button=True)])
+
+
 
 
 

@@ -1,5 +1,6 @@
 from typing import Union, List
 
+from app.data_access.configuration.fixed import ADD_KEYBOARD_SHORTCUT
 from app.logic.cadets.add_cadet import display_form_add_cadet
 from app.logic.cadets.cadet_committee import display_form_cadet_committee
 from app.logic.cadets.import_cadets import display_form_import_cadets
@@ -23,10 +24,12 @@ ADD_CADET_BUTTON_LABEL = "Add cadet"
 IMPORT_CADETS_FROM_WA_FILE = "Import cadets from WA file"
 CADET_COMMITTEE_BUTTON_LABEL = "Edit cadet committee"
 
-add_button = Button(ADD_CADET_BUTTON_LABEL, nav_button=True)
+add_button = Button(ADD_CADET_BUTTON_LABEL, nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT)
 import_button = Button(IMPORT_CADETS_FROM_WA_FILE, nav_button=True)
 sort_buttons = Line([Button(sort_by, nav_button=True) for sort_by in all_sort_types])
 committee_button = Button(CADET_COMMITTEE_BUTTON_LABEL, nav_button=True)
+
+
 
 def display_form_view_of_cadets(interface: abstractInterface) -> Form:
     return display_form_view_of_cadets_with_sort_order_passed(

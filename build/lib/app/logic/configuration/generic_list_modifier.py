@@ -2,6 +2,7 @@ from copy import copy
 from typing import Union,  Callable
 
 from app.backend.forms.reorder_form import UP, DOWN, get_button_name_to_move_in_list, modify_list_given_button_name
+from app.data_access.configuration.fixed import BACK_KEYBOARD_SHORTCUT, SAVE_KEYBOARD_SHORTCUT
 from app.objects.abstract_objects.abstract_form import Form, NewForm, textInput
 from app.objects.abstract_objects.abstract_buttons import Button, BACK_CANCEL_BUTTON_LABEL, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
@@ -22,8 +23,8 @@ def display_form_edit_generic_list(
 
     existing_entries = rows_for_existing_entries(existing_list)
     new_entries = row_for_new_entries()
-    navbar = ButtonBar([Button(BACK_CANCEL_BUTTON_LABEL, nav_button=True)])
-    footer_buttons = ButtonBar([ Button(SAVE_ENTRY_BUTTON_LABEL, nav_button=True)])
+    navbar = ButtonBar([Button(BACK_CANCEL_BUTTON_LABEL, nav_button=True, shortcut=BACK_KEYBOARD_SHORTCUT)])
+    footer_buttons = ButtonBar([ Button(SAVE_ENTRY_BUTTON_LABEL, nav_button=True, shortcut=SAVE_KEYBOARD_SHORTCUT)])
 
     return Form([
         ListOfLines([
@@ -36,6 +37,8 @@ def display_form_edit_generic_list(
             footer_buttons
         ])
     ])
+
+
 
 def rows_for_existing_entries(existing_list: list) -> ListOfLines:
 

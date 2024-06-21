@@ -11,6 +11,7 @@ from app.backend.volunteers.volunteer_rota import boat_related_role_str_and_grou
     dict_of_roles_for_dropdown, get_volunteer_role_at_event_on_day
 from app.backend.volunteers.volunteers import boat_related_skill_str, \
  get_volunteer_name_from_id, get_volunteer_from_list_of_volunteers_given_volunteer_name
+from app.data_access.configuration.fixed import ADD_KEYBOARD_SHORTCUT
 
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_form import dropDownInput
@@ -33,7 +34,7 @@ def get_add_boat_dropdown(interface: abstractInterface, event: Event) -> Line:
         input_label="",
         dict_of_options=list_of_boats_as_dict
     )
-    button = Button(ADD_NEW_BOAT_BUTTON_LABEL)
+    button = Button(ADD_NEW_BOAT_BUTTON_LABEL, shortcut=ADD_KEYBOARD_SHORTCUT)
 
     return Line([dropdown, button])
 

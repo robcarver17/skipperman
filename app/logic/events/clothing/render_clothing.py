@@ -1,5 +1,6 @@
 from typing import List
 
+from app.data_access.configuration.fixed import SAVE_KEYBOARD_SHORTCUT, CANCEL_KEYBOARD_SHORTCUT
 from app.objects.abstract_objects.abstract_form import listInput
 
 from app.objects.clothing import CadetObjectWithClothingAtEvent, all_sort_types, SORT_BY_FIRSTNAME
@@ -34,8 +35,8 @@ EXPORT_COLOURS = "Download spreadsheet of colour teams"
 #### Auto colour
 
 def get_button_bar_for_clothing(interface:abstractInterface, event: Event) -> ButtonBar:
-    save_button = Button(SAVE_BUTTON_LABEL, nav_button=True)
-    back_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
+    save_button = Button(SAVE_BUTTON_LABEL, nav_button=True, shortcut=SAVE_KEYBOARD_SHORTCUT)
+    back_button = Button(CANCEL_BUTTON_LABEL, nav_button=True, shortcut=CANCEL_KEYBOARD_SHORTCUT)
     cadet_button = Button(GET_CLOTHING_FOR_CADETS, nav_button=True)
     action_button = Button(DISTRIBUTE_ACTION_BUTTON_LABEL, nav_button=True)
     clear_button = Button(CLEAR_ALL_COLOURS, nav_button=True)
@@ -57,6 +58,7 @@ def get_button_bar_for_clothing(interface:abstractInterface, event: Event) -> Bu
         button_bar.append(action_button)
 
     return button_bar
+
 
 
 def get_clothing_table(interface: abstractInterface, event: Event) -> Table:

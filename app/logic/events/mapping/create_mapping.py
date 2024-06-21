@@ -1,5 +1,6 @@
 
 import pandas as pd
+from app.data_access.configuration.fixed import BACK_KEYBOARD_SHORTCUT
 
 from app.backend.wa_import.map_wa_fields import temp_mapping_file_name
 from app.backend.wa_import.load_wa_file import get_staged_file_raw_event_filename, load_raw_wa_file
@@ -35,7 +36,8 @@ def display_form_for_create_custom_field_mapping(interface: abstractInterface):
 
     return Form(contents_of_form)
 
-back_button = Button(BACK_BUTTON_LABEL, nav_button=True)
+back_button = Button(BACK_BUTTON_LABEL, nav_button=True, shortcut=BACK_KEYBOARD_SHORTCUT)
+
 
 def get_wa_field_download_button(interface: abstractInterface):
     try:

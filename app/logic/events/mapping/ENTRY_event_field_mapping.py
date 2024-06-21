@@ -1,5 +1,6 @@
 from typing import Union
 
+from app.data_access.configuration.fixed import BACK_KEYBOARD_SHORTCUT
 from app.logic.events.mapping.clone_field_mapping import display_form_for_clone_event_field_mapping
 from app.logic.events.mapping.create_mapping import display_form_for_create_custom_field_mapping
 from app.logic.events.mapping.template_field_mapping import display_form_for_choose_template_field_mapping
@@ -105,12 +106,13 @@ def mapping_buttons() -> ButtonBar:
 
         [
             main_menu_button,
-            Button(BACK_BUTTON_LABEL, nav_button=True),
+            Button(BACK_BUTTON_LABEL, nav_button=True, shortcut=BACK_KEYBOARD_SHORTCUT),
             Button(MAP_TO_TEMPLATE_BUTTON_LABEL, nav_button=True),
             Button(CLONE_EVENT_MAPPING_BUTTON_LABEL, nav_button=True),
             Button(CREATE_MAPPING_BUTTON_LABEL, nav_button=True)
         ]
     )
+
 
 
 def post_form_event_field_mapping(interface: abstractInterface) -> Union[Form, NewForm]:

@@ -74,9 +74,9 @@ def display_form_view_ticksheets_for_event_and_group(interface: abstractInterfac
 
 def get_nav_bar(interface: abstractInterface):
     if not_editing(interface):
-        navbar = [main_menu_button, Button(BACK_BUTTON_LABEL, nav_button=True)]
+        navbar = [main_menu_button, Button(BACK_BUTTON_LABEL, nav_button=True, shortcut='b')]
     else:
-        navbar = ButtonBar([Button(CANCEL_BUTTON_LABEL, nav_button=True), Button(SAVE_BUTTON_LABEL, nav_button=True)])
+        navbar = ButtonBar([Button(CANCEL_BUTTON_LABEL, nav_button=True), Button(SAVE_BUTTON_LABEL, nav_button=True, shortcut='s')])
 
     volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser(interface)
     if can_see_all_groups_and_award_qualifications(interface=interface, event=get_event_from_state(interface), volunteer_id=volunteer_id):

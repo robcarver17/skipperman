@@ -1,5 +1,6 @@
 from typing import Union, List
 
+from app.data_access.configuration.fixed import BACK_KEYBOARD_SHORTCUT, SAVE_KEYBOARD_SHORTCUT
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.volunteers.volunteers import get_volunteer_name_from_id, get_sorted_list_of_volunteers
@@ -26,8 +27,8 @@ def display_form_edit_list_of_users(interface: abstractInterface,
     header_text= Heading("List of current skipperman users; edit name, enter new password, modify access, delete (carefully!) or add new user. Passwords are not shown, but can be changed by entering new values.", centred=False, size=4)
     warning = warning_text(interface)
     user_table = table_for_users(interface=interface, existing_list_of_users=existing_list_of_users)
-    nav_buttons = ButtonBar([Button(BACK_BUTTON_LABEL, nav_button=True)])
-    footer_buttons = ButtonBar([Button(SAVE_ENTRY_BUTTON_LABEL, nav_button=True)])
+    nav_buttons = ButtonBar([Button(BACK_BUTTON_LABEL, nav_button=True, shortcut=BACK_KEYBOARD_SHORTCUT)])
+    footer_buttons = ButtonBar([Button(SAVE_ENTRY_BUTTON_LABEL, nav_button=True, shortcut=SAVE_KEYBOARD_SHORTCUT)])
 
     return Form([
         ListOfLines([
@@ -40,7 +41,6 @@ def display_form_edit_list_of_users(interface: abstractInterface,
             footer_buttons
         ])
     ])
-
 
 
 def warning_text(interface: abstractInterface):

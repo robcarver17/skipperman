@@ -233,7 +233,8 @@ def get_html_for_button(button: Button) -> Html:
         big_button = button.big,
         menu_tile=button.tile,
         nav_button=button.nav_button,
-        url = button.url
+        url = button.url,
+        shortcut = button.shortcut
     )
 
 def get_html_for_menu_button() -> Html:

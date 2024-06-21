@@ -32,6 +32,7 @@ def display_form_for_clone_event_field_mapping(interface: abstractInterface):
     )
 
 
+
 def display_list_of_events_with_field_mapping_buttons(interface: abstractInterface, exclude_event: Event) -> ListOfLines:
     list_of_events = get_list_of_events_with_field_mapping(interface=interface, exclude_event=exclude_event)
     list_of_event_descriptions = list_of_events.list_of_event_descriptions
@@ -82,3 +83,7 @@ def post_form_for_clone_event_field_mapping(interface: abstractInterface):
 
 
 cancel_button = Button(CANCEL_BUTTON_LABEL)
+
+
+
+

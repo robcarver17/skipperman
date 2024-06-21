@@ -1,3 +1,4 @@
+from app.data_access.configuration.fixed import SAVE_KEYBOARD_SHORTCUT, CANCEL_KEYBOARD_SHORTCUT
 from app.objects.events import Event
 
 from app.backend.volunteers.volunteers import get_volunteer_from_id
@@ -15,9 +16,11 @@ GET_FOOD_FOR_CADETS = "Get food requirements for cadets from registration data"
 GET_FOOD_FOR_VOLUNTEERS = "Get food requirements for volunteers from registration data"
 DOWNLOAD_FOOD = "Download food requirements to spreadsheet"
 
+
+
 def get_button_bar_for_food_required(event: Event) -> ButtonBar:
-    save_button = Button(SAVE_BUTTON_LABEL, nav_button=True)
-    back_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
+    save_button = Button(SAVE_BUTTON_LABEL, nav_button=True, shortcut=SAVE_KEYBOARD_SHORTCUT)
+    back_button = Button(CANCEL_BUTTON_LABEL, nav_button=True, shortcut=CANCEL_KEYBOARD_SHORTCUT)
     cadet_button = Button(GET_FOOD_FOR_CADETS, nav_button=True)
     volunteer_button = Button(GET_FOOD_FOR_VOLUNTEERS, nav_button=True)
     download_button = Button(DOWNLOAD_FOOD, nav_button=True)

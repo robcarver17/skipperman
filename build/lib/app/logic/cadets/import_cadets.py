@@ -2,6 +2,7 @@ from typing import Union
 
 from app.backend.wa_import.load_wa_file import WA_FILE
 from app.data_access.configuration.configuration import WILD_APRICOT_FILE_TYPES
+from app.data_access.configuration.fixed import BACK_KEYBOARD_SHORTCUT
 from app.logic.cadets.iterate_over_import_cadets_in_uploaded_file import begin_iteration_over_rows_in_temp_cadet_file
 from app.backend.wa_import.import_cadets import create_temp_file_with_list_of_cadets, \
     DESCRIBE_ALL_FIELDS_IN_WA_CADET_LIST_FILE
@@ -28,7 +29,7 @@ def display_form_import_cadets(
 
 def get_upload_buttons():
     upload = Button(UPLOAD_FILE_BUTTON_LABEL)
-    back_button = Button(BACK_BUTTON_LABEL)
+    back_button = Button(BACK_BUTTON_LABEL, shortcut=BACK_KEYBOARD_SHORTCUT)
 
     return ButtonBar([back_button, upload])
 

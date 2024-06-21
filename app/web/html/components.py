@@ -172,7 +172,7 @@ HTML_BUTTON_NAME = "action"
 
 
 def html_button(button_text, button_value=arg_not_passed, big_button: bool = False, menu_tile = False, nav_button = False, url = '',
-                open_new_window: bool = False):
+                open_new_window: bool = False, shortcut: str = arg_not_passed):
 
     button_name = HTML_BUTTON_NAME
     if button_value == arg_not_passed:
@@ -190,11 +190,16 @@ def html_button(button_text, button_value=arg_not_passed, big_button: bool = Fal
     else:
         style_str = ''
 
+    if shortcut is arg_not_passed:
+        shortcut_str = ''
+    else:
+        shortcut_str = 'accesskey="%s"' % shortcut
+        button_text = "%s [Alt-%s]" % (button_text,shortcut)
 
     if url=='':
         html = Html(
-            '<button %s name="%s" type="submit" value="%s" %s>%s</button>'
-            % (style_str, button_name, button_value, size, button_text)
+            '<button %s name="%s" type="submit" value="%s" %s %s>%s</button>'
+            % (style_str, button_name, button_value, size, shortcut_str, button_text)
         )
     else:
         if open_new_window:
@@ -202,7 +207,7 @@ def html_button(button_text, button_value=arg_not_passed, big_button: bool = Fal
         else:
             target = ''
 
-        html= Html( '<a  href="%s" %s> <button %s>%s</button>  </a>'  %  (url, target, style_str, button_text))
+        html= Html( '<a  href="%s" %s> <button %s %s>%s</button>  </a>'  %  (url, target, style_str, shortcut_str, button_text))
     return html
 
 

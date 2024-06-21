@@ -1,6 +1,7 @@
 from typing import Union, Dict, List
 
 from app.backend.ticks_and_qualifications.ticksheets import get_qualification_status_for_single_cadet_as_list_of_str
+from app.data_access.configuration.fixed import SAVE_KEYBOARD_SHORTCUT, CANCEL_KEYBOARD_SHORTCUT
 from app.objects.groups import Group
 
 from app.backend.events import get_list_of_all_events
@@ -117,9 +118,9 @@ def get_allocations_and_classes_detail(interface: abstractInterface, event: Even
 
 
 
-update_button = Button(UPDATE_ALLOCATION_BUTTON_LABEL, nav_button=True)
-back_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
 
+update_button = Button(UPDATE_ALLOCATION_BUTTON_LABEL, nav_button=True, shortcut=SAVE_KEYBOARD_SHORTCUT)
+back_button = Button(CANCEL_BUTTON_LABEL, nav_button=True, shortcut=CANCEL_KEYBOARD_SHORTCUT)
 
 def sort_buttons_for_allocation_table(sort_order: list) -> Table:
     return reorder_table(sort_order)

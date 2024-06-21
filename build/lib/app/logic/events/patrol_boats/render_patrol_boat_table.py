@@ -5,7 +5,8 @@ from app.backend.forms.swaps import is_ready_to_swap
 from app.backend.volunteers.patrol_boats import get_summary_list_of_boat_allocations_for_events
 from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
 from app.data_access.configuration.fixed import COPY_OVERWRITE_SYMBOL, SWAP_SHORTHAND, SWAP_SHORTHAND2, \
-    BOAT_SHORTHAND, ROLE_SHORTHAND, BOAT_AND_ROLE_SHORTHAND, REMOVE_SHORTHAND, COPY_FILL_SYMBOL
+    BOAT_SHORTHAND, ROLE_SHORTHAND, BOAT_AND_ROLE_SHORTHAND, REMOVE_SHORTHAND, COPY_FILL_SYMBOL, SAVE_KEYBOARD_SHORTCUT, \
+    CANCEL_KEYBOARD_SHORTCUT
 from app.logic.events.patrol_boats.elements_in_patrol_boat_table import \
     get_existing_allocation_elements_for_day_and_boat, get_unique_list_of_volunteer_ids_for_skills_checkboxes, \
     get_volunteer_row_to_select_skill
@@ -190,10 +191,10 @@ def get_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonBar:
     in_swap_state = is_ready_to_swap(interface)
     if in_swap_state:
         return ButtonBar([])
-    save_button = Button(SAVE_CHANGES_BUTTON_LABEL, nav_button=True)
-    back_button = get_back_button_for_boat_allocation(interface)
+    save_button = Button(SAVE_CHANGES_BUTTON_LABEL, nav_button=True, shortcut=SAVE_KEYBOARD_SHORTCUT)
+    cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True, shortcut=CANCEL_KEYBOARD_SHORTCUT)
     help_button = HelpButton('patrol_boat_help')
-    return ButtonBar([back_button, save_button, copy_all_boats_button, copy_all_boats_and_roles_buttons, copyover_all_boats_button, copyover_all_boats_and_roles_buttons, help_button])
+    return ButtonBar([cancel_button, save_button, copy_all_boats_button, copy_all_boats_and_roles_buttons, copyover_all_boats_button, copyover_all_boats_and_roles_buttons, help_button])
 
 COPY_ALL_BOATS_BUTTON_LABEL = "Copy and fill all boats from earliest allocated boat across days"
 COPYOVER_ALL_BOATS_BUTTON_LABEL = "Copy, fill and overwrite all boats from earliest allocated boat"
@@ -207,13 +208,6 @@ copyover_all_boats_button = Button(COPYOVER_ALL_BOATS_BUTTON_LABEL, nav_button=T
 copy_all_boats_and_roles_buttons = Button(COPY_BOATS_AND_ROLES_BUTTON_LABEL, nav_button=True)
 copyover_all_boats_and_roles_buttons = Button(COPYOVER_BOATS_AND_ROLES_BUTTON_LABEL, nav_button=True)
 
-
-def get_back_button_for_boat_allocation(interface: abstractInterface):
-    in_swap_state = is_ready_to_swap(interface)
-    if in_swap_state:
-        return ""
-    else:
-        return Button(CANCEL_BUTTON_LABEL, nav_button=True)
 
 
 link = Link(url=

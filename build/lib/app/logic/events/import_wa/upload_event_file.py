@@ -2,6 +2,7 @@ import os
 from typing import Union
 
 from app.data_access.configuration.configuration import WILD_APRICOT_FILE_TYPES
+from app.data_access.configuration.fixed import BACK_KEYBOARD_SHORTCUT
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -53,9 +54,11 @@ def get_form_for_wa_upload_with_prompt(prompt: str) -> Form:
 
 def get_upload_buttons():
     upload = Button(UPLOAD_FILE_BUTTON_LABEL, nav_button=True)
-    back_button = Button(BACK_BUTTON_LABEL, nav_button=True)
+    back_button = Button(BACK_BUTTON_LABEL, nav_button=True, shortcut=BACK_KEYBOARD_SHORTCUT)
 
     return ButtonBar([back_button, upload])
+
+
 
 
 def post_form_upload_event_file(interface: abstractInterface) -> Union[Form, NewForm]:

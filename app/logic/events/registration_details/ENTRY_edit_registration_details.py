@@ -1,5 +1,7 @@
 from typing import Union
 
+from app.data_access.configuration.fixed import SAVE_KEYBOARD_SHORTCUT, BACK_KEYBOARD_SHORTCUT
+
 from app.logic.events.registration_details.registration_details_form import get_registration_data, \
     get_top_row_for_table_of_registration_details, row_for_cadet_in_event
 from app.logic.events.registration_details.parse_registration_details_form import parse_registration_details_from_form
@@ -63,8 +65,11 @@ def display_form_edit_registration_details_given_event_and_sort_order(
         )
     )
 
-save_button = Button(SAVE_CHANGES, nav_button=True)
-back_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
+
+
+
+save_button = Button(SAVE_CHANGES, nav_button=True, shortcut=SAVE_KEYBOARD_SHORTCUT)
+back_button = Button(CANCEL_BUTTON_LABEL, nav_button=True, shortcut=BACK_KEYBOARD_SHORTCUT)
 
 nav_buttons = ButtonBar([back_button, save_button])
 

@@ -14,7 +14,7 @@ from app.logic.events.patrol_boats.swapping import get_all_swap_buttons_for_boat
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm, )
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL
+from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, cancel_menu_button, save_menu_button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.logic.events.events_in_state import get_event_from_state
@@ -54,12 +54,12 @@ def post_form_view_for_patrol_boat_allocation(
 
     last_button_pressed = interface.last_button_pressed()
 
-    if last_button_pressed==CANCEL_BUTTON_LABEL:
+    if last_button_pressed==cancel_menu_button.name:
         return previous_form(interface)
 
     update_data_from_form_entries_in_patrol_boat_allocation_page(interface)
 
-    if last_button_pressed==SAVE_CHANGES_BUTTON_LABEL:
+    if last_button_pressed==save_menu_button.name:
         pass
     elif last_button_pressed==COPY_ALL_BOATS_BUTTON_LABEL:
         copy_across_all_boats(interface)

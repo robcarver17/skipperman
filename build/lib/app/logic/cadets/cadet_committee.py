@@ -6,7 +6,7 @@ from app.backend.cadets import get_list_of_cadets_not_on_committee_ordered_by_ag
     get_next_year_for_cadet_committee, get_cadet_from_list_of_cadets, add_new_cadet_to_committee, \
     CadetOnCommitteeWithName, toggle_selection_for_cadet_committee_member
 from app.objects.abstract_objects.abstract_form import Form, NewForm, dropDownInput, dateInput
-from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, CANCEL_BUTTON_LABEL
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, CANCEL_BUTTON_LABEL, cancel_menu_button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, DetailListOfLines
 from app.objects.abstract_objects.abstract_text import Heading
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
@@ -22,7 +22,7 @@ def display_form_cadet_committee(
 ) -> Union[Form, NewForm]:
 
 
-    nav_buttons = ButtonBar([Button(CANCEL_BUTTON_LABEL, nav_button=True)])
+    nav_buttons = ButtonBar([cancel_menu_button])
 
     existing_cadet_rows = table_rows_for_existing_cadets_on_committee(interface=interface)
     new_cadet_row = table_row_for_new_cadet_on_committee(interface=interface)

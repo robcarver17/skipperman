@@ -1,7 +1,7 @@
 from app.logic.events.constants import TEMPLATE_NAME, MAPPING_FILE, UPLOAD_FILE_BUTTON_LABEL
 from app.backend.wa_import.map_wa_fields import write_template, read_mapping_from_csv_file_object
 from app.objects.abstract_objects.abstract_form import textInput, fileInput, Form
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar, cancel_menu_button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.objects.abstract_objects.abstract_interface import abstractInterface, get_file_from_interface, \
     form_with_message_and_finished_button
@@ -30,16 +30,15 @@ def display_form_for_upload_template_field_mapping(interface: abstractInterface)
 
 def get_upload_buttons_for_template():
 
-    return ButtonBar([cancel_button, upload_button])
+    return ButtonBar([cancel_menu_button, upload_button])
 
 
 upload_button = Button(UPLOAD_FILE_BUTTON_LABEL, nav_button=True)
-cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
 
 def post_form_for_upload_template_field_mapping(interface: abstractInterface):
     last_button = interface.last_button_pressed()
     previous_form = interface.get_new_display_form_for_parent_of_function(display_form_for_upload_template_field_mapping)
-    if last_button == CANCEL_BUTTON_LABEL:
+    if last_button == cancel_menu_button.name:
         return previous_form
 
     template_name = interface.value_from_form(TEMPLATE_NAME)

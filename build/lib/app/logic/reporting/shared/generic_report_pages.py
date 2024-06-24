@@ -21,8 +21,8 @@ from app.objects.abstract_objects.abstract_form import (
 )
 from app.objects.abstract_objects.abstract_text import bold, Heading
 from app.objects.abstract_objects.abstract_lines import  ListOfLines, _______________
-from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, CANCEL_BUTTON_LABEL, Button, ButtonBar, \
-    main_menu_button
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL,  Button, ButtonBar, \
+    main_menu_button, back_menu_button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.logic.events.events_in_state import get_event_from_state, update_state_for_specific_event_given_event_description
@@ -39,7 +39,7 @@ def display_initial_generic_report_form(interface: abstractInterface, report_gen
     )
     criteria_description  =describe_criteria(**event_criteria)
 
-    nav_bar = ButtonBar([main_menu_button, back_button])
+    nav_bar = ButtonBar([main_menu_button, back_menu_button])
 
     heading = Heading("Select event for %s %s:" % (report_generator.name, criteria_description), centred=True, size=4)
     lines_inside_form = ListOfLines(
@@ -52,8 +52,6 @@ def display_initial_generic_report_form(interface: abstractInterface, report_gen
 
     return Form(lines_inside_form)
 
-back_button = Button(BACK_BUTTON_LABEL, nav_button=True)
-
 
 
 
@@ -62,7 +60,7 @@ def post_form_initial_generic_report(
     report_generator: ReportGenerator
 ) -> Union[Form, NewForm]:
     last_button = interface.last_button_pressed()
-    if last_button == BACK_BUTTON_LABEL:
+    if back_menu_button.pressed(last_button):
         return interface.get_new_display_form_for_parent_of_function(report_generator.initial_display_form_function)
 
     event_name_selected = last_button
@@ -96,7 +94,7 @@ def display_form_for_generic_report_all_options(
         arrangement_and_order_text,
     ) = get_text_explaining_various_options_for_generic_report(interface=interface, report_generator=report_generator)
 
-    navbar = ButtonBar([main_menu_button, back_button, create_report_button])
+    navbar = ButtonBar([main_menu_button, back_menu_button, create_report_button])
 
     link =weblink_for_report(interface=interface, report_generator=report_generator)
     return Form(
@@ -152,14 +150,11 @@ def post_form_for_generic_report_all_options(
     elif last_button_pressed == MODIFY_ADDITIONAL_OPTIONS_BUTTON_LABEL:
         return additional_options_form(interface, report_generator)
 
-    elif last_button_pressed == BACK_BUTTON_LABEL:
+    elif back_menu_button.pressed(last_button_pressed):
         # otherwise event/report specific data like filenames is remembered; also group order which could break everything if persisted
         # note if the report type was persistently stored we'd need to keep it here but it is not
         interface.clear_persistent_data_except_specified_fields([])
         return previous_form
-
-    elif last_button_pressed == CANCEL_BUTTON_LABEL:
-        return initial_state_form
 
     else:
         button_error_and_back_to_initial_state_form(interface)
@@ -188,7 +183,7 @@ def display_form_for_generic_report_additional_options(
     return Form(
         ListOfLines(
             [
-                ButtonBar([back_button, create_report_button, save_button]),
+                ButtonBar([back_menu_button, create_report_button, save_button]),
                 _______________,
                 Heading("%s: Select additional parameters for %s" % (report_generator.name, str(event)), centred=False, size=6),
                 _______________,
@@ -220,8 +215,6 @@ def post_form_for_generic_report_additional_options(
         report_generator.get_additional_parameters_from_form_and_save(interface)
         return previous_form
 
-    elif last_button_pressed == CANCEL_BUTTON_LABEL:
-        return initial_state_form
 
     else:
         button_error_and_back_to_initial_state_form(interface)
@@ -241,7 +234,7 @@ def display_form_for_generic_report_print_options(
     return Form(
         ListOfLines(
             [
-                ButtonBar([back_button,  save_button, create_report_button])
+                ButtonBar([back_menu_button,  save_button, create_report_button])
                 ,
                 _______________])+
                 form_of_print_options+
@@ -264,9 +257,6 @@ def post_form_for_generic_report_print_options(
 
     if last_button_pressed == BACK_BUTTON_LABEL:
         return previous_form
-
-    elif last_button_pressed == CANCEL_BUTTON_LABEL:
-        return initial_state_form
 
     #saving
     print_options = get_print_options_from_main_option_form_fields(interface)
@@ -296,7 +286,7 @@ def display_form_for_generic_report_arrangement_options(interface: abstractInter
     return Form(
         ListOfLines(
             [
-                ButtonBar([back_button, create_report_button]),
+                ButtonBar([back_menu_button, create_report_button]),
                 Heading("%s: Arrange layout for %s" % (report_generator.name, str(event)), centred=False, size=6),
                 form_for_arrangement_options,
                 _______________,
@@ -320,8 +310,6 @@ def post_form_for_generic_report_arrangement_options(
     elif last_button_pressed == BACK_BUTTON_LABEL:
         return previous_form
 
-    elif last_button_pressed == CANCEL_BUTTON_LABEL:
-        return initial_state_form
     else:
         ## Changing arrangement
         dict_of_df = report_generator.get_dict_of_df(interface)

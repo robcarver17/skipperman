@@ -1,10 +1,9 @@
 from typing import Union
 
-from app.data_access.configuration.fixed import CANCEL_KEYBOARD_SHORTCUT, SAVE_KEYBOARD_SHORTCUT
 from app.logic.cadets.cadet_state_storage import get_cadet_from_state
 from app.backend.cadets import modify_cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm, checkboxInput
-from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, SAVE_BUTTON_LABEL, CANCEL_BUTTON_LABEL
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, SAVE_BUTTON_LABEL, CANCEL_BUTTON_LABEL, cancel_menu_button, save_menu_button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_interface import (
@@ -27,7 +26,7 @@ def display_form_edit_individual_cadet(
         )
         return initial_state_form
 
-    footer_buttons = ButtonBar([Button(CANCEL_BUTTON_LABEL, nav_button=True, shortcut=CANCEL_KEYBOARD_SHORTCUT), Button(SAVE_BUTTON_LABEL, nav_button=True, shortcut=SAVE_KEYBOARD_SHORTCUT)])
+    footer_buttons = ButtonBar([cancel_menu_button, save_menu_button])
     cadet_and_text = CadetAndVerificationText(
         cadet=cadet,
         verification_text=""

@@ -6,7 +6,7 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     File, NewForm, )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button
+from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button,get_nav_bar_with_just_cancel_button
 from app.logic.abstract_logic_api import initial_state_form
 
 
@@ -19,7 +19,7 @@ def display_form_for_download_template_field_mapping(interface: abstractInterfac
     else:
         contents_of_form = ListOfLines(
             [
-                cancel_button,
+                get_nav_bar_with_just_cancel_button(),
                 "Choose template to download and edit in excel",
                 _______________,
                 list_of_templates_with_buttons,
@@ -27,8 +27,6 @@ def display_form_for_download_template_field_mapping(interface: abstractInterfac
         )
 
     return Form(contents_of_form)
-
-cancel_button = Button(CANCEL_BUTTON_LABEL)
 
 def post_form_for_download_template_field_mapping(
     interface: abstractInterface,

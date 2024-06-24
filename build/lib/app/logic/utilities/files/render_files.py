@@ -3,7 +3,8 @@ from typing import List, Tuple
 
 from app.data_access.file_access import public_reporting_directory, download_directory, upload_directory, \
     get_files_in_directory, web_pathname_of_file
-from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, main_menu_button, BACK_BUTTON_LABEL
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, main_menu_button, BACK_BUTTON_LABEL, \
+    back_menu_button
 from app.objects.abstract_objects.abstract_form import checkboxInput
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 
@@ -111,7 +112,7 @@ CLEAR_STAGING_BUTTON_LABEL = "Delete all temporary uploaded files" ## STAGING
 CLEAR_PUBLIC_BUTTON_LABEL= "Delete all public file(s)" # PUBLIC_REPORTING_SUBDIRECTORY
 UPLOAD_PUBLIC_FILE = "Upload new public file"
 DELETE_SELECTED_FILES = "Delete selected files"
-nav_buttons = ButtonBar([main_menu_button, Button(BACK_BUTTON_LABEL, nav_button=True)
+nav_buttons = ButtonBar([main_menu_button, back_menu_button
                          ])
 public_file_header = ButtonBar([Button(UPLOAD_PUBLIC_FILE, nav_button=True),
                                 Button(DELETE_SELECTED_FILES, nav_button=True),

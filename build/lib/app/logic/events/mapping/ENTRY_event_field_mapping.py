@@ -1,6 +1,5 @@
 from typing import Union
 
-from app.data_access.configuration.fixed import BACK_KEYBOARD_SHORTCUT
 from app.logic.events.mapping.clone_field_mapping import display_form_for_clone_event_field_mapping
 from app.logic.events.mapping.create_mapping import display_form_for_create_custom_field_mapping
 from app.logic.events.mapping.template_field_mapping import display_form_for_choose_template_field_mapping
@@ -10,7 +9,7 @@ from app.objects.abstract_objects.abstract_form import (
 )
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button, ButtonBar, main_menu_button
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button, ButtonBar, main_menu_button, back_menu_button
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
@@ -106,7 +105,7 @@ def mapping_buttons() -> ButtonBar:
 
         [
             main_menu_button,
-            Button(BACK_BUTTON_LABEL, nav_button=True, shortcut=BACK_KEYBOARD_SHORTCUT),
+            back_menu_button,
             Button(MAP_TO_TEMPLATE_BUTTON_LABEL, nav_button=True),
             Button(CLONE_EVENT_MAPPING_BUTTON_LABEL, nav_button=True),
             Button(CREATE_MAPPING_BUTTON_LABEL, nav_button=True)

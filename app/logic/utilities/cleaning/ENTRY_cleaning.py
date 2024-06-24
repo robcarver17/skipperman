@@ -12,7 +12,8 @@ from app.objects.events import SORT_BY_START_DSC, ListOfEvents
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm, )
-from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button, ButtonBar, HelpButton
+from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button, ButtonBar, HelpButton, \
+    back_menu_button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.events.constants import (
     ADD_EVENT_BUTTON_LABEL,
@@ -25,7 +26,7 @@ def display_form_for_event_cleaning( interface: abstractInterface):
 
 def display_form_for_event_cleaning_sort_order_passed( interface: abstractInterface, sort_by: str = SORT_BY_START_DSC):
     list_of_events_with_buttons = display_list_of_events_with_buttons_ignoring_future_events(interface=interface, sort_by=sort_by)
-    navbar = ButtonBar([main_menu_button, HelpButton("event_cleaning_help")])
+    navbar = ButtonBar([back_menu_button, HelpButton("event_cleaning_help")])
 
     contents_of_form = ListOfLines(
         [
@@ -46,6 +47,8 @@ add_button = Button(ADD_EVENT_BUTTON_LABEL, nav_button=True)
 
 def post_form_view_of_event_data_cleaning(interface: abstractInterface) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
+    if back_menu_button.pressed(button_pressed):
+        return interface.get_new_display_form_for_parent_of_function(display_form_for_event_cleaning)
     if button_pressed in all_sort_types_for_event_list:
         ## no change to stage required
         sort_by = interface.last_button_pressed()

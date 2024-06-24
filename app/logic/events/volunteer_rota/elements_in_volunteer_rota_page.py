@@ -7,14 +7,14 @@ from app.backend.volunteers.volunteer_rota_summary import get_summary_list_of_ro
 from app.data_access.configuration.configuration import VOLUNTEER_SKILLS, WEBLINK_FOR_QUALIFICATIONS
 from app.data_access.configuration.fixed import COPY_OVERWRITE_SYMBOL, SWAP_SHORTHAND,  \
     NOT_AVAILABLE_SHORTHAND, COPY_FILL_SYMBOL, REMOVE_SHORTHAND
-from app.logic.events.constants import SAVE_CHANGES
+
 
 from app.logic.events.volunteer_rota.rota_state import get_skills_filter_from_state, get_sorts_and_filters_from_state
 from app.objects.volunteers_in_roles import FILTER_OPTIONS
 
 from app.backend.forms.swaps import is_ready_to_swap
 from app.logic.volunteers.ENTRY_view_volunteers import all_sort_types as all_volunteer_name_sort_types
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button, CANCEL_BUTTON_LABEL, main_menu_button, \
+from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button, cancel_menu_button, save_menu_button, main_menu_button, \
     HelpButton
 from app.objects.abstract_objects.abstract_form import MaterialAroundTable, checkboxInput, Link, dropDownInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -111,12 +111,13 @@ COPY_ALL_FIRST_ROLE_BUTTON_LABEL = "Copy from earliest allocated role to fill em
 filter_button = Button(APPLY_FILTER_BUTTON_LABEL, nav_button=True)
 clear_filter_button = Button(CLEAR_FILTERS_BUTTON_LABEL, nav_button=True)
 
+
 def get_header_buttons_for_rota(interface: abstractInterface):
     if is_ready_to_swap(interface):
         return ''
     else:
-        return ButtonBar([Button(CANCEL_BUTTON_LABEL, nav_button=True, shortcut='c'),
-                          Button(SAVE_CHANGES, nav_button=True, shortcut='s'),
+        return ButtonBar([cancel_menu_button,
+                          save_menu_button,
                       Button(ADD_NEW_VOLUNTEER_BUTTON_LABEL, nav_button=True),
                       Button(COPY_ALL_ROLES_BUTTON_LABEL, nav_button=True),
                           Button(COPY_ALL_FIRST_ROLE_BUTTON_LABEL, nav_button=True),

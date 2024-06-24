@@ -2,7 +2,7 @@ from typing import Union
 
 from app.backend.data.qualification import QualificationData
 from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button, BACK_BUTTON_LABEL, \
-    get_nav_bar_with_just_main_menu_and_back_button, main_menu_button, HelpButton
+    get_nav_bar_with_just_main_menu_and_back_button, main_menu_button, HelpButton, back_menu_button
 
 from app.objects.abstract_objects.abstract_text import Heading
 
@@ -41,7 +41,7 @@ def display_form_choose_level_for_group_at_event(interface: abstractInterface) -
 
 
 def get_nav_bar(interface: abstractInterface):
-    navbar = [main_menu_button, Button(BACK_BUTTON_LABEL, nav_button=True), HelpButton("ticksheets_levels_help")]
+    navbar = [main_menu_button, back_menu_button, HelpButton("ticksheets_levels_help")]
 
     return ButtonBar(navbar)
 
@@ -61,7 +61,7 @@ def get_level_buttons(interface: abstractInterface):
 
 def post_form_choose_level_for_group_at_event(interface: abstractInterface) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
-    if button_pressed == BACK_BUTTON_LABEL:
+    if back_menu_button.pressed(button_pressed):
         ## no change to stage required
         return previous_form(interface)
     else:  ## must be a level

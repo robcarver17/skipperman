@@ -13,7 +13,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.events import Event
 
-from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, SAVE_BUTTON_LABEL, CANCEL_BUTTON_LABEL
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, SAVE_BUTTON_LABEL, CANCEL_BUTTON_LABEL, save_menu_button, cancel_menu_button
 
 
 
@@ -35,8 +35,6 @@ EXPORT_COLOURS = "Download spreadsheet of colour teams"
 #### Auto colour
 
 def get_button_bar_for_clothing(interface:abstractInterface, event: Event) -> ButtonBar:
-    save_button = Button(SAVE_BUTTON_LABEL, nav_button=True, shortcut=SAVE_KEYBOARD_SHORTCUT)
-    back_button = Button(CANCEL_BUTTON_LABEL, nav_button=True, shortcut=CANCEL_KEYBOARD_SHORTCUT)
     cadet_button = Button(GET_CLOTHING_FOR_CADETS, nav_button=True)
     action_button = Button(DISTRIBUTE_ACTION_BUTTON_LABEL, nav_button=True)
     clear_button = Button(CLEAR_ALL_COLOURS, nav_button=True)
@@ -49,7 +47,7 @@ def get_button_bar_for_clothing(interface:abstractInterface, event: Event) -> Bu
         export_buttons = [Button(EXPORT_ALL, nav_button=True), Button(EXPORT_COLOURS, nav_button=True)]
 
 
-    button_bar = ButtonBar([back_button, save_button, filter_button, clear_button]+export_buttons)
+    button_bar = ButtonBar([cancel_menu_button, save_menu_button, filter_button, clear_button]+export_buttons)
 
     if event.contains_cadets:
         button_bar.append(cadet_button)

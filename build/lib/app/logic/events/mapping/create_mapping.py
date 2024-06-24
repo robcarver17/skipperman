@@ -1,6 +1,5 @@
 
 import pandas as pd
-from app.data_access.configuration.fixed import BACK_KEYBOARD_SHORTCUT
 
 from app.backend.wa_import.map_wa_fields import temp_mapping_file_name
 from app.backend.wa_import.load_wa_file import get_staged_file_raw_event_filename, load_raw_wa_file
@@ -10,7 +9,7 @@ from app.logic.events.constants import UPLOAD_MAPPING_BUTTON_LABEL
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.mapping.download_template_field_mapping import display_form_for_download_template_field_mapping
 from app.logic.events.mapping.upload_field_mapping import display_form_for_upload_custom_field_mapping
-from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, back_menu_button, BACK_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_form import Form, NewForm, File
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
@@ -26,7 +25,7 @@ def display_form_for_create_custom_field_mapping(interface: abstractInterface):
         [
             "Tools to create mapping for event %s" % str(event),
             _______________,
-            ButtonBar([back_button, Button(DOWNLOAD_MAPPING_BUTTON_LABEL, nav_button=True),
+            ButtonBar([back_menu_button, Button(DOWNLOAD_MAPPING_BUTTON_LABEL, nav_button=True),
             Button(DOWNLOAD_FIELD_NAMES_BUTTON_LANEL, nav_button=True),
             wa_field_button,
             Button(UPLOAD_MAPPING_BUTTON_LABEL, nav_button=True)]),
@@ -36,7 +35,6 @@ def display_form_for_create_custom_field_mapping(interface: abstractInterface):
 
     return Form(contents_of_form)
 
-back_button = Button(BACK_BUTTON_LABEL, nav_button=True, shortcut=BACK_KEYBOARD_SHORTCUT)
 
 
 def get_wa_field_download_button(interface: abstractInterface):

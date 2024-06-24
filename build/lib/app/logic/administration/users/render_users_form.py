@@ -1,6 +1,6 @@
 from typing import Union, List
 
-from app.data_access.configuration.fixed import BACK_KEYBOARD_SHORTCUT, SAVE_KEYBOARD_SHORTCUT
+from app.data_access.configuration.fixed import  SAVE_KEYBOARD_SHORTCUT
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.volunteers.volunteers import get_volunteer_name_from_id, get_sorted_list_of_volunteers
@@ -12,12 +12,11 @@ from app.objects.abstract_objects.abstract_form import Form, NewForm, textInput,
 from app.objects.abstract_objects.abstract_tables import RowInTable, Table
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.objects.abstract_objects.abstract_text import bold, Heading
-from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, cancel_menu_button
 from app.objects.users_and_security import ListOfSkipperManUsers, SkipperManUser, ADMIN_GROUP, ALL_GROUPS, \
     NO_VOLUNTEER_ID
 from app.backend.data.security import load_all_users
 
-BACK_BUTTON_LABEL = "Back (cancel changes)"
 SAVE_ENTRY_BUTTON_LABEL =  "Save edits to existing or add new entry"
 
 def display_form_edit_list_of_users(interface: abstractInterface,
@@ -27,7 +26,7 @@ def display_form_edit_list_of_users(interface: abstractInterface,
     header_text= Heading("List of current skipperman users; edit name, enter new password, modify access, delete (carefully!) or add new user. Passwords are not shown, but can be changed by entering new values.", centred=False, size=4)
     warning = warning_text(interface)
     user_table = table_for_users(interface=interface, existing_list_of_users=existing_list_of_users)
-    nav_buttons = ButtonBar([Button(BACK_BUTTON_LABEL, nav_button=True, shortcut=BACK_KEYBOARD_SHORTCUT)])
+    nav_buttons = ButtonBar([cancel_menu_button])
     footer_buttons = ButtonBar([Button(SAVE_ENTRY_BUTTON_LABEL, nav_button=True, shortcut=SAVE_KEYBOARD_SHORTCUT)])
 
     return Form([

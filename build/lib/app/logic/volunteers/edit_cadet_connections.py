@@ -4,7 +4,7 @@ from typing import Union, List
 from app.backend.cadets import get_sorted_list_of_cadets, get_list_of_cadets_similar_to_name_first, cadet_from_id, \
     get_cadet_from_list_of_cadets
 from app.objects.abstract_objects.abstract_form import Form, NewForm, dropDownInput
-from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, cancel_menu_button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_interface import (
@@ -50,7 +50,7 @@ def form_to_edit_connections(volunteer: Volunteer,
 
     existing_entries = rows_for_existing_entries(connected_cadets=connected_cadets)
     new_entries = row_for_new_entries(volunteer=volunteer, connected_cadets=connected_cadets, from_list_of_cadets=from_list_of_cadets)
-    footer_buttons = ButtonBar([Button(BACK_BUTTON_LABEL, nav_button=True)])
+    footer_buttons = ButtonBar([cancel_menu_button])
 
     return Form([
         ListOfLines([
@@ -110,11 +110,11 @@ def post_form_edit_cadet_volunteer_connections(
 
     button = interface.last_button_pressed()
     ### Buttons are back; delete button for individual cadet connection; add to add a new connection
-    if button==BACK_BUTTON_LABEL:
+    if cancel_menu_button.pressed(button):
         return previous_form(interface)
     elif button==ADD_CONNECTION_BUTTON_LABEL:
         add_connection_from_form(interface)
-        interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+        interface.flush_cache_to_store()
         ## might want to do more
         return display_form_edit_cadet_volunteer_connections(interface)
 
@@ -135,7 +135,7 @@ def post_form_edit_cadet_volunteer_connections_when_delete_button_pressed(
     list_of_delete_cadet_buttons = get_list_of_delete_cadet_buttons(connected_cadets)
     if button in list_of_delete_cadet_buttons:
         delete_connection_given_form(interface=interface)
-        interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+        interface.flush_cache_to_store()
         ## might want to do more
         return display_form_edit_cadet_volunteer_connections(interface)
     else:

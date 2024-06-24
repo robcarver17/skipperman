@@ -46,11 +46,6 @@ def function_given_pressed_button_label(label) -> Callable:
     return DICT_OF_REPORT_LABELS_AND_STAGES.get(label, missing_data)
 
 def display_form_view_of_reports(interface: abstractInterface) -> Form:
-    print(nav_buttons)
-    print(list_of_report_buttons)
-    print(nav_buttons+list_of_report_buttons)
-    print(Form(ListOfLines([nav_buttons,
-        list_of_report_buttons])))
     return Form(ListOfLines([nav_buttons,
         list_of_report_buttons]))
 

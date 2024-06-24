@@ -3,7 +3,7 @@ from app.objects.abstract_objects.abstract_interface import (
     form_with_message_and_finished_button,
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import cancel_menu_button, Button, ButtonBar, CANCEL_BUTTON_LABEL
 
 from app.logic.events.events_in_state import get_event_from_state, get_event_from_list_of_events_given_event_description
 
@@ -24,7 +24,7 @@ def display_form_for_clone_event_field_mapping(interface: abstractInterface):
     else:
         return ListOfLines(
         [
-            ButtonBar([cancel_button]),
+            ButtonBar([cancel_menu_button]),
             Line("Choose event to clone event field mapping for %s" % str(current_event)),
             _______________,
             list_of_events_with_buttons,
@@ -81,8 +81,6 @@ def post_form_for_clone_event_field_mapping(interface: abstractInterface):
                                                  interface=interface,
                                                  function_whose_parent_go_to_on_button_press=display_form_for_clone_event_field_mapping)
 
-
-cancel_button = Button(CANCEL_BUTTON_LABEL)
 
 
 

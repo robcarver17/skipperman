@@ -14,7 +14,7 @@ from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line, _______________
 
 from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button, BACK_BUTTON_LABEL, main_menu_button, \
-    HelpButton
+    HelpButton, back_menu_button
 
 from app.logic.events.events_in_state import get_event_from_state
 
@@ -45,7 +45,7 @@ def display_form_choose_group_for_event(interface: abstractInterface) -> Form:
     return Form(lines_inside_form)
 
 def get_nav_bar(interface: abstractInterface):
-    navbar = [main_menu_button, Button(BACK_BUTTON_LABEL, nav_button=True)]
+    navbar = [main_menu_button, back_menu_button]
     volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser(interface)
     if can_see_all_groups_and_award_qualifications(interface=interface, event=get_event_from_state(interface), volunteer_id=volunteer_id):
         navbar.append(download_qualification_list_button)
@@ -83,7 +83,7 @@ def event_is_empty_of_groups(interface: abstractInterface, event: Event) -> bool
 
 def post_form_choose_group_for_event(interface: abstractInterface) -> Union[Form, NewForm, File]:
     button_pressed = interface.last_button_pressed()
-    if button_pressed==BACK_BUTTON_LABEL:
+    if back_menu_button.pressed(button_pressed):
         ## no change to stage required
         return previous_form(interface)
     elif button_pressed == DOWNLOAD_QUALIFICATION_LIST:

@@ -1,4 +1,4 @@
-from app.data_access.configuration.fixed import SAVE_KEYBOARD_SHORTCUT, CANCEL_KEYBOARD_SHORTCUT
+
 from app.objects.events import Event
 
 from app.backend.volunteers.volunteers import get_volunteer_from_id
@@ -7,7 +7,7 @@ from app.backend.cadets import get_cadet_from_id
 from app.backend.data.food import FoodData
 from app.backend.forms.form_utils import get_food_requirements_input_as_tuple
 from app.logic.events.events_in_state import get_event_from_state
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button, SAVE_BUTTON_LABEL, CANCEL_BUTTON_LABEL
+from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button,  save_menu_button, cancel_menu_button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.food import CadetWithFoodRequirementsAtEvent, VolunteerWithFoodRequirementsAtEvent
@@ -19,13 +19,11 @@ DOWNLOAD_FOOD = "Download food requirements to spreadsheet"
 
 
 def get_button_bar_for_food_required(event: Event) -> ButtonBar:
-    save_button = Button(SAVE_BUTTON_LABEL, nav_button=True, shortcut=SAVE_KEYBOARD_SHORTCUT)
-    back_button = Button(CANCEL_BUTTON_LABEL, nav_button=True, shortcut=CANCEL_KEYBOARD_SHORTCUT)
     cadet_button = Button(GET_FOOD_FOR_CADETS, nav_button=True)
     volunteer_button = Button(GET_FOOD_FOR_VOLUNTEERS, nav_button=True)
     download_button = Button(DOWNLOAD_FOOD, nav_button=True)
 
-    button_bar = ButtonBar([back_button, save_button, download_button])
+    button_bar = ButtonBar([cancel_menu_button, save_menu_button, download_button])
 
     if event.contains_cadets:
         button_bar.append(cadet_button)

@@ -20,7 +20,8 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     File, NewForm, )
 from app.objects.abstract_objects.abstract_lines import ListOfLines
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar, main_menu_button
+from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar, main_menu_button, \
+    cancel_menu_button
 
 
 def display_form_for_all_event_data_report(interface: abstractInterface):
@@ -29,7 +30,7 @@ def display_form_for_all_event_data_report(interface: abstractInterface):
     title = Heading("Select to dump giant spreadsheet of all event data", centred=True, size=4)
     contents_of_form = ListOfLines(
         [
-            ButtonBar([main_menu_button, cancel_button]),
+            ButtonBar([main_menu_button, cancel_menu_button]),
             title,
             event_buttons
         ]
@@ -37,14 +38,12 @@ def display_form_for_all_event_data_report(interface: abstractInterface):
 
     return Form(contents_of_form)
 
-cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
-
 
 def post_form_for_for_all_event_data_report(
     interface: abstractInterface,
 ) -> Union[File, Form, NewForm]:
     last_button = interface.last_button_pressed()
-    if last_button == CANCEL_BUTTON_LABEL:
+    if cancel_menu_button.pressed(last_button):
         return previous_form(interface)
     else:
         return action_when_event_button_clicked(interface)

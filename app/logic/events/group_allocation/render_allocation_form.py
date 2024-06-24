@@ -1,7 +1,7 @@
 from typing import Union, Dict, List
 
 from app.backend.ticks_and_qualifications.ticksheets import get_qualification_status_for_single_cadet_as_list_of_str
-from app.data_access.configuration.fixed import SAVE_KEYBOARD_SHORTCUT, CANCEL_KEYBOARD_SHORTCUT
+
 from app.objects.groups import Group
 
 from app.backend.events import get_list_of_all_events
@@ -26,9 +26,8 @@ from app.backend.group_allocations.group_allocations_data import get_allocation_
 from app.backend.group_allocations.sorting import sorted_active_cadets
 from app.backend.group_allocations.event_summarys import summarise_allocations_for_event
 
-from app.logic.events.constants import UPDATE_ALLOCATION_BUTTON_LABEL
 from app.logic.events.events_in_state import get_event_from_state
-from app.objects.abstract_objects.abstract_buttons import Button, CANCEL_BUTTON_LABEL, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import Button,  ButtonBar, cancel_menu_button, save_menu_button
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, DetailListOfLines, Line, \
@@ -51,7 +50,7 @@ def display_form_allocate_cadets_at_event(interface: abstractInterface, event: E
     day_dropdown = get_day_buttons(interface)
     inner_form = get_inner_form_for_cadet_allocation(interface=interface, event=event, sort_order=sort_order)
     sort_button_table = sort_buttons_for_allocation_table(sort_order)
-    nav_bar = ButtonBar([back_button, update_button])
+    nav_bar = ButtonBar([cancel_menu_button, save_menu_button])
 
     sort_order_line =                     DetailListOfLines(ListOfLines([
                     _______________,
@@ -119,8 +118,6 @@ def get_allocations_and_classes_detail(interface: abstractInterface, event: Even
 
 
 
-update_button = Button(UPDATE_ALLOCATION_BUTTON_LABEL, nav_button=True, shortcut=SAVE_KEYBOARD_SHORTCUT)
-back_button = Button(CANCEL_BUTTON_LABEL, nav_button=True, shortcut=CANCEL_KEYBOARD_SHORTCUT)
 
 def sort_buttons_for_allocation_table(sort_order: list) -> Table:
     return reorder_table(sort_order)

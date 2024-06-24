@@ -5,7 +5,7 @@ from app.logic.volunteers.delete_volunteer import display_form_delete_individual
 from app.logic.volunteers.edit_cadet_connections import display_form_edit_cadet_volunteer_connections
 from app.logic.volunteers.edit_volunteer import display_form_edit_individual_volunteer
 from app.objects.abstract_objects.abstract_form import Form, NewForm
-from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, back_menu_button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_interface import (
@@ -94,7 +94,7 @@ def lines_for_connected_cadets(interface: abstractInterface, volunteer: Voluntee
     )
 
 def buttons_for_volunteer_form() -> ButtonBar:
-    return ButtonBar([Button(BACK_BUTTON_LABEL, nav_button=True), Button(EDIT_BUTTON_LABEL, nav_button=True),  Button(EDIT_CADET_CONNECTIONS_BUTTON_LABEL, nav_button=True)])
+    return ButtonBar([back_menu_button, Button(EDIT_BUTTON_LABEL, nav_button=True),  Button(EDIT_CADET_CONNECTIONS_BUTTON_LABEL, nav_button=True)])
 
 
 def post_form_view_individual_volunteer(
@@ -102,7 +102,7 @@ def post_form_view_individual_volunteer(
 ) -> Union[Form, NewForm]:
     ## placeholder, not currently used
     button = interface.last_button_pressed()
-    if button==BACK_BUTTON_LABEL:
+    if back_menu_button.pressed(button):
         return previous_form(interface)
     elif button==DELETE_BUTTON_LABEL:
         return delete_volunteer_form(interface)

@@ -1,5 +1,6 @@
 from typing import Union
-from app.objects.abstract_objects.abstract_buttons import  Button, ButtonBar, HelpButton
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, HelpButton, ActionOptionButton, \
+    MainMenuNavButton
 from app.objects.abstract_objects.abstract_form import *
 from app.objects.abstract_objects.abstract_tables import PandasDFTable, ElementsInTable, RowInTable, Table, DetailTable
 from app.objects.abstract_objects.abstract_text import Text, Arrow, up_arrow, down_arrow, \
@@ -9,7 +10,7 @@ from app.objects.abstract_objects.abstract_text import Text, Arrow, up_arrow, do
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, DetailListOfLines, DetailLine
 
 from app.web.html.components import *
-from app.web.html.components import html_button, small_button_with_link
+from app.web.html.components import generic_html_button, nav_button_with_link_to_avoid_weird_routing_issue
 from app.web.html.url import INDEX_URL
 from app.web.html.forms import *
 from app.objects.abstract_objects.abstract_form import textInput, dateInput, radioInput, checkboxInput
@@ -132,10 +133,17 @@ def get_html_for_element_in_line(
         return Html(symbol_text(element_in_line))
     elif type(element_in_line) is Text:
         return get_html_for_text(element_in_line)
+
     elif type(element_in_line) is Button:
         return get_html_for_button(element_in_line)
+    elif type(element_in_line) is ActionOptionButton:
+        return get_html_for_action_option_button(element_in_line)
+    elif type(element_in_line) is MainMenuNavButton:
+        return get_html_for_main_menu_nav_button(element_in_line)
+
     elif type(element_in_line) is HelpButton:
         return get_html_for_help_button(element_in_line)
+
 
     elif type(element_in_line) is Link:
         return get_html_for_link(element_in_line)
@@ -224,25 +232,29 @@ def get_html_for_element_in_line(
 
 def get_html_for_button(button: Button) -> Html:
 
-    if button.url_is_main_menu:
-        return get_html_for_menu_button()
-
-    return html_button(
+    return generic_html_button(
         button_text=get_html_button_text(button.label),
         button_value=button.value,
         big_button = button.big,
         menu_tile=button.tile,
         nav_button=button.nav_button,
-        url = button.url,
         shortcut = button.shortcut
     )
 
-def get_html_for_menu_button() -> Html:
-    return small_button_with_link(label="Main menu", url = INDEX_URL, open_new_window=False)
+def get_html_for_action_option_button(button: ActionOptionButton):
+    return  html_action_option_button(
+        button_text=button.label,
+        url = button.url,
+    )
+
+
+def get_html_for_main_menu_nav_button(button: MainMenuNavButton) -> Html:
+    return html_for_main_menu_button(label = button.label, shortcut = button.shortcut)
+
 
 
 def get_html_for_help_button(help_button: HelpButton) -> Html:
-    return help_link_button(help_button.help_page)
+    return help_link_button(help_button.help_page, from_main_menu=help_button.from_main_menu, shortcut=help_button.shortcut)
 
 def get_html_button_text(button_text, urls_of_interest: UrlsOfInterest = arg_not_passed) -> Html:
     if type(button_text) is Line:

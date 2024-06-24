@@ -3,7 +3,7 @@ from typing import Union
 from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
 
 from app.objects.abstract_objects.abstract_form import Form, NewForm, textInput, checkboxInput, Link
-from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, cancel_menu_button, save_menu_button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_interface import (
@@ -39,7 +39,7 @@ def form_to_edit_individual_volunteer(interface: abstractInterface, volunteer: V
     skills_entries = skills_form_entries(interface=interface, volunteer=volunteer)
     link = Link(url=WEBLINK_FOR_QUALIFICATIONS, string="See qualifications table", open_new_window=True)
 
-    footer_buttons = ButtonBar([Button(CANCEL_BUTTON_LABEL, nav_button=True), Button(SAVE_BUTTON_LABEL, nav_button=True)])
+    footer_buttons = ButtonBar([cancel_menu_button, save_menu_button])
 
     return Form([
         ListOfLines([
@@ -82,11 +82,11 @@ def post_form_edit_individual_volunteer(
     button = interface.last_button_pressed()
     previous_page_form =interface.get_new_display_form_for_parent_of_function(display_form_edit_individual_volunteer)
 
-    if button==CANCEL_BUTTON_LABEL:
+    if cancel_menu_button.pressed(button):
         return previous_page_form
-    elif button==SAVE_BUTTON_LABEL:
+    elif save_menu_button.pressed(button):
         modify_volunteer_given_form_contents(interface=interface)
-        interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+        interface.flush_cache_to_store()
         return previous_page_form
     else:
         return button_error_and_back_to_initial_state_form(interface)

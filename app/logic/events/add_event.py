@@ -17,10 +17,10 @@ from app.objects.abstract_objects.abstract_interface import (
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
-    textInput, dateInput, checkboxInput,
+     dateInput, checkboxInput,
     intInput, listInput
 )
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import  Button, ButtonBar, cancel_menu_button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
 
@@ -71,11 +71,10 @@ def get_heading_text(interface: abstractInterface):
 def get_footer_buttons(form_is_blank: bool):
     final_submit = Button(FINAL_ADD_BUTTON_LABEL, nav_button=True)
     check_submit = Button(CHECK_BUTTON_LABEL, nav_button=True)
-    cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
     if form_is_blank:
-        return ButtonBar([cancel_button,  check_submit])
+        return ButtonBar([cancel_menu_button,  check_submit])
     else:
-        return ButtonBar([cancel_button, check_submit, final_submit])
+        return ButtonBar([cancel_menu_button, check_submit, final_submit])
 
 
 
@@ -146,7 +145,7 @@ def post_form_view_for_add_event(
     elif last_button_pressed == FINAL_ADD_BUTTON_LABEL:
         return process_form_when_event_verified(interface)
 
-    elif last_button_pressed == CANCEL_BUTTON_LABEL:
+    elif cancel_menu_button.pressed(last_button_pressed):
         return previous_form(interface)
     else:
         button_error_and_back_to_initial_state_form(interface)

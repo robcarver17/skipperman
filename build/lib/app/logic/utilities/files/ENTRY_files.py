@@ -17,7 +17,7 @@ from app.objects.abstract_objects.abstract_form import Form, NewForm, File
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines,  _______________
 from app.objects.abstract_objects.abstract_text import Heading
-from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL
+from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, back_menu_button
 from app.objects.abstract_objects.abstract_tables import DetailTable
 
 
@@ -49,7 +49,7 @@ def display_form_file_management(interface: abstractInterface) -> Form:
 
 def post_form_file_management(interface: abstractInterface) -> Union[NewForm, Form, File]:
     button_pressed = interface.last_button_pressed()
-    if button_pressed == BACK_BUTTON_LABEL:
+    if back_menu_button.pressed(button_pressed):
         return interface.get_new_display_form_for_parent_of_function(post_form_file_management)
     if button_pressed == CLEAR_TEMP_BUTTON_LABEL:
         delete_private_temporary_files()

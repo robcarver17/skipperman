@@ -1,5 +1,9 @@
 from typing import Union
 
+from app.backend.clothing import summarise_clothing
+
+from app.backend.food import summarise_food_data_by_day
+
 from app.backend.wa_import.map_wa_fields import     is_wa_field_mapping_setup_for_event
 from app.backend.group_allocations.event_summarys import summarise_registrations_for_event, \
     identify_birthdays, summarise_allocations_for_event
@@ -22,7 +26,8 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm
 )
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button, ButtonBar, main_menu_button
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, main_menu_button, \
+    back_menu_button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 
@@ -83,15 +88,30 @@ def get_event_form_for_event(
                         "Patrol boats, number of crew:",
                         boat_allocation_table])
 
-
-
+    food_summary = ""
     if event.contains_food:
-        ## FIXME SUMMARISE FOOD NUMBERS
-        pass
+        food_summary = summarise_food_data_by_day(interface=interface, event=event)
+        food_summary = ListOfLines([
+            _______________,
+            "Food requirements",
+            _______________,
+            food_summary,
+            _______________,
 
+        ])
+
+
+    clothing_summary = ""
     if event.contains_clothing:
-        ## FIXME SUMMARISE CLOTHING NUMBERS
-        pass
+        clothing_summary = summarise_clothing(interface=interface, event=event)
+        clothing_summary = ListOfLines([
+            _______________,
+            "Clothing sizes and colours:",
+            _______________,
+            clothing_summary,
+            _______________,
+
+        ])
 
     buttons = get_event_buttons(event, interface=interface)
 
@@ -104,6 +124,8 @@ def get_event_form_for_event(
                         summarise_registrations,
                         allocations_lines,
                         rota_lines,
+                        food_summary,
+                        clothing_summary
 ]))
 
     return Form(lines_in_form)
@@ -131,10 +153,6 @@ def get_event_buttons(event: Event, interface: abstractInterface) -> ButtonBar:
         nav_button=True
     )  ## does upload and import_wa, assuming no staged file
 
-    back_button = Button(BACK_BUTTON_LABEL,
-        nav_button=True)
-
-
     wa_import_done = is_wa_file_mapping_setup_for_event(interface=interface, event=event) ## have we done an import already (sets up event mapping)
     field_mapping_done = is_wa_field_mapping_setup_for_event(interface=interface, event=event) ## have set up field mapping
     raw_event_file_exists = does_raw_event_file_exist(event.id) ## is there a staging file waiting to be uploaded
@@ -146,33 +164,33 @@ def get_event_buttons(event: Event, interface: abstractInterface) -> ButtonBar:
     )
 
     if not wa_import_done and not field_mapping_done and not raw_event_file_exists:
-        return ButtonBar([main_menu_button, back_button, wa_initial_upload])
+        return ButtonBar([main_menu_button, back_menu_button, wa_initial_upload])
 
     if not wa_import_done and field_mapping_done and not raw_event_file_exists:
         ## probably done mapping manually, need to do initial upload
-        return ButtonBar([main_menu_button, back_button, wa_initial_upload])
+        return ButtonBar([main_menu_button, back_menu_button, wa_initial_upload])
 
     if not wa_import_done and not field_mapping_done and raw_event_file_exists:
-        return ButtonBar([main_menu_button, back_button, wa_create_field_mapping])
+        return ButtonBar([main_menu_button, back_menu_button, wa_create_field_mapping])
 
     if not wa_import_done and field_mapping_done and raw_event_file_exists:
-        return ButtonBar([main_menu_button, back_button, wa_import, wa_check_field_mapping])
+        return ButtonBar([main_menu_button, back_menu_button, wa_import, wa_check_field_mapping])
 
     ## both done, we can update the WA file and do cadet backend / other editing
     if wa_import_done and field_mapping_done and not raw_event_file_exists:
         event_specific_buttons = get_event_specific_buttons(event)
-        return ButtonBar([main_menu_button, back_button, wa_update, wa_modify_field_mapping]+event_specific_buttons )
+        return ButtonBar([main_menu_button, back_menu_button, wa_update, wa_modify_field_mapping]+event_specific_buttons )
 
     if wa_import_done and field_mapping_done and raw_event_file_exists:
         ## shouldn't really happen
         event_specific_buttons = get_event_specific_buttons(event)
-        return ButtonBar([main_menu_button, back_button, wa_update, wa_modify_field_mapping]+event_specific_buttons )
+        return ButtonBar([main_menu_button, back_menu_button, wa_update, wa_modify_field_mapping]+event_specific_buttons )
 
     interface.log_error(
         "Something went wrong; contact support [wa_import_done=%s, field_mapping_done=%s, raw_event_file_exists=%s]"
         % (str(wa_import_done), str(field_mapping_done), str(raw_event_file_exists))
     )
-    return ButtonBar([main_menu_button, back_button])
+    return ButtonBar([main_menu_button, back_menu_button])
 
 def get_event_specific_buttons(event: Event) -> list:
     group_allocation = Button(ALLOCATE_CADETS_BUTTON_LABEL, nav_button=True)
@@ -237,7 +255,7 @@ def post_form_view_individual_event(
     elif last_button_pressed==CLOTHING_BUTTON_LABEL:
         return form_to_do_clothing(interface)
 
-    elif last_button_pressed == BACK_BUTTON_LABEL:
+    elif back_menu_button.pressed(last_button_pressed):
         return previous_form(interface)
     else:
         button_error_and_back_to_initial_state_form(interface)

@@ -15,7 +15,7 @@ from app.logic.events.volunteer_rota.warnings import warn_on_all_volunteers
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm, )
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL
+from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, cancel_menu_button, save_menu_button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.volunteers.ENTRY_view_volunteers import all_sort_types as all_volunteer_name_sort_types
@@ -74,7 +74,7 @@ def post_form_view_for_volunteer_rota(
 
     last_button_pressed = interface.last_button_pressed()
 
-    if last_button_pressed==CANCEL_BUTTON_LABEL:
+    if last_button_pressed==cancel_menu_button.name:
         return previous_form(interface)
 
     ## Always do this unless we pressed back
@@ -125,15 +125,14 @@ def post_form_view_for_volunteer_rota(
     elif last_button_pressed in get_all_swap_buttons(interface):
         update_if_swap_button_pressed(interface=interface, swap_button = last_button_pressed)
 
-    elif last_button_pressed in [SAVE_CHANGES, APPLY_FILTER_BUTTON_LABEL]:
+    elif last_button_pressed in [save_menu_button.name, APPLY_FILTER_BUTTON_LABEL]:
         ## already saved
         pass
     ## exception
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_clear_stored_items()
+    interface.flush_cache_to_store()
 
 
     return display_form_view_for_volunteer_rota(interface=interface)

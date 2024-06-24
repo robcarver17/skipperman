@@ -14,7 +14,8 @@ from app.logic.events.patrol_boats.patrol_boat_dropdowns import get_add_boat_dro
     get_allocation_dropdown_to_add_volunteer_for_day_and_boat
 from app.logic.events.patrol_boats.patrol_boat_buttons import delete_button_for_boat, DELETE_BOAT_BUTTON_LABEL
 from app.logic.events.patrol_boats.warnings import warn_on_all_volunteers_in_patrol_boats
-from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, CANCEL_BUTTON_LABEL, HelpButton
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, CANCEL_BUTTON_LABEL, HelpButton, \
+    cancel_menu_button, save_menu_button
 from app.objects.abstract_objects.abstract_form import Link
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, DetailListOfLines, _______________
@@ -191,10 +192,8 @@ def get_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonBar:
     in_swap_state = is_ready_to_swap(interface)
     if in_swap_state:
         return ButtonBar([])
-    save_button = Button(SAVE_CHANGES_BUTTON_LABEL, nav_button=True, shortcut=SAVE_KEYBOARD_SHORTCUT)
-    cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True, shortcut=CANCEL_KEYBOARD_SHORTCUT)
     help_button = HelpButton('patrol_boat_help')
-    return ButtonBar([cancel_button, save_button, copy_all_boats_button, copy_all_boats_and_roles_buttons, copyover_all_boats_button, copyover_all_boats_and_roles_buttons, help_button])
+    return ButtonBar([cancel_menu_button, save_menu_button, copy_all_boats_button, copy_all_boats_and_roles_buttons, copyover_all_boats_button, copyover_all_boats_and_roles_buttons, help_button])
 
 COPY_ALL_BOATS_BUTTON_LABEL = "Copy and fill all boats from earliest allocated boat across days"
 COPYOVER_ALL_BOATS_BUTTON_LABEL = "Copy, fill and overwrite all boats from earliest allocated boat"

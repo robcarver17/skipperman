@@ -5,7 +5,7 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.web.flask.flask_interface import get_urls_of_interest
 
 from app.objects.abstract_objects.abstract_form import Form
-from app.objects.abstract_objects.abstract_buttons import HelpButton, ButtonBar, Button
+from app.objects.abstract_objects.abstract_buttons import HelpButton, ButtonBar, Button, ActionOptionButton
 
 from app.web.html.process_abstract_form_to_html import process_abstract_form_to_html, process_abstract_objects_to_html
 
@@ -54,7 +54,7 @@ def get_menu_as_abstract_objects() -> Form:
 
 def get_nav_bar_for_main_menu() -> ButtonBar:
     navbar = \
-                    ButtonBar([HelpButton('main-menu')])
+                    ButtonBar([HelpButton('main-menu', from_main_menu=True)])
 
     return navbar
 
@@ -63,7 +63,7 @@ def get_menu_buttons_for_actions() -> list:
     filtered_menu_definition = filter_menu_for_user_permissions(menu_definition)
     list_of_buttons = []
     for label, action_name in filtered_menu_definition.items():
-        list_of_buttons.append(Button(label = label, tile=True, url = get_action_url(action_name)))
+        list_of_buttons.append(ActionOptionButton(label = label, url = get_action_url(action_name)))
 
     return Line(list_of_buttons)
 

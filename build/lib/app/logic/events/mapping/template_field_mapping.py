@@ -9,7 +9,7 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm, File,
 )
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar, cancel_menu_button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.abstract_logic_api import initial_state_form
@@ -26,7 +26,7 @@ def display_form_for_choose_template_field_mapping(interface: abstractInterface)
                 "Click to upload a new template for mapping fields",
                 _______________,
                 Button(UPLOAD_TEMPLATE_BUTTON_LABEL),
-                cancel_button,
+                cancel_menu_button,
             ]
         )
     else:
@@ -41,13 +41,12 @@ def display_form_for_choose_template_field_mapping(interface: abstractInterface)
                 Button(UPLOAD_TEMPLATE_BUTTON_LABEL),
                 _______________,
                 _______________,
-                ButtonBar([cancel_button]),
+                ButtonBar([cancel_menu_button]),
             ]
         )
 
     return Form(contents_of_form)
 
-cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
 
 def display_list_of_templates_with_buttons(interface: abstractInterface) -> ListOfLines:
     list_of_templates = get_list_of_templates(interface)

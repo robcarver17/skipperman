@@ -8,7 +8,7 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     fileInput
 )
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import cancel_menu_button, Button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.constants import UPLOAD_FILE_BUTTON_LABEL, MAPPING_FILE
@@ -30,22 +30,21 @@ def display_form_for_upload_custom_field_mapping(interface: abstractInterface):
 
 def get_upload_buttons():
 
-    return ButtonBar([cancel_button, upload_button])
+    return ButtonBar([cancel_menu_button, upload_button])
 
-cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
 upload_button = Button(UPLOAD_FILE_BUTTON_LABEL, nav_button=True)
 
 
 def post_form_for_upload_custom_field_mapping(interface: abstractInterface):
     previous_form = interface.get_new_display_form_for_parent_of_function(display_form_for_upload_custom_field_mapping)
-    if interface.last_button_pressed()==CANCEL_BUTTON_LABEL:
+    if interface.last_button_pressed()==cancel_menu_button.label:
         return previous_form
     try:
         file = get_file_from_interface(MAPPING_FILE, interface=interface)
         mapping = read_mapping_from_csv_file_object(file)
         event = get_event_from_state(interface)
         write_field_mapping_for_event(interface=interface, event=event, new_mapping=mapping)
-        interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+        interface.flush_cache_to_store()
 
     except Exception as e:
         interface.log_error("Something went wrong uploading file %s" % str(e))

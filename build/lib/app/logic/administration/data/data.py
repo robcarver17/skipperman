@@ -4,15 +4,14 @@ from typing import Union
 from app.data_access.backups.find_and_restore_backups import delete_all_master_data
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, main_menu_button, Button
+from app.objects.abstract_objects.abstract_buttons import ButtonBar,  Button, BACK_BUTTON_LABEL, back_menu_button
 
-from app.logic.administration.users.render_users_form import BACK_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 DELETE_ALL_DATA_BUTTON_LABEL = "Delete all data"
 
-nav_buttons = ButtonBar([main_menu_button])
+nav_buttons = ButtonBar([back_menu_button])
 config_option_buttons = Line([Button(DELETE_ALL_DATA_BUTTON_LABEL, tile=True)])
 
 def display_form_data(interface: abstractInterface) -> Union[Form, NewForm]:

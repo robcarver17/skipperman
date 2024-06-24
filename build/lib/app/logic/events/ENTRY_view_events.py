@@ -41,7 +41,7 @@ add_button = Button(ADD_EVENT_BUTTON_LABEL, nav_button=True)
 
 def post_form_view_of_events(interface: abstractInterface) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
-    if button_pressed == ADD_EVENT_BUTTON_LABEL:
+    if add_button.pressed(button_pressed):
         return form_for_add_event(interface)
     elif button_pressed in all_sort_types_for_event_list:
         ## no change to stage required

@@ -8,7 +8,7 @@ from app.objects.abstract_objects.abstract_form import Image
 from app.objects.abstract_objects.abstract_interface import UrlsOfInterest
 
 from app.objects.abstract_objects.abstract_text import Heading
-from app.web.html.url import get_action_url, get_help_url
+from app.web.html.url import get_action_url, get_help_url, INDEX_URL
 
 
 ## primitives
@@ -133,10 +133,6 @@ def get_html_for_heading(heading: Heading):
 
     return html_container_wrapper.wrap_around(heading_text)
 
-def help_link_button(help_page_name: str):
-    url = get_help_url(help_page_name)
-    return small_button_with_link(label="Help", url=url, open_new_window=True)
-
 
 
 def get_html_image(image: Image, urls_of_interest: UrlsOfInterest):
@@ -171,8 +167,30 @@ def html_image_given_components( image_directory: str, image: Image):
 HTML_BUTTON_NAME = "action"
 
 
-def html_button(button_text, button_value=arg_not_passed, big_button: bool = False, menu_tile = False, nav_button = False, url = '',
-                open_new_window: bool = False, shortcut: str = arg_not_passed):
+
+def html_action_option_button(button_text, url =''):
+    return generic_html_button(
+        button_text=button_text,
+        url=url,
+        menu_tile=True
+
+    )
+
+
+def help_link_button(help_page_name: str, shortcut: str='', from_main_menu: bool = False):
+    url = get_help_url(help_page_name)
+    if from_main_menu:
+        return generic_html_button("Help", shortcut=shortcut, url=url, open_new_window=True, nav_button=True)
+    else:
+        return nav_button_with_link_to_avoid_weird_routing_issue("Help", url=url, open_new_window=True, shortcut=shortcut)
+
+
+def html_for_main_menu_button(label, shortcut=''):
+    return nav_button_with_link_to_avoid_weird_routing_issue(label, url = INDEX_URL, open_new_window=False, shortcut=shortcut)
+
+
+def generic_html_button(button_text, button_value=arg_not_passed, big_button: bool = False, menu_tile = False, nav_button = False, url ='',
+                        open_new_window: bool = False, shortcut: str = arg_not_passed):
 
     button_name = HTML_BUTTON_NAME
     if button_value == arg_not_passed:
@@ -210,14 +228,20 @@ def html_button(button_text, button_value=arg_not_passed, big_button: bool = Fal
         html= Html( '<a  href="%s" %s> <button %s %s>%s</button>  </a>'  %  (url, target, style_str, shortcut_str, button_text))
     return html
 
-
-def small_button_with_link(label, url, open_new_window: bool = False):
+def nav_button_with_link_to_avoid_weird_routing_issue(button_text, url, open_new_window: bool = False, shortcut= arg_not_passed):
     ## Shouldn't really be required but button breaks for main menu
     if open_new_window:
         target = 'target = "_blank"'
     else:
         target = ''
 
+    if shortcut is arg_not_passed:
+        shortcut_str = ''
+    else:
+        shortcut_str = 'accesskey="%s"' % shortcut
+        button_text = "%s [Alt-%s]" % (button_text,shortcut)
+
+
     return Html("""
-    '<a class = "w3-btn w3-dark-grey"  href="%s" %s> %s </a>' 
-    """ % (url, target, label))
+    '<a class = "w3-btn w3-dark-grey"  href="%s" %s %s> %s </a>' 
+    """ % (url, target, shortcut_str, button_text))

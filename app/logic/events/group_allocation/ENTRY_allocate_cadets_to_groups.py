@@ -5,7 +5,6 @@ from app.objects.day_selectors import Day
 
 from app.backend.forms.reorder_form import list_of_button_names_given_group_order, reorderFormInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
-from app.logic.events.constants import UPDATE_ALLOCATION_BUTTON_LABEL
 from app.logic.events.group_allocation.add_cadet_partner import display_add_cadet_partner
 from app.logic.events.group_allocation.store_state import set_day_in_state, no_day_set_in_state, clear_day_in_state, \
     get_day_from_state_or_none, SORT_ORDER, get_current_sort_order
@@ -20,7 +19,7 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL
+from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, SAVE_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
@@ -65,13 +64,13 @@ def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewFo
     elif was_reorder_sort_button(interface):
         change_sort_order_and_save(interface)
 
-    elif last_button == UPDATE_ALLOCATION_BUTTON_LABEL:
+    elif last_button == SAVE_BUTTON_LABEL:
         ## already saved
         pass
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_clear_stored_items()
+    interface.flush_cache_to_store()
 
     return interface.get_new_form_given_function(display_form_allocate_cadets)
 

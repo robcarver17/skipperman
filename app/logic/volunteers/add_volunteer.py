@@ -11,7 +11,7 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm,
     textInput,
 )
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar, cancel_menu_button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface, form_with_message_and_finished_button
 from app.logic.volunteers.constants import *
@@ -26,7 +26,7 @@ def post_form_add_volunteer(interface: abstractInterface) -> Union[Form, NewForm
     ## Called by Logic API when buttons pressed
 
     last_button_pressed = interface.last_button_pressed()
-    if last_button_pressed == CANCEL_BUTTON_LABEL:
+    if cancel_menu_button.pressed(last_button_pressed):
         return previous_form(interface)
 
     if last_button_pressed == CHECK_BUTTON_LABEL:
@@ -160,11 +160,11 @@ def add_volunteer_from_form_to_data(interface) -> Volunteer:
 def get_footer_buttons_for_add_volunteer_form(form_is_empty: bool) -> ButtonBar:
     final_submit = Button(FINAL_ADD_BUTTON_LABEL, nav_button=True)
     check_submit = Button(CHECK_BUTTON_LABEL, nav_button=True)
-    cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
+
     if form_is_empty:
-        return ButtonBar([cancel_button, check_submit])
+        return ButtonBar([cancel_menu_button, check_submit])
     else:
-        return ButtonBar([cancel_button, check_submit, final_submit])
+        return ButtonBar([cancel_menu_button, check_submit, final_submit])
 
 
 

@@ -1,6 +1,6 @@
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.events import  SORT_BY_START_DSC, get_sorted_list_of_events
+from app.backend.events import  SORT_BY_START_DSC, DEPRECATE_get_sorted_list_of_events
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.objects.events import ListOfEvents, Event
@@ -10,7 +10,7 @@ from app.backend.group_allocations.boat_allocation import load_list_of_cadets_at
 
 
 def display_list_of_events_with_buttons_criteria_matched(interface: abstractInterface, **kwargs) -> ListOfLines:
-    list_of_events = get_sorted_list_of_events(interface=interface, sort_by=SORT_BY_START_DSC)
+    list_of_events = DEPRECATE_get_sorted_list_of_events(interface=interface, sort_by=SORT_BY_START_DSC)
     list_of_events = ListOfEvents([event for event in list_of_events if event_matches_criteria(interface=interface, event=event, **kwargs)])
     list_of_event_descriptions = list_of_events.list_of_event_descriptions
     list_with_buttons = [Line(Button(event_description, tile=True)) for event_description in list_of_event_descriptions]

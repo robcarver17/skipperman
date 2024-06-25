@@ -3,6 +3,8 @@ from dataclasses import dataclass
 from typing import List, Dict
 from statistics import mode
 
+from app.objects.volunteers import Volunteer
+
 from app.data_access.configuration.configuration import VOLUNTEERS_REQUIRING_GROUP, VOLUNTEERS_REQUIRING_BOATS, \
     VOLUNTEER_ROLES, VOLUNTEER_TEAMS, SI_ROLE, INSTRUCTOR_TEAM, VOLUNTEER_SKILL_DICT
 from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
@@ -243,16 +245,16 @@ class ListOfVolunteersInRoleAtEvent(GenericListOfObjects):
     def list_of_first_teams_and_groups_at_event_for_day(self, day: Day) -> List[RoleAndGroup]:
         return [volunteer_with_role.first_team_and_group for volunteer_with_role in self if volunteer_with_role.day == day]
 
-    def most_common_role_and_group_at_event_for_volunteer(self, volunteer_id: str) -> RoleAndGroup:
+    def most_common_role_and_group_at_event_for_volunteer(self, volunteer: Volunteer) -> RoleAndGroup:
         ## crazy that mode works with strings
-        all_roles = self.all_roles_and_groups_for_a_specific_volunteer(volunteer_id)
+        all_roles = self.all_roles_and_groups_for_a_specific_volunteer(volunteer)
         if len(all_roles)==0:
             return RoleAndGroup()
 
         return mode(all_roles)
 
-    def all_roles_and_groups_for_a_specific_volunteer(self, volunteer_id: str)-> List[RoleAndGroup]:
-        list_of_matches = [volunteer_with_role for volunteer_with_role in self if volunteer_with_role.volunteer_id == volunteer_id]
+    def all_roles_and_groups_for_a_specific_volunteer(self, volunteer: Volunteer)-> List[RoleAndGroup]:
+        list_of_matches = [volunteer_with_role for volunteer_with_role in self if volunteer_with_role.volunteer_id == volunteer.id]
 
         return [volunteer_with_role.role_and_group for volunteer_with_role in list_of_matches]
 

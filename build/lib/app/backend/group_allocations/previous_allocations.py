@@ -6,7 +6,7 @@ from app.objects.cadets import Cadet
 from app.objects.events import Event
 from app.objects.groups import ListOfCadetIdsWithGroups, Group, GROUP_UNALLOCATED
 from app.backend.group_allocations.cadet_event_allocations import load_list_of_cadets_ids_with_group_allocations_active_cadets_only
-from app.backend.events import  get_sorted_list_of_events
+from app.backend.events import  DEPRECATE_get_sorted_list_of_events
 
 
 def get_dict_of_allocations_for_events_and_list_of_cadets(interface: abstractInterface, list_of_events: list) -> Dict[Event, ListOfCadetIdsWithGroups]:
@@ -17,7 +17,7 @@ def get_dict_of_allocations_for_events_and_list_of_cadets(interface: abstractInt
 
 
 def get_dict_of_all_event_allocations_for_single_cadet(interface: abstractInterface, cadet: Cadet, remove_unallocated: bool = False) -> Dict[Event, Group]:
-    list_of_events = get_sorted_list_of_events(interface)
+    list_of_events = DEPRECATE_get_sorted_list_of_events(interface)
     previous_allocations_as_dict = get_dict_of_allocations_for_events_and_list_of_cadets(interface=interface, list_of_events=list_of_events)
     list_of_previous_groups = allocation_for_cadet_in_previous_events(cadet=cadet, previous_allocations_as_dict=previous_allocations_as_dict)
 

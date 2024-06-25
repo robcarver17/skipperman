@@ -9,7 +9,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.group_allocations.group_allocation_info import get_group_allocation_info, \
     GroupAllocationInfo
-from app.backend.events import  get_sorted_list_of_events
+from app.backend.events import  DEPRECATE_get_sorted_list_of_events
 from app.backend.group_allocations.cadet_event_allocations import load_list_of_cadets_ids_with_group_allocations_active_cadets_only, get_list_of_active_cadets_at_event
 from app.backend.group_allocations.previous_allocations import allocation_for_cadet_in_previous_events, \
      allocation_for_cadet_in_previous_events_as_dict, \
@@ -418,7 +418,7 @@ def get_allocation_data(interface: abstractInterface, event: Event) -> Allocatio
     current_allocation_for_event = load_list_of_cadets_ids_with_group_allocations_active_cadets_only(event=event, interface=interface)
     cadets_at_event_including_non_active = load_cadets_at_event(event=event, interface=interface)
     list_of_cadets_in_event_active_only = get_list_of_active_cadets_at_event(interface=interface, event=event)
-    list_of_events = get_sorted_list_of_events(interface)
+    list_of_events = DEPRECATE_get_sorted_list_of_events(interface)
     list_of_previous_events = list_of_events_excluding_one_event(list_of_events=list_of_events,event_to_exclude=event,
                                                                  only_past=True, sort_by=SORT_BY_START_ASC)[-3:]
     previous_allocations_as_dict = get_dict_of_allocations_for_events_and_list_of_cadets(interface=interface, list_of_events=list_of_previous_events)

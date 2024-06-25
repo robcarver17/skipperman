@@ -11,7 +11,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event
 from app.backend.data.volunteer_allocation import VolunteerAllocationData
 from app.backend.data.volunteer_rota import VolunteerRotaData
-from app.backend.volunteers.volunteers import get_volunteer_name_from_id, get_dict_of_existing_skills
+from app.backend.volunteers.volunteers import get_volunteer_name_from_id, DEPRECATE_get_dict_of_existing_skills
 from app.backend.data.patrol_boats import PatrolBoatsData
 
 def get_df_for_volunteers_event_data_dump(

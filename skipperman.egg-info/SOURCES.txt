@@ -71,6 +71,8 @@ app/backend/reporting/boat_report/__init__.py
 app/backend/reporting/boat_report/boat_report_parameters.py
 app/backend/reporting/boat_report/get_data.py
 app/backend/reporting/boat_report/../../../data_access/configuration/configuration.yaml
+app/backend/reporting/data_dump/__init__.py
+app/backend/reporting/data_dump/../../../data_access/configuration/configuration.yaml
 app/backend/reporting/food_report/__init__.py
 app/backend/reporting/food_report/food_report_parameters.py
 app/backend/reporting/food_report/get_data.py
@@ -111,6 +113,7 @@ app/backend/transfer/../../data_access/configuration/configuration.yaml
 app/backend/volunteers/__init__.py
 app/backend/volunteers/patrol_boats.py
 app/backend/volunteers/volunteer_allocation.py
+app/backend/volunteers/volunteer_data_dump.py
 app/backend/volunteers/volunteer_rota.py
 app/backend/volunteers/volunteer_rota_data.py
 app/backend/volunteers/volunteer_rota_summary.py
@@ -351,6 +354,7 @@ app/logic/reporting/boats/report_boats.py
 app/logic/reporting/boats/../../../data_access/configuration/configuration.yaml
 app/logic/reporting/data_dumps/ENTRY_data_dump.py
 app/logic/reporting/data_dumps/__init__.py
+app/logic/reporting/data_dumps/volunteer_data.py
 app/logic/reporting/data_dumps/../../../data_access/configuration/configuration.yaml
 app/logic/reporting/qualifications/ENTRY_report_qualifications.py
 app/logic/reporting/qualifications/__init__.py

@@ -11,7 +11,7 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 from app.logic.volunteers.constants import *
-from app.backend.volunteers.volunteers import get_connected_cadets, delete_connection_in_data, \
+from app.backend.volunteers.volunteers import DEPRECATE_get_connected_cadets, delete_connection_in_data, \
     add_volunteer_connection_to_cadet_in_master_list_of_volunteers
 from app.backend.data.volunteers import SORT_BY_SURNAME
 from app.logic.volunteers.volunteer_state import get_volunteer_from_state
@@ -29,7 +29,7 @@ def display_form_edit_cadet_volunteer_connections(
             "Volunteer selected no longer in list- someone else has deleted or file corruption?"
         )
         return initial_state_form
-    connected_cadets = get_connected_cadets(interface=interface, volunteer=volunteer)
+    connected_cadets = DEPRECATE_get_connected_cadets(interface=interface, volunteer=volunteer)
     from_list_of_cadets = get_sorted_list_of_cadets(interface=interface, sort_by=SORT_BY_SURNAME)
 
     form = form_to_edit_connections(volunteer=volunteer, connected_cadets=connected_cadets, text=header_text, from_list_of_cadets=from_list_of_cadets)
@@ -130,7 +130,7 @@ def post_form_edit_cadet_volunteer_connections_when_delete_button_pressed(
     button = interface.last_button_pressed()
 
     volunteer = get_volunteer_from_state(interface)
-    connected_cadets = get_connected_cadets(interface=interface, volunteer=volunteer)
+    connected_cadets = DEPRECATE_get_connected_cadets(interface=interface, volunteer=volunteer)
 
     list_of_delete_cadet_buttons = get_list_of_delete_cadet_buttons(connected_cadets)
     if button in list_of_delete_cadet_buttons:

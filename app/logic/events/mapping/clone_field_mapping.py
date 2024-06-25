@@ -9,7 +9,7 @@ from app.logic.events.events_in_state import get_event_from_state, get_event_fro
 
 from app.logic.abstract_logic_api import initial_state_form
 
-from app.backend.events import  get_sorted_list_of_events, confirm_event_exists_given_description
+from app.backend.events import  DEPRECATE_get_sorted_list_of_events, confirm_event_exists_given_description
 from app.backend.wa_import.map_wa_fields import is_wa_field_mapping_setup_for_event, get_field_mapping_for_event, \
     write_field_mapping_for_event
 from app.objects.events import ListOfEvents, SORT_BY_START_DSC, Event
@@ -41,7 +41,7 @@ def display_list_of_events_with_field_mapping_buttons(interface: abstractInterfa
     return ListOfLines(list_with_buttons)
 
 def get_list_of_events_with_field_mapping(interface: abstractInterface, exclude_event: Event) -> ListOfEvents:
-    list_of_events = get_sorted_list_of_events(interface=interface, sort_by=SORT_BY_START_DSC)
+    list_of_events = DEPRECATE_get_sorted_list_of_events(interface=interface, sort_by=SORT_BY_START_DSC)
     list_of_events = [event for event in list_of_events if is_wa_field_mapping_setup_for_event(interface=interface,event=event)]
     list_of_events = [event for event in list_of_events if not event.id==exclude_event.id]
 

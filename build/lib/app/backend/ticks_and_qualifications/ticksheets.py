@@ -10,7 +10,7 @@ from app.backend.data.qualification import QualificationData
 from app.backend.data.security import SUPERUSER, UserData, get_volunteer_id_of_logged_in_user_or_superuser
 from app.backend.data.ticksheets import TickSheetsData
 from app.backend.data.volunteer_rota import VolunteerRotaData
-from app.backend.events import get_sorted_list_of_events
+from app.backend.events import DEPRECATE_get_sorted_list_of_events
 from app.backend.ticks_and_qualifications.create_ticksheets import \
     get_ticksheet_for_cadets_in_group_at_event_for_qualification
 from app.backend.volunteers.volunteers import is_volunteer_SI
@@ -45,7 +45,7 @@ def get_list_of_all_groups_at_event(interface: abstractInterface, event: Event) 
     return group_allocations_data.get_list_of_groups_at_event(event=event)
 
 def get_list_of_events_entitled_to_see(interface: abstractInterface, volunteer_id: str, sort_by: str):
-    all_events = get_sorted_list_of_events(interface, sort_by=sort_by)
+    all_events = DEPRECATE_get_sorted_list_of_events(interface, sort_by=sort_by)
     all_events = ListOfEvents([event for event in all_events if can_volunteer_id_see_event(interface=interface,
                                                                                            event=event,
                                                                                            volunteer_id=volunteer_id)])

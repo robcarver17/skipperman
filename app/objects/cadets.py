@@ -89,6 +89,9 @@ multiple_matches = object()
 
 
 class ListOfCadets(GenericListOfObjectsWithIds):
+    def as_str(self):
+        return ", ".join([str(cadet) for cadet in self])
+
     def excluding_cadets_from_other_list(self, list_of_cadets: 'ListOfCadets'):
         list_of_ids = in_x_not_in_y(self.list_of_ids, list_of_cadets.list_of_ids)
         return self.subset_from_list_of_ids(self, list_of_ids)

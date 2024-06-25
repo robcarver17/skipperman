@@ -40,3 +40,7 @@ except:
 
 def web_pathname_of_file(filename_with_extension: str):
     return PUBLIC_WEB_PATH+filename_with_extension
+
+
+def temp_file_name() -> str:
+    return os.path.join(download_directory, "temp_file.csv")

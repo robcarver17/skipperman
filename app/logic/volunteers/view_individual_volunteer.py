@@ -1,6 +1,7 @@
 from typing import Union
 
-from app.backend.volunteers.volunteer_rota_data import get_all_roles_across_recent_events_for_volunteer_id_as_dict
+from app.backend.volunteers.volunteer_rota_data import \
+    get_all_roles_across_recent_events_for_volunteer_as_dict
 from app.logic.volunteers.delete_volunteer import display_form_delete_individual_volunteer
 from app.logic.volunteers.edit_cadet_connections import display_form_edit_cadet_volunteer_connections
 from app.logic.volunteers.edit_volunteer import display_form_edit_individual_volunteer
@@ -11,7 +12,8 @@ from app.logic.abstract_logic_api import initial_state_form, button_error_and_ba
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
-from app.backend.volunteers.volunteers import get_connected_cadets, get_dict_of_existing_skills
+from app.backend.volunteers.volunteers import DEPRECATE_get_connected_cadets, DEPRECATE_get_dict_of_existing_skills, \
+    get_dict_of_existing_skills, get_connected_cadets
 from app.logic.volunteers.volunteer_state import get_volunteer_from_state
 from app.logic.volunteers.constants import *
 
@@ -61,8 +63,9 @@ def display_form_for_selected_volunteer(
     )
 
 def list_of_lines_with_allocations_and_roles(interface: abstractInterface, volunteer: Volunteer) -> ListOfLines:
-    dict_of_roles =get_all_roles_across_recent_events_for_volunteer_id_as_dict(
-        interface=interface, volunteer_id=volunteer.id,
+    dict_of_roles =get_all_roles_across_recent_events_for_volunteer_as_dict(
+        data_layer=interface.data,
+        volunteer=volunteer,
                                                       sort_by=SORT_BY_START_DSC)
     if len(dict_of_roles)==0:
         return ListOfLines([])
@@ -73,7 +76,7 @@ def list_of_lines_with_allocations_and_roles(interface: abstractInterface, volun
 
 
 def list_of_skills_as_list_of_lines(interface: abstractInterface, volunteer: Volunteer) -> ListOfLines:
-    skills = get_dict_of_existing_skills(interface=interface, volunteer=volunteer)
+    skills = get_dict_of_existing_skills(data_layer=interface.data, volunteer=volunteer)
     skills_held = [skill for skill, skill_held in skills.items() if skill_held]
     skills_not_held = [skill for skill, skill_held in skills.items() if not skill_held]
 
@@ -85,12 +88,12 @@ def list_of_skills_as_list_of_lines(interface: abstractInterface, volunteer: Vol
 
 
 def lines_for_connected_cadets(interface: abstractInterface, volunteer: Volunteer) -> Line:
-    cadets = get_connected_cadets(interface=interface, volunteer=volunteer)
-    cadets_as_str = [str(cadet) for cadet in cadets]
+    cadets = get_connected_cadets(data_layer=interface.data, volunteer=volunteer)
     if len(cadets)==0:
         return Line([])
+    cadets_as_str = cadets.as_str()
     return Line(
-        "Connected to: %s" % ", ".join(cadets_as_str)
+        "Connected to: %s" % cadets_as_str
     )
 
 def buttons_for_volunteer_form() -> ButtonBar:

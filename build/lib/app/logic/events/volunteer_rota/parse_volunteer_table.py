@@ -9,7 +9,7 @@ from app.backend.volunteers.volunteer_rota import delete_role_at_event_for_volun
     update_role_and_group_at_event_for_volunteer_on_all_days_when_available, \
     copy_earliest_valid_role_and_overwrite_for_volunteer, copy_earliest_valid_role_to_all_empty_for_volunteer
 from app.backend.volunteers.volunteer_rota_data import get_data_to_be_stored_for_volunteer_rota_page, \
-    get_last_role_for_volunteer_id
+    DEPRECATE_get_last_role_for_volunteer_id
 from app.data_access.configuration.configuration import VOLUNTEER_SKILLS
 from app.logic.events.volunteer_rota.edit_cadet_connections_for_event_from_rota import \
     display_form_edit_cadet_connections_from_rota
@@ -181,7 +181,7 @@ def update_if_individual_copy_fill_button_pressed(interface: abstractInterface, 
 def update_if_copy_previous_role_button_pressed(interface: abstractInterface, copy_button: str):
     volunteer_id = from_previous_role_copy_button_to_volunteer_id(copy_button)
     event = get_event_from_state(interface)
-    previous_role_and_group = get_last_role_for_volunteer_id(interface=interface, volunteer_id=volunteer_id, avoid_event=event)
+    previous_role_and_group = DEPRECATE_get_last_role_for_volunteer_id(interface=interface, volunteer_id=volunteer_id, avoid_event=event)
 
     if previous_role_and_group.missing:
         return

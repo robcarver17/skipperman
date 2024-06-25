@@ -1,14 +1,14 @@
 from app.logic.reporting.qualifications.achieved_qualifications import \
     write_qualifications_to_temp_csv_file_and_return_filename
-from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
-from app.objects.abstract_objects.abstract_buttons import  cancel_menu_button
+from app.objects.abstract_objects.abstract_lines import  Line
+from app.objects.abstract_objects.abstract_buttons import  back_menu_button
 from app.logic.reporting.qualifications.qualification_status import *
 
 
 def display_form_for_qualifications_report(interface: abstractInterface):
     contents_of_form = ListOfLines(
         [
-            ButtonBar([main_menu_button, cancel_menu_button]),
+            ButtonBar([main_menu_button, back_menu_button]),
             Line([create_qualification_list_report_button, expected_qualification_report_button])
         ]
     )
@@ -25,7 +25,7 @@ def post_form_for_qualifications_report(
 ) -> Union[File, Form, NewForm]:
     last_button = interface.last_button_pressed()
 
-    if cancel_menu_button.pressed(last_button):
+    if back_menu_button.pressed(last_button):
         return previous_form(interface)
     elif create_qualification_list_report_button .pressed(last_button):
         filename = write_qualifications_to_temp_csv_file_and_return_filename(interface)

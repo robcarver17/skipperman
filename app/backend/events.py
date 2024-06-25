@@ -2,6 +2,8 @@ import datetime
 import re
 from dataclasses import dataclass
 
+from app.data_access.storage_layer.api import DataLayer
+
 from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -45,7 +47,7 @@ def contains_2_more_digits(string: str) -> bool:
     return len(re.findall(r'\d', string))>1
 
 def warning_for_similar_events(interface: abstractInterface, event: Event) -> str:
-    existing_events = get_sorted_list_of_events(interface)
+    existing_events = DEPRECATE_get_sorted_list_of_events(interface)
     similar_events = existing_events.similar_events(
         event,
         name_threshold=SIMILARITY_LEVEL_TO_WARN_NAME,
@@ -62,21 +64,31 @@ def warning_for_similar_events(interface: abstractInterface, event: Event) -> st
 
 
 
-def get_sorted_list_of_events(interface: abstractInterface, sort_by=SORT_BY_START_DSC) -> ListOfEvents:
-    list_of_events = get_list_of_all_events(interface)
+def DEPRECATE_get_sorted_list_of_events(interface: abstractInterface, sort_by=SORT_BY_START_DSC) -> ListOfEvents:
+    list_of_events = DEPRECATE_get_list_of_all_events(interface)
     list_of_events = list_of_events.sort_by(sort_by)
 
     return list_of_events
 
+def get_sorted_list_of_events(data_layer: DataLayer, sort_by=SORT_BY_START_DSC) -> ListOfEvents:
+    list_of_events = get_list_of_all_events(data_layer)
+    list_of_events = list_of_events.sort_by(sort_by)
+
+    return list_of_events
+
+def get_list_of_all_events(data_layer: DataLayer) -> ListOfEvents:
+    event_data =EventData(data_layer)
+    return event_data.list_of_events
+
 
 def list_of_previously_used_event_names(interface: abstractInterface) -> list:
-    list_of_events = get_list_of_all_events(interface)
+    list_of_events = DEPRECATE_get_list_of_all_events(interface)
     event_names = [event.event_name for event in list_of_events]
     return list(set(event_names))
 
 
 def confirm_event_exists_given_description(interface: abstractInterface, event_description: str):
-    list_of_events = get_list_of_all_events(interface)
+    list_of_events = DEPRECATE_get_list_of_all_events(interface)
 
     ## fails if missing
     __ = list_of_events.event_with_description(event_description)
@@ -106,6 +118,6 @@ def add_new_verified_event(interface: abstractInterface, event: Event):
     event_data.add_event(event)
 
 
-def get_list_of_all_events(interface: abstractInterface) -> ListOfEvents:
+def DEPRECATE_get_list_of_all_events(interface: abstractInterface) -> ListOfEvents:
     event_data =EventData(interface.data)
     return event_data.list_of_events

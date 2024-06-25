@@ -1,5 +1,7 @@
 from typing import List
 
+from app.data_access.storage_layer.api import DataLayer
+
 from app.objects.cadets import ListOfCadets, Cadet
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -15,15 +17,25 @@ def get_volunteer_from_list_of_volunteers_given_volunteer_name(interface: abstra
     return volunteer_data.get_volunteer_from_list_of_volunteers_given_name(volunteer_name=volunteer_name)
 
 
-def get_dict_of_existing_skills(interface: abstractInterface, volunteer: Volunteer)-> dict:
+def DEPRECATE_get_dict_of_existing_skills(interface: abstractInterface, volunteer: Volunteer)-> dict:
     volunteer_data = VolunteerData(interface.data)
     return volunteer_data.get_dict_of_existing_skills_for_volunteer(volunteer)
 
+def get_dict_of_existing_skills(data_layer: DataLayer, volunteer: Volunteer)-> dict:
+    volunteer_data = VolunteerData(data_layer)
+    return volunteer_data.get_dict_of_existing_skills_for_volunteer(volunteer)
 
-def get_connected_cadets(interface: abstractInterface, volunteer: Volunteer) -> ListOfCadets:
+
+def DEPRECATE_get_connected_cadets(interface: abstractInterface, volunteer: Volunteer) -> ListOfCadets:
     volunteer_data = VolunteerData(interface.data)
 
     return volunteer_data.get_connected_cadets(volunteer)
+
+def get_connected_cadets(data_layer: DataLayer, volunteer: Volunteer) -> ListOfCadets:
+    volunteer_data = VolunteerData(data_layer)
+
+    return volunteer_data.get_connected_cadets(volunteer)
+
 
 def list_of_similar_volunteers(interface: abstractInterface, volunteer: Volunteer) -> list:
     volunteer_data = VolunteerData(interface.data)

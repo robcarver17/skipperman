@@ -6,7 +6,7 @@ from app.objects.abstract_objects.abstract_text import Heading
 from app.logic.events.ENTRY_view_events import display_given_list_of_events_with_buttons
 
 from app.logic.events.events_in_state import get_event_from_list_of_events_given_event_description
-from app.backend.events import     all_sort_types_for_event_list, sort_buttons_for_event_list, get_sorted_list_of_events
+from app.backend.events import     all_sort_types_for_event_list, sort_buttons_for_event_list, DEPRECATE_get_sorted_list_of_events
 from app.objects.events import SORT_BY_START_DSC, ListOfEvents
 
 from app.objects.abstract_objects.abstract_form import (
@@ -69,7 +69,7 @@ def action_when_event_button_clicked(interface: abstractInterface) -> Form:
 
 
 def display_list_of_events_with_buttons_ignoring_future_events(interface: abstractInterface, sort_by=SORT_BY_START_DSC) -> Line:
-    list_of_events = get_sorted_list_of_events(interface=interface, sort_by=sort_by)
+    list_of_events = DEPRECATE_get_sorted_list_of_events(interface=interface, sort_by=sort_by)
     list_of_events = ListOfEvents([event for event in list_of_events if event.in_the_past()])
 
     return display_given_list_of_events_with_buttons(list_of_events)

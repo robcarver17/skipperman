@@ -2,7 +2,7 @@ from typing import Union
 
 from app.logic.events.add_event import display_form_view_for_add_event
 from app.logic.events.events_in_state import update_state_for_specific_event_given_event_description
-from app.backend.events import     all_sort_types_for_event_list, sort_buttons_for_event_list, get_sorted_list_of_events, \
+from app.backend.events import     all_sort_types_for_event_list, sort_buttons_for_event_list, DEPRECATE_get_sorted_list_of_events, \
     confirm_event_exists_given_description
 from app.logic.events.view_individual_events import display_form_view_individual_event
 from app.objects.events import SORT_BY_START_DSC, ListOfEvents
@@ -62,7 +62,7 @@ def action_when_event_button_clicked(interface: abstractInterface) -> NewForm:
 
 
 def display_list_of_events_with_buttons(interface: abstractInterface, sort_by=SORT_BY_START_DSC) -> Line:
-    list_of_events = get_sorted_list_of_events(interface=interface, sort_by=sort_by)
+    list_of_events = DEPRECATE_get_sorted_list_of_events(interface=interface, sort_by=sort_by)
     return display_given_list_of_events_with_buttons(list_of_events)
 
 def display_given_list_of_events_with_buttons(list_of_events: ListOfEvents) -> Line:

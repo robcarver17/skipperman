@@ -5,7 +5,7 @@ import pandas as pd
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.data.volunteer_rota import VolunteerRotaData
-from app.backend.volunteers.volunteer_rota import get_volunteers_in_role_at_event_with_active_allocations
+from app.backend.volunteers.volunteer_rota import DEPRECATE_get_volunteers_in_role_at_event_with_active_allocations
 from app.data_access.configuration.configuration import ALL_GROUPS_NAMES, VOLUNTEER_ROLES
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -24,7 +24,7 @@ class RowInTableWithActualAndTargetsForRole:
 
 
 def get_list_of_actual_and_targets_for_roles_at_event(interface: abstractInterface, event: Event) -> List[RowInTableWithActualAndTargetsForRole]:
-    volunteers_in_roles_at_event = get_volunteers_in_role_at_event_with_active_allocations(event=event, interface=interface)
+    volunteers_in_roles_at_event = DEPRECATE_get_volunteers_in_role_at_event_with_active_allocations(event=event, interface=interface)
     targets_at_event = get_volunteer_targets_at_event(interface=interface, event=event)
 
     all_rows = [get_row_in_table_with_actual_and_targets_for_roles_at_event(event=event, role=role, volunteers_in_roles_at_event=volunteers_in_roles_at_event,
@@ -73,7 +73,7 @@ def get_summary_list_of_roles_and_groups_for_events_as_pd_df(interface: abstract
     return single_df
 
 def list_of_day_summaries_for_roles_at_event(interface: abstractInterface, event: Event) -> List[pd.DataFrame]:
-    volunteers_in_roles_at_event = get_volunteers_in_role_at_event_with_active_allocations(event=event, interface=interface)
+    volunteers_in_roles_at_event = DEPRECATE_get_volunteers_in_role_at_event_with_active_allocations(event=event, interface=interface)
     days_at_event = event.weekdays_in_event()
     all_day_summaries = []
     for day in days_at_event:
@@ -127,7 +127,7 @@ def get_summary_list_of_teams_and_groups_for_events_as_pd_df(interface: abstract
     return single_df
 
 def list_of_day_summaries_teams_and_groups_at_event(interface: abstractInterface, event: Event) -> List[pd.DataFrame]:
-    volunteers_in_roles_at_event = get_volunteers_in_role_at_event_with_active_allocations(event=event, interface=interface)
+    volunteers_in_roles_at_event = DEPRECATE_get_volunteers_in_role_at_event_with_active_allocations(event=event, interface=interface)
     days_at_event = event.weekdays_in_event()
     all_day_summaries = []
     for day in days_at_event:

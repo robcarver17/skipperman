@@ -1,17 +1,21 @@
 from dataclasses import dataclass
 from typing import Dict, List
+
+from app.data_access.storage_layer.api import DataLayer
+
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.backend.events import get_sorted_list_of_events
+from app.backend.events import DEPRECATE_get_sorted_list_of_events, get_sorted_list_of_events
 from app.backend.group_allocations.cadet_event_allocations import \
     load_list_of_cadets_ids_with_group_allocations_active_cadets_only, get_list_of_cadets_unallocated_to_group_at_event
-from app.backend.volunteers.volunteers import load_list_of_volunteer_skills
+from app.backend.volunteers.volunteers import load_list_of_volunteer_skills, get_volunteer_from_id
 from app.backend.volunteers.volunteer_rota import load_list_of_volunteers_at_event, \
-    get_volunteers_in_role_at_event_with_active_allocations, sort_volunteer_data_for_event_by_name_sort_order
+    DEPRECATE_get_volunteers_in_role_at_event_with_active_allocations, sort_volunteer_data_for_event_by_name_sort_order, \
+    get_volunteers_in_role_at_event_with_active_allocations
 
 from app.objects.cadets import ListOfCadets
 from app.objects.constants import missing_data, arg_not_passed
 from app.objects.day_selectors import Day
-from app.objects.events import Event, SORT_BY_START_ASC, list_of_events_excluding_one_event
+from app.objects.events import Event, SORT_BY_START_ASC, list_of_events_excluding_one_event, ListOfEvents
 from app.objects.groups import ListOfCadetIdsWithGroups, GROUP_UNALLOCATED, Group, sorted_locations
 from app.objects.volunteers import ListOfVolunteerSkills, Volunteer
 from app.objects.volunteers_at_event import ListOfVolunteersAtEvent, VolunteerAtEvent
@@ -217,7 +221,7 @@ def get_data_to_be_stored_for_volunteer_rota_page(interface: abstractInterface, 
     list_of_cadet_ids_with_groups = load_list_of_cadets_ids_with_group_allocations_active_cadets_only(event=event, interface=interface)
     unallocated_cadets_at_event = get_list_of_cadets_unallocated_to_group_at_event(event=event, interface=interface)
     volunteer_skills = load_list_of_volunteer_skills(interface)
-    volunteers_in_roles_at_event = get_volunteers_in_role_at_event_with_active_allocations(event=event, interface=interface)
+    volunteers_in_roles_at_event = DEPRECATE_get_volunteers_in_role_at_event_with_active_allocations(event=event, interface=interface)
     list_of_volunteers_at_event = load_list_of_volunteers_at_event(event=event, interface=interface)
 
     dict_of_volunteers_with_last_roles = get_dict_of_volunteers_with_last_roles(interface=interface,
@@ -237,15 +241,28 @@ def get_data_to_be_stored_for_volunteer_rota_page(interface: abstractInterface, 
 
 def get_dict_of_volunteers_with_last_roles(interface: abstractInterface, list_of_volunteer_ids: List[str], avoid_event: Event) -> Dict[str, RoleAndGroup]:
     return dict([
-        (volunteer_id, get_last_role_for_volunteer_id(interface=interface, volunteer_id=volunteer_id, avoid_event=avoid_event))
+        (volunteer_id, DEPRECATE_get_last_role_for_volunteer_id(interface=interface, volunteer_id=volunteer_id, avoid_event=avoid_event))
         for volunteer_id in list_of_volunteer_ids
     ])
 
 
-def get_last_role_for_volunteer_id(interface: abstractInterface, volunteer_id: str, avoid_event: Event = arg_not_passed) -> RoleAndGroup:
+def DEPRECATE_get_last_role_for_volunteer_id(interface: abstractInterface, volunteer_id: str, avoid_event: Event = arg_not_passed) -> RoleAndGroup:
+    volunteer = get_volunteer_from_id(interface=interface, volunteer_id=volunteer_id)
     roles = get_all_roles_across_recent_events_for_volunteer_id_as_list(
-        interface=interface,
-        volunteer_id=volunteer_id,
+        data_layer=interface.data,
+        volunteer=volunteer,
+        avoid_event=avoid_event,
+        sort_by=SORT_BY_START_ASC
+    )
+    if len(roles)==0:
+        return RoleAndGroup()
+
+    return roles[-1] ## most recent role
+
+def get_last_role_for_volunteer_id(data_layer: DataLayer, volunteer: Volunteer, avoid_event: Event = arg_not_passed) -> RoleAndGroup:
+    roles = get_all_roles_across_recent_events_for_volunteer_id_as_list(
+        data_layer=data_layer,
+        volunteer=volunteer,
         avoid_event=avoid_event,
         sort_by=SORT_BY_START_ASC
     )
@@ -255,18 +272,18 @@ def get_last_role_for_volunteer_id(interface: abstractInterface, volunteer_id: s
     return roles[-1] ## most recent role
 
 
-def get_all_roles_across_recent_events_for_volunteer_id_as_list(interface: abstractInterface, volunteer_id: str, sort_by = SORT_BY_START_ASC, avoid_event: Event = arg_not_passed) -> List[RoleAndGroup]:
-    roles_as_dict = get_all_roles_across_recent_events_for_volunteer_id_as_dict(
-        interface=interface,
-        volunteer_id=volunteer_id,
+
+def get_all_roles_across_recent_events_for_volunteer_id_as_list(data_layer: DataLayer, volunteer: Volunteer, sort_by = SORT_BY_START_ASC, avoid_event: Event = arg_not_passed) -> List[RoleAndGroup]:
+    roles_as_dict = get_all_roles_across_recent_events_for_volunteer_as_dict(
+        data_layer=data_layer,
+        volunteer=volunteer,
         sort_by=sort_by,
         avoid_event=avoid_event
     )
     return list(roles_as_dict.values())
 
-
-def get_all_roles_across_recent_events_for_volunteer_id_as_dict(interface: abstractInterface, volunteer_id: str, sort_by = SORT_BY_START_ASC, avoid_event: Event = arg_not_passed) -> Dict[Event, RoleAndGroup]:
-    list_of_events = get_sorted_list_of_events(interface=interface, sort_by=sort_by)
+def get_all_roles_across_recent_events_for_volunteer_as_dict(data_layer: DataLayer, volunteer: Volunteer, sort_by = SORT_BY_START_ASC, avoid_event: Event = arg_not_passed) -> Dict[Event, RoleAndGroup]:
+    list_of_events = get_sorted_list_of_events(data_layer=data_layer, sort_by=sort_by)
     if avoid_event is arg_not_passed:
         pass ## can't exclude so do everything
     else:
@@ -275,17 +292,28 @@ def get_all_roles_across_recent_events_for_volunteer_id_as_dict(interface: abstr
                                                                  sort_by=sort_by,
                                                                  only_past=True)
 
-    list_of_roles_and_groups = [get_role_and_group_for_event_and_volunteer_id(interface=interface, event=event, volunteer_id=volunteer_id) for event in list_of_events]
+    return get_all_roles_for_list_of_events_for_volunteer_as_dict(
+        data_layer=data_layer,
+        volunteer=volunteer,
+        list_of_events=list_of_events
+    )
+
+
+def get_all_roles_for_list_of_events_for_volunteer_as_dict(data_layer: DataLayer, volunteer: Volunteer, list_of_events: ListOfEvents) -> Dict[Event, RoleAndGroup]:
+
+    list_of_roles_and_groups = [get_role_and_group_for_event_and_volunteer(data_layer=data_layer, event=event, volunteer=volunteer) for event in list_of_events]
     roles_dict = dict([(event, role_and_group) for event, role_and_group in zip(list_of_events, list_of_roles_and_groups) if not role_and_group.missing])
 
     return roles_dict
 
 
-def get_role_and_group_for_event_and_volunteer_id(interface: abstractInterface, volunteer_id: str, event: Event) -> RoleAndGroup:
-    volunteer_data = get_volunteers_in_role_at_event_with_active_allocations(interface=interface, event=event)
-    role_and_group = volunteer_data.most_common_role_and_group_at_event_for_volunteer(volunteer_id=volunteer_id)
+def get_role_and_group_for_event_and_volunteer(data_layer: DataLayer, volunteer: Volunteer, event: Event) -> RoleAndGroup:
+    volunteer_data = get_volunteers_in_role_at_event_with_active_allocations(data_layer=data_layer, event=event)
+    role_and_group = volunteer_data.most_common_role_and_group_at_event_for_volunteer(volunteer=volunteer)
 
     return role_and_group
+
+
 
 
 def sort_volunteer_data_for_event_by_day_sort_order(

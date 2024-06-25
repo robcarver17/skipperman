@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import List
 
+from app.data_access.storage_layer.api import DataLayer
+
 from app.backend.data.group_allocations import GroupAllocationsData
 from app.backend.data.volunteer_allocation import VolunteerAllocationData
 
@@ -307,8 +309,12 @@ def load_volunteers_in_role_at_event(interface: abstractInterface, event: Event)
 
 
 
-def get_volunteers_in_role_at_event_with_active_allocations(interface: abstractInterface, event: Event) -> ListOfVolunteersInRoleAtEvent:
+def DEPRECATE_get_volunteers_in_role_at_event_with_active_allocations(interface: abstractInterface, event: Event) -> ListOfVolunteersInRoleAtEvent:
     volunteer_role_data = VolunteerRotaData(interface.data)
+    return volunteer_role_data.get_volunteers_in_role_at_event_who_are_also_allocated_to_event(event)
+
+def get_volunteers_in_role_at_event_with_active_allocations(data_layer: DataLayer, event: Event) -> ListOfVolunteersInRoleAtEvent:
+    volunteer_role_data = VolunteerRotaData(data_layer)
     return volunteer_role_data.get_volunteers_in_role_at_event_who_are_also_allocated_to_event(event)
 
 

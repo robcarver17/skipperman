@@ -4,7 +4,7 @@ from app.backend.ticks_and_qualifications.ticksheets import get_qualification_st
 
 from app.objects.groups import Group
 
-from app.backend.events import get_list_of_all_events
+from app.backend.events import DEPRECATE_get_list_of_all_events
 
 from app.backend.group_allocations.previous_allocations import allocation_for_cadet_in_previous_events_as_dict, \
     get_dict_of_allocations_for_events_and_list_of_cadets
@@ -238,7 +238,7 @@ def previous_groups_as_dict_excluding_one_event(interface: abstractInterface, ca
 
 def dict_of_previous_allocations_excluding_one_event(interface: abstractInterface,  event_to_exclude: Event, number_of_events: int = 3):
 
-    list_of_events = get_list_of_all_events(interface)
+    list_of_events = DEPRECATE_get_list_of_all_events(interface)
     list_of_previous_events = list_of_events_excluding_one_event(list_of_events=list_of_events,event_to_exclude=event_to_exclude, only_past=True,
                                                                  sort_by=SORT_BY_START_ASC)[-number_of_events:]
     previous_allocations_as_dict = get_dict_of_allocations_for_events_and_list_of_cadets(interface=interface,

@@ -3,7 +3,7 @@ from typing import Union
 from app.logic.reporting.rollcall_and_contacts.forms import reporting_options_form_for_rollcall_additional_parameters, \
     explain_additional_parameters_for_rollcall_report
 from app.logic.reporting.rollcall_and_contacts.processes import get_dict_of_df_for_reporting_rollcalls, \
-    load_additional_parameters_for_rollcall_report
+    load_additional_parameters_for_rollcall_report, clear_additional_parameters_for_rollcall_report
 
 from app.logic.reporting.rollcall_and_contacts.processes import get_group_rollcall_report_additional_parameters_from_form_and_save
 
@@ -103,6 +103,7 @@ rollcall_report_generator = ReportGenerator(
                                     get_dict_of_df=get_dict_of_df_for_reporting_rollcalls,
 
                                     load_additional_parameters=load_additional_parameters_for_rollcall_report,
+                                    clear_additional_parameters=clear_additional_parameters_for_rollcall_report,
                                     explain_additional_parameters=explain_additional_parameters_for_rollcall_report,
                                     additional_parameters_form=reporting_options_form_for_rollcall_additional_parameters,
                                     get_additional_parameters_from_form_and_save=get_group_rollcall_report_additional_parameters_from_form_and_save)

@@ -13,6 +13,7 @@ from app.logic.reporting.shared.print_options import (
     get_saved_print_options_and_create_form, get_saved_print_options,
 )
 from app.logic.reporting.shared.report_generator import ReportGenerator
+from app.logic.reporting.shared.reporting_options import reset_all_report_options
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -94,7 +95,7 @@ def display_form_for_generic_report_all_options(
         arrangement_and_order_text,
     ) = get_text_explaining_various_options_for_generic_report(interface=interface, report_generator=report_generator)
 
-    navbar = ButtonBar([main_menu_button, back_menu_button, create_report_button])
+    navbar = ButtonBar([main_menu_button, back_menu_button, create_report_button, reset_options_button])
 
     link =weblink_for_report(interface=interface, report_generator=report_generator)
     return Form(
@@ -119,6 +120,8 @@ def display_form_for_generic_report_all_options(
             ]
         )
     )
+
+reset_options_button = Button("Reset print options", nav_button=True)
 
 def weblink_for_report(interface: abstractInterface, report_generator: ReportGenerator) -> str:
     print_options = get_saved_print_options(report_type=report_generator.specific_parameters_for_type_of_report.report_type, interface=interface)
@@ -149,6 +152,11 @@ def post_form_for_generic_report_all_options(
 
     elif last_button_pressed == MODIFY_ADDITIONAL_OPTIONS_BUTTON_LABEL:
         return additional_options_form(interface, report_generator)
+
+    elif reset_options_button.pressed(last_button_pressed):
+        reset_all_report_options(interface, report_generator)
+        interface.flush_cache_to_store()
+        return  display_form_for_generic_report_all_options(interface, report_generator)
 
     elif back_menu_button.pressed(last_button_pressed):
         # otherwise event/report specific data like filenames is remembered; also group order which could break everything if persisted
@@ -207,14 +215,14 @@ def post_form_for_generic_report_additional_options(
     if last_button_pressed == BACK_BUTTON_LABEL:
         return previous_form
 
-    elif  last_button_pressed== CREATE_REPORT_BUTTON_LABEL:
-        report_generator.get_additional_parameters_from_form_and_save(interface)
+    report_generator.get_additional_parameters_from_form_and_save(interface)
+    interface.flush_cache_to_store()
+
+    if  last_button_pressed== CREATE_REPORT_BUTTON_LABEL:
         return create_generic_report(interface=interface, report_generator=report_generator)
 
     elif last_button_pressed == SAVE_THESE_OPTIONS_BUTTON_LABEL:
-        report_generator.get_additional_parameters_from_form_and_save(interface)
         return previous_form
-
 
     else:
         button_error_and_back_to_initial_state_form(interface)
@@ -263,6 +271,7 @@ def post_form_for_generic_report_print_options(
     save_print_options(
         report_type=report_generator.specific_parameters_for_type_of_report.report_type, print_options=print_options, interface=interface
     )
+    interface.flush_cache_to_store()
     if last_button_pressed == CREATE_REPORT_BUTTON_LABEL:
         return create_generic_report(interface=interface, report_generator=report_generator)
 
@@ -303,6 +312,8 @@ def post_form_for_generic_report_arrangement_options(
 ) -> Union[NewForm, Form, File]:
     last_button_pressed = interface.last_button_pressed()
     previous_form = interface.get_new_display_form_for_parent_of_function(report_generator.arrangement_options_display_form_function)
+
+    ## No need to save as only buttons in form
 
     if last_button_pressed == CREATE_REPORT_BUTTON_LABEL:
         return create_generic_report(interface=interface, report_generator=report_generator)

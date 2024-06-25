@@ -1,6 +1,7 @@
 from app.backend.data.options import OptionsData
 from app.data_access.configuration.fixed import ALL_PAGESIZE, ALL_FONTS
 from app.logic.events.events_in_state import get_event_from_state
+from app.logic.reporting.shared.report_generator import ReportGenerator
 from app.objects.abstract_objects.abstract_form import (
     yes_no_radio, textInput, radioInput, intInput,
 )
@@ -283,3 +284,8 @@ PDF = "pdf"
 CSV = "csv"
 
 
+def reset_print_report_options(interface: abstractInterface, report_generator: ReportGenerator):
+    options_data = OptionsData(interface.data)
+    options_data.reset_print_options_to_default(report_generator.name)
+    interface.clear_persistent_value(REPORT_TITLE)
+    interface.clear_persistent_value(REPORT_FILENAME)

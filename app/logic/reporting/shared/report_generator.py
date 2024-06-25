@@ -20,6 +20,7 @@ class ReportGenerator:
 
     explain_additional_parameters: Callable
     load_additional_parameters: Callable
+    clear_additional_parameters: Callable
     additional_parameters_form: Callable
 
     get_additional_parameters_from_form_and_save: Callable

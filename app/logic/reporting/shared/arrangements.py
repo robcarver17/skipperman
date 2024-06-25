@@ -5,13 +5,13 @@ from app.logic.reporting.shared.arrangement_state import save_arrangement_and_gr
     get_stored_arrangement_and_group_order
 
 from app.backend.reporting.arrangement.arrangement_order import ArrangementOfColumns, ArrangementOfRows, \
-    ListOfArrangementOfColumns, IndicesToSwap
+    IndicesToSwap
 
 from app.backend.reporting.options_and_parameters.report_options import ReportingOptions
 
 
 from app.backend.reporting.process_stages.create_list_of_columns_from_groups import \
-    create_arrangement_from_list_of_pages
+    modify_arrangement_given_list_of_pages_and_method
 from app.backend.reporting.process_stages.create_list_of_groups_from_df import create_list_of_pages_from_dict_of_df
 
 
@@ -46,44 +46,38 @@ def create_arrangement_from_order_and_algo_and_save(
     reporting_options: ReportingOptions,
 ) -> ArrangementOfColumns:
 
-    arrangement_of_columns = create_arrangement_from_order_and_algo(reporting_options=reporting_options)
-    arrangement_options = reporting_options.arrangement
-    arrangement_options.add_arrangement_of_columns(arrangement_of_columns)
-    save_arrangement_and_group_order(interface=interface, arrangement_and_group_options=reporting_options.arrange_options_and_group_order,
+    arrangement_group_options = create_arrangement_from_order_and_algo(reporting_options=reporting_options)
+
+    save_arrangement_and_group_order(interface=interface, arrangement_and_group_options=arrangement_group_options,
                                      report_type=reporting_options.specific_parameters.report_type)
 
-    return arrangement_of_columns
+    ## FIXME why returning this? should be whole thing
+    return arrangement_group_options.arrangement_options.arrangement_of_columns
 
 def create_arrangement_from_order_and_algo(
     reporting_options: ReportingOptions,
-) -> ArrangementOfColumns:
-
+) -> ArrangementOptionsAndGroupOrder:
     list_of_pages = create_list_of_pages_from_dict_of_df(
         dict_of_df=reporting_options.dict_of_df,
         marked_up_list_from_df_parameters=reporting_options.marked_up_list_from_df_parameters,
     )
-    list_of_arrangement_of_columns = create_arrangement_from_list_of_pages(list_of_pages=list_of_pages,
-                                                                   reporting_options=reporting_options)
 
-    print("list of arrangement of columns %s" % str(list_of_arrangement_of_columns))
-    arrangement_of_columns = from_list_of_arrangement_of_columns_to_typical_arrangement_of_columns(list_of_arrangement_of_columns)
+    arrangement_options_and_group_order = modify_arrangement_given_list_of_pages_and_method(list_of_pages=list_of_pages,
+                                                                                            reporting_options=reporting_options)
 
-    print("Arrange of columns %s" % str(arrangement_of_columns))
-    return arrangement_of_columns
-
-def from_list_of_arrangement_of_columns_to_typical_arrangement_of_columns(list_of_arrangement_of_columns: ListOfArrangementOfColumns) -> ArrangementOfColumns:
-    ## FIXME TEMP
-    return list_of_arrangement_of_columns[0]
+    return arrangement_options_and_group_order
 
 
 def modify_arrangement_options_and_group_order_to_reflect_arrangement_method_name(reporting_options: ReportingOptions,
                                                                                   arrangement_method_name: str) -> ArrangementOptionsAndGroupOrder:
+
+    ## Modify inside of reporting options, then whole thing passed to create arrangement
     arrangement_options_and_group_order = reporting_options.arrange_options_and_group_order
     arrangement_options_and_group_order.arrangement_options.change_arrangement_options_given_new_method_name(arrangement_method_name)
+    print(arrangement_options_and_group_order)
 
     ## above modifies arrangement method inside reporting options, we now replace the columns
-    new_arrangement_of_columns = create_arrangement_from_order_and_algo(reporting_options=reporting_options)
-    arrangement_options_and_group_order.replace_column_arrangement(new_arrangement_of_columns)
+    arrangement_options_and_group_order  = create_arrangement_from_order_and_algo(reporting_options=reporting_options)
 
     return arrangement_options_and_group_order
 
@@ -104,9 +98,9 @@ def  remove_empty_groups_from_group_order_and_arrangement(interface: abstractInt
     arrangement_options_and_group_order.reset_arrangement_back_to_default()
 
     ## above modifies arrangement method inside reporting options, we now replace the columns
-    new_arrangement_of_columns = create_arrangement_from_order_and_algo(reporting_options=reporting_options)
-    arrangement_options_and_group_order.replace_column_arrangement(new_arrangement_of_columns)
-    reset_arrangement_and_regenerate_columns(reporting_options=reporting_options, arrangement_options_and_group_order=arrangement_options_and_group_order)
+    arrangement_options_and_group_order = create_arrangement_from_order_and_algo(reporting_options=reporting_options)
+
+    arrangement_options_and_group_order = reset_arrangement_and_regenerate_columns(reporting_options=reporting_options, arrangement_options_and_group_order=arrangement_options_and_group_order)
 
     save_arrangement_and_group_order(arrangement_and_group_options=arrangement_options_and_group_order, interface=interface, report_type=reporting_options.specific_parameters.report_type)
 
@@ -114,7 +108,7 @@ def  remove_empty_groups_from_group_order_and_arrangement(interface: abstractInt
 def  add_missing_groups_to_group_order_and_arrangement(interface: abstractInterface ,missing_groups: GroupOrder,  reporting_options: ReportingOptions):
     arrangement_options_and_group_order = get_stored_arrangement_and_group_order(interface, report_type=reporting_options.specific_parameters.report_type)
     arrangement_options_and_group_order.add_missing_groups_to_group_order_and_arrangement(missing_groups=missing_groups)
-    reset_arrangement_and_regenerate_columns(reporting_options=reporting_options, arrangement_options_and_group_order=arrangement_options_and_group_order)
+    arrangement_options_and_group_order = reset_arrangement_and_regenerate_columns(reporting_options=reporting_options, arrangement_options_and_group_order=arrangement_options_and_group_order)
     save_arrangement_and_group_order(arrangement_and_group_options=arrangement_options_and_group_order, interface=interface, report_type=reporting_options.specific_parameters.report_type)
 
 
@@ -122,8 +116,11 @@ def reset_arrangement_and_regenerate_columns(reporting_options: ReportingOptions
     arrangement_options_and_group_order.reset_arrangement_back_to_default()
 
     ## above modifies arrangement method inside reporting options, we now replace the columns
-    new_arrangement_of_columns = create_arrangement_from_order_and_algo(reporting_options=reporting_options)
-    arrangement_options_and_group_order.replace_column_arrangement(new_arrangement_of_columns)
+    ## Will this do an place?
+    arrangement_options_and_group_order = create_arrangement_from_order_and_algo(reporting_options=reporting_options)
+
+    return arrangement_options_and_group_order
+
 
 
 def modify_arrangement_options_given_custom_list(interface: abstractInterface, report_type: str, new_arrangement_of_columns: ArrangementOfColumns):

@@ -1,6 +1,8 @@
 import pandas as pd
 from typing import Dict
 
+from app.objects.constants import arg_not_passed
+
 from app.backend.reporting.process_stages.create_column_report_from_df import \
     create_column_report_from_df_and_return_filename
 from app.backend.reporting.rota_report.configuration import AdditionalParametersForVolunteerReport, specific_parameters_for_volunteer_report
@@ -36,6 +38,14 @@ def load_additional_parameters_for_rota_report(
         days_to_show=days_to_show,
         power_boats_only=boats
     )
+
+
+def clear_additional_parameters_for_rota_report(
+    interface: abstractInterface,
+) :
+    interface.clear_persistent_value(DAYS_TO_SHOW)
+    interface.clear_persistent_value(BOATS)
+
 
 
 def get_rota_report_additional_parameters_from_form_and_save(

@@ -2,9 +2,9 @@ from dataclasses import dataclass
 from typing import List, Union, Tuple, Dict
 
 import pandas as pd
+from app.backend.reporting.arrangement.arrange_options import ArrangementOptionsAndGroupOrder
 
 from app.data_access.configuration.fixed import APPROX_WIDTH_TO_HEIGHT_RATIO
-from app.backend.reporting.arrangement.arrangement_order import ArrangementOfColumns, ListOfArrangementOfColumns
 from app.objects.constants import arg_not_passed
 
 
@@ -94,8 +94,22 @@ class Page(List[GroupOfMarkedUpString]):
         super().__init__(list_of_marked_up_string)
         self.title_str = title_str
 
+    @property
+    def group_names(self):
+        return getattr(self, "_group_names", [])
+
+    @group_names.setter
+    def group_names(self, group_names: List[str]):
+        self._group_names = group_names
+
 class ListOfPages(List[Page]):
-    pass
+    def unique_list_of_groups_across_all_pages(self):
+        list_of_groups = []
+        for page in self:
+            list_of_groups+=page.group_names
+
+        return list(set(list_of_groups))
+
 
 class Column(ListOfGroupsOfMarkedUpStrings):
     def number_of_lines_including_gaps(self) -> int:
@@ -187,17 +201,17 @@ class ListOfPagesWithColumns(List[PageWithColumns]):
     pass
 
 
-def create_list_of_pages_with_columns_from_list_of_pages_and_arrangements(
+def create_list_of_pages_with_columns_from_list_of_pages_and_arrangement_options(
     list_of_pages: ListOfPages,
-    list_of_arrangement_of_columns: ListOfArrangementOfColumns,
+    arrangement_options_and_group_order: ArrangementOptionsAndGroupOrder,
 ) -> ListOfPagesWithColumns:
 
     list_of_pages_with_columns = [
         create_columns_from_page(
             page = page,
-            arrangement_of_columns=arrangement_of_columns
+            arrangement_options_and_group_order=arrangement_options_and_group_order
         )
-        for page, arrangement_of_columns in zip(list_of_pages, list_of_arrangement_of_columns)
+        for page in list_of_pages
     ]
 
     return ListOfPagesWithColumns(list_of_pages_with_columns)
@@ -205,14 +219,18 @@ def create_list_of_pages_with_columns_from_list_of_pages_and_arrangements(
 
 def create_columns_from_page(
     page: Page,
-    arrangement_of_columns: ArrangementOfColumns,
+    arrangement_options_and_group_order: ArrangementOptionsAndGroupOrder,
 ) -> PageWithColumns:
     ## is passed list list of str?
+    master_group_order = arrangement_options_and_group_order.group_order
+    arrangement_of_columns = arrangement_options_and_group_order.arrangement_options.arrangement_of_columns
+
     list_of_columns  = []
     for order_list_of_index_for_column in arrangement_of_columns:
         single_column = _create_single_column_from_list_of_groups_of_marked_up_str_given_order(
             page=page,
             order_list_of_index_for_column=order_list_of_index_for_column,
+            master_group_order = master_group_order
         )
         if len(single_column)==0:
             continue
@@ -225,12 +243,17 @@ def create_columns_from_page(
 def _create_single_column_from_list_of_groups_of_marked_up_str_given_order(
     page: Page,
     order_list_of_index_for_column: List[int],
+    master_group_order: List[str]
 ) -> Column:
     column_as_list = []
+    groups_in_page = page.group_names
     for index in order_list_of_index_for_column:
+        group_name = master_group_order[index]
         try:
-            column_as_list.append(page[index])
-        except IndexError:
+            index_of_group_in_page = groups_in_page.index(group_name)
+            relevant_group_in_page = page[index_of_group_in_page]
+            column_as_list.append(relevant_group_in_page)
+        except:
             ## missing from this page that's fine
             continue
 

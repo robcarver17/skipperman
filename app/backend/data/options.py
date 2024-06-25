@@ -8,6 +8,13 @@ class OptionsData():
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
 
+    def reset_print_options_to_default(self, report_name: str):
+        self.data_api.save_print_options(print_options=PrintOptions(), report_name=report_name)
+
+
+    def reset_arrangement_options_to_default(self, report_name: str):
+        return self.data_api.save_arrange_group_options(report_name=report_name, arrange_group_options=ArrangementOptionsAndGroupOrder.create_empty())
+
     def get_print_options(self, report_name: str) -> PrintOptions:
         return self.data_api.get_print_options(report_name)
 

@@ -74,6 +74,14 @@ def load_additional_parameters_for_allocation_report(
         add_asterix_for_club_boats = add_asterix_for_club_boats
     )
 
+
+def clear_additional_parameters_for_allocation_report(
+    interface: abstractInterface,
+):
+    interface.clear_persistent_value(SHOW_FULL_NAMES)
+    interface.clear_persistent_value(CLUB_BOAT_ASTERIX)
+    interface.clear_persistent_value(INCLUDE_UNALLOCATED_CADETS)
+
 def get_dict_of_df_for_reporting_allocations(interface: abstractInterface) -> Dict[str, pd.DataFrame]:
     event = get_event_from_state(interface)
     additional_parameters = load_additional_parameters_for_allocation_report(interface)

@@ -77,6 +77,16 @@ class ArrangementOptionsAndGroupOrder:
     arrangement_options: ArrangeGroupsOptions
     group_order: GroupOrder
 
+    @classmethod
+    def create_empty(cls):
+        return cls(arrangement_options=ArrangeGroupsOptions(), group_order=GroupOrder([]))
+
+    def does_arrangement_include_all_groups(self) -> bool:
+        all_group_indices_in_arrangement = self.arrangement_options.arrangement_of_columns.items_in_self()
+        all_groups_as_count = list(range(len(self.group_order)))
+
+        return all_group_indices_in_arrangement == all_groups_as_count
+
     def replace_column_arrangement(self, new_column_arrangement: ArrangementOfColumns):
         self.arrangement_options.replace_column_arrangement(new_column_arrangement)
 

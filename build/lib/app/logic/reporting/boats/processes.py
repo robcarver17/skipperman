@@ -87,6 +87,17 @@ def load_additional_parameters_for_boat_report(
                                              display_full_names=display_full_names,
                                              in_out_columns=include_in_out)
 
+def clear_additional_parameters_for_boat_report(
+    interface: abstractInterface,
+) :
+
+    interface.clear_persistent_value(DISPLAY_FULL_NAMES)
+    interface.clear_persistent_value(EXCLUDE_UNALLOCATED)
+    interface.clear_persistent_value(EXCLUDE_RIVER_TRAIN)
+    interface.clear_persistent_value(EXCLUDE_LAKE)
+    interface.clear_persistent_value(INCLUDE_IN_OUT)
+
+
 def get_dict_of_df_for_reporting_boats(interface: abstractInterface) -> Dict[str, pd.DataFrame]:
     event = get_event_from_state(interface)
     additional_parameters = load_additional_parameters_for_boat_report(interface)

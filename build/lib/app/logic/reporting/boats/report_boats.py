@@ -1,7 +1,9 @@
 from typing import Union
 
 from app.logic.reporting.boats.forms import reporting_options_form_for_boat_additional_parameters, explain_additional_parameters_for_boat_report
-from app.logic.reporting.boats.processes import get_dict_of_df_for_reporting_boats, load_additional_parameters_for_boat_report, get_boat_allocation_report_additional_parameters_from_form_and_save
+from app.logic.reporting.boats.processes import get_dict_of_df_for_reporting_boats, \
+    load_additional_parameters_for_boat_report, get_boat_allocation_report_additional_parameters_from_form_and_save, \
+    clear_additional_parameters_for_boat_report
 
 from app.logic.reporting.shared.generic_report_pages import post_form_initial_generic_report, \
     post_form_for_generic_report_arrangement_options, display_form_for_generic_report_all_options, \
@@ -100,6 +102,7 @@ boat_report_generator = ReportGenerator(
                                     get_dict_of_df=get_dict_of_df_for_reporting_boats,
 
                                     load_additional_parameters=load_additional_parameters_for_boat_report,
+                                    clear_additional_parameters=clear_additional_parameters_for_boat_report,
                                     explain_additional_parameters=explain_additional_parameters_for_boat_report,
                                     additional_parameters_form=reporting_options_form_for_boat_additional_parameters,
                                     get_additional_parameters_from_form_and_save=get_boat_allocation_report_additional_parameters_from_form_and_save)

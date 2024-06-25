@@ -9,9 +9,11 @@ from app.backend.reporting.options_and_parameters.report_options import Reportin
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import \
     SpecificParametersForTypeOfReport
 from app.backend.reporting.process_stages.create_list_of_groups_from_df import get_dict_of_grouped_df
+from app.logic.reporting.shared.arrangement_state import reset_arrangement_report_options
+from app.logic.reporting.shared.report_generator import ReportGenerator
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.reporting.shared.group_order import get_arrangement_options_and_group_order_from_stored_or_defaults
-from app.logic.reporting.shared.print_options import get_saved_print_options
+from app.logic.reporting.shared.print_options import get_saved_print_options, reset_print_report_options
 
 
 def augment_order_of_groups_with_sizes(
@@ -52,19 +54,32 @@ def get_reporting_options(interface: abstractInterface,
                           specific_parameters_for_type_of_report: SpecificParametersForTypeOfReport,
                           dict_of_df: Dict[str, pd.DataFrame]) -> ReportingOptions:
 
-    arrange_options_and_group_order = get_arrangement_options_and_group_order_from_stored_or_defaults(interface=interface,  specific_parameters_for_type_of_report=specific_parameters_for_type_of_report,
+
+    arrangement_options_and_group_order = get_arrangement_options_and_group_order_from_stored_or_defaults(interface=interface,  specific_parameters_for_type_of_report=specific_parameters_for_type_of_report,
                                                                                                       dict_of_df=dict_of_df)
+
     print_options = get_saved_print_options(interface=interface, report_type=specific_parameters_for_type_of_report.report_type)
+
 
     marked_up_list_from_df_parameters_with_actual_group_order = create_parameters_to_create_marked_up_list_from_df(
         print_options=print_options,
         specific_parameters=specific_parameters_for_type_of_report,
-        group_order=arrange_options_and_group_order.group_order
+        group_order=arrangement_options_and_group_order.group_order
     )
 
-    return ReportingOptions(arrange_options_and_group_order=arrange_options_and_group_order,
+    return ReportingOptions(arrange_options_and_group_order=arrangement_options_and_group_order,
                             specific_parameters=specific_parameters_for_type_of_report,
                             dict_of_df=dict_of_df,
                             print_options=print_options,
                             marked_up_list_from_df_parameters=marked_up_list_from_df_parameters_with_actual_group_order)
+
+
+def reset_all_report_options(interface: abstractInterface, report_generator: ReportGenerator):
+    reset_print_report_options(interface, report_generator)
+    reset_specific_report_options(interface, report_generator)
+    reset_arrangement_report_options(interface, report_generator)
+
+
+def reset_specific_report_options(interface: abstractInterface, report_generator: ReportGenerator):
+    report_generator.clear_additional_parameters(interface)
 

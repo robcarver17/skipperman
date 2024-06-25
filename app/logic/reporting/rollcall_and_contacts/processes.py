@@ -87,6 +87,17 @@ def load_additional_parameters_for_rollcall_report(
         incude_emergency_contacts=include_emergency_contacts
     )
 
+
+def clear_additional_parameters_for_rollcall_report(
+    interface: abstractInterface,
+):
+    interface.clear_persistent_value(SHOW_FULL_NAMES)
+    interface.clear_persistent_value(INCLUDE_UNALLOCATED_CADETS)
+    interface.clear_persistent_value(CLUB_BOAT_ASTERIX)
+    interface.clear_persistent_value(HEALTH_DATA)
+    interface.clear_persistent_value(EMERGENCY_CONTACTS)
+
+
 def get_dict_of_df_for_reporting_rollcalls(interface: abstractInterface) -> Dict[str, pd.DataFrame]:
     event = get_event_from_state(interface)
     additional_parameters = load_additional_parameters_for_rollcall_report(interface)

@@ -7,7 +7,7 @@ from app.logic.reporting.allocations.forms import (
 from app.logic.reporting.allocations.processes import (
     get_group_allocation_report_additional_parameters_from_form_and_save,
     get_dict_of_df_for_reporting_allocations,
-    load_additional_parameters_for_allocation_report,
+    load_additional_parameters_for_allocation_report, clear_additional_parameters_for_allocation_report,
 
 )
 from app.logic.reporting.shared.generic_report_pages import display_initial_generic_report_form, \
@@ -103,6 +103,7 @@ allocation_report_generator = ReportGenerator(
                                     get_dict_of_df=get_dict_of_df_for_reporting_allocations,
 
                                     load_additional_parameters=load_additional_parameters_for_allocation_report,
+                                    clear_additional_parameters=clear_additional_parameters_for_allocation_report,
                                     explain_additional_parameters=explain_additional_parameters_for_allocation_report,
                                     additional_parameters_form=reporting_options_form_for_group_additional_parameters,
                                     get_additional_parameters_from_form_and_save=get_group_allocation_report_additional_parameters_from_form_and_save)

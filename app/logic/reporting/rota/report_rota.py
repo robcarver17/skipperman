@@ -3,7 +3,7 @@ from typing import Union
 from app.logic.reporting.rota.forms import reporting_options_form_for_rota_additional_parameters, \
     explain_additional_parameters_for_rota_report
 from app.logic.reporting.rota.processes import get_dict_of_df_for_reporting_rota, \
-    load_additional_parameters_for_rota_report
+    load_additional_parameters_for_rota_report, clear_additional_parameters_for_rota_report
 
 from app.logic.reporting.rota.processes import get_rota_report_additional_parameters_from_form_and_save
 
@@ -104,6 +104,7 @@ rota_report_generator = ReportGenerator(
                                     get_dict_of_df=get_dict_of_df_for_reporting_rota,
 
                                     load_additional_parameters=load_additional_parameters_for_rota_report,
+                                    clear_additional_parameters = clear_additional_parameters_for_rota_report,
                                     explain_additional_parameters=explain_additional_parameters_for_rota_report,
                                     additional_parameters_form=reporting_options_form_for_rota_additional_parameters,
                                     get_additional_parameters_from_form_and_save=get_rota_report_additional_parameters_from_form_and_save)

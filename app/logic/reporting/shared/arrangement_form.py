@@ -34,6 +34,8 @@ def form_for_group_arrangement_options(interface: abstractInterface,
     reporting_options = get_reporting_options(interface=interface,
                                               specific_parameters_for_type_of_report=specific_parameters_for_type_of_report,
                                               dict_of_df=dict_of_df)
+    print("HERO!")
+    print(reporting_options)
     add_delete_buttons = get_add_delete_buttons_for_group_ordering(reporting_options)
     reorder_list_form = get_reorder_list_of_groups_form_element(reporting_options)
     auto_layout_buttons = get_auto_layout_buttons_form_element()
@@ -149,31 +151,35 @@ def post_form_for_group_arrangement_options(
     last_button_pressed = interface.last_button_pressed()
 
     if last_button_pressed in list_of_arrangement_descriptions_on_buttons:
-        return change_arrangement_given_method_and_current_order_save_and_return_form_again(interface=interface, current_form_function=current_form_function,reporting_options=reporting_options)
+        change_arrangement_given_method_and_current_order(interface=interface,  reporting_options=reporting_options)
 
     elif last_button_pressed == REMOVE_EMPTY_BUTTON_NAME:
-        return remove_empty_from_group_order_and_arrangement_save_and_return_form_again(interface=interface,current_form_function=current_form_function,
-                                                                             reporting_options=reporting_options)
+        remove_empty_from_group_order_and_arrangement(interface=interface,
+                                                      reporting_options=reporting_options)
 
     elif last_button_pressed == ADD_MISSING_BUTTON_NAME:
-        return add_missing_to_group_order_and_arrangement_save_and_return_form_again(interface=interface,current_form_function=current_form_function,
-                                                                             reporting_options=reporting_options)
+        add_missing_to_group_order_and_arrangement(interface=interface,
+                                                   reporting_options=reporting_options)
 
 
     elif last_button_pressed in list_of_buttons_for_changing_group_order:
-        return change_group_order_and_arrangement_save_and_return_form_again(interface=interface,current_form_function=current_form_function,
-                                                                             reporting_options=reporting_options)
+        change_group_order_and_arrangement(interface=interface,
+                                           reporting_options=reporting_options)
 
     elif last_button_pressed in list_of_buttons_changing_matrix_shape:
-        return change_arrangement_matrix_save_and_return_form_again(interface=interface, current_form_function=current_form_function,
-                                                                    reporting_options=reporting_options)
+        change_arrangement_matrix(interface=interface,
+                                  reporting_options=reporting_options)
 
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
+    interface.flush_cache_to_store()
 
-def change_arrangement_given_method_and_current_order_save_and_return_form_again(interface: abstractInterface, current_form_function: Callable,
-                                                                                 reporting_options: ReportingOptions) -> NewForm:
+    return interface.get_new_form_given_function(current_form_function)
+
+
+def change_arrangement_given_method_and_current_order(interface: abstractInterface,
+                                                      reporting_options: ReportingOptions):
     arrangement_method_name = interface.last_button_pressed()
     arrange_options_and_group_order = modify_arrangement_options_and_group_order_to_reflect_arrangement_method_name(
         reporting_options=reporting_options,
@@ -183,13 +189,10 @@ def change_arrangement_given_method_and_current_order_save_and_return_form_again
     save_arrangement_and_group_order(arrangement_and_group_options=arrange_options_and_group_order,
                                      interface=interface, report_type=reporting_options.specific_parameters.report_type)
 
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
-
-    return interface.get_new_form_given_function(current_form_function)
 
 
-def change_group_order_and_arrangement_save_and_return_form_again(interface: abstractInterface, current_form_function: Callable,
-                                                                                 reporting_options: ReportingOptions) -> NewForm:
+def change_group_order_and_arrangement(interface: abstractInterface,
+                                       reporting_options: ReportingOptions) :
     ## Change in order of list
     group_order = reporting_options.group_order
     reorder_form_interface = reorderFormInterface(
@@ -203,41 +206,29 @@ def change_group_order_and_arrangement_save_and_return_form_again(interface: abs
                                                    new_group_order = new_group_order,
                                                    report_type=reporting_options.specific_parameters.report_type)
 
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
-    return interface.get_new_form_given_function(current_form_function)
-
-def remove_empty_from_group_order_and_arrangement_save_and_return_form_again(interface: abstractInterface, current_form_function: Callable,
-                                                                                 reporting_options: ReportingOptions) -> NewForm:
+def remove_empty_from_group_order_and_arrangement(interface: abstractInterface,
+                                                  reporting_options: ReportingOptions):
     empty_groups = get_empty_groups(reporting_options)
     remove_empty_groups_from_group_order_and_arrangement(interface=interface, empty_groups=empty_groups, reporting_options=reporting_options)
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
-
-    return interface.get_new_form_given_function(current_form_function)
 
 
-def add_missing_to_group_order_and_arrangement_save_and_return_form_again(interface: abstractInterface, current_form_function: Callable,
-                                                                                 reporting_options: ReportingOptions) -> NewForm:
+def add_missing_to_group_order_and_arrangement(interface: abstractInterface,
+                                               reporting_options: ReportingOptions):
 
     missing_groups = get_missing_groups(reporting_options)
     add_missing_groups_to_group_order_and_arrangement(interface=interface, missing_groups=missing_groups, reporting_options=reporting_options)
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
-
-    return interface.get_new_form_given_function(current_form_function)
 
 
 
-def change_arrangement_matrix_save_and_return_form_again(interface: abstractInterface, current_form_function: Callable,
-                                                                                 reporting_options: ReportingOptions) -> NewForm:
+def change_arrangement_matrix(interface: abstractInterface,
+                              reporting_options: ReportingOptions) :
     ## Matrix update
 
     reorder_matrix_interface= get_order_matrix_interface(interface=interface, reporting_options=reporting_options)
     new_arrangement_of_columns = reorder_matrix_interface.new_arrangement()
     modify_arrangement_options_given_custom_list(interface=interface, new_arrangement_of_columns=new_arrangement_of_columns, report_type=reporting_options.specific_parameters.report_type)
 
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
-
-    return interface.get_new_form_given_function(current_form_function)
 
 def get_order_matrix_interface(interface: abstractInterface,reporting_options: ReportingOptions) -> reorderMatrixInterface:
     arrangement_of_columns = get_arrangement_of_columns_from_storage_or_derive_from_method(

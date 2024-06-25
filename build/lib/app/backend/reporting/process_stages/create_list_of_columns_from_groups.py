@@ -1,16 +1,17 @@
+from typing import List
+
 import numpy as np
+from app.backend.reporting.arrangement.arrange_options import ArrangementOptionsAndGroupOrder
 
 from app.backend.reporting.process_stages.optimise_column_layout import (
     _generate_list_of_all_possible_indices,
     _find_best_list_of_indices,
 )
 from app.backend.reporting.process_stages.strings_columns_groups import (
-    PageWithColumns,
-    create_list_of_pages_with_columns_from_list_of_pages_and_arrangements, ListOfPages, Page, ListOfPagesWithColumns,
+    create_list_of_pages_with_columns_from_list_of_pages_and_arrangement_options, ListOfPages, Page, ListOfPagesWithColumns,
 )
 from app.backend.reporting.arrangement.arrangement_order import (
-    ArrangementOfColumns, ListOfArrangementOfColumns,
-)
+    ArrangementOfColumns)
 from app.backend.reporting.options_and_parameters.report_options import ReportingOptions
 from app.backend.reporting.arrangement.arrangement_methods import (
     ARRANGE_PASSED_LIST,
@@ -20,54 +21,50 @@ from app.backend.reporting.options_and_parameters.print_options import PrintOpti
 
 def create_list_of_pages_with_columns_from_list_of_pages(list_of_pages: ListOfPages,
                                       reporting_options: ReportingOptions) -> ListOfPagesWithColumns:
-    list_of_arrangement_of_columns = create_arrangement_from_list_of_pages(list_of_pages=list_of_pages,
-                                                                   reporting_options=reporting_options)
+    arrangement_options_and_group_order = modify_arrangement_given_list_of_pages_and_method(list_of_pages=list_of_pages,
+                                                                                            reporting_options=reporting_options)
 
-    list_of_pages_with_columns =  create_list_of_pages_with_columns_from_list_of_pages_and_arrangements(
+    list_of_pages_with_columns =  create_list_of_pages_with_columns_from_list_of_pages_and_arrangement_options(
         list_of_pages=list_of_pages,
-        list_of_arrangement_of_columns=list_of_arrangement_of_columns,
+        arrangement_options_and_group_order=arrangement_options_and_group_order,
     )
 
     return list_of_pages_with_columns
 
 
-def create_arrangement_from_list_of_pages(list_of_pages: ListOfPages,
-                                          reporting_options: ReportingOptions) -> ListOfArrangementOfColumns:
+def modify_arrangement_given_list_of_pages_and_method(list_of_pages: ListOfPages,
+                                                      reporting_options: ReportingOptions) -> ArrangementOptionsAndGroupOrder:
 
-    list_of_arrangements_of_columns = [
-        create_arrangement_from_pages(page, reporting_options=reporting_options)
-        for page in list_of_pages
-    ]
+    unique_list_of_groups_across_all_pages= list_of_pages.unique_list_of_groups_across_all_pages()
 
-    return ListOfArrangementOfColumns(list_of_arrangements_of_columns)
-
-def create_arrangement_from_pages(page: Page,
-                                              reporting_options: ReportingOptions) -> ArrangementOfColumns:
-
-    arrangement_options = reporting_options.arrangement
-    print_options = reporting_options.print_options
+    arrangement_options_and_group_order = reporting_options.arrange_options_and_group_order
+    arrangement_options = arrangement_options_and_group_order.arrangement_options
     arrangement_method = arrangement_options.arrangement_method
 
     print(arrangement_method)
     if arrangement_method is ARRANGE_PASSED_LIST:
-        return arrangement_options.arrangement_of_columns
+        arrangement_of_columns = arrangement_options.arrangement_of_columns
 
     elif arrangement_method ==ARRANGE_RECTANGLE:
-        return get_order_of_indices_even_sizing(
-            page=page,
+        print_options = reporting_options.print_options
+        arrangement_of_columns = get_order_of_indices_even_sizing(
+            unique_list_of_groups_across_all_pages=unique_list_of_groups_across_all_pages,
             print_options=print_options,
         )
 
     else:
         raise Exception("Arrangement %s not recognised" % arrangement_method)
 
+    arrangement_options_and_group_order.replace_column_arrangement(arrangement_of_columns)
+
+    return arrangement_options_and_group_order
 
 def get_order_of_indices_even_sizing(
-    page: Page,
+    unique_list_of_groups_across_all_pages: List[str],
     print_options: PrintOptions,
 ) -> ArrangementOfColumns:
     landscape = print_options.landscape
-    group_count = len(page)
+    group_count = len(unique_list_of_groups_across_all_pages)
 
     return get_order_of_indices_even_sizing_with_parameters(
         group_count=group_count, landscape=landscape

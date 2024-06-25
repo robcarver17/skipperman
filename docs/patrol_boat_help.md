@@ -25,8 +25,6 @@ The first thing we need to do is add a boat. Select a boat from the drop down an
 
 Click on 'remove boat from rota' to remove a boat entirely. 
 
-FIXME - there is currently a bug where you need to press the button several times.
-
 # Allocating volunteers 
 
 ## Allocating a volunteer to a boat

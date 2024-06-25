@@ -43,6 +43,7 @@ def create_page_from_df(grouped_df: pd.core.groupby.generic.DataFrameGroupBy,
                         marked_up_list_from_df_parameters: MarkedUpListFromDfParametersWithActualGroupOrder,
                         title_str: str)-> Page:
     page = Page([], title_str=title_str)
+    groups_with_content = []
     for group in ordered_list_of_groups:
         group_of_marked_up_str = _create_marked_up_str_for_group(
             group=group,
@@ -53,6 +54,9 @@ def create_page_from_df(grouped_df: pd.core.groupby.generic.DataFrameGroupBy,
             continue
         else:
             page.append(group_of_marked_up_str)
+            groups_with_content.append(group)
+
+    page.group_names = groups_with_content
 
     return page
 

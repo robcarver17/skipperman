@@ -4,7 +4,7 @@ from app.backend.cadets import cadet_name_from_id
 from app.backend.wa_import.update_cadets_at_event import update_data_row_for_existing_cadet_at_event, \
     update_availability_of_existing_cadet_at_event, \
     update_status_of_existing_cadet_at_event_to_cancelled_or_deleted, \
-    update_status_of_existing_cadet_at_event_to_active, update_notes_for_existing_cadet_at_event, \
+    update_status_of_existing_cadet_at_event, update_notes_for_existing_cadet_at_event, \
     update_health_for_existing_cadet_at_event
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadet_at_event import CadetAtEvent
@@ -18,7 +18,7 @@ from app.logic.events.registration_details.registration_details_form import get_
 
 from app.data_access.configuration.field_list_groups import FIELDS_WITH_INTEGERS, FIELDS_AS_STR
 from app.objects.day_selectors import DaySelector
-from app.objects.mapped_wa_event import RegistrationStatus, cancelled_status, deleted_status, active_status
+from app.objects.mapped_wa_event import RegistrationStatus
 
 
 def parse_registration_details_from_form(interface: abstractInterface, event: Event):
@@ -102,15 +102,13 @@ def get_cadet_event_status_for_row_in_form_and_alter_registration_data(interface
 
     if original_status == new_status:
         return
-    if new_status in [cancelled_status, deleted_status]:
-        print("Original cadet id %s" % original_cadet_in_data.cadet_id)
-        print("New status %s" % str(new_status))
+    if new_status.is_cancelled_or_deleted:
         update_status_of_existing_cadet_at_event_to_cancelled_or_deleted(interface=interface,
                                                                          event=event,
                                                                          cadet_id=original_cadet_in_data.cadet_id,
                                                                          new_status=new_status)
-    elif new_status==active_status:
-        update_status_of_existing_cadet_at_event_to_active(interface=interface, cadet_id=original_cadet_in_data.cadet_id, event=event)
+    elif new_status.is_active:
+        update_status_of_existing_cadet_at_event(interface=interface, cadet_id=original_cadet_in_data.cadet_id, event=event, new_status=new_status)
     else:
         interface.log_error("Status change to cadet ID %s for %s not recognised contact support" % (original_cadet_in_data.cadet_id,
                                                                                            str(new_status)))
@@ -207,10 +205,12 @@ def log_alert_for_status_change(interface: abstractInterface,
     if original_status == new_status:
         return
 
-    if new_status==cancelled_status or new_status==deleted_status:
+    if new_status.is_cancelled_or_deleted:
         warning_str = "*Following volunteers associated with cadet %s for whom status updated to deleted or cancelled - check their availability, and if no longer available update volunteer rota:" % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
-    else:
+    elif original_status.is_cancelled_or_deleted and new_status.is_active:
         warning_str = "*Following volunteers associated with cadet %s for whom status updated to active registration - check their availability on the volunteer rota and / or add new volunteers if available:" % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
+    else:
+        return
 
     log_alert_for_volunteers(warning_str=warning_str, interface=interface, cadet_id=cadet_id, event=event)
 

@@ -5,7 +5,7 @@ from app.backend.wa_import.update_cadets_at_event import \
     replace_existing_cadet_at_event_where_original_cadet_was_inactive, \
     get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active, \
     update_status_of_existing_cadet_at_event_to_cancelled_or_deleted, update_availability_of_existing_cadet_at_event, \
-    get_cadet_at_event_for_cadet_id
+    get_cadet_at_event_for_cadet_id, update_payment_status_of_existing_cadet_at_event
 from app.logic.events.constants import ROW_STATUS, ATTENDANCE
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing import get_current_cadet_id_at_event
@@ -13,7 +13,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadet_at_event import CadetAtEvent, get_cadet_at_event_from_row_in_mapped_event
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
-from app.objects.mapped_wa_event import RegistrationStatus, cancelled_status, active_status, deleted_status
+from app.objects.mapped_wa_event import RegistrationStatus
 
 
 def update_cadets_at_event_with_form_data(interface: abstractInterface):
@@ -29,14 +29,14 @@ def update_cadets_at_event(interface: abstractInterface, new_cadet_at_event: Cad
     existing_cadet_at_event = get_existing_cadet_at_event_from_state(interface)
 
     original_status = existing_cadet_at_event.status
-
     new_status = new_cadet_at_event.status
 
-    was_cancelled = original_status in [cancelled_status, deleted_status]
-
-    new_registration_replacing_deleted_or_cancelled = was_cancelled and new_status == active_status
-    existing_registration_now_deleted_or_cancelled = new_status in [deleted_status, cancelled_status]
+    new_registration_replacing_deleted_or_cancelled = original_status.is_cancelled_or_deleted and new_status.is_active
+    existing_registration_now_deleted_or_cancelled = new_status.is_cancelled_or_deleted
     status_unchanged = new_status == original_status
+    status_changed = not status_unchanged
+    status_active_and_was_active = (new_status.is_active and original_status.is_active)
+    status_still_active_but_has_changed = status_active_and_was_active and status_changed
 
     if new_registration_replacing_deleted_or_cancelled:
         ## Replace entire original cadet, new registration
@@ -44,19 +44,24 @@ def update_cadets_at_event(interface: abstractInterface, new_cadet_at_event: Cad
 
     elif existing_registration_now_deleted_or_cancelled:
         ## availability is a moot point
-        update_status_of_existing_cadet_at_event_to_cancelled_or_deleted(interface=interface, event=event, new_status = new_status,
-                                                                         cadet_id=new_cadet_at_event.cadet_id)
+        update_status_of_existing_cadet_at_event_to_cancelled_or_deleted(interface=interface, event=event, new_status = new_status,cadet_id=new_cadet_at_event.cadet_id)
+
+
+    elif status_still_active_but_has_changed:
+        update_payment_status_of_existing_cadet_at_event(interface=interface, event=event, cadet_id=new_cadet_at_event.cadet_id, new_status=new_status)
 
     elif status_unchanged:
         ## Must be an availability change
-        update_cadet_at_event_when_status_unchanged(interface=interface, event=event, new_cadet_at_event=new_cadet_at_event, existing_cadet_at_event=existing_cadet_at_event)
+        update_cadet_at_event_when_status_unchanged(interface=interface, event=event,
+                                                    new_cadet_at_event=new_cadet_at_event,
+                                                    existing_cadet_at_event=existing_cadet_at_event)
+
 
     else:
         interface.log_error("For existing cadet %s status change from %s to %s don't know how to handle" % (str(new_cadet_at_event),
                                                                                                        original_status.name, new_status.name))
 
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_clear_stored_items()
+    interface.flush_cache_to_store()
 
 def update_cadet_at_event_when_status_unchanged(interface: abstractInterface,
                                          event: Event, new_cadet_at_event: CadetAtEvent,

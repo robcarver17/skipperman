@@ -17,8 +17,7 @@ from app.objects.cadet_at_event import ListOfCadetsAtEvent, CadetAtEvent
 from app.data_access.configuration.field_list_groups import FIELDS_WITH_INTEGERS, FIELDS_VIEW_ONLY_IN_EDIT_VIEW, \
     FIELDS_TO_EDIT_IN_EDIT_VIEW
 from app.objects.constants import arg_not_passed
-from app.objects.mapped_wa_event import RowInMappedWAEvent, RegistrationStatus, cancelled_status, active_status, \
-    deleted_status, manual_add_status
+from app.objects.mapped_wa_event import RowInMappedWAEvent, RegistrationStatus, get_states_allowed_give_current_status
 
 DAYS_ATTENDING = "days_attending_field"
 NOTES = "Notes"
@@ -105,20 +104,14 @@ def get_columns_to_view(data_in_row: RowInMappedWAEvent) -> list:
 
 
 def get_status_button(current_status: RegistrationStatus, cadet_id: str)-> dropDownInput:
-    if current_status in [cancelled_status, active_status]:
-        allowable_status = [cancelled_status, active_status]
-    elif current_status == deleted_status:
-        allowable_status = [cancelled_status, active_status, deleted_status]
-    elif current_status == manual_add_status:
-        allowable_status = [cancelled_status, manual_add_status]
-    else:
-        raise Exception("Status %s not recognised" % str(current_status))
+    allowable_status = get_states_allowed_give_current_status(current_status)
 
     return dropdown_input_for_status_change(input_label="",
                                             input_name=input_name_from_column_name_and_cadet_id(ROW_STATUS, cadet_id),
                                             default_status=current_status,
                                             allowable_status=allowable_status
                                             )
+
 
 def get_days_attending_field(attendance: DaySelector, cadet_id: str, event: Event) -> checkboxInput:
     return get_availability_checkbox(availability=attendance,

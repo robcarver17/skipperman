@@ -1,5 +1,6 @@
 import datetime
 from copy import copy
+from typing import List
 
 from app.backend.data.group_allocations import GroupAllocationsData
 
@@ -11,7 +12,6 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.data.cadets_at_event import  CadetsAtEventData
 from app.backend.data.mapped_events import MappedEventsData
-from app.backend.group_allocations.boat_allocation import   update_boat_info_for_updated_cadets_at_event
 from app.backend.wa_import.add_cadet_ids_to_mapped_wa_event_data import     add_identified_cadet_and_row
 from app.backend.wa_import.update_cadets_at_event import add_new_cadet_to_event, \
     get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active
@@ -21,7 +21,7 @@ from app.objects.cadets import Cadet, DEFAULT_DATE_OF_BIRTH
 from app.objects.constants import missing_data
 from app.objects.dinghies import ListOfCadetAtEventWithDinghies
 from app.objects.events import Event
-from app.objects.mapped_wa_event import MappedWAEvent, RowInMappedWAEvent, manual_add_status
+from app.objects.mapped_wa_event import MappedWAEvent, RowInMappedWAEvent, manual_status
 from app.objects.utils import in_both_x_and_y
 
 def convert_mapped_wa_event_potentially_with_joined_rows(mapped_wa_event: MappedWAEvent)-> MappedWAEvent:
@@ -71,7 +71,7 @@ def from_partner_name_to_cadet(partner_name: str) -> Cadet:
 def add_matched_partner_cadet_with_duplicate_registration_to_wa_mapped_data(interface: abstractInterface,
                                                                 original_cadet: Cadet,
                                                                             new_cadet: Cadet,
-                                                                            day: Day,
+                                                                            day_or_none_if_all_days: Day,
                                                                             event: Event):
 
     new_row = add_new_row_to_wa_event_data_and_return_row(interface=interface, original_cadet=original_cadet, new_cadet=new_cadet, event=event)
@@ -85,16 +85,35 @@ def add_matched_partner_cadet_with_duplicate_registration_to_wa_mapped_data(inte
         event=event, row_in_mapped_wa_event=new_row,
         cadet_id=new_cadet.id
     )
-    add_two_handed_partnership_on_day_for_new_cadet_when_have_dinghy_for_existing_cadet(interface=interface, event=event,
-                                                                                        day=day,
-                                                                                        original_cadet=original_cadet, new_cadet=new_cadet)
+    add_two_handed_partnership_on_for_new_cadet_when_have_dinghy_for_existing_cadet(interface=interface, event=event,
+                                                                                    day_or_none_if_all_days=day_or_none_if_all_days,
+                                                                                    original_cadet=original_cadet, new_cadet=new_cadet)
 
-    add_new_cadet_to_group_on_day(interface=interface, new_cadet=new_cadet, original_cadet=original_cadet, day=day, event=event)
+    add_new_cadet_to_groups(interface=interface, new_cadet=new_cadet, original_cadet=original_cadet, day_or_none_if_all_days=day_or_none_if_all_days, event=event)
+
+def add_new_cadet_to_groups(interface: abstractInterface, original_cadet: Cadet,
+                            new_cadet: Cadet,
+                            day_or_none_if_all_days: Day,
+                            event: Event):
+
+    list_of_days = get_list_of_days_given_original_cadet(interface=interface,
+                                                         event=event,
+                                                         day_or_none_if_all_days=day_or_none_if_all_days,
+                                                         original_cadet=original_cadet)
+
+    for day in list_of_days:
+        add_new_cadet_to_group_on_day(interface=interface,
+                                      event=event,
+                                      original_cadet=original_cadet,
+                                      new_cadet=new_cadet,
+                                      day=day)
+
 
 def add_new_cadet_to_group_on_day(interface: abstractInterface, original_cadet: Cadet,
-                                  new_cadet: Cadet,
-                                  day: Day,
-                                  event: Event):
+                            new_cadet: Cadet,
+                            day: Day,
+                            event: Event):
+
 
     cadets_at_event_data = GroupAllocationsData(interface.data)
     cadets_at_event =cadets_at_event_data.active_cadet_ids_at_event_with_allocations_including_unallocated_cadets(event)
@@ -126,7 +145,7 @@ def modify_row_to_clone_for_new_cadet_partner(original_cadet: Cadet,
     new_row = copy(existing_row)
 
     new_row.registration_date =existing_row.registration_date + datetime.timedelta(0,9) ## otherwise get duplicate key
-    new_row.registration_status = manual_add_status ## avoids it being deleted
+    new_row.registration_status = manual_status ## avoids it being deleted
     new_row[CADET_FIRST_NAME] = new_cadet.first_name
     new_row[CADET_SURNAME] = new_cadet.surname
     new_row[CADET_DOUBLE_HANDED_PARTNER] = original_cadet.name
@@ -134,19 +153,50 @@ def modify_row_to_clone_for_new_cadet_partner(original_cadet: Cadet,
     return new_row
 
 
-def add_two_handed_partnership_on_day_for_new_cadet_when_have_dinghy_for_existing_cadet(interface: abstractInterface, day: Day, event: Event, original_cadet: Cadet, new_cadet: Cadet, ):
+def add_two_handed_partnership_on_for_new_cadet_when_have_dinghy_for_existing_cadet(interface: abstractInterface, day_or_none_if_all_days: Day, event: Event, original_cadet: Cadet, new_cadet: Cadet, ):
     ## We only need to include the original cadet as will copy over
+    list_of_days = get_list_of_days_given_original_cadet(interface=interface,
+                                                         event=event,
+                                                         day_or_none_if_all_days=day_or_none_if_all_days,
+                                                         original_cadet=original_cadet)
+    for day in list_of_days:
+        add_two_handed_partnership_on_day_for_new_cadet_when_have_dinghy_for_existing_cadet(
+            interface=interface,
+            event=event,
+            original_cadet=original_cadet,
+            new_cadet=new_cadet,
+            day=day,
+        )
+
+def get_list_of_days_given_original_cadet(interface: abstractInterface, day_or_none_if_all_days: Day, event: Event, original_cadet: Cadet) -> List[Day]:
+    if day_or_none_if_all_days is None:
+        cadets_at_event_data = CadetsAtEventData(interface.data)
+
+        original_cadet_at_event = cadets_at_event_data.cadet_at_event_or_missing_data(event=event,
+                                                                                      cadet_id=original_cadet.id)
+        list_of_days = original_cadet_at_event.availability.days_available()
+    else:
+        list_of_days = [day_or_none_if_all_days]
+
+    return list_of_days
+
+def add_two_handed_partnership_on_day_for_new_cadet_when_have_dinghy_for_existing_cadet(
+        interface: abstractInterface, day: Day, event: Event, original_cadet: Cadet,
+        new_cadet: Cadet, ):
     dinghys_data = DinghiesData(interface.data)
-    list_of_cadets_at_event_with_dinghies=dinghys_data.get_list_of_cadets_at_event_with_dinghies(event)
+
+    list_of_cadets_at_event_with_dinghies = dinghys_data.get_list_of_cadets_at_event_with_dinghies(event)
+
     original_cadet_with_dinghy = list_of_cadets_at_event_with_dinghies.object_with_cadet_id_on_day(cadet_id=original_cadet.id,
-                                                                                                   day=day)
-    assert original_cadet_with_dinghy is not missing_data
+                                                                                                       day=day)
+    if original_cadet_with_dinghy is missing_data:
+        ## Edge case if available but not allocated this day
+        return
 
-    original_cadet_with_dinghy.partner_cadet_id = new_cadet.id
-
-    list_of_updated_cadets = ListOfCadetAtEventWithDinghies([original_cadet_with_dinghy]) ## ignore phantom type error
-
-    update_boat_info_for_updated_cadets_at_event(event=event, list_of_updated_cadets=list_of_updated_cadets, interface=interface)
+    dinghys_data.create_two_handed_partnership(event=event,
+                                               cadet=original_cadet,
+                                               new_two_handed_partner=new_cadet,
+                                               day=day)
 
 
 

@@ -105,12 +105,12 @@ def process_form_when_existing_cadet_chosen_as_partner(interface: abstractInterf
 def add_matched_partner_cadet_with_duplicate_registration(interface: abstractInterface, new_cadet: Cadet) -> NewForm:
     primary_cadet, __ = get_primary_cadet_and_partner_name(interface)
     event = get_event_from_state(interface)
-    day = get_day_from_state_or_none(interface)
+    day_or_none_if_all_days = get_day_from_state_or_none(interface)
     add_matched_partner_cadet_with_duplicate_registration_to_wa_mapped_data(interface=interface, event=event,
-                                                                            day=day,
+                                                                            day_or_none_if_all_days=day_or_none_if_all_days,
                                                                             original_cadet=primary_cadet, new_cadet=new_cadet
                                                                             )
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+    interface.flush_cache_to_store()
 
     clear_cadet_id_at_event(interface)
 

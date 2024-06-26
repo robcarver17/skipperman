@@ -27,12 +27,14 @@ maximium_cadet_age: 19
 # Wild apricot
 # Should only be used when WA change their status - hopefully never!
 #
-wild_apricot_payment_fields_which_are_active_status:
-  - "Partially paid"
+wild_apricot_payment_fields_which_are_active_and_paid_status:
   - "Paid"
-  - "Unpaid"
   - "Free"
   - "No invoice"
+wild_apricot_payment_fields_which_are_unpaid_status:
+  - "Unpaid"
+wild_apricot_payment_fields_which_are_part_paid_status:
+  - "Partially paid"
 wild_apricot_payment_fields_which_are_cancelled_status:
   - "Canceled"
   - "Cancelled"

@@ -1,5 +1,4 @@
 from copy import copy
-from typing import List
 
 from app.backend.data.cadets import CadetData
 
@@ -17,8 +16,7 @@ from app.objects.cadet_at_event import CadetAtEvent
 from app.objects.constants import DuplicateCadets
 from app.objects.day_selectors import DaySelector, Day
 from app.objects.events import Event
-from app.objects.mapped_wa_event import RowInMappedWAEvent, MappedWAEvent, cancelled_status, active_status, \
-    deleted_status, RegistrationStatus
+from app.objects.mapped_wa_event import RowInMappedWAEvent, MappedWAEvent,  RegistrationStatus
 
 
 def is_cadet_with_id_already_at_event(interface: abstractInterface, event: Event, cadet_id: str)-> bool:
@@ -82,13 +80,16 @@ def replace_existing_cadet_at_event_where_original_cadet_was_inactive(interface:
     cadets_at_event_data.replace_existing_cadet_at_event(new_cadet_at_event=new_cadet_at_event, event=event)
 
 
+def update_payment_status_of_existing_cadet_at_event(interface: abstractInterface, event: Event, cadet_id:str, new_status: RegistrationStatus):
+    cadets_at_event_data = CadetsAtEventData(interface.data)
+    cadets_at_event_data.update_status_of_existing_cadet_at_event(event=event, cadet_id=cadet_id, new_status=new_status)
 
 def update_status_of_existing_cadet_at_event_to_cancelled_or_deleted(interface: abstractInterface, event: Event, cadet_id:str, new_status: RegistrationStatus):
     cadets_at_event_data = CadetsAtEventData(interface.data)
     dinghies_data = DinghiesData(interface.data)
     groups_data = GroupAllocationsData(interface.data)
 
-    cadets_at_event_data.update_status_of_existing_cadet_at_event_to_cancelled_or_deleted(event=event, cadet_id=cadet_id, new_status=new_status)
+    cadets_at_event_data.update_status_of_existing_cadet_at_event(event=event, cadet_id=cadet_id, new_status=new_status)
 
 
     for day in event.weekdays_in_event():
@@ -124,9 +125,9 @@ def remove_partner_and_log_if_present(interface: abstractInterface, event: Event
         ))
 
 
-def update_status_of_existing_cadet_at_event_to_active(interface: abstractInterface, event: Event, cadet_id:str):
+def update_status_of_existing_cadet_at_event(interface: abstractInterface, event: Event, cadet_id:str, new_status: RegistrationStatus):
     cadets_at_event_data = CadetsAtEventData(interface.data)
-    cadets_at_event_data.update_status_of_existing_cadet_at_event_to_active(event=event, cadet_id=cadet_id)
+    cadets_at_event_data.update_status_of_existing_cadet_at_event(event=event, cadet_id=cadet_id, new_status=new_status)
 
 def make_cadet_available_on_day(interface: abstractInterface, event: Event, cadet_id:str, day: Day):
     cadets_at_event_data = CadetsAtEventData(interface.data)
@@ -218,28 +219,34 @@ def new_status_and_status_message(interface: abstractInterface,
     cadet = cadet_name_from_id(interface=interface, cadet_id=new_cadet_at_event.cadet_id)
 
     ## Don't need all shared as new_status can't be deleted
-    if old_status == cancelled_status and new_status == active_status:
+    if old_status.is_cancelled and new_status.is_active:
         status_message = (
                 "Cadet %s was cancelled; now active so probably new registration"
                 % str(cadet)
         )
 
-    elif old_status == deleted_status and new_status == active_status:
+    elif old_status.is_deleted and new_status.is_active:
         status_message = (
                 "Existing cadet %s data was deleted (missing from event spreadsheet); now active so probably manual editing of WA file has occured"
                 % str(cadet)
         )
 
-    elif old_status == deleted_status and new_status == cancelled_status:
+    elif old_status.is_deleted and new_status.is_cancelled:
         status_message = (
                 "Cadet %s was deleted (missing from event spreadsheet); now cancelled so probably manual editing of WA file has occured"
                 % str(cadet)
         )
 
-    elif old_status == active_status and new_status == cancelled_status:
+    elif old_status.is_active and new_status.is_cancelled:
         status_message = (
                 "Cadet %s was active now cancelled, so probably cancelled on WA website"
                 % str(cadet)
+        )
+    elif old_status.is_active and new_status.is_active:
+        status_message = (
+                "Cadet %s was still active but status has changed from %s to %s"
+                % (str(cadet), old_status_name, new_status_name)
+
         )
     else:
         status_message = (

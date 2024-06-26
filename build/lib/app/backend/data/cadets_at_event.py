@@ -17,7 +17,6 @@ from app.objects.events import Event
 
 from app.objects.cadet_at_event import ListOfCadetsAtEvent, ListOfIdentifiedCadetsAtEvent, CadetAtEvent, \
     get_cadet_at_event_from_row_in_mapped_event
-from app.objects.cadet_at_event import active_status
 
 def cadet_id_at_event_given_row_id(interface: abstractInterface, event: Event, row_id: str) -> str:
     cadet_data = CadetsAtEventData(interface.data)
@@ -110,8 +109,8 @@ class CadetsAtEventData():
         cadet.availability.make_available_on_day(day)
         self.save_list_of_cadets_at_event(list_of_cadets_at_event=existing_cadets_at_event, event=event)
 
-    def update_status_of_existing_cadet_at_event_to_cancelled_or_deleted(self, event: Event, cadet_id: str,
-                                                                         new_status: RegistrationStatus):
+    def update_status_of_existing_cadet_at_event(self, event: Event, cadet_id: str,
+                                                 new_status: RegistrationStatus):
 
         existing_cadets_at_event = self.get_list_of_cadets_at_event(event)
         print("update %s to %s" % (cadet_id, new_status.name))
@@ -119,13 +118,6 @@ class CadetsAtEventData():
                                                                       new_status=new_status)
         self.save_list_of_cadets_at_event(list_of_cadets_at_event=existing_cadets_at_event, event=event)
 
-
-    def update_status_of_existing_cadet_at_event_to_active(self, event: Event, cadet_id: str):
-
-        existing_cadets_at_event = self.get_list_of_cadets_at_event(event)
-        existing_cadets_at_event.update_status_of_existing_cadet_at_event(cadet_id=cadet_id,
-                                                                      new_status=active_status)
-        self.save_list_of_cadets_at_event(list_of_cadets_at_event=existing_cadets_at_event, event=event)
 
     def replace_existing_cadet_at_event(self, new_cadet_at_event: CadetAtEvent, event: Event):
         existing_cadets_at_event = self.get_list_of_cadets_at_event(event)

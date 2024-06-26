@@ -5,7 +5,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import checkboxInput, textInput, dropDownInput
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.constants import arg_not_passed
-from app.objects.day_selectors import DaySelector, Day
+from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
 from app.objects.food import FoodRequirements, OTHER_IN_FOOD_REQUIRED
 from app.objects.mapped_wa_event import RegistrationStatus, all_possible_status
@@ -130,7 +130,7 @@ def dropdown_input_for_status_change(input_name: str,
 
 def get_status_from_form(interface: abstractInterface, input_name: str) -> RegistrationStatus:
     row_status_as_str = interface.value_from_form(input_name)
-    return RegistrationStatus[row_status_as_str]
+    return RegistrationStatus(row_status_as_str)
 
 
 def input_name_from_column_name_and_cadet_id(column_name: str, cadet_id: str) -> str:

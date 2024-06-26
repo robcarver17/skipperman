@@ -1,5 +1,7 @@
 from typing import List
 
+from app.objects.cadets import Cadet
+
 from app.backend.data.cadets import CadetData
 
 from app.objects.cadet_at_event import CadetAtEvent
@@ -89,6 +91,15 @@ class DinghiesData():
         self.save_list_of_cadets_at_event_with_club_dinghies(
             list_of_cadets_at_event_with_club_dinghies=cadets_with_club_dinghies_at_event,
             event=event)
+
+    def create_two_handed_partnership(self, event: Event, cadet: Cadet, new_two_handed_partner: Cadet, day: Day):
+        list_of_cadets_at_event_with_dinghies = self.get_list_of_cadets_at_event_with_dinghies(event)
+        list_of_cadets_at_event_with_dinghies.create_two_handed_partnership(
+            cadet_id=cadet.id,
+            new_two_handed_partner_id=new_two_handed_partner.id,
+            day=day
+        )
+        self.save_list_of_cadets_at_event_with_dinghies(event=event, list_of_cadets_at_event_with_dinghies=list_of_cadets_at_event_with_dinghies)
 
     def update_boat_info_for_updated_cadets_at_event_where_cadets_available(self, event: Event,
                                                                             list_of_updated_cadets: ListOfCadetAtEventWithDinghies):

@@ -11,7 +11,7 @@ from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObj
     GenericSkipperManObject, transform_string_into_class_instance, transform_class_instance_into_string
 
 from app.objects.utils import clean_up_dict_with_nans
-from app.objects.mapped_wa_event import RowInMappedWAEvent, RegistrationStatus, deleted_status, active_status, manual_add_status
+from app.objects.mapped_wa_event import RowInMappedWAEvent, RegistrationStatus, deleted_status
 
 SKIP_TEST_CADET_ID = str(-9999)
 
@@ -124,13 +124,7 @@ class CadetAtEvent(GenericSkipperManObjectWithIds):
         return self.data_in_row.get_item(key_name, default=default)
 
     def is_active(self):
-        return self.status in [active_status, manual_add_status]
-
-    def is_deleted(self):
-        return self.status == deleted_status
-
-    def is_manual_add(self):
-        return self.status == manual_add_status
+        return self.status.is_active
 
     @classmethod
     def from_dict(cls, dict_with_str):
@@ -141,7 +135,7 @@ class CadetAtEvent(GenericSkipperManObjectWithIds):
         availability = day_selector_stored_format_from_text(availability_as_str)
 
         status_as_str = dict_with_str.pop(STATUS_KEY)
-        status =RegistrationStatus[status_as_str]
+        status =RegistrationStatus(status_as_str)
 
         cadet_id = str(dict_with_str.pop(CADET_ID))
 

@@ -347,6 +347,7 @@ def relevant_information_requires_clarification_or_cadets_not_permanently_connec
                                                                                     list_of_relevant_information: ListOfRelevantInformationForVolunteer
                                                                                     , volunteer_id: str) -> str:
     issues = NO_ISSUES_WITH_VOLUNTEER
+    volunteer_name = get_volunteer_from_id(volunteer_id)
 
     list_of_status = [relevant_information.identify.self_declared_status for relevant_information in  list_of_relevant_information]
     list_of_preferred = [relevant_information.availability.preferred_duties for relevant_information in  list_of_relevant_information]
@@ -372,17 +373,17 @@ def relevant_information_requires_clarification_or_cadets_not_permanently_connec
     cadets_not_connected = any_cadets_not_permanently_connected(interface=interface, event=event, volunteer_id=volunteer_id)
 
     if any_status_is_unable:
-        issues+='Volunteer is unable to volunteer according to at least one registration. '
+        issues+='Volunteer %s is unable to volunteer according to at least one registration. ' % volunteer_name
     if availability_conflict:
-        issues+='Inconsistency between availability for cadet and volunteer across registrations. '
+        issues+='Inconsistency between availability for cadet and volunteer %s across registrations. ' % volunteer_name
     if cadet_vs_volunteer_availability_conflict:
-        issues+='Volunteer is available on days when cadet is not. '
+        issues+='Volunteer %s is available on days when cadet is not. ' % volunteer_name
     if preferred_conflict:
-        issues+='Inconsistency on preferred duties across registrations. '
+        issues+='Inconsistency on preferred duties across registrations for volunter %s . ' % volunteer_name
     if same_or_different_conflict:
-        issues+='Inconsistency on same/different duties across registrations. '
+        issues+='Inconsistency on same/different duties across registrations for volunteer %s . ' % volunteer_name
     if cadets_not_connected:
-        issues+='Volunteer is not currently permanently connected to all registered cadets. '
+        issues+='Volunteer %s is not currently permanently connected to all registered cadets. ' % volunteer_name
 
     return issues
 

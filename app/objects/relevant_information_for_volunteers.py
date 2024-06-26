@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import List
 
 from app.objects.day_selectors import DaySelector
-from app.objects.mapped_wa_event import RegistrationStatus, cancelled_status, deleted_status
+from app.objects.mapped_wa_event import RegistrationStatus
 
 
 @dataclass
@@ -58,6 +58,6 @@ def get_row_status_cancelled_or_deleted_from_relevant_information(relevant_infor
         return True
 
     row_status = relevant_information.availability.row_status
-    cancelled_or_deleted = row_status in [cancelled_status, deleted_status]
+    cancelled_or_deleted = row_status.is_cancelled_or_deleted
 
     return cancelled_or_deleted

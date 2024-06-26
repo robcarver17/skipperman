@@ -1,7 +1,7 @@
 from typing import List
 
 from app.objects.constants import NoDaysSelected
-from app.objects.volunteers_at_event import VolunteerAtEvent
+from app.objects.volunteers_at_event import VolunteerAtEventWithId
 
 from app.backend.forms.form_utils import get_availablity_from_form
 from app.backend.volunteers.volunteer_allocation import \
@@ -56,7 +56,7 @@ def get_volunteer_at_event_from_form_contents(interface: abstractInterface):
     same_or_different_in_form = get_same_or_different_from_form(interface)
     notes_in_form = interface.value_from_form(NOTES)
 
-    volunteer_at_event = VolunteerAtEvent(
+    volunteer_at_event = VolunteerAtEventWithId(
         volunteer_id=volunteer_id,
         availablity=availability_in_form,
         list_of_associated_cadet_id=list_of_associated_cadet_id,

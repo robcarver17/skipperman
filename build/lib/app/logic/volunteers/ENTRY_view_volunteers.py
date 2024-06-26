@@ -11,7 +11,7 @@ from app.objects.abstract_objects.abstract_buttons import main_menu_button, Butt
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.backend.data.volunteers import SORT_BY_SURNAME, SORT_BY_FIRSTNAME
-from app.backend.volunteers.volunteers import get_sorted_list_of_volunteers
+from app.backend.volunteers.volunteers import DEPRECATE_get_sorted_list_of_volunteers
 from app.logic.volunteers.volunteer_state import update_state_for_specific_volunteer_given_volunteer_as_str
 from app.logic.volunteers.constants import *
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
@@ -73,7 +73,7 @@ def view_specific_volunteer_form(interface:abstractInterface):
 
 
 def display_list_of_volunteers_with_buttons(interface: abstractInterface, sort_order=SORT_BY_SURNAME) -> Table:
-    list_of_volunteers = get_sorted_list_of_volunteers(interface=interface, sort_by=sort_order)
+    list_of_volunteers = DEPRECATE_get_sorted_list_of_volunteers(interface=interface, sort_by=sort_order)
 
     list_with_buttons = [
         row_of_form_for_volunteer_with_buttons(volunteer) for volunteer in list_of_volunteers

@@ -17,7 +17,7 @@ from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
 from app.objects.day_selectors import no_days_selected
 from app.objects.events import Event
-from app.objects.volunteers_at_event import VolunteerAtEvent
+from app.objects.volunteers_at_event import VolunteerAtEventWithId
 
 DELETE_VOLUNTEER_FROM_EVENT_BUTTON_LABEL = "Remove volunteer from event"
 
@@ -41,7 +41,7 @@ def display_form_confirm_volunteer_details_from_rota(interface: abstractInterfac
     ]))
 
 
-def get_text_of_last_roles(interface: abstractInterface, volunteer_at_event: VolunteerAtEvent) -> Line:
+def get_text_of_last_roles(interface: abstractInterface, volunteer_at_event: VolunteerAtEventWithId) -> Line:
     volunteer= get_volunteer_from_id(interface=interface, volunteer_id=volunteer_at_event.volunteer_id)
     all_roles_as_dict = get_all_roles_across_recent_events_for_volunteer_as_dict(data_layer=interface.data, volunteer=volunteer)
     text_as_list  = ['%s: %s' % (str(event), role)for event, role in all_roles_as_dict.items()]
@@ -53,7 +53,7 @@ def get_text_of_last_roles(interface: abstractInterface, volunteer_at_event: Vol
 
 
 
-def get_availability_checkbox_for_volunteer_at_event(volunteer_at_event: VolunteerAtEvent, event: Event):
+def get_availability_checkbox_for_volunteer_at_event(volunteer_at_event: VolunteerAtEventWithId, event: Event):
     availability = volunteer_at_event.availablity
     return get_availability_checkbox(availability=availability,
                                      event=event,

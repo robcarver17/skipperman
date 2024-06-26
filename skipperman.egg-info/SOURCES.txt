@@ -354,7 +354,6 @@ app/logic/reporting/boats/report_boats.py
 app/logic/reporting/boats/../../../data_access/configuration/configuration.yaml
 app/logic/reporting/data_dumps/ENTRY_data_dump.py
 app/logic/reporting/data_dumps/__init__.py
-app/logic/reporting/data_dumps/volunteer_data.py
 app/logic/reporting/data_dumps/../../../data_access/configuration/configuration.yaml
 app/logic/reporting/qualifications/ENTRY_report_qualifications.py
 app/logic/reporting/qualifications/__init__.py

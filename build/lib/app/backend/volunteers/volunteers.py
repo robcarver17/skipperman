@@ -147,10 +147,14 @@ def load_list_of_volunteer_skills(data_layer: DataLayer)-> ListOfVolunteerSkills
     return volunteer_data.get_list_of_volunteer_skills()
 
 
-def get_sorted_list_of_volunteers(interface: abstractInterface, sort_by: str = arg_not_passed) -> ListOfVolunteers:
+def DEPRECATE_get_sorted_list_of_volunteers(interface: abstractInterface, sort_by: str = arg_not_passed) -> ListOfVolunteers:
     volunteer_data = VolunteerData(interface.data)
     return volunteer_data.get_sorted_list_of_volunteers(sort_by)
 
+
+def get_sorted_list_of_volunteers(data_layer: DataLayer, sort_by: str = arg_not_passed) -> ListOfVolunteers:
+    volunteer_data = VolunteerData(data_layer)
+    return volunteer_data.get_sorted_list_of_volunteers(sort_by)
 
 def DEPRECATE_get_list_of_all_volunteers(interface:abstractInterface)-> ListOfVolunteers:
     volunteer_data = VolunteerData(interface.data)

@@ -1,14 +1,14 @@
 from app.backend.forms.swaps import is_ready_to_swap
 from app.logic.events.volunteer_rota.volunteer_targets import save_volunteer_targets
 
-from app.objects.volunteers_at_event import ListOfVolunteersAtEvent
+from app.objects.volunteers_at_event import ListOfVolunteersAtEventWithId
 
 from app.backend.volunteers.volunteer_allocation import     make_volunteer_unavailable_on_day, make_volunteer_available_on_day
 from app.backend.volunteers.volunteer_rota import delete_role_at_event_for_volunteer_on_day, \
     copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days, \
     update_role_and_group_at_event_for_volunteer_on_all_days_when_available, \
     copy_earliest_valid_role_and_overwrite_for_volunteer, copy_earliest_valid_role_to_all_empty_for_volunteer
-from app.backend.volunteers.volunteer_rota_data import get_data_to_be_stored_for_volunteer_rota_page, \
+from app.backend.volunteers.volunteer_rota_data import DEPRECATE_get_data_to_be_stored_for_volunteer_rota_page, \
     DEPRECATE_get_last_role_for_volunteer_id, get_volunteer_matrix
 from app.data_access.configuration.configuration import VOLUNTEER_SKILLS
 from app.logic.events.volunteer_rota.edit_cadet_connections_for_event_from_rota import \
@@ -20,7 +20,8 @@ from app.logic.events.volunteer_rota.edit_volunteer_skills_from_rota import \
 from app.logic.events.volunteer_rota.elements_in_volunteer_rota_page import SKILLS_FILTER, \
     get_available_filter_name_for_day, from_filter_entry_to_option, COPY_ALL_ROLES_BUTTON_LABEL, \
     COPY_ALL_FIRST_ROLE_BUTTON_LABEL
-from app.logic.events.volunteer_rota.rota_state import save_skills_filter_to_state, save_availablity_filter_to_state
+from app.logic.events.volunteer_rota.rota_state import save_skills_filter_to_state, save_availablity_filter_to_state, \
+    get_sorts_and_filters_from_state
 from app.logic.events.volunteer_rota.swapping import get_list_of_swap_buttons
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.events.volunteer_rota.parse_data_fields_in_rota import update_details_from_form_for_volunteer_at_event
@@ -264,17 +265,18 @@ def save_all_information_in_rota_page(interface: abstractInterface):
             print("Can't volunteer %s: error code %s probably because was filtered out" % (str(volunteer_at_event), str(e)))
 
 
-def get_list_of_volunteers_at_event(interface: abstractInterface) -> ListOfVolunteersAtEvent:
+def get_list_of_volunteers_at_event(interface: abstractInterface) -> ListOfVolunteersAtEventWithId:
     event = get_event_from_state(interface)
-    data_to_be_stored = get_data_to_be_stored_for_volunteer_rota_page(interface=interface, event=event)
+    data_to_be_stored = DEPRECATE_get_data_to_be_stored_for_volunteer_rota_page(interface=interface, event=event)
 
-    return data_to_be_stored.list_of_volunteers_at_event
+    return data_to_be_stored.list_of_volunteers_with_id_at_event
 
 
 from app.data_access.file_access import temp_file_name
 def save_volunteer_matrix_and_return_filename(interface: abstractInterface) -> str:
     event = get_event_from_state(interface)
-    volunteer_matrix = get_volunteer_matrix(data_layer=interface.data, event=event)
+    sorts_and_filters = get_sorts_and_filters_from_state(interface)
+    volunteer_matrix = get_volunteer_matrix(data_layer=interface.data, event=event, sorts_and_filters=sorts_and_filters)
     filename = temp_file_name()
     volunteer_matrix.to_csv(filename)
 

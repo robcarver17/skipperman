@@ -291,7 +291,7 @@ class PatrolBoatsData():
         return list_of_volunteers.list_of_volunteer_ids
 
     def get_list_of_volunteers_at_event(self, event: Event):
-        return self.volunteers_at_event_data.load_list_of_volunteers_at_event(event)
+        return self.volunteers_at_event_data.load_list_of_volunteers_with_ids_at_event(event)
 
     @property
     def volunteers_at_event_data(self) -> VolunteerAllocationData:

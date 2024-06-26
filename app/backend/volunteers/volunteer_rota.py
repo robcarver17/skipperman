@@ -6,7 +6,8 @@ from app.data_access.storage_layer.api import DataLayer
 from app.backend.data.group_allocations import GroupAllocationsData
 from app.backend.data.volunteer_allocation import VolunteerAllocationData
 
-from app.backend.volunteers.volunteers import get_volunteer_name_from_id, get_sorted_list_of_volunteers
+from app.backend.volunteers.volunteers import get_volunteer_name_from_id, DEPRECATE_get_sorted_list_of_volunteers, \
+    get_sorted_list_of_volunteers
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -17,7 +18,8 @@ from app.backend.data.patrol_boats import PatrolBoatsData
 from app.objects.constants import missing_data
 from app.objects.events import Event
 from app.objects.groups import Group, ALL_GROUPS_NAMES, GROUP_UNALLOCATED_TEXT, LAKE_TRAINING
-from app.objects.volunteers_at_event import VolunteerAtEvent, ListOfVolunteersAtEvent, ListOfIdentifiedVolunteersAtEvent
+from app.objects.volunteers_at_event import VolunteerAtEventWithId, ListOfVolunteersAtEventWithId, \
+    ListOfIdentifiedVolunteersAtEvent, ListOfVolunteersAtEvent
 from app.objects.volunteers_in_roles import NO_ROLE_SET, VolunteerInRoleAtEvent, ListOfVolunteersInRoleAtEvent, \
     RoleAndGroup
 
@@ -57,8 +59,14 @@ def get_volunteer_with_role_at_event_on_day(interface: abstractInterface, event:
 
 
 
-def sort_volunteer_data_for_event_by_name_sort_order(interface: abstractInterface, volunteers_at_event: ListOfVolunteersAtEvent, sort_order) -> ListOfVolunteersAtEvent:
-    list_of_volunteers = get_sorted_list_of_volunteers(interface=interface, sort_by=sort_order)
+def DEPRECATE_sort_volunteer_data_for_event_by_name_sort_order(interface: abstractInterface, volunteers_at_event: ListOfVolunteersAtEventWithId, sort_order) -> ListOfVolunteersAtEventWithId:
+    list_of_volunteers = DEPRECATE_get_sorted_list_of_volunteers(interface=interface, sort_by=sort_order)
+    ## this works because if an ID is missing we just ignore it
+    return volunteers_at_event.sort_by_list_of_volunteer_ids(list_of_volunteers.list_of_ids)
+
+
+def sort_volunteer_data_for_event_by_name_sort_order(data_layer: DataLayer, volunteers_at_event: ListOfVolunteersAtEventWithId, sort_order) -> ListOfVolunteersAtEventWithId:
+    list_of_volunteers = get_sorted_list_of_volunteers(data_layer=data_layer, sort_by=sort_order)
     ## this works because if an ID is missing we just ignore it
     return volunteers_at_event.sort_by_list_of_volunteer_ids(list_of_volunteers.list_of_ids)
 
@@ -195,7 +203,7 @@ def volunteer_is_on_lake(interface: abstractInterface, event: Event, volunteer_i
 
 
 
-def list_of_cadet_groups_associated_with_volunteer(interface: abstractInterface, event: Event, volunteer_at_event: VolunteerAtEvent) -> List[Group]:
+def list_of_cadet_groups_associated_with_volunteer(interface: abstractInterface, event: Event, volunteer_at_event: VolunteerAtEventWithId) -> List[Group]:
     group_data = GroupAllocationsData(interface.data)
     list_of_cadet_ids = volunteer_at_event.list_of_associated_cadet_id
     list_of_groups = []
@@ -230,14 +238,18 @@ def load_list_of_identified_volunteers_at_event(interface: abstractInterface, ev
 
 
 
-def DEPRECATE_load_list_of_volunteers_at_event(interface:abstractInterface, event: Event)-> ListOfVolunteersAtEvent:
+def DEPRECATE_load_list_of_volunteers_at_event(interface:abstractInterface, event: Event)-> ListOfVolunteersAtEventWithId:
     volunteer_allocation_data = VolunteerAllocationData(interface.data)
-    return volunteer_allocation_data.load_list_of_volunteers_at_event(event)
+    return volunteer_allocation_data.load_list_of_volunteers_with_ids_at_event(event)
 
 
 def load_list_of_volunteers_at_event(data_layer: DataLayer, event: Event)-> ListOfVolunteersAtEvent:
     volunteer_allocation_data = VolunteerAllocationData(data_layer)
-    return volunteer_allocation_data.load_list_of_volunteers_at_event(event)
+    return volunteer_allocation_data.get_list_of_volunteers_at_event(event)
+
+def load_list_of_volunteers_with_ids_at_event(data_layer: DataLayer, event: Event)-> ListOfVolunteersAtEventWithId:
+    volunteer_allocation_data = VolunteerAllocationData(data_layer)
+    return volunteer_allocation_data.load_list_of_volunteers_with_ids_at_event(event)
 
 
 def remove_volunteer_and_cadet_association_at_event(interface: abstractInterface, cadet_id: str, volunteer_id: str, event: Event):
@@ -272,9 +284,9 @@ def add_volunteer_to_event_with_just_id(interface: abstractInterface, volunteer_
 
 
 
-def get_volunteer_at_event(interface: abstractInterface, volunteer_id: str, event: Event) -> VolunteerAtEvent:
+def get_volunteer_at_event(interface: abstractInterface, volunteer_id: str, event: Event) -> VolunteerAtEventWithId:
     volunteers_at_event_data = VolunteerAllocationData(interface.data)
-    list_of_volunteers = volunteers_at_event_data.load_list_of_volunteers_at_event(event)
+    list_of_volunteers = volunteers_at_event_data.load_list_of_volunteers_with_ids_at_event(event)
     volunteer_at_event = list_of_volunteers.volunteer_at_event_with_id(volunteer_id)
     if volunteer_at_event is missing_data:
         raise Exception("Weirdly volunteer with id %s is no longer in event %s" % (volunteer_id, event))

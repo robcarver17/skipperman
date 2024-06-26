@@ -1,6 +1,6 @@
 from typing import List
 
-from app.objects.volunteers_at_event import VolunteerAtEvent
+from app.objects.volunteers_at_event import VolunteerAtEventWithId
 
 from app.objects.volunteers import Volunteer
 
@@ -179,7 +179,7 @@ class VolunteerRotaData():
 
         return volunteer_ids_in_boat_related_roles_on_any_day_of_event
 
-    def get_volunteer_with_role_at_event_on_day_for_volunteer_at_event(self, event: Event, volunteer_at_event: VolunteerAtEvent,
+    def get_volunteer_with_role_at_event_on_day_for_volunteer_at_event(self, event: Event, volunteer_at_event: VolunteerAtEventWithId,
                                                                        day: Day) -> VolunteerInRoleAtEvent:
 
         return self.get_volunteer_with_role_at_event_on_day_from_id(
@@ -248,7 +248,7 @@ class VolunteerRotaData():
         return volunteer_in_role
 
     def get_volunteers_in_role_at_event_who_are_also_allocated_to_event(self, event: Event)-> ListOfVolunteersInRoleAtEvent:
-        list_of_volunteers_at_event = self.volunteer_allocation_data.load_list_of_volunteers_at_event(event)
+        list_of_volunteers_at_event = self.volunteer_allocation_data.load_list_of_volunteers_with_ids_at_event(event)
         list_of_volunteer_ids_at_event = list_of_volunteers_at_event.list_of_volunteer_ids
         list_of_volunteers_in_role_at_event = self.get_list_of_volunteers_in_roles_at_event(event)
         volunteers_in_roles_and_at_event = list_of_volunteers_in_role_at_event.list_if_volunteer_id_in_list_of_ids(list_of_volunteer_ids_at_event)

@@ -1,7 +1,7 @@
 from app.backend.cadets import  cadet_from_id
 from app.backend.volunteers.volunteer_allocation import get_list_of_relevant_volunteers
 from app.backend.data.volunteers import SORT_BY_SURNAME
-from app.backend.volunteers.volunteers import get_sorted_list_of_volunteers
+from app.backend.volunteers.volunteers import DEPRECATE_get_sorted_list_of_volunteers
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.events.constants import CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL, FINAL_VOLUNTEER_ADD_BUTTON_LABEL, \
     SKIP_VOLUNTEER_BUTTON_LABEL, SEE_SIMILAR_VOLUNTEER_ONLY_LABEL, SEE_ALL_VOLUNTEER_BUTTON_LABEL, \
@@ -92,7 +92,7 @@ def get_list_of_volunteer_buttons(interface: abstractInterface,
                                   see_all_volunteers: bool = False) -> ListOfLines:
 
     if see_all_volunteers:
-        list_of_volunteers = get_sorted_list_of_volunteers(interface=interface, sort_by=SORT_BY_SURNAME)
+        list_of_volunteers = DEPRECATE_get_sorted_list_of_volunteers(interface=interface, sort_by=SORT_BY_SURNAME)
         msg_text = "Showing all volunteers:"
         extra_button_text = SEE_SIMILAR_VOLUNTEER_ONLY_LABEL
     else:
@@ -113,6 +113,6 @@ def get_list_of_volunteer_buttons(interface: abstractInterface,
 
 
 def get_dict_of_volunteer_names_and_volunteers(interface: abstractInterface):
-    list_of_volunteers = get_sorted_list_of_volunteers(interface)
+    list_of_volunteers = DEPRECATE_get_sorted_list_of_volunteers(interface)
     return dict([(str(volunteer), volunteer) for volunteer in list_of_volunteers])
 

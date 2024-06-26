@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 import pandas as pd
-from app.objects.volunteers_at_event import ListOfVolunteersAtEvent
+from app.objects.volunteers_at_event import ListOfVolunteersAtEventWithId
 
 from app.data_access.storage_layer.api import DataLayer
 
@@ -26,7 +26,7 @@ class DataForDfConstruction:
     all_volunteers_and_boats: ListOfVolunteersAtEventWithPatrolBoats
     volunteers_in_role_at_event: ListOfVolunteersInRoleAtEvent
     skills: ListOfVolunteerSkills
-    volunteers_at_event: ListOfVolunteersAtEvent
+    volunteers_at_event: ListOfVolunteersAtEventWithId
 
     @classmethod
     def construct_for_event(cls, event, data_layer: DataLayer):
@@ -39,7 +39,7 @@ class DataForDfConstruction:
         all_patrol_boats = patrol_boat_data.get_list_of_patrol_boats()
         all_volunteers_and_boats = patrol_boat_data.get_list_of_voluteers_at_event_with_patrol_boats(event)
         volunteers_in_role_at_event = volunteers_in_role_data.get_list_of_volunteers_in_roles_at_event(event)
-        volunteers_at_event = volunteer_allocation_data.load_list_of_volunteers_at_event(event)
+        volunteers_at_event = volunteer_allocation_data.load_list_of_volunteers_with_ids_at_event(event)
         skills = volunteer_data.get_list_of_volunteer_skills()
 
         return cls(

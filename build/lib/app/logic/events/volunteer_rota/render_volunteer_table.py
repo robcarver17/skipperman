@@ -5,8 +5,8 @@ from app.backend.forms.swaps import is_ready_to_swap
 from app.backend.volunteers.volunteer_rota import dict_of_groups_for_dropdown, \
     dict_of_roles_for_dropdown
 from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingVolunteerRotaPage, \
-    get_data_to_be_stored_for_volunteer_rota_page, \
-    RotaSortsAndFilters, get_sorted_and_filtered_list_of_volunteers_at_event
+    DEPRECATE_get_data_to_be_stored_for_volunteer_rota_page, \
+    RotaSortsAndFilters, DEPRECATE_get_sorted_and_filtered_list_of_volunteers_at_event
 from app.backend.volunteers.volunteers import get_volunteer_from_id
 from app.data_access.configuration.fixed import COPY_OVERWRITE_SYMBOL, COPY_FILL_SYMBOL, NOT_AVAILABLE_SHORTHAND, \
    REMOVE_SHORTHAND
@@ -24,7 +24,7 @@ from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_form import dropDownInput, textInput
 
 from app.objects.events import Event
-from app.objects.volunteers_at_event import VolunteerAtEvent
+from app.objects.volunteers_at_event import VolunteerAtEventWithId
 from app.objects.day_selectors import Day
 from app.objects.volunteers_in_roles import VolunteerInRoleAtEvent
 
@@ -72,9 +72,9 @@ def get_body_of_table_at_event(event: Event,
 
                                ) -> List[RowInTable]:
 
-    data_to_be_stored = get_data_to_be_stored_for_volunteer_rota_page(interface=interface, event=event)
+    data_to_be_stored = DEPRECATE_get_data_to_be_stored_for_volunteer_rota_page(interface=interface, event=event)
 
-    list_of_volunteers_at_event = get_sorted_and_filtered_list_of_volunteers_at_event(
+    list_of_volunteers_at_event = DEPRECATE_get_sorted_and_filtered_list_of_volunteers_at_event(
         interface=interface,
         data_to_be_stored=data_to_be_stored,
         sorts_and_filters=sorts_and_filters
@@ -91,7 +91,7 @@ def get_body_of_table_at_event(event: Event,
 
 
 def get_row_for_volunteer_at_event(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
-                                   volunteer_at_event: VolunteerAtEvent,
+                                   volunteer_at_event: VolunteerAtEventWithId,
                                    interface: abstractInterface,
                                    ready_to_swap:bool= False) -> RowInTable:
 
@@ -115,9 +115,9 @@ def get_row_for_volunteer_at_event(data_to_be_stored: DataToBeStoredWhilstConstr
     return RowInTable(first_part+day_inputs+last_part)
 
 def get_first_part_of_row_for_volunteer_at_event(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
-                                   volunteer_at_event: VolunteerAtEvent,
-                                   interface: abstractInterface,
-                                   ready_to_swap:bool= False) -> list:
+                                                 volunteer_at_event: VolunteerAtEventWithId,
+                                                 interface: abstractInterface,
+                                                 ready_to_swap:bool= False) -> list:
 
     volunteer = get_volunteer_from_id(interface=interface, volunteer_id=volunteer_at_event.volunteer_id)
     volunteer_name = volunteer.name
@@ -143,7 +143,7 @@ def get_first_part_of_row_for_volunteer_at_event(data_to_be_stored: DataToBeStor
 
 
 def get_last_part_of_row_for_volunteer_at_event(
-                                   volunteer_at_event: VolunteerAtEvent,
+                                   volunteer_at_event: VolunteerAtEventWithId,
                                     ready_to_swap: bool = False
 
 ) -> list:
@@ -156,7 +156,7 @@ def get_last_part_of_row_for_volunteer_at_event(
     return [notes, other_information]
 
 
-def get_allocation_inputs_for_day_and_volunteer(volunteer_at_event: VolunteerAtEvent,
+def get_allocation_inputs_for_day_and_volunteer(volunteer_at_event: VolunteerAtEventWithId,
                                                 day: Day,
                                                 data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
                                                 ready_to_swap: bool,
@@ -178,12 +178,12 @@ def get_allocation_inputs_for_day_and_volunteer(volunteer_at_event: VolunteerAtE
         )
 
 
-def get_allocation_inputs_for_day_and_volunteer_when_available(volunteer_at_event: VolunteerAtEvent,
-                                                day: Day,
-                                                data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
-                                                ready_to_swap: bool,
-                                                interface: abstractInterface
-                                                ) -> ListOfLines:
+def get_allocation_inputs_for_day_and_volunteer_when_available(volunteer_at_event: VolunteerAtEventWithId,
+                                                               day: Day,
+                                                               data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
+                                                               ready_to_swap: bool,
+                                                               interface: abstractInterface
+                                                               ) -> ListOfLines:
 
     volunteer_in_role_at_event_on_day = data_to_be_stored.volunteer_in_role_at_event_on_day(
         day=day,
@@ -195,10 +195,10 @@ def get_allocation_inputs_for_day_and_volunteer_when_available(volunteer_at_even
                                                                           interface=interface)
 
 
-def get_allocation_inputs_for_day_and_volunteer_when_unavailable(volunteer_at_event: VolunteerAtEvent,
-                                                day: Day,
-                                                ready_to_swap: bool,
-                                                ) -> ListOfLines:
+def get_allocation_inputs_for_day_and_volunteer_when_unavailable(volunteer_at_event: VolunteerAtEventWithId,
+                                                                 day: Day,
+                                                                 ready_to_swap: bool,
+                                                                 ) -> ListOfLines:
 
     if ready_to_swap:
         return ListOfLines(["Unavailable"])
@@ -360,14 +360,14 @@ def input_name_for_group_and_volunteer(volunteer_in_role_at_event_on_day: Volunt
 
 
 
-def get_notes_input(volunteer_at_event: VolunteerAtEvent) -> textInput:
+def get_notes_input(volunteer_at_event: VolunteerAtEventWithId) -> textInput:
     return textInput(
         value=volunteer_at_event.notes,
         input_name=input_name_for_notes_and_volunteer(volunteer_at_event),
         input_label=""
     )
 
-def input_name_for_notes_and_volunteer(volunteer_at_event: VolunteerAtEvent) -> str:
+def input_name_for_notes_and_volunteer(volunteer_at_event: VolunteerAtEventWithId) -> str:
     return "NOTES_%s" % (volunteer_at_event.volunteer_id)
 
 

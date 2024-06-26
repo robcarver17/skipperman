@@ -7,7 +7,7 @@ from app.backend.reporting.options_and_parameters.print_options import PrintOpti
 from app.objects.users_and_security import ListOfSkipperManUsers
 from app.objects.volunteers import ListOfVolunteers, ListOfCadetVolunteerAssociations
 
-from app.objects.volunteers_at_event import ListOfIdentifiedVolunteersAtEvent, ListOfVolunteersAtEvent
+from app.objects.volunteers_at_event import ListOfIdentifiedVolunteersAtEvent, ListOfVolunteersAtEventWithId
 
 from app.objects.mapped_wa_event import MappedWAEvent
 
@@ -268,11 +268,11 @@ class DataLayer():
         data_access_for_identified_volunteers_at_event =  get_data_access_for_identified_volunteers_at_event(self.data, event_id=event.id)
         self.store.write(list_of_volunteers, data_access_method=data_access_for_identified_volunteers_at_event)
 
-    def get_list_of_volunteers_at_event(self, event: Event) -> ListOfVolunteersAtEvent:
+    def get_list_of_volunteers_at_event(self, event: Event) -> ListOfVolunteersAtEventWithId:
         data_access_for_volunteers_at_event = get_data_access_for_volunteers_at_event(self.data, event_id=event.id)
         return self.store.read(data_access_for_volunteers_at_event)
 
-    def save_list_of_volunteers_at_event(self, event: Event, list_of_volunteers_at_event: ListOfVolunteersAtEvent):
+    def save_list_of_volunteers_at_event(self, event: Event, list_of_volunteers_at_event: ListOfVolunteersAtEventWithId):
         data_access_for_volunteers_at_event = get_data_access_for_volunteers_at_event(self.data, event_id=event.id)
         self.store.write(list_of_volunteers_at_event, data_access_method=data_access_for_volunteers_at_event)
 

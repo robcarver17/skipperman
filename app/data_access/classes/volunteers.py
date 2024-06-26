@@ -1,6 +1,6 @@
 from app.objects.volunteers import Volunteer, VolunteerSkill, ListOfVolunteers, ListOfVolunteerSkills, \
     CadetVolunteerAssociation, ListOfCadetVolunteerAssociations
-from app.objects.volunteers_at_event import VolunteerAtEvent, ListOfVolunteersAtEvent, ListOfIdentifiedVolunteersAtEvent
+from app.objects.volunteers_at_event import VolunteerAtEventWithId, ListOfVolunteersAtEventWithId, ListOfIdentifiedVolunteersAtEvent
 from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent, ListOfTargetForRoleAtEvent
 
 
@@ -30,10 +30,10 @@ class DataListOfCadetVolunteerAssociations(object):
 
 
 class DataListOfVolunteersAtEvent(object):
-    def read(self, event_id: str) -> ListOfVolunteersAtEvent:
+    def read(self, event_id: str) -> ListOfVolunteersAtEventWithId:
         raise NotImplemented
 
-    def write(self, list_of_volunteers_at_event: ListOfVolunteersAtEvent, event_id: str):
+    def write(self, list_of_volunteers_at_event: ListOfVolunteersAtEventWithId, event_id: str):
         raise NotImplemented
 
 

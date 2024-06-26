@@ -26,7 +26,7 @@ from app.objects.relevant_information_for_volunteers import ListOfRelevantInform
 #from app.objects.food import FoodRequirements
 from app.objects.utils import union_of_x_and_y, in_x_not_in_y, we_are_not_the_same
 from app.objects.volunteers import Volunteer, ListOfVolunteers
-from app.objects.volunteers_at_event import VolunteerAtEvent, ListOfIdentifiedVolunteersAtEvent
+from app.objects.volunteers_at_event import VolunteerAtEventWithId, ListOfIdentifiedVolunteersAtEvent
 
 
 def add_identified_volunteer(interface: abstractInterface,
@@ -49,7 +49,7 @@ def list_of_identified_volunteers_with_volunteer_id(interface: abstractInterface
 
 def add_volunteer_at_event(interface: abstractInterface,
                            event: Event,
-                           volunteer_at_event: VolunteerAtEvent
+                           volunteer_at_event: VolunteerAtEventWithId
     ):
 
 
@@ -262,7 +262,7 @@ def update_cadet_connections_for_volunteer_with_list_of_cadet_ids(interface: abs
 
 
 
-def get_volunteer_at_event_with_id(interface: abstractInterface ,event: Event, volunteer_id: str) -> VolunteerAtEvent:
+def get_volunteer_at_event_with_id(interface: abstractInterface ,event: Event, volunteer_id: str) -> VolunteerAtEventWithId:
     list_of_volunteers_at_event = DEPRECATE_load_list_of_volunteers_at_event(interface=interface, event=event)
     volunteer_at_event = list_of_volunteers_at_event.volunteer_at_event_with_id(volunteer_id)
 
@@ -409,9 +409,9 @@ def any_cadets_not_permanently_connected(interface: abstractInterface,  event: E
     return not already_all_connected
 
 def get_volunteer_at_event_from_list_of_relevant_information_with_no_conflicts(list_of_relevant_information: ListOfRelevantInformationForVolunteer, volunteer_id: str,
-                                                                               list_of_associated_cadet_id: List[str]) -> VolunteerAtEvent:
+                                                                               list_of_associated_cadet_id: List[str]) -> VolunteerAtEventWithId:
     first_relevant_information = list_of_relevant_information[0] ## can use first as all the same - checked
-    return VolunteerAtEvent(
+    return VolunteerAtEventWithId(
         volunteer_id=volunteer_id,
         availablity=suggested_volunteer_availability(first_relevant_information.availability),
         list_of_associated_cadet_id=list_of_associated_cadet_id,

@@ -1,5 +1,7 @@
 from typing import List, Dict
 
+from app.data_access.storage_layer.api import DataLayer
+
 from app.objects.day_selectors import Day
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -30,7 +32,7 @@ def get_list_of_active_cadets_at_event(
 
 
 
-def get_list_of_cadets_unallocated_to_group_at_event(
+def DEPRECATE_get_list_of_cadets_unallocated_to_group_at_event(
         interface: abstractInterface,
     event: Event,
 ) -> ListOfCadets:
@@ -38,11 +40,25 @@ def get_list_of_cadets_unallocated_to_group_at_event(
     return group_allocations_data.unallocated_cadets_at_event(event)
 
 
+def get_list_of_cadets_unallocated_to_group_at_event(
+        data_layer: DataLayer,
+    event: Event,
+) -> ListOfCadets:
+    group_allocations_data = GroupAllocationsData(data_layer)
+    return group_allocations_data.unallocated_cadets_at_event(event)
 
 
-def load_list_of_cadets_ids_with_group_allocations_active_cadets_only(interface: abstractInterface, event: Event) -> ListOfCadetIdsWithGroups:
+
+
+def DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only(interface: abstractInterface, event: Event) -> ListOfCadetIdsWithGroups:
     group_allocations_data = GroupAllocationsData(interface.data)
     return group_allocations_data.active_cadet_ids_at_event_with_allocations(event)
+
+
+def load_list_of_cadets_ids_with_group_allocations_active_cadets_only(data_layer: DataLayer, event: Event) -> ListOfCadetIdsWithGroups:
+    group_allocations_data = GroupAllocationsData(data_layer)
+    return group_allocations_data.active_cadet_ids_at_event_with_allocations(event)
+
 
 def count_of_cadet_ids_allocated_to_group_by_day(interface: abstractInterface, event: Event) -> Dict[Day, int]:
     group_allocations_data = GroupAllocationsData(interface.data)

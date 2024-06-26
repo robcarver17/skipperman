@@ -8,12 +8,16 @@ from app.data_access.storage_layer.api import DataLayer
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.backend.events import  get_sorted_list_of_events
 from app.backend.group_allocations.cadet_event_allocations import \
+    DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only, \
+    DEPRECATE_get_list_of_cadets_unallocated_to_group_at_event, \
     load_list_of_cadets_ids_with_group_allocations_active_cadets_only, get_list_of_cadets_unallocated_to_group_at_event
 from app.backend.volunteers.volunteers import DEPRECATE_load_list_of_volunteer_skills, get_volunteer_from_id, \
     load_list_of_volunteer_skills, get_list_of_all_volunteers
 from app.backend.volunteers.volunteer_rota import DEPRECATE_load_list_of_volunteers_at_event, \
-    DEPRECATE_get_volunteers_in_role_at_event_with_active_allocations, sort_volunteer_data_for_event_by_name_sort_order, \
-    get_volunteers_in_role_at_event_with_active_allocations, load_list_of_volunteers_at_event
+    DEPRECATE_get_volunteers_in_role_at_event_with_active_allocations, \
+    DEPRECATE_sort_volunteer_data_for_event_by_name_sort_order, \
+    get_volunteers_in_role_at_event_with_active_allocations, load_list_of_volunteers_at_event, \
+    load_list_of_volunteers_with_ids_at_event, sort_volunteer_data_for_event_by_name_sort_order
 
 from app.objects.cadets import ListOfCadets
 from app.objects.constants import missing_data, arg_not_passed
@@ -21,7 +25,8 @@ from app.objects.day_selectors import Day
 from app.objects.events import Event, SORT_BY_START_ASC, list_of_events_excluding_one_event, ListOfEvents
 from app.objects.groups import ListOfCadetIdsWithGroups, GROUP_UNALLOCATED, Group, sorted_locations
 from app.objects.volunteers import ListOfVolunteerSkills, Volunteer, ListOfVolunteers
-from app.objects.volunteers_at_event import ListOfVolunteersAtEvent, VolunteerAtEvent
+from app.objects.volunteers_at_event import ListOfVolunteersAtEventWithId, VolunteerAtEventWithId, \
+    ListOfVolunteersAtEvent
 from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent, VolunteerInRoleAtEvent, \
     FILTER_ALL, FILTER_AVAILABLE, FILTER_UNALLOC_AVAILABLE, FILTER_ALLOC_AVAILABLE, FILTER_UNAVAILABLE, RoleAndGroup
 
@@ -72,17 +77,18 @@ class DataToBeStoredWhilstConstructingVolunteerRotaPage:
     unallocated_cadets_at_event: ListOfCadets
     volunteer_skills: ListOfVolunteerSkills
     volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent
-    list_of_volunteers_at_event: ListOfVolunteersAtEvent
+    list_of_volunteers_with_id_at_event: ListOfVolunteersAtEventWithId
     dict_of_volunteers_with_last_roles: Dict[str, RoleAndGroup]
+    all_volunteers: ListOfVolunteers
 
-    def filtered_list_of_volunteers_at_event(self, sorts_and_filters: RotaSortsAndFilters) -> ListOfVolunteersAtEvent:
+    def filtered_list_of_volunteers_at_event(self, sorts_and_filters: RotaSortsAndFilters) -> ListOfVolunteersAtEventWithId:
         skills_filter = sorts_and_filters.skills_filter
-        original_list = self.list_of_volunteers_at_event
+        original_list = self.list_of_volunteers_with_id_at_event
         volunteer_skills = self.volunteer_skills
         availability_filter_dict = sorts_and_filters.availability_filter
         list_of_volunteers_in_roles_at_event = self.volunteers_in_roles_at_event
 
-        new_list = ListOfVolunteersAtEvent([volunteer for volunteer in original_list if filter_volunteer(
+        new_list = ListOfVolunteersAtEventWithId([volunteer for volunteer in original_list if filter_volunteer(
             volunteer, list_of_volunteers_in_roles_at_event=list_of_volunteers_in_roles_at_event,
             skills_filter=skills_filter, volunteer_skills=volunteer_skills,
             availability_filter_dict=availability_filter_dict
@@ -107,11 +113,11 @@ class DataToBeStoredWhilstConstructingVolunteerRotaPage:
     def volunteer_in_role_at_event_on_day(self, volunteer_id: str, day: Day) -> VolunteerInRoleAtEvent:
         return self.volunteers_in_roles_at_event.member_matching_volunteer_id_and_day(volunteer_id=volunteer_id, day=day)
 
-    def previous_role_and_group_for_volunteer(self, volunteer_at_event: VolunteerAtEvent) -> RoleAndGroup:
+    def previous_role_and_group_for_volunteer(self, volunteer_at_event: VolunteerAtEventWithId) -> RoleAndGroup:
         return self.dict_of_volunteers_with_last_roles.get(volunteer_at_event.volunteer_id, RoleAndGroup())
 
     def all_roles_match_across_event(self, volunteer_id: str)->bool:
-        availability = self.list_of_volunteers_at_event.volunteer_at_event_with_id(volunteer_id=volunteer_id).availablity
+        availability = self.list_of_volunteers_with_id_at_event.volunteer_at_event_with_id(volunteer_id=volunteer_id).availablity
         all_volunteers_in_roles_at_event_including_no_role_set = [self.volunteer_in_role_at_event_on_day(volunteer_id=volunteer_id,
                                                                                    day=day)
                                             for day in availability.days_available()]
@@ -128,7 +134,7 @@ class DataToBeStoredWhilstConstructingVolunteerRotaPage:
         return all_roles_match and all_groups_match
 
     def volunteer_has_empty_available_days_without_role(self, volunteer_id: str)->bool:
-        availability = self.list_of_volunteers_at_event.volunteer_at_event_with_id(volunteer_id=volunteer_id).availablity
+        availability = self.list_of_volunteers_with_id_at_event.volunteer_at_event_with_id(volunteer_id=volunteer_id).availablity
         all_volunteers_in_roles_at_event_including_no_role_set = [self.volunteer_in_role_at_event_on_day(volunteer_id=volunteer_id,
                                                                                    day=day)
                                             for day in availability.days_available()]
@@ -139,7 +145,7 @@ class DataToBeStoredWhilstConstructingVolunteerRotaPage:
 
     def volunteer_has_at_least_one_day_in_role_and_all_roles_and_groups_match(self, volunteer_id: str)->bool:
 
-        availability = self.list_of_volunteers_at_event.volunteer_at_event_with_id(volunteer_id=volunteer_id).availablity
+        availability = self.list_of_volunteers_with_id_at_event.volunteer_at_event_with_id(volunteer_id=volunteer_id).availablity
         all_volunteers_in_roles_at_event_including_no_role_set = [self.volunteer_in_role_at_event_on_day(volunteer_id=volunteer_id,
                                                                                    day=day)
                                             for day in availability.days_available()]
@@ -156,9 +162,9 @@ class DataToBeStoredWhilstConstructingVolunteerRotaPage:
         return all_match
 
 
-def filter_volunteer(volunteer_at_event: VolunteerAtEvent,
+def filter_volunteer(volunteer_at_event: VolunteerAtEventWithId,
                      list_of_volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent,
-                     skills_filter: dict,     volunteer_skills: ListOfVolunteerSkills,
+                     skills_filter: dict, volunteer_skills: ListOfVolunteerSkills,
                      availability_filter_dict: dict)-> bool:
 
     filter_by_skills = filter_volunteer_by_skills(volunteer_at_event=volunteer_at_event, skills_filter=skills_filter, volunteer_skills=volunteer_skills)
@@ -168,7 +174,7 @@ def filter_volunteer(volunteer_at_event: VolunteerAtEvent,
 
     return filter_by_skills and filter_by_availability
 
-def filter_volunteer_by_skills(volunteer_at_event: VolunteerAtEvent, skills_filter: dict,     volunteer_skills: ListOfVolunteerSkills,)-> bool:
+def filter_volunteer_by_skills(volunteer_at_event: VolunteerAtEventWithId, skills_filter: dict, volunteer_skills: ListOfVolunteerSkills, )-> bool:
     volunteer_skills = volunteer_skills.skills_for_volunteer_id(volunteer_id=volunteer_at_event.volunteer_id)
     if not any(skills_filter.values()):
         ## nothing to filter on
@@ -179,9 +185,9 @@ def filter_volunteer_by_skills(volunteer_at_event: VolunteerAtEvent, skills_filt
 
     return any(required_skill_present)
 
-def filter_volunteer_by_availability(volunteer_at_event: VolunteerAtEvent,
-                    list_of_volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent,
-                     availability_filter_dict: dict)-> bool:
+def filter_volunteer_by_availability(volunteer_at_event: VolunteerAtEventWithId,
+                                     list_of_volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent,
+                                     availability_filter_dict: dict)-> bool:
 
     filter_by_day = [filter_volunteer_by_availability_on_given_day(
         volunteer_at_event=volunteer_at_event,
@@ -194,10 +200,10 @@ def filter_volunteer_by_availability(volunteer_at_event: VolunteerAtEvent,
 
     return all(filter_by_day)
 
-def filter_volunteer_by_availability_on_given_day(volunteer_at_event: VolunteerAtEvent,
-                                    list_of_volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent,
-                                     day: Day,
-                                      availability_filter: str) -> bool:
+def filter_volunteer_by_availability_on_given_day(volunteer_at_event: VolunteerAtEventWithId,
+                                                  list_of_volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent,
+                                                  day: Day,
+                                                  availability_filter: str) -> bool:
 
     if availability_filter==FILTER_ALL:
         return True ## no filtering
@@ -220,16 +226,17 @@ def filter_volunteer_by_availability_on_given_day(volunteer_at_event: VolunteerA
         return available and unallocated
 
 
-def get_data_to_be_stored_for_volunteer_rota_page(interface: abstractInterface, event: Event) -> DataToBeStoredWhilstConstructingVolunteerRotaPage:
-    list_of_cadet_ids_with_groups = load_list_of_cadets_ids_with_group_allocations_active_cadets_only(event=event, interface=interface)
-    unallocated_cadets_at_event = get_list_of_cadets_unallocated_to_group_at_event(event=event, interface=interface)
+def DEPRECATE_get_data_to_be_stored_for_volunteer_rota_page(interface: abstractInterface, event: Event) -> DataToBeStoredWhilstConstructingVolunteerRotaPage:
+    list_of_cadet_ids_with_groups = DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only(event=event, interface=interface)
+    unallocated_cadets_at_event = DEPRECATE_get_list_of_cadets_unallocated_to_group_at_event(event=event, interface=interface)
     volunteer_skills = DEPRECATE_load_list_of_volunteer_skills(interface)
+    all_volunteers = get_list_of_all_volunteers(interface.data)
     volunteers_in_roles_at_event = DEPRECATE_get_volunteers_in_role_at_event_with_active_allocations(event=event, interface=interface)
     list_of_volunteers_at_event = DEPRECATE_load_list_of_volunteers_at_event(event=event, interface=interface)
 
-    dict_of_volunteers_with_last_roles = get_dict_of_volunteers_with_last_roles(interface=interface,
-                                                                                list_of_volunteer_ids=list_of_volunteers_at_event.list_of_volunteer_ids,
-                                                                                avoid_event=event)
+    dict_of_volunteers_with_last_roles = DEPRECATE_get_dict_of_volunteers_with_last_roles(interface=interface,
+                                                                                          list_of_volunteer_ids=list_of_volunteers_at_event.list_of_volunteer_ids,
+                                                                                          avoid_event=event)
 
     return DataToBeStoredWhilstConstructingVolunteerRotaPage(
         event=event,
@@ -237,15 +244,49 @@ def get_data_to_be_stored_for_volunteer_rota_page(interface: abstractInterface, 
         unallocated_cadets_at_event=unallocated_cadets_at_event,
         volunteer_skills=volunteer_skills,
         volunteers_in_roles_at_event=volunteers_in_roles_at_event,
-        list_of_volunteers_at_event=list_of_volunteers_at_event,
+        list_of_volunteers_with_id_at_event=list_of_volunteers_at_event,
+        dict_of_volunteers_with_last_roles=dict_of_volunteers_with_last_roles,
+        all_volunteers=all_volunteers
+    )
+
+
+def get_data_to_be_stored_for_volunteer_rota_page(data_layer: DataLayer, event: Event) -> DataToBeStoredWhilstConstructingVolunteerRotaPage:
+    list_of_cadet_ids_with_groups = load_list_of_cadets_ids_with_group_allocations_active_cadets_only(event=event, data_layer=data_layer)
+    unallocated_cadets_at_event = get_list_of_cadets_unallocated_to_group_at_event(event=event, data_layer=data_layer)
+    volunteer_skills = load_list_of_volunteer_skills(data_layer)
+    all_volunteers =get_list_of_all_volunteers(data_layer)
+    volunteers_in_roles_at_event = get_volunteers_in_role_at_event_with_active_allocations(event=event, data_layer=data_layer)
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event=event, data_layer=data_layer)
+    list_of_volunteers_at_event_with_ids = load_list_of_volunteers_with_ids_at_event(event=event, data_layer=data_layer) ## WANT TO DEPRECATE
+
+    dict_of_volunteers_with_last_roles = get_dict_of_volunteers_with_last_roles(data_layer=data_layer,
+                                                                                          list_of_volunteers_at_event=list_of_volunteers_at_event,
+                                                                                          avoid_event=event)
+
+    return DataToBeStoredWhilstConstructingVolunteerRotaPage(
+        event=event,
+        list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups,
+        unallocated_cadets_at_event=unallocated_cadets_at_event,
+        volunteer_skills=volunteer_skills,
+        volunteers_in_roles_at_event=volunteers_in_roles_at_event,
+        all_volunteers=all_volunteers,
+        list_of_volunteers_with_id_at_event=list_of_volunteers_at_event_with_ids ,
         dict_of_volunteers_with_last_roles=dict_of_volunteers_with_last_roles
     )
 
 
-def get_dict_of_volunteers_with_last_roles(interface: abstractInterface, list_of_volunteer_ids: List[str], avoid_event: Event) -> Dict[str, RoleAndGroup]:
+
+def DEPRECATE_get_dict_of_volunteers_with_last_roles(interface: abstractInterface, list_of_volunteer_ids: List[str], avoid_event: Event) -> Dict[str, RoleAndGroup]:
     return dict([
         (volunteer_id, DEPRECATE_get_last_role_for_volunteer_id(interface=interface, volunteer_id=volunteer_id, avoid_event=avoid_event))
         for volunteer_id in list_of_volunteer_ids
+    ])
+
+
+def get_dict_of_volunteers_with_last_roles(data_layer: DataLayer, list_of_volunteers_at_event: ListOfVolunteersAtEvent, avoid_event: Event) -> Dict[str, RoleAndGroup]:
+    return dict([
+        (volunteer_at_event.volunteer.id, get_last_role_for_volunteer_id(data_layer=data_layer, volunteer=volunteer_at_event.volunteer, avoid_event=avoid_event))
+        for volunteer_at_event in list_of_volunteers_at_event
     ])
 
 
@@ -320,9 +361,9 @@ def get_role_and_group_for_event_and_volunteer(data_layer: DataLayer, volunteer:
 
 
 def sort_volunteer_data_for_event_by_day_sort_order(
-            list_of_volunteers_at_event: ListOfVolunteersAtEvent,
+            list_of_volunteers_at_event: ListOfVolunteersAtEventWithId,
         sort_by_day: Day,
-        data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage) -> ListOfVolunteersAtEvent:
+        data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage) -> ListOfVolunteersAtEventWithId:
 
     tuple_of_volunteers_at_event_and_roles = [(volunteer_at_event,
                                                     data_to_be_stored.volunteer_in_role_at_event_on_day(
@@ -334,10 +375,10 @@ def sort_volunteer_data_for_event_by_day_sort_order(
 
     list_of_volunteers = [volunteer_at_event for volunteer_at_event, __ in tuple_of_volunteers_at_event_and_roles]
 
-    return ListOfVolunteersAtEvent(list_of_volunteers)
+    return ListOfVolunteersAtEventWithId(list_of_volunteers)
 
 
-def get_cadet_location_string(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage, volunteer_at_event: VolunteerAtEvent):
+def get_cadet_location_string(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage, volunteer_at_event: VolunteerAtEventWithId):
     list_of_groups = list_of_cadet_groups_associated_with_volunteer(data_to_be_stored=data_to_be_stored,
                                                                     volunteer_at_event=volunteer_at_event)
     if len(list_of_groups)==0:
@@ -361,14 +402,14 @@ def str_dict_skills(volunteer: Volunteer, data_to_be_stored: DataToBeStoredWhils
     return ", ".join(list_of_skills)
 
 
-def get_sorted_and_filtered_list_of_volunteers_at_event(
+def DEPRECATE_get_sorted_and_filtered_list_of_volunteers_at_event(
         interface: abstractInterface,
         data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
         sorts_and_filters: RotaSortsAndFilters,
-    ) -> ListOfVolunteersAtEvent:
+    ) -> ListOfVolunteersAtEventWithId:
 
     list_of_volunteers_at_event = data_to_be_stored.filtered_list_of_volunteers_at_event(sorts_and_filters)
-    sorted_list_of_volunteers_at_event = sort_list_of_volunteers_at_event(
+    sorted_list_of_volunteers_at_event = DEPRECATE_sort_list_of_volunteers_at_event(
         interface=interface,
         list_of_volunteers_at_event=list_of_volunteers_at_event,
         data_to_be_stored=data_to_be_stored,
@@ -378,10 +419,28 @@ def get_sorted_and_filtered_list_of_volunteers_at_event(
     return sorted_list_of_volunteers_at_event
 
 
-def sort_list_of_volunteers_at_event(interface: abstractInterface,
-        list_of_volunteers_at_event: ListOfVolunteersAtEvent,
-                                     data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
-                                     sorts_and_filters: RotaSortsAndFilters)-> ListOfVolunteersAtEvent:
+def get_sorted_and_filtered_list_of_volunteers_at_event(
+        data_layer: DataLayer,
+        data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
+        sorts_and_filters: RotaSortsAndFilters,
+    ) -> ListOfVolunteersAtEventWithId:
+
+    list_of_volunteers_at_event = data_to_be_stored.filtered_list_of_volunteers_at_event(sorts_and_filters)
+    sorted_list_of_volunteers_at_event = sort_list_of_volunteers_at_event(
+        data_layer=data_layer,
+        list_of_volunteers_at_event=list_of_volunteers_at_event,
+        data_to_be_stored=data_to_be_stored,
+        sorts_and_filters=sorts_and_filters
+    )
+
+    return sorted_list_of_volunteers_at_event
+
+
+
+def DEPRECATE_sort_list_of_volunteers_at_event(interface: abstractInterface,
+                                               list_of_volunteers_at_event: ListOfVolunteersAtEventWithId,
+                                               data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
+                                               sorts_and_filters: RotaSortsAndFilters)-> ListOfVolunteersAtEventWithId:
 
     sort_by_location = sorts_and_filters.sort_by_location
     if sort_by_location:
@@ -392,7 +451,7 @@ def sort_list_of_volunteers_at_event(interface: abstractInterface,
 
     sort_by_volunteer_name = sorts_and_filters.sort_by_volunteer_name
     if sort_by_volunteer_name is not arg_not_passed:
-        return sort_volunteer_data_for_event_by_name_sort_order(
+        return DEPRECATE_sort_volunteer_data_for_event_by_name_sort_order(
             interface=interface, volunteers_at_event=list_of_volunteers_at_event,
              sort_order=sort_by_volunteer_name)
 
@@ -405,8 +464,35 @@ def sort_list_of_volunteers_at_event(interface: abstractInterface,
     return list_of_volunteers_at_event
 
 
-def sort_volunteer_data_for_event_by_location(list_of_volunteers_at_event: ListOfVolunteersAtEvent,
-                                              data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage)-> ListOfVolunteersAtEvent:
+def sort_list_of_volunteers_at_event(data_layer: DataLayer,
+                                               list_of_volunteers_at_event: ListOfVolunteersAtEventWithId,
+                                               data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
+                                               sorts_and_filters: RotaSortsAndFilters)-> ListOfVolunteersAtEventWithId:
+
+    sort_by_location = sorts_and_filters.sort_by_location
+    if sort_by_location:
+        return sort_volunteer_data_for_event_by_location(
+            list_of_volunteers_at_event=list_of_volunteers_at_event,
+            data_to_be_stored=data_to_be_stored
+        )
+
+    sort_by_volunteer_name = sorts_and_filters.sort_by_volunteer_name
+    if sort_by_volunteer_name is not arg_not_passed:
+        return sort_volunteer_data_for_event_by_name_sort_order(
+            data_layer=data_layer, volunteers_at_event=list_of_volunteers_at_event,
+             sort_order=sort_by_volunteer_name)
+
+    sort_by_day = sorts_and_filters.sort_by_day
+    if sort_by_day is not arg_not_passed:
+        return sort_volunteer_data_for_event_by_day_sort_order(
+            list_of_volunteers_at_event, sort_by_day=sorts_and_filters.sort_by_day,
+            data_to_be_stored=data_to_be_stored)
+
+    return list_of_volunteers_at_event
+
+
+def sort_volunteer_data_for_event_by_location(list_of_volunteers_at_event: ListOfVolunteersAtEventWithId,
+                                              data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage)-> ListOfVolunteersAtEventWithId:
 
     list_of_locations = [
         get_cadet_location_string(data_to_be_stored=data_to_be_stored, volunteer_at_event=volunteer_at_event)
@@ -415,12 +501,12 @@ def sort_volunteer_data_for_event_by_location(list_of_volunteers_at_event: ListO
     locations_and_volunteers = zip(list_of_locations, list_of_volunteers_at_event)
 
     sorted_by_location = sorted(locations_and_volunteers, key=lambda tup: tup[0])
-    sorted_list_of_volunteers = ListOfVolunteersAtEvent([location_and_volunteer[1] for location_and_volunteer in sorted_by_location])
+    sorted_list_of_volunteers = ListOfVolunteersAtEventWithId([location_and_volunteer[1] for location_and_volunteer in sorted_by_location])
 
     return sorted_list_of_volunteers
 
 
-def list_of_cadet_groups_associated_with_volunteer(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage, volunteer_at_event: VolunteerAtEvent) -> List[Group]:
+def list_of_cadet_groups_associated_with_volunteer(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage, volunteer_at_event: VolunteerAtEventWithId) -> List[Group]:
     list_of_cadet_ids = volunteer_at_event.list_of_associated_cadet_id
     list_of_groups = [data_to_be_stored.group_given_cadet_id(cadet_id) for cadet_id in list_of_cadet_ids]
     list_of_groups = [group for group in list_of_groups if group is not missing_data]
@@ -428,45 +514,46 @@ def list_of_cadet_groups_associated_with_volunteer(data_to_be_stored: DataToBeSt
     return list_of_groups
 
 
-def get_volunteer_matrix(data_layer: DataLayer, event: Event) -> pd.DataFrame:
-    volunteer_skills = load_list_of_volunteer_skills(data_layer=data_layer)
-    volunteers_in_roles_at_event = get_volunteers_in_role_at_event_with_active_allocations(event=event, data_layer=data_layer)
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event=event, data_layer=data_layer)
-    list_of_volunteers = get_list_of_all_volunteers(data_layer)
+def get_volunteer_matrix(data_layer: DataLayer, event: Event, sorts_and_filters: RotaSortsAndFilters) -> pd.DataFrame:
+
+    data_to_be_stored = get_data_to_be_stored_for_volunteer_rota_page(data_layer=data_layer, event=event)
+
+    list_of_volunteers_at_event = get_sorted_and_filtered_list_of_volunteers_at_event(
+        data_layer=data_layer,
+        data_to_be_stored=data_to_be_stored,
+        sorts_and_filters=sorts_and_filters
+    )
 
     list_of_rows  = [
-        row_for_volunteer_at_event(event=event, volunteer_at_event=volunteer_at_event, volunteer_skills=volunteer_skills,
-                                   list_of_volunteers=list_of_volunteers, volunteers_in_roles_at_event=volunteers_in_roles_at_event)
+        row_for_volunteer_at_event(event=event, volunteer_at_event=volunteer_at_event, data_to_be_stored=data_to_be_stored)
         for volunteer_at_event in list_of_volunteers_at_event
     ]
 
     return pd.DataFrame(list_of_rows)
 
-def row_for_volunteer_at_event(event: Event, volunteer_at_event: VolunteerAtEvent, volunteer_skills: ListOfVolunteerSkills,
-                               volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent,
-                               list_of_volunteers: ListOfVolunteers) -> pd.Series:
+def row_for_volunteer_at_event(event: Event, volunteer_at_event: VolunteerAtEventWithId,
+                               data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage) -> pd.Series:
 
     id = volunteer_at_event.volunteer_id
-    volunteer = list_of_volunteers.object_with_id(id)
+    volunteer = data_to_be_stored.all_volunteers.object_with_id(id)
     name = volunteer.name
-    skills_dict = volunteer_skills.dict_of_skills_for_volunteer_id(id)
+    skills_dict = data_to_be_stored.volunteer_skills.dict_of_skills_for_volunteer_id(id)
     volunteers_in_roles_dict = dict([(day.name,
                                       role_and_group_string_for_day(
                                           volunteer_at_event=volunteer_at_event,
                                           day=day,
-                                          volunteers_in_roles_at_event=volunteers_in_roles_at_event
+                                          volunteers_in_roles_at_event=data_to_be_stored.volunteers_in_roles_at_event
                                       )) for day in event.weekdays_in_event()])
 
-    result_dict = dict(Name = name)
-    result_dict.update(skills_dict)
+    result_dict = dict(Name = name, Skills = str(skills_dict))
     result_dict.update(volunteers_in_roles_dict)
 
     return pd.Series(result_dict)
 
-def role_and_group_string_for_day( volunteer_at_event: VolunteerAtEvent, day: Day,
+def role_and_group_string_for_day(volunteer_at_event: VolunteerAtEventWithId, day: Day,
 
-                               volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent,
-                              )-> str:
+                                  volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent,
+                                  )-> str:
 
     if not volunteer_at_event.available_on_day(day):
         return "Unavailable"

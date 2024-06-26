@@ -1,6 +1,6 @@
 from typing import List
 
-from app.objects.volunteers_at_event import ListOfVolunteersAtEvent
+from app.objects.volunteers_at_event import ListOfVolunteersAtEventWithId
 
 from app.objects.events import Event
 
@@ -66,8 +66,8 @@ class FoodData():
     def list_of_active_cadets_at_event(self, event: Event) -> ListOfCadets:
         return self.cadets_at_event_data.list_of_active_cadets_at_event(event)
 
-    def list_of_active_volunteers_at_event(self, event: Event) -> ListOfVolunteersAtEvent:
-        return self.volunteer_allocation_data.load_list_of_volunteers_at_event(event)
+    def list_of_active_volunteers_at_event(self, event: Event) -> ListOfVolunteersAtEventWithId:
+        return self.volunteer_allocation_data.load_list_of_volunteers_with_ids_at_event(event)
 
     def get_list_of_volunteeers_with_food_at_event(self, event: Event) -> ListOfVolunteersWithFoodRequirementsAtEvent:
         return self.data_api.get_list_of_volunteers_with_food_at_event(event)

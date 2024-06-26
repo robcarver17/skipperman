@@ -3,7 +3,7 @@ from typing import Union, List
 from app.data_access.configuration.fixed import  SAVE_KEYBOARD_SHORTCUT
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.volunteers.volunteers import get_volunteer_name_from_id, get_sorted_list_of_volunteers
+from app.backend.volunteers.volunteers import get_volunteer_name_from_id, DEPRECATE_get_sorted_list_of_volunteers
 
 from app.backend.data.volunteers import SORT_BY_FIRSTNAME
 
@@ -122,7 +122,7 @@ def text_box_for_email(user: SkipperManUser) -> emailInput:
                      input_name=name_for_user_and_input_type(user, EMAIL))
 
 def dropdown_for_volunteer(interface: abstractInterface, user: SkipperManUser) -> dropDownInput:
-    volunteers = get_sorted_list_of_volunteers(interface=interface, sort_by=SORT_BY_FIRSTNAME)
+    volunteers = DEPRECATE_get_sorted_list_of_volunteers(interface=interface, sort_by=SORT_BY_FIRSTNAME)
     dict_of_volunteers = dict([(volunteer.name, volunteer.name) for volunteer in volunteers])
     try:
         name = get_volunteer_name_from_id(interface=interface, volunteer_id=user.volunteer_id)

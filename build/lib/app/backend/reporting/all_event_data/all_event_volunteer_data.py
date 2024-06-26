@@ -67,7 +67,7 @@ def get_volunteer_name_or_not_allocated(interface: abstractInterface, volunteer_
 
 def get_connected_cadet_names(interface: abstractInterface, event: Event, volunteer_id: str, default=''):
     volunteers_at_event_data = VolunteerAllocationData(interface.data)
-    list_of_volunteers_at_event = volunteers_at_event_data.load_list_of_volunteers_at_event(event)
+    list_of_volunteers_at_event = volunteers_at_event_data.load_list_of_volunteers_with_ids_at_event(event)
     if not volunteer_id in list_of_volunteers_at_event.list_of_volunteer_ids:
         return default
 
@@ -81,9 +81,8 @@ def get_connected_cadet_names(interface: abstractInterface, event: Event, volunt
 def get_skills_string(interface: abstractInterface,volunteer_id: str, default=''):
     volunteer_data = VolunteerData(interface.data)
     skills =volunteer_data.get_dict_of_existing_skills_for_volunteer_id(volunteer_id=volunteer_id)
-    skills_held = [skill for skill, skill_held in skills.items() if skill_held]
 
-    return ", ".join(skills_held)
+    return str(skills)
 
 def get_role_group(interface: abstractInterface,volunteer_id: str, event: Event, default=''):
     volunteer_rota_data =VolunteerRotaData(interface.data)
@@ -104,7 +103,7 @@ def get_patrol_boat(interface: abstractInterface,volunteer_id: str, event: Event
 def data_from_volunteers_at_event_data_or_empty(interface: abstractInterface, event: Event, volunteer_id: str, keyname: str, default=''):
     volunteers_at_event_data = VolunteerAllocationData(interface.data)
 
-    list_of_volunteers_at_event = volunteers_at_event_data.load_list_of_volunteers_at_event(event)
+    list_of_volunteers_at_event = volunteers_at_event_data.load_list_of_volunteers_with_ids_at_event(event)
     if not volunteer_id in list_of_volunteers_at_event.list_of_volunteer_ids:
         return default
 

@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from app.objects.constants import missing_data
 
-from app.backend.volunteers.volunteers import get_volunteer_name_from_id, get_sorted_list_of_volunteers
+from app.backend.volunteers.volunteers import get_volunteer_name_from_id, DEPRECATE_get_sorted_list_of_volunteers
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -145,7 +145,7 @@ def sort_volunteer_ids_by_role_and_skills_and_then_name(interface: abstractInter
                                                         event: Event,
                                                         day: Day) -> List[str]:
 
-    sorted_list_of_volunteers = get_sorted_list_of_volunteers(interface=interface, sort_by=SORT_BY_FIRSTNAME)
+    sorted_list_of_volunteers = DEPRECATE_get_sorted_list_of_volunteers(interface=interface, sort_by=SORT_BY_FIRSTNAME)
 
     sorted_list_of_ids = []
 

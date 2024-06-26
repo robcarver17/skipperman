@@ -5,7 +5,7 @@ from app.data_access.csv.resolve_csv_paths_and_filenames import LIST_OF_VOLUNTEE
     LIST_OF_VOLUNTEER_SKILLS_FILE_ID, LIST_OF_VOLUNTEER_ASSOCIATIONS_FILE_ID, LIST_OF_VOLUNTEERS_AT_EVENT_FILE_ID, \
     LIST_OF_IDENTIFIED_VOLUNTEERS_AT_EVENT_FILE_ID, LIST_OF_VOLUNTEERS_IN_ROLES_FILE_ID, \
     LIST_OF_VOLUNTEER_TARGETS_AT_EVENT_FILE_ID
-from app.objects.volunteers_at_event import ListOfVolunteersAtEvent, ListOfIdentifiedVolunteersAtEvent
+from app.objects.volunteers_at_event import ListOfVolunteersAtEventWithId, ListOfIdentifiedVolunteersAtEvent
 from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent, ListOfTargetForRoleAtEvent
 
 
@@ -46,14 +46,14 @@ class CsvDataListOfCadetVolunteerAssociations(GenericCsvData, DataListOfCadetVol
 
 class CsvDataListOfVolunteersAtEvent(GenericCsvData, DataListOfVolunteersAtEvent):
 
-    def read(self, event_id: str) -> ListOfVolunteersAtEvent:
-        list_of_volunteers_at_event = self.read_and_return_object_of_type(ListOfVolunteersAtEvent,
+    def read(self, event_id: str) -> ListOfVolunteersAtEventWithId:
+        list_of_volunteers_at_event = self.read_and_return_object_of_type(ListOfVolunteersAtEventWithId,
                                                                           file_identifier=LIST_OF_VOLUNTEERS_AT_EVENT_FILE_ID,
                                                                           additional_file_identifiers=event_id)
 
         return list_of_volunteers_at_event
 
-    def write(self, list_of_volunteers_at_event: ListOfVolunteersAtEvent, event_id: str):
+    def write(self, list_of_volunteers_at_event: ListOfVolunteersAtEventWithId, event_id: str):
         self.write_object(list_of_volunteers_at_event,
                           file_identifier=LIST_OF_VOLUNTEERS_AT_EVENT_FILE_ID,
                           additional_file_identifiers=event_id)

@@ -12,12 +12,12 @@ from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.volunteers import Volunteer
-from app.objects.volunteers_at_event import VolunteerAtEvent
+from app.objects.volunteers_at_event import VolunteerAtEventWithId
 from app.objects.volunteers_in_roles import VolunteerInRoleAtEvent
 
 
 def get_location_button(data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
-                        volunteer_at_event: VolunteerAtEvent,
+                        volunteer_at_event: VolunteerAtEventWithId,
                         ready_to_swap:bool) -> Button:
     location = get_cadet_location_string(data_to_be_stored=data_to_be_stored, volunteer_at_event=volunteer_at_event)
     if ready_to_swap:
@@ -45,7 +45,7 @@ def get_skills_button(volunteer: Volunteer,
 def skills_button_name_from_volunteer_id(volunteer_id: str) -> str:
     return "SKILL_%s" % volunteer_id
 
-def copy_previous_role_button_or_blank(volunteer_at_event: VolunteerAtEvent,
+def copy_previous_role_button_or_blank(volunteer_at_event: VolunteerAtEventWithId,
                                        data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
                                        ready_to_swap: bool
                                        )-> Union[Button, str]:

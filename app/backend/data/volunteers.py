@@ -7,7 +7,8 @@ from app.data_access.storage_layer.api import DataLayer
 
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.constants import arg_not_passed
-from app.objects.volunteers import ListOfVolunteerSkills, ListOfVolunteers, Volunteer, ListOfCadetVolunteerAssociations
+from app.objects.volunteers import ListOfVolunteerSkills, ListOfVolunteers, Volunteer, ListOfCadetVolunteerAssociations, \
+    SkillsDict
 
 
 class VolunteerData():
@@ -33,10 +34,11 @@ class VolunteerData():
         dict_of_skills = self.get_dict_of_existing_skills_for_volunteer_id(volunteer_id)
         return dict_of_skills.get(SI_SKILL, False)
 
-    def get_dict_of_existing_skills_for_volunteer(self, volunteer: Volunteer) -> dict:
+    def get_dict_of_existing_skills_for_volunteer(self, volunteer: Volunteer) -> SkillsDict:
         return self.get_dict_of_existing_skills_for_volunteer_id(volunteer_id=volunteer.id)
 
-    def get_dict_of_existing_skills_for_volunteer_id(self, volunteer_id: str) -> dict:
+    def get_dict_of_existing_skills_for_volunteer_id(self, volunteer_id: str) ->SkillsDict:
+
         all_skills = self.get_list_of_volunteer_skills()
         return all_skills.dict_of_skills_for_volunteer_id(volunteer_id=volunteer_id)
 

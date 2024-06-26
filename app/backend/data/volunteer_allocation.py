@@ -11,8 +11,8 @@ from app.data_access.storage_layer.api import DataLayer
 from app.objects.constants import missing_data
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.volunteers_at_event import ListOfVolunteersAtEvent, ListOfIdentifiedVolunteersAtEvent,\
-    VolunteerAtEvent
+from app.objects.volunteers_at_event import ListOfVolunteersAtEventWithId, ListOfIdentifiedVolunteersAtEvent, \
+    VolunteerAtEventWithId, ListOfVolunteersAtEvent, VolunteerAtEvent
 from app.backend.data.volunteers import VolunteerData
 
 class VolunteerAllocationData():
@@ -22,56 +22,56 @@ class VolunteerAllocationData():
     def add_volunteer_and_cadet_association_for_existing_volunteer(self, cadet_id: str,
                                                                    volunteer_id: str, event: Event):
 
-        list_of_volunteers_at_event = self.load_list_of_volunteers_at_event(event)
+        list_of_volunteers_at_event = self.load_list_of_volunteers_with_ids_at_event(event)
         list_of_volunteers_at_event.add_cadet_id_to_existing_volunteer(volunteer_id=volunteer_id, cadet_id=cadet_id)
         self.save_list_of_volunteers_at_event(list_of_volunteers_at_event=list_of_volunteers_at_event, event=event)
 
     def remove_volunteer_and_cadet_association_at_event(self, cadet_id: str, volunteer_id: str,
                                                         event: Event):
 
-        list_of_volunteers_at_event = self.load_list_of_volunteers_at_event(event)
+        list_of_volunteers_at_event = self.load_list_of_volunteers_with_ids_at_event(event)
         list_of_volunteers_at_event.remove_cadet_id_association_from_volunteer(cadet_id=cadet_id,
                                                                                volunteer_id=volunteer_id)
         self.save_list_of_volunteers_at_event(list_of_volunteers_at_event=list_of_volunteers_at_event, event=event)
 
     def delete_volunteer_with_id_at_event(self, volunteer_id: str, event: Event):
-        list_of_volunteers_at_event = self.load_list_of_volunteers_at_event(event)
+        list_of_volunteers_at_event = self.load_list_of_volunteers_with_ids_at_event(event)
         list_of_volunteers_at_event.remove_volunteer_with_id(volunteer_id=volunteer_id)
         self.save_list_of_volunteers_at_event(list_of_volunteers_at_event=list_of_volunteers_at_event, event=event)
 
     def add_volunteer_to_event_with_just_id(self, volunteer_id: str, event: Event):
         availability = event.day_selector_with_covered_days()  ## assume available all days in event
-        list_of_volunteers_at_event = self.load_list_of_volunteers_at_event(event)
+        list_of_volunteers_at_event = self.load_list_of_volunteers_with_ids_at_event(event)
         list_of_volunteers_at_event.add_volunteer_with_just_id(volunteer_id,
                                                                availability=availability)
         self.save_list_of_volunteers_at_event(list_of_volunteers_at_event=list_of_volunteers_at_event, event=event)
 
     def update_volunteer_notes_at_event(self, event: Event, volunteer_id: str, new_notes: str):
-        list_of_volunteers_at_event = self.load_list_of_volunteers_at_event(event)
+        list_of_volunteers_at_event = self.load_list_of_volunteers_with_ids_at_event(event)
         list_of_volunteers_at_event.update_volunteer_notes_at_event(volunteer_id=volunteer_id, new_notes=new_notes)
         self.save_list_of_volunteers_at_event(list_of_volunteers_at_event=list_of_volunteers_at_event, event=event)
 
     def make_volunteer_available_on_day(self, volunteer_id: str, event: Event, day: Day):
-        list_of_volunteers_at_event = self.load_list_of_volunteers_at_event(event)
+        list_of_volunteers_at_event = self.load_list_of_volunteers_with_ids_at_event(event)
         volunteer_at_event = list_of_volunteers_at_event.volunteer_at_event_with_id(volunteer_id)
         volunteer_at_event.availablity.make_available_on_day(day)
         self.save_list_of_volunteers_at_event(list_of_volunteers_at_event=list_of_volunteers_at_event, event=event)
 
     def make_volunteer_unavailable_on_day(self, volunteer_id: str, event: Event, day: Day):
-        list_of_volunteers_at_event = self.load_list_of_volunteers_at_event(event)
+        list_of_volunteers_at_event = self.load_list_of_volunteers_with_ids_at_event(event)
         volunteer_at_event = list_of_volunteers_at_event.volunteer_at_event_with_id(volunteer_id)
         volunteer_at_event.availablity.make_unavailable_on_day(day)
         self.save_list_of_volunteers_at_event(list_of_volunteers_at_event=list_of_volunteers_at_event, event=event)
 
     def volunteer_ids_associated_with_cadet_at_specific_event(self, event: Event,
                                                               cadet_id: str) -> List[str]:
-        volunteer_data = self.load_list_of_volunteers_at_event(event)
+        volunteer_data = self.load_list_of_volunteers_with_ids_at_event(event)
         volunteer_ids = volunteer_data.list_of_volunteer_ids_associated_with_cadet_id(cadet_id)
 
         return volunteer_ids
 
-    def add_volunteer_at_event(self, event: Event, volunteer_at_event: VolunteerAtEvent):
-        list_of_volunteers_at_event = self.load_list_of_volunteers_at_event(event)
+    def add_volunteer_at_event(self, event: Event, volunteer_at_event: VolunteerAtEventWithId):
+        list_of_volunteers_at_event = self.load_list_of_volunteers_with_ids_at_event(event)
         list_of_volunteers_at_event.add_new_volunteer(volunteer_at_event)
         self.save_list_of_volunteers_at_event(list_of_volunteers_at_event=list_of_volunteers_at_event, event=event)
 
@@ -79,12 +79,12 @@ class VolunteerAllocationData():
                                                                       volunteer_id: str,
                                                                       cadet_id: str):
 
-        list_of_volunteers_at_event = self.load_list_of_volunteers_at_event(event)
+        list_of_volunteers_at_event = self.load_list_of_volunteers_with_ids_at_event(event)
         list_of_volunteers_at_event.add_cadet_id_to_existing_volunteer(cadet_id=cadet_id, volunteer_id=volunteer_id)
         self.save_list_of_volunteers_at_event(event=event, list_of_volunteers_at_event=list_of_volunteers_at_event)
 
-    def get_volunteer_at_this_event(self, event: Event, volunteer_id: str) -> VolunteerAtEvent:
-        list_of_volunteers = self.load_list_of_volunteers_at_event(event)
+    def get_volunteer_at_this_event(self, event: Event, volunteer_id: str) -> VolunteerAtEventWithId:
+        list_of_volunteers = self.load_list_of_volunteers_with_ids_at_event(event)
         volunteer_at_event = list_of_volunteers.volunteer_at_event_with_id(volunteer_id)
 
         return volunteer_at_event
@@ -92,7 +92,7 @@ class VolunteerAllocationData():
     def get_sorted_list_of_volunteers_except_those_already_at_event(self,
                                                                     event: Event,
                                                                     sort_by: str = SORT_BY_FIRSTNAME) -> ListOfVolunteers:
-        volunteers_at_event = self.load_list_of_volunteers_at_event(event)
+        volunteers_at_event = self.load_list_of_volunteers_with_ids_at_event(event)
         volunteers_at_event_ids = volunteers_at_event.list_of_volunteer_ids
         master_list_of_volunteers = self.sorted_list_of_all_volunteers(sort_by)
         all_volunteer_ids = master_list_of_volunteers.list_of_ids
@@ -101,7 +101,7 @@ class VolunteerAllocationData():
         return ListOfVolunteers.subset_from_list_of_ids(master_list_of_volunteers, ids_of_volunteers_not_at_event)
 
     def is_volunteer_already_at_event(self, event: Event, volunteer_id: str):
-        list_of_volunteers_at_event = self.load_list_of_volunteers_at_event(event)
+        list_of_volunteers_at_event = self.load_list_of_volunteers_with_ids_at_event(event)
         return list_of_volunteers_at_event.is_volunteer_already_at_event(volunteer_id)
 
     def mark_volunteer_as_skipped(self,
@@ -129,16 +129,29 @@ class VolunteerAllocationData():
                                                                               volunteer_index=volunteer_index)
         return volunteer_id is not missing_data
 
+    def get_list_of_volunteers_at_event(self, event: Event) -> ListOfVolunteersAtEvent:
+        list_of_volunteers_at_event = self.load_list_of_volunteers_with_ids_at_event(event)
+
+        return ListOfVolunteersAtEvent([
+            VolunteerAtEvent.from_volunteer_and_voluteer_at_event_with_id(
+                volunteer=self.volunteer_data.volunteer_with_id(volunteer_with_id_at_event.volunteer_id),
+                volunteer_at_event_with_id=volunteer_with_id_at_event
+            )
+
+            for volunteer_with_id_at_event in list_of_volunteers_at_event
+        ])
+
+
     def load_list_of_identified_volunteers_at_event(self, event: Event)-> ListOfIdentifiedVolunteersAtEvent:
         return self.data_api.get_list_of_identified_volunteers_at_event(event=event)
 
     def save_list_of_identified_volunteers_at_event(self, event: Event, list_of_volunteers: ListOfIdentifiedVolunteersAtEvent):
         return self.data_api.save_list_of_identified_volunteers_at_event(list_of_volunteers=list_of_volunteers, event=event)
 
-    def load_list_of_volunteers_at_event(self, event: Event) -> ListOfVolunteersAtEvent:
+    def load_list_of_volunteers_with_ids_at_event(self, event: Event) -> ListOfVolunteersAtEventWithId:
         return self.data_api.get_list_of_volunteers_at_event(event=event)
 
-    def save_list_of_volunteers_at_event(self, event: Event, list_of_volunteers_at_event: ListOfVolunteersAtEvent):
+    def save_list_of_volunteers_at_event(self, event: Event, list_of_volunteers_at_event: ListOfVolunteersAtEventWithId):
         self.data_api.save_list_of_volunteers_at_event(event=event,
                                                                list_of_volunteers_at_event=list_of_volunteers_at_event)
 

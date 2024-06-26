@@ -138,6 +138,13 @@ class VolunteerSkill(GenericSkipperManObject):
     def boat_related_skill(self) -> bool:
         return self.skill == VOLUNTEERS_SKILL_FOR_PB2
 
+class SkillsDict(Dict[str, bool]):
+    def __repr__(self):
+        skills_as_list = [skill for skill,has_skill in self.items() if has_skill]
+        skills_as_str = ", ".join(skills_as_list)
+
+        return skills_as_str
+
 class ListOfVolunteerSkills(GenericListOfObjects):
 
     @property
@@ -156,13 +163,13 @@ class ListOfVolunteerSkills(GenericListOfObjects):
     def list_of_volunteer_ids_with_boat_related_skill(self) -> List[str]:
         return list(set([item.volunteer_id for item in self if item.boat_related_skill]))
 
-    def dict_of_skills_for_volunteer_id(self, volunteer_id: str) -> Dict[str, bool]:
+    def dict_of_skills_for_volunteer_id(self, volunteer_id: str) -> SkillsDict:
         skills_held = self.skills_for_volunteer_id(volunteer_id)
         dict_of_skills = dict([
             (skill, skill in skills_held) for skill in VOLUNTEER_SKILLS
         ])
 
-        return dict_of_skills
+        return SkillsDict(dict_of_skills)
 
     def skills_for_volunteer_id(self, volunteer_id: str):
         skills = [element.skill for element in self if element.volunteer_id==volunteer_id]

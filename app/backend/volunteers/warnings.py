@@ -28,7 +28,7 @@ from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.day_selectors import EMPTY_DAY_SELECTOR, Day
 from app.objects.events import Event
 from app.objects.mapped_wa_event import RowInMappedWAEvent
-from app.objects.volunteers_at_event import VolunteerAtEvent
+from app.objects.volunteers_at_event import VolunteerAtEventWithId
 
 
 def warn_on_all_volunteers_availability(interface: abstractInterface) -> List[str]:
@@ -72,7 +72,7 @@ def process_warning_list(list_of_warnings: List[str]) -> List[str]:
 
 def warn_about_single_volunteer_groups_at_event(interface: abstractInterface,
                                                 event: Event,
-                                                volunteer_at_event: VolunteerAtEvent) -> str:
+                                                volunteer_at_event: VolunteerAtEventWithId) -> str:
 
     group_warnings_for_volunteer = []
 
@@ -99,7 +99,7 @@ def warn_about_single_volunteer_groups_at_event(interface: abstractInterface,
 
 def warn_about_single_volunteer_availablity_at_event(interface: abstractInterface,
                                                      event: Event,
-                                                     volunteer_at_event: VolunteerAtEvent) -> str:
+                                                     volunteer_at_event: VolunteerAtEventWithId) -> str:
 
     cadet_ids = volunteer_at_event.list_of_associated_cadet_id
     connected_cadets = ListOfCadets([cadet_from_id(interface=interface, cadet_id=cadet_id) for cadet_id in cadet_ids])
@@ -118,8 +118,8 @@ def warn_about_single_volunteer_availablity_at_event(interface: abstractInterfac
 
 
 def warn_about_volunteer_availablity_at_event_with_connected_cadets(interface: abstractInterface,
-                                         event: Event,
-                                  volunteer_at_event: VolunteerAtEvent,
+                                                                    event: Event,
+                                                                    volunteer_at_event: VolunteerAtEventWithId,
                                                                     active_connected_cadets: ListOfCadets) -> str:
     warnings = []
     cadets_at_event_data = CadetsAtEventData(interface.data)
@@ -153,8 +153,8 @@ def warn_about_volunteer_availablity_at_event_with_connected_cadets(interface: a
 
 
 def warn_about_single_volunteer_with_no_cadet_at_event(interface: abstractInterface,
-                                         event: Event,
-                                  volunteer_at_event: VolunteerAtEvent) -> str:
+                                                       event: Event,
+                                                       volunteer_at_event: VolunteerAtEventWithId) -> str:
 
     cadet_ids = volunteer_at_event.list_of_associated_cadet_id
     connected_cadets = ListOfCadets([cadet_from_id(interface=interface, cadet_id=cadet_id) for cadet_id in cadet_ids])
@@ -241,8 +241,8 @@ def warn_on_volunteer_qualifications(interface: abstractInterface) -> List[str]:
 
 
 def warn_about_single_volunteer_with_qualifications(interface: abstractInterface,
-                                         event: Event,
-                                  volunteer_at_event: VolunteerAtEvent) -> str:
+                                                    event: Event,
+                                                    volunteer_at_event: VolunteerAtEventWithId) -> str:
 
     volunteer_rota_data = VolunteerRotaData(interface.data)
     volunteer_data = VolunteerData(interface.data)

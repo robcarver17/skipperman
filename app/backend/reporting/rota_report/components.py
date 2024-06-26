@@ -1,18 +1,23 @@
 from dataclasses import dataclass
 
 import pandas as pd
+from app.objects.volunteers_at_event import ListOfVolunteersAtEvent
+
+from app.data_access.storage_layer.api import DataLayer
+
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.reporting.rota_report.configuration import TEAM_NAME, ROLE, VOLUNTEER, GROUP, BOAT
 from app.objects.constants import missing_data
 from app.objects.groups import GROUP_UNALLOCATED
 from app.objects.patrol_boats import ListOfPatrolBoats, ListOfVolunteersAtEventWithPatrolBoats
-from app.objects.volunteers import ListOfVolunteers
+from app.objects.volunteers import ListOfVolunteers, ListOfVolunteerSkills
 from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent, VolunteerInRoleAtEventWithTeamName
 
 from app.backend.data.patrol_boats import PatrolBoatsData
 from app.backend.data.volunteers import VolunteerData
 from app.backend.data.volunteer_rota import VolunteerRotaData
+from app.backend.data.volunteer_allocation import VolunteerAllocationData
 
 @dataclass
 class DataForDfConstruction:
@@ -20,23 +25,30 @@ class DataForDfConstruction:
     all_patrol_boats: ListOfPatrolBoats
     all_volunteers_and_boats: ListOfVolunteersAtEventWithPatrolBoats
     volunteers_in_role_at_event: ListOfVolunteersInRoleAtEvent
+    skills: ListOfVolunteerSkills
+    volunteers_at_event: ListOfVolunteersAtEvent
 
     @classmethod
-    def construct_for_event(cls, event, interface: abstractInterface):
-        volunteer_data = VolunteerData(interface.data)
-        patrol_boat_data = PatrolBoatsData(interface.data)
-        volunteers_in_role = VolunteerRotaData(interface.data)
+    def construct_for_event(cls, event, data_layer: DataLayer):
+        volunteer_data = VolunteerData(data_layer)
+        patrol_boat_data = PatrolBoatsData(data_layer)
+        volunteers_in_role_data = VolunteerRotaData(data_layer)
+        volunteer_allocation_data =VolunteerAllocationData(data_layer)
 
         all_volunteers = volunteer_data.get_list_of_volunteers()
         all_patrol_boats = patrol_boat_data.get_list_of_patrol_boats()
         all_volunteers_and_boats = patrol_boat_data.get_list_of_voluteers_at_event_with_patrol_boats(event)
-        volunteers_in_role_at_event = volunteers_in_role.get_list_of_volunteers_in_roles_at_event(event)
+        volunteers_in_role_at_event = volunteers_in_role_data.get_list_of_volunteers_in_roles_at_event(event)
+        volunteers_at_event = volunteer_allocation_data.load_list_of_volunteers_at_event(event)
+        skills = volunteer_data.get_list_of_volunteer_skills()
 
         return cls(
             all_volunteers=all_volunteers,
             all_patrol_boats=all_patrol_boats,
             all_volunteers_and_boats=all_volunteers_and_boats,
-            volunteers_in_role_at_event=volunteers_in_role_at_event
+            volunteers_in_role_at_event=volunteers_in_role_at_event,
+            skills = skills,
+            volunteers_at_event=volunteers_at_event
         )
 
 

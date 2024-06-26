@@ -1,8 +1,5 @@
-from typing import Union
-
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 
-from app.logic.events.constants import *
 from app.logic.events.volunteer_rota.swapping import update_if_swap_button_pressed
 from app.logic.events.volunteer_rota.add_volunteer_to_rota import display_form_add_new_volunteer_to_rota_at_event
 
@@ -14,15 +11,16 @@ from app.logic.events.volunteer_rota.volunteer_targets import get_volunteer_targ
 from app.logic.events.volunteer_rota.warnings import warn_on_all_volunteers
 from app.objects.abstract_objects.abstract_form import (
     Form,
-    NewForm, )
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, cancel_menu_button, save_menu_button
+    NewForm, File, )
+from app.objects.abstract_objects.abstract_buttons import cancel_menu_button, save_menu_button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.volunteers.ENTRY_view_volunteers import all_sort_types as all_volunteer_name_sort_types
 from app.logic.events.volunteer_rota.render_volunteer_table import get_volunteer_table
 from app.logic.events.volunteer_rota.elements_in_volunteer_rota_page import get_filters_and_buttons, \
     APPLY_FILTER_BUTTON_LABEL, get_header_buttons_for_rota, get_summary_table, instructions, \
-    ADD_NEW_VOLUNTEER_BUTTON_LABEL, SORT_BY_CADET_LOCATION, CLEAR_FILTERS_BUTTON_LABEL, get_summary_group_table
+    ADD_NEW_VOLUNTEER_BUTTON_LABEL, SORT_BY_CADET_LOCATION, CLEAR_FILTERS_BUTTON_LABEL, get_summary_group_table, \
+    download_matrix_button
 from app.objects.abstract_objects.abstract_text import Heading
 
 
@@ -70,7 +68,7 @@ def display_form_view_for_volunteer_rota(interface: abstractInterface) -> Form:
 
 def post_form_view_for_volunteer_rota(
     interface: abstractInterface
-) -> Union[Form, NewForm]:
+) -> Union[Form, NewForm, File]:
 
     last_button_pressed = interface.last_button_pressed()
 
@@ -84,6 +82,11 @@ def post_form_view_for_volunteer_rota(
     ## This may reverse what we did before with filter updates, that's fine
     if last_button_pressed==CLEAR_FILTERS_BUTTON_LABEL:
         clear_all_filters(interface)
+
+    ## File
+    elif download_matrix_button.pressed(last_button_pressed):
+        filename = save_volunteer_matrix_and_return_filename(interface)
+        return File(filename)
 
     ## Actions which result in new forms
     elif last_button_pressed==ADD_NEW_VOLUNTEER_BUTTON_LABEL:

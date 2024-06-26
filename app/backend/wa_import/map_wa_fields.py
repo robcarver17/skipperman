@@ -2,6 +2,7 @@ import os
 from typing import List
 
 import pandas as pd
+from app.data_access.storage_layer.api import DataLayer
 
 from app.data_access.file_access import download_directory
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -62,13 +63,21 @@ def get_field_mapping_for_event(interface: abstractInterface, event: Event) -> L
     return wa_mapping
 
 
-def write_field_mapping_for_event(interface: abstractInterface, event: Event, new_mapping: ListOfWAFieldMappings):
+def DEPRECATE_write_field_mapping_for_event(interface: abstractInterface, event: Event, new_mapping: ListOfWAFieldMappings):
     field_mapping_data = FieldMappingData(interface.data)
     field_mapping_data.write_field_mapping_for_event(event=event, new_mapping=new_mapping)
 
+def write_field_mapping_for_event(data_layer: DataLayer, event: Event, new_mapping: ListOfWAFieldMappings):
+    field_mapping_data = FieldMappingData(data_layer)
+    field_mapping_data.write_field_mapping_for_event(event=event, new_mapping=new_mapping)
 
-def get_list_of_templates(interface: abstractInterface) -> List[str]:
+
+def DEPRECATE_get_list_of_template_names(interface: abstractInterface) -> List[str]:
     field_mapping_data = FieldMappingData(interface.data)
+    return field_mapping_data.get_list_of_field_mapping_template_names()
+
+def get_list_of_template_names(data_layer: DataLayer) -> List[str]:
+    field_mapping_data = FieldMappingData(data_layer)
     return field_mapping_data.get_list_of_field_mapping_template_names()
 
 
@@ -77,8 +86,8 @@ def get_template(interface: abstractInterface, template_name:str) -> ListOfWAFie
     return field_mapping_data.get_field_mapping_for_template(template_name)
 
 
-def write_template(interface: abstractInterface, template_name:str, new_mapping: ListOfWAFieldMappings):
-    field_mapping_data = FieldMappingData(interface.data)
+def write_template(data_layer: DataLayer, template_name:str, new_mapping: ListOfWAFieldMappings):
+    field_mapping_data = FieldMappingData(data_layer)
     field_mapping_data.save_field_mapping_for_template(template_name=template_name, field_mapping=new_mapping)
 
 

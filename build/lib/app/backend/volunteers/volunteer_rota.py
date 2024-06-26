@@ -230,8 +230,13 @@ def load_list_of_identified_volunteers_at_event(interface: abstractInterface, ev
 
 
 
-def load_list_of_volunteers_at_event(interface:abstractInterface, event: Event)-> ListOfVolunteersAtEvent:
+def DEPRECATE_load_list_of_volunteers_at_event(interface:abstractInterface, event: Event)-> ListOfVolunteersAtEvent:
     volunteer_allocation_data = VolunteerAllocationData(interface.data)
+    return volunteer_allocation_data.load_list_of_volunteers_at_event(event)
+
+
+def load_list_of_volunteers_at_event(data_layer: DataLayer, event: Event)-> ListOfVolunteersAtEvent:
+    volunteer_allocation_data = VolunteerAllocationData(data_layer)
     return volunteer_allocation_data.load_list_of_volunteers_at_event(event)
 
 

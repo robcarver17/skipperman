@@ -16,7 +16,9 @@ def explain_additional_parameters_for_rota_report(interface: abstractInterface,
 ) -> ListOfLines:
 
     days =  "Report covers the following days: %s" % str(additional_parameters.days_to_show)
-    boats =  "Sort by power boats and exclude volunteers not on boats" if additional_parameters.power_boats_only else "Include all volunteers"
+    power_boats_only = additional_parameters.power_boats_only
+
+    boats =  "Sort by power boats and exclude volunteers not on boats" if power_boats_only else ""
 
     return ListOfLines([days, boats]).add_Lines()
 
@@ -31,7 +33,7 @@ def reporting_options_form_for_rota_additional_parameters(
                                             include_all=True,
                                             event=event)
     boats =  yes_no_radio(
-                input_label="Report for power boats only, sorted by power boat",
+                input_label="Report for power boats only, sorted by power boat (will be ignored if sort by skills also set)",
                 input_name=BOATS,
                 default_is_yes=additional_parameters.power_boats_only,
             )
@@ -42,7 +44,8 @@ def reporting_options_form_for_rota_additional_parameters(
             "Select days in the event you wish to include in the report rota:",
             choose_days,
             _______________,
-            boats
+            boats,
+            _______________,
         ]
     )
 

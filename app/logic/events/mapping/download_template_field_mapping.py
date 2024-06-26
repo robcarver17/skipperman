@@ -1,5 +1,5 @@
 from typing import Union
-from app.backend.wa_import.map_wa_fields import get_list_of_templates, get_template, \
+from app.backend.wa_import.map_wa_fields import DEPRECATE_get_list_of_template_names, get_template, \
     write_mapping_to_temp_csv_file_and_return_filename
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import (
@@ -54,5 +54,5 @@ def previous_form(interface: abstractInterface):
 
 ## repeats but avoids circular
 def display_list_of_templates_with_buttons(interface: abstractInterface) -> ListOfLines:
-    list_of_templates = get_list_of_templates(interface)
+    list_of_templates = DEPRECATE_get_list_of_template_names(interface)
     return ListOfLines([Button(template_name) for template_name in list_of_templates])

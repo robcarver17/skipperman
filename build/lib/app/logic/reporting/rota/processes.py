@@ -1,19 +1,12 @@
 import pandas as pd
 from typing import Dict
 
-from app.objects.constants import arg_not_passed
-
-from app.backend.reporting.process_stages.create_column_report_from_df import \
-    create_column_report_from_df_and_return_filename
 from app.backend.reporting.rota_report.configuration import AdditionalParametersForVolunteerReport, specific_parameters_for_volunteer_report
 from app.backend.reporting.rota_report.generate_dataframe_dict_for_rota_report import get_df_for_reporting_volunteers_with_flags
 
 from app.backend.forms.form_utils import get_availablity_from_form
 
 from app.logic.events.events_in_state import get_event_from_state
-from app.logic.reporting.shared.group_order import get_arrangement_options_and_group_order_from_stored_or_defaults
-from app.logic.reporting.shared.reporting_options import get_reporting_options
-from app.objects.abstract_objects.abstract_form import File
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
@@ -22,6 +15,7 @@ from app.objects.events import Event
 
 DAYS_TO_SHOW = "DaysToShow"
 BOATS = "boats"
+
 def load_additional_parameters_for_rota_report(
     interface: abstractInterface,
 ) -> AdditionalParametersForVolunteerReport:
@@ -33,7 +27,6 @@ def load_additional_parameters_for_rota_report(
         days_to_show = DaySelector.from_str(days_to_show_str)
 
     boats = interface.get_persistent_value(BOATS, default=False)
-
     return AdditionalParametersForVolunteerReport(
         days_to_show=days_to_show,
         power_boats_only=boats
@@ -67,7 +60,6 @@ def get_rota_report_additional_parameters_from_form(
         BOATS
     )
 
-
     return AdditionalParametersForVolunteerReport(
         days_to_show=days_to_show, power_boats_only=boats)
 
@@ -86,7 +78,6 @@ def save_days_to_show_parameter(interface: abstractInterface, parameters: Additi
 def save_patrol_boat_parameter(interface: abstractInterface, parameters: AdditionalParametersForVolunteerReport):
     boats = parameters.power_boats_only
     interface.set_persistent_value(BOATS, boats)
-
 
 def get_dict_of_df_for_reporting_rota(interface: abstractInterface) -> Dict[str, pd.DataFrame]:
     event = get_event_from_state(interface)

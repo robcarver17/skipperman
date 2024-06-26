@@ -11,7 +11,7 @@ from app.logic.abstract_logic_api import initial_state_form
 
 from app.backend.events import  DEPRECATE_get_sorted_list_of_events, confirm_event_exists_given_description
 from app.backend.wa_import.map_wa_fields import is_wa_field_mapping_setup_for_event, get_field_mapping_for_event, \
-    write_field_mapping_for_event
+    DEPRECATE_write_field_mapping_for_event
 from app.objects.events import ListOfEvents, SORT_BY_START_DSC, Event
 
 
@@ -73,7 +73,7 @@ def post_form_for_clone_event_field_mapping(interface: abstractInterface):
         )
         return initial_state_form
 
-    write_field_mapping_for_event(interface=interface, event=current_event, new_mapping=mapping)
+    DEPRECATE_write_field_mapping_for_event(interface=interface, event=current_event, new_mapping=mapping)
     interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return form_with_message_and_finished_button("Mapping copied from event %s to %s"

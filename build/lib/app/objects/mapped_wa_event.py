@@ -2,8 +2,6 @@ import datetime
 from typing import List
 import pandas as pd
 
-from xdg.Menu import DELETED
-
 from app.objects.utils import (
     clean_up_dict_with_nans,
     transform_df_from_str_to_dates,
@@ -23,6 +21,7 @@ EMPTY = "Empty"
 MANUAL = "Manual"
 UNPAID = "Unpaid"
 PARTIAL_PAID = "PartialPaid"
+DELETED = "Deleted"
 POSSIBLE_STATUS_NAMES = [CANCELLED, ACTIVE_PAID, DELETED, EMPTY, MANUAL, UNPAID, PARTIAL_PAID]
 ACTIVE_STATUS_NAMES = [ACTIVE_PAID, UNPAID, PARTIAL_PAID, MANUAL]
 

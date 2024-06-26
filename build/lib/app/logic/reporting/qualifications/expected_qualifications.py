@@ -8,7 +8,7 @@ from app.backend.data.cadets import CadetData
 
 from app.data_access.file_access import download_directory
 
-from app.backend.wa_import.map_wa_fields import get_list_of_templates, get_template, \
+from app.backend.wa_import.map_wa_fields import DEPRECATE_get_list_of_template_names, get_template, \
     write_mapping_to_temp_csv_file_and_return_filename
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import (

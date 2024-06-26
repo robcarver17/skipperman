@@ -61,7 +61,7 @@ def write_field_mapping_for_event(event, new_mapping):
 
 
 def get_list_of_templates():
-    return DEPRECATED_data.data_wa_field_mapping.DEPRECATE_get_list_of_templates()
+    return DEPRECATED_data.data_wa_field_mapping.DEPRECATE_get_list_of_template_names()
 
 
 def get_template(template_name):

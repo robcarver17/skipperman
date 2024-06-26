@@ -4,7 +4,7 @@ from app.objects.abstract_objects.abstract_lines import Line
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.volunteers.volunteer_rota import  load_list_of_volunteers_at_event
+from app.backend.volunteers.volunteer_rota import  DEPRECATE_load_list_of_volunteers_at_event
 from app.backend.volunteers.volunteer_rota_data import DataToBeStoredWhilstConstructingVolunteerRotaPage, \
     get_cadet_location_string, str_dict_skills
 from app.backend.volunteers.volunteers import  get_volunteer_from_id
@@ -64,18 +64,18 @@ def copy_previous_role_button_name_from_volunteer_id(volunteer_id: str) -> str:
 
 
 def list_of_all_location_button_names(interface: abstractInterface, event: Event):
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(interface=interface, event=event)
+    list_of_volunteers_at_event = DEPRECATE_load_list_of_volunteers_at_event(interface=interface, event=event)
     return [location_button_name_from_volunteer_id(volunteer_at_event.volunteer_id)
             for volunteer_at_event in list_of_volunteers_at_event]
 
 
 def list_of_all_skills_buttons(interface: abstractInterface,event: Event):
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(interface=interface, event=event)
+    list_of_volunteers_at_event = DEPRECATE_load_list_of_volunteers_at_event(interface=interface, event=event)
     return [skills_button_name_from_volunteer_id(volunteer_at_event.volunteer_id)
             for volunteer_at_event in list_of_volunteers_at_event]
 
 def list_of_all_copy_previous_roles_buttons(interface: abstractInterface, event: Event):
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(interface=interface, event=event)
+    list_of_volunteers_at_event = DEPRECATE_load_list_of_volunteers_at_event(interface=interface, event=event)
     return [copy_previous_role_button_name_from_volunteer_id(volunteer_at_event.volunteer_id)
             for volunteer_at_event in list_of_volunteers_at_event]
 
@@ -99,7 +99,7 @@ def from_previous_role_copy_button_to_volunteer_id(previous_role_copy_button_nam
 
 
 def get_dict_of_volunteer_name_buttons_and_volunteer_ids(interface: abstractInterface, event: Event)-> dict:
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event=event, interface=interface)
+    list_of_volunteers_at_event = DEPRECATE_load_list_of_volunteers_at_event(event=event, interface=interface)
     list_of_volunteer_ids = list_of_volunteers_at_event.list_of_volunteer_ids
 
     return dict([(
@@ -204,7 +204,7 @@ def get_list_of_make_unavailable_buttons(interface: abstractInterface, event: Ev
 
 def get_list_of_generic_button_values_across_days_and_volunteers(interface: abstractInterface, event: Event, value_function: Callable) -> list:
     ## Strictly speaking this will include buttons that aren't visible, but quicker and easier trhan checking
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(interface=interface, event=event)
+    list_of_volunteers_at_event = DEPRECATE_load_list_of_volunteers_at_event(interface=interface, event=event)
     list_of_volunteer_ids = list_of_volunteers_at_event.list_of_volunteer_ids
     list_of_days = event.weekdays_in_event()
 

@@ -1,5 +1,5 @@
 from typing import Union
-from app.backend.wa_import.map_wa_fields import write_field_mapping_for_event, get_list_of_templates, get_template
+from app.backend.wa_import.map_wa_fields import DEPRECATE_write_field_mapping_for_event, DEPRECATE_get_list_of_template_names, get_template
 from app.logic.events.mapping.upload_template_field_mapping import display_form_for_upload_template_field_mapping
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
@@ -49,7 +49,7 @@ def display_form_for_choose_template_field_mapping(interface: abstractInterface)
 
 
 def display_list_of_templates_with_buttons(interface: abstractInterface) -> ListOfLines:
-    list_of_templates = get_list_of_templates(interface)
+    list_of_templates = DEPRECATE_get_list_of_template_names(interface)
     return ListOfLines([Button(template_name) for template_name in list_of_templates])
 
 
@@ -86,7 +86,7 @@ def post_form_when_template_chosen(interface: abstractInterface,
         return initial_state_form
 
     event = get_event_from_state(interface)
-    write_field_mapping_for_event(interface=interface,event=event, new_mapping=mapping)
+    DEPRECATE_write_field_mapping_for_event(interface=interface, event=event, new_mapping=mapping)
     interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
 
     return form_with_message_and_finished_button(

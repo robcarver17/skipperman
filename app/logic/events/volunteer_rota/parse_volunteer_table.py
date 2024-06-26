@@ -9,7 +9,7 @@ from app.backend.volunteers.volunteer_rota import delete_role_at_event_for_volun
     update_role_and_group_at_event_for_volunteer_on_all_days_when_available, \
     copy_earliest_valid_role_and_overwrite_for_volunteer, copy_earliest_valid_role_to_all_empty_for_volunteer
 from app.backend.volunteers.volunteer_rota_data import get_data_to_be_stored_for_volunteer_rota_page, \
-    DEPRECATE_get_last_role_for_volunteer_id
+    DEPRECATE_get_last_role_for_volunteer_id, get_volunteer_matrix
 from app.data_access.configuration.configuration import VOLUNTEER_SKILLS
 from app.logic.events.volunteer_rota.edit_cadet_connections_for_event_from_rota import \
     display_form_edit_cadet_connections_from_rota
@@ -269,4 +269,15 @@ def get_list_of_volunteers_at_event(interface: abstractInterface) -> ListOfVolun
     data_to_be_stored = get_data_to_be_stored_for_volunteer_rota_page(interface=interface, event=event)
 
     return data_to_be_stored.list_of_volunteers_at_event
+
+
+from app.data_access.file_access import temp_file_name
+def save_volunteer_matrix_and_return_filename(interface: abstractInterface) -> str:
+    event = get_event_from_state(interface)
+    volunteer_matrix = get_volunteer_matrix(data_layer=interface.data, event=event)
+    filename = temp_file_name()
+    volunteer_matrix.to_csv(filename)
+
+    return filename
+
 

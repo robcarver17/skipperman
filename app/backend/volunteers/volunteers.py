@@ -137,8 +137,13 @@ def save_skills_for_volunteer(interface: abstractInterface, volunteer: Volunteer
     volunteer_data.save_skills_for_volunteer(volunteer=volunteer, dict_of_skills=dict_of_skills)
 
 
-def load_list_of_volunteer_skills(interface: abstractInterface)-> ListOfVolunteerSkills:
+def DEPRECATE_load_list_of_volunteer_skills(interface: abstractInterface)-> ListOfVolunteerSkills:
     volunteer_data = VolunteerData(interface.data)
+    return volunteer_data.get_list_of_volunteer_skills()
+
+
+def load_list_of_volunteer_skills(data_layer: DataLayer)-> ListOfVolunteerSkills:
+    volunteer_data = VolunteerData(data_layer)
     return volunteer_data.get_list_of_volunteer_skills()
 
 
@@ -147,8 +152,12 @@ def get_sorted_list_of_volunteers(interface: abstractInterface, sort_by: str = a
     return volunteer_data.get_sorted_list_of_volunteers(sort_by)
 
 
-def load_all_volunteers(interface:abstractInterface)-> ListOfVolunteers:
+def DEPRECATE_get_list_of_all_volunteers(interface:abstractInterface)-> ListOfVolunteers:
     volunteer_data = VolunteerData(interface.data)
+    return volunteer_data.get_list_of_volunteers()
+
+def get_list_of_all_volunteers(data_layer: DataLayer)-> ListOfVolunteers:
+    volunteer_data = VolunteerData(data_layer)
     return volunteer_data.get_list_of_volunteers()
 
 

@@ -121,9 +121,10 @@ def get_header_buttons_for_rota(interface: abstractInterface):
                       Button(ADD_NEW_VOLUNTEER_BUTTON_LABEL, nav_button=True),
                       Button(COPY_ALL_ROLES_BUTTON_LABEL, nav_button=True),
                           Button(COPY_ALL_FIRST_ROLE_BUTTON_LABEL, nav_button=True),
+                          download_matrix_button,
                            HelpButton('volunteer_rota_help')])
 
-
+download_matrix_button = Button("Download spreadsheet of volunteer information", nav_button=True)
 
 
 def get_summary_table(interface: abstractInterface, event: Event):

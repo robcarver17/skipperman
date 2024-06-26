@@ -10,7 +10,7 @@ from app.backend.data.volunteer_allocation import VolunteerAllocationData
 from app.backend.data.volunteers import     VolunteerData,  SORT_BY_FIRSTNAME
 from app.backend.volunteers.volunteer_rota import load_list_of_identified_volunteers_at_event, \
      get_volunteer_at_event, delete_role_at_event_for_volunteer_on_day, \
-    load_list_of_volunteers_at_event
+    DEPRECATE_load_list_of_volunteers_at_event
 
 from app.backend.cadets import  cadet_name_from_id
 from app.backend.volunteers.volunteers import list_of_similar_volunteers, \
@@ -263,7 +263,7 @@ def update_cadet_connections_for_volunteer_with_list_of_cadet_ids(interface: abs
 
 
 def get_volunteer_at_event_with_id(interface: abstractInterface ,event: Event, volunteer_id: str) -> VolunteerAtEvent:
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(interface=interface, event=event)
+    list_of_volunteers_at_event = DEPRECATE_load_list_of_volunteers_at_event(interface=interface, event=event)
     volunteer_at_event = list_of_volunteers_at_event.volunteer_at_event_with_id(volunteer_id)
 
     return volunteer_at_event

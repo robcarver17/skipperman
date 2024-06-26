@@ -15,7 +15,7 @@ from app.backend.data.cadets_at_event import CadetsAtEventData
 from app.backend.group_allocations.cadet_event_allocations import get_list_of_active_cadets_at_event
 from app.backend.group_allocations.previous_allocations import get_dict_of_all_event_allocations_for_single_cadet
 
-from app.backend.volunteers.volunteer_rota import load_list_of_volunteers_at_event, \
+from app.backend.volunteers.volunteer_rota import DEPRECATE_load_list_of_volunteers_at_event, \
     list_of_cadet_groups_associated_with_volunteer, lake_in_list_of_groups, volunteer_is_on_lake, groups_for_volunteer
 from app.backend.volunteers.volunteers import get_volunteer_from_id
 from app.data_access.configuration.field_list import VOLUNTEER_STATUS
@@ -49,7 +49,7 @@ def warn_on_all_volunteers_unconnected(interface: abstractInterface) -> List[str
 
 def warn_on_all_volunteers_generic(interface: abstractInterface, warning_function: Callable) -> List[str]:
     event = get_event_from_state(interface)
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event=event, interface=interface)
+    list_of_volunteers_at_event = DEPRECATE_load_list_of_volunteers_at_event(event=event, interface=interface)
 
     list_of_warnings = []
     for volunteer_at_event in list_of_volunteers_at_event:

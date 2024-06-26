@@ -1,23 +1,26 @@
 from dataclasses import dataclass
 from typing import Dict, List
 
+import pandas as pd
+
 from app.data_access.storage_layer.api import DataLayer
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.backend.events import DEPRECATE_get_sorted_list_of_events, get_sorted_list_of_events
+from app.backend.events import  get_sorted_list_of_events
 from app.backend.group_allocations.cadet_event_allocations import \
     load_list_of_cadets_ids_with_group_allocations_active_cadets_only, get_list_of_cadets_unallocated_to_group_at_event
-from app.backend.volunteers.volunteers import load_list_of_volunteer_skills, get_volunteer_from_id
-from app.backend.volunteers.volunteer_rota import load_list_of_volunteers_at_event, \
+from app.backend.volunteers.volunteers import DEPRECATE_load_list_of_volunteer_skills, get_volunteer_from_id, \
+    load_list_of_volunteer_skills, get_list_of_all_volunteers
+from app.backend.volunteers.volunteer_rota import DEPRECATE_load_list_of_volunteers_at_event, \
     DEPRECATE_get_volunteers_in_role_at_event_with_active_allocations, sort_volunteer_data_for_event_by_name_sort_order, \
-    get_volunteers_in_role_at_event_with_active_allocations
+    get_volunteers_in_role_at_event_with_active_allocations, load_list_of_volunteers_at_event
 
 from app.objects.cadets import ListOfCadets
 from app.objects.constants import missing_data, arg_not_passed
 from app.objects.day_selectors import Day
 from app.objects.events import Event, SORT_BY_START_ASC, list_of_events_excluding_one_event, ListOfEvents
 from app.objects.groups import ListOfCadetIdsWithGroups, GROUP_UNALLOCATED, Group, sorted_locations
-from app.objects.volunteers import ListOfVolunteerSkills, Volunteer
+from app.objects.volunteers import ListOfVolunteerSkills, Volunteer, ListOfVolunteers
 from app.objects.volunteers_at_event import ListOfVolunteersAtEvent, VolunteerAtEvent
 from app.objects.volunteers_in_roles import ListOfVolunteersInRoleAtEvent, VolunteerInRoleAtEvent, \
     FILTER_ALL, FILTER_AVAILABLE, FILTER_UNALLOC_AVAILABLE, FILTER_ALLOC_AVAILABLE, FILTER_UNAVAILABLE, RoleAndGroup
@@ -220,9 +223,9 @@ def filter_volunteer_by_availability_on_given_day(volunteer_at_event: VolunteerA
 def get_data_to_be_stored_for_volunteer_rota_page(interface: abstractInterface, event: Event) -> DataToBeStoredWhilstConstructingVolunteerRotaPage:
     list_of_cadet_ids_with_groups = load_list_of_cadets_ids_with_group_allocations_active_cadets_only(event=event, interface=interface)
     unallocated_cadets_at_event = get_list_of_cadets_unallocated_to_group_at_event(event=event, interface=interface)
-    volunteer_skills = load_list_of_volunteer_skills(interface)
+    volunteer_skills = DEPRECATE_load_list_of_volunteer_skills(interface)
     volunteers_in_roles_at_event = DEPRECATE_get_volunteers_in_role_at_event_with_active_allocations(event=event, interface=interface)
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event=event, interface=interface)
+    list_of_volunteers_at_event = DEPRECATE_load_list_of_volunteers_at_event(event=event, interface=interface)
 
     dict_of_volunteers_with_last_roles = get_dict_of_volunteers_with_last_roles(interface=interface,
                                                                                 list_of_volunteer_ids=list_of_volunteers_at_event.list_of_volunteer_ids,
@@ -423,3 +426,51 @@ def list_of_cadet_groups_associated_with_volunteer(data_to_be_stored: DataToBeSt
     list_of_groups = [group for group in list_of_groups if group is not missing_data]
 
     return list_of_groups
+
+
+def get_volunteer_matrix(data_layer: DataLayer, event: Event) -> pd.DataFrame:
+    volunteer_skills = load_list_of_volunteer_skills(data_layer=data_layer)
+    volunteers_in_roles_at_event = get_volunteers_in_role_at_event_with_active_allocations(event=event, data_layer=data_layer)
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(event=event, data_layer=data_layer)
+    list_of_volunteers = get_list_of_all_volunteers(data_layer)
+
+    list_of_rows  = [
+        row_for_volunteer_at_event(event=event, volunteer_at_event=volunteer_at_event, volunteer_skills=volunteer_skills,
+                                   list_of_volunteers=list_of_volunteers, volunteers_in_roles_at_event=volunteers_in_roles_at_event)
+        for volunteer_at_event in list_of_volunteers_at_event
+    ]
+
+    return pd.DataFrame(list_of_rows)
+
+def row_for_volunteer_at_event(event: Event, volunteer_at_event: VolunteerAtEvent, volunteer_skills: ListOfVolunteerSkills,
+                               volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent,
+                               list_of_volunteers: ListOfVolunteers) -> pd.Series:
+
+    id = volunteer_at_event.volunteer_id
+    volunteer = list_of_volunteers.object_with_id(id)
+    name = volunteer.name
+    skills_dict = volunteer_skills.dict_of_skills_for_volunteer_id(id)
+    volunteers_in_roles_dict = dict([(day.name,
+                                      role_and_group_string_for_day(
+                                          volunteer_at_event=volunteer_at_event,
+                                          day=day,
+                                          volunteers_in_roles_at_event=volunteers_in_roles_at_event
+                                      )) for day in event.weekdays_in_event()])
+
+    result_dict = dict(Name = name)
+    result_dict.update(skills_dict)
+    result_dict.update(volunteers_in_roles_dict)
+
+    return pd.Series(result_dict)
+
+def role_and_group_string_for_day( volunteer_at_event: VolunteerAtEvent, day: Day,
+
+                               volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent,
+                              )-> str:
+
+    if not volunteer_at_event.available_on_day(day):
+        return "Unavailable"
+    else:
+        return str(
+        volunteers_in_roles_at_event.member_matching_volunteer_id_and_day(volunteer_id=volunteer_at_event.volunteer_id,
+                                                                                             day=day, return_empty_if_missing=True).role_and_group)

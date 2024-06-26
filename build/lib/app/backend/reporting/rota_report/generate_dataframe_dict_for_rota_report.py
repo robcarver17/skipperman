@@ -1,6 +1,7 @@
 from typing import Dict, List
 
 import pandas as pd
+from app.data_access.storage_layer.api import DataLayer
 
 from app.data_access.configuration.configuration import RIVER_SAFETY, LAKE_SAFETY
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -17,9 +18,9 @@ def get_df_for_reporting_volunteers_with_flags(
     event: Event,
     days_to_show: DaySelector,
         interface: abstractInterface,
-power_boats_only: bool = False
+power_boats_only: bool = False,
 ) -> Dict[str, pd.DataFrame]:
-    data_for_df = DataForDfConstruction.construct_for_event(event=event, interface=interface)
+    data_for_df = DataForDfConstruction.construct_for_event(event=event, data_layer=interface.data)
     list_of_days = days_to_show.align_with_list_of_days(event.weekdays_in_event())
     dict_of_df = {}
     for day in list_of_days:
@@ -28,7 +29,8 @@ power_boats_only: bool = False
         if len(df_for_reporting_volunteers_for_day) == 0:
             continue
 
-        df_for_reporting_volunteers_for_day= apply_sorts_and_transforms_to_df(df_for_reporting_volunteers_for_day=df_for_reporting_volunteers_for_day, data_for_df=data_for_df, power_boats_only=power_boats_only)
+        df_for_reporting_volunteers_for_day= apply_sorts_and_transforms_to_df(df_for_reporting_volunteers_for_day=df_for_reporting_volunteers_for_day,
+                                                                              data_for_df=data_for_df, power_boats_only=power_boats_only)
         dict_of_df[day_name] = df_for_reporting_volunteers_for_day
 
     return dict_of_df

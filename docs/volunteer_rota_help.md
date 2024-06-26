@@ -31,6 +31,42 @@ Each row shows a volunteer who has been imported to the event automatically. You
 - For each day the role they are doing, and the buttons you can use to give them roles.
 - Notes and other information from registration
 
+# Typical workflow
+
+A typical workflow for a training weekend would be: 
+
+- allocate instructors (DI, RCL and AI)
+- allocate rescue boat drivers
+- allocate other key people, eg ramp spotters and welfare people
+- allocate lake helpers
+- allocate ramp including ramp lead, and rescue crew
+
+This would be broadly similar for a racing weekend (although the rota here tends to be a bit ad hoc on the day):
+
+- allocate lead positions: Race officer, Ramp lead
+- allocate bridge (as advised by race officer) 
+- allocate instructors (DI, RCL and AI)
+- allocate rescue boat drivers
+- allocate ramp
+
+For Cadet Week we'd do things slightly differently:
+
+- allocate lead positions: Race officer, Ramp lead, Safety lead, Galley lead, SI
+- allocate Bridge (based on a list provided by the race officer and/or what people have put on their form)
+- allocate instructors (DI, RCL and AI)
+- allocate rescue boat drivers
+- allocate Galley in co-ordination with Galley lead
+- allocate other key people, eg ramp spotters and welfare people
+- allocate lake helpers
+- allocate ramp and rescue crew
+
+Given the workflow above it can be useful to see what kinds of volunteers are available with a given skills, and which haven't yet been allocated. You can use [skills filtering](#skills-filtering) and [allocation/available filtering](#availabilty--allocation-filtering) to do this.
+
+- for instructors: filter to see only AI, DI and RCL2
+- for safety boat drivers: filter to see only those with PB2, and filter for unallocated and available (so it excludes the rescue boat drivers)
+
+At each stage it can also be useful to share the list of volunteers with others, the easiest way of doing this is to click the 'Download spreadsheet of volunteer information', which will give you detailed information on who is available with what skill, given the filtering you have already done.
+
 # Allocating roles and groups
 
 ## Giving someone a role
@@ -313,4 +349,4 @@ You can delete the connection, or add a new one by choosing from the dropdown li
 - You can see more information about the previous roles a volunteer performed by clicking on their name; click cancel to go back.
 - The 'other information' from registration column on the far right can be useful if volunteers have told you about their availability in more detail.
 - You can enter notes about the volunteer in the notes column; typically this would be around issues or finer preferences on roles, or availability constraints not captured by just which day they are around. Remember under GDPR they have the right to see them, so be careful!
-
+- Click on 'download spreadsheet of volunteer information' in the navigation bar to get a spreadsheet version of what you can see on the screen; useful for sharing with other people without a full on report.

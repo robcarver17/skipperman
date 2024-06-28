@@ -38,7 +38,7 @@ class CadetWithIdCommitteeMember(GenericSkipperManObject):
             return "Current committee member"
 
 
-class ListOfCadetsWithIdOnCommittee(GenericListOfObjects[CadetWithIdCommitteeMember]):
+class ListOfCadetsWithIdOnCommittee(GenericListOfObjects):
     @property
     def _object_class_contained(self):
         return CadetWithIdCommitteeMember

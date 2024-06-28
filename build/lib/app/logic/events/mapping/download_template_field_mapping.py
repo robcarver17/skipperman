@@ -1,14 +1,22 @@
 from typing import Union
-from app.backend.wa_import.map_wa_fields import DEPRECATE_get_list_of_template_names, get_template, \
-    write_mapping_to_temp_csv_file_and_return_filename
+from app.backend.wa_import.map_wa_fields import (
+    DEPRECATE_get_list_of_template_names,
+    get_template,
+    write_mapping_to_temp_csv_file_and_return_filename,
+)
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import (
     Form,
-    File, NewForm, )
+    File,
+    NewForm,
+)
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button,get_nav_bar_with_just_cancel_button
+from app.objects.abstract_objects.abstract_buttons import (
+    CANCEL_BUTTON_LABEL,
+    Button,
+    get_nav_bar_with_just_cancel_button,
+)
 from app.logic.abstract_logic_api import initial_state_form
-
 
 
 def display_form_for_download_template_field_mapping(interface: abstractInterface):
@@ -27,6 +35,7 @@ def display_form_for_download_template_field_mapping(interface: abstractInterfac
         )
 
     return Form(contents_of_form)
+
 
 def post_form_for_download_template_field_mapping(
     interface: abstractInterface,
@@ -48,8 +57,11 @@ def post_form_for_download_template_field_mapping(
     filename = write_mapping_to_temp_csv_file_and_return_filename(mapping)
     return File(filename)
 
+
 def previous_form(interface: abstractInterface):
-    return interface.get_new_display_form_for_parent_of_function(display_form_for_download_template_field_mapping)
+    return interface.get_new_display_form_for_parent_of_function(
+        display_form_for_download_template_field_mapping
+    )
 
 
 ## repeats but avoids circular

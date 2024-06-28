@@ -7,6 +7,8 @@ import numpy as np
 from app.objects.utils import in_x_not_in_y
 
 MARK_AS_DELETE = -9999
+
+
 @dataclass
 class IndicesToSwap:
     idx1: int
@@ -18,7 +20,7 @@ class IndicesToSwap:
 
     @property
     def is_delete_index(self):
-        return self.idx1==MARK_AS_DELETE
+        return self.idx1 == MARK_AS_DELETE
 
     def index_to_delete(self):
         assert self.is_delete_index
@@ -27,17 +29,16 @@ class IndicesToSwap:
 
 class GenericArrangement(list):
     @classmethod
-    def from_str(cls, the_string:str):
+    def from_str(cls, the_string: str):
         return cls(eval(the_string))
 
     def as_str(self):
         return str(self)
 
-
     def remove_empty_elements(self):
         while True:
-            empty = [i for i in range(len(self)) if len(self[i])==0]
-            if len(empty)==0:
+            empty = [i for i in range(len(self)) if len(self[i]) == 0]
+            if len(empty) == 0:
                 return
             self.pop(empty[0])
 
@@ -45,12 +46,9 @@ class GenericArrangement(list):
         arrangement = copy(self)
         return np.matrix(arrangement)
 
-
     @classmethod
     def from_matrix(cls, matrix: np.matrix):
         return cls(matrix.tolist())
-
-
 
 
 class ArrangementOfRows(GenericArrangement):
@@ -66,8 +64,11 @@ class Position:
 
 EMPTY = -1
 
+
 class ArrangementOfColumns(GenericArrangement):
-    def add_extra_items_from_other_arrangement(self, other_arrangement: 'ArrangementOfColumns'):
+    def add_extra_items_from_other_arrangement(
+        self, other_arrangement: "ArrangementOfColumns"
+    ):
         items_in_self = self.items_in_self()
         items_in_other = other_arrangement.items_in_self()
 
@@ -120,10 +121,10 @@ class ArrangementOfColumns(GenericArrangement):
             column = self[i]
             for j in range(len(column)):
                 cell = self[i][j]
-                if cell<value:
+                if cell < value:
                     continue
                 ## can't be equal so must be higher
-                cell= cell- 1
+                cell = cell - 1
                 self[i][j] = cell
 
     def left(self, value):
@@ -175,22 +176,20 @@ class ArrangementOfColumns(GenericArrangement):
             self.pop(position.column)
 
     def insert_value_at_top_left(self, value):
-        if len(self)==0:
-            self.insert(0,[value])
+        if len(self) == 0:
+            self.insert(0, [value])
             return
 
         self.insert_value_in_new_column(value, 0, 0)
 
-
     def insert_value_at_bottom_right(self, value):
-        if len(self)==0:
-            self.insert(0,[value])
+        if len(self) == 0:
+            self.insert(0, [value])
             return
 
         last_column_idx = -1
         last_column_length = len(self[last_column_idx])
         self.insert_value_in_new_column(value, last_column_idx, last_column_length)
-
 
     def insert_value_in_new_column(self, value, new_column_idx, row_idx):
         current_column = self[new_column_idx]
@@ -217,9 +216,9 @@ class ArrangementOfColumns(GenericArrangement):
         return ArrangementOfRows.from_matrix(padded.as_matrix().transpose())
 
     def items_in_self(self):
-        all_items =[]
+        all_items = []
         for column in self:
-            all_items+=column
+            all_items += column
 
         return list(set(all_items))
 
@@ -231,7 +230,6 @@ class ArrangementOfColumns(GenericArrangement):
         return len(self[columnidx]) - 1
 
 
-
 def pad_columns_to_square(arrangement: ArrangementOfColumns):
     max_column_length = max(len(column) for column in arrangement)
     new_arrangement = []
@@ -240,5 +238,3 @@ def pad_columns_to_square(arrangement: ArrangementOfColumns):
         new_arrangement.append(column + add_items)
 
     return ArrangementOfColumns(new_arrangement)
-
-

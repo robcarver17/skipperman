@@ -12,8 +12,10 @@ app/backend/events.py
 app/backend/food.py
 app/backend/../data_access/configuration/configuration.yaml
 app/backend/data/__init__.py
-app/backend/data/cadets.py
+app/backend/data/cadet_committee.py
 app/backend/data/cadets_at_event.py
+app/backend/data/cadets_at_event_id_level.py
+app/backend/data/cadets_at_id_level.py
 app/backend/data/clothing.py
 app/backend/data/data_for_event.py
 app/backend/data/dinghies.py
@@ -105,6 +107,7 @@ app/backend/reporting/rota_report/teams.py
 app/backend/reporting/rota_report/../../../data_access/configuration/configuration.yaml
 app/backend/ticks_and_qualifications/__init__.py
 app/backend/ticks_and_qualifications/create_ticksheets.py
+app/backend/ticks_and_qualifications/edit_qualifications.py
 app/backend/ticks_and_qualifications/qualifications.py
 app/backend/ticks_and_qualifications/ticksheets.py
 app/backend/ticks_and_qualifications/../../data_access/configuration/configuration.yaml
@@ -209,11 +212,11 @@ app/logic/administration/users/../../../data_access/configuration/configuration.
 app/logic/cadets/ENTRY_view_cadets.py
 app/logic/cadets/__init__.py
 app/logic/cadets/add_cadet.py
+app/logic/cadets/add_edit_cadet_form.py
 app/logic/cadets/cadet_committee.py
 app/logic/cadets/cadet_function_mapping.py
-app/logic/cadets/cadet_state_storage.py
-app/logic/cadets/delete_cadet.py
 app/logic/cadets/edit_cadet.py
+app/logic/cadets/get_or_select_cadet_forms.py
 app/logic/cadets/import_cadets.py
 app/logic/cadets/iterate_over_import_cadets_in_uploaded_file.py
 app/logic/cadets/view_individual_cadets.py
@@ -225,8 +228,13 @@ app/logic/configuration/club_dinghies.py
 app/logic/configuration/config_function_mapping.py
 app/logic/configuration/generic_list_modifier.py
 app/logic/configuration/patrol_boats.py
-app/logic/configuration/qualifications.py
 app/logic/configuration/../../data_access/configuration/configuration.yaml
+app/logic/configuration/qualifications/__init__.py
+app/logic/configuration/qualifications/edit_qualifications_in_detail.py
+app/logic/configuration/qualifications/edit_qualifications_in_detail_form.py
+app/logic/configuration/qualifications/edit_qualifications_in_stage_parse.py
+app/logic/configuration/qualifications/qualifications.py
+app/logic/configuration/qualifications/../../../data_access/configuration/configuration.yaml
 app/logic/events/ENTRY_view_events.py
 app/logic/events/__init__.py
 app/logic/events/add_event.py
@@ -236,7 +244,6 @@ app/logic/events/events_in_state.py
 app/logic/events/view_individual_events.py
 app/logic/events/../../data_access/configuration/configuration.yaml
 app/logic/events/cadets_at_event/__init__.py
-app/logic/events/cadets_at_event/get_or_select_cadet_forms.py
 app/logic/events/cadets_at_event/interactively_update_records_of_cadets_at_event.py
 app/logic/events/cadets_at_event/iteratively_add_cadet_ids_in_wa_import_stage.py
 app/logic/events/cadets_at_event/track_cadet_id_in_state_when_importing.py
@@ -331,7 +338,6 @@ app/logic/instructors/parse_macro_buttons_in_ticksheets.py
 app/logic/instructors/parse_ticksheet_table.py
 app/logic/instructors/print_ticksheet.py
 app/logic/instructors/render_ticksheet_table.py
-app/logic/instructors/state_storage.py
 app/logic/instructors/ticksheet_table_elements.py
 app/logic/instructors/../../data_access/configuration/configuration.yaml
 app/logic/reporting/ENTRY_view_list_of_reports.py
@@ -382,6 +388,10 @@ app/logic/reporting/shared/print_options.py
 app/logic/reporting/shared/report_generator.py
 app/logic/reporting/shared/reporting_options.py
 app/logic/reporting/shared/../../../data_access/configuration/configuration.yaml
+app/logic/shared/__init__.py
+app/logic/shared/cadet_state_storage.py
+app/logic/shared/qualification_and_tick_state_storage.py
+app/logic/shared/../../data_access/configuration/configuration.yaml
 app/logic/utilities/ENTRY_utilities_menu.py
 app/logic/utilities/__init__.py
 app/logic/utilities/utilities_function_mapping.py
@@ -417,6 +427,7 @@ app/logic/volunteers/volunteer_state.py
 app/logic/volunteers/../../data_access/configuration/configuration.yaml
 app/objects/__init__.py
 app/objects/cadet_at_event.py
+app/objects/cadet_with_id_at_event.py
 app/objects/cadets.py
 app/objects/clothing.py
 app/objects/club_dinghies.py
@@ -428,6 +439,7 @@ app/objects/events.py
 app/objects/food.py
 app/objects/generic.py
 app/objects/groups.py
+app/objects/identified_cadets_at_event.py
 app/objects/mapped_wa_event.py
 app/objects/patrol_boats.py
 app/objects/person_with_food_at_event.py

@@ -4,7 +4,8 @@ from dataclasses import dataclass
 from typing import List
 
 from app.backend.reporting.process_stages.strings_columns_groups import (
-     Page, create_columns_from_page,
+    Page,
+    create_columns_from_page,
 )
 
 
@@ -29,7 +30,9 @@ class PossibleIndex:
         return len(self.items_yet_to_be_allocated) == 0
 
 
-def _generate_list_of_all_possible_indices(group_count: int) -> List[ArrangementOfColumns]:
+def _generate_list_of_all_possible_indices(
+    group_count: int,
+) -> List[ArrangementOfColumns]:
     generate_list = list(range(group_count))
     starting_list = [PossibleIndex(items_yet_to_be_allocated=generate_list)]
 
@@ -107,11 +110,9 @@ def _tracking_error_for_list_of_indices(
     page: Page,
     print_options: PrintOptions,
 ) -> float:
-    list_of_columns = (
-        create_columns_from_page(
-            page=page,
-            arrangement_of_columns=order_list_of_indices,
-        )
+    list_of_columns = create_columns_from_page(
+        page=page,
+        arrangement_of_columns=order_list_of_indices,
     )
 
     equalise_columns = print_options.equalise_column_width

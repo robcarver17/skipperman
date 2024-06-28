@@ -15,19 +15,23 @@ from app.objects.utils import (
     transform_datetime_into_str,
     transform_str_into_datetime,
     transform_str_or_datetime_into_date,
-    clean_up_dict_with_nans, clean_up_dict_with_weird_floats_for_id
+    clean_up_dict_with_nans,
+    clean_up_dict_with_weird_floats_for_id,
 )
 
 KEYS = "Keys"
 VALUES = "Values"
 
+
 class GenericSkipperManObject:
     def __eq__(self, other):
-        return self.__hash__()== other.__hash__()
+        return self.__hash__() == other.__hash__()
 
     def __hash__(self):
         list_of_attributes = get_list_of_attributes(self)
-        str_dict_repr = "_".join([str(getattr(self, key)) for key in list_of_attributes])
+        str_dict_repr = "_".join(
+            [str(getattr(self, key)) for key in list_of_attributes]
+        )
         return hash(str_dict_repr)
 
     @classmethod
@@ -37,19 +41,19 @@ class GenericSkipperManObject:
 
         return cls(**dict_of_nones)
 
-
-
     @classmethod
     def from_str(cls, object_as_str: str):
         as_list_of_str = object_as_str.split(",")
-        as_list_of_key_value_pairs = [key_value_as_str.split(":") for key_value_as_str in as_list_of_str]
-        as_dict = dict([(key,value) for key,value in as_list_of_key_value_pairs])
+        as_list_of_key_value_pairs = [
+            key_value_as_str.split(":") for key_value_as_str in as_list_of_str
+        ]
+        as_dict = dict([(key, value) for key, value in as_list_of_key_value_pairs])
 
         return cls.from_dict(as_dict)
 
-    def to_str(self)-> str:
+    def to_str(self) -> str:
         as_str_dict = self.as_str_dict()
-        as_list_of_str = ["%s:%s" % (key, value) for key,value in as_str_dict.items()]
+        as_list_of_str = ["%s:%s" % (key, value) for key, value in as_str_dict.items()]
 
         return ",".join(as_list_of_str)
 
@@ -120,7 +124,8 @@ def transform_class_instance_into_string(class_instance):
 TRUE = "TRUE_VALUE"
 FALSE = "FALSE_VALUE"
 
-def from_bool_to_str(class_instance:bool)-> str:
+
+def from_bool_to_str(class_instance: bool) -> str:
     if class_instance:
         return TRUE
     else:
@@ -154,8 +159,10 @@ def transform_string_into_class_instance(object_class, string):
     ## this will work for non strings eg floats
     return object_class(string)
 
-def from_str_to_bool(string: str)-> bool:
+
+def from_str_to_bool(string: str) -> bool:
     return string == TRUE
+
 
 class GenericListOfObjects(list):
     def __init__(self, list_of_objects: List[GenericSkipperManObject]):
@@ -163,7 +170,6 @@ class GenericListOfObjects(list):
 
     def __repr__(self):
         return str(self.to_df())
-
 
     @classmethod
     def create_empty(cls):
@@ -215,7 +221,9 @@ class GenericListOfObjectsWithIds(GenericListOfObjects):
     def subset_from_list_of_ids(
         cls, full_list: "GenericListOfObjectsWithIds", list_of_ids: List[str]
     ):
-        subset_list = [full_list.has_id(id) for id in full_list.list_of_ids if id in list_of_ids]
+        subset_list = [
+            full_list.has_id(id) for id in full_list.list_of_ids if id in list_of_ids
+        ]
 
         return cls(subset_list)
 
@@ -239,7 +247,6 @@ class GenericListOfObjectsWithIds(GenericListOfObjects):
     @property
     def list_of_ids(self) -> list:
         return [item.id for item in self]
-
 
     def next_id(self) -> str:
         if len(self) == 0:

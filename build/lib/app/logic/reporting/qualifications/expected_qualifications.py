@@ -4,7 +4,7 @@ from typing import Union
 import pandas as pd
 from app.logic.events.ENTRY_view_events import display_list_of_events_with_buttons
 
-from app.backend.data.cadets import CadetData
+from app.backend.data.cadets_at_id_level import CadetData
 
 from app.data_access.file_access import download_directory
 

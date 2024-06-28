@@ -2,8 +2,14 @@ from copy import copy
 from dataclasses import dataclass
 from typing import Union
 
-from app.backend.volunteers.volunteers import verify_volunteer_and_warn, add_new_verified_volunteer
-from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
+from app.backend.volunteers.volunteers import (
+    verify_volunteer_and_warn,
+    add_new_verified_volunteer,
+)
+from app.logic.abstract_logic_api import (
+    initial_state_form,
+    button_error_and_back_to_initial_state_form,
+)
 from app.objects.volunteers import Volunteer, default_volunteer
 
 from app.objects.abstract_objects.abstract_form import (
@@ -11,13 +17,25 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm,
     textInput,
 )
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar, cancel_menu_button
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-from app.objects.abstract_objects.abstract_interface import abstractInterface, form_with_message_and_finished_button
+from app.objects.abstract_objects.abstract_buttons import (
+    CANCEL_BUTTON_LABEL,
+    Button,
+    ButtonBar,
+    cancel_menu_button,
+)
+from app.objects.abstract_objects.abstract_lines import (
+    Line,
+    ListOfLines,
+    _______________,
+)
+from app.objects.abstract_objects.abstract_interface import (
+    abstractInterface,
+    form_with_message_and_finished_button,
+)
 from app.logic.volunteers.constants import *
 
-def display_form_add_volunteer(    interface: abstractInterface
-) -> Form:
+
+def display_form_add_volunteer(interface: abstractInterface) -> Form:
     ## Called by logic API only once, subsequently we are responding to button presses
     return get_add_volunteer_form(interface=interface, first_time_displayed=True)
 
@@ -39,14 +57,21 @@ def post_form_add_volunteer(interface: abstractInterface) -> Union[Form, NewForm
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
+
 def previous_form(interface: abstractInterface):
-    return interface.get_new_display_form_for_parent_of_function(display_form_add_volunteer)
+    return interface.get_new_display_form_for_parent_of_function(
+        display_form_add_volunteer
+    )
 
 
-def get_add_volunteer_form(    interface: abstractInterface, first_time_displayed: bool = True) -> Form:
+def get_add_volunteer_form(
+    interface: abstractInterface, first_time_displayed: bool = True
+) -> Form:
     if first_time_displayed:
         footer_buttons = get_footer_buttons_for_add_volunteer_form(form_is_empty=True)
-        return get_add_volunteer_form_with_information_passed(footer_buttons=footer_buttons)
+        return get_add_volunteer_form_with_information_passed(
+            footer_buttons=footer_buttons
+        )
     else:
         volunteer_and_text = verify_form_with_volunteer_details(interface)
         form_is_empty = volunteer_and_text.is_default
@@ -73,13 +98,11 @@ default_volunteer_and_text = VolunteerAndVerificationText(
 )
 
 
-
 def get_add_volunteer_form_with_information_passed(
     footer_buttons: Union[Line, ListOfLines, ButtonBar],
     header_text: ListOfLines = "Add a new volunteer",
-    volunteer_and_text: VolunteerAndVerificationText = default_volunteer_and_text, ## if blank
+    volunteer_and_text: VolunteerAndVerificationText = default_volunteer_and_text,  ## if blank
 ) -> Form:
-
     form_fields = form_fields_for_add_volunteer(volunteer_and_text.volunteer)
 
     list_of_lines_inside_form = ListOfLines(
@@ -114,15 +137,16 @@ def verify_form_with_volunteer_details(
 ) -> VolunteerAndVerificationText:
     try:
         volunteer = get_volunteer_from_form(interface)
-        verify_text = verify_volunteer_and_warn(interface=interface, volunteer=volunteer)
+        verify_text = verify_volunteer_and_warn(
+            interface=interface, volunteer=volunteer
+        )
     except Exception as e:
         volunteer = copy(default)
-        verify_text = (
-            "Doesn't appear to be a valid volunteer error code %s"
-            % str(e)
-        )
+        verify_text = "Doesn't appear to be a valid volunteer error code %s" % str(e)
 
-    return VolunteerAndVerificationText(volunteer=volunteer, verification_text=verify_text)
+    return VolunteerAndVerificationText(
+        volunteer=volunteer, verification_text=verify_text
+    )
 
 
 def get_volunteer_from_form(interface: abstractInterface) -> Volunteer:
@@ -145,8 +169,11 @@ def process_form_when_volunteer_verified(
         )
         return initial_state_form
 
-    return form_with_message_and_finished_button("Added volunteer %s" % str(volunteer), interface=interface,
-                                                 function_whose_parent_go_to_on_button_press=display_form_add_volunteer)
+    return form_with_message_and_finished_button(
+        "Added volunteer %s" % str(volunteer),
+        interface=interface,
+        function_whose_parent_go_to_on_button_press=display_form_add_volunteer,
+    )
 
 
 def add_volunteer_from_form_to_data(interface) -> Volunteer:
@@ -165,6 +192,3 @@ def get_footer_buttons_for_add_volunteer_form(form_is_empty: bool) -> ButtonBar:
         return ButtonBar([cancel_menu_button, check_submit])
     else:
         return ButtonBar([cancel_menu_button, check_submit, final_submit])
-
-
-

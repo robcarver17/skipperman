@@ -75,6 +75,7 @@ def save_staged_file_of_raw_event_upload_with_event_id(
 def get_staged_file_raw_event_filename(event_id: str):
     return os.path.join(upload_directory, "raw_event_%s" % event_id)
 
+
 def get_staged_adhoc_filename(adhoc_name: str):
     return os.path.join(upload_directory, "_%s" % adhoc_name)
 
@@ -113,5 +114,3 @@ def check_local_file_is_valid_wa_file(new_filename: str):
 
 
 WA_FILE = "file"
-
-

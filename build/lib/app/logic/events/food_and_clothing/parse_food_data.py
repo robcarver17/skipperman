@@ -3,7 +3,7 @@ from app.objects.abstract_objects.abstract_form import File
 
 from app.objects.events import Event
 
-from app.backend.cadets import get_cadet_from_id
+from app.backend.cadets import DEPRECATE_get_cadet_from_id
 
 from app.backend.food import update_cadet_food_data, update_volunteer_food_data, download_food_data_and_return_filename
 from app.objects.food import CadetWithFoodRequirementsAtEvent, FoodRequirements, VolunteerWithFoodRequirementsAtEvent
@@ -54,7 +54,7 @@ def update_cadet_food_data_if_changed(interface: abstractInterface, existing_cad
     try:
         update_cadet_food_data(interface=interface, cadet_id=existing_cadet_with_food.cadet_id, new_food_requirements=new_food_requirements, event=event)
     except Exception as e:
-        cadet = get_cadet_from_id(interface=interface, cadet_id=existing_cadet_with_food.cadet_id)
+        cadet = DEPRECATE_get_cadet_from_id(interface=interface, cadet_id=existing_cadet_with_food.cadet_id)
         interface.log_error("Couldn't update food_report for cadet %s, error %s" % (str(cadet), str(e)))
 
 

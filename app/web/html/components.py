@@ -73,24 +73,30 @@ html_header_wrapper = HtmlWrapper("<header>%s</header>")
 html_nav_wrapper = HtmlWrapper("<nav>%s</nav>")
 html_container_wrapper = HtmlWrapper('<div class="w3-container">%s</div>')
 
+
 def get_detail_wrapper(summary_text: str, open_detail: bool = False):
-    open_str = 'open="yes"' if open_detail else ''
-    return HtmlWrapper('<details '+open_str+'><summary>'+summary_text+'</summary>%s</details>')
+    open_str = 'open="yes"' if open_detail else ""
+    return HtmlWrapper(
+        "<details " + open_str + "><summary>" + summary_text + "</summary>%s</details>"
+    )
+
 
 html_bar_wrapper = HtmlWrapper('<div class="w3-bar w3-grey">%s</div>')
 
 html_h1_logo_wrapper = HtmlWrapper('<h1 class="logo">%s</h1>')
 
-html_title_wrapper = HtmlWrapper('<title>%s</title>')
+html_title_wrapper = HtmlWrapper("<title>%s</title>")
+
 
 ## Links
 def html_link(string: str, url: str, open_new_window: bool = False):
     if open_new_window:
         target = 'target = "_blank"'
     else:
-        target = ''
+        target = ""
 
     return Html('<a href="%s" %s>  %s</a>' % (url, target, string))
+
 
 def rel_stylesheet_link(url: str):
     return Html('<link rel="stylesheet" href="%s">' % (url))
@@ -114,89 +120,113 @@ def html_from_pandas_table(table: pd.DataFrame) -> Html:
     table.style
     return Html(table.to_html())
 
-html_table_wrappper = HtmlWrapper('<table class="w3-table w3-striped w3-bordered"> %s </table>')
-html_table_row_wrapper = HtmlWrapper('<tr >%s</tr>')
+
+html_table_wrappper = HtmlWrapper(
+    '<table class="w3-table w3-striped w3-bordered"> %s </table>'
+)
+html_table_row_wrapper = HtmlWrapper("<tr >%s</tr>")
 html_table_heading_row_wrapper = HtmlWrapper('<tr class="w3-theme">%s</tr>')
 html_table_element_wrapper = HtmlWrapper("<td>%s</td>")
-html_table_heading_wrapper = HtmlWrapper('<th>%s</th>')
+html_table_heading_wrapper = HtmlWrapper("<th>%s</th>")
+
 
 def get_html_for_heading(heading: Heading):
     if heading.centred:
         centring = 'class="w3-center"'
     else:
-        centring = ''
-    heading_size = 'h%d' % heading.size
+        centring = ""
+    heading_size = "h%d" % heading.size
     string = heading.text
 
     id_str = 'id = "%s"' % heading.href
-    heading_text = '<%s %s %s">%s</%s>' % (heading_size, centring, id_str, string, heading_size)
+    heading_text = '<%s %s %s">%s</%s>' % (
+        heading_size,
+        centring,
+        id_str,
+        string,
+        heading_size,
+    )
 
     return html_container_wrapper.wrap_around(heading_text)
 
 
-
 def get_html_image(image: Image, urls_of_interest: UrlsOfInterest):
     return html_image_given_components(
-        image_directory=urls_of_interest.image_directory,
-        image=image
+        image_directory=urls_of_interest.image_directory, image=image
     )
 
-def html_image_given_components( image_directory: str, image: Image):
-    passed_height_width= image.px_height_width is not arg_not_passed
+
+def html_image_given_components(image_directory: str, image: Image):
+    passed_height_width = image.px_height_width is not arg_not_passed
     passed_ratio_size = image.ratio_size is not arg_not_passed
 
     if passed_height_width and passed_ratio_size:
         print("Can't do both, choosing ratio")
         auto_width = image.ratio_size
-        size_str = 'style = "height: %d%% width: %d%%; object-fit: contain"' % (auto_width, auto_width)
+        size_str = 'style = "height: %d%% width: %d%%; object-fit: contain"' % (
+            auto_width,
+            auto_width,
+        )
     elif passed_ratio_size:
         auto_width = image.ratio_size
-        size_str = 'style = "height: %d%% width: %d%%; object-fit: contain"' % (auto_width, auto_width)
+        size_str = 'style = "height: %d%% width: %d%%; object-fit: contain"' % (
+            auto_width,
+            auto_width,
+        )
     elif passed_height_width:
         height = image.px_height_width[0]
         width = image.px_height_width[1]
         size_str = 'height = "%d" width = "%d" ' % (height, width)
     else:
-        size_str= ''
+        size_str = ""
 
-    source_string ='src="%s/%s"' %(image_directory, image.filename)
+    source_string = 'src="%s/%s"' % (image_directory, image.filename)
 
-    return '<img %s %s >' % (source_string, size_str)
+    return "<img %s %s >" % (source_string, size_str)
 
 
 HTML_BUTTON_NAME = "action"
 
 
+def html_action_option_button(button_text, url=""):
+    return generic_html_button(button_text=button_text, url=url, menu_tile=True)
 
-def html_action_option_button(button_text, url =''):
-    return generic_html_button(
-        button_text=button_text,
-        url=url,
-        menu_tile=True
 
+def help_link_button(
+    help_page_name: str, shortcut: str = "", from_main_menu: bool = False
+):
+    url = get_help_url(help_page_name)
+    if from_main_menu:
+        return generic_html_button(
+            "Help", shortcut=shortcut, url=url, open_new_window=True, nav_button=True
+        )
+    else:
+        return nav_button_with_link_to_avoid_weird_routing_issue(
+            "Help", url=url, open_new_window=True, shortcut=shortcut
+        )
+
+
+def html_for_main_menu_button(label, shortcut=""):
+    return nav_button_with_link_to_avoid_weird_routing_issue(
+        label, url=INDEX_URL, open_new_window=False, shortcut=shortcut
     )
 
 
-def help_link_button(help_page_name: str, shortcut: str='', from_main_menu: bool = False):
-    url = get_help_url(help_page_name)
-    if from_main_menu:
-        return generic_html_button("Help", shortcut=shortcut, url=url, open_new_window=True, nav_button=True)
-    else:
-        return nav_button_with_link_to_avoid_weird_routing_issue("Help", url=url, open_new_window=True, shortcut=shortcut)
-
-
-def html_for_main_menu_button(label, shortcut=''):
-    return nav_button_with_link_to_avoid_weird_routing_issue(label, url = INDEX_URL, open_new_window=False, shortcut=shortcut)
-
-
-def generic_html_button(button_text, button_value=arg_not_passed, big_button: bool = False, menu_tile = False, nav_button = False, url ='',
-                        open_new_window: bool = False, shortcut: str = arg_not_passed):
-
+def generic_html_button(
+    button_text,
+    button_value=arg_not_passed,
+    big_button: bool = False,
+    menu_tile=False,
+    nav_button=False,
+    url="",
+    open_new_window: bool = False,
+    shortcut: str = arg_not_passed,
+):
     button_name = HTML_BUTTON_NAME
     if button_value == arg_not_passed:
         button_value = button_text
     if big_button:
-        #size = 'style="font-size : 20px; width: 100%; height: 100px;"'
+        # size = 'style="font-size : 20px; width: 100%; height: 100px;"'
         size = 'style="font-size : 20px"'
     else:
         size = ""
@@ -206,15 +236,15 @@ def generic_html_button(button_text, button_value=arg_not_passed, big_button: bo
     elif nav_button:
         style_str = 'class = "w3-btn w3-dark-grey"'
     else:
-        style_str = ''
+        style_str = ""
 
     if shortcut is arg_not_passed:
-        shortcut_str = ''
+        shortcut_str = ""
     else:
         shortcut_str = 'accesskey="%s"' % shortcut
-        button_text = "%s [Alt-%s]" % (button_text,shortcut)
+        button_text = "%s [Alt-%s]" % (button_text, shortcut)
 
-    if url=='':
+    if url == "":
         html = Html(
             '<button %s name="%s" type="submit" value="%s" %s %s>%s</button>'
             % (style_str, button_name, button_value, size, shortcut_str, button_text)
@@ -223,25 +253,33 @@ def generic_html_button(button_text, button_value=arg_not_passed, big_button: bo
         if open_new_window:
             target = 'target = "_blank"'
         else:
-            target = ''
+            target = ""
 
-        html= Html( '<a  href="%s" %s> <button %s %s>%s</button>  </a>'  %  (url, target, style_str, shortcut_str, button_text))
+        html = Html(
+            '<a  href="%s" %s> <button %s %s>%s</button>  </a>'
+            % (url, target, style_str, shortcut_str, button_text)
+        )
     return html
 
-def nav_button_with_link_to_avoid_weird_routing_issue(button_text, url, open_new_window: bool = False, shortcut= arg_not_passed):
+
+def nav_button_with_link_to_avoid_weird_routing_issue(
+    button_text, url, open_new_window: bool = False, shortcut=arg_not_passed
+):
     ## Shouldn't really be required but button breaks for main menu
     if open_new_window:
         target = 'target = "_blank"'
     else:
-        target = ''
+        target = ""
 
     if shortcut is arg_not_passed:
-        shortcut_str = ''
+        shortcut_str = ""
     else:
         shortcut_str = 'accesskey="%s"' % shortcut
-        button_text = "%s [Alt-%s]" % (button_text,shortcut)
+        button_text = "%s [Alt-%s]" % (button_text, shortcut)
 
-
-    return Html("""
+    return Html(
+        """
     '<a class = "w3-btn w3-dark-grey"  href="%s" %s %s> %s </a>' 
-    """ % (url, target, shortcut_str, button_text))
+    """
+        % (url, target, shortcut_str, button_text)
+    )

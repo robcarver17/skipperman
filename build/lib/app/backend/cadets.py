@@ -1,19 +1,25 @@
 import datetime
 from copy import copy
-from dataclasses import dataclass
-from typing import List
+from typing import Tuple
+
+from app.backend.data.cadet_committee import CadetCommitteeData
+from app.data_access.configuration.fixed import (
+    MONTH_WHEN_CADET_AGE_BRACKET_BEGINS,
+    MONTH_WHEN_NEW_COMMITTEE_YEAR_BEGINS,
+    YEARS_ON_CADET_COMMITTEE,
+)
+from app.data_access.storage_layer.api import DataLayer
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.cadets import CadetData, SORT_BY_DOB_DSC, SORT_BY_DOB_ASC
-from app.data_access.configuration.configuration import MIN_CADET_AGE, MAX_CADET_AGE
+from app.backend.data.cadets_at_id_level import CadetData
 from app.objects.cadets import Cadet, ListOfCadets, is_cadet_age_surprising
-from app.objects.committee import CadetCommitteeMember
+from app.objects.committee import ListOfCadetsOnCommittee
 from app.objects.constants import arg_not_passed, missing_data
 
 
-def add_new_verified_cadet(interface: abstractInterface, cadet: Cadet) -> Cadet:
-    cadet_data = CadetData(interface.data)
+def add_new_verified_cadet(data_layer: DataLayer, cadet: Cadet) -> Cadet:
+    cadet_data = CadetData(data_layer)
     cadet_data.add_cadet(cadet)
 
     return cadet
@@ -24,11 +30,18 @@ def confirm_cadet_exists(interface: abstractInterface, cadet_selected: str):
     cadet_data.confirm_cadet_exists(cadet_selected)
 
 
-def get_list_of_cadets_as_str_similar_to_name_first(object_with_name, from_list_of_cadets: ListOfCadets) -> list:
-    list_of_cadets_similar_to_first = get_list_of_cadets_similar_to_name_first(object_with_name, from_list_of_cadets=from_list_of_cadets)
+def get_list_of_cadets_as_str_similar_to_name_first(
+    object_with_name, from_list_of_cadets: ListOfCadets
+) -> list:
+    list_of_cadets_similar_to_first = get_list_of_cadets_similar_to_name_first(
+        object_with_name, from_list_of_cadets=from_list_of_cadets
+    )
     return [str(cadet) for cadet in list_of_cadets_similar_to_first]
 
-def get_list_of_cadets_similar_to_name_first(object_with_name, from_list_of_cadets: ListOfCadets) -> ListOfCadets:
+
+def get_list_of_cadets_similar_to_name_first(
+    object_with_name, from_list_of_cadets: ListOfCadets
+) -> ListOfCadets:
     list_of_cadets = copy(from_list_of_cadets)
 
     similar_cadets = list_of_cadets.similar_surnames(object_with_name)
@@ -39,23 +52,34 @@ def get_list_of_cadets_similar_to_name_first(object_with_name, from_list_of_cade
         ## avoid double counting
         first_lot.append(list_of_cadets.pop_with_id(cadet.id))
 
-    return ListOfCadets(first_lot+list_of_cadets)
+    return ListOfCadets(first_lot + list_of_cadets)
 
-def get_cadet_from_id(interface: abstractInterface, cadet_id: str) -> Cadet:
-    list_of_cadets = load_list_of_all_cadets(interface)
+
+def DEPRECATE_get_cadet_from_id(interface: abstractInterface, cadet_id: str) -> Cadet:
+    list_of_cadets = DEPRECATE_load_list_of_all_cadets(interface)
 
     return list_of_cadets.object_with_id(cadet_id)
 
 
-
-def get_cadet_from_list_of_cadets(interface: abstractInterface, cadet_selected: str) -> Cadet:
+def DEPRECATE_get_cadet_given_cadet_as_str(
+    interface: abstractInterface, cadet_selected: str
+) -> Cadet:
     cadet_data = CadetData(interface.data)
     cadet = cadet_data.get_cadet_from_list_of_cadets_given_str_of_cadet(cadet_selected)
 
     return cadet
 
 
-def get_sorted_list_of_cadets(interface: abstractInterface, sort_by: str = arg_not_passed) -> ListOfCadets:
+def get_cadet_given_cadet_as_str(data_layer: DataLayer, cadet_as_str: str) -> Cadet:
+    cadet_data = CadetData(data_layer)
+    cadet = cadet_data.get_cadet_from_list_of_cadets_given_str_of_cadet(cadet_as_str)
+
+    return cadet
+
+
+def get_sorted_list_of_cadets(
+    interface: abstractInterface, sort_by: str = arg_not_passed
+) -> ListOfCadets:
     cadet_data = CadetData(interface.data)
     return cadet_data.get_sorted_list_of_cadets(sort_by)
 
@@ -68,25 +92,28 @@ def cadet_from_id_with_passed_list(
     return cadet
 
 
-
-
 def cadet_name_from_id(interface: abstractInterface, cadet_id: str) -> str:
-    cadet = cadet_from_id(interface=interface, cadet_id=cadet_id)
+    cadet = DEPRECATE_cadet_from_id_USE_get_cadet_from_id(
+        interface=interface, cadet_id=cadet_id
+    )
 
     return cadet.name
 
 
-def cadet_from_id(interface: abstractInterface, cadet_id: str) -> Cadet:
+def DEPRECATE_cadet_from_id_USE_get_cadet_from_id(
+    interface: abstractInterface, cadet_id: str
+) -> Cadet:
     cadet_data = CadetData(interface.data)
-    cadet = cadet_data.get_cadet_with_id_(cadet_id)
+    cadet = cadet_data.get_cadet_with_id(cadet_id)
 
     return cadet
 
 
+def get_cadet_from_id(data_layer: DataLayer, cadet_id: str) -> Cadet:
+    cadet_data = CadetData(data_layer)
+    cadet = cadet_data.get_cadet_with_id(cadet_id)
 
-LOWEST_FEASIBLE_CADET_AGE = MIN_CADET_AGE - 2
-HIGHEST_FEASIBLE_CADET_AGE = MAX_CADET_AGE + 20  ## might be backfilling
-
+    return cadet
 
 
 def verify_cadet_and_warn(interface: abstractInterface, cadet: Cadet) -> str:
@@ -134,105 +161,111 @@ def get_matching_cadet_with_id_or_missing_data(
     return matched_cadet_with_id
 
 
-def load_list_of_all_cadets(interface: abstractInterface) -> ListOfCadets:
+def DEPRECATE_load_list_of_all_cadets(interface: abstractInterface) -> ListOfCadets:
     cadet_data = CadetData(interface.data)
     return cadet_data.get_list_of_cadets()
 
 
-def modify_cadet(interface: abstractInterface, cadet_id: str, new_cadet: Cadet):
-    cadet_data = CadetData(interface.data)
+def load_list_of_all_cadets(data_layer: DataLayer) -> ListOfCadets:
+    cadet_data = CadetData(data_layer)
+    return cadet_data.get_list_of_cadets()
+
+
+def modify_cadet(data_layer: DataLayer, cadet_id: str, new_cadet: Cadet):
+    cadet_data = CadetData(data_layer)
     cadet_data.modify_cadet(cadet_id=cadet_id, new_cadet=new_cadet)
 
 
-def get_list_of_cadets_not_on_committee_ordered_by_age(interface: abstractInterface) -> ListOfCadets:
-    cadet_data = CadetData(interface.data)
-    all_cadets = get_sorted_list_of_cadets(interface=interface, sort_by=SORT_BY_DOB_ASC)
-    committee = cadet_data.get_list_of_cadets_on_committee()
-
-    list_of_cadets = ListOfCadets([cadet for cadet in all_cadets if cadet.id not in committee.list_of_cadet_ids()])
+def get_list_of_cadets_not_on_committee_ordered_by_age(
+    data_layer: DataLayer,
+) -> ListOfCadets:
+    cadet_data = CadetCommitteeData(data_layer)
+    list_of_cadets = cadet_data.get_list_of_cadets_not_on_committee_ordered_by_age()
 
     return list_of_cadets
 
-@dataclass
-class CadetOnCommitteeWithName:
-    cadet_on_committee: CadetCommitteeMember
-    cadet: Cadet
 
-    def __lt__(self, other):
-        if self.cadet_on_committee.status_string()<other.cadet_on_committee.status_string():
-            return True
-        elif self.cadet_on_committee.status_string()>other.cadet_on_committee.status_string():
-            return False
-
-        return self.cadet.name<other.cadet.name
-
-    @property
-    def cadet_id(self):
-        return self.cadet.id
-
-    @property
-    def deselected(self):
-        return self.cadet_on_committee.deselected
+def get_list_of_cadets_on_committee(data_layer: DataLayer) -> ListOfCadetsOnCommittee:
+    cadet_data = CadetCommitteeData(data_layer)
+    return cadet_data.get_list_of_cadets_on_committee()
 
 
-class ListOfCadetsOnCommitteeWithName(List[CadetOnCommitteeWithName]):
-    pass
+MIN_AGE_TO_JOIN_COMMITTEE = 16
+MAX_AGE_TO_JOIN_COMMITTEE = 17
 
-def get_list_of_cadets_with_names_on_committee(interface: abstractInterface) -> ListOfCadetsOnCommitteeWithName:
-    cadet_data = CadetData(interface.data)
+
+def get_list_of_cadets_not_on_committee_in_right_age_bracket(
+    data_layer: DataLayer, next_year_for_committee: int
+) -> ListOfCadets:
+    cadet_data = CadetData(data_layer)
     list_of_cadets = cadet_data.get_list_of_cadets()
-    list_of_committee_members = cadet_data.get_list_of_cadets_on_committee()
-    list_of_cadets_on_committee = [list_of_cadets.cadet_with_id(cadet_on_committee.cadet_id) for cadet_on_committee in list_of_committee_members]
+    list_of_committee_members = cadet_data.get_list_of_cadets_with_id_on_committee()
 
-    list_of_cadets_on_committee = ListOfCadetsOnCommitteeWithName(
+    earliest_date = datetime.date(
+        next_year_for_committee - MAX_AGE_TO_JOIN_COMMITTEE,
+        MONTH_WHEN_CADET_AGE_BRACKET_BEGINS,
+        1,
+    )
+    latest_date = datetime.date(
+        next_year_for_committee - MIN_AGE_TO_JOIN_COMMITTEE,
+        MONTH_WHEN_CADET_AGE_BRACKET_BEGINS,
+        1,
+    )
+
+    list_of_cadets = ListOfCadets(
         [
-            CadetOnCommitteeWithName(cadet=cadet, cadet_on_committee=cadet_on_committee)
-            for cadet, cadet_on_committee in zip(list_of_cadets_on_committee, list_of_committee_members)])
+            cadet
+            for cadet in list_of_cadets
+            if cadet.date_of_birth < latest_date
+            and cadet.date_of_birth >= earliest_date
+            and cadet.id not in list_of_committee_members.list_of_cadet_ids()
+        ]
+    )
 
-    list_of_cadets_on_committee.sort()
+    list_of_cadets = list_of_cadets.sort_by_dob_desc()
 
-    return list_of_cadets_on_committee
+    return list_of_cadets
 
-
-def get_list_of_cadets_not_on_committee_born_after_sept_first_in_year(interface: abstractInterface,
-                                                                      next_year_for_committee: int) -> ListOfCadets:
-
-    cadet_data = CadetData(interface.data)
-    list_of_cadets = cadet_data.get_list_of_cadets()
-    list_of_committee_members = cadet_data.get_list_of_cadets_on_committee()
-
-    list_of_cadets = [cadet for cadet in list_of_cadets if cadet.date_of_birth<datetime.date(next_year_for_committee-16,9,1)
-                        and cadet.date_of_birth>=datetime.date(next_year_for_committee-17, 9,1)
-                      and cadet.id not in list_of_committee_members.list_of_cadet_ids()]
-
-    return ListOfCadets(list_of_cadets).sort_by_dob_asc()
 
 def get_next_year_for_cadet_committee():
     today = datetime.date.today()
-    if today.month<9:
+    if today.month < MONTH_WHEN_CADET_AGE_BRACKET_BEGINS:
         return today.year
     else:
-        return today.year+1
+        return today.year + 1
 
 
-def add_new_cadet_to_committee(interface: abstractInterface, cadet: Cadet, date_term_start: datetime.date, date_term_end: datetime.date):
-    cadet_data = CadetData(interface.data)
-    cadet_data.elect_to_committee_with_dates(cadet=cadet,
-                                             date_term_end=date_term_end,
-                                             date_term_start=date_term_start
-                                             )
+def month_name_when_cadet_committee_age_bracket_begins():
+    return datetime.date(1990, MONTH_WHEN_CADET_AGE_BRACKET_BEGINS, 1).strftime("%B")
 
 
-def toggle_selection_for_cadet_committee_member(interface: abstractInterface, cadet_id: str):
-    cadet_data = CadetData(interface.data)
-    cadet = cadet_data.get_cadet_with_id_(cadet_id)
-    committee_members = cadet_data.get_list_of_cadets_on_committee()
-    specific_member = committee_members.cadet_committee_member_with_id(cadet_id)
-    if specific_member is missing_data:
-        interface.log_error("Cadet %s is not on committee so can't be selected / deselected" % cadet)
+def add_new_cadet_to_committee(
+    data_layer: DataLayer,
+    cadet: Cadet,
+    date_term_start: datetime.date,
+    date_term_end: datetime.date,
+):
+    cadet_data = CadetCommitteeData(data_layer)
+    cadet_data.elect_to_committee_with_dates(
+        cadet=cadet, date_term_end=date_term_end, date_term_start=date_term_start
+    )
 
-    currently_deselected = specific_member.deselected
-    if currently_deselected:
-        cadet_data.reselect_to_committee(cadet)
-    else:
-        cadet_data.deselect_from_committee(cadet)
+
+def toggle_selection_for_cadet_committee_member(data_layer: DataLayer, cadet: Cadet):
+    cadet_data = CadetCommitteeData(data_layer)
+    cadet_data.toggle_selection_for_cadet_committee_member(cadet)
+
+
+def start_and_end_date_on_cadet_commmittee() -> Tuple[datetime.date, datetime.date]:
+    start_date_on_committee = datetime.date(
+        day=1,
+        month=MONTH_WHEN_NEW_COMMITTEE_YEAR_BEGINS,
+        year=get_next_year_for_cadet_committee(),
+    )
+    end_date_on_committee = datetime.date(
+        day=1,
+        month=MONTH_WHEN_NEW_COMMITTEE_YEAR_BEGINS,
+        year=get_next_year_for_cadet_committee() + YEARS_ON_CADET_COMMITTEE,
+    )
+
+    return start_date_on_committee, end_date_on_committee

@@ -11,18 +11,28 @@ from app.objects.constants import (
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,
-    YES, NO, NewForm,
+    YES,
+    NO,
+    NewForm,
 )
 from app.objects.abstract_objects.abstract_buttons import FINISHED_BUTTON_LABEL, Button
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-from app.objects.abstract_objects.form_function_mapping import DisplayAndPostFormFunctionMaps
+from app.objects.abstract_objects.abstract_lines import (
+    Line,
+    ListOfLines,
+    _______________,
+)
+from app.objects.abstract_objects.form_function_mapping import (
+    DisplayAndPostFormFunctionMaps,
+)
 
 finished_button = Button(FINISHED_BUTTON_LABEL)
-DISPLAY="DISPFLAG_%s"
-SET= "1"
+DISPLAY = "DISPFLAG_%s"
+SET = "1"
 
-def finished_button_with_custom_label(label:str):
+
+def finished_button_with_custom_label(label: str):
     return Button(value=FINISHED_BUTTON_LABEL, label=label)
+
 
 @dataclass
 class abstractInterface:
@@ -55,7 +65,7 @@ class abstractInterface:
     def set_where_finished_button_should_lead_to(self, stage_name: str):
         self.set_persistent_value(FINISHED_BUTTON_LABEL, stage_name)
 
-    def get_where_finished_button_should_lead_to(self, default: str)-> str:
+    def get_where_finished_button_should_lead_to(self, default: str) -> str:
         return self.get_persistent_value(FINISHED_BUTTON_LABEL, default=default)
 
     def clear_where_finished_button_should_lead_to(self):
@@ -65,7 +75,7 @@ class abstractInterface:
         value = self.get_persistent_value(DISPLAY % flag_key, default=False)
         return value == SET
 
-    def set_display_flag(self, flag_key, set_to:bool):
+    def set_display_flag(self, flag_key, set_to: bool):
         key = DISPLAY % flag_key
         if set_to:
             self.set_persistent_value(key, SET)
@@ -79,11 +89,11 @@ class abstractInterface:
         self.persistent_store[key] = value
 
     def clear_persistent_value(self, key):
-        del(self.persistent_store[key])
+        del self.persistent_store[key]
 
     @property
     def persistent_store(self) -> dict:
-        store = getattr(self, '_store', None)
+        store = getattr(self, "_store", None)
         if store is None:
             store = dict()
             self._store = store
@@ -118,7 +128,9 @@ class abstractInterface:
     def value_from_form(self, key: str, value_is_date: bool = False):
         raise NotImplemented
 
-    def value_of_multiple_options_from_form(self, key: str, default=arg_not_passed) -> list:
+    def value_of_multiple_options_from_form(
+        self, key: str, default=arg_not_passed
+    ) -> list:
         raise NotImplemented
 
     def true_if_radio_was_yes(self, input_label: str) -> bool:
@@ -137,11 +149,15 @@ class abstractInterface:
         raise NoFileUploaded
 
     def get_new_form_given_function(self, func: Callable) -> NewForm:
-        form_name = self.display_and_post_form_function_maps.get_form_name_for_function(func)
+        form_name = self.display_and_post_form_function_maps.get_form_name_for_function(
+            func
+        )
         return NewForm(form_name)
 
     def get_new_display_form_for_parent_of_function(self, func: Callable) -> NewForm:
-        form_name = self.display_and_post_form_function_maps.get_display_form_name_for_parent_of_function(func)
+        form_name = self.display_and_post_form_function_maps.get_display_form_name_for_parent_of_function(
+            func
+        )
         return NewForm(form_name)
 
     def url_for_password_reset(self, username: str, new_password: str):
@@ -153,6 +169,7 @@ class abstractInterface:
     @property
     def read_only(self):
         raise NotImplemented
+
 
 def get_file_from_interface(file_label: str, interface: abstractInterface):
     try:
@@ -166,25 +183,34 @@ def get_file_from_interface(file_label: str, interface: abstractInterface):
     return file
 
 
-def form_with_message_and_finished_button(message: str, interface: abstractInterface, button: Button = finished_button,
-                                          function_whose_parent_go_to_on_button_press: Callable = arg_not_passed,
-                                          log_error: str = arg_not_passed, log_msg: str = arg_not_passed) -> Form:
+def form_with_message_and_finished_button(
+    message: str,
+    interface: abstractInterface,
+    button: Button = finished_button,
+    function_whose_parent_go_to_on_button_press: Callable = arg_not_passed,
+    log_error: str = arg_not_passed,
+    log_msg: str = arg_not_passed,
+) -> Form:
     if log_error is not arg_not_passed:
         interface.log_error(log_error)
     elif log_msg is not arg_not_passed:
         interface.log_error(log_msg)
 
     if function_whose_parent_go_to_on_button_press is not arg_not_passed:
-        stage_name= interface.get_new_display_form_for_parent_of_function(function_whose_parent_go_to_on_button_press)
+        stage_name = interface.get_new_display_form_for_parent_of_function(
+            function_whose_parent_go_to_on_button_press
+        )
         interface.set_where_finished_button_should_lead_to(stage_name.form_name)
     else:
         interface.clear_where_finished_button_should_lead_to()
 
-    return form_with_content_and_finished_button(content = Line(message), interface=interface, button=button)
+    return form_with_content_and_finished_button(
+        content=Line(message), interface=interface, button=button
+    )
+
 
 def form_with_content_and_finished_button(
-    content, interface: abstractInterface,
-        button: Button = finished_button
+    content, interface: abstractInterface, button: Button = finished_button
 ) -> Form:
     return Form(
         ListOfLines(

@@ -2,7 +2,7 @@ from typing import Union
 
 from app.backend.ticks_and_qualifications.ticksheets import get_list_of_groups_volunteer_id_can_see, \
     get_list_of_all_groups_at_event
-from app.logic.instructors.state_storage import update_state_for_group_name
+from app.logic.shared.qualification_and_tick_state_storage import update_state_for_group_name
 from app.objects.events import Event
 
 from app.backend.data.security import get_volunteer_id_of_logged_in_user_or_superuser
@@ -10,8 +10,8 @@ from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line, _______________
 
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button, BACK_BUTTON_LABEL, \
-    get_nav_bar_with_just_back_button, get_nav_bar_with_just_main_menu_and_back_button
+from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL, \
+    get_nav_bar_with_just_main_menu_and_back_button
 
 from app.logic.events.events_in_state import get_event_from_state
 

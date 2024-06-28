@@ -1,30 +1,41 @@
 from typing import Union
-from app.backend.cadets import  cadet_name_from_id
-from app.backend.wa_import.update_cadets_at_event import     \
-    no_important_difference_between_cadets_at_event, \
-    is_cadet_with_id_already_at_event, get_cadet_at_event_for_cadet_id, \
-    get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active, add_new_cadet_to_event
+from app.backend.cadets import cadet_name_from_id
+from app.backend.wa_import.update_cadets_at_event import (
+    no_important_difference_between_cadets_at_event,
+    is_cadet_with_id_already_at_event,
+    get_cadet_at_event_for_cadet_id,
+    get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active,
+    add_new_cadet_to_event,
+)
 
-from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing import \
-    get_and_save_next_cadet_id_in_event_data, clear_cadet_id_at_event
+from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing import (
+    get_and_save_next_cadet_id_in_event_data,
+    clear_cadet_id_at_event,
+)
 
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 from app.logic.events.constants import (
-    USE_ORIGINAL_DATA_BUTTON_LABEL, USE_NEW_DATA_BUTTON_LABEL,
-    USE_DATA_IN_FORM_BUTTON_LABEL
+    USE_ORIGINAL_DATA_BUTTON_LABEL,
+    USE_NEW_DATA_BUTTON_LABEL,
+    USE_DATA_IN_FORM_BUTTON_LABEL,
 )
 
 from app.logic.events.events_in_state import get_event_from_state
 
 from app.logic.events.cadets_at_event.update_existing_cadet_at_event_forms import (
-    display_form_for_update_to_existing_cadet_at_event
+    display_form_for_update_to_existing_cadet_at_event,
 )
-from app.logic.events.cadets_at_event.update_existing_cadet_at_event_from_form_entries import update_cadets_at_event_with_new_data, \
-    update_cadets_at_event_with_form_data
-from app.objects.cadet_at_event import CadetAtEvent, get_cadet_at_event_from_row_in_mapped_event
+from app.logic.events.cadets_at_event.update_existing_cadet_at_event_from_form_entries import (
+    update_cadets_at_event_with_new_data,
+    update_cadets_at_event_with_form_data,
+)
+from app.objects.cadet_with_id_at_event import (
+    CadetWithIdAtEvent,
+    get_cadet_at_event_from_row_in_mapped_event,
+)
 
 from app.objects.events import Event
 from app.objects.constants import NoMoreData, DuplicateCadets
@@ -41,10 +52,7 @@ def display_form_interactively_update_cadets_at_event(
     return process_next_cadet_at_event(interface)
 
 
-def process_next_cadet_at_event(
-    interface: abstractInterface
-) -> Union[Form, NewForm]:
-
+def process_next_cadet_at_event(interface: abstractInterface) -> Union[Form, NewForm]:
     print("Looping through updating delta data")
     event = get_event_from_state(interface)
 
@@ -62,13 +70,11 @@ def process_next_cadet_at_event(
     )
 
 
-
 def process_update_to_cadet_data(
     interface: abstractInterface, event: Event, cadet_id: str
 ) -> Form:
     cadet_already_at_event = is_cadet_with_id_already_at_event(
-        interface=interface,
-        event=event, cadet_id=cadet_id
+        interface=interface, event=event, cadet_id=cadet_id
     )
 
     print("STATUS: ID %s already at event %s" % (cadet_id, str(cadet_already_at_event)))
@@ -82,18 +88,17 @@ def process_update_to_cadet_data(
         )
 
 
-
 def process_update_to_cadet_new_to_event(
-        interface: abstractInterface, event: Event, cadet_id: str
+    interface: abstractInterface, event: Event, cadet_id: str
 ) -> Form:
-
     print("New row in master data for cadet with id %s" % cadet_id)
 
     try:
         relevant_row = get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
             interface=interface,
-            cadet_id=cadet_id, event=event,
-            raise_error_on_duplicate=True
+            cadet_id=cadet_id,
+            event=event,
+            raise_error_on_duplicate=True,
         )
     except DuplicateCadets:
         interface.log_error(
@@ -102,8 +107,9 @@ def process_update_to_cadet_new_to_event(
         )
         relevant_row = get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
             interface=interface,
-            cadet_id=cadet_id, event=event,
-            raise_error_on_duplicate=False ## try again this time allowing duplicates
+            cadet_id=cadet_id,
+            event=event,
+            raise_error_on_duplicate=False,  ## try again this time allowing duplicates
         )
     except NoMoreData:
         interface.log_error(
@@ -112,27 +118,26 @@ def process_update_to_cadet_new_to_event(
         )
         return process_next_cadet_at_event(interface)
 
-
     add_new_cadet_to_event(
         interface=interface,
-        event=event, row_in_mapped_wa_event=relevant_row,
-        cadet_id=cadet_id
+        event=event,
+        row_in_mapped_wa_event=relevant_row,
+        cadet_id=cadet_id,
     )
     interface.flush_cache_to_store()
 
     return process_next_cadet_at_event(interface)
 
 
-
 def process_update_to_existing_cadet_in_event_data(
     interface: abstractInterface, event: Event, cadet_id: str
 ) -> Form:
-
     try:
         relevant_row = get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
             interface=interface,
-            cadet_id=cadet_id, event=event,
-            raise_error_on_duplicate=True
+            cadet_id=cadet_id,
+            event=event,
+            raise_error_on_duplicate=True,
         )
     except DuplicateCadets:
         interface.log_error(
@@ -149,37 +154,32 @@ def process_update_to_existing_cadet_in_event_data(
         return process_next_cadet_at_event(interface)
 
     existing_cadet_at_event = get_cadet_at_event_for_cadet_id(
-        interface=interface,
-        event=event, cadet_id=cadet_id
+        interface=interface, event=event, cadet_id=cadet_id
     )
 
     return process_update_to_existing_cadet_at_event(
         interface=interface,
         row_in_mapped_wa_event=relevant_row,
-        existing_cadet_at_event =existing_cadet_at_event,
-        event=event
+        existing_cadet_at_event=existing_cadet_at_event,
+        event=event,
     )
-
-
 
 
 def process_update_to_existing_cadet_at_event(
     interface: abstractInterface,
     row_in_mapped_wa_event: RowInMappedWAEvent,
-    existing_cadet_at_event: CadetAtEvent,
-        event: Event
+    existing_cadet_at_event: CadetWithIdAtEvent,
+    event: Event,
 ) -> Form:
-    new_cadet_at_event = (
-        get_cadet_at_event_from_row_in_mapped_event(
-            row_in_mapped_wa_event=row_in_mapped_wa_event,
-            event=event,
-            cadet_id=existing_cadet_at_event.cadet_id
-        )
+    new_cadet_at_event = get_cadet_at_event_from_row_in_mapped_event(
+        row_in_mapped_wa_event=row_in_mapped_wa_event,
+        event=event,
+        cadet_id=existing_cadet_at_event.cadet_id,
     )
 
     if no_important_difference_between_cadets_at_event(
-        new_cadet_at_event = new_cadet_at_event,
-        existing_cadet_at_event=existing_cadet_at_event
+        new_cadet_at_event=new_cadet_at_event,
+        existing_cadet_at_event=existing_cadet_at_event,
     ):
         ## nothing to do
         return process_next_cadet_at_event(interface)
@@ -188,7 +188,8 @@ def process_update_to_existing_cadet_at_event(
             interface=interface,
             new_cadet_at_event=new_cadet_at_event,
             existing_cadet_at_event=existing_cadet_at_event,
-            event=event)
+            event=event,
+        )
 
 
 def post_form_interactively_update_cadets_at_event(
@@ -209,6 +210,7 @@ def post_form_interactively_update_cadets_at_event(
     return process_next_cadet_at_event(interface)
 
 
-def finished_looping_return_to_controller(interface: abstractInterface)-> NewForm:
-    return interface.get_new_display_form_for_parent_of_function(display_form_interactively_update_cadets_at_event)
-
+def finished_looping_return_to_controller(interface: abstractInterface) -> NewForm:
+    return interface.get_new_display_form_for_parent_of_function(
+        display_form_interactively_update_cadets_at_event
+    )

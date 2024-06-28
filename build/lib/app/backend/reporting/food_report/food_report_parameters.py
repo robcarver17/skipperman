@@ -15,7 +15,7 @@ ALL_TYPES = [CADET_FOOD, VOLUNTEER_FOOD, ADULT_FOOD, CHILD_FOOD]
 specific_parameters_for_food_report = SpecificParametersForTypeOfReport(
     group_by_column=FOOD_GROUP_TYPE,
     passed_group_order=ALL_TYPES,
-    report_type="Food required report"
+    report_type="Food required report",
 )
 
 
@@ -26,4 +26,3 @@ class AdditionalParametersForFoodReport:
     include_non_volunteer_adults: bool
     include_non_cadet_children: bool
     minimum_days_for_volunteer: int = 0
-    

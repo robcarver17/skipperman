@@ -7,7 +7,8 @@ from app.backend.group_allocations.cadet_event_allocations import \
 
 from app.objects.events import Event
 
-from app.backend.data.cadets_at_event import CadetsAtEventData, load_identified_cadets_at_event, load_cadets_at_event
+from app.backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData, load_cadets_at_event, \
+    load_identified_cadets_at_event
 from app.objects.mapped_wa_event import summarise_status
 from app.backend.data.mapped_events import load_mapped_wa_event
 from app.objects.utils import print_dict_nicely
@@ -35,7 +36,7 @@ def summarise_registrations_for_event(interface: abstractInterface, event: Event
 
 
 def identify_birthdays(interface: abstractInterface, event: Event) -> list:
-    cadets_at_event_data = CadetsAtEventData(interface.data)
+    cadets_at_event_data = CadetsAtEventIdLevelData(interface.data)
     active_cadets = cadets_at_event_data.list_of_active_cadets_at_event(event)
     dates_in_event = event.dates_in_event()
 

@@ -4,11 +4,12 @@ from app.data_access.storage_layer.api import DataLayer
 
 from app.objects.wa_event_mapping import ListOfWAEventMaps
 
-class EventMappingData():
+
+class EventMappingData:
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
 
-    def add_event(self, event_id: str, wa_id:str):
+    def add_event(self, event_id: str, wa_id: str):
         mapping_data = self.wa_mapping_data
         mapping_data.add_event(event_id=event_id, wa_id=wa_id)
         self.save_wa_mapping_data(mapping_data)
@@ -26,7 +27,7 @@ class EventMappingData():
         return self.wa_mapping_data.get_event_id_for_wa(wa_id)
 
     @property
-    def wa_mapping_data(self)-> ListOfWAEventMaps:
+    def wa_mapping_data(self) -> ListOfWAEventMaps:
         return self.data_api.get_wa_event_mapping()
 
     def save_wa_mapping_data(self, list_of_wa_event_maps: ListOfWAEventMaps):

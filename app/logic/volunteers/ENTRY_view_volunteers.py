@@ -1,35 +1,51 @@
 from typing import Union
 
 from app.logic.volunteers.add_volunteer import display_form_add_volunteer
-from app.logic.volunteers.view_individual_volunteer import display_form_view_individual_volunteer
+from app.logic.volunteers.view_individual_volunteer import (
+    display_form_view_individual_volunteer,
+)
 from app.objects.volunteers import Volunteer
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_buttons import main_menu_button, Button, ButtonBar
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
+from app.objects.abstract_objects.abstract_buttons import (
+    main_menu_button,
+    Button,
+    ButtonBar,
+)
+from app.objects.abstract_objects.abstract_lines import (
+    Line,
+    ListOfLines,
+    _______________,
+)
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.backend.data.volunteers import SORT_BY_SURNAME, SORT_BY_FIRSTNAME
 from app.backend.volunteers.volunteers import DEPRECATE_get_sorted_list_of_volunteers
-from app.logic.volunteers.volunteer_state import update_state_for_specific_volunteer_given_volunteer_as_str
+from app.logic.volunteers.volunteer_state import (
+    update_state_for_specific_volunteer_given_volunteer_as_str,
+)
 from app.logic.volunteers.constants import *
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 
 add_button = Button(ADD_VOLUNTEER_BUTTON_LABEL, nav_button=True)
 all_sort_types = [SORT_BY_SURNAME, SORT_BY_FIRSTNAME]
-sort_buttons = ButtonBar([Button(sort_by, nav_button=True) for sort_by in all_sort_types])
+sort_buttons = ButtonBar(
+    [Button(sort_by, nav_button=True) for sort_by in all_sort_types]
+)
 
 nav_buttons = ButtonBar([main_menu_button, add_button])
+
+
 def display_form_view_of_volunteers(interface: abstractInterface) -> Form:
     ## simple wrap function as display can only take interface
 
     return get_form_view_of_volunteers(interface=interface, sort_order=SORT_BY_SURNAME)
 
+
 def get_form_view_of_volunteers(interface: abstractInterface, sort_order: str) -> Form:
     list_of_volunteers_with_buttons = display_list_of_volunteers_with_buttons(
-        interface=interface,
-        sort_order=sort_order
+        interface=interface, sort_order=sort_order
     )
 
     form_contents = ListOfLines(
@@ -62,21 +78,29 @@ def post_form_view_of_volunteers(interface: abstractInterface) -> Union[Form, Ne
     else:  ## must be a volunteer redirect:
         return view_specific_volunteer_form(interface)
 
-def add_volunteer_form(interface:abstractInterface):
+
+def add_volunteer_form(interface: abstractInterface):
     return interface.get_new_form_given_function(display_form_add_volunteer)
 
-def view_specific_volunteer_form(interface:abstractInterface):
+
+def view_specific_volunteer_form(interface: abstractInterface):
     volunteer_selected = interface.last_button_pressed()
-    update_state_for_specific_volunteer_given_volunteer_as_str(interface=interface,
-                                                               volunteer_selected=volunteer_selected)
+    update_state_for_specific_volunteer_given_volunteer_as_str(
+        interface=interface, volunteer_selected=volunteer_selected
+    )
     return interface.get_new_form_given_function(display_form_view_individual_volunteer)
 
 
-def display_list_of_volunteers_with_buttons(interface: abstractInterface, sort_order=SORT_BY_SURNAME) -> Table:
-    list_of_volunteers = DEPRECATE_get_sorted_list_of_volunteers(interface=interface, sort_by=sort_order)
+def display_list_of_volunteers_with_buttons(
+    interface: abstractInterface, sort_order=SORT_BY_SURNAME
+) -> Table:
+    list_of_volunteers = DEPRECATE_get_sorted_list_of_volunteers(
+        interface=interface, sort_by=sort_order
+    )
 
     list_with_buttons = [
-        row_of_form_for_volunteer_with_buttons(volunteer) for volunteer in list_of_volunteers
+        row_of_form_for_volunteer_with_buttons(volunteer)
+        for volunteer in list_of_volunteers
     ]
 
     return Table(list_with_buttons)
@@ -84,7 +108,3 @@ def display_list_of_volunteers_with_buttons(interface: abstractInterface, sort_o
 
 def row_of_form_for_volunteer_with_buttons(volunteer: Volunteer) -> RowInTable:
     return RowInTable([Button(str(volunteer))])
-
-
-
-

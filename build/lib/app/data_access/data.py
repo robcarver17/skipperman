@@ -19,7 +19,11 @@ except:
 
 ## IF YOU WANT TO USE A DIFFERENT KIND OF DATA, EG DATABASE, CREATE AN API AND MODIFY THIS
 def make_data():
-    return CsvDataApi(master_data_path=master_data_path, user_data_path=user_data_path, backup_data_path=backup_data_path)
+    return CsvDataApi(
+        master_data_path=master_data_path,
+        user_data_path=user_data_path,
+        backup_data_path=backup_data_path,
+    )
 
 
 underling_data_api = make_data()

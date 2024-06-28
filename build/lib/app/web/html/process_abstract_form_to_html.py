@@ -1,37 +1,87 @@
 from typing import Union
-from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, HelpButton, ActionOptionButton, \
-    MainMenuNavButton
+from app.objects.abstract_objects.abstract_buttons import (
+    Button,
+    ButtonBar,
+    HelpButton,
+    ActionOptionButton,
+    MainMenuNavButton,
+)
 from app.objects.abstract_objects.abstract_form import *
-from app.objects.abstract_objects.abstract_tables import PandasDFTable, ElementsInTable, RowInTable, Table, DetailTable
-from app.objects.abstract_objects.abstract_text import Text, Arrow, up_arrow, down_arrow, \
-    right_arrow, left_arrow, up_down_arrow, left_right_arrow, Pointer, Symbol, reg_tm_symbol, copyright_symbol, \
-    up_pointer, down_pointer, left_pointer, right_pointer, lightning_symbol, circle_up_arrow_symbol, umbrella_symbol, \
-    at_symbol, outline_left_right_arrow
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, DetailListOfLines, DetailLine
+from app.objects.abstract_objects.abstract_tables import (
+    PandasDFTable,
+    ElementsInTable,
+    RowInTable,
+    Table,
+    DetailTable,
+)
+from app.objects.abstract_objects.abstract_text import (
+    Text,
+    Arrow,
+    up_arrow,
+    down_arrow,
+    right_arrow,
+    left_arrow,
+    up_down_arrow,
+    left_right_arrow,
+    Pointer,
+    Symbol,
+    reg_tm_symbol,
+    copyright_symbol,
+    up_pointer,
+    down_pointer,
+    left_pointer,
+    right_pointer,
+    lightning_symbol,
+    circle_up_arrow_symbol,
+    umbrella_symbol,
+    at_symbol,
+    outline_left_right_arrow,
+)
+from app.objects.abstract_objects.abstract_lines import (
+    Line,
+    ListOfLines,
+    DetailListOfLines,
+    DetailLine,
+)
 
 from app.web.html.components import *
-from app.web.html.components import generic_html_button, nav_button_with_link_to_avoid_weird_routing_issue
+from app.web.html.components import (
+    generic_html_button,
+    nav_button_with_link_to_avoid_weird_routing_issue,
+)
 from app.web.html.url import INDEX_URL
 from app.web.html.forms import *
-from app.objects.abstract_objects.abstract_form import textInput, dateInput, radioInput, checkboxInput
+from app.objects.abstract_objects.abstract_form import (
+    textInput,
+    dateInput,
+    radioInput,
+    checkboxInput,
+)
 
-DEBUG =False
+DEBUG = False
 TERSE = False
+
 
 def process_abstract_form_to_html(form: Form, urls_of_interest: UrlsOfInterest) -> Html:
     if TERSE:
         print("Abstract form %s" % str(form))
-    html_inside_form = process_abstract_objects_to_html(form, urls_of_interest=urls_of_interest)
+    html_inside_form = process_abstract_objects_to_html(
+        form, urls_of_interest=urls_of_interest
+    )
     current_url = urls_of_interest.current_url_for_action
     form = form_html_wrapper(current_url)
 
     return form.wrap_around(html_inside_form)
 
 
-def process_abstract_objects_to_html(list_of_abstract_objects, urls_of_interest: UrlsOfInterest) -> Html:
+def process_abstract_objects_to_html(
+    list_of_abstract_objects, urls_of_interest: UrlsOfInterest
+) -> Html:
     return_html = ""
     for element in list_of_abstract_objects:
-        html_this_element = get_html_for_element_in_form(element=element, urls_of_interest=urls_of_interest)
+        html_this_element = get_html_for_element_in_form(
+            element=element, urls_of_interest=urls_of_interest
+        )
         return_html = return_html + html_this_element
 
     return return_html
@@ -42,55 +92,82 @@ def get_html_for_element_in_form(element, urls_of_interest: UrlsOfInterest) -> H
         print("parsing %s type %s" % (str(element), type(element)))
     if type(element) is Line:
         ## non-nested, treat as line
-        html_this_element = get_html_for_line(line=element, urls_of_interest=urls_of_interest)
+        html_this_element = get_html_for_line(
+            line=element, urls_of_interest=urls_of_interest
+        )
     elif type(element) is ListOfLines:
-        html_this_element = get_html_for_list_of_lines(list_of_lines=element, urls_of_interest=urls_of_interest)
+        html_this_element = get_html_for_list_of_lines(
+            list_of_lines=element, urls_of_interest=urls_of_interest
+        )
     elif type(element) is DetailListOfLines:
-        html_this_element = get_html_for_detail_list_of_lines(list_of_lines=element, urls_of_interest=urls_of_interest)
+        html_this_element = get_html_for_detail_list_of_lines(
+            list_of_lines=element, urls_of_interest=urls_of_interest
+        )
     elif type(element) is DetailTable:
         html_this_element = get_html_for_detail_table(element)
     elif type(element) is ButtonBar:
-        html_this_element = html_bar_wrapper.wrap_around(get_html_for_line(element, urls_of_interest=urls_of_interest))
+        html_this_element = html_bar_wrapper.wrap_around(
+            get_html_for_line(element, urls_of_interest=urls_of_interest)
+        )
     else:
         ## Single line
-        html_this_element = get_html_for_element_in_line(element, urls_of_interest=urls_of_interest)
-
+        html_this_element = get_html_for_element_in_line(
+            element, urls_of_interest=urls_of_interest
+        )
 
     return html_this_element
 
 
-def get_html_for_list_of_lines(list_of_lines: ListOfLines, urls_of_interest: UrlsOfInterest = arg_not_passed) -> Html:
+def get_html_for_list_of_lines(
+    list_of_lines: ListOfLines, urls_of_interest: UrlsOfInterest = arg_not_passed
+) -> Html:
     list_of_html_for_each_lines = [
-        get_html_for_element_in_form(line, urls_of_interest=urls_of_interest) for line in list_of_lines
+        get_html_for_element_in_form(line, urls_of_interest=urls_of_interest)
+        for line in list_of_lines
     ]
     all_html = " ".join(list_of_html_for_each_lines)
     return html_container_wrapper.wrap_around(all_html)
 
-def get_html_for_detail_list_of_lines(list_of_lines: DetailListOfLines, urls_of_interest: UrlsOfInterest) -> Html:
+
+def get_html_for_detail_list_of_lines(
+    list_of_lines: DetailListOfLines, urls_of_interest: UrlsOfInterest
+) -> Html:
     list_of_html_for_each_lines = [
-        get_html_for_element_in_form(line, urls_of_interest=urls_of_interest) for line in list_of_lines.list_of_lines
+        get_html_for_element_in_form(line, urls_of_interest=urls_of_interest)
+        for line in list_of_lines.list_of_lines
     ]
     all_html = " ".join(list_of_html_for_each_lines)
-    detail_wrapper =get_detail_wrapper(list_of_lines.name, open_detail=list_of_lines.open)
+    detail_wrapper = get_detail_wrapper(
+        list_of_lines.name, open_detail=list_of_lines.open
+    )
     return detail_wrapper.wrap_around(all_html)
+
 
 def get_html_for_detail_line(line: DetailLine) -> Html:
     line_html = line.string
-    detail_wrapper =get_detail_wrapper(line.name, open_detail=line.open)
+    detail_wrapper = get_detail_wrapper(line.name, open_detail=line.open)
     return detail_wrapper.wrap_around(line_html)
+
 
 def get_html_for_detail_table(detail_table: DetailTable) -> Html:
     table_html = get_html_for_table(detail_table.table)
-    detail_wrapper =get_detail_wrapper(detail_table.name, open_detail=detail_table.open)
+    detail_wrapper = get_detail_wrapper(
+        detail_table.name, open_detail=detail_table.open
+    )
 
     return detail_wrapper.wrap_around(table_html)
 
-def get_html_for_line(line: Line, urls_of_interest: UrlsOfInterest = arg_not_passed) -> Html:
+
+def get_html_for_line(
+    line: Line, urls_of_interest: UrlsOfInterest = arg_not_passed
+) -> Html:
     return html_line_wrapper.wrap_around(
         Html(
             "".join(
                 [
-                    get_html_for_element_in_line(element_in_line, urls_of_interest=urls_of_interest)
+                    get_html_for_element_in_line(
+                        element_in_line, urls_of_interest=urls_of_interest
+                    )
                     for element_in_line in line
                 ]
             )
@@ -98,13 +175,12 @@ def get_html_for_line(line: Line, urls_of_interest: UrlsOfInterest = arg_not_pas
     )
 
 
-
 def get_html_for_element_in_line(
     element_in_line: Union[
         str,
         Button,
         textInput,
-            emailInput,
+        emailInput,
         intInput,
         radioInput,
         dateInput,
@@ -118,8 +194,9 @@ def get_html_for_element_in_line(
         Heading,
         DetailLine,
         Image,
-        int
-    ], urls_of_interest: UrlsOfInterest = arg_not_passed
+        int,
+    ],
+    urls_of_interest: UrlsOfInterest = arg_not_passed,
 ) -> Html:
     if type(element_in_line) is str:
         return Html(element_in_line)
@@ -143,7 +220,6 @@ def get_html_for_element_in_line(
 
     elif type(element_in_line) is HelpButton:
         return get_html_for_help_button(element_in_line)
-
 
     elif type(element_in_line) is Link:
         return get_html_for_link(element_in_line)
@@ -202,14 +278,17 @@ def get_html_for_element_in_line(
             input_name=element_in_line.input_name,
             list_of_options=element_in_line.list_of_options,
             default_option=element_in_line.default_option,
-            list_name=element_in_line.list_name
+            list_name=element_in_line.list_name,
         )
 
     elif type(element_in_line) is checkboxInput:
-        return html_checkbox_input(input_name=element_in_line.input_name, dict_of_labels=element_in_line.dict_of_labels,
-                                   dict_of_checked=element_in_line.dict_of_checked,
-                                   input_label=element_in_line.input_label,
-                                   line_break=element_in_line.line_break)
+        return html_checkbox_input(
+            input_name=element_in_line.input_name,
+            dict_of_labels=element_in_line.dict_of_labels,
+            dict_of_checked=element_in_line.dict_of_checked,
+            input_label=element_in_line.input_label,
+            line_break=element_in_line.line_break,
+        )
 
     elif type(element_in_line) is PandasDFTable:
         return html_from_pandas_table(element_in_line)
@@ -231,36 +310,45 @@ def get_html_for_element_in_line(
 
 
 def get_html_for_button(button: Button) -> Html:
-
     return generic_html_button(
         button_text=get_html_button_text(button.label),
         button_value=button.value,
-        big_button = button.big,
+        big_button=button.big,
         menu_tile=button.tile,
         nav_button=button.nav_button,
-        shortcut = button.shortcut
+        shortcut=button.shortcut,
     )
 
+
 def get_html_for_action_option_button(button: ActionOptionButton):
-    return  html_action_option_button(
+    return html_action_option_button(
         button_text=button.label,
-        url = button.url,
+        url=button.url,
     )
 
 
 def get_html_for_main_menu_nav_button(button: MainMenuNavButton) -> Html:
-    return html_for_main_menu_button(label = button.label, shortcut = button.shortcut)
-
+    return html_for_main_menu_button(label=button.label, shortcut=button.shortcut)
 
 
 def get_html_for_help_button(help_button: HelpButton) -> Html:
-    return help_link_button(help_button.help_page, from_main_menu=help_button.from_main_menu, shortcut=help_button.shortcut)
+    return help_link_button(
+        help_button.help_page,
+        from_main_menu=help_button.from_main_menu,
+        shortcut=help_button.shortcut,
+    )
 
-def get_html_button_text(button_text, urls_of_interest: UrlsOfInterest = arg_not_passed) -> Html:
+
+def get_html_button_text(
+    button_text, urls_of_interest: UrlsOfInterest = arg_not_passed
+) -> Html:
     if type(button_text) is Line:
         return get_html_for_line(button_text, urls_of_interest=urls_of_interest)
     else:
-        return get_html_for_element_in_line(button_text, urls_of_interest=urls_of_interest)
+        return get_html_for_element_in_line(
+            button_text, urls_of_interest=urls_of_interest
+        )
+
 
 def arrow_text(arrow: Arrow) -> str:
     if arrow == up_arrow:
@@ -281,30 +369,32 @@ def arrow_text(arrow: Arrow) -> str:
     else:
         raise Exception("arrow %s not known" % str(arrow))
 
-def pointer_text(pointer: Pointer)-> str:
-    if pointer==up_pointer:
-        return '&#9757;'
-    elif pointer==down_pointer:
-        return '&#9759;'
-    elif pointer==left_pointer:
-        return '&#9754;'
-    elif pointer==right_pointer:
-        return '&#9755;'
+
+def pointer_text(pointer: Pointer) -> str:
+    if pointer == up_pointer:
+        return "&#9757;"
+    elif pointer == down_pointer:
+        return "&#9759;"
+    elif pointer == left_pointer:
+        return "&#9754;"
+    elif pointer == right_pointer:
+        return "&#9755;"
     else:
         raise Exception("pointer %s not known" % str(pointer))
 
-def symbol_text(symbol: Symbol)-> str:
+
+def symbol_text(symbol: Symbol) -> str:
     if symbol == copyright_symbol:
-        return '&copy;'
-    elif symbol ==reg_tm_symbol:
-        return '&reg;'
-    elif symbol==lightning_symbol:
-        return '&#9735;'
-    elif symbol==circle_up_arrow_symbol:
-        return '&#9954;'
-    elif symbol==umbrella_symbol:
+        return "&copy;"
+    elif symbol == reg_tm_symbol:
+        return "&reg;"
+    elif symbol == lightning_symbol:
+        return "&#9735;"
+    elif symbol == circle_up_arrow_symbol:
+        return "&#9954;"
+    elif symbol == umbrella_symbol:
         return "&#9730;"
-    elif symbol==at_symbol:
+    elif symbol == at_symbol:
         return "&commat;"
     else:
         raise Exception("symbol %s not known" % str(symbol))
@@ -323,10 +413,10 @@ def get_html_for_table(table: Table) -> Html:
     if DEBUG:
         print("parsing table")
     html_for_rows_in_list = [
-        get_html_for_table_row(table_row, is_heading= table_row.is_heading_row) for table_row in table.get_rows()
+        get_html_for_table_row(table_row, is_heading=table_row.is_heading_row)
+        for table_row in table.get_rows()
     ]
     html_for_rows = " ".join(html_for_rows_in_list)
-
 
     return html_table_wrappper.wrap_around(html_for_rows)
 
@@ -366,5 +456,8 @@ def get_html_for_table_element(table_element: ElementsInTable) -> Html:
 
     return wrapper.wrap_around(html_contents)
 
+
 def get_html_for_link(link: Link):
-    return  html_link(url=link.url, string=link.string, open_new_window=link.open_new_window)
+    return html_link(
+        url=link.url, string=link.string, open_new_window=link.open_new_window
+    )

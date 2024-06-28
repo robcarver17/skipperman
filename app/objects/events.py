@@ -9,22 +9,31 @@ from app.data_access.configuration.configuration import (
 )
 
 from app.objects.utils import transform_date_into_str, similar
-from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds
+from app.objects.generic import (
+    GenericSkipperManObjectWithIds,
+    GenericListOfObjectsWithIds,
+)
 from app.objects.constants import arg_not_passed
-from app.objects.day_selectors import day_given_datetime, all_possible_days, Day, DaySelector
+from app.objects.day_selectors import (
+    day_given_datetime,
+    all_possible_days,
+    Day,
+    DaySelector,
+)
 
 
 ## VALUES OF THIS DICT *MUST* MATCH VALUES BELOW
 DICT_OF_NAMES_AND_ATTRIBUTES_CHECKBOX = {
-'Cadets': 'contains_cadets',
-'Training groups to which cadets can be allocated': 'contains_groups',
-'Volunteers': 'contains_volunteers',
-"Food requirements (catering supplied)": 'contains_food',
-"Clothing sizes (merchandise)": 'contains_clothing'
+    "Cadets": "contains_cadets",
+    "Training groups to which cadets can be allocated": "contains_groups",
+    "Volunteers": "contains_volunteers",
+    "Food requirements (catering supplied)": "contains_food",
+    "Clothing sizes (merchandise)": "contains_clothing",
 }
 
 
 EXAMPLES_OF_EVENTS = "Examples: Cadet week - check all. Cadet week hoodies - check merch only. Racing event eg Reid Scott- check Cadets, Volunteers. Training weekend = check Cadets, Training groups, Volunteers. Social event eg easter supper - check Food only"
+
 
 @dataclass
 class Event(GenericSkipperManObjectWithIds):
@@ -42,7 +51,7 @@ class Event(GenericSkipperManObjectWithIds):
         return self.event_description
 
     def __eq__(self, other):
-        return (self.event_description == other.event_description)
+        return self.event_description == other.event_description
 
     def __hash__(self):
         return hash(self.event_description)
@@ -55,15 +64,15 @@ class Event(GenericSkipperManObjectWithIds):
         return self.contains_cadets and not self.contains_groups
 
     @classmethod
-    def from_date_length_and_name_only(cls, event_name: str, start_date: datetime.date, duration: int):
-        if duration<1:
+    def from_date_length_and_name_only(
+        cls, event_name: str, start_date: datetime.date, duration: int
+    ):
+        if duration < 1:
             end_date = start_date
         else:
-            end_date = add_days(start_date, duration-1)
+            end_date = add_days(start_date, duration - 1)
 
-        return cls(event_name=event_name,
-                   start_date=start_date,
-                   end_date=end_date)
+        return cls(event_name=event_name, start_date=start_date, end_date=end_date)
 
     def details_as_list_of_str(self):
         elements = []
@@ -79,19 +88,27 @@ class Event(GenericSkipperManObjectWithIds):
             elements.append("Cadets")
         elements = ", ".join(elements)
 
-        return [self.event_description,
-                "From %s to %s, %d days, covering %s" % (str(self.start_date), str(self.end_date), self.duration, self.weekdays_in_event_as_single_string()),
-                "Has the following elements: %s" % elements]
+        return [
+            self.event_description,
+            "From %s to %s, %d days, covering %s"
+            % (
+                str(self.start_date),
+                str(self.end_date),
+                self.duration,
+                self.weekdays_in_event_as_single_string(),
+            ),
+            "Has the following elements: %s" % elements,
+        ]
 
     @property
     def invalid(self) -> bool:
         invalid_reason = self.invalid_reason()
 
-        return len(invalid_reason)>0
+        return len(invalid_reason) > 0
 
     def invalid_reason(self) -> str:
         try:
-            assert self.duration<8
+            assert self.duration < 8
         except:
             return "Length of event greater than 7 days"
 
@@ -102,7 +119,6 @@ class Event(GenericSkipperManObjectWithIds):
             return "An event with volunteers must also contain cadets (Possible fix in the future)"
 
         return ""
-
 
     @property
     def event_description(self) -> str:
@@ -136,13 +152,17 @@ class Event(GenericSkipperManObjectWithIds):
         end_date = self.end_date
         return transform_date_into_str(end_date)
 
-    def days_in_event_overlap_with_selected_days(self, day_selector: DaySelector) -> List[Day]:
+    def days_in_event_overlap_with_selected_days(
+        self, day_selector: DaySelector
+    ) -> List[Day]:
         my_day_selector = self.day_selector_with_covered_days()
         return day_selector.days_that_intersect_with(my_day_selector)
 
     def day_selector_with_covered_days(self) -> DaySelector:
         weekdays_covered = self.weekdays_in_event()
-        return DaySelector(dict([(day, day in weekdays_covered) for day in all_possible_days]))
+        return DaySelector(
+            dict([(day, day in weekdays_covered) for day in all_possible_days])
+        )
 
     def first_day(self):
         ## relies on ordering
@@ -168,26 +188,23 @@ class Event(GenericSkipperManObjectWithIds):
     def dates_in_event(self) -> list:
         some_date = self.start_date
         date_list = []
-        while some_date<=self.end_date:
+        while some_date <= self.end_date:
             date_list.append(some_date)
-            some_date+=datetime.timedelta(days=1)
+            some_date += datetime.timedelta(days=1)
         return date_list
 
     def in_the_past(self) -> bool:
         days = datetime.date.today() - self.end_date
-        return days.days>0
+        return days.days > 0
 
 
 def add_days(some_date: datetime.date, duration: int) -> datetime.date:
     return some_date + datetime.timedelta(days=duration)
 
+
 today = datetime.datetime.today().date()
 
-default_event = Event(
-    start_date=today,
-    end_date=add_days(today, 1),
-    event_name=""
-)
+default_event = Event(start_date=today, end_date=add_days(today, 1), event_name="")
 
 
 class ListOfEvents(GenericListOfObjectsWithIds):
@@ -200,7 +217,7 @@ class ListOfEvents(GenericListOfObjectsWithIds):
         return [event.event_description for event in self]
 
     def add(self, event: Event):
-        event.id =self.next_id()
+        event.id = self.next_id()
         self.append(event)
 
     def event_with_description(self, event_description: str) -> Event:
@@ -263,14 +280,20 @@ SORT_BY_NAME = "Sort by event name"
 SORT_BY_START_DSC = "Sort by start date, descending"
 
 
-def list_of_events_excluding_one_event(list_of_events: ListOfEvents,
-                                       event_to_exclude: Event,
-                                       sort_by: str = SORT_BY_START_ASC,
-                                       only_past: bool = True) -> ListOfEvents:
-
-
+def list_of_events_excluding_one_event(
+    list_of_events: ListOfEvents,
+    event_to_exclude: Event,
+    sort_by: str = SORT_BY_START_ASC,
+    only_past: bool = True,
+) -> ListOfEvents:
     if only_past:
-        list_of_events = ListOfEvents([event for event in list_of_events if event.start_date<event_to_exclude.start_date])
+        list_of_events = ListOfEvents(
+            [
+                event
+                for event in list_of_events
+                if event.start_date < event_to_exclude.start_date
+            ]
+        )
     else:
         list_of_events.pop_with_id(event_to_exclude.id)
 
@@ -281,10 +304,10 @@ def list_of_events_excluding_one_event(list_of_events: ListOfEvents,
 
 CADETS = "cadets"
 VOLUNTEERS = "volunteers"
-GROUP_ALLOCATION = "groups" ## null, doesn't do anything
+GROUP_ALLOCATION = "groups"  ## null, doesn't do anything
 FOOD = "food"
 CLOTHING = "clothing"
 
 
 def get_event_attribute_given_container(container_name: str) -> str:
-    return "contains_"+container_name
+    return "contains_" + container_name

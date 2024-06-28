@@ -1,6 +1,7 @@
 from app.data_access.file_access import get_files_in_directory, upload_directory
 import os
 
+
 def get_next_valid_upload_file_name(file_marker: str):
     suffix_id = get_last_id_of_file_uploaded(file_marker)
     suffix_id += 1

@@ -12,6 +12,7 @@ class WAFieldMap(GenericSkipperManObject):
     skipperman_field: str
     wa_field: str
 
+
 class ListOfWAFieldMappings(GenericListOfObjects):
     @property
     def _object_class_contained(self):
@@ -39,4 +40,3 @@ class ListOfWAFieldMappings(GenericListOfObjects):
     @property
     def list_of_skipperman_fields(self):
         return [wa_field_map.skipperman_field for wa_field_map in self]
-

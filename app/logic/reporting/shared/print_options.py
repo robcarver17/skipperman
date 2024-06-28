@@ -3,9 +3,16 @@ from app.data_access.configuration.fixed import ALL_PAGESIZE, ALL_FONTS
 from app.logic.events.events_in_state import get_event_from_state
 from app.logic.reporting.shared.report_generator import ReportGenerator
 from app.objects.abstract_objects.abstract_form import (
-    yes_no_radio, textInput, radioInput, intInput,
+    yes_no_radio,
+    textInput,
+    radioInput,
+    intInput,
 )
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
+from app.objects.abstract_objects.abstract_lines import (
+    ListOfLines,
+    _______________,
+    Line,
+)
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_text import bold, Heading
 from app.logic.reporting.constants import (
@@ -17,12 +24,18 @@ from app.logic.reporting.constants import (
     EQUALISE_COLUMN_WIDTHS,
     GROUP_NAME_AS_HEADER,
     FIRST_VALUE_IN_GROUP_IS_KEY,
-    PREPEND_GROUP_NAME, OUTPUT_PDF,
-    PUBLIC, IF_HEADER_INCLUDE_SIZE, FONT_SIZE
+    PREPEND_GROUP_NAME,
+    OUTPUT_PDF,
+    PUBLIC,
+    IF_HEADER_INCLUDE_SIZE,
+    FONT_SIZE,
 )
 from app.objects.constants import missing_data
-from app.backend.reporting.options_and_parameters.print_options import PrintOptions, default_report_title_and_filename, \
-    get_default_filename_for_report
+from app.backend.reporting.options_and_parameters.print_options import (
+    PrintOptions,
+    default_report_title_and_filename,
+    get_default_filename_for_report,
+)
 
 
 def get_saved_print_options(
@@ -64,7 +77,6 @@ def get_report_filename_from_storage_or_use_default(
     return filename
 
 
-
 def save_print_options(
     report_type: str, interface: abstractInterface, print_options: PrintOptions
 ):
@@ -74,7 +86,9 @@ def save_print_options(
 
     ## although title and filename are written here as well they are never used
     options_data = OptionsData(interface.data)
-    options_data.save_print_options(print_options=print_options, report_name=report_type)
+    options_data.save_print_options(
+        print_options=print_options, report_name=report_type
+    )
 
 
 def report_print_options_as_list_of_lines(print_options: PrintOptions) -> ListOfLines:
@@ -82,7 +96,11 @@ def report_print_options_as_list_of_lines(print_options: PrintOptions) -> ListOf
     output_pdf = print_options.output_pdf
     output_pdf_str = "Output to .pdf file" if output_pdf else "Output to .csv file"
     public = print_options.publish_to_public
-    public_str = "Output to public directory with shareable web link" if public else "Save in private directory"
+    public_str = (
+        "Output to public directory with shareable web link"
+        if public
+        else "Save in private directory"
+    )
     output_pdf_line = Line(output_pdf_str)
     public_pdf_line = Line(public_str)
 
@@ -102,7 +120,8 @@ def report_print_options_as_list_of_lines(print_options: PrintOptions) -> ListOf
                 "Report title: %s" % print_options.title_str,
                 "Highlight first value in group: %s"
                 % print_options.first_value_in_group_is_key,
-            ])
+            ]
+        )
     else:
         pdf_only = ListOfLines([])
 
@@ -111,18 +130,13 @@ def report_print_options_as_list_of_lines(print_options: PrintOptions) -> ListOf
             "Filename: %s" % print_options.filename_with_extension,
             "Put group name as header: %s" % print_options.include_group_as_header,
             "Prepend group name to all entries: %s" % print_options.prepend_group_name,
-            "If prepending, include size of group: %s" % print_options.include_size_of_group_if_header
+            "If prepending, include size of group: %s"
+            % print_options.include_size_of_group_if_header,
         ]
     )
-    output = ListOfLines(
-        output_pdf_line+
-        public_pdf_line+
-        pdf_only+
-        generic
-    )
+    output = ListOfLines(output_pdf_line + public_pdf_line + pdf_only + generic)
 
-    return  output.add_Lines()
-
+    return output.add_Lines()
 
 
 def get_print_options_from_main_option_form_fields(
@@ -143,13 +157,15 @@ def get_print_options_from_main_option_form_fields(
         FIRST_VALUE_IN_GROUP_IS_KEY
     )
     prepend_group_name = interface.true_if_radio_was_yes(PREPEND_GROUP_NAME)
-    include_size_of_group_if_header = interface.true_if_radio_was_yes(IF_HEADER_INCLUDE_SIZE)
+    include_size_of_group_if_header = interface.true_if_radio_was_yes(
+        IF_HEADER_INCLUDE_SIZE
+    )
     public = interface.true_if_radio_was_yes(PUBLIC)
 
     print_options = PrintOptions()
 
     print_options.landscape = page_alignment == LANDSCAPE
-    print_options.output_pdf = output_to ==PDF
+    print_options.output_pdf = output_to == PDF
     print_options.font = font
     print_options.page_size = page_size
     print_options.equalise_column_width = equalise_column_widths
@@ -159,7 +175,7 @@ def get_print_options_from_main_option_form_fields(
     print_options.prepend_group_name = prepend_group_name
     print_options.first_value_in_group_is_key = highlight_first_value_as_key
     print_options.publish_to_public = public
-    print_options.include_size_of_group_if_header =include_size_of_group_if_header
+    print_options.include_size_of_group_if_header = include_size_of_group_if_header
     print_options.font_size = int(font_size)
 
     print("Print shared from form %s" % str(print_options))
@@ -170,21 +186,19 @@ def report_print_options_as_form_contents(print_options: PrintOptions) -> ListOf
     landscape_str = LANDSCAPE if print_options.landscape else PORTRAIT
     output_to_str = PDF if print_options.output_pdf else CSV
 
-    print_options_form =  ListOfLines(
+    print_options_form = ListOfLines(
         [
             _______________,
-
             radioInput(
                 input_label="Output to:",
                 input_name=OUTPUT_PDF,
-                dict_of_options={PDF:PDF, CSV: CSV},
+                dict_of_options={PDF: PDF, CSV: CSV},
                 default_label=output_to_str,
             ),
             _______________,
-
             yes_no_radio(
                 input_label="Output to public with shareable web link (ensure no private information!)",
-                input_name=PUBLIC
+                input_name=PUBLIC,
             ),
             _______________,
             _______________,
@@ -193,13 +207,13 @@ def report_print_options_as_form_contents(print_options: PrintOptions) -> ListOf
             radioInput(
                 input_label="Alignment",
                 input_name=PAGE_ALIGNMENT,
-                dict_of_options={LANDSCAPE:LANDSCAPE, PORTRAIT:PORTRAIT},
+                dict_of_options={LANDSCAPE: LANDSCAPE, PORTRAIT: PORTRAIT},
                 default_label=landscape_str,
             ),
             intInput(
-                input_label='Font size (Set to zero for automatic sizing)',
+                input_label="Font size (Set to zero for automatic sizing)",
                 input_name=FONT_SIZE,
-                value=print_options.font_size
+                value=print_options.font_size,
             ),
             radioInput(
                 input_label="Font",
@@ -228,7 +242,6 @@ def report_print_options_as_form_contents(print_options: PrintOptions) -> ListOf
                 input_name=FIRST_VALUE_IN_GROUP_IS_KEY,
                 default_is_yes=print_options.first_value_in_group_is_key,
             ),
-
             _______________,
             _______________,
             bold("Following apply to all types of output:"),
@@ -254,7 +267,6 @@ def report_print_options_as_form_contents(print_options: PrintOptions) -> ListOf
                 default_is_yes=print_options.prepend_group_name,
             ),
             _______________,
-
         ]
     )
     return print_options_form.add_Lines()
@@ -263,13 +275,18 @@ def report_print_options_as_form_contents(print_options: PrintOptions) -> ListOf
 def get_saved_print_options_and_create_form(
     interface: abstractInterface, report_type: str, report_for: str = ""
 ) -> ListOfLines:
-    print_options = get_saved_print_options(report_type=report_type, interface=interface)
+    print_options = get_saved_print_options(
+        report_type=report_type, interface=interface
+    )
     report_options_within_form = report_print_options_as_form_contents(print_options)
 
     return ListOfLines(
         [
-            Heading("%s: Select additional parameters for %s" % (report_type, report_for), centred=False,
-                    size=5),
+            Heading(
+                "%s: Select additional parameters for %s" % (report_type, report_for),
+                centred=False,
+                size=5,
+            ),
             report_options_within_form,
         ]
     ).add_Lines()
@@ -284,7 +301,9 @@ PDF = "pdf"
 CSV = "csv"
 
 
-def reset_print_report_options(interface: abstractInterface, report_generator: ReportGenerator):
+def reset_print_report_options(
+    interface: abstractInterface, report_generator: ReportGenerator
+):
     options_data = OptionsData(interface.data)
     options_data.reset_print_options_to_default(report_generator.name)
     interface.clear_persistent_value(REPORT_TITLE)

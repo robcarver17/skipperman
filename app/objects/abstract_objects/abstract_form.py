@@ -13,11 +13,12 @@ class Form(list):
 
     @property
     def title(self) -> str:
-        return getattr(self, '_title', '')
+        return getattr(self, "_title", "")
 
     @title.setter
     def title(self, new_title: str):
-        setattr(self, '_title', new_title)
+        setattr(self, "_title", new_title)
+
 
 @dataclass
 class Link:
@@ -25,16 +26,19 @@ class Link:
     url: str
     open_new_window: bool = False
 
+
 @dataclass
 class HelpLink:
     text: str
     help_page_name: str
+
 
 @dataclass
 class Image:
     filename: str
     px_height_width: Tuple[int, int] = arg_not_passed
     ratio_size: int = arg_not_passed
+
 
 @dataclass
 class NewForm:
@@ -45,7 +49,6 @@ def form_with_message(message: str) -> Form:
     return Form(ListOfLines([Line(message)]))
 
 
-
 @dataclass
 class radioInput(Input):
     input_label: str
@@ -53,13 +56,14 @@ class radioInput(Input):
     dict_of_options: dict
     default_label: str = arg_not_passed
 
+
 @dataclass
 class listInput(Input):
     input_label: str
     input_name: str
     list_of_options: list
     list_name: str = arg_not_passed
-    default_option: str = ''
+    default_option: str = ""
 
 
 def yes_no_radio(input_label, input_name, default_is_yes: bool = True) -> radioInput:
@@ -84,6 +88,7 @@ class dropDownInput(Input):
     dict_of_options: dict
     default_label: str = arg_not_passed
 
+
 @dataclass
 class checkboxInput(Input):
     dict_of_labels: dict
@@ -93,7 +98,6 @@ class checkboxInput(Input):
     line_break: bool = False
 
 
-
 @dataclass
 class intInput(Input):
     input_label: str
@@ -101,15 +105,11 @@ class intInput(Input):
     value: int = arg_not_passed
 
 
-
-
 @dataclass
 class fileInput(Input):
     input_name: str = "file"
     accept: str = arg_not_passed
     # accept can be eg '.doc' or '.doc, .csv'
-
-
 
 
 @dataclass
@@ -123,11 +123,13 @@ class textInput(Input):
     input_name: str
     value: str = arg_not_passed
 
+
 @dataclass
 class emailInput(Input):
     input_label: str
     input_name: str
     value: str = arg_not_passed
+
 
 @dataclass
 class passwordInput(Input):

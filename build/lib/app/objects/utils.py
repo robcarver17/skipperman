@@ -1,4 +1,3 @@
-
 from collections import defaultdict, Counter
 import datetime
 import math
@@ -10,17 +9,24 @@ import numpy as np
 import pandas as pd
 from difflib import SequenceMatcher
 
-from app.data_access.configuration.field_list_groups import FIELDS_WITH_DATES, FIELDS_WITH_DATETIMES, FIELDS_AS_STR
+from app.data_access.configuration.field_list_groups import (
+    FIELDS_WITH_DATES,
+    FIELDS_WITH_DATETIMES,
+    FIELDS_AS_STR,
+)
 from dateutil.parser import parse
 
 
 from itertools import groupby
 
-def list_of_list_max_wide_for_table_building(list_of_stuff: list, max_columns = 10) -> list:
+
+def list_of_list_max_wide_for_table_building(
+    list_of_stuff: list, max_columns=10
+) -> list:
     use_max_colums = calculate_max_columns(list_of_stuff, max_columns=max_columns)
     list_to_empty = copy(list_of_stuff)
     new_list = []
-    while len(list_to_empty)>0:
+    while len(list_to_empty) > 0:
         this_row = []
         for i in range(use_max_colums):
             try:
@@ -32,20 +38,24 @@ def list_of_list_max_wide_for_table_building(list_of_stuff: list, max_columns = 
     return new_list
 
 
-
 OPTIMAL_LINE_LENGTH = 20
-def calculate_max_columns(list_of_stuff: list, max_columns=10) -> int:
-    max_columns_to_use = max([min([int(np.floor(len(list_of_stuff)/ OPTIMAL_LINE_LENGTH)), max_columns]),1])
-    return max_columns_to_use
 
+
+def calculate_max_columns(list_of_stuff: list, max_columns=10) -> int:
+    max_columns_to_use = max(
+        [min([int(np.floor(len(list_of_stuff) / OPTIMAL_LINE_LENGTH)), max_columns]), 1]
+    )
+    return max_columns_to_use
 
 
 def drop_duplicates_in_list_of_ids(list_of_ids: list):
     return list(dict.fromkeys(list_of_ids))
 
+
 def all_equal(iterable):
     g = groupby(iterable)
     return next(g, True) and not next(g, False)
+
 
 def data_object_as_dict(some_object) -> dict:
     list_of_attributes = get_list_of_attributes(some_object)
@@ -122,11 +132,12 @@ def clean_up_dict_with_nans(some_dict) -> dict:
             pass
     return some_dict
 
+
 def clean_up_dict_with_weird_floats_for_id(some_dict) -> dict:
     for key, value in some_dict.items():
-        key_is_id = key=="id"
+        key_is_id = key == "id"
         key_contains_id = "_id" in key
-        key_is_row_id = key == "row_id" ## special event row id, FIXME orrible hack
+        key_is_row_id = key == "row_id"  ## special event row id, FIXME orrible hack
         if key_is_row_id:
             continue
         elif key_is_id or key_contains_id:
@@ -134,12 +145,14 @@ def clean_up_dict_with_weird_floats_for_id(some_dict) -> dict:
 
     return some_dict
 
-def make_id_as_int_str(value: str)->str:
+
+def make_id_as_int_str(value: str) -> str:
     try:
         return str(int(float(value)))
     except:
         ## actually a string
         return value
+
 
 def list_duplicate_indices(seq):
     tally = defaultdict(list)
@@ -199,11 +212,15 @@ def transform_df_from_str_to_dates(df: pd.DataFrame):
 
 def transform_df_column_from_str_to_dates(df: pd.DataFrame, date_series_name: str):
     date_series = getattr(df, date_series_name)
-    date_series = [transform_str_or_datetime_into_date(date_str) for date_str in date_series]
+    date_series = [
+        transform_str_or_datetime_into_date(date_str) for date_str in date_series
+    ]
     setattr(df, date_series_name, date_series)
 
 
-def transform_str_or_datetime_into_date(date_string: Union[str, datetime.date, datetime.datetime]) -> datetime.date:
+def transform_str_or_datetime_into_date(
+    date_string: Union[str, datetime.date, datetime.datetime]
+) -> datetime.date:
     if isinstance(date_string, datetime.date):
         return date_string
     elif isinstance(date_string, datetime.datetime):
@@ -211,8 +228,8 @@ def transform_str_or_datetime_into_date(date_string: Union[str, datetime.date, d
 
     return transform_str_into_date(date_string)
 
-def transform_str_into_date(date_string: str) -> datetime.date:
 
+def transform_str_into_date(date_string: str) -> datetime.date:
     try:
         return datetime.datetime.strptime(date_string, DATE_STR).date()
     except:
@@ -223,7 +240,7 @@ def transform_str_into_date(date_string: str) -> datetime.date:
     except:
         pass
 
-    return datetime.datetime(1970,1,1)
+    return datetime.datetime(1970, 1, 1)
 
 
 def transform_df_column_from_str_to_datetimes(df: pd.DataFrame, date_series_name: str):
@@ -242,15 +259,17 @@ def transform_str_into_datetime(date_string: str) -> datetime.datetime:
         return parse(date_string)
 
 
-def in_x_not_in_y(x: list,y: list) -> list:
+def in_x_not_in_y(x: list, y: list) -> list:
     return list(set(x).difference(set(y)))
 
 
-def in_both_x_and_y(x: list,y: list) -> list:
+def in_both_x_and_y(x: list, y: list) -> list:
     return list(set(x).intersection(set(y)))
 
-def union_of_x_and_y(x: list,y: list) -> list:
+
+def union_of_x_and_y(x: list, y: list) -> list:
     return list(set(x).union(set(y)))
+
 
 DATE_STR = "%Y/%m/%d"
 DATETIME_STR = "%Y/%m/%d %H:%M:%S.%f"
@@ -261,11 +280,9 @@ def dict_as_single_str(some_dict: dict) -> str:
     return ",".join(single_list)
 
 
-def from_single_str_to_dict(single_str: str)->dict:
+def from_single_str_to_dict(single_str: str) -> dict:
     entries = single_str.split(",")
-    output_dict = dict([
-        entry.split(":") for entry in entries
-    ])
+    output_dict = dict([entry.split(":") for entry in entries])
     return output_dict
 
 
@@ -273,18 +290,18 @@ def flatten(xss):
     return [x for xs in xss for x in xs]
 
 
-def print_dict_nicely(label, some_dict:dict) -> str:
-    dict_str_list = ['%s: %s' % (key, value) for key, value in some_dict.items()]
+def print_dict_nicely(label, some_dict: dict) -> str:
+    dict_str_list = ["%s: %s" % (key, value) for key, value in some_dict.items()]
     dict_str_list = ", ".join(dict_str_list)
 
-    return label+"- "+dict_str_list
+    return label + "- " + dict_str_list
 
 
-def most_common(some_list: list, default = ''):
-    if len(some_list)==0:
+def most_common(some_list: list, default=""):
+    if len(some_list) == 0:
         return default
     return Counter(some_list).most_common(1)[0][0]
 
 
-def we_are_not_the_same(some_list: list) ->bool:
-    return len(set(some_list))>1
+def we_are_not_the_same(some_list: list) -> bool:
+    return len(set(some_list)) > 1

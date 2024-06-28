@@ -2,7 +2,9 @@ from dataclasses import dataclass
 from typing import List, Union, Tuple, Dict
 
 import pandas as pd
-from app.backend.reporting.arrangement.arrange_options import ArrangementOptionsAndGroupOrder
+from app.backend.reporting.arrangement.arrange_options import (
+    ArrangementOptionsAndGroupOrder,
+)
 
 from app.data_access.configuration.fixed import APPROX_WIDTH_TO_HEIGHT_RATIO
 from app.objects.constants import arg_not_passed
@@ -17,45 +19,99 @@ class MarkedUpString:
     underline: bool = False
 
     @classmethod
-    def bodytext(cls, row: Union[str, pd.Series],  group: str = arg_not_passed,
-                                                         prepend_group_name: bool = False,dict_of_max_length: Dict[str, int] = arg_not_passed):
-        string, original_contents_as_series = (
-            from_row_and_columns_to_string_and_original_contents(row=row,
-                                                                 group=group, prepend_group_name=prepend_group_name,
-                                                                 dict_of_max_length=dict_of_max_length))
-        return cls(string=string, original_contents_as_series=original_contents_as_series, bold=False, italics=False, underline=False)
+    def bodytext(
+        cls,
+        row: Union[str, pd.Series],
+        group: str = arg_not_passed,
+        prepend_group_name: bool = False,
+        dict_of_max_length: Dict[str, int] = arg_not_passed,
+    ):
+        (
+            string,
+            original_contents_as_series,
+        ) = from_row_and_columns_to_string_and_original_contents(
+            row=row,
+            group=group,
+            prepend_group_name=prepend_group_name,
+            dict_of_max_length=dict_of_max_length,
+        )
+        return cls(
+            string=string,
+            original_contents_as_series=original_contents_as_series,
+            bold=False,
+            italics=False,
+            underline=False,
+        )
 
     @classmethod
-    def header(cls, row: Union[str, pd.Series],  group: str = arg_not_passed,
-                                                         prepend_group_name: bool = False,dict_of_max_length: Dict[str, int] = arg_not_passed):
-
-        string, original_contents_as_series = (
-            from_row_and_columns_to_string_and_original_contents(row=row, group=group,
-                                                                 prepend_group_name=prepend_group_name,
-                                                                 dict_of_max_length=dict_of_max_length))
-        return cls(string=string, bold=True, italics=False, underline=True, original_contents_as_series=original_contents_as_series)
+    def header(
+        cls,
+        row: Union[str, pd.Series],
+        group: str = arg_not_passed,
+        prepend_group_name: bool = False,
+        dict_of_max_length: Dict[str, int] = arg_not_passed,
+    ):
+        (
+            string,
+            original_contents_as_series,
+        ) = from_row_and_columns_to_string_and_original_contents(
+            row=row,
+            group=group,
+            prepend_group_name=prepend_group_name,
+            dict_of_max_length=dict_of_max_length,
+        )
+        return cls(
+            string=string,
+            bold=True,
+            italics=False,
+            underline=True,
+            original_contents_as_series=original_contents_as_series,
+        )
 
     @classmethod
-    def keyvalue(cls, row: Union[str, pd.Series],  group: str = arg_not_passed,
-                                                         prepend_group_name: bool = False,
-                                                        dict_of_max_length: Dict[str, int] = arg_not_passed):
-        string, original_contents_as_series = (
-            from_row_and_columns_to_string_and_original_contents(row=row,
-                                                                 group=group, prepend_group_name=prepend_group_name,
-                                                                 dict_of_max_length=dict_of_max_length))
-        return cls(string=string, bold=True, italics=False, underline=False, original_contents_as_series=original_contents_as_series)
+    def keyvalue(
+        cls,
+        row: Union[str, pd.Series],
+        group: str = arg_not_passed,
+        prepend_group_name: bool = False,
+        dict_of_max_length: Dict[str, int] = arg_not_passed,
+    ):
+        (
+            string,
+            original_contents_as_series,
+        ) = from_row_and_columns_to_string_and_original_contents(
+            row=row,
+            group=group,
+            prepend_group_name=prepend_group_name,
+            dict_of_max_length=dict_of_max_length,
+        )
+        return cls(
+            string=string,
+            bold=True,
+            italics=False,
+            underline=False,
+            original_contents_as_series=original_contents_as_series,
+        )
 
     @property
     def width(self) -> int:
         return len(self.string)
 
-def from_row_and_columns_to_string_and_original_contents(row: Union[str, pd.Series],  group: str = arg_not_passed,
-                                                         prepend_group_name: bool = False, dict_of_max_length: Dict[str, int] = arg_not_passed) -> Tuple[str, pd.Series]:
+
+def from_row_and_columns_to_string_and_original_contents(
+    row: Union[str, pd.Series],
+    group: str = arg_not_passed,
+    prepend_group_name: bool = False,
+    dict_of_max_length: Dict[str, int] = arg_not_passed,
+) -> Tuple[str, pd.Series]:
     if type(row) is str:
-        string =row
+        string = row
         return string, pd.Series(dict(text=string))
     original_contents_as_dict = row.to_dict()
-    original_contents_as_dict = reformat_to_max_length_padding(original_contents_as_dict=original_contents_as_dict, dict_of_max_length=dict_of_max_length)
+    original_contents_as_dict = reformat_to_max_length_padding(
+        original_contents_as_dict=original_contents_as_dict,
+        dict_of_max_length=dict_of_max_length,
+    )
     original_contents_as_series = pd.Series(original_contents_as_dict)
     original_contents_as_list = original_contents_as_series.to_list()
     string = " ".join(original_contents_as_list)
@@ -64,7 +120,11 @@ def from_row_and_columns_to_string_and_original_contents(row: Union[str, pd.Seri
 
     return string, original_contents_as_series
 
-def reformat_to_max_length_padding(original_contents_as_dict: Dict[str,str], dict_of_max_length: Dict[str, int] = arg_not_passed) -> Dict[str,str]:
+
+def reformat_to_max_length_padding(
+    original_contents_as_dict: Dict[str, str],
+    dict_of_max_length: Dict[str, int] = arg_not_passed,
+) -> Dict[str, str]:
     if dict_of_max_length is arg_not_passed:
         return original_contents_as_dict
 
@@ -76,21 +136,27 @@ def reformat_to_max_length_padding(original_contents_as_dict: Dict[str,str], dic
 
     return original_contents_as_dict
 
+
 class GroupOfMarkedUpString(List[MarkedUpString]):
     def max_width(self) -> int:
         line_widths = [marked_up_string.width for marked_up_string in self]
-        if len(self)==0:
+        if len(self) == 0:
             return 0
 
         return max(line_widths)
 
+
 EMPTY_GROUP = GroupOfMarkedUpString([])
+
 
 class ListOfGroupsOfMarkedUpStrings(List[GroupOfMarkedUpString]):
     pass
 
+
 class Page(List[GroupOfMarkedUpString]):
-    def __init__(self, list_of_marked_up_string: List[GroupOfMarkedUpString], title_str: str = ""):
+    def __init__(
+        self, list_of_marked_up_string: List[GroupOfMarkedUpString], title_str: str = ""
+    ):
         super().__init__(list_of_marked_up_string)
         self.title_str = title_str
 
@@ -102,11 +168,12 @@ class Page(List[GroupOfMarkedUpString]):
     def group_names(self, group_names: List[str]):
         self._group_names = group_names
 
+
 class ListOfPages(List[Page]):
     def unique_list_of_groups_across_all_pages(self):
         list_of_groups = []
         for page in self:
-            list_of_groups+=page.group_names
+            list_of_groups += page.group_names
 
         return list(set(list_of_groups))
 
@@ -120,11 +187,10 @@ class Column(ListOfGroupsOfMarkedUpStrings):
 
     def max_width(self) -> int:
         group_widths = [group.max_width() for group in self]
-        if len(group_widths)==0:
+        if len(group_widths) == 0:
             return 0
 
         return max(group_widths)
-
 
 
 class PageWithColumns(List[Column]):
@@ -134,7 +200,7 @@ class PageWithColumns(List[Column]):
 
     @property
     def has_title(self):
-        return len(self.title_str)>0
+        return len(self.title_str) > 0
 
     def list_of_column_widths(self) -> List[int]:
         widths_of_each_column = [list_of_groups.max_width() for list_of_groups in self]
@@ -205,11 +271,10 @@ def create_list_of_pages_with_columns_from_list_of_pages_and_arrangement_options
     list_of_pages: ListOfPages,
     arrangement_options_and_group_order: ArrangementOptionsAndGroupOrder,
 ) -> ListOfPagesWithColumns:
-
     list_of_pages_with_columns = [
         create_columns_from_page(
-            page = page,
-            arrangement_options_and_group_order=arrangement_options_and_group_order
+            page=page,
+            arrangement_options_and_group_order=arrangement_options_and_group_order,
         )
         for page in list_of_pages
     ]
@@ -223,16 +288,20 @@ def create_columns_from_page(
 ) -> PageWithColumns:
     ## is passed list list of str?
     master_group_order = arrangement_options_and_group_order.group_order
-    arrangement_of_columns = arrangement_options_and_group_order.arrangement_options.arrangement_of_columns
+    arrangement_of_columns = (
+        arrangement_options_and_group_order.arrangement_options.arrangement_of_columns
+    )
 
-    list_of_columns  = []
+    list_of_columns = []
     for order_list_of_index_for_column in arrangement_of_columns:
-        single_column = _create_single_column_from_list_of_groups_of_marked_up_str_given_order(
-            page=page,
-            order_list_of_index_for_column=order_list_of_index_for_column,
-            master_group_order = master_group_order
+        single_column = (
+            _create_single_column_from_list_of_groups_of_marked_up_str_given_order(
+                page=page,
+                order_list_of_index_for_column=order_list_of_index_for_column,
+                master_group_order=master_group_order,
+            )
         )
-        if len(single_column)==0:
+        if len(single_column) == 0:
             continue
         else:
             list_of_columns.append(single_column)
@@ -241,9 +310,7 @@ def create_columns_from_page(
 
 
 def _create_single_column_from_list_of_groups_of_marked_up_str_given_order(
-    page: Page,
-    order_list_of_index_for_column: List[int],
-    master_group_order: List[str]
+    page: Page, order_list_of_index_for_column: List[int], master_group_order: List[str]
 ) -> Column:
     column_as_list = []
     groups_in_page = page.group_names
@@ -257,8 +324,4 @@ def _create_single_column_from_list_of_groups_of_marked_up_str_given_order(
             ## missing from this page that's fine
             continue
 
-    return Column(
-        column_as_list
-    )
-
-
+    return Column(column_as_list)

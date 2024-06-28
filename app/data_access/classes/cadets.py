@@ -1,7 +1,9 @@
-from app.objects.cadet_at_event import ListOfCadetsAtEvent, ListOfIdentifiedCadetsAtEvent
+from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent
+from app.objects.identified_cadets_at_event import ListOfIdentifiedCadetsAtEvent
 from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.groups import ListOfCadetIdsWithGroups
-from app.objects.committee import ListOfCadetsOnCommittee
+from app.objects.committee import ListOfCadetsWithIdOnCommittee
+
 
 class DataListOfCadets(object):
     def read(self) -> ListOfCadets:
@@ -20,11 +22,12 @@ class DataListOfCadetsWithGroups(object):
     ):
         raise NotImplemented
 
+
 class DataListOfCadetsAtEvent(object):
-    def read(self, event_id: str) -> ListOfCadetsAtEvent:
+    def read(self, event_id: str) -> ListOfCadetsWithIDAtEvent:
         raise NotImplemented
 
-    def write(self, list_of_cadets_at_event: ListOfCadetsAtEvent, event_id: str):
+    def write(self, list_of_cadets_at_event: ListOfCadetsWithIDAtEvent, event_id: str):
         raise NotImplemented
 
 
@@ -32,13 +35,15 @@ class DataListOfIdentifiedCadetsAtEvent(object):
     def read(self, event_id: str) -> ListOfIdentifiedCadetsAtEvent:
         raise NotImplemented
 
-    def write(self, list_of_cadets_at_event: ListOfIdentifiedCadetsAtEvent, event_id: str):
+    def write(
+        self, list_of_cadets_at_event: ListOfIdentifiedCadetsAtEvent, event_id: str
+    ):
         raise NotImplemented
 
 
 class DataListOfCadetsOnCommitte(object):
-    def read(self) -> ListOfCadetsOnCommittee:
+    def read(self) -> ListOfCadetsWithIdOnCommittee:
         raise NotImplemented
 
-    def write(self, list_of_cadets: ListOfCadetsOnCommittee):
+    def write(self, list_of_cadets: ListOfCadetsWithIdOnCommittee):
         raise NotImplemented

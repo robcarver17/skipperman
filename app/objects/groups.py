@@ -1,4 +1,3 @@
-
 from typing import List, Dict
 import pandas as pd
 from app.objects.events import Event
@@ -17,18 +16,24 @@ from app.data_access.configuration.configuration import (
 from app.objects.cadets import Cadet, ListOfCadets
 from dataclasses import dataclass
 from app.objects.constants import missing_data
-from app.objects.generic import GenericSkipperManObjectWithIds, GenericListOfObjectsWithIds, GenericSkipperManObject, GenericListOfObjects
+from app.objects.generic import (
+    GenericSkipperManObjectWithIds,
+    GenericListOfObjectsWithIds,
+    GenericSkipperManObject,
+    GenericListOfObjects,
+)
 
 LAKE_TRAINING = "Lake training"
 RIVER_TRAINING = "River training"
 MG = "MG"
 
+
 def sorted_locations(locations: List[str]):
     order = [LAKE_TRAINING, RIVER_TRAINING, MG]
     return [location for location in order if location in locations]
 
-class Group:
 
+class Group:
     def __init__(self, group_name: str):
         try:
             assert group_name in ALL_GROUPS_NAMES
@@ -42,7 +47,7 @@ class Group:
 
     def __eq__(self, other):
         if type(other) is str:
-            return self.group_name==other
+            return self.group_name == other
 
         return self.group_name == other.group_name
 
@@ -55,10 +60,10 @@ class Group:
     def __repr__(self):
         return self.group_name
 
-    def __lt__(self, other: 'Group'):
-        return index_group(self)<index_group(other)
+    def __lt__(self, other: "Group"):
+        return index_group(self) < index_group(other)
 
-    def as_str_replace_unallocated_with_empty(self)-> str:
+    def as_str_replace_unallocated_with_empty(self) -> str:
         if self.is_unallocated:
             return ""
         else:
@@ -100,17 +105,21 @@ class Group:
     def is_race_group(self) -> bool:
         return self.group_name in MG_GROUP_NAMES
 
+
 GROUP_UNALLOCATED = Group.create_unallocated()
 GROUP_UNALLOCATED_TEXT = "Unallocated"
 
 ALL_GROUPS = [Group(group) for group in ALL_GROUPS_NAMES]
 
+
 def index_group(group: Group):
     all_groups = ALL_GROUPS_NAMES + [GROUP_UNALLOCATED_TEXT]
     return all_groups.index(group)
 
+
 def order_list_of_groups(list_of_groups: List[Group]) -> List[Group]:
     return [group for group in ALL_GROUPS if group in list_of_groups]
+
 
 @dataclass
 class CadetIdWithGroup(GenericSkipperManObjectWithIds):
@@ -119,27 +128,20 @@ class CadetIdWithGroup(GenericSkipperManObjectWithIds):
     day: Day
 
 
-
 class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return CadetIdWithGroup
 
-
     def count_of_ids_by_day(self, event: Event) -> Dict[Day, int]:
         return dict(
-            [
-                (day,
-                 self.count_of_ids_for_day(day))
-                for day in event.weekdays_in_event()
-            ]
+            [(day, self.count_of_ids_for_day(day)) for day in event.weekdays_in_event()]
         )
 
     def count_of_ids_for_day(self, day: Day) -> int:
-        matches = [item for item in self if item.day==day]
+        matches = [item for item in self if item.day == day]
 
         return len(matches)
-
 
     def unique_list_of_cadet_ids(self, group: Group) -> List[str]:
         ids = list(set([item.cadet_id for item in self if item.group == group]))
@@ -147,15 +149,17 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
         return ids
 
     def list_of_cadet_ids_in_group_on_day(self, group: Group, day: Day) -> List[str]:
-        ids = [item.cadet_id for item in self if item.group == group and item.day == day]
+        ids = [
+            item.cadet_id for item in self if item.group == group and item.day == day
+        ]
 
         return ids
 
     def total_in_each_group_as_dict(self) -> dict:
         list_of_groups = self.unique_list_of_groups()
-        total_by_group = dict([(str(group),0) for group in list_of_groups])
+        total_by_group = dict([(str(group), 0) for group in list_of_groups])
         for cadet_id_with_group in self:
-            total_by_group[str(cadet_id_with_group.group)]+=1
+            total_by_group[str(cadet_id_with_group.group)] += 1
 
         return total_by_group
 
@@ -168,27 +172,40 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
         list_of_groups = [cadet_id_with_group.group for cadet_id_with_group in self]
         return list_of_groups
 
-    def add_list_of_unallocated_cadets_on_day(self, list_of_unallocated_cadets: ListOfCadets, day: Day):
+    def add_list_of_unallocated_cadets_on_day(
+        self, list_of_unallocated_cadets: ListOfCadets, day: Day
+    ):
         [self.add_unallocated_cadet(cadet, day) for cadet in list_of_unallocated_cadets]
 
     def add_unallocated_cadet(self, cadet: Cadet, day: Day):
         cadet_id = cadet.id
-        self.append(CadetIdWithGroup(cadet_id=cadet_id, group=GROUP_UNALLOCATED, day=day))
+        self.append(
+            CadetIdWithGroup(cadet_id=cadet_id, group=GROUP_UNALLOCATED, day=day)
+        )
 
-    def remove_group_allocation_for_cadet_on_day(self, cadet_id:str, day: Day):
-        self.update_group_for_cadet_on_day(cadet_id=cadet_id, day=day, chosen_group=GROUP_UNALLOCATED)
+    def remove_group_allocation_for_cadet_on_day(self, cadet_id: str, day: Day):
+        self.update_group_for_cadet_on_day(
+            cadet_id=cadet_id, day=day, chosen_group=GROUP_UNALLOCATED
+        )
 
-    def update_group_for_cadet_on_day(self, cadet_id:str, day: Day, chosen_group: Group):
-        if self.cadet_is_allocated_to_group_on_day(cadet_id=cadet_id,day=day):
+    def update_group_for_cadet_on_day(
+        self, cadet_id: str, day: Day, chosen_group: Group
+    ):
+        if self.cadet_is_allocated_to_group_on_day(cadet_id=cadet_id, day=day):
             self._update_group_for_existing_cadet_id_on_day(
                 cadet_id=cadet_id, chosen_group=chosen_group, day=day
             )
         else:
-            self._update_group_for_new_cadet(cadet_id=cadet_id, chosen_group=chosen_group, day=day)
+            self._update_group_for_new_cadet(
+                cadet_id=cadet_id, chosen_group=chosen_group, day=day
+            )
 
-
-    def _update_group_for_existing_cadet_id_on_day(self, cadet_id: str, day: Day, chosen_group: Group):
-        item_with_cadet_id_and_day = self.item_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
+    def _update_group_for_existing_cadet_id_on_day(
+        self, cadet_id: str, day: Day, chosen_group: Group
+    ):
+        item_with_cadet_id_and_day = self.item_with_cadet_id_on_day(
+            cadet_id=cadet_id, day=day
+        )
         idx = self.index(item_with_cadet_id_and_day)
         if item_with_cadet_id_and_day.group == chosen_group:
             pass
@@ -198,16 +215,18 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
         else:
             self[idx] = CadetIdWithGroup(cadet_id=cadet_id, group=chosen_group, day=day)
 
-
     def _update_group_for_new_cadet(self, cadet_id: str, chosen_group: Group, day: Day):
         if chosen_group.is_unallocated:
             ## don't store group as unallocated
             return
         else:
-            self.append(CadetIdWithGroup(cadet_id=cadet_id, group=chosen_group, day=day))
+            self.append(
+                CadetIdWithGroup(cadet_id=cadet_id, group=chosen_group, day=day)
+            )
 
-    def cadet_ids_in_passed_list_not_allocated_to_any_group(self,
-                                                            list_of_cadet_ids: List[str]):
+    def cadet_ids_in_passed_list_not_allocated_to_any_group(
+        self, list_of_cadet_ids: List[str]
+    ):
         my_ids = self.list_of_ids
         ids_in_list_not_given_group = in_x_not_in_y(x=list_of_cadet_ids, y=my_ids)
 
@@ -225,7 +244,6 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
             full_list=list_of_cadets, list_of_ids=ids_in_list_not_given_group
         )
 
-
     def group_for_cadet_id_on_day(self, cadet_id: str, day: Day) -> Group:
         item = self.item_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
         if item is missing_data:
@@ -233,7 +251,7 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
 
         return item.group
 
-    def cadet_is_allocated_to_group_on_day(self, cadet_id:str, day: Day) -> bool:
+    def cadet_is_allocated_to_group_on_day(self, cadet_id: str, day: Day) -> bool:
         item = self.item_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
         return not item is missing_data
 
@@ -241,12 +259,11 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
         idx = self.DEPRECATE_index_of_item_with_cadet_id(cadet_id)
         return self[idx]
 
-
     def item_with_cadet_id_on_day(self, cadet_id: str, day: Day) -> CadetIdWithGroup:
-        items = [item for item in self if item.cadet_id==cadet_id and item.day == day]
-        if len(items)==0:
+        items = [item for item in self if item.cadet_id == cadet_id and item.day == day]
+        if len(items) == 0:
             return missing_data
-        elif len(items)>1:
+        elif len(items) > 1:
             raise Exception("dupilicate groups")
         else:
             return items[0]
@@ -273,8 +290,9 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
 
 
 ## Following used for reporting, must match field names below
-CADET_NAME = "cadet" #### FIXME USED IN REPORTING DELETE
-GROUP_STR_NAME = "group"#### FIXME USED IN REPORTING DELETE
+CADET_NAME = "cadet"  #### FIXME USED IN REPORTING DELETE
+GROUP_STR_NAME = "group"  #### FIXME USED IN REPORTING DELETE
+
 
 @dataclass
 class CadetWithGroup(GenericSkipperManObject):
@@ -299,10 +317,8 @@ class CadetWithGroup(GenericSkipperManObject):
 
         group_name = str(self.group)
 
-        return {
-            CADET_NAME: cadet_name,
-             GROUP_STR_NAME: group_name
-        }
+        return {CADET_NAME: cadet_name, GROUP_STR_NAME: group_name}
+
 
 class ListOfCadetsWithGroup(GenericListOfObjects):
     def _object_class_contained(self):
@@ -312,7 +328,9 @@ class ListOfCadetsWithGroup(GenericListOfObjects):
         return ListOfCadets([cadet_with_group.cadet for cadet_with_group in self])
 
     def attendance_matrix(self) -> ListOfDaySelectors:
-        list_of_availability = ListOfDaySelectors([DaySelector({item.day: True}) for item in self])
+        list_of_availability = ListOfDaySelectors(
+            [DaySelector({item.day: True}) for item in self]
+        )
 
         return list_of_availability
 
@@ -322,8 +340,9 @@ class ListOfCadetsWithGroup(GenericListOfObjects):
     ):
         list_of_cadets_with_group = [
             CadetWithGroup(
-                cadet=list_of_cadets.has_id(allocation.cadet_id), group=allocation.group, day=allocation.day
-
+                cadet=list_of_cadets.has_id(allocation.cadet_id),
+                group=allocation.group,
+                day=allocation.day,
             )
             for allocation in list_of_allocations
         ]

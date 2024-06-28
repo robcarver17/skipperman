@@ -1,4 +1,3 @@
-
 from flask import request, render_template
 
 from flask_login import login_user, logout_user
@@ -11,9 +10,10 @@ from app.web.menus.menu_pages import generate_menu_page_html
 
 
 # If using template these need to match
-USERNAME='username'
-PASSWORD = 'password'
-PASSWORD2='password2'
+USERNAME = "username"
+PASSWORD = "password"
+PASSWORD2 = "password2"
+
 
 def login_page():
     if request.method == "GET":
@@ -24,17 +24,19 @@ def login_page():
 
         return process_login(username=username, password=password)
 
+
 def change_password_page():
-    if request.method=="GET":
+    if request.method == "GET":
         return display_change_password_page()
     else:
         password = request.form[PASSWORD]
         confirm_password = request.form[PASSWORD2]
         return change_password(password, confirm_password)
 
+
 def change_password(password, confirm_password):
-    if password!= confirm_password:
-        flash_error('Passwords dont match!')
+    if password != confirm_password:
+        flash_error("Passwords dont match!")
         return generate_menu_page_html()
 
     username = get_username()
@@ -45,23 +47,28 @@ def change_password(password, confirm_password):
         flash_error("Couldn't change password error %s" % str(e))
     return generate_menu_page_html()
 
+
 def display_change_password_page():
     return render_template("change_password.html")
 
 
 def login_link_page():
-    username = request.args.get('username')
-    password = request.args.get('password')
+    username = request.args.get("username")
+    password = request.args.get("password")
     flash_log("CHANGE YOUR PASSWORD NOW %s!" % get_username())
     return process_login(username=username, password=password)
 
+
 def display_login_form():
     return render_template("login_page.html")
-    #return render_template("test.html")
 
-def display_login_form_on_error():
+
+def display_login_form_on_user_error():
     return render_template("login_page_user_error.html")
-    #return render_template("test.html")
+
+
+def display_login_form_on_password_error():
+    return render_template("login_page_password_error.html")
 
 
 """
@@ -80,22 +87,23 @@ login_html_wrapper = HtmlWrapper(
 
 
 def process_login(username: str, password: str):
-
     all_flask_users = get_all_flask_users()
     if username not in all_flask_users:
         print("User %s not known in %s" % (username, str(all_flask_users)))
-        return display_login_form_on_error()
+        return display_login_form_on_user_error()
 
     user = all_flask_users[username]
 
     if not user.check_password(password):
-        flash_error("Password for user %s not recognised" % password)
-        return display_login_form_on_error()
+        print("Password for user %s not recognised" % password)
+        return display_login_form_on_password_error()
 
     login_user(user)
 
-    if username ==default_admin_user_if_none_defined.username:
-        flash_error("USING DEFAULT ADMIN USER BECAUSE NO SECURITY FILE CREATED YET - ADD A PROPER ADMIN USER ASAP!! (Use Administration Menu)")
+    if username == default_admin_user_if_none_defined.username:
+        flash_error(
+            "USING DEFAULT ADMIN USER BECAUSE NO SECURITY FILE CREATED YET - ADD A PROPER ADMIN USER ASAP!! (Use Administration Menu)"
+        )
 
     flash_log("Welcome %s!" % get_username())
 

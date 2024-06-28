@@ -18,4 +18,3 @@ class DataWAFieldMapping(object):
         self, template_name: str, wa_field_mapping: ListOfWAFieldMappings
     ) -> ListOfWAFieldMappings:
         raise NotImplemented
-

@@ -18,22 +18,25 @@ def bold(text):
 def emphasis(text):
     return Text(text, emphasis=True)
 
+
 @dataclass
 class Heading:
     text: str
     centred: bool = True
-    size: int= 1
+    size: int = 1
 
     @property
     def href(self):
         return self.text.replace(" ", "-").lower()
 
+
 class LinkToHeading:
-    def __init__(self,
+    def __init__(
+        self,
         heading_text: str,
         link_text_to_show: str = arg_not_passed,
-                 help_page: str = ''):
-
+        help_page: str = "",
+    ):
         if link_text_to_show is arg_not_passed:
             link_text_to_show = heading_text
 
@@ -41,20 +44,23 @@ class LinkToHeading:
         self.link_text_to_show = link_text_to_show
         self.help_page = help_page
 
-
     @property
     def href(self):
         return href_from_name(self.heading_text)
 
+
 def href_from_name(heading_text: str):
     return heading_text.replace(" ", "-").lower()
+
 
 class Input:
     input_name: str
     input_name: str
 
 
-Arrow = Enum("Arrow", ["Up", "Down", "Left", "Right", "UpDown","LeftRight", "OutlineLeftRight"])
+Arrow = Enum(
+    "Arrow", ["Up", "Down", "Left", "Right", "UpDown", "LeftRight", "OutlineLeftRight"]
+)
 up_arrow = Arrow.Up
 down_arrow = Arrow.Down
 right_arrow = Arrow.Right
@@ -63,7 +69,10 @@ up_down_arrow = Arrow.UpDown
 left_right_arrow = Arrow.LeftRight
 outline_left_right_arrow = Arrow.OutlineLeftRight
 
-Symbol = Enum("Symbol", ["Copyright", "RegTradeMark", "Lightning","CircleUpArrow", "Umbrella", "At"])
+Symbol = Enum(
+    "Symbol",
+    ["Copyright", "RegTradeMark", "Lightning", "CircleUpArrow", "Umbrella", "At"],
+)
 copyright_symbol = Symbol.Copyright
 reg_tm_symbol = Symbol.RegTradeMark
 lightning_symbol = Symbol.Lightning

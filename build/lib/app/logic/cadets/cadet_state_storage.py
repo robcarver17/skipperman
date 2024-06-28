@@ -1,4 +1,4 @@
-from app.backend.cadets import  get_cadet_from_id
+from app.backend.cadets import  DEPRECATE_get_cadet_from_id
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
 
@@ -13,7 +13,7 @@ def update_state_for_specific_cadet(interface: abstractInterface, cadet_id_selec
 def get_cadet_from_state(interface: abstractInterface) -> Cadet:
     cadet_id = get_cadet_id_selected_from_state(interface)
 
-    return get_cadet_from_id(interface=interface, cadet_id=cadet_id)
+    return DEPRECATE_get_cadet_from_id(interface=interface, cadet_id=cadet_id)
 
 
 def get_cadet_id_selected_from_state(interface: abstractInterface) -> str:

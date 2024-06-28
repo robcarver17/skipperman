@@ -12,16 +12,21 @@ from app.objects.dinghies import ListOfBoatClasses
 from app.objects.patrol_boats import ListOfPatrolBoats
 
 
-def save_list_of_club_dinghies(interface: abstractInterface, list_of_boats: ListOfClubDinghies):
+def save_list_of_club_dinghies(
+    interface: abstractInterface, list_of_boats: ListOfClubDinghies
+):
     dinghy_data = DinghiesData(interface.data)
     dinghy_data.save_list_of_club_dinghies(list_of_boats)
+
 
 def load_list_of_club_dinghies(interface: abstractInterface) -> ListOfClubDinghies:
     dinghy_data = DinghiesData(interface.data)
     return dinghy_data.get_list_of_club_dinghies()
 
 
-def add_new_club_dinghy_given_string_and_return_list(interface: abstractInterface, entry_to_add: str) -> ListOfClubDinghies:
+def add_new_club_dinghy_given_string_and_return_list(
+    interface: abstractInterface, entry_to_add: str
+) -> ListOfClubDinghies:
     dinghy_data = DinghiesData(interface.data)
     list_of_boats = dinghy_data.get_list_of_club_dinghies()
     list_of_boats.add(entry_to_add)
@@ -29,7 +34,10 @@ def add_new_club_dinghy_given_string_and_return_list(interface: abstractInterfac
 
     return list_of_boats
 
-def delete_club_dinghy_given_string_and_return_list(interface: abstractInterface, entry_to_delete: str) -> ListOfClubDinghies:
+
+def delete_club_dinghy_given_string_and_return_list(
+    interface: abstractInterface, entry_to_delete: str
+) -> ListOfClubDinghies:
     dinghy_data = DinghiesData(interface.data)
     list_of_boats = dinghy_data.get_list_of_club_dinghies()
     list_of_boats.delete_given_name(entry_to_delete)
@@ -38,9 +46,9 @@ def delete_club_dinghy_given_string_and_return_list(interface: abstractInterface
     return list_of_boats
 
 
-def modify_club_dinghy_given_string_and_return_list(interface: abstractInterface,
-                                                    existing_value_as_str: str,
-                                                    new_value_as_str: str) -> ListOfClubDinghies:
+def modify_club_dinghy_given_string_and_return_list(
+    interface: abstractInterface, existing_value_as_str: str, new_value_as_str: str
+) -> ListOfClubDinghies:
     dinghy_data = DinghiesData(interface.data)
     list_of_boats = dinghy_data.get_list_of_club_dinghies()
     list_of_boats.delete_given_name(existing_value_as_str)
@@ -56,12 +64,16 @@ def load_list_of_boat_classes(interface: abstractInterface) -> ListOfBoatClasses
     return dinghy_data.get_list_of_boat_classes()
 
 
-def save_list_of_boat_classes(interface: abstractInterface, list_of_boats: ListOfBoatClasses):
+def save_list_of_boat_classes(
+    interface: abstractInterface, list_of_boats: ListOfBoatClasses
+):
     dinghy_data = DinghiesData(interface.data)
     dinghy_data.save_list_of_boat_classes(list_of_boats)
 
 
-def add_new_boat_class_given_string_and_return_list(interface: abstractInterface, entry_to_add: str) -> ListOfBoatClasses:
+def add_new_boat_class_given_string_and_return_list(
+    interface: abstractInterface, entry_to_add: str
+) -> ListOfBoatClasses:
     dinghy_data = DinghiesData(interface.data)
 
     list_of_boats = dinghy_data.get_list_of_boat_classes()
@@ -71,7 +83,9 @@ def add_new_boat_class_given_string_and_return_list(interface: abstractInterface
     return list_of_boats
 
 
-def delete_boat_class_given_string_and_return_list(interface: abstractInterface, entry_to_delete: str) -> ListOfBoatClasses:
+def delete_boat_class_given_string_and_return_list(
+    interface: abstractInterface, entry_to_delete: str
+) -> ListOfBoatClasses:
     dinghy_data = DinghiesData(interface.data)
 
     list_of_boats = dinghy_data.get_list_of_boat_classes()
@@ -81,7 +95,9 @@ def delete_boat_class_given_string_and_return_list(interface: abstractInterface,
     return list_of_boats
 
 
-def modify_boat_class_given_string_and_return_list(interface: abstractInterface, existing_value_as_str: str, new_value_as_str: str) -> ListOfBoatClasses:
+def modify_boat_class_given_string_and_return_list(
+    interface: abstractInterface, existing_value_as_str: str, new_value_as_str: str
+) -> ListOfBoatClasses:
     dinghy_data = DinghiesData(interface.data)
 
     list_of_boats = dinghy_data.get_list_of_boat_classes()
@@ -92,12 +108,16 @@ def modify_boat_class_given_string_and_return_list(interface: abstractInterface,
     return list_of_boats
 
 
-def save_list_of_patrol_boats(interface: abstractInterface, list_of_boats: ListOfPatrolBoats):
+def save_list_of_patrol_boats(
+    interface: abstractInterface, list_of_boats: ListOfPatrolBoats
+):
     boat_data = PatrolBoatsData(interface.data)
     boat_data.save_list_of_patrol_boats(list_of_boats)
 
 
-def add_new_patrol_boat_given_string_and_return_list(interface: abstractInterface, entry_to_add: str) -> ListOfPatrolBoats:
+def add_new_patrol_boat_given_string_and_return_list(
+    interface: abstractInterface, entry_to_add: str
+) -> ListOfPatrolBoats:
     boat_data = PatrolBoatsData(interface.data)
     list_of_patrol_boats = boat_data.get_list_of_patrol_boats()
     list_of_patrol_boats.add(entry_to_add)
@@ -106,7 +126,9 @@ def add_new_patrol_boat_given_string_and_return_list(interface: abstractInterfac
     return list_of_patrol_boats
 
 
-def delete_patrol_boat_given_string_and_return_list(interface: abstractInterface, entry_to_delete: str) -> ListOfPatrolBoats:
+def delete_patrol_boat_given_string_and_return_list(
+    interface: abstractInterface, entry_to_delete: str
+) -> ListOfPatrolBoats:
     boat_data = PatrolBoatsData(interface.data)
     list_of_patrol_boats = boat_data.get_list_of_patrol_boats()
     list_of_patrol_boats.delete_given_name(entry_to_delete)
@@ -115,7 +137,9 @@ def delete_patrol_boat_given_string_and_return_list(interface: abstractInterface
     return list_of_patrol_boats
 
 
-def modify_patrol_boat_given_string_and_return_list(interface: abstractInterface, existing_value_as_str: str, new_value_as_str: str) -> ListOfPatrolBoats:
+def modify_patrol_boat_given_string_and_return_list(
+    interface: abstractInterface, existing_value_as_str: str, new_value_as_str: str
+) -> ListOfPatrolBoats:
     boat_data = PatrolBoatsData(interface.data)
     list_of_patrol_boats = boat_data.get_list_of_patrol_boats()
     list_of_patrol_boats.delete_given_name(existing_value_as_str)
@@ -137,12 +161,17 @@ def load_list_of_qualifications(interface: abstractInterface) -> ListOfQualifica
     quali_data = QualificationData(interface.data)
     return quali_data.load_list_of_qualifications()
 
-def save_list_of_qualifications(interface: abstractInterface, list_of_qualifications: ListOfQualifications):
+
+def save_list_of_qualifications(
+    interface: abstractInterface, list_of_qualifications: ListOfQualifications
+):
     quali_data = QualificationData(interface.data)
     quali_data.save_list_of_qualifications(list_of_qualifications)
 
 
-def add_new_qualification_given_string_and_return_list(interface: abstractInterface, entry_to_add: str) -> ListOfQualifications:
+def add_new_qualification_given_string_and_return_list(
+    interface: abstractInterface, entry_to_add: str
+) -> ListOfQualifications:
     quali_data = QualificationData(interface.data)
     list_of_qualifications = quali_data.load_list_of_qualifications()
     list_of_qualifications.add(entry_to_add)
@@ -151,7 +180,9 @@ def add_new_qualification_given_string_and_return_list(interface: abstractInterf
     return list_of_qualifications
 
 
-def delete_qualification_given_string_and_return_list(interface: abstractInterface, entry_to_delete: str) -> ListOfQualifications:
+def delete_qualification_given_string_and_return_list(
+    interface: abstractInterface, entry_to_delete: str
+) -> ListOfQualifications:
     quali_data = QualificationData(interface.data)
     list_of_qualifications = quali_data.load_list_of_qualifications()
     list_of_qualifications.delete_given_name(entry_to_delete)
@@ -160,7 +191,9 @@ def delete_qualification_given_string_and_return_list(interface: abstractInterfa
     return list_of_qualifications
 
 
-def modify_qualification_given_string_and_return_list(interface: abstractInterface, existing_value_as_str: str, new_value_as_str: str) -> ListOfQualifications:
+def modify_qualification_given_string_and_return_list(
+    interface: abstractInterface, existing_value_as_str: str, new_value_as_str: str
+) -> ListOfQualifications:
     quali_data = QualificationData(interface.data)
     list_of_qualifications = quali_data.load_list_of_qualifications()
     list_of_qualifications.add(new_value_as_str)

@@ -18,7 +18,7 @@ from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 
-from app.logic.instructors.state_storage import get_group_from_state, get_qualification_from_state, \
+from app.logic.shared.qualification_and_tick_state_storage import get_group_from_state, get_qualification_from_state, \
     set_edit_state_of_ticksheet, \
     EDIT_CHECKBOX_STATE, EDIT_DROPDOWN_STATE, NO_EDIT_STATE, get_edit_state_of_ticksheet, clear_cadet_id_in_state
 

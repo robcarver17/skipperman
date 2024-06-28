@@ -7,10 +7,12 @@ NO_EVENT_ID = Exception
 WA_ID_LABEL = "WA_id"
 EVENT_ID_LABEL = "Event_id"
 
+
 @dataclass
 class WAEventMap(GenericSkipperManObject):
     event_id: str
     wa_id: str
+
 
 class ListOfWAEventMaps(GenericListOfObjects):
     @property

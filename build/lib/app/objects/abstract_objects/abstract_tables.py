@@ -66,8 +66,9 @@ class Table(list):
 
         return rows
 
+
 @dataclass
-class DetailTable():
+class DetailTable:
     table: Table
     name: str
     open: bool = False

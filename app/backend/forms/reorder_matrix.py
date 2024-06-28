@@ -1,6 +1,10 @@
 from app.objects.abstract_objects.abstract_tables import RowInTable, Table
-from app.objects.abstract_objects.abstract_text import up_arrow, down_arrow, \
-    right_arrow, left_arrow
+from app.objects.abstract_objects.abstract_text import (
+    up_arrow,
+    down_arrow,
+    right_arrow,
+    left_arrow,
+)
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line
 from app.backend.reporting.arrangement.arrangement_order import (
@@ -10,12 +14,10 @@ from app.backend.reporting.arrangement.arrangement_order import (
 )
 
 
-
 def reorder_matrix(
     current_list_of_entries: list,
     arrangement_of_rows: ArrangementOfRows,
 ) -> Table:
-
     rows = []
     for row_index, current_order_as_list_for_row in enumerate(arrangement_of_rows):
         row = reorder_matrix_table_row(
@@ -65,13 +67,15 @@ LEFT = "LEFT"
 RIGHT = "RIGHT"
 DIVIDER = "_"  ##
 
+
 def list_of_button_values_given_list_of_entries(list_of_entries: list) -> list:
     up_buttons = [get_button_name(entry, UP) for entry in list_of_entries]
     down_buttons = [get_button_name(entry, DOWN) for entry in list_of_entries]
     right_buttons = [get_button_name(entry, RIGHT) for entry in list_of_entries]
     left_buttons = [get_button_name(entry, LEFT) for entry in list_of_entries]
 
-    return up_buttons+down_buttons+right_buttons+left_buttons
+    return up_buttons + down_buttons + right_buttons + left_buttons
+
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 

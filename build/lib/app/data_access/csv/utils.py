@@ -14,5 +14,3 @@ def files_with_extension_in_resolved_pathname(
     file_list_no_extension = [filename.split(".")[0] for filename in file_list]
 
     return file_list_no_extension
-
-

@@ -1,14 +1,23 @@
-
 from app.objects.abstract_objects.abstract_form import (
     yes_no_radio,
 )
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
+from app.objects.abstract_objects.abstract_lines import (
+    ListOfLines,
+    _______________,
+    Line,
+)
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.reporting.rollcall_and_contacts.processes import (
-    load_additional_parameters_for_rollcall_report, SHOW_FULL_NAMES, INCLUDE_UNALLOCATED_CADETS, CLUB_BOAT_ASTERIX,
-HEALTH_DATA, EMERGENCY_CONTACTS
+    load_additional_parameters_for_rollcall_report,
+    SHOW_FULL_NAMES,
+    INCLUDE_UNALLOCATED_CADETS,
+    CLUB_BOAT_ASTERIX,
+    HEALTH_DATA,
+    EMERGENCY_CONTACTS,
 )
-from app.backend.reporting.rollcall_report.configuration import AdditionalParametersForRollcallReport
+from app.backend.reporting.rollcall_report.configuration import (
+    AdditionalParametersForRollcallReport,
+)
 
 
 def reporting_options_form_for_rollcall_additional_parameters(
@@ -48,7 +57,8 @@ def reporting_options_form_for_rollcall_additional_parameters(
     return my_options.add_Lines()
 
 
-def explain_additional_parameters_for_rollcall_report(interface: abstractInterface,
+def explain_additional_parameters_for_rollcall_report(
+    interface: abstractInterface,
     additional_parameters: AdditionalParametersForRollcallReport,
 ) -> ListOfLines:
     if additional_parameters.display_full_names:
@@ -72,4 +82,12 @@ def explain_additional_parameters_for_rollcall_report(interface: abstractInterfa
     else:
         health_str = "Health data not included"
 
-    return ListOfLines([Line(name_str), Line(alloc_str), Line(health_str), Line(contact_str), Line(club_str)])
+    return ListOfLines(
+        [
+            Line(name_str),
+            Line(alloc_str),
+            Line(health_str),
+            Line(contact_str),
+            Line(club_str),
+        ]
+    )

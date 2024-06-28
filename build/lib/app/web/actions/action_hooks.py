@@ -3,15 +3,20 @@ from app.logic.events.events_function_mapping import event_function_mapping
 from app.logic.reporting.reporting_function_mapping import reporting_function_mapping
 from app.logic.volunteers.volunteer_function_mapping import volunteer_function_mapping
 from app.logic.configuration.config_function_mapping import config_function_mapping
-from app.logic.instructors.instructor_function_mapping import instructor_function_mapping
+from app.logic.instructors.instructor_function_mapping import (
+    instructor_function_mapping,
+)
 from app.logic.administration.admin_function_mapping import admin_function_mapping
 from app.logic.utilities.utilities_function_mapping import utilities_function_mapping
 
 from app.web.flask.flask_interface import flaskInterface
 from app.objects.abstract_objects.abstract_form import Form, form_with_message, File
-from app.objects.abstract_objects.form_function_mapping import DisplayAndPostFormFunctionMaps
+from app.objects.abstract_objects.form_function_mapping import (
+    DisplayAndPostFormFunctionMaps,
+)
 from app.logic.abstract_logic_api import LogicApi
 from app.data_access.data import data_api
+
 
 class MissingMethod(Exception):
     pass
@@ -19,7 +24,6 @@ class MissingMethod(Exception):
 
 class SiteActions:
     def get_abstract_form_for_specific_action(self, action_name) -> [File, Form]:
-
         try:
             api = self.get_logic_api_for_specific_action_with_form_mapping(action_name)
         except MissingMethod:
@@ -33,14 +37,20 @@ class SiteActions:
 
         return abstract_form_for_action
 
-    def get_logic_api_for_specific_action_with_form_mapping(self, action_name) -> LogicApi:
+    def get_logic_api_for_specific_action_with_form_mapping(
+        self, action_name
+    ) -> LogicApi:
         try:
             form_mapping = getattr(self, action_name)
         except AttributeError:
             raise MissingMethod
 
-        interface = flaskInterface(action_name=action_name, display_and_post_form_function_maps=form_mapping, data=data_api)
-        interface._DONT_CALL_DIRECTLY_USE_FLUSH_clear_stored_items() ## avoid caching issues
+        interface = flaskInterface(
+            action_name=action_name,
+            display_and_post_form_function_maps=form_mapping,
+            data=data_api,
+        )
+        interface._DONT_CALL_DIRECTLY_USE_FLUSH_clear_stored_items()  ## avoid caching issues
 
         return LogicApi(interface)
 
@@ -57,11 +67,13 @@ class SiteActions:
         return event_function_mapping
 
     @property
-    def view_possible_reports(self,) -> DisplayAndPostFormFunctionMaps:
+    def view_possible_reports(
+        self,
+    ) -> DisplayAndPostFormFunctionMaps:
         return reporting_function_mapping
 
     @property
-    def view_list_of_volunteers(self)-> DisplayAndPostFormFunctionMaps:
+    def view_list_of_volunteers(self) -> DisplayAndPostFormFunctionMaps:
         return volunteer_function_mapping
 
     @property

@@ -1,35 +1,61 @@
 from typing import Union
 
-from app.logic.reporting.qualifications.qualification_status import \
-    write_expected_qualifications_to_temp_csv_file_and_return_filename
+from app.logic.reporting.qualifications.qualification_status import (
+    write_expected_qualifications_to_temp_csv_file_and_return_filename,
+)
 
-from app.backend.ticks_and_qualifications.ticksheets import get_list_of_groups_volunteer_id_can_see, \
-    get_list_of_all_groups_at_event, can_see_all_groups_and_award_qualifications
-from app.logic.instructors.state_storage import update_state_for_group_name
+from app.backend.ticks_and_qualifications.ticksheets import (
+    get_list_of_groups_volunteer_id_can_see,
+    get_list_of_all_groups_at_event,
+    can_see_all_groups_and_award_qualifications,
+)
+from app.logic.shared.qualification_and_tick_state_storage import (
+    update_state_for_group_name,
+)
 from app.objects.events import Event
 
 from app.backend.data.security import get_volunteer_id_of_logged_in_user_or_superuser
 from app.objects.abstract_objects.abstract_text import Heading
 
-from app.objects.abstract_objects.abstract_lines import ListOfLines, Line, _______________
+from app.objects.abstract_objects.abstract_lines import (
+    ListOfLines,
+    Line,
+    _______________,
+)
 
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button, BACK_BUTTON_LABEL, main_menu_button, \
-    HelpButton, back_menu_button
+from app.objects.abstract_objects.abstract_buttons import (
+    ButtonBar,
+    Button,
+    main_menu_button,
+    HelpButton,
+    back_menu_button,
+)
 
 from app.logic.events.events_in_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
-    NewForm, File,
+    NewForm,
+    File,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.instructors.ENTRY3_choose_level import display_form_choose_level_for_group_at_event
+from app.logic.instructors.ENTRY3_choose_level import (
+    display_form_choose_level_for_group_at_event,
+)
+
 
 def display_form_choose_group_for_event(interface: abstractInterface) -> Form:
     event = get_event_from_state(interface)
     group_buttons = get_group_buttons(interface=interface, event=event)
     navbar = get_nav_bar(interface)
-    header = Line(Heading("Tick sheets and reports for instructors: Event: %s; Select group" % str(event), centred=False, size=4))
+    header = Line(
+        Heading(
+            "Tick sheets and reports for instructors: Event: %s; Select group"
+            % str(event),
+            centred=False,
+            size=4,
+        )
+    )
     lines_inside_form = ListOfLines(
         [
             navbar,
@@ -37,17 +63,21 @@ def display_form_choose_group_for_event(interface: abstractInterface) -> Form:
             header,
             _______________,
             _______________,
-            group_buttons
-
+            group_buttons,
         ]
     )
 
     return Form(lines_inside_form)
 
+
 def get_nav_bar(interface: abstractInterface):
     navbar = [main_menu_button, back_menu_button]
     volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser(interface)
-    if can_see_all_groups_and_award_qualifications(interface=interface, event=get_event_from_state(interface), volunteer_id=volunteer_id):
+    if can_see_all_groups_and_award_qualifications(
+        interface=interface,
+        event=get_event_from_state(interface),
+        volunteer_id=volunteer_id,
+    ):
         navbar.append(download_qualification_list_button)
         help = HelpButton("ticksheets_choose_group_SI_skipper_help")
     else:
@@ -57,8 +87,11 @@ def get_nav_bar(interface: abstractInterface):
 
     return ButtonBar(navbar)
 
-DOWNLOAD_QUALIFICATION_LIST = 'Download qualification progress for registered cadets'
-download_qualification_list_button = Button(DOWNLOAD_QUALIFICATION_LIST, nav_button=True)
+
+DOWNLOAD_QUALIFICATION_LIST = "Download qualification progress for registered cadets"
+download_qualification_list_button = Button(
+    DOWNLOAD_QUALIFICATION_LIST, nav_button=True
+)
 
 
 def get_group_buttons(interface: abstractInterface, event: Event) -> Line:
@@ -66,36 +99,51 @@ def get_group_buttons(interface: abstractInterface, event: Event) -> Line:
         return Line(Heading("No groups defined at this event yet"))
 
     volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser(interface)
-    list_of_groups = get_list_of_groups_volunteer_id_can_see(interface=interface,
-                                                             event=event,
-                                                             volunteer_id=volunteer_id)
+    list_of_groups = get_list_of_groups_volunteer_id_can_see(
+        interface=interface, event=event, volunteer_id=volunteer_id
+    )
 
-    if len(list_of_groups)==0:
-        return Line(Heading("The user doesn't have right to see any ticksheets for event %s; must be skipper, admin, SI for event, or DI/AI/RCL2 for a group" % str(event), centred=False, size=4))
+    if len(list_of_groups) == 0:
+        return Line(
+            Heading(
+                "The user doesn't have right to see any ticksheets for event %s; must be skipper, admin, SI for event, or DI/AI/RCL2 for a group"
+                % str(event),
+                centred=False,
+                size=4,
+            )
+        )
 
-    list_with_buttons = [Button(group.group_name, tile=True) for group in list_of_groups]
+    list_with_buttons = [
+        Button(group.group_name, tile=True) for group in list_of_groups
+    ]
 
     return Line(list_with_buttons)
 
+
 def event_is_empty_of_groups(interface: abstractInterface, event: Event) -> bool:
-    return len(get_list_of_all_groups_at_event(interface=interface, event=event))==0
+    return len(get_list_of_all_groups_at_event(interface=interface, event=event)) == 0
 
 
-def post_form_choose_group_for_event(interface: abstractInterface) -> Union[Form, NewForm, File]:
+def post_form_choose_group_for_event(
+    interface: abstractInterface,
+) -> Union[Form, NewForm, File]:
     button_pressed = interface.last_button_pressed()
     if back_menu_button.pressed(button_pressed):
         ## no change to stage required
         return previous_form(interface)
     elif button_pressed == DOWNLOAD_QUALIFICATION_LIST:
-        filename = write_expected_qualifications_to_temp_csv_file_and_return_filename(interface=interface,
-                                                                                      event=get_event_from_state(interface))
+        filename = write_expected_qualifications_to_temp_csv_file_and_return_filename(
+            interface=interface, event=get_event_from_state(interface)
+        )
         return File(filename)
     else:  ## must be a group
         return action_when_group_button_clicked(interface)
 
 
 def previous_form(interface: abstractInterface):
-    return interface.get_new_display_form_for_parent_of_function(post_form_choose_group_for_event)
+    return interface.get_new_display_form_for_parent_of_function(
+        post_form_choose_group_for_event
+    )
 
 
 def action_when_group_button_clicked(interface: abstractInterface) -> NewForm:
@@ -106,5 +154,6 @@ def action_when_group_button_clicked(interface: abstractInterface) -> NewForm:
 
 
 def form_for_view_level(interface: abstractInterface):
-    return interface.get_new_form_given_function(display_form_choose_level_for_group_at_event)
-
+    return interface.get_new_form_given_function(
+        display_form_choose_level_for_group_at_event
+    )

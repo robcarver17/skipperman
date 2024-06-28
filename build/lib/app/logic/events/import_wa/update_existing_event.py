@@ -37,10 +37,11 @@ def post_form_update_existing_event(
     ## check button pressed (can only be upload or back - anything else treat as back as must be an error)
     if button_pressed == UPLOAD_FILE_BUTTON_LABEL:
         return respond_to_uploaded_file_when_updating(interface)
-    elif button_pressed==BACK_BUTTON_LABEL:
+    elif button_pressed == BACK_BUTTON_LABEL:
         return previous_form(interface)
     else:
         button_error_and_back_to_initial_state_form(interface)
+
 
 def respond_to_uploaded_file_when_updating(
     interface: abstractInterface,
@@ -54,11 +55,12 @@ def respond_to_uploaded_file_when_updating(
 
     return import_event_file(interface)
 
+
 def import_event_file(interface: abstractInterface):
     return interface.get_new_form_given_function(display_form_import_event_file)
 
 
-
 def previous_form(interface: abstractInterface):
-    return interface.get_new_display_form_for_parent_of_function(post_form_update_existing_event)
-
+    return interface.get_new_display_form_for_parent_of_function(
+        post_form_update_existing_event
+    )

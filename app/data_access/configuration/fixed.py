@@ -1,5 +1,17 @@
-from app.objects.abstract_objects.abstract_text import copyright_symbol, reg_tm_symbol, up_pointer, down_pointer, \
-    umbrella_symbol, at_symbol, left_pointer, right_pointer, up_down_arrow, outline_left_right_arrow, left_right_arrow
+from app.data_access.configuration.configuration import MIN_CADET_AGE, MAX_CADET_AGE
+from app.objects.abstract_objects.abstract_text import (
+    copyright_symbol,
+    reg_tm_symbol,
+    up_pointer,
+    down_pointer,
+    umbrella_symbol,
+    at_symbol,
+    left_pointer,
+    right_pointer,
+    up_down_arrow,
+    outline_left_right_arrow,
+    left_right_arrow,
+)
 
 A4_PAGESIZE = "A4"
 A3_PAGESIZE = "A3"
@@ -27,23 +39,28 @@ LINE_GAP_AS_PERCENTAGE_OF_CHARACTER_HEIGHT = (
     0.2  ## change if you like but bear in mind readability / efficiency
 )
 MAX_FONT_SIZE = 18
-COPY_OVERWRITE_SYMBOL =  outline_left_right_arrow
+COPY_OVERWRITE_SYMBOL = outline_left_right_arrow
 
-COPY_FILL_SYMBOL =left_right_arrow
+COPY_FILL_SYMBOL = left_right_arrow
 
 BOAT_SHORTHAND = "B"
 ROLE_SHORTHAND = "R"
 BOAT_AND_ROLE_SHORTHAND = "BR"
-REMOVE_SHORTHAND =reg_tm_symbol
+REMOVE_SHORTHAND = reg_tm_symbol
 SWAP_SHORTHAND = up_down_arrow
-SWAP_SHORTHAND2 = ''
+SWAP_SHORTHAND2 = ""
 
 NOT_AVAILABLE_SHORTHAND = umbrella_symbol
 
 
-SAVE_KEYBOARD_SHORTCUT = 's'
-BACK_KEYBOARD_SHORTCUT = 'b'
-CANCEL_KEYBOARD_SHORTCUT = 'c'
-ADD_KEYBOARD_SHORTCUT = 'a'
-MAIN_MENU_KEYBOARD_SHORTCUT = 'm'
-HELP_KEYBOARD_SHORTCUT = 'h'
+SAVE_KEYBOARD_SHORTCUT = "s"
+BACK_KEYBOARD_SHORTCUT = "b"
+CANCEL_KEYBOARD_SHORTCUT = "c"
+ADD_KEYBOARD_SHORTCUT = "a"
+MAIN_MENU_KEYBOARD_SHORTCUT = "m"
+HELP_KEYBOARD_SHORTCUT = "h"
+MONTH_WHEN_CADET_AGE_BRACKET_BEGINS = 9  # September
+LOWEST_FEASIBLE_CADET_AGE = MIN_CADET_AGE - 2
+HIGHEST_FEASIBLE_CADET_AGE = MAX_CADET_AGE + 20  ## might be backfilling
+MONTH_WHEN_NEW_COMMITTEE_YEAR_BEGINS = 11
+YEARS_ON_CADET_COMMITTEE = 2

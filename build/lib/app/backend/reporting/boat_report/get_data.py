@@ -3,11 +3,24 @@ from typing import Dict, List, Tuple
 import pandas as pd
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.reporting.boat_report.boat_report_parameters import AdditionalParametersForBoatReport, FIRST_CADET, \
-    SECOND_CADET, GROUP, BOAT_CLASS, SAIL_NUMBER, CLUB_BOAT
+from app.backend.reporting.boat_report.boat_report_parameters import (
+    AdditionalParametersForBoatReport,
+    FIRST_CADET,
+    SECOND_CADET,
+    GROUP,
+    BOAT_CLASS,
+    SAIL_NUMBER,
+    CLUB_BOAT,
+)
 
-from app.data_access.configuration.configuration import RIVER_TRAINING_GROUP_NAMES, LAKE_TRAINING_GROUP_NAMES
-from app.backend.data.data_for_event import get_data_required_for_event, RequiredDataForReport
+from app.data_access.configuration.configuration import (
+    RIVER_TRAINING_GROUP_NAMES,
+    LAKE_TRAINING_GROUP_NAMES,
+)
+from app.backend.data.data_for_event import (
+    get_data_required_for_event,
+    RequiredDataForReport,
+)
 
 from app.objects.constants import missing_data
 from app.objects.day_selectors import Day
@@ -15,7 +28,11 @@ from app.objects.events import Event
 from app.objects.groups import UNALLOCATED_GROUP_NAME, Group
 
 
-def get_dict_of_df_for_boat_report(interface: abstractInterface, event: Event, additional_parameters:AdditionalParametersForBoatReport)-> Dict[str, pd.DataFrame]:
+def get_dict_of_df_for_boat_report(
+    interface: abstractInterface,
+    event: Event,
+    additional_parameters: AdditionalParametersForBoatReport,
+) -> Dict[str, pd.DataFrame]:
     data_required = get_data_required_for_event(interface=interface, event=event)
     days_in_event = event.weekdays_in_event()
 
@@ -24,53 +41,79 @@ def get_dict_of_df_for_boat_report(interface: abstractInterface, event: Event, a
 
     dict_of_df = {}
     for day in days_in_event:
-        df = get_df_for_day_of_boat_report(day=day,
-                                                             data_required=data_required,
-                                                             additional_parameters=additional_parameters)
+        df = get_df_for_day_of_boat_report(
+            day=day,
+            data_required=data_required,
+            additional_parameters=additional_parameters,
+        )
 
-        if len(df)>0:
+        if len(df) > 0:
             dict_of_df[day.name] = df
 
     return dict_of_df
 
-def get_df_for_day_of_boat_report(day: Day, data_required: RequiredDataForReport, additional_parameters:AdditionalParametersForBoatReport) -> pd.DataFrame:
-    cadet_ids_at_event_on_day = list_of_active_cadet_ids_on_day(day=day, data_required=data_required)
 
-    list_of_row = [row_of_data_for_cadet_id(cadet_id=cadet_id,
-                                            day=day,
-                                            additional_parameters=additional_parameters,
-                                            data_required=data_required,
-                                            cadet_ids_at_event_on_day=cadet_ids_at_event_on_day)
-                   for cadet_id in cadet_ids_at_event_on_day if
-                   is_cadet_id_valid_for_report(cadet_id=cadet_id, day=day, additional_parameters=additional_parameters, data_required=data_required)]
+def get_df_for_day_of_boat_report(
+    day: Day,
+    data_required: RequiredDataForReport,
+    additional_parameters: AdditionalParametersForBoatReport,
+) -> pd.DataFrame:
+    cadet_ids_at_event_on_day = list_of_active_cadet_ids_on_day(
+        day=day, data_required=data_required
+    )
 
-    df=pd.DataFrame(list_of_row)
-    if len(df)==0:
+    list_of_row = [
+        row_of_data_for_cadet_id(
+            cadet_id=cadet_id,
+            day=day,
+            additional_parameters=additional_parameters,
+            data_required=data_required,
+            cadet_ids_at_event_on_day=cadet_ids_at_event_on_day,
+        )
+        for cadet_id in cadet_ids_at_event_on_day
+        if is_cadet_id_valid_for_report(
+            cadet_id=cadet_id,
+            day=day,
+            additional_parameters=additional_parameters,
+            data_required=data_required,
+        )
+    ]
+
+    df = pd.DataFrame(list_of_row)
+    if len(df) == 0:
         return pd.DataFrame()
 
     df = df.sort_values(by=BOAT_CLASS)
 
     return df
 
-def list_of_active_cadet_ids_on_day(day: Day, data_required: RequiredDataForReport) -> List[str]:
-    cadet_ids_at_event_on_day = [cadet_at_event.cadet_id
-                                 for cadet_at_event in data_required.list_of_cadets_at_event
-                                 if cadet_at_event.availability.available_on_day(day) and cadet_at_event.is_active()]
+
+def list_of_active_cadet_ids_on_day(
+    day: Day, data_required: RequiredDataForReport
+) -> List[str]:
+    cadet_ids_at_event_on_day = [
+        cadet_at_event.cadet_id
+        for cadet_at_event in data_required.list_of_cadets_at_event
+        if cadet_at_event.availability.available_on_day(day)
+        and cadet_at_event.is_active()
+    ]
 
     return cadet_ids_at_event_on_day
 
-def row_of_data_for_cadet_id(cadet_id: str,
-                             day: Day,
-                             data_required: RequiredDataForReport,
-                             additional_parameters:AdditionalParametersForBoatReport,
-                             cadet_ids_at_event_on_day: List[str])-> pd.Series:
 
+def row_of_data_for_cadet_id(
+    cadet_id: str,
+    day: Day,
+    data_required: RequiredDataForReport,
+    additional_parameters: AdditionalParametersForBoatReport,
+    cadet_ids_at_event_on_day: List[str],
+) -> pd.Series:
     group = get_group(cadet_id=cadet_id, data_required=data_required, day=day)
 
     first_cadet_name = get_first_cadet_name(
         cadet_id=cadet_id,
         data_required=data_required,
-        additional_parameters=additional_parameters
+        additional_parameters=additional_parameters,
     )
 
     second_cadet_name = get_second_cadet_name_popping_if_required(
@@ -78,37 +121,53 @@ def row_of_data_for_cadet_id(cadet_id: str,
         day=day,
         data_required=data_required,
         additional_parameters=additional_parameters,
-        cadet_ids_at_event_on_day=cadet_ids_at_event_on_day
+        cadet_ids_at_event_on_day=cadet_ids_at_event_on_day,
     )
 
-    boat_class, sail_number, club_boat_flag = get_boat_class_sail_number_and_club_boat_flag(cadet_id=cadet_id,
-                                                                                            day=day,
-                                                                                            data_required=data_required,
-                                                                                    )
+    (
+        boat_class,
+        sail_number,
+        club_boat_flag,
+    ) = get_boat_class_sail_number_and_club_boat_flag(
+        cadet_id=cadet_id,
+        day=day,
+        data_required=data_required,
+    )
 
-    row_for_cadet = pd.Series({FIRST_CADET: first_cadet_name,
+    row_for_cadet = pd.Series(
+        {
+            FIRST_CADET: first_cadet_name,
             SECOND_CADET: second_cadet_name,
             GROUP: group.group_name,
-            BOAT_CLASS:boat_class,
+            BOAT_CLASS: boat_class,
             SAIL_NUMBER: sail_number,
-            CLUB_BOAT: club_boat_flag})
+            CLUB_BOAT: club_boat_flag,
+        }
+    )
 
     if additional_parameters.in_out_columns:
-        in_out_columns = pd.Series({RAMP: MARKER,LAUNCH: MARKER,  IN1: MARKER, OUT1: MARKER, IN2: MARKER})
+        in_out_columns = pd.Series(
+            {RAMP: MARKER, LAUNCH: MARKER, IN1: MARKER, OUT1: MARKER, IN2: MARKER}
+        )
         row_for_cadet = pd.concat([row_for_cadet, in_out_columns])
 
     return row_for_cadet
 
-LAUNCH = 'Launch'
-RAMP = 'Ramp'
-IN1 = 'Return'
-OUT1 = 'Re-launch'
-IN2 = 'Final return'
 
-MARKER = ' [   ] '
+LAUNCH = "Launch"
+RAMP = "Ramp"
+IN1 = "Return"
+OUT1 = "Re-launch"
+IN2 = "Final return"
 
-def get_first_cadet_name(cadet_id: str, data_required: RequiredDataForReport,
-                                                    additional_parameters:AdditionalParametersForBoatReport) -> str:
+MARKER = " [   ] "
+
+
+def get_first_cadet_name(
+    cadet_id: str,
+    data_required: RequiredDataForReport,
+    additional_parameters: AdditionalParametersForBoatReport,
+) -> str:
     display_full_names = additional_parameters.display_full_names
     first_cadet = data_required.list_of_all_cadets.cadet_with_id(cadet_id)
     if display_full_names:
@@ -118,17 +177,27 @@ def get_first_cadet_name(cadet_id: str, data_required: RequiredDataForReport,
 
     return first_cadet_name
 
-def get_second_cadet_name_popping_if_required(cadet_id: str, data_required: RequiredDataForReport,
-                                              day: Day,
-                                                    additional_parameters:AdditionalParametersForBoatReport,
-                                                    cadet_ids_at_event_on_day: List[str]):
+
+def get_second_cadet_name_popping_if_required(
+    cadet_id: str,
+    data_required: RequiredDataForReport,
+    day: Day,
+    additional_parameters: AdditionalParametersForBoatReport,
+    cadet_ids_at_event_on_day: List[str],
+):
     display_full_names = additional_parameters.display_full_names
     second_cadet_name = ""
-    first_cadet_with_dinghy = data_required.list_of_cadets_at_event_with_dinghies.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
+    first_cadet_with_dinghy = (
+        data_required.list_of_cadets_at_event_with_dinghies.object_with_cadet_id_on_day(
+            cadet_id=cadet_id, day=day
+        )
+    )
     if first_cadet_with_dinghy is not missing_data:
         if first_cadet_with_dinghy.has_partner():
             second_cadet_id = first_cadet_with_dinghy.partner_cadet_id
-            second_cadet = data_required.list_of_all_cadets.cadet_with_id(second_cadet_id)
+            second_cadet = data_required.list_of_all_cadets.cadet_with_id(
+                second_cadet_id
+            )
             if display_full_names:
                 second_cadet_name = second_cadet.name
             else:
@@ -142,22 +211,34 @@ def get_second_cadet_name_popping_if_required(cadet_id: str, data_required: Requ
     return second_cadet_name
 
 
-
-def is_cadet_id_valid_for_report(cadet_id: str, day: Day, data_required: RequiredDataForReport,
-                    additional_parameters:AdditionalParametersForBoatReport
-                   ) -> bool:
+def is_cadet_id_valid_for_report(
+    cadet_id: str,
+    day: Day,
+    data_required: RequiredDataForReport,
+    additional_parameters: AdditionalParametersForBoatReport,
+) -> bool:
     group = get_group(cadet_id=cadet_id, data_required=data_required, day=day)
 
-    return is_group_valid_for_report(group=group, additional_parameters=additional_parameters)
+    return is_group_valid_for_report(
+        group=group, additional_parameters=additional_parameters
+    )
 
-def get_group(cadet_id: str, data_required: RequiredDataForReport,
-day: Day,
-                   ) -> Group:
-    group = data_required.list_of_cadet_ids_with_groups.group_for_cadet_id_on_day(cadet_id=cadet_id, day=day)
+
+def get_group(
+    cadet_id: str,
+    data_required: RequiredDataForReport,
+    day: Day,
+) -> Group:
+    group = data_required.list_of_cadet_ids_with_groups.group_for_cadet_id_on_day(
+        cadet_id=cadet_id, day=day
+    )
 
     return group
 
-def is_group_valid_for_report(group: Group, additional_parameters:AdditionalParametersForBoatReport):
+
+def is_group_valid_for_report(
+    group: Group, additional_parameters: AdditionalParametersForBoatReport
+):
     if additional_parameters.exclude_unallocated_groups:
         if group.group_name is UNALLOCATED_GROUP_NAME:
             return False
@@ -172,9 +253,15 @@ def is_group_valid_for_report(group: Group, additional_parameters:AdditionalPara
 
     return True
 
-def get_boat_class_sail_number_and_club_boat_flag(cadet_id: str, day: Day, data_required: RequiredDataForReport) -> Tuple[str,str,str]:
 
-    first_cadet_with_dinghy = data_required.list_of_cadets_at_event_with_dinghies.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
+def get_boat_class_sail_number_and_club_boat_flag(
+    cadet_id: str, day: Day, data_required: RequiredDataForReport
+) -> Tuple[str, str, str]:
+    first_cadet_with_dinghy = (
+        data_required.list_of_cadets_at_event_with_dinghies.object_with_cadet_id_on_day(
+            cadet_id=cadet_id, day=day
+        )
+    )
     if first_cadet_with_dinghy is not missing_data:
         boat_class_id = first_cadet_with_dinghy.boat_class_id
         sail_number = first_cadet_with_dinghy.sail_number
@@ -184,11 +271,12 @@ def get_boat_class_sail_number_and_club_boat_flag(cadet_id: str, day: Day, data_
 
     boat_name = boat_name[:10]
 
-    club_boat_id = data_required.list_of_cadets_at_event_with_club_dinghies.dinghy_for_cadet_id_on_day(cadet_id=cadet_id, day=day)
+    club_boat_id = data_required.list_of_cadets_at_event_with_club_dinghies.dinghy_for_cadet_id_on_day(
+        cadet_id=cadet_id, day=day
+    )
     if club_boat_id is missing_data:
         club_boat_flag = ""
     else:
         club_boat_flag = "(Club boat)"
 
     return boat_name, sail_number, club_boat_flag
-

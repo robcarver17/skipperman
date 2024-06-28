@@ -1,7 +1,15 @@
 from typing import List
 
-from app.objects.qualifications import ListOfQualifications,ListOfCadetsWithQualifications
-from app.objects.ticks import ListOfTickSubStages, ListOfTickSheetItems, ListOfCadetsWithTickListItems
+from app.objects.qualifications import (
+    ListOfQualifications,
+    ListOfCadetsWithQualifications,
+)
+from app.objects.ticks import (
+    ListOfTickSubStages,
+    ListOfTickSheetItems,
+    ListOfCadetsWithTickListItems,
+)
+
 
 class DataListOfQualifications(object):
     def read(self) -> ListOfQualifications:
@@ -17,7 +25,6 @@ class DataListOfCadetsWithQualifications(object):
 
     def write(self, list_of_cadets_with_qualifications: ListOfCadetsWithQualifications):
         raise NotImplemented
-
 
 
 class DataListOfTickSubStages(object):
@@ -36,7 +43,6 @@ class DataListOfTickSheetItems(object):
         raise NotImplemented
 
 
-
 class DataListOfCadetsWithTickListItems(object):
     def read(self) -> ListOfCadetsWithTickListItems:
         raise NotImplemented
@@ -47,5 +53,9 @@ class DataListOfCadetsWithTickListItems(object):
     def read_for_cadet_id(self, cadet_id: str):
         raise NotImplemented
 
-    def write_for_cadet_id(self, list_of_cadets_with_tick_list_items: ListOfCadetsWithTickListItems, cadet_id: str):
+    def write_for_cadet_id(
+        self,
+        list_of_cadets_with_tick_list_items: ListOfCadetsWithTickListItems,
+        cadet_id: str,
+    ):
         raise NotImplemented

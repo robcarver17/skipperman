@@ -1,6 +1,6 @@
 from enum import Enum
 
-POSSIBLE_ARRANGEMENT_NAMES = [ "PassedList", "Rectangle"]
+POSSIBLE_ARRANGEMENT_NAMES = ["PassedList", "Rectangle"]
 ArrangementMethod = Enum("ArrangementMethod", POSSIBLE_ARRANGEMENT_NAMES)
 
 ARRANGE_PASSED_LIST = ArrangementMethod.PassedList

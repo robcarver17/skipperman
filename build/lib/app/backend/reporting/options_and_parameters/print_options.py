@@ -2,12 +2,21 @@ from dataclasses import dataclass
 
 from app.objects.constants import arg_not_passed
 
-from app.data_access.configuration.fixed import A4_PAGESIZE, UNIT_MM, WIDTH, HEIGHT, PAGESIZE_MM, TITLE_MULTIPLIER, \
-    EDGE_MARGIN_MM, COLUMN_GAP_MM
+from app.data_access.configuration.fixed import (
+    A4_PAGESIZE,
+    UNIT_MM,
+    WIDTH,
+    HEIGHT,
+    PAGESIZE_MM,
+    TITLE_MULTIPLIER,
+    EDGE_MARGIN_MM,
+    COLUMN_GAP_MM,
+)
 from app.objects.events import Event
 from app.objects.generic import GenericSkipperManObject
 
 AUTO_FONT_SIZE = 0
+
 
 @dataclass
 class PrintOptions(GenericSkipperManObject):
@@ -28,14 +37,14 @@ class PrintOptions(GenericSkipperManObject):
 
     @property
     def auto_font_size(self) -> bool:
-        return self.font_size ==AUTO_FONT_SIZE
+        return self.font_size == AUTO_FONT_SIZE
 
     @property
     def filename_with_extension(self):
         if self.output_pdf:
-            return self.filename+".pdf"
+            return self.filename + ".pdf"
         else:
-            return self.filename+".xlsx"
+            return self.filename + ".xlsx"
 
     @classmethod
     def create_empty(cls):
@@ -105,5 +114,3 @@ def get_default_filename_for_report(default_title: str) -> str:
     default_file_name = default_file_name.replace(":", "_")
 
     return default_file_name
-
-

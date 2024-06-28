@@ -4,8 +4,16 @@ from fpdf import FPDF
 import numpy as np
 
 from app.backend.reporting.options_and_parameters.print_options import PrintOptions
-from app.data_access.configuration.fixed import ALL_PAGESIZE, ALL_FONTS, UNIT_MM, MM_PER_POINT_OF_FONT_SIZE, \
-    APPROX_WIDTH_TO_HEIGHT_RATIO, TITLE_MULTIPLIER, LINE_GAP_AS_PERCENTAGE_OF_CHARACTER_HEIGHT, MAX_FONT_SIZE
+from app.data_access.configuration.fixed import (
+    ALL_PAGESIZE,
+    ALL_FONTS,
+    UNIT_MM,
+    MM_PER_POINT_OF_FONT_SIZE,
+    APPROX_WIDTH_TO_HEIGHT_RATIO,
+    TITLE_MULTIPLIER,
+    LINE_GAP_AS_PERCENTAGE_OF_CHARACTER_HEIGHT,
+    MAX_FONT_SIZE,
+)
 from app.backend.reporting.process_stages.strings_columns_groups import (
     PageWithColumns,
     MarkedUpString,
@@ -18,7 +26,7 @@ class PdfLayout:
 
     def add_page(self, page: PageWithColumns):
         self.setup_page(page)
-        add_page_contents_to_pdf_layout(self,page)
+        add_page_contents_to_pdf_layout(self, page)
         self.clear_page()
 
     def setup_page(self, page: PageWithColumns):
@@ -31,9 +39,8 @@ class PdfLayout:
         pdf.set_auto_page_break(0)
         pdf.add_page()
 
-
     @property
-    def page(self)-> PageWithColumns:
+    def page(self) -> PageWithColumns:
         page = getattr(self, "_page", None)
         if page is None:
             raise Exception("Need to add a page")
@@ -46,10 +53,9 @@ class PdfLayout:
 
     def clear_page(self):
         try:
-            del(self._page)
+            del self._page
         except:
             pass
-
 
     def add_title_to_page(self):
         title_str = self.title_str
@@ -380,7 +386,7 @@ class PdfLayout:
         title_str_this_page = self.current_page_title_str
         master_title = self.print_options.title_str
 
-        title_str = master_title+" "+ title_str_this_page
+        title_str = master_title + " " + title_str_this_page
 
         return title_str
 

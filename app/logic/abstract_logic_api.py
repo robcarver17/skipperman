@@ -1,22 +1,27 @@
 from typing import Union
 from dataclasses import dataclass
-from app.objects.abstract_objects.abstract_interface import abstractInterface, form_with_message_and_finished_button, \
-   finished_button_with_custom_label
+from app.objects.abstract_objects.abstract_interface import (
+    abstractInterface,
+    form_with_message_and_finished_button,
+    finished_button_with_custom_label,
+)
 from app.objects.abstract_objects.abstract_form import (
     NewForm,
     Form,
-
 )
 from app.objects.abstract_objects.abstract_buttons import is_finished_button
-from app.objects.abstract_objects.form_function_mapping import FormNameFunctionNameMapping, MissingFormName, \
-    DisplayAndPostFormFunctionMaps, INITIAL_STATE
+from app.objects.abstract_objects.form_function_mapping import (
+    FormNameFunctionNameMapping,
+    MissingFormName,
+    DisplayAndPostFormFunctionMaps,
+    INITIAL_STATE,
+)
 from app.objects.constants import NoButtonPressed, arg_not_passed
 
 
 @dataclass
 class LogicApi:
     interface: abstractInterface
-
 
     def get_form(self) -> Form:
         if self.interface.is_posted_form:
@@ -31,9 +36,13 @@ class LogicApi:
 
         due_for_another_backup = self.interface.due_for_another_data_backup()
         if due_for_another_backup:
-            return form_with_message_and_finished_button(interface=self.interface,
-                                                         message="Time to backup data",
-                                                         button=finished_button_with_custom_label("Press to do backup - might take a couple of minutes"))
+            return form_with_message_and_finished_button(
+                interface=self.interface,
+                message="Time to backup data",
+                button=finished_button_with_custom_label(
+                    "Press to do backup - might take a couple of minutes"
+                ),
+            )
 
         print("Getting displayed form for %s" % form_name)
         form = self.get_displayed_form_given_form_name(form_name)
@@ -66,9 +75,11 @@ class LogicApi:
             print("Backing up")
             self.interface.make_data_backup()
 
-        new_form = self.interface.get_where_finished_button_should_lead_to(default=INITIAL_STATE)
+        new_form = self.interface.get_where_finished_button_should_lead_to(
+            default=INITIAL_STATE
+        )
         print("Finished button form going to %s" % new_form)
-        self.interface.clear_where_finished_button_should_lead_to() ## to avoid problems
+        self.interface.clear_where_finished_button_should_lead_to()  ## to avoid problems
 
         form = self.redirect_to_new_form(NewForm(new_form))
 
@@ -96,10 +107,16 @@ class LogicApi:
         self, form_name: str
     ) -> Union[Form, NewForm]:
         try:
-            form_function = self.display_and_post_form_function_maps.get_function_for_form_name(form_name=form_name, is_display=False)
+            form_function = (
+                self.display_and_post_form_function_maps.get_function_for_form_name(
+                    form_name=form_name, is_display=False
+                )
+            )
         except MissingFormName:
             print("Form %s not recognised" % form_name)
-            self.interface.log_error("Internal error, form name %s not recognised" % form_name)
+            self.interface.log_error(
+                "Internal error, form name %s not recognised" % form_name
+            )
             return self.get_posted_form_with_finished_button_pressed()
 
         form_contents = form_function(self.interface)
@@ -126,10 +143,16 @@ class LogicApi:
     ) -> Union[Form, NewForm]:
         print("get_displayed_form_given_form_name %s" % form_name)
         try:
-            form_function = self.display_and_post_form_function_maps.get_function_for_form_name(form_name=form_name, is_display=True)
+            form_function = (
+                self.display_and_post_form_function_maps.get_function_for_form_name(
+                    form_name=form_name, is_display=True
+                )
+            )
         except MissingFormName:
             print("Form %s not recognised" % form_name)
-            self.interface.log_error("Internal error, form name %s not recognised" % form_name)
+            self.interface.log_error(
+                "Internal error, form name %s not recognised" % form_name
+            )
             return self.get_posted_form_with_finished_button_pressed()
 
         form_contents = form_function(self.interface)
@@ -160,18 +183,20 @@ class LogicApi:
         return form_name
 
     @property
-    def display_and_post_form_function_maps(self)-> DisplayAndPostFormFunctionMaps:
-
+    def display_and_post_form_function_maps(self) -> DisplayAndPostFormFunctionMaps:
         mapping = self.interface.display_and_post_form_function_maps
         if mapping is arg_not_passed:
             raise Exception("You need to pass a mapping into interface")
 
         return mapping
 
+
 initial_state_form = NewForm(INITIAL_STATE)
 
 
-def button_error_and_back_to_initial_state_form(interface: abstractInterface) -> NewForm:
+def button_error_and_back_to_initial_state_form(
+    interface: abstractInterface,
+) -> NewForm:
     try:
         button = interface.last_button_pressed()
         interface.log_error("Button %s not recognised!" % button)

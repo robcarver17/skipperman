@@ -5,13 +5,17 @@ from app.data_access.classes.list_of_events import DataListOfEvents
 from app.data_access.classes.wa_event_mapping import DataWAEventMapping
 from app.data_access.classes.wa_field_mapping import DataWAFieldMapping
 from app.data_access.classes.mapped_wa_event import DataMappedWAEvent
-from app.data_access.classes.print_options import DataListOfPrintOptions, DataListOfArrangementAndGroupOrderOptions
+from app.data_access.classes.print_options import (
+    DataListOfPrintOptions,
+    DataListOfArrangementAndGroupOrderOptions,
+)
 from app.data_access.classes.volunteers import *
 from app.data_access.classes.resources import *
 from app.data_access.classes.dinghies_at_events import *
 from app.data_access.classes.users import *
 from app.data_access.classes.qualifications import *
 from app.data_access.classes.food_and_clothing import *
+
 
 class GenericDataApi(object):
     ## FOLLOWING SHOULD BE OVERWRITTEN BY SPECIFIC CLASSES
@@ -45,7 +49,6 @@ class GenericDataApi(object):
     def data_mapped_wa_event(self) -> DataMappedWAEvent:
         raise NotImplemented
 
-
     @property
     def data_identified_cadets_at_event(
         self,
@@ -68,9 +71,10 @@ class GenericDataApi(object):
     def data_print_options(self) -> DataListOfPrintOptions:
         raise NotImplemented
 
-
     @property
-    def data_arrangement_and_group_order_options(self) -> DataListOfArrangementAndGroupOrderOptions:
+    def data_arrangement_and_group_order_options(
+        self,
+    ) -> DataListOfArrangementAndGroupOrderOptions:
         raise NotImplemented
 
     @property
@@ -82,7 +86,9 @@ class GenericDataApi(object):
         raise NotImplemented
 
     @property
-    def data_list_of_cadet_volunteer_associations(self) -> DataListOfCadetVolunteerAssociations:
+    def data_list_of_cadet_volunteer_associations(
+        self,
+    ) -> DataListOfCadetVolunteerAssociations:
         raise NotImplemented
 
     @property
@@ -90,11 +96,15 @@ class GenericDataApi(object):
         raise NotImplemented
 
     @property
-    def data_list_of_identified_volunteers_at_event(self) -> DataListOfIdentifiedVolunteersAtEvent:
+    def data_list_of_identified_volunteers_at_event(
+        self,
+    ) -> DataListOfIdentifiedVolunteersAtEvent:
         raise NotImplemented
 
     @property
-    def data_list_of_volunteers_in_roles_at_event(self) -> DataListOfVolunteersInRolesAtEvent:
+    def data_list_of_volunteers_in_roles_at_event(
+        self,
+    ) -> DataListOfVolunteersInRolesAtEvent:
         raise NotImplemented
 
     @property
@@ -106,11 +116,15 @@ class GenericDataApi(object):
         raise NotImplemented
 
     @property
-    def data_list_of_volunteers_at_event_with_patrol_boats(self) -> DataListOfVolunteersAtEventWithPatrolBoats:
+    def data_list_of_volunteers_at_event_with_patrol_boats(
+        self,
+    ) -> DataListOfVolunteersAtEventWithPatrolBoats:
         raise NotImplemented
 
     @property
-    def data_list_of_cadets_at_event_with_club_dinghies(self) -> DataListOfCadetAtEventWithClubDinghies:
+    def data_list_of_cadets_at_event_with_club_dinghies(
+        self,
+    ) -> DataListOfCadetAtEventWithClubDinghies:
         raise NotImplemented
 
     @property
@@ -118,7 +132,9 @@ class GenericDataApi(object):
         raise NotImplemented
 
     @property
-    def data_list_of_cadets_with_dinghies_at_event(self) -> DataListOfCadetAtEventWithDinghies:
+    def data_list_of_cadets_with_dinghies_at_event(
+        self,
+    ) -> DataListOfCadetAtEventWithDinghies:
         raise NotImplemented
 
     @property
@@ -130,7 +146,9 @@ class GenericDataApi(object):
         raise NotImplemented
 
     @property
-    def data_list_of_cadets_with_qualifications(self) -> DataListOfCadetsWithQualifications:
+    def data_list_of_cadets_with_qualifications(
+        self,
+    ) -> DataListOfCadetsWithQualifications:
         raise NotImplemented
 
     @property
@@ -142,32 +160,37 @@ class GenericDataApi(object):
         raise NotImplemented
 
     @property
-    def data_list_of_cadets_with_tick_list_items(self) -> DataListOfCadetsWithTickListItems:
+    def data_list_of_cadets_with_tick_list_items(
+        self,
+    ) -> DataListOfCadetsWithTickListItems:
         raise NotImplemented
 
     @property
     def data_list_of_targets_for_role_at_event(self) -> DataListOfTargetForRoleAtEvent:
-        raise  NotImplemented
-
-    @property
-    def data_list_of_cadets_with_food_requirement_at_event(self) -> DataListOfCadetsWithFoodRequirementsAtEvent:
         raise NotImplemented
 
     @property
-    def data_list_of_volunteers_with_food_requirement_at_event(self) -> DataListOfVolunteersWithFoodRequirementsAtEvent:
+    def data_list_of_cadets_with_food_requirement_at_event(
+        self,
+    ) -> DataListOfCadetsWithFoodRequirementsAtEvent:
         raise NotImplemented
-
 
     @property
-    def data_list_of_cadets_with_clothing_at_event(self) -> DataListOfCadetsWithClothingAtEvent:
+    def data_list_of_volunteers_with_food_requirement_at_event(
+        self,
+    ) -> DataListOfVolunteersWithFoodRequirementsAtEvent:
         raise NotImplemented
 
+    @property
+    def data_list_of_cadets_with_clothing_at_event(
+        self,
+    ) -> DataListOfCadetsWithClothingAtEvent:
+        raise NotImplemented
 
     ## Specials
 
-    def delete_all_master_data(self, are_you_sure: bool =False):
+    def delete_all_master_data(self, are_you_sure: bool = False):
         pass
-
 
     @property
     def master_data_path(self) -> str:
@@ -177,9 +200,6 @@ class GenericDataApi(object):
     def user_data_path(self) -> str:
         raise NotImplemented
 
-
     @property
     def backup_data_path(self) -> str:
         raise NotImplemented
-
-

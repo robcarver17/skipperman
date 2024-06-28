@@ -1,7 +1,7 @@
 from app.backend.data.events import get_event_from_id
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.event_mapping import    EventMappingData
+from app.backend.data.event_mapping import EventMappingData
 from app.objects.events import Event
 from app.backend.wa_import.load_wa_file import (
     get_event_id_from_wa_df,
@@ -19,16 +19,19 @@ def verify_file_has_correct_wa_id(
 
     wa_id = get_event_id_from_wa_df(wa_as_df=wa_as_df)
 
-    __is_new_event_not_used = confirm_correct_wa_mapping_and_return_true_if_new_event(interface=interface, wa_id=wa_id, event=event)
+    __is_new_event_not_used = confirm_correct_wa_mapping_and_return_true_if_new_event(
+        interface=interface, wa_id=wa_id, event=event
+    )
 
 
-def verify_and_if_required_add_wa_mapping(interface: abstractInterface, filename: str, event: Event):
-
+def verify_and_if_required_add_wa_mapping(
+    interface: abstractInterface, filename: str, event: Event
+):
     wa_as_df = load_raw_wa_file(filename)
     wa_id = get_event_id_from_wa_df(wa_as_df=wa_as_df)
 
-    is_new_event = confirm_correct_wa_mapping_and_return_true_if_new_event(interface=interface,
-        wa_id=wa_id, event=event
+    is_new_event = confirm_correct_wa_mapping_and_return_true_if_new_event(
+        interface=interface, wa_id=wa_id, event=event
     )
 
     # Add the WA/Event id mapping to the relevant table unless we are updating an existing event
@@ -37,16 +40,12 @@ def verify_and_if_required_add_wa_mapping(interface: abstractInterface, filename
 
 
 def confirm_correct_wa_mapping_and_return_true_if_new_event(
-    interface: abstractInterface,
-    event: Event, wa_id: str
+    interface: abstractInterface, event: Event, wa_id: str
 ) -> bool:
-
     wa_event_mapping = EventMappingData(interface.data)
     event_id = event.id
 
-    event_is_already_in_mapping_list = wa_event_mapping.is_event_in_mapping_list(
-        event
-    )
+    event_is_already_in_mapping_list = wa_event_mapping.is_event_in_mapping_list(event)
 
     if event_is_already_in_mapping_list:
         existing_wa_id = wa_event_mapping.get_wa_id_for_event(event)
@@ -69,7 +68,9 @@ def confirm_correct_wa_mapping_and_return_true_if_new_event(
             # existing event mapped correctly - shouldn't get here, but for good order:
             return False
         else:
-            other_event = get_event_from_id(interface=interface, event_id=existing_event_id)
+            other_event = get_event_from_id(
+                interface=interface, event_id=existing_event_id
+            )
             raise FileError(
                 "WA ID %s in file is already mapped to a different existing event with ID %s - are you sure you have the right file? [my id %s, other id %s]"
                 % (wa_id, other_event, event_id, existing_event_id)
@@ -79,15 +80,14 @@ def confirm_correct_wa_mapping_and_return_true_if_new_event(
     return True
 
 
-def add_wa_to_event_mapping(interface: abstractInterface,  event: Event, wa_id: str):
-    wa_event_mapping  = EventMappingData(interface.data)
+def add_wa_to_event_mapping(interface: abstractInterface, event: Event, wa_id: str):
+    wa_event_mapping = EventMappingData(interface.data)
     event_id = event.id
     wa_event_mapping.add_event(event_id=event_id, wa_id=wa_id)
 
 
-
-
-def is_wa_file_mapping_setup_for_event(interface: abstractInterface, event: Event) -> bool:
-    event_mapping_data=EventMappingData(interface.data)
+def is_wa_file_mapping_setup_for_event(
+    interface: abstractInterface, event: Event
+) -> bool:
+    event_mapping_data = EventMappingData(interface.data)
     return event_mapping_data.is_event_in_mapping_list(event=event)
-

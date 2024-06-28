@@ -1,7 +1,11 @@
 import os
 
-from app.data_access.configuration.configuration import DOWNLOAD_DIRECTORY, PUBLIC_REPORTING_SUBDIRECTORY, UPLOADS, \
-    PUBLIC_WEB_PATH
+from app.data_access.configuration.configuration import (
+    DOWNLOAD_DIRECTORY,
+    PUBLIC_REPORTING_SUBDIRECTORY,
+    UPLOADS,
+    PUBLIC_WEB_PATH,
+)
 
 
 def get_files_in_directory(mypath: str):
@@ -17,14 +21,13 @@ public_reporting_directory = os.path.join(home_directory, PUBLIC_REPORTING_SUBDI
 upload_directory = os.path.join(home_directory, UPLOADS)
 download_directory = os.path.join(home_directory, DOWNLOAD_DIRECTORY)
 
-skipperman_directory = os.path.join(home_directory, 'skipperman')
-docs_directory = os.path.join(skipperman_directory, 'docs')
+skipperman_directory = os.path.join(home_directory, "skipperman")
+docs_directory = os.path.join(skipperman_directory, "docs")
 
 try:
     os.mkdir(public_reporting_directory)
 except:
     pass
-
 
 
 try:
@@ -39,7 +42,7 @@ except:
 
 
 def web_pathname_of_file(filename_with_extension: str):
-    return PUBLIC_WEB_PATH+filename_with_extension
+    return PUBLIC_WEB_PATH + filename_with_extension
 
 
 def temp_file_name() -> str:

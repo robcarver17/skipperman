@@ -2,17 +2,29 @@ import os
 
 from werkzeug.exceptions import RequestEntityTooLarge
 
-from app.data_access.file_access import public_reporting_directory, web_pathname_of_file, get_files_in_directory
+from app.data_access.file_access import (
+    public_reporting_directory,
+    web_pathname_of_file,
+    get_files_in_directory,
+)
 from app.objects.abstract_objects.abstract_form import textInput, fileInput, Form
-from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import (
+    CANCEL_BUTTON_LABEL,
+    Button,
+    ButtonBar,
+)
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
-from app.objects.abstract_objects.abstract_interface import abstractInterface, get_file_from_interface, \
-    form_with_message_and_finished_button
+from app.objects.abstract_objects.abstract_interface import (
+    abstractInterface,
+    get_file_from_interface,
+    form_with_message_and_finished_button,
+)
 
 empty_name = ""
 FILE_NAME = "filename"
 FILE_FIELD = "file"
 UPLOAD_FILE_BUTTON_LABEL = "Upload file"
+
 
 def display_form_for_upload_public_file(interface: abstractInterface):
     buttons = ButtonBar([cancel_button, upload_button])
@@ -33,10 +45,9 @@ def display_form_for_upload_public_file(interface: abstractInterface):
     return Form(list_of_lines)
 
 
-
-
 upload_button = Button(UPLOAD_FILE_BUTTON_LABEL, nav_button=True)
 cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
+
 
 def post_form_for_upload_public_file(interface: abstractInterface):
     try:
@@ -45,19 +56,20 @@ def post_form_for_upload_public_file(interface: abstractInterface):
         interface.log_error("File is too big to upload")
         return display_form_for_upload_public_file(interface)
 
-    previous_form = interface.get_new_display_form_for_parent_of_function(display_form_for_upload_public_file)
+    previous_form = interface.get_new_display_form_for_parent_of_function(
+        display_form_for_upload_public_file
+    )
     if last_button == CANCEL_BUTTON_LABEL:
         return previous_form
 
     filename = interface.value_from_form(FILE_NAME)
-    if len(filename)==0:
+    if len(filename) == 0:
         interface.log_error("You need to enter the filename")
         return display_form_for_upload_public_file(interface)
 
     if filename in get_files_in_directory(public_reporting_directory):
         interface.log_error("Filename already exists - use update button instead")
         return display_form_for_upload_public_file(interface)
-
 
     full_filename = os.path.join(public_reporting_directory, filename)
     web_path = web_pathname_of_file(filename)
@@ -69,5 +81,8 @@ def post_form_for_upload_public_file(interface: abstractInterface):
         interface.log_error("Something went wrong uploading file: error %s" % str(e))
         return display_form_for_upload_public_file(interface)
 
-    return form_with_message_and_finished_button("Uploaded new file %s" % (web_path), interface=interface,
-                                                 function_whose_parent_go_to_on_button_press=display_form_for_upload_public_file)
+    return form_with_message_and_finished_button(
+        "Uploaded new file %s" % (web_path),
+        interface=interface,
+        function_whose_parent_go_to_on_button_press=display_form_for_upload_public_file,
+    )

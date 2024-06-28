@@ -10,17 +10,14 @@ FINAL_ADD_BUTTON_LABEL = "Yes - these details are correct - add to data"
 # specific event; WA
 WA_UPLOAD_BUTTON_LABEL = "Upload initial Wild Apricot export file"
 WA_FIELD_MAPPING_BUTTON_LABEL = "Set up mapping of Wild Apricot fields"
-WA_CHECK_FIELD_MAPPING_BUTTON_LABEL = "Check mapping of Wild Apricot fields against uploaded file"
+WA_CHECK_FIELD_MAPPING_BUTTON_LABEL = (
+    "Check mapping of Wild Apricot fields against uploaded file"
+)
 WA_MODIFY_FIELD_MAPPING_BUTTON_LABEL = "Modify WA mapping (not recommended!)"
 WA_IMPORT_BUTTON_LABEL = "Import data from uploaded Wild Apricot file"
 WA_UPDATE_BUTTON_LABEL = "Update from WA export file"
 
 # Iterative adding of cadets
-DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL = "I have double checked the cadet details entered - let me add this cadet"
-CHECK_CADET_FOR_ME_BUTTON_LABEL = "Please check the details again for me before I add"
-FINAL_CADET_ADD_BUTTON_LABEL = "Yes - these details are correct - add this new cadet"
-SEE_ALL_CADETS_BUTTON_LABEL = "Choose from all existing cadets"
-SEE_SIMILAR_CADETS_ONLY_LABEL = "See similar cadets only"
 #
 # Field mapping
 MAP_TO_TEMPLATE_BUTTON_LABEL = "Use template mapping"
@@ -39,19 +36,23 @@ SAVE_CHANGES = "Save changes"
 UPLOAD_FILE_BUTTON_LABEL = "Upload selected file"
 
 # update master event rows
-USE_ORIGINAL_DATA_BUTTON_LABEL = "Use original data that we already have (ignores subsequent changes in WA file)"
-USE_NEW_DATA_BUTTON_LABEL = "Use new data imported from latest WA file (recommended)"
-USE_DATA_IN_FORM_BUTTON_LABEL = (
-    "Use data as edited in form above (will be newest data from WA file if no changes made in form)"
+USE_ORIGINAL_DATA_BUTTON_LABEL = (
+    "Use original data that we already have (ignores subsequent changes in WA file)"
 )
+USE_NEW_DATA_BUTTON_LABEL = "Use new data imported from latest WA file (recommended)"
+USE_DATA_IN_FORM_BUTTON_LABEL = "Use data as edited in form above (will be newest data from WA file if no changes made in form)"
 
 # allocation
 UPDATE_ALLOCATION_BUTTON_LABEL = "Save group allocation"
 
 ## Volunteers
-CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL = "I have double checked the volunteer details entered - allow me to add"
+CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL = (
+    "I have double checked the volunteer details entered - allow me to add"
+)
 CHECK_FOR_ME_VOLUNTEER_BUTTON_LABEL = "Please check these volunteer details for me"
-FINAL_VOLUNTEER_ADD_BUTTON_LABEL = "Yes - these details are correct - add this new volunteer"
+FINAL_VOLUNTEER_ADD_BUTTON_LABEL = (
+    "Yes - these details are correct - add this new volunteer"
+)
 SEE_ALL_VOLUNTEER_BUTTON_LABEL = "Choose from all existing volunteers"
 SEE_SIMILAR_VOLUNTEER_ONLY_LABEL = "See similar volunteers only"
 SKIP_VOLUNTEER_BUTTON_LABEL = "Skip - this isn't a volunteers name"
@@ -76,7 +77,7 @@ SORT_ORDER = "sort_order"
 ## field names row
 ROW_STATUS = "row_status"
 ATTENDANCE = "attendance"
-CLUB_BOAT="club_boat"
-PARTNER="partner"
-BOAT_CLASS="boat_class"
-SAIL_NUMBER="sail_number"
+CLUB_BOAT = "club_boat"
+PARTNER = "partner"
+BOAT_CLASS = "boat_class"
+SAIL_NUMBER = "sail_number"

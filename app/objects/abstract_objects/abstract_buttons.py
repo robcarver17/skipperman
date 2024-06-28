@@ -1,7 +1,13 @@
 from dataclasses import dataclass
 from typing import Union, List
 
-from app.data_access.configuration.fixed import MAIN_MENU_KEYBOARD_SHORTCUT, HELP_KEYBOARD_SHORTCUT, BACK_KEYBOARD_SHORTCUT, CANCEL_KEYBOARD_SHORTCUT, SAVE_KEYBOARD_SHORTCUT
+from app.data_access.configuration.fixed import (
+    MAIN_MENU_KEYBOARD_SHORTCUT,
+    HELP_KEYBOARD_SHORTCUT,
+    BACK_KEYBOARD_SHORTCUT,
+    CANCEL_KEYBOARD_SHORTCUT,
+    SAVE_KEYBOARD_SHORTCUT,
+)
 from app.objects.abstract_objects.abstract_text import Arrow, Pointer, Symbol
 from app.objects.constants import arg_not_passed
 
@@ -13,13 +19,15 @@ BACK_BUTTON_LABEL = "Back"
 
 
 def is_finished_button(button_value: str) -> bool:
-    return button_value==FINISHED_BUTTON_LABEL
+    return button_value == FINISHED_BUTTON_LABEL
 
-MAIN_MENU = 'main_menu' ## Not actual index page
+
+MAIN_MENU = "main_menu"  ## Not actual index page
+
 
 @dataclass
 class Button:
-    label: Union[str, 'Line', Arrow, Pointer, Symbol]
+    label: Union[str, "Line", Arrow, Pointer, Symbol]
     value: str = arg_not_passed
     big: bool = False
     tile: bool = False
@@ -35,15 +43,17 @@ class Button:
     def pressed(self, last_button: str):
         return self.name == last_button
 
+
 @dataclass
 class MainMenuNavButton:
     label: str = MAIN_MENU_BUTTON_LABEL
-    shortcut: str=MAIN_MENU_KEYBOARD_SHORTCUT
+    shortcut: str = MAIN_MENU_KEYBOARD_SHORTCUT
+
 
 @dataclass
 class ActionOptionButton:
     label: str
-    url: str = ''
+    url: str = ""
 
 
 @dataclass
@@ -52,31 +62,34 @@ class HelpButton:
     shortcut: str = HELP_KEYBOARD_SHORTCUT
     from_main_menu: bool = False
 
+
 class ButtonBar(List[Button]):
     def __repr__(self):
         return "ButtonBar contents %s" % str(super().__repr__())
 
 
-
 def get_nav_bar_with_just_back_button() -> ButtonBar:
     return ButtonBar([back_menu_button])
 
-def get_nav_bar_with_just_cancel_button() -> ButtonBar:
 
+def get_nav_bar_with_just_cancel_button() -> ButtonBar:
     return ButtonBar([cancel_menu_button])
 
 
 def get_nav_bar_with_just_main_menu_and_back_button() -> ButtonBar:
-
-
     return ButtonBar([main_menu_button, back_menu_button])
 
 
-EDIT_BUTTON_LABEL = "Edit"
 SAVE_BUTTON_LABEL = "Save changes"
 
-#main_menu_button = Button(MAIN_MENU_BUTTON_LABEL, url = MAIN_MENU, nav_button=True, shortcut=MAIN_MENU_KEYBOARD_SHORTCUT)
+# main_menu_button = Button(MAIN_MENU_BUTTON_LABEL, url = MAIN_MENU, nav_button=True, shortcut=MAIN_MENU_KEYBOARD_SHORTCUT)
 main_menu_button = MainMenuNavButton()
-back_menu_button = Button(BACK_BUTTON_LABEL, nav_button=True, shortcut=BACK_KEYBOARD_SHORTCUT)
-cancel_menu_button = Button(CANCEL_BUTTON_LABEL, nav_button=True, shortcut=CANCEL_KEYBOARD_SHORTCUT)
-save_menu_button = Button(SAVE_BUTTON_LABEL, nav_button=True, shortcut=SAVE_KEYBOARD_SHORTCUT)
+back_menu_button = Button(
+    BACK_BUTTON_LABEL, nav_button=True, shortcut=BACK_KEYBOARD_SHORTCUT
+)
+cancel_menu_button = Button(
+    CANCEL_BUTTON_LABEL, nav_button=True, shortcut=CANCEL_KEYBOARD_SHORTCUT
+)
+save_menu_button = Button(
+    SAVE_BUTTON_LABEL, nav_button=True, shortcut=SAVE_KEYBOARD_SHORTCUT
+)

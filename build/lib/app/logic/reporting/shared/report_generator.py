@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from typing import Callable
 
-from app.backend.reporting.options_and_parameters.report_type_specific_parameters import \
-    SpecificParametersForTypeOfReport
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
+    SpecificParametersForTypeOfReport,
+)
 
 
 @dataclass

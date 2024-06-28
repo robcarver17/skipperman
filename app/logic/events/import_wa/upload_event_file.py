@@ -8,21 +8,27 @@ from app.objects.abstract_objects.abstract_form import (
     fileInput,
 )
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
-from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, Button, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import (
+    BACK_BUTTON_LABEL,
+    Button,
+    ButtonBar,
+)
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
     form_with_message_and_finished_button,
 )
 from app.objects.abstract_objects.abstract_buttons import back_menu_button
-from app.logic.abstract_logic_api import initial_state_form, button_error_and_back_to_initial_state_form
-from app.logic.events.constants import (
-    UPLOAD_FILE_BUTTON_LABEL
+from app.logic.abstract_logic_api import (
+    initial_state_form,
+    button_error_and_back_to_initial_state_form,
 )
+from app.logic.events.constants import UPLOAD_FILE_BUTTON_LABEL
 from app.backend.wa_import.load_wa_file import (
     save_staged_file_of_raw_event_upload_with_event_id,
     verify_and_return_uploaded_wa_event_file,
     save_uploaded_wa_as_local_temp_file,
-    check_local_file_is_valid_wa_file, WA_FILE,
+    check_local_file_is_valid_wa_file,
+    WA_FILE,
 )
 from app.backend.wa_import.map_wa_files import verify_file_has_correct_wa_id
 from app.logic.events.events_in_state import get_event_from_state
@@ -58,8 +64,6 @@ def get_upload_buttons():
     return ButtonBar([back_menu_button, upload])
 
 
-
-
 def post_form_upload_event_file(interface: abstractInterface) -> Union[Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
 
@@ -72,8 +76,12 @@ def post_form_upload_event_file(interface: abstractInterface) -> Union[Form, New
     else:
         button_error_and_back_to_initial_state_form(interface)
 
+
 def previous_form(interface: abstractInterface) -> NewForm:
-    return interface.get_new_display_form_for_parent_of_function(display_form_upload_event_file)
+    return interface.get_new_display_form_for_parent_of_function(
+        display_form_upload_event_file
+    )
+
 
 def respond_to_uploaded_file(interface: abstractInterface) -> Union[Form, NewForm]:
     try:
@@ -83,15 +91,20 @@ def respond_to_uploaded_file(interface: abstractInterface) -> Union[Form, NewFor
         interface.log_error("Problem with file upload %s" % e)
         return initial_state_form
 
-    return form_with_message_and_finished_button("Uploaded file successfully", interface=interface,
-                                                 function_whose_parent_go_to_on_button_press=display_form_upload_event_file)
+    return form_with_message_and_finished_button(
+        "Uploaded file successfully",
+        interface=interface,
+        function_whose_parent_go_to_on_button_press=display_form_upload_event_file,
+    )
 
 
 def verify_uploaded_wa_file_and_save_as_staged_file(interface: abstractInterface):
     temp_filename = verify_and_save_uploaded_wa_event_file_as_temporary_file(interface)
     try:
         event = get_event_from_state(interface)
-        verify_file_has_correct_wa_id(interface=interface, filename=temp_filename, event=event)
+        verify_file_has_correct_wa_id(
+            interface=interface, filename=temp_filename, event=event
+        )
         save_staged_file_of_raw_event_upload_with_event_id(
             temp_filename, event_id=event.id
         )
@@ -102,7 +115,9 @@ def verify_uploaded_wa_file_and_save_as_staged_file(interface: abstractInterface
     os.remove(temp_filename)
 
 
-def verify_and_save_uploaded_wa_event_file_as_temporary_file(interface: abstractInterface) -> str:
+def verify_and_save_uploaded_wa_event_file_as_temporary_file(
+    interface: abstractInterface,
+) -> str:
     ## returns local filename, ensuring we don't overwrite
     ## does not check is a valid WA file
     ## not associated with event so just given incremental filename

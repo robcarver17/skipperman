@@ -1,44 +1,74 @@
 from typing import Union
 
 from app.backend.data.security import get_volunteer_id_of_logged_in_user_or_superuser
-from app.backend.ticks_and_qualifications.ticksheets import can_see_all_groups_and_award_qualifications
+from app.backend.ticks_and_qualifications.ticksheets import (
+    can_see_all_groups_and_award_qualifications,
+)
 
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
-from app.logic.instructors.buttons import get_list_of_all_tick_related_button_names, \
-    get_list_of_all_possible_select_cadet_buttons, set_cadet_id
+from app.logic.instructors.buttons import (
+    get_list_of_all_tick_related_button_names,
+    get_list_of_all_possible_select_cadet_buttons,
+    set_cadet_id,
+)
 from app.logic.instructors.parse_ticksheet_table import save_ticksheet_edits
-from app.logic.instructors.parse_macro_buttons_in_ticksheets import action_if_macro_tick_button_pressed
-from app.logic.instructors.print_ticksheet import download_labelled_ticksheet_and_return_file
+from app.logic.instructors.parse_macro_buttons_in_ticksheets import (
+    action_if_macro_tick_button_pressed,
+)
+from app.logic.instructors.print_ticksheet import (
+    download_labelled_ticksheet_and_return_file,
+)
 
 from app.logic.instructors.render_ticksheet_table import get_ticksheet_table
-from app.logic.instructors.ticksheet_table_elements import get_buttons_for_ticksheet, get_instructions_for_ticksheet, \
-    EDIT_CHECKBOX_BUTTON_LABEL, EDIT_DROPDOWN_BUTTON_LABEL, SAVE_BUTTON_LABEL, PRINT_BUTTON_LABEL, \
-    SHOW_ALL_CADETS_BUTTON_LABEL
-from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, \
-    get_nav_bar_with_just_main_menu_and_back_button, \
-    CANCEL_BUTTON_LABEL, Button, ButtonBar, main_menu_button, HelpButton, back_menu_button, cancel_menu_button, \
-    save_menu_button
+from app.logic.instructors.ticksheet_table_elements import (
+    get_buttons_for_ticksheet,
+    get_instructions_for_ticksheet,
+    EDIT_CHECKBOX_BUTTON_LABEL,
+    EDIT_DROPDOWN_BUTTON_LABEL,
+    PRINT_BUTTON_LABEL,
+    SHOW_ALL_CADETS_BUTTON_LABEL,
+)
+from app.objects.abstract_objects.abstract_buttons import (
+    ButtonBar,
+    main_menu_button,
+    HelpButton,
+    back_menu_button,
+    cancel_menu_button,
+    save_menu_button,
+)
 
 from app.objects.abstract_objects.abstract_text import Heading
 
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
+from app.objects.abstract_objects.abstract_lines import (
+    Line,
+    ListOfLines,
+    _______________,
+)
 
-from app.logic.instructors.state_storage import get_group_from_state, get_qualification_from_state, \
-    set_edit_state_of_ticksheet, \
-    EDIT_CHECKBOX_STATE, EDIT_DROPDOWN_STATE, NO_EDIT_STATE, clear_cadet_id_in_state, \
-    not_editing
+from app.logic.shared.qualification_and_tick_state_storage import (
+    get_group_from_state,
+    get_qualification_from_state,
+    set_edit_state_of_ticksheet,
+    EDIT_CHECKBOX_STATE,
+    EDIT_DROPDOWN_STATE,
+    NO_EDIT_STATE,
+    clear_cadet_id_in_state,
+    not_editing,
+)
 
 from app.logic.events.events_in_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
-    NewForm, File,
+    NewForm,
+    File,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
-
-def display_form_view_ticksheets_for_event_and_group(interface: abstractInterface) -> Form:
+def display_form_view_ticksheets_for_event_and_group(
+    interface: abstractInterface,
+) -> Form:
     ### options: print, edit, add qualifications (super users only)
     event = get_event_from_state(interface)
     group = get_group_from_state(interface)
@@ -47,13 +77,17 @@ def display_form_view_ticksheets_for_event_and_group(interface: abstractInterfac
     buttons = get_buttons_for_ticksheet(interface)
     instructions = get_instructions_for_ticksheet(interface=interface)
     navbar = get_nav_bar(interface)
-    ticksheet_table = get_ticksheet_table(interface=interface,
-                                          event=event,
-                                          qualification=qualification,
-                                          group=group)
+    ticksheet_table = get_ticksheet_table(
+        interface=interface, event=event, qualification=qualification, group=group
+    )
     header = Line(
-        Heading("Tick sheets 'Tickerman': Event %s, group %s, qualification %s" % (str(event), str(group), str(qualification)),
-                centred=False, size=4))
+        Heading(
+            "Tick sheets 'Tickerman': Event %s, group %s, qualification %s"
+            % (str(event), str(group), str(qualification)),
+            centred=False,
+            size=4,
+        )
+    )
     lines_inside_form = ListOfLines(
         [
             navbar,
@@ -66,7 +100,6 @@ def display_form_view_ticksheets_for_event_and_group(interface: abstractInterfac
             _______________,
             ticksheet_table,
             _______________,
-
         ]
     )
 
@@ -80,7 +113,11 @@ def get_nav_bar(interface: abstractInterface):
         navbar = ButtonBar([cancel_menu_button, save_menu_button])
 
     volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser(interface)
-    if can_see_all_groups_and_award_qualifications(interface=interface, event=get_event_from_state(interface), volunteer_id=volunteer_id):
+    if can_see_all_groups_and_award_qualifications(
+        interface=interface,
+        event=get_event_from_state(interface),
+        volunteer_id=volunteer_id,
+    ):
         help = HelpButton("ticksheet_entry_help_SI")
     else:
         help = HelpButton("ticksheet_entry_help")
@@ -90,8 +127,9 @@ def get_nav_bar(interface: abstractInterface):
     return ButtonBar(navbar)
 
 
-
-def post_form_view_ticksheets_for_event_and_group(interface: abstractInterface) -> Union[Form, NewForm, File]:
+def post_form_view_ticksheets_for_event_and_group(
+    interface: abstractInterface,
+) -> Union[Form, NewForm, File]:
     button_pressed = interface.last_button_pressed()
     if cancel_menu_button.pressed(button_pressed):
         ## DOES NOT SAVE
@@ -107,7 +145,9 @@ def post_form_view_ticksheets_for_event_and_group(interface: abstractInterface) 
     save_ticksheet_edits(interface)
 
     list_of_tick_buttons = get_list_of_all_tick_related_button_names(interface)
-    list_of_all_possible_select_cadet_buttons = get_list_of_all_possible_select_cadet_buttons(interface)
+    list_of_all_possible_select_cadet_buttons = (
+        get_list_of_all_possible_select_cadet_buttons(interface)
+    )
 
     ## Edit state has to change
     if button_pressed == EDIT_DROPDOWN_BUTTON_LABEL:
@@ -131,7 +171,9 @@ def post_form_view_ticksheets_for_event_and_group(interface: abstractInterface) 
 
     ## SPECIAL BUTTONS: qualification, all ticks, all column
     elif button_pressed in list_of_tick_buttons:
-        action_if_macro_tick_button_pressed(interface=interface, button_pressed=button_pressed)
+        action_if_macro_tick_button_pressed(
+            interface=interface, button_pressed=button_pressed
+        )
 
     else:
         return button_error_and_back_to_initial_state_form(interface)
@@ -142,6 +184,6 @@ def post_form_view_ticksheets_for_event_and_group(interface: abstractInterface) 
 
 
 def previous_form(interface: abstractInterface):
-    return interface.get_new_display_form_for_parent_of_function(post_form_view_ticksheets_for_event_and_group)
-
-
+    return interface.get_new_display_form_for_parent_of_function(
+        post_form_view_ticksheets_for_event_and_group
+    )

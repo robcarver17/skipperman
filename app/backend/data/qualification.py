@@ -1,4 +1,8 @@
-from app.objects.qualifications import ListOfQualifications, ListOfCadetsWithQualifications, Qualification
+from app.objects.qualifications import (
+    ListOfQualifications,
+    ListOfCadetsWithQualifications,
+    Qualification,
+)
 
 from typing import List
 
@@ -6,14 +10,14 @@ from app.data_access.storage_layer.api import DataLayer
 from app.objects.cadets import Cadet
 
 
-class QualificationData():
+class QualificationData:
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
 
     def highest_name_of_qualification_for_cadet(self, cadet: Cadet) -> str:
         list_of_ids = self.list_of_qualification_ids_for_cadet(cadet)
         list_of_qualification = self.load_list_of_qualifications()
-        highest = ''
+        highest = ""
         for qual in list_of_qualification:
             if qual.id in list_of_ids:
                 highest = qual.name
@@ -23,36 +27,60 @@ class QualificationData():
     def list_of_named_qualifications_for_cadet(self, cadet: Cadet) -> List[str]:
         list_of_qualifications_for_cadet = self.list_of_qualifications_for_cadet(cadet)
         all_qualifications = self.load_list_of_qualifications()
-        list_of_names = [qualification.name for qualification in all_qualifications if qualification in list_of_qualifications_for_cadet]
+        list_of_names = [
+            qualification.name
+            for qualification in all_qualifications
+            if qualification in list_of_qualifications_for_cadet
+        ]
 
         return list_of_names
 
     def list_of_qualifications_for_cadet(self, cadet: Cadet) -> List[Qualification]:
         list_of_ids = self.list_of_qualification_ids_for_cadet(cadet)
-        list_of_qualifications = [self.get_qualification_given_id(id) for id in list_of_ids]
+        list_of_qualifications = [
+            self.get_qualification_given_id(id) for id in list_of_ids
+        ]
 
         return list_of_qualifications
 
-
     def apply_qualification_to_cadet(self, cadet_id: str, qualification: Qualification):
-        list_of_cadets_with_qualifications = self.get_list_of_cadets_with_qualifications()
-        list_of_cadets_with_qualifications.apply_qualification_to_cadet(cadet_id=cadet_id, qualification_id=qualification.id)
+        list_of_cadets_with_qualifications = (
+            self.get_list_of_cadets_with_qualifications()
+        )
+        list_of_cadets_with_qualifications.apply_qualification_to_cadet(
+            cadet_id=cadet_id, qualification_id=qualification.id
+        )
         self.save_list_of_cadets_with_qualifications(list_of_cadets_with_qualifications)
 
-    def remove_qualification_from_cadet(self, cadet_id: str, qualification: Qualification):
-        list_of_cadets_with_qualifications = self.get_list_of_cadets_with_qualifications()
-        list_of_cadets_with_qualifications.remove_qualification_from_cadet(cadet_id=cadet_id, qualification_id=qualification.id)
+    def remove_qualification_from_cadet(
+        self, cadet_id: str, qualification: Qualification
+    ):
+        list_of_cadets_with_qualifications = (
+            self.get_list_of_cadets_with_qualifications()
+        )
+        list_of_cadets_with_qualifications.remove_qualification_from_cadet(
+            cadet_id=cadet_id, qualification_id=qualification.id
+        )
         self.save_list_of_cadets_with_qualifications(list_of_cadets_with_qualifications)
 
+    def list_of_cadet_ids_with_qualification(
+        self, qualification: Qualification
+    ) -> List[str]:
+        list_of_qualification_ids_for_cadet = (
+            self.get_list_of_cadets_with_qualifications()
+        )
+        return list_of_qualification_ids_for_cadet.list_of_cadet_ids_with_qualification(
+            qualification_id=qualification.id
+        )
 
-    def list_of_cadet_ids_with_qualification(self, qualification: Qualification) -> List[str]:
-        list_of_qualification_ids_for_cadet = self.get_list_of_cadets_with_qualifications()
-        return list_of_qualification_ids_for_cadet.list_of_cadet_ids_with_qualification(qualification_id = qualification.id)
+    def does_cadet_id_have_qualification(self, cadet_id, qualification_id: str) -> bool:
+        list_of_qualification_ids_for_cadet = (
+            self.get_list_of_cadets_with_qualifications()
+        )
 
-    def does_cadet_id_have_qualification(self, cadet_id, qualification_id: str)-> bool:
-        list_of_qualification_ids_for_cadet = self.get_list_of_cadets_with_qualifications()
-
-        return list_of_qualification_ids_for_cadet.does_cadet_id_have_qualification(cadet_id=cadet_id, qualification_id=qualification_id)
+        return list_of_qualification_ids_for_cadet.does_cadet_id_have_qualification(
+            cadet_id=cadet_id, qualification_id=qualification_id
+        )
 
     def get_qualification_given_name(self, name: str) -> Qualification:
         list_of_qualifications = self.load_list_of_qualifications()
@@ -60,8 +88,14 @@ class QualificationData():
         return list_of_qualifications[idx]
 
     def list_of_qualification_ids_for_cadet(self, cadet: Cadet) -> List[str]:
-        list_of_cadets_with_qualifications = self.get_list_of_cadets_with_qualifications()
-        list_of_ids = list_of_cadets_with_qualifications.list_of_qualification_ids_for_cadet(cadet_id=cadet.id)
+        list_of_cadets_with_qualifications = (
+            self.get_list_of_cadets_with_qualifications()
+        )
+        list_of_ids = (
+            list_of_cadets_with_qualifications.list_of_qualification_ids_for_cadet(
+                cadet_id=cadet.id
+            )
+        )
         return list_of_ids
 
     def get_qualification_given_id(self, id: str) -> Qualification:
@@ -83,5 +117,9 @@ class QualificationData():
     def get_list_of_cadets_with_qualifications(self) -> ListOfCadetsWithQualifications:
         return self.data_api.get_list_of_cadets_with_qualifications()
 
-    def save_list_of_cadets_with_qualifications(self, list_of_cadets_with_qualifications: ListOfCadetsWithQualifications):
-        self.data_api.save_list_of_cadets_with_qualifications(list_of_cadets_with_qualifications)
+    def save_list_of_cadets_with_qualifications(
+        self, list_of_cadets_with_qualifications: ListOfCadetsWithQualifications
+    ):
+        self.data_api.save_list_of_cadets_with_qualifications(
+            list_of_cadets_with_qualifications
+        )

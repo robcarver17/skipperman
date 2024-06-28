@@ -4,19 +4,25 @@ from flask_login import UserMixin, current_user
 
 
 from app.backend.data.security import load_all_users, regenerate_password_hash
-from app.objects.users_and_security import SkipperManUser, ListOfSkipperManUsers, UserGroup
+from app.objects.users_and_security import (
+    SkipperManUser,
+    ListOfSkipperManUsers,
+    UserGroup,
+)
 
-USERNAME = 'var078' ### can be anything
+USERNAME = "var078"  ### can be anything
 
 
-def get_access_group_for_current_user()-> UserGroup:
+def get_access_group_for_current_user() -> UserGroup:
     group_name = current_user.group_name
     return UserGroup[group_name]
+
 
 def get_username():
     return current_user.username
 
-no_user = ''
+
+no_user = ""
 
 
 def authenticated_user():
@@ -27,7 +33,6 @@ def authenticated_user():
 
 
 class FlaskUser(UserMixin):
-
     def __init__(self, username, password_hash, group: UserGroup):
         self.username = username
         self.password_hash = password_hash
@@ -41,21 +46,25 @@ class FlaskUser(UserMixin):
 
 
 def as_flask_user(skipper_man_user: SkipperManUser) -> FlaskUser:
-    return FlaskUser(skipper_man_user.username, password_hash=skipper_man_user.password_hash, group=skipper_man_user.group)
+    return FlaskUser(
+        skipper_man_user.username,
+        password_hash=skipper_man_user.password_hash,
+        group=skipper_man_user.group,
+    )
+
 
 def check_password(flask_user: FlaskUser, password: str):
     skipperman_user = skipperman_user_from_flask_user(flask_user)
     return skipperman_user.check_password(password)
 
-def as_dict_of_flask_users(list_of_users: ListOfSkipperManUsers) -> Dict[str, FlaskUser]:
+
+def as_dict_of_flask_users(
+    list_of_users: ListOfSkipperManUsers,
+) -> Dict[str, FlaskUser]:
     users = list_of_users.list_of_users()
 
-    return dict(
-        [
-            (user.username, as_flask_user(user))
-            for user in users
-        ]
-    )
+    return dict([(user.username, as_flask_user(user)) for user in users])
+
 
 def get_all_flask_users():
     all_skipperman_users_from_data = load_all_users()
@@ -63,12 +72,20 @@ def get_all_flask_users():
 
     return all_flask_users
 
-all_flask_users=""
+
+all_flask_users = ""
+
 
 def regenerate_password_hash_for_flask_user(flask_user: FlaskUser, password: str):
     skipperman_user = skipperman_user_from_flask_user(flask_user)
     regenerate_password_hash(user=skipperman_user, user_entered_password=password)
 
+
 def skipperman_user_from_flask_user(flask_user: FlaskUser) -> SkipperManUser:
-    return SkipperManUser(username=flask_user.username, password_hash=flask_user.password_hash, group=UserGroup[flask_user.group_name],
-                                     email_address='', volunteer_id='')
+    return SkipperManUser(
+        username=flask_user.username,
+        password_hash=flask_user.password_hash,
+        group=UserGroup[flask_user.group_name],
+        email_address="",
+        volunteer_id="",
+    )

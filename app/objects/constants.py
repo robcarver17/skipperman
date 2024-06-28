@@ -23,6 +23,7 @@ class NoValidID(Exception):
 class NoMoreData(Exception):
     pass
 
+
 class NoDaysSelected(Exception):
     pass
 

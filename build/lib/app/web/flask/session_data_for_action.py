@@ -19,7 +19,7 @@ class SessionDataForAction(object):
         return self.stage == INITIAL_STAGE
 
     def get_value(self, key, default=missing_data):
-        result = self.other_data.get(key,default)
+        result = self.other_data.get(key, default)
 
         return result
 
@@ -63,7 +63,6 @@ class SessionDataForAction(object):
 
     def update_session_dict_for_action(self, new_dict: dict):
         _update_session_dict_for_action(action_name=self.action_name, new_dict=new_dict)
-
 
     @property
     def state_data_as_dict_from_session(self) -> dict:

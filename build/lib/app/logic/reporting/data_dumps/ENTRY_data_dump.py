@@ -9,30 +9,39 @@ from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import (
     Form,
-    File, NewForm, )
+    File,
+    NewForm,
+)
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
-from app.objects.abstract_objects.abstract_buttons import  Button, ButtonBar, main_menu_button, \
-    back_menu_button
+from app.objects.abstract_objects.abstract_buttons import (
+    Button,
+    ButtonBar,
+    main_menu_button,
+    back_menu_button,
+)
 
 dict_of_dump_options_and_functions_to_generate_df = {
-    "Volunteer data":get_volunteer_data_dump
+    "Volunteer data": get_volunteer_data_dump
 }
 
 
 def display_form_for_data_dump_report(interface: abstractInterface):
     title = Heading("Select data to dump", centred=True, size=4)
     list_of_buttons_as_line = Line(
-        [button_given_data_name(data_name) for data_name in dict_of_dump_options_and_functions_to_generate_df.keys()])
+        [
+            button_given_data_name(data_name)
+            for data_name in dict_of_dump_options_and_functions_to_generate_df.keys()
+        ]
+    )
     contents_of_form = ListOfLines(
         [
             ButtonBar([main_menu_button, back_menu_button]),
             title,
-            list_of_buttons_as_line
+            list_of_buttons_as_line,
         ]
     )
 
     return Form(contents_of_form)
-
 
 
 def post_form_for_data_dump_report(
@@ -45,7 +54,9 @@ def post_form_for_data_dump_report(
     for data_name in list(dict_of_dump_options_and_functions_to_generate_df.keys()):
         button = button_given_data_name(data_name)
         if button.pressed(last_button):
-            func_to_call = dict_of_dump_options_and_functions_to_generate_df.get(data_name)
+            func_to_call = dict_of_dump_options_and_functions_to_generate_df.get(
+                data_name
+            )
             df = func_to_call(data_layer=interface.data)
             filename = temp_file_name()
 
@@ -55,10 +66,12 @@ def post_form_for_data_dump_report(
 
     raise Exception("Uknown button")
 
+
 def previous_form(interface: abstractInterface) -> NewForm:
-    return interface.get_new_display_form_for_parent_of_function(display_form_for_data_dump_report)
+    return interface.get_new_display_form_for_parent_of_function(
+        display_form_for_data_dump_report
+    )
+
 
 def button_given_data_name(data_name: str):
     return Button(data_name, tile=True)
-
-

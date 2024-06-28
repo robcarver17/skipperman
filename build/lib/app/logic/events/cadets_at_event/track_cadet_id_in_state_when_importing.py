@@ -1,4 +1,6 @@
-from app.backend.wa_import.update_cadets_at_event import list_of_cadet_ids_at_event_and_in_mapped_data_for_event
+from app.backend.wa_import.update_cadets_at_event import (
+    list_of_cadet_ids_at_event_and_in_mapped_data_for_event,
+)
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.constants import missing_data, NoMoreData
@@ -7,10 +9,14 @@ from app.objects.constants import missing_data, NoMoreData
 CADET_ID_AT_EVENT = "cadet_id_at_event"
 
 
-def get_and_save_next_cadet_id_in_event_data(interface: abstractInterface, include_mapped_data: bool = True) -> str:
+def get_and_save_next_cadet_id_in_event_data(
+    interface: abstractInterface, include_mapped_data: bool = True
+) -> str:
     current_id = get_current_cadet_id_at_event(interface)
     if current_id is missing_data:
-        new_id = get_first_cadet_id_in_event_data(interface, include_mapped_data=include_mapped_data)
+        new_id = get_first_cadet_id_in_event_data(
+            interface, include_mapped_data=include_mapped_data
+        )
     else:
         new_id = get_next_cadet_id_in_event_data(
             interface=interface, current_id=current_id
@@ -20,8 +26,12 @@ def get_and_save_next_cadet_id_in_event_data(interface: abstractInterface, inclu
     return new_id
 
 
-def get_first_cadet_id_in_event_data(interface: abstractInterface, include_mapped_data: bool = True) -> str:
-    list_of_ids = list_of_cadet_ids_at_event_and_in_mapped_data(interface, include_mapped_data=include_mapped_data)
+def get_first_cadet_id_in_event_data(
+    interface: abstractInterface, include_mapped_data: bool = True
+) -> str:
+    list_of_ids = list_of_cadet_ids_at_event_and_in_mapped_data(
+        interface, include_mapped_data=include_mapped_data
+    )
     id = list_of_ids[0]
 
     print("Getting first Cadet ID %s from list %s " % (id, list_of_ids))
@@ -30,12 +40,13 @@ def get_first_cadet_id_in_event_data(interface: abstractInterface, include_mappe
 
 
 def get_next_cadet_id_in_event_data(
-    interface: abstractInterface, current_id: str,
- include_mapped_data: bool = True
+    interface: abstractInterface, current_id: str, include_mapped_data: bool = True
 ) -> str:
-    list_of_ids = list_of_cadet_ids_at_event_and_in_mapped_data(interface, include_mapped_data=include_mapped_data)
+    list_of_ids = list_of_cadet_ids_at_event_and_in_mapped_data(
+        interface, include_mapped_data=include_mapped_data
+    )
     current_index = list_of_ids.index(current_id)
-    new_index = current_index+1
+    new_index = current_index + 1
 
     try:
         new_id = list_of_ids[new_index]
@@ -45,9 +56,13 @@ def get_next_cadet_id_in_event_data(
     return new_id
 
 
-def list_of_cadet_ids_at_event_and_in_mapped_data(interface:abstractInterface, include_mapped_data: bool = True) -> list:
+def list_of_cadet_ids_at_event_and_in_mapped_data(
+    interface: abstractInterface, include_mapped_data: bool = True
+) -> list:
     event = get_event_from_state(interface)
-    all_ids = list_of_cadet_ids_at_event_and_in_mapped_data_for_event(interface=interface, event=event, include_mapped_data=include_mapped_data)
+    all_ids = list_of_cadet_ids_at_event_and_in_mapped_data_for_event(
+        interface=interface, event=event, include_mapped_data=include_mapped_data
+    )
 
     return all_ids
 
@@ -57,8 +72,10 @@ def get_current_cadet_id_at_event(interface: abstractInterface) -> str:
 
     return cadet_id
 
+
 def save_cadet_id_at_event(interface: abstractInterface, cadet_id: str):
     interface.set_persistent_value(CADET_ID_AT_EVENT, cadet_id)
+
 
 def clear_cadet_id_at_event(interface: abstractInterface):
     interface.clear_persistent_value(CADET_ID_AT_EVENT)

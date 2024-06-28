@@ -1,4 +1,4 @@
-from app.data_access.backups.make_backup import  make_backup_if_due
+from app.data_access.backups.make_backup import make_backup_if_due
 from app.objects.constants import arg_not_passed
 import pandas as pd
 from app.data_access.csv.resolve_csv_paths_and_filenames import (
@@ -21,13 +21,11 @@ class GenericCsvData(object):
         except:
             pass
 
-
     def get_path_and_filename_for_named_csv_file(
         self,
         generic_name_of_file_required: str,
-        additional_file_identifiers=arg_not_passed
+        additional_file_identifiers=arg_not_passed,
     ) -> str:
-
         return get_path_and_filename_for_named_csv_file(
             generic_name_of_file_required=generic_name_of_file_required,
             master_data_path=self._master_data_path,
@@ -40,17 +38,29 @@ class GenericCsvData(object):
             master_data_path=self._master_data_path,
         )
 
-    def read_and_return_object_of_type(self, object_type, file_identifier: str, additional_file_identifiers=arg_not_passed):
-        path_and_filename = self.get_path_and_filename_for_named_csv_file(file_identifier, additional_file_identifiers=additional_file_identifiers)
+    def read_and_return_object_of_type(
+        self,
+        object_type,
+        file_identifier: str,
+        additional_file_identifiers=arg_not_passed,
+    ):
+        path_and_filename = self.get_path_and_filename_for_named_csv_file(
+            file_identifier, additional_file_identifiers=additional_file_identifiers
+        )
         object = read_object_of_type(object_type, path_and_filename)
         return object
 
-    def write_object(self, object, file_identifier: str, additional_file_identifiers=arg_not_passed):
-        path_and_filename = self.get_path_and_filename_for_named_csv_file(file_identifier, additional_file_identifiers=additional_file_identifiers)
+    def write_object(
+        self, object, file_identifier: str, additional_file_identifiers=arg_not_passed
+    ):
+        path_and_filename = self.get_path_and_filename_for_named_csv_file(
+            file_identifier, additional_file_identifiers=additional_file_identifiers
+        )
         write_object(object, path_and_filename)
 
-
-    def get_list_of_csv_files_in_path_for_field_id(self, file_identifier: str) -> List[str]:
+    def get_list_of_csv_files_in_path_for_field_id(
+        self, file_identifier: str
+    ) -> List[str]:
         path = self.path_for_field_id(file_identifier)
         return files_with_extension_in_resolved_pathname(path, extension=".csv")
 
@@ -62,10 +72,11 @@ def write_object(object, path_and_filename: str):
     df = object.to_df_of_str()
     df.to_csv(path_and_filename, index=False)
 
+
 def read_object_of_type(object_type, path_and_filename):
     try:
         df = pd.read_csv(path_and_filename)
-        assert len(df)>0
+        assert len(df) > 0
     except:
         return object_type.create_empty()
 

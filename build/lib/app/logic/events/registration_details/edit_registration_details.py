@@ -13,7 +13,7 @@ from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, But
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.cadets.ENTRY_view_cadets import sort_buttons, all_sort_types
-from app.backend.data.cadets import SORT_BY_SURNAME
+from app.backend.data.cadets_at_id_level import SORT_BY_SURNAME
 from app.logic.events.constants import *
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_text import Heading

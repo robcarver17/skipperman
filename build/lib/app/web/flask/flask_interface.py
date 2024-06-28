@@ -4,7 +4,10 @@ import flask
 from werkzeug.exceptions import RequestEntityTooLarge
 
 from app.data_access.data import data_api
-from app.objects.abstract_objects.abstract_interface import abstractInterface, UrlsOfInterest
+from app.objects.abstract_objects.abstract_interface import (
+    abstractInterface,
+    UrlsOfInterest,
+)
 from app.web.flask.flash import flash_error
 from app.web.flask.security import get_username
 
@@ -27,10 +30,8 @@ from flask import request
 
 @dataclass
 class flaskInterface(abstractInterface):
-
     def log_error(self, error_message: str):
         flash_error(error_message)
-
 
     def get_persistent_value(self, key, default=missing_data):
         return self.session_data.get_value(key, default=default)
@@ -84,7 +85,9 @@ class flaskInterface(abstractInterface):
 
         return value
 
-    def value_of_multiple_options_from_form(self, key: str, default = arg_not_passed) -> list:
+    def value_of_multiple_options_from_form(
+        self, key: str, default=arg_not_passed
+    ) -> list:
         try:
             list_of_values = get_list_from_form(key)
         except:
@@ -112,13 +115,16 @@ class flaskInterface(abstractInterface):
         print("inside state")
         return uploaded_file(input_name)
 
-
-    def url_for_password_reset(self,username: str, new_password: str):
-        url =self.main_url()
+    def url_for_password_reset(self, username: str, new_password: str):
+        url = self.main_url()
         print(url)
 
-        return '%s%s/?username=%s&password=%s' % (url, LINK_LOGIN,username, new_password)
-
+        return "%s%s/?username=%s&password=%s" % (
+            url,
+            LINK_LOGIN,
+            username,
+            new_password,
+        )
 
     def main_url(self):
         return flask.request.host_url
@@ -131,7 +137,7 @@ class flaskInterface(abstractInterface):
         return is_read_only()
 
 
-READ_ONLY_KEY = '__read_only'
+READ_ONLY_KEY = "__read_only"
 
 
 def is_website_post() -> bool:
@@ -140,6 +146,7 @@ def is_website_post() -> bool:
 
 def get_value_from_form(key: str):
     return request.form[key]
+
 
 def get_list_from_form(key: str):
     return request.form.getlist(key)
@@ -150,7 +157,7 @@ def get_last_button_pressed(button_name: str = arg_not_passed) -> str:
         button_name = HTML_BUTTON_NAME
     print("Testing press of %s" % button_name)
     try:
-        return request.form.get(button_name, '')
+        return request.form.get(button_name, "")
     except RequestEntityTooLarge:
         raise RequestEntityTooLarge
 
@@ -171,17 +178,18 @@ def uploaded_file(input_name: str = "file"):
 def get_urls_of_interest(action_name: str = arg_not_passed) -> UrlsOfInterest:
     return UrlsOfInterest(
         current_url_for_action=get_current_url_from_action_name(action_name),
-        image_directory=get_image_directory_url()
+        image_directory=get_image_directory_url(),
     )
 
-def get_current_url_from_action_name(action_name:str = arg_not_passed) -> str:
+
+def get_current_url_from_action_name(action_name: str = arg_not_passed) -> str:
     if action_name is arg_not_passed:
         return INDEX_URL
     interface = flaskInterface(action_name=action_name, data=data_api)
     return interface.current_url
 
+
 def get_image_directory_url():
     abstractInterface = flaskInterface(data=data_api)
-    home_page =abstractInterface.main_url()
-    return "/"+STATIC_DIRECTORY
-
+    home_page = abstractInterface.main_url()
+    return "/" + STATIC_DIRECTORY

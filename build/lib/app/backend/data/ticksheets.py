@@ -195,9 +195,7 @@ class TickSheetsData:
         self, list_of_substage_ids: List[str]
     ) -> ListOfTickSubStages:
         list_of_tick_sub_stages = self.data_api.get_list_of_tick_sub_stages()
-        return ListOfTickSubStages.subset_from_list_of_ids(
-            list_of_tick_sub_stages, list_of_ids=list_of_substage_ids
-        )
+        return ListOfTickSubStages([list_of_tick_sub_stages.object_with_id(id) for id in list_of_substage_ids])
 
     def qualifications_and_tick_items_as_dict(self) -> QualificationsAndTickItemsAsDict:
         list_of_qualifications = self.qualification_data.load_list_of_qualifications()

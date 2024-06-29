@@ -206,7 +206,7 @@ class TickSheetItem(GenericSkipperManObjectWithIds):
     def is_placeholder(self):
         return self.id==PLACEHOLDER_TICK_SHEET_ID
 
-class ListOfTickSheetItems(GenericListOfObjectsWithIds[TickSheetItem]):
+class ListOfTickSheetItems(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return TickSheetItem

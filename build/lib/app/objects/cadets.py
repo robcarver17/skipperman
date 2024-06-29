@@ -108,7 +108,7 @@ class Cadet(GenericSkipperManObjectWithIds):
 multiple_matches = object()
 
 
-class ListOfCadets(GenericListOfObjectsWithIds[Cadet]):
+class ListOfCadets(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return Cadet

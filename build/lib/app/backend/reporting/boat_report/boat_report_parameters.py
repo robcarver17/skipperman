@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from app.data_access.configuration.configuration import ALL_GROUPS_NAMES
+from app.data_access.configuration.groups import ALL_GROUPS_NAMES
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
     SpecificParametersForTypeOfReport,
 )

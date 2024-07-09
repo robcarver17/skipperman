@@ -6,13 +6,8 @@ from app.objects.day_selectors import Day, ListOfDaySelectors, DaySelector
 
 from app.objects.utils import in_x_not_in_y
 
-from app.data_access.configuration.configuration import (
-    LAKE_TRAINING_GROUP_NAMES,
-    RIVER_TRAINING_GROUP_NAMES,
-    MG_GROUP_NAMES,
-    ALL_GROUPS_NAMES,
-    UNALLOCATED_GROUP_NAME,
-)
+from app.data_access.configuration.groups import LAKE_TRAINING_GROUP_NAMES, RIVER_TRAINING_GROUP_NAMES, MG_GROUP_NAMES, \
+    UNALLOCATED_GROUP_NAME, ALL_GROUPS_NAMES
 from app.objects.cadets import Cadet, ListOfCadets
 from dataclasses import dataclass
 from app.objects.constants import missing_data

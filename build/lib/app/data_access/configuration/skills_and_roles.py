@@ -5,14 +5,15 @@ import yaml
 from app.data_access.configuration.configuration import DATAPATH
 
 home_directory = os.path.expanduser("~")
-
 master_data_path = os.path.join(home_directory, DATAPATH)
 
 ROLES_AND_SKILLS_YAML_FILE = 'roles_and_skills.yaml'
 roles_and_skills_filename = os.path.join(master_data_path, ROLES_AND_SKILLS_YAML_FILE)
+
+
+### Core skills
 VOLUNTEERS_SKILL_FOR_PB2 = "PB2"
 SI_SKILL = "SI"
-
 core_skills = [SI_SKILL, VOLUNTEERS_SKILL_FOR_PB2]
 
 SKILLS_KEY = "skills"

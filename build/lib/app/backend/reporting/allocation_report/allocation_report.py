@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from app.backend.data.dinghies import DinghiesData
-from app.data_access.configuration.configuration import ALL_GROUPS_NAMES
+from app.data_access.configuration.groups import ALL_GROUPS_NAMES
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
 from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies

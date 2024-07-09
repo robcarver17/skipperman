@@ -13,10 +13,8 @@ from app.backend.reporting.boat_report.boat_report_parameters import (
     CLUB_BOAT,
 )
 
-from app.data_access.configuration.configuration import (
-    RIVER_TRAINING_GROUP_NAMES,
-    LAKE_TRAINING_GROUP_NAMES,
-)
+from app.data_access.configuration.groups import LAKE_TRAINING_GROUP_NAMES, RIVER_TRAINING_GROUP_NAMES, \
+    UNALLOCATED_GROUP_NAME
 from app.backend.data.data_for_event import (
     get_data_required_for_event,
     RequiredDataForReport,
@@ -25,7 +23,7 @@ from app.backend.data.data_for_event import (
 from app.objects.constants import missing_data
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.groups import UNALLOCATED_GROUP_NAME, Group
+from app.objects.groups import Group
 
 
 def get_dict_of_df_for_boat_report(

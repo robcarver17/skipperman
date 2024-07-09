@@ -5,7 +5,7 @@ from app.backend.forms.form_utils import (
     get_availability_checkbox,
 )
 from app.backend.group_allocations.group_allocations_data import AllocationData
-from app.data_access.configuration.configuration import ALL_GROUPS_NAMES
+from app.data_access.configuration.groups import ALL_GROUPS_NAMES
 from app.logic.events.constants import (
     ATTENDANCE,
     ALLOCATION,

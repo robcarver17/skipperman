@@ -56,24 +56,6 @@ WA_CANCELLED_STATUS = configuration[
 WILD_APRICOT_EVENT_ID = configuration["wild_apricot_event_id"]
 WILD_APRICOT_FILE_TYPES = configuration["wild_apricot_file_types"]
 #
-# File handling
-## GROUPS
-LAKE_TRAINING_GROUP_NAMES = configuration["lake_training_groups"]
-RIVER_TRAINING_GROUP_NAMES = configuration["river_training_groups"]
-MG_GROUP_NAMES = configuration["mg_groups"]
-UNALLOCATED_GROUP_NAME = configuration["unallocated"]
-
-
-ALL_GROUPS_NAMES = (
-    LAKE_TRAINING_GROUP_NAMES
-    + RIVER_TRAINING_GROUP_NAMES
-    + MG_GROUP_NAMES
-    + [UNALLOCATED_GROUP_NAME]
-)
-
-
-
-### si at an event can see all groups
 
 ## Page sizes - not configured in yaml as won't need changing
 MAX_FILE_SIZE = configuration["max_file_size"]

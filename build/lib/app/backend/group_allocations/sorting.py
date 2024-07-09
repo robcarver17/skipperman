@@ -4,7 +4,7 @@ from app.objects.day_selectors import Day
 from app.backend.group_allocations.group_allocations_data import AllocationData
 from app.objects.cadets import ListOfCadets
 from app.objects.constants import arg_not_passed
-from app.data_access.configuration.configuration import ALL_GROUPS_NAMES
+from app.data_access.configuration.groups import ALL_GROUPS_NAMES
 
 ## following double up as column headers in df
 CADET = "Cadet"

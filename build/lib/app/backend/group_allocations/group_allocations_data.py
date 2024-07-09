@@ -21,7 +21,7 @@ from app.backend.group_allocations.previous_allocations import (
     allocation_for_cadet_in_previous_events_as_dict,
     DEPRECATE_get_dict_of_allocations_for_events_and_list_of_cadets,
 )
-from app.data_access.configuration.configuration import UNALLOCATED_GROUP_NAME
+from app.data_access.configuration.groups import UNALLOCATED_GROUP_NAME
 from app.backend.data.cadets_at_event_id_level import load_cadets_at_event
 from app.data_access.configuration.field_list import (
     CADET_GROUP_PREFERENCE,

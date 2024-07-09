@@ -8,9 +8,7 @@ from app.backend.data.volunteer_rota import VolunteerRotaData
 from app.backend.volunteers.volunteer_rota import (
     DEPRECATE_get_volunteers_in_role_at_event_with_active_allocations,
 )
-from app.data_access.configuration.configuration import (
-    ALL_GROUPS_NAMES,
-)
+from app.data_access.configuration.groups import ALL_GROUPS_NAMES
 from app.data_access.configuration.skills_and_roles import VOLUNTEER_ROLES
 from app.objects.day_selectors import Day
 from app.objects.events import Event

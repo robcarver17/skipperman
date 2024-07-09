@@ -3,9 +3,7 @@ from dataclasses import dataclass
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
     SpecificParametersForTypeOfReport,
 )
-from app.data_access.configuration.configuration import (
-    LAKE_TRAINING_GROUP_NAMES,
-)
+from app.data_access.configuration.groups import LAKE_TRAINING_GROUP_NAMES
 from app.data_access.configuration.skills_and_roles import VOLUNTEER_TEAMS
 from app.objects.day_selectors import DaySelector
 

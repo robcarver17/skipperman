@@ -21,10 +21,10 @@ from app.objects.constants import missing_data
 from app.objects.events import Event
 from app.objects.groups import (
     Group,
-    ALL_GROUPS_NAMES,
     GROUP_UNALLOCATED_TEXT,
     LAKE_TRAINING,
 )
+from app.data_access.configuration.groups import ALL_GROUPS_NAMES
 from app.objects.volunteers_at_event import (
     VolunteerAtEventWithId,
     ListOfVolunteersAtEventWithId,

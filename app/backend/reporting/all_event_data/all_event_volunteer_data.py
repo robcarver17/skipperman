@@ -3,7 +3,7 @@ from app.backend.data.volunteers import VolunteerData
 
 from app.objects.volunteers_at_event import NO_VOLUNTEER_ALLOCATED
 
-from app.backend.cadets import cadet_name_from_id
+from app.backend.cadets import  cadet_name_from_id
 from app.backend.reporting.all_event_data.components import (
     ROW_ID,
     day_item_dict_as_string_or_single_if_identical,
@@ -149,7 +149,7 @@ def get_connected_cadet_names(
     list_of_cadet_ids = volunteer_at_event.list_of_associated_cadet_id
 
     names = [
-        cadet_name_from_id(interface=interface, cadet_id=cadet_id)
+        cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id)
         for cadet_id in list_of_cadet_ids
     ]
 
@@ -158,7 +158,7 @@ def get_connected_cadet_names(
 
 def get_skills_string(interface: abstractInterface, volunteer_id: str, default=""):
     volunteer_data = VolunteerData(interface.data)
-    skills = volunteer_data.get_dict_of_existing_skills_for_volunteer_id(
+    skills = volunteer_data._get_dict_of_existing_skills_for_volunteer_id(
         volunteer_id=volunteer_id
     )
 

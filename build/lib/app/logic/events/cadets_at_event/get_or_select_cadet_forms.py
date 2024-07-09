@@ -7,8 +7,8 @@ from app.logic.cadets.get_or_select_cadet_forms import DOUBLE_CHECKED_OK_ADD_CAD
     CHECK_CADET_FOR_ME_BUTTON_LABEL, FINAL_CADET_ADD_BUTTON_LABEL, SEE_ALL_CADETS_BUTTON_LABEL, \
     SEE_SIMILAR_CADETS_ONLY_LABEL
 
-from app.backend.cadets import verify_cadet_and_warn, get_sorted_list_of_cadets, get_list_of_similar_cadets
-from app.backend.data.cadets_at_id_level import SORT_BY_FIRSTNAME
+from app.backend.cadets import verify_cadet_and_return_warnings, get_sorted_list_of_cadets, DEPREACATE_get_list_of_similar_cadets
+from app.backend.data.cadets import SORT_BY_FIRSTNAME
 from app.logic.cadets.add_edit_cadet_form import CadetAndVerificationText, get_add_cadet_form_with_information_passed, \
     verify_form_with_cadet_details
 
@@ -33,7 +33,7 @@ def get_add_or_select_existing_cadet_form(
         cadet = cadet_and_text.cadet
     else:
         ## Cadet details as in WA passed through, uese these
-        verification_text = verify_cadet_and_warn(cadet=cadet, interface=interface)
+        verification_text = verify_cadet_and_return_warnings(cadet=cadet, interface=interface)
         cadet_and_text = CadetAndVerificationText(
             cadet=cadet, verification_text=verification_text
         )
@@ -96,7 +96,7 @@ def get_list_of_cadet_buttons(interface: abstractInterface, cadet: Cadet, see_al
         extra_button = SEE_SIMILAR_CADETS_ONLY_LABEL
     else:
         ## similar cadets with option to see more
-        list_of_cadets = get_list_of_similar_cadets(interface=interface, cadet=cadet)
+        list_of_cadets = DEPREACATE_get_list_of_similar_cadets(interface=interface, cadet=cadet)
         msg = "Currently choosing from similar cadets only:"
         extra_button = SEE_ALL_CADETS_BUTTON_LABEL
 

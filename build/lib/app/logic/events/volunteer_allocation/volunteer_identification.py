@@ -4,7 +4,7 @@ from app.backend.volunteers.volunteer_allocation import (
     add_identified_volunteer,
     mark_volunteer_as_skipped,
     volunteer_for_this_row_and_index_already_identified,
-    matched_volunteer_or_missing_data,
+    get_volunteer_with_matching_name,
 )
 from app.backend.volunteers.volunteers import verify_volunteer_and_warn
 from app.backend.volunteers.volunter_relevant_information import (
@@ -48,7 +48,7 @@ from app.objects.abstract_objects.abstract_interface import (
 
 from app.logic.events.constants import *
 
-from app.objects.constants import NoMoreData, missing_data, arg_not_passed
+from app.objects.constants import NoMoreData, missing_data, arg_not_passed, MissingData
 from app.objects.relevant_information_for_volunteers import missing_relevant_information
 from app.objects.volunteers import Volunteer
 
@@ -146,10 +146,11 @@ def add_specific_volunteer_at_event(
 def add_passed_volunteer_at_event(
     interface: abstractInterface, volunteer: Volunteer
 ) -> Union[Form, NewForm]:
-    matched_volunteer_with_id = matched_volunteer_or_missing_data(
-        interface=interface, volunteer=volunteer
-    )
-    if matched_volunteer_with_id is missing_data:
+    try:
+        matched_volunteer_with_id = get_volunteer_with_matching_name(
+            data_layer=interface.data, volunteer=volunteer
+        )
+    except MissingData:
         print("Volunteer %s not matched" % str(volunteer))
         return display_volunteer_selection_form(
             interface=interface, volunteer=volunteer

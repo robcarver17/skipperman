@@ -1,5 +1,5 @@
 from typing import Union
-from app.backend.cadets import cadet_name_from_id
+from app.backend.cadets import  cadet_name_from_id
 from app.backend.wa_import.update_cadets_at_event import (
     no_important_difference_between_cadets_at_event,
     is_cadet_with_id_already_at_event,
@@ -103,7 +103,7 @@ def process_update_to_cadet_new_to_event(
     except DuplicateCadets:
         interface.log_error(
             "ACTION REQUIRED: Cadet %s appears more than once in WA file with an active registration - using the first registration found - go to WA and cancel all but one of the registrations please, and then check details here are correct!"
-            % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
+            % cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id)
         )
         relevant_row = get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
             interface=interface,
@@ -114,7 +114,8 @@ def process_update_to_cadet_new_to_event(
     except NoMoreData:
         interface.log_error(
             "ACTION REQUIRED: Cadet %s vanished from WA mapping file - contact support"
-            % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
+            % cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id)
+
         )
         return process_next_cadet_at_event(interface)
 
@@ -142,14 +143,14 @@ def process_update_to_existing_cadet_in_event_data(
     except DuplicateCadets:
         interface.log_error(
             "ACTION REQUIRED: Cadet %s appears more than once in WA file with multiple active registrations - ignoring any possible changes made to registration - go to WA and cancel one of the registrations please!"
-            % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
+            % cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id)
         )
         return process_next_cadet_at_event(interface)
     except NoMoreData:
         ## No rows match cadet ID, so deleted
         interface.log_error(
             "Cadet %s was in WA event data, now appears to be missing in latest file - possible data corruption of WA output or manual hacking - no WA changes will be reflected in data"
-            % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
+            % cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id)
         )
         return process_next_cadet_at_event(interface)
 

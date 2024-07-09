@@ -26,7 +26,7 @@ from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 
 from app.logic.shared.cadet_state_storage import update_state_for_specific_cadet
 from app.backend.cadets import get_cadet_given_cadet_as_str, get_sorted_list_of_cadets
-from app.backend.data.cadets_at_id_level import (
+from app.backend.data.cadets import (
     SORT_BY_SURNAME,
     SORT_BY_FIRSTNAME,
     SORT_BY_DOB_ASC,

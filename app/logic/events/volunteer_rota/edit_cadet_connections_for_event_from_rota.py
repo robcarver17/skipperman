@@ -13,7 +13,7 @@ from app.backend.volunteers.volunteer_rota import (
     get_volunteer_at_event,
 )
 
-from app.backend.cadets import DEPRECATE_cadet_from_id_USE_get_cadet_from_id
+from app.backend.cadets import  get_cadet_from_id
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -80,8 +80,8 @@ def get_list_of_connected_cadets(interface: abstractInterface) -> ListOfCadets:
 
     connected_cadets = ListOfCadets(
         [
-            DEPRECATE_cadet_from_id_USE_get_cadet_from_id(
-                interface=interface, cadet_id=cadet_id
+            get_cadet_from_id(
+                data_layer=interface.data, cadet_id=cadet_id
             )
             for cadet_id in cadet_ids
         ]
@@ -161,8 +161,8 @@ def add_event_specific_cadet_connection_from_form(interface: abstractInterface):
         )
         return
     volunteer_id = get_volunteer_id_selected_from_state(interface)
-    selected_cadet = DEPRECATE_cadet_from_id_USE_get_cadet_from_id(
-        interface=interface, cadet_id=selected_cadet_id
+    selected_cadet =get_cadet_from_id(
+        data_layer=interface.data, cadet_id=selected_cadet_id
     )
     event = get_event_from_state(interface)
     add_volunteer_and_cadet_association_for_existing_volunteer(

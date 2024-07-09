@@ -1,6 +1,5 @@
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.cadets import DEPRECATE_cadet_from_id_USE_get_cadet_from_id
 from app.backend.data.cadets_at_event_id_level import cadet_at_event_given_row_id
 from app.backend.data.mapped_events import get_row_in_mapped_event_data_given_id
 from app.objects.cadets import default_cadet

@@ -202,7 +202,7 @@ def get_next_cadet_and_store(interface: abstractInterface) -> Cadet:
     list_of_cadets = get_temp_cadet_file()
     current_cadet_id = get_cadet_id_selected_from_state(interface)
 
-    current_idx = list_of_cadets.index_of_object_with_id(current_cadet_id)
+    current_idx = list_of_cadets.index_of_id(current_cadet_id)
     next_idx = current_idx + 1
 
     try:
@@ -218,6 +218,6 @@ def get_next_cadet_and_store(interface: abstractInterface) -> Cadet:
 def get_cadet_from_temp_file_and_state(interface: abstractInterface) -> Cadet:
     list_of_cadets = get_temp_cadet_file()
     current_cadet_id = get_cadet_id_selected_from_state(interface)
-    current_idx = list_of_cadets.index_of_object_with_id(current_cadet_id)
+    current_idx = list_of_cadets.index_of_id(current_cadet_id)
 
     return list_of_cadets[current_idx]

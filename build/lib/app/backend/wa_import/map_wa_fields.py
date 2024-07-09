@@ -131,7 +131,7 @@ def read_mapping_from_file_object_or_filename(file) -> ListOfWAFieldMappings:
 def write_mapping_to_temp_csv_file_and_return_filename(
     mapping: ListOfWAFieldMappings,
 ) -> str:
-    df = mapping.to_df_of_str()
+    df = mapping.as_df_of_str()
     filename = temp_mapping_file_name()
 
     df.to_csv(filename, index=False)

@@ -1,20 +1,15 @@
-from typing import Dict, List
-
 from dataclasses import dataclass
+from typing import List
 
 from app.data_access.configuration.configuration import (
     SIMILARITY_LEVEL_TO_WARN_NAME,
-    VOLUNTEER_SKILLS,
-    VOLUNTEERS_SKILL_FOR_PB2,
 )
-from app.objects.generic import (
-    GenericSkipperManObjectWithIds,
+from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
-    GenericListOfObjects,
-    GenericSkipperManObject,
 )
+from app.objects.generic_objects import GenericSkipperManObjectWithIds
 from app.objects.utils import similar
-from app.objects.constants import arg_not_passed
+from app.objects.constants import arg_not_passed, MissingData
 from app.objects.constants import missing_data
 
 
@@ -36,16 +31,20 @@ class Volunteer(GenericSkipperManObjectWithIds):
     def __hash__(self):
         return hash(self.first_name + "_" + self.surname)
 
+    @classmethod
+    def new(cls, first_name: str, surname: str, id: str =arg_not_passed):
+        return cls(
+            first_name=first_name.strip(" ").title(),
+            surname=surname.strip(" ").title(),
+            id=id
+        )
+
     @property
     def name(self):
         return self.first_name.title() + " " + self.surname.title()
 
     def similarity_name(self, other_volunteer: "Volunteer") -> float:
         return similar(self.name, other_volunteer.name)
-
-    def similarity_surname(self, other_volunteer: "Volunteer") -> float:
-        return similar(self.surname, other_volunteer.surname)
-
 
 class ListOfVolunteers(GenericListOfObjectsWithIds):
     @property
@@ -57,11 +56,16 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
         volunteer.id = volunteer_id
         self.append(volunteer)
 
-    def matching_volunteer(self, volunteer: Volunteer) -> Volunteer:
+    def update_existing_volunteer(self, volunteer: Volunteer):
+        existing_volunteer = self.object_with_id(volunteer.id)
+        existing_volunteer.first_name = volunteer.first_name
+        existing_volunteer.surname= volunteer.surname
+
+    def volunteer_with_matching_name(self, volunteer: Volunteer) -> Volunteer:
         try:
             return self[self.index(volunteer)]
         except ValueError:
-            return missing_data
+            raise MissingData
 
     def similar_volunteers(
         self,
@@ -82,146 +86,25 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
     def sort_by_firstname(self):
         return ListOfVolunteers(sorted(self, key=lambda x: x.first_name))
 
+    def get_volunteer_from_list_of_volunteers_given_name(
+        self, volunteer_name: str
+    ) -> Volunteer:
+        list_of_volunteer_names = self.list_of_names()
+
+        try:
+            idx = list_of_volunteer_names.index(volunteer_name)
+        except ValueError:
+            raise MissingData
+
+        return self[idx]
+
+
+    def list_of_names(self) -> List[str]:
+        return [volunteer.name for volunteer in self]
+
+    def volunteer_with_id(self, id: str) -> Volunteer:
+        return self.object_with_id(id)
 
 default_volunteer = Volunteer(first_name=" ", surname=" ")
 
 
-@dataclass
-class CadetVolunteerAssociation(GenericSkipperManObject):
-    cadet_id: str
-    volunteer_id: str
-
-
-class ListOfCadetVolunteerAssociations(GenericListOfObjects):
-    @property
-    def _object_class_contained(self):
-        return CadetVolunteerAssociation
-
-    def list_of_volunteer_ids_associated_with_cadet_id(self, cadet_id: str):
-        return [
-            element.volunteer_id for element in self if element.cadet_id == cadet_id
-        ]
-
-    def list_of_connections_for_volunteer(self, volunteer_id: str):
-        return [
-            element.cadet_id for element in self if element.volunteer_id == volunteer_id
-        ]
-
-    def delete(self, cadet_id: str, volunteer_id: str):
-        matching_elements_list = [
-            element
-            for element in self
-            if element.volunteer_id == volunteer_id and element.cadet_id == cadet_id
-        ]
-        if len(matching_elements_list) == 0:
-            return
-        matching_element = matching_elements_list[
-            0
-        ]  ## corner case of duplicates shouldn't happen just in case
-        self.remove(matching_element)
-
-    def add(self, cadet_id: str, volunteer_id: str):
-        if self.connection_exists(cadet_id=cadet_id, volunteer_id=volunteer_id):
-            return
-        self.append(
-            CadetVolunteerAssociation(cadet_id=cadet_id, volunteer_id=volunteer_id)
-        )
-
-    def connection_exists(self, cadet_id: str, volunteer_id: str):
-        exists = [
-            True
-            for element in self
-            if element.volunteer_id == volunteer_id and element.cadet_id == cadet_id
-        ]
-        return any(exists)
-
-
-@dataclass
-class VolunteerSkill(GenericSkipperManObject):
-    volunteer_id: str
-    skill: str
-
-    @property
-    def boat_related_skill(self) -> bool:
-        return self.skill == VOLUNTEERS_SKILL_FOR_PB2
-
-
-class SkillsDict(Dict[str, bool]):
-    def __repr__(self):
-        skills_as_list = [skill for skill, has_skill in self.items() if has_skill]
-        skills_as_str = ", ".join(skills_as_list)
-
-        return skills_as_str
-
-
-class ListOfVolunteerSkills(GenericListOfObjects):
-    @property
-    def _object_class_contained(self):
-        return VolunteerSkill
-
-    def add_boat_related_skill_for_volunteer(self, volunteer_id: str):
-        self.add_skill_for_id(VOLUNTEERS_SKILL_FOR_PB2, volunteer_id=volunteer_id)
-
-    def remove_boat_related_skill_for_volunteer(self, volunteer_id: str):
-        self.delete_skill_for_id(
-            volunteer_id=volunteer_id, skill_name=VOLUNTEERS_SKILL_FOR_PB2
-        )
-
-    def volunteer_id_has_boat_related_skills(self, volunteer_id: str) -> bool:
-        return volunteer_id in self.list_of_volunteer_ids_with_boat_related_skill()
-
-    def list_of_volunteer_ids_with_boat_related_skill(self) -> List[str]:
-        return list(
-            set([item.volunteer_id for item in self if item.boat_related_skill])
-        )
-
-    def dict_of_skills_for_volunteer_id(self, volunteer_id: str) -> SkillsDict:
-        skills_held = self.skills_for_volunteer_id(volunteer_id)
-        dict_of_skills = dict(
-            [(skill, skill in skills_held) for skill in VOLUNTEER_SKILLS]
-        )
-
-        return SkillsDict(dict_of_skills)
-
-    def skills_for_volunteer_id(self, volunteer_id: str):
-        skills = [
-            element.skill for element in self if element.volunteer_id == volunteer_id
-        ]
-
-        return skills
-
-    def replace_skills_for_volunteer_with_new_skills_dict(
-        self, volunteer_id: str, dict_of_skills: Dict[str, bool]
-    ):
-        ## skills that are missing from dict won't be modified - should be fine
-        for skill, skill_held in dict_of_skills.items():
-            currently_held_skill = self.skill_held_for_id(skill, volunteer_id)
-            if skill_held and not currently_held_skill:
-                self.add_skill_for_id(skill_name=skill, volunteer_id=volunteer_id)
-
-            if not skill_held and currently_held_skill:
-                self.delete_skill_for_id(skill_name=skill, volunteer_id=volunteer_id)
-
-    def skill_held_for_id(self, skill_name: str, volunteer_id: str) -> bool:
-        present = [
-            True
-            for element in self
-            if element.skill == skill_name and element.volunteer_id == volunteer_id
-        ]
-        return len(present) > 0
-
-    def add_skill_for_id(self, skill_name: str, volunteer_id: str):
-        if self.skill_held_for_id(skill_name=skill_name, volunteer_id=volunteer_id):
-            return
-        self.append(VolunteerSkill(skill=skill_name, volunteer_id=volunteer_id))
-
-    def delete_skill_for_id(self, skill_name: str, volunteer_id: str):
-        element_with_skill_in_list = [
-            element
-            for element in self
-            if element.skill == skill_name and element.volunteer_id == volunteer_id
-        ]
-        if len(element_with_skill_in_list) == 0:
-            return
-        element_with_skill = element_with_skill_in_list[0]
-        self.remove(element_with_skill)

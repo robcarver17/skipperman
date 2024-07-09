@@ -4,7 +4,7 @@ from typing import List, Dict
 import pandas as pd
 from app.objects.utils import print_dict_nicely
 
-from app.backend.data.cadets_at_id_level import CadetData
+from app.backend.data.cadets import CadetData
 from app.backend.data.qualification import QualificationData
 
 from app.backend.data.security import (
@@ -18,7 +18,7 @@ from app.backend.events import DEPRECATE_get_sorted_list_of_events
 from app.backend.ticks_and_qualifications.create_ticksheets import (
     get_ticksheet_for_cadets_in_group_at_event_for_qualification,
 )
-from app.backend.volunteers.volunteers import is_volunteer_SI
+from app.backend.volunteers.volunteers import is_volunteer_with_id_qualified_as_SI
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event, ListOfEvents
 from app.objects.groups import Group
@@ -90,7 +90,7 @@ def is_volunteer_SI_or_super_user(interface: abstractInterface):
 
     if volunteer_id == SUPERUSER:
         return True
-    return is_volunteer_SI(interface=interface, volunteer_id=volunteer_id)
+    return is_volunteer_with_id_qualified_as_SI(interface=interface, volunteer_id=volunteer_id)
 
 
 def can_volunteer_id_see_event(
@@ -302,7 +302,7 @@ def get_expected_qualifications_for_single_cadet_with_group(
     )
 
     return [
-        cadet_name_from_id(interface=interface, cadet_id=cadet_id),
+        cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id),
         group.group_name,
     ] + percentage_list
 

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.constants import arg_not_passed
-from app.objects.generic import TRUE, FALSE
+from app.objects.generic_objects import TRUE, FALSE
 from app.objects.utils import from_single_str_to_dict, dict_as_single_str
 
 

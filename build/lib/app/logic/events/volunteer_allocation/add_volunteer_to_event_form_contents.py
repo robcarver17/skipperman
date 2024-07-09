@@ -71,7 +71,7 @@ def get_list_of_active_associated_cadet_names_in_mapped_event_data_given_identif
         volunteer_id=volunteer.id, event=event, interface=interface
     )
     cadet_names = [
-        cadet_name_from_id(interface=interface, cadet_id=cadet_id)
+        cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id)
         for cadet_id in list_of_cadet_ids
     ]
 
@@ -94,7 +94,7 @@ def get_connection_checkbox(
 
     dict_of_labels = dict(
         [
-            (cadet_id, cadet_name_from_id(cadet_id=cadet_id, interface=interface))
+            (cadet_id, cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id))
             for cadet_id in list_of_cadet_ids
         ]
     )
@@ -172,7 +172,7 @@ def get_cadet_name_from_relevant_information(
     if cadet_id is missing_data:
         return NO_CADET
 
-    cadet_name = cadet_name_from_id(interface=interface, cadet_id=cadet_id)
+    cadet_name = cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id)
 
     return cadet_name
 

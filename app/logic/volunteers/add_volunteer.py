@@ -153,7 +153,7 @@ def get_volunteer_from_form(interface: abstractInterface) -> Volunteer:
     first_name = interface.value_from_form(FIRST_NAME).strip().title()
     surname = interface.value_from_form(SURNAME).strip().title()
 
-    return Volunteer(first_name=first_name, surname=surname)
+    return Volunteer.new(first_name=first_name, surname=surname)
 
 
 def process_form_when_volunteer_verified(
@@ -179,7 +179,7 @@ def process_form_when_volunteer_verified(
 def add_volunteer_from_form_to_data(interface) -> Volunteer:
     volunteer = get_volunteer_from_form(interface)
     add_new_verified_volunteer(volunteer=volunteer, interface=interface)
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+    interface.flush_cache_to_store()
 
     return volunteer
 

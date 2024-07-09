@@ -1,11 +1,9 @@
 from app.objects.volunteers import (
     Volunteer,
-    VolunteerSkill,
     ListOfVolunteers,
-    ListOfVolunteerSkills,
-    CadetVolunteerAssociation,
-    ListOfCadetVolunteerAssociations,
 )
+from app.objects.volunteer_skills import VolunteerSkill, ListOfVolunteerSkills
+from app.objects.cadet_volunteer_connections import CadetVolunteerAssociation, ListOfCadetVolunteerAssociations
 from app.objects.volunteers_at_event import (
     VolunteerAtEventWithId,
     ListOfVolunteersAtEventWithId,

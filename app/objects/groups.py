@@ -16,12 +16,11 @@ from app.data_access.configuration.configuration import (
 from app.objects.cadets import Cadet, ListOfCadets
 from dataclasses import dataclass
 from app.objects.constants import missing_data
-from app.objects.generic import (
-    GenericSkipperManObjectWithIds,
+from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
-    GenericSkipperManObject,
     GenericListOfObjects,
 )
+from app.objects.generic_objects import GenericSkipperManObject, GenericSkipperManObjectWithIds
 
 LAKE_TRAINING = "Lake training"
 RIVER_TRAINING = "River training"
@@ -340,7 +339,7 @@ class ListOfCadetsWithGroup(GenericListOfObjects):
     ):
         list_of_cadets_with_group = [
             CadetWithGroup(
-                cadet=list_of_cadets.has_id(allocation.cadet_id),
+                cadet=list_of_cadets.object_with_id(allocation.cadet_id),
                 group=allocation.group,
                 day=allocation.day,
             )
@@ -349,7 +348,7 @@ class ListOfCadetsWithGroup(GenericListOfObjects):
 
         return cls(list_of_cadets_with_group)
 
-    def to_df_of_str(self, display_full_names: bool = True) -> pd.DataFrame:
+    def as_df_of_str(self, display_full_names: bool = True) -> pd.DataFrame:
         list_of_dicts = [
             item.as_str_dict(display_full_names=display_full_names) for item in self
         ]

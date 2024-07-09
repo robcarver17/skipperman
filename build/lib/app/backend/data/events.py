@@ -21,7 +21,7 @@ class EventData:
 
     def get_event_from_id(self, event_id: str) -> Event:
         list_of_events = self.list_of_events
-        return list_of_events.has_id(event_id)
+        return list_of_events.object_with_id(event_id)
 
     @property
     def list_of_events(self) -> ListOfEvents:

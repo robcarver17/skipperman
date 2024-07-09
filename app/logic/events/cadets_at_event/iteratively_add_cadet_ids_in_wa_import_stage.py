@@ -6,9 +6,7 @@ from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
 from app.backend.data.mapped_events import get_row_in_mapped_event_data_given_id
 from app.backend.cadets import (
-    get_matching_cadet_with_id_or_missing_data,
-    confirm_cadet_exists,
-    DEPRECATE_get_cadet_given_cadet_as_str,
+    get_matching_cadet_with_id, get_cadet_given_cadet_as_str,
 )
 from app.logic.events.cadets_at_event.interactively_update_records_of_cadets_at_event import (
     display_form_interactively_update_cadets_at_event,
@@ -36,7 +34,7 @@ from app.logic.cadets.get_or_select_cadet_forms import (
 )
 from app.logic.cadets.add_cadet import add_cadet_from_form_to_data
 
-from app.objects.constants import NoMoreData, missing_data
+from app.objects.constants import NoMoreData, missing_data, MissingData, MultipleMatches
 from app.objects.mapped_wa_event import RowInMappedWAEvent
 from app.objects.cadets import Cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm
@@ -108,18 +106,22 @@ def process_next_row_with_cadet_from_row(
     interface: abstractInterface,
     cadet: Cadet,
 ) -> Form:
-    matched_cadet_with_id = get_matching_cadet_with_id_or_missing_data(
-        interface=interface, cadet=cadet
-    )
-
-    if matched_cadet_with_id is missing_data:
+    try:
+        matched_cadet_with_id = get_matching_cadet_with_id(
+            interface=interface, cadet=cadet
+        )
+    except MissingData:
         print("Cadet %s not matched" % str(cadet))
         return process_row_when_cadet_unmatched(interface=interface, cadet=cadet)
-    else:
-        print("Cadet %s matched id is %s" % (str(cadet), matched_cadet_with_id.id))
-        return process_row_when_cadet_matched(
-            interface=interface, cadet=matched_cadet_with_id
-        )
+    except Exception as e:
+        ## can happen in corner case
+        interface.log_error("Error %s when trying to match cadet %s automatically" % (str(e), str(cadet)))
+        return process_row_when_cadet_unmatched(interface=interface, cadet=cadet)
+
+    print("Cadet %s matched id is %s" % (str(cadet), matched_cadet_with_id.id))
+    return process_row_when_cadet_matched(
+        interface=interface, cadet=matched_cadet_with_id
+    )
 
 
 def process_row_when_cadet_matched(interface: abstractInterface, cadet: Cadet) -> Form:
@@ -239,18 +241,18 @@ def process_form_when_skipping_cadet(interface: abstractInterface) -> Form:
 
 
 def process_form_when_existing_cadet_chosen(interface: abstractInterface) -> Form:
-    cadet_selected = interface.last_button_pressed()
-    print(cadet_selected)
+    cadet_selected_as_str = interface.last_button_pressed()
+
     try:
-        confirm_cadet_exists(interface=interface, cadet_selected=cadet_selected)
+        cadet = get_cadet_given_cadet_as_str(
+            data_layer=interface.data,
+            cadet_as_str=cadet_selected_as_str
+        )
     except:
         raise Exception(
             "Cadet selected no longer exists - file corruption or someone deleted?",
         )
 
-    cadet = DEPRECATE_get_cadet_given_cadet_as_str(
-        interface=interface, cadet_selected=cadet_selected
-    )
     print(str(cadet))
     return process_row_when_cadet_matched(interface=interface, cadet=cadet)
 

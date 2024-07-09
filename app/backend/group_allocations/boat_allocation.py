@@ -2,7 +2,8 @@ import pandas as pd
 from dataclasses import dataclass
 from typing import List, Dict
 
-from app.backend.cadets import DEPRECATE_load_list_of_all_cadets
+from app.data_access.storage_layer.api import DataLayer
+
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -35,7 +36,7 @@ class CadetWithDinghyInputs:
     cadet_id: str
     sail_number: str
     boat_class_name: str
-    two_handed_partner_name: str
+    two_handed_partner_cadet_as_str: str
 
 
 def update_boat_info_for_cadets_at_event(
@@ -96,8 +97,9 @@ def convert_single_input_to_cadet_at_event(
     boat_class_id = get_boat_class_id_from_name(
         interface=interface, boat_class_name=update.boat_class_name
     )
-    two_handed_partner_id = get_two_handed_partner_id_from_name(
-        interface=interface, two_handed_partner_name=update.two_handed_partner_name
+
+    two_handed_partner_id = get_two_handed_partner_id_from_str(
+        data_layer=interface.data, two_handed_partner_cadet_as_str=update.two_handed_partner_cadet_as_str
     )
 
     return CadetAtEventWithDinghy(
@@ -109,17 +111,17 @@ def convert_single_input_to_cadet_at_event(
     )
 
 
-def get_two_handed_partner_id_from_name(
-    interface: abstractInterface, two_handed_partner_name: str
+def get_two_handed_partner_id_from_str(
+    data_layer: DataLayer, two_handed_partner_cadet_as_str: str
 ):
-    if no_partnership(two_handed_partner_name):
-        return two_handed_partner_name
+    if no_partnership(two_handed_partner_cadet_as_str):
+        return two_handed_partner_cadet_as_str
 
-    list_of_cadets = DEPRECATE_load_list_of_all_cadets(interface)
-    two_handed_partner_id = list_of_cadets.id_given_name(two_handed_partner_name)
+    two_handed_partner = get_cadet_given_cadet_as_str(data_layer=data_layer, cadet_as_str=two_handed_partner_cadet_as_str)
 
-    return two_handed_partner_id
+    return two_handed_partner.id
 
+from app.backend.cadets import get_cadet_given_cadet_as_str
 
 def get_boat_class_id_from_name(interface: abstractInterface, boat_class_name: str):
     dinghy_data = DinghiesData(interface.data)

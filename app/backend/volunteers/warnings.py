@@ -1,8 +1,6 @@
 from copy import copy
 from typing import List, Callable
 
-from app.objects.constants import missing_data
-
 from app.backend.data.volunteers import VolunteerData
 
 from app.backend.data.volunteer_rota import VolunteerRotaData
@@ -10,7 +8,7 @@ from app.backend.data.volunteer_rota import VolunteerRotaData
 from app.backend.data.patrol_boats import PatrolBoatsData
 from app.objects.patrol_boats import PatrolBoat
 
-from app.backend.cadets import DEPRECATE_cadet_from_id_USE_get_cadet_from_id
+from app.backend.cadets import get_cadet_from_id
 from app.backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
 from app.backend.group_allocations.cadet_event_allocations import (
     get_list_of_active_cadets_at_event,
@@ -139,8 +137,8 @@ def warn_about_single_volunteer_availablity_at_event(
     cadet_ids = volunteer_at_event.list_of_associated_cadet_id
     connected_cadets = ListOfCadets(
         [
-            DEPRECATE_cadet_from_id_USE_get_cadet_from_id(
-                interface=interface, cadet_id=cadet_id
+            get_cadet_from_id(
+                data_layer=interface.data, cadet_id=cadet_id
             )
             for cadet_id in cadet_ids
         ]
@@ -227,8 +225,8 @@ def warn_about_single_volunteer_with_no_cadet_at_event(
     cadet_ids = volunteer_at_event.list_of_associated_cadet_id
     connected_cadets = ListOfCadets(
         [
-            DEPRECATE_cadet_from_id_USE_get_cadet_from_id(
-                interface=interface, cadet_id=cadet_id
+            get_cadet_from_id(
+                data_layer=interface.data, cadet_id=cadet_id
             )
             for cadet_id in cadet_ids
         ]

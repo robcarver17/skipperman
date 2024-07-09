@@ -69,7 +69,7 @@ class GenericCsvData(object):
 
 
 def write_object(object, path_and_filename: str):
-    df = object.to_df_of_str()
+    df = object.as_df_of_str()
     df.to_csv(path_and_filename, index=False)
 
 

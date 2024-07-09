@@ -2,7 +2,7 @@ from collections import defaultdict, Counter
 import datetime
 import math
 from copy import copy
-from typing import Union
+from typing import Union, Dict
 from dataclasses import dataclass
 
 import numpy as np
@@ -18,6 +18,8 @@ from dateutil.parser import parse
 
 
 from itertools import groupby
+
+from app.data_access.configuration.fixed import ID_KEY, ID_KEY_POSTFIX, LIST_OF_ID_KEY_TO_IGNORE_WHEN_CLEANING
 
 
 def list_of_list_max_wide_for_table_building(
@@ -57,61 +59,6 @@ def all_equal(iterable):
     return next(g, True) and not next(g, False)
 
 
-def data_object_as_dict(some_object) -> dict:
-    list_of_attributes = get_list_of_attributes(some_object)
-
-    object_as_dict = dict(
-        [(key, getattr(some_object, key)) for key in list_of_attributes]
-    )
-
-    return object_as_dict
-
-
-def create_list_of_objects_from_dataframe(class_of_object, df: pd.DataFrame):
-    list_of_objects = [
-        create_object_from_df_row(class_of_object=class_of_object, row=row)
-        for index, row in df.iterrows()
-    ]
-
-    return list_of_objects
-
-
-def create_object_from_df_row(class_of_object, row: pd.Series):
-    row_as_dict = row.to_dict()
-
-    try:
-        object = class_of_object.from_dict(row_as_dict)
-    except:
-        raise Exception(
-            _error_str_when_creating_object_from_df_row(
-                class_of_object=class_of_object, row_as_dict=dict(row_as_dict)
-            )
-        )
-
-    return object
-
-
-def _error_str_when_creating_object_from_df_row(class_of_object, row_as_dict: dict):
-    if getattr(class_of_object, "from_dict", None) is None:
-        return Exception(
-            "Class %s requires .from_dict() method" % (str(class_of_object))
-        )
-    list_of_attributes = get_list_of_attributes(some_class=class_of_object)
-    return Exception(
-        "Class %s requires elements %s element %s doesn't match"
-        % (str(class_of_object), str(list_of_attributes), str(row_as_dict))
-    )
-
-
-def get_list_of_attributes(some_class) -> list:
-    dict_of_attributes = get_dict_of_class_attributes(some_class)
-    return list(dict_of_attributes.keys())
-
-
-def get_dict_of_class_attributes(some_class) -> dict:
-    return some_class.__annotations__
-
-
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
@@ -135,9 +82,9 @@ def clean_up_dict_with_nans(some_dict) -> dict:
 
 def clean_up_dict_with_weird_floats_for_id(some_dict) -> dict:
     for key, value in some_dict.items():
-        key_is_id = key == "id"
-        key_contains_id = "_id" in key
-        key_is_row_id = key == "row_id"  ## special event row id, FIXME orrible hack
+        key_is_id = key == ID_KEY
+        key_contains_id = ID_KEY_POSTFIX in key
+        key_is_row_id = key in LIST_OF_ID_KEY_TO_IGNORE_WHEN_CLEANING  ## special event row id, FIXME orrible hack
         if key_is_row_id:
             continue
         elif key_is_id or key_contains_id:
@@ -159,6 +106,26 @@ def list_duplicate_indices(seq):
     for i, item in enumerate(seq):
         tally[item].append(i)
     return [locs for locs in tally.values() if len(locs) > 1]
+
+
+KEY_VALUE_SEPERATOR=":"
+ITEM_SEPERATOR=","
+
+def dict_from_str( object_as_str: str) -> dict:
+    as_list_of_str = object_as_str.split(ITEM_SEPERATOR)
+    as_list_of_key_value_pairs = [
+        key_value_as_str.split(KEY_VALUE_SEPERATOR) for key_value_as_str in as_list_of_str
+    ]
+    as_dict = dict([(key, value) for key, value in as_list_of_key_value_pairs])
+
+    return as_dict
+
+
+def dict_as_str(some_dict: Dict[str,str]) -> str:
+    as_list_of_str = ["%s%s%s" % (key, KEY_VALUE_SEPERATOR, value) for key, value in some_dict.items()]
+
+    return ITEM_SEPERATOR.join(as_list_of_str)
+
 
 
 def transform_df_to_str(df: pd.DataFrame):
@@ -197,6 +164,8 @@ def transform_df_column_from_datetime_to_str(df: pd.DataFrame, date_series_name:
 
 def transform_datetime_into_str(date: datetime.datetime) -> str:
     return date.strftime(DATETIME_STR)
+
+
 
 
 def transform_df_from_str_to_dates(df: pd.DataFrame):

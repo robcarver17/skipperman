@@ -1,12 +1,10 @@
 from dataclasses import dataclass
 from typing import List, Union
 
-from app.objects.generic import (
-    GenericSkipperManObject,
+from app.objects.generic_list_of_objects import (
     GenericListOfObjects,
-    from_str_to_bool,
-    from_bool_to_str,
 )
+from app.objects.generic_objects import GenericSkipperManObject, from_bool_to_str, from_str_to_bool
 
 OTHER_IN_FOOD_REQUIRED = "other"
 
@@ -94,9 +92,9 @@ class CadetWithFoodRequirementsAtEvent(GenericSkipperManObject):
         return food_required_as_dict
 
     @classmethod
-    def from_dict(cls, some_dict: dict) -> "CadetWithFoodRequirementsAtEvent":
+    def from_dict_of_str(cls, some_dict: dict) -> "CadetWithFoodRequirementsAtEvent":
         cadet_id = str(some_dict.pop(CADET_ID))
-        food_required = FoodRequirements.from_dict(some_dict)
+        food_required = FoodRequirements.from_dict_of_str(some_dict)
 
         return cls(cadet_id=cadet_id, food_requirements=food_required)
 
@@ -174,9 +172,9 @@ class VolunteerWithFoodRequirementsAtEvent(GenericSkipperManObject):
         return food_required_as_dict
 
     @classmethod
-    def from_dict(cls, some_dict: dict) -> "VolunteerWithFoodRequirementsAtEvent":
+    def from_dict_of_str(cls, some_dict: dict) -> "VolunteerWithFoodRequirementsAtEvent":
         volunteer_id = str(some_dict.pop(VOLUNTEER_ID))
-        food_required = FoodRequirements.from_dict(some_dict)
+        food_required = FoodRequirements.from_dict_of_str(some_dict)
 
         return cls(volunteer_id=volunteer_id, food_requirements=food_required)
 

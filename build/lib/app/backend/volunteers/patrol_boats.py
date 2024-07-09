@@ -381,7 +381,7 @@ def get_list_of_volunteer_ids_with_boat_skills(
 ) -> List[str]:
     volunteer_data = VolunteerData(interface.data)
     list_of_volunteer_ids_with_boat_skills = (
-        volunteer_data.get_list_of_volunteer_ids_with_boat_skills()
+        volunteer_data.list_of_volunteer_ids_who_can_drive_safety_boat()
     )
 
     return list_of_volunteer_ids_with_boat_skills

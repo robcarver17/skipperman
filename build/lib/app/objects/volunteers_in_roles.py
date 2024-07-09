@@ -5,16 +5,10 @@ from statistics import mode
 
 from app.objects.volunteers import Volunteer
 
-from app.data_access.configuration.configuration import (
-    VOLUNTEERS_REQUIRING_GROUP,
-    VOLUNTEERS_REQUIRING_BOATS,
-    VOLUNTEER_ROLES,
-    VOLUNTEER_TEAMS,
-    SI_ROLE,
-    INSTRUCTOR_TEAM,
-    VOLUNTEER_SKILL_DICT,
-)
-from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
+from app.data_access.configuration.skills_and_roles import VOLUNTEER_TEAMS, VOLUNTEER_SKILL_DICT, \
+    VOLUNTEERS_REQUIRING_BOATS, VOLUNTEERS_REQUIRING_GROUP, INSTRUCTOR_TEAM, SI_ROLE, VOLUNTEER_ROLES
+from app.objects.generic_list_of_objects import GenericListOfObjects
+from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.groups import Group, GROUP_UNALLOCATED, index_group
 from app.objects.day_selectors import Day
 from app.objects.constants import missing_data

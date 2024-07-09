@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 from app.backend.data.qualification import QualificationData
 
-from app.backend.cadets import DEPRECATE_load_list_of_all_cadets
+from app.backend.cadets import  load_list_of_all_cadets
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -250,7 +250,7 @@ class AllocationData:
             [
                 (
                     day,
-                    self.get_two_handed_partner_name_for_cadet_on_day(
+                    self.get_two_handed_partner_as_str_for_cadet_on_day(
                         cadet=cadet, day=day
                     ),
                 )
@@ -258,18 +258,18 @@ class AllocationData:
             ]
         )
 
-    def list_of_names_of_cadets_at_event_with_matching_schedules_excluding_this_cadet(
+    def list_of_cadets_as_str_at_event_with_matching_schedules_excluding_this_cadet(
         self, cadet: Cadet
     ):
         ids_at_event = self.list_of_cadets_in_event_active_only.list_of_ids
         ids_at_event_excluding_cadet = [id for id in ids_at_event if not id == cadet.id]
-        names = [
-            self.list_of_all_cadets.object_with_id(id).name
+        cadets_as_str = [
+            str(self.list_of_all_cadets.cadet_with_id(id))
             for id in ids_at_event_excluding_cadet
         ]
-        names.sort()
+        cadets_as_str.sort()
 
-        return names
+        return cadets_as_str
 
     def cadet_at_event_with_dinghy_object_already_exists_for_cadet_across_days(
         self, cadet: Cadet
@@ -283,7 +283,7 @@ class AllocationData:
 
         return all([object is not missing_data for object in object_list])
 
-    def list_of_names_of_cadets_at_event_excluding_cadet_available_on_day(
+    def list_of_cadets_as_str_at_event_excluding_cadet_available_on_day(
         self, cadet: Cadet, day: Day
     ):
         list_of_cadets_at_event_available = self.list_of_cadets_available_on_day(day)
@@ -296,7 +296,7 @@ class AllocationData:
             self.list_of_all_cadets, list_of_cadet_ids_at_available
         )
 
-        return list_of_cadets.list_of_names()
+        return [str(cadet) for cadet in list_of_cadets]
 
     def list_of_cadets_available_on_day(self, day: Day) -> ListOfCadetsWithIDAtEvent:
         list_of_cadets_at_event = self.cadets_at_event_including_non_active
@@ -314,7 +314,7 @@ class AllocationData:
         availability = self.cadet_availability_at_event(cadet)
         return availability.available_on_day(day)
 
-    def get_two_handed_partner_name_for_cadet_on_day(
+    def get_two_handed_partner_as_str_for_cadet_on_day(
         self, cadet: Cadet, day: Day
     ) -> str:
         if not self.cadet_availability_at_event(cadet).available_on_day(day):
@@ -334,7 +334,7 @@ class AllocationData:
             ## partner cadet has vanished
             return ""
 
-        return cadet.name
+        return str(cadet)
 
     def get_two_handed_partner_id_for_cadet_on_day(self, cadet: Cadet, day: Day) -> str:
         partner_id = self.list_of_cadets_at_event_with_dinghies.cadet_partner_id_for_cadet_id_on_day(
@@ -626,7 +626,7 @@ def get_allocation_data(interface: abstractInterface, event: Event) -> Allocatio
             interface=interface, list_of_events=list_of_previous_events
         )
     )
-    list_of_all_cadets = DEPRECATE_load_list_of_all_cadets(interface)
+    list_of_all_cadets = load_list_of_all_cadets(interface.data)
 
     group_allocation_info = get_group_allocation_info(
         cadets_at_event_including_non_active

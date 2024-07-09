@@ -7,17 +7,17 @@ from app.data_access.configuration.configuration import (
     SIMILARITY_LEVEL_TO_WARN_DATE,
     SIMILARITY_LEVEL_TO_WARN_NAME,
 )
-from app.objects.generic import (
-    GenericSkipperManObjectWithIds,
+from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
 )
+from app.objects.generic_objects import GenericSkipperManObjectWithIds
 from app.objects.utils import (
     transform_date_into_str,
     similar,
     transform_str_or_datetime_into_date,
     in_x_not_in_y,
 )
-from app.objects.constants import arg_not_passed, DAYS_IN_YEAR, missing_data
+from app.objects.constants import arg_not_passed, DAYS_IN_YEAR, missing_data, MissingData, MultipleMatches
 from app.objects.utils import union_of_x_and_y
 
 
@@ -105,7 +105,16 @@ class Cadet(GenericSkipperManObjectWithIds):
         )
 
 
-multiple_matches = object()
+
+def is_cadet_age_surprising(cadet: Cadet):
+    age = cadet.approx_age_years()
+
+    return age < MIN_CADET_AGE or age > MAX_CADET_AGE
+
+
+DEFAULT_DATE_OF_BIRTH = datetime.date(1970, 1, 1)
+
+default_cadet = Cadet(first_name=" ", surname=" ", date_of_birth=DEFAULT_DATE_OF_BIRTH)
 
 
 class ListOfCadets(GenericListOfObjectsWithIds):
@@ -113,15 +122,10 @@ class ListOfCadets(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return Cadet
 
-    def as_str(self):
-        return ", ".join([str(cadet) for cadet in self])
-
     def excluding_cadets_from_other_list(self, list_of_cadets: "ListOfCadets"):
         list_of_ids = in_x_not_in_y(self.list_of_ids, list_of_cadets.list_of_ids)
         return self.subset_from_list_of_ids(self, list_of_ids)
 
-    def list_of_names(self):
-        return [cadet.name for cadet in self]
 
     def add(self, cadet: Cadet):
         if cadet in self:
@@ -132,12 +136,6 @@ class ListOfCadets(GenericListOfObjectsWithIds):
         self.append(cadet)
 
         return cadet
-
-    def index_of_cadet(self, cadet: Cadet):
-        return self.index_of_object_with_id(cadet.id)
-
-    def cadet_with_id(self, cadet_id: str) -> Cadet:
-        return self.object_with_id(cadet_id)
 
     def replace_cadet_with_id_with_new_cadet_details(
         self, existing_cadet_id: str, new_cadet: Cadet
@@ -154,11 +152,11 @@ class ListOfCadets(GenericListOfObjectsWithIds):
         if len(exact_match) == 1:
             return exact_match[0]
         elif len(exact_match) > 1:
-            raise Exception("Multiple matching cadets found!")
+            raise MultipleMatches("Multiple matching cadets found looking for %s!" % str(cadet))
 
         ### no exact matches required
         if exact_match_required:
-            return missing_data
+            raise MissingData("No cadet found matching %s wanted exact match" % str(cadet))
         else:
             return self.matching_cadets_on_name_only(cadet)
 
@@ -171,14 +169,12 @@ class ListOfCadets(GenericListOfObjectsWithIds):
 
         if len(names_match) > 1:
             ## multiple matches, as good as missing data
-            return missing_data
+            raise MultipleMatches("Multiple matching cadets found looking for %s with name only match!" % str(cadet))
         elif len(names_match) == 0:
-            return missing_data
+            raise MissingData("No cadet found matching %s wanted looking for name only match!" % str(cadet))
 
         return names_match[0]
 
-    def exact_match(self, cadet: Cadet) -> Cadet:
-        return self[self.index(cadet)]
 
     def sort_by_surname(self):
         return ListOfCadets(sorted(self, key=lambda x: x.surname))
@@ -201,6 +197,7 @@ class ListOfCadets(GenericListOfObjectsWithIds):
         name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME,
         dob_threshold: float = SIMILARITY_LEVEL_TO_WARN_DATE,
     ) -> "ListOfCadets":
+
         similar_dob = self.similar_dob(cadet, dob_threshold=dob_threshold)
         similar_names = self.similar_names(cadet, name_threshold=name_threshold)
         joint_list_of_similar_cadets = union_of_x_and_y(similar_names, similar_dob)
@@ -246,22 +243,10 @@ class ListOfCadets(GenericListOfObjectsWithIds):
 
         return ListOfCadets(similar_surnames)
 
-    def id_given_name(self, name: str):
-        ids = [cadet.id for cadet in self if cadet.name == name]
-        if len(ids) == 0:
-            return missing_data
-        if len(ids) > 1:
-            raise Exception("Can't have multiple cadets with same name")
 
-        return ids[0]
+    def cadet_with_id(self, cadet_id: str) -> Cadet:
+        return self.object_with_id(cadet_id)
 
+    def list_of_names(self):
+        return [cadet.name for cadet in self]
 
-def is_cadet_age_surprising(cadet: Cadet):
-    age = cadet.approx_age_years()
-
-    return age < MIN_CADET_AGE or age > MAX_CADET_AGE
-
-
-DEFAULT_DATE_OF_BIRTH = datetime.date(1970, 1, 1)
-
-default_cadet = Cadet(first_name=" ", surname=" ", date_of_birth=DEFAULT_DATE_OF_BIRTH)

@@ -1,4 +1,4 @@
-from app.backend.data.cadets_at_id_level import CadetData
+from app.backend.data.cadets import CadetData
 from app.backend.data.qualification import QualificationData
 from app.data_access.file_access import temp_file_name
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -28,7 +28,7 @@ def write_qualifications_to_temp_csv_file_and_return_filename(
     list_of_cadet_names_with_qualifications = (
         list_of_cadet_names_with_qualifications.sort_by_date()
     )
-    df_of_qualifications = list_of_cadet_names_with_qualifications.to_df_of_str()
+    df_of_qualifications = list_of_cadet_names_with_qualifications.as_df_of_str()
 
     filename = temp_file_name()
 

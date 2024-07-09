@@ -4,7 +4,8 @@ from app.objects.cadets import Cadet
 
 from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
 from app.objects.day_selectors import DaySelector
-from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
+from app.objects.generic_list_of_objects import GenericListOfObjects
+from app.objects.generic_objects import GenericSkipperManObject
 
 from app.objects.mapped_wa_event import RowInMappedWAEvent, RegistrationStatus
 

@@ -3,8 +3,7 @@ from dataclasses import dataclass
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.cadets import (
-    cadet_from_id_with_passed_list,
-    DEPRECATE_load_list_of_all_cadets,
+    get_cadet_from_id, load_list_of_all_cadets,
 )
 from app.backend.forms.form_utils import (
     get_availability_checkbox,
@@ -64,7 +63,7 @@ def get_registration_data(
         interface=interface, event=event, sort_order=sort_order
     )
     all_columns = get_list_of_columns_excluding_special_fields(cadets_at_event)
-    list_of_cadets = DEPRECATE_load_list_of_all_cadets(interface)
+    list_of_cadets = load_list_of_all_cadets(interface.data)
 
     return RegistrationDetailsForEvent(
         cadets_at_event=cadets_at_event,
@@ -98,12 +97,14 @@ def get_top_row_for_table_of_registration_details(all_columns: list) -> RowInTab
 
 
 def row_for_cadet_in_event(
+        interface: abstractInterface,
     cadet_at_event: CadetWithIdAtEvent,
     registration_details: RegistrationDetailsForEvent,
 ) -> RowInTable:
     cadet_id = cadet_at_event.cadet_id
-    cadet = cadet_from_id_with_passed_list(
-        cadet_id, list_of_cadets=registration_details.list_of_cadets
+    cadet = get_cadet_from_id(
+        data_layer=interface.data,
+        cadet_id=cadet_id
     )
 
     status_button = get_status_button(cadet_at_event.status, cadet_id=cadet_id)

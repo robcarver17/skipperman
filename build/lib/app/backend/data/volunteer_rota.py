@@ -6,7 +6,7 @@ from app.objects.volunteers import Volunteer
 
 from app.objects.groups import order_list_of_groups
 
-from app.data_access.configuration.configuration import VOLUNTEER_TEAMS
+from app.data_access.configuration.skills_and_roles import VOLUNTEER_TEAMS
 
 from app.backend.data.volunteer_allocation import VolunteerAllocationData
 from app.objects.volunteers_in_roles import (

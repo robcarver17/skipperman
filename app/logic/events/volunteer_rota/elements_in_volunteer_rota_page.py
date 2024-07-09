@@ -1,5 +1,6 @@
 from typing import List
 
+from app.backend.forms.form_utils import checked_and_labels_dict_for_skills_form
 from app.backend.volunteers.volunteer_rota_data import (
     get_explanation_of_sorts_and_filters,
 )
@@ -9,7 +10,6 @@ from app.backend.volunteers.volunteer_rota_summary import (
     get_summary_list_of_teams_and_groups_for_events,
 )
 from app.data_access.configuration.configuration import (
-    VOLUNTEER_SKILLS,
     WEBLINK_FOR_QUALIFICATIONS,
 )
 from app.data_access.configuration.fixed import (
@@ -26,7 +26,6 @@ from app.logic.events.volunteer_rota.rota_state import (
     get_sorts_and_filters_from_state,
 )
 from app.objects.volunteers_in_roles import FILTER_OPTIONS
-
 from app.backend.forms.swaps import is_ready_to_swap
 from app.logic.volunteers.ENTRY_view_volunteers import (
     all_sort_types as all_volunteer_name_sort_types,
@@ -36,7 +35,6 @@ from app.objects.abstract_objects.abstract_buttons import (
     Button,
     cancel_menu_button,
     save_menu_button,
-    main_menu_button,
     HelpButton,
 )
 from app.objects.abstract_objects.abstract_form import (
@@ -140,11 +138,13 @@ def get_volunteer_name_sort_buttons() -> List[Button]:
 
 
 def get_volunteer_skills_filter(interface: abstractInterface):
-    dict_of_labels = dict([(skill, skill) for skill in VOLUNTEER_SKILLS])
-    dict_of_checked = get_skills_filter_from_state(interface)
+    skills_filter = get_skills_filter_from_state(interface)
+    skills_dict_checked, dict_of_labels = checked_and_labels_dict_for_skills_form(skills_filter)
+
+
     return checkboxInput(
         input_label="Filter for volunteers with these skills",
-        dict_of_checked=dict_of_checked,
+        dict_of_checked=skills_dict_checked,
         dict_of_labels=dict_of_labels,
         input_name=SKILLS_FILTER,
         line_break=False,

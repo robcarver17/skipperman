@@ -3,7 +3,7 @@ from typing import Dict, List
 import pandas as pd
 from app.data_access.storage_layer.api import DataLayer
 
-from app.data_access.configuration.configuration import RIVER_SAFETY, LAKE_SAFETY
+from app.data_access.configuration.skills_and_roles import RIVER_SAFETY, LAKE_SAFETY
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.reporting.rota_report.components import DataForDfConstruction

@@ -1,5 +1,4 @@
 from app.backend.forms.swaps import is_ready_to_swap
-from app.data_access.configuration.configuration import VOLUNTEERS_SKILL_FOR_PB2
 from typing import List
 
 from app.backend.volunteers.patrol_boats import (
@@ -118,6 +117,8 @@ def get_buttons_for_volunteer_day_and_boat(
 
     return copy_buttons + swap_buttons + [" "] + [remove_volunteer_button]
 
+
+VOLUNTEERS_SKILL_FOR_PB2 = "PB2"
 
 def volunteer_boat_skill_checkbox(
     interface: abstractInterface, volunteer_id: str

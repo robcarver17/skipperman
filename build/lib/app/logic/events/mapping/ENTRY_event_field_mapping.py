@@ -121,7 +121,7 @@ def text_for_pre_existing_mapping(
     except:
         return PandasDFTable()
 
-    return PandasDFTable(mapping.to_df())
+    return PandasDFTable(mapping.as_df_of_str())
 
 
 def mapping_buttons() -> ButtonBar:

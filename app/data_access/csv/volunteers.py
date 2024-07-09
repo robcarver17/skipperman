@@ -10,6 +10,8 @@ from app.data_access.csv.resolve_csv_paths_and_filenames import (
     LIST_OF_VOLUNTEERS_IN_ROLES_FILE_ID,
     LIST_OF_VOLUNTEER_TARGETS_AT_EVENT_FILE_ID,
 )
+from app.objects.cadet_volunteer_connections import ListOfCadetVolunteerAssociations
+from app.objects.volunteer_skills import ListOfVolunteerSkills
 from app.objects.volunteers_at_event import (
     ListOfVolunteersAtEventWithId,
     ListOfIdentifiedVolunteersAtEvent,

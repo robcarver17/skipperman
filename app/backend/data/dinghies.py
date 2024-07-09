@@ -2,7 +2,7 @@ from typing import List
 
 from app.objects.cadets import Cadet
 
-from app.backend.data.cadets_at_id_level import CadetData
+from app.backend.data.cadets import CadetData
 
 from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
 

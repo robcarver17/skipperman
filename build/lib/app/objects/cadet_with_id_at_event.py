@@ -18,12 +18,11 @@ from app.objects.day_selectors import (
     any_day_selector_from_short_form_text,
 )
 from app.objects.events import Event
-from app.objects.generic import (
-    GenericSkipperManObjectWithIds,
-    transform_string_into_class_instance,
-    transform_class_instance_into_string,
+from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
 )
+from app.objects.generic_objects import GenericSkipperManObjectWithIds, transform_class_instance_into_string, \
+    transform_string_into_class_instance
 from app.objects.mapped_wa_event import (
     RegistrationStatus,
     RowInMappedWAEvent,
@@ -65,7 +64,7 @@ class CadetWithIdAtEvent(GenericSkipperManObjectWithIds):
         return self.status.is_active
 
     @classmethod
-    def from_dict(cls, dict_with_str):
+    def from_dict_of_str(cls, dict_with_str):
         dict_with_str = clean_up_dict_with_nans(dict_with_str)
         availability_as_str = dict_with_str.pop(AVAILABILITY)
         if type(availability_as_str) is not str:

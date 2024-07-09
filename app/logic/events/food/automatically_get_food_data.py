@@ -73,7 +73,7 @@ def process_update_to_cadet_food_data_if_new_to_event(
     except DuplicateCadets:
         interface.log_error(
             "ACTION REQUIRED: Cadet %s appears more than once in WA file with an active registration - using the first registration found - go to WA and cancel all but one of the registrations please, and then check details here are correct!"
-            % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
+            % cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id)
         )
         relevant_row = get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
             interface=interface,
@@ -84,7 +84,7 @@ def process_update_to_cadet_food_data_if_new_to_event(
     except NoMoreData:
         interface.log_error(
             "ACTION REQUIRED: Cadet %s vanished from WA mapping file - contact support"
-            % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
+            % cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id)
         )
         return
 
@@ -109,7 +109,7 @@ def process_update_to_cadet_food_data_given_registration_data(
     )
     interface.log_error(
         "Added food for cadet %s to event"
-        % cadet_name_from_id(interface=interface, cadet_id=cadet_id)
+        % cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id)
     )
 
 

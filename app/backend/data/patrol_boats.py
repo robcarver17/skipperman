@@ -308,7 +308,7 @@ class PatrolBoatsData:
         return self.volunteer_data.volunteer_with_id(volunteer_id)
 
     def boat_related_skill_for_volunteer(self, volunteer: Volunteer):
-        return self.volunteer_data.boat_related_skill_for_volunteer(volunteer)
+        return self.volunteer_data.can_volunteer_drive_safety_boat(volunteer)
 
     def list_of_volunteer_ids_assigned_to_boat_and_day(
         self, event: Event, patrol_boat: PatrolBoat, day: Day

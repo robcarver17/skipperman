@@ -3,9 +3,10 @@ import datetime
 from typing import List
 
 from app.objects.cadets import Cadet
-from app.objects.constants import missing_data
+from app.objects.constants import missing_data, MissingData
 
-from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
+from app.objects.generic_list_of_objects import GenericListOfObjects
+from app.objects.generic_objects import GenericSkipperManObject
 
 
 @dataclass
@@ -81,7 +82,7 @@ class ListOfCadetsWithIdOnCommittee(GenericListOfObjects):
         try:
             idx = list_of_ids.index(cadet_id)
         except ValueError:
-            return missing_data
+            raise MissingData
 
         return self[idx]
 

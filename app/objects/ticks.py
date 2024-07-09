@@ -10,11 +10,11 @@ from app.objects.qualifications import Qualification
 from app.objects.day_selectors import ListOfDaySelectors
 
 from app.objects.constants import missing_data, arg_not_passed
-from app.objects.generic import (
-    GenericSkipperManObjectWithIds,
+from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     GenericListOfObjects,
 )
+from app.objects.generic_objects import GenericSkipperManObjectWithIds
 
 
 @dataclass
@@ -449,9 +449,9 @@ class ListOfCadetsWithTickListItems(GenericListOfObjects):
         return CadetWithTickListItems
 
     def to_df(self) -> pd.DataFrame:
-        return self.to_df_of_str()
+        return self.as_df_of_str()
 
-    def to_df_of_str(self) -> pd.DataFrame:
+    def as_df_of_str(self) -> pd.DataFrame:
         return list_of_cadets_with_tick_list_items_as_df(self)
 
     def append(self, __object):
@@ -526,7 +526,7 @@ class ListOfCadetsWithTickListItems(GenericListOfObjects):
         qualification_name: str = "",
         group_name: str = "",
     ) -> LabelledTickSheetWithCadetIds:
-        df = self.to_df_of_str()
+        df = self.as_df_of_str()
         list_of_cadet_ids = self.list_of_cadet_ids
         df = df.drop("cadet_id", axis=1)
         df.index = list_of_cadet_names

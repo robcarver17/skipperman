@@ -73,7 +73,7 @@ def export_all_clothing(interface: abstractInterface) -> File:
     list_of_cadets_with_clothing = ListOfCadetObjectsWithClothingAtEvent(new_list)
 
     filename = temp_file_name()
-    df = list_of_cadets_with_clothing.to_df()
+    df = list_of_cadets_with_clothing.as_df_of_str()
     df.to_excel(filename, index=False)
 
     return File(filename)

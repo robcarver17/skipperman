@@ -5,7 +5,7 @@ from typing import Dict, List
 
 import pandas as pd
 
-from app.objects.generic import from_bool_to_str, from_str_to_bool
+from app.objects.generic_objects import from_bool_to_str, from_str_to_bool
 
 Day = Enum(
     "Day",

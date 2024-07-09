@@ -4,6 +4,7 @@ pyproject.toml
 setup.py
 app/__init__.py
 app/backend/__init__.py
+app/backend/cadet_committee.py
 app/backend/cadets.py
 app/backend/cleaning.py
 app/backend/clothing.py
@@ -13,9 +14,9 @@ app/backend/food.py
 app/backend/../data_access/configuration/configuration.yaml
 app/backend/data/__init__.py
 app/backend/data/cadet_committee.py
+app/backend/data/cadets.py
 app/backend/data/cadets_at_event.py
 app/backend/data/cadets_at_event_id_level.py
-app/backend/data/cadets_at_id_level.py
 app/backend/data/clothing.py
 app/backend/data/data_for_event.py
 app/backend/data/dinghies.py
@@ -172,6 +173,8 @@ app/data_access/configuration/configuration.yaml
 app/data_access/configuration/field_list.py
 app/data_access/configuration/field_list_groups.py
 app/data_access/configuration/fixed.py
+app/data_access/configuration/groups.py
+app/data_access/configuration/skills_and_roles.py
 app/data_access/csv/__init__.py
 app/data_access/csv/cadets.py
 app/data_access/csv/dinghies_at_events.py
@@ -427,6 +430,7 @@ app/logic/volunteers/volunteer_state.py
 app/logic/volunteers/../../data_access/configuration/configuration.yaml
 app/objects/__init__.py
 app/objects/cadet_at_event.py
+app/objects/cadet_volunteer_connections.py
 app/objects/cadet_with_id_at_event.py
 app/objects/cadets.py
 app/objects/clothing.py
@@ -437,7 +441,8 @@ app/objects/day_selectors.py
 app/objects/dinghies.py
 app/objects/events.py
 app/objects/food.py
-app/objects/generic.py
+app/objects/generic_list_of_objects.py
+app/objects/generic_objects.py
 app/objects/groups.py
 app/objects/identified_cadets_at_event.py
 app/objects/mapped_wa_event.py
@@ -449,6 +454,7 @@ app/objects/roles.py
 app/objects/ticks.py
 app/objects/users_and_security.py
 app/objects/utils.py
+app/objects/volunteer_skills.py
 app/objects/volunteers.py
 app/objects/volunteers_at_event.py
 app/objects/volunteers_in_roles.py

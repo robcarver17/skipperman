@@ -1,6 +1,6 @@
 from app.backend.data.ticksheets import TickSheetsData
 from app.backend.data.group_allocations import GroupAllocationsData
-from app.backend.data.cadets_at_id_level import CadetData
+from app.backend.data.cadets import CadetData
 from app.backend.data.qualification import QualificationData
 
 from app.objects.groups import Group

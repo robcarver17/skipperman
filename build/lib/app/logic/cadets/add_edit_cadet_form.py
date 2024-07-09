@@ -2,7 +2,7 @@ from copy import copy
 from dataclasses import dataclass
 from typing import Union
 
-from app.backend.cadets import verify_cadet_and_warn
+from app.backend.cadets import verify_cadet_and_return_warnings
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
@@ -104,7 +104,7 @@ def verify_form_with_cadet_details(
 ) -> CadetAndVerificationText:
     try:
         cadet = get_cadet_from_form(interface)
-        verify_text = verify_cadet_and_warn(cadet=cadet, interface=interface)
+        verify_text = verify_cadet_and_return_warnings(cadet=cadet,data_layer=interface.data)
     except Exception as e:
         cadet = copy(default)
         verify_text = (

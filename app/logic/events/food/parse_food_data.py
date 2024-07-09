@@ -3,7 +3,7 @@ from app.objects.abstract_objects.abstract_form import File
 
 from app.objects.events import Event
 
-from app.backend.cadets import DEPRECATE_get_cadet_from_id
+from app.backend.cadets import  get_cadet_from_id
 
 from app.backend.food import (
     update_cadet_food_data,
@@ -93,8 +93,8 @@ def update_cadet_food_data_if_changed(
             event=event,
         )
     except Exception as e:
-        cadet = DEPRECATE_get_cadet_from_id(
-            interface=interface, cadet_id=existing_cadet_with_food.cadet_id
+        cadet = get_cadet_from_id(
+            data_layer=interface.data, cadet_id=existing_cadet_with_food.cadet_id
         )
         interface.log_error(
             "Couldn't update food_report for cadet %s, error %s" % (str(cadet), str(e))

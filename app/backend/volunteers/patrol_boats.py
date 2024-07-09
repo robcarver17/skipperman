@@ -234,7 +234,7 @@ def sort_volunteer_ids_by_role_and_skills_and_then_name(
         sorted_list_of_volunteers=sorted_list_of_volunteers,
     )
 
-    list_of_volunteer_ids_with_boat_skills = get_list_of_volunteer_ids_with_boat_skills(
+    list_of_volunteer_ids_with_boat_skills = get_list_of_volunteer_ids_who_can_drive_safety_boat(
         interface
     )
     add_to_list_of_volunteer_ids(
@@ -376,12 +376,12 @@ def sort_list_of_volunteer_ids_as_per_list_of_volunteers(
     return sorted_subset_list_of_volunteers.list_of_ids
 
 
-def get_list_of_volunteer_ids_with_boat_skills(
+def get_list_of_volunteer_ids_who_can_drive_safety_boat(
     interface: abstractInterface,
 ) -> List[str]:
     volunteer_data = VolunteerData(interface.data)
     list_of_volunteer_ids_with_boat_skills = (
-        volunteer_data.get_list_of_volunteer_ids_with_boat_skills()
+        volunteer_data.list_of_volunteer_ids_who_can_drive_safety_boat()
     )
 
     return list_of_volunteer_ids_with_boat_skills

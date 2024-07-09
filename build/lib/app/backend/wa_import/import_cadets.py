@@ -2,8 +2,8 @@ import os
 
 import pandas as pd
 
-from app.backend.cadets import get_list_of_similar_cadets
-from app.backend.data.cadets_at_id_level import CadetData
+from app.backend.cadets import  get_list_of_similar_cadets
+from app.backend.data.cadets import CadetData
 from app.backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
 from app.backend.wa_import.load_wa_file import (
     get_staged_adhoc_filename,
@@ -39,14 +39,15 @@ def get_temp_cadet_file() -> ListOfCadets:
 def does_identical_cadet_exist_in_data(interface: abstractInterface, cadet: Cadet):
     cadet_data = CadetData(interface.data)
     all_existing_cadets = cadet_data.get_list_of_cadets()
-    matching = all_existing_cadets.matching_cadet(cadet, exact_match_required=True)
-    no_matching = matching is missing_data
-
-    return not no_matching
+    try:
+        __ = all_existing_cadets.matching_cadet(cadet, exact_match_required=True)
+        return True
+    except:
+        return False
 
 
 def are_there_no_similar_cadets(interface: abstractInterface, cadet: Cadet) -> bool:
-    similar_cadets = get_list_of_similar_cadets(interface=interface, cadet=cadet)
+    similar_cadets = get_list_of_similar_cadets(data_layer=interface.data, cadet=cadet)
 
     return len(similar_cadets) == 0
 

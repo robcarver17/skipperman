@@ -2,7 +2,8 @@ from dataclasses import dataclass
 from typing import List
 
 from app.objects.constants import missing_data
-from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
+from app.objects.generic_list_of_objects import GenericListOfObjects
+from app.objects.generic_objects import GenericSkipperManObject
 
 SKIP_TEST_CADET_ID = str(-9999)
 

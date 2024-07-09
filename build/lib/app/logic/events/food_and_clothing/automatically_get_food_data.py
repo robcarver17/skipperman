@@ -11,7 +11,7 @@ from app.objects.mapped_wa_event import RowInMappedWAEvent
 
 from app.objects.food import guess_food_requirements_from_food_field
 
-from app.backend.cadets import cadet_name_from_id
+from app.backend.cadets import DEPRECATE_cadet_name_from_id
 from app.data_access.configuration.field_list import CADET_FOOD_PREFERENCE
 
 from app.objects.constants import DuplicateCadets, NoMoreData
@@ -59,7 +59,7 @@ def process_update_to_cadet_food_data_if_new_to_event(
     except DuplicateCadets:
         interface.log_error(
             "ACTION REQUIRED: Cadet %s appears more than once in WA file with an active registration - using the first registration found - go to WA and cancel all but one of the registrations please, and then check details here are correct!"
-            % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
+            % DEPRECATE_cadet_name_from_id(cadet_id=cadet_id, interface=interface)
         )
         relevant_row = get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
             interface=interface,
@@ -69,7 +69,7 @@ def process_update_to_cadet_food_data_if_new_to_event(
     except NoMoreData:
         interface.log_error(
             "ACTION REQUIRED: Cadet %s vanished from WA mapping file - contact support"
-            % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
+            % DEPRECATE_cadet_name_from_id(cadet_id=cadet_id, interface=interface)
         )
         return
     
@@ -88,7 +88,7 @@ def process_update_to_cadet_food_data_given_registration_data(
     food_from_registration = relevant_row.get_item(CADET_FOOD_PREFERENCE, '')
     food_requirements = guess_food_requirements_from_food_field(food_from_registration)
     add_new_cadet_with_food_to_event(interface=interface, event=event, food_requirements=food_requirements, cadet_id=cadet_id)
-    interface.log_error("Added food for cadet %s to event" % cadet_name_from_id(interface=interface, cadet_id=cadet_id))
+    interface.log_error("Added food for cadet %s to event" % DEPRECATE_cadet_name_from_id(interface=interface, cadet_id=cadet_id))
 
 
 def get_and_save_food_for_volunteers_from_registration_data(interface: abstractInterface):

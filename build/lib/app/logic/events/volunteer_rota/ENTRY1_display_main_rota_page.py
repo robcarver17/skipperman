@@ -50,6 +50,7 @@ from app.objects.abstract_objects.abstract_text import Heading
 
 def display_form_view_for_volunteer_rota(interface: abstractInterface) -> Form:
     sorts_and_filters = get_sorts_and_filters_from_state(interface)
+    print(sorts_and_filters)
     event = get_event_from_state(interface)
     title = Heading("Volunteer rota for event %s" % str(event), centred=True, size=4)
     summary_of_filled_roles = get_summary_table(interface=interface, event=event)

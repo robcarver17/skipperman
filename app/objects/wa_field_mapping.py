@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 
 from app.objects.utils import in_x_not_in_y, in_both_x_and_y
-from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
+from app.objects.generic_list_of_objects import GenericListOfObjects
+from app.objects.generic_objects import GenericSkipperManObject
 
 SKIPPERMAN_FIELD_COLUMN_VALUE = "skipperman_field"
 WA_FIELD_COLUMN_KEY = "wa_field"

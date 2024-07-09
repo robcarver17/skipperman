@@ -1,6 +1,8 @@
 from typing import Union
 
-from app.backend.data.cadets_at_id_level import CadetData
+from app.backend.data.cadet_committee import CadetCommitteeData
+
+from app.backend.data.cadets import CadetData
 
 from app.backend.ticks_and_qualifications.qualifications import (
     sorted_list_of_named_qualifications_for_cadet,
@@ -89,8 +91,9 @@ def qualifications_line(interface: abstractInterface, cadet: Cadet) -> Line:
 
 
 def get_committee_string(interface: abstractInterface, cadet: Cadet) -> Line:
-    cadet_data = CadetData(interface.data)
-    return Line(cadet_data.cadet_on_committee_status_str(cadet))
+    cadet_data = CadetCommitteeData(interface.data)
+    status_str = cadet_data.cadet_on_committee_status_str(cadet)
+    return Line(status_str)
 
 
 def buttons_for_cadet_form() -> ButtonBar:

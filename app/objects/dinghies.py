@@ -6,12 +6,12 @@ from app.objects.day_selectors import Day
 from app.objects.utils import make_id_as_int_str
 
 from app.objects.constants import missing_data, arg_not_passed
-from app.objects.generic import (
-    GenericSkipperManObjectWithIds,
-    GenericSkipperManObject,
+from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
-    clean_up_dict_with_weird_floats_for_id,
+
 )
+
+from app.objects.generic_objects import GenericSkipperManObject, GenericSkipperManObjectWithIds
 
 
 @dataclass

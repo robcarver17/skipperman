@@ -5,7 +5,7 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines
 
 from app.objects.food import guess_food_requirements_from_food_field
 
-from app.backend.cadets import  cadet_name_from_id
+from app.backend.cadets import  DEPRECATE_cadet_name_from_id
 from app.backend.food import is_cadet_with_id_already_at_event_with_food, add_new_cadet_with_food_to_event
 from app.backend.forms.form_utils import get_food_requirements_input, get_food_requirements_from_form
 from app.backend.wa_import.update_cadets_at_event import        get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active
@@ -94,7 +94,7 @@ def process_update_to_cadet_new_to_event_with_food(
     except DuplicateCadets:
         interface.log_error(
             "ACTION REQUIRED: Cadet %s appears more than once in WA file with an active registration - using the first registration found - go to WA and cancel all but one of the registrations please, and then check details here are correct!"
-            % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
+            % DEPRECATE_cadet_name_from_id(cadet_id=cadet_id, interface=interface)
         )
         relevant_row = get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
             interface=interface,
@@ -104,7 +104,7 @@ def process_update_to_cadet_new_to_event_with_food(
     except NoMoreData:
         interface.log_error(
             "ACTION REQUIRED: Cadet %s vanished from WA mapping file - contact support"
-            % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
+            % DEPRECATE_cadet_name_from_id(cadet_id=cadet_id, interface=interface)
         )
         return process_next_cadet_food_at_event(interface)
 
@@ -131,7 +131,7 @@ def display_form_for_new_cadet_food_requirements(
                                               checkbox_input_name=CHECKBOX_FOOD,
                                               other_input_label="Other")
 
-    cadet_name = cadet_name_from_id(interface=interface, cadet_id=cadet_id)
+    cadet_name = DEPRECATE_cadet_name_from_id(interface=interface, cadet_id=cadet_id)
 
     button = Button(SAVE_BUTTON_LABEL)
 

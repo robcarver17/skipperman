@@ -147,7 +147,7 @@ def get_dict_of_df_for_reporting_allocations_with_flags(
                 event=event,
             )
 
-        df = list_of_cadets_with_groups.to_df_of_str(
+        df = list_of_cadets_with_groups.as_df_of_str(
             display_full_names=display_full_names
         )
         dict_of_df[day.name] = df

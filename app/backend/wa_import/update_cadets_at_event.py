@@ -4,7 +4,7 @@ from app.data_access.storage_layer.api import DataLayer
 
 from app.objects.cadets import Cadet
 
-from app.backend.data.cadets_at_id_level import CadetData
+from app.backend.data.cadets import CadetData
 
 from app.backend.data.group_allocations import GroupAllocationsData
 from app.backend.data.dinghies import DinghiesData
@@ -14,7 +14,7 @@ from app.objects.utils import union_of_x_and_y
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.constants import NoMoreData, missing_data
 
-from app.backend.cadets import cadet_name_from_id, DEPRECATE_get_cadet_from_id
+from app.backend.cadets import  get_cadet_from_id
 from app.backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
 from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
 from app.objects.constants import DuplicateCadets
@@ -73,7 +73,7 @@ def get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
     cadet_id: str,
     raise_error_on_duplicate: bool = True,
 ) -> RowInMappedWAEvent:
-    cadet = DEPRECATE_get_cadet_from_id(cadet_id=cadet_id, interface=interface)
+    cadet = get_cadet_from_id(cadet_id=cadet_id, data_layer=interface.data)
 
     all_rows = get_all_rows_in_mapped_event_for_cadet(
         event=event, cadet=cadet, data_layer=interface.data
@@ -295,9 +295,7 @@ def new_status_and_status_message(
     old_status_name = old_status.name
     new_status_name = new_status.name
 
-    cadet = cadet_name_from_id(
-        interface=interface, cadet_id=new_cadet_at_event.cadet_id
-    )
+    cadet = cadet_name_from_id(data_layer=interface.data, cadet_id=new_cadet_at_event.cadet_id)
 
     ## Don't need all shared as new_status can't be deleted
     if old_status.is_cancelled and new_status.is_active:

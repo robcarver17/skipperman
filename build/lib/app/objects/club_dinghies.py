@@ -3,11 +3,10 @@ from dataclasses import dataclass
 from app.objects.day_selectors import Day, all_possible_days
 
 from app.objects.constants import missing_data, arg_not_passed
-from app.objects.generic import (
-    GenericSkipperManObjectWithIds,
-    GenericSkipperManObject,
+from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
 )
+from app.objects.generic_objects import GenericSkipperManObject, GenericSkipperManObjectWithIds
 
 
 @dataclass

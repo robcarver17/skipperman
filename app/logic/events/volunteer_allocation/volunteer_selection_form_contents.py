@@ -1,4 +1,4 @@
-from app.backend.cadets import DEPRECATE_cadet_from_id_USE_get_cadet_from_id
+from app.backend.cadets import get_cadet_from_id
 from app.backend.volunteers.volunteer_allocation import get_list_of_relevant_volunteers
 from app.backend.data.volunteers import SORT_BY_SURNAME
 from app.backend.volunteers.volunteers import DEPRECATE_get_sorted_list_of_volunteers
@@ -41,8 +41,8 @@ def get_header_text_for_volunteer_selection_form(
         status_text = "Registration volunteer status in form: %s" % status_text
 
     volunteer_index = get_volunteer_index(interface)
-    cadet = DEPRECATE_cadet_from_id_USE_get_cadet_from_id(
-        interface=interface, cadet_id=relevant_information_for_identification.cadet_id
+    cadet = get_cadet_from_id(
+        data_layer=interface.data, cadet_id=relevant_information_for_identification.cadet_id
     )
 
     introduction = (
@@ -72,8 +72,9 @@ def volunteer_name_is_similar_to_cadet_name(
     relevant_information_for_identification = relevant_information.identify
     cadet_id = relevant_information_for_identification.cadet_id
 
-    cadet = DEPRECATE_cadet_from_id_USE_get_cadet_from_id(
-        interface=interface, cadet_id=cadet_id
+    cadet =\
+    get_cadet_from_id(
+    interface.data, cadet_id=cadet_id
     )
 
     return similar(volunteer.name, cadet.name) > 0.9

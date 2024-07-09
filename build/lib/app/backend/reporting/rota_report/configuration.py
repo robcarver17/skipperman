@@ -4,9 +4,9 @@ from app.backend.reporting.options_and_parameters.report_type_specific_parameter
     SpecificParametersForTypeOfReport,
 )
 from app.data_access.configuration.configuration import (
-    VOLUNTEER_TEAMS,
     LAKE_TRAINING_GROUP_NAMES,
 )
+from app.data_access.configuration.skills_and_roles import VOLUNTEER_TEAMS
 from app.objects.day_selectors import DaySelector
 
 TEAM_NAME = "Team name"

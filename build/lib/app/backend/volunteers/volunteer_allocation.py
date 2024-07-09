@@ -162,7 +162,7 @@ def get_string_of_other_associated_cadets_for_event(
         return ""
 
     associated_cadets_without_this_cadet_names = [
-        cadet_name_from_id(interface=interface, cadet_id=other_cadet_id)
+        cadet_name_from_id(data_layer=interface.data, cadet_id=other_cadet_id)
         for other_cadet_id in associated_cadets_without_this_cadet
     ]
     associated_cadets_without_this_cadet_names_str = ", ".join(
@@ -484,7 +484,7 @@ def matched_volunteer_or_missing_data(
     interface: abstractInterface, volunteer: Volunteer
 ) -> Union[object, Volunteer]:
     volunteer_data = VolunteerData(interface.data)
-    matched_volunteer_with_id = volunteer_data.matching_volunteer_or_missing_data(
+    matched_volunteer_with_id = volunteer_data.get_volunteer_with_matching_name(
         volunteer
     )
 

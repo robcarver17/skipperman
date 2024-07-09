@@ -27,7 +27,7 @@ from app.objects.abstract_objects.abstract_lines import (
     _______________,
 )
 
-from app.backend.cadets import cadet_name_from_id
+from app.backend.cadets import  cadet_name_from_id
 from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
 from app.objects.events import Event
 
@@ -40,9 +40,7 @@ def display_form_for_update_to_existing_cadet_at_event(
 ) -> Form:
     overall_message = (
         "There have been important changes for event registration information about cadet %s"
-        % cadet_name_from_id(
-            interface=interface, cadet_id=existing_cadet_at_event.cadet_id
-        )
+        % cadet_name_from_id(data_layer=interface.data, cadet_id=existin_cadet_at_event.cadet_id)
     )
 
     status_change_field = get_line_in_form_for_status_change(

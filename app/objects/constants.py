@@ -38,3 +38,9 @@ class DuplicateCadets(Exception):
 
 class NoButtonPressed(Exception):
     pass
+
+class MissingData(Exception):
+    pass
+
+class MultipleMatches(Exception):
+    pass

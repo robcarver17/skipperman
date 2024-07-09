@@ -1,5 +1,6 @@
 from typing import Union
 
+from app.backend.forms.form_utils import checked_and_labels_dict_for_skills_form, get_dict_of_skills_from_form
 from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
 
 from app.objects.abstract_objects.abstract_form import (
@@ -10,7 +11,6 @@ from app.objects.abstract_objects.abstract_form import (
     Link,
 )
 from app.objects.abstract_objects.abstract_buttons import (
-    Button,
     ButtonBar,
     cancel_menu_button,
     save_menu_button,
@@ -29,9 +29,8 @@ from app.objects.abstract_objects.abstract_interface import (
 )
 from app.logic.volunteers.constants import *
 from app.backend.volunteers.volunteers import (
-    DEPRECATE_get_dict_of_existing_skills,
     save_skills_for_volunteer,
-    update_existing_volunteer,
+    update_existing_volunteer, get_dict_of_existing_skills,
 )
 from app.logic.volunteers.volunteer_state import get_volunteer_from_state
 from app.logic.volunteers.add_volunteer import get_volunteer_from_form
@@ -99,13 +98,14 @@ def core_volunteer_form_entries(volunteer: Volunteer) -> ListOfLines:
 
 
 def skills_form_entries(interface: abstractInterface, volunteer: Volunteer):
-    skills_dict = DEPRECATE_get_dict_of_existing_skills(
-        interface=interface, volunteer=volunteer
+    skills_dict = get_dict_of_existing_skills(
+        data_layer=interface.data, volunteer=volunteer
     )
-    dict_of_labels = dict([(skill, skill) for skill in skills_dict.keys()])
+    skills_dict_checked, dict_of_labels = checked_and_labels_dict_for_skills_form(skills_dict)
+
     return checkboxInput(
         input_label="Volunteer skills:",
-        dict_of_checked=skills_dict,
+        dict_of_checked=skills_dict_checked,
         dict_of_labels=dict_of_labels,
         input_name=SKILLS,
     )
@@ -155,24 +155,11 @@ def get_and_save_volunteer_skills_from_form(
     interface: abstractInterface, volunteer: Volunteer
 ):
     dict_of_skills = get_dict_of_skills_from_form(
-        interface=interface, volunteer=volunteer
+        interface=interface,
+        field_name=SKILLS
     )
     save_skills_for_volunteer(
         interface=interface, volunteer=volunteer, dict_of_skills=dict_of_skills
     )
 
 
-def get_dict_of_skills_from_form(
-    interface: abstractInterface, volunteer: Volunteer
-) -> dict:
-    selected_skills = interface.value_of_multiple_options_from_form(SKILLS)
-    existing_skills = DEPRECATE_get_dict_of_existing_skills(
-        interface=interface, volunteer=volunteer
-    )
-    for skill_name in existing_skills.keys():
-        if skill_name in selected_skills:
-            existing_skills[skill_name] = True
-        else:
-            existing_skills[skill_name] = False
-
-    return existing_skills

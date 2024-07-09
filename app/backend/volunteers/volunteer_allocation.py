@@ -1,5 +1,7 @@
 from typing import List, Dict, Union
 
+from app.data_access.storage_layer.api import DataLayer
+
 from app.data_access.configuration.configuration import UNABLE_TO_VOLUNTEER_KEYWORD
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -162,7 +164,7 @@ def get_string_of_other_associated_cadets_for_event(
         return ""
 
     associated_cadets_without_this_cadet_names = [
-        cadet_name_from_id(interface=interface, cadet_id=other_cadet_id)
+        cadet_name_from_id(data_layer=interface.data, cadet_id=other_cadet_id)
         for other_cadet_id in associated_cadets_without_this_cadet
     ]
     associated_cadets_without_this_cadet_names_str = ", ".join(
@@ -480,11 +482,11 @@ def get_list_of_volunteers_except_those_already_at_event(
     )
 
 
-def matched_volunteer_or_missing_data(
-    interface: abstractInterface, volunteer: Volunteer
+def get_volunteer_with_matching_name(
+    data_layer: DataLayer, volunteer: Volunteer
 ) -> Union[object, Volunteer]:
-    volunteer_data = VolunteerData(interface.data)
-    matched_volunteer_with_id = volunteer_data.matching_volunteer_or_missing_data(
+    volunteer_data = VolunteerData(data_layer)
+    matched_volunteer_with_id = volunteer_data.get_volunteer_with_matching_name(
         volunteer
     )
 

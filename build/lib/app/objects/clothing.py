@@ -4,7 +4,8 @@ from typing import List
 
 from app.objects.cadets import Cadet, ListOfCadets
 
-from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
+from app.objects.generic_list_of_objects import GenericListOfObjects
+from app.objects.generic_objects import GenericSkipperManObject
 
 UNALLOCATED_COLOUR = ""
 

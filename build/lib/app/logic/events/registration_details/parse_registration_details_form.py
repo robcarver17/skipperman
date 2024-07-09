@@ -2,7 +2,7 @@ from app.backend.volunteers.volunteer_allocation import (
     volunteer_ids_associated_with_cadet_at_specific_event,
 )
 from app.backend.volunteers.volunteers import get_volunteer_from_id
-from app.backend.cadets import cadet_name_from_id
+from app.backend.cadets import  cadet_name_from_id
 from app.backend.wa_import.update_cadets_at_event import (
     update_data_row_for_existing_cadet_at_event,
     update_availability_of_existing_cadet_at_event,
@@ -277,7 +277,7 @@ def log_alert_for_attendance_change(
 
     warning_str = (
         "*Following volunteers associated with cadet %s for whom days attending updated - check they are still available for their nominated days, and if not update volunteer rota:"
-        % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
+        % cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id)
     )
 
     log_alert_for_volunteers(
@@ -298,12 +298,12 @@ def log_alert_for_status_change(
     if new_status.is_cancelled_or_deleted:
         warning_str = (
             "*Following volunteers associated with cadet %s for whom status updated to deleted or cancelled - check their availability, and if no longer available update volunteer rota:"
-            % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
+            % cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id)
         )
     elif original_status.is_cancelled_or_deleted and new_status.is_active:
         warning_str = (
             "*Following volunteers associated with cadet %s for whom status updated to active registration - check their availability on the volunteer rota and / or add new volunteers if available:"
-            % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
+            % cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id)
         )
     else:
         return

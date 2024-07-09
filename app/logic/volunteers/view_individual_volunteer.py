@@ -29,8 +29,6 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 from app.backend.volunteers.volunteers import (
-    DEPRECATE_get_connected_cadets,
-    DEPRECATE_get_dict_of_existing_skills,
     get_dict_of_existing_skills,
     get_connected_cadets,
 )
@@ -100,14 +98,15 @@ def list_of_lines_with_allocations_and_roles(
 def list_of_skills_as_list_of_lines(
     interface: abstractInterface, volunteer: Volunteer
 ) -> ListOfLines:
+
     skills = get_dict_of_existing_skills(data_layer=interface.data, volunteer=volunteer)
-    skills_held = [skill for skill, skill_held in skills.items() if skill_held]
-    skills_not_held = [skill for skill, skill_held in skills.items() if not skill_held]
+    skills_held = skills.skills_held_as_str()
+    skills_not_held = skills.skills_not_held_as_str()
 
     return ListOfLines(
         [
-            Line("Skills held: %s" % ", ".join(skills_held)),
-            Line("Skills missing: %s" % ", ".join(skills_not_held)),
+            Line("Skills held: %s" % skills_held),
+            Line("Skills missing: %s" % skills_not_held)
         ]
     )
 

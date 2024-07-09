@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
 
-from app.objects.constants import arg_not_passed, missing_data
+from app.objects.constants import arg_not_passed, missing_data, MissingData
 
 from app.data_access.storage_layer.api import DataLayer
 from app.objects.cadets import Cadet, ListOfCadets
@@ -102,7 +102,7 @@ class CadetData:
         list_of_cadets = self.get_list_of_cadets()
         return list_of_cadets.similar_cadets(cadet)
 
-    def get_matching_cadet_with_id_or_missing_data(
+    def get_matching_cadet_with_id(
         self,
         cadet: Cadet,
     ) -> Cadet:

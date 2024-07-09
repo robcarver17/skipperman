@@ -20,7 +20,8 @@ from app.objects.patrol_boats import (
     ListOfPatrolBoats,
     ListOfVolunteersAtEventWithPatrolBoats,
 )
-from app.objects.volunteers import ListOfVolunteers, ListOfVolunteerSkills
+from app.objects.volunteers import ListOfVolunteers
+from app.objects.volunteer_skills import ListOfVolunteerSkills
 from app.objects.volunteers_in_roles import (
     ListOfVolunteersInRoleAtEvent,
     VolunteerInRoleAtEventWithTeamName,

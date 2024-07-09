@@ -3,7 +3,8 @@ from typing import List
 
 from app.objects.volunteers import Volunteer
 
-from app.objects.generic import GenericSkipperManObject, GenericListOfObjects
+from app.objects.generic_list_of_objects import GenericListOfObjects
+from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.day_selectors import (
     DaySelector,
     day_selector_stored_format_from_text,
@@ -168,7 +169,7 @@ class VolunteerAtEventWithId(GenericSkipperManObject):
     notes: str = ""
 
     @classmethod
-    def from_dict(cls, dict_with_str):
+    def from_dict_of_str(cls, dict_with_str):
         dict_with_str = clean_up_dict_with_nans(dict_with_str)
         list_of_cadet_ids_as_str = str(dict_with_str[LIST_KEY])
         if len(list_of_cadet_ids_as_str) == 0:

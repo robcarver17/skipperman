@@ -3,7 +3,7 @@ from app.backend.clothing import (
     add_new_cadet_with_clothing_to_event,
 )
 
-from app.backend.cadets import cadet_name_from_id
+from app.backend.cadets import  cadet_name_from_id
 from app.backend.wa_import.update_cadets_at_event import (
     get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active,
     list_of_cadet_ids_at_event_and_in_mapped_data_for_event,
@@ -69,7 +69,7 @@ def process_update_to_cadet_new_to_event_with_clothing(
     except DuplicateCadets:
         interface.log_error(
             "ACTION REQUIRED: Cadet %s appears more than once in WA file with an active registration - using the first registration found - go to WA and cancel all but one of the registrations please, and then check details here are correct!"
-            % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
+            % cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id)
         )
         relevant_row = get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
             interface=interface,
@@ -80,7 +80,7 @@ def process_update_to_cadet_new_to_event_with_clothing(
     except NoMoreData:
         interface.log_error(
             "ACTION REQUIRED: Cadet %s vanished from WA mapping file - contact support"
-            % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
+            % cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id)
         )
         return
 
@@ -102,8 +102,8 @@ def process_new_cadet_clothing_requirements(
         cadet_id=cadet_id,
         size=clothing_size_from_registration,
     )
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+    interface.flush_cache_to_store()
     interface.log_error(
         "Added clothing for cadet %s"
-        % cadet_name_from_id(interface=interface, cadet_id=cadet_id)
+        % cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id)
     )

@@ -1,7 +1,7 @@
 from typing import Dict, List
 
 import pandas as pd
-from app.backend.cadets import cadet_name_from_id
+from app.backend.cadets import  cadet_name_from_id
 
 from app.backend.volunteers.volunteers import get_volunteer_name_from_id
 
@@ -11,7 +11,7 @@ from app.backend.data.volunteers import VolunteerData
 
 from app.objects.cadets import ListOfCadets
 
-from app.backend.data.cadets_at_id_level import CadetData
+from app.backend.data.cadets import CadetData
 
 from app.objects.day_selectors import DaySelector, Day
 
@@ -408,7 +408,7 @@ def get_allergy_list_as_df_for_cadets(
     )
 
     list_of_names = [
-        cadet_name_from_id(interface=interface, cadet_id=cadet_id)
+        cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id)
         for cadet_id in subset.list_of_cadet_ids()
     ]
 
@@ -459,7 +459,7 @@ def row_for_volunteer_in_data(
     list_of_volunteers: ListOfVolunteers,
     volunteer_with_food_at_event: VolunteerWithFoodRequirementsAtEvent,
 ) -> pd.Series:
-    volunteer = list_of_volunteers.has_id(volunteer_with_food_at_event.volunteer_id)
+    volunteer = list_of_volunteers.object_with_id(volunteer_with_food_at_event.volunteer_id)
     return pd.Series(
         dict(
             name=volunteer.name,

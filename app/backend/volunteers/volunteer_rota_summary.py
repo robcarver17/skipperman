@@ -10,8 +10,8 @@ from app.backend.volunteers.volunteer_rota import (
 )
 from app.data_access.configuration.configuration import (
     ALL_GROUPS_NAMES,
-    VOLUNTEER_ROLES,
 )
+from app.data_access.configuration.skills_and_roles import VOLUNTEER_ROLES
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.groups import GROUP_UNALLOCATED_TEXT, Group

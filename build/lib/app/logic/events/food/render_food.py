@@ -2,7 +2,7 @@ from app.objects.events import Event
 
 from app.backend.volunteers.volunteers import get_volunteer_from_id
 
-from app.backend.cadets import DEPRECATE_get_cadet_from_id
+from app.backend.cadets import get_cadet_from_id
 from app.backend.data.food import FoodData
 from app.backend.forms.form_utils import get_food_requirements_input_as_tuple
 from app.logic.events.events_in_state import get_event_from_state
@@ -62,8 +62,8 @@ def get_row_in_table_of_cadets_with_food(
     interface: abstractInterface,
     cadet_with_food_required: CadetWithFoodRequirementsAtEvent,
 ) -> RowInTable:
-    cadet = DEPRECATE_get_cadet_from_id(
-        interface=interface, cadet_id=cadet_with_food_required.cadet_id
+    cadet = get_cadet_from_id(
+        data_layer=interface.data, cadet_id=cadet_with_food_required.cadet_id
     )
     checkbox, other_input = get_food_requirements_input_as_tuple(
         existing_food_requirements=cadet_with_food_required.food_requirements,

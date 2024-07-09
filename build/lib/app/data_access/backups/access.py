@@ -2,7 +2,7 @@ import datetime
 import pathlib
 
 from app.data_access.configuration.configuration import HOURS_BETWEEN_BACKUPS
-from app.objects.generic import transform_datetime_into_str, transform_str_into_datetime
+from app.objects.utils import transform_datetime_into_str, transform_str_into_datetime
 import os
 from typing import List
 

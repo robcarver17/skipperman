@@ -118,7 +118,7 @@ def get_active_cadets_as_data_frame_on_specific_day(
         for cadet in active_cadets
     ]
     partners = [
-        allocation_data.get_two_handed_partner_name_for_cadet_on_day(cadet, day=day)
+        allocation_data.get_two_handed_partner_as_str_for_cadet_on_day(cadet, day=day)
         for cadet in active_cadets
     ]
     df_as_dict = {

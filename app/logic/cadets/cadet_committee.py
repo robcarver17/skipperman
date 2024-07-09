@@ -3,17 +3,13 @@ from typing import Union, List
 from app.objects.cadets import Cadet
 
 from app.backend.cadets import (
-    get_list_of_cadets_not_on_committee_ordered_by_age,
-    get_list_of_cadets_on_committee,
-    get_list_of_cadets_not_on_committee_in_right_age_bracket,
-    get_next_year_for_cadet_committee,
     get_cadet_given_cadet_as_str,
-    add_new_cadet_to_committee,
-    toggle_selection_for_cadet_committee_member,
-    month_name_when_cadet_committee_age_bracket_begins,
     get_cadet_from_id,
-    start_and_end_date_on_cadet_commmittee,
 )
+from app.backend.cadet_committee import get_list_of_cadets_not_on_committee_ordered_by_age, \
+    get_list_of_cadets_on_committee, get_list_of_cadets_not_on_committee_in_right_age_bracket, \
+    get_next_year_for_cadet_committee, month_name_when_cadet_committee_age_bracket_begins, add_new_cadet_to_committee, \
+    toggle_selection_for_cadet_committee_member, start_and_end_date_on_cadet_commmittee
 from app.objects.committee import CadetOnCommittee
 from app.objects.abstract_objects.abstract_form import (
     Form,

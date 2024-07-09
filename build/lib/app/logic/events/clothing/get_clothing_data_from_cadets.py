@@ -2,7 +2,7 @@ from typing import Union
 
 from app.backend.clothing import is_cadet_with_id_already_at_event_with_clothing, add_new_cadet_with_clothing_to_event
 
-from app.backend.cadets import  cadet_name_from_id
+from app.backend.cadets import  DEPRECATE_cadet_name_from_id
 from app.backend.wa_import.update_cadets_at_event import        get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active
 
 from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing import \
@@ -88,7 +88,7 @@ def process_update_to_cadet_new_to_event_with_clothing(
     except DuplicateCadets:
         interface.log_error(
             "ACTION REQUIRED: Cadet %s appears more than once in WA file with an active registration - using the first registration found - go to WA and cancel all but one of the registrations please, and then check details here are correct!"
-            % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
+            % DEPRECATE_cadet_name_from_id(cadet_id=cadet_id, interface=interface)
         )
         relevant_row = get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
             interface=interface,
@@ -98,7 +98,7 @@ def process_update_to_cadet_new_to_event_with_clothing(
     except NoMoreData:
         interface.log_error(
             "ACTION REQUIRED: Cadet %s vanished from WA mapping file - contact support"
-            % cadet_name_from_id(cadet_id=cadet_id, interface=interface)
+            % DEPRECATE_cadet_name_from_id(cadet_id=cadet_id, interface=interface)
         )
         return process_next_cadet_clothing_at_event(interface)
 

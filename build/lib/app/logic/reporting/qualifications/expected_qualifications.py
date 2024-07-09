@@ -4,7 +4,7 @@ from typing import Union
 import pandas as pd
 from app.logic.events.ENTRY_view_events import display_list_of_events_with_buttons
 
-from app.backend.data.cadets_at_id_level import CadetData
+from app.backend.data.cadets import CadetData
 
 from app.data_access.file_access import download_directory
 
@@ -69,7 +69,7 @@ def write_qualifications_to_temp_csv_file_and_return_filename(interface: abstrac
     )
 
     list_of_cadet_names_with_qualifications = list_of_cadet_names_with_qualifications.sort_by_date()
-    df_of_qualifications = list_of_cadet_names_with_qualifications.to_df_of_str()
+    df_of_qualifications = list_of_cadet_names_with_qualifications.as_df_of_str()
 
     filename = temp_file_name()
 

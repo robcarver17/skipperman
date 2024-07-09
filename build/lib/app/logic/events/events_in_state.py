@@ -11,7 +11,7 @@ def get_event_from_state(interface: abstractInterface) -> Event:
 
 def get_event_given_id(interface: abstractInterface, id: str) -> Event:
     list_of_events = DEPRECATE_get_list_of_all_events(interface)
-    return list_of_events.has_id(id)
+    return list_of_events.object_with_id(id)
 
 
 def get_event_id_from_state(interface: abstractInterface) -> str:

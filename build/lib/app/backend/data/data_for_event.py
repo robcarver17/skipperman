@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from app.backend.cadets import DEPRECATE_load_list_of_all_cadets
+from app.backend.cadets import load_list_of_all_cadets
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -54,7 +54,7 @@ def get_data_required_for_event(
     list_of_cadet_ids_with_groups = load_list_of_cadets_with_allocated_groups_at_event(
         interface=interface, event=event
     )
-    list_of_all_cadets = DEPRECATE_load_list_of_all_cadets(interface)
+    list_of_all_cadets =load_list_of_all_cadets(interface.data)
     list_of_cadets_at_event_with_club_dinghies = (
         load_list_of_cadets_at_event_with_club_dinghies(
             interface=interface, event=event

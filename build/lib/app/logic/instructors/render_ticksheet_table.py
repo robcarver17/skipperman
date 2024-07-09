@@ -5,7 +5,7 @@ from app.logic.instructors.buttons import (
     get_button_or_label_for_tickitem_name,
     get_select_cadet_button_when_in_no_edit_mode,
 )
-from app.backend.cadets import DEPRECATE_cadet_from_id_USE_get_cadet_from_id
+from app.backend.cadets import get_cadet_from_id
 from app.backend.ticks_and_qualifications.ticksheets import (
     get_ticksheet_data,
     TickSheetDataWithExtraInfo,
@@ -154,8 +154,8 @@ def get_cadet_cell_at_start_of_row(
 ) -> list:
     has_an_id_been_set = return_true_if_a_cadet_id_been_set(interface)
 
-    cadet = DEPRECATE_cadet_from_id_USE_get_cadet_from_id(
-        interface=interface, cadet_id=cadet_id
+    cadet = get_cadet_from_id(
+        data_layer=interface.data, cadet_id=cadet_id
     )
     cadet_name = cadet.name
     qualification_name = ticksheet_data.qualification.name

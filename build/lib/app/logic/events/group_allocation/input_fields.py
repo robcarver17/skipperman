@@ -374,7 +374,7 @@ def get_dropdown_input_for_partner_allocation_across_days(
             )
         )
 
-    list_of_other_cadets = allocation_data.list_of_names_of_cadets_at_event_with_matching_schedules_excluding_this_cadet(
+    list_of_other_cadets = allocation_data.list_of_cadets_as_str_at_event_with_matching_schedules_excluding_this_cadet(
         cadet
     )  ### needs to disapply cadets who aren't also available the whole week
     list_of_other_cadets = NO_PARTNERSHIP_LIST + list_of_other_cadets
@@ -403,10 +403,10 @@ def okay_to_have_partner_button_across_days(
 def get_dropdown_input_for_partner_allocation_on_day(
     cadet: Cadet, day: Day, allocation_data: AllocationData
 ) -> ListOfLines:
-    current_partner_name = allocation_data.get_two_handed_partner_name_for_cadet_on_day(
+    current_partner_name = allocation_data.get_two_handed_partner_as_str_for_cadet_on_day(
         cadet=cadet, day=day
     )
-    list_of_other_cadets = allocation_data.list_of_names_of_cadets_at_event_excluding_cadet_available_on_day(
+    list_of_other_cadets = allocation_data.list_of_cadets_as_str_at_event_excluding_cadet_available_on_day(
         cadet=cadet, day=day
     )
 

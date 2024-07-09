@@ -3,11 +3,10 @@ from typing import List
 
 from app.objects.constants import missing_data, arg_not_passed
 from app.objects.events import Event
-from app.objects.generic import (
-    GenericSkipperManObjectWithIds,
-    GenericSkipperManObject,
+from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
 )
+from app.objects.generic_objects import GenericSkipperManObject, GenericSkipperManObjectWithIds
 from app.objects.utils import make_id_as_int_str
 from app.objects.day_selectors import Day, DaySelector
 
@@ -24,7 +23,7 @@ class PatrolBoat(GenericSkipperManObjectWithIds):
         return hash(self.name)
 
     @classmethod
-    def from_dict(cls, dict_with_str):
+    def from_dict_of_str(cls, dict_with_str):
         return cls(
             name=dict_with_str["name"], id=make_id_as_int_str(dict_with_str["id"])
         )
@@ -90,7 +89,7 @@ class VolunteerAtEventWithPatrolBoat(GenericSkipperManObject):
     day: Day
 
     @classmethod
-    def from_dict(cls, dict_with_str):
+    def from_dict_of_str(cls, dict_with_str):
         volunteer_id = dict_with_str["volunteer_id"]
         patrol_boat_id = dict_with_str["patrol_boat_id"]
         day = dict_with_str["day"]

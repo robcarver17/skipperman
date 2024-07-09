@@ -233,4 +233,4 @@ def cadet_name_or_test(
 ):
     if identified_cadet.is_test_cadet:
         return "Test"
-    return cadet_name_from_id(interface=interface, cadet_id=identified_cadet.cadet_id)
+    return cadet_name_from_id(data_layer=interface.data, cadet_id=identified_cadet.cadet_id)

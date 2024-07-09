@@ -105,8 +105,7 @@ def get_row_data_for_volunteer(
         data_layer=data_layer, volunteer=volunteer
     )
     skills = get_dict_of_existing_skills(data_layer=data_layer, volunteer=volunteer)
-    skills_as_list = [skill for skill, has_skill in skills.items() if has_skill]
-    skills_as_str = ", ".join(skills_as_list)
+    skills_as_str = str(skills)
 
     connected_cadets = get_connected_cadets(data_layer=data_layer, volunteer=volunteer)
     connected_cadets_as_str = connected_cadets.as_str()

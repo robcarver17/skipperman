@@ -44,7 +44,8 @@ from app.objects.groups import (
     Group,
     sorted_locations,
 )
-from app.objects.volunteers import ListOfVolunteerSkills, Volunteer, ListOfVolunteers
+from app.objects.volunteers import Volunteer, ListOfVolunteers
+from app.objects.volunteer_skills import ListOfVolunteerSkills, SkillsDict
 from app.objects.volunteers_at_event import (
     ListOfVolunteersAtEventWithId,
     VolunteerAtEventWithId,
@@ -66,7 +67,7 @@ from app.objects.volunteers_in_roles import (
 class RotaSortsAndFilters:
     sort_by_volunteer_name: str
     sort_by_day: Day
-    skills_filter: dict
+    skills_filter: SkillsDict
     availability_filter: dict
     sort_by_location: bool
 
@@ -88,9 +89,7 @@ def get_explanation_of_sorts_and_filters(sorts_and_filters: RotaSortsAndFilters)
     explanation += print_dict_nicely(
         "Availability filter", sorts_and_filters.availability_filter
     )
-    explanation += ". " + explain_filter(
-        sorts_and_filters.skills_filter, "Skills filter"
-    )
+    explanation += explain_skills_filter(skills_filter=sorts_and_filters.skills_filter, prepend_text="Skills filter")
 
     return explanation
 
@@ -98,20 +97,11 @@ def get_explanation_of_sorts_and_filters(sorts_and_filters: RotaSortsAndFilters)
 from app.objects.utils import print_dict_nicely
 
 
-def explain_filter(filter: Dict[str, bool], prepend_text: str) -> str:
-    true_only_str = dict_elements_only_true(filter)
-    if len(true_only_str) == 0:
+def explain_skills_filter(skills_filter: SkillsDict, prepend_text: str) -> str:
+    if skills_filter.empty():
         return ""
-    else:
-        return "%s: %s" % (prepend_text, true_only_str)
 
-
-def dict_elements_only_true(some_dict: Dict[str, bool]) -> str:
-    true_only = [key for key, value in some_dict.items() if value]
-    true_only = ", ".join(true_only)
-
-    return true_only
-
+    return " %s: %s" % (prepend_text, skills_filter.skills_held_as_str())
 
 @dataclass
 class DataToBeStoredWhilstConstructingVolunteerRotaPage:
@@ -164,8 +154,8 @@ class DataToBeStoredWhilstConstructingVolunteerRotaPage:
             except:
                 return missing_data
 
-    def list_of_skills_given_volunteer_id(self, volunteer_id: str) -> dict:
-        return self.volunteer_skills.skills_for_volunteer_id(volunteer_id)
+    def dict_of_skills_given_volunteer_id(self, volunteer_id: str) -> SkillsDict:
+        return self.volunteer_skills.dict_of_skills_for_volunteer_id(volunteer_id)
 
     def volunteer_in_role_at_event_on_day(
         self, volunteer_id: str, day: Day
@@ -259,7 +249,7 @@ class DataToBeStoredWhilstConstructingVolunteerRotaPage:
 def filter_volunteer(
     volunteer_at_event: VolunteerAtEventWithId,
     list_of_volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent,
-    skills_filter: dict,
+    skills_filter: SkillsDict,
     volunteer_skills: ListOfVolunteerSkills,
     availability_filter_dict: dict,
 ) -> bool:
@@ -279,7 +269,7 @@ def filter_volunteer(
 
 def filter_volunteer_by_skills(
     volunteer_at_event: VolunteerAtEventWithId,
-    skills_filter: dict,
+    skills_filter: SkillsDict,
     volunteer_skills: ListOfVolunteerSkills,
 ) -> bool:
     volunteer_skills = volunteer_skills.skills_for_volunteer_id(
@@ -290,9 +280,9 @@ def filter_volunteer_by_skills(
         return True
 
     required_skill_present = [
-        skill_name
-        for skill_name, filter_by_this_skill in skills_filter.items()
-        if filter_by_this_skill and skill_name in volunteer_skills
+        skill
+        for skill, filter_by_this_skill in skills_filter.items()
+        if filter_by_this_skill and skill in volunteer_skills
     ]
 
     return any(required_skill_present)
@@ -620,11 +610,11 @@ def str_dict_skills(
     volunteer: Volunteer,
     data_to_be_stored: DataToBeStoredWhilstConstructingVolunteerRotaPage,
 ):
-    list_of_skills = data_to_be_stored.list_of_skills_given_volunteer_id(volunteer.id)
-    if len(list_of_skills) == 0:
+    dict_of_skills = data_to_be_stored.dict_of_skills_given_volunteer_id(volunteer.id)
+    if dict_of_skills.empty():
         return "No skills recorded"
 
-    return ", ".join(list_of_skills)
+    return dict_of_skills.skills_held_as_str()
 
 
 def DEPRECATE_get_sorted_and_filtered_list_of_volunteers_at_event(
@@ -796,6 +786,10 @@ def row_for_volunteer_at_event(
     volunteer = data_to_be_stored.all_volunteers.object_with_id(id)
     name = volunteer.name
     skills_dict = data_to_be_stored.volunteer_skills.dict_of_skills_for_volunteer_id(id)
+    preferred = volunteer_at_event.preferred_duties
+    same_different = volunteer_at_event.same_or_different
+
+
     volunteers_in_roles_dict = dict(
         [
             (
@@ -810,7 +804,7 @@ def row_for_volunteer_at_event(
         ]
     )
 
-    result_dict = dict(Name=name, Skills=str(skills_dict))
+    result_dict = dict(Name=name, Skills=str(skills_dict), preferred=preferred, same_different=same_different)
     result_dict.update(volunteers_in_roles_dict)
 
     return pd.Series(result_dict)

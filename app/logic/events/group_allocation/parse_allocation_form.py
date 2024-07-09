@@ -325,13 +325,13 @@ def get_update_for_cadet(
             cadet_id=cadet.id, column_name=BOAT_CLASS
         )
     )
-    two_handed_partner_name = interface.value_from_form(
+    two_handed_partner_as_str = interface.value_from_form(
         input_name_from_column_name_and_cadet_id(cadet_id=cadet.id, column_name=PARTNER)
     )
 
     return CadetWithDinghyInputs(
         sail_number=sail_number,
         boat_class_name=boat_class_name,
-        two_handed_partner_name=two_handed_partner_name,
+        two_handed_partner_cadet_as_str=two_handed_partner_as_str,
         cadet_id=cadet.id,
     )

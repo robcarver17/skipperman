@@ -41,7 +41,7 @@ wild_apricot_payment_fields_which_are_cancelled_status:
 wild_apricot_event_id: "Event ID"
 wild_apricot_file_types: ".csv, .xls"
 #
-# FIXME Consider moving to user editable file
+# FIXME Consider moving to user editable file - needs to incorporate SI and PB2
 volunteer_skills:
   - "DI"
   - "RCL2"
@@ -50,10 +50,6 @@ volunteer_skills:
   - "First aid"
   - "DBS"
   - "SI"
-SI_skill: "SI"
-#
-power_boat_skills:
-  - "PB2"
 #
 #
 role_and_skills_required:

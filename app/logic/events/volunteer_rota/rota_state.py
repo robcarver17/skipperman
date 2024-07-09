@@ -1,12 +1,12 @@
 from typing import Union
 
 from app.backend.volunteers.volunteer_rota_data import RotaSortsAndFilters
-from app.data_access.configuration.configuration import VOLUNTEER_SKILLS
 from app.logic.events.events_in_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.constants import arg_not_passed, missing_data, NoMoreData
 from app.objects.day_selectors import Day
 from app.objects.volunteers_in_roles import FILTER_ALL
+from app.objects.volunteer_skills import all_skills, default_skills_dict, SkillsDict
 
 SORT_BY_VOLUNTEER_NAME = "Sort_volunteer_name"
 SORT_BY_DAY = "Sort_by_day"
@@ -16,33 +16,23 @@ AVAILABILTY_FILTER = "av_filter"
 SKILLS_FILTER = "skills_filter"
 
 
-def get_skills_filter_from_state(interface: abstractInterface):
-    skills_dict = get_skills_filter_dict_or_default_from_state(interface)
+def get_skills_filter_from_state(interface: abstractInterface) -> SkillsDict:
+    skills_dict_with_str = interface.get_persistent_value(
+        SKILLS_FILTER, default=None
+    ) ### dict of enum okay to store?
+    if skills_dict_with_str is None:
+        skills_dict = default_skills_dict
+    else:
+        skills_dict = SkillsDict.from_dict_of_str_and_bool(skills_dict_with_str)
+
+    skills_dict.pad_with_missing_skills()
 
     return skills_dict
 
 
-def get_skills_filter_dict_or_default_from_state(interface: abstractInterface) -> dict:
-    skills_dict = interface.get_persistent_value(
-        SKILLS_FILTER, default=default_skills_dict
-    )
-    skills_dict = ensure_filter_has_all_skills(skills_dict)
-
-    return skills_dict
-
-
-default_skills_dict = dict([(skill, False) for skill in VOLUNTEER_SKILLS])
-
-
-def ensure_filter_has_all_skills(skills_dict: dict) -> dict:
-    for skill in VOLUNTEER_SKILLS:
-        if not skill in skills_dict.keys():
-            skills_dict[skill] = False
-    return skills_dict
-
-
-def save_skills_filter_to_state(interface: abstractInterface, dict_of_skills: dict):
-    interface.set_persistent_value(SKILLS_FILTER, dict_of_skills)
+def save_skills_filter_to_state(interface: abstractInterface, dict_of_skills: SkillsDict):
+    dict_of_skills_with_str = dict_of_skills.as_dict_of_str_and_bool()
+    interface.set_persistent_value(SKILLS_FILTER, dict_of_skills_with_str)
 
 
 def save_availablity_filter_to_state(

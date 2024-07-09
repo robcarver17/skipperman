@@ -1,3 +1,5 @@
+from app.backend.data.cadet_committee import CadetCommitteeData
+
 from app.objects.committee import ListOfCadetsWithIdOnCommittee
 
 from app.objects.events import Event
@@ -9,7 +11,7 @@ from app.objects.clothing import (
     ListOfCadetObjectsWithClothingAtEvent,
 )
 from app.backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
-from app.backend.data.cadets_at_id_level import CadetData
+from app.backend.data.cadets import CadetData
 
 
 class ClothingData:
@@ -92,7 +94,7 @@ class ClothingData:
         return self.cadet_data.get_list_of_cadets()
 
     def list_of_current_cadet_committee(self) -> ListOfCadetsWithIdOnCommittee:
-        return self.cadet_data.get_list_of_current_cadets_on_committee()
+        return self.committee_data.get_list_of_current_cadets_on_committee()
 
     def get_list_of_cadets_with_clothing_at_event(
         self, event: Event
@@ -115,3 +117,7 @@ class ClothingData:
     @property
     def cadet_data(self) -> CadetData:
         return CadetData(self.data_api)
+
+    @property
+    def committee_data(self) -> CadetCommitteeData:
+        return CadetCommitteeData(self.data_api)

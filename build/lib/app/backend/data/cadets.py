@@ -1,70 +1,131 @@
-import datetime
+from datetime import datetime
+from typing import List
 
-from app.objects.constants import missing_data
-
-from app.objects.cadets import ListOfCadets, Cadet
-
-from app.objects.committee import ListOfCadetsOnCommittee, CadetOnCommittee
-
-from app.backend.data.cadets_at_id_level import CadetData
-from app.data_access.storage_layer.store import DataAccessMethod
-
+from app.objects.constants import arg_not_passed, missing_data, MissingData
 
 from app.data_access.storage_layer.api import DataLayer
+from app.objects.cadets import Cadet, ListOfCadets
+from app.objects.committee import (
+    CadetWithIdCommitteeMember,
+    ListOfCadetsWithIdOnCommittee,
+    ListOfCadetsOnCommittee,
+)
 
 
+class CadetData:
+    def __init__(self, data_api: DataLayer):
+        self.data_api = data_api
 
 
-class CadetCommitteeData():
-    def __init__(self, data_layer: DataLayer):
-        self.data_layer = data_layer
-        self.store = data_layer.store
-
-    def elect_to_committee_with_dates(self, cadet: Cadet, date_term_start: datetime.date, date_term_end: datetime.date):
-        cadet_data = self.cadet_at_id_level_data
-        cadet_data.elect_to_committee_with_dates(cadet_id=cadet.id,
-                                                 date_term_end=date_term_end,
-                                                 date_term_start=date_term_start
-                                                 )
-
-
-    def toggle_selection_for_cadet_committee_member(self, cadet: Cadet):
-        cadet_data = self.cadet_at_id_level_data
-        committee_members = cadet_data.get_list_of_cadets_with_id_on_committee()
-        specific_member = committee_members.cadet_committee_member_with_id(cadet.id)
-        if specific_member is missing_data:
-            raise("Cadet %s is not on committee so can't be selected / deselected" % cadet)
-
-        currently_deselected = specific_member.deselected
-        if currently_deselected:
-            cadet_data.reselect_to_committee(cadet.id)
+    def get_sorted_list_of_cadets(self, sort_by: str = arg_not_passed) -> ListOfCadets:
+        master_list = self.get_list_of_cadets()
+        if sort_by is arg_not_passed:
+            return master_list
+        if sort_by == SORT_BY_SURNAME:
+            return master_list.sort_by_surname()
+        elif sort_by == SORT_BY_FIRSTNAME:
+            return master_list.sort_by_firstname()
+        elif sort_by == SORT_BY_DOB_ASC:
+            return master_list.sort_by_dob_asc()
+        elif sort_by == SORT_BY_DOB_DSC:
+            return master_list.sort_by_dob_desc()
         else:
-            cadet_data.deselect_from_committee(cadet.id)
+            return master_list
 
-    def get_list_of_cadets_not_on_committee_ordered_by_age(self) -> ListOfCadets:
-        all_cadets = self.cadet_at_id_level_data.get_list_of_cadets()
-        list_of_committee_members = self.cadet_at_id_level_data.get_list_of_cadets_with_id_on_committee()
-        list_of_committee_member_ids= list_of_committee_members.list_of_cadet_ids()
+    def get_cadet_from_list_of_cadets_given_str_of_cadet(
+        self, cadet_selected: str
+    ) -> Cadet:
+        list_of_cadets = self.get_list_of_cadets()
+        list_of_cadets_as_str = get_list_of_cadets_as_str(
+            list_of_cadets
+        )  ## don't use stored version in case changes
+        cadet_idx = list_of_cadets_as_str.index(cadet_selected)
 
-        list_of_cadets = ListOfCadets([cadet for cadet in all_cadets if cadet.id not in list_of_committee_member_ids])
+        return list_of_cadets[cadet_idx]
 
-        return list_of_cadets.sort_by_dob_desc()
 
-    def get_list_of_cadets_on_committee(self) -> ListOfCadetsOnCommittee:
-        list_of_cadets = self.cadet_at_id_level_data.get_list_of_cadets()
-        list_of_committee_members = self.cadet_at_id_level_data.get_list_of_cadets_with_id_on_committee()
-        list_of_cadets_on_committee = [list_of_cadets.cadet_with_id(cadet_on_committee.cadet_id) for cadet_on_committee
-                                       in list_of_committee_members]
+    def add_cadet(self, cadet: Cadet) -> Cadet:
+        list_of_cadets = self.get_list_of_cadets()
+        cadet = list_of_cadets.add(cadet)
+        self.save_list_of_cadets(list_of_cadets)
 
-        list_of_cadets_on_committee = ListOfCadetsOnCommittee(
-            [
-                CadetOnCommittee(cadet=cadet, cadet_on_committee=cadet_on_committee)
-                for cadet, cadet_on_committee in zip(list_of_cadets_on_committee, list_of_committee_members)])
+        return cadet
 
-        list_of_cadets_on_committee.sort()
+    def replace_cadet_with_id_with_new_cadet_details(
+        self, existing_cadet_id: str, new_cadet: Cadet
+    ):
+        list_of_cadets = self.get_list_of_cadets()
+        list_of_cadets.replace_cadet_with_id_with_new_cadet_details(
+            existing_cadet_id=existing_cadet_id, new_cadet=new_cadet
+        )
+        self.save_list_of_cadets(list_of_cadets)
 
-        return list_of_cadets_on_committee
+    def similar_cadets(self, cadet: Cadet):
+        list_of_cadets = self.get_list_of_cadets()
+        return list_of_cadets.similar_cadets(cadet)
 
-    @property
-    def cadet_at_id_level_data(self) -> CadetData:
-        return CadetData(self.data_layer)
+    def get_matching_cadet_with_id(
+        self,
+        cadet: Cadet,
+    ) -> Cadet:
+        list_of_cadets = self.get_list_of_cadets()
+        matched_cadet_with_id = list_of_cadets.matching_cadet(cadet)
+
+        return matched_cadet_with_id
+
+    def get_cadet_with_id(
+        self,
+        cadet_id: str,
+    ) -> Cadet:
+        list_of_cadets = self.get_list_of_cadets()
+
+        return list_of_cadets.cadet_with_id(cadet_id)
+
+    def reorder_list_of_cadet_ids_by_cadet_name(self, list_of_cadet_ids: List[str]):
+        list_of_cadets = self.get_list_of_cadets_given_list_of_cadet_ids(
+            list_of_cadet_ids
+        )
+        list_of_cadets.sort_by_name()
+
+        return list_of_cadets.list_of_ids
+
+    def get_list_of_cadet_names_given_list_of_cadet_ids(
+        self, list_of_cadet_ids: List[str]
+    ):
+        list_of_cadets = self.get_list_of_cadets_given_list_of_cadet_ids(
+            list_of_cadet_ids
+        )
+        return list_of_cadets.list_of_names()
+
+    def get_list_of_cadets_given_list_of_cadet_ids(
+        self, list_of_cadet_ids: List[str]
+    ) -> ListOfCadets:
+        list_of_cadets = self.get_list_of_cadets()
+        return ListOfCadets.subset_from_list_of_ids(
+            full_list=list_of_cadets, list_of_ids=list_of_cadet_ids
+        )
+
+    def modify_cadet(self, cadet_id: str, new_cadet: Cadet):
+        list_of_cadets = self.get_list_of_cadets()
+        new_cadet.id = cadet_id
+        list_of_cadets.replace_with_new_object(new_cadet)
+        self.data_api.save_list_of_cadets(list_of_cadets)
+
+
+    def get_list_of_cadets(self) -> ListOfCadets:
+        list_of_cadets = self.data_api.get_list_of_cadets()
+        return list_of_cadets
+
+    def save_list_of_cadets(self, list_of_cadets: ListOfCadets):
+        self.data_api.save_list_of_cadets(list_of_cadets)
+
+
+
+def get_list_of_cadets_as_str(list_of_cadets: ListOfCadets) -> List[str]:
+    return [str(cadet) for cadet in list_of_cadets]
+
+
+SORT_BY_SURNAME = "Sort by surname"
+SORT_BY_FIRSTNAME = "Sort by first name"
+SORT_BY_DOB_ASC = "Sort by date of birth, ascending"
+SORT_BY_DOB_DSC = "Sort by date of birth, descending"

@@ -13,9 +13,8 @@ from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing imp
     clear_cadet_id_at_event,
 )
 from app.backend.cadets import (
-    DEPRECATE_get_cadet_from_id,
-    confirm_cadet_exists,
-    DEPRECATE_get_cadet_given_cadet_as_str,
+
+get_cadet_from_id, get_cadet_given_cadet_as_str,
 )
 
 from app.logic.events.events_in_state import get_event_from_state
@@ -111,18 +110,18 @@ def process_form_when_verified_cadet_to_be_added_as_partner(
 def process_form_when_existing_cadet_chosen_as_partner(
     interface: abstractInterface,
 ) -> NewForm:
-    cadet_selected = interface.last_button_pressed()
+    cadet_selected_as_str = interface.last_button_pressed()
 
     try:
-        confirm_cadet_exists(interface=interface, cadet_selected=cadet_selected)
+        cadet = get_cadet_given_cadet_as_str(
+            data_layer=interface.data,
+            cadet_as_str=cadet_selected_as_str
+        )
     except:
         raise Exception(
             "Cadet selected no longer exists - file corruption or someone deleted?",
         )
 
-    cadet = DEPRECATE_get_cadet_given_cadet_as_str(
-        cadet_selected=cadet_selected, interface=interface
-    )
 
     return add_matched_partner_cadet_with_duplicate_registration(
         interface=interface, new_cadet=cadet
@@ -162,7 +161,7 @@ def get_primary_cadet_and_partner_name(
 ) -> Tuple[Cadet, Cadet]:
     event = get_event_from_state(interface)
     cadet_id = get_current_cadet_id_at_event(interface)
-    primary_cadet = DEPRECATE_get_cadet_from_id(cadet_id=cadet_id, interface=interface)
+    primary_cadet =get_cadet_from_id(cadet_id=cadet_id, data_layer=interface.data)
     partner_name = get_registered_two_handed_partner_name_for_cadet_at_event(
         interface=interface, cadet=primary_cadet, event=event
     )

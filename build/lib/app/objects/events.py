@@ -9,10 +9,10 @@ from app.data_access.configuration.configuration import (
 )
 
 from app.objects.utils import transform_date_into_str, similar
-from app.objects.generic import (
-    GenericSkipperManObjectWithIds,
+from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
 )
+from app.objects.generic_objects import GenericSkipperManObjectWithIds
 from app.objects.constants import arg_not_passed
 from app.objects.day_selectors import (
     day_given_datetime,

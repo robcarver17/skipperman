@@ -332,6 +332,6 @@ def get_update_for_cadet(
     return CadetWithDinghyInputs(
         sail_number=sail_number,
         boat_class_name=boat_class_name,
-        two_handed_partner_name=two_handed_partner_name,
+        two_handed_partner_cadet_as_str=two_handed_partner_name,
         cadet_id=cadet.id,
     )

@@ -1,7 +1,7 @@
 from app.backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
 from app.data_access.storage_layer.store import DataAccessMethod
 
-from app.backend.data.cadets_at_id_level import CadetData
+from app.backend.data.cadets import CadetData
 
 from app.data_access.storage_layer.api import DataLayer
 

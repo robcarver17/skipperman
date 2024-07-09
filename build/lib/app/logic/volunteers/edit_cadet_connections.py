@@ -1,16 +1,14 @@
 from typing import Union, List
-
+from app.backend.data.cadets import SORT_BY_SURNAME
 from app.backend.cadets import (
     get_sorted_list_of_cadets,
-    get_list_of_cadets_similar_to_name_first,
-    DEPRECATE_cadet_from_id_USE_get_cadet_from_id,
-    DEPRECATE_get_cadet_given_cadet_as_str,
+    get_list_of_cadets_with_those_with_name_similar_to_volunteer_with_listed_first,
+    get_cadet_given_cadet_as_str, get_cadet_from_id,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm, dropDownInput
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
-    cancel_menu_button,
     back_menu_button,
 )
 from app.objects.abstract_objects.abstract_lines import (
@@ -27,11 +25,10 @@ from app.objects.abstract_objects.abstract_interface import (
 )
 from app.logic.volunteers.constants import *
 from app.backend.volunteers.volunteers import (
-    DEPRECATE_get_connected_cadets,
-    delete_connection_in_data,
-    add_volunteer_connection_to_cadet_in_master_list_of_volunteers,
+    delete_cadet_connection,
+    add_volunteer_connection_to_cadet_in_master_list_of_volunteers, get_connected_cadets,
 )
-from app.backend.data.volunteers import SORT_BY_SURNAME
+
 from app.logic.volunteers.volunteer_state import get_volunteer_from_state
 from app.objects.volunteers import Volunteer
 from app.objects.cadets import Cadet, ListOfCadets
@@ -47,8 +44,8 @@ def display_form_edit_cadet_volunteer_connections(
             "Volunteer selected no longer in list- someone else has deleted or file corruption?"
         )
         return initial_state_form
-    connected_cadets = DEPRECATE_get_connected_cadets(
-        interface=interface, volunteer=volunteer
+    connected_cadets = get_connected_cadets(
+        data_layer=interface.data, volunteer=volunteer
     )
     from_list_of_cadets = get_sorted_list_of_cadets(
         interface=interface, sort_by=SORT_BY_SURNAME
@@ -121,9 +118,10 @@ def button_str_for_deletion(cadet: Cadet):
 
 
 def cadet_from_button_str(interface: abstractInterface, button_str: str) -> Cadet:
-    cadet_selected = " ".join(button_str.split(" ")[1:])
-    return DEPRECATE_get_cadet_given_cadet_as_str(
-        interface=interface, cadet_selected=cadet_selected
+    cadet_selected_as_str = " ".join(button_str.split(" ")[1:])
+    return get_cadet_given_cadet_as_str(
+cadet_as_str=cadet_selected_as_str,
+        data_layer=interface.data
     )
 
 
@@ -135,8 +133,8 @@ def row_for_new_entries(
     list_of_cadets_to_pick_from = from_list_of_cadets.excluding_cadets_from_other_list(
         list_of_cadets=connected_cadets
     )
-    list_of_cadets_similar_to_name_first = get_list_of_cadets_similar_to_name_first(
-        object_with_name=volunteer, from_list_of_cadets=list_of_cadets_to_pick_from
+    list_of_cadets_similar_to_name_first = get_list_of_cadets_with_those_with_name_similar_to_volunteer_with_listed_first(
+        volunteer=volunteer, from_list_of_cadets=list_of_cadets_to_pick_from
     )
 
     dict_of_options = dict(
@@ -194,8 +192,8 @@ def post_form_edit_cadet_volunteer_connections_when_delete_button_pressed(
     button = interface.last_button_pressed()
 
     volunteer = get_volunteer_from_state(interface)
-    connected_cadets = DEPRECATE_get_connected_cadets(
-        interface=interface, volunteer=volunteer
+    connected_cadets = get_connected_cadets(
+        data_layer=interface.data, volunteer=volunteer
     )
 
     list_of_delete_cadet_buttons = get_list_of_delete_cadet_buttons(connected_cadets)
@@ -220,8 +218,8 @@ def add_connection_from_form(interface: abstractInterface):
             "You have to select a cadet from the dropdown before adding"
         )
         return
-    selected_cadet = DEPRECATE_cadet_from_id_USE_get_cadet_from_id(
-        interface=interface, cadet_id=selected_cadet_id
+    selected_cadet = get_cadet_from_id(
+        data_layer=interface.data, cadet_id=selected_cadet_id
     )
     add_volunteer_connection_to_cadet_in_master_list_of_volunteers(
         interface=interface, cadet=selected_cadet, volunteer=volunteer
@@ -231,7 +229,7 @@ def add_connection_from_form(interface: abstractInterface):
 def delete_connection_given_form(interface: abstractInterface):
     cadet = get_cadet_connection_to_delete_from_form(interface)
     volunteer = get_volunteer_from_state(interface)
-    delete_connection_in_data(interface=interface, cadet=cadet, volunteer=volunteer)
+    delete_cadet_connection(data_layer=interface.data, cadet=cadet, volunteer=volunteer)
 
 
 def get_cadet_connection_to_delete_from_form(interface: abstractInterface) -> Cadet:

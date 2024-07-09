@@ -8,7 +8,8 @@ from app.backend.reporting.arrangement.arrange_options import (
 from app.backend.reporting.options_and_parameters.print_options import PrintOptions
 
 from app.objects.users_and_security import ListOfSkipperManUsers
-from app.objects.volunteers import ListOfVolunteers, ListOfCadetVolunteerAssociations
+from app.objects.volunteers import ListOfVolunteers
+from app.objects.cadet_volunteer_connections import ListOfCadetVolunteerAssociations
 
 from app.objects.volunteers_at_event import (
     ListOfIdentifiedVolunteersAtEvent,
@@ -47,7 +48,7 @@ from app.objects.volunteers_in_roles import (
     ListOfVolunteersInRoleAtEvent,
     ListOfTargetForRoleAtEvent,
 )
-from app.objects.volunteers import ListOfVolunteerSkills
+from app.objects.volunteer_skills import ListOfVolunteerSkills
 from app.objects.patrol_boats import (
     ListOfPatrolBoats,
     ListOfVolunteersAtEventWithPatrolBoats,

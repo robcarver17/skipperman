@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-from app.backend.data.cadets_at_id_level import CadetData
+from app.backend.data.cadets import CadetData
 from app.backend.data.mapped_events import MappedEventsData
 from app.data_access.storage_layer.api import DataLayer
 from app.objects.abstract_objects.abstract_interface import abstractInterface

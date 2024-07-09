@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple, Dict
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -13,6 +13,7 @@ from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
 from app.objects.food import FoodRequirements, OTHER_IN_FOOD_REQUIRED
 from app.objects.mapped_wa_event import RegistrationStatus, all_possible_status
+from app.objects.volunteer_skills import SkillsDict, all_skills
 
 ALL_AVAILABLE = "Select all"
 
@@ -187,3 +188,26 @@ def get_status_from_form(
 
 def input_name_from_column_name_and_cadet_id(column_name: str, cadet_id: str) -> str:
     return "%s_%s" % (column_name, cadet_id)
+
+
+def checked_and_labels_dict_for_skills_form(skills_dict: SkillsDict) -> Tuple[Dict[str, bool], Dict[str, str]]:
+    skills_dict_checked = skills_dict.as_dict_of_str_and_bool()
+    skills_as_list_of_str = skills_dict.skill_names_as_list_of_str()
+    dict_of_labels = dict([(skill_name, skill_name) for skill_name in skills_as_list_of_str])
+
+    return skills_dict_checked, dict_of_labels
+
+
+def get_dict_of_skills_from_form(
+        interface: abstractInterface, field_name: str
+) -> SkillsDict:
+    selected_skills_as_list_of_str = interface.value_of_multiple_options_from_form(field_name)
+    skills_dict = SkillsDict()
+    for skill in all_skills:
+        skill_name = skill.name
+        if skill_name in selected_skills_as_list_of_str:
+            skills_dict[skill] = True
+        else:
+            skills_dict[skill] = False
+
+    return skills_dict

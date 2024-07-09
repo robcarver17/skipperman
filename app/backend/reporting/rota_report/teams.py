@@ -2,9 +2,9 @@ from typing import List
 
 import pandas as pd
 from app.data_access.configuration.configuration import (
-    VOLUNTEER_ROLES,
     ALL_GROUPS_NAMES,
 )
+from app.data_access.configuration.skills_and_roles import VOLUNTEER_ROLES
 
 from app.backend.reporting.rota_report.components import (
     DataForDfConstruction,

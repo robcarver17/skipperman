@@ -1,3 +1,4 @@
+from app.backend.forms.form_utils import get_dict_of_skills_from_form
 from app.backend.forms.swaps import is_ready_to_swap
 from app.logic.events.volunteer_rota.volunteer_targets import save_volunteer_targets
 
@@ -19,7 +20,6 @@ from app.backend.volunteers.volunteer_rota_data import (
     DEPRECATE_get_last_role_for_volunteer_id,
     get_volunteer_matrix,
 )
-from app.data_access.configuration.configuration import VOLUNTEER_SKILLS
 from app.logic.events.volunteer_rota.edit_cadet_connections_for_event_from_rota import (
     display_form_edit_cadet_connections_from_rota,
 )
@@ -52,10 +52,11 @@ from app.objects.abstract_objects.abstract_form import NewForm
 
 
 def update_volunteer_skills_filter(interface: abstractInterface):
-    ticked_skills = interface.value_of_multiple_options_from_form(SKILLS_FILTER)
-    dict_of_skills = dict(
-        [(skill, skill in ticked_skills) for skill in VOLUNTEER_SKILLS]
+    dict_of_skills = get_dict_of_skills_from_form(
+        interface=interface,
+        field_name=SKILLS_FILTER
     )
+
     save_skills_filter_to_state(interface=interface, dict_of_skills=dict_of_skills)
 
 

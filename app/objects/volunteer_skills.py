@@ -1,14 +1,14 @@
 from dataclasses import dataclass
 from typing import Dict, List
 
-from app.data_access.configuration.skills_and_roles import VOLUNTEER_SKILLS, VOLUNTEERS_SKILL_FOR_PB2, SI_SKILL
+from app.data_access.configuration.skills_and_roles import all_volunteer_skill_names, VOLUNTEERS_SKILL_FOR_PB2, SI_SKILL
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
 
 from enum import Enum
 
 
-Skill = Enum("Skill", VOLUNTEER_SKILLS)
+Skill = Enum("Skill", all_volunteer_skill_names)
 
 def skill_from_str(skill_str: str) -> Skill:
     return Skill[skill_str]
@@ -16,7 +16,7 @@ def skill_from_str(skill_str: str) -> Skill:
 PB2_skill = Skill[VOLUNTEERS_SKILL_FOR_PB2]
 SI_skill = Skill[SI_SKILL]
 
-all_skills = [Skill[skill_str] for skill_str in VOLUNTEER_SKILLS]
+all_skills = [Skill[skill_str] for skill_str in all_volunteer_skill_names]
 
 @dataclass
 class VolunteerSkill(GenericSkipperManObject):
@@ -37,6 +37,9 @@ class SkillsDict(Dict[Skill, bool]):
         skills_as_str = ", ".join(skills_as_list)
 
         return skills_as_str
+
+    def has_skill_name(self, skill_name:str):
+        return self.get(skill_from_str(skill_name), False)
 
     def empty(self):
         return not any([held for held in self.values()])

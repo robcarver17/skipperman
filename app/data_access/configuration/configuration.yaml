@@ -13,6 +13,7 @@ uploads: "uploads" ## directory in users home directory where uploads are tempor
 max_file_size: 2100000 # ~2mb
 upload_extensions: ".csv, .xls, .zip"
 number_of_backups_to_keep: 10
+hours_between_backups: 4
 #
 #
 #
@@ -38,6 +39,7 @@ wild_apricot_payment_fields_which_are_part_paid_status:
 wild_apricot_payment_fields_which_are_cancelled_status:
   - "Canceled"
   - "Cancelled"
+if_volunteer_unable_to_volunteer_contains: 'unable' ## if volunteer status contains this, can't volunteer
 wild_apricot_event_id: "Event ID"
 wild_apricot_file_types: ".csv, .xls"
 #

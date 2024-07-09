@@ -13,8 +13,8 @@ from app.backend.reporting.boat_report.boat_report_parameters import (
     CLUB_BOAT,
 )
 
-from app.data_access.configuration.groups import LAKE_TRAINING_GROUP_NAMES, RIVER_TRAINING_GROUP_NAMES, \
-    UNALLOCATED_GROUP_NAME
+from app.data_access.configuration.groups import lake_training_group_names, river_training_group_names, \
+    unallocated_group_name
 from app.backend.data.data_for_event import (
     get_data_required_for_event,
     RequiredDataForReport,
@@ -238,15 +238,15 @@ def is_group_valid_for_report(
     group: Group, additional_parameters: AdditionalParametersForBoatReport
 ):
     if additional_parameters.exclude_unallocated_groups:
-        if group.group_name is UNALLOCATED_GROUP_NAME:
+        if group.group_name is unallocated_group_name:
             return False
 
     if additional_parameters.exclude_river_training_groups:
-        if group.group_name in RIVER_TRAINING_GROUP_NAMES:
+        if group.group_name in river_training_group_names:
             return False
 
     if additional_parameters.exclude_lake_groups:
-        if group.group_name in LAKE_TRAINING_GROUP_NAMES:
+        if group.group_name in lake_training_group_names:
             return False
 
     return True

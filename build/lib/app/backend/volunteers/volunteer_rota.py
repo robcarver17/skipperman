@@ -24,7 +24,7 @@ from app.objects.groups import (
     GROUP_UNALLOCATED_TEXT,
     LAKE_TRAINING,
 )
-from app.data_access.configuration.groups import ALL_GROUPS_NAMES
+from app.data_access.configuration.groups import all_groups_names
 from app.objects.volunteers_at_event import (
     VolunteerAtEventWithId,
     ListOfVolunteersAtEventWithId,
@@ -119,7 +119,7 @@ def sort_volunteer_data_for_event_by_name_sort_order(
 def dict_of_groups_for_dropdown(
     interface: abstractInterface,
 ):  ## Future proof to when groups come from files
-    dict_of_groups = {group: group for group in ALL_GROUPS_NAMES}
+    dict_of_groups = {group: group for group in all_groups_names}
     dict_of_groups[GROUP_UNALLOCATED_TEXT] = GROUP_UNALLOCATED_TEXT
 
     return dict_of_groups

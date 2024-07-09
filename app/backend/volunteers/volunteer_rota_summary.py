@@ -8,8 +8,8 @@ from app.backend.data.volunteer_rota import VolunteerRotaData
 from app.backend.volunteers.volunteer_rota import (
     DEPRECATE_get_volunteers_in_role_at_event_with_active_allocations,
 )
-from app.data_access.configuration.groups import ALL_GROUPS_NAMES
-from app.data_access.configuration.skills_and_roles import VOLUNTEER_ROLES
+from app.data_access.configuration.groups import all_groups_names
+from app.data_access.configuration.skills_and_roles import all_volunteer_role_names
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.groups import GROUP_UNALLOCATED_TEXT, Group
@@ -49,7 +49,7 @@ def get_list_of_actual_and_targets_for_roles_at_event(
             volunteers_in_roles_at_event=volunteers_in_roles_at_event,
             targets_at_event=targets_at_event,
         )
-        for role in VOLUNTEER_ROLES
+        for role in all_volunteer_role_names
     ]
 
     return all_rows
@@ -148,12 +148,12 @@ def get_summary_of_roles_and_groups_for_events_on_day(
     list_of_roles_and_groups = (
         volunteers_in_roles_at_event.list_of_roles_and_groups_at_event_for_day(day)
     )
-    all_roles = VOLUNTEER_ROLES + [
+    all_roles = all_volunteer_role_names + [
         NO_ROLE_SET
     ]  ## ordered, doesn't include unallocated do those last
     all_group_names = [
         GROUP_UNALLOCATED_TEXT
-    ] + ALL_GROUPS_NAMES  ## ordered, doesn't include unallocated we put these first
+    ] + all_groups_names  ## ordered, doesn't include unallocated we put these first
 
     summary_dict = {}
     for group_name in all_group_names:
@@ -237,7 +237,7 @@ def get_summary_of_teams_and_groups_for_events_on_day(
     ]  ## ordered, doesn't include unallocated do those last
     all_group_names = [
         GROUP_UNALLOCATED_TEXT
-    ] + ALL_GROUPS_NAMES  ## ordered, doesn't include unallocated we put these first
+    ] + all_groups_names  ## ordered, doesn't include unallocated we put these first
 
     summary_dict = {}
     for group_name in all_group_names:

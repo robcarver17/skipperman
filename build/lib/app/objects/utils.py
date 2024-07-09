@@ -19,7 +19,7 @@ from dateutil.parser import parse
 
 from itertools import groupby
 
-from app.data_access.configuration.fixed import ID_KEY, ID_KEY_POSTFIX, LIST_OF_ID_KEY_TO_IGNORE_WHEN_CLEANING
+from app.data_access.configuration.fixed import ID_KEY, ID_KEY_SUFFIX, LIST_OF_ID_KEY_TO_IGNORE_WHEN_CLEANING
 
 
 def list_of_list_max_wide_for_table_building(
@@ -83,7 +83,7 @@ def clean_up_dict_with_nans(some_dict) -> dict:
 def clean_up_dict_with_weird_floats_for_id(some_dict) -> dict:
     for key, value in some_dict.items():
         key_is_id = key == ID_KEY
-        key_contains_id = ID_KEY_POSTFIX in key
+        key_contains_id = ID_KEY_SUFFIX in key
         key_is_row_id = key in LIST_OF_ID_KEY_TO_IGNORE_WHEN_CLEANING  ## special event row id, FIXME orrible hack
         if key_is_row_id:
             continue

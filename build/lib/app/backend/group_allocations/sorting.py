@@ -4,7 +4,7 @@ from app.objects.day_selectors import Day
 from app.backend.group_allocations.group_allocations_data import AllocationData
 from app.objects.cadets import ListOfCadets
 from app.objects.constants import arg_not_passed
-from app.data_access.configuration.groups import ALL_GROUPS_NAMES
+from app.data_access.configuration.groups import all_groups_names
 
 ## following double up as column headers in df
 CADET = "Cadet"
@@ -93,7 +93,7 @@ def get_active_cadets_as_data_frame_on_non_specified_day(
 
     active_cadets_as_data_frame = pd.DataFrame(df_as_dict)
     active_cadets_as_data_frame[SORT_GROUP] = pd.Categorical(
-        active_cadets_as_data_frame[SORT_GROUP], ALL_GROUPS_NAMES
+        active_cadets_as_data_frame[SORT_GROUP], all_groups_names
     )
 
     return active_cadets_as_data_frame
@@ -133,7 +133,7 @@ def get_active_cadets_as_data_frame_on_specific_day(
 
     active_cadets_as_data_frame = pd.DataFrame(df_as_dict)
     active_cadets_as_data_frame[SORT_GROUP] = pd.Categorical(
-        active_cadets_as_data_frame[SORT_GROUP], ALL_GROUPS_NAMES
+        active_cadets_as_data_frame[SORT_GROUP], all_groups_names
     )
 
     return active_cadets_as_data_frame

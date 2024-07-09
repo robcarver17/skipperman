@@ -1,17 +1,5 @@
 from app.data_access.configuration.configuration import MIN_CADET_AGE, MAX_CADET_AGE
-from app.objects.abstract_objects.abstract_text import (
-    copyright_symbol,
-    reg_tm_symbol,
-    up_pointer,
-    down_pointer,
-    umbrella_symbol,
-    at_symbol,
-    left_pointer,
-    right_pointer,
-    up_down_arrow,
-    outline_left_right_arrow,
-    left_right_arrow,
-)
+from app.objects.abstract_objects.abstract_text import *
 
 
 ## REPORTING STUFF
@@ -63,16 +51,16 @@ HELP_KEYBOARD_SHORTCUT = "h"
 
 
 #### CADET AGES
-MONTH_WHEN_CADET_AGE_BRACKET_BEGINS = 9  # September
+MONTH_WHEN_CADET_AGE_BRACKET_BEGINS = 9  # September, start of school year
 LOWEST_FEASIBLE_CADET_AGE = MIN_CADET_AGE - 2
 HIGHEST_FEASIBLE_CADET_AGE = MAX_CADET_AGE + 20  ## might be backfilling
-MONTH_WHEN_NEW_COMMITTEE_YEAR_BEGINS = 11
+MONTH_WHEN_NEW_COMMITTEE_YEAR_BEGINS = 11 # November, start of EGM year
 YEARS_ON_CADET_COMMITTEE = 2
+MIN_AGE_TO_JOIN_COMMITTEE = 16
+MAX_AGE_TO_JOIN_COMMITTEE = 17
 
 
 ### DO NOT CHANGE THE FOLLOWING WITHOUT ALSO CHANGING ALL THE CLASSES THAT USE THEM - BASICALLY DON'T CHANGE - THESE ARE A CONVENTION RATHER THAN A PARAMETER
-ID_KEY = "id"
-ID_KEY_POSTFIX = "_id"
+ID_KEY = "id" ## ANYTHING WITH 'ID' IS AN INT SAVED AS A STRING
+ID_KEY_SUFFIX = "_id" ## DITTO ANY FIELD NAME
 LIST_OF_ID_KEY_TO_IGNORE_WHEN_CLEANING = ["row_id"]
-MIN_AGE_TO_JOIN_COMMITTEE = 16
-MAX_AGE_TO_JOIN_COMMITTEE = 17

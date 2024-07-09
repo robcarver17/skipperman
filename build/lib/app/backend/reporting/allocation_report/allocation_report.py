@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from app.backend.data.dinghies import DinghiesData
-from app.data_access.configuration.groups import ALL_GROUPS_NAMES
+from app.data_access.configuration.groups import all_groups_names
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
 from app.objects.club_dinghies import ListOfCadetAtEventWithClubDinghies
@@ -15,7 +15,7 @@ from app.backend.reporting.options_and_parameters.report_type_specific_parameter
 specific_parameters_for_allocation_report = SpecificParametersForTypeOfReport(
     #    entry_columns=[CADET_NAME],
     group_by_column=GROUP_STR_NAME,
-    passed_group_order=ALL_GROUPS_NAMES,
+    passed_group_order=all_groups_names,
     report_type="Allocation report",
 )
 

@@ -11,9 +11,6 @@ with open(configuration_file) as file_to_parse:
     configuration = yaml.load(file_to_parse, Loader=yaml.FullLoader)
 
 
-## Get everything from config as constants.py
-
-
 ### directories
 DATAPATH = configuration["datapath"]
 BACKUP_DATA = configuration["backuppath"]
@@ -24,6 +21,7 @@ PUBLIC_REPORTING_SUBDIRECTORY = configuration["public_reporting_subdirectory"]
 
 
 NUMBER_OF_BACKUPS = configuration["number_of_backups_to_keep"]
+HOURS_BETWEEN_BACKUPS = configuration["hours_between_backups"]
 
 ## links
 WEBLINK_FOR_QUALIFICATIONS = configuration["weblink_for_qualifications"]
@@ -63,5 +61,4 @@ UPLOAD_EXTENSIONS = configuration["upload_extensions"]
 
 MINIMUM_COLOUR_GROUPS_TO_DISTRIBUTE = configuration["min_colour_groups_to_distribute"]
 
-UNABLE_TO_VOLUNTEER_KEYWORD = "unable"
-HOURS_BETWEEN_BACKUPS = 4
+UNABLE_TO_VOLUNTEER_KEYWORD = configuration["if_volunteer_unable_to_volunteer_contains"]

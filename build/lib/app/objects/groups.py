@@ -6,8 +6,8 @@ from app.objects.day_selectors import Day, ListOfDaySelectors, DaySelector
 
 from app.objects.utils import in_x_not_in_y
 
-from app.data_access.configuration.groups import LAKE_TRAINING_GROUP_NAMES, RIVER_TRAINING_GROUP_NAMES, MG_GROUP_NAMES, \
-    UNALLOCATED_GROUP_NAME, ALL_GROUPS_NAMES
+from app.data_access.configuration.groups import lake_training_group_names, river_training_group_names, mg_group_names, \
+    unallocated_group_name, all_groups_names
 from app.objects.cadets import Cadet, ListOfCadets
 from dataclasses import dataclass
 from app.objects.constants import missing_data
@@ -30,7 +30,7 @@ def sorted_locations(locations: List[str]):
 class Group:
     def __init__(self, group_name: str):
         try:
-            assert group_name in ALL_GROUPS_NAMES
+            assert group_name in all_groups_names
         except:
             raise Exception(
                 "Group %s is not a valid group name - correct or add to configuration"
@@ -65,11 +65,11 @@ class Group:
 
     @classmethod
     def create_unallocated(cls):
-        return cls(UNALLOCATED_GROUP_NAME)
+        return cls(unallocated_group_name)
 
     @property
     def is_unallocated(self):
-        return self.group_name == UNALLOCATED_GROUP_NAME
+        return self.group_name == unallocated_group_name
 
     @property
     def group_name(self):
@@ -77,7 +77,7 @@ class Group:
 
     def type_of_group(self):
         if self.is_unallocated:
-            return UNALLOCATED_GROUP_NAME
+            return unallocated_group_name
         elif self.is_lake_training():
             return LAKE_TRAINING
         elif self.is_river_training():
@@ -91,23 +91,23 @@ class Group:
             )
 
     def is_lake_training(self) -> bool:
-        return self.group_name in LAKE_TRAINING_GROUP_NAMES
+        return self.group_name in lake_training_group_names
 
     def is_river_training(self) -> bool:
-        return self.group_name in RIVER_TRAINING_GROUP_NAMES
+        return self.group_name in river_training_group_names
 
     def is_race_group(self) -> bool:
-        return self.group_name in MG_GROUP_NAMES
+        return self.group_name in mg_group_names
 
 
 GROUP_UNALLOCATED = Group.create_unallocated()
 GROUP_UNALLOCATED_TEXT = "Unallocated"
 
-ALL_GROUPS = [Group(group) for group in ALL_GROUPS_NAMES]
+ALL_GROUPS = [Group(group) for group in all_groups_names]
 
 
 def index_group(group: Group):
-    all_groups = ALL_GROUPS_NAMES + [GROUP_UNALLOCATED_TEXT]
+    all_groups = all_groups_names + [GROUP_UNALLOCATED_TEXT]
     return all_groups.index(group)
 
 

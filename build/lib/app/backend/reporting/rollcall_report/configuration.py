@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from app.data_access.configuration.groups import ALL_GROUPS_NAMES
+from app.data_access.configuration.groups import all_groups_names
 from app.objects.groups import CADET_NAME, GROUP_STR_NAME
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
     SpecificParametersForTypeOfReport,
@@ -8,7 +8,7 @@ from app.backend.reporting.options_and_parameters.report_type_specific_parameter
 specific_parameters_for_rollcall_report = SpecificParametersForTypeOfReport(
     #    entry_columns=[CADET_NAME],
     group_by_column=GROUP_STR_NAME,
-    passed_group_order=ALL_GROUPS_NAMES,
+    passed_group_order=all_groups_names,
     report_type="Rollcall report",
 )
 

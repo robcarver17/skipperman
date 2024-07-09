@@ -3,10 +3,12 @@ from dataclasses import dataclass
 from typing import List, Dict
 from statistics import mode
 
+from app.objects.volunteer_skills import SkillsDict
+
 from app.objects.volunteers import Volunteer
 
-from app.data_access.configuration.skills_and_roles import VOLUNTEER_TEAMS, VOLUNTEER_SKILL_DICT, \
-    VOLUNTEERS_REQUIRING_BOATS, VOLUNTEERS_REQUIRING_GROUP, INSTRUCTOR_TEAM, SI_ROLE, VOLUNTEER_ROLES
+from app.data_access.configuration.skills_and_roles import dict_of_volunteer_teams, dict_of_roles_and_skills_required, \
+    volunteers_requiring_boats, volunteers_requiring_group, instructor_team, si_role, all_volunteer_role_names
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.groups import Group, GROUP_UNALLOCATED, index_group
@@ -22,7 +24,7 @@ GROUP_KEY = "group"
 
 
 def get_list_of_volunteer_teams():
-    return list(VOLUNTEER_TEAMS.keys())
+    return list(dict_of_volunteer_teams.keys())
 
 
 @dataclass
@@ -42,11 +44,11 @@ class VolunteerInRoleAtEvent(GenericSkipperManObject):
 
     @property
     def requires_group(self):
-        return self.role in VOLUNTEERS_REQUIRING_GROUP
+        return self.role in volunteers_requiring_group
 
     @property
     def requires_boat(self):
-        return self.role in VOLUNTEERS_REQUIRING_BOATS
+        return self.role in volunteers_requiring_boats
 
     @property
     def no_role_set(self) -> bool:
@@ -57,10 +59,10 @@ class VolunteerInRoleAtEvent(GenericSkipperManObject):
         return teams_given_role(self.role)
 
     def senior_instructor(self) -> bool:
-        return self.role == SI_ROLE
+        return self.role == si_role
 
     def in_instructor_team(self):
-        return self.role in INSTRUCTOR_TEAM
+        return self.role in instructor_team
 
     def on_lake(self):
         if not self.group.is_unallocated:
@@ -72,21 +74,21 @@ class VolunteerInRoleAtEvent(GenericSkipperManObject):
 
         return False
 
-    def is_qualified_for_role(self, dict_of_skills: Dict[str, bool]) -> bool:
+    def is_qualified_for_role(self, dict_of_skills: SkillsDict) -> bool:
         return is_qualified_for_role(role=self.role, dict_of_skills=dict_of_skills)
 
 
-def is_qualified_for_role(role: str, dict_of_skills: Dict[str, bool]) -> bool:
-    skills_required = VOLUNTEER_SKILL_DICT.get(role, [])
+def is_qualified_for_role(role: str, dict_of_skills: SkillsDict) -> bool:
+    skills_required = dict_of_roles_and_skills_required.get(role, [])
     for skill_needed in skills_required:
-        has_skill = dict_of_skills.get(skill_needed, False)
+        has_skill = dict_of_skills.has_skill_name(skill_needed)
         if not has_skill:
             return False
 
     return True
 
 
-def teams_given_role(role: str, teams: dict = VOLUNTEER_TEAMS) -> List[str]:
+def teams_given_role(role: str, teams: dict = dict_of_volunteer_teams) -> List[str]:
     if role == NO_ROLE_SET:
         return [NO_ROLE_SET]
     all_teams = [
@@ -100,12 +102,12 @@ def teams_given_role(role: str, teams: dict = VOLUNTEER_TEAMS) -> List[str]:
 
 
 def index_of_role(role: str):
-    combined_roles = VOLUNTEER_ROLES + [NO_ROLE_SET]
+    combined_roles = all_volunteer_role_names + [NO_ROLE_SET]
     return combined_roles.index(role)
 
 
 def index_of_team(role: str):
-    combined_teams = VOLUNTEER_TEAMS + [NO_ROLE_SET]
+    combined_teams = dict_of_volunteer_teams + [NO_ROLE_SET]
     return combined_teams.index(role)
 
 

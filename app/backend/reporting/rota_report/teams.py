@@ -1,8 +1,8 @@
 from typing import List
 
 import pandas as pd
-from app.data_access.configuration.groups import ALL_GROUPS_NAMES
-from app.data_access.configuration.skills_and_roles import VOLUNTEER_ROLES
+from app.data_access.configuration.groups import all_groups_names
+from app.data_access.configuration.skills_and_roles import all_volunteer_role_names
 
 from app.backend.reporting.rota_report.components import (
     DataForDfConstruction,
@@ -179,7 +179,7 @@ def sort_df_by_role(
     data_for_df: DataForDfConstruction,
     include_no_role: bool = True,
 ) -> pd.DataFrame:
-    all_roles_in_order = VOLUNTEER_ROLES
+    all_roles_in_order = all_volunteer_role_names
     new_df = pd.DataFrame()
     for role in all_roles_in_order:
         subset_df = df_for_reporting_volunteers_for_day[
@@ -201,7 +201,7 @@ def sort_df_by_group(
     data_for_df: DataForDfConstruction,
     include_no_group: bool = True,
 ) -> pd.DataFrame:
-    all_groups = ALL_GROUPS_NAMES
+    all_groups = all_groups_names
     new_df = pd.DataFrame()
     for group in all_groups:
         subset_df = df_for_reporting_volunteers_for_day[

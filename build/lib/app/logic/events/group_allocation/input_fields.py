@@ -5,7 +5,7 @@ from app.backend.forms.form_utils import (
     get_availability_checkbox,
 )
 from app.backend.group_allocations.group_allocations_data import AllocationData
-from app.data_access.configuration.groups import ALL_GROUPS_NAMES
+from app.data_access.configuration.groups import all_groups_names
 from app.logic.events.constants import (
     ATTENDANCE,
     ALLOCATION,
@@ -207,7 +207,7 @@ def get_dropdown_input_for_group_allocation(
 
 
 dict_of_all_possible_groups_for_dropdown_input = dict(
-    [(group, group) for group in ALL_GROUPS_NAMES]
+    [(group, group) for group in all_groups_names]
 )
 
 

@@ -6,7 +6,7 @@ from app.objects.volunteers import Volunteer
 
 from app.objects.groups import order_list_of_groups
 
-from app.data_access.configuration.skills_and_roles import VOLUNTEER_TEAMS
+from app.data_access.configuration.skills_and_roles import dict_of_volunteer_teams
 
 from app.backend.data.volunteer_allocation import VolunteerAllocationData
 from app.objects.volunteers_in_roles import (
@@ -425,7 +425,7 @@ class VolunteerRotaData:
 def get_volunteer_roles(interface: abstractInterface):
     ## FIXME REPLACE WITH CONFIGURABLE FILE
     volunteer_roles = []
-    for team in VOLUNTEER_TEAMS.values():
+    for team in dict_of_volunteer_teams.values():
         for role in team:
             if (
                 role not in volunteer_roles

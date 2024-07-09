@@ -21,7 +21,7 @@ from app.backend.group_allocations.previous_allocations import (
     allocation_for_cadet_in_previous_events_as_dict,
     DEPRECATE_get_dict_of_allocations_for_events_and_list_of_cadets,
 )
-from app.data_access.configuration.groups import UNALLOCATED_GROUP_NAME
+from app.data_access.configuration.groups import unallocated_group_name
 from app.backend.data.cadets_at_event_id_level import load_cadets_at_event
 from app.data_access.configuration.field_list import (
     CADET_GROUP_PREFERENCE,
@@ -90,7 +90,7 @@ class AllocationData:
         all_groups = list(
             remove_na_from_dict(self.get_group_names_across_days(cadet)).values()
         )
-        return most_common(all_groups, UNALLOCATED_GROUP_NAME)
+        return most_common(all_groups, unallocated_group_name)
 
     def get_most_common_club_boat_name_across_days(self, cadet: Cadet):
         all_boats_across_days = list(
@@ -521,12 +521,12 @@ class AllocationData:
         previous_allocation = self.previous_groups_as_list(cadet)
         previous_allocation.reverse()  ## last event first when considering
         for allocation in previous_allocation:
-            if allocation == UNALLOCATED_GROUP_NAME:
+            if allocation == unallocated_group_name:
                 continue
             else:
                 return allocation.group_name
 
-        return UNALLOCATED_GROUP_NAME
+        return unallocated_group_name
 
     def get_current_group_name_for_day(self, cadet: Cadet, day: Day) -> str:
         if not self.cadet_availability_at_event(cadet).available_on_day(day):

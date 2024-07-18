@@ -10,10 +10,6 @@ from app.logic.volunteers.view_individual_volunteer import (
     display_form_view_individual_volunteer,
     post_form_view_individual_volunteer,
 )
-from app.logic.volunteers.delete_volunteer import (
-    display_form_delete_individual_volunteer,
-    post_form_delete_individual_volunteer,
-)
 from app.logic.volunteers.edit_volunteer import (
     display_form_edit_individual_volunteer,
     post_form_edit_individual_volunteer,
@@ -45,10 +41,6 @@ volunteer_function_mapping = (
                         (
                             display_form_edit_individual_volunteer,
                             post_form_edit_individual_volunteer,
-                        ): 0,
-                        (
-                            display_form_delete_individual_volunteer,
-                            post_form_delete_individual_volunteer,
                         ): 0,
                     },
                 }

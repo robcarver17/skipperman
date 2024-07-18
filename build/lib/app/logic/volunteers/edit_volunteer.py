@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.backend.forms.form_utils import checked_and_labels_dict_for_skills_form, get_dict_of_skills_from_form
+from app.OLD_backend.forms.form_utils import checked_and_labels_dict_for_skills_form, get_dict_of_skills_from_form
 from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
 
 from app.objects.abstract_objects.abstract_form import (
@@ -27,14 +27,13 @@ from app.logic.abstract_logic_api import (
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
-from app.logic.volunteers.constants import *
-from app.backend.volunteers.volunteers import (
+from app.OLD_backend.volunteers.volunteers import (
     save_skills_for_volunteer,
     update_existing_volunteer, get_dict_of_existing_skills,
 )
-from app.logic.volunteers.volunteer_state import get_volunteer_from_state
-from app.logic.volunteers.add_volunteer import get_volunteer_from_form
-from app.objects.volunteers import Volunteer
+from app.logic.shared.volunteer_state import get_volunteer_from_state
+from app.logic.shared.add_edit_volunteer_forms import get_volunteer_from_form
+from app.objects.primtive_with_id.volunteers import Volunteer
 
 
 def display_form_edit_individual_volunteer(
@@ -147,7 +146,7 @@ def get_and_save_core_volunteer_details_from_form(
     volunteer_details_from_form = get_volunteer_from_form(interface)
     volunteer_details_from_form.id = original_volunteer.id  ## won't be in form
     update_existing_volunteer(
-        interface=interface, volunteer=volunteer_details_from_form
+        data_layer=interface.data, volunteer=volunteer_details_from_form
     )
 
 
@@ -159,7 +158,7 @@ def get_and_save_volunteer_skills_from_form(
         field_name=SKILLS
     )
     save_skills_for_volunteer(
-        interface=interface, volunteer=volunteer, dict_of_skills=dict_of_skills
+        data_layer=interface.data, volunteer=volunteer, dict_of_skills=dict_of_skills
     )
 
 

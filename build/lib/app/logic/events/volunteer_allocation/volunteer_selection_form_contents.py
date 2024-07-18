@@ -1,7 +1,7 @@
-from app.backend.cadets import get_cadet_from_id
-from app.backend.volunteers.volunteer_allocation import get_list_of_relevant_volunteers
-from app.backend.data.volunteers import SORT_BY_SURNAME
-from app.backend.volunteers.volunteers import DEPRECATE_get_sorted_list_of_volunteers
+from app.OLD_backend.cadets import get_cadet_from_id
+from app.OLD_backend.volunteers.volunteer_allocation import get_list_of_relevant_volunteers
+from app.OLD_backend.data.volunteers import SORT_BY_SURNAME
+from app.OLD_backend.volunteers.volunteers import get_sorted_list_of_volunteers
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.events.constants import (
     CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL,
@@ -22,7 +22,7 @@ from app.objects.abstract_objects.abstract_lines import (
     Line,
 )
 from app.objects.utils import similar
-from app.objects.volunteers import Volunteer
+from app.objects.primtive_with_id.volunteers import Volunteer
 
 
 def get_header_text_for_volunteer_selection_form(
@@ -121,8 +121,8 @@ def get_list_of_volunteer_buttons(
     see_all_volunteers: bool = False,
 ) -> ListOfLines:
     if see_all_volunteers:
-        list_of_volunteers = DEPRECATE_get_sorted_list_of_volunteers(
-            interface=interface, sort_by=SORT_BY_SURNAME
+        list_of_volunteers = get_sorted_list_of_volunteers(
+            data_layer=interface.data, sort_by=SORT_BY_SURNAME
         )
         msg_text = "Showing all volunteers:"
         extra_button_text = SEE_SIMILAR_VOLUNTEER_ONLY_LABEL
@@ -144,6 +144,3 @@ def get_list_of_volunteer_buttons(
     ).add_Lines()
 
 
-def get_dict_of_volunteer_names_and_volunteers(interface: abstractInterface):
-    list_of_volunteers = DEPRECATE_get_sorted_list_of_volunteers(interface)
-    return dict([(str(volunteer), volunteer) for volunteer in list_of_volunteers])

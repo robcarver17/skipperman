@@ -1,9 +1,5 @@
 from typing import List
 
-from app.data_access.configuration.fixed import (
-    SAVE_KEYBOARD_SHORTCUT,
-    CANCEL_KEYBOARD_SHORTCUT,
-)
 from app.objects.abstract_objects.abstract_form import listInput
 
 from app.objects.clothing import (
@@ -12,11 +8,9 @@ from app.objects.clothing import (
     SORT_BY_FIRSTNAME,
 )
 
-from app.backend.clothing import (
-    get_list_of_active_cadet_ids_with_clothing_at_event,
+from app.OLD_backend.clothing import (
     get_list_of_active_cadet_objects_with_clothing_at_event,
 )
-from app.logic.events.events_in_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
@@ -25,8 +19,6 @@ from app.objects.events import Event
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
-    SAVE_BUTTON_LABEL,
-    CANCEL_BUTTON_LABEL,
     save_menu_button,
     cancel_menu_button,
 )

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from app.objects.constants import arg_not_passed
+from app.objects.exceptions import arg_not_passed
 from app.web.html.components import (
     ListOfHtml,
     Html,

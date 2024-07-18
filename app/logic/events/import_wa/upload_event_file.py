@@ -23,15 +23,15 @@ from app.logic.abstract_logic_api import (
     button_error_and_back_to_initial_state_form,
 )
 from app.logic.events.constants import UPLOAD_FILE_BUTTON_LABEL
-from app.backend.wa_import.load_wa_file import (
+from app.OLD_backend.wa_import.load_wa_file import (
     save_staged_file_of_raw_event_upload_with_event_id,
     verify_and_return_uploaded_wa_event_file,
     save_uploaded_wa_as_local_temp_file,
     check_local_file_is_valid_wa_file,
     WA_FILE,
 )
-from app.backend.wa_import.map_wa_files import verify_file_has_correct_wa_id
-from app.logic.events.events_in_state import get_event_from_state
+from app.OLD_backend.wa_import.map_wa_files import verify_file_has_correct_wa_id
+from app.logic.shared.events_state import get_event_from_state
 from app.objects.events import Event
 
 

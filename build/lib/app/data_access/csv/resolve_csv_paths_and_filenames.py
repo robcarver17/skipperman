@@ -1,6 +1,6 @@
 from os.path import join, exists
 from pathlib import Path
-from app.objects.constants import arg_not_passed
+from app.objects.exceptions import arg_not_passed
 
 
 def get_path_and_filename_for_named_csv_file(

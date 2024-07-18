@@ -69,9 +69,7 @@ class SkillsAndRolesConfiguration(List[str]):
         )
 
     def self_as_dict(self):
-        return dict(
-
-        )
+        raise NotImplemented
 
     def core_skills(self):
         return [self.pb2_skill, self.si_skill]
@@ -101,3 +99,18 @@ instructor_team = skills_and_roles_configuration.instructor_team_members()
 si_role = skills_and_roles_configuration.SI_role
 all_volunteer_role_names = skills_and_roles_configuration.volunteer_roles
 
+
+def get_volunteer_roles():
+    ## FIXME REPLACE WITH CONFIGURABLE FILE
+    volunteer_roles = []
+    for team in dict_of_volunteer_teams.values():
+        for role in team:
+            if (
+                role not in volunteer_roles
+            ):  ## avoids duplication eg deputy skipper while preserving order
+                volunteer_roles.append(role)
+
+    return volunteer_roles
+
+
+volunteer_roles = get_volunteer_roles()

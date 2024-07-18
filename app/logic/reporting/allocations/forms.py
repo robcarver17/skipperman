@@ -15,7 +15,7 @@ from app.logic.reporting.allocations.processes import (
     INCLUDE_UNALLOCATED_CADETS,
     CLUB_BOAT_ASTERIX,
 )
-from app.backend.reporting.allocation_report.allocation_report import (
+from app.OLD_backend.reporting.allocation_report.allocation_report import (
     AdditionalParametersForAllocationReport,
 )
 

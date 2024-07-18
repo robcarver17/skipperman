@@ -1,14 +1,14 @@
 import pandas as pd
 
-from app.backend.wa_import.map_wa_fields import temp_mapping_file_name
-from app.backend.wa_import.load_wa_file import (
+from app.OLD_backend.wa_import.map_wa_fields import temp_mapping_file_name
+from app.OLD_backend.wa_import.load_wa_file import (
     get_staged_file_raw_event_filename,
     load_raw_wa_file,
 )
 from app.data_access.configuration.field_list_groups import ALL_FIELDS_AS_PD_SERIES
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.events.constants import UPLOAD_MAPPING_BUTTON_LABEL
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 from app.logic.events.mapping.download_template_field_mapping import (
     display_form_for_download_template_field_mapping,
 )

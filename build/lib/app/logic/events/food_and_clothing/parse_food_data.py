@@ -1,23 +1,23 @@
-from app.backend.volunteers.volunteers import get_volunteer_from_id
+from app.OLD_backend.volunteers.volunteers import DEPRECATE_get_volunteer_from_id
 from app.objects.abstract_objects.abstract_form import File
 
 from app.objects.events import Event
 
-from app.backend.cadets import DEPRECATE_get_cadet_from_id
+from app.OLD_backend.cadets import DEPRECATE_get_cadet_from_id
 
-from app.backend.food import update_cadet_food_data, update_volunteer_food_data, download_food_data_and_return_filename
+from app.OLD_backend.food import update_cadet_food_data, update_volunteer_food_data, download_food_data_and_return_filename
 from app.objects.food import CadetWithFoodRequirementsAtEvent, FoodRequirements, VolunteerWithFoodRequirementsAtEvent
 
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 
-from app.backend.data.food import FoodData
+from app.OLD_backend.data.food import FoodData
 
 from app.logic.events.food.render_food import get_input_name_other_food_for_cadet, \
     get_input_name_food_checkbox_for_cadet, get_input_name_other_food_for_volunteer, \
     get_input_name_food_checkbox_for_volunteer
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.backend.forms.form_utils import get_food_requirements_from_form
+from app.OLD_backend.forms.form_utils import get_food_requirements_from_form
 
 def save_food_data_in_form(interface: abstractInterface):
     save_cadet_food_data_in_form(interface)
@@ -95,7 +95,7 @@ def update_volunteer_food_data_if_changed(interface: abstractInterface,
         update_volunteer_food_data(interface=interface, volunteer_id=existing_volunteer_with_food.volunteer_id,
                                new_food_requirements=new_food_requirements, event=event)
     except Exception as e:
-        volunteer = get_volunteer_from_id(interface=interface, volunteer_id=existing_volunteer_with_food.volunteer_id)
+        volunteer = DEPRECATE_get_volunteer_from_id(interface=interface, volunteer_id=existing_volunteer_with_food.volunteer_id)
         interface.log_error("Couldn't update food_report for volunteer %s, error %s" % (str(volunteer), str(e)))
 
 

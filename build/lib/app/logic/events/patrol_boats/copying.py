@@ -1,19 +1,17 @@
-from typing import Union, List
+from typing import List
 
-from app.backend.volunteers.patrol_boats import (
-    get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day,
+from app.OLD_backend.rota.patrol_boats import (
     copy_across_earliest_allocation_of_boats_at_event,
-    get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day,
+    DEPRECATE_get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day,
 )
 
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 
-from app.backend.data.patrol_boats import PatrolBoatsData
+from app.OLD_backend.data.patrol_boats import PatrolBoatsData
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.volunteers.volunteer_rota import (
+from app.OLD_backend.rota.volunteer_rota import (
     is_possible_to_copy_roles_for_non_grouped_roles_only,
-    copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days,
     copy_earliest_valid_role_to_all_empty_for_volunteer,
     copy_earliest_valid_role_and_overwrite_for_volunteer,
     volunteer_has_at_least_one_allocated_role_and_empty_spaces_to_fill,
@@ -419,7 +417,7 @@ def volunteer_has_at_least_one_allocated_boat_which_matches_others(
 def copy_across_all_boats(interface: abstractInterface):
     event = get_event_from_state(interface)
     list_of_volunteer_ids = (
-        get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day(
+        DEPRECATE_get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day(
             interface=interface, event=event
         )
     )
@@ -435,7 +433,7 @@ def copy_across_all_boats(interface: abstractInterface):
 def copy_over_across_all_boats(interface: abstractInterface):
     event = get_event_from_state(interface)
     list_of_volunteer_ids = (
-        get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day(
+        DEPRECATE_get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day(
             interface=interface, event=event
         )
     )
@@ -451,7 +449,7 @@ def copy_over_across_all_boats(interface: abstractInterface):
 def copy_across_all_boats_and_roles(interface: abstractInterface):
     event = get_event_from_state(interface)
     list_of_volunteer_ids = (
-        get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day(
+        DEPRECATE_get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day(
             interface=interface, event=event
         )
     )
@@ -470,7 +468,7 @@ def copy_across_all_boats_and_roles(interface: abstractInterface):
 def copy_over_across_all_boats_and_roles(interface: abstractInterface):
     event = get_event_from_state(interface)
     list_of_volunteer_ids = (
-        get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day(
+        DEPRECATE_get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day(
             interface=interface, event=event
         )
     )

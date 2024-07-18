@@ -10,7 +10,7 @@ from app.data_access.configuration.groups import lake_training_group_names, rive
     unallocated_group_name, all_groups_names
 from app.objects.cadets import Cadet, ListOfCadets
 from dataclasses import dataclass
-from app.objects.constants import missing_data
+from app.objects.exceptions import missing_data
 from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     GenericListOfObjects,
@@ -313,10 +313,16 @@ class CadetWithGroup(GenericSkipperManObject):
 
         return {CADET_NAME: cadet_name, GROUP_STR_NAME: group_name}
 
+    @property
+    def cadet_id(self):
+        return self.cadet.id
 
 class ListOfCadetsWithGroup(GenericListOfObjects):
     def _object_class_contained(self):
         return CadetWithGroup
+
+    def items_with_cadet_id(self, cadet_id: str) -> List[CadetWithGroup]:
+        return [item for item in self if item.cadet_id == cadet_id]
 
     def list_of_cadets(self) -> ListOfCadets:
         return ListOfCadets([cadet_with_group.cadet for cadet_with_group in self])
@@ -334,7 +340,7 @@ class ListOfCadetsWithGroup(GenericListOfObjects):
     ):
         list_of_cadets_with_group = [
             CadetWithGroup(
-                cadet=list_of_cadets.has_id(allocation.cadet_id),
+                cadet=list_of_cadets.object_with_id(allocation.cadet_id),
                 group=allocation.group,
                 day=allocation.day,
             )

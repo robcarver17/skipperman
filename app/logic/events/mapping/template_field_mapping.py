@@ -1,5 +1,5 @@
 from typing import Union
-from app.backend.wa_import.map_wa_fields import (
+from app.OLD_backend.wa_import.map_wa_fields import (
     write_field_mapping_for_event,
     DEPRECATE_get_list_of_template_names,
     get_template,
@@ -17,13 +17,12 @@ from app.objects.abstract_objects.abstract_form import (
     File,
 )
 from app.objects.abstract_objects.abstract_buttons import (
-    CANCEL_BUTTON_LABEL,
     Button,
     ButtonBar,
     cancel_menu_button,
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 from app.logic.abstract_logic_api import initial_state_form
 
 upload_template_button = Button("Upload a new template")

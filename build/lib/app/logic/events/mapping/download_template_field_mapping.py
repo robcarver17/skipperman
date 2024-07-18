@@ -1,5 +1,5 @@
 from typing import Union
-from app.backend.wa_import.map_wa_fields import (
+from app.OLD_backend.wa_import.map_wa_fields import (
     DEPRECATE_get_list_of_template_names,
     get_template,
     write_mapping_to_temp_csv_file_and_return_filename,

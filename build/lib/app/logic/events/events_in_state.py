@@ -1,4 +1,4 @@
-from app.backend.events import DEPRECATE_get_list_of_all_events
+from app.OLD_backend.events import DEPRECATE_get_list_of_all_events
 from app.logic.events.constants import EVENT
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event

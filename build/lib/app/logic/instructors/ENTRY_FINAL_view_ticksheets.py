@@ -1,7 +1,7 @@
 from typing import Union
 
-from app.backend.data.security import get_volunteer_id_of_logged_in_user_or_superuser
-from app.backend.ticks_and_qualifications.ticksheets import (
+from app.OLD_backend.data.security import get_volunteer_id_of_logged_in_user_or_superuser
+from app.OLD_backend.ticks_and_qualifications.ticksheets import (
     can_see_all_groups_and_award_qualifications,
 )
 
@@ -56,7 +56,7 @@ from app.logic.shared.qualification_and_tick_state_storage import (
     not_editing,
 )
 
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -178,7 +178,7 @@ def post_form_view_ticksheets_for_event_and_group(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+    interface._save_data_store_cache()
 
     return display_form_view_ticksheets_for_event_and_group(interface)
 

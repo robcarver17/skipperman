@@ -2,25 +2,22 @@ from dataclasses import dataclass
 from typing import List, Dict
 
 import pandas as pd
-from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.volunteer_rota import VolunteerRotaData
-from app.backend.volunteers.volunteer_rota import (
-    DEPRECATE_get_volunteers_in_role_at_event_with_active_allocations,
+from app.data_access.data_layer.ad_hoc_cache import AdHocCache
+from app.data_access.data_layer.data_layer import DataLayer
+
+from app.OLD_backend.data.volunteer_rota import VolunteerRotaData
+from app.OLD_backend.rota.volunteer_rota import (
+    get_volunteers_in_role_at_event_with_active_allocations,
 )
 from app.data_access.configuration.groups import all_groups_names
 from app.data_access.configuration.skills_and_roles import all_volunteer_role_names
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.groups import GROUP_UNALLOCATED_TEXT, Group
-from app.objects.volunteers_in_roles import (
-    ListOfVolunteersInRoleAtEvent,
-    NO_ROLE_SET,
-    RoleAndGroup,
-    TeamAndGroup,
-    get_list_of_volunteer_teams,
-    ListOfTargetForRoleAtEvent,
-)
+from app.objects.primtive_with_id.groups import Group, GROUP_UNALLOCATED_TEXT
+from app.objects.primtive_with_id.volunteer_role_targets import ListOfTargetForRoleAtEvent
+from app.objects.primtive_with_id.volunteer_roles_and_groups import NO_ROLE_SET, get_list_of_volunteer_teams, \
+    ListOfVolunteersWithIdInRoleAtEvent, RoleAndGroup, TeamAndGroup
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 
 
@@ -33,14 +30,14 @@ class RowInTableWithActualAndTargetsForRole:
 
 
 def get_list_of_actual_and_targets_for_roles_at_event(
-    interface: abstractInterface, event: Event
+    cache: AdHocCache, event: Event
 ) -> List[RowInTableWithActualAndTargetsForRole]:
-    volunteers_in_roles_at_event = (
-        DEPRECATE_get_volunteers_in_role_at_event_with_active_allocations(
-            event=event, interface=interface
+    volunteers_in_roles_at_event = cache.get_from_cache(
+        get_volunteers_in_role_at_event_with_active_allocations,
+            event=event,
         )
-    )
-    targets_at_event = get_volunteer_targets_at_event(interface=interface, event=event)
+
+    targets_at_event = cache.get_from_cache(get_volunteer_targets_at_event, event=event)
 
     all_rows = [
         get_row_in_table_with_actual_and_targets_for_roles_at_event(
@@ -56,16 +53,16 @@ def get_list_of_actual_and_targets_for_roles_at_event(
 
 
 def get_volunteer_targets_at_event(
-    interface: abstractInterface, event: Event
+    data_layer: DataLayer, event: Event
 ) -> ListOfTargetForRoleAtEvent:
-    volunteer_data = VolunteerRotaData(interface.data)
+    volunteer_data = VolunteerRotaData(data_layer)
     return volunteer_data.get_list_of_targets_for_role_at_event(event)
 
 
 def get_row_in_table_with_actual_and_targets_for_roles_at_event(
     event: Event,
     role: str,
-    volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent,
+    volunteers_in_roles_at_event: ListOfVolunteersWithIdInRoleAtEvent,
     targets_at_event: ListOfTargetForRoleAtEvent,
 ) -> RowInTableWithActualAndTargetsForRole:
     daily_counts = {}
@@ -91,9 +88,9 @@ def get_row_in_table_with_actual_and_targets_for_roles_at_event(
 
 
 def save_new_volunteer_target(
-    interface: abstractInterface, event: Event, role: str, target: int
+    data_layer: DataLayer, event: Event, role: str, target: int
 ):
-    volunteer_data = VolunteerRotaData(interface.data)
+    volunteer_data = VolunteerRotaData(data_layer)
     volunteer_data.save_new_volunteer_target(event=event, role=role, target=target)
 
 
@@ -101,20 +98,20 @@ def save_new_volunteer_target(
 
 
 def get_summary_list_of_roles_and_groups_for_events(
-    interface: abstractInterface, event: Event
+    cache: AdHocCache, event: Event
 ) -> PandasDFTable:
     return PandasDFTable(
         get_summary_list_of_roles_and_groups_for_events_as_pd_df(
-            interface=interface, event=event
+            cache=cache, event=event
         )
     )
 
 
 def get_summary_list_of_roles_and_groups_for_events_as_pd_df(
-    interface: abstractInterface, event: Event
+        cache: AdHocCache, event: Event
 ) -> pd.DataFrame:
-    all_day_summaries = list_of_day_summaries_for_roles_at_event(
-        interface=interface, event=event
+    all_day_summaries = get_list_of_day_summaries_for_roles_at_event(
+        cache=cache, event=event
     )
     single_df = from_list_of_day_summaries_to_single_df(
         all_day_summaries=all_day_summaries, event=event
@@ -123,14 +120,14 @@ def get_summary_list_of_roles_and_groups_for_events_as_pd_df(
     return single_df
 
 
-def list_of_day_summaries_for_roles_at_event(
-    interface: abstractInterface, event: Event
+def get_list_of_day_summaries_for_roles_at_event(
+        cache: AdHocCache, event: Event
 ) -> List[pd.DataFrame]:
-    volunteers_in_roles_at_event = (
-        DEPRECATE_get_volunteers_in_role_at_event_with_active_allocations(
-            event=event, interface=interface
+    volunteers_in_roles_at_event = cache.get_from_cache(
+        get_volunteers_in_role_at_event_with_active_allocations,
+            event=event
         )
-    )
+
     days_at_event = event.weekdays_in_event()
     all_day_summaries = []
     for day in days_at_event:
@@ -143,21 +140,21 @@ def list_of_day_summaries_for_roles_at_event(
 
 
 def get_summary_of_roles_and_groups_for_events_on_day(
-    day: Day, volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent
+    day: Day, volunteers_in_roles_at_event: ListOfVolunteersWithIdInRoleAtEvent
 ) -> pd.DataFrame:
     list_of_roles_and_groups = (
         volunteers_in_roles_at_event.list_of_roles_and_groups_at_event_for_day(day)
     )
-    all_roles = all_volunteer_role_names + [
+    list_of_all_role_names = all_volunteer_role_names + [
         NO_ROLE_SET
     ]  ## ordered, doesn't include unallocated do those last
-    all_group_names = [
+    list_of_all_group_names = [
         GROUP_UNALLOCATED_TEXT
     ] + all_groups_names  ## ordered, doesn't include unallocated we put these first
 
     summary_dict = {}
-    for group_name in all_group_names:
-        for role in all_roles:
+    for group_name in list_of_all_group_names:
+        for role in list_of_all_role_names:
             role_and_group = RoleAndGroup(role=role, group=Group(group_name))
             count = role_and_group_with_count(
                 role_and_group, list_of_roles_and_groups=list_of_roles_and_groups
@@ -183,20 +180,20 @@ def role_and_group_with_count(
 
 
 def get_summary_list_of_teams_and_groups_for_events(
-    interface: abstractInterface, event: Event
+    cache: AdHocCache, event: Event
 ) -> PandasDFTable:
     return PandasDFTable(
         get_summary_list_of_teams_and_groups_for_events_as_pd_df(
-            interface=interface, event=event
+            cache=cache, event=event
         )
     )
 
 
 def get_summary_list_of_teams_and_groups_for_events_as_pd_df(
-    interface: abstractInterface, event: Event
+    cache: AdHocCache, event: Event
 ) -> pd.DataFrame:
-    all_day_summaries = list_of_day_summaries_teams_and_groups_at_event(
-        interface=interface, event=event
+    all_day_summaries = get_list_of_day_summaries_teams_and_groups_at_event(
+        cache=cache, event=event
     )
     single_df = from_list_of_day_summaries_to_single_df(
         all_day_summaries=all_day_summaries, event=event
@@ -205,14 +202,14 @@ def get_summary_list_of_teams_and_groups_for_events_as_pd_df(
     return single_df
 
 
-def list_of_day_summaries_teams_and_groups_at_event(
-    interface: abstractInterface, event: Event
+def get_list_of_day_summaries_teams_and_groups_at_event(
+    cache: AdHocCache, event: Event
 ) -> List[pd.DataFrame]:
-    volunteers_in_roles_at_event = (
-        DEPRECATE_get_volunteers_in_role_at_event_with_active_allocations(
-            event=event, interface=interface
+    volunteers_in_roles_at_event = cache.get_from_cache(
+
+        get_volunteers_in_role_at_event_with_active_allocations, event=event
         )
-    )
+
     days_at_event = event.weekdays_in_event()
     all_day_summaries = []
     for day in days_at_event:
@@ -225,7 +222,7 @@ def list_of_day_summaries_teams_and_groups_at_event(
 
 
 def get_summary_of_teams_and_groups_for_events_on_day(
-    day: Day, volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent
+    day: Day, volunteers_in_roles_at_event: ListOfVolunteersWithIdInRoleAtEvent
 ) -> pd.DataFrame:
     list_of_teams_and_groups = (
         volunteers_in_roles_at_event.list_of_first_teams_and_groups_at_event_for_day(

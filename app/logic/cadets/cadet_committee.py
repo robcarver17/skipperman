@@ -1,15 +1,17 @@
 from typing import Union, List
 
+
 from app.objects.cadets import Cadet
 
-from app.backend.cadets import (
+from app.OLD_backend.cadets import (
     get_cadet_given_cadet_as_str,
     get_cadet_from_id,
 )
-from app.backend.cadet_committee import get_list_of_cadets_not_on_committee_ordered_by_age, \
-    get_list_of_cadets_on_committee, get_list_of_cadets_not_on_committee_in_right_age_bracket, \
+from app.OLD_backend.cadet_committee import get_list_of_cadets_not_on_committee_ordered_by_age, \
+    get_list_of_cadets_on_committee, \
     get_next_year_for_cadet_committee, month_name_when_cadet_committee_age_bracket_begins, add_new_cadet_to_committee, \
-    toggle_selection_for_cadet_committee_member, start_and_end_date_on_cadet_commmittee
+    toggle_selection_for_cadet_committee_member, start_and_end_date_on_cadet_commmittee, get_list_of_cadet_as_str_not_on_committee_born_in_right_age_bracket
+
 from app.objects.committee import CadetOnCommittee
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -34,7 +36,6 @@ from app.objects.abstract_objects.abstract_interface import (
 )
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 
-ADD_MEMBER = "Add new member"
 
 
 def display_form_cadet_committee(
@@ -103,7 +104,7 @@ def select_or_deselect_button(cadet_on_committee: CadetOnCommittee) -> Button:
         button_text = "Deselect from committee (can be reinstated)"
 
     selection_button = Button(
-        value=get_select_or_deselect_button_name_for_committee_member(
+        value=get_select_or_deselect_button_value_for_committee_member(
             cadet_on_committee
         ),
         label=button_text,
@@ -159,16 +160,10 @@ def suggested_cadets_for_next_committee(
 ) -> DetailListOfLines:
     next_year_for_committee = get_next_year_for_cadet_committee()
     month_name = month_name_when_cadet_committee_age_bracket_begins()
-    list_of_cadets_not_on_committee_born_in_right_age_bracket = (
-        get_list_of_cadets_not_on_committee_in_right_age_bracket(
-            data_layer=interface.data, next_year_for_committee=next_year_for_committee
-        )
-    )
 
-    list_of_cadet_as_str_not_on_committee_born_in_right_age_bracket = [
-        str(cadet)
-        for cadet in list_of_cadets_not_on_committee_born_in_right_age_bracket
-    ]
+    list_of_cadet_as_str_not_on_committee_born_in_right_age_bracket = get_list_of_cadet_as_str_not_on_committee_born_in_right_age_bracket(
+        data_layer=interface.data
+    )
 
     list_of_lines = ListOfLines(
         [
@@ -188,16 +183,16 @@ def suggested_cadets_for_next_committee(
     return DetailListOfLines(list_of_lines, name="Suggested members")
 
 
+
 def post_form_cadet_committee(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
-    ## placeholder, not currently used
     button_pressed = interface.last_button_pressed()
     if cancel_menu_button.pressed(button_pressed):
         return previous_form(interface)
     elif add_button.pressed(button_pressed):
         add_new_cadet_to_committee_from_form(interface)
-    elif button_pressed in get_list_of_all_select_or_deselect_button_names(interface):
+    elif button_pressed_was_in_list_of_all_select_or_deselect_buttons(interface):
         select_or_deselect_cadet_from_committee(
             interface=interface, button_name=button_pressed
         )
@@ -255,11 +250,21 @@ def cadet_id_from_select_or_deselect_button_name(button_name: str) -> str:
     return button_name.split("_")[1]
 
 
-def get_select_or_deselect_button_name_for_committee_member(
+def get_select_or_deselect_button_value_for_committee_member(
     cadet: CadetOnCommittee,
 ) -> str:
     return "ds_%s" % cadet.cadet_id
 
+
+def button_pressed_was_in_list_of_all_select_or_deselect_buttons(interface: abstractInterface) -> bool:
+    last_button = interface.last_button_pressed()
+    all_button_names = get_list_of_all_select_or_deselect_button_names(interface)
+
+    for button_name in all_button_names:
+        if Button(button_name).pressed(last_button):
+            return True
+
+    return False
 
 def get_list_of_all_select_or_deselect_button_names(
     interface: abstractInterface,
@@ -269,7 +274,7 @@ def get_list_of_all_select_or_deselect_button_names(
     )
 
     return [
-        get_select_or_deselect_button_name_for_committee_member(cadet)
+        get_select_or_deselect_button_value_for_committee_member(cadet)
         for cadet in list_of_cadets_with_names_on_committee
     ]
 
@@ -279,5 +284,6 @@ DATE_TERM_STARTS = "dateTermStart"
 DATE_TERM_END = "dateTermEnd"
 NEW_COMMITTEE_MEMBER_DROPDOWN = "NewCommDrop"
 
-
+## Buttons
+ADD_MEMBER = "Add new member"
 add_button = Button(ADD_MEMBER)

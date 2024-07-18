@@ -8,7 +8,7 @@ from app.logic.events.clothing.render_clothing import (
 
 from app.objects.clothing import CadetWithClothingAtEvent
 
-from app.backend.clothing import (
+from app.OLD_backend.clothing import (
     get_list_of_active_cadet_ids_with_clothing_at_event,
     change_clothing_size_for_cadet,
     change_colour_group_for_cadet,
@@ -16,7 +16,7 @@ from app.backend.clothing import (
     clear_colour_group_for_cadet,
 )
 
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 

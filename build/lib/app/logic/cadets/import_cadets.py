@@ -1,11 +1,11 @@
 from typing import Union
 
-from app.backend.wa_import.load_wa_file import WA_FILE
+from app.OLD_backend.wa_import.load_wa_file import WA_FILE
 from app.data_access.configuration.configuration import WILD_APRICOT_FILE_TYPES
 from app.logic.cadets.iterate_over_import_cadets_in_uploaded_file import (
     begin_iteration_over_rows_in_temp_cadet_file,
 )
-from app.backend.wa_import.import_cadets import (
+from app.OLD_backend.wa_import.import_cadets import (
     create_temp_file_with_list_of_cadets,
     DESCRIBE_ALL_FIELDS_IN_WA_CADET_LIST_FILE,
 )
@@ -25,7 +25,7 @@ UPLOAD_FILE_BUTTON_LABEL = "Upload file"
 
 
 def display_form_import_cadets(
-    interface: abstractInterface,
+    interface: abstractInterface, ## unused but always passed
 ) -> Union[Form, NewForm]:
     prompt = Line(
         "File to upload (for now must be a csv or xls with following columns: %s)"

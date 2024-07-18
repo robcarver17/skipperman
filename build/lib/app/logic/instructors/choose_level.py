@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.backend.data.qualification import QualificationData
+from app.OLD_backend.data.qualification import QualificationData
 from app.objects.abstract_objects.abstract_buttons import Button, BACK_BUTTON_LABEL, \
     get_nav_bar_with_just_main_menu_and_back_button
 
@@ -8,7 +8,7 @@ from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 from app.logic.shared.qualification_and_tick_state_storage import get_group_from_state, \
     update_state_for_qualification_name
 

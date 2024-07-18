@@ -3,7 +3,7 @@ from typing import List, Union
 from app.logic.events.cadets_at_event.iteratively_add_cadet_ids_in_wa_import_stage import (
     display_form_add_cadet_ids_during_import,
 )
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 
 from app.logic.events.volunteer_allocation.volunteer_identification import (
     display_form_volunteer_identification,
@@ -20,7 +20,7 @@ from app.objects.events import (
     VOLUNTEERS,
     get_event_attribute_given_container,
 )
-from app.objects.constants import NoMoreData
+from app.objects.exceptions import NoMoreData
 from app.objects.abstract_objects.abstract_form import NewForm, Form
 
 

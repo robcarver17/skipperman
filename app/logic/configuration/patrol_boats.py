@@ -3,7 +3,7 @@ from typing import Union, List
 from app.objects.qualifications import ListOfQualifications
 
 
-from app.backend.configuration import (
+from app.OLD_backend.configuration import (
     save_list_of_patrol_boats,
     add_new_patrol_boat_given_string_and_return_list,
     delete_patrol_boat_given_string_and_return_list,
@@ -23,7 +23,7 @@ from app.logic.configuration.generic_list_modifier import (
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.patrol_boats import PatrolBoat, ListOfPatrolBoats
+from app.objects.primtive_with_id.patrol_boats import PatrolBoat, ListOfPatrolBoats
 
 header_text = "List of club patrol boats: add, edit, or re-order"
 

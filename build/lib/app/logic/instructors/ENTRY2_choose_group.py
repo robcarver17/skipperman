@@ -4,7 +4,7 @@ from app.logic.reporting.qualifications.qualification_status import (
     write_expected_qualifications_to_temp_csv_file_and_return_filename,
 )
 
-from app.backend.ticks_and_qualifications.ticksheets import (
+from app.OLD_backend.ticks_and_qualifications.ticksheets import (
     get_list_of_groups_volunteer_id_can_see,
     get_list_of_all_groups_at_event,
     can_see_all_groups_and_award_qualifications,
@@ -14,7 +14,7 @@ from app.logic.shared.qualification_and_tick_state_storage import (
 )
 from app.objects.events import Event
 
-from app.backend.data.security import get_volunteer_id_of_logged_in_user_or_superuser
+from app.OLD_backend.data.security import get_volunteer_id_of_logged_in_user_or_superuser
 from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.abstract_objects.abstract_lines import (
@@ -31,7 +31,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     back_menu_button,
 )
 
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_form import (
     Form,

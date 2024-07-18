@@ -7,7 +7,7 @@ from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.abstract_objects.abstract_buttons import ButtonBar, cancel_menu_button, save_menu_button, \
     back_menu_button, Button
 
-from app.backend.ticks_and_qualifications.edit_qualifications import (
+from app.OLD_backend.ticks_and_qualifications.edit_qualifications import (
     get_tick_items_as_dict_for_qualification,
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line

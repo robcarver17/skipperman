@@ -1,51 +1,27 @@
-from typing import List
+from typing import List, Union
 
-from app.backend.data.dinghies import load_list_of_patrol_boats_at_event
-from app.backend.forms.swaps import is_ready_to_swap
-from app.backend.volunteers.patrol_boats import (
+from app.OLD_backend.data.dinghies import load_list_of_patrol_boats_at_event, load_list_of_patrol_boats_at_event_from_cache
+from app.OLD_backend.forms.swaps import is_ready_to_swap
+from app.OLD_backend.rota.patrol_boats import (
     get_summary_list_of_boat_allocations_for_events,
-)
-from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
-from app.data_access.configuration.fixed import (
-    COPY_OVERWRITE_SYMBOL,
-    SWAP_SHORTHAND,
-    SWAP_SHORTHAND2,
-    BOAT_SHORTHAND,
-    ROLE_SHORTHAND,
-    BOAT_AND_ROLE_SHORTHAND,
-    REMOVE_SHORTHAND,
-    COPY_FILL_SYMBOL,
-    SAVE_KEYBOARD_SHORTCUT,
-    CANCEL_KEYBOARD_SHORTCUT,
 )
 from app.logic.events.patrol_boats.elements_in_patrol_boat_table import (
     get_existing_allocation_elements_for_day_and_boat,
-    get_unique_list_of_volunteer_ids_for_skills_checkboxes,
-    get_volunteer_row_to_select_skill,
+    get_volunteer_row_to_select_skill, get_list_of_volunteers_for_skills_checkboxes,
+    warn_on_all_volunteers_in_patrol_boats, instructions_qual_table, instructions_text,
 )
 from app.logic.events.patrol_boats.patrol_boat_dropdowns import (
     get_add_boat_dropdown,
-    get_allocation_dropdown_to_add_volunteer_for_day_and_boat,
+    get_add_volunteer_to_patrol_boat_dropdown,
 )
 from app.logic.events.patrol_boats.patrol_boat_buttons import (
-    delete_button_for_boat,
-    DELETE_BOAT_BUTTON_LABEL,
-)
-from app.logic.events.patrol_boats.warnings import (
-    warn_on_all_volunteers_in_patrol_boats,
-)
+    delete_button_for_boat_value,
+    DELETE_BOAT_BUTTON_LABEL, )
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
-    ButtonBar,
-    CANCEL_BUTTON_LABEL,
-    HelpButton,
-    cancel_menu_button,
-    save_menu_button,
 )
-from app.objects.abstract_objects.abstract_form import Link
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import (
-    Line,
     ListOfLines,
     DetailListOfLines,
     _______________,
@@ -54,8 +30,7 @@ from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.abstract_objects.abstract_text import bold
-from app.objects.patrol_boats import PatrolBoat
-
+from app.objects.primtive_with_id.patrol_boats import PatrolBoat
 
 SAVE_CHANGES_BUTTON_LABEL = "Save changes"
 
@@ -63,33 +38,9 @@ SAVE_CHANGES_BUTTON_LABEL = "Save changes"
 def get_top_material_for_patrol_boat_form(
     interface: abstractInterface, event: Event
 ) -> ListOfLines:
-    summary_of_boat_allocations = get_summary_list_of_boat_allocations_for_events(
-        interface=interface, event=event
-    )
-    if len(summary_of_boat_allocations) == 0:
-        summary_of_boat_allocations = ""
-    else:
-        summary_of_boat_allocations = DetailListOfLines(
-            ListOfLines([summary_of_boat_allocations]), name="Summary"
-        )
-    patrol_boat_driver_and_crew_qualifications_table = (
-        get_patrol_boat_driver_and_crew_qualifications_table(
-            interface=interface, event=event
-        )
-    )
-    if len(patrol_boat_driver_and_crew_qualifications_table) == 0:
-        patrol_boat_driver_and_crew_qualifications_table = ""
-    else:
-        patrol_boat_driver_and_crew_qualifications_table = DetailListOfLines(
-            ListOfLines(
-                [
-                    instructions_qual_table,
-                    patrol_boat_driver_and_crew_qualifications_table,
-                ]
-            ),
-            name="Qualifications",
-        )
-    warnings = warn_on_all_volunteers_in_patrol_boats(interface)
+    summary_of_boat_allocations = get_patrol_boat_summary(interface=interface, event=event)
+    patrol_boat_driver_and_crew_qualifications = get_patrol_boat_driver_and_crew_qualifications(interface=interface, event=event)
+    warnings = warn_on_all_volunteers_in_patrol_boats(interface=interface, event=event)
     return ListOfLines(
         [
             _______________,
@@ -97,7 +48,7 @@ def get_top_material_for_patrol_boat_form(
             summary_of_boat_allocations,
             _______________,
             _______________,
-            patrol_boat_driver_and_crew_qualifications_table,
+            patrol_boat_driver_and_crew_qualifications,
             _______________,
             _______________,
             warnings,
@@ -108,19 +59,53 @@ def get_top_material_for_patrol_boat_form(
     )
 
 
+def get_patrol_boat_summary(interface: abstractInterface, event: Event) -> Union[str, DetailListOfLines]:
+    summary_of_boat_allocations_as_df = get_summary_list_of_boat_allocations_for_events(
+        cache=interface.cache, event=event
+    )
+    if len(summary_of_boat_allocations_as_df) == 0:
+        summary_of_boat_allocations = ""
+    else:
+        summary_of_boat_allocations = DetailListOfLines(
+            ListOfLines([summary_of_boat_allocations_as_df]), name="Summary"
+        )
+
+    return summary_of_boat_allocations
+
+def get_patrol_boat_driver_and_crew_qualifications(interface: abstractInterface, event: Event) -> Union[DetailListOfLines, str]:
+    patrol_boat_driver_and_crew_qualifications_table = (
+        get_patrol_boat_driver_and_crew_qualifications_table(
+            interface=interface, event=event
+        )
+    )
+    if len(patrol_boat_driver_and_crew_qualifications_table) == 0:
+        patrol_boat_driver_and_crew_qualifications = ""
+    else:
+        patrol_boat_driver_and_crew_qualifications = DetailListOfLines(
+            ListOfLines(
+                [
+                    instructions_qual_table,
+                    patrol_boat_driver_and_crew_qualifications_table,
+                ]
+            ),
+            name="Qualifications",
+        )
+
+    return patrol_boat_driver_and_crew_qualifications
+
 def get_patrol_boat_driver_and_crew_qualifications_table(
     interface: abstractInterface, event: Event
 ) -> Table:
-    volunteer_ids = get_unique_list_of_volunteer_ids_for_skills_checkboxes(
-        event=event, interface=interface
+    volunteers = get_list_of_volunteers_for_skills_checkboxes(
+        event=event, cache=interface.cache
     )
 
     return Table(
         [
             get_volunteer_row_to_select_skill(
-                interface=interface, volunteer_id=volunteer_id
+                interface=interface, volunteer = volunteer
             )
-            for volunteer_id in volunteer_ids
+            for volunteer in volunteers
         ]
     )
 
@@ -180,8 +165,8 @@ def get_bottom_row_padding_columns_for_patrol_boat_table(event: Event) -> List[s
 def get_body_of_patrol_boat_table_at_event(
     interface: abstractInterface, event: Event
 ) -> List[RowInTable]:
-    list_of_boats_at_event = load_list_of_patrol_boats_at_event(
-        interface=interface, event=event
+    list_of_boats_at_event = load_list_of_patrol_boats_at_event_from_cache(
+        cache=interface.cache, event=event
     )
 
     other_rows = [
@@ -220,7 +205,7 @@ def get_boat_name_and_button_for_first_column(
         delete_button = ""
     else:
         delete_button = Button(
-            label=DELETE_BOAT_BUTTON_LABEL, value=delete_button_for_boat(patrol_boat)
+            label=DELETE_BOAT_BUTTON_LABEL, value=delete_button_for_boat_value(patrol_boat)
         )
 
     return ListOfLines([boat_name, delete_button]).add_Lines()
@@ -232,94 +217,9 @@ def get_allocation_inputs_for_day_and_boat(
     existing_elements = get_existing_allocation_elements_for_day_and_boat(
         day=day, patrol_boat=patrol_boat, event=event, interface=interface
     )
-    in_swap_state = is_ready_to_swap(interface)
-    if in_swap_state:
-        add_volunteer_dropdown = ""
-    else:
-        add_volunteer_dropdown = (
-            get_allocation_dropdown_to_add_volunteer_for_day_and_boat(
-                interface=interface, boat_at_event=patrol_boat, day=day, event=event
+    add_volunteer_to_patrol_boat_dropdown = get_add_volunteer_to_patrol_boat_dropdown(
+                interface=interface, patrol_boat=patrol_boat, day=day, event=event
             )
-        )
-    return ListOfLines(existing_elements + [add_volunteer_dropdown])
+    return ListOfLines(existing_elements + [add_volunteer_to_patrol_boat_dropdown])
 
 
-def get_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonBar:
-    in_swap_state = is_ready_to_swap(interface)
-    if in_swap_state:
-        return ButtonBar([])
-    help_button = HelpButton("patrol_boat_help")
-    return ButtonBar(
-        [
-            cancel_menu_button,
-            save_menu_button,
-            copy_all_boats_button,
-            copy_all_boats_and_roles_buttons,
-            copyover_all_boats_button,
-            copyover_all_boats_and_roles_buttons,
-            help_button,
-        ]
-    )
-
-
-COPY_ALL_BOATS_BUTTON_LABEL = (
-    "Copy and fill all boats from earliest allocated boat across days"
-)
-COPYOVER_ALL_BOATS_BUTTON_LABEL = (
-    "Copy, fill and overwrite all boats from earliest allocated boat"
-)
-COPY_BOATS_AND_ROLES_BUTTON_LABEL = (
-    "Copy and fill all boats and roles from earliest allocated boat and role"
-)
-COPYOVER_BOATS_AND_ROLES_BUTTON_LABEL = (
-    "Copy, fill and overwrite all boats and roles from earliest allocated boat and role"
-)
-
-
-copy_all_boats_button = Button(COPY_ALL_BOATS_BUTTON_LABEL, nav_button=True)
-copyover_all_boats_button = Button(COPYOVER_ALL_BOATS_BUTTON_LABEL, nav_button=True)
-
-copy_all_boats_and_roles_buttons = Button(
-    COPY_BOATS_AND_ROLES_BUTTON_LABEL, nav_button=True
-)
-copyover_all_boats_and_roles_buttons = Button(
-    COPYOVER_BOATS_AND_ROLES_BUTTON_LABEL, nav_button=True
-)
-
-
-link = Link(
-    url=WEBLINK_FOR_QUALIFICATIONS, string="Qualifications table", open_new_window=True
-)
-instructions_qual_table = ListOfLines(
-    [
-        Line(
-            [
-                "Tick to specify that a volunteer has PB2 (check don't assume: ",
-                link,
-                " )",
-            ]
-        )
-    ]
-)
-instructions_text = ListOfLines(
-    [
-        Line(
-            [
-                "Save changes after non button actions. Key for buttons: Copy, fill and overwrite existing ",
-                COPY_OVERWRITE_SYMBOL,
-                "; Copy and fill any unallocated days ",
-                COPY_FILL_SYMBOL,
-                "; Swap ",
-                SWAP_SHORTHAND,
-                " ; ",
-                BOAT_SHORTHAND,
-                " = boat, ",
-                ROLE_SHORTHAND,
-                " = role, ",
-                BOAT_AND_ROLE_SHORTHAND,
-                " = boat & role. " "; Remove from boat: ",
-                REMOVE_SHORTHAND,
-            ]
-        )
-    ]
-)

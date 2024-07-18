@@ -1,20 +1,20 @@
 from typing import Union
 
-from app.backend.cadets import add_new_verified_cadet, get_cadet_given_cadet_as_str
-from app.backend.wa_import.import_cadets import (
+from app.OLD_backend.cadets import add_new_verified_cadet, get_cadet_given_cadet_as_str
+from app.OLD_backend.wa_import.import_cadets import (
     remove_temp_file,
     get_temp_cadet_file,
     are_there_no_similar_cadets,
     does_identical_cadet_exist_in_data,
     replace_cadet_with_id_with_new_cadet_details,
 )
-from app.logic.cadets.add_edit_cadet_form import get_cadet_from_form
-from app.logic.shared.cadet_state_storage import (
+from app.logic.shared.add_edit_cadet_form import get_cadet_from_form
+from app.logic.shared.cadet_state import (
     clear_cadet_state,
     update_state_for_specific_cadet_id,
     get_cadet_id_selected_from_state,
 )
-from app.logic.cadets.get_or_select_cadet_forms import (
+from app.logic.shared.get_or_select_cadet_forms import (
     get_add_or_select_existing_cadet_form,
     checked_cadet_ok_button,
     see_similar_cadets_only_button,
@@ -28,7 +28,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
 from app.objects.cadets import Cadet
-from app.objects.constants import NoMoreData
+from app.objects.exceptions import NoMoreData
 
 
 def begin_iteration_over_rows_in_temp_cadet_file(
@@ -85,7 +85,6 @@ def process_when_cadet_to_be_added(interface: abstractInterface, cadet: Cadet) -
     return next_iteration_over_rows_in_temp_cadet_file(interface)
 
 
-SKIP_CADET_BUTTON_LABEL = "Skip - do not add this cadet"
 
 
 def display_verify_adding_cadet_from_list_form(interface: abstractInterface) -> Form:
@@ -105,6 +104,7 @@ provided_header_text = ListOfLines(
         "Looks like an imported cadet is very similar to some existing cadets. Click on the existing cadet to replace with this addition (useful if date of birth is wrong), add cadet if really new, or press skip to ignore."
     ]
 )
+SKIP_CADET_BUTTON_LABEL = "Skip - do not add this cadet"
 skip_cadet_button = Button(SKIP_CADET_BUTTON_LABEL)
 extra_buttons = Line([skip_cadet_button])
 

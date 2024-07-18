@@ -1,9 +1,11 @@
 from dataclasses import dataclass
 from typing import Callable
 
-from app.data_access.storage_layer.api import DataLayer
+from app.data_access.data_layer.ad_hoc_cache import AdHocCache
 
-from app.objects.constants import (
+from app.data_access.data_layer.data_layer import DataLayer
+
+from app.objects.exceptions import (
     missing_data,
     NoFileUploaded,
     FileError,
@@ -47,17 +49,21 @@ class abstractInterface:
         self.data.make_data_backup()
 
     def flush_cache_to_store(self):
-        self._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
-        self._DONT_CALL_DIRECTLY_USE_FLUSH_clear_stored_items()
+        self._save_data_store_cache()
+        self._clear_data_store_cache()
+        self._clear_adhoc_cache() ## isn't saved as we don't write to it
 
-    def _DONT_CALL_DIRECTLY_USE_FLUSH_clear_stored_items(self):
+    def _clear_data_store_cache(self):
         self.data.clear_stored_items()
 
-    def _DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items(self):
+    def _save_data_store_cache(self):
         if self.read_only:
             self.log_error("Read only mode - not saving changes")
             return
         self.data.save_stored_items()
+
+    def _clear_adhoc_cache(self):
+        del(self._cache)
 
     def log_error(self, error_message: str):
         raise NotImplemented
@@ -170,6 +176,13 @@ class abstractInterface:
     def read_only(self):
         raise NotImplemented
 
+    @property
+    def cache(self) -> AdHocCache:
+        cache = getattr(self, '_cache', None)
+        if cache is None:
+            cache = self._cache = AdHocCache(self.data)
+
+        return cache
 
 def get_file_from_interface(file_label: str, interface: abstractInterface):
     try:

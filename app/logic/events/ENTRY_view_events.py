@@ -1,10 +1,10 @@
 from typing import Union
 
 from app.logic.events.add_event import display_form_view_for_add_event
-from app.logic.events.events_in_state import (
+from app.logic.shared.events_state import (
     update_state_for_specific_event_given_event_description,
 )
-from app.backend.events import (
+from app.OLD_backend.events import (
     all_sort_types_for_event_list,
     sort_buttons_for_event_list,
     DEPRECATE_get_sorted_list_of_events,
@@ -16,13 +16,11 @@ from app.objects.events import SORT_BY_START_DSC, ListOfEvents
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
-    Image,
 )
 from app.objects.abstract_objects.abstract_buttons import (
     main_menu_button,
     Button,
     ButtonBar,
-    HelpButton,
 )
 from app.objects.abstract_objects.abstract_lines import (
     Line,

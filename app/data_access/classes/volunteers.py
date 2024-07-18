@@ -1,18 +1,12 @@
-from app.objects.volunteers import (
-    Volunteer,
+from app.objects.primtive_with_id.volunteers import (
     ListOfVolunteers,
 )
-from app.objects.volunteer_skills import VolunteerSkill, ListOfVolunteerSkills
-from app.objects.cadet_volunteer_connections import CadetVolunteerAssociation, ListOfCadetVolunteerAssociations
-from app.objects.volunteers_at_event import (
-    VolunteerAtEventWithId,
-    ListOfVolunteersAtEventWithId,
-    ListOfIdentifiedVolunteersAtEvent,
-)
-from app.objects.volunteers_in_roles import (
-    ListOfVolunteersInRoleAtEvent,
-    ListOfTargetForRoleAtEvent,
-)
+from app.objects.primtive_with_id.volunteer_skills import ListOfVolunteerSkills
+from app.objects.cadet_volunteer_connections import ListOfCadetVolunteerAssociations
+from app.objects.primtive_with_id.volunteer_at_event import ListOfVolunteersAtEventWithId
+from app.objects.primtive_with_id.identified_volunteer_at_event import ListOfIdentifiedVolunteersAtEvent
+from app.objects.primtive_with_id.volunteer_role_targets import ListOfTargetForRoleAtEvent
+from app.objects.primtive_with_id.volunteer_roles_and_groups import ListOfVolunteersWithIdInRoleAtEvent
 
 
 class DataListOfVolunteers(object):
@@ -64,12 +58,12 @@ class DataListOfIdentifiedVolunteersAtEvent(object):
 
 
 class DataListOfVolunteersInRolesAtEvent(object):
-    def read(self, event_id: str) -> ListOfVolunteersInRoleAtEvent:
+    def read(self, event_id: str) -> ListOfVolunteersWithIdInRoleAtEvent:
         raise NotImplemented
 
     def write(
         self,
-        list_of_volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent,
+        list_of_volunteers_in_roles_at_event: ListOfVolunteersWithIdInRoleAtEvent,
         event_id: str,
     ):
         raise NotImplemented

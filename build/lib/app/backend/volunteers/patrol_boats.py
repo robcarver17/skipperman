@@ -1,22 +1,23 @@
 from dataclasses import dataclass
 
-from app.objects.constants import missing_data
+from app.objects.exceptions import missing_data
 
-from app.backend.volunteers.volunteers import (
-    get_volunteer_name_from_id,
-    DEPRECATE_get_sorted_list_of_volunteers,
+from app.OLD_backend.volunteers.volunteers import (
+    get_volunteer_from_id,
+    get_sorted_list_of_volunteers,
 )
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.volunteers import SORT_BY_FIRSTNAME, VolunteerData
+from app.OLD_backend.data.volunteers import SORT_BY_FIRSTNAME, VolunteerData
 from typing import List
 
 import pandas as pd
 
-from app.backend.data.volunteer_rota import get_volunteer_roles, VolunteerRotaData
+from app.OLD_backend.data.volunteer_rota import VolunteerRotaData
+from app.data_access.configuration.skills_and_roles import get_volunteer_roles
 
-from app.backend.volunteers.volunteer_rota import (
+from app.OLD_backend.rota.volunteer_rota import (
     SwapData,
     get_volunteer_role_at_event_on_day,
 )
@@ -24,10 +25,10 @@ from app.backend.volunteers.volunteer_rota import (
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.backend.data.patrol_boats import PatrolBoatsData
-from app.objects.patrol_boats import PatrolBoat
+from app.OLD_backend.data.patrol_boats import PatrolBoatsData
+from app.objects.primtive_with_id.patrol_boats import PatrolBoat
 from app.objects.utils import in_x_not_in_y, in_both_x_and_y
-from app.objects.volunteers import Volunteer, ListOfVolunteers
+from app.objects.primtive_with_id.volunteers import Volunteer, ListOfVolunteers
 
 
 def get_summary_list_of_boat_allocations_for_events(
@@ -192,8 +193,8 @@ def sort_volunteer_ids_by_role_and_skills_and_then_name(
     event: Event,
     day: Day,
 ) -> List[str]:
-    sorted_list_of_volunteers = DEPRECATE_get_sorted_list_of_volunteers(
-        interface=interface, sort_by=SORT_BY_FIRSTNAME
+    sorted_list_of_volunteers = get_sorted_list_of_volunteers(
+        data_layer=interface.data, sort_by=SORT_BY_FIRSTNAME
     )
 
     sorted_list_of_ids = []
@@ -234,7 +235,7 @@ def sort_volunteer_ids_by_role_and_skills_and_then_name(
         sorted_list_of_volunteers=sorted_list_of_volunteers,
     )
 
-    list_of_volunteer_ids_with_boat_skills = get_list_of_volunteer_ids_with_boat_skills(
+    list_of_volunteer_ids_with_boat_skills = get_list_of_volunteer_ids_who_can_drive_safety_boat(
         interface
     )
     add_to_list_of_volunteer_ids(
@@ -260,7 +261,7 @@ def remove_volunteer_from_patrol_boat_on_day_at_event(
     interface: abstractInterface, volunteer_id: str, day: Day, event: Event
 ):
     patrol_boat_data = PatrolBoatsData(interface.data)
-    patrol_boat_data.remove_volunteer_from_patrol_boat_on_day_at_event(
+    patrol_boat_data.remove_volunteer_with_id_from_patrol_boat_on_day_at_event(
         volunteer_id=volunteer_id, event=event, day=day
     )
 
@@ -299,8 +300,8 @@ def copy_across_boats_at_event(
             allow_overwrite=allow_overwrite,
         )
     except Exception as e:
-        name = get_volunteer_name_from_id(
-            interface=interface, volunteer_id=volunteer_id
+        name = get_volunteer_from_id(
+            data_layer=interface.data, volunteer_id=volunteer_id
         )
         interface.log_error(
             "Can't copy across boat data for %s on %s, error %s, conflicting change made?"
@@ -376,7 +377,7 @@ def sort_list_of_volunteer_ids_as_per_list_of_volunteers(
     return sorted_subset_list_of_volunteers.list_of_ids
 
 
-def get_list_of_volunteer_ids_with_boat_skills(
+def get_list_of_volunteer_ids_who_can_drive_safety_boat(
     interface: abstractInterface,
 ) -> List[str]:
     volunteer_data = VolunteerData(interface.data)

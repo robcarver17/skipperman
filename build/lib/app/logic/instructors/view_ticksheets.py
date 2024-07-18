@@ -22,7 +22,7 @@ from app.logic.shared.qualification_and_tick_state_storage import get_group_from
     set_edit_state_of_ticksheet, \
     EDIT_CHECKBOX_STATE, EDIT_DROPDOWN_STATE, NO_EDIT_STATE, get_edit_state_of_ticksheet, clear_cadet_id_in_state
 
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -112,7 +112,7 @@ def post_form_view_ticksheets_for_event_and_group(interface: abstractInterface) 
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+    interface._save_data_store_cache()
 
     return display_form_view_ticksheets_for_event_and_group(interface)
 

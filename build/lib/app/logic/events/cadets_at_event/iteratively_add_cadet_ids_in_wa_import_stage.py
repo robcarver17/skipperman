@@ -4,27 +4,27 @@ from app.objects.abstract_objects.abstract_buttons import Button
 
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
-from app.backend.data.mapped_events import get_row_in_mapped_event_data_given_id
-from app.backend.cadets import (
+from app.OLD_backend.data.mapped_events import get_row_in_mapped_event_data_given_id
+from app.OLD_backend.cadets import (
     get_matching_cadet_with_id, get_cadet_given_cadet_as_str,
 )
 from app.logic.events.cadets_at_event.interactively_update_records_of_cadets_at_event import (
     display_form_interactively_update_cadets_at_event,
 )
 
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 from app.logic.events.import_wa.shared_state_tracking_and_data import (
     get_and_save_next_row_id_in_mapped_event_data,
     get_current_row_id,
     clear_row_in_state,
 )
-from app.backend.wa_import.add_cadet_ids_to_mapped_wa_event_data import (
+from app.OLD_backend.wa_import.add_cadet_ids_to_mapped_wa_event_data import (
     get_cadet_data_from_row_of_mapped_data_no_checks,
     add_identified_cadet_and_row,
     is_row_in_event_already_identified_with_cadet,
     mark_row_as_skip_cadet,
 )
-from app.logic.cadets.get_or_select_cadet_forms import (
+from app.logic.shared.get_or_select_cadet_forms import (
     get_add_or_select_existing_cadet_form,
     DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL,
     CHECK_CADET_FOR_ME_BUTTON_LABEL,
@@ -32,9 +32,9 @@ from app.logic.cadets.get_or_select_cadet_forms import (
     SEE_ALL_CADETS_BUTTON_LABEL,
     SEE_SIMILAR_CADETS_ONLY_LABEL,
 )
-from app.logic.cadets.add_cadet import add_cadet_from_form_to_data
+from app.logic.shared.add_edit_cadet_form import add_cadet_from_form_to_data
 
-from app.objects.constants import NoMoreData, missing_data, MissingData, MultipleMatches
+from app.objects.exceptions import NoMoreData, MissingData
 from app.objects.mapped_wa_event import RowInMappedWAEvent
 from app.objects.cadets import Cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm
@@ -108,7 +108,7 @@ def process_next_row_with_cadet_from_row(
 ) -> Form:
     try:
         matched_cadet_with_id = get_matching_cadet_with_id(
-            interface=interface, cadet=cadet
+            data_layer=interface.data, cadet=cadet
         )
     except MissingData:
         print("Cadet %s not matched" % str(cadet))
@@ -131,7 +131,7 @@ def process_row_when_cadet_matched(interface: abstractInterface, cadet: Cadet) -
     add_identified_cadet_and_row(
         interface=interface, event=event, row_id=row_id, cadet_id=cadet.id
     )
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+    interface._save_data_store_cache()
     ## run recursively until no more data
     return add_cadet_ids_on_next_row(interface)
 
@@ -235,7 +235,7 @@ def process_form_when_skipping_cadet(interface: abstractInterface) -> Form:
 
     mark_row_as_skip_cadet(event=event, row_id=row_id, interface=interface)
 
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+    interface._save_data_store_cache()
     ## run recursively until no more data
     return add_cadet_ids_on_next_row(interface)
 

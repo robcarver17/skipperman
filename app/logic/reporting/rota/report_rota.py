@@ -28,7 +28,7 @@ from app.logic.reporting.shared.generic_report_pages import (
 )
 from app.logic.reporting.shared.report_generator import ReportGenerator
 
-from app.backend.reporting.rota_report.configuration import (
+from app.OLD_backend.reporting.rota_report.configuration import (
     specific_parameters_for_volunteer_report,
 )
 

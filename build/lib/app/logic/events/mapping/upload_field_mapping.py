@@ -1,4 +1,4 @@
-from app.backend.wa_import.map_wa_fields import (
+from app.OLD_backend.wa_import.map_wa_fields import (
     DEPRECATE_write_field_mapping_for_event,
     read_mapping_from_csv_file_object,
 )
@@ -14,7 +14,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
 )
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 from app.logic.events.constants import UPLOAD_FILE_BUTTON_LABEL, MAPPING_FILE
 
 

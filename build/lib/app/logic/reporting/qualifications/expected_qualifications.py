@@ -4,11 +4,11 @@ from typing import Union
 import pandas as pd
 from app.logic.events.ENTRY_view_events import display_list_of_events_with_buttons
 
-from app.backend.data.cadets import CadetData
+from app.OLD_backend.data.cadets import CadetData
 
 from app.data_access.file_access import download_directory
 
-from app.backend.wa_import.map_wa_fields import DEPRECATE_get_list_of_template_names, get_template, \
+from app.OLD_backend.wa_import.map_wa_fields import DEPRECATE_get_list_of_template_names, get_template, \
     write_mapping_to_temp_csv_file_and_return_filename
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import (
@@ -17,7 +17,7 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar, main_menu_button
 from app.logic.abstract_logic_api import initial_state_form
-from app.backend.data.qualification import QualificationData
+from app.OLD_backend.data.qualification import QualificationData
 from app.objects.qualifications import ListOfNamedCadetsWithQualifications
 
 

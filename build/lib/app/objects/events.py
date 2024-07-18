@@ -13,7 +13,7 @@ from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
 )
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
-from app.objects.constants import arg_not_passed
+from app.objects.exceptions import arg_not_passed
 from app.objects.day_selectors import (
     day_given_datetime,
     all_possible_days,

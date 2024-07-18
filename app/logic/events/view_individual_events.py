@@ -1,22 +1,24 @@
 from typing import Union
 
-from app.backend.clothing import summarise_clothing
+from app.data_access.data_layer.ad_hoc_cache import AdHocCache
 
-from app.backend.food import summarise_food_data_by_day
+from app.OLD_backend.clothing import summarise_clothing
 
-from app.backend.wa_import.map_wa_fields import is_wa_field_mapping_setup_for_event
-from app.backend.group_allocations.event_summarys import (
+from app.OLD_backend.food import summarise_food_data_by_day
+
+from app.OLD_backend.wa_import.map_wa_fields import is_wa_field_mapping_setup_for_event
+from app.OLD_backend.group_allocations.event_summarys import (
     summarise_registrations_for_event,
     identify_birthdays,
     summarise_allocations_for_event,
 )
-from app.backend.volunteers.patrol_boats import (
+from app.OLD_backend.rota.patrol_boats import (
     get_summary_list_of_boat_allocations_for_events,
 )
-from app.backend.volunteers.volunteer_rota_summary import (
+from app.OLD_backend.rota.volunteer_rota_summary import (
     get_summary_list_of_teams_and_groups_for_events,
 )
-from app.backend.wa_import.map_wa_files import is_wa_file_mapping_setup_for_event
+from app.OLD_backend.wa_import.map_wa_files import is_wa_file_mapping_setup_for_event
 from app.logic.events.group_allocation.ENTRY_allocate_cadets_to_groups import (
     display_form_allocate_cadets,
 )
@@ -58,8 +60,8 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 
 from app.logic.events.constants import *
-from app.backend.wa_import.load_wa_file import does_raw_event_file_exist
-from app.logic.events.events_in_state import get_event_from_state
+from app.OLD_backend.wa_import.load_wa_file import does_raw_event_file_exist
+from app.logic.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import Event
 
@@ -76,6 +78,9 @@ def display_form_view_individual_event(
 def get_event_form_for_event(
     event: Event, interface: abstractInterface
 ) -> Union[Form, NewForm]:
+
+    cache = AdHocCache(interface.data)
+
     birthdays = identify_birthdays(interface=interface, event=event)
 
     event_description = event.details_as_list_of_str()
@@ -103,10 +108,10 @@ def get_event_form_for_event(
     rota_lines = ""
     if event.contains_volunteers:
         rota = get_summary_list_of_teams_and_groups_for_events(
-            interface=interface, event=event
+            cache=cache, event=event
         )
         boat_allocation_table = get_summary_list_of_boat_allocations_for_events(
-            interface=interface, event=event
+            cache=interface.cache, event=event
         )
         if len(boat_allocation_table) > 0:
             rota_lines = ListOfLines(
@@ -218,7 +223,7 @@ def get_event_buttons(event: Event, interface: abstractInterface) -> ButtonBar:
             [main_menu_button, back_menu_button, wa_import, wa_check_field_mapping]
         )
 
-    ## both done, we can update the WA file and do cadet backend / other editing
+    ## both done, we can update the WA file and do cadet OLD_backend / other editing
     if wa_import_done and field_mapping_done and not raw_event_file_exists:
         event_specific_buttons = get_event_specific_buttons(event)
         return ButtonBar(

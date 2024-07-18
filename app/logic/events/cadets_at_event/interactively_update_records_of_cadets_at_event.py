@@ -1,6 +1,6 @@
 from typing import Union
-from app.backend.cadets import  cadet_name_from_id
-from app.backend.wa_import.update_cadets_at_event import (
+from app.OLD_backend.cadets import  cadet_name_from_id
+from app.OLD_backend.wa_import.update_cadets_at_event import (
     no_important_difference_between_cadets_at_event,
     is_cadet_with_id_already_at_event,
     get_cadet_at_event_for_cadet_id,
@@ -23,7 +23,7 @@ from app.logic.events.constants import (
     USE_DATA_IN_FORM_BUTTON_LABEL,
 )
 
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 
 from app.logic.events.cadets_at_event.update_existing_cadet_at_event_forms import (
     display_form_for_update_to_existing_cadet_at_event,
@@ -32,13 +32,13 @@ from app.logic.events.cadets_at_event.update_existing_cadet_at_event_from_form_e
     update_cadets_at_event_with_new_data,
     update_cadets_at_event_with_form_data,
 )
-from app.objects.cadet_with_id_at_event import (
+from app.objects.primtive_with_id.cadet_with_id_at_event import (
     CadetWithIdAtEvent,
     get_cadet_at_event_from_row_in_mapped_event,
 )
 
 from app.objects.events import Event
-from app.objects.constants import NoMoreData, DuplicateCadets
+from app.objects.exceptions import NoMoreData, DuplicateCadets
 from app.objects.mapped_wa_event import RowInMappedWAEvent
 
 

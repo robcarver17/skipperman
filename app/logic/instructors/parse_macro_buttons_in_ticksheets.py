@@ -1,10 +1,10 @@
 from typing import List
 
-from app.backend.ticks_and_qualifications.qualifications import (
+from app.OLD_backend.ticks_and_qualifications.qualifications import (
     apply_qualification_to_cadet,
     remove_qualification_from_cadet,
 )
-from app.backend.ticks_and_qualifications.ticksheets import (
+from app.OLD_backend.ticks_and_qualifications.ticksheets import (
     TickSheetDataWithExtraInfo,
     cadet_is_already_qualified,
 )

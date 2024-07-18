@@ -6,7 +6,7 @@ from app.objects.cadets import ListOfCadets
 
 from app.objects.utils import in_x_not_in_y
 
-from app.objects.constants import missing_data, arg_not_passed
+from app.objects.exceptions import missing_data, arg_not_passed
 from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     GenericListOfObjects,

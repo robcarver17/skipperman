@@ -2,11 +2,11 @@ from typing import Union
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.forms.form_utils import (
+from app.OLD_backend.forms.form_utils import (
     get_availability_checkbox,
     dropdown_input_for_status_change,
 )
-from app.backend.wa_import.update_cadets_at_event import (
+from app.OLD_backend.wa_import.update_cadets_at_event import (
     new_status_and_status_message,
     NO_STATUS_CHANGE,
 )
@@ -27,8 +27,8 @@ from app.objects.abstract_objects.abstract_lines import (
     _______________,
 )
 
-from app.backend.cadets import  cadet_name_from_id
-from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
+from app.OLD_backend.cadets import  cadet_name_from_id
+from app.objects.primtive_with_id.cadet_with_id_at_event import CadetWithIdAtEvent
 from app.objects.events import Event
 
 

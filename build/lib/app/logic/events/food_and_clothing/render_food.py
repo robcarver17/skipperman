@@ -1,11 +1,11 @@
 from app.objects.events import Event
 
-from app.backend.volunteers.volunteers import get_volunteer_from_id
+from app.OLD_backend.volunteers.volunteers import DEPRECATE_get_volunteer_from_id
 
-from app.backend.cadets import DEPRECATE_get_cadet_from_id
-from app.backend.data.food import FoodData
-from app.backend.forms.form_utils import get_food_requirements_input_as_tuple
-from app.logic.events.events_in_state import get_event_from_state
+from app.OLD_backend.cadets import DEPRECATE_get_cadet_from_id
+from app.OLD_backend.data.food import FoodData
+from app.OLD_backend.forms.form_utils import get_food_requirements_input_as_tuple
+from app.logic.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button, SAVE_BUTTON_LABEL, CANCEL_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
@@ -85,7 +85,7 @@ def get_table_of_volunteers_with_food(interface: abstractInterface) -> Table:
 
 def get_row_in_table_of_volunteers_with_food(interface: abstractInterface,
                                          volunteer_with_food_required: VolunteerWithFoodRequirementsAtEvent) -> RowInTable:
-    volunteer = get_volunteer_from_id(interface=interface, volunteer_id=volunteer_with_food_required.volunteer_id)
+    volunteer = DEPRECATE_get_volunteer_from_id(interface=interface, volunteer_id=volunteer_with_food_required.volunteer_id)
     checkbox, other_input = get_food_requirements_input_as_tuple(existing_food_requirements=
                                                                  volunteer_with_food_required.food_requirements,
                                                                  other_input_name=get_input_name_other_food_for_volunteer(

@@ -1,11 +1,11 @@
 from app.objects.abstract_objects.abstract_form import yes_no_radio
 
-from app.backend.reporting.rota_report.configuration import (
+from app.OLD_backend.reporting.rota_report.configuration import (
     AdditionalParametersForVolunteerReport,
 )
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 from app.logic.reporting.rota.processes import DAYS_TO_SHOW, BOATS
-from app.backend.forms.form_utils import get_availability_checkbox
+from app.OLD_backend.forms.form_utils import get_availability_checkbox
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 

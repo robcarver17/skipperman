@@ -1,12 +1,11 @@
 from typing import List, Union
 
-from app.backend.forms.swaps import is_ready_to_swap
+from app.OLD_backend.forms.swaps import is_ready_to_swap
 
-from app.backend.volunteers.patrol_boats import (
+from app.OLD_backend.rota.patrol_boats import (
     add_named_boat_to_event_with_no_allocation,
     remove_patrol_boat_and_all_associated_volunteer_connections_from_event,
     remove_volunteer_from_patrol_boat_on_day_at_event,
-    copy_across_earliest_allocation_of_boats_at_event,
     get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day,
     BoatDayVolunteer,
     NO_ADDITION_TO_MAKE,
@@ -14,18 +13,18 @@ from app.backend.volunteers.patrol_boats import (
     add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts,
     copy_across_boats_at_event,
 )
-from app.backend.volunteers.volunteer_rota import (
+from app.OLD_backend.rota.volunteer_rota import (
     update_role_at_event_for_volunteer_on_day_at_event,
     get_volunteer_role_at_event_on_day,
     copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days,
 )
-from app.backend.volunteers.volunteers import (
+from app.OLD_backend.volunteers.volunteers import (
     add_boat_related_skill_for_volunteer,
     remove_boat_related_skill_for_volunteer,
-    boat_related_skill_for_volunteer,
-    get_volunteer_name_from_id,
+    can_volunteer_drive_safety_boat,
+    EPRECATE_get_volunteer_name_from_id, get_volunteer_from_id,
 )
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 from app.logic.events.patrol_boats.elements_in_patrol_boat_table import (
     get_unique_list_of_volunteer_ids_for_skills_checkboxes,
     is_volunteer_skill_checkbox_ticked,
@@ -218,7 +217,7 @@ def get_boat_day_volunteer_for_dropdown_name_or_none(
 def update_skills_checkbox(interface: abstractInterface):
     event = get_event_from_state(interface)
     unique_volunteer_ids = get_unique_list_of_volunteer_ids_for_skills_checkboxes(
-        interface=interface, event=event
+        cache=interface.cache, event=event
     )
     for volunteer_id in unique_volunteer_ids:
         update_skills_checkbox_for_specific_volunteer_id(
@@ -229,8 +228,10 @@ def update_skills_checkbox(interface: abstractInterface):
 def update_skills_checkbox_for_specific_volunteer_id(
     interface: abstractInterface, volunteer_id: str
 ):
-    currently_has_boat_skill = boat_related_skill_for_volunteer(
-        volunteer_id=volunteer_id, interface=interface
+    volunteer = get_volunteer_from_id(data_layer=interface.data, volunteer_id=volunteer_id)## ideally would pass
+
+    currently_has_boat_skill = can_volunteer_drive_safety_boat(
+        data_layer=interface.data, volunteer=volunteer
     )
     is_ticked = is_volunteer_skill_checkbox_ticked(
         interface=interface, volunteer_id=volunteer_id
@@ -241,11 +242,11 @@ def update_skills_checkbox_for_specific_volunteer_id(
 
     if is_ticked:
         add_boat_related_skill_for_volunteer(
-            interface=interface, volunteer_id=volunteer_id
+            data_layer=interface.data, volunteer=volunteer
         )
     else:
         remove_boat_related_skill_for_volunteer(
-            interface=interface, volunteer_id=volunteer_id
+            data_layer=interface.data, volunteer=volunteer
         )
 
 
@@ -263,7 +264,7 @@ def update_role_dropdowns(interface: abstractInterface):
                     interface=interface, event=event, day=day, volunteer_id=volunteer_id
                 )
             except Exception as e:
-                name = get_volunteer_name_from_id(
+                name = EPRECATE_get_volunteer_name_from_id(
                     interface=interface, volunteer_id=volunteer_id
                 )
                 interface.log_error(
@@ -279,7 +280,7 @@ def update_role_dropdown_for_volunteer_on_day(
         interface=interface, volunteer_id=volunteer_id, day=day
     )
     current_role = get_volunteer_role_at_event_on_day(
-        interface=interface, event=event, volunteer_id=volunteer_id, day=day
+        data_layer=interface.data, event=event, volunteer_id=volunteer_id, day=day
     )
 
     if role_selected == current_role:
@@ -321,7 +322,7 @@ def update_if_delete_volunteer_button_pressed(
             interface=interface, event=event, day=day, volunteer_id=volunteer_id
         )
     except Exception as e:
-        name = get_volunteer_name_from_id(
+        name = EPRECATE_get_volunteer_name_from_id(
             interface=interface, volunteer_id=volunteer_id
         )
         interface.log_error(

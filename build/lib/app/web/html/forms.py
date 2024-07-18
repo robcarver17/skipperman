@@ -1,7 +1,7 @@
 import datetime
 
 from app.web.html.components import Html, HtmlWrapper
-from app.objects.constants import arg_not_passed
+from app.objects.exceptions import arg_not_passed
 
 
 def form_html_wrapper(current_url: str):

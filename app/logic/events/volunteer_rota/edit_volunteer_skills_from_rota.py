@@ -3,22 +3,17 @@ from typing import Union
 from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.volunteers.constants import CANCEL_BUTTON_LABEL, SAVE_BUTTON_LABEL
 
-from app.logic.volunteers.edit_volunteer import (
-    get_and_save_volunteer_skills_from_form,
-    skills_form_entries,
-)
-from app.logic.volunteers.volunteer_state import get_volunteer_from_state
+from app.logic.shared.add_edit_volunteer_forms import get_and_save_volunteer_skills_from_form, skills_form_entries
+from app.logic.shared.volunteer_state import get_volunteer_from_state
 
-from app.objects.abstract_objects.abstract_buttons import Button
+from app.objects.abstract_objects.abstract_buttons import Button, SAVE_BUTTON_LABEL, CANCEL_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_form import Form, NewForm, Link
 from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
     _______________,
 )
-from app.objects.volunteers import Volunteer
 
 
 def display_form_edit_individual_volunteer_skills_from_rota(
@@ -32,7 +27,7 @@ def display_form_edit_individual_volunteer_skills_from_rota(
         open_new_window=True,
     )
 
-    footer_buttons = Line([Button(CANCEL_BUTTON_LABEL), Button(SAVE_BUTTON_LABEL)])
+    footer_buttons = Line([cancel_button, save_button])
 
     return Form(
         [
@@ -50,20 +45,22 @@ def display_form_edit_individual_volunteer_skills_from_rota(
         ]
     )
 
+save_button = Button(SAVE_BUTTON_LABEL)
+cancel_button = Button(CANCEL_BUTTON_LABEL)
 
 def post_form_edit_individual_volunteer_skills_from_rota(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     ## placeholder, not currently used
     button = interface.last_button_pressed()
-    if button == CANCEL_BUTTON_LABEL:
+    if cancel_button.pressed(button):
         pass
-    elif button == SAVE_BUTTON_LABEL:
+    elif save_button.pressed(button):
         modify_volunteer_from_rota_given_form_contents(interface=interface)
     else:
         raise Exception("Button %s not recognised" % button)
 
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+    interface.flush_cache_to_store()
 
     return previous_form(interface)
 

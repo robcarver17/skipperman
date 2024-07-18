@@ -59,29 +59,6 @@ class GenericSkipperManObject:
         return class_instance
 
 
-class GenericSkipperManObjectWithIds(GenericSkipperManObject):
-    def __eq__(self, other):
-        return self.id == other.id
-
-    def __hash__(self):
-        return hash(self.id)
-
-    @property
-    def id(self) -> str:
-        raise NotImplemented
-
-
-def transform_class_dict_into_str_dict(
-    some_class_instance: GenericSkipperManObject, class_dict: dict
-):
-    ## don't need to check attributes match is guaranteed
-    list_of_attributes = get_list_of_attributes(some_class_instance)
-
-    for attribute_name in list_of_attributes:
-        attribute = getattr(some_class_instance, attribute_name)
-        class_dict[attribute_name] = transform_class_instance_into_string(attribute)
-
-
 def transform_class_instance_into_string(class_instance):
     if isinstance(class_instance, datetime.date):
         return transform_date_into_str(class_instance)
@@ -203,3 +180,25 @@ def get_list_of_attributes(some_class) -> list:
 def get_dict_of_class_attributes(some_class) -> dict:
     return some_class.__annotations__
 
+
+def transform_class_dict_into_str_dict(
+    some_class_instance: GenericSkipperManObject, class_dict: dict
+):
+    ## don't need to check attributes match is guaranteed
+    list_of_attributes = get_list_of_attributes(some_class_instance)
+
+    for attribute_name in list_of_attributes:
+        attribute = getattr(some_class_instance, attribute_name)
+        class_dict[attribute_name] = transform_class_instance_into_string(attribute)
+
+
+class GenericSkipperManObjectWithIds(GenericSkipperManObject):
+    def __eq__(self, other):
+        return self.id == other.id
+
+    def __hash__(self):
+        return hash(self.id)
+
+    @property
+    def id(self) -> str:
+        raise NotImplemented

@@ -16,7 +16,7 @@ from app.objects.abstract_objects.form_function_mapping import (
     DisplayAndPostFormFunctionMaps,
     INITIAL_STATE,
 )
-from app.objects.constants import NoButtonPressed, arg_not_passed
+from app.objects.exceptions import NoButtonPressed, arg_not_passed
 
 
 @dataclass

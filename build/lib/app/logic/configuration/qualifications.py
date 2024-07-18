@@ -1,6 +1,6 @@
 from typing import Union, List
 
-from app.backend.configuration import (
+from app.OLD_backend.configuration import (
     load_list_of_qualifications,
     save_list_of_qualifications,
     add_new_qualification_given_string_and_return_list,

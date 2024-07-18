@@ -1,16 +1,12 @@
-import os
 from typing import Union
 
-from app.backend.reporting.all_event_data.all_event_data import (
+from app.OLD_backend.reporting.all_event_data.all_event_data import (
     create_csv_event_report_and_return_filename,
 )
 from app.objects.abstract_objects.abstract_text import Heading
 
-from app.logic.events.events_in_state import (
-    get_event_from_list_of_events_given_event_description,
-)
-
-from app.backend.events import confirm_event_exists_given_description
+from app.OLD_backend.events import confirm_event_exists_given_description, \
+    get_event_from_list_of_events_given_event_description
 
 from app.logic.events.ENTRY_view_events import display_list_of_events_with_buttons
 

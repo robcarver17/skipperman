@@ -1,6 +1,6 @@
 from typing import List
 
-from app.backend.data.group_allocations import GroupAllocationsData
+from app.OLD_backend.data.group_allocations import GroupAllocationsData
 from app.logic.events.group_allocation.store_state import (
     no_day_set_in_state,
     get_day_from_state_or_none,
@@ -11,20 +11,20 @@ from app.objects.day_selectors import Day
 from app.logic.events.group_allocation.input_fields import NOTES
 from app.objects.events import Event
 
-from app.backend.forms.form_utils import (
+from app.OLD_backend.forms.form_utils import (
     input_name_from_column_name_and_cadet_id,
     get_availablity_from_form,
 )
-from app.backend.group_allocations.boat_allocation import (
+from app.OLD_backend.group_allocations.boat_allocation import (
     update_club_boat_allocation_for_cadet_at_event_on_day_if_cadet_available,
     update_boat_info_for_cadets_at_event,
     CadetWithDinghyInputs,
 )
-from app.backend.group_allocations.group_allocations_data import (
+from app.OLD_backend.group_allocations.group_allocations_data import (
     get_allocation_data,
     AllocationData,
 )
-from app.backend.wa_import.update_cadets_at_event import (
+from app.OLD_backend.wa_import.update_cadets_at_event import (
     update_availability_of_existing_cadet_at_event,
     update_notes_for_existing_cadet_at_event,
 )
@@ -37,10 +37,10 @@ from app.logic.events.constants import (
     PARTNER,
     BOAT_CLASS,
 )
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
-from app.objects.groups import Group
+from app.objects.primtive_with_id.groups import Group
 
 
 def update_data_given_allocation_form(interface: abstractInterface):

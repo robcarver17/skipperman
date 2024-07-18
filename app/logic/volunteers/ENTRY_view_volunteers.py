@@ -4,7 +4,7 @@ from app.logic.volunteers.add_volunteer import display_form_add_volunteer
 from app.logic.volunteers.view_individual_volunteer import (
     display_form_view_individual_volunteer,
 )
-from app.objects.volunteers import Volunteer
+from app.objects.primtive_with_id.volunteers import Volunteer
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -20,14 +20,14 @@ from app.objects.abstract_objects.abstract_lines import (
     _______________,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.backend.data.volunteers import SORT_BY_SURNAME, SORT_BY_FIRSTNAME
-from app.backend.volunteers.volunteers import DEPRECATE_get_sorted_list_of_volunteers
-from app.logic.volunteers.volunteer_state import (
+from app.OLD_backend.data.volunteers import SORT_BY_SURNAME, SORT_BY_FIRSTNAME
+from app.OLD_backend.volunteers.volunteers import get_sorted_list_of_volunteers
+from app.logic.shared.volunteer_state import (
     update_state_for_specific_volunteer_given_volunteer_as_str,
 )
-from app.logic.volunteers.constants import *
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 
+ADD_VOLUNTEER_BUTTON_LABEL = "Add volunteer"
 add_button = Button(ADD_VOLUNTEER_BUTTON_LABEL, nav_button=True)
 all_sort_types = [SORT_BY_SURNAME, SORT_BY_FIRSTNAME]
 sort_buttons = ButtonBar(
@@ -44,7 +44,7 @@ def display_form_view_of_volunteers(interface: abstractInterface) -> Form:
 
 
 def get_form_view_of_volunteers(interface: abstractInterface, sort_order: str) -> Form:
-    list_of_volunteers_with_buttons = display_list_of_volunteers_with_buttons(
+    list_of_volunteers_with_buttons = get_list_of_volunteers_with_buttons(
         interface=interface, sort_order=sort_order
     )
 
@@ -67,7 +67,7 @@ def get_form_view_of_volunteers(interface: abstractInterface, sort_order: str) -
 
 def post_form_view_of_volunteers(interface: abstractInterface) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
-    if button_pressed == ADD_VOLUNTEER_BUTTON_LABEL:
+    if add_button.pressed(button_pressed):
         return add_volunteer_form(interface)
 
     elif button_pressed in all_sort_types:
@@ -84,18 +84,18 @@ def add_volunteer_form(interface: abstractInterface):
 
 
 def view_specific_volunteer_form(interface: abstractInterface):
-    volunteer_selected = interface.last_button_pressed()
+    volunteer_selected_as_str = interface.last_button_pressed()
     update_state_for_specific_volunteer_given_volunteer_as_str(
-        interface=interface, volunteer_selected=volunteer_selected
+        interface=interface, volunteer_selected=volunteer_selected_as_str
     )
     return interface.get_new_form_given_function(display_form_view_individual_volunteer)
 
 
-def display_list_of_volunteers_with_buttons(
+def get_list_of_volunteers_with_buttons(
     interface: abstractInterface, sort_order=SORT_BY_SURNAME
 ) -> Table:
-    list_of_volunteers = DEPRECATE_get_sorted_list_of_volunteers(
-        interface=interface, sort_by=sort_order
+    list_of_volunteers = get_sorted_list_of_volunteers(
+        data_layer=interface.data, sort_by=sort_order
     )
 
     list_with_buttons = [
@@ -108,3 +108,4 @@ def display_list_of_volunteers_with_buttons(
 
 def row_of_form_for_volunteer_with_buttons(volunteer: Volunteer) -> RowInTable:
     return RowInTable([Button(str(volunteer))])
+

@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.logic.volunteers.volunteer_state import get_volunteer_from_state
+from app.logic.shared.volunteer_state import get_volunteer_from_state
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import (

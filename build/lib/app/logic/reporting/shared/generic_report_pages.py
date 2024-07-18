@@ -6,7 +6,7 @@ from app.logic.reporting.shared.arrangement_form import (
     post_form_for_group_arrangement_options,
 )
 from app.logic.reporting.shared.create_report import create_generic_report
-from app.backend.reporting.event_lists import (
+from app.OLD_backend.reporting.event_lists import (
     display_list_of_events_with_buttons_criteria_matched,
     describe_criteria,
 )
@@ -41,11 +41,11 @@ from app.logic.abstract_logic_api import (
     initial_state_form,
     button_error_and_back_to_initial_state_form,
 )
-from app.logic.events.events_in_state import (
+from app.logic.shared.events_state import (
     get_event_from_state,
     update_state_for_specific_event_given_event_description,
 )
-from app.backend.events import confirm_event_exists_given_description
+from app.OLD_backend.events import confirm_event_exists_given_description
 
 from app.logic.reporting.constants import *
 

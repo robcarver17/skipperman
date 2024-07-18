@@ -25,7 +25,7 @@ from app.logic.reporting.shared.generic_report_pages import (
 )
 from app.logic.reporting.shared.report_generator import ReportGenerator
 
-from app.backend.reporting.boat_report.boat_report_parameters import (
+from app.OLD_backend.reporting.boat_report.boat_report_parameters import (
     specific_parameters_for_boat_report,
 )
 

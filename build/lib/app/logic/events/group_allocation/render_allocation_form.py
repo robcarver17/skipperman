@@ -1,19 +1,19 @@
 from typing import Union, Dict, List
 
-from app.backend.ticks_and_qualifications.ticksheets import (
+from app.OLD_backend.ticks_and_qualifications.ticksheets import (
     get_qualification_status_for_single_cadet_as_list_of_str,
 )
 
-from app.objects.groups import Group
+from app.objects.primtive_with_id.groups import Group
 
-from app.backend.events import DEPRECATE_get_list_of_all_events
+from app.OLD_backend.events import DEPRECATE_get_list_of_all_events
 
-from app.backend.group_allocations.previous_allocations import (
+from app.OLD_backend.group_allocations.previous_allocations import (
     allocation_for_cadet_in_previous_events_as_dict,
     DEPRECATE_get_dict_of_allocations_for_events_and_list_of_cadets,
 )
 
-from app.objects.constants import missing_data
+from app.objects.exceptions import missing_data
 
 from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing import (
     get_current_cadet_id_at_event,
@@ -32,19 +32,19 @@ from app.logic.events.group_allocation.store_state import (
     get_day_from_state_or_none,
 )
 
-from app.backend.forms.reorder_form import reorder_table
-from app.backend.group_allocations.boat_allocation import (
+from app.OLD_backend.forms.reorder_form import reorder_table
+from app.OLD_backend.group_allocations.boat_allocation import (
     summarise_club_boat_allocations_for_event,
     summarise_class_attendance_for_event,
 )
-from app.backend.group_allocations.group_allocations_data import (
+from app.OLD_backend.group_allocations.group_allocations_data import (
     get_allocation_data,
     AllocationData,
 )
-from app.backend.group_allocations.sorting import sorted_active_cadets
-from app.backend.group_allocations.event_summarys import summarise_allocations_for_event
+from app.OLD_backend.group_allocations.sorting import sorted_active_cadets
+from app.OLD_backend.group_allocations.event_summarys import summarise_allocations_for_event
 
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,

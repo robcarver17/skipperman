@@ -24,6 +24,7 @@ similarity_level_to_warn_when_comparing_dates: 0.9 # probably shouldn't change
 # Only change the following when
 minimum_cadet_age: 7
 maximium_cadet_age: 19
+minimum_age_when_cadet_can_be_at_event_without_parent: 11
 #
 # Wild apricot
 # Should only be used when WA change their status - hopefully never!

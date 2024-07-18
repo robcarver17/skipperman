@@ -50,7 +50,7 @@ class SiteActions:
             display_and_post_form_function_maps=form_mapping,
             data=data_api,
         )
-        interface._DONT_CALL_DIRECTLY_USE_FLUSH_clear_stored_items()  ## avoid caching issues
+        interface._clear_data_store_cache()  ## avoid caching issues
 
         return LogicApi(interface)
 

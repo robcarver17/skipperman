@@ -1,6 +1,6 @@
 from typing import List
 
-from app.backend.ticks_and_qualifications.edit_qualifications import get_tick_items_as_dict_for_qualification, \
+from app.OLD_backend.ticks_and_qualifications.edit_qualifications import get_tick_items_as_dict_for_qualification, \
     get_suggestions_for_autocorrect, AutoCorrectForQualificationEdit
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_form import textInput, listInput

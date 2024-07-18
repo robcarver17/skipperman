@@ -5,7 +5,7 @@ from app.logic.administration.users.parse_user_form import delete_user_from_user
 from app.logic.administration.users.render_users_form import display_form_edit_list_of_users, list_of_deletion_buttons_names, BACK_BUTTON_LABEL, list_of_email_send_buttons_names
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.backend.data.security import load_all_users
+from app.OLD_backend.data.security import load_all_users
 
 
 
@@ -29,7 +29,7 @@ def post_form_security(interface: abstractInterface) -> Union[Form, NewForm]:
 
     ## need to be careful here not to try updating deleted user
     save_changes_in_security_form(interface)
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+    interface._save_data_store_cache()
 
     return display_form_security(interface)
 

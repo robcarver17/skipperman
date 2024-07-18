@@ -2,15 +2,15 @@ from typing import List, Tuple, Callable
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.data.dinghies import load_list_of_patrol_boats_at_event
-from app.backend.volunteers.patrol_boats import (
+from app.OLD_backend.data.dinghies import load_list_of_patrol_boats_at_event, load_list_of_patrol_boats_at_event_from_cache
+from app.OLD_backend.rota.patrol_boats import (
     get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day,
 )
-from app.data_access.configuration.fixed import REMOVE_SHORTHAND
+from app.data_access.configuration.fixed import REMOVE_SHORTHAND, ADD_KEYBOARD_SHORTCUT
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.patrol_boats import PatrolBoat
+from app.objects.primtive_with_id.patrol_boats import PatrolBoat
 
 
 def get_list_of_generic_buttons_for_each_volunteer_day_combo(
@@ -45,7 +45,7 @@ def get_button_type_day_volunteer_id_given_button_str(
     return button_type, Day[day_name], volunteer_id
 
 
-def delete_button_for_boat(boat_at_event: PatrolBoat) -> str:
+def delete_button_for_boat_value(boat_at_event: PatrolBoat) -> str:
     return "DELETE_" + str(boat_at_event)
 
 
@@ -57,11 +57,11 @@ def from_delete_button_name_to_boat_name(button_name: str) -> str:
 def list_of_delete_buttons_in_patrol_boat_table(
     interface: abstractInterface, event: Event
 ) -> List[str]:
-    list_of_boats_at_event = load_list_of_patrol_boats_at_event(
-        interface=interface, event=event
+    list_of_boats_at_event = load_list_of_patrol_boats_at_event_from_cache(
+        cache=interface.cache, event=event
     )
     return [
-        delete_button_for_boat(boat_at_event)
+        delete_button_for_boat_value(boat_at_event)
         for boat_at_event in list_of_boats_at_event
     ]
 
@@ -101,3 +101,25 @@ def get_all_remove_volunteer_button_names(
 
 DELETE_BOAT_BUTTON_LABEL = "Remove boat from rota"
 DELETE_VOLUNTEER_BUTTON_LABEL = REMOVE_SHORTHAND
+COPY_ALL_BOATS_BUTTON_LABEL = (
+    "Copy and fill all boats from earliest allocated boat across days"
+)
+COPYOVER_ALL_BOATS_BUTTON_LABEL = (
+    "Copy, fill and overwrite all boats from earliest allocated boat"
+)
+COPY_BOATS_AND_ROLES_BUTTON_LABEL = (
+    "Copy and fill all boats and roles from earliest allocated boat and role"
+)
+COPYOVER_BOATS_AND_ROLES_BUTTON_LABEL = (
+    "Copy, fill and overwrite all boats and roles from earliest allocated boat and role"
+)
+copy_all_boats_button = Button(COPY_ALL_BOATS_BUTTON_LABEL, nav_button=True)
+copyover_all_boats_button = Button(COPYOVER_ALL_BOATS_BUTTON_LABEL, nav_button=True)
+copy_all_boats_and_roles_button = Button(
+    COPY_BOATS_AND_ROLES_BUTTON_LABEL, nav_button=True
+)
+copyover_all_boats_and_roles_button = Button(
+    COPYOVER_BOATS_AND_ROLES_BUTTON_LABEL, nav_button=True
+)
+ADD_NEW_BOAT_BUTTON_LABEL = "Add new boat"
+add_new_boat_button=Button(ADD_NEW_BOAT_BUTTON_LABEL, shortcut=ADD_KEYBOARD_SHORTCUT)

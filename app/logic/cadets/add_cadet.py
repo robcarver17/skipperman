@@ -1,19 +1,17 @@
 from typing import Union
 
-from app.logic.cadets.add_edit_cadet_form import (
+from app.logic.shared.add_edit_cadet_form import (
     get_add_cadet_form,
     final_submit_button,
     check_details_button,
-    get_cadet_from_form,
+    add_cadet_from_form_to_data,
 )
-from app.backend.cadets import add_new_verified_cadet
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
 from app.objects.abstract_objects.abstract_buttons import cancel_menu_button
 
-from app.objects.cadets import Cadet
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
     form_with_message_and_finished_button,
@@ -70,13 +68,3 @@ def process_form_when_cadet_verified(
     )
 
 
-## field names
-
-## buttons
-
-
-def add_cadet_from_form_to_data(interface: abstractInterface) -> Cadet:
-    cadet = get_cadet_from_form(interface)
-    cadet = add_new_verified_cadet(data_layer=interface.data, cadet=cadet)
-
-    return cadet

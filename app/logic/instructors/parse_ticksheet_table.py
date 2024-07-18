@@ -1,11 +1,11 @@
 from typing import Union
 
-from app.backend.ticks_and_qualifications.ticksheets import (
+from app.OLD_backend.ticks_and_qualifications.ticksheets import (
     TickSheetDataWithExtraInfo,
     save_ticksheet_edits_for_specific_tick,
     get_ticksheet_data,
 )
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 from app.logic.instructors.render_ticksheet_table import (
     get_tick_from_dropdown_or_none,
     get_tick_from_checkbox_or_none,

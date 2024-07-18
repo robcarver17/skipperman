@@ -3,7 +3,6 @@ from typing import Union
 from app.logic.events.mapping.clone_field_mapping import display_form_for_clone_event_field_mapping
 from app.logic.events.mapping.create_mapping import display_form_for_create_custom_field_mapping
 from app.logic.events.mapping.template_field_mapping import display_form_for_choose_template_field_mapping
-from app.logic.events.mapping.upload_field_mapping import display_form_for_upload_custom_field_mapping
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -15,10 +14,10 @@ from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, But
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.events.constants import *
-from app.logic.events.events_in_state import get_event_from_state
-from app.backend.data.field_mapping import DEPRECATE_get_field_mapping_for_event
-from app.backend.wa_import.check_mapping import check_field_mapping
-from app.backend.wa_import.map_wa_files import DEPRECATE_is_wa_file_mapping_setup_for_event
+from app.logic.shared.events_state import get_event_from_state
+from app.OLD_backend.data.field_mapping import DEPRECATE_get_field_mapping_for_event
+from app.OLD_backend.wa_import.check_mapping import check_field_mapping
+from app.OLD_backend.wa_import.map_wa_files import DEPRECATE_is_wa_file_mapping_setup_for_event
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import Event
 

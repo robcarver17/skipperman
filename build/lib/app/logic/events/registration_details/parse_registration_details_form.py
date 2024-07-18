@@ -1,9 +1,8 @@
-from app.backend.volunteers.volunteer_allocation import (
-    volunteer_ids_associated_with_cadet_at_specific_event,
+from app.OLD_backend.volunteers.volunteer_allocation import (
+    DEPRECATE_get_list_of_volunteer_names_associated_with_cadet_at_event,
 )
-from app.backend.volunteers.volunteers import get_volunteer_from_id
-from app.backend.cadets import  cadet_name_from_id
-from app.backend.wa_import.update_cadets_at_event import (
+from app.OLD_backend.cadets import  cadet_name_from_id
+from app.OLD_backend.wa_import.update_cadets_at_event import (
     update_data_row_for_existing_cadet_at_event,
     update_availability_of_existing_cadet_at_event,
     update_status_of_existing_cadet_at_event_to_cancelled_or_deleted,
@@ -12,9 +11,9 @@ from app.backend.wa_import.update_cadets_at_event import (
     update_health_for_existing_cadet_at_event,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
+from app.objects.primtive_with_id.cadet_with_id_at_event import CadetWithIdAtEvent
 from app.objects.events import Event
-from app.backend.forms.form_utils import (
+from app.OLD_backend.forms.form_utils import (
     get_availablity_from_form,
     get_status_from_form,
     input_name_from_column_name_and_cadet_id,
@@ -316,7 +315,7 @@ def log_alert_for_status_change(
 def log_alert_for_volunteers(
     interface: abstractInterface, cadet_id: str, event: Event, warning_str: str
 ):
-    volunteer_names = list_of_volunteer_names_associated_with_cadet_at_event(
+    volunteer_names = DEPRECATE_get_list_of_volunteer_names_associated_with_cadet_at_event(
         interface=interface, cadet_id=cadet_id, event=event
     )
     if len(volunteer_names) == 0:
@@ -326,15 +325,3 @@ def log_alert_for_volunteers(
     interface.log_error(warning_str + " " + volunteer_list_as_str)
 
 
-def list_of_volunteer_names_associated_with_cadet_at_event(
-    interface: abstractInterface, cadet_id: str, event: Event
-):
-    list_of_volunteer_ids = volunteer_ids_associated_with_cadet_at_specific_event(
-        interface=interface, event=event, cadet_id=cadet_id
-    )
-    volunteer_names = [
-        get_volunteer_from_id(interface=interface, volunteer_id=volunteer_id).name
-        for volunteer_id in list_of_volunteer_ids
-    ]
-
-    return volunteer_names

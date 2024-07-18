@@ -1,6 +1,6 @@
 from typing import Union, List
 
-from app.backend.configuration import (
+from app.OLD_backend.configuration import (
     save_list_of_boat_classes,
     add_new_boat_class_given_string_and_return_list,
     delete_boat_class_given_string_and_return_list,

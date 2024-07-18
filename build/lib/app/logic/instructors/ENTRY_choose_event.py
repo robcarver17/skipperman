@@ -1,10 +1,10 @@
 from typing import Union
 
-from app.logic.events.events_in_state import update_state_for_specific_event_given_event_description
+from app.logic.shared.events_state import update_state_for_specific_event_given_event_description
 
-from app.backend.events import sort_buttons_for_event_list, all_sort_types_for_event_list, \
+from app.OLD_backend.events import sort_buttons_for_event_list, all_sort_types_for_event_list, \
     DEPRECATE_confirm_event_exists_given_description
-from app.backend.ticks_and_qualifications.ticksheets import get_list_of_events_entitled_to_see
+from app.OLD_backend.ticks_and_qualifications.ticksheets import get_list_of_events_entitled_to_see
 
 from app.objects.abstract_objects.abstract_text import Heading
 
@@ -16,7 +16,7 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import main_menu_button, ButtonBar
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.backend.data.security import  get_volunteer_id_of_logged_in_user_or_superuser, SUPERUSER
+from app.OLD_backend.data.security import  get_volunteer_id_of_logged_in_user_or_superuser
 from app.objects.events import SORT_BY_START_DSC
 from app.logic.instructors.ENTRY2_choose_group import display_form_choose_group_for_event
 def display_form_main_instructors_page(interface: abstractInterface) -> Form:

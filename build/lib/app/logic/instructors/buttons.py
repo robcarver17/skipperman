@@ -1,8 +1,8 @@
 from typing import List, Tuple, Union
 
-from app.backend.ticks_and_qualifications.ticksheets import get_ticksheet_data
+from app.OLD_backend.ticks_and_qualifications.ticksheets import get_ticksheet_data
 
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 

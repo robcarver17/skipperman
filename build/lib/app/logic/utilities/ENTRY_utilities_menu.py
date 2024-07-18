@@ -22,7 +22,7 @@ from app.objects.abstract_objects.abstract_lines import (
     Line,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.constants import missing_data
+from app.objects.exceptions import missing_data
 
 DATA_AND_BACKUP = "Data: backup, upload, and restore"
 DATA_CLEAN = "Delete sensitive data"

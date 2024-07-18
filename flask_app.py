@@ -1,6 +1,6 @@
 import secrets
 from pathlib import Path
-
+from werkzeug.middleware.profiler import ProfilerMiddleware
 from app.web.documentation.documentation_pages import generate_help_page_html
 from app.web.flask.session_data_for_action import clear_session_data_for_all_actions
 from flask import Flask, session
@@ -28,31 +28,45 @@ from app.web.html.url import (
 )
 from app.data_access.configuration.configuration import MAX_FILE_SIZE
 
-#### SETUP
-
-## Secret key
-app = Flask(__name__)
-
-SECRET_FILE_PATH = Path(".flask_secret")
-try:
-    with SECRET_FILE_PATH.open("r") as secret_file:
-        app.secret_key = secret_file.read()
-except FileNotFoundError:
-    # Let's create a cryptographically secure code in that file
-    with SECRET_FILE_PATH.open("w") as secret_file:
-        app.secret_key = secrets.token_hex(32)
-        secret_file.write(app.secret_key)
-
-app.config["SECRET_KEY"] = app.secret_key
-
-## Avoid overload
-app.config["MAX_CONTENT_LENGTH"] = MAX_FILE_SIZE
 Request.max_form_parts = 5000  # avoid large forms crashing
 
+
+PROFILE = False
+
+#### SETUP
+def prepare_flask_app() -> Flask:
+    ## Secret key
+    app = Flask(__name__)
+    if PROFILE:
+        app.wsgi_app = ProfilerMiddleware(app.wsgi_app)
+
+    SECRET_FILE_PATH = Path(".flask_secret")
+    try:
+        with SECRET_FILE_PATH.open("r") as secret_file:
+            app.secret_key = secret_file.read()
+    except FileNotFoundError:
+        # Let's create a cryptographically secure code in that file
+        with SECRET_FILE_PATH.open("w") as secret_file:
+            app.secret_key = secrets.token_hex(32)
+            secret_file.write(app.secret_key)
+
+    app.config["SECRET_KEY"] = app.secret_key
+
+    ## Avoid overload
+    app.config["MAX_CONTENT_LENGTH"] = MAX_FILE_SIZE
+
+    return app
+
 ## Security
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_message = "You need to security to use skipperman"
+def prepare_login_manager(app: Flask) -> LoginManager:
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+    login_manager.login_message = "You need to security to use skipperman"
+
+    return login_manager
+
+app =prepare_flask_app()
+login_manager = prepare_login_manager(app)
 
 
 ## ensures cookies persists between sessions

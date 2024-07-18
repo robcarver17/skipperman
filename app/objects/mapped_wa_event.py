@@ -11,7 +11,7 @@ from app.objects.utils import (
 from app.data_access.configuration.field_list import (
     REGISTRATION_DATE,
     REGISTERED_BY_LAST_NAME,
-    REGISTERED_BY_FIRST_NAME,
+    REGISTERED_BY_FIRST_NAME, VOLUNTEER_STATUS,
 )
 
 from app.data_access.configuration.configuration import (
@@ -20,7 +20,7 @@ from app.data_access.configuration.configuration import (
     WA_PARTIAL_PAID_STATUS,
     WA_UNPAID_STATUS,
 )
-from app.objects.constants import missing_data
+from app.objects.exceptions import missing_data
 from app.data_access.configuration.field_list import PAYMENT_STATUS
 
 ## DO NOT CHANGE THESE OR DATA WILL BREAK
@@ -351,3 +351,7 @@ def extract_list_of_row_ids_from_existing_wa_event(
     ]
 
     return list_of_timestamps
+
+
+def get_status_from_row(row: RowInMappedWAEvent):
+    return row.get_item(VOLUNTEER_STATUS, "")

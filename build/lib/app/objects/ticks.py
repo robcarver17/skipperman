@@ -9,7 +9,7 @@ from app.objects.qualifications import Qualification
 
 from app.objects.day_selectors import ListOfDaySelectors
 
-from app.objects.constants import missing_data, arg_not_passed
+from app.objects.exceptions import missing_data, arg_not_passed
 from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     GenericListOfObjects,

@@ -9,7 +9,7 @@ from app.logic.events.import_wa.upload_event_file import (
     get_form_for_wa_upload_with_prompt,
     verify_uploaded_wa_file_and_save_as_staged_file,
 )
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 from app.objects.events import Event
 from app.web.html.forms import BACK_BUTTON_LABEL
 

@@ -14,18 +14,17 @@ from app.objects.abstract_objects.abstract_buttons import (
     CANCEL_BUTTON_LABEL,
 )
 
-from app.logic.events.events_in_state import (
+from app.logic.shared.events_state import (
     get_event_from_state,
-    get_event_from_list_of_events_given_event_description,
 )
 
 from app.logic.abstract_logic_api import initial_state_form
 
-from app.backend.events import (
+from app.OLD_backend.events import (
     DEPRECATE_get_sorted_list_of_events,
-    confirm_event_exists_given_description,
+    confirm_event_exists_given_description, get_event_from_list_of_events_given_event_description,
 )
-from app.backend.wa_import.map_wa_fields import (
+from app.OLD_backend.wa_import.map_wa_fields import (
     is_wa_field_mapping_setup_for_event,
     get_field_mapping_for_event,
     DEPRECATE_write_field_mapping_for_event,
@@ -122,7 +121,7 @@ def post_form_for_clone_event_field_mapping(interface: abstractInterface):
     DEPRECATE_write_field_mapping_for_event(
         interface=interface, event=current_event, new_mapping=mapping
     )
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+    interface._save_data_store_cache()
 
     return form_with_message_and_finished_button(
         "Mapping copied from event %s to %s"

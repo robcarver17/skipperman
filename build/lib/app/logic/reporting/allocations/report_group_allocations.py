@@ -24,7 +24,7 @@ from app.logic.reporting.shared.generic_report_pages import (
 )
 from app.logic.reporting.shared.report_generator import ReportGenerator
 
-from app.backend.reporting.allocation_report.allocation_report import (
+from app.OLD_backend.reporting.allocation_report.allocation_report import (
     specific_parameters_for_allocation_report,
 )
 

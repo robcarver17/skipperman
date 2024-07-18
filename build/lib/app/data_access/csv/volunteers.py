@@ -11,15 +11,11 @@ from app.data_access.csv.resolve_csv_paths_and_filenames import (
     LIST_OF_VOLUNTEER_TARGETS_AT_EVENT_FILE_ID,
 )
 from app.objects.cadet_volunteer_connections import ListOfCadetVolunteerAssociations
-from app.objects.volunteer_skills import ListOfVolunteerSkills
-from app.objects.volunteers_at_event import (
-    ListOfVolunteersAtEventWithId,
-    ListOfIdentifiedVolunteersAtEvent,
-)
-from app.objects.volunteers_in_roles import (
-    ListOfVolunteersInRoleAtEvent,
-    ListOfTargetForRoleAtEvent,
-)
+from app.objects.primtive_with_id.volunteer_skills import ListOfVolunteerSkills
+from app.objects.primtive_with_id.volunteer_at_event import ListOfVolunteersAtEventWithId
+from app.objects.primtive_with_id.identified_volunteer_at_event import ListOfIdentifiedVolunteersAtEvent
+from app.objects.primtive_with_id.volunteer_role_targets import ListOfTargetForRoleAtEvent
+from app.objects.primtive_with_id.volunteer_roles_and_groups import ListOfVolunteersWithIdInRoleAtEvent
 
 
 class CsvDataListOfVolunteers(GenericCsvData, DataListOfVolunteers):
@@ -115,9 +111,9 @@ class CsvDataListOfIdentifiedVolunteersAtEvent(
 class CsvDataListOfVolunteersInRolesAtEvent(
     GenericCsvData, DataListOfVolunteersInRolesAtEvent
 ):
-    def read(self, event_id: str) -> ListOfVolunteersInRoleAtEvent:
+    def read(self, event_id: str) -> ListOfVolunteersWithIdInRoleAtEvent:
         list_of_volunteers_in_roles_at_event = self.read_and_return_object_of_type(
-            ListOfVolunteersInRoleAtEvent,
+            ListOfVolunteersWithIdInRoleAtEvent,
             file_identifier=LIST_OF_VOLUNTEERS_IN_ROLES_FILE_ID,
             additional_file_identifiers=event_id,
         )
@@ -126,7 +122,7 @@ class CsvDataListOfVolunteersInRolesAtEvent(
 
     def write(
         self,
-        list_of_volunteers_in_roles_at_event: ListOfVolunteersInRoleAtEvent,
+        list_of_volunteers_in_roles_at_event: ListOfVolunteersWithIdInRoleAtEvent,
         event_id: str,
     ):
         self.write_object(

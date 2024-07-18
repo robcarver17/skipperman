@@ -1,7 +1,7 @@
 from copy import copy
 
-from app.backend.group_allocations.sorting import DEFAULT_SORT_ORDER, SORT_GROUP
-from app.logic.events.events_in_state import get_event_from_state
+from app.OLD_backend.group_allocations.sorting import DEFAULT_SORT_ORDER, SORT_GROUP
+from app.logic.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.day_selectors import Day
 

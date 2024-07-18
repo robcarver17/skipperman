@@ -1,18 +1,15 @@
 import os
 from typing import Union
 
-from app.backend.ticks_and_qualifications.ticksheets import (
+from app.OLD_backend.ticks_and_qualifications.ticksheets import (
     get_expected_qualifications_for_cadets_at_event,
 )
 from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.events import Event
 
-from app.logic.events.events_in_state import (
-    get_event_from_list_of_events_given_event_description,
-)
-
-from app.backend.events import confirm_event_exists_given_description
+from app.OLD_backend.events import confirm_event_exists_given_description, \
+    get_event_from_list_of_events_given_event_description
 
 from app.logic.events.ENTRY_view_events import display_list_of_events_with_buttons
 

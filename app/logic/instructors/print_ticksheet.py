@@ -3,12 +3,12 @@ from copy import copy
 
 import pandas as pd
 
-from app.backend.ticks_and_qualifications.create_ticksheets import (
+from app.OLD_backend.ticks_and_qualifications.create_ticksheets import (
     get_labelled_ticksheet_df_for_group_at_event,
 )
 from app.objects.abstract_objects.abstract_form import File
 
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 
 from app.logic.shared.qualification_and_tick_state_storage import (
     get_qualification_from_state,
@@ -19,7 +19,7 @@ from app.data_access.file_access import download_directory
 
 from app.objects.events import Event
 
-from app.objects.groups import Group
+from app.objects.primtive_with_id.groups import Group
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 

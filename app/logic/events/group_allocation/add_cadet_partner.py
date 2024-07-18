@@ -3,7 +3,7 @@ from typing import Union, Tuple
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 
 from app.logic.events.group_allocation.store_state import get_day_from_state_or_none
-from app.backend.wa_import.convert_helm_crew_data import (
+from app.OLD_backend.wa_import.convert_helm_crew_data import (
     from_partner_name_to_cadet,
     add_matched_partner_cadet_with_duplicate_registration_to_wa_mapped_data,
     get_registered_two_handed_partner_name_for_cadet_at_event,
@@ -12,13 +12,13 @@ from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing imp
     get_current_cadet_id_at_event,
     clear_cadet_id_at_event,
 )
-from app.backend.cadets import (
+from app.OLD_backend.cadets import (
 
 get_cadet_from_id, get_cadet_given_cadet_as_str,
 )
 
-from app.logic.events.events_in_state import get_event_from_state
-from app.logic.cadets.get_or_select_cadet_forms import (
+from app.logic.shared.events_state import get_event_from_state
+from app.logic.shared.get_or_select_cadet_forms import (
     get_add_or_select_existing_cadet_form,
     DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL,
     CHECK_CADET_FOR_ME_BUTTON_LABEL,
@@ -26,7 +26,7 @@ from app.logic.cadets.get_or_select_cadet_forms import (
     SEE_ALL_CADETS_BUTTON_LABEL,
     SEE_SIMILAR_CADETS_ONLY_LABEL,
 )
-from app.logic.cadets.add_cadet import add_cadet_from_form_to_data
+from app.logic.shared.add_edit_cadet_form import add_cadet_from_form_to_data
 
 from app.objects.cadets import Cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm

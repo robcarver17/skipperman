@@ -15,7 +15,7 @@ from app.logic.reporting.rollcall_and_contacts.processes import (
     HEALTH_DATA,
     EMERGENCY_CONTACTS,
 )
-from app.backend.reporting.rollcall_report.configuration import (
+from app.OLD_backend.reporting.rollcall_report.configuration import (
     AdditionalParametersForRollcallReport,
 )
 

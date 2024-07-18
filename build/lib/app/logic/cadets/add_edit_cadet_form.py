@@ -2,7 +2,7 @@ from copy import copy
 from dataclasses import dataclass
 from typing import Union
 
-from app.backend.cadets import verify_cadet_and_return_warnings
+from app.OLD_backend.cadets import verify_cadet_and_return_warnings
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
@@ -17,7 +17,7 @@ from app.objects.abstract_objects.abstract_lines import (
 )
 
 from app.objects.cadets import Cadet, default_cadet
-from app.objects.constants import arg_not_passed
+from app.objects.exceptions import arg_not_passed
 
 
 @dataclass

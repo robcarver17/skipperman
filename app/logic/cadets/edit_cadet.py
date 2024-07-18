@@ -1,7 +1,7 @@
 from typing import Union
 
-from app.logic.shared.cadet_state_storage import get_cadet_from_state
-from app.backend.cadets import modify_cadet
+from app.logic.shared.cadet_state import get_cadet_from_state
+from app.OLD_backend.cadets import modify_cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
@@ -17,7 +17,7 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 
-from app.logic.cadets.add_edit_cadet_form import (
+from app.logic.shared.add_edit_cadet_form import (
     CadetAndVerificationText,
     form_fields_for_add_cadet,
     get_cadet_from_form,

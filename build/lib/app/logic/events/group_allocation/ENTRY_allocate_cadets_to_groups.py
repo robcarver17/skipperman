@@ -1,9 +1,9 @@
 from typing import Union
 
-from app.backend.wa_import.update_cadets_at_event import make_cadet_available_on_day
+from app.OLD_backend.wa_import.update_cadets_at_event import make_cadet_available_on_day
 from app.objects.day_selectors import Day
 
-from app.backend.forms.reorder_form import (
+from app.OLD_backend.forms.reorder_form import (
     list_of_button_names_given_group_order,
     reorderFormInterface,
 )
@@ -51,7 +51,7 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 
 
 def display_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewForm]:
@@ -166,4 +166,4 @@ def make_cadet_available_on_current_day(
     make_cadet_available_on_day(
         event=event, cadet_id=cadet_id, day=day, interface=interface
     )
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()  ## need to do here as don't do in main function
+    interface._save_data_store_cache()  ## need to do here as don't do in main function

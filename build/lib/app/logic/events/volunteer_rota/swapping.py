@@ -1,28 +1,24 @@
 from typing import Tuple, Union
 
-from app.backend.forms.swaps import (
+from app.OLD_backend.forms.swaps import (
     is_ready_to_swap,
     SwapButtonState,
     store_swap_state,
     get_swap_state,
 )
-from app.backend.volunteers.volunteer_rota import (
-    swap_roles_for_volunteers_in_allocation,
+from app.OLD_backend.rota.volunteer_rota import (
     swap_roles_and_groups_for_volunteers_in_allocation,
 )
 from app.data_access.configuration.fixed import SWAP_SHORTHAND, SWAP_SHORTHAND2
-from app.logic.events.events_in_state import get_event_from_state
-from app.logic.events.volunteer_rota.volunteer_table_buttons import (
-    generic_button_value_for_volunteer_id_and_day,
-    get_list_of_generic_button_values_across_days_and_volunteers,
-    from_known_button_to_volunteer_id_and_day,
-)
+from app.logic.shared.events_state import get_event_from_state
+from app.logic.events.volunteer_rota.button_values import generic_button_value_for_volunteer_id_and_day, \
+    from_known_button_to_volunteer_id_and_day, get_list_of_generic_button_values_across_days_and_volunteers
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.volunteers_in_roles import VolunteerInRoleAtEvent
+from app.objects.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent
 
 
 def swap_button_value_for_volunteer_id_and_day(volunteer_id: str, day: Day) -> str:
@@ -40,7 +36,7 @@ def get_list_of_swap_buttons(interface: abstractInterface, event: Event):
 
 
 def get_swap_button(
-    volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
+    volunteer_in_role_at_event_on_day: VolunteerWithIdInRoleAtEvent,
     interface: abstractInterface,
 ) -> Button:
     if is_ready_to_swap(interface):
@@ -62,7 +58,7 @@ SWAP_ROLE_ONLY_BUTTON_LABEL = "Swap role with me"
 
 
 def swap_button_if_ready_to_swap(
-    volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
+    volunteer_in_role_at_event_on_day: VolunteerWithIdInRoleAtEvent,
     interface: abstractInterface,
 ) -> Union[Button, str]:
     swap_day, swap_volunteer_id = get_day_volunteer_id_from_swap_state(interface)
@@ -86,7 +82,7 @@ def swap_button_if_ready_to_swap(
 
 
 def swap_button_value_for_volunteer_in_role_on_day(
-    volunteer_in_role_at_event_on_day: VolunteerInRoleAtEvent,
+    volunteer_in_role_at_event_on_day: VolunteerWithIdInRoleAtEvent,
 ) -> str:
     return swap_button_value_for_volunteer_id_and_day(
         volunteer_id=volunteer_in_role_at_event_on_day.volunteer_id,
@@ -139,9 +135,25 @@ def get_and_store_swap_state_from_button_pressed(
     store_swap_state(interface=interface, swap_state=swap_state)
 
 
+cancel_swap_button = Button("Cancel swap", nav_button=True)
+
 def update_if_swap_button_pressed_and_ready_to_swap(
     interface: abstractInterface, swap_button: str
 ):
+    if cancel_swap_button.pressed(swap_button):
+        ## cancel swap
+        pass
+    else:
+        update_if_swap_button_pressed_and_ready_to_swap_but_not_seperate_cancel_button(interface=interface,
+                                                                                       swap_button=swap_button)
+
+    revert_to_not_swapping_state(interface)
+
+
+def update_if_swap_button_pressed_and_ready_to_swap_but_not_seperate_cancel_button(
+        interface: abstractInterface, swap_button: str
+):
+
     original_volunteer_id, original_day = from_known_button_to_volunteer_id_and_day(
         swap_button
     )
@@ -153,7 +165,8 @@ def update_if_swap_button_pressed_and_ready_to_swap(
         day_to_swap_with == original_day
         and volunteer_id_to_swap_with == original_volunteer_id
     ):
-        pass
+        ## cancel swap
+        return
     else:
         swap_roles_and_groups_for_volunteers_in_allocation(
             interface=interface,
@@ -164,4 +177,3 @@ def update_if_swap_button_pressed_and_ready_to_swap(
             original_volunteer_id=original_volunteer_id,
         )
 
-    revert_to_not_swapping_state(interface)

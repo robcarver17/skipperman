@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.objects.constants import missing_data
+from app.objects.exceptions import missing_data
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
 

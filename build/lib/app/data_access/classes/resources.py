@@ -1,7 +1,4 @@
-from app.objects.patrol_boats import (
-    ListOfPatrolBoats,
-    ListOfVolunteersAtEventWithPatrolBoats,
-)
+from app.objects.primtive_with_id.patrol_boats import ListOfPatrolBoats, ListOfVolunteersWithIdAtEventWithPatrolBoatsId
 from app.objects.club_dinghies import (
     ListOfClubDinghies,
     ListOfCadetAtEventWithClubDinghies,
@@ -37,12 +34,12 @@ class DataListOfCadetAtEventWithClubDinghies(object):
 
 
 class DataListOfVolunteersAtEventWithPatrolBoats(object):
-    def read(self, event_id: str) -> ListOfVolunteersAtEventWithPatrolBoats:
+    def read(self, event_id: str) -> ListOfVolunteersWithIdAtEventWithPatrolBoatsId:
         raise NotImplemented
 
     def write(
         self,
-        list_of_volunteers_at_event_with_patrol_boats: ListOfVolunteersAtEventWithPatrolBoats,
+        list_of_volunteers_at_event_with_patrol_boats: ListOfVolunteersWithIdAtEventWithPatrolBoatsId,
         event_id: str,
     ):
         raise NotImplemented

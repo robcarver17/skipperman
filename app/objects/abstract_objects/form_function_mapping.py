@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Callable, Dict, Tuple
 
-from app.objects.constants import arg_not_passed
+from app.objects.exceptions import arg_not_passed
 
 
 class MissingFormName(Exception):

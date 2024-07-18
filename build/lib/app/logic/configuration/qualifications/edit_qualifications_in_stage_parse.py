@@ -1,4 +1,4 @@
-from app.backend.ticks_and_qualifications.edit_qualifications import get_tick_items_as_dict_for_qualification, \
+from app.OLD_backend.ticks_and_qualifications.edit_qualifications import get_tick_items_as_dict_for_qualification, \
     get_substage_given_id, add_new_substage_to_qualification, add_new_ticklistitem_to_qualification, \
     modify_substage_name, modify_ticksheet_item_name
 

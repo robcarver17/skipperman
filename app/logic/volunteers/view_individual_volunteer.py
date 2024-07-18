@@ -1,11 +1,6 @@
 from typing import Union
 
-from app.backend.volunteers.volunteer_rota_data import (
-    get_all_roles_across_recent_events_for_volunteer_as_dict,
-)
-from app.logic.volunteers.delete_volunteer import (
-    display_form_delete_individual_volunteer,
-)
+from app.OLD_backend.rota.volunteer_history import get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first
 from app.logic.volunteers.edit_cadet_connections import (
     display_form_edit_cadet_volunteer_connections,
 )
@@ -28,15 +23,13 @@ from app.logic.abstract_logic_api import (
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
-from app.backend.volunteers.volunteers import (
+from app.OLD_backend.volunteers.volunteers import (
     get_dict_of_existing_skills,
     get_connected_cadets,
 )
-from app.logic.volunteers.volunteer_state import get_volunteer_from_state
-from app.logic.volunteers.constants import *
+from app.logic.shared.volunteer_state import get_volunteer_from_state
 
-from app.objects.volunteers import Volunteer
-from app.objects.events import SORT_BY_START_DSC
+from app.objects.primtive_with_id.volunteers import Volunteer
 
 
 def display_form_view_individual_volunteer(
@@ -83,9 +76,13 @@ def display_form_for_selected_volunteer(
 def list_of_lines_with_allocations_and_roles(
     interface: abstractInterface, volunteer: Volunteer
 ) -> ListOfLines:
-    dict_of_roles = get_all_roles_across_recent_events_for_volunteer_as_dict(
-        data_layer=interface.data, volunteer=volunteer, sort_by=SORT_BY_START_DSC
+    dict_of_roles = get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(
+        data_layer=interface.data, volunteer=volunteer
     )
+
+    return from_dict_of_roles_to_list_of_lines(dict_of_roles)
+
+def from_dict_of_roles_to_list_of_lines(dict_of_roles: dict) -> ListOfLines:
     if len(dict_of_roles) == 0:
         return ListOfLines([])
 
@@ -125,11 +122,16 @@ def buttons_for_volunteer_form() -> ButtonBar:
     return ButtonBar(
         [
             back_menu_button,
-            Button(EDIT_BUTTON_LABEL, nav_button=True),
-            Button(EDIT_CADET_CONNECTIONS_BUTTON_LABEL, nav_button=True),
+            main_edit_button,
+           connection_edit_button,
         ]
     )
 
+EDIT_BUTTON_LABEL = "Edit cadet name and qualifications"
+EDIT_CADET_CONNECTIONS_BUTTON_LABEL = "Edit connections with cadets"
+
+main_edit_button = Button(EDIT_BUTTON_LABEL, nav_button=True)
+connection_edit_button =  Button(EDIT_CADET_CONNECTIONS_BUTTON_LABEL, nav_button=True)
 
 def post_form_view_individual_volunteer(
     interface: abstractInterface,
@@ -138,11 +140,9 @@ def post_form_view_individual_volunteer(
     button = interface.last_button_pressed()
     if back_menu_button.pressed(button):
         return previous_form(interface)
-    elif button == DELETE_BUTTON_LABEL:
-        return delete_volunteer_form(interface)
-    elif button == EDIT_BUTTON_LABEL:
+    elif main_edit_button.pressed(button):
         return edit_volunteer_form(interface)
-    elif button == EDIT_CADET_CONNECTIONS_BUTTON_LABEL:
+    elif connection_edit_button.pressed(button):
         return edit_connections_form(interface)
     else:
         return button_error_and_back_to_initial_state_form(interface)
@@ -154,10 +154,6 @@ def previous_form(interface: abstractInterface) -> NewForm:
     )
 
 
-def delete_volunteer_form(interface: abstractInterface) -> NewForm:
-    return interface.get_new_form_given_function(
-        display_form_delete_individual_volunteer
-    )
 
 
 def edit_volunteer_form(interface: abstractInterface) -> NewForm:

@@ -1,6 +1,6 @@
 from typing import Union, List
 
-from app.backend.ticks_and_qualifications.edit_qualifications import get_tick_items_as_dict_for_qualification
+from app.OLD_backend.ticks_and_qualifications.edit_qualifications import get_tick_items_as_dict_for_qualification
 
 from app.logic.configuration.qualifications.edit_qualifications_in_detail_form import table_for_edit_qualification_details, \
     button_for_new_substage, list_of_button_names_for_new_item_in_substage_name_field

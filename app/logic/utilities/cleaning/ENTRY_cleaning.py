@@ -1,17 +1,14 @@
 from typing import Union
 
-from app.backend.cleaning import clean_sensitive_data_for_event
+from app.OLD_backend.cleaning import clean_sensitive_data_for_event
 from app.objects.abstract_objects.abstract_text import Heading
 
 from app.logic.events.ENTRY_view_events import display_given_list_of_events_with_buttons
 
-from app.logic.events.events_in_state import (
-    get_event_from_list_of_events_given_event_description,
-)
-from app.backend.events import (
+from app.OLD_backend.events import (
     all_sort_types_for_event_list,
     sort_buttons_for_event_list,
-    DEPRECATE_get_sorted_list_of_events,
+    DEPRECATE_get_sorted_list_of_events, get_event_from_list_of_events_given_event_description,
 )
 from app.objects.events import SORT_BY_START_DSC, ListOfEvents
 
@@ -20,7 +17,6 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm,
 )
 from app.objects.abstract_objects.abstract_buttons import (
-    main_menu_button,
     Button,
     ButtonBar,
     HelpButton,

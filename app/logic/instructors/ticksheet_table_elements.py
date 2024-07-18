@@ -1,7 +1,7 @@
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 
-from app.backend.data.security import get_volunteer_id_of_logged_in_user_or_superuser
-from app.backend.ticks_and_qualifications.ticksheets import (
+from app.OLD_backend.data.security import get_volunteer_id_of_logged_in_user_or_superuser
+from app.OLD_backend.ticks_and_qualifications.ticksheets import (
     can_see_all_groups_and_award_qualifications,
 )
 

@@ -2,7 +2,7 @@
 from typing import List
 
 import pandas as pd
-from app.objects.constants import arg_not_passed
+from app.objects.exceptions import arg_not_passed
 
 from app.objects.abstract_objects.abstract_form import Image
 from app.objects.abstract_objects.abstract_interface import UrlsOfInterest

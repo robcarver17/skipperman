@@ -3,12 +3,12 @@ from typing import Union, List
 from app.data_access.configuration.fixed import SAVE_KEYBOARD_SHORTCUT
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.volunteers.volunteers import (
-    get_volunteer_name_from_id,
-    DEPRECATE_get_sorted_list_of_volunteers,
+from app.OLD_backend.volunteers.volunteers import (
+    EPRECATE_get_volunteer_name_from_id,
+    get_sorted_list_of_volunteers,
 )
 
-from app.backend.data.volunteers import SORT_BY_FIRSTNAME
+from app.OLD_backend.data.volunteers import SORT_BY_FIRSTNAME
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -36,7 +36,7 @@ from app.objects.users_and_security import (
     ALL_GROUPS,
     NO_VOLUNTEER_ID,
 )
-from app.backend.data.security import load_all_users
+from app.OLD_backend.data.security import load_all_users
 
 SAVE_ENTRY_BUTTON_LABEL = "Save edits to existing or add new entry"
 
@@ -195,14 +195,14 @@ def text_box_for_email(user: SkipperManUser) -> emailInput:
 def dropdown_for_volunteer(
     interface: abstractInterface, user: SkipperManUser
 ) -> dropDownInput:
-    volunteers = DEPRECATE_get_sorted_list_of_volunteers(
-        interface=interface, sort_by=SORT_BY_FIRSTNAME
+    volunteers = get_sorted_list_of_volunteers(
+        data_layer=interface.data, sort_by=SORT_BY_FIRSTNAME
     )
     dict_of_volunteers = dict(
         [(volunteer.name, volunteer.name) for volunteer in volunteers]
     )
     try:
-        name = get_volunteer_name_from_id(
+        name = EPRECATE_get_volunteer_name_from_id(
             interface=interface, volunteer_id=user.volunteer_id
         )
     except:

@@ -3,7 +3,7 @@ from app.logic.events.constants import (
     MAPPING_FILE,
     UPLOAD_FILE_BUTTON_LABEL,
 )
-from app.backend.wa_import.map_wa_fields import (
+from app.OLD_backend.wa_import.map_wa_fields import (
     write_template,
     read_mapping_from_csv_file_object,
     get_list_of_template_names,

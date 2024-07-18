@@ -1,14 +1,14 @@
 from typing import Dict
 
-from app.backend.reporting.rollcall_report.get_data import (
+from app.OLD_backend.reporting.rollcall_report.get_data import (
     get_dict_of_df_for_reporting_rollcalls_given_event_and_parameters,
 )
 import pandas as pd
 
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.reporting.rollcall_report.configuration import (
+from app.OLD_backend.reporting.rollcall_report.configuration import (
     AdditionalParametersForRollcallReport,
 )
 

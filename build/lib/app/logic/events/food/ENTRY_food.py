@@ -1,4 +1,4 @@
-from app.backend.food import summarise_food_data_by_day
+from app.OLD_backend.food import summarise_food_data_by_day
 
 from app.logic.events.food.automatically_get_food_data import (
     get_and_save_food_for_cadets_from_registration_data,
@@ -37,7 +37,7 @@ from app.objects.abstract_objects.abstract_lines import (
     _______________,
     DetailListOfLines,
 )
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_text import Heading
 
@@ -108,8 +108,8 @@ def post_form_view_for_food_requirements(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_clear_stored_items()
+    interface._save_data_store_cache()
+    interface._clear_data_store_cache()
 
     return display_form_view_for_food_requirements(interface)
 

@@ -5,7 +5,7 @@ from app.data_access.configuration.configuration import MINIMUM_COLOUR_GROUPS_TO
 from app.objects.cadets import Cadet
 from app.objects.clothing import *
 
-from app.backend.data.clothing import ClothingData
+from app.OLD_backend.data.clothing import ClothingData
 from app.objects.clothing import ListOfCadetsWithClothingAtEvent, ListOfCadetObjectsWithClothingAtEvent, \
     CadetObjectWithClothingAtEvent
 from app.objects.events import Event

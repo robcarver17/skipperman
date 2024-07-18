@@ -1,20 +1,18 @@
 from typing import List
 
-from app.logic.events.events_in_state import get_event_from_state
-
-from app.logic.events.constants import SAVE_CHANGES
+from app.logic.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_buttons import Button
 
 from app.objects.abstract_objects.abstract_lines import DetailListOfLines, ListOfLines
 
-from app.backend.volunteers.volunteer_rota_summary import (
+from app.OLD_backend.rota.volunteer_rota_summary import (
     get_list_of_actual_and_targets_for_roles_at_event,
     RowInTableWithActualAndTargetsForRole,
     save_new_volunteer_target,
 )
 
-from app.backend.forms.swaps import is_ready_to_swap
+from app.OLD_backend.forms.swaps import is_ready_to_swap
 
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.abstract_objects.abstract_form import intInput
@@ -25,20 +23,25 @@ from app.objects.events import Event
 
 
 def get_volunteer_targets_table_and_save_button(
+    interface:abstractInterface,
     event: Event,
-    interface: abstractInterface,
+
 ) -> DetailListOfLines:
     table = get_volunteer_targets_table(event=event, interface=interface)
-    button = Button(SAVE_CHANGES)
+    elements_to_return = [table]
+
+    if not is_ready_to_swap(interface):
+        elements_to_return.append(save_targets_button)
 
     return DetailListOfLines(
-        ListOfLines([table, button]).add_Lines(), name="Role numbers and targets"
+        ListOfLines(elements_to_return).add_Lines(), name="Role numbers and targets"
     )
 
 
+save_targets_button = Button("Save changes to targets")
+
 def get_volunteer_targets_table(
-    event: Event,
-    interface: abstractInterface,
+    event: Event,    interface: abstractInterface,
 ) -> Table:
     top_row = get_top_row_of_volunteer_targets_table(event=event)
     other_rows = get_body_of_volunteer_targets_table(event=event, interface=interface)
@@ -63,7 +66,7 @@ def get_body_of_volunteer_targets_table(
     event: Event, interface: abstractInterface
 ) -> List[RowInTable]:
     data_for_table = get_list_of_actual_and_targets_for_roles_at_event(
-        interface=interface, event=event
+        cache =interface.cache, event=event
     )
     ready_to_swap = is_ready_to_swap(interface)
 
@@ -98,7 +101,7 @@ def get_target_box_in_form(role: str, target: int, ready_to_swap: bool = False):
         return target
     else:
         return intInput(
-            value=target, input_label="", input_name=get_input_name_for_target_box(role)
+            value=int(target), input_label="", input_name=get_input_name_for_target_box(role)
         )
 
 
@@ -109,7 +112,7 @@ def get_input_name_for_target_box(role: str):
 def save_volunteer_targets(interface: abstractInterface):
     event = get_event_from_state(interface)
     data_for_table = get_list_of_actual_and_targets_for_roles_at_event(
-        interface=interface, event=event
+        cache=interface.cache, event=event
     )
     for row in data_for_table:
         try:
@@ -126,7 +129,7 @@ def save_volunteer_targets_for_specific_role(
 ):
     new_target = get_target_from_form(interface=interface, role=role)
     save_new_volunteer_target(
-        interface=interface, event=event, role=role, target=new_target
+        data_layer=interface.data, event=event, role=role, target=new_target
     )
 
 

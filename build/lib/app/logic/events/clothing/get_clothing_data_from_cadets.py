@@ -1,9 +1,9 @@
 from typing import Union
 
-from app.backend.clothing import is_cadet_with_id_already_at_event_with_clothing, add_new_cadet_with_clothing_to_event
+from app.OLD_backend.clothing import is_cadet_with_id_already_at_event_with_clothing, add_new_cadet_with_clothing_to_event
 
-from app.backend.cadets import  DEPRECATE_cadet_name_from_id
-from app.backend.wa_import.update_cadets_at_event import        get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active
+from app.OLD_backend.cadets import  DEPRECATE_cadet_name_from_id
+from app.OLD_backend.wa_import.update_cadets_at_event import        get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active
 
 from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing import \
     get_and_save_next_cadet_id_in_event_data, clear_cadet_id_at_event
@@ -13,11 +13,11 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 
 
 from app.objects.events import Event
-from app.objects.constants import NoMoreData, DuplicateCadets
+from app.objects.exceptions import NoMoreData, DuplicateCadets
 from app.objects.mapped_wa_event import RowInMappedWAEvent
 
 
@@ -118,7 +118,7 @@ def process_new_cadet_clothing_requirements(
 
     clothing_size_from_registration = relevant_row.get_item(CADET_T_SHIRT_SIZE, '')
     add_new_cadet_with_clothing_to_event(interface=interface, event=event, cadet_id=cadet_id, size=clothing_size_from_registration)
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+    interface._save_data_store_cache()
 
     return process_next_cadet_clothing_at_event(interface)
 

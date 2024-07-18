@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.backend.events import (
+from app.OLD_backend.events import (
     verify_event_and_warn,
     list_of_previously_used_event_names,
     EventAndVerificationText,
@@ -249,7 +249,7 @@ def process_form_when_event_verified(interface: abstractInterface) -> Form:
         )
         return initial_state_form
 
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
+    interface._save_data_store_cache()
 
     return form_with_message_and_finished_button(
         "Added event %s" % str(event),

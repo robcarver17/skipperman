@@ -25,7 +25,7 @@ UPLOAD_MAPPING_BUTTON_LABEL = "Upload new mapping .csv file"
 CLONE_EVENT_MAPPING_BUTTON_LABEL = "Clone the mapping for an existing event"
 CREATE_MAPPING_BUTTON_LABEL = "Create your own mapping file"
 
-# specific event; backend
+# specific event; OLD_backend
 ALLOCATE_CADETS_BUTTON_LABEL = "Groups and cadet boats"
 MODIFY_CADET_BOATS_BUTTON_LABEL = "Cadet boats"
 
@@ -64,7 +64,7 @@ PATROL_BOAT_ALLOCATION_BUTTON_LABEL = "Patrol boats"
 CLOTHING_BUTTON_LABEL = "Clothing"
 FOOD_BUTTON_LABEL = "Food"
 
-## constants.py in session data
+## exceptions.py in session data
 EVENT = "event"
 ROW_IN_EVENT_DATA = "row_in_event_data"
 

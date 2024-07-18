@@ -1,14 +1,14 @@
 from typing import Dict
 
-from app.backend.data.group_allocations import GroupAllocationsData
+from app.OLD_backend.data.group_allocations import GroupAllocationsData
 
 import pandas as pd
 
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event
 
-from app.backend.reporting.allocation_report.allocation_report import (
+from app.OLD_backend.reporting.allocation_report.allocation_report import (
     AdditionalParametersForAllocationReport,
     add_club_boat_asterix,
 )

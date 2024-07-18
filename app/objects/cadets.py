@@ -5,7 +5,7 @@ from app.data_access.configuration.configuration import (
     MIN_CADET_AGE,
     MAX_CADET_AGE,
     SIMILARITY_LEVEL_TO_WARN_DATE,
-    SIMILARITY_LEVEL_TO_WARN_NAME,
+    SIMILARITY_LEVEL_TO_WARN_NAME, MIN_AGE_WHEN_CADET_CAN_BE_AT_EVENT_WITHOUT_PARENT,
 )
 from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
@@ -17,7 +17,7 @@ from app.objects.utils import (
     transform_str_or_datetime_into_date,
     in_x_not_in_y,
 )
-from app.objects.constants import arg_not_passed, DAYS_IN_YEAR, missing_data, MissingData, MultipleMatches
+from app.objects.exceptions import arg_not_passed, DAYS_IN_YEAR, missing_data, MissingData, MultipleMatches
 from app.objects.utils import union_of_x_and_y
 
 
@@ -250,3 +250,6 @@ class ListOfCadets(GenericListOfObjectsWithIds):
     def list_of_names(self):
         return [cadet.name for cadet in self]
 
+
+def cadet_is_too_young_to_be_without_parent(cadet: Cadet) -> bool:
+    return cadet.approx_age_years() < MIN_AGE_WHEN_CADET_CAN_BE_AT_EVENT_WITHOUT_PARENT

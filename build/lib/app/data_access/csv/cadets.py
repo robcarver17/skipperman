@@ -15,8 +15,8 @@ from app.data_access.csv.resolve_csv_paths_and_filenames import (
 )
 
 from app.objects.cadets import ListOfCadets
-from app.objects.groups import ListOfCadetIdsWithGroups
-from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent
+from app.objects.primtive_with_id.groups import ListOfCadetIdsWithGroups
+from app.objects.primtive_with_id.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent
 from app.objects.identified_cadets_at_event import ListOfIdentifiedCadetsAtEvent
 from app.objects.committee import ListOfCadetsWithIdOnCommittee
 

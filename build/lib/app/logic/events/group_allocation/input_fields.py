@@ -1,10 +1,10 @@
 from typing import Union, List
 
-from app.backend.forms.form_utils import (
+from app.OLD_backend.forms.form_utils import (
     input_name_from_column_name_and_cadet_id,
     get_availability_checkbox,
 )
-from app.backend.group_allocations.group_allocations_data import AllocationData
+from app.OLD_backend.group_allocations.group_allocations_data import AllocationData
 from app.data_access.configuration.groups import all_groups_names
 from app.logic.events.constants import (
     ATTENDANCE,
@@ -28,7 +28,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.cadets import Cadet
 from app.objects.club_dinghies import NO_BOAT
-from app.objects.constants import missing_data
+from app.objects.exceptions import missing_data
 from app.objects.day_selectors import Day
 from app.objects.dinghies import NO_PARTNERSHIP_LIST
 from app.objects.utils import make_id_as_int_str

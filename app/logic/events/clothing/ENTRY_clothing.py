@@ -1,4 +1,4 @@
-from app.backend.clothing import summarise_clothing
+from app.OLD_backend.clothing import summarise_clothing
 from app.logic.events.clothing.automatically_get_clothing_data_from_cadets import (
     update_cadet_clothing_at_event,
 )
@@ -44,7 +44,7 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_text import Heading
 
@@ -117,8 +117,8 @@ def post_form_view_for_clothing_requirements(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_save_stored_items()
-    interface._DONT_CALL_DIRECTLY_USE_FLUSH_clear_stored_items()
+    interface._save_data_store_cache()
+    interface._clear_data_store_cache()
 
     return display_form_view_for_clothing_requirements(interface)
 

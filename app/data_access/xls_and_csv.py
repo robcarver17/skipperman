@@ -2,7 +2,7 @@ from typing import Dict
 
 import pandas as pd
 
-from app.objects.constants import NoValidFile
+from app.objects.exceptions import NoValidFile
 
 """
 """

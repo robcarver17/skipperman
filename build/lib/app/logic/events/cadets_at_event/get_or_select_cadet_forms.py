@@ -3,17 +3,17 @@ from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.logic.cadets.get_or_select_cadet_forms import DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL, \
+from app.logic.shared.get_or_select_cadet_forms import DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL, \
     CHECK_CADET_FOR_ME_BUTTON_LABEL, FINAL_CADET_ADD_BUTTON_LABEL, SEE_ALL_CADETS_BUTTON_LABEL, \
     SEE_SIMILAR_CADETS_ONLY_LABEL
 
-from app.backend.cadets import verify_cadet_and_return_warnings, get_sorted_list_of_cadets, DEPREACATE_get_list_of_similar_cadets
-from app.backend.data.cadets import SORT_BY_FIRSTNAME
-from app.logic.cadets.add_edit_cadet_form import CadetAndVerificationText, get_add_cadet_form_with_information_passed, \
+from app.OLD_backend.cadets import verify_cadet_and_return_warnings, DEPRECATE_get_sorted_list_of_cadets, DEPREACATE_get_list_of_similar_cadets
+from app.OLD_backend.data.cadets import SORT_BY_FIRSTNAME
+from app.logic.shared.add_edit_cadet_form import CadetAndVerificationText, get_add_cadet_form_with_information_passed, \
     verify_form_with_cadet_details
 
 from app.objects.cadets import Cadet
-from app.objects.constants import arg_not_passed
+from app.objects.exceptions import arg_not_passed
 
 
 
@@ -91,7 +91,7 @@ def get_list_of_main_buttons(include_final_button: bool) -> Line:
 
 def get_list_of_cadet_buttons(interface: abstractInterface, cadet: Cadet, see_all_cadets: bool = False) -> ListOfLines:
     if see_all_cadets:
-        list_of_cadets = get_sorted_list_of_cadets(interface=interface, sort_by=SORT_BY_FIRSTNAME)
+        list_of_cadets = DEPRECATE_get_sorted_list_of_cadets(interface=interface, sort_by=SORT_BY_FIRSTNAME)
         msg = "Currently choosing from all cadets"
         extra_button = SEE_SIMILAR_CADETS_ONLY_LABEL
     else:

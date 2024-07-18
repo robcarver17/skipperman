@@ -1,6 +1,6 @@
-from app.backend.data.options import OptionsData
+from app.OLD_backend.data.options import OptionsData
 from app.data_access.configuration.fixed import ALL_PAGESIZE, ALL_FONTS
-from app.logic.events.events_in_state import get_event_from_state
+from app.logic.shared.events_state import get_event_from_state
 from app.logic.reporting.shared.report_generator import ReportGenerator
 from app.objects.abstract_objects.abstract_form import (
     yes_no_radio,
@@ -30,8 +30,8 @@ from app.logic.reporting.constants import (
     IF_HEADER_INCLUDE_SIZE,
     FONT_SIZE,
 )
-from app.objects.constants import missing_data
-from app.backend.reporting.options_and_parameters.print_options import (
+from app.objects.exceptions import missing_data
+from app.OLD_backend.reporting.options_and_parameters.print_options import (
     PrintOptions,
     default_report_title_and_filename,
     get_default_filename_for_report,

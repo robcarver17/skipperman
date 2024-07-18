@@ -3,7 +3,7 @@ import datetime
 from typing import List
 
 from app.objects.cadets import Cadet
-from app.objects.constants import missing_data, MissingData
+from app.objects.exceptions import missing_data, MissingData
 
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject

@@ -30,10 +30,10 @@ from app.objects.abstract_objects.abstract_buttons import (
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
 from app.logic.events.constants import *
-from app.logic.events.events_in_state import get_event_from_state
-from app.backend.wa_import.map_wa_fields import get_field_mapping_for_event
-from app.backend.wa_import.check_mapping import check_field_mapping
-from app.backend.wa_import.map_wa_files import is_wa_file_mapping_setup_for_event
+from app.logic.shared.events_state import get_event_from_state
+from app.OLD_backend.wa_import.map_wa_fields import get_field_mapping_for_event
+from app.OLD_backend.wa_import.check_mapping import check_field_mapping
+from app.OLD_backend.wa_import.map_wa_files import is_wa_file_mapping_setup_for_event
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import Event
 

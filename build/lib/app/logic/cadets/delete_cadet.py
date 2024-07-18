@@ -2,7 +2,7 @@
 
 from typing import Union
 
-from app.logic.shared.cadet_state_storage import get_cadet_from_state
+from app.logic.shared.cadet_state import get_cadet_from_state
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import Button, CANCEL_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________

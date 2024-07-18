@@ -1,6 +1,6 @@
 from typing import Union, List
 
-from app.backend.configuration import (
+from app.OLD_backend.configuration import (
     save_list_of_club_dinghies,
     load_list_of_club_dinghies,
     add_new_club_dinghy_given_string_and_return_list,

@@ -10,14 +10,14 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, BACK_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
     _______________,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.volunteers.constants import *
+
 
 
 def display_form_view_of_snapshots(interface: abstractInterface) -> Form:

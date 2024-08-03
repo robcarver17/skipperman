@@ -1,20 +1,20 @@
-from app.OLD_backend.rota.patrol_boat_warnings import warn_on_pb2_drivers
+from app.objects.patrol_boats import ListOfVolunteersAtEventWithSkillsAndRolesAndPatrolBoats, VolunteerAtEventWithSkillsAndRolesAndPatrolBoats
+
+from app.backend.patrol_boats.patrol_boat_warnings import warn_on_pb2_drivers
 from app.OLD_backend.rota.warnings import warn_on_volunteer_qualifications
 from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
 from app.data_access.configuration.fixed import COPY_OVERWRITE_SYMBOL, COPY_FILL_SYMBOL, SWAP_SHORTHAND, BOAT_SHORTHAND, \
     ROLE_SHORTHAND, BOAT_AND_ROLE_SHORTHAND, REMOVE_SHORTHAND
 from app.objects.abstract_objects.abstract_buttons import ButtonBar, HelpButton, cancel_menu_button, save_menu_button
-from app.objects.primtive_with_id.volunteers import ListOfVolunteers, Volunteer
 
 from app.data_access.data_layer.ad_hoc_cache import AdHocCache
 
 from app.OLD_backend.forms.swaps import is_ready_to_swap
 from typing import List, Union
 
-from app.OLD_backend.rota.patrol_boats import (
-    get_sorted_volunteer_ids_allocated_to_patrol_boat_at_event_on_days_sorted_by_role,
-    get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_data,
-)
+from app.backend.patrol_boats.people_on_boats import \
+    get_sorted_volunteers_allocated_to_patrol_boat_at_event_on_days_sorted_by_role
+from app.backend.patrol_boats.data import get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_data
 from app.OLD_backend.volunteers.volunteers import (
     can_volunteer_drive_safety_boat, get_volunteer_from_id,
 )
@@ -36,12 +36,11 @@ from app.objects.primtive_with_id.patrol_boats import PatrolBoat
 
 
 def get_volunteer_row_to_select_skill(
-    interface: abstractInterface,
-    volunteer: Volunteer
+    volunteer_at_event: VolunteerAtEventWithSkillsAndRolesAndPatrolBoats
 ) -> RowInTable:
-    name = volunteer.name
+    name = volunteer_at_event.volunteer.name
     skill_box = volunteer_boat_skill_checkbox(
-        interface=interface, volunteer_id=volunteer.id
+         volunteer_at_event=volunteer_at_event
     )
 
     return RowInTable([name, skill_box])
@@ -50,21 +49,22 @@ def get_volunteer_row_to_select_skill(
 def get_existing_allocation_elements_for_day_and_boat(
     interface: abstractInterface, patrol_boat: PatrolBoat, day: Day, event: Event
 ) -> ListOfLines:
-    list_of_volunteer_ids = interface.cache.get_from_cache(
-        get_sorted_volunteer_ids_allocated_to_patrol_boat_at_event_on_days_sorted_by_role,
+    list_of_volunteers = \
+        get_sorted_volunteers_allocated_to_patrol_boat_at_event_on_days_sorted_by_role(
+            cache=interface.cache,
              event=event, day=day, patrol_boat=patrol_boat
         )
 
     return ListOfLines(
         [
             get_existing_allocation_elements_for_volunteer_day_and_boat(
-                event=event,
                 day=day,
-                volunteer_id=volunteer_id,
                 interface=interface,
-                patrol_boat=patrol_boat,
+                volunteer_at_event=volunteer_at_event,
+                patrol_boat=patrol_boat
+
             )
-            for volunteer_id in list_of_volunteer_ids
+            for volunteer_at_event in list_of_volunteers
         ]
     )
 
@@ -72,26 +72,21 @@ def get_existing_allocation_elements_for_day_and_boat(
 def get_existing_allocation_elements_for_volunteer_day_and_boat(
     interface: abstractInterface,
     day: Day,
-    event: Event,
-    volunteer_id: str,
-    patrol_boat: PatrolBoat,
+    volunteer_at_event: VolunteerAtEventWithSkillsAndRolesAndPatrolBoats,
+        patrol_boat: PatrolBoat
 ) -> Line:
-    volunteer = get_volunteer_from_id(data_layer=interface.data, volunteer_id=volunteer_id) # FIXME IDEALLY WOULD PASS
-    name = volunteer.name
-    has_boat_skill = can_volunteer_drive_safety_boat(
-        data_layer=interface.data, volunteer=volunteer
-    )
-    if has_boat_skill:
+    name = volunteer_at_event.volunteer.name
+    has_pb2 = volunteer_at_event.has_pb2_qualification()
+    if has_pb2:
         name = "%s (PB2)" % name
     role_dropdown = volunteer_boat_role_dropdown(
-        interface=interface, volunteer_id=volunteer_id, event=event, day=day
+        interface=interface, volunteer_id=volunteer_at_event.volunteer.id, event=volunteer_at_event.volunteer_event_data.event, day=day
     )
     buttons = get_buttons_for_volunteer_day_and_boat(
         interface=interface,
-        event=event,
         day=day,
-        volunteer_id=volunteer_id,
-        patrol_boat=patrol_boat,
+        volunteer_at_event=volunteer_at_event,
+        patrol_boat=patrol_boat
     )
 
     return Line([name, " ", role_dropdown] + buttons)
@@ -100,9 +95,8 @@ def get_existing_allocation_elements_for_volunteer_day_and_boat(
 def get_buttons_for_volunteer_day_and_boat(
     interface: abstractInterface,
     day: Day,
-    event: Event,
-    volunteer_id: str,
-    patrol_boat: PatrolBoat,
+    volunteer_at_event: VolunteerAtEventWithSkillsAndRolesAndPatrolBoats,
+    patrol_boat: PatrolBoat
 ) -> list:
     in_swap_state = is_ready_to_swap(interface)
 
@@ -110,16 +104,17 @@ def get_buttons_for_volunteer_day_and_boat(
         copy_buttons = []
         remove_volunteer_button = ""
     else:
+        ### FIXME HERE
         copy_buttons = get_copy_buttons_for_boat_allocation(
-            interface=interface, volunteer_id=volunteer_id, event=event, day=day
+            interface=interface, volunteer_id=volunteer_at_event.volunteer.id, event=volunteer_at_event.volunteer_event_data.event, day=day
         )
         remove_volunteer_button = get_remove_volunteer_button(
-            day=day, volunteer_id=volunteer_id
+            day=day, volunteer_id=volunteer_at_event.volunteer.id
         )
 
     swap_buttons = get_swap_buttons_for_boat_rota(
-        volunteer_id=volunteer_id,
-        event=event,
+        volunteer_id=volunteer_at_event.volunteer.id,
+        event=volunteer_at_event.volunteer_event_data.event,
         day=day,
         interface=interface,
         boat_at_event=patrol_boat,
@@ -131,19 +126,16 @@ def get_buttons_for_volunteer_day_and_boat(
 VOLUNTEERS_SKILL_FOR_PB2 = "PB2"
 
 def volunteer_boat_skill_checkbox(
-    interface: abstractInterface, volunteer_id: str
+     volunteer_at_event: VolunteerAtEventWithSkillsAndRolesAndPatrolBoats
 ) -> checkboxInput:
-    volunteer = get_volunteer_from_id(data_layer=interface.data, volunteer_id=volunteer_id)## ideally would pass
-    has_boat_skill = can_volunteer_drive_safety_boat(
-data_layer=interface.data, volunteer=volunteer
-    )
+    has_boat_skill = volunteer_at_event.skills.can_drive_safety_boat
 
     dict_of_labels = {VOLUNTEERS_SKILL_FOR_PB2: VOLUNTEERS_SKILL_FOR_PB2}
     dict_of_checked = {VOLUNTEERS_SKILL_FOR_PB2: has_boat_skill}
     return checkboxInput(
         dict_of_labels=dict_of_labels,
         dict_of_checked=dict_of_checked,
-        input_name=get_volunteer_skill_checkbox_name(volunteer_id=volunteer_id),
+        input_name=get_volunteer_skill_checkbox_name(volunteer_id=volunteer_at_event.volunteer.id),
         input_label="",
     )
 
@@ -166,12 +158,12 @@ def get_unique_list_of_volunteer_ids_for_skills_checkboxes(
 ) -> List[str]:
     list_of_volunteers = get_list_of_volunteers_for_skills_checkboxes(cache=cache, event=event)
 
-    return list_of_volunteers.list_of_ids
+    return list_of_volunteers.list_of_volunteer_ids()
 
 def get_list_of_volunteers_for_skills_checkboxes(
         cache: AdHocCache, event: Event
-) -> ListOfVolunteers:
-    return cache.get_from_cache(get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_data,
+) -> ListOfVolunteersAtEventWithSkillsAndRolesAndPatrolBoats:
+    return get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_data(cache=cache,
                                 event=event)
 
 
@@ -180,7 +172,7 @@ def warn_on_all_volunteers_in_patrol_boats(
         event: Event,
 ) -> Union[DetailListOfLines, str]:
     qualification_warnings = warn_on_volunteer_qualifications(cache=interface.cache, event=event)
-    pb2driver_warnings = warn_on_pb2_drivers(data_layer=interface.data, event=event)
+    pb2driver_warnings = warn_on_pb2_drivers(cache=interface.cache, event=event)
 
     all_warnings = qualification_warnings + pb2driver_warnings
 

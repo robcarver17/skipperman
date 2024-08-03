@@ -379,12 +379,12 @@ def get_sorted_list_of_boats_excluding_boats_already_at_event(
     )
 
 
-def load_list_of_patrol_boats_at_event_from_cache(
+def DEPRECATE_load_list_of_patrol_boats_at_event_from_cache(
     cache: AdHocCache, event: Event
 ) -> ListOfPatrolBoats:
-    return cache.get_from_cache(load_list_of_patrol_boats_at_event, event=event)
+    return cache.get_from_cache(DEPRECATE_load_list_of_patrol_boats_at_event, event=event)
 
-def load_list_of_patrol_boats_at_event(
+def DEPRECATE_load_list_of_patrol_boats_at_event(
     data_layer: DataLayer, event: Event
 ) -> ListOfPatrolBoats:
     patrol_boat_data = PatrolBoatsData(data_layer)

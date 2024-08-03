@@ -1,10 +1,9 @@
 from typing import List, Union
 
-from app.OLD_backend.data.dinghies import load_list_of_patrol_boats_at_event, load_list_of_patrol_boats_at_event_from_cache
+from app.OLD_backend.data.dinghies import DEPRECATE_load_list_of_patrol_boats_at_event, DEPRECATE_load_list_of_patrol_boats_at_event_from_cache
 from app.OLD_backend.forms.swaps import is_ready_to_swap
-from app.OLD_backend.rota.patrol_boats import (
-    get_summary_list_of_boat_allocations_for_events,
-)
+from app.backend.patrol_boats.data import load_list_of_patrol_boats_at_event_from_cache
+from app.backend.patrol_boats.summary import get_summary_list_of_patrol_boat_allocations_for_events
 from app.logic.events.patrol_boats.elements_in_patrol_boat_table import (
     get_existing_allocation_elements_for_day_and_boat,
     get_volunteer_row_to_select_skill, get_list_of_volunteers_for_skills_checkboxes,
@@ -60,7 +59,7 @@ def get_top_material_for_patrol_boat_form(
 
 
 def get_patrol_boat_summary(interface: abstractInterface, event: Event) -> Union[str, DetailListOfLines]:
-    summary_of_boat_allocations_as_df = get_summary_list_of_boat_allocations_for_events(
+    summary_of_boat_allocations_as_df = get_summary_list_of_patrol_boat_allocations_for_events(
         cache=interface.cache, event=event
     )
     if len(summary_of_boat_allocations_as_df) == 0:
@@ -73,13 +72,18 @@ def get_patrol_boat_summary(interface: abstractInterface, event: Event) -> Union
     return summary_of_boat_allocations
 
 def get_patrol_boat_driver_and_crew_qualifications(interface: abstractInterface, event: Event) -> Union[DetailListOfLines, str]:
+    in_swap_state = is_ready_to_swap(interface)
+    if in_swap_state:
+        return ""
+
     patrol_boat_driver_and_crew_qualifications_table = (
         get_patrol_boat_driver_and_crew_qualifications_table(
             interface=interface, event=event
         )
     )
+
     if len(patrol_boat_driver_and_crew_qualifications_table) == 0:
-        patrol_boat_driver_and_crew_qualifications = ""
+        return ""
     else:
         patrol_boat_driver_and_crew_qualifications = DetailListOfLines(
             ListOfLines(
@@ -103,9 +107,9 @@ def get_patrol_boat_driver_and_crew_qualifications_table(
     return Table(
         [
             get_volunteer_row_to_select_skill(
-                interface=interface, volunteer = volunteer
+             volunteer_at_event = volunteer_at_event
             )
-            for volunteer in volunteers
+            for volunteer_at_event in volunteers
         ]
     )
 
@@ -210,7 +214,7 @@ def get_boat_name_and_button_for_first_column(
 
     return ListOfLines([boat_name, delete_button]).add_Lines()
 
-
+##FIXME HERE
 def get_allocation_inputs_for_day_and_boat(
     interface: abstractInterface, patrol_boat: PatrolBoat, day: Day, event: Event
 ) -> ListOfLines:

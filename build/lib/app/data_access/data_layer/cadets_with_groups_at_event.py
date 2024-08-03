@@ -5,8 +5,7 @@ from app.data_access.data_layer.cadets_at_event import CadetsAtEventData
 from app.objects.events import Event
 
 
-from app.objects.cadet_at_event import  ListOfCadetsAtEvent, CadetAtEvent, CadetEventData
-from app.objects.primtive_with_id.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent, CadetWithIdAtEvent
+from app.objects.cadet_at_event import  ListOfCadetsAtEvent, CadetAtEvent
 from app.objects.primtive_with_id.groups import ListOfCadetIdsWithGroups
 from app.objects.cadets_with_groups import ListOfCadetsAtEventWithGroupsByDay, CadetAtEventWithGroupsByDay, \
     DaysAndGroups

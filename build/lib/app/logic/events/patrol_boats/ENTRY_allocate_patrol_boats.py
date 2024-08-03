@@ -85,7 +85,7 @@ def post_form_view_for_patrol_boat_allocation(
         copy_over_across_all_boats(interface)
     elif copyover_all_boats_and_roles_button.pressed(last_button_pressed):
         copy_over_across_all_boats_and_roles(interface)
-    elif add_new_boat_button.pressed(interface):
+    elif add_new_boat_button.pressed(last_button_pressed):
         update_adding_boat(interface)
 
     elif last_button_pressed in get_all_delete_buttons_for_patrol_boat_table(interface):

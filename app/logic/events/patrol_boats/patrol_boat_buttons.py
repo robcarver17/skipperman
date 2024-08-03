@@ -2,7 +2,7 @@ from typing import List, Tuple, Callable
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.OLD_backend.data.dinghies import load_list_of_patrol_boats_at_event, load_list_of_patrol_boats_at_event_from_cache
+from app.OLD_backend.data.dinghies import DEPRECATE_load_list_of_patrol_boats_at_event, DEPRECATE_load_list_of_patrol_boats_at_event_from_cache
 from app.OLD_backend.rota.patrol_boats import (
     get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day,
 )
@@ -57,7 +57,7 @@ def from_delete_button_name_to_boat_name(button_name: str) -> str:
 def list_of_delete_buttons_in_patrol_boat_table(
     interface: abstractInterface, event: Event
 ) -> List[str]:
-    list_of_boats_at_event = load_list_of_patrol_boats_at_event_from_cache(
+    list_of_boats_at_event = DEPRECATE_load_list_of_patrol_boats_at_event_from_cache(
         cache=interface.cache, event=event
     )
     return [

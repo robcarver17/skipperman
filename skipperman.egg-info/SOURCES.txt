@@ -107,7 +107,6 @@ app/OLD_backend/reporting/rota_report/generate_dataframe_dict_for_rota_report.py
 app/OLD_backend/reporting/rota_report/teams.py
 app/OLD_backend/reporting/rota_report/../../../data_access/configuration/configuration.yaml
 app/OLD_backend/rota/__init__.py
-app/OLD_backend/rota/patrol_boat_warnings.py
 app/OLD_backend/rota/patrol_boats.py
 app/OLD_backend/rota/rota_cadet_and_volunteer_data.py
 app/OLD_backend/rota/sorting_and_filtering.py
@@ -144,6 +143,12 @@ app/OLD_backend/wa_import/update_cadets_at_event.py
 app/OLD_backend/wa_import/../../data_access/configuration/configuration.yaml
 app/backend/__init__.py
 app/backend/../data_access/configuration/configuration.yaml
+app/backend/patrol_boats/__init__.py
+app/backend/patrol_boats/data.py
+app/backend/patrol_boats/patrol_boat_warnings.py
+app/backend/patrol_boats/people_on_boats.py
+app/backend/patrol_boats/summary.py
+app/backend/patrol_boats/../../data_access/configuration/configuration.yaml
 app/data_access/__init__.py
 app/data_access/data.py
 app/data_access/file_access.py

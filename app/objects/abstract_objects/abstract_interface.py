@@ -63,7 +63,10 @@ class abstractInterface:
         self.data.save_stored_items()
 
     def _clear_adhoc_cache(self):
-        del(self._cache)
+        try:
+            del(self._cache)
+        except:
+            pass
 
     def log_error(self, error_message: str):
         raise NotImplemented

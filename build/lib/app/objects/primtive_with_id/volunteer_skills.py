@@ -66,6 +66,9 @@ class SkillsDict(Dict[Skill, bool]):
                 continue
             self[skill] = False
 
+    @property
+    def can_drive_safety_boat(self) -> bool:
+        return self.get(PB2_skill, False)
 
 
 default_skills_dict = SkillsDict([(skill, False) for skill in all_skills])

@@ -1,7 +1,5 @@
 from dataclasses import dataclass
 
-from app.data_access.data_layer.ad_hoc_cache import AdHocCache
-
 from app.data_access.data_layer.data_layer import DataLayer
 
 from app.objects.exceptions import missing_data
@@ -16,89 +14,18 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.OLD_backend.data.volunteers import SORT_BY_FIRSTNAME, VolunteerData
 from typing import List
 
-import pandas as pd
-
 from app.OLD_backend.data.volunteer_rota import VolunteerRotaData
-from app.data_access.configuration.skills_and_roles import volunteer_roles
 
 from app.OLD_backend.rota.volunteer_rota import (
     SwapData,
-    get_volunteer_role_at_event_on_day,
 )
 
-from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.OLD_backend.data.patrol_boats import PatrolBoatsData
-from app.objects.primtive_with_id.patrol_boats import PatrolBoat, ListOfPatrolBoats
+from app.objects.primtive_with_id.patrol_boats import PatrolBoat
 from app.objects.utils import in_x_not_in_y, in_both_x_and_y
 from app.objects.primtive_with_id.volunteers import Volunteer, ListOfVolunteers
-from app.objects.patrol_boats import DEPRECATE_ListOfVolunteersAtEventWithPatrolBoats
-
-
-def get_summary_list_of_boat_allocations_for_events(
-    cache: AdHocCache, event: Event
-) -> PandasDFTable:
-    list_of_voluteers_at_event_with_patrol_boats = cache.get_from_cache(get_list_of_voluteers_at_event_with_patrol_boats, event=event)
-    list_of_boats_at_event = cache.get_from_cache(get_list_of_unique_boats_at_event_including_unallocated, event=event)
-
-    results_as_dict = dict(
-        [
-            (
-                day.name,
-                get_summary_list_of_boat_allocations_for_day_by_boat(
-                    day=day,
-                    list_of_voluteers_at_event_with_patrol_boats=list_of_voluteers_at_event_with_patrol_boats,
-                    list_of_boats_at_event=list_of_boats_at_event,
-                ),
-            )
-            for day in event.weekdays_in_event()
-        ]
-    )
-    boat_index = [boat.name for boat in list_of_boats_at_event]
-
-    summary_df = pd.DataFrame(results_as_dict, index=boat_index)
-    summary_df.columns = event.weekdays_in_event_as_list_of_string()
-
-    summary_table = PandasDFTable(summary_df)
-
-    return summary_table
-
-
-def  get_list_of_voluteers_at_event_with_patrol_boats(data_layer: DataLayer, event: Event) -> DEPRECATE_ListOfVolunteersAtEventWithPatrolBoats:
-    patrol_boat_data = PatrolBoatsData(data_layer)
-    list_of_voluteers_at_event_with_patrol_boats = (
-        patrol_boat_data.get_volunteers_allocated_to_patrol_boats_at_event(event)
-    )
-    return list_of_voluteers_at_event_with_patrol_boats
-
-def get_list_of_unique_boats_at_event_including_unallocated(data_layer: DataLayer, event: Event) -> ListOfPatrolBoats:
-    patrol_boat_data = PatrolBoatsData(data_layer)
-    list_of_boats_at_event = (
-        patrol_boat_data.list_of_unique_boats_at_event_including_unallocated(event)
-    )
-    return list_of_boats_at_event
-
-
-def get_summary_list_of_boat_allocations_for_day_by_boat(
-    day: Day, list_of_voluteers_at_event_with_patrol_boats, list_of_boats_at_event
-) -> List[int]:
-    return [
-        get_number_of_volunteers_allocated_to_day_and_boat_for_day_by_boat(day=day,
-                                                                           list_of_voluteers_at_event_with_patrol_boats=list_of_voluteers_at_event_with_patrol_boats,
-                                                                           patrol_boat=patrol_boat)
-        for patrol_boat in list_of_boats_at_event
-    ]
-
-def get_number_of_volunteers_allocated_to_day_and_boat_for_day_by_boat(
-    day: Day, list_of_voluteers_at_event_with_patrol_boats: DEPRECATE_ListOfVolunteersAtEventWithPatrolBoats, patrol_boat: PatrolBoat
-) -> int:
-    return \
-        len(
-            list_of_voluteers_at_event_with_patrol_boats.list_of_volunteers_and_boats_assigned_to_boat_and_day(
-                patrol_boat=patrol_boat, day=day
-            )
-        )
 
 
 def add_named_boat_to_event_with_no_allocation(
@@ -119,49 +46,6 @@ def remove_patrol_boat_and_all_associated_volunteer_connections_from_event(
     )
 
 
-def get_sorted_volunteer_ids_allocated_to_patrol_boat_at_event_on_days_sorted_by_role(
-    data_layer: DataLayer, patrol_boat: PatrolBoat, day: Day, event: Event
-) -> List[str]:
-    patrol_boat_data = PatrolBoatsData(data_layer)
-    list_of_volunteer_ids = (
-        patrol_boat_data.list_of_volunteer_ids_assigned_to_boat_and_day(
-            event=event, day=day, patrol_boat=patrol_boat
-        )
-    )
-
-    return sort_list_of_volunteer_ids_for_day_and_event_by_role(
-        data_layer=data_layer,
-        list_of_volunteer_ids=list_of_volunteer_ids,
-        day=day,
-        event=event,
-    )
-
-
-
-def sort_list_of_volunteer_ids_for_day_and_event_by_role(
-    data_layer: DataLayer,
-    list_of_volunteer_ids: List[str],
-    day: Day,
-    event: Event,
-) -> List[str]:
-    new_list = []
-    for role in volunteer_roles:
-        list_of_volunteer_ids_for_this_role = [
-            volunteer_id
-            for volunteer_id in list_of_volunteer_ids
-            if get_volunteer_role_at_event_on_day(
-                data_layer=data_layer, day=day, volunteer_id=volunteer_id, event=event
-            )
-            == role
-        ]
-        new_list += list_of_volunteer_ids_for_this_role
-
-    remaining_not_in_any_role = in_x_not_in_y(x=list_of_volunteer_ids, y=new_list)
-    new_list += remaining_not_in_any_role
-
-    return new_list
-
-
 def get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(
     interface: abstractInterface, day: Day, event: Event
 ) -> List[str]:
@@ -180,13 +64,6 @@ def get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day(
         event
     )
 
-def get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_data(
-data_layer: DataLayer, event: Event
-) -> ListOfVolunteers:
-    patrol_boat_data = PatrolBoatsData(data_layer)
-    return patrol_boat_data.get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_data(
-        event
-    ).sort_by_firstname()
 
 def DEPRECATE_get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day(
     interface: abstractInterface, event: Event

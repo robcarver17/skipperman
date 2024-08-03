@@ -1,9 +1,11 @@
 from dataclasses import dataclass
 from typing import List
 
+from app.objects.exceptions import MultipleMatches
+
 from app.objects.day_selectors import Day, DaySelector
 from app.objects.events import Event
-from app.objects.exceptions import arg_not_passed, missing_data
+from app.objects.exceptions import arg_not_passed, missing_data, MissingData
 from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
 from app.objects.generic_objects import GenericSkipperManObject, GenericSkipperManObjectWithIds
 from app.objects.utils import make_id_as_int_str
@@ -328,6 +330,22 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
             return missing_data
         elif len(matches) > 1:
             raise Exception(
+                "Volunteer %s day %s is on more than one boat at event shouldn't be possible!"
+                % (volunteer_id, day.name)
+            )
+
+        return matches[0].patrol_boat_id
+
+    def which_boat_id_is_volunteer_on_today(self, volunteer_id: str, day: Day) -> str:
+        matches = [
+            item
+            for item in self
+            if item.volunteer_id == volunteer_id and item.day == day
+        ]
+        if len(matches) == 0:
+            raise MissingData
+        elif len(matches) > 1:
+            raise MultipleMatches(
                 "Volunteer %s day %s is on more than one boat at event shouldn't be possible!"
                 % (volunteer_id, day.name)
             )

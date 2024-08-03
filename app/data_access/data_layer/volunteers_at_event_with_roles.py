@@ -1,4 +1,3 @@
-from typing import List
 
 from app.objects.day_selectors import Day
 
@@ -11,19 +10,10 @@ from app.objects.events import Event
 from app.data_access.data_layer.ad_hoc_cache import AdHocCache
 
 from app.data_access.data_layer.data_layer import DataLayer
-from app.data_access.data_layer.cadets_with_groups_at_event import CadetsWithGroupsAtEventData
-
-from app.objects.primtive_with_id.volunteers import (
-    ListOfVolunteers,
-
-)
-from app.objects.primtive_with_id.volunteer_skills import  ListOfVolunteerSkills
-from app.objects.primtive_with_id.volunteer_at_event import ListOfVolunteersAtEventWithId, VolunteerAtEventWithId
 from app.objects.primtive_with_id.volunteer_roles_and_groups import ListOfVolunteersWithIdInRoleAtEvent, RoleAndGroup
 
 from app.objects.volunteers_in_roles import ListOfVolunteersAtEventWithSkillsAndRoles, \
     VolunteerAtEventWithSkillsAndRoles, RoleAndGroupByDayDict
-from app.objects.cadets_with_groups import ListOfCadetsAtEventWithGroupsByDay, CadetAtEventWithGroupsByDay
 from app.objects.volunteers_at_event import VolunteerAtEventWithSkills
 
 class VolunteersAtEventWithRolesData:
@@ -35,7 +25,6 @@ class VolunteersAtEventWithRolesData:
         list_of_volunteers_at_event_with_skills = self.get_list_of_volunteers_at_event_with_skills(event=event)
         list_of_volunteers_at_event_with_skills_and_roles = [
             self.get_volunteer_at_event_with_skills_and_roles(
-                event=event,
                 volunteer_at_event_with_skills=volunteer_at_event_with_skills
             )
             for volunteer_at_event_with_skills in list_of_volunteers_at_event_with_skills

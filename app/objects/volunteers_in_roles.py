@@ -61,7 +61,11 @@ class DEPRECATE_ListOfVolunteersWithRoleAtEvent(GenericListOfObjects):
         return DEPRECATE_VolunteerWithRoleAtEvent
 
 class RoleAndGroupByDayDict(Dict[Day, RoleAndGroup]):
-    pass
+    def has_role_on_day(self, day: Day, role: str) -> bool:
+        return self.role_and_group_on_day(day).role==role
+
+    def role_and_group_on_day(self, day: Day) -> RoleAndGroup:
+        return self.get(day, RoleAndGroup.create_empty())
 
 @dataclass
 class VolunteerAtEventWithSkillsAndRoles:

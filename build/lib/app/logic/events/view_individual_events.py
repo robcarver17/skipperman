@@ -12,9 +12,7 @@ from app.OLD_backend.group_allocations.event_summarys import (
     identify_birthdays,
     summarise_allocations_for_event,
 )
-from app.OLD_backend.rota.patrol_boats import (
-    get_summary_list_of_boat_allocations_for_events,
-)
+from app.backend.patrol_boats.summary import get_summary_list_of_patrol_boat_allocations_for_events
 from app.OLD_backend.rota.volunteer_rota_summary import (
     get_summary_list_of_teams_and_groups_for_events,
 )
@@ -110,7 +108,7 @@ def get_event_form_for_event(
         rota = get_summary_list_of_teams_and_groups_for_events(
             cache=cache, event=event
         )
-        boat_allocation_table = get_summary_list_of_boat_allocations_for_events(
+        boat_allocation_table = get_summary_list_of_patrol_boat_allocations_for_events(
             cache=interface.cache, event=event
         )
         if len(boat_allocation_table) > 0:

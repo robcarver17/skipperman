@@ -22,8 +22,12 @@ class AdHocCache(DataLayer):
         return result
 
     def _call_and_store_in_adhoc(self, callable_function: Callable, key: str, **kwargs):
-        result = callable_function(data_layer = self._data_layer, **kwargs)
+        result = callable_function(data_layer = self.data_layer, **kwargs)
 
         self._adhoc_store[key] = result
 
         return result
+
+    @property
+    def data_layer(self):
+        return self._data_layer

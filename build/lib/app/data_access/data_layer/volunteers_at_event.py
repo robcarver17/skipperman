@@ -40,18 +40,11 @@ class VolunteersAtEventData:
         volunteer_skills = self.get_list_of_volunteer_skills().dict_of_skills_for_volunteer_id(volunteer_at_event_with_id.volunteer_id)
         list_of_associated_cadets=self.get_list_of_associated_cadets_at_event(event=event, list_of_associated_cadet_id=volunteer_at_event_with_id.list_of_associated_cadet_id)
 
-        volunteer_event_data = VolunteerEventData(
+        return VolunteerAtEventWithSkills.from_volunteer_at_event_with_id(
             event=event,
-            availablity = volunteer_at_event_with_id.availablity,
-            any_other_information=volunteer_at_event_with_id.any_other_information,
-            preferred_duties=volunteer_at_event_with_id.preferred_duties,
-            notes=volunteer_at_event_with_id.notes,
-            list_of_associated_cadets=list_of_associated_cadets
-        )
-
-        return VolunteerAtEventWithSkills(
             volunteer=volunteer,
-            volunteer_event_data=volunteer_event_data,
+            volunteer_at_event_with_id=volunteer_at_event_with_id,
+            list_of_associated_cadets=list_of_associated_cadets,
             skills_dict=volunteer_skills
         )
 

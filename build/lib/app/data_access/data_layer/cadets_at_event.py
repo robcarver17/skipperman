@@ -28,9 +28,6 @@ class CadetsAtEventData:
             cadet_with_id_at_event=cadet_with_id_at_event
             )
 
-
-
-
     def get_list_of_cadets_with_id_at_event(self, event: Event) -> ListOfCadetsWithIDAtEvent:
         return self.data_api.get_list_of_cadets_at_event(event)
 

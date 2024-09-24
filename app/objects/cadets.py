@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import datetime
+import enum
 
 from app.data_access.configuration.configuration import (
     MIN_CADET_AGE,
@@ -11,21 +12,25 @@ from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
 )
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
-from app.objects.utils import (
+from app.objects_OLD.utils import (
     transform_date_into_str,
     similar,
     transform_str_or_datetime_into_date,
     in_x_not_in_y,
 )
-from app.objects.exceptions import arg_not_passed, DAYS_IN_YEAR, missing_data, MissingData, MultipleMatches
-from app.objects.utils import union_of_x_and_y
+from app.objects_OLD.exceptions import arg_not_passed, DAYS_IN_YEAR, MissingData, MultipleMatches
+from app.objects_OLD.utils import union_of_x_and_y
 
+MembershipStatus = enum.Enum('MembershipStatus', ['Current', 'None_Member', 'Lapsed'])
+
+none_member = MembershipStatus.None_Member
 
 @dataclass
 class Cadet(GenericSkipperManObjectWithIds):
     first_name: str
     surname: str
     date_of_birth: datetime.date
+    membership_status: MembershipStatus
     id: str = arg_not_passed
 
     @classmethod
@@ -34,13 +39,17 @@ class Cadet(GenericSkipperManObjectWithIds):
         first_name: str,
         surname: str,
         date_of_birth: datetime.date,
+        membership_status: MembershipStatus,
+
         id: str = arg_not_passed,
     ):
         return cls(
             first_name=first_name.strip(" ").title(),
             surname=surname.strip(" ").title(),
             date_of_birth=transform_str_or_datetime_into_date(date_of_birth),
+            membership_status=membership_status,
             id=id,
+
         )
 
     def __repr__(self):
@@ -114,7 +123,7 @@ def is_cadet_age_surprising(cadet: Cadet):
 
 DEFAULT_DATE_OF_BIRTH = datetime.date(1970, 1, 1)
 
-default_cadet = Cadet(first_name=" ", surname=" ", date_of_birth=DEFAULT_DATE_OF_BIRTH)
+default_cadet = Cadet(first_name=" ", surname=" ", date_of_birth=DEFAULT_DATE_OF_BIRTH, membership_status=none_member)
 
 
 class ListOfCadets(GenericListOfObjectsWithIds):

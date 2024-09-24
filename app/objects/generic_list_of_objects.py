@@ -1,8 +1,8 @@
 from typing import List
 import pandas as pd
-from app.objects.exceptions import MissingData
-from app.objects.generic_objects import GenericSkipperManObject, create_list_of_objects_from_dataframe, \
-    create_data_frame_given_list_of_objects, GenericSkipperManObjectWithIds
+from app.objects_OLD.exceptions import MissingData
+from app.objects.generic_objects import GenericSkipperManObject, GenericSkipperManObjectWithIds, \
+    get_list_of_attributes
 
 
 class GenericListOfObjects(list):
@@ -65,7 +65,6 @@ class GenericListOfObjectsWithIds(GenericListOfObjects):
 
         return index
 
-
     @classmethod
     def subset_from_list_of_ids(
         cls, full_list: "GenericListOfObjectsWithIds", list_of_ids: List[str]
@@ -99,3 +98,46 @@ class GenericListOfObjectsWithIds(GenericListOfObjects):
         max_id = max(list_of_ids_as_int)
 
         return max_id
+
+
+def create_list_of_objects_from_dataframe(class_of_object: GenericSkipperManObject, df: pd.DataFrame):
+    list_of_objects = [
+        create_object_from_df_row(class_of_object=class_of_object, row=row)
+        for index, row in df.iterrows()
+    ]
+
+    return list_of_objects
+
+
+def create_data_frame_given_list_of_objects(list_of_objects: List[GenericSkipperManObject]) -> pd.DataFrame:
+    list_of_dicts = [item.as_str_dict() for item in list_of_objects]
+
+    return pd.DataFrame(list_of_dicts)
+
+
+def create_object_from_df_row(class_of_object: GenericSkipperManObject, row: pd.Series):
+    row_as_dict = row.to_dict()
+
+    try:
+        object = class_of_object.from_dict_of_str(row_as_dict)
+    except:
+        raise Exception(
+            _error_str_when_creating_object_from_df_row(
+                class_of_object=class_of_object, row_as_dict=dict(row_as_dict)
+            )
+        )
+
+    return object
+
+
+def _error_str_when_creating_object_from_df_row(class_of_object, row_as_dict: dict):
+    if getattr(class_of_object, "from_dict", None) is None:
+        return Exception(
+            "Class %s requires .from_dict() method" % (str(class_of_object))
+        )
+    list_of_attributes = get_list_of_attributes(some_class=class_of_object)
+    return Exception(
+        "Class %s requires elements %s element %s doesn't match"
+        % (str(class_of_object), str(list_of_attributes), str(row_as_dict))
+    )
+

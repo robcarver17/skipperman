@@ -1,9 +1,7 @@
 from dataclasses import dataclass
 import datetime
-from typing import List
 
-from app.objects.cadets import Cadet
-from app.objects.exceptions import missing_data, MissingData
+from app.objects_OLD.exceptions import MissingData
 
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
@@ -87,33 +85,3 @@ class ListOfCadetsWithIdOnCommittee(GenericListOfObjects):
         return self[idx]
 
 
-@dataclass
-class CadetOnCommittee:
-    cadet_on_committee: CadetWithIdCommitteeMember
-    cadet: Cadet
-
-    def __lt__(self, other):
-        if (
-            self.cadet_on_committee.status_string()
-            < other.cadet_on_committee.status_string()
-        ):
-            return True
-        elif (
-            self.cadet_on_committee.status_string()
-            > other.cadet_on_committee.status_string()
-        ):
-            return False
-
-        return self.cadet.name < other.cadet.name
-
-    @property
-    def cadet_id(self):
-        return self.cadet.id
-
-    @property
-    def deselected(self):
-        return self.cadet_on_committee.deselected
-
-
-class ListOfCadetsOnCommittee(List[CadetOnCommittee]):
-    pass

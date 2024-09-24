@@ -1,10 +1,10 @@
 import datetime
 from typing import Tuple
 
-from app.objects.abstract_objects.abstract_text import Input
+from app.objects_OLD.abstract_objects.abstract_text import Input
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from dataclasses import dataclass
-from app.objects.exceptions import arg_not_passed
+from app.objects_OLD.exceptions import arg_not_passed
 
 
 class Form(list):

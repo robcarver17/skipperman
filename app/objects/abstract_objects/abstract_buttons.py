@@ -8,8 +8,8 @@ from app.data_access.configuration.fixed import (
     CANCEL_KEYBOARD_SHORTCUT,
     SAVE_KEYBOARD_SHORTCUT,
 )
-from app.objects.abstract_objects.abstract_text import Arrow, Pointer, Symbol
-from app.objects.exceptions import arg_not_passed
+from app.objects_OLD.abstract_objects.abstract_text import Arrow, Pointer, Symbol
+from app.objects_OLD.exceptions import arg_not_passed
 
 MAIN_MENU_BUTTON_LABEL = "Main menu"
 CANCEL_BUTTON_LABEL = "Cancel"

@@ -5,25 +5,25 @@ from app.data_access.data_layer.ad_hoc_cache import AdHocCache
 
 from app.data_access.data_layer.data_layer import DataLayer
 
-from app.objects.exceptions import (
+from app.objects_OLD.exceptions import (
     missing_data,
     NoFileUploaded,
     FileError,
     arg_not_passed,
 )
-from app.objects.abstract_objects.abstract_form import (
+from app.objects_OLD.abstract_objects.abstract_form import (
     Form,
     YES,
     NO,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_buttons import FINISHED_BUTTON_LABEL, Button
+from app.objects_OLD.abstract_objects.abstract_buttons import FINISHED_BUTTON_LABEL, Button
 from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
     _______________,
 )
-from app.objects.abstract_objects.form_function_mapping import (
+from app.objects_OLD.abstract_objects.form_function_mapping import (
     DisplayAndPostFormFunctionMaps,
 )
 
@@ -42,12 +42,7 @@ class abstractInterface:
     display_and_post_form_function_maps: DisplayAndPostFormFunctionMaps = arg_not_passed
     action_name: str = ""
 
-    def due_for_another_data_backup(self):
-        return self.data.due_for_another_data_backup()
-
-    def make_data_backup(self):
-        self.data.make_data_backup()
-
+    ## SHOULD BE DONE ON NEW PAGE DISPLAY?? AND A MESS!
     def flush_cache_to_store(self):
         self._save_data_store_cache()
         self._clear_data_store_cache()
@@ -80,34 +75,14 @@ class abstractInterface:
     def clear_where_finished_button_should_lead_to(self):
         return self.clear_persistent_value(FINISHED_BUTTON_LABEL)
 
-    def display_flag_set(self, flag_key):
-        value = self.get_persistent_value(DISPLAY % flag_key, default=False)
-        return value == SET
-
-    def set_display_flag(self, flag_key, set_to: bool):
-        key = DISPLAY % flag_key
-        if set_to:
-            self.set_persistent_value(key, SET)
-        else:
-            self.clear_persistent_value(key)
-
     def get_persistent_value(self, key, default=missing_data):
-        return self.persistent_store.get(key, default)
+        raise NotImplemented
 
     def set_persistent_value(self, key, value):
-        self.persistent_store[key] = value
+        raise NotImplemented
 
     def clear_persistent_value(self, key):
-        del self.persistent_store[key]
-
-    @property
-    def persistent_store(self) -> dict:
-        store = getattr(self, "_store", None)
-        if store is None:
-            store = dict()
-            self._store = store
-
-        return store
+        raise NotImplemented
 
     @property
     def is_initial_stage_form(self) -> bool:
@@ -125,6 +100,10 @@ class abstractInterface:
         raise NotImplemented
 
     def clear_persistent_data_for_action_and_reset_to_initial_stage_form(self):
+        self.reset_to_initial_stage_form()  ## this should happen anyway, but belt and braces
+        self.clear_persistent_data_for_action()
+
+    def clear_persistent_data_for_action(self):
         raise NotImplemented
 
     def clear_persistent_data_except_specified_fields(self, specified_fields: list):
@@ -169,8 +148,6 @@ class abstractInterface:
         )
         return NewForm(form_name)
 
-    def url_for_password_reset(self, username: str, new_password: str):
-        raise NotImplemented
 
     def get_current_logged_in_username(self) -> str:
         raise NotImplemented
@@ -221,12 +198,12 @@ def form_with_message_and_finished_button(
         interface.clear_where_finished_button_should_lead_to()
 
     return form_with_content_and_finished_button(
-        content=Line(message), interface=interface, button=button
+        content=Line(message),  button=button
     )
 
 
 def form_with_content_and_finished_button(
-    content, interface: abstractInterface, button: Button = finished_button
+    content,  button: Button = finished_button
 ) -> Form:
     return Form(
         ListOfLines(

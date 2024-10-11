@@ -5,7 +5,7 @@ from app.OLD_backend.data.mapped_events import get_row_in_mapped_event_data_give
 from app.objects.cadets import default_cadet
 from app.objects.exceptions import missing_data
 from app.objects.day_selectors import DaySelector, any_day_selector_from_short_form_text
-from app.objects.primtive_with_id.cadet_with_id_at_event import get_attendance_selection_from_event_row
+from app.objects.cadet_with_id_at_event import get_attendance_selection_from_event_row
 
 from app.objects.events import Event
 from app.data_access.configuration.field_list import (
@@ -22,15 +22,15 @@ from app.data_access.configuration.field_list_groups import (
     FOOD_PREFERENCE_KEY_IN_VOLUNTEER_FIELDS_DICT,
     LIST_OF_VOLUNTEER_FIELDS,
 )
-from app.objects.mapped_wa_event import RowInMappedWAEvent
-from app.objects.relevant_information_for_volunteers import (
+from app.objects_OLD.mapped_wa_event import RowInMappedWAEvent
+from app.objects_OLD.relevant_information_for_volunteers import (
     RelevantInformationForVolunteer,
     RelevantInformationForVolunteerIdentification,
     RelevantInformationForVolunteerAvailability,
     RelevantInformationForVolunteerDetails,
     missing_relevant_information,
 )
-from app.objects.primtive_with_id.volunteers import Volunteer
+from app.objects.volunteers import Volunteer
 
 NO_VOLUNTEER_IN_FORM = "NO_VOLUNTEER_IN_FORM"
 
@@ -74,6 +74,7 @@ def get_identification_information_for_volunteer(
         )
         if cadet is missing_data:
             raise
+        cadet_id = cadet.id
     except:
         ## Won't always have cadets maybe in the future
         cadet = default_cadet

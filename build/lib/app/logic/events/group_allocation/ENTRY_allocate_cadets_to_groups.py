@@ -3,15 +3,15 @@ from typing import Union
 from app.OLD_backend.wa_import.update_cadets_at_event import make_cadet_available_on_day
 from app.objects.day_selectors import Day
 
-from app.OLD_backend.forms.reorder_form import (
+from app.frontend.forms import (
     list_of_button_names_given_group_order,
     reorderFormInterface,
 )
-from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
-from app.logic.events.group_allocation.add_cadet_partner import (
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+from app.frontend.events.group_allocation.add_cadet_partner import (
     display_add_cadet_partner,
 )
-from app.logic.events.group_allocation.store_state import (
+from app.frontend.events.group_allocation.store_state import (
     set_day_in_state,
     no_day_set_in_state,
     clear_day_in_state,
@@ -19,7 +19,7 @@ from app.logic.events.group_allocation.store_state import (
     SORT_ORDER,
     get_current_sort_order,
 )
-from app.logic.events.group_allocation.render_allocation_form import (
+from app.frontend.events.group_allocation.render_allocation_form import (
     display_form_allocate_cadets_at_event,
     get_list_of_all_add_partner_buttons,
     list_of_all_day_button_names,
@@ -27,15 +27,15 @@ from app.logic.events.group_allocation.render_allocation_form import (
     get_list_of_all_cadet_buttons,
     cadet_id_from_cadet_button,
 )
-from app.logic.events.group_allocation.input_fields import (
+from app.frontend.events.group_allocation.input_fields import (
     cadet_id_given_partner_button,
     RESET_DAY_BUTTON_LABEL,
     cadet_id_from_cadet_available_buttons,
 )
-from app.logic.events.group_allocation.parse_allocation_form import (
+from app.frontend.events.group_allocation.parse_allocation_form import (
     update_data_given_allocation_form,
 )
-from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing import (
+from app.frontend.events.cadets_at_event.track_cadet_id_in_state_when_importing import (
     save_cadet_id_at_event,
     clear_cadet_id_at_event,
 )
@@ -51,7 +51,7 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 
 
 def display_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewForm]:

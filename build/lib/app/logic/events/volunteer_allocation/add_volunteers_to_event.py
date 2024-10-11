@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.objects.relevant_information_for_volunteers import (
+from app.objects_OLD.relevant_information_for_volunteers import (
     ListOfRelevantInformationForVolunteer,
 )
 
@@ -16,16 +16,16 @@ from app.OLD_backend.volunteers.volunteer_allocation import (
 )
 from app.OLD_backend.volunteers.volunteers import DEPRECATE_get_volunteer_from_id
 from app.OLD_backend.rota.volunteer_rota import is_volunteer_already_at_event
-from app.logic.shared.events_state import get_event_from_state
-from app.logic.events.volunteer_allocation.add_volunteers_process_form import (
+from app.frontend.shared.events_state import get_event_from_state
+from app.frontend.events.volunteer_allocation.add_volunteers_process_form import (
     add_volunteer_at_event_with_form_contents,
 )
-from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import (
+from app.frontend.events.volunteer_allocation.track_state_in_volunteer_allocation import (
     clear_volunteer_id_at_event_in_state,
     get_and_save_next_volunteer_id_in_mapped_event_data,
     get_current_volunteer_id_at_event,
 )
-from app.logic.events.volunteer_allocation.add_volunteer_to_event_form_contents import (
+from app.frontend.events.volunteer_allocation.add_volunteer_to_event_form_contents import (
     get_header_text,
     get_connection_checkbox,
     get_availablity_text,
@@ -38,7 +38,7 @@ from app.logic.events.volunteer_allocation.add_volunteer_to_event_form_contents 
     get_notes_input_for_volunteer_at_event,
     get_any_self_declared_status_text,
 )
-from app.logic.events.constants import *
+from app.frontend.events.constants import *
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_buttons import Button

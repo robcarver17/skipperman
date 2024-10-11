@@ -1,10 +1,10 @@
 from typing import Union
 
-from app.logic.volunteers.add_volunteer import display_form_add_volunteer
-from app.logic.volunteers.view_individual_volunteer import (
+from app.frontend.volunteers.add_volunteer import display_form_add_volunteer
+from app.frontend.volunteers.view_individual_volunteer import (
     display_form_view_individual_volunteer,
 )
-from app.objects.primtive_with_id.volunteers import Volunteer
+from app.objects.volunteers import Volunteer
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -22,7 +22,7 @@ from app.objects.abstract_objects.abstract_lines import (
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.OLD_backend.data.volunteers import SORT_BY_SURNAME, SORT_BY_FIRSTNAME
 from app.OLD_backend.volunteers.volunteers import get_sorted_list_of_volunteers
-from app.logic.shared.volunteer_state import (
+from app.frontend.shared.volunteer_state import (
     update_state_for_specific_volunteer_given_volunteer_as_str,
 )
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable

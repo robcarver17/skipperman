@@ -4,7 +4,7 @@ import pandas as pd
 
 from app.objects.abstract_objects.abstract_text import bold
 
-from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_form import Form, NewForm, File
 from app.objects.abstract_objects.abstract_tables import Table
 from app.objects.abstract_objects.abstract_buttons import Button
@@ -15,18 +15,18 @@ from app.objects.abstract_objects.abstract_lines import (
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.OLD_backend.forms.reorder_form import (
+from app.frontend.forms import (
     reorder_table,
     reorderFormInterface,
     list_of_button_names_given_group_order,
 )
-from app.OLD_backend.forms.reorder_matrix import (
+from app.frontend.forms import (
     reorder_matrix,
     reorderMatrixInterface,
     list_of_button_values_given_list_of_entries,
 )
 
-from app.logic.reporting.shared.arrangements import (
+from app.frontend.reporting.shared.arrangements import (
     get_arrangement_of_rows_from_storage_or_derive_from_method,
     get_arrangement_of_columns_from_storage_or_derive_from_method,
     modify_arrangement_options_and_group_order_to_reflect_arrangement_method_name,
@@ -35,14 +35,14 @@ from app.logic.reporting.shared.arrangements import (
     add_missing_groups_to_group_order_and_arrangement,
     modify_arrangement_options_given_custom_list,
 )
-from app.logic.reporting.shared.reporting_options import (
+from app.frontend.reporting.shared.reporting_options import (
     augment_order_of_groups_with_sizes,
     get_reporting_options,
 )
-from app.logic.reporting.shared.arrangement_state import (
+from app.frontend.reporting.shared.arrangement_state import (
     save_arrangement_and_group_order,
 )
-from app.logic.reporting.shared.group_order import get_missing_groups, get_empty_groups
+from app.frontend.reporting.shared.group_order import get_missing_groups, get_empty_groups
 
 from app.OLD_backend.reporting.arrangement.arrange_options import (
     dict_of_arrangements_that_reorder,

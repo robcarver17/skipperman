@@ -11,9 +11,10 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.exceptions import arg_not_passed
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
-from app.objects.food import FoodRequirements, OTHER_IN_FOOD_REQUIRED
-from app.objects.mapped_wa_event import RegistrationStatus, all_possible_status
-from app.objects.primtive_with_id.volunteer_skills import SkillsDict, all_skills
+from app.objects_OLD.food import FoodRequirements, OTHER_IN_FOOD_REQUIRED
+from app.objects_OLD.mapped_wa_event import RegistrationStatus, all_possible_status
+from app.objects.volunteer_skills import all_skills
+from app.objects.composed.volunteers_with_skills import SkillsDict
 
 ALL_AVAILABLE = "Select all"
 

@@ -1,13 +1,13 @@
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
-from app.data_access.data_layer.store import DataAccessMethod
+from app.data_access.store.store import DataAccessMethod
 
 from app.OLD_backend.data.cadets import CadetData
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
 from app.objects.events import Event
 
-from app.objects.cadet_at_event import DEPRECATE_ListOfCadetsAtEvent
+from app.objects_OLD.cadet_at_event import DEPRECATE_ListOfCadetsAtEvent
 
 
 class CadetsAtEventData:

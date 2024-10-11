@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.objects.cadets_with_groups import ListOfCadetsAtEventWithGroupsByDay
+from app.objects_OLD.cadets_with_groups import ListOfCadetsAtEventWithGroupsByDay
 from app.objects.events import Event
-from app.objects.primtive_with_id.volunteer_at_event import VolunteerAtEventWithId
-from app.objects.primtive_with_id.volunteer_skills import SkillsDict
+from app.objects_OLD.primtive_with_id.volunteer_at_event import VolunteerAtEventWithId
+from app.objects.composed.volunteers_with_skills import SkillsDict
 
-from app.objects.primtive_with_id.volunteers import Volunteer
+from app.objects.volunteers import Volunteer
 
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject

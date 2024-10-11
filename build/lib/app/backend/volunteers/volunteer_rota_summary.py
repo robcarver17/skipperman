@@ -3,8 +3,8 @@ from typing import List, Dict
 
 import pandas as pd
 
-from app.data_access.data_layer.ad_hoc_cache import AdHocCache
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
+from app.data_access.store.data_layer import DataLayer
 
 from app.OLD_backend.data.volunteer_rota import VolunteerRotaData
 from app.OLD_backend.rota.volunteer_rota import (
@@ -14,9 +14,9 @@ from app.data_access.configuration.groups import all_groups_names
 from app.data_access.configuration.skills_and_roles import all_volunteer_role_names
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.primtive_with_id.groups import Group, GROUP_UNALLOCATED_TEXT
-from app.objects.primtive_with_id.volunteer_role_targets import ListOfTargetForRoleAtEvent
-from app.objects.primtive_with_id.volunteer_roles_and_groups import NO_ROLE_SET, get_list_of_volunteer_teams, \
+from app.objects.groups import Group, GROUP_UNALLOCATED_TEXT
+from app.objects_OLD.primtive_with_id.volunteer_role_targets import ListOfTargetForRoleAtEvent
+from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import NO_ROLE_SET, get_list_of_volunteer_teams, \
     ListOfVolunteersWithIdInRoleAtEvent, RoleAndGroup, TeamAndGroup
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 

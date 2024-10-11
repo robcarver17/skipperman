@@ -1,13 +1,13 @@
 from app.web.flask.security import get_access_group_for_current_user, authenticated_user
-from app.web.html.components import (
+from app.web.html.html_components import (
     Html,
     menu_item_for_action,
 )
-from app.web.html.components import (
+from app.web.html.html_components import (
     html_container_wrapper,
 )
 from app.web.html.master_layout import get_master_layout
-from app.logic.menu_define import menu_definition, menu_security_dict
+from app.frontend.menu_define import menu_definition, menu_security_dict
 
 
 

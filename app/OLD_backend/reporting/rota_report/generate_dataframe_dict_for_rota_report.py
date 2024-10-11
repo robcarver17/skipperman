@@ -20,10 +20,10 @@ from app.OLD_backend.reporting.rota_report.teams import (
 )
 from app.objects.day_selectors import DaySelector, Day
 from app.objects.events import Event
-from app.objects.volunteers_in_roles import (
+from app.objects_OLD.volunteers_in_roles import (
     VolunteerInRoleAtEventWithTeamName,
 )
-from app.objects.primtive_with_id.volunteer_roles_and_groups import ListOfVolunteersWithIdInRoleAtEvent
+from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import ListOfVolunteersWithIdInRoleAtEvent
 
 RIVER_SAFETY = "River safety"
 LAKE_SAFETY = "Lake safety"

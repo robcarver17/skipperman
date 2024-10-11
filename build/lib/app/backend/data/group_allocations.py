@@ -1,6 +1,6 @@
 from typing import List
 
-from app.objects.primtive_with_id.cadet_with_id_at_event import CadetWithIdAtEvent
+from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
 
 from app.objects.exceptions import missing_data, arg_not_passed
 
@@ -12,12 +12,13 @@ from app.objects.utils import in_both_x_and_y
 
 from app.objects.events import Event
 
-from app.objects.cadets_with_groups import (
+from app.objects_OLD.cadets_with_groups import (
     ListOfCadetsWithGroup,
 )
-from app.objects.primtive_with_id.groups import Group, GROUP_UNALLOCATED, order_list_of_groups, ListOfCadetIdsWithGroups
+from app.objects.groups import Group, GROUP_UNALLOCATED, order_list_of_groups
+from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
 
 class GroupAllocationsData:

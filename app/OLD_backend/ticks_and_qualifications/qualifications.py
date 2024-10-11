@@ -1,7 +1,7 @@
 from typing import List
 
 from app.objects.cadets import Cadet
-from app.objects.qualifications import Qualification, ListOfCadetsWithQualifications
+from app.objects.qualifications import Qualification, ListOfCadetsWithIdsAndQualifications
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -28,7 +28,7 @@ def remove_qualification_from_cadet(
 
 def load_list_of_cadets_with_qualifications(
     interface: abstractInterface,
-) -> ListOfCadetsWithQualifications:
+) -> ListOfCadetsWithIdsAndQualifications:
     qualification_data = QualificationData(interface.data)
     return qualification_data.get_list_of_cadets_with_qualifications()
 

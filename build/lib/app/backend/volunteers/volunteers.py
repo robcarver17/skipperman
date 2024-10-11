@@ -1,6 +1,6 @@
 from typing import List
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
 from app.objects.cadets import ListOfCadets, Cadet
 
@@ -8,11 +8,8 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.OLD_backend.data.volunteers import VolunteerData, SORT_BY_SURNAME
 from app.objects.exceptions import arg_not_passed
-from app.objects.primtive_with_id.volunteers import Volunteer, ListOfVolunteers
-from app.objects.primtive_with_id.volunteer_skills import ListOfVolunteerSkills, SkillsDict
-
-
-
+from app.objects.volunteers import Volunteer, ListOfVolunteers
+from app.objects.composed.volunteers_with_skills import SkillsDict, ListOfVolunteersWithSkills
 
 
 def get_volunteer_with_name(
@@ -210,7 +207,7 @@ def save_skills_for_volunteer(
     )
 
 
-def load_list_of_volunteer_skills(data_layer: DataLayer) -> ListOfVolunteerSkills:
+def load_list_of_volunteer_skills(data_layer: DataLayer) -> ListOfVolunteersWithSkills:
     volunteer_data = VolunteerData(data_layer)
     return volunteer_data.get_list_of_volunteer_skills()
 

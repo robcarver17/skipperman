@@ -1,10 +1,10 @@
 from typing import Union
 
 from app.OLD_backend.rota.volunteer_history import get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first
-from app.logic.volunteers.edit_cadet_connections import (
+from app.frontend.volunteers.edit_cadet_connections import (
     display_form_edit_cadet_volunteer_connections,
 )
-from app.logic.volunteers.edit_volunteer import display_form_edit_individual_volunteer
+from app.frontend.volunteers.edit_volunteer import display_form_edit_individual_volunteer
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
@@ -16,7 +16,7 @@ from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
 )
-from app.logic.abstract_logic_api import (
+from app.frontend.form_handler import (
     initial_state_form,
     button_error_and_back_to_initial_state_form,
 )
@@ -27,9 +27,9 @@ from app.OLD_backend.volunteers.volunteers import (
     get_dict_of_existing_skills,
     get_connected_cadets,
 )
-from app.logic.shared.volunteer_state import get_volunteer_from_state
+from app.frontend.shared.volunteer_state import get_volunteer_from_state
 
-from app.objects.primtive_with_id.volunteers import Volunteer
+from app.objects.volunteers import Volunteer
 
 
 def display_form_view_individual_volunteer(
@@ -127,7 +127,7 @@ def buttons_for_volunteer_form() -> ButtonBar:
         ]
     )
 
-EDIT_BUTTON_LABEL = "Edit cadet name and qualifications"
+EDIT_BUTTON_LABEL = "Edit cadet name and qualifications_and_ticks"
 EDIT_CADET_CONNECTIONS_BUTTON_LABEL = "Edit connections with cadets"
 
 main_edit_button = Button(EDIT_BUTTON_LABEL, nav_button=True)

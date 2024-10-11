@@ -5,7 +5,7 @@ from app.OLD_backend.reporting.rollcall_report.get_data import (
 )
 import pandas as pd
 
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.OLD_backend.reporting.rollcall_report.configuration import (

@@ -10,10 +10,10 @@ from app.OLD_backend.clothing import (
     get_list_of_active_cadet_objects_with_clothing_at_event,
 )
 
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.clothing import ListOfCadetObjectsWithClothingAtEvent
+from app.objects_OLD.clothing import ListOfCadetObjectsWithClothingAtEvent
 
 
 def export_committee_clothing(interface: abstractInterface) -> File:

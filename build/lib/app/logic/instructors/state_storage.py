@@ -1,7 +1,7 @@
 from app.OLD_backend.data.qualification import QualificationData
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.primtive_with_id.groups import Group
+from app.objects.groups import Group
 from app.objects.qualifications import Qualification
 
 

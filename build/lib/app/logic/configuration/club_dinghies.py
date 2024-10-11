@@ -3,13 +3,12 @@ from typing import Union, List
 from app.OLD_backend.configuration import (
     save_list_of_club_dinghies,
     load_list_of_club_dinghies,
-    add_new_club_dinghy_given_string_and_return_list,
-    delete_club_dinghy_given_string_and_return_list,
-    modify_club_dinghy_given_string_and_return_list,
 )
+from app.backend.configuration.list_of_club_dinghies import add_new_club_dinghy_given_string, \
+    delete_club_dinghy_given_string, modify_club_dinghy
 
-from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
-from app.logic.configuration.generic_list_modifier import (
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+from app.frontend.configuration.generic_list_modifier import (
     display_form_edit_generic_list,
     post_form_edit_generic_list,
     BACK_BUTTON_PRESSED,
@@ -40,9 +39,9 @@ def post_form_config_club_dinghies_page(
         existing_list=list_of_boats,
         interface=interface,
         header_text=header_text,
-        deleting_function=delete_club_dinghy_given_string_and_return_list,
-        adding_function=add_new_club_dinghy_given_string_and_return_list,
-        modifying_function=modify_club_dinghy_given_string_and_return_list,
+        deleting_function=delete_club_dinghy_given_string,
+        adding_function=add_new_club_dinghy_given_string,
+        modifying_function=modify_club_dinghy,
         save_function=save_from_ordinary_list_of_club_dinghies,
     )
     if generic_list_output is BACK_BUTTON_PRESSED:

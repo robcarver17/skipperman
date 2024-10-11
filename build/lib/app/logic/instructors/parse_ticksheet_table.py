@@ -5,13 +5,13 @@ from app.OLD_backend.ticks_and_qualifications.ticksheets import (
     save_ticksheet_edits_for_specific_tick,
     get_ticksheet_data,
 )
-from app.logic.shared.events_state import get_event_from_state
-from app.logic.instructors.render_ticksheet_table import (
+from app.frontend.shared.events_state import get_event_from_state
+from app.frontend.instructors.render_ticksheet_table import (
     get_tick_from_dropdown_or_none,
     get_tick_from_checkbox_or_none,
 )
 
-from app.logic.shared.qualification_and_tick_state_storage import (
+from app.frontend.shared.qualification_and_tick_state_storage import (
     get_edit_state_of_ticksheet,
     NO_EDIT_STATE,
     EDIT_DROPDOWN_STATE,

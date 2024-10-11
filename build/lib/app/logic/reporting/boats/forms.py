@@ -1,12 +1,12 @@
 from app.OLD_backend.reporting.boat_report.boat_report_parameters import (
     AdditionalParametersForBoatReport,
 )
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_form import yes_no_radio
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
-from app.logic.reporting.boats.processes import (
+from app.frontend.reporting.boats.processes import (
     load_additional_parameters_for_boat_report,
     EXCLUDE_UNALLOCATED,
     EXCLUDE_LAKE,

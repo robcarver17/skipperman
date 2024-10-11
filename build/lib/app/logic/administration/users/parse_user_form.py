@@ -5,19 +5,16 @@ from app.OLD_backend.volunteers.volunteers import (
 )
 
 from app.OLD_backend.data.security import (
-    add_user,
-    already_in_list,
     load_all_users,
-    change_password_for_user,
-    modify_user_group,
-    generate_reset_message,
-    modify_volunteer_id_for_user,
 )
+from app.backend.security.list_of_users import add_user, already_in_list
+from app.backend.security.modify_user import change_password_for_user, modify_user_group, modify_volunteer_for_user, \
+    generate_reset_message
 from app.OLD_backend.ticks_and_qualifications.ticksheets import (
     delete_username_from_user_list,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.administration.users.render_users_form import (
+from app.frontend.administration.users.render_users_form import (
     USERNAME,
     PASSWORD,
     PASSWORD_CONFIRM,
@@ -26,7 +23,7 @@ from app.logic.administration.users.render_users_form import (
     new_user,
     username_from_deletion_button,
     VOLUNTEER,
-    username_from_email_button,
+    username_from_reset_button,
 )
 from app.objects.users_and_security import SkipperManUser, UserGroup
 
@@ -50,7 +47,7 @@ def delete_user_from_user_list(interface: abstractInterface, last_button: str):
 def generate_reset_message_for_user_name(
     last_button: str, interface: abstractInterface
 ):
-    username = username_from_email_button(last_button)
+    username = username_from_reset_button(last_button)
     return generate_reset_message(username=username, interface=interface)
 
 
@@ -171,7 +168,7 @@ def modify_volunteer_if_changed(
     if user.volunteer_id == user_values_from_form.volunteer_id:
         return
 
-    modify_volunteer_id_for_user(
+    modify_volunteer_for_user(
         interface=interface,
         username=user.username,
         new_volunteer_id=user_values_from_form.volunteer_id,

@@ -1,8 +1,8 @@
 from typing import Union
 
-from app.logic.administration.data.data import display_form_data
+from app.frontend.administration.data.data import display_form_data
 
-from app.logic.administration.users.ENTRY_users import display_form_security
+from app.frontend.administration.users.ENTRY_users import display_form_security
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,

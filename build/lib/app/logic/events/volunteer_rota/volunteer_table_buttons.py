@@ -4,13 +4,13 @@ from app.OLD_backend.rota.volunteer_history import get_previous_role_and_group_f
 
 from app.data_access.configuration.fixed import COPY_OVERWRITE_SYMBOL, COPY_FILL_SYMBOL, NOT_AVAILABLE_SHORTHAND, \
     REMOVE_SHORTHAND
-from app.data_access.data_layer.ad_hoc_cache import AdHocCache
-from app.logic.events.volunteer_rota.button_values import button_value_for_day, name_of_volunteer_button, \
+from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
+from app.frontend.events.volunteer_rota.button_values import button_value_for_day, name_of_volunteer_button, \
     copy_overwrite_button_value_for_volunteer_in_role_on_day, copy_fill_button_value_for_volunteer_in_role_on_day, \
     unavailable_button_value_for_volunteer_in_role_on_day, remove_role_button_value_for_volunteer_in_role_on_day, \
     copy_previous_role_button_name_from_volunteer_id, location_button_name_from_volunteer_id, \
     skills_button_name_from_volunteer_id
-from app.logic.events.volunteer_rota.swapping import get_swap_button
+from app.frontend.events.volunteer_rota.swapping import get_swap_button
 
 from app.objects.abstract_objects.abstract_lines import Line
 
@@ -25,9 +25,9 @@ from app.OLD_backend.rota.rota_cadet_and_volunteer_data import get_cadet_locatio
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.primtive_with_id.volunteers import Volunteer
-from app.objects.volunteers_at_event import DEPRECATE_VolunteerAtEvent
-from app.objects.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent
+from app.objects.volunteers import Volunteer
+from app.objects_OLD.volunteers_at_event import DEPRECATE_VolunteerAtEvent
+from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent
 
 
 def get_location_button(

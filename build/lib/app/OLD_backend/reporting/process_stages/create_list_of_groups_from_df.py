@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import Dict
 import pandas as pd
 
 from app.OLD_backend.reporting.arrangement.group_order import GroupOrder

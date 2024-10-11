@@ -10,17 +10,17 @@ from app.OLD_backend.food import (
     update_volunteer_food_data,
     download_food_data_and_return_filename,
 )
-from app.objects.food import (
+from app.objects_OLD.food import (
     CadetWithFoodRequirementsAtEvent,
     FoodRequirements,
     VolunteerWithFoodRequirementsAtEvent,
 )
 
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 
 from app.OLD_backend.data.food import FoodData
 
-from app.logic.events.food.render_food import (
+from app.frontend.events.food.render_food import (
     get_input_name_other_food_for_cadet,
     get_input_name_food_checkbox_for_cadet,
     get_input_name_other_food_for_volunteer,
@@ -28,7 +28,7 @@ from app.logic.events.food.render_food import (
 )
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.OLD_backend.forms.form_utils import get_food_requirements_from_form
+from app.frontend.forms.form_utils import get_food_requirements_from_form
 
 
 def save_food_data_in_form(interface: abstractInterface):

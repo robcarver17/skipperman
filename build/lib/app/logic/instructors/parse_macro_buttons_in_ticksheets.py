@@ -8,7 +8,7 @@ from app.OLD_backend.ticks_and_qualifications.ticksheets import (
     TickSheetDataWithExtraInfo,
     cadet_is_already_qualified,
 )
-from app.logic.instructors.buttons import (
+from app.frontend.instructors.buttons import (
     get_axis_tick_type_id_from_button_name,
     item_id_axis,
     cadet_id_axis,
@@ -16,14 +16,14 @@ from app.logic.instructors.buttons import (
     disqual_leable,
     from_tick_label_to_tick,
 )
-from app.logic.instructors.parse_ticksheet_table import (
+from app.frontend.instructors.parse_ticksheet_table import (
     apply_ticksheet_edits_for_specific_tick,
     get_ticksheet_data_from_state,
 )
-from app.logic.shared.qualification_and_tick_state_storage import (
+from app.frontend.shared.qualification_and_tick_state_storage import (
     get_qualification_from_state,
 )
-from app.logic.instructors.ticksheet_table_elements import user_can_award_qualifications
+from app.frontend.instructors.ticksheet_table_elements import user_can_award_qualifications
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.ticks import Tick, no_tick
 
@@ -80,7 +80,7 @@ def action_if_cadet_apply_qualification_button_pressed(
 ):
     can_award_qualification = user_can_award_qualifications(interface)
     if not can_award_qualification:
-        interface.log_error("User not allowed to apply qualifications!")
+        interface.log_error("User not allowed to apply qualifications_and_ticks!")
 
     qualification = get_qualification_from_state(interface)
     apply_qualification_to_cadet(
@@ -93,7 +93,7 @@ def action_if_cadet_remove_qualification_button_pressed(
 ):
     can_award_qualification = user_can_award_qualifications(interface)
     if not can_award_qualification:
-        interface.log_error("User not allowed to remove qualifications!")
+        interface.log_error("User not allowed to remove qualifications_and_ticks!")
 
     qualification = get_qualification_from_state(interface)
     remove_qualification_from_cadet(

@@ -1,18 +1,18 @@
-from app.logic.reporting.ENTRY_view_list_of_reports import (
+from app.frontend.reporting.ENTRY_view_list_of_reports import (
     display_form_view_of_reports,
     post_form_view_of_reports,
 )
-from app.logic.reporting.rota.report_rota import *
-from app.logic.reporting.allocations.report_group_allocations import *
-from app.logic.reporting.boats.report_boats import *
-from app.logic.reporting.rollcall_and_contacts.rollcall_report import *
-from app.logic.reporting.qualifications.ENTRY_report_qualifications import *
-from app.logic.reporting.qualifications.qualification_status import *
-from app.logic.reporting.all_event_data.ENTRY_all_event_data import (
+from app.frontend.reporting.rota.report_rota import *
+from app.frontend.reporting.allocations.report_group_allocations import *
+from app.frontend.reporting.boats.report_boats import *
+from app.frontend.reporting.rollcall_and_contacts.rollcall_report import *
+from app.frontend.reporting.qualifications.ENTRY_report_qualifications import *
+from app.frontend.reporting.qualifications.qualification_status import *
+from app.frontend.reporting.all_event_data.ENTRY_all_event_data import (
     display_form_for_all_event_data_report,
     post_form_for_for_all_event_data_report,
 )
-from app.logic.reporting.data_dumps.ENTRY_data_dump import (
+from app.frontend.reporting.data_dumps.ENTRY_data_dump import (
     display_form_for_data_dump_report,
     post_form_for_data_dump_report,
 )

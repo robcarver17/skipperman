@@ -2,19 +2,19 @@ from typing import Union
 
 from app.OLD_backend.cadets import add_new_verified_cadet, get_cadet_given_cadet_as_str
 from app.OLD_backend.wa_import.import_cadets import (
-    remove_temp_file,
-    get_temp_cadet_file,
     are_there_no_similar_cadets,
-    does_identical_cadet_exist_in_data,
     replace_cadet_with_id_with_new_cadet_details,
 )
-from app.logic.shared.add_edit_cadet_form import get_cadet_from_form
-from app.logic.shared.cadet_state import (
+from app.backend.cadets.iterate_over_membership_list import does_identical_cadet_exist_in_data
+from app.backend.cadets.import_membership_list import remove_temp_file_with_list_of_cadet_members, \
+    get_temp_cadet_file_list_of_memberships
+from app.frontend.shared.add_edit_cadet_form import get_cadet_from_form
+from app.frontend.shared.cadet_state import (
     clear_cadet_state,
     update_state_for_specific_cadet_id,
     get_cadet_id_selected_from_state,
 )
-from app.logic.shared.get_or_select_cadet_forms import (
+from app.frontend.shared.get_or_select_cadet_forms import (
     get_add_or_select_existing_cadet_form,
     checked_cadet_ok_button,
     see_similar_cadets_only_button,
@@ -176,7 +176,7 @@ def process_form_when_verified_cadet_to_be_added(interface: abstractInterface) -
 
 
 def finishing_processing_file(interface: abstractInterface) -> NewForm:
-    remove_temp_file()
+    remove_temp_file_with_list_of_cadet_members()
     interface.flush_cache_to_store()
     clear_cadet_state(interface)
 
@@ -189,7 +189,7 @@ def finishing_processing_file(interface: abstractInterface) -> NewForm:
 
 
 def reset_temp_cadet_file_counter_to_first_value(interface: abstractInterface) -> Cadet:
-    list_of_cadets = get_temp_cadet_file()
+    list_of_cadets = get_temp_cadet_file_list_of_memberships()
     first_cadet = list_of_cadets[0]
 
     ## We have to use underlying ID code, since we aren't dealing with the master list of cadets
@@ -199,7 +199,7 @@ def reset_temp_cadet_file_counter_to_first_value(interface: abstractInterface) -
 
 
 def get_next_cadet_and_store(interface: abstractInterface) -> Cadet:
-    list_of_cadets = get_temp_cadet_file()
+    list_of_cadets = get_temp_cadet_file_list_of_memberships()
     current_cadet_id = get_cadet_id_selected_from_state(interface)
 
     current_idx = list_of_cadets.index_of_id(current_cadet_id)
@@ -216,7 +216,7 @@ def get_next_cadet_and_store(interface: abstractInterface) -> Cadet:
 
 
 def get_cadet_from_temp_file_and_state(interface: abstractInterface) -> Cadet:
-    list_of_cadets = get_temp_cadet_file()
+    list_of_cadets = get_temp_cadet_file_list_of_memberships()
     current_cadet_id = get_cadet_id_selected_from_state(interface)
     current_idx = list_of_cadets.index_of_id(current_cadet_id)
 

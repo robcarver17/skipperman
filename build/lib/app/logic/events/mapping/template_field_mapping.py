@@ -4,7 +4,7 @@ from app.OLD_backend.wa_import.map_wa_fields import (
     DEPRECATE_get_list_of_template_names,
     get_template,
 )
-from app.logic.events.mapping.upload_template_field_mapping import (
+from app.frontend.events.mapping.upload_template_field_mapping import (
     display_form_for_upload_template_field_mapping,
 )
 from app.objects.abstract_objects.abstract_interface import (
@@ -22,8 +22,8 @@ from app.objects.abstract_objects.abstract_buttons import (
     cancel_menu_button,
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
-from app.logic.shared.events_state import get_event_from_state
-from app.logic.abstract_logic_api import initial_state_form
+from app.frontend.shared.events_state import get_event_from_state
+from app.frontend.form_handler import initial_state_form
 
 upload_template_button = Button("Upload a new template")
 

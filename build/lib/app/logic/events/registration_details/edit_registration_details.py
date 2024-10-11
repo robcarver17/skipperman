@@ -1,8 +1,8 @@
 from typing import Union
 
-from app.logic.events.registration_details.registration_details_form import get_registration_data, \
+from app.frontend.events.registration_details.registration_details_form import get_registration_data, \
     get_top_row_for_table_of_registration_details, row_for_cadet_in_event
-from app.logic.events.registration_details.parse_registration_details_form import parse_registration_details_from_form
+from app.frontend.events.registration_details.parse_registration_details_form import parse_registration_details_from_form
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm
@@ -11,11 +11,11 @@ from app.objects.abstract_objects.abstract_tables import Table
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
 from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, CANCEL_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
-from app.logic.cadets.ENTRY_view_cadets import sort_buttons, all_sort_types
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+from app.frontend.cadets.ENTRY_view_cadets import sort_buttons, all_sort_types
 from app.OLD_backend.data.cadets import SORT_BY_SURNAME
-from app.logic.events.constants import *
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.events.constants import *
+from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import Event
 

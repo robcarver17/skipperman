@@ -7,16 +7,16 @@ from app.OLD_backend.volunteers.volunteer_allocation import (
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 from app.OLD_backend.volunteers.volunteers import get_volunteer_with_name
-from app.logic.shared.add_edit_volunteer_forms import add_volunteer_from_form_to_data, verify_form_with_volunteer_details, \
+from app.frontend.shared.add_edit_volunteer_forms import add_volunteer_from_form_to_data, verify_form_with_volunteer_details, \
     VolunteerAndVerificationText, get_add_volunteer_form_with_information_passed
 
 from app.objects.abstract_objects.abstract_buttons import Button, CANCEL_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.objects.events import Event
-from app.objects.primtive_with_id.volunteers import Volunteer, default_volunteer
+from app.objects.volunteers import Volunteer, default_volunteer
 from app.objects.abstract_objects.abstract_lines import _______________
 
 

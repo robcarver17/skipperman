@@ -1,16 +1,16 @@
 from typing import Union
 
-from app.logic.reporting.allocations.forms import (
+from app.frontend.reporting.allocations.forms import (
     reporting_options_form_for_group_additional_parameters,
     explain_additional_parameters_for_allocation_report,
 )
-from app.logic.reporting.allocations.processes import (
+from app.frontend.reporting.allocations.processes import (
     get_group_allocation_report_additional_parameters_from_form_and_save,
     get_dict_of_df_for_reporting_allocations,
     load_additional_parameters_for_allocation_report,
     clear_additional_parameters_for_allocation_report,
 )
-from app.logic.reporting.shared.generic_report_pages import (
+from app.frontend.reporting.shared.generic_report_pages import (
     display_initial_generic_report_form,
     post_form_initial_generic_report,
     display_form_for_generic_report_all_options,
@@ -22,7 +22,7 @@ from app.logic.reporting.shared.generic_report_pages import (
     post_form_for_generic_report_arrangement_options,
     display_form_for_generic_report_arrangement_options,
 )
-from app.logic.reporting.shared.report_generator import ReportGenerator
+from app.frontend.reporting.shared.report_generator import ReportGenerator
 
 from app.OLD_backend.reporting.allocation_report.allocation_report import (
     specific_parameters_for_allocation_report,

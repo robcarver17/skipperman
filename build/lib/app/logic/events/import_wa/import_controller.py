@@ -1,11 +1,11 @@
 from typing import List, Union
 
-from app.logic.events.cadets_at_event.iteratively_add_cadet_ids_in_wa_import_stage import (
+from app.frontend.events.cadets_at_event.iteratively_add_cadet_ids_in_wa_import_stage import (
     display_form_add_cadet_ids_during_import,
 )
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 
-from app.logic.events.volunteer_allocation.volunteer_identification import (
+from app.frontend.events.volunteer_allocation.volunteer_identification import (
     display_form_volunteer_identification,
 )
 

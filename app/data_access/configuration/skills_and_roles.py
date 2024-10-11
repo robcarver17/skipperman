@@ -12,12 +12,6 @@ ROLES_AND_SKILLS_YAML_FILE = 'roles_and_skills.yaml'
 roles_and_skills_filename = os.path.join(master_data_path, ROLES_AND_SKILLS_YAML_FILE)
 
 
-### Core skills
-VOLUNTEERS_SKILL_FOR_PB2 = "PB2"
-SI_SKILL = "SI"
-core_skills = [SI_SKILL, VOLUNTEERS_SKILL_FOR_PB2]
-
-SKILLS_KEY = "skills"
 
 @dataclass
 class SkillsAndRolesConfiguration(List[str]):
@@ -93,7 +87,6 @@ def save_skills_and_rolls_to_configuration_file(skills_and_rolls:SkillsAndRolesC
 all_volunteer_skill_names = skills_and_roles_configuration.volunteer_skills
 dict_of_volunteer_teams = skills_and_roles_configuration.dict_of_volunteer_teams
 dict_of_roles_and_skills_required = skills_and_roles_configuration.role_and_skills_required
-volunteers_requiring_boats = skills_and_roles_configuration.volunteers_requiring_boats
 volunteers_requiring_group = skills_and_roles_configuration.volunteers_requiring_group
 instructor_team = skills_and_roles_configuration.instructor_team_members()
 si_role = skills_and_roles_configuration.SI_role

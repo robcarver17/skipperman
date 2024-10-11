@@ -1,10 +1,10 @@
 import datetime
 from typing import Tuple
 
-from app.objects_OLD.abstract_objects.abstract_text import Input
+from app.objects.abstract_objects.abstract_text import Input
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from dataclasses import dataclass
-from app.objects_OLD.exceptions import arg_not_passed
+from app.objects.exceptions import arg_not_passed
 
 
 class Form(list):
@@ -55,6 +55,7 @@ class radioInput(Input):
     input_name: str
     dict_of_options: dict
     default_label: str = arg_not_passed
+    include_line_break: bool = True
 
 
 @dataclass

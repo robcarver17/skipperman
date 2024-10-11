@@ -1,14 +1,14 @@
-from app.objects.volunteers_at_event import DEPRECATE_VolunteerAtEvent
-from app.objects.primtive_with_id.volunteer_at_event import VolunteerAtEventWithId
+from app.objects_OLD.volunteers_at_event import DEPRECATE_VolunteerAtEvent
+from app.objects_OLD.primtive_with_id.volunteer_at_event import VolunteerAtEventWithId
 
 from app.OLD_backend.volunteers.volunteer_allocation import DEPRECATE_get_volunteer_at_event_with_id, get_volunteer_at_event
 
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.OLD_backend.volunteers.volunteers import (
     get_volunteer_with_name, get_volunteer_from_id,
 )
-from app.objects.primtive_with_id.volunteers import Volunteer
+from app.objects.volunteers import Volunteer
 
 VOLUNTEER = "volunteer"
 

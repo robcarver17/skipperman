@@ -1,18 +1,15 @@
 from typing import List
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
-from app.objects.cadets import ListOfCadets, Cadet
+from app.objects.cadets import ListOfCadets
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.OLD_backend.data.volunteers import VolunteerData, SORT_BY_SURNAME
 from app.objects.exceptions import arg_not_passed
-from app.objects.primtive_with_id.volunteers import Volunteer, ListOfVolunteers
-from app.objects.primtive_with_id.volunteer_skills import ListOfVolunteerSkills, SkillsDict
-
-
-
+from app.objects.volunteers import Volunteer, ListOfVolunteers
+from app.objects.composed.volunteers_with_skills import SkillsDict, ListOfVolunteersWithSkills
 
 
 def get_volunteer_with_name(
@@ -46,66 +43,6 @@ def get_volunteer_from_id(data_layer: DataLayer, volunteer_id: str) -> Volunteer
     return list_of_volunteers.object_with_id(volunteer_id)
 
 
-## adding and warning
-def add_new_verified_volunteer(
-        data_layer: DataLayer, volunteer: Volunteer
-):
-    volunteer_data = VolunteerData(data_layer)
-    volunteer_data.add_new_volunteer(volunteer)
-
-
-
-def update_existing_volunteer(data_layer: DataLayer, volunteer: Volunteer):
-    volunteer_data = VolunteerData(data_layer)
-    volunteer_data.update_existing_volunteer(volunteer)
-
-
-def warning_str_for_similar_volunteers(
-    data_layer: DataLayer, volunteer: Volunteer
-) -> str:
-    similar_volunteers = list_of_similar_volunteers(
-        data_layer=data_layer, volunteer=volunteer
-    )
-
-    if len(similar_volunteers) > 0:
-        similar_volunteers_str = ", ".join(
-            [str(other_volunteer) for other_volunteer in similar_volunteers]
-        )
-        ## Some similar volunteers, let's see if it's a match
-        return (
-            "Following existing volunteers look awfully similar:\n %s"
-            % similar_volunteers_str
-        )
-    else:
-        return ""
-
-def list_of_similar_volunteers(
-    data_layer: DataLayer, volunteer: Volunteer
-) -> list:
-    volunteer_data = VolunteerData(data_layer)
-    similar_volunteers = volunteer_data.list_of_similar_volunteers(volunteer)
-
-    return similar_volunteers
-
-
-
-def verify_volunteer_and_warn(
-    data_layer: DataLayer, volunteer: Volunteer
-) -> str:
-    warn_text = ""
-    if len(volunteer.surname) < 4:
-        warn_text += "Surname seems too short. "
-    if len(volunteer.first_name) < 4:
-        warn_text += "First name seems too short. "
-    warn_text += warning_str_for_similar_volunteers(
-        data_layer=data_layer, volunteer=volunteer
-    )
-
-    if len(warn_text) > 0:
-        warn_text = "DOUBLE CHECK BEFORE ADDING: " + warn_text
-
-    return warn_text
-
 
 #### CONNECTIONS
 
@@ -135,23 +72,6 @@ def get_connected_cadets(data_layer: DataLayer, volunteer: Volunteer) -> ListOfC
     volunteer_data = VolunteerData(data_layer)
 
     return volunteer_data.get_connected_cadets(volunteer)
-
-
-def delete_cadet_connection(
-    data_layer: DataLayer, cadet: Cadet, volunteer: Volunteer
-):
-    volunteer_data = VolunteerData(data_layer)
-    volunteer_data.delete_cadet_connection(cadet=cadet, volunteer=volunteer)
-
-
-def add_volunteer_connection_to_cadet_in_master_list_of_volunteers(
-    data_layer: DataLayer, cadet: Cadet, volunteer: Volunteer
-):
-    volunteer_data = VolunteerData(data_layer)
-    volunteer_data.add_volunteer_connection_to_cadet_in_master_list_of_volunteers(
-        cadet=cadet, volunteer=volunteer
-    )
-
 
 
 def add_list_of_cadet_connections_to_volunteer(
@@ -201,16 +121,7 @@ def remove_boat_related_skill_for_volunteer(
     volunteer_data.remove_driving_qualification_for_volunteer(volunteer)
 
 
-def save_skills_for_volunteer(
-        data_layer: DataLayer, volunteer: Volunteer, dict_of_skills: SkillsDict
-):
-    volunteer_data = VolunteerData(data_layer)
-    volunteer_data.replace_skills_for_volunteer_with_new_skills_dict(
-        volunteer=volunteer, dict_of_skills=dict_of_skills
-    )
-
-
-def load_list_of_volunteer_skills(data_layer: DataLayer) -> ListOfVolunteerSkills:
+def load_list_of_volunteer_skills(data_layer: DataLayer) -> ListOfVolunteersWithSkills:
     volunteer_data = VolunteerData(data_layer)
     return volunteer_data.get_list_of_volunteer_skills()
 

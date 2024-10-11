@@ -13,15 +13,15 @@ from app.OLD_backend.reporting.options_and_parameters.report_type_specific_param
 from app.OLD_backend.reporting.process_stages.create_list_of_groups_from_df import (
     get_dict_of_grouped_df,
 )
-from app.logic.reporting.shared.arrangement_state import (
+from app.frontend.reporting.shared.arrangement_state import (
     reset_arrangement_report_options,
 )
-from app.logic.reporting.shared.report_generator import ReportGenerator
+from app.frontend.reporting.shared.report_generator import ReportGenerator
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.reporting.shared.group_order import (
+from app.frontend.reporting.shared.group_order import (
     get_arrangement_options_and_group_order_from_stored_or_defaults,
 )
-from app.logic.reporting.shared.print_options import (
+from app.frontend.reporting.shared.print_options import (
     get_saved_print_options,
     reset_print_report_options,
 )

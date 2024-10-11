@@ -1,10 +1,10 @@
 from typing import Union
 
-from app.logic.abstract_logic_api import (
+from app.frontend.form_handler import (
     initial_state_form,
     button_error_and_back_to_initial_state_form,
 )
-from app.logic.shared.add_edit_volunteer_forms import add_volunteer_from_form_to_data, \
+from app.frontend.shared.add_edit_volunteer_forms import add_volunteer_from_form_to_data, \
     verify_form_with_volunteer_details, get_add_volunteer_form_with_information_passed, \
     get_footer_buttons_for_add_volunteer_form, final_submit_button, check_submit_button
 
@@ -22,7 +22,7 @@ from app.objects.abstract_objects.abstract_interface import (
 
 
 def display_form_add_volunteer(interface: abstractInterface) -> Form:
-    ## Called by logic API only once, subsequently we are responding to button presses
+    ## Called by frontend API only once, subsequently we are responding to button presses
     return get_add_volunteer_form(interface=interface, first_time_displayed=True)
 
 

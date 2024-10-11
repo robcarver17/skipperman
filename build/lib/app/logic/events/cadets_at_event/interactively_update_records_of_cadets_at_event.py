@@ -8,7 +8,7 @@ from app.OLD_backend.wa_import.update_cadets_at_event import (
     add_new_cadet_to_event,
 )
 
-from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing import (
+from app.frontend.events.cadets_at_event.track_cadet_id_in_state_when_importing import (
     get_and_save_next_cadet_id_in_event_data,
     clear_cadet_id_at_event,
 )
@@ -17,29 +17,29 @@ from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
-from app.logic.events.constants import (
+from app.frontend.events.constants import (
     USE_ORIGINAL_DATA_BUTTON_LABEL,
     USE_NEW_DATA_BUTTON_LABEL,
     USE_DATA_IN_FORM_BUTTON_LABEL,
 )
 
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 
-from app.logic.events.cadets_at_event.update_existing_cadet_at_event_forms import (
+from app.frontend.events.cadets_at_event.update_existing_cadet_at_event_forms import (
     display_form_for_update_to_existing_cadet_at_event,
 )
-from app.logic.events.cadets_at_event.update_existing_cadet_at_event_from_form_entries import (
+from app.frontend.events.cadets_at_event.update_existing_cadet_at_event_from_form_entries import (
     update_cadets_at_event_with_new_data,
     update_cadets_at_event_with_form_data,
 )
-from app.objects.primtive_with_id.cadet_with_id_at_event import (
+from app.objects.cadet_with_id_at_event import (
     CadetWithIdAtEvent,
     get_cadet_at_event_from_row_in_mapped_event,
 )
 
 from app.objects.events import Event
 from app.objects.exceptions import NoMoreData, DuplicateCadets
-from app.objects.mapped_wa_event import RowInMappedWAEvent
+from app.objects_OLD.mapped_wa_event import RowInMappedWAEvent
 
 
 def display_form_interactively_update_cadets_at_event(

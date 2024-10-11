@@ -53,21 +53,20 @@ from app.objects.events import (
     list_of_events_excluding_one_event,
     SORT_BY_START_ASC,
 )
-from app.objects.primtive_with_id.groups import Group, ListOfCadetIdsWithGroups
+from app.objects.groups import Group
+from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
 from app.objects.club_dinghies import (
-    ListOfCadetAtEventWithClubDinghies,
     ListOfClubDinghies,
-    NO_BOAT,
 )
-from app.objects.dinghies import (
+from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithClubDinghies, NO_BOAT
+from app.objects.boat_classes import (
     ListOfBoatClasses,
-    ListOfCadetAtEventWithDinghies,
-    no_partnership,
-    NO_PARTNER_REQUIRED,
 )
+from app.objects.cadet_at_event_with_dinghy_with_ids import NO_PARTNER_REQUIRED, no_partnership, \
+    ListOfCadetAtEventWithDinghies
 from app.objects.utils import similar, all_equal, most_common
-from app.objects.qualifications import ListOfCadetsWithQualifications
-from app.objects.primtive_with_id.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent
+from app.objects.qualifications import ListOfCadetsWithIdsAndQualifications
+from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent
 
 
 @dataclass
@@ -84,7 +83,7 @@ class AllocationData:
     list_of_cadets_at_event_with_dinghies: ListOfCadetAtEventWithDinghies
     list_of_club_boats: ListOfClubDinghies
     list_of_dinghies: ListOfBoatClasses
-    list_of_cadets_with_qualifications: ListOfCadetsWithQualifications
+    list_of_cadets_with_qualifications: ListOfCadetsWithIdsAndQualifications
 
     def get_most_common_group_name_across_days(self, cadet: Cadet) -> str:
         all_groups = list(
@@ -524,7 +523,7 @@ class AllocationData:
             if allocation == unallocated_group_name:
                 continue
             else:
-                return allocation.group_name
+                return allocation.name
 
         return unallocated_group_name
 
@@ -535,7 +534,7 @@ class AllocationData:
             cadet_id=cadet.id, day=day
         )
 
-        return group.group_name
+        return group.name
 
     def cadet_availability_at_event(self, cadet: Cadet) -> DaySelector:
         cadet_at_event = self.cadets_at_event_including_non_active.cadet_at_event(

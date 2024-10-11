@@ -1,26 +1,26 @@
 from typing import Union
 
 from app.data_access.file_access import web_pathname_of_file
-from app.logic.reporting.shared.arrangement_form import (
+from app.frontend.reporting.shared.arrangement_form import (
     form_for_group_arrangement_options,
     post_form_for_group_arrangement_options,
 )
-from app.logic.reporting.shared.create_report import create_generic_report
+from app.frontend.reporting.shared.create_report import create_generic_report
 from app.OLD_backend.reporting.event_lists import (
     display_list_of_events_with_buttons_criteria_matched,
     describe_criteria,
 )
-from app.logic.reporting.shared.explain_options import (
+from app.frontend.reporting.shared.explain_options import (
     get_text_explaining_various_options_for_generic_report,
 )
-from app.logic.reporting.shared.print_options import (
+from app.frontend.reporting.shared.print_options import (
     save_print_options,
     get_print_options_from_main_option_form_fields,
     get_saved_print_options_and_create_form,
     get_saved_print_options,
 )
-from app.logic.reporting.shared.report_generator import ReportGenerator
-from app.logic.reporting.shared.reporting_options import reset_all_report_options
+from app.frontend.reporting.shared.report_generator import ReportGenerator
+from app.frontend.reporting.shared.reporting_options import reset_all_report_options
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -37,17 +37,17 @@ from app.objects.abstract_objects.abstract_buttons import (
     back_menu_button,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.abstract_logic_api import (
+from app.frontend.form_handler import (
     initial_state_form,
     button_error_and_back_to_initial_state_form,
 )
-from app.logic.shared.events_state import (
+from app.frontend.shared.events_state import (
     get_event_from_state,
     update_state_for_specific_event_given_event_description,
 )
 from app.OLD_backend.events import confirm_event_exists_given_description
 
-from app.logic.reporting.constants import *
+from app.frontend.reporting.constants import *
 
 
 def display_initial_generic_report_form(

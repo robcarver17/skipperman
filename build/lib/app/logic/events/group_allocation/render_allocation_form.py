@@ -4,7 +4,7 @@ from app.OLD_backend.ticks_and_qualifications.ticksheets import (
     get_qualification_status_for_single_cadet_as_list_of_str,
 )
 
-from app.objects.primtive_with_id.groups import Group
+from app.objects.groups import Group
 
 from app.OLD_backend.events import DEPRECATE_get_list_of_all_events
 
@@ -15,11 +15,11 @@ from app.OLD_backend.group_allocations.previous_allocations import (
 
 from app.objects.exceptions import missing_data
 
-from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing import (
+from app.frontend.events.cadets_at_event.track_cadet_id_in_state_when_importing import (
     get_current_cadet_id_at_event,
 )
 
-from app.logic.events.group_allocation.input_fields import (
+from app.frontend.events.group_allocation.input_fields import (
     get_notes_field,
     get_days_attending_field,
     get_input_fields_for_cadet,
@@ -27,12 +27,12 @@ from app.logic.events.group_allocation.input_fields import (
     RESET_DAY_BUTTON_LABEL,
     make_cadet_available_button_name,
 )
-from app.logic.events.group_allocation.store_state import (
+from app.frontend.events.group_allocation.store_state import (
     no_day_set_in_state,
     get_day_from_state_or_none,
 )
 
-from app.OLD_backend.forms.reorder_form import reorder_table
+from app.frontend.forms import reorder_table
 from app.OLD_backend.group_allocations.boat_allocation import (
     summarise_club_boat_allocations_for_event,
     summarise_class_attendance_for_event,
@@ -44,7 +44,7 @@ from app.OLD_backend.group_allocations.group_allocations_data import (
 from app.OLD_backend.group_allocations.sorting import sorted_active_cadets
 from app.OLD_backend.group_allocations.event_summarys import summarise_allocations_for_event
 
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
@@ -343,7 +343,7 @@ def get_list_of_previous_groups_as_str(
         ]
     )
     list_of_groups_as_str = [
-        "%s: %s" % (str(event), group.group_name)
+        "%s: %s" % (str(event), group.name)
         for event, group in dict_of_groups.items()
     ]
 

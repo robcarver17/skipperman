@@ -13,8 +13,7 @@ from app.OLD_backend.reporting.boat_report.boat_report_parameters import (
     CLUB_BOAT,
 )
 
-from app.data_access.configuration.groups import lake_training_group_names, river_training_group_names, \
-    unallocated_group_name
+from app.objects.groups import lake_training_group, river_training_group
 from app.OLD_backend.data.data_for_event import (
     get_data_required_for_event,
     RequiredDataForReport,
@@ -23,7 +22,7 @@ from app.OLD_backend.data.data_for_event import (
 from app.objects.exceptions import missing_data
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.primtive_with_id.groups import Group
+from app.objects.groups import Group
 
 
 def get_dict_of_df_for_boat_report(
@@ -136,7 +135,7 @@ def row_of_data_for_cadet_id(
         {
             FIRST_CADET: first_cadet_name,
             SECOND_CADET: second_cadet_name,
-            GROUP: group.group_name,
+            GROUP: group.name,
             BOAT_CLASS: boat_class,
             SAIL_NUMBER: sail_number,
             CLUB_BOAT: club_boat_flag,
@@ -238,15 +237,15 @@ def is_group_valid_for_report(
     group: Group, additional_parameters: AdditionalParametersForBoatReport
 ):
     if additional_parameters.exclude_unallocated_groups:
-        if group.group_name is unallocated_group_name:
+        if group.is_unallocated:
             return False
 
     if additional_parameters.exclude_river_training_groups:
-        if group.group_name in river_training_group_names:
+        if group.location == river_training_group:
             return False
 
     if additional_parameters.exclude_lake_groups:
-        if group.group_name in lake_training_group_names:
+        if group.location == lake_training_group:
             return False
 
     return True

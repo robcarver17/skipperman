@@ -4,7 +4,7 @@ from app.data_access.csv.resolve_csv_paths_and_filenames import (
     FIELD_MAPPING_FILE_ID,
     TEMPLATES_FIELD_MAPPING_FILE_ID,
 )
-from app.objects.wa_field_mapping import ListOfWAFieldMappings
+from app.objects_OLD.wa_field_mapping import ListOfWAFieldMappings
 from app.data_access.classes.wa_field_mapping import DataWAFieldMapping
 
 

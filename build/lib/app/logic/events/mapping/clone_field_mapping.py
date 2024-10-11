@@ -14,11 +14,11 @@ from app.objects.abstract_objects.abstract_buttons import (
     CANCEL_BUTTON_LABEL,
 )
 
-from app.logic.shared.events_state import (
+from app.frontend.shared.events_state import (
     get_event_from_state,
 )
 
-from app.logic.abstract_logic_api import initial_state_form
+from app.frontend.form_handler import initial_state_form
 
 from app.OLD_backend.events import (
     DEPRECATE_get_sorted_list_of_events,

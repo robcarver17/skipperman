@@ -1,8 +1,6 @@
 from typing import Union, List
-from app.OLD_backend.cadets import (
-     get_list_of_cadets_sorted_by_surname,
-)
-from app.logic.shared.cadet_connection_forms import form_to_edit_connections,  \
+from app.backend.cadets.list_of_cadets import get_list_of_cadets_sorted_by_surname
+from app.frontend.shared.cadet_connection_forms import form_to_edit_connections,  \
     add_connection_button,  \
     get_list_of_delete_cadet_buttons_given_connected_cadets, get_cadet_from_button_pressed, get_selected_cadet_from_form
 from app.objects.abstract_objects.abstract_form import Form, NewForm
@@ -13,7 +11,7 @@ from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
 )
-from app.logic.abstract_logic_api import (
+from app.frontend.form_handler import (
     initial_state_form,
     button_error_and_back_to_initial_state_form,
 )
@@ -21,11 +19,12 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 from app.OLD_backend.volunteers.volunteers import (
-    delete_cadet_connection,
-    add_volunteer_connection_to_cadet_in_master_list_of_volunteers, get_connected_cadets,
+    get_connected_cadets,
 )
+from app.backend.volunteers.connected_cadets import delete_cadet_connection, \
+    add_volunteer_connection_to_cadet_in_master_list_of_volunteers
 
-from app.logic.shared.volunteer_state import get_volunteer_from_state
+from app.frontend.shared.volunteer_state import get_volunteer_from_state
 from app.objects.exceptions import CadetNotSelected
 
 

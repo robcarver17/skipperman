@@ -3,15 +3,15 @@ from app.OLD_backend.data.group_allocations import GroupAllocationsData
 from app.OLD_backend.data.cadets import CadetData
 from app.OLD_backend.data.qualification import QualificationData
 
-from app.objects.primtive_with_id.groups import Group
+from app.objects.groups import Group
 
 from app.objects.events import Event
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.ticks import (
-    LabelledTickSheetWithCadetIds,
     ListOfCadetsWithTickListItems,
 )
+from app.objects.composed.labelled_tick_sheet_with_cadet_ids import LabelledTickSheetWithCadetIds
 
 
 def get_labelled_ticksheet_df_for_group_at_event(
@@ -98,7 +98,7 @@ def get_labelled_ticksheet_df_for_cadets_in_group_at_event_for_qualification(
 
     list_of_qualifications = qualification_data.load_list_of_qualifications()
     qualification_name = list_of_qualifications.name_given_id(qualification_stage_id)
-    group_name = group.group_name
+    group_name = group.name
 
     labelled_ticksheet = tick_sheet.df_replacing_id_with_ordered_label_list(
         list_of_cadet_names=list_of_cadet_names_for_subset,

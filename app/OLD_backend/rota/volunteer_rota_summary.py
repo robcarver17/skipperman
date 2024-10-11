@@ -3,20 +3,19 @@ from typing import List, Dict
 
 import pandas as pd
 
-from app.data_access.data_layer.ad_hoc_cache import AdHocCache
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
+from app.data_access.store.data_layer import DataLayer
 
 from app.OLD_backend.data.volunteer_rota import VolunteerRotaData
 from app.OLD_backend.rota.volunteer_rota import (
     get_volunteers_in_role_at_event_with_active_allocations,
 )
-from app.data_access.configuration.groups import all_groups_names
 from app.data_access.configuration.skills_and_roles import all_volunteer_role_names
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.primtive_with_id.groups import Group, GROUP_UNALLOCATED_TEXT
-from app.objects.primtive_with_id.volunteer_role_targets import ListOfTargetForRoleAtEvent
-from app.objects.primtive_with_id.volunteer_roles_and_groups import NO_ROLE_SET, get_list_of_volunteer_teams, \
+from app.objects.groups import Group, GROUP_UNALLOCATED_TEXT
+from app.objects_OLD.primtive_with_id.volunteer_role_targets import ListOfTargetForRoleAtEvent
+from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import NO_ROLE_SET, get_list_of_volunteer_teams, \
     ListOfVolunteersWithIdInRoleAtEvent, RoleAndGroup, TeamAndGroup
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 
@@ -148,9 +147,10 @@ def get_summary_of_roles_and_groups_for_events_on_day(
     list_of_all_role_names = all_volunteer_role_names + [
         NO_ROLE_SET
     ]  ## ordered, doesn't include unallocated do those last
-    list_of_all_group_names = [
-        GROUP_UNALLOCATED_TEXT
-    ] + all_groups_names  ## ordered, doesn't include unallocated we put these first
+    raise Exception("")
+    #list_of_all_group_names = [
+    #    GROUP_UNALLOCATED_TEXT
+    #] + all_groups_names  ## ordered, doesn't include unallocated we put these first
 
     summary_dict = {}
     for group_name in list_of_all_group_names:
@@ -232,6 +232,7 @@ def get_summary_of_teams_and_groups_for_events_on_day(
     all_teams = get_list_of_volunteer_teams() + [
         NO_ROLE_SET
     ]  ## ordered, doesn't include unallocated do those last
+    raise Exception("all group names unknown")
     all_group_names = [
         GROUP_UNALLOCATED_TEXT
     ] + all_groups_names  ## ordered, doesn't include unallocated we put these first

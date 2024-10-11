@@ -2,16 +2,13 @@ from dataclasses import dataclass
 from typing import List, Dict
 
 import pandas as pd
-from app.objects.utils import print_dict_nicely
 
-from app.OLD_backend.data.cadets import CadetData
 from app.OLD_backend.data.qualification import QualificationData
 
 from app.OLD_backend.data.security import (
-    SUPERUSER,
     UserData,
-    get_volunteer_id_of_logged_in_user_or_superuser,
 )
+from app.backend.security.logged_in_user import SUPERUSER, get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER
 from app.OLD_backend.data.ticksheets import TickSheetsData
 from app.OLD_backend.data.volunteer_rota import VolunteerRotaData
 from app.OLD_backend.events import DEPRECATE_get_sorted_list_of_events
@@ -21,15 +18,15 @@ from app.OLD_backend.ticks_and_qualifications.create_ticksheets import (
 from app.OLD_backend.volunteers.volunteers import is_volunteer_with_id_qualified_as_SI
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event, ListOfEvents
-from app.objects.primtive_with_id.groups import Group
+from app.objects.groups import Group
 from app.OLD_backend.data.group_allocations import GroupAllocationsData
 from app.objects.qualifications import Qualification, ListOfQualifications
 from app.objects.ticks import (
-    LabelledTickSheetWithCadetIds,
     ListOfCadetsWithTickListItems,
     ListOfTickSheetItems,
     Tick,
 )
+from app.objects.composed.labelled_tick_sheet_with_cadet_ids import LabelledTickSheetWithCadetIds
 
 
 def get_list_of_groups_volunteer_id_can_see(
@@ -86,7 +83,7 @@ def get_list_of_events_entitled_to_see(
 
 
 def is_volunteer_SI_or_super_user(interface: abstractInterface):
-    volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser(interface)
+    volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER(interface)
 
     if volunteer_id == SUPERUSER:
         return True
@@ -303,7 +300,7 @@ def get_expected_qualifications_for_single_cadet_with_group(
 
     return [
         cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id),
-        group.group_name,
+        group.name,
     ] + percentage_list
 
 

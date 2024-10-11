@@ -1,6 +1,7 @@
 from typing import List
 
-from app.OLD_backend.cadets import get_cadet_from_id, \
+from app.OLD_backend.cadets import get_cadet_from_id
+from app.backend.volunteers.connected_cadets import \
     get_list_of_cadets_with_those_with_name_similar_to_volunteer_with_listed_first
 
 from app.objects.abstract_objects.abstract_buttons import ButtonBar, back_menu_button, Button
@@ -8,7 +9,7 @@ from app.objects.abstract_objects.abstract_form import Form, dropDownInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
 from app.objects.cadets import ListOfCadets, Cadet
-from app.objects.primtive_with_id.volunteers import Volunteer
+from app.objects.volunteers import Volunteer
 
 
 def form_to_edit_connections(

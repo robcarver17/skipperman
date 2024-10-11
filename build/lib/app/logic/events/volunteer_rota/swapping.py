@@ -1,6 +1,6 @@
 from typing import Tuple, Union
 
-from app.OLD_backend.forms.swaps import (
+from app.frontend.forms import (
     is_ready_to_swap,
     SwapButtonState,
     store_swap_state,
@@ -10,15 +10,15 @@ from app.OLD_backend.rota.volunteer_rota import (
     swap_roles_and_groups_for_volunteers_in_allocation,
 )
 from app.data_access.configuration.fixed import SWAP_SHORTHAND, SWAP_SHORTHAND2
-from app.logic.shared.events_state import get_event_from_state
-from app.logic.events.volunteer_rota.button_values import generic_button_value_for_volunteer_id_and_day, \
+from app.frontend.shared.events_state import get_event_from_state
+from app.frontend.events.volunteer_rota.button_values import generic_button_value_for_volunteer_id_and_day, \
     from_known_button_to_volunteer_id_and_day, get_list_of_generic_button_values_across_days_and_volunteers
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent
+from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent
 
 
 def swap_button_value_for_volunteer_id_and_day(volunteer_id: str, day: Day) -> str:

@@ -1,6 +1,6 @@
 from typing import Union, Tuple
 
-from app.OLD_backend.forms.swaps import (
+from app.frontend.forms import (
     is_ready_to_swap,
     SwapButtonState,
     store_swap_state,
@@ -16,9 +16,9 @@ from app.OLD_backend.rota.volunteer_rota import (
     SwapData,
 )
 
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 
-from app.logic.events.patrol_boats.patrol_boat_buttons import (
+from app.frontend.events.patrol_boats.patrol_boat_buttons import (
     get_list_of_generic_buttons_for_each_volunteer_day_combo,
     generic_button_name_for_volunteer_in_boat_at_event_on_day,
     get_button_type_day_volunteer_id_given_button_str,
@@ -35,7 +35,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.primtive_with_id.patrol_boats import PatrolBoat
+from app.objects.patrol_boats import PatrolBoat
 
 
 def get_list_of_all_swap_buttons_in_boat_allocation(

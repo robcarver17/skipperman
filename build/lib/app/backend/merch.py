@@ -2,11 +2,10 @@ from collections import Counter
 from copy import copy
 
 from app.data_access.configuration.configuration import MINIMUM_COLOUR_GROUPS_TO_DISTRIBUTE
-from app.objects.cadets import Cadet
-from app.objects.clothing import *
+from app.objects_OLD.clothing import *
 
 from app.OLD_backend.data.clothing import ClothingData
-from app.objects.clothing import ListOfCadetsWithClothingAtEvent, ListOfCadetObjectsWithClothingAtEvent, \
+from app.objects_OLD.clothing import ListOfCadetsWithClothingAtEvent, ListOfCadetObjectsWithClothingAtEvent, \
     CadetObjectWithClothingAtEvent
 from app.objects.events import Event
 

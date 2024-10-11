@@ -1,16 +1,13 @@
 from typing import Tuple, Callable
 
-from app.data_access.data_layer.ad_hoc_cache import AdHocCache
-
 from app.OLD_backend.rota.volunteer_rota import load_list_of_volunteers_at_event
-from app.OLD_backend.volunteers.volunteers import DEPRECATE_get_volunteer_from_id
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.volunteers_at_event import DEPRECATE_VolunteerAtEvent
-from app.objects.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent
+from app.objects_OLD.volunteers_at_event import DEPRECATE_VolunteerAtEvent
+from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent
 
 
 def make_available_button_value_for_volunteer_on_day(

@@ -1,10 +1,10 @@
 from typing import Union, List
 
 from app.data_access.configuration.fixed import ADD_KEYBOARD_SHORTCUT
-from app.logic.cadets.add_cadet import display_form_add_cadet
-from app.logic.cadets.cadet_committee import display_form_cadet_committee
-from app.logic.cadets.import_cadets import display_form_import_cadets
-from app.logic.cadets.view_individual_cadets import display_form_view_individual_cadet
+from app.frontend.cadets.add_cadet import display_form_add_cadet
+from app.frontend.cadets.cadet_committee import display_form_cadet_committee
+from app.frontend.cadets.import_members import display_form_import_members
+from app.frontend.cadets.view_individual_cadets import display_form_view_individual_cadet
 from app.objects.cadets import Cadet
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -23,7 +23,7 @@ from app.objects.abstract_objects.abstract_lines import (
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 
-from app.logic.shared.cadet_state import update_state_for_specific_cadet
+from app.frontend.shared.cadet_state import update_state_for_specific_cadet
 from app.OLD_backend.cadets import get_cadet_given_cadet_as_str, get_sorted_list_of_cadets
 from app.OLD_backend.data.cadets import (
     SORT_BY_SURNAME,
@@ -68,7 +68,7 @@ def post_form_view_of_cadets(interface: abstractInterface) -> Union[Form, NewFor
         return interface.get_new_form_given_function(display_form_add_cadet)
 
     if import_button.pressed(button_pressed):
-        return interface.get_new_form_given_function(display_form_import_cadets)
+        return interface.get_new_form_given_function(display_form_import_members)
     elif committee_button.pressed(button_pressed):
         return interface.get_new_form_given_function(display_form_cadet_committee)
 

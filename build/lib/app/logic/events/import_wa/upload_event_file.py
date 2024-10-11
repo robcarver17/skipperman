@@ -1,7 +1,7 @@
 import os
 from typing import Union
 
-from app.data_access.configuration.configuration import WILD_APRICOT_FILE_TYPES
+from app.data_access.configuration.configuration import ALLOWED_UPLOAD_FILE_TYPES
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -18,20 +18,19 @@ from app.objects.abstract_objects.abstract_interface import (
     form_with_message_and_finished_button,
 )
 from app.objects.abstract_objects.abstract_buttons import back_menu_button
-from app.logic.abstract_logic_api import (
+from app.frontend.form_handler import (
     initial_state_form,
     button_error_and_back_to_initial_state_form,
 )
-from app.logic.events.constants import UPLOAD_FILE_BUTTON_LABEL
+from app.frontend.events.constants import UPLOAD_FILE_BUTTON_LABEL
 from app.OLD_backend.wa_import.load_wa_file import (
     save_staged_file_of_raw_event_upload_with_event_id,
-    verify_and_return_uploaded_wa_event_file,
-    save_uploaded_wa_as_local_temp_file,
     check_local_file_is_valid_wa_file,
     WA_FILE,
 )
+from app.backend.file_handling import verify_and_return_uploaded_wa_event_file, save_uploaded_file_as_local_temp_file
 from app.OLD_backend.wa_import.map_wa_files import verify_file_has_correct_wa_id
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 from app.objects.events import Event
 
 
@@ -51,7 +50,7 @@ def get_form_for_wa_upload(event: Event) -> Union[Form, NewForm]:
 
 def get_form_for_wa_upload_with_prompt(prompt: str) -> Form:
     buttons = get_upload_buttons()
-    input_field = fileInput(input_name=WA_FILE, accept=WILD_APRICOT_FILE_TYPES)
+    input_field = fileInput(input_name=WA_FILE, accept=ALLOWED_UPLOAD_FILE_TYPES)
 
     list_of_lines = ListOfLines([Line(prompt), Line(input_field), buttons])
 
@@ -122,7 +121,7 @@ def verify_and_save_uploaded_wa_event_file_as_temporary_file(
     ## does not check is a valid WA file
     ## not associated with event so just given incremental filename
     file = verify_and_return_uploaded_wa_event_file(interface)
-    temp_filename = save_uploaded_wa_as_local_temp_file(file)
+    temp_filename = save_uploaded_file_as_local_temp_file(file)
     check_local_file_is_valid_wa_file(temp_filename)
 
     return temp_filename

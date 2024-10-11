@@ -2,11 +2,11 @@
 
 from typing import Union
 
-from app.logic.shared.cadet_state import get_cadet_from_state
+from app.frontend.shared.cadet_state import get_cadet_from_state
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import Button, CANCEL_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-from app.logic.abstract_logic_api import initial_state_form
+from app.frontend.form_handler import initial_state_form
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )

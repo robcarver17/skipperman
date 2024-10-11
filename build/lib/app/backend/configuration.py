@@ -8,8 +8,8 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
 from app.objects.club_dinghies import ListOfClubDinghies
-from app.objects.dinghies import ListOfBoatClasses
-from app.objects.primtive_with_id.patrol_boats import ListOfPatrolBoats
+from app.objects.boat_classes import ListOfBoatClasses
+from app.objects.patrol_boats import ListOfPatrolBoats
 
 
 def save_list_of_club_dinghies(
@@ -29,7 +29,7 @@ def add_new_club_dinghy_given_string_and_return_list(
 ) -> ListOfClubDinghies:
     dinghy_data = DinghiesData(interface.data)
     list_of_boats = dinghy_data.get_list_of_club_dinghies()
-    list_of_boats.add(entry_to_add)
+    list_of_boats.add_returning_id(entry_to_add)
     dinghy_data.save_list_of_club_dinghies(list_of_boats)
 
     return list_of_boats
@@ -52,7 +52,7 @@ def modify_club_dinghy_given_string_and_return_list(
     dinghy_data = DinghiesData(interface.data)
     list_of_boats = dinghy_data.get_list_of_club_dinghies()
     list_of_boats.delete_given_name(existing_value_as_str)
-    list_of_boats.add(new_value_as_str)
+    list_of_boats.add_returning_id(new_value_as_str)
     dinghy_data.save_list_of_club_dinghies(list_of_boats)
 
     return list_of_boats

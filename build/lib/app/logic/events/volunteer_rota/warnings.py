@@ -7,7 +7,7 @@ from app.OLD_backend.rota.warnings import (
     warn_on_cadets_which_should_have_volunteers,
     warn_on_volunteer_qualifications,
 )
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_lines import ListOfLines, DetailListOfLines
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface

@@ -5,9 +5,10 @@ from app.OLD_backend.data.cadet_committee import CadetCommitteeData
 from app.OLD_backend.data.cadets import CadetData
 from app.data_access.configuration.fixed import MONTH_WHEN_CADET_AGE_BRACKET_BEGINS, \
     MONTH_WHEN_NEW_COMMITTEE_YEAR_BEGINS, YEARS_ON_CADET_COMMITTEE, MIN_AGE_TO_JOIN_COMMITTEE, MAX_AGE_TO_JOIN_COMMITTEE
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 from app.objects.cadets import ListOfCadets, Cadet
-from app.objects.committee import ListOfCadetsOnCommittee
+from app.objects.composed.committee import ListOfCadetsOnCommittee
+
 
 def get_list_of_cadet_as_str_not_on_committee_born_in_right_age_bracket(data_layer: DataLayer)-> List[str]:
     next_year_for_committee = get_next_year_for_cadet_committee()

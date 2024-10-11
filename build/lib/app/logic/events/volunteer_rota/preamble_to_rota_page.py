@@ -3,11 +3,11 @@ from app.OLD_backend.rota.volunteer_rota_summary import get_summary_list_of_role
 from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
 from app.data_access.configuration.fixed import COPY_OVERWRITE_SYMBOL, COPY_FILL_SYMBOL, SWAP_SHORTHAND, \
     NOT_AVAILABLE_SHORTHAND, REMOVE_SHORTHAND
-from app.data_access.data_layer.ad_hoc_cache import AdHocCache
+from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
 
-from app.logic.events.volunteer_rota.volunteer_rota_buttons import get_header_buttons_for_rota
-from app.logic.events.volunteer_rota.volunteer_targets import get_volunteer_targets_table_and_save_button
-from app.logic.events.volunteer_rota.warnings import warn_on_all_volunteers
+from app.frontend.events.volunteer_rota.volunteer_rota_buttons import get_header_buttons_for_rota
+from app.frontend.events.volunteer_rota.volunteer_targets import get_volunteer_targets_table_and_save_button
+from app.frontend.events.volunteer_rota.warnings import warn_on_all_volunteers
 from app.objects.abstract_objects.abstract_form import Link
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, DetailListOfLines, Line
@@ -79,7 +79,7 @@ def get_summary_group_table(cache: AdHocCache, event: Event):
 
 link = Link(
     url=WEBLINK_FOR_QUALIFICATIONS,
-    string="See qualifications table",
+    string="See qualifications_and_ticks table",
     open_new_window=True,
 )
 instructions = ListOfLines(

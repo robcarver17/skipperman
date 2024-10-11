@@ -1,4 +1,3 @@
-**Menu option: Utilities / Delete sensitive data**
 
 Skipperman stores some sensitive; confidential and personal information. Some of this needs to be kept indefinitely as it is essential to the working of the system. But some event specific data is no longer needed once an event has finished
 
@@ -6,7 +5,7 @@ Skipperman stores some sensitive; confidential and personal information. Some of
 
 Select the event you want to remove data from. Only events that have already happened are shown to avoid accidentally deleting data from an active event. As the warning says, you will not be asked for confirmation and this can't be undone without restoring an old backup.
 
-This will remove all information stored in the registration form, of which the following are sensitive-
+This will remove *all* information stored in the registration form, of which the following are sensitive-
 
 - Reported medical conditions
 - Parents phone and email contacts

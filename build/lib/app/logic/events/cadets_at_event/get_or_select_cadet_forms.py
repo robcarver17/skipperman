@@ -3,13 +3,14 @@ from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.logic.shared.get_or_select_cadet_forms import DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL, \
+from app.frontend.shared.get_or_select_cadet_forms import DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL, \
     CHECK_CADET_FOR_ME_BUTTON_LABEL, FINAL_CADET_ADD_BUTTON_LABEL, SEE_ALL_CADETS_BUTTON_LABEL, \
     SEE_SIMILAR_CADETS_ONLY_LABEL
 
-from app.OLD_backend.cadets import verify_cadet_and_return_warnings, DEPRECATE_get_sorted_list_of_cadets, DEPREACATE_get_list_of_similar_cadets
+from app.OLD_backend.cadets import DEPRECATE_get_sorted_list_of_cadets, DEPREACATE_get_list_of_similar_cadets
+from app.backend.cadets.add_edit_cadet import verify_cadet_and_return_warnings
 from app.OLD_backend.data.cadets import SORT_BY_FIRSTNAME
-from app.logic.shared.add_edit_cadet_form import CadetAndVerificationText, get_add_cadet_form_with_information_passed, \
+from app.frontend.shared.add_edit_cadet_form import CadetAndVerificationText, get_add_cadet_form_with_information_passed, \
     verify_form_with_cadet_details
 
 from app.objects.cadets import Cadet

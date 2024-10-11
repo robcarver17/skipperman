@@ -3,7 +3,7 @@ from app.OLD_backend.volunteers.volunteer_allocation import get_list_of_relevant
 from app.OLD_backend.data.volunteers import SORT_BY_SURNAME
 from app.OLD_backend.volunteers.volunteers import get_sorted_list_of_volunteers
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.events.constants import (
+from app.frontend.events.constants import (
     CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL,
     FINAL_VOLUNTEER_ADD_BUTTON_LABEL,
     SKIP_VOLUNTEER_BUTTON_LABEL,
@@ -11,7 +11,7 @@ from app.logic.events.constants import (
     SEE_ALL_VOLUNTEER_BUTTON_LABEL,
     CHECK_FOR_ME_VOLUNTEER_BUTTON_LABEL,
 )
-from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import (
+from app.frontend.events.volunteer_allocation.track_state_in_volunteer_allocation import (
     get_relevant_information_for_current_volunteer,
     get_volunteer_index,
 )
@@ -22,7 +22,7 @@ from app.objects.abstract_objects.abstract_lines import (
     Line,
 )
 from app.objects.utils import similar
-from app.objects.primtive_with_id.volunteers import Volunteer
+from app.objects.volunteers import Volunteer
 
 
 def get_header_text_for_volunteer_selection_form(

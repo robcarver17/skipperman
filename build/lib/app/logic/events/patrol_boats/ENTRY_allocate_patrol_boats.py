@@ -1,20 +1,20 @@
-from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
-from app.logic.events.patrol_boats.copying import (
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+from app.frontend.events.patrol_boats.copying import (
     copy_across_all_boats_and_roles,
     copy_across_all_boats,
     copy_over_across_all_boats,
     copy_over_across_all_boats_and_roles,
 )
-from app.logic.events.patrol_boats.parse_patrol_boat_table import *
-from app.logic.events.patrol_boats.patrol_boat_buttons import copy_all_boats_button, copyover_all_boats_button, \
+from app.frontend.events.patrol_boats.parse_patrol_boat_table import *
+from app.frontend.events.patrol_boats.patrol_boat_buttons import copy_all_boats_button, copyover_all_boats_button, \
     copy_all_boats_and_roles_button, copyover_all_boats_and_roles_button, add_new_boat_button
-from app.logic.events.patrol_boats.render_patrol_boat_table import (
+from app.frontend.events.patrol_boats.render_patrol_boat_table import (
     get_patrol_boat_table,
     get_top_material_for_patrol_boat_form,
 )
-from app.logic.events.patrol_boats.elements_in_patrol_boat_table import get_button_bar_for_patrol_boats
+from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import get_button_bar_for_patrol_boats
 
-from app.logic.events.patrol_boats.swapping import (
+from app.frontend.events.patrol_boats.swapping import (
     get_all_swap_buttons_for_boat_allocation,
     update_if_swap_button_pressed,
 )
@@ -29,9 +29,9 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 
-from app.logic.events.patrol_boats.parse_patrol_boat_table import (
+from app.frontend.events.patrol_boats.parse_patrol_boat_table import (
     get_all_copy_boat_buttons_for_boat_allocation,
 )
 from app.objects.abstract_objects.abstract_text import Heading

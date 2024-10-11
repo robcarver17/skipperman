@@ -1,7 +1,7 @@
 import os.path
 
 from app.data_access.file_access import docs_directory
-from app.web.html.components import (
+from app.web.html.html_components import (
     Html,
 )
 from app.web.html.master_layout import get_master_layout

@@ -42,7 +42,7 @@ wild_apricot_payment_fields_which_are_cancelled_status:
   - "Cancelled"
 if_volunteer_unable_to_volunteer_contains: 'unable' ## if volunteer status contains this, can't volunteer
 wild_apricot_event_id: "Event ID"
-wild_apricot_file_types: ".csv, .xls"
+allowed_upload_file_types: ".csv, .xls"
 #
 #
 #

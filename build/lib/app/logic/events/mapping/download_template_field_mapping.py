@@ -16,7 +16,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     Button,
     get_nav_bar_with_just_cancel_button,
 )
-from app.logic.abstract_logic_api import initial_state_form
+from app.frontend.form_handler import initial_state_form
 
 
 def display_form_for_download_template_field_mapping(interface: abstractInterface):

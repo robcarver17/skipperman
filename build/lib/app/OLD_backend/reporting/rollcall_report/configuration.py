@@ -1,10 +1,10 @@
 from dataclasses import dataclass
-from app.data_access.configuration.groups import all_groups_names
-from app.objects.primtive_with_id.groups import CADET_NAME, GROUP_STR_NAME
+from app.objects.cadet_with_id_with_group_at_event import GROUP_STR_NAME
 from app.OLD_backend.reporting.options_and_parameters.report_type_specific_parameters import (
     SpecificParametersForTypeOfReport,
 )
 
+all_groups_names= []
 specific_parameters_for_rollcall_report = SpecificParametersForTypeOfReport(
     #    entry_columns=[CADET_NAME],
     group_by_column=GROUP_STR_NAME,

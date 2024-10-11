@@ -1,8 +1,8 @@
 from typing import Union
 
-from app.logic.administration.users.parse_user_form import delete_user_from_user_list, save_changes_in_security_form, \
+from app.frontend.administration.users.parse_user_form import delete_user_from_user_list, save_changes_in_security_form, \
     generate_reset_message_for_user_name
-from app.logic.administration.users.render_users_form import display_form_edit_list_of_users, list_of_deletion_buttons_names, BACK_BUTTON_LABEL, list_of_email_send_buttons_names
+from app.frontend.administration.users.render_users_form import display_form_edit_list_of_users, list_of_deletion_buttons_names, BACK_BUTTON_LABEL, list_of_reset_buttons_names
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.OLD_backend.data.security import load_all_users
@@ -34,5 +34,5 @@ def post_form_security(interface: abstractInterface) -> Union[Form, NewForm]:
     return display_form_security(interface)
 
 deleted_buttons =list_of_deletion_buttons_names()
-email_buttons = list_of_email_send_buttons_names()
+email_buttons = list_of_reset_buttons_names()
 

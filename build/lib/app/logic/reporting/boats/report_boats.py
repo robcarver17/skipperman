@@ -1,17 +1,17 @@
 from typing import Union
 
-from app.logic.reporting.boats.forms import (
+from app.frontend.reporting.boats.forms import (
     reporting_options_form_for_boat_additional_parameters,
     explain_additional_parameters_for_boat_report,
 )
-from app.logic.reporting.boats.processes import (
+from app.frontend.reporting.boats.processes import (
     get_dict_of_df_for_reporting_boats,
     load_additional_parameters_for_boat_report,
     get_boat_allocation_report_additional_parameters_from_form_and_save,
     clear_additional_parameters_for_boat_report,
 )
 
-from app.logic.reporting.shared.generic_report_pages import (
+from app.frontend.reporting.shared.generic_report_pages import (
     post_form_initial_generic_report,
     post_form_for_generic_report_arrangement_options,
     display_form_for_generic_report_all_options,
@@ -23,7 +23,7 @@ from app.logic.reporting.shared.generic_report_pages import (
     display_form_for_generic_report_arrangement_options,
     display_initial_generic_report_form,
 )
-from app.logic.reporting.shared.report_generator import ReportGenerator
+from app.frontend.reporting.shared.report_generator import ReportGenerator
 
 from app.OLD_backend.reporting.boat_report.boat_report_parameters import (
     specific_parameters_for_boat_report,

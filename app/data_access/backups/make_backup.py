@@ -5,18 +5,9 @@ import subprocess
 from app.data_access.backups.access import (
     get_oldest_backup_number,
     get_backup_directory,
-    due_for_another_backup,
     create_timestamp_file,
 )
 from app.data_access.configuration.configuration import NUMBER_OF_BACKUPS
-
-
-def make_backup_if_due(backup_data_path: str, master_data_path: str):
-    due = due_for_another_backup(backup_data_path)
-    if due:
-        make_backup(
-            backup_data_path=backup_data_path, master_data_path=master_data_path
-        )
 
 
 def make_backup(backup_data_path: str, master_data_path: str):

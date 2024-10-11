@@ -5,7 +5,7 @@ from app.data_access.backups.find_and_restore_backups import (
 
 from typing import Union
 
-from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,

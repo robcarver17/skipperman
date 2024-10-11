@@ -1,7 +1,7 @@
 import os.path
 from typing import Union
 
-from app.logic.reporting.qualifications.achieved_qualifications import (
+from app.frontend.reporting.qualifications.achieved_qualifications import (
     write_qualifications_to_temp_csv_file_and_return_filename,
 )
 
@@ -10,15 +10,14 @@ from app.data_access.file_access import (
     public_reporting_directory,
 )
 
-from app.logic.shared.events_state import (
+from app.frontend.shared.events_state import (
     update_state_for_specific_event_given_event_description,
 )
 
 from app.OLD_backend.events import (
-    sort_buttons_for_event_list,
-    all_sort_types_for_event_list,
     confirm_event_exists_given_description,
 )
+from app.backend.events.list_of_events import all_sort_types_for_event_list, sort_buttons_for_event_list
 from app.OLD_backend.ticks_and_qualifications.ticksheets import (
     get_list_of_events_entitled_to_see,
     is_volunteer_SI_or_super_user,
@@ -26,7 +25,7 @@ from app.OLD_backend.ticks_and_qualifications.ticksheets import (
 
 from app.objects.abstract_objects.abstract_text import Heading
 
-from app.logic.events.ENTRY_view_events import display_given_list_of_events_with_buttons
+from app.frontend.events.ENTRY_view_events import display_given_list_of_events_with_buttons
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -45,9 +44,9 @@ from app.objects.abstract_objects.abstract_lines import (
     DetailListOfLines,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.OLD_backend.data.security import get_volunteer_id_of_logged_in_user_or_superuser
+from app.backend.security.logged_in_user import get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER
 from app.objects.events import SORT_BY_START_DSC
-from app.logic.instructors.ENTRY2_choose_group import (
+from app.frontend.instructors.ENTRY2_choose_group import (
     display_form_choose_group_for_event,
 )
 
@@ -160,7 +159,7 @@ def form_for_view_event(interface: abstractInterface):
 
 
 def get_event_buttons(interface: abstractInterface, sort_by: str) -> Line:
-    volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser(interface)
+    volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER(interface)
     list_of_events = get_list_of_events_entitled_to_see(
         interface=interface, volunteer_id=volunteer_id, sort_by=sort_by
     )

@@ -1,26 +1,12 @@
 import datetime
 import pathlib
 
-from app.data_access.configuration.configuration import HOURS_BETWEEN_BACKUPS
 from app.objects.utils import transform_datetime_into_str, transform_str_into_datetime
 import os
 from typing import List
 
 
 NO_BACKUPS_YET = -1
-
-
-def due_for_another_backup(datapath):
-    oldest = get_oldest_backup_number(datapath)
-    if oldest == NO_BACKUPS_YET:
-        return True
-
-    newest_date = datetime_of_backup_number(0, datapath)
-    time_since_backup = datetime.datetime.now() - newest_date
-    seconds_since_backup = time_since_backup.total_seconds()
-    hours_since_backup = seconds_since_backup / 3600.0
-
-    return hours_since_backup > HOURS_BETWEEN_BACKUPS
 
 
 def get_oldest_backup_number(datapath) -> int:

@@ -3,7 +3,7 @@ from typing import Union, List
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.OLD_backend.cadets import cadet_name_from_id
-from app.OLD_backend.forms.form_utils import get_availability_checkbox
+from app.frontend.forms.form_utils import get_availability_checkbox
 from app.OLD_backend.volunteers.volunteers import (
     are_all_cadet_ids_in_list_already_connection_to_volunteer,
 )
@@ -18,12 +18,12 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.objects.exceptions import missing_data
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
-from app.objects.relevant_information_for_volunteers import (
+from app.objects_OLD.relevant_information_for_volunteers import (
     RelevantInformationForVolunteer,
     ListOfRelevantInformationForVolunteer,
     missing_relevant_information,
 )
-from app.objects.primtive_with_id.volunteers import Volunteer
+from app.objects.volunteers import Volunteer
 
 
 AVAILABILITY = "availability"

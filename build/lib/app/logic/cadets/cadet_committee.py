@@ -8,11 +8,13 @@ from app.OLD_backend.cadets import (
     get_cadet_from_id,
 )
 from app.OLD_backend.cadet_committee import get_list_of_cadets_not_on_committee_ordered_by_age, \
-    get_list_of_cadets_on_committee, \
-    get_next_year_for_cadet_committee, month_name_when_cadet_committee_age_bracket_begins, add_new_cadet_to_committee, \
-    toggle_selection_for_cadet_committee_member, start_and_end_date_on_cadet_commmittee, get_list_of_cadet_as_str_not_on_committee_born_in_right_age_bracket
+    get_list_of_cadets_on_committee
+from app.backend.cadets.cadet_committee import get_next_year_for_cadet_committee_after_EGM, \
+    month_name_when_cadet_committee_age_bracket_begins, \
+    get_list_of_cadet_as_str_members_but_not_on_committee_born_in_right_age_bracket, add_new_cadet_to_committee, \
+    toggle_selection_for_cadet_committee_member, start_and_end_date_on_cadet_commmittee
 
-from app.objects.committee import CadetOnCommittee
+from app.objects.composed.committee import CadetOnCommittee
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -30,7 +32,7 @@ from app.objects.abstract_objects.abstract_lines import (
     DetailListOfLines,
 )
 from app.objects.abstract_objects.abstract_text import Heading
-from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
@@ -89,9 +91,9 @@ def get_row_for_existing_cadets_on_committee(
     return RowInTable(
         [
             cadet_on_committee.cadet.name,
-            str(cadet_on_committee.cadet_on_committee.date_term_starts),
-            str(cadet_on_committee.cadet_on_committee.date_term_ends),
-            cadet_on_committee.cadet_on_committee.status_string(),
+            str(cadet_on_committee.cadet_with_id_on_committee.date_term_starts),
+            str(cadet_on_committee.cadet_with_id_on_committee.date_term_ends),
+            cadet_on_committee.cadet_with_id_on_committee.status_string(),
             selection_button,
         ]
     )
@@ -158,10 +160,10 @@ def dropdown_list_of_cadets_not_on_committee(interface: abstractInterface):
 def suggested_cadets_for_next_committee(
     interface: abstractInterface,
 ) -> DetailListOfLines:
-    next_year_for_committee = get_next_year_for_cadet_committee()
+    next_year_for_committee = get_next_year_for_cadet_committee_after_EGM()
     month_name = month_name_when_cadet_committee_age_bracket_begins()
 
-    list_of_cadet_as_str_not_on_committee_born_in_right_age_bracket = get_list_of_cadet_as_str_not_on_committee_born_in_right_age_bracket(
+    list_of_cadet_as_str_not_on_committee_born_in_right_age_bracket = get_list_of_cadet_as_str_members_but_not_on_committee_born_in_right_age_bracket(
         data_layer=interface.data
     )
 

@@ -63,7 +63,7 @@ class HelpButton:
     from_main_menu: bool = False
 
 
-class ButtonBar(List[Button]):
+class ButtonBar(List[Union[HelpButton,Button]]):
     def __repr__(self):
         return "ButtonBar contents %s" % str(super().__repr__())
 

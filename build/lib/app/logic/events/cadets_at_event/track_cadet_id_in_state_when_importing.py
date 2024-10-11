@@ -1,7 +1,7 @@
 from app.OLD_backend.wa_import.update_cadets_at_event import (
     list_of_cadet_ids_at_event_and_in_mapped_data_for_event,
 )
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.exceptions import missing_data, NoMoreData
 

@@ -40,4 +40,4 @@ def restore_backup(interface: abstractInterface, backup_diff: int, datapath: str
 
 
 def delete_all_master_data(interface: abstractInterface, are_you_sure: bool = False):
-    interface.data.data.delete_all_master_data(are_you_sure=are_you_sure)
+    interface.delete_all_data(are_you_sure=are_you_sure)

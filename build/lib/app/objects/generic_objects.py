@@ -1,7 +1,7 @@
 import datetime
 import enum
 from enum import EnumMeta
-from typing import List
+from typing import Dict
 
 import pandas as pd
 
@@ -74,6 +74,7 @@ def transform_class_instance_into_string(class_instance):
         return str(class_instance)
 
 
+
 TRUE = "TRUE_VALUE"
 FALSE = "FALSE_VALUE"
 
@@ -83,6 +84,10 @@ def from_bool_to_str(class_instance: bool) -> str:
         return TRUE
     else:
         return FALSE
+
+ITEM_SEPERATOR = ","
+KEY_VALUE_SEPERATOR = ":"
+
 
 
 def get_class_instance_from_str_dict(some_class, dict_with_str: dict):
@@ -129,49 +134,6 @@ def data_object_as_dict(some_object) -> dict:
     return object_as_dict
 
 
-def create_list_of_objects_from_dataframe(class_of_object: GenericSkipperManObject, df: pd.DataFrame):
-    list_of_objects = [
-        create_object_from_df_row(class_of_object=class_of_object, row=row)
-        for index, row in df.iterrows()
-    ]
-
-    return list_of_objects
-
-
-
-def create_data_frame_given_list_of_objects(list_of_objects: List[GenericSkipperManObject]) -> pd.DataFrame:
-    list_of_dicts = [item.as_str_dict() for item in list_of_objects]
-
-    return pd.DataFrame(list_of_dicts)
-
-
-def create_object_from_df_row(class_of_object: GenericSkipperManObject, row: pd.Series):
-    row_as_dict = row.to_dict()
-
-    try:
-        object = class_of_object.from_dict_of_str(row_as_dict)
-    except:
-        raise Exception(
-            _error_str_when_creating_object_from_df_row(
-                class_of_object=class_of_object, row_as_dict=dict(row_as_dict)
-            )
-        )
-
-    return object
-
-
-def _error_str_when_creating_object_from_df_row(class_of_object, row_as_dict: dict):
-    if getattr(class_of_object, "from_dict", None) is None:
-        return Exception(
-            "Class %s requires .from_dict() method" % (str(class_of_object))
-        )
-    list_of_attributes = get_list_of_attributes(some_class=class_of_object)
-    return Exception(
-        "Class %s requires elements %s element %s doesn't match"
-        % (str(class_of_object), str(list_of_attributes), str(row_as_dict))
-    )
-
-
 def get_list_of_attributes(some_class) -> list:
     dict_of_attributes = get_dict_of_class_attributes(some_class)
     return list(dict_of_attributes.keys())
@@ -193,12 +155,6 @@ def transform_class_dict_into_str_dict(
 
 
 class GenericSkipperManObjectWithIds(GenericSkipperManObject):
-    def __eq__(self, other):
-        return self.id == other.id
-
-    def __hash__(self):
-        return hash(self.id)
-
     @property
     def id(self) -> str:
         raise NotImplemented

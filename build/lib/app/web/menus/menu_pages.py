@@ -1,8 +1,8 @@
-from app.web.html.url import get_action_url
+from typing import List
+
+from app.web.html.url_define import get_action_url, get_urls_of_interest
 
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
-
-from app.web.flask.flask_interface import get_urls_of_interest
 
 from app.objects.abstract_objects.abstract_form import Form
 from app.objects.abstract_objects.abstract_buttons import (
@@ -13,14 +13,13 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 
 from app.web.html.process_abstract_form_to_html import (
-    process_abstract_form_to_html,
     process_abstract_objects_to_html,
 )
 
 from app.web.flask.security import get_access_group_for_current_user, authenticated_user
-from app.web.html.components import Html
+from app.web.html.html_components import Html
 from app.web.html.master_layout import get_master_layout
-from app.logic.menu_define import menu_definition, menu_security_dict
+from app.frontend.menu_define import menu_definition, menu_security_dict
 
 
 ### Returns HTML for a menu page
@@ -32,7 +31,7 @@ def generate_menu_page_html() -> str:
         html_code_for_menu = ""
 
     html_page_master_layout = get_master_layout(
-        include_read_only_toggle=True, include_user_options=True
+        include_read_only_toggle=True, include_user_options=True, include_backup_option=True
     )
     html_page_master_layout.body.append(html_code_for_menu)
 
@@ -63,30 +62,35 @@ def get_nav_bar_for_main_menu() -> ButtonBar:
     return navbar
 
 
-def get_menu_buttons_for_actions() -> list:
+def get_menu_buttons_for_actions() -> Line:
     filtered_menu_definition = filter_menu_for_user_permissions(menu_definition)
+    list_of_buttons = get_menu_buttons_from_filtered_menu(filtered_menu_definition)
+
+    return Line(list_of_buttons)
+
+def get_menu_buttons_from_filtered_menu(filtered_menu_definition: dict) -> List[ActionOptionButton]:
     list_of_buttons = []
     for label, action_name in filtered_menu_definition.items():
         list_of_buttons.append(
             ActionOptionButton(label=label, url=get_action_url(action_name))
         )
 
-    return Line(list_of_buttons)
+    return list_of_buttons
 
 
-def filter_menu_for_user_permissions(menu_definition: dict):
+def filter_menu_for_user_permissions(menu_definition: dict) -> dict:
     new_menu = dict(
         [
-            (url_ref, url)
-            for url_ref, url in menu_definition.items()
-            if can_action_be_seen(url)
+            (menu_option, action_name)
+            for menu_option, action_name in menu_definition.items()
+            if can_action_be_seen(action_name)
         ]
     )
 
     return new_menu
 
 
-def can_action_be_seen(action_name):
+def can_action_be_seen(action_name: str) -> bool:
     list_of_allowed_groups = menu_security_dict.get(action_name, None)
     if list_of_allowed_groups is None:
         raise Exception("menu_security_dict doesn't include %s" % action_name)

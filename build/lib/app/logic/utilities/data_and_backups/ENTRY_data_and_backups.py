@@ -1,11 +1,11 @@
 from typing import Union
 
-from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
-from app.logic.utilities.data_and_backups.make_backup import make_backup_and_return_file
-from app.logic.utilities.data_and_backups.restore_backup_from_local import (
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+from app.frontend.utilities.data_and_backups.make_backup import make_backup_and_return_file
+from app.frontend.utilities.data_and_backups.restore_backup_from_local import (
     display_form_for_upload_backup,
 )
-from app.logic.utilities.data_and_backups.restore_backup_from_snapshot import (
+from app.frontend.utilities.data_and_backups.restore_backup_from_snapshot import (
     display_form_view_of_snapshots,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm, File

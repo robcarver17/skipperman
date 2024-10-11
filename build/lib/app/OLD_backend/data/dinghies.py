@@ -1,12 +1,12 @@
 from typing import List
 
-from app.data_access.data_layer.ad_hoc_cache import AdHocCache
+from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
 
 from app.objects.cadets import Cadet
 
 from app.OLD_backend.data.cadets import CadetData
 
-from app.objects.primtive_with_id.cadet_with_id_at_event import CadetWithIdAtEvent
+from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
 
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
 
@@ -15,20 +15,18 @@ from app.objects.exceptions import missing_data
 from app.objects.day_selectors import Day
 
 from app.OLD_backend.data.patrol_boats import PatrolBoatsData
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.club_dinghies import (
-    ListOfCadetAtEventWithClubDinghies,
     ListOfClubDinghies,
-    NO_BOAT,
 )
-from app.objects.dinghies import (
+from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithClubDinghies, NO_BOAT
+from app.objects.boat_classes import (
     ListOfBoatClasses,
-    ListOfCadetAtEventWithDinghies,
-    NO_PARTNERSHIP_LIST,
 )
+from app.objects.cadet_at_event_with_dinghy_with_ids import NO_PARTNERSHIP_LIST, ListOfCadetAtEventWithDinghies
 from app.objects.events import Event
-from app.objects.primtive_with_id.patrol_boats import ListOfPatrolBoats
+from app.objects.patrol_boats import ListOfPatrolBoats
 
 
 class DinghiesData:

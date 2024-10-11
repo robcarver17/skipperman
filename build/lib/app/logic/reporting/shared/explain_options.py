@@ -1,24 +1,21 @@
 from typing import Tuple
 
-from app.OLD_backend.reporting.options_and_parameters.report_options import ReportingOptions
-
 from app.OLD_backend.reporting.arrangement.arrange_options import describe_arrangement
 from app.OLD_backend.reporting.arrangement.group_order import (
-    GroupOrder,
     get_group_order_excluding_missing_groups,
     get_groups_in_dict_missing_from_group_order,
 )
-from app.logic.reporting.shared.arrangement_state import (
+from app.frontend.reporting.shared.arrangement_state import (
     get_stored_arrangement_and_group_order,
 )
-from app.logic.reporting.shared.group_order import (
+from app.frontend.reporting.shared.group_order import (
     get_arrangement_options_and_group_order_from_stored_or_defaults,
 )
-from app.logic.reporting.shared.print_options import (
+from app.frontend.reporting.shared.print_options import (
     get_saved_print_options,
     report_print_options_as_list_of_lines,
 )
-from app.logic.reporting.shared.report_generator import ReportGenerator
+from app.frontend.reporting.shared.report_generator import ReportGenerator
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.objects.abstract_objects.abstract_text import bold

@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-from app.logic.instructors.buttons import (
+from app.frontend.instructors.buttons import (
     get_cadet_buttons_at_start_of_row_in_edit_state,
     get_button_or_label_for_tickitem_name,
     get_select_cadet_button_when_in_no_edit_mode,
@@ -13,7 +13,7 @@ from app.OLD_backend.ticks_and_qualifications.ticksheets import (
 )
 
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
-from app.logic.shared.qualification_and_tick_state_storage import (
+from app.frontend.shared.qualification_and_tick_state_storage import (
     get_edit_state_of_ticksheet,
     NO_EDIT_STATE,
     EDIT_CHECKBOX_STATE,
@@ -26,7 +26,7 @@ from app.logic.shared.qualification_and_tick_state_storage import (
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import checkboxInput, dropDownInput
 from app.objects.events import Event
-from app.objects.primtive_with_id.groups import Group
+from app.objects.groups import Group
 from app.objects.qualifications import Qualification
 
 from app.objects.ticks import (

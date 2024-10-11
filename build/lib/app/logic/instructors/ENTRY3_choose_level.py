@@ -17,8 +17,8 @@ from app.objects.abstract_objects.abstract_lines import (
     _______________,
 )
 
-from app.logic.shared.events_state import get_event_from_state
-from app.logic.shared.qualification_and_tick_state_storage import (
+from app.frontend.shared.events_state import get_event_from_state
+from app.frontend.shared.qualification_and_tick_state_storage import (
     get_group_from_state,
     update_state_for_qualification_name,
 )
@@ -28,7 +28,7 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.instructors.ENTRY_FINAL_view_ticksheets import (
+from app.frontend.instructors.ENTRY_FINAL_view_ticksheets import (
     display_form_view_ticksheets_for_event_and_group,
 )
 

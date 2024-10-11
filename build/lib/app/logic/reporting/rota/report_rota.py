@@ -1,20 +1,20 @@
 from typing import Union
 
-from app.logic.reporting.rota.forms import (
+from app.frontend.reporting.rota.forms import (
     reporting_options_form_for_rota_additional_parameters,
     explain_additional_parameters_for_rota_report,
 )
-from app.logic.reporting.rota.processes import (
+from app.frontend.reporting.rota.processes import (
     get_dict_of_df_for_reporting_rota,
     load_additional_parameters_for_rota_report,
     clear_additional_parameters_for_rota_report,
 )
 
-from app.logic.reporting.rota.processes import (
+from app.frontend.reporting.rota.processes import (
     get_rota_report_additional_parameters_from_form_and_save,
 )
 
-from app.logic.reporting.shared.generic_report_pages import (
+from app.frontend.reporting.shared.generic_report_pages import (
     post_form_initial_generic_report,
     post_form_for_generic_report_arrangement_options,
     display_form_for_generic_report_all_options,
@@ -26,7 +26,7 @@ from app.logic.reporting.shared.generic_report_pages import (
     display_form_for_generic_report_arrangement_options,
     display_initial_generic_report_form,
 )
-from app.logic.reporting.shared.report_generator import ReportGenerator
+from app.frontend.reporting.shared.report_generator import ReportGenerator
 
 from app.OLD_backend.reporting.rota_report.configuration import (
     specific_parameters_for_volunteer_report,

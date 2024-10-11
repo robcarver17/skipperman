@@ -8,13 +8,13 @@ from app.OLD_backend.volunteers.volunteers import (
  get_dict_of_existing_skills,
 )
 from app.objects.day_selectors import Day
-from app.objects.volunteers_at_event import (
+from app.objects_OLD.volunteers_at_event import (
     DEPRECATE_VolunteerAtEvent, )
-from app.objects.primtive_with_id.volunteer_roles_and_groups import ListOfVolunteersWithIdInRoleAtEvent
+from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import ListOfVolunteersWithIdInRoleAtEvent
 
 from app.objects.events import Event
 
-from app.data_access.data_layer.ad_hoc_cache import AdHocCache
+from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
 
 def get_volunteer_matrix(
     cache: AdHocCache, event: Event, sorts_and_filters: RotaSortsAndFilters

@@ -2,13 +2,11 @@ from typing import Union
 
 from app.OLD_backend.data.cadet_committee import CadetCommitteeData
 
-from app.OLD_backend.data.cadets import CadetData
-
 from app.OLD_backend.ticks_and_qualifications.qualifications import (
     sorted_list_of_named_qualifications_for_cadet,
 )
-from app.logic.shared.cadet_state import get_cadet_from_state
-from app.logic.cadets.edit_cadet import display_form_edit_individual_cadet
+from app.frontend.shared.cadet_state import get_cadet_from_state
+from app.frontend.cadets.edit_cadet import display_form_edit_individual_cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
@@ -20,7 +18,7 @@ from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
 )
-from app.logic.abstract_logic_api import initial_state_form
+from app.frontend.form_handler import initial_state_form
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )

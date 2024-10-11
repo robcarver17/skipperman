@@ -5,8 +5,8 @@ from app.OLD_backend.data.event_mapping import EventMappingData
 from app.objects.events import Event
 from app.OLD_backend.wa_import.load_wa_file import (
     get_event_id_from_wa_df,
-    load_raw_wa_file,
 )
+from app.backend.file_handling import load_spreadsheet_file_and_clear_nans
 from app.objects.exceptions import FileError
 
 
@@ -15,7 +15,7 @@ def verify_file_has_correct_wa_id(
     filename: str,
     event: Event,
 ):
-    wa_as_df = load_raw_wa_file(filename)
+    wa_as_df = load_spreadsheet_file_and_clear_nans(filename)
 
     wa_id = get_event_id_from_wa_df(wa_as_df=wa_as_df)
 
@@ -27,7 +27,7 @@ def verify_file_has_correct_wa_id(
 def verify_and_if_required_add_wa_mapping(
     interface: abstractInterface, filename: str, event: Event
 ):
-    wa_as_df = load_raw_wa_file(filename)
+    wa_as_df = load_spreadsheet_file_and_clear_nans(filename)
     wa_id = get_event_id_from_wa_df(wa_as_df=wa_as_df)
 
     is_new_event = confirm_correct_wa_mapping_and_return_true_if_new_event(

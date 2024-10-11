@@ -3,13 +3,12 @@ from typing import Union
 from app.OLD_backend.cleaning import clean_sensitive_data_for_event
 from app.objects.abstract_objects.abstract_text import Heading
 
-from app.logic.events.ENTRY_view_events import display_given_list_of_events_with_buttons
+from app.frontend.events.ENTRY_view_events import display_given_list_of_events_with_buttons
 
 from app.OLD_backend.events import (
-    all_sort_types_for_event_list,
-    sort_buttons_for_event_list,
     DEPRECATE_get_sorted_list_of_events, get_event_from_list_of_events_given_event_description,
 )
+from app.backend.events.list_of_events import all_sort_types_for_event_list, sort_buttons_for_event_list
 from app.objects.events import SORT_BY_START_DSC, ListOfEvents
 
 from app.objects.abstract_objects.abstract_form import (
@@ -27,7 +26,7 @@ from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
 )
-from app.logic.events.constants import (
+from app.frontend.events.constants import (
     ADD_EVENT_BUTTON_LABEL,
 )
 from app.objects.abstract_objects.abstract_interface import (

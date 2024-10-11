@@ -4,7 +4,7 @@ import qrcode.image.svg
 
 from app.data_access.file_access import web_pathname_of_file, download_directory
 
-from app.logic.utilities.files.render_files import (
+from app.frontend.utilities.files.render_files import (
     type_directory_and_filename_from_button_name,
 )
 

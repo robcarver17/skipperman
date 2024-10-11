@@ -1,15 +1,15 @@
 from copy import copy
 from typing import List, Callable, Dict
 
-import app.objects.primtive_with_id.volunteer_roles_and_groups
+import app.objects_OLD.primtive_with_id.volunteer_roles_and_groups
 from app.OLD_backend.wa_import.update_cadets_at_event import get_all_rows_in_mapped_event_for_cadet
 
-from app.data_access.data_layer.ad_hoc_cache import AdHocCache
+from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
 from app.OLD_backend.data.patrol_boats import PatrolBoatsData
-from app.objects.primtive_with_id.patrol_boats import PatrolBoat
+from app.objects.patrol_boats import PatrolBoat
 
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
 from app.OLD_backend.group_allocations.cadet_event_allocations import (
@@ -26,7 +26,7 @@ from app.OLD_backend.rota.volunteer_rota import (
     groups_for_volunteer_at_event, load_list_of_volunteers_at_event, get_list_of_volunteer_roles_for_event_across_days,
 )
 from app.OLD_backend.volunteers.volunteers import get_dict_of_existing_skills
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 from app.OLD_backend.volunteers.volunteer_allocation import \
     get_list_of_volunteer_names_associated_with_cadet_at_event, \
     get_list_of_active_connected_cadets_at_event_for_volunteer
@@ -35,8 +35,8 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import ListOfCadets, Cadet, cadet_is_too_young_to_be_without_parent
 from app.objects.day_selectors import EMPTY_DAY_SELECTOR, Day, DaySelector
 from app.objects.events import Event
-from app.objects.mapped_wa_event import get_status_from_row
-from app.objects.volunteers_at_event import DEPRECATE_VolunteerAtEvent
+from app.objects_OLD.mapped_wa_event import get_status_from_row
+from app.objects_OLD.volunteers_at_event import DEPRECATE_VolunteerAtEvent
 
 
 def warn_on_all_volunteers_availability(cache: AdHocCache, event: Event) -> List[str]:
@@ -157,7 +157,7 @@ def warn_about_single_volunteer_groups_at_event(
                 continue
             group_warnings_for_volunteer.append(
                 "Volunteer %s and cadet are both in group %s %s"
-                % (volunteer.name, group.group_name, notes)
+                % (volunteer.name, group.name, notes)
             )
 
     return ", ".join(group_warnings_for_volunteer)

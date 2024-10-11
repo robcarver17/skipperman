@@ -1,15 +1,15 @@
 from typing import Union
 
-from app.logic.events.import_wa.import_controller import import_controller
+from app.frontend.events.import_wa.import_controller import import_controller
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.abstract_logic_api import initial_state_form
+from app.frontend.form_handler import initial_state_form
 from app.OLD_backend.wa_import.load_wa_file import (
     delete_raw_event_upload_with_event_id,
     get_staged_file_raw_event_filename,
 )
 from app.OLD_backend.wa_import.process_wa_file import process_uploaded_wa_event_file
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 
 
 def display_form_import_event_file(

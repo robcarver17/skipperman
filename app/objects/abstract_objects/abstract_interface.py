@@ -1,29 +1,30 @@
 from dataclasses import dataclass
 from typing import Callable
 
-from app.data_access.data_layer.ad_hoc_cache import AdHocCache
+from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.object_store import ObjectStore
 
-from app.objects_OLD.exceptions import (
+from app.objects.exceptions import (
     missing_data,
     NoFileUploaded,
     FileError,
     arg_not_passed,
 )
-from app.objects_OLD.abstract_objects.abstract_form import (
+from app.objects.abstract_objects.abstract_form import (
     Form,
     YES,
     NO,
     NewForm,
 )
-from app.objects_OLD.abstract_objects.abstract_buttons import FINISHED_BUTTON_LABEL, Button
+from app.objects.abstract_objects.abstract_buttons import FINISHED_BUTTON_LABEL, Button
 from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
     _______________,
 )
-from app.objects_OLD.abstract_objects.form_function_mapping import (
+from app.objects.abstract_objects.form_function_mapping import (
     DisplayAndPostFormFunctionMaps,
 )
 
@@ -39,14 +40,25 @@ def finished_button_with_custom_label(label: str):
 @dataclass
 class abstractInterface:
     data: DataLayer
+    object_store: ObjectStore
     display_and_post_form_function_maps: DisplayAndPostFormFunctionMaps = arg_not_passed
     action_name: str = ""
 
+    def make_backup_of_data(self):
+        self.data.ba
+
+    def delete_all_data(self, are_you_sure: bool = False):
+        self.data.delete_all_data(are_you_sure=are_you_sure)
+
     ## SHOULD BE DONE ON NEW PAGE DISPLAY?? AND A MESS!
     def flush_cache_to_store(self):
-        self._save_data_store_cache()
-        self._clear_data_store_cache()
-        self._clear_adhoc_cache() ## isn't saved as we don't write to it
+        self.object_store.flush_store()
+        self._save_data_store_cache() ## FIXME REMOVE EVENTUALLY
+        self._clear_data_store_cache() ## FIXME REMOVE EVENTUALLY
+        self._clear_adhoc_cache() ## ## FIXME REMOVE EVENTUALLY
+
+    def clear_cache(self):
+        self.object_store.clear_store()
 
     def _clear_data_store_cache(self):
         self.data.clear_stored_items()

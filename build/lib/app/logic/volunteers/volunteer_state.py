@@ -2,7 +2,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.OLD_backend.volunteers.volunteers import (
     get_volunteer_with_name, get_volunteer_from_id,
 )
-from app.objects.primtive_with_id.volunteers import Volunteer
+from app.objects.volunteers import Volunteer
 
 VOLUNTEER = "volunteer"
 

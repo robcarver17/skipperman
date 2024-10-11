@@ -8,9 +8,9 @@ from app.OLD_backend.ticks_and_qualifications.create_ticksheets import (
 )
 from app.objects.abstract_objects.abstract_form import File
 
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 
-from app.logic.shared.qualification_and_tick_state_storage import (
+from app.frontend.shared.qualification_and_tick_state_storage import (
     get_qualification_from_state,
     get_group_from_state,
 )
@@ -19,11 +19,11 @@ from app.data_access.file_access import download_directory
 
 from app.objects.events import Event
 
-from app.objects.primtive_with_id.groups import Group
+from app.objects.groups import Group
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.objects.ticks import LabelledTickSheetWithCadetIds
+from app.objects.composed.labelled_tick_sheet_with_cadet_ids import LabelledTickSheetWithCadetIds
 
 
 def download_labelled_ticksheet_and_return_file(interface: abstractInterface) -> File:
@@ -89,7 +89,7 @@ def align_center(x):
 
 
 def temp_file_name(event: Event, group: Group, qualification_stage_id: str) -> str:
-    use_group_name = copy(group.group_name)
+    use_group_name = copy(group.name)
     use_group_name = use_group_name.replace("/", "_")
     filename = os.path.join(
         download_directory,

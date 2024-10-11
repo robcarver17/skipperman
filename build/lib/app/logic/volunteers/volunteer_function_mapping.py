@@ -1,20 +1,20 @@
-from app.logic.volunteers.ENTRY_view_volunteers import (
+from app.frontend.volunteers.ENTRY_view_volunteers import (
     post_form_view_of_volunteers,
     display_form_view_of_volunteers,
 )
-from app.logic.volunteers.add_volunteer import (
+from app.frontend.volunteers.add_volunteer import (
     display_form_add_volunteer,
     post_form_add_volunteer,
 )
-from app.logic.volunteers.view_individual_volunteer import (
+from app.frontend.volunteers.view_individual_volunteer import (
     display_form_view_individual_volunteer,
     post_form_view_individual_volunteer,
 )
-from app.logic.volunteers.edit_volunteer import (
+from app.frontend.volunteers.edit_volunteer import (
     display_form_edit_individual_volunteer,
     post_form_edit_individual_volunteer,
 )
-from app.logic.volunteers.edit_cadet_connections import (
+from app.frontend.volunteers.edit_cadet_connections import (
     display_form_edit_cadet_volunteer_connections,
     post_form_edit_cadet_volunteer_connections,
 )

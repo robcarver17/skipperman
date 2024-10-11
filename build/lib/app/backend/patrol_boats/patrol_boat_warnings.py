@@ -1,14 +1,14 @@
 from typing import List
 
-from app.backend.patrol_boats.data import  \
+from app.backend.OLD_patrol_boats.data import  \
     get_list_of_voluteers_at_event_with_patrol_boats_from_cache, load_list_of_patrol_boats_at_event_from_cache
 
-from app.data_access.data_layer.ad_hoc_cache import AdHocCache
+from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
 
 from app.OLD_backend.rota.warnings import process_warning_list
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.primtive_with_id.patrol_boats import PatrolBoat
+from app.objects.patrol_boats import PatrolBoat
 
 
 def warn_on_pb2_drivers(cache: AdHocCache, event: Event) -> List[str]:

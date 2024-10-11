@@ -1,20 +1,20 @@
-from app.logic.cadets.cadet_function_mapping import cadet_function_mapping
-from app.logic.events.events_function_mapping import event_function_mapping
-from app.logic.reporting.reporting_function_mapping import reporting_function_mapping
-from app.logic.volunteers.volunteer_function_mapping import volunteer_function_mapping
-from app.logic.configuration.config_function_mapping import config_function_mapping
-from app.logic.instructors.instructor_function_mapping import (
+from app.frontend.cadets.cadet_function_mapping import cadet_function_mapping
+from app.frontend.events.events_function_mapping import event_function_mapping
+from app.frontend.reporting.reporting_function_mapping import reporting_function_mapping
+from app.frontend.volunteers.volunteer_function_mapping import volunteer_function_mapping
+from app.frontend.configuration.config_function_mapping import config_function_mapping
+from app.frontend.instructors.instructor_function_mapping import (
     instructor_function_mapping,
 )
-from app.logic.administration.admin_function_mapping import admin_function_mapping
-from app.logic.utilities.utilities_function_mapping import utilities_function_mapping
+from app.frontend.administration.admin_function_mapping import admin_function_mapping
+from app.frontend.utilities.utilities_function_mapping import utilities_function_mapping
 
 from app.web.flask.flask_interface import flaskInterface
 from app.objects.abstract_objects.abstract_form import Form, form_with_message, File
 from app.objects.abstract_objects.form_function_mapping import (
     DisplayAndPostFormFunctionMaps,
 )
-from app.logic.abstract_logic_api import LogicApi
+from app.frontend.form_handler import FormHandler
 from app.data_access.data import data_api
 
 
@@ -39,7 +39,7 @@ class SiteActions:
 
     def get_logic_api_for_specific_action_with_form_mapping(
         self, action_name
-    ) -> LogicApi:
+    ) -> FormHandler:
         try:
             form_mapping = getattr(self, action_name)
         except AttributeError:
@@ -52,7 +52,7 @@ class SiteActions:
         )
         interface._clear_data_store_cache()  ## avoid caching issues
 
-        return LogicApi(interface)
+        return FormHandler(interface)
 
     ## TO ADD NEW ACTIONS SUBMIT A NEW METHOD HERE
     ## These are values from the dict in menu_define

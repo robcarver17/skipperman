@@ -1,7 +1,7 @@
 from typing import List, Callable
 
 from flask import flash, get_flashed_messages
-from app.web.html.components import (
+from app.web.html.html_components import (
     HtmlWrapper,
     Html,
     horizontal_line,

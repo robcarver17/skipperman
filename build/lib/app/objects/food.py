@@ -4,7 +4,7 @@ from typing import List, Union
 from app.objects.generic_list_of_objects import (
     GenericListOfObjects,
 )
-from app.objects.generic_objects import GenericSkipperManObject, from_bool_to_str, from_str_to_bool
+from app.objects.generic_objects import GenericSkipperManObject
 
 OTHER_IN_FOOD_REQUIRED = "other"
 

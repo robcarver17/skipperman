@@ -1,4 +1,3 @@
-import shutil
 from typing import Union
 
 from app.data_access.backups.find_and_restore_backups import delete_all_master_data

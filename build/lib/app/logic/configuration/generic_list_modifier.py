@@ -2,20 +2,18 @@ from copy import copy
 from dataclasses import dataclass
 from typing import Union, Callable
 
-from app.OLD_backend.forms.reorder_form import (
+from app.frontend.forms import (
     UP,
     DOWN,
     get_button_name_to_move_in_list,
     modify_list_given_button_name,
 )
 from app.data_access.configuration.fixed import (
-    BACK_KEYBOARD_SHORTCUT,
     SAVE_KEYBOARD_SHORTCUT,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm, textInput
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
-    CANCEL_BUTTON_LABEL,
     ButtonBar,
     cancel_menu_button,
 )
@@ -161,7 +159,7 @@ def post_form_edit_generic_list(
     interface: abstractInterface,
     existing_list: list,
     header_text: str,
-    ## functions need to take string and return new list of objects
+    ## functions need to take string and return new list of objects_OLD
     adding_function: Callable,
     deleting_function: Callable,
     modifying_function: Callable,
@@ -245,7 +243,7 @@ def add_new_entry_from_form_and_return_updated_list(
 ) -> list:
     entry_to_add = interface.value_from_form(ADD_ENTRY_TEXT_FIELD)
     if len(entry_to_add) > 0:
-        ## functions need to take string and return new list of objects
+        ## functions need to take string and return new list of objects_OLD
         try:
             new_list = adding_function(interface=interface, entry_to_add=entry_to_add)
             return new_list

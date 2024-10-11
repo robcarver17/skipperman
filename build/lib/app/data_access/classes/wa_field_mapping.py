@@ -1,4 +1,4 @@
-from app.objects.wa_field_mapping import ListOfWAFieldMappings
+from app.objects_OLD.wa_field_mapping import ListOfWAFieldMappings
 
 
 class DataWAFieldMapping(object):

@@ -11,11 +11,11 @@ from app.OLD_backend.reporting.arrangement.arrange_options import (
     ArrangementOptionsAndGroupOrder,
 )
 
-from app.logic.reporting.shared.arrangement_state import (
+from app.frontend.reporting.shared.arrangement_state import (
     get_stored_arrangement_and_group_order,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.reporting.constants import GROUP_ORDER
+from app.frontend.reporting.constants import GROUP_ORDER
 from app.OLD_backend.reporting.arrangement.group_order import (
     GroupOrder,
     get_group_order_excluding_missing_groups,

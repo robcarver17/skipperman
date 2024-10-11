@@ -1,8 +1,6 @@
-from typing import List
-
 from app.objects.qualifications import (
     ListOfQualifications,
-    ListOfCadetsWithQualifications,
+    ListOfCadetsWithIdsAndQualifications,
 )
 from app.objects.ticks import (
     ListOfTickSubStages,
@@ -20,10 +18,10 @@ class DataListOfQualifications(object):
 
 
 class DataListOfCadetsWithQualifications(object):
-    def read(self) -> ListOfCadetsWithQualifications:
+    def read(self) -> ListOfCadetsWithIdsAndQualifications:
         raise NotImplemented
 
-    def write(self, list_of_cadets_with_qualifications: ListOfCadetsWithQualifications):
+    def write(self, list_of_cadets_with_qualifications: ListOfCadetsWithIdsAndQualifications):
         raise NotImplemented
 
 

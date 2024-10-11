@@ -2,11 +2,11 @@ from typing import List, Tuple, Union
 
 from app.OLD_backend.ticks_and_qualifications.ticksheets import get_ticksheet_data
 
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 
-from app.logic.shared.qualification_and_tick_state_storage import (
+from app.frontend.shared.qualification_and_tick_state_storage import (
     get_edit_state_of_ticksheet,
     EDIT_DROPDOWN_STATE,
     NO_EDIT_STATE,
@@ -15,7 +15,7 @@ from app.logic.shared.qualification_and_tick_state_storage import (
     set_cadet_id_in_state,
     return_true_if_a_cadet_id_been_set,
 )
-from app.logic.instructors.ticksheet_table_elements import user_can_award_qualifications
+from app.frontend.instructors.ticksheet_table_elements import user_can_award_qualifications
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.ticks import (

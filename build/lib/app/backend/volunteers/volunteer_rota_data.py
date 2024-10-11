@@ -5,7 +5,7 @@ import pandas as pd
 
 from app.OLD_backend.rota.volunteer_history import DEPRECATE_get_dict_of_volunteers_with_last_roles, \
     get_dict_of_volunteers_with_last_roles
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.OLD_backend.group_allocations.cadet_event_allocations import (
@@ -33,18 +33,19 @@ from app.objects.day_selectors import Day
 from app.objects.events import (
     Event,
 )
-from app.objects.primtive_with_id.groups import sorted_locations, Group, GROUP_UNALLOCATED, ListOfCadetIdsWithGroups
-from app.objects.primtive_with_id.volunteers import Volunteer, ListOfVolunteers
-from app.objects.primtive_with_id.volunteer_skills import ListOfVolunteerSkills, SkillsDict
-from app.objects.primtive_with_id.volunteer_at_event import VolunteerAtEventWithId, ListOfVolunteersAtEventWithId
-from app.objects.volunteers_in_roles import (
+from app.objects.groups import sorted_locations_REPLACE_WITH_PROPER_SORT_NOT_STR, Group, GROUP_UNALLOCATED
+from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
+from app.objects.volunteers import Volunteer, ListOfVolunteers
+from app.objects.composed.volunteers_with_skills import SkillsDict, ListOfVolunteersWithSkills
+from app.objects_OLD.primtive_with_id.volunteer_at_event import VolunteerAtEventWithId, ListOfVolunteersAtEventWithId
+from app.objects_OLD.volunteers_in_roles import (
     FILTER_ALL,
     FILTER_AVAILABLE,
     FILTER_UNALLOC_AVAILABLE,
     FILTER_ALLOC_AVAILABLE,
     FILTER_UNAVAILABLE,
 )
-from app.objects.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent, \
+from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent, \
     ListOfVolunteersWithIdInRoleAtEvent, RoleAndGroup
 from app.objects.utils import print_dict_nicely
 
@@ -96,7 +97,7 @@ class DataToBeStoredWhilstConstructingVolunteerRotaPage:
     event: Event
     list_of_cadet_ids_with_groups: ListOfCadetIdsWithGroups
     unallocated_cadets_at_event: ListOfCadets
-    volunteer_skills: ListOfVolunteerSkills
+    volunteer_skills: ListOfVolunteersWithSkills
     volunteers_in_roles_at_event: ListOfVolunteersWithIdInRoleAtEvent
     list_of_volunteers_with_id_at_event: ListOfVolunteersAtEventWithId
     dict_of_volunteers_with_last_roles: Dict[str, RoleAndGroup]
@@ -238,7 +239,7 @@ def filter_volunteer(
     volunteer_at_event: VolunteerAtEventWithId,
     list_of_volunteers_in_roles_at_event: ListOfVolunteersWithIdInRoleAtEvent,
     skills_filter: SkillsDict,
-    volunteer_skills: ListOfVolunteerSkills,
+    volunteer_skills: ListOfVolunteersWithSkills,
     availability_filter_dict: dict,
 ) -> bool:
     filter_by_skills = filter_volunteer_by_skills(
@@ -258,7 +259,7 @@ def filter_volunteer(
 def filter_volunteer_by_skills(
     volunteer_at_event: VolunteerAtEventWithId,
     skills_filter: SkillsDict,
-    volunteer_skills: ListOfVolunteerSkills,
+    volunteer_skills: ListOfVolunteersWithSkills,
 ) -> bool:
     volunteer_skills = volunteer_skills.skills_for_volunteer_id(
         volunteer_id=volunteer_at_event.volunteer_id
@@ -451,7 +452,7 @@ def get_cadet_location_string(
 def str_type_of_group_given_list_of_groups(list_of_groups: List[Group]):
     types_of_groups = [group.type_of_group() for group in list_of_groups]
     unique_list_of_group_locations = list(set(types_of_groups))
-    sorted_list_of_group_locations = sorted_locations(unique_list_of_group_locations)
+    sorted_list_of_group_locations = sorted_locations_REPLACE_WITH_PROPER_SORT_NOT_STR(unique_list_of_group_locations)
     return ", ".join(sorted_list_of_group_locations)
 
 

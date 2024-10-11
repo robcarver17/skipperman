@@ -1,14 +1,14 @@
 from typing import Union
 
-from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
-from app.logic.instructors.buttons import get_list_of_all_tick_related_button_names, \
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+from app.frontend.instructors.buttons import get_list_of_all_tick_related_button_names, \
     get_list_of_all_possible_select_cadet_buttons, set_cadet_id
-from app.logic.instructors.parse_ticksheet_table import save_ticksheet_edits
-from app.logic.instructors.parse_macro_buttons_in_ticksheets import action_if_macro_tick_button_pressed
-from app.logic.instructors.print_ticksheet import download_labelled_ticksheet_and_return_file
+from app.frontend.instructors.parse_ticksheet_table import save_ticksheet_edits
+from app.frontend.instructors.parse_macro_buttons_in_ticksheets import action_if_macro_tick_button_pressed
+from app.frontend.instructors.print_ticksheet import download_labelled_ticksheet_and_return_file
 
-from app.logic.instructors.render_ticksheet_table import get_ticksheet_table
-from app.logic.instructors.ticksheet_table_elements import get_buttons_for_ticksheet, get_instructions_for_ticksheet, \
+from app.frontend.instructors.render_ticksheet_table import get_ticksheet_table
+from app.frontend.instructors.ticksheet_table_elements import get_buttons_for_ticksheet, get_instructions_for_ticksheet, \
     EDIT_CHECKBOX_BUTTON_LABEL, EDIT_DROPDOWN_BUTTON_LABEL, SAVE_BUTTON_LABEL, PRINT_BUTTON_LABEL, \
     SHOW_ALL_CADETS_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_buttons import BACK_BUTTON_LABEL, \
@@ -18,11 +18,11 @@ from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 
-from app.logic.shared.qualification_and_tick_state_storage import get_group_from_state, get_qualification_from_state, \
+from app.frontend.shared.qualification_and_tick_state_storage import get_group_from_state, get_qualification_from_state, \
     set_edit_state_of_ticksheet, \
     EDIT_CHECKBOX_STATE, EDIT_DROPDOWN_STATE, NO_EDIT_STATE, get_edit_state_of_ticksheet, clear_cadet_id_in_state
 
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -32,7 +32,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
 def display_form_view_ticksheets_for_event_and_group(interface: abstractInterface) -> Form:
-    ### options: print, edit, add qualifications (super users only)
+    ### options: print, edit, add qualifications_and_ticks (super users only)
     event = get_event_from_state(interface)
     group = get_group_from_state(interface)
     qualification = get_qualification_from_state(interface)

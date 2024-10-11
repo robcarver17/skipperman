@@ -4,8 +4,8 @@ from app.OLD_backend.volunteers.volunteers import DEPRECATE_get_volunteer_from_i
 
 from app.OLD_backend.cadets import get_cadet_from_id
 from app.OLD_backend.data.food import FoodData
-from app.OLD_backend.forms.form_utils import get_food_requirements_input_as_tuple
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.forms.form_utils import get_food_requirements_input_as_tuple
+from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     Button,
@@ -14,7 +14,7 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
-from app.objects.food import (
+from app.objects_OLD.food import (
     CadetWithFoodRequirementsAtEvent,
     VolunteerWithFoodRequirementsAtEvent,
 )

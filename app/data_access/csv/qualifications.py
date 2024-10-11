@@ -3,7 +3,7 @@ from app.data_access.csv.generic_csv_data import GenericCsvData
 from app.data_access.classes.qualifications import *
 from app.objects.qualifications import (
     ListOfQualifications,
-    ListOfCadetsWithQualifications,
+    ListOfCadetsWithIdsAndQualifications,
 )
 from app.data_access.csv.resolve_csv_paths_and_filenames import (
     LIST_OF_QUALIFICATIONS,
@@ -31,15 +31,15 @@ class CsvDataListOfQualifications(GenericCsvData, DataListOfQualifications):
 class CsvListOfCadetsWithQualifications(
     GenericCsvData, DataListOfCadetsWithQualifications
 ):
-    def read(self) -> ListOfCadetsWithQualifications:
+    def read(self) -> ListOfCadetsWithIdsAndQualifications:
         list_of_cadets_with_qualifications = self.read_and_return_object_of_type(
-            ListOfCadetsWithQualifications,
+            ListOfCadetsWithIdsAndQualifications,
             file_identifier=LIST_OF_CADETS_WITH_QUALIFICATIONS,
         )
 
         return list_of_cadets_with_qualifications
 
-    def write(self, list_of_cadets_with_qualifications: ListOfCadetsWithQualifications):
+    def write(self, list_of_cadets_with_qualifications: ListOfCadetsWithIdsAndQualifications):
         self.write_object(
             list_of_cadets_with_qualifications,
             file_identifier=LIST_OF_CADETS_WITH_QUALIFICATIONS,

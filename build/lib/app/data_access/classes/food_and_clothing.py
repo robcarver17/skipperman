@@ -1,5 +1,5 @@
-from app.objects.clothing import ListOfCadetsWithClothingAtEvent
-from app.objects.food import (
+from app.objects_OLD.clothing import ListOfCadetsWithClothingAtEvent
+from app.objects_OLD.food import (
     ListOfVolunteersWithFoodRequirementsAtEvent,
     ListOfCadetsWithFoodRequirementsAtEvent,
 )

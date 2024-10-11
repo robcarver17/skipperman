@@ -1,6 +1,6 @@
 from typing import Callable
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
 NOT_IN_STORE = object()
 

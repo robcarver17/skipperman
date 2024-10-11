@@ -1,7 +1,6 @@
 from typing import List
 
 import pandas as pd
-from app.data_access.configuration.groups import all_groups_names
 from app.data_access.configuration.skills_and_roles import all_volunteer_role_names
 
 from app.OLD_backend.reporting.rota_report.components import (
@@ -17,7 +16,7 @@ from app.OLD_backend.reporting.rota_report.configuration import (
     ROLE,
     GROUP,
 )
-from app.objects.volunteers_in_roles import VolunteerInRoleAtEventWithTeamName
+from app.objects_OLD.volunteers_in_roles import VolunteerInRoleAtEventWithTeamName
 
 
 class Team(List[VolunteerInRoleAtEventWithTeamName]):
@@ -201,6 +200,7 @@ def sort_df_by_group(
     data_for_df: DataForDfConstruction,
     include_no_group: bool = True,
 ) -> pd.DataFrame:
+    raise Exception("no groups")
     all_groups = all_groups_names
     new_df = pd.DataFrame()
     for group in all_groups:

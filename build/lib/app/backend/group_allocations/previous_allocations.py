@@ -1,19 +1,19 @@
 from typing import Dict, List
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.objects.cadets import Cadet
 from app.objects.events import Event
-from app.objects.primtive_with_id.groups import Group, GROUP_UNALLOCATED, ListOfCadetIdsWithGroups
+from app.objects.groups import Group, GROUP_UNALLOCATED
+from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
 from app.OLD_backend.group_allocations.cadet_event_allocations import (
     DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only,
     load_list_of_cadets_ids_with_group_allocations_active_cadets_only,
 )
 from app.OLD_backend.events import (
     DEPRECATE_get_sorted_list_of_events,
-    get_sorted_list_of_events,
     get_list_of_all_events,
 )
 

@@ -1,6 +1,6 @@
 from typing import List, Union
 
-from app.OLD_backend.forms.swaps import is_ready_to_swap
+from app.frontend.forms import is_ready_to_swap
 
 from app.OLD_backend.rota.patrol_boats import (
     add_named_boat_to_event_with_no_allocation,
@@ -24,12 +24,12 @@ from app.OLD_backend.volunteers.volunteers import (
     can_volunteer_drive_safety_boat,
     EPRECATE_get_volunteer_name_from_id, get_volunteer_from_id,
 )
-from app.logic.shared.events_state import get_event_from_state
-from app.logic.events.patrol_boats.elements_in_patrol_boat_table import (
+from app.frontend.shared.events_state import get_event_from_state
+from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
     get_unique_list_of_volunteer_ids_for_skills_checkboxes,
     is_volunteer_skill_checkbox_ticked,
 )
-from app.logic.events.patrol_boats.patrol_boat_dropdowns import (
+from app.frontend.events.patrol_boats.patrol_boat_dropdowns import (
     TOP_ROW_OF_VOLUNTEER_DROPDOWN,
     from_allocation_dropdown_input_name_to_boat_and_day,
     from_selected_dropdown_to_volunteer,
@@ -37,14 +37,14 @@ from app.logic.events.patrol_boats.patrol_boat_dropdowns import (
     ADD_BOAT_DROPDOWN,
     which_volunteer_role_selected_in_boat_allocation,
 )
-from app.logic.events.patrol_boats.patrol_boat_buttons import (
+from app.frontend.events.patrol_boats.patrol_boat_buttons import (
     from_delete_button_name_to_boat_name,
     list_of_delete_buttons_in_patrol_boat_table,
     from_volunter_remove_button_name_to_volunteer_id_and_day,
     get_all_remove_volunteer_button_names,
     get_button_type_day_volunteer_id_given_button_str,
 )
-from app.logic.events.patrol_boats.copying import (
+from app.frontend.events.patrol_boats.copying import (
     COPY_BOAT_OVERWRITE,
     COPY_ROLE_OVERWRITE,
     COPY_BOTH_OVERWRITE,

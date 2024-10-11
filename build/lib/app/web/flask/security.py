@@ -2,15 +2,12 @@ from typing import Dict
 
 from flask_login import UserMixin, current_user
 
-
-from app.OLD_backend.data.security import load_all_users, regenerate_password_hash
+from app.backend.security.list_of_users import get_list_of_users
 from app.objects.users_and_security import (
     SkipperManUser,
     ListOfSkipperManUsers,
     UserGroup,
 )
-
-USERNAME = "var078"  ### can be anything
 
 
 def get_access_group_for_current_user() -> UserGroup:
@@ -67,18 +64,13 @@ def as_dict_of_flask_users(
 
 
 def get_all_flask_users():
-    all_skipperman_users_from_data = load_all_users()
+    all_skipperman_users_from_data = get_list_of_users()
     all_flask_users = as_dict_of_flask_users(all_skipperman_users_from_data)
 
     return all_flask_users
 
 
 all_flask_users = ""
-
-
-def regenerate_password_hash_for_flask_user(flask_user: FlaskUser, password: str):
-    skipperman_user = skipperman_user_from_flask_user(flask_user)
-    regenerate_password_hash(user=skipperman_user, user_entered_password=password)
 
 
 def skipperman_user_from_flask_user(flask_user: FlaskUser) -> SkipperManUser:
@@ -89,3 +81,5 @@ def skipperman_user_from_flask_user(flask_user: FlaskUser) -> SkipperManUser:
         email_address="",
         volunteer_id="",
     )
+
+

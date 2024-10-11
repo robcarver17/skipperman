@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from app.data_access.configuration.groups import all_groups_names
 from app.OLD_backend.reporting.options_and_parameters.report_type_specific_parameters import (
     SpecificParametersForTypeOfReport,
 )
@@ -11,6 +10,7 @@ BOAT_CLASS = "Boat class"
 SAIL_NUMBER = "Sail number"
 CLUB_BOAT = "Club boat"
 
+all_groups_names = []
 specific_parameters_for_boat_report = SpecificParametersForTypeOfReport(
     #    entry_columns=[FIRST_CADET, SECOND_CADET, GROUP, BOAT_CLASS, SAIL_NUMBER, CLUB_BOAT],
     group_by_column=GROUP,

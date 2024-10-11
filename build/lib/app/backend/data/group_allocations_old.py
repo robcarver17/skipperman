@@ -1,6 +1,6 @@
 from app.data_access.data import DEPRECATED_data
 from app.objects.events import Event
-from app.objects.primtive_with_id.groups import ListOfCadetIdsWithGroups
+from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
 
 
 def load_list_of_cadets_with_allocated_groups_at_event(event: Event) -> ListOfCadetIdsWithGroups:

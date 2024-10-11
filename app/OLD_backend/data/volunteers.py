@@ -2,16 +2,16 @@ from typing import List
 
 from app.OLD_backend.data.cadets import CadetData
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.exceptions import arg_not_passed
-from app.objects.primtive_with_id.volunteers import (
+from app.objects.volunteers import (
     ListOfVolunteers,
     Volunteer,
 )
-from app.objects.primtive_with_id.volunteer_skills import SkillsDict, ListOfVolunteerSkills
-from app.objects.cadet_volunteer_connections import ListOfCadetVolunteerAssociations
+from app.objects.composed.volunteers_with_skills import SkillsDict, ListOfVolunteersWithSkills
+from app.objects.cadet_volunteer_connections_with_ids import ListOfCadetVolunteerAssociationsWithIds
 
 
 class VolunteerData:
@@ -54,12 +54,6 @@ class VolunteerData:
         skills.remove_volunteer_driving_qualification(volunteer.id)
         self.save_list_of_volunteer_skills(skills)
 
-    def replace_skills_for_volunteer_with_new_skills_dict(self, volunteer: Volunteer, dict_of_skills: SkillsDict):
-        all_skills = self.get_list_of_volunteer_skills()
-        all_skills.replace_skills_for_volunteer_with_new_skills_dict(
-            volunteer_id=volunteer.id, dict_of_skills=dict_of_skills
-        )
-        self.save_list_of_volunteer_skills(all_skills)
 
     def list_of_volunteer_ids_who_can_drive_safety_boat(self) -> List[str]:
         volunteer_skills = self.get_list_of_volunteer_skills()
@@ -78,10 +72,6 @@ class VolunteerData:
 
     ## Cadet connections
 
-    def delete_cadet_connection(self, cadet: Cadet, volunteer: Volunteer):
-        existing_connections = self.get_list_of_cadet_volunteer_associations()
-        existing_connections.delete(cadet_id=cadet.id, volunteer_id=volunteer.id)
-        self.save_list_of_cadet_volunteer_associations(existing_connections)
 
     def get_connected_cadets(self, volunteer: Volunteer) -> ListOfCadets:
         existing_connections = self.get_list_of_cadet_volunteer_associations()
@@ -126,17 +116,6 @@ class VolunteerData:
 
         return list_of_volunteers_associated_with_cadet
 
-    ## add/modify
-    def add_new_volunteer(self, volunteer: Volunteer):
-        list_of_volunteers = self.get_list_of_volunteers()
-
-        list_of_volunteers.add(volunteer)
-        self.save_list_of_volunteers(list_of_volunteers)
-
-    def update_existing_volunteer(self, volunteer: Volunteer):
-        list_of_volunteers = self.get_list_of_volunteers()
-        list_of_volunteers.update_existing_volunteer(volunteer=volunteer)
-        self.save_list_of_volunteers(list_of_volunteers)
 
     ## get
     def list_of_similar_volunteers(self, volunteer: Volunteer) -> ListOfVolunteers:
@@ -177,21 +156,21 @@ class VolunteerData:
 
     def get_list_of_cadet_volunteer_associations(
         self,
-    ) -> ListOfCadetVolunteerAssociations:
+    ) -> ListOfCadetVolunteerAssociationsWithIds:
         return self.data_api.get_list_of_cadet_volunteer_associations()
 
     def save_list_of_cadet_volunteer_associations(
-        self, list_of_associations: ListOfCadetVolunteerAssociations
+        self, list_of_associations: ListOfCadetVolunteerAssociationsWithIds
     ):
         return self.data_api.save_list_of_cadet_volunteer_associations(
             list_of_associations
         )
 
-    def get_list_of_volunteer_skills(self) -> ListOfVolunteerSkills:
+    def get_list_of_volunteer_skills(self) -> ListOfVolunteersWithSkills:
         return self.data_api.get_list_of_volunteer_skills()
 
     def save_list_of_volunteer_skills(
-        self, list_of_volunteer_skills: ListOfVolunteerSkills
+        self, list_of_volunteer_skills: ListOfVolunteersWithSkills
     ):
         return self.data_api.save_list_of_volunteer_skills(list_of_volunteer_skills)
 
@@ -202,3 +181,4 @@ class VolunteerData:
 
 SORT_BY_SURNAME = "Sort by surname"
 SORT_BY_FIRSTNAME = "Sort by first name"
+

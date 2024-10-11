@@ -2,7 +2,7 @@ from typing import List
 
 from app.objects.abstract_objects.abstract_form import listInput
 
-from app.objects.clothing import (
+from app.objects_OLD.clothing import (
     CadetObjectWithClothingAtEvent,
     all_sort_types,
     SORT_BY_FIRSTNAME,

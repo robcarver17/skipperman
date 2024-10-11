@@ -1,9 +1,10 @@
 from typing import List, Dict
 import pandas as pd
 
-from app.objects.cadet_at_event import CadetEventData
+from app.objects_OLD.cadet_at_event import CadetEventData
 from app.objects.day_selectors import Day, ListOfDaySelectors, DaySelector
-from app.objects.primtive_with_id.groups import Group, ListOfCadetIdsWithGroups, CADET_NAME, GROUP_STR_NAME
+from app.objects.groups import Group
+from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups, CADET_NAME, GROUP_STR_NAME
 
 from app.objects.cadets import Cadet, ListOfCadets
 from dataclasses import dataclass

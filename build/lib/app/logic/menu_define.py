@@ -1,7 +1,6 @@
-### DEFINITION OF MENUS USING A NESTED DICT
-### TOP LEVEL DICT IS LIST OF SUBMENUS
-### NEXT LEVEL DICT KEYS ARE SUBMENU OPTIONS
-### NEXT LEVEL DICT VALUES ARE NAMES OF METHODS TO CALL IN web/actions
+### DEFINITION OF MENUS USING A DICT
+### DICT KEYS ARE OPTION SHOWN TO USER
+### DICT VALUES ARE NAMES OF METHODS TO CALL IN web/actions
 from app.objects.users_and_security import ADMIN_GROUP, SKIPPER_GROUP, INSTRUCTOR_GROUP
 
 menu_definition = {
@@ -9,11 +8,14 @@ menu_definition = {
     "Reports": "view_possible_reports",
     "Cadets": "view_master_list_of_cadets",
     "Volunteers": "view_list_of_volunteers",
-    "Ticksheets and qualifications": "view_for_instructors",
+    "Ticksheets and qualifications_and_ticks": "view_for_instructors",
     "Configuration": "view_configuration",
     "Utilities": "view_utilities",
     "Administration": "administration",
 }
+
+## SECURITY
+## KEYS ARE ACTIONS, VALUES ARE LISTS OF GROUPS ALLOWED TO ACCESS SUBMENU
 menu_security_dict = {
     "view_master_list_of_cadets": [ADMIN_GROUP, SKIPPER_GROUP],
     "view_list_of_volunteers": [ADMIN_GROUP, SKIPPER_GROUP],

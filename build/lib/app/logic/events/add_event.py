@@ -7,7 +7,7 @@ from app.OLD_backend.events import (
     event_and_text_if_first_time,
     add_new_verified_event,
 )
-from app.logic.events.constants import (
+from app.frontend.events.constants import (
     CHECK_BUTTON_LABEL,
     FINAL_ADD_BUTTON_LABEL,
 )
@@ -42,7 +42,7 @@ from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
 )
-from app.logic.abstract_logic_api import (
+from app.frontend.form_handler import (
     initial_state_form,
     button_error_and_back_to_initial_state_form,
 )

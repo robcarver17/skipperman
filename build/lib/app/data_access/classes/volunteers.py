@@ -1,13 +1,44 @@
-from app.objects.primtive_with_id.volunteers import (
+from app.objects.volunteers import (
     ListOfVolunteers,
 )
-from app.objects.primtive_with_id.volunteer_skills import ListOfVolunteerSkills
-from app.objects.cadet_volunteer_connections import ListOfCadetVolunteerAssociations
-from app.objects.primtive_with_id.volunteer_at_event import ListOfVolunteersAtEventWithId
-from app.objects.primtive_with_id.identified_volunteer_at_event import ListOfIdentifiedVolunteersAtEvent
-from app.objects.primtive_with_id.volunteer_role_targets import ListOfTargetForRoleAtEvent
-from app.objects.primtive_with_id.volunteer_roles_and_groups import ListOfVolunteersWithIdInRoleAtEvent
+from app.objects.composed.volunteers_with_skills import ListOfVolunteersWithSkills
+from app.objects.cadet_volunteer_connections_with_ids import ListOfCadetVolunteerAssociationsWithIds
+from app.objects_OLD.primtive_with_id.volunteer_at_event import ListOfVolunteersAtEventWithId
+from app.objects_OLD.primtive_with_id.identified_volunteer_at_event import ListOfIdentifiedVolunteersAtEvent
+from app.objects_OLD.primtive_with_id.volunteer_role_targets import ListOfTargetForRoleAtEvent
+from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import ListOfVolunteersWithIdInRoleAtEvent
+from app.objects.volunteer_skills import ListOfSkills
+from app.objects.roles_and_teams import ListOfRolesWithSkillIds, ListOfTeams, ListOfTeamsAndRolesWithIds
 
+class DataListOfRoles(object):
+    def read(self) -> ListOfRolesWithSkillIds:
+        raise NotImplemented
+
+    def write(self, list_of_roles: ListOfRolesWithSkillIds):
+        raise NotImplemented
+
+
+class DataListOfTeams(object):
+    def read(self) -> ListOfTeams:
+        raise NotImplemented
+
+    def write(self, list_of_teams: ListOfTeams):
+        raise NotImplemented
+
+class DataListOfTeamsAndRolesWithIds(object):
+    def read(self) -> ListOfTeamsAndRolesWithIds:
+        raise NotImplemented
+
+    def write(self, list_of_teams_and_roles_with_ids: ListOfTeamsAndRolesWithIds):
+        raise NotImplemented
+
+
+class DataListOfSkills(object):
+    def read(self) -> ListOfSkills:
+        raise NotImplemented
+
+    def write(self, list_of_skills: ListOfSkills):
+        raise NotImplemented
 
 class DataListOfVolunteers(object):
     def read(self) -> ListOfVolunteers:
@@ -18,19 +49,19 @@ class DataListOfVolunteers(object):
 
 
 class DataListOfVolunteerSkills(object):
-    def read(self) -> ListOfVolunteerSkills:
+    def read(self) -> ListOfVolunteersWithSkills:
         raise NotImplemented
 
-    def write(self, list_of_volunteer_skills: ListOfVolunteerSkills):
+    def write(self, list_of_volunteer_skills: ListOfVolunteersWithSkills):
         raise NotImplemented
 
 
 class DataListOfCadetVolunteerAssociations(object):
-    def read(self) -> ListOfCadetVolunteerAssociations:
+    def read(self) -> ListOfCadetVolunteerAssociationsWithIds:
         raise NotImplemented
 
     def write(
-        self, list_of_cadet_volunteer_associations: ListOfCadetVolunteerAssociations
+        self, list_of_cadet_volunteer_associations: ListOfCadetVolunteerAssociationsWithIds
     ):
         raise NotImplemented
 

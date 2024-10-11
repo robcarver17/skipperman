@@ -12,7 +12,7 @@ from app.data_access.configuration.field_list import (
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
 
 from app.objects.events import Event
-from app.objects.mapped_wa_event import RowInMappedWAEvent
+from app.objects_OLD.mapped_wa_event import RowInMappedWAEvent
 
 
 def get_cadet_data_from_row_of_mapped_data_no_checks(

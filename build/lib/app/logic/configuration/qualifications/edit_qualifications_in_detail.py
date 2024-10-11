@@ -1,10 +1,11 @@
 from typing import Union, List
 
-from app.OLD_backend.ticks_and_qualifications.edit_qualifications import get_tick_items_as_dict_for_qualification
+from app.backend.qualifications_and_ticks.dict_of_qualifications_substages_and_ticks import \
+    get_tick_items_as_dict_for_qualification
 
-from app.logic.configuration.qualifications.edit_qualifications_in_detail_form import table_for_edit_qualification_details, \
+from app.frontend.configuration.qualifications.edit_qualifications_in_detail_form import table_for_edit_qualification_details, \
     button_for_new_substage, list_of_button_names_for_new_item_in_substage_name_field
-from app.logic.configuration.qualifications.edit_qualifications_in_stage_parse import \
+from app.frontend.configuration.qualifications.edit_qualifications_in_stage_parse import \
     add_new_substage_to_qualification_from_form, add_new_tick_list_item_from_form, \
     save_edited_values_in_qualifications_form
 from app.objects.abstract_objects.abstract_text import Heading
@@ -13,8 +14,8 @@ from app.objects.abstract_objects.abstract_buttons import ButtonBar, cancel_menu
 
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 
-from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
-from app.logic.shared.qualification_and_tick_state_storage import (
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+from app.frontend.shared.qualification_and_tick_state_storage import (
     get_qualification_from_state,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm

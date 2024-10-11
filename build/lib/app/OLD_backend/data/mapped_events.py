@@ -2,11 +2,11 @@ from typing import List
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
 from app.objects.exceptions import missing_data
 from app.objects.events import Event
-from app.objects.mapped_wa_event import MappedWAEvent, RowInMappedWAEvent
+from app.objects_OLD.mapped_wa_event import MappedWAEvent, RowInMappedWAEvent
 
 
 def get_row_in_mapped_event_data_given_id(

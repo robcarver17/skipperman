@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.logic.shared.volunteer_state import get_volunteer_from_state
+from app.frontend.shared.volunteer_state import get_volunteer_from_state
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import (
@@ -8,14 +8,14 @@ from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
 )
-from app.logic.abstract_logic_api import (
+from app.frontend.form_handler import (
     initial_state_form,
     button_error_and_back_to_initial_state_form,
 )
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
-from app.logic.volunteers.constants import *
+from app.frontend.volunteers.constants import *
 
 
 def display_form_delete_individual_volunteer(

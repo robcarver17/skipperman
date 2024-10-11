@@ -2,13 +2,13 @@ from app.OLD_backend.rota.volunteer_history import  get_last_role_for_volunteer_
 from app.OLD_backend.rota.volunteer_rota import copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days, \
     update_role_and_group_at_event_for_volunteer_on_all_days_when_available, load_list_of_volunteers_at_event, \
     copy_earliest_valid_role_to_all_empty_for_volunteer, copy_earliest_valid_role_and_overwrite_for_volunteer
-from app.logic.events.volunteer_rota.button_values import \
+from app.frontend.events.volunteer_rota.button_values import \
     from_previous_role_copy_button_to_volunteer_id, from_known_button_to_volunteer_at_event_and_day, \
     from_previous_role_copy_button_to_volunteer_at_event
-from app.logic.events.volunteer_rota.volunteer_rota_buttons import copy_all_roles_button, copy_all_first_role_button, \
+from app.frontend.events.volunteer_rota.volunteer_rota_buttons import copy_all_roles_button, copy_all_first_role_button, \
     get_all_copy_previous_role_buttons, get_all_copy_overwrite_individual_role_buttons, \
     get_all_copy_fill_individual_role_buttons
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 

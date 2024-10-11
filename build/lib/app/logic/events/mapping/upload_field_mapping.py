@@ -14,8 +14,8 @@ from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
 )
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
-from app.logic.shared.events_state import get_event_from_state
-from app.logic.events.constants import UPLOAD_FILE_BUTTON_LABEL, MAPPING_FILE
+from app.frontend.shared.events_state import get_event_from_state
+from app.frontend.events.constants import UPLOAD_FILE_BUTTON_LABEL, MAPPING_FILE
 
 
 def display_form_for_upload_custom_field_mapping(interface: abstractInterface):

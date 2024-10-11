@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.logic.reporting.qualifications.qualification_status import (
+from app.frontend.reporting.qualifications.qualification_status import (
     write_expected_qualifications_to_temp_csv_file_and_return_filename,
 )
 
@@ -9,12 +9,12 @@ from app.OLD_backend.ticks_and_qualifications.ticksheets import (
     get_list_of_all_groups_at_event,
     can_see_all_groups_and_award_qualifications,
 )
-from app.logic.shared.qualification_and_tick_state_storage import (
+from app.frontend.shared.qualification_and_tick_state_storage import (
     update_state_for_group_name,
 )
 from app.objects.events import Event
 
-from app.OLD_backend.data.security import get_volunteer_id_of_logged_in_user_or_superuser
+from app.backend.security.logged_in_user import get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER
 from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.abstract_objects.abstract_lines import (
@@ -31,7 +31,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     back_menu_button,
 )
 
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -39,7 +39,7 @@ from app.objects.abstract_objects.abstract_form import (
     File,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.instructors.ENTRY3_choose_level import (
+from app.frontend.instructors.ENTRY3_choose_level import (
     display_form_choose_level_for_group_at_event,
 )
 
@@ -72,7 +72,7 @@ def display_form_choose_group_for_event(interface: abstractInterface) -> Form:
 
 def get_nav_bar(interface: abstractInterface):
     navbar = [main_menu_button, back_menu_button]
-    volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser(interface)
+    volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER(interface)
     if can_see_all_groups_and_award_qualifications(
         interface=interface,
         event=get_event_from_state(interface),
@@ -98,7 +98,7 @@ def get_group_buttons(interface: abstractInterface, event: Event) -> Line:
     if event_is_empty_of_groups(interface=interface, event=event):
         return Line(Heading("No groups defined at this event yet"))
 
-    volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser(interface)
+    volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER(interface)
     list_of_groups = get_list_of_groups_volunteer_id_can_see(
         interface=interface, event=event, volunteer_id=volunteer_id
     )
@@ -114,7 +114,7 @@ def get_group_buttons(interface: abstractInterface, event: Event) -> Line:
         )
 
     list_with_buttons = [
-        Button(group.group_name, tile=True) for group in list_of_groups
+        Button(group.name, tile=True) for group in list_of_groups
     ]
 
     return Line(list_with_buttons)

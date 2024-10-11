@@ -3,8 +3,8 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.OLD_backend.wa_import.map_wa_fields import get_field_mapping_for_event
 from app.OLD_backend.wa_import.load_wa_file import (
     does_raw_event_file_exist,
-    load_raw_wa_file,
 )
+from app.backend.file_handling import load_spreadsheet_file_and_clear_nans
 from app.OLD_backend.wa_import.load_wa_file import (
     get_staged_file_raw_event_filename,
 )
@@ -51,7 +51,7 @@ def list_of_warnings_about_fields(
     event: Event,
     filename: str,
 ) -> ListOfLines:
-    wa_as_df = load_raw_wa_file(filename)
+    wa_as_df = load_spreadsheet_file_and_clear_nans(filename)
     # Set up WA event mapping fields
     wa_field_mapping = get_field_mapping_for_event(event=event, interface=interface)
 

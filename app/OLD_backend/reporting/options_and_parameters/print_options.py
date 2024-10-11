@@ -1,7 +1,5 @@
 from dataclasses import dataclass
 
-from app.objects.exceptions import arg_not_passed
-
 from app.data_access.configuration.fixed import (
     A4_PAGESIZE,
     UNIT_MM,

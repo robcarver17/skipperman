@@ -6,17 +6,17 @@ from app.OLD_backend.rota.volunteer_rota import load_list_of_volunteers_at_event
     get_volunteer_role_and_group_event_on_day_for_volunteer_at_event
 from app.OLD_backend.volunteers.volunteers import load_list_of_volunteer_skills, get_sorted_list_of_volunteers
 
-from app.data_access.data_layer.ad_hoc_cache import AdHocCache
+from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
 
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.exceptions import arg_not_passed
 from app.objects.utils import print_dict_nicely
-from app.objects.primtive_with_id.volunteer_skills import SkillsDict, ListOfVolunteerSkills
-from app.objects.volunteers_at_event import ListOfVolunteersAtEvent, DEPRECATE_VolunteerAtEvent
-from app.objects.volunteers_in_roles import FILTER_ALL, FILTER_AVAILABLE, \
+from app.objects.composed.volunteers_with_skills import SkillsDict, ListOfVolunteersWithSkills
+from app.objects_OLD.volunteers_at_event import ListOfVolunteersAtEvent, DEPRECATE_VolunteerAtEvent
+from app.objects_OLD.volunteers_in_roles import FILTER_ALL, FILTER_AVAILABLE, \
     FILTER_UNAVAILABLE, FILTER_ALLOC_AVAILABLE, FILTER_UNALLOC_AVAILABLE
-from app.objects.primtive_with_id.volunteer_roles_and_groups import ListOfVolunteersWithIdInRoleAtEvent
+from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import ListOfVolunteersWithIdInRoleAtEvent
 
 
 @dataclass
@@ -78,7 +78,7 @@ def filter_volunteer(
     volunteer_at_event: DEPRECATE_VolunteerAtEvent,
     list_of_volunteers_in_roles_at_event: ListOfVolunteersWithIdInRoleAtEvent,
     skills_filter: SkillsDict,
-    volunteer_skills: ListOfVolunteerSkills,
+    volunteer_skills: ListOfVolunteersWithSkills,
     availability_filter_dict: dict,
 ) -> bool:
     filter_by_skills = filter_volunteer_by_skills(
@@ -98,7 +98,7 @@ def filter_volunteer(
 def filter_volunteer_by_skills(
     volunteer_at_event: DEPRECATE_VolunteerAtEvent,
     skills_filter: SkillsDict,
-    volunteer_skills: ListOfVolunteerSkills,
+    volunteer_skills: ListOfVolunteersWithSkills,
 ) -> bool:
     volunteer_skills = volunteer_skills.skills_for_volunteer_id(
         volunteer_id=volunteer_at_event.volunteer_id

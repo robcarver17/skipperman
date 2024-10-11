@@ -55,6 +55,7 @@ class radioInput(Input):
     input_name: str
     dict_of_options: dict
     default_label: str = arg_not_passed
+    include_line_break: bool = True
 
 
 @dataclass

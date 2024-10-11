@@ -8,19 +8,18 @@ from app.OLD_backend.data.qualification import QualificationData
 
 from app.objects.events import Event
 
-from app.objects.primtive_with_id.groups import Group
+from app.objects.groups import Group
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 from app.objects.ticks import (
     ListOfCadetsWithTickListItems,
     ListOfTickSheetItems,
-    LabelledTickSheetWithCadetIds,
     Tick,
-    QualificationsAndTickItemsAsDict,
-    TickSubStagesAsDict,
     ListOfTickSubStages,
     TickSubStage, TickSheetItem,
 )
+from app.objects.composed.ticks_in_dicts import TickSubStagesAsDict, QualificationsAndTickItemsAsDict
+from app.objects.composed.labelled_tick_sheet_with_cadet_ids import LabelledTickSheetWithCadetIds
 from app.OLD_backend.data.group_allocations import GroupAllocationsData
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
 from app.OLD_backend.data.dinghies import DinghiesData

@@ -4,12 +4,13 @@ from app.objects.day_selectors import Day
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.OLD_backend.forms.summarys import summarise_generic_counts_for_event_over_days
+from app.frontend.forms import summarise_generic_counts_for_event_over_days
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
 from app.OLD_backend.data.group_allocations import GroupAllocationsData
 from app.objects.events import Event
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
-from app.objects.primtive_with_id.groups import Group, ListOfCadetIdsWithGroups
+from app.objects.groups import Group
+from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
 
 
 def summarise_allocations_for_event(interface: abstractInterface, event: Event) -> PandasDFTable:

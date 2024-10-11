@@ -1,12 +1,12 @@
 from typing import Union, List
 
-from app.OLD_backend.forms.form_utils import (
+from app.frontend.forms.form_utils import (
     input_name_from_column_name_and_cadet_id,
     get_availability_checkbox,
 )
 from app.OLD_backend.group_allocations.group_allocations_data import AllocationData
 from app.data_access.configuration.groups import all_groups_names
-from app.logic.events.constants import (
+from app.frontend.events.constants import (
     ATTENDANCE,
     ALLOCATION,
     CLUB_BOAT,
@@ -14,7 +14,7 @@ from app.logic.events.constants import (
     SAIL_NUMBER,
     PARTNER,
 )
-from app.logic.events.group_allocation.store_state import (
+from app.frontend.events.group_allocation.store_state import (
     no_day_set_in_state,
     get_day_from_state_or_none,
 )
@@ -27,10 +27,10 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.cadets import Cadet
-from app.objects.club_dinghies import NO_BOAT
+from app.objects.cadet_at_event_with_club_boat_with_ids import NO_BOAT
 from app.objects.exceptions import missing_data
 from app.objects.day_selectors import Day
-from app.objects.dinghies import NO_PARTNERSHIP_LIST
+from app.objects.cadet_at_event_with_dinghy_with_ids import NO_PARTNERSHIP_LIST
 from app.objects.utils import make_id_as_int_str
 
 

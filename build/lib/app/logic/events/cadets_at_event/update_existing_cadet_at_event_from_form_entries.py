@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from app.OLD_backend.forms.form_utils import get_availablity_from_form, get_status_from_form
+from app.frontend.forms.form_utils import get_availablity_from_form, get_status_from_form
 from app.OLD_backend.wa_import.update_cadets_at_event import (
     replace_existing_cadet_at_event_where_original_cadet_was_inactive,
     get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active,
@@ -9,19 +9,19 @@ from app.OLD_backend.wa_import.update_cadets_at_event import (
     get_cadet_at_event_for_cadet_id,
     update_payment_status_of_existing_cadet_at_event,
 )
-from app.logic.events.constants import ROW_STATUS, ATTENDANCE
-from app.logic.shared.events_state import get_event_from_state
-from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing import (
+from app.frontend.events.constants import ROW_STATUS, ATTENDANCE
+from app.frontend.shared.events_state import get_event_from_state
+from app.frontend.events.cadets_at_event.track_cadet_id_in_state_when_importing import (
     get_current_cadet_id_at_event,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.primtive_with_id.cadet_with_id_at_event import (
+from app.objects.cadet_with_id_at_event import (
     CadetWithIdAtEvent,
     get_cadet_at_event_from_row_in_mapped_event,
 )
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
-from app.objects.mapped_wa_event import RegistrationStatus
+from app.objects_OLD.mapped_wa_event import RegistrationStatus
 
 
 def update_cadets_at_event_with_form_data(interface: abstractInterface):

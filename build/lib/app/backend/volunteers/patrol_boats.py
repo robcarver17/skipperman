@@ -26,9 +26,9 @@ from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.OLD_backend.data.patrol_boats import PatrolBoatsData
-from app.objects.primtive_with_id.patrol_boats import PatrolBoat
+from app.objects.patrol_boats import PatrolBoat
 from app.objects.utils import in_x_not_in_y, in_both_x_and_y
-from app.objects.primtive_with_id.volunteers import Volunteer, ListOfVolunteers
+from app.objects.volunteers import Volunteer, ListOfVolunteers
 
 
 def get_summary_list_of_boat_allocations_for_events(

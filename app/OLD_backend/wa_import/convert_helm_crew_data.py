@@ -31,9 +31,8 @@ from app.data_access.configuration.field_list import (
 
 from app.objects.cadets import Cadet, DEFAULT_DATE_OF_BIRTH
 from app.objects.exceptions import missing_data
-from app.objects.dinghies import ListOfCadetAtEventWithDinghies
 from app.objects.events import Event
-from app.objects.mapped_wa_event import MappedWAEvent, RowInMappedWAEvent, manual_status
+from app.objects_OLD.mapped_wa_event import MappedWAEvent, RowInMappedWAEvent, manual_status
 from app.objects.utils import in_both_x_and_y
 
 

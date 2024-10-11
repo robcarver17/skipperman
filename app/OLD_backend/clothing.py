@@ -3,16 +3,15 @@ from copy import copy
 
 import pandas as pd
 
-from app.objects.abstract_objects.abstract_tables import Table, PandasDFTable
+from app.objects.abstract_objects.abstract_tables import PandasDFTable
 
 from app.data_access.configuration.configuration import (
     MINIMUM_COLOUR_GROUPS_TO_DISTRIBUTE,
 )
-from app.objects.cadets import Cadet
-from app.objects.clothing import *
+from app.objects_OLD.clothing import *
 
 from app.OLD_backend.data.clothing import ClothingData
-from app.objects.clothing import (
+from app.objects_OLD.clothing import (
     ListOfCadetsWithClothingAtEvent,
     ListOfCadetObjectsWithClothingAtEvent,
     CadetObjectWithClothingAtEvent,

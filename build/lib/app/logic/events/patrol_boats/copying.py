@@ -5,7 +5,7 @@ from app.OLD_backend.rota.patrol_boats import (
     DEPRECATE_get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day,
 )
 
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 
 from app.OLD_backend.data.patrol_boats import PatrolBoatsData
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -24,7 +24,7 @@ from app.data_access.configuration.fixed import (
     ROLE_SHORTHAND,
     COPY_FILL_SYMBOL,
 )
-from app.logic.events.patrol_boats.patrol_boat_buttons import (
+from app.frontend.events.patrol_boats.patrol_boat_buttons import (
     generic_button_name_for_volunteer_in_boat_at_event_on_day,
     get_list_of_generic_buttons_for_each_volunteer_day_combo,
 )

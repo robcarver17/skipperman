@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import List
 
 from app.OLD_backend.reporting.arrangement.group_order import GroupOrder
 from app.OLD_backend.reporting.options_and_parameters.print_options import PrintOptions

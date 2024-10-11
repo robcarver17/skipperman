@@ -1,9 +1,9 @@
 import datetime
 from copy import copy
 
-from app.objects.primtive_with_id.volunteers import Volunteer
+from app.objects.volunteers import Volunteer
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 

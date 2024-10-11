@@ -2,19 +2,19 @@ from app.objects.abstract_objects.form_function_mapping import (
     DisplayAndPostFormFunctionMaps,
     NestedDictOfMappings,
 )
-from app.logic.instructors.ENTRY1_choose_event import (
+from app.frontend.instructors.ENTRY1_choose_event import (
     display_form_main_instructors_page,
     post_form_main_instructors_page,
 )
-from app.logic.instructors.ENTRY2_choose_group import (
+from app.frontend.instructors.ENTRY2_choose_group import (
     display_form_choose_group_for_event,
     post_form_choose_group_for_event,
 )
-from app.logic.instructors.ENTRY3_choose_level import (
+from app.frontend.instructors.ENTRY3_choose_level import (
     display_form_choose_level_for_group_at_event,
     post_form_choose_level_for_group_at_event,
 )
-from app.logic.instructors.ENTRY_FINAL_view_ticksheets import (
+from app.frontend.instructors.ENTRY_FINAL_view_ticksheets import (
     display_form_view_ticksheets_for_event_and_group,
     post_form_view_ticksheets_for_event_and_group,
 )

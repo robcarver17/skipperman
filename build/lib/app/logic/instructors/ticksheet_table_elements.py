@@ -1,6 +1,6 @@
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 
-from app.OLD_backend.data.security import get_volunteer_id_of_logged_in_user_or_superuser
+from app.backend.security.logged_in_user import get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER
 from app.OLD_backend.ticks_and_qualifications.ticksheets import (
     can_see_all_groups_and_award_qualifications,
 )
@@ -11,7 +11,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.objects.abstract_objects.abstract_buttons import Button
 
-from app.logic.shared.qualification_and_tick_state_storage import (
+from app.frontend.shared.qualification_and_tick_state_storage import (
     get_edit_state_of_ticksheet,
     EDIT_CHECKBOX_STATE,
     EDIT_DROPDOWN_STATE,
@@ -52,7 +52,7 @@ def get_buttons_for_ticksheet_when_not_editing(interface: abstractInterface) -> 
 
 
 def user_can_award_qualifications(interface):
-    volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser(interface)
+    volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER(interface)
     event = get_event_from_state(interface)
 
     can_award_qualificaiton = can_see_all_groups_and_award_qualifications(
@@ -63,7 +63,7 @@ def user_can_award_qualifications(interface):
 
 
 def get_cadet_button_instructions(interface) -> str:
-    volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser(interface)
+    volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER(interface)
     event = get_event_from_state(interface)
 
     can_award_qualificaiton = can_see_all_groups_and_award_qualifications(
@@ -74,7 +74,7 @@ def get_cadet_button_instructions(interface) -> str:
 
     if state == NO_EDIT_STATE:
         if cadet_id_set:
-            return 'Cadets with qualifications in brackets are already qualified. Only one cadet displayed. Press "see all cadets" button to see more, or select edit mode'
+            return 'Cadets with qualifications_and_ticks in brackets are already qualified. Only one cadet displayed. Press "see all cadets" button to see more, or select edit mode'
         else:
             return "Cadets with qualification in brackets are already qualified. Click on a cadet name to see only their ticksheet (useful for mobile)."
 

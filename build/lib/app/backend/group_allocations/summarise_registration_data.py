@@ -9,7 +9,7 @@ from app.objects.events import Event
 
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData, load_cadets_at_event, \
     load_identified_cadets_at_event
-from app.objects.mapped_wa_event import summarise_status
+from app.objects_OLD.mapped_wa_event import summarise_status
 from app.OLD_backend.data.mapped_events import load_mapped_wa_event
 from app.objects.utils import print_dict_nicely
 

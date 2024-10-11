@@ -1,16 +1,16 @@
 from typing import Union
 
-from app.logic.events.food.get_food_data_from_volunteers import display_interactively_add_volunteer_food_to_event
+from app.frontend.events.food.get_food_data_from_volunteers import display_interactively_add_volunteer_food_to_event
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 
-from app.objects.food import guess_food_requirements_from_food_field
+from app.objects_OLD.food import guess_food_requirements_from_food_field
 
 from app.OLD_backend.cadets import  DEPRECATE_cadet_name_from_id
 from app.OLD_backend.food import is_cadet_with_id_already_at_event_with_food, add_new_cadet_with_food_to_event
-from app.OLD_backend.forms.form_utils import get_food_requirements_input, get_food_requirements_from_form
+from app.frontend.forms.form_utils import get_food_requirements_input, get_food_requirements_from_form
 from app.OLD_backend.wa_import.update_cadets_at_event import        get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active
 
-from app.logic.events.cadets_at_event.track_cadet_id_in_state_when_importing import \
+from app.frontend.events.cadets_at_event.track_cadet_id_in_state_when_importing import \
     get_and_save_next_cadet_id_in_event_data, clear_cadet_id_at_event, get_current_cadet_id_at_event
 from app.objects.abstract_objects.abstract_buttons import SAVE_BUTTON_LABEL, Button
 from app.objects.abstract_objects.abstract_form import Form, NewForm
@@ -19,12 +19,12 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 
 
 from app.objects.events import Event
 from app.objects.exceptions import NoMoreData, DuplicateCadets
-from app.objects.mapped_wa_event import RowInMappedWAEvent
+from app.objects_OLD.mapped_wa_event import RowInMappedWAEvent
 
 
 def display_form_interactively_update_cadet_food_at_event(

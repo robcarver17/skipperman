@@ -1,7 +1,7 @@
 from typing import Union
-from app.web.actions.action_hooks import SiteActions
+from app.web.actions.site_actions import SiteActions
 from app.objects.abstract_objects.abstract_form import File, Form
-from app.web.html.components import (
+from app.web.html.html_components import (
     Html,
     html_joined_list_as_paragraphs,
 )
@@ -9,7 +9,7 @@ from app.web.html.master_layout import get_master_layout
 from app.web.html.process_abstract_form_to_html import (
     process_abstract_form_to_html,
 )
-from app.web.flask.flask_interface import get_urls_of_interest
+from app.web.html.url_define import get_urls_of_interest
 from flask import send_file, Response
 
 ### Returns HTML for an 'action', non menu page

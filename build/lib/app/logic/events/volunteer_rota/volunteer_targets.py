@@ -1,6 +1,6 @@
 from typing import List
 
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_buttons import Button
 
@@ -12,7 +12,7 @@ from app.OLD_backend.rota.volunteer_rota_summary import (
     save_new_volunteer_target,
 )
 
-from app.OLD_backend.forms.swaps import is_ready_to_swap
+from app.frontend.forms import is_ready_to_swap
 
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.abstract_objects.abstract_form import intInput

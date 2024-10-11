@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.data_access.data_layer.ad_hoc_cache import AdHocCache
+from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
 
 from app.OLD_backend.clothing import summarise_clothing
 
@@ -12,33 +12,33 @@ from app.OLD_backend.group_allocations.event_summarys import (
     identify_birthdays,
     summarise_allocations_for_event,
 )
-from app.backend.patrol_boats.summary import get_summary_list_of_patrol_boat_allocations_for_events
+from app.backend.OLD_patrol_boats.summary import get_summary_list_of_patrol_boat_allocations_for_events
 from app.OLD_backend.rota.volunteer_rota_summary import (
     get_summary_list_of_teams_and_groups_for_events,
 )
 from app.OLD_backend.wa_import.map_wa_files import is_wa_file_mapping_setup_for_event
-from app.logic.events.group_allocation.ENTRY_allocate_cadets_to_groups import (
+from app.frontend.events.group_allocation.ENTRY_allocate_cadets_to_groups import (
     display_form_allocate_cadets,
 )
-from app.logic.events.import_wa.import_wa_file import display_form_import_event_file
-from app.logic.events.import_wa.update_existing_event import (
+from app.frontend.events.import_wa.import_wa_file import display_form_import_event_file
+from app.frontend.events.import_wa.update_existing_event import (
     display_form_update_existing_event,
 )
-from app.logic.events.import_wa.upload_event_file import display_form_upload_event_file
-from app.logic.events.mapping.ENTRY_event_field_mapping import (
+from app.frontend.events.import_wa.upload_event_file import display_form_upload_event_file
+from app.frontend.events.mapping.ENTRY_event_field_mapping import (
     display_form_event_field_mapping,
 )
-from app.logic.events.registration_details.ENTRY_edit_registration_details import (
+from app.frontend.events.registration_details.ENTRY_edit_registration_details import (
     display_form_edit_registration_details,
 )
-from app.logic.events.volunteer_rota.ENTRY1_display_main_rota_page import (
+from app.frontend.events.volunteer_rota.ENTRY1_display_main_rota_page import (
     display_form_view_for_volunteer_rota,
 )
-from app.logic.events.patrol_boats.ENTRY_allocate_patrol_boats import (
+from app.frontend.events.patrol_boats.ENTRY_allocate_patrol_boats import (
     display_form_view_for_patrol_boat_allocation,
 )
-from app.logic.events.food.ENTRY_food import display_form_view_for_food_requirements
-from app.logic.events.clothing.ENTRY_clothing import (
+from app.frontend.events.food.ENTRY_food import display_form_view_for_food_requirements
+from app.frontend.events.clothing.ENTRY_clothing import (
     display_form_view_for_clothing_requirements,
 )
 
@@ -55,11 +55,11 @@ from app.objects.abstract_objects.abstract_buttons import (
     back_menu_button,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 
-from app.logic.events.constants import *
+from app.frontend.events.constants import *
 from app.OLD_backend.wa_import.load_wa_file import does_raw_event_file_exist
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import Event
 

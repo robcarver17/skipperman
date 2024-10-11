@@ -11,10 +11,10 @@ from app.OLD_backend.reporting.all_event_data.components import (
 from app.OLD_backend.volunteers.volunteer_allocation import \
     DEPRECATE_get_list_of_volunteer_names_associated_with_cadet_at_event
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.identified_cadets_at_event import IdentifiedCadetAtEvent
+from app.objects_OLD.identified_cadets_at_event import IdentifiedCadetAtEvent
 from app.objects.day_selectors import EMPTY_DAY_SELECTOR
 from app.objects.events import Event
-from app.objects.mapped_wa_event import empty_status
+from app.objects_OLD.mapped_wa_event import empty_status
 
 
 def get_df_for_cadets_event_data_dump(interface: abstractInterface, event: Event):
@@ -140,7 +140,7 @@ def group_string_for_cadet(interface: abstractInterface, event: Event, cadet_id:
                 day,
                 group_data.CONSIDER_USING_ACTIVE_FILTER_get_list_of_cadet_ids_with_groups_at_event(event)
                 .group_for_cadet_id_on_day(day=day, cadet_id=cadet_id)
-                .group_name,
+                .name,
             )
             for day in event.weekdays_in_event()
         ]

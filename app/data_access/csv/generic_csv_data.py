@@ -1,4 +1,3 @@
-from app.data_access.backups.make_backup import make_backup_if_due
 from app.objects.exceptions import arg_not_passed
 import pandas as pd
 from app.data_access.csv.resolve_csv_paths_and_filenames import (
@@ -56,7 +55,7 @@ class GenericCsvData(object):
         path_and_filename = self.get_path_and_filename_for_named_csv_file(
             file_identifier, additional_file_identifiers=additional_file_identifiers
         )
-        write_object(object, path_and_filename)
+        write_object_as_csv_file(object, path_and_filename)
 
     def get_list_of_csv_files_in_path_for_field_id(
         self, file_identifier: str
@@ -68,7 +67,7 @@ class GenericCsvData(object):
         return self.get_path_for_generic_file_name(file_identifier)
 
 
-def write_object(object, path_and_filename: str):
+def write_object_as_csv_file(object, path_and_filename: str):
     df = object.as_df_of_str()
     df.to_csv(path_and_filename, index=False)
 

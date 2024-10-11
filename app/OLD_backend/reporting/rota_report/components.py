@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
 import pandas as pd
-from app.objects.primtive_with_id.volunteer_at_event import ListOfVolunteersAtEventWithId
+from app.objects_OLD.primtive_with_id.volunteer_at_event import ListOfVolunteersAtEventWithId
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
 from app.OLD_backend.reporting.rota_report.configuration import (
     TEAM_NAME,
@@ -13,14 +13,15 @@ from app.OLD_backend.reporting.rota_report.configuration import (
     BOAT,
 )
 from app.objects.exceptions import missing_data
-from app.objects.primtive_with_id.groups import GROUP_UNALLOCATED
-from app.objects.primtive_with_id.patrol_boats import ListOfPatrolBoats, ListOfVolunteersWithIdAtEventWithPatrolBoatsId
-from app.objects.primtive_with_id.volunteers import ListOfVolunteers
-from app.objects.primtive_with_id.volunteer_skills import ListOfVolunteerSkills
-from app.objects.volunteers_in_roles import (
+from app.objects.groups import GROUP_UNALLOCATED
+from app.objects.patrol_boats import ListOfPatrolBoats
+from app.objects.patrol_boats_with_volunteers_with_id import ListOfVolunteersWithIdAtEventWithPatrolBoatsId
+from app.objects.volunteers import ListOfVolunteers
+from app.objects.composed.volunteers_with_skills import ListOfVolunteersWithSkills
+from app.objects_OLD.volunteers_in_roles import (
     VolunteerInRoleAtEventWithTeamName,
 )
-from app.objects.primtive_with_id.volunteer_roles_and_groups import ListOfVolunteersWithIdInRoleAtEvent
+from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import ListOfVolunteersWithIdInRoleAtEvent
 
 from app.OLD_backend.data.patrol_boats import PatrolBoatsData
 from app.OLD_backend.data.volunteers import VolunteerData
@@ -34,7 +35,7 @@ class DataForDfConstruction:
     all_patrol_boats: ListOfPatrolBoats
     all_volunteers_and_boats: ListOfVolunteersWithIdAtEventWithPatrolBoatsId
     volunteers_in_role_at_event: ListOfVolunteersWithIdInRoleAtEvent
-    skills: ListOfVolunteerSkills
+    skills: ListOfVolunteersWithSkills
     volunteers_at_event: ListOfVolunteersAtEventWithId
 
     @classmethod
@@ -138,7 +139,7 @@ def get_group_string(
     if group is GROUP_UNALLOCATED:
         return ""
 
-    return group.group_name
+    return group.name
 
 
 def get_boat_string(

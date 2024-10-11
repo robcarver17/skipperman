@@ -4,11 +4,12 @@ from app.objects.exceptions import missing_data, MissingData
 
 from app.objects.cadets import ListOfCadets, Cadet
 
-from app.objects.committee import ListOfCadetsOnCommittee, CadetOnCommittee, ListOfCadetsWithIdOnCommittee
+from app.objects.committee import ListOfCadetsWithIdOnCommittee
+from app.objects.composed.committee import CadetOnCommittee, ListOfCadetsOnCommittee
 
 from app.OLD_backend.data.cadets import CadetData
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
 
 class CadetCommitteeData:
@@ -94,7 +95,7 @@ class CadetCommitteeData:
 
         list_of_cadets_on_committee = ListOfCadetsOnCommittee(
             [
-                CadetOnCommittee(cadet=cadet, cadet_on_committee=cadet_on_committee)
+                CadetOnCommittee(cadet=cadet, cadet_with_id_on_committee=cadet_on_committee)
                 for cadet, cadet_on_committee in zip(
                     list_of_cadets_on_committee, list_of_committee_members
                 )

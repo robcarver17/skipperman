@@ -4,15 +4,15 @@ from app.OLD_backend.events import get_sorted_list_of_events
 from app.OLD_backend.rota.volunteer_rota import get_volunteers_in_role_at_event_with_active_allocations, \
     load_list_of_volunteers_at_event
 from app.OLD_backend.volunteers.volunteers import DEPRECATE_get_volunteer_from_id
-from app.data_access.data_layer.ad_hoc_cache import AdHocCache
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
+from app.data_access.store.data_layer import DataLayer
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.exceptions import arg_not_passed
 from app.objects.events import Event, SORT_BY_START_ASC, list_of_events_excluding_one_event, ListOfEvents, \
     SORT_BY_START_DSC
-from app.objects.primtive_with_id.volunteers import Volunteer
-from app.objects.volunteers_at_event import ListOfVolunteersAtEvent, DEPRECATE_VolunteerAtEvent
-from app.objects.primtive_with_id.volunteer_roles_and_groups import RoleAndGroup
+from app.objects.volunteers import Volunteer
+from app.objects_OLD.volunteers_at_event import ListOfVolunteersAtEvent, DEPRECATE_VolunteerAtEvent
+from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import RoleAndGroup
 
 
 def DEPRECATE_get_dict_of_volunteers_with_last_roles(

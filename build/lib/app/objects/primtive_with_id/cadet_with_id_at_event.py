@@ -23,7 +23,7 @@ from app.objects.generic_list_of_objects import (
 )
 from app.objects.generic_objects import transform_class_instance_into_string, \
     transform_string_into_class_instance, GenericSkipperManObjectWithIds
-from app.objects.mapped_wa_event import (
+from app.objects_OLD.mapped_wa_event import (
     RegistrationStatus,
     RowInMappedWAEvent,
     deleted_status,

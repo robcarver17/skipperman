@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.OLD_backend.forms.form_utils import checked_and_labels_dict_for_skills_form, get_dict_of_skills_from_form
+from app.frontend.forms.form_utils import checked_and_labels_dict_for_skills_form, get_dict_of_skills_from_form
 from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
 
 from app.objects.abstract_objects.abstract_form import (
@@ -20,7 +20,7 @@ from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
 )
-from app.logic.abstract_logic_api import (
+from app.frontend.form_handler import (
     initial_state_form,
     button_error_and_back_to_initial_state_form,
 )
@@ -28,12 +28,12 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 from app.OLD_backend.volunteers.volunteers import (
-    save_skills_for_volunteer,
     update_existing_volunteer, get_dict_of_existing_skills,
 )
-from app.logic.shared.volunteer_state import get_volunteer_from_state
-from app.logic.shared.add_edit_volunteer_forms import get_volunteer_from_form
-from app.objects.primtive_with_id.volunteers import Volunteer
+from app.backend.volunteers.skills import save_skills_for_volunteer
+from app.frontend.shared.volunteer_state import get_volunteer_from_state
+from app.frontend.shared.add_edit_volunteer_forms import get_volunteer_from_form
+from app.objects.volunteers import Volunteer
 
 
 def display_form_edit_individual_volunteer(
@@ -60,7 +60,7 @@ def form_to_edit_individual_volunteer(
     skills_entries = skills_form_entries(interface=interface, volunteer=volunteer)
     link = Link(
         url=WEBLINK_FOR_QUALIFICATIONS,
-        string="See qualifications table",
+        string="See qualifications_and_ticks table",
         open_new_window=True,
     )
 

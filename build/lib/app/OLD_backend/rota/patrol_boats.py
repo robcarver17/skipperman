@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
 from app.objects.exceptions import missing_data
 
@@ -23,9 +23,9 @@ from app.OLD_backend.rota.volunteer_rota import (
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.OLD_backend.data.patrol_boats import PatrolBoatsData
-from app.objects.primtive_with_id.patrol_boats import PatrolBoat
+from app.objects.patrol_boats import PatrolBoat
 from app.objects.utils import in_x_not_in_y, in_both_x_and_y
-from app.objects.primtive_with_id.volunteers import Volunteer, ListOfVolunteers
+from app.objects.volunteers import Volunteer, ListOfVolunteers
 
 
 def add_named_boat_to_event_with_no_allocation(

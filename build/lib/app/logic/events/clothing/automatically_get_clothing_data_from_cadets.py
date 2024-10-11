@@ -14,12 +14,12 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 
 
 from app.objects.events import Event
 from app.objects.exceptions import NoMoreData, DuplicateCadets
-from app.objects.mapped_wa_event import RowInMappedWAEvent
+from app.objects_OLD.mapped_wa_event import RowInMappedWAEvent
 
 
 def update_cadet_clothing_at_event(

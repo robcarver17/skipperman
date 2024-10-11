@@ -1,5 +1,5 @@
 from app.OLD_backend.data.mapped_events import MappedEventsData
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.exceptions import missing_data, NoMoreData
 

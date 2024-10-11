@@ -1,14 +1,14 @@
 from typing import List
 
-from app.OLD_backend.forms.swaps import is_ready_to_swap
-from app.logic.shared.events_state import get_event_from_state
-from app.logic.events.volunteer_rota.swapping import get_list_of_swap_buttons, cancel_swap_button
-from app.logic.events.volunteer_rota.button_values import get_list_of_day_button_values, \
+from app.frontend.forms import is_ready_to_swap
+from app.frontend.shared.events_state import get_event_from_state
+from app.frontend.events.volunteer_rota.swapping import get_list_of_swap_buttons, cancel_swap_button
+from app.frontend.events.volunteer_rota.button_values import get_list_of_day_button_values, \
     get_list_of_make_available_button_values, get_list_of_copy_overwrite_buttons_for_individual_volunteers, \
     get_list_of_copy_fill_buttons_for_individual_volunteers, get_list_of_remove_role_buttons, \
     get_list_of_make_unavailable_buttons, list_of_all_copy_previous_roles_buttons, \
     get_dict_of_volunteer_name_buttons_and_volunteer_ids, list_of_all_location_button_names, list_of_all_skills_buttons
-from app.logic.volunteers.ENTRY_view_volunteers import all_sort_types as all_volunteer_name_sort_types
+from app.frontend.volunteers.ENTRY_view_volunteers import all_sort_types as all_volunteer_name_sort_types
 from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, cancel_menu_button, save_menu_button, \
     HelpButton
 from app.objects.abstract_objects.abstract_interface import abstractInterface

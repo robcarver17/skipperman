@@ -1,14 +1,12 @@
 from datetime import datetime
 from typing import List
 
-from app.objects.exceptions import arg_not_passed, missing_data, MissingData
+from app.objects.exceptions import arg_not_passed, missing_data
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.committee import (
-    CadetWithIdCommitteeMember,
     ListOfCadetsWithIdOnCommittee,
-    ListOfCadetsOnCommittee,
 )
 
 

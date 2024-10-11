@@ -1,6 +1,6 @@
 import datetime
 
-from app.web.html.components import Html, HtmlWrapper
+from app.web.html.html_components import Html, HtmlWrapper
 from app.objects.exceptions import arg_not_passed
 
 
@@ -155,6 +155,7 @@ def html_radio_input(
     input_label: str,
     input_name: str,
     dict_of_options: dict,
+        include_line_break: bool = True,
     default_label: str = DEFAULT_LABEL,
 ):
     options_str_as_list = [
@@ -167,8 +168,11 @@ def html_radio_input(
         for option_label, option_value in dict_of_options.items()
     ]
     options_str = " ".join(options_str_as_list)
-
-    return Html("%s <br/> %s" % (input_label, options_str))
+    if include_line_break:
+        break_text = "<br/>"
+    else:
+        break_text = ""
+    return Html("%s %s %s" % (input_label, break_text, options_str))
 
 
 def html_single_radio_button(

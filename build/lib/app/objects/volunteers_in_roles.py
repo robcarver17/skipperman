@@ -1,16 +1,16 @@
 from dataclasses import dataclass
 from typing import Dict, List
 
-from app.objects.primtive_with_id.volunteer_skills import SkillsDict
+from app.objects.composed.volunteers_with_skills import SkillsDict
 
-from app.objects.primtive_with_id.volunteer_roles_and_groups import NO_ROLE_SET, VolunteerWithIdInRoleAtEvent, RoleAndGroup
-from app.objects.primtive_with_id.volunteers import Volunteer
+from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import NO_ROLE_SET, VolunteerWithIdInRoleAtEvent, RoleAndGroup
+from app.objects.volunteers import Volunteer
 
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
-from app.objects.primtive_with_id.groups import Group, GROUP_UNALLOCATED
+from app.objects.groups import Group, GROUP_UNALLOCATED
 from app.objects.day_selectors import Day
-from app.objects.volunteers_at_event import VolunteerEventData, VolunteerAtEventWithSkills
+from app.objects_OLD.volunteers_at_event import VolunteerEventData, VolunteerAtEventWithSkills
 
 ## must match below
 

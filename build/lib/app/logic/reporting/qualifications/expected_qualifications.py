@@ -1,24 +1,20 @@
 import os
 from typing import Union
 
-import pandas as pd
-from app.logic.events.ENTRY_view_events import display_list_of_events_with_buttons
+from app.frontend.events.ENTRY_view_events import display_list_of_events_with_buttons
 
 from app.OLD_backend.data.cadets import CadetData
 
 from app.data_access.file_access import download_directory
 
-from app.OLD_backend.wa_import.map_wa_fields import DEPRECATE_get_list_of_template_names, get_template, \
-    write_mapping_to_temp_csv_file_and_return_filename
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import (
     Form,
     File, NewForm, )
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
+from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL, Button, ButtonBar, main_menu_button
-from app.logic.abstract_logic_api import initial_state_form
 from app.OLD_backend.data.qualification import QualificationData
-from app.objects.qualifications import ListOfNamedCadetsWithQualifications
+from app.objects.composed.cadets_with_qualifications import ListOfNamedCadetsWithQualifications
 
 
 def display_form_for_expected_qualifications_report(interface: abstractInterface):
@@ -34,7 +30,7 @@ def display_form_for_expected_qualifications_report(interface: abstractInterface
 
     return Form(contents_of_form)
 
-MAKE_REPORT = "Download list of qualifications"
+MAKE_REPORT = "Download list of qualifications_and_ticks"
 cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
 
 

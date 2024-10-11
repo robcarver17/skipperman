@@ -1,12 +1,13 @@
 from typing import Union
 
 from app.OLD_backend.rota.sorting_and_filtering import RotaSortsAndFilters
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.exceptions import arg_not_passed, missing_data
 from app.objects.day_selectors import Day
-from app.objects.volunteers_in_roles import FILTER_ALL
-from app.objects.primtive_with_id.volunteer_skills import default_skills_dict, SkillsDict
+from app.objects_OLD.volunteers_in_roles import FILTER_ALL
+from app.objects.volunteers_with_skills_and_ids import default_skills_dict
+from app.objects.composed.volunteers_with_skills import SkillsDict
 
 SORT_BY_VOLUNTEER_NAME = "Sort_volunteer_name"
 SORT_BY_DAY = "Sort_by_day"

@@ -1,6 +1,6 @@
 from typing import List
 import pandas as pd
-from app.objects_OLD.exceptions import MissingData
+from app.objects.exceptions import MissingData
 from app.objects.generic_objects import GenericSkipperManObject, GenericSkipperManObjectWithIds, \
     get_list_of_attributes
 
@@ -120,24 +120,25 @@ def create_object_from_df_row(class_of_object: GenericSkipperManObject, row: pd.
 
     try:
         object = class_of_object.from_dict_of_str(row_as_dict)
-    except:
+    except Exception as exception:
         raise Exception(
             _error_str_when_creating_object_from_df_row(
-                class_of_object=class_of_object, row_as_dict=dict(row_as_dict)
+                class_of_object=class_of_object, row_as_dict=dict(row_as_dict),
+                exception=exception
             )
         )
 
     return object
 
 
-def _error_str_when_creating_object_from_df_row(class_of_object, row_as_dict: dict):
-    if getattr(class_of_object, "from_dict", None) is None:
+def _error_str_when_creating_object_from_df_row(class_of_object, row_as_dict: dict, exception: Exception):
+    if getattr(class_of_object, "from_dict_of_str", None) is None:
         return Exception(
-            "Class %s requires .from_dict() method" % (str(class_of_object))
+            "Class %s requires .from_dict_of_str() method" % (str(class_of_object))
         )
     list_of_attributes = get_list_of_attributes(some_class=class_of_object)
     return Exception(
-        "Class %s requires elements %s element %s doesn't match"
-        % (str(class_of_object), str(list_of_attributes), str(row_as_dict))
+        "Class %s requires elements %s element %s doesn't match exception %s"
+        % (str(class_of_object), str(list_of_attributes), str(row_as_dict), str(exception))
     )
 

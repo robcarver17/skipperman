@@ -9,7 +9,7 @@ menu_definition = {
     "Reports": "view_possible_reports",
     "Cadets": "view_master_list_of_cadets",
     "Volunteers": "view_list_of_volunteers",
-    "Ticksheets and qualifications": "view_for_instructors",
+    "Ticksheets and qualifications_and_ticks": "view_for_instructors",
     "Configuration": "view_configuration",
     "Utilities": "view_utilities",
     "Administration": "administration"

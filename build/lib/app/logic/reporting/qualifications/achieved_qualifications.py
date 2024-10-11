@@ -2,7 +2,7 @@ from app.OLD_backend.data.cadets import CadetData
 from app.OLD_backend.data.qualification import QualificationData
 from app.data_access.file_access import temp_file_name
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.qualifications import ListOfNamedCadetsWithQualifications
+from app.objects.composed.cadets_with_qualifications import ListOfNamedCadetsWithQualifications
 
 
 def write_qualifications_to_temp_csv_file_and_return_filename(

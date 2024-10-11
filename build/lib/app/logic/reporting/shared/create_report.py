@@ -2,8 +2,8 @@ from app.OLD_backend.reporting.process_stages.create_column_report_from_df impor
     create_column_report_from_df_and_return_filename,
 )
 from app.data_access.file_access import web_pathname_of_file
-from app.logic.reporting.shared.report_generator import ReportGenerator
-from app.logic.reporting.shared.reporting_options import get_reporting_options
+from app.frontend.reporting.shared.report_generator import ReportGenerator
+from app.frontend.reporting.shared.reporting_options import get_reporting_options
 from app.objects.abstract_objects.abstract_form import File
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 

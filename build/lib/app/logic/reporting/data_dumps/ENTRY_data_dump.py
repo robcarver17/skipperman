@@ -1,4 +1,3 @@
-import os
 from typing import Union
 
 from app.OLD_backend.volunteers.volunteer_data_dump import get_volunteer_data_dump

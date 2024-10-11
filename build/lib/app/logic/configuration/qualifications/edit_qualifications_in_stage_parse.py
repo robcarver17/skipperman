@@ -1,16 +1,18 @@
-from app.OLD_backend.ticks_and_qualifications.edit_qualifications import get_tick_items_as_dict_for_qualification, \
-    get_substage_given_id, add_new_substage_to_qualification, add_new_ticklistitem_to_qualification, \
+from app.backend.qualifications_and_ticks.list_of_substages import get_substage_given_id
+from app.backend.qualifications_and_ticks.dict_of_qualifications_substages_and_ticks import \
+    get_tick_items_as_dict_for_qualification, add_new_substage_to_qualification, add_new_ticklistitem_to_qualification, \
     modify_substage_name, modify_ticksheet_item_name
 
-from app.logic.shared.qualification_and_tick_state_storage import get_qualification_from_state
+from app.frontend.shared.qualification_and_tick_state_storage import get_qualification_from_state
 
 from app.objects.qualifications import Qualification
 
-from app.logic.configuration.qualifications.edit_qualifications_in_detail_form import \
+from app.frontend.configuration.qualifications.edit_qualifications_in_detail_form import \
     FIELDNAME_FOR_NEW_SUBSTAGE_TEXT_BOX, substage_id_for_button_name_new_item, fieldname_for_new_item_in_substage_name, \
     name_of_edit_substage_field, name_of_edit_tickitem_field
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.ticks import TickSubStage, TickSubStagesAsDict, TickSheetItem, ListOfTickSheetItems
+from app.objects.ticks import TickSubStage, TickSheetItem, ListOfTickSheetItems
+from app.objects.composed.ticks_in_dicts import TickSubStagesAsDict
 
 
 def add_new_substage_to_qualification_from_form(interface: abstractInterface):

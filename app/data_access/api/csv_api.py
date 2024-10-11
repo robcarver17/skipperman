@@ -1,7 +1,6 @@
 import shutil
 
 from app.data_access.api.generic_api import GenericDataApi
-from app.data_access.backups.access import due_for_another_backup
 from app.data_access.backups.make_backup import make_backup
 from app.data_access.classes.volunteers import DataListOfIdentifiedVolunteersAtEvent
 from app.data_access.csv.cadets import (
@@ -18,10 +17,7 @@ from app.data_access.csv.wa_field_mapping import CsvDataWAFieldMapping
 from app.data_access.csv.mapped_wa_event import (
     CsvDataMappedWAEvent,
 )
-from app.data_access.csv.print_options import (
-    csvDataListOfPrintOptions,
-    csvDataListOfArrangementOptions,
-)
+from app.data_access.csv.configuration import *
 from app.data_access.csv.volunteers import (
     CsvDataListOfVolunteers,
     CsvDataListOfVolunteerSkills,
@@ -30,6 +26,11 @@ from app.data_access.csv.volunteers import (
     CsvDataListOfIdentifiedVolunteersAtEvent,
     CsvDataListOfVolunteersInRolesAtEvent,
     CsvDataListOfTargetForRoleAtEvent,
+CsvDataListOfSkills,
+CsvDataListOfTeams,
+CsvDataListOfRoles,
+CsvDataListOfTeamsAndRolesWithIds,
+
 )
 from app.data_access.csv.resources import (
     CsvDataListOfPatrolBoats,
@@ -59,9 +60,6 @@ class CsvDataApi(GenericDataApi):
         self._user_data_path = user_data_path
         self._backup_data_path = backup_data_path
 
-    def due_for_another_backup(self) -> bool:
-        return due_for_another_backup(self.backup_data_path)
-
     def make_backup(self):
         make_backup(
             backup_data_path=self.backup_data_path,
@@ -87,6 +85,44 @@ class CsvDataApi(GenericDataApi):
         return CsvDataListOfEvents(
             master_data_path=self.master_data_path,
             backup_data_path=self.backup_data_path,
+        )
+
+    @property
+    def data_list_of_skills(self) -> CsvDataListOfSkills:
+        return CsvDataListOfSkills(
+            master_data_path=self.master_data_path,
+            backup_data_path=self.backup_data_path,
+        )
+
+
+    @property
+    def data_list_of_roles(self) -> CsvDataListOfRoles:
+        return CsvDataListOfRoles(
+            master_data_path=self.master_data_path,
+            backup_data_path=self.backup_data_path,
+
+        )
+
+    @property
+    def data_list_of_teams(self) -> CsvDataListOfTeams:
+        return CsvDataListOfTeams(            master_data_path=self.master_data_path,
+            backup_data_path=self.backup_data_path,
+)
+
+    @property
+    def data_list_of_teams_and_roles_with_ids(self) -> CsvDataListOfTeamsAndRolesWithIds:
+        return CsvDataListOfTeamsAndRolesWithIds(
+            master_data_path=self.master_data_path,
+            backup_data_path=self.backup_data_path,
+
+        )
+
+
+    @property
+    def data_list_of_groups(self) -> csvDataListOfGroups:
+        return csvDataListOfGroups(
+            master_data_path=self.master_data_path,
+            backup_data_path=self.backup_data_path
         )
 
     @property

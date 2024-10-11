@@ -3,14 +3,14 @@ from typing import Union
 from app.OLD_backend.wa_import.update_cadets_at_event import has_cadet_at_event_changed, mark_cadet_at_event_as_unchanged
 from app.OLD_backend.volunteers.volunteer_allocation import are_any_volunteers_associated_with_cadet_at_event, \
     is_current_cadet_active_at_event
-from app.logic.events.volunteer_rota.form_elements_verify_volunteers_if_cadet_at_event_changed import *
-from app.logic.events.volunteer_rota.form_elements_verify_volunteers_if_cadet_at_event_changed import \
+from app.frontend.events.volunteer_rota.form_elements_verify_volunteers_if_cadet_at_event_changed import *
+from app.frontend.events.volunteer_rota.form_elements_verify_volunteers_if_cadet_at_event_changed import \
     get_list_of_volunteer_names_relating_to_changed_cadet
 
-from app.logic.events.volunteer_rota.rota_state import get_and_save_next_cadet_id_in_event_data, get_current_cadet_id_for_rota_at_event
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.events.volunteer_rota.rota_state import get_and_save_next_cadet_id_in_event_data, get_current_cadet_id_for_rota_at_event
+from app.frontend.shared.events_state import get_event_from_state
 from app.objects.exceptions import NoMoreData
-from app.logic.events.volunteer_rota.ENTRY1_display_main_rota_page import display_form_view_for_volunteer_rota
+from app.frontend.events.volunteer_rota.ENTRY1_display_main_rota_page import display_form_view_for_volunteer_rota
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import Form, NewForm

@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.data_access.data_layer.ad_hoc_cache import AdHocCache
-from app.objects.primtive_with_id.volunteers import Volunteer
+from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
+from app.objects.volunteers import Volunteer
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
 from app.OLD_backend.data.group_allocations import GroupAllocationsData
 from app.OLD_backend.data.volunteer_allocation import VolunteerAllocationData
@@ -22,14 +22,13 @@ from app.OLD_backend.data.patrol_boats import PatrolBoatsData
 
 from app.objects.exceptions import missing_data
 from app.objects.events import Event
-from app.objects.primtive_with_id.groups import LAKE_TRAINING, Group, GROUP_UNALLOCATED_TEXT
-from app.data_access.configuration.groups import all_groups_names
-from app.objects.volunteers_at_event import (
+from app.objects.groups import LAKE_TRAINING, Group
+from app.objects_OLD.volunteers_at_event import (
     ListOfVolunteersAtEvent, DEPRECATE_VolunteerAtEvent,
 )
-from app.objects.primtive_with_id.volunteer_at_event import ListOfVolunteersAtEventWithId
-from app.objects.primtive_with_id.identified_volunteer_at_event import ListOfIdentifiedVolunteersAtEvent
-from app.objects.primtive_with_id.volunteer_roles_and_groups import NO_ROLE_SET, VolunteerWithIdInRoleAtEvent, \
+from app.objects_OLD.primtive_with_id.volunteer_at_event import ListOfVolunteersAtEventWithId
+from app.objects_OLD.primtive_with_id.identified_volunteer_at_event import ListOfIdentifiedVolunteersAtEvent
+from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import NO_ROLE_SET, VolunteerWithIdInRoleAtEvent, \
     ListOfVolunteersWithIdInRoleAtEvent, RoleAndGroup
 
 from app.objects.day_selectors import Day
@@ -101,10 +100,12 @@ def get_volunteer_with_role_at_event_on_day(
 
 def get_dict_of_groups_for_dropdown(
 ):
-    dict_of_groups = {group: group for group in all_groups_names}
-    dict_of_groups[GROUP_UNALLOCATED_TEXT] = GROUP_UNALLOCATED_TEXT
+    #raise Exception("All group names undefined")
+    #dict_of_groups = {group: group for group in all_groups_names}
+    #dict_of_groups[GROUP_UNALLOCATED_TEXT] = GROUP_UNALLOCATED_TEXT
 
-    return dict_of_groups
+    #return dict_of_groups
+    return {}
 
 dict_of_groups_for_dropdown = get_dict_of_groups_for_dropdown()
 
@@ -130,16 +131,13 @@ def boat_related_role_str_and_group_on_day_for_volunteer_id(
     )
     if volunteer_on_day is missing_data:
         return ""
-    elif volunteer_on_day.requires_boat:
-        if volunteer_on_day.group.is_unallocated:
+    elif volunteer_on_day.group.is_unallocated:
             return volunteer_on_day.role
-        else:
-            return "%s - %s" % (
-                volunteer_on_day.group.group_name,
-                volunteer_on_day.role,
-            )
     else:
-        return ""
+        return "%s - %s" % (
+            volunteer_on_day.group.name,
+            volunteer_on_day.role,
+        )
 
 
 def is_possible_to_copy_roles_for_non_grouped_roles_only(

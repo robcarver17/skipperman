@@ -1,8 +1,6 @@
-from copy import copy
 import datetime
 import enum
 from enum import EnumMeta
-from dataclasses import dataclass
 from typing import List
 import pandas as pd
 
@@ -14,8 +12,8 @@ from app.objects.utils import (
     clean_up_dict_with_nans,
     clean_up_dict_with_weird_floats_for_id,
 )
-from app.objects.generic_objects import data_object_as_dict, create_list_of_objects_from_dataframe, \
-    get_list_of_attributes, get_dict_of_class_attributes
+from app.objects.generic_objects import data_object_as_dict, get_list_of_attributes, get_dict_of_class_attributes
+from app.objects.generic_list_of_objects import create_list_of_objects_from_dataframe
 
 KEYS = "Keys"
 VALUES = "Values"

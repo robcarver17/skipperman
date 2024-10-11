@@ -1,7 +1,7 @@
 from app.OLD_backend.data.options import OptionsData
 from app.data_access.configuration.fixed import ALL_PAGESIZE, ALL_FONTS
-from app.logic.shared.events_state import get_event_from_state
-from app.logic.reporting.shared.report_generator import ReportGenerator
+from app.frontend.shared.events_state import get_event_from_state
+from app.frontend.reporting.shared.report_generator import ReportGenerator
 from app.objects.abstract_objects.abstract_form import (
     yes_no_radio,
     textInput,
@@ -15,7 +15,7 @@ from app.objects.abstract_objects.abstract_lines import (
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_text import bold, Heading
-from app.logic.reporting.constants import (
+from app.frontend.reporting.constants import (
     REPORT_TITLE,
     REPORT_FILENAME,
     PAGE_ALIGNMENT,

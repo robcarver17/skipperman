@@ -17,16 +17,16 @@ from app.OLD_backend.configuration import (
     load_list_of_club_dinghies,
 )
 
-from app.objects.primtive_with_id.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent
+from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent
 from app.objects.cadets import ListOfCadets
-from app.objects.dinghies import ListOfCadetAtEventWithDinghies
+from app.objects.cadet_at_event_with_dinghy_with_ids import ListOfCadetAtEventWithDinghies
 from app.objects.club_dinghies import (
     ListOfClubDinghies,
-    ListOfCadetAtEventWithClubDinghies,
 )
-from app.objects.dinghies import ListOfBoatClasses
+from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithClubDinghies
+from app.objects.boat_classes import ListOfBoatClasses
 from app.objects.events import Event
-from app.objects.primtive_with_id.groups import ListOfCadetIdsWithGroups
+from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
 
 
 ##### MORE GENERIC VERSION OF THIS - WE USE THIS SORT OF GLUE CODE A LOT

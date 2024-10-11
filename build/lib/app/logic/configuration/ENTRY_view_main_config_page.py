@@ -1,10 +1,10 @@
 from typing import Union
 
-from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
-from app.logic.configuration.club_dinghies import display_form_config_club_dinghies_page
-from app.logic.configuration.patrol_boats import display_form_config_patrol_boats_page
-from app.logic.configuration.boat_classes import display_form_config_boat_classes_page
-from app.logic.configuration.qualifications.qualifications import (
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+from app.frontend.configuration.club_dinghies import display_form_config_club_dinghies_page
+from app.frontend.configuration.patrol_boats import display_form_config_patrol_boats_page
+from app.frontend.configuration.boat_classes import display_form_config_boat_classes_page
+from app.frontend.configuration.qualifications.qualifications import (
     display_form_config_qualifications_page,
 )
 from app.objects.abstract_objects.abstract_form import (

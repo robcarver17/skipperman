@@ -1,25 +1,25 @@
 from typing import List, Union
 
-from app.objects.volunteers_at_event import DEPRECATE_VolunteerAtEvent
-from app.objects.primtive_with_id.volunteer_at_event import VolunteerAtEventWithId
+from app.objects_OLD.volunteers_at_event import DEPRECATE_VolunteerAtEvent
+from app.objects_OLD.primtive_with_id.volunteer_at_event import VolunteerAtEventWithId
 
-from app.objects.primtive_with_id.volunteers import Volunteer, ListOfVolunteers
+from app.objects.volunteers import Volunteer, ListOfVolunteers
 
 from app.OLD_backend.data.volunteer_allocation import VolunteerAllocationData
 from app.OLD_backend.data.volunteers import VolunteerData
-from app.objects.volunteers_in_roles import (
+from app.objects_OLD.volunteers_in_roles import (
     DEPRECATE_VolunteerWithRoleAtEvent, DEPRECATE_ListOfVolunteersWithRoleAtEvent
 )
-from app.objects.primtive_with_id.volunteer_role_targets import ListOfTargetForRoleAtEvent
-from app.objects.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent, \
+from app.objects_OLD.primtive_with_id.volunteer_role_targets import ListOfTargetForRoleAtEvent
+from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent, \
     ListOfVolunteersWithIdInRoleAtEvent, RoleAndGroup
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
 from app.objects.exceptions import missing_data
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.primtive_with_id.groups import Group, order_list_of_groups
+from app.objects.groups import Group, order_list_of_groups
 
 
 class VolunteerRotaData:
@@ -320,7 +320,7 @@ class VolunteerRotaData:
         if group.is_unallocated:
             return default_if_unallocated
 
-        return group.group_name
+        return group.name
 
     def volunteer_has_at_least_one_allocated_role_which_matches_others(
         self, event: Event, volunteer_id: str

@@ -8,9 +8,9 @@ from app.OLD_backend.reporting.rota_report.generate_dataframe_dict_for_rota_repo
     get_df_for_reporting_volunteers_with_flags,
 )
 
-from app.OLD_backend.forms.form_utils import get_availablity_from_form
+from app.frontend.forms.form_utils import get_availablity_from_form
 
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event

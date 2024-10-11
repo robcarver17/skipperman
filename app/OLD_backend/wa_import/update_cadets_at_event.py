@@ -1,6 +1,6 @@
 from copy import copy
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
 from app.objects.cadets import Cadet
 
@@ -14,13 +14,13 @@ from app.objects.utils import union_of_x_and_y
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.exceptions import NoMoreData, missing_data
 
-from app.OLD_backend.cadets import  get_cadet_from_id
+from app.OLD_backend.cadets import get_cadet_from_id, cadet_name_from_id
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
-from app.objects.primtive_with_id.cadet_with_id_at_event import CadetWithIdAtEvent
+from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
 from app.objects.exceptions import DuplicateCadets
 from app.objects.day_selectors import DaySelector, Day
 from app.objects.events import Event
-from app.objects.mapped_wa_event import (
+from app.objects_OLD.mapped_wa_event import (
     RowInMappedWAEvent,
     MappedWAEvent,
     RegistrationStatus,

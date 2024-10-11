@@ -1,14 +1,14 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.objects_OLD.events import Event
+from app.objects.events import Event
 
-from app.objects_OLD.cadets import Cadet
+from app.objects.cadets import Cadet
 
-from app.objects_OLD.primtive_with_id.cadet_with_id_at_event import CadetWithIdAtEvent
-from app.objects_OLD.day_selectors import DaySelector
-from app.objects_OLD.generic_list_of_objects import GenericListOfObjects
-from app.objects_OLD.generic_objects import GenericSkipperManObject
+from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
+from app.objects.day_selectors import DaySelector
+from app.objects.generic_list_of_objects import GenericListOfObjects
+from app.objects.generic_objects import GenericSkipperManObject
 
 from app.objects_OLD.mapped_wa_event import RowInMappedWAEvent, RegistrationStatus
 
@@ -46,6 +46,9 @@ class CadetAtEvent:
         return cls(cadet=cadet, event_data=CadetEventData.from_cadet_with_id_at_event(event=event, cadet_with_id_at_event=cadet_with_id_at_event))
 
 class ListOfCadetsAtEvent(List[CadetAtEvent]):
+    pass
+
+def create_list_of_cadets_at_event():
     pass
 
 @dataclass

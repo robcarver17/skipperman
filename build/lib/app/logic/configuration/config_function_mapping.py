@@ -3,27 +3,27 @@ from app.objects.abstract_objects.form_function_mapping import (
     NestedDictOfMappings,
 )
 
-from app.logic.configuration.ENTRY_view_main_config_page import (
+from app.frontend.configuration.ENTRY_view_main_config_page import (
     display_form_main_config_page,
     post_form_main_config_page,
 )
-from app.logic.configuration.patrol_boats import (
+from app.frontend.configuration.patrol_boats import (
     display_form_config_patrol_boats_page,
     post_form_config_patrol_boats_page,
 )
-from app.logic.configuration.club_dinghies import (
+from app.frontend.configuration.club_dinghies import (
     display_form_config_club_dinghies_page,
     post_form_config_club_dinghies_page,
 )
-from app.logic.configuration.boat_classes import (
+from app.frontend.configuration.boat_classes import (
     display_form_config_boat_classes_page,
     post_form_config_dinghies_page,
 )
-from app.logic.configuration.qualifications.qualifications import (
+from app.frontend.configuration.qualifications.qualifications import (
     display_form_config_qualifications_page,
     post_form_config_qualifications_page,
 )
-from app.logic.configuration.qualifications.edit_qualifications_in_detail import (
+from app.frontend.configuration.qualifications.edit_qualifications_in_detail import (
     display_form_edit_qualification_details,
     post_form_edit_qualification_details,
 )

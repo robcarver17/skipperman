@@ -1,21 +1,21 @@
 from typing import Union, Callable
 
-from app.logic.abstract_logic_api import initial_state_form
-from app.logic.reporting.allocations.report_group_allocations import (
+from app.frontend.form_handler import initial_state_form
+from app.frontend.reporting.allocations.report_group_allocations import (
     display_form_report_group_allocation,
 )
-from app.logic.reporting.rota.report_rota import display_form_report_rota
-from app.logic.reporting.boats.report_boats import display_form_report_boat
-from app.logic.reporting.rollcall_and_contacts.rollcall_report import (
+from app.frontend.reporting.rota.report_rota import display_form_report_rota
+from app.frontend.reporting.boats.report_boats import display_form_report_boat
+from app.frontend.reporting.rollcall_and_contacts.rollcall_report import (
     display_form_report_rollcall,
 )
-from app.logic.reporting.qualifications.ENTRY_report_qualifications import (
+from app.frontend.reporting.qualifications.ENTRY_report_qualifications import (
     display_form_for_qualifications_report,
 )
-from app.logic.reporting.data_dumps.ENTRY_data_dump import (
+from app.frontend.reporting.data_dumps.ENTRY_data_dump import (
     display_form_for_data_dump_report,
 )
-from app.logic.reporting.all_event_data.ENTRY_all_event_data import (
+from app.frontend.reporting.all_event_data.ENTRY_all_event_data import (
     display_form_for_all_event_data_report,
 )
 
@@ -30,7 +30,6 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
-    _______________,
     Line,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -40,7 +39,7 @@ GROUP_ALLOCATION_REPORT_BUTTON_LABEL = "Group allocation for event"
 ROTA_REPORT_BUTTON_LABEL = "Volunteer rota for event"
 BOATS_REPORT_BUTTON_LABEL = "Spotter sheet for event"
 ROLLCALL_REPORT_BUTTON_LABEL = "Rollcall/health/contacts for event"
-QUALIFICATIONS_REPORT_BUTTON_LABEL = "Cadet qualifications"
+QUALIFICATIONS_REPORT_BUTTON_LABEL = "Cadet qualifications_and_ticks"
 DUMP_BUTTON_LABEL = "Data dumps"
 EVENT_DATA_BUTTON_LABEL = "All event data in giant spreadsheet"
 

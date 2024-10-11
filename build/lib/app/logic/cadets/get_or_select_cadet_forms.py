@@ -4,12 +4,12 @@ from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.OLD_backend.cadets import (
-    verify_cadet_and_return_warnings,
     DEPRECATE_get_sorted_list_of_cadets,
     get_list_of_similar_cadets,
 )
+from app.backend.cadets.add_edit_cadet import verify_cadet_and_return_warnings
 from app.OLD_backend.data.cadets import SORT_BY_FIRSTNAME
-from app.logic.shared.add_edit_cadet_form import (
+from app.frontend.shared.add_edit_cadet_form import (
     CadetAndVerificationText,
     get_add_cadet_form_with_information_passed,
     verify_form_with_cadet_details,

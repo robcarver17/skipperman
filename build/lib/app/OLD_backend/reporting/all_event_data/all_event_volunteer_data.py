@@ -1,7 +1,7 @@
 import pandas as pd
 from app.OLD_backend.data.volunteers import VolunteerData
 
-from app.objects.primtive_with_id.identified_volunteer_at_event import NO_VOLUNTEER_ALLOCATED
+from app.objects_OLD.primtive_with_id.identified_volunteer_at_event import NO_VOLUNTEER_ALLOCATED
 
 from app.OLD_backend.cadets import  cadet_name_from_id
 from app.OLD_backend.reporting.all_event_data.components import (

@@ -5,7 +5,7 @@ import pandas as pd
 
 from app.data_access.configuration.configuration import (
     WILD_APRICOT_EVENT_ID,
-    WILD_APRICOT_FILE_TYPES,
+    ALLOWED_UPLOAD_FILE_TYPES,
 )
 from app.data_access.uploads_and_downloads import (
     get_next_valid_upload_file_name,
@@ -83,10 +83,10 @@ def get_staged_adhoc_filename(adhoc_name: str):
 def verify_and_return_uploaded_wa_event_file(interface: abstractInterface):
     file = get_file_from_interface(WA_FILE, interface=interface)
     file_ext = os.path.splitext(file.filename)[1]
-    if file_ext not in WILD_APRICOT_FILE_TYPES:
+    if file_ext not in ALLOWED_UPLOAD_FILE_TYPES:
         raise FileError(
             "Not one of file types %s, upload a different file or "
-            % WILD_APRICOT_FILE_TYPES
+            % ALLOWED_UPLOAD_FILE_TYPES
         )
 
     return file

@@ -1,4 +1,4 @@
-from app.logic.events.constants import (
+from app.frontend.events.constants import (
     TEMPLATE_NAME,
     MAPPING_FILE,
     UPLOAD_FILE_BUTTON_LABEL,

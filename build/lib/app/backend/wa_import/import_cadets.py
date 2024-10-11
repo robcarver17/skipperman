@@ -7,11 +7,10 @@ from app.OLD_backend.data.cadets import CadetData
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
 from app.OLD_backend.wa_import.load_wa_file import (
     get_staged_adhoc_filename,
-    verify_and_return_uploaded_wa_event_file,
-    save_uploaded_wa_as_local_temp_file,
-    load_raw_wa_file,
 )
-from app.data_access.csv.generic_csv_data import read_object_of_type, write_object
+from app.backend.file_handling import verify_and_return_uploaded_wa_event_file, save_uploaded_file_as_local_temp_file, \
+    load_spreadsheet_file_and_clear_nans
+from app.data_access.csv.generic_csv_data import read_object_of_type, write_object_as_csv_file
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.exceptions import missing_data
@@ -84,7 +83,7 @@ def create_temp_file_with_list_of_cadets(interface: abstractInterface) -> str:
             % (e, DESCRIBE_ALL_FIELDS_IN_WA_CADET_LIST_FILE)
         )
 
-    write_object(as_list_of_cadets, path_and_filename=temp_list_of_cadets_file_name)
+    write_object_as_csv_file(as_list_of_cadets, path_and_filename=temp_list_of_cadets_file_name)
     os.remove(original_filename)
 
     return temp_list_of_cadets_file_name
@@ -94,13 +93,13 @@ def create_local_file_from_uploaded_and_return_filename(
     interface: abstractInterface,
 ) -> str:
     original_file = verify_and_return_uploaded_wa_event_file(interface)
-    original_filename = save_uploaded_wa_as_local_temp_file(original_file)
+    original_filename = save_uploaded_file_as_local_temp_file(original_file)
 
     return original_filename
 
 
 def read_imported_list_of_cadets(filename: str) -> ListOfCadets:
-    data = load_raw_wa_file(filename)
+    data = load_spreadsheet_file_and_clear_nans(filename)
     list_of_cadets = [
         cadet_from_row_in_imported_list(cadet_row, id)
         for id, cadet_row in data.iterrows()

@@ -4,8 +4,8 @@ from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIO
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.logic.shared.add_edit_volunteer_forms import get_and_save_volunteer_skills_from_form, skills_form_entries
-from app.logic.shared.volunteer_state import get_volunteer_from_state
+from app.frontend.shared.add_edit_volunteer_forms import get_and_save_volunteer_skills_from_form, skills_form_entries
+from app.frontend.shared.volunteer_state import get_volunteer_from_state
 
 from app.objects.abstract_objects.abstract_buttons import Button, SAVE_BUTTON_LABEL, CANCEL_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_form import Form, NewForm, Link
@@ -23,7 +23,7 @@ def display_form_edit_individual_volunteer_skills_from_rota(
     skills_entries = skills_form_entries(interface=interface, volunteer=volunteer)
     link = Link(
         url=WEBLINK_FOR_QUALIFICATIONS,
-        string="See qualifications table",
+        string="See qualifications_and_ticks table",
         open_new_window=True,
     )
 

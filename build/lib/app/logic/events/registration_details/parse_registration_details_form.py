@@ -11,15 +11,15 @@ from app.OLD_backend.wa_import.update_cadets_at_event import (
     update_health_for_existing_cadet_at_event,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.primtive_with_id.cadet_with_id_at_event import CadetWithIdAtEvent
+from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
 from app.objects.events import Event
-from app.OLD_backend.forms.form_utils import (
+from app.frontend.forms.form_utils import (
     get_availablity_from_form,
     get_status_from_form,
     input_name_from_column_name_and_cadet_id,
 )
 
-from app.logic.events.registration_details.registration_details_form import (
+from app.frontend.events.registration_details.registration_details_form import (
     get_registration_data,
     RegistrationDetailsForEvent,
     _column_can_be_edited,
@@ -34,7 +34,7 @@ from app.data_access.configuration.field_list_groups import (
     FIELDS_AS_STR,
 )
 from app.objects.day_selectors import DaySelector
-from app.objects.mapped_wa_event import RegistrationStatus
+from app.objects_OLD.mapped_wa_event import RegistrationStatus
 
 
 def parse_registration_details_from_form(interface: abstractInterface, event: Event):

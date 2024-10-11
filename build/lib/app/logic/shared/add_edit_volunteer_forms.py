@@ -2,15 +2,16 @@ from copy import copy
 from dataclasses import dataclass
 from typing import Union
 
-from app.OLD_backend.forms.form_utils import get_dict_of_skills_from_form, checked_and_labels_dict_for_skills_form
-from app.OLD_backend.volunteers.volunteers import add_new_verified_volunteer, verify_volunteer_and_warn, \
-    save_skills_for_volunteer, get_dict_of_existing_skills
+from app.frontend.forms.form_utils import get_dict_of_skills_from_form, checked_and_labels_dict_for_skills_form
+from app.OLD_backend.volunteers.volunteers import add_new_verified_volunteer, get_dict_of_existing_skills
+from app.backend.volunteers.skills import save_skills_for_volunteer
+from app.backend.volunteers.add_edit_volunteer import verify_volunteer_and_warn
 
 from app.objects.abstract_objects.abstract_buttons import ButtonBar, cancel_menu_button, Button
 from app.objects.abstract_objects.abstract_form import Form, textInput, checkboxInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
-from app.objects.primtive_with_id.volunteers import Volunteer, default_volunteer
+from app.objects.volunteers import Volunteer, default_volunteer
 
 
 def get_volunteer_from_form(interface: abstractInterface) -> Volunteer:

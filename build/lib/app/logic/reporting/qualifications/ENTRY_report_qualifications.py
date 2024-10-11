@@ -1,9 +1,9 @@
-from app.logic.reporting.qualifications.achieved_qualifications import (
+from app.frontend.reporting.qualifications.achieved_qualifications import (
     write_qualifications_to_temp_csv_file_and_return_filename,
 )
 from app.objects.abstract_objects.abstract_lines import Line
 from app.objects.abstract_objects.abstract_buttons import back_menu_button
-from app.logic.reporting.qualifications.qualification_status import *
+from app.frontend.reporting.qualifications.qualification_status import *
 
 
 def display_form_for_qualifications_report(interface: abstractInterface):
@@ -22,7 +22,7 @@ def display_form_for_qualifications_report(interface: abstractInterface):
     return Form(contents_of_form)
 
 
-QUALIFICATION_LIST_BUTTON_LABEL = "Download list of qualifications"
+QUALIFICATION_LIST_BUTTON_LABEL = "Download list of qualifications_and_ticks"
 STATUS_REPORT_BUTTON_LABEL = "Qualification status at event"
 create_qualification_list_report_button = Button(
     QUALIFICATION_LIST_BUTTON_LABEL, tile=True

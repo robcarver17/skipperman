@@ -11,7 +11,7 @@ from app.objects.events import Event
 from app.OLD_backend.events import confirm_event_exists_given_description, \
     get_event_from_list_of_events_given_event_description
 
-from app.logic.events.ENTRY_view_events import display_list_of_events_with_buttons
+from app.frontend.events.ENTRY_view_events import display_list_of_events_with_buttons
 
 from app.data_access.file_access import download_directory
 

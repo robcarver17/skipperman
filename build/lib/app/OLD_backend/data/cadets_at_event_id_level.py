@@ -2,10 +2,10 @@ from typing import List, Dict
 
 from app.OLD_backend.data.cadets import CadetData
 from app.OLD_backend.data.mapped_events import MappedEventsData
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.cadet_at_event import DEPRECATE_ListOfCadetsAtEvent, DEPRECATE_CadetAtEvent
-from app.objects.primtive_with_id.cadet_with_id_at_event import (
+from app.objects_OLD.cadet_at_event import DEPRECATE_ListOfCadetsAtEvent, DEPRECATE_CadetAtEvent
+from app.objects.cadet_with_id_at_event import (
     CadetWithIdAtEvent,
     ListOfCadetsWithIDAtEvent,
     get_cadet_at_event_from_row_in_mapped_event,
@@ -14,8 +14,8 @@ from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.exceptions import missing_data
 from app.objects.day_selectors import DaySelector, Day, ListOfDaySelectors
 from app.objects.events import Event
-from app.objects.identified_cadets_at_event import ListOfIdentifiedCadetsAtEvent
-from app.objects.mapped_wa_event import (
+from app.objects_OLD.identified_cadets_at_event import ListOfIdentifiedCadetsAtEvent
+from app.objects_OLD.mapped_wa_event import (
     RowInMappedWAEvent,
     RegistrationStatus,
     MappedWAEvent,

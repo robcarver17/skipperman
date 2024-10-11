@@ -1,21 +1,21 @@
 from typing import Union
 
-from app.logic.utilities.files.delete_files import (
+from app.frontend.utilities.files.delete_files import (
     delete_selected_files,
     delete_public_files,
     delete_private_temporary_files,
     delete_uploaded_temporary_files,
     delete_specific_file,
 )
-from app.logic.utilities.files.qr_codes import generate_qr_code
-from app.logic.utilities.files.replace_files import (
+from app.frontend.utilities.files.qr_codes import generate_qr_code
+from app.frontend.utilities.files.replace_files import (
     display_form_to_replace_selected_files,
 )
-from app.logic.utilities.files.state import store_directory_and_filename
-from app.logic.utilities.files.upload_file import display_form_for_upload_public_file
+from app.frontend.utilities.files.state import store_directory_and_filename
+from app.frontend.utilities.files.upload_file import display_form_for_upload_public_file
 
-from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
-from app.logic.utilities.files.render_files import (
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+from app.frontend.utilities.files.render_files import (
     list_of_all_public_files_with_options,
     list_of_all_private_download_files_with_options,
     list_of_all_upload_files_with_options,

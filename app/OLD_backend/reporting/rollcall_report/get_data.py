@@ -13,11 +13,9 @@ from app.OLD_backend.reporting.allocation_report.allocation_report import (
 )
 from app.objects.events import Event
 
-from app.data_access.data_layer.store import Store
-from app.objects.primtive_with_id.groups import GROUP_UNALLOCATED
+from app.objects.groups import GROUP_UNALLOCATED
 
 from app.OLD_backend.data.group_allocations import GroupAllocationsData
-from app.objects.utils import drop_duplicates_in_list_of_ids
 
 
 def get_dict_of_df_for_reporting_rollcalls_given_event_and_parameters(

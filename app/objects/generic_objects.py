@@ -1,10 +1,11 @@
 import datetime
 import enum
 from enum import EnumMeta
+from typing import Dict
 
 import pandas as pd
 
-from app.objects_OLD.utils import transform_date_into_str, \
+from app.objects.utils import transform_date_into_str, \
     transform_datetime_into_str, clean_up_dict_with_nans, clean_up_dict_with_weird_floats_for_id, \
     transform_str_or_datetime_into_date, transform_str_into_datetime, dict_as_str, dict_from_str
 
@@ -73,6 +74,7 @@ def transform_class_instance_into_string(class_instance):
         return str(class_instance)
 
 
+
 TRUE = "TRUE_VALUE"
 FALSE = "FALSE_VALUE"
 
@@ -82,6 +84,10 @@ def from_bool_to_str(class_instance: bool) -> str:
         return TRUE
     else:
         return FALSE
+
+ITEM_SEPERATOR = ","
+KEY_VALUE_SEPERATOR = ":"
+
 
 
 def get_class_instance_from_str_dict(some_class, dict_with_str: dict):

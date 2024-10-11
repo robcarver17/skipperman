@@ -4,15 +4,15 @@ from app.objects.events import Event
 
 from app.OLD_backend.rota.volunteer_rota import get_volunteers_in_role_at_event_with_active_allocations, \
     dict_of_roles_for_dropdown, dict_of_groups_for_dropdown
-from app.logic.events.volunteer_rota.volunteer_table_buttons import get_allocation_inputs_buttons_in_role_when_available
-from app.logic.events.volunteer_rota.button_values import make_available_button_value_for_volunteer_on_day
+from app.frontend.events.volunteer_rota.volunteer_table_buttons import get_allocation_inputs_buttons_in_role_when_available
+from app.frontend.events.volunteer_rota.button_values import make_available_button_value_for_volunteer_on_day
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_form import dropDownInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.day_selectors import Day
-from app.objects.volunteers_at_event import DEPRECATE_VolunteerAtEvent
-from app.objects.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent
+from app.objects_OLD.volunteers_at_event import DEPRECATE_VolunteerAtEvent
+from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent
 
 
 def get_allocation_inputs_for_volunteer(
@@ -167,7 +167,7 @@ def get_allocation_input_for_group(
     ready_to_swap: bool,
 ) -> dropDownInput:
     if ready_to_swap:
-        return " (%s)" % volunteer_in_role_at_event_on_day.group.group_name
+        return " (%s)" % volunteer_in_role_at_event_on_day.group.name
 
 
     return dropDownInput(
@@ -176,7 +176,7 @@ def get_allocation_input_for_group(
             volunteer_in_role_at_event_on_day
         ),
         dict_of_options=dict_of_groups_for_dropdown,
-        default_label=volunteer_in_role_at_event_on_day.group.group_name,
+        default_label=volunteer_in_role_at_event_on_day.group.name,
     )
 
 

@@ -1,6 +1,6 @@
 from app.OLD_backend.volunteers.volunteers import get_volunteer_from_id
 
-from app.objects.primtive_with_id.groups import Group
+from app.objects.groups import Group
 
 from app.objects.events import Event
 
@@ -14,15 +14,15 @@ from app.OLD_backend.volunteers.volunteer_allocation import (
     make_volunteer_unavailable_on_day,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.shared.events_state import get_event_from_state
-from app.logic.events.volunteer_rota.render_volunteer_table import (
+from app.frontend.shared.events_state import get_event_from_state
+from app.frontend.events.volunteer_rota.render_volunteer_table import (
     input_name_for_notes_and_volunteer,
 )
-from app.logic.events.volunteer_rota.rota_allocation_inputs import input_name_for_role_and_volunteer, \
+from app.frontend.events.volunteer_rota.rota_allocation_inputs import input_name_for_role_and_volunteer, \
     input_name_for_group_and_volunteer
 from app.objects.day_selectors import Day
-from app.objects.volunteers_at_event import DEPRECATE_VolunteerAtEvent
-from app.objects.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent
+from app.objects_OLD.volunteers_at_event import DEPRECATE_VolunteerAtEvent
+from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent
 
 
 def update_details_from_form_for_volunteer_at_event(

@@ -9,14 +9,58 @@ from app.data_access.csv.resolve_csv_paths_and_filenames import (
     LIST_OF_IDENTIFIED_VOLUNTEERS_AT_EVENT_FILE_ID,
     LIST_OF_VOLUNTEERS_IN_ROLES_FILE_ID,
     LIST_OF_VOLUNTEER_TARGETS_AT_EVENT_FILE_ID,
+LIST_OF_SKILLS_FILE_ID,
+VOLUNTEER_ROLES_FILE_ID,
+VOLUNTEER_TEAMS_FILE_ID,
+VOLUNTEER_ROLE_AND_TEAMS_FILE_ID
 )
-from app.objects.cadet_volunteer_connections import ListOfCadetVolunteerAssociations
-from app.objects.primtive_with_id.volunteer_skills import ListOfVolunteerSkills
-from app.objects.primtive_with_id.volunteer_at_event import ListOfVolunteersAtEventWithId
-from app.objects.primtive_with_id.identified_volunteer_at_event import ListOfIdentifiedVolunteersAtEvent
-from app.objects.primtive_with_id.volunteer_role_targets import ListOfTargetForRoleAtEvent
-from app.objects.primtive_with_id.volunteer_roles_and_groups import ListOfVolunteersWithIdInRoleAtEvent
+from app.objects.cadet_volunteer_connections_with_ids import ListOfCadetVolunteerAssociationsWithIds
+from app.objects.roles_and_teams import ListOfRolesWithSkillIds, ListOfTeams, ListOfTeamsAndRolesWithIds
+from app.objects.volunteers_with_skills_and_ids import ListOfVolunteerSkillsWithIds
 
+from app.objects_OLD.primtive_with_id.volunteer_at_event import ListOfVolunteersAtEventWithId
+from app.objects_OLD.primtive_with_id.identified_volunteer_at_event import ListOfIdentifiedVolunteersAtEvent
+from app.objects_OLD.primtive_with_id.volunteer_role_targets import ListOfTargetForRoleAtEvent
+from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import ListOfVolunteersWithIdInRoleAtEvent
+
+class CsvDataListOfRoles(GenericCsvData, DataListOfRoles):
+    def read(self) -> ListOfRolesWithSkillIds:
+        return self.read_and_return_object_of_type(
+            ListOfRolesWithSkillIds,
+            file_identifier=VOLUNTEER_ROLES_FILE_ID
+        )
+    def write(self, list_of_roles: ListOfRolesWithSkillIds):
+        self.write_object(list_of_roles,
+                          file_identifier=VOLUNTEER_ROLES_FILE_ID)
+
+class CsvDataListOfTeams(GenericCsvData, DataListOfTeams):
+    def read(self) -> ListOfTeams:
+        return self.read_and_return_object_of_type(
+            ListOfTeams,
+            file_identifier=VOLUNTEER_TEAMS_FILE_ID
+        )
+
+    def write(self, list_of_teams: ListOfTeams):
+        self.write_object(list_of_teams,
+                          file_identifier=VOLUNTEER_TEAMS_FILE_ID)
+
+class CsvDataListOfTeamsAndRolesWithIds(GenericCsvData, DataListOfTeamsAndRolesWithIds):
+    def read(self) -> ListOfTeamsAndRolesWithIds:
+        return self.read_and_return_object_of_type(
+            ListOfTeamsAndRolesWithIds,
+            file_identifier=VOLUNTEER_ROLE_AND_TEAMS_FILE_ID
+        )
+
+    def write(self,  list_of_teams_and_roles_with_ids: ListOfTeamsAndRolesWithIds):
+        self.write_object(list_of_teams_and_roles_with_ids, file_identifier=VOLUNTEER_ROLE_AND_TEAMS_FILE_ID)
+
+class CsvDataListOfSkills(GenericCsvData, DataListOfSkills):
+    def read(self) -> ListOfSkills:
+        return self.read_and_return_object_of_type(ListOfSkills,
+                                                   file_identifier=LIST_OF_SKILLS_FILE_ID)
+
+    def write(self, list_of_skills: ListOfSkills):
+        self.write_object(list_of_skills, file_identifier=LIST_OF_SKILLS_FILE_ID)
 
 class CsvDataListOfVolunteers(GenericCsvData, DataListOfVolunteers):
     def read(self) -> ListOfVolunteers:
@@ -33,14 +77,14 @@ class CsvDataListOfVolunteers(GenericCsvData, DataListOfVolunteers):
 
 
 class CsvDataListOfVolunteerSkills(GenericCsvData, DataListOfVolunteerSkills):
-    def read(self) -> ListOfVolunteerSkills:
+    def read(self) -> ListOfVolunteerSkillsWithIds:
         list_of_volunteer_skills = self.read_and_return_object_of_type(
-            ListOfVolunteerSkills, file_identifier=LIST_OF_VOLUNTEER_SKILLS_FILE_ID
+            ListOfVolunteerSkillsWithIds, file_identifier=LIST_OF_VOLUNTEER_SKILLS_FILE_ID
         )
 
         return list_of_volunteer_skills
 
-    def write(self, list_of_volunteer_skills: ListOfVolunteerSkills):
+    def write(self, list_of_volunteer_skills: ListOfVolunteerSkillsWithIds):
         self.write_object(
             list_of_volunteer_skills, file_identifier=LIST_OF_VOLUNTEER_SKILLS_FILE_ID
         )
@@ -49,16 +93,16 @@ class CsvDataListOfVolunteerSkills(GenericCsvData, DataListOfVolunteerSkills):
 class CsvDataListOfCadetVolunteerAssociations(
     GenericCsvData, DataListOfCadetVolunteerAssociations
 ):
-    def read(self) -> ListOfCadetVolunteerAssociations:
+    def read(self) -> ListOfCadetVolunteerAssociationsWithIds:
         list_of_cadet_volunteer_associations = self.read_and_return_object_of_type(
-            ListOfCadetVolunteerAssociations,
+            ListOfCadetVolunteerAssociationsWithIds,
             file_identifier=LIST_OF_VOLUNTEER_ASSOCIATIONS_FILE_ID,
         )
 
         return list_of_cadet_volunteer_associations
 
     def write(
-        self, list_of_cadet_volunteer_associations: ListOfCadetVolunteerAssociations
+        self, list_of_cadet_volunteer_associations: ListOfCadetVolunteerAssociationsWithIds
     ):
         self.write_object(
             list_of_cadet_volunteer_associations,

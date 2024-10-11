@@ -1,23 +1,26 @@
 from typing import List
 
-from app.OLD_backend.ticks_and_qualifications.edit_qualifications import get_tick_items_as_dict_for_qualification, \
-    get_suggestions_for_autocorrect, AutoCorrectForQualificationEdit
-from app.objects_OLD.abstract_objects.abstract_buttons import Button
-from app.objects_OLD.abstract_objects.abstract_form import textInput, listInput
-from app.objects_OLD.abstract_objects.abstract_interface import abstractInterface
+from app.backend.qualifications_and_ticks.list_of_substages import AutoCorrectForQualificationEdit, \
+    get_suggestions_for_autocorrect
+from app.backend.qualifications_and_ticks.dict_of_qualifications_substages_and_ticks import \
+    get_tick_items_as_dict_for_qualification
+from app.objects.abstract_objects.abstract_buttons import Button
+from app.objects.abstract_objects.abstract_form import textInput, listInput
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line
-from app.objects_OLD.abstract_objects.abstract_tables import Table, RowInTable
-from app.objects_OLD.qualifications import Qualification
-from app.objects_OLD.ticks import TickSubStage, TickSubStagesAsDict, TickSheetItem
+from app.objects.abstract_objects.abstract_tables import Table, RowInTable
+from app.objects.qualifications import Qualification
+from app.objects.ticks import TickSubStage, TickSheetItem
+from app.objects.composed.ticks_in_dicts import TickSubStagesAsDict
 
 
 def table_for_edit_qualification_details(
     interface: abstractInterface, qualification: Qualification
 ) -> Table:
     tick_items_as_dict = get_tick_items_as_dict_for_qualification(
-        data_layer=interface.data, qualification=qualification
+        object_store=interface.object_store, qualification=qualification
     )
-    suggestions = get_suggestions_for_autocorrect(data_layer = interface.data, qualification=qualification)
+    suggestions = get_suggestions_for_autocorrect(object_store = interface.object_store, qualification=qualification)
 
     table =[]
     for substage in tick_items_as_dict.keys():

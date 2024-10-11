@@ -1,15 +1,15 @@
 from app.OLD_backend.food import summarise_food_data_by_day
 
-from app.logic.events.food.automatically_get_food_data import (
+from app.frontend.events.food.automatically_get_food_data import (
     get_and_save_food_for_cadets_from_registration_data,
     get_and_save_food_for_volunteers_from_registration_data,
 )
 
-from app.logic.events.food.parse_food_data import (
+from app.frontend.events.food.parse_food_data import (
     save_food_data_in_form,
     download_food_data,
 )
-from app.logic.events.food.render_food import (
+from app.frontend.events.food.render_food import (
     get_button_bar_for_food_required,
     get_table_of_cadets_with_food,
     get_table_of_volunteers_with_food,
@@ -19,8 +19,8 @@ from app.logic.events.food.render_food import (
     DOWNLOAD_FOOD,
 )
 
-from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
-from app.logic.events.patrol_boats.parse_patrol_boat_table import *
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+from app.frontend.events.patrol_boats.parse_patrol_boat_table import *
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -37,7 +37,7 @@ from app.objects.abstract_objects.abstract_lines import (
     _______________,
     DetailListOfLines,
 )
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_text import Heading
 
@@ -108,8 +108,7 @@ def post_form_view_for_food_requirements(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface._save_data_store_cache()
-    interface._clear_data_store_cache()
+    interface.flush_cache_to_store()
 
     return display_form_view_for_food_requirements(interface)
 

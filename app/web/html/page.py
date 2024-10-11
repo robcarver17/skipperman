@@ -1,13 +1,12 @@
 from dataclasses import dataclass
 
 from app.objects.exceptions import arg_not_passed
-from app.web.html.components import (
+from app.web.html.html_components import (
     ListOfHtml,
     Html,
     html_title_wrapper,
     html_header_wrapper,
     html_doc_wrapper,
-    html_link,
     rel_stylesheet_link,
     empty_html,
 )

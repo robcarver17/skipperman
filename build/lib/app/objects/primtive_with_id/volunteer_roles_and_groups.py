@@ -9,9 +9,9 @@ from app.objects.day_selectors import Day
 from app.objects.exceptions import missing_data
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
-from app.objects.primtive_with_id.groups import Group, GROUP_UNALLOCATED, index_group
-from app.objects.primtive_with_id.volunteer_skills import SkillsDict
-from app.objects.primtive_with_id.volunteers import Volunteer
+from app.objects.groups import Group, GROUP_UNALLOCATED, index_group
+from app.objects.composed.volunteers_with_skills import SkillsDict
+from app.objects.volunteers import Volunteer
 
 NO_ROLE_SET = "No role allocated"
 DAY_KEY = "day"
@@ -43,7 +43,7 @@ class RoleAndGroup(GenericSkipperManObject):
         return self.__hash__() == other.__hash__()
 
     def __hash__(self):
-        return hash("%s_%s" % (self.role, self.group.group_name))
+        return hash("%s_%s" % (self.role, self.group.name))
 
     def __lt__(self, other):
         role_index = index_of_role(self.role)
@@ -79,7 +79,7 @@ class TeamAndGroup(GenericSkipperManObject):
         return self.__hash__() == other.__hash__()
 
     def __hash__(self):
-        return hash("%s_%s" % (self.team, self.group.group_name))
+        return hash("%s_%s" % (self.team, self.group.name))
 
     def __lt__(self, other):
         team_index = index_of_team(self.team)
@@ -235,7 +235,7 @@ class ListOfVolunteersWithIdInRoleAtEvent(GenericListOfObjects):
             day=original_day,
             return_empty_if_missing=False,
         )
-        original_volunteer_group_name = copy(original_volunteer.group.group_name)
+        original_volunteer_group_name = copy(original_volunteer.group.name)
         original_volunteer_role = copy(original_volunteer.role)
 
         volunteer_to_swap_with = self.member_matching_volunteer_id_and_day(
@@ -244,7 +244,7 @@ class ListOfVolunteersWithIdInRoleAtEvent(GenericListOfObjects):
             return_empty_if_missing=False,
         )
         volunteer_to_swap_with_group_name = copy(
-            volunteer_to_swap_with.group.group_name
+            volunteer_to_swap_with.group.name
         )
         volunteer_to_swap_with_role = copy(volunteer_to_swap_with.role)
 

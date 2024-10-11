@@ -17,7 +17,7 @@ from app.OLD_backend.reporting.rota_report.configuration import (
     ROLE,
     GROUP,
 )
-from app.objects.volunteers_in_roles import VolunteerInRoleAtEventWithTeamName
+from app.objects_OLD.volunteers_in_roles import VolunteerInRoleAtEventWithTeamName
 
 
 class Team(List[VolunteerInRoleAtEventWithTeamName]):

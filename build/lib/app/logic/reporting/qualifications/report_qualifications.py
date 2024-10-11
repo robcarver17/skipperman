@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.logic.reporting.qualifications.achieved_qualifications import \
+from app.frontend.reporting.qualifications.achieved_qualifications import \
     write_qualifications_to_temp_csv_file_and_return_filename
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import (
@@ -20,8 +20,8 @@ def display_form_for_qualifications_report(interface: abstractInterface):
 
     return Form(contents_of_form)
 
-MAKE_REPORT_BUTTON_LABEL = "Download list of qualifications"
-EXPECTED_REPORT_BUTTON_LABEL = "Expected qualifications at event"
+MAKE_REPORT_BUTTON_LABEL = "Download list of qualifications_and_ticks"
+EXPECTED_REPORT_BUTTON_LABEL = "Expected qualifications_and_ticks at event"
 cancel_button = Button(BACK_BUTTON_LABEL, nav_button=True)
 create_report_button = Button(MAKE_REPORT_BUTTON_LABEL, tile=True) ## tile
 expected_report_button = Button(EXPECTED_REPORT_BUTTON_LABEL, tile=True) ## tile

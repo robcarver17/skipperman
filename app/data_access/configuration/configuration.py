@@ -52,7 +52,7 @@ WA_CANCELLED_STATUS = configuration[
     "wild_apricot_payment_fields_which_are_cancelled_status"
 ]
 WILD_APRICOT_EVENT_ID = configuration["wild_apricot_event_id"]
-WILD_APRICOT_FILE_TYPES = configuration["wild_apricot_file_types"]
+ALLOWED_UPLOAD_FILE_TYPES = configuration["allowed_upload_file_types"]
 #
 
 ## Page sizes - not configured in yaml as won't need changing

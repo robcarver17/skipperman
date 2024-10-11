@@ -3,7 +3,7 @@ from app.OLD_backend.data.options import OptionsData
 from app.OLD_backend.reporting.arrangement.arrange_options import (
     ArrangementOptionsAndGroupOrder,
 )
-from app.logic.reporting.shared.report_generator import ReportGenerator
+from app.frontend.reporting.shared.report_generator import ReportGenerator
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 

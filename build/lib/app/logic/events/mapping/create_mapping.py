@@ -3,16 +3,16 @@ import pandas as pd
 from app.OLD_backend.wa_import.map_wa_fields import temp_mapping_file_name
 from app.OLD_backend.wa_import.load_wa_file import (
     get_staged_file_raw_event_filename,
-    load_raw_wa_file,
 )
+from app.backend.file_handling import load_spreadsheet_file_and_clear_nans
 from app.data_access.configuration.field_list_groups import ALL_FIELDS_AS_PD_SERIES
-from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
-from app.logic.events.constants import UPLOAD_MAPPING_BUTTON_LABEL
-from app.logic.shared.events_state import get_event_from_state
-from app.logic.events.mapping.download_template_field_mapping import (
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+from app.frontend.events.constants import UPLOAD_MAPPING_BUTTON_LABEL
+from app.frontend.shared.events_state import get_event_from_state
+from app.frontend.events.mapping.download_template_field_mapping import (
     display_form_for_download_template_field_mapping,
 )
-from app.logic.events.mapping.upload_field_mapping import (
+from app.frontend.events.mapping.upload_field_mapping import (
     display_form_for_upload_custom_field_mapping,
 )
 from app.objects.abstract_objects.abstract_buttons import (
@@ -129,6 +129,6 @@ def download_WA_event_field_names_form(interface: abstractInterface):
 def get_wa_file_from_staging(interface: abstractInterface):
     event = get_event_from_state(interface)
     filename = get_staged_file_raw_event_filename(event.id)
-    wa_as_df = load_raw_wa_file(filename)
+    wa_as_df = load_spreadsheet_file_and_clear_nans(filename)
 
     return wa_as_df

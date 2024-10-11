@@ -2,22 +2,22 @@ import os
 from typing import List
 
 import pandas as pd
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
 from app.data_access.file_access import download_directory
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.OLD_backend.data.field_mapping import FieldMappingData
 from app.objects.events import Event
-from app.objects.wa_field_mapping import ListOfWAFieldMappings
-from app.objects.mapped_wa_event import MappedWAEvent
-from app.OLD_backend.wa_import.load_wa_file import load_raw_wa_file
+from app.objects_OLD.wa_field_mapping import ListOfWAFieldMappings
+from app.objects_OLD.mapped_wa_event import MappedWAEvent
+from app.backend.file_handling import load_spreadsheet_file_and_clear_nans
 
 
 def map_wa_fields_in_df_for_event(
     interface: abstractInterface, event: Event, filename: str
 ) -> MappedWAEvent:
-    wa_as_df = load_raw_wa_file(filename)
+    wa_as_df = load_spreadsheet_file_and_clear_nans(filename)
     # Set up WA event mapping fields
     wa_field_mapping = get_field_mapping_for_event(event=event, interface=interface)
 

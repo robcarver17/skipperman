@@ -1,14 +1,14 @@
 from typing import Union
 
-from app.logic.administration.users.parse_user_form import (
+from app.frontend.administration.users.parse_user_form import (
     delete_user_from_user_list,
     save_changes_in_security_form,
     generate_reset_message_for_user_name,
 )
-from app.logic.administration.users.render_users_form import (
+from app.frontend.administration.users.render_users_form import (
     display_form_edit_list_of_users,
     list_of_deletion_buttons_names,
-    list_of_email_send_buttons_names,
+    list_of_reset_buttons_names,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import CANCEL_BUTTON_LABEL
@@ -26,7 +26,7 @@ def display_form_security(interface: abstractInterface) -> Union[Form, NewForm]:
 
 def post_form_security(interface: abstractInterface) -> Union[Form, NewForm]:
     deleted_buttons = list_of_deletion_buttons_names(interface)
-    email_buttons = list_of_email_send_buttons_names(interface)
+    email_buttons = list_of_reset_buttons_names(interface)
 
     last_button = interface.last_button_pressed()
 

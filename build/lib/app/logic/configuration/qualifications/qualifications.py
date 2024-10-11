@@ -3,30 +3,30 @@ from typing import Union, List
 from app.OLD_backend.configuration import (
     load_list_of_qualifications,
     save_list_of_qualifications,
-    add_new_qualification_given_string_and_return_list,
-    delete_qualification_given_string_and_return_list,
-    modify_qualification_given_string_and_return_list,
 )
+from app.backend.qualifications_and_ticks.list_of_qualifications import \
+    add_new_qualification_given_string_and_return_list, delete_qualification_given_string_and_return_list, \
+    modify_qualification
 
-from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
-from app.logic.configuration.qualifications.edit_qualifications_in_detail import (
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+from app.frontend.configuration.qualifications.edit_qualifications_in_detail import (
     display_form_edit_qualification_details,
 )
-from app.logic.configuration.generic_list_modifier import (
+from app.frontend.configuration.generic_list_modifier import (
     display_form_edit_generic_list,
     post_form_edit_generic_list,
     BACK_BUTTON_PRESSED,
     BUTTON_NOT_KNOWN,
     edit_button_pressed,
 )
-from app.logic.shared.qualification_and_tick_state_storage import (
+from app.frontend.shared.qualification_and_tick_state_storage import (
     update_state_for_qualification_name,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.qualifications import Qualification, ListOfQualifications
 
-header_text = "List of qualifications: add, edit, re-order"
+header_text = "List of qualifications_and_ticks: add, edit, re-order"
 
 
 def display_form_config_qualifications_page(interface: abstractInterface) -> Form:
@@ -50,7 +50,7 @@ def post_form_config_qualifications_page(
         header_text=header_text,
         deleting_function=delete_qualification_given_string_and_return_list,
         adding_function=add_new_qualification_given_string_and_return_list,
-        modifying_function=modify_qualification_given_string_and_return_list,
+        modifying_function=modify_qualification,
         save_function=save_from_ordinary_list_of_qualifications,
     )
 

@@ -3,12 +3,12 @@ from typing import List
 from app.OLD_backend.volunteers.volunteers import get_dict_of_existing_skills
 
 from app.OLD_backend.data.group_allocations import GroupAllocationsData
-from app.data_access.data_layer.ad_hoc_cache import AdHocCache
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
+from app.data_access.store.data_layer import DataLayer
 from app.objects.events import Event
-from app.objects.primtive_with_id.groups import sorted_locations, Group
-from app.objects.primtive_with_id.volunteers import Volunteer
-from app.objects.volunteers_at_event import DEPRECATE_VolunteerAtEvent
+from app.objects.groups import sorted_locations_REPLACE_WITH_PROPER_SORT_NOT_STR, Group
+from app.objects.volunteers import Volunteer
+from app.objects_OLD.volunteers_at_event import DEPRECATE_VolunteerAtEvent
 
 
 def get_cadet_location_string(
@@ -28,7 +28,7 @@ def get_cadet_location_string(
 def str_type_of_group_given_list_of_groups(list_of_groups: List[Group]):
     types_of_groups = [group.type_of_group() for group in list_of_groups]
     unique_list_of_group_locations = list(set(types_of_groups))
-    sorted_list_of_group_locations = sorted_locations(unique_list_of_group_locations)
+    sorted_list_of_group_locations = sorted_locations_REPLACE_WITH_PROPER_SORT_NOT_STR(unique_list_of_group_locations)
     return ", ".join(sorted_list_of_group_locations)
 
 

@@ -8,12 +8,12 @@ from app.OLD_backend.data.mapped_events import get_row_in_mapped_event_data_give
 from app.OLD_backend.cadets import (
     get_matching_cadet_with_id, get_cadet_given_cadet_as_str,
 )
-from app.logic.events.cadets_at_event.interactively_update_records_of_cadets_at_event import (
+from app.frontend.events.cadets_at_event.interactively_update_records_of_cadets_at_event import (
     display_form_interactively_update_cadets_at_event,
 )
 
-from app.logic.shared.events_state import get_event_from_state
-from app.logic.events.import_wa.shared_state_tracking_and_data import (
+from app.frontend.shared.events_state import get_event_from_state
+from app.frontend.events.import_wa.shared_state_tracking_and_data import (
     get_and_save_next_row_id_in_mapped_event_data,
     get_current_row_id,
     clear_row_in_state,
@@ -24,7 +24,7 @@ from app.OLD_backend.wa_import.add_cadet_ids_to_mapped_wa_event_data import (
     is_row_in_event_already_identified_with_cadet,
     mark_row_as_skip_cadet,
 )
-from app.logic.shared.get_or_select_cadet_forms import (
+from app.frontend.shared.get_or_select_cadet_forms import (
     get_add_or_select_existing_cadet_form,
     DOUBLE_CHECKED_OK_ADD_CADET_BUTTON_LABEL,
     CHECK_CADET_FOR_ME_BUTTON_LABEL,
@@ -32,10 +32,10 @@ from app.logic.shared.get_or_select_cadet_forms import (
     SEE_ALL_CADETS_BUTTON_LABEL,
     SEE_SIMILAR_CADETS_ONLY_LABEL,
 )
-from app.logic.shared.add_edit_cadet_form import add_cadet_from_form_to_data
+from app.frontend.shared.add_edit_cadet_form import add_cadet_from_form_to_data
 
 from app.objects.exceptions import NoMoreData, MissingData
-from app.objects.mapped_wa_event import RowInMappedWAEvent
+from app.objects_OLD.mapped_wa_event import RowInMappedWAEvent
 from app.objects.cadets import Cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface

@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import Union
 
-from app.objects_OLD.abstract_objects.abstract_text import Input, Heading
-from app.objects_OLD.abstract_objects.abstract_buttons import Button, ButtonBar
+from app.objects.abstract_objects.abstract_text import Input, Heading
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar
 
 
 class Line(list):

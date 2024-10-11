@@ -5,10 +5,10 @@ import pandas as pd
 
 from app.OLD_backend.rota.sorting_and_filtering import filter_volunteer, \
     RotaSortsAndFilters, get_sorted_and_filtered_list_of_volunteers_at_event
-from app.data_access.data_layer.ad_hoc_cache import AdHocCache
+from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
 
 from app.OLD_backend.rota.volunteer_history import get_dict_of_volunteers_with_last_roles
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
 from app.OLD_backend.group_allocations.cadet_event_allocations import (
     load_list_of_cadets_ids_with_group_allocations_active_cadets_only,
@@ -30,11 +30,12 @@ from app.objects.day_selectors import Day
 from app.objects.events import (
     Event,
 )
-from app.objects.primtive_with_id.groups import Group, GROUP_UNALLOCATED, ListOfCadetIdsWithGroups
-from app.objects.primtive_with_id.volunteers import ListOfVolunteers
-from app.objects.primtive_with_id.volunteer_skills import ListOfVolunteerSkills, SkillsDict
-from app.objects.primtive_with_id.volunteer_at_event import VolunteerAtEventWithId, ListOfVolunteersAtEventWithId
-from app.objects.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent, \
+from app.objects.groups import Group, GROUP_UNALLOCATED
+from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
+from app.objects.volunteers import ListOfVolunteers
+from app.objects.composed.volunteers_with_skills import SkillsDict, ListOfVolunteersWithSkills
+from app.objects_OLD.primtive_with_id.volunteer_at_event import VolunteerAtEventWithId, ListOfVolunteersAtEventWithId
+from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent, \
     ListOfVolunteersWithIdInRoleAtEvent, RoleAndGroup
 
 
@@ -43,7 +44,7 @@ class DEPRECATE_DataToBeStoredWhilstConstructingVolunteerRotaPage:
     event: Event
     list_of_cadet_ids_with_groups: ListOfCadetIdsWithGroups
     unallocated_cadets_at_event: ListOfCadets
-    volunteer_skills: ListOfVolunteerSkills
+    volunteer_skills: ListOfVolunteersWithSkills
     volunteers_in_roles_at_event: ListOfVolunteersWithIdInRoleAtEvent
     list_of_volunteers_with_id_at_event: ListOfVolunteersAtEventWithId
     dict_of_volunteers_with_last_roles: Dict[str, RoleAndGroup]

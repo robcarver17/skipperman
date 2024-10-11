@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 import datetime
-import enum
 
 from app.data_access.configuration.configuration import (
     MIN_CADET_AGE,
@@ -12,18 +11,17 @@ from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
 )
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
-from app.objects_OLD.utils import (
+from app.objects.membership_status import MembershipStatus, none_member, current_member, lapsed_member, \
+    system_unconfirmed_member, describe_status, user_unconfirmed_member
+from app.objects.utils import (
     transform_date_into_str,
     similar,
     transform_str_or_datetime_into_date,
     in_x_not_in_y,
 )
-from app.objects_OLD.exceptions import arg_not_passed, DAYS_IN_YEAR, MissingData, MultipleMatches
-from app.objects_OLD.utils import union_of_x_and_y
+from app.objects.exceptions import arg_not_passed, DAYS_IN_YEAR, MissingData, MultipleMatches
+from app.objects.utils import union_of_x_and_y
 
-MembershipStatus = enum.Enum('MembershipStatus', ['Current', 'None_Member', 'Lapsed'])
-
-none_member = MembershipStatus.None_Member
 
 @dataclass
 class Cadet(GenericSkipperManObjectWithIds):
@@ -53,13 +51,15 @@ class Cadet(GenericSkipperManObjectWithIds):
         )
 
     def __repr__(self):
-        return "%s %s (%s)" % (
+        return "%s %s (%s) %s" % (
             self.first_name,
             self.surname,
             str(self.date_of_birth),
+            describe_status(self.membership_status)
         )
 
     def __eq__(self, other):
+        ## Doesn't consider membership status
         return self.has_same_name(other) and self.date_of_birth == other.date_of_birth
 
     def has_same_name(self, other):
@@ -67,7 +67,7 @@ class Cadet(GenericSkipperManObjectWithIds):
 
     def __hash__(self):
         return hash(
-            self.first_name + "_" + self.surname + "_" + self._date_of_birth_as_str
+            self.first_name + "_" + self.surname + "_" + self._date_of_birth_as_str+self.membership_status.name
         )
 
     def replace_all_attributes_except_id_with_those_from_new_cadet(
@@ -76,6 +76,7 @@ class Cadet(GenericSkipperManObjectWithIds):
         self.first_name = new_cadet.first_name
         self.surname = new_cadet.surname
         self.date_of_birth = new_cadet.date_of_birth
+        self.membership_status = new_cadet.membership_status
 
     def approx_age_years(self, at_date: datetime.date = arg_not_passed) -> float:
         if at_date is arg_not_passed:
@@ -124,12 +125,38 @@ def is_cadet_age_surprising(cadet: Cadet):
 DEFAULT_DATE_OF_BIRTH = datetime.date(1970, 1, 1)
 
 default_cadet = Cadet(first_name=" ", surname=" ", date_of_birth=DEFAULT_DATE_OF_BIRTH, membership_status=none_member)
-
+unknown_cadet = Cadet(first_name="Unknown cadet", surname="(data error)", date_of_birth=DEFAULT_DATE_OF_BIRTH, membership_status=none_member)
 
 class ListOfCadets(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return Cadet
+
+    def pop_cadet(self, cadet: Cadet):
+        return self.pop_with_id(cadet.id)
+
+    def set_all_current_members_to_temporary_unconfirmed_status(self):
+        for cadet in self:
+            if cadet.membership_status == current_member:
+                cadet.membership_status = system_unconfirmed_member
+
+    def set_all_temporary_unconfirmed_members_to_lapsed_and_return_list(self)-> 'ListOfCadets':
+        list_of_cadets = []
+        for cadet in self:
+            if cadet.membership_status == system_unconfirmed_member:
+                cadet.membership_status = lapsed_member
+                list_of_cadets.append(cadet)
+
+        return ListOfCadets(list_of_cadets)
+
+    def set_all_user_unconfirmed_members_to_non_members_and_return_list(self)-> 'ListOfCadets':
+        list_of_cadets = []
+        for cadet in self:
+            if cadet.membership_status == user_unconfirmed_member:
+                cadet.membership_status = none_member
+                list_of_cadets.append(cadet)
+
+        return ListOfCadets(list_of_cadets)
 
     def excluding_cadets_from_other_list(self, list_of_cadets: "ListOfCadets"):
         list_of_ids = in_x_not_in_y(self.list_of_ids, list_of_cadets.list_of_ids)
@@ -146,6 +173,21 @@ class ListOfCadets(GenericListOfObjectsWithIds):
 
         return cadet
 
+    def update_cadet(
+        self, existing_cadet: Cadet, new_cadet: Cadet
+    ):
+        self.replace_cadet_with_id_with_new_cadet_details(
+            existing_cadet_id=existing_cadet.id,
+            new_cadet=new_cadet
+        )
+
+    def confirm_cadet_as_member(self, existing_cadet: Cadet):
+        existing_cadet.membership_status = current_member
+        self.replace_cadet_with_id_with_new_cadet_details(
+            existing_cadet_id=existing_cadet.id,
+            new_cadet=existing_cadet
+        )
+
     def replace_cadet_with_id_with_new_cadet_details(
         self, existing_cadet_id: str, new_cadet: Cadet
     ):
@@ -153,6 +195,14 @@ class ListOfCadets(GenericListOfObjectsWithIds):
         existing_cadet.replace_all_attributes_except_id_with_those_from_new_cadet(
             new_cadet
         )
+
+
+    def any_matching_cadets(self, cadet: Cadet) -> bool:
+        for cadet_in_list in self:
+            if cadet==cadet_in_list:
+                return True
+
+        return False
 
     def matching_cadet(self, cadet: Cadet, exact_match_required: bool = False) -> Cadet:
         exact_match = [
@@ -231,6 +281,9 @@ class ListOfCadets(GenericListOfObjectsWithIds):
         cadet: Cadet,
         dob_threshold: float = SIMILARITY_LEVEL_TO_WARN_DATE,
     ):
+        if cadet.date_of_birth == DEFAULT_DATE_OF_BIRTH:
+            return ListOfCadets([])
+
         similar_dob = [
             other_cadet
             for other_cadet in self

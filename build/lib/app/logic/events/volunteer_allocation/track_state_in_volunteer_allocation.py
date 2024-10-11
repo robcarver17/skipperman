@@ -1,9 +1,9 @@
 from app.OLD_backend.data.volunteer_allocation import VolunteerAllocationData
 
-from app.logic.shared.events_state import get_event_from_state
-from app.logic.events.import_wa.shared_state_tracking_and_data import get_current_row_id
+from app.frontend.shared.events_state import get_event_from_state
+from app.frontend.events.import_wa.shared_state_tracking_and_data import get_current_row_id
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.relevant_information_for_volunteers import (
+from app.objects_OLD.relevant_information_for_volunteers import (
     RelevantInformationForVolunteer,
 )
 from app.OLD_backend.volunteers.volunter_relevant_information import (

@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
 from app.objects.day_selectors import Day
 
@@ -9,8 +9,9 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
 from app.objects.cadets import ListOfCadets
 from app.objects.events import Event
-from app.objects.cadets_with_groups import ListOfCadetsWithGroup
-from app.objects.primtive_with_id.groups import Group, ListOfCadetIdsWithGroups
+from app.objects_OLD.cadets_with_groups import ListOfCadetsWithGroup
+from app.objects.groups import Group
+from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
 from app.OLD_backend.data.group_allocations import GroupAllocationsData
 
 

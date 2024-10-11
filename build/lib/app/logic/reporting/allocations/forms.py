@@ -1,5 +1,3 @@
-from typing import Tuple
-
 from app.objects.abstract_objects.abstract_form import (
     yes_no_radio,
 )
@@ -9,7 +7,7 @@ from app.objects.abstract_objects.abstract_lines import (
     Line,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.reporting.allocations.processes import (
+from app.frontend.reporting.allocations.processes import (
     load_additional_parameters_for_allocation_report,
     SHOW_FULL_NAMES,
     INCLUDE_UNALLOCATED_CADETS,

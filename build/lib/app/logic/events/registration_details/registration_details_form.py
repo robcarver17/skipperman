@@ -5,14 +5,14 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.OLD_backend.cadets import (
     get_cadet_from_id, load_list_of_all_cadets,
 )
-from app.OLD_backend.forms.form_utils import (
+from app.frontend.forms.form_utils import (
     get_availability_checkbox,
     input_name_from_column_name_and_cadet_id,
 )
-from app.OLD_backend.forms.form_utils import dropdown_input_for_status_change
+from app.frontend.forms.form_utils import dropdown_input_for_status_change
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
 
-from app.logic.events.constants import ROW_STATUS
+from app.frontend.events.constants import ROW_STATUS
 from app.objects.abstract_objects.abstract_form import (
     dropDownInput,
     checkboxInput,
@@ -23,7 +23,7 @@ from app.objects.abstract_objects.abstract_tables import RowInTable
 from app.objects.cadets import ListOfCadets
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
-from app.objects.primtive_with_id.cadet_with_id_at_event import (
+from app.objects.cadet_with_id_at_event import (
     CadetWithIdAtEvent,
     ListOfCadetsWithIDAtEvent,
 )
@@ -33,7 +33,7 @@ from app.data_access.configuration.field_list_groups import (
     FIELDS_TO_EDIT_IN_EDIT_VIEW,
 )
 from app.objects.exceptions import arg_not_passed
-from app.objects.mapped_wa_event import (
+from app.objects_OLD.mapped_wa_event import (
     RowInMappedWAEvent,
     RegistrationStatus,
     get_states_allowed_give_current_status,

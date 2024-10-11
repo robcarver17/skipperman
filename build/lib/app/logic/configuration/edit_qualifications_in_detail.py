@@ -5,23 +5,23 @@ from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 
 from app.objects.abstract_objects.abstract_buttons import ButtonBar, cancel_menu_button, save_menu_button, \
-    back_menu_button, Button
+    Button
 
-from app.OLD_backend.ticks_and_qualifications.edit_qualifications import (
-    get_tick_items_as_dict_for_qualification,
-)
+from app.backend.qualifications_and_ticks.dict_of_qualifications_substages_and_ticks import \
+    get_tick_items_as_dict_for_qualification
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 
-from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
-from app.logic.shared.qualification_and_tick_state_storage import (
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+from app.frontend.shared.qualification_and_tick_state_storage import (
     get_qualification_from_state,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm, textInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.qualifications import Qualification
-from app.objects.ticks import TickSubStage, TickSubStagesAsDict, ListOfTickSheetItems, TickSheetItem
+from app.objects.ticks import TickSubStage, TickSheetItem
+from app.objects.composed.ticks_in_dicts import TickSubStagesAsDict
 
-header_text = "List of qualifications: add, edit, re-order"
+header_text = "List of qualifications_and_ticks: add, edit, re-order"
 
 
 def display_form_edit_qualification_details(interface: abstractInterface) -> Form:

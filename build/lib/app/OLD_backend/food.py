@@ -5,7 +5,7 @@ from app.OLD_backend.cadets import  cadet_name_from_id
 
 from app.OLD_backend.volunteers.volunteers import get_volunteer_name_from_id
 
-from app.objects.primtive_with_id.volunteers import ListOfVolunteers
+from app.objects.volunteers import ListOfVolunteers
 
 from app.OLD_backend.data.volunteers import VolunteerData
 
@@ -23,7 +23,7 @@ from app.OLD_backend.reporting.process_stages.create_file_from_list_of_columns i
     create_csv_report_from_dict_of_df_and_return_filename,
 )
 
-from app.objects.food import (
+from app.objects_OLD.food import (
     FoodRequirements,
     ListOfCadetsWithFoodRequirementsAtEvent,
     CadetWithFoodRequirementsAtEvent,

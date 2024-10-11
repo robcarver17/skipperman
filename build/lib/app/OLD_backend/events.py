@@ -2,9 +2,8 @@ import datetime
 import re
 from dataclasses import dataclass
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.OLD_backend.data.events import EventData
@@ -17,8 +16,6 @@ from app.objects.events import (
     Event,
     ListOfEvents,
     SORT_BY_START_DSC,
-    SORT_BY_START_ASC,
-    SORT_BY_NAME,
     default_event,
 )
 
@@ -110,12 +107,6 @@ def confirm_event_exists_given_description(
 
     ## fails if missing
     __ = list_of_events.event_with_description(event_description)
-
-
-all_sort_types_for_event_list = [SORT_BY_START_ASC, SORT_BY_START_DSC, SORT_BY_NAME]
-sort_buttons_for_event_list = ButtonBar(
-    [Button(sortby, nav_button=True) for sortby in all_sort_types_for_event_list]
-)
 
 
 @dataclass

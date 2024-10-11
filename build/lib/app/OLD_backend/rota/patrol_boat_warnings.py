@@ -1,11 +1,11 @@
 from typing import List
 
-from app.data_access.data_layer.data_layer import DataLayer
+from app.data_access.store.data_layer import DataLayer
 from app.OLD_backend.data.patrol_boats import PatrolBoatsData
 from app.OLD_backend.rota.warnings import process_warning_list
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.primtive_with_id.patrol_boats import PatrolBoat
+from app.objects.patrol_boats import PatrolBoat
 
 
 def warn_on_pb2_drivers(data_layer: DataLayer, event: Event) -> List[str]:

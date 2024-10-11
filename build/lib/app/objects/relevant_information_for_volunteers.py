@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import List
 
 from app.objects.day_selectors import DaySelector
-from app.objects.mapped_wa_event import RegistrationStatus
+from app.objects_OLD.mapped_wa_event import RegistrationStatus
 
 
 @dataclass

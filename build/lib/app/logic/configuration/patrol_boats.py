@@ -1,21 +1,16 @@
 from typing import Union, List
 
-from app.objects.qualifications import ListOfQualifications
-
-
 from app.OLD_backend.configuration import (
     save_list_of_patrol_boats,
-    add_new_patrol_boat_given_string_and_return_list,
-    delete_patrol_boat_given_string_and_return_list,
-    modify_patrol_boat_given_string_and_return_list,
     load_list_of_patrol_boats,
 )
+from app.backend.configuration.list_of_patrol_boats import add_new_patrol_boat, \
+    delete_patrol_boat_given_string, modify_patrol_boat
 
-from app.logic.abstract_logic_api import (
-    initial_state_form,
+from app.frontend.form_handler import (
     button_error_and_back_to_initial_state_form,
 )
-from app.logic.configuration.generic_list_modifier import (
+from app.frontend.configuration.generic_list_modifier import (
     display_form_edit_generic_list,
     post_form_edit_generic_list,
     BACK_BUTTON_PRESSED,
@@ -23,7 +18,7 @@ from app.logic.configuration.generic_list_modifier import (
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.primtive_with_id.patrol_boats import PatrolBoat, ListOfPatrolBoats
+from app.objects.patrol_boats import PatrolBoat, ListOfPatrolBoats
 
 header_text = "List of club patrol boats: add, edit, or re-order"
 
@@ -46,9 +41,9 @@ def post_form_config_patrol_boats_page(
         existing_list=list_of_boats,
         interface=interface,
         header_text=header_text,
-        deleting_function=delete_patrol_boat_given_string_and_return_list,
-        adding_function=add_new_patrol_boat_given_string_and_return_list,
-        modifying_function=modify_patrol_boat_given_string_and_return_list,
+        deleting_function=delete_patrol_boat_given_string,
+        adding_function=add_new_patrol_boat,
+        modifying_function=modify_patrol_boat,
         save_function=save_from_ordinary_list_of_patrol_boats,
     )
     if generic_list_output is BACK_BUTTON_PRESSED:

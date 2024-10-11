@@ -1,5 +1,7 @@
 # SKIPPERMAN - Blackwater Sailing Club Cadet Skipper Managemet System: Original spec
 
+This was the original spec document written in late summer 2023.
+
 ## Abbreviations
 
 WA - Wild Apricot, the BSC club management system

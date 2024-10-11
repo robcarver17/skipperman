@@ -1,12 +1,9 @@
 from dataclasses import dataclass
 
-import flask
 from werkzeug.exceptions import RequestEntityTooLarge
 
-from app.data_access.data import data_api
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
-    UrlsOfInterest,
 )
 from app.web.flask.flash import flash_error
 from app.web.flask.security import get_username
@@ -16,9 +13,8 @@ from app.web.flask.session_data_for_action import (
     clear_session_data_for_action,
 )
 from app.web.html.forms import html_as_date
-from app.web.html.components import HTML_BUTTON_NAME
+from app.web.html.abstract_components_to_html import HTML_BUTTON_NAME
 from app.web.html.read_only import is_read_only
-from app.web.html.url import get_action_url, LINK_LOGIN, STATIC_DIRECTORY, INDEX_URL
 from app.objects.exceptions import (
     NoFileUploaded,
     missing_data,
@@ -60,8 +56,7 @@ class flaskInterface(abstractInterface):
     def form_name(self, new_stage):
         self.session_data.stage = new_stage
 
-    def clear_persistent_data_for_action_and_reset_to_initial_stage_form(self):
-        self.reset_to_initial_stage_form()  ## this should happen anyway, but belt and braces
+    def clear_persistent_data_for_action(self):
         clear_session_data_for_action(self.action_name)
 
     def clear_persistent_data_except_specified_fields(self, specified_fields: list):
@@ -107,27 +102,10 @@ class flaskInterface(abstractInterface):
     ) -> SessionDataForAction:  ## pipe through to current session object
         return SessionDataForAction(self.action_name)
 
-    @property
-    def current_url(self) -> str:
-        return get_action_url(self.action_name)
-
     def uploaded_file(self, input_name: str = "file"):
         print("inside state")
         return uploaded_file(input_name)
 
-    def url_for_password_reset(self, username: str, new_password: str):
-        url = self.main_url()
-        print(url)
-
-        return "%s%s/?username=%s&password=%s" % (
-            url,
-            LINK_LOGIN,
-            username,
-            new_password,
-        )
-
-    def main_url(self):
-        return flask.request.host_url
 
     def get_current_logged_in_username(self) -> str:
         return get_username()
@@ -135,9 +113,6 @@ class flaskInterface(abstractInterface):
     @property
     def read_only(self):
         return is_read_only()
-
-
-READ_ONLY_KEY = "__read_only"
 
 
 def is_website_post() -> bool:
@@ -175,21 +150,3 @@ def uploaded_file(input_name: str = "file"):
     return file
 
 
-def get_urls_of_interest(action_name: str = arg_not_passed) -> UrlsOfInterest:
-    return UrlsOfInterest(
-        current_url_for_action=get_current_url_from_action_name(action_name),
-        image_directory=get_image_directory_url(),
-    )
-
-
-def get_current_url_from_action_name(action_name: str = arg_not_passed) -> str:
-    if action_name is arg_not_passed:
-        return INDEX_URL
-    interface = flaskInterface(action_name=action_name, data=data_api)
-    return interface.current_url
-
-
-def get_image_directory_url():
-    abstractInterface = flaskInterface(data=data_api)
-    home_page = abstractInterface.main_url()
-    return "/" + STATIC_DIRECTORY

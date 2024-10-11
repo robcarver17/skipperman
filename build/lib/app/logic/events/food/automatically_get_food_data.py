@@ -1,16 +1,16 @@
 from app.OLD_backend.volunteers.volunteers import EPRECATE_get_volunteer_name_from_id
 
-from app.objects.relevant_information_for_volunteers import missing_relevant_information
+from app.objects_OLD.relevant_information_for_volunteers import missing_relevant_information
 
 from app.OLD_backend.volunteers.volunteer_allocation import get_list_of_relevant_information
 
-from app.logic.events.volunteer_allocation.track_state_in_volunteer_allocation import (
+from app.frontend.events.volunteer_allocation.track_state_in_volunteer_allocation import (
     list_of_unique_volunteer_ids_in_identified_event_data,
 )
 
-from app.objects.mapped_wa_event import RowInMappedWAEvent
+from app.objects_OLD.mapped_wa_event import RowInMappedWAEvent
 
-from app.objects.food import guess_food_requirements_from_food_field
+from app.objects_OLD.food import guess_food_requirements_from_food_field
 
 from app.OLD_backend.cadets import cadet_name_from_id
 from app.data_access.configuration.field_list import CADET_FOOD_PREFERENCE
@@ -30,7 +30,7 @@ from app.OLD_backend.wa_import.update_cadets_at_event import (
     list_of_cadet_ids_at_event_and_in_mapped_data_for_event,
     get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active,
 )
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 

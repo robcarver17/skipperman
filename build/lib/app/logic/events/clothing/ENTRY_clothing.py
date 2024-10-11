@@ -1,18 +1,18 @@
 from app.OLD_backend.clothing import summarise_clothing
-from app.logic.events.clothing.automatically_get_clothing_data_from_cadets import (
+from app.frontend.events.clothing.automatically_get_clothing_data_from_cadets import (
     update_cadet_clothing_at_event,
 )
-from app.logic.events.clothing.downloads import (
+from app.frontend.events.clothing.downloads import (
     export_committee_clothing,
     export_clothing_colours,
     export_all_clothing,
 )
-from app.logic.events.clothing.parse_clothing import (
+from app.frontend.events.clothing.parse_clothing import (
     save_clothing_data,
     distribute_colour_groups,
     clear_all_colours,
 )
-from app.logic.events.clothing.render_clothing import (
+from app.frontend.events.clothing.render_clothing import (
     get_button_bar_for_clothing,
     get_clothing_table,
     GET_CLOTHING_FOR_CADETS,
@@ -28,10 +28,10 @@ from app.logic.events.clothing.render_clothing import (
     EXPORT_ALL,
     EXPORT_COMMITTEE,
 )
-from app.objects.clothing import all_sort_types
+from app.objects_OLD.clothing import all_sort_types
 
-from app.logic.abstract_logic_api import button_error_and_back_to_initial_state_form
-from app.logic.events.patrol_boats.parse_patrol_boat_table import *
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+from app.frontend.events.patrol_boats.parse_patrol_boat_table import *
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -44,7 +44,7 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
-from app.logic.shared.events_state import get_event_from_state
+from app.frontend.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_text import Heading
 
@@ -117,8 +117,7 @@ def post_form_view_for_clothing_requirements(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface._save_data_store_cache()
-    interface._clear_data_store_cache()
+    interface.flush_cache_to_store()
 
     return display_form_view_for_clothing_requirements(interface)
 

@@ -3,7 +3,7 @@ from app.OLD_backend.reporting.arrangement.arrange_options import (
 )
 from app.OLD_backend.reporting.arrangement.group_order import GroupOrder
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.logic.reporting.shared.arrangement_state import (
+from app.frontend.reporting.shared.arrangement_state import (
     save_arrangement_and_group_order,
     get_stored_arrangement_and_group_order,
 )

@@ -2,8 +2,8 @@ from copy import copy
 from dataclasses import dataclass
 from typing import Union
 
-from app.OLD_backend.cadets import verify_cadet_and_return_warnings
-from app.logic.shared.add_edit_cadet_form import get_footer_buttons_for_add_cadet_form, FIRST_NAME, SURNAME, DOB, \
+from app.backend.cadets.add_edit_cadet import verify_cadet_and_return_warnings
+from app.frontend.shared.add_edit_cadet_form import get_footer_buttons_for_add_cadet_form, FIRST_NAME, SURNAME, DOB, \
     get_cadet_from_form
 from app.objects.abstract_objects.abstract_buttons import ButtonBar
 from app.objects.abstract_objects.abstract_form import Form, textInput, dateInput

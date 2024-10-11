@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Callable, Dict, Tuple
+from typing import Callable, Dict
 
 from app.objects.exceptions import arg_not_passed
 
@@ -220,11 +220,11 @@ class DisplayAndPostFormFunctionMaps:
                     % (str(func), str(e1), str(e2))
                 )
 
-    def get_function_for_form_name(self, form_name: str, is_display: bool = True):
-        if is_display:
-            return self.display_mappings.get_function_for_form_name(form_name)
-        else:
-            return self.post_mappings.get_function_for_form_name(form_name)
+    def get_display_function_for_form_name(self, form_name: str):
+        return self.display_mappings.get_function_for_form_name(form_name)
+
+    def get_post_function_for_form_name(self, form_name: str):
+        return self.post_mappings.get_function_for_form_name(form_name)
 
     @classmethod
     def from_nested_dict_of_functions(cls, nested_dict: NestedDictOfMappings):

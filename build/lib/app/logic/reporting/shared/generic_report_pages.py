@@ -45,7 +45,7 @@ from app.frontend.shared.events_state import (
     get_event_from_state,
     update_state_for_specific_event_given_event_description,
 )
-from app.OLD_backend.events import confirm_event_exists_given_description
+from app.backend.events.list_of_events import confirm_event_exists_given_description_REFACTOR
 
 from app.frontend.reporting.constants import *
 
@@ -84,7 +84,7 @@ def post_form_initial_generic_report(
 
     event_name_selected = last_button
     try:
-        confirm_event_exists_given_description(
+        confirm_event_exists_given_description_REFACTOR(
             interface=interface, event_description=event_name_selected
         )
     except:

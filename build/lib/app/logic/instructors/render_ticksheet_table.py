@@ -6,7 +6,7 @@ from app.frontend.instructors.buttons import (
     get_select_cadet_button_when_in_no_edit_mode,
 )
 from app.OLD_backend.cadets import get_cadet_from_id
-from app.OLD_backend.ticks_and_qualifications.ticksheets import (
+from app.backend.qualifications_and_ticks.ticksheets import (
     get_ticksheet_data,
     TickSheetDataWithExtraInfo,
     cadet_is_already_qualified,

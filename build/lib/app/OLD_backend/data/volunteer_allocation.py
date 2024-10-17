@@ -8,7 +8,7 @@ from app.OLD_backend.data.volunteers import SORT_BY_FIRSTNAME
 
 from app.objects.volunteers import ListOfVolunteers, Volunteer
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.objects.exceptions import missing_data
 from app.objects.day_selectors import Day
@@ -17,7 +17,7 @@ from app.objects_OLD.volunteers_at_event import (
     ListOfVolunteersAtEvent,
     DEPRECATE_VolunteerAtEvent,
 )
-from app.objects_OLD.primtive_with_id.volunteer_at_event import VolunteerAtEventWithId, ListOfVolunteersAtEventWithId
+from app.objects.volunteer_at_event_with_id import VolunteerAtEventWithId, ListOfVolunteersAtEventWithId
 from app.objects_OLD.primtive_with_id.identified_volunteer_at_event import ListOfIdentifiedVolunteersAtEvent
 from app.OLD_backend.data.volunteers import VolunteerData
 

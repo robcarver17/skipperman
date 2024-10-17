@@ -34,3 +34,7 @@ def get_list_of_groups(object_store: ObjectStore) -> ListOfGroups:
 def update_list_of_groups(object_store: ObjectStore, updated_list_of_groups: ListOfGroups):
     object_store.update(new_object=updated_list_of_groups, object_definition=object_definition_for_list_of_groups)
 
+
+def order_list_of_groups(object_store: ObjectStore, list_of_groups: ListOfGroups):
+    all_groups = get_list_of_groups(object_store)
+    return ListOfGroups.subset_from_list_of_ids(all_groups, list_of_groups.list_of_ids)

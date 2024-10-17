@@ -2,7 +2,7 @@ from typing import Union, List
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.backend.configuration.list_of_patrol_boats import get_list_of_patrol_boats, update_list_of_patrol_boats, \
+from app.backend.patrol_boats.list_of_patrol_boats import get_list_of_patrol_boats, update_list_of_patrol_boats, \
     add_new_patrol_boat,\
     modify_patrol_boat
 

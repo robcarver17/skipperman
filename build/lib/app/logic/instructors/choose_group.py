@@ -1,7 +1,7 @@
 from typing import Union
 
-from app.OLD_backend.ticks_and_qualifications.ticksheets import get_list_of_groups_volunteer_id_can_see, \
-    get_list_of_all_groups_at_event
+from app.backend.qualifications_and_ticks.ticksheets import get_list_of_all_groups_at_event
+from app.backend.security.user_access import get_list_of_groups_volunteer_can_see
 from app.frontend.shared.qualification_and_tick_state_storage import update_state_for_group_name
 from app.objects.events import Event
 
@@ -47,9 +47,9 @@ def get_group_buttons(interface: abstractInterface, event: Event) -> Line:
         return Line(Heading("No groups defined at this event yet"))
 
     volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER(interface)
-    list_of_groups = get_list_of_groups_volunteer_id_can_see(interface=interface,
-                                                             event=event,
-                                                             volunteer_id=volunteer_id)
+    list_of_groups = get_list_of_groups_volunteer_can_see(interface=interface,
+                                                          event=event,
+                                                          volunteer_id=volunteer_id)
 
     if len(list_of_groups)==0:
         return Line(Heading("The user doesn't have right to see any ticksheets for event %s; must be skipper, admin, SI for event, or DI/AI/RCL2 for a group" % str(event), centred=False, size=4))

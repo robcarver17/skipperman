@@ -10,19 +10,21 @@ LAKE_TRAINING = "Lake training"
 RIVER_TRAINING = "River training"
 MG = "MG"
 UNALLOCATED = "Unallocated"
+UNDETERMINED = "Undetermined"
 
 def sorted_locations_REPLACE_WITH_PROPER_SORT_NOT_STR(locations: List[str]):
     order = [LAKE_TRAINING, RIVER_TRAINING, MG]
     return [location for location in order if location in locations]
 
 
-GroupLocation = Enum("GroupLocation", [LAKE_TRAINING, RIVER_TRAINING, MG, UNALLOCATED])
-lake_training_group = GroupLocation[LAKE_TRAINING]
-river_training_group = GroupLocation[RIVER_TRAINING]
-mg_training_group = GroupLocation[MG]
-unallocated_group = GroupLocation[UNALLOCATED]
+GroupLocation = Enum("GroupLocation", [LAKE_TRAINING, RIVER_TRAINING, MG, UNALLOCATED, UNDETERMINED])
+lake_training_group_location = GroupLocation[LAKE_TRAINING]
+river_training_group_location = GroupLocation[RIVER_TRAINING]
+mg_training_group_location = GroupLocation[MG]
+unallocated_group_location = GroupLocation[UNALLOCATED]
+undetermined_group_location = GroupLocation[UNDETERMINED]
 
-all_locations = [lake_training_group, river_training_group, mg_training_group]
+all_locations = [lake_training_group_location, river_training_group_location, mg_training_group_location]
 
 @dataclass
 class Group(GenericSkipperManObjectWithIds):
@@ -31,6 +33,13 @@ class Group(GenericSkipperManObjectWithIds):
     protected: bool
     hidden: bool
     id: str = arg_not_passed
+
+    @classmethod
+    def name_only(cls, name: str):
+        return cls(name=name,
+                   location=undetermined_group_location,
+                   protected=True,
+                   hidden=True)
 
 
     def __eq__(self, other):
@@ -57,16 +66,16 @@ class Group(GenericSkipperManObjectWithIds):
 
     @classmethod
     def create_unallocated(cls):
-        return cls(UNALLOCATED, location=unallocated_group, protected=True, id='0', hidden=False)
+        return cls(UNALLOCATED, location=unallocated_group_location, protected=True, id='0', hidden=False)
 
     @property
     def is_unallocated(self):
-        return self.location == unallocated_group
+        return self == unallocated_group
 
 
 
-GROUP_UNALLOCATED = Group.create_unallocated()
-GROUP_UNALLOCATED_TEXT = "Unallocated"
+unallocated_group = Group.create_unallocated()
+GROUP_UNALLOCATED_TEXT_DONTUSE = "Unallocated"
 
 class ListOfGroups(GenericListOfObjectsWithIds):
     @property
@@ -78,7 +87,7 @@ class ListOfGroups(GenericListOfObjectsWithIds):
             assert group_name not in self.list_of_names()
         except:
             raise Exception("Can't add duplicate sailing group %s already exists" % group_name)
-        group = Group(group_name, protected=False, location=lake_training_group, hidden=False)
+        group = Group(group_name, protected=False, location=lake_training_group_location, hidden=False)
         group.id = self.next_id()
 
         self.append(group)

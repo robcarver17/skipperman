@@ -19,11 +19,11 @@ from app.OLD_backend.configuration import (
 
 from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent
 from app.objects.cadets import ListOfCadets
-from app.objects.cadet_at_event_with_dinghy_with_ids import ListOfCadetAtEventWithDinghies
+from app.objects.cadet_at_event_with_dinghy_with_ids import ListOfCadetAtEventWithBoatClassAndPartnerWithIds
 from app.objects.club_dinghies import (
     ListOfClubDinghies,
 )
-from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithClubDinghies
+from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithIdAndClubDinghies
 from app.objects.boat_classes import ListOfBoatClasses
 from app.objects.events import Event
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
@@ -34,12 +34,12 @@ from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGrou
 @dataclass
 class RequiredDataForReport:
     list_of_all_cadets: ListOfCadets
-    list_of_cadets_at_event_with_dinghies: ListOfCadetAtEventWithDinghies
+    list_of_cadets_at_event_with_dinghies: ListOfCadetAtEventWithBoatClassAndPartnerWithIds
     list_of_cadets_at_event: ListOfCadetsWithIDAtEvent
     list_of_boat_classes: ListOfBoatClasses
     list_of_club_dinghies: ListOfClubDinghies
     list_of_cadet_ids_with_groups: ListOfCadetIdsWithGroups
-    list_of_cadets_at_event_with_club_dinghies: ListOfCadetAtEventWithClubDinghies
+    list_of_cadets_at_event_with_club_dinghies: ListOfCadetAtEventWithIdAndClubDinghies
 
 
 def get_data_required_for_event(

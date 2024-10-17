@@ -10,7 +10,7 @@ from app.objects.day_selectors import DaySelector
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
 
-from app.objects_OLD.mapped_wa_event import RowInMappedWAEvent, RegistrationStatus
+from app.objects.registration_data import RowInRegistrationData, RegistrationStatus
 
 
 @dataclass
@@ -18,7 +18,7 @@ class CadetEventData:
     event: Event
     availability: DaySelector
     status: RegistrationStatus
-    data_in_row: RowInMappedWAEvent
+    data_in_row: RowInRegistrationData
     notes: str = ""
     health: str = ""
 
@@ -53,7 +53,7 @@ class DEPRECATE_CadetAtEvent(GenericSkipperManObject):
     cadet: Cadet
     availability: DaySelector
     status: RegistrationStatus
-    data_in_row: RowInMappedWAEvent
+    data_in_row: RowInRegistrationData
     notes: str = ""
     health: str = ""
     changed: bool = False

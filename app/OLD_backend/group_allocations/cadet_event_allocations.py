@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.objects.day_selectors import Day
 
@@ -9,7 +9,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
 from app.objects.cadets import ListOfCadets
 from app.objects.events import Event
-from app.objects_OLD.cadets_with_groups import ListOfCadetsWithGroup
+from app.objects.composed.cadets_at_event_with_groups import ListOfCadetsWithGroupOnDay
 from app.objects.groups import Group
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
 from app.OLD_backend.data.group_allocations import GroupAllocationsData
@@ -72,7 +72,7 @@ def load_list_of_cadets_ids_with_group_allocations_active_cadets_only(
 
 def load_list_of_cadets_with_group_allocations_active_cadets_only(
     data_layer: DataLayer, event: Event
-) -> ListOfCadetsWithGroup:
+) -> ListOfCadetsWithGroupOnDay:
     group_allocations_data = GroupAllocationsData(data_layer)
     return group_allocations_data.list_of_active_cadets_with_groups(event)
 

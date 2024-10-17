@@ -15,16 +15,16 @@ from app.objects.exceptions import missing_data
 from app.objects.day_selectors import Day
 
 from app.OLD_backend.data.patrol_boats import PatrolBoatsData
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.club_dinghies import (
     ListOfClubDinghies,
 )
-from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithClubDinghies, NO_BOAT
+from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithIdAndClubDinghies, NO_BOAT
 from app.objects.boat_classes import (
     ListOfBoatClasses,
 )
-from app.objects.cadet_at_event_with_dinghy_with_ids import NO_PARTNERSHIP_LIST, ListOfCadetAtEventWithDinghies
+from app.objects.cadet_at_event_with_dinghy_with_ids import NO_PARTNERSHIP_LIST, ListOfCadetAtEventWithBoatClassAndPartnerWithIds
 from app.objects.events import Event
 from app.objects.patrol_boats import ListOfPatrolBoats
 
@@ -142,7 +142,7 @@ class DinghiesData:
         )
 
     def update_boat_info_for_updated_cadets_at_event_where_cadets_available(
-        self, event: Event, list_of_updated_cadets: ListOfCadetAtEventWithDinghies
+        self, event: Event, list_of_updated_cadets: ListOfCadetAtEventWithBoatClassAndPartnerWithIds
     ):
         list_of_cadets_at_event_with_dinghies = (
             self.get_list_of_cadets_at_event_with_dinghies(event)
@@ -308,13 +308,13 @@ class DinghiesData:
 
     def get_list_of_cadets_at_event_with_club_dinghies(
         self, event: Event
-    ) -> ListOfCadetAtEventWithClubDinghies:
+    ) -> ListOfCadetAtEventWithIdAndClubDinghies:
         return self.data_api.get_list_of_cadets_at_event_with_club_dinghies(event)
 
     def save_list_of_cadets_at_event_with_club_dinghies(
         self,
         event: Event,
-        list_of_cadets_at_event_with_club_dinghies: ListOfCadetAtEventWithClubDinghies,
+        list_of_cadets_at_event_with_club_dinghies: ListOfCadetAtEventWithIdAndClubDinghies,
     ):
         self.data_api.save_list_of_cadets_at_event_with_club_dinghies(
             event=event,
@@ -329,13 +329,13 @@ class DinghiesData:
 
     def get_list_of_cadets_at_event_with_dinghies(
         self, event: Event
-    ) -> ListOfCadetAtEventWithDinghies:
+    ) -> ListOfCadetAtEventWithBoatClassAndPartnerWithIds:
         return self.data_api.get_list_of_cadets_at_event_with_dinghies(event)
 
     def save_list_of_cadets_at_event_with_dinghies(
         self,
         event: Event,
-        list_of_cadets_at_event_with_dinghies: ListOfCadetAtEventWithDinghies,
+        list_of_cadets_at_event_with_dinghies: ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
     ):
         self.data_api.save_list_of_cadets_at_event_with_dinghies(
             list_of_cadets_at_event_with_dinghies=list_of_cadets_at_event_with_dinghies,
@@ -359,7 +359,7 @@ class DinghiesData:
 
 def load_list_of_cadets_at_event_with_club_dinghies(
     interface: abstractInterface, event: Event
-) -> ListOfCadetAtEventWithClubDinghies:
+) -> ListOfCadetAtEventWithIdAndClubDinghies:
     dinghies_data = DinghiesData(interface.data)
     cadets_with_dinghies = dinghies_data.get_list_of_cadets_at_event_with_club_dinghies(
         event

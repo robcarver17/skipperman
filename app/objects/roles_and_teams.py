@@ -7,6 +7,7 @@ from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds, Gen
 from app.objects.generic_objects import GenericSkipperManObjectWithIds, GenericSkipperManObject, from_str_to_bool, \
     from_bool_to_str
 from app.objects.groups import LAKE_TRAINING, RIVER_TRAINING
+from app.objects.volunteer_roles_and_groups_with_id import SI_ROLE_NAME
 
 NO_WARNING = "No warning"
 RoleLocation = Enum("RoleLocation", [LAKE_TRAINING, RIVER_TRAINING, NO_WARNING])
@@ -59,6 +60,7 @@ class RolesWithSkillIds(GenericSkipperManObjectWithIds):
             hidden = from_bool_to_str(self.hidden)
         )
 
+
 class ListOfRolesWithSkillIds(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
@@ -86,6 +88,7 @@ class ListOfRolesWithSkillIds(GenericListOfObjectsWithIds):
             return matching_list[0]
 
 
+INSTRUCTOR_TEAM = "Instructors"
 
 @dataclass
 class Team(GenericSkipperManObjectWithIds):
@@ -102,6 +105,10 @@ class Team(GenericSkipperManObjectWithIds):
 
     def __hash__(self):
         return hash(self.name)
+
+instructor_team = Team(INSTRUCTOR_TEAM,
+                       location_for_cadet_warning=role_location_no_warning,
+                       protected=True)
 
 class ListOfTeams(GenericListOfObjectsWithIds):
     @property

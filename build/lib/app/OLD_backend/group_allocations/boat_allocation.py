@@ -3,7 +3,7 @@ from typing import List, Dict
 
 from app.OLD_backend.summarys import summarise_generic_counts_for_event_over_days
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -13,9 +13,9 @@ from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
-from app.objects.cadet_at_event_with_dinghy_with_ids import no_partnership, CadetAtEventWithDinghy, \
-    ListOfCadetAtEventWithDinghies, compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values
-from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithClubDinghies
+from app.objects.cadet_at_event_with_dinghy_with_ids import no_partnership, CadetAtEventWithBoatClassAndPartnerWithIds, \
+    ListOfCadetAtEventWithBoatClassAndPartnerWithIds, compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values
+from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithIdAndClubDinghies
 
 
 def update_club_boat_allocation_for_cadet_at_event_on_day_if_cadet_available(
@@ -66,7 +66,7 @@ def update_boat_info_for_cadets_at_event(
 def update_boat_info_for_updated_cadets_at_event(
     interface: abstractInterface,
     event: Event,
-    list_of_updated_cadets: ListOfCadetAtEventWithDinghies,
+    list_of_updated_cadets: ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
 ):
     dinghies_data = DinghiesData(interface.data)
     dinghies_data.update_boat_info_for_updated_cadets_at_event_where_cadets_available(
@@ -76,8 +76,8 @@ def update_boat_info_for_updated_cadets_at_event(
 
 def convert_list_of_inputs_to_list_of_cadet_at_event_objects(
     interface: abstractInterface, list_of_updates: List[CadetWithDinghyInputs], day: Day
-) -> ListOfCadetAtEventWithDinghies:
-    return ListOfCadetAtEventWithDinghies(
+) -> ListOfCadetAtEventWithBoatClassAndPartnerWithIds:
+    return ListOfCadetAtEventWithBoatClassAndPartnerWithIds(
         [
             convert_single_input_to_cadet_at_event(
                 update=update, interface=interface, day=day
@@ -89,7 +89,7 @@ def convert_list_of_inputs_to_list_of_cadet_at_event_objects(
 
 def convert_single_input_to_cadet_at_event(
     interface: abstractInterface, update: CadetWithDinghyInputs, day: Day
-) -> CadetAtEventWithDinghy:
+) -> CadetAtEventWithBoatClassAndPartnerWithIds:
     boat_class_id = get_boat_class_id_from_name(
         interface=interface, boat_class_name=update.boat_class_name
     )
@@ -98,7 +98,7 @@ def convert_single_input_to_cadet_at_event(
         data_layer=interface.data, two_handed_partner_cadet_as_str=update.two_handed_partner_cadet_as_str
     )
 
-    return CadetAtEventWithDinghy(
+    return CadetAtEventWithBoatClassAndPartnerWithIds(
         cadet_id=update.cadet_id,
         boat_class_id=boat_class_id,
         partner_cadet_id=two_handed_partner_id,
@@ -159,7 +159,7 @@ def summarise_club_boat_allocations_for_event(
 def get_relevant_cadet_ids_for_club_dinghy_id(
     group: str,
     event: Event,
-    list_of_ids_with_groups: ListOfCadetAtEventWithClubDinghies,
+    list_of_ids_with_groups: ListOfCadetAtEventWithIdAndClubDinghies,
 ) -> Dict[Day, List[str]]:
     ## map from generic to specific var names. Event is not used
     dinghy_id = group
@@ -210,7 +210,7 @@ def summarise_class_attendance_for_event(
 
 
 def get_relevant_cadet_ids_for_boat_class_id(
-    group: str, event: Event, list_of_ids_with_groups: ListOfCadetAtEventWithDinghies
+    group: str, event: Event, list_of_ids_with_groups: ListOfCadetAtEventWithBoatClassAndPartnerWithIds
 ) -> Dict[Day, List[str]]:
     ## map from generic to specific var names. Event is not used
     boat_class_id = group
@@ -232,6 +232,6 @@ def get_relevant_cadet_ids_for_boat_class_id(
 
 def load_list_of_cadets_at_event_with_dinghies(
     interface: abstractInterface, event: Event
-) -> ListOfCadetAtEventWithDinghies:
+) -> ListOfCadetAtEventWithBoatClassAndPartnerWithIds:
     dinghies_data = DinghiesData(interface.data)
     return dinghies_data.get_list_of_cadets_at_event_with_dinghies(event)

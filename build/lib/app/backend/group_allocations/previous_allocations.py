@@ -1,12 +1,12 @@
 from typing import Dict, List
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.objects.cadets import Cadet
 from app.objects.events import Event
-from app.objects.groups import Group, GROUP_UNALLOCATED
+from app.objects.groups import Group, unallocated_group
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
 from app.OLD_backend.group_allocations.cadet_event_allocations import (
     DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only,
@@ -61,7 +61,7 @@ def DEPRECATE_get_dict_of_all_event_allocations_for_single_cadet(
             [
                 (event, group)
                 for event, group in dict_of_previous.items()
-                if group is not GROUP_UNALLOCATED
+                if group is not unallocated_group
             ]
         )
 

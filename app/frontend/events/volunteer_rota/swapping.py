@@ -19,7 +19,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent
+from app.objects.volunteer_roles_and_groups_with_id import VolunteerWithIdInRoleAtEvent
 
 
 def swap_button_value_for_volunteer_id_and_day(volunteer_id: str, day: Day) -> str:

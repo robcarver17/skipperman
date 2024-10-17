@@ -7,7 +7,7 @@ from app.OLD_backend.volunteers.volunteer_allocation import get_list_of_relevant
 from app.frontend.events.volunteer_allocation.track_state_in_volunteer_allocation import \
     list_of_unique_volunteer_ids_in_identified_event_data
 
-from app.objects_OLD.mapped_wa_event import RowInMappedWAEvent
+from app.objects.registration_data import RowInRegistrationData
 
 from app.objects_OLD.food import guess_food_requirements_from_food_field
 
@@ -82,7 +82,7 @@ def process_update_to_cadet_food_data_if_new_to_event(
 
 def process_update_to_cadet_food_data_given_registration_data(
         interface: abstractInterface, event: Event, cadet_id: str,
-        relevant_row: RowInMappedWAEvent
+        relevant_row: RowInRegistrationData
 ):
 
     food_from_registration = relevant_row.get_item(CADET_FOOD_PREFERENCE, '')

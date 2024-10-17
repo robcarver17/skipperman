@@ -22,7 +22,7 @@ from app.data_access.configuration.field_list_groups import (
     FOOD_PREFERENCE_KEY_IN_VOLUNTEER_FIELDS_DICT,
     LIST_OF_VOLUNTEER_FIELDS,
 )
-from app.objects_OLD.mapped_wa_event import RowInMappedWAEvent
+from app.objects.registration_data import RowInRegistrationData
 from app.objects_OLD.relevant_information_for_volunteers import (
     RelevantInformationForVolunteer,
     RelevantInformationForVolunteerIdentification,
@@ -37,7 +37,7 @@ NO_VOLUNTEER_IN_FORM = "NO_VOLUNTEER_IN_FORM"
 
 def get_relevant_information_for_volunteer(
     interface: abstractInterface,
-    row_in_mapped_event: RowInMappedWAEvent,
+    row_in_mapped_event: RowInRegistrationData,
     volunteer_index: int,
     event: Event,
 ) -> RelevantInformationForVolunteer:
@@ -61,7 +61,7 @@ def get_relevant_information_for_volunteer(
 
 def get_identification_information_for_volunteer(
     interface: abstractInterface,
-    row_in_mapped_event: RowInMappedWAEvent,
+    row_in_mapped_event: RowInRegistrationData,
     volunteer_index: int,
     event: Event,
 ) -> RelevantInformationForVolunteerIdentification:
@@ -97,7 +97,7 @@ def get_identification_information_for_volunteer(
 
 
 def get_availability_information_for_volunteer(
-    row_in_mapped_event: RowInMappedWAEvent, volunteer_index: int, event: Event
+    row_in_mapped_event: RowInRegistrationData, volunteer_index: int, event: Event
 ) -> RelevantInformationForVolunteerAvailability:
     dict_of_fields_for_volunteer = LIST_OF_VOLUNTEER_FIELDS[volunteer_index]
     day_available_key = dict_of_fields_for_volunteer[
@@ -131,7 +131,7 @@ def get_availability_information_for_volunteer(
 
 
 def get_details_information_for_volunteer(
-    row_in_mapped_event: RowInMappedWAEvent, volunteer_index: int
+    row_in_mapped_event: RowInRegistrationData, volunteer_index: int
 ) -> RelevantInformationForVolunteerDetails:
     dict_of_fields_for_volunteer = LIST_OF_VOLUNTEER_FIELDS[volunteer_index]
     food_preference_key = dict_of_fields_for_volunteer[

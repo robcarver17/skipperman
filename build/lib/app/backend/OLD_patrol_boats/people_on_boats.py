@@ -6,7 +6,7 @@ from app.objects.events import Event
 from app.objects.patrol_boats import PatrolBoat
 from app.objects_OLD.patrol_boats import ListOfVolunteersAtEventWithSkillsAndRolesAndPatrolBoats
 from app.objects.utils import in_x_not_in_y
-from app.backend.OLD_patrol_boats.data import get_list_of_voluteers_at_event_with_patrol_boats_from_cache
+from app.OLD_backend.OLD_patrol_boats import get_list_of_voluteers_at_event_with_patrol_boats_from_cache
 
 def get_sorted_volunteers_allocated_to_patrol_boat_at_event_on_days_sorted_by_role(
     cache: AdHocCache, patrol_boat: PatrolBoat, day: Day, event: Event

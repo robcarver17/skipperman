@@ -6,10 +6,10 @@ from app.data_access.api.generic_api import GenericDataApi
 
 from app.data_access.store.store import Store, DataAccessMethod
 
-from app.data_access.store.data_layer import get_data_access_for_list_of_cadets_on_committee, \
+from app.data_access.store.data_access import get_data_access_for_list_of_cadets_on_committee, \
     get_data_access_for_list_of_cadets, get_data_access_for_list_of_qualifications, \
     get_data_access_for_list_of_cadets_with_qualifications, get_data_access_for_cadets_with_groups, \
-    get_data_access_for_cadets_at_event
+    get_data_access_for_cadets_with_ids_and_registration_data_at_event
 from app.objects.composed.cadets_with_qualifications import create_dict_of_qualifications_for_cadets
 from app.objects.composed.committee import  \
     create_list_of_cadet_committee_members_from_underlying_data
@@ -254,7 +254,7 @@ list_of_object_definitions_to_modify_on_update = [object_definition_for_list_of_
 )
 
 object_definition_for_cadets_with_ids_at_event = UnderlyingObjectDefinition(
-    data_store_method_function=get_data_access_for_cadets_at_event,
+    data_store_method_function=get_data_access_for_cadets_with_ids_and_registration_data_at_event,
 )
 
 object_definition_for_cadets_with_ids_and_groups_at_event = UnderlyingObjectDefinition(

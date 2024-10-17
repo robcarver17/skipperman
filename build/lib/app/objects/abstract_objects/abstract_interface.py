@@ -3,7 +3,7 @@ from typing import Callable
 
 from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 from app.data_access.store.object_store import ObjectStore
 
 from app.objects.exceptions import (

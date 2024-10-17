@@ -4,7 +4,7 @@ from app.frontend.shared.events_state import update_state_for_specific_event_giv
 
 from app.OLD_backend.events import DEPRECATE_confirm_event_exists_given_description
 from app.backend.events.list_of_events import all_sort_types_for_event_list, sort_buttons_for_event_list
-from app.OLD_backend.ticks_and_qualifications.ticksheets import get_list_of_events_entitled_to_see
+from app.backend.security.user_access import get_list_of_events_entitled_to_see
 
 from app.objects.abstract_objects.abstract_text import Heading
 

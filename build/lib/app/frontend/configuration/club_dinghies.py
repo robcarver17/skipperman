@@ -2,7 +2,7 @@ from typing import Union, List
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.backend.configuration.list_of_club_dinghies import get_list_of_boat_classes, update_list_of_boat_classes, \
+from app.backend.club_boats.list_of_club_dinghies import get_list_of_boat_classes, update_list_of_boat_classes, \
     add_new_club_dinghy_given_string,  \
     modify_club_dinghy
 

@@ -8,16 +8,16 @@ from app.objects.generic_objects import GenericSkipperManObject
 
 
 @dataclass
-class CadetAtEventWithClubDinghy(GenericSkipperManObject):
+class CadetAtEventWithClubDinghyWithId(GenericSkipperManObject):
     cadet_id: str
     club_dinghy_id: str
     day: Day
 
 
-class ListOfCadetAtEventWithClubDinghies(GenericListOfObjectsWithIds):
+class ListOfCadetAtEventWithIdAndClubDinghies(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
-        return CadetAtEventWithClubDinghy
+        return CadetAtEventWithClubDinghyWithId
 
     def unique_sorted_list_of_dinghy_ids(
         self, sorted_list_of_all_dinghies: ListOfClubDinghies
@@ -37,7 +37,7 @@ class ListOfCadetAtEventWithClubDinghies(GenericListOfObjectsWithIds):
     ):
         self.delete_allocation_for_cadet_on_day(cadet_id=cadet_id, day=day)
         self.append(
-            CadetAtEventWithClubDinghy(
+            CadetAtEventWithClubDinghyWithId(
                 cadet_id=cadet_id, club_dinghy_id=club_dinghy_id, day=day
             )
         )
@@ -84,7 +84,7 @@ class ListOfCadetAtEventWithClubDinghies(GenericListOfObjectsWithIds):
 
     def item_for_cadet_id_on_day(
         self, cadet_id: str, day: Day, default=missing_data
-    ) -> CadetAtEventWithClubDinghy:
+    ) -> CadetAtEventWithClubDinghyWithId:
         list_of_items = [
             item for item in self if item.cadet_id == cadet_id and item.day == day
         ]

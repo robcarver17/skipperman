@@ -19,7 +19,7 @@ from app.frontend.shared.events_state import get_event_from_state
 
 from app.objects.events import Event
 from app.objects.exceptions import NoMoreData, DuplicateCadets
-from app.objects_OLD.mapped_wa_event import RowInMappedWAEvent
+from app.objects.registration_data import RowInRegistrationData
 
 
 def update_cadet_clothing_at_event(
@@ -91,7 +91,7 @@ def process_update_to_cadet_new_to_event_with_clothing(
 
 def process_new_cadet_clothing_requirements(
     interface: abstractInterface,
-    relevant_row: RowInMappedWAEvent,
+    relevant_row: RowInRegistrationData,
     event: Event,
     cadet_id: str,
 ):

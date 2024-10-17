@@ -1,9 +1,7 @@
 from app.frontend.shared.events_state import get_event_from_state
 
 from app.backend.security.logged_in_user import get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER
-from app.OLD_backend.ticks_and_qualifications.ticksheets import (
-    can_see_all_groups_and_award_qualifications,
-)
+from app.backend.security.user_access import can_see_all_groups_and_award_qualifications
 
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 

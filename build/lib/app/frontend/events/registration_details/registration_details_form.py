@@ -33,8 +33,8 @@ from app.data_access.configuration.field_list_groups import (
     FIELDS_TO_EDIT_IN_EDIT_VIEW,
 )
 from app.objects.exceptions import arg_not_passed
-from app.objects_OLD.mapped_wa_event import (
-    RowInMappedWAEvent,
+from app.objects.registration_data import (
+    RowInRegistrationData,
     RegistrationStatus,
     get_states_allowed_give_current_status,
 )
@@ -138,7 +138,7 @@ def get_list_of_column_forms_excluding_reserved_fields(
     return column_form_entries
 
 
-def get_columns_to_edit(data_in_row: RowInMappedWAEvent) -> list:
+def get_columns_to_edit(data_in_row: RowInRegistrationData) -> list:
     all_columns = list(data_in_row.keys())
     columns_to_edit = [
         column_name
@@ -149,7 +149,7 @@ def get_columns_to_edit(data_in_row: RowInMappedWAEvent) -> list:
     return columns_to_edit
 
 
-def get_columns_to_view(data_in_row: RowInMappedWAEvent) -> list:
+def get_columns_to_view(data_in_row: RowInRegistrationData) -> list:
     all_columns = list(data_in_row.keys())
 
     columns_to_view = [

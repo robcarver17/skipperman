@@ -5,7 +5,7 @@ from app.OLD_backend.cadets import get_cadet_from_id
 from app.objects.cadets import ListOfCadets
 
 from app.objects.exceptions import NoDaysSelected
-from app.objects_OLD.primtive_with_id.volunteer_at_event import VolunteerAtEventWithId
+from app.objects.volunteer_at_event_with_id import VolunteerAtEventWithId
 
 from app.frontend.forms.form_utils import get_availablity_from_form
 from app.OLD_backend.volunteers.volunteer_allocation import (

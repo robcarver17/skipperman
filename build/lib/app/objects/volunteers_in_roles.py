@@ -3,14 +3,15 @@ from typing import Dict, List
 
 from app.objects.composed.volunteers_with_skills import SkillsDict
 
-from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import NO_ROLE_SET, VolunteerWithIdInRoleAtEvent, RoleAndGroup
+from app.objects.volunteer_roles_and_groups_with_id import NO_ROLE_SET, VolunteerWithIdInRoleAtEvent, RoleAndGroupDEPRECATE
 from app.objects.volunteers import Volunteer
 
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
-from app.objects.groups import Group, GROUP_UNALLOCATED
+from app.objects.groups import Group, unallocated_group
 from app.objects.day_selectors import Day
-from app.objects_OLD.volunteers_at_event import VolunteerEventData, VolunteerAtEventWithSkills
+from app.objects_OLD.volunteers_in_roles import VolunteerEventData_DEPRECATE, VolunteerAtEventWithSkills_DEPRECATE
+
 
 ## must match below
 
@@ -43,7 +44,7 @@ class DEPRECATE_VolunteerWithRoleAtEvent(GenericSkipperManObject):
     volunteer: Volunteer
     day: Day
     role: str = NO_ROLE_SET
-    group: Group = GROUP_UNALLOCATED
+    group: Group = unallocated_group
 
     @classmethod
     def from_volunteer_with_id_in_role_at_event(cls, volunteer_with_id_in_role_at_event: VolunteerWithIdInRoleAtEvent,
@@ -60,22 +61,22 @@ class DEPRECATE_ListOfVolunteersWithRoleAtEvent(GenericListOfObjects):
     def _object_class_contained(self):
         return DEPRECATE_VolunteerWithRoleAtEvent
 
-class RoleAndGroupByDayDict(Dict[Day, RoleAndGroup]):
+class RoleAndGroupByDayDict(Dict[Day, RoleAndGroupDEPRECATE]):
     def has_role_on_day(self, day: Day, role: str) -> bool:
         return self.role_and_group_on_day(day).role==role
 
-    def role_and_group_on_day(self, day: Day) -> RoleAndGroup:
-        return self.get(day, RoleAndGroup.create_empty())
+    def role_and_group_on_day(self, day: Day) -> RoleAndGroupDEPRECATE:
+        return self.get(day, RoleAndGroupDEPRECATE.create_empty())
 
 @dataclass
 class VolunteerAtEventWithSkillsAndRoles:
     volunteer: Volunteer
     skills: SkillsDict
-    volunteer_event_data: VolunteerEventData
+    volunteer_event_data: VolunteerEventData_DEPRECATE
     role_and_group_by_day: RoleAndGroupByDayDict
 
     @classmethod
-    def from_volunteer_at_event_with_skills(cls, volunteer_at_event_with_skills: VolunteerAtEventWithSkills, role_and_group_by_day: RoleAndGroupByDayDict):
+    def from_volunteer_at_event_with_skills(cls, volunteer_at_event_with_skills: VolunteerAtEventWithSkills_DEPRECATE, role_and_group_by_day: RoleAndGroupByDayDict):
         return cls(
             volunteer=volunteer_at_event_with_skills.volunteer,
             skills=volunteer_at_event_with_skills.skills_dict,

@@ -39,7 +39,7 @@ from app.objects.cadet_with_id_at_event import (
 
 from app.objects.events import Event
 from app.objects.exceptions import NoMoreData, DuplicateCadets
-from app.objects_OLD.mapped_wa_event import RowInMappedWAEvent
+from app.objects.registration_data import RowInRegistrationData
 
 
 def display_form_interactively_update_cadets_at_event(
@@ -168,7 +168,7 @@ def process_update_to_existing_cadet_in_event_data(
 
 def process_update_to_existing_cadet_at_event(
     interface: abstractInterface,
-    row_in_mapped_wa_event: RowInMappedWAEvent,
+    row_in_mapped_wa_event: RowInRegistrationData,
     existing_cadet_at_event: CadetWithIdAtEvent,
     event: Event,
 ) -> Form:

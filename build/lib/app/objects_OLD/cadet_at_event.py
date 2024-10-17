@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import List
 
 from app.objects.events import Event
 
@@ -10,7 +9,7 @@ from app.objects.day_selectors import DaySelector
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
 
-from app.objects_OLD.mapped_wa_event import RowInMappedWAEvent, RegistrationStatus
+from app.objects.registration_data import RowInRegistrationData, RegistrationStatus
 
 
 @dataclass
@@ -18,7 +17,7 @@ class CadetEventData:
     event: Event
     availability: DaySelector
     status: RegistrationStatus
-    data_in_row: RowInMappedWAEvent
+    data_in_row: RowInRegistrationData
     notes: str = ""
     health: str = ""
 
@@ -35,17 +34,7 @@ class CadetEventData:
         )
 
 
-
-@dataclass
-class CadetAtEvent:
-    cadet: Cadet
-    event_data: CadetEventData
-
-    @classmethod
-    def from_cadet_with_id_at_event(cls, event: Event, cadet: Cadet, cadet_with_id_at_event: CadetWithIdAtEvent):
-        return cls(cadet=cadet, event_data=CadetEventData.from_cadet_with_id_at_event(event=event, cadet_with_id_at_event=cadet_with_id_at_event))
-
-class ListOfCadetsAtEvent(List[CadetAtEvent]):
+def create_list_of_cadets_at_event():
     pass
 
 @dataclass
@@ -53,7 +42,7 @@ class DEPRECATE_CadetAtEvent(GenericSkipperManObject):
     cadet: Cadet
     availability: DaySelector
     status: RegistrationStatus
-    data_in_row: RowInMappedWAEvent
+    data_in_row: RowInRegistrationData
     notes: str = ""
     health: str = ""
     changed: bool = False

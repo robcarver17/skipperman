@@ -10,7 +10,7 @@ from app.objects.day_selectors import Day, DaySelector
 
 from app.objects.exceptions import missing_data
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.objects.events import Event
 from app.objects_OLD.patrol_boats import (

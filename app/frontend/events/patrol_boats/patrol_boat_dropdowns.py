@@ -1,7 +1,7 @@
 from typing import List, Dict, Tuple, Union
 
-from app.backend.OLD_patrol_boats.data import get_sorted_list_of_boats_excluding_boats_already_at_event
-from app.data_access.store.data_layer import DataLayer
+#from app.OLD_backend.OLD_patrol_boats import get_sorted_list_of_boats_excluding_boats_already_at_event
+from app.data_access.store.data_access import DataLayer
 
 from app.frontend.forms.swaps import is_ready_to_swap
 
@@ -60,13 +60,14 @@ def get_add_boat_dropdown(interface: abstractInterface, event: Event) -> Line:
 def get_list_of_boat_names_excluding_boats_already_at_event(
     interface: abstractInterface, event: Event
 ) -> List[str]:
-    list_of_boats_excluding_boats_already_at_event = (
-        get_sorted_list_of_boats_excluding_boats_already_at_event(
-            cache=interface.cache, event=event
-        )
-    )
+    #list_of_boats_excluding_boats_already_at_event = (
+    #    get_sorted_list_of_boats_excluding_boats_already_at_event(
+    #        cache=interface.cache, event=event
+    #    )
+    #)
 
-    return list_of_boats_excluding_boats_already_at_event.list_of_names()
+    #return list_of_boats_excluding_boats_already_at_event.list_of_names()
+    return []
 
 
 def get_allocation_dropdown_elements_to_add_volunteer_for_day_and_boat(

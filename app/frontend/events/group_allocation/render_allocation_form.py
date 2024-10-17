@@ -1,6 +1,6 @@
 from typing import Union, Dict, List
 
-from app.OLD_backend.ticks_and_qualifications.ticksheets import (
+from app.backend.qualifications_and_ticks.ticksheets import (
     get_qualification_status_for_single_cadet_as_list_of_str,
 )
 from app.frontend.forms.reorder_form import reorder_table
@@ -10,9 +10,9 @@ from app.objects.groups import Group
 from app.OLD_backend.events import DEPRECATE_get_list_of_all_events
 
 from app.OLD_backend.group_allocations.previous_allocations import (
-    allocation_for_cadet_in_previous_events_as_dict,
     DEPRECATE_get_dict_of_allocations_for_events_and_list_of_cadets,
 )
+from app.backend.groups.cadets_with_groups_at_event import allocation_for_cadet_in_previous_events_as_dictCONSIDER_REFACTOR
 
 from app.objects.exceptions import missing_data
 
@@ -374,7 +374,7 @@ def previous_groups_as_dict_excluding_one_event(
         event_to_exclude=event_to_exclude,
         number_of_events=number_of_events,
     )
-    allocation_for_cadet = allocation_for_cadet_in_previous_events_as_dict(
+    allocation_for_cadet = allocation_for_cadet_in_previous_events_as_dictCONSIDER_REFACTOR(
         cadet=cadet,
         previous_allocations_as_dict=previous_allocations_as_dict,
         number_of_events=number_of_events,

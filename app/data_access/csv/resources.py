@@ -7,7 +7,7 @@ from app.data_access.csv.resolve_csv_paths_and_filenames import (
     LIST_OF_PATROL_BOATS_AND_VOLUNTEERS_FILE_ID,
     LIST_OF_CLUB_DINGHIES_AND_CADETS_FILE_ID,
 )
-from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithClubDinghies
+from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithIdAndClubDinghies
 from app.objects.patrol_boats import ListOfPatrolBoats
 from app.objects.patrol_boats_with_volunteers_with_id import ListOfVolunteersWithIdAtEventWithPatrolBoatsId
 
@@ -61,9 +61,9 @@ class CsvDataListOfVolunteersAtEventWithPatrolBoats(
 class CsvDataListOfCadetAtEventWithClubDinghies(
     GenericCsvData, DataListOfCadetAtEventWithClubDinghies
 ):
-    def read(self, event_id: str) -> ListOfCadetAtEventWithClubDinghies:
+    def read(self, event_id: str) -> ListOfCadetAtEventWithIdAndClubDinghies:
         people_and_boats = self.read_and_return_object_of_type(
-            ListOfCadetAtEventWithClubDinghies,
+            ListOfCadetAtEventWithIdAndClubDinghies,
             file_identifier=LIST_OF_CLUB_DINGHIES_AND_CADETS_FILE_ID,
             additional_file_identifiers=event_id,
         )
@@ -71,7 +71,7 @@ class CsvDataListOfCadetAtEventWithClubDinghies(
         return people_and_boats
 
     def write(
-        self, people_and_boats: ListOfCadetAtEventWithClubDinghies, event_id: str
+        self, people_and_boats: ListOfCadetAtEventWithIdAndClubDinghies, event_id: str
     ):
         self.write_object(
             people_and_boats,

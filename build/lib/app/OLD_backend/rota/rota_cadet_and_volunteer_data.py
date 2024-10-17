@@ -4,7 +4,7 @@ from app.OLD_backend.volunteers.volunteers import get_dict_of_existing_skills
 
 from app.OLD_backend.data.group_allocations import GroupAllocationsData
 from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 from app.objects.events import Event
 from app.objects.groups import sorted_locations_REPLACE_WITH_PROPER_SORT_NOT_STR, Group
 from app.objects.volunteers import Volunteer

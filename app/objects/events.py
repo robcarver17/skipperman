@@ -176,8 +176,17 @@ class ListOfEvents(GenericListOfObjectsWithIds):
         return [event.event_description for event in self]
 
     def add(self, event: Event):
+        self.confirm_event_does_not_already_exist(event)
         event.id = self.next_id()
         self.append(event)
+
+    def confirm_event_does_not_already_exist(self, event: Event):
+        try:
+            self.index(event)
+        except ValueError:
+            return
+
+        raise Exception("Event %s already in data" % str(event))
 
     def event_with_description(self, event_description: str) -> Event:
         list_of_descriptions = self.list_of_event_descriptions

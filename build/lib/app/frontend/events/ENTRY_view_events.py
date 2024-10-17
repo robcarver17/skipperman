@@ -6,9 +6,9 @@ from app.frontend.shared.events_state import (
 )
 from app.OLD_backend.events import (
     DEPRECATE_get_sorted_list_of_events,
-    confirm_event_exists_given_description,
 )
-from app.backend.events.list_of_events import all_sort_types_for_event_list, sort_buttons_for_event_list
+from app.backend.events.list_of_events import all_sort_types_for_event_list, sort_buttons_for_event_list, \
+    confirm_event_exists_given_description_REFACTOR
 from app.frontend.events.view_individual_events import display_form_view_individual_event
 from app.objects.events import SORT_BY_START_DSC, ListOfEvents
 
@@ -78,7 +78,7 @@ def post_form_view_of_events(interface: abstractInterface) -> Union[Form, NewFor
 
 def action_when_event_button_clicked(interface: abstractInterface) -> NewForm:
     event_description_selected = interface.last_button_pressed()
-    confirm_event_exists_given_description(
+    confirm_event_exists_given_description_REFACTOR(
         interface=interface, event_description=event_description_selected
     )
     update_state_for_specific_event_given_event_description(

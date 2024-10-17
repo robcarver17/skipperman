@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from typing import Dict, List
 
-from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.volunteer_skills import Skill, PB2_skill, SI_skill, skill_from_str, ListOfSkills
 from app.objects.volunteers import Volunteer, ListOfVolunteers
-from app.objects.volunteers_with_skills_and_ids import ListOfVolunteerSkillsWithIds
+from app.objects.volunteers_with_skills_and_ids import ListOfVolunteerSkillsWithIds, VolunteerSkillWithIds
+
 
 
 @dataclass
@@ -20,6 +20,15 @@ class VolunteerWithSkill(GenericSkipperManObject):
     @property
     def volunteer_is_senior_instructor(self) -> bool:
         return self.skill == SI_skill
+
+    @classmethod
+    def from_volunteer_skills_with_id(cls, volunteer_skill_with_id: VolunteerSkillWithIds, list_of_volunteers: ListOfVolunteers,
+                                      list_of_skills: ListOfSkills):
+        return cls(
+            volunteer=list_of_volunteers.volunteer_with_id(volunteer_skill_with_id.volunteer_id),
+            skill=list_of_skills.object_with_id(volunteer_skill_with_id.skill_id)
+        )
+
 
 
 class SkillsDict(Dict[Skill, bool]):
@@ -82,17 +91,50 @@ class SkillsDict(Dict[Skill, bool]):
     def can_drive_safety_boat(self) -> bool:
         return self.get(PB2_skill, False)
 
+    @property
+    def is_SI(self) -> bool:
+        return self.get(SI_skill, False)
+
 
 class ListOfVolunteersWithSkills(List[VolunteerWithSkill]):
-    def __init__(self, list_of_volunteers: ListOfVolunteers,
-                 list_of_skills: ListOfSkills,
+    @classmethod
+    def from_list_of_volunteer_skills_with_ids(cls, list_of_volunteer_skills_with_id: ListOfVolunteerSkillsWithIds,
+                                               list_of_volunteers: ListOfVolunteers,
+                                               list_of_skills: ListOfSkills):
+
+        return cls([
+            VolunteerWithSkill.from_volunteer_skills_with_id(
+                volunteer_skill_with_id=volunteer_skill_with_id,
+                list_of_skills=list_of_skills,
+                list_of_volunteers=list_of_volunteers
+            )
+            for volunteer_skill_with_id in list_of_volunteer_skills_with_id
+        ])
+
+    def unique_list_of_volunteers(self) -> ListOfVolunteers:
+        return ListOfVolunteers(
+            list(set(
+                [
+                    volunteer_with_skills.volunteer
+                       for volunteer_with_skills in self
+                ]
+            ))
+        )
+
+    def skills_dict_for_volunteer(self, volunteer: Volunteer) -> SkillsDict:
+        subset_for_volunteer = self.subset_for_volunteer(volunteer)
+        list_of_skills_held_by_volunteer = ListOfSkills([volunteer_with_skill.skill for volunteer_with_skill in subset_for_volunteer])
+        return SkillsDict.from_list_of_skills(list_of_skills_held_by_volunteer)
+
+    def subset_for_volunteer(self, volunteer: Volunteer) -> 'ListOfVolunteersWithSkills':
+        return ListOfVolunteersWithSkills([ volunteer_with_skills
+                       for volunteer_with_skills in self if volunteer_with_skills.volunteer==volunteer])
+
+class DictOfVolunteersWithSkills(Dict[Volunteer, SkillsDict]):
+    def __init__(self, raw_dict: Dict[Volunteer, SkillsDict],
                  list_of_volunteers_with_skills_and_ids: ListOfVolunteerSkillsWithIds):
 
-        super().__init__(compose_raw_list_of_volunteer_skills(
-            list_of_volunteers=list_of_volunteers,
-            list_of_skills=list_of_skills,
-            list_of_volunteers_with_skills_and_ids=list_of_volunteers_with_skills_and_ids
-        ))
+        super().__init__(raw_dict)
 
         self._list_of_volunteers_with_skills_and_ids = list_of_volunteers_with_skills_and_ids
 
@@ -125,7 +167,7 @@ class ListOfVolunteersWithSkills(List[VolunteerWithSkill]):
         )
 
     def dict_of_skills_for_volunteer(self, volunteer: Volunteer) -> SkillsDict:
-        return self.dict_of_skills_for_volunteer_id(volunteer.id)
+        return self.get(volunteer, SkillsDict())
 
     def dict_of_skills_for_volunteer_id(self, volunteer_id: str) -> SkillsDict:
         skills_held = self.skills_for_volunteer_id(volunteer_id)
@@ -145,58 +187,72 @@ class ListOfVolunteersWithSkills(List[VolunteerWithSkill]):
     def replace_skills_for_volunteer_with_new_skills_dict(
         self, volunteer: Volunteer, dict_of_skills: SkillsDict
     ):
+        existing_skills_dict = self.dict_of_skills_for_volunteer(volunteer)
+        if len(existing_skills_dict)==0:
+            self[volunteer] = SkillsDict()
+
+        self.replace_skills_for_existing_volunteer_with_new_skills_dict(
+            volunteer=volunteer, dict_of_skills=dict_of_skills
+        )
+
+    def replace_skills_for_existing_volunteer_with_new_skills_dict(
+            self, volunteer: Volunteer, dict_of_skills: SkillsDict
+    ):
+
         ## skills that are missing from dict won't be modified - should be fine
         for skill, skill_held in dict_of_skills.items():
-            currently_held_skill = self.skill_held_for_id(skill, volunteer.id)
+            currently_held_skill = self.skill_held_for_volunteer(skill, volunteer)
             if skill_held and not currently_held_skill:
-                self.add_skill_for_id(skill=skill, volunteer=volunteer)
+                self.add_skill_for_volunteer(skill=skill, volunteer=volunteer)
 
             if not skill_held and currently_held_skill:
-                self.delete_skill_for_id(skill=skill, volunteer=volunteer)
+                self.delete_skill_for_volunteer(skill=skill, volunteer=volunteer)
 
-    def skill_held_for_id(self, skill: Skill, volunteer_id: str) -> bool:
-        present = [
-            True
-            for element in self
-            if element.skill == skill and element.volunteer.id == volunteer_id
-        ]
-        return len(present) > 0
+    def skill_held_for_volunteer(self, skill: Skill, volunteer: Volunteer) -> bool:
+        existing_skills_dict =  self.dict_of_skills_for_volunteer(volunteer)
+        return existing_skills_dict.get(skill, False)
 
-    def add_skill_for_id(self, skill: Skill, volunteer: Volunteer):
-        if self.skill_held_for_id(skill = skill, volunteer_id=volunteer.id):
+    def add_skill_for_volunteer(self, skill: Skill, volunteer: Volunteer):
+        if self.skill_held_for_volunteer(skill = skill, volunteer=volunteer):
             return
-        self.append(VolunteerWithSkill(skill=skill, volunteer=volunteer))
+        existing_skills_dict = self.dict_of_skills_for_volunteer(volunteer)
+        existing_skills_dict[skill] = True
+
         self.list_of_volunteers_with_skills_and_ids.add(volunteer_id=volunteer.id, skill_id=skill.id)
 
-    def delete_skill_for_id(self, skill: Skill, volunteer: Volunteer):
-        element_with_skill_in_list = [
-            element
-            for element in self
-            if element.skill.id == skill.id and element.volunteer.id == volunteer.id
-        ]
-        if len(element_with_skill_in_list) == 0:
+    def delete_skill_for_volunteer(self, skill: Skill, volunteer: Volunteer):
+        if not self.skill_held_for_volunteer(skill=skill, volunteer=volunteer):
             return
-        element_with_skill = element_with_skill_in_list[0]
-        self.remove(element_with_skill)
+        existing_skills_dict = self.dict_of_skills_for_volunteer(volunteer)
+        existing_skills_dict[skill] = False
+
         self.list_of_volunteers_with_skills_and_ids.delete(volunteer_id=volunteer.id, skill_id=skill.id)
 
-def compose_list_of_volunteer_skills(list_of_volunteers: ListOfVolunteers,
+def compose_dict_of_volunteer_skills(list_of_volunteers: ListOfVolunteers,
+                                     list_of_skills: ListOfSkills,
+                                     list_of_volunteers_with_skills_and_ids: ListOfVolunteerSkillsWithIds) -> DictOfVolunteersWithSkills:
+
+    raw_dict = compose_raw_dict_of_volunteer_skills(list_of_volunteers=list_of_volunteers,
+                                                    list_of_skills=list_of_skills,
+                                                    list_of_volunteers_with_skills_and_ids=list_of_volunteers_with_skills_and_ids)
+
+    return DictOfVolunteersWithSkills(
+        raw_dict=raw_dict,
+        list_of_volunteers_with_skills_and_ids=list_of_volunteers_with_skills_and_ids
+    )
+
+def compose_raw_dict_of_volunteer_skills(list_of_volunteers: ListOfVolunteers,
                  list_of_skills: ListOfSkills,
-                 list_of_volunteers_with_skills_and_ids: ListOfVolunteerSkillsWithIds) -> ListOfVolunteersWithSkills:
+                 list_of_volunteers_with_skills_and_ids: ListOfVolunteerSkillsWithIds) -> Dict[Volunteer, SkillsDict]:
 
-    return ListOfVolunteersWithSkills(list_of_volunteers=list_of_volunteers,
-                                      list_of_skills=list_of_skills,
-                                      list_of_volunteers_with_skills_and_ids=list_of_volunteers_with_skills_and_ids)
+    list_of_volunteers_with_skills = ListOfVolunteersWithSkills.from_list_of_volunteer_skills_with_ids(
+        list_of_volunteers=list_of_volunteers,
+        list_of_skills=list_of_skills,
+        list_of_volunteer_skills_with_id=list_of_volunteers_with_skills_and_ids
+    )
+    unique_list_of_volunteers = list_of_volunteers_with_skills.unique_list_of_volunteers()
 
-def compose_raw_list_of_volunteer_skills(list_of_volunteers: ListOfVolunteers,
-                 list_of_skills: ListOfSkills,
-                 list_of_volunteers_with_skills_and_ids: ListOfVolunteerSkillsWithIds) -> List[VolunteerWithSkill]:
+    raw_dict = dict([
+        (volunteer, list_of_volunteers_with_skills.skills_dict_for_volunteer(volunteer)) for volunteer in unique_list_of_volunteers])
 
-    raw_list = []
-    for volunteer_with_skill_and_id in list_of_volunteers_with_skills_and_ids:
-        volunteer_id = volunteer_with_skill_and_id.volunteer_id
-        skill_id = volunteer_with_skill_and_id.skill_id
-
-        raw_list.append(VolunteerWithSkill(skill=list_of_skills.object_with_id(skill_id), volunteer=list_of_volunteers.volunteer_with_id(volunteer_id)))
-
-    return raw_list
+    return raw_dict

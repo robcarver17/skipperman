@@ -1,9 +1,7 @@
 from typing import Union
 
-from app.backend.security.logged_in_user import get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER
-from app.OLD_backend.ticks_and_qualifications.ticksheets import (
-    can_see_all_groups_and_award_qualifications,
-)
+from app.backend.security.logged_in_user import get_volunteer_for_logged_in_user_or_superuser
+from app.backend.security.user_access import can_see_all_groups_and_award_qualifications
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.instructors.buttons import (
@@ -22,12 +20,10 @@ from app.frontend.instructors.print_ticksheet import (
 from app.frontend.instructors.render_ticksheet_table import get_ticksheet_table
 from app.frontend.instructors.ticksheet_table_elements import (
     get_buttons_for_ticksheet,
-    get_instructions_for_ticksheet,
-    EDIT_CHECKBOX_BUTTON_LABEL,
-    EDIT_DROPDOWN_BUTTON_LABEL,
-    PRINT_BUTTON_LABEL,
-    SHOW_ALL_CADETS_BUTTON_LABEL,
+    get_instructions_for_ticksheet
 )
+from app.frontend.instructors.ticksheet_table_elements import edit_checkbox_button, edit_dropdown_button , print_button , show_all_cadets_button
+
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     main_menu_button,
@@ -112,11 +108,11 @@ def get_nav_bar(interface: abstractInterface):
     else:
         navbar = ButtonBar([cancel_menu_button, save_menu_button])
 
-    volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER(interface)
+    volunteer = get_volunteer_for_logged_in_user_or_superuser(interface)
     if can_see_all_groups_and_award_qualifications(
-        interface=interface,
+        object_store=interface.object_store,
         event=get_event_from_state(interface),
-        volunteer_id=volunteer_id,
+        volunteer=volunteer,
     ):
         help = HelpButton("ticksheet_entry_help_SI")
     else:
@@ -150,23 +146,23 @@ def post_form_view_ticksheets_for_event_and_group(
     )
 
     ## Edit state has to change
-    if button_pressed == EDIT_DROPDOWN_BUTTON_LABEL:
+    if edit_dropdown_button.pressed(button_pressed):
         set_edit_state_of_ticksheet(interface=interface, state=EDIT_DROPDOWN_STATE)
 
-    elif button_pressed == EDIT_CHECKBOX_BUTTON_LABEL:
+    elif edit_checkbox_button.pressed(button_pressed):
         set_edit_state_of_ticksheet(interface=interface, state=EDIT_CHECKBOX_STATE)
 
     elif save_menu_button.pressed(button_pressed):
         ## already save, but need to change state back to not editing
         set_edit_state_of_ticksheet(interface=interface, state=NO_EDIT_STATE)
 
-    elif button_pressed == PRINT_BUTTON_LABEL:
+    elif print_button.pressed(button_pressed):
         return download_labelled_ticksheet_and_return_file(interface)
 
     elif button_pressed in list_of_all_possible_select_cadet_buttons:
         set_cadet_id(interface=interface, button_pressed=button_pressed)
 
-    elif button_pressed == SHOW_ALL_CADETS_BUTTON_LABEL:
+    elif show_all_cadets_button.pressed(button_pressed):
         clear_cadet_id_in_state(interface)
 
     ## SPECIAL BUTTONS: qualification, all ticks, all column
@@ -178,7 +174,7 @@ def post_form_view_ticksheets_for_event_and_group(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface._save_data_store_cache()
+    interface.flush_cache_to_store()
 
     return display_form_view_ticksheets_for_event_and_group(interface)
 
@@ -187,3 +183,4 @@ def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(
         post_form_view_ticksheets_for_event_and_group
     )
+

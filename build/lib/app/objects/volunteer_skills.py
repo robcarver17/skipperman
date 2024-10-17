@@ -17,7 +17,7 @@ class Skill(GenericSkipperManObjectWithIds):
         return self.name
 
     def __eq__(self, other):
-        return self.name == other.name and self.protected == other.protected
+        return self.name == other.name
 
 class ListOfSkills(GenericListOfObjectsWithIds):
     @property
@@ -61,5 +61,5 @@ def skill_from_str(skill_str: str) -> Skill:
 
 VOLUNTEERS_SKILL_FOR_PB2_NAME = "PB2"
 SI_SKILL_NAME = "SI"
-SI_skill = Skill(SI_SKILL_NAME, id='0')
-PB2_skill = Skill(VOLUNTEERS_SKILL_FOR_PB2_NAME, id='1')
+SI_skill = Skill(SI_SKILL_NAME)
+PB2_skill = Skill(VOLUNTEERS_SKILL_FOR_PB2_NAME)

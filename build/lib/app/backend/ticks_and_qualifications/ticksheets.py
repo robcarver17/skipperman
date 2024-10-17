@@ -15,7 +15,7 @@ from app.OLD_backend.events import DEPRECATE_get_sorted_list_of_events
 from app.OLD_backend.ticks_and_qualifications.create_ticksheets import (
     get_ticksheet_for_cadets_in_group_at_event_for_qualification,
 )
-from app.OLD_backend.volunteers.volunteers import is_volunteer_with_id_qualified_as_SI
+from app.backend.volunteers.skills import is_volunteer_with_id_qualified_as_SI
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event, ListOfEvents
 from app.objects.groups import Group

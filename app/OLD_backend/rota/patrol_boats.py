@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.objects.exceptions import missing_data
 

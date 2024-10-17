@@ -1,5 +1,5 @@
 from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent
-from app.objects_OLD.identified_cadets_at_event import ListOfIdentifiedCadetsAtEvent
+from app.objects.identified_cadets_at_event import ListOfIdentifiedCadetsAtEvent
 from app.objects.cadets import ListOfCadets
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
 from app.objects.committee import ListOfCadetsWithIdOnCommittee

@@ -1,8 +1,8 @@
 from typing import List, Union
 
 from app.frontend.forms import is_ready_to_swap
-from app.backend.OLD_patrol_boats.data import load_list_of_patrol_boats_at_event_from_cache
-from app.backend.OLD_patrol_boats.summary import get_summary_list_of_patrol_boat_allocations_for_events
+from app.OLD_backend.OLD_patrol_boats import load_list_of_patrol_boats_at_event_from_cache
+from app.OLD_backend.OLD_patrol_boats.summary import get_summary_list_of_patrol_boat_allocations_for_events
 from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
     get_existing_allocation_elements_for_day_and_boat,
     get_volunteer_row_to_select_skill, get_list_of_volunteers_for_skills_checkboxes,

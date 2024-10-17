@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.OLD_backend.ticks_and_qualifications.ticksheets import (
+from app.backend.qualifications_and_ticks.ticksheets import (
     TickSheetDataWithExtraInfo,
     save_ticksheet_edits_for_specific_tick,
     get_ticksheet_data,

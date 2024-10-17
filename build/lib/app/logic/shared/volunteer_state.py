@@ -1,5 +1,5 @@
 from app.objects_OLD.volunteers_at_event import DEPRECATE_VolunteerAtEvent
-from app.objects_OLD.primtive_with_id.volunteer_at_event import VolunteerAtEventWithId
+from app.objects.volunteer_at_event_with_id import VolunteerAtEventWithId
 
 from app.OLD_backend.volunteers.volunteer_allocation import DEPRECATE_get_volunteer_at_event_with_id, get_volunteer_at_event
 

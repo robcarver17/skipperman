@@ -4,7 +4,7 @@ from typing import List
 from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
 from app.objects.volunteers import Volunteer
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.OLD_backend.data.group_allocations import GroupAllocationsData
 from app.OLD_backend.data.volunteer_allocation import VolunteerAllocationData
@@ -26,10 +26,10 @@ from app.objects.groups import LAKE_TRAINING, Group
 from app.objects_OLD.volunteers_at_event import (
     ListOfVolunteersAtEvent, DEPRECATE_VolunteerAtEvent,
 )
-from app.objects_OLD.primtive_with_id.volunteer_at_event import ListOfVolunteersAtEventWithId
+from app.objects.volunteer_at_event_with_id import ListOfVolunteersAtEventWithId
 from app.objects_OLD.primtive_with_id.identified_volunteer_at_event import ListOfIdentifiedVolunteersAtEvent
-from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import NO_ROLE_SET, VolunteerWithIdInRoleAtEvent, \
-    ListOfVolunteersWithIdInRoleAtEvent, RoleAndGroup
+from app.objects.volunteer_roles_and_groups_with_id import NO_ROLE_SET, VolunteerWithIdInRoleAtEvent, \
+    ListOfVolunteersWithIdInRoleAtEvent, RoleAndGroupDEPRECATE
 
 from app.objects.day_selectors import Day
 
@@ -73,7 +73,7 @@ def get_volunteer_role_at_event_on_day(
 
 def get_volunteer_role_and_group_event_on_day_for_volunteer_at_event(
     data_layer:DataLayer, event: Event, volunteer_at_event: DEPRECATE_VolunteerAtEvent, day: Day
-) ->RoleAndGroup:
+) ->RoleAndGroupDEPRECATE:
     volunteer_role_data = VolunteerRotaData(data_layer)
     role_and_group = volunteer_role_data.get_volunteer_role_and_group_event_on_day_for_volunteer_at_event(
         event=event, volunteer_at_event=volunteer_at_event, day=day
@@ -487,7 +487,7 @@ def update_group_at_event_for_volunteer_on_day(
 def update_role_and_group_at_event_for_volunteer_on_all_days_when_available(
     interface: abstractInterface,
     volunteer_at_event: DEPRECATE_VolunteerAtEvent,
-    new_role_and_group: RoleAndGroup,
+    new_role_and_group: RoleAndGroupDEPRECATE,
 ):
     volunteer_rota_data = VolunteerRotaData(interface.data)
     volunteer_rota_data.update_role_and_group_at_event_for_volunteer_on_all_days_when_available(

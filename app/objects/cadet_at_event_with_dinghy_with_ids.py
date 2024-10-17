@@ -22,7 +22,7 @@ def valid_partnership(partnership_str: str):
 
 
 @dataclass
-class CadetAtEventWithDinghy(GenericSkipperManObject):
+class CadetAtEventWithBoatClassAndPartnerWithIds(GenericSkipperManObject):
     cadet_id: str
     boat_class_id: str
     sail_number: str
@@ -54,13 +54,13 @@ WAS_VALID_NOW_INVALID = "was_valid_now_invalid"
 WAS_VALID_NOW_VALID_CHANGED = "valid_changed"
 
 
-class ListOfCadetAtEventWithDinghies(GenericListOfObjectsWithIds):
+class ListOfCadetAtEventWithBoatClassAndPartnerWithIds(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
-        return CadetAtEventWithDinghy
+        return CadetAtEventWithBoatClassAndPartnerWithIds
 
     def update_boat_info_for_cadet_and_partner_at_event_on_day(
-        self, cadet_at_event_with_dinghy: CadetAtEventWithDinghy
+        self, cadet_at_event_with_dinghy: CadetAtEventWithBoatClassAndPartnerWithIds
     ):
         cadet_id = cadet_at_event_with_dinghy.cadet_id
         self.update_boat_for_cadet_on_day(
@@ -198,7 +198,7 @@ class ListOfCadetAtEventWithDinghies(GenericListOfObjectsWithIds):
         self, cadet_id: str, boat_class_id: str, sail_number: str, day: Day
     ):
         self.append(
-            CadetAtEventWithDinghy(
+            CadetAtEventWithBoatClassAndPartnerWithIds(
                 cadet_id=cadet_id,
                 boat_class_id=boat_class_id,
                 sail_number=sail_number,
@@ -242,7 +242,7 @@ class ListOfCadetAtEventWithDinghies(GenericListOfObjectsWithIds):
 
     def object_with_cadet_id_on_day(
         self, cadet_id: str, day: Day, default=missing_data
-    ) -> CadetAtEventWithDinghy:
+    ) -> CadetAtEventWithBoatClassAndPartnerWithIds:
         list_of_items = [
             item for item in self if item.cadet_id == cadet_id and item.day == day
         ]
@@ -279,10 +279,10 @@ class ListOfCadetAtEventWithDinghies(GenericListOfObjectsWithIds):
 
 
 def compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values(
-    new_list: ListOfCadetAtEventWithDinghies,
-    existing_list: ListOfCadetAtEventWithDinghies,
+    new_list: ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
+    existing_list: ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
 ):
-    updated_list = ListOfCadetAtEventWithDinghies([])
+    updated_list = ListOfCadetAtEventWithBoatClassAndPartnerWithIds([])
     for potentially_updated_cadet_at_event in new_list:
         cadet_in_existing_list = existing_list.object_with_cadet_id_on_day(
             cadet_id=potentially_updated_cadet_at_event.cadet_id,
@@ -320,8 +320,8 @@ def compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values(
 
 
 def is_cadet_already_in_changed_partnership(
-    updated_list: ListOfCadetAtEventWithDinghies,
-    potentially_updated_cadet_at_event: CadetAtEventWithDinghy,
+    updated_list: ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
+    potentially_updated_cadet_at_event: CadetAtEventWithBoatClassAndPartnerWithIds,
 ) -> bool:
     list_of_changed_partner_id = updated_list.list_of_partner_ids_excluding_not_valid()
     cadet_id = potentially_updated_cadet_at_event.cadet_id

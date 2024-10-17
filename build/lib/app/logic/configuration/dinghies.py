@@ -1,7 +1,7 @@
 from typing import Union, List
 
 from app.OLD_backend.configuration import DEPRECATE_load_list_of_boat_classes, save_list_of_boat_classes
-from app.backend.configuration.list_of_boat_classes import add_new_boat_class_given_string, \
+from app.backend.boat_classes.list_of_boat_classes import add_new_boat_class_given_string, \
     delete_boat_class_given_string, modify_boat_class
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form

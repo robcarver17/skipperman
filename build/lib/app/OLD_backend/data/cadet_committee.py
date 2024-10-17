@@ -9,7 +9,7 @@ from app.objects.composed.committee import CadetOnCommittee, ListOfCadetsOnCommi
 
 from app.OLD_backend.data.cadets import CadetData
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 
 class CadetCommitteeData:

@@ -21,7 +21,7 @@ from app.OLD_backend.data.cadets_at_event_id_level import (
 )
 from app.objects.groups import Group
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
-from app.objects_OLD.mapped_wa_event import summarise_status
+from app.objects.registration_data import summarise_status
 from app.OLD_backend.data.mapped_events import load_mapped_wa_event
 from app.objects.utils import print_dict_nicely
 

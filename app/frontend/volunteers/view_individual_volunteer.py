@@ -1,6 +1,7 @@
 from typing import Union
 
-#from app.OLD_backend.rota.volunteer_history import get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first
+from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
+    get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first
 from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunteer
 from app.frontend.volunteers.edit_cadet_connections import (
     display_form_edit_cadet_volunteer_connections,
@@ -76,13 +77,11 @@ def display_form_for_selected_volunteer(
 def list_of_lines_with_allocations_and_roles(
     interface: abstractInterface, volunteer: Volunteer
 ) -> ListOfLines:
- #   dict_of_roles = get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(
- #       data_layer=interface.data, volunteer=volunteer
- #   )
+    dict_of_roles = get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(
+        object_store=interface.object_store, volunteer=volunteer
+    )
 
- #   return from_dict_of_roles_to_list_of_lines(dict_of_roles)
-
-    return ListOfLines(["no group data"])
+    return from_dict_of_roles_to_list_of_lines(dict_of_roles)
 
 def from_dict_of_roles_to_list_of_lines(dict_of_roles: dict) -> ListOfLines:
     if len(dict_of_roles) == 0:

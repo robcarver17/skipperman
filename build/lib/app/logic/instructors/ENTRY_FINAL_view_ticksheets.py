@@ -1,9 +1,7 @@
 from typing import Union
 
 from app.backend.security.logged_in_user import get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER
-from app.OLD_backend.ticks_and_qualifications.ticksheets import (
-    can_see_all_groups_and_award_qualifications,
-)
+from app.backend.security.user_access import can_see_all_groups_and_award_qualifications
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.instructors.buttons import (

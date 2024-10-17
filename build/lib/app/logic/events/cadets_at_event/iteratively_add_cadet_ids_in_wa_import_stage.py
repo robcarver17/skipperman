@@ -35,7 +35,7 @@ from app.frontend.shared.get_or_select_cadet_forms import (
 from app.frontend.shared.add_edit_cadet_form import add_cadet_from_form_to_data
 
 from app.objects.exceptions import NoMoreData, MissingData
-from app.objects_OLD.mapped_wa_event import RowInMappedWAEvent
+from app.objects.registration_data import RowInRegistrationData
 from app.objects.cadets import Cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -70,7 +70,7 @@ def add_cadet_ids_on_next_row(
         return go_to_update_cadet_data_form(interface)
 
 
-def process_current_row(row: RowInMappedWAEvent, interface: abstractInterface) -> Form:
+def process_current_row(row: RowInRegistrationData, interface: abstractInterface) -> Form:
     ### NOTE: In theory we only need to deal with new rows, but no harm in doing all of them
     ##
     row_id_has_identified_cadet = is_row_already_identified_with_cadet(
@@ -92,7 +92,7 @@ def process_current_row(row: RowInMappedWAEvent, interface: abstractInterface) -
 
 
 def is_row_already_identified_with_cadet(
-    row: RowInMappedWAEvent, interface: abstractInterface
+    row: RowInRegistrationData, interface: abstractInterface
 ) -> bool:
     event = get_event_from_state(interface)
     row_id_has_identified_cadet = is_row_in_event_already_identified_with_cadet(

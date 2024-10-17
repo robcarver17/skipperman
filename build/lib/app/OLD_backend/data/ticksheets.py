@@ -10,7 +10,7 @@ from app.objects.events import Event
 
 from app.objects.groups import Group
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 from app.objects.ticks import (
     ListOfCadetsWithTickListItems,
     ListOfTickSheetItems,

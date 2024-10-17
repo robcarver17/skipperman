@@ -1,12 +1,12 @@
 from copy import copy
 from typing import List, Callable, Dict
 
-import app.objects_OLD.primtive_with_id.volunteer_roles_and_groups
+import app.objects.volunteer_roles_and_groups_with_id
 from app.OLD_backend.wa_import.update_cadets_at_event import get_all_rows_in_mapped_event_for_cadet
 
 from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.OLD_backend.data.patrol_boats import PatrolBoatsData
 from app.objects.patrol_boats import PatrolBoat
@@ -15,9 +15,7 @@ from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelDa
 from app.OLD_backend.group_allocations.cadet_event_allocations import (
     get_list_of_active_cadets_at_event,
 )
-from app.OLD_backend.group_allocations.previous_allocations import (
-    get_dict_of_all_event_allocations_for_single_cadet,
-)
+from app.backend.groups.cadets_with_groups_at_event import get_dict_of_all_event_allocations_for_single_cadet
 
 from app.OLD_backend.rota.volunteer_rota import (
     list_of_cadet_groups_associated_with_volunteer,
@@ -35,7 +33,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import ListOfCadets, Cadet, cadet_is_too_young_to_be_without_parent
 from app.objects.day_selectors import EMPTY_DAY_SELECTOR, Day, DaySelector
 from app.objects.events import Event
-from app.objects_OLD.mapped_wa_event import get_status_from_row
+from app.objects.registration_data import get_status_from_row
 from app.objects_OLD.volunteers_at_event import DEPRECATE_VolunteerAtEvent
 
 

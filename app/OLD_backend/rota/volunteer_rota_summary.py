@@ -4,7 +4,7 @@ from typing import List, Dict
 import pandas as pd
 
 from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.OLD_backend.data.volunteer_rota import VolunteerRotaData
 from app.OLD_backend.rota.volunteer_rota import (
@@ -13,10 +13,10 @@ from app.OLD_backend.rota.volunteer_rota import (
 from app.data_access.configuration.skills_and_roles import all_volunteer_role_names
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.groups import Group, GROUP_UNALLOCATED_TEXT
+from app.objects.groups import Group, GROUP_UNALLOCATED_TEXT_DONTUSE
 from app.objects_OLD.primtive_with_id.volunteer_role_targets import ListOfTargetForRoleAtEvent
-from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import NO_ROLE_SET, get_list_of_volunteer_teams, \
-    ListOfVolunteersWithIdInRoleAtEvent, RoleAndGroup, TeamAndGroup
+from app.objects.volunteer_roles_and_groups_with_id import NO_ROLE_SET, DEPRECATE_get_list_of_volunteer_teams, \
+    ListOfVolunteersWithIdInRoleAtEvent, RoleAndGroupDEPRECATE, TeamAndGroup
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 
 
@@ -155,7 +155,7 @@ def get_summary_of_roles_and_groups_for_events_on_day(
     summary_dict = {}
     for group_name in list_of_all_group_names:
         for role in list_of_all_role_names:
-            role_and_group = RoleAndGroup(role=role, group=Group(group_name))
+            role_and_group = RoleAndGroupDEPRECATE(role=role, group=Group(group_name))
             count = role_and_group_with_count(
                 role_and_group, list_of_roles_and_groups=list_of_roles_and_groups
             )
@@ -165,7 +165,7 @@ def get_summary_of_roles_and_groups_for_events_on_day(
 
 
 def role_and_group_with_count(
-    role_and_group: RoleAndGroup, list_of_roles_and_groups: List[RoleAndGroup]
+    role_and_group: RoleAndGroupDEPRECATE, list_of_roles_and_groups: List[RoleAndGroupDEPRECATE]
 ) -> int:
     matching = [
         role_and_group_in_list
@@ -229,12 +229,12 @@ def get_summary_of_teams_and_groups_for_events_on_day(
             day
         )
     )
-    all_teams = get_list_of_volunteer_teams() + [
+    all_teams = DEPRECATE_get_list_of_volunteer_teams() + [
         NO_ROLE_SET
     ]  ## ordered, doesn't include unallocated do those last
     raise Exception("all group names unknown")
     all_group_names = [
-        GROUP_UNALLOCATED_TEXT
+        GROUP_UNALLOCATED_TEXT_DONTUSE
     ] + all_groups_names  ## ordered, doesn't include unallocated we put these first
 
     summary_dict = {}
@@ -250,7 +250,7 @@ def get_summary_of_teams_and_groups_for_events_on_day(
 
 
 def team_and_group_with_count(
-    team_and_group: TeamAndGroup, list_of_teams_and_groups: List[RoleAndGroup]
+    team_and_group: TeamAndGroup, list_of_teams_and_groups: List[RoleAndGroupDEPRECATE]
 ) -> int:
     matching = [
         team_and_group_in_list

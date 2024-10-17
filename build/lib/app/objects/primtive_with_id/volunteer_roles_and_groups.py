@@ -9,7 +9,7 @@ from app.objects.day_selectors import Day
 from app.objects.exceptions import missing_data
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
-from app.objects.groups import Group, GROUP_UNALLOCATED, index_group
+from app.objects.groups import Group, unallocated_group, index_group
 from app.objects.composed.volunteers_with_skills import SkillsDict
 from app.objects.volunteers import Volunteer
 
@@ -31,10 +31,10 @@ def no_role_set(role: str):
 @dataclass
 class RoleAndGroup(GenericSkipperManObject):
     role: str = NO_ROLE_SET
-    group: Group = GROUP_UNALLOCATED
+    group: Group = unallocated_group
 
     def __repr__(self):
-        if self.group == GROUP_UNALLOCATED:
+        if self.group == unallocated_group:
             return self.role
         else:
             return "%s (%s)" % (self.role, self.group)
@@ -67,10 +67,10 @@ class RoleAndGroup(GenericSkipperManObject):
 @dataclass
 class TeamAndGroup(GenericSkipperManObject):
     team: str = NO_ROLE_SET
-    group: Group = GROUP_UNALLOCATED
+    group: Group = unallocated_group
 
     def __repr__(self):
-        if self.group == GROUP_UNALLOCATED:
+        if self.group == unallocated_group:
             return self.team
         else:
             return "%s (%s)" % (self.team, self.group)
@@ -100,7 +100,7 @@ class VolunteerWithIdInRoleAtEvent(GenericSkipperManObject):
     volunteer_id: str
     day: Day
     role: str = NO_ROLE_SET
-    group: Group = GROUP_UNALLOCATED
+    group: Group = unallocated_group
 
     @property
     def role_and_group(self):

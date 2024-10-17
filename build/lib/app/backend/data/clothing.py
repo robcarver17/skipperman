@@ -4,7 +4,7 @@ from app.objects.committee import ListOfCadetsWithIdOnCommittee
 
 from app.objects.events import Event
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 from app.objects.cadets import ListOfCadets
 from app.objects_OLD.clothing import (
     ListOfCadetsWithClothingAtEvent,

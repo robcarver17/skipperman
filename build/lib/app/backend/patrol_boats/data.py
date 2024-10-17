@@ -1,7 +1,7 @@
 from app.objects.utils import in_x_not_in_y
 
 from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 from app.data_access.store.DEPRECATE_volunteers_with_patrol_boats import PatrolBoatData
 from app.objects.events import Event
 from app.objects_OLD.patrol_boats import ListOfVolunteersAtEventWithSkillsAndRolesAndPatrolBoats

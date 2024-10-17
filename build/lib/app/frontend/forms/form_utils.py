@@ -14,7 +14,7 @@ from app.objects.exceptions import arg_not_passed
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
 from app.objects_OLD.food import FoodRequirements, OTHER_IN_FOOD_REQUIRED
-from app.objects_OLD.mapped_wa_event import RegistrationStatus, all_possible_status
+from app.objects.registration_data import RegistrationStatus, all_possible_status
 from app.objects.composed.volunteers_with_skills import SkillsDict
 
 ALL_AVAILABLE = "Select all"

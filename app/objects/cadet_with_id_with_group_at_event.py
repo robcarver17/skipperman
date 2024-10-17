@@ -7,14 +7,14 @@ from app.objects.events import Event
 from app.objects.exceptions import missing_data
 from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
-from app.objects.groups import Group, GROUP_UNALLOCATED
+from app.objects.groups import Group, unallocated_group
 from app.objects.utils import in_x_not_in_y
 
 
 @dataclass
 class CadetIdWithGroup(GenericSkipperManObjectWithIds):
     cadet_id: str
-    group: Group
+    group_id: str
     day: Day
 
 
@@ -70,12 +70,12 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
     def add_unallocated_cadet(self, cadet: Cadet, day: Day):
         cadet_id = cadet.id
         self.append(
-            CadetIdWithGroup(cadet_id=cadet_id, group=GROUP_UNALLOCATED, day=day)
+            CadetIdWithGroup(cadet_id=cadet_id, group=unallocated_group, day=day)
         )
 
     def remove_group_allocation_for_cadet_on_day(self, cadet_id: str, day: Day):
         self.update_group_for_cadet_on_day(
-            cadet_id=cadet_id, day=day, chosen_group=GROUP_UNALLOCATED
+            cadet_id=cadet_id, day=day, chosen_group=unallocated_group
         )
 
     def update_group_for_cadet_on_day(
@@ -137,7 +137,7 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
     def group_for_cadet_id_on_day(self, cadet_id: str, day: Day) -> Group:
         item = self.item_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
         if item is missing_data:
-            return GROUP_UNALLOCATED
+            return unallocated_group
 
         return item.group
 

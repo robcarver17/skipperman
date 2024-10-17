@@ -34,7 +34,7 @@ from app.data_access.configuration.field_list_groups import (
     FIELDS_AS_STR,
 )
 from app.objects.day_selectors import DaySelector
-from app.objects_OLD.mapped_wa_event import RegistrationStatus
+from app.objects.registration_data import RegistrationStatus
 
 
 def parse_registration_details_from_form(interface: abstractInterface, event: Event):

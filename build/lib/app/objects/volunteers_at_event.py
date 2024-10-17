@@ -3,7 +3,7 @@ from typing import List
 
 from app.objects_OLD.cadets_with_groups import ListOfCadetsAtEventWithGroupsByDay
 from app.objects.events import Event
-from app.objects_OLD.primtive_with_id.volunteer_at_event import VolunteerAtEventWithId
+from app.objects.volunteer_at_event_with_id import VolunteerAtEventWithId
 from app.objects.composed.volunteers_with_skills import SkillsDict
 
 from app.objects.volunteers import Volunteer

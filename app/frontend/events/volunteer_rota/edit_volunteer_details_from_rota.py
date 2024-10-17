@@ -1,4 +1,4 @@
-from app.OLD_backend.rota.volunteer_history import \
+from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
     get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first
 
 from app.frontend.forms.form_utils import (

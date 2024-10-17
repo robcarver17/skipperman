@@ -1,6 +1,6 @@
 from typing import List
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.objects.cadets import ListOfCadets
 
@@ -9,7 +9,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.OLD_backend.data.volunteers import VolunteerData, SORT_BY_SURNAME
 from app.objects.exceptions import arg_not_passed
 from app.objects.volunteers import Volunteer, ListOfVolunteers
-from app.objects.composed.volunteers_with_skills import SkillsDict, ListOfVolunteersWithSkills
+from app.objects.composed.volunteers_with_skills import SkillsDict, DictOfVolunteersWithSkills
 
 
 def get_volunteer_with_name(
@@ -121,14 +121,9 @@ def remove_boat_related_skill_for_volunteer(
     volunteer_data.remove_driving_qualification_for_volunteer(volunteer)
 
 
-def load_list_of_volunteer_skills(data_layer: DataLayer) -> ListOfVolunteersWithSkills:
+def load_list_of_volunteer_skills(data_layer: DataLayer) -> DictOfVolunteersWithSkills:
     volunteer_data = VolunteerData(data_layer)
     return volunteer_data.get_list_of_volunteer_skills()
-
-
-def is_volunteer_with_id_qualified_as_SI(data_layer: DataLayer, volunteer_id: str):
-    volunteer_data = VolunteerData(data_layer)
-    return volunteer_data.is_volunteer_with_id_SI(volunteer_id)
 
 
 def get_list_of_volunteers_sorted_by_surname(

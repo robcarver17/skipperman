@@ -3,7 +3,7 @@ from app.data_access.store.store import DataAccessMethod
 
 from app.OLD_backend.data.cadets import CadetData
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.objects.events import Event
 

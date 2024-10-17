@@ -1,8 +1,8 @@
 from typing import List
 
 import pandas as pd
-from app.backend.OLD_patrol_boats.data import load_list_of_patrol_boats_at_event_from_cache
-from app.backend.OLD_patrol_boats.data import get_list_of_voluteers_at_event_with_patrol_boats_from_cache
+from app.OLD_backend.OLD_patrol_boats import load_list_of_patrol_boats_at_event_from_cache
+from app.OLD_backend.OLD_patrol_boats import get_list_of_voluteers_at_event_with_patrol_boats_from_cache
 from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.day_selectors import Day

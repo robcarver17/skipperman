@@ -8,7 +8,7 @@ from app.OLD_backend.rota.sorting_and_filtering import filter_volunteer, \
 from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
 
 from app.OLD_backend.rota.volunteer_history import get_dict_of_volunteers_with_last_roles
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.OLD_backend.group_allocations.cadet_event_allocations import (
     load_list_of_cadets_ids_with_group_allocations_active_cadets_only,
@@ -30,13 +30,13 @@ from app.objects.day_selectors import Day
 from app.objects.events import (
     Event,
 )
-from app.objects.groups import Group, GROUP_UNALLOCATED
+from app.objects.groups import Group, unallocated_group
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
 from app.objects.volunteers import ListOfVolunteers
-from app.objects.composed.volunteers_with_skills import SkillsDict, ListOfVolunteersWithSkills
-from app.objects_OLD.primtive_with_id.volunteer_at_event import VolunteerAtEventWithId, ListOfVolunteersAtEventWithId
-from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent, \
-    ListOfVolunteersWithIdInRoleAtEvent, RoleAndGroup
+from app.objects.composed.volunteers_with_skills import SkillsDict, DictOfVolunteersWithSkills
+from app.objects.volunteer_at_event_with_id import VolunteerAtEventWithId, ListOfVolunteersAtEventWithId
+from app.objects.volunteer_roles_and_groups_with_id import VolunteerWithIdInRoleAtEvent, \
+    ListOfVolunteersWithIdInRoleAtEvent, RoleAndGroupDEPRECATE
 
 
 @dataclass
@@ -44,10 +44,10 @@ class DEPRECATE_DataToBeStoredWhilstConstructingVolunteerRotaPage:
     event: Event
     list_of_cadet_ids_with_groups: ListOfCadetIdsWithGroups
     unallocated_cadets_at_event: ListOfCadets
-    volunteer_skills: ListOfVolunteersWithSkills
+    volunteer_skills: DictOfVolunteersWithSkills
     volunteers_in_roles_at_event: ListOfVolunteersWithIdInRoleAtEvent
     list_of_volunteers_with_id_at_event: ListOfVolunteersAtEventWithId
-    dict_of_volunteers_with_last_roles: Dict[str, RoleAndGroup]
+    dict_of_volunteers_with_last_roles: Dict[str, RoleAndGroupDEPRECATE]
     all_volunteers: ListOfVolunteers
 
     def filtered_list_of_volunteers_at_event(
@@ -86,7 +86,7 @@ class DEPRECATE_DataToBeStoredWhilstConstructingVolunteerRotaPage:
                 __unallocated_cadet_unused = (
                     self.unallocated_cadets_at_event.object_with_id(cadet_id)
                 )
-                return GROUP_UNALLOCATED
+                return unallocated_group
             except:
                 return missing_data
 
@@ -102,9 +102,9 @@ class DEPRECATE_DataToBeStoredWhilstConstructingVolunteerRotaPage:
 
     def previous_role_and_group_for_volunteer(
         self, volunteer_at_event: VolunteerAtEventWithId
-    ) -> RoleAndGroup:
+    ) -> RoleAndGroupDEPRECATE:
         return self.dict_of_volunteers_with_last_roles.get(
-            volunteer_at_event.volunteer_id, RoleAndGroup()
+            volunteer_at_event.volunteer_id, RoleAndGroupDEPRECATE()
         )
 
     def all_roles_match_across_event(self, volunteer_id: str) -> bool:

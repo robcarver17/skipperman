@@ -18,10 +18,10 @@ from app.objects.cadet_volunteer_connections_with_ids import ListOfCadetVoluntee
 from app.objects.roles_and_teams import ListOfRolesWithSkillIds, ListOfTeams, ListOfTeamsAndRolesWithIds
 from app.objects.volunteers_with_skills_and_ids import ListOfVolunteerSkillsWithIds
 
-from app.objects_OLD.primtive_with_id.volunteer_at_event import ListOfVolunteersAtEventWithId
+from app.objects.volunteer_at_event_with_id import ListOfVolunteersAtEventWithId
 from app.objects_OLD.primtive_with_id.identified_volunteer_at_event import ListOfIdentifiedVolunteersAtEvent
 from app.objects_OLD.primtive_with_id.volunteer_role_targets import ListOfTargetForRoleAtEvent
-from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import ListOfVolunteersWithIdInRoleAtEvent
+from app.objects.volunteer_roles_and_groups_with_id import ListOfVolunteersWithIdInRoleAtEvent
 
 class CsvDataListOfRoles(GenericCsvData, DataListOfRoles):
     def read(self) -> ListOfRolesWithSkillIds:

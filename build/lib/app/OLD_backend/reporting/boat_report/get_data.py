@@ -13,7 +13,7 @@ from app.OLD_backend.reporting.boat_report.boat_report_parameters import (
     CLUB_BOAT,
 )
 
-from app.objects.groups import lake_training_group, river_training_group
+from app.objects.groups import lake_training_group_location, river_training_group_location
 from app.OLD_backend.data.data_for_event import (
     get_data_required_for_event,
     RequiredDataForReport,
@@ -241,11 +241,11 @@ def is_group_valid_for_report(
             return False
 
     if additional_parameters.exclude_river_training_groups:
-        if group.location == river_training_group:
+        if group.location == river_training_group_location:
             return False
 
     if additional_parameters.exclude_lake_groups:
-        if group.location == lake_training_group:
+        if group.location == lake_training_group_location:
             return False
 
     return True

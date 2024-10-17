@@ -6,7 +6,7 @@ from app.objects.utils import (
     transform_df_from_str_to_dates,
 )
 
-from app.objects_OLD.mapped_wa_event import MappedWAEvent
+from app.objects.registration_data import MappedWAEvent
 from app.data_access.classes.mapped_wa_event import (
     DataMappedWAEvent,
 )

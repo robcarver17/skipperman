@@ -4,11 +4,9 @@ from app.frontend.events.add_event import display_form_view_for_add_event
 from app.frontend.shared.events_state import (
     update_state_for_specific_event_given_event_description,
 )
-from app.OLD_backend.events import (
-    DEPRECATE_get_sorted_list_of_events,
-    confirm_event_exists_given_description,
-)
+from app.backend.events.list_of_events import get_sorted_list_of_events
 from app.backend.events.list_of_events import all_sort_types_for_event_list, sort_buttons_for_event_list
+
 from app.frontend.events.view_individual_events import display_form_view_individual_event
 from app.objects.events import SORT_BY_START_DSC, ListOfEvents
 
@@ -26,17 +24,14 @@ from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
 )
-from app.frontend.events.constants import (
-    ADD_EVENT_BUTTON_LABEL,
-)
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
+ADD_EVENT_BUTTON_LABEL = "Add event"
 
 def display_form_view_of_events(interface: abstractInterface):
     return display_form_view_of_events_sort_order_passed(
         sort_by=SORT_BY_START_DSC, interface=interface
     )
-
 
 def display_form_view_of_events_sort_order_passed(
     interface: abstractInterface, sort_by: str = SORT_BY_START_DSC
@@ -58,9 +53,7 @@ def display_form_view_of_events_sort_order_passed(
 
     return Form(contents_of_form)
 
-
 add_button = Button(ADD_EVENT_BUTTON_LABEL, nav_button=True)
-
 
 def post_form_view_of_events(interface: abstractInterface) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
@@ -78,9 +71,6 @@ def post_form_view_of_events(interface: abstractInterface) -> Union[Form, NewFor
 
 def action_when_event_button_clicked(interface: abstractInterface) -> NewForm:
     event_description_selected = interface.last_button_pressed()
-    confirm_event_exists_given_description(
-        interface=interface, event_description=event_description_selected
-    )
     update_state_for_specific_event_given_event_description(
         interface=interface, event_description=event_description_selected
     )
@@ -91,8 +81,8 @@ def action_when_event_button_clicked(interface: abstractInterface) -> NewForm:
 def display_list_of_events_with_buttons(
     interface: abstractInterface, sort_by=SORT_BY_START_DSC
 ) -> Line:
-    list_of_events = DEPRECATE_get_sorted_list_of_events(
-        interface=interface, sort_by=sort_by
+    list_of_events = get_sorted_list_of_events(
+        object_store=interface.object_store, sort_by=sort_by
     )
     return display_given_list_of_events_with_buttons(list_of_events)
 

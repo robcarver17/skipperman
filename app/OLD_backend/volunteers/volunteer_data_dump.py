@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Dict, List
 
 import pandas as pd
-from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import RoleAndGroup
+from app.objects.volunteer_roles_and_groups_with_id import RoleAndGroupDEPRECATE
 
 from app.objects.events import Event, ListOfEvents
 
@@ -11,10 +11,11 @@ from app.OLD_backend.volunteers.volunteers import (
     get_connected_cadets,
 )
 
-from app.OLD_backend.rota.volunteer_history import get_all_roles_across_recent_events_for_volunteer_as_dict_DONTUSEDIRECTLY
+from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
+    get_all_roles_across_recent_events_for_volunteer_as_dict_with_sort_order
 from app.objects.volunteers import Volunteer
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 
 from app.OLD_backend.data.volunteers import VolunteerData
@@ -47,7 +48,7 @@ def get_volunteer_data_dump(data_layer: DataLayer) -> pd.DataFrame:
 @dataclass
 class VolunteerRowData:
     name: str
-    roles_as_dict: Dict[Event, RoleAndGroup]
+    roles_as_dict: Dict[Event, RoleAndGroupDEPRECATE]
     skills_as_str: str
     connected_cadets_as_str: str
 
@@ -99,7 +100,7 @@ def get_row_data_for_volunteer(
     data_layer: DataLayer, volunteer: Volunteer
 ) -> VolunteerRowData:
     name = volunteer.name
-    roles_as_dict = get_all_roles_across_recent_events_for_volunteer_as_dict_DONTUSEDIRECTLY(
+    roles_as_dict = get_all_roles_across_recent_events_for_volunteer_as_dict_with_sort_order(
         data_layer=data_layer, volunteer=volunteer
     )
     skills = get_dict_of_existing_skills(data_layer=data_layer, volunteer=volunteer)

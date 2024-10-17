@@ -1,20 +1,19 @@
 from typing import Union
 
+from app.backend.events.cadets_at_event import get_list_of_all_groups_at_event
+
 from app.frontend.reporting.qualifications.qualification_status import (
     write_expected_qualifications_to_temp_csv_file_and_return_filename,
 )
 
-from app.OLD_backend.ticks_and_qualifications.ticksheets import (
-    get_list_of_groups_volunteer_id_can_see,
-    get_list_of_all_groups_at_event,
-    can_see_all_groups_and_award_qualifications,
-)
+from app.backend.security.user_access import get_list_of_groups_volunteer_can_see, \
+    can_see_all_groups_and_award_qualifications
 from app.frontend.shared.qualification_and_tick_state_storage import (
     update_state_for_group_name,
 )
 from app.objects.events import Event
 
-from app.backend.security.logged_in_user import get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER
+from app.backend.security.logged_in_user import get_volunteer_for_logged_in_user_or_superuser
 from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.abstract_objects.abstract_lines import (
@@ -72,11 +71,11 @@ def display_form_choose_group_for_event(interface: abstractInterface) -> Form:
 
 def get_nav_bar(interface: abstractInterface):
     navbar = [main_menu_button, back_menu_button]
-    volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER(interface)
+    volunteer = get_volunteer_for_logged_in_user_or_superuser(interface)
     if can_see_all_groups_and_award_qualifications(
-        interface=interface,
+        object_store=interface.object_store,
         event=get_event_from_state(interface),
-        volunteer_id=volunteer_id,
+        volunteer=volunteer,
     ):
         navbar.append(download_qualification_list_button)
         help = HelpButton("ticksheets_choose_group_SI_skipper_help")
@@ -98,9 +97,9 @@ def get_group_buttons(interface: abstractInterface, event: Event) -> Line:
     if event_is_empty_of_groups(interface=interface, event=event):
         return Line(Heading("No groups defined at this event yet"))
 
-    volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER(interface)
-    list_of_groups = get_list_of_groups_volunteer_id_can_see(
-        interface=interface, event=event, volunteer_id=volunteer_id
+    volunteer = get_volunteer_for_logged_in_user_or_superuser(interface)
+    list_of_groups = get_list_of_groups_volunteer_can_see(
+        object_store=interface.object_store, event=event, volunteer=volunteer
     )
 
     if len(list_of_groups) == 0:
@@ -121,7 +120,7 @@ def get_group_buttons(interface: abstractInterface, event: Event) -> Line:
 
 
 def event_is_empty_of_groups(interface: abstractInterface, event: Event) -> bool:
-    return len(get_list_of_all_groups_at_event(interface=interface, event=event)) == 0
+    return len(get_list_of_all_groups_at_event(object_store=interface.object_store, event=event)) == 0
 
 
 def post_form_choose_group_for_event(
@@ -131,7 +130,7 @@ def post_form_choose_group_for_event(
     if back_menu_button.pressed(button_pressed):
         ## no change to stage required
         return previous_form(interface)
-    elif button_pressed == DOWNLOAD_QUALIFICATION_LIST:
+    elif download_qualification_list_button.pressed(button_pressed):
         filename = write_expected_qualifications_to_temp_csv_file_and_return_filename(
             interface=interface, event=get_event_from_state(interface)
         )
@@ -150,10 +149,10 @@ def action_when_group_button_clicked(interface: abstractInterface) -> NewForm:
     group_name_selected = interface.last_button_pressed()
     update_state_for_group_name(interface=interface, group_name=group_name_selected)
 
-    return form_for_view_level(interface)
+    return form_for_view_group_level(interface)
 
 
-def form_for_view_level(interface: abstractInterface):
+def form_for_view_group_level(interface: abstractInterface):
     return interface.get_new_form_given_function(
         display_form_choose_level_for_group_at_event
     )

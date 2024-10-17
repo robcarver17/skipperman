@@ -117,6 +117,7 @@ def get_ticksheet_for_cadets_in_group_at_event_for_qualification(
     group: Group,
     qualification_stage_id: str,
 ) -> ListOfCadetsWithTickListItems:
+
     ticksheets_data = TickSheetsData(interface.data)
     group_allocation_data = GroupAllocationsData(interface.data)
     cadet_data = CadetData(interface.data)

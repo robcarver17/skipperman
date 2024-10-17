@@ -13,7 +13,7 @@ CADET_ID = "cadet"
 
 def get_group_from_state(interface: abstractInterface) -> Group:
     name = get_group_name_from_state(interface)
-    return Group(name)
+    return Group.name_only(name)
 
 
 def get_group_name_from_state(interface: abstractInterface) -> str:

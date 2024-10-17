@@ -23,9 +23,9 @@ from app.objects.generic_list_of_objects import (
 )
 from app.objects.generic_objects import transform_class_instance_into_string, \
     transform_string_into_class_instance, GenericSkipperManObjectWithIds
-from app.objects_OLD.mapped_wa_event import (
+from app.objects.registration_data import (
     RegistrationStatus,
-    RowInMappedWAEvent,
+    RowInRegistrationData,
     deleted_status,
 )
 from app.objects.utils import clean_up_dict_with_nans
@@ -43,7 +43,7 @@ class CadetWithIdAtEvent(GenericSkipperManObjectWithIds):
     cadet_id: str
     availability: DaySelector
     status: RegistrationStatus
-    data_in_row: RowInMappedWAEvent
+    data_in_row: RowInRegistrationData
     notes: str = ""
     health: str = ""
     changed: bool = False
@@ -86,7 +86,7 @@ class CadetWithIdAtEvent(GenericSkipperManObjectWithIds):
             cadet_id=cadet_id,
             availability=availability,
             status=status,
-            data_in_row=RowInMappedWAEvent.from_external_dict(dict_with_str),
+            data_in_row=RowInRegistrationData.from_external_dict(dict_with_str),
             changed=changed,
             notes=notes,
             health=health,
@@ -259,7 +259,7 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
         self[existing_cadet_idx] = existing_cadet_at_event
 
     def update_data_row_for_existing_cadet_at_event(
-        self, cadet_id: str, new_data_in_row: RowInMappedWAEvent
+        self, cadet_id: str, new_data_in_row: RowInRegistrationData
     ):
         ## DO NOT MARK AS CHANGED - ONLY APPLIES TO AVAILABLILITY AND STATUS FIELDS
         existing_cadet_idx = self.idx_of_items_with_cadet_id(cadet_id)
@@ -271,7 +271,7 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
 
 
 def get_cadet_at_event_from_row_in_mapped_event(
-    row_in_mapped_wa_event: RowInMappedWAEvent, cadet_id: str, event: Event
+    row_in_mapped_wa_event: RowInRegistrationData, cadet_id: str, event: Event
 ) -> CadetWithIdAtEvent:
     status = row_in_mapped_wa_event.registration_status
     availability = get_attendance_selection_from_event_row(
@@ -291,7 +291,7 @@ def get_cadet_at_event_from_row_in_mapped_event(
 
 
 def get_attendance_selection_from_event_row(
-    row: RowInMappedWAEvent, event: Event
+    row: RowInRegistrationData, event: Event
 ) -> DaySelector:
     row_as_dict = row.as_dict()
 
@@ -306,5 +306,5 @@ def get_attendance_selection_from_event_row(
     return event.day_selector_with_covered_days()
 
 
-def get_health_from_event_row(row: RowInMappedWAEvent):
+def get_health_from_event_row(row: RowInRegistrationData):
     return row.get_item(CADET_HEALTH, "")

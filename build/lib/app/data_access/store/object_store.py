@@ -37,6 +37,7 @@ class ObjectStore:
                                                                         **kwargs)
 
     def get(self, object_definition: [DerivedObjectDefinition, UnderlyingObjectDefinition], **kwargs):
+
         key = get_store_key(object_definition=object_definition, **kwargs)
         stored_object = self.object_store.get(key, NOT_IN_STORE)
 
@@ -123,10 +124,10 @@ def compose_object_for_object_store(object_store: ObjectStore, object_definition
 def compose_derived_object_from_object_store(object_store: ObjectStore, object_definition: DerivedObjectDefinition, **kwargs):
     composition_function = object_definition.composition_function
     dict_of_arguments =object_definition.dict_of_arguments_and_underlying_object_definitions
-
-    kwargs_to_pass = copy(kwargs)
+    matching_kwargs = object_definition.matching_kwargs(**kwargs)
+    kwargs_to_pass = copy(matching_kwargs)
     for keyword_name, object_definition_for_keyword in dict_of_arguments.items():
-        kwargs_to_pass[keyword_name] = object_store.get(object_definition_for_keyword) ## what about keywrods eg event
+        kwargs_to_pass[keyword_name] = object_store.get(object_definition_for_keyword, **kwargs)
 
     return composition_function(**kwargs_to_pass)
 
@@ -138,8 +139,9 @@ def compose_underyling_object_from_data_store(object_store: ObjectStore, object_
 
 
 def get_data_access_method(object_store: ObjectStore, object_definition: UnderlyingObjectDefinition, **kwargs) -> DataAccessMethod:
+    matching_kwargs = object_definition.matching_kwargs(**kwargs)
     data_access_callable_function = object_definition.data_store_method_function
-    data_access_method = data_access_callable_function(object_store.data_api, **kwargs)
+    data_access_method = data_access_callable_function(object_store.data_api, **matching_kwargs)
 
     return data_access_method
 

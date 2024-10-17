@@ -1,6 +1,6 @@
 from copy import copy
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.objects.cadets import Cadet
 
@@ -20,8 +20,8 @@ from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
 from app.objects.exceptions import DuplicateCadets
 from app.objects.day_selectors import DaySelector, Day
 from app.objects.events import Event
-from app.objects_OLD.mapped_wa_event import (
-    RowInMappedWAEvent,
+from app.objects.registration_data import (
+    RowInRegistrationData,
     MappedWAEvent,
     RegistrationStatus,
 )
@@ -49,7 +49,7 @@ def get_all_rows_in_mapped_event_for_cadet(
 def add_new_cadet_to_event(
     interface: abstractInterface,
     event: Event,
-    row_in_mapped_wa_event: RowInMappedWAEvent,
+    row_in_mapped_wa_event: RowInRegistrationData,
     cadet_id: str,
 ):
     cadets_at_event_data = CadetsAtEventIdLevelData(interface.data)
@@ -72,7 +72,7 @@ def get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
     event: Event,
     cadet_id: str,
     raise_error_on_duplicate: bool = True,
-) -> RowInMappedWAEvent:
+) -> RowInRegistrationData:
     cadet = get_cadet_from_id(cadet_id=cadet_id, data_layer=interface.data)
 
     all_rows = get_all_rows_in_mapped_event_for_cadet(
@@ -257,7 +257,7 @@ def update_data_row_for_existing_cadet_at_event(
     interface: abstractInterface,
     event: Event,
     cadet_id: str,
-    new_data_in_row: RowInMappedWAEvent,
+    new_data_in_row: RowInRegistrationData,
 ):
     cadets_at_event_data = CadetsAtEventIdLevelData(interface.data)
     cadets_at_event_data.update_data_row_for_existing_cadet_at_event(

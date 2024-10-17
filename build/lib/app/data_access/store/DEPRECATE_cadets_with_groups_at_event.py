@@ -1,14 +1,13 @@
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 from app.data_access.store.DEPRECATE_cadets_at_event import CadetsAtEventData
 
 from app.objects.events import Event
 
-
-from app.objects_OLD.cadet_at_event import  ListOfCadetsAtEvent, CadetAtEvent
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
-from app.objects_OLD.cadets_with_groups import ListOfCadetsAtEventWithGroupsByDay, CadetAtEventWithGroupsByDay, \
-    DaysAndGroups
+from app.objects_OLD.cadets_with_groups import ListOfCadetsAtEventWithGroupsByDay, CadetAtEventWithGroupsByDay
+from app.objects.composed.cadets_at_event_with_groups import DaysAndGroups
+from app.objects.composed.cadets_at_event_with_registration_data import DEPRECATE_CadetWithEventData, DictOfCadetsWithRegistrationData
 
 
 class CadetsWithGroupsAtEventData:
@@ -27,7 +26,7 @@ class CadetsWithGroupsAtEventData:
 
         return ListOfCadetsAtEventWithGroupsByDay(list_of_cadets_at_event_with_groups)
 
-    def get_cadet_at_event_with_groups(self,  cadet_at_event: CadetAtEvent) -> CadetAtEventWithGroupsByDay:
+    def get_cadet_at_event_with_groups(self, cadet_at_event: DEPRECATE_CadetWithEventData) -> CadetAtEventWithGroupsByDay:
         days_and_groups = self.get_days_and_groups_for_cadet_at_event(cadet_at_event)
         return CadetAtEventWithGroupsByDay(
             cadet=cadet_at_event.cadet,
@@ -35,7 +34,7 @@ class CadetsWithGroupsAtEventData:
             days_and_groups=days_and_groups
         )
 
-    def get_days_and_groups_for_cadet_at_event(self, cadet_at_event: CadetAtEvent) -> DaysAndGroups:
+    def get_days_and_groups_for_cadet_at_event(self, cadet_at_event: DEPRECATE_CadetWithEventData) -> DaysAndGroups:
         all_days_and_groups = self.get_list_of_cadets_with_ids_and_groups_at_event(event=cadet_at_event.event_data.event)
         dict_of_days_and_groups = dict([
             (day,
@@ -48,7 +47,7 @@ class CadetsWithGroupsAtEventData:
     def get_list_of_cadets_with_ids_and_groups_at_event(self, event: Event) -> ListOfCadetIdsWithGroups:
         return self.data_api.get_list_of_cadets_with_groups_at_event(event)
 
-    def get_list_of_cadets_at_event(self, event: Event) -> ListOfCadetsAtEvent:
+    def get_list_of_cadets_at_event(self, event: Event) -> DictOfCadetsWithRegistrationData:
         return self.cadets_at_event_data.get_list_of_cadets_at_event(event)
 
     @property

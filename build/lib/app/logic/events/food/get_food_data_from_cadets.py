@@ -24,7 +24,7 @@ from app.frontend.shared.events_state import get_event_from_state
 
 from app.objects.events import Event
 from app.objects.exceptions import NoMoreData, DuplicateCadets
-from app.objects_OLD.mapped_wa_event import RowInMappedWAEvent
+from app.objects.registration_data import RowInRegistrationData
 
 
 def display_form_interactively_update_cadet_food_at_event(
@@ -120,7 +120,7 @@ CHECKBOX_FOOD = "food_check"
 
 def display_form_for_new_cadet_food_requirements(
         interface: abstractInterface,
-        relevant_row: RowInMappedWAEvent,
+        relevant_row: RowInRegistrationData,
                                                        event: Event,
             cadet_id: str) -> Form:
 

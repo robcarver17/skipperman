@@ -1,23 +1,22 @@
 from typing import List, Dict
 
-from app.OLD_backend.events import get_sorted_list_of_events
-from app.OLD_backend.rota.volunteer_rota import get_volunteers_in_role_at_event_with_active_allocations, \
-    load_list_of_volunteers_at_event
+from app.OLD_backend.rota.volunteer_rota import load_list_of_volunteers_at_event
 from app.OLD_backend.volunteers.volunteers import DEPRECATE_get_volunteer_from_id
+from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
+    get_all_roles_across_recent_events_for_volunteer_as_dict_with_sort_order
 from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.exceptions import arg_not_passed
-from app.objects.events import Event, SORT_BY_START_ASC, list_of_events_excluding_one_event, ListOfEvents, \
-    SORT_BY_START_DSC
+from app.objects.events import Event, SORT_BY_START_ASC
 from app.objects.volunteers import Volunteer
 from app.objects_OLD.volunteers_at_event import ListOfVolunteersAtEvent, DEPRECATE_VolunteerAtEvent
-from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import RoleAndGroup
+from app.objects.volunteer_roles_and_groups_with_id import RoleAndGroupDEPRECATE
 
 
 def DEPRECATE_get_dict_of_volunteers_with_last_roles(
     interface: abstractInterface, list_of_volunteer_ids: List[str], avoid_event: Event
-) -> Dict[str, RoleAndGroup]:
+) -> Dict[str, RoleAndGroupDEPRECATE]:
     return dict(
         [
             (
@@ -37,7 +36,7 @@ def get_dict_of_volunteers_with_last_roles(
     data_layer: DataLayer,
     list_of_volunteers_at_event: ListOfVolunteersAtEvent,
     avoid_event: Event,
-) -> Dict[str, RoleAndGroup]:
+) -> Dict[str, RoleAndGroupDEPRECATE]:
     return dict(
         [
             (
@@ -55,7 +54,7 @@ def get_dict_of_volunteers_with_last_roles(
 
 def DEPRECATE_get_last_role_for_volunteer_id(
     interface: abstractInterface, volunteer_id: str, avoid_event: Event = arg_not_passed
-) -> RoleAndGroup:
+) -> RoleAndGroupDEPRECATE:
     volunteer = DEPRECATE_get_volunteer_from_id(interface=interface, volunteer_id=volunteer_id)
     roles = get_all_roles_across_recent_events_for_volunteer_id_as_list(
         data_layer=interface.data,
@@ -64,14 +63,14 @@ def DEPRECATE_get_last_role_for_volunteer_id(
         sort_by=SORT_BY_START_ASC,
     )
     if len(roles) == 0:
-        return RoleAndGroup()
+        return RoleAndGroupDEPRECATE()
 
     return roles[-1]  ## most recent role
 
 
 def get_last_role_for_volunteer_id(
     data_layer: DataLayer, volunteer: Volunteer, avoid_event: Event = arg_not_passed
-) -> RoleAndGroup:
+) -> RoleAndGroupDEPRECATE:
     roles = get_all_roles_across_recent_events_for_volunteer_id_as_list(
         data_layer=data_layer,
         volunteer=volunteer,
@@ -79,7 +78,7 @@ def get_last_role_for_volunteer_id(
         sort_by=SORT_BY_START_ASC,
     )
     if len(roles) == 0:
-        return RoleAndGroup()
+        return RoleAndGroupDEPRECATE()
 
     return roles[-1]  ## most recent role
 
@@ -89,8 +88,8 @@ def get_all_roles_across_recent_events_for_volunteer_id_as_list(
     volunteer: Volunteer,
     sort_by=SORT_BY_START_ASC,
     avoid_event: Event = arg_not_passed,
-) -> List[RoleAndGroup]:
-    roles_as_dict = get_all_roles_across_recent_events_for_volunteer_as_dict_DONTUSEDIRECTLY(
+) -> List[RoleAndGroupDEPRECATE]:
+    roles_as_dict = get_all_roles_across_recent_events_for_volunteer_as_dict_with_sort_order(
         data_layer=data_layer,
         volunteer=volunteer,
         sort_by=sort_by,
@@ -99,80 +98,11 @@ def get_all_roles_across_recent_events_for_volunteer_id_as_list(
     return list(roles_as_dict.values())
 
 
-def get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(
-    data_layer: DataLayer,
-    volunteer: Volunteer,
-    avoid_event: Event = arg_not_passed,
-) -> Dict[Event, RoleAndGroup]:
-
-    return get_all_roles_across_recent_events_for_volunteer_as_dict_DONTUSEDIRECTLY(
-        data_layer=data_layer,
-        volunteer=volunteer,
-        avoid_event=avoid_event,
-        sort_by=SORT_BY_START_DSC
-    )
-
-
-def get_all_roles_across_recent_events_for_volunteer_as_dict_DONTUSEDIRECTLY(
-    data_layer: DataLayer,
-    volunteer: Volunteer,
-    sort_by=SORT_BY_START_ASC,
-    avoid_event: Event = arg_not_passed,
-) -> Dict[Event, RoleAndGroup]:
-    list_of_events = get_sorted_list_of_events(data_layer=data_layer, sort_by=sort_by)
-    if avoid_event is arg_not_passed:
-        pass  ## can't exclude so do everything
-    else:
-        list_of_events = list_of_events_excluding_one_event(
-            list_of_events=list_of_events,
-            event_to_exclude=avoid_event,
-            sort_by=sort_by,
-            only_past=True,
-        )
-
-    return get_all_roles_for_list_of_events_for_volunteer_as_dict(
-        data_layer=data_layer, volunteer=volunteer, list_of_events=list_of_events
-    )
-
-
-def get_all_roles_for_list_of_events_for_volunteer_as_dict(
-    data_layer: DataLayer, volunteer: Volunteer, list_of_events: ListOfEvents
-) -> Dict[Event, RoleAndGroup]:
-    list_of_roles_and_groups = [
-        get_role_and_group_for_event_and_volunteer(
-            data_layer=data_layer, event=event, volunteer=volunteer
-        )
-        for event in list_of_events
-    ]
-    roles_dict = dict(
-        [
-            (event, role_and_group)
-            for event, role_and_group in zip(list_of_events, list_of_roles_and_groups)
-            if not role_and_group.missing
-        ]
-    )
-
-    return roles_dict
-
-
-def get_role_and_group_for_event_and_volunteer(
-    data_layer: DataLayer, volunteer: Volunteer, event: Event
-) -> RoleAndGroup:
-    volunteer_data = get_volunteers_in_role_at_event_with_active_allocations(
-        data_layer=data_layer, event=event
-    )
-    role_and_group = volunteer_data.most_common_role_and_group_at_event_for_volunteer(
-        volunteer=volunteer
-    )
-
-    return role_and_group
-
-
 def get_previous_role_and_group_for_volunteer_at_event(
         cache: AdHocCache,
         volunteer_at_event: DEPRECATE_VolunteerAtEvent
 
-) -> RoleAndGroup:
+) -> RoleAndGroupDEPRECATE:
     list_of_volunteers_at_event = cache.get_from_cache(load_list_of_volunteers_at_event,
         event=volunteer_at_event.event
     )
@@ -183,7 +113,7 @@ def get_previous_role_and_group_for_volunteer_at_event(
     )
 
     previous_role = dict_of_volunteers_with_last_roles.get(
-        volunteer_at_event.volunteer_id, RoleAndGroup()
+        volunteer_at_event.volunteer_id, RoleAndGroupDEPRECATE()
     )
 
     return previous_role

@@ -10,17 +10,17 @@ from app.objects.users_and_security import ListOfSkipperManUsers
 from app.objects.volunteers import ListOfVolunteers
 from app.objects.cadet_volunteer_connections_with_ids import ListOfCadetVolunteerAssociationsWithIds
 
-from app.objects_OLD.primtive_with_id.volunteer_at_event import ListOfVolunteersAtEventWithId
+from app.objects.volunteer_at_event_with_id import ListOfVolunteersAtEventWithId
 from app.objects_OLD.primtive_with_id.identified_volunteer_at_event import ListOfIdentifiedVolunteersAtEvent
 
-from app.objects_OLD.mapped_wa_event import MappedWAEvent
+from app.objects.registration_data import MappedWAEvent
 
 from app.objects_OLD.wa_field_mapping import ListOfWAFieldMappings
 
 from app.objects_OLD.wa_event_mapping import ListOfWAEventMaps
 
 from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent
-from app.objects_OLD.identified_cadets_at_event import ListOfIdentifiedCadetsAtEvent
+from app.objects.identified_cadets_at_event import ListOfIdentifiedCadetsAtEvent
 
 from app.objects.events import Event
 
@@ -36,15 +36,15 @@ from app.objects.qualifications import ListOfQualifications
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
 from app.objects.events import ListOfEvents
 from app.objects.boat_classes import ListOfBoatClasses
-from app.objects.cadet_at_event_with_dinghy_with_ids import ListOfCadetAtEventWithDinghies
+from app.objects.cadet_at_event_with_dinghy_with_ids import ListOfCadetAtEventWithBoatClassAndPartnerWithIds
 from app.objects.club_dinghies import (
     ListOfClubDinghies,
 )
-from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithClubDinghies
+from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithIdAndClubDinghies
 from app.objects.qualifications import ListOfCadetsWithIdsAndQualifications
 from app.objects_OLD.primtive_with_id.volunteer_role_targets import ListOfTargetForRoleAtEvent
-from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import ListOfVolunteersWithIdInRoleAtEvent
-from app.objects.composed.volunteers_with_skills import ListOfVolunteersWithSkills
+from app.objects.volunteer_roles_and_groups_with_id import ListOfVolunteersWithIdInRoleAtEvent
+from app.objects.composed.volunteers_with_skills import DictOfVolunteersWithSkills
 from app.objects.patrol_boats import ListOfPatrolBoats
 from app.objects.patrol_boats_with_volunteers_with_id import ListOfVolunteersWithIdAtEventWithPatrolBoatsId
 from app.objects.committee import ListOfCadetsWithIdOnCommittee
@@ -363,7 +363,7 @@ class DataLayer:
 
     def get_list_of_cadets_at_event_with_club_dinghies(
         self, event: Event
-    ) -> ListOfCadetAtEventWithClubDinghies:
+    ) -> ListOfCadetAtEventWithIdAndClubDinghies:
         data_access_for_list_of_cadets_at_event_with_club_dinghies = (
             get_data_access_for_list_of_cadets_at_event_with_club_dinghies(
                 self.data, event_id=event.id
@@ -376,7 +376,7 @@ class DataLayer:
     def save_list_of_cadets_at_event_with_club_dinghies(
         self,
         event: Event,
-        list_of_cadets_at_event_with_club_dinghies: ListOfCadetAtEventWithClubDinghies,
+        list_of_cadets_at_event_with_club_dinghies: ListOfCadetAtEventWithIdAndClubDinghies,
     ):
         data_access_for_list_of_cadets_at_event_with_club_dinghies = (
             get_data_access_for_list_of_cadets_at_event_with_club_dinghies(
@@ -390,7 +390,7 @@ class DataLayer:
 
     def get_list_of_cadets_at_event_with_dinghies(
         self, event: Event
-    ) -> ListOfCadetAtEventWithDinghies:
+    ) -> ListOfCadetAtEventWithBoatClassAndPartnerWithIds:
         data_access_for_list_of_cadets_at_event_with_dinghies = (
             get_data_access_for_list_of_cadets_at_event_with_dinghies(
                 self.data, event_id=event.id
@@ -401,7 +401,7 @@ class DataLayer:
     def save_list_of_cadets_at_event_with_dinghies(
         self,
         event: Event,
-        list_of_cadets_at_event_with_dinghies: ListOfCadetAtEventWithDinghies,
+        list_of_cadets_at_event_with_dinghies: ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
     ):
         data_access_for_list_of_cadets_at_event_with_dinghies = (
             get_data_access_for_list_of_cadets_at_event_with_dinghies(
@@ -572,14 +572,14 @@ class DataLayer:
             data_access_method=data_access_for_list_of_voluteers_at_event_with_patrol_boats,
         )
 
-    def get_list_of_volunteer_skills(self) -> ListOfVolunteersWithSkills:
+    def get_list_of_volunteer_skills(self) -> DictOfVolunteersWithSkills:
         data_access_for_list_of_volunteer_skills = (
             get_data_access_for_list_of_volunteer_skills(self.data)
         )
         return self.store.read(data_access_for_list_of_volunteer_skills)
 
     def save_list_of_volunteer_skills(
-        self, list_of_volunteer_skills: ListOfVolunteersWithSkills
+        self, list_of_volunteer_skills: DictOfVolunteersWithSkills
     ):
         data_access_for_list_of_volunteer_skills = (
             get_data_access_for_list_of_volunteer_skills(self.data)

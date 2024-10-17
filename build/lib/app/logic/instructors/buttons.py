@@ -1,6 +1,6 @@
 from typing import List, Tuple, Union
 
-from app.OLD_backend.ticks_and_qualifications.ticksheets import get_ticksheet_data
+from app.backend.qualifications_and_ticks.ticksheets import get_ticksheet_data
 
 from app.frontend.shared.events_state import get_event_from_state
 

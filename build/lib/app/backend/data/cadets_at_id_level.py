@@ -3,7 +3,7 @@ from typing import List
 
 from app.objects.exceptions import arg_not_passed, missing_data
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.committee import (
     ListOfCadetsWithIdOnCommittee,

@@ -4,7 +4,7 @@ from app.OLD_backend.ticks_and_qualifications.qualifications import (
     apply_qualification_to_cadet,
     remove_qualification_from_cadet,
 )
-from app.OLD_backend.ticks_and_qualifications.ticksheets import (
+from app.backend.qualifications_and_ticks.ticksheets import (
     TickSheetDataWithExtraInfo,
     cadet_is_already_qualified,
 )

@@ -1,12 +1,12 @@
 from app.objects.volunteers import (
     ListOfVolunteers,
 )
-from app.objects.composed.volunteers_with_skills import ListOfVolunteersWithSkills
+from app.objects.composed.volunteers_with_skills import DictOfVolunteersWithSkills
 from app.objects.cadet_volunteer_connections_with_ids import ListOfCadetVolunteerAssociationsWithIds
-from app.objects_OLD.primtive_with_id.volunteer_at_event import ListOfVolunteersAtEventWithId
+from app.objects.volunteer_at_event_with_id import ListOfVolunteersAtEventWithId
 from app.objects_OLD.primtive_with_id.identified_volunteer_at_event import ListOfIdentifiedVolunteersAtEvent
 from app.objects_OLD.primtive_with_id.volunteer_role_targets import ListOfTargetForRoleAtEvent
-from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import ListOfVolunteersWithIdInRoleAtEvent
+from app.objects.volunteer_roles_and_groups_with_id import ListOfVolunteersWithIdInRoleAtEvent
 from app.objects.volunteer_skills import ListOfSkills
 from app.objects.roles_and_teams import ListOfRolesWithSkillIds, ListOfTeams, ListOfTeamsAndRolesWithIds
 
@@ -49,10 +49,10 @@ class DataListOfVolunteers(object):
 
 
 class DataListOfVolunteerSkills(object):
-    def read(self) -> ListOfVolunteersWithSkills:
+    def read(self) -> DictOfVolunteersWithSkills:
         raise NotImplemented
 
-    def write(self, list_of_volunteer_skills: ListOfVolunteersWithSkills):
+    def write(self, list_of_volunteer_skills: DictOfVolunteersWithSkills):
         raise NotImplemented
 
 

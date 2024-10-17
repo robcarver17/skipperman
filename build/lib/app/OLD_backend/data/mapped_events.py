@@ -2,16 +2,16 @@ from typing import List
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.objects.exceptions import missing_data
 from app.objects.events import Event
-from app.objects_OLD.mapped_wa_event import MappedWAEvent, RowInMappedWAEvent
+from app.objects.registration_data import MappedWAEvent, RowInRegistrationData
 
 
 def get_row_in_mapped_event_data_given_id(
     interface: abstractInterface, event: Event, row_id: str
-) -> RowInMappedWAEvent:
+) -> RowInRegistrationData:
     mapped_data = MappedEventsData(interface.data)
 
     return mapped_data.get_row_with_rowid(event=event, row_id=row_id)
@@ -37,14 +37,14 @@ class MappedEventsData:
             event=event, mapped_wa_event_data=MappedWAEvent([])
         )
 
-    def add_row(self, event: Event, new_row: RowInMappedWAEvent):
+    def add_row(self, event: Event, new_row: RowInRegistrationData):
         mapped_wa_event_data = self.get_mapped_wa_event(event)
         mapped_wa_event_data.append(new_row)
         self.save_mapped_wa_event(
             event=event, mapped_wa_event_data=mapped_wa_event_data
         )
 
-    def get_row_with_rowid(self, event: Event, row_id: str) -> RowInMappedWAEvent:
+    def get_row_with_rowid(self, event: Event, row_id: str) -> RowInRegistrationData:
         mapped_data = self.get_mapped_wa_event(event)
         try:
             row_data = mapped_data.get_row_with_rowid(row_id)

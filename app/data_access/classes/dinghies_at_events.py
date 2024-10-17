@@ -1,5 +1,5 @@
 from app.objects.boat_classes import ListOfBoatClasses
-from app.objects.cadet_at_event_with_dinghy_with_ids import ListOfCadetAtEventWithDinghies
+from app.objects.cadet_at_event_with_dinghy_with_ids import ListOfCadetAtEventWithBoatClassAndPartnerWithIds
 
 
 class DataListOfDinghies(object):
@@ -11,12 +11,12 @@ class DataListOfDinghies(object):
 
 
 class DataListOfCadetAtEventWithDinghies(object):
-    def read(self, event_id: str) -> ListOfCadetAtEventWithDinghies:
+    def read(self, event_id: str) -> ListOfCadetAtEventWithBoatClassAndPartnerWithIds:
         raise NotImplemented
 
     def write(
         self,
-        list_of_cadets_at_event_with_club_dinghies: ListOfCadetAtEventWithDinghies,
+        list_of_cadets_at_event_with_club_dinghies: ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
         event_id: str,
     ):
         raise NotImplemented

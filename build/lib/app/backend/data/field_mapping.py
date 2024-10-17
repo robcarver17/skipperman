@@ -4,7 +4,7 @@ from app.objects.events import Event
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.objects_OLD.wa_field_mapping import ListOfWAFieldMappings
 

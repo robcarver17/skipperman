@@ -4,10 +4,10 @@ from app.OLD_backend.data.dinghies import DinghiesData
 from app.data_access.configuration.groups import all_groups_names
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
-from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithClubDinghies
+from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithIdAndClubDinghies
 from app.objects.exceptions import missing_data
 from app.objects.events import Event
-from app.objects_OLD.cadets_with_groups import CadetWithGroupOnDay
+from app.objects.composed.cadets_at_event_with_groups import CadetWithGroupOnDay
 from app.objects.cadet_with_id_with_group_at_event import GROUP_STR_NAME
 from app.OLD_backend.reporting.options_and_parameters.report_type_specific_parameters import (
     SpecificParametersForTypeOfReport,
@@ -47,7 +47,7 @@ def add_club_boat_asterix(
 
 def add_club_boat_asterix_to_cadet(
     cadet_with_group: CadetWithGroupOnDay,
-    list_of_cadets_at_event_with_club_dinghies: ListOfCadetAtEventWithClubDinghies,
+    list_of_cadets_at_event_with_club_dinghies: ListOfCadetAtEventWithIdAndClubDinghies,
 ):
     cadet = cadet_with_group.cadet
     cadet_id = cadet.id

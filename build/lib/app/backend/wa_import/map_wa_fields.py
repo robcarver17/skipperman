@@ -2,7 +2,7 @@ import os
 from typing import List
 
 import pandas as pd
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.data_access.file_access import download_directory
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -10,7 +10,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.OLD_backend.data.field_mapping import FieldMappingData
 from app.objects.events import Event
 from app.objects_OLD.wa_field_mapping import ListOfWAFieldMappings
-from app.objects_OLD.mapped_wa_event import MappedWAEvent
+from app.objects.registration_data import MappedWAEvent
 from app.backend.file_handling import load_spreadsheet_file_and_clear_nans
 
 

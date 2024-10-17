@@ -17,10 +17,10 @@ from app.OLD_backend.group_allocations.cadet_event_allocations import (
     DEPRECATE_get_list_of_active_cadets_at_event,
 )
 from app.OLD_backend.group_allocations.previous_allocations import (
-    allocation_for_cadet_in_previous_events,
-    allocation_for_cadet_in_previous_events_as_dict,
     DEPRECATE_get_dict_of_allocations_for_events_and_list_of_cadets,
 )
+from app.backend.groups.cadets_with_groups_at_event import most_popular_allocation_for_cadet_in_previous_events, \
+    allocation_for_cadet_in_previous_events_as_dictCONSIDER_REFACTOR
 from app.data_access.configuration.groups import unallocated_group_name
 from app.OLD_backend.data.cadets_at_event_id_level import load_cadets_at_event
 from app.data_access.configuration.field_list import (
@@ -58,12 +58,12 @@ from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGrou
 from app.objects.club_dinghies import (
     ListOfClubDinghies,
 )
-from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithClubDinghies, NO_BOAT
+from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithIdAndClubDinghies, NO_BOAT
 from app.objects.boat_classes import (
     ListOfBoatClasses,
 )
 from app.objects.cadet_at_event_with_dinghy_with_ids import NO_PARTNER_REQUIRED, no_partnership, \
-    ListOfCadetAtEventWithDinghies
+    ListOfCadetAtEventWithBoatClassAndPartnerWithIds
 from app.objects.utils import similar, all_equal, most_common
 from app.objects.qualifications import ListOfCadetsWithIdsAndQualifications
 from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent
@@ -79,8 +79,8 @@ class AllocationData:
     list_of_all_cadets: ListOfCadets
     previous_allocations_as_dict: Dict[Event, ListOfCadetIdsWithGroups]
     group_allocation_info: GroupAllocationInfo
-    list_of_club_boats_allocated: ListOfCadetAtEventWithClubDinghies
-    list_of_cadets_at_event_with_dinghies: ListOfCadetAtEventWithDinghies
+    list_of_club_boats_allocated: ListOfCadetAtEventWithIdAndClubDinghies
+    list_of_cadets_at_event_with_dinghies: ListOfCadetAtEventWithBoatClassAndPartnerWithIds
     list_of_club_boats: ListOfClubDinghies
     list_of_dinghies: ListOfBoatClasses
     list_of_cadets_with_qualifications: ListOfCadetsWithIdsAndQualifications
@@ -503,14 +503,14 @@ class AllocationData:
     def previous_groups_as_list(
         self, cadet: Cadet, number_of_events: int = 3
     ) -> List[Group]:
-        return allocation_for_cadet_in_previous_events(
+        return most_popular_allocation_for_cadet_in_previous_events(
             cadet=cadet, previous_allocations_as_dict=self.previous_allocations_as_dict
         )[-number_of_events:]
 
     def previous_groups_as_dict(
         self, cadet: Cadet, number_of_events: int = 3
     ) -> Dict[Event, Group]:
-        return allocation_for_cadet_in_previous_events_as_dict(
+        return allocation_for_cadet_in_previous_events_as_dictCONSIDER_REFACTOR(
             cadet=cadet,
             previous_allocations_as_dict=self.previous_allocations_as_dict,
             number_of_events=number_of_events,

@@ -1,8 +1,8 @@
 from typing import List, Union
 
 from app.frontend.forms.swaps import is_ready_to_swap
-from app.backend.OLD_patrol_boats.data import load_list_of_patrol_boats_at_event_from_cache
-from app.backend.OLD_patrol_boats.summary import get_summary_list_of_patrol_boat_allocations_for_events
+#from app.OLD_backend.OLD_patrol_boats import load_list_of_patrol_boats_at_event_from_cache
+from app.OLD_backend.OLD_patrol_boats.summary import get_summary_list_of_patrol_boat_allocations_for_events
 from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
     get_existing_allocation_elements_for_day_and_boat,
     get_volunteer_row_to_select_skill, get_list_of_volunteers_for_skills_checkboxes,
@@ -168,18 +168,19 @@ def get_bottom_row_padding_columns_for_patrol_boat_table(event: Event) -> List[s
 def get_body_of_patrol_boat_table_at_event(
     interface: abstractInterface, event: Event
 ) -> List[RowInTable]:
-    list_of_boats_at_event = load_list_of_patrol_boats_at_event_from_cache(
-        cache=interface.cache, event=event
-    )
+    #list_of_boats_at_event = load_list_of_patrol_boats_at_event_from_cache(
+    #    cache=interface.cache, event=event
+    #)
 
-    other_rows = [
-        get_row_for_boat_at_event(
-            patrol_boat=patrol_boat, event=event, interface=interface
-        )
-        for patrol_boat in list_of_boats_at_event
-    ]
+    #other_rows = [
+    #    get_row_for_boat_at_event(
+    #        patrol_boat=patrol_boat, event=event, interface=interface
+    #    )
+    #    for patrol_boat in list_of_boats_at_event
+    #]
 
-    return other_rows
+    #return other_rows
+    pass
 
 
 def get_row_for_boat_at_event(

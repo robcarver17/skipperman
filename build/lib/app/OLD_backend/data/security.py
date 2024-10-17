@@ -2,7 +2,7 @@ from app.data_access.configuration.configuration import HOMEPAGE
 
 from app.objects.exceptions import arg_not_passed
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 

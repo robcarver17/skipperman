@@ -3,9 +3,6 @@
 
 ## Buttons
 # Add buttons
-ADD_EVENT_BUTTON_LABEL = "Add event"
-CHECK_BUTTON_LABEL = "Check details entered"
-FINAL_ADD_BUTTON_LABEL = "Yes - these details are correct - add to data"
 
 # specific event; WA
 WA_UPLOAD_BUTTON_LABEL = "Upload initial Wild Apricot export file"

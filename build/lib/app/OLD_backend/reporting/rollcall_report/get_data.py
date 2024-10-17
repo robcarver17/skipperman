@@ -13,7 +13,7 @@ from app.OLD_backend.reporting.allocation_report.allocation_report import (
 )
 from app.objects.events import Event
 
-from app.objects.groups import GROUP_UNALLOCATED
+from app.objects.groups import unallocated_group
 
 from app.OLD_backend.data.group_allocations import GroupAllocationsData
 
@@ -51,12 +51,12 @@ def get_dict_of_df_for_reporting_rollcalls_with_flags(
 
     list_of_groups = group_allocations_data.get_list_of_groups_at_event(event)
     if include_unallocated_cadets:
-        list_of_groups.append(GROUP_UNALLOCATED)
+        list_of_groups.append(unallocated_group)
 
     list_of_df = []
     list_of_cadet_ids = []
     for group in list_of_groups:
-        if group is GROUP_UNALLOCATED:
+        if group is unallocated_group:
             list_of_cadet_ids_with_groups = (
                 group_allocations_data.active_cadet_ids_at_event_for_unallocated_cadets(
                     event=event

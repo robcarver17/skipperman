@@ -23,7 +23,7 @@ from app.objects.events import Event
 from app.objects_OLD.volunteers_in_roles import (
     VolunteerInRoleAtEventWithTeamName,
 )
-from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import ListOfVolunteersWithIdInRoleAtEvent
+from app.objects.volunteer_roles_and_groups_with_id import ListOfVolunteersWithIdInRoleAtEvent
 
 RIVER_SAFETY = "River safety"
 LAKE_SAFETY = "Lake safety"

@@ -4,11 +4,11 @@ from app.frontend.reporting.qualifications.qualification_status import (
     write_expected_qualifications_to_temp_csv_file_and_return_filename,
 )
 
-from app.OLD_backend.ticks_and_qualifications.ticksheets import (
-    get_list_of_groups_volunteer_id_can_see,
+from app.backend.qualifications_and_ticks.ticksheets import (
     get_list_of_all_groups_at_event,
-    can_see_all_groups_and_award_qualifications,
 )
+from app.backend.security.user_access import get_list_of_groups_volunteer_can_see, \
+    can_see_all_groups_and_award_qualifications
 from app.frontend.shared.qualification_and_tick_state_storage import (
     update_state_for_group_name,
 )
@@ -99,7 +99,7 @@ def get_group_buttons(interface: abstractInterface, event: Event) -> Line:
         return Line(Heading("No groups defined at this event yet"))
 
     volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER(interface)
-    list_of_groups = get_list_of_groups_volunteer_id_can_see(
+    list_of_groups = get_list_of_groups_volunteer_can_see(
         interface=interface, event=event, volunteer_id=volunteer_id
     )
 

@@ -12,11 +12,11 @@ from app.data_access.configuration.field_list import (
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
 
 from app.objects.events import Event
-from app.objects_OLD.mapped_wa_event import RowInMappedWAEvent
+from app.objects.registration_data import RowInRegistrationData
 
 
 def get_cadet_data_from_row_of_mapped_data_no_checks(
-    row_of_mapped_data: RowInMappedWAEvent,
+    row_of_mapped_data: RowInRegistrationData,
 ) -> Cadet:
     first_name = row_of_mapped_data.get(CADET_FIRST_NAME, "")
     second_name = row_of_mapped_data.get(CADET_SURNAME, "")
@@ -64,7 +64,7 @@ def mark_row_as_skip_cadet(interface: abstractInterface, event: Event, row_id: s
 
 
 def is_row_in_event_already_identified_with_cadet(
-    row: RowInMappedWAEvent, interface: abstractInterface, event: Event
+    row: RowInRegistrationData, interface: abstractInterface, event: Event
 ) -> bool:
     cadets_at_event_data = CadetsAtEventIdLevelData(interface.data)
     row_id_has_identified_cadet = (

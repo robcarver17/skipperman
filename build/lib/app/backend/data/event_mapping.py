@@ -1,6 +1,6 @@
 from app.objects.events import Event
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.objects_OLD.wa_event_mapping import ListOfWAEventMaps
 

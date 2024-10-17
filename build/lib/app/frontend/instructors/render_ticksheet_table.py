@@ -5,8 +5,8 @@ from app.frontend.instructors.buttons import (
     get_button_or_label_for_tickitem_name,
     get_select_cadet_button_when_in_no_edit_mode,
 )
-from app.OLD_backend.cadets import get_cadet_from_id
-from app.OLD_backend.ticks_and_qualifications.ticksheets import (
+from app.backend.cadets.list_of_cadets import get_cadet_from_id
+from app.backend.qualifications_and_ticks.ticksheets import (
     get_ticksheet_data,
     TickSheetDataWithExtraInfo,
     cadet_is_already_qualified,
@@ -155,7 +155,7 @@ def get_cadet_cell_at_start_of_row(
     has_an_id_been_set = return_true_if_a_cadet_id_been_set(interface)
 
     cadet = get_cadet_from_id(
-        data_layer=interface.data, cadet_id=cadet_id
+        object_store=interface.object_store, cadet_id=cadet_id
     )
     cadet_name = cadet.name
     qualification_name = ticksheet_data.qualification.name

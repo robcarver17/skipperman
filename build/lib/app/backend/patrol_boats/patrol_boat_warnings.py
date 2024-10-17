@@ -1,6 +1,6 @@
 from typing import List
 
-from app.backend.OLD_patrol_boats.data import  \
+from app.OLD_backend.OLD_patrol_boats import  \
     get_list_of_voluteers_at_event_with_patrol_boats_from_cache, load_list_of_patrol_boats_at_event_from_cache
 
 from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache

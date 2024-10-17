@@ -32,7 +32,7 @@ from app.data_access.configuration.field_list import (
 from app.objects.cadets import Cadet, DEFAULT_DATE_OF_BIRTH
 from app.objects.exceptions import missing_data
 from app.objects.events import Event
-from app.objects_OLD.mapped_wa_event import MappedWAEvent, RowInMappedWAEvent, manual_status
+from app.objects.registration_data import MappedWAEvent, RowInRegistrationData, manual_status
 from app.objects.utils import in_both_x_and_y
 
 
@@ -48,7 +48,7 @@ def convert_mapped_wa_event_potentially_with_joined_rows(
     return mapped_wa_event
 
 
-def does_row_contain_helm_and_crew(row: RowInMappedWAEvent) -> bool:
+def does_row_contain_helm_and_crew(row: RowInRegistrationData) -> bool:
     fields = list(row.keys())
     return (
         len(
@@ -60,7 +60,7 @@ def does_row_contain_helm_and_crew(row: RowInMappedWAEvent) -> bool:
     )
 
 
-def modify_row(row: RowInMappedWAEvent):
+def modify_row(row: RowInRegistrationData):
     helm_first_name = row.pop(HELM_FIRST_NAME)
     helm_surname = row.pop(HELM_SURNAME)
 
@@ -178,7 +178,7 @@ def add_new_cadet_to_group_on_day(
 
 def add_new_row_to_wa_event_data_and_return_row(
     interface: abstractInterface, original_cadet: Cadet, new_cadet: Cadet, event: Event
-) -> RowInMappedWAEvent:
+) -> RowInRegistrationData:
     existing_row = get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
         interface=interface, cadet_id=original_cadet.id, event=event
     )
@@ -193,8 +193,8 @@ def add_new_row_to_wa_event_data_and_return_row(
 
 
 def modify_row_to_clone_for_new_cadet_partner(
-    original_cadet: Cadet, new_cadet: Cadet, existing_row: RowInMappedWAEvent
-) -> RowInMappedWAEvent:
+    original_cadet: Cadet, new_cadet: Cadet, existing_row: RowInRegistrationData
+) -> RowInRegistrationData:
     new_row = copy(existing_row)
 
     new_row.registration_date = existing_row.registration_date + datetime.timedelta(

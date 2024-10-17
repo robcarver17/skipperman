@@ -5,7 +5,7 @@ import pandas as pd
 
 from app.OLD_backend.rota.volunteer_history import DEPRECATE_get_dict_of_volunteers_with_last_roles, \
     get_dict_of_volunteers_with_last_roles
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.OLD_backend.group_allocations.cadet_event_allocations import (
@@ -33,11 +33,11 @@ from app.objects.day_selectors import Day
 from app.objects.events import (
     Event,
 )
-from app.objects.groups import sorted_locations_REPLACE_WITH_PROPER_SORT_NOT_STR, Group, GROUP_UNALLOCATED
+from app.objects.groups import sorted_locations_REPLACE_WITH_PROPER_SORT_NOT_STR, Group, unallocated_group
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
 from app.objects.volunteers import Volunteer, ListOfVolunteers
-from app.objects.composed.volunteers_with_skills import SkillsDict, ListOfVolunteersWithSkills
-from app.objects_OLD.primtive_with_id.volunteer_at_event import VolunteerAtEventWithId, ListOfVolunteersAtEventWithId
+from app.objects.composed.volunteers_with_skills import SkillsDict, DictOfVolunteersWithSkills
+from app.objects.volunteer_at_event_with_id import VolunteerAtEventWithId, ListOfVolunteersAtEventWithId
 from app.objects_OLD.volunteers_in_roles import (
     FILTER_ALL,
     FILTER_AVAILABLE,
@@ -45,8 +45,8 @@ from app.objects_OLD.volunteers_in_roles import (
     FILTER_ALLOC_AVAILABLE,
     FILTER_UNAVAILABLE,
 )
-from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent, \
-    ListOfVolunteersWithIdInRoleAtEvent, RoleAndGroup
+from app.objects.volunteer_roles_and_groups_with_id import VolunteerWithIdInRoleAtEvent, \
+    ListOfVolunteersWithIdInRoleAtEvent, RoleAndGroupDEPRECATE
 from app.objects.utils import print_dict_nicely
 
 
@@ -97,10 +97,10 @@ class DataToBeStoredWhilstConstructingVolunteerRotaPage:
     event: Event
     list_of_cadet_ids_with_groups: ListOfCadetIdsWithGroups
     unallocated_cadets_at_event: ListOfCadets
-    volunteer_skills: ListOfVolunteersWithSkills
+    volunteer_skills: DictOfVolunteersWithSkills
     volunteers_in_roles_at_event: ListOfVolunteersWithIdInRoleAtEvent
     list_of_volunteers_with_id_at_event: ListOfVolunteersAtEventWithId
-    dict_of_volunteers_with_last_roles: Dict[str, RoleAndGroup]
+    dict_of_volunteers_with_last_roles: Dict[str, RoleAndGroupDEPRECATE]
     all_volunteers: ListOfVolunteers
 
     def filtered_list_of_volunteers_at_event(
@@ -139,7 +139,7 @@ class DataToBeStoredWhilstConstructingVolunteerRotaPage:
                 __unallocated_cadet_unused = (
                     self.unallocated_cadets_at_event.object_with_id(cadet_id)
                 )
-                return GROUP_UNALLOCATED
+                return unallocated_group
             except:
                 return missing_data
 
@@ -155,9 +155,9 @@ class DataToBeStoredWhilstConstructingVolunteerRotaPage:
 
     def previous_role_and_group_for_volunteer(
         self, volunteer_at_event: VolunteerAtEventWithId
-    ) -> RoleAndGroup:
+    ) -> RoleAndGroupDEPRECATE:
         return self.dict_of_volunteers_with_last_roles.get(
-            volunteer_at_event.volunteer_id, RoleAndGroup()
+            volunteer_at_event.volunteer_id, RoleAndGroupDEPRECATE()
         )
 
     def all_roles_match_across_event(self, volunteer_id: str) -> bool:
@@ -239,7 +239,7 @@ def filter_volunteer(
     volunteer_at_event: VolunteerAtEventWithId,
     list_of_volunteers_in_roles_at_event: ListOfVolunteersWithIdInRoleAtEvent,
     skills_filter: SkillsDict,
-    volunteer_skills: ListOfVolunteersWithSkills,
+    volunteer_skills: DictOfVolunteersWithSkills,
     availability_filter_dict: dict,
 ) -> bool:
     filter_by_skills = filter_volunteer_by_skills(
@@ -259,7 +259,7 @@ def filter_volunteer(
 def filter_volunteer_by_skills(
     volunteer_at_event: VolunteerAtEventWithId,
     skills_filter: SkillsDict,
-    volunteer_skills: ListOfVolunteersWithSkills,
+    volunteer_skills: DictOfVolunteersWithSkills,
 ) -> bool:
     volunteer_skills = volunteer_skills.skills_for_volunteer_id(
         volunteer_id=volunteer_at_event.volunteer_id

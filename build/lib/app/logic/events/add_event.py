@@ -1,12 +1,8 @@
 from typing import Union
 
-from app.OLD_backend.events import (
-    verify_event_and_warn,
-    list_of_previously_used_event_names,
-    EventAndVerificationText,
-    event_and_text_if_first_time,
-    add_new_verified_event,
-)
+from app.backend.events.list_of_events import list_of_previously_used_event_names, add_new_verified_event
+from app.backend.events.add_events import verify_event_and_warn, EventAndVerificationText, \
+    event_and_text_if_first_time
 from app.frontend.events.constants import (
     CHECK_BUTTON_LABEL,
     FINAL_ADD_BUTTON_LABEL,

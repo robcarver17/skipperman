@@ -12,13 +12,11 @@ from app.objects.utils import in_both_x_and_y
 
 from app.objects.events import Event
 
-from app.objects_OLD.cadets_with_groups import (
-    ListOfCadetsWithGroup,
-)
-from app.objects.groups import Group, GROUP_UNALLOCATED, order_list_of_groups
+from app.objects.composed.cadets_at_event_with_groups import ListOfCadetsWithGroupOnDay
+from app.objects.groups import Group, unallocated_group, order_list_of_groups
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 
 class GroupAllocationsData:
@@ -32,7 +30,7 @@ class GroupAllocationsData:
         list_of_groups_this_cadet = [cadet_with_group.group for cadet_with_group in list_of_cadet_with_group_this_cadet]
 
         if len(list_of_groups_this_cadet)==0:
-            return [GROUP_UNALLOCATED]
+            return [unallocated_group]
         else:
             return list(set(list_of_groups_this_cadet))
 
@@ -160,7 +158,7 @@ class GroupAllocationsData:
 
     def get_list_of_cadets_with_group_by_day(
         self, event: Event, day: Day, include_unallocated_cadets: bool = True
-    ) -> ListOfCadetsWithGroup:
+    ) -> ListOfCadetsWithGroupOnDay:
         if include_unallocated_cadets:
             list_of_cadet_ids_with_groups = self.active_cadet_ids_at_event_with_allocations_including_unallocated_cadets_on_day(
                 event=event, day=day
@@ -181,12 +179,12 @@ class GroupAllocationsData:
     def get_list_of_cadets_with_group_given_list_of_cadets_with_ids_and_groups(
         self,
         list_of_cadet_ids_with_groups: ListOfCadetIdsWithGroups,
-    ) -> ListOfCadetsWithGroup:
+    ) -> ListOfCadetsWithGroupOnDay:
         list_of_cadets = self.data_api.get_list_of_cadets()
 
         try:
             list_of_cadet_with_groups = (
-                ListOfCadetsWithGroup.from_list_of_cadets_and_list_of_allocations(
+                ListOfCadetsWithGroupOnDay.from_list_of_cadets_and_list_of_allocations(
                     list_of_cadets=list_of_cadets,
                     list_of_allocations=list_of_cadet_ids_with_groups,
                 )
@@ -340,7 +338,7 @@ class GroupAllocationsData:
 
     def list_of_active_cadets_with_groups(
         self, event: Event
-    ) -> ListOfCadetsWithGroup:
+    ) -> ListOfCadetsWithGroupOnDay:
 
         list_of_cadet_ids_with_groups = self.CONSIDER_USING_ACTIVE_FILTER_get_list_of_cadet_ids_with_groups_at_event(
             event

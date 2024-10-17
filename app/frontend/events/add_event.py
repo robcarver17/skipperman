@@ -1,16 +1,8 @@
 from typing import Union
 
-from app.OLD_backend.events import (
-    verify_event_and_warn,
-    list_of_previously_used_event_names,
-    EventAndVerificationText,
-    event_and_text_if_first_time,
-    add_new_verified_event,
-)
-from app.frontend.events.constants import (
-    CHECK_BUTTON_LABEL,
-    FINAL_ADD_BUTTON_LABEL,
-)
+from app.backend.events.list_of_events import list_of_previously_used_event_names, add_new_verified_event
+from app.backend.events.add_events import verify_event_and_warn, EventAndVerificationText, \
+    event_and_text_if_first_time
 from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.events import (
@@ -86,7 +78,7 @@ def get_add_event_form_with_information_passed(
     return Form(list_of_elements_inside_form)
 
 
-def get_heading_text(interface: abstractInterface):
+def get_heading_text():
     header_text = "Do not duplicate event names! (can only have one event with a specific name in a given year, so include months in training weekends eg June Training, or include a number in a series eg Feva Training 1. "
 
     heading = Heading(header_text, size=6, centred=False)
@@ -95,25 +87,24 @@ def get_heading_text(interface: abstractInterface):
 
 
 def get_footer_buttons(form_is_blank: bool):
-    final_submit = Button(FINAL_ADD_BUTTON_LABEL, nav_button=True)
-    check_submit = Button(CHECK_BUTTON_LABEL, nav_button=True)
     if form_is_blank:
-        return ButtonBar([cancel_menu_button, check_submit])
+        return ButtonBar([cancel_menu_button, check_submit_button])
     else:
-        return ButtonBar([cancel_menu_button, check_submit, final_submit])
+        return ButtonBar([cancel_menu_button, check_submit_button, final_submit_button])
+
 
 
 def form_fields_for_add_event(
     interface: abstractInterface, event: Event = default_event
 ) -> ListOfLines:
-    previous_events = list_of_previously_used_event_names(interface)
+    previous_events = list_of_previously_used_event_names(interface.object_store)
     event_name = listInput(
         input_label="Event name (do not include year, eg 'Cadet Week' not 'Cadet Week 2023')",
         input_name=EVENT_NAME,
         default_option=event.event_name,
         list_of_options=previous_events,
     )
-    heading = get_heading_text(interface)
+    heading = get_heading_text()
 
     start_date = dateInput(
         input_label="Start date",
@@ -151,11 +142,11 @@ def post_form_view_for_add_event(
 
     last_button_pressed = interface.last_button_pressed()
 
-    if last_button_pressed == CHECK_BUTTON_LABEL:
+    if check_submit_button.pressed(last_button_pressed):
         ## verify results, display form again
         return get_add_event_form(interface=interface, first_time_displayed=False)
 
-    elif last_button_pressed == FINAL_ADD_BUTTON_LABEL:
+    elif final_submit_button.pressed(last_button_pressed):
         return process_form_when_event_verified(interface)
 
     elif cancel_menu_button.pressed(last_button_pressed):
@@ -169,7 +160,7 @@ def process_form_when_checking_event(
 ) -> EventAndVerificationText:
     try:
         event = get_event_from_form(interface)
-        verify_text = verify_event_and_warn(interface=interface, event=event)
+        verify_text = verify_event_and_warn(object_store=interface.object_store, event=event)
     except Exception as e:
         verify_text = (
             "Doesn't appear to be a valid event (wrong date time in old browser?) error code %s"
@@ -186,15 +177,9 @@ def get_event_from_form(interface) -> Event:
     start_date = interface.value_from_form(EVENT_START_DATE, value_is_date=True)
     duration = int(interface.value_from_form(EVENT_LENGTH_DAYS))
 
-    list_of_contained_labels_set_to_true = (
-        interface.value_of_multiple_options_from_form(EVENT_CONTAINS)
-    )
-
     event = Event.from_date_length_and_name_only(
         event_name=event_name, start_date=start_date, duration=duration
     )
-
-    print(event.details_as_list_of_str())
 
     return event
 
@@ -204,7 +189,7 @@ def process_form_when_event_verified(interface: abstractInterface) -> Form:
     try:
         event = get_event_from_form(interface)
         print("ffrom form %s" % event)
-        add_new_verified_event(interface=interface, event=event)
+        add_new_verified_event(interface.object_store, event=event)
     except Exception as e:
         ## should never happen as we have to be verified to get here, but still
         interface.log_error(
@@ -212,7 +197,7 @@ def process_form_when_event_verified(interface: abstractInterface) -> Form:
         )
         return initial_state_form
 
-    interface._save_data_store_cache()
+    interface.flush_cache_to_store()
 
     return form_with_message_and_finished_button(
         "Added event %s" % str(event),
@@ -231,3 +216,9 @@ def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(
         display_form_view_for_add_event
     )
+
+CHECK_BUTTON_LABEL = "Check details entered"
+FINAL_ADD_BUTTON_LABEL = "Yes - these details are correct - add to data"
+
+final_submit_button = Button(FINAL_ADD_BUTTON_LABEL, nav_button=True)
+check_submit_button = Button(CHECK_BUTTON_LABEL, nav_button=True)

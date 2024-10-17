@@ -10,7 +10,7 @@ from app.OLD_backend.data.security import (
 from app.backend.security.list_of_users import add_user, already_in_list
 from app.backend.security.modify_user import change_password_for_user, modify_user_group, modify_volunteer_for_user, \
     generate_reset_message
-from app.OLD_backend.ticks_and_qualifications.ticksheets import (
+from app.backend.qualifications_and_ticks.ticksheets import (
     delete_username_from_user_list,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface

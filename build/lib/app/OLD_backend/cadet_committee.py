@@ -4,7 +4,7 @@ from typing import Tuple
 from app.OLD_backend.data.cadet_committee import CadetCommitteeData
 from app.backend.cadets.cadet_committee import get_next_year_for_cadet_committee_after_EGM
 from app.data_access.configuration.fixed import MONTH_WHEN_NEW_COMMITTEE_YEAR_BEGINS, YEARS_ON_CADET_COMMITTEE
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 from app.objects.cadets import Cadet
 
 

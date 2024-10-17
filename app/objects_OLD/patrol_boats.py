@@ -1,9 +1,8 @@
 from dataclasses import dataclass
 from typing import List, Dict
 
-from app.objects_OLD.volunteers_in_roles import RoleAndGroupByDayDict, VolunteerAtEventWithSkillsAndRoles
-
-from app.objects_OLD.volunteers_at_event import VolunteerEventData
+from app.objects_OLD.volunteers_in_roles import RoleAndGroupByDayDict, VolunteerAtEventWithSkillsAndRoles, \
+    VolunteerEventData_DEPRECATE
 
 from app.objects.patrol_boats import PatrolBoat
 from app.objects.patrol_boats_with_volunteers_with_id import VolunteerWithIdAtEventWithPatrolBoatId
@@ -53,16 +52,16 @@ class DEPRECATE_ListOfVolunteersAtEventWithPatrolBoats(GenericListOfObjects):
 from app.objects.composed.volunteers_with_skills import SkillsDict
 
 
-class PatrolBoatByDayDict(Dict[Day, PatrolBoat]):
+class PatrolBoatByDayDict_DONOTUSE(Dict[Day, PatrolBoat]):
     pass
 
 @dataclass
 class VolunteerAtEventWithSkillsAndRolesAndPatrolBoats:
     volunteer: Volunteer
     skills: SkillsDict
-    volunteer_event_data: VolunteerEventData
+    volunteer_event_data: VolunteerEventData_DEPRECATE
     role_and_group_by_day: RoleAndGroupByDayDict
-    patrol_boat_by_day: PatrolBoatByDayDict
+    patrol_boat_by_day: PatrolBoatByDayDict_DONOTUSE
 
     def __hash__(self):
         return hash(self.volunteer.id)
@@ -82,7 +81,7 @@ class VolunteerAtEventWithSkillsAndRolesAndPatrolBoats:
 
     @classmethod
     def from_volunteer_at_event_with_skills_and_roles(cls, volunteer_at_event_with_skills_and_roles:VolunteerAtEventWithSkillsAndRoles,
-                                                      patrol_boat_by_day: PatrolBoatByDayDict):
+                                                      patrol_boat_by_day: PatrolBoatByDayDict_DONOTUSE):
         return cls(
             volunteer=volunteer_at_event_with_skills_and_roles.volunteer,
             skills=volunteer_at_event_with_skills_and_roles.skills,

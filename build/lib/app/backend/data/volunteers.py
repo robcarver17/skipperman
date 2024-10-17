@@ -2,7 +2,7 @@ from typing import List
 
 from app.OLD_backend.data.cadets import CadetData
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.exceptions import arg_not_passed
@@ -10,7 +10,7 @@ from app.objects.volunteers import (
     ListOfVolunteers,
     Volunteer,
 )
-from app.objects.composed.volunteers_with_skills import SkillsDict, ListOfVolunteersWithSkills
+from app.objects.composed.volunteers_with_skills import SkillsDict, DictOfVolunteersWithSkills
 from app.objects.cadet_volunteer_connections_with_ids import ListOfCadetVolunteerAssociationsWithIds
 
 
@@ -187,11 +187,11 @@ class VolunteerData:
             list_of_associations
         )
 
-    def get_list_of_volunteer_skills(self) -> ListOfVolunteersWithSkills:
+    def get_list_of_volunteer_skills(self) -> DictOfVolunteersWithSkills:
         return self.data_api.get_list_of_volunteer_skills()
 
     def save_list_of_volunteer_skills(
-        self, list_of_volunteer_skills: ListOfVolunteersWithSkills
+        self, list_of_volunteer_skills: DictOfVolunteersWithSkills
     ):
         return self.data_api.save_list_of_volunteer_skills(list_of_volunteer_skills)
 

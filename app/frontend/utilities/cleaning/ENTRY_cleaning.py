@@ -13,7 +13,6 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm,
 )
 from app.objects.abstract_objects.abstract_buttons import (
-    Button,
     ButtonBar,
     HelpButton,
     back_menu_button,
@@ -22,9 +21,6 @@ from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
     _______________,
-)
-from app.frontend.events.constants import (
-    ADD_EVENT_BUTTON_LABEL,
 )
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
@@ -65,9 +61,6 @@ def display_form_for_event_cleaning_sort_order_passed(
     )
 
     return Form(contents_of_form)
-
-
-add_button = Button(ADD_EVENT_BUTTON_LABEL, nav_button=True)
 
 
 def post_form_view_of_event_data_cleaning(

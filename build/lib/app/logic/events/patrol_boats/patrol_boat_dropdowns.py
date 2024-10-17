@@ -1,7 +1,7 @@
 from typing import List, Dict, Tuple, Union
 
-from app.backend.OLD_patrol_boats.data import get_sorted_list_of_boats_excluding_boats_already_at_event
-from app.data_access.store.data_layer import DataLayer
+from app.OLD_backend.OLD_patrol_boats import get_sorted_list_of_boats_excluding_boats_already_at_event
+from app.data_access.store.data_access import DataLayer
 
 from app.frontend.forms import is_ready_to_swap
 

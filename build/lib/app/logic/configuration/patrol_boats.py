@@ -4,7 +4,7 @@ from app.OLD_backend.configuration import (
     save_list_of_patrol_boats,
     load_list_of_patrol_boats,
 )
-from app.backend.configuration.list_of_patrol_boats import add_new_patrol_boat, \
+from app.backend.patrol_boats.list_of_patrol_boats import add_new_patrol_boat, \
     delete_patrol_boat_given_string, modify_patrol_boat
 
 from app.frontend.form_handler import (

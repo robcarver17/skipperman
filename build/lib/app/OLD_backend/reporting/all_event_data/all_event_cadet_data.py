@@ -11,10 +11,10 @@ from app.OLD_backend.reporting.all_event_data.components import (
 from app.OLD_backend.volunteers.volunteer_allocation import \
     DEPRECATE_get_list_of_volunteer_names_associated_with_cadet_at_event
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects_OLD.identified_cadets_at_event import IdentifiedCadetAtEvent
+from app.objects.identified_cadets_at_event import IdentifiedCadetAtEvent
 from app.objects.day_selectors import EMPTY_DAY_SELECTOR
 from app.objects.events import Event
-from app.objects_OLD.mapped_wa_event import empty_status
+from app.objects.registration_data import empty_status
 
 
 def get_df_for_cadets_event_data_dump(interface: abstractInterface, event: Event):

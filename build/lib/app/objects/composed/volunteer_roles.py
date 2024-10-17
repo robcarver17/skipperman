@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import List, Tuple
 
+from app.objects.volunteer_roles_and_groups_with_id import NO_ROLE_SET, SI_ROLE_NAME
+
 from app.objects.exceptions import arg_not_passed, MissingData, MultipleMatches
 from app.objects.volunteer_skills import Skill, ListOfSkills
 from app.objects.roles_and_teams import RolesWithSkillIds, ListOfRolesWithSkillIds
@@ -25,6 +27,9 @@ class RoleWithSkills:
     def __repr__(self):
         return self.name
 
+    def is_no_role_set(self):
+        return self == no_role_set
+
     def as_role_with_skill_ids(self) -> RolesWithSkillIds:
         return RolesWithSkillIds(
             name=self.name,
@@ -40,6 +45,18 @@ class RoleWithSkills:
 
     def list_of_skills(self) -> ListOfSkills:
         return self.skills_dict.as_list_of_skills()
+
+    def is_si(self):
+        return self.name == SI_ROLE_NAME
+
+
+no_role_set = RoleWithSkills(
+    name=NO_ROLE_SET,
+    skills_dict=SkillsDict(),
+    protected=True,
+    hidden=False,
+    associate_sailing_group=True
+)
 
 def from_list_of_skill_ids_to_padded_dict_of_skills(list_of_skill_ids: List[str], list_of_skills: ListOfSkills) -> SkillsDict:
 
@@ -125,6 +142,12 @@ class ListOfRolesWithSkills(List[RoleWithSkills]):
 
     def list_of_ids(self) -> List[str]:
         return [role.id for role in self]
+
+    def role_with_id(self, id: str) -> RoleWithSkills:
+        try:
+            return self[self.list_of_ids().index(id)]
+        except ValueError:
+            raise MissingData
 
     @property
     def list_of_roles_with_skill_ids(self) -> ListOfRolesWithSkillIds:

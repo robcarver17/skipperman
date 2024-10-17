@@ -1,9 +1,7 @@
 from app.frontend.shared.events_state import get_event_from_state
 
-from app.backend.security.logged_in_user import get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER
-from app.OLD_backend.ticks_and_qualifications.ticksheets import (
-    can_see_all_groups_and_award_qualifications,
-)
+from app.backend.security.logged_in_user import get_volunteer_for_logged_in_user_or_superuser
+from app.backend.security.user_access import can_see_all_groups_and_award_qualifications
 
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
@@ -39,36 +37,35 @@ def get_buttons_for_ticksheet(interface: abstractInterface) -> Line:
 
 def get_buttons_for_ticksheet_when_not_editing(interface: abstractInterface) -> Line:
     list_of_options = [
-        Button(EDIT_CHECKBOX_BUTTON_LABEL),
-        Button(EDIT_DROPDOWN_BUTTON_LABEL),
-        Button(PRINT_BUTTON_LABEL),
+        edit_checkbox_button,
+        edit_dropdown_button,
+        print_button,
     ]
 
     cadet_id_set = return_true_if_a_cadet_id_been_set(interface)
     if cadet_id_set:
-        list_of_options.append(Button(SHOW_ALL_CADETS_BUTTON_LABEL))
+        list_of_options.append(show_all_cadets_button)
 
     return Line(list_of_options)
 
+edit_checkbox_button = Button(EDIT_CHECKBOX_BUTTON_LABEL)
+edit_dropdown_button = Button(EDIT_DROPDOWN_BUTTON_LABEL)
+print_button = Button(PRINT_BUTTON_LABEL)
+show_all_cadets_button = Button(SHOW_ALL_CADETS_BUTTON_LABEL)
 
 def user_can_award_qualifications(interface):
-    volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER(interface)
+    volunteer = get_volunteer_for_logged_in_user_or_superuser(interface)
     event = get_event_from_state(interface)
 
     can_award_qualificaiton = can_see_all_groups_and_award_qualifications(
-        interface=interface, event=event, volunteer_id=volunteer_id
+        object_store=interface.object_store, event=event, volunteer=volunteer
     )
 
     return can_award_qualificaiton
 
 
 def get_cadet_button_instructions(interface) -> str:
-    volunteer_id = get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER(interface)
-    event = get_event_from_state(interface)
-
-    can_award_qualificaiton = can_see_all_groups_and_award_qualifications(
-        interface=interface, event=event, volunteer_id=volunteer_id
-    )
+    can_award_qualificaiton = user_can_award_qualifications(interface)
     state = get_edit_state_of_ticksheet(interface)
     cadet_id_set = return_true_if_a_cadet_id_been_set(interface)
 

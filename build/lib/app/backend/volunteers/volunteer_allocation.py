@@ -1,6 +1,6 @@
 from typing import List, Dict, Union
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.data_access.configuration.configuration import UNABLE_TO_VOLUNTEER_KEYWORD
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -39,7 +39,7 @@ from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects_OLD.volunteers_at_event import (
     DEPRECATE_VolunteerAtEvent,
 )
-from app.objects_OLD.primtive_with_id.volunteer_at_event import VolunteerAtEventWithId
+from app.objects.volunteer_at_event_with_id import VolunteerAtEventWithId
 from app.objects_OLD.primtive_with_id.identified_volunteer_at_event import ListOfIdentifiedVolunteersAtEvent
 
 

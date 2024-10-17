@@ -12,7 +12,7 @@ from app.OLD_backend.group_allocations.event_summarys import (
     identify_birthdays,
     summarise_allocations_for_event,
 )
-from app.backend.OLD_patrol_boats.summary import get_summary_list_of_patrol_boat_allocations_for_events
+from app.OLD_backend.OLD_patrol_boats.summary import get_summary_list_of_patrol_boat_allocations_for_events
 from app.OLD_backend.rota.volunteer_rota_summary import (
     get_summary_list_of_teams_and_groups_for_events,
 )

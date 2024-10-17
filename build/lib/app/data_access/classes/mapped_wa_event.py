@@ -1,4 +1,4 @@
-from app.objects_OLD.mapped_wa_event import MappedWAEvent
+from app.objects.registration_data import MappedWAEvent
 
 
 class DataMappedWAEvent(object):

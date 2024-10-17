@@ -3,7 +3,7 @@ from typing import List
 
 from app.objects.volunteers import Volunteer
 
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 
 from app.OLD_backend.data.group_allocations import GroupAllocationsData
 from app.OLD_backend.data.volunteer_allocation import VolunteerAllocationData
@@ -21,15 +21,15 @@ from app.OLD_backend.data.patrol_boats import PatrolBoatsData
 
 from app.objects.exceptions import missing_data
 from app.objects.events import Event
-from app.objects.groups import LAKE_TRAINING, Group, GROUP_UNALLOCATED_TEXT
+from app.objects.groups import LAKE_TRAINING, Group, GROUP_UNALLOCATED_TEXT_DONTUSE
 from app.data_access.configuration.groups import all_groups_names
 from app.objects_OLD.volunteers_at_event import (
     ListOfVolunteersAtEvent, DEPRECATE_VolunteerAtEvent,
 )
-from app.objects_OLD.primtive_with_id.volunteer_at_event import ListOfVolunteersAtEventWithId
+from app.objects.volunteer_at_event_with_id import ListOfVolunteersAtEventWithId
 from app.objects_OLD.primtive_with_id.identified_volunteer_at_event import ListOfIdentifiedVolunteersAtEvent
-from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import NO_ROLE_SET, VolunteerWithIdInRoleAtEvent, \
-    ListOfVolunteersWithIdInRoleAtEvent, RoleAndGroup
+from app.objects.volunteer_roles_and_groups_with_id import NO_ROLE_SET, VolunteerWithIdInRoleAtEvent, \
+    ListOfVolunteersWithIdInRoleAtEvent, RoleAndGroupDEPRECATE
 
 from app.objects.day_selectors import Day
 
@@ -108,7 +108,7 @@ def dict_of_groups_for_dropdown(
     interface: abstractInterface,
 ):  ## Future proof to when groups come from files
     dict_of_groups = {group: group for group in all_groups_names}
-    dict_of_groups[GROUP_UNALLOCATED_TEXT] = GROUP_UNALLOCATED_TEXT
+    dict_of_groups[GROUP_UNALLOCATED_TEXT_DONTUSE] = GROUP_UNALLOCATED_TEXT_DONTUSE
 
     return dict_of_groups
 
@@ -493,7 +493,7 @@ def update_group_at_event_for_volunteer_on_day(
 def update_role_and_group_at_event_for_volunteer_on_all_days_when_available(
     interface: abstractInterface,
     volunteer_id: str,
-    new_role_and_group: RoleAndGroup,
+    new_role_and_group: RoleAndGroupDEPRECATE,
     event: Event,
 ):
     volunteer_rota_data = VolunteerRotaData(interface.data)

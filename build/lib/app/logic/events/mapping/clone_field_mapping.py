@@ -22,8 +22,9 @@ from app.frontend.form_handler import initial_state_form
 
 from app.OLD_backend.events import (
     DEPRECATE_get_sorted_list_of_events,
-    confirm_event_exists_given_description, get_event_from_list_of_events_given_event_description,
+    get_event_from_list_of_events_given_event_description,
 )
+from app.backend.events.list_of_events import confirm_event_exists_given_description_REFACTOR
 from app.OLD_backend.wa_import.map_wa_fields import (
     is_wa_field_mapping_setup_for_event,
     get_field_mapping_for_event,
@@ -95,7 +96,7 @@ def post_form_for_clone_event_field_mapping(interface: abstractInterface):
     event_description_selected = interface.last_button_pressed()
     current_event = get_event_from_state(interface)
     try:
-        confirm_event_exists_given_description(
+        confirm_event_exists_given_description_REFACTOR(
             interface=interface, event_description=event_description_selected
         )
     except:

@@ -4,13 +4,13 @@ from app.objects.day_selectors import Day
 from app.objects.events import Event
 
 from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
-from app.data_access.store.data_layer import DataLayer
+from app.data_access.store.data_access import DataLayer
 from app.data_access.store.DEPRECATE_volunteers_at_event_with_roles import VolunteersAtEventWithRolesData
 
 from app.objects.exceptions import  MissingData
 from app.objects.patrol_boats import ListOfPatrolBoats, PatrolBoat
 from app.objects.patrol_boats_with_volunteers_with_id import ListOfVolunteersWithIdAtEventWithPatrolBoatsId
-from app.objects_OLD.patrol_boats import ListOfVolunteersAtEventWithSkillsAndRolesAndPatrolBoats, VolunteerAtEventWithSkillsAndRolesAndPatrolBoats, PatrolBoatByDayDict
+from app.objects_OLD.patrol_boats import ListOfVolunteersAtEventWithSkillsAndRolesAndPatrolBoats, VolunteerAtEventWithSkillsAndRolesAndPatrolBoats, PatrolBoatByDayDict_DONOTUSE
 from app.objects_OLD.volunteers_in_roles import ListOfVolunteersAtEventWithSkillsAndRoles, VolunteerAtEventWithSkillsAndRoles
 
 class PatrolBoatData:
@@ -50,7 +50,7 @@ class PatrolBoatData:
         )
 
     def get_patrol_boat_by_day_dict_for_volunteer_at_event(self, volunteer_at_event_with_skills_and_roles: VolunteerAtEventWithSkillsAndRoles
-                                                                                                      ) ->  PatrolBoatByDayDict:
+                                                                                                      ) ->  PatrolBoatByDayDict_DONOTUSE:
 
         days_attending = volunteer_at_event_with_skills_and_roles.volunteer_event_data.availablity
         dict_of_boats_by_day = dict([
@@ -63,7 +63,7 @@ class PatrolBoatData:
 
         dict_of_boats_by_day_as_list = [(day, patrol_boat) for day, patrol_boat in dict_of_boats_by_day.items() if not patrol_boat.is_empty]
 
-        return PatrolBoatByDayDict(dict_of_boats_by_day_as_list)
+        return PatrolBoatByDayDict_DONOTUSE(dict_of_boats_by_day_as_list)
 
     def get_patrol_boat_on_day_for_volunteer_at_event(self, volunteer_at_event_with_skills_and_roles: VolunteerAtEventWithSkillsAndRoles,
                                                       day: Day

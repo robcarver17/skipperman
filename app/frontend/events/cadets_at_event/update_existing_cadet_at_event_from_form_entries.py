@@ -21,7 +21,7 @@ from app.objects.cadet_with_id_at_event import (
 )
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
-from app.objects_OLD.mapped_wa_event import RegistrationStatus
+from app.objects.registration_data import RegistrationStatus
 
 
 def update_cadets_at_event_with_form_data(interface: abstractInterface):

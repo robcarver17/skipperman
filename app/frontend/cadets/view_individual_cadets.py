@@ -20,9 +20,7 @@ from app.frontend.form_handler import initial_state_form
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
-from app.OLD_backend.group_allocations.previous_allocations import (
-    get_dict_of_all_event_allocations_for_single_cadet,
-)
+from app.backend.groups.cadets_with_groups_at_event import get_dict_of_all_event_allocations_for_single_cadet
 from app.objects.cadets import Cadet
 
 
@@ -68,7 +66,7 @@ def list_of_lines_with_allocations(
     interface: abstractInterface, cadet: Cadet
 ) -> ListOfLines:
     dict_of_allocations = get_dict_of_all_event_allocations_for_single_cadet(
-        data_layer=interface.data, cadet=cadet, remove_unallocated=True
+        object_store = interface.object_store, cadet=cadet, remove_unallocated=False
     )
     return ListOfLines(
         ["Events registered at:", _______________]

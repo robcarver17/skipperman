@@ -7,7 +7,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects_OLD.volunteers_at_event import DEPRECATE_VolunteerAtEvent
-from app.objects_OLD.primtive_with_id.volunteer_roles_and_groups import VolunteerWithIdInRoleAtEvent
+from app.objects.volunteer_roles_and_groups_with_id import VolunteerWithIdInRoleAtEvent
 
 
 def make_available_button_value_for_volunteer_on_day(

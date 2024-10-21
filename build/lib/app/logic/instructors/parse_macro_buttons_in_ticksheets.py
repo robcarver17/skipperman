@@ -1,9 +1,7 @@
 from typing import List
 
-from app.OLD_backend.ticks_and_qualifications.qualifications import (
-    apply_qualification_to_cadet,
-    remove_qualification_from_cadet,
-)
+from app.backend.qualifications_and_ticks.qualifications_for_cadet import apply_qualification_to_cadet, \
+    remove_qualification_from_cadet
 from app.backend.qualifications_and_ticks.ticksheets import (
     TickSheetDataWithExtraInfo,
     cadet_is_already_qualified,
@@ -18,8 +16,8 @@ from app.frontend.instructors.buttons import (
 )
 from app.frontend.instructors.parse_ticksheet_table import (
     apply_ticksheet_edits_for_specific_tick,
-    get_ticksheet_data_from_state,
 )
+from app.frontend.instructors.render_ticksheet_table import get_ticksheet_data_from_state
 from app.frontend.shared.qualification_and_tick_state_storage import (
     get_qualification_from_state,
 )

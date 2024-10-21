@@ -12,7 +12,7 @@ from app.objects.cadet_with_id_at_event import (
 )
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.exceptions import missing_data
-from app.objects.day_selectors import DaySelector, Day, ListOfDaySelectors
+from app.objects.day_selectors import DaySelector, Day, DictOfDaySelectors
 from app.objects.events import Event
 from app.objects.identified_cadets_at_event import ListOfIdentifiedCadetsAtEvent
 from app.objects.registration_data import (
@@ -306,11 +306,11 @@ class CadetsAtEventIdLevelData:
 
     def get_attendance_matrix_for_list_of_cadet_ids_at_event(
         self, list_of_cadet_ids: List[str], event: Event
-    ) -> ListOfDaySelectors:
+    ) -> DictOfDaySelectors:
         ### ALL CADETS mus tbe active
         list_of_cadets_at_event = self.get_list_of_cadets_with_id_at_event(event)
         subset_list = list_of_cadets_at_event.subset_given_cadet_ids(list_of_cadet_ids)
-        list_of_availability = ListOfDaySelectors(
+        list_of_availability = DictOfDaySelectors(
             [cadet_at_event.availability for cadet_at_event in subset_list]
         )
 

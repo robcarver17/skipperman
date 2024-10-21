@@ -4,9 +4,7 @@ from app.frontend.reporting.qualifications.qualification_status import (
     write_expected_qualifications_to_temp_csv_file_and_return_filename,
 )
 
-from app.backend.qualifications_and_ticks.ticksheets import (
-    get_list_of_all_groups_at_event,
-)
+from app.backend.groups.cadets_with_groups_at_event import get_list_of_all_groups_at_event
 from app.backend.security.user_access import get_list_of_groups_volunteer_can_see, \
     can_see_all_groups_and_award_qualifications
 from app.frontend.shared.qualification_and_tick_state_storage import (

@@ -1,9 +1,7 @@
 import os
 from typing import Union
 
-from app.backend.qualifications_and_ticks.ticksheets import (
-    get_expected_qualifications_for_cadets_at_event,
-)
+from app.backend.qualifications_and_ticks.progress import get_expected_qualifications_for_cadets_at_event
 from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.events import Event

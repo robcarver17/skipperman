@@ -1,8 +1,6 @@
 from typing import Union, Dict, List
 
-from app.backend.qualifications_and_ticks.ticksheets import (
-    get_qualification_status_for_single_cadet_as_list_of_str,
-)
+from app.backend.qualifications_and_ticks.progress import get_qualification_status_for_single_cadet_as_list_of_str
 from app.frontend.forms.reorder_form import reorder_table
 
 from app.objects.groups import Group

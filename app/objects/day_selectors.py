@@ -4,6 +4,7 @@ from enum import Enum
 from typing import Dict, List
 
 import pandas as pd
+from app.objects.cadets import Cadet, ListOfCadets
 
 from app.objects.generic_objects import from_bool_to_str, from_str_to_bool
 
@@ -176,32 +177,36 @@ def day_selector_to_text_in_stored_format(day_selector: DaySelector) -> str:
     return ",".join(day_text_as_list)
 
 
-class ListOfDaySelectors(List[DaySelector]):
-    def align_with_list_of_days(self, list_of_days: List[Day]) -> "ListOfDaySelectors":
-        return ListOfDaySelectors(
+class DictOfDaySelectors(Dict[Cadet, DaySelector]):
+    def align_with_list_of_days(self, list_of_days: List[Day]) -> "DictOfDaySelectors":
+        return DictOfDaySelectors(dict(
             [
-                day_selector.align_with_list_of_days(list_of_days)
-                for day_selector in self
+                (cadet, day_selector.align_with_list_of_days(list_of_days))
+                for cadet, day_selector in self.items()
             ]
+        )
         )
 
-    def intersect(self, other: "ListOfDaySelectors"):
-        return ListOfDaySelectors(
+    def intersect(self, other: "DictOfDaySelectors"):
+        return DictOfDaySelectors(dict(
             [
-                item_self.intersect(other_item)
-                for item_self, other_item in zip(self, other)
-            ]
-        )
+                (cadet, self[cadet].intersect(other[cadet]))
+                for cadet in self.list_of_cadets
+            ]))
+
 
     def as_pd_data_frame(self) -> pd.DataFrame:
         list_of_dicts = [
-            from_day_selector_to_dict_for_pd(day_selector) for day_selector in self
+            from_day_selector_to_dict_for_pd(day_selector) for day_selector in self.values()
         ]
         df = pd.DataFrame(list_of_dicts)
         df = df.fillna("N/A")
 
         return df
 
+    @property
+    def list_of_cadets(self):
+        return ListOfCadets(list(self.keys()))
 
 def from_day_selector_to_dict_for_pd(day_selector: DaySelector) -> dict:
     as_dict = {}

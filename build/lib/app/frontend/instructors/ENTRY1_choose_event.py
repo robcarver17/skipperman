@@ -131,7 +131,7 @@ def post_form_main_instructors_page(
         return get_file_given_button_pressed(button_pressed)
 
     elif download_qualification_list_button.pressed(button_pressed):
-        filename = write_qualifications_to_temp_csv_file_and_return_filename(interface)
+        filename = write_qualifications_to_temp_csv_file_and_return_filename(interface.object_store)
         return File(filename)
 
     else:  ## must be an event

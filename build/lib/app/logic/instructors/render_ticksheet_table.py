@@ -7,7 +7,7 @@ from app.frontend.instructors.buttons import (
 )
 from app.OLD_backend.cadets import get_cadet_from_id
 from app.backend.qualifications_and_ticks.ticksheets import (
-    get_ticksheet_data,
+    get_ticksheet_data_DEPRECATE,
     TickSheetDataWithExtraInfo,
     cadet_is_already_qualified,
 )
@@ -45,7 +45,7 @@ def get_ticksheet_table(
     qualification: Qualification,
     interface: abstractInterface,
 ) -> Table:
-    ticksheet_data = get_ticksheet_data(
+    ticksheet_data = get_ticksheet_data_DEPRECATE(
         interface=interface, event=event, group=group, qualification=qualification
     )
 

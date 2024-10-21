@@ -18,7 +18,7 @@ from app.frontend.shared.qualification_and_tick_state_storage import (
 from app.objects.abstract_objects.abstract_form import Form, NewForm, textInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.qualifications import Qualification
-from app.objects.ticks import TickSubStage, TickSheetItem
+from app.objects.substages import TickSubStage, TickSheetItem
 from app.objects.composed.ticks_in_dicts import TickSubStagesAsDict
 
 header_text = "List of qualifications_and_ticks: add, edit, re-order"

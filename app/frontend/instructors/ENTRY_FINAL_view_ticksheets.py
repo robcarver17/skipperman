@@ -48,12 +48,11 @@ from app.frontend.shared.qualification_and_tick_state_storage import (
     EDIT_CHECKBOX_STATE,
     EDIT_DROPDOWN_STATE,
     NO_EDIT_STATE,
-    clear_cadet_id_in_state,
     not_editing,
 )
 
 from app.frontend.shared.events_state import get_event_from_state
-
+from app.frontend.shared.cadet_state import clear_cadet_state
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -74,7 +73,7 @@ def display_form_view_ticksheets_for_event_and_group(
     instructions = get_instructions_for_ticksheet(interface=interface)
     navbar = get_nav_bar(interface)
     ticksheet_table = get_ticksheet_table(
-        interface=interface, event=event, qualification=qualification, group=group
+        interface=interface
     )
     header = Line(
         Heading(
@@ -134,11 +133,8 @@ def post_form_view_ticksheets_for_event_and_group(
 
     elif back_menu_button.pressed(button_pressed):
         set_edit_state_of_ticksheet(interface=interface, state=NO_EDIT_STATE)
-        clear_cadet_id_in_state(interface)
+        clear_cadet_state(interface)
         return previous_form(interface)
-
-    ### IF STATE EDIT, SAVE EDITS HERE
-    save_ticksheet_edits(interface)
 
     list_of_tick_buttons = get_list_of_all_tick_related_button_names(interface)
     list_of_all_possible_select_cadet_buttons = (
@@ -153,7 +149,8 @@ def post_form_view_ticksheets_for_event_and_group(
         set_edit_state_of_ticksheet(interface=interface, state=EDIT_CHECKBOX_STATE)
 
     elif save_menu_button.pressed(button_pressed):
-        ## already save, but need to change state back to not editing
+        save_ticksheet_edits(interface)
+        interface.flush_cache_to_store()
         set_edit_state_of_ticksheet(interface=interface, state=NO_EDIT_STATE)
 
     elif print_button.pressed(button_pressed):
@@ -163,18 +160,18 @@ def post_form_view_ticksheets_for_event_and_group(
         set_cadet_id(interface=interface, button_pressed=button_pressed)
 
     elif show_all_cadets_button.pressed(button_pressed):
-        clear_cadet_id_in_state(interface)
+        clear_cadet_state(interface)
 
     ## SPECIAL BUTTONS: qualification, all ticks, all column
     elif button_pressed in list_of_tick_buttons:
         action_if_macro_tick_button_pressed(
             interface=interface, button_pressed=button_pressed
         )
+        interface.flush_cache_to_store()
 
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.flush_cache_to_store()
 
     return display_form_view_ticksheets_for_event_and_group(interface)
 

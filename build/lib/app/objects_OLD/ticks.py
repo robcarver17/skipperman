@@ -6,7 +6,7 @@ from enum import Enum
 import pandas as pd
 from app.objects.qualifications import Qualification
 
-from app.objects.day_selectors import ListOfDaySelectors
+from app.objects.day_selectors import DictOfDaySelectors
 
 from app.objects.exceptions import missing_data, arg_not_passed
 from app.objects.generic_list_of_objects import (
@@ -41,7 +41,7 @@ class LabelledTickSheetWithCadetIds:
 
         return new_version
 
-    def add_attendance_data(self, attendance_data: ListOfDaySelectors):
+    def add_attendance_data(self, attendance_data: DictOfDaySelectors):
         attendance = attendance_data.as_pd_data_frame()
         dummy_multindex = [[""] * len(attendance.columns), attendance.columns]
         attendance.columns = dummy_multindex

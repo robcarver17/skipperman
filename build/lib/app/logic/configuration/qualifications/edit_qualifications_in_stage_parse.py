@@ -11,7 +11,7 @@ from app.frontend.configuration.qualifications.edit_qualifications_in_detail_for
     FIELDNAME_FOR_NEW_SUBSTAGE_TEXT_BOX, substage_id_for_button_name_new_item, fieldname_for_new_item_in_substage_name, \
     name_of_edit_substage_field, name_of_edit_tickitem_field
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.ticks import TickSubStage, TickSheetItem, ListOfTickSheetItems
+from app.objects.substages import TickSubStage, TickSheetItem, ListOfTickSheetItems
 from app.objects.composed.ticks_in_dicts import TickSubStagesAsDict
 
 

@@ -36,7 +36,7 @@ class DictOfAllEventInfoForCadet(Dict[Cadet, AllEventInfoForCadet]):
 
         self._dict_of_cadets_and_boat_class_and_partners = dict_of_cadets_and_boat_class_and_partners
         self._dict_of_cadets_and_club_dinghies_at_event = dict_of_cadets_and_club_dinghies_at_event
-        self._dict_of_cadets_with_event_data = dict_of_cadets_with_registration_data
+        self._dict_of_cadets_with_registration_data = dict_of_cadets_with_registration_data
         self._dict_of_cadets_with_days_and_groups = dict_of_cadets_with_days_and_groups
         self._event = event
 
@@ -50,8 +50,8 @@ class DictOfAllEventInfoForCadet(Dict[Cadet, AllEventInfoForCadet]):
         return self._dict_of_cadets_and_club_dinghies_at_event
 
     @property
-    def dict_of_cadets_with_event_data(self):
-        return self._dict_of_cadets_with_event_data
+    def dict_of_cadets_with_registration_data(self) -> DictOfCadetsWithRegistrationData:
+        return self._dict_of_cadets_with_registration_data
 
     @property
     def dict_of_cadets_with_days_and_groups(self):

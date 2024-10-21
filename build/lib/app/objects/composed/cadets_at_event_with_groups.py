@@ -12,7 +12,7 @@ from app.objects.events import Event, ListOfEvents
 from app.objects.cadet_with_id_with_group_at_event import CADET_NAME, GROUP_STR_NAME, ListOfCadetIdsWithGroups
 from app.objects.cadets import Cadet, ListOfCadets
 
-from app.objects.day_selectors import Day, ListOfDaySelectors, DaySelector
+from app.objects.day_selectors import Day, DictOfDaySelectors, DaySelector
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.groups import Group, ListOfGroups
@@ -62,8 +62,8 @@ class ListOfCadetsWithGroupOnDay(GenericListOfObjects):
     def list_of_cadets(self) -> ListOfCadets:
         return ListOfCadets([cadet_with_group.cadet for cadet_with_group in self])
 
-    def attendance_matrix(self) -> ListOfDaySelectors:
-        list_of_availability = ListOfDaySelectors(
+    def attendance_matrix(self) -> DictOfDaySelectors:
+        list_of_availability = DictOfDaySelectors(
             [DaySelector({item.day: True}) for item in self]
         )
 
@@ -133,6 +133,11 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
         super().__init__(raw_dict)
         self._list_of_cadet_ids_with_groups =list_of_cadet_ids_with_groups
         self._event = event
+
+    def cadets_in_group_during_event(self, group: Group) -> ListOfCadets:
+        return ListOfCadets([
+            cadet for cadet, days_and_groups in self.items() if group in days_and_groups.list_of_groups
+        ])
 
     def all_groups_at_event(self) -> ListOfGroups:
         all_days_and_groups = self.days_and_groups()

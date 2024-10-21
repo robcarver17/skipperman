@@ -2,7 +2,7 @@ from typing import List, Dict
 import pandas as pd
 
 from app.objects.composed.cadets_at_event_with_registration_data import CadetRegistrationData
-from app.objects.day_selectors import Day, ListOfDaySelectors, DaySelector
+from app.objects.day_selectors import Day, DictOfDaySelectors, DaySelector
 from app.objects.groups import Group
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups, CADET_NAME, GROUP_STR_NAME
 
@@ -76,8 +76,8 @@ class ListOfCadetsWithGroup(GenericListOfObjects):
     def list_of_cadets(self) -> ListOfCadets:
         return ListOfCadets([cadet_with_group.cadet for cadet_with_group in self])
 
-    def attendance_matrix(self) -> ListOfDaySelectors:
-        list_of_availability = ListOfDaySelectors(
+    def attendance_matrix(self) -> DictOfDaySelectors:
+        list_of_availability = DictOfDaySelectors(
             [DaySelector({item.day: True}) for item in self]
         )
 

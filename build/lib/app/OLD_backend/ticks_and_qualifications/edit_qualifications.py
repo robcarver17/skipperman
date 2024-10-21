@@ -3,7 +3,7 @@ from app.objects.qualifications import Qualification
 from app.OLD_backend.data.ticksheets import TickSheetsData
 
 from app.data_access.store.data_access import DataLayer
-from app.objects.ticks import TickSubStage, TickSheetItem
+from app.objects.substages import TickSubStage, TickSheetItem
 
 
 def get_substage_given_id(

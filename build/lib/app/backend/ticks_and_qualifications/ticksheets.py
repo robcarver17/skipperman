@@ -12,9 +12,8 @@ from app.backend.security.logged_in_user import SUPERUSER, get_volunteer_id_of_l
 from app.OLD_backend.data.ticksheets import TickSheetsData
 from app.OLD_backend.data.volunteer_rota import VolunteerRotaData
 from app.OLD_backend.events import DEPRECATE_get_sorted_list_of_events
-from app.OLD_backend.ticks_and_qualifications.create_ticksheets import (
-    get_ticksheet_for_cadets_in_group_at_event_for_qualification,
-)
+from app.backend.qualifications_and_ticks.print_ticksheets import \
+    get_ticksheet_for_cadets_in_group_at_event_for_qualification
 from app.backend.volunteers.skills import is_volunteer_with_id_qualified_as_SI
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event, ListOfEvents
@@ -22,11 +21,11 @@ from app.objects.groups import Group
 from app.OLD_backend.data.group_allocations import GroupAllocationsData
 from app.objects.qualifications import Qualification, ListOfQualifications
 from app.objects.ticks import (
-    ListOfCadetsWithTickListItems,
-    ListOfTickSheetItems,
+    ListOfCadetIdsWithTickListItemIds,
     Tick,
 )
-from app.objects.composed.labelled_tick_sheet_with_cadet_ids import LabelledTickSheetWithCadetIds
+from app.objects.substages import ListOfTickSheetItems
+from app.objects.composed.labelled_tick_sheet import LabelledTickSheet
 
 
 def get_list_of_groups_volunteer_id_can_see(
@@ -108,7 +107,7 @@ def align_center(x):
 
 
 def write_ticksheet_to_excel(
-    labelled_ticksheet: LabelledTickSheetWithCadetIds, filename: str
+    labelled_ticksheet: LabelledTickSheet, filename: str
 ):
     title = labelled_ticksheet.qualification_name
     if len(title) == 0:
@@ -162,7 +161,7 @@ def get_ticksheet_data(
 
 @dataclass
 class TickSheetDataWithExtraInfo:
-    tick_sheet: ListOfCadetsWithTickListItems
+    tick_sheet: ListOfCadetIdsWithTickListItemIds
     qualification: Qualification
     list_of_substage_names: List[str]
     list_of_tick_sheet_items_for_this_qualification: ListOfTickSheetItems

@@ -3,7 +3,7 @@ from typing import Union
 from app.backend.qualifications_and_ticks.ticksheets import (
     TickSheetDataWithExtraInfo,
     save_ticksheet_edits_for_specific_tick,
-    get_ticksheet_data,
+    get_ticksheet_data_DEPRECATE,
 )
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.instructors.render_ticksheet_table import (
@@ -143,7 +143,7 @@ def get_ticksheet_data_from_state(
     group = get_group_from_state(interface)
     qualification = get_qualification_from_state(interface)
 
-    ticksheet_data = get_ticksheet_data(
+    ticksheet_data = get_ticksheet_data_DEPRECATE(
         interface=interface, event=event, group=group, qualification=qualification
     )
     return ticksheet_data

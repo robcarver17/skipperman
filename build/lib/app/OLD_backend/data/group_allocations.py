@@ -4,7 +4,7 @@ from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
 
 from app.objects.exceptions import missing_data, arg_not_passed
 
-from app.objects.day_selectors import Day, ListOfDaySelectors, DaySelector
+from app.objects.day_selectors import Day, DictOfDaySelectors, DaySelector
 
 from app.objects.cadets import ListOfCadets, Cadet
 
@@ -59,7 +59,7 @@ class GroupAllocationsData:
 
     def get_attendance_matrix_for_group(
         self, event: Event, group: Group, list_of_cadet_ids: List[str]
-    ) -> ListOfDaySelectors:
+    ) -> DictOfDaySelectors:
         list_of_selectors = [
             self.day_selector_for_cadet_id_and_group_at_event(
                 event=event, group=group, cadet_id=cadet_id
@@ -67,7 +67,7 @@ class GroupAllocationsData:
             for cadet_id in list_of_cadet_ids
         ]
 
-        return ListOfDaySelectors(list_of_selectors)
+        return DictOfDaySelectors(list_of_selectors)
 
     def day_selector_for_cadet_id_and_group_at_event(
         self, event: Event, group: Group, cadet_id: str

@@ -10,7 +10,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.qualifications import Qualification
-from app.objects.ticks import TickSubStage, TickSheetItem
+from app.objects.substages import TickSubStage, TickSheetItem
 from app.objects.composed.ticks_in_dicts import TickSubStagesAsDict
 
 

@@ -79,6 +79,9 @@ class DictOfCadetsAndClubDinghiesAtEvent(Dict[Cadet, DictOfDaysAndClubDinghiesAt
         self._list_of_cadets_at_event_with_id_and_club_dinghy = list_of_cadets_at_event_with_id_and_club_dinghy
         self._event = event
 
+    def get_club_boat_allocation_for_cadet(self, cadet: Cadet):
+        return self.get(cadet, DictOfDaysAndClubDinghiesAtEventForCadet())
+
     @property
     def list_of_cadets_at_event_with_id_and_club_dinghy(self) -> ListOfCadetAtEventWithIdAndClubDinghies:
         return self._list_of_cadets_at_event_with_id_and_club_dinghy

@@ -1,7 +1,7 @@
 from copy import copy
 
 from app.data_access.api.generic_api import GenericDataApi
-from app.data_access.store.object_definitions import UnderlyingObjectDefinition, DerivedObjectDefinition
+from app.data_access.store.object_definitions import UnderlyingObjectDefinition, DerivedObjectDefinition, IterableObjectDefinition
 
 from app.data_access.store.store import Store, DataAccessMethod
 
@@ -80,19 +80,29 @@ def get_store_key(object_definition: [DerivedObjectDefinition, UnderlyingObjectD
     return key
 
 def update_data_and_underlying_objects_in_store_with_changed_object(new_object, object_store: ObjectStore, object_definition: [
-    DerivedObjectDefinition, UnderlyingObjectDefinition], **kwargs):
+    DerivedObjectDefinition, UnderlyingObjectDefinition, IterableObjectDefinition], **kwargs):
     if type(object_definition) is UnderlyingObjectDefinition:
         update_data_store_with_changed_underlying_object(new_object=new_object,
                                               object_store=object_store,
                                               object_definition=object_definition,
                                               **kwargs)
-    else:
+    elif type(object_definition) is IterableObjectDefinition:
+        update_objects_in_store_with_changed_iterable_object(
+            new_object=new_object,
+            object_store=object_store,
+            object_definition=object_definition,
+            **kwargs
+        )
+
+    elif type(object_definition) is DerivedObjectDefinition:
         update_objects_in_store_with_changed_derived_object(
             new_object=new_object,
             object_store=object_store,
             object_definition=object_definition,
             **kwargs
         )
+    else:
+        raise Exception("Object definition type %s not recognised" % str(type(object_definition)))
 
 def update_data_store_with_changed_underlying_object(new_object, object_store: ObjectStore,
                                           object_definition: UnderlyingObjectDefinition, **kwargs):
@@ -102,6 +112,20 @@ def update_data_store_with_changed_underlying_object(new_object, object_store: O
 
     data_store.write(new_object, data_access_method=data_access_method)
     print("updating %s in data store" % str(object_definition))
+
+def update_objects_in_store_with_changed_iterable_object(new_object, object_store: ObjectStore,
+                                                                   object_definition: IterableObjectDefinition, **kwargs):
+
+    list_of_keys= list(new_object.keys())
+    underlying_object_key = object_definition.key_for_underlying_object
+
+    for key in list_of_keys:
+        kwargs_this_element_locate_key = {underlying_object_key: key}
+        kwargs_this_element = kwargs_this_element_locate_key | kwargs
+        update_data_store_with_changed_underlying_object(new_object=new_object[key],
+                                                         object_store=object_store,
+                                                         object_definition=object_definition.underlying_object_definition,
+                                                         **kwargs_this_element)
 
 def update_objects_in_store_with_changed_derived_object(new_object, object_store: ObjectStore,
                                                                    object_definition: DerivedObjectDefinition, **kwargs):
@@ -114,12 +138,16 @@ def update_objects_in_store_with_changed_derived_object(new_object, object_store
 
 
 def compose_object_for_object_store(object_store: ObjectStore, object_definition: [DerivedObjectDefinition,
+                                                                                   IterableObjectDefinition,
                                                                                    UnderlyingObjectDefinition], **kwargs):
     if type(object_definition) is UnderlyingObjectDefinition:
         return compose_underyling_object_from_data_store(object_store=object_store, object_definition=object_definition, **kwargs)
-    else:
+    elif type(object_definition) is IterableObjectDefinition:
+        return compose_iterable_object_from_object_store(object_store=object_store, object_definition=object_definition, **kwargs)
+    elif type(object_definition) is DerivedObjectDefinition:
         return compose_derived_object_from_object_store(object_store=object_store, object_definition=object_definition, **kwargs)
-
+    else:
+        raise Exception("Object definition type %s not recognised" % str(object_definition))
 
 def compose_derived_object_from_object_store(object_store: ObjectStore, object_definition: DerivedObjectDefinition, **kwargs):
     composition_function = object_definition.composition_function
@@ -130,6 +158,25 @@ def compose_derived_object_from_object_store(object_store: ObjectStore, object_d
         kwargs_to_pass[keyword_name] = object_store.get(object_definition_for_keyword, **kwargs)
 
     return composition_function(**kwargs_to_pass)
+
+def compose_iterable_object_from_object_store(object_store: ObjectStore, object_definition: IterableObjectDefinition, **kwargs):
+
+    key_to_iterate_over = object_definition.required_key_for_iteration
+    list_of_keys= kwargs.pop(key_to_iterate_over)
+
+    underlying_object_key = object_definition.key_for_underlying_object
+    dict_of_output = {}
+    for key in list_of_keys:
+        kwargs_this_element_locate_key = {underlying_object_key: key}
+        kwargs_this_element = kwargs_this_element_locate_key | kwargs
+        underyling_data_this_key = compose_underyling_object_from_data_store(
+            object_store=object_store,
+            object_definition=object_definition.underlying_object_definition,
+            **kwargs_this_element
+        )
+        dict_of_output[key] = underyling_data_this_key
+
+    return dict_of_output
 
 def compose_underyling_object_from_data_store(object_store: ObjectStore, object_definition: UnderlyingObjectDefinition, **kwargs):
     data_access_method = get_data_access_method(object_store=object_store, object_definition=object_definition, **kwargs)

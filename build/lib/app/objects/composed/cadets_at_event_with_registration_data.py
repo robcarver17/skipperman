@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import List, Dict
 
+from app.objects.exceptions import MissingData
+
 from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent, ListOfCadetsWithIDAtEvent
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.day_selectors import DaySelector
@@ -49,6 +51,13 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
         super().__init__(raw_list)
         self._list_of_cadets_with_id_at_event = list_of_cadets_with_id_at_event
 
+    def registration_data_for_cadet(self, cadet: Cadet) ->CadetRegistrationData:
+        reg_data = self.get(cadet, None)
+        if reg_data is None:
+            raise MissingData
+
+        return reg_data
+
     def list_of_active_cadets(self) ->ListOfCadets:
         return ListOfCadets([cadet for cadet, registration_data in self.items() if registration_data.active])
 
@@ -58,6 +67,8 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
     @property
     def  list_of_cadets_with_id_at_event(self)-> ListOfCadetsWithIDAtEvent:
         return self._list_of_cadets_with_id_at_event
+
+
 
 
 def compose_dict_of_cadets_with_event_data(list_of_cadets: ListOfCadets,

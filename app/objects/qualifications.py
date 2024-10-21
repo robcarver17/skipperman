@@ -29,17 +29,6 @@ class ListOfQualifications(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return Qualification
 
-    def name_given_id(self, id: str) -> str:
-        names = [item.name for item in self if item.id == id]
-
-        if len(names) == 0:
-            return missing_data
-        elif len(names) > 1:
-            raise Exception(
-                "Found more than one qualification with same ID should be impossible"
-            )
-
-        return names[0]
 
     def replace(self, existing_qualification: Qualification, new_qualification: Qualification):
         index = self.idx_given_name(existing_qualification.name)
@@ -47,11 +36,6 @@ class ListOfQualifications(GenericListOfObjectsWithIds):
 
         self[index] = new_qualification
 
-    def delete_given_name(self, name: str):
-        idx = self.idx_given_name(name)
-        if idx is missing_data:
-            raise Exception("Can't find name to delete %s" % name)
-        self.pop(idx)
 
     def qualification_given_name(self, name:str):
         idx = self.idx_given_name(name)
@@ -105,6 +89,7 @@ class ListOfCadetsWithIdsAndQualifications(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return CadetWithIdAndQualification
 
+
     def sort_by_date(self):
         return ListOfCadetsWithIdsAndQualifications(
             sorted(self, key=lambda object: object.date, reverse=True)
@@ -128,10 +113,6 @@ class ListOfCadetsWithIdsAndQualifications(GenericListOfObjectsWithIds):
             if item.cadet_id == cadet_id and item.qualification_id == qualification_id:
                 self.remove(item)
 
-    def list_of_cadet_ids_with_qualification(self, qualification_id: str) -> List[str]:
-        return [
-            item.cadet_id for item in self if item.qualification_id == qualification_id
-        ]
 
     def does_cadet_id_have_qualification(self, cadet_id: str, qualification_id: str):
         list_of_qualification_ids = self.list_of_qualification_ids_for_cadet(cadet_id)

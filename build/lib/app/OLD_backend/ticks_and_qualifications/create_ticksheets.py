@@ -9,9 +9,9 @@ from app.objects.events import Event
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.ticks import (
-    ListOfCadetsWithTickListItems,
+    ListOfCadetIdsWithTickListItemIds,
 )
-from app.objects.composed.labelled_tick_sheet_with_cadet_ids import LabelledTickSheetWithCadetIds
+from app.objects.composed.labelled_tick_sheet import LabelledTickSheet
 
 
 def get_labelled_ticksheet_df_for_group_at_event(
@@ -24,7 +24,7 @@ def get_labelled_ticksheet_df_for_group_at_event(
     sailors_in_columns: bool = True,
     asterix_club_boats: bool = True,
     medical_notes: bool = True,
-) -> LabelledTickSheetWithCadetIds:
+) -> LabelledTickSheet:
     ticksheets_data = TickSheetsData(interface.data)
 
     labelled_ticksheet = (
@@ -62,7 +62,7 @@ def get_labelled_ticksheet_df_for_cadets_in_group_at_event_for_qualification(
     event: Event,
     group: Group,
     qualification_stage_id: str,
-) -> LabelledTickSheetWithCadetIds:
+) -> LabelledTickSheet:
     ticksheets_data = TickSheetsData(interface.data)
     cadet_data = CadetData(interface.data)
     qualification_data = QualificationData(interface.data)
@@ -116,7 +116,8 @@ def get_ticksheet_for_cadets_in_group_at_event_for_qualification(
     event: Event,
     group: Group,
     qualification_stage_id: str,
-) -> ListOfCadetsWithTickListItems:
+) -> ListOfCadetIdsWithTickListItemIds:
+
     ticksheets_data = TickSheetsData(interface.data)
     group_allocation_data = GroupAllocationsData(interface.data)
     cadet_data = CadetData(interface.data)

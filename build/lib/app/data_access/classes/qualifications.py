@@ -3,10 +3,9 @@ from app.objects.qualifications import (
     ListOfCadetsWithIdsAndQualifications,
 )
 from app.objects.ticks import (
-    ListOfTickSubStages,
-    ListOfTickSheetItems,
-    ListOfCadetsWithTickListItems,
+    ListOfCadetIdsWithTickListItemIds,
 )
+from app.objects.substages import ListOfTickSubStages, ListOfTickSheetItems
 
 
 class DataListOfQualifications(object):
@@ -42,10 +41,10 @@ class DataListOfTickSheetItems(object):
 
 
 class DataListOfCadetsWithTickListItems(object):
-    def read(self) -> ListOfCadetsWithTickListItems:
+    def read(self) -> ListOfCadetIdsWithTickListItemIds:
         raise NotImplemented
 
-    def write(self, list_of_cadets_with_tick_list_items: ListOfCadetsWithTickListItems):
+    def write(self, list_of_cadets_with_tick_list_items: ListOfCadetIdsWithTickListItemIds):
         raise NotImplemented
 
     def read_for_cadet_id(self, cadet_id: str):
@@ -53,7 +52,7 @@ class DataListOfCadetsWithTickListItems(object):
 
     def write_for_cadet_id(
         self,
-        list_of_cadets_with_tick_list_items: ListOfCadetsWithTickListItems,
+        list_of_cadets_with_tick_list_items: ListOfCadetIdsWithTickListItemIds,
         cadet_id: str,
     ):
         raise NotImplemented

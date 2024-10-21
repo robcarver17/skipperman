@@ -3,9 +3,7 @@ from copy import copy
 
 import pandas as pd
 
-from app.OLD_backend.ticks_and_qualifications.create_ticksheets import (
-    get_labelled_ticksheet_df_for_group_at_event,
-)
+from app.backend.qualifications_and_ticks.print_ticksheets import get_labelled_ticksheet_df_for_group_at_event
 from app.objects.abstract_objects.abstract_form import File
 
 from app.frontend.shared.events_state import get_event_from_state
@@ -23,7 +21,7 @@ from app.objects.groups import Group
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.objects.composed.labelled_tick_sheet_with_cadet_ids import LabelledTickSheetWithCadetIds
+from app.objects.composed.labelled_tick_sheet import LabelledTickSheet
 
 
 def download_labelled_ticksheet_and_return_file(interface: abstractInterface) -> File:
@@ -72,7 +70,7 @@ def download_labelled_ticksheet_and_return_filename(
 
 
 def write_ticksheet_to_excel(
-    labelled_ticksheet: LabelledTickSheetWithCadetIds, filename: str
+    labelled_ticksheet: LabelledTickSheet, filename: str
 ):
     title = labelled_ticksheet.qualification_name
     if len(title) == 0:

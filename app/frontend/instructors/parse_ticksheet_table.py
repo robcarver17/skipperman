@@ -1,28 +1,28 @@
 from typing import Union
 
+from app.objects.cadets import Cadet
+
 from app.backend.qualifications_and_ticks.ticksheets import (
-    TickSheetDataWithExtraInfo,
     save_ticksheet_edits_for_specific_tick,
-    get_ticksheet_data,
 )
-from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.instructors.render_ticksheet_table import (
     get_tick_from_dropdown_or_none,
-    get_tick_from_checkbox_or_none,
+    get_tick_from_checkbox_or_none, get_ticksheet_data_from_state,
+get_dropdown_mode_from_state
 )
 
 from app.frontend.shared.qualification_and_tick_state_storage import (
     get_edit_state_of_ticksheet,
     NO_EDIT_STATE,
     EDIT_DROPDOWN_STATE,
-    EDIT_CHECKBOX_STATE,
-    not_editing,
-    get_group_from_state,
-    get_qualification_from_state,
+    EDIT_CHECKBOX_STATE, not_editing,
 )
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.ticks import DictOfTicksWithItem, Tick
+from app.objects.ticks import  Tick, half_tick, not_applicable_tick
+from app.objects.substages import TickSheetItem
+from app.objects.composed.ticksheet import DictOfCadetsAndTicksWithinQualification
+from app.objects.composed.ticks_for_qualification import DictOfTickSheetItemsAndTicksForCadet, TicksForQualification
 
 
 def save_ticksheet_edits(interface: abstractInterface):
@@ -30,6 +30,7 @@ def save_ticksheet_edits(interface: abstractInterface):
         return
 
     ticksheet_data = get_ticksheet_data_from_state(interface)
+
     save_ticksheet_table_edits_given_data(
         interface=interface, ticksheet_data=ticksheet_data
     )
@@ -37,61 +38,62 @@ def save_ticksheet_edits(interface: abstractInterface):
 
 def save_ticksheet_table_edits_given_data(
     interface: abstractInterface,
-    ticksheet_data: TickSheetDataWithExtraInfo,
+    ticksheet_data: DictOfCadetsAndTicksWithinQualification
 ):
-    list_of_cadet_ids = ticksheet_data.tick_sheet.list_of_cadet_ids
+
     return [
         save_ticksheet_edits_for_cadet(
-            interface=interface, ticksheet_data=ticksheet_data, cadet_id=cadet_id
+            interface=interface, ticks_for_qualification=ticksheet_data[cadet], cadet=cadet
         )
-        for cadet_id in list_of_cadet_ids
+        for cadet, ticks_for_qualification in ticksheet_data.items()
     ]
 
 
 def save_ticksheet_edits_for_cadet(
     interface: abstractInterface,
-    ticksheet_data: TickSheetDataWithExtraInfo,
-    cadet_id: str,
+    ticks_for_qualification: TicksForQualification,
+    cadet: Cadet
 ):
-    idx = ticksheet_data.tick_sheet.index_of_cadet_id(cadet_id)
-    relevant_row = ticksheet_data.tick_sheet[idx]
-    dict_of_tick_items = relevant_row.dict_of_ticks_with_items
+    dict_of_tick_items = ticks_for_qualification.all_tick_sheet_items_and_ticks()
     save_ticksheet_edits_for_dict_of_tick_item(
         interface=interface,
-        cadet_id=cadet_id,
-        dict_of_ticks_with_items=dict_of_tick_items,
+        cadet=cadet,
+        dict_of_tick_items=dict_of_tick_items
+
     )
 
 
 def save_ticksheet_edits_for_dict_of_tick_item(
     interface: abstractInterface,
-    cadet_id: str,
-    dict_of_ticks_with_items: DictOfTicksWithItem,
+    cadet: Cadet,
+    dict_of_tick_items: DictOfTickSheetItemsAndTicksForCadet
+
 ):
-    list_of_ticks = dict_of_ticks_with_items.list_of_ticks()
-    list_of_item_ids = dict_of_ticks_with_items.list_of_item_ids()
-    for current_tick, item_id in zip(list_of_ticks, list_of_item_ids):
+
+    for tick_item, current_tick in dict_of_tick_items.items():
         get_and_save_ticksheet_edits_for_specific_tick(
             interface=interface,
             current_tick=current_tick,
-            item_id=item_id,
-            cadet_id=cadet_id,
+            tick_item=tick_item,
+            cadet=cadet
         )
 
 
 def get_and_save_ticksheet_edits_for_specific_tick(
-    interface: abstractInterface, current_tick: Tick, cadet_id: str, item_id: str
+    interface: abstractInterface, current_tick: Tick, cadet: Cadet, tick_item: TickSheetItem
+
 ):
     new_tick_or_none = get_ticksheet_edits_for_specific_tick_or_none(
-        interface=interface, cadet_id=cadet_id, item_id=item_id
+        interface=interface, cadet_id=cadet.id, item_id=tick_item.id,
+        current_tick=current_tick
     )
 
     apply_ticksheet_edits_for_specific_tick(
         interface=interface,
-        cadet_id=cadet_id,
-        item_id=item_id,
+        cadet=cadet,
+        tick_item = tick_item,
         new_tick_or_none=new_tick_or_none,
-        current_tick=current_tick,
+        current_tick=current_tick
     )
 
 
@@ -99,27 +101,35 @@ def apply_ticksheet_edits_for_specific_tick(
     interface: abstractInterface,
     current_tick: Tick,
     new_tick_or_none: Union[Tick, None],
-    cadet_id: str,
-    item_id: str,
+    cadet: Cadet,
+    tick_item: TickSheetItem
+
 ):
-    if new_tick_or_none is None:
+    if tick_status_unchanged(current_tick=current_tick, new_tick_or_none=new_tick_or_none):
         return
 
-    new_tick = new_tick_or_none
-    if new_tick == current_tick:
-        return
+    print("APPLYING TICK CHANGE TO %s ITEM %s FROM %s to %s" % (str(cadet), str(tick_item), str(current_tick), str(new_tick_or_none)))
 
-    print("APPLYING")
-    print(cadet_id)
-    print(item_id)
-    print(str(new_tick))
     save_ticksheet_edits_for_specific_tick(
-        interface=interface, cadet_id=cadet_id, item_id=item_id, new_tick=new_tick
+        object_store = interface.object_store,
+        cadet = cadet,
+        tick_item = tick_item,
+        new_tick=new_tick_or_none
     )
+
+def tick_status_unchanged(    current_tick: Tick,
+        new_tick_or_none: Union[Tick, None],
+
+)->bool:
+    if new_tick_or_none is None:
+        return True
+
+    return new_tick_or_none == current_tick
 
 
 def get_ticksheet_edits_for_specific_tick_or_none(
-    interface: abstractInterface, cadet_id: str, item_id: str
+    interface: abstractInterface, cadet_id: str, item_id: str,
+        current_tick: Tick
 ) -> Union[Tick, None]:
     state = get_edit_state_of_ticksheet(interface)
     if state == NO_EDIT_STATE:
@@ -129,6 +139,10 @@ def get_ticksheet_edits_for_specific_tick_or_none(
             interface=interface, item_id=item_id, cadet_id=cadet_id
         )
     elif state == EDIT_CHECKBOX_STATE:
+        if current_tick in [half_tick, not_applicable_tick]:
+            ## Not possible to get tick if not set to none or full
+            return None
+
         return get_tick_from_checkbox_or_none(
             interface=interface, item_id=item_id, cadet_id=cadet_id
         )
@@ -136,14 +150,3 @@ def get_ticksheet_edits_for_specific_tick_or_none(
         raise Exception("state %s not known" % state)
 
 
-def get_ticksheet_data_from_state(
-    interface: abstractInterface,
-) -> TickSheetDataWithExtraInfo:
-    event = get_event_from_state(interface)
-    group = get_group_from_state(interface)
-    qualification = get_qualification_from_state(interface)
-
-    ticksheet_data = get_ticksheet_data(
-        interface=interface, event=event, group=group, qualification=qualification
-    )
-    return ticksheet_data

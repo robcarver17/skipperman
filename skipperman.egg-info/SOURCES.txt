@@ -117,7 +117,6 @@ app/OLD_backend/rota/../../data_access/configuration/configuration.yaml
 app/OLD_backend/ticks_and_qualifications/__init__.py
 app/OLD_backend/ticks_and_qualifications/create_ticksheets.py
 app/OLD_backend/ticks_and_qualifications/qualifications.py
-app/OLD_backend/ticks_and_qualifications/ticksheets.py
 app/OLD_backend/ticks_and_qualifications/../../data_access/configuration/configuration.yaml
 app/OLD_backend/transfer/__init__.py
 app/OLD_backend/transfer/transfer_to_ids.py
@@ -175,8 +174,10 @@ app/backend/qualifications_and_ticks/__init__.py
 app/backend/qualifications_and_ticks/dict_of_qualifications_substages_and_ticks.py
 app/backend/qualifications_and_ticks/list_of_qualifications.py
 app/backend/qualifications_and_ticks/list_of_substages.py
+app/backend/qualifications_and_ticks/print_ticksheets.py
+app/backend/qualifications_and_ticks/progress.py
 app/backend/qualifications_and_ticks/qualifications_for_cadet.py
-app/backend/qualifications_and_ticks/tick_items.py
+app/backend/qualifications_and_ticks/ticksheets.py
 app/backend/qualifications_and_ticks/../../data_access/configuration/configuration.yaml
 app/backend/registration_data/__init__.py
 app/backend/registration_data/get_registration_data.py
@@ -536,6 +537,7 @@ app/objects/patrol_boats_with_volunteers_with_id.py
 app/objects/qualifications.py
 app/objects/registration_data.py
 app/objects/roles_and_teams.py
+app/objects/substages.py
 app/objects/ticks.py
 app/objects/users_and_security.py
 app/objects/utils.py
@@ -563,9 +565,11 @@ app/objects/composed/cadets_at_event_with_registration_data.py
 app/objects/composed/cadets_with_all_event_info.py
 app/objects/composed/cadets_with_qualifications.py
 app/objects/composed/committee.py
-app/objects/composed/labelled_tick_sheet_with_cadet_ids.py
+app/objects/composed/labelled_tick_sheet.py
 app/objects/composed/roles_and_teams.py
+app/objects/composed/ticks_for_qualification.py
 app/objects/composed/ticks_in_dicts.py
+app/objects/composed/ticksheet.py
 app/objects/composed/volunteer_roles.py
 app/objects/composed/volunteer_with_group_and_role_at_event.py
 app/objects/composed/volunteers_at_event_with_patrol_boats.py

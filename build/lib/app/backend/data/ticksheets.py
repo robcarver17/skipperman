@@ -12,14 +12,12 @@ from app.objects.groups import Group
 
 from app.data_access.store.data_access import DataLayer
 from app.objects.ticks import (
-    ListOfCadetsWithTickListItems,
-    ListOfTickSheetItems,
+    ListOfCadetIdsWithTickListItemIds,
     Tick,
-    ListOfTickSubStages,
-    TickSubStage, TickSheetItem,
 )
+from app.objects.substages import TickSubStage, ListOfTickSubStages, TickSheetItem, ListOfTickSheetItems
 from app.objects.composed.ticks_in_dicts import TickSubStagesAsDict, QualificationsAndTickItemsAsDict
-from app.objects.composed.labelled_tick_sheet_with_cadet_ids import LabelledTickSheetWithCadetIds
+from app.objects.composed.labelled_tick_sheet import LabelledTickSheet
 from app.OLD_backend.data.group_allocations import GroupAllocationsData
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
 from app.OLD_backend.data.dinghies import DinghiesData
@@ -266,8 +264,8 @@ class TickSheetsData:
         return list_of_tick_sheet_items_for_this_qualification
 
     def add_full_rows_where_cadet_has_qualifications(
-        self, tick_sheet: ListOfCadetsWithTickListItems, qualification_stage_id: str
-    ) -> ListOfCadetsWithTickListItems:
+        self, tick_sheet: ListOfCadetIdsWithTickListItemIds, qualification_stage_id: str
+    ) -> ListOfCadetIdsWithTickListItemIds:
         list_of_cadet_ids = tick_sheet.list_of_cadet_ids
         has_qualifications_dict = dict(
             [
@@ -291,8 +289,8 @@ class TickSheetsData:
         self,
         event: Event,
         group: Group,
-        labelled_ticksheet: LabelledTickSheetWithCadetIds,
-    ) -> LabelledTickSheetWithCadetIds:
+        labelled_ticksheet: LabelledTickSheet,
+    ) -> LabelledTickSheet:
         list_of_cadet_ids = labelled_ticksheet.list_of_cadet_ids
         attendance_data = self.group_allocation_data.get_joint_attendance_matrix_for_cadet_ids_in_group_at_event(
             event=event, list_of_cadet_ids=list_of_cadet_ids, group=group
@@ -303,8 +301,8 @@ class TickSheetsData:
         return labelled_tick_sheet
 
     def add_medical_notes(
-        self, event: Event, labelled_ticksheet: LabelledTickSheetWithCadetIds
-    ) -> LabelledTickSheetWithCadetIds:
+        self, event: Event, labelled_ticksheet: LabelledTickSheet
+    ) -> LabelledTickSheet:
         list_of_cadet_ids = labelled_ticksheet.list_of_cadet_ids
         health_notes = (
             self.cadets_at_event_data.get_health_notes_for_list_of_cadet_ids_at_event(
@@ -317,8 +315,8 @@ class TickSheetsData:
         return labelled_tick_sheet
 
     def add_club_boats(
-        self, event: Event, labelled_ticksheet: LabelledTickSheetWithCadetIds
-    ) -> LabelledTickSheetWithCadetIds:
+        self, event: Event, labelled_ticksheet: LabelledTickSheet
+    ) -> LabelledTickSheet:
         list_of_club_boat_bool = (
             self.club_dinghies.list_of_club_dinghies_bool_for_list_of_cadet_ids(
                 list_of_cadet_ids=labelled_ticksheet.list_of_cadet_ids, event=event
@@ -333,7 +331,7 @@ class TickSheetsData:
 
     def get_list_of_cadets_with_tick_list_items_for_list_of_cadets(
         self, list_of_cadet_ids: List[str]
-    ) -> ListOfCadetsWithTickListItems:
+    ) -> ListOfCadetIdsWithTickListItemIds:
         list_of_all_ticks = []
         for cadet_id in list_of_cadet_ids:
             ticks_this_cadet = (
@@ -341,17 +339,17 @@ class TickSheetsData:
             )
             list_of_all_ticks += ticks_this_cadet
 
-        return ListOfCadetsWithTickListItems(list_of_all_ticks)
+        return ListOfCadetIdsWithTickListItemIds(list_of_all_ticks)
 
     def get_list_of_cadets_with_tick_list_items_for_cadet_id(
         self, cadet_id
-    ) -> ListOfCadetsWithTickListItems:
+    ) -> ListOfCadetIdsWithTickListItemIds:
         return self.data_api.get_list_of_cadets_with_tick_list_items_for_cadet_id(
             cadet_id=cadet_id
         )
 
     def save_list_of_cadets_with_tick_list_items(
-        self, list_of_cadets_with_tick_list_items: ListOfCadetsWithTickListItems
+        self, list_of_cadets_with_tick_list_items: ListOfCadetIdsWithTickListItemIds
     ):
         self.data_api.save_list_of_cadets_with_tick_list_items_for_cadet_id(
             list_of_cadets_with_tick_list_items

@@ -1,28 +1,16 @@
-from app.OLD_backend.data.cadets import CadetData
-from app.OLD_backend.data.qualification import QualificationData
-from app.data_access.file_access import temp_file_name
-from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.composed.cadets_with_qualifications import ListOfNamedCadetsWithQualifications
+from app.data_access.store.object_store import ObjectStore
 
+from app.data_access.file_access import temp_file_name
+from app.objects.composed.cadets_with_qualifications import ListOfNamedCadetsWithQualifications
+from app.backend.qualifications_and_ticks.qualifications_for_cadet import get_dict_of_qualifications_for_all_cadets
 
 def write_qualifications_to_temp_csv_file_and_return_filename(
-    interface: abstractInterface,
+    object_store: ObjectStore,
 ) -> str:
-    qualification_data = QualificationData(interface.data)
-    cadet_data = CadetData(interface.data)
-
-    list_of_cadets_with_qualification = (
-        qualification_data.get_list_of_cadets_with_qualifications()
-    )
-    list_of_qualifications = qualification_data.load_list_of_qualifications()
-    list_of_cadets = cadet_data.get_list_of_cadets()
+    qualification_data = get_dict_of_qualifications_for_all_cadets(object_store)
 
     list_of_cadet_names_with_qualifications = (
-        ListOfNamedCadetsWithQualifications.from_id_lists(
-            list_of_cadets_with_qualifications=list_of_cadets_with_qualification,
-            list_of_cadets=list_of_cadets,
-            list_of_qualifications=list_of_qualifications,
-        )
+        ListOfNamedCadetsWithQualifications.from_dict_of_qualifications(qualification_data)
     )
 
     list_of_cadet_names_with_qualifications = (

@@ -1,5 +1,5 @@
 import pandas as pd
-from app.objects.ticks import half_tick, full_tick, no_tick,  Tick, DictOfTicksWithItem, CadetWithTickListItems, TickWithItem, ListOfCadetsWithTickListItems
+from app.objects.ticks import half_tick, full_tick, no_tick,  Tick, DictOfTicksWithItem, CadetIdWithTickListItemIds, TickWithItem, ListOfCadetIdsWithTickListItemIds
 from app.data_access.data import DEPRECATED_data
 
 def input_old_tick_sheets():
@@ -12,7 +12,7 @@ def input_old_tick_sheets():
         row = input_file.iloc[i]
         list_of_cadets_with_tick_lists.append(process_row(row, file_columns=file_columns))
 
-    full_ticksheet = ListOfCadetsWithTickListItems(list_of_cadets_with_tick_lists)
+    full_ticksheet = ListOfCadetIdsWithTickListItemIds(list_of_cadets_with_tick_lists)
     DEPRECATED_data.data_list_of_cadets_with_tick_list_items.write(full_ticksheet)
 
 def process_row(row: pd.Series, file_columns: list):
@@ -22,7 +22,7 @@ def process_row(row: pd.Series, file_columns: list):
 
     tick_list = DictOfTicksWithItem.from_list_of_ticks_with_items(list_of_ticks_with_items)
 
-    return CadetWithTickListItems(cadet_id=cadet_id, dict_of_ticks_with_items=tick_list)
+    return CadetIdWithTickListItemIds(cadet_id=cadet_id, dict_of_ticks_with_items=tick_list)
 
 def tick_item(row: pd.Series, column: str) -> TickWithItem:
     tick = process_tick(row[column])

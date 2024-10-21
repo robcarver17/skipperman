@@ -1,6 +1,6 @@
 from typing import List, Tuple, Union
 
-from app.backend.qualifications_and_ticks.ticksheets import get_ticksheet_data
+from app.backend.qualifications_and_ticks.ticksheets import get_ticksheet_data_DEPRECATE
 
 from app.frontend.shared.events_state import get_event_from_state
 
@@ -24,8 +24,8 @@ from app.objects.ticks import (
     half_tick,
     not_applicable_tick,
     Tick,
-    TickSheetItem,
 )
+from app.objects.substages import TickSheetItem
 
 
 def get_select_cadet_button_when_in_no_edit_mode(
@@ -298,7 +298,7 @@ def get_list_of_all_tick_related_button_names(
     group = get_group_from_state(interface)
     qualification = get_qualification_from_state(interface)
 
-    ticksheet_data = get_ticksheet_data(
+    ticksheet_data = get_ticksheet_data_DEPRECATE(
         interface=interface, event=event, group=group, qualification=qualification
     )
 
@@ -322,7 +322,7 @@ def get_list_of_all_possible_select_cadet_buttons(
     group = get_group_from_state(interface)
     qualification = get_qualification_from_state(interface)
 
-    ticksheet_data = get_ticksheet_data(
+    ticksheet_data = get_ticksheet_data_DEPRECATE(
         interface=interface, event=event, group=group, qualification=qualification
     )
 

@@ -2,7 +2,7 @@ from app.data_access.store.object_definitions import object_definition_for_quali
 from app.data_access.store.object_store import ObjectStore
 from app.objects.composed.ticks_in_dicts import TickSubStagesAsDict, QualificationsAndTickItemsAsDict
 from app.objects.qualifications import Qualification
-from app.objects.ticks import TickSubStage, TickSheetItem
+from app.objects.substages import TickSubStage, TickSheetItem
 
 
 def add_new_ticklistitem_to_qualification(object_store: ObjectStore, qualification: Qualification, substage: TickSubStage, new_tick_list_name: str):

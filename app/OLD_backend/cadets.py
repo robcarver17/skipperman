@@ -6,14 +6,6 @@ from app.OLD_backend.data.cadets import CadetData, SORT_BY_FIRSTNAME
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.exceptions import arg_not_passed
 
-
-def add_new_verified_cadet(data_layer: DataLayer, cadet: Cadet) -> Cadet:
-    cadet_data = CadetData(data_layer)
-    cadet_data.add_cadet(cadet)
-
-    return cadet
-
-
 def get_cadet_given_cadet_as_str(data_layer: DataLayer, cadet_as_str: str) -> Cadet:
     cadet_data = CadetData(data_layer)
     cadet = cadet_data.get_cadet_from_list_of_cadets_given_str_of_cadet(cadet_as_str)

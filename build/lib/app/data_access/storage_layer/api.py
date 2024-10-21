@@ -27,10 +27,9 @@ from app.objects.events import Event
 from app.data_access.store.store import Store, DataAccessMethod
 from app.data_access.api.generic_api import GenericDataApi
 from app.objects.ticks import (
-    ListOfCadetsWithTickListItems,
-    ListOfTickSheetItems,
-    ListOfTickSubStages,
+    ListOfCadetIdsWithTickListItemIds,
 )
+from app.objects.substages import ListOfTickSubStages, ListOfTickSheetItems
 from app.objects.cadets import ListOfCadets
 from app.objects.qualifications import ListOfQualifications
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
@@ -145,7 +144,7 @@ class DataLayer:
 
     def get_list_of_cadets_with_tick_list_items_for_cadet_id(
         self, cadet_id: str
-    ) -> ListOfCadetsWithTickListItems:
+    ) -> ListOfCadetIdsWithTickListItemIds:
         data_access_for_list_of_cadets_with_tick_list_items = (
             get_data_access_for_list_of_cadets_with_tick_list_items_for_cadet_id(
                 self.data, cadet_id=cadet_id
@@ -154,7 +153,7 @@ class DataLayer:
         return self.store.read(data_access_for_list_of_cadets_with_tick_list_items)
 
     def save_list_of_cadets_with_tick_list_items_for_cadet_id(
-        self, list_of_cadets_with_tick_list_items: ListOfCadetsWithTickListItems
+        self, list_of_cadets_with_tick_list_items: ListOfCadetIdsWithTickListItemIds
     ):
         cadet_id_list = list(set(list_of_cadets_with_tick_list_items.list_of_cadet_ids))
         if len(cadet_id_list) == 0:

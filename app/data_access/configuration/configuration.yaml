@@ -13,7 +13,6 @@ uploads: "uploads" ## directory in users home directory where uploads are tempor
 max_file_size: 2100000 # ~2mb
 upload_extensions: ".csv, .xls, .zip"
 number_of_backups_to_keep: 10
-hours_between_backups: 4
 #
 #
 #

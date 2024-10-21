@@ -167,8 +167,8 @@ def compose_iterable_object_from_object_store(object_store: ObjectStore, object_
     underlying_object_key = object_definition.key_for_underlying_object
     dict_of_output = {}
     for key in list_of_keys:
-        kwargs_this_element_locate_key = {underlying_object_key: key}
-        kwargs_this_element = kwargs_this_element_locate_key | kwargs
+        kwargs_this_element = {underlying_object_key: key}
+        kwargs_this_element.update(kwargs)
         underyling_data_this_key = compose_underyling_object_from_data_store(
             object_store=object_store,
             object_definition=object_definition.underlying_object_definition,

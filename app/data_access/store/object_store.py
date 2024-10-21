@@ -120,8 +120,8 @@ def update_objects_in_store_with_changed_iterable_object(new_object, object_stor
     underlying_object_key = object_definition.key_for_underlying_object
 
     for key in list_of_keys:
-        kwargs_this_element_locate_key = {underlying_object_key: key}
-        kwargs_this_element = kwargs_this_element_locate_key | kwargs
+        kwargs_this_element= {underlying_object_key: key}
+        kwargs_this_element.update(kwargs)
         update_data_store_with_changed_underlying_object(new_object=new_object[key],
                                                          object_store=object_store,
                                                          object_definition=object_definition.underlying_object_definition,

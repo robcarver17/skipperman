@@ -36,17 +36,10 @@ CADET_GROUP_PREFERENCE = "Preferred group"
 CADET_HIGHEST_QUALIFICATION = "Highest qualification"
 CADET_PREVIOUS_EXPERIENCE = "Previous experience"
 CADET_HEALTH = "Cadet Health"
+CADET_FOOD_PREFERENCE = "Cadet food preference"
+
 
 CADET_T_SHIRT_SIZE = "Cadet t-shirt size"
-
-TEMPORARY_MEMBERSHIPS_REQUIRED = "Temporary memberships required"
-TEMPORARY_MEMBERSHIP_NAMES = "Temporary membership names"
-
-FOOD_TICKET_ONE_DAY = "Food ticket one day"
-FOOD_TICKET_TWO_DAYS = "Food ticket two days"
-FOOD_TICKET_CHILD = "Food ticket child"
-FOOD_TICKET_ADULT_NOT_VOLUNTEERING = "Food ticket adult"
-FOOD_TICKET_GALA_ONLY = "Gala dinner ticket"
 
 VOLUNTEER_STATUS = "Volunteer status"
 
@@ -66,4 +59,3 @@ VOLUNTEER2_FOOD_PREFERENCE = "Volunteer 2 food preference"
 REGISTRATION_TOTAL_FEE = "Total fee"
 REGISTRATION_INTERNAL_NOTES = "Internal notes"
 REGISTERED_BY_MEMBER = "Registered by member"
-CADET_FOOD_PREFERENCE = "Cadet food preference"

@@ -2,9 +2,12 @@ from typing import Union, List
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.backend.qualifications_and_ticks.list_of_qualifications import get_list_of_qualifications, \
-    update_list_of_qualifications, add_new_qualification,\
-    modify_qualification
+from app.backend.qualifications_and_ticks.list_of_qualifications import (
+    get_list_of_qualifications,
+    update_list_of_qualifications,
+    add_new_qualification,
+    modify_qualification,
+)
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.configuration.qualifications.edit_qualifications_in_detail import (
@@ -68,12 +71,15 @@ def post_form_config_qualifications_page(
 
     interface.flush_cache_to_store()
 
-    return interface.get_new_form_given_function(display_form_config_qualifications_page)
+    return interface.get_new_form_given_function(
+        display_form_config_qualifications_page
+    )
 
 
 def save_from_ordinary_list_of_qualifications(
     object_store: ObjectStore, new_list: List[Qualification]
 ):
     update_list_of_qualifications(
-        object_store=object_store, updated_list_of_qualifications=ListOfQualifications(new_list)
+        object_store=object_store,
+        updated_list_of_qualifications=ListOfQualifications(new_list),
     )

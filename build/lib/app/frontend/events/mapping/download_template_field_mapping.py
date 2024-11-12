@@ -1,9 +1,9 @@
 from typing import Union
-from app.OLD_backend.wa_import.map_wa_fields import (
+from app.backend.mapping.map_wa_fields import (
     DEPRECATE_get_list_of_template_names,
     get_template,
-    write_mapping_to_temp_csv_file_and_return_filename,
 )
+from app.backend.mapping.list_of_field_mappings import write_mapping_to_temp_csv_file_and_return_filename
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import (
     Form,

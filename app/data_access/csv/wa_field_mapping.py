@@ -1,10 +1,13 @@
 from typing import List
+
+import pandas as pd
+
 from app.data_access.csv.generic_csv_data import GenericCsvData
 from app.data_access.csv.resolve_csv_paths_and_filenames import (
     FIELD_MAPPING_FILE_ID,
     TEMPLATES_FIELD_MAPPING_FILE_ID,
 )
-from app.objects_OLD.wa_field_mapping import ListOfWAFieldMappings
+from app.objects.wa_field_mapping import ListOfWAFieldMappings
 from app.data_access.classes.wa_field_mapping import DataWAFieldMapping
 
 
@@ -46,3 +49,12 @@ class CsvDataWAFieldMapping(GenericCsvData, DataWAFieldMapping):
         return self.get_list_of_csv_files_in_path_for_field_id(
             TEMPLATES_FIELD_MAPPING_FILE_ID
         )
+
+
+def read_mapping_from_csv_file_object(file) -> ListOfWAFieldMappings:
+    df = pd.read_csv(file)
+
+    ## error condition
+    wa_field_mapping = ListOfWAFieldMappings.from_df_of_str(df)
+
+    return wa_field_mapping

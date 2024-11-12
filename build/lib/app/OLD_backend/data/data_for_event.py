@@ -11,7 +11,9 @@ from app.OLD_backend.data.cadets_at_event_id_level import load_cadets_at_event
 from app.OLD_backend.group_allocations.boat_allocation import (
     load_list_of_cadets_at_event_with_dinghies,
 )
-from app.OLD_backend.data.dinghies import load_list_of_cadets_at_event_with_club_dinghies
+from app.OLD_backend.data.dinghies import (
+    load_list_of_cadets_at_event_with_club_dinghies,
+)
 from app.OLD_backend.configuration import (
     load_list_of_boat_classes,
     load_list_of_club_dinghies,
@@ -19,11 +21,15 @@ from app.OLD_backend.configuration import (
 
 from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent
 from app.objects.cadets import ListOfCadets
-from app.objects.cadet_at_event_with_dinghy_with_ids import ListOfCadetAtEventWithBoatClassAndPartnerWithIds
+from app.objects.cadet_at_event_with_dinghy_with_ids import (
+    ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
+)
 from app.objects.club_dinghies import (
     ListOfClubDinghies,
 )
-from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithIdAndClubDinghies
+from app.objects.cadet_at_event_with_club_boat_with_ids import (
+    ListOfCadetAtEventWithIdAndClubDinghies,
+)
 from app.objects.boat_classes import ListOfBoatClasses
 from app.objects.events import Event
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
@@ -54,7 +60,7 @@ def get_data_required_for_event(
     list_of_cadet_ids_with_groups = load_list_of_cadets_with_allocated_groups_at_event(
         interface=interface, event=event
     )
-    list_of_all_cadets =load_list_of_all_cadets(interface.data)
+    list_of_all_cadets = load_list_of_all_cadets(interface.data)
     list_of_cadets_at_event_with_club_dinghies = (
         load_list_of_cadets_at_event_with_club_dinghies(
             interface=interface, event=event

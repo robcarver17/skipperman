@@ -31,7 +31,9 @@ def generate_menu_page_html() -> str:
         html_code_for_menu = ""
 
     html_page_master_layout = get_master_layout(
-        include_read_only_toggle=True, include_user_options=True, include_backup_option=True
+        include_read_only_toggle=True,
+        include_user_options=True,
+        include_backup_option=True,
     )
     html_page_master_layout.body.append(html_code_for_menu)
 
@@ -68,7 +70,10 @@ def get_menu_buttons_for_actions() -> Line:
 
     return Line(list_of_buttons)
 
-def get_menu_buttons_from_filtered_menu(filtered_menu_definition: dict) -> List[ActionOptionButton]:
+
+def get_menu_buttons_from_filtered_menu(
+    filtered_menu_definition: dict,
+) -> List[ActionOptionButton]:
     list_of_buttons = []
     for label, action_name in filtered_menu_definition.items():
         list_of_buttons.append(

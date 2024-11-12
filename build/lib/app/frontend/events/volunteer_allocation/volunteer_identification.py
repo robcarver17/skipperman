@@ -1,23 +1,21 @@
 from typing import Union, Tuple
 
-from app.OLD_backend.volunteers.volunteer_allocation import (
-    add_identified_volunteer,
-    mark_volunteer_as_skipped,
-    volunteer_for_this_row_and_index_already_identified,
-    get_volunteer_with_matching_name,
+from app.backend.volunteers.list_of_volunteers import get_volunteer_with_matching_name
+from app.backend.registration_data.identified_volunteers_at_event import \
+    volunteer_for_this_row_and_index_already_identified, add_identified_volunteer, mark_volunteer_as_skipped
+from app.OLD_backend.volunteers.volunteers import (
+    get_dict_of_volunteer_names_and_volunteers,
 )
-from app.OLD_backend.volunteers.volunteers import get_dict_of_volunteer_names_and_volunteers
 from app.backend.volunteers.add_edit_volunteer import verify_volunteer_and_warn
-from app.OLD_backend.volunteers.volunter_relevant_information import (
+from app.backend.registration_data.volunter_relevant_information import (
     get_volunteer_from_relevant_information,
 )
-from app.OLD_backend.wa_import.import_cadets import (
-    is_cadet_marked_as_test_cadet_to_skip_in_for_row_in_mapped_data,
-)
+from app.backend.registration_data.identified_cadets_at_event import \
+    is_cadet_marked_as_test_cadet_to_skip_in_for_row_in_raw_registration_data
 
 from app.frontend.shared.events_state import get_event_from_state
-from app.frontend.events.import_wa.shared_state_tracking_and_data import (
-    get_and_save_next_row_id_in_mapped_event_data,
+from app.frontend.events.import_data.shared_state_tracking_and_data import (
+    get_and_save_next_row_id_in_raw_registration_data,
     clear_row_in_state,
     get_current_row_id,
 )
@@ -33,19 +31,25 @@ from app.frontend.events.volunteer_allocation.track_state_in_volunteer_allocatio
 from app.frontend.events.volunteer_allocation.volunteer_selection_form_contents import (
     volunteer_name_is_similar_to_cadet_name,
     get_footer_buttons_add_or_select_existing_volunteer_form,
-    get_header_text_for_volunteer_selection_form,
+    get_header_text_for_volunteer_selection_form, CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL,
+    CHECK_FOR_ME_VOLUNTEER_BUTTON_LABEL, FINAL_VOLUNTEER_ADD_BUTTON_LABEL, SEE_ALL_VOLUNTEER_BUTTON_LABEL,
+    SEE_SIMILAR_VOLUNTEER_ONLY_LABEL, SKIP_VOLUNTEER_BUTTON_LABEL,
 )
-from app.frontend.shared.add_edit_volunteer_forms import add_volunteer_from_form_to_data, verify_form_with_volunteer_details, \
-    VolunteerAndVerificationText, get_add_volunteer_form_with_information_passed
+from app.frontend.shared.add_edit_volunteer_forms import (
+    add_volunteer_from_form_to_data,
+    verify_form_with_volunteer_details,
+    VolunteerAndVerificationText,
+    get_add_volunteer_form_with_information_passed,
+)
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 
-from app.frontend.events.constants import *
-
 from app.objects.exceptions import NoMoreData, arg_not_passed, MissingData
-from app.objects_OLD.relevant_information_for_volunteers import missing_relevant_information
+from app.objects.relevant_information_for_volunteers import (
+    missing_relevant_information,
+)
 from app.objects.volunteers import Volunteer
 
 
@@ -68,7 +72,7 @@ def process_volunteer_on_next_row_of_event_data(
 ) -> Union[Form, NewForm]:
     print("Looping through identifying master event data volunteers")
     try:
-        get_and_save_next_row_id_in_mapped_event_data(interface)
+        get_and_save_next_row_id_in_raw_registration_data(interface)
     except NoMoreData:
         clear_row_in_state(interface)
         print("Finished looping - next stage is to add details")
@@ -123,7 +127,7 @@ def is_cadet_marked_as_test_cadet_to_skip_in_for_current_row_in_mapped_data(
 ):
     current_row_id = get_current_row_id(interface)
     event = get_event_from_state(interface)
-    return is_cadet_marked_as_test_cadet_to_skip_in_for_row_in_mapped_data(
+    return is_cadet_marked_as_test_cadet_to_skip_in_for_row_in_raw_registration_data(
         interface=interface, row_id=current_row_id, event=event
     )
 

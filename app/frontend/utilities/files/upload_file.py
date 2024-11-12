@@ -88,7 +88,6 @@ def get_filename_and_save_new_file(interface: abstractInterface) -> Form:
     )
 
 
-
 def get_filename_from_form(interface: abstractInterface) -> str:
     filename = interface.value_from_form(FILE_NAME)
     if len(filename) == 0:

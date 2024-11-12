@@ -72,14 +72,17 @@ for event_id in range(12):
 """
 
 for event_id in range(12)[8:]:
-    filename = "/home/rob/skipperman_data/mapped_events/list_of_volunteers_in_roles_at_event_%s.csv" % str(event_id)
+    filename = (
+        "/home/rob/skipperman_data/mapped_events/list_of_volunteers_in_roles_at_event_%s.csv"
+        % str(event_id)
+    )
 
     try:
         df = pd.read_csv(filename)
     except:
         continue
 
-    if len(df)==0:
+    if len(df) == 0:
         continue
 
     print(filename)
@@ -97,7 +100,6 @@ for event_id in range(12)[8:]:
 
     df.role = list_of_role_ids
     df.group = list_of_group_ids
-    df = df.rename(columns = {'group': 'group_id'})
-    df = df.rename(columns = {'role': 'role_id'})
+    df = df.rename(columns={"group": "group_id"})
+    df = df.rename(columns={"role": "role_id"})
     df.to_csv(filename, index=False)
-

@@ -9,33 +9,38 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.OLD_backend.data.volunteers import VolunteerData, SORT_BY_SURNAME
 from app.objects.exceptions import arg_not_passed
 from app.objects.volunteers import Volunteer, ListOfVolunteers
-from app.objects.composed.volunteers_with_skills import SkillsDict, DictOfVolunteersWithSkills
+from app.objects.composed.volunteers_with_skills import (
+    SkillsDict,
+    DictOfVolunteersWithSkills,
+)
 
 
-def get_volunteer_with_name(
-    data_layer: DataLayer, volunteer_name: str
-) -> Volunteer:
+def get_volunteer_with_name(data_layer: DataLayer, volunteer_name: str) -> Volunteer:
     volunteer_data = VolunteerData(data_layer)
-    return volunteer_data.get_volunteer_given_name(
-        volunteer_name=volunteer_name
+    return volunteer_data.get_volunteer_given_name(volunteer_name=volunteer_name)
+
+
+def EPRECATE_get_volunteer_name_from_id(
+    interface: abstractInterface, volunteer_id: str
+) -> str:
+    volunteer = DEPRECATE_get_volunteer_from_id(
+        interface=interface, volunteer_id=volunteer_id
     )
-
-
-
-def EPRECATE_get_volunteer_name_from_id(interface: abstractInterface, volunteer_id: str) -> str:
-    volunteer = DEPRECATE_get_volunteer_from_id(interface=interface, volunteer_id=volunteer_id)
     return volunteer.name
+
 
 def get_volunteer_name_from_id(data_layer: DataLayer, volunteer_id: str) -> str:
     volunteer = get_volunteer_from_id(data_layer=data_layer, volunteer_id=volunteer_id)
     return volunteer.name
 
 
-
-def DEPRECATE_get_volunteer_from_id(interface: abstractInterface, volunteer_id: str) -> Volunteer:
+def DEPRECATE_get_volunteer_from_id(
+    interface: abstractInterface, volunteer_id: str
+) -> Volunteer:
     volunteer_data = VolunteerData(interface.data)
     list_of_volunteers = volunteer_data.get_list_of_volunteers()
     return list_of_volunteers.object_with_id(volunteer_id)
+
 
 def get_volunteer_from_id(data_layer: DataLayer, volunteer_id: str) -> Volunteer:
     volunteer_data = VolunteerData(data_layer)
@@ -43,8 +48,8 @@ def get_volunteer_from_id(data_layer: DataLayer, volunteer_id: str) -> Volunteer
     return list_of_volunteers.object_with_id(volunteer_id)
 
 
-
 #### CONNECTIONS
+
 
 def are_all_cadet_ids_in_list_already_connection_to_volunteer(
     data_layer: DataLayer, volunteer: Volunteer, list_of_cadet_ids: List[str]
@@ -86,16 +91,22 @@ def add_list_of_cadet_connections_to_volunteer(
             cadet=cadet, volunteer=volunteer
         )
 
+
 ### skills
 
-def get_dict_of_existing_skills(data_layer: DataLayer, volunteer: Volunteer) -> SkillsDict:
+
+def get_dict_of_existing_skills(
+    data_layer: DataLayer, volunteer: Volunteer
+) -> SkillsDict:
     volunteer_data = VolunteerData(data_layer)
     return volunteer_data.get_dict_of_existing_skills_for_volunteer(volunteer)
 
 
-def string_if_volunteer_can_drive_else_empty(data_layer: DataLayer, volunteer: Volunteer) -> str:
+def string_if_volunteer_can_drive_else_empty(
+    data_layer: DataLayer, volunteer: Volunteer
+) -> str:
     if can_volunteer_drive_safety_boat(data_layer=data_layer, volunteer=volunteer):
-        return "PB2" ## can be anything
+        return "PB2"  ## can be anything
     else:
         return ""
 
@@ -107,9 +118,7 @@ def can_volunteer_drive_safety_boat(
     return volunteer_data.can_volunteer_drive_safety_boat(volunteer)
 
 
-def add_boat_related_skill_for_volunteer(
-    data_layer: DataLayer, volunteer: Volunteer
-):
+def add_boat_related_skill_for_volunteer(data_layer: DataLayer, volunteer: Volunteer):
     volunteer_data = VolunteerData(data_layer)
     volunteer_data.add_volunteer_driving_qualification(volunteer)
 
@@ -126,10 +135,9 @@ def load_list_of_volunteer_skills(data_layer: DataLayer) -> DictOfVolunteersWith
     return volunteer_data.get_list_of_volunteer_skills()
 
 
-def get_list_of_volunteers_sorted_by_surname(
-    data_layer: DataLayer
-) -> ListOfVolunteers:
+def get_list_of_volunteers_sorted_by_surname(data_layer: DataLayer) -> ListOfVolunteers:
     return get_sorted_list_of_volunteers(data_layer=data_layer, sort_by=SORT_BY_SURNAME)
+
 
 ### lists
 def get_sorted_list_of_volunteers(
@@ -137,7 +145,6 @@ def get_sorted_list_of_volunteers(
 ) -> ListOfVolunteers:
     volunteer_data = VolunteerData(data_layer)
     return volunteer_data.get_sorted_list_of_volunteers(sort_by)
-
 
 
 def get_list_of_all_volunteers(data_layer: DataLayer) -> ListOfVolunteers:

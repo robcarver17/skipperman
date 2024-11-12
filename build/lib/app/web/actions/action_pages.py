@@ -16,9 +16,7 @@ from flask import send_file, Response
 def generate_action_page_html(action_name: str) -> Union[Html, Response]:
     print("getting html for %s" % action_name)
 
-    abstract_form_for_action = get_abstract_form_for_specific_action(
-        action_name
-    )
+    abstract_form_for_action = get_abstract_form_for_specific_action(action_name)
 
     if type(abstract_form_for_action) is File:
         print("Generating file %s" % abstract_form_for_action.path_and_filename)
@@ -45,4 +43,3 @@ def from_abstract_to_laid_out_html(
     )
 
     return html_code_for_action
-

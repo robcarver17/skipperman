@@ -2,15 +2,32 @@ from copy import copy
 from dataclasses import dataclass
 from typing import Union
 
-from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunteer, save_skills_for_volunteer
-from app.frontend.forms.form_utils import get_dict_of_skills_from_form, checked_and_labels_dict_for_skills_form
+from app.backend.volunteers.skills import (
+    get_dict_of_existing_skills_for_volunteer,
+    save_skills_for_volunteer,
+)
+from app.frontend.forms.form_utils import (
+    get_dict_of_skills_from_form,
+    checked_and_labels_dict_for_skills_form,
+)
 
-from app.backend.volunteers.add_edit_volunteer import add_new_verified_volunteer, verify_volunteer_and_warn
+from app.backend.volunteers.add_edit_volunteer import (
+    add_new_verified_volunteer,
+    verify_volunteer_and_warn,
+)
 
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, cancel_menu_button, Button
+from app.objects.abstract_objects.abstract_buttons import (
+    ButtonBar,
+    cancel_menu_button,
+    Button,
+)
 from app.objects.abstract_objects.abstract_form import Form, textInput, checkboxInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
+from app.objects.abstract_objects.abstract_lines import (
+    Line,
+    ListOfLines,
+    _______________,
+)
 from app.objects.volunteers import Volunteer, default_volunteer
 
 
@@ -96,24 +113,22 @@ def form_fields_for_add_volunteer(volunteer: Volunteer):
 
 
 def get_footer_buttons_for_add_volunteer_form(form_is_empty: bool) -> ButtonBar:
-
     if form_is_empty:
         return ButtonBar([cancel_menu_button, check_submit_button])
     else:
         return ButtonBar([cancel_menu_button, check_submit_button, final_submit_button])
 
 
-
-
 def get_and_save_volunteer_skills_from_form(
     interface: abstractInterface, volunteer: Volunteer
 ):
     dict_of_skills = get_dict_of_skills_from_form(
-        interface=interface,
-        field_name=SKILLS
+        interface=interface, field_name=SKILLS
     )
     save_skills_for_volunteer(
-        data_layer=interface.data, volunteer=volunteer, dict_of_skills=dict_of_skills
+        object_store=interface.object_store,
+        volunteer=volunteer,
+        dict_of_skills=dict_of_skills,
     )
 
 
@@ -121,7 +136,9 @@ def skills_form_entries(interface: abstractInterface, volunteer: Volunteer):
     skills_dict = get_dict_of_existing_skills_for_volunteer(
         object_store=interface.object_store, volunteer=volunteer
     )
-    skills_dict_checked, dict_of_labels = checked_and_labels_dict_for_skills_form(skills_dict)
+    skills_dict_checked, dict_of_labels = checked_and_labels_dict_for_skills_form(
+        skills_dict
+    )
 
     return checkboxInput(
         input_label="Volunteer skills:",

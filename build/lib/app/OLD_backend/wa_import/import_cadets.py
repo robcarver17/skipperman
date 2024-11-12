@@ -1,6 +1,8 @@
 from app.OLD_backend.data.cadets import CadetData
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
-from app.backend.cadets.import_membership_list import get_temp_cadet_file_list_of_memberships
+from app.backend.cadets.import_membership_list import (
+    get_temp_cadet_file_list_of_memberships,
+)
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
 from app.objects.exceptions import missing_data
@@ -12,7 +14,6 @@ def get_current_cadet_from_temp_file(cadet_id: str) -> Cadet:
     cadet = temp_file.object_with_id(cadet_id)
     cadet_without_id = Cadet(cadet.first_name, cadet.surname, cadet.date_of_birth)
     return cadet_without_id
-
 
 
 def replace_cadet_with_id_with_new_cadet_details(

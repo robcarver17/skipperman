@@ -17,8 +17,13 @@ from app.objects_OLD.volunteers_at_event import (
     ListOfVolunteersAtEvent,
     DEPRECATE_VolunteerAtEvent,
 )
-from app.objects.volunteer_at_event_with_id import VolunteerAtEventWithId, ListOfVolunteersAtEventWithId
-from app.objects_OLD.primtive_with_id.identified_volunteer_at_event import ListOfIdentifiedVolunteersAtEvent
+from app.objects.volunteer_at_event_with_id import (
+    VolunteerAtEventWithId,
+    ListOfVolunteersAtEventWithId,
+)
+from app.objects.identified_volunteer_at_event import (
+    ListOfIdentifiedVolunteersAtEvent,
+)
 from app.OLD_backend.data.volunteers import VolunteerData
 
 
@@ -27,7 +32,7 @@ class VolunteerAllocationData:
         self.data_api = data_api
 
     def add_volunteer_and_cadet_association_for_existing_volunteer(
-        self,  event: Event,  volunteer: Volunteer, cadet: Cadet
+        self, event: Event, volunteer: Volunteer, cadet: Cadet
     ):
         list_of_volunteers_at_event = self.load_list_of_volunteers_with_ids_at_event(
             event
@@ -40,12 +45,11 @@ class VolunteerAllocationData:
         )
 
     def remove_volunteer_and_cadet_association_at_event(
-        self,  event: Event, cadet: Cadet, volunteer: Volunteer
+        self, event: Event, cadet: Cadet, volunteer: Volunteer
     ):
-        self.remove_volunteer_and_cadet_with_ids_association_at_event(event=event,
-                                                                      volunteer_id = volunteer.id,
-                                                                      cadet_id=cadet.id)
-
+        self.remove_volunteer_and_cadet_with_ids_association_at_event(
+            event=event, volunteer_id=volunteer.id, cadet_id=cadet.id
+        )
 
     def remove_volunteer_and_cadet_with_ids_association_at_event(
         self, cadet_id: str, volunteer_id: str, event: Event
@@ -238,7 +242,7 @@ class VolunteerAllocationData:
                         volunteer_with_id_at_event.volunteer_id
                     ),
                     volunteer_at_event_with_id=volunteer_with_id_at_event,
-                    event=event
+                    event=event,
                 )
                 for volunteer_with_id_at_event in list_of_volunteers_at_event
             ]

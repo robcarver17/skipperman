@@ -172,7 +172,9 @@ class VolunteerWithFoodRequirementsAtEvent(GenericSkipperManObject):
         return food_required_as_dict
 
     @classmethod
-    def from_dict_of_str(cls, some_dict: dict) -> "VolunteerWithFoodRequirementsAtEvent":
+    def from_dict_of_str(
+        cls, some_dict: dict
+    ) -> "VolunteerWithFoodRequirementsAtEvent":
         volunteer_id = str(some_dict.pop(VOLUNTEER_ID))
         food_required = FoodRequirements.from_dict_of_str(some_dict)
 

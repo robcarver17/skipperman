@@ -5,7 +5,9 @@ from app.data_access.csv.resolve_csv_paths_and_filenames import (
     LIST_OF_DINGHIES_FILE_ID,
     LIST_OF_CADETS_WITH_DINGHIES_AT_EVENT_FILE_ID,
 )
-from app.objects.cadet_at_event_with_dinghy_with_ids import ListOfCadetAtEventWithBoatClassAndPartnerWithIds
+from app.objects.cadet_at_event_with_dinghy_with_ids import (
+    ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
+)
 
 
 class CsvDataListOfDinghies(GenericCsvData, DataListOfDinghies):
@@ -32,7 +34,11 @@ class CsvDataListOfCadetAtEventWithDinghies(
 
         return people_and_boats
 
-    def write(self, people_and_boats: ListOfCadetAtEventWithBoatClassAndPartnerWithIds, event_id: str):
+    def write(
+        self,
+        people_and_boats: ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
+        event_id: str,
+    ):
         self.write_object(
             people_and_boats,
             file_identifier=LIST_OF_CADETS_WITH_DINGHIES_AT_EVENT_FILE_ID,

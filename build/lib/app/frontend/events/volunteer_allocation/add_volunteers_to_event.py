@@ -1,21 +1,18 @@
 from typing import Union
 
-from app.objects_OLD.relevant_information_for_volunteers import (
-    ListOfRelevantInformationForVolunteer,
+from app.objects.relevant_information_for_volunteers import (
+    ListOfRelevantInformationForVolunteer, relevant_information_requires_clarification, NO_ISSUES_WITH_VOLUNTEER,
 )
 
-from app.OLD_backend.volunteers.volunteer_allocation import (
-    update_cadet_connections_when_volunteer_already_at_event,
-    are_all_connected_cadets_cancelled_or_deleted,
-    get_list_of_relevant_information,
-    relevant_information_requires_clarification_or_cadets_not_permanently_connected,
-    add_volunteer_at_event,
-    get_volunteer_at_event_from_list_of_relevant_information_with_no_conflicts,
-    NO_ISSUES_WITH_VOLUNTEER,
-    get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet,
-)
+from app.backend.registration_data.identified_volunteers_at_event import \
+    get_list_of_relevant_information_for_volunteer_in_registration_data
+from app.backend.registration_data.cadet_and_volunteer_connections_at_event import \
+    update_cadet_connections_when_volunteer_already_at_event, \
+    get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer, \
+    are_all_cadets_associated_with_volunteer_in_registration_data_cancelled_or_deleted
 from app.OLD_backend.volunteers.volunteers import DEPRECATE_get_volunteer_from_id
-from app.OLD_backend.rota.volunteer_rota import is_volunteer_already_at_event
+from app.backend.volunteers.volunteers_at_event import is_volunteer_already_at_event, \
+    get_volunteer_at_event_from_list_of_relevant_information_with_no_conflicts, add_volunteer_at_event
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.volunteer_allocation.add_volunteers_process_form import (
     add_volunteer_at_event_with_form_contents,
@@ -77,7 +74,7 @@ def process_identified_volunteer_at_event(
     already_added = is_volunteer_already_at_event(
         interface=interface, volunteer_id=volunteer_id, event=event
     )
-    all_cancelled = are_all_connected_cadets_cancelled_or_deleted(
+    all_cancelled = are_all_cadets_associated_with_volunteer_in_registration_data_cancelled_or_deleted(
         interface=interface, volunteer_id=volunteer_id, event=event
     )
 
@@ -102,11 +99,11 @@ def process_new_volunteer_at_event_with_active_cadets(
     interface: abstractInterface, volunteer_id: str, event: Event
 ) -> Union[Form, NewForm]:
     ## New volunteer with cadets
-    list_of_relevant_information = get_list_of_relevant_information(
+    list_of_relevant_information = get_list_of_relevant_information_for_volunteer_in_registration_data(
         volunteer_id=volunteer_id, event=event, interface=interface
     )
     issues_with_volunteer = (
-        relevant_information_requires_clarification_or_cadets_not_permanently_connected(
+        relevant_information_requires_clarification(
             interface=interface,
             list_of_relevant_information=list_of_relevant_information,
             event=event,
@@ -117,7 +114,9 @@ def process_new_volunteer_at_event_with_active_cadets(
     if issues_with_volunteer == NO_ISSUES_WITH_VOLUNTEER:
         print(
             "Volunteer %s has no issues, adding automatically"
-            % DEPRECATE_get_volunteer_from_id(interface=interface, volunteer_id=volunteer_id)
+            % DEPRECATE_get_volunteer_from_id(
+                interface=interface, volunteer_id=volunteer_id
+            )
         )
         return process_new_volunteer_at_event_with_active_cadets_and_where_no_manual_intervention_required(
             interface=interface,
@@ -138,7 +137,7 @@ def process_new_volunteer_at_event_with_active_cadets_and_where_no_manual_interv
     volunteer_id: str,
     event: Event,
 ) -> Union[Form, NewForm]:
-    list_of_cadet_ids = get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet(
+    list_of_cadet_ids = get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer(
         interface=interface, volunteer_id=volunteer_id, event=event
     )
     volunteer_at_event = (
@@ -160,9 +159,11 @@ def process_new_volunteer_at_event_with_active_cadets_and_where_no_manual_interv
 def display_form_for_volunteer_details(
     interface: abstractInterface, volunteer_id: str, event: Event
 ) -> Form:
-    volunteer = DEPRECATE_get_volunteer_from_id(interface=interface, volunteer_id=volunteer_id)
+    volunteer = DEPRECATE_get_volunteer_from_id(
+        interface=interface, volunteer_id=volunteer_id
+    )
 
-    list_of_relevant_information = get_list_of_relevant_information(
+    list_of_relevant_information = get_list_of_relevant_information_for_volunteer_in_registration_data(
         volunteer_id=volunteer_id, event=event, interface=interface
     )
 

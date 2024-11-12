@@ -14,7 +14,9 @@ from app.OLD_backend.reporting.arrangement.arrangement_order import (
     IndicesToSwap,
 )
 
-from app.OLD_backend.reporting.options_and_parameters.report_options import ReportingOptions
+from app.OLD_backend.reporting.options_and_parameters.report_options import (
+    ReportingOptions,
+)
 
 
 from app.OLD_backend.reporting.process_stages.create_list_of_columns_from_groups import (

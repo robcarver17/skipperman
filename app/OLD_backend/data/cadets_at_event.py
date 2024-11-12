@@ -15,7 +15,9 @@ class CadetsAtEventData:
         self.data_api = data_api
         self.store = data_api.store
 
-    def get_list_of_cadets_at_event(self, event: Event) -> DEPRECATE_ListOfCadetsAtEvent:
+    def get_list_of_cadets_at_event(
+        self, event: Event
+    ) -> DEPRECATE_ListOfCadetsAtEvent:
         data_method = get_data_access_list_of_cadets_at_event(
             self.cadets_at_event_id_level_data, event=event
         )

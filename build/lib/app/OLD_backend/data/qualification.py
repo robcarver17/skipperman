@@ -114,7 +114,9 @@ class QualificationData:
     def save_list_of_qualifications(self, list_of_qualifications: ListOfQualifications):
         self.data_api.save_list_of_qualifications(list_of_qualifications)
 
-    def get_list_of_cadets_with_qualifications(self) -> ListOfCadetsWithIdsAndQualifications:
+    def get_list_of_cadets_with_qualifications(
+        self,
+    ) -> ListOfCadetsWithIdsAndQualifications:
         return self.data_api.get_list_of_cadets_with_qualifications()
 
     def save_list_of_cadets_with_qualifications(

@@ -1,9 +1,13 @@
 from app.objects.patrol_boats import ListOfPatrolBoats
-from app.objects.patrol_boats_with_volunteers_with_id import ListOfVolunteersWithIdAtEventWithPatrolBoatsId
+from app.objects.patrol_boats_with_volunteers_with_id import (
+    ListOfVolunteersWithIdAtEventWithPatrolBoatsId,
+)
 from app.objects.club_dinghies import (
     ListOfClubDinghies,
 )
-from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithIdAndClubDinghies
+from app.objects.cadet_at_event_with_club_boat_with_ids import (
+    ListOfCadetAtEventWithIdAndClubDinghies,
+)
 
 
 class DataListOfClubDinghies(object):

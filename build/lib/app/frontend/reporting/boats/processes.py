@@ -5,7 +5,9 @@ import pandas as pd
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.OLD_backend.reporting.boat_report.get_data import get_dict_of_df_for_boat_report
+from app.OLD_backend.reporting.boat_report.get_data import (
+    get_dict_of_df_for_boat_report,
+)
 
 from app.OLD_backend.reporting.boat_report.boat_report_parameters import (
     AdditionalParametersForBoatReport,

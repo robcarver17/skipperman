@@ -16,7 +16,9 @@ from app.OLD_backend.reporting.process_stages.strings_columns_groups import (
     ListOfPagesWithColumns,
 )
 from app.OLD_backend.reporting.arrangement.arrangement_order import ArrangementOfColumns
-from app.OLD_backend.reporting.options_and_parameters.report_options import ReportingOptions
+from app.OLD_backend.reporting.options_and_parameters.report_options import (
+    ReportingOptions,
+)
 from app.OLD_backend.reporting.arrangement.arrangement_methods import (
     ARRANGE_PASSED_LIST,
     ARRANGE_RECTANGLE,

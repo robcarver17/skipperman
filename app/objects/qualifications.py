@@ -6,7 +6,10 @@ from app.objects.exceptions import missing_data, arg_not_passed
 from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
 )
-from app.objects.generic_objects import GenericSkipperManObject, GenericSkipperManObjectWithIds
+from app.objects.generic_objects import (
+    GenericSkipperManObject,
+    GenericSkipperManObjectWithIds,
+)
 
 
 @dataclass
@@ -29,15 +32,15 @@ class ListOfQualifications(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return Qualification
 
-
-    def replace(self, existing_qualification: Qualification, new_qualification: Qualification):
+    def replace(
+        self, existing_qualification: Qualification, new_qualification: Qualification
+    ):
         index = self.idx_given_name(existing_qualification.name)
         new_qualification.id = existing_qualification.id
 
         self[index] = new_qualification
 
-
-    def qualification_given_name(self, name:str):
+    def qualification_given_name(self, name: str):
         idx = self.idx_given_name(name)
         return self[idx]
 
@@ -74,7 +77,7 @@ class ListOfQualifications(GenericListOfObjectsWithIds):
 
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_names()
-        assert(len(list_of_names)==len(set(list_of_names)))
+        assert len(list_of_names) == len(set(list_of_names))
 
 
 @dataclass
@@ -88,7 +91,6 @@ class ListOfCadetsWithIdsAndQualifications(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return CadetWithIdAndQualification
-
 
     def sort_by_date(self):
         return ListOfCadetsWithIdsAndQualifications(
@@ -113,7 +115,6 @@ class ListOfCadetsWithIdsAndQualifications(GenericListOfObjectsWithIds):
             if item.cadet_id == cadet_id and item.qualification_id == qualification_id:
                 self.remove(item)
 
-
     def does_cadet_id_have_qualification(self, cadet_id: str, qualification_id: str):
         list_of_qualification_ids = self.list_of_qualification_ids_for_cadet(cadet_id)
 
@@ -122,5 +123,3 @@ class ListOfCadetsWithIdsAndQualifications(GenericListOfObjectsWithIds):
     def list_of_qualification_ids_for_cadet(self, cadet_id: str):
         matching = [item.qualification_id for item in self if item.cadet_id == cadet_id]
         return matching
-
-

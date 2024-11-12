@@ -1,27 +1,93 @@
 from typing import Union
 
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button, ActionOptionButton, MainMenuNavButton, \
-    HelpButton
-from app.objects.abstract_objects.abstract_form import textInput, emailInput, intInput, radioInput, dateInput, \
-    fileInput, passwordInput, Link, HelpLink, Image, dropDownInput, listInput, checkboxInput
+from app.objects.abstract_objects.abstract_buttons import (
+    ButtonBar,
+    Button,
+    ActionOptionButton,
+    MainMenuNavButton,
+    HelpButton,
+)
+from app.objects.abstract_objects.abstract_form import (
+    textInput,
+    emailInput,
+    intInput,
+    radioInput,
+    dateInput,
+    fileInput,
+    passwordInput,
+    Link,
+    HelpLink,
+    Image,
+    dropDownInput,
+    listInput,
+    checkboxInput,
+)
 from app.objects.abstract_objects.abstract_interface import UrlsOfInterest
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, DetailListOfLines, DetailLine
-from app.objects.abstract_objects.abstract_tables import DetailTable, Table, RowInTable, ElementsInTable, PandasDFTable
-from app.objects.abstract_objects.abstract_text import Arrow, Heading, Pointer, Symbol, Text
+from app.objects.abstract_objects.abstract_lines import (
+    Line,
+    ListOfLines,
+    DetailListOfLines,
+    DetailLine,
+)
+from app.objects.abstract_objects.abstract_tables import (
+    DetailTable,
+    Table,
+    RowInTable,
+    ElementsInTable,
+    PandasDFTable,
+)
+from app.objects.abstract_objects.abstract_text import (
+    Arrow,
+    Heading,
+    Pointer,
+    Symbol,
+    Text,
+)
 from app.objects.exceptions import arg_not_passed
 
-from app.web.html.abstract_components_to_html import arrow_text, pointer_text, \
-    symbol_text, get_html_for_text, get_html_for_action_option_button, \
-    get_html_for_main_menu_nav_button, get_html_for_help_button, get_html_for_link, get_html_for_detail_line, \
-    get_html_for_heading, get_html_image, generic_html_button
-from app.web.html.html_components import Html, html_bar_wrapper, html_container_wrapper, get_detail_wrapper, \
-    html_table_wrappper, html_line_wrapper, html_from_pandas_table, html_table_row_wrapper, \
-    html_table_heading_row_wrapper, html_table_element_wrapper, html_table_heading_wrapper
-from app.web.html.forms import html_form_text_input, html_form_email_input, html_form_password_input, html_date_input, \
-    html_int_input, html_file_input, html_radio_input, html_dropdown_input, html_list_input, html_checkbox_input
+from app.web.html.abstract_components_to_html import (
+    arrow_text,
+    pointer_text,
+    symbol_text,
+    get_html_for_text,
+    get_html_for_action_option_button,
+    get_html_for_main_menu_nav_button,
+    get_html_for_help_button,
+    get_html_for_link,
+    get_html_for_detail_line,
+    get_html_for_heading,
+    get_html_image,
+    generic_html_button,
+)
+from app.web.html.html_components import (
+    Html,
+    html_bar_wrapper,
+    html_container_wrapper,
+    get_detail_wrapper,
+    html_table_wrappper,
+    html_line_wrapper,
+    html_from_pandas_table,
+    html_table_row_wrapper,
+    html_table_heading_row_wrapper,
+    html_table_element_wrapper,
+    html_table_heading_wrapper,
+)
+from app.web.html.forms import (
+    html_form_text_input,
+    html_form_email_input,
+    html_form_password_input,
+    html_date_input,
+    html_int_input,
+    html_file_input,
+    html_radio_input,
+    html_dropdown_input,
+    html_list_input,
+    html_checkbox_input,
+)
 from app.web.html.config_html import DEBUG
 
 ## RECURSIVE SPAGHETTI AS MANY ELEMENTS CAN CONTAIN OTHER ELEMENTS
+
 
 def get_html_for_element_in_form(element, urls_of_interest: UrlsOfInterest) -> Html:
     if DEBUG:
@@ -59,7 +125,6 @@ def get_html_for_element_in_form(element, urls_of_interest: UrlsOfInterest) -> H
 def get_html_for_list_of_lines(
     list_of_lines: ListOfLines, urls_of_interest: UrlsOfInterest = arg_not_passed
 ) -> Html:
-
     list_of_html_for_each_lines = [
         get_html_for_element_in_form(line, urls_of_interest=urls_of_interest)
         for line in list_of_lines
@@ -72,7 +137,6 @@ def get_html_for_list_of_lines(
 def get_html_for_detail_list_of_lines(
     list_of_lines: DetailListOfLines, urls_of_interest: UrlsOfInterest
 ) -> Html:
-
     list_of_html_for_each_lines = [
         get_html_for_element_in_form(line, urls_of_interest=urls_of_interest)
         for line in list_of_lines.list_of_lines
@@ -237,7 +301,7 @@ def get_html_for_element_in_line(
             input_name=element_in_line.input_name,
             dict_of_options=element_in_line.dict_of_options,
             default_label=element_in_line.default_label,
-            include_line_break=element_in_line.include_line_break
+            include_line_break=element_in_line.include_line_break,
         )
     elif type(element_in_line) is dropDownInput:
         return html_dropdown_input(

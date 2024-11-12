@@ -1,5 +1,8 @@
 from typing import Union
 
+from app.backend.registration_data.raw_mapped_registration_data import does_event_have_imported_registration_data
+
+from app.backend.wild_apricot.load_wa_file import does_raw_event_file_exist
 from app.frontend.events.mapping.clone_field_mapping import (
     display_form_for_clone_event_field_mapping,
 )
@@ -24,16 +27,14 @@ from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
     main_menu_button,
-    back_menu_button,
+    back_menu_button, HelpButton,
 )
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
-from app.frontend.events.constants import *
 from app.frontend.shared.events_state import get_event_from_state
-from app.OLD_backend.wa_import.map_wa_fields import get_field_mapping_for_event
-from app.OLD_backend.wa_import.check_mapping import check_field_mapping
-from app.OLD_backend.wa_import.map_wa_files import is_wa_file_mapping_setup_for_event
+from app.backend.mapping.list_of_field_mappings import get_field_mapping_for_event, does_event_already_have_mapping
+from app.backend.mapping.check_field_mapping import check_field_mapping
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import Event
 
@@ -41,26 +42,28 @@ from app.objects.events import Event
 def display_form_event_field_mapping(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
-    existing_mapping = does_event_already_have_mapping(interface)
+    event = get_event_from_state(interface)
+    existing_mapping = does_event_already_have_mapping(object_store=interface.object_store, event=event)
     if existing_mapping:
-        return display_form_event_field_mapping_existing_mapping(interface)
+        return display_form_event_field_mapping_existing_mapping(interface=interface, event=event)
     else:
-        return display_form_event_field_mapping_no_existing_mapping()
+        return display_form_event_field_mapping_no_existing_mapping(event)
 
 
 def display_form_event_field_mapping_existing_mapping(
     interface: abstractInterface,
+        event: Event,
 ) -> Union[Form, NewForm]:
-    event = get_event_from_state(interface)
 
     pre_existing_text = text_for_pre_existing_mapping(interface=interface, event=event)
-    check_mapping_lines = check_field_mapping(interface=interface, event=event)
+    check_mapping_lines = check_field_mapping(object_store=interface.object_store, event=event)
     warning_text = warning_text_for_mapping(interface=interface, event=event)
+    nav_bar = mapping_buttons(event)
 
     return Form(
         ListOfLines(
             [
-                mapping_buttons(),
+                nav_bar,
                 Heading(
                     "Mapping already set up for %s" % str(event), centred=True, size=4
                 ),
@@ -81,73 +84,93 @@ def display_form_event_field_mapping_existing_mapping(
 
 
 def warning_text_for_mapping(interface: abstractInterface, event: Event) -> str:
-    wa_import_done = is_wa_file_mapping_setup_for_event(
-        event=event, interface=interface
+    ## CHANGE TO ANY REGISTRATION DATA
+    wa_import_done = does_event_have_imported_registration_data(
+        event=event, object_store=interface.object_store
     )
 
     if wa_import_done:
-        warning_text = "*WARNING* WA import has already been done for this event. Changing the mapping could break things. DO NOT CHANGE UNLESS YOU ARE SURE."
+        warning_text = "*WARNING* Looks like data import has already been done for this event. Changing the mapping could break things. DO NOT CHANGE UNLESS YOU ARE SURE."
     else:
         warning_text = ""
 
     return warning_text
 
 
-def display_form_event_field_mapping_no_existing_mapping() -> Union[Form, NewForm]:
+def display_form_event_field_mapping_no_existing_mapping(event: Event) -> Union[Form, NewForm]:
     information = Line(
-        "Mapping converts WA field names to our internal field names - we can't import_wa an event without it"
+        "Mapping converts WA field names to our internal field names - we can't import an event without it"
     )
 
     return Form(
-        ListOfLines([information, _______________, mapping_buttons(), _______________])
+        ListOfLines([information,
+                     _______________,
+                     mapping_buttons(event),
+                     _______________
+                    ])
     )
-
-
-def does_event_already_have_mapping(interface: abstractInterface):
-    event = get_event_from_state(interface)
-    try:
-        mapping = get_field_mapping_for_event(interface=interface, event=event)
-        assert len(mapping) > 0
-        return True
-    except:
-        return False
 
 
 def text_for_pre_existing_mapping(
     interface: abstractInterface, event: Event
 ) -> PandasDFTable:
-    try:
-        mapping = get_field_mapping_for_event(interface=interface, event=event)
-    except:
-        return PandasDFTable()
+
+    mapping = get_field_mapping_for_event(object_store=interface.object_store, event=event)
 
     return PandasDFTable(mapping.as_df_of_str())
 
 
-def mapping_buttons() -> ButtonBar:
+def mapping_buttons(event: Event) -> ButtonBar:
+    raw_event_file_already_uploaded = does_raw_event_file_exist(event_id=event.id)
+    if raw_event_file_already_uploaded:
+        upload_button = update_a_wa_file_to_check_mapping_against_button
+    else:
+        upload_button = upload_a_wa_file_to_check_mapping_against_button
+
     return ButtonBar(
         [
             main_menu_button,
             back_menu_button,
-            Button(MAP_TO_TEMPLATE_BUTTON_LABEL, nav_button=True),
-            Button(CLONE_EVENT_MAPPING_BUTTON_LABEL, nav_button=True),
-            Button(CREATE_MAPPING_BUTTON_LABEL, nav_button=True),
+            map_to_template_button,
+            clone_event_button,
+            create_mapping_button,
+            upload_button,
+            help_button
         ]
     )
 
+
+MAP_TO_TEMPLATE_BUTTON_LABEL = "Use template mapping"
+map_to_template_button = Button(MAP_TO_TEMPLATE_BUTTON_LABEL, nav_button=True)
+
+CLONE_EVENT_MAPPING_BUTTON_LABEL = "Clone the mapping for an existing event"
+clone_event_button = Button(CLONE_EVENT_MAPPING_BUTTON_LABEL, nav_button=True)
+
+CREATE_MAPPING_BUTTON_LABEL = "Create your own mapping file"
+create_mapping_button = Button(CREATE_MAPPING_BUTTON_LABEL, nav_button=True)
+
+UPLOAD_WA_FILE_BUTTON_LABEL = "Upload an exported WA file to check mapping"
+upload_a_wa_file_to_check_mapping_against_button = Button(UPLOAD_WA_FILE_BUTTON_LABEL, nav_button=True)
+
+UPDATE_WA_FILE_BUTTON_LABEL = "Upload an updated WA file to check mapping"
+update_a_wa_file_to_check_mapping_against_button = Button(UPDATE_WA_FILE_BUTTON_LABEL, nav_button=True)
+
+help_button = HelpButton("WA_field_mapping")
 
 def post_form_event_field_mapping(interface: abstractInterface) -> Union[Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
 
     button_pressed = interface.last_button_pressed()
-    if button_pressed == MAP_TO_TEMPLATE_BUTTON_LABEL:
+    if map_to_template_button.pressed(button_pressed):
         return template_mapping_form(interface)
-    elif button_pressed == CLONE_EVENT_MAPPING_BUTTON_LABEL:
+    elif clone_event_button.pressed(button_pressed):
         return clone_mapping_form(interface)
-    elif button_pressed == BACK_BUTTON_LABEL:
+    elif back_menu_button.pressed(button_pressed):
         return previous_form(interface)
-    elif button_pressed == CREATE_MAPPING_BUTTON_LABEL:
+    elif create_mapping_button.pressed(button_pressed):
         return create_mapping_form(interface)
+    elif upload_a_wa_file_to_check_mapping_against_button.pressed(button_pressed) or update_a_wa_file_to_check_mapping_against_button.pressed(button_pressed):
+        pass
     else:
         button_error_and_back_to_initial_state_form(interface)
 
@@ -174,3 +197,5 @@ def previous_form(interface: abstractInterface) -> NewForm:
     return interface.get_new_display_form_for_parent_of_function(
         display_form_event_field_mapping
     )
+
+

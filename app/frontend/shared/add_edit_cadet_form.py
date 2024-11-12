@@ -2,13 +2,22 @@ from copy import copy
 from dataclasses import dataclass
 from typing import Union
 
-from app.backend.cadets.add_edit_cadet import verify_cadet_and_return_warnings, add_new_verified_cadet
+from app.backend.cadets.add_edit_cadet import (
+    verify_cadet_and_return_warnings,
+    add_new_verified_cadet,
+)
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
-    Button, HelpButton,
+    Button,
+    HelpButton,
 )
-from app.objects.abstract_objects.abstract_form import Form, textInput, dateInput, dropDownInput
+from app.objects.abstract_objects.abstract_form import (
+    Form,
+    textInput,
+    dateInput,
+    dropDownInput,
+)
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
@@ -17,7 +26,11 @@ from app.objects.abstract_objects.abstract_lines import (
 )
 
 from app.objects.cadets import Cadet, default_cadet
-from app.objects.membership_status import MembershipStatus, describe_status, all_status_description_as_dict_for_user_input
+from app.objects.membership_status import (
+    MembershipStatus,
+    describe_status,
+    all_status_description_as_dict_for_user_input,
+)
 from app.objects.exceptions import arg_not_passed
 
 
@@ -38,13 +51,14 @@ default_cadet_and_text = CadetAndVerificationText(
 
 def get_add_cadet_form(
     interface: abstractInterface,
-        header_text: ListOfLines = arg_not_passed,
-        first_time_displayed: bool = True,
-
+    header_text: ListOfLines = arg_not_passed,
+    first_time_displayed: bool = True,
 ) -> Form:
     if first_time_displayed:
         footer_buttons = get_footer_buttons_for_add_cadet_form(form_is_empty=True)
-        return get_add_cadet_form_with_information_passed(footer_buttons=footer_buttons, header_text=header_text)
+        return get_add_cadet_form_with_information_passed(
+            footer_buttons=footer_buttons, header_text=header_text
+        )
     else:
         cadet_and_text = verify_form_with_cadet_details(interface)
         form_is_empty = cadet_and_text.is_default
@@ -102,26 +116,33 @@ def form_fields_for_add_cadet(cadet: Cadet):
         input_label="",
         input_name=MEMBERSHIP_STATUS,
         dict_of_options=membership_status_options(),
-        default_label=describe_status(cadet.membership_status)
+        default_label=describe_status(cadet.membership_status),
     )
 
-    form_fields = ListOfLines([Line(first_name), Line(surname), Line(dob), Line(membership_status)])
+    form_fields = ListOfLines(
+        [Line(first_name), Line(surname), Line(dob), Line(membership_status)]
+    )
 
     return form_fields
 
+
 def membership_status_options():
     return dict(
-        [(status_description, status.name)
-         for status_description, status in all_status_description_as_dict_for_user_input.items()
-         ]
+        [
+            (status_description, status.name)
+            for status_description, status in all_status_description_as_dict_for_user_input.items()
+        ]
     )
+
 
 def verify_form_with_cadet_details(
     interface: abstractInterface, default=default_cadet
 ) -> CadetAndVerificationText:
     try:
         cadet = get_cadet_from_form(interface)
-        verify_text = verify_cadet_and_return_warnings(cadet=cadet,object_store=interface.object_store)
+        verify_text = verify_cadet_and_return_warnings(
+            cadet=cadet, object_store=interface.object_store
+        )
     except Exception as e:
         cadet = copy(default)
         verify_text = (
@@ -159,8 +180,10 @@ def get_cadet_from_form(interface: abstractInterface) -> Cadet:
     membership_status = MembershipStatus[interface.value_from_form(MEMBERSHIP_STATUS)]
 
     return Cadet.new(
-        first_name=first_name, surname=surname, date_of_birth=date_of_birth,
-        membership_status=membership_status
+        first_name=first_name,
+        surname=surname,
+        date_of_birth=date_of_birth,
+        membership_status=membership_status,
     )
 
 

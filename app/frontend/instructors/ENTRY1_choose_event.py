@@ -14,12 +14,20 @@ from app.frontend.shared.events_state import (
     update_state_for_specific_event_given_event_description,
 )
 
-from app.backend.events.list_of_events import all_sort_types_for_event_list, sort_buttons_for_event_list
-from app.backend.security.user_access import get_list_of_events_entitled_to_see, is_volunteer_SI_or_super_user
+from app.backend.events.list_of_events import (
+    all_sort_types_for_event_list,
+    sort_buttons_for_event_list,
+)
+from app.backend.security.user_access import (
+    get_list_of_events_entitled_to_see,
+    is_volunteer_SI_or_super_user,
+)
 
 from app.objects.abstract_objects.abstract_text import Heading
 
-from app.frontend.events.ENTRY_view_events import display_given_list_of_events_with_buttons
+from app.frontend.events.ENTRY_view_events import (
+    display_given_list_of_events_with_buttons,
+)
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -38,7 +46,9 @@ from app.objects.abstract_objects.abstract_lines import (
     DetailListOfLines,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.backend.security.logged_in_user import get_volunteer_for_logged_in_user_or_superuser
+from app.backend.security.logged_in_user import (
+    get_volunteer_for_logged_in_user_or_superuser,
+)
 from app.objects.events import SORT_BY_START_DSC
 from app.frontend.instructors.ENTRY2_choose_group import (
     display_form_choose_group_for_event,
@@ -131,14 +141,18 @@ def post_form_main_instructors_page(
         return get_file_given_button_pressed(button_pressed)
 
     elif download_qualification_list_button.pressed(button_pressed):
-        filename = write_qualifications_to_temp_csv_file_and_return_filename(interface.object_store)
+        filename = write_qualifications_to_temp_csv_file_and_return_filename(
+            interface.object_store
+        )
         return File(filename)
 
     else:  ## must be an event
         return action_when_event_button_clicked(interface)
 
+
 def get_file_given_button_pressed(button_pressed: str) -> File:
     return File(os.path.join(public_reporting_directory, button_pressed))
+
 
 def action_when_event_button_clicked(interface: abstractInterface) -> NewForm:
     event_description_selected = interface.last_button_pressed()

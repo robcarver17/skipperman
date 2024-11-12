@@ -24,10 +24,8 @@ from app.OLD_backend.group_allocations.group_allocations_data import (
     get_allocation_data,
     AllocationData,
 )
-from app.OLD_backend.wa_import.update_cadets_at_event import (
-    update_availability_of_existing_cadet_at_event,
-    update_notes_for_existing_cadet_at_event,
-)
+from app.backend.registration_data.update_cadets_at_event import update_notes_for_existing_cadet_at_event
+from app.backend.events.update_status_and_availability_of_cadets_at_event import update_availability_of_existing_cadet_at_event_and_return_messages
 
 from app.frontend.events.constants import (
     ALLOCATION,
@@ -158,7 +156,7 @@ def update_attendance_data_for_cadet_in_form(
         print("Error %s whilst updating attendance for %s" % (str(e), cadet.name))
         return
 
-    update_availability_of_existing_cadet_at_event(
+    update_availability_of_existing_cadet_at_event_and_return_messages(
         interface=interface,
         event=event,
         cadet_id=cadet.id,

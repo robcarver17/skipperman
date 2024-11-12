@@ -10,14 +10,18 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, back_menu_button, HelpButton
+from app.objects.abstract_objects.abstract_buttons import (
+    Button,
+    ButtonBar,
+    back_menu_button,
+    HelpButton,
+)
 from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
     _______________,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-
 
 
 def display_form_view_of_snapshots(interface: abstractInterface) -> Form:
@@ -39,7 +43,9 @@ def display_form_view_of_snapshots(interface: abstractInterface) -> Form:
 
     return form
 
+
 help_button = HelpButton("data_backup_help")
+
 
 def post_form_view_of_snapshots(interface: abstractInterface) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()

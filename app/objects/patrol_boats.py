@@ -3,7 +3,9 @@ from dataclasses import dataclass
 from app.objects.exceptions import arg_not_passed, missing_data
 from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
+
 NO_BOAT = "NO_BOAT"
+
 
 @dataclass
 class PatrolBoat(GenericSkipperManObjectWithIds):
@@ -22,7 +24,7 @@ class PatrolBoat(GenericSkipperManObjectWithIds):
 
     @property
     def is_empty(self):
-        return self.name==NO_BOAT
+        return self.name == NO_BOAT
 
     @classmethod
     def create_empty(cls):
@@ -33,6 +35,9 @@ class ListOfPatrolBoats(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return PatrolBoat
+
+    def sort_from_other_list_of_boats(self, other_list_of_boats: "ListOfPatrolBoats"):
+        return ListOfPatrolBoats([boat for boat in other_list_of_boats if boat in self])
 
     def replace(self, existing_patrol_boat: PatrolBoat, new_patrol_boat: PatrolBoat):
         object_idx = self.idx_given_name(existing_patrol_boat.name)
@@ -84,5 +89,4 @@ class ListOfPatrolBoats(GenericListOfObjectsWithIds):
 
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_names()
-        assert(len(list_of_names)==len(set(list_of_names)))
-
+        assert len(list_of_names) == len(set(list_of_names))

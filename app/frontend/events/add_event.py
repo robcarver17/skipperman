@@ -1,8 +1,14 @@
 from typing import Union
 
-from app.backend.events.list_of_events import list_of_previously_used_event_names, add_new_verified_event
-from app.backend.events.add_events import verify_event_and_warn, EventAndVerificationText, \
-    event_and_text_if_first_time
+from app.backend.events.list_of_events import (
+    list_of_previously_used_event_names,
+    add_new_verified_event,
+)
+from app.backend.events.add_events import (
+    verify_event_and_warn,
+    EventAndVerificationText,
+    event_and_text_if_first_time,
+)
 from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.events import (
@@ -25,6 +31,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
     cancel_menu_button,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_lines import (
     Line,
@@ -38,7 +45,7 @@ from app.frontend.form_handler import (
 
 
 def display_form_view_for_add_event(interface: abstractInterface) -> Form:
-    return post_form_view_for_add_event(interface=interface, first_time_displayed=True)
+    return get_add_event_form(interface=interface, first_time_displayed=True)
 
 
 def get_add_event_form(
@@ -88,10 +95,14 @@ def get_heading_text():
 
 def get_footer_buttons(form_is_blank: bool):
     if form_is_blank:
-        return ButtonBar([cancel_menu_button, check_submit_button])
+        return ButtonBar([cancel_menu_button, check_submit_button, help_button])
     else:
-        return ButtonBar([cancel_menu_button, check_submit_button, final_submit_button])
+        return ButtonBar(
+            [cancel_menu_button, check_submit_button, final_submit_button, help_button]
+        )
 
+
+help_button = HelpButton("add_event_help")
 
 
 def form_fields_for_add_event(
@@ -123,14 +134,9 @@ def form_fields_for_add_event(
         start_date,
         days,
         _______________,
-
     ]
 
     return ListOfLines(list_of_form_entries).add_Lines()
-
-
-
-
 
 
 def post_form_view_for_add_event(
@@ -160,7 +166,9 @@ def process_form_when_checking_event(
 ) -> EventAndVerificationText:
     try:
         event = get_event_from_form(interface)
-        verify_text = verify_event_and_warn(object_store=interface.object_store, event=event)
+        verify_text = verify_event_and_warn(
+            object_store=interface.object_store, event=event
+        )
     except Exception as e:
         verify_text = (
             "Doesn't appear to be a valid event (wrong date time in old browser?) error code %s"
@@ -182,7 +190,6 @@ def get_event_from_form(interface) -> Event:
     )
 
     return event
-
 
 
 def process_form_when_event_verified(interface: abstractInterface) -> Form:
@@ -216,6 +223,7 @@ def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(
         display_form_view_for_add_event
     )
+
 
 CHECK_BUTTON_LABEL = "Check details entered"
 FINAL_ADD_BUTTON_LABEL = "Yes - these details are correct - add to data"

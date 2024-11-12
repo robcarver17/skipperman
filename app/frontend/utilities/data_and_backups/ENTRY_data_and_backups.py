@@ -1,7 +1,9 @@
 from typing import Union
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
-from app.frontend.utilities.data_and_backups.make_backup import make_backup_and_return_file
+from app.frontend.utilities.data_and_backups.make_backup import (
+    make_backup_and_return_file,
+)
 from app.frontend.utilities.data_and_backups.restore_backup_from_local import (
     display_form_for_upload_backup,
 )
@@ -15,7 +17,8 @@ from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
     main_menu_button,
-    back_menu_button, HelpButton,
+    back_menu_button,
+    HelpButton,
 )
 from app.data_access.backups.make_backup import make_backup
 
@@ -27,14 +30,12 @@ MAKE_SNAPSHOT = "Write a snapshot of data now"
 backup_files_button = Button(BACKUP_FILES, tile=True)
 upload_data_button = Button(UPLOAD_DATA, tile=True)
 restore_data_button = Button(RESTORE_DATA, tile=True)
-snapshot_data_button = Button(MAKE_SNAPSHOT, tile = True)
+snapshot_data_button = Button(MAKE_SNAPSHOT, tile=True)
 help_button = HelpButton("data_backup_help")
 
 
 list_of_menu_buttons = Line(
-    [
-        backup_files_button, upload_data_button, restore_data_button, snapshot_data_button
-    ]
+    [backup_files_button, upload_data_button, restore_data_button, snapshot_data_button]
 )
 
 nav_buttons = ButtonBar([back_menu_button, main_menu_button, help_button])

@@ -1,16 +1,18 @@
 from typing import Union
 
-from app.OLD_backend.rota.volunteer_rota import add_volunteer_to_event_with_just_id
-from app.OLD_backend.volunteers.volunteer_allocation import (
-    get_list_of_volunteers_except_those_already_at_event,
-)
+from app.backend.rota.add_volunteer import get_list_of_volunteers_except_those_already_at_event, \
+    add_volunteer_to_event_with_full_availability
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.frontend.shared.events_state import get_event_from_state
 from app.OLD_backend.volunteers.volunteers import get_volunteer_with_name
-from app.frontend.shared.add_edit_volunteer_forms import add_volunteer_from_form_to_data, verify_form_with_volunteer_details, \
-    VolunteerAndVerificationText, get_add_volunteer_form_with_information_passed
+from app.frontend.shared.add_edit_volunteer_forms import (
+    add_volunteer_from_form_to_data,
+    verify_form_with_volunteer_details,
+    VolunteerAndVerificationText,
+    get_add_volunteer_form_with_information_passed,
+)
 
 from app.objects.abstract_objects.abstract_buttons import Button, CANCEL_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_form import Form, NewForm
@@ -92,7 +94,9 @@ def action_when_new_volunteer_to_be_added_from_rota(
 def action_when_specific_volunteer_selected_for_rota(
     volunteer_name: str, interface: abstractInterface
 ) -> Union[Form, NewForm]:
-    volunteer = get_volunteer_with_name(data_layer=interface.data, volunteer_name=volunteer_name)
+    volunteer = get_volunteer_with_name(
+        data_layer=interface.data, volunteer_name=volunteer_name
+    )
 
     return action_when_volunteer_known_for_rota(
         volunteer=volunteer, interface=interface
@@ -103,7 +107,7 @@ def action_when_volunteer_known_for_rota(
     volunteer: Volunteer, interface: abstractInterface
 ) -> Union[Form, NewForm]:
     event = get_event_from_state(interface)
-    add_volunteer_to_event_with_just_id(
+    add_volunteer_to_event_with_full_availability(
         interface=interface, volunteer_id=volunteer.id, event=event
     )
     interface.flush_cache_to_store()
@@ -126,7 +130,6 @@ def get_footer_buttons_add_or_select_existing_volunteer_for_rota(
 
 
 def get_list_of_main_buttons_in_rota(include_final_button: bool) -> Line:
-
     if include_final_button:
         main_buttons = Line([cancel_button, check_for_me_button, final_add_button])
     else:
@@ -153,6 +156,7 @@ def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(
         display_form_add_new_volunteer_to_rota_at_event
     )
+
 
 CHECK_FOR_ME_VOLUNTEER_BUTTON_LABEL = "Please check these volunteer details for me"
 FINAL_VOLUNTEER_ADD_BUTTON_LABEL = (

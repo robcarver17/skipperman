@@ -2,9 +2,12 @@ from typing import Union, List
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.backend.boat_classes.list_of_boat_classes import get_list_of_boat_classes, update_list_of_boat_classes, \
-    add_new_boat_class_given_string,  \
-    modify_boat_class
+from app.backend.boat_classes.list_of_boat_classes import (
+    get_list_of_boat_classes,
+    update_list_of_boat_classes,
+    add_new_boat_class_given_string,
+    modify_boat_class,
+)
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.configuration.generic_list_modifier import (
@@ -55,10 +58,11 @@ def post_form_config_dinghies_page(
 
     return interface.get_new_form_given_function(display_form_config_boat_classes_page)
 
+
 def save_from_ordinary_list_of_dinghies(
     object_store: ObjectStore, new_list: List[BoatClass]
 ):
     update_list_of_boat_classes(
         object_store=object_store,
-        updated_list_of_boat_classes=ListOfBoatClasses(new_list)
+        updated_list_of_boat_classes=ListOfBoatClasses(new_list),
     )

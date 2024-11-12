@@ -139,8 +139,7 @@ class ListOfSkipperManUsers(GenericListOfObjects):
 
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_usernames_excludes_default()
-        assert(len(list_of_names)==len(set(list_of_names)))
-
+        assert len(list_of_names) == len(set(list_of_names))
 
 
 def list_of_users_or_default_if_empty(

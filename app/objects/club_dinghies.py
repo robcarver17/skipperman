@@ -19,6 +19,7 @@ class ClubDinghy(GenericSkipperManObjectWithIds):
     def __eq__(self, other):
         return self.name == other.name and self.hidden == other.hidden
 
+
 class ListOfClubDinghies(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
@@ -76,7 +77,6 @@ class ListOfClubDinghies(GenericListOfObjectsWithIds):
     def list_of_names(self):
         return [boat.name for boat in self]
 
-
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_names()
-        assert(len(list_of_names)==len(set(list_of_names)))
+        assert len(list_of_names) == len(set(list_of_names))

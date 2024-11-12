@@ -6,7 +6,9 @@ from app.OLD_backend.reporting.all_event_data.all_event_data import (
 from app.objects.abstract_objects.abstract_text import Heading
 
 from app.OLD_backend.events import get_event_from_list_of_events_given_event_description
-from app.backend.events.list_of_events import confirm_event_exists_given_description_REFACTOR
+from app.backend.events.list_of_events import (
+    confirm_event_exists_given_description_REFACTOR,
+)
 
 from app.frontend.events.ENTRY_view_events import display_list_of_events_with_buttons
 

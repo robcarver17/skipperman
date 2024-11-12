@@ -1,9 +1,6 @@
 from typing import Union
-from app.OLD_backend.wa_import.map_wa_fields import (
-    write_field_mapping_for_event,
-    DEPRECATE_get_list_of_template_names,
-    get_template,
-)
+from app.backend.mapping.list_of_field_mappings import get_list_of_field_mapping_template_names, get_field_mapping_template, save_field_mapping_template, save_field_mapping_for_event
+
 from app.frontend.events.mapping.upload_template_field_mapping import (
     display_form_for_upload_template_field_mapping,
 )
@@ -60,7 +57,7 @@ def display_form_for_choose_template_field_mapping(interface: abstractInterface)
 
 
 def display_list_of_templates_with_buttons(interface: abstractInterface) -> ListOfLines:
-    list_of_templates = DEPRECATE_get_list_of_template_names(interface)
+    list_of_templates = get_list_of_field_mapping_template_names(interface.object_store)
     return ListOfLines([Button(template_name) for template_name in list_of_templates])
 
 
@@ -96,7 +93,7 @@ def post_form_when_template_chosen(
     template_name = interface.last_button_pressed()
 
     try:
-        mapping = get_template(interface=interface, template_name=template_name)
+        mapping = get_field_mapping_template(object_store=interface.object_store, template_name=template_name)
     except Exception as e:
         interface.log_error(
             "Template %s does not exist anymore? error code %s"
@@ -105,7 +102,7 @@ def post_form_when_template_chosen(
         return initial_state_form
 
     event = get_event_from_state(interface)
-    write_field_mapping_for_event(interface=interface, event=event, new_mapping=mapping)
+    save_field_mapping_for_event(object_store=interface.object_store, event=event, mapping=mapping)
     interface.flush_cache_to_store()
 
     return form_with_message_and_finished_button(

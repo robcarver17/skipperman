@@ -34,7 +34,7 @@ def get_list_of_all_events(data_layer: DataLayer) -> ListOfEvents:
     return event_data.list_of_events
 
 
-def get_event_from_id(data_layer: DataLayer, event_id:str) -> Event:
+def get_event_from_id(data_layer: DataLayer, event_id: str) -> Event:
     event_data = EventData(data_layer)
     return event_data.get_event_from_id(event_id)
 

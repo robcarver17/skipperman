@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import List
 
+from app.objects.cadets import Cadet
+
 from app.objects.exceptions import missing_data
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
@@ -35,6 +37,9 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
 
     def list_of_row_ids_including_test_cadets(self):
         return [item.row_id for item in self]
+
+    def add_cadet_and_row_association(self, cadet: Cadet, row_id: str):
+        self.add(cadet_id=cadet.id, row_id=row_id)
 
     def add(self, row_id: str, cadet_id: str):
         try:

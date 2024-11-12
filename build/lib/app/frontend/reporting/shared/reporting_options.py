@@ -6,7 +6,9 @@ import pandas as pd
 from app.OLD_backend.reporting.options_and_parameters.marked_up_list_from_df_parameters import (
     create_parameters_to_create_marked_up_list_from_df,
 )
-from app.OLD_backend.reporting.options_and_parameters.report_options import ReportingOptions
+from app.OLD_backend.reporting.options_and_parameters.report_options import (
+    ReportingOptions,
+)
 from app.OLD_backend.reporting.options_and_parameters.report_type_specific_parameters import (
     SpecificParametersForTypeOfReport,
 )

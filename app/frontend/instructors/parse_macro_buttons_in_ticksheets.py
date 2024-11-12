@@ -1,10 +1,11 @@
-
 from app.objects.cadets import Cadet
 
 from app.objects.composed.ticksheet import DictOfCadetsAndTicksWithinQualification
 
-from app.backend.qualifications_and_ticks.qualifications_for_cadet import apply_qualification_to_cadet, \
-    remove_qualification_from_cadet
+from app.backend.qualifications_and_ticks.qualifications_for_cadet import (
+    apply_qualification_to_cadet,
+    remove_qualification_from_cadet,
+)
 
 from app.frontend.instructors.buttons import (
     get_axis_tick_type_id_from_button_name,
@@ -17,14 +18,20 @@ from app.frontend.instructors.buttons import (
 from app.frontend.instructors.parse_ticksheet_table import (
     apply_ticksheet_edits_for_specific_tick,
 )
-from app.frontend.instructors.render_ticksheet_table import get_ticksheet_data_from_state
+from app.frontend.instructors.render_ticksheet_table import (
+    get_ticksheet_data_from_state,
+)
 from app.frontend.shared.qualification_and_tick_state_storage import (
-    get_qualification_from_state, )
-from app.frontend.instructors.ticksheet_table_elements import user_can_award_qualifications
+    get_qualification_from_state,
+)
+from app.frontend.instructors.ticksheet_table_elements import (
+    user_can_award_qualifications,
+)
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.ticks import Tick
 from app.objects.substages import TickSheetItem
 from app.backend.cadets.list_of_cadets import get_cadet_from_id
+
 
 def action_if_macro_tick_button_pressed(
     interface: abstractInterface, button_pressed: str
@@ -51,7 +58,7 @@ def action_if_cadet_tick_button_pressed(
     interface: abstractInterface,
     tick_type: str,
     cadet_id: str,
-    ticksheet_data: DictOfCadetsAndTicksWithinQualification
+    ticksheet_data: DictOfCadetsAndTicksWithinQualification,
 ):
     cadet = get_cadet_from_id(object_store=interface.object_store, cadet_id=cadet_id)
     if tick_type == qual_label:
@@ -104,7 +111,7 @@ def action_if_cadet_tick_level_button_pressed(
     interface: abstractInterface,
     ticksheet_data: DictOfCadetsAndTicksWithinQualification,
     tick: Tick,
-    cadet: Cadet
+    cadet: Cadet,
 ):
     already_qualified = ticksheet_data[cadet].already_qualified
     if already_qualified:
@@ -114,13 +121,14 @@ def action_if_cadet_tick_level_button_pressed(
     list_of_items = ticksheet_data.list_of_tick_sheet_items_for_this_qualification
     for tick_item in list_of_items:
         current_tick = get_current_tick(
-            ticksheet_data=ticksheet_data, cadet=cadet, tick_item=tick_item)
+            ticksheet_data=ticksheet_data, cadet=cadet, tick_item=tick_item
+        )
         apply_ticksheet_edits_for_specific_tick(
             interface=interface,
             cadet=cadet,
             tick_item=tick_item,
             new_tick_or_none=tick,
-            current_tick=current_tick
+            current_tick=current_tick,
         )
 
 
@@ -130,7 +138,11 @@ def action_if_item_tick_button_pressed(
     tick_type: str,
     item_id: str,
 ):
-    tick_item = ticksheet_data.list_of_tick_sheet_items_for_this_qualification.object_with_id(item_id)
+    tick_item = (
+        ticksheet_data.list_of_tick_sheet_items_for_this_qualification.object_with_id(
+            item_id
+        )
+    )
     tick = from_tick_label_to_tick(tick_type)
     list_of_cadets = ticksheet_data.list_of_cadets
     for cadet in list_of_cadets:
@@ -150,8 +162,9 @@ def action_if_item_tick_button_pressed(
 
 
 def get_current_tick(
-        ticksheet_data: DictOfCadetsAndTicksWithinQualification,
-        cadet: Cadet, tick_item: TickSheetItem
+    ticksheet_data: DictOfCadetsAndTicksWithinQualification,
+    cadet: Cadet,
+    tick_item: TickSheetItem,
 ) -> Tick:
     ticksheet_for_cadet = ticksheet_data[cadet]
     return ticksheet_for_cadet.current_tick(tick_item)

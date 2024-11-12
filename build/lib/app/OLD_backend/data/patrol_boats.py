@@ -14,10 +14,13 @@ from app.data_access.store.data_access import DataLayer
 
 from app.objects.events import Event
 from app.objects_OLD.patrol_boats import (
-    DEPRECATE_ListOfVolunteersAtEventWithPatrolBoats, DEPRECATE_VolunteerAtEventWithPatrolBoat,
+    DEPRECATE_ListOfVolunteersAtEventWithPatrolBoats,
+    DEPRECATE_VolunteerAtEventWithPatrolBoat,
 )
 from app.objects.patrol_boats import PatrolBoat, ListOfPatrolBoats
-from app.objects.patrol_boats_with_volunteers_with_id import ListOfVolunteersWithIdAtEventWithPatrolBoatsId
+from app.objects.patrol_boats_with_volunteers_with_id import (
+    ListOfVolunteersWithIdAtEventWithPatrolBoatsId,
+)
 
 from app.objects.utils import in_x_not_in_y, in_both_x_and_y
 from app.OLD_backend.data.volunteer_allocation import VolunteerAllocationData
@@ -124,9 +127,7 @@ class PatrolBoatsData:
         self, volunteer: Volunteer, day: Day, event: Event
     ):
         self.remove_volunteer_with_id_from_patrol_boat_on_day_at_event(
-            event=event,
-            volunteer_id=volunteer.id,
-            day=day
+            event=event, volunteer_id=volunteer.id, day=day
         )
 
     def remove_volunteer_with_id_from_patrol_boat_on_day_at_event(
@@ -337,8 +338,12 @@ class PatrolBoatsData:
 
         return list_of_volunteer_ids_assigned_to_boat_and_day
 
-    def get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_data(self, event: Event):
-        list_of_volunteers_at_event = self.get_volunteers_allocated_to_patrol_boats_at_event(event)
+    def get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_data(
+        self, event: Event
+    ):
+        list_of_volunteers_at_event = (
+            self.get_volunteers_allocated_to_patrol_boats_at_event(event)
+        )
 
         list_of_volunteers = list_of_volunteers_at_event.unique_list_of_volunteers()
 
@@ -347,7 +352,6 @@ class PatrolBoatsData:
     def get_volunteers_allocated_to_patrol_boats_at_event(
         self, event: Event
     ) -> DEPRECATE_ListOfVolunteersAtEventWithPatrolBoats:
-
         list_of_volunteer_ids_at_event = self.load_list_of_volunteer_ids_at_event(event)
         list_of_voluteers_at_event_with_patrol_boats = (
             self.get_list_of_voluteers_at_event_with_patrol_boats(event)
@@ -358,15 +362,18 @@ class PatrolBoatsData:
         return DEPRECATE_ListOfVolunteersAtEventWithPatrolBoats(
             [
                 DEPRECATE_VolunteerAtEventWithPatrolBoat.from_volunteer_with_id_and_patrol_boat_id(
-                    patrol_boat=boats.object_with_id(volunteer_with_id_and_patrol_boat_id.patrol_boat_id),
-                    volunteer=list_of_volunteers.volunteer_with_id(volunteer_with_id_and_patrol_boat_id.volunteer_id),
-                    volunteer_with_id_at_event_with_patrol_boat_id=volunteer_with_id_and_patrol_boat_id
+                    patrol_boat=boats.object_with_id(
+                        volunteer_with_id_and_patrol_boat_id.patrol_boat_id
+                    ),
+                    volunteer=list_of_volunteers.volunteer_with_id(
+                        volunteer_with_id_and_patrol_boat_id.volunteer_id
+                    ),
+                    volunteer_with_id_at_event_with_patrol_boat_id=volunteer_with_id_and_patrol_boat_id,
                 )
-                                    for volunteer_with_id_and_patrol_boat_id in list_of_voluteers_at_event_with_patrol_boats
-
-                    if volunteer_with_id_and_patrol_boat_id.volunteer_id in list_of_volunteer_ids_at_event
-                ]
-
+                for volunteer_with_id_and_patrol_boat_id in list_of_voluteers_at_event_with_patrol_boats
+                if volunteer_with_id_and_patrol_boat_id.volunteer_id
+                in list_of_volunteer_ids_at_event
+            ]
         )
 
     def get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day(

@@ -12,7 +12,11 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_buttons import cancel_menu_button, ButtonBar, HelpButton
+from app.objects.abstract_objects.abstract_buttons import (
+    cancel_menu_button,
+    ButtonBar,
+    HelpButton,
+)
 
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
@@ -25,15 +29,21 @@ from app.frontend.form_handler import (
 
 header_text = ListOfLines([ButtonBar([HelpButton("add_cadet_help")])])
 
+
 def display_form_add_cadet(interface: abstractInterface) -> Union[Form, NewForm]:
-    return get_add_cadet_form(interface=interface, first_time_displayed=True, header_text=header_text)
+    return get_add_cadet_form(
+        interface=interface, first_time_displayed=True, header_text=header_text
+    )
+
 
 def post_form_add_cadets(interface: abstractInterface) -> Union[Form, NewForm]:
     last_button_pressed = interface.last_button_pressed()
 
     if check_details_button.pressed(last_button_pressed):
         ## verify results, display form again
-        return get_add_cadet_form(interface=interface, first_time_displayed=False, header_text=header_text)
+        return get_add_cadet_form(
+            interface=interface, first_time_displayed=False, header_text=header_text
+        )
 
     elif final_submit_button.pressed(last_button_pressed):
         return process_form_when_cadet_verified(interface)
@@ -69,5 +79,3 @@ def process_form_when_cadet_verified(
         interface=interface,
         function_whose_parent_go_to_on_button_press=display_form_add_cadet,
     )
-
-

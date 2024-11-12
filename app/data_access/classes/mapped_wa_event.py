@@ -1,9 +1,11 @@
-from app.objects.registration_data import MappedWAEvent
+from app.objects.registration_data import RegistrationDataForEvent
 
 
-class DataMappedWAEvent(object):
-    def read(self, event_id: str) -> MappedWAEvent:
+class DataMappedRegistrationData(object):
+    def read(self, event_id: str) -> RegistrationDataForEvent:
         raise NotImplemented
 
-    def write(self, mapped_wa_event_with_no_ids: MappedWAEvent, event_id: str):
+    def write(
+        self, mapped_wa_event_with_no_ids: RegistrationDataForEvent, event_id: str
+    ):
         raise NotImplemented

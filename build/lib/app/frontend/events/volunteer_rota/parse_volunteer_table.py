@@ -3,23 +3,22 @@ from app.OLD_backend.volunteers.volunteers import get_volunteer_from_id
 from app.frontend.forms.form_utils import get_dict_of_skills_from_form
 from app.frontend.forms.swaps import is_ready_to_swap
 
-from app.frontend.events.volunteer_rota.button_values import from_known_button_to_volunteer_id_and_day, \
-    from_location_button_to_volunteer_id, from_skills_button_to_volunteer_id, \
-    get_dict_of_volunteer_name_buttons_and_volunteer_ids
+from app.frontend.events.volunteer_rota.button_values import (
+    from_known_button_to_volunteer_id_and_day,
+    from_location_button_to_volunteer_id,
+    from_skills_button_to_volunteer_id,
+    get_dict_of_volunteer_name_buttons_and_volunteer_ids,
+)
 from app.frontend.events.volunteer_rota.volunteer_targets import save_volunteer_targets
 
 from app.data_access.file_access import temp_file_name
 
-
-from app.OLD_backend.volunteers.volunteer_allocation import (
-    make_volunteer_unavailable_on_day,
-    make_volunteer_available_on_day,
-)
 from app.OLD_backend.rota.volunteer_rota import (
     delete_role_at_event_for_volunteer_on_day,
-    load_list_of_volunteers_at_event,
 )
-from app.OLD_backend.rota.volunteer_matrix import get_volunteer_matrix
+from app.backend.volunteers.volunteers_at_event import load_list_of_volunteers_at_event, \
+    make_volunteer_available_on_day, make_volunteer_unavailable_on_day
+from app.backend.rota.volunteer_matrix import get_volunteer_matrix
 from app.frontend.events.volunteer_rota.edit_cadet_connections_for_event_from_rota import (
     display_form_edit_cadet_connections_from_rota,
 )
@@ -48,8 +47,6 @@ from app.frontend.shared.volunteer_state import update_state_with_volunteer_id
 from app.objects.abstract_objects.abstract_form import NewForm
 
 
-
-
 def save_all_information_and_filter_state_in_rota_page(interface: abstractInterface):
     ready_to_swap = is_ready_to_swap(interface)
     if ready_to_swap:
@@ -60,11 +57,11 @@ def save_all_information_and_filter_state_in_rota_page(interface: abstractInterf
     update_filters(interface)
 
 
-
 def save_all_information_in_rota_page(interface: abstractInterface):
     event = get_event_from_state(interface)
-    list_of_volunteers_at_event = interface.cache.get_from_cache(load_list_of_volunteers_at_event,
-        event=event)
+    list_of_volunteers_at_event = interface.cache.get_from_cache(
+        load_list_of_volunteers_at_event, event=event
+    )
 
     for volunteer_at_event in list_of_volunteers_at_event:
         try:
@@ -78,7 +75,6 @@ def save_all_information_in_rota_page(interface: abstractInterface):
                 "Can't volunteer %s: error code %s probably because was filtered out"
                 % (str(volunteer_at_event), str(e))
             )
-
 
 
 def action_if_volunteer_button_pressed(
@@ -123,7 +119,9 @@ def update_if_make_available_button_pressed(
     interface: abstractInterface, available_button: str
 ):
     volunteer_id, day = from_known_button_to_volunteer_id_and_day(available_button)
-    volunteer = get_volunteer_from_id(data_layer=interface.data, volunteer_id=volunteer_id)
+    volunteer = get_volunteer_from_id(
+        data_layer=interface.data, volunteer_id=volunteer_id
+    )
     event = get_event_from_state(interface)
     make_volunteer_available_on_day(
         data_layer=interface.data, event=event, volunteer=volunteer, day=day
@@ -134,7 +132,9 @@ def update_if_make_unavailable_button_pressed(
     interface: abstractInterface, unavailable_button: str
 ):
     volunteer_id, day = from_known_button_to_volunteer_id_and_day(unavailable_button)
-    volunteer = get_volunteer_from_id(data_layer=interface.data, volunteer_id=volunteer_id)
+    volunteer = get_volunteer_from_id(
+        data_layer=interface.data, volunteer_id=volunteer_id
+    )
     event = get_event_from_state(interface)
     make_volunteer_unavailable_on_day(
         data_layer=interface.data, event=event, volunteer=volunteer, day=day
@@ -144,16 +144,14 @@ def update_if_make_unavailable_button_pressed(
 def update_if_remove_role_button_pressed(
     interface: abstractInterface, remove_button: str
 ):
-
     volunteer_id, day = from_known_button_to_volunteer_id_and_day(remove_button)
-    volunteer = get_volunteer_from_id(data_layer=interface.data, volunteer_id=volunteer_id)
+    volunteer = get_volunteer_from_id(
+        data_layer=interface.data, volunteer_id=volunteer_id
+    )
     event = get_event_from_state(interface)
     delete_role_at_event_for_volunteer_on_day(
         data_layer=interface.data, event=event, volunteer=volunteer, day=day
     )
-
-
-
 
 
 def save_volunteer_matrix_and_return_filename(interface: abstractInterface) -> str:
@@ -167,6 +165,7 @@ def save_volunteer_matrix_and_return_filename(interface: abstractInterface) -> s
 
     return filename
 
+
 def update_filters(interface: abstractInterface):
     update_volunteer_skills_filter(interface)
     update_volunteer_availability_filter(interface)
@@ -174,8 +173,7 @@ def update_filters(interface: abstractInterface):
 
 def update_volunteer_skills_filter(interface: abstractInterface):
     dict_of_skills = get_dict_of_skills_from_form(
-        interface=interface,
-        field_name=SKILLS_FILTER
+        interface=interface, field_name=SKILLS_FILTER
     )
 
     save_skills_filter_to_state(interface=interface, dict_of_skills=dict_of_skills)
@@ -196,7 +194,6 @@ def update_volunteer_availability_filter(interface: abstractInterface):
     save_availablity_filter_to_state(
         interface=interface, availability_filter_dict=availabilty_filter_dict
     )
-
 
 
 def update_volunteer_availability_for_day(

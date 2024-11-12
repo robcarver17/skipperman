@@ -22,7 +22,11 @@ config_option_buttons = Line([delete_all_data_button])
 
 
 def display_form_data(interface: abstractInterface) -> Union[Form, NewForm]:
-    warning = Heading("Deleting data cannot be undone. There will be no 'are you sure'. DO NOT PRESS UNLESS REALLY SURE!", size=1, centred=True)
+    warning = Heading(
+        "Deleting data cannot be undone. There will be no 'are you sure'. DO NOT PRESS UNLESS REALLY SURE!",
+        size=1,
+        centred=True,
+    )
     lines_inside_form = ListOfLines([nav_buttons, warning, config_option_buttons])
 
     return Form(lines_inside_form)

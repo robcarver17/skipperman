@@ -22,9 +22,9 @@ from app.objects.day_selectors import DaySelector, Day
 from app.objects.events import Event
 from app.objects.registration_data import (
     RowInRegistrationData,
-    MappedWAEvent,
-    RegistrationStatus,
+    RegistrationDataForEvent,
 )
+from app.objects.registration_status import RegistrationStatus
 
 
 def is_cadet_with_id_already_at_event(
@@ -38,7 +38,7 @@ def is_cadet_with_id_already_at_event(
 
 def get_all_rows_in_mapped_event_for_cadet(
     data_layer: DataLayer, event: Event, cadet: Cadet
-) -> MappedWAEvent:
+) -> RegistrationDataForEvent:
     cadets_at_event_data = CadetsAtEventIdLevelData(data_layer)
     relevant_rows = cadets_at_event_data.get_all_rows_in_mapped_event_for_cadet(
         event=event, cadet=cadet
@@ -295,7 +295,9 @@ def new_status_and_status_message(
     old_status_name = old_status.name
     new_status_name = new_status.name
 
-    cadet = cadet_name_from_id(data_layer=interface.data, cadet_id=new_cadet_at_event.cadet_id)
+    cadet = cadet_name_from_id(
+        data_layer=interface.data, cadet_id=new_cadet_at_event.cadet_id
+    )
 
     ## Don't need all shared as new_status can't be deleted
     if old_status.is_cancelled and new_status.is_active:

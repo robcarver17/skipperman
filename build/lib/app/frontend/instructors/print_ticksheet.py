@@ -2,8 +2,11 @@ import os
 from copy import copy
 
 import pandas as pd
+from app.objects.qualifications import Qualification
 
-from app.backend.qualifications_and_ticks.print_ticksheets import get_labelled_ticksheet_df_for_group_at_event
+from app.backend.qualifications_and_ticks.print_ticksheets import (
+    get_labelled_ticksheet_df_for_group_at_event,
+)
 from app.objects.abstract_objects.abstract_form import File
 
 from app.frontend.shared.events_state import get_event_from_state
@@ -32,7 +35,7 @@ def download_labelled_ticksheet_and_return_file(interface: abstractInterface) ->
         interface=interface,
         event=event,
         group=group,
-        qualification_stage_id=qualification.id,
+        qualification=qualification,
     )
 
     return File(filename)
@@ -42,7 +45,7 @@ def download_labelled_ticksheet_and_return_filename(
     interface: abstractInterface,
     event: Event,
     group: Group,
-    qualification_stage_id: str,
+    qualification: Qualification,
     ## FIXME MAKE THESE CONFIGURABLE AT SOME POINT
     include_attendance_columns: bool = True,
     add_header: bool = True,
@@ -51,27 +54,23 @@ def download_labelled_ticksheet_and_return_filename(
     medical_notes: bool = True,
 ):
     labelled_ticksheet = get_labelled_ticksheet_df_for_group_at_event(
-        interface=interface,
+        object_store=interface.object_store,
         event=event,
         group=group,
-        qualification_stage_id=qualification_stage_id,
+        qualification=qualification,
         include_attendance_columns=include_attendance_columns,
         add_header=add_header,
         sailors_in_columns=sailors_in_columns,
         asterix_club_boats=asterix_club_boats,
         medical_notes=medical_notes,
     )
-    filename = temp_file_name(
-        event=event, group=group, qualification_stage_id=qualification_stage_id
-    )
+    filename = temp_file_name(event=event, group=group, qualification=qualification)
     write_ticksheet_to_excel(labelled_ticksheet=labelled_ticksheet, filename=filename)
 
     return filename
 
 
-def write_ticksheet_to_excel(
-    labelled_ticksheet: LabelledTickSheet, filename: str
-):
+def write_ticksheet_to_excel(labelled_ticksheet: LabelledTickSheet, filename: str):
     title = labelled_ticksheet.qualification_name
     if len(title) == 0:
         title = " "
@@ -86,12 +85,15 @@ def align_center(x):
     return ["text-align: center" for x in x]
 
 
-def temp_file_name(event: Event, group: Group, qualification_stage_id: str) -> str:
-    use_group_name = copy(group.name)
-    use_group_name = use_group_name.replace("/", "_")
-    filename = os.path.join(
-        download_directory,
-        "ticksheet_%s_%s_%s.xlsx" % (event.id, use_group_name, qualification_stage_id),
-    )
+def temp_file_name(event: Event, group: Group, qualification: Qualification) -> str:
+    filename = "ticksheet_%s_%s_%s.xlsx" % (str(event), group.name, qualification.name)
+    filename = clean_up_filename(filename)
+    full_filename = os.path.join(download_directory, filename)
 
+    return full_filename
+
+
+def clean_up_filename(filename: str):
+    filename = filename.replace("/", "_")
+    filename = filename.replace(" ", "_")
     return filename

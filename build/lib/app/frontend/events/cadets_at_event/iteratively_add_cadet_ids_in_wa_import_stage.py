@@ -6,24 +6,25 @@ from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
 from app.OLD_backend.data.mapped_events import get_row_in_mapped_event_data_given_id
 from app.OLD_backend.cadets import (
-    get_matching_cadet_with_id, get_cadet_given_cadet_as_str,
+    get_matching_cadet_with_id,
+    get_cadet_given_cadet_as_str,
 )
 from app.frontend.events.cadets_at_event.interactively_update_records_of_cadets_at_event import (
     display_form_interactively_update_cadets_at_event,
 )
 
 from app.frontend.shared.events_state import get_event_from_state
-from app.frontend.events.import_wa.shared_state_tracking_and_data import (
-    get_and_save_next_row_id_in_mapped_event_data,
+from app.frontend.events.import_data.shared_state_tracking_and_data import (
+    get_and_save_next_row_id_in_raw_registration_data,
     get_current_row_id,
     clear_row_in_state,
 )
 from app.OLD_backend.wa_import.add_cadet_ids_to_mapped_wa_event_data import (
     get_cadet_data_from_row_of_mapped_data_no_checks,
-    add_identified_cadet_and_row,
     is_row_in_event_already_identified_with_cadet,
     mark_row_as_skip_cadet,
 )
+from app.backend.registration_data.identified_cadets_at_event import add_identified_cadet_and_row
 from app.frontend.shared.get_or_select_cadet_forms import (
     get_add_or_select_existing_cadet_form,
     CHECK_CADET_FOR_ME_BUTTON_LABEL,
@@ -56,7 +57,7 @@ def add_cadet_ids_on_next_row(
     print("Looping through allocating IDs on WA file without IDs")
 
     try:
-        row_id = get_and_save_next_row_id_in_mapped_event_data(interface)
+        row_id = get_and_save_next_row_id_in_raw_registration_data(interface)
         next_row = get_row_in_mapped_event_data_given_id(
             interface=interface, event=event, row_id=row_id
         )
@@ -69,7 +70,9 @@ def add_cadet_ids_on_next_row(
         return go_to_update_cadet_data_form(interface)
 
 
-def process_current_row(row: RowInRegistrationData, interface: abstractInterface) -> Form:
+def process_current_row(
+    row: RowInRegistrationData, interface: abstractInterface
+) -> Form:
     ### NOTE: In theory we only need to deal with new rows, but no harm in doing all of them
     ##
     row_id_has_identified_cadet = is_row_already_identified_with_cadet(
@@ -114,7 +117,10 @@ def process_next_row_with_cadet_from_row(
         return process_row_when_cadet_unmatched(interface=interface, cadet=cadet)
     except Exception as e:
         ## can happen in corner case
-        interface.log_error("Error %s when trying to match cadet %s automatically" % (str(e), str(cadet)))
+        interface.log_error(
+            "Error %s when trying to match cadet %s automatically"
+            % (str(e), str(cadet))
+        )
         return process_row_when_cadet_unmatched(interface=interface, cadet=cadet)
 
     print("Cadet %s matched id is %s" % (str(cadet), matched_cadet_with_id.id))
@@ -243,8 +249,7 @@ def process_form_when_existing_cadet_chosen(interface: abstractInterface) -> For
 
     try:
         cadet = get_cadet_given_cadet_as_str(
-            data_layer=interface.data,
-            cadet_as_str=cadet_selected_as_str
+            data_layer=interface.data, cadet_as_str=cadet_selected_as_str
         )
     except:
         raise Exception(

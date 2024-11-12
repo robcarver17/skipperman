@@ -1,8 +1,14 @@
 import datetime
 from typing import List, Tuple
 
-from app.data_access.configuration.fixed import MONTH_WHEN_CADET_AGE_BRACKET_BEGINS, MAX_AGE_TO_JOIN_COMMITTEE, \
-    MIN_AGE_TO_JOIN_COMMITTEE, MONTH_WHEN_NEW_COMMITTEE_YEAR_BEGINS, YEARS_ON_CADET_COMMITTEE, MONTH_WHEN_EGM_HAPPENS
+from app.data_access.configuration.fixed import (
+    MONTH_WHEN_CADET_AGE_BRACKET_BEGINS,
+    MAX_AGE_TO_JOIN_COMMITTEE,
+    MIN_AGE_TO_JOIN_COMMITTEE,
+    MONTH_WHEN_NEW_COMMITTEE_YEAR_BEGINS,
+    YEARS_ON_CADET_COMMITTEE,
+    MONTH_WHEN_EGM_HAPPENS,
+)
 from app.objects.membership_status import current_member
 
 from app.backend.cadets.list_of_cadets import get_list_of_cadets
@@ -11,7 +17,9 @@ from app.objects.composed.committee import ListOfCadetsOnCommittee
 from app.objects.cadets import Cadet, ListOfCadets
 
 from app.data_access.store.object_store import ObjectStore
-from app.data_access.store.object_definitions import object_definition_for_list_of_cadet_committee_members
+from app.data_access.store.object_definitions import (
+    object_definition_for_list_of_cadet_committee_members,
+)
 from app.objects.exceptions import MissingData
 
 
@@ -25,7 +33,8 @@ def get_list_of_cadets_who_are_members_but_not_on_committee_ordered_by_name(
         [
             cadet
             for cadet in all_cadets
-            if not list_of_committee_members.is_cadet_on_committee(cadet) and cadet.membership_status == current_member
+            if not list_of_committee_members.is_cadet_on_committee(cadet)
+            and cadet.membership_status == current_member
         ]
     )
 
@@ -42,13 +51,17 @@ def get_cadet_on_committee_status(object_store: ObjectStore, cadet: Cadet) -> st
         return "Not on cadet committee"
 
 
-def get_list_of_cadet_as_str_members_but_not_on_committee_born_in_right_age_bracket(object_store: ObjectStore)-> List[str]:
+def get_list_of_cadet_as_str_members_but_not_on_committee_born_in_right_age_bracket(
+    object_store: ObjectStore,
+) -> List[str]:
     list_of_cadets_not_on_committee_born_in_right_age_bracket = (
         get_list_of_cadets_members_but_not_on_committee_in_right_age_bracket(
             object_store=object_store
         )
     )
-    list_of_cadets_not_on_committee_born_in_right_age_bracket =list_of_cadets_not_on_committee_born_in_right_age_bracket.sort_by_name()
+    list_of_cadets_not_on_committee_born_in_right_age_bracket = (
+        list_of_cadets_not_on_committee_born_in_right_age_bracket.sort_by_name()
+    )
 
     list_of_cadet_as_str_not_on_committee_born_in_right_age_bracket = [
         str(cadet)
@@ -59,7 +72,7 @@ def get_list_of_cadet_as_str_members_but_not_on_committee_born_in_right_age_brac
 
 
 def get_list_of_cadets_members_but_not_on_committee_in_right_age_bracket(
-    object_store: ObjectStore
+    object_store: ObjectStore,
 ) -> ListOfCadets:
     list_of_cadets = get_list_of_cadets(object_store)
 
@@ -68,10 +81,8 @@ def get_list_of_cadets_members_but_not_on_committee_in_right_age_bracket(
             cadet
             for cadet in list_of_cadets
             if is_cadet_member_not_on_committee_and_in_right_age_bracket_to_join(
-            cadet=cadet,
-            object_store=object_store
-        )
-
+                cadet=cadet, object_store=object_store
+            )
         ]
     )
 
@@ -79,17 +90,26 @@ def get_list_of_cadets_members_but_not_on_committee_in_right_age_bracket(
 
     return list_of_cadets
 
-def is_cadet_member_not_on_committee_and_in_right_age_bracket_to_join(object_store: ObjectStore, cadet: Cadet)-> bool:
+
+def is_cadet_member_not_on_committee_and_in_right_age_bracket_to_join(
+    object_store: ObjectStore, cadet: Cadet
+) -> bool:
     list_of_committee_members = get_list_of_cadets_on_committee(object_store)
     next_year_for_committee = get_next_year_for_cadet_committee_after_EGM()
-    earliest_date, latest_date = earliest_and_latest_date_to_join_committee(next_year_for_committee)
+    earliest_date, latest_date = earliest_and_latest_date_to_join_committee(
+        next_year_for_committee
+    )
 
-    return cadet.date_of_birth <= latest_date  \
-        and cadet.date_of_birth >= earliest_date \
-        and not list_of_committee_members.is_cadet_on_committee(cadet) \
+    return (
+        cadet.date_of_birth <= latest_date
+        and cadet.date_of_birth >= earliest_date
+        and not list_of_committee_members.is_cadet_on_committee(cadet)
         and cadet.membership_status == current_member
+    )
+
 
 ### MODIFY
+
 
 def add_new_cadet_to_committee(
     object_store: ObjectStore,
@@ -103,26 +123,44 @@ def add_new_cadet_to_committee(
         date_term_starts=date_term_starts,
         date_term_ends=date_term_ends,
     )
-    update_list_of_cadets_on_committee(object_store=object_store, updated_list_of_cadets_on_committee=list_of_committee_members)
+    update_list_of_cadets_on_committee(
+        object_store=object_store,
+        updated_list_of_cadets_on_committee=list_of_committee_members,
+    )
 
 
-def toggle_selection_for_cadet_committee_member(object_store: ObjectStore, cadet: Cadet):
+def toggle_selection_for_cadet_committee_member(
+    object_store: ObjectStore, cadet: Cadet
+):
     list_of_committee_members = get_list_of_cadets_on_committee(object_store)
     list_of_committee_members.toggle_selection_for_cadet(cadet)
-    update_list_of_cadets_on_committee(object_store=object_store, updated_list_of_cadets_on_committee=list_of_committee_members)
+    update_list_of_cadets_on_committee(
+        object_store=object_store,
+        updated_list_of_cadets_on_committee=list_of_committee_members,
+    )
 
 
 ## STORAGE
 
-def get_list_of_cadets_on_committee(object_store: ObjectStore) -> ListOfCadetsOnCommittee:
+
+def get_list_of_cadets_on_committee(
+    object_store: ObjectStore,
+) -> ListOfCadetsOnCommittee:
     return object_store.get(object_definition_for_list_of_cadet_committee_members)
 
-def update_list_of_cadets_on_committee(object_store: ObjectStore, updated_list_of_cadets_on_committee:ListOfCadetsOnCommittee):
-    object_store.update(new_object=updated_list_of_cadets_on_committee,
-                        object_definition=object_definition_for_list_of_cadet_committee_members)
+
+def update_list_of_cadets_on_committee(
+    object_store: ObjectStore,
+    updated_list_of_cadets_on_committee: ListOfCadetsOnCommittee,
+):
+    object_store.update(
+        new_object=updated_list_of_cadets_on_committee,
+        object_definition=object_definition_for_list_of_cadet_committee_members,
+    )
 
 
 ## DATES
+
 
 def start_and_end_date_on_cadet_commmittee() -> Tuple[datetime.date, datetime.date]:
     start_date_on_committee = datetime.date(
@@ -137,6 +175,7 @@ def start_and_end_date_on_cadet_commmittee() -> Tuple[datetime.date, datetime.da
     )
 
     return start_date_on_committee, end_date_on_committee
+
 
 def earliest_and_latest_date_to_join_committee(next_year_for_committee: int):
     earliest_date = datetime.date(
@@ -153,7 +192,6 @@ def earliest_and_latest_date_to_join_committee(next_year_for_committee: int):
     return earliest_date, latest_date
 
 
-
 def get_next_year_for_cadet_committee_after_EGM():
     today = datetime.date.today()
     if today.month < MONTH_WHEN_EGM_HAPPENS:
@@ -164,4 +202,6 @@ def get_next_year_for_cadet_committee_after_EGM():
 
 def month_name_when_cadet_committee_age_bracket_begins():
     ARBITRARY_YEAR = 1990
-    return datetime.date(ARBITRARY_YEAR, MONTH_WHEN_CADET_AGE_BRACKET_BEGINS, 1).strftime("%B")
+    return datetime.date(
+        ARBITRARY_YEAR, MONTH_WHEN_CADET_AGE_BRACKET_BEGINS, 1
+    ).strftime("%B")

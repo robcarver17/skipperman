@@ -8,13 +8,14 @@ from app.OLD_backend.reporting.all_event_data.components import (
     ROW_ID,
     day_item_dict_as_string_or_single_if_identical,
 )
-from app.OLD_backend.volunteers.volunteer_allocation import \
-    DEPRECATE_get_list_of_volunteer_names_associated_with_cadet_at_event
+from app.OLD_backend.volunteers.volunteer_allocation import (
+    DEPRECATE_get_list_of_volunteer_names_associated_with_cadet_at_event,
+)
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.identified_cadets_at_event import IdentifiedCadetAtEvent
 from app.objects.day_selectors import EMPTY_DAY_SELECTOR
 from app.objects.events import Event
-from app.objects.registration_data import empty_status
+from app.objects.registration_status import empty_status
 
 
 def get_df_for_cadets_event_data_dump(interface: abstractInterface, event: Event):
@@ -138,7 +139,9 @@ def group_string_for_cadet(interface: abstractInterface, event: Event, cadet_id:
         [
             (
                 day,
-                group_data.CONSIDER_USING_ACTIVE_FILTER_get_list_of_cadet_ids_with_groups_at_event(event)
+                group_data.CONSIDER_USING_ACTIVE_FILTER_get_list_of_cadet_ids_with_groups_at_event(
+                    event
+                )
                 .group_for_cadet_id_on_day(day=day, cadet_id=cadet_id)
                 .name,
             )
@@ -220,8 +223,10 @@ def partner_name_for_cadet(interface: abstractInterface, event: Event, cadet_id:
 def names_of_volunteers_for_cadet(
     interface: abstractInterface, event: Event, cadet_id: str
 ):
-    volunteer_names = DEPRECATE_get_list_of_volunteer_names_associated_with_cadet_at_event(
-        interface=interface, cadet_id=cadet_id, event=event
+    volunteer_names = (
+        DEPRECATE_get_list_of_volunteer_names_associated_with_cadet_at_event(
+            interface=interface, cadet_id=cadet_id, event=event
+        )
     )
 
     return ", ".join(volunteer_names)
@@ -232,4 +237,6 @@ def cadet_name_or_test(
 ):
     if identified_cadet.is_test_cadet:
         return "Test"
-    return cadet_name_from_id(data_layer=interface.data, cadet_id=identified_cadet.cadet_id)
+    return cadet_name_from_id(
+        data_layer=interface.data, cadet_id=identified_cadet.cadet_id
+    )

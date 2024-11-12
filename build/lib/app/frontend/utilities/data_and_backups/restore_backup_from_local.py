@@ -9,7 +9,8 @@ from app.frontend.form_handler import button_error_and_back_to_initial_state_for
 from app.objects.abstract_objects.abstract_buttons import (
     BACK_BUTTON_LABEL,
     Button,
-    ButtonBar, HelpButton,
+    ButtonBar,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_form import fileInput, Form, NewForm
 from app.objects.abstract_objects.abstract_interface import (
@@ -37,12 +38,13 @@ def display_form_for_upload_backup(interface: abstractInterface):
 
 
 def get_upload_buttons():
-
     return ButtonBar([back_button, upload_button, help_button])
+
 
 upload_button = Button(UPLOAD_FILE_BUTTON_LABEL, nav_button=True)
 back_button = Button(BACK_BUTTON_LABEL, nav_button=True)
 help_button = HelpButton("data_backup_help")
+
 
 def post_form_upload_backup_file(interface: abstractInterface) -> Union[Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set

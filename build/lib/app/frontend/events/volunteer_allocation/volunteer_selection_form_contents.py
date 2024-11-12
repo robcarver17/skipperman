@@ -1,16 +1,11 @@
 from app.OLD_backend.cadets import get_cadet_from_id
-from app.OLD_backend.volunteers.volunteer_allocation import get_list_of_relevant_volunteers
+from app.backend.volunteers.connected_cadets import get_list_of_relevant_volunteers
 from app.OLD_backend.data.volunteers import SORT_BY_SURNAME
 from app.OLD_backend.volunteers.volunteers import get_sorted_list_of_volunteers
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.frontend.events.constants import (
-    CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL,
-    FINAL_VOLUNTEER_ADD_BUTTON_LABEL,
-    SKIP_VOLUNTEER_BUTTON_LABEL,
-    SEE_SIMILAR_VOLUNTEER_ONLY_LABEL,
-    SEE_ALL_VOLUNTEER_BUTTON_LABEL,
-    CHECK_FOR_ME_VOLUNTEER_BUTTON_LABEL,
-)
+from app.frontend.events.volunteer_allocation.volunteer_selection_form_contents import \
+    CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL, CHECK_FOR_ME_VOLUNTEER_BUTTON_LABEL, FINAL_VOLUNTEER_ADD_BUTTON_LABEL, \
+    SEE_ALL_VOLUNTEER_BUTTON_LABEL, SEE_SIMILAR_VOLUNTEER_ONLY_LABEL, SKIP_VOLUNTEER_BUTTON_LABEL
 from app.frontend.events.volunteer_allocation.track_state_in_volunteer_allocation import (
     get_relevant_information_for_current_volunteer,
     get_volunteer_index,
@@ -42,7 +37,8 @@ def get_header_text_for_volunteer_selection_form(
 
     volunteer_index = get_volunteer_index(interface)
     cadet = get_cadet_from_id(
-        data_layer=interface.data, cadet_id=relevant_information_for_identification.cadet_id
+        data_layer=interface.data,
+        cadet_id=relevant_information_for_identification.cadet_id,
     )
 
     introduction = (
@@ -72,10 +68,7 @@ def volunteer_name_is_similar_to_cadet_name(
     relevant_information_for_identification = relevant_information.identify
     cadet_id = relevant_information_for_identification.cadet_id
 
-    cadet =\
-    get_cadet_from_id(
-    interface.data, cadet_id=cadet_id
-    )
+    cadet = get_cadet_from_id(interface.data, cadet_id=cadet_id)
 
     return similar(volunteer.name, cadet.name) > 0.9
 
@@ -142,5 +135,3 @@ def get_list_of_volunteer_buttons(
     return ListOfLines(
         [Line([msg_text, extra_button]), volunteer_buttons_line]
     ).add_Lines()
-
-

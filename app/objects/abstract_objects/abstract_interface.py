@@ -53,9 +53,9 @@ class abstractInterface:
     ## SHOULD BE DONE ON NEW PAGE DISPLAY?? AND A MESS!
     def flush_cache_to_store(self):
         self.object_store.flush_store()
-        self._save_data_store_cache() ## FIXME REMOVE EVENTUALLY
-        self._clear_data_store_cache() ## FIXME REMOVE EVENTUALLY
-        self._clear_adhoc_cache() ## ## FIXME REMOVE EVENTUALLY
+        self._save_data_store_cache()  ## FIXME REMOVE EVENTUALLY
+        self._clear_data_store_cache()  ## FIXME REMOVE EVENTUALLY
+        self._clear_adhoc_cache()  ## ## FIXME REMOVE EVENTUALLY
 
     def clear_cache(self):
         self.object_store.clear_store()
@@ -71,7 +71,7 @@ class abstractInterface:
 
     def _clear_adhoc_cache(self):
         try:
-            del(self._cache)
+            del self._cache
         except:
             pass
 
@@ -160,7 +160,6 @@ class abstractInterface:
         )
         return NewForm(form_name)
 
-
     def get_current_logged_in_username(self) -> str:
         raise NotImplemented
 
@@ -170,11 +169,12 @@ class abstractInterface:
 
     @property
     def cache(self) -> AdHocCache:
-        cache = getattr(self, '_cache', None)
+        cache = getattr(self, "_cache", None)
         if cache is None:
             cache = self._cache = AdHocCache(self.data)
 
         return cache
+
 
 def get_file_from_interface(file_label: str, interface: abstractInterface):
     try:
@@ -209,13 +209,11 @@ def form_with_message_and_finished_button(
     else:
         interface.clear_where_finished_button_should_lead_to()
 
-    return form_with_content_and_finished_button(
-        content=Line(message),  button=button
-    )
+    return form_with_content_and_finished_button(content=Line(message), button=button)
 
 
 def form_with_content_and_finished_button(
-    content,  button: Button = finished_button
+    content, button: Button = finished_button
 ) -> Form:
     return Form(
         ListOfLines(

@@ -92,9 +92,9 @@ def get_registration_details_inner_form_for_event(
         row_for_cadet_in_event(
             interface=interface,
             cadet_at_event=cadet_at_event,
-            registration_details=registration_details
+            registration_details=registration_details,
         )
-        for cadet_at_event in registration_details.cadets_at_event
+        for cadet_at_event in registration_details.registration_data
     ]
 
     return Table(

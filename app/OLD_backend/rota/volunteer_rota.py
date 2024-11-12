@@ -1,35 +1,40 @@
 from dataclasses import dataclass
 from typing import List
 
+from app.backend.volunteers.volunteers_at_event import load_list_of_volunteers_at_event
 from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
 from app.objects.volunteers import Volunteer
 
 from app.data_access.store.data_access import DataLayer
 
-from app.OLD_backend.data.group_allocations import GroupAllocationsData
 from app.OLD_backend.data.volunteer_allocation import VolunteerAllocationData
 
 from app.OLD_backend.volunteers.volunteers import (
     EPRECATE_get_volunteer_name_from_id,
-     get_volunteer_from_id,
+    get_volunteer_from_id,
 )
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.OLD_backend.data.volunteer_rota import VolunteerRotaData
-from app.data_access.configuration.skills_and_roles import  volunteer_roles
 from app.OLD_backend.data.patrol_boats import PatrolBoatsData
 
 from app.objects.exceptions import missing_data
 from app.objects.events import Event
 from app.objects.groups import LAKE_TRAINING, Group
 from app.objects_OLD.volunteers_at_event import (
-    ListOfVolunteersAtEvent, DEPRECATE_VolunteerAtEvent,
+    DEPRECATE_VolunteerAtEvent,
 )
 from app.objects.volunteer_at_event_with_id import ListOfVolunteersAtEventWithId
-from app.objects_OLD.primtive_with_id.identified_volunteer_at_event import ListOfIdentifiedVolunteersAtEvent
-from app.objects.volunteer_roles_and_groups_with_id import NO_ROLE_SET, VolunteerWithIdInRoleAtEvent, \
-    ListOfVolunteersWithIdInRoleAtEvent, RoleAndGroupDEPRECATE
+from app.objects.identified_volunteer_at_event import (
+    ListOfIdentifiedVolunteersAtEvent,
+)
+from app.objects.volunteer_roles_and_groups_with_id import (
+    NO_ROLE_SET,
+    VolunteerWithIdInRoleAtEvent,
+    ListOfVolunteersWithIdInRoleAtEvent,
+    RoleAndGroupDEPRECATE,
+)
 
 from app.objects.day_selectors import Day
 
@@ -64,21 +69,26 @@ def update_role_at_event_for_volunteer_on_day_at_event(
 
 
 def get_volunteer_role_at_event_on_day(
-    data_layer:DataLayer, event: Event, volunteer_id: str, day: Day
+    data_layer: DataLayer, event: Event, volunteer_id: str, day: Day
 ) -> str:
     volunteer_role_data = VolunteerRotaData(data_layer)
     return volunteer_role_data.get_volunteer_role_at_event_on_day_for_volunteer_id(
         event=event, volunteer_id=volunteer_id, day=day
     )
 
+
 def get_volunteer_role_and_group_event_on_day_for_volunteer_at_event(
-    data_layer:DataLayer, event: Event, volunteer_at_event: DEPRECATE_VolunteerAtEvent, day: Day
-) ->RoleAndGroupDEPRECATE:
+    data_layer: DataLayer,
+    event: Event,
+    volunteer_at_event: DEPRECATE_VolunteerAtEvent,
+    day: Day,
+) -> RoleAndGroupDEPRECATE:
     volunteer_role_data = VolunteerRotaData(data_layer)
     role_and_group = volunteer_role_data.get_volunteer_role_and_group_event_on_day_for_volunteer_at_event(
         event=event, volunteer_at_event=volunteer_at_event, day=day
     )
     return role_and_group
+
 
 def DEPRECATE_get_volunteer_with_role_at_event_on_day(
     interface: abstractInterface, event: Event, volunteer_id: str, day: Day
@@ -87,6 +97,7 @@ def DEPRECATE_get_volunteer_with_role_at_event_on_day(
     return volunteer_role_data.get_volunteer_with_id_in_role_at_event_on_day_from_id(
         event=event, volunteer_id=volunteer_id, day=day
     )
+
 
 def get_volunteer_with_role_at_event_on_day(
     data_layer: DataLayer, event: Event, volunteer: Volunteer, day: Day
@@ -98,41 +109,22 @@ def get_volunteer_with_role_at_event_on_day(
 
 
 
-def get_dict_of_groups_for_dropdown(
-):
-    #raise Exception("All group names undefined")
-    #dict_of_groups = {group: group for group in all_groups_names}
-    #dict_of_groups[GROUP_UNALLOCATED_TEXT] = GROUP_UNALLOCATED_TEXT
-
-    #return dict_of_groups
-    return {}
-
-dict_of_groups_for_dropdown = get_dict_of_groups_for_dropdown()
-
-MAKE_UNAVAILABLE = "* UNAVAILABLE *"
 
 
-def get_dict_of_roles_for_dropdown():
-
-    dict_of_roles = {role: role for role in volunteer_roles}
-    dict_of_roles[NO_ROLE_SET] = NO_ROLE_SET
-    dict_of_roles[MAKE_UNAVAILABLE] = MAKE_UNAVAILABLE
-
-    return dict_of_roles
-
-dict_of_roles_for_dropdown = get_dict_of_roles_for_dropdown()
 
 def boat_related_role_str_and_group_on_day_for_volunteer_id(
     data_layer: DataLayer, day: Day, event: Event, volunteer_id: str
 ) -> str:
     volunteer_rota = VolunteerRotaData(data_layer)
-    volunteer_on_day = volunteer_rota.get_volunteer_with_id_in_role_at_event_on_day_from_id(
-        event=event, day=day, volunteer_id=volunteer_id
+    volunteer_on_day = (
+        volunteer_rota.get_volunteer_with_id_in_role_at_event_on_day_from_id(
+            event=event, day=day, volunteer_id=volunteer_id
+        )
     )
     if volunteer_on_day is missing_data:
         return ""
     elif volunteer_on_day.group.is_unallocated:
-            return volunteer_on_day.role
+        return volunteer_on_day.role
     else:
         return "%s - %s" % (
             volunteer_on_day.group.name,
@@ -268,29 +260,6 @@ def volunteer_is_on_lake(
     )
 
 
-def list_of_cadet_groups_associated_with_volunteer(
-    data_layer: DataLayer,
-    event: Event,
-    volunteer_at_event: DEPRECATE_VolunteerAtEvent,
-) -> List[Group]:
-    group_data = GroupAllocationsData(data_layer)
-    list_of_cadet_ids = volunteer_at_event.list_of_associated_cadet_id
-    list_of_groups = []
-    for cadet_id in list_of_cadet_ids:
-        list_of_groups_this_cadet = [
-            group_data.CONSIDER_USING_ACTIVE_FILTER_get_list_of_cadet_ids_with_groups_at_event(
-                event
-            ).group_for_cadet_id_on_day(cadet_id, day)
-            for day in event.weekdays_in_event()
-        ]
-        list_of_groups += list_of_groups_this_cadet
-
-    list_of_groups = list(set(list_of_groups))
-    list_of_groups = [group for group in list_of_groups if group is not missing_data]
-
-    return list_of_groups
-
-
 def lake_in_list_of_groups(list_of_groups: List[Group]):
     types_of_groups = [group.type_of_group() for group in list_of_groups]
     return LAKE_TRAINING in types_of_groups
@@ -324,38 +293,11 @@ def DEPRECATE_load_list_of_volunteers_at_event(
     return volunteer_allocation_data.load_list_of_volunteers_with_ids_at_event(event)
 
 
-def load_list_of_volunteers_at_event(
-    data_layer: DataLayer, event: Event
-) -> ListOfVolunteersAtEvent:
-    volunteer_allocation_data = VolunteerAllocationData(data_layer)
-    return volunteer_allocation_data.get_list_of_volunteers_at_event(event)
-
-
 def load_list_of_volunteers_with_ids_at_event(
     data_layer: DataLayer, event: Event
 ) -> ListOfVolunteersAtEventWithId:
     volunteer_allocation_data = VolunteerAllocationData(data_layer)
     return volunteer_allocation_data.load_list_of_volunteers_with_ids_at_event(event)
-
-
-def delete_volunteer_at_event(
-    data_layer: DataLayer,  event: Event, volunteer: Volunteer
-):
-    volunteer_id = volunteer.id
-
-    volunteer_allocation_data = VolunteerAllocationData(data_layer)
-    volunteer_allocation_data.delete_volunteer_with_id_at_event(
-        event=event, volunteer_id=volunteer_id
-    )
-
-    patrol_boat_data = PatrolBoatsData(data_layer)
-    patrol_boat_data.delete_volunteer_with_id_at_event(
-        event=event, volunteer_id=volunteer_id
-    )
-
-    delete_role_at_event_for_volunteer_on_all_days(
-        data_layer=data_layer, volunteer_id=volunteer_id, event=event
-    )
 
 
 def update_volunteer_notes_at_event(
@@ -364,24 +306,6 @@ def update_volunteer_notes_at_event(
     volunteer_allocation_data = VolunteerAllocationData(interface.data)
     volunteer_allocation_data.update_volunteer_notes_at_event(
         event=event, volunteer_id=volunteer_id, new_notes=new_notes
-    )
-
-
-def add_volunteer_to_event_with_just_id(
-    interface: abstractInterface, volunteer_id: str, event: Event
-):
-    volunteer_allocation_data = VolunteerAllocationData(interface.data)
-    volunteer_allocation_data.add_volunteer_to_event_with_just_id(
-        event=event, volunteer_id=volunteer_id
-    )
-
-
-def is_volunteer_already_at_event(
-    interface: abstractInterface, volunteer_id: str, event: Event
-) -> bool:
-    volunteers_at_event_data = VolunteerAllocationData(interface.data)
-    return volunteers_at_event_data.is_volunteer_already_at_event(
-        volunteer_id=volunteer_id, event=event
     )
 
 
@@ -433,13 +357,17 @@ def get_volunteers_in_role_at_event_with_active_allocations(
         event
     )
 
+
 def update_role_at_event_for_volunteer_on_day(
     interface: abstractInterface,
     volunteer_in_role_at_event_on_day: VolunteerWithIdInRoleAtEvent,
     new_role: str,
     event: Event,
 ):
-    volunteer = get_volunteer_from_id(data_layer=interface.data, volunteer_id=volunteer_in_role_at_event_on_day.volunteer_id)
+    volunteer = get_volunteer_from_id(
+        data_layer=interface.data,
+        volunteer_id=volunteer_in_role_at_event_on_day.volunteer_id,
+    )
     if new_role is NO_ROLE_SET:
         delete_role_at_event_for_volunteer_on_day(
             data_layer=interface.data,
@@ -518,13 +446,17 @@ def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
 
 
 def copy_earliest_valid_role_and_overwrite_for_volunteer(
-    interface: abstractInterface, event: Event,  volunteer_at_event: DEPRECATE_VolunteerAtEvent
+    interface: abstractInterface,
+    event: Event,
+    volunteer_at_event: DEPRECATE_VolunteerAtEvent,
 ):
     valid_day = get_day_with_earliest_valid_role_and_group_for_volunteer_or_none(
         interface=interface, event=event, volunteer_at_event=volunteer_at_event
     )
 
-    print("Valid day for volunteer %s is %s" % (volunteer_at_event.name, str(valid_day)))
+    print(
+        "Valid day for volunteer %s is %s" % (volunteer_at_event.name, str(valid_day))
+    )
     if valid_day is None:
         return
 
@@ -537,7 +469,9 @@ def copy_earliest_valid_role_and_overwrite_for_volunteer(
 
 
 def copy_earliest_valid_role_to_all_empty_for_volunteer(
-    interface: abstractInterface, event: Event, volunteer_at_event: DEPRECATE_VolunteerAtEvent
+    interface: abstractInterface,
+    event: Event,
+    volunteer_at_event: DEPRECATE_VolunteerAtEvent,
 ):
     valid_day = get_day_with_earliest_valid_role_and_group_for_volunteer_or_none(
         interface=interface, event=event, volunteer_at_event=volunteer_at_event
@@ -556,7 +490,9 @@ def copy_earliest_valid_role_to_all_empty_for_volunteer(
 
 
 def get_day_with_earliest_valid_role_and_group_for_volunteer_or_none(
-    interface: abstractInterface, event: Event,  volunteer_at_event: DEPRECATE_VolunteerAtEvent
+    interface: abstractInterface,
+    event: Event,
+    volunteer_at_event: DEPRECATE_VolunteerAtEvent,
 ) -> Day:
     volunteer_data = VolunteerRotaData(interface.data)
 
@@ -595,7 +531,9 @@ def volunteer_has_at_least_one_allocated_role_which_matches_others(
     )
 
 
-def get_list_of_volunteer_roles_for_event_across_days(data_layer: DataLayer, event: Event, volunteer_at_event: DEPRECATE_VolunteerAtEvent) -> List[VolunteerWithIdInRoleAtEvent]:
+def get_list_of_volunteer_roles_for_event_across_days(
+    data_layer: DataLayer, event: Event, volunteer_at_event: DEPRECATE_VolunteerAtEvent
+) -> List[VolunteerWithIdInRoleAtEvent]:
     volunteer_rota_data = VolunteerRotaData(data_layer)
     list_of_volunteer_roles = [
         volunteer_rota_data.get_volunteer_with_role_at_event_on_day_for_volunteer_at_event(
@@ -607,92 +545,20 @@ def get_list_of_volunteer_roles_for_event_across_days(data_layer: DataLayer, eve
     return list_of_volunteer_roles
 
 
-def all_roles_match_across_event(cache: AdHocCache,
-                                 event: Event,
-                                 volunteer_in_role_at_event_on_day: VolunteerWithIdInRoleAtEvent,
-                                 ) -> bool:
-
-    all_volunteers_in_roles_at_event_including_no_role_set =get_roles_for_group_info(
-            cache=cache,
-        event=event,
-        volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day
+def get_roles_for_group_info(
+    cache: AdHocCache,
+    event: Event,
+    volunteer_in_role_at_event_on_day: VolunteerWithIdInRoleAtEvent,
+) -> List[VolunteerWithIdInRoleAtEvent]:
+    list_of_volunteers_at_event = cache.get_from_cache(
+        load_list_of_volunteers_at_event, event=event
     )
-
-    if len(all_volunteers_in_roles_at_event_including_no_role_set) == 0:
-        return False
-
-    all_roles = [
-        volunteer_in_role_at_event_on_day.role
-        for volunteer_in_role_at_event_on_day in all_volunteers_in_roles_at_event_including_no_role_set
-    ]
-    all_groups = [
-        volunteer_in_role_at_event_on_day.group
-        for volunteer_in_role_at_event_on_day in all_volunteers_in_roles_at_event_including_no_role_set
-    ]
-
-    all_groups_match = len(set(all_groups)) <= 1
-    all_roles_match = len(set(all_roles)) <= 1
-
-    return all_roles_match and all_groups_match
-
-
-def volunteer_has_empty_available_days_without_role(
-        cache: AdHocCache,
-        event: Event,
-        volunteer_in_role_at_event_on_day: VolunteerWithIdInRoleAtEvent,
-) -> bool:
-    all_volunteers_in_roles_at_event_including_no_role_set =get_roles_for_group_info(
-            cache=cache,
-        event=event,
-        volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day
-    )
-    unallocated_roles = [
-        volunteer_role
-        for volunteer_role in all_volunteers_in_roles_at_event_including_no_role_set
-        if volunteer_role.no_role_set
-    ]
-
-    return len(unallocated_roles) > 0
-
-
-def volunteer_has_at_least_one_day_in_role_and_all_roles_and_groups_match(
-        cache: AdHocCache,
-        event: Event,
-        volunteer_in_role_at_event_on_day: VolunteerWithIdInRoleAtEvent,
-) -> bool:
-    all_volunteers_in_roles_at_event_including_no_role_set =get_roles_for_group_info(
-            cache=cache,
-        event=event,
-        volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day
-    )
-
-    allocated_roles = [
-        volunteer_role.role_and_group
-        for volunteer_role in all_volunteers_in_roles_at_event_including_no_role_set
-        if not volunteer_role.no_role_set
-    ]
-
-    if len(allocated_roles) == 0:
-        print("No roles, False")
-        return False
-
-    all_match = allocated_roles.count(allocated_roles[0]) == len(allocated_roles)
-
-    return all_match
-
-
-def get_roles_for_group_info(cache: AdHocCache,
-                             event: Event,
-                             volunteer_in_role_at_event_on_day: VolunteerWithIdInRoleAtEvent, ) -> List[VolunteerWithIdInRoleAtEvent]:
-    list_of_volunteers_at_event = cache.get_from_cache(load_list_of_volunteers_at_event, event=event)
-    availability = (
-        list_of_volunteers_at_event.volunteer_at_event_with_id(
-            volunteer_id=volunteer_in_role_at_event_on_day.volunteer_id
-        ).availablity
-    )
+    availability = list_of_volunteers_at_event.volunteer_at_event_with_id(
+        volunteer_id=volunteer_in_role_at_event_on_day.volunteer_id
+    ).availablity
     volunteers_in_role_at_event_with_active_allocations = cache.get_from_cache(
-        get_volunteers_in_role_at_event_with_active_allocations,
-        event=event)
+        get_volunteers_in_role_at_event_with_active_allocations, event=event
+    )
 
     all_volunteers_in_roles_at_event_including_no_role_set = [
         volunteers_in_role_at_event_with_active_allocations.member_matching_volunteer_id_and_day(

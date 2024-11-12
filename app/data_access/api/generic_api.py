@@ -1,9 +1,8 @@
-
 from app.data_access.classes.cadets import *
 from app.data_access.classes.list_of_events import DataListOfEvents
 from app.data_access.classes.wa_event_mapping import DataWAEventMapping
 from app.data_access.classes.wa_field_mapping import DataWAFieldMapping
-from app.data_access.classes.mapped_wa_event import DataMappedWAEvent
+from app.data_access.classes.mapped_wa_event import DataMappedRegistrationData
 from app.data_access.classes.configuration import *
 from app.data_access.classes.volunteers import *
 from app.data_access.classes.resources import *
@@ -20,7 +19,6 @@ class GenericDataApi(object):
 
     def make_backup(self):
         raise Exception
-
 
     @property
     def data_list_of_cadets(self) -> DataListOfCadets:
@@ -43,7 +41,7 @@ class GenericDataApi(object):
         raise NotImplemented
 
     @property
-    def data_mapped_wa_event(self) -> DataMappedWAEvent:
+    def data_registration_data(self) -> DataMappedRegistrationData:
         raise NotImplemented
 
     @property
@@ -97,7 +95,6 @@ class GenericDataApi(object):
     @property
     def data_list_of_teams_and_roles_with_ids(self) -> DataListOfTeamsAndRolesWithIds:
         raise NotImplemented
-
 
     @property
     def data_list_of_volunteer_skills(self) -> DataListOfVolunteerSkills:

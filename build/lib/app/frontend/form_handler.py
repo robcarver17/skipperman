@@ -40,9 +40,7 @@ class FormHandler:
 
         return form
 
-
     def get_posted_form_with_finished_button_pressed(self) -> Form:
-
         new_form = self.interface.get_where_finished_button_should_lead_to(
             default=INITIAL_STATE
         )
@@ -61,9 +59,7 @@ class FormHandler:
         return form
 
     def get_posted_form_given_form_name(self, form_name: str):
-        form = self.get_posted_form_given_form_name_from_mapping(
-            form_name
-        )
+        form = self.get_posted_form_given_form_name_from_mapping(form_name)
         if (
             type(form) is NewForm
         ):  ## redirection, action we are taking is to create a new form
@@ -75,10 +71,8 @@ class FormHandler:
         self, form_name: str
     ) -> Union[Form, NewForm]:
         try:
-            form_function = (
-                self.display_and_post_form_function_maps.get_post_function_for_form_name(
-                    form_name=form_name
-                )
+            form_function = self.display_and_post_form_function_maps.get_post_function_for_form_name(
+                form_name=form_name
             )
         except MissingFormName:
             print("Form %s not recognised" % form_name)
@@ -99,16 +93,13 @@ class FormHandler:
 
         return form
 
-
     def get_displayed_form_given_form_name(
         self, form_name: str
     ) -> Union[Form, NewForm]:
         print("get_displayed_form_given_form_name %s" % form_name)
         try:
-            form_function = (
-                self.display_and_post_form_function_maps.get_display_function_for_form_name(
-                    form_name=form_name
-                )
+            form_function = self.display_and_post_form_function_maps.get_display_function_for_form_name(
+                form_name=form_name
             )
         except MissingFormName:
             print("Form %s not recognised" % form_name)
@@ -180,8 +171,10 @@ class FormHandler:
     def object_store(self) -> ObjectStore:
         return self.interface.object_store
 
+
 ## Commonly used to return the initial state if an error occurs
 initial_state_form = NewForm(INITIAL_STATE)
+
 
 ## Standard form to report errors with button presses, should always be at the end of a try/catch
 def button_error_and_back_to_initial_state_form(

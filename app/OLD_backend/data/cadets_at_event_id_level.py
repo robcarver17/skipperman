@@ -4,11 +4,14 @@ from app.OLD_backend.data.cadets import CadetData
 from app.OLD_backend.data.mapped_events import MappedEventsData
 from app.data_access.store.data_access import DataLayer
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects_OLD.cadet_at_event import DEPRECATE_ListOfCadetsAtEvent, DEPRECATE_CadetAtEvent
+from app.objects_OLD.cadet_at_event import (
+    DEPRECATE_ListOfCadetsAtEvent,
+    DEPRECATE_CadetAtEvent,
+)
 from app.objects.cadet_with_id_at_event import (
     CadetWithIdAtEvent,
     ListOfCadetsWithIDAtEvent,
-    get_cadet_at_event_from_row_in_mapped_event,
+    get_cadet_at_event_from_row_in_event_raw_registration_data,
 )
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.exceptions import missing_data
@@ -17,9 +20,9 @@ from app.objects.events import Event
 from app.objects.identified_cadets_at_event import ListOfIdentifiedCadetsAtEvent
 from app.objects.registration_data import (
     RowInRegistrationData,
-    RegistrationStatus,
-    MappedWAEvent,
+    RegistrationDataForEvent,
 )
+from app.objects.registration_status import RegistrationStatus
 
 
 class CadetsAtEventIdLevelData:
@@ -154,7 +157,7 @@ class CadetsAtEventIdLevelData:
     def add_new_cadet_to_event(
         self, event: Event, row_in_mapped_wa_event: RowInRegistrationData, cadet_id: str
     ):
-        cadet_at_event = get_cadet_at_event_from_row_in_mapped_event(
+        cadet_at_event = get_cadet_at_event_from_row_in_event_raw_registration_data(
             event=event,
             cadet_id=cadet_id,
             row_in_mapped_wa_event=row_in_mapped_wa_event,
@@ -179,14 +182,14 @@ class CadetsAtEventIdLevelData:
 
     def get_all_rows_in_mapped_event_for_cadet(
         self, event: Event, cadet: Cadet
-    ) -> MappedWAEvent:
+    ) -> RegistrationDataForEvent:
         return self.get_all_rows_in_mapped_event_for_cadet_id(
             event=event, cadet_id=cadet.id
         )
 
     def get_all_rows_in_mapped_event_for_cadet_id(
         self, event: Event, cadet_id: str
-    ) -> MappedWAEvent:
+    ) -> RegistrationDataForEvent:
         identified_cadets = self.get_list_of_identified_cadets_at_event(event)
         mapped_event_data = self.get_mapped_wa_data_for_event(event)
 
@@ -359,7 +362,9 @@ class CadetsAtEventIdLevelData:
             list_of_identified_cadets_at_event=list_of_identified_cadets_at_event,
         )
 
-    def get_list_of_cadets_at_event(self, event: Event) -> DEPRECATE_ListOfCadetsAtEvent:
+    def get_list_of_cadets_at_event(
+        self, event: Event
+    ) -> DEPRECATE_ListOfCadetsAtEvent:
         list_of_cadets_with_id_at_event = self.get_list_of_cadets_with_id_at_event(
             event
         )
@@ -411,12 +416,3 @@ def load_identified_cadets_at_event(
     return cadets_at_event_data.get_list_of_identified_cadets_at_event(event)
 
 
-def cadet_at_event_given_row_id(
-    interface: abstractInterface, event: Event, row_id: str
-) -> Cadet:
-    cadet_data = CadetsAtEventIdLevelData(interface.data)
-    cadet_id = cadet_data.identifed_cadet_given_row_id_at_event(
-        row_id=row_id, event=event
-    )
-
-    return cadet_id

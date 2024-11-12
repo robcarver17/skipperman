@@ -2,14 +2,17 @@ from typing import Union
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 
-from app.OLD_backend.volunteers.volunteer_allocation import get_list_of_connected_cadets_given_volunteer_at_event, \
-    remove_volunteer_and_cadet_association_at_event, add_volunteer_and_cadet_association_for_existing_volunteer
+from app.OLD_backend.volunteers.volunteer_allocation import (
+    get_list_of_connected_cadets_given_volunteer_at_event,
+    remove_volunteer_and_cadet_association_at_event,
+    add_volunteer_and_cadet_association_for_existing_volunteer,
+)
 from app.objects.events import Event
 
 from app.OLD_backend.group_allocations.cadet_event_allocations import (
     get_list_of_groups_at_event_given_list_of_cadets,
-    get_list_of_active_cadets_at_event,
 )
+from app.backend.events.cadets_at_event import get_list_of_active_cadets_at_event
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -18,11 +21,16 @@ from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.volunteers.edit_cadet_connections import (
     get_cadet_from_button_pressed,
 )
-from app.frontend.shared.cadet_connection_forms import form_to_edit_connections,  \
-    get_list_of_delete_cadet_buttons_given_connected_cadets, add_connection_button, \
-     get_selected_cadet_from_form
-from app.frontend.shared.volunteer_state import  get_volunteer_from_state, \
-    get_volunteer_at_event_with_id_from_state
+from app.frontend.shared.cadet_connection_forms import (
+    form_to_edit_connections,
+    get_list_of_delete_cadet_buttons_given_connected_cadets,
+    add_connection_button,
+    get_selected_cadet_from_form,
+)
+from app.frontend.shared.volunteer_state import (
+    get_volunteer_from_state,
+    get_volunteer_at_event_with_id_from_state,
+)
 
 from app.objects.cadets import ListOfCadets
 
@@ -65,7 +73,9 @@ def display_form_edit_cadet_connections_from_rota(interface: abstractInterface):
 
 def get_list_of_connected_cadets(interface: abstractInterface) -> ListOfCadets:
     volunteer_at_event = get_volunteer_at_event_with_id_from_state(interface)
-    connected_cadets = get_list_of_connected_cadets_given_volunteer_at_event(data_layer=interface.data, volunteer_at_event=volunteer_at_event)
+    connected_cadets = get_list_of_connected_cadets_given_volunteer_at_event(
+        data_layer=interface.data, volunteer_at_event=volunteer_at_event
+    )
 
     return connected_cadets
 
@@ -106,14 +116,21 @@ def post_form_edit_cadet_connections_from_rota(
 
     return display_form_edit_cadet_connections_from_rota(interface)
 
+
 def last_button_pressed_was_delete_cadet_connection(interface: abstractInterface):
-    return interface.last_button_pressed() in get_list_of_delete_cadet_buttons_with_currently_connected_cadets(interface)
+    return (
+        interface.last_button_pressed()
+        in get_list_of_delete_cadet_buttons_with_currently_connected_cadets(interface)
+    )
+
 
 def get_list_of_delete_cadet_buttons_with_currently_connected_cadets(
     interface: abstractInterface,
 ):
     connected_cadets = get_list_of_connected_cadets(interface)
-    list_of_delete_cadet_buttons = get_list_of_delete_cadet_buttons_given_connected_cadets(connected_cadets)
+    list_of_delete_cadet_buttons = (
+        get_list_of_delete_cadet_buttons_given_connected_cadets(connected_cadets)
+    )
 
     return list_of_delete_cadet_buttons
 
@@ -126,7 +143,7 @@ def previous_form(interface: abstractInterface):
 
 def delete_event_connection_given_form(interface: abstractInterface):
     cadet = get_cadet_from_button_pressed(interface)
-    volunteer= get_volunteer_from_state(interface)
+    volunteer = get_volunteer_from_state(interface)
     event = get_event_from_state(interface)
 
     remove_volunteer_and_cadet_association_at_event(
@@ -148,6 +165,5 @@ def add_event_specific_cadet_connection_from_form(interface: abstractInterface):
         data_layer=interface.data,
         event=event,
         volunteer=volunteer,
-        cadet=selected_cadet
+        cadet=selected_cadet,
     )
-

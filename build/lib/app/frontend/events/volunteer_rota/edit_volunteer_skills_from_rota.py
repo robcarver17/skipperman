@@ -4,10 +4,17 @@ from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIO
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.frontend.shared.add_edit_volunteer_forms import get_and_save_volunteer_skills_from_form, skills_form_entries
+from app.frontend.shared.add_edit_volunteer_forms import (
+    get_and_save_volunteer_skills_from_form,
+    skills_form_entries,
+)
 from app.frontend.shared.volunteer_state import get_volunteer_from_state
 
-from app.objects.abstract_objects.abstract_buttons import Button, SAVE_BUTTON_LABEL, CANCEL_BUTTON_LABEL
+from app.objects.abstract_objects.abstract_buttons import (
+    Button,
+    SAVE_BUTTON_LABEL,
+    CANCEL_BUTTON_LABEL,
+)
 from app.objects.abstract_objects.abstract_form import Form, NewForm, Link
 from app.objects.abstract_objects.abstract_lines import (
     Line,
@@ -45,8 +52,10 @@ def display_form_edit_individual_volunteer_skills_from_rota(
         ]
     )
 
+
 save_button = Button(SAVE_BUTTON_LABEL)
 cancel_button = Button(CANCEL_BUTTON_LABEL)
+
 
 def post_form_edit_individual_volunteer_skills_from_rota(
     interface: abstractInterface,

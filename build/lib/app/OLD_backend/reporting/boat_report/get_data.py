@@ -13,7 +13,10 @@ from app.OLD_backend.reporting.boat_report.boat_report_parameters import (
     CLUB_BOAT,
 )
 
-from app.objects.groups import lake_training_group_location, river_training_group_location
+from app.objects.groups import (
+    lake_training_group_location,
+    river_training_group_location,
+)
 from app.OLD_backend.data.data_for_event import (
     get_data_required_for_event,
     RequiredDataForReport,

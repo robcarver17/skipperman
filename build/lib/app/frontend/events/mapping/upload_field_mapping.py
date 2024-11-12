@@ -1,7 +1,7 @@
-from app.OLD_backend.wa_import.map_wa_fields import (
+from app.backend.mapping.map_wa_fields import (
     DEPRECATE_write_field_mapping_for_event,
-    read_mapping_from_csv_file_object,
 )
+from app.data_access.csv.wa_field_mapping import read_mapping_from_csv_file_object
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
     get_file_from_interface,
@@ -15,7 +15,7 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.frontend.shared.events_state import get_event_from_state
-from app.frontend.events.constants import UPLOAD_FILE_BUTTON_LABEL, MAPPING_FILE
+
 
 
 def display_form_for_upload_custom_field_mapping(interface: abstractInterface):
@@ -39,7 +39,7 @@ def display_form_for_upload_custom_field_mapping(interface: abstractInterface):
 def get_upload_buttons():
     return ButtonBar([cancel_menu_button, upload_button])
 
-
+UPLOAD_FILE_BUTTON_LABEL = "Upload file"
 upload_button = Button(UPLOAD_FILE_BUTTON_LABEL, nav_button=True)
 
 
@@ -67,3 +67,5 @@ def post_form_for_upload_custom_field_mapping(interface: abstractInterface):
         interface=interface,
         function_whose_parent_go_to_on_button_press=display_form_for_upload_custom_field_mapping,
     )
+
+MAPPING_FILE = "mapping_File"

@@ -4,6 +4,7 @@ from app.objects.exceptions import arg_not_passed, MultipleMatches, MissingData
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
 from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
 
+
 @dataclass
 class Skill(GenericSkipperManObjectWithIds):
     name: str
@@ -19,6 +20,7 @@ class Skill(GenericSkipperManObjectWithIds):
     def __eq__(self, other):
         return self.name == other.name
 
+
 class ListOfSkills(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
@@ -28,7 +30,9 @@ class ListOfSkills(GenericListOfObjectsWithIds):
         try:
             assert new_skill_name not in self.list_of_names()
         except:
-            raise Exception("Can't add duplicate skill name %s already exists" % new_skill_name)
+            raise Exception(
+                "Can't add duplicate skill name %s already exists" % new_skill_name
+            )
         skill = Skill(new_skill_name, protected=False)
         skill.id = self.next_id()
 
@@ -39,21 +43,22 @@ class ListOfSkills(GenericListOfObjectsWithIds):
         new_skill.id = existing_skill.id
         self[existing_skill_idx] = new_skill
 
-    def matches_name(self, skill_name:str):
+    def matches_name(self, skill_name: str):
         matching_list = [object for object in self if object.name == skill_name]
-        if len(matching_list)==0:
+        if len(matching_list) == 0:
             raise MissingData
-        elif len(matching_list)>1:
+        elif len(matching_list) > 1:
             raise MultipleMatches
         else:
             return matching_list[0]
 
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_names()
-        assert(len(list_of_names)==len(set(list_of_names)))
+        assert len(list_of_names) == len(set(list_of_names))
 
     def list_of_names(self):
         return [skill.name for skill in self]
+
 
 def skill_from_str(skill_str: str) -> Skill:
     return Skill(skill_str)

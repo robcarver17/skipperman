@@ -8,11 +8,11 @@ from app.objects.exceptions import NoDaysSelected
 from app.objects.volunteer_at_event_with_id import VolunteerAtEventWithId
 
 from app.frontend.forms.form_utils import get_availablity_from_form
-from app.OLD_backend.volunteers.volunteer_allocation import (
-    add_volunteer_at_event,
-    get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet,
-    get_list_of_relevant_information,
-)
+from app.backend.volunteers.volunteers_at_event import add_volunteer_at_event
+from app.backend.registration_data.identified_volunteers_at_event import \
+    get_list_of_relevant_information_for_volunteer_in_registration_data
+from app.backend.registration_data.cadet_and_volunteer_connections_at_event import \
+    get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer
 from app.OLD_backend.volunteers.volunteers import (
     add_list_of_cadet_connections_to_volunteer,
     DEPRECATE_get_volunteer_from_id,
@@ -31,7 +31,7 @@ from app.frontend.events.volunteer_allocation.track_state_in_volunteer_allocatio
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.day_selectors import no_days_selected
 from app.objects.events import Event
-from app.objects_OLD.relevant_information_for_volunteers import (
+from app.objects.relevant_information_for_volunteers import (
     ListOfRelevantInformationForVolunteer,
 )
 
@@ -39,7 +39,9 @@ from app.objects_OLD.relevant_information_for_volunteers import (
 def add_volunteer_at_event_with_form_contents(interface: abstractInterface):
     try:
         volunteer_at_event = get_volunteer_at_event_from_form_contents(interface)
-        volunteer = DEPRECATE_get_volunteer_from_id(interface=interface, volunteer_id=volunteer_at_event.volunteer_id) ## FIXME IDEALLY HAVE CLASS THAT ALREADY CONTAINS VOLUNTEER
+        volunteer = DEPRECATE_get_volunteer_from_id(
+            interface=interface, volunteer_id=volunteer_at_event.volunteer_id
+        )  ## FIXME IDEALLY HAVE CLASS THAT ALREADY CONTAINS VOLUNTEER
     except NoDaysSelected as e:
         interface.log_error(str(e))
         return
@@ -53,11 +55,16 @@ def add_volunteer_at_event_with_form_contents(interface: abstractInterface):
     list_of_cadet_ids_to_permanently_connect = (
         get_list_of_cadet_ids_to_permanently_connect_from_form(interface=interface)
     )
-    list_of_cadets_to_connect= ListOfCadets([get_cadet_from_id(data_layer=interface.data, cadet_id=id) for id in list_of_cadet_ids_to_permanently_connect]) ## collapse into previous function
+    list_of_cadets_to_connect = ListOfCadets(
+        [
+            get_cadet_from_id(data_layer=interface.data, cadet_id=id)
+            for id in list_of_cadet_ids_to_permanently_connect
+        ]
+    )  ## collapse into previous function
     add_list_of_cadet_connections_to_volunteer(
         data_layer=interface.data,
         volunteer=volunteer,
-        list_of_cadets_to_connect=list_of_cadets_to_connect
+        list_of_cadets_to_connect=list_of_cadets_to_connect,
     )
 
     interface.flush_cache_to_store()
@@ -79,7 +86,7 @@ def get_volunteer_at_event_from_form_contents(interface: abstractInterface):
             % volunteer.name
         )
 
-    list_of_associated_cadet_id = get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet(
+    list_of_associated_cadet_id = get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer(
         interface=interface, event=event, volunteer_id=volunteer_id
     )
     any_other_information = get_any_other_information(
@@ -116,7 +123,7 @@ def get_list_of_cadet_ids_to_permanently_connect_from_form(
 def get_any_other_information(
     interface: abstractInterface, event: Event, volunteer_id: str
 ) -> str:
-    list_of_relevant_information = get_list_of_relevant_information(
+    list_of_relevant_information = get_list_of_relevant_information_for_volunteer_in_registration_data(
         interface=interface, volunteer_id=volunteer_id, event=event
     )
 

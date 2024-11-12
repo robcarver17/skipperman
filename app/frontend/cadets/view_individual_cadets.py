@@ -2,14 +2,17 @@ from typing import Union
 
 from app.backend.cadets.cadet_committee import get_cadet_on_committee_status
 
-from app.backend.qualifications_and_ticks.qualifications_for_cadet import sorted_list_of_named_qualifications_for_cadet
+from app.backend.qualifications_and_ticks.qualifications_for_cadet import (
+    sorted_list_of_named_qualifications_for_cadet,
+)
 from app.frontend.shared.cadet_state import get_cadet_from_state
 from app.frontend.cadets.edit_cadet import display_form_edit_individual_cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
-    back_menu_button, HelpButton,
+    back_menu_button,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_lines import (
     Line,
@@ -20,7 +23,9 @@ from app.frontend.form_handler import initial_state_form
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
-from app.backend.groups.cadets_with_groups_at_event import get_dict_of_all_event_allocations_for_single_cadet
+from app.backend.groups.cadets_with_groups_at_event import (
+    get_dict_of_all_event_allocations_for_single_cadet,
+)
 from app.objects.cadets import Cadet
 
 
@@ -43,7 +48,9 @@ def display_form_for_selected_cadet(interface: abstractInterface, cadet: Cadet) 
         interface=interface, cadet=cadet
     )
     qualifications_str = qualifications_line(interface=interface, cadet=cadet)
-    committee_str = get_cadet_on_committee_status(object_store=interface.object_store, cadet=cadet)
+    committee_str = get_cadet_on_committee_status(
+        object_store=interface.object_store, cadet=cadet
+    )
     buttons = buttons_for_view_individual_cadet_form()
     return Form(
         ListOfLines(
@@ -66,7 +73,7 @@ def list_of_lines_with_allocations(
     interface: abstractInterface, cadet: Cadet
 ) -> ListOfLines:
     dict_of_allocations = get_dict_of_all_event_allocations_for_single_cadet(
-        object_store = interface.object_store, cadet=cadet, remove_unallocated=False
+        object_store=interface.object_store, cadet=cadet, remove_unallocated=False
     )
     return ListOfLines(
         ["Events registered at:", _______________]
@@ -84,7 +91,6 @@ def qualifications_line(interface: abstractInterface, cadet: Cadet) -> Line:
     qualifications_str = ", ".join(qualifications)
 
     return Line(["Qualifications: %s" % qualifications_str])
-
 
 
 def buttons_for_view_individual_cadet_form() -> ButtonBar:

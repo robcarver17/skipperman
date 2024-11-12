@@ -1,9 +1,16 @@
 from app.frontend.forms.form_utils import checked_and_labels_dict_for_skills_form
-from app.OLD_backend.rota.sorting_and_filtering import RotaSortsAndFilters, get_explanation_of_sorts_and_filters
+from app.backend.rota.sorting_and_filtering import (
+    RotaSortsAndFilters,
+    get_explanation_of_sorts_and_filters, FILTER_OPTIONS,
+)
 
-from app.frontend.events.volunteer_rota.volunteer_rota_buttons import get_all_volunteer_sort_buttons, apply_filter_button, \
-    clear_filter_button, get_buttons_after_rota_table_if_not_swapping, get_buttons_after_rota_table_if_swapping
-from app.objects_OLD.volunteers_in_roles import FILTER_OPTIONS
+from app.frontend.events.volunteer_rota.volunteer_rota_buttons import (
+    get_all_volunteer_sort_buttons,
+    apply_filter_button,
+    clear_filter_button,
+    get_buttons_after_rota_table_if_not_swapping,
+    get_buttons_after_rota_table_if_swapping,
+)
 from app.frontend.forms.swaps import is_ready_to_swap
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
@@ -26,19 +33,20 @@ from app.objects.events import Event
 def get_filters_and_buttons(
     interface: abstractInterface, event: Event, sorts_and_filters: RotaSortsAndFilters
 ) -> MaterialAroundTable:
-
     if is_ready_to_swap(interface):
         before_table = null_list_of_lines
-        after_table =  ListOfLines([get_buttons_after_rota_table_if_swapping()])
+        after_table = ListOfLines([get_buttons_after_rota_table_if_swapping()])
     else:
-        before_table = get_before_material_if_not_swapping(event=event, sorts_and_filters=sorts_and_filters)
-        after_table =  ListOfLines([get_buttons_after_rota_table_if_not_swapping()])
+        before_table = get_before_material_if_not_swapping(
+            event=event, sorts_and_filters=sorts_and_filters
+        )
+        after_table = ListOfLines([get_buttons_after_rota_table_if_not_swapping()])
 
     return MaterialAroundTable(before_table=before_table, after_table=after_table)
 
 
 def get_before_material_if_not_swapping(
-     event: Event, sorts_and_filters: RotaSortsAndFilters
+    event: Event, sorts_and_filters: RotaSortsAndFilters
 ) -> ListOfLines:
     explain_all_sorts_and_filters = get_explanation_of_sorts_and_filters(
         sorts_and_filters
@@ -48,7 +56,9 @@ def get_before_material_if_not_swapping(
     skills_filter = get_volunteer_skills_filter(sorts_and_filters=sorts_and_filters)
     availablility_filter = get_availability_for_volunteers_filter(event=event)
 
-    pre_table_button_bar = ButtonBar([apply_filter_button, clear_filter_button, ""] + sort_buttons)
+    pre_table_button_bar = ButtonBar(
+        [apply_filter_button, clear_filter_button, ""] + sort_buttons
+    )
 
     before_table = ListOfLines(
         [
@@ -100,10 +110,11 @@ def from_filter_entry_to_option(filter_entry: str) -> str:
 null_list_of_lines = ListOfLines([_______________])
 
 
-def get_volunteer_skills_filter( sorts_and_filters: RotaSortsAndFilters):
+def get_volunteer_skills_filter(sorts_and_filters: RotaSortsAndFilters):
     skills_filter = sorts_and_filters.skills_filter
-    skills_dict_checked, dict_of_labels = checked_and_labels_dict_for_skills_form(skills_filter)
-
+    skills_dict_checked, dict_of_labels = checked_and_labels_dict_for_skills_form(
+        skills_filter
+    )
 
     return checkboxInput(
         input_label="Filter for volunteers with these skills",
@@ -115,5 +126,3 @@ def get_volunteer_skills_filter( sorts_and_filters: RotaSortsAndFilters):
 
 
 SKILLS_FILTER = "skills_filter"
-
-

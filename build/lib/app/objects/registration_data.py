@@ -2,6 +2,15 @@ import datetime
 from typing import List
 import pandas as pd
 
+from app.objects.registration_status import (
+    POSSIBLE_STATUS_NAMES,
+    RegistrationStatus,
+    cancelled_status,
+    active_paid_status,
+    active_unpaid_status,
+    active_part_paid_status,
+    empty_status,
+)
 from app.objects.utils import (
     clean_up_dict_with_nans,
     transform_df_from_str_to_dates,
@@ -11,7 +20,8 @@ from app.objects.utils import (
 from app.data_access.configuration.field_list import (
     REGISTRATION_DATE,
     REGISTERED_BY_LAST_NAME,
-    REGISTERED_BY_FIRST_NAME, VOLUNTEER_STATUS,
+    REGISTERED_BY_FIRST_NAME,
+    VOLUNTEER_STATUS,
 )
 
 from app.data_access.configuration.configuration import (
@@ -24,100 +34,6 @@ from app.objects.exceptions import missing_data
 from app.data_access.configuration.field_list import PAYMENT_STATUS
 
 ## DO NOT CHANGE THESE OR DATA WILL BREAK
-CANCELLED = "Cancelled"
-ACTIVE_PAID = "Paid"
-EMPTY = "Empty"
-MANUAL = "Manual"
-UNPAID = "Unpaid"
-PARTIAL_PAID = "PartialPaid"
-DELETED = "Deleted"
-POSSIBLE_STATUS_NAMES = [
-    CANCELLED,
-    ACTIVE_PAID,
-    DELETED,
-    EMPTY,
-    MANUAL,
-    UNPAID,
-    PARTIAL_PAID,
-]
-ACTIVE_STATUS_NAMES = [ACTIVE_PAID, UNPAID, PARTIAL_PAID, MANUAL]
-
-
-class RegistrationStatus:
-    def __init__(self, name: str):
-        if name == "Active":  ## Fix for old data
-            name = ACTIVE_PAID
-        assert name in POSSIBLE_STATUS_NAMES
-        self._name = name
-
-    def __eq__(self, other):
-        return self.name == other.name
-
-    @property
-    def name(self) -> str:
-        return self._name
-
-    @property
-    def is_active(self) -> bool:
-        return self.name in ACTIVE_STATUS_NAMES
-
-    @property
-    def is_cancelled_or_deleted(self):
-        return self.is_cancelled or self.is_deleted
-
-    @property
-    def is_cancelled(self):
-        return self.name == CANCELLED
-
-    @property
-    def is_deleted(self):
-        return self.name == DELETED
-
-
-cancelled_status = RegistrationStatus(CANCELLED)
-active_paid_status = RegistrationStatus(ACTIVE_PAID)
-active_unpaid_status = RegistrationStatus(UNPAID)
-active_part_paid_status = RegistrationStatus(PARTIAL_PAID)
-deleted_status = RegistrationStatus(DELETED)
-empty_status = RegistrationStatus(EMPTY)
-manual_status = RegistrationStatus(MANUAL)
-
-
-def get_states_allowed_give_current_status(
-    current_status: RegistrationStatus,
-) -> List[RegistrationStatus]:
-    if current_status in [
-        cancelled_status,
-        active_paid_status,
-        active_unpaid_status,
-        active_part_paid_status,
-    ]:
-        allowable_status = [
-            cancelled_status,
-            active_paid_status,
-            active_unpaid_status,
-            active_part_paid_status,
-        ]
-    elif current_status == deleted_status:
-        allowable_status = [
-            cancelled_status,
-            active_paid_status,
-            active_unpaid_status,
-            active_part_paid_status,
-            deleted_status,
-        ]
-    elif current_status == manual_status:
-        allowable_status = [cancelled_status, manual_status]
-    ## SHOULD NEVER BE EMPTY
-    else:
-        raise Exception("Status %s not recognised" % str(current_status))
-
-    return allowable_status
-
-
-all_possible_status = [
-    RegistrationStatus(state_name) for state_name in POSSIBLE_STATUS_NAMES
-]
 
 
 def unique_row_identifier(
@@ -254,7 +170,7 @@ def get_status_str_from_row_of_mapped_wa_event_data(
     return status_field
 
 
-class MappedWAEvent(list):
+class RegistrationDataForEvent(list):
     def __init__(self, list_of_rows: List[RowInRegistrationData]):
         super().__init__(list_of_rows)
 
@@ -277,20 +193,20 @@ class MappedWAEvent(list):
     def list_of_row_ids(self) -> list:
         return extract_list_of_row_ids_from_existing_wa_event(self)
 
-    def remove_empty_status(self) -> "MappedWAEvent":
+    def remove_empty_status(self) -> "RegistrationDataForEvent":
         return self.remove_rows_with_status(empty_status)
 
     def remove_rows_with_status(
         self, status_to_remove: RegistrationStatus
-    ) -> "MappedWAEvent":
+    ) -> "RegistrationDataForEvent":
         subset = [
             row for row in self if not row.registration_status == status_to_remove
         ]
-        return MappedWAEvent(subset)
+        return RegistrationDataForEvent(subset)
 
-    def active_registrations_only(self) -> "MappedWAEvent":
+    def active_registrations_only(self) -> "RegistrationDataForEvent":
         subset = [row for row in self if row.registration_status.is_active]
-        return MappedWAEvent(subset)
+        return RegistrationDataForEvent(subset)
 
     def idx_with_id(self, list_of_row_ids: list) -> int:
         subset = [row for row in self if row.row_id in list_of_row_ids]
@@ -302,9 +218,9 @@ class MappedWAEvent(list):
 
         return self.index(item)
 
-    def subset_with_id(self, list_of_row_ids: list) -> "MappedWAEvent":
+    def subset_with_id(self, list_of_row_ids: list) -> "RegistrationDataForEvent":
         subset = [row for row in self if row.row_id in list_of_row_ids]
-        return MappedWAEvent(subset)
+        return RegistrationDataForEvent(subset)
 
     @classmethod
     def from_df(cls, some_df: pd.DataFrame):
@@ -330,7 +246,7 @@ class MappedWAEvent(list):
         return cls([])
 
 
-def summarise_status(mapped_event: MappedWAEvent) -> dict:
+def summarise_status(mapped_event: RegistrationDataForEvent) -> dict:
     all_status = {}
     for row in mapped_event:
         status = row.registration_status
@@ -342,7 +258,7 @@ def summarise_status(mapped_event: MappedWAEvent) -> dict:
 
 
 def extract_list_of_row_ids_from_existing_wa_event(
-    existing_mapped_wa_event_with_ids: MappedWAEvent,
+    existing_mapped_wa_event_with_ids: RegistrationDataForEvent,
 ) -> list:
     ## Entry timestamps are unique
     list_of_timestamps = [

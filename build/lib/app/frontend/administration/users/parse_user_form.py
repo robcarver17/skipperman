@@ -4,11 +4,21 @@ from app.backend.security.list_of_users import get_list_of_users
 
 from app.objects.volunteers import Volunteer
 
-from app.backend.volunteers.list_of_volunteers import get_volunteer_from_list_of_given_str_of_volunteer
+from app.backend.volunteers.list_of_volunteers import (
+    get_volunteer_from_list_of_given_str_of_volunteer,
+)
 
-from app.backend.security.modify_user import change_password_for_user, modify_user_group, modify_volunteer_for_user, \
-    generate_reset_message
-from app.backend.security.list_of_users import delete_user_from_user_list, add_user, already_in_list
+from app.backend.security.modify_user import (
+    change_password_for_user,
+    modify_user_group,
+    modify_volunteer_for_user,
+    generate_reset_message,
+)
+from app.backend.security.list_of_users import (
+    delete_user_from_user_list,
+    add_user,
+    already_in_list,
+)
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.administration.users.render_users_form import (
@@ -45,9 +55,9 @@ def generate_reset_message_for_user_name(
     last_button: str, interface: abstractInterface
 ):
     username = username_from_reset_button(last_button)
-    return generate_reset_message(username=username, object_store=interface.object_store)
-
-
+    return generate_reset_message(
+        username=username, object_store=interface.object_store
+    )
 
 
 def add_new_user_if_present(interface: abstractInterface):
@@ -90,7 +100,7 @@ def add_user_with_values_from_form(
         password=user_values.password,
         group=user_values.group,
         email_address=user_values.email,
-        volunteer=user_values.volunteer
+        volunteer=user_values.volunteer,
     )
 
     add_user(object_store=interface.object_store, user=user)
@@ -104,6 +114,7 @@ def save_changes_to_existing_users(interface: abstractInterface):
     except Exception as e:
         interface.log_error("Error updating users %s" % str(e))
         interface.clear_cache()
+
 
 def save_change_to_user_from_form(interface: abstractInterface, user: SkipperManUser):
     user_values_from_form = get_user_values_from_values_in_form(
@@ -152,7 +163,7 @@ def modify_group_if_changed(
         return
 
     modify_user_group(
-    object_store=interface.object_store,
+        object_store=interface.object_store,
         username=user.username,
         new_group=user_values_from_form.group,
     )
@@ -203,7 +214,7 @@ def get_user_values_from_values_in_form(
             name_for_user_and_input_type(user, PASSWORD_CONFIRM)
         ),
         group=group,
-        volunteer=volunteer
+        volunteer=volunteer,
     )
 
 
@@ -217,7 +228,9 @@ def is_user_valid_text(
         valid_error += "Password too short (3 character min). "
     if user_values.password != user_values.confirm_password:
         valid_error += "Passwords don't match. "
-    if already_in_list(object_store=interface.object_store, username=user_values.username):
+    if already_in_list(
+        object_store=interface.object_store, username=user_values.username
+    ):
         valid_error += "Username is not unique. "
     return valid_error
 

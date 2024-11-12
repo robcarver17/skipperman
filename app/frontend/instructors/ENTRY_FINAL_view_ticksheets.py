@@ -1,6 +1,8 @@
 from typing import Union
 
-from app.backend.security.logged_in_user import get_volunteer_for_logged_in_user_or_superuser
+from app.backend.security.logged_in_user import (
+    get_volunteer_for_logged_in_user_or_superuser,
+)
 from app.backend.security.user_access import can_see_all_groups_and_award_qualifications
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
@@ -20,9 +22,14 @@ from app.frontend.instructors.print_ticksheet import (
 from app.frontend.instructors.render_ticksheet_table import get_ticksheet_table
 from app.frontend.instructors.ticksheet_table_elements import (
     get_buttons_for_ticksheet,
-    get_instructions_for_ticksheet
+    get_instructions_for_ticksheet,
 )
-from app.frontend.instructors.ticksheet_table_elements import edit_checkbox_button, edit_dropdown_button , print_button , show_all_cadets_button
+from app.frontend.instructors.ticksheet_table_elements import (
+    edit_checkbox_button,
+    edit_dropdown_button,
+    print_button,
+    show_all_cadets_button,
+)
 
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
@@ -72,9 +79,7 @@ def display_form_view_ticksheets_for_event_and_group(
     buttons = get_buttons_for_ticksheet(interface)
     instructions = get_instructions_for_ticksheet(interface=interface)
     navbar = get_nav_bar(interface)
-    ticksheet_table = get_ticksheet_table(
-        interface=interface
-    )
+    ticksheet_table = get_ticksheet_table(interface=interface)
     header = Line(
         Heading(
             "Tick sheets 'Tickerman': Event %s, group %s, qualification %s"
@@ -172,7 +177,6 @@ def post_form_view_ticksheets_for_event_and_group(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-
     return display_form_view_ticksheets_for_event_and_group(interface)
 
 
@@ -180,4 +184,3 @@ def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(
         post_form_view_ticksheets_for_event_and_group
     )
-

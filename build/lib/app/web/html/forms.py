@@ -155,7 +155,7 @@ def html_radio_input(
     input_label: str,
     input_name: str,
     dict_of_options: dict,
-        include_line_break: bool = True,
+    include_line_break: bool = True,
     default_label: str = DEFAULT_LABEL,
 ):
     options_str_as_list = [

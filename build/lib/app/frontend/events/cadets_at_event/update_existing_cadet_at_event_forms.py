@@ -6,17 +6,13 @@ from app.frontend.forms.form_utils import (
     get_availability_checkbox,
     dropdown_input_for_status_change,
 )
-from app.OLD_backend.wa_import.update_cadets_at_event import (
-    new_status_and_status_message,
-    NO_STATUS_CHANGE,
-)
+from app.backend.registration_data.update_cadets_at_event import NO_STATUS_CHANGE, new_status_and_status_message
 from app.frontend.events.constants import (
-    USE_NEW_DATA_BUTTON_LABEL,
-    USE_ORIGINAL_DATA_BUTTON_LABEL,
-    USE_DATA_IN_FORM_BUTTON_LABEL,
     ATTENDANCE,
     ROW_STATUS,
 )
+from app.frontend.events.cadets_at_event.update_existing_cadet_at_event_forms import USE_ORIGINAL_DATA_BUTTON_LABEL, \
+    USE_NEW_DATA_BUTTON_LABEL, USE_DATA_IN_FORM_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_form import (
     Form,
 )
@@ -27,7 +23,7 @@ from app.objects.abstract_objects.abstract_lines import (
     _______________,
 )
 
-from app.OLD_backend.cadets import  cadet_name_from_id
+from app.OLD_backend.cadets import cadet_name_from_id
 from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
 from app.objects.events import Event
 
@@ -40,7 +36,9 @@ def display_form_for_update_to_existing_cadet_at_event(
 ) -> Form:
     overall_message = (
         "There have been important changes for event registration information about cadet %s"
-        % cadet_name_from_id(data_layer=interface.data, cadet_id=existing_cadet_at_event.cadet_id)
+        % cadet_name_from_id(
+            data_layer=interface.data, cadet_id=existing_cadet_at_event.cadet_id
+        )
     )
 
     status_change_field = get_line_in_form_for_status_change(

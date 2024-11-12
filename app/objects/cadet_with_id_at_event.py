@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import List
 
+from app.objects.cadets import Cadet
+
 from app.data_access.configuration.field_list import (
     RESPONSIBLE_ADULT_NUMBER,
     RESPONSIBLE_ADULT_NAME,
@@ -21,13 +23,15 @@ from app.objects.events import Event
 from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
 )
-from app.objects.generic_objects import transform_class_instance_into_string, \
-    transform_string_into_class_instance, GenericSkipperManObjectWithIds
-from app.objects.registration_data import (
-    RegistrationStatus,
-    RowInRegistrationData,
-    deleted_status,
+from app.objects.generic_objects import (
+    transform_class_instance_into_string,
+    transform_string_into_class_instance,
+    GenericSkipperManObjectWithIds,
 )
+from app.objects.registration_data import (
+    RowInRegistrationData,
+)
+from app.objects.registration_status import RegistrationStatus, deleted_status
 from app.objects.utils import clean_up_dict_with_nans
 
 STATUS_KEY = "status"
@@ -270,8 +274,8 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
         self[existing_cadet_idx] = existing_cadet_at_event
 
 
-def get_cadet_at_event_from_row_in_mapped_event(
-    row_in_mapped_wa_event: RowInRegistrationData, cadet_id: str, event: Event
+def get_cadet_at_event_from_row_in_event_raw_registration_data(
+    row_in_mapped_wa_event: RowInRegistrationData, cadet: Cadet, event: Event
 ) -> CadetWithIdAtEvent:
     status = row_in_mapped_wa_event.registration_status
     availability = get_attendance_selection_from_event_row(
@@ -280,7 +284,7 @@ def get_cadet_at_event_from_row_in_mapped_event(
     health = get_health_from_event_row(row_in_mapped_wa_event)
 
     return CadetWithIdAtEvent(
-        cadet_id=cadet_id,
+        cadet_id=cadet.id,
         status=status,
         availability=availability,
         data_in_row=row_in_mapped_wa_event,

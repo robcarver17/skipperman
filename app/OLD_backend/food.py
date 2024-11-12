@@ -1,7 +1,7 @@
 from typing import Dict, List
 
 import pandas as pd
-from app.OLD_backend.cadets import  cadet_name_from_id
+from app.OLD_backend.cadets import cadet_name_from_id
 
 from app.OLD_backend.volunteers.volunteers import get_volunteer_name_from_id
 
@@ -459,7 +459,9 @@ def row_for_volunteer_in_data(
     list_of_volunteers: ListOfVolunteers,
     volunteer_with_food_at_event: VolunteerWithFoodRequirementsAtEvent,
 ) -> pd.Series:
-    volunteer = list_of_volunteers.object_with_id(volunteer_with_food_at_event.volunteer_id)
+    volunteer = list_of_volunteers.object_with_id(
+        volunteer_with_food_at_event.volunteer_id
+    )
     return pd.Series(
         dict(
             name=volunteer.name,

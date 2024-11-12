@@ -40,7 +40,9 @@ class CsvListOfCadetsWithQualifications(
 
         return list_of_cadets_with_qualifications
 
-    def write(self, list_of_cadets_with_qualifications: ListOfCadetsWithIdsAndQualifications):
+    def write(
+        self, list_of_cadets_with_qualifications: ListOfCadetsWithIdsAndQualifications
+    ):
         self.write_object(
             list_of_cadets_with_qualifications,
             file_identifier=LIST_OF_CADETS_WITH_QUALIFICATIONS,

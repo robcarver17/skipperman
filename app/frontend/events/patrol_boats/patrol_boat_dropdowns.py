@@ -1,6 +1,6 @@
 from typing import List, Dict, Tuple, Union
 
-#from app.OLD_backend.OLD_patrol_boats import get_sorted_list_of_boats_excluding_boats_already_at_event
+# from app.OLD_backend.OLD_patrol_boats import get_sorted_list_of_boats_excluding_boats_already_at_event
 from app.data_access.store.data_access import DataLayer
 
 from app.frontend.forms.swaps import is_ready_to_swap
@@ -19,7 +19,8 @@ from app.OLD_backend.rota.volunteer_rota import (
 )
 from app.OLD_backend.volunteers.volunteers import (
     string_if_volunteer_can_drive_else_empty,
-    get_volunteer_with_name, get_volunteer_from_id,
+    get_volunteer_with_name,
+    get_volunteer_from_id,
 )
 from app.frontend.events.patrol_boats.patrol_boat_buttons import add_new_boat_button
 
@@ -53,29 +54,29 @@ def get_add_boat_dropdown(interface: abstractInterface, event: Event) -> Line:
         dict_of_options=list_of_boats_as_dict,
     )
 
-
     return Line([dropdown, add_new_boat_button])
 
 
 def get_list_of_boat_names_excluding_boats_already_at_event(
     interface: abstractInterface, event: Event
 ) -> List[str]:
-    #list_of_boats_excluding_boats_already_at_event = (
+    # list_of_boats_excluding_boats_already_at_event = (
     #    get_sorted_list_of_boats_excluding_boats_already_at_event(
     #        cache=interface.cache, event=event
     #    )
-    #)
+    # )
 
-    #return list_of_boats_excluding_boats_already_at_event.list_of_names()
+    # return list_of_boats_excluding_boats_already_at_event.list_of_names()
     return []
 
 
 def get_allocation_dropdown_elements_to_add_volunteer_for_day_and_boat(
     interface: abstractInterface, day: Day, event: Event
 ) -> Dict[str, str]:
-    dropdown_elements = interface.cache.get_from_cache(get_list_of_strings_of_volunteers_to_add_for_day_on_patrol_boat,
-         event=event, day=day
-
+    dropdown_elements = interface.cache.get_from_cache(
+        get_list_of_strings_of_volunteers_to_add_for_day_on_patrol_boat,
+        event=event,
+        day=day,
     )
 
     dropdown_elements.insert(0, TOP_ROW_OF_VOLUNTEER_DROPDOWN)
@@ -84,22 +85,25 @@ def get_allocation_dropdown_elements_to_add_volunteer_for_day_and_boat(
 
     return dict_of_options
 
-def get_list_of_strings_of_volunteers_to_add_for_day_on_patrol_boat(data_layer: DataLayer, event: Event, day: Day)-> List[str]:
-    sorted_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats = \
-        get_sorted_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day(
-            data_layer=data_layer,
+
+def get_list_of_strings_of_volunteers_to_add_for_day_on_patrol_boat(
+    data_layer: DataLayer, event: Event, day: Day
+) -> List[str]:
+    sorted_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats = get_sorted_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day(
+        data_layer=data_layer,
         event=event,
         day=day,
-        )
+    )
 
     dropdown_elements = [
         from_volunteer_id_to_string_of_volunteer_with_skill_and_role(
-           data_layer=data_layer, volunteer_id=volunteer_id, event=event, day=day
+            data_layer=data_layer, volunteer_id=volunteer_id, event=event, day=day
         )
         for volunteer_id in sorted_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats
     ]
 
     return dropdown_elements
+
 
 TOP_ROW_OF_VOLUNTEER_DROPDOWN = "Select volunteer to allocate to patrol boat"
 
@@ -135,7 +139,9 @@ def from_volunteer_id_to_string_of_volunteer_with_skill_and_role(
 ) -> str:
     volunteer = get_volunteer_from_id(volunteer_id=volunteer_id, data_layer=data_layer)
     name = volunteer.name
-    skill_str = string_if_volunteer_can_drive_else_empty(data_layer=data_layer, volunteer=volunteer)
+    skill_str = string_if_volunteer_can_drive_else_empty(
+        data_layer=data_layer, volunteer=volunteer
+    )
 
     ### MUST BE IN BRACKETS OR WON'T WORK WITH GETTING VOLUNTEER NAME
     if len(skill_str) > 0:
@@ -171,7 +177,7 @@ def get_list_of_dropdown_names_for_adding_volunteers(
     interface: abstractInterface, event: Event
 ) -> List[str]:
     list_of_boats_at_event = DEPRECATE_load_list_of_patrol_boats_at_event_from_cache(
-         cache=interface.cache, event=event
+        cache=interface.cache, event=event
     )
 
     list_of_names = []
@@ -222,8 +228,9 @@ def which_volunteer_role_selected_in_boat_allocation(
     return interface.value_from_form(dropdown_field)
 
 
-
-def get_add_volunteer_to_patrol_boat_dropdown(interface: abstractInterface, event: Event, patrol_boat: PatrolBoat, day: Day):
+def get_add_volunteer_to_patrol_boat_dropdown(
+    interface: abstractInterface, event: Event, patrol_boat: PatrolBoat, day: Day
+):
     in_swap_state = is_ready_to_swap(interface)
     if in_swap_state:
         add_volunteer_dropdown = ""
@@ -254,5 +261,3 @@ def get_allocation_dropdown_to_add_volunteer_for_day_and_boat(
             dict_of_options=dict_of_options,
         )
     )
-
-

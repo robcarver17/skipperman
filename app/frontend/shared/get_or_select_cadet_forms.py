@@ -32,7 +32,9 @@ def get_add_or_select_existing_cadet_form(
         cadet = cadet_and_text.cadet
     else:
         ## Cadet details as in WA passed through, uese these
-        verification_text = verify_cadet_and_return_warnings(cadet=cadet, object_store=interface.object_store)
+        verification_text = verify_cadet_and_return_warnings(
+            cadet=cadet, object_store=interface.object_store
+        )
         cadet_and_text = CadetAndVerificationText(
             cadet=cadet, verification_text=verification_text
         )
@@ -96,7 +98,9 @@ def get_list_of_cadet_buttons(
         extra_button = see_similar_cadets_only_button
     else:
         ## similar cadets with option to see more
-        list_of_cadets = get_list_of_similar_cadets(data_layer=interface.data, cadet=cadet)
+        list_of_cadets = get_list_of_similar_cadets(
+            data_layer=interface.data, cadet=cadet
+        )
         msg = "Currently choosing from similar cadets only:"
         extra_button = see_all_cadets_button
 

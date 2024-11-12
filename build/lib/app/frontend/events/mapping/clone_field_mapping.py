@@ -24,12 +24,14 @@ from app.OLD_backend.events import (
     DEPRECATE_get_sorted_list_of_events,
     get_event_from_list_of_events_given_event_description,
 )
-from app.backend.events.list_of_events import confirm_event_exists_given_description_REFACTOR
-from app.OLD_backend.wa_import.map_wa_fields import (
+from app.backend.events.list_of_events import (
+    confirm_event_exists_given_description_REFACTOR,
+)
+from app.backend.mapping.map_wa_fields import (
     is_wa_field_mapping_setup_for_event,
-    get_field_mapping_for_event,
     DEPRECATE_write_field_mapping_for_event,
 )
+from app.backend.mapping.list_of_field_mappings import get_field_mapping_for_event
 from app.objects.events import ListOfEvents, SORT_BY_START_DSC, Event
 
 

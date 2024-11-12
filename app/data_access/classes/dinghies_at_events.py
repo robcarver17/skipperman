@@ -1,5 +1,7 @@
 from app.objects.boat_classes import ListOfBoatClasses
-from app.objects.cadet_at_event_with_dinghy_with_ids import ListOfCadetAtEventWithBoatClassAndPartnerWithIds
+from app.objects.cadet_at_event_with_dinghy_with_ids import (
+    ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
+)
 
 
 class DataListOfDinghies(object):

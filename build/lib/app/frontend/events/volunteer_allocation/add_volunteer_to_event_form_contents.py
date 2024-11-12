@@ -4,13 +4,10 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.OLD_backend.cadets import cadet_name_from_id
 from app.frontend.forms.form_utils import get_availability_checkbox
-from app.OLD_backend.volunteers.volunteers import (
-    are_all_cadet_ids_in_list_already_connection_to_volunteer,
-)
-from app.OLD_backend.volunteers.volunteer_allocation import (
-    get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet,
-)
-from app.OLD_backend.volunteers.volunter_relevant_information import (
+from app.backend.registration_data.cadet_and_volunteer_connections_at_event import \
+    are_all_cadets_in_list_already_connection_to_volunteer, \
+    get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer
+from app.backend.registration_data.volunter_relevant_information import (
     suggested_volunteer_availability,
 )
 from app.objects.abstract_objects.abstract_form import checkboxInput, textInput
@@ -18,7 +15,7 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.objects.exceptions import missing_data
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
-from app.objects_OLD.relevant_information_for_volunteers import (
+from app.objects.relevant_information_for_volunteers import (
     RelevantInformationForVolunteer,
     ListOfRelevantInformationForVolunteer,
     missing_relevant_information,
@@ -67,7 +64,7 @@ def get_cadet_names_text_given_identified_volunteer(
 def get_list_of_active_associated_cadet_names_in_mapped_event_data_given_identified_volunteer(
     interface: abstractInterface, event: Event, volunteer: Volunteer
 ) -> List[str]:
-    list_of_cadet_ids = get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet(
+    list_of_cadet_ids = get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer(
         volunteer_id=volunteer.id, event=event, interface=interface
     )
     cadet_names = [
@@ -81,12 +78,14 @@ def get_list_of_active_associated_cadet_names_in_mapped_event_data_given_identif
 def get_connection_checkbox(
     interface: abstractInterface, event: Event, volunteer: Volunteer
 ) -> Union[checkboxInput, str]:
-    list_of_cadet_ids = get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet(
+    list_of_cadet_ids = get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer(
         interface=interface, volunteer_id=volunteer.id, event=event
     )
 
-    already_all_connected = are_all_cadet_ids_in_list_already_connection_to_volunteer(
-        data_layer=interface.data, volunteer=volunteer, list_of_cadet_ids=list_of_cadet_ids
+    already_all_connected = are_all_cadets_in_list_already_connection_to_volunteer(
+        data_layer=interface.data,
+        volunteer=volunteer,
+        list_of_cadet_ids=list_of_cadet_ids,
     )
 
     if already_all_connected:

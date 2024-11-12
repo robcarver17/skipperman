@@ -1,7 +1,7 @@
 from typing import List, Union
 
-from app.frontend.events.cadets_at_event.iteratively_add_cadet_ids_in_wa_import_stage import (
-    display_form_add_cadet_ids_during_import,
+from app.frontend.events.cadets_at_event.iteratively_identify_cadets_in_import_stage import (
+    display_form_identify_cadets_during_import,
 )
 from app.frontend.shared.events_state import get_event_from_state
 

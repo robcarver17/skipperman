@@ -3,7 +3,9 @@ from dataclasses import dataclass
 from app.OLD_backend.data.dinghies import DinghiesData
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
-from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithIdAndClubDinghies
+from app.objects.cadet_at_event_with_club_boat_with_ids import (
+    ListOfCadetAtEventWithIdAndClubDinghies,
+)
 from app.objects.exceptions import missing_data
 from app.objects.events import Event
 from app.objects.composed.cadets_at_event_with_groups import CadetWithGroupOnDay
@@ -12,7 +14,7 @@ from app.OLD_backend.reporting.options_and_parameters.report_type_specific_param
     SpecificParametersForTypeOfReport,
 )
 
-all_groups_names= []
+all_groups_names = []
 
 specific_parameters_for_allocation_report = SpecificParametersForTypeOfReport(
     #    entry_columns=[CADET_NAME],

@@ -1,21 +1,20 @@
-from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
-    get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first
+from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
+    get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first,
+)
 
 from app.frontend.forms.form_utils import (
     get_availablity_from_form,
     get_availability_checkbox,
 )
-from app.OLD_backend.volunteers.volunteer_allocation import (
-    update_volunteer_availability_at_event
-)
 
-from app.OLD_backend.rota.volunteer_rota import (
-    delete_volunteer_at_event,
-)
+from app.backend.volunteers.volunteers_at_event import delete_volunteer_at_event, update_volunteer_availability_at_event
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.shared.events_state import get_event_from_state
-from app.frontend.shared.volunteer_state import  get_volunteer_from_state, get_volunteer_at_event_from_state
+from app.frontend.shared.volunteer_state import (
+    get_volunteer_from_state,
+    get_volunteer_at_event_from_state,
+)
 
 from app.objects.abstract_objects.abstract_buttons import Button, CANCEL_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_form import Form, NewForm
@@ -26,14 +25,12 @@ from app.objects.abstract_objects.abstract_lines import (
 )
 from app.objects.day_selectors import no_days_selected
 from app.objects.events import Event
-from app.objects_OLD.volunteers_at_event import  DEPRECATE_VolunteerAtEvent
-
+from app.objects_OLD.volunteers_at_event import DEPRECATE_VolunteerAtEvent
 
 
 def display_form_confirm_volunteer_details_from_rota(interface: abstractInterface):
     event = get_event_from_state(interface)
-    volunteer_at_event = get_volunteer_at_event_from_state(
-        interface=interface)
+    volunteer_at_event = get_volunteer_at_event_from_state(interface=interface)
     past_roles = get_text_of_last_roles(
         interface=interface, volunteer_at_event=volunteer_at_event
     )
@@ -56,7 +53,7 @@ def display_form_confirm_volunteer_details_from_rota(interface: abstractInterfac
                 _______________,
                 save_button,
                 delete_button,
-                cancel_button
+                cancel_button,
             ]
         )
     )
@@ -66,8 +63,10 @@ def get_text_of_last_roles(
     interface: abstractInterface, volunteer_at_event: DEPRECATE_VolunteerAtEvent
 ) -> Line:
     volunteer = volunteer_at_event.volunteer
-    all_roles_as_dict = get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(
-        data_layer=interface.data, volunteer=volunteer
+    all_roles_as_dict = (
+        get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(
+            data_layer=interface.data, volunteer=volunteer
+        )
     )
     text_as_list = [
         "%s: %s" % (str(event), role) for event, role in all_roles_as_dict.items()
@@ -121,9 +120,7 @@ def delete_volunteer_from_event(interface: abstractInterface):
     volunteer = get_volunteer_from_state(interface)
     event = get_event_from_state(interface)
     delete_volunteer_at_event(
-        data_layer=interface.data,
-        event=event,
-        volunteer=volunteer
+        data_layer=interface.data, event=event, volunteer=volunteer
     )
 
 
@@ -150,6 +147,7 @@ def update_volunteer_at_event_from_rota_with_form_contents_and_return_true_if_ok
     )
 
     return True
+
 
 AVAILABILITY = "Availability"
 DELETE_VOLUNTEER_FROM_EVENT_BUTTON_LABEL = "Remove volunteer from event"

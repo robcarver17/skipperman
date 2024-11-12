@@ -11,25 +11,29 @@ from app.OLD_backend.data.volunteer_allocation import VolunteerAllocationData
 from app.OLD_backend.data.volunteers import VolunteerData, SORT_BY_FIRSTNAME
 from app.OLD_backend.rota.volunteer_rota import (
     delete_role_at_event_for_volunteer_on_day,
-    DEPRECATE_load_list_of_volunteers_at_event, )
+    DEPRECATE_load_list_of_volunteers_at_event,
+)
 
 from app.OLD_backend.cadets import cadet_name_from_id, get_cadet_from_id
 from app.OLD_backend.volunteers.volunteers import (
-    are_all_cadet_ids_in_list_already_connection_to_volunteer,
-    DEPRECATE_get_volunteer_from_id, get_volunteer_from_id,
+    DEPRECATE_get_volunteer_from_id,
+    get_volunteer_from_id,
 )
 from app.backend.volunteers.add_edit_volunteer import list_of_similar_volunteers
-from app.OLD_backend.wa_import.update_cadets_at_event import get_cadet_at_event_for_cadet_id
-from app.OLD_backend.volunteers.volunter_relevant_information import (
-    get_relevant_information_for_volunteer_in_event_at_row_and_index,
+from app.backend.registration_data.cadet_registration_data import get_cadet_at_event
+from app.backend.registration_data.volunter_relevant_information import (
     suggested_volunteer_availability,
 )
+from app.backend.registration_data.identified_volunteers_at_event import \
+    get_relevant_information_for_volunteer_in_event_at_row_and_index
+from app.backend.registration_data.cadet_and_volunteer_connections_at_event import \
+    are_all_cadets_in_list_already_connection_to_volunteer
 from app.objects.cadets import ListOfCadets, Cadet
 
 from app.objects.exceptions import missing_data
 from app.objects.day_selectors import Day, DaySelector, union_across_day_selectors
 from app.objects.events import Event
-from app.objects_OLD.relevant_information_for_volunteers import (
+from app.objects.relevant_information_for_volunteers import (
     ListOfRelevantInformationForVolunteer,
 )
 
@@ -40,7 +44,9 @@ from app.objects_OLD.volunteers_at_event import (
     DEPRECATE_VolunteerAtEvent,
 )
 from app.objects.volunteer_at_event_with_id import VolunteerAtEventWithId
-from app.objects_OLD.primtive_with_id.identified_volunteer_at_event import ListOfIdentifiedVolunteersAtEvent
+from app.objects.identified_volunteer_at_event import (
+    ListOfIdentifiedVolunteersAtEvent,
+)
 
 
 def add_identified_volunteer(
@@ -91,6 +97,7 @@ def DEPRECATE_get_volunteer_ids_associated_with_cadet_at_specific_event(
             event=event, cadet_id=cadet_id
         )
     )
+
 
 def get_volunteer_ids_associated_with_cadet_at_specific_event(
     data_layer: DataLayer, event: Event, cadet_id: str
@@ -237,9 +244,7 @@ def update_volunteer_availability_at_event(
 
 
 def make_volunteer_available_on_day(
-        data_layer: DataLayer,
-        volunteer: Volunteer,
-         event: Event, day: Day
+    data_layer: DataLayer, volunteer: Volunteer, event: Event, day: Day
 ):
     volunteer_allocation_data = VolunteerAllocationData(data_layer)
     volunteer_allocation_data.make_volunteer_available_on_day(
@@ -248,17 +253,15 @@ def make_volunteer_available_on_day(
 
 
 def make_volunteer_unavailable_on_day(
-        data_layer: DataLayer,
-        volunteer: Volunteer,
-        event: Event, day: Day
+    data_layer: DataLayer, volunteer: Volunteer, event: Event, day: Day
 ):
     volunteer_allocation_data = VolunteerAllocationData(data_layer)
     volunteer_allocation_data.make_volunteer_unavailable_on_day(
-        event=event, day=day,  volunteer=volunteer
+        event=event, day=day, volunteer=volunteer
     )
     ## also delete any associated roles for tidyness
     delete_role_at_event_for_volunteer_on_day(
-        data_layer=data_layer, event=event,volunteer=volunteer, day=day
+        data_layer=data_layer, event=event, volunteer=volunteer, day=day
     )
 
     ### and patrol boat data
@@ -397,7 +400,6 @@ def update_cadet_connections_for_volunteer_with_list_of_cadet_ids(
         )
 
 
-
 def are_all_connected_cadets_cancelled_or_deleted(
     interface: abstractInterface, volunteer_id: str, event: Event
 ) -> bool:
@@ -411,7 +413,7 @@ def are_all_connected_cadets_cancelled_or_deleted(
 def is_current_cadet_active_at_event(
     interface: abstractInterface, cadet_id: str, event: Event
 ) -> bool:
-    cadet_at_event = get_cadet_at_event_for_cadet_id(
+    cadet_at_event = get_cadet_at_event(
         interface=interface, event=event, cadet_id=cadet_id
     )
 
@@ -422,8 +424,10 @@ def get_dict_of_relevant_volunteer_names_and_association_cadets_with_id_values(
     interface: abstractInterface, cadet_id: str, event: Event
 ) -> Dict[str, str]:
     ## list of volunteers at event
-    list_of_volunteers_ids = DEPRECATE_get_volunteer_ids_associated_with_cadet_at_specific_event(
-        event=event, cadet_id=cadet_id, interface=interface
+    list_of_volunteers_ids = (
+        DEPRECATE_get_volunteer_ids_associated_with_cadet_at_specific_event(
+            event=event, cadet_id=cadet_id, interface=interface
+        )
     )
     list_of_relevant_volunteer_names_and_other_cadets = [
         get_volunteer_name_and_associated_cadets_for_event(
@@ -607,10 +611,14 @@ def any_cadets_not_permanently_connected(
     list_of_cadet_ids = get_list_of_active_associated_cadet_id_in_mapped_event_data_given_identified_volunteer_and_cadet(
         interface=interface, volunteer_id=volunteer_id, event=event
     )
-    volunteer = DEPRECATE_get_volunteer_from_id(interface=interface, volunteer_id=volunteer_id)
+    volunteer = DEPRECATE_get_volunteer_from_id(
+        interface=interface, volunteer_id=volunteer_id
+    )
 
-    already_all_connected = are_all_cadet_ids_in_list_already_connection_to_volunteer(
-        data_layer=interface.data, volunteer=volunteer, list_of_cadet_ids=list_of_cadet_ids
+    already_all_connected = are_all_cadets_in_list_already_connection_to_volunteer(
+        data_layer=interface.data,
+        volunteer=volunteer,
+        list_of_cadet_ids=list_of_cadet_ids,
     )
 
     return not already_all_connected
@@ -650,14 +658,14 @@ def get_any_other_information_joint_string(
     return ". ".join(unique_list)
 
 
-def get_list_of_connected_cadets_given_volunteer_at_event(data_layer: DataLayer, volunteer_at_event: VolunteerAtEventWithId)-> ListOfCadets:
+def get_list_of_connected_cadets_given_volunteer_at_event(
+    data_layer: DataLayer, volunteer_at_event: VolunteerAtEventWithId
+) -> ListOfCadets:
     cadet_ids = volunteer_at_event.list_of_associated_cadet_id
 
     connected_cadets = ListOfCadets(
         [
-            get_cadet_from_id(
-                data_layer=data_layer, cadet_id=cadet_id
-            )
+            get_cadet_from_id(data_layer=data_layer, cadet_id=cadet_id)
             for cadet_id in cadet_ids
         ]
     )
@@ -686,15 +694,18 @@ def add_volunteer_and_cadet_association_for_existing_volunteer(
 def get_volunteer_at_event(
     data_layer: DataLayer, volunteer_id: str, event: Event
 ) -> DEPRECATE_VolunteerAtEvent:
-    volunteer_at_event_with_id = get_volunteer_at_event_with_id(data_layer=data_layer, event=event, volunteer_id=volunteer_id)
+    volunteer_at_event_with_id = get_volunteer_at_event_with_id(
+        data_layer=data_layer, event=event, volunteer_id=volunteer_id
+    )
     volunteer_data = VolunteerData(data_layer)
     volunteer = volunteer_data.volunteer_with_id(volunteer_id=volunteer_id)
 
     return DEPRECATE_VolunteerAtEvent.from_volunteer_and_voluteer_at_event_with_id(
         volunteer=volunteer,
         volunteer_at_event_with_id=volunteer_at_event_with_id,
-        event=event
+        event=event,
     )
+
 
 def DEPRECATE_get_volunteer_at_event_with_id(
     interface: abstractInterface, event: Event, volunteer_id: str
@@ -708,11 +719,14 @@ def DEPRECATE_get_volunteer_at_event_with_id(
 
     return volunteer_at_event
 
+
 def get_volunteer_at_event_with_id(
     data_layer: DataLayer, event: Event, volunteer_id: str
 ) -> VolunteerAtEventWithId:
     volunteer_allocation_data = VolunteerAllocationData(data_layer)
-    return volunteer_allocation_data.get_volunteer_at_this_event(event=event, volunteer_id=volunteer_id)
+    return volunteer_allocation_data.get_volunteer_at_this_event(
+        event=event, volunteer_id=volunteer_id
+    )
 
 
 def get_list_of_volunteer_names_associated_with_cadet_at_event(
@@ -732,27 +746,28 @@ def get_list_of_volunteer_names_associated_with_cadet_at_event(
 def DEPRECATE_get_list_of_volunteer_names_associated_with_cadet_at_event(
     interface: abstractInterface, cadet_id: str, event: Event
 ):
-    list_of_volunteer_ids = DEPRECATE_get_volunteer_ids_associated_with_cadet_at_specific_event(
-        interface=interface, event=event, cadet_id=cadet_id
+    list_of_volunteer_ids = (
+        DEPRECATE_get_volunteer_ids_associated_with_cadet_at_specific_event(
+            interface=interface, event=event, cadet_id=cadet_id
+        )
     )
     volunteer_names = [
-        DEPRECATE_get_volunteer_from_id(interface=interface, volunteer_id=volunteer_id).name
+        DEPRECATE_get_volunteer_from_id(
+            interface=interface, volunteer_id=volunteer_id
+        ).name
         for volunteer_id in list_of_volunteer_ids
     ]
 
     return volunteer_names
 
 
-def get_list_of_active_connected_cadets_at_event_for_volunteer(data_layer: DataLayer,
-                                                               event: Event,
-                                                               volunteer_at_event: DEPRECATE_VolunteerAtEvent):
-
+def get_list_of_active_connected_cadets_at_event_for_volunteer(
+    data_layer: DataLayer, event: Event, volunteer_at_event: DEPRECATE_VolunteerAtEvent
+):
     cadet_ids = volunteer_at_event.list_of_associated_cadet_id
     connected_cadets = ListOfCadets(
         [
-            get_cadet_from_id(
-                data_layer=data_layer, cadet_id=cadet_id
-            )
+            get_cadet_from_id(data_layer=data_layer, cadet_id=cadet_id)
             for cadet_id in cadet_ids
         ]
     )

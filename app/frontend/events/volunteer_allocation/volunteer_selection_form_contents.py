@@ -1,16 +1,8 @@
-from app.OLD_backend.cadets import get_cadet_from_id
-from app.OLD_backend.volunteers.volunteer_allocation import get_list_of_relevant_volunteers
-from app.OLD_backend.data.volunteers import SORT_BY_SURNAME
-from app.OLD_backend.volunteers.volunteers import get_sorted_list_of_volunteers
+from app.objects.cadets import Cadet
+
+from app.backend.volunteers.connected_cadets import get_list_of_relevant_volunteers
+from app.backend.volunteers.list_of_volunteers import SORT_BY_SURNAME, get_sorted_list_of_volunteers
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.frontend.events.constants import (
-    CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL,
-    FINAL_VOLUNTEER_ADD_BUTTON_LABEL,
-    SKIP_VOLUNTEER_BUTTON_LABEL,
-    SEE_SIMILAR_VOLUNTEER_ONLY_LABEL,
-    SEE_ALL_VOLUNTEER_BUTTON_LABEL,
-    CHECK_FOR_ME_VOLUNTEER_BUTTON_LABEL,
-)
 from app.frontend.events.volunteer_allocation.track_state_in_volunteer_allocation import (
     get_relevant_information_for_current_volunteer,
     get_volunteer_index,
@@ -41,9 +33,8 @@ def get_header_text_for_volunteer_selection_form(
         status_text = "Registration volunteer status in form: %s" % status_text
 
     volunteer_index = get_volunteer_index(interface)
-    cadet = get_cadet_from_id(
-        data_layer=interface.data, cadet_id=relevant_information_for_identification.cadet_id
-    )
+    cadet = relevant_information_for_identification.cadet
+
 
     introduction = (
         "Looks like a potential new volunteer in the WA entry file for cadet: %s, volunteer number %d"
@@ -66,16 +57,8 @@ def get_header_text_for_volunteer_selection_form(
 
 
 def volunteer_name_is_similar_to_cadet_name(
-    interface: abstractInterface, volunteer: Volunteer
+    cadet: Cadet, volunteer: Volunteer
 ) -> bool:
-    relevant_information = get_relevant_information_for_current_volunteer(interface)
-    relevant_information_for_identification = relevant_information.identify
-    cadet_id = relevant_information_for_identification.cadet_id
-
-    cadet =\
-    get_cadet_from_id(
-    interface.data, cadet_id=cadet_id
-    )
 
     return similar(volunteer.name, cadet.name) > 0.9
 
@@ -83,7 +66,7 @@ def volunteer_name_is_similar_to_cadet_name(
 def get_footer_buttons_add_or_select_existing_volunteer_form(
     interface: abstractInterface,
     volunteer: Volunteer,
-    cadet_id: str,  ## could be missing_data
+    cadet_in_row: Cadet,  ## could be missing_data
     see_all_volunteers: bool = False,
     include_final_button: bool = False,
 ) -> ListOfLines:
@@ -93,7 +76,7 @@ def get_footer_buttons_add_or_select_existing_volunteer_form(
     volunteer_buttons = get_list_of_volunteer_buttons(
         volunteer=volunteer,
         see_all_volunteers=see_all_volunteers,
-        cadet_id=cadet_id,
+        cadet_in_row = cadet_in_row,
         interface=interface,
     )
 
@@ -101,46 +84,59 @@ def get_footer_buttons_add_or_select_existing_volunteer_form(
 
 
 def get_list_of_main_buttons(include_final_button: bool) -> Line:
-    check_confirm = Button(CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL)
-    check_for_me = Button(CHECK_FOR_ME_VOLUNTEER_BUTTON_LABEL)
-    add = Button(FINAL_VOLUNTEER_ADD_BUTTON_LABEL)
-    skip = Button(SKIP_VOLUNTEER_BUTTON_LABEL)
 
     if include_final_button:
-        main_buttons = Line([skip, check_for_me, add])
+        main_buttons = Line([skip_volunteer_button, check_for_me_volunteer_button, add_volunteer_button])
     else:
-        main_buttons = Line([check_confirm, skip])
+        main_buttons = Line([check_confirm_volunteer_button, skip_volunteer_button])
 
     return main_buttons
+
 
 
 def get_list_of_volunteer_buttons(
     interface: abstractInterface,
     volunteer: Volunteer,
-    cadet_id: str,  ## could be missing data
+    cadet_in_row: Cadet,  ## could be missing data
     see_all_volunteers: bool = False,
 ) -> ListOfLines:
     if see_all_volunteers:
         list_of_volunteers = get_sorted_list_of_volunteers(
-            data_layer=interface.data, sort_by=SORT_BY_SURNAME
+            object_store=interface.object_store, sort_by=SORT_BY_SURNAME
         )
         msg_text = "Showing all volunteers:"
-        extra_button_text = SEE_SIMILAR_VOLUNTEER_ONLY_LABEL
+        extra_button = see_similar_volunteers_button
     else:
         ## similar volunteers with option to see more
         list_of_volunteers = get_list_of_relevant_volunteers(
-            interface=interface, volunteer=volunteer, cadet_id=cadet_id
+            object_store = interface.object_store, volunteer=volunteer, cadet=cadet_in_row
         )
         msg_text = "Showing only volunteers with similar names:"
-        extra_button_text = SEE_ALL_VOLUNTEER_BUTTON_LABEL
+        extra_button = see_all_volunteers
 
     volunteer_buttons_line = Line(
         [Button(volunteer.name) for volunteer in list_of_volunteers]
     )
-    extra_button = Button(extra_button_text)
 
     return ListOfLines(
         [Line([msg_text, extra_button]), volunteer_buttons_line]
     ).add_Lines()
 
 
+SEE_SIMILAR_VOLUNTEER_ONLY_LABEL = "See similar volunteers only"
+SEE_ALL_VOLUNTEER_BUTTON_LABEL = "Choose from all existing volunteers"
+CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL = (
+    "I have double checked the volunteer details entered - allow me to add"
+)
+CHECK_FOR_ME_VOLUNTEER_BUTTON_LABEL = "Please check these volunteer details for me"
+FINAL_VOLUNTEER_ADD_BUTTON_LABEL = (
+    "Yes - these details are correct - add this new volunteer"
+)
+SKIP_VOLUNTEER_BUTTON_LABEL = "Skip - this isn't a volunteers name"
+
+add_volunteer_button = Button(FINAL_VOLUNTEER_ADD_BUTTON_LABEL)
+skip_volunteer_button = Button(SKIP_VOLUNTEER_BUTTON_LABEL)
+see_all_volunteers_button = Button(SEE_ALL_VOLUNTEER_BUTTON_LABEL)
+see_similar_volunteers_button = Button(SEE_SIMILAR_VOLUNTEER_ONLY_LABEL)
+check_for_me_volunteer_button = Button(CHECK_FOR_ME_VOLUNTEER_BUTTON_LABEL)
+check_confirm_volunteer_button = Button(CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL)

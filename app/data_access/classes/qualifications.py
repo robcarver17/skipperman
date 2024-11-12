@@ -20,7 +20,9 @@ class DataListOfCadetsWithQualifications(object):
     def read(self) -> ListOfCadetsWithIdsAndQualifications:
         raise NotImplemented
 
-    def write(self, list_of_cadets_with_qualifications: ListOfCadetsWithIdsAndQualifications):
+    def write(
+        self, list_of_cadets_with_qualifications: ListOfCadetsWithIdsAndQualifications
+    ):
         raise NotImplemented
 
 
@@ -44,7 +46,9 @@ class DataListOfCadetsWithTickListItems(object):
     def read(self) -> ListOfCadetIdsWithTickListItemIds:
         raise NotImplemented
 
-    def write(self, list_of_cadets_with_tick_list_items: ListOfCadetIdsWithTickListItemIds):
+    def write(
+        self, list_of_cadets_with_tick_list_items: ListOfCadetIdsWithTickListItemIds
+    ):
         raise NotImplemented
 
     def read_for_cadet_id(self, cadet_id: str):

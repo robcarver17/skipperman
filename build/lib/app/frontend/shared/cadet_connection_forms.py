@@ -1,13 +1,23 @@
 from typing import List
 
-from app.backend.volunteers.connected_cadets import \
-    get_list_of_cadets_with_those_with_name_similar_to_volunteer_with_listed_first
+from app.backend.volunteers.connected_cadets import (
+    get_list_of_cadets_with_those_with_name_similar_to_volunteer_with_listed_first,
+)
 from app.backend.cadets.list_of_cadets import get_cadet_from_id
 
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, back_menu_button, Button, HelpButton
+from app.objects.abstract_objects.abstract_buttons import (
+    ButtonBar,
+    back_menu_button,
+    Button,
+    HelpButton,
+)
 from app.objects.abstract_objects.abstract_form import Form, dropDownInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, Line
+from app.objects.abstract_objects.abstract_lines import (
+    ListOfLines,
+    _______________,
+    Line,
+)
 from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.volunteers import Volunteer
 
@@ -41,6 +51,7 @@ def form_to_edit_connections(
         ]
     )
 
+
 help_button = HelpButton("view_individual_volunteer_help")
 
 
@@ -51,7 +62,15 @@ def rows_for_existing_entries(connected_cadets: List[Cadet]) -> ListOfLines:
 
 
 def get_row_for_connected_cadet(cadet: Cadet) -> Line:
-    return Line([str(cadet), Button(label=button_label_for_deletion(cadet),value=button_name_for_deletion(cadet))])
+    return Line(
+        [
+            str(cadet),
+            Button(
+                label=button_label_for_deletion(cadet),
+                value=button_name_for_deletion(cadet),
+            ),
+        ]
+    )
 
 
 def button_label_for_deletion(cadet: Cadet):
@@ -72,9 +91,11 @@ def row_for_new_entries(
     connected_cadets: ListOfCadets,
     from_list_of_cadets: ListOfCadets,
 ) -> Line:
-    dict_of_options = get_dict_of_options_for_new_entry_dropdown(connected_cadets=connected_cadets,
-                                                                 volunteer=volunteer,
-                                                                 from_list_of_cadets=from_list_of_cadets)
+    dict_of_options = get_dict_of_options_for_new_entry_dropdown(
+        connected_cadets=connected_cadets,
+        volunteer=volunteer,
+        from_list_of_cadets=from_list_of_cadets,
+    )
     drop_down = dropDownInput(
         input_label="Add new connection",
         default_label=CADET_FILLER,
@@ -83,14 +104,18 @@ def row_for_new_entries(
     )
     return Line([drop_down, add_connection_button])
 
-def get_dict_of_options_for_new_entry_dropdown(    volunteer: Volunteer,
+
+def get_dict_of_options_for_new_entry_dropdown(
+    volunteer: Volunteer,
     connected_cadets: ListOfCadets,
     from_list_of_cadets: ListOfCadets,
 ) -> dict:
-    list_of_cadets_similar_to_name_first =get_list_of_cadets_similar_to_name_first_excluding_already_connected(
-        volunteer=volunteer,
-        connected_cadets=connected_cadets,
-        from_list_of_cadets=from_list_of_cadets
+    list_of_cadets_similar_to_name_first = (
+        get_list_of_cadets_similar_to_name_first_excluding_already_connected(
+            volunteer=volunteer,
+            connected_cadets=connected_cadets,
+            from_list_of_cadets=from_list_of_cadets,
+        )
     )
     dict_of_options = dict(
         [
@@ -103,18 +128,23 @@ def get_dict_of_options_for_new_entry_dropdown(    volunteer: Volunteer,
 
     return dict_of_options
 
-def get_list_of_cadets_similar_to_name_first_excluding_already_connected(volunteer: Volunteer,
-                                                                         connected_cadets: ListOfCadets,
-                                                                         from_list_of_cadets: ListOfCadets, ) -> ListOfCadets:
 
+def get_list_of_cadets_similar_to_name_first_excluding_already_connected(
+    volunteer: Volunteer,
+    connected_cadets: ListOfCadets,
+    from_list_of_cadets: ListOfCadets,
+) -> ListOfCadets:
     list_of_cadets_to_pick_from = from_list_of_cadets.excluding_cadets_from_other_list(
         list_of_cadets=connected_cadets
     )
-    list_of_cadets_similar_to_name_first = get_list_of_cadets_with_those_with_name_similar_to_volunteer_with_listed_first(
-        volunteer=volunteer, from_list_of_cadets=list_of_cadets_to_pick_from
+    list_of_cadets_similar_to_name_first = (
+        get_list_of_cadets_with_those_with_name_similar_to_volunteer_with_listed_first(
+            volunteer=volunteer, from_list_of_cadets=list_of_cadets_to_pick_from
+        )
     )
 
     return list_of_cadets_similar_to_name_first
+
 
 ADD_CONNECTION_BUTTON_LABEL = "Add connection"
 DELETE_CONNECTION_BUTTON_LABEL = "Delete connection"
@@ -139,7 +169,9 @@ def get_cadet_from_button_pressed(interface: abstractInterface) -> Cadet:
 
     return cadet
 
+
 from app.objects.exceptions import CadetNotSelected
+
 
 def get_selected_cadet_from_form(interface: abstractInterface) -> Cadet:
     selected_cadet_id = interface.value_from_form(CONNECTION)
@@ -149,6 +181,7 @@ def get_selected_cadet_from_form(interface: abstractInterface) -> Cadet:
     )
 
     return selected_cadet
+
 
 def get_cadet_id_to_add_from_dropdown(interface: abstractInterface):
     selected_cadet_id = interface.value_from_form(CONNECTION)

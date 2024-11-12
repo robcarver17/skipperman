@@ -1,7 +1,10 @@
 from typing import Union
 
-from app.OLD_backend.wa_import.update_cadets_at_event import make_cadet_available_on_day
-from app.frontend.forms.reorder_form import list_of_button_names_given_group_order, reorderFormInterface
+from app.backend.events.update_status_and_availability_of_cadets_at_event import make_cadet_available_on_day
+from app.frontend.forms.reorder_form import (
+    list_of_button_names_given_group_order,
+    reorderFormInterface,
+)
 from app.objects.day_selectors import Day
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form

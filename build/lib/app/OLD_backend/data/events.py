@@ -1,8 +1,6 @@
-
 from app.data_access.store.data_access import DataLayer
 
 from app.objects.events import Event, ListOfEvents
-
 
 
 class EventData:

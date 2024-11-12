@@ -75,7 +75,7 @@ CADETS_WITH_GROUPS_ID = "cadets_with_groups_for_event"
 
 LIST_OF_CADETS_FILE_ID = "cadet_master_list"
 EVENT_FILE_IDENTIFIER = "list_of_events"
-MAPPED_WA_EVENT_FILE_ID = "mapped_wa_event"
+MAPPED_REGISTRATION_DATA_FILE_ID = "mapped_registration_data_fileid"
 PRINT_OPTIONS_FILE_ID = "print_options"
 ARRANGEMENT_OPTIONS_FILE_ID = "arrangement_options"
 GROUPS_FILE_ID = "groups"
@@ -132,7 +132,7 @@ _dict_of_filenames_and_paths = {
     FIELD_MAPPING_FILE_ID: ("event_field_mapping", "wa_field_mapping_for_event_%s.csv"),
     TEMPLATES_FIELD_MAPPING_FILE_ID: ("event_field_mapping_templates", "%s.csv"),
     GROUPS_FILE_ID: ("lists", "groups.csv"),
-    MAPPED_WA_EVENT_FILE_ID: ("mapped_events", "mapped_wa_event_%s.csv"),
+    MAPPED_REGISTRATION_DATA_FILE_ID: ("mapped_events", "mapped_wa_event_%s.csv"),
     CADETS_AT_EVENT_ID: (
         "mapped_events",
         "cadets_at_event_%s.csv",
@@ -145,10 +145,9 @@ _dict_of_filenames_and_paths = {
         "mapped_events",
         "cadets_with_groups_for_event_%s.csv",
     ),
-VOLUNTEER_ROLES_FILE_ID :("lists", "roles.csv"),
-VOLUNTEER_TEAMS_FILE_ID : ("lists", "volunteer_teams.csv"),
-VOLUNTEER_ROLE_AND_TEAMS_FILE_ID:  ("lists", "list_of_role_and_team_ids.csv"),
-
+    VOLUNTEER_ROLES_FILE_ID: ("lists", "roles.csv"),
+    VOLUNTEER_TEAMS_FILE_ID: ("lists", "volunteer_teams.csv"),
+    VOLUNTEER_ROLE_AND_TEAMS_FILE_ID: ("lists", "list_of_role_and_team_ids.csv"),
     PRINT_OPTIONS_FILE_ID: ("lists", "print_options_for_report_%s.csv"),
     ARRANGEMENT_OPTIONS_FILE_ID: ("lists", "arrangement_options_for_report_%s.csv"),
     LIST_OF_VOLUNTEERS_FILE_ID: ("lists", "list_of_volunteers.csv"),

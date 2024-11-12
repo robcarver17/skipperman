@@ -2,7 +2,9 @@ from typing import List, Tuple, Callable
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.OLD_backend.data.dinghies import DEPRECATE_load_list_of_patrol_boats_at_event_from_cache
+from app.OLD_backend.data.dinghies import (
+    DEPRECATE_load_list_of_patrol_boats_at_event_from_cache,
+)
 from app.OLD_backend.rota.patrol_boats import (
     get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day,
 )
@@ -122,4 +124,4 @@ copyover_all_boats_and_roles_button = Button(
     COPYOVER_BOATS_AND_ROLES_BUTTON_LABEL, nav_button=True
 )
 ADD_NEW_BOAT_BUTTON_LABEL = "Add new boat"
-add_new_boat_button=Button(ADD_NEW_BOAT_BUTTON_LABEL, shortcut=ADD_KEYBOARD_SHORTCUT)
+add_new_boat_button = Button(ADD_NEW_BOAT_BUTTON_LABEL, shortcut=ADD_KEYBOARD_SHORTCUT)

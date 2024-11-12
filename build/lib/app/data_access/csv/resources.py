@@ -7,9 +7,13 @@ from app.data_access.csv.resolve_csv_paths_and_filenames import (
     LIST_OF_PATROL_BOATS_AND_VOLUNTEERS_FILE_ID,
     LIST_OF_CLUB_DINGHIES_AND_CADETS_FILE_ID,
 )
-from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithIdAndClubDinghies
+from app.objects.cadet_at_event_with_club_boat_with_ids import (
+    ListOfCadetAtEventWithIdAndClubDinghies,
+)
 from app.objects.patrol_boats import ListOfPatrolBoats
-from app.objects.patrol_boats_with_volunteers_with_id import ListOfVolunteersWithIdAtEventWithPatrolBoatsId
+from app.objects.patrol_boats_with_volunteers_with_id import (
+    ListOfVolunteersWithIdAtEventWithPatrolBoatsId,
+)
 
 
 class CsvDataListOfPatrolBoats(GenericCsvData, DataListOfPatrolBoats):
@@ -49,7 +53,9 @@ class CsvDataListOfVolunteersAtEventWithPatrolBoats(
         return people_and_boats
 
     def write(
-        self, people_and_boats: ListOfVolunteersWithIdAtEventWithPatrolBoatsId, event_id: str
+        self,
+        people_and_boats: ListOfVolunteersWithIdAtEventWithPatrolBoatsId,
+        event_id: str,
     ):
         self.write_object(
             people_and_boats,

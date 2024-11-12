@@ -21,7 +21,9 @@ from app.frontend.shared.qualification_and_tick_state_storage import (
     get_group_from_state,
     update_state_for_qualification_name,
 )
-from app.backend.qualifications_and_ticks.list_of_qualifications import get_list_of_qualifications
+from app.backend.qualifications_and_ticks.list_of_qualifications import (
+    get_list_of_qualifications,
+)
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -37,7 +39,9 @@ def display_form_choose_level_for_group_at_event(interface: abstractInterface) -
     group = get_group_from_state(interface)
     level_buttons = get_level_buttons(interface=interface)
 
-    navbar = ButtonBar([main_menu_button, back_menu_button, HelpButton("ticksheets_levels_help")])
+    navbar = ButtonBar(
+        [main_menu_button, back_menu_button, HelpButton("ticksheets_levels_help")]
+    )
     header = Line(
         Heading(
             "Tick sheets and reports for instructors: Event: %s, Group: %s; Select level"
@@ -58,8 +62,6 @@ def display_form_choose_level_for_group_at_event(interface: abstractInterface) -
     )
 
     return Form(lines_inside_form)
-
-
 
 
 def get_level_buttons(interface: abstractInterface):

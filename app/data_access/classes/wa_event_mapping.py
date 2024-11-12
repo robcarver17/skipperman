@@ -1,4 +1,4 @@
-from app.objects_OLD.wa_event_mapping import ListOfWAEventMaps
+from app.objects.wa_event_mapping import ListOfWAEventMaps
 
 
 class DataWAEventMapping(object):

@@ -8,11 +8,17 @@ from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.OLD_backend.data.volunteer_allocation import VolunteerAllocationData
 from app.OLD_backend.data.volunteers import VolunteerData
 from app.objects_OLD.volunteers_in_roles import (
-    DEPRECATE_VolunteerWithRoleAtEvent, DEPRECATE_ListOfVolunteersWithRoleAtEvent
+    DEPRECATE_VolunteerWithRoleAtEvent,
+    DEPRECATE_ListOfVolunteersWithRoleAtEvent,
 )
-from app.objects_OLD.primtive_with_id.volunteer_role_targets import ListOfTargetForRoleAtEvent
-from app.objects.volunteer_roles_and_groups_with_id import VolunteerWithIdInRoleAtEvent, \
-    ListOfVolunteersWithIdInRoleAtEvent, RoleAndGroupDEPRECATE
+from app.objects.volunteer_role_targets import (
+    ListOfTargetForRoleWithIdAtEvent,
+)
+from app.objects.volunteer_roles_and_groups_with_id import (
+    VolunteerWithIdInRoleAtEvent,
+    ListOfVolunteersWithIdInRoleAtEvent,
+    RoleAndGroupDEPRECATE,
+)
 
 from app.data_access.store.data_access import DataLayer
 
@@ -71,7 +77,7 @@ class VolunteerRotaData:
         all_valid_groups = list(set(all_valid_groups))
         raise Exception("Can't order groups")
 
-        #return order_list_of_groups(all_valid_groups)
+        # return order_list_of_groups(all_valid_groups)
 
     def delete_role_at_event_for_volunteer_on_all_days(
         self, volunteer_id: str, event: Event
@@ -81,13 +87,12 @@ class VolunteerRotaData:
                 event=event, day=day, volunteer_id=volunteer_id
             )
 
-
     def delete_role_at_event_for_volunteer_on_day(
         self, volunteer: Volunteer, day: Day, event: Event
     ):
-        self.delete_role_at_event_for_volunteer_with_id_on_day(event=event,
-                                                               volunteer_id=volunteer.id,
-                                                               day=day)
+        self.delete_role_at_event_for_volunteer_with_id_on_day(
+            event=event, volunteer_id=volunteer.id, day=day
+        )
 
     def delete_role_at_event_for_volunteer_with_id_on_day(
         self, volunteer_id: str, day: Day, event: Event
@@ -108,7 +113,9 @@ class VolunteerRotaData:
         )
 
     def update_role_and_group_at_event_for_volunteer_on_all_days_when_available(
-        self, volunteer_at_event: DEPRECATE_VolunteerAtEvent, new_role_and_group: RoleAndGroupDEPRECATE
+        self,
+        volunteer_at_event: DEPRECATE_VolunteerAtEvent,
+        new_role_and_group: RoleAndGroupDEPRECATE,
     ):
         event = volunteer_at_event.event
         list_of_volunteers_in_roles_at_event = (
@@ -178,7 +185,10 @@ class VolunteerRotaData:
         )
 
     def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
-        self, volunteer_at_event: DEPRECATE_VolunteerAtEvent, day: Day, allow_replacement: bool = True
+        self,
+        volunteer_at_event: DEPRECATE_VolunteerAtEvent,
+        day: Day,
+        allow_replacement: bool = True,
     ):
         list_of_volunteers_in_roles_at_event = (
             self.get_list_of_volunteers_in_roles_at_event(volunteer_at_event.event)
@@ -250,8 +260,8 @@ class VolunteerRotaData:
     def get_volunteer_ids_in_boat_related_roles_on_day_of_event(
         self, event: Event, day: Day
     ) -> List[str]:
-        volunteers_in_role_at_event = (
-            self.get_volunteers_with_id_in_role_at_event_who_are_also_allocated_to_event(event)
+        volunteers_in_role_at_event = self.get_volunteers_with_id_in_role_at_event_who_are_also_allocated_to_event(
+            event
         )
         volunteer_ids_in_boat_related_roles_on_day_of_event = volunteers_in_role_at_event.list_of_volunteer_ids_in_boat_related_role_on_day(
             day
@@ -262,8 +272,8 @@ class VolunteerRotaData:
     def get_volunteer_ids_in_boat_related_roles_on_any_day_of_event(
         self, event: Event
     ) -> List[str]:
-        volunteers_in_role_at_event = (
-            self.get_volunteers_with_id_in_role_at_event_who_are_also_allocated_to_event(event)
+        volunteers_in_role_at_event = self.get_volunteers_with_id_in_role_at_event_who_are_also_allocated_to_event(
+            event
         )
         volunteer_ids_in_boat_related_roles_on_any_day_of_event = (
             volunteers_in_role_at_event.list_of_volunteer_ids_in_boat_related_role_on_any_day()
@@ -271,26 +281,29 @@ class VolunteerRotaData:
 
         return volunteer_ids_in_boat_related_roles_on_any_day_of_event
 
-
     def get_volunteer_role_and_group_event_on_day_for_volunteer_at_event(
-        self, event: Event, volunteer_at_event: Union[VolunteerAtEventWithId, DEPRECATE_VolunteerAtEvent], day: Day
+        self,
+        event: Event,
+        volunteer_at_event: Union[VolunteerAtEventWithId, DEPRECATE_VolunteerAtEvent],
+        day: Day,
     ) -> RoleAndGroupDEPRECATE:
-        volunteer_with_role = self.get_volunteer_with_role_at_event_on_day_for_volunteer_at_event(
-            event=event,
-            volunteer_at_event=volunteer_at_event,
-            day=day
+        volunteer_with_role = (
+            self.get_volunteer_with_role_at_event_on_day_for_volunteer_at_event(
+                event=event, volunteer_at_event=volunteer_at_event, day=day
+            )
         )
 
         return volunteer_with_role.role_and_group
 
-
     def get_volunteer_with_role_at_event_on_day_for_volunteer_at_event(
-        self, event: Event, volunteer_at_event: Union[VolunteerAtEventWithId, DEPRECATE_VolunteerAtEvent], day: Day
+        self,
+        event: Event,
+        volunteer_at_event: Union[VolunteerAtEventWithId, DEPRECATE_VolunteerAtEvent],
+        day: Day,
     ) -> VolunteerWithIdInRoleAtEvent:
         return self.get_volunteer_with_id_in_role_at_event_on_day_from_id(
             event=event, volunteer_id=volunteer_at_event.volunteer_id, day=day
         )
-
 
     def get_volunteer_role_at_event_on_day_for_volunteer_id(
         self, event: Event, volunteer_id: str, day: Day, default=missing_data
@@ -374,16 +387,15 @@ class VolunteerRotaData:
     def get_volunteer_with_role_at_event_on_day_from_volunteer(
         self, event: Event, volunteer: Volunteer, day: Day
     ) -> VolunteerWithIdInRoleAtEvent:
-        return self.get_volunteer_with_id_in_role_at_event_on_day_from_id(event=event,
-                                                                          volunteer_id=volunteer.id,
-                                                                          day=day
-                                                                          )
+        return self.get_volunteer_with_id_in_role_at_event_on_day_from_id(
+            event=event, volunteer_id=volunteer.id, day=day
+        )
 
     def get_volunteer_with_id_in_role_at_event_on_day_from_id(
         self, event: Event, volunteer_id: str, day: Day
     ) -> VolunteerWithIdInRoleAtEvent:
-        volunteers_in_roles_at_event = (
-            self.get_volunteers_with_id_in_role_at_event_who_are_also_allocated_to_event(event)
+        volunteers_in_roles_at_event = self.get_volunteers_with_id_in_role_at_event_who_are_also_allocated_to_event(
+            event
         )
         volunteer_in_role = (
             volunteers_in_roles_at_event.member_matching_volunteer_id_and_day(
@@ -396,8 +408,7 @@ class VolunteerRotaData:
     def get_volunteers_with_in_role_at_event_who_are_also_allocated_to_event(
         self, event: Event
     ) -> DEPRECATE_ListOfVolunteersWithRoleAtEvent:
-
-        volunteers_with_ids_in_roles_and_at_event= self.get_volunteers_with_id_in_role_at_event_who_are_also_allocated_to_event(
+        volunteers_with_ids_in_roles_and_at_event = self.get_volunteers_with_id_in_role_at_event_who_are_also_allocated_to_event(
             event=event
         )
         list_of_volunteers = self.get_list_of_all_volunteers()
@@ -406,9 +417,10 @@ class VolunteerRotaData:
             [
                 DEPRECATE_VolunteerWithRoleAtEvent.from_volunteer_with_id_in_role_at_event(
                     volunteer_with_id_in_role_at_event=volunteer_with_id_in_role_at_event,
-                    volunteer=list_of_volunteers.volunteer_with_id(volunteer_with_id_in_role_at_event.volunteer_id)
+                    volunteer=list_of_volunteers.volunteer_with_id(
+                        volunteer_with_id_in_role_at_event.volunteer_id
+                    ),
                 )
-
                 for volunteer_with_id_in_role_at_event in volunteers_with_ids_in_roles_and_at_event
             ]
         )
@@ -452,12 +464,12 @@ class VolunteerRotaData:
 
     def get_list_of_targets_for_role_at_event(
         self, event: Event
-    ) -> ListOfTargetForRoleAtEvent:
+    ) -> ListOfTargetForRoleWithIdAtEvent:
         return self.data_api.get_list_of_targets_for_role_at_event(event)
 
     def save_list_of_targets_for_role_at_event(
         self,
-        list_of_targets_for_role_at_event: ListOfTargetForRoleAtEvent,
+        list_of_targets_for_role_at_event: ListOfTargetForRoleWithIdAtEvent,
         event: Event,
     ):
         self.data_api.save_list_of_targets_for_role_at_event(
@@ -471,7 +483,6 @@ class VolunteerRotaData:
     @property
     def volunteer_allocation_data(self) -> VolunteerAllocationData:
         return VolunteerAllocationData(self.data_api)
-
 
     @property
     def volunteer_data(self) -> VolunteerData:

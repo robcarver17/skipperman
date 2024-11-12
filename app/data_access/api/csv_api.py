@@ -15,7 +15,7 @@ from app.data_access.csv.list_of_events import CsvDataListOfEvents
 from app.data_access.csv.wa_event_mapping import CsvDataWAEventMapping
 from app.data_access.csv.wa_field_mapping import CsvDataWAFieldMapping
 from app.data_access.csv.mapped_wa_event import (
-    CsvDataMappedWAEvent,
+    CsvDataMappedRegistrationData,
 )
 from app.data_access.csv.configuration import *
 from app.data_access.csv.volunteers import (
@@ -26,11 +26,10 @@ from app.data_access.csv.volunteers import (
     CsvDataListOfIdentifiedVolunteersAtEvent,
     CsvDataListOfVolunteersInRolesAtEvent,
     CsvDataListOfTargetForRoleAtEvent,
-CsvDataListOfSkills,
-CsvDataListOfTeams,
-CsvDataListOfRoles,
-CsvDataListOfTeamsAndRolesWithIds,
-
+    CsvDataListOfSkills,
+    CsvDataListOfTeams,
+    CsvDataListOfRoles,
+    CsvDataListOfTeamsAndRolesWithIds,
 )
 from app.data_access.csv.resources import (
     CsvDataListOfPatrolBoats,
@@ -94,35 +93,34 @@ class CsvDataApi(GenericDataApi):
             backup_data_path=self.backup_data_path,
         )
 
-
     @property
     def data_list_of_roles(self) -> CsvDataListOfRoles:
         return CsvDataListOfRoles(
             master_data_path=self.master_data_path,
             backup_data_path=self.backup_data_path,
-
         )
 
     @property
     def data_list_of_teams(self) -> CsvDataListOfTeams:
-        return CsvDataListOfTeams(            master_data_path=self.master_data_path,
+        return CsvDataListOfTeams(
+            master_data_path=self.master_data_path,
             backup_data_path=self.backup_data_path,
-)
+        )
 
     @property
-    def data_list_of_teams_and_roles_with_ids(self) -> CsvDataListOfTeamsAndRolesWithIds:
+    def data_list_of_teams_and_roles_with_ids(
+        self,
+    ) -> CsvDataListOfTeamsAndRolesWithIds:
         return CsvDataListOfTeamsAndRolesWithIds(
             master_data_path=self.master_data_path,
             backup_data_path=self.backup_data_path,
-
         )
-
 
     @property
     def data_list_of_groups(self) -> csvDataListOfGroups:
         return csvDataListOfGroups(
             master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path
+            backup_data_path=self.backup_data_path,
         )
 
     @property
@@ -140,8 +138,8 @@ class CsvDataApi(GenericDataApi):
         )
 
     @property
-    def data_mapped_wa_event(self) -> CsvDataMappedWAEvent:
-        return CsvDataMappedWAEvent(
+    def data_registration_data(self) -> CsvDataMappedRegistrationData:
+        return CsvDataMappedRegistrationData(
             master_data_path=self.master_data_path,
             backup_data_path=self.backup_data_path,
         )

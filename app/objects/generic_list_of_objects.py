@@ -1,8 +1,11 @@
 from typing import List
 import pandas as pd
 from app.objects.exceptions import MissingData
-from app.objects.generic_objects import GenericSkipperManObject, GenericSkipperManObjectWithIds, \
-    get_list_of_attributes
+from app.objects.generic_objects import (
+    GenericSkipperManObject,
+    GenericSkipperManObjectWithIds,
+    get_list_of_attributes,
+)
 
 
 class GenericListOfObjects(list):
@@ -37,6 +40,7 @@ def get_contained_class(cls):
 
     return contained_class
 
+
 class GenericListOfObjectsWithIds(GenericListOfObjects):
     def __init__(self, list_of_objects: List[GenericSkipperManObjectWithIds]):
         super().__init__(list_of_objects)
@@ -70,7 +74,9 @@ class GenericListOfObjectsWithIds(GenericListOfObjects):
         cls, full_list: "GenericListOfObjectsWithIds", list_of_ids: List[str]
     ):
         subset_list = [
-            full_list.object_with_id(id) for id in full_list.list_of_ids if id in list_of_ids
+            full_list.object_with_id(id)
+            for id in full_list.list_of_ids
+            if id in list_of_ids
         ]
 
         return cls(subset_list)
@@ -85,7 +91,7 @@ class GenericListOfObjectsWithIds(GenericListOfObjects):
 
     def next_id(self) -> str:
         if len(self) == 0:
-            return '1'
+            return "1"
 
         max_id = self.max_id()
         next_id = max_id + 1
@@ -100,7 +106,9 @@ class GenericListOfObjectsWithIds(GenericListOfObjects):
         return max_id
 
 
-def create_list_of_objects_from_dataframe(class_of_object: GenericSkipperManObject, df: pd.DataFrame):
+def create_list_of_objects_from_dataframe(
+    class_of_object: GenericSkipperManObject, df: pd.DataFrame
+):
     list_of_objects = [
         create_object_from_df_row(class_of_object=class_of_object, row=row)
         for index, row in df.iterrows()
@@ -109,7 +117,9 @@ def create_list_of_objects_from_dataframe(class_of_object: GenericSkipperManObje
     return list_of_objects
 
 
-def create_data_frame_given_list_of_objects(list_of_objects: List[GenericSkipperManObject]) -> pd.DataFrame:
+def create_data_frame_given_list_of_objects(
+    list_of_objects: List[GenericSkipperManObject],
+) -> pd.DataFrame:
     list_of_dicts = [item.as_str_dict() for item in list_of_objects]
 
     return pd.DataFrame(list_of_dicts)
@@ -123,15 +133,18 @@ def create_object_from_df_row(class_of_object: GenericSkipperManObject, row: pd.
     except Exception as exception:
         raise Exception(
             _error_str_when_creating_object_from_df_row(
-                class_of_object=class_of_object, row_as_dict=dict(row_as_dict),
-                exception=exception
+                class_of_object=class_of_object,
+                row_as_dict=dict(row_as_dict),
+                exception=exception,
             )
         )
 
     return object
 
 
-def _error_str_when_creating_object_from_df_row(class_of_object, row_as_dict: dict, exception: Exception):
+def _error_str_when_creating_object_from_df_row(
+    class_of_object, row_as_dict: dict, exception: Exception
+):
     if getattr(class_of_object, "from_dict_of_str", None) is None:
         return Exception(
             "Class %s requires .from_dict_of_str() method" % (str(class_of_object))
@@ -139,6 +152,10 @@ def _error_str_when_creating_object_from_df_row(class_of_object, row_as_dict: di
     list_of_attributes = get_list_of_attributes(some_class=class_of_object)
     return Exception(
         "Class %s requires elements %s element %s doesn't match exception %s"
-        % (str(class_of_object), str(list_of_attributes), str(row_as_dict), str(exception))
+        % (
+            str(class_of_object),
+            str(list_of_attributes),
+            str(row_as_dict),
+            str(exception),
+        )
     )
-

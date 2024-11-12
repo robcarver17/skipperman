@@ -30,16 +30,16 @@ class Volunteer(GenericSkipperManObjectWithIds):
     def __hash__(self):
         return hash(self.first_name + "_" + self.surname)
 
-    def replace_everything_except_id(self, updated_volunteer: 'Volunteer'):
-        self.first_name=updated_volunteer.first_name
+    def replace_everything_except_id(self, updated_volunteer: "Volunteer"):
+        self.first_name = updated_volunteer.first_name
         self.surname = updated_volunteer.surname
 
     @classmethod
-    def new(cls, first_name: str, surname: str, id: str =arg_not_passed):
+    def new(cls, first_name: str, surname: str, id: str = arg_not_passed):
         return cls(
             first_name=first_name.strip(" ").title(),
             surname=surname.strip(" ").title(),
-            id=id
+            id=id,
         )
 
     @property
@@ -48,6 +48,7 @@ class Volunteer(GenericSkipperManObjectWithIds):
 
     def similarity_name(self, other_volunteer: "Volunteer") -> float:
         return similar(self.name, other_volunteer.name)
+
 
 class ListOfVolunteers(GenericListOfObjectsWithIds):
     @property
@@ -63,9 +64,13 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
         volunteer.id = volunteer_id
         self.append(volunteer)
 
-    def update_existing_volunteer(self, existing_volunteer: Volunteer, updated_volunteer: Volunteer):
+    def update_existing_volunteer(
+        self, existing_volunteer: Volunteer, updated_volunteer: Volunteer
+    ):
         existing_volunteer = self.volunteer_with_id(existing_volunteer.id)
-        existing_volunteer.replace_everything_except_id(updated_volunteer=updated_volunteer)
+        existing_volunteer.replace_everything_except_id(
+            updated_volunteer=updated_volunteer
+        )
 
     def volunteer_with_matching_name(self, volunteer: Volunteer) -> Volunteer:
         try:
@@ -104,13 +109,11 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
 
         return self[idx]
 
-
     def list_of_names(self) -> List[str]:
         return [volunteer.name for volunteer in self]
 
     def volunteer_with_id(self, id: str) -> Volunteer:
         return self.object_with_id(id)
 
+
 default_volunteer = Volunteer(first_name=" ", surname=" ")
-
-

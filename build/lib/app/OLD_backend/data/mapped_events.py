@@ -6,7 +6,10 @@ from app.data_access.store.data_access import DataLayer
 
 from app.objects.exceptions import missing_data
 from app.objects.events import Event
-from app.objects.registration_data import MappedWAEvent, RowInRegistrationData
+from app.objects.registration_data import (
+    RegistrationDataForEvent,
+    RowInRegistrationData,
+)
 
 
 def get_row_in_mapped_event_data_given_id(
@@ -19,7 +22,7 @@ def get_row_in_mapped_event_data_given_id(
 
 def save_mapped_wa_event(
     interface: abstractInterface,
-    mapped_wa_event_data: MappedWAEvent,
+    mapped_wa_event_data: RegistrationDataForEvent,
     event: Event,
 ):
     mapped_events_data = MappedEventsData(interface.data)
@@ -34,7 +37,7 @@ class MappedEventsData:
 
     def clear_mapped_event_data(self, event: Event):
         self.data_api.save_mapped_wa_event(
-            event=event, mapped_wa_event_data=MappedWAEvent([])
+            event=event, mapped_wa_event_data=RegistrationDataForEvent([])
         )
 
     def add_row(self, event: Event, new_row: RowInRegistrationData):
@@ -59,20 +62,20 @@ class MappedEventsData:
 
     def save_mapped_wa_event(
         self,
-        mapped_wa_event_data: MappedWAEvent,
+        mapped_wa_event_data: RegistrationDataForEvent,
         event: Event,
     ):
         self.data_api.save_mapped_wa_event(
             mapped_wa_event_data=mapped_wa_event_data, event=event
         )
 
-    def get_mapped_wa_event(self, event: Event) -> MappedWAEvent:
+    def get_mapped_wa_event(self, event: Event) -> RegistrationDataForEvent:
         return self.data_api.get_mapped_wa_event(event)
 
 
 def load_mapped_wa_event(
     interface: abstractInterface,
     event: Event,
-) -> MappedWAEvent:
+) -> RegistrationDataForEvent:
     mapped_events_data = MappedEventsData(interface.data)
     return mapped_events_data.get_mapped_wa_event(event)

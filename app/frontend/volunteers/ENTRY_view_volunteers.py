@@ -12,7 +12,8 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import (
     main_menu_button,
     Button,
-    ButtonBar, HelpButton,
+    ButtonBar,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_lines import (
     Line,
@@ -20,7 +21,11 @@ from app.objects.abstract_objects.abstract_lines import (
     _______________,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.backend.volunteers.list_of_volunteers import get_sorted_list_of_volunteers, SORT_BY_SURNAME, SORT_BY_FIRSTNAME
+from app.backend.volunteers.list_of_volunteers import (
+    get_sorted_list_of_volunteers,
+    SORT_BY_SURNAME,
+    SORT_BY_FIRSTNAME,
+)
 from app.frontend.shared.volunteer_state import (
     update_state_for_specific_volunteer_given_volunteer_as_str,
 )
@@ -107,4 +112,3 @@ def get_list_of_volunteers_with_buttons(
 
 def row_of_form_for_volunteer_with_buttons(volunteer: Volunteer) -> RowInTable:
     return RowInTable([Button(str(volunteer))])
-

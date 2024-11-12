@@ -1,15 +1,14 @@
 from app.OLD_backend.volunteers.volunteer_allocation import (
     DEPRECATE_get_list_of_volunteer_names_associated_with_cadet_at_event,
 )
-from app.OLD_backend.cadets import  cadet_name_from_id
-from app.OLD_backend.wa_import.update_cadets_at_event import (
-    update_data_row_for_existing_cadet_at_event,
-    update_availability_of_existing_cadet_at_event,
-    update_status_of_existing_cadet_at_event_to_cancelled_or_deleted,
-    update_status_of_existing_cadet_at_event,
-    update_notes_for_existing_cadet_at_event,
-    update_health_for_existing_cadet_at_event,
-)
+from app.OLD_backend.cadets import cadet_name_from_id
+from app.backend.registration_data.update_cadets_at_event import \
+    update_notes_for_existing_cadet_at_event, \
+    update_health_for_existing_cadet_at_event, update_data_row_for_existing_cadet_at_event
+from app.backend.events.update_status_and_availability_of_cadets_at_event import \
+    update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_messages, \
+    update_availability_of_existing_cadet_at_event_and_return_messages, \
+    update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
 from app.objects.events import Event
@@ -34,14 +33,14 @@ from app.data_access.configuration.field_list_groups import (
     FIELDS_AS_STR,
 )
 from app.objects.day_selectors import DaySelector
-from app.objects.registration_data import RegistrationStatus
+from app.objects.registration_status import RegistrationStatus
 
 
 def parse_registration_details_from_form(interface: abstractInterface, event: Event):
     ## This loads the existing data
     registration_data = get_registration_data(interface=interface, event=event)
 
-    for cadet_in_data in registration_data.cadets_at_event:
+    for cadet_in_data in registration_data.registration_data:
         ## in place update so doesn't return anything
         get_registration_details_for_row_in_form_and_alter_registration_data(
             interface=interface,
@@ -107,7 +106,7 @@ def get_days_attending_for_row_in_form_and_alter_registration_data(
     if new_attendance == original_attendance:
         return
 
-    update_availability_of_existing_cadet_at_event(
+    update_availability_of_existing_cadet_at_event_and_return_messages(
         interface=interface,
         event=event,
         cadet_id=original_cadet_in_data.cadet_id,
@@ -140,14 +139,14 @@ def get_cadet_event_status_for_row_in_form_and_alter_registration_data(
     if original_status == new_status:
         return
     if new_status.is_cancelled_or_deleted:
-        update_status_of_existing_cadet_at_event_to_cancelled_or_deleted(
+        update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_messages(
             interface=interface,
             event=event,
             cadet_id=original_cadet_in_data.cadet_id,
             new_status=new_status,
         )
     elif new_status.is_active:
-        update_status_of_existing_cadet_at_event(
+        update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting(
             interface=interface,
             cadet_id=original_cadet_in_data.cadet_id,
             event=event,
@@ -315,13 +314,13 @@ def log_alert_for_status_change(
 def log_alert_for_volunteers(
     interface: abstractInterface, cadet_id: str, event: Event, warning_str: str
 ):
-    volunteer_names = DEPRECATE_get_list_of_volunteer_names_associated_with_cadet_at_event(
-        interface=interface, cadet_id=cadet_id, event=event
+    volunteer_names = (
+        DEPRECATE_get_list_of_volunteer_names_associated_with_cadet_at_event(
+            interface=interface, cadet_id=cadet_id, event=event
+        )
     )
     if len(volunteer_names) == 0:
         return
 
     volunteer_list_as_str = ", ".join(volunteer_names)
     interface.log_error(warning_str + " " + volunteer_list_as_str)
-
-

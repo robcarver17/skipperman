@@ -1,6 +1,6 @@
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.OLD_backend.data.cadets_at_event_id_level import cadet_at_event_given_row_id
+from app.backend.registration_data.identified_cadets_at_event import cadet_at_event_given_row_id
 from app.OLD_backend.data.mapped_events import get_row_in_mapped_event_data_given_id
 from app.objects.cadets import default_cadet
 from app.objects.exceptions import missing_data
@@ -23,7 +23,7 @@ from app.data_access.configuration.field_list_groups import (
     LIST_OF_VOLUNTEER_FIELDS,
 )
 from app.objects.registration_data import RowInRegistrationData
-from app.objects_OLD.relevant_information_for_volunteers import (
+from app.objects.relevant_information_for_volunteers import (
     RelevantInformationForVolunteer,
     RelevantInformationForVolunteerIdentification,
     RelevantInformationForVolunteerAvailability,

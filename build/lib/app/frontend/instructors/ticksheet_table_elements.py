@@ -1,6 +1,8 @@
 from app.frontend.shared.events_state import get_event_from_state
 
-from app.backend.security.logged_in_user import get_volunteer_for_logged_in_user_or_superuser
+from app.backend.security.logged_in_user import (
+    get_volunteer_for_logged_in_user_or_superuser,
+)
 from app.backend.security.user_access import can_see_all_groups_and_award_qualifications
 
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
@@ -48,10 +50,12 @@ def get_buttons_for_ticksheet_when_not_editing(interface: abstractInterface) -> 
 
     return Line(list_of_options)
 
+
 edit_checkbox_button = Button(EDIT_CHECKBOX_BUTTON_LABEL)
 edit_dropdown_button = Button(EDIT_DROPDOWN_BUTTON_LABEL)
 print_button = Button(PRINT_BUTTON_LABEL)
 show_all_cadets_button = Button(SHOW_ALL_CADETS_BUTTON_LABEL)
+
 
 def user_can_award_qualifications(interface):
     volunteer = get_volunteer_for_logged_in_user_or_superuser(interface)

@@ -6,13 +6,20 @@ from app.frontend.events.patrol_boats.copying import (
     copy_over_across_all_boats_and_roles,
 )
 from app.frontend.events.patrol_boats.parse_patrol_boat_table import *
-from app.frontend.events.patrol_boats.patrol_boat_buttons import copy_all_boats_button, copyover_all_boats_button, \
-    copy_all_boats_and_roles_button, copyover_all_boats_and_roles_button, add_new_boat_button
+from app.frontend.events.patrol_boats.patrol_boat_buttons import (
+    copy_all_boats_button,
+    copyover_all_boats_button,
+    copy_all_boats_and_roles_button,
+    copyover_all_boats_and_roles_button,
+    add_new_boat_button,
+)
 from app.frontend.events.patrol_boats.render_patrol_boat_table import (
     get_patrol_boat_table,
     get_top_material_for_patrol_boat_form,
 )
-from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import get_button_bar_for_patrol_boats
+from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
+    get_button_bar_for_patrol_boats,
+)
 
 from app.frontend.events.patrol_boats.swapping import (
     get_all_swap_buttons_for_boat_allocation,
@@ -119,8 +126,6 @@ def post_form_view_for_patrol_boat_allocation(
     interface.flush_cache_to_store()
 
     return display_form_view_for_patrol_boat_allocation(interface)
-
-
 
 
 def previous_form(interface: abstractInterface):

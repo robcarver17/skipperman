@@ -6,14 +6,18 @@ from app.frontend.reporting.qualifications.qualification_status import (
     write_expected_qualifications_to_temp_csv_file_and_return_filename,
 )
 
-from app.backend.security.user_access import get_list_of_groups_volunteer_can_see, \
-    can_see_all_groups_and_award_qualifications
+from app.backend.security.user_access import (
+    get_list_of_groups_volunteer_can_see,
+    can_see_all_groups_and_award_qualifications,
+)
 from app.frontend.shared.qualification_and_tick_state_storage import (
     update_state_for_group_name,
 )
 from app.objects.events import Event
 
-from app.backend.security.logged_in_user import get_volunteer_for_logged_in_user_or_superuser
+from app.backend.security.logged_in_user import (
+    get_volunteer_for_logged_in_user_or_superuser,
+)
 from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.abstract_objects.abstract_lines import (
@@ -112,15 +116,20 @@ def get_group_buttons(interface: abstractInterface, event: Event) -> Line:
             )
         )
 
-    list_with_buttons = [
-        Button(group.name, tile=True) for group in list_of_groups
-    ]
+    list_with_buttons = [Button(group.name, tile=True) for group in list_of_groups]
 
     return Line(list_with_buttons)
 
 
 def event_is_empty_of_groups(interface: abstractInterface, event: Event) -> bool:
-    return len(get_list_of_all_groups_at_event(object_store=interface.object_store, event=event)) == 0
+    return (
+        len(
+            get_list_of_all_groups_at_event(
+                object_store=interface.object_store, event=event
+            )
+        )
+        == 0
+    )
 
 
 def post_form_choose_group_for_event(

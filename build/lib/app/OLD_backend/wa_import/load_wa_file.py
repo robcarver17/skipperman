@@ -61,8 +61,6 @@ def get_staged_file_raw_event_filename(event_id: str):
     return os.path.join(upload_directory, "raw_event_%s" % event_id)
 
 
-
-
 def check_local_file_is_valid_wa_file(new_filename: str):
     ## check can load as a WA file
     try:

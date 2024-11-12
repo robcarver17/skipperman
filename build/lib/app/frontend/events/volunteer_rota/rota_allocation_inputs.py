@@ -2,10 +2,17 @@ from typing import Union, List
 
 from app.objects.events import Event
 
-from app.OLD_backend.rota.volunteer_rota import get_volunteers_in_role_at_event_with_active_allocations, \
-    dict_of_roles_for_dropdown, dict_of_groups_for_dropdown
-from app.frontend.events.volunteer_rota.volunteer_table_buttons import get_allocation_inputs_buttons_in_role_when_available
-from app.frontend.events.volunteer_rota.button_values import make_available_button_value_for_volunteer_on_day
+from app.OLD_backend.rota.volunteer_rota import (
+    get_volunteers_in_role_at_event_with_active_allocations,
+    dict_of_roles_for_dropdown,
+    dict_of_groups_for_dropdown,
+)
+from app.frontend.events.volunteer_rota.volunteer_table_buttons import (
+    get_allocation_inputs_buttons_in_role_when_available,
+)
+from app.frontend.events.volunteer_rota.button_values import (
+    make_available_button_value_for_volunteer_on_day,
+)
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_form import dropDownInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -16,10 +23,9 @@ from app.objects.volunteer_roles_and_groups_with_id import VolunteerWithIdInRole
 
 
 def get_allocation_inputs_for_volunteer(
-        interface: abstractInterface,
-        volunteer_at_event: DEPRECATE_VolunteerAtEvent,
-        ready_to_swap: bool = False,
-
+    interface: abstractInterface,
+    volunteer_at_event: DEPRECATE_VolunteerAtEvent,
+    ready_to_swap: bool = False,
 ) -> List[ListOfLines]:
     day_inputs = [
         get_allocation_inputs_for_day_and_volunteer(
@@ -35,8 +41,8 @@ def get_allocation_inputs_for_volunteer(
 
 
 def get_allocation_inputs_for_day_and_volunteer(
-        interface: abstractInterface,
-        volunteer_at_event: DEPRECATE_VolunteerAtEvent,
+    interface: abstractInterface,
+    volunteer_at_event: DEPRECATE_VolunteerAtEvent,
     day: Day,
     ready_to_swap: bool,
 ) -> ListOfLines:
@@ -64,16 +70,18 @@ def get_allocation_inputs_for_day_and_volunteer_when_available(
 
     volunteers_in_roles_at_event = cache.get_from_cache(
         get_volunteers_in_role_at_event_with_active_allocations,
-            event=volunteer_at_event.event
-        )
+        event=volunteer_at_event.event,
+    )
 
-    volunteer_in_role_at_event_on_day = volunteers_in_roles_at_event.member_matching_volunteer_id_and_day(
-        volunteer_id=volunteer_at_event.volunteer_id, day=day
+    volunteer_in_role_at_event_on_day = (
+        volunteers_in_roles_at_event.member_matching_volunteer_id_and_day(
+            volunteer_id=volunteer_at_event.volunteer_id, day=day
+        )
     )
 
     return get_allocation_inputs_for_day_and_volunteer_in_role_when_available(
         interface=interface,
-        event = volunteer_at_event.event,
+        event=volunteer_at_event.event,
         volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day,
         ready_to_swap=ready_to_swap,
     )
@@ -98,7 +106,7 @@ def get_allocation_inputs_for_day_and_volunteer_when_unavailable(
 
 def get_allocation_inputs_for_day_and_volunteer_in_role_when_available(
     interface: abstractInterface,
-        event: Event,
+    event: Event,
     volunteer_in_role_at_event_on_day: VolunteerWithIdInRoleAtEvent,
     ready_to_swap: bool,
 ) -> ListOfLines:
@@ -110,7 +118,7 @@ def get_allocation_inputs_for_day_and_volunteer_in_role_when_available(
         interface=interface,
         volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day,
         ready_to_swap=ready_to_swap,
-        event=event
+        event=event,
     )
     return ListOfLines([group_and_role_inputs, buttons]).add_Lines()
 
@@ -169,7 +177,6 @@ def get_allocation_input_for_group(
     if ready_to_swap:
         return " (%s)" % volunteer_in_role_at_event_on_day.group.name
 
-
     return dropDownInput(
         input_label="",
         input_name=input_name_for_group_and_volunteer(
@@ -187,5 +194,3 @@ def input_name_for_group_and_volunteer(
         volunteer_in_role_at_event_on_day.volunteer_id,
         volunteer_in_role_at_event_on_day.day.name,
     )
-
-

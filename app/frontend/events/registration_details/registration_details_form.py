@@ -1,10 +1,11 @@
 from dataclasses import dataclass
+from typing import List
+
+from app.objects.composed.cadets_at_event_with_registration_data import DictOfCadetsWithRegistrationData, \
+    CadetRegistrationData
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.OLD_backend.cadets import (
-    get_cadet_from_id, load_list_of_all_cadets,
-)
 from app.frontend.forms.form_utils import (
     get_availability_checkbox,
     input_name_from_column_name_and_cadet_id,
@@ -20,21 +21,16 @@ from app.objects.abstract_objects.abstract_form import (
     intInput,
 )
 from app.objects.abstract_objects.abstract_tables import RowInTable
-from app.objects.cadets import ListOfCadets
+from app.objects.cadets import  Cadet
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
-from app.objects.cadet_with_id_at_event import (
-    CadetWithIdAtEvent,
-    ListOfCadetsWithIDAtEvent,
-)
 from app.data_access.configuration.field_list_groups import (
     FIELDS_WITH_INTEGERS,
     FIELDS_VIEW_ONLY_IN_EDIT_VIEW,
     FIELDS_TO_EDIT_IN_EDIT_VIEW,
 )
 from app.objects.exceptions import arg_not_passed
-from app.objects.registration_data import (
-    RowInRegistrationData,
+from app.objects.registration_status import (
     RegistrationStatus,
     get_states_allowed_give_current_status,
 )
@@ -47,27 +43,23 @@ HEALTH = "Health"
 @dataclass
 class RegistrationDetailsForEvent:
     event: Event
-    list_of_cadets: ListOfCadets
     all_columns_excluding_special_fields: list
-    cadets_at_event: ListOfCadetsWithIDAtEvent
+    registration_data: DictOfCadetsWithRegistrationData
 
-    def columns_to_parse_including_special_fields(self):
-        ## order not important
-        return [ROW_STATUS, DAYS_ATTENDING]
-
+from app.backend.registration_data.cadet_registration_data import get_dict_of_cadets_with_registration_data
 
 def get_registration_data(
     interface: abstractInterface, event: Event, sort_order: str = arg_not_passed
 ) -> RegistrationDetailsForEvent:
-    cadets_at_event = get_sorted_list_of_cadets_at_event(
-        interface=interface, event=event, sort_order=sort_order
+    dict_of_registration_data = get_dict_of_cadets_with_registration_data(
+        object_store=interface.object_store, event=event
     )
-    all_columns = get_list_of_columns_excluding_special_fields(cadets_at_event)
-    list_of_cadets = load_list_of_all_cadets(interface.data)
+    dict_of_registration_data = dict_of_registration_data.sort_by(sort_order)
+
+    all_columns = dict_of_registration_data.list_of_registration_fields()
 
     return RegistrationDetailsForEvent(
-        cadets_at_event=cadets_at_event,
-        list_of_cadets=list_of_cadets,
+        registration_data=dict_of_registration_data,
         event=event,
         all_columns_excluding_special_fields=all_columns,
     )
@@ -83,11 +75,10 @@ def get_sorted_list_of_cadets_at_event(
 
 
 def get_list_of_columns_excluding_special_fields(
-    cadets_at_event: ListOfCadetsWithIDAtEvent,
+    registration_data: DictOfCadetsWithRegistrationData
 ) -> list:
-    first_cadet = cadets_at_event[0]
-    top_row = first_cadet.data_in_row  ## should all be the same
-    all_columns = get_columns_to_edit(top_row) + get_columns_to_view(top_row)
+    field_names = registration_data.list_of_registration_fields()
+    all_columns = get_columns_to_edit(field_names) + get_columns_to_view(field_names)
 
     return all_columns
 
@@ -97,25 +88,21 @@ def get_top_row_for_table_of_registration_details(all_columns: list) -> RowInTab
 
 
 def row_for_cadet_in_event(
-        interface: abstractInterface,
-    cadet_at_event: CadetWithIdAtEvent,
-    registration_details: RegistrationDetailsForEvent,
-) -> RowInTable:
-    cadet_id = cadet_at_event.cadet_id
-    cadet = get_cadet_from_id(
-        data_layer=interface.data,
-        cadet_id=cadet_id
-    )
+    cadet: Cadet,
+        registration_details: RegistrationDetailsForEvent
 
-    status_button = get_status_button(cadet_at_event.status, cadet_id=cadet_id)
+) -> RowInTable:
+
+    registration_details_for_cadet= registration_details.registration_data[cadet]
+    status_button = get_status_button(registration_details_for_cadet.status, cadet_id=cadet.id)
     days_attending_field = get_days_attending_field(
-        cadet_at_event.availability, cadet_id=cadet_id, event=registration_details.event
+        registration_details_for_cadet.availability, cadet_id=cadet.id, event=registration_details_for_cadet.event
     )
-    health_field = get_health_field(cadet_at_event.health, cadet_id=cadet_id)
-    notes_field = get_notes_field(cadet_at_event.notes, cadet_id=cadet_id)
+    health_field = get_health_field(registration_details_for_cadet.health, cadet_id=cadet.id)
+    notes_field = get_notes_field(registration_details_for_cadet.notes, cadet_id=cadet.id)
 
     other_columns = get_list_of_column_forms_excluding_reserved_fields(
-        cadet_at_event=cadet_at_event, registration_details=registration_details
+         cadet=cadet, registration_details=registration_details
     )
 
     return RowInTable(
@@ -125,12 +112,14 @@ def row_for_cadet_in_event(
 
 
 def get_list_of_column_forms_excluding_reserved_fields(
-    cadet_at_event: CadetWithIdAtEvent,
+    cadet: Cadet,
     registration_details: RegistrationDetailsForEvent,
 ) -> list:
+    registration_details_for_cadet= registration_details.registration_data[cadet]
+
     column_form_entries = [
         form_item_for_key_value_pair_in_row_data(
-            column_name=column_name, cadet_at_event=cadet_at_event
+            column_name=column_name, cadet=cadet, registration_details_for_cadet=registration_details_for_cadet
         )
         for column_name in registration_details.all_columns_excluding_special_fields
     ]
@@ -138,8 +127,8 @@ def get_list_of_column_forms_excluding_reserved_fields(
     return column_form_entries
 
 
-def get_columns_to_edit(data_in_row: RowInRegistrationData) -> list:
-    all_columns = list(data_in_row.keys())
+def get_columns_to_edit(all_columns: List[str]) -> list:
+
     columns_to_edit = [
         column_name
         for column_name in FIELDS_TO_EDIT_IN_EDIT_VIEW
@@ -149,8 +138,7 @@ def get_columns_to_edit(data_in_row: RowInRegistrationData) -> list:
     return columns_to_edit
 
 
-def get_columns_to_view(data_in_row: RowInRegistrationData) -> list:
-    all_columns = list(data_in_row.keys())
+def get_columns_to_view(all_columns: List[str]) -> list:
 
     columns_to_view = [
         column_name
@@ -208,10 +196,12 @@ def get_health_field(notes: str, cadet_id: str) -> textInput:
 
 
 def form_item_for_key_value_pair_in_row_data(
-    column_name: str, cadet_at_event: CadetWithIdAtEvent
+    column_name: str,     cadet: Cadet,
+    registration_details_for_cadet: CadetRegistrationData
+
 ):
-    current_value = cadet_at_event.data_in_row[column_name]
-    cadet_id = cadet_at_event.cadet_id
+    current_value = registration_details_for_cadet.data_in_row[column_name]
+    cadet_id = cadet.id
     if _column_can_be_edited(column_name):
         return form_item_for_key_value_pair_in_row_data_if_editable(
             column_name=column_name, current_value=current_value, cadet_id=cadet_id

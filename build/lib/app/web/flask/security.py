@@ -81,5 +81,3 @@ def skipperman_user_from_flask_user(flask_user: FlaskUser) -> SkipperManUser:
         email_address="",
         volunteer_id="",
     )
-
-

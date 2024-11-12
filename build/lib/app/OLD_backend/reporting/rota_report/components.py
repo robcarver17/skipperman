@@ -15,13 +15,17 @@ from app.OLD_backend.reporting.rota_report.configuration import (
 from app.objects.exceptions import missing_data
 from app.objects.groups import unallocated_group
 from app.objects.patrol_boats import ListOfPatrolBoats
-from app.objects.patrol_boats_with_volunteers_with_id import ListOfVolunteersWithIdAtEventWithPatrolBoatsId
+from app.objects.patrol_boats_with_volunteers_with_id import (
+    ListOfVolunteersWithIdAtEventWithPatrolBoatsId,
+)
 from app.objects.volunteers import ListOfVolunteers
 from app.objects.composed.volunteers_with_skills import DictOfVolunteersWithSkills
 from app.objects_OLD.volunteers_in_roles import (
     VolunteerInRoleAtEventWithTeamName,
 )
-from app.objects.volunteer_roles_and_groups_with_id import ListOfVolunteersWithIdInRoleAtEvent
+from app.objects.volunteer_roles_and_groups_with_id import (
+    ListOfVolunteersWithIdInRoleAtEvent,
+)
 
 from app.OLD_backend.data.patrol_boats import PatrolBoatsData
 from app.OLD_backend.data.volunteers import VolunteerData

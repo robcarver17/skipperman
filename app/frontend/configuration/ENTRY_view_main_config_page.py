@@ -1,13 +1,25 @@
 from typing import Union
 
 from app.frontend.configuration.sailing_groups import display_form_config_sailing_groups
-from app.frontend.configuration.teams_and_roles.volunteer_roles import display_form_config_volunteer_roles
-from app.frontend.configuration.volunteer_skills import display_form_config_volunteer_skills
+from app.frontend.configuration.teams_and_roles.volunteer_roles import (
+    display_form_config_volunteer_roles,
+)
+from app.frontend.configuration.volunteer_skills import (
+    display_form_config_volunteer_skills,
+)
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
-from app.frontend.configuration.club_dinghies import display_form_config_club_dinghies_page
-from app.frontend.configuration.patrol_boats import display_form_config_patrol_boats_page
-from app.frontend.configuration.boat_classes import display_form_config_boat_classes_page
-from app.frontend.configuration.teams_and_roles.volunteer_teams import display_form_config_teams_page
+from app.frontend.configuration.club_dinghies import (
+    display_form_config_club_dinghies_page,
+)
+from app.frontend.configuration.patrol_boats import (
+    display_form_config_patrol_boats_page,
+)
+from app.frontend.configuration.boat_classes import (
+    display_form_config_boat_classes_page,
+)
+from app.frontend.configuration.teams_and_roles.volunteer_teams import (
+    display_form_config_teams_page,
+)
 from app.frontend.configuration.qualifications.qualifications import (
     display_form_config_qualifications_page,
 )
@@ -18,7 +30,8 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import (
     main_menu_button,
     Button,
-    ButtonBar, HelpButton,
+    ButtonBar,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
@@ -44,7 +57,7 @@ dict_of_options_and_functions = {
     VOLUNTEER_TEAMS: display_form_config_teams_page,
     VOLUNTEER_SKILLS: display_form_config_volunteer_skills,
     SAILING_GROUPS: display_form_config_sailing_groups,
-    QUALIFICATIONS_BUTTON_LABEL: display_form_config_qualifications_page
+    QUALIFICATIONS_BUTTON_LABEL: display_form_config_qualifications_page,
 }
 
 all_options = list(dict_of_options_and_functions.keys())
@@ -65,6 +78,7 @@ def post_form_main_config_page(interface: abstractInterface) -> Union[Form, NewF
         return interface.get_new_form_given_function(relevant_function)
     else:
         return button_error_and_back_to_initial_state_form(interface)
+
 
 help_button = HelpButton("configuration_help")
 nav_buttons = ButtonBar([main_menu_button, help_button])

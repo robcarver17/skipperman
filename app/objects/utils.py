@@ -19,7 +19,11 @@ from dateutil.parser import parse
 
 from itertools import groupby
 
-from app.data_access.configuration.fixed import ID_KEY, ID_KEY_SUFFIX, LIST_OF_ID_KEY_TO_IGNORE_WHEN_CLEANING
+from app.data_access.configuration.fixed import (
+    ID_KEY,
+    ID_KEY_SUFFIX,
+    LIST_OF_ID_KEY_TO_IGNORE_WHEN_CLEANING,
+)
 
 
 def list_of_list_max_wide_for_table_building(
@@ -84,7 +88,9 @@ def clean_up_dict_with_weird_floats_for_id(some_dict) -> dict:
     for key, value in some_dict.items():
         key_is_id = key == ID_KEY
         key_contains_id = ID_KEY_SUFFIX in key
-        key_is_row_id = key in LIST_OF_ID_KEY_TO_IGNORE_WHEN_CLEANING  ## special event row id, FIXME orrible hack
+        key_is_row_id = (
+            key in LIST_OF_ID_KEY_TO_IGNORE_WHEN_CLEANING
+        )  ## special event row id, FIXME orrible hack
         if key_is_row_id:
             continue
         elif key_is_id or key_contains_id:
@@ -108,24 +114,27 @@ def list_duplicate_indices(seq):
     return [locs for locs in tally.values() if len(locs) > 1]
 
 
-KEY_VALUE_SEPERATOR=":"
-ITEM_SEPERATOR=","
+KEY_VALUE_SEPERATOR = ":"
+ITEM_SEPERATOR = ","
 
-def dict_from_str( object_as_str: str) -> dict:
+
+def dict_from_str(object_as_str: str) -> dict:
     as_list_of_str = object_as_str.split(ITEM_SEPERATOR)
     as_list_of_key_value_pairs = [
-        key_value_as_str.split(KEY_VALUE_SEPERATOR) for key_value_as_str in as_list_of_str
+        key_value_as_str.split(KEY_VALUE_SEPERATOR)
+        for key_value_as_str in as_list_of_str
     ]
     as_dict = dict([(key, value) for key, value in as_list_of_key_value_pairs])
 
     return as_dict
 
 
-def dict_as_str(some_dict: Dict[str,str]) -> str:
-    as_list_of_str = ["%s%s%s" % (key, KEY_VALUE_SEPERATOR, value) for key, value in some_dict.items()]
+def dict_as_str(some_dict: Dict[str, str]) -> str:
+    as_list_of_str = [
+        "%s%s%s" % (key, KEY_VALUE_SEPERATOR, value) for key, value in some_dict.items()
+    ]
 
     return ITEM_SEPERATOR.join(as_list_of_str)
-
 
 
 def transform_df_to_str(df: pd.DataFrame):
@@ -164,8 +173,6 @@ def transform_df_column_from_datetime_to_str(df: pd.DataFrame, date_series_name:
 
 def transform_datetime_into_str(date: datetime.datetime) -> str:
     return date.strftime(DATETIME_STR)
-
-
 
 
 def transform_df_from_str_to_dates(df: pd.DataFrame):
@@ -277,8 +284,8 @@ def we_are_not_the_same(some_list: list) -> bool:
 
 
 def has_hidden_attribute(object):
-    return hasattr(object, 'hidden')
+    return hasattr(object, "hidden")
 
 
 def is_protected_object(object):
-    return getattr(object, 'protected', False)
+    return getattr(object, "protected", False)

@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from app.objects.exceptions import missing_data, arg_not_passed
 from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
-
 )
 
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
@@ -20,6 +19,7 @@ class BoatClass(GenericSkipperManObjectWithIds):
 
     def __eq__(self, other):
         return self.name == other.name and self.hidden == other.hidden
+
 
 class ListOfBoatClasses(GenericListOfObjectsWithIds):
     @property
@@ -88,5 +88,4 @@ class ListOfBoatClasses(GenericListOfObjectsWithIds):
 
     def check_for_duplicated_names(self):
         list_of_names = [role.name for role in self]
-        assert(len(list_of_names)==len(set(list_of_names)))
-
+        assert len(list_of_names) == len(set(list_of_names))

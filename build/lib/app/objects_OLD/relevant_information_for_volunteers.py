@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import List
 
 from app.objects.day_selectors import DaySelector
-from app.objects.registration_data import RegistrationStatus
+from app.objects.registration_status import RegistrationStatus
 
 
 @dataclass

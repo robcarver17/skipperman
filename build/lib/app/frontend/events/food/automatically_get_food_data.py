@@ -1,8 +1,11 @@
 from app.OLD_backend.volunteers.volunteers import EPRECATE_get_volunteer_name_from_id
 
-from app.objects_OLD.relevant_information_for_volunteers import missing_relevant_information
+from app.objects.relevant_information_for_volunteers import (
+    missing_relevant_information,
+)
 
-from app.OLD_backend.volunteers.volunteer_allocation import get_list_of_relevant_information
+from app.backend.registration_data.identified_volunteers_at_event import \
+    get_list_of_relevant_information_for_volunteer_in_registration_data
 
 from app.frontend.events.volunteer_allocation.track_state_in_volunteer_allocation import (
     list_of_unique_volunteer_ids_in_identified_event_data,
@@ -26,18 +29,17 @@ from app.OLD_backend.food import (
 
 from app.objects.events import Event
 
-from app.OLD_backend.wa_import.update_cadets_at_event import (
-    list_of_cadet_ids_at_event_and_in_mapped_data_for_event,
-    get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active,
-)
+from app.backend.registration_data.identified_cadets_at_event import \
+    list_of_cadet_ids_in_event_data_and_identified_in_raw_registration_data_for_event, \
+    get_row_in_registration_data_for_cadet_both_cancelled_and_active
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
 def get_and_save_food_for_cadets_from_registration_data(interface: abstractInterface):
     event = get_event_from_state(interface)
-    list_of_ids = list_of_cadet_ids_at_event_and_in_mapped_data_for_event(
-        event=event, interface=interface, include_mapped_data=False
+    list_of_ids = list_of_cadet_ids_in_event_data_and_identified_in_raw_registration_data_for_event(
+        event=event, interface=interface, include_identified_in_raw_registration_data=False
     )
 
     for cadet_id in list_of_ids:
@@ -64,7 +66,7 @@ def process_update_to_cadet_food_data_if_new_to_event(
     interface: abstractInterface, event: Event, cadet_id: str
 ):
     try:
-        relevant_row = get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
+        relevant_row = get_row_in_registration_data_for_cadet_both_cancelled_and_active(
             interface=interface,
             cadet_id=cadet_id,
             event=event,
@@ -75,7 +77,7 @@ def process_update_to_cadet_food_data_if_new_to_event(
             "ACTION REQUIRED: Cadet %s appears more than once in WA file with an active registration - using the first registration found - go to WA and cancel all but one of the registrations please, and then check details here are correct!"
             % cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id)
         )
-        relevant_row = get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
+        relevant_row = get_row_in_registration_data_for_cadet_both_cancelled_and_active(
             interface=interface,
             cadet_id=cadet_id,
             event=event,
@@ -159,14 +161,16 @@ def process_update_to_volunteer_food_data_if_new_to_event(
     )
     interface.log_error(
         "Added food for volunteer %s to event"
-        % EPRECATE_get_volunteer_name_from_id(volunteer_id=volunteer_id, interface=interface)
+        % EPRECATE_get_volunteer_name_from_id(
+            volunteer_id=volunteer_id, interface=interface
+        )
     )
 
 
 def get_volunteer_food_preferences_as_single_str(
     interface: abstractInterface, event: Event, volunteer_id: str
 ) -> str:
-    list_of_relevant_information = get_list_of_relevant_information(
+    list_of_relevant_information = get_list_of_relevant_information_for_volunteer_in_registration_data(
         volunteer_id=volunteer_id, event=event, interface=interface
     )
     list_of_relevant_information = [

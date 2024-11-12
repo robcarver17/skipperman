@@ -206,9 +206,9 @@ def get_dropdown_input_for_group_allocation(
         return "Racing"
 
 
-#dict_of_all_possible_groups_for_dropdown_input = dict(
+# dict_of_all_possible_groups_for_dropdown_input = dict(
 #    [(group, group) for group in all_groups_names]
-#)
+# )
 
 
 def get_dropdown_input_for_club_boat_allocation_across_days(
@@ -403,11 +403,15 @@ def okay_to_have_partner_button_across_days(
 def get_dropdown_input_for_partner_allocation_on_day(
     cadet: Cadet, day: Day, allocation_data: AllocationData
 ) -> ListOfLines:
-    current_partner_name = allocation_data.get_two_handed_partner_as_str_for_cadet_on_day(
-        cadet=cadet, day=day
+    current_partner_name = (
+        allocation_data.get_two_handed_partner_as_str_for_cadet_on_day(
+            cadet=cadet, day=day
+        )
     )
-    list_of_other_cadets = allocation_data.list_of_cadets_as_str_at_event_excluding_cadet_available_on_day(
-        cadet=cadet, day=day
+    list_of_other_cadets = (
+        allocation_data.list_of_cadets_as_str_at_event_excluding_cadet_available_on_day(
+            cadet=cadet, day=day
+        )
     )
 
     okay_to_have_partner_button = okay_to_have_partner_button_on_day(

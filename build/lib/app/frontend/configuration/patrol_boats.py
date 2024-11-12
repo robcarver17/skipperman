@@ -2,9 +2,12 @@ from typing import Union, List
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.backend.patrol_boats.list_of_patrol_boats import get_list_of_patrol_boats, update_list_of_patrol_boats, \
-    add_new_patrol_boat,\
-    modify_patrol_boat
+from app.backend.patrol_boats.list_of_patrol_boats import (
+    get_list_of_patrol_boats,
+    update_list_of_patrol_boats,
+    add_new_patrol_boat,
+    modify_patrol_boat,
+)
 
 from app.frontend.form_handler import (
     button_error_and_back_to_initial_state_form,
@@ -26,9 +29,7 @@ def display_form_config_patrol_boats_page(interface: abstractInterface) -> Form:
     list_of_boats = get_list_of_patrol_boats(interface.object_store)
 
     return display_form_edit_generic_list(
-        existing_list=list_of_boats,
-        header_text=header_text
-
+        existing_list=list_of_boats, header_text=header_text
     )
 
 
@@ -58,10 +59,11 @@ def post_form_config_patrol_boats_page(
 
     return interface.get_new_form_given_function(display_form_config_patrol_boats_page)
 
+
 def save_from_ordinary_list_of_patrol_boats(
     object_store: ObjectStore, new_list: List[PatrolBoat]
 ):
     update_list_of_patrol_boats(
         object_store=object_store,
-        updated_list_of_patrol_boats=ListOfPatrolBoats(new_list)
+        updated_list_of_patrol_boats=ListOfPatrolBoats(new_list),
     )

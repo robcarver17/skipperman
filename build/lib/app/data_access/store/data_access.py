@@ -8,16 +8,20 @@ from app.OLD_backend.reporting.options_and_parameters.print_options import Print
 
 from app.objects.users_and_security import ListOfSkipperManUsers
 from app.objects.volunteers import ListOfVolunteers
-from app.objects.cadet_volunteer_connections_with_ids import ListOfCadetVolunteerAssociationsWithIds
+from app.objects.cadet_volunteer_connections_with_ids import (
+    ListOfCadetVolunteerAssociationsWithIds,
+)
 
 from app.objects.volunteer_at_event_with_id import ListOfVolunteersAtEventWithId
-from app.objects_OLD.primtive_with_id.identified_volunteer_at_event import ListOfIdentifiedVolunteersAtEvent
+from app.objects.identified_volunteer_at_event import (
+    ListOfIdentifiedVolunteersAtEvent,
+)
 
-from app.objects.registration_data import MappedWAEvent
+from app.objects.registration_data import RegistrationDataForEvent
 
-from app.objects_OLD.wa_field_mapping import ListOfWAFieldMappings
+from app.objects.wa_field_mapping import ListOfWAFieldMappings
 
-from app.objects_OLD.wa_event_mapping import ListOfWAEventMaps
+from app.objects.wa_event_mapping import ListOfWAEventMaps
 
 from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent
 from app.objects.identified_cadets_at_event import ListOfIdentifiedCadetsAtEvent
@@ -35,17 +39,27 @@ from app.objects.qualifications import ListOfQualifications
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
 from app.objects.events import ListOfEvents
 from app.objects.boat_classes import ListOfBoatClasses
-from app.objects.cadet_at_event_with_dinghy_with_ids import ListOfCadetAtEventWithBoatClassAndPartnerWithIds
+from app.objects.cadet_at_event_with_dinghy_with_ids import (
+    ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
+)
 from app.objects.club_dinghies import (
     ListOfClubDinghies,
 )
-from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithIdAndClubDinghies
+from app.objects.cadet_at_event_with_club_boat_with_ids import (
+    ListOfCadetAtEventWithIdAndClubDinghies,
+)
 from app.objects.qualifications import ListOfCadetsWithIdsAndQualifications
-from app.objects_OLD.primtive_with_id.volunteer_role_targets import ListOfTargetForRoleAtEvent
-from app.objects.volunteer_roles_and_groups_with_id import ListOfVolunteersWithIdInRoleAtEvent
+from app.objects.volunteer_role_targets import (
+    ListOfTargetForRoleWithIdAtEvent,
+)
+from app.objects.volunteer_roles_and_groups_with_id import (
+    ListOfVolunteersWithIdInRoleAtEvent,
+)
 from app.objects.composed.volunteers_with_skills import DictOfVolunteersWithSkills
 from app.objects.patrol_boats import ListOfPatrolBoats
-from app.objects.patrol_boats_with_volunteers_with_id import ListOfVolunteersWithIdAtEventWithPatrolBoatsId
+from app.objects.patrol_boats_with_volunteers_with_id import (
+    ListOfVolunteersWithIdAtEventWithPatrolBoatsId,
+)
 from app.objects.committee import ListOfCadetsWithIdOnCommittee
 from app.objects_OLD.food import (
     ListOfCadetsWithFoodRequirementsAtEvent,
@@ -198,7 +212,9 @@ class DataLayer:
         data_access_for_list_of_substages = get_data_access_for_list_of_substages(
             self.data
         )
-        return self.store.write(list_of_tick_substages, data_access_method=data_access_for_list_of_substages)
+        return self.store.write(
+            list_of_tick_substages, data_access_method=data_access_for_list_of_substages
+        )
 
     def get_list_of_tick_sheet_items(self) -> ListOfTickSheetItems:
         data_access_for_list_of_tick_sheet_items = (
@@ -206,12 +222,16 @@ class DataLayer:
         )
         return self.store.read(data_access_for_list_of_tick_sheet_items)
 
-    def save_list_of_tick_sheet_items(self, list_of_tick_sheet_items: ListOfTickSheetItems):
+    def save_list_of_tick_sheet_items(
+        self, list_of_tick_sheet_items: ListOfTickSheetItems
+    ):
         data_access_for_list_of_tick_sheet_items = (
             get_data_access_for_list_of_tick_sheet_items(self.data)
         )
-        return self.store.write(list_of_tick_sheet_items, data_access_method=data_access_for_list_of_tick_sheet_items)
-
+        return self.store.write(
+            list_of_tick_sheet_items,
+            data_access_method=data_access_for_list_of_tick_sheet_items,
+        )
 
     def get_list_of_cadets(self) -> ListOfCadets:
         data_access_for_list_of_cadets = get_data_access_for_list_of_cadets(self.data)
@@ -229,8 +249,9 @@ class DataLayer:
         )
         return self.store.read(data_access_for_list_of_cadets_on_committee)
 
-
-    def get_list_of_cadets_with_qualifications(self) -> ListOfCadetsWithIdsAndQualifications:
+    def get_list_of_cadets_with_qualifications(
+        self,
+    ) -> ListOfCadetsWithIdsAndQualifications:
         data_access_for_list_of_cadets_with_qualifications = (
             get_data_access_for_list_of_cadets_with_qualifications(self.data)
         )
@@ -349,14 +370,16 @@ class DataLayer:
             field_mapping, data_access_method=data_access_for_wa_field_mapping_at_event
         )
 
-    def get_mapped_wa_event(self, event: Event) -> MappedWAEvent:
-        data_access_for_mapped_wa_event = get_data_access_for_mapped_wa_event(
+    def get_mapped_wa_event(self, event: Event) -> RegistrationDataForEvent:
+        data_access_for_mapped_wa_event = get_data_access_for_mapped_registration_data(
             self.data, event_id=event.id
         )
         return self.store.read(data_access_for_mapped_wa_event)
 
-    def save_mapped_wa_event(self, mapped_wa_event_data: MappedWAEvent, event: Event):
-        data_access_for_mapped_wa_event = get_data_access_for_mapped_wa_event(
+    def save_mapped_wa_event(
+        self, mapped_wa_event_data: RegistrationDataForEvent, event: Event
+    ):
+        data_access_for_mapped_wa_event = get_data_access_for_mapped_registration_data(
             self.data, event_id=event.id
         )
         self.store.write(
@@ -439,8 +462,10 @@ class DataLayer:
         )
 
     def get_list_of_cadets_at_event(self, event: Event) -> ListOfCadetsWithIDAtEvent:
-        data_access_for_cadets_at_event = get_data_access_for_cadets_with_ids_and_registration_data_at_event(
-            self.data, event_id=event.id
+        data_access_for_cadets_at_event = (
+            get_data_access_for_cadets_with_ids_and_registration_data_at_event(
+                self.data, event_id=event.id
+            )
         )
 
         return self.store.read(data_access_for_cadets_at_event)
@@ -448,8 +473,10 @@ class DataLayer:
     def save_list_of_cadets_at_event(
         self, event: Event, list_of_cadets_at_event: ListOfCadetsWithIDAtEvent
     ):
-        data_access_for_cadets_at_event = get_data_access_for_cadets_with_ids_and_registration_data_at_event(
-            self.data, event_id=event.id
+        data_access_for_cadets_at_event = (
+            get_data_access_for_cadets_with_ids_and_registration_data_at_event(
+                self.data, event_id=event.id
+            )
         )
         self.store.write(
             list_of_cadets_at_event, data_access_method=data_access_for_cadets_at_event
@@ -593,7 +620,7 @@ class DataLayer:
 
     def get_list_of_targets_for_role_at_event(
         self, event: Event
-    ) -> ListOfTargetForRoleAtEvent:
+    ) -> ListOfTargetForRoleWithIdAtEvent:
         data_access_for_list_of_targets_for_role_at_event = (
             get_data_access_for_list_of_targets_for_role_at_event(
                 self.data, event_id=event.id
@@ -603,7 +630,7 @@ class DataLayer:
 
     def save_list_of_targets_for_role_at_event(
         self,
-        list_of_targets_for_role_at_event: ListOfTargetForRoleAtEvent,
+        list_of_targets_for_role_at_event: ListOfTargetForRoleWithIdAtEvent,
         event: Event,
     ):
         data_access_for_list_of_targets_for_role_at_event = (
@@ -926,13 +953,13 @@ def get_data_access_for_list_of_wa_field_mapping_templates(
     )
 
 
-def get_data_access_for_mapped_wa_event(
+def get_data_access_for_mapped_registration_data(
     data: GenericDataApi, event_id: str
 ) -> DataAccessMethod:
     return DataAccessMethod(
         "mapped_wa_event",
-        read_method=data.data_mapped_wa_event.read,
-        write_method=data.data_mapped_wa_event.write,
+        read_method=data.data_registration_data.read,
+        write_method=data.data_registration_data.write,
         event_id=event_id,
     )
 
@@ -1073,42 +1100,44 @@ def get_data_access_for_list_of_club_dinghies(data: GenericDataApi) -> DataAcces
         write_method=data.data_List_of_club_dinghies.write,
     )
 
+
 def get_data_access_for_list_of_groups(data: GenericDataApi) -> DataAccessMethod:
     return DataAccessMethod(
         "list_of_groups",
         read_method=data.data_list_of_groups.read,
-        write_method=data.data_list_of_groups.write
+        write_method=data.data_list_of_groups.write,
     )
+
 
 def get_data_access_for_list_of_skills(data: GenericDataApi) -> DataAccessMethod:
     return DataAccessMethod(
         "list_of_skills",
         read_method=data.data_list_of_skills.read,
-        write_method=data.data_list_of_skills.write
+        write_method=data.data_list_of_skills.write,
     )
+
 
 def get_data_access_for_list_of_teams(data: GenericDataApi) -> DataAccessMethod:
     return DataAccessMethod(
         "list_of_teams",
         read_method=data.data_list_of_teams.read,
-        write_method=data.data_list_of_teams.write
+        write_method=data.data_list_of_teams.write,
     )
+
 
 def get_data_access_for_list_of_roles(data: GenericDataApi) -> DataAccessMethod:
     return DataAccessMethod(
         "list_of_roles",
         read_method=data.data_list_of_roles.read,
-        write_method=data.data_list_of_roles.write
-
-
+        write_method=data.data_list_of_roles.write,
     )
 
 
-def get_data_access_for_list_of_teams_and_roles_with_ids(data: GenericDataApi) -> DataAccessMethod:
+def get_data_access_for_list_of_teams_and_roles_with_ids(
+    data: GenericDataApi,
+) -> DataAccessMethod:
     return DataAccessMethod(
         "list_of_teams_and_roles_with_ids",
         read_method=data.data_list_of_teams_and_roles_with_ids.read,
-        write_method=data.data_list_of_teams_and_roles_with_ids.write
-
+        write_method=data.data_list_of_teams_and_roles_with_ids.write,
     )
-

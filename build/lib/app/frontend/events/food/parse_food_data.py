@@ -3,7 +3,7 @@ from app.objects.abstract_objects.abstract_form import File
 
 from app.objects.events import Event
 
-from app.OLD_backend.cadets import  get_cadet_from_id
+from app.OLD_backend.cadets import get_cadet_from_id
 
 from app.OLD_backend.food import (
     update_cadet_food_data,

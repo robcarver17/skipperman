@@ -1,7 +1,9 @@
 from typing import Union, Callable
 
 from app.frontend.form_handler import initial_state_form
-from app.frontend.utilities.cleaning.ENTRY_cleaning import display_form_for_event_cleaning
+from app.frontend.utilities.cleaning.ENTRY_cleaning import (
+    display_form_for_event_cleaning,
+)
 from app.frontend.utilities.data_and_backups.ENTRY_data_and_backups import (
     display_form_data_and_backups,
 )

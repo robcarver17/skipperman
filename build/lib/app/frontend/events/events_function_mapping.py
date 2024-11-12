@@ -18,7 +18,7 @@ from app.frontend.events.view_individual_events import (
     display_form_view_individual_event,
     post_form_view_individual_event,
 )
-from app.frontend.events.import_wa.upload_event_file import (
+from app.frontend.events.import_data.upload_event_file import (
     display_form_upload_event_file,
     post_form_upload_event_file,
 )
@@ -46,27 +46,22 @@ from app.frontend.events.mapping.download_template_field_mapping import (
     display_form_for_download_template_field_mapping,
     post_form_for_download_template_field_mapping,
 )
-from app.frontend.events.import_wa.import_wa_file import (
-    display_form_import_event_file,
-    post_form_import_event_file,
-)
-from app.frontend.events.cadets_at_event.iteratively_add_cadet_ids_in_wa_import_stage import (
-    display_form_add_cadet_ids_during_import,
+
+from app.frontend.events.cadets_at_event.iteratively_identify_cadets_in_import_stage import (
+    display_form_identify_cadets_during_import,
     post_form_add_cadet_ids_during_import,
 )
 from app.frontend.events.cadets_at_event.interactively_update_records_of_cadets_at_event import (
     display_form_interactively_update_cadets_at_event,
     post_form_interactively_update_cadets_at_event,
 )
-from app.frontend.events.import_wa.update_existing_event import (
-    display_form_update_existing_event,
-    post_form_update_existing_event,
-)
 
-from app.frontend.events.import_wa.import_controller import (
+from app.frontend.events.import_data.import_controller import (
     import_controller,
     post_import_controller,
 )
+
+from app.frontend.events.import_data.import_wa_file import display_form_import_event_file, post_form_import_event_file
 
 from app.frontend.events.group_allocation.ENTRY_allocate_cadets_to_groups import (
     display_form_allocate_cadets,
@@ -123,14 +118,70 @@ from app.frontend.events.mapping.create_mapping import (
     display_form_for_create_custom_field_mapping,
     post_form_for_create_custom_field_mapping,
 )
+from app.frontend.events.import_data.ENTRY_import_choose import display_form_choose_import_source, post_form_choose_import_source
+from app.frontend.events.import_data.wa_import_gateway import display_form_WA_import_gateway, post_form_WA_import_gateway
 
 event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_functions(
     NestedDictOfMappings(
         {
             (display_form_view_of_events, post_form_view_of_events): {
                 (display_form_view_for_add_event, post_form_view_for_add_event): 0,
+
                 (display_form_view_individual_event, post_form_view_individual_event): {
-                    (display_form_upload_event_file, post_form_upload_event_file): 0,
+                    (display_form_choose_import_source, post_form_choose_import_source): {
+                        (display_form_WA_import_gateway, post_form_WA_import_gateway): {
+                            (display_form_upload_event_file, post_form_upload_event_file):0,
+                            (display_form_import_event_file, post_form_import_event_file): {
+                                (import_controller, post_import_controller): {
+                                    (
+                                        display_form_identify_cadets_during_import,
+                                        post_form_add_cadet_ids_during_import,
+                                    ): 0,
+                                    (
+                                        display_form_interactively_update_cadets_at_event,
+                                        post_form_interactively_update_cadets_at_event,
+                                    ): 0,
+                                    (
+                                        display_form_volunteer_identification,
+                                        post_form_volunteer_identification,
+                                    ): 0,
+                                    (
+                                        display_add_volunteers_to_event,
+                                        post_form_add_volunteers_to_event,
+                                    ): 0,
+                                },
+                            },
+                            (display_form_event_field_mapping, post_form_event_field_mapping): {
+                                (
+                                    display_form_for_choose_template_field_mapping,
+                                    post_form_for_choose_template_field_mapping,
+                                ): {
+                                    (
+                                        display_form_for_upload_template_field_mapping,
+                                        post_form_for_upload_template_field_mapping,
+                                    ): 0,
+                                },
+                                (
+                                    display_form_for_clone_event_field_mapping,
+                                    post_form_for_clone_event_field_mapping,
+                                ): 0,
+                                (
+                                    display_form_for_create_custom_field_mapping,
+                                    post_form_for_create_custom_field_mapping,
+                                ): {
+                                    (
+                                        display_form_for_download_template_field_mapping,
+                                        post_form_for_download_template_field_mapping,
+                                    ): 0,
+                                    (
+                                        display_form_for_upload_custom_field_mapping,
+                                        post_form_for_upload_custom_field_mapping,
+                                    ): 0,
+                                },
+
+                            },
+                        },
+                    },
                     (display_form_allocate_cadets, post_form_allocate_cadets): {
                         (display_add_cadet_partner, post_form_add_cadet_partner): 0
                     },
@@ -164,10 +215,6 @@ event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_func
                         post_form_view_for_patrol_boat_allocation,
                     ): 0,
                     (
-                        display_form_update_existing_event,
-                        post_form_update_existing_event,
-                    ): 0,
-                    (
                         display_form_view_for_food_requirements,
                         post_form_view_for_food_requirements,
                     ): 0,
@@ -175,53 +222,7 @@ event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_func
                         display_form_view_for_clothing_requirements,
                         post_form_view_for_clothing_requirements,
                     ): 0,
-                    (display_form_event_field_mapping, post_form_event_field_mapping): {
-                        (
-                            display_form_for_choose_template_field_mapping,
-                            post_form_for_choose_template_field_mapping,
-                        ): {
-                            (
-                                display_form_for_upload_template_field_mapping,
-                                post_form_for_upload_template_field_mapping,
-                            ): 0,
-                        },
-                        (
-                            display_form_for_clone_event_field_mapping,
-                            post_form_for_clone_event_field_mapping,
-                        ): 0,
-                        (
-                            display_form_for_create_custom_field_mapping,
-                            post_form_for_create_custom_field_mapping,
-                        ): {
-                            (
-                                display_form_for_download_template_field_mapping,
-                                post_form_for_download_template_field_mapping,
-                            ): 0,
-                            (
-                                display_form_for_upload_custom_field_mapping,
-                                post_form_for_upload_custom_field_mapping,
-                            ): 0,
-                        },
-                    },
-                    (display_form_import_event_file, post_form_import_event_file): 0,
-                    (import_controller, post_import_controller): {
-                        (
-                            display_form_add_cadet_ids_during_import,
-                            post_form_add_cadet_ids_during_import,
-                        ): 0,
-                        (
-                            display_form_interactively_update_cadets_at_event,
-                            post_form_interactively_update_cadets_at_event,
-                        ): 0,
-                        (
-                            display_form_volunteer_identification,
-                            post_form_volunteer_identification,
-                        ): 0,
-                        (
-                            display_add_volunteers_to_event,
-                            post_form_add_volunteers_to_event,
-                        ): 0,
-                    },
+
                 },
             }
         }

@@ -61,7 +61,3 @@ class ListOfCadetsWithIdOnCommittee(GenericListOfObjects):
 
     def list_of_cadet_ids(self):
         return [cadet.cadet_id for cadet in self]
-
-
-
-

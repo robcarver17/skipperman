@@ -20,11 +20,17 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.club_dinghies import (
     ListOfClubDinghies,
 )
-from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithIdAndClubDinghies, NO_BOAT
+from app.objects.cadet_at_event_with_club_boat_with_ids import (
+    ListOfCadetAtEventWithIdAndClubDinghies,
+    NO_BOAT,
+)
 from app.objects.boat_classes import (
     ListOfBoatClasses,
 )
-from app.objects.cadet_at_event_with_dinghy_with_ids import NO_PARTNERSHIP_LIST, ListOfCadetAtEventWithBoatClassAndPartnerWithIds
+from app.objects.cadet_at_event_with_dinghy_with_ids import (
+    NO_PARTNERSHIP_LIST,
+    ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
+)
 from app.objects.events import Event
 from app.objects.patrol_boats import ListOfPatrolBoats
 
@@ -142,7 +148,9 @@ class DinghiesData:
         )
 
     def update_boat_info_for_updated_cadets_at_event_where_cadets_available(
-        self, event: Event, list_of_updated_cadets: ListOfCadetAtEventWithBoatClassAndPartnerWithIds
+        self,
+        event: Event,
+        list_of_updated_cadets: ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
     ):
         list_of_cadets_at_event_with_dinghies = (
             self.get_list_of_cadets_at_event_with_dinghies(event)
@@ -380,7 +388,10 @@ def get_sorted_list_of_boats_excluding_boats_already_at_event(
 def DEPRECATE_load_list_of_patrol_boats_at_event_from_cache(
     cache: AdHocCache, event: Event
 ) -> ListOfPatrolBoats:
-    return cache.get_from_cache(DEPRECATE_load_list_of_patrol_boats_at_event, event=event)
+    return cache.get_from_cache(
+        DEPRECATE_load_list_of_patrol_boats_at_event, event=event
+    )
+
 
 def DEPRECATE_load_list_of_patrol_boats_at_event(
     data_layer: DataLayer, event: Event

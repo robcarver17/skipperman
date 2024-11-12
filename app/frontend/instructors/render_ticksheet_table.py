@@ -7,7 +7,10 @@ from typing import List, Dict
 from app.objects.cadets import ListOfCadets, Cadet
 
 from app.objects.composed.ticksheet import DictOfCadetsAndTicksWithinQualification
-from app.objects.composed.ticks_for_qualification import DictOfTickSheetItemsAndTicksForCadet, TicksForQualification
+from app.objects.composed.ticks_for_qualification import (
+    DictOfTickSheetItemsAndTicksForCadet,
+    TicksForQualification,
+)
 
 from app.frontend.instructors.buttons import (
     get_cadet_buttons_at_start_of_row_in_edit_state,
@@ -24,7 +27,10 @@ from app.frontend.shared.qualification_and_tick_state_storage import (
     NO_EDIT_STATE,
     EDIT_CHECKBOX_STATE,
     EDIT_DROPDOWN_STATE,
-    not_editing, return_true_if_a_cadet_id_been_set, get_group_from_state, get_qualification_from_state,
+    not_editing,
+    return_true_if_a_cadet_id_been_set,
+    get_group_from_state,
+    get_qualification_from_state,
 )
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -36,16 +42,15 @@ from app.objects.ticks import (
     tick_as_str,
     no_tick,
     full_tick,
-    list_of_tick_options, )
+    list_of_tick_options,
+)
 from app.objects.substages import TickSheetItem
 
 
 def get_ticksheet_table(
     interface: abstractInterface,
 ) -> Table:
-    ticksheet_data =  get_ticksheet_data_from_state(
-        interface=interface
-    )
+    ticksheet_data = get_ticksheet_data_from_state(interface=interface)
     print("Length of ticksheet %d" % len(ticksheet_data))
     top_rows = get_top_two_rows_for_table(
         interface=interface, ticksheet_data=ticksheet_data
@@ -55,14 +60,16 @@ def get_ticksheet_table(
     return Table(top_rows + other_rows, has_column_headings=True, has_row_headings=True)
 
 
-
 def get_top_two_rows_for_table(
-    interface: abstractInterface, ticksheet_data: DictOfCadetsAndTicksWithinQualification
+    interface: abstractInterface,
+    ticksheet_data: DictOfCadetsAndTicksWithinQualification,
 ) -> List[RowInTable]:
     list_of_tick_list_items = (
         ticksheet_data.list_of_tick_sheet_items_for_this_qualification
     )
-    list_of_substage_names = ticksheet_data.list_of_substage_names_aligned_to_tick_sheet_items
+    list_of_substage_names = (
+        ticksheet_data.list_of_substage_names_aligned_to_tick_sheet_items
+    )
 
     first_row = [""]
     second_row = [""]
@@ -92,10 +99,11 @@ def get_body_of_table(
     interface: abstractInterface,
     ticksheet_data: DictOfCadetsAndTicksWithinQualification,
 ) -> List[RowInTable]:
-
     return [
         get_row_for_cadet_in_ticksheet(
-            interface=interface, row_in_ticksheet_data=row_in_ticksheet_data, cadet=cadet
+            interface=interface,
+            row_in_ticksheet_data=row_in_ticksheet_data,
+            cadet=cadet,
         )
         for cadet, row_in_ticksheet_data in ticksheet_data.items()
     ]
@@ -103,18 +111,19 @@ def get_body_of_table(
 
 def get_row_for_cadet_in_ticksheet(
     interface: abstractInterface,
-        row_in_ticksheet_data: TicksForQualification,
-    cadet: Cadet
+    row_in_ticksheet_data: TicksForQualification,
+    cadet: Cadet,
 ) -> RowInTable:
-
-    all_tick_sheet_items_and_ticks = row_in_ticksheet_data.all_tick_sheet_items_and_ticks()
+    all_tick_sheet_items_and_ticks = (
+        row_in_ticksheet_data.all_tick_sheet_items_and_ticks()
+    )
 
     already_qualified = row_in_ticksheet_data.already_qualified
     first_cell_in_row = get_cadet_cell_at_start_of_row(
         interface=interface,
         qualification=row_in_ticksheet_data._qualification,
         already_qualified=already_qualified,
-        cadet=cadet
+        cadet=cadet,
     )
     rest_of_row = get_rest_of_row_in_table_for_dict_of_tick_item(
         interface=interface,
@@ -164,7 +173,6 @@ def get_rest_of_row_in_table_for_dict_of_tick_item(
     all_tick_sheet_items_and_ticks: DictOfTickSheetItemsAndTicksForCadet,
     already_qualified: bool,
 ) -> list:
-
     return [
         get_cell_in_table_for_tick(
             interface=interface,
@@ -182,7 +190,7 @@ def get_cell_in_table_for_tick(
     tick: Tick,
     cadet: Cadet,
     item: TickSheetItem,
-    already_qualified: bool
+    already_qualified: bool,
 ):
     state = get_edit_state_of_ticksheet(interface)
     if already_qualified:
@@ -231,8 +239,12 @@ def get_tick_from_checkbox_or_none(
     interface: abstractInterface, cadet_id: str, item_id: str
 ) -> Tick:
     selected_ticks = interface.value_of_multiple_options_from_form(
-        get_name_of_cell(item_id=item_id, cadet_id=cadet_id, dropdown=False,
-                         ), default=None
+        get_name_of_cell(
+            item_id=item_id,
+            cadet_id=cadet_id,
+            dropdown=False,
+        ),
+        default=None,
     )
     if selected_ticks is None:
         ## must be half or no tick
@@ -279,7 +291,7 @@ def get_tick_from_dropdown_or_none(
     return Tick[selected_tick_name]
 
 
-def get_name_of_cell(item_id: str, cadet_id: str, dropdown:bool):
+def get_name_of_cell(item_id: str, cadet_id: str, dropdown: bool):
     return "%s_%s_%s" % (item_id, cadet_id, str(dropdown))
 
 
@@ -291,18 +303,24 @@ def get_ticksheet_data_from_state(
     qualification = get_qualification_from_state(interface)
 
     ticksheet_data = get_ticksheet_data_for_cadets_at_event_in_group_with_qualification(
-        object_store=interface.object_store, event=event, group=group, qualification=qualification
+        object_store=interface.object_store,
+        event=event,
+        group=group,
+        qualification=qualification,
     )
-    ticksheet_data = filter_ticksheet_for_selected_cadet(ticksheet_data=ticksheet_data, interface=interface)
+    ticksheet_data = filter_ticksheet_for_selected_cadet(
+        ticksheet_data=ticksheet_data, interface=interface
+    )
 
     return ticksheet_data
 
 
 def filter_ticksheet_for_selected_cadet(
-    interface: abstractInterface, ticksheet_data: DictOfCadetsAndTicksWithinQualification
+    interface: abstractInterface,
+    ticksheet_data: DictOfCadetsAndTicksWithinQualification,
 ) -> DictOfCadetsAndTicksWithinQualification:
     try:
-        cadet =  get_cadet_from_state(interface)
+        cadet = get_cadet_from_state(interface)
         return ticksheet_data.subset_for_list_of_cadets(ListOfCadets([cadet]))
     except MissingData:
         return ticksheet_data

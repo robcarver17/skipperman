@@ -12,7 +12,8 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
-    save_menu_button, HelpButton,
+    save_menu_button,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_lines import (
     Line,
@@ -28,8 +29,11 @@ from app.objects.abstract_objects.abstract_interface import (
 )
 
 from app.frontend.shared.volunteer_state import get_volunteer_from_state
-from app.frontend.shared.add_edit_volunteer_forms import get_volunteer_from_form, get_and_save_volunteer_skills_from_form, \
-    skills_form_entries
+from app.frontend.shared.add_edit_volunteer_forms import (
+    get_volunteer_from_form,
+    get_and_save_volunteer_skills_from_form,
+    skills_form_entries,
+)
 from app.objects.volunteers import Volunteer
 
 
@@ -80,6 +84,8 @@ def form_to_edit_individual_volunteer(
             )
         ]
     )
+
+
 help_button = HelpButton("view_individual_volunteer_help")
 
 
@@ -130,13 +136,11 @@ def get_and_save_core_volunteer_details_from_form(
 ):
     volunteer_details_from_form = get_volunteer_from_form(interface)
     modify_volunteer(
-       object_store=interface.object_store,
+        object_store=interface.object_store,
         existing_volunteer=original_volunteer,
-        updated_volunteer=volunteer_details_from_form
+        updated_volunteer=volunteer_details_from_form,
     )
 
 
 FIRST_NAME = "first_name"
 SURNAME = "surname"
-
-

@@ -41,7 +41,10 @@ class DEPRECATE_VolunteerAtEvent(GenericSkipperManObject):
 
     @classmethod
     def from_volunteer_and_voluteer_at_event_with_id(
-        cls, volunteer: Volunteer, event: Event, volunteer_at_event_with_id=VolunteerAtEventWithId
+        cls,
+        volunteer: Volunteer,
+        event: Event,
+        volunteer_at_event_with_id=VolunteerAtEventWithId,
     ):
         return cls(
             volunteer=volunteer,
@@ -60,8 +63,9 @@ class ListOfVolunteersAtEvent(GenericListOfObjects):
     def _object_class_contained(self):
         return DEPRECATE_VolunteerAtEvent
 
-
-    def volunteer_at_event_with_id(self, volunteer_id: str, return_missing_data: bool = False):
+    def volunteer_at_event_with_id(
+        self, volunteer_id: str, return_missing_data: bool = False
+    ):
         try:
             idx = self.list_of_volunteer_ids().index(volunteer_id)
         except:
@@ -72,15 +76,13 @@ class ListOfVolunteersAtEvent(GenericListOfObjects):
 
         return self[idx]
 
-
     def list_of_volunteer_ids(self) -> List[str]:
         return [volunteer_at_event.volunteer_id for volunteer_at_event in self]
 
-    def sort_by_list_of_volunteer_ids(
-        self, list_of_ids
-    ) -> "ListOfVolunteersAtEvent":
+    def sort_by_list_of_volunteer_ids(self, list_of_ids) -> "ListOfVolunteersAtEvent":
         new_list_of_volunteers_at_event = [
-            self.volunteer_at_event_with_id(id, return_missing_data=True) for id in list_of_ids
+            self.volunteer_at_event_with_id(id, return_missing_data=True)
+            for id in list_of_ids
         ]
         new_list_of_volunteers_at_event = [
             volunteer_at_event

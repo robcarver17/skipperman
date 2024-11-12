@@ -11,7 +11,8 @@ from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
     main_menu_button,
-    back_menu_button, HelpButton,
+    back_menu_button,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_form import checkboxInput
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
@@ -199,23 +200,12 @@ help_button = HelpButton("file_management_help")
 nav_buttons = ButtonBar([main_menu_button, back_menu_button, help_button])
 
 
-
 public_file_header = ButtonBar(
-    [
-        upload_public_file_button,
-        delete_selected_files_button,
-        clear_public_file_button
-    ]
+    [upload_public_file_button, delete_selected_files_button, clear_public_file_button]
 )
 downloads_file_header = ButtonBar(
-    [
-        clear_temp_files_button,
-        delete_selected_files_button
-    ]
+    [clear_temp_files_button, delete_selected_files_button]
 )
 uploads_file_hedaer = ButtonBar(
-    [
-        clear_staging_files_button,
-        delete_selected_files_button
-    ]
+    [clear_staging_files_button, delete_selected_files_button]
 )

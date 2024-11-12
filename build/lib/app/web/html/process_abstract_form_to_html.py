@@ -32,5 +32,3 @@ def process_abstract_objects_to_html(
         return_html = return_html + html_this_element
 
     return return_html
-
-

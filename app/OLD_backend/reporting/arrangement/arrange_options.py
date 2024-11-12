@@ -162,7 +162,6 @@ class ArrangementOptionsAndGroupOrder:
 
         current_columns.remove_empty_elements()
 
-
     def as_df_of_str(self) -> pd.DataFrame:
         method = self.arrangement_options.arrangement_method.name
         columns = self.arrangement_options.arrangement_of_columns.as_str()

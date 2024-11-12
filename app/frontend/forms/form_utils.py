@@ -7,14 +7,15 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import (
     checkboxInput,
     textInput,
-    dropDownInput, radioInput,
+    dropDownInput,
+    radioInput,
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.exceptions import arg_not_passed
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
 from app.objects_OLD.food import FoodRequirements, OTHER_IN_FOOD_REQUIRED
-from app.objects.registration_data import RegistrationStatus, all_possible_status
+from app.objects.registration_status import RegistrationStatus, all_possible_status
 from app.objects.composed.volunteers_with_skills import SkillsDict
 
 ALL_AVAILABLE = "Select all"
@@ -192,19 +193,25 @@ def input_name_from_column_name_and_cadet_id(column_name: str, cadet_id: str) ->
     return "%s_%s" % (column_name, cadet_id)
 
 
-def checked_and_labels_dict_for_skills_form(skills_dict: SkillsDict) -> Tuple[Dict[str, bool], Dict[str, str]]:
+def checked_and_labels_dict_for_skills_form(
+    skills_dict: SkillsDict,
+) -> Tuple[Dict[str, bool], Dict[str, str]]:
     skills_dict_checked = skills_dict.as_dict_of_str_and_bool()
     skills_as_list_of_str = skills_dict.skill_names_as_list_of_str()
-    dict_of_labels = dict([(skill_name, skill_name) for skill_name in skills_as_list_of_str])
+    dict_of_labels = dict(
+        [(skill_name, skill_name) for skill_name in skills_as_list_of_str]
+    )
 
     return skills_dict_checked, dict_of_labels
 
 
 def get_dict_of_skills_from_form(
-        interface: abstractInterface, field_name: str
+    interface: abstractInterface, field_name: str
 ) -> SkillsDict:
-    all_skills =get_list_of_skills(interface.object_store)
-    selected_skills_as_list_of_str = interface.value_of_multiple_options_from_form(field_name)
+    all_skills = get_list_of_skills(interface.object_store)
+    selected_skills_as_list_of_str = interface.value_of_multiple_options_from_form(
+        field_name
+    )
     skills_dict = SkillsDict()
     for skill in all_skills:
         skill_name = skill.name
@@ -216,13 +223,15 @@ def get_dict_of_skills_from_form(
     return skills_dict
 
 
-def yes_no_radio(input_name:str, input_label: str = "", default_to_yes: bool =True) -> radioInput:
-    return  radioInput(
+def yes_no_radio(
+    input_name: str, input_label: str = "", default_to_yes: bool = True
+) -> radioInput:
+    return radioInput(
         input_name=input_name,
         input_label=input_label,
         dict_of_options={YES: YES, NO: NO},
         default_label=YES if default_to_yes else NO,
-        include_line_break=False
+        include_line_break=False,
     )
 
 

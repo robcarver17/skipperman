@@ -107,17 +107,21 @@ class LabelledTickSheet:
 
         return self.from_existing_replace_df(new_df)
 
+
 def labelled_tick_sheet_from_ticksheet_data(
-    ticksheet_data: DictOfCadetsAndTicksWithinQualification,
-    group: Group
+    ticksheet_data: DictOfCadetsAndTicksWithinQualification, group: Group
 ) -> LabelledTickSheet:
     df = raw_tick_sheet_from_ticksheet_data(ticksheet_data)
 
     list_of_cadets = ticksheet_data.list_of_cadets
     df.index = list_of_cadets.list_of_names()
 
-    list_of_substage_names = ticksheet_data.list_of_substage_names_aligned_to_tick_sheet_items
-    list_of_tick_item_names = ticksheet_data.list_of_tick_sheet_items_for_this_qualification
+    list_of_substage_names = (
+        ticksheet_data.list_of_substage_names_aligned_to_tick_sheet_items
+    )
+    list_of_tick_item_names = (
+        ticksheet_data.list_of_tick_sheet_items_for_this_qualification
+    )
     df.columns = [list_of_substage_names, list_of_tick_item_names]
 
     return LabelledTickSheet(
@@ -125,12 +129,12 @@ def labelled_tick_sheet_from_ticksheet_data(
         list_of_cadets=list_of_cadets,
         qualification_name=ticksheet_data.qualification.name,
         group_name=group.name,
-        cadets_in_columns=False
+        cadets_in_columns=False,
     )
+
 
 def raw_tick_sheet_from_ticksheet_data(
     ticksheet_data: DictOfCadetsAndTicksWithinQualification,
-
 ) -> pd.DataFrame:
     return pd.DataFrame(
         dict(
@@ -139,8 +143,8 @@ def raw_tick_sheet_from_ticksheet_data(
                 for cadet, ticks_for_cadet in ticksheet_data.items()
             ]
         )
-
     ).transpose()
+
 
 def dict_of_itemnames_and_ticks(ticks_for_cadet: TicksForQualification) -> dict:
     items_and_ticks = ticks_for_cadet.all_tick_sheet_items_and_ticks()

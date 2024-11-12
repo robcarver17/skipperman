@@ -1,11 +1,11 @@
 from typing import Union
 
-from app.frontend.events.import_wa.import_wa_file import display_form_import_event_file
+from app.frontend.events.import_data.import_wa_file import display_form_import_event_file
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.events.constants import *
-from app.frontend.events.import_wa.upload_event_file import (
+from app.frontend.events.import_data.upload_event_file import (
     get_form_for_wa_upload_with_prompt,
     verify_uploaded_wa_file_and_save_as_staged_file,
 )

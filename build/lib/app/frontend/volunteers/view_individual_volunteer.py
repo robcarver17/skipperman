@@ -1,17 +1,21 @@
 from typing import Union
 
-from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
-    get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first
+from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
+    get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first,
+)
 from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunteer
 from app.frontend.volunteers.edit_cadet_connections import (
     display_form_edit_cadet_volunteer_connections,
 )
-from app.frontend.volunteers.edit_volunteer import display_form_edit_individual_volunteer
+from app.frontend.volunteers.edit_volunteer import (
+    display_form_edit_individual_volunteer,
+)
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
-    back_menu_button, HelpButton,
+    back_menu_button,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_lines import (
     Line,
@@ -25,7 +29,9 @@ from app.frontend.form_handler import (
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
-from app.backend.volunteers.connected_cadets import get_list_of_cadets_associated_with_volunteer
+from app.backend.volunteers.connected_cadets import (
+    get_list_of_cadets_associated_with_volunteer,
+)
 from app.frontend.shared.volunteer_state import get_volunteer_from_state
 
 from app.objects.volunteers import Volunteer
@@ -67,21 +73,22 @@ def display_form_for_selected_volunteer(
                 skills,
                 _______________,
                 connected,
-
             ]
         )
     )
 
 
-
 def list_of_lines_with_allocations_and_roles(
     interface: abstractInterface, volunteer: Volunteer
 ) -> ListOfLines:
-    dict_of_roles = get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(
-        object_store=interface.object_store, volunteer=volunteer
+    dict_of_roles = (
+        get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(
+            object_store=interface.object_store, volunteer=volunteer
+        )
     )
 
     return from_dict_of_roles_to_list_of_lines(dict_of_roles)
+
 
 def from_dict_of_roles_to_list_of_lines(dict_of_roles: dict) -> ListOfLines:
     if len(dict_of_roles) == 0:
@@ -96,15 +103,16 @@ def from_dict_of_roles_to_list_of_lines(dict_of_roles: dict) -> ListOfLines:
 def list_of_skills_as_list_of_lines(
     interface: abstractInterface, volunteer: Volunteer
 ) -> ListOfLines:
-
-    skills = get_dict_of_existing_skills_for_volunteer(object_store=interface.object_store, volunteer=volunteer)
+    skills = get_dict_of_existing_skills_for_volunteer(
+        object_store=interface.object_store, volunteer=volunteer
+    )
     skills_held = skills.skills_held_as_str()
     skills_not_held = skills.skills_not_held_as_str()
 
     return ListOfLines(
         [
             Line("Skills held: %s" % skills_held),
-            Line("Skills missing: %s" % skills_not_held)
+            Line("Skills missing: %s" % skills_not_held),
         ]
     )
 
@@ -112,7 +120,9 @@ def list_of_skills_as_list_of_lines(
 def lines_for_connected_cadets(
     interface: abstractInterface, volunteer: Volunteer
 ) -> Line:
-    cadets = get_list_of_cadets_associated_with_volunteer(object_store=interface.object_store, volunteer=volunteer)
+    cadets = get_list_of_cadets_associated_with_volunteer(
+        object_store=interface.object_store, volunteer=volunteer
+    )
     if len(cadets) == 0:
         return Line([])
     cadets_as_str = cadets.as_str()
@@ -122,22 +132,21 @@ def lines_for_connected_cadets(
 def buttons_for_volunteer_form() -> ButtonBar:
     return ButtonBar(
         [
-
             back_menu_button,
             main_edit_button,
-           connection_edit_button,
+            connection_edit_button,
             help_button,
         ]
     )
-
 
 
 EDIT_BUTTON_LABEL = "Edit volunteer name and skills"
 EDIT_CADET_CONNECTIONS_BUTTON_LABEL = "Edit connection with sailors"
 
 main_edit_button = Button(EDIT_BUTTON_LABEL, nav_button=True)
-connection_edit_button =  Button(EDIT_CADET_CONNECTIONS_BUTTON_LABEL, nav_button=True)
+connection_edit_button = Button(EDIT_CADET_CONNECTIONS_BUTTON_LABEL, nav_button=True)
 help_button = HelpButton("view_individual_volunteer_help")
+
 
 def post_form_view_individual_volunteer(
     interface: abstractInterface,
@@ -158,8 +167,6 @@ def previous_form(interface: abstractInterface) -> NewForm:
     return interface.get_new_display_form_for_parent_of_function(
         display_form_view_individual_volunteer
     )
-
-
 
 
 def edit_volunteer_form(interface: abstractInterface) -> NewForm:

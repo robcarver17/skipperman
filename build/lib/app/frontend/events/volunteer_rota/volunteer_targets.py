@@ -7,7 +7,7 @@ from app.objects.abstract_objects.abstract_buttons import Button
 
 from app.objects.abstract_objects.abstract_lines import DetailListOfLines, ListOfLines
 
-from app.OLD_backend.rota.volunteer_rota_summary import (
+from app.backend.rota.volunteer_rota_targets import (
     get_list_of_actual_and_targets_for_roles_at_event,
     RowInTableWithActualAndTargetsForRole,
     save_new_volunteer_target,
@@ -23,9 +23,8 @@ from app.objects.events import Event
 
 
 def get_volunteer_targets_table_and_save_button(
-    interface:abstractInterface,
+    interface: abstractInterface,
     event: Event,
-
 ) -> DetailListOfLines:
     table = get_volunteer_targets_table(event=event, interface=interface)
     elements_to_return = [table]
@@ -40,8 +39,10 @@ def get_volunteer_targets_table_and_save_button(
 
 save_targets_button = Button("Save changes to targets")
 
+
 def get_volunteer_targets_table(
-    event: Event,    interface: abstractInterface,
+    event: Event,
+    interface: abstractInterface,
 ) -> Table:
     top_row = get_top_row_of_volunteer_targets_table(event=event)
     other_rows = get_body_of_volunteer_targets_table(event=event, interface=interface)
@@ -66,7 +67,7 @@ def get_body_of_volunteer_targets_table(
     event: Event, interface: abstractInterface
 ) -> List[RowInTable]:
     data_for_table = get_list_of_actual_and_targets_for_roles_at_event(
-        cache =interface.cache, event=event
+        cache=interface.cache, event=event
     )
     ready_to_swap = is_ready_to_swap(interface)
 
@@ -101,7 +102,9 @@ def get_target_box_in_form(role: str, target: int, ready_to_swap: bool = False):
         return target
     else:
         return intInput(
-            value=int(target), input_label="", input_name=get_input_name_for_target_box(role)
+            value=int(target),
+            input_label="",
+            input_name=get_input_name_for_target_box(role),
         )
 
 

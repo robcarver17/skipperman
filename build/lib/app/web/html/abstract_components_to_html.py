@@ -1,14 +1,43 @@
-from app.objects.abstract_objects.abstract_buttons import ActionOptionButton, MainMenuNavButton, HelpButton
+from app.objects.abstract_objects.abstract_buttons import (
+    ActionOptionButton,
+    MainMenuNavButton,
+    HelpButton,
+)
 from app.objects.abstract_objects.abstract_form import Image, Link
 from app.objects.abstract_objects.abstract_interface import UrlsOfInterest
 from app.objects.abstract_objects.abstract_lines import DetailLine
-from app.objects.abstract_objects.abstract_text import Heading, Arrow, up_arrow, down_arrow, right_arrow, left_arrow, \
-    up_down_arrow, left_right_arrow, outline_left_right_arrow, Pointer, up_pointer, down_pointer, left_pointer, \
-    right_pointer, Symbol, copyright_symbol, reg_tm_symbol, lightning_symbol, circle_up_arrow_symbol, umbrella_symbol, \
-    at_symbol, Text
+from app.objects.abstract_objects.abstract_text import (
+    Heading,
+    Arrow,
+    up_arrow,
+    down_arrow,
+    right_arrow,
+    left_arrow,
+    up_down_arrow,
+    left_right_arrow,
+    outline_left_right_arrow,
+    Pointer,
+    up_pointer,
+    down_pointer,
+    left_pointer,
+    right_pointer,
+    Symbol,
+    copyright_symbol,
+    reg_tm_symbol,
+    lightning_symbol,
+    circle_up_arrow_symbol,
+    umbrella_symbol,
+    at_symbol,
+    Text,
+)
 from app.objects.exceptions import arg_not_passed
-from app.web.html.html_components import html_container_wrapper, Html, html_bold_wrapper, html_link, \
-    get_detail_wrapper
+from app.web.html.html_components import (
+    html_container_wrapper,
+    Html,
+    html_bold_wrapper,
+    html_link,
+    get_detail_wrapper,
+)
 from app.web.html.url_define import get_help_url, INDEX_URL
 
 
@@ -255,5 +284,3 @@ def get_html_for_detail_line(line: DetailLine) -> Html:
     line_html = line.string
     detail_wrapper = get_detail_wrapper(line.name, open_detail=line.open)
     return detail_wrapper.wrap_around(line_html)
-
-

@@ -1,12 +1,18 @@
 from typing import List, Union
 
 from app.frontend.forms.swaps import is_ready_to_swap
-#from app.OLD_backend.OLD_patrol_boats import load_list_of_patrol_boats_at_event_from_cache
-from app.OLD_backend.OLD_patrol_boats.summary import get_summary_list_of_patrol_boat_allocations_for_events
+
+# from app.OLD_backend.OLD_patrol_boats import load_list_of_patrol_boats_at_event_from_cache
+from app.backend.patrol_boats.patrol_boat_summary import (
+    get_summary_list_of_patrol_boat_allocations_for_events,
+)
 from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
     get_existing_allocation_elements_for_day_and_boat,
-    get_volunteer_row_to_select_skill, get_list_of_volunteers_for_skills_checkboxes,
-    warn_on_all_volunteers_in_patrol_boats, instructions_qual_table, instructions_text,
+    get_volunteer_row_to_select_skill,
+    get_list_of_volunteers_for_skills_checkboxes,
+    warn_on_all_volunteers_in_patrol_boats,
+    instructions_qual_table,
+    instructions_text,
 )
 from app.frontend.events.patrol_boats.patrol_boat_dropdowns import (
     get_add_boat_dropdown,
@@ -14,7 +20,8 @@ from app.frontend.events.patrol_boats.patrol_boat_dropdowns import (
 )
 from app.frontend.events.patrol_boats.patrol_boat_buttons import (
     delete_button_for_boat_value,
-    DELETE_BOAT_BUTTON_LABEL, )
+    DELETE_BOAT_BUTTON_LABEL,
+)
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
 )
@@ -36,8 +43,12 @@ SAVE_CHANGES_BUTTON_LABEL = "Save changes"
 def get_top_material_for_patrol_boat_form(
     interface: abstractInterface, event: Event
 ) -> ListOfLines:
-    summary_of_boat_allocations = get_patrol_boat_summary(interface=interface, event=event)
-    patrol_boat_driver_and_crew_qualifications = get_patrol_boat_driver_and_crew_qualifications(interface=interface, event=event)
+    summary_of_boat_allocations = get_patrol_boat_summary(
+        interface=interface, event=event
+    )
+    patrol_boat_driver_and_crew_qualifications = (
+        get_patrol_boat_driver_and_crew_qualifications(interface=interface, event=event)
+    )
     warnings = warn_on_all_volunteers_in_patrol_boats(interface=interface, event=event)
     return ListOfLines(
         [
@@ -57,9 +68,13 @@ def get_top_material_for_patrol_boat_form(
     )
 
 
-def get_patrol_boat_summary(interface: abstractInterface, event: Event) -> Union[str, DetailListOfLines]:
-    summary_of_boat_allocations_as_df = get_summary_list_of_patrol_boat_allocations_for_events(
-        cache=interface.cache, event=event
+def get_patrol_boat_summary(
+    interface: abstractInterface, event: Event
+) -> Union[str, DetailListOfLines]:
+    summary_of_boat_allocations_as_df = (
+        get_summary_list_of_patrol_boat_allocations_for_events(
+            cache=interface.cache, event=event
+        )
     )
     if len(summary_of_boat_allocations_as_df) == 0:
         summary_of_boat_allocations = ""
@@ -70,7 +85,10 @@ def get_patrol_boat_summary(interface: abstractInterface, event: Event) -> Union
 
     return summary_of_boat_allocations
 
-def get_patrol_boat_driver_and_crew_qualifications(interface: abstractInterface, event: Event) -> Union[DetailListOfLines, str]:
+
+def get_patrol_boat_driver_and_crew_qualifications(
+    interface: abstractInterface, event: Event
+) -> Union[DetailListOfLines, str]:
     in_swap_state = is_ready_to_swap(interface)
     if in_swap_state:
         return ""
@@ -96,6 +114,7 @@ def get_patrol_boat_driver_and_crew_qualifications(interface: abstractInterface,
 
     return patrol_boat_driver_and_crew_qualifications
 
+
 def get_patrol_boat_driver_and_crew_qualifications_table(
     interface: abstractInterface, event: Event
 ) -> Table:
@@ -105,9 +124,7 @@ def get_patrol_boat_driver_and_crew_qualifications_table(
 
     return Table(
         [
-            get_volunteer_row_to_select_skill(
-             volunteer_at_event = volunteer_at_event
-            )
+            get_volunteer_row_to_select_skill(volunteer_at_event=volunteer_at_event)
             for volunteer_at_event in volunteers
         ]
     )
@@ -168,18 +185,18 @@ def get_bottom_row_padding_columns_for_patrol_boat_table(event: Event) -> List[s
 def get_body_of_patrol_boat_table_at_event(
     interface: abstractInterface, event: Event
 ) -> List[RowInTable]:
-    #list_of_boats_at_event = load_list_of_patrol_boats_at_event_from_cache(
+    # list_of_boats_at_event = load_list_of_patrol_boats_at_event_from_cache(
     #    cache=interface.cache, event=event
-    #)
+    # )
 
-    #other_rows = [
+    # other_rows = [
     #    get_row_for_boat_at_event(
     #        patrol_boat=patrol_boat, event=event, interface=interface
     #    )
     #    for patrol_boat in list_of_boats_at_event
-    #]
+    # ]
 
-    #return other_rows
+    # return other_rows
     pass
 
 
@@ -209,10 +226,12 @@ def get_boat_name_and_button_for_first_column(
         delete_button = ""
     else:
         delete_button = Button(
-            label=DELETE_BOAT_BUTTON_LABEL, value=delete_button_for_boat_value(patrol_boat)
+            label=DELETE_BOAT_BUTTON_LABEL,
+            value=delete_button_for_boat_value(patrol_boat),
         )
 
     return ListOfLines([boat_name, delete_button]).add_Lines()
+
 
 ##FIXME HERE
 def get_allocation_inputs_for_day_and_boat(
@@ -222,8 +241,6 @@ def get_allocation_inputs_for_day_and_boat(
         day=day, patrol_boat=patrol_boat, event=event, interface=interface
     )
     add_volunteer_to_patrol_boat_dropdown = get_add_volunteer_to_patrol_boat_dropdown(
-                interface=interface, patrol_boat=patrol_boat, day=day, event=event
-            )
+        interface=interface, patrol_boat=patrol_boat, day=day, event=event
+    )
     return ListOfLines(existing_elements + [add_volunteer_to_patrol_boat_dropdown])
-
-

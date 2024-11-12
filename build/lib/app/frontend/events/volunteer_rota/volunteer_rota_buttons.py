@@ -3,22 +3,42 @@ from typing import List
 from app.frontend.forms.swaps import is_ready_to_swap
 
 from app.frontend.shared.events_state import get_event_from_state
-from app.frontend.events.volunteer_rota.swapping import get_list_of_swap_buttons, cancel_swap_button
-from app.frontend.events.volunteer_rota.button_values import get_list_of_day_button_values, \
-    get_list_of_make_available_button_values, get_list_of_copy_overwrite_buttons_for_individual_volunteers, \
-    get_list_of_copy_fill_buttons_for_individual_volunteers, get_list_of_remove_role_buttons, \
-    get_list_of_make_unavailable_buttons, list_of_all_copy_previous_roles_buttons, \
-    get_dict_of_volunteer_name_buttons_and_volunteer_ids, list_of_all_location_button_names, list_of_all_skills_buttons
-from app.frontend.volunteers.ENTRY_view_volunteers import all_sort_types as all_volunteer_name_sort_types
-from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, cancel_menu_button, save_menu_button, \
-    HelpButton
+from app.frontend.events.volunteer_rota.swapping import (
+    get_list_of_swap_buttons,
+    cancel_swap_button,
+)
+from app.frontend.events.volunteer_rota.button_values import (
+    get_list_of_day_button_values,
+    get_list_of_make_available_button_values,
+    get_list_of_copy_overwrite_buttons_for_individual_volunteers,
+    get_list_of_copy_fill_buttons_for_individual_volunteers,
+    get_list_of_remove_role_buttons,
+    get_list_of_make_unavailable_buttons,
+    list_of_all_copy_previous_roles_buttons,
+    get_dict_of_volunteer_name_buttons_and_volunteer_ids,
+    list_of_all_location_button_names,
+    list_of_all_skills_buttons,
+)
+from app.frontend.volunteers.ENTRY_view_volunteers import (
+    all_sort_types as all_volunteer_name_sort_types,
+)
+from app.objects.abstract_objects.abstract_buttons import (
+    Button,
+    ButtonBar,
+    cancel_menu_button,
+    save_menu_button,
+    HelpButton,
+)
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
 def was_volunteer_name_sort_button_pressed(interface: abstractInterface):
     all_buttons = get_volunteer_name_sort_buttons()
 
-    return any([button.pressed(interface.last_button_pressed()) for button in all_buttons])
+    return any(
+        [button.pressed(interface.last_button_pressed()) for button in all_buttons]
+    )
+
 
 def get_all_volunteer_sort_buttons():
     name_sort_buttons = get_volunteer_name_sort_buttons()
@@ -69,8 +89,10 @@ def get_header_buttons_for_rota(interface: abstractInterface):
             ]
         )
 
+
 def get_buttons_after_rota_table_if_swapping():
     return ButtonBar([cancel_swap_button, help_button])
+
 
 def get_buttons_after_rota_table_if_not_swapping():
     return ButtonBar(
@@ -82,7 +104,9 @@ def get_buttons_after_rota_table_if_not_swapping():
         ]
     )
 
+
 help_button = HelpButton("volunteer_rota_help")
+
 
 def last_button_pressed_was_volunteer_name_button(interface: abstractInterface) -> bool:
     last_button = interface.last_button_pressed()
@@ -110,7 +134,7 @@ def get_all_day_sort_buttons(interface: abstractInterface):
     return get_list_of_day_button_values(event)
 
 
-def last_button_pressed_was_location_button(interface: abstractInterface)->bool:
+def last_button_pressed_was_location_button(interface: abstractInterface) -> bool:
     return interface.last_button_pressed() in get_all_location_buttons(interface)
 
 
@@ -197,7 +221,6 @@ def get_all_swap_buttons(interface: abstractInterface):
     return get_list_of_swap_buttons(interface=interface, event=event)
 
 
-
 def last_button_pressed_was_remove_role_button(interface: abstractInterface):
     return interface.last_button_pressed() in get_all_remove_role_buttons(interface)
 
@@ -208,7 +231,9 @@ def get_all_remove_role_buttons(interface: abstractInterface):
 
 
 def last_button_pressed_was_make_unavailable_button(interface: abstractInterface):
-    return interface.last_button_pressed() in get_all_make_unavailable_buttons(interface)
+    return interface.last_button_pressed() in get_all_make_unavailable_buttons(
+        interface
+    )
 
 
 def get_all_make_unavailable_buttons(interface: abstractInterface):

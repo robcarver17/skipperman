@@ -28,7 +28,8 @@ from app.web.html.url_define import (
     LOGOUT_URL,
     CHANGE_PASSWORD,
     TOGGLE_READ_ONLY,
-    HELP_PREFIX, MAKE_BACKUP,
+    HELP_PREFIX,
+    MAKE_BACKUP,
 )
 from app.data_access.configuration.configuration import MAX_FILE_SIZE
 
@@ -38,6 +39,7 @@ Request.max_form_parts = 5000  # avoid large forms crashing
 PROFILE = False
 
 #### SETUP
+
 
 ## Do not move these functions out of this file or things break
 def prepare_flask_app(max_file_size: int, profile: bool = False) -> Flask:
@@ -75,7 +77,6 @@ def prepare_login_manager(app: Flask) -> LoginManager:
 app = prepare_flask_app(max_file_size=MAX_FILE_SIZE, profile=PROFILE)
 
 
-
 login_manager = prepare_login_manager(app)
 
 
@@ -83,6 +84,7 @@ login_manager = prepare_login_manager(app)
 @app.before_request
 def setup():
     session.permanent = True
+
 
 ## login manager
 @login_manager.user_loader
@@ -107,6 +109,7 @@ def set_read_only():
     toggle_read_only()
     ## only possible from menu page
     return generate_menu_page_html()
+
 
 @app.route("/%s/" % MAKE_BACKUP, methods=["GET"])
 def make_backup():
@@ -147,6 +150,7 @@ def action(action_option):
 @login_required
 def help(help_page_name):
     return generate_help_page_html(help_page_name)
+
 
 @app.errorhandler(500)
 def generic_web_error(e):

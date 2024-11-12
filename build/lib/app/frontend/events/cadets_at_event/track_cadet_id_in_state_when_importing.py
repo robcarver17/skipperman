@@ -1,6 +1,5 @@
-from app.OLD_backend.wa_import.update_cadets_at_event import (
-    list_of_cadet_ids_at_event_and_in_mapped_data_for_event,
-)
+from app.backend.registration_data.identified_cadets_at_event import \
+    list_of_cadet_ids_in_event_data_and_identified_in_raw_registration_data_for_event
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.exceptions import missing_data, NoMoreData
@@ -60,8 +59,8 @@ def list_of_cadet_ids_at_event_and_in_mapped_data(
     interface: abstractInterface, include_mapped_data: bool = True
 ) -> list:
     event = get_event_from_state(interface)
-    all_ids = list_of_cadet_ids_at_event_and_in_mapped_data_for_event(
-        interface=interface, event=event, include_mapped_data=include_mapped_data
+    all_ids = list_of_cadet_ids_in_event_data_and_identified_in_raw_registration_data_for_event(
+        interface=interface, event=event, include_identified_in_raw_registration_data=include_mapped_data
     )
 
     return all_ids

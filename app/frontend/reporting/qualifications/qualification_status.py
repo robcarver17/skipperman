@@ -1,13 +1,17 @@
 import os
 from typing import Union
 
-from app.backend.qualifications_and_ticks.progress import get_expected_qualifications_for_cadets_at_event
+from app.backend.qualifications_and_ticks.progress import (
+    get_expected_qualifications_for_cadets_at_event,
+)
 from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.events import Event
 
 from app.OLD_backend.events import get_event_from_list_of_events_given_event_description
-from app.backend.events.list_of_events import confirm_event_exists_given_description_REFACTOR
+from app.backend.events.list_of_events import (
+    confirm_event_exists_given_description_REFACTOR,
+)
 
 from app.frontend.events.ENTRY_view_events import display_list_of_events_with_buttons
 
@@ -87,7 +91,7 @@ def write_expected_qualifications_to_temp_csv_file_and_return_filename(
     interface: abstractInterface, event: Event
 ) -> str:
     df_of_qualifications = get_expected_qualifications_for_cadets_at_event(
-        object_store = interface.object_store, event=event
+        object_store=interface.object_store, event=event
     )
     filename = temp_file_name()
     df_of_qualifications.to_csv(filename, index=False)

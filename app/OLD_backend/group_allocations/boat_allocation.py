@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Dict
 
-from app.OLD_backend.summarys import summarise_generic_counts_for_event_over_days
+from app.backend.events.summarys import summarise_generic_counts_for_event_over_days
 
 from app.data_access.store.data_access import DataLayer
 
@@ -13,9 +13,15 @@ from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
-from app.objects.cadet_at_event_with_dinghy_with_ids import no_partnership, CadetAtEventWithBoatClassAndPartnerWithIds, \
-    ListOfCadetAtEventWithBoatClassAndPartnerWithIds, compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values
-from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithIdAndClubDinghies
+from app.objects.cadet_at_event_with_dinghy_with_ids import (
+    no_partnership,
+    CadetAtEventWithBoatClassAndPartnerWithIds,
+    ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
+    compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values,
+)
+from app.objects.cadet_at_event_with_club_boat_with_ids import (
+    ListOfCadetAtEventWithIdAndClubDinghies,
+)
 
 
 def update_club_boat_allocation_for_cadet_at_event_on_day_if_cadet_available(
@@ -95,7 +101,8 @@ def convert_single_input_to_cadet_at_event(
     )
 
     two_handed_partner_id = get_two_handed_partner_id_from_str(
-        data_layer=interface.data, two_handed_partner_cadet_as_str=update.two_handed_partner_cadet_as_str
+        data_layer=interface.data,
+        two_handed_partner_cadet_as_str=update.two_handed_partner_cadet_as_str,
     )
 
     return CadetAtEventWithBoatClassAndPartnerWithIds(
@@ -113,11 +120,15 @@ def get_two_handed_partner_id_from_str(
     if no_partnership(two_handed_partner_cadet_as_str):
         return two_handed_partner_cadet_as_str
 
-    two_handed_partner = get_cadet_given_cadet_as_str(data_layer=data_layer, cadet_as_str=two_handed_partner_cadet_as_str)
+    two_handed_partner = get_cadet_given_cadet_as_str(
+        data_layer=data_layer, cadet_as_str=two_handed_partner_cadet_as_str
+    )
 
     return two_handed_partner.id
 
+
 from app.OLD_backend.cadets import get_cadet_given_cadet_as_str
+
 
 def get_boat_class_id_from_name(interface: abstractInterface, boat_class_name: str):
     dinghy_data = DinghiesData(interface.data)
@@ -210,7 +221,9 @@ def summarise_class_attendance_for_event(
 
 
 def get_relevant_cadet_ids_for_boat_class_id(
-    group: str, event: Event, list_of_ids_with_groups: ListOfCadetAtEventWithBoatClassAndPartnerWithIds
+    group: str,
+    event: Event,
+    list_of_ids_with_groups: ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
 ) -> Dict[Day, List[str]]:
     ## map from generic to specific var names. Event is not used
     boat_class_id = group

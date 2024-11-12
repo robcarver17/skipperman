@@ -3,7 +3,7 @@ from typing import Union, Tuple
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 
 from app.frontend.events.group_allocation.store_state import get_day_from_state_or_none
-from app.OLD_backend.wa_import.convert_helm_crew_data import (
+from app.backend.mapping.convert_helm_crew_data import (
     from_partner_name_to_cadet,
     add_matched_partner_cadet_with_duplicate_registration_to_wa_mapped_data,
     get_registered_two_handed_partner_name_for_cadet_at_event,
@@ -13,8 +13,8 @@ from app.frontend.events.cadets_at_event.track_cadet_id_in_state_when_importing 
     clear_cadet_id_at_event,
 )
 from app.OLD_backend.cadets import (
-
-get_cadet_from_id, get_cadet_given_cadet_as_str,
+    get_cadet_from_id,
+    get_cadet_given_cadet_as_str,
 )
 
 from app.frontend.shared.events_state import get_event_from_state
@@ -112,14 +112,12 @@ def process_form_when_existing_cadet_chosen_as_partner(
 
     try:
         cadet = get_cadet_given_cadet_as_str(
-            data_layer=interface.data,
-            cadet_as_str=cadet_selected_as_str
+            data_layer=interface.data, cadet_as_str=cadet_selected_as_str
         )
     except:
         raise Exception(
             "Cadet selected no longer exists - file corruption or someone deleted?",
         )
-
 
     return add_matched_partner_cadet_with_duplicate_registration(
         interface=interface, new_cadet=cadet
@@ -159,7 +157,7 @@ def get_primary_cadet_and_partner_name(
 ) -> Tuple[Cadet, Cadet]:
     event = get_event_from_state(interface)
     cadet_id = get_current_cadet_id_at_event(interface)
-    primary_cadet =get_cadet_from_id(cadet_id=cadet_id, data_layer=interface.data)
+    primary_cadet = get_cadet_from_id(cadet_id=cadet_id, data_layer=interface.data)
     partner_name = get_registered_two_handed_partner_name_for_cadet_at_event(
         interface=interface, cadet=primary_cadet, event=event
     )

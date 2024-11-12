@@ -1,27 +1,42 @@
 from typing import Union
 
-from app.OLD_backend.rota.volunteer_history import get_previous_role_and_group_for_volunteer_at_event
+from app.OLD_backend.rota.volunteer_history import (
+    get_previous_role_and_group_for_volunteer_at_event,
+)
 
-from app.data_access.configuration.fixed import COPY_OVERWRITE_SYMBOL, COPY_FILL_SYMBOL, NOT_AVAILABLE_SHORTHAND, \
-    REMOVE_SHORTHAND
+from app.data_access.configuration.fixed import (
+    COPY_OVERWRITE_SYMBOL,
+    COPY_FILL_SYMBOL,
+    NOT_AVAILABLE_SHORTHAND,
+    REMOVE_SHORTHAND,
+)
 from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
-from app.frontend.events.volunteer_rota.button_values import button_value_for_day, name_of_volunteer_button, \
-    copy_overwrite_button_value_for_volunteer_in_role_on_day, copy_fill_button_value_for_volunteer_in_role_on_day, \
-    unavailable_button_value_for_volunteer_in_role_on_day, remove_role_button_value_for_volunteer_in_role_on_day, \
-    copy_previous_role_button_name_from_volunteer_id, location_button_name_from_volunteer_id, \
-    skills_button_name_from_volunteer_id
+from app.frontend.events.volunteer_rota.button_values import (
+    button_value_for_day,
+    name_of_volunteer_button,
+    copy_overwrite_button_value_for_volunteer_in_role_on_day,
+    copy_fill_button_value_for_volunteer_in_role_on_day,
+    unavailable_button_value_for_volunteer_in_role_on_day,
+    remove_role_button_value_for_volunteer_in_role_on_day,
+    copy_previous_role_button_name_from_volunteer_id,
+    location_button_name_from_volunteer_id,
+    skills_button_name_from_volunteer_id,
+)
 from app.frontend.events.volunteer_rota.swapping import get_swap_button
 
 from app.objects.abstract_objects.abstract_lines import Line
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.OLD_backend.rota.volunteer_rota import (
-    all_roles_match_across_event, volunteer_has_empty_available_days_without_role,
-    volunteer_has_at_least_one_day_in_role_and_all_roles_and_groups_match,
-)
+from app.backend.rota.volunteer_table import all_roles_match_across_event, \
+    volunteer_has_empty_available_days_without_role, \
+    volunteer_has_at_least_one_day_in_role_and_all_roles_and_groups_match
 
-from app.OLD_backend.rota.rota_cadet_and_volunteer_data import get_cadet_location_string, get_str_dict_skills
+from app.OLD_backend.rota.rota_cadet_and_volunteer_data import (
+    get_str_dict_skills,
+)
+from app.backend.registration_data.cadet_and_volunteer_connections_at_event import \
+    get_cadet_location_string_for_volunteer
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -35,8 +50,8 @@ def get_location_button(
     volunteer_at_event: DEPRECATE_VolunteerAtEvent,
     ready_to_swap: bool,
 ) -> Button:
-    location = cache.get_from_cache(get_cadet_location_string,
-         volunteer_at_event=volunteer_at_event
+    location = cache.get_from_cache(
+        get_cadet_location_string_for_volunteer, volunteer_at_event=volunteer_at_event
     )
     if ready_to_swap:
         return location
@@ -48,7 +63,7 @@ def get_location_button(
 
 
 def get_skills_button(
-        cache: AdHocCache,
+    cache: AdHocCache,
     volunteer: Volunteer,
     ready_to_swap: bool,
 ) -> Button:
@@ -64,14 +79,14 @@ def get_skills_button(
     )
 
 
-
 def copy_previous_role_button_or_blank(
     volunteer_at_event: DEPRECATE_VolunteerAtEvent,
     cache: AdHocCache,
     ready_to_swap: bool,
 ) -> Union[Button, str]:
-    previous_role = get_previous_role_and_group_for_volunteer_at_event(cache=cache,
-                                                                       volunteer_at_event=volunteer_at_event)
+    previous_role = get_previous_role_and_group_for_volunteer_at_event(
+        cache=cache, volunteer_at_event=volunteer_at_event
+    )
 
     if previous_role.missing:
         return ""
@@ -88,6 +103,7 @@ def copy_previous_role_button_or_blank(
 
 #
 
+
 ### SORT BUTTONS
 def get_buttons_for_days_at_event(event: Event, ready_to_swap: bool):
     if ready_to_swap:
@@ -103,7 +119,9 @@ def button_for_day(day: Day) -> Button:
     return Button(day.name, value=button_value_for_day(day))
 
 
-def get_volunteer_button_or_string(volunteer_at_event: DEPRECATE_VolunteerAtEvent, ready_to_swap:bool):
+def get_volunteer_button_or_string(
+    volunteer_at_event: DEPRECATE_VolunteerAtEvent, ready_to_swap: bool
+):
     if ready_to_swap:
         return volunteer_at_event.name
     else:
@@ -143,7 +161,7 @@ def get_allocation_inputs_buttons_in_role_when_available(
     all_buttons = get_copy_buttons_for_volunteer(
         cache=interface.cache,
         volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day,
-        event=event
+        event=event,
     )
     all_buttons.append(swap_button)
     all_buttons.append(remove_role_button)
@@ -154,26 +172,26 @@ def get_allocation_inputs_buttons_in_role_when_available(
 
 def get_copy_buttons_for_volunteer(
     cache: AdHocCache,
-        event: Event,
+    event: Event,
     volunteer_in_role_at_event_on_day: VolunteerWithIdInRoleAtEvent,
 ):
     any_copy_possible = not all_roles_match_across_event(
         cache=cache,
         event=event,
-        volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day
+        volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day,
     )
 
-    copy_fill_possible = (
-        volunteer_has_empty_available_days_without_role(
-            cache=cache,
-            event=event,
-            volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day
-        )
-    )
-    copy_ovewrite_required = not volunteer_has_at_least_one_day_in_role_and_all_roles_and_groups_match(
+    copy_fill_possible = volunteer_has_empty_available_days_without_role(
         cache=cache,
         event=event,
-        volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day
+        volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day,
+    )
+    copy_ovewrite_required = (
+        not volunteer_has_at_least_one_day_in_role_and_all_roles_and_groups_match(
+            cache=cache,
+            event=event,
+            volunteer_in_role_at_event_on_day=volunteer_in_role_at_event_on_day,
+        )
     )
 
     overwrite_copy_button = get_overwrite_copy_button_for_volunteer(
@@ -191,8 +209,6 @@ def get_copy_buttons_for_volunteer(
             all_buttons.append(fill_copy_button)
 
     return all_buttons
-
-
 
 
 def get_overwrite_copy_button_for_volunteer(

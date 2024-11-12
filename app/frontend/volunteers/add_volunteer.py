@@ -6,16 +6,23 @@ from app.frontend.form_handler import (
     initial_state_form,
     button_error_and_back_to_initial_state_form,
 )
-from app.frontend.shared.add_edit_volunteer_forms import add_volunteer_from_form_to_data, \
-    verify_form_with_volunteer_details, get_add_volunteer_form_with_information_passed, \
-    get_footer_buttons_for_add_volunteer_form, final_submit_button, check_submit_button
+from app.frontend.shared.add_edit_volunteer_forms import (
+    add_volunteer_from_form_to_data,
+    verify_form_with_volunteer_details,
+    get_add_volunteer_form_with_information_passed,
+    get_footer_buttons_for_add_volunteer_form,
+    final_submit_button,
+    check_submit_button,
+)
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
 from app.objects.abstract_objects.abstract_buttons import (
-    cancel_menu_button, ButtonBar, HelpButton,
+    cancel_menu_button,
+    ButtonBar,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
@@ -28,16 +35,13 @@ def display_form_add_volunteer(interface: abstractInterface) -> Form:
     return get_add_volunteer_form(interface=interface, first_time_displayed=True)
 
 
-
 def get_add_volunteer_form(
     interface: abstractInterface, first_time_displayed: bool = True
 ) -> Form:
-
     if first_time_displayed:
         footer_buttons = get_footer_buttons_for_add_volunteer_form(form_is_empty=True)
         return get_add_volunteer_form_with_information_passed(
-            footer_buttons=footer_buttons,
-            header_text=header_text
+            footer_buttons=footer_buttons, header_text=header_text
         )
     else:
         volunteer_and_text = verify_form_with_volunteer_details(interface)
@@ -47,11 +51,13 @@ def get_add_volunteer_form(
         return get_add_volunteer_form_with_information_passed(
             volunteer_and_text=volunteer_and_text,
             footer_buttons=footer_buttons,
-            header_text=header_text
+            header_text=header_text,
         )
+
 
 help_button = HelpButton("add_new_volunteer_help")
 header_text = ListOfLines([ButtonBar([help_button]), "Add a new volunteer"]).add_Lines()
+
 
 def post_form_add_volunteer(interface: abstractInterface) -> Union[Form, NewForm]:
     ## Called by Logic API when buttons pressed
@@ -96,4 +102,3 @@ def process_form_when_volunteer_verified(
         interface=interface,
         function_whose_parent_go_to_on_button_press=display_form_add_volunteer,
     )
-

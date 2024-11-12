@@ -1,8 +1,13 @@
 from app.data_access.store.object_store import ObjectStore
 
 from app.data_access.file_access import temp_file_name
-from app.objects.composed.cadets_with_qualifications import ListOfNamedCadetsWithQualifications
-from app.backend.qualifications_and_ticks.qualifications_for_cadet import get_dict_of_qualifications_for_all_cadets
+from app.objects.composed.cadets_with_qualifications import (
+    ListOfNamedCadetsWithQualifications,
+)
+from app.backend.qualifications_and_ticks.qualifications_for_cadet import (
+    get_dict_of_qualifications_for_all_cadets,
+)
+
 
 def write_qualifications_to_temp_csv_file_and_return_filename(
     object_store: ObjectStore,
@@ -10,7 +15,9 @@ def write_qualifications_to_temp_csv_file_and_return_filename(
     qualification_data = get_dict_of_qualifications_for_all_cadets(object_store)
 
     list_of_cadet_names_with_qualifications = (
-        ListOfNamedCadetsWithQualifications.from_dict_of_qualifications(qualification_data)
+        ListOfNamedCadetsWithQualifications.from_dict_of_qualifications(
+            qualification_data
+        )
     )
 
     list_of_cadet_names_with_qualifications = (

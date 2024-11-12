@@ -59,6 +59,7 @@ class ListOfCadetAtEventWithBoatClassAndPartnerWithIds(GenericListOfObjectsWithI
     def _object_class_contained(self):
         return CadetAtEventWithBoatClassAndPartnerWithIds
 
+
     def update_boat_info_for_cadet_and_partner_at_event_on_day(
         self, cadet_at_event_with_dinghy: CadetAtEventWithBoatClassAndPartnerWithIds
     ):

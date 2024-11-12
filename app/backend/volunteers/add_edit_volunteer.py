@@ -2,28 +2,37 @@ from app.OLD_backend.data.volunteers import VolunteerData
 from app.data_access.store.data_access import DataLayer
 from app.data_access.store.object_store import ObjectStore
 
-from app.backend.volunteers.list_of_volunteers import get_list_of_volunteers, update_list_of_volunteers
+from app.backend.volunteers.list_of_volunteers import (
+    get_list_of_volunteers,
+    update_list_of_volunteers,
+)
 from app.objects.volunteers import Volunteer
-
-
 
 
 ## adding and warning
 
 
-def modify_volunteer(object_store: ObjectStore, existing_volunteer: Volunteer, updated_volunteer: Volunteer):
-    list_of_volunteers = get_list_of_volunteers(object_store)
-    list_of_volunteers.update_existing_volunteer(existing_volunteer=existing_volunteer, updated_volunteer=updated_volunteer)
-    update_list_of_volunteers(object_store=object_store, list_of_volunteers=list_of_volunteers)
-
-
-def add_new_verified_volunteer(
-        object_store: ObjectStore, volunteer: Volunteer
+def modify_volunteer(
+    object_store: ObjectStore,
+    existing_volunteer: Volunteer,
+    updated_volunteer: Volunteer,
 ):
+    list_of_volunteers = get_list_of_volunteers(object_store)
+    list_of_volunteers.update_existing_volunteer(
+        existing_volunteer=existing_volunteer, updated_volunteer=updated_volunteer
+    )
+    update_list_of_volunteers(
+        object_store=object_store, list_of_volunteers=list_of_volunteers
+    )
+
+
+def add_new_verified_volunteer(object_store: ObjectStore, volunteer: Volunteer):
     list_of_volunteers = get_list_of_volunteers(object_store)
 
     list_of_volunteers.add(volunteer)
-    update_list_of_volunteers(list_of_volunteers=list_of_volunteers, object_store=object_store)
+    update_list_of_volunteers(
+        list_of_volunteers=list_of_volunteers, object_store=object_store
+    )
 
 
 def warning_str_for_similar_volunteers(
@@ -46,16 +55,12 @@ def warning_str_for_similar_volunteers(
         return ""
 
 
-def list_of_similar_volunteers(
-    object_store: ObjectStore, volunteer: Volunteer
-) -> list:
+def list_of_similar_volunteers(object_store: ObjectStore, volunteer: Volunteer) -> list:
     list_of_volunteers = get_list_of_volunteers(object_store)
     return list_of_volunteers.similar_volunteers(volunteer)
 
 
-def verify_volunteer_and_warn(
-    object_store: ObjectStore, volunteer: Volunteer
-) -> str:
+def verify_volunteer_and_warn(object_store: ObjectStore, volunteer: Volunteer) -> str:
     warn_text = ""
     if len(volunteer.surname) < 4:
         warn_text += "Surname seems too short. "

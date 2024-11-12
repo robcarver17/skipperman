@@ -1,10 +1,16 @@
 from typing import List, Dict
 
 import pandas as pd
-from app.backend.qualifications_and_ticks.list_of_qualifications import get_list_of_qualifications
+from app.backend.qualifications_and_ticks.list_of_qualifications import (
+    get_list_of_qualifications,
+)
 
-from app.backend.qualifications_and_ticks.ticksheets import get_dict_of_cadets_with_qualifications_and_ticks
-from app.backend.groups.cadets_with_groups_at_event import get_dict_of_cadets_with_groups_at_event
+from app.backend.qualifications_and_ticks.ticksheets import (
+    get_dict_of_cadets_with_qualifications_and_ticks,
+)
+from app.backend.groups.cadets_with_groups_at_event import (
+    get_dict_of_cadets_with_groups_at_event,
+)
 
 from app.objects.cadets import Cadet
 
@@ -18,8 +24,9 @@ from app.objects.qualifications import ListOfQualifications, Qualification
 def get_expected_qualifications_for_cadets_at_event(
     object_store: ObjectStore, event: Event
 ) -> pd.DataFrame:
-
-    groups_data = get_dict_of_cadets_with_groups_at_event(object_store=object_store, event=event)
+    groups_data = get_dict_of_cadets_with_groups_at_event(
+        object_store=object_store, event=event
+    )
     list_of_groups = groups_data.all_groups_at_event()
 
     list_of_qualifications = get_list_of_qualifications(object_store)
@@ -33,7 +40,7 @@ def get_expected_qualifications_for_cadets_at_event(
                 object_store=object_store,
                 group=group,
                 list_of_qualifications=list_of_qualifications,
-                cadet=cadet
+                cadet=cadet,
             )
             for cadet in cadets_in_this_group
         ]
@@ -47,10 +54,11 @@ def get_expected_qualifications_for_cadets_at_event(
 
 
 def get_qualification_status_for_single_cadet_as_list_of_str(
-        object_store: ObjectStore, cadet: Cadet) -> List[str]:
+    object_store: ObjectStore, cadet: Cadet
+) -> List[str]:
     qualification_status_for_single_cadet_as_dict = (
         get_qualification_status_for_single_cadet_as_dict(
-           object_store=object_store, cadet=cadet
+            object_store=object_store, cadet=cadet
         )
     )
 
@@ -100,7 +108,8 @@ def get_qualification_status_for_single_cadet_as_dict(
 
 
 def get_expected_qualifications_for_single_cadet_with_group(
-    object_store: ObjectStore, cadet: Cadet,
+    object_store: ObjectStore,
+    cadet: Cadet,
     group: Group,
     list_of_qualifications: ListOfQualifications,
 ) -> List[str]:
@@ -117,7 +126,8 @@ def get_expected_qualifications_for_single_cadet_with_group(
 
 
 def get_percentage_qualifications_for_single_cadet(
-    object_store: ObjectStore, cadet: Cadet,
+    object_store: ObjectStore,
+    cadet: Cadet,
     list_of_qualifications: ListOfQualifications,
 ) -> List[str]:
     percentage_list = [
@@ -137,15 +147,21 @@ EMPTY = "0%"
 def percentage_qualification_for_cadet_and_qualification(
     object_store: ObjectStore, cadet: Cadet, qualification: Qualification
 ) -> str:
+    dict_of_cadets_with_qualifications_and_ticks = (
+        get_dict_of_cadets_with_qualifications_and_ticks(
+            object_store=object_store, list_of_cadet_ids=[cadet.id]
+        )
+    )
 
-    dict_of_cadets_with_qualifications_and_ticks = get_dict_of_cadets_with_qualifications_and_ticks(object_store=object_store,
-                                                                                                    list_of_cadet_ids=[cadet.id])
-
-    tickdata_this_cadet_and_qualification = dict_of_cadets_with_qualifications_and_ticks[cadet][qualification]
+    tickdata_this_cadet_and_qualification = (
+        dict_of_cadets_with_qualifications_and_ticks[cadet][qualification]
+    )
 
     if tickdata_this_cadet_and_qualification.already_qualified:
         return QUALIFIED
 
-    percentage_ticks_completed_as_number = tickdata_this_cadet_and_qualification.percentage_qualified()
+    percentage_ticks_completed_as_number = (
+        tickdata_this_cadet_and_qualification.percentage_qualified()
+    )
 
     return "%d%%" % percentage_ticks_completed_as_number

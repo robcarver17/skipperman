@@ -14,12 +14,17 @@ from app.frontend.forms.reorder_form import (
 from app.data_access.configuration.fixed import (
     SAVE_KEYBOARD_SHORTCUT,
 )
-from app.objects.abstract_objects.abstract_form import Form, NewForm, textInput, radioInput
+from app.objects.abstract_objects.abstract_form import (
+    Form,
+    NewForm,
+    textInput,
+    radioInput,
+)
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
-    cancel_menu_button, HelpButton,
-
+    cancel_menu_button,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_lines import (
     Line,
@@ -48,9 +53,11 @@ def row_for_new_entries() -> RowInTable:
 def get_row_for_existing_entry(entry, include_edit_button: bool = False) -> RowInTable:
     protected = is_protected_object(entry)
     if protected:
-        return RowInTable([
-            "Protected - cannot edit: ",
-            entry.name,]
+        return RowInTable(
+            [
+                "Protected - cannot edit: ",
+                entry.name,
+            ]
         )
     line = [
         text_box_for_entry(entry),
@@ -61,20 +68,21 @@ def get_row_for_existing_entry(entry, include_edit_button: bool = False) -> RowI
     if has_hidden_attribute(entry):
         line.append(hide_button_for_entry(entry))
 
-    line.append(Line([up_button_for_entry(entry),down_button_for_entry(entry)]))
+    line.append(Line([up_button_for_entry(entry), down_button_for_entry(entry)]))
 
     return RowInTable(line)
 
-def get_object_from_form(interface: abstractInterface, existing_object):
 
+def get_object_from_form(interface: abstractInterface, existing_object):
     new_name = interface.value_from_form(text_box_name(existing_object))
 
     object_class = existing_object.__class__
     if has_hidden_attribute(existing_object):
-        is_hidden = is_radio_yes_or_no(interface=interface,
-                                                 input_name=hidden_box_name(existing_object))
+        is_hidden = is_radio_yes_or_no(
+            interface=interface, input_name=hidden_box_name(existing_object)
+        )
 
-        return object_class(name = new_name, hidden = is_hidden)
+        return object_class(name=new_name, hidden=is_hidden)
     else:
         return object_class(new_name)
 
@@ -82,13 +90,17 @@ def get_object_from_form(interface: abstractInterface, existing_object):
 BACK_BUTTON_PRESSED = object()
 BUTTON_NOT_KNOWN = object()
 
-def display_form_edit_generic_list(
-    existing_list: list, header_text: str, include_edit_button: bool = False,
-    function_for_existing_entry_row: Callable = get_row_for_existing_entry
-) -> Union[Form, NewForm]:
 
-    existing_entries = rows_for_existing_entries(function_for_existing_entry_row=function_for_existing_entry_row,
-        existing_list=existing_list, include_edit_button=include_edit_button,
+def display_form_edit_generic_list(
+    existing_list: list,
+    header_text: str,
+    include_edit_button: bool = False,
+    function_for_existing_entry_row: Callable = get_row_for_existing_entry,
+) -> Union[Form, NewForm]:
+    existing_entries = rows_for_existing_entries(
+        function_for_existing_entry_row=function_for_existing_entry_row,
+        existing_list=existing_list,
+        include_edit_button=include_edit_button,
     )
     new_entries = row_for_new_entries()
     existing_entries.append(new_entries)
@@ -104,39 +116,41 @@ def display_form_edit_generic_list(
                     _______________,
                     existing_entries,
                     _______________,
-                    navbar
+                    navbar,
                 ]
             )
         ]
     )
 
+
 save_button = Button(
-                SAVE_ENTRY_BUTTON_LABEL,
-                nav_button=True,
-                shortcut=SAVE_KEYBOARD_SHORTCUT,
-            )
+    SAVE_ENTRY_BUTTON_LABEL,
+    nav_button=True,
+    shortcut=SAVE_KEYBOARD_SHORTCUT,
+)
 
 add_button = Button(
-                ADD_ENTRY_BUTTON_LABEL,
-                nav_button=True,
-                shortcut=SAVE_KEYBOARD_SHORTCUT,
-            )
+    ADD_ENTRY_BUTTON_LABEL,
+    nav_button=True,
+    shortcut=SAVE_KEYBOARD_SHORTCUT,
+)
 
 help_button = HelpButton("configuration_help")
 
+
 def rows_for_existing_entries(
-        existing_list: list,
-        function_for_existing_entry_row: Callable = get_row_for_existing_entry,
-     include_edit_button: bool = False
+    existing_list: list,
+    function_for_existing_entry_row: Callable = get_row_for_existing_entry,
+    include_edit_button: bool = False,
 ) -> Table:
     return Table(
         [
-            function_for_existing_entry_row(entry, include_edit_button=include_edit_button)
+            function_for_existing_entry_row(
+                entry, include_edit_button=include_edit_button
+            )
             for entry in existing_list
         ]
     )
-
-
 
 
 def up_button_for_entry(entry):
@@ -154,25 +168,25 @@ def text_box_for_entry(entry) -> textInput:
         value=str(entry), input_label="Edit name", input_name=text_box_name(entry)
     )
 
+
 def hide_button_for_entry(entry) -> radioInput:
-    return  yes_no_radio(
+    return yes_no_radio(
         input_name=hidden_box_name(entry),
         input_label="Hide in dropdown lists",
-        default_to_yes=entry.hidden
-
+        default_to_yes=entry.hidden,
     )
 
 
 EDIT_NAME_FLAG = "edit"
 HIDE_BUTTON_FLAG = "hide"
 
+
 def text_box_name(entry) -> str:
     return EDIT_NAME_FLAG + "_" + str(entry)
 
+
 def hidden_box_name(entry) -> str:
     return HIDE_BUTTON_FLAG + "_" + str(entry)
-
-
 
 
 def edit_contents_button(entry_name: str) -> Button:
@@ -185,7 +199,6 @@ def name_of_edit_contents_button_name(entry_name: str) -> str:
 
 def entry_name_from_edit_contents_button(button_pressed: str) -> str:
     return button_pressed.split("_")[1]
-
 
 
 @dataclass
@@ -207,7 +220,6 @@ def post_form_edit_generic_list(
     save_function: Callable,
     get_object_from_form_function: Callable = get_object_from_form,
 ) -> Union[Form, NewForm, object, EditButtonPressed]:
-
     last_button = interface.last_button_pressed()
 
     list_of_arrow_buttons = get_list_of_arrow_buttons(existing_list)
@@ -217,7 +229,7 @@ def post_form_edit_generic_list(
         return BACK_BUTTON_PRESSED
 
     elif save_button.pressed(last_button):
-       add_edits_from_form(
+        add_edits_from_form(
             interface=interface,
             modifying_function=modifying_function,
             existing_list=existing_list,
@@ -225,11 +237,7 @@ def post_form_edit_generic_list(
         )
 
     elif add_button.pressed(last_button):
-         add_new_entry_from_form(
-            interface=interface,
-            adding_function=adding_function
-        )
-
+        add_new_entry_from_form(interface=interface, adding_function=adding_function)
 
     elif last_button in list_of_arrow_buttons:
         reorder_list_given_form(
@@ -244,9 +252,9 @@ def post_form_edit_generic_list(
 
     return None
 
+
 def get_list_of_edit_contents_buttons(existing_list):
     return [name_of_edit_contents_button_name(entry) for entry in existing_list]
-
 
 
 def get_list_of_arrow_buttons(existing_list: list):
@@ -255,66 +263,68 @@ def get_list_of_arrow_buttons(existing_list: list):
     ]
 
 
-
-
-def add_new_entry_from_form(
-    interface: abstractInterface, adding_function: Callable
-):
+def add_new_entry_from_form(interface: abstractInterface, adding_function: Callable):
     name_of_entry_to_add = interface.value_from_form(ADD_ENTRY_TEXT_FIELD)
     if len(name_of_entry_to_add) > 0:
         ## functions need to take string and return new list of objects_OLD
         try:
-            adding_function(object_store = interface.object_store, name_of_entry_to_add=name_of_entry_to_add)
+            adding_function(
+                object_store=interface.object_store,
+                name_of_entry_to_add=name_of_entry_to_add,
+            )
         except Exception as e:
             interface.log_error("Error when adding new entry: %s" % str(e))
 
 
 def add_edits_from_form(
-    interface: abstractInterface, modifying_function: Callable, existing_list: list,
-        get_object_from_form_function: Callable = get_object_from_form,
+    interface: abstractInterface,
+    modifying_function: Callable,
+    existing_list: list,
+    get_object_from_form_function: Callable = get_object_from_form,
 ):
     try:
         add_edits_from_form_without_error_logging(
             interface=interface,
             modifying_function=modifying_function,
             existing_list=existing_list,
-            get_object_from_form_function=get_object_from_form_function
+            get_object_from_form_function=get_object_from_form_function,
         )
 
     except Exception as e:
-        interface.log_error(
-            "Error when modifying: %s"
-            % (str(e))
-        )
+        interface.log_error("Error when modifying: %s" % (str(e)))
 
         interface.clear_cache()
 
 
 def add_edits_from_form_without_error_logging(
-    interface: abstractInterface, modifying_function: Callable, existing_list: list,
-        get_object_from_form_function: Callable = get_object_from_form,
-
+    interface: abstractInterface,
+    modifying_function: Callable,
+    existing_list: list,
+    get_object_from_form_function: Callable = get_object_from_form,
 ):
     for existing_object in existing_list:
-        edit_specific_object_in_form(interface=interface,
-                                     modifying_function=modifying_function,
-                                     existing_object=existing_object,
-                                     get_object_from_form_function=get_object_from_form_function)
+        edit_specific_object_in_form(
+            interface=interface,
+            modifying_function=modifying_function,
+            existing_object=existing_object,
+            get_object_from_form_function=get_object_from_form_function,
+        )
 
 
-
-def edit_specific_object_in_form(interface: abstractInterface,
-                                 modifying_function: Callable, existing_object,
-                                 get_object_from_form_function: Callable = get_object_from_form,
-                    ):
-
+def edit_specific_object_in_form(
+    interface: abstractInterface,
+    modifying_function: Callable,
+    existing_object,
+    get_object_from_form_function: Callable = get_object_from_form,
+):
     protected = is_protected_object(existing_object)
     if protected:
         return
 
-    new_object = get_object_from_form_function(interface=interface,
-                                               existing_object=existing_object,
-)
+    new_object = get_object_from_form_function(
+        interface=interface,
+        existing_object=existing_object,
+    )
 
     if new_object == existing_object:
         return
@@ -322,12 +332,8 @@ def edit_specific_object_in_form(interface: abstractInterface,
     modifying_function(
         object_store=interface.object_store,
         existing_object=existing_object,
-        new_object=new_object
+        new_object=new_object,
     )
-
-
-
-
 
 
 def reorder_list_given_form(
@@ -339,7 +345,7 @@ def reorder_list_given_form(
         new_list = re_order_return_list(
             button_name=interface.last_button_pressed(), existing_list=existing_list
         )
-        save_function(object_store = interface.object_store, new_list=new_list)
+        save_function(object_store=interface.object_store, new_list=new_list)
     except Exception as e:
         interface.log_error("Error when reordering entry %s: " % str(e))
         new_list = copy(existing_list)

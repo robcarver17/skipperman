@@ -4,7 +4,7 @@ from app.OLD_backend.reporting.options_and_parameters.report_type_specific_param
     SpecificParametersForTypeOfReport,
 )
 
-all_groups_names= []
+all_groups_names = []
 specific_parameters_for_rollcall_report = SpecificParametersForTypeOfReport(
     #    entry_columns=[CADET_NAME],
     group_by_column=GROUP_STR_NAME,

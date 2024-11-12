@@ -18,7 +18,9 @@ def get_volunteer_for_logged_in_user_or_superuser(
 
     if user.is_skipper_or_admin():
         return SUPERUSER
-    volunteer = get_volunteer_from_id(object_store=interface.object_store, volunteer_id=user.volunteer_id)
+    volunteer = get_volunteer_from_id(
+        object_store=interface.object_store, volunteer_id=user.volunteer_id
+    )
 
     return volunteer
 

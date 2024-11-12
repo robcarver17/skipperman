@@ -21,13 +21,15 @@ from app.objects.events import Event
 from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
 )
-from app.objects.generic_objects import transform_class_instance_into_string, \
-    transform_string_into_class_instance, GenericSkipperManObjectWithIds
-from app.objects.registration_data import (
-    RegistrationStatus,
-    RowInRegistrationData,
-    deleted_status,
+from app.objects.generic_objects import (
+    transform_class_instance_into_string,
+    transform_string_into_class_instance,
+    GenericSkipperManObjectWithIds,
 )
+from app.objects.registration_data import (
+    RowInRegistrationData,
+)
+from app.objects.registration_status import RegistrationStatus, deleted_status
 from app.objects.utils import clean_up_dict_with_nans
 
 STATUS_KEY = "status"

@@ -1,10 +1,16 @@
 from dataclasses import dataclass
 
-from app.OLD_backend.rota.rota_cadet_and_volunteer_data import get_cadet_location_string
-from app.OLD_backend.rota.volunteer_rota import load_list_of_volunteers_at_event, \
-    get_volunteers_in_role_at_event_with_active_allocations, \
-    get_volunteer_role_and_group_event_on_day_for_volunteer_at_event
-from app.OLD_backend.volunteers.volunteers import load_list_of_volunteer_skills, get_sorted_list_of_volunteers
+from app.backend.registration_data.cadet_and_volunteer_connections_at_event import \
+    get_cadet_location_string_for_volunteer
+from app.OLD_backend.rota.volunteer_rota import (
+    get_volunteers_in_role_at_event_with_active_allocations,
+    get_volunteer_role_and_group_event_on_day_for_volunteer_at_event,
+)
+from app.backend.volunteers.volunteers_at_event import load_list_of_volunteers_at_event
+from app.OLD_backend.volunteers.volunteers import (
+    load_list_of_volunteer_skills,
+    get_sorted_list_of_volunteers,
+)
 
 from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
 
@@ -12,11 +18,19 @@ from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.exceptions import arg_not_passed
 from app.objects.utils import print_dict_nicely
-from app.objects.composed.volunteers_with_skills import SkillsDict, DictOfVolunteersWithSkills
-from app.objects_OLD.volunteers_at_event import ListOfVolunteersAtEvent, DEPRECATE_VolunteerAtEvent
-from app.objects_OLD.volunteers_in_roles import FILTER_ALL, FILTER_AVAILABLE, \
-    FILTER_UNAVAILABLE, FILTER_ALLOC_AVAILABLE, FILTER_UNALLOC_AVAILABLE
-from app.objects.volunteer_roles_and_groups_with_id import ListOfVolunteersWithIdInRoleAtEvent
+from app.objects.composed.volunteers_with_skills import (
+    SkillsDict,
+    DictOfVolunteersWithSkills,
+)
+from app.objects_OLD.volunteers_at_event import (
+    ListOfVolunteersAtEvent,
+    DEPRECATE_VolunteerAtEvent,
+)
+from app.backend.rota.sorting_and_filtering import FILTER_ALL, FILTER_AVAILABLE, FILTER_UNALLOC_AVAILABLE, \
+    FILTER_ALLOC_AVAILABLE, FILTER_UNAVAILABLE
+from app.objects.volunteer_roles_and_groups_with_id import (
+    ListOfVolunteersWithIdInRoleAtEvent,
+)
 
 
 @dataclass
@@ -28,14 +42,13 @@ class RotaSortsAndFilters:
     sort_by_location: bool
 
 
-
 def get_sorted_and_filtered_list_of_volunteers_at_event(
     cache: AdHocCache,
-        event: Event,
+    event: Event,
     sorts_and_filters: RotaSortsAndFilters,
 ) -> ListOfVolunteersAtEvent:
-    list_of_volunteers_at_event = (
-        filtered_list_of_volunteers_at_event(cache=cache, event=event, sorts_and_filters=sorts_and_filters)
+    list_of_volunteers_at_event = filtered_list_of_volunteers_at_event(
+        cache=cache, event=event, sorts_and_filters=sorts_and_filters
     )
     sorted_list_of_volunteers_at_event = sort_list_of_volunteers_at_event(
         cache=cache,
@@ -45,17 +58,20 @@ def get_sorted_and_filtered_list_of_volunteers_at_event(
 
     return sorted_list_of_volunteers_at_event
 
+
 def filtered_list_of_volunteers_at_event(
     cache: AdHocCache, event: Event, sorts_and_filters: RotaSortsAndFilters
 ) -> ListOfVolunteersAtEvent:
     skills_filter = sorts_and_filters.skills_filter
-    original_list_of_volunteers_at_event_with_ids = cache.get_from_cache(load_list_of_volunteers_at_event,
-        event=event)
+    original_list_of_volunteers_at_event_with_ids = cache.get_from_cache(
+        load_list_of_volunteers_at_event, event=event
+    )
 
     volunteer_skills = cache.get_from_cache(load_list_of_volunteer_skills)
     availability_filter_dict = sorts_and_filters.availability_filter
-    list_of_volunteers_in_roles_at_event = cache.get_from_cache(get_volunteers_in_role_at_event_with_active_allocations,
-            event=event)
+    list_of_volunteers_in_roles_at_event = cache.get_from_cache(
+        get_volunteers_in_role_at_event_with_active_allocations, event=event
+    )
 
     new_list = ListOfVolunteersAtEvent(
         [
@@ -162,6 +178,7 @@ def filter_volunteer_by_availability_on_given_day(
     elif availability_filter == FILTER_UNALLOC_AVAILABLE:
         return available and unallocated
 
+
 def sort_list_of_volunteers_at_event(
     cache: AdHocCache,
     list_of_volunteers_at_event: ListOfVolunteersAtEvent,
@@ -170,8 +187,7 @@ def sort_list_of_volunteers_at_event(
     sort_by_location = sorts_and_filters.sort_by_location
     if sort_by_location:
         return sort_volunteer_data_for_event_by_location(
-            list_of_volunteers_at_event=list_of_volunteers_at_event,
-            cache=cache
+            list_of_volunteers_at_event=list_of_volunteers_at_event, cache=cache
         )
 
     sort_by_volunteer_name = sorts_and_filters.sort_by_volunteer_name
@@ -187,7 +203,7 @@ def sort_list_of_volunteers_at_event(
         return sort_volunteer_data_for_event_by_day_sort_order(
             list_of_volunteers_at_event=list_of_volunteers_at_event,
             sort_by_day=sorts_and_filters.sort_by_day,
-            cache=cache
+            cache=cache,
         )
 
     return list_of_volunteers_at_event
@@ -198,8 +214,8 @@ def sort_volunteer_data_for_event_by_location(
     cache: AdHocCache,
 ) -> ListOfVolunteersAtEvent:
     list_of_locations = [
-        cache.get_from_cache(get_cadet_location_string,
-             volunteer_at_event=volunteer_at_event
+        cache.get_from_cache(
+            get_cadet_location_string_for_volunteer, volunteer_at_event=volunteer_at_event
         )
         for volunteer_at_event in list_of_volunteers_at_event
     ]
@@ -219,14 +235,13 @@ def sort_volunteer_data_for_event_by_name_sort_order(
     volunteers_at_event: ListOfVolunteersAtEvent,
     sort_order: str,
 ) -> ListOfVolunteersAtEvent:
-    list_of_all_volunteers = cache.get_from_cache(get_sorted_list_of_volunteers,
-         sort_by=sort_order
+    list_of_all_volunteers = cache.get_from_cache(
+        get_sorted_list_of_volunteers, sort_by=sort_order
     )
     ## this works because if an ID is missing we just ignore it
     return volunteers_at_event.sort_by_list_of_volunteer_ids(
         list_of_all_volunteers.list_of_ids
     )
-
 
 
 def sort_volunteer_data_for_event_by_day_sort_order(
@@ -237,11 +252,13 @@ def sort_volunteer_data_for_event_by_day_sort_order(
     tuple_of_volunteers_at_event_and_roles = [
         (
             volunteer_at_event,
-            cache.get_from_cache(get_volunteer_role_and_group_event_on_day_for_volunteer_at_event,
-                                 event = volunteer_at_event.event,
-                                 volunteer_at_event=volunteer_at_event, day=sort_by_day,
-                                 ))
-
+            cache.get_from_cache(
+                get_volunteer_role_and_group_event_on_day_for_volunteer_at_event,
+                event=volunteer_at_event.event,
+                volunteer_at_event=volunteer_at_event,
+                day=sort_by_day,
+            ),
+        )
         for volunteer_at_event in list_of_volunteers_at_event
     ]
 
@@ -253,7 +270,6 @@ def sort_volunteer_data_for_event_by_day_sort_order(
     ]
 
     return ListOfVolunteersAtEvent(list_of_volunteers)
-
 
 
 def get_explanation_of_sorts_and_filters(sorts_and_filters: RotaSortsAndFilters):
@@ -273,7 +289,9 @@ def get_explanation_of_sorts_and_filters(sorts_and_filters: RotaSortsAndFilters)
     explanation += print_dict_nicely(
         " Availability filter", sorts_and_filters.availability_filter
     )
-    explanation += explain_skills_filter(skills_filter=sorts_and_filters.skills_filter, prepend_text=" Skills filter")
+    explanation += explain_skills_filter(
+        skills_filter=sorts_and_filters.skills_filter, prepend_text=" Skills filter"
+    )
 
     return explanation
 
@@ -283,4 +301,3 @@ def explain_skills_filter(skills_filter: SkillsDict, prepend_text: str) -> str:
         return ""
 
     return " %s: %s" % (prepend_text, skills_filter.skills_held_as_str())
-

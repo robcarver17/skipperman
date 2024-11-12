@@ -14,6 +14,5 @@ def toggle_read_only():
     print(session)
 
 
-
 def is_read_only():
     return session.get(SESSION_KEY_FOR_TOGGLE, False)

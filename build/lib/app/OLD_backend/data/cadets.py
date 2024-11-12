@@ -10,7 +10,6 @@ class CadetData:
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
 
-
     def get_sorted_list_of_cadets(self, sort_by: str = arg_not_passed) -> ListOfCadets:
         master_list = self.get_list_of_cadets()
         if sort_by is arg_not_passed:
@@ -37,14 +36,12 @@ class CadetData:
 
         return list_of_cadets[cadet_idx]
 
-
     def add_cadet(self, cadet: Cadet) -> Cadet:
         list_of_cadets = self.get_list_of_cadets()
         cadet = list_of_cadets.add(cadet)
         self.save_list_of_cadets(list_of_cadets)
 
         return cadet
-
 
     def replace_cadet_with_id_with_new_cadet_details(
         self, existing_cadet_id: str, new_cadet: Cadet
@@ -106,14 +103,12 @@ class CadetData:
         list_of_cadets.replace_with_new_object(new_cadet)
         self.data_api.save_list_of_cadets(list_of_cadets)
 
-
     def get_list_of_cadets(self) -> ListOfCadets:
         list_of_cadets = self.data_api.get_list_of_cadets()
         return list_of_cadets
 
     def save_list_of_cadets(self, list_of_cadets: ListOfCadets):
         self.data_api.save_list_of_cadets(list_of_cadets)
-
 
 
 def get_list_of_cadets_as_str(list_of_cadets: ListOfCadets) -> List[str]:

@@ -3,9 +3,13 @@ from typing import List
 from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
 
 from app.frontend.forms.swaps import is_ready_to_swap
-from app.OLD_backend.rota.sorting_and_filtering import RotaSortsAndFilters, \
-    get_sorted_and_filtered_list_of_volunteers_at_event
-from app.frontend.events.volunteer_rota.rota_allocation_inputs import get_allocation_inputs_for_volunteer
+from app.backend.rota.sorting_and_filtering import (
+    RotaSortsAndFilters,
+    get_sorted_and_filtered_dict_of_volunteers_at_event,
+)
+from app.frontend.events.volunteer_rota.rota_allocation_inputs import (
+    get_allocation_inputs_for_volunteer,
+)
 from app.frontend.events.volunteer_rota.volunteer_table_buttons import (
     get_location_button,
     get_skills_button,
@@ -15,7 +19,8 @@ from app.frontend.events.volunteer_rota.volunteer_table_buttons import (
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import (
-    make_long_thing_detail_box, )
+    make_long_thing_detail_box,
+)
 
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.abstract_objects.abstract_form import textInput
@@ -67,13 +72,10 @@ def get_body_of_table_at_event(
     sorts_and_filters: RotaSortsAndFilters,
     ready_to_swap: bool = False,
 ) -> List[RowInTable]:
-
-    list_of_volunteers_at_event = (
-        get_sorted_and_filtered_list_of_volunteers_at_event(
-            cache=interface.cache,
-            event=event,
-            sorts_and_filters=sorts_and_filters,
-        )
+    list_of_volunteers_at_event = get_sorted_and_filtered_dict_of_volunteers_at_event(
+        cache=interface.cache,
+        event=event,
+        sorts_and_filters=sorts_and_filters,
     )
 
     other_rows = [
@@ -99,9 +101,11 @@ def get_row_for_volunteer_at_event(
         ready_to_swap=ready_to_swap,
     )
 
-    day_inputs = get_allocation_inputs_for_volunteer(interface=interface,
-                                                     volunteer_at_event=volunteer_at_event,
-                                                     ready_to_swap=ready_to_swap)
+    day_inputs = get_allocation_inputs_for_volunteer(
+        interface=interface,
+        volunteer_at_event=volunteer_at_event,
+        ready_to_swap=ready_to_swap,
+    )
 
     last_part = get_last_part_of_row_for_volunteer_at_event(
         volunteer_at_event=volunteer_at_event, ready_to_swap=ready_to_swap
@@ -113,10 +117,11 @@ def get_row_for_volunteer_at_event(
 def get_first_part_of_row_for_volunteer_at_event(
     cache: AdHocCache,
     volunteer_at_event: DEPRECATE_VolunteerAtEvent,
-    ready_to_swap: bool
+    ready_to_swap: bool,
 ) -> list:
-
-    name_button = get_volunteer_button_or_string(volunteer_at_event=volunteer_at_event, ready_to_swap=ready_to_swap)
+    name_button = get_volunteer_button_or_string(
+        volunteer_at_event=volunteer_at_event, ready_to_swap=ready_to_swap
+    )
     location = get_location_button(
         cache=cache,
         volunteer_at_event=volunteer_at_event,

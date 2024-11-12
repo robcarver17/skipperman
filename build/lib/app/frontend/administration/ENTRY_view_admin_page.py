@@ -22,8 +22,7 @@ user_button = Button(USERS_BUTTON_LABEL, tile=True)
 data_button = Button(DATA_BUTTON_LABEL, tile=True)
 
 nav_buttons = ButtonBar([main_menu_button])
-config_option_buttons = Line([user_button, data_button]
-)
+config_option_buttons = Line([user_button, data_button])
 
 
 def display_form_main_admin_page(interface: abstractInterface) -> Form:

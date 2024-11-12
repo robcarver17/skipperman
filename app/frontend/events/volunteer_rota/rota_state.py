@@ -1,11 +1,10 @@
 from typing import Union
 
-from app.OLD_backend.rota.sorting_and_filtering import RotaSortsAndFilters
+from app.backend.rota.sorting_and_filtering import RotaSortsAndFilters, FILTER_ALL
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.exceptions import arg_not_passed, missing_data
 from app.objects.day_selectors import Day
-from app.objects_OLD.volunteers_in_roles import FILTER_ALL
 from app.objects.composed.volunteers_with_skills import SkillsDict
 
 SORT_BY_VOLUNTEER_NAME = "Sort_volunteer_name"
@@ -19,9 +18,9 @@ SKILLS_FILTER = "skills_filter"
 def get_skills_filter_from_state(interface: abstractInterface) -> SkillsDict:
     skills_dict_with_str = interface.get_persistent_value(
         SKILLS_FILTER, default=None
-    ) ### dict of enum okay to store?
+    )  ### dict of enum okay to store?
     if skills_dict_with_str is None:
-        skills_dict = SkillsDict() ##
+        skills_dict = SkillsDict()  ##
     else:
         skills_dict = SkillsDict.from_dict_of_str_and_bool(skills_dict_with_str)
 
@@ -31,7 +30,9 @@ def get_skills_filter_from_state(interface: abstractInterface) -> SkillsDict:
     return skills_dict
 
 
-def save_skills_filter_to_state(interface: abstractInterface, dict_of_skills: SkillsDict):
+def save_skills_filter_to_state(
+    interface: abstractInterface, dict_of_skills: SkillsDict
+):
     dict_of_skills_with_str = dict_of_skills.as_dict_of_str_and_bool()
     interface.set_persistent_value(SKILLS_FILTER, dict_of_skills_with_str)
 

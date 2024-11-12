@@ -10,14 +10,12 @@ from app.objects.exceptions import arg_not_passed
 from app.objects.users_and_security import get_random_string
 
 
-
-
 def change_password_for_user(
     username: str, new_password: str, object_store: ObjectStore = arg_not_passed
 ):
     if object_store is arg_not_passed:
         ## If called from change password web page
-        object_store=default_object_store
+        object_store = default_object_store
 
     list_of_users = get_list_of_users(object_store)
     list_of_users.change_password_for_user(username, new_password=new_password)

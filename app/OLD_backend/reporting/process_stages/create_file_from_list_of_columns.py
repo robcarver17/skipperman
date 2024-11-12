@@ -11,7 +11,9 @@ from app.OLD_backend.reporting.process_stages.strings_columns_groups import (
     ListOfPagesWithColumns,
 )
 from app.OLD_backend.reporting.process_stages.pdf_layout import PdfLayout
-from app.OLD_backend.reporting.options_and_parameters.report_options import ReportingOptions
+from app.OLD_backend.reporting.options_and_parameters.report_options import (
+    ReportingOptions,
+)
 from app.data_access.file_access import download_directory, public_reporting_directory
 from app.data_access.xls_and_csv import save_dict_of_df_as_spreadsheet_file
 

@@ -5,7 +5,10 @@ from dataclasses import dataclass
 from app.data_access.store.object_store import ObjectStore
 
 from app.backend.events.list_of_events import get_sorted_list_of_events
-from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME, SIMILARITY_LEVEL_TO_WARN_DATE
+from app.data_access.configuration.configuration import (
+    SIMILARITY_LEVEL_TO_WARN_NAME,
+    SIMILARITY_LEVEL_TO_WARN_DATE,
+)
 
 from app.objects.events import Event, default_event
 

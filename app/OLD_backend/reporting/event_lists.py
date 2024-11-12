@@ -1,6 +1,9 @@
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.OLD_backend.events import SORT_BY_START_DSC, DEPRECATE_get_sorted_list_of_events
+from app.OLD_backend.events import (
+    SORT_BY_START_DSC,
+    DEPRECATE_get_sorted_list_of_events,
+)
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.objects.events import ListOfEvents, Event
@@ -92,7 +95,10 @@ def event_has_volunteers(interface: abstractInterface, event: Event):
     if not event.contains_volunteers:
         return False
 
-    if len(get_volunteers_in_role_at_event(data_layer=interface.data, event=event)) == 0:
+    if (
+        len(get_volunteers_in_role_at_event(data_layer=interface.data, event=event))
+        == 0
+    ):
         return False
 
     return True

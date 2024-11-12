@@ -22,7 +22,8 @@ from app.OLD_backend.volunteers.volunteers import (
     add_boat_related_skill_for_volunteer,
     remove_boat_related_skill_for_volunteer,
     can_volunteer_drive_safety_boat,
-    EPRECATE_get_volunteer_name_from_id, get_volunteer_from_id,
+    EPRECATE_get_volunteer_name_from_id,
+    get_volunteer_from_id,
 )
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
@@ -228,7 +229,9 @@ def update_skills_checkbox(interface: abstractInterface):
 def update_skills_checkbox_for_specific_volunteer_id(
     interface: abstractInterface, volunteer_id: str
 ):
-    volunteer = get_volunteer_from_id(data_layer=interface.data, volunteer_id=volunteer_id)## ideally would pass
+    volunteer = get_volunteer_from_id(
+        data_layer=interface.data, volunteer_id=volunteer_id
+    )  ## ideally would pass
 
     currently_has_boat_skill = can_volunteer_drive_safety_boat(
         data_layer=interface.data, volunteer=volunteer

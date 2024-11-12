@@ -42,7 +42,9 @@ class ListOfCadetVolunteerAssociationsWithIds(GenericListOfObjects):
         if self.connection_exists(cadet_id=cadet_id, volunteer_id=volunteer_id):
             return
         self.append(
-            CadetVolunteerAssociationWithIds(cadet_id=cadet_id, volunteer_id=volunteer_id)
+            CadetVolunteerAssociationWithIds(
+                cadet_id=cadet_id, volunteer_id=volunteer_id
+            )
         )
 
     def connection_exists(self, cadet_id: str, volunteer_id: str):

@@ -13,6 +13,7 @@ TOGGLE_READ_ONLY = "toggle_read_only"
 STATIC_DIRECTORY = "static"
 MAKE_BACKUP = "make_backup"
 
+
 def get_action_url(action_name: str):
     return "/%s/%s" % (ACTION_PREFIX, action_name)
 

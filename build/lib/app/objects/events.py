@@ -21,7 +21,6 @@ from app.objects.day_selectors import (
 )
 
 
-
 @dataclass
 class Event(GenericSkipperManObjectWithIds):
     event_name: str  ## has to be preselected
@@ -53,7 +52,6 @@ class Event(GenericSkipperManObjectWithIds):
         return cls(event_name=event_name, start_date=start_date, end_date=end_date)
 
     def details_as_list_of_str(self):
-
         return [
             self.event_description,
             "From %s to %s, %d days, covering %s"
@@ -268,4 +266,3 @@ def list_of_events_excluding_one_event(
     list_of_events = list_of_events.sort_by(sort_by)
 
     return list_of_events
-

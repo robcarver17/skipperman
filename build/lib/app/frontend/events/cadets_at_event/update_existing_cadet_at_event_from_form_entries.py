@@ -1,14 +1,16 @@
 from typing import Tuple
 
-from app.frontend.forms.form_utils import get_availablity_from_form, get_status_from_form
-from app.OLD_backend.wa_import.update_cadets_at_event import (
-    replace_existing_cadet_at_event_where_original_cadet_was_inactive,
-    get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active,
-    update_status_of_existing_cadet_at_event_to_cancelled_or_deleted,
-    update_availability_of_existing_cadet_at_event,
-    get_cadet_at_event_for_cadet_id,
-    update_payment_status_of_existing_cadet_at_event,
+from app.frontend.forms.form_utils import (
+    get_availablity_from_form,
+    get_status_from_form,
 )
+from app.backend.registration_data.update_cadets_at_event import \
+    replace_existing_cadet_at_event_where_original_cadet_was_inactive, update_payment_status_of_existing_cadet_at_event
+from app.backend.events.update_status_and_availability_of_cadets_at_event import update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_messages, \
+    update_availability_of_existing_cadet_at_event_and_return_messages
+from app.backend.registration_data.cadet_registration_data import get_cadet_at_event
+from app.backend.registration_data.identified_cadets_at_event import \
+    get_row_in_registration_data_for_cadet_both_cancelled_and_active
 from app.frontend.events.constants import ROW_STATUS, ATTENDANCE
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.cadets_at_event.track_cadet_id_in_state_when_importing import (
@@ -17,11 +19,11 @@ from app.frontend.events.cadets_at_event.track_cadet_id_in_state_when_importing 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadet_with_id_at_event import (
     CadetWithIdAtEvent,
-    get_cadet_at_event_from_row_in_mapped_event,
+    get_cadet_at_event_from_row_in_event_raw_registration_data,
 )
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
-from app.objects.registration_data import RegistrationStatus
+from app.objects.registration_status import RegistrationStatus
 
 
 def update_cadets_at_event_with_form_data(interface: abstractInterface):
@@ -66,7 +68,7 @@ def update_cadets_at_event(
 
     elif existing_registration_now_deleted_or_cancelled:
         ## availability is a moot point
-        update_status_of_existing_cadet_at_event_to_cancelled_or_deleted(
+        update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_messages(
             interface=interface,
             event=event,
             new_status=new_status,
@@ -126,7 +128,7 @@ def update_cadet_at_event_when_status_unchanged(
         )
         return
 
-    update_availability_of_existing_cadet_at_event(
+    update_availability_of_existing_cadet_at_event_and_return_messages(
         interface=interface,
         event=event,
         new_availabilty=new_availability,
@@ -140,7 +142,7 @@ def get_existing_cadet_at_event_from_state(
     event = get_event_from_state(interface)
     cadet_id = get_current_cadet_id_at_event(interface)
 
-    existing_cadet_at_event = get_cadet_at_event_for_cadet_id(
+    existing_cadet_at_event = get_cadet_at_event(
         interface=interface, event=event, cadet_id=cadet_id
     )
 
@@ -153,7 +155,7 @@ def get_new_cadet_from_mapped_event_and_optionally_form(
     event = get_event_from_state(interface)
     cadet_id = get_current_cadet_id_at_event(interface)
     row_in_mapped_wa_event = (
-        get_row_in_mapped_event_for_cadet_id_both_cancelled_and_active(
+        get_row_in_registration_data_for_cadet_both_cancelled_and_active(
             interface=interface,
             cadet_id=cadet_id,
             event=event,
@@ -161,7 +163,7 @@ def get_new_cadet_from_mapped_event_and_optionally_form(
         )
     )
     new_cadet_at_event_from_mapped_event_data = (
-        get_cadet_at_event_from_row_in_mapped_event(
+        get_cadet_at_event_from_row_in_event_raw_registration_data(
             row_in_mapped_wa_event=row_in_mapped_wa_event,
             event=event,
             cadet_id=cadet_id,

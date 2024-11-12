@@ -2,8 +2,10 @@ from app.objects.exceptions import MissingData
 
 from app.frontend.shared.cadet_state import get_cadet_from_state
 
-from app.backend.qualifications_and_ticks.list_of_qualifications import get_qualification_given_name, \
-    get_qualification_given_id
+from app.backend.qualifications_and_ticks.list_of_qualifications import (
+    get_qualification_given_name,
+    get_qualification_given_id,
+)
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.groups import Group
@@ -32,17 +34,19 @@ def get_qualification_from_state(interface: abstractInterface) -> Qualification:
     id = get_qualification_id_from_state(interface)
     return get_qualification_given_id(object_store=interface.object_store, id=id)
 
+
 def get_qualification_id_from_state(interface: abstractInterface) -> str:
     return interface.get_persistent_value(QUALIFICATION_NAME)
-
-
 
 
 def update_state_for_qualification_name(
     interface: abstractInterface, qualification_name: str
 ):
-    qualification = get_qualification_given_name(interface.object_store, name=qualification_name)
+    qualification = get_qualification_given_name(
+        interface.object_store, name=qualification_name
+    )
     update_state_for_qualification(interface, qualification=qualification)
+
 
 def update_state_for_qualification(
     interface: abstractInterface, qualification: Qualification
@@ -64,13 +68,13 @@ def set_edit_state_of_ticksheet(interface: abstractInterface, state: str):
     assert state in [EDIT_CHECKBOX_STATE, EDIT_DROPDOWN_STATE, NO_EDIT_STATE]
     interface.set_persistent_value(EDIT_STATE, state)
 
+
 def return_true_if_a_cadet_id_been_set(interface: abstractInterface):
     try:
         get_cadet_from_state(interface)
         return True
     except MissingData:
         return False
-
 
 
 def not_editing(interface: abstractInterface):

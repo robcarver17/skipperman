@@ -1,7 +1,11 @@
 from dataclasses import dataclass
 
-from app.objects.day_selectors import DaySelector, day_selector_stored_format_from_text, \
-    day_selector_to_text_in_stored_format, Day
+from app.objects.day_selectors import (
+    DaySelector,
+    day_selector_stored_format_from_text,
+    day_selector_to_text_in_stored_format,
+    Day,
+)
 from app.objects.exceptions import missing_data
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject

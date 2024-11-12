@@ -1,12 +1,19 @@
 from app.data_access.store.object_store import ObjectStore
 
-from app.backend.cadets.list_of_cadets import get_list_of_similar_cadets, get_list_of_cadets, update_list_of_cadets
+from app.backend.cadets.list_of_cadets import (
+    get_list_of_similar_cadets,
+    get_list_of_cadets,
+    update_list_of_cadets,
+)
 from app.objects.cadets import Cadet, is_cadet_age_surprising
+
 
 def add_new_verified_cadet(object_store: ObjectStore, cadet: Cadet) -> Cadet:
     list_of_cadets = get_list_of_cadets(object_store)
     cadet = list_of_cadets.add(cadet)
-    update_list_of_cadets(object_store=object_store, updated_list_of_cadets=list_of_cadets)
+    update_list_of_cadets(
+        object_store=object_store, updated_list_of_cadets=list_of_cadets
+    )
 
     return cadet
 
@@ -14,7 +21,9 @@ def add_new_verified_cadet(object_store: ObjectStore, cadet: Cadet) -> Cadet:
 def modify_cadet(object_store: ObjectStore, existing_cadet: Cadet, new_cadet: Cadet):
     list_of_cadets = get_list_of_cadets(object_store)
     list_of_cadets.update_cadet(existing_cadet=existing_cadet, new_cadet=new_cadet)
-    update_list_of_cadets(object_store=object_store, updated_list_of_cadets=list_of_cadets)
+    update_list_of_cadets(
+        object_store=object_store, updated_list_of_cadets=list_of_cadets
+    )
 
 
 def verify_cadet_and_return_warnings(object_store: ObjectStore, cadet: Cadet) -> str:

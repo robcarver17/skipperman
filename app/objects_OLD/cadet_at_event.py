@@ -9,7 +9,8 @@ from app.objects.day_selectors import DaySelector
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
 
-from app.objects.registration_data import RowInRegistrationData, RegistrationStatus
+from app.objects.registration_data import RowInRegistrationData
+from app.objects.registration_status import RegistrationStatus
 
 
 @dataclass
@@ -22,8 +23,12 @@ class CadetEventData:
     health: str = ""
 
     @classmethod
-    def from_cadet_with_id_at_event(cls, event: Event, cadet_with_id_at_event: CadetWithIdAtEvent):
-        availability = cadet_with_id_at_event.availability.intersect(event.day_selector_with_covered_days())
+    def from_cadet_with_id_at_event(
+        cls, event: Event, cadet_with_id_at_event: CadetWithIdAtEvent
+    ):
+        availability = cadet_with_id_at_event.availability.intersect(
+            event.day_selector_with_covered_days()
+        )
         return cls(
             event=event,
             availability=availability,
@@ -36,6 +41,7 @@ class CadetEventData:
 
 def create_list_of_cadets_at_event():
     pass
+
 
 @dataclass
 class DEPRECATE_CadetAtEvent(GenericSkipperManObject):

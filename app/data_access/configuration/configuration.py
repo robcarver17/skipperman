@@ -63,4 +63,6 @@ MINIMUM_COLOUR_GROUPS_TO_DISTRIBUTE = configuration["min_colour_groups_to_distri
 
 ## if following in volunteer status field can't volunteer
 UNABLE_TO_VOLUNTEER_KEYWORD = configuration["if_volunteer_unable_to_volunteer_contains"]
-MIN_AGE_WHEN_CADET_CAN_BE_AT_EVENT_WITHOUT_PARENT = configuration['minimum_age_when_cadet_can_be_at_event_without_parent']
+MIN_AGE_WHEN_CADET_CAN_BE_AT_EVENT_WITHOUT_PARENT = configuration[
+    "minimum_age_when_cadet_can_be_at_event_without_parent"
+]

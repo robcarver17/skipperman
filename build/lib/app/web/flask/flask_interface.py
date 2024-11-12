@@ -106,7 +106,6 @@ class flaskInterface(abstractInterface):
         print("inside state")
         return uploaded_file(input_name)
 
-
     def get_current_logged_in_username(self) -> str:
         return get_username()
 
@@ -148,5 +147,3 @@ def uploaded_file(input_name: str = "file"):
 
         raise NoFileUploaded()
     return file
-
-

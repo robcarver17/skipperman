@@ -2,9 +2,12 @@ from typing import Union, List
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.backend.club_boats.list_of_club_dinghies import get_list_of_boat_classes, update_list_of_boat_classes, \
-    add_new_club_dinghy_given_string,  \
-    modify_club_dinghy
+from app.backend.club_boats.list_of_club_dinghies import (
+    get_list_of_boat_classes,
+    update_list_of_boat_classes,
+    add_new_club_dinghy_given_string,
+    modify_club_dinghy,
+)
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.configuration.generic_list_modifier import (
@@ -55,7 +58,11 @@ def post_form_config_club_dinghies_page(
 
     return interface.get_new_form_given_function(display_form_config_club_dinghies_page)
 
+
 def save_from_ordinary_list_of_club_dinghies(
     object_store: ObjectStore, new_list: List[ClubDinghy]
 ):
-    update_list_of_boat_classes(object_store=object_store, updated_list_of_boat_classes=ListOfClubDinghies(new_list))
+    update_list_of_boat_classes(
+        object_store=object_store,
+        updated_list_of_boat_classes=ListOfClubDinghies(new_list),
+    )

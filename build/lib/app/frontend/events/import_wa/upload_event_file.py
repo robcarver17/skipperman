@@ -23,13 +23,13 @@ from app.frontend.form_handler import (
     button_error_and_back_to_initial_state_form,
 )
 from app.frontend.events.constants import UPLOAD_FILE_BUTTON_LABEL
-from app.OLD_backend.wa_import.load_wa_file import (
+from app.backend.wild_apricot.load_wa_file import (
     save_staged_file_of_raw_event_upload_with_event_id,
     check_local_file_is_valid_wa_file,
     WA_FILE,
 )
 from app.backend.file_handling import verify_and_return_uploaded_wa_event_file, save_uploaded_file_as_local_temp_file
-from app.OLD_backend.wa_import.map_wa_files import verify_file_has_correct_wa_id
+from app.backend.mapping.event_mapping import verify_file_has_correct_wa_id
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.events import Event
 

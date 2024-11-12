@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 from app.OLD_backend.data.qualification import QualificationData
 
-from app.OLD_backend.cadets import  load_list_of_all_cadets
+from app.OLD_backend.cadets import load_list_of_all_cadets
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -19,9 +19,11 @@ from app.OLD_backend.group_allocations.cadet_event_allocations import (
 from app.OLD_backend.group_allocations.previous_allocations import (
     DEPRECATE_get_dict_of_allocations_for_events_and_list_of_cadets,
 )
-from app.backend.groups.cadets_with_groups_at_event import most_common_allocation_for_cadet_in_previous_events as most_popular_allocation_for_cadet_in_previous_events, \
-    allocation_for_cadet_in_previous_events_as_dictCONSIDER_REFACTOR
-from app.objects.groups import GROUP_UNALLOCATED_TEXT_DONTUSE  as unallocated_group_name
+from app.backend.groups.cadets_with_groups_at_event import (
+    most_common_allocation_for_cadet_in_previous_events as most_popular_allocation_for_cadet_in_previous_events,
+    allocation_for_cadet_in_previous_events_as_dictCONSIDER_REFACTOR,
+)
+from app.objects.groups import GROUP_UNALLOCATED_TEXT_DONTUSE as unallocated_group_name
 from app.OLD_backend.data.cadets_at_event_id_level import load_cadets_at_event
 from app.data_access.configuration.field_list import (
     CADET_GROUP_PREFERENCE,
@@ -30,7 +32,9 @@ from app.data_access.configuration.field_list import (
     CADET_BOAT_SAIL_NUMBER,
     CADET_BOAT_OWNERSHIP_STATUS,
 )
-from app.OLD_backend.data.dinghies import load_list_of_cadets_at_event_with_club_dinghies
+from app.OLD_backend.data.dinghies import (
+    load_list_of_cadets_at_event_with_club_dinghies,
+)
 from app.OLD_backend.configuration import (
     load_list_of_boat_classes,
     load_list_of_club_dinghies,
@@ -58,12 +62,18 @@ from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGrou
 from app.objects.club_dinghies import (
     ListOfClubDinghies,
 )
-from app.objects.cadet_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithIdAndClubDinghies, NO_BOAT
+from app.objects.cadet_at_event_with_club_boat_with_ids import (
+    ListOfCadetAtEventWithIdAndClubDinghies,
+    NO_BOAT,
+)
 from app.objects.boat_classes import (
     ListOfBoatClasses,
 )
-from app.objects.cadet_at_event_with_dinghy_with_ids import NO_PARTNER_REQUIRED, no_partnership, \
-    ListOfCadetAtEventWithBoatClassAndPartnerWithIds
+from app.objects.cadet_at_event_with_dinghy_with_ids import (
+    NO_PARTNER_REQUIRED,
+    no_partnership,
+    ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
+)
 from app.objects.utils import similar, all_equal, most_common
 from app.objects.qualifications import ListOfCadetsWithIdsAndQualifications
 from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent

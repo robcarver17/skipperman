@@ -1,11 +1,16 @@
 from typing import Union, List
 from app.backend.cadets.list_of_cadets import get_list_of_cadets_sorted_by_surname
-from app.frontend.shared.cadet_connection_forms import form_to_edit_connections,  \
-    add_connection_button,  \
-    get_list_of_delete_cadet_buttons_given_connected_cadets, get_cadet_from_button_pressed, get_selected_cadet_from_form
+from app.frontend.shared.cadet_connection_forms import (
+    form_to_edit_connections,
+    add_connection_button,
+    get_list_of_delete_cadet_buttons_given_connected_cadets,
+    get_cadet_from_button_pressed,
+    get_selected_cadet_from_form,
+)
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import (
-    back_menu_button, Button,
+    back_menu_button,
+    Button,
 )
 from app.objects.abstract_objects.abstract_lines import (
     Line,
@@ -19,8 +24,11 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 
-from app.backend.volunteers.connected_cadets import get_list_of_cadets_associated_with_volunteer, \
-    delete_cadet_connection, add_volunteer_connection_to_cadet_in_master_list_of_volunteers
+from app.backend.volunteers.connected_cadets import (
+    get_list_of_cadets_associated_with_volunteer,
+    delete_cadet_connection,
+    add_volunteer_connection_to_cadet_in_master_list_of_volunteers,
+)
 
 from app.frontend.shared.volunteer_state import get_volunteer_from_state
 from app.objects.exceptions import CadetNotSelected
@@ -56,9 +64,7 @@ def display_form_edit_cadet_volunteer_connections(
 
 header_text = ListOfLines(
     [
-
-            "Edit volunteer and sailors connections (used to avoid putting group_allocations/parents together and to find volunteers):"
-
+        "Edit volunteer and sailors connections (used to avoid putting group_allocations/parents together and to find volunteers):"
     ]
 )
 
@@ -92,7 +98,6 @@ def previous_form(interface: abstractInterface):
 def post_form_edit_cadet_volunteer_connections_when_delete_button_probably_pressed(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
-
     if last_button_pressed_was_delete_cadet_button(interface=interface):
         delete_connection_given_form(interface=interface)
         interface.flush_cache_to_store()
@@ -112,13 +117,16 @@ def last_button_pressed_was_delete_cadet_button(interface: abstractInterface) ->
 
     return False
 
+
 def get_list_of_delete_cadet_buttons(interface: abstractInterface) -> List[str]:
     volunteer = get_volunteer_from_state(interface)
     connected_cadets = get_list_of_cadets_associated_with_volunteer(
         object_store=interface.object_store, volunteer=volunteer
     )
 
-    list_of_delete_cadet_buttons = get_list_of_delete_cadet_buttons_given_connected_cadets(connected_cadets)
+    list_of_delete_cadet_buttons = (
+        get_list_of_delete_cadet_buttons_given_connected_cadets(connected_cadets)
+    )
 
     return list_of_delete_cadet_buttons
 
@@ -139,9 +147,9 @@ def add_connection_from_form(interface: abstractInterface):
     )
 
 
-
 def delete_connection_given_form(interface: abstractInterface):
     cadet = get_cadet_from_button_pressed(interface)
     volunteer = get_volunteer_from_state(interface)
-    delete_cadet_connection(object_store=interface.object_store, cadet=cadet, volunteer=volunteer)
-
+    delete_cadet_connection(
+        object_store=interface.object_store, cadet=cadet, volunteer=volunteer
+    )

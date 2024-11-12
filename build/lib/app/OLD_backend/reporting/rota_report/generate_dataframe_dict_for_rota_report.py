@@ -23,10 +23,13 @@ from app.objects.events import Event
 from app.objects_OLD.volunteers_in_roles import (
     VolunteerInRoleAtEventWithTeamName,
 )
-from app.objects.volunteer_roles_and_groups_with_id import ListOfVolunteersWithIdInRoleAtEvent
+from app.objects.volunteer_roles_and_groups_with_id import (
+    ListOfVolunteersWithIdInRoleAtEvent,
+)
 
 RIVER_SAFETY = "River safety"
 LAKE_SAFETY = "Lake safety"
+
 
 def get_df_for_reporting_volunteers_with_flags(
     event: Event,

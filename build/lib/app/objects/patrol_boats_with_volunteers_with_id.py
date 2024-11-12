@@ -6,15 +6,12 @@ from app.objects.events import Event
 from app.objects.exceptions import missing_data, MissingData, MultipleMatches
 from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
 from app.objects.generic_objects import GenericSkipperManObject
-from app.objects.patrol_boats import  PatrolBoat, ListOfPatrolBoats
+from app.objects.patrol_boats import PatrolBoat, ListOfPatrolBoats
 from app.objects.utils import make_id_as_int_str
-
 
 
 EMPTY_VOLUNTEER_ID = "NONE"
 ARBITRARY_DAY = Day.Monday
-
-
 
 
 @dataclass
@@ -246,7 +243,9 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
 
         return len(matches) > 0
 
-    def which_boat_id_is_volunteer_on_today_or_missing_data(self, volunteer_id: str, day: Day) -> str:
+    def which_boat_id_is_volunteer_on_today_or_missing_data(
+        self, volunteer_id: str, day: Day
+    ) -> str:
         matches = [
             item
             for item in self

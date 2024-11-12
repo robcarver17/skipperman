@@ -1,7 +1,8 @@
 from typing import List, Tuple, Union
 
-from app.backend.qualifications_and_ticks.ticksheets import  \
-    get_ticksheet_data_for_cadets_at_event_in_group_with_qualification
+from app.backend.qualifications_and_ticks.ticksheets import (
+    get_ticksheet_data_for_cadets_at_event_in_group_with_qualification,
+)
 
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.shared.cadet_state import update_state_for_specific_cadet_id
@@ -15,7 +16,9 @@ from app.frontend.shared.qualification_and_tick_state_storage import (
     get_qualification_from_state,
     return_true_if_a_cadet_id_been_set,
 )
-from app.frontend.instructors.ticksheet_table_elements import user_can_award_qualifications
+from app.frontend.instructors.ticksheet_table_elements import (
+    user_can_award_qualifications,
+)
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.ticks import (
@@ -299,11 +302,16 @@ def get_list_of_all_tick_related_button_names(
     qualification = get_qualification_from_state(interface)
 
     ticksheet_data = get_ticksheet_data_for_cadets_at_event_in_group_with_qualification(
-        object_store=interface.object_store, event=event, group=group, qualification=qualification
+        object_store=interface.object_store,
+        event=event,
+        group=group,
+        qualification=qualification,
     )
 
     list_of_cadet_ids = ticksheet_data.list_of_cadets.list_of_ids
-    list_of_item_ids = ticksheet_data.list_of_tick_sheet_items_for_this_qualification.list_of_ids
+    list_of_item_ids = (
+        ticksheet_data.list_of_tick_sheet_items_for_this_qualification.list_of_ids
+    )
 
     all_buttons = []
     for cadet_id in list_of_cadet_ids:
@@ -323,7 +331,10 @@ def get_list_of_all_possible_select_cadet_buttons(
     qualification = get_qualification_from_state(interface)
 
     ticksheet_data = get_ticksheet_data_for_cadets_at_event_in_group_with_qualification(
-        object_store=interface.object_store, event=event, group=group, qualification=qualification
+        object_store=interface.object_store,
+        event=event,
+        group=group,
+        qualification=qualification,
     )
 
     list_of_cadet_ids = ticksheet_data.list_of_cadets.list_of_ids

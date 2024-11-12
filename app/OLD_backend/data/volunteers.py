@@ -10,21 +10,25 @@ from app.objects.volunteers import (
     ListOfVolunteers,
     Volunteer,
 )
-from app.objects.composed.volunteers_with_skills import SkillsDict, DictOfVolunteersWithSkills
-from app.objects.cadet_volunteer_connections_with_ids import ListOfCadetVolunteerAssociationsWithIds
+from app.objects.composed.volunteers_with_skills import (
+    SkillsDict,
+    DictOfVolunteersWithSkills,
+)
+from app.objects.cadet_volunteer_connections_with_ids import (
+    ListOfCadetVolunteerAssociationsWithIds,
+)
 
 
 class VolunteerData:
     def __init__(self, data_api: DataLayer):
         self.data_api = data_api
 
-
-    def get_volunteer_given_name(
-        self, volunteer_name: str
-    ) -> Volunteer:
+    def get_volunteer_given_name(self, volunteer_name: str) -> Volunteer:
         list_of_volunteers = self.get_list_of_volunteers()
 
-        return list_of_volunteers.get_volunteer_from_list_of_volunteers_given_name(volunteer_name)
+        return list_of_volunteers.get_volunteer_from_list_of_volunteers_given_name(
+            volunteer_name
+        )
 
     def is_volunteer_with_id_SI(self, volunteer_id: str) -> bool:
         list_of_skills = self.get_list_of_volunteer_skills()
@@ -54,7 +58,6 @@ class VolunteerData:
         skills.remove_volunteer_driving_qualification(volunteer.id)
         self.save_list_of_volunteer_skills(skills)
 
-
     def list_of_volunteer_ids_who_can_drive_safety_boat(self) -> List[str]:
         volunteer_skills = self.get_list_of_volunteer_skills()
         list_of_volunteer_ids_with_boat_skills = (
@@ -71,7 +74,6 @@ class VolunteerData:
         return skills.volunteer_id_can_drive_safety_boat(volunteer_id)
 
     ## Cadet connections
-
 
     def get_connected_cadets(self, volunteer: Volunteer) -> ListOfCadets:
         existing_connections = self.get_list_of_cadet_volunteer_associations()
@@ -99,8 +101,9 @@ class VolunteerData:
         )
         return cadet_id in connections_for_volunteer
 
-
-    def get_list_of_volunteers_connected_to_cadet(self, cadet_id: str) -> ListOfVolunteers:
+    def get_list_of_volunteers_connected_to_cadet(
+        self, cadet_id: str
+    ) -> ListOfVolunteers:
         list_of_cadet_volunteer_associations = (
             self.get_list_of_cadet_volunteer_associations()
         )
@@ -109,13 +112,14 @@ class VolunteerData:
         )
         list_of_all_volunteers = self.get_list_of_volunteers()
 
-        list_of_volunteers_associated_with_cadet = ListOfVolunteers([
-            list_of_all_volunteers.volunteer_with_id(volunteer_id)
-            for volunteer_id in list_of_associated_ids
-        ])
+        list_of_volunteers_associated_with_cadet = ListOfVolunteers(
+            [
+                list_of_all_volunteers.volunteer_with_id(volunteer_id)
+                for volunteer_id in list_of_associated_ids
+            ]
+        )
 
         return list_of_volunteers_associated_with_cadet
-
 
     ## get
     def list_of_similar_volunteers(self, volunteer: Volunteer) -> ListOfVolunteers:
@@ -181,4 +185,3 @@ class VolunteerData:
 
 SORT_BY_SURNAME = "Sort by surname"
 SORT_BY_FIRSTNAME = "Sort by first name"
-

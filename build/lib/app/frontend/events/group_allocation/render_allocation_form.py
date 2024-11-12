@@ -1,6 +1,8 @@
 from typing import Union, Dict, List
 
-from app.backend.qualifications_and_ticks.progress import get_qualification_status_for_single_cadet_as_list_of_str
+from app.backend.qualifications_and_ticks.progress import (
+    get_qualification_status_for_single_cadet_as_list_of_str,
+)
 from app.frontend.forms.reorder_form import reorder_table
 
 from app.objects.groups import Group
@@ -10,7 +12,9 @@ from app.OLD_backend.events import DEPRECATE_get_list_of_all_events
 from app.OLD_backend.group_allocations.previous_allocations import (
     DEPRECATE_get_dict_of_allocations_for_events_and_list_of_cadets,
 )
-from app.backend.groups.cadets_with_groups_at_event import allocation_for_cadet_in_previous_events_as_dictCONSIDER_REFACTOR
+from app.backend.groups.cadets_with_groups_at_event import (
+    allocation_for_cadet_in_previous_events_as_dictCONSIDER_REFACTOR,
+)
 
 from app.objects.exceptions import missing_data
 
@@ -40,7 +44,7 @@ from app.OLD_backend.group_allocations.group_allocations_data import (
     AllocationData,
 )
 from app.OLD_backend.group_allocations.sorting import sorted_active_cadets
-from app.OLD_backend.group_allocations.event_summarys import summarise_allocations_for_event
+from app.backend.events.summarys import summarise_allocations_for_event
 
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_buttons import (
@@ -341,8 +345,7 @@ def get_list_of_previous_groups_as_str(
         ]
     )
     list_of_groups_as_str = [
-        "%s: %s" % (str(event), group.name)
-        for event, group in dict_of_groups.items()
+        "%s: %s" % (str(event), group.name) for event, group in dict_of_groups.items()
     ]
 
     return list_of_groups_as_str
@@ -372,10 +375,12 @@ def previous_groups_as_dict_excluding_one_event(
         event_to_exclude=event_to_exclude,
         number_of_events=number_of_events,
     )
-    allocation_for_cadet = allocation_for_cadet_in_previous_events_as_dictCONSIDER_REFACTOR(
-        cadet=cadet,
-        previous_allocations_as_dict=previous_allocations_as_dict,
-        number_of_events=number_of_events,
+    allocation_for_cadet = (
+        allocation_for_cadet_in_previous_events_as_dictCONSIDER_REFACTOR(
+            cadet=cadet,
+            previous_allocations_as_dict=previous_allocations_as_dict,
+            number_of_events=number_of_events,
+        )
     )
 
     return allocation_for_cadet

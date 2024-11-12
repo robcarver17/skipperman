@@ -11,8 +11,9 @@ from app.OLD_backend.volunteers.volunteers import (
     get_connected_cadets,
 )
 
-from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
-    get_all_roles_across_recent_events_for_volunteer_as_dict_with_sort_order
+from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
+    get_all_roles_across_recent_events_for_volunteer_as_dict_with_sort_order,
+)
 from app.objects.volunteers import Volunteer
 
 from app.data_access.store.data_access import DataLayer
@@ -100,8 +101,10 @@ def get_row_data_for_volunteer(
     data_layer: DataLayer, volunteer: Volunteer
 ) -> VolunteerRowData:
     name = volunteer.name
-    roles_as_dict = get_all_roles_across_recent_events_for_volunteer_as_dict_with_sort_order(
-        data_layer=data_layer, volunteer=volunteer
+    roles_as_dict = (
+        get_all_roles_across_recent_events_for_volunteer_as_dict_with_sort_order(
+            data_layer=data_layer, volunteer=volunteer
+        )
     )
     skills = get_dict_of_existing_skills(data_layer=data_layer, volunteer=volunteer)
     skills_as_str = str(skills)

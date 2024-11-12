@@ -45,10 +45,8 @@ class DictOfTicksWithItem(Dict[str, Tick]):
         ## have to modify underlying data so stored properly, don't actually have to modify this object as only intermediate
         self[tick_item.id] = new_tick
 
-
     def list_of_ticks(self) -> List[Tick]:
         return list(self.values())
-
 
     def add_all_ticks_inplace(self):
         for tick_item_id in self.keys():
@@ -89,11 +87,12 @@ class CadetIdWithTickListItemIds:
 
     def update_tick(self, new_tick: Tick, tick_item: TickSheetItem):
         ## have to modify underlying data so stored properly, don't actually have to modify this object as only intermediate
-        self.dict_of_ticks_with_items.update_tick(new_tick=new_tick, tick_item=tick_item)
+        self.dict_of_ticks_with_items.update_tick(
+            new_tick=new_tick, tick_item=tick_item
+        )
 
     def add_all_ticks_inplace(self):
         self.dict_of_ticks_with_items.add_all_ticks_inplace()
-
 
     @property
     def list_of_tick_item_ids(self) -> List[str]:
@@ -155,13 +154,11 @@ class ListOfCadetIdsWithTickListItemIds(GenericListOfObjects):
     def list_of_cadet_ids(self):
         return [str(item.cadet_id) for item in self]
 
-
     def list_of_tick_list_item_ids(self) -> List[str]:
         first_cadet = self[0]
         tick_list_items = first_cadet.list_of_tick_item_ids
 
         return tick_list_items
-
 
 
 def list_of_cadets_with_tick_list_items_as_df(

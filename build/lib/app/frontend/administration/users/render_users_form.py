@@ -1,9 +1,15 @@
 from typing import Union, List
 
-from app.data_access.configuration.fixed import SAVE_KEYBOARD_SHORTCUT, ADD_KEYBOARD_SHORTCUT
+from app.data_access.configuration.fixed import (
+    SAVE_KEYBOARD_SHORTCUT,
+    ADD_KEYBOARD_SHORTCUT,
+)
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.backend.volunteers.list_of_volunteers import get_sorted_list_of_volunteers, get_volunteer_from_id
+from app.backend.volunteers.list_of_volunteers import (
+    get_sorted_list_of_volunteers,
+    get_volunteer_from_id,
+)
 
 from app.backend.volunteers.list_of_volunteers import SORT_BY_FIRSTNAME
 
@@ -24,7 +30,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
     cancel_menu_button,
-HelpButton
+    HelpButton,
 )
 from app.objects.users_and_security import (
     ListOfSkipperManUsers,
@@ -47,17 +53,18 @@ def display_form_edit_list_of_users(
         centred=True,
         size=4,
     )
-    instructions = ListOfLines(["Edit name, enter new password, modify access, delete (carefully!) or add new user."," Passwords are not shown, but can be changed by entering new values and clicking 'Save edits' or clicking 'Generate new password' to create an arbitrary password."]).add_Lines()
+    instructions = ListOfLines(
+        [
+            "Edit name, enter new password, modify access, delete (carefully!) or add new user.",
+            " Passwords are not shown, but can be changed by entering new values and clicking 'Save edits' or clicking 'Generate new password' to create an arbitrary password.",
+        ]
+    ).add_Lines()
     warning = warning_text(interface)
     user_table = table_for_users(
         interface=interface, existing_list_of_users=existing_list_of_users
     )
     nav_buttons = ButtonBar([cancel_menu_button, help_button])
-    footer_buttons = ButtonBar(
-        [
-            save_entry_button, add_entry_button
-        ]
-    )
+    footer_buttons = ButtonBar([save_entry_button, add_entry_button])
 
     return Form(
         [
@@ -78,18 +85,17 @@ def display_form_edit_list_of_users(
         ]
     )
 
-help_button = HelpButton("list_of_users_help")
-save_entry_button =             Button(
-                SAVE_ENTRY_BUTTON_LABEL,
-                nav_button=True,
-                shortcut=SAVE_KEYBOARD_SHORTCUT,
-            )
 
-add_entry_button =             Button(
-                ADD_ENTRY_BUTTON_LABEL,
-                nav_button=True,
-                shortcut=ADD_KEYBOARD_SHORTCUT
-            )
+help_button = HelpButton("list_of_users_help")
+save_entry_button = Button(
+    SAVE_ENTRY_BUTTON_LABEL,
+    nav_button=True,
+    shortcut=SAVE_KEYBOARD_SHORTCUT,
+)
+
+add_entry_button = Button(
+    ADD_ENTRY_BUTTON_LABEL, nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT
+)
 
 
 def warning_text(interface: abstractInterface):
@@ -189,7 +195,6 @@ def text_box_for_password(user: SkipperManUser, confirm=False) -> textInput:
     )
 
 
-
 def dropdown_for_volunteer(
     interface: abstractInterface, user: SkipperManUser
 ) -> dropDownInput:
@@ -265,5 +270,3 @@ def list_of_deletion_buttons_names(interface: abstractInterface):
 def list_of_reset_buttons_names(interface: abstractInterface):
     existing_list_of_users = get_list_of_users(interface.object_store)
     return [button_name_for_reset_password(user) for user in existing_list_of_users]
-
-

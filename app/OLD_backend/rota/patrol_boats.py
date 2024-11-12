@@ -56,6 +56,7 @@ def get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(
         )
     )
 
+
 def get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day(
     data_layer: DataLayer, event: Event
 ) -> List[str]:
@@ -152,8 +153,8 @@ def sort_volunteer_ids_by_role_and_skills_and_then_name(
         sorted_list_of_volunteers=sorted_list_of_volunteers,
     )
 
-    list_of_volunteer_ids_with_boat_skills = get_list_of_volunteer_ids_who_can_drive_safety_boat(
-        data_layer=data_layer
+    list_of_volunteer_ids_with_boat_skills = (
+        get_list_of_volunteer_ids_who_can_drive_safety_boat(data_layer=data_layer)
     )
     add_to_list_of_volunteer_ids(
         list_of_ids_to_draw_from=volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day,

@@ -3,8 +3,16 @@ from dataclasses import dataclass
 from statistics import mode
 from typing import List
 
-from app.data_access.configuration.skills_and_roles import dict_of_volunteer_teams, volunteers_requiring_group, \
-   si_role, instructor_team, dict_of_roles_and_skills_required, all_volunteer_role_names
+from app.objects.composed.volunteer_roles import is_qualified_for_role
+from app.objects.roles_and_teams import Team
+
+from app.data_access.configuration.skills_and_roles import (
+    dict_of_volunteer_teams,
+    volunteers_requiring_group,
+    si_role,
+    instructor_team,
+    all_volunteer_role_names,
+)
 from app.objects.day_selectors import Day
 from app.objects.exceptions import missing_data
 from app.objects.generic_list_of_objects import GenericListOfObjects
@@ -24,7 +32,9 @@ def DEPRECATE_get_list_of_volunteer_teams():
 
 
 def no_role_set(role: str):
-    return role==NO_ROLE_SET
+    return role == NO_ROLE_SET
+
+
 
 
 
@@ -70,20 +80,20 @@ class RoleAndGroupDEPRECATE(GenericSkipperManObject):
 
 @dataclass
 class TeamAndGroup(GenericSkipperManObject):
-    team: str = NO_ROLE_SET
+    team: Team
     group: Group = unallocated_group
 
     def __repr__(self):
         if self.group == unallocated_group:
-            return self.team
+            return self.team.name
         else:
-            return "%s (%s)" % (self.team, self.group)
+            return "%s (%s)" % (self.team.name, self.group.name)
 
     def __eq__(self, other):
         return self.__hash__() == other.__hash__()
 
     def __hash__(self):
-        return hash("%s_%s" % (self.team, self.group.name))
+        return hash("%s_%s" % (self.team.name, self.group.name))
 
     def __lt__(self, other):
         raise Exception("Can't properly sort role/group yet")
@@ -102,6 +112,7 @@ class TeamAndGroup(GenericSkipperManObject):
         return group_index < other_group_index
         """
 
+
 @dataclass
 class VolunteerWithIdInRoleAtEvent(GenericSkipperManObject):
     volunteer_id: str
@@ -114,13 +125,8 @@ class VolunteerWithIdInRoleAtEvent(GenericSkipperManObject):
         return RoleAndGroupDEPRECATE(role=self.role, group=self.group)
 
     @property
-    def first_team_and_group(self):
-        return TeamAndGroup(team=self.list_of_teams[0], group=self.group)
-
-    @property
     def requires_group(self):
         return self.role in volunteers_requiring_group
-
 
     @property
     def no_role_set(self) -> bool:
@@ -148,16 +154,6 @@ class VolunteerWithIdInRoleAtEvent(GenericSkipperManObject):
 
     def is_qualified_for_role(self, dict_of_skills: SkillsDict) -> bool:
         return is_qualified_for_role(role=self.role, dict_of_skills=dict_of_skills)
-
-
-def is_qualified_for_role(role: str, dict_of_skills: SkillsDict) -> bool:
-    skills_required = dict_of_roles_and_skills_required.get(role, [])
-    for skill_needed in skills_required:
-        has_skill = dict_of_skills.has_skill_name(skill_needed)
-        if not has_skill:
-            return False
-
-    return True
 
 
 def teams_given_role(role: str, teams: dict = dict_of_volunteer_teams) -> List[str]:
@@ -247,9 +243,7 @@ class ListOfVolunteersWithIdInRoleAtEvent(GenericListOfObjects):
             day=day_to_swap_with,
             return_empty_if_missing=False,
         )
-        volunteer_to_swap_with_group_name = copy(
-            volunteer_to_swap_with.group.name
-        )
+        volunteer_to_swap_with_group_name = copy(volunteer_to_swap_with.group.name)
         volunteer_to_swap_with_role = copy(volunteer_to_swap_with.role)
 
         self.update_volunteer_in_role_on_day_to_actual_role(
@@ -280,18 +274,11 @@ class ListOfVolunteersWithIdInRoleAtEvent(GenericListOfObjects):
     def list_of_volunteer_ids_in_boat_related_role_on_any_day(self) -> List[str]:
         return list(set([item.volunteer_id for item in self if item.requires_boat]))
 
-    def list_of_roles_and_groups_at_event_for_day(self, day: Day) -> List[RoleAndGroupDEPRECATE]:
-        return [
-            volunteer_with_role.role_and_group
-            for volunteer_with_role in self
-            if volunteer_with_role.day == day
-        ]
-
-    def list_of_first_teams_and_groups_at_event_for_day(
+    def list_of_roles_and_groups_at_event_for_day(
         self, day: Day
     ) -> List[RoleAndGroupDEPRECATE]:
         return [
-            volunteer_with_role.first_team_and_group
+            volunteer_with_role.role_and_group
             for volunteer_with_role in self
             if volunteer_with_role.day == day
         ]

@@ -6,7 +6,8 @@ from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
-    save_menu_button, HelpButton,
+    save_menu_button,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.frontend.form_handler import (
@@ -86,7 +87,8 @@ def modify_cadet_given_form_contents(interface: abstractInterface):
     modify_cadet(
         object_store=interface.object_store,
         existing_cadet=existing_cadet,
-        new_cadet=new_cadet
+        new_cadet=new_cadet,
     )
+
 
 help_button = HelpButton("view_and_edit_individual_cadet_help")

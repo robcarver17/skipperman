@@ -2,7 +2,9 @@ from typing import Dict
 
 import pandas as pd
 
-from app.OLD_backend.reporting.options_and_parameters.report_options import ReportingOptions
+from app.OLD_backend.reporting.options_and_parameters.report_options import (
+    ReportingOptions,
+)
 from app.OLD_backend.reporting.process_stages.create_list_of_columns_from_groups import (
     get_order_of_indices_even_sizing_with_parameters,
 )

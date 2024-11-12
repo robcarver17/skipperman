@@ -49,7 +49,9 @@ def post_form_to_replace_selected_files(interface: abstractInterface):
     try:
         last_button = interface.last_button_pressed()
     except RequestEntityTooLarge:
-        interface.log_error("File is too big to upload - change configuration or use a smaller file")
+        interface.log_error(
+            "File is too big to upload - change configuration or use a smaller file"
+        )
         return display_form_to_replace_selected_files(interface)
 
     if last_button == CANCEL_BUTTON_LABEL:

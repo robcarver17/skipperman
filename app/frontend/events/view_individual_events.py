@@ -1,33 +1,23 @@
 from typing import Union
 
-from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
-
-from app.OLD_backend.clothing import summarise_clothing
-
-from app.OLD_backend.food import summarise_food_data_by_day
-
-from app.OLD_backend.wa_import.map_wa_fields import is_wa_field_mapping_setup_for_event
-from app.OLD_backend.group_allocations.event_summarys import (
-    summarise_registrations_for_event,
-    identify_birthdays,
-    summarise_allocations_for_event,
+from app.backend.patrol_boats.patrol_boat_summary import (
+    get_summary_list_of_patrol_boat_allocations_for_events,
 )
-from app.OLD_backend.OLD_patrol_boats.summary import get_summary_list_of_patrol_boat_allocations_for_events
-from app.OLD_backend.rota.volunteer_rota_summary import (
+from app.backend.rota.volunteer_rota_summary import (
     get_summary_list_of_teams_and_groups_for_events,
 )
-from app.OLD_backend.wa_import.map_wa_files import is_wa_file_mapping_setup_for_event
+from app.backend.events.summarys import summarise_allocations_for_event
+from app.backend.events.view_event import (
+    identify_birthdays,
+    summarise_registrations_for_event,
+)
 from app.frontend.events.group_allocation.ENTRY_allocate_cadets_to_groups import (
     display_form_allocate_cadets,
 )
-from app.frontend.events.import_wa.import_wa_file import display_form_import_event_file
-from app.frontend.events.import_wa.update_existing_event import (
-    display_form_update_existing_event,
+from app.frontend.events.import_data.ENTRY_import_choose import (
+    display_form_choose_import_source,
 )
-from app.frontend.events.import_wa.upload_event_file import display_form_upload_event_file
-from app.frontend.events.mapping.ENTRY_event_field_mapping import (
-    display_form_event_field_mapping,
-)
+
 from app.frontend.events.registration_details.ENTRY_edit_registration_details import (
     display_form_edit_registration_details,
 )
@@ -53,12 +43,11 @@ from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     main_menu_button,
     back_menu_button,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 
-from app.frontend.events.constants import *
-from app.OLD_backend.wa_import.load_wa_file import does_raw_event_file_exist
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import Event
@@ -76,10 +65,17 @@ def display_form_view_individual_event(
 def get_event_form_for_event(
     event: Event, interface: abstractInterface
 ) -> Union[Form, NewForm]:
+    event_heading = get_event_heading(interface=interface, event=event)
+    summary_lines = summary_tables_for_event(interface=interface, event=event)
+    buttons = ListOfLines([get_event_buttons()])
 
-    cache = AdHocCache(interface.data)
+    lines_in_form = buttons + event_heading + summary_lines
 
-    birthdays = identify_birthdays(interface=interface, event=event)
+    return Form(lines_in_form.add_Lines())
+
+
+def get_event_heading(interface: abstractInterface, event: Event) -> ListOfLines:
+    birthdays = identify_birthdays(object_store=interface.object_store, event=event)
 
     event_description = event.details_as_list_of_str()
     event_description = event_description + birthdays
@@ -87,48 +83,64 @@ def get_event_form_for_event(
         [Line([Heading(item, centred=True, size=5)]) for item in event_description]
     )
 
+    return event_description
+
+
+def summary_tables_for_event(interface: abstractInterface, event: Event) -> ListOfLines:
     summarise_registrations = summarise_registrations_for_event(
-        interface=interface, event=event
+        object_store=interface.object_store, event=event
     )
 
-    allocations_lines = ""
-    if event.contains_cadets:
-        if event.contains_groups:
-            description = "Boat details and group allocations"
-        else:
-            description = "Boat details and allocations"
-        allocations = summarise_allocations_for_event(interface=interface, event=event)
-        if len(allocations) > 0:
-            allocations_lines = ListOfLines(
-                [_______________, description, _______________, allocations]
-            )
-
-    rota_lines = ""
-    if event.contains_volunteers:
-        rota = get_summary_list_of_teams_and_groups_for_events(
-            cache=cache, event=event
+    allocations = summarise_allocations_for_event(
+        object_store=interface.object_store, event=event
+    )
+    if len(allocations) > 0:
+        allocations_lines = ListOfLines(
+            [
+                _______________,
+                "Boat details and group allocations",
+                _______________,
+                allocations,
+            ]
         )
-        boat_allocation_table = get_summary_list_of_patrol_boat_allocations_for_events(
-            cache=interface.cache, event=event
-        )
-        if len(boat_allocation_table) > 0:
-            rota_lines = ListOfLines(
-                [
-                    _______________,
-                    "Volunteer rota:",
-                    _______________,
-                    rota,
-                    _______________,
-                    _______________,
-                    "Patrol boats, number of crew:",
-                    boat_allocation_table,
-                ]
-            )
+    else:
+        allocations_lines = ""
 
-    food_summary = ""
-    if event.contains_food:
-        food_summary = summarise_food_data_by_day(interface=interface, event=event)
-        food_summary = ListOfLines(
+    rota = get_summary_list_of_teams_and_groups_for_events(
+        object_store=interface.object_store, event=event
+    )
+    if len(rota) > 0:
+        rota_lines = ListOfLines(
+            [
+                _______________,
+                "Volunteer rota:",
+                _______________,
+                rota,
+                _______________,
+            ]
+        )
+    else:
+        rota_lines = ""
+
+    boat_allocation_table = get_summary_list_of_patrol_boat_allocations_for_events(
+        object_store=interface.object_store, event=event
+    )
+    if len(boat_allocation_table) > 0:
+        boat_lines = ListOfLines(
+            [
+                _______________,
+                "Patrol boats, number of crew:",
+                boat_allocation_table,
+                _______________,
+            ]
+        )
+    else:
+        boat_lines = ""
+
+    """
+    food_summary = summarise_food_data_by_day(interface=interface, event=event)
+    if len(food_summary)>0:
+        food_summary_lines = ListOfLines(
             [
                 _______________,
                 "Food requirements",
@@ -137,11 +149,13 @@ def get_event_form_for_event(
                 _______________,
             ]
         )
+    else:
+        food_summary_lines = ""
 
-    clothing_summary = ""
-    if event.contains_clothing:
-        clothing_summary = summarise_clothing(interface=interface, event=event)
-        clothing_summary = ListOfLines(
+
+    clothing_summary = summarise_clothing(interface=interface, event=event)
+    if len(clothing_summary)>0:        
+        clothing_summary_lines = ListOfLines(
             [
                 _______________,
                 "Clothing sizes and colours:",
@@ -150,129 +164,41 @@ def get_event_form_for_event(
                 _______________,
             ]
         )
+    else:
+        clothing_summary_lines = ""
 
-    buttons = get_event_buttons(event, interface=interface)
+    """
 
-    lines_in_form = ListOfLines(
+    summary_lines = ListOfLines(
         [
-            buttons,
-            _______________,
-            ListOfLines(event_description),
-            _______________,
             summarise_registrations,
             allocations_lines,
             rota_lines,
-            food_summary,
-            clothing_summary,
+            boat_lines,
+            # food_summary,
+            # clothing_summary,
         ]
     )
 
-    return Form(lines_in_form)
+    return summary_lines
 
 
-def get_event_buttons(event: Event, interface: abstractInterface) -> ButtonBar:
-    wa_initial_upload = Button(
-        WA_UPLOAD_BUTTON_LABEL, nav_button=True
-    )  ## uploads and creates staging file
-    wa_create_field_mapping = Button(
-        WA_FIELD_MAPPING_BUTTON_LABEL, nav_button=True
-    )  ## does field mapping from staged file
-    wa_check_field_mapping = Button(
-        WA_CHECK_FIELD_MAPPING_BUTTON_LABEL, nav_button=True
+def get_event_buttons() -> ButtonBar:
+    return ButtonBar(
+        [
+            main_menu_button,
+            back_menu_button,
+            " ",
+            import_registration_data_button,
+            edit_registration_button,
+            group_allocation_button,
+            volunteer_rota_button,
+            patrol_boat_allocation_button,
+            food_button,
+            clothing_button,
+            help_button,
+        ]
     )
-    wa_modify_field_mapping = Button(
-        WA_MODIFY_FIELD_MAPPING_BUTTON_LABEL, nav_button=True
-    )
-
-    wa_import = Button(
-        WA_IMPORT_BUTTON_LABEL, nav_button=True
-    )  ## does import_wa given a staged file
-    wa_update = Button(
-        WA_UPDATE_BUTTON_LABEL, nav_button=True
-    )  ## does upload and import_wa, assuming no staged file
-
-    wa_import_done = is_wa_file_mapping_setup_for_event(
-        interface=interface, event=event
-    )  ## have we done an import already (sets up event mapping)
-    field_mapping_done = is_wa_field_mapping_setup_for_event(
-        interface=interface, event=event
-    )  ## have set up field mapping
-    raw_event_file_exists = does_raw_event_file_exist(
-        event.id
-    )  ## is there a staging file waiting to be uploaded
-
-    print(
-        "[wa_import_done=%s, field_mapping_done=%s, raw_event_file_exists=%s]"
-        % (str(wa_import_done), str(field_mapping_done), str(raw_event_file_exists))
-    )
-
-    if not wa_import_done and not field_mapping_done and not raw_event_file_exists:
-        return ButtonBar([main_menu_button, back_menu_button, wa_initial_upload])
-
-    if not wa_import_done and field_mapping_done and not raw_event_file_exists:
-        ## probably done mapping manually, need to do initial upload
-        return ButtonBar([main_menu_button, back_menu_button, wa_initial_upload])
-
-    if not wa_import_done and not field_mapping_done and raw_event_file_exists:
-        return ButtonBar([main_menu_button, back_menu_button, wa_create_field_mapping])
-
-    if not wa_import_done and field_mapping_done and raw_event_file_exists:
-        return ButtonBar(
-            [main_menu_button, back_menu_button, wa_import, wa_check_field_mapping]
-        )
-
-    ## both done, we can update the WA file and do cadet OLD_backend / other editing
-    if wa_import_done and field_mapping_done and not raw_event_file_exists:
-        event_specific_buttons = get_event_specific_buttons(event)
-        return ButtonBar(
-            [main_menu_button, back_menu_button, wa_update, wa_modify_field_mapping]
-            + event_specific_buttons
-        )
-
-    if wa_import_done and field_mapping_done and raw_event_file_exists:
-        ## shouldn't really happen
-        event_specific_buttons = get_event_specific_buttons(event)
-        return ButtonBar(
-            [main_menu_button, back_menu_button, wa_update, wa_modify_field_mapping]
-            + event_specific_buttons
-        )
-
-    interface.log_error(
-        "Something went wrong; contact support [wa_import_done=%s, field_mapping_done=%s, raw_event_file_exists=%s]"
-        % (str(wa_import_done), str(field_mapping_done), str(raw_event_file_exists))
-    )
-    return ButtonBar([main_menu_button, back_menu_button])
-
-
-def get_event_specific_buttons(event: Event) -> list:
-    group_allocation = Button(ALLOCATE_CADETS_BUTTON_LABEL, nav_button=True)
-    modify_cadet_boats = Button(MODIFY_CADET_BOATS_BUTTON_LABEL, nav_button=True)
-    edit_registration = Button(
-        EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON, nav_button=True
-    )
-    volunteer_rota = Button(EDIT_VOLUNTEER_ROLES_BUTTON_LABEL, nav_button=True)
-    patrol_boat_allocation = Button(
-        PATROL_BOAT_ALLOCATION_BUTTON_LABEL, nav_button=True
-    )
-    food = Button(FOOD_BUTTON_LABEL, nav_button=True)
-    clothing = Button(CLOTHING_BUTTON_LABEL, nav_button=True)
-    event_specific_buttons = []
-    if event.contains_cadets:
-        event_specific_buttons.append(edit_registration)
-        if event.contains_groups:
-            event_specific_buttons.append(group_allocation)
-        else:
-            event_specific_buttons.append(
-                modify_cadet_boats
-            )  ## Still do sails etc even if not groups
-    if event.contains_volunteers:
-        event_specific_buttons += [volunteer_rota, patrol_boat_allocation]
-    if event.contains_food:
-        event_specific_buttons.append(food)
-    if event.contains_clothing:
-        event_specific_buttons.append(clothing)
-
-    return event_specific_buttons
 
 
 def post_form_view_individual_event(
@@ -281,42 +207,25 @@ def post_form_view_individual_event(
     ## Called by post on view events form, so both stage and event name are set
 
     last_button_pressed = interface.last_button_pressed()
-    if last_button_pressed == WA_UPLOAD_BUTTON_LABEL:
+    if import_registration_data_button.pressed(last_button_pressed):
         return form_to_upload_event_file(interface)
 
-    elif last_button_pressed in [
-        WA_FIELD_MAPPING_BUTTON_LABEL,
-        WA_MODIFY_FIELD_MAPPING_BUTTON_LABEL,
-        WA_CHECK_FIELD_MAPPING_BUTTON_LABEL,
-    ]:
-        ## same form, but contents will be different
-        return form_to_do_field_mapping(interface)
-
-    elif last_button_pressed == WA_IMPORT_BUTTON_LABEL:
-        return form_to_do_import_event(interface)
-
-    elif last_button_pressed == WA_UPDATE_BUTTON_LABEL:
-        return form_to_do_update_event(interface)
-
-    elif last_button_pressed in [
-        ALLOCATE_CADETS_BUTTON_LABEL,
-        MODIFY_CADET_BOATS_BUTTON_LABEL,
-    ]:
+    elif group_allocation_button.pressed(last_button_pressed):
         return form_to_do_cadet_allocation(interface)
 
-    elif last_button_pressed == EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON:
+    elif edit_registration_button.pressed(last_button_pressed):
         return form_to_edit_registration_details(interface)
 
-    elif last_button_pressed == EDIT_VOLUNTEER_ROLES_BUTTON_LABEL:
+    elif volunteer_rota_button.pressed(last_button_pressed):
         return form_to_do_volunteer_rota(interface)
 
-    elif last_button_pressed == PATROL_BOAT_ALLOCATION_BUTTON_LABEL:
+    elif patrol_boat_allocation_button.pressed(last_button_pressed):
         return form_to_allocate_patrol_boats(interface)
 
-    elif last_button_pressed == FOOD_BUTTON_LABEL:
+    elif food_button.pressed(last_button_pressed):
         return form_to_allocate_food(interface)
 
-    elif last_button_pressed == CLOTHING_BUTTON_LABEL:
+    elif clothing_button.pressed(last_button_pressed):
         return form_to_do_clothing(interface)
 
     elif back_menu_button.pressed(last_button_pressed):
@@ -330,19 +239,7 @@ def row_of_form_for_event_with_buttons(event) -> Line:
 
 
 def form_to_upload_event_file(interface: abstractInterface):
-    return interface.get_new_form_given_function(display_form_upload_event_file)
-
-
-def form_to_do_field_mapping(interface: abstractInterface):
-    return interface.get_new_form_given_function(display_form_event_field_mapping)
-
-
-def form_to_do_import_event(interface: abstractInterface):
-    return interface.get_new_form_given_function(display_form_import_event_file)
-
-
-def form_to_do_update_event(interface: abstractInterface):
-    return interface.get_new_form_given_function(display_form_update_existing_event)
+    return interface.get_new_form_given_function(display_form_choose_import_source)
 
 
 def form_to_do_cadet_allocation(interface: abstractInterface):
@@ -381,3 +278,27 @@ def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(
         post_form_view_individual_event
     )
+
+
+IMPORT_REGISTRATION_DATA_BUTTON_LABEL = "Import registration data"
+ALLOCATE_CADETS_BUTTON_LABEL = "Sailors, groups and boats"
+EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON = "Edit sailors registration data"
+EDIT_VOLUNTEER_ROLES_BUTTON_LABEL = "Volunteers"
+PATROL_BOAT_ALLOCATION_BUTTON_LABEL = "Patrol boats"
+CLOTHING_BUTTON_LABEL = "Clothing"
+FOOD_BUTTON_LABEL = "Food"
+
+group_allocation_button = Button(ALLOCATE_CADETS_BUTTON_LABEL, nav_button=True)
+edit_registration_button = Button(
+    EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON, nav_button=True
+)
+volunteer_rota_button = Button(EDIT_VOLUNTEER_ROLES_BUTTON_LABEL, nav_button=True)
+patrol_boat_allocation_button = Button(
+    PATROL_BOAT_ALLOCATION_BUTTON_LABEL, nav_button=True
+)
+food_button = Button(FOOD_BUTTON_LABEL, nav_button=True)
+clothing_button = Button(CLOTHING_BUTTON_LABEL, nav_button=True)
+import_registration_data_button = Button(
+    IMPORT_REGISTRATION_DATA_BUTTON_LABEL, nav_button=True
+)  ## uploads and creates staging file
+help_button = HelpButton("view_event_help")

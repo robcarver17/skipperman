@@ -132,6 +132,9 @@ def update_list_of_teams(object_store: ObjectStore, list_of_teams: ListOfTeams):
         new_object=list_of_teams, object_definition=object_definition_for_list_of_teams
     )
 
+def get_role_from_name(object_store: ObjectStore, role_name: str) -> RoleWithSkills:
+    list_of_roles = get_list_of_roles_with_skills(object_store)
+    return list_of_roles.role_with_name(role_name)
 
 def get_list_of_roles(object_store: ObjectStore) -> ListOfRolesWithSkillIds:
     return object_store.get(object_definition_for_list_of_roles_with_skill_ids)

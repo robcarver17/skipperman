@@ -1,4 +1,6 @@
+from app.OLD_backend.data.patrol_boats import PatrolBoatsData
 from app.data_access.store.object_store import ObjectStore
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.patrol_boats import ListOfPatrolBoats, PatrolBoat
 from app.data_access.store.object_definitions import (
     object_definition_for_list_of_patrol_boats,
@@ -40,3 +42,10 @@ def update_list_of_patrol_boats(
         new_object=updated_list_of_patrol_boats,
         object_definition=object_definition_for_list_of_patrol_boats,
     )
+
+
+def from_patrol_boat_name_to_boat(
+    object_store: ObjectStore, boat_name: str
+) -> PatrolBoat:
+    patrol_boat_data = get_list_of_patrol_boats(object_store)
+    return patrol_boat_data.boat_given_name(boat_name)

@@ -68,14 +68,6 @@ def get_list_of_row_ids_in_raw_registration_data_for_event(object_store: ObjectS
     registration_data = get_raw_mapped_registration_data(object_store=object_store, event=event)
     return registration_data.list_of_row_ids()
 
-def save_mapped_wa_event(
-        self,
-        mapped_wa_event_data: RegistrationDataForEvent,
-        event: Event,
-):
-    self.data_api.save_mapped_wa_event(
-        mapped_wa_event_data=mapped_wa_event_data, event=event
-    )
 
 
 def does_event_have_imported_registration_data(

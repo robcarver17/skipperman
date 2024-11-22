@@ -10,7 +10,7 @@ from app.objects.volunteer_at_event_with_id import (
 )
 from app.objects.cadets import ListOfCadets
 
-from app.objects.day_selectors import DaySelector
+from app.objects.day_selectors import DaySelector, Day
 
 
 @dataclass
@@ -68,6 +68,22 @@ class DictOfRegistrationDataForVolunteerAtEvent(
     def drop_volunteer(self, volunteer: Volunteer):
         self.pop(volunteer)
         self.list_of_volunteers_at_event_with_id.remove_volunteer_with_id(volunteer.id)
+
+    def make_volunteer_available_on_day(self, volunteer: Volunteer, day: Day):
+        registration_for_volunteer = self.get_data_for_volunteer(volunteer)
+        registration_for_volunteer.availablity.make_available_on_day(day)
+        self.list_of_volunteers_at_event_with_id.make_volunteer_available_on_day(volunteer=volunteer, day=day)
+
+    def make_volunteer_unavailable_on_day(self, volunteer: Volunteer, day: Day):
+        registration_for_volunteer = self.get(volunteer)
+        registration_for_volunteer.availablity.make_unavailable_on_day(day)
+        self.list_of_volunteers_at_event_with_id.make_volunteer_unavailable_on_day(volunteer=volunteer, day=day)
+
+    def get_data_for_volunteer(self, volunteer: Volunteer):
+        try:
+            return self.get(volunteer)
+        except:
+            raise Exception("Volunteer %s not found" % str(volunteer))
 
     @property
     def event(self) -> Event:

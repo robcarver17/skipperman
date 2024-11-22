@@ -151,6 +151,14 @@ class ListOfRolesWithSkills(List[RoleWithSkills]):
         except ValueError:
             raise MissingData
 
+    def index_of_matching_existing_role_name(
+        self, existing_role_name: str
+    ) -> int:
+        try:
+            return self.list_of_names().index(existing_role_name)
+        except ValueError:
+            raise MissingData
+
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_names()
         assert len(list_of_names) == len(set(list_of_names))
@@ -172,6 +180,10 @@ class ListOfRolesWithSkills(List[RoleWithSkills]):
             return self[self.list_of_ids().index(id)]
         except ValueError:
             raise MissingData
+
+    def role_with_name(self, role_name):
+        index = self.index_of_matching_existing_role_name(role_name)
+        return self[index]
 
     @property
     def list_of_roles_with_skill_ids(self) -> ListOfRolesWithSkillIds:

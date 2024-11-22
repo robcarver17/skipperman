@@ -23,7 +23,7 @@ from app.OLD_backend.reporting.process_stages.create_file_from_list_of_columns i
     create_csv_report_from_dict_of_df_and_return_filename,
 )
 
-from app.objects_OLD.food import (
+from app.objects.food import (
     FoodRequirements,
     ListOfCadetsWithFoodRequirementsAtEvent,
     CadetWithFoodRequirementsAtEvent,

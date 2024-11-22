@@ -1,15 +1,10 @@
 from typing import Union
 
 from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
-    get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first
-
+    get_last_role_or_none_for_volunteer_at_previous_events
 from app.data_access.store.object_store import ObjectStore
 
 from app.backend.events.cadets_at_event import get_dict_of_all_event_info_for_cadets
-
-from app.OLD_backend.rota.volunteer_history import (
-    get_previous_role_and_group_for_volunteer_at_event,
-)
 
 from app.data_access.configuration.fixed import (
     COPY_OVERWRITE_SYMBOL,
@@ -17,7 +12,6 @@ from app.data_access.configuration.fixed import (
     NOT_AVAILABLE_SHORTHAND,
     REMOVE_SHORTHAND,
 )
-from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
 from app.frontend.events.volunteer_rota.button_values import (
     button_value_for_day,
     name_of_volunteer_button,
@@ -39,9 +33,6 @@ from app.backend.rota.volunteer_table import all_roles_match_across_event, \
     volunteer_has_empty_available_days_without_role, \
     volunteer_has_at_least_one_day_in_role_and_all_roles_and_groups_match
 
-from app.OLD_backend.rota.rota_cadet_and_volunteer_data import (
-    get_str_dict_skills,
-)
 from app.backend.registration_data.cadet_and_volunteer_connections_at_event import \
     get_cadet_location_string_for_volunteer
 from app.objects.abstract_objects.abstract_buttons import Button
@@ -49,8 +40,6 @@ from app.objects.composed.volunteers_with_all_event_data import AllEventDataForV
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.volunteers import Volunteer
-from app.objects_OLD.volunteers_at_event import DEPRECATE_VolunteerAtEvent
-from app.objects.volunteer_roles_and_groups_with_id import VolunteerWithIdInRoleAtEvent
 
 
 def get_location_button(
@@ -92,14 +81,12 @@ def copy_previous_role_button_or_blank(
     volunteer_data_at_event: AllEventDataForVolunteer,
     ready_to_swap: bool,
 ) -> Union[Button, str]:
-    previous_roles = get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(object_store=object_store,
-                                                                                          volunteer=volunteer_data_at_event.volunteer,
-                                                                                          avoid_event=volunteer_data_at_event.event
-                                                                                          )
-    if len(previous_roles)==0:
+    previous_role = get_last_role_or_none_for_volunteer_at_previous_events(object_store=object_store,
+                                                                           avoid_event=volunteer_data_at_event.event,
+                                                                           volunteer=volunteer_data_at_event.volunteer
+                                                                           )
+    if previous_role is None:
         return ""
-
-    previous_role = list(previous_roles.values())[0] ## latest first
 
     if ready_to_swap:
         return str(previous_role)
@@ -110,7 +97,6 @@ def copy_previous_role_button_or_blank(
             volunteer_data_at_event.volunteer.id
         ),
     )
-
 
 #
 

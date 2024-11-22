@@ -2,11 +2,7 @@ from typing import List
 
 from app.objects.abstract_objects.abstract_form import listInput
 
-from app.objects_OLD.clothing import (
-    CadetObjectWithClothingAtEvent,
-    all_sort_types,
-    SORT_BY_FIRSTNAME,
-)
+from app.objects.composed.clothing_at_event import CadetWithClothingAtEvent, SORT_BY_FIRSTNAME, all_sort_types
 
 from app.OLD_backend.clothing import (
     get_list_of_active_cadet_objects_with_clothing_at_event,
@@ -35,8 +31,6 @@ DISTRIBUTE_ACTION_BUTTON_LABEL = (
 )
 CLEAR_ALL_COLOURS = "Clear all colour groups"
 
-GET_CLOTHING_FOR_CADETS = "Get clothing for cadets from registration data"
-
 EXPORT_COMMITTEE = "Download committee polo shirts spreadsheet"
 EXPORT_ALL = "Download spreadsheet of t-shirt sizes"
 EXPORT_COLOURS = "Download spreadsheet of colour teams"
@@ -47,35 +41,36 @@ EXPORT_COLOURS = "Download spreadsheet of colour teams"
 
 
 def get_button_bar_for_clothing(
-    interface: abstractInterface, event: Event
+    interface: abstractInterface
 ) -> ButtonBar:
-    cadet_button = Button(GET_CLOTHING_FOR_CADETS, nav_button=True)
-    action_button = Button(DISTRIBUTE_ACTION_BUTTON_LABEL, nav_button=True)
-    clear_button = Button(CLEAR_ALL_COLOURS, nav_button=True)
 
     if are_we_showing_only_committee(interface):
-        filter_button = Button(FILTER_ALL_BUTTON_LABEL, nav_button=True)
-        export_buttons = [Button(EXPORT_COMMITTEE, nav_button=True)]
+        filter_button = filter_all_button
+        export_buttons = [export_committee_button]
     else:
-        filter_button = Button(FILTER_COMMITTEE_BUTTON_LABEL, nav_button=True)
+        filter_button = filter_committee_button
         export_buttons = [
-            Button(EXPORT_ALL, nav_button=True),
-            Button(EXPORT_COLOURS, nav_button=True),
+            export_all_clothing_button,
+            export_colours_button
         ]
 
     button_bar = ButtonBar(
-        [cancel_menu_button, save_menu_button, filter_button, clear_button]
+        [cancel_menu_button, save_menu_button, filter_button, clear_all_colours_button]
         + export_buttons
     )
 
-    if event.contains_cadets:
-        button_bar.append(cadet_button)
-
     if not are_we_showing_only_committee(interface):
-        button_bar.append(action_button)
+        button_bar.append(distribute_action_button)
 
     return button_bar
 
+distribute_action_button = Button(DISTRIBUTE_ACTION_BUTTON_LABEL, nav_button=True)
+clear_all_colours_button = Button(CLEAR_ALL_COLOURS, nav_button=True)
+filter_all_button = Button(FILTER_ALL_BUTTON_LABEL, nav_button=True)
+filter_committee_button = Button(FILTER_COMMITTEE_BUTTON_LABEL, nav_button=True)
+export_committee_button = Button(EXPORT_COMMITTEE, nav_button=True)
+export_all_clothing_button = Button(EXPORT_ALL, nav_button=True)
+export_colours_button = Button(EXPORT_COLOURS, nav_button=True)
 
 def get_clothing_table(interface: abstractInterface, event: Event) -> Table:
     sort_order = get_sort_order(interface)
@@ -116,7 +111,7 @@ def get_top_row_for_clothing_table() -> RowInTable:
 def get_clothing_row_for_cadet(
     size_options: List[str],
     colour_options: List[str],
-    cadet_with_clothing: CadetObjectWithClothingAtEvent,
+    cadet_with_clothing: CadetWithClothingAtEvent,
 ) -> RowInTable:
     cadet_id = cadet_with_clothing.cadet.id
     size_field = listInput(

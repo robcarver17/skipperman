@@ -96,21 +96,24 @@ def get_availability_checkbox_for_volunteer_at_event(
 def post_form_confirm_volunteer_details_from_rota(interface: abstractInterface):
     last_button = interface.last_button_pressed()
     if cancel_button.pressed(last_button):
-        pass
+        return go_back_to_parent_form(interface)
     elif delete_button.pressed(last_button):
         delete_volunteer_from_event(interface)
+        interface.flush_cache_to_store()
+        return go_back_to_parent_form(interface)
+
     elif save_button.pressed(last_button):
         form_ok = update_volunteer_at_event_from_rota_with_form_contents_and_return_true_if_ok(
             interface
         )
         if not form_ok:
             return display_form_confirm_volunteer_details_from_rota(interface)
+        else:
+            interface.flush_cache_to_store()
+            return go_back_to_parent_form(interface)
     else:
         raise button_error_and_back_to_initial_state_form(interface)
 
-    interface.flush_cache_to_store()
-
-    return go_back_to_parent_form(interface)
 
 
 def go_back_to_parent_form(interface: abstractInterface) -> NewForm:
@@ -138,7 +141,7 @@ def update_volunteer_at_event_from_rota_with_form_contents_and_return_true_if_ok
 
     if no_days_selected(availability, possible_days=event.weekdays_in_event()):
         interface.log_error(
-            "No days selected for volunteer at event - delete if not using"
+            "No days selected for volunteer at event - delete if not using at event"
         )
         return False
 

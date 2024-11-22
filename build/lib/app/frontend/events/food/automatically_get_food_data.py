@@ -13,7 +13,7 @@ from app.frontend.events.volunteer_allocation.track_state_in_volunteer_allocatio
 
 from app.objects.registration_data import RowInRegistrationData
 
-from app.objects_OLD.food import guess_food_requirements_from_food_field
+from app.objects.food import guess_food_requirements_from_food_field
 
 from app.OLD_backend.cadets import cadet_name_from_id
 from app.data_access.configuration.field_list import CADET_FOOD_PREFERENCE

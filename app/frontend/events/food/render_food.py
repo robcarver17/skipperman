@@ -14,7 +14,7 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
-from app.objects_OLD.food import (
+from app.objects.food import (
     CadetWithFoodRequirementsAtEvent,
     VolunteerWithFoodRequirementsAtEvent,
 )

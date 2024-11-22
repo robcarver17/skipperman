@@ -1,5 +1,10 @@
+from copy import copy
 from dataclasses import dataclass
 from typing import Dict, List
+
+from app.objects.exceptions import MultipleMatches
+
+from app.objects.utils import flatten
 
 from app.objects.events import Event, ListOfEvents
 
@@ -7,7 +12,7 @@ from app.objects.volunteers import Volunteer, ListOfVolunteers
 
 from app.objects.patrol_boats import PatrolBoat, ListOfPatrolBoats
 
-from app.objects.day_selectors import Day
+from app.objects.day_selectors import Day, DaySelector
 
 from app.objects.patrol_boats_with_volunteers_with_id import (
     ListOfVolunteersWithIdAtEventWithPatrolBoatsId,
@@ -48,6 +53,60 @@ class VolunteerPatrolBoatDay:
 
 
 class PatrolBoatByDayDict(Dict[Day, PatrolBoat]):
+    def delete_patrol_boat_association(self, patrol_boat: PatrolBoat):
+        for day in self.keys():
+            if self[day] == patrol_boat:
+                self.pop(day)
+
+    def copy_across_boats_at_event(
+            self,
+            day: Day,
+            volunteer_availablility_at_event: DaySelector,
+            allow_overwrite: bool,
+    ):
+        original_boat = self.get(day)
+        for day_to_copy_to in volunteer_availablility_at_event:
+            existing_boat  = self.on_any_patrol_boat_on_given_day(day)
+            if existing_boat:
+                if not allow_overwrite:
+                    continue
+
+            self[day_to_copy_to] = original_boat
+
+    def add_boat_on_day(self, day: Day, patrol_boat: PatrolBoat):
+        existing_boat = self.get(day, None)
+        if existing_boat is not None:
+            raise Exception("Volunteer cannot be on more than one boat for a given day")
+
+        self[day] = patrol_boat
+
+    def on_any_patrol_boat_on_given_day(self, day: Day):
+        return not self.not_on_patrol_boat_on_given_day(day)
+
+    def not_on_patrol_boat_on_given_day(self, day: Day):
+        boat_on_day = self.get(day, None)
+
+        return boat_on_day is None
+
+    def assigned_to_boat_on_day(self, day: Day, patrol_boat: PatrolBoat):
+        boat_on_day = self.get(day, None)
+        if boat_on_day is None:
+            return False
+
+        return boat_on_day == patrol_boat
+
+    def delete_patrol_boat_on_day(self, day: Day):
+        try:
+            self.pop(day)
+        except:
+            pass
+
+    def assigned_to_any_boat_on_any_day(self):
+        return self.number_of_days_assigned_to_any_boat()>0
+
+    def number_of_days_assigned_to_any_boat(self):
+        return len(self)
+
     def number_of_days_assigned_to_boat_and_day(
         self, patrol_boat: PatrolBoat, day: Day
     ):
@@ -147,6 +206,106 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
             list_of_volunteers_with_id_at_event_with_patrol_boat_id
         )
         self._list_of_all_patrol_boats_at_event = list_of_all_patrol_boats_at_event
+
+    def swap_patrol_boats_for_volunteers_in_allocation(
+            self,
+            original_day: Day,
+            original_volunteer: Volunteer,
+            day_to_swap_with: Day,
+            volunteer_to_swap_with: Volunteer):
+
+        dict_of_patrol_boat_for_original_volunteer = self.patrol_boats_for_volunteer(original_volunteer)
+        dict_of_patrol_boat_for_swap_volunteer = self.patrol_boats_for_volunteer(volunteer_to_swap_with)
+
+        original_boat = copy(dict_of_patrol_boat_for_original_volunteer.get(original_day))
+        swap_boat = copy(dict_of_patrol_boat_for_swap_volunteer.get(day_to_swap_with))
+
+        dict_of_patrol_boat_for_original_volunteer[original_day] = swap_boat
+        dict_of_patrol_boat_for_swap_volunteer[day_to_swap_with] = original_boat
+
+        self.list_of_volunteers_with_id_at_event_with_patrol_boat_id.swap_boats_for_volunteers_in_allocation(
+            volunteer_id_to_swap_with=volunteer_to_swap_with.id,
+            original_volunteer_id=original_volunteer.id,
+            day_to_swap_with=day_to_swap_with,
+            original_day=original_day
+        )
+
+
+    def remove_patrol_boat_and_all_associated_volunteers_from_event(
+            self, patrol_boat: PatrolBoat
+    ):
+        for volunteer_patrol_boats in self.values():
+            volunteer_patrol_boats.delete_patrol_boat_association(patrol_boat)
+
+        self.list_of_volunteers_with_id_at_event_with_patrol_boat_id.remove_patrol_boat_id_and_all_associated_volunteer_connections_from_event(
+            patrol_boat_id=patrol_boat.id
+        )
+
+    def add_boat_to_event_with_no_allocation(
+            self, patrol_boat: PatrolBoat):
+
+        self.list_of_volunteers_with_id_at_event_with_patrol_boat_id.add_unallocated_boat(patrol_boat.id)
+
+    def copy_across_boats_at_event(
+            self,
+            volunteer: Volunteer,
+            day: Day,
+            volunteer_availablility_at_event: DaySelector,
+            allow_overwrite: bool,
+    ):
+        patrol_boats_for_volunteer = self.patrol_boats_for_volunteer(volunteer)
+        patrol_boats_for_volunteer.copy_across_boats_at_event(
+                                                              volunteer_availablility_at_event=volunteer_availablility_at_event,
+                                                              day=day,
+                                                              allow_overwrite=allow_overwrite)
+        self.list_of_volunteers_with_id_at_event_with_patrol_boat_id.copy_across_allocation_of_boats_at_event(volunteer_id=volunteer.id,
+                                                                                                              day=day,
+                                                                                                              volunteer_availablility_at_event=volunteer_availablility_at_event,
+                                                                                                              allow_overwrite=allow_overwrite)
+
+    def add_volunteer_with_boat(self, volunteer: Volunteer, patrol_boat: PatrolBoat, day: Day):
+        patrol_boats_for_volunteer = self.patrol_boats_for_volunteer(volunteer)
+        patrol_boats_for_volunteer.add_boat_on_day(patrol_boat=patrol_boat, day=day)
+
+        self.list_of_volunteers_with_id_at_event_with_patrol_boat_id.add_volunteer_with_boat(volunteer_id=volunteer.id,
+                                                                                             day=day,
+                                                                                             patrol_boat_id=patrol_boat.id)
+
+    def volunteers_assigned_to_boat_on_day(self, patrol_boat: PatrolBoat, day: Day) -> ListOfVolunteers:
+        matching_volunteers = [volunteer for volunteer in self
+                               if self.patrol_boats_for_volunteer(volunteer).assigned_to_boat_on_day(day=day,
+                                                                                                                                     patrol_boat=patrol_boat)]
+
+        return ListOfVolunteers(matching_volunteers)
+
+    def volunteers_assigned_to_any_boat_on_given_day(self, day: Day) -> ListOfVolunteers:
+        matching_volunteers = [volunteer for volunteer in self
+                               if self.patrol_boats_for_volunteer(volunteer).on_any_patrol_boat_on_given_day(day)]
+
+        return ListOfVolunteers(matching_volunteers)
+
+    def list_of_unique_boats_at_event_including_unallocated(self) -> ListOfPatrolBoats:
+       return self.list_of_volunteers_with_id_at_event_with_patrol_boat_id.list_of_unique_boats_at_event_including_unallocated(list_of_patrol_boats=self.list_of_all_patrol_boats_at_event)
+
+    def list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_day(self) -> ListOfVolunteers:
+        return ListOfVolunteers(list(self.keys()))
+
+    def drop_volunteer(self, volunteer: Volunteer):
+        try:
+            self.pop(volunteer)
+        except:
+            pass
+
+        self.list_of_volunteers_with_id_at_event_with_patrol_boat_id.drop_volunteer(volunteer)
+
+    def delete_patrol_boat_for_volunteer_on_day(self, volunteer: Volunteer, day: Day):
+        patrol_boats_for_volunteer = self.patrol_boats_for_volunteer(volunteer)
+        patrol_boats_for_volunteer.delete_patrol_boat_on_day(day)
+        self.list_of_volunteers_with_id_at_event_with_patrol_boat_id.remove_volunteer_from_patrol_boat_on_day_at_event(volunteer_id=volunteer.id,
+                                                                                                                       day=day)
+
+    def patrol_boats_for_volunteer(self, volunteer: Volunteer):
+        return self.get(volunteer, PatrolBoatByDayDict({}))
 
     def number_of_volunteers_and_boats_assigned_to_boat_and_day(
         self, patrol_boat: PatrolBoat, day: Day

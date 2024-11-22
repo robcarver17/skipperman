@@ -6,11 +6,10 @@ from app.objects.events import Event
 
 from app.OLD_backend.rota.volunteer_rota import (
     MAKE_UNAVAILABLE,
-    update_volunteer_notes_at_event,
-    update_role_at_event_for_volunteer_on_day,
     update_group_at_event_for_volunteer_on_day,
     get_volunteer_with_role_at_event_on_day,
 )
+from app.backend.rota.changes import update_volunteer_notes_at_event, update_role_at_event_for_volunteer_on_day
 from app.backend.volunteers.volunteers_at_event import make_volunteer_unavailable_on_day
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.shared.events_state import get_event_from_state

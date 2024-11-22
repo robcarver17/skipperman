@@ -16,9 +16,7 @@ from typing import List
 
 from app.OLD_backend.data.volunteer_rota import VolunteerRotaData
 
-from app.OLD_backend.rota.volunteer_rota import (
-    SwapData,
-)
+from app.backend.rota.changes import SwapData
 
 from app.objects.day_selectors import Day
 from app.objects.events import Event

@@ -6,10 +6,10 @@ from app.objects.events import Event
 
 from app.data_access.store.data_access import DataLayer
 from app.objects.cadets import ListOfCadets
-from app.objects_OLD.clothing import (
-    ListOfCadetsWithClothingAtEvent,
-    ListOfCadetObjectsWithClothingAtEvent,
+from app.objects.clothing import (
+    ListOfCadetsWithClothingAndIdsAtEvent,
 )
+from app.objects.composed.clothing_at_event import ListOfCadetsWithClothingAtEvent
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
 from app.OLD_backend.data.cadets import CadetData
 
@@ -56,7 +56,7 @@ class ClothingData:
 
     def get_list_of_active_cadet_objects_with_clothing_at_event(
         self, event: Event, only_committee: bool = False
-    ) -> ListOfCadetObjectsWithClothingAtEvent:
+    ) -> ListOfCadetsWithClothingAtEvent:
         active_cadets_with_clothing = (
             self.get_list_of_active_cadets_with_clothing_at_event(
                 event=event, only_committee=only_committee
@@ -64,14 +64,14 @@ class ClothingData:
         )
         all_cadets = self.list_of_all_cadets()
 
-        return ListOfCadetObjectsWithClothingAtEvent.from_list_of_cadets(
+        return ListOfCadetsWithClothingAtEvent.from_list_of_cadets(
             list_of_cadets=all_cadets,
             list_of_cadets_with_clothing=active_cadets_with_clothing,
         )
 
     def get_list_of_active_cadets_with_clothing_at_event(
         self, event: Event, only_committee: bool = False
-    ) -> ListOfCadetsWithClothingAtEvent:
+    ) -> ListOfCadetsWithClothingAndIdsAtEvent:
         cadets_with_clothing = self.get_list_of_cadets_with_clothing_at_event(event)
         active_cadets = self.active_cadets_at_event(event)
         if only_committee:
@@ -98,13 +98,13 @@ class ClothingData:
 
     def get_list_of_cadets_with_clothing_at_event(
         self, event: Event
-    ) -> ListOfCadetsWithClothingAtEvent:
+    ) -> ListOfCadetsWithClothingAndIdsAtEvent:
         return self.data_api.get_list_of_cadets_with_clothing_at_event(event)
 
     def save_list_of_cadets_with_clothing_at_event(
         self,
         event: Event,
-        list_of_cadets_with_clothing: ListOfCadetsWithClothingAtEvent,
+        list_of_cadets_with_clothing: ListOfCadetsWithClothingAndIdsAtEvent,
     ):
         self.data_api.save_list_of_cadets_with_clothing_at_event(
             event=event, list_of_cadets_with_clothing=list_of_cadets_with_clothing

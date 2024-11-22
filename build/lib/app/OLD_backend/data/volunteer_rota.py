@@ -104,7 +104,7 @@ class VolunteerRotaData:
         list_of_volunteers_in_roles_at_event = (
             self.get_list_of_volunteers_in_roles_at_event(event)
         )
-        list_of_volunteers_in_roles_at_event.delete_volunteer_in_role_at_event_on_day(
+        list_of_volunteers_in_roles_at_event.delete_volunteer_in_role_at_event_on_day_DEPRECATE(
             volunteer_in_role_at_event=volunteer_in_role_at_event_on_day
         )
         self.save_list_of_volunteers_in_roles_at_event(

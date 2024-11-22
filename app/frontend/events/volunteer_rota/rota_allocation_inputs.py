@@ -10,13 +10,7 @@ from app.objects.volunteers import Volunteer
 from app.objects.roles_and_teams import RolesWithSkillIds
 
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
-from app.objects.events import Event
 
-from app.OLD_backend.rota.volunteer_rota import (
-    get_volunteers_in_role_at_event_with_active_allocations,
-    dict_of_roles_for_dropdown,
-    dict_of_groups_for_dropdown,
-)
 from app.frontend.events.volunteer_rota.volunteer_table_buttons import (
     get_allocation_inputs_buttons_in_role_when_available,
 )
@@ -28,8 +22,6 @@ from app.objects.abstract_objects.abstract_form import dropDownInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.day_selectors import Day
-from app.objects_OLD.volunteers_at_event import DEPRECATE_VolunteerAtEvent
-from app.objects.volunteer_roles_and_groups_with_id import VolunteerWithIdInRoleAtEvent
 
 
 def get_allocation_inputs_for_volunteer(

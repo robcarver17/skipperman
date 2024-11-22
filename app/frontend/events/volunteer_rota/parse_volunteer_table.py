@@ -1,7 +1,7 @@
-from app.OLD_backend.volunteers.volunteers import get_volunteer_from_id
+from app.backend.rota.sorting_and_filtering import get_sorted_and_filtered_dict_of_volunteers_at_event
+from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
 
 from app.frontend.forms.form_utils import get_dict_of_skills_from_form
-from app.frontend.forms.swaps import is_ready_to_swap
 
 from app.frontend.events.volunteer_rota.button_values import (
     from_known_button_to_volunteer_id_and_day,
@@ -9,14 +9,11 @@ from app.frontend.events.volunteer_rota.button_values import (
     from_skills_button_to_volunteer_id,
     get_dict_of_volunteer_name_buttons_and_volunteer_ids,
 )
-from app.frontend.events.volunteer_rota.volunteer_targets import save_volunteer_targets
 
 from app.data_access.file_access import temp_file_name
 
-from app.OLD_backend.rota.volunteer_rota import (
-    delete_role_at_event_for_volunteer_on_day,
-)
-from app.backend.volunteers.volunteers_at_event import load_list_of_volunteers_at_event, \
+from app.backend.rota.changes import delete_role_at_event_for_volunteer_on_day
+from app.backend.volunteers.volunteers_at_event import  \
     make_volunteer_available_on_day, make_volunteer_unavailable_on_day
 from app.backend.rota.volunteer_matrix import get_volunteer_matrix
 from app.frontend.events.volunteer_rota.edit_cadet_connections_for_event_from_rota import (
@@ -50,21 +47,26 @@ from app.objects.abstract_objects.abstract_form import NewForm
 
 def save_all_information_in_rota_page(interface: abstractInterface):
     event = get_event_from_state(interface)
-    list_of_volunteers_at_event = interface.cache.get_from_cache(
-        load_list_of_volunteers_at_event, event=event
+    sorts_and_filters = get_sorts_and_filters_from_state(interface)
+
+    dict_of_volunteers_at_event_with_event_data = get_sorted_and_filtered_dict_of_volunteers_at_event(
+        object_store=interface.object_store,
+        event=event,
+        sorts_and_filters=sorts_and_filters,
     )
 
-    for volunteer_at_event in list_of_volunteers_at_event:
+    for volunteer, volunteer_at_event_data in dict_of_volunteers_at_event_with_event_data.items():
         try:
             update_details_from_form_for_volunteer_at_event(
                 interface=interface,
-                volunteer_at_event=volunteer_at_event,
+                volunteer=volunteer,
+                volunteer_at_event_data=volunteer_at_event_data
             )
         except Exception as e:
             ## perfectly fine if
             print(
                 "Can't volunteer %s: error code %s probably because was filtered out"
-                % (str(volunteer_at_event), str(e))
+                % (volunteer.name, str(e))
             )
 
 
@@ -105,17 +107,16 @@ def action_if_volunteer_skills_button_pressed(
         display_form_edit_individual_volunteer_skills_from_rota
     )
 
-
 def update_if_make_available_button_pressed(
     interface: abstractInterface, available_button: str
 ):
     volunteer_id, day = from_known_button_to_volunteer_id_and_day(available_button)
     volunteer = get_volunteer_from_id(
-        data_layer=interface.data, volunteer_id=volunteer_id
+        object_store=interface.object_store, volunteer_id=volunteer_id
     )
     event = get_event_from_state(interface)
     make_volunteer_available_on_day(
-        data_layer=interface.data, event=event, volunteer=volunteer, day=day
+        object_store=interface.object_store, event=event, volunteer=volunteer, day=day
     )
 
 
@@ -124,11 +125,11 @@ def update_if_make_unavailable_button_pressed(
 ):
     volunteer_id, day = from_known_button_to_volunteer_id_and_day(unavailable_button)
     volunteer = get_volunteer_from_id(
-        data_layer=interface.data, volunteer_id=volunteer_id
+        object_store=interface.object_store, volunteer_id=volunteer_id
     )
     event = get_event_from_state(interface)
     make_volunteer_unavailable_on_day(
-        data_layer=interface.data, event=event, volunteer=volunteer, day=day
+        object_store=interface.object_store, event=event, volunteer=volunteer, day=day
     )
 
 
@@ -137,11 +138,11 @@ def update_if_remove_role_button_pressed(
 ):
     volunteer_id, day = from_known_button_to_volunteer_id_and_day(remove_button)
     volunteer = get_volunteer_from_id(
-        data_layer=interface.data, volunteer_id=volunteer_id
+        object_store=interface.object_store, volunteer_id=volunteer_id
     )
     event = get_event_from_state(interface)
     delete_role_at_event_for_volunteer_on_day(
-        data_layer=interface.data, event=event, volunteer=volunteer, day=day
+        object_store=interface.object_store, event=event, volunteer=volunteer, day=day
     )
 
 

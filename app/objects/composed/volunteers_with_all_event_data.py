@@ -1,5 +1,8 @@
+from copy import copy
 from dataclasses import dataclass
 from typing import Dict
+
+from app.objects.day_selectors import Day
 
 from app.objects.cadets import ListOfCadets
 
@@ -13,7 +16,7 @@ from app.objects.composed.volunteers_with_skills import (
 )
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
     DictOfDaysRolesAndGroups,
-    DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups, RoleAndGroupAndTeam,
 )
 from app.objects.composed.volunteers_at_event_with_registration_data import (
     RegistrationDataForVolunteerAtEvent,
@@ -34,6 +37,9 @@ class AllEventDataForVolunteer:
     associated_cadets: ListOfCadets
     event: Event
     volunteer: Volunteer
+
+    def not_on_patrol_boat_on_given_day(self, day: Day) -> bool:
+        return self.patrol_boats.not_on_patrol_boat_on_given_day(day)
 
 class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer]):
     def __init__(
@@ -59,6 +65,68 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         )
         self._dict_of_cadets_associated_with_volunteers = dict_of_cadets_associated_with_volunteers
         self._event = event
+
+
+    def not_on_patrol_boat_on_given_day(self, day: Day) -> 'DictOfAllEventDataForVolunteers':
+        raw_dict = dict([(volunteer, volunteer_data) for volunteer, volunteer_data in self.items() if volunteer_data.not_on_patrol_boat_on_given_day(day)])
+        return DictOfAllEventDataForVolunteers(
+            raw_dict=raw_dict,
+            dict_of_registration_data_for_volunteers_at_event=self.dict_of_registration_data_for_volunteers_at_event,
+            dict_of_volunteers_at_event_with_patrol_boats=self.dict_of_volunteers_at_event_with_patrol_boats,
+            dict_of_volunteers_with_skills=self.dict_of_volunteers_with_skills,
+            dict_of_cadets_associated_with_volunteers=self.dict_of_cadets_associated_with_volunteers,
+            dict_of_volunteers_at_event_with_days_and_roles=self.dict_of_volunteers_at_event_with_days_and_role,
+            event=self.event
+        )
+
+    def update_role_and_group_at_event_for_volunteer_on_all_days_when_available(
+            self,
+            volunteer: Volunteer,
+            new_role_and_group: RoleAndGroupAndTeam
+    ):
+        available_days = self.dict_of_registration_data_for_volunteers_at_event.get_data_for_volunteer(volunteer).availablity.days_available()
+        self.dict_of_volunteers_at_event_with_days_and_role.update_role_and_group_at_event_for_volunteer_on_all_days_when_available(
+            list_of_days_available=available_days,
+            volunteer=volunteer,
+            new_role_and_group=new_role_and_group
+        )
+
+    def delete_role_at_event_for_volunteer_on_day(
+            self, volunteer: Volunteer, day: Day
+    ):
+        days_and_roles_data = self.dict_of_volunteers_at_event_with_days_and_role
+        days_and_roles_data.delete_role_for_volunteer_on_day(day=day, volunteer=volunteer)
+
+        patrol_boat_data = self.dict_of_volunteers_at_event_with_patrol_boats
+        patrol_boat_data.delete_patrol_boat_for_volunteer_on_day(day=day, volunteer=volunteer)
+
+    def delete_volunteer_from_event(
+            self, volunteer: Volunteer
+    ):
+        volunteer_registration_data = self.dict_of_registration_data_for_volunteers_at_event
+        volunteer_registration_data.drop_volunteer(volunteer)
+
+        days_and_roles_data = self.dict_of_volunteers_at_event_with_days_and_role
+        days_and_roles_data.drop_volunteer(volunteer)
+
+        patrol_boat_data = self.dict_of_volunteers_at_event_with_patrol_boats
+        patrol_boat_data.drop_volunteer(volunteer)
+
+    def make_volunteer_unavailable_on_day(self,
+             volunteer: Volunteer,  day: Day
+    ):
+
+        volunteer_registration_data = self.dict_of_registration_data_for_volunteers_at_event
+        volunteer_registration_data.make_volunteer_available_on_day(
+             day=day, volunteer=volunteer
+        )
+
+        days_and_roles_data = self.dict_of_volunteers_at_event_with_days_and_role
+        days_and_roles_data.delete_role_for_volunteer_on_day(day=day, volunteer=volunteer)
+
+        patrol_boat_data = self.dict_of_volunteers_at_event_with_patrol_boats
+        patrol_boat_data.delete_patrol_boat_for_volunteer_on_day(day=day, volunteer=volunteer)
+
 
     def sort_by_list_of_volunteers(self, list_of_volunteers: ListOfVolunteers):
         new_raw_dict = dict([(volunteer, self[volunteer]) for volunteer in list_of_volunteers])

@@ -6,22 +6,21 @@ from app.frontend.forms.swaps import (
     store_swap_state,
     get_swap_state,
 )
-from app.OLD_backend.rota.patrol_boats import (
-    get_boat_name_allocated_to_volunteer_on_day_at_event,
-    swap_boats_for_volunteers_in_allocation,
-)
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import \
+    get_boat_name_allocated_to_volunteer_on_day_at_event
 from app.OLD_backend.rota.volunteer_rota import (
-    is_possible_to_swap_roles_on_one_day_for_non_grouped_roles_only,
     swap_roles_for_volunteers_in_allocation,
-    SwapData,
 )
+from app.backend.rota.changes import SwapData
+from app.backend.patrol_boats.swapping import is_possible_to_swap_roles_on_one_day_for_non_grouped_roles_only, \
+    swap_boats_for_volunteers_in_allocation_using_swapdata
 
 from app.frontend.shared.events_state import get_event_from_state
 
 from app.frontend.events.patrol_boats.patrol_boat_buttons import (
     get_list_of_generic_buttons_for_each_volunteer_day_combo,
     generic_button_name_for_volunteer_in_boat_at_event_on_day,
-    get_button_type_day_volunteer_id_given_button_str,
+    get_button_type_day_volunteer_given_button_name,
 )
 from app.data_access.configuration.fixed import (
     BOAT_SHORTHAND,
@@ -257,9 +256,7 @@ def get_swap_roles_button_name(day: Day, volunteer_id: str) -> str:
 def get_and_store_swap_state_from_button_pressed(
     interface: abstractInterface, swap_button: str
 ):
-    swap_type, day, volunteer_id = get_button_type_day_volunteer_id_given_button_str(
-        swap_button
-    )
+    swap_type, day, volunteer_id = get_button_type_day_volunteer_given_button_name(swap_button, )
     swap_state = SwapButtonState(
         ready_to_swap=True,
         dict_of_thing_to_swap=dict(
@@ -361,7 +358,7 @@ def get_swap_data(interface: abstractInterface, swap_button: str) -> SwapData:
         swap_type,
         day_to_swap_with,
         volunteer_id_to_swap_with,
-    ) = get_button_type_day_volunteer_id_given_button_str(swap_button)
+    ) = get_button_type_day_volunteer_given_button_name(swap_button, )
     (
         __not_used_swapping_both,
         original_day,
@@ -395,7 +392,7 @@ def do_swapping_for_volunteers_boats_and_possibly_roles_in_boat_allocation(
             interface=interface, swap_data=swap_data
         )
     if swap_data.swap_boats:
-        swap_boats_for_volunteers_in_allocation(
+        swap_boats_for_volunteers_in_allocation_using_swapdata(
             interface=interface, swap_data=swap_data
         )
 

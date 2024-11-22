@@ -1,9 +1,9 @@
 from typing import List
 
 from app.OLD_backend.rota.patrol_boats import (
-    copy_across_earliest_allocation_of_boats_at_event,
     DEPRECATE_get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day,
 )
+from app.backend.patrol_boats.changes import copy_across_earliest_allocation_of_boats_at_event
 
 from app.frontend.shared.events_state import get_event_from_state
 
@@ -12,11 +12,11 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.OLD_backend.rota.volunteer_rota import (
     is_possible_to_copy_roles_for_non_grouped_roles_only,
-    copy_earliest_valid_role_to_all_empty_for_volunteer,
-    copy_earliest_valid_role_and_overwrite_for_volunteer,
-    volunteer_has_at_least_one_allocated_role_and_empty_spaces_to_fill,
-    volunteer_has_at_least_one_allocated_role_which_matches_others,
 )
+from app.backend.rota.copying import copy_earliest_valid_role_and_overwrite_for_volunteer, \
+    copy_earliest_valid_role_to_all_empty_for_volunteer, \
+    volunteer_has_at_least_one_allocated_role_and_empty_spaces_to_fill
+from app.backend.patrol_boats.copying import volunteer_has_at_least_one_allocated_role_which_matches_others
 from app.data_access.configuration.fixed import (
     COPY_OVERWRITE_SYMBOL,
     BOAT_SHORTHAND,

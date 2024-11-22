@@ -5,20 +5,18 @@ from app.data_access.store.data_access import DataLayer
 
 from app.frontend.forms.swaps import is_ready_to_swap
 
-from app.OLD_backend.data.patrol_boats import from_patrol_boat_name_to_boat
+from app.backend.patrol_boats.list_of_patrol_boats import from_patrol_boat_name_to_boat
 from app.OLD_backend.data.dinghies import (
     DEPRECATE_load_list_of_patrol_boats_at_event_from_cache,
 )
-from app.OLD_backend.rota.patrol_boats import (
-    get_sorted_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day,
-)
+from app.backend.patrol_boats.volunteers_to_choose_from import \
+    get_sorted_volunteer_data_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day, \
+    string_if_volunteer_can_drive_else_empty, boat_related_role_str_and_group_on_day_for_volunteer_at_event
 from app.OLD_backend.rota.volunteer_rota import (
-    boat_related_role_str_and_group_on_day_for_volunteer_id,
     dict_of_roles_for_dropdown,
     get_volunteer_role_at_event_on_day,
 )
 from app.OLD_backend.volunteers.volunteers import (
-    string_if_volunteer_can_drive_else_empty,
     get_volunteer_with_name,
     get_volunteer_from_id,
 )
@@ -89,7 +87,7 @@ def get_allocation_dropdown_elements_to_add_volunteer_for_day_and_boat(
 def get_list_of_strings_of_volunteers_to_add_for_day_on_patrol_boat(
     data_layer: DataLayer, event: Event, day: Day
 ) -> List[str]:
-    sorted_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats = get_sorted_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day(
+    sorted_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats = get_sorted_volunteer_data_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day(
         data_layer=data_layer,
         event=event,
         day=day,
@@ -146,7 +144,7 @@ def from_volunteer_id_to_string_of_volunteer_with_skill_and_role(
     ### MUST BE IN BRACKETS OR WON'T WORK WITH GETTING VOLUNTEER NAME
     if len(skill_str) > 0:
         skill_str = " (%s)" % skill_str
-    role_str = boat_related_role_str_and_group_on_day_for_volunteer_id(
+    role_str = boat_related_role_str_and_group_on_day_for_volunteer_at_event(
         data_layer=data_layer, volunteer_id=volunteer_id, event=event, day=day
     )
     if len(role_str) > 0:

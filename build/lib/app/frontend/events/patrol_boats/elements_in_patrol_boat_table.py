@@ -3,7 +3,7 @@ from app.objects_OLD.patrol_boats import (
     VolunteerAtEventWithSkillsAndRolesAndPatrolBoats,
 )
 
-from app.OLD_backend.OLD_patrol_boats.patrol_boat_warnings import warn_on_pb2_drivers
+from app.backend.patrol_boats.patrol_boat_warnings import warn_on_pb2_drivers
 from app.backend.volunteers.warnings import warn_on_volunteer_qualifications
 from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
 from app.data_access.configuration.fixed import (

@@ -2,8 +2,8 @@ from typing import List
 
 from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
     is_volunteer_senior_instructor_at_event,
-    get_list_of_groups_volunteer_is_instructor_for,
 )
+from app.backend.rota.volunteer_table import get_list_of_groups_volunteer_is_instructor_for
 from app.data_access.store.object_store import ObjectStore
 
 from app.backend.events.list_of_events import get_sorted_list_of_events

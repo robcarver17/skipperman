@@ -8,14 +8,13 @@ from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.data_access.configuration.configuration import (
     MINIMUM_COLOUR_GROUPS_TO_DISTRIBUTE,
 )
-from app.objects_OLD.clothing import *
+from app.objects.clothing import *
 
 from app.OLD_backend.data.clothing import ClothingData
-from app.objects_OLD.clothing import (
-    ListOfCadetsWithClothingAtEvent,
-    ListOfCadetObjectsWithClothingAtEvent,
-    CadetObjectWithClothingAtEvent,
+from app.objects.clothing import (
+    ListOfCadetsWithClothingAndIdsAtEvent,
 )
+from app.objects.composed.clothing_at_event import CadetWithClothingAtEvent, ListOfCadetsWithClothingAtEvent
 from app.objects.events import Event
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -47,7 +46,7 @@ def add_new_cadet_with_clothing_to_event(
 
 def get_list_of_active_cadet_objects_with_clothing_at_event(
     interface: abstractInterface, event: Event, only_committee: bool = False
-) -> ListOfCadetObjectsWithClothingAtEvent:
+) -> ListOfCadetsWithClothingAtEvent:
     clothing_data = ClothingData(interface.data)
 
     return clothing_data.get_list_of_active_cadet_objects_with_clothing_at_event(
@@ -57,7 +56,7 @@ def get_list_of_active_cadet_objects_with_clothing_at_event(
 
 def get_list_of_active_cadet_ids_with_clothing_at_event(
     interface: abstractInterface, event: Event, only_committee: bool = False
-) -> ListOfCadetsWithClothingAtEvent:
+) -> ListOfCadetsWithClothingAndIdsAtEvent:
     clothing_data = ClothingData(interface.data)
 
     return clothing_data.get_list_of_active_cadets_with_clothing_at_event(
@@ -127,8 +126,8 @@ def distribute_colour_groups_at_event(interface: abstractInterface, event: Event
 
 
 def allocate_best_colour_group_for_cadet(
-    sorted_list_of_cadets_with_clothing: ListOfCadetObjectsWithClothingAtEvent,
-    cadet_with_clothing: CadetObjectWithClothingAtEvent,
+    sorted_list_of_cadets_with_clothing: ListOfCadetsWithClothingAtEvent,
+    cadet_with_clothing: CadetWithClothingAtEvent,
 ):
     if cadet_with_clothing.has_colour:
         ## skip
@@ -161,7 +160,7 @@ def allocate_best_colour_group_for_cadet(
 def save_list_of_cadets_with_clothing_with_changed_colours(
     interface: abstractInterface,
     event: Event,
-    sorted_list_of_cadets_with_clothing: ListOfCadetObjectsWithClothingAtEvent,
+    sorted_list_of_cadets_with_clothing: ListOfCadetsWithClothingAtEvent,
 ):
     for cadet_with_clothing in sorted_list_of_cadets_with_clothing:
         change_colour_group_for_cadet(
@@ -174,7 +173,7 @@ def save_list_of_cadets_with_clothing_with_changed_colours(
 
 def probably_has_family_with_colour(
     cadet: Cadet,
-    list_of_cadets_with_clothing: ListOfCadetObjectsWithClothingAtEvent,
+    list_of_cadets_with_clothing: ListOfCadetsWithClothingAtEvent,
     colour: str,
 ) -> bool:
     list_of_cadets_with_clothing_and_same_surname = (
@@ -184,7 +183,7 @@ def probably_has_family_with_colour(
 
 
 def least_popular_colours(
-    list_of_cadets_with_clothing: ListOfCadetObjectsWithClothingAtEvent,
+    list_of_cadets_with_clothing: ListOfCadetsWithClothingAtEvent,
 ):
     colours = list_of_cadets_with_clothing.colours()
     counter = Counter(colours).most_common()

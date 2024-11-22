@@ -5,9 +5,8 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.OLD_backend.data.dinghies import (
     DEPRECATE_load_list_of_patrol_boats_at_event_from_cache,
 )
-from app.OLD_backend.rota.patrol_boats import (
-    get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day,
-)
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import \
+    get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day
 from app.data_access.configuration.fixed import REMOVE_SHORTHAND, ADD_KEYBOARD_SHORTCUT
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.day_selectors import Day

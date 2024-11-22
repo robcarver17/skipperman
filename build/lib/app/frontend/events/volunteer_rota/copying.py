@@ -1,15 +1,12 @@
 from app.OLD_backend.rota.volunteer_history import get_last_role_for_volunteer_id
-from app.OLD_backend.rota.volunteer_rota import (
-    copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days,
-    update_role_and_group_at_event_for_volunteer_on_all_days_when_available,
-    copy_earliest_valid_role_to_all_empty_for_volunteer,
-    copy_earliest_valid_role_and_overwrite_for_volunteer,
-)
+from app.backend.rota.copying import copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days, \
+    copy_earliest_valid_role_and_overwrite_for_volunteer, copy_earliest_valid_role_to_all_empty_for_volunteer
+from app.backend.rota.changes import update_role_and_group_at_event_for_volunteer_on_all_days_when_available
 from app.backend.volunteers.volunteers_at_event import load_list_of_volunteers_at_event
 from app.frontend.events.volunteer_rota.button_values import (
     from_previous_role_copy_button_to_volunteer_id,
-    from_known_button_to_volunteer_at_event_and_day,
-    from_previous_role_copy_button_to_volunteer_at_event,
+    from_known_button_to_volunteer_and_day,
+    from_previous_role_copy_button_to_volunteer,
 )
 from app.frontend.events.volunteer_rota.volunteer_rota_buttons import (
     copy_all_roles_button,
@@ -48,7 +45,7 @@ def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str
 def update_if_individual_copy_overwrite_button_pressed(
     interface: abstractInterface, copy_button: str
 ):
-    volunteer_at_event, day = from_known_button_to_volunteer_at_event_and_day(
+    volunteer_at_event, day = from_known_button_to_volunteer_and_day(
         interface=interface, copy_button_text=copy_button
     )
 
@@ -63,7 +60,7 @@ def update_if_individual_copy_overwrite_button_pressed(
 def update_if_individual_copy_fill_button_pressed(
     interface: abstractInterface, copy_button: str
 ):
-    volunteer_at_event, day = from_known_button_to_volunteer_at_event_and_day(
+    volunteer_at_event, day = from_known_button_to_volunteer_and_day(
         interface=interface, copy_button_text=copy_button
     )
 
@@ -78,7 +75,7 @@ def update_if_individual_copy_fill_button_pressed(
 def update_if_copy_previous_role_button_pressed(
     interface: abstractInterface, copy_button: str
 ):
-    volunteer_at_event = from_previous_role_copy_button_to_volunteer_at_event(
+    volunteer_at_event = from_previous_role_copy_button_to_volunteer(
         interface=interface, previous_role_copy_button_name=copy_button
     )
     event = get_event_from_state(interface)

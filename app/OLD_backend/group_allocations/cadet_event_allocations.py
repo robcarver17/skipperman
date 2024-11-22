@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import Dict
 
 from app.data_access.store.data_access import DataLayer
 
@@ -10,18 +10,8 @@ from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelDa
 from app.objects.cadets import ListOfCadets
 from app.objects.events import Event
 from app.objects.composed.cadets_at_event_with_groups import ListOfCadetsWithGroupOnDay
-from app.objects.groups import Group
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
 from app.OLD_backend.data.group_allocations import GroupAllocationsData
-
-
-def get_list_of_groups_at_event_given_list_of_cadets(
-    data_layer: DataLayer, event: Event, list_of_cadets: ListOfCadets
-) -> List[Group]:
-    group_allocation_data = GroupAllocationsData(data_layer)
-    return group_allocation_data.get_list_of_groups_at_event_given_list_of_cadets(
-        event=event, list_of_cadets=list_of_cadets
-    )
 
 
 def DEPRECATE_get_list_of_active_cadets_at_event(

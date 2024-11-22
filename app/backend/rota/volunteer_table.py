@@ -1,11 +1,17 @@
-from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
+from typing import List
 
-from app.objects.groups import unallocated_group
+from app.backend.volunteers.volunteers_at_event import get_dict_of_all_event_data_for_volunteers
+from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
+from app.objects.events import Event
+
+from app.objects.groups import unallocated_group, Group
 
 from app.data_access.store.object_store import ObjectStore
-from app.backend.volunteers.roles_and_teams import get_list_of_roles
+from app.backend.volunteers.roles_and_teams import get_list_of_roles, get_dict_of_teams_and_roles
 from app.backend.groups.list_of_groups import get_list_of_groups
 from app.objects.composed.volunteer_roles import no_role_set
+from app.objects.roles_and_teams import instructor_team
+from app.objects.volunteers import Volunteer
 
 MAKE_UNAVAILABLE = "* UNAVAILABLE *"
 NO_ROLE_SET = "No role allocated"
@@ -85,3 +91,32 @@ def volunteer_has_at_least_one_day_in_role_and_all_roles_and_groups_match(
     all_match = len(unique_allocated_roles)==1
 
     return all_match
+
+
+def get_list_of_groups_volunteer_is_instructor_for(
+    object_store: ObjectStore, event: Event, volunteer: Volunteer
+) -> List[Group]:
+    dict_of_all_event_data = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
+    )
+    volunteer_days_and_roles = dict_of_all_event_data.dict_of_volunteers_at_event_with_days_and_role.days_and_roles_for_volunteer(
+        volunteer
+    )
+
+    roles_in_instructor_team = get_instructor_team_roles(object_store)
+
+    days_and_roles_when_instructor = (
+        volunteer_days_and_roles.subset_where_role_in_list_of_roles(
+            roles_in_instructor_team
+        )
+    )
+    relevant_groups = days_and_roles_when_instructor.list_of_groups()
+
+    return relevant_groups
+
+
+def get_instructor_team_roles(object_store: ObjectStore):
+    teams_and_roles = get_dict_of_teams_and_roles(object_store)
+    roles_in_instructor_team = teams_and_roles[instructor_team]
+
+    return roles_in_instructor_team

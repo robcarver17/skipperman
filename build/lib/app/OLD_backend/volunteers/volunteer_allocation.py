@@ -10,9 +10,9 @@ from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelDa
 from app.OLD_backend.data.volunteer_allocation import VolunteerAllocationData
 from app.OLD_backend.data.volunteers import VolunteerData, SORT_BY_FIRSTNAME
 from app.OLD_backend.rota.volunteer_rota import (
-    delete_role_at_event_for_volunteer_on_day,
     DEPRECATE_load_list_of_volunteers_at_event,
 )
+from app.backend.rota.changes import delete_role_at_event_for_volunteer_on_day
 
 from app.OLD_backend.cadets import cadet_name_from_id, get_cadet_from_id
 from app.OLD_backend.volunteers.volunteers import (

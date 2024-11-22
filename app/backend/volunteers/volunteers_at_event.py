@@ -1,8 +1,8 @@
 from typing import List
 
 from app.OLD_backend.data.patrol_boats import PatrolBoatsData
-from app.OLD_backend.rota.volunteer_rota import delete_role_at_event_for_volunteer_on_all_days, \
-    delete_role_at_event_for_volunteer_on_day
+from app.OLD_backend.rota.volunteer_rota import delete_role_at_event_for_volunteer_on_all_days
+from app.backend.rota.changes import delete_role_at_event_for_volunteer_on_day
 
 from app.data_access.store.data_access import DataLayer
 from app.objects.cadets import ListOfCadets
@@ -57,6 +57,15 @@ def get_dict_of_all_event_data_for_volunteers(
     return object_store.get(
         object_definition=object_definition_for_dict_of_all_event_data_for_volunteers,
         event_id=event.id,
+    )
+
+
+def update_dict_of_all_event_data_for_volunteers(
+    object_store: ObjectStore,  dict_of_all_event_data: DictOfAllEventDataForVolunteers):
+    object_store.update(
+        object_definition=object_definition_for_dict_of_all_event_data_for_volunteers,
+        event_id=dict_of_all_event_data.event.id,
+        new_object=dict_of_all_event_data
     )
 
 
@@ -130,23 +139,12 @@ def delete_volunteer_at_event(
     object_store: ObjectStore, event: Event, volunteer: Volunteer
 ):
 
-    dict_of_registration_data = get_dict_of_registration_data_for_volunteers_at_event(object_store=object_store, event=event)
-    dict_of_registration_data.drop_volunteer(volunteer)
-    update_dict_of_registration_data_for_volunteers_at_event(dict_of_registration_data=dict_of_registration_data, object_store=object_store)
-
-
-    patrol_boat_data = PatrolBoatsData(data_layer)
-    patrol_boat_data.delete_volunteer_with_id_at_event(
-        event=event, volunteer_id=volunteer_id
-    )
-
-    delete_role_at_event_for_volunteer_on_all_days(
-        data_layer=data_layer, volunteer_id=volunteer_id, event=event
-    )
-
+    all_volunteer_data = get_dict_of_all_event_data_for_volunteers(object_store=object_store, event=event)
+    all_volunteer_data.delete_volunteer_from_event(volunteer)
+    update_dict_of_all_event_data_for_volunteers(object_store=object_store, dict_of_all_event_data=all_volunteer_data)
 
 def update_volunteer_availability_at_event(
-    data_layer: DataLayer,
+    object_store: ObjectStore,
     volunteer: Volunteer,
     event: Event,
     availability: DaySelector,
@@ -154,37 +152,30 @@ def update_volunteer_availability_at_event(
     for day in event.weekdays_in_event():
         if availability.available_on_day(day):
             make_volunteer_available_on_day(
-                data_layer=data_layer, event=event, volunteer=volunteer, day=day
+                object_store=object_store, event=event, volunteer=volunteer, day=day
             )
         else:
             make_volunteer_unavailable_on_day(
-                data_layer=data_layer, event=event, volunteer=volunteer, day=day
+                object_store=object_store, event=event, volunteer=volunteer, day=day
             )
 
 
+
 def make_volunteer_available_on_day(
-    data_layer: DataLayer, volunteer: Volunteer, event: Event, day: Day
+    object_store: ObjectStore, volunteer: Volunteer, event: Event, day: Day
 ):
-    volunteer_allocation_data = VolunteerAllocationData(data_layer)
-    volunteer_allocation_data.make_volunteer_available_on_day(
-        event=event, day=day, volunteer=volunteer
+    volunteer_registration_data = get_dict_of_registration_data_for_volunteers_at_event(event=event, object_store=object_store)
+    volunteer_registration_data.make_volunteer_available_on_day(
+         day=day, volunteer=volunteer
     )
+    update_dict_of_registration_data_for_volunteers_at_event(object_store=object_store, dict_of_registration_data=volunteer_registration_data)
 
 
 def make_volunteer_unavailable_on_day(
-    data_layer: DataLayer, volunteer: Volunteer, event: Event, day: Day
+    object_store: ObjectStore, volunteer: Volunteer, event: Event, day: Day
 ):
-    volunteer_allocation_data = VolunteerAllocationData(data_layer)
-    volunteer_allocation_data.make_volunteer_unavailable_on_day(
-        event=event, day=day, volunteer=volunteer
-    )
-    ## also delete any associated roles for tidyness
-    delete_role_at_event_for_volunteer_on_day(
-        data_layer=data_layer, event=event, volunteer=volunteer, day=day
-    )
 
-    ### and patrol boat data
-    patrol_boat_data = PatrolBoatsData(data_layer)
-    patrol_boat_data.remove_volunteer_from_patrol_boat_on_day_at_event(
-        event=event, volunteer=volunteer, day=day
-    )
+    all_volunteer_data = get_dict_of_all_event_data_for_volunteers(object_store=object_store, event=event)
+    all_volunteer_data.make_volunteer_unavailable_on_day(volunteer=volunteer, day=day)
+    update_dict_of_all_event_data_for_volunteers(object_store=object_store, dict_of_all_event_data=all_volunteer_data)
+

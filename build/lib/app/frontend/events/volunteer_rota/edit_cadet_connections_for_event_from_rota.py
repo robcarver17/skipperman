@@ -9,9 +9,7 @@ from app.OLD_backend.volunteers.volunteer_allocation import (
 )
 from app.objects.events import Event
 
-from app.OLD_backend.group_allocations.cadet_event_allocations import (
-    get_list_of_groups_at_event_given_list_of_cadets,
-)
+from app.backend.groups.cadets_with_groups_at_event import get_list_of_groups_at_event_given_list_of_cadets
 from app.backend.events.cadets_at_event import get_list_of_active_cadets_at_event
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface

@@ -1,5 +1,7 @@
 from typing import Tuple, Union
 
+from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
+
 from app.objects.volunteers import Volunteer
 
 from app.frontend.forms.swaps import (
@@ -8,9 +10,7 @@ from app.frontend.forms.swaps import (
     store_swap_state,
     get_swap_state,
 )
-from app.OLD_backend.rota.volunteer_rota import (
-    swap_roles_and_groups_for_volunteers_in_allocation,
-)
+from app.backend.rota.changes import swap_roles_and_groups_for_volunteers_in_allocation
 from app.data_access.configuration.fixed import SWAP_SHORTHAND, SWAP_SHORTHAND2
 from app.frontend.shared.events_state import get_event_from_state
 
@@ -72,7 +72,7 @@ def swap_button_if_ready_to_swap(
     current_day: Day,
     interface: abstractInterface,
 ) -> Union[Button, str]:
-    swap_day, swap_volunteer_id = get_day_volunteer_id_from_swap_state(interface)
+    swap_day, swap_volunteer_id = get_day_and_volunteer_id_from_swap_state(interface)
     current_volunteer_id = volunteer_data_at_event.volunteer.id
 
     day_matches = swap_day == current_day
@@ -111,7 +111,7 @@ def revert_to_not_swapping_state(interface: abstractInterface):
     store_swap_state(interface=interface, swap_state=swap_state)
 
 
-def get_day_volunteer_id_from_swap_state(
+def get_day_and_volunteer_id_from_swap_state(
     interface: abstractInterface,
 ) -> Tuple[Day, str]:
     swap_state = get_swap_state(interface)
@@ -161,35 +161,38 @@ def update_if_swap_button_pressed_and_ready_to_swap(
         ## cancel swap
         pass
     else:
-        update_if_swap_button_pressed_and_ready_to_swap_but_not_seperate_cancel_button(
+        update_if_swap_button_pressed_and_ready_to_swap_but_not_cancel_button(
             interface=interface, swap_button=swap_button
         )
 
     revert_to_not_swapping_state(interface)
 
 
-def update_if_swap_button_pressed_and_ready_to_swap_but_not_seperate_cancel_button(
+def update_if_swap_button_pressed_and_ready_to_swap_but_not_cancel_button(
     interface: abstractInterface, swap_button: str
 ):
     original_volunteer_id, original_day = from_known_button_to_volunteer_id_and_day(
         swap_button
     )
-    day_to_swap_with, volunteer_id_to_swap_with = get_day_volunteer_id_from_swap_state(
+    day_to_swap_with, volunteer_id_to_swap_with = get_day_and_volunteer_id_from_swap_state(
         interface
     )
+    original_volunteer = get_volunteer_from_id(object_store=interface.object_store, volunteer_id=original_volunteer_id)
+    volunteer_to_swap_with = get_volunteer_from_id(object_store=interface.object_store, volunteer_id=volunteer_id_to_swap_with)
+
     event = get_event_from_state(interface)
     if (
         day_to_swap_with == original_day
-        and volunteer_id_to_swap_with == original_volunteer_id
+        and original_volunteer==volunteer_to_swap_with
     ):
         ## cancel swap
         return
     else:
         swap_roles_and_groups_for_volunteers_in_allocation(
-            interface=interface,
+            object_store=interface.object_store,
             original_day=original_day,
             event=event,
             day_to_swap_with=day_to_swap_with,
-            volunteer_id_to_swap_with=volunteer_id_to_swap_with,
-            original_volunteer_id=original_volunteer_id,
+            volunteer_to_swap_with=volunteer_to_swap_with,
+            original_volunteer=original_volunteer
         )

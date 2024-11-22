@@ -13,7 +13,7 @@ from app.OLD_backend.clothing import (
 from app.frontend.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects_OLD.clothing import ListOfCadetObjectsWithClothingAtEvent
+from app.objects.composed.clothing_at_event import ListOfCadetsWithClothingAtEvent
 
 
 def export_committee_clothing(interface: abstractInterface) -> File:
@@ -69,7 +69,7 @@ def export_all_clothing(interface: abstractInterface) -> File:
         list_this_colour = list_this_colour.sort_by_firstname()
         new_list += list_this_colour
 
-    list_of_cadets_with_clothing = ListOfCadetObjectsWithClothingAtEvent(new_list)
+    list_of_cadets_with_clothing = ListOfCadetsWithClothingAtEvent(new_list)
 
     filename = temp_file_name()
     df = list_of_cadets_with_clothing.as_df_of_str()

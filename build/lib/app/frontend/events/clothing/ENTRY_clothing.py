@@ -28,7 +28,7 @@ from app.frontend.events.clothing.render_clothing import (
     EXPORT_ALL,
     EXPORT_COMMITTEE,
 )
-from app.objects_OLD.clothing import all_sort_types
+from app.objects.composed.clothing_at_event import all_sort_types
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.events.patrol_boats.parse_patrol_boat_table import *

@@ -7,7 +7,7 @@ from app.objects.events import Event
 
 from app.data_access.store.data_access import DataLayer
 from app.objects.cadets import ListOfCadets
-from app.objects_OLD.food import (
+from app.objects.food import (
     ListOfCadetsWithFoodRequirementsAtEvent,
     FoodRequirements,
     ListOfVolunteersWithFoodRequirementsAtEvent,

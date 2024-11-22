@@ -1,4 +1,3 @@
-from typing import Dict
 
 from app.frontend.cadets.cadet_function_mapping import cadet_function_mapping
 from app.frontend.events.events_function_mapping import event_function_mapping
@@ -19,7 +18,7 @@ from app.objects.abstract_objects.form_function_mapping import (
     DisplayAndPostFormFunctionMaps,
 )
 from app.frontend.form_handler import FormHandler
-from app.data_access.data import data_api, object_store
+from app.data_access.data import object_store
 
 
 class MissingMethod(Exception):
@@ -47,7 +46,6 @@ def get_form_handler_for_specific_action(action_name) -> FormHandler:
     interface = flaskInterface(
         action_name=action_name,
         display_and_post_form_function_maps=form_mapping,
-        data=data_api,
         object_store=object_store,
     )
 

@@ -13,9 +13,7 @@ from app.frontend.events.volunteer_rota.volunteer_targets import save_volunteer_
 
 from app.data_access.file_access import temp_file_name
 
-from app.OLD_backend.rota.volunteer_rota import (
-    delete_role_at_event_for_volunteer_on_day,
-)
+from app.backend.rota.changes import delete_role_at_event_for_volunteer_on_day
 from app.backend.volunteers.volunteers_at_event import load_list_of_volunteers_at_event, \
     make_volunteer_available_on_day, make_volunteer_unavailable_on_day
 from app.backend.rota.volunteer_matrix import get_volunteer_matrix

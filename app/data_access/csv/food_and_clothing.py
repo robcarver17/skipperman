@@ -11,16 +11,16 @@ from app.data_access.csv.resolve_csv_paths_and_filenames import (
 class CsvDataListOfCadetsWithClothingAtEvent(
     GenericCsvData, DataListOfCadetsWithClothingAtEvent
 ):
-    def read(self, event_id: str) -> ListOfCadetsWithClothingAtEvent:
+    def read(self, event_id: str) -> ListOfCadetsWithClothingAndIdsAtEvent:
         return self.read_and_return_object_of_type(
-            ListOfCadetsWithClothingAtEvent,
+            ListOfCadetsWithClothingAndIdsAtEvent,
             file_identifier=LIST_OF_CADETS_WITH_CLOTHING_AT_EVENT,
             additional_file_identifiers=event_id,
         )
 
     def write(
         self,
-        list_of_cadets_with_clothing: ListOfCadetsWithClothingAtEvent,
+        list_of_cadets_with_clothing: ListOfCadetsWithClothingAndIdsAtEvent,
         event_id: str,
     ):
         self.write_object(

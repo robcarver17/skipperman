@@ -1,22 +1,25 @@
 from typing import List
 
 from app.OLD_backend.rota.patrol_boats import (
-    copy_across_earliest_allocation_of_boats_at_event,
     DEPRECATE_get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day,
 )
+from app.backend.patrol_boats.changes import copy_across_earliest_allocation_of_boats_at_event
+from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event import \
+    get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats
 
 from app.frontend.shared.events_state import get_event_from_state
 
-from app.OLD_backend.data.patrol_boats import PatrolBoatsData
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.OLD_backend.rota.volunteer_rota import (
-    is_possible_to_copy_roles_for_non_grouped_roles_only,
-    copy_earliest_valid_role_to_all_empty_for_volunteer,
-    copy_earliest_valid_role_and_overwrite_for_volunteer,
-    volunteer_has_at_least_one_allocated_role_and_empty_spaces_to_fill,
-    volunteer_has_at_least_one_allocated_role_which_matches_others,
-)
+from app.backend.rota.copying import copy_earliest_valid_role_and_overwrite_for_volunteer, \
+    copy_earliest_valid_role_to_all_empty_for_volunteer
+from app.backend.patrol_boats.copying import volunteer_has_at_least_one_allocated_role_which_matches_others, \
+    is_possible_to_copy_boat_allocation, is_possible_to_copy_boat_and_role_allocation, \
+    is_possible_to_copy_fill_boat_and_role_allocation, \
+    volunteer_has_at_least_one_allocated_role_and_empty_spaces_to_fill, \
+    is_required_to_copy_overwrite_boat_and_role_allocation, \
+    volunteer_has_at_least_one_allocated_boat_and_empty_spaces_to_fill, \
+    volunteer_has_at_least_one_allocated_boat_which_matches_others
 from app.data_access.configuration.fixed import (
     COPY_OVERWRITE_SYMBOL,
     BOAT_SHORTHAND,
@@ -30,6 +33,8 @@ from app.frontend.events.patrol_boats.patrol_boat_buttons import (
 )
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line
+from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import \
+    VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 
@@ -45,46 +50,47 @@ COPY_FILL_ROLE_BUTTON_LABEL = Line([COPY_FILL_SYMBOL, ROLE_SHORTHAND])
 
 
 def get_copy_buttons_for_boat_allocation(
-    interface: abstractInterface, day: Day, event: Event, volunteer_id: str
+        volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
+
 ) -> List[Button]:
     copy_boat_buttons = get_copy_buttons_for_boat_copy_in_boat_rota(
-        interface=interface, volunteer_id=volunteer_id, event=event, day=day
+        volunteer_at_event_on_boat=volunteer_at_event_on_boat
     )
     copy_both_buttons = get_copy_buttons_for_role_and_boat_in_rota(
-        interface=interface, volunteer_id=volunteer_id, event=event, day=day
-    )
+        volunteer_at_event_on_boat=volunteer_at_event_on_boat    )
+
     copy_role_buttons = get_copy_buttons_for_role_in_boat_rota(
-        interface=interface, volunteer_id=volunteer_id, event=event, day=day
-    )
+        volunteer_at_event_on_boat=volunteer_at_event_on_boat    )
 
     return copy_boat_buttons + copy_role_buttons + copy_both_buttons
 
 
 def get_copy_buttons_for_boat_copy_in_boat_rota(
-    interface: abstractInterface, day: Day, event: Event, volunteer_id: str
+        volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
 ) -> List[Button]:
     copy_fill_possible = (
         volunteer_has_at_least_one_allocated_boat_and_empty_spaces_to_fill(
-            interface=interface, event=event, volunteer_id=volunteer_id
+            volunteer_at_event_on_boat
         )
     )
     any_copy_possible = is_possible_to_copy_boat_allocation(
-        interface=interface, event=event, volunteer_id=volunteer_id
+        volunteer_at_event_on_boat
     )
     overwrite_copy_required = (
         not volunteer_has_at_least_one_allocated_boat_which_matches_others(
-            interface=interface, event=event, volunteer_id=volunteer_id
+            volunteer_at_event_on_boat
         )
     )
 
     overwrite_copy_button_name = (
         copy_overwrite_button_name_for_boat_copy_in_boat_at_event_on_day(
-            day=day,
-            volunteer_id=volunteer_id,
+            day=volunteer_at_event_on_boat.day,
+            volunteer_id=volunteer_at_event_on_boat.volunteer.id,
         )
     )
     fill_button_name = copy_fill_button_name_for_boat_copy_in_boat_at_event_on_day(
-        day=day, volunteer_id=volunteer_id
+        day=volunteer_at_event_on_boat.day,
+        volunteer_id=volunteer_at_event_on_boat.volunteer.id,
     )
     overwrite_button = Button(
         label=COPY_OVERWRITE_BOAT_BUTTON_LABEL, value=overwrite_copy_button_name
@@ -104,21 +110,22 @@ def get_copy_buttons_for_boat_copy_in_boat_rota(
 
 
 def get_copy_buttons_for_role_in_boat_rota(
-    interface: abstractInterface, day: Day, event: Event, volunteer_id: str
+        volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
 ) -> List[Button]:
     any_copy_possible = is_possible_to_copy_roles_for_non_grouped_roles_only(
-        interface=interface, event=event, volunteer_id=volunteer_id, day=day
+volunteer_at_event_on_boat=volunteer_at_event_on_boat
     )
     copy_fill_possible = (
         volunteer_has_at_least_one_allocated_role_and_empty_spaces_to_fill(
-            interface=interface, event=event, volunteer_id=volunteer_id
-        )
+            volunteer_at_event_on_boat=volunteer_at_event_on_boat        )
     )
     overwrite_copy_required = (
         not volunteer_has_at_least_one_allocated_role_which_matches_others(
-            interface=interface, event=event, volunteer_id=volunteer_id
+            volunteer_at_event_on_boat=volunteer_at_event_on_boat
         )
     )
+    day = volunteer_at_event_on_boat.day
+    volunteer_id = volunteer_at_event_on_boat.volunteer.id
     copy_overwrite_button_name = (
         copy_overwrite_button_name_for_volunteer_role_in_boat_at_event_on_day(
             day=day,
@@ -151,27 +158,29 @@ def get_copy_buttons_for_role_in_boat_rota(
 
 
 def get_copy_buttons_for_role_and_boat_in_rota(
-    interface: abstractInterface, day: Day, event: Event, volunteer_id: str
+        volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
+
 ) -> List[Button]:
     any_copy_possible = is_possible_to_copy_boat_and_role_allocation(
-        interface=interface, event=event, volunteer_id=volunteer_id, day=day
+        volunteer_at_event_on_boat
     )
     fill_copy_possible = is_possible_to_copy_fill_boat_and_role_allocation(
-        interface=interface, event=event, volunteer_id=volunteer_id
+        volunteer_at_event_on_boat
     )
     overwrite_copy_required = is_required_to_copy_overwrite_boat_and_role_allocation(
-        interface=interface, event=event, volunteer_id=volunteer_id
+        volunteer_at_event_on_boat
     )
 
     copy_overwrite_button_name = (
         copy_overwrite_button_name_for_both_volunteer_role_and_boat_at_event_on_day(
-            day=day,
-            volunteer_id=volunteer_id,
+            day=volunteer_at_event_on_boat.day,
+            volunteer_id=volunteer_at_event_on_boat.volunteer.id,
         )
     )
     copy_fill_button_name = (
         copy_fill_button_name_for_both_volunteer_role_and_boat_at_event_on_day(
-            day=day, volunteer_id=volunteer_id
+            day=volunteer_at_event_on_boat.day,
+            volunteer_id=volunteer_at_event_on_boat.volunteer.id,
         )
     )
 
@@ -190,57 +199,6 @@ def get_copy_buttons_for_role_and_boat_in_rota(
         buttons = [""]
 
     return buttons
-
-
-def is_possible_to_copy_boat_allocation(
-    interface: abstractInterface, event: Event, volunteer_id: str
-):
-    on_same_boat_for_all_days = volunteer_is_on_same_boat_for_all_days(
-        interface=interface, volunteer_id=volunteer_id, event=event
-    )
-
-    copy_button_required = not on_same_boat_for_all_days
-
-    return copy_button_required
-
-
-def is_possible_to_copy_boat_and_role_allocation(
-    interface: abstractInterface, event: Event, volunteer_id: str, day: Day
-):
-    boat_possible = is_possible_to_copy_boat_allocation(
-        interface=interface, event=event, volunteer_id=volunteer_id
-    )
-    role_possible = is_possible_to_copy_roles_for_non_grouped_roles_only(
-        interface=interface, event=event, volunteer_id=volunteer_id, day=day
-    )
-
-    return boat_possible and role_possible
-
-
-def is_possible_to_copy_fill_boat_and_role_allocation(
-    interface: abstractInterface, event: Event, volunteer_id: str
-):
-    boat_possible = volunteer_has_at_least_one_allocated_boat_and_empty_spaces_to_fill(
-        interface=interface, event=event, volunteer_id=volunteer_id
-    )
-    role_possible = volunteer_has_at_least_one_allocated_role_and_empty_spaces_to_fill(
-        interface=interface, event=event, volunteer_id=volunteer_id
-    )
-
-    return boat_possible and role_possible
-
-
-def is_required_to_copy_overwrite_boat_and_role_allocation(
-    interface: abstractInterface, event: Event, volunteer_id: str
-):
-    boat_possible = not volunteer_has_at_least_one_allocated_boat_which_matches_others(
-        interface=interface, event=event, volunteer_id=volunteer_id
-    )
-    role_possible = not volunteer_has_at_least_one_allocated_role_which_matches_others(
-        interface=interface, event=event, volunteer_id=volunteer_id
-    )
-
-    return boat_possible and role_possible
 
 
 COPY_BOAT_OVERWRITE = "copyOverwriteBoatButton"
@@ -385,100 +343,88 @@ def get_list_of_all_copy_fill_both_buttons_for_boat_allocation(
     )
 
 
-def volunteer_is_on_same_boat_for_all_days(
-    interface: abstractInterface, event: Event, volunteer_id: str
-) -> bool:
-    patrol_boat_data = PatrolBoatsData(interface.data)
-    return patrol_boat_data.volunteer_is_on_same_boat_for_all_days(
-        event=event, volunteer_id=volunteer_id
-    )
-
-
-def volunteer_has_at_least_one_allocated_boat_and_empty_spaces_to_fill(
-    interface: abstractInterface, event: Event, volunteer_id: str
-) -> bool:
-    patrol_boat_data = PatrolBoatsData(interface.data)
-    return patrol_boat_data.volunteer_has_at_least_one_allocated_boat_and_empty_spaces_to_fill(
-        event=event, volunteer_id=volunteer_id
-    )
-
-
-def volunteer_has_at_least_one_allocated_boat_which_matches_others(
-    interface: abstractInterface, event: Event, volunteer_id: str
-) -> bool:
-    patrol_boat_data = PatrolBoatsData(interface.data)
-    return (
-        patrol_boat_data.volunteer_has_at_least_one_allocated_boat_which_matches_others(
-            event=event, volunteer_id=volunteer_id
-        )
-    )
-
-
 def copy_across_all_boats(interface: abstractInterface):
     event = get_event_from_state(interface)
-    list_of_volunteer_ids = (
-        DEPRECATE_get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day(
-            interface=interface, event=event
-        )
+    all_volunteers_on_boats = get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats(
+        object_store=interface.object_store, event=event
     )
-    for volunteer_id in list_of_volunteer_ids:
+    for volunteer_with_boat_data in all_volunteers_on_boats:
         copy_across_earliest_allocation_of_boats_at_event(
-            interface=interface,
-            volunteer_id=volunteer_id,
-            event=event,
+            object_store=interface.object_store,
+            volunteer_with_boat_data=volunteer_with_boat_data,
             allow_overwrite=False,
         )
 
 
-def copy_over_across_all_boats(interface: abstractInterface):
+def overwrite_allocation_across_all_boats(interface: abstractInterface):
     event = get_event_from_state(interface)
-    list_of_volunteer_ids = (
-        DEPRECATE_get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day(
-            interface=interface, event=event
-        )
+    all_volunteers_on_boats = get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats(
+        object_store=interface.object_store, event=event
     )
-    for volunteer_id in list_of_volunteer_ids:
+    for volunteer_with_boat_data in all_volunteers_on_boats:
         copy_across_earliest_allocation_of_boats_at_event(
-            interface=interface,
-            volunteer_id=volunteer_id,
-            event=event,
+            object_store=interface.object_store,
+            volunteer_with_boat_data=volunteer_with_boat_data,
             allow_overwrite=True,
         )
+
 
 
 def copy_across_all_boats_and_roles(interface: abstractInterface):
     event = get_event_from_state(interface)
-    list_of_volunteer_ids = (
-        DEPRECATE_get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day(
-            interface=interface, event=event
-        )
+    all_volunteers_on_boats = get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats(
+        object_store=interface.object_store, event=event
     )
-    for volunteer_id in list_of_volunteer_ids:
+    for volunteer_with_boat_data in all_volunteers_on_boats:
         copy_across_earliest_allocation_of_boats_at_event(
-            interface=interface,
-            volunteer_id=volunteer_id,
-            event=event,
+            object_store=interface.object_store,
+            volunteer_with_boat_data=volunteer_with_boat_data,
             allow_overwrite=False,
         )
         copy_earliest_valid_role_to_all_empty_for_volunteer(
-            interface=interface, event=event, volunteer_id=volunteer_id
+            object_store=interface.object_store, event=event, volunteer=volunteer_with_boat_data.volunteer
         )
 
 
-def copy_over_across_all_boats_and_roles(interface: abstractInterface):
+def overwrite_copy_across_all_boats_and_roles(interface: abstractInterface):
     event = get_event_from_state(interface)
-    list_of_volunteer_ids = (
-        DEPRECATE_get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_any_day(
-            interface=interface, event=event
-        )
+    all_volunteers_on_boats = get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats(
+        object_store=interface.object_store, event=event
     )
-    for volunteer_id in list_of_volunteer_ids:
+    for volunteer_with_boat_data in all_volunteers_on_boats:
         copy_across_earliest_allocation_of_boats_at_event(
-            interface=interface,
-            volunteer_id=volunteer_id,
-            event=event,
+            object_store=interface.object_store,
+            volunteer_with_boat_data=volunteer_with_boat_data,
             allow_overwrite=True,
         )
         copy_earliest_valid_role_and_overwrite_for_volunteer(
-            interface=interface, event=event, volunteer_id=volunteer_id
+            object_store=interface.object_store, event=event, volunteer=volunteer_with_boat_data.volunteer
         )
+
+def is_possible_to_copy_roles_for_non_grouped_roles_only(
+        volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
+
+) -> bool:
+    ## Only possible if: none of the roles require a group, and all the roles don't currently match
+
+    role_today = volunteer_at_event_on_boat.role_and_group.role
+    if role_today.is_no_role_set():
+        return False
+
+    all_roles = volunteer_at_event_on_boat.role_and_group_by_day.list_of_roles()
+
+    no_roles_to_copy = len(all_roles) == 0
+    all_roles_match = len(set(all_roles)) <= 1
+
+    roles_require_groups = [
+        role.associate_sailing_group
+        for role in all_roles
+    ]
+    at_least_one_role_require_group = any(roles_require_groups)
+
+    ## copy not possible if all roles the same, or at least one requires a group, or nothing to copy
+    if all_roles_match or at_least_one_role_require_group or no_roles_to_copy:
+        return False
+    else:
+        return True
+

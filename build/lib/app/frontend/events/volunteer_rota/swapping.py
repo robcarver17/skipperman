@@ -6,9 +6,7 @@ from app.frontend.forms.swaps import (
     store_swap_state,
     get_swap_state,
 )
-from app.OLD_backend.rota.volunteer_rota import (
-    swap_roles_and_groups_for_volunteers_in_allocation,
-)
+from app.backend.rota.changes import swap_roles_and_groups_for_volunteers_in_allocation
 from app.data_access.configuration.fixed import SWAP_SHORTHAND, SWAP_SHORTHAND2
 from app.frontend.shared.events_state import get_event_from_state
 

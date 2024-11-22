@@ -1,33 +1,36 @@
 from typing import List, Union
 
+from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event import \
+    get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats
+from app.backend.rota.changes import update_role_at_event_for_volunteer_on_day
+from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import \
+    VolunteerAtEventWithSkillsAndRolesAndPatrolBoats, VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
+from app.objects.volunteers import Volunteer
+
+from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunteer, \
+    add_boat_related_skill_for_volunteer, remove_boat_related_skill_for_volunteer
+
 from app.frontend.forms.swaps import is_ready_to_swap
 
-from app.OLD_backend.rota.patrol_boats import (
-    add_named_boat_to_event_with_no_allocation,
-    remove_patrol_boat_and_all_associated_volunteer_connections_from_event,
-    remove_volunteer_from_patrol_boat_on_day_at_event,
-    get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day,
-    BoatDayVolunteer,
-    NO_ADDITION_TO_MAKE,
-    ListOfBoatDayVolunteer,
-    add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts,
-    copy_across_boats_at_event,
-)
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import \
+    get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day
+from app.backend.patrol_boats.changes import BoatDayVolunteer, NO_ADDITION_TO_MAKE, ListOfBoatDayVolunteer, \
+    add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts, copy_across_boats_at_event, \
+    add_named_boat_to_event_with_no_allocation, remove_patrol_boat_and_all_associated_volunteers_from_event, \
+    delete_volunteer_from_patrol_boat_on_day_at_event
 from app.OLD_backend.rota.volunteer_rota import (
     update_role_at_event_for_volunteer_on_day_at_event,
     get_volunteer_role_at_event_on_day,
-    copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days,
 )
+from app.backend.rota.copying import copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days
 from app.OLD_backend.volunteers.volunteers import (
-    add_boat_related_skill_for_volunteer,
-    remove_boat_related_skill_for_volunteer,
     can_volunteer_drive_safety_boat,
     EPRECATE_get_volunteer_name_from_id,
     get_volunteer_from_id,
 )
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
-    get_unique_list_of_volunteer_ids_for_skills_checkboxes,
+    get_unique_list_of_volunteers_for_skills_checkboxes,
     is_volunteer_skill_checkbox_ticked,
 )
 from app.frontend.events.patrol_boats.patrol_boat_dropdowns import (
@@ -41,9 +44,9 @@ from app.frontend.events.patrol_boats.patrol_boat_dropdowns import (
 from app.frontend.events.patrol_boats.patrol_boat_buttons import (
     from_delete_button_name_to_boat_name,
     list_of_delete_buttons_in_patrol_boat_table,
-    from_volunter_remove_button_name_to_volunteer_id_and_day,
+    from_volunter_remove_button_name_to_volunteer_and_day,
     get_all_remove_volunteer_button_names,
-    get_button_type_day_volunteer_id_given_button_str,
+    get_button_type_day_volunteer_given_button_name,
 )
 from app.frontend.events.patrol_boats.copying import (
     COPY_BOAT_OVERWRITE,
@@ -66,9 +69,8 @@ def get_all_copy_boat_buttons_for_boat_allocation(interface: abstractInterface) 
 
 def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str):
     event = get_event_from_state(interface)
-    copy_type, day, volunteer_id = get_button_type_day_volunteer_id_given_button_str(
-        copy_button
-    )
+    copy_type, day, volunteer = get_button_type_day_volunteer_given_button_name(interface=interface,
+                                                                                   button_name=copy_button)
 
     if copy_type == COPY_BOAT_OVERWRITE:
         copy_boat = True
@@ -101,18 +103,18 @@ def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str
 
     if copy_boat:
         copy_across_boats_at_event(
-            interface=interface,
+            object_store=interface.object_store,
             day=day,
-            volunteer_id=volunteer_id,
+            volunteer=volunteer,
             event=event,
             allow_overwrite=overwrite,
         )
 
     if copy_role:
         copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
-            interface=interface,
+            object_store=interface.object_store,
             event=event,
-            volunteer_id=volunteer_id,
+            volunteer=volunteer,
             day=day,
             allow_replacement=overwrite,
         )
@@ -139,8 +141,8 @@ def update_if_delete_boat_button_pressed(
     event = get_event_from_state(interface)
     print("Deleting %s" % patrol_boat_name)
     try:
-        remove_patrol_boat_and_all_associated_volunteer_connections_from_event(
-            interface=interface, event=event, patrol_boat_name=patrol_boat_name
+        remove_patrol_boat_and_all_associated_volunteers_from_event(
+            object_store = interface.object_store, event=event, patrol_boat_name=patrol_boat_name
         )
     except Exception as e:
         interface.log_error(
@@ -215,29 +217,28 @@ def get_boat_day_volunteer_for_dropdown_name_or_none(
     return boat_day_volunteer
 
 
+
 def update_skills_checkbox(interface: abstractInterface):
     event = get_event_from_state(interface)
-    unique_volunteer_ids = get_unique_list_of_volunteer_ids_for_skills_checkboxes(
-        cache=interface.cache, event=event
+    unique_volunteers = get_unique_list_of_volunteers_for_skills_checkboxes(
+        object_store=interface.object_store, event=event
     )
-    for volunteer_id in unique_volunteer_ids:
-        update_skills_checkbox_for_specific_volunteer_id(
-            volunteer_id=volunteer_id, interface=interface
+
+    for volunteer in unique_volunteers:
+        update_skills_checkbox_for_specific_volunteer(
+            volunteer=volunteer, interface=interface
         )
 
 
-def update_skills_checkbox_for_specific_volunteer_id(
-    interface: abstractInterface, volunteer_id: str
+def update_skills_checkbox_for_specific_volunteer(
+    interface: abstractInterface, volunteer: Volunteer
 ):
-    volunteer = get_volunteer_from_id(
-        data_layer=interface.data, volunteer_id=volunteer_id
-    )  ## ideally would pass
+    skills = get_dict_of_existing_skills_for_volunteer(object_store=interface.object_store,
+                                                       volunteer=volunteer)
 
-    currently_has_boat_skill = can_volunteer_drive_safety_boat(
-        data_layer=interface.data, volunteer=volunteer
-    )
+    currently_has_boat_skill = skills.can_drive_safety_boat
     is_ticked = is_volunteer_skill_checkbox_ticked(
-        interface=interface, volunteer_id=volunteer_id
+        interface=interface, volunteer_id=volunteer.id
     )
 
     if currently_has_boat_skill == is_ticked:
@@ -245,56 +246,54 @@ def update_skills_checkbox_for_specific_volunteer_id(
 
     if is_ticked:
         add_boat_related_skill_for_volunteer(
-            data_layer=interface.data, volunteer=volunteer
+            object_store = interface.object_store, volunteer=volunteer
         )
     else:
         remove_boat_related_skill_for_volunteer(
-            data_layer=interface.data, volunteer=volunteer
+            object_store = interface.object_store, volunteer=volunteer
         )
 
 
 def update_role_dropdowns(interface: abstractInterface):
     event = get_event_from_state(interface)
+    all_volunteers = get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats(
+        object_store=interface.object_store, event=event
+    )
+
     for day in event.weekdays_in_event():
-        list_of_volunteer_ids = (
-            get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(
-                interface=interface, day=day, event=event
-            )
-        )
-        for volunteer_id in list_of_volunteer_ids:
+        volunteers_on_boat_on_day = all_volunteers.assigned_to_any_boat_on_day(day)
+        for volunteer_on_boat in volunteers_on_boat_on_day:
             try:
                 update_role_dropdown_for_volunteer_on_day(
-                    interface=interface, event=event, day=day, volunteer_id=volunteer_id
+                    interface=interface, volunteer_on_boat=volunteer_on_boat
                 )
             except Exception as e:
-                name = EPRECATE_get_volunteer_name_from_id(
-                    interface=interface, volunteer_id=volunteer_id
-                )
                 interface.log_error(
                     "Couldn't update volunteer role for %s on day %s - perhaps a conflicting change was made? Error code %s"
-                    % (name, day.name, str(e))
+                    % (volunteer_on_boat.volunteer.name, day.name, str(e))
                 )
 
 
 def update_role_dropdown_for_volunteer_on_day(
-    interface: abstractInterface, volunteer_id: str, event: Event, day: Day
+    interface: abstractInterface, volunteer_on_boat:VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
 ):
+    volunteer_id = volunteer_on_boat.volunteer.id
+    day = volunteer_on_boat.day
+
     role_selected = which_volunteer_role_selected_in_boat_allocation(
         interface=interface, volunteer_id=volunteer_id, day=day
     )
-    current_role = get_volunteer_role_at_event_on_day(
-        data_layer=interface.data, event=event, volunteer_id=volunteer_id, day=day
-    )
+    current_role = volunteer_on_boat.role_and_group.role
 
     if role_selected == current_role:
         return
 
-    update_role_at_event_for_volunteer_on_day_at_event(
-        interface=interface,
-        volunteer_id=volunteer_id,
+    update_role_at_event_for_volunteer_on_day(
+        object_store=interface.object_store,
+        event=volunteer_on_boat.event,
+        volunteer=volunteer_on_boat.volunteer,
         day=day,
         new_role=role_selected,
-        event=event,
     )
 
 
@@ -304,7 +303,7 @@ def update_adding_boat(interface: abstractInterface):
 
     try:
         add_named_boat_to_event_with_no_allocation(
-            interface=interface, name_of_boat_added=name_of_boat_added, event=event
+            object_store = interface.object_store, name_of_boat_added=name_of_boat_added, event=event
         )
     except Exception as e:
         interface.log_error(
@@ -316,19 +315,16 @@ def update_if_delete_volunteer_button_pressed(
     interface: abstractInterface, delete_button: str
 ):
     event = get_event_from_state(interface)
-    volunteer_id, day = from_volunter_remove_button_name_to_volunteer_id_and_day(
-        delete_button
-    )
+    volunteer, day = from_volunter_remove_button_name_to_volunteer_and_day(interface=interface,
+                                                                              button_name=delete_button
+                                                                              )
 
     try:
-        remove_volunteer_from_patrol_boat_on_day_at_event(
-            interface=interface, event=event, day=day, volunteer_id=volunteer_id
+        delete_volunteer_from_patrol_boat_on_day_at_event(
+            object_store = interface.object_store, event=event, day=day, volunteer=volunteer
         )
     except Exception as e:
-        name = EPRECATE_get_volunteer_name_from_id(
-            interface=interface, volunteer_id=volunteer_id
-        )
         interface.log_error(
             "Couldn't remove volunteer %s from rescue boat on day %s - perhaps a conflicting change was made? Error: %s"
-            % (name, day.name, str(e))
+            % (volunteer.name, day.name, str(e))
         )

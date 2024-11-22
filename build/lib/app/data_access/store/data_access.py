@@ -61,11 +61,11 @@ from app.objects.patrol_boats_with_volunteers_with_id import (
     ListOfVolunteersWithIdAtEventWithPatrolBoatsId,
 )
 from app.objects.committee import ListOfCadetsWithIdOnCommittee
-from app.objects_OLD.food import (
+from app.objects.food import (
     ListOfCadetsWithFoodRequirementsAtEvent,
     ListOfVolunteersWithFoodRequirementsAtEvent,
 )
-from app.objects_OLD.clothing import ListOfCadetsWithClothingAtEvent
+from app.objects.clothing import ListOfCadetsWithClothingAndIdsAtEvent
 
 
 class DataLayer:
@@ -645,7 +645,7 @@ class DataLayer:
 
     def get_list_of_cadets_with_clothing_at_event(
         self, event: Event
-    ) -> ListOfCadetsWithClothingAtEvent:
+    ) -> ListOfCadetsWithClothingAndIdsAtEvent:
         data_access_for_cadets_with_clothing_at_event = (
             get_data_access_for_cadets_with_clothing_at_event(
                 self.data, event_id=event.id
@@ -655,7 +655,7 @@ class DataLayer:
 
     def save_list_of_cadets_with_clothing_at_event(
         self,
-        list_of_cadets_with_clothing: ListOfCadetsWithClothingAtEvent,
+        list_of_cadets_with_clothing: ListOfCadetsWithClothingAndIdsAtEvent,
         event: Event,
     ):
         data_access_for_cadets_with_clothing_at_event = (

@@ -6,7 +6,7 @@ from app.frontend.events.clothing.render_clothing import (
     are_we_showing_only_committee,
 )
 
-from app.objects_OLD.clothing import CadetWithClothingAtEvent
+from app.objects.clothing import CadetWithClothingAndIdsAtEvent
 
 from app.OLD_backend.clothing import (
     get_list_of_active_cadet_ids_with_clothing_at_event,
@@ -37,7 +37,7 @@ def save_clothing_data(interface: abstractInterface):
 def save_clothing_data_for_cadet(
     interface: abstractInterface,
     event: Event,
-    cadet_with_clothing: CadetWithClothingAtEvent,
+    cadet_with_clothing: CadetWithClothingAndIdsAtEvent,
 ):
     cadet_id = cadet_with_clothing.cadet_id
 

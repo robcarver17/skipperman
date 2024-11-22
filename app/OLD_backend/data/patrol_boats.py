@@ -4,8 +4,6 @@ from app.objects.volunteers import Volunteer
 
 from app.OLD_backend.data.volunteers import VolunteerData
 
-from app.objects.abstract_objects.abstract_interface import abstractInterface
-
 from app.objects.day_selectors import Day, DaySelector
 
 from app.objects.exceptions import missing_data
@@ -468,8 +466,3 @@ class PatrolBoatsData:
         return VolunteerData(self.data_api)
 
 
-def from_patrol_boat_name_to_boat(
-    interface: abstractInterface, boat_name: str
-) -> PatrolBoat:
-    patrol_boat_data = PatrolBoatsData(interface.data)
-    return patrol_boat_data.from_patrol_boat_name_to_boat(boat_name)

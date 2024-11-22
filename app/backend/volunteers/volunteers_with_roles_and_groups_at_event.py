@@ -1,8 +1,7 @@
-from typing import Dict, List
+from typing import Dict
 
-from app.backend.volunteers.roles_and_teams import get_dict_of_teams_and_roles
 from app.backend.volunteers.volunteers_at_event import (
-    get_dict_of_all_event_data_for_volunteers,
+    get_dict_of_all_event_data_for_volunteers
 )
 
 from app.backend.events.list_of_events import get_sorted_list_of_events
@@ -14,18 +13,14 @@ from app.data_access.store.object_definitions import (
 )
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
     DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
-    RoleAndGroupAndTeam,
-)
+    RoleAndGroupAndTeam, )
 
 from app.objects.events import (
     Event,
     SORT_BY_START_DSC,
     list_of_events_excluding_one_event,
-    ListOfEvents,
-)
+    ListOfEvents, )
 from app.objects.exceptions import arg_not_passed
-from app.objects.groups import Group
-from app.objects.roles_and_teams import instructor_team
 from app.objects.volunteers import Volunteer
 
 ALL_EVENTS = 999999999999
@@ -120,12 +115,11 @@ def get_dict_of_volunteers_with_roles_and_groups_at_event(
 
 def update_dict_of_volunteers_with_roles_and_groups_at_event(
     object_store: ObjectStore,
-    event: Event,
     dict_of_volunteers_with_roles_and_groups_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
 ):
     return object_store.update(
         object_definition=object_definition_for_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups,
-        event_id=event.id,
+        event_id=dict_of_volunteers_with_roles_and_groups_at_event.event.id,
         new_object=dict_of_volunteers_with_roles_and_groups_at_event,
     )
 
@@ -142,30 +136,14 @@ def is_volunteer_senior_instructor_at_event(
     return volunteer_days_and_roles.contains_si()
 
 
-def get_list_of_groups_volunteer_is_instructor_for(
-    object_store: ObjectStore, event: Event, volunteer: Volunteer
-) -> List[Group]:
-    dict_of_all_event_data = get_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, event=event
-    )
-    volunteer_days_and_roles = dict_of_all_event_data.dict_of_volunteers_at_event_with_days_and_role.days_and_roles_for_volunteer(
-        volunteer
-    )
+def get_last_role_or_none_for_volunteer_at_previous_events(object_store: ObjectStore, volunteer: Volunteer, avoid_event: Event):
+    previous_roles = get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(object_store=object_store,
+                                                                                          volunteer=volunteer,
+                                                                                          avoid_event=avoid_event
+                                                                                          )
+    if len(previous_roles)==0:
+        return None
 
-    roles_in_instructor_team = get_instructor_team_roles(object_store)
+    previous_role = list(previous_roles.values())[0] ## latest first
 
-    days_and_roles_when_instructor = (
-        volunteer_days_and_roles.subset_where_role_in_list_of_roles(
-            roles_in_instructor_team
-        )
-    )
-    relevant_groups = days_and_roles_when_instructor.list_of_groups()
-
-    return relevant_groups
-
-
-def get_instructor_team_roles(object_store: ObjectStore):
-    teams_and_roles = get_dict_of_teams_and_roles(object_store)
-    roles_in_instructor_team = teams_and_roles[instructor_team]
-
-    return roles_in_instructor_team
+    return previous_role

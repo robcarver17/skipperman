@@ -10,7 +10,7 @@ from app.OLD_backend.food import (
     update_volunteer_food_data,
     download_food_data_and_return_filename,
 )
-from app.objects_OLD.food import (
+from app.objects.food import (
     CadetWithFoodRequirementsAtEvent,
     FoodRequirements,
     VolunteerWithFoodRequirementsAtEvent,

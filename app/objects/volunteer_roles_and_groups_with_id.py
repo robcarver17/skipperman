@@ -4,6 +4,7 @@ from statistics import mode
 from typing import List
 
 from app.objects.composed.volunteer_roles import is_qualified_for_role
+from app.objects.composed.volunteer_with_group_and_role_at_event import RoleAndGroupAndTeam
 from app.objects.roles_and_teams import Team
 
 from app.data_access.configuration.skills_and_roles import (
@@ -22,6 +23,7 @@ from app.objects.composed.volunteers_with_skills import SkillsDict
 from app.objects.volunteers import Volunteer
 
 NO_ROLE_SET = "No role allocated"
+NO_GROUP_SET = "No group set"
 SI_ROLE_NAME = "SI"
 DAY_KEY = "day"
 GROUP_KEY = "group"
@@ -117,8 +119,8 @@ class TeamAndGroup(GenericSkipperManObject):
 class VolunteerWithIdInRoleAtEvent(GenericSkipperManObject):
     volunteer_id: str
     day: Day
-    group_id: str
-    role_id: str
+    group_id: str = NO_GROUP_SET
+    role_id: str = NO_ROLE_SET
 
     @property
     def role_and_group(self):
@@ -184,6 +186,27 @@ class ListOfVolunteersWithIdInRoleAtEvent(GenericListOfObjects):
     def _object_class_contained(self):
         return VolunteerWithIdInRoleAtEvent
 
+    def update_role_and_group_at_event_for_volunteer_on_all_days_when_available(
+            self,
+            volunteer: Volunteer,
+            group_id: str,
+            role_id: str,
+        list_of_days_available: List[Day]
+
+    ):
+        for day in list_of_days_available:
+            self.update_volunteer_in_role_on_day(volunteer=volunteer,
+                                                 day=day,
+                                                 new_role_id=role_id)
+            self.update_volunteer_in_group_on_day(volunteer=volunteer,
+                                                  day=day,
+                                                  new_group_id=group_id)
+
+    def drop_volunteer(self, volunteer: Volunteer):
+        for item in self:
+            if item.volunteer_id == volunteer.id:
+                self.remove(item)
+
     def list_if_volunteer_id_in_list_of_ids(
         self, list_of_ids: List[str]
     ) -> "ListOfVolunteersWithIdInRoleAtEvent":
@@ -235,30 +258,28 @@ class ListOfVolunteersWithIdInRoleAtEvent(GenericListOfObjects):
             day=original_day,
             return_empty_if_missing=False,
         )
-        original_volunteer_group_name = copy(original_volunteer.group.name)
-        original_volunteer_role = copy(original_volunteer.role)
 
         volunteer_to_swap_with = self.member_matching_volunteer_id_and_day(
             volunteer_id=volunteer_id_to_swap_with,
             day=day_to_swap_with,
             return_empty_if_missing=False,
         )
-        volunteer_to_swap_with_group_name = copy(volunteer_to_swap_with.group.name)
-        volunteer_to_swap_with_role = copy(volunteer_to_swap_with.role)
 
-        self.update_volunteer_in_role_on_day_to_actual_role(
-            original_volunteer, new_role=volunteer_to_swap_with_role
-        )
-        self.update_volunteer_in_group_on_day(
-            original_volunteer, new_group=volunteer_to_swap_with_group_name
-        )
+        if original_volunteer is missing_data or volunteer_to_swap_with is missing_data:
+            raise Exception("can't swap non existent volunteers!")
 
-        self.update_volunteer_in_role_on_day_to_actual_role(
-            volunteer_to_swap_with, new_role=original_volunteer_role
-        )
-        self.update_volunteer_in_group_on_day(
-            volunteer_to_swap_with, new_group=original_volunteer_group_name
-        )
+        original_volunteer_group_id = copy(original_volunteer.group_id)
+        original_volunteer_role_id = copy(original_volunteer.role_id)
+
+        volunteer_to_swap_with_group_id = copy(volunteer_to_swap_with.group_id)
+        volunteer_to_swap_with_role_id = copy(volunteer_to_swap_with.role_id)
+
+        original_volunteer.role_id=volunteer_to_swap_with_role_id
+        original_volunteer.group_id=volunteer_to_swap_with_group_id
+
+        volunteer_to_swap_with.role_id = original_volunteer_role_id
+        volunteer_to_swap_with.group_id = original_volunteer_group_id
+
 
     def list_of_volunteer_ids_in_boat_related_role_on_day(self, day: Day) -> List[str]:
         return list(
@@ -349,16 +370,32 @@ class ListOfVolunteersWithIdInRoleAtEvent(GenericListOfObjects):
             raise Exception("Cannot have more than one volunteer for a given day")
 
     def update_volunteer_in_role_on_day(
-        self, volunteer_in_role_at_event: VolunteerWithIdInRoleAtEvent, new_role: str
+        self, volunteer: Volunteer, day: Day, new_role_id: str
     ):
-        if new_role == NO_ROLE_SET:
-            self.delete_volunteer_in_role_at_event_on_day(volunteer_in_role_at_event)
+        if new_role_id == NO_ROLE_SET:
+            self.delete_volunteer_in_role_at_event_on_day(volunteer=volunteer, day=day)
         else:
             self.update_volunteer_in_role_on_day_to_actual_role(
-                volunteer_in_role_at_event=volunteer_in_role_at_event, new_role=new_role
+                volunteer_id=volunteer.id,
+                day=day,
+                new_role_id=new_role_id
             )
 
     def delete_volunteer_in_role_at_event_on_day(
+        self, volunteer: Volunteer, day: Day
+    ):
+        existing_member = self.member_matching_volunteer_id_and_day(
+            volunteer_id=volunteer.id,
+            day=day,
+            return_empty_if_missing=False,
+        )
+
+        if existing_member is missing_data:
+            pass
+        else:
+            self.remove(existing_member)
+
+    def delete_volunteer_in_role_at_event_on_day_DEPRECATE(
         self, volunteer_in_role_at_event: VolunteerWithIdInRoleAtEvent
     ):
         existing_member = self.member_matching_volunteer_id_and_day(
@@ -373,34 +410,38 @@ class ListOfVolunteersWithIdInRoleAtEvent(GenericListOfObjects):
             self.remove(existing_member)
 
     def update_volunteer_in_role_on_day_to_actual_role(
-        self, volunteer_in_role_at_event: VolunteerWithIdInRoleAtEvent, new_role: str
+        self, volunteer_id: str, day: Day, new_role_id: str
     ):
         existing_member = self.member_matching_volunteer_id_and_day(
-            volunteer_id=volunteer_in_role_at_event.volunteer_id,
-            day=volunteer_in_role_at_event.day,
+            volunteer_id=volunteer_id,
+            day=day,
             return_empty_if_missing=False,
         )
 
         if existing_member is missing_data:
-            volunteer_in_role_at_event.role = new_role
+            volunteer_in_role_at_event = VolunteerWithIdInRoleAtEvent(
+                volunteer_id=volunteer_id,
+                day=day,
+                role_id=new_role_id,
+                group_id=unallocated_group.id
+            )
             self.append(volunteer_in_role_at_event)
         else:
-            existing_member.role = new_role
+            existing_member.role_id = new_role_id
 
     def update_volunteer_in_group_on_day(
-        self, volunteer_in_role_at_event: VolunteerWithIdInRoleAtEvent, new_group: Group
+        self, volunteer: Volunteer, day: Day, new_group_id: str
     ):
         existing_member = self.member_matching_volunteer_id_and_day(
-            volunteer_id=volunteer_in_role_at_event.volunteer_id,
-            day=volunteer_in_role_at_event.day,
+            volunteer_id=volunteer.id,
+            day=day,
             return_empty_if_missing=False,
         )
 
         if existing_member is missing_data:
-            volunteer_in_role_at_event.group = new_group
-            self.append(volunteer_in_role_at_event)
+            raise Exception("Can't update group if role not already set")
         else:
-            existing_member.group = new_group
+            existing_member.group_id = new_group_id
 
     def replace_or_add_volunteer_in_group_on_day_with_copy(
         self,
@@ -421,18 +462,18 @@ class ListOfVolunteersWithIdInRoleAtEvent(GenericListOfObjects):
             copied_volunteer_in_role_at_event.day = day
             self.append(copied_volunteer_in_role_at_event)
         else:
-            current_role = existing_member.role
-            no_role_set = current_role == NO_ROLE_SET
+            current_role_id = existing_member.role_id
+            no_role_set = current_role_id == NO_ROLE_SET
             print("no role set %s" % str(no_role_set))
             if allow_replacement or no_role_set:
                 print("overwriting role")
-                existing_member.role = volunteer_in_role_at_event.role
+                existing_member.role_id = volunteer_in_role_at_event.role_id
 
-            current_group = existing_member.group
-            no_group_set = current_group.is_unallocated
+            current_group_id = existing_member.group_id
+            no_group_set = current_group_id == NO_GROUP_SET
             print("no group set %s" % str(no_group_set))
             if no_group_set or allow_replacement:
                 print("overwriting group")
-                existing_member.group = volunteer_in_role_at_event.group
+                existing_member.group_id = volunteer_in_role_at_event.group_id
 
         print("existing after %s" % str(existing_member))

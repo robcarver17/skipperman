@@ -4,16 +4,15 @@ from typing import List, Dict
 from app.data_access.store.object_definitions import object_definition_for_list_of_targets_for_role_at_event
 from app.data_access.store.object_store import ObjectStore
 
-from app.data_access.store.data_access import DataLayer
 from app.backend.volunteers.volunteers_at_event import get_dict_of_all_event_data_for_volunteers
+from app.objects.composed.volunteer_roles import RoleWithSkills
 from app.objects.composed.volunteer_with_group_and_role_at_event import DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.volunteer_role_targets import (
     DictOfTargetsForRolesAtEvent,
 )
-from app.objects.roles_and_teams import RolesWithSkillIds
-from app.backend.volunteers.roles_and_teams import get_list_of_roles
+from app.backend.volunteers.roles_and_teams import get_role_from_name, get_list_of_roles_with_skills
 
 
 @dataclass
@@ -32,7 +31,7 @@ def get_list_of_actual_and_targets_for_roles_at_event(
 
     targets_at_event = get_volunteer_targets_at_event(object_store=object_store, event=event)
 
-    all_volunteer_roles = get_list_of_roles(object_store=)
+    all_volunteer_roles = get_list_of_roles_with_skills(object_store=object_store)
 
     all_rows = [
         get_row_in_table_with_actual_and_targets_for_roles_at_event(
@@ -57,7 +56,7 @@ def get_volunteer_targets_at_event(
 
 def get_row_in_table_with_actual_and_targets_for_roles_at_event(
     event: Event,
-    role: RolesWithSkillIds,
+    role: RoleWithSkills,
     volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     targets_at_event: DictOfTargetsForRolesAtEvent,
 ) -> RowInTableWithActualAndTargetsForRole:
@@ -79,10 +78,12 @@ def get_row_in_table_with_actual_and_targets_for_roles_at_event(
 
 
 def save_new_volunteer_target(
-    data_layer: DataLayer, event: Event, role: str, target: int
+    object_store: ObjectStore, event: Event, role_name: str, target: int
 ):
-    #volunteer_data = VolunteerRotaData(data_layer)
-    #volunteer_data.save_new_volunteer_target(event=event, role=role, target=target)
+    targets_at_event = get_volunteer_targets_at_event(object_store=object_store, event=event)
+    role = get_role_from_name(object_store=object_store, role_name=role_name)
+    targets_at_event.update_new_volunteer_target(role=role, target=target)
+    update_volunteer_targets_at_event(object_store=object_store, dict_of_targets=targets_at_event)
 
 
 def update_volunteer_targets_at_event(

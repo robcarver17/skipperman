@@ -65,32 +65,11 @@ def get_dict_of_existing_skills(
     return volunteer_data.get_dict_of_existing_skills_for_volunteer(volunteer)
 
 
-def string_if_volunteer_can_drive_else_empty(
-    data_layer: DataLayer, volunteer: Volunteer
-) -> str:
-    if can_volunteer_drive_safety_boat(data_layer=data_layer, volunteer=volunteer):
-        return "PB2"  ## can be anything
-    else:
-        return ""
-
-
 def can_volunteer_drive_safety_boat(
     data_layer: DataLayer, volunteer: Volunteer
 ) -> bool:
     volunteer_data = VolunteerData(data_layer)
     return volunteer_data.can_volunteer_drive_safety_boat(volunteer)
-
-
-def add_boat_related_skill_for_volunteer(data_layer: DataLayer, volunteer: Volunteer):
-    volunteer_data = VolunteerData(data_layer)
-    volunteer_data.add_volunteer_driving_qualification(volunteer)
-
-
-def remove_boat_related_skill_for_volunteer(
-    data_layer: DataLayer, volunteer: Volunteer
-):
-    volunteer_data = VolunteerData(data_layer)
-    volunteer_data.remove_driving_qualification_for_volunteer(volunteer)
 
 
 def load_list_of_volunteer_skills(data_layer: DataLayer) -> DictOfVolunteersWithSkills:

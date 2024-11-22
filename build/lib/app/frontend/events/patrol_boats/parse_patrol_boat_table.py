@@ -2,32 +2,26 @@ from typing import List, Union
 
 from app.frontend.forms.swaps import is_ready_to_swap
 
-from app.OLD_backend.rota.patrol_boats import (
-    add_named_boat_to_event_with_no_allocation,
-    remove_patrol_boat_and_all_associated_volunteer_connections_from_event,
-    remove_volunteer_from_patrol_boat_on_day_at_event,
-    get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day,
-    BoatDayVolunteer,
-    NO_ADDITION_TO_MAKE,
-    ListOfBoatDayVolunteer,
-    add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts,
-    copy_across_boats_at_event,
-)
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import \
+    get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day
+from app.backend.patrol_boats.changes import BoatDayVolunteer, NO_ADDITION_TO_MAKE, ListOfBoatDayVolunteer, \
+    add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts, copy_across_boats_at_event, \
+    add_named_boat_to_event_with_no_allocation, remove_patrol_boat_and_all_associated_volunteers_from_event, \
+    delete_volunteer_from_patrol_boat_on_day_at_event
 from app.OLD_backend.rota.volunteer_rota import (
     update_role_at_event_for_volunteer_on_day_at_event,
     get_volunteer_role_at_event_on_day,
-    copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days,
 )
+from app.backend.rota.copying import copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days
 from app.OLD_backend.volunteers.volunteers import (
-    add_boat_related_skill_for_volunteer,
-    remove_boat_related_skill_for_volunteer,
     can_volunteer_drive_safety_boat,
     EPRECATE_get_volunteer_name_from_id,
     get_volunteer_from_id,
 )
+from app.backend.volunteers.skills import add_boat_related_skill_for_volunteer, remove_boat_related_skill_for_volunteer
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
-    get_unique_list_of_volunteer_ids_for_skills_checkboxes,
+    get_unique_list_of_volunteers_for_skills_checkboxes,
     is_volunteer_skill_checkbox_ticked,
 )
 from app.frontend.events.patrol_boats.patrol_boat_dropdowns import (
@@ -41,9 +35,9 @@ from app.frontend.events.patrol_boats.patrol_boat_dropdowns import (
 from app.frontend.events.patrol_boats.patrol_boat_buttons import (
     from_delete_button_name_to_boat_name,
     list_of_delete_buttons_in_patrol_boat_table,
-    from_volunter_remove_button_name_to_volunteer_id_and_day,
+    from_volunter_remove_button_name_to_volunteer_and_day,
     get_all_remove_volunteer_button_names,
-    get_button_type_day_volunteer_id_given_button_str,
+    get_button_type_day_volunteer_given_button_name,
 )
 from app.frontend.events.patrol_boats.copying import (
     COPY_BOAT_OVERWRITE,
@@ -66,9 +60,7 @@ def get_all_copy_boat_buttons_for_boat_allocation(interface: abstractInterface) 
 
 def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str):
     event = get_event_from_state(interface)
-    copy_type, day, volunteer_id = get_button_type_day_volunteer_id_given_button_str(
-        copy_button
-    )
+    copy_type, day, volunteer_id = get_button_type_day_volunteer_given_button_name(copy_button, )
 
     if copy_type == COPY_BOAT_OVERWRITE:
         copy_boat = True
@@ -139,7 +131,7 @@ def update_if_delete_boat_button_pressed(
     event = get_event_from_state(interface)
     print("Deleting %s" % patrol_boat_name)
     try:
-        remove_patrol_boat_and_all_associated_volunteer_connections_from_event(
+        remove_patrol_boat_and_all_associated_volunteers_from_event(
             interface=interface, event=event, patrol_boat_name=patrol_boat_name
         )
     except Exception as e:
@@ -217,7 +209,7 @@ def get_boat_day_volunteer_for_dropdown_name_or_none(
 
 def update_skills_checkbox(interface: abstractInterface):
     event = get_event_from_state(interface)
-    unique_volunteer_ids = get_unique_list_of_volunteer_ids_for_skills_checkboxes(
+    unique_volunteer_ids = get_unique_list_of_volunteers_for_skills_checkboxes(
         cache=interface.cache, event=event
     )
     for volunteer_id in unique_volunteer_ids:
@@ -316,12 +308,12 @@ def update_if_delete_volunteer_button_pressed(
     interface: abstractInterface, delete_button: str
 ):
     event = get_event_from_state(interface)
-    volunteer_id, day = from_volunter_remove_button_name_to_volunteer_id_and_day(
+    volunteer_id, day = from_volunter_remove_button_name_to_volunteer_and_day(
         delete_button
     )
 
     try:
-        remove_volunteer_from_patrol_boat_on_day_at_event(
+        delete_volunteer_from_patrol_boat_on_day_at_event(
             interface=interface, event=event, day=day, volunteer_id=volunteer_id
         )
     except Exception as e:

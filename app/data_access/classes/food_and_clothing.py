@@ -1,17 +1,17 @@
-from app.objects_OLD.clothing import ListOfCadetsWithClothingAtEvent
-from app.objects_OLD.food import (
+from app.objects.clothing import ListOfCadetsWithClothingAndIdsAtEvent
+from app.objects.food import (
     ListOfVolunteersWithFoodRequirementsAtEvent,
     ListOfCadetsWithFoodRequirementsAtEvent,
 )
 
 
 class DataListOfCadetsWithClothingAtEvent(object):
-    def read(self, event_id: str) -> ListOfCadetsWithClothingAtEvent:
+    def read(self, event_id: str) -> ListOfCadetsWithClothingAndIdsAtEvent:
         raise NotImplemented
 
     def write(
         self,
-        list_of_cadets_with_clothing_at_event: ListOfCadetsWithClothingAtEvent,
+        list_of_cadets_with_clothing_at_event: ListOfCadetsWithClothingAndIdsAtEvent,
         event_id: str,
     ):
         raise NotImplemented

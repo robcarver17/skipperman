@@ -25,8 +25,10 @@ class ObjectStore:
         self.data_store.clear_stored_items()
         self.clear_object_store()
 
-    def flush_store(self):
-        self.data_store.save_stored_items()
+    def flush_store(self, read_only: bool = False):
+        if not read_only:
+            self.data_store.save_stored_items()
+
         self.data_store.clear_stored_items()
         self.clear_object_store()  ## everything saved in data store
 

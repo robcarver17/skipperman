@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import List
 
+from app.objects.volunteers import Volunteer
+
 from app.objects.day_selectors import Day, DaySelector
 from app.objects.events import Event
 from app.objects.exceptions import missing_data, MissingData, MultipleMatches
@@ -51,6 +53,11 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
     @property
     def _object_class_contained(self):
         return VolunteerWithIdAtEventWithPatrolBoatId
+
+    def drop_volunteer(self, volunteer: Volunteer):
+        for item in self:
+            if item.volunteer_id == volunteer.id:
+                self.remove(item)
 
     def swap_boats_for_volunteers_in_allocation(
         self,

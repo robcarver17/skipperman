@@ -2,8 +2,8 @@ from app.frontend.form_handler import button_error_and_back_to_initial_state_for
 from app.frontend.events.patrol_boats.copying import (
     copy_across_all_boats_and_roles,
     copy_across_all_boats,
-    copy_over_across_all_boats,
-    copy_over_across_all_boats_and_roles,
+    overwrite_allocation_across_all_boats,
+    overwrite_copy_across_all_boats_and_roles,
 )
 from app.frontend.events.patrol_boats.parse_patrol_boat_table import *
 from app.frontend.events.patrol_boats.patrol_boat_buttons import (
@@ -80,18 +80,16 @@ def post_form_view_for_patrol_boat_allocation(
     if last_button_pressed == cancel_menu_button.name:
         return previous_form(interface)
 
-    update_data_from_form_entries_in_patrol_boat_allocation_page(interface)
-
     if last_button_pressed == save_menu_button.name:
-        pass
+        update_data_from_form_entries_in_patrol_boat_allocation_page(interface)
     elif copy_all_boats_button.pressed(last_button_pressed):
         copy_across_all_boats(interface)
     elif copy_all_boats_and_roles_button.pressed(last_button_pressed):
         copy_across_all_boats_and_roles(interface)
     elif copyover_all_boats_button.pressed(last_button_pressed):
-        copy_over_across_all_boats(interface)
+        overwrite_allocation_across_all_boats(interface)
     elif copyover_all_boats_and_roles_button.pressed(last_button_pressed):
-        copy_over_across_all_boats_and_roles(interface)
+        overwrite_copy_across_all_boats_and_roles(interface)
     elif add_new_boat_button.pressed(last_button_pressed):
         update_adding_boat(interface)
 

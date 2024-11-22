@@ -2,11 +2,7 @@ from typing import List
 
 from app.objects.abstract_objects.abstract_form import listInput
 
-from app.objects_OLD.clothing import (
-    CadetObjectWithClothingAtEvent,
-    all_sort_types,
-    SORT_BY_FIRSTNAME,
-)
+from app.objects.composed.clothing_at_event import CadetWithClothingAtEvent, SORT_BY_FIRSTNAME, all_sort_types
 
 from app.OLD_backend.clothing import (
     get_list_of_active_cadet_objects_with_clothing_at_event,
@@ -116,7 +112,7 @@ def get_top_row_for_clothing_table() -> RowInTable:
 def get_clothing_row_for_cadet(
     size_options: List[str],
     colour_options: List[str],
-    cadet_with_clothing: CadetObjectWithClothingAtEvent,
+    cadet_with_clothing: CadetWithClothingAtEvent,
 ) -> RowInTable:
     cadet_id = cadet_with_clothing.cadet.id
     size_field = listInput(

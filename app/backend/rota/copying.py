@@ -8,7 +8,9 @@ from app.objects.events import Event
 from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
     update_dict_of_volunteers_with_roles_and_groups_at_event
 
-from app.backend.volunteers.volunteers_at_event import get_dict_of_registration_data_for_volunteers_at_event
+from app.backend.registration_data.volunteer_registration_data import \
+    get_dict_of_registration_data_for_volunteers_at_event
+
 
 def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
     object_store: ObjectStore,

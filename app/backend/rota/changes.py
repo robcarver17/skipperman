@@ -2,8 +2,9 @@
 from app.objects.groups import Group
 
 from app.backend.volunteers.volunteers_at_event import get_dict_of_all_event_data_for_volunteers, \
-    update_dict_of_all_event_data_for_volunteers, get_dict_of_registration_data_for_volunteers_at_event, \
-    update_dict_of_registration_data_for_volunteers_at_event
+    update_dict_of_all_event_data_for_volunteers
+from app.backend.registration_data.volunteer_registration_data import \
+    get_dict_of_registration_data_for_volunteers_at_event, update_dict_of_registration_data_for_volunteers_at_event
 from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
     get_dict_of_volunteers_with_roles_and_groups_at_event, update_dict_of_volunteers_with_roles_and_groups_at_event
 from app.data_access.store.object_store import ObjectStore

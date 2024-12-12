@@ -54,3 +54,5 @@ def update_list_of_cadets_with_ids_with_boat_classes_at_event(
         object_definition=object_definition_for_cadets_with_ids_and_boat_classes_at_event,
         event_id=event.id,
     )
+
+

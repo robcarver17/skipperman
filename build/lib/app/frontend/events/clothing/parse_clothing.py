@@ -10,11 +10,9 @@ from app.objects.clothing import CadetWithClothingAndIdsAtEvent
 
 from app.OLD_backend.clothing import (
     get_list_of_active_cadet_ids_with_clothing_at_event,
-    change_clothing_size_for_cadet,
-    change_colour_group_for_cadet,
-    distribute_colour_groups_at_event,
-    clear_colour_group_for_cadet,
 )
+from app.backend.clothing.dict_of_clothing_for_event import change_clothing_size_for_cadet, \
+    change_colour_group_for_cadet, clear_colour_group_for_cadet, distribute_colour_groups_at_event
 
 from app.frontend.shared.events_state import get_event_from_state
 

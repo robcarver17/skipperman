@@ -9,8 +9,9 @@ from app.frontend.forms.form_utils import (
     get_availability_checkbox,
 )
 
-from app.backend.volunteers.volunteers_at_event import get_dict_of_registration_data_for_volunteers_at_event, \
-    delete_volunteer_at_event, update_volunteer_availability_at_event
+from app.backend.volunteers.volunteers_at_event import delete_volunteer_at_event, update_volunteer_availability_at_event
+from app.backend.registration_data.volunteer_registration_data import \
+    get_dict_of_registration_data_for_volunteers_at_event
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.shared.events_state import get_event_from_state

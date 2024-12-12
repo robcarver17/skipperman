@@ -7,9 +7,7 @@ from app.data_access.configuration.configuration import ALLOWED_UPLOAD_FILE_TYPE
 from app.data_access.uploads_and_downloads import get_next_valid_upload_file_name
 from app.data_access.xls_and_csv import load_spreadsheet_file
 from app.objects.abstract_objects.abstract_interface import (
-    abstractInterface,
-    get_file_from_interface,
-)
+    abstractInterface, get_file_from_interface, )
 from app.objects.exceptions import FileError
 
 

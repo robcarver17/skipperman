@@ -4,9 +4,7 @@ from app.objects.abstract_objects.abstract_form import listInput
 
 from app.objects.composed.clothing_at_event import CadetWithClothingAtEvent, SORT_BY_FIRSTNAME, all_sort_types
 
-from app.OLD_backend.clothing import (
-    get_list_of_active_cadet_objects_with_clothing_at_event,
-)
+from app.backend.clothing.active_cadets_with_clothing import get_dict_of_active_cadets_with_clothing_at_event
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
@@ -78,7 +76,7 @@ def get_clothing_table(interface: abstractInterface, event: Event) -> Table:
     only_committee = are_we_showing_only_committee(interface)
 
     list_of_cadets_with_clothing = (
-        get_list_of_active_cadet_objects_with_clothing_at_event(
+        get_dict_of_active_cadets_with_clothing_at_event(
             interface=interface, event=event, only_committee=only_committee
         )
     )

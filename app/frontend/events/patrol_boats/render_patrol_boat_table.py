@@ -1,10 +1,8 @@
 from typing import List, Union
 
-from app.OLD_backend.OLD_patrol_boats.data import load_list_of_patrol_boats_at_event_from_cache
 
 from app.frontend.forms.swaps import is_ready_to_swap
 
-# from app.OLD_backend.OLD_patrol_boats import load_list_of_patrol_boats_at_event_from_cache
 from app.backend.patrol_boats.patrol_boat_summary import (
     get_summary_list_of_patrol_boat_allocations_for_events,
 )

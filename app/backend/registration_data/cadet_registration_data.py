@@ -1,3 +1,7 @@
+from typing import Dict
+
+from app.objects.day_selectors import DaySelector
+
 from app.objects.cadets import Cadet, ListOfCadets
 
 from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent, get_cadet_at_event_from_row_in_event_raw_registration_data, \
@@ -15,6 +19,11 @@ from app.objects.composed.cadets_at_event_with_registration_data import (
     DictOfCadetsWithRegistrationData,
 )
 from app.objects.registration_data import RowInRegistrationData
+
+def get_availability_dict_for_cadets_at_event(    object_store: ObjectStore, event: Event
+) -> Dict[Cadet, DaySelector]:
+    registration_data = get_dict_of_cadets_with_registration_data(object_store=object_store, event=event)
+    return dict([(cadet, registration_data.registration_data_for_cadet(cadet).availability) for cadet in registration_data.list_of_cadets()])
 
 
 def get_cadet_at_event(

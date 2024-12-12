@@ -78,8 +78,8 @@ def get_all_rows_in_registration_data_which_have_been_identified_for_a_specific_
 def list_of_cadet_ids_in_event_data_and_identified_in_raw_registration_data_for_event(
     object_store: ObjectStore, event: Event, include_identified_in_raw_registration_data: bool = True
 ) -> List[str]:
-    list_of_cadet_ids_at_event = get_list_of_cadets_with_id_and_registration_data_at_event(object_store=object_store, event=event)
-    existing_ids = list_of_cadet_ids_at_event.list_of_ids()
+    list_of_cadets_at_event = get_list_of_cadets_with_id_and_registration_data_at_event(object_store=object_store, event=event)
+    existing_ids = list_of_cadets_at_event.list_of_ids()
     if include_identified_in_raw_registration_data:
         mapped_ids = identified_cadet_ids_in_raw_registration_data(object_store=object_store, event=event)
     else:

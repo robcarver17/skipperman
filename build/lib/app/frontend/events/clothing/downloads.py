@@ -6,9 +6,7 @@ from app.data_access.file_access import download_directory
 
 from app.objects.abstract_objects.abstract_form import File
 
-from app.OLD_backend.clothing import (
-    get_list_of_active_cadet_objects_with_clothing_at_event,
-)
+from app.backend.clothing.active_cadets_with_clothing import get_dict_of_active_cadets_with_clothing_at_event
 
 from app.frontend.shared.events_state import get_event_from_state
 
@@ -19,7 +17,7 @@ from app.objects.composed.clothing_at_event import ListOfCadetsWithClothingAtEve
 def export_committee_clothing(interface: abstractInterface) -> File:
     event = get_event_from_state(interface)
     list_of_cadets_with_clothing = (
-        get_list_of_active_cadet_objects_with_clothing_at_event(
+        get_dict_of_active_cadets_with_clothing_at_event(
             interface=interface, event=event, only_committee=True
         )
     )
@@ -59,7 +57,7 @@ def export_committee_clothing(interface: abstractInterface) -> File:
 def export_all_clothing(interface: abstractInterface) -> File:
     event = get_event_from_state(interface)
     list_of_cadets_with_clothing = (
-        get_list_of_active_cadet_objects_with_clothing_at_event(
+        get_dict_of_active_cadets_with_clothing_at_event(
             interface=interface, event=event, only_committee=False
         )
     )
@@ -81,12 +79,12 @@ def export_all_clothing(interface: abstractInterface) -> File:
 def export_clothing_colours(interface: abstractInterface) -> File:
     event = get_event_from_state(interface)
     list_of_cadets_with_clothing = (
-        get_list_of_active_cadet_objects_with_clothing_at_event(
+        get_dict_of_active_cadets_with_clothing_at_event(
             interface=interface, event=event, only_committee=False
         )
     )
     list_of_cadets_with_clothing_committee = (
-        get_list_of_active_cadet_objects_with_clothing_at_event(
+        get_dict_of_active_cadets_with_clothing_at_event(
             interface=interface, event=event, only_committee=True
         )
     )
@@ -99,7 +97,7 @@ def export_clothing_colours(interface: abstractInterface) -> File:
 
         list_this_colour_committee = list_this_colour_committee.sort_by_dob_asc()
 
-        list_this_colour = list_this_colour.remove_if_in_list_of_cadet_ids(
+        list_this_colour = list_this_colour.remove_if_in_list_of_cadets(
             list_this_colour_committee.list_of_cadet_ids()
         )
         list_this_colour = list_this_colour.sort_by_firstname()

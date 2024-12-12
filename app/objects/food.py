@@ -104,14 +104,17 @@ class ListOfCadetsWithFoodRequirementsAtEvent(GenericListOfObjects):
     def _object_class_contained(self):
         return CadetWithFoodRequirementsAtEvent
 
+    def remove_food_requirements_for_cadet_at_event(self, cadet_id: str):
+        self.remove(self.object_with_cadet_id(cadet_id))
+
     def subset_matches_food_required_description(
-        self, food_required_description: str
+        self, food_requirements: FoodRequirements
     ) -> "ListOfCadetsWithFoodRequirementsAtEvent":
         return ListOfCadetsWithFoodRequirementsAtEvent(
             [
                 object
                 for object in self
-                if object.food_requirements.describe() == food_required_description
+                if object.food_requirements == food_requirements
             ]
         )
 
@@ -186,14 +189,14 @@ class ListOfVolunteersWithFoodRequirementsAtEvent(GenericListOfObjects):
     def _object_class_contained(self):
         return VolunteerWithFoodRequirementsAtEvent
 
-    def subset_matches_food_required_description(
-        self, food_required_description: str
+    def subset_matches_food_requirements(
+        self, food_requirements: FoodRequirements
     ) -> "ListOfVolunteersWithFoodRequirementsAtEvent":
         return ListOfVolunteersWithFoodRequirementsAtEvent(
             [
                 object
                 for object in self
-                if object.food_requirements.describe() == food_required_description
+                if object.food_requirements == food_requirements
             ]
         )
 
@@ -224,6 +227,10 @@ class ListOfVolunteersWithFoodRequirementsAtEvent(GenericListOfObjects):
 
     def list_of_volunteer_ids(self) -> List[str]:
         return [object.volunteer_id for object in self]
+
+    def drop_volunteer(self, volunteer_id: str):
+        object_with_id = self.object_with_volunteer_id(volunteer_id)
+        self.remove(object_with_id)
 
     def object_with_volunteer_id(
         self, volunteer_id: str

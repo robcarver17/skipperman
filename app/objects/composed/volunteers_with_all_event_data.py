@@ -26,7 +26,7 @@ from app.objects.composed.volunteers_at_event_with_patrol_boats import (
     PatrolBoatByDayDict,
     DictOfVolunteersAtEventWithPatrolBoatsByDay,
 )
-
+from app.objects.composed.food_at_event import DictOfVolunteersWithFoodRequirementsAtEvent, FoodRequirements
 
 @dataclass
 class AllEventDataForVolunteer:
@@ -37,7 +37,7 @@ class AllEventDataForVolunteer:
     associated_cadets: ListOfCadets
     event: Event
     volunteer: Volunteer
-
+    food_requirements: FoodRequirements
     def not_on_patrol_boat_on_given_day(self, day: Day) -> bool:
         return self.patrol_boats.not_on_patrol_boat_on_given_day(day)
 
@@ -50,7 +50,8 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         dict_of_volunteers_with_skills: DictOfVolunteersWithSkills,
         dict_of_volunteers_at_event_with_days_and_roles: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
         dict_of_volunteers_at_event_with_patrol_boats: DictOfVolunteersAtEventWithPatrolBoatsByDay,
-        dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer
+        dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
+            dict_of_volunteers_with_food_at_event: DictOfVolunteersWithFoodRequirementsAtEvent
     ):
         super().__init__(raw_dict)
         self._dict_of_registration_data_for_volunteers_at_event = (
@@ -64,20 +65,13 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
             dict_of_volunteers_at_event_with_patrol_boats
         )
         self._dict_of_cadets_associated_with_volunteers = dict_of_cadets_associated_with_volunteers
+        self._dict_of_volunteers_with_food_at_event = dict_of_volunteers_with_food_at_event
         self._event = event
 
 
     def not_on_patrol_boat_on_given_day(self, day: Day) -> 'DictOfAllEventDataForVolunteers':
-        raw_dict = dict([(volunteer, volunteer_data) for volunteer, volunteer_data in self.items() if volunteer_data.not_on_patrol_boat_on_given_day(day)])
-        return DictOfAllEventDataForVolunteers(
-            raw_dict=raw_dict,
-            dict_of_registration_data_for_volunteers_at_event=self.dict_of_registration_data_for_volunteers_at_event,
-            dict_of_volunteers_at_event_with_patrol_boats=self.dict_of_volunteers_at_event_with_patrol_boats,
-            dict_of_volunteers_with_skills=self.dict_of_volunteers_with_skills,
-            dict_of_cadets_associated_with_volunteers=self.dict_of_cadets_associated_with_volunteers,
-            dict_of_volunteers_at_event_with_days_and_roles=self.dict_of_volunteers_at_event_with_days_and_role,
-            event=self.event
-        )
+        list_of_volunteers = ListOfVolunteers([volunteer for volunteer, volunteer_data in self.items() if volunteer_data.not_on_patrol_boat_on_given_day(day)])
+        return self.sort_by_list_of_volunteers(list_of_volunteers)
 
     def update_role_and_group_at_event_for_volunteer_on_all_days_when_available(
             self,
@@ -112,6 +106,9 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         patrol_boat_data = self.dict_of_volunteers_at_event_with_patrol_boats
         patrol_boat_data.drop_volunteer(volunteer)
 
+        food_data = self.dict_of_volunteers_with_food_at_event
+        food_data.drop_volunteer(volunteer)
+
     def make_volunteer_unavailable_on_day(self,
              volunteer: Volunteer,  day: Day
     ):
@@ -138,6 +135,7 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
             dict_of_volunteers_at_event_with_days_and_roles=self.dict_of_volunteers_at_event_with_days_and_role,
             dict_of_volunteers_at_event_with_patrol_boats=self.dict_of_volunteers_at_event_with_patrol_boats,
             dict_of_cadets_associated_with_volunteers=self.dict_of_cadets_associated_with_volunteers,
+            dict_of_volunteers_with_food_at_event=self.dict_of_volunteers_with_food_at_event,
             event=self.event
         )
 
@@ -171,6 +169,10 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         return self._dict_of_cadets_associated_with_volunteers
 
     @property
+    def dict_of_volunteers_with_food_at_event(self) -> DictOfVolunteersWithFoodRequirementsAtEvent:
+        return self._dict_of_volunteers_with_food_at_event
+
+    @property
     def event(self) -> Event:
         return self._event
 
@@ -184,7 +186,8 @@ def compose_dict_of_all_event_data_for_volunteers(
     dict_of_volunteers_with_skills: DictOfVolunteersWithSkills,
     dict_of_volunteers_at_event_with_days_and_roles: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     dict_of_volunteers_at_event_with_patrol_boats: DictOfVolunteersAtEventWithPatrolBoatsByDay,
-    dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer
+    dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
+    dict_of_volunteers_with_food_at_event: DictOfVolunteersWithFoodRequirementsAtEvent
 ) -> DictOfAllEventDataForVolunteers:
     event = list_of_events.object_with_id(event_id)
 
@@ -194,6 +197,7 @@ def compose_dict_of_all_event_data_for_volunteers(
         dict_of_registration_data_for_volunteers_at_event=dict_of_registration_data_for_volunteers_at_event,
         dict_of_volunteers_at_event_with_days_and_roles=dict_of_volunteers_at_event_with_days_and_roles,
         dict_of_cadets_associated_with_volunteers=dict_of_cadets_associated_with_volunteers,
+        dict_of_volunteers_with_food_at_event=dict_of_volunteers_with_food_at_event,
         event=event
     )
 
@@ -204,7 +208,8 @@ def compose_dict_of_all_event_data_for_volunteers(
         dict_of_volunteers_at_event_with_patrol_boats=dict_of_volunteers_at_event_with_patrol_boats,
         dict_of_registration_data_for_volunteers_at_event=dict_of_registration_data_for_volunteers_at_event,
         dict_of_volunteers_at_event_with_days_and_roles=dict_of_volunteers_at_event_with_days_and_roles,
-        dict_of_cadets_associated_with_volunteers=dict_of_cadets_associated_with_volunteers
+        dict_of_cadets_associated_with_volunteers=dict_of_cadets_associated_with_volunteers,
+        dict_of_volunteers_with_food_at_event=dict_of_volunteers_with_food_at_event
     )
 
 
@@ -214,6 +219,7 @@ def compose_raw_dict_of_all_event_data_for_volunteers(
     dict_of_volunteers_at_event_with_days_and_roles: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     dict_of_volunteers_at_event_with_patrol_boats: DictOfVolunteersAtEventWithPatrolBoatsByDay,
     dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
+    dict_of_volunteers_with_food_at_event: DictOfVolunteersWithFoodRequirementsAtEvent,
         event: Event
 ) -> Dict[Volunteer, AllEventDataForVolunteer]:
     ## THis construction means if we delete from registration data they won't be seen elsewhere
@@ -240,6 +246,7 @@ def compose_raw_dict_of_all_event_data_for_volunteers(
                         volunteer, PatrolBoatByDayDict()
                     ),
                     associated_cadets = dict_of_cadets_associated_with_volunteers.get(volunteer, ListOfCadets([])),
+                    food_requirements=dict_of_volunteers_with_food_at_event.food_for_volunteer(volunteer, return_empty=True),
                     event=event
                 ),
             )

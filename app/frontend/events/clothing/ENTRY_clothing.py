@@ -1,4 +1,4 @@
-from app.OLD_backend.clothing import summarise_clothing
+from app.backend.clothing.summarise_clothing import summarise_clothing
 from app.frontend.events.clothing.downloads import (
     export_committee_clothing,
     export_clothing_colours,
@@ -36,7 +36,7 @@ def display_form_view_for_clothing_requirements(interface: abstractInterface) ->
 
     button_bar = get_button_bar_for_clothing(interface=interface)
     clothing_table = get_clothing_table(interface=interface, event=event)
-    summary = summarise_clothing(interface=interface, event=event)
+    summary = summarise_clothing(object_store=interface.object_store, event=event)
     return Form(
         ListOfLines(
             [
@@ -62,10 +62,18 @@ def post_form_view_for_clothing_requirements(
         return previous_form(interface)
 
     ### save
-
     if save_menu_button.pressed(last_button_pressed):
         save_clothing_data(interface)
         interface.flush_cache_to_store()
+
+    elif distribute_action_button.pressed(last_button_pressed):
+        distribute_colour_groups(interface)
+        interface.flush_cache_to_store()
+
+    elif clear_all_colours_button.pressed(last_button_pressed):
+        clear_all_colours(interface)
+        interface.flush_cache_to_store()
+
 
     elif last_button_pressed in all_sort_types:
         sort_order = interface.last_button_pressed()
@@ -74,17 +82,8 @@ def post_form_view_for_clothing_requirements(
     elif filter_all_button.pressed(last_button_pressed):
         set_to_showing_all(interface)
 
-
     elif filter_committee_button.pressed(last_button_pressed):
         set_to_showing_only_committee(interface)
-
-    elif distribute_action_button.pressed(last_button_pressed)
-        distribute_colour_groups(interface)
-        interface.flush_cache_to_store()
-
-    elif clear_all_colours_button.pressed(last_button_pressed):
-        clear_all_colours(interface)
-        interface.flush_cache_to_store()
 
 
     elif export_committee_button.pressed(last_button_pressed):

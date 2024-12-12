@@ -9,7 +9,10 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event
 from app.objects.volunteers import ListOfVolunteers, Volunteer
 from app.backend.volunteers.list_of_volunteers import get_list_of_volunteers
-from app.backend.volunteers.volunteers_at_event import get_dict_of_registration_data_for_volunteers_at_event, add_volunteer_at_event
+from app.backend.volunteers.volunteers_at_event import add_volunteer_at_event
+from app.backend.registration_data.volunteer_registration_data import \
+    get_dict_of_registration_data_for_volunteers_at_event
+
 
 def get_list_of_volunteers_except_those_already_at_event(
     object_store: ObjectStore, event: Event

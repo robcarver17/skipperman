@@ -29,12 +29,19 @@ from app.objects.composed.cadets_at_event_with_groups import (
 )
 
 
+
+from app.objects.composed.clothing_at_event import DictOfCadetsWithClothingAtEvent, ClothingAtEvent
+from app.objects.composed.food_at_event import ListOfCadetsWithFoodRequirementsAtEvent, \
+    DictOfCadetsWithFoodRequirementsAtEvent, FoodRequirements
+
 @dataclass
 class AllEventInfoForCadet:
     registration_data: CadetRegistrationData
     days_and_groups: DaysAndGroups
     days_and_club_dinghies: DictOfDaysAndClubDinghiesAtEventForCadet
     days_and_boat_class: DictOfDaysBoatClassAndPartners
+    food_requirements: FoodRequirements
+    clothing: ClothingAtEvent
 
     def is_active_registration(self):
         return self.registration_data.status.is_active
@@ -48,6 +55,8 @@ class DictOfAllEventInfoForCadet(Dict[Cadet, AllEventInfoForCadet]):
         dict_of_cadets_and_club_dinghies_at_event: DictOfCadetsAndClubDinghiesAtEvent,
         dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
         dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
+        dict_of_cadets_with_clothing_at_event: DictOfCadetsWithClothingAtEvent,
+        dict_of_cadets_with_food_required_at_event: DictOfCadetsWithFoodRequirementsAtEvent,
         event: Event,
     ):
         super().__init__(raw_dict)
@@ -63,6 +72,8 @@ class DictOfAllEventInfoForCadet(Dict[Cadet, AllEventInfoForCadet]):
         )
         self._dict_of_cadets_with_days_and_groups = dict_of_cadets_with_days_and_groups
         self._event = event
+        self._dict_of_cadets_with_clothing_at_event = dict_of_cadets_with_clothing_at_event
+        self._dict_of_cadets_with_food_required_at_event = dict_of_cadets_with_food_required_at_event
 
     def update_availability_of_existing_cadet_at_event_and_return_messages(
             self, cadet: Cadet,
@@ -118,9 +129,14 @@ class DictOfAllEventInfoForCadet(Dict[Cadet, AllEventInfoForCadet]):
             cadet=cadet
         )
 
+        self.dict_of_cadets_with_clothing_at_event.remove_clothing_for_cadet_at_event(cadet=cadet)
+
+        self.dict_of_cadets_with_food_required_at_event.remove_food_requirements_for_cadet_at_event(cadet=cadet)
+
         messages = self.dict_of_cadets_and_boat_class_and_partners.remove_cadet_from_event_and_return_messages(
             cadet=cadet
         )
+
 
 
         return messages
@@ -142,6 +158,14 @@ class DictOfAllEventInfoForCadet(Dict[Cadet, AllEventInfoForCadet]):
         return self._dict_of_cadets_with_days_and_groups
 
     @property
+    def dict_of_cadets_with_clothing_at_event(self) -> DictOfCadetsWithClothingAtEvent:
+        return self._dict_of_cadets_with_clothing_at_event
+
+    @property
+    def dict_of_cadets_with_food_required_at_event(self) -> DictOfCadetsWithFoodRequirementsAtEvent:
+        return self._dict_of_cadets_with_food_required_at_event
+
+    @property
     def event(self):
         return self._event
 
@@ -157,7 +181,9 @@ def compose_dict_of_all_event_info_for_cadet(
     dict_of_cadets_and_club_dinghies_at_event: DictOfCadetsAndClubDinghiesAtEvent,
     dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
     dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
-    active_only: bool,
+        dict_of_cadets_with_clothing_at_event: DictOfCadetsWithClothingAtEvent,
+        dict_of_cadets_with_food_required_at_event: DictOfCadetsWithFoodRequirementsAtEvent,
+        active_only: bool,
 ) -> DictOfAllEventInfoForCadet:
     event = list_of_events.object_with_id(event_id)
     raw_dict = compose_raw_dict_of_all_event_info_for_cadet(
@@ -165,6 +191,8 @@ def compose_dict_of_all_event_info_for_cadet(
         dict_of_cadets_and_club_dinghies_at_event=dict_of_cadets_and_club_dinghies_at_event,
         dict_of_cadets_with_days_and_groups=dict_of_cadets_with_days_and_groups,
         dict_of_cadets_and_boat_class_and_partners=dict_of_cadets_and_boat_class_and_partners,
+        dict_of_cadets_with_food_required_at_event=dict_of_cadets_with_food_required_at_event,
+        dict_of_cadets_with_clothing_at_event=dict_of_cadets_with_clothing_at_event,
         active_only=active_only,
     )
     return DictOfAllEventInfoForCadet(
@@ -173,6 +201,8 @@ def compose_dict_of_all_event_info_for_cadet(
         dict_of_cadets_and_club_dinghies_at_event=dict_of_cadets_and_club_dinghies_at_event,
         dict_of_cadets_with_days_and_groups=dict_of_cadets_with_days_and_groups,
         dict_of_cadets_and_boat_class_and_partners=dict_of_cadets_and_boat_class_and_partners,
+        dict_of_cadets_with_clothing_at_event=dict_of_cadets_with_clothing_at_event,
+        dict_of_cadets_with_food_required_at_event=dict_of_cadets_with_food_required_at_event,
         event=event,
     )
 
@@ -182,7 +212,9 @@ def compose_raw_dict_of_all_event_info_for_cadet(
     dict_of_cadets_and_club_dinghies_at_event: DictOfCadetsAndClubDinghiesAtEvent,
     dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
     dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
-    active_only: bool,
+    dict_of_cadets_with_clothing_at_event: DictOfCadetsWithClothingAtEvent,
+    dict_of_cadets_with_food_required_at_event: DictOfCadetsWithFoodRequirementsAtEvent,
+        active_only: bool,
 ) -> Dict[Cadet, AllEventInfoForCadet]:
     if active_only:
         list_of_all_cadets_with_event_data = (
@@ -208,6 +240,11 @@ def compose_raw_dict_of_all_event_info_for_cadet(
                     days_and_club_dinghies=dict_of_cadets_and_club_dinghies_at_event.get(
                         cadet, DictOfDaysAndClubDinghiesAtEventForCadet()
                     ),
+                    food_requirements=dict_of_cadets_with_food_required_at_event.get(
+                        cadet, FoodRequirements()
+                    ),
+                    clothing=dict_of_cadets_with_clothing_at_event.get(cadet, ClothingAtEvent()),
+
                 ),
             )
             for cadet in list_of_all_cadets_with_event_data

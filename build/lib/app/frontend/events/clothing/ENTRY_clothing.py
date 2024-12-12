@@ -1,4 +1,4 @@
-from app.OLD_backend.clothing import summarise_clothing
+from app.backend.clothing.summarise_clothing import summarise_clothing
 from app.frontend.events.clothing.automatically_get_clothing_data_from_cadets import (
     update_cadet_clothing_at_event,
 )

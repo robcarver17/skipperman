@@ -5,8 +5,7 @@ from app.frontend.events.mapping.upload_template_field_mapping import (
     display_form_for_upload_template_field_mapping,
 )
 from app.objects.abstract_objects.abstract_interface import (
-    abstractInterface,
-    form_with_message_and_finished_button,
+    abstractInterface, form_with_message_and_finished_button,
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,

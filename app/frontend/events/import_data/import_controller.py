@@ -1,4 +1,9 @@
-from typing import List, Union, Callable
+from typing import  Union, Callable
+
+from app.frontend.events.food.automatically_get_food_data import update_food_for_cadets_from_registration_data, \
+    update_food_for_volunteers_from_registration_data
+
+from app.frontend.events.clothing.automatically_get_clothing_data_from_cadets import update_cadet_clothing_at_event
 
 from app.frontend.events.cadets_at_event.interactively_update_records_of_cadets_at_event import \
     display_form_interactively_update_cadets_at_event
@@ -12,8 +17,7 @@ from app.frontend.events.volunteer_allocation.volunteer_identification import (
 )
 
 from app.objects.abstract_objects.abstract_interface import (
-    abstractInterface,
-    form_with_message_and_finished_button,
+    abstractInterface, form_with_message_and_finished_button,
 )
 
 from app.objects.exceptions import NoMoreData
@@ -26,9 +30,10 @@ import_stages_in_order = [
     display_form_identify_cadets_during_import,
     display_form_interactively_update_cadets_at_event,
     display_form_volunteer_identification,
-    display_add_volunteers_to_event
-    ## FIXME FOOD
-    ## FIXME CLOTHING
+    display_add_volunteers_to_event,
+    update_cadet_clothing_at_event,
+    update_food_for_cadets_from_registration_data,
+    update_food_for_volunteers_from_registration_data
 ]
 
 ### KEEP TRACK OF WHICH IMPORT STAGES HAVE BEEN DONE, AND THEN CALLS NEW FORMS AS REQUIRED

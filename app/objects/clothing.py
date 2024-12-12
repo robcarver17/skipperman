@@ -5,12 +5,12 @@ from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
 
 UNALLOCATED_COLOUR = ""
-
+UNALLOCATED_SIZE = ""
 
 @dataclass
 class CadetWithClothingAndIdsAtEvent(GenericSkipperManObject):
     cadet_id: str
-    size: str
+    size: str = UNALLOCATED_SIZE
     colour: str = UNALLOCATED_COLOUR
 
 

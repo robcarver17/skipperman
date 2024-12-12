@@ -1,7 +1,5 @@
-from app.OLD_backend.clothing import (
-    is_cadet_with_id_already_at_event_with_clothing,
-    add_new_cadet_with_clothing_to_event,
-)
+from app.backend.clothing.dict_of_clothing_for_event import is_cadet_already_at_event_with_clothing, \
+    add_new_cadet_with_clothing_to_event
 
 from app.OLD_backend.cadets import cadet_name_from_id
 from app.backend.registration_data.identified_cadets_at_event import \
@@ -40,7 +38,7 @@ def update_cadet_clothing_at_event(
 def process_update_to_cadet_clothing_data(
     interface: abstractInterface, event: Event, cadet_id: str
 ):
-    cadet_already_at_event = is_cadet_with_id_already_at_event_with_clothing(
+    cadet_already_at_event = is_cadet_already_at_event_with_clothing(
         interface=interface, event=event, cadet_id=cadet_id
     )
 

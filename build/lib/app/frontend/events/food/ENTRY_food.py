@@ -1,7 +1,5 @@
-from app.OLD_backend.food import summarise_food_data_by_day
-
 from app.frontend.events.food.automatically_get_food_data import (
-    get_and_save_food_for_cadets_from_registration_data,
+    update_food_for_cadets_from_registration_data,
     get_and_save_food_for_volunteers_from_registration_data,
 )
 
@@ -16,8 +14,8 @@ from app.frontend.events.food.render_food import (
     get_other_food_table,
     GET_FOOD_FOR_CADETS,
     GET_FOOD_FOR_VOLUNTEERS,
-    DOWNLOAD_FOOD,
-)
+    DOWNLOAD_FOOD, )
+from app.backend.food.summarise_food import summarise_food_data_by_day
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.events.patrol_boats.parse_patrol_boat_table import *
@@ -101,7 +99,7 @@ def post_form_view_for_food_requirements(
     elif last_button_pressed == DOWNLOAD_FOOD:
         return download_food_data(interface)
     elif last_button_pressed == GET_FOOD_FOR_CADETS:
-        get_and_save_food_for_cadets_from_registration_data(interface)
+        update_food_for_cadets_from_registration_data(interface)
     elif last_button_pressed == GET_FOOD_FOR_VOLUNTEERS:
         get_and_save_food_for_volunteers_from_registration_data(interface)
 

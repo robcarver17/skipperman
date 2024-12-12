@@ -4,7 +4,7 @@ from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event 
     get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats
 from app.backend.rota.changes import update_role_at_event_for_volunteer_on_day
 from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import \
-    VolunteerAtEventWithSkillsAndRolesAndPatrolBoats, VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
+     VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
 from app.objects.volunteers import Volunteer
 
 from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunteer, \
@@ -12,22 +12,11 @@ from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunt
 
 from app.frontend.forms.swaps import is_ready_to_swap
 
-from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import \
-    get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day
 from app.backend.patrol_boats.changes import BoatDayVolunteer, NO_ADDITION_TO_MAKE, ListOfBoatDayVolunteer, \
     add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts, copy_across_boats_at_event, \
     add_named_boat_to_event_with_no_allocation, remove_patrol_boat_and_all_associated_volunteers_from_event, \
     delete_volunteer_from_patrol_boat_on_day_at_event
-from app.OLD_backend.rota.volunteer_rota import (
-    update_role_at_event_for_volunteer_on_day_at_event,
-    get_volunteer_role_at_event_on_day,
-)
 from app.backend.rota.copying import copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days
-from app.OLD_backend.volunteers.volunteers import (
-    can_volunteer_drive_safety_boat,
-    EPRECATE_get_volunteer_name_from_id,
-    get_volunteer_from_id,
-)
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
     get_unique_list_of_volunteers_for_skills_checkboxes,
@@ -58,8 +47,6 @@ from app.frontend.events.patrol_boats.copying import (
     COPY_BOTH_FILL,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.day_selectors import Day
-from app.objects.events import Event
 
 
 def get_all_copy_boat_buttons_for_boat_allocation(interface: abstractInterface) -> list:

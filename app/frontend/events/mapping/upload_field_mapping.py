@@ -1,9 +1,7 @@
 from app.backend.mapping.list_of_field_mappings import save_field_mapping_for_event
 from app.data_access.csv.wa_field_mapping import read_mapping_from_csv_file_object
 from app.objects.abstract_objects.abstract_interface import (
-    abstractInterface,
-    get_file_from_interface,
-    form_with_message_and_finished_button,
+    abstractInterface, form_with_message_and_finished_button, get_file_from_interface,
 )
 from app.objects.abstract_objects.abstract_form import Form, fileInput
 from app.objects.abstract_objects.abstract_buttons import (

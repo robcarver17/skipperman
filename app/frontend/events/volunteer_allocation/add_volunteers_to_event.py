@@ -12,8 +12,9 @@ from app.backend.registration_data.cadet_and_volunteer_connections_at_event impo
     update_cadet_connections_when_volunteer_already_at_event, \
     are_all_cadets_associated_with_volunteer_in_registration_data_cancelled_or_deleted, \
     get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer
-from app.backend.volunteers.volunteers_at_event import is_volunteer_already_at_event, \
+from app.backend.volunteers.volunteers_at_event import \
     get_volunteer_at_event_from_list_of_relevant_information_with_no_conflicts, add_volunteer_at_event
+from app.backend.registration_data.volunteer_registration_data import is_volunteer_already_at_event
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.volunteer_allocation.add_volunteers_process_form import (
     add_volunteer_at_event_with_form_contents,

@@ -5,6 +5,7 @@ from app.objects.composed.food_at_event import DictOfVolunteersWithFoodRequireme
 from app.data_access.store.object_store import ObjectStore
 from app.objects.events import Event
 
+
 def get_dict_of_cadets_with_food_requirements_at_event(object_store: ObjectStore, event: Event) -> DictOfCadetsWithFoodRequirementsAtEvent:
     return object_store.get(
         object_definition=object_definition_for_dict_of_cadets_with_food_requirements_at_event,

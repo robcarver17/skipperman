@@ -20,12 +20,9 @@ from app.data_access.configuration.field_list import CADET_FOOD_PREFERENCE
 
 from app.objects.exceptions import DuplicateCadets, NoMoreData
 
-from app.OLD_backend.food import (
-    is_cadet_with_id_already_at_event_with_food,
-    add_new_cadet_with_food_to_event,
-    is_volunteer_with_id_already_at_event_with_food,
-    add_new_volunteer_with_food_to_event,
-)
+from app.backend.food.modify_food_data import is_cadet_with_already_at_event_with_food, \
+    add_new_cadet_with_food_to_event, is_volunteer_with_already_at_event_with_food, \
+    add_new_volunteer_with_food_to_event
 
 from app.objects.events import Event
 
@@ -51,7 +48,7 @@ def get_and_save_food_for_cadets_from_registration_data(interface: abstractInter
 def process_update_to_cadet_food_data(
     interface: abstractInterface, event: Event, cadet_id: str
 ):
-    cadet_already_at_event = is_cadet_with_id_already_at_event_with_food(
+    cadet_already_at_event = is_cadet_with_already_at_event_with_food(
         interface=interface, event=event, cadet_id=cadet_id
     )
     if cadet_already_at_event:
@@ -130,7 +127,7 @@ def get_and_save_food_for_volunteers_from_registration_data(
 def process_update_to_volunteer_food_data(
     interface: abstractInterface, event: Event, volunteer_id: str
 ):
-    volunteer_already_at_event = is_volunteer_with_id_already_at_event_with_food(
+    volunteer_already_at_event = is_volunteer_with_already_at_event_with_food(
         interface=interface, event=event, volunteer_id=volunteer_id
     )
     if volunteer_already_at_event:

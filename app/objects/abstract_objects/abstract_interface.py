@@ -2,25 +2,18 @@ from dataclasses import dataclass
 from typing import Callable
 
 from app.data_access.store.object_store import ObjectStore
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 
 from app.objects.exceptions import (
     missing_data,
     NoFileUploaded,
-    FileError,
-    arg_not_passed,
-)
+    arg_not_passed, FileError, )
 from app.objects.abstract_objects.abstract_form import (
-    Form,
     YES,
     NO,
-    NewForm,
+    NewForm, Form,
 )
 from app.objects.abstract_objects.abstract_buttons import FINISHED_BUTTON_LABEL, Button
-from app.objects.abstract_objects.abstract_lines import (
-    Line,
-    ListOfLines,
-    _______________,
-)
 from app.objects.abstract_objects.form_function_mapping import (
     DisplayAndPostFormFunctionMaps,
 )
@@ -143,19 +136,6 @@ class abstractInterface:
         raise NotImplemented
 
 
-
-def get_file_from_interface(file_label: str, interface: abstractInterface):
-    try:
-        file = interface.uploaded_file(file_label)
-    except NoFileUploaded:
-        raise FileError("No file uploaded")
-
-    if file.filename == "":
-        raise FileError("No file name selected")
-
-    return file
-
-
 def form_with_message_and_finished_button(
     message: str,
     interface: abstractInterface,
@@ -199,3 +179,15 @@ def form_with_content_and_finished_button(
 class UrlsOfInterest:
     current_url_for_action: str = arg_not_passed
     image_directory: str = arg_not_passed
+
+
+def get_file_from_interface(file_label: str, interface: abstractInterface):
+    try:
+        file = interface.uploaded_file(file_label)
+    except NoFileUploaded:
+        raise FileError("No file uploaded")
+
+    if file.filename == "":
+        raise FileError("No file name selected")
+
+    return file

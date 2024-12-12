@@ -99,7 +99,7 @@ class ClothingData:
     def get_list_of_cadets_with_clothing_at_event(
         self, event: Event
     ) -> ListOfCadetsWithClothingAndIdsAtEvent:
-        return self.data_api.get_list_of_cadets_with_clothing_at_event(event)
+        return self.data_api.get_dict_of_cadets_with_clothing_at_event(event)
 
     def save_list_of_cadets_with_clothing_at_event(
         self,

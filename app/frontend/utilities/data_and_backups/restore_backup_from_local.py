@@ -14,9 +14,7 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 from app.objects.abstract_objects.abstract_form import fileInput, Form, NewForm
 from app.objects.abstract_objects.abstract_interface import (
-    abstractInterface,
-    get_file_from_interface,
-)
+    abstractInterface, get_file_from_interface, )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 
 ZIPPED_FILE = "zipped_file"

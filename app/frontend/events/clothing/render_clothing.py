@@ -1,12 +1,13 @@
 from typing import List
 
+from app.objects.cadets import Cadet
+
 from app.objects.abstract_objects.abstract_form import listInput
 
-from app.objects.composed.clothing_at_event import CadetWithClothingAtEvent, SORT_BY_FIRSTNAME, all_sort_types
+from app.objects.composed.clothing_at_event import  SORT_BY_FIRSTNAME, all_sort_types, \
+    ClothingAtEvent
 
-from app.OLD_backend.clothing import (
-    get_list_of_active_cadet_objects_with_clothing_at_event,
-)
+from app.backend.clothing.active_cadets_with_clothing import get_dict_of_active_cadets_with_clothing_at_event
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
@@ -76,23 +77,24 @@ def get_clothing_table(interface: abstractInterface, event: Event) -> Table:
     sort_order = get_sort_order(interface)
     only_committee = are_we_showing_only_committee(interface)
 
-    list_of_cadets_with_clothing = (
-        get_list_of_active_cadet_objects_with_clothing_at_event(
-            interface=interface, event=event, only_committee=only_committee
+    dict_of_cadets_with_clothing = (
+        get_dict_of_active_cadets_with_clothing_at_event(
+            object_store=interface.object_store, event=event, only_committee=only_committee
         )
     )
-    sorted_list_of_cadets = list_of_cadets_with_clothing.sort_by(sort_order)
+    sorted_dict_of_cadets_with_clothing = dict_of_cadets_with_clothing.sort_by(sort_order)
 
-    size_options = list_of_cadets_with_clothing.get_clothing_size_options()
-    colour_options = list_of_cadets_with_clothing.get_colour_options()
+    size_options = sorted_dict_of_cadets_with_clothing.get_clothing_size_options()
+    colour_options = sorted_dict_of_cadets_with_clothing.get_colour_options()
     top_row = get_top_row_for_clothing_table()
     body = [
         get_clothing_row_for_cadet(
-            cadet_with_clothing=cadet_with_clothing,
+            cadet=cadet,
+            clothing = clothing,
             size_options=size_options,
             colour_options=colour_options,
         )
-        for cadet_with_clothing in sorted_list_of_cadets
+        for cadet, clothing in sorted_dict_of_cadets_with_clothing.items()
     ]
 
     return Table([top_row] + body)
@@ -111,23 +113,24 @@ def get_top_row_for_clothing_table() -> RowInTable:
 def get_clothing_row_for_cadet(
     size_options: List[str],
     colour_options: List[str],
-    cadet_with_clothing: CadetWithClothingAtEvent,
+        cadet: Cadet,
+        clothing: ClothingAtEvent,
 ) -> RowInTable:
-    cadet_id = cadet_with_clothing.cadet.id
+    cadet_id = cadet.id
     size_field = listInput(
         list_of_options=size_options,
         input_name=size_field_name(cadet_id=cadet_id),
-        default_option=cadet_with_clothing.size,
+        default_option=clothing.size,
         input_label="",
     )
     colour_field = listInput(
         list_of_options=colour_options,
         input_name=colour_field_name(cadet_id=cadet_id),
-        default_option=cadet_with_clothing.colour,
+        default_option=clothing.colour,
         input_label="",
     )
 
-    return RowInTable([str(cadet_with_clothing.cadet), size_field, colour_field])
+    return RowInTable([str(cadet), size_field, colour_field])
 
 
 def size_field_name(cadet_id: str) -> str:

@@ -383,7 +383,7 @@ def get_allergy_list_as_df_for_volunteers(
 ):
     food_data = FoodData(interface.data)
     volunteers_with_food = food_data.list_of_active_volunteers_with_food_at_event(event)
-    subset = volunteers_with_food.subset_matches_food_required_description(
+    subset = volunteers_with_food.subset_matches_food_requirements(
         food_required_str
     )
 

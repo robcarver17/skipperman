@@ -29,8 +29,7 @@ from app.objects.abstract_objects.abstract_lines import (
     _______________,
 )
 from app.objects.abstract_objects.abstract_interface import (
-    abstractInterface,
-    form_with_message_and_finished_button,
+    abstractInterface, form_with_message_and_finished_button,
 )
 
 

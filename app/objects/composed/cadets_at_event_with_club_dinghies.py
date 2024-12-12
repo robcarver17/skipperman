@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import List, Dict
 
+from app.objects.utils import flatten
+
 from app.objects.events import ListOfEvents, Event
 
 from app.objects.cadets import Cadet, ListOfCadets
@@ -37,6 +39,16 @@ class ClubDinghyAtEventOnDayForCadet:
 
 
 class DictOfDaysAndClubDinghiesAtEventForCadet(Dict[Day, ClubDinghy]):
+    def has_dinghy_on_day(self, day: Day, dinghy: ClubDinghy):
+        dinghy_on_day = self.get(day,None)
+        if dinghy_on_day is None:
+            return False
+
+        return dinghy_on_day == dinghy
+
+    def unique_list_of_dinghies(self) -> ListOfClubDinghies:
+        return ListOfClubDinghies(list(set(self.values())))
+
     def remove_cadet_from_event_on_day(self, day):
         try:
             self.pop(day)
@@ -94,13 +106,23 @@ class DictOfCadetsAndClubDinghiesAtEvent(
         raw_dict,
         event: Event,
         list_of_cadets_at_event_with_id_and_club_dinghy: ListOfCadetAtEventWithIdAndClubDinghies,
+            list_of_club_dinghies: ListOfClubDinghies,
     ):
         super().__init__(raw_dict)
 
         self._list_of_cadets_at_event_with_id_and_club_dinghy = (
             list_of_cadets_at_event_with_id_and_club_dinghy
         )
+        self._list_of_club_dinghies = list_of_club_dinghies
         self._event = event
+
+
+    def unique_sorted_list_of_allocated_club_dinghys_allocated_at_event(self) -> ListOfClubDinghies:
+        dinghies_for_cadet = [dict_of_dinghies.unique_list_of_dinghies() for dict_of_dinghies in self.values()]
+        all_dinghies_as_single_list = flatten(dinghies_for_cadet)
+        sorted_list = [dinghy for dinghy in self.list_of_club_dinghies if dinghy in all_dinghies_as_single_list]
+
+        return ListOfClubDinghies(sorted_list)
 
     def remove_cadet_from_event(self, cadet: Cadet):
         for day in self.event.weekdays_in_event():
@@ -119,6 +141,13 @@ class DictOfCadetsAndClubDinghiesAtEvent(
     def get_club_boat_allocation_for_cadet(self, cadet: Cadet):
         return self.get(cadet, DictOfDaysAndClubDinghiesAtEventForCadet())
 
+    def club_dinghys_for_cadet(self, cadet: Cadet) -> DictOfDaysAndClubDinghiesAtEventForCadet:
+        return self.get(cadet)
+
+    @property
+    def list_of_club_dinghies(self) ->ListOfClubDinghies:
+        return self._list_of_club_dinghies
+
     @property
     def list_of_cadets_at_event_with_id_and_club_dinghy(
         self,
@@ -128,6 +157,10 @@ class DictOfCadetsAndClubDinghiesAtEvent(
     @property
     def event(self) -> Event:
         return self._event
+
+    @property
+    def list_of_cadets(self) -> ListOfCadets:
+        return ListOfCadets(list(self.keys()))
 
 
 def compose_dict_of_cadets_and_club_dinghies_at_event(
@@ -148,6 +181,7 @@ def compose_dict_of_cadets_and_club_dinghies_at_event(
         raw_dict=raw_dict,
         event=event,
         list_of_cadets_at_event_with_id_and_club_dinghy=list_of_cadets_at_event_with_id_and_club_dinghy,
+        list_of_club_dinghies=list_of_club_dinghies
     )
 
 

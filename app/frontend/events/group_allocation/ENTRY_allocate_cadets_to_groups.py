@@ -1,6 +1,7 @@
 from typing import Union
 
 from app.backend.events.update_status_and_availability_of_cadets_at_event import make_cadet_available_on_day
+from app.backend.cadets.list_of_cadets import get_cadet_from_id
 from app.frontend.forms.reorder_form import (
     list_of_button_names_given_group_order,
     reorderFormInterface,
@@ -44,8 +45,7 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm,
 )
 from app.objects.abstract_objects.abstract_buttons import (
-    CANCEL_BUTTON_LABEL,
-    SAVE_BUTTON_LABEL,
+    cancel_menu_button, save_menu_button
 )
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
@@ -65,12 +65,12 @@ def display_form_allocate_cadets(interface: abstractInterface) -> Union[Form, Ne
 def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
     last_button = interface.last_button_pressed()
-    if last_button == CANCEL_BUTTON_LABEL:
+    if cancel_menu_button.pressed(last_button):
         return previous_form(interface)
-
-    ## This also saves the stored data in interface otherwise we don't do it later if add partner button saved
-    update_data_given_allocation_form(interface)
-    clear_cadet_id_at_event(interface)
+    elif save_menu_button.pressed(last_button):
+        ## This also saves the stored data in interface otherwise we don't do it later if add partner button saved
+        update_data_given_allocation_form(interface)
+        clear_cadet_id_at_event(interface)
 
     if was_add_partner_button(interface):
         ### SAVE CADET ID TO GET PARTNER FOR
@@ -95,9 +95,6 @@ def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewFo
     elif was_reorder_sort_button(interface):
         change_sort_order_and_save(interface)
 
-    elif last_button == SAVE_BUTTON_LABEL:
-        ## already saved
-        pass
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
@@ -162,8 +159,11 @@ def make_cadet_available_on_current_day(
 
     cadet_id = cadet_id_from_cadet_available_buttons(add_availability_button_name)
     event = get_event_from_state(interface)
+    cadet = get_cadet_from_id(object_store=interface.object_store, cadet_id=cadet_id)
 
     make_cadet_available_on_day(
-        event=event, cadet_id=cadet_id, day=day, interface=interface
+        object_store=interface.object_store,
+        event=event, cadet=cadet,
+        day=day
     )
-    interface._save_data_store_cache()  ## need to do here as don't do in main function
+    interface.flush_cache_to_store()

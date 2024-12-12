@@ -2,39 +2,36 @@ import os
 
 import pandas as pd
 
+from app.data_access.configuration.configuration import CADET_COMMITTEE_SHIRT_COLOUR
 from app.data_access.file_access import download_directory
 
 from app.objects.abstract_objects.abstract_form import File
 
-from app.OLD_backend.clothing import (
-    get_list_of_active_cadet_objects_with_clothing_at_event,
-)
+from app.backend.clothing.active_cadets_with_clothing import get_dict_of_active_cadets_with_clothing_at_event
 
 from app.frontend.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.composed.clothing_at_event import ListOfCadetsWithClothingAtEvent
-
 
 def export_committee_clothing(interface: abstractInterface) -> File:
     event = get_event_from_state(interface)
-    list_of_cadets_with_clothing = (
-        get_list_of_active_cadet_objects_with_clothing_at_event(
-            interface=interface, event=event, only_committee=True
+    dict_of_cadets_with_clothing = (
+        get_dict_of_active_cadets_with_clothing_at_event(
+            object_store=interface.object_store, event=event, only_committee=True
         )
     )
     new_list = []
 
-    for cadet_with_clothing in list_of_cadets_with_clothing:
+    for cadet, clothing in dict_of_cadets_with_clothing.items():
         new_list.append(
             {
-                "Name": cadet_with_clothing.cadet.name,
-                "Shirt Colour": "Navy Blue",
-                "Stitching Colour": cadet_with_clothing.colour,
-                "Shirt size": cadet_with_clothing.size,
-                "Left sleeve": "%s Team" % cadet_with_clothing.colour.title(),
+                "Name": cadet.name,
+                "Shirt Colour": CADET_COMMITTEE_SHIRT_COLOUR,
+                "Stitching Colour": clothing.colour,
+                "Shirt size": clothing.size,
+                "Left sleeve": "%s Team" % clothing.colour.title(),
                 "Right sleeve": "Cadet Committee",
-                "Back": cadet_with_clothing.cadet.first_name,
+                "Back": cadet.first_name,
             }
         )
     new_list.append(
@@ -58,21 +55,17 @@ def export_committee_clothing(interface: abstractInterface) -> File:
 
 def export_all_clothing(interface: abstractInterface) -> File:
     event = get_event_from_state(interface)
-    list_of_cadets_with_clothing = (
-        get_list_of_active_cadet_objects_with_clothing_at_event(
-            interface=interface, event=event, only_committee=False
+    dict_of_cadets_with_clothing = (
+        get_dict_of_active_cadets_with_clothing_at_event(
+            object_store=interface.object_store, event=event, only_committee=False
         )
     )
-    new_list = []
-    for colour in list_of_cadets_with_clothing.get_colour_options():
-        list_this_colour = list_of_cadets_with_clothing.filter_for_colour(colour)
-        list_this_colour = list_this_colour.sort_by_firstname()
-        new_list += list_this_colour
 
-    list_of_cadets_with_clothing = ListOfCadetsWithClothingAtEvent(new_list)
-
+    sorted_dict_of_cadets_with_clothing = dict_of_cadets_with_clothing.sort_by_colour_and_firstname()
+    sorted_list_of_cadets_with_clothing = sorted_dict_of_cadets_with_clothing.as_list()
     filename = temp_file_name()
-    df = list_of_cadets_with_clothing.as_df_of_str()
+
+    df = sorted_list_of_cadets_with_clothing.as_df_of_str()
     df.to_excel(filename, index=False)
 
     return File(filename)
@@ -80,36 +73,31 @@ def export_all_clothing(interface: abstractInterface) -> File:
 
 def export_clothing_colours(interface: abstractInterface) -> File:
     event = get_event_from_state(interface)
-    list_of_cadets_with_clothing = (
-        get_list_of_active_cadet_objects_with_clothing_at_event(
-            interface=interface, event=event, only_committee=False
+    dict_of_cadets_with_clothing = (
+        get_dict_of_active_cadets_with_clothing_at_event(
+            object_store=interface.object_store, event=event, only_committee=False
         )
     )
-    list_of_cadets_with_clothing_committee = (
-        get_list_of_active_cadet_objects_with_clothing_at_event(
-            interface=interface, event=event, only_committee=True
+    dict_of_cadets_with_clothing_committee = (
+        get_dict_of_active_cadets_with_clothing_at_event(
+            object_store=interface.object_store, event=event, only_committee=True
         )
     )
     colour_dict = {}
-    for colour in list_of_cadets_with_clothing.get_colour_options():
-        list_this_colour = list_of_cadets_with_clothing.filter_for_colour(colour)
-        list_this_colour_committee = (
-            list_of_cadets_with_clothing_committee.filter_for_colour(colour)
+    for colour in dict_of_cadets_with_clothing.get_colour_options():
+        dict_this_colour = dict_of_cadets_with_clothing.filter_for_colour(colour)
+        dict_this_colour_committee = (
+            dict_of_cadets_with_clothing_committee.filter_for_colour(colour)
         )
 
-        list_this_colour_committee = list_this_colour_committee.sort_by_dob_asc()
+        dict_this_colour_committee = dict_this_colour_committee.sort_by_dob_asc()
 
-        list_this_colour = list_this_colour.remove_if_in_list_of_cadet_ids(
-            list_this_colour_committee.list_of_cadet_ids()
+        dict_this_colour_without_committee = dict_this_colour.remove_if_in_list_of_cadets(
+            dict_this_colour_committee.list_of_cadets
         )
-        list_this_colour = list_this_colour.sort_by_firstname()
+        dict_this_colour_without_committee = dict_this_colour_without_committee.sort_by_firstname()
 
-        list_of_cadets_with_clothing_this_colour = (
-            list_this_colour_committee + list_this_colour
-        )
-        list_of_names = [
-            object.cadet.name for object in list_of_cadets_with_clothing_this_colour
-        ]
+        list_of_names = dict_this_colour_committee.list_of_cadets.list_of_names() + dict_this_colour_without_committee.list_of_cadets.list_of_names()
 
         colour_dict[colour] = pd.Series(list_of_names)
 

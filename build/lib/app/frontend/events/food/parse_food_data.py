@@ -5,11 +5,8 @@ from app.objects.events import Event
 
 from app.OLD_backend.cadets import get_cadet_from_id
 
-from app.OLD_backend.food import (
-    update_cadet_food_data,
-    update_volunteer_food_data,
-    download_food_data_and_return_filename,
-)
+from app.backend.food.download_food_data import download_food_data_and_return_filename
+from app.backend.food.modify_food_data import update_cadet_food_data, update_volunteer_food_data
 from app.objects.food import (
     CadetWithFoodRequirementsAtEvent,
     FoodRequirements,

@@ -35,15 +35,13 @@ from app.frontend.events.group_allocation.store_state import (
     get_day_from_state_or_none,
 )
 
-from app.OLD_backend.group_allocations.boat_allocation import (
-    summarise_club_boat_allocations_for_event,
-    summarise_class_attendance_for_event,
-)
+from app.backend.boat_classes.summary import summarise_class_attendance_for_event
+from app.backend.club_boats.summary import summarise_club_boat_allocations_for_event
 from app.OLD_backend.group_allocations.group_allocations_data import (
     get_allocation_data,
     AllocationData,
 )
-from app.OLD_backend.group_allocations.sorting import sorted_active_cadets
+from app.backend.groups.sorting import sorted_active_cadets
 from app.backend.events.summarys import summarise_allocations_for_event
 
 from app.frontend.shared.events_state import get_event_from_state

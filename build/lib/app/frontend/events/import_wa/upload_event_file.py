@@ -14,8 +14,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
 )
 from app.objects.abstract_objects.abstract_interface import (
-    abstractInterface,
-    form_with_message_and_finished_button,
+    abstractInterface, form_with_message_and_finished_button,
 )
 from app.objects.abstract_objects.abstract_buttons import back_menu_button
 from app.frontend.form_handler import (

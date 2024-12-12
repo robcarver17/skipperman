@@ -1,23 +1,9 @@
-from app.OLD_backend.food import summarise_food_data_by_day
-
-from app.frontend.events.food.automatically_get_food_data import (
-    get_and_save_food_for_cadets_from_registration_data,
-    get_and_save_food_for_volunteers_from_registration_data,
-)
-
+from app.backend.food.summarise_food import summarise_food_data_by_day
 from app.frontend.events.food.parse_food_data import (
     save_food_data_in_form,
     download_food_data,
 )
-from app.frontend.events.food.render_food import (
-    get_button_bar_for_food_required,
-    get_table_of_cadets_with_food,
-    get_table_of_volunteers_with_food,
-    get_other_food_table,
-    GET_FOOD_FOR_CADETS,
-    GET_FOOD_FOR_VOLUNTEERS,
-    DOWNLOAD_FOOD,
-)
+from app.frontend.events.food.render_food import *
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.events.patrol_boats.parse_patrol_boat_table import *
@@ -28,8 +14,8 @@ from app.objects.abstract_objects.abstract_form import (
     File,
 )
 from app.objects.abstract_objects.abstract_buttons import (
-    CANCEL_BUTTON_LABEL,
-    SAVE_BUTTON_LABEL,
+    cancel_menu_button,
+    save_menu_button
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import (
@@ -42,27 +28,18 @@ from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_text import Heading
 
 
-### OPTION TO EDIT CADET FOOD REQUIRED
-### OPTION TO EDIT VOLUNTEER FOOD REQUIRED
-### OPTION TO APPLY # OF DAYS SERVICE TO VOLUNTEERS
-###
-### REPORT: FOOD BY DAY, FILTERED FOR ACTUALLY THERE
-
-## Questions: how do we combine with wristbands and gala dinners (seperate event - manual)
-
 
 def display_form_view_for_food_requirements(interface: abstractInterface) -> Form:
     event = get_event_from_state(interface)
     title = Heading("Food requirements for event %s" % str(event), centred=True, size=4)
 
-    button_bar = get_button_bar_for_food_required(event)
+    button_bar = get_button_bar_for_food_required()
 
-    summary_by_day = summarise_food_data_by_day(interface=interface, event=event)
+    summary_by_day = summarise_food_data_by_day(object_store=interface.object_store, event=event)
     summaries = DetailListOfLines(ListOfLines([summary_by_day]), name="Summary")
 
-    cadet_food_table = get_table_of_cadets_with_food(interface)
-    volunteer_food_table = get_table_of_volunteers_with_food(interface)
-    other_food_table = get_other_food_table(interface)
+    cadet_food_table = DetailListOfLines(ListOfLines([get_table_of_cadets_with_food(interface)]), name = "Cadet food requirements")
+    volunteer_food_table = DetailListOfLines(ListOfLines([get_table_of_volunteers_with_food(interface)]), name = "Volunteer food requirements")
 
     return Form(
         ListOfLines(
@@ -72,14 +49,10 @@ def display_form_view_for_food_requirements(interface: abstractInterface) -> For
                 _______________,
                 summaries,
                 _______________,
-                "Cadets:",
                 cadet_food_table,
                 _______________,
-                "Volunteers:",
                 volunteer_food_table,
                 _______________,
-                "Other:",
-                other_food_table,
             ]
         )
     )
@@ -90,25 +63,18 @@ def post_form_view_for_food_requirements(
 ) -> Union[Form, NewForm, File]:
     last_button_pressed = interface.last_button_pressed()
 
-    if last_button_pressed == CANCEL_BUTTON_LABEL:
+    if cancel_menu_button.pressed(last_button_pressed):
         return previous_form(interface)
 
-    ### save
-    save_food_data_in_form(interface)
+    elif save_menu_button.pressed():
+        save_food_data_in_form(interface)
+        interface.flush_cache_to_store()
 
-    if last_button_pressed == SAVE_BUTTON_LABEL:
-        pass
-    elif last_button_pressed == DOWNLOAD_FOOD:
+    elif download_food_button.pressed(last_button_pressed):
         return download_food_data(interface)
-    elif last_button_pressed == GET_FOOD_FOR_CADETS:
-        get_and_save_food_for_cadets_from_registration_data(interface)
-    elif last_button_pressed == GET_FOOD_FOR_VOLUNTEERS:
-        get_and_save_food_for_volunteers_from_registration_data(interface)
 
     else:
         return button_error_and_back_to_initial_state_form(interface)
-
-    interface.flush_cache_to_store()
 
     return display_form_view_for_food_requirements(interface)
 

@@ -76,6 +76,11 @@ class ListOfRolesWithSkillIds(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return RolesWithSkillIds
 
+    def sort_to_match_other_role_list_order(self, other_list: 'ListOfRolesWithSkillIds'):
+        return ListOfRolesWithSkillIds([
+            role for role in other_list if role in self
+        ])
+
     def replace_at_index(self, index: int, new_role_with_skill_ids: RolesWithSkillIds):
         existing_role_as_skill_id = self[index]
         new_role_with_skill_ids.id = existing_role_as_skill_id.id

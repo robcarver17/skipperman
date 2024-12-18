@@ -46,7 +46,7 @@ def process_wa_staged_file_already_uploaded(interface: abstractInterface) -> New
     filename = get_staged_file_raw_event_filename(event)
     print("Working on %s " % filename)
 
-    process_uploaded_wa_event_file(filename=filename, event=event, interface=interface)
+    process_uploaded_wa_event_file(filename=filename, event=event, object_store=interface.object_store)
     interface.flush_cache_to_store()
 
     print("Deleting staging file no longer needed")

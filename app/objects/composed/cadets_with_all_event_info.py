@@ -1,7 +1,11 @@
 from dataclasses import dataclass
 from typing import Dict, List
 
+from app.objects.boat_classes import BoatClass
+from app.objects.club_dinghies import ClubDinghy
 from app.objects.day_selectors import DaySelector, Day
+from app.objects.exceptions import MissingData
+from app.objects.groups import Group
 
 from app.objects.registration_status import RegistrationStatus
 
@@ -47,7 +51,7 @@ class AllEventInfoForCadet:
         return self.registration_data.status.is_active
 
 
-class DictOfAllEventInfoForCadet(Dict[Cadet, AllEventInfoForCadet]):
+class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
     def __init__(
         self,
         raw_dict: Dict[Cadet, AllEventInfoForCadet],
@@ -75,6 +79,25 @@ class DictOfAllEventInfoForCadet(Dict[Cadet, AllEventInfoForCadet]):
         self._dict_of_cadets_with_clothing_at_event = dict_of_cadets_with_clothing_at_event
         self._dict_of_cadets_with_food_required_at_event = dict_of_cadets_with_food_required_at_event
 
+    def get_most_common_partner_across_days(self, cadet: Cadet) -> Cadet:
+        event_data_for_cadet = self.event_data_for_cadet(cadet)
+
+        return event_data_for_cadet.days_and_boat_class.most_common_partner()
+
+    def get_most_common_boat_class_name_across_days(self, cadet: Cadet) -> BoatClass:
+        event_data_for_cadet = self.event_data_for_cadet(cadet)
+
+        return event_data_for_cadet.days_and_boat_class.most_common_boat_class()
+
+    def get_most_common_club_boat_name_across_days(self, cadet: Cadet)-> ClubDinghy:
+        event_data_for_cadet = self.event_data_for_cadet(cadet)
+
+        return event_data_for_cadet.days_and_club_dinghies.most_common()
+
+    def get_most_common_group_name_across_days(self, cadet: Cadet) -> Group:
+        event_data_for_cadet = self.event_data_for_cadet(cadet)
+        return event_data_for_cadet.days_and_groups.most_common()
+
     def update_availability_of_existing_cadet_at_event_and_return_messages(
             self, cadet: Cadet,
             new_availabilty: DaySelector,
@@ -98,7 +121,7 @@ class DictOfAllEventInfoForCadet(Dict[Cadet, AllEventInfoForCadet]):
     ) -> List[str]:
         pass
 
-        self.dict_of_cadets_and_club_dinghies_at_event.remove_cadet_from_event_on_day(
+        self.dict_of_cadets_and_club_dinghies_at_event.remove_cadet_club_boat_allocation_on_day(
             cadet=cadet, day=day
         )
 
@@ -140,6 +163,12 @@ class DictOfAllEventInfoForCadet(Dict[Cadet, AllEventInfoForCadet]):
 
 
         return messages
+
+    def event_data_for_cadet(self, cadet: Cadet):
+        try:
+            return self.get(cadet)
+        except:
+            raise MissingData
 
     @property
     def dict_of_cadets_and_boat_class_and_partners(self):
@@ -184,7 +213,7 @@ def compose_dict_of_all_event_info_for_cadet(
         dict_of_cadets_with_clothing_at_event: DictOfCadetsWithClothingAtEvent,
         dict_of_cadets_with_food_required_at_event: DictOfCadetsWithFoodRequirementsAtEvent,
         active_only: bool,
-) -> DictOfAllEventInfoForCadet:
+) -> DictOfAllEventInfoForCadets:
     event = list_of_events.object_with_id(event_id)
     raw_dict = compose_raw_dict_of_all_event_info_for_cadet(
         dict_of_cadets_with_registration_data=dict_of_cadets_with_registration_data,
@@ -195,7 +224,7 @@ def compose_dict_of_all_event_info_for_cadet(
         dict_of_cadets_with_clothing_at_event=dict_of_cadets_with_clothing_at_event,
         active_only=active_only,
     )
-    return DictOfAllEventInfoForCadet(
+    return DictOfAllEventInfoForCadets(
         raw_dict=raw_dict,
         dict_of_cadets_with_registration_data=dict_of_cadets_with_registration_data,
         dict_of_cadets_and_club_dinghies_at_event=dict_of_cadets_and_club_dinghies_at_event,

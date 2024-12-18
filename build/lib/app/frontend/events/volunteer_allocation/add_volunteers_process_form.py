@@ -1,6 +1,11 @@
 from typing import List
 
-from app.OLD_backend.cadets import get_cadet_from_id
+from app.backend.cadets.list_of_cadets import get_cadet_from_id
+
+from app.objects.volunteers import Volunteer
+
+from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
+
 
 from app.objects.cadets import ListOfCadets
 
@@ -12,11 +17,7 @@ from app.backend.volunteers.volunteers_at_event import add_volunteer_at_event
 from app.backend.registration_data.identified_volunteers_at_event import \
     get_list_of_relevant_information_for_volunteer_in_registration_data
 from app.backend.registration_data.cadet_and_volunteer_connections_at_event import \
-    get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer
-from app.OLD_backend.volunteers.volunteers import (
-    add_list_of_cadet_connections_to_volunteer,
-    DEPRECATE_get_volunteer_from_id,
-)
+    update_cadet_connections_for_volunteer_already_at_event_given_list_of_cadets
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.volunteer_allocation.add_volunteer_to_event_form_contents import (
     AVAILABILITY,
@@ -37,69 +38,52 @@ from app.objects.relevant_information_for_volunteers import (
 
 
 def add_volunteer_at_event_with_form_contents(interface: abstractInterface):
+    volunteer = get_volunteer_from_state(interface)
     try:
-        volunteer_at_event = get_volunteer_at_event_from_form_contents(interface)
-        volunteer = DEPRECATE_get_volunteer_from_id(
-            interface=interface, volunteer_id=volunteer_at_event.volunteer_id
-        )  ## FIXME IDEALLY HAVE CLASS THAT ALREADY CONTAINS VOLUNTEER
+        volunteer_at_event = get_volunteer_at_event_from_form_contents(interface=interface, volunteer=volunteer)
     except NoDaysSelected as e:
         interface.log_error(str(e))
         return
 
     add_volunteer_at_event(
-        interface=interface,
+        object_store=interface.object_store,
         event=get_event_from_state(interface),
         volunteer_at_event=volunteer_at_event,
     )
 
-    list_of_cadet_ids_to_permanently_connect = (
-        get_list_of_cadet_ids_to_permanently_connect_from_form(interface=interface)
-    )
-    list_of_cadets_to_connect = ListOfCadets(
-        [
-            get_cadet_from_id(data_layer=interface.data, cadet_id=id)
-            for id in list_of_cadet_ids_to_permanently_connect
-        ]
-    )  ## collapse into previous function
-    add_list_of_cadet_connections_to_volunteer(
-        data_layer=interface.data,
-        volunteer=volunteer,
-        list_of_cadets_to_connect=list_of_cadets_to_connect,
-    )
+    add_permanent_cadet_connections_from_form(interface=interface, volunteer = volunteer)
 
-    interface.flush_cache_to_store()
-
-
-def get_volunteer_at_event_from_form_contents(interface: abstractInterface):
+def get_volunteer_from_state(interface: abstractInterface) -> Volunteer:
     volunteer_id = get_current_volunteer_id_at_event(interface)
+    volunteer = get_volunteer_from_id(
+        object_store=interface.object_store, volunteer_id=volunteer_id
+    )
+    return volunteer
+
+
+def get_volunteer_at_event_from_form_contents(interface: abstractInterface, volunteer: Volunteer) -> VolunteerAtEventWithId:
     event = get_event_from_state(interface)
     availability_in_form = get_availablity_from_form(
         interface=interface, event=event, input_name=AVAILABILITY
     )
 
     if no_days_selected(availability_in_form, possible_days=event.weekdays_in_event()):
-        volunteer = DEPRECATE_get_volunteer_from_id(
-            interface=interface, volunteer_id=volunteer_id
-        )
         raise NoDaysSelected(
             "No days selected for volunteer %s at event - not adding this volunteer - you might want to add manually later"
             % volunteer.name
         )
 
-    list_of_associated_cadet_id = get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer(
-        interface=interface, event=event, volunteer_id=volunteer_id
-    )
     any_other_information = get_any_other_information(
-        interface=interface, volunteer_id=volunteer_id, event=event
+        interface=interface, volunteer=volunteer, event=event
     )
     preferred_duties_in_form = get_preferred_duties_from_form(interface)
     same_or_different_in_form = get_same_or_different_from_form(interface)
     notes_in_form = interface.value_from_form(NOTES)
 
     volunteer_at_event = VolunteerAtEventWithId(
-        volunteer_id=volunteer_id,
+        volunteer_id=volunteer.id,
         availablity=availability_in_form,
-        list_of_associated_cadet_id=list_of_associated_cadet_id,
+        list_of_associated_cadet_id=[], ## no longer used
         preferred_duties=preferred_duties_in_form,
         same_or_different=same_or_different_in_form,
         any_other_information=any_other_information,
@@ -107,6 +91,32 @@ def get_volunteer_at_event_from_form_contents(interface: abstractInterface):
     )
 
     return volunteer_at_event
+
+
+def add_permanent_cadet_connections_from_form(interface: abstractInterface, volunteer: Volunteer):
+
+    list_of_cadets_to_connect = get_list_of_cadets_from_form_to_connect_to_volunteer(interface=interface)
+
+    update_cadet_connections_for_volunteer_already_at_event_given_list_of_cadets(
+        list_of_cadets_to_connect=list_of_cadets_to_connect,
+        object_store=interface.object_store,
+        volunteer=volunteer
+    )
+
+
+
+def get_list_of_cadets_from_form_to_connect_to_volunteer(interface: abstractInterface) -> ListOfCadets:
+    list_of_cadet_ids_to_permanently_connect = (
+        get_list_of_cadet_ids_to_permanently_connect_from_form(interface=interface)
+    )
+    list_of_cadets_to_connect = ListOfCadets(
+        [
+            get_cadet_from_id(object_store=interface.object_store, cadet_id=id)
+            for id in list_of_cadet_ids_to_permanently_connect
+        ]
+    )  ## collapse into previous function
+
+    return list_of_cadets_to_connect
 
 
 def get_list_of_cadet_ids_to_permanently_connect_from_form(
@@ -121,10 +131,9 @@ def get_list_of_cadet_ids_to_permanently_connect_from_form(
 
 
 def get_any_other_information(
-    interface: abstractInterface, event: Event, volunteer_id: str
-) -> str:
+    interface: abstractInterface, event: Event, volunteer: Volunteer) -> str:
     list_of_relevant_information = get_list_of_relevant_information_for_volunteer_in_registration_data(
-        interface=interface, volunteer_id=volunteer_id, event=event
+        object_store=interface.object_store, event=event, volunteer=volunteer
     )
 
     return first_valid_other_information(list_of_relevant_information)

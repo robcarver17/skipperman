@@ -20,6 +20,7 @@ class BoatClass(GenericSkipperManObjectWithIds):
     def __eq__(self, other):
         return self.name == other.name and self.hidden == other.hidden
 
+no_boat_class= BoatClass('', True)
 
 class ListOfBoatClasses(GenericListOfObjectsWithIds):
     @property

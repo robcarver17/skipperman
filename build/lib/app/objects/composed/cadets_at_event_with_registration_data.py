@@ -1,7 +1,10 @@
 from dataclasses import dataclass
 from typing import List, Dict
 
-from app.objects.exceptions import MissingData
+from app.objects.utils import flatten
+
+from app.backend.cadets.list_of_cadets import sort_a_list_of_cadets
+from app.objects.exceptions import MissingData, arg_not_passed
 
 from app.objects.cadet_with_id_at_event import (
     CadetWithIdAtEvent,
@@ -22,6 +25,10 @@ class CadetRegistrationData:
     data_in_row: RowInRegistrationData
     notes: str = ""
     health: str = ""
+
+    @property
+    def data_fields(self) -> List[str]:
+        return list(self.data_in_row.keys())
 
     @classmethod
     def from_cadet_with_id_at_event(
@@ -61,7 +68,6 @@ class DEPRECATE_CadetWithEventData:
             ),
         )
 
-
 class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
     def __init__(
         self,
@@ -70,6 +76,30 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
     ):
         super().__init__(raw_list)
         self._list_of_cadets_with_id_at_event = list_of_cadets_with_id_at_event
+
+    def update_availability_of_existing_cadet_at_event(
+            self, cadet: Cadet,
+            new_availabilty: DaySelector,
+    ):
+
+        registration_data = self.registration_data_for_cadet(cadet)
+        registration_data.availability = new_availabilty
+        cadet_at_event_data = self.list_of_cadets_with_id_at_event.cadet_at_event(cadet)
+        cadet_at_event_data.availability = new_availabilty
+
+    def update_status_of_existing_cadet_in_event_info_to_cancelled_or_deleted(self,
+            cadet: Cadet, new_status: RegistrationStatus):
+
+        self[cadet].status = new_status
+        cadet_at_event_with_id = self.list_of_cadets_with_id_at_event.cadet_at_event(cadet)
+        cadet_at_event_with_id.status = new_status
+
+    def list_of_registration_fields(self):
+        all_fields = [
+            reg_data.data_fields for reg_data in list(self.values())
+        ]
+        all_fields = flatten(all_fields)
+        return list(set(all_fields))
 
     def registration_data_for_cadet(self, cadet: Cadet) -> CadetRegistrationData:
         reg_data = self.get(cadet, None)
@@ -89,6 +119,16 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
 
     def list_of_cadets(self):
         return ListOfCadets(list(self.keys()))
+
+    def sort_by(self, sort_by: str = arg_not_passed) -> 'DictOfCadetsWithRegistrationData':
+        list_of_cadets = self.list_of_cadets()
+        sorted_list_of_cadets= sort_a_list_of_cadets(list_of_cadets, sort_by=sort_by)
+
+        return DictOfCadetsWithRegistrationData(dict([
+            (cadet, self[cadet])
+            for cadet in sorted_list_of_cadets
+        ]),
+        list_of_cadets_with_id_at_event=self.list_of_cadets_with_id_at_event)
 
     @property
     def list_of_cadets_with_id_at_event(self) -> ListOfCadetsWithIDAtEvent:

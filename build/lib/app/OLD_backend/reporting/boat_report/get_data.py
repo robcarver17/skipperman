@@ -229,7 +229,7 @@ def get_group(
     data_required: RequiredDataForReport,
     day: Day,
 ) -> Group:
-    group = data_required.list_of_cadet_ids_with_groups.group_for_cadet_id_on_day(
+    group = data_required.list_of_cadet_ids_with_groups.DO_NOT_USE_group_for_cadet_id_on_day(
         cadet_id=cadet_id, day=day
     )
 

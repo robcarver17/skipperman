@@ -1,8 +1,7 @@
 from typing import Dict
 
-from app.backend.groups.cadets_with_groups_at_event import (
-    most_common_allocation_for_cadet_in_previous_events as most_popular_allocation_for_cadet_in_previous_events,
-)
+from app.backend.groups.previous_groups import \
+    most_common_allocation_for_cadet_in_previous_events as most_popular_allocation_for_cadet_in_previous_events
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.objects.cadets import Cadet

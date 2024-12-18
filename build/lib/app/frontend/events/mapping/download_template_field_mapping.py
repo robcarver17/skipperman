@@ -1,8 +1,5 @@
 from typing import Union
-from app.backend.mapping.map_wa_fields import (
-    DEPRECATE_get_list_of_template_names,
-    get_template,
-)
+from app.backend.mapping.list_of_field_mappings import get_field_mapping_template, get_list_of_field_mapping_template_names, save_field_mapping_template
 from app.backend.mapping.list_of_field_mappings import write_mapping_to_temp_csv_file_and_return_filename
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import (
@@ -46,7 +43,7 @@ def post_form_for_download_template_field_mapping(
         return previous_form(interface)
 
     try:
-        mapping = get_template(interface=interface, template_name=template_name)
+        mapping = get_field_mapping_template(object_store=interface.object_store, template_name=template_name)
     except Exception as e:
         interface.log_error(
             "Template %s does not exist anymore? error code %s"
@@ -66,5 +63,5 @@ def previous_form(interface: abstractInterface):
 
 ## repeats but avoids circular
 def display_list_of_templates_with_buttons(interface: abstractInterface) -> ListOfLines:
-    list_of_templates = DEPRECATE_get_list_of_template_names(interface)
+    list_of_templates = get_list_of_field_mapping_template_names(object_store=interface.object_store)
     return ListOfLines([Button(template_name) for template_name in list_of_templates])

@@ -1,7 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Dict
-
-from app.backend.events.summarys import summarise_generic_counts_for_event_over_days
+from typing import List
 
 from app.data_access.store.data_access import DataLayer
 
@@ -9,19 +7,15 @@ from app.data_access.store.data_access import DataLayer
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.OLD_backend.data.dinghies import DinghiesData
-from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
 from app.objects.cadet_at_event_with_dinghy_with_ids import (
-    no_partnership,
+    no_partnership_given_partner_id_or_str,
     CadetAtEventWithBoatClassAndPartnerWithIds,
     ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
-    compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values,
 )
-from app.objects.cadet_at_event_with_club_boat_with_ids import (
-    ListOfCadetAtEventWithIdAndClubDinghies,
-)
+from app.backend.boat_classes.update_boat_information import \
+    compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values
 
 
 def update_club_boat_allocation_for_cadet_at_event_on_day_if_cadet_available(
@@ -117,7 +111,7 @@ def convert_single_input_to_cadet_at_event(
 def get_two_handed_partner_id_from_str(
     data_layer: DataLayer, two_handed_partner_cadet_as_str: str
 ):
-    if no_partnership(two_handed_partner_cadet_as_str):
+    if no_partnership_given_partner_id_or_str(two_handed_partner_cadet_as_str):
         return two_handed_partner_cadet_as_str
 
     two_handed_partner = get_cadet_given_cadet_as_str(
@@ -136,111 +130,6 @@ def get_boat_class_id_from_name(interface: abstractInterface, boat_class_name: s
     boat_class_id = list_of_boats.id_given_name(boat_class_name)
 
     return boat_class_id
-
-
-def summarise_club_boat_allocations_for_event(
-    interface: abstractInterface, event: Event
-) -> PandasDFTable:
-    dinghies_data = DinghiesData(interface.data)
-    cadets_at_event_data = CadetsAtEventIdLevelData(interface.data)
-
-    cadets_with_club_dinghies_at_event = (
-        dinghies_data.get_list_of_cadets_at_event_with_club_dinghies(event)
-    )
-    list_of_dinghy_ids = dinghies_data.unique_sorted_list_of_allocated_club_dinghy_ids_allocated_at_event(
-        event
-    )
-    row_names = dinghies_data.sorted_list_of_names_of_allocated_club_dinghies(event)
-    availability_dict = (
-        cadets_at_event_data.get_availability_dict_for_active_cadet_ids_at_event(event)
-    )
-
-    table = summarise_generic_counts_for_event_over_days(
-        get_id_function=get_relevant_cadet_ids_for_club_dinghy_id,
-        event=event,
-        groups=list_of_dinghy_ids,
-        group_labels=row_names,
-        availability_dict=availability_dict,
-        list_of_ids_with_groups=cadets_with_club_dinghies_at_event,
-    )
-
-    return table
-
-
-def get_relevant_cadet_ids_for_club_dinghy_id(
-    group: str,
-    event: Event,
-    list_of_ids_with_groups: ListOfCadetAtEventWithIdAndClubDinghies,
-) -> Dict[Day, List[str]]:
-    ## map from generic to specific var names. Event is not used
-    dinghy_id = group
-    cadets_with_club_dinghies_at_event = list_of_ids_with_groups
-
-    result_dict = {}
-    for day in event.weekdays_in_event():
-        result_dict[day] = [
-            cadet_id
-            for cadet_id in cadets_with_club_dinghies_at_event.list_of_unique_cadet_ids()
-            if cadets_with_club_dinghies_at_event.dinghy_for_cadet_id_on_day(
-                cadet_id=cadet_id, day=day
-            )
-            == dinghy_id
-        ]
-
-    return result_dict
-
-
-def summarise_class_attendance_for_event(
-    interface: abstractInterface, event: Event
-) -> PandasDFTable:
-    dinghies_data = DinghiesData(interface.data)
-    cadets_at_event_data = CadetsAtEventIdLevelData(interface.data)
-
-    cadets_with_dinghies_at_event = (
-        dinghies_data.get_list_of_cadets_at_event_with_dinghies(event)
-    )
-
-    list_of_boat_class_ids = (
-        dinghies_data.unique_sorted_list_of_boat_class_ids_at_event(event)
-    )
-    row_names = dinghies_data.sorted_list_of_names_of_dinghies_at_event(event)
-    availability_dict = (
-        cadets_at_event_data.get_availability_dict_for_active_cadet_ids_at_event(event)
-    )
-
-    table = summarise_generic_counts_for_event_over_days(
-        get_id_function=get_relevant_cadet_ids_for_boat_class_id,
-        event=event,
-        groups=list_of_boat_class_ids,
-        group_labels=row_names,
-        availability_dict=availability_dict,
-        list_of_ids_with_groups=cadets_with_dinghies_at_event,
-    )
-
-    return table
-
-
-def get_relevant_cadet_ids_for_boat_class_id(
-    group: str,
-    event: Event,
-    list_of_ids_with_groups: ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
-) -> Dict[Day, List[str]]:
-    ## map from generic to specific var names. Event is not used
-    boat_class_id = group
-    cadets_with_dinghies_at_event = list_of_ids_with_groups
-
-    result_dict = {}
-    for day in event.weekdays_in_event():
-        result_dict[day] = [
-            cadet_id
-            for cadet_id in cadets_with_dinghies_at_event.unique_list_of_cadet_ids()
-            if cadets_with_dinghies_at_event.dinghy_id_for_cadet_id_on_day(
-                cadet_id=cadet_id, day=day
-            )
-            == boat_class_id
-        ]
-
-    return result_dict
 
 
 def load_list_of_cadets_at_event_with_dinghies(

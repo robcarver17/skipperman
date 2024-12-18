@@ -1,18 +1,16 @@
 from typing import Union
 
-from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
 from app.frontend.events.volunteer_rota.parse_volunteer_table import (
-    save_all_information_and_filter_state_in_rota_page,
     save_volunteer_matrix_and_return_filename,
     action_if_volunteer_button_pressed,
     action_if_location_button_pressed,
     action_if_volunteer_skills_button_pressed,
     update_if_make_available_button_pressed,
     update_if_make_unavailable_button_pressed,
-    update_if_remove_role_button_pressed,
+    update_if_remove_role_button_pressed, update_filters, save_all_information_in_rota_page,
 )
 from app.frontend.events.volunteer_rota.copying import update_if_copy_button_pressed
-from app.frontend.events.volunteer_rota.volunteer_targets import save_targets_button
+from app.frontend.events.volunteer_rota.volunteer_targets import save_targets_button, save_volunteer_targets
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -107,8 +105,6 @@ def post_form_view_for_volunteer_rota(
     if cancel_menu_button.pressed(last_button_pressed):
         return previous_form(interface)
 
-    ## Always do this unless we pressed back
-    save_all_information_and_filter_state_in_rota_page(interface)
 
     ### BUTTONS: HAS TO BE ONE BIG IF
     ## This may reverse what we did before with filter updates, that's fine
@@ -177,16 +173,13 @@ def post_form_view_for_volunteer_rota(
             interface=interface, swap_button=last_button_pressed
         )
     elif save_menu_button.pressed(last_button_pressed):
-        ## already saved
-        pass
+        save_all_information_in_rota_page(interface)
 
     elif save_targets_button.pressed(last_button_pressed):
-        ## already saved
-        pass
+        save_volunteer_targets(interface)
 
     elif apply_filter_button.pressed(last_button_pressed):
-        ## already saved
-        pass
+        update_filters(interface)
 
     else:
         return button_error_and_back_to_initial_state_form(interface)

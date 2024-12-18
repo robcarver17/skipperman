@@ -1,18 +1,60 @@
 import datetime
 from copy import copy
+from typing import List
+
+from app.backend.volunteers.add_edit_volunteer import list_of_similar_volunteers
+from app.objects.exceptions import missing_data
 
 from app.objects.membership_status import current_member
 
 from app.objects.cadets import ListOfCadets, Cadet
-from app.objects.volunteers import Volunteer
+from app.objects.utils import union_of_x_and_y
+from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.composed.cadet_volunteer_associations import (
-    ListOfCadetVolunteerAssociations,
+    ListOfCadetVolunteerAssociations, DictOfCadetsAssociatedWithVolunteer, DictOfVolunteersAssociatedWithCadet,
 )
 
 from app.data_access.store.object_store import ObjectStore
 from app.data_access.store.object_definitions import (
     object_definition_for_volunteer_and_cadet_associations,
+    object_definition_for_dict_of_volunteers_associated_with_cadets,
+    object_definition_for_dict_of_cadets_associated_with_volunteers,
 )
+
+def get_dict_of_cadets_associated_with_volunteers(object_store: ObjectStore) ->DictOfCadetsAssociatedWithVolunteer:
+    return object_store.get(object_definition_for_dict_of_cadets_associated_with_volunteers)
+
+
+def get_dict_of_volunteers_associated_with_cadets(object_store: ObjectStore) -> DictOfVolunteersAssociatedWithCadet:
+    return object_store.get(object_definition_for_dict_of_volunteers_associated_with_cadets)
+
+
+def get_list_of_relevant_volunteers(
+    object_store: ObjectStore,
+    volunteer: Volunteer,
+    cadet: Cadet,  ## could be missing data
+) -> ListOfVolunteers:
+    list_of_volunteers_with_similar_name = list_of_similar_volunteers(
+        object_store=object_store, volunteer=volunteer
+    )
+    if cadet is missing_data:
+        list_of_volunteers_associated_with_cadet = []
+    else:
+        list_of_volunteers_associated_with_cadet = (
+            get_list_of_volunteers_associated_with_cadet(
+                object_store=object_store,
+                cadet=cadet
+            )
+        )
+
+    list_of_volunteers = union_of_x_and_y(
+        list_of_volunteers_associated_with_cadet, list_of_volunteers_with_similar_name
+    )
+
+    return ListOfVolunteers(list_of_volunteers)
+
+
+
 
 
 def get_list_of_cadets_with_those_with_name_similar_to_volunteer_with_listed_first(
@@ -49,6 +91,14 @@ def get_list_of_cadets_with_names_similar_to_volunteer(
 
     return similar_cadets
 
+def is_cadet_already_associated_with_volunteer(
+        object_store: ObjectStore, volunteer: Volunteer, cadet: Cadet
+
+)-> bool:
+    list_of_cadet_volunteer_associations = get_list_of_cadet_volunteer_association(
+        object_store
+    )
+    return volunteer in list_of_cadet_volunteer_associations.list_of_volunteers_associated_with_cadet(cadet)
 
 def get_list_of_cadets_associated_with_volunteer(
     object_store: ObjectStore, volunteer: Volunteer
@@ -61,6 +111,15 @@ def get_list_of_cadets_associated_with_volunteer(
             volunteer
         )
     )
+
+def get_list_of_volunteers_associated_with_cadet(
+        object_store: ObjectStore, cadet: Cadet
+) -> ListOfVolunteers:
+
+    list_of_cadet_volunteer_associations = get_list_of_cadet_volunteer_association(
+        object_store
+    )
+    return list_of_cadet_volunteer_associations.list_of_volunteers_associated_with_cadet(cadet)
 
 
 ## UPDATES
@@ -77,6 +136,16 @@ def delete_cadet_connection(
         list_of_cadet_volunteer_associations=list_of_cadet_volunteer_associations,
         object_store=object_store,
     )
+
+def add_list_of_cadets_to_volunteer_connection(
+    object_store: ObjectStore, volunteer: Volunteer, list_of_cadets: List[Cadet]
+):
+    for cadet in list_of_cadets:
+        add_volunteer_connection_to_cadet_in_master_list_of_volunteers(
+            object_store=object_store,
+            volunteer=volunteer,
+            cadet=cadet
+        )
 
 
 def add_volunteer_connection_to_cadet_in_master_list_of_volunteers(
@@ -109,3 +178,4 @@ def update_list_of_cadet_volunteer_association(
         new_object=list_of_cadet_volunteer_associations,
         object_definition=object_definition_for_volunteer_and_cadet_associations,
     )
+

@@ -47,3 +47,4 @@ allowed_upload_file_types: ".csv, .xls"
 #
 weblink_for_qualifications: "https://docs.google.com/spreadsheets/d/1a0ov-KN8zzG2mdFQCfLK-I6AD1tLihU-z_3tPF2vlV4/edit?usp=sharing"
 min_colour_groups_to_distribute: 6
+cadet_committee_shirt_colour: "Navy Blue"

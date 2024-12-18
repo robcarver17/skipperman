@@ -33,6 +33,7 @@ from app.objects.exceptions import (
 )
 from app.objects.utils import union_of_x_and_y
 
+DEFAULT_DATE_OF_BIRTH = datetime.date(1970, 1, 1)
 
 @dataclass
 class Cadet(GenericSkipperManObjectWithIds):
@@ -82,6 +83,15 @@ class Cadet(GenericSkipperManObjectWithIds):
             + "_"
             + self._date_of_birth_as_str
             + self.membership_status.name
+        )
+
+    @classmethod
+    def from_name_only(cls, first_name: str, surname: str) -> 'Cadet':
+        return cls(
+            first_name=first_name,
+            surname=surname,
+            date_of_birth=DEFAULT_DATE_OF_BIRTH,
+            membership_status=none_member
         )
 
     def replace_all_attributes_except_id_with_those_from_new_cadet(
@@ -330,7 +340,6 @@ def is_cadet_age_surprising(cadet: Cadet):
     return age < MIN_CADET_AGE or age > MAX_CADET_AGE
 
 
-DEFAULT_DATE_OF_BIRTH = datetime.date(1970, 1, 1)
 default_cadet = Cadet(
     first_name=" ",
     surname=" ",

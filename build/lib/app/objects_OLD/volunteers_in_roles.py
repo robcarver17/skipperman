@@ -31,20 +31,6 @@ class VolunteerInRoleAtEventWithTeamName(GenericSkipperManObject):
 ## Not saved, used purely for sorting purposes
 
 
-FILTER_ALL = "All"
-FILTER_AVAILABLE = "Available"
-FILTER_UNALLOC_AVAILABLE = "Unallocated+Available"
-FILTER_ALLOC_AVAILABLE = "Allocated+Available"
-FILTER_UNAVAILABLE = "Unavailable"
-FILTER_OPTIONS = [
-    FILTER_ALL,
-    FILTER_AVAILABLE,
-    FILTER_UNALLOC_AVAILABLE,
-    FILTER_ALLOC_AVAILABLE,
-    FILTER_UNAVAILABLE,
-]
-
-
 @dataclass
 class DEPRECATE_VolunteerWithRoleAtEvent(GenericSkipperManObject):
     volunteer: Volunteer

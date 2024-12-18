@@ -10,9 +10,7 @@ from app.objects.composed.cadets_at_event_with_groups import (
 from app.data_access.store.object_store import ObjectStore
 
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
-from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadet
-from app.objects.day_selectors import DictOfDaySelectors
-from app.backend.events.cadets_at_event import (
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     get_dict_of_all_event_info_for_cadets,
     get_attendance_matrix_for_list_of_cadets_at_event,
 )

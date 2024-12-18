@@ -1,4 +1,7 @@
+from enum import Enum
 from typing import List
+
+from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
 
 CANCELLED = "Cancelled"
 ACTIVE_PAID = "Paid"
@@ -94,3 +97,36 @@ def get_states_allowed_give_current_status(
 all_possible_status = [
     RegistrationStatus(state_name) for state_name in POSSIBLE_STATUS_NAMES
 ]
+RegStatusChange = Enum("RegStatusChange", ["new_registration_replacing_deleted_or_cancelled",
+                             "existing_registration_now_deleted_or_cancelled",
+                             "status_unchanged",
+                             "status_still_active_but_has_changed",
+                               "error"])
+new_registration_replacing_deleted_or_cancelled= RegStatusChange["new_registration_replacing_deleted_or_cancelled"]
+existing_registration_now_deleted_or_cancelled = RegStatusChange["existing_registration_now_deleted_or_cancelled"]
+status_unchanged = RegStatusChange["status_unchanged"]
+status_still_active_but_has_changed = RegStatusChange["status_still_active_but_has_changed"]
+error = RegStatusChange["error"]
+
+
+def interpret_status_change(existing_cadet_at_event: CadetWithIdAtEvent,
+                                                     new_cadet_at_event: CadetWithIdAtEvent) -> RegStatusChange:
+    original_status = existing_cadet_at_event.status
+    new_status = new_cadet_at_event.status
+
+    if new_status == original_status:
+        return status_unchanged
+
+    if original_status.is_cancelled_or_deleted and new_status.is_active:
+        return new_registration_replacing_deleted_or_cancelled
+
+    if new_status.is_cancelled_or_deleted:
+        return existing_registration_now_deleted_or_cancelled
+
+    status_changed = not status_unchanged
+    status_active_and_was_active = new_status.is_active and original_status.is_active
+
+    if status_active_and_was_active and status_changed:
+        return status_still_active_but_has_changed
+
+    return error

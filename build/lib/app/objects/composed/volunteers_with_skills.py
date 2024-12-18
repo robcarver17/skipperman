@@ -180,11 +180,11 @@ class DictOfVolunteersWithSkills(Dict[Volunteer, SkillsDict]):
     def list_of_volunteers_with_skills_and_ids(self):
         return self._list_of_volunteers_with_skills_and_ids
 
-    def add_volunteer_driving_qualification(self, volunteer_id: str):
-        self.add_skill_for_id(PB2_skill, volunteer_id=volunteer_id)
+    def add_volunteer_driving_qualification(self, volunteer: Volunteer):
+        self.add_skill_for_volunteer(volunteer=volunteer, skill=PB2_skill)
 
-    def remove_volunteer_driving_qualification(self, volunteer_id: str):
-        self.delete_skill_for_id(volunteer_id=volunteer_id, skill=PB2_skill)
+    def remove_volunteer_driving_qualification(self, volunteer: Volunteer):
+        self.delete_skill_for_volunteer(volunteer=volunteer, skill=PB2_skill)
 
     def volunteer_id_can_drive_safety_boat(self, volunteer_id: str) -> bool:
         return volunteer_id in self.list_of_volunteer_ids_who_can_drive_safety_boat()

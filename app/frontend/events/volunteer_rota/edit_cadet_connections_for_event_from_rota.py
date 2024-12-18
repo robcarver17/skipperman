@@ -5,7 +5,7 @@ from app.backend.volunteers.connected_cadets import get_list_of_cadets_associate
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.objects.events import Event
 
-from app.backend.events.cadets_at_event import get_list_of_active_cadets_at_event
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_list_of_active_cadets_at_event
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 

@@ -4,13 +4,11 @@ from dataclasses import dataclass
 from app.OLD_backend.data.qualification import QualificationData
 
 from app.OLD_backend.cadets import load_list_of_all_cadets
+from app.backend.groups.data_for_group_display import NOT_AVAILABLE, remove_na_from_dict
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.OLD_backend.group_allocations.group_allocation_info import (
-    get_group_allocation_info,
-    GroupAllocationInfo,
-)
+from app.backend.groups.group_allocation_info import get_group_allocation_info, GroupAllocationInfo
 from app.OLD_backend.events import DEPRECATE_get_sorted_list_of_events
 from app.OLD_backend.group_allocations.cadet_event_allocations import (
     DEPRECATE_load_list_of_cadets_ids_with_group_allocations_active_cadets_only,
@@ -19,10 +17,8 @@ from app.OLD_backend.group_allocations.cadet_event_allocations import (
 from app.OLD_backend.group_allocations.previous_allocations import (
     DEPRECATE_get_dict_of_allocations_for_events_and_list_of_cadets,
 )
-from app.backend.groups.cadets_with_groups_at_event import (
-    most_common_allocation_for_cadet_in_previous_events as most_popular_allocation_for_cadet_in_previous_events,
-    allocation_for_cadet_in_previous_events_as_dictCONSIDER_REFACTOR,
-)
+from app.backend.groups.previous_groups import allocation_for_cadet_in_previous_events_as_dictCONSIDER_REFACTOR, \
+    most_common_allocation_for_cadet_in_previous_events as most_popular_allocation_for_cadet_in_previous_events
 from app.objects.groups import GROUP_UNALLOCATED_TEXT_DONTUSE as unallocated_group_name
 from app.OLD_backend.data.cadets_at_event_id_level import load_cadets_at_event
 from app.data_access.configuration.field_list import (
@@ -39,9 +35,7 @@ from app.OLD_backend.configuration import (
     load_list_of_boat_classes,
     load_list_of_club_dinghies,
 )
-from app.OLD_backend.group_allocations.boat_allocation import (
-    load_list_of_cadets_at_event_with_dinghies,
-)
+from app.backend.boat_classes.update_boat_information import DEPRECATE_load_list_of_cadets_at_event_with_dinghies
 from app.OLD_backend.ticks_and_qualifications.qualifications import (
     load_list_of_cadets_with_qualifications,
 )
@@ -64,14 +58,14 @@ from app.objects.club_dinghies import (
 )
 from app.objects.cadet_at_event_with_club_boat_with_ids import (
     ListOfCadetAtEventWithIdAndClubDinghies,
-    NO_BOAT,
+    NO_CLUB_BOAT,
 )
 from app.objects.boat_classes import (
     ListOfBoatClasses,
 )
 from app.objects.cadet_at_event_with_dinghy_with_ids import (
     NO_PARTNER_REQUIRED,
-    no_partnership,
+    no_partnership_given_partner_id_or_str,
     ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
 )
 from app.objects.utils import similar, all_equal, most_common
@@ -332,7 +326,7 @@ class AllocationData:
             cadet=cadet, day=day
         )
 
-        if no_partnership(partner_id):
+        if no_partnership_given_partner_id_or_str(partner_id):
             return partner_id
         try:
             cadet = self.list_of_cadets_in_event_active_only.object_with_id(partner_id)
@@ -445,7 +439,7 @@ class AllocationData:
         if "club boat" in boat_status.lower():
             return self.guess_current_club_boat_name_on_day(cadet=cadet, day=day)
         else:
-            return NO_BOAT
+            return NO_CLUB_BOAT
 
     def guess_current_club_boat_name_on_day(self, cadet: Cadet, day: Day) -> str:
         ## Guess
@@ -540,7 +534,7 @@ class AllocationData:
     def get_current_group_name_for_day(self, cadet: Cadet, day: Day) -> str:
         if not self.cadet_availability_at_event(cadet).available_on_day(day):
             return NOT_AVAILABLE
-        group = self.current_allocation_for_event.group_for_cadet_id_on_day(
+        group = self.current_allocation_for_event.DO_NOT_USE_group_for_cadet_id_on_day(
             cadet_id=cadet.id, day=day
         )
 
@@ -551,15 +545,6 @@ class AllocationData:
             cadet_id=cadet.id
         )
         return cadet_at_event.availability
-
-
-NOT_AVAILABLE = "Not available"
-
-
-def remove_na_from_dict(some_dict: dict) -> dict:
-    return dict(
-        [(key, value) for key, value in some_dict.items() if not value == NOT_AVAILABLE]
-    )
 
 
 def guess_best_club_boat_name_given_list_of_possibly_matching_fields(
@@ -646,7 +631,7 @@ def get_allocation_data(interface: abstractInterface, event: Event) -> Allocatio
     list_of_club_boats_allocated = load_list_of_cadets_at_event_with_club_dinghies(
         interface=interface, event=event
     )
-    list_of_cadets_at_event_with_dinghies = load_list_of_cadets_at_event_with_dinghies(
+    list_of_cadets_at_event_with_dinghies = DEPRECATE_load_list_of_cadets_at_event_with_dinghies(
         event=event, interface=interface
     )
     list_of_cadets_with_qualifications = load_list_of_cadets_with_qualifications(

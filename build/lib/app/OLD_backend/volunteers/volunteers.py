@@ -1,5 +1,3 @@
-from typing import List
-
 from app.data_access.store.data_access import DataLayer
 
 from app.objects.cadets import ListOfCadets
@@ -51,45 +49,10 @@ def get_volunteer_from_id(data_layer: DataLayer, volunteer_id: str) -> Volunteer
 #### CONNECTIONS
 
 
-def are_all_cadet_ids_in_list_already_connection_to_volunteer(
-    data_layer: DataLayer, volunteer: Volunteer, list_of_cadet_ids: List[str]
-) -> bool:
-    list_of_already_connected = [
-        is_cadet_already_connected_to_volunteer_in_volunteer_list(
-            data_layer=data_layer, volunteer=volunteer, cadet_id=cadet_id
-        )
-        for cadet_id in list_of_cadet_ids
-    ]
-
-    return all(list_of_already_connected)
-
-
-def is_cadet_already_connected_to_volunteer_in_volunteer_list(
-    data_layer: DataLayer, cadet_id: str, volunteer: Volunteer
-) -> bool:
-    volunteer_data = VolunteerData(data_layer)
-    return volunteer_data.is_cadet_already_connected_to_volunteer_in_volunteer_list(
-        cadet_id=cadet_id, volunteer=volunteer
-    )
-
-
 def get_connected_cadets(data_layer: DataLayer, volunteer: Volunteer) -> ListOfCadets:
     volunteer_data = VolunteerData(data_layer)
 
     return volunteer_data.get_connected_cadets(volunteer)
-
-
-def add_list_of_cadet_connections_to_volunteer(
-    data_layer: DataLayer,
-    volunteer: Volunteer,
-    list_of_cadets_to_connect: ListOfCadets,
-):
-    volunteer_data = VolunteerData(data_layer)
-
-    for cadet in list_of_cadets_to_connect:
-        volunteer_data.add_volunteer_connection_to_cadet_in_master_list_of_volunteers(
-            cadet=cadet, volunteer=volunteer
-        )
 
 
 ### skills
@@ -102,32 +65,11 @@ def get_dict_of_existing_skills(
     return volunteer_data.get_dict_of_existing_skills_for_volunteer(volunteer)
 
 
-def string_if_volunteer_can_drive_else_empty(
-    data_layer: DataLayer, volunteer: Volunteer
-) -> str:
-    if can_volunteer_drive_safety_boat(data_layer=data_layer, volunteer=volunteer):
-        return "PB2"  ## can be anything
-    else:
-        return ""
-
-
 def can_volunteer_drive_safety_boat(
     data_layer: DataLayer, volunteer: Volunteer
 ) -> bool:
     volunteer_data = VolunteerData(data_layer)
     return volunteer_data.can_volunteer_drive_safety_boat(volunteer)
-
-
-def add_boat_related_skill_for_volunteer(data_layer: DataLayer, volunteer: Volunteer):
-    volunteer_data = VolunteerData(data_layer)
-    volunteer_data.add_volunteer_driving_qualification(volunteer)
-
-
-def remove_boat_related_skill_for_volunteer(
-    data_layer: DataLayer, volunteer: Volunteer
-):
-    volunteer_data = VolunteerData(data_layer)
-    volunteer_data.remove_driving_qualification_for_volunteer(volunteer)
 
 
 def load_list_of_volunteer_skills(data_layer: DataLayer) -> DictOfVolunteersWithSkills:

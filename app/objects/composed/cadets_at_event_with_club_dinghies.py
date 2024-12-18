@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 from typing import List, Dict
 
-from app.objects.utils import flatten
+from app.objects.utils import flatten, most_common
 
 from app.objects.events import ListOfEvents, Event
 
 from app.objects.cadets import Cadet, ListOfCadets
-from app.objects.club_dinghies import ClubDinghy, ListOfClubDinghies
+from app.objects.club_dinghies import ClubDinghy, ListOfClubDinghies, no_club_dinghy
 from app.objects.day_selectors import Day
 from app.objects.cadet_at_event_with_club_boat_with_ids import (
     ListOfCadetAtEventWithIdAndClubDinghies,
@@ -39,15 +39,28 @@ class ClubDinghyAtEventOnDayForCadet:
 
 
 class DictOfDaysAndClubDinghiesAtEventForCadet(Dict[Day, ClubDinghy]):
+    def allocate_club_boat_on_day(self, cadet: Cadet, day: Day, club_boat: ClubDinghy):
+        self[day] = club_boat
+
+    def most_common(self) -> ClubDinghy:
+        return most_common(self.list_of_dinghies, default = ClubDinghy.create_empty())
+
+
     def has_dinghy_on_day(self, day: Day, dinghy: ClubDinghy):
-        dinghy_on_day = self.get(day,None)
-        if dinghy_on_day is None:
+        dinghy_on_day = self.dinghy_on_day(day)
+        if dinghy_on_day == no_club_dinghy:
             return False
 
         return dinghy_on_day == dinghy
 
+    def dinghy_on_day(self, day)-> ClubDinghy:
+        return self.get(day, ClubDinghy.create_empty())
+
     def unique_list_of_dinghies(self) -> ListOfClubDinghies:
         return ListOfClubDinghies(list(set(self.values())))
+
+    def list_of_dinghies(self) -> ListOfClubDinghies:
+        return ListOfClubDinghies(list(self.values()))
 
     def remove_cadet_from_event_on_day(self, day):
         try:
@@ -116,6 +129,15 @@ class DictOfCadetsAndClubDinghiesAtEvent(
         self._list_of_club_dinghies = list_of_club_dinghies
         self._event = event
 
+    def allocate_club_boat_on_day(self, cadet: Cadet, day: Day, club_boat: ClubDinghy):
+        boats_for_cadet = self.club_dinghys_for_cadet(cadet)
+        boats_for_cadet.allocate_club_boat_on_day(day=day, club_boat=club_boat)
+        self.list_of_cadets_at_event_with_id_and_club_dinghy.update_allocation_for_cadet_on_day(
+            cadet_id=cadet.id,
+            day=day,
+            club_dinghy_id=club_boat.id
+        )
+
 
     def unique_sorted_list_of_allocated_club_dinghys_allocated_at_event(self) -> ListOfClubDinghies:
         dinghies_for_cadet = [dict_of_dinghies.unique_list_of_dinghies() for dict_of_dinghies in self.values()]
@@ -126,14 +148,14 @@ class DictOfCadetsAndClubDinghiesAtEvent(
 
     def remove_cadet_from_event(self, cadet: Cadet):
         for day in self.event.weekdays_in_event():
-            self.remove_cadet_from_event_on_day(cadet=cadet, day=day)
+            self.remove_cadet_club_boat_allocation_on_day(cadet=cadet, day=day)
 
         try:
             self.pop(cadet)
         except:
             pass
 
-    def remove_cadet_from_event_on_day(self, cadet: Cadet, day: Day):
+    def remove_cadet_club_boat_allocation_on_day(self, cadet: Cadet, day: Day):
         current_allocation = self.get_club_boat_allocation_for_cadet(cadet)
         current_allocation.remove_cadet_from_event_on_day(day)
         self.list_of_cadets_at_event_with_id_and_club_dinghy.delete_allocation_for_cadet_on_day(cadet_id=cadet.id, day=day)

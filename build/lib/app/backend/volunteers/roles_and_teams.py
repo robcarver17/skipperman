@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 from app.objects.composed.roles_and_teams import DictOfTeamsWithRoles
 
@@ -10,9 +10,24 @@ from app.data_access.store.object_definitions import (
 )
 from app.data_access.store.object_store import ObjectStore
 from app.objects.composed.volunteer_roles import ListOfRolesWithSkills, RoleWithSkills
+from app.objects.composed.volunteer_with_group_and_role_at_event import RoleAndGroup, ListOfRolesAndGroupsAndTeams, \
+    ListOfRolesAndGroups
 
 from app.objects.roles_and_teams import ListOfTeams, ListOfRolesWithSkillIds, Team
+from app.backend.groups.list_of_groups import order_list_of_groups, get_list_of_groups
 
+def reorder_tuple_of_item_and_role_and_group(object_store: ObjectStore,
+                                             list_of_tuples: List[Tuple[object, RoleAndGroup]]) -> List[Tuple[object, RoleAndGroup]]:
+
+    list_of_roles = get_list_of_roles(object_store)
+    list_of_groups = get_list_of_groups(object_store)
+
+    list_of_roles_and_groups = ListOfRolesAndGroups([tuple[1] for tuple in list_of_tuples])
+    sorted_list_of_roles_and_groups = list_of_roles_and_groups.sorted(list_of_groups=list_of_groups, list_of_roles=list_of_roles)
+    list_of_indices = [list_of_roles_and_groups.index(role_and_group) for role_and_group in sorted_list_of_roles_and_groups]
+    sorted_list_of_tuples = [list_of_tuples[idx] for idx in list_of_indices]
+
+    return sorted_list_of_tuples
 
 def reorder_roles_for_team_given_list_of_names(
     object_store: ObjectStore, new_order_of_role_names: List[str], team: Team
@@ -117,9 +132,16 @@ def update_list_of_teams(object_store: ObjectStore, list_of_teams: ListOfTeams):
         new_object=list_of_teams, object_definition=object_definition_for_list_of_teams
     )
 
+def get_role_from_name(object_store: ObjectStore, role_name: str) -> RoleWithSkills:
+    list_of_roles = get_list_of_roles_with_skills(object_store)
+    return list_of_roles.role_with_name(role_name)
 
 def get_list_of_roles(object_store: ObjectStore) -> ListOfRolesWithSkillIds:
     return object_store.get(object_definition_for_list_of_roles_with_skill_ids)
+
+def order_list_of_roles(object_store: ObjectStore, list_of_roles: ListOfRolesWithSkillIds):
+    all_roles = get_list_of_roles(object_store)
+    return ListOfRolesWithSkillIds.subset_from_list_of_ids(full_list=all_roles, list_of_ids=list_of_roles.list_of_ids)
 
 
 def update_list_of_roles(

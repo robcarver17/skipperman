@@ -13,12 +13,12 @@ NOT_ALLOCATED = "Unallocated"
 NO_PARTNERSHIP_LIST = [NOT_ALLOCATED, NO_PARTNER_REQUIRED]
 
 
-def no_partnership(partnership_str: str):
+def no_partnership_given_partner_id_or_str(partnership_str: str):
     return partnership_str in NO_PARTNERSHIP_LIST
 
 
-def valid_partnership(partnership_str: str):
-    return not no_partnership(partnership_str)
+def valid_partnership_given_partner_id_or_str(partnership_str: str):
+    return not no_partnership_given_partner_id_or_str(partnership_str)
 
 
 @dataclass
@@ -30,7 +30,7 @@ class CadetAtEventWithBoatClassAndPartnerWithIds(GenericSkipperManObject):
     partner_cadet_id: str = NO_PARTNER_REQUIRED
 
     def has_partner(self):
-        return valid_partnership(self.partner_cadet_id)
+        return valid_partnership_given_partner_id_or_str(self.partner_cadet_id)
 
     def __eq__(self, other):
         sail_number = make_id_as_int_str(self.sail_number)
@@ -166,8 +166,8 @@ class ListOfCadetAtEventWithBoatClassAndPartnerWithIds(GenericListOfObjectsWithI
         if original_partner_id == new_two_handed_partner_id:
             return UNCHANGED
 
-        was_valid = valid_partnership(original_partner_id)
-        now_valid = valid_partnership(new_two_handed_partner_id)
+        was_valid = valid_partnership_given_partner_id_or_str(original_partner_id)
+        now_valid = valid_partnership_given_partner_id_or_str(new_two_handed_partner_id)
 
         if was_valid and now_valid:
             return WAS_VALID_NOW_VALID_CHANGED
@@ -266,7 +266,7 @@ class ListOfCadetAtEventWithBoatClassAndPartnerWithIds(GenericListOfObjectsWithI
         return [
             object.partner_cadet_id
             for object in self
-            if valid_partnership(object.partner_cadet_id)
+            if valid_partnership_given_partner_id_or_str(object.partner_cadet_id)
         ]
 
     def unique_sorted_list_of_boat_class_ids(
@@ -279,53 +279,3 @@ class ListOfCadetAtEventWithBoatClassAndPartnerWithIds(GenericListOfObjectsWithI
         ]
 
 
-def compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values(
-    new_list: ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
-    existing_list: ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
-):
-    updated_list = ListOfCadetAtEventWithBoatClassAndPartnerWithIds([])
-    for potentially_updated_cadet_at_event in new_list:
-        cadet_in_existing_list = existing_list.object_with_cadet_id_on_day(
-            cadet_id=potentially_updated_cadet_at_event.cadet_id,
-            day=potentially_updated_cadet_at_event.day,
-        )
-        print(
-            "Has %s changed? It was %s"
-            % (str(potentially_updated_cadet_at_event), str(cadet_in_existing_list))
-        )
-
-        already_in_a_changed_partnership = is_cadet_already_in_changed_partnership(
-            updated_list=updated_list,
-            potentially_updated_cadet_at_event=potentially_updated_cadet_at_event,
-        )
-        if already_in_a_changed_partnership:
-            continue
-
-        if cadet_in_existing_list is missing_data:
-            print("new cadet %s" % str(potentially_updated_cadet_at_event))
-            updated_list.append(potentially_updated_cadet_at_event)
-            continue
-
-        elif cadet_in_existing_list == potentially_updated_cadet_at_event:
-            print("no change to %s" % str(potentially_updated_cadet_at_event))
-            ## no change
-            continue
-        else:
-            print(
-                "Change from %s to %s"
-                % (str(cadet_in_existing_list), str(potentially_updated_cadet_at_event))
-            )
-            updated_list.append(potentially_updated_cadet_at_event)
-
-    return updated_list
-
-
-def is_cadet_already_in_changed_partnership(
-    updated_list: ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
-    potentially_updated_cadet_at_event: CadetAtEventWithBoatClassAndPartnerWithIds,
-) -> bool:
-    list_of_changed_partner_id = updated_list.list_of_partner_ids_excluding_not_valid()
-    cadet_id = potentially_updated_cadet_at_event.cadet_id
-    changed = cadet_id in list_of_changed_partner_id
-
-    return changed

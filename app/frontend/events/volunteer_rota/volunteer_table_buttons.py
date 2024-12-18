@@ -4,7 +4,7 @@ from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
     get_last_role_or_none_for_volunteer_at_previous_events
 from app.data_access.store.object_store import ObjectStore
 
-from app.backend.events.cadets_at_event import get_dict_of_all_event_info_for_cadets
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets
 
 from app.data_access.configuration.fixed import (
     COPY_OVERWRITE_SYMBOL,

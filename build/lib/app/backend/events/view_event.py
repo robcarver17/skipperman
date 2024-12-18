@@ -13,7 +13,7 @@ from app.backend.groups.cadets_with_groups_at_event import (
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.objects.events import Event
 from app.data_access.store.object_store import ObjectStore
-from app.backend.events.cadets_at_event import get_dict_of_all_event_info_for_cadets
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets
 from app.objects.registration_data import summarise_status
 from app.objects.utils import print_dict_nicely
 

@@ -1,6 +1,6 @@
 from typing import Dict
 
-from app.objects.day_selectors import DaySelector
+from app.objects.day_selectors import DaySelector, Day
 
 from app.objects.cadets import Cadet, ListOfCadets
 
@@ -19,6 +19,27 @@ from app.objects.composed.cadets_at_event_with_registration_data import (
     DictOfCadetsWithRegistrationData,
 )
 from app.objects.registration_data import RowInRegistrationData
+
+
+def is_cadet_unavailable_on_day(    object_store: ObjectStore, event: Event,cadet: Cadet, day: Day
+) ->bool:
+    return not is_cadet_available_on_day(object_store=object_store,
+                                         event=event,
+                                         cadet=cadet,
+                                         day=day)
+
+def is_cadet_available_on_day(    object_store: ObjectStore, event: Event,cadet: Cadet, day: Day
+) ->bool:
+    availability_dict=get_availability_dict_for_cadets_at_event(object_store=object_store, event=event)
+    cadet_availability = availability_dict.get(cadet, DaySelector())
+    active = is_cadet_active_at_event(object_store=object_store, event=event, cadet=cadet)
+
+    return cadet_availability.available_on_day(day) and active
+
+def is_cadet_active_at_event(    object_store: ObjectStore, event: Event, cadet: Cadet):
+    registration_data = get_dict_of_cadets_with_registration_data(object_store=object_store, event=event)
+
+    return registration_data.registration_data_for_cadet(cadet).active
 
 def get_availability_dict_for_cadets_at_event(    object_store: ObjectStore, event: Event
 ) -> Dict[Cadet, DaySelector]:

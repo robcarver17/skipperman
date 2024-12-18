@@ -105,6 +105,12 @@ class DaysAndGroups(Dict[Day, Group]):
     def group_on_day(self, day: Day, default=Group.create_unallocated()) -> Group:
         return self.get(day, default)
 
+    def remove_cadet_from_event_on_day(self, day):
+        try:
+            self.pop(day)
+        except:
+            pass
+
     @classmethod
     def from_list_of_cadets_with_group_by_day_for_specific_cadet(
         cls, cadet: Cadet, list_of_cadets_with_group_by_day: ListOfCadetsWithGroupOnDay
@@ -159,6 +165,20 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
         super().__init__(raw_dict)
         self._list_of_cadet_ids_with_groups = list_of_cadet_ids_with_groups
         self._event = event
+
+    def remove_cadet_from_event(self, cadet: Cadet):
+        for day in self.event.weekdays_in_event():
+            self.remove_cadet_from_event_on_day(cadet=cadet, day=day)
+
+        try:
+            self.pop(cadet)
+        except:
+            pass
+
+    def remove_cadet_from_event_on_day(self, cadet: Cadet, day: Day):
+        current_allocation = self.get_days_and_groups_for_cadet(cadet=cadet)
+        current_allocation.remove_cadet_from_event_on_day(day)
+        self.list_of_cadet_ids_with_groups.remove_group_allocation_for_cadet_on_day(cadet_id=cadet.id, day=day)
 
     def list_of_cadets_in_group_on_day(self, day: Day, group: Group):
         return ListOfCadets(

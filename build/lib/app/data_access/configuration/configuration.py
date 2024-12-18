@@ -66,3 +66,4 @@ UNABLE_TO_VOLUNTEER_KEYWORD = configuration["if_volunteer_unable_to_volunteer_co
 MIN_AGE_WHEN_CADET_CAN_BE_AT_EVENT_WITHOUT_PARENT = configuration[
     "minimum_age_when_cadet_can_be_at_event_without_parent"
 ]
+CADET_COMMITTEE_SHIRT_COLOUR = configuration["cadet_committee_shirt_colour"]

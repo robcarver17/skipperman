@@ -1,29 +1,19 @@
 from dataclasses import dataclass
 from typing import Callable
 
-from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
-
-from app.data_access.store.data_access import DataLayer
 from app.data_access.store.object_store import ObjectStore
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 
 from app.objects.exceptions import (
     missing_data,
     NoFileUploaded,
-    FileError,
-    arg_not_passed,
-)
+    arg_not_passed, FileError, )
 from app.objects.abstract_objects.abstract_form import (
-    Form,
     YES,
     NO,
-    NewForm,
+    NewForm, Form,
 )
 from app.objects.abstract_objects.abstract_buttons import FINISHED_BUTTON_LABEL, Button
-from app.objects.abstract_objects.abstract_lines import (
-    Line,
-    ListOfLines,
-    _______________,
-)
 from app.objects.abstract_objects.form_function_mapping import (
     DisplayAndPostFormFunctionMaps,
 )
@@ -39,41 +29,19 @@ def finished_button_with_custom_label(label: str):
 
 @dataclass
 class abstractInterface:
-    data: DataLayer
     object_store: ObjectStore
     display_and_post_form_function_maps: DisplayAndPostFormFunctionMaps = arg_not_passed
     action_name: str = ""
 
-    def make_backup_of_data(self):
-        self.data.ba
-
-    def delete_all_data(self, are_you_sure: bool = False):
-        self.data.delete_all_data(are_you_sure=are_you_sure)
 
     ## SHOULD BE DONE ON NEW PAGE DISPLAY?? AND A MESS!
     def flush_cache_to_store(self):
-        self.object_store.flush_store()
-        self._save_data_store_cache()  ## FIXME REMOVE EVENTUALLY
-        self._clear_data_store_cache()  ## FIXME REMOVE EVENTUALLY
-        self._clear_adhoc_cache()  ## ## FIXME REMOVE EVENTUALLY
-
-    def clear_cache(self):
-        self.object_store.clear_store()
-
-    def _clear_data_store_cache(self):
-        self.data.clear_stored_items()
-
-    def _save_data_store_cache(self):
+        read_only = self.read_only
         if self.read_only:
             self.log_error("Read only mode - not saving changes")
-            return
-        self.data.save_stored_items()
 
-    def _clear_adhoc_cache(self):
-        try:
-            del self._cache
-        except:
-            pass
+        self.object_store.flush_store(read_only)
+
 
     def log_error(self, error_message: str):
         raise NotImplemented
@@ -167,26 +135,6 @@ class abstractInterface:
     def read_only(self):
         raise NotImplemented
 
-    @property
-    def cache(self) -> AdHocCache:
-        cache = getattr(self, "_cache", None)
-        if cache is None:
-            cache = self._cache = AdHocCache(self.data)
-
-        return cache
-
-
-def get_file_from_interface(file_label: str, interface: abstractInterface):
-    try:
-        file = interface.uploaded_file(file_label)
-    except NoFileUploaded:
-        raise FileError("No file uploaded")
-
-    if file.filename == "":
-        raise FileError("No file name selected")
-
-    return file
-
 
 def form_with_message_and_finished_button(
     message: str,
@@ -231,3 +179,15 @@ def form_with_content_and_finished_button(
 class UrlsOfInterest:
     current_url_for_action: str = arg_not_passed
     image_directory: str = arg_not_passed
+
+
+def get_file_from_interface(file_label: str, interface: abstractInterface):
+    try:
+        file = interface.uploaded_file(file_label)
+    except NoFileUploaded:
+        raise FileError("No file uploaded")
+
+    if file.filename == "":
+        raise FileError("No file name selected")
+
+    return file

@@ -85,7 +85,7 @@ class GroupAllocationsData:
                 [
                     (
                         day,
-                        list_of_cadet_ids_with_groups.group_for_cadet_id_on_day(
+                        list_of_cadet_ids_with_groups.DO_NOT_USE_group_for_cadet_id_on_day(
                             day=day, cadet_id=cadet_id
                         )
                         == group,

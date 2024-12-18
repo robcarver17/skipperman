@@ -1,12 +1,16 @@
 from typing import List, Tuple, Callable
 
+from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
+
+from app.objects.volunteers import Volunteer
+
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import load_list_of_patrol_boats_at_event, \
+    get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.OLD_backend.data.dinghies import (
     DEPRECATE_load_list_of_patrol_boats_at_event_from_cache,
 )
-from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import \
-    get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day
 from app.data_access.configuration.fixed import REMOVE_SHORTHAND, ADD_KEYBOARD_SHORTCUT
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.day_selectors import Day
@@ -21,7 +25,7 @@ def get_list_of_generic_buttons_for_each_volunteer_day_combo(
     for day in event.weekdays_in_event():
         list_of_volunteer_ids = (
             get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(
-                interface=interface, event=event, day=day
+                object_store=interface.object_store, event=event, day=day
             )
         )
         for volunteer_id in list_of_volunteer_ids:
@@ -37,13 +41,15 @@ def generic_button_name_for_volunteer_in_boat_at_event_on_day(
     return "%s_%s_%s" % (button_type, day.name, volunteer_id)
 
 
-def get_button_type_day_volunteer_id_given_button_str(
-    copy_both_button: str,
-) -> Tuple[str, Day, str]:
-    splitter = copy_both_button.split("_")
+def get_button_type_day_volunteer_given_button_name(interface: abstractInterface,
+                                                    button_name: str) -> Tuple[str, Day, Volunteer]:
+    splitter = button_name.split("_")
     button_type, day_name, volunteer_id = splitter
 
-    return button_type, Day[day_name], volunteer_id
+    volunteer = get_volunteer_from_id(object_store=interface.object_store,
+                                      volunteer_id=volunteer_id)
+
+    return button_type, Day[day_name], volunteer
 
 
 def delete_button_for_boat_value(boat_at_event: PatrolBoat) -> str:
@@ -58,9 +64,9 @@ def from_delete_button_name_to_boat_name(button_name: str) -> str:
 def list_of_delete_buttons_in_patrol_boat_table(
     interface: abstractInterface, event: Event
 ) -> List[str]:
-    list_of_boats_at_event = DEPRECATE_load_list_of_patrol_boats_at_event_from_cache(
-        cache=interface.cache, event=event
-    )
+    list_of_boats_at_event = load_list_of_patrol_boats_at_event(object_store=interface.object_store,
+                                                                event=event)
+
     return [
         delete_button_for_boat_value(boat_at_event)
         for boat_at_event in list_of_boats_at_event
@@ -80,14 +86,13 @@ def get_remove_volunteer_button_name(day: Day, volunteer_id: str) -> str:
     )
 
 
-def from_volunter_remove_button_name_to_volunteer_id_and_day(
+def from_volunter_remove_button_name_to_volunteer_and_day(
+        interface: abstractInterface,
     button_name: str,
-) -> Tuple[str, Day]:
-    __, day, volunteer_id = get_button_type_day_volunteer_id_given_button_str(
-        button_name
-    )
+) -> Tuple[Volunteer, Day]:
+    __, day, volunteer = get_button_type_day_volunteer_given_button_name(interface=interface, button_name=button_name)
 
-    return volunteer_id, day
+    return volunteer, day
 
 
 def get_all_remove_volunteer_button_names(

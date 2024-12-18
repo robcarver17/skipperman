@@ -7,12 +7,8 @@ from app.frontend.forms.form_utils import (
 from app.OLD_backend.group_allocations.group_allocations_data import AllocationData
 from app.frontend.events.constants import (
     ATTENDANCE,
-    ALLOCATION,
-    CLUB_BOAT,
-    BOAT_CLASS,
-    SAIL_NUMBER,
-    PARTNER,
 )
+from app.frontend.events.group_allocation.input_fields import ALLOCATION, CLUB_BOAT, PARTNER, BOAT_CLASS, SAIL_NUMBER
 from app.frontend.events.group_allocation.store_state import (
     no_day_set_in_state,
     get_day_from_state_or_none,
@@ -26,7 +22,7 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.cadets import Cadet
-from app.objects.cadet_at_event_with_club_boat_with_ids import NO_BOAT
+from app.objects.cadet_at_event_with_club_boat_with_ids import NO_CLUB_BOAT
 from app.objects.exceptions import missing_data
 from app.objects.day_selectors import Day
 from app.objects.cadet_at_event_with_dinghy_with_ids import NO_PARTNERSHIP_LIST
@@ -262,7 +258,7 @@ def get_dropdown_input_for_club_boat_allocation(
 
 def get_list_of_club_dinghies_for_dropdown(allocation_data: AllocationData):
     club_dinghies = allocation_data.list_of_club_boats
-    dict_of_club_dinghies_for_dropdown_input = {NO_BOAT: NO_BOAT}
+    dict_of_club_dinghies_for_dropdown_input = {NO_CLUB_BOAT: NO_CLUB_BOAT}
     dict_of_all_possible_club_boats = dict(
         [(dinghy.name, dinghy.name) for dinghy in club_dinghies]
     )

@@ -2,7 +2,6 @@ from app.backend.events.list_of_events import (
     get_event_from_id,
     get_event_from_list_of_events_given_event_description,
 )
-from app.frontend.events.constants import EVENT
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event
 
@@ -24,3 +23,6 @@ def update_state_for_specific_event_given_event_description(
     )
     id = event.id
     interface.set_persistent_value(EVENT, id)
+
+
+EVENT = "event"

@@ -142,7 +142,7 @@ def group_string_for_cadet(interface: abstractInterface, event: Event, cadet_id:
                 group_data.CONSIDER_USING_ACTIVE_FILTER_get_list_of_cadet_ids_with_groups_at_event(
                     event
                 )
-                .group_for_cadet_id_on_day(day=day, cadet_id=cadet_id)
+                .DO_NOT_USE_group_for_cadet_id_on_day(day=day, cadet_id=cadet_id)
                 .name,
             )
             for day in event.weekdays_in_event()

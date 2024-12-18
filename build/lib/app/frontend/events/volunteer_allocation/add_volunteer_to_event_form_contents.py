@@ -1,17 +1,19 @@
 from typing import Union, List
 
+from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.OLD_backend.cadets import cadet_name_from_id
 from app.frontend.forms.form_utils import get_availability_checkbox
+from app.backend.registration_data.identified_volunteers_at_event import \
+    get_list_of_relevant_information_for_volunteer_in_registration_data
 from app.backend.registration_data.cadet_and_volunteer_connections_at_event import \
     are_all_cadets_in_list_already_connection_to_volunteer, \
     get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer
 from app.backend.registration_data.volunter_relevant_information import (
     suggested_volunteer_availability,
 )
-from app.objects.abstract_objects.abstract_form import checkboxInput, textInput
-from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
+from app.objects.abstract_objects.abstract_form import checkboxInput, textInput, Form
+from app.objects.abstract_objects.abstract_lines import ListOfLines, Line, _______________
 from app.objects.exceptions import missing_data
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
@@ -29,6 +31,81 @@ ANY_OTHER_INFORMATION = "any_other_information"
 PREFERRED_DUTIES = "preferred_duties"
 SAME_OR_DIFFERENT = "same_or_different"
 NOTES = "Notes"
+
+
+
+def display_form_to_confirm_volunteer_details(
+    interface: abstractInterface, volunteer: Volunteer, event: Event
+) -> Form:
+
+    list_of_relevant_information = get_list_of_relevant_information_for_volunteer_in_registration_data(
+        object_store=interface.object_store, volunteer=volunteer, event=event,
+    )
+
+    header_text = get_header_text(event=event, volunteer=volunteer, interface=interface)
+
+    connection_checkbox = get_connection_checkbox(
+        interface=interface, volunteer=volunteer, event=event
+    )
+
+    any_other_information_text = get_any_other_information_text(
+        list_of_relevant_information=list_of_relevant_information
+    )
+    status_text = get_any_self_declared_status_text(
+        list_of_relevant_information=list_of_relevant_information
+    )
+
+    preferred_duties_text = get_preferred_duties_text(
+        list_of_relevant_information=list_of_relevant_information
+    )
+    preferred_duties_input = get_preferred_duties_input(
+        list_of_relevant_information=list_of_relevant_information
+    )
+
+    same_or_different_text = get_same_or_different_text(
+        list_of_relevant_information=list_of_relevant_information
+    )
+    same_or_different_input = get_same_or_different_input(
+        list_of_relevant_information=list_of_relevant_information
+    )
+
+    available_text = get_availablity_text(
+        interface=interface, list_of_relevant_information=list_of_relevant_information
+    )
+    available_checkbox = (
+        get_availability_checkbox_for_volunteer_at_event_based_on_relevant_information(
+            list_of_relevant_information=list_of_relevant_information, event=event
+        )
+    )
+
+    notes_input = get_notes_input_for_volunteer_at_event(list_of_relevant_information)
+
+    return Form(
+        ListOfLines(
+            [
+                header_text,
+                _______________,
+                connection_checkbox,
+                _______________,
+                status_text,
+                _______________,
+                available_text.add_Lines(),
+                available_checkbox,
+                _______________,
+                any_other_information_text,
+                _______________,
+                preferred_duties_text.add_Lines(),
+                preferred_duties_input,
+                _______________,
+                same_or_different_text.add_Lines(),
+                same_or_different_input,
+                _______________,
+                notes_input,
+                _______________,
+                Line([Button(SAVE_CHANGES), Button(DO_NOT_ADD_VOLUNTEER_LABEL)]),
+            ]
+        )
+    )
 
 
 def get_header_text(
@@ -54,38 +131,34 @@ def get_cadet_names_text_given_identified_volunteer(
     )
 
     if len(cadet_names) == 0:
-        cadet_names_text = "(No active cadets - must all be cancelled)"
+        cadet_names_text = "(No active registered sailors - must all be cancelled)"
     else:
         cadet_names_text = ", ".join(cadet_names)
 
     return cadet_names_text
 
-
 def get_list_of_active_associated_cadet_names_in_mapped_event_data_given_identified_volunteer(
     interface: abstractInterface, event: Event, volunteer: Volunteer
 ) -> List[str]:
-    list_of_cadet_ids = get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer(
-        volunteer_id=volunteer.id, event=event, interface=interface
+    list_of_cadets = get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer(
+        object_store=interface.object_store, event=event, volunteer=volunteer
     )
-    cadet_names = [
-        cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id)
-        for cadet_id in list_of_cadet_ids
-    ]
-
-    return cadet_names
+    return list_of_cadets.list_of_names()
 
 
 def get_connection_checkbox(
     interface: abstractInterface, event: Event, volunteer: Volunteer
 ) -> Union[checkboxInput, str]:
-    list_of_cadet_ids = get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer(
-        interface=interface, volunteer_id=volunteer.id, event=event
+    list_of_cadets = get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer(
+        object_store=interface.object_store, event=event, volunteer=volunteer
     )
+    if len(list_of_cadets)==0:
+        return ""
 
     already_all_connected = are_all_cadets_in_list_already_connection_to_volunteer(
-        data_layer=interface.data,
+        object_store = interface.object_store,
         volunteer=volunteer,
-        list_of_cadet_ids=list_of_cadet_ids,
+        list_of_cadets=list_of_cadets,
     )
 
     if already_all_connected:
@@ -93,22 +166,24 @@ def get_connection_checkbox(
 
     dict_of_labels = dict(
         [
-            (cadet_id, cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id))
-            for cadet_id in list_of_cadet_ids
+            (cadet.id, cadet.name)
+            for cadet in list_of_cadets
         ]
     )
     dict_of_checked = dict(
-        [(cadet_id, True) for cadet_id in list_of_cadet_ids]
+        [(cadet.id, True) for cadet in list_of_cadets]
     )  ## we assume we want to connect by default
 
     connection_checkbox = checkboxInput(
         dict_of_labels=dict_of_labels,
         dict_of_checked=dict_of_checked,
         input_name=MAKE_CADET_CONNECTION,
-        input_label="Tick to permanently connect cadet with volunteer in main volunteer list (leave blank if not usually connected):",
+        input_label="Tick to permanently connect sailor with volunteer (leave blank if not usually connected):",
     )
 
     return connection_checkbox
+
+
 
 
 def get_availablity_text(
@@ -131,7 +206,7 @@ def get_availablity_text_for_single_entry(
         return ListOfLines("")
 
     cadet_name = get_cadet_name_from_relevant_information(
-        interface=interface, relevant_information=relevant_information
+         relevant_information=relevant_information
     )
     availability_info = relevant_information.availability
     available_text = ListOfLines(
@@ -162,18 +237,16 @@ def get_availablity_text_for_single_entry(
 
 
 def get_cadet_name_from_relevant_information(
-    interface: abstractInterface, relevant_information: RelevantInformationForVolunteer
+     relevant_information: RelevantInformationForVolunteer
 ) -> str:
     NO_CADET = "(no cadet)"
     if relevant_information is missing_relevant_information:
         return NO_CADET
-    cadet_id = relevant_information.identify.cadet_id
-    if cadet_id is missing_data:
+    cadet = relevant_information.identify.cadet
+    if cadet is missing_data:
         return NO_CADET
 
-    cadet_name = cadet_name_from_id(data_layer=interface.data, cadet_id=cadet_id)
-
-    return cadet_name
+    return cadet.name
 
 
 def get_availability_checkbox_for_volunteer_at_event_based_on_relevant_information(
@@ -213,7 +286,7 @@ def get_any_other_information_text(
     list_of_relevant_information: ListOfRelevantInformationForVolunteer,
 ) -> ListOfLines:
     list_of_other_information = ListOfLines(
-        ["Other information in form: (for each cadet entered with)"]
+        ["Other information in form: (for each registration)"]
     )
     for relevant_information in list_of_relevant_information:
         try:
@@ -234,7 +307,7 @@ def get_any_self_declared_status_text(
     list_of_relevant_information: ListOfRelevantInformationForVolunteer,
 ) -> ListOfLines:
     list_of_self_declared = ListOfLines(
-        ["Self declared status in form: (for each cadet entered with)"]
+        ["Self declared status in form: (for each registration)"]
     )
     for relevant_information in list_of_relevant_information:
         try:
@@ -255,7 +328,7 @@ def get_preferred_duties_text(
     list_of_relevant_information: ListOfRelevantInformationForVolunteer,
 ) -> ListOfLines:
     list_of_preferred_duties = ListOfLines(
-        ["Preferred duties in form (for each cadet registered with):"]
+        ["Preferred duties in form (for each registration):"]
     )
     for relevant_information in list_of_relevant_information:
         try:
@@ -301,7 +374,7 @@ def get_same_or_different_text(
     list_of_relevant_information: ListOfRelevantInformationForVolunteer,
 ) -> ListOfLines:
     list_of_same_or_different = ListOfLines(
-        ["Same or different duties in form (for each cadet registered with):"]
+        ["Same or different duties in form (for each registration):"]
     )
     for relevant_information in list_of_relevant_information:
         try:
@@ -352,3 +425,9 @@ def first_valid_same_or_different(
             continue
 
     return ""
+
+
+SAVE_CHANGES = "Save changes"
+DO_NOT_ADD_VOLUNTEER_LABEL = "This volunteer is not available at this event"
+save_button = Button(SAVE_CHANGES)
+do_not_add_volunteer = Button(DO_NOT_ADD_VOLUNTEER_LABEL)

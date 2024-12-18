@@ -1,5 +1,8 @@
 from typing import List
 
+from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
+from app.objects.volunteers import Volunteer
+
 from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
 
 from app.frontend.forms.swaps import is_ready_to_swap
@@ -72,8 +75,8 @@ def get_body_of_table_at_event(
     sorts_and_filters: RotaSortsAndFilters,
     ready_to_swap: bool = False,
 ) -> List[RowInTable]:
-    list_of_volunteers_at_event = get_sorted_and_filtered_dict_of_volunteers_at_event(
-        cache=interface.cache,
+    dict_of_volunteers_at_event_with_event_data = get_sorted_and_filtered_dict_of_volunteers_at_event(
+        object_store=interface.object_store,
         event=event,
         sorts_and_filters=sorts_and_filters,
     )
@@ -81,63 +84,66 @@ def get_body_of_table_at_event(
     other_rows = [
         get_row_for_volunteer_at_event(
             ready_to_swap=ready_to_swap,
+            volunteer=volunteer,
+            volunteer_data_at_event=volunteer_data_at_event,
             interface=interface,
-            volunteer_at_event=volunteer_at_event,
         )
-        for volunteer_at_event in list_of_volunteers_at_event
+        for volunteer, volunteer_data_at_event in dict_of_volunteers_at_event_with_event_data.items()
     ]
 
     return other_rows
 
 
 def get_row_for_volunteer_at_event(
-    interface: abstractInterface,
-    volunteer_at_event: DEPRECATE_VolunteerAtEvent,
+        interface: abstractInterface,
+        volunteer: Volunteer,
+    volunteer_data_at_event: AllEventDataForVolunteer,
     ready_to_swap: bool = False,
 ) -> RowInTable:
     first_part = get_first_part_of_row_for_volunteer_at_event(
-        cache=interface.cache,
-        volunteer_at_event=volunteer_at_event,
+        interface=interface,
+        volunteer=volunteer,
+        volunteer_data_at_event=volunteer_data_at_event,
         ready_to_swap=ready_to_swap,
     )
 
     day_inputs = get_allocation_inputs_for_volunteer(
-        interface=interface,
-        volunteer_at_event=volunteer_at_event,
+        volunteer_data_at_event=volunteer_data_at_event,
         ready_to_swap=ready_to_swap,
+        interface=interface
     )
 
     last_part = get_last_part_of_row_for_volunteer_at_event(
-        volunteer_at_event=volunteer_at_event, ready_to_swap=ready_to_swap
+        volunteer_data_at_event=volunteer_data_at_event,
+        ready_to_swap=ready_to_swap
     )
 
     return RowInTable(first_part + day_inputs + last_part)
 
 
 def get_first_part_of_row_for_volunteer_at_event(
-    cache: AdHocCache,
-    volunteer_at_event: DEPRECATE_VolunteerAtEvent,
+        interface: abstractInterface,
+        volunteer: Volunteer,
+    volunteer_data_at_event: AllEventDataForVolunteer,
     ready_to_swap: bool,
 ) -> list:
     name_button = get_volunteer_button_or_string(
-        volunteer_at_event=volunteer_at_event, ready_to_swap=ready_to_swap
+        volunteer=volunteer, ready_to_swap=ready_to_swap
     )
     location = get_location_button(
-        cache=cache,
-        volunteer_at_event=volunteer_at_event,
+        object_store=interface.object_store,
         ready_to_swap=ready_to_swap,
+        volunteer_data_at_event=volunteer_data_at_event
     )
 
-    preferred = volunteer_at_event.preferred_duties
-    same_different = volunteer_at_event.same_or_different
-    skills_button = get_skills_button(
-        cache=cache,
-        volunteer=volunteer_at_event.volunteer,
+    preferred = volunteer_data_at_event.registration_data.preferred_duties
+    same_different = volunteer_data_at_event.registration_data.same_or_different
+    skills_button = get_skills_button(volunteer_data_at_event=volunteer_data_at_event,
         ready_to_swap=ready_to_swap,
     )
     previous_role_copy_button = copy_previous_role_button_or_blank(
-        cache=cache,
-        volunteer_at_event=volunteer_at_event,
+        object_store=interface.object_store,
+        volunteer_data_at_event=volunteer_data_at_event,
         ready_to_swap=ready_to_swap,
     )
 
@@ -152,27 +158,28 @@ def get_first_part_of_row_for_volunteer_at_event(
 
 
 def get_last_part_of_row_for_volunteer_at_event(
-    volunteer_at_event: DEPRECATE_VolunteerAtEvent, ready_to_swap: bool = False
+        volunteer_data_at_event: AllEventDataForVolunteer,
+        ready_to_swap: bool = False
 ) -> list:
     if ready_to_swap:
         return ["", ""]
     other_information = make_long_thing_detail_box(
-        volunteer_at_event.any_other_information
+        volunteer_data_at_event.registration_data.any_other_information
     )
-    notes = get_notes_input(volunteer_at_event=volunteer_at_event)
+    notes = get_notes_input(volunteer_data_at_event)
 
     return [notes, other_information]
 
 
-def get_notes_input(volunteer_at_event: DEPRECATE_VolunteerAtEvent) -> textInput:
+def get_notes_input(volunteer_data_at_event: AllEventDataForVolunteer) -> textInput:
     return textInput(
-        value=volunteer_at_event.notes,
-        input_name=input_name_for_notes_and_volunteer(volunteer_at_event),
+        value=volunteer_data_at_event.registration_data.notes,
+        input_name=input_name_for_notes_and_volunteer(volunteer_data_at_event.volunteer),
         input_label="",
     )
 
 
 def input_name_for_notes_and_volunteer(
-    volunteer_at_event: DEPRECATE_VolunteerAtEvent,
+    volunteer: Volunteer,
 ) -> str:
-    return "NOTES_%s" % (volunteer_at_event.volunteer_id)
+    return "NOTES_%s" % (volunteer.id)

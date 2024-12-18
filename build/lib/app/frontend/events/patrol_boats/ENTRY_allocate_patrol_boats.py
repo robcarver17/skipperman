@@ -80,10 +80,8 @@ def post_form_view_for_patrol_boat_allocation(
     if last_button_pressed == cancel_menu_button.name:
         return previous_form(interface)
 
-    update_data_from_form_entries_in_patrol_boat_allocation_page(interface)
-
     if last_button_pressed == save_menu_button.name:
-        pass
+        update_data_from_form_entries_in_patrol_boat_allocation_page(interface)
     elif copy_all_boats_button.pressed(last_button_pressed):
         copy_across_all_boats(interface)
     elif copy_all_boats_and_roles_button.pressed(last_button_pressed):

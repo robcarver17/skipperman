@@ -19,6 +19,7 @@ class ClubDinghy(GenericSkipperManObjectWithIds):
     def __eq__(self, other):
         return self.name == other.name and self.hidden == other.hidden
 
+no_club_dinghy = ClubDinghy.create_empty()
 
 class ListOfClubDinghies(GenericListOfObjectsWithIds):
     @property

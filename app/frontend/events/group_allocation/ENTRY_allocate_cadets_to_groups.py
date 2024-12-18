@@ -1,12 +1,13 @@
 from typing import Union
 
-from app.backend.events.update_status_and_availability_of_cadets_at_event import make_cadet_available_on_day
+from app.backend.cadets_at_event.update_status_and_availability_of_cadets_at_event import make_cadet_available_on_day
 from app.backend.cadets.list_of_cadets import get_cadet_from_id
 from app.frontend.forms.reorder_form import (
     list_of_button_names_given_group_order,
     reorderFormInterface,
 )
 from app.objects.day_selectors import Day
+from app.frontend.shared.cadet_state import clear_cadet_state, update_state_for_specific_cadet_id
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.events.group_allocation.add_cadet_partner import (
@@ -26,19 +27,14 @@ from app.frontend.events.group_allocation.render_allocation_form import (
     list_of_all_day_button_names,
     get_list_of_all_add_cadet_availability_buttons,
     get_list_of_all_cadet_buttons,
-    cadet_id_from_cadet_button,
+    cadet_id_from_cadet_button, reset_day_button,
 )
 from app.frontend.events.group_allocation.input_fields import (
     cadet_id_given_partner_button,
-    RESET_DAY_BUTTON_LABEL,
     cadet_id_from_cadet_available_buttons,
 )
 from app.frontend.events.group_allocation.parse_allocation_form import (
     update_data_given_allocation_form,
-)
-from app.frontend.events.cadets_at_event.track_cadet_id_in_state_when_importing import (
-    save_cadet_id_at_event,
-    clear_cadet_id_at_event,
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -70,13 +66,13 @@ def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewFo
     elif save_menu_button.pressed(last_button):
         ## This also saves the stored data in interface otherwise we don't do it later if add partner button saved
         update_data_given_allocation_form(interface)
-        clear_cadet_id_at_event(interface)
+        clear_cadet_state(interface)
 
     if was_add_partner_button(interface):
         ### SAVE CADET ID TO GET PARTNER FOR
         ## DISPLAY NEW FORM
         cadet_id = cadet_id_given_partner_button(last_button)
-        save_cadet_id_at_event(interface=interface, cadet_id=cadet_id)
+        update_state_for_specific_cadet_id(interface=interface, cadet_id=cadet_id)
         return interface.get_new_form_given_function(display_add_cadet_partner)
 
     elif last_button in get_list_of_all_add_cadet_availability_buttons(interface):
@@ -87,7 +83,7 @@ def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewFo
     elif last_button in get_list_of_all_cadet_buttons(interface):
         cadet_id = cadet_id_from_cadet_button(last_button)
         print("seeting cadet id to %s" % cadet_id)
-        save_cadet_id_at_event(interface=interface, cadet_id=cadet_id)
+        update_state_for_specific_cadet_id(interface=interface, cadet_id=cadet_id)
 
     elif last_button in list_of_all_day_button_names(interface):
         change_day_and_save(interface=interface, day_button=last_button)
@@ -138,7 +134,7 @@ def change_day_and_save(interface: abstractInterface, day_button: str):
     if no_day_set_in_state(interface):
         day = Day[day_button]
         set_day_in_state(interface=interface, day=day)
-    elif day_button == RESET_DAY_BUTTON_LABEL:
+    elif reset_day_button.pressed(day_button):
         clear_day_in_state(interface)
     else:
         raise Exception("Don't recognise day button %s" % day_button)

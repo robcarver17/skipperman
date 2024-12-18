@@ -2,11 +2,9 @@ from dataclasses import dataclass
 import datetime
 
 from app.data_access.configuration.configuration import (
-    MIN_CADET_AGE,
-    MAX_CADET_AGE,
     SIMILARITY_LEVEL_TO_WARN_DATE,
     SIMILARITY_LEVEL_TO_WARN_NAME,
-    MIN_AGE_WHEN_CADET_CAN_BE_AT_EVENT_WITHOUT_PARENT,
+    MIN_AGE_WHEN_CADET_CAN_BE_AT_EVENT_WITHOUT_PARENT, MIN_CADET_AGE, MAX_CADET_AGE,
 )
 from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
@@ -129,28 +127,6 @@ class Cadet(GenericSkipperManObjectWithIds):
             self.date_of_birth.day == other_date.day
             and self.date_of_birth.month == other_date.month
         )
-
-
-def is_cadet_age_surprising(cadet: Cadet):
-    age = cadet.approx_age_years()
-
-    return age < MIN_CADET_AGE or age > MAX_CADET_AGE
-
-
-DEFAULT_DATE_OF_BIRTH = datetime.date(1970, 1, 1)
-
-default_cadet = Cadet(
-    first_name=" ",
-    surname=" ",
-    date_of_birth=DEFAULT_DATE_OF_BIRTH,
-    membership_status=none_member,
-)
-unknown_cadet = Cadet(
-    first_name="Unknown cadet",
-    surname="(data error)",
-    date_of_birth=DEFAULT_DATE_OF_BIRTH,
-    membership_status=none_member,
-)
 
 
 class ListOfCadets(GenericListOfObjectsWithIds):
@@ -346,3 +322,24 @@ class ListOfCadets(GenericListOfObjectsWithIds):
 
 def cadet_is_too_young_to_be_without_parent(cadet: Cadet) -> bool:
     return cadet.approx_age_years() < MIN_AGE_WHEN_CADET_CAN_BE_AT_EVENT_WITHOUT_PARENT
+
+
+def is_cadet_age_surprising(cadet: Cadet):
+    age = cadet.approx_age_years()
+
+    return age < MIN_CADET_AGE or age > MAX_CADET_AGE
+
+
+DEFAULT_DATE_OF_BIRTH = datetime.date(1970, 1, 1)
+default_cadet = Cadet(
+    first_name=" ",
+    surname=" ",
+    date_of_birth=DEFAULT_DATE_OF_BIRTH,
+    membership_status=none_member,
+)
+unknown_cadet = Cadet(
+    first_name="Unknown cadet",
+    surname="(data error)",
+    date_of_birth=DEFAULT_DATE_OF_BIRTH,
+    membership_status=none_member,
+)

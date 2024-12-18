@@ -1,5 +1,7 @@
 from typing import Union
 
+from app.objects.cadets import Cadet
+
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.frontend.forms.form_utils import (
@@ -11,8 +13,6 @@ from app.frontend.events.constants import (
     ATTENDANCE,
     ROW_STATUS,
 )
-from app.frontend.events.cadets_at_event.update_existing_cadet_at_event_forms import USE_ORIGINAL_DATA_BUTTON_LABEL, \
-    USE_NEW_DATA_BUTTON_LABEL, USE_DATA_IN_FORM_BUTTON_LABEL
 from app.objects.abstract_objects.abstract_form import (
     Form,
 )
@@ -29,27 +29,25 @@ from app.objects.events import Event
 
 
 def display_form_for_update_to_existing_cadet_at_event(
-    interface: abstractInterface,
-    new_cadet_at_event: CadetWithIdAtEvent,
-    existing_cadet_at_event: CadetWithIdAtEvent,
+    cadet: Cadet,
+    new_cadet_at_event_data: CadetWithIdAtEvent,
+    existing_cadet_at_event_data: CadetWithIdAtEvent,
     event: Event,
 ) -> Form:
     overall_message = (
         "There have been important changes for event registration information about cadet %s"
-        % cadet_name_from_id(
-            data_layer=interface.data, cadet_id=existing_cadet_at_event.cadet_id
-        )
+        % cadet
     )
 
     status_change_field = get_line_in_form_for_status_change(
-        interface=interface,
-        new_cadet_at_event=new_cadet_at_event,
-        existing_cadet_at_event=existing_cadet_at_event,
+        cadet=cadet,
+        new_cadet_at_event_data=new_cadet_at_event_data,
+        existing_cadet_at_event_data=existing_cadet_at_event_data,
     )
 
     attendance_change_field = get_line_in_form_for_attendance_change(
-        new_cadet_at_event=new_cadet_at_event,
-        existing_cadet_at_event=existing_cadet_at_event,
+        new_cadet_at_event_data=new_cadet_at_event_data,
+        existing_cadet_at_event_data=existing_cadet_at_event_data,
         event=event,
     )
 
@@ -74,20 +72,27 @@ def display_form_for_update_to_existing_cadet_at_event(
 
 
 def buttons_for_update_row() -> Line:
-    use_new_data = Button(USE_NEW_DATA_BUTTON_LABEL)
-    use_original_data = Button(USE_ORIGINAL_DATA_BUTTON_LABEL)
-    use_data_in_form = Button(USE_DATA_IN_FORM_BUTTON_LABEL)
 
-    return Line([use_original_data, use_new_data, use_data_in_form])
+    return Line([use_original_data_button, use_new_data_button, use_data_in_form_button])
+
+
+USE_NEW_DATA_BUTTON_LABEL = "Use new data imported from latest WA file (recommended)"
+use_new_data_button = Button(USE_NEW_DATA_BUTTON_LABEL)
+USE_ORIGINAL_DATA_BUTTON_LABEL = (
+    "Use original data that we already have (ignores subsequent changes in WA file)"
+)
+use_original_data_button = Button(USE_ORIGINAL_DATA_BUTTON_LABEL)
+USE_DATA_IN_FORM_BUTTON_LABEL = "Use data as edited in form above (will be newest data from WA file if no changes made in form)"
+use_data_in_form_button = Button(USE_DATA_IN_FORM_BUTTON_LABEL)
 
 
 def get_line_in_form_for_attendance_change(
-    new_cadet_at_event: CadetWithIdAtEvent,
-    existing_cadet_at_event: CadetWithIdAtEvent,
+    new_cadet_at_event_data: CadetWithIdAtEvent,
+    existing_cadet_at_event_data: CadetWithIdAtEvent,
     event: Event,
 ) -> Union[ListOfLines, Line]:
-    original_attendance = existing_cadet_at_event.availability
-    new_attendance = new_cadet_at_event.availability
+    original_attendance = existing_cadet_at_event_data.availability
+    new_attendance = new_cadet_at_event_data.availability
 
     if original_attendance == new_attendance:
         return Line("Attendance at event %s (unchanged)" % str(new_attendance))
@@ -106,14 +111,14 @@ def get_line_in_form_for_attendance_change(
 
 
 def get_line_in_form_for_status_change(
-    interface: abstractInterface,
-    new_cadet_at_event: CadetWithIdAtEvent,
-    existing_cadet_at_event: CadetWithIdAtEvent,
+        cadet: Cadet,
+    new_cadet_at_event_data: CadetWithIdAtEvent,
+    existing_cadet_at_event_data: CadetWithIdAtEvent,
 ) -> Line:
     new_status, status_message = new_status_and_status_message(
-        interface=interface,
-        new_cadet_at_event=new_cadet_at_event,
-        existing_cadet_at_event=existing_cadet_at_event,
+        cadet=cadet,
+        new_cadet_at_event_data=new_cadet_at_event_data,
+        existing_cadet_at_event_data=existing_cadet_at_event_data,
     )
 
     if status_message is NO_STATUS_CHANGE:

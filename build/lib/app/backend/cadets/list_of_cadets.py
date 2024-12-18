@@ -56,6 +56,12 @@ def get_sorted_list_of_cadets(
     object_store: ObjectStore, sort_by: str = arg_not_passed
 ) -> ListOfCadets:
     master_list = get_list_of_cadets(object_store)
+
+    return sort_a_list_of_cadets(master_list=master_list, sort_by=sort_by)
+
+def sort_a_list_of_cadets(
+    master_list: ListOfCadets, sort_by: str = arg_not_passed
+) -> ListOfCadets:
     if sort_by is arg_not_passed:
         return master_list
     if sort_by == SORT_BY_SURNAME:

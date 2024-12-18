@@ -416,12 +416,3 @@ def load_identified_cadets_at_event(
     return cadets_at_event_data.get_list_of_identified_cadets_at_event(event)
 
 
-def cadet_at_event_given_row_id(
-    interface: abstractInterface, event: Event, row_id: str
-) -> Cadet:
-    cadet_data = CadetsAtEventIdLevelData(interface.data)
-    cadet_id = cadet_data.identifed_cadet_given_row_id_at_event(
-        row_id=row_id, event=event
-    )
-
-    return cadet_id

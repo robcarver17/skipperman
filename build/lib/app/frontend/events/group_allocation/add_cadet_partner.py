@@ -3,11 +3,9 @@ from typing import Union, Tuple
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 
 from app.frontend.events.group_allocation.store_state import get_day_from_state_or_none
-from app.backend.mapping.convert_helm_crew_data import (
-    from_partner_name_to_cadet,
-    add_matched_partner_cadet_with_duplicate_registration_to_wa_mapped_data,
-    get_registered_two_handed_partner_name_for_cadet_at_event,
-)
+from app.backend.cadets_at_event.add_unregistered_partner_cadet import from_partner_name_to_cadet, \
+    add_unregistered_partner_cadet, \
+    get_registered_two_handed_partner_name_for_cadet_at_event
 from app.frontend.events.cadets_at_event.track_cadet_id_in_state_when_importing import (
     get_current_cadet_id_at_event,
     clear_cadet_id_at_event,
@@ -130,7 +128,7 @@ def add_matched_partner_cadet_with_duplicate_registration(
     primary_cadet, __ = get_primary_cadet_and_partner_name(interface)
     event = get_event_from_state(interface)
     day_or_none_if_all_days = get_day_from_state_or_none(interface)
-    add_matched_partner_cadet_with_duplicate_registration_to_wa_mapped_data(
+    add_unregistered_partner_cadet(
         interface=interface,
         event=event,
         day_or_none_if_all_days=day_or_none_if_all_days,

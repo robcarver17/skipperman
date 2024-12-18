@@ -4,7 +4,6 @@ from app.data_access.api.csv_api import CsvDataApi
 from app.data_access.store.object_store import ObjectStore
 from app.data_access.user_data import user_data_path
 from app.data_access.backups.backup_data import backup_data_path
-from app.data_access.store.data_access import DataLayer
 from app.data_access.store.store import Store
 import os
 
@@ -30,6 +29,5 @@ def make_data():
 ## Only one of these
 underling_data_api = make_data()
 store = Store()
-data_api = DataLayer(store=store, underlying_data=underling_data_api)
 
 object_store = ObjectStore(data_store=store, data_api=underling_data_api)

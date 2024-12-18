@@ -1,21 +1,23 @@
-from app.OLD_backend.volunteers.volunteers import DEPRECATE_get_volunteer_from_id
+from app.objects.volunteers import Volunteer
+
+from app.objects.cadets import Cadet
+
+
+from app.backend.food.active_cadets_and_volunteers_with_food import \
+    get_dict_of_active_cadets_with_food_requirements_at_event, get_dict_of_active_volunteers_with_food_requirements_at_event
 from app.objects.abstract_objects.abstract_form import File
 
 from app.objects.events import Event
 
-from app.OLD_backend.cadets import get_cadet_from_id
-
 from app.backend.food.download_food_data import download_food_data_and_return_filename
 from app.backend.food.modify_food_data import update_cadet_food_data, update_volunteer_food_data
 from app.objects.food import (
-    CadetWithFoodRequirementsAtEvent,
     FoodRequirements,
-    VolunteerWithFoodRequirementsAtEvent,
 )
 
 from app.frontend.shared.events_state import get_event_from_state
 
-from app.OLD_backend.data.food import FoodData
+
 
 from app.frontend.events.food.render_food import (
     get_input_name_other_food_for_cadet,
@@ -34,29 +36,29 @@ def save_food_data_in_form(interface: abstractInterface):
 
 
 def save_cadet_food_data_in_form(interface: abstractInterface):
-    food_data = FoodData(interface.data)
     event = get_event_from_state(interface)
+    cadets_with_food_at_event = get_dict_of_active_cadets_with_food_requirements_at_event(object_store=interface.object_store,
+                                                                                          event=event)
 
-    cadets_with_food_at_event = food_data.list_of_active_cadets_with_food_at_event(
-        event=event
-    )
 
-    for cadet_with_food in cadets_with_food_at_event:
+    for cadet, existing_food_requirements in cadets_with_food_at_event:
         save_cadet_food_data_for_cadet(
-            interface=interface, cadet_with_food=cadet_with_food, event=event
+            interface=interface, event=event,
+            cadet=cadet,
+            existing_food_requirements=existing_food_requirements
         )
 
 
 def save_cadet_food_data_for_cadet(
     interface: abstractInterface,
     event: Event,
-    cadet_with_food: CadetWithFoodRequirementsAtEvent,
-):
+    cadet: Cadet,
+        existing_food_requirements: FoodRequirements):
     other_input_name = get_input_name_other_food_for_cadet(
-        cadet_id=cadet_with_food.cadet_id
+        cadet_id=cadet.id
     )
     checkbox_input_name = get_input_name_food_checkbox_for_cadet(
-        cadet_id=cadet_with_food.cadet_id
+        cadet_id=cadet.id
     )
 
     new_food_requirements = get_food_requirements_from_form(
@@ -67,7 +69,8 @@ def save_cadet_food_data_for_cadet(
 
     update_cadet_food_data_if_changed(
         interface=interface,
-        existing_cadet_with_food=cadet_with_food,
+        cadet=cadet,
+        existing_food_requirements=existing_food_requirements,
         new_food_requirements=new_food_requirements,
         event=event,
     )
@@ -75,53 +78,52 @@ def save_cadet_food_data_for_cadet(
 
 def update_cadet_food_data_if_changed(
     interface: abstractInterface,
-    existing_cadet_with_food: CadetWithFoodRequirementsAtEvent,
-    new_food_requirements: FoodRequirements,
+    cadet: Cadet,
+        existing_food_requirements: FoodRequirements,
+        new_food_requirements: FoodRequirements,
     event: Event,
 ):
-    if existing_cadet_with_food.food_requirements == new_food_requirements:
+    if existing_food_requirements == new_food_requirements:
         return
 
     try:
         update_cadet_food_data(
-            interface=interface,
-            cadet_id=existing_cadet_with_food.cadet_id,
-            new_food_requirements=new_food_requirements,
+            object_store=interface.object_store,
             event=event,
+            cadet=cadet,
+            new_food_requirements=new_food_requirements,
         )
     except Exception as e:
-        cadet = get_cadet_from_id(
-            data_layer=interface.data, cadet_id=existing_cadet_with_food.cadet_id
-        )
         interface.log_error(
             "Couldn't update food_report for cadet %s, error %s" % (str(cadet), str(e))
         )
 
 
 def save_volunteer_food_data_in_form(interface: abstractInterface):
-    food_data = FoodData(interface.data)
     event = get_event_from_state(interface)
-
-    volunteers_with_food_at_event = (
-        food_data.list_of_active_volunteers_with_food_at_event(event=event)
+    volunteers_with_food_at_event = get_dict_of_active_volunteers_with_food_requirements_at_event(
+        object_store=interface.object_store,
+        event=event
     )
 
-    for volunteer_with_food in volunteers_with_food_at_event:
+    for volunteer, existing_food_requirements in volunteers_with_food_at_event.items():
         save_volunteer_food_data_for_volunteer(
-            interface=interface, volunteer_with_food=volunteer_with_food, event=event
+            interface=interface,  event=event,
+            volunteer=volunteer,existing_food_requirements=existing_food_requirements
         )
 
 
 def save_volunteer_food_data_for_volunteer(
     interface: abstractInterface,
     event: Event,
-    volunteer_with_food: VolunteerWithFoodRequirementsAtEvent,
+    volunteer: Volunteer,
+    existing_food_requirements: FoodRequirements
 ):
     other_input_name = get_input_name_other_food_for_volunteer(
-        volunteer_id=volunteer_with_food.volunteer_id
+        volunteer_id=volunteer.id
     )
     checkbox_input_name = get_input_name_food_checkbox_for_volunteer(
-        volunteer_id=volunteer_with_food.volunteer_id
+        volunteer_id=volunteer.id
     )
 
     new_food_requirements = get_food_requirements_from_form(
@@ -132,32 +134,32 @@ def save_volunteer_food_data_for_volunteer(
 
     update_volunteer_food_data_if_changed(
         interface=interface,
-        existing_volunteer_with_food=volunteer_with_food,
-        new_food_requirements=new_food_requirements,
         event=event,
+        volunteer=volunteer,
+        existing_food_requirements=existing_food_requirements,
+        new_food_requirements=new_food_requirements,
+
     )
 
 
 def update_volunteer_food_data_if_changed(
     interface: abstractInterface,
-    existing_volunteer_with_food: VolunteerWithFoodRequirementsAtEvent,
-    new_food_requirements: FoodRequirements,
     event: Event,
+    volunteer: Volunteer,
+    existing_food_requirements: FoodRequirements,
+    new_food_requirements: FoodRequirements,
 ):
-    if existing_volunteer_with_food.food_requirements == new_food_requirements:
+    if existing_food_requirements == new_food_requirements:
         return
 
     try:
         update_volunteer_food_data(
-            interface=interface,
-            volunteer_id=existing_volunteer_with_food.volunteer_id,
+            object_store=interface.object_store,
+            volunteer=volunteer,
             new_food_requirements=new_food_requirements,
             event=event,
         )
     except Exception as e:
-        volunteer = DEPRECATE_get_volunteer_from_id(
-            interface=interface, volunteer_id=existing_volunteer_with_food.volunteer_id
-        )
         interface.log_error(
             "Couldn't update food_report for volunteer %s, error %s"
             % (str(volunteer), str(e))
@@ -166,5 +168,5 @@ def update_volunteer_food_data_if_changed(
 
 def download_food_data(interface: abstractInterface) -> File:
     event = get_event_from_state(interface)
-    filename = download_food_data_and_return_filename(interface=interface, event=event)
+    filename = download_food_data_and_return_filename(object_store=interface.object_store, event=event)
     return File(filename)

@@ -102,6 +102,9 @@ class ListOfCadetsWithGroupOnDay(GenericListOfObjects):
 
 
 class DaysAndGroups(Dict[Day, Group]):
+    def update_group_on_day(self, day: Day, group: Group):
+        self[day] = group
+
     def group_on_day(self, day: Day, default=Group.create_unallocated()) -> Group:
         return self.get(day, default)
 
@@ -160,11 +163,27 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
         self,
         raw_dict: Dict[Cadet, DaysAndGroups],
         list_of_cadet_ids_with_groups: ListOfCadetIdsWithGroups,
+        list_of_groups: ListOfGroups,
         event: Event,
     ):
         super().__init__(raw_dict)
         self._list_of_cadet_ids_with_groups = list_of_cadet_ids_with_groups
         self._event = event
+        self._list_of_groups = list_of_groups
+
+    def add_or_upate_group_for_cadet_on_day(
+        self,
+        cadet: Cadet,
+        day: Day,
+        group: Group,
+
+        ):
+        current_allocation = self.get_days_and_groups_for_cadet(cadet=cadet)
+        current_allocation.update_group_on_day(day=day, group=group)
+        self.list_of_cadet_ids_with_groups.update_group_for_cadet_on_day(cadet_id=cadet.id,
+                                                                         day=day,
+                                                                         chosen_group_id=group.id)
+
 
     def remove_cadet_from_event(self, cadet: Cadet):
         for day in self.event.weekdays_in_event():
@@ -261,6 +280,7 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
             ),
             list_of_cadet_ids_with_groups=self.list_of_cadet_ids_with_groups,
             event=self.event,
+            list_of_groups=self.list_of_groups
         )
 
     def add_unallocated_and_filter_for_list_of_cadets(
@@ -281,6 +301,7 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
             new_dict,
             list_of_cadet_ids_with_groups=self.list_of_cadet_ids_with_groups,
             event=self.event,
+            list_of_groups=self.list_of_groups
         )
 
     @property
@@ -290,6 +311,10 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
     @property
     def list_of_cadet_ids_with_groups(self) -> ListOfCadetIdsWithGroups:
         return self._list_of_cadet_ids_with_groups
+
+    @property
+    def list_of_groups(self) -> ListOfGroups:
+        return self._list_of_groups
 
 
 def compose_dict_of_cadets_with_days_and_groups_at_event(
@@ -310,6 +335,7 @@ def compose_dict_of_cadets_with_days_and_groups_at_event(
     return DictOfCadetsWithDaysAndGroupsAtEvent(
         raw_dict=raw_dict,
         list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups,
+        list_of_groups=list_of_groups,
         event=event,
     )
 

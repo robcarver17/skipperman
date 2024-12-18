@@ -25,7 +25,6 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.cadets.ENTRY_view_cadets import sort_buttons, all_sort_types
 from app.OLD_backend.data.cadets import SORT_BY_SURNAME
-from app.frontend.events.constants import *
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import Event
@@ -124,3 +123,6 @@ def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(
         display_form_edit_registration_details
     )
+
+
+SORT_ORDER = "sort_order"

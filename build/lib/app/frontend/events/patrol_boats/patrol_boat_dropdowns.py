@@ -1,30 +1,33 @@
 from typing import List, Dict, Tuple, Union
 
+from app.backend.volunteers.list_of_volunteers import get_volunteer_from_name
+from app.backend.volunteers.roles_and_teams import get_list_of_roles_with_skills
+
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import \
+    get_list_of_boat_names_excluding_boats_already_at_event, load_list_of_patrol_boats_at_event
+from app.backend.rota.volunteer_table import get_dict_of_roles_for_dropdown
 # from app.OLD_backend.OLD_patrol_boats import get_sorted_list_of_boats_excluding_boats_already_at_event
-from app.data_access.store.data_access import DataLayer
 
 from app.frontend.forms.swaps import is_ready_to_swap
 
-from app.backend.patrol_boats.list_of_patrol_boats import from_patrol_boat_name_to_boat
 from app.OLD_backend.data.dinghies import (
     DEPRECATE_load_list_of_patrol_boats_at_event_from_cache,
 )
 from app.backend.patrol_boats.volunteers_to_choose_from import \
     get_sorted_volunteer_data_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day, \
     string_if_volunteer_can_drive_else_empty, boat_related_role_str_and_group_on_day_for_volunteer_at_event
-from app.OLD_backend.rota.volunteer_rota import (
-    dict_of_roles_for_dropdown,
-    get_volunteer_role_at_event_on_day,
-)
 from app.OLD_backend.volunteers.volunteers import (
     get_volunteer_with_name,
-    get_volunteer_from_id,
 )
 from app.frontend.events.patrol_boats.patrol_boat_buttons import add_new_boat_button
 
 from app.objects.abstract_objects.abstract_form import dropDownInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line
+from app.objects.composed.volunteer_roles import RoleWithSkills
+from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import \
+    VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
+from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.patrol_boats import PatrolBoat
@@ -34,7 +37,7 @@ from app.objects.volunteers import Volunteer
 def get_add_boat_dropdown(interface: abstractInterface, event: Event) -> Line:
     list_of_boats_excluding_boats_already_at_event = (
         get_list_of_boat_names_excluding_boats_already_at_event(
-            interface=interface, event=event
+            object_store = interface.object_store, event=event
         )
     )
     if len(list_of_boats_excluding_boats_already_at_event) == 0:
@@ -55,24 +58,11 @@ def get_add_boat_dropdown(interface: abstractInterface, event: Event) -> Line:
     return Line([dropdown, add_new_boat_button])
 
 
-def get_list_of_boat_names_excluding_boats_already_at_event(
-    interface: abstractInterface, event: Event
-) -> List[str]:
-    # list_of_boats_excluding_boats_already_at_event = (
-    #    get_sorted_list_of_boats_excluding_boats_already_at_event(
-    #        cache=interface.cache, event=event
-    #    )
-    # )
-
-    # return list_of_boats_excluding_boats_already_at_event.list_of_names()
-    return []
-
-
 def get_allocation_dropdown_elements_to_add_volunteer_for_day_and_boat(
     interface: abstractInterface, day: Day, event: Event
 ) -> Dict[str, str]:
-    dropdown_elements = interface.cache.get_from_cache(
-        get_list_of_strings_of_volunteers_to_add_for_day_on_patrol_boat,
+    dropdown_elements = get_list_of_strings_of_volunteers_to_add_for_day_on_patrol_boat(
+        interface=interface,
         event=event,
         day=day,
     )
@@ -85,19 +75,21 @@ def get_allocation_dropdown_elements_to_add_volunteer_for_day_and_boat(
 
 
 def get_list_of_strings_of_volunteers_to_add_for_day_on_patrol_boat(
-    data_layer: DataLayer, event: Event, day: Day
+        interface: abstractInterface, event: Event, day: Day
 ) -> List[str]:
-    sorted_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats = get_sorted_volunteer_data_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day(
-        data_layer=data_layer,
+    sorted_volunteers_at_event_but_not_yet_on_patrol_boats = get_sorted_volunteer_data_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day(
+        object_store = interface.object_store,
         event=event,
         day=day,
     )
 
     dropdown_elements = [
-        from_volunteer_id_to_string_of_volunteer_with_skill_and_role(
-            data_layer=data_layer, volunteer_id=volunteer_id, event=event, day=day
+        from_volunteer_data_to_string_of_volunteer_with_skill_and_role(
+           volunteer=volunteer,
+            event_data_for_volunteer=event_data_for_volunteer,
+            day=day
         )
-        for volunteer_id in sorted_volunteer_ids_for_volunteers_at_event_but_not_yet_on_patrol_boats
+        for volunteer, event_data_for_volunteer in sorted_volunteers_at_event_but_not_yet_on_patrol_boats
     ]
 
     return dropdown_elements
@@ -109,6 +101,8 @@ TOP_ROW_OF_VOLUNTEER_DROPDOWN = "Select volunteer to allocate to patrol boat"
 def get_input_name_for_allocation_dropdown(boat_at_event: PatrolBoat, day: Day) -> str:
     return "allocationDropDownAddBoat_%s_%s" % (boat_at_event.name, day.name)
 
+from app.backend.patrol_boats.list_of_patrol_boats import pa, from_patrol_boat_name_to_boat
+
 
 def from_allocation_dropdown_input_name_to_boat_and_day(
     interface: abstractInterface, dropdown_input_name: str
@@ -117,7 +111,7 @@ def from_allocation_dropdown_input_name_to_boat_and_day(
         dropdown_input_name
     )
 
-    boat = from_patrol_boat_name_to_boat(interface=interface, boat_name=boat_name)
+    boat = from_patrol_boat_name_to_boat(object_store=interface.object_store, boat_name=boat_name)
     day = Day[day_name]
 
     return boat, day
@@ -132,23 +126,20 @@ def from_allocation_dropdown_input_name_to_boat_name_and_day_name(
     return boat_name, day_name
 
 
-def from_volunteer_id_to_string_of_volunteer_with_skill_and_role(
-    data_layer: DataLayer, volunteer_id: str, event: Event, day: Day
+def from_volunteer_data_to_string_of_volunteer_with_skill_and_role(
+        volunteer: Volunteer,
+        event_data_for_volunteer: AllEventDataForVolunteer,
+        day: Day
 ) -> str:
-    volunteer = get_volunteer_from_id(volunteer_id=volunteer_id, data_layer=data_layer)
     name = volunteer.name
     skill_str = string_if_volunteer_can_drive_else_empty(
-        data_layer=data_layer, volunteer=volunteer
+        event_data_for_volunteer
     )
 
-    ### MUST BE IN BRACKETS OR WON'T WORK WITH GETTING VOLUNTEER NAME
-    if len(skill_str) > 0:
-        skill_str = " (%s)" % skill_str
     role_str = boat_related_role_str_and_group_on_day_for_volunteer_at_event(
-        data_layer=data_layer, volunteer_id=volunteer_id, event=event, day=day
+        event_data_for_volunteer=event_data_for_volunteer,
+        day=day
     )
-    if len(role_str) > 0:
-        role_str = " (%s)" % role_str
 
     return "%s%s%s" % (name, skill_str, role_str)
 
@@ -157,9 +148,8 @@ def from_selected_dropdown_to_volunteer(
     interface: abstractInterface, selected_dropdown: str
 ) -> Volunteer:
     volunteer_name = from_dropdown_for_volunteer_to_volunteer_name(selected_dropdown)
-    volunteer = get_volunteer_with_name(
-        data_layer=interface.data, volunteer_name=volunteer_name
-    )
+    volunteer =get_volunteer_from_name(object_store=interface.object_store, volunteer_name=volunteer_name)
+
     return volunteer
 
 
@@ -174,9 +164,8 @@ def from_dropdown_for_volunteer_to_volunteer_name(selected_dropdown: str) -> str
 def get_list_of_dropdown_names_for_adding_volunteers(
     interface: abstractInterface, event: Event
 ) -> List[str]:
-    list_of_boats_at_event = DEPRECATE_load_list_of_patrol_boats_at_event_from_cache(
-        cache=interface.cache, event=event
-    )
+    list_of_boats_at_event = load_list_of_patrol_boats_at_event(object_store=interface.object_store,
+                                                                event=event)
 
     list_of_names = []
     for boat_at_event in list_of_boats_at_event:
@@ -193,21 +182,25 @@ ADD_BOAT_DROPDOWN = "add_boat_dropdown"
 
 
 def volunteer_boat_role_dropdown(
-    interface: abstractInterface, event: Event, day: Day, volunteer_id: str
+    interface: abstractInterface,
+        volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
+
 ) -> Union[dropDownInput, str]:
-    current_role = get_volunteer_role_at_event_on_day(
-        data_layer=interface.data, volunteer_id=volunteer_id, event=event, day=day
-    )
+    current_role_name = volunteer_at_event_on_boat.role_and_group.role.name
+    volunteer_id = volunteer_at_event_on_boat.volunteer.id
+    day = volunteer_at_event_on_boat.day
 
     in_swap_state = is_ready_to_swap(interface)
     if in_swap_state:
-        return current_role
+        return current_role_name
+
+    dict_of_roles_for_dropdown = get_dict_of_roles_for_dropdown(interface.object_store)
 
     return dropDownInput(
         input_name=get_dropdown_field_name_for_volunteer_role(
             volunteer_id=volunteer_id, day=day
         ),
-        default_label=current_role,
+        default_label=current_role_name,
         dict_of_options=dict_of_roles_for_dropdown,
         input_label="",
     )
@@ -219,12 +212,15 @@ def get_dropdown_field_name_for_volunteer_role(volunteer_id: str, day: Day) -> s
 
 def which_volunteer_role_selected_in_boat_allocation(
     interface: abstractInterface, volunteer_id: str, day: Day
-) -> str:
+) -> RoleWithSkills:
     dropdown_field = get_dropdown_field_name_for_volunteer_role(
         volunteer_id=volunteer_id, day=day
     )
-    return interface.value_from_form(dropdown_field)
+    role_name = interface.value_from_form(dropdown_field)
 
+    all_roles  =get_list_of_roles_with_skills(interface.object_store)
+
+    return all_roles.role_with_name(role_name)
 
 def get_add_volunteer_to_patrol_boat_dropdown(
     interface: abstractInterface, event: Event, patrol_boat: PatrolBoat, day: Day

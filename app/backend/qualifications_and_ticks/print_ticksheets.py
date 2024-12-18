@@ -1,7 +1,7 @@
 from app.backend.club_boats.cadets_with_club_dinghies_at_event import (
     is_a_club_dinghy_allocated_for_list_of_cadets_on_any_day_at_event,
 )
-from app.backend.events.cadets_at_event import (
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     get_health_notes_for_list_of_cadets_at_event,
 )
 from app.backend.groups.cadets_with_groups_at_event import (

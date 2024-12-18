@@ -141,7 +141,10 @@ def toggle_selection_for_cadet_committee_member(
 
 
 ## STORAGE
+def get_list_of_cadets_currently_serving(object_store: ObjectStore) -> ListOfCadets:
+    list_of_cadets_on_committee = get_list_of_cadets_on_committee(object_store)
 
+    return list_of_cadets_on_committee.list_of_cadets_currently_serving()
 
 def get_list_of_cadets_on_committee(
     object_store: ObjectStore,

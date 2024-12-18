@@ -5,7 +5,7 @@ from app.objects.cadets import Cadet
 from app.backend.registration_data.update_cadets_at_event import \
     update_notes_for_existing_cadet_at_event, \
     update_health_for_existing_cadet_at_event, update_data_row_for_existing_cadet_at_event
-from app.backend.events.update_status_and_availability_of_cadets_at_event import \
+from app.backend.cadets_at_event.update_status_and_availability_of_cadets_at_event import \
     update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_messages, \
     update_availability_of_existing_cadet_at_event_and_return_messages, \
     update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting

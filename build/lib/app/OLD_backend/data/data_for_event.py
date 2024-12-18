@@ -8,9 +8,7 @@ from app.OLD_backend.group_allocations.cadet_event_allocations import (
     load_list_of_cadets_with_allocated_groups_at_event,
 )
 from app.OLD_backend.data.cadets_at_event_id_level import load_cadets_at_event
-from app.OLD_backend.group_allocations.boat_allocation import (
-    load_list_of_cadets_at_event_with_dinghies,
-)
+from app.backend.boat_classes.update_boat_information import DEPRECATE_load_list_of_cadets_at_event_with_dinghies
 from app.OLD_backend.data.dinghies import (
     load_list_of_cadets_at_event_with_club_dinghies,
 )
@@ -51,7 +49,7 @@ class RequiredDataForReport:
 def get_data_required_for_event(
     interface: abstractInterface, event: Event
 ) -> RequiredDataForReport:
-    list_of_cadets_at_event_with_dinghies = load_list_of_cadets_at_event_with_dinghies(
+    list_of_cadets_at_event_with_dinghies = DEPRECATE_load_list_of_cadets_at_event_with_dinghies(
         interface=interface, event=event
     )
     list_of_cadets_at_event = load_cadets_at_event(interface=interface, event=event)

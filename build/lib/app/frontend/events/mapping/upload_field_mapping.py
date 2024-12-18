@@ -1,6 +1,4 @@
-from app.backend.mapping.map_wa_fields import (
-    DEPRECATE_write_field_mapping_for_event,
-)
+from app.backend.mapping.list_of_field_mappings import save_field_mapping_for_event
 from app.data_access.csv.wa_field_mapping import read_mapping_from_csv_file_object
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface, form_with_message_and_finished_button, get_file_from_interface,
@@ -51,8 +49,8 @@ def post_form_for_upload_custom_field_mapping(interface: abstractInterface):
         file = get_file_from_interface(MAPPING_FILE, interface=interface)
         mapping = read_mapping_from_csv_file_object(file)
         event = get_event_from_state(interface)
-        DEPRECATE_write_field_mapping_for_event(
-            interface=interface, event=event, new_mapping=mapping
+        save_field_mapping_for_event(
+            object_store=interface.object_store, event=event, mapping=mapping
         )
         interface.flush_cache_to_store()
 

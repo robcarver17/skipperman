@@ -1,8 +1,8 @@
-from typing import List
+from typing import List, Dict
 
 from app.objects.exceptions import arg_not_passed
 
-from app.objects.cadets import ListOfCadets
+from app.objects.cadets import ListOfCadets, Cadet
 
 from app.objects.day_selectors import DictOfDaySelectors, DaySelector
 
@@ -13,7 +13,7 @@ from app.data_access.store.object_store import ObjectStore
 from app.data_access.store.object_definitions import (
     object_definition_for_dict_of_all_event_info_for_cadet,
 )
-from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadet
+from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 from app.objects.groups import ListOfGroups
 
 
@@ -62,7 +62,7 @@ def get_attendance_matrix_for_list_of_cadets_at_event(
 
 def get_dict_of_all_event_info_for_cadets(
     object_store: ObjectStore, event: Event, active_only: bool = True
-) -> DictOfAllEventInfoForCadet:
+) -> DictOfAllEventInfoForCadets:
     return object_store.get(
         object_definition=object_definition_for_dict_of_all_event_info_for_cadet,
         event_id=event.id,
@@ -70,9 +70,10 @@ def get_dict_of_all_event_info_for_cadets(
     )
 
 
+
 def update_dict_of_all_event_info_for_cadets(
     object_store: ObjectStore,
-    dict_of_all_event_info_for_cadets: DictOfAllEventInfoForCadet,
+    dict_of_all_event_info_for_cadets: DictOfAllEventInfoForCadets,
 ):
     object_store.update(
         new_object=dict_of_all_event_info_for_cadets,
@@ -88,3 +89,26 @@ def get_list_of_all_groups_at_event(
         object_store=object_store, event=event, active_only=True
     )
     return event_info.dict_of_cadets_with_days_and_groups.all_groups_at_event()
+
+
+def get_availability_dict_for_active_cadets_at_event(
+    object_store: ObjectStore, event: Event
+) -> Dict[Cadet, DaySelector]:
+    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
+
+    active_cadets_at_event = get_list_of_active_cadets_at_event(object_store=object_store, event=event)
+    registration_data = cadets_at_event_data.dict_of_cadets_with_registration_data
+
+    return dict(
+        [(cadet, registration_data.registration_data_for_cadet(cadet).availability) for cadet in active_cadets_at_event]
+    )
+
+
+def get_list_of_active_cadets_at_event(
+    object_store: ObjectStore, event: Event
+) -> ListOfCadets:
+    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
+
+    active_cadets_at_event = cadets_at_event_data.dict_of_cadets_with_registration_data.list_of_cadets()
+
+    return active_cadets_at_event

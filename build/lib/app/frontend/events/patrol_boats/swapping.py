@@ -1,5 +1,9 @@
 from typing import Union, Tuple
 
+from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
+
+from app.objects.volunteers import Volunteer
+
 from app.frontend.forms.swaps import (
     is_ready_to_swap,
     SwapButtonState,
@@ -7,13 +11,10 @@ from app.frontend.forms.swaps import (
     get_swap_state,
 )
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import \
-    get_boat_name_allocated_to_volunteer_on_day_at_event
-from app.OLD_backend.rota.volunteer_rota import (
-    swap_roles_for_volunteers_in_allocation,
-)
+    get_boat_allocated_to_volunteer_on_day_at_event
 from app.backend.rota.changes import SwapData
 from app.backend.patrol_boats.swapping import is_possible_to_swap_roles_on_one_day_for_non_grouped_roles_only, \
-    swap_boats_for_volunteers_in_allocation_using_swapdata
+    swap_boats_for_volunteers_in_allocation_using_swapdata, swap_roles_for_volunteers_in_allocation_using_swapdata
 
 from app.frontend.shared.events_state import get_event_from_state
 
@@ -32,6 +33,8 @@ from app.data_access.configuration.fixed import (
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line
+from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import \
+    VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.patrol_boats import PatrolBoat
@@ -59,36 +62,32 @@ def get_list_of_all_swap_buttons_in_boat_allocation(
 
 def get_swap_buttons_for_boat_rota(
     interface: abstractInterface,
-    day: Day,
-    event: Event,
-    volunteer_id: str,
-    boat_at_event: PatrolBoat,
+        volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
 ) -> list:
     if is_ready_to_swap(interface):
         return [
             get_swap_button_when_ready_to_swap(
-                day=day,
-                event=event,
-                volunteer_id=volunteer_id,
                 interface=interface,
-                boat_at_event=boat_at_event,
+                volunteer_at_event_on_boat=volunteer_at_event_on_boat
             )
         ]
     else:
         return get_swap_buttons_when_not_ready_to_swap(
-            interface=interface, day=day, volunteer_id=volunteer_id, event=event
+            volunteer_at_event_on_boat
         )
 
 
 ## NOT READY TO SWAP
 def get_swap_buttons_when_not_ready_to_swap(
-    interface: abstractInterface, event: Event, day: Day, volunteer_id: str
+        volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
 ) -> list:
     okay_to_swap_roles = (
         is_possible_to_swap_roles_on_one_day_for_non_grouped_roles_only(
-            interface=interface, event=event, volunteer_id=volunteer_id, day=day
+            volunteer_at_event_on_boat
         )
     )
+    day = volunteer_at_event_on_boat.day
+    volunteer_id = volunteer_at_event_on_boat.volunteer.id
     list_of_buttons = [
         get_swap_boat_button_when_not_ready_to_swap(day=day, volunteer_id=volunteer_id)
     ]
@@ -120,22 +119,21 @@ def get_swap_both_button_when_not_ready_to_swap(day: Day, volunteer_id: str) -> 
 
 
 def get_swap_button_when_ready_to_swap(
-    interface: abstractInterface,
-    day: Day,
-    event: Event,
-    volunteer_id: str,
-    boat_at_event: PatrolBoat,
+        interface: abstractInterface,
+        volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
 ) -> Union[Button, str]:
     (
         swapping_both,
         swap_day,
-        volunteer_id_to_swap,
-    ) = get_type_day_volunteer_id_from_swap_state(interface)
-    boat_name_of_swapping_boat = get_boat_name_allocated_to_volunteer_on_day_at_event(
-        interface=interface, event=event, day=day, volunteer_id=volunteer_id_to_swap
-    )
+        volunteer_to_swap,
+    ) = get_type_day_volunteer_from_swap_state(interface)
 
-    this_is_the_swapper = swap_day == day and volunteer_id_to_swap == volunteer_id
+    day = volunteer_at_event_on_boat.day
+    event = volunteer_at_event_on_boat.event
+    volunteer= volunteer_at_event_on_boat.volunteer
+    volunteer_id = volunteer.id
+
+    this_is_the_swapper = swap_day == day and volunteer_to_swap == volunteer
     swapping_on_this_day = swap_day == day
 
     if this_is_the_swapper:
@@ -143,14 +141,15 @@ def get_swap_button_when_ready_to_swap(
             day=day, volunteer_id=volunteer_id
         )
     elif swapping_on_this_day:
+        swapping_boat = get_boat_allocated_to_volunteer_on_day_at_event(
+            object_store=interface.object_store, event=event, day=day, volunteer=volunteer
+        )
+
         return get_swap_button_when_ready_to_swap_and_this_is_a_potential_swapper(
             interface=interface,
             swapping_both=swapping_both,
-            day=day,
-            volunteer_id=volunteer_id,
-            event=event,
-            boat_at_event=boat_at_event,
-            boat_name_of_swapping_boat=boat_name_of_swapping_boat,
+            volunteer_at_event_on_boat=volunteer_at_event_on_boat,
+            swapping_boat=swapping_boat
         )
     else:
         ## Can't swap across dates
@@ -170,20 +169,21 @@ def get_swap_button_when_ready_to_swap_and_this_is_the_swapper(
 def get_swap_button_when_ready_to_swap_and_this_is_a_potential_swapper(
     interface: abstractInterface,
     swapping_both: bool,
-    day: Day,
-    volunteer_id: str,
-    event: Event,
-    boat_at_event: PatrolBoat,
-    boat_name_of_swapping_boat: str,
+        swapping_boat: PatrolBoat,
+        volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
 ) -> Union[Button, str]:
-    same_boat_names = boat_name_of_swapping_boat == boat_at_event.name
+    boat_at_event = volunteer_at_event_on_boat.patrol_boat
+    same_boat = boat_at_event == swapping_boat
 
-    valid_to_swap_boats = not same_boat_names
+    valid_to_swap_boats = not same_boat
     valid_to_swap_roles = (
         is_possible_to_swap_roles_on_one_day_for_non_grouped_roles_only(
-            interface=interface, event=event, day=day, volunteer_id=volunteer_id
+            volunteer_at_event_on_boat=volunteer_at_event_on_boat
         )
     )
+
+    volunteer_id = volunteer_at_event_on_boat.volunteer.id
+    day = volunteer_at_event_on_boat.day
 
     if swapping_both:
         if valid_to_swap_boats and valid_to_swap_roles:
@@ -256,11 +256,11 @@ def get_swap_roles_button_name(day: Day, volunteer_id: str) -> str:
 def get_and_store_swap_state_from_button_pressed(
     interface: abstractInterface, swap_button: str
 ):
-    swap_type, day, volunteer_id = get_button_type_day_volunteer_given_button_name(swap_button, )
+    swap_type, day, volunteer = get_button_type_day_volunteer_given_button_name(interface=interface, button_name=swap_button)
     swap_state = SwapButtonState(
         ready_to_swap=True,
         dict_of_thing_to_swap=dict(
-            day_str=day.name, volunteer_id=volunteer_id, swap_type=swap_type
+            day_str=day.name, volunteer_id=volunteer.id, swap_type=swap_type
         ),
     )
     store_swap_state(interface=interface, swap_state=swap_state)
@@ -270,10 +270,9 @@ def revert_to_not_swapping_state(interface: abstractInterface):
     swap_state = SwapButtonState(ready_to_swap=False)
     store_swap_state(interface=interface, swap_state=swap_state)
 
-
-def get_type_day_volunteer_id_from_swap_state(
+def get_type_day_volunteer_from_swap_state(
     interface: abstractInterface,
-) -> Tuple[bool, Day, str]:
+) -> Tuple[bool, Day, Volunteer]:
     swap_state = get_swap_state(interface)
     day_str = swap_state.dict_of_thing_to_swap["day_str"]
     swap_type = swap_state.dict_of_thing_to_swap["swap_type"]
@@ -285,7 +284,10 @@ def get_type_day_volunteer_id_from_swap_state(
     else:
         raise Exception("Swap type %s not known" % swap_type)
 
-    return swap_both, Day[day_str], volunteer_id
+    volunteer = get_volunteer_from_id(object_store=interface.object_store, volunteer_id=volunteer_id)
+    day = Day[day_str]
+
+    return swap_both, day, volunteer
 
 
 SWAP_BOATS = "SwapBoats"
@@ -357,13 +359,13 @@ def get_swap_data(interface: abstractInterface, swap_button: str) -> SwapData:
     (
         swap_type,
         day_to_swap_with,
-        volunteer_id_to_swap_with,
-    ) = get_button_type_day_volunteer_given_button_name(swap_button, )
+        volunteer_to_swap_with,
+    ) = get_button_type_day_volunteer_given_button_name(button_name=swap_button, interface=interface)
     (
         __not_used_swapping_both,
         original_day,
-        original_volunteer_id,
-    ) = get_type_day_volunteer_id_from_swap_state(interface)
+        original_volunteer,
+    ) = get_type_day_volunteer_from_swap_state(interface)
     event = get_event_from_state(interface)
     swap_boats, swap_roles = is_swapping_boats_and_or_roles_based_on_button_type(
         swap_type
@@ -375,8 +377,8 @@ def get_swap_data(interface: abstractInterface, swap_button: str) -> SwapData:
         day_to_swap_with=day_to_swap_with,
         swap_boats=swap_boats,
         swap_roles=swap_roles,
-        volunteer_id_to_swap_with=volunteer_id_to_swap_with,
-        original_volunteer_id=original_volunteer_id,
+        original_volunteer=original_volunteer,
+        volunteer_to_swap_with=volunteer_to_swap_with
     )
 
 
@@ -388,7 +390,7 @@ def do_swapping_for_volunteers_boats_and_possibly_roles_in_boat_allocation(
         return
 
     if swap_data.swap_roles:
-        swap_roles_for_volunteers_in_allocation(
+        swap_roles_for_volunteers_in_allocation_using_swapdata(
             interface=interface, swap_data=swap_data
         )
     if swap_data.swap_boats:
@@ -398,8 +400,8 @@ def do_swapping_for_volunteers_boats_and_possibly_roles_in_boat_allocation(
 
 
 def is_no_swap_required_cancel_instead(swap_data: SwapData):
-    s = swap_data
-    day_matches = s.original_day == s.day_to_swap_with
-    volunteer_matches = s.original_volunteer_id == s.volunteer_id_to_swap_with
+
+    day_matches = swap_data.original_day == swap_data.day_to_swap_with
+    volunteer_matches = swap_data.original_volunteer == swap_data.volunteer_to_swap_with
 
     return day_matches and volunteer_matches

@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+from app.objects.volunteers import Volunteer
+
 from app.objects.day_selectors import (
     DaySelector,
     day_selector_stored_format_from_text,
@@ -77,6 +79,14 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
     @property
     def _object_class_contained(self):
         return VolunteerAtEventWithId
+
+    def make_volunteer_available_on_day(self, volunteer: Volunteer, day: Day):
+        volunteer_at_event = self.volunteer_at_event_with_id(volunteer.id)
+        volunteer_at_event.availablity.make_available_on_day(day)
+
+    def make_volunteer_unavailable_on_day(self, volunteer: Volunteer, day: Day):
+        volunteer_at_event = self.volunteer_at_event_with_id(volunteer.id)
+        volunteer_at_event.availablity.make_unavailable_on_day(day)
 
     def is_volunteer_already_at_event(self, volunteer_id: str):
         all_ids = self.list_of_volunteer_ids

@@ -2,12 +2,11 @@ from typing import Union
 
 from app.backend.registration_data.raw_mapped_registration_data import does_event_have_imported_registration_data
 
-from app.backend.wild_apricot.load_wa_file import does_raw_event_file_exist
 from app.frontend.events.mapping.clone_field_mapping import (
     display_form_for_clone_event_field_mapping,
 )
 from app.frontend.events.mapping.create_mapping import (
-    display_form_for_create_custom_field_mapping,
+    display_form_for_create_custom_field_mapping
 )
 from app.frontend.events.mapping.template_field_mapping import (
     display_form_for_choose_template_field_mapping,
@@ -121,11 +120,6 @@ def text_for_pre_existing_mapping(
 
 
 def mapping_buttons(event: Event) -> ButtonBar:
-    raw_event_file_already_uploaded = does_raw_event_file_exist(event_id=event.id)
-    if raw_event_file_already_uploaded:
-        upload_button = update_a_wa_file_to_check_mapping_against_button
-    else:
-        upload_button = upload_a_wa_file_to_check_mapping_against_button
 
     return ButtonBar(
         [
@@ -134,7 +128,6 @@ def mapping_buttons(event: Event) -> ButtonBar:
             map_to_template_button,
             clone_event_button,
             create_mapping_button,
-            upload_button,
             help_button
         ]
     )
@@ -149,12 +142,6 @@ clone_event_button = Button(CLONE_EVENT_MAPPING_BUTTON_LABEL, nav_button=True)
 CREATE_MAPPING_BUTTON_LABEL = "Create your own mapping file"
 create_mapping_button = Button(CREATE_MAPPING_BUTTON_LABEL, nav_button=True)
 
-UPLOAD_WA_FILE_BUTTON_LABEL = "Upload an exported WA file to check mapping"
-upload_a_wa_file_to_check_mapping_against_button = Button(UPLOAD_WA_FILE_BUTTON_LABEL, nav_button=True)
-
-UPDATE_WA_FILE_BUTTON_LABEL = "Upload an updated WA file to check mapping"
-update_a_wa_file_to_check_mapping_against_button = Button(UPDATE_WA_FILE_BUTTON_LABEL, nav_button=True)
-
 help_button = HelpButton("WA_field_mapping")
 
 def post_form_event_field_mapping(interface: abstractInterface) -> Union[Form, NewForm]:
@@ -165,12 +152,10 @@ def post_form_event_field_mapping(interface: abstractInterface) -> Union[Form, N
         return template_mapping_form(interface)
     elif clone_event_button.pressed(button_pressed):
         return clone_mapping_form(interface)
-    elif back_menu_button.pressed(button_pressed):
-        return previous_form(interface)
     elif create_mapping_button.pressed(button_pressed):
         return create_mapping_form(interface)
-    elif upload_a_wa_file_to_check_mapping_against_button.pressed(button_pressed) or update_a_wa_file_to_check_mapping_against_button.pressed(button_pressed):
-        pass
+    elif back_menu_button.pressed(button_pressed):
+        return previous_form(interface)
     else:
         button_error_and_back_to_initial_state_form(interface)
 

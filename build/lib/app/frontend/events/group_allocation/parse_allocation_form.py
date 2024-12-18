@@ -8,32 +8,26 @@ from app.frontend.events.group_allocation.store_state import (
 
 from app.objects.day_selectors import Day
 
-from app.frontend.events.group_allocation.input_fields import NOTES
+from app.frontend.events.group_allocation.input_fields import NOTES, ALLOCATION, CLUB_BOAT, PARTNER, BOAT_CLASS, \
+    SAIL_NUMBER
 from app.objects.events import Event
 
 from app.frontend.forms.form_utils import (
     input_name_from_column_name_and_cadet_id,
     get_availablity_from_form,
 )
-from app.OLD_backend.group_allocations.boat_allocation import (
-    update_club_boat_allocation_for_cadet_at_event_on_day_if_cadet_available,
-    update_boat_info_for_cadets_at_event,
-    CadetWithDinghyInputs,
-)
+from app.backend.boat_classes.update_boat_information import CadetWithDinghyInputs, update_boat_info_for_cadets_at_event
+from app.backend.club_boats.cadets_with_club_dinghies_at_event import \
+    update_club_boat_allocation_for_cadet_at_event_on_day_if_cadet_available
 from app.OLD_backend.group_allocations.group_allocations_data import (
     get_allocation_data,
     AllocationData,
 )
 from app.backend.registration_data.update_cadets_at_event import update_notes_for_existing_cadet_at_event
-from app.backend.events.update_status_and_availability_of_cadets_at_event import update_availability_of_existing_cadet_at_event_and_return_messages
+from app.backend.cadets_at_event.update_status_and_availability_of_cadets_at_event import update_availability_of_existing_cadet_at_event_and_return_messages
 
 from app.frontend.events.constants import (
-    ALLOCATION,
     ATTENDANCE,
-    CLUB_BOAT,
-    SAIL_NUMBER,
-    PARTNER,
-    BOAT_CLASS,
 )
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface

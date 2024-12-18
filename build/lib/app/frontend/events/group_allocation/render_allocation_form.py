@@ -12,9 +12,7 @@ from app.OLD_backend.events import DEPRECATE_get_list_of_all_events
 from app.OLD_backend.group_allocations.previous_allocations import (
     DEPRECATE_get_dict_of_allocations_for_events_and_list_of_cadets,
 )
-from app.backend.groups.cadets_with_groups_at_event import (
-    allocation_for_cadet_in_previous_events_as_dictCONSIDER_REFACTOR,
-)
+from app.backend.groups.previous_groups import allocation_for_cadet_in_previous_events_as_dictCONSIDER_REFACTOR
 
 from app.objects.exceptions import missing_data
 
@@ -38,7 +36,6 @@ from app.frontend.events.group_allocation.store_state import (
 from app.backend.boat_classes.summary import summarise_class_attendance_for_event
 from app.backend.club_boats.summary import summarise_club_boat_allocations_for_event
 from app.OLD_backend.group_allocations.group_allocations_data import (
-    get_allocation_data,
     AllocationData,
 )
 from app.backend.groups.sorting import sorted_active_cadets
@@ -73,12 +70,6 @@ from app.objects.events import (
 def display_form_allocate_cadets_at_event(
     interface: abstractInterface, event: Event, sort_order: list
 ) -> Union[Form, NewForm]:
-    if event.contains_groups:
-        star_indicator = "* indicates only compulsory for racing / river training with spotter sheets"
-    elif event.reg_splitting_allowed:
-        star_indicator = ""
-    else:
-        star_indicator = ""
 
     allocations_and_class_summary = get_allocations_and_classes_detail(
         event=event, interface=interface
@@ -112,7 +103,6 @@ def display_form_allocate_cadets_at_event(
                 allocations_and_class_summary,
                 sort_order_line,
                 _______________,
-                Line([star_indicator]),
                 day_dropdown,
                 Line("Click on a cadet name to show all previous events"),
                 inner_form,
@@ -137,9 +127,10 @@ def get_day_buttons(interface: abstractInterface) -> Line:
     else:
         day = get_day_from_state_or_none(interface)
         return Line(
-            ["Currently editing %s: " % day.name, Button(RESET_DAY_BUTTON_LABEL)]
+            ["Currently editing %s: " % day.name, reset_day_button]
         )
 
+reset_day_button = Button(RESET_DAY_BUTTON_LABEL)
 
 def list_of_all_day_button_names(interface: abstractInterface):
     event = get_event_from_state(interface)
@@ -153,18 +144,12 @@ def list_of_all_day_button_names(interface: abstractInterface):
 def get_allocations_and_classes_detail(
     interface: abstractInterface, event: Event
 ) -> DetailListOfLines:
-    if event.contains_groups:
-        allocations = summarise_allocations_for_event(interface=interface, event=event)
-    elif event.reg_splitting_allowed:
-        allocations = "No groups in event- racing only"
-    else:
-        ##shouldn't happen, but ok
-        allocations = ""
+    allocations = summarise_allocations_for_event(object_store=interface.object_store, event=event)
 
     club_dinghies = summarise_club_boat_allocations_for_event(
-        event=event, interface=interface
+        event=event, object_store=interface.object_store
     )
-    classes = summarise_class_attendance_for_event(event=event, interface=interface)
+    classes = summarise_class_attendance_for_event(event=event, object_store=interface.object_store)
     return DetailListOfLines(
         ListOfLines(
             [
@@ -187,20 +172,23 @@ def get_allocations_and_classes_detail(
 def sort_buttons_for_allocation_table(sort_order: list) -> Table:
     return reorder_table(sort_order)
 
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets
 
 def get_inner_form_for_cadet_allocation(
     interface: abstractInterface, event: Event, sort_order: list
 ) -> Table:
-    allocation_data = get_allocation_data(interface=interface, event=event)
+    dict_of_all_event_data =get_dict_of_all_event_info_for_cadets(object_store=interface.object_store, event=event, active_only=True)
     day_or_none = get_day_from_state_or_none(interface)
     list_of_cadets = sorted_active_cadets(
-        allocation_data=allocation_data, sort_order=sort_order, day_or_none=day_or_none
+        object_store = interface.object_store,
+        dict_of_all_event_data=dict_of_all_event_data, sort_order=sort_order, day_or_none=day_or_none
     )
     return Table(
-        [get_top_row(allocation_data=allocation_data, interface=interface)]
+        [get_top_row(dict_of_all_event_data=dict_of_all_event_data, interface=interface)]
         + [
             get_row_for_cadet(
-                interface=interface, cadet=cadet, allocation_data=allocation_data
+                interface=interface, cadet=cadet,
+                event_data_for_cadet = dict_of_all_event_data.event_data_for_cadet(cadet)
             )
             for cadet in list_of_cadets
         ],
@@ -437,7 +425,8 @@ def get_list_of_all_add_cadet_availability_buttons(interface: abstractInterface)
 
 def get_list_of_all_cadets(interface: abstractInterface):
     event = get_event_from_state(interface)
-    allocation_data = get_allocation_data(interface=interface, event=event)
-    list_of_cadets = sorted_active_cadets(allocation_data)
+    dict_of_all_event_data =get_dict_of_all_event_info_for_cadets(object_store=interface.object_store, event=event,
+                                                                  active_only=True)
+    list_of_cadets = dict_of_all_event_data.list_of_cadets
 
     return list_of_cadets

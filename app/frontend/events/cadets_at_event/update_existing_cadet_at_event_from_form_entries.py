@@ -8,7 +8,7 @@ from app.frontend.forms.form_utils import (
 )
 from app.backend.registration_data.update_cadets_at_event import \
     replace_existing_cadet_at_event_where_original_cadet_was_inactive
-from app.backend.events.update_status_and_availability_of_cadets_at_event import \
+from app.backend.cadets_at_event.update_status_and_availability_of_cadets_at_event import \
     update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_messages, \
     update_availability_of_existing_cadet_at_event_and_return_messages, \
     update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting
@@ -220,10 +220,13 @@ def update_cadet_at_event_when_status_unchanged_and_availability_has_probably_ch
         )
         return
 
-    update_availability_of_existing_cadet_at_event_and_return_messages(
+    list_of_messages = update_availability_of_existing_cadet_at_event_and_return_messages(
         object_store=interface.object_store,
         event=event,
         new_availabilty=new_availability,
         cadet=cadet,
     )
+
+    for message in list_of_messages:
+        interface.log_error(message)
 

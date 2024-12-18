@@ -45,12 +45,9 @@ def get_volunteer_id_selected_from_state(interface: abstractInterface) -> str:
 
 def get_volunteer_at_event_from_state(
     interface: abstractInterface,
-) -> DEPRECATE_VolunteerAtEvent:
+) -> Volunteer:
     volunteer_id = get_volunteer_id_selected_from_state(interface)  ## NEEDS TO BE SET
-    event = get_event_from_state(interface)
-    return get_volunteer_at_event(
-        data_layer=interface.data, event=event, volunteer_id=volunteer_id
-    )
+    return get_volunteer_from_id(object_store=interface.object_store, volunteer_id=volunteer_id)
 
 
 def get_volunteer_at_event_with_id_from_state(

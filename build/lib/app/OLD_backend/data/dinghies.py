@@ -22,7 +22,7 @@ from app.objects.club_dinghies import (
 )
 from app.objects.cadet_at_event_with_club_boat_with_ids import (
     ListOfCadetAtEventWithIdAndClubDinghies,
-    NO_BOAT,
+    NO_CLUB_BOAT,
 )
 from app.objects.boat_classes import (
     ListOfBoatClasses,
@@ -115,7 +115,7 @@ class DinghiesData:
         cadets_with_club_dinghies_at_event = (
             self.get_list_of_cadets_at_event_with_club_dinghies(event)
         )
-        if boat_name == NO_BOAT:
+        if boat_name == NO_CLUB_BOAT:
             cadets_with_club_dinghies_at_event.delete_allocation_for_cadet_on_day(
                 cadet_id=cadet_id, day=day
             )
@@ -351,7 +351,7 @@ class DinghiesData:
         )
 
     def get_list_of_boat_classes(self) -> ListOfBoatClasses:
-        return self.data_api.get_list_of_boat_classes()
+        return self.data_api.get_list_of_club_dinghies()
 
     def save_list_of_boat_classes(self, list_of_boat_classes: ListOfBoatClasses):
         self.data_api.save_list_of_boat_classes(list_of_boat_classes)

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Dict, List
 
-from app.objects.roles_and_teams import Team, ListOfTeams, no_team
+from app.objects.roles_and_teams import Team, ListOfTeams, no_team, RoleLocation
 from app.objects.roles_and_teams import ListOfTeamsAndRolesWithIds, TeamsAndRolesWithIds
 from app.objects.composed.volunteer_roles import ListOfRolesWithSkills, RoleWithSkills
 from app.objects.utils import in_x_not_in_y
@@ -11,6 +11,9 @@ from app.objects.utils import in_x_not_in_y
 class TeamAndIndex:
     team: Team
     index: int
+
+    def location_for_cadet_warning(self)-> RoleLocation:
+        return self.team.location_for_cadet_warning
 
 
 class ListOfTeamsAndIndices(List[TeamAndIndex]):
@@ -202,3 +205,5 @@ def add_new_named_role_to_team(
     dict_of_teams_with_roles.refresh_roles_for_team(
         team=team, new_list_of_roles=current_roles_for_team
     )
+
+

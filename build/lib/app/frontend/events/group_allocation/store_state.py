@@ -31,8 +31,6 @@ SORT_ORDER = "sort_order"
 
 
 def get_current_sort_order(interface: abstractInterface) -> list:
-    event = get_event_from_state(interface)
     default_order = copy(DEFAULT_SORT_ORDER)
-    if not event.contains_groups:
-        default_order.remove(SORT_GROUP)
+
     return interface.get_persistent_value(SORT_ORDER, default=DEFAULT_SORT_ORDER)

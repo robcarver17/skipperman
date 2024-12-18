@@ -11,9 +11,7 @@ from app.OLD_backend.rota.volunteer_rota import get_volunteers_in_role_at_event
 from app.OLD_backend.group_allocations.cadet_event_allocations import (
     load_list_of_cadets_with_allocated_groups_at_event,
 )
-from app.OLD_backend.group_allocations.boat_allocation import (
-    load_list_of_cadets_at_event_with_dinghies,
-)
+from app.backend.boat_classes.update_boat_information import DEPRECATE_load_list_of_cadets_at_event_with_dinghies
 
 
 def display_list_of_events_with_buttons_criteria_matched(
@@ -127,7 +125,7 @@ def event_has_cadets_with_boats(interface: abstractInterface, event: Event):
 
     if (
         len(
-            load_list_of_cadets_at_event_with_dinghies(interface=interface, event=event)
+            DEPRECATE_load_list_of_cadets_at_event_with_dinghies(interface=interface, event=event)
         )
         == 0
     ):

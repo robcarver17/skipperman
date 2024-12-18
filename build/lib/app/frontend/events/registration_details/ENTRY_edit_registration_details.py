@@ -1,6 +1,6 @@
 from typing import Union
 
-
+from app.frontend.events.registration_details.ENTRY_edit_registration_details import SORT_ORDER
 from app.frontend.events.registration_details.registration_details_form import (
     get_registration_data,
     get_top_row_for_table_of_registration_details,
@@ -25,13 +25,11 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.cadets.ENTRY_view_cadets import sort_buttons, all_sort_types
 from app.OLD_backend.data.cadets import SORT_BY_SURNAME
-from app.frontend.events.constants import *
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import Event
 
 
-# EDIT_CADET_REGISTRATION_DATA_IN_VIEW_EVENT_STAGE
 def display_form_edit_registration_details(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
@@ -58,13 +56,6 @@ def display_form_edit_registration_details_given_event_and_sort_order(
                 Line(
                     Heading("Registration details for %s" % event, centred=True, size=4)
                 ),
-                Line(
-                    Heading(
-                        "(Excludes boat information, group allocation and volunteer information; plus cadet name/DOB - edit in the appropriate places / also food and clothing if relevamt)",
-                        centred=True,
-                        size=6,
-                    )
-                ),
                 _______________,
                 sort_buttons,
                 _______________,
@@ -90,11 +81,10 @@ def get_registration_details_inner_form_for_event(
     )
     rows_in_table = [
         row_for_cadet_in_event(
-            interface=interface,
-            cadet_at_event=cadet_at_event,
+            cadet=cadet,
             registration_details=registration_details,
         )
-        for cadet_at_event in registration_details.registration_data
+        for cadet in registration_details.registration_data.list_of_cadets()
     ]
 
     return Table(
@@ -107,22 +97,22 @@ def post_form_edit_registration_details(
 ) -> Union[Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
 
-    event = get_event_from_state(interface)
 
     last_button_pressed = interface.last_button_pressed()
 
-    if interface.last_button_pressed() == cancel_menu_button.name:
+    if cancel_menu_button.pressed(last_button_pressed):
         return previous_form(interface)
 
-    parse_registration_details_from_form(interface=interface, event=event)
+    elif save_menu_button.pressed(last_button_pressed):
+        event = get_event_from_state(interface)
+        parse_registration_details_from_form(interface=interface, event=event)
+        interface.flush_cache_to_store()
 
-    if last_button_pressed in all_sort_types:
+    elif last_button_pressed in all_sort_types:
         ## no change to stage required, just sort order
         sort_order = interface.last_button_pressed()
         interface.set_persistent_value(SORT_ORDER, sort_order)
 
-    elif last_button_pressed == save_menu_button.name:
-        pass
     else:
         button_error_and_back_to_initial_state_form(interface)
 

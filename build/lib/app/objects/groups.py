@@ -13,9 +13,6 @@ UNALLOCATED = "Unallocated"
 UNDETERMINED = "Undetermined"
 
 
-def sorted_locations_REPLACE_WITH_PROPER_SORT_NOT_STR(locations: List[str]):
-    order = [LAKE_TRAINING, RIVER_TRAINING, MG]
-    return [location for location in order if location in locations]
 
 
 GroupLocation = Enum(
@@ -32,6 +29,9 @@ all_locations = [
     river_training_group_location,
     mg_training_group_location,
 ]
+
+def sorted_locations(locations: List[GroupLocation]):
+    return [location for location in all_locations if location in locations]
 
 
 @dataclass
@@ -133,3 +133,9 @@ class ListOfGroups(GenericListOfObjectsWithIds):
 
     def list_of_names(self):
         return [group.name for group in self]
+
+    def has_lake_group(self):
+        return self.contains_specific_location(lake_training_group_location)
+
+    def contains_specific_location(self, location: GroupLocation):
+        return any([group.location==location for group in self])

@@ -4,7 +4,7 @@ from app.objects.exceptions import arg_not_passed
 
 from app.objects.day_selectors import DictOfDaySelectors
 
-from app.backend.events.cadets_at_event import (
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     get_dict_of_all_event_info_for_cadets,
     get_attendance_matrix_for_list_of_cadets_at_event,
 )
@@ -258,3 +258,15 @@ def update_list_of_cadets_with_ids_with_groups_at_event(
         object_definition=object_definition_for_cadets_with_ids_and_groups_at_event,
         event_id=event.id,
     )
+
+
+def get_list_of_groups_at_event_given_list_of_cadets(
+    object_store: ObjectStore, event: Event, list_of_cadets: ListOfCadets
+) -> List[Group]:
+    group_allocation_data = get_group_allocations_for_event_active_cadets_only(object_store=object_store, event=event)
+    list_of_groups = []
+    for cadet in list_of_cadets:
+        groups_for_cadet = group_allocation_data.get_days_and_groups_for_cadet(cadet).list_of_groups
+        list_of_groups+=groups_for_cadet
+
+    return list(set(list_of_groups))

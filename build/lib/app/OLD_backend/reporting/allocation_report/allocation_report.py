@@ -10,7 +10,7 @@ from app.objects.exceptions import missing_data
 from app.objects.events import Event
 from app.objects.composed.cadets_at_event_with_groups import CadetWithGroupOnDay
 from app.objects.cadet_with_id_with_group_at_event import GROUP_STR_NAME
-from app.OLD_backend.reporting.options_and_parameters.report_type_specific_parameters import (
+from app.backend.reporting import (
     SpecificParametersForTypeOfReport,
 )
 

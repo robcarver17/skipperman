@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from app.OLD_backend.reporting.options_and_parameters.report_type_specific_parameters import (
+from app.backend.reporting import (
     SpecificParametersForTypeOfReport,
 )
 from app.data_access.configuration.skills_and_roles import dict_of_volunteer_teams

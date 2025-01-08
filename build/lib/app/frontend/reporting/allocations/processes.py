@@ -8,7 +8,7 @@ from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event
 
-from app.OLD_backend.reporting.allocation_report.allocation_report import (
+from app.backend.reporting.allocation_report.allocation_report import (
     AdditionalParametersForAllocationReport,
     add_club_boat_asterix,
 )

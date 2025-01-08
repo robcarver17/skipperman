@@ -4,10 +4,10 @@ from dataclasses import dataclass
 
 import pandas as pd
 
-from app.OLD_backend.reporting.arrangement.group_order import GroupOrder
+from app.backend.reporting.arrangement.group_order import GroupOrder
 from app.objects.exceptions import arg_not_passed
-from app.OLD_backend.reporting.arrangement.arrangement_order import ArrangementOfColumns
-from app.OLD_backend.reporting.arrangement.arrangement_methods import (
+from app.backend.reporting import ArrangementOfColumns
+from app.backend.reporting.arrangement.arrangement_methods import (
     ArrangementMethod,
     ARRANGE_PASSED_LIST,
     ARRANGE_RECTANGLE,

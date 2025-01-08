@@ -1,6 +1,5 @@
-from app.OLD_backend.reporting.boat_report.boat_report_parameters import (
-    AdditionalParametersForBoatReport,
-)
+from app.backend.reporting.boat_report.boat_report_parameters import AdditionalParametersForBoatReport
+
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_form import yes_no_radio
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -18,28 +17,25 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines, ___________
 
 
 def explain_additional_parameters_for_boat_report(
-    interface: abstractInterface,
+    interface: abstractInterface, ## always passed even if not used
     additional_parameters: AdditionalParametersForBoatReport,
 ) -> ListOfLines:
-    event = get_event_from_state(interface)
-    if event.contains_groups:
-        lake_text = (
-            "Exclude lake groups"
-            if additional_parameters.exclude_lake_groups
-            else "Include lake groups"
-        )
-        river_text = (
-            "Exclude river training groups"
-            if additional_parameters.exclude_river_training_groups
-            else "Include river training groups"
-        )
-        unallocated = (
-            "Exclude sailors with no group"
-            if additional_parameters.exclude_unallocated_groups
-            else "Include sailors with no group"
-        )
-    else:
-        lake_text = river_text = unallocated = ""
+
+    lake_text = (
+        "Exclude lake groups"
+        if additional_parameters.exclude_lake_groups
+        else "Include lake groups"
+    )
+    river_text = (
+        "Exclude river training groups"
+        if additional_parameters.exclude_river_training_groups
+        else "Include river training groups"
+    )
+    unallocated = (
+        "Exclude sailors with no group"
+        if additional_parameters.exclude_unallocated_groups
+        else "Include sailors with no group"
+    )
 
     full_names = (
         "Display sailors full names"

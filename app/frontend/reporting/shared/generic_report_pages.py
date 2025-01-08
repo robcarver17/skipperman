@@ -6,7 +6,7 @@ from app.frontend.reporting.shared.arrangement_form import (
     post_form_for_group_arrangement_options,
 )
 from app.frontend.reporting.shared.create_report import create_generic_report
-from app.OLD_backend.reporting.event_lists import (
+from app.backend.reporting import (
     display_list_of_events_with_buttons_criteria_matched,
     describe_criteria,
 )
@@ -49,7 +49,7 @@ from app.backend.events.list_of_events import (
     confirm_event_exists_given_description_REFACTOR,
 )
 
-from app.frontend.reporting.constants import *
+from app.frontend.reporting.shared.constants import *
 
 
 def display_initial_generic_report_form(

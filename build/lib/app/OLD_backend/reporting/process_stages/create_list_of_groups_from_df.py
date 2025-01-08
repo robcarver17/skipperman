@@ -1,12 +1,12 @@
 from typing import Dict
 import pandas as pd
 
-from app.OLD_backend.reporting.arrangement.group_order import GroupOrder
-from app.OLD_backend.reporting.options_and_parameters.marked_up_list_from_df_parameters import (
+from app.backend.reporting.arrangement.group_order import GroupOrder
+from app.backend.reporting.options_and_parameters.marked_up_list_from_df_parameters import (
     MarkedUpListFromDfParametersWithActualGroupOrder,
 )
 
-from app.OLD_backend.reporting.process_stages.strings_columns_groups import (
+from app.backend.reporting import (
     GroupOfMarkedUpString,
     MarkedUpString,
     Page,

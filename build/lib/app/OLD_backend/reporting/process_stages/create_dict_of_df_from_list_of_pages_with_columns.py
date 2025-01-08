@@ -2,7 +2,7 @@ from typing import Dict, Tuple
 
 import pandas as pd
 
-from app.OLD_backend.reporting.process_stages.strings_columns_groups import (
+from app.backend.reporting import (
     ListOfPagesWithColumns,
     PageWithColumns,
     Column,

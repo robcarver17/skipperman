@@ -3,21 +3,19 @@ from typing import List, Dict
 import numpy as np
 import pandas as pd
 
-from app.OLD_backend.reporting.options_and_parameters.marked_up_list_from_df_parameters import (
+from app.backend.reporting.options_and_parameters.marked_up_list_from_df_parameters import (
     create_parameters_to_create_marked_up_list_from_df,
 )
-from app.OLD_backend.reporting.options_and_parameters.report_options import (
+from app.backend.reporting import (
     ReportingOptions,
 )
-from app.OLD_backend.reporting.options_and_parameters.report_type_specific_parameters import (
+from app.backend.reporting import (
     SpecificParametersForTypeOfReport,
 )
-from app.OLD_backend.reporting.process_stages.create_list_of_groups_from_df import (
+from app.backend.reporting import (
     get_dict_of_grouped_df,
 )
-from app.frontend.reporting.shared.arrangement_state import (
-    reset_arrangement_report_options,
-)
+from app.backend.reporting.arrangement.arrange_options import reset_arrangement_report_options
 from app.frontend.reporting.shared.report_generator import ReportGenerator
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.reporting.shared.group_order import (
@@ -106,9 +104,9 @@ def get_reporting_options(
 def reset_all_report_options(
     interface: abstractInterface, report_generator: ReportGenerator
 ):
-    reset_print_report_options(interface, report_generator)
+    reset_print_report_options(interface=interface, report_generator=report_generator)
     reset_specific_report_options(interface, report_generator)
-    reset_arrangement_report_options(interface, report_generator)
+    reset_arrangement_report_options(object_store=interface.object_store, report_generator=report_generator)
 
 
 def reset_specific_report_options(

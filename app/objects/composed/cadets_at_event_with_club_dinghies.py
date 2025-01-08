@@ -53,8 +53,8 @@ class DictOfDaysAndClubDinghiesAtEventForCadet(Dict[Day, ClubDinghy]):
 
         return dinghy_on_day == dinghy
 
-    def dinghy_on_day(self, day)-> ClubDinghy:
-        return self.get(day, ClubDinghy.create_empty())
+    def dinghy_on_day(self, day, default=no_club_dinghy)-> ClubDinghy:
+        return self.get(day, default)
 
     def unique_list_of_dinghies(self) -> ListOfClubDinghies:
         return ListOfClubDinghies(list(set(self.values())))

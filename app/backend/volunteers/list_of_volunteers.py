@@ -25,7 +25,7 @@ def get_volunteer_from_name( object_store: ObjectStore, volunteer_name: str) -> 
 
 def get_volunteer_from_id(object_store: ObjectStore, volunteer_id: str) -> Volunteer:
     list_of_volunteers = get_list_of_volunteers(object_store)
-    return list_of_volunteers.object_with_id(volunteer_id)
+    return list_of_volunteers.volunteer_with_id(volunteer_id)
 
 
 def get_volunteer_from_list_of_given_str_of_volunteer(

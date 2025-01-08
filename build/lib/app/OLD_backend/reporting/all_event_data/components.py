@@ -1,6 +1,6 @@
 from typing import Dict
 
-from app.OLD_backend.reporting.options_and_parameters.print_options import PrintOptions
+from app.backend.reporting import PrintOptions
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.utils import we_are_not_the_same

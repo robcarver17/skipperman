@@ -1,7 +1,7 @@
-from app.OLD_backend.reporting.arrangement.arrange_options import (
+from app.backend.reporting import (
     ArrangementOptionsAndGroupOrder,
 )
-from app.OLD_backend.reporting.options_and_parameters.print_options import PrintOptions
+from app.backend.reporting import PrintOptions
 from app.objects.groups import ListOfGroups
 
 

@@ -1,13 +1,13 @@
-from app.OLD_backend.reporting.process_stages.create_list_of_groups_from_df import (
+from app.backend.reporting import (
     create_list_of_pages_from_dict_of_df,
 )
-from app.OLD_backend.reporting.process_stages.create_list_of_columns_from_groups import (
+from app.backend.reporting import (
     create_list_of_pages_with_columns_from_list_of_pages,
 )
-from app.OLD_backend.reporting.process_stages.create_file_from_list_of_columns import (
+from app.backend.reporting import (
     create_report_from_list_of_columns_and_return_filename,
 )
-from app.OLD_backend.reporting.options_and_parameters.report_options import (
+from app.backend.reporting import (
     ReportingOptions,
 )
 

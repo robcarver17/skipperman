@@ -3,7 +3,7 @@ from fpdf import FPDF
 
 import numpy as np
 
-from app.OLD_backend.reporting.options_and_parameters.print_options import PrintOptions
+from app.backend.reporting import PrintOptions
 from app.data_access.configuration.fixed import (
     ALL_PAGESIZE,
     ALL_FONTS,
@@ -14,7 +14,7 @@ from app.data_access.configuration.fixed import (
     LINE_GAP_AS_PERCENTAGE_OF_CHARACTER_HEIGHT,
     MAX_FONT_SIZE,
 )
-from app.OLD_backend.reporting.process_stages.strings_columns_groups import (
+from app.backend.reporting import (
     PageWithColumns,
     MarkedUpString,
 )

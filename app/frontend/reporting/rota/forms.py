@@ -1,6 +1,6 @@
 from app.objects.abstract_objects.abstract_form import yes_no_radio
 
-from app.OLD_backend.reporting.rota_report.configuration import (
+from app.backend.reporting.rota_report.configuration import (
     AdditionalParametersForVolunteerReport,
 )
 from app.frontend.shared.events_state import get_event_from_state

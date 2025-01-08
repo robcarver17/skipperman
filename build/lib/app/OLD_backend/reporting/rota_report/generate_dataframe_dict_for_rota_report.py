@@ -4,8 +4,8 @@ import pandas as pd
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.OLD_backend.reporting.rota_report.components import DataForDfConstruction
-from app.OLD_backend.reporting.rota_report.configuration import (
+from app.backend.reporting.rota_report.components import DataForDfConstruction
+from app.backend.reporting.rota_report.configuration import (
     list_of_teams,
     roles_in_team,
     BOAT,
@@ -13,7 +13,7 @@ from app.OLD_backend.reporting.rota_report.configuration import (
     ROLE,
     GROUP,
 )
-from app.OLD_backend.reporting.rota_report.teams import (
+from app.backend.reporting import (
     Team,
     dataframe_for_team,
     sort_df_by_power_boat,

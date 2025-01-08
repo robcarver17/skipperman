@@ -28,7 +28,7 @@ from app.frontend.reporting.shared.generic_report_pages import (
 )
 from app.frontend.reporting.shared.report_generator import ReportGenerator
 
-from app.OLD_backend.reporting.rollcall_report.configuration import (
+from app.backend.reporting.rollcall_report.configuration import (
     specific_parameters_for_rollcall_report,
 )
 

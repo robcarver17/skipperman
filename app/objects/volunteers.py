@@ -113,7 +113,11 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
         return [volunteer.name for volunteer in self]
 
     def volunteer_with_id(self, id: str) -> Volunteer:
+        if id ==  NO_VOLUNTEER_ALLOCATED:
+            return no_volunteer_allocated
         return self.object_with_id(id)
 
 
 default_volunteer = Volunteer(first_name=" ", surname=" ")
+no_volunteer_allocated = Volunteer("No volunteer", "allocated")
+NO_VOLUNTEER_ALLOCATED = "NO_volunteer_allocated"

@@ -40,7 +40,7 @@ def post_form_for_qualifications_report(
     if back_menu_button.pressed(last_button):
         return previous_form(interface)
     elif create_qualification_list_report_button.pressed(last_button):
-        filename = write_qualifications_to_temp_csv_file_and_return_filename(interface)
+        filename = write_qualifications_to_temp_csv_file_and_return_filename(object_store=interface.object_store)
         return File(filename)
     elif expected_qualification_report_button.pressed(last_button):
         return interface.get_new_form_given_function(

@@ -1,9 +1,9 @@
-from app.OLD_backend.reporting.options_and_parameters.print_options import PrintOptions
-from app.OLD_backend.reporting.arrangement.arrangement_order import ArrangementOfColumns
+from app.backend.reporting import PrintOptions
+from app.backend.reporting import ArrangementOfColumns
 from dataclasses import dataclass
 from typing import List
 
-from app.OLD_backend.reporting.process_stages.strings_columns_groups import (
+from app.backend.reporting import (
     Page,
     create_columns_from_page,
 )

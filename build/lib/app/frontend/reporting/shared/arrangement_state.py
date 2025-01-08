@@ -1,6 +1,6 @@
 from app.OLD_backend.data.options import OptionsData
 
-from app.OLD_backend.reporting.arrangement.arrange_options import (
+from app.backend.reporting import (
     ArrangementOptionsAndGroupOrder,
 )
 from app.frontend.reporting.shared.report_generator import ReportGenerator

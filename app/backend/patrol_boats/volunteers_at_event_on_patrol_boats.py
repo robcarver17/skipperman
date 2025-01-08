@@ -6,7 +6,7 @@ from app.objects.utils import in_x_not_in_y
 from app.backend.patrol_boats.list_of_patrol_boats import get_list_of_patrol_boats
 
 from app.objects.day_selectors import Day
-from app.objects.patrol_boats import ListOfPatrolBoats, PatrolBoat
+from app.objects.patrol_boats import ListOfPatrolBoats, PatrolBoat, no_patrol_boat
 from app.objects.volunteers import ListOfVolunteers, Volunteer
 
 from app.objects.composed.volunteers_at_event_with_patrol_boats import (
@@ -61,14 +61,28 @@ def load_list_of_patrol_boats_at_event(
     return list_of_boats_at_event
 
 
+def get_name_of_boat_allocated_to_volunteer_on_day_at_event(
+    object_store: ObjectStore, event: Event, volunteer: Volunteer, day: Day, default=""
+) -> str:
+
+    boat = get_boat_allocated_to_volunteer_on_day_at_event(object_store=object_store,
+                                                           event=event,
+                                                           volunteer=volunteer,
+                                                           day=day, default=None)
+    if boat is None:
+        return default
+
+    return boat.name
+
 def get_boat_allocated_to_volunteer_on_day_at_event(
-    object_store: ObjectStore, event: Event, volunteer: Volunteer, day: Day
+    object_store: ObjectStore, event: Event, volunteer: Volunteer, day: Day, default=no_patrol_boat
 ) -> PatrolBoat:
 
     patrol_boat_data = get_dict_of_patrol_boats_by_day_for_volunteer_at_event(object_store=object_store, event=event)
     boat_dict = patrol_boat_data.patrol_boats_for_volunteer(volunteer)
 
-    return boat_dict.get(day)
+    return boat_dict.boat_on_day(day, default=default)
+
 
 def get_list_of_boat_names_excluding_boats_already_at_event(
     object_store: ObjectStore, event: Event

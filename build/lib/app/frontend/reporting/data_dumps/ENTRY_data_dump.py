@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.OLD_backend.volunteers.volunteer_data_dump import get_volunteer_data_dump
+from app.backend.volunteers.volunteer_data_dump import get_volunteer_data_dump
 from app.data_access.file_access import temp_file_name
 from app.objects.abstract_objects.abstract_text import Heading
 

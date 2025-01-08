@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from app.objects.cadet_with_id_with_group_at_event import GROUP_STR_NAME
-from app.OLD_backend.reporting.options_and_parameters.report_type_specific_parameters import (
+from app.backend.reporting import (
     SpecificParametersForTypeOfReport,
 )
 

@@ -1,9 +1,8 @@
-from app.OLD_backend.reporting.arrangement.arrange_options import (
-    ArrangeGroupsOptions,
+from app.backend.reporting import (
     ArrangementOptionsAndGroupOrder,
 )
 
-from app.OLD_backend.reporting.options_and_parameters.print_options import PrintOptions
+from app.backend.reporting import PrintOptions
 from app.data_access.csv.generic_csv_data import GenericCsvData
 from app.data_access.classes.configuration import (
     DataListOfPrintOptions,

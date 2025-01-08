@@ -324,11 +324,14 @@ class ListOfCadets(GenericListOfObjectsWithIds):
         return ListOfCadets(similar_surnames)
 
     def cadet_with_id(self, cadet_id: str) -> Cadet:
+        if cadet_id == SKIP_TEST_CADET_ID:
+            return test_cadet
         return self.object_with_id(cadet_id)
 
     def list_of_names(self):
         return [cadet.name for cadet in self]
 
+test_cadet = Cadet.from_name_only("Test", "")
 
 def cadet_is_too_young_to_be_without_parent(cadet: Cadet) -> bool:
     return cadet.approx_age_years() < MIN_AGE_WHEN_CADET_CAN_BE_AT_EVENT_WITHOUT_PARENT
@@ -352,3 +355,4 @@ unknown_cadet = Cadet(
     date_of_birth=DEFAULT_DATE_OF_BIRTH,
     membership_status=none_member,
 )
+SKIP_TEST_CADET_ID = str(-9999)

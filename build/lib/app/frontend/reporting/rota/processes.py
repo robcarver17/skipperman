@@ -1,10 +1,10 @@
 import pandas as pd
 from typing import Dict
 
-from app.OLD_backend.reporting.rota_report.configuration import (
+from app.backend.reporting.rota_report.configuration import (
     AdditionalParametersForVolunteerReport,
 )
-from app.OLD_backend.reporting.rota_report.generate_dataframe_dict_for_rota_report import (
+from app.backend.reporting.rota_report.generate_dataframe_dict_for_rota_report import (
     get_df_for_reporting_volunteers_with_flags,
 )
 

@@ -1,28 +1,26 @@
-from app.OLD_backend.reporting.arrangement.arrange_options import (
+from app.backend.reporting import (
     ArrangementOptionsAndGroupOrder,
 )
-from app.OLD_backend.reporting.arrangement.group_order import GroupOrder
+from app.backend.reporting.arrangement.group_order import GroupOrder
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.frontend.reporting.shared.arrangement_state import (
-    save_arrangement_and_group_order,
-    get_stored_arrangement_and_group_order,
-)
+from app.backend.reporting.arrangement.arrange_options import get_stored_arrangement_and_group_order, \
+    update_arrangement_and_group_order
 
-from app.OLD_backend.reporting.arrangement.arrangement_order import (
+from app.backend.reporting import (
     ArrangementOfColumns,
     ArrangementOfRows,
     IndicesToSwap,
 )
 
-from app.OLD_backend.reporting.options_and_parameters.report_options import (
+from app.backend.reporting import (
     ReportingOptions,
 )
 
 
-from app.OLD_backend.reporting.process_stages.create_list_of_columns_from_groups import (
+from app.backend.reporting import (
     modify_arrangement_given_list_of_pages_and_method,
 )
-from app.OLD_backend.reporting.process_stages.create_list_of_groups_from_df import (
+from app.backend.reporting import (
     create_list_of_pages_from_dict_of_df,
 )
 
@@ -69,7 +67,7 @@ def create_arrangement_from_order_and_algo_and_save(
         reporting_options=reporting_options
     )
 
-    save_arrangement_and_group_order(
+    update_arrangement_and_group_order(
         interface=interface,
         arrangement_and_group_options=arrangement_group_options,
         report_type=reporting_options.specific_parameters.report_type,
@@ -131,7 +129,7 @@ def modify_arrangement_given_change_in_group_order(
     )
     arrangement_options_and_group_order.group_order = new_group_order
 
-    save_arrangement_and_group_order(
+    update_arrangement_and_group_order(
         arrangement_and_group_options=arrangement_options_and_group_order,
         interface=interface,
         report_type=report_type,
@@ -161,7 +159,7 @@ def remove_empty_groups_from_group_order_and_arrangement(
         arrangement_options_and_group_order=arrangement_options_and_group_order,
     )
 
-    save_arrangement_and_group_order(
+    update_arrangement_and_group_order(
         arrangement_and_group_options=arrangement_options_and_group_order,
         interface=interface,
         report_type=reporting_options.specific_parameters.report_type,
@@ -183,7 +181,7 @@ def add_missing_groups_to_group_order_and_arrangement(
         reporting_options=reporting_options,
         arrangement_options_and_group_order=arrangement_options_and_group_order,
     )
-    save_arrangement_and_group_order(
+    update_arrangement_and_group_order(
         arrangement_and_group_options=arrangement_options_and_group_order,
         interface=interface,
         report_type=reporting_options.specific_parameters.report_type,
@@ -217,7 +215,7 @@ def modify_arrangement_options_given_custom_list(
     arrangement_options_and_group_order.arrangement_options.add_arrangement_of_columns(
         new_arrangement_of_columns
     )
-    save_arrangement_and_group_order(
+    update_arrangement_and_group_order(
         arrangement_and_group_options=arrangement_options_and_group_order,
         interface=interface,
         report_type=report_type,

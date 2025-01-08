@@ -3,8 +3,8 @@ from typing import Dict, List
 import pandas as pd
 from app.data_access.store.object_store import ObjectStore
 
-from app.OLD_backend.reporting.options_and_parameters.print_options import PrintOptions
-from app.OLD_backend.reporting.process_stages.create_file_from_list_of_columns import \
+from app.backend.reporting import PrintOptions
+from app.backend.reporting import \
     create_csv_report_from_dict_of_df_and_return_filename
 from app.backend.food.summarise_food import summarise_food_data_by_day
 from app.objects.cadets import Cadet

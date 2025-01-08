@@ -1,5 +1,3 @@
-from typing import Tuple
-
 from app.objects.abstract_objects.abstract_form import (
     yes_no_radio,
 )
@@ -15,7 +13,7 @@ from app.frontend.reporting.allocations.processes import (
     INCLUDE_UNALLOCATED_CADETS,
     CLUB_BOAT_ASTERIX,
 )
-from app.OLD_backend.reporting.allocation_report.allocation_report import (
+from app.backend.reporting.allocation_report.allocation_report import (
     AdditionalParametersForAllocationReport,
 )
 

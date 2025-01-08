@@ -2,29 +2,26 @@ from typing import Dict
 
 import pandas as pd
 
-from app.OLD_backend.reporting.options_and_parameters.report_options import (
+from app.backend.reporting import (
     ReportingOptions,
 )
-from app.OLD_backend.reporting.process_stages.create_list_of_columns_from_groups import (
+from app.backend.reporting import (
     get_order_of_indices_even_sizing_with_parameters,
 )
 
-from app.OLD_backend.reporting.arrangement.arrange_options import (
+from app.backend.reporting import (
     ArrangementOptionsAndGroupOrder,
 )
 
-from app.frontend.reporting.shared.arrangement_state import (
-    get_stored_arrangement_and_group_order,
-)
+from app.backend.reporting.arrangement.arrange_options import get_stored_arrangement_and_group_order
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.frontend.reporting.constants import GROUP_ORDER
-from app.OLD_backend.reporting.arrangement.group_order import (
+from app.backend.reporting.arrangement.group_order import (
     GroupOrder,
     get_group_order_excluding_missing_groups,
     get_groups_in_dict_missing_from_group_order,
     get_groups_in_group_order_missing_from_dict,
 )
-from app.OLD_backend.reporting.options_and_parameters.report_type_specific_parameters import (
+from app.backend.reporting import (
     SpecificParametersForTypeOfReport,
 )
 

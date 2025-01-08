@@ -5,10 +5,10 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
 
-from app.OLD_backend.reporting.rollcall_report.configuration import (
+from app.backend.reporting.rollcall_report.configuration import (
     AdditionalParametersForRollcallReport,
 )
-from app.OLD_backend.reporting.allocation_report.allocation_report import (
+from app.backend.reporting.allocation_report.allocation_report import (
     add_club_boat_asterix,
 )
 from app.objects.events import Event

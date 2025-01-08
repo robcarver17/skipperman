@@ -1,8 +1,6 @@
-from typing import Tuple
 from copy import copy
 
-from app.OLD_backend.reporting.arrangement.arrangement_order import (
-    MARK_AS_DELETE,
+from app.backend.reporting import (
     IndicesToSwap,
 )
 from app.objects.abstract_objects.abstract_tables import RowInTable, Table

@@ -1,4 +1,4 @@
-from app.OLD_backend.reporting.boat_report.boat_report_parameters import (
+from app.backend.reporting import (
     AdditionalParametersForBoatReport,
 )
 from app.frontend.shared.events_state import get_event_from_state

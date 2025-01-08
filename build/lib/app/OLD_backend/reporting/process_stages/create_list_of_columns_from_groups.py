@@ -1,29 +1,29 @@
 from typing import List
 
 import numpy as np
-from app.OLD_backend.reporting.arrangement.arrange_options import (
+from app.backend.reporting import (
     ArrangementOptionsAndGroupOrder,
 )
 
-from app.OLD_backend.reporting.process_stages.optimise_column_layout import (
+from app.backend.reporting import (
     _generate_list_of_all_possible_indices,
     _find_best_list_of_indices,
 )
-from app.OLD_backend.reporting.process_stages.strings_columns_groups import (
+from app.backend.reporting import (
     create_list_of_pages_with_columns_from_list_of_pages_and_arrangement_options,
     ListOfPages,
     Page,
     ListOfPagesWithColumns,
 )
-from app.OLD_backend.reporting.arrangement.arrangement_order import ArrangementOfColumns
-from app.OLD_backend.reporting.options_and_parameters.report_options import (
+from app.backend.reporting import ArrangementOfColumns
+from app.backend.reporting import (
     ReportingOptions,
 )
-from app.OLD_backend.reporting.arrangement.arrangement_methods import (
+from app.backend.reporting.arrangement.arrangement_methods import (
     ARRANGE_PASSED_LIST,
     ARRANGE_RECTANGLE,
 )
-from app.OLD_backend.reporting.options_and_parameters.print_options import PrintOptions
+from app.backend.reporting import PrintOptions
 
 
 def create_list_of_pages_with_columns_from_list_of_pages(

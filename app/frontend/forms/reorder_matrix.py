@@ -7,7 +7,7 @@ from app.objects.abstract_objects.abstract_text import (
 )
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line
-from app.OLD_backend.reporting.arrangement.arrangement_order import (
+from app.backend.reporting import (
     ArrangementOfRows,
     EMPTY,
     ArrangementOfColumns,

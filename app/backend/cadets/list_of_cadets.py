@@ -1,6 +1,6 @@
 from typing import List
 
-from app.objects.cadets import ListOfCadets, Cadet
+from app.objects.cadets import ListOfCadets, Cadet, SKIP_TEST_CADET_ID
 from app.objects.exceptions import arg_not_passed
 
 
@@ -46,6 +46,8 @@ def get_cadet_from_list_of_cadets_given_str_of_cadet(
 def get_cadet_from_id(object_store: ObjectStore, cadet_id: str) -> Cadet:
     list_of_cadets = get_list_of_cadets(object_store)
     return list_of_cadets.cadet_with_id(cadet_id)
+
+from app.objects.cadets import Cadet
 
 
 def get_list_of_cadets_sorted_by_surname(object_store: ObjectStore) -> ListOfCadets:

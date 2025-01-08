@@ -15,7 +15,7 @@ from app.objects.abstract_objects.abstract_lines import (
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_text import bold, Heading
-from app.frontend.reporting.constants import (
+from app.frontend.reporting.shared.constants import (
     REPORT_TITLE,
     REPORT_FILENAME,
     PAGE_ALIGNMENT,
@@ -31,7 +31,7 @@ from app.frontend.reporting.constants import (
     FONT_SIZE,
 )
 from app.objects.exceptions import missing_data
-from app.OLD_backend.reporting.options_and_parameters.print_options import (
+from app.backend.reporting import (
     PrintOptions,
     default_report_title_and_filename,
     get_default_filename_for_report,

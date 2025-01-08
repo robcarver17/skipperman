@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from app.OLD_backend.reporting.arrangement.group_order import GroupOrder
-from app.OLD_backend.reporting.options_and_parameters.print_options import PrintOptions
-from app.OLD_backend.reporting.options_and_parameters.report_type_specific_parameters import (
+from app.backend.reporting.arrangement.group_order import GroupOrder
+from app.backend.reporting import PrintOptions
+from app.backend.reporting import (
     SpecificParametersForTypeOfReport,
 )
 from app.objects.exceptions import arg_not_passed

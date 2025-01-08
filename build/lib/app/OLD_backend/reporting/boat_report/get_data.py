@@ -3,7 +3,7 @@ from typing import Dict, List, Tuple
 import pandas as pd
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.OLD_backend.reporting.boat_report.boat_report_parameters import (
+from app.backend.reporting import (
     AdditionalParametersForBoatReport,
     FIRST_CADET,
     SECOND_CADET,

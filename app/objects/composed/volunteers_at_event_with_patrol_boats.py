@@ -10,7 +10,7 @@ from app.objects.events import Event, ListOfEvents
 
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 
-from app.objects.patrol_boats import PatrolBoat, ListOfPatrolBoats
+from app.objects.patrol_boats import PatrolBoat, ListOfPatrolBoats, no_patrol_boat
 
 from app.objects.day_selectors import Day, DaySelector
 
@@ -53,6 +53,9 @@ class VolunteerPatrolBoatDay:
 
 
 class PatrolBoatByDayDict(Dict[Day, PatrolBoat]):
+    def boat_on_day(self, day: Day, default = no_patrol_boat) -> PatrolBoat:
+        return self.get(day, default)
+
     def delete_patrol_boat_association(self, patrol_boat: PatrolBoat):
         for day in self.keys():
             if self[day] == patrol_boat:
@@ -74,7 +77,7 @@ class PatrolBoatByDayDict(Dict[Day, PatrolBoat]):
             self[day_to_copy_to] = original_boat
 
     def add_boat_on_day(self, day: Day, patrol_boat: PatrolBoat):
-        existing_boat = self.get(day, None)
+        existing_boat = self.boat_on_day(day, None)
         if existing_boat is not None:
             raise Exception("Volunteer cannot be on more than one boat for a given day")
 
@@ -84,12 +87,12 @@ class PatrolBoatByDayDict(Dict[Day, PatrolBoat]):
         return not self.not_on_patrol_boat_on_given_day(day)
 
     def not_on_patrol_boat_on_given_day(self, day: Day):
-        boat_on_day = self.get(day, None)
+        boat_on_day = self.boat_on_day(day, None)
 
         return boat_on_day is None
 
     def assigned_to_boat_on_day(self, day: Day, patrol_boat: PatrolBoat):
-        boat_on_day = self.get(day, None)
+        boat_on_day = self.boat_on_day(day, None)
         if boat_on_day is None:
             return False
 
@@ -110,7 +113,7 @@ class PatrolBoatByDayDict(Dict[Day, PatrolBoat]):
     def number_of_days_assigned_to_boat_and_day(
         self, patrol_boat: PatrolBoat, day: Day
     ):
-        assigned_boat = self.get(day, None)
+        assigned_boat = self.boat_on_day(day, None)
         if assigned_boat is None:
             return 0
         elif assigned_boat == patrol_boat:
@@ -119,7 +122,7 @@ class PatrolBoatByDayDict(Dict[Day, PatrolBoat]):
             return 0
 
     def first_patrol_boat(self) -> PatrolBoat:
-        return list(set(self.values()))[0]
+        return list(set(self.list_of_boats))[0]
 
     @property
     def list_of_boats(self):

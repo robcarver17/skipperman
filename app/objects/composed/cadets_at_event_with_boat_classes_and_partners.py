@@ -90,6 +90,11 @@ class BoatClassAndPartnerAtEventOnDay:
     def has_partner(self) -> bool:
         return valid_partnership_given_partner_cadet(self.partner_cadet)
 
+no_boat_class_partner_or_sail_number = BoatClassAndPartnerAtEventOnDay(
+    boat_class=no_boat_class,
+    sail_number=""
+)
+
 def no_partnership_given_partner_cadet_as_str(partner_as_str: str):
     return partner_as_str in [NO_PARTNER_REQUIRED, NOT_ALLOCATED]
 
@@ -167,12 +172,8 @@ class DictOfDaysBoatClassAndPartners(Dict[Day, BoatClassAndPartnerAtEventOnDay])
 
         return boat_class_and_partner.partner_cadet
 
-    def boat_class_and_partner_on_day(self, day: Day) -> BoatClassAndPartnerAtEventOnDay:
-        boat_class_and_partner = self.get(day, None)
-        if boat_class_and_partner is None:
-            raise MissingData
-
-        return boat_class_and_partner
+    def boat_class_and_partner_on_day(self, day: Day, default =no_boat_class_partner_or_sail_number) -> BoatClassAndPartnerAtEventOnDay:
+        return self.get(day, default)
 
     def remove_boat_and_partner_on_day(self, day: Day):
         try:
@@ -333,10 +334,7 @@ class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPart
 
     def remove_cadet_from_event_on_day_and_return_message(self, cadet: Cadet, day: Day) -> str:
         boat_classes_and_partners = self.boat_classes_and_partner_for_cadet(cadet)
-        try:
-            boat_classes_and_partner_on_day = boat_classes_and_partners.boat_class_and_partner_on_day(day)
-        except MissingData:
-            return ""
+        boat_classes_and_partner_on_day = boat_classes_and_partners.boat_class_and_partner_on_day(day)
 
         if boat_classes_and_partner_on_day.has_partner:
             partner_cadet = boat_classes_and_partner_on_day.partner_cadet
@@ -357,10 +355,7 @@ class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPart
     ):
 
         boat_classes_and_partners = self.boat_classes_and_partner_for_cadet(cadet)
-        try:
-            boat_classes_and_partner_on_day = boat_classes_and_partners.boat_class_and_partner_on_day(day)
-        except MissingData:
-            return
+        boat_classes_and_partner_on_day = boat_classes_and_partners.boat_class_and_partner_on_day(day)
 
         boat_classes_and_partner_on_day.partner_cadet = NoPartnerAllocated
         self.list_of_cadets_at_event_with_boat_class_and_partners_with_ids.remove_two_handed_partner_from_existing_cadet(cadet_id=cadet.id,

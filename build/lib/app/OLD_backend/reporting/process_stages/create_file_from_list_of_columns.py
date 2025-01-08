@@ -2,16 +2,16 @@ import os
 from typing import Dict
 
 import pandas as pd
-from app.OLD_backend.reporting.options_and_parameters.print_options import PrintOptions
+from app.backend.reporting import PrintOptions
 
-from app.OLD_backend.reporting.process_stages.create_dict_of_df_from_list_of_pages_with_columns import (
+from app.backend.reporting import (
     convert_list_of_pages_with_columns_to_dict_of_df,
 )
-from app.OLD_backend.reporting.process_stages.strings_columns_groups import (
+from app.backend.reporting import (
     ListOfPagesWithColumns,
 )
-from app.OLD_backend.reporting.process_stages.pdf_layout import PdfLayout
-from app.OLD_backend.reporting.options_and_parameters.report_options import (
+from app.backend.reporting import PdfLayout
+from app.backend.reporting import (
     ReportingOptions,
 )
 from app.data_access.file_access import download_directory, public_reporting_directory

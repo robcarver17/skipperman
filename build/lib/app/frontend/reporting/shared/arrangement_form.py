@@ -39,21 +39,19 @@ from app.frontend.reporting.shared.reporting_options import (
     augment_order_of_groups_with_sizes,
     get_reporting_options,
 )
-from app.frontend.reporting.shared.arrangement_state import (
-    save_arrangement_and_group_order,
-)
+from app.backend.reporting.arrangement.arrange_options import update_arrangement_and_group_order
 from app.frontend.reporting.shared.group_order import (
     get_missing_groups,
     get_empty_groups,
 )
 
-from app.OLD_backend.reporting.arrangement.arrange_options import (
+from app.backend.reporting import (
     dict_of_arrangements_that_reorder,
 )
-from app.OLD_backend.reporting.options_and_parameters.report_type_specific_parameters import (
+from app.backend.reporting import (
     SpecificParametersForTypeOfReport,
 )
-from app.OLD_backend.reporting.options_and_parameters.report_options import (
+from app.backend.reporting import (
     ReportingOptions,
 )
 
@@ -244,7 +242,7 @@ def change_arrangement_given_method_and_current_order(
         )
     )
 
-    save_arrangement_and_group_order(
+    update_arrangement_and_group_order(
         arrangement_and_group_options=arrange_options_and_group_order,
         interface=interface,
         report_type=reporting_options.specific_parameters.report_type,

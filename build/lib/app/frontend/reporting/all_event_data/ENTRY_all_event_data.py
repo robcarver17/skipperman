@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.OLD_backend.reporting.all_event_data.all_event_data import (
+from app.backend.reporting import (
     create_csv_event_report_and_return_filename,
 )
 from app.objects.abstract_objects.abstract_text import Heading

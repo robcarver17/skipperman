@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import List, Union, Tuple, Dict
 
 import pandas as pd
-from app.OLD_backend.reporting.arrangement.arrange_options import (
+from app.backend.reporting import (
     ArrangementOptionsAndGroupOrder,
 )
 

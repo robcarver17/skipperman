@@ -1,13 +1,11 @@
 from typing import Tuple
 
-from app.OLD_backend.reporting.arrangement.arrange_options import describe_arrangement
-from app.OLD_backend.reporting.arrangement.group_order import (
+from app.backend.reporting import describe_arrangement
+from app.backend.reporting.arrangement.group_order import (
     get_group_order_excluding_missing_groups,
     get_groups_in_dict_missing_from_group_order,
 )
-from app.frontend.reporting.shared.arrangement_state import (
-    get_stored_arrangement_and_group_order,
-)
+from app.backend.reporting.arrangement.arrange_options import get_stored_arrangement_and_group_order
 from app.frontend.reporting.shared.group_order import (
     get_arrangement_options_and_group_order_from_stored_or_defaults,
 )

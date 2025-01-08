@@ -2,19 +2,19 @@ from typing import Dict
 
 import pandas as pd
 from dataclasses import dataclass
-from app.OLD_backend.reporting.arrangement.arrange_options import (
+from app.backend.reporting import (
     ArrangeGroupsOptions,
     ArrangementOptionsAndGroupOrder,
 )
-from app.OLD_backend.reporting.arrangement.group_order import (
+from app.backend.reporting.arrangement.group_order import (
     GroupOrder,
     get_group_order_from_dict_of_df_given_report_parameters,
 )
-from app.OLD_backend.reporting.options_and_parameters.print_options import PrintOptions
-from app.OLD_backend.reporting.options_and_parameters.report_type_specific_parameters import (
+from app.backend.reporting import PrintOptions
+from app.backend.reporting import (
     SpecificParametersForTypeOfReport,
 )
-from app.OLD_backend.reporting.options_and_parameters.marked_up_list_from_df_parameters import (
+from app.backend.reporting.options_and_parameters.marked_up_list_from_df_parameters import (
     MarkedUpListFromDfParametersWithActualGroupOrder,
 )
 

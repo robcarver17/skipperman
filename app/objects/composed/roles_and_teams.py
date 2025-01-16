@@ -45,6 +45,11 @@ class DictOfTeamsWithRoles(Dict[Team, ListOfRolesWithSkills]):
         self._list_of_teams_and_roles_with_ids = list_of_teams_and_roles_with_ids
         self._list_of_roles_with_skills = list_of_roles_with_skills
 
+    def roles_for_team(self, team: Team) -> ListOfRolesWithSkills:
+        roles_for_team = self.get(team, ListOfRolesWithSkills())
+
+        return roles_for_team
+
     def list_of_teams_and_index_given_role(
         self, role: RoleWithSkills
     ) -> ListOfTeamsAndIndices:

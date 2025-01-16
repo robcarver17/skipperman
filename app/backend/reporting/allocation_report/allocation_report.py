@@ -5,7 +5,6 @@ import pandas as pd
 
 from app.backend.groups.cadets_with_groups_at_event import get_dict_of_cadets_with_groups_at_event
 from app.data_access.store.object_store import ObjectStore
-from app.objects.cadets import Cadet
 from app.objects.exceptions import missing_data
 from app.objects.events import Event
 from app.objects.composed.cadets_at_event_with_groups import CadetWithGroupOnDay, ListOfCadetsWithGroupOnDay
@@ -19,7 +18,6 @@ all_groups_names = []
 specific_parameters_for_allocation_report = SpecificParametersForTypeOfReport(
     #    entry_columns=[CADET_NAME],
     group_by_column=GROUP_STR_NAME,
-    passed_group_order=all_groups_names,
     report_type="Allocation report",
 )
 
@@ -41,7 +39,7 @@ def add_club_boat_asterix(
     )
 
     for cadet_with_group in list_of_cadets_with_groups:
-        add_club_boat_asterix_to_cadet(
+        add_club_boat_asterix_to_cadet_with_group_on_day(
             cadet_with_group=cadet_with_group,
             dict_of_cadets_at_event_with_club_dinghies=dict_of_cadets_at_event_with_club_dinghies,
         )
@@ -49,23 +47,18 @@ def add_club_boat_asterix(
     return list_of_cadets_with_groups
 
 
-def add_club_boat_asterix_to_cadet(
+def add_club_boat_asterix_to_cadet_with_group_on_day(
     cadet_with_group: CadetWithGroupOnDay,
     dict_of_cadets_at_event_with_club_dinghies: DictOfCadetsAndClubDinghiesAtEvent
 ):
     cadet = cadet_with_group.cadet
-    cadet_id = cadet.id
     day = cadet_with_group.day
     dinghy = dict_of_cadets_at_event_with_club_dinghies.club_dinghys_for_cadet(cadet).dinghy_on_day(day=day, default=missing_data)
 
     if dinghy is not missing_data:
-        cadet_with_group.cadet = Cadet(
-            first_name=cadet.first_name,
-            surname=cadet.surname + "*",
-            date_of_birth=cadet.date_of_birth,
-            id=cadet_id,
-            membership_status=cadet.membership_status
-        )
+        cadet_with_group.cadet = cadet_with_group.cadet.add_asterix_to_name()
+
+
 
 
 def get_dict_of_df_for_reporting_allocations_with_flags(

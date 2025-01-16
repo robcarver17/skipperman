@@ -14,7 +14,6 @@ all_groups_names = []
 specific_parameters_for_boat_report = SpecificParametersForTypeOfReport(
     #    entry_columns=[FIRST_CADET, SECOND_CADET, GROUP, BOAT_CLASS, SAIL_NUMBER, CLUB_BOAT],
     group_by_column=GROUP,
-    passed_group_order=all_groups_names,
     report_type="Sailors with boats report",
 )
 

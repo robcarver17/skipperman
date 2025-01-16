@@ -3,10 +3,6 @@ from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.OLD_backend.cadets import (
-    get_list_of_cadets_sorted_by_first_name,
-    get_list_of_similar_cadets,
-)
 from app.backend.cadets.add_edit_cadet import verify_cadet_and_return_warnings
 from app.frontend.shared.add_edit_cadet_form import (
     CadetAndVerificationText,

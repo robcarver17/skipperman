@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.OLD_backend.cleaning import clean_sensitive_data_for_event
+from app.backend.events.cleaning import clean_sensitive_data_for_event
 from app.objects.abstract_objects.abstract_text import Heading
 
 from app.frontend.events.ENTRY_view_events import (
@@ -73,7 +73,7 @@ def post_form_view_of_event_data_cleaning(
 ) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
     if back_menu_button.pressed(button_pressed):
-        interface.clear_cache()
+        interface.flush_cache_to_store()
         return interface.get_new_display_form_for_parent_of_function(
             display_form_for_event_cleaning
         )
@@ -92,7 +92,7 @@ def action_when_event_button_clicked(interface: abstractInterface) -> Form:
     event = get_event_from_list_of_events_given_event_description(
         object_store=interface.object_store, event_description=event_description
     )
-    clean_sensitive_data_for_event(interface=interface, event=event)
+    clean_sensitive_data_for_event(object_store=interface.object_store, event=event)
     interface.flush_cache_to_store()
     return form_with_message_and_finished_button(
         "Cleaned sensitive data for event %s" % str(event),

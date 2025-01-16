@@ -4,12 +4,8 @@ from typing import List
 from app.backend.registration_data.volunteer_registration_data import \
     get_dict_of_registration_data_for_volunteers_at_event
 
-from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
-    get_dict_of_volunteers_with_roles_and_groups_at_event
-
 from app.objects.exceptions import arg_not_passed
 
-from app.OLD_backend.data.patrol_boats import PatrolBoatsData
 from app.data_access.store.object_store import ObjectStore
 
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import \

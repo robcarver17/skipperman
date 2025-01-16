@@ -26,7 +26,6 @@ def make_data():
     )
 
 
-## Only one of these
 underling_data_api = make_data()
 store = Store()
 

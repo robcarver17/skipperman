@@ -2,13 +2,8 @@ from app.backend.volunteers.list_of_volunteers import (
     get_volunteer_from_list_of_given_str_of_volunteer,
 )
 
-from app.objects_OLD.volunteers_at_event import DEPRECATE_VolunteerAtEvent
 from app.objects.volunteer_at_event_with_id import VolunteerAtEventWithId
 
-from app.OLD_backend.volunteers.volunteer_allocation import (
-    DEPRECATE_get_volunteer_at_event_with_id,
-    get_volunteer_at_event,
-)
 from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
 
 from app.frontend.shared.events_state import get_event_from_state

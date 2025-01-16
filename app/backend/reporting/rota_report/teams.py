@@ -1,39 +1,41 @@
-from typing import List
+from copy import copy
+from typing import List, Dict
 
 import pandas as pd
-from app.data_access.configuration.skills_and_roles import all_volunteer_role_names
 
 from app.backend.reporting.rota_report.components import (
-    DataForDfConstruction,
     df_row_for_volunteer_in_role_at_event,
 )
 from app.backend.reporting.rota_report.configuration import (
-    DEFAULT_SORT_TEAM,
-    SORT_BY_DICT,
-    TEAMS_WITH_DUPLICATE_LEADERS,
-    team_leader_role_for_team,
     BOAT,
     ROLE,
     GROUP,
 )
-from app.objects_OLD.volunteers_in_roles import VolunteerInRoleAtEventWithTeamName
+from app.objects.composed.volunteer_roles import RoleWithSkills
+from app.objects.composed.volunteer_with_group_and_role_at_event import VolunteerWithRoleGroupAndTeamAtEvent
+from app.objects.composed.volunteers_with_all_event_data import DictOfAllEventDataForVolunteers
+from app.objects.roles_and_teams import instructor_team
+from app.objects.utils import flatten
+from app.objects.roles_and_teams import Team
 
 
-class Team(List[VolunteerInRoleAtEventWithTeamName]):
-    pass
 
-
-def get_team_name(team: Team) -> str:
-    team_name = team[0].team_name
-    return team_name
-
-
-def dataframe_for_team(data_for_df: DataForDfConstruction, team: Team) -> pd.DataFrame:
-    if len(team) == 0:
+def dataframe_for_team(volunteer_event_data: DictOfAllEventDataForVolunteers,
+                       team: Team,
+                       dict_of_volunteers_in_team_on_day_at_event: Dict[RoleWithSkills, List[VolunteerWithRoleGroupAndTeamAtEvent]],
+                       include_no_power_boat: bool = True) -> pd.DataFrame:
+    if len(dict_of_volunteers_in_team_on_day_at_event) == 0:
         return pd.DataFrame()
 
-    leaders_df = dataframe_for_team_leaders(data_for_df=data_for_df, team=team)
-    others_df = get_sorted_df_for_rest_of_team(data_for_df=data_for_df, team=team)
+    ## first entry should be team leaders - these are not sorted
+    leadership_role = list(dict_of_volunteers_in_team_on_day_at_event.keys())[0]
+    volunteers_in_team_leader_roles = dict_of_volunteers_in_team_on_day_at_event[leadership_role]
+
+    dict_of_other_volunteers = copy(dict_of_volunteers_in_team_on_day_at_event)
+    dict_of_other_volunteers.pop(leadership_role)
+
+    leaders_df = dataframe_for_team_leaders(team=team, volunteers_in_team_leader_roles=volunteers_in_team_leader_roles, volunteer_event_data=volunteer_event_data)
+    others_df = get_sorted_df_for_rest_of_team(team=team, dict_of_other_volunteers=dict_of_other_volunteers, volunteer_event_data=volunteer_event_data, include_no_power_boat=include_no_power_boat)
 
     combined_df = combine_and_drop_initial_duplicates(
         leaders_df=leaders_df, others_df=others_df
@@ -43,51 +45,62 @@ def dataframe_for_team(data_for_df: DataForDfConstruction, team: Team) -> pd.Dat
     return combined_df
 
 
-def dataframe_for_team_leaders(data_for_df: DataForDfConstruction, team: Team):
-    matching_volunteers = list_of_volunteers_in_leadership_position(team)
+def dataframe_for_team_leaders(volunteer_event_data: DictOfAllEventDataForVolunteers,
+                               team: Team,
+                               volunteers_in_team_leader_roles: List[VolunteerWithRoleGroupAndTeamAtEvent]):
 
     df_for_team_leaders = [
         df_row_for_volunteer_in_role_at_event(
-            volunteer_in_role_at_event_with_team_name=volunteer, data_for_df=data_for_df
+            volunteer_event_data=volunteer_event_data,
+            team=team,
+            volunteer_with_role_and_group_and_team=volunteer_with_role_and_group_and_team
         )
-        for volunteer in matching_volunteers
+        for volunteer_with_role_and_group_and_team in volunteers_in_team_leader_roles
     ]
 
     return pd.DataFrame(df_for_team_leaders)
 
 
-def get_sorted_df_for_rest_of_team(
-    data_for_df: DataForDfConstruction, team: Team
+def get_sorted_df_for_rest_of_team(volunteer_event_data: DictOfAllEventDataForVolunteers,
+                                   team: Team,
+    dict_of_other_volunteers: Dict[RoleWithSkills, List[VolunteerWithRoleGroupAndTeamAtEvent]],
+                                   include_no_power_boat: bool = True
 ) -> pd.DataFrame:
-    if does_team_have_duplicate_leader(team):
-        volunteers_to_exclude = []
-    else:
-        volunteers_to_exclude = list_of_volunteers_in_leadership_position(team)
+
+    list_of_volunteers = flatten([volunteers_for_role for volunteers_for_role in list(dict_of_other_volunteers.values())])
+
+    if len(list_of_volunteers) == 0:
+        return pd.DataFrame()
 
     list_of_rest_of_team = [
         df_row_for_volunteer_in_role_at_event(
-            volunteer_in_role_at_event_with_team_name=volunteer, data_for_df=data_for_df
+            volunteer_with_role_and_group_and_team=volunteer_with_role_and_group_and_team,
+            volunteer_event_data=volunteer_event_data,
+            team=team
         )
-        for volunteer in team
-        if not volunteer in volunteers_to_exclude
+        for volunteer_with_role_and_group_and_team in list_of_volunteers
     ]
 
-    if len(list_of_rest_of_team) == 0:
-        return pd.DataFrame()
 
     as_df = pd.DataFrame(list_of_rest_of_team)
-    sort_order_list = get_sort_order_for_team(team)
+    if team == instructor_team:
+        sort_order_list = [ROLE, GROUP]
+    else:
+        sort_order_list = [ROLE, GROUP, BOAT]
+
     for sort_order in sort_order_list:
         if sort_order == ROLE:
             as_df = sort_df_by_role(
-                df_for_reporting_volunteers_for_day=as_df, data_for_df=data_for_df
+                df_for_reporting_volunteers_for_day=as_df,
+                volunteer_event_data=volunteer_event_data
             )
         elif sort_order == GROUP:
             as_df = sort_df_by_group(
-                df_for_reporting_volunteers_for_day=as_df, data_for_df=data_for_df
+                df_for_reporting_volunteers_for_day=as_df,
+                volunteer_event_data=volunteer_event_data
             )
         elif sort_order == BOAT:
-            as_df = sort_df_by_power_boat(as_df, data_for_df=data_for_df)
+            as_df = sort_df_by_power_boat(as_df, volunteer_event_data=volunteer_event_data, include_no_power_boat=include_no_power_boat)
 
     return as_df
 
@@ -124,39 +137,12 @@ def rows_match(some_row: pd.Series, other_row: pd.Series):
     return all(some_row == other_row)
 
 
-def does_team_have_duplicate_leader(team: Team) -> bool:
-    return get_team_name(team) in TEAMS_WITH_DUPLICATE_LEADERS
-
-
-def get_sort_order_for_team(team: Team) -> List[str]:
-    team_name = get_team_name(team)
-    order = SORT_BY_DICT.get(team_name, None)
-    if order is None:
-        return SORT_BY_DICT[DEFAULT_SORT_TEAM]
-    else:
-        return order
-
-
-def list_of_volunteers_in_leadership_position(
-    team: Team,
-) -> List[VolunteerInRoleAtEventWithTeamName]:
-    team_name = get_team_name(team)
-    lead_role = team_leader_role_for_team(team_name)
-    matching_volunteers = [
-        volunteer
-        for volunteer in team
-        if volunteer.volunteer_in_role_at_event.role == lead_role
-    ]
-
-    return matching_volunteers
-
-
 def sort_df_by_power_boat(
     df_for_reporting_volunteers_for_day: pd.DataFrame,
-    data_for_df: DataForDfConstruction,
-    include_no_power_boat: bool = True,
+        volunteer_event_data: DictOfAllEventDataForVolunteers,
+        include_no_power_boat: bool = True,
 ) -> pd.DataFrame:
-    all_boats_in_order = data_for_df.all_patrol_boats
+    all_boats_in_order = volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats.list_of_all_patrol_boats_at_event
     new_df = pd.DataFrame()
     for boat in all_boats_in_order:
         subset_df = df_for_reporting_volunteers_for_day[
@@ -175,18 +161,18 @@ def sort_df_by_power_boat(
 
 def sort_df_by_role(
     df_for_reporting_volunteers_for_day: pd.DataFrame,
-    data_for_df: DataForDfConstruction,
-    include_no_role: bool = True,
+        volunteer_event_data: DictOfAllEventDataForVolunteers,
+        include_no_role: bool = True,
 ) -> pd.DataFrame:
-    all_roles_in_order = all_volunteer_role_names
+    all_roles_in_order = volunteer_event_data.dict_of_volunteers_at_event_with_days_and_role.list_of_roles_with_skills
     new_df = pd.DataFrame()
     for role in all_roles_in_order:
         subset_df = df_for_reporting_volunteers_for_day[
-            df_for_reporting_volunteers_for_day[ROLE] == role
+            df_for_reporting_volunteers_for_day[ROLE] == role.name
         ]
         new_df = pd.concat([new_df, subset_df], axis=0)
         df_for_reporting_volunteers_for_day = df_for_reporting_volunteers_for_day[
-            df_for_reporting_volunteers_for_day[ROLE] != role
+            df_for_reporting_volunteers_for_day[ROLE] != role.name
         ]
 
     if include_no_role:
@@ -197,22 +183,24 @@ def sort_df_by_role(
 
 def sort_df_by_group(
     df_for_reporting_volunteers_for_day: pd.DataFrame,
-    data_for_df: DataForDfConstruction,
-    include_no_group: bool = True,
+        volunteer_event_data: DictOfAllEventDataForVolunteers,
+        include_no_group: bool = True,
 ) -> pd.DataFrame:
-    raise Exception("no groups")
-    all_groups = all_groups_names
+
+    all_groups = volunteer_event_data.dict_of_volunteers_at_event_with_days_and_role.list_of_groups
     new_df = pd.DataFrame()
     for group in all_groups:
         subset_df = df_for_reporting_volunteers_for_day[
-            df_for_reporting_volunteers_for_day[GROUP] == group
+            df_for_reporting_volunteers_for_day[GROUP] == group.name
         ]
         new_df = pd.concat([new_df, subset_df], axis=0)
         df_for_reporting_volunteers_for_day = df_for_reporting_volunteers_for_day[
-            df_for_reporting_volunteers_for_day[GROUP] != group
+            df_for_reporting_volunteers_for_day[GROUP] != group.name
         ]
 
     if include_no_group:
         new_df = pd.concat([new_df, df_for_reporting_volunteers_for_day], axis=0)
 
     return new_df
+
+

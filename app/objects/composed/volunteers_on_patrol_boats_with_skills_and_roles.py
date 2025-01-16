@@ -10,7 +10,7 @@ from app.objects.composed.volunteers_with_skills import SkillsDict
 
 from app.objects.volunteers import Volunteer
 from app.objects.day_selectors import DaySelector, Day
-from app.objects.composed.volunteer_with_group_and_role_at_event import DictOfDaysRolesAndGroups, RoleAndGroupAndTeam
+from app.objects.composed.volunteer_with_group_and_role_at_event import DictOfDaysRolesAndGroupsAndTeams, RoleAndGroupAndTeam
 from app.objects.composed.volunteers_at_event_with_patrol_boats import PatrolBoatByDayDict
 
 @dataclass
@@ -21,7 +21,7 @@ class VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday:
     role_and_group: RoleAndGroupAndTeam
     patrol_boat: PatrolBoat
     day: Day
-    role_and_group_by_day: DictOfDaysRolesAndGroups
+    role_and_group_by_day: DictOfDaysRolesAndGroupsAndTeams
     patrol_boat_by_day: PatrolBoatByDayDict
     availability: DaySelector
 
@@ -48,7 +48,7 @@ class VolunteerAtEventWithSkillsAndRolesAndPatrolBoats:
     event: Event
     skills: SkillsDict
     availability: DaySelector
-    role_and_group_by_day: DictOfDaysRolesAndGroups
+    role_and_group_by_day: DictOfDaysRolesAndGroupsAndTeams
     patrol_boat_by_day: PatrolBoatByDayDict
 
     def assigned_to_boat_on_day(self, patrol_boat: PatrolBoat, day: Day)-> bool:

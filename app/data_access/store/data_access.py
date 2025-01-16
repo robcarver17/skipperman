@@ -161,16 +161,6 @@ def get_data_access_for_cadets_with_food_at_event(
     )
 
 
-def get_data_access_for_people_with_food_at_event(
-    data: GenericDataApi, event_id: str
-) -> DataAccessMethod:
-    return DataAccessMethod(
-        "people_at_event_with_food",
-        read_method=data.data_list_of_people_with_food_requirement_at_event.read,
-        write_method=data.data_list_of_people_with_food_requirement_at_event.write,
-        event_id=event_id,
-    )
-
 
 def get_data_access_for_cadets_with_clothing_at_event(
     data: GenericDataApi, event_id: str

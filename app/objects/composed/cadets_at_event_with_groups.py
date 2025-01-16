@@ -21,6 +21,14 @@ from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.groups import Group, ListOfGroups
 
+@dataclass
+class CadetWithGroup:
+    ## display purposes
+    cadet: Cadet
+    group: Group
+
+class ListOfCadetsWithGroups(List[CadetWithGroup]):
+    pass
 
 @dataclass
 class CadetWithGroupOnDay(GenericSkipperManObject):
@@ -233,6 +241,8 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
         )
 
         return raw_dict
+
+
 
     def cadets_in_group_during_event(self, group: Group) -> ListOfCadets:
         return ListOfCadets(

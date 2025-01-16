@@ -85,6 +85,15 @@ class Cadet(GenericSkipperManObjectWithIds):
             + self.membership_status.name
         )
 
+    def add_asterix_to_name(self) -> 'Cadet':
+        return Cadet(
+                    first_name=self.first_name,
+                    surname=self.surname + "*",
+                    date_of_birth=self.date_of_birth,
+                    id=self.id,
+                    membership_status=self.membership_status
+                )
+
     @classmethod
     def from_name_only(cls, first_name: str, surname: str) -> 'Cadet':
         return cls(

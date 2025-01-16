@@ -15,7 +15,7 @@ from app.objects.composed.volunteers_with_skills import (
     DictOfVolunteersWithSkills,
 )
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
-    DictOfDaysRolesAndGroups,
+    DictOfDaysRolesAndGroupsAndTeams,
     DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups, RoleAndGroupAndTeam,
 )
 from app.objects.composed.volunteers_at_event_with_registration_data import (
@@ -32,7 +32,7 @@ from app.objects.composed.food_at_event import DictOfVolunteersWithFoodRequireme
 class AllEventDataForVolunteer:
     registration_data: RegistrationDataForVolunteerAtEvent
     volunteer_skills: SkillsDict
-    roles_and_groups: DictOfDaysRolesAndGroups
+    roles_and_groups: DictOfDaysRolesAndGroupsAndTeams
     patrol_boats: PatrolBoatByDayDict
     associated_cadets: ListOfCadets
     event: Event
@@ -240,7 +240,7 @@ def compose_raw_dict_of_all_event_data_for_volunteers(
                         volunteer, SkillsDict()
                     ),
                     roles_and_groups=dict_of_volunteers_at_event_with_days_and_roles.get(
-                        volunteer, DictOfDaysRolesAndGroups()
+                        volunteer, DictOfDaysRolesAndGroupsAndTeams()
                     ),
                     patrol_boats=dict_of_volunteers_at_event_with_patrol_boats.get(
                         volunteer, PatrolBoatByDayDict()

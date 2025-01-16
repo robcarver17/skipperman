@@ -8,14 +8,12 @@ from app.backend.reporting.rota_report.components import (
     df_row_for_volunteer_in_role_at_event,
 )
 from app.backend.reporting.rota_report.configuration import (
-    DEFAULT_SORT_TEAM,
-    SORT_BY_DICT,
-    TEAMS_WITH_DUPLICATE_LEADERS,
     team_leader_role_for_team,
     BOAT,
     ROLE,
     GROUP,
 )
+from app.backend.reporting.rota_report.teams import DEFAULT_SORT_TEAM, SORT_BY_DICT, TEAMS_WITH_DUPLICATE_LEADERS
 from app.objects_OLD.volunteers_in_roles import VolunteerInRoleAtEventWithTeamName
 
 

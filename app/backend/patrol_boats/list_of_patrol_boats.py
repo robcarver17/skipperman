@@ -1,6 +1,4 @@
-from app.OLD_backend.data.patrol_boats import PatrolBoatsData
 from app.data_access.store.object_store import ObjectStore
-from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.patrol_boats import ListOfPatrolBoats, PatrolBoat
 from app.data_access.store.object_definitions import (
     object_definition_for_list_of_patrol_boats,

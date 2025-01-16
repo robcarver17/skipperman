@@ -1,8 +1,5 @@
 from typing import List, Union
 
-from app.OLD_backend.data.volunteers import VolunteerData
-from app.data_access.store.data_access import DataLayer
-
 from app.data_access.store.object_store import ObjectStore
 from app.data_access.store.object_definitions import object_definition_for_volunteers
 from app.objects.exceptions import arg_not_passed, missing_data

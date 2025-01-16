@@ -16,7 +16,7 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines, ___________
 
 
 def explain_additional_parameters_for_rota_report(
-    interface: abstractInterface,
+    interface: abstractInterface, ## required by default but not used
     additional_parameters: AdditionalParametersForVolunteerReport,  ## should be rota
 ) -> ListOfLines:
     days = "Report covers the following days: %s" % str(

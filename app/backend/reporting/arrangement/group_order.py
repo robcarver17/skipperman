@@ -61,7 +61,6 @@ def get_group_order_from_df_given_report_parameters(
 
 def get_group_order_excluding_missing_groups(
     dict_of_df,
-    group_order: GroupOrder,
     specific_parameters_for_type_of_report: SpecificParametersForTypeOfReport,
 ) -> GroupOrder:
     group_order_from_df = get_group_order_from_dict_of_df_given_report_parameters(
@@ -69,7 +68,7 @@ def get_group_order_excluding_missing_groups(
         specific_parameters_for_type_of_report=specific_parameters_for_type_of_report,
     )
 
-    return group_order.subset_if_in_other_group_order(group_order_from_df)
+    return group_order_from_df
 
 
 def get_groups_in_dict_missing_from_group_order(

@@ -2,7 +2,6 @@ from typing import Union
 
 from app.objects.cadets import Cadet
 
-from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.frontend.forms.form_utils import (
     get_availability_checkbox,
@@ -23,7 +22,6 @@ from app.objects.abstract_objects.abstract_lines import (
     _______________,
 )
 
-from app.OLD_backend.cadets import cadet_name_from_id
 from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
 from app.objects.events import Event
 

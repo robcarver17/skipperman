@@ -46,7 +46,7 @@ def reporting_options_form_for_group_additional_parameters(
 
 
 def explain_additional_parameters_for_allocation_report(
-    interface: abstractInterface,
+    interface: abstractInterface, ## not used but always passed
     additional_parameters: AdditionalParametersForAllocationReport,
 ) -> ListOfLines:
     if additional_parameters.display_full_names:

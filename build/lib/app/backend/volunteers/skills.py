@@ -1,5 +1,3 @@
-from app.OLD_backend.data.volunteers import VolunteerData
-from app.data_access.store.data_access import DataLayer
 from app.objects.volunteer_skills import ListOfSkills, Skill
 from app.objects.volunteers import Volunteer
 

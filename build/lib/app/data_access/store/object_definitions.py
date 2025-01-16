@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Callable, Dict, Union
+from typing import Callable, Dict, Union, List
 
 from app.objects.composed.cadets_with_all_event_info import (
     compose_dict_of_all_event_info_for_cadet,
@@ -301,6 +301,16 @@ required_keys=['event_id']
 object_definition_for_volunteer_ids_with_food_at_event = UnderlyingObjectDefinition(
     data_store_method_function=get_data_access_for_volunteers_with_food_at_event,
 required_keys=['event_id']
+)
+
+object_definition_for_print_options = UnderlyingObjectDefinition(
+    data_store_method_function=get_data_access_for_print_options,
+    required_keys=['report_name']
+)
+
+object_definition_for_report_arrangement_and_group_order_options = UnderlyingObjectDefinition(
+    data_store_method_function=get_data_access_for_arrangement_and_group_order_options,
+    required_keys=['report_name']
 )
 
 ## ITERABLE

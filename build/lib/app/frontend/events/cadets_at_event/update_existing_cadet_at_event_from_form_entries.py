@@ -220,10 +220,13 @@ def update_cadet_at_event_when_status_unchanged_and_availability_has_probably_ch
         )
         return
 
-    update_availability_of_existing_cadet_at_event_and_return_messages(
+    list_of_messages = update_availability_of_existing_cadet_at_event_and_return_messages(
         object_store=interface.object_store,
         event=event,
         new_availabilty=new_availability,
         cadet=cadet,
     )
+
+    for message in list_of_messages:
+        interface.log_error(message)
 

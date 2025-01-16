@@ -5,10 +5,8 @@ Summary: BSC Cadet skipper management system
 Home-page: https://github.com/robcarver17/skipperman
 Author: Robert Carver
 Author-email: Robert Carver <rob@systematicmoney.org>
-License: GNU GPL v3
 Project-URL: Homepage, https://github.com/robcarver17/skipperman
 Project-URL: Bug Tracker, https://github.com/robcarver17/skipperman/issues
-Keywords: sailing wildapricot
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: GNU v3
 Classifier: Operating System :: Linux
@@ -21,7 +19,7 @@ Blackwater sailing club cadet skipper management system
 
 
 
-Version 1.00
+Version 1.01
  
 
 2024-06-20

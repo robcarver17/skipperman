@@ -33,6 +33,7 @@ from app.objects.exceptions import (
 )
 from app.objects.utils import union_of_x_and_y
 
+DEFAULT_DATE_OF_BIRTH = datetime.date(1970, 1, 1)
 
 @dataclass
 class Cadet(GenericSkipperManObjectWithIds):
@@ -82,6 +83,24 @@ class Cadet(GenericSkipperManObjectWithIds):
             + "_"
             + self._date_of_birth_as_str
             + self.membership_status.name
+        )
+
+    def add_asterix_to_name(self) -> 'Cadet':
+        return Cadet(
+                    first_name=self.first_name,
+                    surname=self.surname + "*",
+                    date_of_birth=self.date_of_birth,
+                    id=self.id,
+                    membership_status=self.membership_status
+                )
+
+    @classmethod
+    def from_name_only(cls, first_name: str, surname: str) -> 'Cadet':
+        return cls(
+            first_name=first_name,
+            surname=surname,
+            date_of_birth=DEFAULT_DATE_OF_BIRTH,
+            membership_status=none_member
         )
 
     def replace_all_attributes_except_id_with_those_from_new_cadet(
@@ -314,11 +333,14 @@ class ListOfCadets(GenericListOfObjectsWithIds):
         return ListOfCadets(similar_surnames)
 
     def cadet_with_id(self, cadet_id: str) -> Cadet:
+        if cadet_id == SKIP_TEST_CADET_ID:
+            return test_cadet
         return self.object_with_id(cadet_id)
 
     def list_of_names(self):
         return [cadet.name for cadet in self]
 
+test_cadet = Cadet.from_name_only("Test", "")
 
 def cadet_is_too_young_to_be_without_parent(cadet: Cadet) -> bool:
     return cadet.approx_age_years() < MIN_AGE_WHEN_CADET_CAN_BE_AT_EVENT_WITHOUT_PARENT
@@ -330,7 +352,6 @@ def is_cadet_age_surprising(cadet: Cadet):
     return age < MIN_CADET_AGE or age > MAX_CADET_AGE
 
 
-DEFAULT_DATE_OF_BIRTH = datetime.date(1970, 1, 1)
 default_cadet = Cadet(
     first_name=" ",
     surname=" ",
@@ -343,3 +364,4 @@ unknown_cadet = Cadet(
     date_of_birth=DEFAULT_DATE_OF_BIRTH,
     membership_status=none_member,
 )
+SKIP_TEST_CADET_ID = str(-9999)

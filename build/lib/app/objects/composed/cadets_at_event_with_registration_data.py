@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Dict
 
+from app.data_access.configuration.field_list import RESPONSIBLE_ADULT_NUMBER, RESPONSIBLE_ADULT_NAME
 from app.objects.utils import flatten
 
 from app.backend.cadets.list_of_cadets import sort_a_list_of_cadets
@@ -25,6 +26,13 @@ class CadetRegistrationData:
     data_in_row: RowInRegistrationData
     notes: str = ""
     health: str = ""
+
+    @property
+    def emergency_contact(self):
+        contact = self.data_in_row.get_item(RESPONSIBLE_ADULT_NUMBER, '')
+        contact_name = self.data_in_row.get_item(RESPONSIBLE_ADULT_NAME, '')
+
+        return "%s (%s)" % (contact_name, str(contact))
 
     @property
     def data_fields(self) -> List[str]:
@@ -100,6 +108,28 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
         ]
         all_fields = flatten(all_fields)
         return list(set(all_fields))
+
+    def get_emergency_contact_for_list_of_cadets_at_event(self,  list_of_cadets: ListOfCadets) -> List[str]:
+        list_of_contacts = []
+        for cadet in list_of_cadets:
+            try:
+                reg_data = self.registration_data_for_cadet(cadet)
+                list_of_contacts.append(reg_data.emergency_contact)
+            except MissingData:
+                list_of_contacts.append("")
+
+        return list_of_contacts
+
+    def get_health_notes_for_list_of_cadets_at_event(self, list_of_cadets: ListOfCadets) -> List[str]:
+        list_of_contacts = []
+        for cadet in list_of_cadets:
+            try:
+                reg_data = self.registration_data_for_cadet(cadet)
+                list_of_contacts.append(reg_data.health)
+            except MissingData:
+                list_of_contacts.append("")
+
+        return list_of_contacts
 
     def registration_data_for_cadet(self, cadet: Cadet) -> CadetRegistrationData:
         reg_data = self.get(cadet, None)

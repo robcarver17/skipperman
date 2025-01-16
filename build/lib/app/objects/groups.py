@@ -75,7 +75,7 @@ class Group(GenericSkipperManObjectWithIds):
             UNALLOCATED,
             location=unallocated_group_location,
             protected=True,
-            id="0",
+            id="0", ## DO NOT CHANGE
             hidden=False,
         )
 
@@ -86,7 +86,7 @@ class Group(GenericSkipperManObjectWithIds):
 
 unallocated_group = Group.create_unallocated()
 GROUP_UNALLOCATED_TEXT_DONTUSE = "Unallocated"
-
+unallocated_group_id = unallocated_group.id
 
 class ListOfGroups(GenericListOfObjectsWithIds):
     def sort_to_match_other_group_list_order(self, other_groups: "ListOfGroups"):

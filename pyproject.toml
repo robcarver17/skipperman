@@ -30,3 +30,6 @@ testpaths = [
 line-length = 88
 target-version = ['py310']
 required-version = '23.11.0'
+
+[build-system]
+requires = ["setuptools == 68.2.2"]

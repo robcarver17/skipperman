@@ -3,12 +3,6 @@ import os
 import sys
 import platform
 from setuptools import setup, find_packages
-from distutils.version import StrictVersion
-
-if StrictVersion(platform.python_version()) <= StrictVersion("3.7.0"):
-    print("skipperman requires Python 3.7.0 or later. Exiting.", file=sys.stderr)
-    sys.exit(1)
-
 
 def read(fname):
     """Utility function to read the README file."""
@@ -44,8 +38,8 @@ setup(
     version="0.0.1",
     author="Robert Carver",
     description=("BSC cadet management system"),
-    license="GNU GPL v3",
-    keywords="sailing wildapricot",
+#      license="GNU GPL v3",
+#    keywords="sailing wildapricot",
     url="https://github.com/robcarver17/skipperman",
     packages=find_packages(),
     package_data=package_data,

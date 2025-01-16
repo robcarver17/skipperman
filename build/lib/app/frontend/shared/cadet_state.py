@@ -1,6 +1,5 @@
 from app.objects.exceptions import missing_data, MissingData
 
-from app.OLD_backend.cadets import get_cadet_from_id
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
 

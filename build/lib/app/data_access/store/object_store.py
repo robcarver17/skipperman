@@ -29,8 +29,8 @@ class ObjectStore:
         if not read_only:
             self.data_store.save_stored_items()
 
-        self.data_store.clear_stored_items()
-        self.clear_object_store()  ## everything saved in data store
+        self.data_store.clear_stored_items() ## everything cached in underlying data store
+        self.clear_object_store()  ## everything cached in this object
 
     def update(
         self,

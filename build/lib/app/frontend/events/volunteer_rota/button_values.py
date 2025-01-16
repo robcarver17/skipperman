@@ -4,12 +4,10 @@ from app.objects.volunteers import Volunteer
 
 from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
 from app.backend.volunteers.volunteers_at_event import load_list_of_volunteers_at_event
-from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects_OLD.volunteers_at_event import DEPRECATE_VolunteerAtEvent
 
 
 def make_available_button_value_for_volunteer_on_day(

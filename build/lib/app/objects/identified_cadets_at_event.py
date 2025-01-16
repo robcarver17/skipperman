@@ -1,13 +1,11 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.objects.cadets import Cadet
+from app.objects.cadets import Cadet, SKIP_TEST_CADET_ID
 
 from app.objects.exceptions import missing_data
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
-
-SKIP_TEST_CADET_ID = str(-9999)
 
 
 @dataclass

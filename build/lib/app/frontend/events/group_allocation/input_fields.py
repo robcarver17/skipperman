@@ -1,14 +1,11 @@
-from typing import Union, List
-
+from app.backend.groups.data_for_group_display import *
 from app.frontend.forms.form_utils import (
     input_name_from_column_name_and_cadet_id,
     get_availability_checkbox,
 )
-from app.OLD_backend.group_allocations.group_allocations_data import AllocationData
 from app.frontend.events.constants import (
     ATTENDANCE,
 )
-from app.frontend.events.group_allocation.input_fields import ALLOCATION, CLUB_BOAT, PARTNER, BOAT_CLASS, SAIL_NUMBER
 from app.frontend.events.group_allocation.store_state import (
     no_day_set_in_state,
     get_day_from_state_or_none,
@@ -23,32 +20,31 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.cadets import Cadet
 from app.objects.cadet_at_event_with_club_boat_with_ids import NO_CLUB_BOAT
-from app.objects.exceptions import missing_data
+from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 from app.objects.day_selectors import Day
 from app.objects.cadet_at_event_with_dinghy_with_ids import NO_PARTNERSHIP_LIST
 from app.objects.utils import make_id_as_int_str
 
 
-def get_notes_field(cadet: Cadet, allocation_data: AllocationData):
-    cadet_at_event = (
-        allocation_data.cadets_at_event_including_non_active.cadet_at_event(cadet.id)
-    )
+def get_notes_field(cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets):
+    registration_for_cadet_at_event = dict_of_all_event_data.event_data_for_cadet(cadet).registration_data
 
     return textInput(
         input_name=input_name_from_column_name_and_cadet_id(
             column_name=NOTES, cadet_id=cadet.id
         ),
         input_label="",
-        value=cadet_at_event.notes,
+        value=registration_for_cadet_at_event.notes,
     )
 
 
 def get_days_attending_field(
-    cadet: Cadet, allocation_data: AllocationData
+    cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> checkboxInput:
+    availability = cadet_availability_at_event(dict_of_all_event_data=dict_of_all_event_data, cadet=cadet)
     days_attending_field = get_availability_checkbox(
-        availability=allocation_data.cadet_availability_at_event(cadet),
-        event=allocation_data.event,
+        availability=availability,
+        event=dict_of_all_event_data.event,
         input_name=input_name_from_column_name_and_cadet_id(
             column_name=ATTENDANCE, cadet_id=cadet.id
         ),
@@ -58,42 +54,42 @@ def get_days_attending_field(
 
 
 def get_input_fields_for_cadet(
-    interface: abstractInterface, cadet: Cadet, allocation_data: AllocationData
+    interface: abstractInterface, cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> list:
     if no_day_set_in_state(interface=interface):
         return get_input_fields_for_cadet_across_days(
-            cadet=cadet, allocation_data=allocation_data
+            cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
         )
     day = get_day_from_state_or_none(interface)
 
     return get_input_fields_for_cadet_on_day(
-        cadet=cadet, day=day, allocation_data=allocation_data
+        cadet=cadet, day=day, dict_of_all_event_data=dict_of_all_event_data
     )
 
 
 def get_input_fields_for_cadet_across_days(
-    cadet: Cadet, allocation_data: AllocationData
+    cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> list:
     group_allocation_field = get_dropdown_input_for_group_allocation_across_days(
-        cadet=cadet, allocation_data=allocation_data
+        cadet=cadet,dict_of_all_event_data=dict_of_all_event_data
     )
     dropdown_input_for_club_boat_allocation = (
         get_dropdown_input_for_club_boat_allocation_across_days(
-            cadet=cadet, allocation_data=allocation_data
+            cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
         )
     )
     dropdown_input_for_boat_class_allocation = (
         get_dropdown_input_for_boat_class_allocation_across_days(
-            cadet=cadet, allocation_data=allocation_data
+            cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
         )
     )
     dropdown_input_for_partner_allocation = (
         get_dropdown_input_for_partner_allocation_across_days(
-            cadet=cadet, allocation_data=allocation_data
+            cadet=cadet,dict_of_all_event_data=dict_of_all_event_data
         )
     )
     sail_number_field = get_sail_number_field_across_days(
-        cadet=cadet, allocation_data=allocation_data
+        cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
     )
 
     input_fields = [
@@ -108,9 +104,10 @@ def get_input_fields_for_cadet_across_days(
 
 
 def get_input_fields_for_cadet_on_day(
-    cadet: Cadet, day: Day, allocation_data: AllocationData
+    cadet: Cadet, day: Day, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> list:
-    if not allocation_data.is_cadet_available_on_this_day(cadet=cadet, day=day):
+    availability =  cadet_availability_at_event(dict_of_all_event_data=dict_of_all_event_data, cadet=cadet)
+    if not availability.available_on_day(day):
         padding = [""] * 4
         return [
             Button(
@@ -120,25 +117,25 @@ def get_input_fields_for_cadet_on_day(
         ] + padding
 
     group_allocation_field = get_dropdown_input_for_group_allocation_on_day(
-        cadet=cadet, allocation_data=allocation_data, day=day
+        cadet=cadet,  dict_of_all_event_data=dict_of_all_event_data, day=day
     )
     dropdown_input_for_club_boat_allocation = (
         get_dropdown_input_for_club_boat_allocation_on_day(
-            cadet=cadet, allocation_data=allocation_data, day=day
+            cadet=cadet, dict_of_all_event_data=dict_of_all_event_data, day=day
         )
     )
     dropdown_input_for_boat_class_allocation = (
         get_dropdown_input_for_boat_class_allocation_on_day(
-            cadet=cadet, allocation_data=allocation_data, day=day
+            cadet=cadet, dict_of_all_event_data=dict_of_all_event_data, day=day
         )
     )
     dropdown_input_for_partner_allocation = (
         get_dropdown_input_for_partner_allocation_on_day(
-            cadet=cadet, allocation_data=allocation_data, day=day
+            cadet=cadet, dict_of_all_event_data=dict_of_all_event_data, day=day
         )
     )
     sail_number_field = get_sail_number_field_on_day(
-        cadet=cadet, allocation_data=allocation_data, day=day
+        cadet=cadet,  dict_of_all_event_data=dict_of_all_event_data, day=day
     )
 
     input_fields = [
@@ -161,103 +158,98 @@ def cadet_id_from_cadet_available_buttons(button_str: str):
 
 
 def get_dropdown_input_for_group_allocation_across_days(
-    cadet: Cadet, allocation_data: AllocationData
+    cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets,
 ) -> Union[dropDownInput, str]:
     current_group = (
-        allocation_data.get_current_group_name_across_days_or_none_if_different(
+        get_current_group_name_across_days_or_none_if_different(
+            dict_of_all_event_data=dict_of_all_event_data,
             cadet=cadet
         )
     )
     if current_group is None:
-        return allocation_data.get_string_describing_different_group_names(cadet=cadet)
+        return get_string_describing_different_group_names(dict_of_all_event_data=dict_of_all_event_data, cadet=cadet)
+
     return get_dropdown_input_for_group_allocation(
-        cadet=cadet, current_group=current_group, allocation_data=allocation_data
+       dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, current_group=current_group,
     )
 
 
 def get_dropdown_input_for_group_allocation_on_day(
-    cadet: Cadet, day: Day, allocation_data: AllocationData
+    cadet: Cadet, day: Day, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> Union[dropDownInput, str]:
-    current_group = allocation_data.get_current_group_name_for_day(cadet=cadet, day=day)
+    current_group = get_current_group_name_for_day(dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day)
+
     return get_dropdown_input_for_group_allocation(
-        cadet=cadet, current_group=current_group, allocation_data=allocation_data
+        dict_of_all_event_data=dict_of_all_event_data,
+        cadet=cadet, current_group=current_group
     )
 
 
 def get_dropdown_input_for_group_allocation(
-    cadet: Cadet, current_group: str, allocation_data: AllocationData
+    cadet: Cadet, current_group: str, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> Union[dropDownInput, str]:
-    raise Exception("group names not known")
-    if allocation_data.event.contains_groups:
-        drop_down_input_field = dropDownInput(
-            input_name=input_name_from_column_name_and_cadet_id(
-                ALLOCATION, cadet_id=cadet.id
-            ),
-            input_label="",
-            default_label=current_group,
-            dict_of_options=dict_of_all_possible_groups_for_dropdown_input,
-        )
-        return drop_down_input_field
-    else:
-        return "Racing"
+    dict_of_options = get_dict_of_all_possible_groups_for_dropdown_input(dict_of_all_event_data)
+    drop_down_input_field = dropDownInput(
+        input_name=input_name_from_column_name_and_cadet_id(
+            ALLOCATION, cadet_id=cadet.id
+        ),
+        input_label="",
+        default_label=current_group,
+        dict_of_options=dict_of_options,
+    )
+
+    return drop_down_input_field
 
 
-# dict_of_all_possible_groups_for_dropdown_input = dict(
-#    [(group, group) for group in all_groups_names]
-# )
+def get_dict_of_all_possible_groups_for_dropdown_input( dict_of_all_event_data: DictOfAllEventInfoForCadets):
+    all_group_names = dict_of_all_event_data.dict_of_cadets_with_days_and_groups.list_of_groups.list_of_names()
+    dict_of_all_possible_groups_for_dropdown_input = dict(
+        [(group, group) for group in all_group_names]
+     )
+
+    return dict_of_all_possible_groups_for_dropdown_input
 
 
 def get_dropdown_input_for_club_boat_allocation_across_days(
-    cadet: Cadet, allocation_data: AllocationData
+    cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets,
+
 ) -> Union[dropDownInput, str]:
-    current_club_boat = (
-        allocation_data.get_current_club_boat_name_across_days_or_none_if_different(
+    current_club_boat_name = (
+        get_current_club_boat_name_across_days_or_none_if_different(
+            dict_of_all_event_data = dict_of_all_event_data,
             cadet=cadet
         )
     )
-    if current_club_boat is None:
-        return allocation_data.get_string_describing_different_club_boats_across_days(
-            cadet=cadet
+    if current_club_boat_name is None:
+        return get_string_describing_different_club_boats_across_days(
+            dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
         )
-    return get_dropdown_input_for_club_boat_allocation(
+    dropdown_input_field = get_dropdown_input_field_for_club_dinghies(
+        dict_of_all_event_data=dict_of_all_event_data,
         cadet=cadet,
-        current_club_boat=current_club_boat,
-        allocation_data=allocation_data,
+        current_club_boat_name=current_club_boat_name
     )
 
 
 def get_dropdown_input_for_club_boat_allocation_on_day(
-    cadet: Cadet, day: Day, allocation_data: AllocationData
+    cadet: Cadet, day: Day,dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> dropDownInput:
-    current_club_boat = allocation_data.get_current_club_boat_name_on_day(
+    current_club_boat_name = get_current_club_boat_name_on_day(
+        dict_of_all_event_data=dict_of_all_event_data,
         cadet=cadet, day=day
     )
-    return get_dropdown_input_for_club_boat_allocation(
+
+    dropdown_input_field = get_dropdown_input_field_for_club_dinghies(
+        dict_of_all_event_data=dict_of_all_event_data,
         cadet=cadet,
-        current_club_boat=current_club_boat,
-        allocation_data=allocation_data,
+        current_club_boat_name=current_club_boat_name
     )
 
-
-def get_dropdown_input_for_club_boat_allocation(
-    cadet: Cadet, current_club_boat: str, allocation_data: AllocationData
-) -> dropDownInput:
-    dict_of_club_dinghies_for_dropdown_input = get_list_of_club_dinghies_for_dropdown(
-        allocation_data
-    )
-    drop_down_input_field = dropDownInput(
-        input_name=input_name_from_column_name_and_cadet_id(
-            CLUB_BOAT, cadet_id=cadet.id
-        ),
-        input_label="",
-        default_label=str(current_club_boat),
-        dict_of_options=dict_of_club_dinghies_for_dropdown_input,
-    )
-    return drop_down_input_field
+    return dropdown_input_field
 
 
-def get_list_of_club_dinghies_for_dropdown(allocation_data: AllocationData):
-    club_dinghies = allocation_data.list_of_club_boats
+def get_dict_of_club_dinghies_for_dropdown(dict_of_all_event_data: DictOfAllEventInfoForCadets):
+    club_dinghies = dict_of_all_event_data.dict_of_cadets_and_club_dinghies_at_event.list_of_club_dinghies
     dict_of_club_dinghies_for_dropdown_input = {NO_CLUB_BOAT: NO_CLUB_BOAT}
     dict_of_all_possible_club_boats = dict(
         [(dinghy.name, dinghy.name) for dinghy in club_dinghies]
@@ -266,43 +258,64 @@ def get_list_of_club_dinghies_for_dropdown(allocation_data: AllocationData):
 
     return dict_of_club_dinghies_for_dropdown_input
 
+def get_dropdown_input_field_for_club_dinghies(dict_of_all_event_data: DictOfAllEventInfoForCadets,
+                                               cadet: Cadet,
+                                               current_club_boat_name: str) -> dropDownInput:
+    dict_of_club_dinghies_for_dropdown_input = get_dict_of_club_dinghies_for_dropdown(
+        dict_of_all_event_data
+    )
+
+    dropdown_input_field = dropDownInput(
+        input_name=input_name_from_column_name_and_cadet_id(
+            CLUB_BOAT, cadet_id=cadet.id
+        ),
+        input_label="",
+        default_label=current_club_boat_name,
+        dict_of_options=dict_of_club_dinghies_for_dropdown_input,
+    )
+
+    return dropdown_input_field
 
 def get_dropdown_input_for_boat_class_allocation_across_days(
-    cadet: Cadet, allocation_data: AllocationData
+    cadet: Cadet,dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> dropDownInput:
     current_boat_class = (
-        allocation_data.get_current_boat_class_across_days_or_none_if_different(
+        get_current_boat_class_across_days_or_none_if_different(
+            dict_of_all_event_data=dict_of_all_event_data,
             cadet=cadet
         )
     )
     if current_boat_class is None:
-        return allocation_data.get_string_describing_different_boat_class_across_days(
+        return get_string_describing_different_boat_class_across_days(
+            dict_of_all_event_data=dict_of_all_event_data,
             cadet=cadet
         )
-    return get_dropdown_input_for_boat_class_allocation(
-        cadet=cadet,
-        current_boat_class=current_boat_class,
-        allocation_data=allocation_data,
-    )
+    else:
+        return get_dropdown_input_for_boat_class_allocation(
+            dict_of_all_event_data=dict_of_all_event_data,
+            cadet=cadet,
+            current_boat_class=current_boat_class,
+        )
 
 
 def get_dropdown_input_for_boat_class_allocation_on_day(
-    cadet: Cadet, day: Day, allocation_data: AllocationData
+    cadet: Cadet, day: Day, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> dropDownInput:
-    current_boat_class = allocation_data.get_name_of_class_of_boat_on_day(
+    current_boat_class = get_name_of_class_of_boat_on_day(
+        dict_of_all_event_data=dict_of_all_event_data,
         cadet=cadet, day=day
     )
     return get_dropdown_input_for_boat_class_allocation(
+        dict_of_all_event_data=dict_of_all_event_data,
         cadet=cadet,
         current_boat_class=current_boat_class,
-        allocation_data=allocation_data,
     )
 
 
 def get_dropdown_input_for_boat_class_allocation(
-    cadet: Cadet, current_boat_class: str, allocation_data: AllocationData
+    cadet: Cadet, current_boat_class: str, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> dropDownInput:
-    dict_of_all_possible_boat_classes = get_dict_of_boat_classes(allocation_data)
+    dict_of_all_possible_boat_classes = get_dict_of_boat_classes(dict_of_all_event_data)
     drop_down_input_field = dropDownInput(
         input_name=input_name_from_column_name_and_cadet_id(
             BOAT_CLASS, cadet_id=cadet.id
@@ -314,8 +327,8 @@ def get_dropdown_input_for_boat_class_allocation(
     return drop_down_input_field
 
 
-def get_dict_of_boat_classes(allocation_data: AllocationData):
-    boat_classes = allocation_data.list_of_dinghies
+def get_dict_of_boat_classes(dict_of_all_event_data: DictOfAllEventInfoForCadets):
+    boat_classes = dict_of_all_event_data.dict_of_cadets_and_boat_class_and_partners.list_of_boat_classes
     dict_of_all_possible_boat_classes = dict(
         [(dinghy.name, dinghy.name) for dinghy in boat_classes]
     )
@@ -323,25 +336,27 @@ def get_dict_of_boat_classes(allocation_data: AllocationData):
 
 
 def get_sail_number_field_across_days(
-    cadet: Cadet, allocation_data: AllocationData
+    cadet: Cadet,dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> textInput:
     current_number = (
-        allocation_data.get_current_sail_number_across_days_or_none_if_different(
+        get_current_sail_number_across_days_or_none_if_different(
+            dict_of_all_event_data=dict_of_all_event_data,
             cadet=cadet
         )
     )
     if current_number is None:
-        return allocation_data.get_string_describing_different_sail_numbers_across_days(
+        return get_string_describing_different_sail_numbers_across_days(
+            dict_of_all_event_data=dict_of_all_event_data,
             cadet=cadet
         )
     return get_sail_number_field(cadet=cadet, current_number=current_number)
 
 
 def get_sail_number_field_on_day(
-    cadet: Cadet, day: Day, allocation_data: AllocationData
+    cadet: Cadet, day: Day, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> textInput:
     current_number = make_id_as_int_str(
-        allocation_data.get_sail_number_for_boat_on_day(cadet=cadet, day=day)
+        get_sail_number_for_boat_on_day(dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day)
     )
     return get_sail_number_field(cadet=cadet, current_number=current_number)
 
@@ -358,67 +373,56 @@ def get_sail_number_field(cadet: Cadet, current_number: str) -> textInput:
 
 
 def get_dropdown_input_for_partner_allocation_across_days(
-    cadet: Cadet, allocation_data: AllocationData
+    cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> ListOfLines:
-    current_partner_name = allocation_data.get_two_handed_partner_name_for_cadet_across_days_or_none_if_different(
+    current_partner_name = get_two_handed_partner_name_for_cadet_across_days_or_none_if_different(
+        dict_of_all_event_data=dict_of_all_event_data,
         cadet=cadet
     )
     if current_partner_name is None:
         return (
-            allocation_data.get_string_describing_two_handed_partner_name_across_days(
+            get_string_describing_two_handed_partner_name_across_days(
+                dict_of_all_event_data=dict_of_all_event_data,
                 cadet=cadet
             )
         )
 
-    list_of_other_cadets = allocation_data.list_of_cadets_as_str_at_event_with_matching_schedules_excluding_this_cadet(
-        cadet
+    list_of_other_cadets = get_list_of_cadets_as_str_at_event_with_matching_schedules_excluding_this_cadet(
+        dict_of_all_event_data=dict_of_all_event_data,
+        cadet=cadet
     )  ### needs to disapply cadets who aren't also available the whole week
     list_of_other_cadets = NO_PARTNERSHIP_LIST + list_of_other_cadets
-    okay_to_have_partner_button = okay_to_have_partner_button_across_days(
-        cadet=cadet, allocation_data=allocation_data
-    )
 
     return get_dropdown_input_for_partner_allocation(
         cadet=cadet,
         list_of_other_cadets=list_of_other_cadets,
         current_partner_name=current_partner_name,
-        okay_to_have_partner_button=okay_to_have_partner_button,
     )
 
 
-def okay_to_have_partner_button_across_days(
-    cadet: Cadet, allocation_data: AllocationData
-) -> bool:
-    registration_split_allowed = allocation_data.event.reg_splitting_allowed
-    boat_exists = allocation_data.cadet_at_event_with_dinghy_object_already_exists_for_cadet_across_days(
-        cadet=cadet
-    )
-    return registration_split_allowed and boat_exists
 
 
 def get_dropdown_input_for_partner_allocation_on_day(
-    cadet: Cadet, day: Day, allocation_data: AllocationData
+    cadet: Cadet, day: Day, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> ListOfLines:
     current_partner_name = (
-        allocation_data.get_two_handed_partner_as_str_for_cadet_on_day(
+        get_two_handed_partner_as_str_for_cadet_on_day(
+            dict_of_all_event_data=dict_of_all_event_data,
             cadet=cadet, day=day
         )
     )
     list_of_other_cadets = (
-        allocation_data.list_of_cadets_as_str_at_event_excluding_cadet_available_on_day(
+        list_of_cadets_as_str_at_event_excluding_cadet_available_on_day(
+            dict_of_all_event_data = dict_of_all_event_data,
             cadet=cadet, day=day
         )
     )
 
-    okay_to_have_partner_button = okay_to_have_partner_button_on_day(
-        cadet_id=cadet.id, allocation_data=allocation_data, day=day
-    )
 
     return get_dropdown_input_for_partner_allocation(
         cadet=cadet,
         list_of_other_cadets=list_of_other_cadets,
         current_partner_name=current_partner_name,
-        okay_to_have_partner_button=okay_to_have_partner_button,
     )
 
 
@@ -426,7 +430,6 @@ def get_dropdown_input_for_partner_allocation(
     cadet: Cadet,
     list_of_other_cadets: List[str],
     current_partner_name: str,
-    okay_to_have_partner_button: bool,
 ) -> ListOfLines:
     list_of_other_cadets = NO_PARTNERSHIP_LIST + list_of_other_cadets
     dict_of_all_possible_cadets = dict(
@@ -440,38 +443,13 @@ def get_dropdown_input_for_partner_allocation(
         dict_of_options=dict_of_all_possible_cadets,
     )
 
-    if okay_to_have_partner_button:
-        button_to_add_partner = Button(
-            value=button_name_for_add_partner(cadet_id=cadet.id),
-            label="Add partner as new cadet",
-        )
-    else:
-        button_to_add_partner = ""
+    button_to_add_partner = Button(
+        value=button_name_for_add_partner(cadet_id=cadet.id),
+        label="Add partner as new cadet",
+    )
 
     return ListOfLines([drop_down_input_field, button_to_add_partner])
 
-
-def okay_to_have_partner_button_on_day(
-    cadet_id: str, day: Day, allocation_data: AllocationData
-) -> bool:
-    registration_split_allowed = allocation_data.event.reg_splitting_allowed
-    boat_exists = boat_already_exists_for_cadet_on_day(
-        cadet_id=cadet_id, day=day, allocation_data=allocation_data
-    )
-    return registration_split_allowed and boat_exists
-
-
-def boat_already_exists_for_cadet_on_day(
-    cadet_id: str, day: Day, allocation_data: AllocationData
-) -> bool:
-    is_missing = (
-        allocation_data.list_of_cadets_at_event_with_dinghies.object_with_cadet_id_on_day(
-            cadet_id=cadet_id, day=day
-        )
-        is missing_data
-    )
-
-    return not is_missing
 
 
 def button_name_for_add_partner(cadet_id: str):
@@ -486,3 +464,8 @@ def cadet_id_given_partner_button(button_name: str) -> str:
 NOTES = "Notes"
 RESET_DAY_BUTTON_LABEL = "Show all day view"
 MAKE_CADET_AVAILABLE_ON_DAY_BUTTON = "Cadet not sailing today - click to change"
+ALLOCATION = "allocation"
+CLUB_BOAT = "club_boat"
+PARTNER = "partner"
+BOAT_CLASS = "boat_class"
+SAIL_NUMBER = "sail_number"

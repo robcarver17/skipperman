@@ -11,7 +11,6 @@ from app.frontend.forms.form_utils import (
     input_name_from_column_name_and_cadet_id,
 )
 from app.frontend.forms.form_utils import dropdown_input_for_status_change
-from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
 
 from app.frontend.events.constants import ROW_STATUS
 from app.objects.abstract_objects.abstract_form import (
@@ -64,14 +63,6 @@ def get_registration_data(
         all_columns_excluding_special_fields=all_columns,
     )
 
-
-def get_sorted_list_of_cadets_at_event(
-    interface: abstractInterface, event: Event, sort_order: str
-):
-    cadets_at_event_data = CadetsAtEventIdLevelData(interface.data)
-    return cadets_at_event_data.get_sorted_list_of_cadets_at_event(
-        event=event, sort_by=sort_order
-    )
 
 
 def get_list_of_columns_excluding_special_fields(

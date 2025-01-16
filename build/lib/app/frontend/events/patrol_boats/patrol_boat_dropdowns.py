@@ -10,15 +10,9 @@ from app.backend.rota.volunteer_table import get_dict_of_roles_for_dropdown
 
 from app.frontend.forms.swaps import is_ready_to_swap
 
-from app.OLD_backend.data.dinghies import (
-    DEPRECATE_load_list_of_patrol_boats_at_event_from_cache,
-)
 from app.backend.patrol_boats.volunteers_to_choose_from import \
     get_sorted_volunteer_data_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day, \
     string_if_volunteer_can_drive_else_empty, boat_related_role_str_and_group_on_day_for_volunteer_at_event
-from app.OLD_backend.volunteers.volunteers import (
-    get_volunteer_with_name,
-)
 from app.frontend.events.patrol_boats.patrol_boat_buttons import add_new_boat_button
 
 from app.objects.abstract_objects.abstract_form import dropDownInput
@@ -101,7 +95,7 @@ TOP_ROW_OF_VOLUNTEER_DROPDOWN = "Select volunteer to allocate to patrol boat"
 def get_input_name_for_allocation_dropdown(boat_at_event: PatrolBoat, day: Day) -> str:
     return "allocationDropDownAddBoat_%s_%s" % (boat_at_event.name, day.name)
 
-from app.backend.patrol_boats.list_of_patrol_boats import pa, from_patrol_boat_name_to_boat
+from app.backend.patrol_boats.list_of_patrol_boats import  from_patrol_boat_name_to_boat
 
 
 def from_allocation_dropdown_input_name_to_boat_and_day(

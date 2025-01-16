@@ -105,10 +105,11 @@ def get_dict_of_df_for_reporting_rota_given_event_and_state(
     additional_parameters: AdditionalParametersForVolunteerReport,
 ) -> Dict[str, pd.DataFrame]:
     dict_of_df = get_df_for_reporting_volunteers_with_flags(
+        object_store = interface.object_store,
         event=event,
         days_to_show=additional_parameters.days_to_show,
         power_boats_only=additional_parameters.power_boats_only,
-        interface=interface,
+
     )
 
     return dict_of_df

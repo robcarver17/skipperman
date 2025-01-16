@@ -29,7 +29,6 @@ from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.abstract_objects.abstract_form import textInput
 
 from app.objects.events import Event
-from app.objects_OLD.volunteers_at_event import DEPRECATE_VolunteerAtEvent
 
 
 def get_volunteer_table(

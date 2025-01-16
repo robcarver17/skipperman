@@ -1,11 +1,9 @@
 from app.objects.volunteer_at_event_with_id import VolunteerAtEventWithId
 
-from app.OLD_backend.data.volunteer_allocation import VolunteerAllocationData
 from app.objects.utils import in_x_not_in_y
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event
 from app.objects.volunteers import ListOfVolunteers, Volunteer
 from app.backend.volunteers.list_of_volunteers import get_list_of_volunteers

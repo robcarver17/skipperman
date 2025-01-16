@@ -56,7 +56,7 @@ def post_form_for_data_dump_report(
             func_to_call = dict_of_dump_options_and_functions_to_generate_df.get(
                 data_name
             )
-            df = func_to_call(data_layer=interface.data)
+            df = func_to_call(object_store=interface.object_store)
             filename = temp_file_name()
 
             df.to_csv(filename, index=False)

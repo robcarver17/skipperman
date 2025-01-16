@@ -30,6 +30,7 @@ class PatrolBoat(GenericSkipperManObjectWithIds):
     def create_empty(cls):
         return cls(NO_BOAT, hidden=False)
 
+no_patrol_boat = PatrolBoat.create_empty()
 
 class ListOfPatrolBoats(GenericListOfObjectsWithIds):
     @property

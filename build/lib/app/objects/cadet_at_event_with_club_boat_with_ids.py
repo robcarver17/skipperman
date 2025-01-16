@@ -99,4 +99,4 @@ class ListOfCadetAtEventWithIdAndClubDinghies(GenericListOfObjectsWithIds):
         return list(set([item.cadet_id for item in self]))
 
 
-NO_BOAT = ""
+NO_CLUB_BOAT = ""

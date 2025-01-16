@@ -111,11 +111,8 @@ def load_additional_parameters_for_rollcall_report(
 def clear_additional_parameters_for_rollcall_report(
     interface: abstractInterface,
 ):
-    interface.clear_persistent_value(SHOW_FULL_NAMES)
-    interface.clear_persistent_value(INCLUDE_UNALLOCATED_CADETS)
-    interface.clear_persistent_value(CLUB_BOAT_ASTERIX)
-    interface.clear_persistent_value(HEALTH_DATA)
-    interface.clear_persistent_value(EMERGENCY_CONTACTS)
+    for parameter_name in [SHOW_FULL_NAMES, INCLUDE_UNALLOCATED_CADETS, CLUB_BOAT_ASTERIX, HEALTH_DATA, EMERGENCY_CONTACTS]:
+        interface.clear_persistent_value(parameter_name)
 
 
 def get_dict_of_df_for_reporting_rollcalls(
@@ -125,7 +122,7 @@ def get_dict_of_df_for_reporting_rollcalls(
     additional_parameters = load_additional_parameters_for_rollcall_report(interface)
 
     dict_of_df = get_dict_of_df_for_reporting_rollcalls_given_event_and_parameters(
-        interface=interface, event=event, additional_parameters=additional_parameters
+        object_store=interface.object_store, event=event, additional_parameters=additional_parameters
     )
 
     return dict_of_df

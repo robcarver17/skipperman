@@ -1,6 +1,5 @@
 from typing import Union
 
-from app.OLD_backend.cadets import get_cadet_given_cadet_as_str
 from app.backend.cadets.list_of_cadets import get_matching_cadet
 from app.objects.abstract_objects.abstract_buttons import Button
 

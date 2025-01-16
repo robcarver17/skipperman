@@ -2,10 +2,8 @@ from typing import List
 
 from app.backend.cadets.list_of_cadets import get_cadet_from_id
 
-from app.OLD_backend.data.cadets_at_event_id_level import CadetsAtEventIdLevelData
 from app.backend.registration_data.cadet_registration_data import \
     get_list_of_cadets_with_id_and_registration_data_at_event
-from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
 from app.objects.exceptions import NoMoreData, DuplicateCadets, missing_data
 

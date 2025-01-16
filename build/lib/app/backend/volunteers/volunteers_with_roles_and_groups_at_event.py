@@ -13,7 +13,8 @@ from app.data_access.store.object_definitions import (
 )
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
     DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
-    RoleAndGroupAndTeam, )
+    RoleAndGroupAndTeam, RoleAndGroup, )
+from app.objects.day_selectors import Day
 
 from app.objects.events import (
     Event,
@@ -85,6 +86,20 @@ def get_all_roles_for_list_of_events_for_volunteer_as_dict(
 
     return roles_dict
 
+def get_role_and_group_on_day_for_event_and_volunteer(
+    object_store: ObjectStore, volunteer: Volunteer, event: Event, day: Day
+) -> RoleAndGroup:
+    dict_of_all_event_data = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
+    )
+    dict_of_roles_and_groups = (
+        dict_of_all_event_data.dict_of_volunteers_at_event_with_days_and_role
+    )
+    roles_and_groups_for_volunteer = (
+        dict_of_roles_and_groups.days_and_roles_for_volunteer(volunteer)
+    )
+
+    return roles_and_groups_for_volunteer.role_and_group_on_day(day)
 
 def get_role_and_group_for_event_and_volunteer(
     object_store: ObjectStore, volunteer: Volunteer, event: Event

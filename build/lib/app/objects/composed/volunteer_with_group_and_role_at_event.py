@@ -29,7 +29,7 @@ from app.objects.roles_and_teams import ListOfRolesWithSkillIds
 
 
 @dataclass
-class VolunteerWithRoleAtEvent:
+class VolunteerWithRoleGroupAndTeamAtEvent:
     volunteer: Volunteer
     day: Day
     role: RoleWithSkills
@@ -170,7 +170,7 @@ class ListOfRolesAndGroupsAndTeams(List[RoleAndGroupAndTeam]):
 unallocated_role_and_group_and_team = RoleAndGroupAndTeam.create_unallocated()
 
 
-class DictOfDaysRolesAndGroups(Dict[Day, RoleAndGroupAndTeam]):
+class DictOfDaysRolesAndGroupsAndTeams(Dict[Day, RoleAndGroupAndTeam]):
     def update_role_on_day(self,
                            day: Day,
                            new_role: RoleWithSkills
@@ -249,7 +249,7 @@ class DictOfDaysRolesAndGroups(Dict[Day, RoleAndGroupAndTeam]):
         )
 
     def subset_where_role_in_list_of_roles(self, list_of_roles: List[RoleWithSkills]):
-        return DictOfDaysRolesAndGroups(
+        return DictOfDaysRolesAndGroupsAndTeams(
             [
                 (day, role_and_group)
                 for day, role_and_group in self.items()
@@ -264,7 +264,7 @@ class DictOfDaysRolesAndGroups(Dict[Day, RoleAndGroupAndTeam]):
         return len(lake_teams)>0
 
 
-class ListOfVolunteersWithRoleAtEvent(List[VolunteerWithRoleAtEvent]):
+class ListOfVolunteersWithRoleAtEvent(List[VolunteerWithRoleGroupAndTeamAtEvent]):
     @classmethod
     def from_list_of_volunteers_with_id_in_role_at_event(
         cls,
@@ -276,7 +276,7 @@ class ListOfVolunteersWithRoleAtEvent(List[VolunteerWithRoleAtEvent]):
     ):
         return cls(
             [
-                VolunteerWithRoleAtEvent.from_volunteer_with_id_in_role_at_event(
+                VolunteerWithRoleGroupAndTeamAtEvent.from_volunteer_with_id_in_role_at_event(
                     volunteer_with_id_in_role_at_event=volunteer_with_id_in_role_at_event,
                     list_of_groups=list_of_groups,
                     list_of_roles_with_skills=list_of_roles_with_skills,
@@ -294,9 +294,9 @@ class ListOfVolunteersWithRoleAtEvent(List[VolunteerWithRoleAtEvent]):
 
     def dict_of_days_roles_and_groups_for_volunteer(
         self, volunteer: Volunteer
-    ) -> DictOfDaysRolesAndGroups:
+    ) -> DictOfDaysRolesAndGroupsAndTeams:
         subset_for_volunteer = self.subset_for_volunteer(volunteer)
-        return DictOfDaysRolesAndGroups(
+        return DictOfDaysRolesAndGroupsAndTeams(
             dict(
                 [
                     (
@@ -325,19 +325,27 @@ class ListOfVolunteersWithRoleAtEvent(List[VolunteerWithRoleAtEvent]):
 
 
 class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
-    Dict[Volunteer, DictOfDaysRolesAndGroups]
+    Dict[Volunteer, DictOfDaysRolesAndGroupsAndTeams]
 ):
     def __init__(
         self,
-        raw_dict: Dict[Volunteer, DictOfDaysRolesAndGroups],
+        raw_dict: Dict[Volunteer, DictOfDaysRolesAndGroupsAndTeams],
         list_of_volunteers_with_id_in_role_at_event: ListOfVolunteersWithIdInRoleAtEvent,
         event: Event,
+        dict_of_teams_and_roles: DictOfTeamsWithRoles,
+        list_of_groups: ListOfGroups,
+        list_of_roles_with_skills: ListOfRolesWithSkills,
+
     ):
         super().__init__(raw_dict)
         self._list_of_volunteers_with_id_in_role_at_event = (
             list_of_volunteers_with_id_in_role_at_event
         )
         self._event = event
+        self._dict_of_teams_and_roles =dict_of_teams_and_roles
+        self._list_of_groups = list_of_groups
+
+        self._list_of_roles_with_skills = list_of_roles_with_skills
 
     def update_group_at_event_for_volunteer_on_day(
             self,
@@ -449,6 +457,9 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
 
         return sum(sum_values)
 
+    def roles_for_team(self, team: Team) -> ListOfRolesWithSkills:
+        return self.dict_of_teams_with_roles.roles_for_team(team)
+
     @property
     def all_groups_at_event(self) -> List[Group]:
         all_groups = [
@@ -478,6 +489,22 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
 
         return all_roles
 
+    def list_of_volunteers_with_roles_and_groups_and_teams_doing_role_on_day(self, role: RoleWithSkills, day: Day) -> List[VolunteerWithRoleGroupAndTeamAtEvent]:
+        list_of_volunteers = []
+        for volunteer, roles_for_volunteer in self.items():
+            role_and_group_and_team = roles_for_volunteer.role_and_group_and_team_on_day(day)
+            if role_and_group_and_team.role == role:
+                list_of_volunteers.append(
+                    VolunteerWithRoleGroupAndTeamAtEvent(
+                        volunteer=volunteer,
+                        role=role_and_group_and_team.role,
+                        group=role_and_group_and_team.group,
+                        list_of_team_and_index=role_and_group_and_team.list_of_team_and_index,
+                        day=day
+                    )
+                )
+        return list_of_volunteers
+
     def list_of_all_roles_and_groups_and_teams_for_day(
         self, day: Day
     ) -> List[RoleAndGroupAndTeam]:
@@ -497,11 +524,11 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
         ]
 
     @property
-    def all_dicts_of_roles_and_groups(self) -> List[DictOfDaysRolesAndGroups]:
+    def all_dicts_of_roles_and_groups(self) -> List[DictOfDaysRolesAndGroupsAndTeams]:
         return list(self.values())
 
-    def days_and_roles_for_volunteer(self, volunteer: Volunteer) -> DictOfDaysRolesAndGroups:
-        return self.get(volunteer, DictOfDaysRolesAndGroups())
+    def days_and_roles_for_volunteer(self, volunteer: Volunteer) -> DictOfDaysRolesAndGroupsAndTeams:
+        return self.get(volunteer, DictOfDaysRolesAndGroupsAndTeams())
 
     @property
     def list_of_volunteers_with_id_in_role_at_event(
@@ -515,6 +542,18 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
     @property
     def event(self) -> Event:
         return self._event
+
+    @property
+    def dict_of_teams_with_roles(self) -> DictOfTeamsWithRoles:
+        return self._dict_of_teams_and_roles
+
+    @property
+    def list_of_groups(self) -> ListOfGroups:
+        return self._list_of_groups
+
+    @property
+    def list_of_roles_with_skills(self):
+        return self._list_of_roles_with_skills
 
 
 def compose_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups(
@@ -538,7 +577,10 @@ def compose_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups(
     return DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
         raw_dict=raw_dict,
         event=event,
+        dict_of_teams_and_roles = dict_of_teams_and_roles,
+        list_of_groups=list_of_groups,
         list_of_volunteers_with_id_in_role_at_event=list_of_volunteers_with_id_in_role_at_event,
+        list_of_roles_with_skills=list_of_roles_with_skills
     )
 
 
@@ -548,7 +590,7 @@ def compose_raw_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups(
     list_of_roles_with_skills: ListOfRolesWithSkills,
     list_of_volunteers_with_id_in_role_at_event: ListOfVolunteersWithIdInRoleAtEvent,
     dict_of_teams_and_roles: DictOfTeamsWithRoles,
-) -> Dict[Volunteer, DictOfDaysRolesAndGroups]:
+) -> Dict[Volunteer, DictOfDaysRolesAndGroupsAndTeams]:
     list_of_volunteers_with_role_in_event = ListOfVolunteersWithRoleAtEvent.from_list_of_volunteers_with_id_in_role_at_event(
         list_of_volunteers_with_id_in_role_at_event=list_of_volunteers_with_id_in_role_at_event,
         list_of_volunteers=list_of_volunteers,

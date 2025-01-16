@@ -1,5 +1,6 @@
 from typing import Union
 
+from app.backend.reporting.boat_report.boat_report_parameters import specific_parameters_for_boat_report
 from app.frontend.reporting.boats.forms import (
     reporting_options_form_for_boat_additional_parameters,
     explain_additional_parameters_for_boat_report,
@@ -11,23 +12,10 @@ from app.frontend.reporting.boats.processes import (
     clear_additional_parameters_for_boat_report,
 )
 
-from app.frontend.reporting.shared.generic_report_pages import (
-    post_form_initial_generic_report,
-    post_form_for_generic_report_arrangement_options,
-    display_form_for_generic_report_all_options,
-    post_form_for_generic_report_all_options,
-    display_form_for_generic_report_additional_options,
-    post_form_for_generic_report_additional_options,
-    display_form_for_generic_report_print_options,
-    post_form_for_generic_report_print_options,
-    display_form_for_generic_report_arrangement_options,
-    display_initial_generic_report_form,
-)
+from app.frontend.reporting.shared.generic_report_pages import *
 from app.frontend.reporting.shared.report_generator import ReportGenerator
 
-from app.backend.reporting import (
-    specific_parameters_for_boat_report,
-)
+
 
 from app.objects.abstract_objects.abstract_form import (
     Form,

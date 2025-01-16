@@ -1,11 +1,6 @@
 from copy import copy
 
-from app.OLD_backend.data.volunteer_rota import VolunteerRotaData
-from app.OLD_backend.volunteers.volunteers import can_volunteer_drive_safety_boat
-from app.data_access.store.data_access import DataLayer
-from app.objects.exceptions import missing_data
-
-from app.objects.volunteers import ListOfVolunteers, Volunteer
+from app.objects.volunteers import ListOfVolunteers
 
 from app.data_access.store.object_store import ObjectStore
 

@@ -4,16 +4,8 @@ from statistics import mode
 from typing import List
 
 from app.objects.composed.volunteer_roles import is_qualified_for_role
-from app.objects.composed.volunteer_with_group_and_role_at_event import RoleAndGroupAndTeam
 from app.objects.roles_and_teams import Team
 
-from app.data_access.configuration.skills_and_roles import (
-    dict_of_volunteer_teams,
-    volunteers_requiring_group,
-    si_role,
-    instructor_team,
-    all_volunteer_role_names,
-)
 from app.objects.day_selectors import Day
 from app.objects.exceptions import missing_data
 from app.objects.generic_list_of_objects import GenericListOfObjects
@@ -28,9 +20,6 @@ SI_ROLE_NAME = "SI"
 DAY_KEY = "day"
 GROUP_KEY = "group"
 
-
-def DEPRECATE_get_list_of_volunteer_teams():
-    return list(dict_of_volunteer_teams.keys())
 
 
 def no_role_set(role: str):
@@ -126,9 +115,6 @@ class VolunteerWithIdInRoleAtEvent(GenericSkipperManObject):
     def role_and_group(self):
         return RoleAndGroupDEPRECATE(role=self.role, group=self.group)
 
-    @property
-    def requires_group(self):
-        return self.role in volunteers_requiring_group
 
     @property
     def no_role_set(self) -> bool:
@@ -138,11 +124,6 @@ class VolunteerWithIdInRoleAtEvent(GenericSkipperManObject):
     def list_of_teams(self) -> List[str]:
         return teams_given_role(self.role)
 
-    def senior_instructor(self) -> bool:
-        return self.role == si_role
-
-    def in_instructor_team(self):
-        return self.role in instructor_team
 
     def on_lake(self):
         if not self.group.is_unallocated:
@@ -170,10 +151,6 @@ def teams_given_role(role: str, teams: dict = dict_of_volunteer_teams) -> List[s
 
     return all_teams
 
-
-def index_of_role(role: str):
-    combined_roles = all_volunteer_role_names + [NO_ROLE_SET]
-    return combined_roles.index(role)
 
 
 def index_of_team(role: str):

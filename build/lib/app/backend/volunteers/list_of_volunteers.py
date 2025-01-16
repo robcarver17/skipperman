@@ -1,8 +1,5 @@
 from typing import List, Union
 
-from app.OLD_backend.data.volunteers import VolunteerData
-from app.data_access.store.data_access import DataLayer
-
 from app.data_access.store.object_store import ObjectStore
 from app.data_access.store.object_definitions import object_definition_for_volunteers
 from app.objects.exceptions import arg_not_passed, missing_data
@@ -25,7 +22,7 @@ def get_volunteer_from_name( object_store: ObjectStore, volunteer_name: str) -> 
 
 def get_volunteer_from_id(object_store: ObjectStore, volunteer_id: str) -> Volunteer:
     list_of_volunteers = get_list_of_volunteers(object_store)
-    return list_of_volunteers.object_with_id(volunteer_id)
+    return list_of_volunteers.volunteer_with_id(volunteer_id)
 
 
 def get_volunteer_from_list_of_given_str_of_volunteer(

@@ -73,7 +73,7 @@ def get_list_of_day_summaries_for_roles_at_event(
         all_groups
     )
 
-    days_at_event = event.weekdays_in_event()
+    days_at_event = event.days_in_event()
     all_day_summaries = []
     for day in days_at_event:
         this_day_summary = get_summary_of_roles_and_groups_for_events_on_day(
@@ -168,7 +168,7 @@ def get_list_of_day_summaries_teams_and_groups_at_event(
         all_groups
     )
 
-    days_at_event = event.weekdays_in_event()
+    days_at_event = event.days_in_event()
     all_day_summaries = []
     for day in days_at_event:
         this_day_summary = get_summary_of_teams_and_groups_for_events_on_day(
@@ -224,7 +224,7 @@ def from_list_of_day_summaries_to_single_df(
 ) -> pd.DataFrame:
     if len(all_day_summaries)==0:
         return pd.DataFrame()
-    days_at_event = event.weekdays_in_event()
+    days_at_event = event.days_in_event()
     single_df = pd.concat(all_day_summaries, axis=1)
     single_df = single_df.loc[~(single_df == 0).all(axis=1)]  ## missing values
     single_df.columns = [day.name for day in days_at_event]

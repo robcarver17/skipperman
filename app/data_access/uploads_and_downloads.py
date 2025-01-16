@@ -1,4 +1,5 @@
-from app.data_access.file_access import get_files_in_directory, upload_directory
+from app.data_access.file_access import get_files_in_directory
+from app.data_access.init_directories import upload_directory
 import os
 
 

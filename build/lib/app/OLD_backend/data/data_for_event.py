@@ -19,7 +19,7 @@ from app.OLD_backend.configuration import (
 
 from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent
 from app.objects.cadets import ListOfCadets
-from app.objects.cadet_at_event_with_dinghy_with_ids import (
+from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import (
     ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
 )
 from app.objects.club_dinghies import (

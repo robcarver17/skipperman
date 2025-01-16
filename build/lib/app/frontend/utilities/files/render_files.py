@@ -1,12 +1,10 @@
 from typing import List, Tuple
 
 from app.data_access.file_access import (
-    public_reporting_directory,
-    download_directory,
-    upload_directory,
     get_files_in_directory,
-    web_pathname_of_file,
 )
+from app.data_access.init_directories import public_reporting_directory, upload_directory, download_directory, \
+    web_pathname_of_file
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,

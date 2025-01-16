@@ -22,7 +22,7 @@ def get_list_of_generic_buttons_for_each_volunteer_day_combo(
     interface: abstractInterface, event: Event, button_name_function: Callable
 ) -> List[str]:
     list_of_button_names = []
-    for day in event.weekdays_in_event():
+    for day in event.days_in_event():
         list_of_volunteer_ids = (
             get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(
                 object_store=interface.object_store, event=event, day=day

@@ -27,7 +27,7 @@ class CadetEventData:
         cls, event: Event, cadet_with_id_at_event: CadetWithIdAtEvent
     ):
         availability = cadet_with_id_at_event.availability.intersect(
-            event.day_selector_with_covered_days()
+            event.day_selector_for_days_in_event()
         )
         return cls(
             event=event,

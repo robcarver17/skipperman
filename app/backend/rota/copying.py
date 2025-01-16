@@ -101,7 +101,7 @@ def get_day_with_earliest_valid_role_and_group_for_volunteer_or_none(
     volunteers_at_event = get_dict_of_volunteers_with_roles_and_groups_at_event(object_store=object_store, event=event)
     volunteer_data = volunteers_at_event.days_and_roles_for_volunteer(volunteer)
 
-    for day in event.weekdays_in_event():
+    for day in event.days_in_event():
         role_and_group = (
             volunteer_data.role_and_group_on_day(day)
             )

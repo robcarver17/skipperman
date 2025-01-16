@@ -51,7 +51,7 @@ def get_relevant_cadet_ids_for_boat_class_id(
     dict_of_cadets_and_boat_classes_and_partners_at_events = list_of_ids_with_groups
 
     result_dict = {}
-    for day in event.weekdays_in_event():
+    for day in event.days_in_event():
         result_dict[day] = [
             cadet
             for cadet in dict_of_cadets_and_boat_classes_and_partners_at_events.list_of_cadets ## ignore warning

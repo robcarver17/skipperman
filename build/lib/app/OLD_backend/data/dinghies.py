@@ -27,8 +27,8 @@ from app.objects.cadet_at_event_with_club_boat_with_ids import (
 from app.objects.boat_classes import (
     ListOfBoatClasses,
 )
-from app.objects.cadet_at_event_with_dinghy_with_ids import (
-    NO_PARTNERSHIP_LIST,
+from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import (
+    NO_PARTNERSHIP_LIST_OF_STR,
     ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
 )
 from app.objects.events import Event
@@ -82,7 +82,7 @@ class DinghiesData:
         )
 
     def remove_boat_and_partner_for_cadet_at_event(self, event: Event, cadet_id: str):
-        for day in event.weekdays_in_event():
+        for day in event.days_in_event():
             self.remove_boat_and_partner_for_cadet_at_event_on_day(
                 event=event, cadet_id=cadet_id, day=day
             )
@@ -300,7 +300,7 @@ class DinghiesData:
         if partner_id is None:
             return default
 
-        if partner_id in NO_PARTNERSHIP_LIST:
+        if partner_id in NO_PARTNERSHIP_LIST_OF_STR:
             return default
 
         partner_cadet = self.cadet_data.get_list_of_cadets().cadet_with_id(partner_id)

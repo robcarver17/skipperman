@@ -62,8 +62,8 @@ from app.objects.cadet_at_event_with_club_boat_with_ids import (
 from app.objects.boat_classes import (
     ListOfBoatClasses,
 )
-from app.objects.cadet_at_event_with_dinghy_with_ids import (
-    NO_PARTNER_REQUIRED,
+from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import (
+    NO_PARTNER_REQUIRED_STR,
     no_partnership_given_partner_id_or_str,
     ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
 )
@@ -138,7 +138,7 @@ class AllocationData:
         return dict(
             [
                 (day, self.get_current_group_name_for_day(cadet=cadet, day=day))
-                for day in self.event.weekdays_in_event()
+                for day in self.event.days_in_event()
             ]
         )
 
@@ -166,7 +166,7 @@ class AllocationData:
         return dict(
             [
                 (day, self.get_current_club_boat_name_on_day(cadet=cadet, day=day))
-                for day in self.event.weekdays_in_event()
+                for day in self.event.days_in_event()
             ]
         )
 
@@ -194,7 +194,7 @@ class AllocationData:
         return dict(
             [
                 (day, self.get_name_of_class_of_boat_on_day(cadet=cadet, day=day))
-                for day in self.event.weekdays_in_event()
+                for day in self.event.days_in_event()
             ]
         )
 
@@ -222,7 +222,7 @@ class AllocationData:
         return dict(
             [
                 (day, self.get_sail_number_for_boat_on_day(cadet=cadet, day=day))
-                for day in self.event.weekdays_in_event()
+                for day in self.event.days_in_event()
             ]
         )
 
@@ -256,7 +256,7 @@ class AllocationData:
                         cadet=cadet, day=day
                     ),
                 )
-                for day in self.event.weekdays_in_event()
+                for day in self.event.days_in_event()
             ]
         )
 
@@ -280,7 +280,7 @@ class AllocationData:
             self.list_of_cadets_at_event_with_dinghies.object_with_cadet_id_on_day(
                 cadet_id=cadet.id, day=day
             )
-            for day in self.event.weekdays_in_event()
+            for day in self.event.days_in_event()
         ]
 
         return all([object is not missing_data for object in object_list])
@@ -343,7 +343,7 @@ class AllocationData:
             cadet_id=cadet.id, day=day
         )
         if partner_id is missing_data:
-            return NO_PARTNER_REQUIRED
+            return NO_PARTNER_REQUIRED_STR
 
         return partner_id
 

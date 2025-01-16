@@ -178,8 +178,9 @@ app/backend/wild_apricot/load_wa_file.py
 app/backend/wild_apricot/process_upload.py
 app/backend/wild_apricot/../../data_access/configuration/configuration.yaml
 app/data_access/__init__.py
-app/data_access/data.py
 app/data_access/file_access.py
+app/data_access/init_data.py
+app/data_access/init_directories.py
 app/data_access/uploads_and_downloads.py
 app/data_access/user_data.py
 app/data_access/xls_and_csv.py

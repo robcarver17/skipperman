@@ -3,7 +3,7 @@ from app.data_access.store.object_store import ObjectStore
 from app.backend.registration_data.identified_cadets_at_event import cadet_at_event_given_row_id
 from app.objects.cadets import default_cadet
 from app.objects.exceptions import missing_data
-from app.objects.day_selectors import DaySelector, any_day_selector_from_short_form_text
+from app.objects.day_selectors import DaySelector, create_day_selector_from_short_form_text
 from app.objects.cadet_with_id_at_event import get_attendance_selection_from_event_row
 
 from app.objects.events import Event
@@ -197,9 +197,9 @@ def suggested_volunteer_availability(
     cadet_availability = relevant_information.cadet_availability
 
     if day_availability is not missing_data:
-        return any_day_selector_from_short_form_text(day_availability)
+        return create_day_selector_from_short_form_text(day_availability)
     elif weekend_availability is not missing_data:
-        return any_day_selector_from_short_form_text(weekend_availability)
+        return create_day_selector_from_short_form_text(weekend_availability)
     elif cadet_availability is not missing_data:
         return cadet_availability
     else:

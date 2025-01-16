@@ -29,7 +29,7 @@ def get_availability_checkbox(
     line_break: bool = False,
     include_all: bool = False,
 ) -> checkboxInput:
-    possible_days = event.weekdays_in_event()
+    possible_days = event.days_in_event()
     dict_of_labels = dict([(day.name, day.name) for day in possible_days])
     dict_of_checked = dict(
         [(day.name, availability.get(day, False)) for day in possible_days]
@@ -52,7 +52,7 @@ def get_availablity_from_form(
     list_of_days_ticked_in_form = interface.value_of_multiple_options_from_form(
         input_name
     )
-    possible_days = event.weekdays_in_event()
+    possible_days = event.days_in_event()
     day_selector = DaySelector({})
     all_ticked = ALL_AVAILABLE in list_of_days_ticked_in_form
 

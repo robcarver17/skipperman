@@ -156,7 +156,7 @@ def str_type_of_group_given_list_of_groups(list_of_groups: List[Group]):
     types_of_groups = [group.location for group in list_of_groups]
     unique_list_of_group_locations = list(set(types_of_groups))
     sorted_list_of_group_locations = sorted_locations(
-        locations=unique_list_of_group_locations
+        unique_list_of_group_locations
     )
     sorted_list_of_group_locations = [location.name for location in sorted_list_of_group_locations]
 

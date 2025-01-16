@@ -5,7 +5,7 @@ from typing import Dict
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
-from app.data_access.data import master_data_path
+from app.data_access.init_data import master_data_path
 from app.data_access.backups.access import (
     all_diffs_in_directory,
     datetime_of_backup_number,

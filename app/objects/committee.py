@@ -52,12 +52,3 @@ class ListOfCadetsWithIdOnCommittee(GenericListOfObjects):
     @property
     def _object_class_contained(self):
         return CadetWithIdCommitteeMember
-
-    ## FIXME LEGACY METHODS CAN REMOVE ONCE CLOTHING DONE LOGIC NOW IN COMPOSED
-    def currently_active(self):
-        return ListOfCadetsWithIdOnCommittee(
-            [cadet for cadet in self if cadet.currently_active()]
-        )
-
-    def list_of_cadet_ids(self):
-        return [cadet.cadet_id for cadet in self]

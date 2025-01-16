@@ -1,6 +1,6 @@
 import os.path
 
-from app.data_access.file_access import docs_directory
+from app.data_access.init_directories import docs_directory
 from app.web.html.html_components import (
     Html,
 )

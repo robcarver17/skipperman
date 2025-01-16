@@ -39,7 +39,7 @@ def get_group_names_across_days(dict_of_all_event_data: DictOfAllEventInfoForCad
     return dict(
         [
             (day, get_current_group_name_for_day(dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day))
-            for day in dict_of_all_event_data.event.weekdays_in_event()
+            for day in dict_of_all_event_data.event.days_in_event()
         ]
     )
 
@@ -81,7 +81,7 @@ def get_club_boat_names_across_days( dict_of_all_event_data: DictOfAllEventInfoF
     return dict(
         [
             (day, get_current_club_boat_name_on_day(dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day))
-            for day in dict_of_all_event_data.event.weekdays_in_event()
+            for day in dict_of_all_event_data.event.days_in_event()
         ]
     )
 
@@ -151,7 +151,7 @@ def get_boat_class_names_across_days( dict_of_all_event_data: DictOfAllEventInfo
     return dict(
         [
             (day, get_name_of_class_of_boat_on_day(cadet=cadet, day=day))
-            for day in dict_of_all_event_data.event.weekdays_in_event()
+            for day in dict_of_all_event_data.event.days_in_event()
         ]
     )
 
@@ -229,7 +229,7 @@ def get_sail_numbers_across_days( dict_of_all_event_data: DictOfAllEventInfoForC
     return dict(
         [
             (day, get_sail_number_for_boat_on_day(cadet=cadet, day=day))
-            for day in dict_of_all_event_data.event.weekdays_in_event()
+            for day in dict_of_all_event_data.event.days_in_event()
         ]
     )
 
@@ -287,7 +287,7 @@ def get_two_handed_partners_across_days( dict_of_all_event_data: DictOfAllEventI
                     cadet=cadet, day=day
                 ),
             )
-            for day in dict_of_all_event_data.event.weekdays_in_event()
+            for day in dict_of_all_event_data.event.days_in_event()
         ]
     )
 

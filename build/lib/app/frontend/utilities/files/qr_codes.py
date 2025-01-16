@@ -2,7 +2,7 @@ import os
 import qrcode
 import qrcode.image.svg
 
-from app.data_access.file_access import web_pathname_of_file, download_directory
+from app.data_access.init_directories import download_directory, web_pathname_of_file
 
 from app.frontend.utilities.files.render_files import (
     type_directory_and_filename_from_button_name,

@@ -49,7 +49,7 @@ def get_relevant_cadets_for_club_dinghy(
     dict_of_cadets_with_club_dinghies_at_event = list_of_ids_with_groups
 
     result_dict = {}
-    for day in event.weekdays_in_event():
+    for day in event.days_in_event():
         result_dict[day] = [
             cadet
             for cadet in dict_of_cadets_with_club_dinghies_at_event.list_of_cadets

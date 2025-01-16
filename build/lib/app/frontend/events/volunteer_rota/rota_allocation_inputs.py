@@ -36,7 +36,7 @@ def get_allocation_inputs_for_volunteer(
             volunteer_data_at_event=volunteer_data_at_event,
             day=day,
         )
-        for day in volunteer_data_at_event.event.weekdays_in_event()
+        for day in volunteer_data_at_event.event.days_in_event()
     ]
 
     return day_inputs

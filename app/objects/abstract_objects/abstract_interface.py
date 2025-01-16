@@ -33,8 +33,6 @@ class abstractInterface:
     display_and_post_form_function_maps: DisplayAndPostFormFunctionMaps = arg_not_passed
     action_name: str = ""
 
-
-    ## SHOULD BE DONE ON NEW PAGE DISPLAY?? AND A MESS!
     def flush_cache_to_store(self):
         read_only = self.read_only
         if self.read_only:

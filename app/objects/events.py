@@ -59,7 +59,7 @@ class Event(GenericSkipperManObjectWithIds):
                 str(self.start_date),
                 str(self.end_date),
                 self.duration,
-                self.weekdays_in_event_as_single_string(),
+                self.days_in_event_as_single_string(),
             ),
         ]
 
@@ -112,31 +112,27 @@ class Event(GenericSkipperManObjectWithIds):
     def days_in_event_overlap_with_selected_days(
         self, day_selector: DaySelector
     ) -> List[Day]:
-        my_day_selector = self.day_selector_with_covered_days()
+        my_day_selector = self.day_selector_for_days_in_event()
         return day_selector.days_that_intersect_with(my_day_selector)
 
-    def day_selector_with_covered_days(self) -> DaySelector:
-        weekdays_covered = self.weekdays_in_event()
+    def day_selector_for_days_in_event(self) -> DaySelector:
+        weekdays_covered = self.days_in_event()
         return DaySelector(
             dict([(day, day in weekdays_covered) for day in all_possible_days])
         )
 
-    def first_day(self):
-        ## relies on ordering
-        return self.weekdays_in_event()[0]
-
-    def weekdays_in_event_as_single_string(self) -> str:
-        names_of_days = self.weekdays_in_event_as_list_of_string()
+    def days_in_event_as_single_string(self) -> str:
+        names_of_days = self.days_in_event_as_list_of_string()
 
         return ", ".join(names_of_days)
 
-    def weekdays_in_event_as_list_of_string(self) -> List[str]:
-        weekdays_in_event = self.weekdays_in_event()
+    def days_in_event_as_list_of_string(self) -> List[str]:
+        weekdays_in_event = self.days_in_event()
         names_of_days = [day.name for day in weekdays_in_event]
 
         return names_of_days
 
-    def weekdays_in_event(self) -> List[Day]:
+    def days_in_event(self) -> List[Day]:
         date_list = self.dates_in_event()
         weekdays = [day_given_datetime(some_day) for some_day in date_list]
 

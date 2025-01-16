@@ -74,7 +74,7 @@ def get_before_material_if_not_swapping(
 
 
 def get_availability_for_volunteers_filter(event: Event) -> Line:
-    days_in_event = event.weekdays_in_event()
+    days_in_event = event.days_in_event()
     availability_filters = [
         get_available_filter_for_day(day=day) for day in days_in_event
     ]

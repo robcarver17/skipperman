@@ -2,7 +2,7 @@ import os
 from typing import List
 
 from app.backend.events.list_of_events import get_sorted_list_of_events
-from app.data_access.file_access import download_directory
+from app.data_access.init_directories import download_directory
 from app.data_access.store.object_definitions import (
     object_definition_for_field_mappings_at_event, object_definition_for_list_of_field_mapping_templates,
     object_definition_for_field_mapping_templates,

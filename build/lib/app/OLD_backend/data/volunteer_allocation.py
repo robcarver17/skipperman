@@ -75,7 +75,7 @@ class VolunteerAllocationData:
 
     def add_volunteer_to_event_with_just_id(self, volunteer_id: str, event: Event):
         availability = (
-            event.day_selector_with_covered_days()
+            event.day_selector_for_days_in_event()
         )  ## assume available all days in event
         list_of_volunteers_at_event = self.load_list_of_volunteers_with_ids_at_event(
             event

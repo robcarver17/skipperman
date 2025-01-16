@@ -34,7 +34,7 @@ def get_dict_of_df_for_boat_report(
     additional_parameters: AdditionalParametersForBoatReport,
 ) -> Dict[str, pd.DataFrame]:
     data_required = get_data_required_for_event(interface=interface, event=event)
-    days_in_event = event.weekdays_in_event()
+    days_in_event = event.days_in_event()
 
     if not event.contains_groups:
         additional_parameters.exclude_unallocated_groups = False

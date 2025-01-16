@@ -85,7 +85,7 @@ def get_list_of_generic_button_values_across_days_and_volunteers(
         load_list_of_volunteers_at_event, event=event
     )
     list_of_volunteer_ids = list_of_volunteers_at_event.list_of_volunteer_ids()
-    list_of_days = event.weekdays_in_event()
+    list_of_days = event.days_in_event()
 
     all_button_values = []
     for id in list_of_volunteer_ids:
@@ -100,7 +100,7 @@ def button_value_for_day(day: Day):
 
 
 def get_list_of_day_button_values(event: Event):
-    return [button_value_for_day(day) for day in event.weekdays_in_event()]
+    return [button_value_for_day(day) for day in event.days_in_event()]
 
 
 def from_day_button_value_to_day(day_button_value: str) -> Day:

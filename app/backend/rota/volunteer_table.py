@@ -37,7 +37,7 @@ def all_roles_match_across_event(
     volunteer_data_at_event: AllEventDataForVolunteer
 ) -> bool:
     all_volunteers_in_roles_at_event_including_no_role_set = [volunteer_data_at_event.roles_and_groups.role_and_group_on_day(day)
-                                                    for day in volunteer_data_at_event.event.weekdays_in_event()]
+                                                              for day in volunteer_data_at_event.event.days_in_event()]
 
     if len(all_volunteers_in_roles_at_event_including_no_role_set) == 0:
         return False
@@ -61,7 +61,7 @@ def volunteer_has_empty_available_days_without_role(
     volunteer_data_at_event: AllEventDataForVolunteer,
 ) -> bool:
     all_volunteers_in_roles_at_event_including_no_role_set = [volunteer_data_at_event.roles_and_groups.role_and_group_on_day(day)
-                                                    for day in volunteer_data_at_event.event.weekdays_in_event()]
+                                                              for day in volunteer_data_at_event.event.days_in_event()]
     unallocated_roles = [
         volunteer_role_and_group.role
         for volunteer_role_and_group in all_volunteers_in_roles_at_event_including_no_role_set
@@ -76,7 +76,7 @@ def volunteer_has_at_least_one_day_in_role_and_all_roles_and_groups_match(
 
 ) -> bool:
     all_volunteers_in_roles_at_event_including_no_role_set = [volunteer_data_at_event.roles_and_groups.role_and_group_on_day(day)
-                                                    for day in volunteer_data_at_event.event.weekdays_in_event()]
+                                                              for day in volunteer_data_at_event.event.days_in_event()]
 
     allocated_roles = [
         volunteer_role_and_group.role

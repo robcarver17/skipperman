@@ -1,4 +1,4 @@
-from app.data_access.data import data_api
+from app.data_access.init_data import data_api
 
 from app.web.flask.flask_interface import flaskInterface
 

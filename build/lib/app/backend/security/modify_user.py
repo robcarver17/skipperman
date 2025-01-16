@@ -5,7 +5,7 @@ from app.backend.security.list_of_users import get_list_of_users, update_list_of
 from app.data_access.store.object_store import ObjectStore
 
 from app.data_access.configuration.configuration import HOMEPAGE
-from app.data_access.data import object_store as default_object_store
+from app.data_access.init_data import object_store as default_object_store
 from app.objects.exceptions import arg_not_passed
 from app.objects.users_and_security import get_random_string
 

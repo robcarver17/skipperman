@@ -17,7 +17,7 @@ from app.backend.volunteers.connected_cadets import get_list_of_volunteers_assoc
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.exceptions import MissingData
 from app.objects.identified_cadets_at_event import IdentifiedCadetAtEvent
-from app.objects.day_selectors import EMPTY_DAY_SELECTOR
+from app.objects.day_selectors import empty_day_selector
 from app.objects.events import Event
 from app.objects.registration_status import empty_status
 from app.backend.registration_data.identified_cadets_at_event import get_list_of_identified_cadets_at_event
@@ -40,7 +40,7 @@ def get_df_for_cadets_event_data_dump(object_store: ObjectStore, event: Event):
             event=event,
             cadet=cadet,
             keyname="availability",
-            default=EMPTY_DAY_SELECTOR,
+            default=empty_day_selector,
         ).days_available_as_str()
         for cadet in list_of_cadets
     ]
@@ -150,7 +150,7 @@ def club_dinghy_for_cadet(object_store: ObjectStore, event: Event, cadet: Cadet)
                 day,
                 dinghy_data.club_dinghys_for_cadet(cadet).dinghy_on_day(day=day).name,
             )
-            for day in event.weekdays_in_event()
+            for day in event.days_in_event()
         ]
     )
 
@@ -165,7 +165,7 @@ def boat_class_for_cadet(object_store: ObjectStore, event: Event, cadet: Cadet):
                 day,
                 dinghy_data.boat_classes_and_partner_for_cadet(cadet).boat_class_on_day(day).name,
             )
-            for day in event.weekdays_in_event()
+            for day in event.days_in_event()
         ]
     )
 
@@ -180,7 +180,7 @@ def sail_number_for_cadet(object_store: ObjectStore, event: Event, cadet: Cadet)
                 day,
                 dinghy_data.boat_classes_and_partner_for_cadet(cadet).sail_number_on_day(day),
             )
-            for day in event.weekdays_in_event()
+            for day in event.days_in_event()
         ]
     )
 
@@ -195,7 +195,7 @@ def partner_name_for_cadet(object_store: ObjectStore, event: Event, cadet: Cadet
                 day,
                 str(dinghy_data.boat_classes_and_partner_for_cadet(cadet).partner_on_day(day)),
             )
-            for day in event.weekdays_in_event()
+            for day in event.days_in_event()
         ]
     )
 
@@ -230,7 +230,7 @@ def group_string_for_cadet(object_store: ObjectStore, event: Event, cadet: Cadet
                 day,
                 group_data.get_days_and_groups_for_cadet(cadet).group_on_day(day).name,
             )
-            for day in event.weekdays_in_event()
+            for day in event.days_in_event()
         ]
     )
 

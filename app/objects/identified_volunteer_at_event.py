@@ -5,7 +5,8 @@ from app.objects.exceptions import missing_data
 from app.objects.generic_list_of_objects import GenericListOfObjects
 
 from app.objects.generic_objects import GenericSkipperManObject
-from app.objects.volunteers import NO_VOLUNTEER_ALLOCATED
+
+NO_VOLUNTEER_ALLOCATED = "NO_volunteer_allocated"
 
 
 @dataclass

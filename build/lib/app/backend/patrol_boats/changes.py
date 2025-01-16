@@ -128,7 +128,7 @@ def copy_across_boats_at_event(
 def earliest_day_with_boat_for_volunteer_or_none(
     volunteer_with_boat_data: VolunteerAtEventWithSkillsAndRolesAndPatrolBoats
 ) -> Day:
-    for day in volunteer_with_boat_data.event.weekdays_in_event():
+    for day in volunteer_with_boat_data.event.days_in_event():
         if volunteer_with_boat_data.patrol_boat_by_day.on_any_patrol_boat_on_given_day(day):
             return day
 

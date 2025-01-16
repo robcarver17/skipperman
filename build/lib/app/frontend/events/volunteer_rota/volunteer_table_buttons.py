@@ -104,11 +104,11 @@ def copy_previous_role_button_or_blank(
 ### SORT BUTTONS
 def get_buttons_for_days_at_event(event: Event, ready_to_swap: bool):
     if ready_to_swap:
-        return event.weekdays_in_event_as_list_of_string()
+        return event.days_in_event_as_list_of_string()
     else:
         return [
             Line([button_for_day(day), " (click to sort group/role)"])
-            for day in event.weekdays_in_event()
+            for day in event.days_in_event()
         ]
 
 

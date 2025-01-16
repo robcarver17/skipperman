@@ -50,7 +50,7 @@ def row_for_volunteer_at_event(
                     day=day,
                 ),
             )
-            for day in volunteer_data.event.weekdays_in_event()
+            for day in volunteer_data.event.days_in_event()
         ]
     )
 

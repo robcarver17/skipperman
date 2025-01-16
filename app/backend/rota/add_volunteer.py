@@ -36,7 +36,7 @@ def add_volunteer_to_event_with_full_availability(
     object_store: ObjectStore, volunteer: Volunteer, event: Event
 ):
     availability = (
-        event.day_selector_with_covered_days()
+        event.day_selector_for_days_in_event()
     )  ## assume available all days in event
 
     volunteer_at_event_with_id = VolunteerAtEventWithId(volunteer_id=volunteer.id, availablity=availability, list_of_associated_cadet_id=[])

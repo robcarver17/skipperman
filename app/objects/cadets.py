@@ -216,13 +216,6 @@ class ListOfCadets(GenericListOfObjectsWithIds):
             new_cadet
         )
 
-    def any_matching_cadets(self, cadet: Cadet) -> bool:
-        for cadet_in_list in self:
-            if cadet == cadet_in_list:
-                return True
-
-        return False
-
     def matching_cadet(self, cadet: Cadet, exact_match_required: bool = False) -> Cadet:
         exact_match = [
             cadet_in_list for cadet_in_list in self if cadet == cadet_in_list
@@ -340,7 +333,6 @@ class ListOfCadets(GenericListOfObjectsWithIds):
     def list_of_names(self):
         return [cadet.name for cadet in self]
 
-test_cadet = Cadet.from_name_only("Test", "")
 
 def cadet_is_too_young_to_be_without_parent(cadet: Cadet) -> bool:
     return cadet.approx_age_years() < MIN_AGE_WHEN_CADET_CAN_BE_AT_EVENT_WITHOUT_PARENT
@@ -351,6 +343,8 @@ def is_cadet_age_surprising(cadet: Cadet):
 
     return age < MIN_CADET_AGE or age > MAX_CADET_AGE
 
+SKIP_TEST_CADET_ID = str(-9999)
+
 
 default_cadet = Cadet(
     first_name=" ",
@@ -358,10 +352,12 @@ default_cadet = Cadet(
     date_of_birth=DEFAULT_DATE_OF_BIRTH,
     membership_status=none_member,
 )
+
 unknown_cadet = Cadet(
     first_name="Unknown cadet",
     surname="(data error)",
     date_of_birth=DEFAULT_DATE_OF_BIRTH,
     membership_status=none_member,
 )
-SKIP_TEST_CADET_ID = str(-9999)
+
+test_cadet = Cadet("Test", "", date_of_birth=DEFAULT_DATE_OF_BIRTH, membership_status=none_member, id=SKIP_TEST_CADET_ID)

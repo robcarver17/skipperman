@@ -18,7 +18,7 @@ from app.objects.abstract_objects.form_function_mapping import (
     DisplayAndPostFormFunctionMaps,
 )
 from app.frontend.form_handler import FormHandler
-from app.data_access.data import object_store
+from app.data_access.init_data import object_store
 
 
 class MissingMethod(Exception):

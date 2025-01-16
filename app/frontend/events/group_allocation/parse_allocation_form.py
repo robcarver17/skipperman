@@ -121,7 +121,7 @@ def do_allocation_for_cadet_at_event_across_days(
 
     chosen_group = get_group_with_name(object_store=interface.object_store, group_name=allocation_str)
 
-    for day in event.weekdays_in_event():
+    for day in event.days_in_event():
         ## Won't update cadets who aren't available on a given day
         add_or_upate_group_for_cadet_on_day_if_cadet_available_on_day(
             object_store=interface.object_store,
@@ -212,7 +212,7 @@ def update_club_boat_for_cadet_across_days(
         )
         return
 
-    for day in event.weekdays_in_event():
+    for day in event.days_in_event():
         update_club_boat_allocation_for_cadet_at_event_on_day_if_cadet_available(
             object_store=interface.object_store,
             boat_name=boat_name,
@@ -268,7 +268,7 @@ def update_boat_info_for_all_cadets_in_form_across_days(
     list_of_updates = get_list_of_updates(
         interface=interface, list_of_cadets=list_of_cadets
     )
-    for day in event.weekdays_in_event():
+    for day in event.days_in_event():
         update_boat_info_for_cadets_at_event(
             object_store=interface.object_store, event=event, list_of_updates=list_of_updates, day=day
         )

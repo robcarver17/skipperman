@@ -15,7 +15,7 @@ from app.OLD_backend.data.volunteer_rota import VolunteerRotaData
 
 from app.objects.exceptions import missing_data
 from app.objects.events import Event
-from app.objects.groups import LAKE_TRAINING, Group
+from app.objects.groups import LAKE_TRAINING_LOCATION, Group
 from app.objects_OLD.volunteers_at_event import (
     DEPRECATE_VolunteerAtEvent,
 )
@@ -62,7 +62,7 @@ def get_list_of_volunteer_with_role_across_days_for_volunteer_at_event(
         DEPRECATE_get_volunteer_with_role_at_event_on_day(
             interface=interface, volunteer_id=volunteer_id, day=day, event=event
         )
-        for day in event.weekdays_in_event()
+        for day in event.days_in_event()
     ]
 
     all_volunteer_positions = [
@@ -85,7 +85,7 @@ def volunteer_is_on_lake(
 
 def lake_in_list_of_groups(list_of_groups: List[Group]):
     types_of_groups = [group.type_of_group() for group in list_of_groups]
-    return LAKE_TRAINING in types_of_groups
+    return LAKE_TRAINING_LOCATION in types_of_groups
 
 
 def groups_for_volunteer_at_event(
@@ -95,7 +95,7 @@ def groups_for_volunteer_at_event(
         get_volunteer_with_role_at_event_on_day(
             data_layer=data_layer, volunteer=volunteer, day=day, event=event
         ).group
-        for day in event.weekdays_in_event()
+        for day in event.days_in_event()
     ]
     list_of_groups = [group for group in list_of_groups if group is not missing_data]
 
@@ -179,7 +179,7 @@ def get_list_of_volunteer_roles_for_event_across_days(
         volunteer_rota_data.get_volunteer_with_role_at_event_on_day_for_volunteer_at_event(
             event=event, volunteer_at_event=volunteer_at_event, day=day
         )
-        for day in event.weekdays_in_event()
+        for day in event.days_in_event()
     ]
 
     return list_of_volunteer_roles

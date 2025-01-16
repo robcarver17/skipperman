@@ -8,7 +8,7 @@ from app.backend.reporting.all_event_data.components import (
     ROW_ID,
     day_item_dict_as_string_or_single_if_identical,
 )
-from app.objects.day_selectors import EMPTY_DAY_SELECTOR
+from app.objects.day_selectors import empty_day_selector
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event
@@ -49,7 +49,7 @@ def get_df_for_volunteers_event_data_dump(interface: abstractInterface, event: E
             event=event,
             volunteer_id=volunteer_id,
             keyname="availablity",
-            default=EMPTY_DAY_SELECTOR,
+            default=empty_day_selector,
         ).days_available_as_str()
         for volunteer_id in list_of_volunteer_ids
     ]
@@ -182,7 +182,7 @@ def get_role_group(
                     default_if_unallocated=default,
                 ),
             )
-            for day in event.weekdays_in_event()
+            for day in event.days_in_event()
         ]
     )
 
@@ -201,7 +201,7 @@ def get_patrol_boat(
                     event=event, day=day, volunteer_id=volunteer_id, default=default
                 ),
             )
-            for day in event.weekdays_in_event()
+            for day in event.days_in_event()
         ]
     )
     return day_item_dict_as_string_or_single_if_identical(boat_name_dict)

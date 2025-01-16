@@ -17,7 +17,7 @@ from app.objects.day_selectors import (
     day_selector_to_text_in_stored_format,
     Day,
     weekend_day_selector_from_text,
-    any_day_selector_from_short_form_text,
+    create_day_selector_from_short_form_text,
 )
 from app.objects.events import Event
 from app.objects.generic_list_of_objects import (
@@ -303,11 +303,11 @@ def get_attendance_selection_from_event_row(
         return weekend_day_selector_from_text(row_as_dict[WEEKEND_DAYS_ATTENDING_INPUT])
 
     elif ALL_DAYS_ATTENDING_INPUT in row_as_dict.keys():
-        return any_day_selector_from_short_form_text(
+        return create_day_selector_from_short_form_text(
             row_as_dict[WEEKEND_DAYS_ATTENDING_INPUT]
         )
 
-    return event.day_selector_with_covered_days()
+    return event.day_selector_for_days_in_event()
 
 
 def get_health_from_event_row(row: RowInRegistrationData):

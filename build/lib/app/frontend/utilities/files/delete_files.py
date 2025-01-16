@@ -8,11 +8,9 @@ from app.frontend.utilities.files.render_files import (
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.data_access.file_access import (
-    public_reporting_directory,
-    download_directory,
-    upload_directory,
     get_files_in_directory,
 )
+from app.data_access.init_directories import public_reporting_directory, upload_directory, download_directory
 
 
 def delete_selected_files(interface: abstractInterface):

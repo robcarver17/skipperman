@@ -35,7 +35,7 @@ def get_df_for_reporting_volunteers_with_flags(
 ) -> Dict[str, pd.DataFrame]:
     volunteer_event_data = get_dict_of_all_event_data_for_volunteers(object_store=object_store, event=event)
 
-    list_of_days = days_to_show.align_with_list_of_days(event.weekdays_in_event())
+    list_of_days = days_to_show.align_with_list_of_days(event.days_in_event())
     dict_of_df = {}
     for day in list_of_days:
         day_name = day.name

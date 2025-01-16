@@ -57,7 +57,7 @@ class VolunteerRotaData:
             self.get_volunteer_with_id_in_role_at_event_on_day_from_id(
                 event=event, day=day, volunteer_id=volunteer_id
             )
-            for day in event.weekdays_in_event()
+            for day in event.days_in_event()
         ]
         is_si = [role.senior_instructor() for role in all_roles]
         return any(is_si)
@@ -69,7 +69,7 @@ class VolunteerRotaData:
             self.get_volunteer_with_id_in_role_at_event_on_day_from_id(
                 event=event, day=day, volunteer_id=volunteer_id
             )
-            for day in event.weekdays_in_event()
+            for day in event.days_in_event()
         ]
         all_valid_groups = [
             role.group for role in all_roles if role.in_instructor_team()
@@ -82,7 +82,7 @@ class VolunteerRotaData:
     def delete_role_at_event_for_volunteer_on_all_days(
         self, volunteer_id: str, event: Event
     ):
-        for day in event.weekdays_in_event():
+        for day in event.days_in_event():
             self.delete_role_at_event_for_volunteer_with_id_on_day(
                 event=event, day=day, volunteer_id=volunteer_id
             )
@@ -215,7 +215,7 @@ class VolunteerRotaData:
         )
         all_days = [
             day
-            for day in event.weekdays_in_event()
+            for day in event.days_in_event()
             if volunteer_at_event.availablity.available_on_day(day)
         ]
 
@@ -374,7 +374,7 @@ class VolunteerRotaData:
             self.get_volunteer_with_id_in_role_at_event_on_day_from_id(
                 event=event, day=day, volunteer_id=volunteer_id
             )
-            for day in event.weekdays_in_event()
+            for day in event.days_in_event()
         ]
         list_of_volunteers_in_roles = [
             volunteer_in_role

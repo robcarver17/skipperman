@@ -112,7 +112,7 @@ class VolunteerEventData_DEPRECATE:
         list_of_associated_cadets: ListOfCadetsAtEventWithGroupsByDay,
     ):
         availability = volunteer_at_event_with_id.availablity.intersect(
-            event.day_selector_with_covered_days()
+            event.day_selector_for_days_in_event()
         )
         return cls(
             event=event,

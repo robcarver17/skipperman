@@ -116,7 +116,7 @@ def display_form_allocate_cadets_at_event(
 def get_day_buttons(interface: abstractInterface) -> Line:
     if no_day_set_in_state(interface):
         event = get_event_from_state(interface)
-        event_weekdays = event.weekdays_in_event()
+        event_weekdays = event.days_in_event()
         weekday_buttons = [Button(day.name) for day in event_weekdays]
         return Line(
             [
@@ -134,7 +134,7 @@ reset_day_button = Button(RESET_DAY_BUTTON_LABEL)
 
 def list_of_all_day_button_names(interface: abstractInterface):
     event = get_event_from_state(interface)
-    event_weekdays = event.weekdays_in_event()
+    event_weekdays = event.days_in_event()
     weekday_buttons = [day.name for day in event_weekdays]
     weekday_buttons.append(RESET_DAY_BUTTON_LABEL)
 

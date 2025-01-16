@@ -19,7 +19,8 @@ from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.day_selectors import Day, DictOfDaySelectors, DaySelector
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
-from app.objects.groups import Group, ListOfGroups
+from app.objects.groups import Group, ListOfGroups, unallocated_group
+
 
 @dataclass
 class CadetWithGroup:
@@ -101,7 +102,7 @@ class DaysAndGroups(Dict[Day, Group]):
     def update_group_on_day(self, day: Day, group: Group):
         self[day] = group
 
-    def group_on_day(self, day: Day, default=Group.create_unallocated()) -> Group:
+    def group_on_day(self, day: Day, default=unallocated_group) -> Group:
         return self.get(day, default)
 
     def remove_cadet_from_event_on_day(self, day):
@@ -132,7 +133,7 @@ class DaysAndGroups(Dict[Day, Group]):
         )
 
     def most_common(self) -> Group:
-        return most_common(self.list_of_groups, default=Group.create_unallocated())
+        return most_common(self.list_of_groups, default=unallocated_group)
 
     @property
     def list_of_groups(self) -> List[Group]:
@@ -143,7 +144,7 @@ class DaysAndGroups(Dict[Day, Group]):
     def create_unallocated_for_all_event_days(cls, event: Event):
         return cls(
             dict(
-                [(day, Group.create_unallocated()) for day in event.weekdays_in_event()]
+                [(day, unallocated_group) for day in event.days_in_event()]
             )
         )
 
@@ -183,7 +184,7 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
 
 
     def remove_cadet_from_event(self, cadet: Cadet):
-        for day in self.event.weekdays_in_event():
+        for day in self.event.days_in_event():
             self.remove_cadet_from_event_on_day(cadet=cadet, day=day)
 
         try:

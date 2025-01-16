@@ -156,7 +156,7 @@ class DictOfCadetsAndClubDinghiesAtEvent(
         return ListOfClubDinghies(sorted_list)
 
     def remove_cadet_from_event(self, cadet: Cadet):
-        for day in self.event.weekdays_in_event():
+        for day in self.event.days_in_event():
             self.remove_cadet_club_boat_allocation_on_day(cadet=cadet, day=day)
 
         try:

@@ -16,7 +16,7 @@ from app.frontend.shared.qualification_and_tick_state_storage import (
     get_group_from_state,
 )
 
-from app.data_access.file_access import download_directory
+from app.data_access.init_directories import download_directory
 
 from app.objects.events import Event
 

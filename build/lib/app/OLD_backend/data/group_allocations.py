@@ -56,7 +56,7 @@ class GroupAllocationsData:
 
         joint_attendance = attendance_data.intersect(attendance_in_group)
         joint_attendance = joint_attendance.align_with_list_of_days(
-            event.weekdays_in_event()
+            event.days_in_event()
         )
 
         return joint_attendance
@@ -90,13 +90,13 @@ class GroupAllocationsData:
                         )
                         == group,
                     )
-                    for day in event.weekdays_in_event()
+                    for day in event.days_in_event()
                 ]
             )
         )
 
     def remove_cadet_from_data(self, event: Event, cadet_id: str):
-        for day in event.weekdays_in_event():
+        for day in event.days_in_event():
             self.remove_cadet_from_data_on_day(event=event, cadet_id=cadet_id, day=day)
 
     def remove_cadet_from_data_on_day(self, event: Event, cadet_id: str, day: Day):
@@ -220,7 +220,7 @@ class GroupAllocationsData:
         if list_of_cadet_ids_with_groups is arg_not_passed:
             list_of_cadet_ids_with_groups = ListOfCadetIdsWithGroups([])
         unallocated_cadets = self.unallocated_cadets_at_event(event)
-        for day in event.weekdays_in_event():
+        for day in event.days_in_event():
             list_of_cadet_ids_with_groups.add_list_of_unallocated_cadets_on_day(
                 unallocated_cadets, day=day
             )

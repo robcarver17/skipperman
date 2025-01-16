@@ -1,20 +1,18 @@
 from dataclasses import dataclass
-from typing import List
 
-from app.objects.boat_classes import ListOfBoatClasses
 from app.objects.day_selectors import Day
 from app.objects.exceptions import missing_data
 from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.utils import make_id_as_int_str
 
-NO_PARTNER_REQUIRED = "Singlehander"
-NOT_ALLOCATED = "Unallocated"
-NO_PARTNERSHIP_LIST = [NOT_ALLOCATED, NO_PARTNER_REQUIRED]
+NO_PARTNER_REQUIRED_STR = "Singlehander"
+NOT_ALLOCATED_STR = "Unallocated"
+NO_PARTNERSHIP_LIST_OF_STR = [NOT_ALLOCATED_STR, NO_PARTNER_REQUIRED_STR]
 
 
 def no_partnership_given_partner_id_or_str(partnership_str: str):
-    return partnership_str in NO_PARTNERSHIP_LIST
+    return partnership_str in NO_PARTNERSHIP_LIST_OF_STR
 
 
 def valid_partnership_given_partner_id_or_str(partnership_str: str):
@@ -27,10 +25,8 @@ class CadetAtEventWithBoatClassAndPartnerWithIds(GenericSkipperManObject):
     boat_class_id: str
     sail_number: str
     day: Day
-    partner_cadet_id: str = NO_PARTNER_REQUIRED
+    partner_cadet_id: str = NO_PARTNER_REQUIRED_STR
 
-    def has_partner(self):
-        return valid_partnership_given_partner_id_or_str(self.partner_cadet_id)
 
     def __eq__(self, other):
         sail_number = make_id_as_int_str(self.sail_number)
@@ -44,7 +40,7 @@ class CadetAtEventWithBoatClassAndPartnerWithIds(GenericSkipperManObject):
         )
 
     def clear_partner(self):
-        self.partner_cadet_id = NOT_ALLOCATED
+        self.partner_cadet_id = NOT_ALLOCATED_STR
 
 
 UNCHANGED = "unchanged"
@@ -214,33 +210,6 @@ class ListOfCadetAtEventWithBoatClassAndPartnerWithIds(GenericListOfObjectsWithI
 
         return self.index(item)
 
-    def cadet_partner_id_for_cadet_id_on_day(
-        self, cadet_id: str, day: Day, default=missing_data
-    ) -> str:
-        item = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
-        if item is missing_data:
-            return default
-
-        return item.partner_cadet_id
-
-    def sail_number_for_cadet_id(
-        self, cadet_id: str, day: Day, default=missing_data
-    ) -> str:
-        item = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
-        if item is missing_data:
-            return default
-
-        return item.sail_number
-
-    def dinghy_id_for_cadet_id_on_day(
-        self, cadet_id: str, day: Day, default=missing_data
-    ) -> str:
-        item = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
-        if item is missing_data:
-            return default
-
-        return item.boat_class_id
-
     def object_with_cadet_id_on_day(
         self, cadet_id: str, day: Day, default=missing_data
     ) -> CadetAtEventWithBoatClassAndPartnerWithIds:
@@ -253,29 +222,5 @@ class ListOfCadetAtEventWithBoatClassAndPartnerWithIds(GenericListOfObjectsWithI
             raise Exception("Can only have one dinghy per cadet per day")
 
         return list_of_items[0]
-
-    def unique_list_of_cadet_ids(self):
-        ## unique
-        return list(set([item.cadet_id for item in self]))
-
-    def list_of_boat_class_ids(self):
-        ## not unique
-        return [item.boat_class_id for item in self]
-
-    def list_of_partner_ids_excluding_not_valid(self) -> List[str]:
-        return [
-            object.partner_cadet_id
-            for object in self
-            if valid_partnership_given_partner_id_or_str(object.partner_cadet_id)
-        ]
-
-    def unique_sorted_list_of_boat_class_ids(
-        self, all_boat_classes: ListOfBoatClasses
-    ) -> List[str]:
-        return [
-            object.id
-            for object in all_boat_classes
-            if object.id in self.list_of_boat_class_ids()
-        ]
 
 

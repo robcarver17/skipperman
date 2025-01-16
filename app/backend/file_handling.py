@@ -1,7 +1,7 @@
 import os
 
 import pandas as pd
-from app.data_access.file_access import upload_directory
+from app.data_access.init_directories import upload_directory
 
 from app.data_access.configuration.configuration import ALLOWED_UPLOAD_FILE_TYPES
 from app.data_access.uploads_and_downloads import get_next_valid_upload_file_name

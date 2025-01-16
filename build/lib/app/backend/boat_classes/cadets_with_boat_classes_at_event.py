@@ -9,7 +9,7 @@ from app.data_access.store.object_definitions import (
     object_definition_for_cadets_with_ids_and_boat_classes_at_event,
     object_definition_for_dict_of_cadets_and_boat_classes_and_partners,
 )
-from app.objects.cadet_at_event_with_dinghy_with_ids import (
+from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import (
     ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
 )
 

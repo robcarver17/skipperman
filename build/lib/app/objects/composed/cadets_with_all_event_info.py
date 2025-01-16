@@ -116,7 +116,7 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         self.dict_of_cadets_with_registration_data.update_availability_of_existing_cadet_at_event(cadet=cadet, new_availabilty=new_availabilty)
 
         messages = []
-        for day in self.event.weekdays_in_event():
+        for day in self.event.days_in_event():
             if new_availabilty.available_on_day(day):
                 continue
 

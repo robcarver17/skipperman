@@ -26,7 +26,7 @@ def load_additional_parameters_for_rota_report(
     days_to_show_str = interface.get_persistent_value(DAYS_TO_SHOW, None)
     if days_to_show_str is None:
         event = get_event_from_state(interface)
-        days_to_show = event.day_selector_with_covered_days()
+        days_to_show = event.day_selector_for_days_in_event()
     else:
         days_to_show = DaySelector.from_str(days_to_show_str)
 

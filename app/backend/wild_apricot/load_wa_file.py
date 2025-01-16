@@ -8,7 +8,7 @@ from app.backend.file_handling import load_spreadsheet_file_and_clear_nans
 from app.data_access.configuration.configuration import (
     WILD_APRICOT_EVENT_ID,
 )
-from app.data_access.file_access import upload_directory
+from app.data_access.init_directories import upload_directory
 from app.objects.exceptions import NoValidID, FileError
 
 

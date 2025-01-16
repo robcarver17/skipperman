@@ -7,8 +7,8 @@ from app.frontend.reporting.qualifications.achieved_qualifications import (
 
 from app.data_access.file_access import (
     get_files_in_directory,
-    public_reporting_directory,
 )
+from app.data_access.init_directories import public_reporting_directory
 
 from app.frontend.shared.events_state import (
     update_state_for_specific_event_given_event_description,

@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.data_access.file_access import web_pathname_of_file
+from app.data_access.init_directories import web_pathname_of_file
 from app.frontend.reporting.shared.arrangement_form import (
     form_for_group_arrangement_options,
     post_form_for_group_arrangement_options,
@@ -38,15 +38,11 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.form_handler import (
-    initial_state_form,
     button_error_and_back_to_initial_state_form,
 )
 from app.frontend.shared.events_state import (
     get_event_from_state,
     update_state_for_specific_event_given_event_description,
-)
-from app.backend.events.list_of_events import (
-    confirm_event_exists_given_description_REFACTOR,
 )
 
 from app.frontend.reporting.shared.constants import *
@@ -85,16 +81,6 @@ def post_form_initial_generic_report(
         )
 
     event_name_selected = last_button
-    try:
-        confirm_event_exists_given_description_REFACTOR(
-            interface=interface, event_description=event_name_selected
-        )
-    except:
-        interface.log_error(
-            "Event %s no longer in list- someone else has deleted or file corruption?"
-            % event_name_selected
-        )
-        return initial_state_form
 
     ## so whilst we are in this stage, we know which event we are talking about
     update_state_for_specific_event_given_event_description(

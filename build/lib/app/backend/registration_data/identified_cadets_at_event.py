@@ -110,7 +110,7 @@ def identified_cadet_ids_in_raw_registration_data(object_store: ObjectStore, eve
 
 def mark_row_as_skip_cadet(object_store: ObjectStore,  event: Event, row_id: str):
     identified_cadets_at_event= get_list_of_identified_cadets_at_event(object_store=object_store, event=event)
-    identified_cadets_at_event.add_cadet_to_skip(row_id=row_id)
+    identified_cadets_at_event.add_row_with_test_cadet_as_skipping(row_id=row_id)
     update_list_of_identified_cadets_at_event(identified_cadets_at_event=identified_cadets_at_event,
                                               event=event,
                                               object_store=object_store)

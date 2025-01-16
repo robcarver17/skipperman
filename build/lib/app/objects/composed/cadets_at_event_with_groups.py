@@ -143,7 +143,7 @@ class DaysAndGroups(Dict[Day, Group]):
     def create_unallocated_for_all_event_days(cls, event: Event):
         return cls(
             dict(
-                [(day, Group.create_unallocated()) for day in event.weekdays_in_event()]
+                [(day, Group.create_unallocated()) for day in event.days_in_event()]
             )
         )
 
@@ -183,7 +183,7 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
 
 
     def remove_cadet_from_event(self, cadet: Cadet):
-        for day in self.event.weekdays_in_event():
+        for day in self.event.days_in_event():
             self.remove_cadet_from_event_on_day(cadet=cadet, day=day)
 
         try:

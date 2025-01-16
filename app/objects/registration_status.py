@@ -1,8 +1,6 @@
 from enum import Enum
 from typing import List
 
-from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
-
 CANCELLED = "Cancelled"
 ACTIVE_PAID = "Paid"
 EMPTY = "Empty"
@@ -109,24 +107,3 @@ status_still_active_but_has_changed = RegStatusChange["status_still_active_but_h
 error = RegStatusChange["error"]
 
 
-def interpret_status_change(existing_cadet_at_event: CadetWithIdAtEvent,
-                                                     new_cadet_at_event: CadetWithIdAtEvent) -> RegStatusChange:
-    original_status = existing_cadet_at_event.status
-    new_status = new_cadet_at_event.status
-
-    if new_status == original_status:
-        return status_unchanged
-
-    if original_status.is_cancelled_or_deleted and new_status.is_active:
-        return new_registration_replacing_deleted_or_cancelled
-
-    if new_status.is_cancelled_or_deleted:
-        return existing_registration_now_deleted_or_cancelled
-
-    status_changed = not status_unchanged
-    status_active_and_was_active = new_status.is_active and original_status.is_active
-
-    if status_active_and_was_active and status_changed:
-        return status_still_active_but_has_changed
-
-    return error

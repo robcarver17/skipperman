@@ -9,9 +9,7 @@ from app.objects.composed.volunteer_roles import RoleWithSkills
 from app.objects.composed.volunteer_with_group_and_role_at_event import DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.volunteer_role_targets import (
-    DictOfTargetsForRolesAtEvent,
-)
+from app.objects.composed.dict_of_volunteer_role_targets import DictOfTargetsForRolesAtEvent
 from app.backend.volunteers.roles_and_teams import get_role_from_name, get_list_of_roles_with_skills
 
 
@@ -62,7 +60,7 @@ def get_row_in_table_with_actual_and_targets_for_roles_at_event(
 ) -> RowInTableWithActualAndTargetsForRole:
 
     daily_counts = {}
-    for day in event.weekdays_in_event():
+    for day in event.days_in_event():
         daily_counts[day] = volunteers_in_roles_at_event.count_of_volunteers_in_role_on_day(day=day, role=role)
 
     min_count = min(daily_counts.values())

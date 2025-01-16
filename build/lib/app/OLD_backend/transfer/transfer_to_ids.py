@@ -1,4 +1,4 @@
-from app.data_access.data import *
+from app.data_access.init_data import *
 from app.backend.volunteers.skills import get_list_of_skills
 from app.backend.groups.list_of_groups import get_list_of_groups
 from app.backend.volunteers.roles_and_teams import get_list_of_roles

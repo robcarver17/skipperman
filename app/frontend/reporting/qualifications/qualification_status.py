@@ -12,7 +12,7 @@ from app.backend.events.list_of_events import get_event_from_list_of_events_give
 
 from app.frontend.events.ENTRY_view_events import display_list_of_events_with_buttons
 
-from app.data_access.file_access import download_directory
+from app.data_access.init_directories import download_directory
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import (

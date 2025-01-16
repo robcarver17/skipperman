@@ -23,7 +23,7 @@ from app.objects.cadets import (
     Cadet,
     cadet_is_too_young_to_be_without_parent,
 )
-from app.objects.day_selectors import EMPTY_DAY_SELECTOR
+from app.objects.day_selectors import empty_day_selector
 from app.objects.events import Event
 from app.objects.registration_data import get_status_from_row
 
@@ -186,7 +186,7 @@ def warn_about_volunteer_availablity_at_event_with_connected_cadets(
                                                          )
     volunteer_registration_data = volunteer_event_data.registration_data
     warnings = []
-    for day in event.weekdays_in_event():
+    for day in event.days_in_event():
         volunteer_available_on_day = volunteer_registration_data.availablity.available_on_day(
             day
         )
@@ -194,7 +194,7 @@ def warn_about_volunteer_availablity_at_event_with_connected_cadets(
             cadet
             for cadet in active_connected_cadets
             if cadet_at_event_availability.get(
-                cadet, EMPTY_DAY_SELECTOR
+                cadet, empty_day_selector
             ).available_on_day(day)
         ]
 

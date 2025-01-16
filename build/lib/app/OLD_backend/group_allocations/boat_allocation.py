@@ -9,7 +9,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.OLD_backend.data.dinghies import DinghiesData
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.cadet_at_event_with_dinghy_with_ids import (
+from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import (
     no_partnership_given_partner_id_or_str,
     CadetAtEventWithBoatClassAndPartnerWithIds,
     ListOfCadetAtEventWithBoatClassAndPartnerWithIds,

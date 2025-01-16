@@ -28,7 +28,8 @@ from app.objects.cadet_with_id_at_event import (
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
 from app.objects.registration_status import RegistrationStatus, new_registration_replacing_deleted_or_cancelled, existing_registration_now_deleted_or_cancelled, status_unchanged, \
-    status_still_active_but_has_changed, interpret_status_change
+    status_still_active_but_has_changed
+from app.frontend.events.cadets_at_event.update_existing_cadet_at_event_from_form_entries import interpret_status_change
 
 
 def update_cadets_at_event_with_form_data(interface: abstractInterface):

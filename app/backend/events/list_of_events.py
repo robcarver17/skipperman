@@ -14,16 +14,6 @@ from app.objects.events import (
 from app.data_access.store.object_store import ObjectStore
 
 
-def confirm_event_exists_given_description_REFACTOR(
-    interface: abstractInterface, event_description: str
-):
-    list_of_events = get_list_of_events(interface.object_store)
-
-    ## fails if missing
-
-    __ = list_of_events.event_with_description(event_description)
-
-
 def list_of_previously_used_event_names(object_store: ObjectStore) -> list:
     list_of_events = get_list_of_events(object_store)
     event_names = [event.event_name for event in list_of_events]

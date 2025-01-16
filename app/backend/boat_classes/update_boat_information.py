@@ -11,7 +11,7 @@ from app.backend.boat_classes.cadets_with_boat_classes_at_event import get_dict_
 from app.data_access.store.object_store import ObjectStore
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.cadet_at_event_with_dinghy_with_ids import \
+from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import \
     ListOfCadetAtEventWithBoatClassAndPartnerWithIds
 from app.objects.cadets import Cadet
 from app.objects.day_selectors import Day

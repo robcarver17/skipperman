@@ -163,7 +163,7 @@ def get_list_of_dropdown_names_for_adding_volunteers(
 
     list_of_names = []
     for boat_at_event in list_of_boats_at_event:
-        for day in event.weekdays_in_event():
+        for day in event.days_in_event():
             names_for_boat_and_day = get_input_name_for_allocation_dropdown(
                 boat_at_event=boat_at_event, day=day
             )

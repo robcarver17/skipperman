@@ -10,7 +10,7 @@ from app.frontend.events.volunteer_rota.button_values import (
     get_dict_of_volunteer_name_buttons_and_volunteer_ids,
 )
 
-from app.data_access.file_access import temp_file_name
+from app.data_access.init_directories import temp_file_name
 
 from app.backend.rota.changes import delete_role_at_event_for_volunteer_on_day
 from app.backend.volunteers.volunteers_at_event import  \
@@ -179,7 +179,7 @@ def update_volunteer_availability_filter(interface: abstractInterface):
                 day.name,
                 update_volunteer_availability_for_day(interface=interface, day=day),
             )
-            for day in event.weekdays_in_event()
+            for day in event.days_in_event()
         ]
     )
 

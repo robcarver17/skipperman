@@ -67,7 +67,7 @@ def get_volunteer_at_event_from_form_contents(interface: abstractInterface, volu
         interface=interface, event=event, input_name=AVAILABILITY
     )
 
-    if no_days_selected(availability_in_form, possible_days=event.weekdays_in_event()):
+    if no_days_selected(availability_in_form, possible_days=event.days_in_event()):
         raise NoDaysSelected(
             "No days selected for volunteer %s at event - not adding this volunteer - you might want to add manually later"
             % volunteer.name

@@ -36,7 +36,7 @@ def warn_on_pb2_drivers_for_boat(
         warn_on_pb2_drivers_for_boat_on_day(
             object_store=object_store, event=event, patrol_boat=patrol_boat, day=day
         )
-        for day in event.weekdays_in_event()
+        for day in event.days_in_event()
     ]
 
     return list_of_warnings

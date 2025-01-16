@@ -55,7 +55,7 @@ class CadetsAtEventIdLevelData:
 
     def mark_row_as_skip_cadet(self, event: Event, row_id: str):
         identified_cadets = self.get_list_of_identified_cadets_at_event(event)
-        identified_cadets.add_cadet_to_skip(row_id=row_id)
+        identified_cadets.add_row_with_test_cadet_as_skipping(row_id=row_id)
         self.save_list_of_identified_cadets_at_event(
             event=event, list_of_identified_cadets_at_event=identified_cadets
         )

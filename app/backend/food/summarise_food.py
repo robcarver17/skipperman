@@ -45,11 +45,11 @@ def summarise_food_data_by_day_for_volunteers(
 
     availability_dict = get_availability_dict_for_volunteers_at_event(object_store=object_store, event=event)
 
-    range_of_days_worked = list(range(1, len(event.weekdays_in_event()) + 1))
+    range_of_days_worked = list(range(1, len(event.days_in_event()) + 1))
     summary_over_required = {}
     for days_required in range_of_days_worked:
         summary_dict = {}
-        for day in event.weekdays_in_event():
+        for day in event.days_in_event():
             list_to_count = [
                 1
                 for volunteer, food_requirements in volunteers_with_food.items()
@@ -81,7 +81,7 @@ def summarise_food_data_by_day_for_cadets(
     for age_window in age_brackets:
         summary_dict = {}
 
-        for day in event.weekdays_in_event():
+        for day in event.days_in_event():
             list_to_count = [
                 1
                 for cadet in cadets_with_food_requirements.list_of_cadets()

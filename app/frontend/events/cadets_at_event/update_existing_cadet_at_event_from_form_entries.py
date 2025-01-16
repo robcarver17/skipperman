@@ -27,8 +27,9 @@ from app.objects.cadet_with_id_at_event import (
 )
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
-from app.objects.registration_status import RegistrationStatus, new_registration_replacing_deleted_or_cancelled, existing_registration_now_deleted_or_cancelled, status_unchanged, \
-    status_still_active_but_has_changed, interpret_status_change
+from app.objects.registration_status import RegistrationStatus, new_registration_replacing_deleted_or_cancelled, \
+    existing_registration_now_deleted_or_cancelled, status_unchanged, \
+    status_still_active_but_has_changed, RegStatusChange, error
 
 
 def update_cadets_at_event_with_form_data(interface: abstractInterface):
@@ -230,3 +231,25 @@ def update_cadet_at_event_when_status_unchanged_and_availability_has_probably_ch
     for message in list_of_messages:
         interface.log_error(message)
 
+
+def interpret_status_change(existing_cadet_at_event: CadetWithIdAtEvent,
+                                                     new_cadet_at_event: CadetWithIdAtEvent) -> RegStatusChange:
+    original_status = existing_cadet_at_event.status
+    new_status = new_cadet_at_event.status
+
+    if new_status == original_status:
+        return status_unchanged
+
+    if original_status.is_cancelled_or_deleted and new_status.is_active:
+        return new_registration_replacing_deleted_or_cancelled
+
+    if new_status.is_cancelled_or_deleted:
+        return existing_registration_now_deleted_or_cancelled
+
+    status_changed = not status_unchanged
+    status_active_and_was_active = new_status.is_active and original_status.is_active
+
+    if status_active_and_was_active and status_changed:
+        return status_still_active_but_has_changed
+
+    return error

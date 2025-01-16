@@ -116,7 +116,7 @@ class PatrolBoatsData:
         return patrol_boat
 
     def delete_volunteer_with_id_at_event(self, volunteer_id: str, event: Event):
-        for day in event.weekdays_in_event():
+        for day in event.days_in_event():
             self.remove_volunteer_with_id_from_patrol_boat_on_day_at_event(
                 event=event, volunteer_id=volunteer_id, day=day
             )
@@ -243,7 +243,7 @@ class PatrolBoatsData:
         list_of_voluteers_at_event_with_patrol_boats = (
             self.get_list_of_voluteers_at_event_with_patrol_boats(event)
         )
-        patrol_boat_id = list_of_voluteers_at_event_with_patrol_boats.which_boat_id_is_volunteer_on_today_or_missing_data(
+        patrol_boat_id = list_of_voluteers_at_event_with_patrol_boats.which_boat_id_is_volunteer_on_today(
             day=day, volunteer_id=volunteer_id
         )
         return patrol_boat_id
@@ -378,7 +378,7 @@ class PatrolBoatsData:
         self, event: Event
     ) -> List[str]:
         list_of_ids = []
-        for day in event.weekdays_in_event():
+        for day in event.days_in_event():
             list_of_ids += (
                 self.get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(
                     event=event, day=day

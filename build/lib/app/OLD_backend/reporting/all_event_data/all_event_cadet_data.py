@@ -13,7 +13,7 @@ from app.OLD_backend.volunteers.volunteer_allocation import (
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.identified_cadets_at_event import IdentifiedCadetAtEvent
-from app.objects.day_selectors import EMPTY_DAY_SELECTOR
+from app.objects.day_selectors import empty_day_selector
 from app.objects.events import Event
 from app.objects.registration_status import empty_status
 
@@ -40,7 +40,7 @@ def get_df_for_cadets_event_data_dump(interface: abstractInterface, event: Event
             event=event,
             cadet_id=cadet_id,
             keyname="availability",
-            default=EMPTY_DAY_SELECTOR,
+            default=empty_day_selector,
         ).days_available_as_str()
         for cadet_id in list_of_cadet_ids
     ]
@@ -145,7 +145,7 @@ def group_string_for_cadet(interface: abstractInterface, event: Event, cadet_id:
                 .DO_NOT_USE_group_for_cadet_id_on_day(day=day, cadet_id=cadet_id)
                 .name,
             )
-            for day in event.weekdays_in_event()
+            for day in event.days_in_event()
         ]
     )
 
@@ -162,7 +162,7 @@ def club_dinghy_for_cadet(interface: abstractInterface, event: Event, cadet_id: 
                     event=event, cadet_id=cadet_id, day=day, default=""
                 ),
             )
-            for day in event.weekdays_in_event()
+            for day in event.days_in_event()
         ]
     )
 
@@ -179,7 +179,7 @@ def boat_class_for_cadet(interface: abstractInterface, event: Event, cadet_id: s
                     event=event, cadet_id=cadet_id, day=day, default=""
                 ),
             )
-            for day in event.weekdays_in_event()
+            for day in event.days_in_event()
         ]
     )
 
@@ -196,7 +196,7 @@ def sail_number_for_cadet(interface: abstractInterface, event: Event, cadet_id: 
                     event=event, cadet_id=cadet_id, day=day, default=""
                 ),
             )
-            for day in event.weekdays_in_event()
+            for day in event.days_in_event()
         ]
     )
 
@@ -213,7 +213,7 @@ def partner_name_for_cadet(interface: abstractInterface, event: Event, cadet_id:
                     event=event, cadet_id=cadet_id, day=day, default=""
                 ),
             )
-            for day in event.weekdays_in_event()
+            for day in event.days_in_event()
         ]
     )
 

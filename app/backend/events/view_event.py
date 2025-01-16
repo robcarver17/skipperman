@@ -67,7 +67,7 @@ def summarise_registrations_for_event(
     dict_of_cadets_with_groups_at_event = get_dict_of_cadets_with_groups_at_event(
         object_store=object_store, event=event
     )
-    for day in event.weekdays_in_event():
+    for day in event.days_in_event():
         cadet_dict["Allocated to groups on %s" % day.name] = len(
             dict_of_cadets_with_groups_at_event.subset_for_day(day)
         )

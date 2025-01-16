@@ -42,7 +42,7 @@ def update_details_for_days_from_form_for_volunteer_at_event(
 volunteer_at_event_data: AllEventDataForVolunteer
 ):
     event = volunteer_at_event_data.event
-    days_at_event = volunteer_at_event_data.event.weekdays_in_event()
+    days_at_event = volunteer_at_event_data.event.days_in_event()
     for day in days_at_event:
         update_details_from_form_for_volunteer_given_specific_day_at_event(
             interface=interface,

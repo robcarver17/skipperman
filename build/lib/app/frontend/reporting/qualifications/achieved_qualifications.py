@@ -1,6 +1,6 @@
 from app.data_access.store.object_store import ObjectStore
 
-from app.data_access.file_access import temp_file_name
+from app.data_access.init_directories import temp_file_name
 from app.objects.composed.cadets_with_qualifications import (
     ListOfNamedCadetsWithQualifications,
 )

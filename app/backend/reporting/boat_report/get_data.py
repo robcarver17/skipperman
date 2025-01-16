@@ -26,7 +26,7 @@ def get_dict_of_df_for_boat_report(
     additional_parameters: AdditionalParametersForBoatReport,
 ) -> Dict[str, pd.DataFrame]:
     dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event, active_only=True)
-    days_in_event = event.weekdays_in_event()
+    days_in_event = event.days_in_event()
 
     dict_of_df = {}
     for day in days_in_event:

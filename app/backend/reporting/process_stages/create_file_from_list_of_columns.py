@@ -14,7 +14,7 @@ from app.backend.reporting.process_stages.pdf_layout import PdfLayout
 from app.backend.reporting.options_and_parameters.report_options import (
     ReportingOptions,
 )
-from app.data_access.file_access import download_directory, public_reporting_directory
+from app.data_access.init_directories import public_reporting_directory, download_directory
 from app.data_access.xls_and_csv import save_dict_of_df_as_spreadsheet_file
 
 

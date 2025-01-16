@@ -8,11 +8,11 @@ from app.objects.exceptions import MissingData, missing_data, MultipleMatches
 from app.objects.events import Event, ListOfEvents
 
 from app.objects.boat_classes import BoatClass, ListOfBoatClasses, no_boat_class
-from app.objects.cadet_at_event_with_dinghy_with_ids import (
+from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import (
     ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
     CadetAtEventWithBoatClassAndPartnerWithIds,
-    NO_PARTNER_REQUIRED,
-    NOT_ALLOCATED,
+    NO_PARTNER_REQUIRED_STR,
+    NOT_ALLOCATED_STR,
 )
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.day_selectors import Day
@@ -20,11 +20,11 @@ from app.objects.utils import most_common
 
 class NoPartnerCadetRequired:
     def __repr__(self):
-        return NO_PARTNER_REQUIRED
+        return NO_PARTNER_REQUIRED_STR
 
 class NoPartnerAllocated:
     def __repr__(self):
-        return NOT_ALLOCATED
+        return NOT_ALLOCATED_STR
 
 
 @dataclass
@@ -65,18 +65,18 @@ class CadetBoatClassAndPartnerAtEventOnDay:
 def from_cadet_id_to_partner_cadet(
     cadet_id: str, list_of_cadets: ListOfCadets
 ) -> Union[Cadet, object]:
-    if cadet_id == NOT_ALLOCATED:
+    if cadet_id == NOT_ALLOCATED_STR:
         return NoPartnerAllocated
-    elif cadet_id == NO_PARTNER_REQUIRED:
+    elif cadet_id == NO_PARTNER_REQUIRED_STR:
         return NoPartnerCadetRequired
     else:
         return list_of_cadets.cadet_with_id(cadet_id)
 
 def from_partner_cadet_to_id_or_string(partner_cadet: Union[Cadet, object]):
     if partner_cadet is NoPartnerAllocated:
-        return NOT_ALLOCATED
+        return NOT_ALLOCATED_STR
     elif partner_cadet is NoPartnerCadetRequired:
-        return NO_PARTNER_REQUIRED
+        return NO_PARTNER_REQUIRED_STR
 
     return partner_cadet.id
 
@@ -96,12 +96,12 @@ no_boat_class_partner_or_sail_number = BoatClassAndPartnerAtEventOnDay(
 )
 
 def no_partnership_given_partner_cadet_as_str(partner_as_str: str):
-    return partner_as_str in [NO_PARTNER_REQUIRED, NOT_ALLOCATED]
+    return partner_as_str in [NO_PARTNER_REQUIRED_STR, NOT_ALLOCATED_STR]
 
 def no_partnership_object_given_str(partner_as_str: str):
-    if partner_as_str==NO_PARTNER_REQUIRED:
+    if partner_as_str==NO_PARTNER_REQUIRED_STR:
         return NoPartnerCadetRequired
-    elif partner_as_str == NOT_ALLOCATED:
+    elif partner_as_str == NOT_ALLOCATED_STR:
         return NoPartnerAllocated
     else:
         raise Exception("Don't know how to process %s" % partner_as_str)
@@ -321,7 +321,7 @@ class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPart
 
     def remove_cadet_from_event_and_return_messages(self, cadet: Cadet) -> List[str]:
         all_messages = []
-        for day in self.event.weekdays_in_event():
+        for day in self.event.days_in_event():
             message = self.remove_cadet_from_event_on_day_and_return_message(cadet=cadet, day=day)
             all_messages.append(message)
 

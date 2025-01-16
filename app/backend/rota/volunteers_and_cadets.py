@@ -23,7 +23,7 @@ def list_of_cadet_groups_associated_with_volunteer(
         days_and_groups_for_cadet = group_data.get_days_and_groups_for_cadet(cadet)
         list_of_groups_this_cadet = [
             days_and_groups_for_cadet.group_on_day(day, default=None)
-            for day in event.weekdays_in_event()
+            for day in event.days_in_event()
         ]
         list_of_groups_this_cadet = [group for group in list_of_groups_this_cadet if group is not None]
         list_of_groups += list_of_groups_this_cadet

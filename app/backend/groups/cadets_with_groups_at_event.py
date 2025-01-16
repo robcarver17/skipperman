@@ -70,7 +70,7 @@ def get_joint_attendance_matrix_for_cadets_in_group_at_event(
 
     joint_attendance = attendance_data.intersect(attendance_in_group)
     joint_attendance = joint_attendance.align_with_list_of_days(
-        event.weekdays_in_event()
+        event.days_in_event()
     )
 
     return joint_attendance

@@ -140,7 +140,7 @@ def update_volunteer_at_event_from_rota_with_form_contents_and_return_true_if_ok
         interface=interface, event=event, input_name=AVAILABILITY
     )
 
-    if no_days_selected(availability, possible_days=event.weekdays_in_event()):
+    if no_days_selected(availability, possible_days=event.days_in_event()):
         interface.log_error(
             "No days selected for volunteer at event - delete if not using at event"
         )

@@ -247,7 +247,7 @@ def update_role_dropdowns(interface: abstractInterface):
         object_store=interface.object_store, event=event
     )
 
-    for day in event.weekdays_in_event():
+    for day in event.days_in_event():
         volunteers_on_boat_on_day = all_volunteers.assigned_to_any_boat_on_day(day)
         for volunteer_on_boat in volunteers_on_boat_on_day:
             try:

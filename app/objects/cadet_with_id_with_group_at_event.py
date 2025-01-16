@@ -1,14 +1,10 @@
 from dataclasses import dataclass
-from typing import Dict, List
 
-from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.day_selectors import Day
-from app.objects.events import Event
 from app.objects.exceptions import missing_data
 from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
-from app.objects.groups import Group, unallocated_group, unallocated_group_id
-from app.objects.utils import in_x_not_in_y
+from app.objects.groups import unallocated_group_id
 
 
 @dataclass
@@ -65,12 +61,6 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
             CadetIdWithGroup(cadet_id=cadet_id, group_id=chosen_group_id, day=day)
         )
 
-    def DO_NOT_USE_group_for_cadet_id_on_day(self, cadet_id: str, day: Day) -> Group:
-        item = self.item_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
-        if item is missing_data:
-            return unallocated_group
-
-        return item.group
 
     def cadet_is_allocated_to_group_on_day(self, cadet_id: str, day: Day) -> bool:
         item = self.item_with_cadet_id_on_day(cadet_id=cadet_id, day=day)

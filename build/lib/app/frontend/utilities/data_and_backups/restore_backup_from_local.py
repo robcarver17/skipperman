@@ -1,6 +1,6 @@
 import os
 
-from app.data_access.file_access import download_directory
+from app.data_access.init_directories import download_directory
 
 import shutil
 from typing import Union

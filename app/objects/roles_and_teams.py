@@ -13,16 +13,16 @@ from app.objects.generic_objects import (
     from_str_to_bool,
     from_bool_to_str,
 )
-from app.objects.groups import LAKE_TRAINING, RIVER_TRAINING
+from app.objects.groups import LAKE_TRAINING_LOCATION, RIVER_TRAINING_LOCATION
 
 NO_WARNING = "No warning"
-RoleLocation = Enum("RoleLocation", [LAKE_TRAINING, RIVER_TRAINING, NO_WARNING])
+RoleLocation = Enum("RoleLocation", [LAKE_TRAINING_LOCATION, RIVER_TRAINING_LOCATION, NO_WARNING])
 
 NO_SKILLS_REQUIRED = "-1"
 
-role_location_lake = RoleLocation[LAKE_TRAINING]
-role_location_river = RoleLocation[RIVER_TRAINING]
-role_location_no_warning = RoleLocation[NO_WARNING]
+role_location_lake = RoleLocation[LAKE_TRAINING_LOCATION].value
+role_location_river = RoleLocation[RIVER_TRAINING_LOCATION].value
+role_location_no_warning = RoleLocation[NO_WARNING].value
 
 all_role_locations = [role_location_no_warning, role_location_lake, role_location_river]
 

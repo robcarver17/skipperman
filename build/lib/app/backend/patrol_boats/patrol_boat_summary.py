@@ -45,13 +45,13 @@ def get_summary_list_of_patrol_boat_allocations_for_events(
                     list_of_boats_at_event=sorted_list_of_boats_at_event,
                 ),
             )
-            for day in event.weekdays_in_event()
+            for day in event.days_in_event()
         ]
     )
     boat_index = [boat.name for boat in sorted_list_of_boats_at_event]
 
     summary_df = pd.DataFrame(results_as_dict, index=boat_index)
-    summary_df.columns = event.weekdays_in_event_as_list_of_string()
+    summary_df.columns = event.days_in_event_as_list_of_string()
 
     summary_table = PandasDFTable(summary_df)
 

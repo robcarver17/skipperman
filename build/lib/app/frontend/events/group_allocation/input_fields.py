@@ -22,7 +22,7 @@ from app.objects.cadets import Cadet
 from app.objects.cadet_at_event_with_club_boat_with_ids import NO_CLUB_BOAT
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 from app.objects.day_selectors import Day
-from app.objects.cadet_at_event_with_dinghy_with_ids import NO_PARTNERSHIP_LIST
+from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import NO_PARTNERSHIP_LIST_OF_STR
 from app.objects.utils import make_id_as_int_str
 
 
@@ -391,7 +391,7 @@ def get_dropdown_input_for_partner_allocation_across_days(
         dict_of_all_event_data=dict_of_all_event_data,
         cadet=cadet
     )  ### needs to disapply cadets who aren't also available the whole week
-    list_of_other_cadets = NO_PARTNERSHIP_LIST + list_of_other_cadets
+    list_of_other_cadets = NO_PARTNERSHIP_LIST_OF_STR + list_of_other_cadets
 
     return get_dropdown_input_for_partner_allocation(
         cadet=cadet,
@@ -431,7 +431,7 @@ def get_dropdown_input_for_partner_allocation(
     list_of_other_cadets: List[str],
     current_partner_name: str,
 ) -> ListOfLines:
-    list_of_other_cadets = NO_PARTNERSHIP_LIST + list_of_other_cadets
+    list_of_other_cadets = NO_PARTNERSHIP_LIST_OF_STR + list_of_other_cadets
     dict_of_all_possible_cadets = dict(
         [(cadet_name, cadet_name) for cadet_name in list_of_other_cadets]
     )

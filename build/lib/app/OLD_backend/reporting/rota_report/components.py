@@ -157,7 +157,7 @@ def get_boat_string(
     )
 
     boat_id_for_volunteer = (
-        all_volunteers_and_boats.which_boat_id_is_volunteer_on_today_or_missing_data(
+        all_volunteers_and_boats.which_boat_id_is_volunteer_on_today(
             day=day, volunteer_id=volunteer_id
         )
     )

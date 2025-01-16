@@ -1,5 +1,4 @@
 import yaml
-import yaml
 
 from app.data_access.file_access import get_relative_pathname_from_list
 

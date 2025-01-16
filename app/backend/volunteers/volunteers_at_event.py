@@ -113,7 +113,7 @@ def update_volunteer_availability_at_event(
     event: Event,
     availability: DaySelector,
 ):
-    for day in event.weekdays_in_event():
+    for day in event.days_in_event():
         if availability.available_on_day(day):
             make_volunteer_available_on_day(
                 object_store=object_store, event=event, volunteer=volunteer, day=day

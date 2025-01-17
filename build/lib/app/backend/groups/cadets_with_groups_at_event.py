@@ -1,14 +1,19 @@
 from typing import List
 
-from app.backend.groups.previous_groups import get_group_allocations_for_event_active_cadets_only
+from app.backend.groups.previous_groups import (
+    get_group_allocations_for_event_active_cadets_only,
+)
 from app.objects.exceptions import arg_not_passed
 
 from app.objects.day_selectors import DictOfDaySelectors, Day
 
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
-    get_attendance_matrix_for_list_of_cadets_at_event, get_dict_of_all_event_info_for_cadets,
+    get_attendance_matrix_for_list_of_cadets_at_event,
+    get_dict_of_all_event_info_for_cadets,
 )
-from app.backend.registration_data.cadet_registration_data import is_cadet_unavailable_on_day
+from app.backend.registration_data.cadet_registration_data import (
+    is_cadet_unavailable_on_day,
+)
 from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.composed.cadets_at_event_with_groups import (
     DictOfCadetsWithDaysAndGroupsAtEvent,
@@ -27,25 +32,27 @@ from app.objects.groups import Group
 
 
 def add_or_upate_group_for_cadet_on_day_if_cadet_available_on_day(
-        object_store: ObjectStore,
-        event: Event,
-        cadet: Cadet,
-        day: Day,
-        group: Group,
-
+    object_store: ObjectStore,
+    event: Event,
+    cadet: Cadet,
+    day: Day,
+    group: Group,
 ):
     if is_cadet_unavailable_on_day(object_store=object_store, cadet=cadet, day=day):
         return
 
-    dict_of_cadets_with_groups_at_event = get_dict_of_cadets_with_groups_at_event(object_store=object_store, event=event)
-    dict_of_cadets_with_groups_at_event.add_or_upate_group_for_cadet_on_day(
-        cadet=cadet,
-        day=day,
-        group=group
+    dict_of_cadets_with_groups_at_event = get_dict_of_cadets_with_groups_at_event(
+        object_store=object_store, event=event
     )
-    update_dict_of_cadets_with_groups_at_event(object_store=object_store,
-                                               event=event,
-                                               dict_of_cadets_with_groups_at_event=dict_of_cadets_with_groups_at_event)
+    dict_of_cadets_with_groups_at_event.add_or_upate_group_for_cadet_on_day(
+        cadet=cadet, day=day, group=group
+    )
+    update_dict_of_cadets_with_groups_at_event(
+        object_store=object_store,
+        event=event,
+        dict_of_cadets_with_groups_at_event=dict_of_cadets_with_groups_at_event,
+    )
+
 
 def get_joint_attendance_matrix_for_cadets_in_group_at_event(
     object_store: ObjectStore,
@@ -69,9 +76,7 @@ def get_joint_attendance_matrix_for_cadets_in_group_at_event(
     )
 
     joint_attendance = attendance_data.intersect(attendance_in_group)
-    joint_attendance = joint_attendance.align_with_list_of_days(
-        event.days_in_event()
-    )
+    joint_attendance = joint_attendance.align_with_list_of_days(event.days_in_event())
 
     return joint_attendance
 
@@ -142,10 +147,14 @@ def update_list_of_cadets_with_ids_with_groups_at_event(
 def get_list_of_groups_at_event_given_list_of_cadets(
     object_store: ObjectStore, event: Event, list_of_cadets: ListOfCadets
 ) -> List[Group]:
-    group_allocation_data = get_group_allocations_for_event_active_cadets_only(object_store=object_store, event=event)
+    group_allocation_data = get_group_allocations_for_event_active_cadets_only(
+        object_store=object_store, event=event
+    )
     list_of_groups = []
     for cadet in list_of_cadets:
-        groups_for_cadet = group_allocation_data.get_days_and_groups_for_cadet(cadet).list_of_groups
-        list_of_groups+=groups_for_cadet
+        groups_for_cadet = group_allocation_data.get_days_and_groups_for_cadet(
+            cadet
+        ).list_of_groups
+        list_of_groups += groups_for_cadet
 
     return list(set(list_of_groups))

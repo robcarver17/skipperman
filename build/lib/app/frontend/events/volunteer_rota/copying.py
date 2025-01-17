@@ -1,10 +1,15 @@
-
-from app.backend.rota.copying import copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days, \
-    copy_earliest_valid_role_and_overwrite_for_volunteer, copy_earliest_valid_role_to_all_empty_for_volunteer
-from app.backend.rota.changes import update_role_and_group_at_event_for_volunteer_on_all_days_when_available
+from app.backend.rota.copying import (
+    copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days,
+    copy_earliest_valid_role_and_overwrite_for_volunteer,
+    copy_earliest_valid_role_to_all_empty_for_volunteer,
+)
+from app.backend.rota.changes import (
+    update_role_and_group_at_event_for_volunteer_on_all_days_when_available,
+)
 from app.backend.volunteers.volunteers_at_event import load_list_of_volunteers_at_event
-from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
-    get_last_role_or_none_for_volunteer_at_previous_events
+from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
+    get_last_role_or_none_for_volunteer_at_previous_events,
+)
 from app.frontend.events.volunteer_rota.button_values import (
     from_known_button_to_volunteer_and_day,
     from_previous_role_copy_button_to_volunteer,
@@ -82,10 +87,9 @@ def update_if_copy_previous_role_button_pressed(
         interface=interface, previous_role_copy_button_name=copy_button
     )
     event = get_event_from_state(interface)
-    previous_role_and_group = get_last_role_or_none_for_volunteer_at_previous_events(object_store=interface.object_store,
-                                                                           avoid_event=event,
-                                                                           volunteer=volunteer
-                                                                           )
+    previous_role_and_group = get_last_role_or_none_for_volunteer_at_previous_events(
+        object_store=interface.object_store, avoid_event=event, volunteer=volunteer
+    )
 
     if previous_role_and_group is None:
         return
@@ -105,8 +109,8 @@ def update_if_copy_first_role_to_empty_roles_button_pressed(
     interface: abstractInterface,
 ):
     event = get_event_from_state(interface)
-    list_of_volunteers_at_event = \
-        load_list_of_volunteers_at_event(object_store=interface.object_store, event=event
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(
+        object_store=interface.object_store, event=event
     )
     for volunteer in list_of_volunteers_at_event:
         copy_earliest_valid_role_to_all_empty_for_volunteer(
@@ -118,8 +122,8 @@ def update_if_copy_first_role_and_overwrite_button_pressed(
     interface: abstractInterface,
 ):
     event = get_event_from_state(interface)
-    list_of_volunteers_at_event = \
-        load_list_of_volunteers_at_event(object_store=interface.object_store, event=event
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(
+        object_store=interface.object_store, event=event
     )
     for volunteer in list_of_volunteers_at_event:
         copy_earliest_valid_role_and_overwrite_for_volunteer(

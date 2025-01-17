@@ -12,7 +12,7 @@ class TeamAndIndex:
     team: Team
     index: int
 
-    def location_for_cadet_warning(self)-> RoleLocation:
+    def location_for_cadet_warning(self) -> RoleLocation:
         return self.team.location_for_cadet_warning
 
 
@@ -210,5 +210,3 @@ def add_new_named_role_to_team(
     dict_of_teams_with_roles.refresh_roles_for_team(
         team=team, new_list_of_roles=current_roles_for_team
     )
-
-

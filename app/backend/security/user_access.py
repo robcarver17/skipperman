@@ -3,7 +3,9 @@ from typing import List
 from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
     is_volunteer_senior_instructor_at_event,
 )
-from app.backend.rota.volunteer_table import get_list_of_groups_volunteer_is_instructor_for
+from app.backend.rota.volunteer_table import (
+    get_list_of_groups_volunteer_is_instructor_for,
+)
 from app.data_access.store.object_store import ObjectStore
 
 from app.backend.events.list_of_events import get_sorted_list_of_events
@@ -13,7 +15,9 @@ from app.objects.groups import Group
 from app.objects.volunteers import Volunteer
 
 from app.backend.volunteers.skills import is_volunteer_qualified_as_SI
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_list_of_all_groups_at_event
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
+    get_list_of_all_groups_at_event,
+)
 
 from app.backend.security.logged_in_user import (
     get_volunteer_for_logged_in_user_or_superuser,

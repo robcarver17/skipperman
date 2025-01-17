@@ -10,10 +10,8 @@ from app.data_access.configuration.fixed import (
     EDGE_MARGIN_MM,
     COLUMN_GAP_MM,
 )
-from app.data_access.store.object_store import ObjectStore
 from app.objects.events import Event
 from app.objects.generic_objects import GenericSkipperManObject
-from app.data_access.store.object_definitions import object_definition_for_print_options
 
 AUTO_FONT_SIZE = 0
 
@@ -114,17 +112,3 @@ def get_default_filename_for_report(default_title: str) -> str:
     default_file_name = default_file_name.replace(":", "_")
 
     return default_file_name
-
-def get_print_options(object_store: ObjectStore, report_name: str) -> PrintOptions:
-    return object_store.get(object_definition_for_print_options, report_name=report_name)
-
-def reset_print_options_to_default(object_store: ObjectStore, report_name: str):
-    update_print_options(object_store=object_store, report_name=report_name,
-                         print_options=PrintOptions())
-
-def update_print_options(object_store: ObjectStore, report_name: str, print_options: PrintOptions):
-    object_store.update(
-        object_definition=object_definition_for_print_options,
-        report_name=report_name,
-        new_object=print_options
-    )

@@ -1,10 +1,16 @@
 from dataclasses import dataclass
 from typing import Dict
 
-from app.data_access.configuration.field_list_groups import GROUP_ALLOCATION_FIELDS, GROUP_ALLOCATION_FIELDS_HIDE
+from app.data_access.configuration.field_list_groups import (
+    GROUP_ALLOCATION_FIELDS,
+    GROUP_ALLOCATION_FIELDS_HIDE,
+)
 from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent
 from app.objects.cadets import Cadet
-from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets, AllEventInfoForCadet
+from app.objects.composed.cadets_with_all_event_info import (
+    DictOfAllEventInfoForCadets,
+    AllEventInfoForCadet,
+)
 
 
 @dataclass
@@ -32,7 +38,6 @@ class GroupAllocationInfo:
 
         return info_dict_for_key
 
-
     def group_info_dict_for_cadet_as_ordered_list(self, cadet: Cadet):
         info_dict = self.get_allocation_info_for_cadet(cadet)
 
@@ -46,9 +51,7 @@ class GroupAllocationInfo:
             [
                 (
                     field_name,
-                    cadet_info_from_info_dict(
-                        self, cadet=cadet, field_name=field_name
-                    ),
+                    cadet_info_from_info_dict(self, cadet=cadet, field_name=field_name),
                 )
                 for field_name in field_names
             ]

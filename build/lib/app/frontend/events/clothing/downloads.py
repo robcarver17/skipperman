@@ -7,18 +7,19 @@ from app.data_access.init_directories import download_directory
 
 from app.objects.abstract_objects.abstract_form import File
 
-from app.backend.clothing.active_cadets_with_clothing import get_dict_of_active_cadets_with_clothing_at_event
+from app.backend.clothing.active_cadets_with_clothing import (
+    get_dict_of_active_cadets_with_clothing_at_event,
+)
 
 from app.frontend.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
+
 def export_committee_clothing(interface: abstractInterface) -> File:
     event = get_event_from_state(interface)
-    dict_of_cadets_with_clothing = (
-        get_dict_of_active_cadets_with_clothing_at_event(
-            object_store=interface.object_store, event=event, only_committee=True
-        )
+    dict_of_cadets_with_clothing = get_dict_of_active_cadets_with_clothing_at_event(
+        object_store=interface.object_store, event=event, only_committee=True
     )
     new_list = []
 
@@ -55,13 +56,13 @@ def export_committee_clothing(interface: abstractInterface) -> File:
 
 def export_all_clothing(interface: abstractInterface) -> File:
     event = get_event_from_state(interface)
-    dict_of_cadets_with_clothing = (
-        get_dict_of_active_cadets_with_clothing_at_event(
-            object_store=interface.object_store, event=event, only_committee=False
-        )
+    dict_of_cadets_with_clothing = get_dict_of_active_cadets_with_clothing_at_event(
+        object_store=interface.object_store, event=event, only_committee=False
     )
 
-    sorted_dict_of_cadets_with_clothing = dict_of_cadets_with_clothing.sort_by_colour_and_firstname()
+    sorted_dict_of_cadets_with_clothing = (
+        dict_of_cadets_with_clothing.sort_by_colour_and_firstname()
+    )
     sorted_list_of_cadets_with_clothing = sorted_dict_of_cadets_with_clothing.as_list()
     filename = temp_file_name()
 
@@ -73,10 +74,8 @@ def export_all_clothing(interface: abstractInterface) -> File:
 
 def export_clothing_colours(interface: abstractInterface) -> File:
     event = get_event_from_state(interface)
-    dict_of_cadets_with_clothing = (
-        get_dict_of_active_cadets_with_clothing_at_event(
-            object_store=interface.object_store, event=event, only_committee=False
-        )
+    dict_of_cadets_with_clothing = get_dict_of_active_cadets_with_clothing_at_event(
+        object_store=interface.object_store, event=event, only_committee=False
     )
     dict_of_cadets_with_clothing_committee = (
         get_dict_of_active_cadets_with_clothing_at_event(
@@ -92,12 +91,19 @@ def export_clothing_colours(interface: abstractInterface) -> File:
 
         dict_this_colour_committee = dict_this_colour_committee.sort_by_dob_asc()
 
-        dict_this_colour_without_committee = dict_this_colour.remove_if_in_list_of_cadets(
-            dict_this_colour_committee.list_of_cadets
+        dict_this_colour_without_committee = (
+            dict_this_colour.remove_if_in_list_of_cadets(
+                dict_this_colour_committee.list_of_cadets
+            )
         )
-        dict_this_colour_without_committee = dict_this_colour_without_committee.sort_by_firstname()
+        dict_this_colour_without_committee = (
+            dict_this_colour_without_committee.sort_by_firstname()
+        )
 
-        list_of_names = dict_this_colour_committee.list_of_cadets.list_of_names() + dict_this_colour_without_committee.list_of_cadets.list_of_names()
+        list_of_names = (
+            dict_this_colour_committee.list_of_cadets.list_of_names()
+            + dict_this_colour_without_committee.list_of_cadets.list_of_names()
+        )
 
         colour_dict[colour] = pd.Series(list_of_names)
 

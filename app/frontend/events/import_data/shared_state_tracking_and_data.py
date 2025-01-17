@@ -1,4 +1,6 @@
-from app.backend.registration_data.raw_mapped_registration_data import get_list_of_row_ids_in_raw_registration_data_for_event
+from app.backend.registration_data.raw_mapped_registration_data import (
+    get_list_of_row_ids_in_raw_registration_data_for_event,
+)
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.exceptions import missing_data, NoMoreData
@@ -6,7 +8,9 @@ from app.objects.exceptions import missing_data, NoMoreData
 ROW_ID = "row_id"
 
 
-def get_and_save_next_row_id_in_raw_registration_data(interface: abstractInterface) -> str:
+def get_and_save_next_row_id_in_raw_registration_data(
+    interface: abstractInterface,
+) -> str:
     current_id = get_current_row_id(interface)
     if current_id is missing_data:
         new_id = get_first_row_id_in_event_data(interface)
@@ -49,7 +53,9 @@ def get_next_row_id_in_event_data(interface: abstractInterface, current_id: str)
 
 def list_of_row_ids_in_raw_registration_data(interface: abstractInterface) -> list:
     event = get_event_from_state(interface)
-    all_ids = get_list_of_row_ids_in_raw_registration_data_for_event(object_store=interface.object_store, event=event)
+    all_ids = get_list_of_row_ids_in_raw_registration_data_for_event(
+        object_store=interface.object_store, event=event
+    )
 
     return all_ids
 

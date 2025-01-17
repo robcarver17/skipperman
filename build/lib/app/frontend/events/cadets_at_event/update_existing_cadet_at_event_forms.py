@@ -7,7 +7,10 @@ from app.frontend.forms.form_utils import (
     get_availability_checkbox,
     dropdown_input_for_status_change,
 )
-from app.backend.registration_data.update_cadets_at_event import NO_STATUS_CHANGE, new_status_and_status_message
+from app.backend.registration_data.update_cadets_at_event import (
+    NO_STATUS_CHANGE,
+    new_status_and_status_message,
+)
 from app.frontend.events.constants import (
     ATTENDANCE,
     ROW_STATUS,
@@ -71,7 +74,9 @@ def display_form_for_update_to_existing_cadet_at_event(
 
 def buttons_for_update_row() -> Line:
 
-    return Line([use_original_data_button, use_new_data_button, use_data_in_form_button])
+    return Line(
+        [use_original_data_button, use_new_data_button, use_data_in_form_button]
+    )
 
 
 USE_NEW_DATA_BUTTON_LABEL = "Use new data imported from latest WA file (recommended)"
@@ -109,7 +114,7 @@ def get_line_in_form_for_attendance_change(
 
 
 def get_line_in_form_for_status_change(
-        cadet: Cadet,
+    cadet: Cadet,
     new_cadet_at_event_data: CadetWithIdAtEvent,
     existing_cadet_at_event_data: CadetWithIdAtEvent,
 ) -> Line:

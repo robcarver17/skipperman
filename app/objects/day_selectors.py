@@ -93,7 +93,6 @@ class DaySelector(Dict[Day, bool]):
     def days_available(self) -> List[Day]:
         return [day for day in all_possible_days if self.available_on_day(day)]
 
-
     def available_on_day(self, day: Day):
         return self.get(day, False)
 

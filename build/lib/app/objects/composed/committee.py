@@ -108,17 +108,22 @@ class ListOfCadetsOnCommittee(List[CadetOnCommittee]):
 
     def is_cadet_on_committee(self, cadet: Cadet) -> bool:
         for cadet_on_committee in self:
-            if cadet_on_committee.cadet_id == cadet.id and cadet_on_committee.currently_serving():
+            if (
+                cadet_on_committee.cadet_id == cadet.id
+                and cadet_on_committee.currently_serving()
+            ):
                 return True
 
         return False
 
     def list_of_cadets_currently_serving(self) -> ListOfCadets:
-        return ListOfCadets([
-            cadet_on_committee.cadet
-            for cadet_on_committee in self
-            if cadet_on_committee.currently_serving()
-        ])
+        return ListOfCadets(
+            [
+                cadet_on_committee.cadet
+                for cadet_on_committee in self
+                if cadet_on_committee.currently_serving()
+            ]
+        )
 
     def add_new_member(
         self,

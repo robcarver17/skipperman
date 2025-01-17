@@ -1,7 +1,8 @@
 from app.objects.cadets import Cadet
 
-from app.backend.registration_data.identified_cadets_at_event import \
-    list_of_cadet_ids_in_event_data_and_identified_in_raw_registration_data_for_event
+from app.backend.registration_data.identified_cadets_at_event import (
+    list_of_cadet_ids_in_event_data_and_identified_in_raw_registration_data_for_event,
+)
 from app.backend.cadets.list_of_cadets import get_cadet_from_id
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -10,24 +11,16 @@ from app.objects.exceptions import missing_data, NoMoreData, MissingData
 CADET_ID_AT_EVENT = "cadet_id_at_event"
 
 
-def get_and_save_next_cadet_in_event_data(
-    interface: abstractInterface
-) -> Cadet:
+def get_and_save_next_cadet_in_event_data(interface: abstractInterface) -> Cadet:
 
-    next_id = get_and_save_next_cadet_id_in_event_data(
-        interface=interface
-    )
+    next_id = get_and_save_next_cadet_id_in_event_data(interface=interface)
     return get_cadet_from_id(object_store=interface.object_store, cadet_id=next_id)
 
 
-def get_and_save_next_cadet_id_in_event_data(
-    interface: abstractInterface
-) -> str:
+def get_and_save_next_cadet_id_in_event_data(interface: abstractInterface) -> str:
     current_id = get_current_cadet_id_at_event(interface)
     if current_id is missing_data:
-        new_id = get_first_cadet_id_in_event_data(
-            interface
-        )
+        new_id = get_first_cadet_id_in_event_data(interface)
     else:
         new_id = get_next_cadet_id_in_event_data(
             interface=interface, current_id=current_id
@@ -36,12 +29,9 @@ def get_and_save_next_cadet_id_in_event_data(
 
     return new_id
 
-def get_first_cadet_id_in_event_data(
-    interface: abstractInterface
-) -> str:
-    list_of_ids = list_of_cadet_ids_at_event_and_in_mapped_data(
-        interface
-    )
+
+def get_first_cadet_id_in_event_data(interface: abstractInterface) -> str:
+    list_of_ids = list_of_cadet_ids_at_event_and_in_mapped_data(interface)
     id = list_of_ids[0]
 
     print("Getting first Cadet ID %s from list %s " % (id, list_of_ids))
@@ -52,9 +42,7 @@ def get_first_cadet_id_in_event_data(
 def get_next_cadet_id_in_event_data(
     interface: abstractInterface, current_id: str
 ) -> str:
-    list_of_ids = list_of_cadet_ids_at_event_and_in_mapped_data(
-        interface
-    )
+    list_of_ids = list_of_cadet_ids_at_event_and_in_mapped_data(interface)
     current_index = list_of_ids.index(current_id)
     new_index = current_index + 1
 
@@ -66,12 +54,12 @@ def get_next_cadet_id_in_event_data(
     return new_id
 
 
-def list_of_cadet_ids_at_event_and_in_mapped_data(
-    interface: abstractInterface
-) -> list:
+def list_of_cadet_ids_at_event_and_in_mapped_data(interface: abstractInterface) -> list:
     event = get_event_from_state(interface)
     all_ids = list_of_cadet_ids_in_event_data_and_identified_in_raw_registration_data_for_event(
-        object_store=interface.object_store, event=event, include_identified_in_raw_registration_data=True
+        object_store=interface.object_store,
+        event=event,
+        include_identified_in_raw_registration_data=True,
     )
 
     return all_ids
@@ -83,7 +71,6 @@ def get_current_cadet_at_event(interface: abstractInterface) -> Cadet:
         raise MissingData("Cadet ID not stored")
 
     return get_cadet_from_id(object_store=interface.object_store, cadet_id=cadet_id)
-
 
 
 def get_current_cadet_id_at_event(interface: abstractInterface) -> str:

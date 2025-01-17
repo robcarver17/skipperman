@@ -126,10 +126,7 @@ def get_patrol_boat_driver_and_crew_qualifications_table(
 
     return Table(
         [
-            get_volunteer_row_to_select_skill(
-                interface=interface,
-                volunteer=volunteer
-            )
+            get_volunteer_row_to_select_skill(interface=interface, volunteer=volunteer)
             for volunteer in list_of_volunteers
         ]
     )
@@ -186,21 +183,28 @@ def get_bottom_row_padding_columns_for_patrol_boat_table(event: Event) -> List[s
 
     return padding_columns
 
-from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import load_list_of_patrol_boats_at_event
+
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
+    load_list_of_patrol_boats_at_event,
+)
+
+
 def get_body_of_patrol_boat_table_at_event(
     interface: abstractInterface, event: Event
 ) -> List[RowInTable]:
-    list_of_boats_at_event = load_list_of_patrol_boats_at_event(object_store=interface.object_store,
-                                                                event=event)
+    list_of_boats_at_event = load_list_of_patrol_boats_at_event(
+        object_store=interface.object_store, event=event
+    )
 
     other_rows = [
         get_row_for_boat_at_event(
             patrol_boat=patrol_boat, event=event, interface=interface
         )
         for patrol_boat in list_of_boats_at_event
-     ]
+    ]
 
     return other_rows
+
 
 def get_row_for_boat_at_event(
     interface: abstractInterface, event: Event, patrol_boat: PatrolBoat
@@ -233,7 +237,6 @@ def get_boat_name_and_button_for_first_column(
         )
 
     return ListOfLines([boat_name, delete_button]).add_Lines()
-
 
 
 def get_allocation_inputs_for_day_and_boat(

@@ -174,9 +174,7 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
 
         return len(matches) > 0
 
-    def which_boat_id_is_volunteer_on_today(
-        self, volunteer_id: str, day: Day
-    ) -> str:
+    def which_boat_id_is_volunteer_on_today(self, volunteer_id: str, day: Day) -> str:
         matches = [
             item
             for item in self
@@ -191,7 +189,6 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
             )
 
         return matches[0].patrol_boat_id
-
 
     def list_of_unique_boats_at_event_including_unallocated(
         self, list_of_patrol_boats: ListOfPatrolBoats
@@ -216,4 +213,3 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
     def list_of_boat_ids_at_event_including_unallocated(self) -> List[str]:
         all_ids = [item.patrol_boat_id for item in self]
         return all_ids
-

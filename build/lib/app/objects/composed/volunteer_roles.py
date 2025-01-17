@@ -1,12 +1,15 @@
 from dataclasses import dataclass
 from typing import List, Tuple
 
-from app.objects.volunteer_roles_and_groups_with_id import NO_ROLE_SET, SI_ROLE_NAME
 
-from app.objects.exceptions import arg_not_passed, MissingData, MultipleMatches
-from app.objects.volunteer_skills import Skill, ListOfSkills
+from app.objects.exceptions import arg_not_passed, MissingData
+from app.objects.volunteer_skills import ListOfSkills
 from app.objects.roles_and_teams import RolesWithSkillIds, ListOfRolesWithSkillIds
 from app.objects.composed.volunteers_with_skills import SkillsDict
+
+
+SI_ROLE_NAME = "SI"
+NO_ROLE_SET = "No role allocated"
 
 
 @dataclass
@@ -151,9 +154,7 @@ class ListOfRolesWithSkills(List[RoleWithSkills]):
         except ValueError:
             raise MissingData
 
-    def index_of_matching_existing_role_name(
-        self, existing_role_name: str
-    ) -> int:
+    def index_of_matching_existing_role_name(self, existing_role_name: str) -> int:
         try:
             return self.list_of_names().index(existing_role_name)
         except ValueError:

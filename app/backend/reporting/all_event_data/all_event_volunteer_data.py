@@ -13,26 +13,34 @@ from app.objects.day_selectors import empty_day_selector
 
 from app.objects.events import Event
 
-from app.backend.registration_data.identified_volunteers_at_event import get_list_of_identified_volunteers_at_event
+from app.backend.registration_data.identified_volunteers_at_event import (
+    get_list_of_identified_volunteers_at_event,
+)
 from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
 
 
 def get_df_for_volunteers_event_data_dump(object_store: ObjectStore, event: Event):
-    list_of_identified_volunteers = get_list_of_identified_volunteers_at_event(object_store=object_store, event=event)
+    list_of_identified_volunteers = get_list_of_identified_volunteers_at_event(
+        object_store=object_store, event=event
+    )
     list_of_row_ids = [
         identified_volunteer.row_id
         for identified_volunteer in list_of_identified_volunteers
     ]
     list_of_volunteer_ids = list_of_identified_volunteers.list_of_volunteer_ids()
-    list_of_volunteers = ListOfVolunteers([
-        get_volunteer_from_id(object_store=object_store, volunteer_id=volunteer_id) for volunteer_id in list_of_volunteer_ids
-    ])
+    list_of_volunteers = ListOfVolunteers(
+        [
+            get_volunteer_from_id(object_store=object_store, volunteer_id=volunteer_id)
+            for volunteer_id in list_of_volunteer_ids
+        ]
+    )
 
     list_of_volunteer_names = list_of_volunteers.list_of_names()
 
     list_of_connected_cadets = [
         get_connected_cadet_names(
-            object_store=object_store, event=event,
+            object_store=object_store,
+            event=event,
             volunteer=volunteer,
         )
         for volunteer in list_of_volunteers
@@ -82,20 +90,15 @@ def get_df_for_volunteers_event_data_dump(object_store: ObjectStore, event: Even
     ]
 
     list_of_skills = [
-        get_skills_string(object_store=object_store,
-                          volunteer=volunteer,
-                          default="")
+        get_skills_string(object_store=object_store, volunteer=volunteer, default="")
         for volunteer in list_of_volunteers
     ]
     list_of_role_group = [
-        get_role_group(object_store=object_store,
- event=event,             volunteer=volunteer)
+        get_role_group(object_store=object_store, event=event, volunteer=volunteer)
         for volunteer in list_of_volunteers
     ]
     list_of_boats = [
-        get_patrol_boat(object_store=object_store,
- event=event,             volunteer=volunteer
-)
+        get_patrol_boat(object_store=object_store, event=event, volunteer=volunteer)
         for volunteer in list_of_volunteers
     ]
 
@@ -118,43 +121,64 @@ def get_df_for_volunteers_event_data_dump(object_store: ObjectStore, event: Even
 
     return df
 
-from app.backend.registration_data.cadet_registration_data import get_dict_of_cadets_with_registration_data
-from app.backend.volunteers.connected_cadets import get_list_of_cadets_associated_with_volunteer
+
+from app.backend.registration_data.cadet_registration_data import (
+    get_dict_of_cadets_with_registration_data,
+)
+from app.backend.volunteers.connected_cadets import (
+    get_list_of_cadets_associated_with_volunteer,
+)
+
 
 def get_connected_cadet_names(
-    object_store: ObjectStore,event: Event, volunteer: Volunteer, default=""
+    object_store: ObjectStore, event: Event, volunteer: Volunteer, default=""
 ):
-    registered_cadets = get_dict_of_cadets_with_registration_data(object_store=object_store, event=event).list_of_active_cadets()
-    connected_cadets = get_list_of_cadets_associated_with_volunteer(object_store=object_store, volunteer=volunteer)
+    registered_cadets = get_dict_of_cadets_with_registration_data(
+        object_store=object_store, event=event
+    ).list_of_active_cadets()
+    connected_cadets = get_list_of_cadets_associated_with_volunteer(
+        object_store=object_store, volunteer=volunteer
+    )
 
-    connected_and_at_event = ListOfCadets([
-        cadet for cadet in connected_cadets if cadet in registered_cadets
-    ])
-    names= connected_and_at_event.list_of_names()
+    connected_and_at_event = ListOfCadets(
+        [cadet for cadet in connected_cadets if cadet in registered_cadets]
+    )
+    names = connected_and_at_event.list_of_names()
 
     return ", ".join(names)
 
+
 from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunteer
 
+
 def get_skills_string(object_store: ObjectStore, volunteer: Volunteer, default=""):
-    skills = get_dict_of_existing_skills_for_volunteer(object_store=object_store, volunteer=volunteer)
+    skills = get_dict_of_existing_skills_for_volunteer(
+        object_store=object_store, volunteer=volunteer
+    )
     return str(skills)
 
-from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import get_role_and_group_on_day_for_event_and_volunteer
+
+from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
+    get_role_and_group_on_day_for_event_and_volunteer,
+)
 
 
 def get_role_group(
-    object_store: ObjectStore,  volunteer: Volunteer, event: Event, default=""
+    object_store: ObjectStore, volunteer: Volunteer, event: Event, default=""
 ):
 
     role_dict = dict(
         [
             (
                 day,
-                str(get_role_and_group_on_day_for_event_and_volunteer(object_store=object_store,
-                                                                  event=event,
-                                                                  volunteer=volunteer,
-                                                                  day=day))
+                str(
+                    get_role_and_group_on_day_for_event_and_volunteer(
+                        object_store=object_store,
+                        event=event,
+                        volunteer=volunteer,
+                        day=day,
+                    )
+                ),
             )
             for day in event.days_in_event()
         ]
@@ -162,40 +186,53 @@ def get_role_group(
 
     return day_item_dict_as_string_or_single_if_identical(role_dict)
 
-from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import get_name_of_boat_allocated_to_volunteer_on_day_at_event
+
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
+    get_name_of_boat_allocated_to_volunteer_on_day_at_event,
+)
+
 
 def get_patrol_boat(
-    object_store: ObjectStore,  volunteer: Volunteer, event: Event, default=""
+    object_store: ObjectStore, volunteer: Volunteer, event: Event, default=""
 ):
     boat_name_dict = dict(
         [
             (
                 day,
-                get_name_of_boat_allocated_to_volunteer_on_day_at_event(object_store=object_store,
-                                                                event=event,
-                                                                volunteer=volunteer,
-                                                                day=day,
-                                                                default=default),
+                get_name_of_boat_allocated_to_volunteer_on_day_at_event(
+                    object_store=object_store,
+                    event=event,
+                    volunteer=volunteer,
+                    day=day,
+                    default=default,
+                ),
             )
             for day in event.days_in_event()
         ]
     )
     return day_item_dict_as_string_or_single_if_identical(boat_name_dict)
 
-from app.backend.registration_data.volunteer_registration_data import get_dict_of_registration_data_for_volunteers_at_event
+
+from app.backend.registration_data.volunteer_registration_data import (
+    get_dict_of_registration_data_for_volunteers_at_event,
+)
+
 
 def data_from_volunteers_at_event_data_or_empty(
     object_store: ObjectStore,
     event: Event,
-        volunteer: Volunteer,    keyname: str,
+    volunteer: Volunteer,
+    keyname: str,
     default="",
 ):
-    volunteers_at_event_data = get_dict_of_registration_data_for_volunteers_at_event(object_store=object_store, event=event)
+    volunteers_at_event_data = get_dict_of_registration_data_for_volunteers_at_event(
+        object_store=object_store, event=event
+    )
     try:
-        data_for_volunteer = volunteers_at_event_data.get_data_for_volunteer(volunteer=volunteer)
+        data_for_volunteer = volunteers_at_event_data.get_data_for_volunteer(
+            volunteer=volunteer
+        )
     except MissingData:
         return default
 
-    return getattr(
-        data_for_volunteer, keyname
-    )
+    return getattr(data_for_volunteer, keyname)

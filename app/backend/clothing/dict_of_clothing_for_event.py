@@ -4,42 +4,70 @@ from typing import List
 
 from app.objects.cadets import Cadet
 
-from app.data_access.configuration.configuration import MINIMUM_COLOUR_GROUPS_TO_DISTRIBUTE
-from app.data_access.store.object_definitions import object_definition_for_dict_of_cadets_with_clothing_at_event
+from app.data_access.configuration.configuration import (
+    MINIMUM_COLOUR_GROUPS_TO_DISTRIBUTE,
+)
+from app.data_access.store.object_definitions import (
+    object_definition_for_dict_of_cadets_with_clothing_at_event,
+)
 from app.data_access.store.object_store import ObjectStore
 from app.objects.events import Event
-from app.objects.composed.clothing_at_event import DictOfCadetsWithClothingAtEvent, ClothingAtEvent
+from app.objects.composed.clothing_at_event import (
+    DictOfCadetsWithClothingAtEvent,
+    ClothingAtEvent,
+)
 
 
-def get_dict_of_cadets_with_clothing_at_event(object_store: ObjectStore, event: Event) -> DictOfCadetsWithClothingAtEvent:
-    return object_store.get(object_definition_for_dict_of_cadets_with_clothing_at_event, event_id = event.id)
+def get_dict_of_cadets_with_clothing_at_event(
+    object_store: ObjectStore, event: Event
+) -> DictOfCadetsWithClothingAtEvent:
+    return object_store.get(
+        object_definition_for_dict_of_cadets_with_clothing_at_event, event_id=event.id
+    )
 
-def update_dict_of_cadets_with_clothing_at_event(object_store: ObjectStore, event: Event,
-                                                 dict_of_cadets_with_clothing_at_event:DictOfCadetsWithClothingAtEvent):
+
+def update_dict_of_cadets_with_clothing_at_event(
+    object_store: ObjectStore,
+    event: Event,
+    dict_of_cadets_with_clothing_at_event: DictOfCadetsWithClothingAtEvent,
+):
     object_store.update(
         object_definition=object_definition_for_dict_of_cadets_with_clothing_at_event,
         new_object=dict_of_cadets_with_clothing_at_event,
-        event_id = event.id
+        event_id=event.id,
     )
 
 
 def change_clothing_size_for_cadet(
     object_store: ObjectStore, event: Event, cadet: Cadet, size: str
 ):
-    dict_of_cadets_with_clothing_at_event =get_dict_of_cadets_with_clothing_at_event(object_store=object_store, event=event)
-    dict_of_cadets_with_clothing_at_event.change_clothing_size_for_cadet(cadet=cadet, size=size)
-    update_dict_of_cadets_with_clothing_at_event(object_store=object_store,
-                                                 event=event,
-                                                 dict_of_cadets_with_clothing_at_event=dict_of_cadets_with_clothing_at_event)
+    dict_of_cadets_with_clothing_at_event = get_dict_of_cadets_with_clothing_at_event(
+        object_store=object_store, event=event
+    )
+    dict_of_cadets_with_clothing_at_event.change_clothing_size_for_cadet(
+        cadet=cadet, size=size
+    )
+    update_dict_of_cadets_with_clothing_at_event(
+        object_store=object_store,
+        event=event,
+        dict_of_cadets_with_clothing_at_event=dict_of_cadets_with_clothing_at_event,
+    )
+
 
 def change_colour_group_for_cadet(
     object_store: ObjectStore, event: Event, cadet: Cadet, colour: str
 ):
-    dict_of_cadets_with_clothing_at_event =get_dict_of_cadets_with_clothing_at_event(object_store=object_store, event=event)
-    dict_of_cadets_with_clothing_at_event.change_colour_group_for_cadet(cadet=cadet, colour=colour)
-    update_dict_of_cadets_with_clothing_at_event(object_store=object_store,
-                                                 event=event,
-                                                 dict_of_cadets_with_clothing_at_event=dict_of_cadets_with_clothing_at_event)
+    dict_of_cadets_with_clothing_at_event = get_dict_of_cadets_with_clothing_at_event(
+        object_store=object_store, event=event
+    )
+    dict_of_cadets_with_clothing_at_event.change_colour_group_for_cadet(
+        cadet=cadet, colour=colour
+    )
+    update_dict_of_cadets_with_clothing_at_event(
+        object_store=object_store,
+        event=event,
+        dict_of_cadets_with_clothing_at_event=dict_of_cadets_with_clothing_at_event,
+    )
 
 
 def clear_colour_group_for_cadet(
@@ -47,29 +75,41 @@ def clear_colour_group_for_cadet(
     event: Event,
     cadet: Cadet,
 ):
-    dict_of_cadets_with_clothing_at_event =get_dict_of_cadets_with_clothing_at_event(object_store=object_store, event=event)
+    dict_of_cadets_with_clothing_at_event = get_dict_of_cadets_with_clothing_at_event(
+        object_store=object_store, event=event
+    )
     dict_of_cadets_with_clothing_at_event.clear_colour_group_for_cadet(cadet=cadet)
-    update_dict_of_cadets_with_clothing_at_event(object_store=object_store,
-                                                 event=event,
-                                                 dict_of_cadets_with_clothing_at_event=dict_of_cadets_with_clothing_at_event)
+    update_dict_of_cadets_with_clothing_at_event(
+        object_store=object_store,
+        event=event,
+        dict_of_cadets_with_clothing_at_event=dict_of_cadets_with_clothing_at_event,
+    )
 
-def remove_clothing_for_cadet_at_event(    object_store: ObjectStore,
+
+def remove_clothing_for_cadet_at_event(
+    object_store: ObjectStore,
     event: Event,
     cadet: Cadet,
 ):
-    dict_of_cadets_with_clothing_at_event =get_dict_of_cadets_with_clothing_at_event(object_store=object_store, event=event)
+    dict_of_cadets_with_clothing_at_event = get_dict_of_cadets_with_clothing_at_event(
+        object_store=object_store, event=event
+    )
     dict_of_cadets_with_clothing_at_event.remove_clothing_for_cadet_at_event(cadet)
-    update_dict_of_cadets_with_clothing_at_event(object_store=object_store,
-                                                 event=event,
-                                                 dict_of_cadets_with_clothing_at_event=dict_of_cadets_with_clothing_at_event)
+    update_dict_of_cadets_with_clothing_at_event(
+        object_store=object_store,
+        event=event,
+        dict_of_cadets_with_clothing_at_event=dict_of_cadets_with_clothing_at_event,
+    )
 
 
 class NotEnoughColours(Exception):
     pass
 
+
 def distribute_colour_groups_at_event(object_store: ObjectStore, event: Event):
-    dict_of_cadets_with_clothing = get_dict_of_cadets_with_clothing_at_event(object_store=object_store,
-                                                                             event=event)
+    dict_of_cadets_with_clothing = get_dict_of_cadets_with_clothing_at_event(
+        object_store=object_store, event=event
+    )
     sorted_dict_of_cadets_with_clothing = (
         dict_of_cadets_with_clothing.sort_by_dob_asc()
     )  ## oldest first
@@ -84,22 +124,24 @@ def distribute_colour_groups_at_event(object_store: ObjectStore, event: Event):
             )
         )
 
-
     for cadet, clothing in sorted_dict_of_cadets_with_clothing.items():
-        allocate_best_colour_group_for_cadet(sorted_dict_of_cadets_with_clothing=sorted_dict_of_cadets_with_clothing,
-                                             cadet=cadet,
-                                             clothing=clothing
+        allocate_best_colour_group_for_cadet(
+            sorted_dict_of_cadets_with_clothing=sorted_dict_of_cadets_with_clothing,
+            cadet=cadet,
+            clothing=clothing,
         )
 
-    update_dict_of_cadets_with_clothing_at_event(object_store=object_store,
-                                                 event=event,
-                                                 dict_of_cadets_with_clothing_at_event=sorted_dict_of_cadets_with_clothing)
+    update_dict_of_cadets_with_clothing_at_event(
+        object_store=object_store,
+        event=event,
+        dict_of_cadets_with_clothing_at_event=sorted_dict_of_cadets_with_clothing,
+    )
 
 
 def allocate_best_colour_group_for_cadet(
     sorted_dict_of_cadets_with_clothing: DictOfCadetsWithClothingAtEvent,
     cadet: Cadet,
-        clothing: ClothingAtEvent
+    clothing: ClothingAtEvent,
 ):
     if clothing.has_colour:
         ## skip
@@ -124,9 +166,9 @@ def allocate_best_colour_group_for_cadet(
 
         current_colour = colour_options_to_use_this_cadet[0]  ## next least popular
 
-    sorted_dict_of_cadets_with_clothing.change_colour_group_for_cadet(cadet=cadet,
-                                                                      colour=current_colour)
-
+    sorted_dict_of_cadets_with_clothing.change_colour_group_for_cadet(
+        cadet=cadet, colour=current_colour
+    )
 
 
 def probably_has_family_with_colour(
@@ -137,7 +179,9 @@ def probably_has_family_with_colour(
     dict_of_cadets_with_clothing_and_same_surname = (
         dict_of_cadets_with_clothing.filter_for_surname(cadet.surname)
     )
-    colours_allocated_this_surname = dict_of_cadets_with_clothing_and_same_surname.get_colour_options()
+    colours_allocated_this_surname = (
+        dict_of_cadets_with_clothing_and_same_surname.get_colour_options()
+    )
     colour_in_matching_surnames = colour in colours_allocated_this_surname
     return colour_in_matching_surnames
 
@@ -158,19 +202,27 @@ def least_popular_colours(
 def is_cadet_already_at_event_with_clothing(
     object_store: ObjectStore, event: Event, cadet: Cadet
 ) -> bool:
-    dict_of_cadets_with_clothing = get_dict_of_cadets_with_clothing_at_event(object_store=object_store, event=event)
+    dict_of_cadets_with_clothing = get_dict_of_cadets_with_clothing_at_event(
+        object_store=object_store, event=event
+    )
 
     return cadet in dict_of_cadets_with_clothing.list_of_cadets
+
 
 def add_new_cadet_with_clothing_to_event(
     object_store: ObjectStore,
     event: Event,
     cadet: Cadet,
     size: str,
-
 ):
-    dict_of_cadets_with_clothing_at_event =get_dict_of_cadets_with_clothing_at_event(object_store=object_store, event=event)
-    dict_of_cadets_with_clothing_at_event.add_new_cadet_with_clothing_to_event(cadet=cadet, size=size)
-    update_dict_of_cadets_with_clothing_at_event(object_store=object_store,
-                                                 event=event,
-                                                 dict_of_cadets_with_clothing_at_event=dict_of_cadets_with_clothing_at_event)
+    dict_of_cadets_with_clothing_at_event = get_dict_of_cadets_with_clothing_at_event(
+        object_store=object_store, event=event
+    )
+    dict_of_cadets_with_clothing_at_event.add_new_cadet_with_clothing_to_event(
+        cadet=cadet, size=size
+    )
+    update_dict_of_cadets_with_clothing_at_event(
+        object_store=object_store,
+        event=event,
+        dict_of_cadets_with_clothing_at_event=dict_of_cadets_with_clothing_at_event,
+    )

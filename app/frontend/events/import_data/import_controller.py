@@ -1,23 +1,31 @@
-from typing import  Union, Callable
+from typing import Union, Callable
 
-from app.frontend.events.food.automatically_get_food_data import update_food_for_cadets_from_registration_data, \
-    update_food_for_volunteers_from_registration_data
+from app.frontend.events.food.automatically_get_food_data import (
+    update_food_for_cadets_from_registration_data,
+    update_food_for_volunteers_from_registration_data,
+)
 
-from app.frontend.events.clothing.automatically_get_clothing_data_from_cadets import update_cadet_clothing_at_event
+from app.frontend.events.clothing.automatically_get_clothing_data_from_cadets import (
+    update_cadet_clothing_at_event,
+)
 
-from app.frontend.events.cadets_at_event.interactively_update_records_of_cadets_at_event import \
-    display_form_interactively_update_cadets_at_event
+from app.frontend.events.cadets_at_event.interactively_update_records_of_cadets_at_event import (
+    display_form_interactively_update_cadets_at_event,
+)
 from app.frontend.events.cadets_at_event.iteratively_identify_cadets_in_import_stage import (
     display_form_identify_cadets_during_import,
 )
-from app.frontend.events.volunteer_allocation.add_volunteers_to_event import display_add_volunteers_to_event
+from app.frontend.events.volunteer_allocation.add_volunteers_to_event import (
+    display_add_volunteers_to_event,
+)
 
 from app.frontend.events.volunteer_allocation.volunteer_identification import (
     display_form_volunteer_identification,
 )
 
 from app.objects.abstract_objects.abstract_interface import (
-    abstractInterface, form_with_message_and_finished_button,
+    abstractInterface,
+    form_with_message_and_finished_button,
 )
 
 from app.objects.exceptions import NoMoreData
@@ -33,8 +41,9 @@ import_stages_in_order = [
     display_add_volunteers_to_event,
     update_cadet_clothing_at_event,
     update_food_for_cadets_from_registration_data,
-    update_food_for_volunteers_from_registration_data
+    update_food_for_volunteers_from_registration_data,
 ]
+
 
 ### KEEP TRACK OF WHICH IMPORT STAGES HAVE BEEN DONE, AND THEN CALLS NEW FORMS AS REQUIRED
 def import_controller(interface: abstractInterface) -> Union[Form, NewForm]:
@@ -49,6 +58,7 @@ def import_controller(interface: abstractInterface) -> Union[Form, NewForm]:
 
     print("Next import %s" % str(next_import))
     return interface.get_new_form_given_function(next_import)
+
 
 def post_import_controller(interface):
     raise Exception("Should never get here")
@@ -67,7 +77,9 @@ def next_import_required_for_event(interface: abstractInterface) -> Callable:
     except IndexError:
         raise NoMoreData
 
+
 LAST_IMPORT_DONE = "last_import"
+
 
 def return_and_increment_import_state_index(interface: abstractInterface) -> int:
     last_import = get_index_of_last_import_done_in_state(interface)

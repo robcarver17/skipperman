@@ -18,7 +18,9 @@ def display_form_import_event_file(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     event = get_event_from_state(interface)
-    existing_field_mapping = does_event_already_have_mapping(object_store=interface.object_store, event=event)
+    existing_field_mapping = does_event_already_have_mapping(
+        object_store=interface.object_store, event=event
+    )
     if not existing_field_mapping:
         interface.log_error("Can't import file as no field mapping set up")
         return initial_state_form
@@ -46,7 +48,9 @@ def process_wa_staged_file_already_uploaded(interface: abstractInterface) -> New
     filename = get_staged_file_raw_event_filename(event)
     print("Working on %s " % filename)
 
-    process_uploaded_wa_event_file(filename=filename, event=event, object_store=interface.object_store)
+    process_uploaded_wa_event_file(
+        filename=filename, event=event, object_store=interface.object_store
+    )
     interface.flush_cache_to_store()
 
     print("Deleting staging file no longer needed")

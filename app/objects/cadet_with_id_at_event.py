@@ -106,7 +106,6 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return CadetWithIdAtEvent
 
-
     def mark_cadet_as_changed(self, cadet_id: str):
         cadet_at_event = self.cadet_at_event_or_missing_data(cadet_id)
         if cadet_at_event is missing_data:
@@ -167,7 +166,6 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
 
         self[existing_cadet_idx] = existing_cadet_at_event
         self.mark_cadet_as_changed(cadet_id)
-
 
     def update_notes_for_existing_cadet_at_event(self, cadet_id: str, new_notes: str):
         existing_cadet_idx = self.idx_of_items_with_cadet_id(cadet_id)

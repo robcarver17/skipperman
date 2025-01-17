@@ -53,6 +53,3 @@ def modify_row(row: RowInRegistrationData):
     row[CADET_FIRST_NAME] = helm_first_name
     row[CADET_SURNAME] = helm_surname
     row[CADET_DOUBLE_HANDED_PARTNER] = crew_name
-
-
-

@@ -1,7 +1,12 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.objects.exceptions import arg_not_passed, missing_data
+from app.objects.exceptions import (
+    arg_not_passed,
+    missing_data,
+    MissingData,
+    MultipleMatches,
+)
 from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
 
@@ -36,9 +41,9 @@ class ListOfTickSubStages(GenericListOfObjectsWithIds):
         id = [item.id for item in self if item.name == name]
 
         if len(id) == 0:
-            return missing_data
+            raise MissingData
         elif len(id) > 1:
-            raise Exception(
+            raise MultipleMatches(
                 "Found more than one substage with same name should be impossible"
             )
 

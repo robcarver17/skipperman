@@ -1,7 +1,6 @@
 import datetime
 import enum
 from enum import EnumMeta
-from typing import Dict
 
 import pandas as pd
 

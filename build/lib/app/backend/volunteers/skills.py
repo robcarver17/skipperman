@@ -89,11 +89,14 @@ def update_list_of_skills(object_store: ObjectStore, list_of_skills: ListOfSkill
     )
 
 
-def add_boat_related_skill_for_volunteer(object_store: ObjectStore, volunteer: Volunteer):
+def add_boat_related_skill_for_volunteer(
+    object_store: ObjectStore, volunteer: Volunteer
+):
     dict_of_volunteer_skills = get_dict_of_volunteers_with_skills(object_store)
     dict_of_volunteer_skills.add_volunteer_driving_qualification(volunteer)
-    update_dict_of_volunteers_with_skills(object_store=object_store,
-                                          dict_of_volunteer_skills=dict_of_volunteer_skills)
+    update_dict_of_volunteers_with_skills(
+        object_store=object_store, dict_of_volunteer_skills=dict_of_volunteer_skills
+    )
 
 
 def remove_boat_related_skill_for_volunteer(
@@ -101,5 +104,6 @@ def remove_boat_related_skill_for_volunteer(
 ):
     dict_of_volunteer_skills = get_dict_of_volunteers_with_skills(object_store)
     dict_of_volunteer_skills.remove_volunteer_driving_qualification(volunteer)
-    update_dict_of_volunteers_with_skills(object_store=object_store,
-                                          dict_of_volunteer_skills=dict_of_volunteer_skills)
+    update_dict_of_volunteers_with_skills(
+        object_store=object_store, dict_of_volunteer_skills=dict_of_volunteer_skills
+    )

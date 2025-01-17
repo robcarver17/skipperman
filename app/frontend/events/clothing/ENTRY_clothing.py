@@ -20,7 +20,10 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm,
     File,
 )
-from app.objects.abstract_objects.abstract_buttons import cancel_menu_button, save_menu_button
+from app.objects.abstract_objects.abstract_buttons import (
+    cancel_menu_button,
+    save_menu_button,
+)
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.frontend.shared.events_state import get_event_from_state
@@ -74,7 +77,6 @@ def post_form_view_for_clothing_requirements(
         clear_all_colours(interface)
         interface.flush_cache_to_store()
 
-
     elif last_button_pressed in all_sort_types:
         sort_order = interface.last_button_pressed()
         save_sort_order(interface=interface, sort_order=sort_order)
@@ -85,7 +87,6 @@ def post_form_view_for_clothing_requirements(
     elif filter_committee_button.pressed(last_button_pressed):
         set_to_showing_only_committee(interface)
 
-
     elif export_committee_button.pressed(last_button_pressed):
         return export_committee_clothing(interface)
     elif export_all_clothing_button.pressed(last_button_pressed):
@@ -95,7 +96,6 @@ def post_form_view_for_clothing_requirements(
 
     else:
         return button_error_and_back_to_initial_state_form(interface)
-
 
     return display_form_view_for_clothing_requirements(interface)
 

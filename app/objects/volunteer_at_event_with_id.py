@@ -22,7 +22,7 @@ NOTES = "notes"
 class VolunteerAtEventWithId(GenericSkipperManObject):
     volunteer_id: str
     availablity: DaySelector
-    list_of_associated_cadet_id: list ## no longer used
+    list_of_associated_cadet_id: list  ## no longer used
     preferred_duties: str = ""  ## information only
     same_or_different: str = ""  ## information only
     any_other_information: str = (
@@ -97,7 +97,6 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
         else:
             del self[idx_of_volunteer_at_event]
 
-
     def volunteer_at_event_with_id(self, volunteer_id: str) -> VolunteerAtEventWithId:
         index_of_matching_volunteer = self.index_of_volunteer_at_event_with_id(
             volunteer_id
@@ -132,7 +131,6 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
                 % volunteer_at_event.volunteer_id
             )
 
-
     def sort_by_list_of_volunteer_ids(
         self, list_of_ids
     ) -> "ListOfVolunteersAtEventWithId":
@@ -146,4 +144,3 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
         ]
 
         return ListOfVolunteersAtEventWithId(new_list_of_volunteers_at_event)
-

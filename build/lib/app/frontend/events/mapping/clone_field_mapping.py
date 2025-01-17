@@ -1,5 +1,6 @@
 from app.objects.abstract_objects.abstract_interface import (
-    abstractInterface, form_with_message_and_finished_button,
+    abstractInterface,
+    form_with_message_and_finished_button,
 )
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
@@ -19,9 +20,15 @@ from app.frontend.shared.events_state import (
 
 from app.frontend.form_handler import initial_state_form
 
-from app.backend.events.list_of_events import get_event_from_list_of_events_given_event_description
+from app.backend.events.list_of_events import (
+    get_event_from_list_of_events_given_event_description,
+)
 
-from app.backend.mapping.list_of_field_mappings import get_field_mapping_for_event, get_list_of_events_with_field_mapping, save_field_mapping_for_event
+from app.backend.mapping.list_of_field_mappings import (
+    get_field_mapping_for_event,
+    get_list_of_events_with_field_mapping,
+    save_field_mapping_for_event,
+)
 from app.objects.events import Event
 
 
@@ -71,10 +78,13 @@ def post_form_for_clone_event_field_mapping(interface: abstractInterface):
     current_event = get_event_from_state(interface)
 
     event = get_event_from_list_of_events_given_event_description(
-        object_store=interface.object_store, event_description=event_description_selected
+        object_store=interface.object_store,
+        event_description=event_description_selected,
     )
     try:
-        mapping = get_field_mapping_for_event(object_store=interface.object_store, event=event)
+        mapping = get_field_mapping_for_event(
+            object_store=interface.object_store, event=event
+        )
         assert len(mapping) > 0
     except:
         interface.log_error(

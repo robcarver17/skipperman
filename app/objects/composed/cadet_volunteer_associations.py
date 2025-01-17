@@ -39,7 +39,6 @@ class ListOfCadetVolunteerAssociations(List[CadetVolunteerAssociation]):
             ## What we would expect
             self._add_association_without_checking(cadet=cadet, volunteer=volunteer)
 
-
     def _add_association_without_checking(self, cadet: Cadet, volunteer: Volunteer):
         self.append(CadetVolunteerAssociation(cadet=cadet, volunteer=volunteer))
         self.list_of_cadet_volunteer_associations_with_ids.add(
@@ -102,7 +101,6 @@ class ListOfCadetVolunteerAssociations(List[CadetVolunteerAssociation]):
     def list_of_cadets(self):
         return ListOfCadets(list(set([item.cadet for item in self])))
 
-
     @property
     def list_of_cadet_volunteer_associations_with_ids(
         self,
@@ -148,25 +146,42 @@ def create_raw_list_of_cadet_volunteer_associations_from_underlying_data(
 class DictOfCadetsAssociatedWithVolunteer(Dict[Volunteer, ListOfCadets]):
     pass
 
-def compose_dict_of_cadets_associated_with_volunteers(list_of_cadet_volunteer_associations: ListOfCadetVolunteerAssociations) -> DictOfCadetsAssociatedWithVolunteer:
+
+def compose_dict_of_cadets_associated_with_volunteers(
+    list_of_cadet_volunteer_associations: ListOfCadetVolunteerAssociations,
+) -> DictOfCadetsAssociatedWithVolunteer:
     list_of_volunteers = list_of_cadet_volunteer_associations.list_of_volunteers
 
     return DictOfCadetsAssociatedWithVolunteer(
-        [(
-            volunteer, list_of_cadet_volunteer_associations.list_of_cadets_associated_with_volunteer(volunteer)
-        ) for volunteer in list_of_volunteers]
+        [
+            (
+                volunteer,
+                list_of_cadet_volunteer_associations.list_of_cadets_associated_with_volunteer(
+                    volunteer
+                ),
+            )
+            for volunteer in list_of_volunteers
+        ]
     )
 
 
 class DictOfVolunteersAssociatedWithCadet(Dict[Cadet, ListOfVolunteers]):
     pass
 
-def compose_dict_of_volunteers_associated_with_cadets(list_of_cadet_volunteer_associations: ListOfCadetVolunteerAssociations) -> DictOfVolunteersAssociatedWithCadet:
+
+def compose_dict_of_volunteers_associated_with_cadets(
+    list_of_cadet_volunteer_associations: ListOfCadetVolunteerAssociations,
+) -> DictOfVolunteersAssociatedWithCadet:
     list_of_cadets = list_of_cadet_volunteer_associations.list_of_cadets
 
     return DictOfVolunteersAssociatedWithCadet(
         [
-            (cadet, list_of_cadet_volunteer_associations.list_of_volunteers_associated_with_cadet(cadet))
+            (
+                cadet,
+                list_of_cadet_volunteer_associations.list_of_volunteers_associated_with_cadet(
+                    cadet
+                ),
+            )
             for cadet in list_of_cadets
         ]
     )

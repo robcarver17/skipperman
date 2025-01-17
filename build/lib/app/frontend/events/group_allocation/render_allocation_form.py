@@ -1,24 +1,26 @@
-from typing import Union, Dict, List
+from typing import Union
 
+from app.backend.groups.group_allocation_info import (
+    get_group_allocation_info,
+    GroupAllocationInfo,
+)
+from app.backend.groups.previous_groups import (
+    get_list_of_previous_groups_as_str,
+    DictOfEventAllocations,
+    get_dict_of_event_allocations_for_last_N_events_for_list_of_cadets,
+)
 from app.backend.qualifications_and_ticks.progress import (
     get_qualification_status_for_single_cadet_as_list_of_str,
 )
-from app.frontend.forms.reorder_form import reorder_table
-
-from app.objects.groups import Group
-
-from app.OLD_backend.events import DEPRECATE_get_list_of_all_events
-
-from app.OLD_backend.group_allocations.previous_allocations import (
-    DEPRECATE_get_dict_of_allocations_for_events_and_list_of_cadets,
+from app.backend.qualifications_and_ticks.qualifications_for_cadet import (
+    highest_qualification_for_cadet,
 )
-from app.backend.groups.previous_groups import allocation_for_cadet_in_previous_events_as_dictCONSIDER_REFACTOR
+from app.frontend.forms.reorder_form import reorder_table
+from app.frontend.shared.cadet_state import get_cadet_from_state
+from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 
 from app.objects.exceptions import missing_data
 
-from app.frontend.events.cadets_at_event.track_cadet_id_in_state_when_importing import (
-    get_current_cadet_id_at_event,
-)
 
 from app.frontend.events.group_allocation.input_fields import (
     get_notes_field,
@@ -35,9 +37,6 @@ from app.frontend.events.group_allocation.store_state import (
 
 from app.backend.boat_classes.summary import summarise_class_attendance_for_event
 from app.backend.club_boats.summary import summarise_club_boat_allocations_for_event
-from app.OLD_backend.group_allocations.group_allocations_data import (
-    AllocationData,
-)
 from app.backend.groups.sorting import sorted_active_cadets
 from app.backend.events.summarys import summarise_allocations_for_event
 
@@ -62,8 +61,6 @@ from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.cadets import Cadet
 from app.objects.events import (
     Event,
-    list_of_events_excluding_one_event,
-    SORT_BY_START_ASC,
 )
 
 
@@ -126,11 +123,11 @@ def get_day_buttons(interface: abstractInterface) -> Line:
         )
     else:
         day = get_day_from_state_or_none(interface)
-        return Line(
-            ["Currently editing %s: " % day.name, reset_day_button]
-        )
+        return Line(["Currently editing %s: " % day.name, reset_day_button])
+
 
 reset_day_button = Button(RESET_DAY_BUTTON_LABEL)
+
 
 def list_of_all_day_button_names(interface: abstractInterface):
     event = get_event_from_state(interface)
@@ -144,12 +141,16 @@ def list_of_all_day_button_names(interface: abstractInterface):
 def get_allocations_and_classes_detail(
     interface: abstractInterface, event: Event
 ) -> DetailListOfLines:
-    allocations = summarise_allocations_for_event(object_store=interface.object_store, event=event)
+    allocations = summarise_allocations_for_event(
+        object_store=interface.object_store, event=event
+    )
 
     club_dinghies = summarise_club_boat_allocations_for_event(
         event=event, object_store=interface.object_store
     )
-    classes = summarise_class_attendance_for_event(event=event, object_store=interface.object_store)
+    classes = summarise_class_attendance_for_event(
+        event=event, object_store=interface.object_store
+    )
     return DetailListOfLines(
         ListOfLines(
             [
@@ -172,23 +173,52 @@ def get_allocations_and_classes_detail(
 def sort_buttons_for_allocation_table(sort_order: list) -> Table:
     return reorder_table(sort_order)
 
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets
+
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
+    get_dict_of_all_event_info_for_cadets,
+)
+
 
 def get_inner_form_for_cadet_allocation(
     interface: abstractInterface, event: Event, sort_order: list
 ) -> Table:
-    dict_of_all_event_data =get_dict_of_all_event_info_for_cadets(object_store=interface.object_store, event=event, active_only=True)
+    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
+        object_store=interface.object_store, event=event, active_only=True
+    )
+
     day_or_none = get_day_from_state_or_none(interface)
     list_of_cadets = sorted_active_cadets(
-        object_store = interface.object_store,
-        dict_of_all_event_data=dict_of_all_event_data, sort_order=sort_order, day_or_none=day_or_none
+        object_store=interface.object_store,
+        dict_of_all_event_data=dict_of_all_event_data,
+        sort_order=sort_order,
+        day_or_none=day_or_none,
     )
+    previous_groups_for_cadets = (
+        get_dict_of_event_allocations_for_last_N_events_for_list_of_cadets(
+            object_store=interface.object_store,
+            list_of_cadets=list_of_cadets,
+            remove_unallocated=False,
+            N_events=NUMBER_OF_PREVIOUS_EVENTS,
+            excluding_event=event,
+        )
+    )
+    group_allocation_info = get_group_allocation_info(dict_of_all_event_data)
+
     return Table(
-        [get_top_row(dict_of_all_event_data=dict_of_all_event_data, interface=interface)]
+        [
+            get_top_row(
+                previous_groups_for_cadets=previous_groups_for_cadets,
+                group_allocation_info=group_allocation_info,
+                interface=interface,
+            )
+        ]
         + [
             get_row_for_cadet(
-                interface=interface, cadet=cadet,
-                event_data_for_cadet = dict_of_all_event_data.event_data_for_cadet(cadet)
+                interface=interface,
+                previous_groups_for_cadets=previous_groups_for_cadets,
+                group_allocation_info=group_allocation_info,
+                dict_of_all_event_data=dict_of_all_event_data,
+                cadet=cadet,
             )
             for cadet in list_of_cadets
         ],
@@ -201,16 +231,15 @@ NUMBER_OF_PREVIOUS_EVENTS = 3
 
 
 def get_top_row(
-    interface: abstractInterface, allocation_data: AllocationData
+    interface: abstractInterface,
+    previous_groups_for_cadets: DictOfEventAllocations,
+    group_allocation_info: GroupAllocationInfo,
 ) -> RowInTable:
-    previous_event_names_in_list = allocation_data.previous_event_names(
-        number_of_events=NUMBER_OF_PREVIOUS_EVENTS
-    )
-    info_field_names = allocation_data.group_info_fields()
+    previous_event_names_in_list = previous_groups_for_cadets.list_of_events
 
-    input_field_names_over_days = get_daily_input_field_headings(
-        allocation_data=allocation_data, interface=interface
-    )
+    info_field_names = group_allocation_info.visible_field_names
+
+    input_field_names_over_days = get_daily_input_field_headings(interface=interface)
 
     return RowInTable(
         ["", "Set Availability"]  ## cadet name
@@ -221,33 +250,22 @@ def get_top_row(
     )
 
 
-def get_daily_input_field_headings(
-    interface: abstractInterface, allocation_data: AllocationData
-) -> list:
-    event = allocation_data.event
+def get_daily_input_field_headings(interface: abstractInterface) -> list:
+
     if no_day_set_in_state(interface):
-        return get_input_field_headings_for_day(
-            "All days", event_contains_groups=event.contains_groups
-        )
+        return get_input_field_headings_for_day("All days")
     else:
         day = get_day_from_state_or_none(interface)
-        return get_input_field_headings_for_day(
-            day.name, event_contains_groups=event.contains_groups
-        )
+        return get_input_field_headings_for_day(day.name)
 
 
-def get_input_field_headings_for_day(
-    day_name: str, event_contains_groups: bool
-) -> list:
-    if event_contains_groups:
-        star = "*"
-    else:
-        star = ""
+def get_input_field_headings_for_day(day_name: str) -> list:
+
     input_field_names = [
         "Allocate: group (%s)" % day_name,
         "Allocate: Club boat(%s)" % day_name,
-        "Allocate: Class of boat%s (%s)" % (star, day_name),
-        "Edit: Sail number %s (%s)" % (star, day_name),
+        "Allocate: Class of boat (%s)" % (day_name),
+        "Edit: Sail number (%s)" % (day_name),
         "Allocate: Two handed partner (%s)" % day_name,
     ]
 
@@ -255,25 +273,37 @@ def get_input_field_headings_for_day(
 
 
 def get_row_for_cadet(
-    interface: abstractInterface, cadet: Cadet, allocation_data: AllocationData
+    interface: abstractInterface,
+    previous_groups_for_cadets: DictOfEventAllocations,
+    group_allocation_info: GroupAllocationInfo,
+    dict_of_all_event_data: DictOfAllEventInfoForCadets,
+    cadet: Cadet,
 ) -> RowInTable:
-    cell_for_cadet = get_cell_for_cadet(interface=interface, cadet=cadet)
-    previous_groups_as_list = allocation_data.previous_groups_as_list_of_str(
-        cadet, number_of_events=NUMBER_OF_PREVIOUS_EVENTS
+    cell_for_cadet = get_cell_for_cadet(
+        interface=interface, event=dict_of_all_event_data.event, cadet=cadet
     )
-    previous_group_info = allocation_data.group_info_dict_for_cadet_as_ordered_list(
-        cadet
+    previous_groups_as_list = (
+        previous_groups_for_cadets.previous_groups_for_cadet_as_list(cadet)
+    )
+    previous_group_info = (
+        group_allocation_info.group_info_dict_for_cadet_as_ordered_list(cadet)
     )
     previous_group_info = [
         make_long_thing_detail_box(field) for field in previous_group_info
     ]
     input_fields = get_input_fields_for_cadet(
-        interface=interface, cadet=cadet, allocation_data=allocation_data
+        interface=interface, cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
     )
-    qualification = allocation_data.get_highest_qualification_for_cadet(cadet)
-    notes_field = get_notes_field(cadet=cadet, allocation_data=allocation_data)
+    qualification = str(
+        highest_qualification_for_cadet(
+            object_store=interface.object_store, cadet=cadet
+        )
+    )
+    notes_field = get_notes_field(
+        dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
+    )
     days_attending_field = get_days_attending_field(
-        cadet=cadet, allocation_data=allocation_data
+        dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
     )
 
     return RowInTable(
@@ -289,23 +319,25 @@ MAX_EVENTS_TO_SHOW = 10
 
 
 def get_cell_for_cadet(
-    interface: abstractInterface, cadet: Cadet
+    interface: abstractInterface, event: Event, cadet: Cadet
 ) -> Union[ListOfLines, Button]:
     if this_cadet_has_been_clicked_on_already(interface=interface, cadet=cadet):
-        return get_cell_for_cadet_that_is_clicked_on(interface=interface, cadet=cadet)
+        return get_cell_for_cadet_that_is_clicked_on(
+            interface=interface, event=event, cadet=cadet
+        )
     else:
         return Button(str(cadet), value=get_button_id_for_cadet(cadet.id))
 
 
 def get_cell_for_cadet_that_is_clicked_on(
-    interface: abstractInterface, cadet: Cadet
+    interface: abstractInterface, event: Event, cadet: Cadet
 ) -> ListOfLines:
     list_of_groups_as_str = get_list_of_previous_groups_as_str(
-        interface=interface, cadet=cadet
+        object_store=interface.object_store, event_to_exclude=event, cadet=cadet
     )
     list_of_qualifications_as_str = (
         get_qualification_status_for_single_cadet_as_list_of_str(
-            interface=interface, cadet_id=cadet.id
+            object_store=interface.object_store, cadet=cadet
         )
     )
 
@@ -317,81 +349,8 @@ def get_cell_for_cadet_that_is_clicked_on(
     ).add_Lines()
 
 
-def get_list_of_previous_groups_as_str(
-    interface: abstractInterface, cadet: Cadet
-) -> List[str]:
-    dict_of_groups = previous_groups_as_dict(
-        interface=interface, cadet=cadet, number_of_events=MAX_EVENTS_TO_SHOW
-    )
-    dict_of_groups = dict(
-        [
-            (key, value)
-            for key, value in dict_of_groups.items()
-            if not value.is_unallocated
-        ]
-    )
-    list_of_groups_as_str = [
-        "%s: %s" % (str(event), group.name) for event, group in dict_of_groups.items()
-    ]
-
-    return list_of_groups_as_str
-
-
-def previous_groups_as_dict(
-    interface: abstractInterface, cadet: Cadet, number_of_events: int = 3
-) -> Dict[Event, Group]:
-    event = get_event_from_state(interface)
-
-    return previous_groups_as_dict_excluding_one_event(
-        interface=interface,
-        cadet=cadet,
-        event_to_exclude=event,
-        number_of_events=number_of_events,
-    )
-
-
-def previous_groups_as_dict_excluding_one_event(
-    interface: abstractInterface,
-    cadet: Cadet,
-    event_to_exclude: Event,
-    number_of_events: int = 3,
-) -> Dict[Event, Group]:
-    previous_allocations_as_dict = dict_of_previous_allocations_excluding_one_event(
-        interface=interface,
-        event_to_exclude=event_to_exclude,
-        number_of_events=number_of_events,
-    )
-    allocation_for_cadet = (
-        allocation_for_cadet_in_previous_events_as_dictCONSIDER_REFACTOR(
-            cadet=cadet,
-            previous_allocations_as_dict=previous_allocations_as_dict,
-            number_of_events=number_of_events,
-        )
-    )
-
-    return allocation_for_cadet
-
-
-def dict_of_previous_allocations_excluding_one_event(
-    interface: abstractInterface, event_to_exclude: Event, number_of_events: int = 3
-):
-    list_of_events = DEPRECATE_get_list_of_all_events(interface)
-    list_of_previous_events = list_of_events_excluding_one_event(
-        list_of_events=list_of_events,
-        event_to_exclude=event_to_exclude,
-        only_past=True,
-        sort_by=SORT_BY_START_ASC,
-    )[-number_of_events:]
-    previous_allocations_as_dict = (
-        DEPRECATE_get_dict_of_allocations_for_events_and_list_of_cadets(
-            interface=interface, list_of_events=list_of_previous_events
-        )
-    )
-    return previous_allocations_as_dict
-
-
 def this_cadet_has_been_clicked_on_already(interface: abstractInterface, cadet: Cadet):
-    cadet_id = get_current_cadet_id_at_event(interface)
+    cadet_id = get_cadet_from_state(interface)
     if cadet_id is missing_data:
         return False
     return cadet_id == cadet.id
@@ -402,7 +361,7 @@ def get_button_id_for_cadet(id: str) -> str:
 
 
 def get_list_of_all_cadet_buttons(interface: abstractInterface):
-    list_of_cadets = get_list_of_all_cadets(interface)
+    list_of_cadets = get_list_of_all_cadets_with_event_data(interface)
     return [get_button_id_for_cadet(id) for id in list_of_cadets.list_of_ids]
 
 
@@ -411,22 +370,23 @@ def cadet_id_from_cadet_button(button_str):
 
 
 def get_list_of_all_add_partner_buttons(interface: abstractInterface):
-    list_of_cadets = get_list_of_all_cadets(interface)
+    list_of_cadets = get_list_of_all_cadets_with_event_data(interface)
     return [
         button_name_for_add_partner(cadet_id=id) for id in list_of_cadets.list_of_ids
     ]
 
 
 def get_list_of_all_add_cadet_availability_buttons(interface: abstractInterface):
-    list_of_cadets = get_list_of_all_cadets(interface)
+    list_of_cadets = get_list_of_all_cadets_with_event_data(interface)
 
     return [make_cadet_available_button_name(cadet) for cadet in list_of_cadets]
 
 
-def get_list_of_all_cadets(interface: abstractInterface):
+def get_list_of_all_cadets_with_event_data(interface: abstractInterface):
     event = get_event_from_state(interface)
-    dict_of_all_event_data =get_dict_of_all_event_info_for_cadets(object_store=interface.object_store, event=event,
-                                                                  active_only=True)
+    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
+        object_store=interface.object_store, event=event, active_only=True
+    )
     list_of_cadets = dict_of_all_event_data.list_of_cadets
 
     return list_of_cadets

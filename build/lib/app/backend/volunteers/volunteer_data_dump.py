@@ -92,8 +92,12 @@ class ListOfVolunteerRowData(List[VolunteerRowData]):
 
         return ListOfEvents(list(set(all_events)))
 
+
 from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunteer
-from app.backend.volunteers.connected_cadets import get_list_of_cadets_associated_with_volunteer
+from app.backend.volunteers.connected_cadets import (
+    get_list_of_cadets_associated_with_volunteer,
+)
+
 
 def get_row_data_for_volunteer(
     object_store: ObjectStore, volunteer: Volunteer
@@ -104,14 +108,21 @@ def get_row_data_for_volunteer(
             object_store=object_store, volunteer=volunteer
         )
     )
-    roles_with_groups_as_dict = dict([
-        (event, role_with_team.role_and_group()) for event, role_with_team in roles_with_teams_as_dict.items()
-    ])
+    roles_with_groups_as_dict = dict(
+        [
+            (event, role_with_team.role_and_group())
+            for event, role_with_team in roles_with_teams_as_dict.items()
+        ]
+    )
 
-    skills = get_dict_of_existing_skills_for_volunteer(object_store=object_store, volunteer=volunteer)
+    skills = get_dict_of_existing_skills_for_volunteer(
+        object_store=object_store, volunteer=volunteer
+    )
     skills_as_str = str(skills)
 
-    connected_cadets = get_list_of_cadets_associated_with_volunteer(object_store=object_store, volunteer=volunteer)
+    connected_cadets = get_list_of_cadets_associated_with_volunteer(
+        object_store=object_store, volunteer=volunteer
+    )
     connected_cadets_as_str = connected_cadets.as_str()
 
     return VolunteerRowData(

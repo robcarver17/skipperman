@@ -95,15 +95,24 @@ def get_states_allowed_give_current_status(
 all_possible_status = [
     RegistrationStatus(state_name) for state_name in POSSIBLE_STATUS_NAMES
 ]
-RegStatusChange = Enum("RegStatusChange", ["new_registration_replacing_deleted_or_cancelled",
-                             "existing_registration_now_deleted_or_cancelled",
-                             "status_unchanged",
-                             "status_still_active_but_has_changed",
-                               "error"])
-new_registration_replacing_deleted_or_cancelled= RegStatusChange["new_registration_replacing_deleted_or_cancelled"]
-existing_registration_now_deleted_or_cancelled = RegStatusChange["existing_registration_now_deleted_or_cancelled"]
+RegStatusChange = Enum(
+    "RegStatusChange",
+    [
+        "new_registration_replacing_deleted_or_cancelled",
+        "existing_registration_now_deleted_or_cancelled",
+        "status_unchanged",
+        "status_still_active_but_has_changed",
+        "error",
+    ],
+)
+new_registration_replacing_deleted_or_cancelled = RegStatusChange[
+    "new_registration_replacing_deleted_or_cancelled"
+]
+existing_registration_now_deleted_or_cancelled = RegStatusChange[
+    "existing_registration_now_deleted_or_cancelled"
+]
 status_unchanged = RegStatusChange["status_unchanged"]
-status_still_active_but_has_changed = RegStatusChange["status_still_active_but_has_changed"]
+status_still_active_but_has_changed = RegStatusChange[
+    "status_still_active_but_has_changed"
+]
 error = RegStatusChange["error"]
-
-

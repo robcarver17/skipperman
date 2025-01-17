@@ -19,7 +19,8 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 
 from app.objects.abstract_objects.abstract_interface import (
-    abstractInterface, form_with_message_and_finished_button,
+    abstractInterface,
+    form_with_message_and_finished_button,
 )
 from app.frontend.form_handler import (
     initial_state_form,

@@ -151,9 +151,9 @@ def update_dict_of_qualifications_for_cadets(
     )
 
     list_of_qualifications_and_dates_for_cadet.append(qualification_and_date)
-    dict_of_qualifications_for_cadets[
-        cadet
-    ] = list_of_qualifications_and_dates_for_cadet
+    dict_of_qualifications_for_cadets[cadet] = (
+        list_of_qualifications_and_dates_for_cadet
+    )
 
 
 ### USED FOR WRITE ONLY

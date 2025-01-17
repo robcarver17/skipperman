@@ -1,6 +1,5 @@
-from app.backend.reporting import (
-    create_column_report_from_df_and_return_filename,
-)
+from app.backend.reporting.process_stages.create_column_report_from_df import \
+    create_column_report_from_df_and_return_filename
 from app.frontend.reporting.shared.report_generator import ReportGenerator
 from app.frontend.reporting.shared.reporting_options import get_reporting_options
 from app.objects.abstract_objects.abstract_form import File

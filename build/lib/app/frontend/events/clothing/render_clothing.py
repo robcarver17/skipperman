@@ -4,10 +4,15 @@ from app.objects.cadets import Cadet
 
 from app.objects.abstract_objects.abstract_form import listInput
 
-from app.objects.composed.clothing_at_event import  SORT_BY_FIRSTNAME, all_sort_types, \
-    ClothingAtEvent
+from app.objects.composed.clothing_at_event import (
+    SORT_BY_FIRSTNAME,
+    all_sort_types,
+    ClothingAtEvent,
+)
 
-from app.backend.clothing.active_cadets_with_clothing import get_dict_of_active_cadets_with_clothing_at_event
+from app.backend.clothing.active_cadets_with_clothing import (
+    get_dict_of_active_cadets_with_clothing_at_event,
+)
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
@@ -41,19 +46,14 @@ EXPORT_COLOURS = "Download spreadsheet of colour teams"
 #### Auto colour
 
 
-def get_button_bar_for_clothing(
-    interface: abstractInterface
-) -> ButtonBar:
+def get_button_bar_for_clothing(interface: abstractInterface) -> ButtonBar:
 
     if are_we_showing_only_committee(interface):
         filter_button = filter_all_button
         export_buttons = [export_committee_button]
     else:
         filter_button = filter_committee_button
-        export_buttons = [
-            export_all_clothing_button,
-            export_colours_button
-        ]
+        export_buttons = [export_all_clothing_button, export_colours_button]
 
     button_bar = ButtonBar(
         [cancel_menu_button, save_menu_button, filter_button, clear_all_colours_button]
@@ -65,6 +65,7 @@ def get_button_bar_for_clothing(
 
     return button_bar
 
+
 distribute_action_button = Button(DISTRIBUTE_ACTION_BUTTON_LABEL, nav_button=True)
 clear_all_colours_button = Button(CLEAR_ALL_COLOURS, nav_button=True)
 filter_all_button = Button(FILTER_ALL_BUTTON_LABEL, nav_button=True)
@@ -73,16 +74,17 @@ export_committee_button = Button(EXPORT_COMMITTEE, nav_button=True)
 export_all_clothing_button = Button(EXPORT_ALL, nav_button=True)
 export_colours_button = Button(EXPORT_COLOURS, nav_button=True)
 
+
 def get_clothing_table(interface: abstractInterface, event: Event) -> Table:
     sort_order = get_sort_order(interface)
     only_committee = are_we_showing_only_committee(interface)
 
-    dict_of_cadets_with_clothing = (
-        get_dict_of_active_cadets_with_clothing_at_event(
-            object_store=interface.object_store, event=event, only_committee=only_committee
-        )
+    dict_of_cadets_with_clothing = get_dict_of_active_cadets_with_clothing_at_event(
+        object_store=interface.object_store, event=event, only_committee=only_committee
     )
-    sorted_dict_of_cadets_with_clothing = dict_of_cadets_with_clothing.sort_by(sort_order)
+    sorted_dict_of_cadets_with_clothing = dict_of_cadets_with_clothing.sort_by(
+        sort_order
+    )
 
     size_options = sorted_dict_of_cadets_with_clothing.get_clothing_size_options()
     colour_options = sorted_dict_of_cadets_with_clothing.get_colour_options()
@@ -90,7 +92,7 @@ def get_clothing_table(interface: abstractInterface, event: Event) -> Table:
     body = [
         get_clothing_row_for_cadet(
             cadet=cadet,
-            clothing = clothing,
+            clothing=clothing,
             size_options=size_options,
             colour_options=colour_options,
         )
@@ -113,8 +115,8 @@ def get_top_row_for_clothing_table() -> RowInTable:
 def get_clothing_row_for_cadet(
     size_options: List[str],
     colour_options: List[str],
-        cadet: Cadet,
-        clothing: ClothingAtEvent,
+    cadet: Cadet,
+    clothing: ClothingAtEvent,
 ) -> RowInTable:
     cadet_id = cadet.id
     size_field = listInput(

@@ -6,19 +6,23 @@ from app.objects.exceptions import arg_not_passed, missing_data
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 
 
-
-
 def get_volunteer_with_matching_name(
-        object_store: ObjectStore, volunteer: Volunteer
+    object_store: ObjectStore, volunteer: Volunteer
 ) -> Union[object, Volunteer]:
     list_of_volunteers = get_list_of_volunteers(object_store)
 
     return list_of_volunteers.volunteer_with_matching_name(volunteer)
 
-def get_volunteer_from_name( object_store: ObjectStore, volunteer_name: str) -> Volunteer:
+
+def get_volunteer_from_name(
+    object_store: ObjectStore, volunteer_name: str
+) -> Volunteer:
     list_of_volunteers = get_list_of_volunteers(object_store)
 
-    return list_of_volunteers.get_volunteer_from_list_of_volunteers_given_name(volunteer_name)
+    return list_of_volunteers.get_volunteer_from_list_of_volunteers_given_name(
+        volunteer_name
+    )
+
 
 def get_volunteer_from_id(object_store: ObjectStore, volunteer_id: str) -> Volunteer:
     list_of_volunteers = get_list_of_volunteers(object_store)
@@ -26,7 +30,7 @@ def get_volunteer_from_id(object_store: ObjectStore, volunteer_id: str) -> Volun
 
 
 def get_volunteer_from_list_of_given_str_of_volunteer(
-    object_store: ObjectStore, volunteer_as_str: str, default = missing_data
+    object_store: ObjectStore, volunteer_as_str: str, default=missing_data
 ) -> Volunteer:
     list_of_volunteers = get_list_of_volunteers(object_store)
     list_of_volunteers_as_str = get_list_of_volunteers_as_str(list_of_volunteers)
@@ -48,7 +52,10 @@ def get_sorted_list_of_volunteers(
     master_list = get_list_of_volunteers(object_store)
     return sort_list_of_volunteers(list_of_volunteers=master_list, sort_by=sort_by)
 
-def sort_list_of_volunteers(list_of_volunteers: ListOfVolunteers,  sort_by: str = arg_not_passed) -> ListOfVolunteers:
+
+def sort_list_of_volunteers(
+    list_of_volunteers: ListOfVolunteers, sort_by: str = arg_not_passed
+) -> ListOfVolunteers:
     if sort_by is arg_not_passed:
         return list_of_volunteers
     if sort_by == SORT_BY_SURNAME:
@@ -74,4 +81,3 @@ def update_list_of_volunteers(
         new_object=list_of_volunteers,
         object_definition=object_definition_for_volunteers,
     )
-

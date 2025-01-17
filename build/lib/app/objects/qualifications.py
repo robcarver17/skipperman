@@ -2,7 +2,12 @@ import datetime
 from dataclasses import dataclass
 from typing import List
 
-from app.objects.exceptions import missing_data, arg_not_passed
+from app.objects.exceptions import (
+    missing_data,
+    arg_not_passed,
+    MissingData,
+    MultipleMatches,
+)
 from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
 )
@@ -52,9 +57,9 @@ class ListOfQualifications(GenericListOfObjectsWithIds):
         id = [item.id for item in self if item.name == name]
 
         if len(id) == 0:
-            return missing_data
+            raise MissingData
         elif len(id) > 1:
-            raise Exception(
+            raise MultipleMatches(
                 "Found more than one qualification with same name should be impossible"
             )
 

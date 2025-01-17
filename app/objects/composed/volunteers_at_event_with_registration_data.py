@@ -58,12 +58,16 @@ class DictOfRegistrationDataForVolunteerAtEvent(
         self._list_of_volunteers_at_event_with_id = list_of_volunteers_at_event_with_id
 
     def sort_by_list_of_volunteers(self, list_of_volunteers: ListOfVolunteers):
-        new_raw_dict = dict([(volunteer, self[volunteer]) for volunteer in list_of_volunteers])
+        new_raw_dict = dict(
+            [(volunteer, self[volunteer]) for volunteer in list_of_volunteers]
+        )
 
         return DictOfRegistrationDataForVolunteerAtEvent(
             raw_dict=new_raw_dict,
-            list_of_volunteers_at_event_with_id=self.list_of_volunteers_at_event_with_id.sort_by_list_of_volunteer_ids(list_of_volunteers.list_of_ids),
-            event=self.event
+            list_of_volunteers_at_event_with_id=self.list_of_volunteers_at_event_with_id.sort_by_list_of_volunteer_ids(
+                list_of_volunteers.list_of_ids
+            ),
+            event=self.event,
         )
 
     def drop_volunteer(self, volunteer: Volunteer):
@@ -73,12 +77,16 @@ class DictOfRegistrationDataForVolunteerAtEvent(
     def make_volunteer_available_on_day(self, volunteer: Volunteer, day: Day):
         registration_for_volunteer = self.get_data_for_volunteer(volunteer)
         registration_for_volunteer.availablity.make_available_on_day(day)
-        self.list_of_volunteers_at_event_with_id.make_volunteer_available_on_day(volunteer=volunteer, day=day)
+        self.list_of_volunteers_at_event_with_id.make_volunteer_available_on_day(
+            volunteer=volunteer, day=day
+        )
 
     def make_volunteer_unavailable_on_day(self, volunteer: Volunteer, day: Day):
         registration_for_volunteer = self.get(volunteer)
         registration_for_volunteer.availablity.make_unavailable_on_day(day)
-        self.list_of_volunteers_at_event_with_id.make_volunteer_unavailable_on_day(volunteer=volunteer, day=day)
+        self.list_of_volunteers_at_event_with_id.make_volunteer_unavailable_on_day(
+            volunteer=volunteer, day=day
+        )
 
     def get_data_for_volunteer(self, volunteer: Volunteer):
         try:

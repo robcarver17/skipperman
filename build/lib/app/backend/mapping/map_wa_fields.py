@@ -1,4 +1,3 @@
-
 import pandas as pd
 from app.data_access.store.object_store import ObjectStore
 
@@ -14,7 +13,9 @@ def map_wa_fields_in_df_for_event(
 ) -> RegistrationDataForEvent:
     wa_as_df = load_spreadsheet_file_and_clear_nans(filename)
     # Set up WA event mapping fields
-    wa_field_mapping = get_field_mapping_for_event(event=event, object_store=object_store)
+    wa_field_mapping = get_field_mapping_for_event(
+        event=event, object_store=object_store
+    )
 
     # Do the field mapping
     # need to think about what happens if a field is missing
@@ -40,4 +41,3 @@ def map_wa_fields_in_df(
     mapped_wa_event_data = RegistrationDataForEvent.from_dict(dict_of_mapped_data)
 
     return mapped_wa_event_data
-

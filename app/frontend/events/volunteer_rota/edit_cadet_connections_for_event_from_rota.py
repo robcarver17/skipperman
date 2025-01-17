@@ -1,11 +1,17 @@
 from typing import Union
 
-from app.backend.groups.cadets_with_groups_at_event import get_list_of_groups_at_event_given_list_of_cadets
-from app.backend.volunteers.connected_cadets import get_list_of_cadets_associated_with_volunteer
+from app.backend.groups.cadets_with_groups_at_event import (
+    get_list_of_groups_at_event_given_list_of_cadets,
+)
+from app.backend.volunteers.connected_cadets import (
+    get_list_of_cadets_associated_with_volunteer,
+)
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.objects.events import Event
 
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_list_of_active_cadets_at_event
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
+    get_list_of_active_cadets_at_event,
+)
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -30,7 +36,9 @@ from app.objects.abstract_objects.abstract_buttons import back_menu_button
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.objects.exceptions import CadetNotSelected
-from app.backend.volunteers.connected_cadets import add_volunteer_connection_to_cadet_in_master_list_of_volunteers
+from app.backend.volunteers.connected_cadets import (
+    add_volunteer_connection_to_cadet_in_master_list_of_volunteers,
+)
 
 from app.backend.volunteers.connected_cadets import delete_cadet_connection
 
@@ -40,7 +48,7 @@ def display_form_edit_cadet_connections_from_rota(interface: abstractInterface):
     volunteer = get_volunteer_from_state(interface)
     connected_cadets = get_list_of_cadets_associated_with_volunteer(
         object_store=interface.object_store, volunteer=volunteer
-        )
+    )
     group_text = get_group_text(
         interface=interface, event=event, connected_cadets=connected_cadets
     )
@@ -68,13 +76,13 @@ def display_form_edit_cadet_connections_from_rota(interface: abstractInterface):
     return form
 
 
-
-
 def get_group_text(
     interface: abstractInterface, event: Event, connected_cadets: ListOfCadets
 ) -> Line:
     groups = get_list_of_groups_at_event_given_list_of_cadets(
-        object_store=interface.object_store, event=event, list_of_cadets=connected_cadets
+        object_store=interface.object_store,
+        event=event,
+        list_of_cadets=connected_cadets,
     )
     text_of_groups = ", ".join([group.name for group in groups])
 
@@ -105,7 +113,6 @@ def post_form_edit_cadet_connections_from_rota(
         return button_error_and_back_to_initial_state_form(interface)
 
 
-
 def last_button_pressed_was_delete_cadet_connection(interface: abstractInterface):
     return (
         interface.last_button_pressed()
@@ -119,7 +126,7 @@ def get_list_of_delete_cadet_buttons_with_currently_connected_cadets(
     volunteer = get_volunteer_from_state(interface)
     connected_cadets = get_list_of_cadets_associated_with_volunteer(
         object_store=interface.object_store, volunteer=volunteer
-        )
+    )
     list_of_delete_cadet_buttons = (
         get_list_of_delete_cadet_buttons_given_connected_cadets(connected_cadets)
     )
@@ -132,14 +139,14 @@ def previous_form(interface: abstractInterface):
         display_form_edit_cadet_connections_from_rota
     )
 
+
 def delete_event_connection_given_form(interface: abstractInterface):
     cadet = get_cadet_from_button_pressed(interface)
     volunteer = get_volunteer_from_state(interface)
 
-    delete_cadet_connection(object_store=interface.object_store,
-                            cadet=cadet,
-                            volunteer=volunteer)
-
+    delete_cadet_connection(
+        object_store=interface.object_store, cadet=cadet, volunteer=volunteer
+    )
 
 
 def add_cadet_connection_from_form(interface: abstractInterface):

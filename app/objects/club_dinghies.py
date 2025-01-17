@@ -19,7 +19,9 @@ class ClubDinghy(GenericSkipperManObjectWithIds):
     def __eq__(self, other):
         return self.name == other.name and self.hidden == other.hidden
 
+
 no_club_dinghy = ClubDinghy.create_empty()
+
 
 class ListOfClubDinghies(GenericListOfObjectsWithIds):
     @property
@@ -30,7 +32,6 @@ class ListOfClubDinghies(GenericListOfObjectsWithIds):
         object_idx = self.idx_given_name(existing_club_dinghy.name)
         new_club_dinghy.id = existing_club_dinghy.id
         self[object_idx] = new_club_dinghy
-
 
     def idx_given_name(self, boat_name: str):
         id = self.id_given_name(boat_name)

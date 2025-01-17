@@ -1,8 +1,12 @@
 from typing import Union
 
-from app.backend.rota.add_volunteer import get_list_of_volunteers_except_those_already_at_event, \
-    add_volunteer_to_event_with_full_availability
-from app.backend.volunteers.list_of_volunteers import get_volunteer_from_list_of_given_str_of_volunteer
+from app.backend.rota.add_volunteer import (
+    get_list_of_volunteers_except_those_already_at_event,
+    add_volunteer_to_event_with_full_availability,
+)
+from app.backend.volunteers.list_of_volunteers import (
+    get_volunteer_from_list_of_given_str_of_volunteer,
+)
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -95,7 +99,9 @@ def action_when_new_volunteer_to_be_added_from_rota(
 def action_when_specific_volunteer_selected_for_rota(
     volunteer_name: str, interface: abstractInterface
 ) -> Union[Form, NewForm]:
-    volunteer = get_volunteer_from_list_of_given_str_of_volunteer(volunteer_as_str=volunteer_name, object_store=interface.object_store)
+    volunteer = get_volunteer_from_list_of_given_str_of_volunteer(
+        volunteer_as_str=volunteer_name, object_store=interface.object_store
+    )
 
     return action_when_volunteer_known_for_rota(
         volunteer=volunteer, interface=interface
@@ -107,8 +113,7 @@ def action_when_volunteer_known_for_rota(
 ) -> Union[Form, NewForm]:
     event = get_event_from_state(interface)
     add_volunteer_to_event_with_full_availability(
-        object_store=interface.object_store, event=event,
-        volunteer=volunteer
+        object_store=interface.object_store, event=event, volunteer=volunteer
     )
     interface.flush_cache_to_store()
 

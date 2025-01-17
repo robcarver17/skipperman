@@ -13,16 +13,17 @@ from app.objects.generic_objects import (
     from_str_to_bool,
     from_bool_to_str,
 )
-from app.objects.groups import LAKE_TRAINING_LOCATION, RIVER_TRAINING_LOCATION
 
-NO_WARNING = "No warning"
-RoleLocation = Enum("RoleLocation", [LAKE_TRAINING_LOCATION, RIVER_TRAINING_LOCATION, NO_WARNING])
+
+RoleLocation = Enum(
+    "RoleLocation", ['Lake_training', 'No_warning', 'River_training']
+)
 
 NO_SKILLS_REQUIRED = "-1"
 
-role_location_lake = RoleLocation[LAKE_TRAINING_LOCATION]
-role_location_river = RoleLocation[RIVER_TRAINING_LOCATION]
-role_location_no_warning = RoleLocation[NO_WARNING]
+role_location_lake = RoleLocation.Lake_training
+role_location_river = RoleLocation.River_training
+role_location_no_warning = RoleLocation.No_warning
 
 all_role_locations = [role_location_no_warning, role_location_lake, role_location_river]
 
@@ -76,10 +77,10 @@ class ListOfRolesWithSkillIds(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return RolesWithSkillIds
 
-    def sort_to_match_other_role_list_order(self, other_list: 'ListOfRolesWithSkillIds'):
-        return ListOfRolesWithSkillIds([
-            role for role in other_list if role in self
-        ])
+    def sort_to_match_other_role_list_order(
+        self, other_list: "ListOfRolesWithSkillIds"
+    ):
+        return ListOfRolesWithSkillIds([role for role in other_list if role in self])
 
     def replace_at_index(self, index: int, new_role_with_skill_ids: RolesWithSkillIds):
         existing_role_as_skill_id = self[index]

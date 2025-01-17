@@ -1,12 +1,16 @@
 from typing import List, Dict
 
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
+    get_dict_of_all_event_info_for_cadets,
+)
 from app.backend.events.list_of_events import get_list_of_events
 
 from app.data_access.store.object_store import ObjectStore
 from app.objects.cadets import Cadet, ListOfCadets
-from app.objects.composed.cadets_at_event_with_groups import DictOfCadetsWithDaysAndGroupsAtEvent
-from app.objects.events import Event,  ListOfEvents
+from app.objects.composed.cadets_at_event_with_groups import (
+    DictOfCadetsWithDaysAndGroupsAtEvent,
+)
+from app.objects.events import Event, ListOfEvents
 from app.objects.exceptions import arg_not_passed
 from app.objects.groups import Group
 
@@ -15,9 +19,7 @@ def get_list_of_previous_groups_as_str(
     object_store: ObjectStore, event_to_exclude: Event, cadet: Cadet
 ) -> List[str]:
     dict_of_groups = get_dict_of_event_allocations_for_last_N_events_for_single_cadet(
-        object_store=object_store,
-        excluding_event=event_to_exclude,
-        cadet=cadet
+        object_store=object_store, excluding_event=event_to_exclude, cadet=cadet
     )
     dict_of_groups = dict(
         [
@@ -48,7 +50,9 @@ def get_dict_of_all_event_allocations_for_single_cadet(
 
 
 class DictOfEventAllocations(Dict[Cadet, Dict[Event, Group]]):
-    def __init__(self, raw_dict: Dict[Cadet, Dict[Event, Group]], list_of_events: ListOfEvents):
+    def __init__(
+        self, raw_dict: Dict[Cadet, Dict[Event, Group]], list_of_events: ListOfEvents
+    ):
         super().__init__(raw_dict)
         self._list_of_events = list_of_events
 
@@ -61,25 +65,31 @@ class DictOfEventAllocations(Dict[Cadet, Dict[Event, Group]]):
 
 
 def get_dict_of_event_allocations_for_last_N_events_for_list_of_cadets(
-        object_store: ObjectStore,
-        list_of_cadets: ListOfCadets,
-        N_events: int = ALL_EVENTS,
-        remove_unallocated: bool = False,
-        excluding_event: Event = arg_not_passed
+    object_store: ObjectStore,
+    list_of_cadets: ListOfCadets,
+    N_events: int = ALL_EVENTS,
+    remove_unallocated: bool = False,
+    excluding_event: Event = arg_not_passed,
+) -> DictOfEventAllocations:
+    list_of_events = get_list_of_last_N_events(
+        object_store=object_store, N_events=N_events, excluding_event=excluding_event
+    )
+    raw_dict = dict(
+        [
+            (
+                cadet,
+                get_dict_of_event_allocations_for_last_N_events_for_single_cadet_given_list_of_events(
+                    object_store=object_store,
+                    cadet=cadet,
+                    list_of_events=list_of_events,
+                    remove_unallocated=remove_unallocated,
+                ),
+            )
+            for cadet in list_of_cadets
+        ]
+    )
 
-    ) -> DictOfEventAllocations:
-        list_of_events = get_list_of_last_N_events(object_store=object_store, N_events=N_events, excluding_event=excluding_event)
-        raw_dict = dict(
-            [(cadet,
-             get_dict_of_event_allocations_for_last_N_events_for_single_cadet_given_list_of_events(
-                 object_store=object_store,
-                 cadet=cadet,
-                 list_of_events=list_of_events,
-                 remove_unallocated=remove_unallocated
-             )) for cadet in list_of_cadets]
-        )
-
-        return DictOfEventAllocations(raw_dict, list_of_events=list_of_events)
+    return DictOfEventAllocations(raw_dict, list_of_events=list_of_events)
 
 
 def get_dict_of_event_allocations_for_last_N_events_for_single_cadet(
@@ -89,18 +99,24 @@ def get_dict_of_event_allocations_for_last_N_events_for_single_cadet(
     excluding_event: Event = arg_not_passed,
     remove_unallocated: bool = False,
 ) -> Dict[Event, Group]:
-    list_of_events = get_list_of_last_N_events(object_store=object_store, N_events=N_events, excluding_event=excluding_event)
+    list_of_events = get_list_of_last_N_events(
+        object_store=object_store, N_events=N_events, excluding_event=excluding_event
+    )
     dict_of_previous_groups = get_dict_of_event_allocations_for_last_N_events_for_single_cadet_given_list_of_events(
         object_store=object_store,
         cadet=cadet,
         list_of_events=list_of_events,
-        remove_unallocated=remove_unallocated
+        remove_unallocated=remove_unallocated,
     )
 
     return dict_of_previous_groups
 
 
-def get_list_of_last_N_events(object_store: ObjectStore, N_events: int = ALL_EVENTS, excluding_event: Event = arg_not_passed):
+def get_list_of_last_N_events(
+    object_store: ObjectStore,
+    N_events: int = ALL_EVENTS,
+    excluding_event: Event = arg_not_passed,
+):
     unsorted_list_of_events = get_list_of_events(object_store)
     if excluding_event is not arg_not_passed:
         unsorted_list_of_events.remove(excluding_event)

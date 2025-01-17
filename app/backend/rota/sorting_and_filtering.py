@@ -1,18 +1,25 @@
 from dataclasses import dataclass
 
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
+    get_dict_of_all_event_info_for_cadets,
+)
 
-from app.backend.volunteers.list_of_volunteers import  sort_list_of_volunteers
-from app.backend.volunteers.roles_and_teams import reorder_tuple_of_item_and_role_and_group
+from app.backend.volunteers.list_of_volunteers import sort_list_of_volunteers
+from app.backend.volunteers.roles_and_teams import (
+    reorder_tuple_of_item_and_role_and_group,
+)
 
 from app.objects.volunteers import ListOfVolunteers
 
-from app.backend.volunteers.volunteers_at_event import get_dict_of_all_event_data_for_volunteers
+from app.backend.volunteers.volunteers_at_event import (
+    get_dict_of_all_event_data_for_volunteers,
+)
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.backend.registration_data.cadet_and_volunteer_connections_at_event import \
-    get_cadet_location_string_for_volunteer
+from app.backend.registration_data.cadet_and_volunteer_connections_at_event import (
+    get_cadet_location_string_for_volunteer,
+)
 from app.objects.composed.volunteer_roles import no_role_set
 
 from app.objects.day_selectors import Day
@@ -21,9 +28,11 @@ from app.objects.exceptions import arg_not_passed
 from app.objects.utils import print_dict_nicely
 from app.objects.composed.volunteers_with_skills import (
     SkillsDict,
-
 )
-from app.objects.composed.volunteers_with_all_event_data import DictOfAllEventDataForVolunteers, AllEventDataForVolunteer
+from app.objects.composed.volunteers_with_all_event_data import (
+    DictOfAllEventDataForVolunteers,
+    AllEventDataForVolunteer,
+)
 
 
 @dataclass
@@ -41,11 +50,13 @@ def get_sorted_and_filtered_dict_of_volunteers_at_event(
     sorts_and_filters: RotaSortsAndFilters,
 ) -> DictOfAllEventDataForVolunteers:
 
-    dict_of_all_event_data_for_volunteers = get_dict_of_all_event_data_for_volunteers(object_store=object_store, event=event)
+    dict_of_all_event_data_for_volunteers = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
+    )
 
-    filtered_dict_of_all_event_data_for_volunteers= filter_dict_of_volunteers_at_event(
-         sorts_and_filters=sorts_and_filters,
-        dict_of_all_event_data_for_volunteers=dict_of_all_event_data_for_volunteers
+    filtered_dict_of_all_event_data_for_volunteers = filter_dict_of_volunteers_at_event(
+        sorts_and_filters=sorts_and_filters,
+        dict_of_all_event_data_for_volunteers=dict_of_all_event_data_for_volunteers,
     )
     sorted_list_of_volunteers_at_event = sort_dict_of_volunteer_data_at_event(
         object_store=object_store,
@@ -57,20 +68,22 @@ def get_sorted_and_filtered_dict_of_volunteers_at_event(
 
 
 def filter_dict_of_volunteers_at_event(
-        dict_of_all_event_data_for_volunteers: DictOfAllEventDataForVolunteers,
-
-        sorts_and_filters: RotaSortsAndFilters
+    dict_of_all_event_data_for_volunteers: DictOfAllEventDataForVolunteers,
+    sorts_and_filters: RotaSortsAndFilters,
 ) -> DictOfAllEventDataForVolunteers:
 
     skills_filter = sorts_and_filters.skills_filter
     availability_filter_dict = sorts_and_filters.availability_filter
 
-    for volunteer, event_data_for_volunteer in dict_of_all_event_data_for_volunteers.items():
+    for (
+        volunteer,
+        event_data_for_volunteer,
+    ) in dict_of_all_event_data_for_volunteers.items():
         if volunteer_passes_filter(
-                event_data_for_volunteer=event_data_for_volunteer,
-                skills_filter=skills_filter,
-                availability_filter_dict=availability_filter_dict,
-            ):
+            event_data_for_volunteer=event_data_for_volunteer,
+            skills_filter=skills_filter,
+            availability_filter_dict=availability_filter_dict,
+        ):
             continue
         else:
             dict_of_all_event_data_for_volunteers.filter_out_volunteer(volunteer)
@@ -78,10 +91,8 @@ def filter_dict_of_volunteers_at_event(
     return dict_of_all_event_data_for_volunteers
 
 
-
-
 def volunteer_passes_filter(
-        event_data_for_volunteer: AllEventDataForVolunteer,
+    event_data_for_volunteer: AllEventDataForVolunteer,
     skills_filter: SkillsDict,
     availability_filter_dict: dict,
 ) -> bool:
@@ -98,8 +109,8 @@ def volunteer_passes_filter(
 
 
 def filter_volunteer_by_skills(
-        event_data_for_volunteer: AllEventDataForVolunteer,
-        skills_filter: SkillsDict,
+    event_data_for_volunteer: AllEventDataForVolunteer,
+    skills_filter: SkillsDict,
 ) -> bool:
     volunteer_skills = event_data_for_volunteer.volunteer_skills.as_list_of_skills()
     if not any(skills_filter.values()):
@@ -116,8 +127,8 @@ def filter_volunteer_by_skills(
 
 
 def filter_volunteer_by_availability(
-        event_data_for_volunteer: AllEventDataForVolunteer,
-        availability_filter_dict: dict,
+    event_data_for_volunteer: AllEventDataForVolunteer,
+    availability_filter_dict: dict,
 ) -> bool:
     filter_by_day = [
         filter_volunteer_by_availability_on_given_day(
@@ -132,15 +143,19 @@ def filter_volunteer_by_availability(
 
 
 def filter_volunteer_by_availability_on_given_day(
-        event_data_for_volunteer: AllEventDataForVolunteer,
-        day: Day,
+    event_data_for_volunteer: AllEventDataForVolunteer,
+    day: Day,
     availability_filter: str,
 ) -> bool:
     if availability_filter == FILTER_ALL:
         return True  ## no filtering
 
-    role_today = event_data_for_volunteer.roles_and_groups.role_and_group_on_day(day).role
-    available = event_data_for_volunteer.registration_data.availablity.available_on_day(day)
+    role_today = event_data_for_volunteer.roles_and_groups.role_and_group_on_day(
+        day
+    ).role
+    available = event_data_for_volunteer.registration_data.availablity.available_on_day(
+        day
+    )
 
     unallocated = role_today == no_role_set
     allocated = not unallocated
@@ -159,12 +174,12 @@ def sort_dict_of_volunteer_data_at_event(
     object_store: ObjectStore,
     filtered_dict_of_all_event_data_for_volunteers: DictOfAllEventDataForVolunteers,
     sorts_and_filters: RotaSortsAndFilters,
-) ->  DictOfAllEventDataForVolunteers:
+) -> DictOfAllEventDataForVolunteers:
     sort_by_location = sorts_and_filters.sort_by_location
     if sort_by_location:
         return sort_volunteer_data_for_event_by_location_of_connected_cadets(
             object_store=object_store,
-            dict_of_all_event_data_for_volunteers=filtered_dict_of_all_event_data_for_volunteers
+            dict_of_all_event_data_for_volunteers=filtered_dict_of_all_event_data_for_volunteers,
         )
 
     sort_by_volunteer_name = sorts_and_filters.sort_by_volunteer_name
@@ -188,31 +203,52 @@ def sort_dict_of_volunteer_data_at_event(
 def sort_volunteer_data_for_event_by_location_of_connected_cadets(
     object_store: ObjectStore,
     dict_of_all_event_data_for_volunteers: DictOfAllEventDataForVolunteers,
-) ->  DictOfAllEventDataForVolunteers:
-    sorted_list_of_volunteers_at_event =get_sorted_list_of_volunteers_at_event_sorted_by_location_of_connected_cadets(
-        object_store=object_store,
-        dict_of_all_event_data_for_volunteers=dict_of_all_event_data_for_volunteers
+) -> DictOfAllEventDataForVolunteers:
+    sorted_list_of_volunteers_at_event = (
+        get_sorted_list_of_volunteers_at_event_sorted_by_location_of_connected_cadets(
+            object_store=object_store,
+            dict_of_all_event_data_for_volunteers=dict_of_all_event_data_for_volunteers,
+        )
     )
-    sorted_list_of_volunteer_event_data = dict_of_all_event_data_for_volunteers.sort_by_list_of_volunteers(sorted_list_of_volunteers_at_event)
+    sorted_list_of_volunteer_event_data = (
+        dict_of_all_event_data_for_volunteers.sort_by_list_of_volunteers(
+            sorted_list_of_volunteers_at_event
+        )
+    )
 
     return sorted_list_of_volunteer_event_data
 
 
-def get_sorted_list_of_volunteers_at_event_sorted_by_location_of_connected_cadets(    object_store: ObjectStore,
+def get_sorted_list_of_volunteers_at_event_sorted_by_location_of_connected_cadets(
+    object_store: ObjectStore,
     dict_of_all_event_data_for_volunteers: DictOfAllEventDataForVolunteers,
 ) -> ListOfVolunteers:
 
-    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=dict_of_all_event_data_for_volunteers.event)
+    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(
+        object_store=object_store, event=dict_of_all_event_data_for_volunteers.event
+    )
     list_of_locations = [
-        get_cadet_location_string_for_volunteer(volunteer_data_at_event=dict_of_all_event_data_for_volunteers.get(volunteer),
-                                                cadets_at_event_data=cadets_at_event_data)
-                for volunteer in dict_of_all_event_data_for_volunteers.list_of_volunteers()]
+        get_cadet_location_string_for_volunteer(
+            volunteer_data_at_event=dict_of_all_event_data_for_volunteers.get(
+                volunteer
+            ),
+            cadets_at_event_data=cadets_at_event_data,
+        )
+        for volunteer in dict_of_all_event_data_for_volunteers.list_of_volunteers()
+    ]
 
-    list_of_volunteers_at_event = dict_of_all_event_data_for_volunteers.list_of_volunteers()
+    list_of_volunteers_at_event = (
+        dict_of_all_event_data_for_volunteers.list_of_volunteers()
+    )
     locations_and_volunteers = zip(list_of_locations, list_of_volunteers_at_event)
 
-    volunteers_and_location_sorted_by_location = sorted(locations_and_volunteers, key=lambda tup: tup[0])
-    sorted_list_of_volunteers_at_event = [location_and_volunteer[1] for location_and_volunteer in volunteers_and_location_sorted_by_location]
+    volunteers_and_location_sorted_by_location = sorted(
+        locations_and_volunteers, key=lambda tup: tup[0]
+    )
+    sorted_list_of_volunteers_at_event = [
+        location_and_volunteer[1]
+        for location_and_volunteer in volunteers_and_location_sorted_by_location
+    ]
 
     return ListOfVolunteers(sorted_list_of_volunteers_at_event)
 
@@ -220,48 +256,60 @@ def get_sorted_list_of_volunteers_at_event_sorted_by_location_of_connected_cadet
 def sort_volunteer_data_for_event_by_name_sort_order(
     dict_of_all_event_data_for_volunteers: DictOfAllEventDataForVolunteers,
     sort_order: str,
-) ->  DictOfAllEventDataForVolunteers:
-    list_of_volunteers_at_event = dict_of_all_event_data_for_volunteers.list_of_volunteers()
-    sorted_list_of_volunteers = sort_list_of_volunteers(list_of_volunteers=list_of_volunteers_at_event, sort_by=sort_order)
-    sorted_dict_of_all_event_data_for_volunteers = dict_of_all_event_data_for_volunteers.sort_by_list_of_volunteers(sorted_list_of_volunteers)
+) -> DictOfAllEventDataForVolunteers:
+    list_of_volunteers_at_event = (
+        dict_of_all_event_data_for_volunteers.list_of_volunteers()
+    )
+    sorted_list_of_volunteers = sort_list_of_volunteers(
+        list_of_volunteers=list_of_volunteers_at_event, sort_by=sort_order
+    )
+    sorted_dict_of_all_event_data_for_volunteers = (
+        dict_of_all_event_data_for_volunteers.sort_by_list_of_volunteers(
+            sorted_list_of_volunteers
+        )
+    )
 
     return sorted_dict_of_all_event_data_for_volunteers
-
 
 
 def sort_volunteer_data_for_event_by_day_sort_order(
     object_store: ObjectStore,
     dict_of_all_event_data_for_volunteers: DictOfAllEventDataForVolunteers,
     sort_by_day: Day,
-) ->  DictOfAllEventDataForVolunteers:
-    sorted_list_of_volunteers = get_sorted_list_of_volunteers_at_event_sorted_by_role_and_group_on_day(
-        object_store=object_store,
-        dict_of_all_event_data_for_volunteers=dict_of_all_event_data_for_volunteers,
-        sort_by_day=sort_by_day
+) -> DictOfAllEventDataForVolunteers:
+    sorted_list_of_volunteers = (
+        get_sorted_list_of_volunteers_at_event_sorted_by_role_and_group_on_day(
+            object_store=object_store,
+            dict_of_all_event_data_for_volunteers=dict_of_all_event_data_for_volunteers,
+            sort_by_day=sort_by_day,
+        )
     )
 
-    return dict_of_all_event_data_for_volunteers.sort_by_list_of_volunteers(sorted_list_of_volunteers)
+    return dict_of_all_event_data_for_volunteers.sort_by_list_of_volunteers(
+        sorted_list_of_volunteers
+    )
 
-def get_sorted_list_of_volunteers_at_event_sorted_by_role_and_group_on_day( object_store: ObjectStore,
+
+def get_sorted_list_of_volunteers_at_event_sorted_by_role_and_group_on_day(
+    object_store: ObjectStore,
     dict_of_all_event_data_for_volunteers: DictOfAllEventDataForVolunteers,
-    sort_by_day: Day,) -> ListOfVolunteers:
+    sort_by_day: Day,
+) -> ListOfVolunteers:
 
     tuple_of_volunteers_at_event_and_roles = [
         (
             volunteer,
-            volunteer_data.roles_and_groups.role_and_group_on_day(day=sort_by_day)
+            volunteer_data.roles_and_groups.role_and_group_on_day(day=sort_by_day),
         )
         for volunteer, volunteer_data in dict_of_all_event_data_for_volunteers.items()
     ]
     sorted_tuples = reorder_tuple_of_item_and_role_and_group(
-        object_store=object_store,
-        list_of_tuples=tuple_of_volunteers_at_event_and_roles
+        object_store=object_store, list_of_tuples=tuple_of_volunteers_at_event_and_roles
     )
 
     sorted_list_of_volunteers = ListOfVolunteers([tuple[0] for tuple in sorted_tuples])
 
     return sorted_list_of_volunteers
-
 
 
 def get_explanation_of_sorts_and_filters(sorts_and_filters: RotaSortsAndFilters):

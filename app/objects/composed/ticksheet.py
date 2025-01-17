@@ -82,13 +82,13 @@ class QualificationsAndTicksForCadet(Dict[Qualification, TicksForQualification])
             already_qualified = qualifications_for_cadet.is_cadet_qualified(
                 qualification
             )
-            raw_dict[
-                qualification
-            ] = TicksForQualification.from_dict_of_ticks_and_qualifications(
-                tick_substages_as_dict=tick_substages_as_dict,
-                dict_of_ticks_with_items=dict_of_ticks_with_items,
-                already_qualified=already_qualified,
-                qualification=qualification,
+            raw_dict[qualification] = (
+                TicksForQualification.from_dict_of_ticks_and_qualifications(
+                    tick_substages_as_dict=tick_substages_as_dict,
+                    dict_of_ticks_with_items=dict_of_ticks_with_items,
+                    already_qualified=already_qualified,
+                    qualification=qualification,
+                )
             )
 
         return cls(raw_dict)

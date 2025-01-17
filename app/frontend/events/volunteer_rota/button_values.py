@@ -64,7 +64,9 @@ def from_known_button_to_volunteer_and_day(
     interface: abstractInterface, copy_button_text: str
 ) -> Tuple[Volunteer, Day]:
     id, day = from_known_button_to_volunteer_id_and_day(copy_button_text)
-    volunteer = get_volunteer_from_id(object_store=interface.object_store, volunteer_id=id)
+    volunteer = get_volunteer_from_id(
+        object_store=interface.object_store, volunteer_id=id
+    )
 
     return volunteer, day
 
@@ -109,7 +111,7 @@ def from_day_button_value_to_day(day_button_value: str) -> Day:
 
 
 def name_of_volunteer_button(volunteer: Volunteer):
-    return "VOLUNTEER_"+volunteer.name
+    return "VOLUNTEER_" + volunteer.name
 
 
 def get_list_of_make_available_button_values(
@@ -160,28 +162,26 @@ def get_list_of_make_unavailable_buttons(interface: abstractInterface, event: Ev
 
 
 def copy_overwrite_button_value_for_volunteer_in_role_on_day(
-        volunteer: Volunteer,
-        day: Day,
-
+    volunteer: Volunteer,
+    day: Day,
 ) -> str:
     return copy_overwrite_button_value_for_volunteer_id_and_day(
-        volunteer_id=volunteer.id,
-        day=day
+        volunteer_id=volunteer.id, day=day
     )
 
 
 def copy_fill_button_value_for_volunteer_in_role_on_day(
-        volunteer: Volunteer,
-        day: Day,
+    volunteer: Volunteer,
+    day: Day,
 ) -> str:
     return copy_fill_button_value_for_volunteer_id_and_day(
-        volunteer_id=volunteer.id,
-        day=day
+        volunteer_id=volunteer.id, day=day
     )
 
 
 def unavailable_button_value_for_volunteer_in_role_on_day(
-    volunteer: Volunteer, day: Day,
+    volunteer: Volunteer,
+    day: Day,
 ) -> str:
     return unavailable_button_value_for_volunteer_id_and_day(
         volunteer_id=volunteer.id,
@@ -190,7 +190,8 @@ def unavailable_button_value_for_volunteer_in_role_on_day(
 
 
 def remove_role_button_value_for_volunteer_in_role_on_day(
-    volunteer: Volunteer, day: Day,
+    volunteer: Volunteer,
+    day: Day,
 ) -> str:
     return remove_role_button_value_for_volunteer_id_and_day(
         volunteer_id=volunteer.id,
@@ -226,8 +227,12 @@ def from_previous_role_copy_button_to_volunteer(
     interface: abstractInterface,
     previous_role_copy_button_name: str,
 ) -> Volunteer:
-    volunteer_id = from_previous_role_copy_button_to_volunteer_id(previous_role_copy_button_name)
-    volunteer = get_volunteer_from_id(volunteer_id=volunteer_id, object_store=interface.object_store)
+    volunteer_id = from_previous_role_copy_button_to_volunteer_id(
+        previous_role_copy_button_name
+    )
+    volunteer = get_volunteer_from_id(
+        volunteer_id=volunteer_id, object_store=interface.object_store
+    )
 
     return volunteer
 
@@ -244,19 +249,13 @@ def from_previous_role_copy_button_to_volunteer_id(
 def get_dict_of_volunteer_name_buttons_and_volunteer_ids(
     interface: abstractInterface, event: Event
 ) -> Dict[str, str]:
-    list_of_volunteers_at_event = \
-        load_list_of_volunteers_at_event( event=event,
-                                          object_store=interface.object_store,
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(
+        event=event,
+        object_store=interface.object_store,
     )
 
     return dict(
-
-
-                [
-                    (volunteer.name, volunteer.id)
-                    for volunteer in list_of_volunteers_at_event
-        ]
-
+        [(volunteer.name, volunteer.id) for volunteer in list_of_volunteers_at_event]
     )
 
 

@@ -2,37 +2,33 @@ from typing import Dict
 
 import pandas as pd
 
-from app.backend.reporting import (
-    ReportingOptions,
-)
-from app.backend.reporting import (
-    get_order_of_indices_even_sizing_with_parameters,
-)
+from app.backend.reporting.arrangement.arrange_options import ArrangementOptionsAndGroupOrder
 
-from app.backend.reporting import (
-    ArrangementOptionsAndGroupOrder,
+from app.backend.reporting.arrangement.get_and_update_arrangement_options import (
+    get_stored_arrangement_and_group_order,
 )
+from app.backend.reporting.options_and_parameters.report_options import ReportingOptions
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import \
+    SpecificParametersForTypeOfReport
+from app.backend.reporting.process_stages.create_list_of_columns_from_groups import \
+    get_order_of_indices_even_sizing_with_parameters
+from app.data_access.store.object_store import ObjectStore
 
-from app.backend.reporting.arrangement.arrange_options import get_stored_arrangement_and_group_order
-from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.backend.reporting.arrangement.group_order import (
     GroupOrder,
     get_group_order_excluding_missing_groups,
     get_groups_in_dict_missing_from_group_order,
     get_groups_in_group_order_missing_from_dict,
 )
-from app.backend.reporting import (
-    SpecificParametersForTypeOfReport,
-)
 
 
 def get_arrangement_options_and_group_order_from_stored_or_defaults(
-    interface: abstractInterface,
+    object_store: ObjectStore,
     specific_parameters_for_type_of_report: SpecificParametersForTypeOfReport,
     dict_of_df: Dict[str, pd.DataFrame],
 ) -> ArrangementOptionsAndGroupOrder:
     arrangement_options_and_group_order = get_stored_arrangement_and_group_order(
-        interface=interface,
+        object_store=object_store,
         report_type=specific_parameters_for_type_of_report.report_type,
     )
     if arrangement_options_and_group_order.is_empty():

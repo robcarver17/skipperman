@@ -4,6 +4,7 @@ import sys
 import platform
 from setuptools import setup, find_packages
 
+
 def read(fname):
     """Utility function to read the README file."""
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
@@ -38,8 +39,8 @@ setup(
     version="0.0.1",
     author="Robert Carver",
     description=("BSC cadet management system"),
-#      license="GNU GPL v3",
-#    keywords="sailing wildapricot",
+    #      license="GNU GPL v3",
+    #    keywords="sailing wildapricot",
     url="https://github.com/robcarver17/skipperman",
     packages=find_packages(),
     package_data=package_data,

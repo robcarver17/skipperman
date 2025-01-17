@@ -9,9 +9,13 @@ from app.frontend.forms.form_utils import (
     get_availability_checkbox,
 )
 
-from app.backend.volunteers.volunteers_at_event import delete_volunteer_at_event, update_volunteer_availability_at_event
-from app.backend.registration_data.volunteer_registration_data import \
-    get_dict_of_registration_data_for_volunteers_at_event
+from app.backend.volunteers.volunteers_at_event import (
+    delete_volunteer_at_event,
+    update_volunteer_availability_at_event,
+)
+from app.backend.registration_data.volunteer_registration_data import (
+    get_dict_of_registration_data_for_volunteers_at_event,
+)
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.shared.events_state import get_event_from_state
@@ -33,9 +37,7 @@ from app.objects.events import Event
 def display_form_confirm_volunteer_details_from_rota(interface: abstractInterface):
     event = get_event_from_state(interface)
     volunteer = get_volunteer_from_state(interface=interface)
-    past_roles = get_text_of_last_roles(
-        interface=interface, volunteer=volunteer
-    )
+    past_roles = get_text_of_last_roles(interface=interface, volunteer=volunteer)
     available_checkbox = Line(
         [
             get_availability_checkbox_for_volunteer_at_event(
@@ -61,9 +63,7 @@ def display_form_confirm_volunteer_details_from_rota(interface: abstractInterfac
     )
 
 
-def get_text_of_last_roles(
-    interface: abstractInterface, volunteer: Volunteer
-) -> Line:
+def get_text_of_last_roles(interface: abstractInterface, volunteer: Volunteer) -> Line:
     all_roles_as_dict = (
         get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(
             object_store=interface.object_store, volunteer=volunteer
@@ -82,8 +82,9 @@ def get_text_of_last_roles(
 def get_availability_checkbox_for_volunteer_at_event(
     interface: abstractInterface, event: Event, volunteer: Volunteer
 ):
-    registration_data = get_dict_of_registration_data_for_volunteers_at_event(object_store=interface.object_store,
-                                                                              event=event)
+    registration_data = get_dict_of_registration_data_for_volunteers_at_event(
+        object_store=interface.object_store, event=event
+    )
     data_for_volunteer = registration_data.get(volunteer)
     availability = data_for_volunteer.availablity
     return get_availability_checkbox(
@@ -116,7 +117,6 @@ def post_form_confirm_volunteer_details_from_rota(interface: abstractInterface):
         raise button_error_and_back_to_initial_state_form(interface)
 
 
-
 def go_back_to_parent_form(interface: abstractInterface) -> NewForm:
     return interface.get_new_display_form_for_parent_of_function(
         display_form_confirm_volunteer_details_from_rota
@@ -127,7 +127,7 @@ def delete_volunteer_from_event(interface: abstractInterface):
     volunteer = get_volunteer_from_state(interface)
     event = get_event_from_state(interface)
     delete_volunteer_at_event(
-        object_store = interface.object_store, event=event, volunteer=volunteer
+        object_store=interface.object_store, event=event, volunteer=volunteer
     )
 
 
@@ -147,7 +147,7 @@ def update_volunteer_at_event_from_rota_with_form_contents_and_return_true_if_ok
         return False
 
     update_volunteer_availability_at_event(
-        object_store = interface.object_store,
+        object_store=interface.object_store,
         event=event,
         volunteer=volunteer,
         availability=availability,

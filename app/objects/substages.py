@@ -1,7 +1,12 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.objects.exceptions import arg_not_passed, missing_data, MissingData, MultipleMatches
+from app.objects.exceptions import (
+    arg_not_passed,
+    missing_data,
+    MissingData,
+    MultipleMatches,
+)
 from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
 

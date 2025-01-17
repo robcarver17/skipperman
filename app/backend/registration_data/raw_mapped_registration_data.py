@@ -4,10 +4,17 @@ from typing import List
 import pandas as pd
 from app.objects.membership_status import none_member
 
-from app.data_access.configuration.field_list import CADET_FIRST_NAME, CADET_SURNAME, CADET_DATE_OF_BIRTH
+from app.data_access.configuration.field_list import (
+    CADET_FIRST_NAME,
+    CADET_SURNAME,
+    CADET_DATE_OF_BIRTH,
+)
 from app.objects.cadets import Cadet, DEFAULT_DATE_OF_BIRTH
 
-from app.objects.registration_data import RegistrationDataForEvent, RowInRegistrationData
+from app.objects.registration_data import (
+    RegistrationDataForEvent,
+    RowInRegistrationData,
+)
 
 from app.data_access.store.object_store import ObjectStore
 
@@ -16,7 +23,6 @@ from app.objects.events import Event
 from app.data_access.store.object_definitions import (
     object_definition_for_mapped_registration_data,
 )
-
 
 
 def get_cadet_data_from_row_of_registration_data_no_checks(
@@ -34,9 +40,8 @@ def get_cadet_data_from_row_of_registration_data_no_checks(
         first_name=first_name,
         surname=second_name,
         date_of_birth=dob_as_date,
-        membership_status=none_member
+        membership_status=none_member,
     )
-
 
 
 def _translate_df_timestamp_to_datetime(df_timestamp) -> datetime.date:
@@ -58,16 +63,20 @@ def _translate_df_timestamp_to_datetime(df_timestamp) -> datetime.date:
 def get_row_in_raw_registration_data_given_id(
     object_store: ObjectStore, event: Event, row_id: str
 ) -> RowInRegistrationData:
-    registration_data = get_raw_mapped_registration_data(object_store=object_store, event=event)
+    registration_data = get_raw_mapped_registration_data(
+        object_store=object_store, event=event
+    )
 
     return registration_data.get_row_with_rowid(row_id=row_id)
 
 
-
-def get_list_of_row_ids_in_raw_registration_data_for_event(object_store: ObjectStore, event: Event) -> List[str]:
-    registration_data = get_raw_mapped_registration_data(object_store=object_store, event=event)
+def get_list_of_row_ids_in_raw_registration_data_for_event(
+    object_store: ObjectStore, event: Event
+) -> List[str]:
+    registration_data = get_raw_mapped_registration_data(
+        object_store=object_store, event=event
+    )
     return registration_data.list_of_row_ids()
-
 
 
 def does_event_have_imported_registration_data(
@@ -85,10 +94,12 @@ def get_raw_mapped_registration_data(
         event_id=event.id,
     )
 
+
 def update_raw_mapped_registration_data(
-    object_store: ObjectStore, event: Event, registration_data: RegistrationDataForEvent):
+    object_store: ObjectStore, event: Event, registration_data: RegistrationDataForEvent
+):
     object_store.update(
         object_definition=object_definition_for_mapped_registration_data,
         event_id=event.id,
-        new_object=registration_data
+        new_object=registration_data,
     )

@@ -7,10 +7,15 @@ from app.frontend.events.volunteer_rota.parse_volunteer_table import (
     action_if_volunteer_skills_button_pressed,
     update_if_make_available_button_pressed,
     update_if_make_unavailable_button_pressed,
-    update_if_remove_role_button_pressed, update_filters, save_all_information_in_rota_page,
+    update_if_remove_role_button_pressed,
+    update_filters,
+    save_all_information_in_rota_page,
 )
 from app.frontend.events.volunteer_rota.copying import update_if_copy_button_pressed
-from app.frontend.events.volunteer_rota.volunteer_targets import save_targets_button, save_volunteer_targets
+from app.frontend.events.volunteer_rota.volunteer_targets import (
+    save_targets_button,
+    save_volunteer_targets,
+)
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -104,7 +109,6 @@ def post_form_view_for_volunteer_rota(
 
     if cancel_menu_button.pressed(last_button_pressed):
         return previous_form(interface)
-
 
     ### BUTTONS: HAS TO BE ONE BIG IF
     ## This may reverse what we did before with filter updates, that's fine

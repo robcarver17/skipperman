@@ -2,16 +2,23 @@ from dataclasses import dataclass
 from typing import Callable
 
 from app.data_access.store.object_store import ObjectStore
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
+from app.objects.abstract_objects.abstract_lines import (
+    Line,
+    ListOfLines,
+    _______________,
+)
 
 from app.objects.exceptions import (
     missing_data,
     NoFileUploaded,
-    arg_not_passed, FileError, )
+    arg_not_passed,
+    FileError,
+)
 from app.objects.abstract_objects.abstract_form import (
     YES,
     NO,
-    NewForm, Form,
+    NewForm,
+    Form,
 )
 from app.objects.abstract_objects.abstract_buttons import FINISHED_BUTTON_LABEL, Button
 from app.objects.abstract_objects.form_function_mapping import (
@@ -33,15 +40,12 @@ class abstractInterface:
     display_and_post_form_function_maps: DisplayAndPostFormFunctionMaps = arg_not_passed
     action_name: str = ""
 
-
-    ## SHOULD BE DONE ON NEW PAGE DISPLAY?? AND A MESS!
     def flush_cache_to_store(self):
         read_only = self.read_only
         if self.read_only:
             self.log_error("Read only mode - not saving changes")
 
         self.object_store.flush_store(read_only)
-
 
     def log_error(self, error_message: str):
         raise NotImplemented

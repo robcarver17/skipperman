@@ -6,19 +6,22 @@ from app.frontend.forms.form_utils import (
     get_availablity_from_form,
     get_status_from_form,
 )
-from app.backend.registration_data.update_cadets_at_event import \
-    replace_existing_cadet_at_event_where_original_cadet_was_inactive
-from app.backend.cadets_at_event.update_status_and_availability_of_cadets_at_event import \
-    update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_messages, \
-    update_availability_of_existing_cadet_at_event_and_return_messages, \
-    update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting
+from app.backend.registration_data.update_cadets_at_event import (
+    replace_existing_cadet_at_event_where_original_cadet_was_inactive,
+)
+from app.backend.cadets_at_event.update_status_and_availability_of_cadets_at_event import (
+    update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_messages,
+    update_availability_of_existing_cadet_at_event_and_return_messages,
+    update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting,
+)
 from app.backend.registration_data.cadet_registration_data import get_cadet_at_event
-from app.backend.registration_data.identified_cadets_at_event import \
-    get_row_in_registration_data_for_cadet_both_cancelled_and_active
+from app.backend.registration_data.identified_cadets_at_event import (
+    get_row_in_registration_data_for_cadet_both_cancelled_and_active,
+)
 from app.frontend.events.constants import ROW_STATUS, ATTENDANCE
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.cadets_at_event.track_cadet_id_in_state_when_importing import (
-    get_current_cadet_at_event
+    get_current_cadet_at_event,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadet_with_id_at_event import (
@@ -27,9 +30,15 @@ from app.objects.cadet_with_id_at_event import (
 )
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
-from app.objects.registration_status import RegistrationStatus, new_registration_replacing_deleted_or_cancelled, \
-    existing_registration_now_deleted_or_cancelled, status_unchanged, \
-    status_still_active_but_has_changed, RegStatusChange, error
+from app.objects.registration_status import (
+    RegistrationStatus,
+    new_registration_replacing_deleted_or_cancelled,
+    existing_registration_now_deleted_or_cancelled,
+    status_unchanged,
+    status_still_active_but_has_changed,
+    RegStatusChange,
+    error,
+)
 
 
 def update_cadets_at_event_with_form_data(interface: abstractInterface):
@@ -38,7 +47,12 @@ def update_cadets_at_event_with_form_data(interface: abstractInterface):
     new_cadet_at_event = get_new_cadet_at_event_from_mapped_event_and_optionally_form(
         interface, event=event, cadet=cadet, use_form_data=True
     )
-    update_cadets_at_event(interface=interface, event=event,cadet=cadet, new_cadet_at_event=new_cadet_at_event)
+    update_cadets_at_event(
+        interface=interface,
+        event=event,
+        cadet=cadet,
+        new_cadet_at_event=new_cadet_at_event,
+    )
 
 
 def update_cadets_at_event_with_new_data(interface: abstractInterface):
@@ -47,27 +61,29 @@ def update_cadets_at_event_with_new_data(interface: abstractInterface):
     new_cadet_at_event = get_new_cadet_at_event_from_mapped_event_and_optionally_form(
         interface, event=event, cadet=cadet, use_form_data=False
     )
-    update_cadets_at_event(interface=interface, event=event,cadet=cadet, new_cadet_at_event=new_cadet_at_event)
-
-
+    update_cadets_at_event(
+        interface=interface,
+        event=event,
+        cadet=cadet,
+        new_cadet_at_event=new_cadet_at_event,
+    )
 
 
 def get_new_cadet_at_event_from_mapped_event_and_optionally_form(
-    interface: abstractInterface, event: Event, cadet: Cadet, use_form_data: bool = False
+    interface: abstractInterface,
+    event: Event,
+    cadet: Cadet,
+    use_form_data: bool = False,
 ) -> CadetWithIdAtEvent:
-    row_in_mapped_wa_event = (
-        get_row_in_registration_data_for_cadet_both_cancelled_and_active(
-            object_store=interface.object_store,
-            cadet=cadet,
-            event=event,
-            raise_error_on_duplicate=True, ## if a duplicate cadet wouldn't get here as we ignore them in the main loop
-        )
+    row_in_mapped_wa_event = get_row_in_registration_data_for_cadet_both_cancelled_and_active(
+        object_store=interface.object_store,
+        cadet=cadet,
+        event=event,
+        raise_error_on_duplicate=True,  ## if a duplicate cadet wouldn't get here as we ignore them in the main loop
     )
     new_cadet_at_event_from_mapped_event_data = (
         get_cadet_at_event_from_row_in_event_raw_registration_data(
-            row_in_mapped_wa_event=row_in_mapped_wa_event,
-            event=event,
-            cadet=cadet
+            row_in_mapped_wa_event=row_in_mapped_wa_event, event=event, cadet=cadet
         )
     )
 
@@ -113,7 +129,10 @@ def status_and_attendance_from_form_entries(
 
 
 def update_cadets_at_event(
-    interface: abstractInterface, event: Event, cadet: Cadet, new_cadet_at_event: CadetWithIdAtEvent
+    interface: abstractInterface,
+    event: Event,
+    cadet: Cadet,
+    new_cadet_at_event: CadetWithIdAtEvent,
 ):
     existing_cadet_at_event = get_existing_cadet_at_event_from_state(interface)
     update_comparing_new_and_existing_cadet_at_event(
@@ -121,9 +140,8 @@ def update_cadets_at_event(
         event=event,
         cadet=cadet,
         existing_cadet_at_event=existing_cadet_at_event,
-        new_cadet_at_event=new_cadet_at_event
+        new_cadet_at_event=new_cadet_at_event,
     )
-
 
 
 def get_existing_cadet_at_event_from_state(
@@ -139,18 +157,20 @@ def get_existing_cadet_at_event_from_state(
     return existing_cadet_at_event
 
 
-def update_comparing_new_and_existing_cadet_at_event(interface: abstractInterface,
-                                                     event: Event,
-                                                     cadet: Cadet,
-                                                     existing_cadet_at_event: CadetWithIdAtEvent,
-                                                     new_cadet_at_event: CadetWithIdAtEvent):
+def update_comparing_new_and_existing_cadet_at_event(
+    interface: abstractInterface,
+    event: Event,
+    cadet: Cadet,
+    existing_cadet_at_event: CadetWithIdAtEvent,
+    new_cadet_at_event: CadetWithIdAtEvent,
+):
 
-    reg_status_change  = interpret_status_change(
+    reg_status_change = interpret_status_change(
         existing_cadet_at_event=existing_cadet_at_event,
-        new_cadet_at_event=new_cadet_at_event
+        new_cadet_at_event=new_cadet_at_event,
     )
 
-    if reg_status_change== status_unchanged:
+    if reg_status_change == status_unchanged:
         ## Must be an availability change
         update_cadet_at_event_when_status_unchanged_and_availability_has_probably_changed(
             interface=interface,
@@ -159,13 +179,15 @@ def update_comparing_new_and_existing_cadet_at_event(interface: abstractInterfac
             new_cadet_at_event=new_cadet_at_event,
             existing_cadet_at_event=existing_cadet_at_event,
         )
-    if reg_status_change== new_registration_replacing_deleted_or_cancelled:
+    if reg_status_change == new_registration_replacing_deleted_or_cancelled:
         ## Replace entire original cadet, new registration
         replace_existing_cadet_at_event_where_original_cadet_was_inactive(
-            object_store=interface.object_store, event=event, new_cadet_at_event=new_cadet_at_event
+            object_store=interface.object_store,
+            event=event,
+            new_cadet_at_event=new_cadet_at_event,
         )
 
-    elif reg_status_change== existing_registration_now_deleted_or_cancelled:
+    elif reg_status_change == existing_registration_now_deleted_or_cancelled:
         ## availability is a moot point
         new_status = new_cadet_at_event.status
         update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_messages(
@@ -175,7 +197,7 @@ def update_comparing_new_and_existing_cadet_at_event(interface: abstractInterfac
             cadet=cadet,
         )
 
-    elif reg_status_change== status_still_active_but_has_changed:
+    elif reg_status_change == status_still_active_but_has_changed:
         new_status = new_cadet_at_event.status
         update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting(
             object_store=interface.object_store,
@@ -187,8 +209,12 @@ def update_comparing_new_and_existing_cadet_at_event(interface: abstractInterfac
     else:
         interface.log_error(
             "For existing cadet %s status change from %s to %s don't know how to handle"
-                        % (str(new_cadet_at_event), existing_cadet_at_event.status.name, new_cadet_at_event.status.name))
-
+            % (
+                str(new_cadet_at_event),
+                existing_cadet_at_event.status.name,
+                new_cadet_at_event.status.name,
+            )
+        )
 
     interface.flush_cache_to_store()
 
@@ -221,19 +247,22 @@ def update_cadet_at_event_when_status_unchanged_and_availability_has_probably_ch
         )
         return
 
-    list_of_messages = update_availability_of_existing_cadet_at_event_and_return_messages(
-        object_store=interface.object_store,
-        event=event,
-        new_availabilty=new_availability,
-        cadet=cadet,
+    list_of_messages = (
+        update_availability_of_existing_cadet_at_event_and_return_messages(
+            object_store=interface.object_store,
+            event=event,
+            new_availabilty=new_availability,
+            cadet=cadet,
+        )
     )
 
     for message in list_of_messages:
         interface.log_error(message)
 
 
-def interpret_status_change(existing_cadet_at_event: CadetWithIdAtEvent,
-                                                     new_cadet_at_event: CadetWithIdAtEvent) -> RegStatusChange:
+def interpret_status_change(
+    existing_cadet_at_event: CadetWithIdAtEvent, new_cadet_at_event: CadetWithIdAtEvent
+) -> RegStatusChange:
     original_status = existing_cadet_at_event.status
     new_status = new_cadet_at_event.status
 

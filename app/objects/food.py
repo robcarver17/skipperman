@@ -42,6 +42,7 @@ class FoodRequirements(GenericSkipperManObject):
 
         return ", ".join(description_list)
 
+
 def guess_food_requirements_from_food_field(food_field_str: str) -> FoodRequirements:
     food_field_str_lower = food_field_str.lower()
     vegetarian = (
@@ -107,11 +108,7 @@ class ListOfCadetsWithFoodRequirementsAtEvent(GenericListOfObjects):
         self, food_requirements: FoodRequirements
     ) -> "ListOfCadetsWithFoodRequirementsAtEvent":
         return ListOfCadetsWithFoodRequirementsAtEvent(
-            [
-                object
-                for object in self
-                if object.food_requirements == food_requirements
-            ]
+            [object for object in self if object.food_requirements == food_requirements]
         )
 
     def change_food_requirements_for_cadet(
@@ -186,11 +183,7 @@ class ListOfVolunteersWithFoodRequirementsAtEvent(GenericListOfObjects):
         self, food_requirements: FoodRequirements
     ) -> "ListOfVolunteersWithFoodRequirementsAtEvent":
         return ListOfVolunteersWithFoodRequirementsAtEvent(
-            [
-                object
-                for object in self
-                if object.food_requirements == food_requirements
-            ]
+            [object for object in self if object.food_requirements == food_requirements]
         )
 
     def change_food_requirements_for_volunteer(

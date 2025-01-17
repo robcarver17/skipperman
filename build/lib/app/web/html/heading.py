@@ -1,13 +1,8 @@
-from app.data_access.init_data import data_api
-
-from app.web.flask.flask_interface import flaskInterface
-
 from app.web.flask.flash import get_html_of_flashed_messages
 from app.web.flask.security import authenticated_user
 from app.web.html.html_components import (
     Html,
     html_joined_list_as_lines,
-    horizontal_line,
 )
 from app.web.html.login_and_out import (
     get_login_link_html_code,

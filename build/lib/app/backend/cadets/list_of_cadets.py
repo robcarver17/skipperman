@@ -1,6 +1,11 @@
 from typing import List
 
-from app.objects.cadets import ListOfCadets, Cadet, SKIP_TEST_CADET_ID
+from app.objects.cadets import (
+    ListOfCadets,
+    Cadet,
+    sort_a_list_of_cadets,
+    SORT_BY_SURNAME,
+)
 from app.objects.exceptions import arg_not_passed
 
 
@@ -47,8 +52,6 @@ def get_cadet_from_id(object_store: ObjectStore, cadet_id: str) -> Cadet:
     list_of_cadets = get_list_of_cadets(object_store)
     return list_of_cadets.cadet_with_id(cadet_id)
 
-from app.objects.cadets import Cadet
-
 
 def get_list_of_cadets_sorted_by_surname(object_store: ObjectStore) -> ListOfCadets:
     return get_sorted_list_of_cadets(object_store=object_store, sort_by=SORT_BY_SURNAME)
@@ -60,28 +63,6 @@ def get_sorted_list_of_cadets(
     master_list = get_list_of_cadets(object_store)
 
     return sort_a_list_of_cadets(master_list=master_list, sort_by=sort_by)
-
-def sort_a_list_of_cadets(
-    master_list: ListOfCadets, sort_by: str = arg_not_passed
-) -> ListOfCadets:
-    if sort_by is arg_not_passed:
-        return master_list
-    if sort_by == SORT_BY_SURNAME:
-        return master_list.sort_by_surname()
-    elif sort_by == SORT_BY_FIRSTNAME:
-        return master_list.sort_by_firstname()
-    elif sort_by == SORT_BY_DOB_ASC:
-        return master_list.sort_by_dob_asc()
-    elif sort_by == SORT_BY_DOB_DSC:
-        return master_list.sort_by_dob_desc()
-    else:
-        return master_list
-
-
-SORT_BY_SURNAME = "Sort by surname"
-SORT_BY_FIRSTNAME = "Sort by first name"
-SORT_BY_DOB_ASC = "Sort by date of birth, ascending"
-SORT_BY_DOB_DSC = "Sort by date of birth, descending"
 
 
 def get_list_of_cadets_as_str(list_of_cadets: ListOfCadets) -> List[str]:

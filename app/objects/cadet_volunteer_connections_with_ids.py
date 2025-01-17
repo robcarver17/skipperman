@@ -15,7 +15,6 @@ class ListOfCadetVolunteerAssociationsWithIds(GenericListOfObjects):
     def _object_class_contained(self):
         return CadetVolunteerAssociationWithIds
 
-
     def delete(self, cadet_id: str, volunteer_id: str):
         matching_elements_list = [
             element

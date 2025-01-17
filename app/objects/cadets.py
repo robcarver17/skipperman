@@ -4,7 +4,9 @@ import datetime
 from app.data_access.configuration.configuration import (
     SIMILARITY_LEVEL_TO_WARN_DATE,
     SIMILARITY_LEVEL_TO_WARN_NAME,
-    MIN_AGE_WHEN_CADET_CAN_BE_AT_EVENT_WITHOUT_PARENT, MIN_CADET_AGE, MAX_CADET_AGE,
+    MIN_AGE_WHEN_CADET_CAN_BE_AT_EVENT_WITHOUT_PARENT,
+    MIN_CADET_AGE,
+    MAX_CADET_AGE,
 )
 from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
@@ -34,6 +36,7 @@ from app.objects.exceptions import (
 from app.objects.utils import union_of_x_and_y
 
 DEFAULT_DATE_OF_BIRTH = datetime.date(1970, 1, 1)
+
 
 @dataclass
 class Cadet(GenericSkipperManObjectWithIds):
@@ -85,22 +88,22 @@ class Cadet(GenericSkipperManObjectWithIds):
             + self.membership_status.name
         )
 
-    def add_asterix_to_name(self) -> 'Cadet':
+    def add_asterix_to_name(self) -> "Cadet":
         return Cadet(
-                    first_name=self.first_name,
-                    surname=self.surname + "*",
-                    date_of_birth=self.date_of_birth,
-                    id=self.id,
-                    membership_status=self.membership_status
-                )
+            first_name=self.first_name,
+            surname=self.surname + "*",
+            date_of_birth=self.date_of_birth,
+            id=self.id,
+            membership_status=self.membership_status,
+        )
 
     @classmethod
-    def from_name_only(cls, first_name: str, surname: str) -> 'Cadet':
+    def from_name_only(cls, first_name: str, surname: str) -> "Cadet":
         return cls(
             first_name=first_name,
             surname=surname,
             date_of_birth=DEFAULT_DATE_OF_BIRTH,
-            membership_status=none_member
+            membership_status=none_member,
         )
 
     def replace_all_attributes_except_id_with_those_from_new_cadet(
@@ -343,6 +346,7 @@ def is_cadet_age_surprising(cadet: Cadet):
 
     return age < MIN_CADET_AGE or age > MAX_CADET_AGE
 
+
 SKIP_TEST_CADET_ID = str(-9999)
 
 
@@ -360,4 +364,33 @@ unknown_cadet = Cadet(
     membership_status=none_member,
 )
 
-test_cadet = Cadet("Test", "", date_of_birth=DEFAULT_DATE_OF_BIRTH, membership_status=none_member, id=SKIP_TEST_CADET_ID)
+test_cadet = Cadet(
+    "Test",
+    "",
+    date_of_birth=DEFAULT_DATE_OF_BIRTH,
+    membership_status=none_member,
+    id=SKIP_TEST_CADET_ID,
+)
+
+
+def sort_a_list_of_cadets(
+    master_list: ListOfCadets, sort_by: str = arg_not_passed
+) -> ListOfCadets:
+    if sort_by is arg_not_passed:
+        return master_list
+    if sort_by == SORT_BY_SURNAME:
+        return master_list.sort_by_surname()
+    elif sort_by == SORT_BY_FIRSTNAME:
+        return master_list.sort_by_firstname()
+    elif sort_by == SORT_BY_DOB_ASC:
+        return master_list.sort_by_dob_asc()
+    elif sort_by == SORT_BY_DOB_DSC:
+        return master_list.sort_by_dob_desc()
+    else:
+        return master_list
+
+
+SORT_BY_SURNAME = "Sort by surname"
+SORT_BY_FIRSTNAME = "Sort by first name"
+SORT_BY_DOB_ASC = "Sort by date of birth, ascending"
+SORT_BY_DOB_DSC = "Sort by date of birth, descending"

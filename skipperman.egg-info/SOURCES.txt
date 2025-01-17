@@ -94,6 +94,7 @@ app/backend/registration_data/volunteer_registration_data.py
 app/backend/registration_data/volunter_relevant_information.py
 app/backend/registration_data/../../data_access/configuration/configuration.yaml
 app/backend/reporting/__init__.py
+app/backend/reporting/event_lists.py
 app/backend/reporting/../../data_access/configuration/configuration.yaml
 app/backend/reporting/all_event_data/__init__.py
 app/backend/reporting/all_event_data/all_event_cadet_data.py
@@ -109,6 +110,7 @@ app/backend/reporting/arrangement/__init__.py
 app/backend/reporting/arrangement/arrange_options.py
 app/backend/reporting/arrangement/arrangement_methods.py
 app/backend/reporting/arrangement/arrangement_order.py
+app/backend/reporting/arrangement/get_and_update_arrangement_options.py
 app/backend/reporting/arrangement/group_order.py
 app/backend/reporting/arrangement/../../../data_access/configuration/configuration.yaml
 app/backend/reporting/boat_report/__init__.py
@@ -120,6 +122,7 @@ app/backend/reporting/data_dump/../../../data_access/configuration/configuration
 app/backend/reporting/food_report/__init__.py
 app/backend/reporting/food_report/../../../data_access/configuration/configuration.yaml
 app/backend/reporting/options_and_parameters/__init__.py
+app/backend/reporting/options_and_parameters/get_and_update_print_options.py
 app/backend/reporting/options_and_parameters/marked_up_list_from_df_parameters.py
 app/backend/reporting/options_and_parameters/print_options.py
 app/backend/reporting/options_and_parameters/report_options.py
@@ -490,8 +493,8 @@ app/frontend/volunteers/volunteer_function_mapping.py
 app/frontend/volunteers/../../data_access/configuration/configuration.yaml
 app/objects/__init__.py
 app/objects/boat_classes.py
+app/objects/cadet_at_event_with_boat_class_and_partners_with_ids.py
 app/objects/cadet_at_event_with_club_boat_with_ids.py
-app/objects/cadet_at_event_with_dinghy_with_ids.py
 app/objects/cadet_volunteer_connections_with_ids.py
 app/objects/cadet_with_id_at_event.py
 app/objects/cadet_with_id_with_group_at_event.py
@@ -548,6 +551,7 @@ app/objects/composed/cadets_with_all_event_info.py
 app/objects/composed/cadets_with_qualifications.py
 app/objects/composed/clothing_at_event.py
 app/objects/composed/committee.py
+app/objects/composed/dict_of_volunteer_role_targets.py
 app/objects/composed/food_at_event.py
 app/objects/composed/labelled_tick_sheet.py
 app/objects/composed/roles_and_teams.py

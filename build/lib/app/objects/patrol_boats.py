@@ -1,6 +1,11 @@
 from dataclasses import dataclass
 
-from app.objects.exceptions import arg_not_passed, missing_data
+from app.objects.exceptions import (
+    arg_not_passed,
+    missing_data,
+    MissingData,
+    MultipleMatches,
+)
 from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
 
@@ -30,7 +35,9 @@ class PatrolBoat(GenericSkipperManObjectWithIds):
     def create_empty(cls):
         return cls(NO_BOAT, hidden=False)
 
+
 no_patrol_boat = PatrolBoat.create_empty()
+
 
 class ListOfPatrolBoats(GenericListOfObjectsWithIds):
     @property
@@ -45,25 +52,13 @@ class ListOfPatrolBoats(GenericListOfObjectsWithIds):
         new_patrol_boat.id = existing_patrol_boat.id
         self[object_idx] = new_patrol_boat
 
-    def delete_given_name(self, patrol_boat_name: str):
-        idx = self.idx_given_name(patrol_boat_name)
-        if idx is missing_data:
-            raise Exception(
-                "Can't find patrol boat with name to delete %s" % patrol_boat_name
-            )
-        self.pop(idx)
-
-    def id_given_name(self, patrol_boat_name: str) -> str:
-        boat = self.boat_given_name(patrol_boat_name)
-        return boat.id
-
     def boat_given_name(self, patrol_boat_name: str) -> PatrolBoat:
         matching = [item for item in self if item.name == patrol_boat_name]
 
         if len(matching) == 0:
-            return missing_data
+            raise MissingData
         elif len(matching) > 1:
-            raise Exception(
+            raise MultipleMatches(
                 "Found more than one patrol boat with same name should be impossible"
             )
 

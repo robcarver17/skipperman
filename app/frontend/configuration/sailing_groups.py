@@ -69,7 +69,6 @@ def post_form_config_sailing_groups(
     )
 
     if generic_list_output is BACK_BUTTON_PRESSED:
-        interface.clear_cache()
         return interface.get_new_display_form_for_parent_of_function(
             post_form_config_sailing_groups
         )

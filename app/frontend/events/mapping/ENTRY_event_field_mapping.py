@@ -1,12 +1,14 @@
 from typing import Union
 
-from app.backend.registration_data.raw_mapped_registration_data import does_event_have_imported_registration_data
+from app.backend.registration_data.raw_mapped_registration_data import (
+    does_event_have_imported_registration_data,
+)
 
 from app.frontend.events.mapping.clone_field_mapping import (
     display_form_for_clone_event_field_mapping,
 )
 from app.frontend.events.mapping.create_mapping import (
-    display_form_for_create_custom_field_mapping
+    display_form_for_create_custom_field_mapping,
 )
 from app.frontend.events.mapping.template_field_mapping import (
     display_form_for_choose_template_field_mapping,
@@ -26,13 +28,17 @@ from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
     main_menu_button,
-    back_menu_button, HelpButton,
+    back_menu_button,
+    HelpButton,
 )
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.shared.events_state import get_event_from_state
-from app.backend.mapping.list_of_field_mappings import get_field_mapping_for_event, does_event_already_have_mapping
+from app.backend.mapping.list_of_field_mappings import (
+    get_field_mapping_for_event,
+    does_event_already_have_mapping,
+)
 from app.backend.mapping.check_field_mapping import check_field_mapping
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import Event
@@ -42,20 +48,26 @@ def display_form_event_field_mapping(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     event = get_event_from_state(interface)
-    existing_mapping = does_event_already_have_mapping(object_store=interface.object_store, event=event)
+    existing_mapping = does_event_already_have_mapping(
+        object_store=interface.object_store, event=event
+    )
     if existing_mapping:
-        return display_form_event_field_mapping_existing_mapping(interface=interface, event=event)
+        return display_form_event_field_mapping_existing_mapping(
+            interface=interface, event=event
+        )
     else:
         return display_form_event_field_mapping_no_existing_mapping(event)
 
 
 def display_form_event_field_mapping_existing_mapping(
     interface: abstractInterface,
-        event: Event,
+    event: Event,
 ) -> Union[Form, NewForm]:
 
     pre_existing_text = text_for_pre_existing_mapping(interface=interface, event=event)
-    check_mapping_lines = check_field_mapping(object_store=interface.object_store, event=event)
+    check_mapping_lines = check_field_mapping(
+        object_store=interface.object_store, event=event
+    )
     warning_text = warning_text_for_mapping(interface=interface, event=event)
     nav_bar = mapping_buttons(event)
 
@@ -96,17 +108,17 @@ def warning_text_for_mapping(interface: abstractInterface, event: Event) -> str:
     return warning_text
 
 
-def display_form_event_field_mapping_no_existing_mapping(event: Event) -> Union[Form, NewForm]:
+def display_form_event_field_mapping_no_existing_mapping(
+    event: Event,
+) -> Union[Form, NewForm]:
     information = Line(
         "Mapping converts WA field names to our internal field names - we can't import an event without it"
     )
 
     return Form(
-        ListOfLines([information,
-                     _______________,
-                     mapping_buttons(event),
-                     _______________
-                    ])
+        ListOfLines(
+            [information, _______________, mapping_buttons(event), _______________]
+        )
     )
 
 
@@ -114,7 +126,9 @@ def text_for_pre_existing_mapping(
     interface: abstractInterface, event: Event
 ) -> PandasDFTable:
 
-    mapping = get_field_mapping_for_event(object_store=interface.object_store, event=event)
+    mapping = get_field_mapping_for_event(
+        object_store=interface.object_store, event=event
+    )
 
     return PandasDFTable(mapping.as_df_of_str())
 
@@ -128,7 +142,7 @@ def mapping_buttons(event: Event) -> ButtonBar:
             map_to_template_button,
             clone_event_button,
             create_mapping_button,
-            help_button
+            help_button,
         ]
     )
 
@@ -143,6 +157,7 @@ CREATE_MAPPING_BUTTON_LABEL = "Create your own mapping file"
 create_mapping_button = Button(CREATE_MAPPING_BUTTON_LABEL, nav_button=True)
 
 help_button = HelpButton("WA_field_mapping")
+
 
 def post_form_event_field_mapping(interface: abstractInterface) -> Union[Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
@@ -182,5 +197,3 @@ def previous_form(interface: abstractInterface) -> NewForm:
     return interface.get_new_display_form_for_parent_of_function(
         display_form_event_field_mapping
     )
-
-

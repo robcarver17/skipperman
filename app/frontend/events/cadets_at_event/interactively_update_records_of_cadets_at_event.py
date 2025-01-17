@@ -2,11 +2,17 @@ from typing import Union
 
 from app.objects.cadets import Cadet
 
-from app.backend.registration_data.update_cadets_at_event import no_important_difference_between_cadets_at_event
-from app.backend.registration_data.cadet_registration_data import  \
-    is_cadet_already_at_event, add_new_cadet_to_event_from_row_in_registration_data, get_cadet_at_event
-from app.backend.registration_data.identified_cadets_at_event import \
-    get_row_in_registration_data_for_cadet_both_cancelled_and_active
+from app.backend.registration_data.update_cadets_at_event import (
+    no_important_difference_between_cadets_at_event,
+)
+from app.backend.registration_data.cadet_registration_data import (
+    is_cadet_already_at_event,
+    add_new_cadet_to_event_from_row_in_registration_data,
+    get_cadet_at_event,
+)
+from app.backend.registration_data.identified_cadets_at_event import (
+    get_row_in_registration_data_for_cadet_both_cancelled_and_active,
+)
 
 from app.frontend.events.cadets_at_event.track_cadet_id_in_state_when_importing import (
     get_and_save_next_cadet_in_event_data,
@@ -21,7 +27,9 @@ from app.objects.abstract_objects.abstract_interface import (
 from app.frontend.shared.events_state import get_event_from_state
 
 from app.frontend.events.cadets_at_event.update_existing_cadet_at_event_forms import (
-    display_form_for_update_to_existing_cadet_at_event, use_original_data_button, use_new_data_button,
+    display_form_for_update_to_existing_cadet_at_event,
+    use_original_data_button,
+    use_new_data_button,
     use_data_in_form_button,
 )
 from app.frontend.events.cadets_at_event.update_existing_cadet_at_event_from_form_entries import (
@@ -61,9 +69,7 @@ def process_next_cadet_at_event(interface: abstractInterface) -> Union[Form, New
 
     print("Current cadet is %s" % cadet)
 
-    return process_update_to_cadet_data(
-        interface=interface, event=event, cadet=cadet
-    )
+    return process_update_to_cadet_data(interface=interface, event=event, cadet=cadet)
 
 
 def process_update_to_cadet_data(
@@ -81,7 +87,6 @@ def process_update_to_cadet_data(
         return process_update_to_cadet_new_to_event(
             event=event, cadet=cadet, interface=interface
         )
-
 
 
 def process_update_to_existing_cadet_in_event_data(
@@ -109,7 +114,6 @@ def process_update_to_existing_cadet_in_event_data(
         )
         return process_next_cadet_at_event(interface)
 
-
     return process_update_to_existing_cadet_at_event(
         interface=interface,
         event=event,
@@ -118,12 +122,10 @@ def process_update_to_existing_cadet_in_event_data(
     )
 
 
-
-
 def process_update_to_existing_cadet_at_event(
     interface: abstractInterface,
     row_in_mapped_wa_event: RowInRegistrationData,
-        cadet: Cadet,
+    cadet: Cadet,
     event: Event,
 ) -> Form:
 
@@ -131,10 +133,10 @@ def process_update_to_existing_cadet_at_event(
         object_store=interface.object_store, event=event, cadet=cadet
     )
 
-    new_cadet_at_event_data = get_cadet_at_event_from_row_in_event_raw_registration_data(
-        row_in_mapped_wa_event=row_in_mapped_wa_event,
-        event=event,
-        cadet=cadet
+    new_cadet_at_event_data = (
+        get_cadet_at_event_from_row_in_event_raw_registration_data(
+            row_in_mapped_wa_event=row_in_mapped_wa_event, event=event, cadet=cadet
+        )
     )
 
     if no_important_difference_between_cadets_at_event(
@@ -149,9 +151,8 @@ def process_update_to_existing_cadet_at_event(
             event=event,
             new_cadet_at_event_data=new_cadet_at_event_data,
             existing_cadet_at_event_data=existing_cadet_at_event_data,
-            cadet=cadet
+            cadet=cadet,
         )
-
 
 
 def post_form_interactively_update_cadets_at_event(
@@ -173,13 +174,13 @@ def post_form_interactively_update_cadets_at_event(
 
 
 def process_update_to_cadet_new_to_event(
-    interface: abstractInterface, event: Event,cadet: Cadet
+    interface: abstractInterface, event: Event, cadet: Cadet
 ) -> Form:
     print("New row in master data for cadet with id %s" % cadet.id)
 
     try:
         relevant_row = get_row_in_registration_data_for_cadet_both_cancelled_and_active(
-            object_store = interface.object_store,
+            object_store=interface.object_store,
             cadet=cadet,
             event=event,
             raise_error_on_duplicate=True,

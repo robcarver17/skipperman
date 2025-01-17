@@ -1,3 +1,4 @@
+from app.backend.reporting.arrangement.arrangement_order import ArrangementOfRows, EMPTY, ArrangementOfColumns
 from app.objects.abstract_objects.abstract_tables import RowInTable, Table
 from app.objects.abstract_objects.abstract_text import (
     up_arrow,
@@ -7,11 +8,6 @@ from app.objects.abstract_objects.abstract_text import (
 )
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line
-from app.backend.reporting import (
-    ArrangementOfRows,
-    EMPTY,
-    ArrangementOfColumns,
-)
 
 
 def reorder_matrix(
@@ -22,7 +18,6 @@ def reorder_matrix(
     for row_index, current_order_as_list_for_row in enumerate(arrangement_of_rows):
         row = reorder_matrix_table_row(
             current_list_of_entries=current_list_of_entries,
-            row_index=row_index,
             current_order_as_list_for_row=current_order_as_list_for_row,
         )
         rows.append(row)
@@ -31,13 +26,12 @@ def reorder_matrix(
 
 
 def reorder_matrix_table_row(
-    current_list_of_entries: list, current_order_as_list_for_row: list, row_index: int
+    current_list_of_entries: list, current_order_as_list_for_row: list,
 ) -> RowInTable:
     row_elements = []
     for column_index, index_in_list in enumerate(current_order_as_list_for_row):
         element = reorder_matrix_table_element(
             current_list_of_entries=current_list_of_entries,
-            row_index=row_index,
             index_in_list=index_in_list,
         )
         row_elements.append(element)
@@ -47,7 +41,7 @@ def reorder_matrix_table_row(
 
 
 def reorder_matrix_table_element(
-    current_list_of_entries: list, row_index: int, index_in_list: int
+    current_list_of_entries: list, index_in_list: int
 ) -> Line:
     if index_in_list == EMPTY:
         return Line("")

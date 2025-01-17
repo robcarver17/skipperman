@@ -1,13 +1,18 @@
 from typing import Union
 
-from app.backend.cadets_at_event.update_status_and_availability_of_cadets_at_event import make_cadet_available_on_day
+from app.backend.cadets_at_event.update_status_and_availability_of_cadets_at_event import (
+    make_cadet_available_on_day,
+)
 from app.backend.cadets.list_of_cadets import get_cadet_from_id
 from app.frontend.forms.reorder_form import (
     list_of_button_names_given_group_order,
     reorderFormInterface,
 )
 from app.objects.day_selectors import Day
-from app.frontend.shared.cadet_state import clear_cadet_state, update_state_for_specific_cadet_id
+from app.frontend.shared.cadet_state import (
+    clear_cadet_state,
+    update_state_for_specific_cadet_id,
+)
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.events.group_allocation.add_cadet_partner import (
@@ -27,7 +32,8 @@ from app.frontend.events.group_allocation.render_allocation_form import (
     list_of_all_day_button_names,
     get_list_of_all_add_cadet_availability_buttons,
     get_list_of_all_cadet_buttons,
-    cadet_id_from_cadet_button, reset_day_button,
+    cadet_id_from_cadet_button,
+    reset_day_button,
 )
 from app.frontend.events.group_allocation.input_fields import (
     cadet_id_given_partner_button,
@@ -41,7 +47,8 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm,
 )
 from app.objects.abstract_objects.abstract_buttons import (
-    cancel_menu_button, save_menu_button
+    cancel_menu_button,
+    save_menu_button,
 )
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
@@ -158,8 +165,6 @@ def make_cadet_available_on_current_day(
     cadet = get_cadet_from_id(object_store=interface.object_store, cadet_id=cadet_id)
 
     make_cadet_available_on_day(
-        object_store=interface.object_store,
-        event=event, cadet=cadet,
-        day=day
+        object_store=interface.object_store, event=event, cadet=cadet, day=day
     )
     interface.flush_cache_to_store()

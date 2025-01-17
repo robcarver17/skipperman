@@ -65,7 +65,7 @@ def get_preamble_before_table(
 
 def get_summary_table(interface: abstractInterface, event: Event):
     summary_of_filled_roles = get_summary_list_of_roles_and_groups_for_events(
-        event=event, object_store = interface.object_store
+        event=event, object_store=interface.object_store
     )
     if len(summary_of_filled_roles) > 0:
         summary_of_filled_roles = DetailListOfLines(

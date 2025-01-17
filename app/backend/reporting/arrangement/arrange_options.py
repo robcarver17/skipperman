@@ -5,7 +5,6 @@ from dataclasses import dataclass
 import pandas as pd
 
 from app.backend.reporting.arrangement.group_order import GroupOrder
-from app.frontend.reporting.shared.report_generator import ReportGenerator
 from app.objects.exceptions import arg_not_passed
 from app.backend.reporting.arrangement.arrangement_order import ArrangementOfColumns
 from app.backend.reporting.arrangement.arrangement_methods import (
@@ -15,8 +14,7 @@ from app.backend.reporting.arrangement.arrangement_methods import (
     DEFAULT_ARRANGEMENT,
     POSSIBLE_ARRANGEMENTS_NOT_PASSING,
 )
-from app.data_access.store.object_store import ObjectStore
-from app.data_access.store.object_definitions import object_definition_for_report_arrangement_and_group_order_options
+
 
 class ArrangeGroupsOptions:
     def __init__(
@@ -222,33 +220,3 @@ dict_of_arrangements_that_reorder = dict(
         for arrangement in POSSIBLE_ARRANGEMENTS_NOT_PASSING
     ]
 )
-
-
-def get_stored_arrangement_and_group_order(
-        object_store: ObjectStore, report_type: str
-) -> ArrangementOptionsAndGroupOrder:
-    return object_store.get(object_definition=object_definition_for_report_arrangement_and_group_order_options,
-                            report_name=report_type)
-
-
-def update_arrangement_and_group_order(
-    object_store: ObjectStore,
-    arrangement_and_group_options: ArrangementOptionsAndGroupOrder,
-    report_type: str,
-):
-    object_store.update(
-        object_definition=object_definition_for_report_arrangement_and_group_order_options,
-        report_name=report_type,
-        new_object=arrangement_and_group_options
-    )
-
-
-def reset_arrangement_report_options(
-    object_store: ObjectStore, report_generator: ReportGenerator
-):
-
-    update_arrangement_and_group_order(
-        object_store=object_store,
-        report_type=report_generator.name,
-        arrangement_and_group_options=ArrangementOptionsAndGroupOrder.create_empty()
-    )

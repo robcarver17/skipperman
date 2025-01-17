@@ -15,7 +15,9 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.objects.abstract_objects.abstract_interface import (
-    abstractInterface, form_with_message_and_finished_button, get_file_from_interface,
+    abstractInterface,
+    form_with_message_and_finished_button,
+    get_file_from_interface,
 )
 
 empty_name = ""

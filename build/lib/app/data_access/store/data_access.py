@@ -1,5 +1,4 @@
-
-from app.data_access.store.store import  DataAccessMethod
+from app.data_access.store.store import DataAccessMethod
 from app.data_access.api.generic_api import GenericDataApi
 
 
@@ -159,7 +158,6 @@ def get_data_access_for_cadets_with_food_at_event(
         write_method=data.data_list_of_cadets_with_food_requirement_at_event.write,
         event_id=event_id,
     )
-
 
 
 def get_data_access_for_cadets_with_clothing_at_event(

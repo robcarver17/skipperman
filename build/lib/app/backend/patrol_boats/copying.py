@@ -1,14 +1,14 @@
-
-from app.frontend.events.patrol_boats.copying import is_possible_to_copy_roles_for_non_grouped_roles_only
-from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import \
-    VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
+from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import (
+    VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
+)
 
 
 def volunteer_has_at_least_one_allocated_role_which_matches_others(
-        volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
-
+    volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 ) -> bool:
-    list_of_volunteers_in_roles = volunteer_at_event_on_boat.role_and_group_by_day.list_of_roles_and_groups
+    list_of_volunteers_in_roles = (
+        volunteer_at_event_on_boat.role_and_group_by_day.list_of_roles_and_groups
+    )
     if len(list_of_volunteers_in_roles) == 0:
         return False
     return list_of_volunteers_in_roles.count(list_of_volunteers_in_roles[0]) == len(
@@ -17,7 +17,7 @@ def volunteer_has_at_least_one_allocated_role_which_matches_others(
 
 
 def is_possible_to_copy_boat_allocation(
-        volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
+    volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 ):
     on_same_boat_for_all_days = volunteer_is_on_same_boat_for_all_days(
         volunteer_at_event_on_boat
@@ -29,8 +29,7 @@ def is_possible_to_copy_boat_allocation(
 
 
 def is_possible_to_copy_boat_and_role_allocation(
-        volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
-
+    volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 ):
     boat_possible = is_possible_to_copy_boat_allocation(
         volunteer_at_event_on_boat=volunteer_at_event_on_boat
@@ -43,7 +42,7 @@ def is_possible_to_copy_boat_and_role_allocation(
 
 
 def is_possible_to_copy_fill_boat_and_role_allocation(
-        volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
+    volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 ):
     boat_possible = volunteer_has_at_least_one_allocated_boat_and_empty_spaces_to_fill(
         volunteer_at_event_on_boat=volunteer_at_event_on_boat
@@ -56,10 +55,11 @@ def is_possible_to_copy_fill_boat_and_role_allocation(
 
 
 def volunteer_has_at_least_one_allocated_role_and_empty_spaces_to_fill(
-        volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
-
+    volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 ) -> bool:
-    list_of_volunteers_in_roles = volunteer_at_event_on_boat.role_and_group_by_day.list_of_roles()
+    list_of_volunteers_in_roles = (
+        volunteer_at_event_on_boat.role_and_group_by_day.list_of_roles()
+    )
     available_days = volunteer_at_event_on_boat.availability.days_available()
     empty_spaces = len(available_days) - len(list_of_volunteers_in_roles)
     at_least_one_allocated = len(list_of_volunteers_in_roles) > 0
@@ -69,7 +69,7 @@ def volunteer_has_at_least_one_allocated_role_and_empty_spaces_to_fill(
 
 
 def is_required_to_copy_overwrite_boat_and_role_allocation(
-        volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
+    volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 ):
     boat_possible = not volunteer_has_at_least_one_allocated_boat_which_matches_others(
         volunteer_at_event_on_boat=volunteer_at_event_on_boat
@@ -82,10 +82,11 @@ def is_required_to_copy_overwrite_boat_and_role_allocation(
 
 
 def volunteer_is_on_same_boat_for_all_days(
-        volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
-
+    volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 ) -> bool:
-    list_of_boat_allocations = volunteer_at_event_on_boat.patrol_boat_by_day.list_of_boats
+    list_of_boat_allocations = (
+        volunteer_at_event_on_boat.patrol_boat_by_day.list_of_boats
+    )
     number_of_days_in_event = volunteer_at_event_on_boat.event.duration
     number_of_allocated_days = len(list_of_boat_allocations)
     unique_boats = set(list_of_boat_allocations)
@@ -97,10 +98,14 @@ def volunteer_is_on_same_boat_for_all_days(
 
 
 def volunteer_has_at_least_one_allocated_boat_and_empty_spaces_to_fill(
-    volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
+    volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 ) -> bool:
-    number_of_days_available_at_event = len(volunteer_at_event_on_boat.availability.days_available())
-    number_of_allocated_days = volunteer_at_event_on_boat.patrol_boat_by_day.number_of_days_assigned_to_any_boat()
+    number_of_days_available_at_event = len(
+        volunteer_at_event_on_boat.availability.days_available()
+    )
+    number_of_allocated_days = (
+        volunteer_at_event_on_boat.patrol_boat_by_day.number_of_days_assigned_to_any_boat()
+    )
     empty_spaces = number_of_days_available_at_event - number_of_allocated_days
 
     at_least_one_boat = number_of_allocated_days > 0
@@ -110,9 +115,11 @@ def volunteer_has_at_least_one_allocated_boat_and_empty_spaces_to_fill(
 
 
 def volunteer_has_at_least_one_allocated_boat_which_matches_others(
-        volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
+    volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 ) -> bool:
-    list_of_boat_allocations =volunteer_at_event_on_boat.patrol_boat_by_day.list_of_boats
+    list_of_boat_allocations = (
+        volunteer_at_event_on_boat.patrol_boat_by_day.list_of_boats
+    )
 
     if len(list_of_boat_allocations) == 0:
         return False
@@ -120,3 +127,27 @@ def volunteer_has_at_least_one_allocated_boat_which_matches_others(
     return list_of_boat_allocations.count(list_of_boat_allocations[0]) == len(
         list_of_boat_allocations
     )
+
+
+def is_possible_to_copy_roles_for_non_grouped_roles_only(
+    volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
+) -> bool:
+    ## Only possible if: none of the roles require a group, and all the roles don't currently match
+
+    role_today = volunteer_at_event_on_boat.role_and_group.role
+    if role_today.is_no_role_set():
+        return False
+
+    all_roles = volunteer_at_event_on_boat.role_and_group_by_day.list_of_roles()
+
+    no_roles_to_copy = len(all_roles) == 0
+    all_roles_match = len(set(all_roles)) <= 1
+
+    roles_require_groups = [role.associate_sailing_group for role in all_roles]
+    at_least_one_role_require_group = any(roles_require_groups)
+
+    ## copy not possible if all roles the same, or at least one requires a group, or nothing to copy
+    if all_roles_match or at_least_one_role_require_group or no_roles_to_copy:
+        return False
+    else:
+        return True

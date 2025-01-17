@@ -10,7 +10,11 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.data_access.file_access import (
     get_files_in_directory,
 )
-from app.data_access.init_directories import public_reporting_directory, upload_directory, download_directory
+from app.data_access.init_directories import (
+    public_reporting_directory,
+    upload_directory,
+    download_directory,
+)
 
 
 def delete_selected_files(interface: abstractInterface):

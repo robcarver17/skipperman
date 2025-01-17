@@ -50,8 +50,3 @@ class MultipleMatches(Exception):
 
 class CadetNotSelected(Exception):
     pass
-
-
-FIRST_NAME = "first_name"
-SURNAME = "surname"
-SKILLS = "skills"

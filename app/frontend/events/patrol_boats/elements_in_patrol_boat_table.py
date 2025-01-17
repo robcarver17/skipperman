@@ -2,15 +2,19 @@ from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunt
 
 from app.objects.volunteers import ListOfVolunteers, Volunteer
 
-from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import \
-    get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_day
-from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event import \
-    get_sorted_volunteers_allocated_to_patrol_boat_at_event_on_days_sorted_by_role
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
+    get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_day,
+)
+from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event import (
+    get_sorted_volunteers_allocated_to_patrol_boat_at_event_on_days_sorted_by_role,
+)
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import \
-    VolunteerAtEventWithSkillsAndRolesAndPatrolBoats, VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
+from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import (
+    VolunteerAtEventWithSkillsAndRolesAndPatrolBoats,
+    VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
+)
 
 from app.backend.patrol_boats.patrol_boat_warnings import warn_on_pb2_drivers
 from app.backend.volunteers.warnings import warn_on_volunteer_qualifications
@@ -66,10 +70,7 @@ def get_volunteer_row_to_select_skill(
     volunteer: Volunteer,
 ) -> RowInTable:
     name = volunteer.name
-    skill_box = volunteer_boat_skill_checkbox(
-        interface=interface,
-        volunteer=volunteer
-    )
+    skill_box = volunteer_boat_skill_checkbox(interface=interface, volunteer=volunteer)
 
     return RowInTable([name, skill_box])
 
@@ -79,7 +80,10 @@ def get_existing_allocation_elements_for_day_and_boat(
 ) -> ListOfLines:
     list_of_volunteers_at_event_on_boats = (
         get_sorted_volunteers_allocated_to_patrol_boat_at_event_on_days_sorted_by_role(
-            object_store = interface.object_store, event=event, day=day, patrol_boat=patrol_boat
+            object_store=interface.object_store,
+            event=event,
+            day=day,
+            patrol_boat=patrol_boat,
         )
     )
 
@@ -92,6 +96,7 @@ def get_existing_allocation_elements_for_day_and_boat(
             for volunteer_at_event_on_boat in list_of_volunteers_at_event_on_boats
         ]
     )
+
 
 def get_existing_allocation_elements_for_volunteer_day_and_boat(
     interface: abstractInterface,
@@ -116,7 +121,7 @@ def get_existing_allocation_elements_for_volunteer_day_and_boat(
 
 def get_buttons_for_volunteer_day_and_boat(
     interface: abstractInterface,
-    volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
+    volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 ) -> list:
     in_swap_state = is_ready_to_swap(interface)
 
@@ -128,12 +133,12 @@ def get_buttons_for_volunteer_day_and_boat(
             volunteer_at_event_on_boat=volunteer_at_event_on_boat
         )
         remove_volunteer_button = get_remove_volunteer_button(
-            day=volunteer_at_event_on_boat.day, volunteer_id=volunteer_at_event_on_boat.volunteer.id
+            day=volunteer_at_event_on_boat.day,
+            volunteer_id=volunteer_at_event_on_boat.volunteer.id,
         )
 
     swap_buttons = get_swap_buttons_for_boat_rota(
-        interface=interface,
-        volunteer_at_event_on_boat=volunteer_at_event_on_boat
+        interface=interface, volunteer_at_event_on_boat=volunteer_at_event_on_boat
     )
 
     return copy_buttons + swap_buttons + [" "] + [remove_volunteer_button]
@@ -141,13 +146,14 @@ def get_buttons_for_volunteer_day_and_boat(
 
 VOLUNTEERS_SKILL_FOR_PB2 = "PB2"
 
-def volunteer_boat_skill_checkbox(
-        interface: abstractInterface,
-        volunteer: Volunteer,
 
+def volunteer_boat_skill_checkbox(
+    interface: abstractInterface,
+    volunteer: Volunteer,
 ) -> checkboxInput:
-    skills = get_dict_of_existing_skills_for_volunteer(object_store=interface.object_store,
-                                                       volunteer=volunteer)
+    skills = get_dict_of_existing_skills_for_volunteer(
+        object_store=interface.object_store, volunteer=volunteer
+    )
     has_boat_skill = skills.can_drive_safety_boat
 
     dict_of_labels = {VOLUNTEERS_SKILL_FOR_PB2: VOLUNTEERS_SKILL_FOR_PB2}
@@ -155,9 +161,7 @@ def volunteer_boat_skill_checkbox(
     return checkboxInput(
         dict_of_labels=dict_of_labels,
         dict_of_checked=dict_of_checked,
-        input_name=get_volunteer_skill_checkbox_name(
-            volunteer_id=volunteer.id
-        ),
+        input_name=get_volunteer_skill_checkbox_name(volunteer_id=volunteer.id),
         input_label="",
     )
 
@@ -189,9 +193,8 @@ def get_list_of_volunteers_for_skills_checkboxes(
     object_store: ObjectStore, event: Event
 ) -> ListOfVolunteers:
     return get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_day(
-        object_store=object_store,
-        event=event)
-
+        object_store=object_store, event=event
+    )
 
 
 def warn_on_all_volunteers_in_patrol_boats(
@@ -201,7 +204,9 @@ def warn_on_all_volunteers_in_patrol_boats(
     qualification_warnings = warn_on_volunteer_qualifications(
         object_store=interface.object_store, event=event
     )
-    pb2driver_warnings = warn_on_pb2_drivers(object_store=interface.object_store, event=event)
+    pb2driver_warnings = warn_on_pb2_drivers(
+        object_store=interface.object_store, event=event
+    )
 
     all_warnings = qualification_warnings + pb2driver_warnings
 

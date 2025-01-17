@@ -6,23 +6,24 @@ from app.objects.exceptions import arg_not_passed, MissingData, MultipleMatches
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
 from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
 
-LAKE_TRAINING = "Lake training"
-RIVER_TRAINING = "River training"
-MG = "MG"
-UNALLOCATED = "Unallocated"
-UNDETERMINED = "Undetermined"
 
-
+UNALLOCATED_GROUP_STR = "Unallocated"
 
 
 GroupLocation = Enum(
-    "GroupLocation", [LAKE_TRAINING, RIVER_TRAINING, MG, UNALLOCATED, UNDETERMINED]
-)
-lake_training_group_location = GroupLocation[LAKE_TRAINING]
-river_training_group_location = GroupLocation[RIVER_TRAINING]
-mg_training_group_location = GroupLocation[MG]
-unallocated_group_location = GroupLocation[UNALLOCATED]
-undetermined_group_location = GroupLocation[UNDETERMINED]
+    "GroupLocation",
+    [
+        "Lake_training",
+"River_training",
+"MG",
+"Unallocated",
+"Undetermined"])
+
+lake_training_group_location = GroupLocation.Lake_training
+river_training_group_location = GroupLocation.River_training
+mg_training_group_location = GroupLocation.MG
+unallocated_group_location = GroupLocation.Unallocated
+undetermined_group_location = GroupLocation.Undetermined
 
 all_locations = [
     lake_training_group_location,
@@ -30,8 +31,11 @@ all_locations = [
     mg_training_group_location,
 ]
 
-def sorted_locations(locations: List[GroupLocation]):
-    return [location for location in all_locations if location in locations]
+
+def sorted_locations(passed_list_of_locations: List[GroupLocation]):
+    return [
+        location for location in all_locations if location in passed_list_of_locations
+    ]
 
 
 @dataclass
@@ -72,10 +76,10 @@ class Group(GenericSkipperManObjectWithIds):
     @classmethod
     def create_unallocated(cls):
         return cls(
-            UNALLOCATED,
+            UNALLOCATED_GROUP_STR,
             location=unallocated_group_location,
             protected=True,
-            id="0", ## DO NOT CHANGE
+            id="0",  ## DO NOT CHANGE
             hidden=False,
         )
 
@@ -85,8 +89,8 @@ class Group(GenericSkipperManObjectWithIds):
 
 
 unallocated_group = Group.create_unallocated()
-GROUP_UNALLOCATED_TEXT_DONTUSE = "Unallocated"
 unallocated_group_id = unallocated_group.id
+
 
 class ListOfGroups(GenericListOfObjectsWithIds):
     def sort_to_match_other_group_list_order(self, other_groups: "ListOfGroups"):
@@ -138,4 +142,4 @@ class ListOfGroups(GenericListOfObjectsWithIds):
         return self.contains_specific_location(lake_training_group_location)
 
     def contains_specific_location(self, location: GroupLocation):
-        return any([group.location==location for group in self])
+        return any([group.location == location for group in self])

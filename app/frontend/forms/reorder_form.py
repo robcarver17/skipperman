@@ -1,8 +1,6 @@
 from copy import copy
 
-from app.backend.reporting import (
-    IndicesToSwap,
-)
+from app.backend.reporting.arrangement.arrangement_order import IndicesToSwap
 from app.objects.abstract_objects.abstract_tables import RowInTable, Table
 from app.objects.abstract_objects.abstract_text import up_arrow, down_arrow
 from app.objects.abstract_objects.abstract_buttons import Button

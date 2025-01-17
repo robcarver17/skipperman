@@ -6,16 +6,13 @@ import pandas as pd
 from app.backend.reporting.options_and_parameters.marked_up_list_from_df_parameters import (
     create_parameters_to_create_marked_up_list_from_df,
 )
-from app.backend.reporting import (
-    ReportingOptions,
+from app.backend.reporting.arrangement.get_and_update_arrangement_options import (
+    reset_arrangement_report_options,
 )
-from app.backend.reporting import (
-    SpecificParametersForTypeOfReport,
-)
-from app.backend.reporting import (
-    get_dict_of_grouped_df,
-)
-from app.backend.reporting.arrangement.arrange_options import reset_arrangement_report_options
+from app.backend.reporting.options_and_parameters.report_options import ReportingOptions
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import \
+    SpecificParametersForTypeOfReport
+from app.backend.reporting.process_stages.create_list_of_groups_from_df import get_dict_of_grouped_df
 from app.frontend.reporting.shared.report_generator import ReportGenerator
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.reporting.shared.group_order import (
@@ -74,7 +71,7 @@ def get_reporting_options(
     dict_of_df: Dict[str, pd.DataFrame],
 ) -> ReportingOptions:
     arrangement_options_and_group_order = get_arrangement_options_and_group_order_from_stored_or_defaults(
-        interface=interface,
+        object_store=interface.object_store,
         specific_parameters_for_type_of_report=specific_parameters_for_type_of_report,
         dict_of_df=dict_of_df,
     )
@@ -104,9 +101,11 @@ def get_reporting_options(
 def reset_all_report_options(
     interface: abstractInterface, report_generator: ReportGenerator
 ):
-    reset_print_report_options(interface, report_generator)
+    reset_print_report_options(interface=interface, report_generator=report_generator)
     reset_specific_report_options(interface, report_generator)
-    reset_arrangement_report_options(interface, report_generator)
+    reset_arrangement_report_options(
+        object_store=interface.object_store, report_generator=report_generator
+    )
 
 
 def reset_specific_report_options(

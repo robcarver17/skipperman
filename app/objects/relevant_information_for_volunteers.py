@@ -1,12 +1,16 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.backend.registration_data.volunter_relevant_information import suggested_volunteer_availability
 from app.data_access.configuration.configuration import UNABLE_TO_VOLUNTEER_KEYWORD
 
 from app.objects.cadets import Cadet
 
-from app.objects.day_selectors import DaySelector, union_across_day_selectors
+from app.objects.day_selectors import (
+    DaySelector,
+    union_across_day_selectors,
+    create_day_selector_from_short_form_text,
+)
+from app.objects.exceptions import missing_data
 from app.objects.registration_status import RegistrationStatus
 from app.objects.utils import we_are_not_the_same
 from app.objects.volunteers import Volunteer
@@ -23,6 +27,7 @@ class RelevantInformationForVolunteerIdentification:
     @property
     def cadet_surname(self):
         return self.cadet.surname
+
 
 @dataclass
 class RelevantInformationForVolunteerDetails:  ##copied across
@@ -82,8 +87,7 @@ def get_row_status_cancelled_or_deleted_from_relevant_information(
 
 def relevant_information_requires_clarification(
     volunteer: Volunteer,
-    list_of_relevant_information: ListOfRelevantInformationForVolunteer
-
+    list_of_relevant_information: ListOfRelevantInformationForVolunteer,
 ) -> str:
     issues = NO_ISSUES_WITH_VOLUNTEER
 
@@ -173,3 +177,21 @@ def is_volunteer_available_on_days_when_cadet_not_attending(
 
 
 NO_ISSUES_WITH_VOLUNTEER = ""
+
+
+def suggested_volunteer_availability(
+    relevant_information: RelevantInformationForVolunteerAvailability,
+) -> DaySelector:
+    day_availability = relevant_information.day_availability
+    weekend_availability = relevant_information.weekend_availability
+    cadet_availability = relevant_information.cadet_availability
+
+    if day_availability is not missing_data:
+        return create_day_selector_from_short_form_text(day_availability)
+    elif weekend_availability is not missing_data:
+        return create_day_selector_from_short_form_text(weekend_availability)
+    elif cadet_availability is not missing_data:
+        return cadet_availability
+    else:
+        ## assume all
+        raise Exception("No availability information")

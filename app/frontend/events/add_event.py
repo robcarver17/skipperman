@@ -17,7 +17,8 @@ from app.objects.events import (
 )
 
 from app.objects.abstract_objects.abstract_interface import (
-    abstractInterface, form_with_message_and_finished_button,
+    abstractInterface,
+    form_with_message_and_finished_button,
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,

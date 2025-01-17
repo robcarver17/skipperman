@@ -18,7 +18,6 @@ class ListOfCadetAtEventWithIdAndClubDinghies(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return CadetAtEventWithClubDinghyWithId
 
-
     def update_allocation_for_cadet_on_day(
         self, cadet_id: str, day: Day, club_dinghy_id: str
     ):
@@ -58,5 +57,6 @@ class ListOfCadetAtEventWithIdAndClubDinghies(GenericListOfObjectsWithIds):
             raise Exception("Can only have one dinghy per cadet")
 
         return list_of_items[0]
+
 
 NO_CLUB_BOAT = ""

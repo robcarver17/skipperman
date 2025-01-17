@@ -1,36 +1,25 @@
-from app.backend.reporting import (
-    ArrangementOptionsAndGroupOrder,
-)
+from app.backend.reporting.arrangement.arrange_options import ArrangementOptionsAndGroupOrder
+from app.backend.reporting.arrangement.arrangement_order import ArrangementOfColumns, ArrangementOfRows, IndicesToSwap
+
 from app.backend.reporting.arrangement.group_order import GroupOrder
+from app.backend.reporting.options_and_parameters.report_options import ReportingOptions
+from app.backend.reporting.process_stages.create_list_of_columns_from_groups import \
+    modify_arrangement_given_list_of_pages_and_method
+from app.backend.reporting.process_stages.create_list_of_groups_from_df import create_list_of_pages_from_dict_of_df
+from app.data_access.store.object_store import ObjectStore
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.backend.reporting.arrangement.arrange_options import get_stored_arrangement_and_group_order, \
-    update_arrangement_and_group_order
-
-from app.backend.reporting import (
-    ArrangementOfColumns,
-    ArrangementOfRows,
-    IndicesToSwap,
-)
-
-from app.backend.reporting import (
-    ReportingOptions,
-)
-
-
-from app.backend.reporting import (
-    modify_arrangement_given_list_of_pages_and_method,
-)
-from app.backend.reporting import (
-    create_list_of_pages_from_dict_of_df,
+from app.backend.reporting.arrangement.get_and_update_arrangement_options import (
+    get_stored_arrangement_and_group_order,
+    update_arrangement_and_group_order,
 )
 
 
 def get_arrangement_of_rows_from_storage_or_derive_from_method(
-    interface: abstractInterface, reporting_options: ReportingOptions
+        object_store: ObjectStore, reporting_options: ReportingOptions
 ) -> ArrangementOfRows:
     arrangement_of_columns = (
         get_arrangement_of_columns_from_storage_or_derive_from_method(
-            interface, reporting_options=reporting_options
+            object_store=object_store, reporting_options=reporting_options
         )
     )
     arrangement_of_rows = arrangement_of_columns.transpose_to_rows()
@@ -39,7 +28,7 @@ def get_arrangement_of_rows_from_storage_or_derive_from_method(
 
 
 def get_arrangement_of_columns_from_storage_or_derive_from_method(
-    interface: abstractInterface, reporting_options: ReportingOptions
+    object_store: ObjectStore, reporting_options: ReportingOptions
 ) -> ArrangementOfColumns:
     arrangement_options = reporting_options.arrangement
 
@@ -47,7 +36,7 @@ def get_arrangement_of_columns_from_storage_or_derive_from_method(
         print("No arrangement provided creating one")
         ## create an arrangement using the current algo
         arrangement_of_columns = create_arrangement_from_order_and_algo_and_save(
-            interface=interface, reporting_options=reporting_options
+            object_store=object_store, reporting_options=reporting_options
         )
     else:
         print(
@@ -60,15 +49,15 @@ def get_arrangement_of_columns_from_storage_or_derive_from_method(
 
 
 def create_arrangement_from_order_and_algo_and_save(
-    interface: abstractInterface,
-    reporting_options: ReportingOptions,
+        object_store: ObjectStore,
+        reporting_options: ReportingOptions,
 ) -> ArrangementOfColumns:
     arrangement_group_options = create_arrangement_from_order_and_algo(
         reporting_options=reporting_options
     )
 
     update_arrangement_and_group_order(
-        interface=interface,
+        object_store=object_store,
         arrangement_and_group_options=arrangement_group_options,
         report_type=reporting_options.specific_parameters.report_type,
     )
@@ -115,14 +104,14 @@ def modify_arrangement_options_and_group_order_to_reflect_arrangement_method_nam
 
 
 def modify_arrangement_given_change_in_group_order(
-    interface: abstractInterface,
+    object_store: ObjectStore,
     report_type: str,
     indices_to_swap: IndicesToSwap,
     new_group_order: GroupOrder,
 ):
     ## Need to modify the indices in the matrix layout or that will change when should not
     arrangement_options_and_group_order = get_stored_arrangement_and_group_order(
-        interface, report_type=report_type
+        object_store=object_store, report_type=report_type
     )
     arrangement_options_and_group_order.arrangement_options.arrangement_of_columns.swap_or_delete_indices(
         indices_to_swap
@@ -131,18 +120,18 @@ def modify_arrangement_given_change_in_group_order(
 
     update_arrangement_and_group_order(
         arrangement_and_group_options=arrangement_options_and_group_order,
-        interface=interface,
+        object_store=object_store,
         report_type=report_type,
     )
 
 
 def remove_empty_groups_from_group_order_and_arrangement(
-    interface: abstractInterface,
+    object_store: ObjectStore,
     empty_groups: GroupOrder,
     reporting_options: ReportingOptions,
 ):
     arrangement_options_and_group_order = get_stored_arrangement_and_group_order(
-        interface, report_type=reporting_options.specific_parameters.report_type
+        object_store=object_store, report_type=reporting_options.specific_parameters.report_type
     )
     arrangement_options_and_group_order.remove_empty_groups_from_group_order_and_arrangement(
         empty_groups
@@ -161,7 +150,7 @@ def remove_empty_groups_from_group_order_and_arrangement(
 
     update_arrangement_and_group_order(
         arrangement_and_group_options=arrangement_options_and_group_order,
-        interface=interface,
+        object_store=object_store,
         report_type=reporting_options.specific_parameters.report_type,
     )
 

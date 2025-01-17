@@ -1,4 +1,6 @@
-from app.backend.reporting.boat_report.boat_report_parameters import AdditionalParametersForBoatReport
+from app.backend.reporting.boat_report.boat_report_parameters import (
+    AdditionalParametersForBoatReport,
+)
 
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_form import yes_no_radio
@@ -17,7 +19,7 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines, ___________
 
 
 def explain_additional_parameters_for_boat_report(
-    interface: abstractInterface, ## always passed even if not used
+    interface: abstractInterface,  ## always passed even if not used
     additional_parameters: AdditionalParametersForBoatReport,
 ) -> ListOfLines:
 

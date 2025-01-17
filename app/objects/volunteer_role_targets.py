@@ -46,5 +46,3 @@ class ListOfTargetForRoleWithIdAtEvent(GenericListOfObjects):
             raise MissingData
 
         return matching[0]
-
-

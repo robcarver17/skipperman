@@ -3,8 +3,6 @@ from typing import List
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
 from app.objects.volunteers import Volunteer
 
-from app.data_access.store.DEPRECATE_ad_hoc_cache import AdHocCache
-
 from app.frontend.forms.swaps import is_ready_to_swap
 from app.backend.rota.sorting_and_filtering import (
     RotaSortsAndFilters,
@@ -74,10 +72,12 @@ def get_body_of_table_at_event(
     sorts_and_filters: RotaSortsAndFilters,
     ready_to_swap: bool = False,
 ) -> List[RowInTable]:
-    dict_of_volunteers_at_event_with_event_data = get_sorted_and_filtered_dict_of_volunteers_at_event(
-        object_store=interface.object_store,
-        event=event,
-        sorts_and_filters=sorts_and_filters,
+    dict_of_volunteers_at_event_with_event_data = (
+        get_sorted_and_filtered_dict_of_volunteers_at_event(
+            object_store=interface.object_store,
+            event=event,
+            sorts_and_filters=sorts_and_filters,
+        )
     )
 
     other_rows = [
@@ -94,8 +94,8 @@ def get_body_of_table_at_event(
 
 
 def get_row_for_volunteer_at_event(
-        interface: abstractInterface,
-        volunteer: Volunteer,
+    interface: abstractInterface,
+    volunteer: Volunteer,
     volunteer_data_at_event: AllEventDataForVolunteer,
     ready_to_swap: bool = False,
 ) -> RowInTable:
@@ -109,20 +109,19 @@ def get_row_for_volunteer_at_event(
     day_inputs = get_allocation_inputs_for_volunteer(
         volunteer_data_at_event=volunteer_data_at_event,
         ready_to_swap=ready_to_swap,
-        interface=interface
+        interface=interface,
     )
 
     last_part = get_last_part_of_row_for_volunteer_at_event(
-        volunteer_data_at_event=volunteer_data_at_event,
-        ready_to_swap=ready_to_swap
+        volunteer_data_at_event=volunteer_data_at_event, ready_to_swap=ready_to_swap
     )
 
     return RowInTable(first_part + day_inputs + last_part)
 
 
 def get_first_part_of_row_for_volunteer_at_event(
-        interface: abstractInterface,
-        volunteer: Volunteer,
+    interface: abstractInterface,
+    volunteer: Volunteer,
     volunteer_data_at_event: AllEventDataForVolunteer,
     ready_to_swap: bool,
 ) -> list:
@@ -132,12 +131,13 @@ def get_first_part_of_row_for_volunteer_at_event(
     location = get_location_button(
         object_store=interface.object_store,
         ready_to_swap=ready_to_swap,
-        volunteer_data_at_event=volunteer_data_at_event
+        volunteer_data_at_event=volunteer_data_at_event,
     )
 
     preferred = volunteer_data_at_event.registration_data.preferred_duties
     same_different = volunteer_data_at_event.registration_data.same_or_different
-    skills_button = get_skills_button(volunteer_data_at_event=volunteer_data_at_event,
+    skills_button = get_skills_button(
+        volunteer_data_at_event=volunteer_data_at_event,
         ready_to_swap=ready_to_swap,
     )
     previous_role_copy_button = copy_previous_role_button_or_blank(
@@ -157,8 +157,7 @@ def get_first_part_of_row_for_volunteer_at_event(
 
 
 def get_last_part_of_row_for_volunteer_at_event(
-        volunteer_data_at_event: AllEventDataForVolunteer,
-        ready_to_swap: bool = False
+    volunteer_data_at_event: AllEventDataForVolunteer, ready_to_swap: bool = False
 ) -> list:
     if ready_to_swap:
         return ["", ""]
@@ -173,7 +172,9 @@ def get_last_part_of_row_for_volunteer_at_event(
 def get_notes_input(volunteer_data_at_event: AllEventDataForVolunteer) -> textInput:
     return textInput(
         value=volunteer_data_at_event.registration_data.notes,
-        input_name=input_name_for_notes_and_volunteer(volunteer_data_at_event.volunteer),
+        input_name=input_name_for_notes_and_volunteer(
+            volunteer_data_at_event.volunteer
+        ),
         input_label="",
     )
 
@@ -181,4 +182,4 @@ def get_notes_input(volunteer_data_at_event: AllEventDataForVolunteer) -> textIn
 def input_name_for_notes_and_volunteer(
     volunteer: Volunteer,
 ) -> str:
-    return "NOTES_%s" % (volunteer.id)
+    return "NOTES_%s" % volunteer.id

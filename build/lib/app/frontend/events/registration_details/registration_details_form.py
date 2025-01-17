@@ -1,8 +1,10 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.objects.composed.cadets_at_event_with_registration_data import DictOfCadetsWithRegistrationData, \
-    CadetRegistrationData
+from app.objects.composed.cadets_at_event_with_registration_data import (
+    DictOfCadetsWithRegistrationData,
+    CadetRegistrationData,
+)
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -20,7 +22,7 @@ from app.objects.abstract_objects.abstract_form import (
     intInput,
 )
 from app.objects.abstract_objects.abstract_tables import RowInTable
-from app.objects.cadets import  Cadet
+from app.objects.cadets import Cadet
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
 from app.data_access.configuration.field_list_groups import (
@@ -45,7 +47,11 @@ class RegistrationDetailsForEvent:
     all_columns_excluding_special_fields: list
     registration_data: DictOfCadetsWithRegistrationData
 
-from app.backend.registration_data.cadet_registration_data import get_dict_of_cadets_with_registration_data
+
+from app.backend.registration_data.cadet_registration_data import (
+    get_dict_of_cadets_with_registration_data,
+)
+
 
 def get_registration_data(
     interface: abstractInterface, event: Event, sort_order: str = arg_not_passed
@@ -64,9 +70,8 @@ def get_registration_data(
     )
 
 
-
 def get_list_of_columns_excluding_special_fields(
-    registration_data: DictOfCadetsWithRegistrationData
+    registration_data: DictOfCadetsWithRegistrationData,
 ) -> list:
     field_names = registration_data.list_of_registration_fields()
     all_columns = get_columns_to_edit(field_names) + get_columns_to_view(field_names)
@@ -79,21 +84,27 @@ def get_top_row_for_table_of_registration_details(all_columns: list) -> RowInTab
 
 
 def row_for_cadet_in_event(
-    cadet: Cadet,
-        registration_details: RegistrationDetailsForEvent
-
+    cadet: Cadet, registration_details: RegistrationDetailsForEvent
 ) -> RowInTable:
 
-    registration_details_for_cadet= registration_details.registration_data[cadet]
-    status_button = get_status_button(registration_details_for_cadet.status, cadet_id=cadet.id)
-    days_attending_field = get_days_attending_field(
-        registration_details_for_cadet.availability, cadet_id=cadet.id, event=registration_details_for_cadet.event
+    registration_details_for_cadet = registration_details.registration_data[cadet]
+    status_button = get_status_button(
+        registration_details_for_cadet.status, cadet_id=cadet.id
     )
-    health_field = get_health_field(registration_details_for_cadet.health, cadet_id=cadet.id)
-    notes_field = get_notes_field(registration_details_for_cadet.notes, cadet_id=cadet.id)
+    days_attending_field = get_days_attending_field(
+        registration_details_for_cadet.availability,
+        cadet_id=cadet.id,
+        event=registration_details_for_cadet.event,
+    )
+    health_field = get_health_field(
+        registration_details_for_cadet.health, cadet_id=cadet.id
+    )
+    notes_field = get_notes_field(
+        registration_details_for_cadet.notes, cadet_id=cadet.id
+    )
 
     other_columns = get_list_of_column_forms_excluding_reserved_fields(
-         cadet=cadet, registration_details=registration_details
+        cadet=cadet, registration_details=registration_details
     )
 
     return RowInTable(
@@ -106,11 +117,13 @@ def get_list_of_column_forms_excluding_reserved_fields(
     cadet: Cadet,
     registration_details: RegistrationDetailsForEvent,
 ) -> list:
-    registration_details_for_cadet= registration_details.registration_data[cadet]
+    registration_details_for_cadet = registration_details.registration_data[cadet]
 
     column_form_entries = [
         form_item_for_key_value_pair_in_row_data(
-            column_name=column_name, cadet=cadet, registration_details_for_cadet=registration_details_for_cadet
+            column_name=column_name,
+            cadet=cadet,
+            registration_details_for_cadet=registration_details_for_cadet,
         )
         for column_name in registration_details.all_columns_excluding_special_fields
     ]
@@ -187,9 +200,9 @@ def get_health_field(notes: str, cadet_id: str) -> textInput:
 
 
 def form_item_for_key_value_pair_in_row_data(
-    column_name: str,     cadet: Cadet,
-    registration_details_for_cadet: CadetRegistrationData
-
+    column_name: str,
+    cadet: Cadet,
+    registration_details_for_cadet: CadetRegistrationData,
 ):
     current_value = registration_details_for_cadet.data_in_row[column_name]
     cadet_id = cadet.id

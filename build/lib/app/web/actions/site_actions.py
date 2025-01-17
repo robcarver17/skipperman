@@ -1,4 +1,3 @@
-
 from app.frontend.cadets.cadet_function_mapping import cadet_function_mapping
 from app.frontend.events.events_function_mapping import event_function_mapping
 from app.frontend.reporting.reporting_function_mapping import reporting_function_mapping

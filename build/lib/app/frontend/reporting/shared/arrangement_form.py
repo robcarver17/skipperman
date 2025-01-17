@@ -2,6 +2,10 @@ from typing import Union, Callable, Dict
 
 import pandas as pd
 
+from app.backend.reporting.arrangement.arrange_options import dict_of_arrangements_that_reorder
+from app.backend.reporting.options_and_parameters.report_options import ReportingOptions
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import \
+    SpecificParametersForTypeOfReport
 from app.objects.abstract_objects.abstract_text import bold
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
@@ -39,21 +43,14 @@ from app.frontend.reporting.shared.reporting_options import (
     augment_order_of_groups_with_sizes,
     get_reporting_options,
 )
-from app.backend.reporting.arrangement.arrange_options import update_arrangement_and_group_order
+from app.backend.reporting.arrangement.get_and_update_arrangement_options import (
+    update_arrangement_and_group_order,
+)
 from app.frontend.reporting.shared.group_order import (
     get_missing_groups,
     get_empty_groups,
 )
 
-from app.backend.reporting import (
-    dict_of_arrangements_that_reorder,
-)
-from app.backend.reporting import (
-    SpecificParametersForTypeOfReport,
-)
-from app.backend.reporting import (
-    ReportingOptions,
-)
 
 
 def form_for_group_arrangement_options(
@@ -66,7 +63,6 @@ def form_for_group_arrangement_options(
         specific_parameters_for_type_of_report=specific_parameters_for_type_of_report,
         dict_of_df=dict_of_df,
     )
-    print("HERO!")
     print(reporting_options)
     add_delete_buttons = get_add_delete_buttons_for_group_ordering(reporting_options)
     reorder_list_form = get_reorder_list_of_groups_form_element(reporting_options)
@@ -75,7 +71,7 @@ def form_for_group_arrangement_options(
         interface=interface, reporting_options=reporting_options
     )
     missing_line = flag_missing_groups(
-        interface=interface, reporting_options=reporting_options
+         reporting_options=reporting_options
     )
 
     return ListOfLines(
@@ -98,7 +94,7 @@ def form_for_group_arrangement_options(
 
 
 def flag_missing_groups(
-    interface: abstractInterface, reporting_options: ReportingOptions
+   reporting_options: ReportingOptions
 ) -> Line:
     missing_groups = get_missing_groups(reporting_options=reporting_options)
     if len(missing_groups) == 0:
@@ -163,7 +159,7 @@ def get_reorder_matrix_form_element(
     interface: abstractInterface, reporting_options: ReportingOptions
 ) -> Table:
     arrangement_of_rows = get_arrangement_of_rows_from_storage_or_derive_from_method(
-        reporting_options=reporting_options, interface=interface
+        reporting_options=reporting_options, object_store=interface.object_store
     )
     order_of_groups_with_numbers = augment_order_of_groups_with_sizes(reporting_options)
     reorder_matrix_table = reorder_matrix(
@@ -244,7 +240,7 @@ def change_arrangement_given_method_and_current_order(
 
     update_arrangement_and_group_order(
         arrangement_and_group_options=arrange_options_and_group_order,
-        interface=interface,
+        object_store=interface.object_store,
         report_type=reporting_options.specific_parameters.report_type,
     )
 
@@ -260,7 +256,7 @@ def change_group_order_and_arrangement(
     indices_to_swap = reorder_form_interface.indices_to_swap()
     new_group_order = reorder_form_interface.new_order_of_list()
     modify_arrangement_given_change_in_group_order(
-        interface=interface,
+        object_store=interface.object_store,
         indices_to_swap=indices_to_swap,
         new_group_order=new_group_order,
         report_type=reporting_options.specific_parameters.report_type,
@@ -272,7 +268,7 @@ def remove_empty_from_group_order_and_arrangement(
 ):
     empty_groups = get_empty_groups(reporting_options)
     remove_empty_groups_from_group_order_and_arrangement(
-        interface=interface,
+        object_store=interface.object_store,
         empty_groups=empty_groups,
         reporting_options=reporting_options,
     )
@@ -310,7 +306,7 @@ def get_order_matrix_interface(
 ) -> reorderMatrixInterface:
     arrangement_of_columns = (
         get_arrangement_of_columns_from_storage_or_derive_from_method(
-            interface, reporting_options=reporting_options
+            object_store=interface.object_store, reporting_options=reporting_options
         )
     )
 

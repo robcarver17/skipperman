@@ -1,3 +1,4 @@
+import app.backend.reporting.options_and_parameters.get_and_update_print_options
 from app.backend.reporting import (
     ArrangementOptionsAndGroupOrder,
 )
@@ -23,7 +24,7 @@ class OptionsData:
         )
 
     def get_print_options(self, report_name: str) -> PrintOptions:
-        return self.data_api.get_print_options(report_name)
+        return app.backend.reporting.options_and_parameters.get_and_update_print_options.get_print_options(report_name)
 
     def save_print_options(self, print_options: PrintOptions, report_name: str):
         self.data_api.save_print_options(

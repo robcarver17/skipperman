@@ -43,9 +43,6 @@ class FoodRequirements(GenericSkipperManObject):
         return ", ".join(description_list)
 
 
-no_food_requirements = FoodRequirements()
-
-
 def guess_food_requirements_from_food_field(food_field_str: str) -> FoodRequirements:
     food_field_str_lower = food_field_str.lower()
     vegetarian = (
@@ -111,15 +108,8 @@ class ListOfCadetsWithFoodRequirementsAtEvent(GenericListOfObjects):
         self, food_requirements: FoodRequirements
     ) -> "ListOfCadetsWithFoodRequirementsAtEvent":
         return ListOfCadetsWithFoodRequirementsAtEvent(
-            [
-                object
-                for object in self
-                if object.food_requirements == food_requirements
-            ]
+            [object for object in self if object.food_requirements == food_requirements]
         )
-
-    def unique_list_of_food_requirements(self) -> List[str]:
-        return unique_list_of_food_requirements(self)
 
     def change_food_requirements_for_cadet(
         self, cadet_id: str, food_requirements: FoodRequirements
@@ -193,15 +183,8 @@ class ListOfVolunteersWithFoodRequirementsAtEvent(GenericListOfObjects):
         self, food_requirements: FoodRequirements
     ) -> "ListOfVolunteersWithFoodRequirementsAtEvent":
         return ListOfVolunteersWithFoodRequirementsAtEvent(
-            [
-                object
-                for object in self
-                if object.food_requirements == food_requirements
-            ]
+            [object for object in self if object.food_requirements == food_requirements]
         )
-
-    def unique_list_of_food_requirements(self) -> List[str]:
-        return unique_list_of_food_requirements(self)
 
     def change_food_requirements_for_volunteer(
         self, volunteer_id: str, food_requirements: FoodRequirements
@@ -246,19 +229,3 @@ class ListOfVolunteersWithFoodRequirementsAtEvent(GenericListOfObjects):
         return ListOfVolunteersWithFoodRequirementsAtEvent(
             [object for object in self if object.volunteer_id in list_of_volunteer_ids]
         )
-
-
-def unique_list_of_food_requirements(
-    list_of_food_requirements: Union[
-        ListOfCadetsWithFoodRequirementsAtEvent,
-        ListOfVolunteersWithFoodRequirementsAtEvent,
-    ]
-) -> List[str]:
-    all_required = [
-        required.food_requirements.describe() for required in list_of_food_requirements
-    ]
-    all_required = [
-        food_required for food_required in all_required if len(food_required) > 0
-    ]
-
-    return list(set(all_required))

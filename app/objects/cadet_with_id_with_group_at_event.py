@@ -19,15 +19,13 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return CadetIdWithGroup
 
-
     def remove_group_allocation_for_cadet_on_day(self, cadet_id: str, day: Day):
         self.update_group_for_cadet_on_day(
-            cadet_id=cadet_id, day=day,
-            chosen_group_id=unallocated_group_id
+            cadet_id=cadet_id, day=day, chosen_group_id=unallocated_group_id
         )
 
     def update_group_for_cadet_on_day(
-        self, cadet_id: str, day: Day,  chosen_group_id: str
+        self, cadet_id: str, day: Day, chosen_group_id: str
     ):
         if self.cadet_is_allocated_to_group_on_day(cadet_id=cadet_id, day=day):
             self._update_group_for_existing_cadet_id_on_day(
@@ -51,16 +49,19 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
             ## don't store group as unallocated instead remove entirely
             self.pop(idx)
         else:
-            self[idx] = CadetIdWithGroup(cadet_id=cadet_id, group_id=chosen_group_id, day=day)
+            self[idx] = CadetIdWithGroup(
+                cadet_id=cadet_id, group_id=chosen_group_id, day=day
+            )
 
-    def _update_group_for_new_cadet(self, cadet_id: str,  day: Day,  chosen_group_id: str):
+    def _update_group_for_new_cadet(
+        self, cadet_id: str, day: Day, chosen_group_id: str
+    ):
         if chosen_group_id == unallocated_group_id:
-            return ## we don't store unallocated
+            return  ## we don't store unallocated
 
         self.append(
             CadetIdWithGroup(cadet_id=cadet_id, group_id=chosen_group_id, day=day)
         )
-
 
     def cadet_is_allocated_to_group_on_day(self, cadet_id: str, day: Day) -> bool:
         item = self.item_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
@@ -78,7 +79,6 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
     @property
     def list_of_ids(self) -> list:
         return [item.cadet_id for item in self]
-
 
 
 CADET_NAME = "cadet"

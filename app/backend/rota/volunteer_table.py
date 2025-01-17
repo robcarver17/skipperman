@@ -1,13 +1,18 @@
 from typing import List
 
-from app.backend.volunteers.volunteers_at_event import get_dict_of_all_event_data_for_volunteers
+from app.backend.volunteers.volunteers_at_event import (
+    get_dict_of_all_event_data_for_volunteers,
+)
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
 from app.objects.events import Event
 
 from app.objects.groups import unallocated_group, Group
 
 from app.data_access.store.object_store import ObjectStore
-from app.backend.volunteers.roles_and_teams import get_list_of_roles, get_dict_of_teams_and_roles
+from app.backend.volunteers.roles_and_teams import (
+    get_list_of_roles,
+    get_dict_of_teams_and_roles,
+)
 from app.backend.groups.list_of_groups import get_list_of_groups
 from app.objects.composed.volunteer_roles import no_role_set
 from app.objects.roles_and_teams import instructor_team
@@ -16,6 +21,7 @@ from app.objects.volunteers import Volunteer
 MAKE_UNAVAILABLE = "* UNAVAILABLE *"
 NO_ROLE_SET = "No role allocated"
 
+
 def get_dict_of_roles_for_dropdown(object_store: ObjectStore):
     volunteer_roles = get_list_of_roles(object_store)
     dict_of_roles = {role.name: role.name for role in volunteer_roles}
@@ -23,6 +29,7 @@ def get_dict_of_roles_for_dropdown(object_store: ObjectStore):
     dict_of_roles[MAKE_UNAVAILABLE] = MAKE_UNAVAILABLE
 
     return dict_of_roles
+
 
 def get_dict_of_groups_for_dropdown(object_store: ObjectStore):
     groups = get_list_of_groups(object_store)
@@ -34,10 +41,12 @@ def get_dict_of_groups_for_dropdown(object_store: ObjectStore):
 
 
 def all_roles_match_across_event(
-    volunteer_data_at_event: AllEventDataForVolunteer
+    volunteer_data_at_event: AllEventDataForVolunteer,
 ) -> bool:
-    all_volunteers_in_roles_at_event_including_no_role_set = [volunteer_data_at_event.roles_and_groups.role_and_group_on_day(day)
-                                                              for day in volunteer_data_at_event.event.days_in_event()]
+    all_volunteers_in_roles_at_event_including_no_role_set = [
+        volunteer_data_at_event.roles_and_groups.role_and_group_on_day(day)
+        for day in volunteer_data_at_event.event.days_in_event()
+    ]
 
     if len(all_volunteers_in_roles_at_event_including_no_role_set) == 0:
         return False
@@ -60,8 +69,10 @@ def all_roles_match_across_event(
 def volunteer_has_empty_available_days_without_role(
     volunteer_data_at_event: AllEventDataForVolunteer,
 ) -> bool:
-    all_volunteers_in_roles_at_event_including_no_role_set = [volunteer_data_at_event.roles_and_groups.role_and_group_on_day(day)
-                                                              for day in volunteer_data_at_event.event.days_in_event()]
+    all_volunteers_in_roles_at_event_including_no_role_set = [
+        volunteer_data_at_event.roles_and_groups.role_and_group_on_day(day)
+        for day in volunteer_data_at_event.event.days_in_event()
+    ]
     unallocated_roles = [
         volunteer_role_and_group.role
         for volunteer_role_and_group in all_volunteers_in_roles_at_event_including_no_role_set
@@ -73,10 +84,11 @@ def volunteer_has_empty_available_days_without_role(
 
 def volunteer_has_at_least_one_day_in_role_and_all_roles_and_groups_match(
     volunteer_data_at_event: AllEventDataForVolunteer,
-
 ) -> bool:
-    all_volunteers_in_roles_at_event_including_no_role_set = [volunteer_data_at_event.roles_and_groups.role_and_group_on_day(day)
-                                                              for day in volunteer_data_at_event.event.days_in_event()]
+    all_volunteers_in_roles_at_event_including_no_role_set = [
+        volunteer_data_at_event.roles_and_groups.role_and_group_on_day(day)
+        for day in volunteer_data_at_event.event.days_in_event()
+    ]
 
     allocated_roles = [
         volunteer_role_and_group.role
@@ -88,7 +100,7 @@ def volunteer_has_at_least_one_day_in_role_and_all_roles_and_groups_match(
         return False
 
     unique_allocated_roles = set(allocated_roles)
-    all_match = len(unique_allocated_roles)==1
+    all_match = len(unique_allocated_roles) == 1
 
     return all_match
 

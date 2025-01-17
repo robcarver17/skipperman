@@ -20,13 +20,14 @@ class BoatClass(GenericSkipperManObjectWithIds):
     def __eq__(self, other):
         return self.name == other.name and self.hidden == other.hidden
 
-no_boat_class= BoatClass('', True)
+
+no_boat_class = BoatClass("", True)
+
 
 class ListOfBoatClasses(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return BoatClass
-
 
     def idx_given_name(self, boat_name: str):
         id = [item.id for item in self if item.name == boat_name]

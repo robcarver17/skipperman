@@ -3,7 +3,6 @@ from importlib import import_module
 from typing import List
 
 
-
 def get_files_in_directory(mypath: str):
     onlyfiles = [
         f for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))

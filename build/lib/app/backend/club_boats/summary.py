@@ -2,7 +2,9 @@ from typing import Dict, List
 
 from app.objects.cadets import Cadet
 
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_attendance_matrix_for_list_of_cadets_at_event
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
+    get_attendance_matrix_for_list_of_cadets_at_event,
+)
 
 from app.data_access.store.object_store import ObjectStore
 
@@ -12,15 +14,25 @@ from app.objects.club_dinghies import ClubDinghy
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 
-from app.objects.composed.cadets_at_event_with_club_dinghies import DictOfCadetsAndClubDinghiesAtEvent
-from app.backend.club_boats.cadets_with_club_dinghies_at_event import get_dict_of_cadets_and_club_dinghies_at_event
+from app.objects.composed.cadets_at_event_with_club_dinghies import (
+    DictOfCadetsAndClubDinghiesAtEvent,
+)
+from app.backend.club_boats.cadets_with_club_dinghies_at_event import (
+    get_dict_of_cadets_and_club_dinghies_at_event,
+)
+
 
 def summarise_club_boat_allocations_for_event(
     object_store: ObjectStore, event: Event
 ) -> PandasDFTable:
-    dict_of_cadets_and_club_dinghies_at_event = get_dict_of_cadets_and_club_dinghies_at_event(object_store=object_store,
-                                                                                              event=event)
-    list_of_dinghys_at_event = dict_of_cadets_and_club_dinghies_at_event.unique_sorted_list_of_allocated_club_dinghys_allocated_at_event()
+    dict_of_cadets_and_club_dinghies_at_event = (
+        get_dict_of_cadets_and_club_dinghies_at_event(
+            object_store=object_store, event=event
+        )
+    )
+    list_of_dinghys_at_event = (
+        dict_of_cadets_and_club_dinghies_at_event.unique_sorted_list_of_allocated_club_dinghys_allocated_at_event()
+    )
 
     row_names = list_of_dinghys_at_event.list_of_names()
     availability_dict = get_attendance_matrix_for_list_of_cadets_at_event(
@@ -33,7 +45,7 @@ def summarise_club_boat_allocations_for_event(
         groups=list_of_dinghys_at_event,
         group_labels=row_names,
         availability_dict=availability_dict,
-        list_of_ids_with_groups=dict_of_cadets_and_club_dinghies_at_event, ## ignore typing error
+        list_of_ids_with_groups=dict_of_cadets_and_club_dinghies_at_event,  ## ignore typing error
     )
 
     return table
@@ -53,7 +65,9 @@ def get_relevant_cadets_for_club_dinghy(
         result_dict[day] = [
             cadet
             for cadet in dict_of_cadets_with_club_dinghies_at_event.list_of_cadets
-            if dict_of_cadets_with_club_dinghies_at_event.club_dinghys_for_cadet(cadet).has_dinghy_on_day(day=day, dinghy=dinghy)
+            if dict_of_cadets_with_club_dinghies_at_event.club_dinghys_for_cadet(
+                cadet
+            ).has_dinghy_on_day(day=day, dinghy=dinghy)
         ]
 
     return result_dict

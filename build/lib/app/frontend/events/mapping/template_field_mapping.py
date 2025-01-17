@@ -1,11 +1,17 @@
 from typing import Union
-from app.backend.mapping.list_of_field_mappings import get_list_of_field_mapping_template_names, get_field_mapping_template, save_field_mapping_template, save_field_mapping_for_event
+from app.backend.mapping.list_of_field_mappings import (
+    get_list_of_field_mapping_template_names,
+    get_field_mapping_template,
+    save_field_mapping_template,
+    save_field_mapping_for_event,
+)
 
 from app.frontend.events.mapping.upload_template_field_mapping import (
     display_form_for_upload_template_field_mapping,
 )
 from app.objects.abstract_objects.abstract_interface import (
-    abstractInterface, form_with_message_and_finished_button,
+    abstractInterface,
+    form_with_message_and_finished_button,
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -92,7 +98,9 @@ def post_form_when_template_chosen(
     template_name = interface.last_button_pressed()
 
     try:
-        mapping = get_field_mapping_template(object_store=interface.object_store, template_name=template_name)
+        mapping = get_field_mapping_template(
+            object_store=interface.object_store, template_name=template_name
+        )
     except Exception as e:
         interface.log_error(
             "Template %s does not exist anymore? error code %s"
@@ -101,7 +109,9 @@ def post_form_when_template_chosen(
         return initial_state_form
 
     event = get_event_from_state(interface)
-    save_field_mapping_for_event(object_store=interface.object_store, event=event, mapping=mapping)
+    save_field_mapping_for_event(
+        object_store=interface.object_store, event=event, mapping=mapping
+    )
     interface.flush_cache_to_store()
 
     return form_with_message_and_finished_button(

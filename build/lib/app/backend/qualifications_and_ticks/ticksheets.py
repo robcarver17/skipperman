@@ -2,7 +2,9 @@ from typing import List
 
 from app.objects.cadets import Cadet
 
-from app.backend.groups.previous_groups import get_group_allocations_for_event_active_cadets_only
+from app.backend.groups.previous_groups import (
+    get_group_allocations_for_event_active_cadets_only,
+)
 
 from app.data_access.store.object_store import ObjectStore
 

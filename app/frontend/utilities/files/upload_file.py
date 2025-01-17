@@ -5,7 +5,10 @@ from werkzeug.exceptions import RequestEntityTooLarge
 from app.data_access.file_access import (
     get_files_in_directory,
 )
-from app.data_access.init_directories import public_reporting_directory, web_pathname_of_file
+from app.data_access.init_directories import (
+    public_reporting_directory,
+    web_pathname_of_file,
+)
 from app.objects.abstract_objects.abstract_form import textInput, fileInput, Form
 from app.objects.abstract_objects.abstract_buttons import (
     CANCEL_BUTTON_LABEL,
@@ -14,7 +17,9 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.objects.abstract_objects.abstract_interface import (
-    abstractInterface, form_with_message_and_finished_button, get_file_from_interface,
+    abstractInterface,
+    form_with_message_and_finished_button,
+    get_file_from_interface,
 )
 
 empty_name = ""

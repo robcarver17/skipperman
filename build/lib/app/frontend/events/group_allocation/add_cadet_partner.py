@@ -2,17 +2,23 @@ from typing import Union, Tuple
 
 from app.frontend.shared.cadet_state import get_cadet_from_state, clear_cadet_state
 from app.objects.abstract_objects.abstract_lines import ListOfLines
-from app.backend.cadets.list_of_cadets import  get_cadet_from_list_of_cadets_given_str_of_cadet
+from app.backend.cadets.list_of_cadets import (
+    get_cadet_from_list_of_cadets_given_str_of_cadet,
+)
 
 from app.frontend.events.group_allocation.store_state import get_day_from_state_or_none
-from app.backend.cadets_at_event.add_unregistered_partner_cadet import from_partner_name_to_cadet, \
-    add_unregistered_partner_cadet, \
-    get_registered_two_handed_partner_name_for_cadet_at_event
+from app.backend.cadets_at_event.add_unregistered_partner_cadet import (
+    from_partner_name_to_cadet,
+    add_unregistered_partner_cadet,
+    get_registered_two_handed_partner_name_for_cadet_at_event,
+)
 
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.shared.get_or_select_cadet_forms import (
     get_add_or_select_existing_cadet_form,
-see_similar_cadets_only_button, check_cadet_for_me_button, see_all_cadets_button,
+    see_similar_cadets_only_button,
+    check_cadet_for_me_button,
+    see_all_cadets_button,
     add_cadet_button,
 )
 from app.frontend.shared.add_edit_cadet_form import add_cadet_from_form_to_data
@@ -42,8 +48,6 @@ def header_text_given_cadets(primary_cadet: Cadet, partner_cadet: Cadet) -> List
     return ListOfLines([header_text_start % (primary_cadet.name, partner_cadet.name)])
 
 
-
-
 def post_form_add_cadet_partner(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
@@ -51,10 +55,9 @@ def post_form_add_cadet_partner(
     primary_cadet, partner_cadet = get_primary_cadet_and_partner_name(interface)
     header_text = header_text_given_cadets(primary_cadet, partner_cadet)
 
-    if (
-        see_similar_cadets_only_button.pressed(last_button_pressed)
-        or check_cadet_for_me_button.pressed(last_button_pressed)
-    ):
+    if see_similar_cadets_only_button.pressed(
+        last_button_pressed
+    ) or check_cadet_for_me_button.pressed(last_button_pressed):
         ## verify results already in form, display form again, allow final this time
         return get_add_or_select_existing_cadet_form(
             interface=interface,
@@ -96,6 +99,7 @@ def process_form_when_verified_cadet_to_be_added_as_partner(
         interface=interface, new_cadet=cadet
     )
 
+
 def process_form_when_existing_cadet_chosen_as_partner(
     interface: abstractInterface,
 ) -> NewForm:
@@ -103,8 +107,7 @@ def process_form_when_existing_cadet_chosen_as_partner(
 
     try:
         cadet = get_cadet_from_list_of_cadets_given_str_of_cadet(
-            object_store=interface.object_store,
-            cadet_selected=cadet_selected_as_str
+            object_store=interface.object_store, cadet_selected=cadet_selected_as_str
         )
     except:
         raise Exception(
@@ -132,7 +135,6 @@ def add_matched_partner_cadet_with_duplicate_registration(
     interface.flush_cache_to_store()
 
     return return_to_allocation_pages(interface)
-
 
 
 def return_to_allocation_pages(interface: abstractInterface) -> NewForm:

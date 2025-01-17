@@ -4,16 +4,19 @@ from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.frontend.forms.form_utils import get_availability_checkbox
-from app.backend.registration_data.identified_volunteers_at_event import \
-    get_list_of_relevant_information_for_volunteer_in_registration_data
-from app.backend.registration_data.cadet_and_volunteer_connections_at_event import \
-    are_all_cadets_in_list_already_connection_to_volunteer, \
-    get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer
-from app.backend.registration_data.volunter_relevant_information import (
-    suggested_volunteer_availability,
+from app.backend.registration_data.identified_volunteers_at_event import (
+    get_list_of_relevant_information_for_volunteer_in_registration_data,
+)
+from app.backend.registration_data.cadet_and_volunteer_connections_at_event import (
+    are_all_cadets_in_list_already_connection_to_volunteer,
+    get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer,
 )
 from app.objects.abstract_objects.abstract_form import checkboxInput, textInput, Form
-from app.objects.abstract_objects.abstract_lines import ListOfLines, Line, _______________
+from app.objects.abstract_objects.abstract_lines import (
+    ListOfLines,
+    Line,
+    _______________,
+)
 from app.objects.exceptions import missing_data
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
@@ -21,6 +24,7 @@ from app.objects.relevant_information_for_volunteers import (
     RelevantInformationForVolunteer,
     ListOfRelevantInformationForVolunteer,
     missing_relevant_information,
+    suggested_volunteer_availability,
 )
 from app.objects.volunteers import Volunteer
 
@@ -33,13 +37,16 @@ SAME_OR_DIFFERENT = "same_or_different"
 NOTES = "Notes"
 
 
-
 def display_form_to_confirm_volunteer_details(
     interface: abstractInterface, volunteer: Volunteer, event: Event
 ) -> Form:
 
-    list_of_relevant_information = get_list_of_relevant_information_for_volunteer_in_registration_data(
-        object_store=interface.object_store, volunteer=volunteer, event=event,
+    list_of_relevant_information = (
+        get_list_of_relevant_information_for_volunteer_in_registration_data(
+            object_store=interface.object_store,
+            volunteer=volunteer,
+            event=event,
+        )
     )
 
     header_text = get_header_text(event=event, volunteer=volunteer, interface=interface)
@@ -137,6 +144,7 @@ def get_cadet_names_text_given_identified_volunteer(
 
     return cadet_names_text
 
+
 def get_list_of_active_associated_cadet_names_in_mapped_event_data_given_identified_volunteer(
     interface: abstractInterface, event: Event, volunteer: Volunteer
 ) -> List[str]:
@@ -152,11 +160,11 @@ def get_connection_checkbox(
     list_of_cadets = get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer(
         object_store=interface.object_store, event=event, volunteer=volunteer
     )
-    if len(list_of_cadets)==0:
+    if len(list_of_cadets) == 0:
         return ""
 
     already_all_connected = are_all_cadets_in_list_already_connection_to_volunteer(
-        object_store = interface.object_store,
+        object_store=interface.object_store,
         volunteer=volunteer,
         list_of_cadets=list_of_cadets,
     )
@@ -164,12 +172,7 @@ def get_connection_checkbox(
     if already_all_connected:
         return ""
 
-    dict_of_labels = dict(
-        [
-            (cadet.id, cadet.name)
-            for cadet in list_of_cadets
-        ]
-    )
+    dict_of_labels = dict([(cadet.id, cadet.name) for cadet in list_of_cadets])
     dict_of_checked = dict(
         [(cadet.id, True) for cadet in list_of_cadets]
     )  ## we assume we want to connect by default
@@ -182,8 +185,6 @@ def get_connection_checkbox(
     )
 
     return connection_checkbox
-
-
 
 
 def get_availablity_text(
@@ -206,7 +207,7 @@ def get_availablity_text_for_single_entry(
         return ListOfLines("")
 
     cadet_name = get_cadet_name_from_relevant_information(
-         relevant_information=relevant_information
+        relevant_information=relevant_information
     )
     availability_info = relevant_information.availability
     available_text = ListOfLines(
@@ -237,7 +238,7 @@ def get_availablity_text_for_single_entry(
 
 
 def get_cadet_name_from_relevant_information(
-     relevant_information: RelevantInformationForVolunteer
+    relevant_information: RelevantInformationForVolunteer,
 ) -> str:
     NO_CADET = "(no cadet)"
     if relevant_information is missing_relevant_information:

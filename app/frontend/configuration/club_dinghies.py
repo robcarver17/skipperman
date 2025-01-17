@@ -62,4 +62,7 @@ def post_form_config_club_dinghies_page(
 def save_from_ordinary_list_of_club_dinghies(
     object_store: ObjectStore, new_list: List[ClubDinghy]
 ):
-    update_list_of_club_dinghies(object_store=object_store, updated_list_of_club_dinghies=ListOfClubDinghies(new_list))
+    update_list_of_club_dinghies(
+        object_store=object_store,
+        updated_list_of_club_dinghies=ListOfClubDinghies(new_list),
+    )

@@ -2,7 +2,9 @@ from typing import Dict
 
 import pandas as pd
 
-from app.backend.registration_data.raw_mapped_registration_data import get_raw_mapped_registration_data
+from app.backend.registration_data.raw_mapped_registration_data import (
+    get_raw_mapped_registration_data,
+)
 from app.backend.reporting.all_event_data.all_event_cadet_data import (
     get_df_for_cadets_event_data_dump,
 )
@@ -33,7 +35,8 @@ def create_csv_event_report_and_return_filename(
     dict_of_df = {}
     dict_of_df["Raw data"] = get_raw_event_data(object_store=object_store, event=event)
     dict_of_df["Cadets"] = get_df_for_cadets_event_data_dump(
-        object_store=object_store, event=event    )
+        object_store=object_store, event=event
+    )
     dict_of_df["Volunteers"] = get_df_for_volunteers_event_data_dump(
         object_store=object_store, event=event
     )
@@ -59,13 +62,16 @@ def create_csv_event_report_and_return_filename(
 def clear_empty_df_in_dict(dict_of_df: Dict[str, pd.DataFrame]):
     new_df_dict = dict()
     for tab_name, df in dict_of_df.items():
-        if len(df)>0:
+        if len(df) > 0:
             new_df_dict[tab_name] = df
 
     return new_df_dict
 
+
 def get_raw_event_data(object_store: ObjectStore, event: Event) -> pd.DataFrame:
-    mapped_events_data = get_raw_mapped_registration_data(object_store=object_store, event=event)
+    mapped_events_data = get_raw_mapped_registration_data(
+        object_store=object_store, event=event
+    )
 
     df = mapped_events_data.to_df()
     df[ROW_ID] = mapped_events_data.list_of_row_ids()

@@ -41,9 +41,17 @@ def check_field_mapping(object_store: ObjectStore, event: Event) -> ListOfLines:
     return warning_list
 
 
-MAPPING_ADVICE_IF_NO_IMPORT_DONE =ListOfLines([_______________,
-                                               Line(bold( "Upload a WA file to check the field mapping is consistent with that file")),
-                                               _______________])
+MAPPING_ADVICE_IF_NO_IMPORT_DONE = ListOfLines(
+    [
+        _______________,
+        Line(
+            bold(
+                "Upload a WA file to check the field mapping is consistent with that file"
+            )
+        ),
+        _______________,
+    ]
+)
 
 
 def list_of_warnings_about_fields(
@@ -53,7 +61,9 @@ def list_of_warnings_about_fields(
 ) -> ListOfLines:
 
     # Set up WA event mapping fields
-    wa_field_mapping = get_field_mapping_for_event(event=event, object_store=object_store)
+    wa_field_mapping = get_field_mapping_for_event(
+        event=event, object_store=object_store
+    )
 
     in_mapping_not_in_wa_file = wa_field_mapping.wa_fields_missing_from_list(
         fields_in_wa_file
@@ -71,7 +81,7 @@ def list_of_warnings_about_fields(
     )
 
     output = []
-    if len(fields_in_wa_file)>0:
+    if len(fields_in_wa_file) > 0:
         if len(in_mapping_not_in_wa_file) > 0:
             in_mapping_not_in_wa_file_as_lines = [
                 Line("-" + x) for x in in_mapping_not_in_wa_file
@@ -99,7 +109,7 @@ def list_of_warnings_about_fields(
             output.append(_______________)
 
     else:
-        output+=MAPPING_ADVICE_IF_NO_IMPORT_DONE
+        output += MAPPING_ADVICE_IF_NO_IMPORT_DONE
 
     if len(expected_not_in_mapping) > 0:
         expected_not_in_mapping_as_lines = [

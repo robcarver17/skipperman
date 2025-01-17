@@ -8,7 +8,7 @@ from app.objects.day_selectors import (
     day_selector_to_text_in_stored_format,
     Day,
 )
-from app.objects.exceptions import missing_data
+from app.objects.exceptions import missing_data, MissingData, MultipleMatches
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.utils import clean_up_dict_with_nans
@@ -22,7 +22,7 @@ NOTES = "notes"
 class VolunteerAtEventWithId(GenericSkipperManObject):
     volunteer_id: str
     availablity: DaySelector
-    list_of_associated_cadet_id: list
+    list_of_associated_cadet_id: list  ## no longer used
     preferred_duties: str = ""  ## information only
     same_or_different: str = ""  ## information only
     any_other_information: str = (
@@ -88,33 +88,6 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
         volunteer_at_event = self.volunteer_at_event_with_id(volunteer.id)
         volunteer_at_event.availablity.make_unavailable_on_day(day)
 
-    def is_volunteer_already_at_event(self, volunteer_id: str):
-        all_ids = self.list_of_volunteer_ids
-        return str(volunteer_id) in all_ids
-
-    def list_of_volunteer_ids_associated_with_cadet_id(self, cadet_id: str):
-        list_of_volunteers = self.list_of_volunteers_associated_with_cadet_id(cadet_id)
-        return list_of_volunteers.list_of_volunteer_ids
-
-    def list_of_volunteers_associated_with_cadet_id(self, cadet_id: str):
-        return ListOfVolunteersAtEventWithId(
-            [
-                volunteer_at_event
-                for volunteer_at_event in self
-                if cadet_id in volunteer_at_event.list_of_associated_cadet_id
-            ]
-        )
-
-    def update_volunteer_at_event(self, volunteer_at_event: VolunteerAtEventWithId):
-        current_volunteer_idx = self.index_of_volunteer_at_event_with_id(
-            volunteer_at_event.volunteer_id
-        )
-        if current_volunteer_idx is missing_data:
-            raise Exception("Can't update if volunteer doesn't exist at event")
-
-        ## ignore warning, it's an in place replacement
-        self[current_volunteer_idx] = volunteer_at_event
-
     def remove_volunteer_with_id(self, volunteer_id: str):
         idx_of_volunteer_at_event = self.index_of_volunteer_at_event_with_id(
             volunteer_id
@@ -124,30 +97,11 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
         else:
             del self[idx_of_volunteer_at_event]
 
-    def update_volunteer_notes_at_event(self, volunteer_id: str, new_notes: str):
-        volunteer_at_event = self.volunteer_at_event_with_id(volunteer_id)
-        volunteer_at_event.notes = new_notes
-
-    def remove_cadet_id_association_from_volunteer(
-        self, cadet_id: str, volunteer_id: str
-    ):
-        volunteer_at_event = self.volunteer_at_event_with_id(volunteer_id)
-        if volunteer_at_event is missing_data:
-            return None
-        associated_cadets = volunteer_at_event.list_of_associated_cadet_id
-        if cadet_id not in associated_cadets:
-            return None
-
-        associated_cadets.remove(cadet_id)
-
     def volunteer_at_event_with_id(self, volunteer_id: str) -> VolunteerAtEventWithId:
         index_of_matching_volunteer = self.index_of_volunteer_at_event_with_id(
             volunteer_id
         )
-        if index_of_matching_volunteer is missing_data:
-            return missing_data
-        else:
-            return self[index_of_matching_volunteer]
+        return self[index_of_matching_volunteer]
 
     def index_of_volunteer_at_event_with_id(self, volunteer_id: str) -> int:
         list_of_ids = self.list_of_volunteer_ids
@@ -155,25 +109,15 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
             idx for idx, item_id in enumerate(list_of_ids) if item_id == volunteer_id
         ]
         if len(list_of_matching_indices) == 0:
-            return missing_data
+            raise MissingData
         elif len(list_of_matching_indices) == 1:
             return list_of_matching_indices[0]
         else:
-            raise Exception("A volunteer can't appear more than once at an event")
+            raise MultipleMatches("A volunteer can't appear more than once at an event")
 
     @property
     def list_of_volunteer_ids(self) -> list:
         return [str(object.volunteer_id) for object in self]
-
-    def add_volunteer_with_just_id(self, volunteer_id: str, availability: DaySelector):
-        if volunteer_id in self.list_of_volunteer_ids:
-            return
-        new_volunteer = VolunteerAtEventWithId(
-            volunteer_id=volunteer_id,
-            availablity=availability,
-            list_of_associated_cadet_id=[],
-        )
-        self.append(new_volunteer)
 
     def add_new_volunteer(self, volunteer_at_event: VolunteerAtEventWithId):
         existing_volunteer_at_event = self.volunteer_at_event_with_id(
@@ -186,14 +130,6 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
                 "Can't add volunteer with id %s to event again"
                 % volunteer_at_event.volunteer_id
             )
-
-    def add_cadet_id_to_existing_volunteer(self, volunteer_id: str, cadet_id: str):
-        existing_volunteer_at_event = self.volunteer_at_event_with_id(
-            volunteer_id=volunteer_id
-        )
-        add_cadet_association_to_existing_volunteer_with_cadet_id(
-            existing_volunteer_at_event=existing_volunteer_at_event, cadet_id=cadet_id
-        )
 
     def sort_by_list_of_volunteer_ids(
         self, list_of_ids
@@ -208,36 +144,3 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
         ]
 
         return ListOfVolunteersAtEventWithId(new_list_of_volunteers_at_event)
-
-    def list_of_volunteers_available_on_given_day(
-        self, day: Day
-    ) -> "ListOfVolunteersAtEventWithId":
-        new_list_of_volunteers_at_event = [
-            volunteer for volunteer in self if volunteer.available_on_day(day)
-        ]
-        return ListOfVolunteersAtEventWithId(new_list_of_volunteers_at_event)
-
-
-def add_cadet_association_to_existing_volunteer(
-    existing_volunteer_at_event: VolunteerAtEventWithId,
-    new_volunteer_at_event: VolunteerAtEventWithId,
-):
-    try:
-        assert len(new_volunteer_at_event.list_of_associated_cadet_id) == 1
-    except:
-        raise Exception(
-            "A new volunteer at an event can only have one cadet associated with them"
-        )
-    cadet_id = new_volunteer_at_event.list_of_associated_cadet_id[0]
-    add_cadet_association_to_existing_volunteer_with_cadet_id(
-        existing_volunteer_at_event=existing_volunteer_at_event, cadet_id=cadet_id
-    )
-
-
-def add_cadet_association_to_existing_volunteer_with_cadet_id(
-    existing_volunteer_at_event: VolunteerAtEventWithId, cadet_id: str
-):
-    if str(cadet_id) in existing_volunteer_at_event.list_of_associated_cadet_id:
-        pass
-    else:
-        existing_volunteer_at_event.list_of_associated_cadet_id.append(cadet_id)

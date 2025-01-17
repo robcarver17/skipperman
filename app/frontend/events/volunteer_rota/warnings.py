@@ -18,10 +18,18 @@ def warn_on_all_volunteers(
 ) -> Union[DetailListOfLines, str]:
     event = get_event_from_state(interface)
 
-    available_warnings = warn_on_all_volunteers_availability(object_store=interface.object_store, event=event)
-    group_warnings = warn_on_all_volunteers_group(object_store=interface.object_store, event=event)
-    missing_cadets = warn_on_all_volunteers_unconnected(object_store=interface.object_store, event=event)
-    qualification_warnings = warn_on_volunteer_qualifications(object_store=interface.object_store, event=event)
+    available_warnings = warn_on_all_volunteers_availability(
+        object_store=interface.object_store, event=event
+    )
+    group_warnings = warn_on_all_volunteers_group(
+        object_store=interface.object_store, event=event
+    )
+    missing_cadets = warn_on_all_volunteers_unconnected(
+        object_store=interface.object_store, event=event
+    )
+    qualification_warnings = warn_on_volunteer_qualifications(
+        object_store=interface.object_store, event=event
+    )
     cadets_with_no_volunteer = warn_on_cadets_which_should_have_volunteers(
         object_store=interface.object_store, event=event
     )

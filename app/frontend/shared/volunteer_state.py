@@ -42,7 +42,9 @@ def get_volunteer_at_event_from_state(
     interface: abstractInterface,
 ) -> Volunteer:
     volunteer_id = get_volunteer_id_selected_from_state(interface)  ## NEEDS TO BE SET
-    return get_volunteer_from_id(object_store=interface.object_store, volunteer_id=volunteer_id)
+    return get_volunteer_from_id(
+        object_store=interface.object_store, volunteer_id=volunteer_id
+    )
 
 
 def get_volunteer_at_event_with_id_from_state(

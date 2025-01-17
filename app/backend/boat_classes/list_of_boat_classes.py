@@ -5,9 +5,13 @@ from app.data_access.store.object_definitions import (
 )
 from app.objects.boat_classes import ListOfBoatClasses, BoatClass
 
-def get_boat_class_from_name(object_store: ObjectStore, boat_class_name: str) -> BoatClass:
+
+def get_boat_class_from_name(
+    object_store: ObjectStore, boat_class_name: str
+) -> BoatClass:
     list_of_boat_classes = get_list_of_boat_classes(object_store)
     return list_of_boat_classes[list_of_boat_classes.idx_given_name(boat_class_name)]
+
 
 def add_new_boat_class_given_string(
     object_store: ObjectStore, name_of_entry_to_add: str

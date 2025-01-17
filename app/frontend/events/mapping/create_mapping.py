@@ -3,7 +3,8 @@ from app.objects.events import Event
 
 from app.backend.mapping.list_of_field_mappings import temp_mapping_file_name
 from app.backend.wild_apricot.load_wa_file import (
-    get_staged_file_raw_event_filename, does_raw_event_file_exist,
+    get_staged_file_raw_event_filename,
+    does_raw_event_file_exist,
 )
 from app.backend.file_handling import load_spreadsheet_file_and_clear_nans
 from app.data_access.configuration.field_list_groups import ALL_FIELDS_AS_PD_SERIES
@@ -26,17 +27,12 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 
 
-
 def display_form_for_create_custom_field_mapping(interface: abstractInterface):
     event = get_event_from_state(interface)
     buttons = get_buttons_for_custom_mapping(interface=interface)
     contents_of_form = ListOfLines(
-        [
-            "Tools to create mapping for event %s" % str(event),
-            _______________,
-            buttons
-            ]
-        )
+        ["Tools to create mapping for event %s" % str(event), _______________, buttons]
+    )
 
     return Form(contents_of_form)
 
@@ -53,9 +49,10 @@ def get_buttons_for_custom_mapping(interface: abstractInterface):
             wa_field_button,
             upload_new_mapping_button,
             "",
-            help_button
+            help_button,
         ]
     )
+
 
 def get_wa_field_download_button(interface: abstractInterface):
     try:
@@ -137,7 +134,6 @@ def get_wa_file_from_staging(event: Event):
     return wa_as_df
 
 
-
 DOWNLOAD_MAPPING_BUTTON_LABEL = (
     "Download a mapping .csv file to edit (which you can then upload)"
 )
@@ -149,7 +145,9 @@ DOWNLOAD_FIELD_NAMES_BUTTON_LANEL = (
 download_field_names_button = Button(DOWNLOAD_FIELD_NAMES_BUTTON_LANEL, nav_button=True)
 
 DOWNLOAD_DEFINED_LIST_BUTTON_LABEL = "Download a .csv file of WA field names used in the current event file waiting for import"
-download_defined_list_button = Button(DOWNLOAD_DEFINED_LIST_BUTTON_LABEL, nav_button=True)
+download_defined_list_button = Button(
+    DOWNLOAD_DEFINED_LIST_BUTTON_LABEL, nav_button=True
+)
 
 UPLOAD_MAPPING_BUTTON_LABEL = "Upload new mapping .csv file"
 upload_new_mapping_button = Button(UPLOAD_MAPPING_BUTTON_LABEL, nav_button=True)

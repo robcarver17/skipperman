@@ -15,7 +15,7 @@ from app.objects.abstract_objects.abstract_form import (
 )
 from app.objects.abstract_objects.abstract_buttons import (
     cancel_menu_button,
-    save_menu_button
+    save_menu_button,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import (
@@ -28,18 +28,25 @@ from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_text import Heading
 
 
-
 def display_form_view_for_food_requirements(interface: abstractInterface) -> Form:
     event = get_event_from_state(interface)
     title = Heading("Food requirements for event %s" % str(event), centred=True, size=4)
 
     button_bar = get_button_bar_for_food_required()
 
-    summary_by_day = summarise_food_data_by_day(object_store=interface.object_store, event=event)
+    summary_by_day = summarise_food_data_by_day(
+        object_store=interface.object_store, event=event
+    )
     summaries = DetailListOfLines(ListOfLines([summary_by_day]), name="Summary")
 
-    cadet_food_table = DetailListOfLines(ListOfLines([get_table_of_cadets_with_food(interface)]), name = "Cadet food requirements")
-    volunteer_food_table = DetailListOfLines(ListOfLines([get_table_of_volunteers_with_food(interface)]), name = "Volunteer food requirements")
+    cadet_food_table = DetailListOfLines(
+        ListOfLines([get_table_of_cadets_with_food(interface)]),
+        name="Cadet food requirements",
+    )
+    volunteer_food_table = DetailListOfLines(
+        ListOfLines([get_table_of_volunteers_with_food(interface)]),
+        name="Volunteer food requirements",
+    )
 
     return Form(
         ListOfLines(

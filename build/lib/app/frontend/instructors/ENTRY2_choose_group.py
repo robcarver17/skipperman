@@ -1,6 +1,8 @@
 from typing import Union
 
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_list_of_all_groups_at_event
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
+    get_list_of_all_groups_at_event,
+)
 
 from app.frontend.reporting.qualifications.qualification_status import (
     write_expected_qualifications_to_temp_csv_file_and_return_filename,

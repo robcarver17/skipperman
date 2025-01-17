@@ -1,7 +1,11 @@
 import os
 
-from app.data_access.configuration.configuration import PUBLIC_REPORTING_SUBDIRECTORY, UPLOADS, DOWNLOAD_DIRECTORY, \
-    PUBLIC_WEB_PATH
+from app.data_access.configuration.configuration import (
+    PUBLIC_REPORTING_SUBDIRECTORY,
+    UPLOADS,
+    DOWNLOAD_DIRECTORY,
+    PUBLIC_WEB_PATH,
+)
 
 home_directory = os.path.expanduser("~")
 public_reporting_directory = os.path.join(home_directory, PUBLIC_REPORTING_SUBDIRECTORY)
@@ -34,4 +38,3 @@ try:
     os.mkdir(download_directory)
 except:
     pass
-

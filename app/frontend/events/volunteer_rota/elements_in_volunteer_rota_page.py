@@ -1,7 +1,8 @@
 from app.frontend.forms.form_utils import checked_and_labels_dict_for_skills_form
 from app.backend.rota.sorting_and_filtering import (
     RotaSortsAndFilters,
-    get_explanation_of_sorts_and_filters, FILTER_OPTIONS,
+    get_explanation_of_sorts_and_filters,
+    FILTER_OPTIONS,
 )
 
 from app.frontend.events.volunteer_rota.volunteer_rota_buttons import (

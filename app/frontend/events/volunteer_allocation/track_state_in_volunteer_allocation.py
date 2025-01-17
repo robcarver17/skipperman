@@ -10,9 +10,10 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.relevant_information_for_volunteers import (
     RelevantInformationForVolunteer,
 )
-from app.backend.registration_data.identified_volunteers_at_event import \
-    get_relevant_information_for_volunteer_in_event_at_row_and_index, \
-    get_list_of_unique_volunteer_ids_identified_in_registration_data
+from app.backend.registration_data.identified_volunteers_at_event import (
+    get_relevant_information_for_volunteer_in_event_at_row_and_index,
+    get_list_of_unique_volunteer_ids_identified_in_registration_data,
+)
 from app.objects.exceptions import missing_data, NoMoreData
 from app.data_access.configuration.field_list_groups import LIST_OF_VOLUNTEER_FIELDS
 
@@ -55,7 +56,7 @@ def get_relevant_information_for_current_volunteer(
     event = get_event_from_state(interface)
     relevant_information = (
         get_relevant_information_for_volunteer_in_event_at_row_and_index(
-            object_store = interface.object_store,
+            object_store=interface.object_store,
             row_id=row_id,
             volunteer_index=volunteer_index,
             event=event,
@@ -109,11 +110,15 @@ def get_next_volunteer_id_in_identified_event_data(
 
     return new_id
 
+
 def get_current_volunteer_at_event(interface: abstractInterface) -> Volunteer:
     volunteer_id = get_current_volunteer_id_at_event(interface)
-    if volunteer_id is missing_data:#
+    if volunteer_id is missing_data:  #
         return missing_data
-    return get_volunteer_from_id(object_store=interface.object_store, volunteer_id=volunteer_id)
+    return get_volunteer_from_id(
+        object_store=interface.object_store, volunteer_id=volunteer_id
+    )
+
 
 def get_current_volunteer_id_at_event(interface: abstractInterface) -> str:
     return interface.get_persistent_value(VOLUNTEER_AT_EVENT_ID, default=missing_data)
@@ -131,5 +136,6 @@ def list_of_unique_volunteer_ids_in_identified_event_data(
     interface: abstractInterface,
 ) -> list:
     event = get_event_from_state(interface)
-    return get_list_of_unique_volunteer_ids_identified_in_registration_data(object_store=interface.object_store, event=event)
-
+    return get_list_of_unique_volunteer_ids_identified_in_registration_data(
+        object_store=interface.object_store, event=event
+    )

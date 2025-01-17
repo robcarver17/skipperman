@@ -1,9 +1,10 @@
 from app.data_access.store.object_store import ObjectStore
 
-from app.backend.registration_data.identified_cadets_at_event import cadet_at_event_given_row_id
+from app.backend.registration_data.identified_cadets_at_event import (
+    cadet_at_event_given_row_id,
+)
 from app.objects.cadets import default_cadet
 from app.objects.exceptions import missing_data
-from app.objects.day_selectors import DaySelector, create_day_selector_from_short_form_text
 from app.objects.cadet_with_id_at_event import get_attendance_selection_from_event_row
 
 from app.objects.events import Event
@@ -35,7 +36,7 @@ NO_VOLUNTEER_IN_FORM = "NO_VOLUNTEER_IN_FORM"
 
 
 def get_relevant_information_for_volunteer(
-    object_store:ObjectStore,
+    object_store: ObjectStore,
     row_in_mapped_event: RowInRegistrationData,
     volunteer_index: int,
     event: Event,
@@ -59,7 +60,7 @@ def get_relevant_information_for_volunteer(
 
 
 def get_identification_information_for_volunteer(
-        object_store: ObjectStore,
+    object_store: ObjectStore,
     row_in_mapped_event: RowInRegistrationData,
     volunteer_index: int,
     event: Event,
@@ -187,23 +188,3 @@ def minimum_volunteer_information_is_missing(
     relevant_information_for_id: RelevantInformationForVolunteerIdentification,
 ):
     return relevant_information_for_id.passed_name == NO_VOLUNTEER_IN_FORM
-
-
-def suggested_volunteer_availability(
-    relevant_information: RelevantInformationForVolunteerAvailability,
-) -> DaySelector:
-    day_availability = relevant_information.day_availability
-    weekend_availability = relevant_information.weekend_availability
-    cadet_availability = relevant_information.cadet_availability
-
-    if day_availability is not missing_data:
-        return create_day_selector_from_short_form_text(day_availability)
-    elif weekend_availability is not missing_data:
-        return create_day_selector_from_short_form_text(weekend_availability)
-    elif cadet_availability is not missing_data:
-        return cadet_availability
-    else:
-        ## assume all
-        raise Exception("No availability information")
-
-

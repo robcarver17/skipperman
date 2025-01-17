@@ -57,9 +57,9 @@ def compose_dict_of_tick_list_items_with_cadet_id_as_key(
         for (
             cadet_with_tick_list_items
         ) in list_of_cadet_ids_with_tick_list_items_for_cadet_id:
-            raw_dict[
-                str(cadet_with_tick_list_items.cadet_id)
-            ] = cadet_with_tick_list_items.dict_of_ticks_with_items
+            raw_dict[str(cadet_with_tick_list_items.cadet_id)] = (
+                cadet_with_tick_list_items.dict_of_ticks_with_items
+            )
 
     return DictOfCadetIdAndTicksWithItems(
         raw_dict=raw_dict,
@@ -132,12 +132,12 @@ class TicksForQualification(Dict[TickSubStage, DictOfTickSheetItemsAndTicksForCa
     ):
         raw_dict = {}
         for tick_sub_stage, list_of_tick_sheet_items in tick_substages_as_dict.items():
-            raw_dict[
-                tick_sub_stage
-            ] = DictOfTickSheetItemsAndTicksForCadet.from_dict_of_ticks_and_qualifications(
-                dict_of_ticks_with_items=dict_of_ticks_with_items,
-                list_of_tick_sheet_items=list_of_tick_sheet_items,
-                already_qualified=already_qualified,
+            raw_dict[tick_sub_stage] = (
+                DictOfTickSheetItemsAndTicksForCadet.from_dict_of_ticks_and_qualifications(
+                    dict_of_ticks_with_items=dict_of_ticks_with_items,
+                    list_of_tick_sheet_items=list_of_tick_sheet_items,
+                    already_qualified=already_qualified,
+                )
             )
 
         return cls(

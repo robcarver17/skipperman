@@ -8,7 +8,9 @@ from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.events import Event
 
-from app.backend.events.list_of_events import get_event_from_list_of_events_given_event_description
+from app.backend.events.list_of_events import (
+    get_event_from_list_of_events_given_event_description,
+)
 
 from app.frontend.events.ENTRY_view_events import display_list_of_events_with_buttons
 
@@ -33,7 +35,9 @@ def display_form_for_qualification_status_report(interface: abstractInterface):
     ## LIST OF EVENTS AS TILES, THEN FROM THAT DOWNLOAD EXPECTED QUALIFICATIONS FOR EVENT
     event_buttons = display_list_of_events_with_buttons(interface)
     title = Heading(
-        "Select event to see qualification status of registered cadets", centred=True, size=4
+        "Select event to see qualification status of registered cadets",
+        centred=True,
+        size=4,
     )
     contents_of_form = ListOfLines(
         [ButtonBar([main_menu_button, cancel_button]), title, event_buttons]
@@ -53,6 +57,7 @@ def post_form_for_qualification_status_report(
         return previous_form(interface)
     else:
         return action_when_event_button_clicked(interface)
+
 
 def action_when_event_button_clicked(interface: abstractInterface) -> File:
     event_description = interface.last_button_pressed()

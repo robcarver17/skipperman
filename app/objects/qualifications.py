@@ -2,7 +2,12 @@ import datetime
 from dataclasses import dataclass
 from typing import List
 
-from app.objects.exceptions import missing_data, arg_not_passed, MissingData, MultipleMatches
+from app.objects.exceptions import (
+    missing_data,
+    arg_not_passed,
+    MissingData,
+    MultipleMatches,
+)
 from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
 )

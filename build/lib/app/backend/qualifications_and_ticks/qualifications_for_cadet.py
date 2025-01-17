@@ -42,17 +42,22 @@ def remove_qualification_from_cadet(
         dict_of_qualifications=dict_of_qualifications_for_all_cadets,
     )
 
+
 class NoQualifications:
     def __repr__(self):
         return "No qualifications"
 
+
 no_qualifications = NoQualifications()
 
-def highest_qualification_for_cadet(object_store: ObjectStore, cadet: Cadet) -> Union[object, Qualification]:
+
+def highest_qualification_for_cadet(
+    object_store: ObjectStore, cadet: Cadet
+) -> Union[object, Qualification]:
     list_of_qualifications_for_cadet = get_list_of_qualifications_for_cadet(
         object_store=object_store, cadet=cadet
     )
-    if len(list_of_qualifications_for_cadet)==0:
+    if len(list_of_qualifications_for_cadet) == 0:
         return no_qualifications
 
     list_of_qualifications_for_cadet.sort_by_qualification_order()

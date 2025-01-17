@@ -7,6 +7,7 @@ from app.objects.generic_objects import GenericSkipperManObject
 UNALLOCATED_COLOUR = ""
 UNALLOCATED_SIZE = ""
 
+
 @dataclass
 class CadetWithClothingAndIdsAtEvent(GenericSkipperManObject):
     cadet_id: str
@@ -55,5 +56,3 @@ class ListOfCadetsWithClothingAndIdsAtEvent(GenericListOfObjects):
         return ListOfCadetsWithClothingAndIdsAtEvent(
             [object for object in self if object.cadet_id in list_of_cadet_ids]
         )
-
-

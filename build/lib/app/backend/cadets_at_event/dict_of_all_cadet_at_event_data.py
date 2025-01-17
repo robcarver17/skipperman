@@ -1,6 +1,5 @@
 from typing import List, Dict
 
-from app.backend.groups.data_for_group_display import cadet_is_active
 from app.objects.exceptions import arg_not_passed
 
 from app.objects.cadets import ListOfCadets, Cadet
@@ -16,6 +15,12 @@ from app.data_access.store.object_definitions import (
 )
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 from app.objects.groups import ListOfGroups
+
+
+def cadet_is_active(
+    dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet
+) -> bool:
+    return dict_of_all_event_data.event_data_for_cadet(cadet).is_active_registration()
 
 
 def get_health_notes_for_list_of_cadets_at_event(
@@ -90,7 +95,6 @@ def get_dict_of_all_event_info_for_cadets(
     )
 
 
-
 def update_dict_of_all_event_info_for_cadets(
     object_store: ObjectStore,
     dict_of_all_event_info_for_cadets: DictOfAllEventInfoForCadets,
@@ -114,37 +118,62 @@ def get_list_of_all_groups_at_event(
 def get_availability_dict_for_active_cadets_at_event(
     object_store: ObjectStore, event: Event
 ) -> Dict[Cadet, DaySelector]:
-    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
+    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(
+        object_store=object_store, event=event
+    )
 
-    active_cadets_at_event = get_list_of_active_cadets_at_event(object_store=object_store, event=event)
+    active_cadets_at_event = get_list_of_active_cadets_at_event(
+        object_store=object_store, event=event
+    )
     registration_data = cadets_at_event_data.dict_of_cadets_with_registration_data
 
     return dict(
-        [(cadet, registration_data.registration_data_for_cadet(cadet).availability) for cadet in active_cadets_at_event]
+        [
+            (cadet, registration_data.registration_data_for_cadet(cadet).availability)
+            for cadet in active_cadets_at_event
+        ]
     )
 
 
 def get_list_of_active_cadets_at_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfCadets:
-    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
+    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(
+        object_store=object_store, event=event
+    )
 
-    active_cadets_at_event = cadets_at_event_data.dict_of_cadets_with_registration_data.list_of_cadets()
+    active_cadets_at_event = (
+        cadets_at_event_data.dict_of_cadets_with_registration_data.list_of_cadets()
+    )
 
     return active_cadets_at_event
 
 
-def cadet_is_unavailable_on_day(dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day) -> bool:
-    return not cadet_is_available_on_day(dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day)
+def cadet_is_unavailable_on_day(
+    dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
+) -> bool:
+    return not cadet_is_available_on_day(
+        dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
+    )
 
 
-def cadet_is_available_on_day(dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day) -> bool:
-    return cadet_availability_at_event(dict_of_all_event_data=dict_of_all_event_data, cadet=cadet).available_on_day(day)
+def cadet_is_available_on_day(
+    dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
+) -> bool:
+    return cadet_availability_at_event(
+        dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
+    ).available_on_day(day)
 
 
-def cadet_availability_at_event(dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet) -> DaySelector:
-    is_active = cadet_is_active(dict_of_all_event_data=dict_of_all_event_data, cadet=cadet)
+def cadet_availability_at_event(
+    dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet
+) -> DaySelector:
+    is_active = cadet_is_active(
+        dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
+    )
     if not is_active:
         return DaySelector()
 
-    return dict_of_all_event_data.event_data_for_cadet(cadet).registration_data.availability
+    return dict_of_all_event_data.event_data_for_cadet(
+        cadet
+    ).registration_data.availability

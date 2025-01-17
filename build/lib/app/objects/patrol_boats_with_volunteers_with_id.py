@@ -66,10 +66,10 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
         day_to_swap_with: Day,
         volunteer_id_to_swap_with: str,
     ):
-        original_boat_id = self.which_boat_id_is_volunteer_on_today_or_missing_data(
+        original_boat_id = self.which_boat_id_is_volunteer_on_today(
             volunteer_id=original_volunteer_id, day=original_day
         )
-        swapping_boat_id = self.which_boat_id_is_volunteer_on_today_or_missing_data(
+        swapping_boat_id = self.which_boat_id_is_volunteer_on_today(
             volunteer_id=volunteer_id_to_swap_with, day=day_to_swap_with
         )
 
@@ -97,7 +97,7 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
         volunteer_availablility_at_event: DaySelector,
         allow_overwrite: bool = True,
     ):
-        current_boat_id = self.which_boat_id_is_volunteer_on_today_or_missing_data(
+        current_boat_id = self.which_boat_id_is_volunteer_on_today(
             volunteer_id=volunteer_id, day=day
         )
         if current_boat_id is missing_data:
@@ -129,82 +129,6 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
                     patrol_boat_id=current_boat_id,
                     day=other_day,
                 )
-
-    def volunteer_has_at_least_one_allocated_boat_which_matches_others(
-        self, volunteer_id: str
-    ) -> bool:
-        all_items = self.list_of_all_items_excluding_unallocated()
-        list_of_boat_allocations = [
-            item.patrol_boat_id
-            for item in all_items
-            if item.volunteer_id == volunteer_id
-        ]
-
-        if len(list_of_boat_allocations) == 0:
-            return False
-
-        return list_of_boat_allocations.count(list_of_boat_allocations[0]) == len(
-            list_of_boat_allocations
-        )
-
-    def volunteer_has_at_least_one_allocated_boat_and_empty_spaces_to_fill(
-        self, volunteer_id: str, volunteer_availablility_at_event: DaySelector
-    ) -> bool:
-        all_items = self.list_of_all_items_excluding_unallocated()
-        list_of_boat_allocations = [
-            item.patrol_boat_id
-            for item in all_items
-            if item.volunteer_id == volunteer_id
-        ]
-        number_of_days_available_at_event = len(
-            volunteer_availablility_at_event.days_available()
-        )
-        number_of_allocated_days = len(list_of_boat_allocations)
-        empty_spaces = number_of_days_available_at_event - number_of_allocated_days
-
-        at_least_one_boat = number_of_allocated_days > 0
-        has_empty_spaces = empty_spaces > 0
-
-        return at_least_one_boat and has_empty_spaces
-
-    def volunteer_is_on_same_boat_for_all_days(
-        self, volunteer_id: str, event: Event
-    ) -> bool:
-        all_items = self.list_of_all_items_excluding_unallocated()
-        list_of_boat_allocations = [
-            item.patrol_boat_id
-            for item in all_items
-            if item.volunteer_id == volunteer_id
-        ]
-        number_of_days_in_event = event.duration
-        number_of_allocated_days = len(list_of_boat_allocations)
-        unique_boats = set(list_of_boat_allocations)
-
-        allocated_for_all_days = number_of_allocated_days == number_of_days_in_event
-        on_one_boat_entire_event = len(unique_boats) == 1
-
-        return allocated_for_all_days and on_one_boat_entire_event
-
-    def list_of_all_volunteer_ids_at_event(self) -> List[str]:
-        all_items = self.list_of_all_items_excluding_unallocated()
-        list_of_ids = [item.volunteer_id for item in all_items]
-        return list_of_ids
-
-    def list_of_volunteer_ids_assigned_to_any_boat_on_day(self, day: Day) -> List[str]:
-        all_items = self.list_of_all_items_excluding_unallocated()
-        list_of_ids = [item.volunteer_id for item in all_items if item.day == day]
-        return list_of_ids
-
-    def list_of_volunteer_ids_assigned_to_boat_and_day(
-        self, patrol_boat: PatrolBoat, day: Day
-    ) -> List[str]:
-        all_items = self.list_of_all_items_excluding_unallocated()
-        list_of_ids = [
-            item.volunteer_id
-            for item in all_items
-            if item.patrol_boat_id == patrol_boat.id and item.day == day
-        ]
-        return list_of_ids
 
     def remove_patrol_boat_id_and_all_associated_volunteer_connections_from_event(
         self, patrol_boat_id: str
@@ -250,24 +174,6 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
 
         return len(matches) > 0
 
-    def which_boat_id_is_volunteer_on_today_or_missing_data(
-        self, volunteer_id: str, day: Day
-    ) -> str:
-        matches = [
-            item
-            for item in self
-            if item.volunteer_id == volunteer_id and item.day == day
-        ]
-        if len(matches) == 0:
-            return missing_data
-        elif len(matches) > 1:
-            raise Exception(
-                "Volunteer %s day %s is on more than one boat at event shouldn't be possible!"
-                % (volunteer_id, day.name)
-            )
-
-        return matches[0].patrol_boat_id
-
     def which_boat_id_is_volunteer_on_today(self, volunteer_id: str, day: Day) -> str:
         matches = [
             item
@@ -307,8 +213,3 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
     def list_of_boat_ids_at_event_including_unallocated(self) -> List[str]:
         all_ids = [item.patrol_boat_id for item in self]
         return all_ids
-
-    def list_of_all_items_excluding_unallocated(self):
-        return ListOfVolunteersWithIdAtEventWithPatrolBoatsId(
-            [item for item in self if not item.is_empty]
-        )

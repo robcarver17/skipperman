@@ -1,11 +1,13 @@
 from typing import Tuple
 
-from app.backend.reporting import describe_arrangement
+from app.backend.reporting.arrangement.arrange_options import describe_arrangement
 from app.backend.reporting.arrangement.group_order import (
     get_group_order_excluding_missing_groups,
     get_groups_in_dict_missing_from_group_order,
 )
-from app.backend.reporting.arrangement.arrange_options import get_stored_arrangement_and_group_order
+from app.backend.reporting.arrangement.get_and_update_arrangement_options import (
+    get_stored_arrangement_and_group_order,
+)
 from app.frontend.reporting.shared.group_order import (
     get_arrangement_options_and_group_order_from_stored_or_defaults,
 )
@@ -56,14 +58,13 @@ def get_arrangement_options_and_group_order_text(
         )
 
     arrangement_options_and_group_order = get_arrangement_options_and_group_order_from_stored_or_defaults(
-        interface=interface,
+        object_store=interface.object_store,
         specific_parameters_for_type_of_report=report_generator.specific_parameters_for_type_of_report,
         dict_of_df=dict_of_df,
     )
     group_order = arrangement_options_and_group_order.group_order
     filtered_group_order = get_group_order_excluding_missing_groups(
         dict_of_df=dict_of_df,
-        group_order=group_order,
         specific_parameters_for_type_of_report=report_generator.specific_parameters_for_type_of_report,
     )
 
@@ -87,7 +88,7 @@ def get_arrangement_options_and_group_order_text(
         interface.log_error(warning)
 
     arrangement = get_stored_arrangement_and_group_order(
-        interface=interface,
+        object_store=interface.object_store,
         report_type=report_generator.specific_parameters_for_type_of_report.report_type,
     ).arrangement_options
     arrangement_text = describe_arrangement(arrangement)

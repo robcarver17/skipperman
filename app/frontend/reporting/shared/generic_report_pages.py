@@ -1,15 +1,12 @@
 from typing import Union
 
+from app.backend.reporting.event_lists import display_list_of_events_with_buttons_criteria_matched, describe_criteria
 from app.data_access.init_directories import web_pathname_of_file
 from app.frontend.reporting.shared.arrangement_form import (
     form_for_group_arrangement_options,
     post_form_for_group_arrangement_options,
 )
 from app.frontend.reporting.shared.create_report import create_generic_report
-from app.backend.reporting import (
-    display_list_of_events_with_buttons_criteria_matched,
-    describe_criteria,
-)
 from app.frontend.reporting.shared.explain_options import (
     get_text_explaining_various_options_for_generic_report,
 )
@@ -53,7 +50,7 @@ def display_initial_generic_report_form(
 ) -> Form:
     event_criteria = report_generator.event_criteria
     list_of_events = display_list_of_events_with_buttons_criteria_matched(
-        interface=interface, **event_criteria
+        object_store=interface.object_store, event_criteria=event_criteria
     )
     criteria_description = describe_criteria(**event_criteria)
 

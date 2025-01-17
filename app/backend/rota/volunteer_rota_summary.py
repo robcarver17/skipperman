@@ -13,12 +13,13 @@ from app.backend.volunteers.volunteers_at_event import (
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
     DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
-    RoleAndGroupAndTeam, RoleAndGroup,
+    RoleAndGroupAndTeam,
+    RoleAndGroup,
 )
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.groups import unallocated_group, ListOfGroups
-from app.objects.roles_and_teams import  ListOfTeams
+from app.objects.roles_and_teams import ListOfTeams
 from app.objects.volunteer_roles_and_groups_with_id import (
     TeamAndGroup,
 )
@@ -49,21 +50,26 @@ def get_summary_list_of_roles_and_groups_for_events_as_pd_df(
 
 from app.objects.roles_and_teams import RolesWithSkillIds, ListOfRolesWithSkillIds
 
+
 def get_list_of_day_summaries_for_roles_at_event(
     object_store: ObjectStore, event: Event
 ) -> List[pd.DataFrame]:
     volunteer_event_data = get_dict_of_all_event_data_for_volunteers(
         object_store=object_store, event=event
     )
-    if len(volunteer_event_data)==0:
+    if len(volunteer_event_data) == 0:
         return []
     volunteers_in_roles_at_event = (
         volunteer_event_data.dict_of_volunteers_at_event_with_days_and_role
     )
 
     list_of_roles = get_list_of_roles(object_store)
-    all_roles_at_event = ListOfRolesWithSkillIds(volunteers_in_roles_at_event.all_roles_at_event)
-    sorted_roles_at_event = all_roles_at_event.sort_to_match_other_role_list_order(list_of_roles)
+    all_roles_at_event = ListOfRolesWithSkillIds(
+        volunteers_in_roles_at_event.all_roles_at_event
+    )
+    sorted_roles_at_event = all_roles_at_event.sort_to_match_other_role_list_order(
+        list_of_roles
+    )
 
     all_groups = get_list_of_groups(object_store)
     all_groups_at_event = ListOfGroups(
@@ -77,29 +83,33 @@ def get_list_of_day_summaries_for_roles_at_event(
     all_day_summaries = []
     for day in days_at_event:
         this_day_summary = get_summary_of_roles_and_groups_for_events_on_day(
-            day=day, volunteers_in_roles_at_event=volunteers_in_roles_at_event,
+            day=day,
+            volunteers_in_roles_at_event=volunteers_in_roles_at_event,
             sorted_roles_at_event=sorted_roles_at_event,
-            sorted_groups_at_event=sorted_groups_at_event
+            sorted_groups_at_event=sorted_groups_at_event,
         )
         all_day_summaries.append(this_day_summary)
 
     return all_day_summaries
 
 
-
 def get_summary_of_roles_and_groups_for_events_on_day(
-    day: Day, volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
-        sorted_roles_at_event: ListOfRolesWithSkillIds,
-        sorted_groups_at_event:ListOfGroups
+    day: Day,
+    volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    sorted_roles_at_event: ListOfRolesWithSkillIds,
+    sorted_groups_at_event: ListOfGroups,
 ) -> pd.DataFrame:
 
-    list_of_roles_and_groups = volunteers_in_roles_at_event.list_of_all_roles_and_groups_for_day(day)
+    list_of_roles_and_groups = (
+        volunteers_in_roles_at_event.list_of_all_roles_and_groups_for_day(day)
+    )
     summary_dict = {}
     for group in sorted_groups_at_event:
         for role in sorted_roles_at_event:
-            role_and_group = RoleAndGroup(role = role, group=group)
+            role_and_group = RoleAndGroup(role=role, group=group)
             count = role_and_group_with_count(
-                role_and_group=role_and_group, list_of_roles_and_groups=list_of_roles_and_groups
+                role_and_group=role_and_group,
+                list_of_roles_and_groups=list_of_roles_and_groups,
             )
             summary_dict[""] = [count]
 
@@ -148,7 +158,7 @@ def get_list_of_day_summaries_teams_and_groups_at_event(
     volunteer_event_data = get_dict_of_all_event_data_for_volunteers(
         object_store=object_store, event=event
     )
-    if len(volunteer_event_data)==0:
+    if len(volunteer_event_data) == 0:
         return []
     volunteers_in_roles_at_event = (
         volunteer_event_data.dict_of_volunteers_at_event_with_days_and_role
@@ -222,7 +232,7 @@ def team_and_group_with_count(
 def from_list_of_day_summaries_to_single_df(
     all_day_summaries: List[pd.DataFrame], event: Event
 ) -> pd.DataFrame:
-    if len(all_day_summaries)==0:
+    if len(all_day_summaries) == 0:
         return pd.DataFrame()
     days_at_event = event.days_in_event()
     single_df = pd.concat(all_day_summaries, axis=1)

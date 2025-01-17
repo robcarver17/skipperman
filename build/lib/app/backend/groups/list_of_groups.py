@@ -30,9 +30,11 @@ def modify_sailing_group(
         object_store=object_store, updated_list_of_groups=list_of_groups
     )
 
+
 def get_group_with_name(object_store: ObjectStore, group_name: str) -> Group:
     list_of_groups = get_list_of_groups(object_store)
     return list_of_groups.matches_name(group_name)
+
 
 def get_list_of_groups(object_store: ObjectStore) -> ListOfGroups:
     return object_store.get(object_definition_for_list_of_groups)

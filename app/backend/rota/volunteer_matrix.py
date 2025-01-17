@@ -5,8 +5,10 @@ from app.objects.volunteers import Volunteer
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.backend.rota.sorting_and_filtering import RotaSortsAndFilters, \
-    get_sorted_and_filtered_dict_of_volunteers_at_event
+from app.backend.rota.sorting_and_filtering import (
+    RotaSortsAndFilters,
+    get_sorted_and_filtered_dict_of_volunteers_at_event,
+)
 
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -22,10 +24,7 @@ def get_volunteer_matrix(
     )
 
     list_of_rows = [
-        row_for_volunteer_at_event(
-            volunteer=volunteer,
-            volunteer_data = volunteer_data
-        )
+        row_for_volunteer_at_event(volunteer=volunteer, volunteer_data=volunteer_data)
         for volunteer, volunteer_data in dict_of_volunteers_at_event.items()
     ]
 
@@ -33,8 +32,7 @@ def get_volunteer_matrix(
 
 
 def row_for_volunteer_at_event(
-    volunteer: Volunteer,
-        volunteer_data: AllEventDataForVolunteer
+    volunteer: Volunteer, volunteer_data: AllEventDataForVolunteer
 ) -> pd.Series:
     name = volunteer.name
     skills_dict = volunteer_data.volunteer_skills
@@ -66,14 +64,11 @@ def row_for_volunteer_at_event(
 
 
 def role_and_group_string_for_day(
-        volunteer_data: AllEventDataForVolunteer,
+    volunteer_data: AllEventDataForVolunteer,
     day: Day,
-
 ) -> str:
-    availability =volunteer_data.registration_data.availablity
+    availability = volunteer_data.registration_data.availablity
     if not availability.available_on_day(day):
         return "Unavailable"
     else:
-        return str(
-            volunteer_data.roles_and_groups.role_and_group_on_day(day)
-        )
+        return str(volunteer_data.roles_and_groups.role_and_group_on_day(day))

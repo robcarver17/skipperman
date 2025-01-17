@@ -33,10 +33,16 @@ from app.objects.composed.cadets_at_event_with_groups import (
 )
 
 
+from app.objects.composed.clothing_at_event import (
+    DictOfCadetsWithClothingAtEvent,
+    ClothingAtEvent,
+)
+from app.objects.composed.food_at_event import (
+    ListOfCadetsWithFoodRequirementsAtEvent,
+    DictOfCadetsWithFoodRequirementsAtEvent,
+    FoodRequirements,
+)
 
-from app.objects.composed.clothing_at_event import DictOfCadetsWithClothingAtEvent, ClothingAtEvent
-from app.objects.composed.food_at_event import ListOfCadetsWithFoodRequirementsAtEvent, \
-    DictOfCadetsWithFoodRequirementsAtEvent, FoodRequirements
 
 @dataclass
 class AllEventInfoForCadet:
@@ -76,18 +82,25 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         )
         self._dict_of_cadets_with_days_and_groups = dict_of_cadets_with_days_and_groups
         self._event = event
-        self._dict_of_cadets_with_clothing_at_event = dict_of_cadets_with_clothing_at_event
-        self._dict_of_cadets_with_food_required_at_event = dict_of_cadets_with_food_required_at_event
+        self._dict_of_cadets_with_clothing_at_event = (
+            dict_of_cadets_with_clothing_at_event
+        )
+        self._dict_of_cadets_with_food_required_at_event = (
+            dict_of_cadets_with_food_required_at_event
+        )
 
-    def  cadets_in_group_during_event(self, group: Group) -> ListOfCadets:
+    def cadets_in_group_during_event(self, group: Group) -> ListOfCadets:
         if group is unallocated_group:
             return cadets_not_allocated_to_group_on_at_least_one_day_attending(
                 dict_of_cadets_with_registration_data=self.dict_of_cadets_with_registration_data,
-                dict_of_cadets_with_days_and_groups=self.dict_of_cadets_with_days_and_groups
+                dict_of_cadets_with_days_and_groups=self.dict_of_cadets_with_days_and_groups,
             )
         else:
-            return self.dict_of_cadets_with_days_and_groups.cadets_in_group_during_event(group)
-
+            return (
+                self.dict_of_cadets_with_days_and_groups.cadets_in_group_during_event(
+                    group
+                )
+            )
 
     def get_most_common_partner_across_days(self, cadet: Cadet) -> Cadet:
         event_data_for_cadet = self.event_data_for_cadet(cadet)
@@ -99,7 +112,7 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
 
         return event_data_for_cadet.days_and_boat_class.most_common_boat_class()
 
-    def get_most_common_club_boat_name_across_days(self, cadet: Cadet)-> ClubDinghy:
+    def get_most_common_club_boat_name_across_days(self, cadet: Cadet) -> ClubDinghy:
         event_data_for_cadet = self.event_data_for_cadet(cadet)
 
         return event_data_for_cadet.days_and_club_dinghies.most_common()
@@ -109,25 +122,31 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         return event_data_for_cadet.days_and_groups.most_common()
 
     def update_availability_of_existing_cadet_at_event_and_return_messages(
-            self, cadet: Cadet,
-            new_availabilty: DaySelector,
+        self,
+        cadet: Cadet,
+        new_availabilty: DaySelector,
     ) -> List[str]:
 
-        self.dict_of_cadets_with_registration_data.update_availability_of_existing_cadet_at_event(cadet=cadet, new_availabilty=new_availabilty)
+        self.dict_of_cadets_with_registration_data.update_availability_of_existing_cadet_at_event(
+            cadet=cadet, new_availabilty=new_availabilty
+        )
 
         messages = []
         for day in self.event.days_in_event():
             if new_availabilty.available_on_day(day):
                 continue
 
-            message_for_day = self.remove_availability_of_existing_cadet_on_day_and_return_messages(cadet=cadet, day=day)
-            messages+=message_for_day
+            message_for_day = (
+                self.remove_availability_of_existing_cadet_on_day_and_return_messages(
+                    cadet=cadet, day=day
+                )
+            )
+            messages += message_for_day
 
         return messages
 
     def remove_availability_of_existing_cadet_on_day_and_return_messages(
-            self, cadet: Cadet,
-            day: Day
+        self, cadet: Cadet, day: Day
     ) -> List[str]:
         pass
 
@@ -145,8 +164,9 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
 
         return [message]
 
-    def update_status_of_existing_cadet_in_event_info_to_cancelled_or_deleted_and_return_messages(self,
-            cadet: Cadet, new_status: RegistrationStatus) -> List[str]:
+    def update_status_of_existing_cadet_in_event_info_to_cancelled_or_deleted_and_return_messages(
+        self, cadet: Cadet, new_status: RegistrationStatus
+    ) -> List[str]:
 
         assert new_status.is_cancelled_or_deleted
 
@@ -158,19 +178,19 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
             cadet=cadet
         )
 
-        self.dict_of_cadets_with_days_and_groups.remove_cadet_from_event(
+        self.dict_of_cadets_with_days_and_groups.remove_cadet_from_event(cadet=cadet)
+
+        self.dict_of_cadets_with_clothing_at_event.remove_clothing_for_cadet_at_event(
             cadet=cadet
         )
 
-        self.dict_of_cadets_with_clothing_at_event.remove_clothing_for_cadet_at_event(cadet=cadet)
-
-        self.dict_of_cadets_with_food_required_at_event.remove_food_requirements_for_cadet_at_event(cadet=cadet)
+        self.dict_of_cadets_with_food_required_at_event.remove_food_requirements_for_cadet_at_event(
+            cadet=cadet
+        )
 
         messages = self.dict_of_cadets_and_boat_class_and_partners.remove_cadet_from_event_and_return_messages(
             cadet=cadet
         )
-
-
 
         return messages
 
@@ -193,7 +213,9 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         return self._dict_of_cadets_with_registration_data
 
     @property
-    def dict_of_cadets_with_days_and_groups(self) -> DictOfCadetsWithDaysAndGroupsAtEvent:
+    def dict_of_cadets_with_days_and_groups(
+        self,
+    ) -> DictOfCadetsWithDaysAndGroupsAtEvent:
         return self._dict_of_cadets_with_days_and_groups
 
     @property
@@ -201,7 +223,9 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         return self._dict_of_cadets_with_clothing_at_event
 
     @property
-    def dict_of_cadets_with_food_required_at_event(self) -> DictOfCadetsWithFoodRequirementsAtEvent:
+    def dict_of_cadets_with_food_required_at_event(
+        self,
+    ) -> DictOfCadetsWithFoodRequirementsAtEvent:
         return self._dict_of_cadets_with_food_required_at_event
 
     @property
@@ -220,9 +244,9 @@ def compose_dict_of_all_event_info_for_cadet(
     dict_of_cadets_and_club_dinghies_at_event: DictOfCadetsAndClubDinghiesAtEvent,
     dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
     dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
-        dict_of_cadets_with_clothing_at_event: DictOfCadetsWithClothingAtEvent,
-        dict_of_cadets_with_food_required_at_event: DictOfCadetsWithFoodRequirementsAtEvent,
-        active_only: bool,
+    dict_of_cadets_with_clothing_at_event: DictOfCadetsWithClothingAtEvent,
+    dict_of_cadets_with_food_required_at_event: DictOfCadetsWithFoodRequirementsAtEvent,
+    active_only: bool,
 ) -> DictOfAllEventInfoForCadets:
     event = list_of_events.object_with_id(event_id)
     raw_dict = compose_raw_dict_of_all_event_info_for_cadet(
@@ -253,7 +277,7 @@ def compose_raw_dict_of_all_event_info_for_cadet(
     dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
     dict_of_cadets_with_clothing_at_event: DictOfCadetsWithClothingAtEvent,
     dict_of_cadets_with_food_required_at_event: DictOfCadetsWithFoodRequirementsAtEvent,
-        active_only: bool,
+    active_only: bool,
 ) -> Dict[Cadet, AllEventInfoForCadet]:
     if active_only:
         list_of_all_cadets_with_event_data = (
@@ -282,41 +306,49 @@ def compose_raw_dict_of_all_event_info_for_cadet(
                     food_requirements=dict_of_cadets_with_food_required_at_event.get(
                         cadet, FoodRequirements()
                     ),
-                    clothing=dict_of_cadets_with_clothing_at_event.get(cadet, ClothingAtEvent()),
-
+                    clothing=dict_of_cadets_with_clothing_at_event.get(
+                        cadet, ClothingAtEvent()
+                    ),
                 ),
             )
             for cadet in list_of_all_cadets_with_event_data
         ]
     )
 
-def cadets_not_allocated_to_group_on_at_least_one_day_attending(    dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
+
+def cadets_not_allocated_to_group_on_at_least_one_day_attending(
+    dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
     dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
-    ) -> ListOfCadets:
+) -> ListOfCadets:
 
     list_of_cadets = []
     for cadet in dict_of_cadets_with_registration_data.list_of_cadets():
         if cadet_is_not_allocated_to_group_on_at_least_one_day_attending(
             cadet=cadet,
             dict_of_cadets_with_registration_data=dict_of_cadets_with_registration_data,
-            dict_of_cadets_with_days_and_groups=dict_of_cadets_with_days_and_groups
+            dict_of_cadets_with_days_and_groups=dict_of_cadets_with_days_and_groups,
         ):
             list_of_cadets.append(cadet)
 
     return ListOfCadets(list_of_cadets)
 
 
-def cadet_is_not_allocated_to_group_on_at_least_one_day_attending( cadet: Cadet,   dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
+def cadet_is_not_allocated_to_group_on_at_least_one_day_attending(
+    cadet: Cadet,
+    dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
     dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
-    ) -> bool:
+) -> bool:
 
-    availability = dict_of_cadets_with_registration_data.registration_data_for_cadet(cadet).availability
+    availability = dict_of_cadets_with_registration_data.registration_data_for_cadet(
+        cadet
+    ).availability
     days_when_cadet_is_available = availability.days_available()
     for day in days_when_cadet_is_available:
-        days_and_groups = dict_of_cadets_with_days_and_groups.get_days_and_groups_for_cadet(cadet)
+        days_and_groups = (
+            dict_of_cadets_with_days_and_groups.get_days_and_groups_for_cadet(cadet)
+        )
         group_on_day = days_and_groups.group_on_day(day)
         if group_on_day is unallocated_group:
             return True
 
     return False
-

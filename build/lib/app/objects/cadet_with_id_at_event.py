@@ -4,8 +4,6 @@ from typing import List
 from app.objects.cadets import Cadet
 
 from app.data_access.configuration.field_list import (
-    RESPONSIBLE_ADULT_NUMBER,
-    RESPONSIBLE_ADULT_NAME,
     WEEKEND_DAYS_ATTENDING_INPUT,
     ALL_DAYS_ATTENDING_INPUT,
     CADET_HEALTH,
@@ -15,7 +13,6 @@ from app.objects.day_selectors import (
     DaySelector,
     day_selector_stored_format_from_text,
     day_selector_to_text_in_stored_format,
-    Day,
     weekend_day_selector_from_text,
     create_day_selector_from_short_form_text,
 )
@@ -54,15 +51,6 @@ class CadetWithIdAtEvent(GenericSkipperManObjectWithIds):
 
     def clear_row_data(self):
         self.data_in_row.clear_values()
-
-    def emergency_contact(self):
-        contact = self.get_item_from_data(RESPONSIBLE_ADULT_NUMBER, "")
-        contact_name = self.get_item_from_data(RESPONSIBLE_ADULT_NAME, "")
-
-        return "%s (%s)" % (contact_name, str(contact))
-
-    def get_item_from_data(self, key_name, default=""):
-        return self.data_in_row.get_item(key_name, default=default)
 
     def is_active(self):
         return self.status.is_active
@@ -118,42 +106,6 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return CadetWithIdAtEvent
 
-    def active_and_available_on_day(self, day: Day):
-        active = self.list_of_active_cadets_at_event()
-        return active.subset_available_on_day(day)
-
-    def subset_available_on_day(self, day: Day):
-        return ListOfCadetsWithIDAtEvent(
-            [
-                cadet_at_event
-                for cadet_at_event in self
-                if cadet_at_event.availability.available_on_day(day)
-            ]
-        )
-
-    def list_of_active_cadet_ids(self):
-        new_list = self.list_of_active_cadets_at_event()
-        return new_list.list_of_cadet_ids()
-
-    def list_of_active_cadets_at_event(self):
-        new_list = [
-            cadet_at_event for cadet_at_event in self if cadet_at_event.is_active()
-        ]
-        return ListOfCadetsWithIDAtEvent(new_list)
-
-    def mark_cadet_as_deleted(self, cadet_id: str):
-        cadet_at_event = self.cadet_at_event_or_missing_data(cadet_id)
-        if cadet_at_event is missing_data:
-            raise Exception("Cadet not in event to mark as deleted")
-        cadet_at_event.status = deleted_status
-        cadet_at_event.changed = True
-
-    def mark_cadet_as_unchanged(self, cadet_id: str):
-        cadet_at_event = self.cadet_at_event_or_missing_data(cadet_id)
-        if cadet_at_event is missing_data:
-            raise Exception("Cadet not in event to mark as unchanged")
-        cadet_at_event.changed = False
-
     def mark_cadet_as_changed(self, cadet_id: str):
         cadet_at_event = self.cadet_at_event_or_missing_data(cadet_id)
         if cadet_at_event is missing_data:
@@ -191,14 +143,6 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
             raise Exception("Cadet already exists!")
         self.append(cadet_at_event)
 
-    def subset_given_cadet_ids(self, list_of_ids: List[str]):
-        new_list = [
-            self.cadet_at_event_or_missing_data(cadet_id)
-            for cadet_id in list_of_ids
-            if self.is_cadet_id_in_event(cadet_id)
-        ]
-        return ListOfCadetsWithIDAtEvent(new_list)
-
     def replace_existing_cadet_at_event(self, new_cadet_at_event: CadetWithIdAtEvent):
         existing_cadet_idx = self.idx_of_items_with_cadet_id(
             new_cadet_at_event.cadet_id
@@ -223,18 +167,6 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
         self[existing_cadet_idx] = existing_cadet_at_event
         self.mark_cadet_as_changed(cadet_id)
 
-    def update_availability_of_existing_cadet_at_event(
-        self, cadet_id: str, new_availabilty: DaySelector
-    ):
-        existing_cadet_idx = self.idx_of_items_with_cadet_id(cadet_id)
-        if existing_cadet_idx is missing_data:
-            raise Exception("Can't replace cadet id %s not in data" % cadet_id)
-        existing_cadet_at_event = self[existing_cadet_idx]
-        existing_cadet_at_event.availability = new_availabilty
-
-        self[existing_cadet_idx] = existing_cadet_at_event
-        self.mark_cadet_as_changed(cadet_id)
-
     def update_notes_for_existing_cadet_at_event(self, cadet_id: str, new_notes: str):
         existing_cadet_idx = self.idx_of_items_with_cadet_id(cadet_id)
         if existing_cadet_idx is missing_data:
@@ -253,14 +185,6 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
         existing_cadet_at_event.health = new_health
         self[existing_cadet_idx] = existing_cadet_at_event
         self.mark_cadet_as_changed(cadet_id)
-
-    def clear_data_row_for_existing_cadet_at_event(self, cadet_id: str):
-        existing_cadet_idx = self.idx_of_items_with_cadet_id(cadet_id)
-        if existing_cadet_idx is missing_data:
-            return
-        existing_cadet_at_event = self[existing_cadet_idx]
-        existing_cadet_at_event.clear_row_data()
-        self[existing_cadet_idx] = existing_cadet_at_event
 
     def update_data_row_for_existing_cadet_at_event(
         self, cadet_id: str, new_data_in_row: RowInRegistrationData

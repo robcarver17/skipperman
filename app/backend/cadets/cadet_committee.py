@@ -146,6 +146,7 @@ def get_list_of_cadets_currently_serving(object_store: ObjectStore) -> ListOfCad
 
     return list_of_cadets_on_committee.list_of_cadets_currently_serving()
 
+
 def get_list_of_cadets_on_committee(
     object_store: ObjectStore,
 ) -> ListOfCadetsOnCommittee:

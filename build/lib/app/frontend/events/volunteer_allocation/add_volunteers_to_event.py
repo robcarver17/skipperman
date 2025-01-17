@@ -3,18 +3,26 @@ from typing import Union
 from app.objects.volunteers import Volunteer
 
 from app.objects.relevant_information_for_volunteers import (
-    ListOfRelevantInformationForVolunteer, relevant_information_requires_clarification, NO_ISSUES_WITH_VOLUNTEER,
+    ListOfRelevantInformationForVolunteer,
+    relevant_information_requires_clarification,
+    NO_ISSUES_WITH_VOLUNTEER,
 )
 
-from app.backend.registration_data.identified_volunteers_at_event import \
-    get_list_of_relevant_information_for_volunteer_in_registration_data
-from app.backend.registration_data.cadet_and_volunteer_connections_at_event import \
-    update_cadet_connections_when_volunteer_already_at_event, \
-    are_all_cadets_associated_with_volunteer_in_registration_data_cancelled_or_deleted, \
-    get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer
-from app.backend.volunteers.volunteers_at_event import \
-    get_volunteer_at_event_from_list_of_relevant_information_with_no_conflicts, add_volunteer_at_event
-from app.backend.registration_data.volunteer_registration_data import is_volunteer_already_at_event
+from app.backend.registration_data.identified_volunteers_at_event import (
+    get_list_of_relevant_information_for_volunteer_in_registration_data,
+)
+from app.backend.registration_data.cadet_and_volunteer_connections_at_event import (
+    update_cadet_connections_when_volunteer_already_at_event,
+    are_all_cadets_associated_with_volunteer_in_registration_data_cancelled_or_deleted,
+    get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer,
+)
+from app.backend.volunteers.volunteers_at_event import (
+    get_volunteer_at_event_from_list_of_relevant_information_with_no_conflicts,
+    add_volunteer_at_event,
+)
+from app.backend.registration_data.volunteer_registration_data import (
+    is_volunteer_already_at_event,
+)
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.volunteer_allocation.add_volunteers_process_form import (
     add_volunteer_at_event_with_form_contents,
@@ -25,13 +33,16 @@ from app.frontend.events.volunteer_allocation.track_state_in_volunteer_allocatio
     get_current_volunteer_at_event,
 )
 from app.frontend.events.volunteer_allocation.add_volunteer_to_event_form_contents import (
-    display_form_to_confirm_volunteer_details, save_button, do_not_add_volunteer,
+    display_form_to_confirm_volunteer_details,
+    save_button,
+    do_not_add_volunteer,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.exceptions import NoMoreData
 from app.objects.events import Event
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+
 
 def display_add_volunteers_to_event(
     interface: abstractInterface,
@@ -61,7 +72,7 @@ def process_identified_volunteer_at_event(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
 
-    volunteer =  get_current_volunteer_at_event(interface)
+    volunteer = get_current_volunteer_at_event(interface)
     event = get_event_from_state(interface)
     all_cancelled = are_all_cadets_associated_with_volunteer_in_registration_data_cancelled_or_deleted(
         object_store=interface.object_store, event=event, volunteer=volunteer
@@ -73,16 +84,12 @@ def process_identified_volunteer_at_event(
         return next_volunteer_in_event(interface)
     else:
         return process_identified_volunteer_at_event_with_valid_registered_cadets(
-            interface=interface,
-            event=event,
-            volunteer=volunteer
+            interface=interface, event=event, volunteer=volunteer
         )
 
 
 def process_identified_volunteer_at_event_with_valid_registered_cadets(
-        interface: abstractInterface,
-        event: Event,
-        volunteer: Volunteer
+    interface: abstractInterface, event: Event, volunteer: Volunteer
 ) -> Union[Form, NewForm]:
 
     already_added = is_volunteer_already_at_event(
@@ -90,7 +97,7 @@ def process_identified_volunteer_at_event_with_valid_registered_cadets(
     )
     if already_added:
         update_cadet_connections_when_volunteer_already_at_event(
-            object_store = interface.object_store, event=event, volunteer=volunteer
+            object_store=interface.object_store, event=event, volunteer=volunteer
         )
         interface.flush_cache_to_store()
         return next_volunteer_in_event(interface)
@@ -105,32 +112,29 @@ def process_new_volunteer_at_event_with_active_cadets(
     interface: abstractInterface, event: Event, volunteer: Volunteer
 ) -> Union[Form, NewForm]:
     ## New volunteer with cadets
-    list_of_relevant_information = get_list_of_relevant_information_for_volunteer_in_registration_data(
-        object_store=interface.object_store, event=event, volunteer=volunteer
-    )
-    issues_with_volunteer = (
-        relevant_information_requires_clarification(
-            list_of_relevant_information=list_of_relevant_information,
-            volunteer=volunteer,
+    list_of_relevant_information = (
+        get_list_of_relevant_information_for_volunteer_in_registration_data(
+            object_store=interface.object_store, event=event, volunteer=volunteer
         )
+    )
+    issues_with_volunteer = relevant_information_requires_clarification(
+        list_of_relevant_information=list_of_relevant_information,
+        volunteer=volunteer,
     )
 
     if issues_with_volunteer == NO_ISSUES_WITH_VOLUNTEER:
-        print(
-            "Volunteer %s has no issues, adding automatically"
-            % volunteer
-        )
+        print("Volunteer %s has no issues, adding automatically" % volunteer)
         return process_new_volunteer_at_event_with_active_cadets_and_where_no_manual_intervention_required(
             interface=interface,
             event=event,
             list_of_relevant_information=list_of_relevant_information,
-            volunteer=volunteer)
+            volunteer=volunteer,
+        )
     else:
         interface.log_error(issues_with_volunteer)
         return display_form_to_confirm_volunteer_details(
             interface=interface, volunteer=volunteer, event=event
         )
-
 
 
 def process_new_volunteer_at_event_with_active_cadets_and_where_no_manual_intervention_required(
@@ -146,12 +150,14 @@ def process_new_volunteer_at_event_with_active_cadets_and_where_no_manual_interv
         get_volunteer_at_event_from_list_of_relevant_information_with_no_conflicts(
             list_of_relevant_information=list_of_relevant_information,
             volunteer=volunteer,
-            list_of_associated_cadets = list_of_associated_cadets
+            list_of_associated_cadets=list_of_associated_cadets,
         )
     )
 
     add_volunteer_at_event(
-        object_store=interface.object_store, event=event, volunteer_at_event=volunteer_at_event
+        object_store=interface.object_store,
+        event=event,
+        volunteer_at_event=volunteer_at_event,
     )
     update_cadet_connections_when_volunteer_already_at_event(
         object_store=interface.object_store, event=event, volunteer=volunteer
@@ -172,4 +178,3 @@ def post_form_add_volunteers_to_event(interface: abstractInterface):
         return button_error_and_back_to_initial_state_form(interface)
 
     return next_volunteer_in_event(interface)
-

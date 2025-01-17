@@ -1,7 +1,7 @@
 from typing import Dict
 
 from app.backend.volunteers.volunteers_at_event import (
-    get_dict_of_all_event_data_for_volunteers
+    get_dict_of_all_event_data_for_volunteers,
 )
 
 from app.backend.events.list_of_events import get_sorted_list_of_events
@@ -13,14 +13,17 @@ from app.data_access.store.object_definitions import (
 )
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
     DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
-    RoleAndGroupAndTeam, RoleAndGroup, )
+    RoleAndGroupAndTeam,
+    RoleAndGroup,
+)
 from app.objects.day_selectors import Day
 
 from app.objects.events import (
     Event,
     SORT_BY_START_DSC,
     list_of_events_excluding_one_event,
-    ListOfEvents, )
+    ListOfEvents,
+)
 from app.objects.exceptions import arg_not_passed
 from app.objects.volunteers import Volunteer
 
@@ -86,6 +89,7 @@ def get_all_roles_for_list_of_events_for_volunteer_as_dict(
 
     return roles_dict
 
+
 def get_role_and_group_on_day_for_event_and_volunteer(
     object_store: ObjectStore, volunteer: Volunteer, event: Event, day: Day
 ) -> RoleAndGroup:
@@ -100,6 +104,7 @@ def get_role_and_group_on_day_for_event_and_volunteer(
     )
 
     return roles_and_groups_for_volunteer.role_and_group_on_day(day)
+
 
 def get_role_and_group_for_event_and_volunteer(
     object_store: ObjectStore, volunteer: Volunteer, event: Event
@@ -151,14 +156,17 @@ def is_volunteer_senior_instructor_at_event(
     return volunteer_days_and_roles.contains_si()
 
 
-def get_last_role_or_none_for_volunteer_at_previous_events(object_store: ObjectStore, volunteer: Volunteer, avoid_event: Event):
-    previous_roles = get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(object_store=object_store,
-                                                                                          volunteer=volunteer,
-                                                                                          avoid_event=avoid_event
-                                                                                          )
-    if len(previous_roles)==0:
+def get_last_role_or_none_for_volunteer_at_previous_events(
+    object_store: ObjectStore, volunteer: Volunteer, avoid_event: Event
+):
+    previous_roles = (
+        get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(
+            object_store=object_store, volunteer=volunteer, avoid_event=avoid_event
+        )
+    )
+    if len(previous_roles) == 0:
         return None
 
-    previous_role = list(previous_roles.values())[0] ## latest first
+    previous_role = list(previous_roles.values())[0]  ## latest first
 
     return previous_role

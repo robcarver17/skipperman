@@ -12,9 +12,6 @@ GROUP = "Group"
 BOAT = "Boat"
 
 
-
-
-
 specific_parameters_for_volunteer_report = SpecificParametersForTypeOfReport(
     #    entry_columns=[ROLE, VOLUNTEER, GROUP, BOAT],
     group_by_column=TEAM_NAME,

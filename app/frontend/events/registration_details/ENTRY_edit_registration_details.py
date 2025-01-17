@@ -24,9 +24,9 @@ from app.objects.abstract_objects.abstract_buttons import (
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.cadets.ENTRY_view_cadets import sort_buttons, all_sort_types
-from app.OLD_backend.data.cadets import SORT_BY_SURNAME
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_text import Heading
+from app.objects.cadets import SORT_BY_SURNAME
 from app.objects.events import Event
 
 
@@ -96,7 +96,6 @@ def post_form_edit_registration_details(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
-
 
     last_button_pressed = interface.last_button_pressed()
 

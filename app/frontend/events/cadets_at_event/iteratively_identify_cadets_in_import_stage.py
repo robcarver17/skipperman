@@ -5,10 +5,15 @@ from app.objects.abstract_objects.abstract_buttons import Button
 
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
-from app.backend.registration_data.raw_mapped_registration_data import get_row_in_raw_registration_data_given_id, \
-    get_cadet_data_from_row_of_registration_data_no_checks
-from app.backend.registration_data.identified_cadets_at_event import is_row_in_event_already_identified_with_cadet, \
-    add_identified_cadet_and_row, mark_row_as_skip_cadet
+from app.backend.registration_data.raw_mapped_registration_data import (
+    get_row_in_raw_registration_data_given_id,
+    get_cadet_data_from_row_of_registration_data_no_checks,
+)
+from app.backend.registration_data.identified_cadets_at_event import (
+    is_row_in_event_already_identified_with_cadet,
+    add_identified_cadet_and_row,
+    mark_row_as_skip_cadet,
+)
 
 from app.frontend.shared.events_state import get_event_from_state
 
@@ -20,7 +25,9 @@ from app.frontend.events.import_data.shared_state_tracking_and_data import (
 
 from app.frontend.shared.get_or_select_cadet_forms import (
     get_add_or_select_existing_cadet_form,
- see_similar_cadets_only_button, check_cadet_for_me_button, see_all_cadets_button,
+    see_similar_cadets_only_button,
+    check_cadet_for_me_button,
+    see_all_cadets_button,
     add_cadet_button,
 )
 from app.frontend.shared.add_edit_cadet_form import add_cadet_from_form_to_data
@@ -60,6 +67,7 @@ def identify_cadets_on_next_row(
     print("On row %s" % str(next_row))
     return process_current_row(row=next_row, interface=interface)
 
+
 def finished_looping_return_to_controller(interface: abstractInterface) -> NewForm:
     return interface.get_new_display_form_for_parent_of_function(
         display_form_identify_cadets_during_import
@@ -89,8 +97,6 @@ def process_current_row(
         )
 
 
-
-
 def is_row_already_identified_with_cadet(
     row: RowInRegistrationData, interface: abstractInterface
 ) -> bool:
@@ -108,8 +114,7 @@ def process_next_row_with_cadet_from_row(
 ) -> Form:
     try:
         matched_cadet_with_id = get_matching_cadet(
-            object_store=interface.object_store, cadet=cadet,
-            exact_match_required=True
+            object_store=interface.object_store, cadet=cadet, exact_match_required=True
         )
     except MissingData:
         ## New cadet
@@ -134,7 +139,7 @@ def process_row_when_cadet_matched(interface: abstractInterface, cadet: Cadet) -
     row_id = get_current_row_id(interface)
     print("adding matched row %s with id %s" % (row_id, cadet.id))
     add_identified_cadet_and_row(
-        object_store = interface.object_store, event=event, row_id=row_id, cadet=cadet
+        object_store=interface.object_store, event=event, row_id=row_id, cadet=cadet
     )
     interface.flush_cache_to_store()
     ## run recursively until no more data
@@ -146,7 +151,6 @@ def process_row_when_cadet_unmatched(
     cadet: Cadet,
 ) -> Form:
 
-
     return get_add_or_select_existing_cadet_form(
         cadet=cadet,
         interface=interface,
@@ -157,11 +161,10 @@ def process_row_when_cadet_unmatched(
     )
 
 
-
 TEST_CADET_SKIP_BUTTON_LABEL = (
     "Skip: this is a test entry (do not use if it is a real cadet name)"
 )
-skip_button  = Button(TEST_CADET_SKIP_BUTTON_LABEL)
+skip_button = Button(TEST_CADET_SKIP_BUTTON_LABEL)
 extra_buttons = Line([skip_button])
 
 
@@ -169,12 +172,10 @@ def header_text_for_form() -> ListOfLines:
 
     default_header_text = [
         "Looks like a new cadet in the WA entry file. ",
-         "You can edit them, check their details and then add, or choose an existing cadet instead (avoid creating duplicates! If the existing cadet details are wrong, select them for now and edit later) \n\n Row details are: \n%s"
+        "You can edit them, check their details and then add, or choose an existing cadet instead (avoid creating duplicates! If the existing cadet details are wrong, select them for now and edit later) \n\n Row details are: \n%s",
     ]
 
     return ListOfLines(default_header_text).add_Lines()
-
-
 
 
 def post_form_add_cadet_ids_during_import(
@@ -182,7 +183,9 @@ def post_form_add_cadet_ids_during_import(
 ) -> Union[Form, NewForm]:
     header_text = header_text_for_form()
     last_button_pressed = interface.last_button_pressed()
-    if see_similar_cadets_only_button.pressed(last_button_pressed) or check_cadet_for_me_button.pressed(last_button_pressed):
+    if see_similar_cadets_only_button.pressed(
+        last_button_pressed
+    ) or check_cadet_for_me_button.pressed(last_button_pressed):
 
         ## verify results already in form, display form again, allow final this time
         return get_add_or_select_existing_cadet_form(
@@ -216,8 +219,6 @@ def post_form_add_cadet_ids_during_import(
         return process_form_when_existing_cadet_chosen(interface)
 
 
-
-
 def process_form_when_verified_cadet_to_be_added(interface: abstractInterface) -> Form:
     try:
         cadet = add_cadet_from_form_to_data(interface)
@@ -235,7 +236,9 @@ def process_form_when_skipping_cadet(interface: abstractInterface) -> Form:
     row_id = get_current_row_id(interface)
     print("adding skip row %s" % (row_id))
 
-    mark_row_as_skip_cadet(event=event, row_id=row_id, object_store=interface.object_store)
+    mark_row_as_skip_cadet(
+        event=event, row_id=row_id, object_store=interface.object_store
+    )
 
     interface.flush_cache_to_store()
     ## run recursively until no more data
@@ -256,5 +259,3 @@ def process_form_when_existing_cadet_chosen(interface: abstractInterface) -> For
 
     print(str(cadet))
     return process_row_when_cadet_matched(interface=interface, cadet=cadet)
-
-

@@ -1,11 +1,13 @@
 from typing import Union
 
-from app.backend.reporting.all_event_data.all_event_data import create_csv_event_report_and_return_filename
+from app.backend.reporting.all_event_data.all_event_data import (
+    create_csv_event_report_and_return_filename,
+)
 
 from app.objects.abstract_objects.abstract_text import Heading
 
 from app.backend.events.list_of_events import (
-get_event_from_list_of_events_given_event_description
+    get_event_from_list_of_events_given_event_description,
 )
 
 from app.frontend.events.ENTRY_view_events import display_list_of_events_with_buttons

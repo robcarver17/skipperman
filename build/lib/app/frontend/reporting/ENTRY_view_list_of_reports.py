@@ -66,7 +66,9 @@ def function_given_pressed_button_label(label) -> Callable:
     return DICT_OF_REPORT_LABELS_AND_STAGES.get(label, missing_data)
 
 
-def display_form_view_of_reports(interface: abstractInterface) -> Form: ## have to keep interface as standard input
+def display_form_view_of_reports(
+    interface: abstractInterface,
+) -> Form:  ## have to keep interface as standard input
     return Form(ListOfLines([nav_buttons, list_of_report_buttons]))
 
 

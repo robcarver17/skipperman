@@ -7,7 +7,13 @@ from app.frontend.cadets.import_members import display_form_import_members
 from app.frontend.cadets.view_individual_cadets import (
     display_form_view_individual_cadet,
 )
-from app.objects.cadets import Cadet
+from app.objects.cadets import (
+    Cadet,
+    SORT_BY_SURNAME,
+    SORT_BY_FIRSTNAME,
+    SORT_BY_DOB_ASC,
+    SORT_BY_DOB_DSC,
+)
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -29,12 +35,6 @@ from app.frontend.shared.cadet_state import update_state_for_specific_cadet
 from app.backend.cadets.list_of_cadets import (
     get_cadet_from_list_of_cadets_given_str_of_cadet,
     get_sorted_list_of_cadets,
-)
-from app.backend.cadets.list_of_cadets import (
-    SORT_BY_SURNAME,
-    SORT_BY_FIRSTNAME,
-    SORT_BY_DOB_ASC,
-    SORT_BY_DOB_DSC,
 )
 
 

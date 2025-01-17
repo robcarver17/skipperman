@@ -2,7 +2,10 @@ from typing import Union, List
 
 from app.objects.groups import Group
 
-from app.backend.rota.volunteer_table import get_dict_of_roles_for_dropdown, get_dict_of_groups_for_dropdown
+from app.backend.rota.volunteer_table import (
+    get_dict_of_roles_for_dropdown,
+    get_dict_of_groups_for_dropdown,
+)
 from app.objects.composed.volunteer_roles import RoleWithSkills
 from app.objects.composed.volunteer_with_group_and_role_at_event import RoleAndGroup
 from app.objects.volunteers import Volunteer
@@ -48,7 +51,9 @@ def get_allocation_inputs_for_day_and_volunteer(
     day: Day,
     ready_to_swap: bool,
 ) -> ListOfLines:
-    volunteer_available_on_day = volunteer_data_at_event.registration_data.availablity.available_on_day(day)
+    volunteer_available_on_day = (
+        volunteer_data_at_event.registration_data.availablity.available_on_day(day)
+    )
     if volunteer_available_on_day:
         return get_allocation_inputs_for_day_and_volunteer_when_available(
             interface=interface,
@@ -58,9 +63,10 @@ def get_allocation_inputs_for_day_and_volunteer(
         )
     else:
         return get_allocation_inputs_for_day_and_volunteer_when_unavailable(
-            day=day, volunteer_data_at_event=volunteer_data_at_event, ready_to_swap=ready_to_swap
+            day=day,
+            volunteer_data_at_event=volunteer_data_at_event,
+            ready_to_swap=ready_to_swap,
         )
-
 
 
 def get_allocation_inputs_for_day_and_volunteer_when_unavailable(
@@ -78,6 +84,7 @@ def get_allocation_inputs_for_day_and_volunteer_when_unavailable(
             ),
         )
         return ListOfLines([make_available_button])
+
 
 def get_allocation_inputs_for_day_and_volunteer_when_available(
     interface: abstractInterface,
@@ -99,17 +106,17 @@ def get_allocation_inputs_for_day_and_volunteer_when_available(
         interface=interface,
         ready_to_swap=ready_to_swap,
         volunteer_data_at_event=volunteer_data_at_event,
-        day=day
+        day=day,
     )
     return ListOfLines([group_and_role_inputs, buttons]).add_Lines()
 
 
 def get_role_and_group_allocation_inputs_for_day_and_volunteer_in_role_when_available(
     interface: abstractInterface,
-        volunteer: Volunteer,
-        role_and_group: RoleAndGroup,
-        day: Day,
-        ready_to_swap: bool,
+    volunteer: Volunteer,
+    role_and_group: RoleAndGroup,
+    day: Day,
+    ready_to_swap: bool,
 ) -> list:
     role = role_and_group.role
     group = role_and_group.group
@@ -119,7 +126,7 @@ def get_role_and_group_allocation_inputs_for_day_and_volunteer_in_role_when_avai
         role=role,
         ready_to_swap=ready_to_swap,
         day=day,
-        volunteer=volunteer
+        volunteer=volunteer,
     )
 
     role_already_set = not role.is_no_role_set()
@@ -138,8 +145,6 @@ def get_role_and_group_allocation_inputs_for_day_and_volunteer_in_role_when_avai
         all_elements.append(group_input)
 
     return all_elements
-
-
 
 
 def get_allocation_input_for_role(
@@ -163,8 +168,7 @@ def get_allocation_input_for_role(
 
 def input_name_for_role_and_volunteer(
     day: Day,
-        volunteer: Volunteer,
-
+    volunteer: Volunteer,
 ) -> str:
     return "ROLE_%s_%s" % (
         volunteer.id,
@@ -173,29 +177,29 @@ def input_name_for_role_and_volunteer(
 
 
 def get_allocation_input_for_group(
-        interface: abstractInterface,
+    interface: abstractInterface,
     group: Group,
-        volunteer: Volunteer,
-        day: Day,
+    volunteer: Volunteer,
+    day: Day,
     ready_to_swap: bool,
 ) -> Union[dropDownInput, str]:
     if ready_to_swap:
         return " (%s)" % group.name
 
-    dict_of_groups_for_dropdown = get_dict_of_groups_for_dropdown(interface.object_store)
+    dict_of_groups_for_dropdown = get_dict_of_groups_for_dropdown(
+        interface.object_store
+    )
     return dropDownInput(
         input_label="",
-        input_name=input_name_for_group_and_volunteer(
-            volunteer=volunteer, day=day
-        ),
+        input_name=input_name_for_group_and_volunteer(volunteer=volunteer, day=day),
         dict_of_options=dict_of_groups_for_dropdown,
         default_label=group.name,
     )
 
 
 def input_name_for_group_and_volunteer(
-        volunteer: Volunteer,
-        day: Day,
+    volunteer: Volunteer,
+    day: Day,
 ) -> str:
     return "GROUP_%s_%s" % (
         volunteer.id,

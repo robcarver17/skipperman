@@ -93,10 +93,6 @@ class DaySelector(Dict[Day, bool]):
     def days_available(self) -> List[Day]:
         return [day for day in all_possible_days if self.available_on_day(day)]
 
-    def days_available_as_str(self) -> List[str]:
-        days_available = self.days_available()
-        return [day.name for day in days_available]
-
     def available_on_day(self, day: Day):
         return self.get(day, False)
 
@@ -117,10 +113,9 @@ def union_across_day_selectors(list_of_day_selectors: List[DaySelector]) -> DayS
     return union_selector
 
 
-ALL_DAYS_SELECTED = dict([(day, True) for day in all_possible_days])
 NO_DAYS_SELECTED = dict([(day, False) for day in all_possible_days])
 
-EMPTY_DAY_SELECTOR = DaySelector(NO_DAYS_SELECTED)
+empty_day_selector = DaySelector(NO_DAYS_SELECTED)
 
 
 def no_days_selected(day_selector: DaySelector, possible_days: list):
@@ -151,7 +146,7 @@ selection_dict = dict(
 inverse_selection_dict = {value: key for key, value in selection_dict.items()}
 
 
-def any_day_selector_from_short_form_text(text: str) -> DaySelector:
+def create_day_selector_from_short_form_text(text: str) -> DaySelector:
     starting_dict = dict()
     for day_to_find, day_to_select in selection_dict.items():
         if day_to_find in text:
@@ -163,7 +158,7 @@ def any_day_selector_from_short_form_text(text: str) -> DaySelector:
 
 
 day_selector_stored_format_from_text = (
-    any_day_selector_from_short_form_text  ## could use alternative
+    create_day_selector_from_short_form_text  ## could use alternative
 )
 
 

@@ -27,7 +27,7 @@ DEFAULT_SORT_ORDER = [
 
 
 def sorted_active_cadets(
-        object_store: ObjectStore,
+    object_store: ObjectStore,
     dict_of_all_event_data: DictOfAllEventInfoForCadets,
     day_or_none: Day = None,
     sort_order: list = arg_not_passed,
@@ -36,9 +36,9 @@ def sorted_active_cadets(
         return dict_of_all_event_data.list_of_cadets
 
     active_cadets_as_data_frame = get_active_cadets_as_data_frame(
-        dict_of_all_event_data = dict_of_all_event_data,
+        dict_of_all_event_data=dict_of_all_event_data,
         object_store=object_store,
-        day_or_none=day_or_none
+        day_or_none=day_or_none,
     )
 
     sorted_active_cadets_df = get_sorted_active_cadets_df(
@@ -52,26 +52,25 @@ def sorted_active_cadets(
 
 
 def get_active_cadets_as_data_frame(
-        object_store: ObjectStore,
-    dict_of_all_event_data: DictOfAllEventInfoForCadets, day_or_none: Day = None
+    object_store: ObjectStore,
+    dict_of_all_event_data: DictOfAllEventInfoForCadets,
+    day_or_none: Day = None,
 ) -> pd.DataFrame:
     if day_or_none is None:
         return get_active_cadets_as_data_frame_on_non_specified_day(
-            object_store=object_store,
-            dict_of_all_event_data=dict_of_all_event_data
+            object_store=object_store, dict_of_all_event_data=dict_of_all_event_data
         )
     else:
         return get_active_cadets_as_data_frame_on_specific_day(
             object_store=object_store,
-            dict_of_all_event_data=dict_of_all_event_data, day=day_or_none
+            dict_of_all_event_data=dict_of_all_event_data,
+            day=day_or_none,
         )
-
 
 
 def get_active_cadets_as_data_frame_on_non_specified_day(
     dict_of_all_event_data: DictOfAllEventInfoForCadets,
-        object_store: ObjectStore,
-
+    object_store: ObjectStore,
 ) -> pd.DataFrame:
     active_cadets = dict_of_all_event_data.list_of_cadets
     first_names = [cadet.first_name for cadet in active_cadets]
@@ -105,33 +104,42 @@ def get_active_cadets_as_data_frame_on_non_specified_day(
     active_cadets_as_data_frame = pd.DataFrame(df_as_dict)
     active_cadets_as_data_frame = add_sort_order_to_data_frame(
         object_store=object_store,
-        active_cadets_as_data_frame=active_cadets_as_data_frame
+        active_cadets_as_data_frame=active_cadets_as_data_frame,
     )
 
     return active_cadets_as_data_frame
 
 
 def get_active_cadets_as_data_frame_on_specific_day(
-        object_store: ObjectStore,
-        dict_of_all_event_data: DictOfAllEventInfoForCadets, day: Day
+    object_store: ObjectStore,
+    dict_of_all_event_data: DictOfAllEventInfoForCadets,
+    day: Day,
 ) -> pd.DataFrame:
     active_cadets = dict_of_all_event_data.list_of_cadets
     first_names = [cadet.first_name for cadet in active_cadets]
     surnames = [cadet.surname for cadet in active_cadets]
     groups = [
-        dict_of_all_event_data.event_data_for_cadet(cadet).days_and_groups.group_on_day(day)
+        dict_of_all_event_data.event_data_for_cadet(cadet).days_and_groups.group_on_day(
+            day
+        )
         for cadet in active_cadets
     ]
     club_boats = [
-        dict_of_all_event_data.event_data_for_cadet(cadet).days_and_club_dinghies.dinghy_on_day(day)
+        dict_of_all_event_data.event_data_for_cadet(
+            cadet
+        ).days_and_club_dinghies.dinghy_on_day(day)
         for cadet in active_cadets
     ]
     boat_classes = [
-        dict_of_all_event_data.event_data_for_cadet(cadet).days_and_boat_class.boat_class_on_day(day)
+        dict_of_all_event_data.event_data_for_cadet(
+            cadet
+        ).days_and_boat_class.boat_class_on_day(day)
         for cadet in active_cadets
     ]
     partners = [
-        dict_of_all_event_data.event_data_for_cadet(cadet).days_and_boat_class.partner_on_day(day)
+        dict_of_all_event_data.event_data_for_cadet(
+            cadet
+        ).days_and_boat_class.partner_on_day(day)
         for cadet in active_cadets
     ]
 
@@ -148,19 +156,23 @@ def get_active_cadets_as_data_frame_on_specific_day(
     active_cadets_as_data_frame = pd.DataFrame(df_as_dict)
     active_cadets_as_data_frame = add_sort_order_to_data_frame(
         object_store=object_store,
-        active_cadets_as_data_frame=active_cadets_as_data_frame
+        active_cadets_as_data_frame=active_cadets_as_data_frame,
     )
 
     return active_cadets_as_data_frame
 
-def add_sort_order_to_data_frame(object_store: ObjectStore, active_cadets_as_data_frame: pd.DataFrame):
+
+def add_sort_order_to_data_frame(
+    object_store: ObjectStore, active_cadets_as_data_frame: pd.DataFrame
+):
     ## this ensures the groups, boat classes and club boats are sorted in order
     active_cadets_as_data_frame[SORT_GROUP] = pd.Categorical(
         active_cadets_as_data_frame[SORT_GROUP], get_list_of_groups(object_store)
     )
 
     active_cadets_as_data_frame[SORT_CLUBBOAT] = pd.Categorical(
-        active_cadets_as_data_frame[SORT_CLUBBOAT], get_list_of_club_dinghies(object_store)
+        active_cadets_as_data_frame[SORT_CLUBBOAT],
+        get_list_of_club_dinghies(object_store),
     )
 
     active_cadets_as_data_frame[SORT_CLASS] = pd.Categorical(
@@ -168,8 +180,6 @@ def add_sort_order_to_data_frame(object_store: ObjectStore, active_cadets_as_dat
     )
 
     return active_cadets_as_data_frame
-
-
 
 
 def get_sorted_active_cadets_df(

@@ -1,15 +1,12 @@
 from typing import Union
 
+from app.backend.reporting.event_lists import display_list_of_events_with_buttons_criteria_matched, describe_criteria
 from app.data_access.init_directories import web_pathname_of_file
 from app.frontend.reporting.shared.arrangement_form import (
     form_for_group_arrangement_options,
     post_form_for_group_arrangement_options,
 )
 from app.frontend.reporting.shared.create_report import create_generic_report
-from app.backend.reporting import (
-    display_list_of_events_with_buttons_criteria_matched,
-    describe_criteria,
-)
 from app.frontend.reporting.shared.explain_options import (
     get_text_explaining_various_options_for_generic_report,
 )
@@ -38,15 +35,11 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.form_handler import (
-    initial_state_form,
     button_error_and_back_to_initial_state_form,
 )
 from app.frontend.shared.events_state import (
     get_event_from_state,
     update_state_for_specific_event_given_event_description,
-)
-from app.backend.events.list_of_events import (
-    confirm_event_exists_given_description_REFACTOR,
 )
 
 from app.frontend.reporting.shared.constants import *
@@ -57,7 +50,7 @@ def display_initial_generic_report_form(
 ) -> Form:
     event_criteria = report_generator.event_criteria
     list_of_events = display_list_of_events_with_buttons_criteria_matched(
-        interface=interface, **event_criteria
+        object_store=interface.object_store, event_criteria=event_criteria
     )
     criteria_description = describe_criteria(**event_criteria)
 
@@ -85,16 +78,6 @@ def post_form_initial_generic_report(
         )
 
     event_name_selected = last_button
-    try:
-        confirm_event_exists_given_description_REFACTOR(
-            interface=interface, event_description=event_name_selected
-        )
-    except:
-        interface.log_error(
-            "Event %s no longer in list- someone else has deleted or file corruption?"
-            % event_name_selected
-        )
-        return initial_state_form
 
     ## so whilst we are in this stage, we know which event we are talking about
     update_state_for_specific_event_given_event_description(

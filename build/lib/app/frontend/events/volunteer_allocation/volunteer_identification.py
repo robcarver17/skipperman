@@ -1,15 +1,21 @@
 from typing import Union, Tuple
 
-from app.backend.volunteers.list_of_volunteers import get_volunteer_with_matching_name, \
-    get_volunteer_from_list_of_given_str_of_volunteer
-from app.backend.registration_data.identified_volunteers_at_event import \
-    volunteer_for_this_row_and_index_already_identified, add_identified_volunteer, mark_volunteer_as_skipped
+from app.backend.volunteers.list_of_volunteers import (
+    get_volunteer_with_matching_name,
+    get_volunteer_from_list_of_given_str_of_volunteer,
+)
+from app.backend.registration_data.identified_volunteers_at_event import (
+    volunteer_for_this_row_and_index_already_identified,
+    add_identified_volunteer,
+    mark_volunteer_as_skipped,
+)
 from app.backend.volunteers.add_edit_volunteer import verify_volunteer_and_warn
 from app.backend.registration_data.volunter_relevant_information import (
     get_volunteer_from_relevant_information,
 )
-from app.backend.registration_data.identified_cadets_at_event import \
-    is_cadet_marked_as_test_cadet_to_skip_in_for_row_in_raw_registration_data
+from app.backend.registration_data.identified_cadets_at_event import (
+    is_cadet_marked_as_test_cadet_to_skip_in_for_row_in_raw_registration_data,
+)
 
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.import_data.shared_state_tracking_and_data import (
@@ -19,7 +25,7 @@ from app.frontend.events.import_data.shared_state_tracking_and_data import (
 )
 from app.frontend.events.volunteer_allocation.track_state_in_volunteer_allocation import (
     clear_volunteer_index,
-    get_and_save_next_volunteer_index
+    get_and_save_next_volunteer_index,
 )
 from app.frontend.events.volunteer_allocation.volunteer_selection_form_contents import *
 from app.frontend.shared.add_edit_volunteer_forms import (
@@ -62,7 +68,9 @@ def process_volunteer_on_next_row_of_event_data(
     except NoMoreData:
         clear_row_in_state(interface)
         print("Finished looping - next stage is to add details")
-        return interface.get_new_display_form_for_parent_of_function(display_form_volunteer_identification)
+        return interface.get_new_display_form_for_parent_of_function(
+            display_form_volunteer_identification
+        )
 
     return identify_volunteers_in_specific_row_initialise(interface=interface)
 
@@ -81,6 +89,7 @@ def identify_volunteers_in_specific_row_initialise(
 
     return next_volunteer_in_current_row(interface)
 
+
 def is_cadet_marked_as_test_cadet_to_skip_in_for_current_row_in_mapped_data(
     interface: abstractInterface,
 ):
@@ -89,6 +98,7 @@ def is_cadet_marked_as_test_cadet_to_skip_in_for_current_row_in_mapped_data(
     return is_cadet_marked_as_test_cadet_to_skip_in_for_row_in_raw_registration_data(
         object_store=interface.object_store, row_id=current_row_id, event=event
     )
+
 
 def next_volunteer_in_current_row(interface: abstractInterface) -> Union[Form, NewForm]:
     try:
@@ -117,8 +127,6 @@ def current_volunteer_already_identified(interface: abstractInterface):
     )
 
 
-
-
 def add_specific_volunteer_at_event(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
@@ -135,7 +143,7 @@ def add_passed_volunteer_at_event(
 ) -> Union[Form, NewForm]:
     try:
         matched_volunteer_with_id = get_volunteer_with_matching_name(
-            object_store = interface.object_store, volunteer=volunteer
+            object_store=interface.object_store, volunteer=volunteer
         )
         if matched_volunteer_with_id is missing_data:
             raise
@@ -151,7 +159,6 @@ def add_passed_volunteer_at_event(
     return process_identification_when_volunteer_matched(
         interface=interface, volunteer=matched_volunteer_with_id
     )
-
 
 
 def display_volunteer_selection_form(
@@ -177,8 +184,10 @@ def get_add_or_select_existing_volunteers_form(
     cadet_in_row = get_cadet_or_missing_data_for_current_row(interface)
 
     volunteer_and_text, include_final_button = get_volunteer_text_and_final_button(
-        volunteer=volunteer, interface=interface, first_time=first_time,
-        cadet_in_row=cadet_in_row
+        volunteer=volunteer,
+        interface=interface,
+        first_time=first_time,
+        cadet_in_row=cadet_in_row,
     )
     volunteer = volunteer_and_text.volunteer
 
@@ -187,7 +196,7 @@ def get_add_or_select_existing_volunteers_form(
         volunteer=volunteer,
         see_all_volunteers=see_all_volunteers,
         include_final_button=include_final_button,
-        cadet_in_row = cadet_in_row,
+        cadet_in_row=cadet_in_row,
     )
     header_text = get_header_text_for_volunteer_selection_form(interface=interface)
 
@@ -201,14 +210,14 @@ def get_add_or_select_existing_volunteers_form(
 def get_volunteer_text_and_final_button(
     interface: abstractInterface,
     first_time: bool,
-        cadet_in_row: Cadet, ## could be missing data
+    cadet_in_row: Cadet,  ## could be missing data
     volunteer: Volunteer = arg_not_passed,
 ) -> Tuple[VolunteerAndVerificationText, bool]:
     verification_text = verify_volunteer_and_warn(
         object_store=interface.object_store, volunteer=volunteer
     )
     could_be_cadet_not_volunteer = volunteer_name_is_similar_to_cadet_name(
-         volunteer=volunteer, cadet=cadet_in_row
+        volunteer=volunteer, cadet=cadet_in_row
     )
     if could_be_cadet_not_volunteer:
         verification_text += "Volunteer name is similar to cadet name - are you sure this is actually a volunteer and not a cadet?"
@@ -233,14 +242,15 @@ def get_cadet_or_missing_data_for_current_row(interface: abstractInterface) -> C
     return relevant_information.identify.cadet
 
 
-
 def post_form_volunteer_identification(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
-    if check_for_me_volunteer_button.pressed(button_pressed) \
-        or check_confirm_volunteer_button.pressed(button_pressed) \
-        or see_similar_volunteers_button.pressed(button_pressed):
+    if (
+        check_for_me_volunteer_button.pressed(button_pressed)
+        or check_confirm_volunteer_button.pressed(button_pressed)
+        or see_similar_volunteers_button.pressed(button_pressed)
+    ):
         return get_add_or_select_existing_volunteers_form(
             interface=interface, see_all_volunteers=False, first_time=False
         )
@@ -291,18 +301,22 @@ def action_when_skipping_volunteer(interface: abstractInterface) -> NewForm:
 
     return next_volunteer_in_current_row(interface)
 
+
 def action_when_specific_volunteer_selected(
     name_of_volunteer: str, interface: abstractInterface
 ) -> Union[Form, NewForm]:
 
-    volunteer = get_volunteer_from_list_of_given_str_of_volunteer(object_store=interface.object_store, volunteer_as_str=name_of_volunteer, default=None)
+    volunteer = get_volunteer_from_list_of_given_str_of_volunteer(
+        object_store=interface.object_store,
+        volunteer_as_str=name_of_volunteer,
+        default=None,
+    )
     if volunteer is None:
         raise Exception("Volunteer %s has gone missing!" % name_of_volunteer)
 
     return process_identification_when_volunteer_matched(
         interface=interface, volunteer=volunteer
     )
-
 
 
 def process_identification_when_volunteer_matched(
@@ -318,8 +332,8 @@ def process_identification_when_volunteer_matched(
         % (str(volunteer), str(event), current_row_id, current_index)
     )
     add_identified_volunteer(
-        object_store = interface.object_store,
-        volunteer = volunteer,
+        object_store=interface.object_store,
+        volunteer=volunteer,
         event=event,
         row_id=current_row_id,
         volunteer_index=int(current_index),

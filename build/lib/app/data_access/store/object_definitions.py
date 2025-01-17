@@ -19,18 +19,23 @@ from app.objects.composed.cadets_at_event_with_registration_data import (
 
 from app.data_access.store.data_access import *
 from app.objects.composed.cadet_volunteer_associations import (
-    create_list_of_cadet_volunteer_associations_from_underlying_data, compose_dict_of_cadets_associated_with_volunteers,
+    create_list_of_cadet_volunteer_associations_from_underlying_data,
+    compose_dict_of_cadets_associated_with_volunteers,
     compose_dict_of_volunteers_associated_with_cadets,
 )
 from app.objects.composed.cadets_with_qualifications import (
     create_dict_of_qualifications_for_cadets,
 )
-from app.objects.composed.clothing_at_event import compose_dict_of_cadets_with_clothing_at_event
+from app.objects.composed.clothing_at_event import (
+    compose_dict_of_cadets_with_clothing_at_event,
+)
 from app.objects.composed.committee import (
     create_list_of_cadet_committee_members_from_underlying_data,
 )
-from app.objects.composed.food_at_event import compose_dict_of_cadets_with_food_requirements_at_event, \
-    compose_dict_of_volunteers_with_food_requirements_at_event
+from app.objects.composed.food_at_event import (
+    compose_dict_of_cadets_with_food_requirements_at_event,
+    compose_dict_of_volunteers_with_food_requirements_at_event,
+)
 from app.objects.composed.roles_and_teams import compose_dict_of_teams_with_roles
 from app.objects.composed.ticks_in_dicts import (
     create_qualifications_and_tick_items_as_dict_from_underyling,
@@ -56,7 +61,9 @@ from app.objects.composed.volunteers_with_all_event_data import (
 )
 from app.objects.composed.volunteers_with_skills import compose_dict_of_volunteer_skills
 from app.objects.exceptions import arg_not_passed
-from app.objects.composed.dict_of_volunteer_role_targets import compose_list_of_targets_for_roles_at_event
+from app.objects.composed.dict_of_volunteer_role_targets import (
+    compose_list_of_targets_for_roles_at_event,
+)
 
 
 @dataclass
@@ -90,19 +97,6 @@ class IterableObjectDefinition:
         return matching_kwargs(self, **kwargs)
 
 
-def matching_kwargs(object, **kwargs) -> dict:
-    required_keys = object.required_keys
-    if required_keys is arg_not_passed:
-        required_keys = []
-
-    try:
-        new_kwargs = dict([(key, kwargs[key]) for key in required_keys])
-    except KeyError as e:
-        raise Exception("%s missing argument when calling object definition" % str(e))
-
-    return new_kwargs
-
-
 @dataclass
 class DerivedObjectDefinition:
     composition_function: Callable
@@ -132,6 +126,24 @@ class DerivedObjectDefinition:
         return matching_kwargs(self, **kwargs)
 
 
+def matching_kwargs(
+    object_with_kwargs: Union[
+        UnderlyingObjectDefinition, IterableObjectDefinition, DerivedObjectDefinition
+    ],
+    **kwargs,
+) -> dict:
+    required_keys = object_with_kwargs.required_keys
+    if required_keys is arg_not_passed:
+        required_keys = []
+
+    try:
+        new_kwargs = dict([(key, kwargs[key]) for key in required_keys])
+    except KeyError as e:
+        raise Exception("%s missing argument when calling object definition" % str(e))
+
+    return new_kwargs
+
+
 ######## LIST OF OBJECT DEFINITIONS
 
 # UNDERLYING
@@ -158,9 +170,9 @@ object_definition_for_identified_cadets_at_event = UnderlyingObjectDefinition(
     required_keys=["event_id"],
 )
 
-object_definition_for_identified_volunteers_at_event= UnderlyingObjectDefinition(
+object_definition_for_identified_volunteers_at_event = UnderlyingObjectDefinition(
     data_store_method_function=get_data_access_for_identified_volunteers_at_event,
-    required_keys=["event_id"]
+    required_keys=["event_id"],
 )
 
 object_definition_for_cadets_with_ids_and_registration_data_at_event = UnderlyingObjectDefinition(
@@ -277,7 +289,7 @@ object_definition_for_list_of_field_mapping_templates = UnderlyingObjectDefiniti
 
 object_definition_for_field_mapping_templates = UnderlyingObjectDefinition(
     data_store_method_function=get_data_access_for_wa_field_mapping_templates,
-    required_keys = ['template_name']
+    required_keys=["template_name"],
 )
 
 object_definition_for_wa_event_mapping = UnderlyingObjectDefinition(
@@ -286,31 +298,31 @@ object_definition_for_wa_event_mapping = UnderlyingObjectDefinition(
 
 object_definition_for_list_of_targets_for_role_id_at_event = UnderlyingObjectDefinition(
     data_store_method_function=get_data_access_for_list_of_targets_for_role_at_event,
-    required_keys=['event_id']
+    required_keys=["event_id"],
 )
 
 object_definition_for_cadet_ids_with_clothing_at_event = UnderlyingObjectDefinition(
     data_store_method_function=get_data_access_for_cadets_with_clothing_at_event,
-    required_keys=['event_id']
+    required_keys=["event_id"],
 )
 
 object_definition_for_cadet_ids_with_food_at_event = UnderlyingObjectDefinition(
     data_store_method_function=get_data_access_for_cadets_with_food_at_event,
-required_keys=['event_id']
+    required_keys=["event_id"],
 )
 object_definition_for_volunteer_ids_with_food_at_event = UnderlyingObjectDefinition(
     data_store_method_function=get_data_access_for_volunteers_with_food_at_event,
-required_keys=['event_id']
+    required_keys=["event_id"],
 )
 
 object_definition_for_print_options = UnderlyingObjectDefinition(
     data_store_method_function=get_data_access_for_print_options,
-    required_keys=['report_name']
+    required_keys=["report_name"],
 )
 
 object_definition_for_report_arrangement_and_group_order_options = UnderlyingObjectDefinition(
     data_store_method_function=get_data_access_for_arrangement_and_group_order_options,
-    required_keys=['report_name']
+    required_keys=["report_name"],
 )
 
 ## ITERABLE
@@ -517,43 +529,53 @@ object_definition_for_dict_of_patrol_boats_by_day_for_volunteer_at_event = Deriv
     required_keys=["event_id"],
 )
 
-object_definition_for_list_of_targets_for_role_at_event= DerivedObjectDefinition(
+object_definition_for_list_of_targets_for_role_at_event = DerivedObjectDefinition(
     composition_function=compose_list_of_targets_for_roles_at_event,
     dict_of_arguments_and_underlying_object_definitions=dict(
-list_of_targets_with_role_ids = object_definition_for_list_of_targets_for_role_id_at_event,
-    list_of_roles_and_skills = object_definition_for_list_of_roles_with_skills,
-    list_of_events = object_definition_for_list_of_events),
-    dict_of_properties_and_underlying_object_definitions_if_modified=dict(list_of_targets_with_role_ids = object_definition_for_list_of_targets_for_role_id_at_event),
-    required_keys=['event_id']
+        list_of_targets_with_role_ids=object_definition_for_list_of_targets_for_role_id_at_event,
+        list_of_roles_and_skills=object_definition_for_list_of_roles_with_skills,
+        list_of_events=object_definition_for_list_of_events,
+    ),
+    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
+        list_of_targets_with_role_ids=object_definition_for_list_of_targets_for_role_id_at_event
+    ),
+    required_keys=["event_id"],
 )
 
 object_definition_for_dict_of_cadets_with_food_requirements_at_event = DerivedObjectDefinition(
     composition_function=compose_dict_of_cadets_with_food_requirements_at_event,
     dict_of_arguments_and_underlying_object_definitions=dict(
-list_of_cadets = object_definition_for_list_of_cadets,
-list_of_cadets_with_ids_and_food_requirements = object_definition_for_cadet_ids_with_food_at_event
+        list_of_cadets=object_definition_for_list_of_cadets,
+        list_of_cadets_with_ids_and_food_requirements=object_definition_for_cadet_ids_with_food_at_event,
     ),
     dict_of_properties_and_underlying_object_definitions_if_modified=dict(
-list_of_cadets_with_ids_and_food_requirements = object_definition_for_cadet_ids_with_food_at_event),
-required_keys=['event_id']
+        list_of_cadets_with_ids_and_food_requirements=object_definition_for_cadet_ids_with_food_at_event
+    ),
+    required_keys=["event_id"],
 )
 
 object_definition_for_dict_of_volunteers_with_food_requirements_at_event = DerivedObjectDefinition(
     composition_function=compose_dict_of_volunteers_with_food_requirements_at_event,
-    dict_of_arguments_and_underlying_object_definitions=dict(list_of_volunteers=object_definition_for_volunteers,
-                                                             list_of_volunteers_with_ids_and_food_requirements = object_definition_for_volunteer_ids_with_food_at_event),
-    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
-list_of_volunteers_with_ids_and_food_requirements = object_definition_for_volunteer_ids_with_food_at_event
+    dict_of_arguments_and_underlying_object_definitions=dict(
+        list_of_volunteers=object_definition_for_volunteers,
+        list_of_volunteers_with_ids_and_food_requirements=object_definition_for_volunteer_ids_with_food_at_event,
     ),
-required_keys=['event_id']
+    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
+        list_of_volunteers_with_ids_and_food_requirements=object_definition_for_volunteer_ids_with_food_at_event
+    ),
+    required_keys=["event_id"],
 )
 
-object_definition_for_dict_of_cadets_with_clothing_at_event= DerivedObjectDefinition(
+object_definition_for_dict_of_cadets_with_clothing_at_event = DerivedObjectDefinition(
     composition_function=compose_dict_of_cadets_with_clothing_at_event,
-    dict_of_arguments_and_underlying_object_definitions=dict(list_of_cadets = object_definition_for_list_of_cadets,
-                                                             list_of_cadets_with_clothing_and_ids = object_definition_for_cadet_ids_with_clothing_at_event),
-    dict_of_properties_and_underlying_object_definitions_if_modified=dict(list_of_cadets_with_clothing_and_ids = object_definition_for_cadet_ids_with_clothing_at_event),
-    required_keys=['event_id']
+    dict_of_arguments_and_underlying_object_definitions=dict(
+        list_of_cadets=object_definition_for_list_of_cadets,
+        list_of_cadets_with_clothing_and_ids=object_definition_for_cadet_ids_with_clothing_at_event,
+    ),
+    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
+        list_of_cadets_with_clothing_and_ids=object_definition_for_cadet_ids_with_clothing_at_event
+    ),
+    required_keys=["event_id"],
 )
 
 
@@ -569,9 +591,8 @@ object_definition_for_dict_of_all_event_info_for_cadet = DerivedObjectDefinition
         dict_of_cadets_with_registration_data=object_definition_for_dict_of_cadets_with_registration_data_at_event,
         dict_of_cadets_with_days_and_groups=object_definition_for_dict_of_cadets_with_groups_at_event,
         dict_of_cadets_with_clothing_at_event=object_definition_for_dict_of_cadets_with_clothing_at_event,
-    dict_of_cadets_with_food_required_at_event = object_definition_for_dict_of_cadets_with_food_requirements_at_event,
-
-),
+        dict_of_cadets_with_food_required_at_event=object_definition_for_dict_of_cadets_with_food_requirements_at_event,
+    ),
     dict_of_properties_and_underlying_object_definitions_if_modified=dict(
         dict_of_cadets_and_boat_class_and_partners=object_definition_for_dict_of_cadets_and_boat_classes_and_partners,
         dict_of_cadets_and_club_dinghies_at_event=object_definition_for_dict_of_cadets_and_club_dinghies_at_event,
@@ -597,15 +618,26 @@ object_definition_for_dict_of_cadets_with_qualifications_and_ticks = DerivedObje
     required_keys=["list_of_cadet_ids"],
 )  # DictOfCadetsWithQualificationsAndTicks
 
-object_definition_for_dict_of_cadets_associated_with_volunteers =DerivedObjectDefinition(
+object_definition_for_dict_of_cadets_associated_with_volunteers = DerivedObjectDefinition(
     composition_function=compose_dict_of_cadets_associated_with_volunteers,
-    dict_of_arguments_and_underlying_object_definitions=dict(list_of_cadet_volunteer_associations=object_definition_for_volunteer_and_cadet_associations))
+    dict_of_arguments_and_underlying_object_definitions=dict(
+        list_of_cadet_volunteer_associations=object_definition_for_volunteer_and_cadet_associations
+    ),
+    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
+        list_of_cadet_volunteer_associations=object_definition_for_volunteer_and_cadet_associations
+    ),
+)
 
 
-object_definition_for_dict_of_volunteers_associated_with_cadets =DerivedObjectDefinition(
+object_definition_for_dict_of_volunteers_associated_with_cadets = DerivedObjectDefinition(
     composition_function=compose_dict_of_volunteers_associated_with_cadets,
-    dict_of_arguments_and_underlying_object_definitions=dict(list_of_cadet_volunteer_associations=object_definition_for_volunteer_and_cadet_associations))
-
+    dict_of_arguments_and_underlying_object_definitions=dict(
+        list_of_cadet_volunteer_associations=object_definition_for_volunteer_and_cadet_associations
+    ),
+    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
+        list_of_cadet_volunteer_associations=object_definition_for_volunteer_and_cadet_associations
+    ),
+)
 
 
 object_definition_for_dict_of_all_event_data_for_volunteers = DerivedObjectDefinition(
@@ -616,8 +648,8 @@ object_definition_for_dict_of_all_event_data_for_volunteers = DerivedObjectDefin
         dict_of_volunteers_with_skills=object_definition_for_dict_of_volunteers_with_skills,
         dict_of_volunteers_at_event_with_days_and_roles=object_definition_for_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups,
         dict_of_volunteers_at_event_with_patrol_boats=object_definition_for_dict_of_patrol_boats_by_day_for_volunteer_at_event,
-    dict_of_cadets_associated_with_volunteers = object_definition_for_dict_of_cadets_associated_with_volunteers,
-    dict_of_volunteers_with_food_at_event= object_definition_for_dict_of_volunteers_with_food_requirements_at_event
+        dict_of_cadets_associated_with_volunteers=object_definition_for_dict_of_cadets_associated_with_volunteers,
+        dict_of_volunteers_with_food_at_event=object_definition_for_dict_of_volunteers_with_food_requirements_at_event,
     ),
     dict_of_properties_and_underlying_object_definitions_if_modified=dict(),
     required_keys=["event_id"],

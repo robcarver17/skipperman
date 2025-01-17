@@ -3,9 +3,10 @@ from typing import List
 
 from app.objects.cadets import Cadet, SKIP_TEST_CADET_ID
 
-from app.objects.exceptions import missing_data
+from app.objects.exceptions import missing_data, MissingData
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
+from app.objects.exceptions import MultipleMatches
 
 
 @dataclass
@@ -18,7 +19,7 @@ class IdentifiedCadetAtEvent(GenericSkipperManObject):
         return self.cadet_id == SKIP_TEST_CADET_ID
 
     @classmethod
-    def test_cadet(cls, row_id: str):
+    def create_row_for_test_cadet(cls, row_id: str):
         return cls(cadet_id=SKIP_TEST_CADET_ID, row_id=row_id)
 
 
@@ -47,26 +48,26 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
 
         self.append(IdentifiedCadetAtEvent(row_id=row_id, cadet_id=cadet_id))
 
-    def add_cadet_to_skip(self, row_id: str):
+    def add_row_with_test_cadet_as_skipping(self, row_id: str):
         try:
             assert row_id not in self.list_of_row_ids_including_test_cadets()
         except:
             raise Exception("Row ID can't appear more than once")
 
-        self.append(IdentifiedCadetAtEvent.test_cadet(row_id=row_id))
+        self.append(IdentifiedCadetAtEvent.create_row_for_test_cadet(row_id=row_id))
 
     def cadet_id_given_row_id(self, row_id: str) -> str:
         matching = [item for item in self if item.row_id == row_id]
         if len(matching) == 0:
-            return missing_data
+            raise MissingData
         elif len(matching) > 1:
-            raise Exception("Can't have same row_id more than once")
+            raise MultipleMatches("Can't have same row_id more than once")
 
         matching_item = matching[0]
         cadet_id = str(matching_item.cadet_id)
 
         if cadet_id == SKIP_TEST_CADET_ID:
-            return missing_data
+            raise MissingData
 
         return cadet_id
 

@@ -115,8 +115,7 @@ def get_input_name_for_target_box(role: str):
 def save_volunteer_targets(interface: abstractInterface):
     event = get_event_from_state(interface)
     data_for_table = get_list_of_actual_and_targets_for_roles_at_event(
-        object_store=interface.object_store,
-        event=event
+        object_store=interface.object_store, event=event
     )
     for row in data_for_table:
         save_volunteer_targets_for_specific_role(
@@ -129,7 +128,10 @@ def save_volunteer_targets_for_specific_role(
 ):
     new_target = get_target_from_form(interface=interface, role_name=role_name)
     save_new_volunteer_target(
-        object_store=interface.object_store, event=event, role_name=role_name, target=new_target
+        object_store=interface.object_store,
+        event=event,
+        role_name=role_name,
+        target=new_target,
     )
 
 

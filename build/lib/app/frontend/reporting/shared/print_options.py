@@ -1,6 +1,11 @@
-from app.OLD_backend.data.options import OptionsData
-from app.backend.reporting.options_and_parameters.print_options import reset_print_options_to_default, \
-    get_print_options, update_print_options
+
+from app.backend.reporting.options_and_parameters.get_and_update_print_options import (
+    get_print_options,
+    reset_print_options_to_default,
+    update_print_options,
+)
+from app.backend.reporting.options_and_parameters.print_options import PrintOptions, default_report_title_and_filename, \
+    get_default_filename_for_report
 from app.data_access.configuration.fixed import ALL_PAGESIZE, ALL_FONTS
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.reporting.shared.report_generator import ReportGenerator
@@ -33,17 +38,14 @@ from app.frontend.reporting.shared.constants import (
     FONT_SIZE,
 )
 from app.objects.exceptions import missing_data
-from app.backend.reporting import (
-    PrintOptions,
-    default_report_title_and_filename,
-    get_default_filename_for_report,
-)
 
 
 def get_saved_print_options(
     report_type: str, interface: abstractInterface
 ) -> PrintOptions:
-    print_options = get_print_options(object_store=interface.object_store, report_name=report_type)
+    print_options = get_print_options(
+        object_store=interface.object_store, report_name=report_type
+    )
     print_options.title_str = get_report_title_from_storage_or_use_default(
         report_type=report_type, interface=interface
     )
@@ -86,7 +88,11 @@ def save_print_options(
     interface.set_persistent_value(REPORT_FILENAME, print_options.filename)
 
     ## although title and filename are written here as well they are never used
-    update_print_options(object_store=interface.object_store, report_name=report_type, print_options=print_options)
+    update_print_options(
+        object_store=interface.object_store,
+        report_name=report_type,
+        print_options=print_options,
+    )
 
 
 def report_print_options_as_list_of_lines(print_options: PrintOptions) -> ListOfLines:
@@ -302,6 +308,8 @@ CSV = "csv"
 def reset_print_report_options(
     interface: abstractInterface, report_generator: ReportGenerator
 ):
-    reset_print_options_to_default(object_store=interface.object_store, report_name=report_generator.name)
+    reset_print_options_to_default(
+        object_store=interface.object_store, report_name=report_generator.name
+    )
     interface.clear_persistent_value(REPORT_TITLE)
     interface.clear_persistent_value(REPORT_FILENAME)

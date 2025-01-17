@@ -2,7 +2,9 @@ from typing import Dict
 
 import pandas as pd
 
-from app.backend.reporting.boat_report.boat_report_parameters import AdditionalParametersForBoatReport
+from app.backend.reporting.boat_report.boat_report_parameters import (
+    AdditionalParametersForBoatReport,
+)
 from app.backend.reporting.boat_report.get_data import get_dict_of_df_for_boat_report
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -98,8 +100,15 @@ def load_additional_parameters_for_boat_report(
 def clear_additional_parameters_for_boat_report(
     interface: abstractInterface,
 ):
-    for parameter_name in [DISPLAY_FULL_NAMES, EXCLUDE_UNALLOCATED, EXCLUDE_RIVER_TRAIN, EXCLUDE_LAKE, INCLUDE_IN_OUT]:
+    for parameter_name in [
+        DISPLAY_FULL_NAMES,
+        EXCLUDE_UNALLOCATED,
+        EXCLUDE_RIVER_TRAIN,
+        EXCLUDE_LAKE,
+        INCLUDE_IN_OUT,
+    ]:
         interface.clear_persistent_value(parameter_name)
+
 
 def get_dict_of_df_for_reporting_boats(
     interface: abstractInterface,
@@ -108,7 +117,9 @@ def get_dict_of_df_for_reporting_boats(
     additional_parameters = load_additional_parameters_for_boat_report(interface)
 
     dict_of_df = get_dict_of_df_for_boat_report(
-        object_store=interface.object_store, event=event, additional_parameters=additional_parameters
+        object_store=interface.object_store,
+        event=event,
+        additional_parameters=additional_parameters,
     )
 
     return dict_of_df

@@ -94,9 +94,11 @@ def get_row_for_existing_entry(entry: RoleWithSkills, **ignored_kwargs) -> RowIn
         return RowInTable(
             [
                 entry.name,
-                "Can associate with sailing group"
-                if entry.associate_sailing_group
-                else "Not associated with sailing group",
+                (
+                    "Can associate with sailing group"
+                    if entry.associate_sailing_group
+                    else "Not associated with sailing group"
+                ),
                 skills_str,
                 "Hidden in dropdowns" if entry.hidden else "Visible in dropdowns",
                 "Protected, cannot edit",

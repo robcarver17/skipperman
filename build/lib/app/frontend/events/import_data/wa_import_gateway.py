@@ -88,7 +88,7 @@ def report_on_status_of_upload(
         else "No registration data imported yet."
     )
     upload_text = (
-        "WA file has been imported ready for upload"
+        "WA file has been uploaded ready for import"
         if raw_event_file_uploaded
         else "No file currently uploaded for import."
     )
@@ -152,15 +152,15 @@ def get_upload_or_import_buttons(
     return upload_or_import_buttons_from_combo
 
 
-help_button = HelpButton("WA_import_help")
+help_button = HelpButton("import_registration_data_help")
 
 new_wa_field_mapping_button = Button("Set up WA field mapping", tile=True)
 existing_wa_field_mapping_button = Button("Check or modify WA field mapping", tile=True)
 
 first_upload_file_button = Button("Upload a WA export file", tile=True)
 subsequent_upload_file_button = Button("Upload an updated WA export file", tile=True)
-import_file_button = Button("Import data from uploaded file", tile=True)
-update_file_button = Button("Update data from uploaded export file", tile=True)
+import_file_button = Button("Import data from uploaded WA file", tile=True)
+update_file_button = Button("Update data from uploaded WA file", tile=True)
 
 clear_event_id_button = Button("Reset the stored WA event ID", tile=True)
 
@@ -208,5 +208,5 @@ def clear_wa_event_id_mapping_from_data(interface: abstractInterface):
     clear_wa_event_id_mapping(object_store=interface.object_store, event=event)
     interface.flush_cache_to_store()
     interface.log_error(
-        "Cleared WA ID for %s - make sure upload the right file!" % event
+        "Cleared WA ID for %s - make sure you upload the right file!" % event
     )

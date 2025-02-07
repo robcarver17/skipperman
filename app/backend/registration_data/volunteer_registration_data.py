@@ -38,12 +38,13 @@ def get_dict_of_registration_data_for_volunteers_at_event(
 
 def update_dict_of_registration_data_for_volunteers_at_event(
     object_store: ObjectStore,
+        event: Event,
     dict_of_registration_data: DictOfRegistrationDataForVolunteerAtEvent,
 ):
     object_store.update(
         new_object=dict_of_registration_data,
         object_definition=object_definition_for_dict_of_registration_data_for_volunteers_at_event,
-        event_id=dict_of_registration_data.event.id,
+        event_id=event.id,
     )
 
 

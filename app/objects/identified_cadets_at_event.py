@@ -1,12 +1,14 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.objects.cadets import Cadet, SKIP_TEST_CADET_ID
+from app.objects.cadets import Cadet, test_cadet_id
 
-from app.objects.exceptions import missing_data, MissingData
-from app.objects.generic_list_of_objects import GenericListOfObjects
+from app.objects.exceptions import  MissingData
+from app.objects.generic_list_of_objects import GenericListOfObjects, get_idx_of_unique_object_with_attr_in_list, \
+    index_not_found
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.exceptions import MultipleMatches
+from app.objects.exceptions import arg_not_passed
 
 
 @dataclass
@@ -16,11 +18,11 @@ class IdentifiedCadetAtEvent(GenericSkipperManObject):
 
     @property
     def is_test_cadet(self):
-        return self.cadet_id == SKIP_TEST_CADET_ID
+        return self.cadet_id == test_cadet_id
 
     @classmethod
     def create_row_for_test_cadet(cls, row_id: str):
-        return cls(cadet_id=SKIP_TEST_CADET_ID, row_id=row_id)
+        return cls(cadet_id=test_cadet_id, row_id=row_id)
 
 
 class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
@@ -28,8 +30,8 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
     def _object_class_contained(self):
         return IdentifiedCadetAtEvent
 
-    def __add__(self, other: IdentifiedCadetAtEvent):
-        self.add(row_id=other.row_id, cadet_id=other.cadet_id)
+    def row_does_not_have_identified_cadet_including_test_cadets(self, row_id: str):
+        return not self.row_has_identified_cadet_including_test_cadets(row_id)
 
     def row_has_identified_cadet_including_test_cadets(self, row_id: str):
         return row_id in self.list_of_row_ids_including_test_cadets()
@@ -38,36 +40,43 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
         return [item.row_id for item in self]
 
     def add_cadet_and_row_association(self, cadet: Cadet, row_id: str):
-        self.add(cadet_id=cadet.id, row_id=row_id)
-
-    def add(self, row_id: str, cadet_id: str):
         try:
-            assert row_id not in self.list_of_row_ids_including_test_cadets()
+            assert self.row_does_not_have_identified_cadet_including_test_cadets(row_id)
         except:
-            raise Exception("Row ID can't appear more than once")
+            raise Exception("Row ID %s is already mapped to an identified cadet" % row_id)
 
-        self.append(IdentifiedCadetAtEvent(row_id=row_id, cadet_id=cadet_id))
+        self.append(IdentifiedCadetAtEvent(row_id=row_id, cadet_id=cadet.id))
 
-    def add_row_with_test_cadet_as_skipping(self, row_id: str):
+    def add_row_with_test_cadet(self, row_id: str):
         try:
-            assert row_id not in self.list_of_row_ids_including_test_cadets()
+            assert self.row_does_not_have_identified_cadet_including_test_cadets(row_id)
         except:
             raise Exception("Row ID can't appear more than once")
 
         self.append(IdentifiedCadetAtEvent.create_row_for_test_cadet(row_id=row_id))
 
-    def cadet_id_given_row_id(self, row_id: str) -> str:
-        matching = [item for item in self if item.row_id == row_id]
-        if len(matching) == 0:
-            raise MissingData
-        elif len(matching) > 1:
-            raise MultipleMatches("Can't have same row_id more than once")
+    def cadet_id_given_row_id_ignoring_test_cadets(self, row_id: str, default_when_missing = arg_not_passed) -> str:
+        matching_idx = get_idx_of_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='row_id',
+            attr_value=row_id,
+            default=index_not_found
+        )
 
-        matching_item = matching[0]
+        if matching_idx is index_not_found:
+            if default_when_missing is arg_not_passed:
+                raise MissingData("No matching rows found for %s" % row_id)
+            else:
+                return default_when_missing
+
+        matching_item = self[matching_idx]
         cadet_id = str(matching_item.cadet_id)
 
-        if cadet_id == SKIP_TEST_CADET_ID:
-            raise MissingData
+        if cadet_id == test_cadet_id:
+            if default_when_missing is arg_not_passed:
+                raise MissingData
+            else:
+                return default_when_missing
 
         return cadet_id
 
@@ -77,3 +86,4 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
         matching = [item.row_id for item in self if item.cadet_id == cadet_id]
 
         return matching
+

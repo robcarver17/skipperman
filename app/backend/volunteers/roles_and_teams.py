@@ -12,12 +12,11 @@ from app.data_access.store.object_store import ObjectStore
 from app.objects.composed.volunteer_roles import ListOfRolesWithSkills, RoleWithSkills
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
     RoleAndGroup,
-    ListOfRolesAndGroupsAndTeams,
     ListOfRolesAndGroups,
 )
 
 from app.objects.roles_and_teams import ListOfTeams, ListOfRolesWithSkillIds, Team
-from app.backend.groups.list_of_groups import order_list_of_groups, get_list_of_groups
+from app.backend.groups.list_of_groups import get_list_of_groups
 
 
 def reorder_tuple_of_item_and_role_and_group(
@@ -27,17 +26,19 @@ def reorder_tuple_of_item_and_role_and_group(
     list_of_roles = get_list_of_roles(object_store)
     list_of_groups = get_list_of_groups(object_store)
 
-    list_of_roles_and_groups = ListOfRolesAndGroups(
+    list_of_roles_and_groups_in_tuple = ListOfRolesAndGroups(
         [tuple[1] for tuple in list_of_tuples]
     )
-    sorted_list_of_roles_and_groups = list_of_roles_and_groups.sorted(
+    unique_list_of_roles_and_groups = ListOfRolesAndGroups(set(list_of_roles_and_groups_in_tuple))
+
+    sorted_list_of_roles_and_groups = unique_list_of_roles_and_groups.sorted(
         list_of_groups=list_of_groups, list_of_roles=list_of_roles
     )
-    list_of_indices = [
-        list_of_roles_and_groups.index(role_and_group)
-        for role_and_group in sorted_list_of_roles_and_groups
-    ]
-    sorted_list_of_tuples = [list_of_tuples[idx] for idx in list_of_indices]
+    sorted_list_of_tuples = []
+    for role_and_group in sorted_list_of_roles_and_groups:
+        for idx, role_and_group_in_tuple in enumerate(list_of_roles_and_groups_in_tuple):
+            if role_and_group_in_tuple == role_and_group:
+                sorted_list_of_tuples.append(list_of_tuples[idx])
 
     return sorted_list_of_tuples
 
@@ -159,8 +160,8 @@ def order_list_of_roles(
     object_store: ObjectStore, list_of_roles: ListOfRolesWithSkillIds
 ):
     all_roles = get_list_of_roles(object_store)
-    return ListOfRolesWithSkillIds.subset_from_list_of_ids(
-        full_list=all_roles, list_of_ids=list_of_roles.list_of_ids
+    return all_roles.subset_from_list_of_ids_retaining_order(
+         list_of_ids=list_of_roles.list_of_ids
     )
 
 

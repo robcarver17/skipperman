@@ -51,4 +51,4 @@ def update_list_of_groups(
 
 def order_list_of_groups(object_store: ObjectStore, list_of_groups: ListOfGroups):
     all_groups = get_list_of_groups(object_store)
-    return ListOfGroups.subset_from_list_of_ids(all_groups, list_of_groups.list_of_ids)
+    return all_groups.subset_from_list_of_ids_retaining_order(list_of_groups.list_of_ids)

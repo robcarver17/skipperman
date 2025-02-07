@@ -30,14 +30,14 @@ from app.objects.abstract_objects.abstract_lines import (
     _______________,
     Line,
 )
-from app.objects.day_selectors import no_days_selected
+from app.objects.day_selectors import no_days_selected_from_available_days
 from app.objects.events import Event
 
 
 def display_form_confirm_volunteer_details_from_rota(interface: abstractInterface):
     event = get_event_from_state(interface)
     volunteer = get_volunteer_from_state(interface=interface)
-    past_roles = get_text_of_last_roles(interface=interface, volunteer=volunteer)
+    past_roles = get_text_of_last_roles(interface=interface, event=event, volunteer=volunteer)
     available_checkbox = Line(
         [
             get_availability_checkbox_for_volunteer_at_event(
@@ -63,10 +63,11 @@ def display_form_confirm_volunteer_details_from_rota(interface: abstractInterfac
     )
 
 
-def get_text_of_last_roles(interface: abstractInterface, volunteer: Volunteer) -> Line:
+def get_text_of_last_roles(interface: abstractInterface, event: Event, volunteer: Volunteer) -> Line:
     all_roles_as_dict = (
         get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(
-            object_store=interface.object_store, volunteer=volunteer
+            object_store=interface.object_store, volunteer=volunteer,
+            avoid_event=event
         )
     )
     text_as_list = [
@@ -100,6 +101,7 @@ def post_form_confirm_volunteer_details_from_rota(interface: abstractInterface):
     if cancel_button.pressed(last_button):
         return go_back_to_parent_form(interface)
     elif delete_button.pressed(last_button):
+        print("Delete button pressed")
         delete_volunteer_from_event(interface)
         interface.flush_cache_to_store()
         return go_back_to_parent_form(interface)
@@ -108,11 +110,12 @@ def post_form_confirm_volunteer_details_from_rota(interface: abstractInterface):
         form_ok = update_volunteer_at_event_from_rota_with_form_contents_and_return_true_if_ok(
             interface
         )
-        if not form_ok:
-            return display_form_confirm_volunteer_details_from_rota(interface)
-        else:
+        if form_ok:
             interface.flush_cache_to_store()
             return go_back_to_parent_form(interface)
+        else:
+            return display_form_confirm_volunteer_details_from_rota(interface)
+
     else:
         raise button_error_and_back_to_initial_state_form(interface)
 
@@ -140,9 +143,9 @@ def update_volunteer_at_event_from_rota_with_form_contents_and_return_true_if_ok
         interface=interface, event=event, input_name=AVAILABILITY
     )
 
-    if no_days_selected(availability, possible_days=event.days_in_event()):
+    if no_days_selected_from_available_days(availability, possible_days=event.days_in_event()):
         interface.log_error(
-            "No days selected for volunteer at event - delete if not using at event"
+            "No days selected for volunteer at event - can't do this - delete volunteer if not available for event"
         )
         return False
 

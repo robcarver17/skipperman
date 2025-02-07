@@ -107,10 +107,9 @@ def update_volunteer_notes_at_event(
     registration_data = get_dict_of_registration_data_for_volunteers_at_event(
         event=event, object_store=object_store
     )
-    data_for_volunteer = registration_data.get_data_for_volunteer(volunteer)
-    data_for_volunteer.notes = new_notes
+    registration_data.update_volunteer_notes_at_event(volunteer, new_notes=new_notes)
     update_dict_of_registration_data_for_volunteers_at_event(
-        object_store=object_store, dict_of_registration_data=registration_data
+        object_store=object_store, event=event, dict_of_registration_data=registration_data
     )
 
 

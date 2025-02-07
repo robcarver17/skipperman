@@ -27,7 +27,7 @@ from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.qualifications import Qualification, ListOfQualifications
 
-header_text = "List of qualifications_and_ticks: add, edit, re-order"
+header_text = "List of qualifications and ticks: add, edit, re-order"
 
 
 def display_form_config_qualifications_page(interface: abstractInterface) -> Form:

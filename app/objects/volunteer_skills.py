@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from app.objects.exceptions import arg_not_passed, MultipleMatches, MissingData
+from app.objects.exceptions import arg_not_passed
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
-from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
+from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds, get_idx_of_unique_object_with_attr_in_list
 
 
 @dataclass
@@ -20,6 +20,11 @@ class Skill(GenericSkipperManObjectWithIds):
     def __eq__(self, other):
         return self.name == other.name
 
+VOLUNTEERS_SKILL_FOR_PB2_NAME = "PB2" ### DO NOT CHANGE
+SI_SKILL_NAME = "SI" ### DO NOT CHANGE
+SI_skill = Skill(SI_SKILL_NAME)
+PB2_skill = Skill(VOLUNTEERS_SKILL_FOR_PB2_NAME)
+
 
 class ListOfSkills(GenericListOfObjectsWithIds):
     @property
@@ -33,24 +38,24 @@ class ListOfSkills(GenericListOfObjectsWithIds):
             raise Exception(
                 "Can't add duplicate skill name %s already exists" % new_skill_name
             )
-        skill = Skill(new_skill_name, protected=False)
+        skill = Skill(new_skill_name)
         skill.id = self.next_id()
 
         self.append(skill)
 
     def modify(self, existing_skill: Skill, new_skill: Skill):
-        existing_skill_idx = self.index(existing_skill)
+        existing_skill_idx = self.idx_of_skill_with_name(existing_skill.name)
+        existing_skill = self[existing_skill_idx]
         new_skill.id = existing_skill.id
         self[existing_skill_idx] = new_skill
 
-    def matches_name(self, skill_name: str):
-        matching_list = [object for object in self if object.name == skill_name]
-        if len(matching_list) == 0:
-            raise MissingData
-        elif len(matching_list) > 1:
-            raise MultipleMatches
-        else:
-            return matching_list[0]
+    def idx_of_skill_with_name(self, skill_name:str, default = arg_not_passed) -> int:
+        return get_idx_of_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='name',
+            attr_value=skill_name,
+            default=default
+        )
 
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_names()
@@ -60,11 +65,3 @@ class ListOfSkills(GenericListOfObjectsWithIds):
         return [skill.name for skill in self]
 
 
-def skill_from_str(skill_str: str) -> Skill:
-    return Skill(skill_str)
-
-
-VOLUNTEERS_SKILL_FOR_PB2_NAME = "PB2"
-SI_SKILL_NAME = "SI"
-SI_skill = Skill(SI_SKILL_NAME)
-PB2_skill = Skill(VOLUNTEERS_SKILL_FOR_PB2_NAME)

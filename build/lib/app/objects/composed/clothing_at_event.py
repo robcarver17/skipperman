@@ -256,6 +256,7 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
 
 
 def compose_dict_of_cadets_with_clothing_at_event(
+    event_id: str,
     list_of_cadets: ListOfCadets,
     list_of_cadets_with_clothing_and_ids: ListOfCadetsWithClothingAndIdsAtEvent,
 ):

@@ -104,17 +104,16 @@ def get_table_of_cadets_with_buttons(
     list_of_cadets = get_sorted_list_of_cadets(
         object_store=interface.object_store, sort_by=sort_order
     )
-    list_of_cadets_in_rows = [[cadet] for cadet in list_of_cadets]
     list_of_rows = [
-        row_of_form_for_cadets_with_buttons(cadet_row)
-        for cadet_row in list_of_cadets_in_rows
+        row_of_form_for_cadets_with_buttons(cadet)
+        for cadet in list_of_cadets
     ]
 
     return Table(list_of_rows)
 
 
-def row_of_form_for_cadets_with_buttons(cadet_row: List[Cadet]) -> RowInTable:
-    return RowInTable([Button(str(cadet)) for cadet in cadet_row])
+def row_of_form_for_cadets_with_buttons(cadet: Cadet) -> RowInTable:
+    return RowInTable([Button(str(cadet))])
 
 
 def sort_button_pressed(button_pressed: str):

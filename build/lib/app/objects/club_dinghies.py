@@ -7,17 +7,27 @@ from app.objects.generic_list_of_objects import (
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
 
 
+NO_CLUB_DINGHY_ID = str(-9999)
+NO_CLUB_DINGHY_NAME = ''
+
 @dataclass
 class ClubDinghy(GenericSkipperManObjectWithIds):
     name: str
     hidden: bool
     id: str = arg_not_passed
 
+    def __hash__(self):
+        return hash(self.name)
+
     def __repr__(self):
         return self.name
 
     def __eq__(self, other):
         return self.name == other.name and self.hidden == other.hidden
+
+    @classmethod
+    def create_empty(cls):
+        return cls(NO_CLUB_DINGHY_NAME, False, NO_CLUB_DINGHY_ID)
 
 
 no_club_dinghy = ClubDinghy.create_empty()

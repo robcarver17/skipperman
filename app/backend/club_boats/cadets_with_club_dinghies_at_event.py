@@ -10,6 +10,7 @@ from app.objects.cadets import Cadet, ListOfCadets
 from app.data_access.store.object_definitions import (
     object_definition_for_dict_of_cadets_and_club_dinghies_at_event,
 )
+from app.objects.club_dinghies import no_club_dinghy
 from app.objects.composed.cadets_at_event_with_club_dinghies import (
     DictOfCadetsAndClubDinghiesAtEvent,
 )
@@ -34,7 +35,7 @@ def update_club_boat_allocation_for_cadet_at_event_on_day_if_cadet_available(
             object_store=object_store, event=event
         )
     )
-    if boat_name == NO_CLUB_BOAT:
+    if boat_name == no_club_dinghy.name:
         dict_of_cadets_and_club_dinghies_at_event.remove_cadet_club_boat_allocation_on_day(
             cadet=cadet, day=day
         )

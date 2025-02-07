@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 
 from app.objects.day_selectors import Day
-from app.objects.exceptions import missing_data
-from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
+from app.objects.exceptions import missing_data, arg_not_passed, MissingData
+from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds, get_unique_object_with_attr_in_list, \
+    get_idx_of_unique_object_with_attr_in_list
 from app.objects.generic_objects import GenericSkipperManObject
 
 
@@ -30,33 +31,31 @@ class ListOfCadetAtEventWithIdAndClubDinghies(GenericListOfObjectsWithIds):
 
     def delete_allocation_for_cadet_on_day(self, cadet_id: str, day: Day):
         ## allowed to fail
-        idx = self.index_of_item_for_cadet_id_on_day(cadet_id=cadet_id, day=day)
-        if idx is missing_data:
+        idx = self.index_of_item_for_cadet_id_on_day(cadet_id=cadet_id, day=day, default=None)
+        if idx is None:
             return
 
         self.pop(idx)
 
-    def index_of_item_for_cadet_id_on_day(self, cadet_id: str, day: Day) -> int:
-        item = self.item_for_cadet_id_on_day(
-            cadet_id=cadet_id, day=day, default=missing_data
-        )
-        if item is missing_data:
-            return missing_data
+    def index_of_item_for_cadet_id_on_day(self, cadet_id: str, day: Day, default=arg_not_passed) -> int:
+        return get_idx_of_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='cadet_id',
+            attr_value=cadet_id,
+            default=default
 
-        return self.index(item)
+        )
 
     def item_for_cadet_id_on_day(
-        self, cadet_id: str, day: Day, default=missing_data
+        self, cadet_id: str, day: Day, default=arg_not_passed
     ) -> CadetAtEventWithClubDinghyWithId:
-        list_of_items = [
-            item for item in self if item.cadet_id == cadet_id and item.day == day
-        ]
-        if len(list_of_items) == 0:
-            return default
-        if len(list_of_items) > 1:
-            raise Exception("Can only have one dinghy per cadet")
+        return get_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='cadet_id',
+            attr_value=cadet_id,
+            default=default
+        )
 
-        return list_of_items[0]
 
 
 NO_CLUB_BOAT = ""

@@ -2,7 +2,7 @@ import datetime
 from typing import List
 
 import pandas as pd
-from app.objects.membership_status import none_member
+from app.objects.membership_status import none_member, user_unconfirmed_member
 
 from app.data_access.configuration.field_list import (
     CADET_FIRST_NAME,
@@ -28,6 +28,7 @@ from app.data_access.store.object_definitions import (
 def get_cadet_data_from_row_of_registration_data_no_checks(
     row_of_mapped_data: RowInRegistrationData,
 ) -> Cadet:
+    print(row_of_mapped_data)
     first_name = row_of_mapped_data.get(CADET_FIRST_NAME, "")
     second_name = row_of_mapped_data.get(CADET_SURNAME, "")
     dob = row_of_mapped_data.get(CADET_DATE_OF_BIRTH, None)
@@ -36,12 +37,15 @@ def get_cadet_data_from_row_of_registration_data_no_checks(
     else:
         dob_as_date = _translate_df_timestamp_to_datetime(dob)
 
-    return Cadet.new(
+    cadet = Cadet.new(
         first_name=first_name,
         surname=second_name,
         date_of_birth=dob_as_date,
-        membership_status=none_member,
+        membership_status=user_unconfirmed_member,
     )
+    print(cadet)
+
+    return cadet
 
 
 def _translate_df_timestamp_to_datetime(df_timestamp) -> datetime.date:

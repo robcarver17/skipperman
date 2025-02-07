@@ -10,15 +10,13 @@ from app.objects.abstract_objects.abstract_lines import (
 from app.objects.abstract_objects.abstract_buttons import (
     cancel_menu_button,
     Button,
-    ButtonBar,
-    CANCEL_BUTTON_LABEL,
+    ButtonBar
 )
 
 from app.frontend.shared.events_state import (
     get_event_from_state,
 )
 
-from app.frontend.form_handler import initial_state_form
 
 from app.backend.events.list_of_events import (
     get_event_from_list_of_events_given_event_description,
@@ -37,12 +35,13 @@ def display_form_for_clone_event_field_mapping(interface: abstractInterface):
     list_of_events_with_buttons = display_list_of_events_with_field_mapping_buttons(
         exclude_event=current_event, interface=interface
     )
+    nav_bar = ButtonBar([cancel_menu_button])
     if len(list_of_events_with_buttons) == 0:
-        return ListOfLines(["No other events exist with mapping setup"])
+        return ListOfLines([nav_bar, Line("No other events exist with mapping setup")])
     else:
         return ListOfLines(
             [
-                ButtonBar([cancel_menu_button]),
+                nav_bar,
                 Line(
                     "Choose event to clone event field mapping for %s"
                     % str(current_event)
@@ -69,11 +68,22 @@ def display_list_of_events_with_field_mapping_buttons(
 
 
 def post_form_for_clone_event_field_mapping(interface: abstractInterface):
-    if interface.last_button_pressed() == CANCEL_BUTTON_LABEL:
+    last_button = interface.last_button_pressed()
+    if cancel_menu_button.pressed(last_button):
         return interface.get_new_display_form_for_parent_of_function(
             display_form_for_clone_event_field_mapping
         )
 
+    message = clone_field_mapping_for_selected_event_and_return_message(interface)
+
+    return form_with_message_and_finished_button(message,
+        interface=interface,
+        function_whose_parent_go_to_on_button_press=display_form_for_clone_event_field_mapping,
+    )
+
+
+
+def clone_field_mapping_for_selected_event_and_return_message(interface: abstractInterface) -> str:
     event_description_selected = interface.last_button_pressed()
     current_event = get_event_from_state(interface)
 
@@ -81,26 +91,20 @@ def post_form_for_clone_event_field_mapping(interface: abstractInterface):
         object_store=interface.object_store,
         event_description=event_description_selected,
     )
+
     try:
         mapping = get_field_mapping_for_event(
             object_store=interface.object_store, event=event
         )
         assert len(mapping) > 0
     except:
-        interface.log_error(
-            "Event %s has no mapping set up, or mapping file is corrupted - choose another event"
-            % event_description_selected
-        )
-        return initial_state_form
+        return "No mapping set up for event of mapping file is corrupted - try another event"
 
     save_field_mapping_for_event(
         object_store=interface.object_store, event=current_event, mapping=mapping
     )
-    interface._save_data_store_cache()
+    interface.flush_cache_to_store()
 
-    return form_with_message_and_finished_button(
-        "Mapping copied from event %s to %s"
-        % (event_description_selected, str(current_event)),
-        interface=interface,
-        function_whose_parent_go_to_on_button_press=display_form_for_clone_event_field_mapping,
-    )
+    message = "Mapping copied from event %s to %s" %(event_description_selected, str(current_event))
+
+    return message

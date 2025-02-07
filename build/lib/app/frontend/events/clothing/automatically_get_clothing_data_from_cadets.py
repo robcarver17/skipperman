@@ -1,3 +1,4 @@
+from app.objects.abstract_objects.abstract_form import NewForm
 from app.objects.cadets import Cadet
 
 from app.objects.composed.cadets_at_event_with_registration_data import (
@@ -5,7 +6,6 @@ from app.objects.composed.cadets_at_event_with_registration_data import (
 )
 
 from app.backend.registration_data.cadet_registration_data import (
-    get_list_of_cadets_with_id_and_registration_data_at_event,
     get_dict_of_cadets_with_registration_data,
 )
 
@@ -15,10 +15,6 @@ from app.backend.clothing.dict_of_clothing_for_event import (
     remove_clothing_for_cadet_at_event,
 )
 
-from app.backend.registration_data.identified_cadets_at_event import (
-    list_of_cadet_ids_in_event_data_and_identified_in_raw_registration_data_for_event,
-    get_row_in_registration_data_for_cadet_both_cancelled_and_active,
-)
 
 from app.data_access.configuration.field_list import CADET_T_SHIRT_SIZE
 from app.objects.abstract_objects.abstract_interface import (
@@ -29,13 +25,13 @@ from app.frontend.shared.events_state import get_event_from_state
 
 
 from app.objects.events import Event
-from app.objects.exceptions import NoMoreData, DuplicateCadets
-from app.objects.registration_data import RowInRegistrationData
+from app.frontend.form_handler import initial_state_form
 
 
-def update_cadet_clothing_at_event(
+
+def display_call_to_update_cadet_clothing_at_event_during_import(
     interface: abstractInterface,
-):
+) -> NewForm:
 
     event = get_event_from_state(interface)
     dict_of_cadets_at_event_with_registration_data = (
@@ -44,7 +40,7 @@ def update_cadet_clothing_at_event(
         )
     )
 
-    for cadet, registration_data in dict_of_cadets_at_event_with_registration_data:
+    for cadet, registration_data in dict_of_cadets_at_event_with_registration_data.items():
         process_update_to_cadet_clothing_data(
             interface=interface,
             event=event,
@@ -52,7 +48,21 @@ def update_cadet_clothing_at_event(
             registration_data=registration_data,
         )
     interface.flush_cache_to_store()
+    return return_to_controller(interface)
 
+
+
+def return_to_controller(interface: abstractInterface) -> NewForm:
+    return interface.get_new_display_form_for_parent_of_function(
+        display_call_to_update_cadet_clothing_at_event_during_import
+    )
+
+
+def post_call_to_update_cadet_clothing_at_event_during_import(
+    interface: abstractInterface,
+) -> NewForm:
+    interface.log_error("Serious error: should never get to post_call_to_update_cadet_clothing_at_event_during_import")
+    return initial_state_form()
 
 def process_update_to_cadet_clothing_data(
     interface: abstractInterface,

@@ -16,11 +16,10 @@ from app.backend.qualifications_and_ticks.qualifications_for_cadet import (
     highest_qualification_for_cadet,
 )
 from app.frontend.forms.reorder_form import reorder_table
-from app.frontend.shared.cadet_state import get_cadet_from_state
+from app.frontend.shared.cadet_state import get_cadet_from_state, is_cadet_set_in_state
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 
-from app.objects.exceptions import missing_data
-
+from app.objects.exceptions import missing_data, MissingData
 
 from app.frontend.events.group_allocation.input_fields import (
     get_notes_field,
@@ -144,13 +143,21 @@ def get_allocations_and_classes_detail(
     allocations = summarise_allocations_for_event(
         object_store=interface.object_store, event=event
     )
+    if len(allocations)==0:
+        allocations = "No group allocations made"
 
     club_dinghies = summarise_club_boat_allocations_for_event(
         event=event, object_store=interface.object_store
     )
+    if len(club_dinghies)==0:
+        club_dinghies = "No club dinghy allocations made"
+
     classes = summarise_class_attendance_for_event(
         event=event, object_store=interface.object_store
     )
+    if len(classes) ==0:
+        classes = "No boat classes allocated"
+
     return DetailListOfLines(
         ListOfLines(
             [
@@ -326,8 +333,10 @@ def get_cell_for_cadet(
             interface=interface, event=event, cadet=cadet
         )
     else:
-        return Button(str(cadet), value=get_button_id_for_cadet(cadet.id))
+        return button_to_click_on_cadet(cadet)
 
+def button_to_click_on_cadet(cadet:Cadet):
+    return Button(str(cadet), value=get_button_id_for_cadet(cadet.id))
 
 def get_cell_for_cadet_that_is_clicked_on(
     interface: abstractInterface, event: Event, cadet: Cadet
@@ -342,18 +351,19 @@ def get_cell_for_cadet_that_is_clicked_on(
     )
 
     return ListOfLines(
-        [str(cadet), "Previous groups:-"]
+        [button_to_click_on_cadet(cadet), "Previous groups:-"]
         + list_of_groups_as_str
         + ["Qualifications:-"]
         + list_of_qualifications_as_str
     ).add_Lines()
 
-
 def this_cadet_has_been_clicked_on_already(interface: abstractInterface, cadet: Cadet):
-    cadet_id = get_cadet_from_state(interface)
-    if cadet_id is missing_data:
+    try:
+        selected_cadet = get_cadet_from_state(interface)
+    except MissingData:
         return False
-    return cadet_id == cadet.id
+
+    return selected_cadet == cadet
 
 
 def get_button_id_for_cadet(id: str) -> str:

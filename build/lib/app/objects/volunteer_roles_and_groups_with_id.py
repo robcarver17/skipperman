@@ -2,21 +2,19 @@ from copy import copy
 from dataclasses import dataclass
 from typing import List
 
-from app.objects.roles_and_teams import Team
+from app.objects.roles_and_teams import Team, no_role_allocated_id
 
 from app.objects.day_selectors import Day
 from app.objects.exceptions import missing_data
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
-from app.objects.groups import Group, unallocated_group
+from app.objects.groups import Group, unallocated_group, unallocated_group_id
 from app.objects.volunteers import Volunteer
 
-NO_GROUP_SET = "No group set"
 DAY_KEY = "day"
 GROUP_KEY = "group"
 
 
-NO_ROLE_SET = "No role allocated"
 
 
 @dataclass
@@ -44,8 +42,8 @@ class TeamAndGroup(GenericSkipperManObject):
 class VolunteerWithIdInRoleAtEvent(GenericSkipperManObject):
     volunteer_id: str
     day: Day
-    group_id: str = NO_GROUP_SET
-    role_id: str = NO_ROLE_SET
+    group_id: str = unallocated_group_id
+    role_id: str = no_role_allocated_id
 
 
 class ListOfVolunteersWithIdInRoleAtEvent(GenericListOfObjects):
@@ -151,7 +149,7 @@ class ListOfVolunteersWithIdInRoleAtEvent(GenericListOfObjects):
     def update_volunteer_in_role_on_day(
         self, volunteer: Volunteer, day: Day, new_role_id: str
     ):
-        if new_role_id == NO_ROLE_SET:
+        if new_role_id == no_role_allocated_id:
             self.delete_volunteer_in_role_at_event_on_day(volunteer=volunteer, day=day)
         else:
             self.update_volunteer_in_role_on_day_to_actual_role(
@@ -224,14 +222,14 @@ class ListOfVolunteersWithIdInRoleAtEvent(GenericListOfObjects):
             self.append(copied_volunteer_in_role_at_event)
         else:
             current_role_id = existing_member.role_id
-            no_role_set = current_role_id == NO_ROLE_SET
+            no_role_set = current_role_id == no_role_allocated_id
             print("no role set %s" % str(no_role_set))
             if allow_replacement or no_role_set:
                 print("overwriting role")
                 existing_member.role_id = volunteer_in_role_at_event.role_id
 
             current_group_id = existing_member.group_id
-            no_group_set = current_group_id == NO_GROUP_SET
+            no_group_set = current_group_id ==unallocated_group_id
             print("no group set %s" % str(no_group_set))
             if no_group_set or allow_replacement:
                 print("overwriting group")

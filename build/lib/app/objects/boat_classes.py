@@ -1,12 +1,17 @@
 from dataclasses import dataclass
 
-from app.objects.exceptions import missing_data, arg_not_passed
+from app.objects.exceptions import missing_data, arg_not_passed, MultipleMatches, MissingData
 from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
 )
 
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
 
+NO_BOAT_CLASS_NAME = ""
+
+
+
+NO_BOAT_CLASS_ID = str(-9999)
 
 @dataclass
 class BoatClass(GenericSkipperManObjectWithIds):
@@ -20,8 +25,14 @@ class BoatClass(GenericSkipperManObjectWithIds):
     def __eq__(self, other):
         return self.name == other.name and self.hidden == other.hidden
 
+    def __hash__(self):
+        return hash(self.name)
 
-no_boat_class = BoatClass("", True)
+    @classmethod
+    def create_empty(cls):
+        return cls(NO_BOAT_CLASS_NAME, False, NO_BOAT_CLASS_ID)
+
+no_boat_class = BoatClass.create_empty()
 
 
 class ListOfBoatClasses(GenericListOfObjectsWithIds):
@@ -29,13 +40,38 @@ class ListOfBoatClasses(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return BoatClass
 
-    def idx_given_name(self, boat_name: str):
+    def boat_with_id(self, id: str):
+        if id ==NO_BOAT_CLASS_ID:
+            return no_boat_class
+
+        index = self.index_of_id(id)
+
+        return self[index]
+
+    def boat_class_given_name(self, boat_class_name: str, default= missing_data):
+        if boat_class_name == no_boat_class.name:
+            return no_boat_class
+        idx = self.idx_given_name(boat_class_name, default=None)
+        if idx is None:
+            return default
+
+        return self[idx]
+
+    def replace(self, existing_boat_class: BoatClass, new_boat_class: BoatClass):
+        object_idx = self.idx_given_name(existing_boat_class.name)
+        new_boat_class.id = existing_boat_class.id
+        self[object_idx] = new_boat_class
+
+    def idx_given_name(self, boat_name: str, default=arg_not_passed):
         id = [item.id for item in self if item.name == boat_name]
 
         if len(id) == 0:
-            return missing_data
+            if default is arg_not_passed:
+                raise MissingData()
+            else:
+                return default
         elif len(id) > 1:
-            raise Exception(
+            raise MultipleMatches(
                 "Found more than one boat with same name should be impossible"
             )
 

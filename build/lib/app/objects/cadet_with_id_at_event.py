@@ -13,8 +13,7 @@ from app.objects.day_selectors import (
     DaySelector,
     day_selector_stored_format_from_text,
     day_selector_to_text_in_stored_format,
-    weekend_day_selector_from_text,
-    create_day_selector_from_short_form_text,
+     create_day_selector_from_short_form_text_with_passed_days,
 )
 from app.objects.events import Event
 from app.objects.generic_list_of_objects import (
@@ -28,7 +27,7 @@ from app.objects.generic_objects import (
 from app.objects.registration_data import (
     RowInRegistrationData,
 )
-from app.objects.registration_status import RegistrationStatus, deleted_status
+from app.objects.registration_status import RegistrationStatus
 from app.objects.utils import clean_up_dict_with_nans
 
 STATUS_KEY = "status"
@@ -49,6 +48,11 @@ class CadetWithIdAtEvent(GenericSkipperManObjectWithIds):
     health: str = ""
     changed: bool = False
 
+    def clear_user_data(self):
+        self.clear_row_data()
+        self.notes = ""
+        self.health = ""
+
     def clear_row_data(self):
         self.data_in_row.clear_values()
 
@@ -58,7 +62,7 @@ class CadetWithIdAtEvent(GenericSkipperManObjectWithIds):
     @classmethod
     def from_dict_of_str(cls, dict_with_str):
         dict_with_str = clean_up_dict_with_nans(dict_with_str)
-        availability_as_str = dict_with_str.pop(AVAILABILITY)
+        availability_as_str = dict_with_str.pop(AVAILABILITY, '')
         if type(availability_as_str) is not str:
             availability_as_str = ""  ## corner case
         availability = day_selector_stored_format_from_text(availability_as_str)
@@ -78,7 +82,7 @@ class CadetWithIdAtEvent(GenericSkipperManObjectWithIds):
             cadet_id=cadet_id,
             availability=availability,
             status=status,
-            data_in_row=RowInRegistrationData.from_external_dict(dict_with_str),
+            data_in_row=RowInRegistrationData.from_dict_of_str(dict_with_str),
             changed=changed,
             notes=notes,
             health=health,
@@ -105,6 +109,10 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return CadetWithIdAtEvent
+
+    def clear_user_data(self):
+        for cadet_with_id_at_event in self:
+            cadet_with_id_at_event.clear_private_data()
 
     def mark_cadet_as_changed(self, cadet_id: str):
         cadet_at_event = self.cadet_at_event_or_missing_data(cadet_id)
@@ -199,40 +207,50 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
 
 
 def get_cadet_at_event_from_row_in_event_raw_registration_data(
-    row_in_mapped_wa_event: RowInRegistrationData, cadet: Cadet, event: Event
+    row_in_registration_data: RowInRegistrationData, cadet: Cadet, event: Event
 ) -> CadetWithIdAtEvent:
-    status = row_in_mapped_wa_event.registration_status
-    availability = get_attendance_selection_from_event_row(
-        row_in_mapped_wa_event, event=event
+    status = row_in_registration_data.registration_status
+    availability = get_sailor_attendance_selection_from_event_row(
+        row_in_registration_data, event=event
     )
-    health = get_health_from_event_row(row_in_mapped_wa_event)
+    print("availability for %s %s " % (cadet.name, str(availability)))
+    health = get_health_from_event_row(row_in_registration_data)
 
     return CadetWithIdAtEvent(
         cadet_id=cadet.id,
         status=status,
         availability=availability,
-        data_in_row=row_in_mapped_wa_event,
+        data_in_row=row_in_registration_data,
         changed=False,
         notes="",
         health=health,
     )
 
 
-def get_attendance_selection_from_event_row(
+def get_sailor_attendance_selection_from_event_row(
     row: RowInRegistrationData, event: Event
 ) -> DaySelector:
     row_as_dict = row.as_dict()
+    print("row as dict %s" % str(row_as_dict))
+    days_in_event = event.days_in_event()
 
-    if WEEKEND_DAYS_ATTENDING_INPUT in row_as_dict.keys():
-        return weekend_day_selector_from_text(row_as_dict[WEEKEND_DAYS_ATTENDING_INPUT])
+    weekend_selection = row_as_dict.get(WEEKEND_DAYS_ATTENDING_INPUT, '')
+    day_selection = row_as_dict.get(ALL_DAYS_ATTENDING_INPUT, '')
 
-    elif ALL_DAYS_ATTENDING_INPUT in row_as_dict.keys():
-        return create_day_selector_from_short_form_text(
-            row_as_dict[WEEKEND_DAYS_ATTENDING_INPUT]
+    if len(weekend_selection)>0:
+        print("From selection %s" % weekend_selection)
+        return create_day_selector_from_short_form_text_with_passed_days(
+            weekend_selection, days_in_event=days_in_event
         )
-
-    return event.day_selector_for_days_in_event()
-
+    elif len(day_selection)>0:
+        print("From selection %s" % day_selection)
+        return create_day_selector_from_short_form_text_with_passed_days(
+            day_selection, days_in_event=days_in_event
+        )
+    else:
+        print("Not found, doing all")
+        day_selector_for_all_days_at_event = event.day_selector_for_days_in_event()
+        return day_selector_for_all_days_at_event
 
 def get_health_from_event_row(row: RowInRegistrationData):
     return row.get_item(CADET_HEALTH, "")

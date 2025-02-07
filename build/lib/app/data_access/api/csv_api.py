@@ -14,7 +14,7 @@ from app.data_access.csv.food_and_clothing import *
 from app.data_access.csv.list_of_events import CsvDataListOfEvents
 from app.data_access.csv.wa_event_mapping import CsvDataWAEventMapping
 from app.data_access.csv.wa_field_mapping import CsvDataWAFieldMapping
-from app.data_access.csv.mapped_wa_event import (
+from app.data_access.csv.registration_data import (
     CsvDataMappedRegistrationData,
 )
 from app.data_access.csv.configuration import *

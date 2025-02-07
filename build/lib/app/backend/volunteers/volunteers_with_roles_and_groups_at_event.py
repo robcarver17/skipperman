@@ -21,7 +21,7 @@ from app.objects.day_selectors import Day
 from app.objects.events import (
     Event,
     SORT_BY_START_DSC,
-    list_of_events_excluding_one_event,
+    list_of_events_excluding_one_event_and_past_events,
     ListOfEvents,
 )
 from app.objects.exceptions import arg_not_passed
@@ -58,7 +58,7 @@ def get_all_roles_across_recent_events_for_volunteer_as_dict_with_sort_order(
     if avoid_event is arg_not_passed:
         pass  ## can't exclude so do everything
     else:
-        list_of_events = list_of_events_excluding_one_event(
+        list_of_events = list_of_events_excluding_one_event_and_past_events(
             list_of_events=list_of_events,
             event_to_exclude=avoid_event,
             sort_by=sort_by,
@@ -97,7 +97,7 @@ def get_role_and_group_on_day_for_event_and_volunteer(
         object_store=object_store, event=event
     )
     dict_of_roles_and_groups = (
-        dict_of_all_event_data.dict_of_volunteers_at_event_with_days_and_role
+        dict_of_all_event_data.dict_of_volunteers_at_event_with_days_and_roles
     )
     roles_and_groups_for_volunteer = (
         dict_of_roles_and_groups.days_and_roles_for_volunteer(volunteer)
@@ -113,7 +113,7 @@ def get_role_and_group_for_event_and_volunteer(
         object_store=object_store, event=event
     )
     dict_of_roles_and_groups = (
-        dict_of_all_event_data.dict_of_volunteers_at_event_with_days_and_role
+        dict_of_all_event_data.dict_of_volunteers_at_event_with_days_and_roles
     )
     roles_and_groups_for_volunteer = (
         dict_of_roles_and_groups.days_and_roles_for_volunteer(volunteer)
@@ -150,7 +150,7 @@ def is_volunteer_senior_instructor_at_event(
     dict_of_all_event_data = get_dict_of_all_event_data_for_volunteers(
         object_store=object_store, event=event
     )
-    volunteer_days_and_roles = dict_of_all_event_data.dict_of_volunteers_at_event_with_days_and_role.days_and_roles_for_volunteer(
+    volunteer_days_and_roles = dict_of_all_event_data.dict_of_volunteers_at_event_with_days_and_roles.days_and_roles_for_volunteer(
         volunteer
     )
     return volunteer_days_and_roles.contains_si()

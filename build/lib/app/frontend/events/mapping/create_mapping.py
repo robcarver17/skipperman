@@ -41,17 +41,18 @@ def get_buttons_for_custom_mapping(interface: abstractInterface):
 
     wa_field_button = get_wa_field_download_button(interface)
 
-    return ButtonBar(
+    bar = \
         [
             back_menu_button,
+            help_button,
+            upload_new_mapping_button,
             download_mapping_button,
             download_field_names_button,
             wa_field_button,
-            upload_new_mapping_button,
-            "",
-            help_button,
         ]
-    )
+
+
+    return ButtonBar(bar)
 
 
 def get_wa_field_download_button(interface: abstractInterface):
@@ -140,11 +141,11 @@ DOWNLOAD_MAPPING_BUTTON_LABEL = (
 download_mapping_button = Button(DOWNLOAD_MAPPING_BUTTON_LABEL, nav_button=True)
 
 DOWNLOAD_FIELD_NAMES_BUTTON_LANEL = (
-    "Download a .csv file of field names to use in creating a mapping file"
+    "Download a .csv file of Skipperman fields to use in creating a mapping file"
 )
 download_field_names_button = Button(DOWNLOAD_FIELD_NAMES_BUTTON_LANEL, nav_button=True)
 
-DOWNLOAD_DEFINED_LIST_BUTTON_LABEL = "Download a .csv file of WA field names used in the current event file waiting for import"
+DOWNLOAD_DEFINED_LIST_BUTTON_LABEL = "Download a .csv file of WA field names used in the current uploaded event file"
 download_defined_list_button = Button(
     DOWNLOAD_DEFINED_LIST_BUTTON_LABEL, nav_button=True
 )

@@ -75,6 +75,8 @@ def filter_dict_of_volunteers_at_event(
     skills_filter = sorts_and_filters.skills_filter
     availability_filter_dict = sorts_and_filters.availability_filter
 
+    list_of_volunteers = []
+
     for (
         volunteer,
         event_data_for_volunteer,
@@ -84,11 +86,11 @@ def filter_dict_of_volunteers_at_event(
             skills_filter=skills_filter,
             availability_filter_dict=availability_filter_dict,
         ):
-            continue
-        else:
-            dict_of_all_event_data_for_volunteers.filter_out_volunteer(volunteer)
+            list_of_volunteers.append(volunteer)
 
-    return dict_of_all_event_data_for_volunteers
+    return dict_of_all_event_data_for_volunteers.sort_by_list_of_volunteers(
+        ListOfVolunteers(list_of_volunteers)
+    )
 
 
 def volunteer_passes_filter(
@@ -229,7 +231,7 @@ def get_sorted_list_of_volunteers_at_event_sorted_by_location_of_connected_cadet
     )
     list_of_locations = [
         get_cadet_location_string_for_volunteer(
-            volunteer_data_at_event=dict_of_all_event_data_for_volunteers.get(
+            volunteer_data_at_event=dict_of_all_event_data_for_volunteers.get_data_for_volunteer(
                 volunteer
             ),
             cadets_at_event_data=cadets_at_event_data,

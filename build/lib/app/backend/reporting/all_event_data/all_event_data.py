@@ -73,7 +73,7 @@ def get_raw_event_data(object_store: ObjectStore, event: Event) -> pd.DataFrame:
         object_store=object_store, event=event
     )
 
-    df = mapped_events_data.to_df()
+    df = mapped_events_data.as_df_of_str()
     df[ROW_ID] = mapped_events_data.list_of_row_ids()
     df = df.sort_values(ROW_ID)
 

@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from typing import Dict, List
 
-import pandas as pd
 from app.objects.utils import flatten
 from app.objects.exceptions import arg_not_passed, missing_data
 
@@ -10,17 +9,16 @@ from app.objects.utils import most_common
 from app.objects.events import Event, ListOfEvents
 
 from app.objects.cadet_with_id_with_group_at_event import (
-    CADET_NAME,
-    GROUP_STR_NAME,
+
     ListOfCadetIdsWithGroups,
 )
 from app.objects.cadets import Cadet, ListOfCadets
 
-from app.objects.day_selectors import Day, DictOfDaySelectors, DaySelector
-from app.objects.generic_list_of_objects import GenericListOfObjects
+from app.objects.day_selectors import Day, DaySelector
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.groups import Group, ListOfGroups, unallocated_group
 
+CADET_NAME = "cadet"
 
 @dataclass
 class CadetWithGroup:
@@ -48,15 +46,6 @@ class CadetWithGroupOnDay(GenericSkipperManObject):
     def cadet_full_name(self) -> str:
         return self.cadet.name
 
-    def as_str_dict(self, display_full_names: bool = True) -> dict:
-        if display_full_names:
-            cadet_name = self.cadet_full_name
-        else:
-            cadet_name = self.cadet_name_initials_only
-
-        group_name = str(self.group)
-
-        return {CADET_NAME: cadet_name, GROUP_STR_NAME: group_name}
 
     @property
     def cadet_id(self):
@@ -133,7 +122,7 @@ class DaysAndGroups(Dict[Day, Group]):
 
         return cls(dict_of_days_and_groups)
 
-    def day_selector_for_group(self, group: Group) -> DaySelector:
+    def day_selector_when_cadet_in_group(self, group: Group) -> DaySelector:
         return DaySelector(
             [(day, True) for day, group_on_day in self.items() if group_on_day == group]
         )
@@ -231,7 +220,7 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
                 for cadet, days_and_groups in self.items()
             ]
         )
-        raw_dict = dict(
+        dict_without_unallocated = dict(
             [
                 (cadet, group)
                 for cadet, group in raw_dict.items()
@@ -239,7 +228,7 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
             ]
         )
 
-        return raw_dict
+        return dict_without_unallocated
 
     def cadets_in_group_during_event(self, group: Group) -> ListOfCadets:
         return ListOfCadets(
@@ -267,58 +256,33 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
     def get_most_common_group_for_cadet(
         self, cadet: Cadet, default_group=missing_data
     ) -> Group:
-        group_dict = self.get_days_and_groups_for_cadet(cadet, default=None)
-        if group_dict is None:
+        group_dict = self.get_days_and_groups_for_cadet(cadet, default=missing_data)
+        if group_dict is missing_data:
             return default_group
 
         return group_dict.most_common()
 
+    def subset_for_list_of_cadets(self, list_of_cadets: ListOfCadets)-> 'DictOfCadetsWithDaysAndGroupsAtEvent':
+        raw_dict =         dict([
+            (cadet,
+             self.get_days_and_groups_for_cadet(cadet))
+            for cadet in list_of_cadets])
+
+        return DictOfCadetsWithDaysAndGroupsAtEvent(
+            raw_dict=raw_dict,
+            list_of_groups=self.list_of_groups,
+            event=self.event,
+            list_of_cadet_ids_with_groups=self.list_of_cadet_ids_with_groups
+        )
+
+
     def get_days_and_groups_for_cadet(
         self, cadet: Cadet, default=arg_not_passed
     ) -> DaysAndGroups:
-        if default == arg_not_passed:
+        if default is arg_not_passed:
             default = empty_days_and_groups
 
         return self.get(cadet, default)
-
-    def filter_for_list_of_cadets(
-        self, list_of_cadets: ListOfCadets
-    ) -> "DictOfCadetsWithDaysAndGroupsAtEvent":
-        ## doesn't affect underlying
-
-        return DictOfCadetsWithDaysAndGroupsAtEvent(
-            dict(
-                [
-                    (cadet, days_and_groups)
-                    for cadet, days_and_groups in self.items()
-                    if cadet in list_of_cadets
-                ]
-            ),
-            list_of_cadet_ids_with_groups=self.list_of_cadet_ids_with_groups,
-            event=self.event,
-            list_of_groups=self.list_of_groups,
-        )
-
-    def add_unallocated_and_filter_for_list_of_cadets(
-        self, list_of_cadets: ListOfCadets
-    ) -> "DictOfCadetsWithDaysAndGroupsAtEvent":
-        new_dict = {}
-        unallocated_all_days = DaysAndGroups.create_unallocated_for_all_event_days(
-            self.event
-        )
-        for cadet in list_of_cadets:
-            existing_groups = self.get_days_and_groups_for_cadet(cadet)
-            if len(existing_groups) == 0:
-                existing_groups = unallocated_all_days
-
-            new_dict[cadet] = existing_groups
-
-        return DictOfCadetsWithDaysAndGroupsAtEvent(
-            new_dict,
-            list_of_cadet_ids_with_groups=self.list_of_cadet_ids_with_groups,
-            event=self.event,
-            list_of_groups=self.list_of_groups,
-        )
 
     @property
     def list_of_cadets(self) -> ListOfCadets:
@@ -384,3 +348,6 @@ def compose_raw_dict_of_cadets_with_days_and_groups_at_event(
             for cadet in list_of_cadets
         ]
     )
+
+
+GROUP_STR_NAME = "group"

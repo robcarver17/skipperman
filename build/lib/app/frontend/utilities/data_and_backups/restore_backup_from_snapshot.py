@@ -68,7 +68,7 @@ def list_of_snapshot_buttons(interface: abstractInterface):
 
 def get_all_snapshot_labels(interface: abstractInterface):
     dict_of_snapshots = dict_of_backups_with_datetimes(
-        interface.data.data.backup_data_path
+        interface.object_store.backup_data_path
     )
     return [
         "%d Backed up on %s" % (backupid, str(backup_datetime))
@@ -89,10 +89,13 @@ def restore_snapshot_given_button_pressed(
         restore_backup(
             interface=interface,
             backup_diff=backup_id,
-            datapath=interface.data.data.backup_data_path,
+            datapath=interface.object_store.backup_data_path,
         )
     except Exception as e:
         interface.log_error("Can't restore backup, error %s" % str(e))
+
+    ## otherwise backup won't be seen
+    interface.flush_cache_to_store()
 
     return interface.get_new_display_form_for_parent_of_function(
         post_form_view_of_snapshots

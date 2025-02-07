@@ -88,13 +88,15 @@ def process_current_row(
 
     try:
         cadet = get_cadet_data_from_row_of_registration_data_no_checks(row)
-        return process_next_row_with_cadet_from_row(cadet=cadet, interface=interface)
+
     except Exception as e:
         ## Mapping has gone badly wrong, or date field corrupted
         raise Exception(
             "Error code %s cannot identify cadet from row %s: file maybe corrupt or does not actually contain cadets - re-upload or change event configuration"
             % (str(e), str(row)),
         )
+
+    return process_next_row_with_cadet_from_row(cadet=cadet, interface=interface)
 
 
 def is_row_already_identified_with_cadet(
@@ -114,7 +116,7 @@ def process_next_row_with_cadet_from_row(
 ) -> Form:
     try:
         matched_cadet_with_id = get_matching_cadet(
-            object_store=interface.object_store, cadet=cadet, exact_match_required=True
+            object_store=interface.object_store, cadet=cadet
         )
     except MissingData:
         ## New cadet
@@ -172,7 +174,7 @@ def header_text_for_form() -> ListOfLines:
 
     default_header_text = [
         "Looks like a new cadet in the WA entry file. ",
-        "You can edit them, check their details and then add, or choose an existing cadet instead (avoid creating duplicates! If the existing cadet details are wrong, select them for now and edit later) \n\n Row details are: \n%s",
+        "You can edit them, check their details and then add, or choose an existing cadet instead (avoid creating duplicates! If the existing cadet details are wrong, select them for now and edit later) \n\n ",
     ]
 
     return ListOfLines(default_header_text).add_Lines()
@@ -245,12 +247,15 @@ def process_form_when_skipping_cadet(interface: abstractInterface) -> Form:
     return identify_cadets_on_next_row(interface)
 
 
+from app.backend.cadets.list_of_cadets import get_cadet_from_list_of_cadets_given_str_of_cadet
+
 def process_form_when_existing_cadet_chosen(interface: abstractInterface) -> Form:
     cadet_selected_as_str = interface.last_button_pressed()
 
     try:
-        cadet = get_cadet_given_cadet_as_str(
-            data_layer=interface.data, cadet_as_str=cadet_selected_as_str
+        cadet = get_cadet_from_list_of_cadets_given_str_of_cadet(
+            object_store=interface.object_store,
+            cadet_selected=cadet_selected_as_str
         )
     except:
         raise Exception(
@@ -259,3 +264,4 @@ def process_form_when_existing_cadet_chosen(interface: abstractInterface) -> For
 
     print(str(cadet))
     return process_row_when_cadet_matched(interface=interface, cadet=cadet)
+

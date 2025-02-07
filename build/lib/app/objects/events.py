@@ -44,6 +44,9 @@ class Event(GenericSkipperManObjectWithIds):
     def from_date_length_and_name_only(
         cls, event_name: str, start_date: datetime.date, duration: int
     ):
+        if duration>7:
+            raise Exception("Events cannot be more than one week long")
+
         if duration < 1:
             end_date = start_date
         else:

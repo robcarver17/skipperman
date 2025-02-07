@@ -28,7 +28,7 @@ UPLOAD_FILE_BUTTON_LABEL = (
 def display_form_for_upload_backup(interface: abstractInterface):
     buttons = get_upload_buttons()
     prompt = Line(
-        "Choose file. Must be a zip file with the correct directory structure. Wrong file will result in messed up data with no recourse except restoring!"
+        "Choose file. Must be a zip file with the correct directory structure. Wrong file will result in messed up data with no recourse except restoring a snapshot! Strongly recommend you make a snapshot first."
     )
     input_field = Line(fileInput(input_name=ZIPPED_FILE, accept=".zip"))
 
@@ -76,7 +76,7 @@ def respond_to_uploaded_file(interface: abstractInterface) -> Union[Form, NewFor
 
 
 def process_uploaded_zip_file(interface: abstractInterface, file):
-    master_data_path = interface.data.data.master_data_path
+    master_data_path = interface.object_store.master_data_path
     temp_filename = os.path.join(download_directory, "tempzipfile.zip")
     file.save(temp_filename)
     temp_dir = os.path.join(download_directory, "temp")
@@ -89,3 +89,6 @@ def process_uploaded_zip_file(interface: abstractInterface, file):
     shutil.copytree(temp_dir, master_data_path, dirs_exist_ok=True)
     shutil.rmtree(temp_dir)
     interface.log_error("Restore backup done")
+
+    ## otherwise backup won't be seen
+    interface.flush_cache_to_store()

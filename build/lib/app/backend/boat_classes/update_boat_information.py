@@ -1,9 +1,8 @@
 from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import (
     CadetBoatClassAndPartnerAtEventOnDay,
     ListOfCadetBoatClassAndPartnerAtEventOnDay,
-    no_partnership_given_partner_cadet_as_str,
-    no_partnership_object_given_str,
 )
+from app.objects.partners import no_partnership_given_partner_cadet_as_str, no_partnership_object_given_str
 
 from dataclasses import dataclass
 from typing import List, Union
@@ -32,6 +31,7 @@ from app.objects.exceptions import missing_data
 from app.backend.registration_data.cadet_registration_data import (
     is_cadet_unavailable_on_day,
 )
+from build.lib.app.objects.boat_classes import no_boat_class
 
 
 @dataclass
@@ -94,7 +94,8 @@ def convert_single_input_to_cadet_with_class_and_partner_at_event(
     object_store: ObjectStore, update: CadetWithDinghyInputs, day: Day
 ) -> CadetBoatClassAndPartnerAtEventOnDay:
     boat_class = get_boat_class_from_name(
-        object_store=object_store, boat_class_name=update.boat_class_name
+        object_store=object_store, boat_class_name=update.boat_class_name,
+        default=no_boat_class
     )
 
     two_handed_partner = get_two_handed_partner_from_str(
@@ -121,24 +122,23 @@ def get_two_handed_partner_from_str(
         object_store=object_store, cadet_selected=two_handed_partner_cadet_as_str
     )
 
-    return two_handed_partner.id
+    return two_handed_partner
 
 
 def compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values(
     new_list: ListOfCadetBoatClassAndPartnerAtEventOnDay,
     existing_list: ListOfCadetBoatClassAndPartnerAtEventOnDay,
 ):
+
     updated_list = ListOfCadetBoatClassAndPartnerAtEventOnDay([])
     for potentially_updated_cadet_at_event in new_list:
         cadet_in_existing_list = existing_list.element_on_day_for_cadet(
             cadet=potentially_updated_cadet_at_event.cadet,
             day=potentially_updated_cadet_at_event.day,
+            default=missing_data
         )
-        print(
-            "Has %s changed? It was %s"
-            % (str(potentially_updated_cadet_at_event), str(cadet_in_existing_list))
-        )
-
+        print("potential update %s" % str(potentially_updated_cadet_at_event))
+        print("existing %s" % str(cadet_in_existing_list))
         already_in_a_changed_partnership = is_cadet_already_in_changed_partnership(
             updated_list=updated_list,
             potentially_updated_cadet_at_event=potentially_updated_cadet_at_event,
@@ -171,6 +171,8 @@ def is_cadet_already_in_changed_partnership(
 ) -> bool:
     list_of_changed_partners = updated_list.list_of_valid_partners()
     cadet = potentially_updated_cadet_at_event.cadet
+
+    print("Is %s in %s?" % (str(cadet), str(list_of_changed_partners)))
     changed = cadet in list_of_changed_partners
 
     return changed

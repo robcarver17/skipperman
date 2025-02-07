@@ -92,10 +92,6 @@ class Store(dict):
     def _write_to_data(self, contents, data_access_method: DataAccessMethod):
         data_access_write_method = data_access_method.write_method
         kwargs = data_access_method.method_kwargs
-        print(
-            "Writing changed to %s with %s"
-            % (str(data_access_write_method), str(kwargs))
-        )
         data_access_write_method(contents, **kwargs)
 
     def get_storage_item(self, key) -> StorageItem:

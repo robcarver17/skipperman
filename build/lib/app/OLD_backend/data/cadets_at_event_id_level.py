@@ -15,7 +15,8 @@ from app.objects.cadet_with_id_at_event import (
 )
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.exceptions import missing_data
-from app.objects.day_selectors import DaySelector, Day, DictOfDaySelectors
+from app.objects.day_selectors import DaySelector, Day
+from app.objects.cadet_attendance import DictOfDaySelectors
 from app.objects.events import Event
 from app.objects.identified_cadets_at_event import ListOfIdentifiedCadetsAtEvent
 from app.objects.registration_data import (
@@ -55,7 +56,7 @@ class CadetsAtEventIdLevelData:
 
     def mark_row_as_skip_cadet(self, event: Event, row_id: str):
         identified_cadets = self.get_list_of_identified_cadets_at_event(event)
-        identified_cadets.add_row_with_test_cadet_as_skipping(row_id=row_id)
+        identified_cadets.add_row_with_test_cadet(row_id=row_id)
         self.save_list_of_identified_cadets_at_event(
             event=event, list_of_identified_cadets_at_event=identified_cadets
         )
@@ -219,7 +220,7 @@ class CadetsAtEventIdLevelData:
         self, event: Event, cadet_id: str
     ) -> CadetWithIdAtEvent:
         list_of_cadets_at_event = self.get_list_of_cadets_with_id_at_event(event)
-        return list_of_cadets_at_event.cadet_at_event_or_missing_data(cadet_id)
+        return list_of_cadets_at_event.cadet_with_id_and_data_at_event(cadet_id)
 
     def is_cadet_with_id_already_at_event(self, event: Event, cadet_id: str):
         list_of_ids = self.list_of_all_cadet_ids_at_event(event)
@@ -240,7 +241,7 @@ class CadetsAtEventIdLevelData:
         self, event: Event, row_id: str
     ) -> str:
         identified_cadets = self.get_list_of_identified_cadets_at_event(event)
-        return identified_cadets.cadet_id_given_row_id(row_id)
+        return identified_cadets.cadet_id_given_row_id_ignoring_test_cadets(row_id)
 
     def row_has_identified_cadet_including_test_cadets(
         self, row: RowInRegistrationData, event: Event

@@ -23,7 +23,7 @@ from app.data_access.store.object_definitions import (
 from app.objects.exceptions import MissingData
 
 
-def get_list_of_cadets_who_are_members_but_not_on_committee_ordered_by_name(
+def get_list_of_cadets_who_are_members_but_not_on_committee_or_elected_ordered_by_name(
     object_store: ObjectStore,
 ) -> ListOfCadets:
     all_cadets = get_list_of_cadets(object_store)
@@ -33,7 +33,7 @@ def get_list_of_cadets_who_are_members_but_not_on_committee_ordered_by_name(
         [
             cadet
             for cadet in all_cadets
-            if not list_of_committee_members.is_cadet_on_committee(cadet)
+            if not list_of_committee_members.is_cadet_elected_to_committee(cadet)
             and cadet.membership_status == current_member
         ]
     )
@@ -103,7 +103,7 @@ def is_cadet_member_not_on_committee_and_in_right_age_bracket_to_join(
     return (
         cadet.date_of_birth <= latest_date
         and cadet.date_of_birth >= earliest_date
-        and not list_of_committee_members.is_cadet_on_committee(cadet)
+        and not list_of_committee_members.is_cadet_currently_on_committee(cadet)
         and cadet.membership_status == current_member
     )
 

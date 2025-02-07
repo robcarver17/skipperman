@@ -29,8 +29,8 @@ def get_header_text_for_volunteer_selection_form(
 
     status_text = relevant_information_for_identification.self_declared_status
     other_information = (
-        "Other information in form:"
-        + relevant_information_for_identification.any_other_information
+        "Other information in form: "
+        + str(relevant_information_for_identification.any_other_information)
     )
     if len(status_text) > 0:
         status_text = "Registration volunteer status in form: %s" % status_text
@@ -113,7 +113,7 @@ def get_list_of_volunteer_buttons(
             object_store=interface.object_store, volunteer=volunteer, cadet=cadet_in_row
         )
         msg_text = "Showing only volunteers with similar names:"
-        extra_button = see_all_volunteers
+        extra_button = see_all_volunteers_button
 
     volunteer_buttons_line = Line(
         [Button(volunteer.name) for volunteer in list_of_volunteers]

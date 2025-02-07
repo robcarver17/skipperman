@@ -5,7 +5,8 @@ from app.backend.groups.previous_groups import (
 )
 from app.objects.exceptions import arg_not_passed
 
-from app.objects.day_selectors import DictOfDaySelectors, Day
+from app.objects.day_selectors import Day
+from app.objects.cadet_attendance import DictOfDaySelectors
 
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     get_attendance_matrix_for_list_of_cadets_at_event,
@@ -38,7 +39,7 @@ def add_or_upate_group_for_cadet_on_day_if_cadet_available_on_day(
     day: Day,
     group: Group,
 ):
-    if is_cadet_unavailable_on_day(object_store=object_store, cadet=cadet, day=day):
+    if is_cadet_unavailable_on_day(object_store=object_store, event=event, cadet=cadet, day=day):
         return
 
     dict_of_cadets_with_groups_at_event = get_dict_of_cadets_with_groups_at_event(
@@ -96,7 +97,7 @@ def get_attendance_matrix_for_group_at_event(
         days_and_groups = all_cadet_event_data.dict_of_cadets_with_days_and_groups.get_days_and_groups_for_cadet(
             cadet
         )
-        all_selectors[cadet] = days_and_groups.day_selector_for_group(group)
+        all_selectors[cadet] = days_and_groups.day_selector_when_cadet_in_group(group)
 
     return DictOfDaySelectors(all_selectors)
 

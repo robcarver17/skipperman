@@ -31,6 +31,5 @@ SORT_ORDER = "sort_order"
 
 
 def get_current_sort_order(interface: abstractInterface) -> list:
-    default_order = copy(DEFAULT_SORT_ORDER)
 
     return interface.get_persistent_value(SORT_ORDER, default=DEFAULT_SORT_ORDER)

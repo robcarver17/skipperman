@@ -1,3 +1,4 @@
+from copy import copy
 from typing import List, Dict
 
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
@@ -117,7 +118,8 @@ def get_list_of_last_N_events(
     N_events: int = ALL_EVENTS,
     excluding_event: Event = arg_not_passed,
 ):
-    unsorted_list_of_events = get_list_of_events(object_store)
+    unsorted_list_of_events = copy(get_list_of_events(object_store))
+
     if excluding_event is not arg_not_passed:
         unsorted_list_of_events.remove(excluding_event)
 
@@ -180,7 +182,7 @@ def get_group_allocations_for_event_active_cadets_only(
         object_store=object_store, event=event, active_only=True
     )
 
-    return all_cadet_event_data.dict_of_cadets_with_days_and_groups
+    return all_cadet_event_data.dict_of_cadets_with_groups_for_all_cadets_in_data()
 
 
 def most_common_allocation_for_cadet_in_previous_events(

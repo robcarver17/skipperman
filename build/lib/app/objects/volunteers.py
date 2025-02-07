@@ -86,7 +86,7 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
         similar_names = [
             other_volunteer
             for other_volunteer in self
-            if other_volunteer.similarity_name(volunteer) > name_threshold
+            if other_volunteer.similarity_of_names(volunteer) > name_threshold
         ]
 
         return ListOfVolunteers(similar_names)

@@ -9,7 +9,7 @@ from app.objects.club_dinghies import ListOfClubDinghies, ClubDinghy
 def get_club_dinghy_with_name(object_store: ObjectStore, boat_name: str) -> ClubDinghy:
     list_of_boats = get_list_of_club_dinghies(object_store)
 
-    return list_of_boats[list_of_boats.idx_given_name(boat_name)]
+    return list_of_boats.club_dinghy_with_name(boat_name)
 
 
 def add_new_club_dinghy_given_string(

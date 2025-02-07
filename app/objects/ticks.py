@@ -4,9 +4,10 @@ from enum import Enum
 
 import pandas as pd
 from app.objects.cadets import Cadet
+from app.objects.exceptions import arg_not_passed
 
 from app.objects.generic_list_of_objects import (
-    GenericListOfObjects,
+    GenericListOfObjects, get_idx_of_unique_object_with_attr_in_list,
 )
 from app.objects.substages import TickSheetItem
 
@@ -24,6 +25,8 @@ tick_strings_dict = {
     no_tick: "[  ]",
 }
 string_ticks_dict = {v: k for k, v in tick_strings_dict.items()}
+
+list_of_tick_options = [no_tick, half_tick, full_tick, not_applicable_tick]
 
 
 @dataclass
@@ -44,9 +47,6 @@ class DictOfTicksWithItem(Dict[str, Tick]):
     def update_tick(self, new_tick: Tick, tick_item: TickSheetItem):
         ## have to modify underlying data so stored properly, don't actually have to modify this object as only intermediate
         self[tick_item.id] = new_tick
-
-    def list_of_ticks(self) -> List[Tick]:
-        return list(self.values())
 
     def add_all_ticks_inplace(self):
         for tick_item_id in self.keys():
@@ -145,16 +145,21 @@ class ListOfCadetIdsWithTickListItemIds(GenericListOfObjects):
         tick_list_items_for_cadet = self[self.index_of_cadet_id(cadet_id=cadet.id)]
         tick_list_items_for_cadet.update_tick(new_tick=new_tick, tick_item=tick_item)
 
-    def index_of_cadet_id(self, cadet_id: str):
-        list_of_ids = self.list_of_cadet_ids
-
-        return list_of_ids.index(cadet_id)
+    def index_of_cadet_id(self, cadet_id: str, default = arg_not_passed) -> int:
+        return get_idx_of_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='cadet_id',
+            attr_value=cadet_id,
+            default=default
+        )
 
     @property
     def list_of_cadet_ids(self):
         return [str(item.cadet_id) for item in self]
 
     def list_of_tick_list_item_ids(self) -> List[str]:
+        if len(self)==0:
+            return []
         first_cadet = self[0]
         tick_list_items = first_cadet.list_of_tick_item_ids
 
@@ -191,4 +196,3 @@ def from_df_to_list_of_cadets_with_tick_list_items(
     return ListOfCadetIdsWithTickListItemIds(list_of_cadets_with_tick_lists)
 
 
-list_of_tick_options = [no_tick, half_tick, full_tick, not_applicable_tick]

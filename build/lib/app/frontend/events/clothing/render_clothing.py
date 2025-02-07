@@ -7,8 +7,8 @@ from app.objects.abstract_objects.abstract_form import listInput
 from app.objects.composed.clothing_at_event import (
     SORT_BY_FIRSTNAME,
     all_sort_types,
-    ClothingAtEvent,
 )
+from app.objects.clothing import ClothingAtEvent
 
 from app.backend.clothing.active_cadets_with_clothing import (
     get_dict_of_active_cadets_with_clothing_at_event,

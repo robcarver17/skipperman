@@ -93,7 +93,7 @@ def process_update_to_existing_cadet_in_event_data(
     interface: abstractInterface, event: Event, cadet: Cadet
 ) -> Form:
     try:
-        relevant_row = get_row_in_registration_data_for_cadet_both_cancelled_and_active(
+        row_in_registration_data = get_row_in_registration_data_for_cadet_both_cancelled_and_active(
             object_store=interface.object_store,
             cadet=cadet,
             event=event,
@@ -117,14 +117,14 @@ def process_update_to_existing_cadet_in_event_data(
     return process_update_to_existing_cadet_at_event(
         interface=interface,
         event=event,
-        row_in_mapped_wa_event=relevant_row,
+        row_in_registration_data=row_in_registration_data,
         cadet=cadet,
     )
 
 
 def process_update_to_existing_cadet_at_event(
     interface: abstractInterface,
-    row_in_mapped_wa_event: RowInRegistrationData,
+    row_in_registration_data: RowInRegistrationData,
     cadet: Cadet,
     event: Event,
 ) -> Form:
@@ -135,7 +135,7 @@ def process_update_to_existing_cadet_at_event(
 
     new_cadet_at_event_data = (
         get_cadet_at_event_from_row_in_event_raw_registration_data(
-            row_in_mapped_wa_event=row_in_mapped_wa_event, event=event, cadet=cadet
+            row_in_registration_data=row_in_registration_data, event=event, cadet=cadet
         )
     )
 
@@ -162,12 +162,10 @@ def post_form_interactively_update_cadets_at_event(
     last_button_pressed = interface.last_button_pressed()
     if use_original_data_button.pressed(last_button_pressed):
         ## nothing to do, no change to master file
-        print("Using original data - doing nothing")
+        pass
     elif use_new_data_button.pressed(last_button_pressed):
-        print("using new data")
         update_cadets_at_event_with_new_data(interface)
     elif use_data_in_form_button.pressed(last_button_pressed):
-        print("Updating from form data")
         update_cadets_at_event_with_form_data(interface)
 
     return process_next_cadet_at_event(interface)
@@ -206,7 +204,7 @@ def process_update_to_cadet_new_to_event(
     add_new_cadet_to_event_from_row_in_registration_data(
         object_store=interface.object_store,
         event=event,
-        row_in_mapped_wa_event=relevant_row,
+        row_in_registration_data=relevant_row,
         cadet=cadet,
     )
     interface.flush_cache_to_store()

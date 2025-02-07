@@ -181,7 +181,7 @@ class VolunteerAllocationData:
             x=all_volunteer_ids, y=volunteers_at_event_ids
         )
 
-        return ListOfVolunteers.subset_from_list_of_ids(
+        return ListOfVolunteers.DEPRECATE_subset_from_list_of_ids(
             master_list_of_volunteers, ids_of_volunteers_not_at_event
         )
 

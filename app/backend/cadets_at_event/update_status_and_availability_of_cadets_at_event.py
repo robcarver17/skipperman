@@ -37,22 +37,21 @@ def update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_
 
     return messages
 
+from app.backend.registration_data.cadet_registration_data import get_dict_of_cadets_with_registration_data, update_dict_of_cadets_with_registration_data
 
 def make_cadet_available_on_day(
     object_store: ObjectStore, event: Event, cadet: Cadet, day: Day
 ):
 
-    registration_data = get_list_of_cadets_with_id_and_registration_data_at_event(
-        object_store=object_store, event=event
+    registration_data = get_dict_of_cadets_with_registration_data(
+        object_store=object_store,event=event
     )
-    cadet_at_event = registration_data.cadet_at_event(cadet)
-    cadet_at_event.availability.make_available_on_day(day)
-    update_list_of_cadets_with_id_and_registration_data_at_event(
-        object_store=object_store,
-        event=event,
-        list_of_cadets_with_id_at_event=registration_data,
-    )
+    cadet_at_event = registration_data.registration_data_for_cadet(cadet)
+    availablity = cadet_at_event.availability
+    availablity.make_available_on_day(day)
+    registration_data.update_availability_of_existing_cadet_at_event(cadet=cadet, new_availabilty=availablity)
 
+    update_dict_of_cadets_with_registration_data(object_store=object_store, event=event, dict_of_cadets_with_registration_data=registration_data)
 
 def update_availability_of_existing_cadet_at_event_and_return_messages(
     object_store: ObjectStore,

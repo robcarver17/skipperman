@@ -1,10 +1,13 @@
+from typing import List, Union
+
 import pandas as pd
 
 from app.backend.boat_classes.list_of_boat_classes import get_list_of_boat_classes
 from app.backend.club_boats.list_of_club_dinghies import get_list_of_club_dinghies
 from app.backend.groups.list_of_groups import get_list_of_groups
 from app.data_access.store.object_store import ObjectStore
-from app.objects.cadets import ListOfCadets
+from app.objects.cadets import ListOfCadets, Cadet
+from app.objects.partners import NoCadetPartner
 from app.objects.day_selectors import Day
 from app.objects.exceptions import arg_not_passed
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
@@ -179,8 +182,12 @@ def add_sort_order_to_data_frame(
         active_cadets_as_data_frame[SORT_CLASS], get_list_of_boat_classes(object_store)
     )
 
+    active_cadets_as_data_frame[SORT_PARTNER] = convert_partner_cadets_and_objects_into_names(active_cadets_as_data_frame[SORT_PARTNER].values)
+
     return active_cadets_as_data_frame
 
+def convert_partner_cadets_and_objects_into_names(series_of_cadets_and_names: List[Union[Cadet, NoCadetPartner]]) -> List[str]:
+    return [partner.name for partner in series_of_cadets_and_names]
 
 def get_sorted_active_cadets_df(
     active_cadets_as_data_frame: pd.DataFrame, sort_order: list

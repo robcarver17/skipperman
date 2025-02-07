@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from app.objects.exceptions import MissingData, MultipleMatches
+from app.objects.exceptions import MissingData, MultipleMatches, arg_not_passed, missing_data
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
 
@@ -17,31 +17,39 @@ class ListOfVolunteerSkillsWithIds(GenericListOfObjects):
         return VolunteerSkillWithIds
 
     def add(self, volunteer_id: str, skill_id: str):
-        try:
-            self.object_matching_ids(volunteer_id=volunteer_id, skill_id=skill_id)
+        matching_object = self.object_matching_ids(
+            volunteer_id=volunteer_id, skill_id=skill_id,
+            default = missing_data
+        )
+        if matching_object is not missing_data:
             return
-        except MissingData:
-            self.append(
-                VolunteerSkillWithIds(volunteer_id=volunteer_id, skill_id=skill_id)
-            )
+
+        self.append(
+            VolunteerSkillWithIds(volunteer_id=volunteer_id, skill_id=skill_id)
+        )
 
     def delete(self, volunteer_id: str, skill_id: str):
-        try:
-            matching_object = self.object_matching_ids(
-                volunteer_id=volunteer_id, skill_id=skill_id
-            )
-            self.remove(matching_object)
-        except MissingData:
+        matching_object = self.object_matching_ids(
+            volunteer_id=volunteer_id, skill_id=skill_id,
+            default = missing_data
+        )
+        if matching_object is missing_data:
             return
 
-    def object_matching_ids(self, volunteer_id: str, skill_id: str):
+        self.remove(matching_object)
+
+
+    def object_matching_ids(self, volunteer_id: str, skill_id: str, default = arg_not_passed):
         matching = [
             object
             for object in self
             if object.volunteer_id == volunteer_id and object.skill_id == skill_id
         ]
         if len(matching) == 0:
-            raise MissingData
+            if default is arg_not_passed:
+                raise MissingData
+            else:
+                return default
         elif len(matching) > 1:
             raise MultipleMatches
 

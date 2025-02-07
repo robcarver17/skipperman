@@ -27,6 +27,9 @@ role_location_no_warning = RoleLocation.No_warning
 
 all_role_locations = [role_location_no_warning, role_location_lake, role_location_river]
 
+NO_ROLE_ALLOCATED = "No role allocated"
+NO_ROLE_ALLOCATED_ID = str(-9999)
+
 
 @dataclass
 class RolesWithSkillIds(GenericSkipperManObjectWithIds):
@@ -71,6 +74,19 @@ class RolesWithSkillIds(GenericSkipperManObjectWithIds):
             hidden=from_bool_to_str(self.hidden),
         )
 
+    @classmethod
+    def create_empty(cls):
+        return cls(
+            name=NO_ROLE_ALLOCATED,
+            id=NO_ROLE_ALLOCATED_ID,
+            skill_ids_required=[NO_SKILLS_REQUIRED],
+            associate_sailing_group=False,
+            hidden=False,
+            protected=True
+        )
+
+no_role_allocated = RolesWithSkillIds.create_empty()
+no_role_allocated_id = no_role_allocated.id
 
 class ListOfRolesWithSkillIds(GenericListOfObjectsWithIds):
     @property
@@ -101,6 +117,9 @@ class ListOfRolesWithSkillIds(GenericListOfObjectsWithIds):
             raise MultipleMatches
         else:
             return matching_list[0]
+
+    def list_of_names(self) -> List[str]:
+        return [item.name for item in self]
 
 
 INSTRUCTOR_TEAM = "Instructors"
@@ -212,3 +231,4 @@ class ListOfTeamsAndRolesWithIds(GenericListOfObjects):
 
     def list_of_role_ids(self):
         return [team_and_role.role_id for team_and_role in self]
+

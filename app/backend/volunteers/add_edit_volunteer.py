@@ -60,9 +60,9 @@ def list_of_similar_volunteers(object_store: ObjectStore, volunteer: Volunteer) 
 
 def verify_volunteer_and_warn(object_store: ObjectStore, volunteer: Volunteer) -> str:
     warn_text = ""
-    if len(volunteer.surname) < 4:
+    if len(volunteer.surname) < 3:
         warn_text += "Surname seems too short. "
-    if len(volunteer.first_name) < 4:
+    if len(volunteer.first_name) < 3:
         warn_text += "First name seems too short. "
     warn_text += warning_str_for_similar_volunteers(
         object_store=object_store, volunteer=volunteer

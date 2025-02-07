@@ -1,6 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Tuple
-
+from typing import List, Tuple, Union
 
 from app.objects.exceptions import arg_not_passed, MissingData
 from app.objects.volunteer_skills import ListOfSkills
@@ -71,7 +70,7 @@ no_role_set = RoleWithSkills(
 def from_list_of_skill_ids_to_padded_dict_of_skills(
     list_of_skill_ids: List[str], list_of_skills: ListOfSkills
 ) -> SkillsDict:
-    skills_held = ListOfSkills.subset_from_list_of_ids(
+    skills_held = ListOfSkills.DEPRECATE_subset_from_list_of_ids(
         list_of_ids=list_of_skill_ids, full_list=list_of_skills
     )
 
@@ -166,6 +165,15 @@ class ListOfRolesWithSkills(List[RoleWithSkills]):
 
     def list_of_names(self):
         return [role.name for role in self]
+
+    def sort_to_match_other_role_list_order(self,
+                                            other_list: Union['ListOfRolesWithSkills', ListOfRolesWithSkillIds]) -> 'ListOfRolesWithSkills':
+        new_list =[]
+        for role_with_skill in other_list:
+            if role_with_skill.name in self.list_of_names():
+                new_list.append(self.role_with_name(role_with_skill.name))
+
+        return ListOfRolesWithSkills.from_list_of_roles_with_skills(new_list)
 
     def subset_for_ids(self, subset_list_of_ids: List[str]) -> List[RoleWithSkills]:
         list_of_ids = self.list_of_ids()
@@ -276,13 +284,14 @@ def get_raw_list_of_roles_with_skills(
     return new_list
 
 
-def is_qualified_for_role(role: RoleWithSkills, dict_of_skills: SkillsDict) -> bool:
+def empty_if_qualified_for_role_else_warnings(role: RoleWithSkills, dict_of_skills: SkillsDict) -> str:
 
     skills_required = role.skills_dict
+    missing_skills = []
     for skill, skill_needed in skills_required.items():
         if skill_needed:
             has_skill = dict_of_skills.has_skill_name(skill.name)
             if not has_skill:
-                return False
+                missing_skills.append(skill.name)
 
-    return True
+    return ", ".join(missing_skills)

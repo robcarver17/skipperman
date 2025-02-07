@@ -43,7 +43,7 @@ class DictOfDaysAndClubDinghiesAtEventForCadet(Dict[Day, ClubDinghy]):
         self[day] = club_boat
 
     def most_common(self) -> ClubDinghy:
-        return most_common(self.list_of_dinghies, default=ClubDinghy.create_empty())
+        return most_common(self.list_of_dinghies(), default=no_club_dinghy)
 
     def has_dinghy_on_any_day(self):
         unique_list_of_dinghies = self.unique_list_of_dinghies()
@@ -77,6 +77,8 @@ class DictOfDaysAndClubDinghiesAtEventForCadet(Dict[Day, ClubDinghy]):
         except:
             pass
 
+
+no_club_dinghy_information = DictOfDaysAndClubDinghiesAtEventForCadet()
 
 class ListOfClubDinghysAtEventOnDayForCadet(List[ClubDinghyAtEventOnDayForCadet]):
     @classmethod
@@ -141,7 +143,7 @@ class DictOfCadetsAndClubDinghiesAtEvent(
 
     def allocate_club_boat_on_day(self, cadet: Cadet, day: Day, club_boat: ClubDinghy):
         boats_for_cadet = self.club_dinghys_for_cadet(cadet)
-        boats_for_cadet.allocate_club_boat_on_day(day=day, club_boat=club_boat)
+        boats_for_cadet.allocate_club_boat_on_day(cadet=cadet, day=day, club_boat=club_boat)
         self.list_of_cadets_at_event_with_id_and_club_dinghy.update_allocation_for_cadet_on_day(
             cadet_id=cadet.id, day=day, club_dinghy_id=club_boat.id
         )
@@ -184,7 +186,7 @@ class DictOfCadetsAndClubDinghiesAtEvent(
     def club_dinghys_for_cadet(
         self, cadet: Cadet
     ) -> DictOfDaysAndClubDinghiesAtEventForCadet:
-        return self.get(cadet)
+        return self.get(cadet, no_club_dinghy_information)
 
     @property
     def list_of_club_dinghies(self) -> ListOfClubDinghies:

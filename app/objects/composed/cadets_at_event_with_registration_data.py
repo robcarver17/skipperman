@@ -7,7 +7,7 @@ from app.data_access.configuration.field_list import (
 )
 from app.objects.utils import flatten
 
-from app.objects.exceptions import MissingData, arg_not_passed
+from app.objects.exceptions import MissingData, arg_not_passed, missing_data
 
 from app.objects.cadet_with_id_at_event import (
     CadetWithIdAtEvent,
@@ -28,6 +28,11 @@ class CadetRegistrationData:
     data_in_row: RowInRegistrationData
     notes: str = ""
     health: str = ""
+
+    def clean_data(self):
+        self.data_in_row.clear_values()
+        self.health = ""
+        self.notes = ""
 
     @property
     def emergency_contact(self):
@@ -62,22 +67,6 @@ class CadetRegistrationData:
         return self.status.is_active
 
 
-@dataclass
-class DEPRECATE_CadetWithEventData:
-    cadet: Cadet
-    event_data: CadetRegistrationData
-
-    @classmethod
-    def from_cadet_with_id_at_event(
-        cls, event: Event, cadet: Cadet, cadet_with_id_at_event: CadetWithIdAtEvent
-    ):
-        return cls(
-            cadet=cadet,
-            event_data=CadetRegistrationData.from_cadet_with_id_at_event(
-                event=event, cadet_with_id_at_event=cadet_with_id_at_event
-            ),
-        )
-
 
 class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
     def __init__(
@@ -88,6 +77,12 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
         super().__init__(raw_list)
         self._list_of_cadets_with_id_at_event = list_of_cadets_with_id_at_event
 
+    def clear_user_data(self):
+        for reg_data_for_cadet in self.values():
+            reg_data_for_cadet.clean_data()
+            
+        self.list_of_cadets_with_id_at_event.clear_private_data()
+
     def update_availability_of_existing_cadet_at_event(
         self,
         cadet: Cadet,
@@ -96,15 +91,16 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
 
         registration_data = self.registration_data_for_cadet(cadet)
         registration_data.availability = new_availabilty
-        cadet_at_event_data = self.list_of_cadets_with_id_at_event.cadet_at_event(cadet)
+        cadet_at_event_data = self.list_of_cadets_with_id_at_event.cadet_with_id_and_data_at_event(cadet_id=cadet.id)
         cadet_at_event_data.availability = new_availabilty
 
     def update_status_of_existing_cadet_in_event_info_to_cancelled_or_deleted(
         self, cadet: Cadet, new_status: RegistrationStatus
     ):
+        existing_registration = self.registration_data_for_cadet(cadet)
+        existing_registration.status = new_status
 
-        self[cadet].status = new_status
-        cadet_at_event_with_id = self.list_of_cadets_with_id_at_event.cadet_at_event(
+        cadet_at_event_with_id = self.list_of_cadets_with_id_at_event.cadet_with_id_and_data_at_event(
             cadet
         )
         cadet_at_event_with_id.status = new_status
@@ -119,11 +115,11 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
     ) -> List[str]:
         list_of_contacts = []
         for cadet in list_of_cadets:
-            try:
-                reg_data = self.registration_data_for_cadet(cadet)
-                list_of_contacts.append(reg_data.emergency_contact)
-            except MissingData:
+            reg_data = self.registration_data_for_cadet(cadet, default=missing_data)
+            if reg_data is missing_data:
                 list_of_contacts.append("")
+            else:
+                list_of_contacts.append(reg_data.emergency_contact)
 
         return list_of_contacts
 
@@ -132,18 +128,21 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
     ) -> List[str]:
         list_of_contacts = []
         for cadet in list_of_cadets:
-            try:
-                reg_data = self.registration_data_for_cadet(cadet)
-                list_of_contacts.append(reg_data.health)
-            except MissingData:
+            reg_data = self.registration_data_for_cadet(cadet, default=missing_data)
+            if reg_data is missing_data:
                 list_of_contacts.append("")
+            else:
+                list_of_contacts.append(reg_data.health)
 
         return list_of_contacts
 
-    def registration_data_for_cadet(self, cadet: Cadet) -> CadetRegistrationData:
-        reg_data = self.get(cadet, None)
-        if reg_data is None:
-            raise MissingData
+    def registration_data_for_cadet(self, cadet: Cadet, default = arg_not_passed) -> CadetRegistrationData:
+        reg_data = self.get(cadet, missing_data)
+        if reg_data is missing_data:
+            if default is arg_not_passed:
+                raise MissingData
+            else:
+                return default
 
         return reg_data
 
@@ -181,6 +180,7 @@ def compose_dict_of_cadets_with_event_data(
     event_id: str,
     list_of_cadets_with_id_at_event: ListOfCadetsWithIDAtEvent,
 ) -> DictOfCadetsWithRegistrationData:
+
     event = list_of_events.object_with_id(event_id)
     raw_dict = compose_raw_dict_of_cadets_with_event_data(
         event=event,

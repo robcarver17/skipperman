@@ -54,9 +54,9 @@ def display_form_for_event_cleaning_sort_order_passed(
         [
             navbar,
             _______________,
-            Heading("Choose event to remove sensitive data for", size=2),
+            Heading("Choose event to remove sensitive data for. Only events that have finished are shown.", size=2),
             Heading(
-                "WARNING CANNOT BE UNDONE EXCEPT VIA BACKUP OR SNAPSHOT RESTORE! You will not be asked to confirm your choice.",
+                "WARNING CANNOT BE UNDONE EXCEPT VIA RESTORE BACKUP OR RESTORE SNAPSHOT! You will not be asked to confirm your choice.",
                 size=4,
             ),
             _______________,
@@ -95,6 +95,7 @@ def action_when_event_button_clicked(interface: abstractInterface) -> Form:
     )
     clean_sensitive_data_for_event(object_store=interface.object_store, event=event)
     interface.flush_cache_to_store()
+
     return form_with_message_and_finished_button(
         "Cleaned sensitive data for event %s" % str(event),
         interface=interface,

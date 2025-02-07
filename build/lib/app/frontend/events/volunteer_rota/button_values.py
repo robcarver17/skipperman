@@ -83,10 +83,11 @@ def get_list_of_generic_button_values_across_days_and_volunteers(
     interface: abstractInterface, event: Event, value_function: Callable
 ) -> list:
     ## Strictly speaking this will include buttons that aren't visible, but quicker and easier trhan checking
-    list_of_volunteers_at_event = interface.cache.get_from_cache(
-        load_list_of_volunteers_at_event, event=event
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(
+        event=event,
+        object_store=interface.object_store,
     )
-    list_of_volunteer_ids = list_of_volunteers_at_event.list_of_volunteer_ids()
+    list_of_volunteer_ids = list_of_volunteers_at_event.list_of_ids
     list_of_days = event.days_in_event()
 
     all_button_values = []
@@ -200,12 +201,13 @@ def remove_role_button_value_for_volunteer_in_role_on_day(
 
 
 def list_of_all_copy_previous_roles_buttons(interface: abstractInterface, event: Event):
-    list_of_volunteers_at_event = interface.cache.get_from_cache(
-        load_list_of_volunteers_at_event, event=event
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(
+        event=event,
+        object_store=interface.object_store,
     )
     return [
         copy_previous_role_button_name_from_volunteer_id(
-            volunteer_at_event.volunteer_id
+            volunteer_at_event.id
         )
         for volunteer_at_event in list_of_volunteers_at_event
     ]
@@ -255,7 +257,7 @@ def get_dict_of_volunteer_name_buttons_and_volunteer_ids(
     )
 
     return dict(
-        [(volunteer.name, volunteer.id) for volunteer in list_of_volunteers_at_event]
+        [(name_of_volunteer_button(volunteer), volunteer.id) for volunteer in list_of_volunteers_at_event]
     )
 
 
@@ -272,21 +274,23 @@ def copy_previous_role_button_name_from_volunteer_id(volunteer_id: str) -> str:
 
 
 def list_of_all_location_button_names(interface: abstractInterface, event: Event):
-    list_of_volunteers_at_event = interface.cache.get_from_cache(
-        load_list_of_volunteers_at_event, event=event
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(
+        event=event,
+        object_store=interface.object_store,
     )
     return [
-        location_button_name_from_volunteer_id(volunteer_at_event.volunteer_id)
+        location_button_name_from_volunteer_id(volunteer_at_event.id)
         for volunteer_at_event in list_of_volunteers_at_event
     ]
 
 
 def list_of_all_skills_buttons(interface: abstractInterface, event: Event):
-    list_of_volunteers_at_event = interface.cache.get_from_cache(
-        load_list_of_volunteers_at_event, event=event
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(
+        event=event,
+        object_store=interface.object_store,
     )
     return [
-        skills_button_name_from_volunteer_id(volunteer_at_event.volunteer_id)
+        skills_button_name_from_volunteer_id(volunteer_at_event.id)
         for volunteer_at_event in list_of_volunteers_at_event
     ]
 

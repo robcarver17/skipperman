@@ -156,7 +156,7 @@ def update_dict_of_qualifications_for_cadets(
     )
 
 
-### USED FOR WRITE ONLY
+### USED FOR WRITE TO CSV ONLY
 @dataclass
 class NamedCadetWithQualification(GenericSkipperManObject):
     cadet_name: str

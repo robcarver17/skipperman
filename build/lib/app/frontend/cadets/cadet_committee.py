@@ -9,7 +9,7 @@ from app.backend.cadets.list_of_cadets import (
 )
 from app.backend.cadets.cadet_committee import (
     get_list_of_cadets_on_committee,
-    get_list_of_cadets_who_are_members_but_not_on_committee_ordered_by_name,
+    get_list_of_cadets_who_are_members_but_not_on_committee_or_elected_ordered_by_name,
     get_next_year_for_cadet_committee_after_EGM,
     month_name_when_cadet_committee_age_bracket_begins,
     get_list_of_cadet_as_str_members_but_not_on_committee_born_in_right_age_bracket,
@@ -127,7 +127,11 @@ def select_or_deselect_button(
 
 
 def table_row_for_new_cadet_on_committee(interface: abstractInterface) -> RowInTable:
-    dropdown = dropdown_list_of_cadets_not_on_committee(interface)
+    dropdown = dropdown_list_of_cadets_not_on_committee_or_elected_or_none(interface)
+    if dropdown is None:
+        return RowInTable(
+            ['No sailors available who are members but not yet elected to committee','', '', '', '']
+        )
 
     (
         start_date_on_committee,
@@ -150,12 +154,15 @@ def table_row_for_new_cadet_on_committee(interface: abstractInterface) -> RowInT
     )
 
 
-def dropdown_list_of_cadets_not_on_committee(interface: abstractInterface):
+def dropdown_list_of_cadets_not_on_committee_or_elected_or_none(interface: abstractInterface):
     list_of_cadets_not_on_committee_ordered_by_age = (
-        get_list_of_cadets_who_are_members_but_not_on_committee_ordered_by_name(
+        get_list_of_cadets_who_are_members_but_not_on_committee_or_elected_ordered_by_name(
             object_store=interface.object_store
         )
     )
+    if len(list_of_cadets_not_on_committee_ordered_by_age)==0:
+        return None
+
     dict_of_members = dict(
         [
             (str(cadet), str(cadet))
@@ -205,20 +212,23 @@ def post_form_cadet_committee(
 ) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
     if cancel_menu_button.pressed(button_pressed):
-        interface.clear_cache()
         return previous_form(interface)
+
     elif add_button.pressed(button_pressed):
         add_new_cadet_to_committee_from_form(interface)
+
     elif button_pressed_was_in_list_of_all_select_or_deselect_buttons(interface):
         select_or_deselect_cadet_from_committee(
             interface=interface, button_name=button_pressed
         )
+
     else:
-        button_error_and_back_to_initial_state_form(interface)
+        return button_error_and_back_to_initial_state_form(interface)
 
     interface.flush_cache_to_store()
 
     return display_form_cadet_committee(interface)
+
 
 
 def previous_form(interface: abstractInterface):

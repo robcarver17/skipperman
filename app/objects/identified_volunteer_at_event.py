@@ -1,12 +1,13 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.objects.exceptions import missing_data
+from app.objects.exceptions import arg_not_passed, MissingData
 from app.objects.generic_list_of_objects import GenericListOfObjects
 
 from app.objects.generic_objects import GenericSkipperManObject
+from app.objects.exceptions import MultipleMatches
 
-NO_VOLUNTEER_ALLOCATED = "NO_volunteer_allocated"
+NO_VOLUNTEER_ALLOCATED_ID = "NO_volunteer_allocated" ## DO not change
 
 
 @dataclass
@@ -27,14 +28,14 @@ class IdentifiedVolunteerAtEvent(GenericSkipperManObject):
 
     @property
     def is_not_allocated(self):
-        return self.volunteer_id == NO_VOLUNTEER_ALLOCATED
+        return self.volunteer_id == NO_VOLUNTEER_ALLOCATED_ID
 
     @classmethod
     def identified_as_processed_not_allocated(cls, row_id: str, volunteer_index: int):
         return cls(
             row_id=row_id,
             volunteer_index=volunteer_index,
-            volunteer_id=NO_VOLUNTEER_ALLOCATED,
+            volunteer_id=NO_VOLUNTEER_ALLOCATED_ID,
         )
 
     @property
@@ -58,25 +59,11 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
         ]
         return ListOfIdentifiedVolunteersAtEvent(items)
 
-    def unique_list_of_volunteer_ids(self):
-        volunteer_ids = self.list_of_volunteer_ids()
-        return list(set(volunteer_ids))
-
-    def list_of_volunteer_ids(self):
-        volunteer_ids = [item.volunteer_id for item in self if item.is_allocated]
-        return volunteer_ids
-
-    def list_of_volunteer_ids_including_unallocated(self):
-        volunteer_ids = [item.volunteer_id for item in self]
-        return volunteer_ids
-
-    def list_of_row_ids_and_indices(self) -> List[RowIDAndIndex]:
-        return [item.row_and_index for item in self]
 
     def identified_as_processed_not_allocated(self, row_id: str, volunteer_index: int):
         row_and_index = RowIDAndIndex(row_id=row_id, volunteer_index=volunteer_index)
         try:
-            assert row_and_index not in self.list_of_row_ids_and_indices()
+            assert self.row_and_index_not_in_list_of_rows_and_indices(row_id=row_id, volunteer_index=volunteer_index)
         except:
             raise Exception("Row ID and index can't appear more than once")
 
@@ -86,10 +73,9 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
             )
         )
 
-    def add(self, row_id: str, volunteer_id: str, volunteer_index: int):
-        row_and_index = RowIDAndIndex(row_id=row_id, volunteer_index=volunteer_index)
+    def add_identified_volunteer(self, row_id: str, volunteer_id: str, volunteer_index: int):
         try:
-            assert row_and_index not in self.list_of_row_ids_and_indices()
+            assert self.row_and_index_not_in_list_of_rows_and_indices(row_id=row_id, volunteer_index=volunteer_index)
         except:
             raise Exception("Row ID and index can't appear more than once")
 
@@ -101,41 +87,20 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
             )
         )
 
-    def volunteer_id_given_row_id_and_index(
-        self, row_id: str, volunteer_index: int
-    ) -> str:
-        matching = [
-            item
-            for item in self
-            if item.row_id == row_id and item.volunteer_index == volunteer_index
-        ]
-        if len(matching) == 0:
-            return missing_data
-        elif len(matching) > 1:
-            raise Exception("Can't have same row_id and volunteer index more than once")
+    def row_and_index_not_in_list_of_rows_and_indices(self,  row_id: str, volunteer_index: int) -> bool:
+        return not self.row_and_index_in_list_of_rows_and_indices(row_id=row_id, volunteer_index=volunteer_index)
 
-        matching_item = matching[0]
+    def row_and_index_in_list_of_rows_and_indices(self,  row_id: str, volunteer_index: int) -> bool:
+        row_and_index = RowIDAndIndex(row_id=row_id, volunteer_index=volunteer_index)
+        return row_and_index in self.list_of_row_ids_and_indices()
 
-        return matching_item.volunteer_id
+    def unique_list_of_allocated_volunteer_ids(self):
+        volunteer_ids = self.list_of_volunteer_ids()
+        return list(set(volunteer_ids))
 
-    def list_of_volunteer_ids_given_list_of_row_ids_excluding_unallocated(
-        self, list_of_row_ids: List[str]
-    ) -> List[str]:
-        list_of_volunteer_ids = []
-        for row_id in list_of_row_ids:
-            list_of_volunteer_ids += (
-                self.list_of_volunteer_ids_given_row_id_excluding_unallocated(row_id)
-            )
+    def list_of_volunteer_ids(self):
+        volunteer_ids = [item.volunteer_id for item in self if item.is_allocated]
+        return volunteer_ids
 
-        return list_of_volunteer_ids
-
-    def list_of_volunteer_ids_given_row_id_excluding_unallocated(
-        self, row_id: str
-    ) -> List[str]:
-        matching = [
-            item.volunteer_id
-            for item in self
-            if item.row_id == row_id and item.is_allocated
-        ]
-
-        return matching
+    def list_of_row_ids_and_indices(self) -> List[RowIDAndIndex]:
+        return [item.row_and_index for item in self]

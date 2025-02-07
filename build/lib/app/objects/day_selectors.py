@@ -5,6 +5,7 @@ from typing import Dict, List
 
 import pandas as pd
 from app.objects.cadets import Cadet, ListOfCadets
+from app.objects.exceptions import arg_not_passed
 
 from app.objects.generic_objects import from_bool_to_str, from_str_to_bool
 
@@ -29,8 +30,9 @@ class DaySelector(Dict[Day, bool]):
 
     def __str__(self):
         days = [day.name for day, selected in self.items() if selected]
+        joined_days = ", ".join(days)
 
-        return ", ".join(days)
+        return "days: %s " % joined_days
 
     def __eq__(self, other: "DaySelector"):
         for day in all_possible_days:
@@ -76,6 +78,16 @@ class DaySelector(Dict[Day, bool]):
         return ",".join(items_as_str)
 
     @classmethod
+    def from_list_of_days(cls, list_of_days: List[Day]):
+        return cls(
+            dict(
+                [
+                    (day, True) for day in list_of_days
+                ]
+            )
+        )
+
+    @classmethod
     def from_str(cls, string: str):
         if len(string) == 0:
             return cls({})
@@ -89,6 +101,13 @@ class DaySelector(Dict[Day, bool]):
         )
 
         return cls(dict_of_pairs)
+
+    @classmethod
+    def create_empty(cls):
+        return cls({})
+
+    def is_empty(self):
+        return len(self.days_available())==0
 
     def days_available(self) -> List[Day]:
         return [day for day in all_possible_days if self.available_on_day(day)]
@@ -122,19 +141,9 @@ def no_days_selected(day_selector: DaySelector, possible_days: list):
     return not any([day_selector.get(day, False) for day in possible_days])
 
 
-def weekend_day_selector_from_text(
-    text: str,
-) -> DaySelector:  ## we read WA files like this but don't write them internally
-    if "Saturday only" in text:
-        return DaySelector({Day.Saturday: True, Day.Sunday: False})
-    elif "Sunday only" in text:
-        return DaySelector({Day.Saturday: False, Day.Sunday: True})
-    elif "Both days" in text:
-        return DaySelector({Day.Saturday: True, Day.Sunday: True})
-    raise Exception("Day selection text %s not recognised" % text)
 
 
-selection_dict = dict(
+dict_of_short_day_text_and_Days = dict(
     Mon=Day.Monday,
     Tues=Day.Tuesday,
     Wed=Day.Wednesday,
@@ -143,23 +152,40 @@ selection_dict = dict(
     Sat=Day.Saturday,
     Sun=Day.Sunday,
 )
-inverse_selection_dict = {value: key for key, value in selection_dict.items()}
+inverse_selection_dict = {value: key for key, value in dict_of_short_day_text_and_Days.items()}
 
 
-def create_day_selector_from_short_form_text(text: str) -> DaySelector:
+def create_day_selector_from_short_form_text_with_passed_days(text: str, days_in_event: List[Day] = arg_not_passed) -> DaySelector:
+    all_days = DaySelector.from_list_of_days(days_in_event)
+
+    if len(text)==0:
+        return all_days
+
+    if "all days" in text.lower():
+        return all_days
+
+    if len(days_in_event)==2:
+        if "both" in text.lower():
+            return all_days
+
     starting_dict = dict()
-    for day_to_find, day_to_select in selection_dict.items():
-        if day_to_find in text:
+    for day_to_find_text, day_to_select in dict_of_short_day_text_and_Days.items():
+        if day_to_find_text in text:
             starting_dict[day_to_select] = True
         else:
             starting_dict[day_to_select] = False
 
     return DaySelector(starting_dict)
 
+def day_selector_stored_format_from_text(text: str) -> DaySelector:
+    starting_dict = dict()
+    for day_to_find_text, day_to_select in dict_of_short_day_text_and_Days.items():
+        if day_to_find_text in text:
+            starting_dict[day_to_select] = True
+        else:
+            starting_dict[day_to_select] = False
 
-day_selector_stored_format_from_text = (
-    create_day_selector_from_short_form_text  ## could use alternative
-)
+    return DaySelector(starting_dict)
 
 
 def day_selector_to_text_in_stored_format(day_selector: DaySelector) -> str:

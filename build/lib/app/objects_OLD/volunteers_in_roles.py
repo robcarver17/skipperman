@@ -6,10 +6,10 @@ from app.objects.events import Event
 from app.objects.volunteer_at_event_with_id import VolunteerAtEventWithId
 
 from app.objects.volunteer_roles_and_groups_with_id import (
-    NO_ROLE_SET,
     VolunteerWithIdInRoleAtEvent,
     RoleAndGroupDEPRECATE,
 )
+from app.objects.roles_and_teams import NO_ROLE_SET
 from app.objects.volunteers import Volunteer
 
 from app.objects.generic_list_of_objects import GenericListOfObjects

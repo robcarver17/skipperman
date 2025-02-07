@@ -10,6 +10,7 @@ from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
 
 NO_BOAT = "NO_BOAT"
+NO_BOAT_ID = str(-9999)
 
 
 @dataclass
@@ -33,7 +34,7 @@ class PatrolBoat(GenericSkipperManObjectWithIds):
 
     @classmethod
     def create_empty(cls):
-        return cls(NO_BOAT, hidden=False)
+        return cls(NO_BOAT, hidden=False, id=NO_BOAT_ID)
 
 
 no_patrol_boat = PatrolBoat.create_empty()

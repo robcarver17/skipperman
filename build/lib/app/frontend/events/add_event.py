@@ -84,6 +84,8 @@ def get_add_event_form_with_information_passed(
 
     return Form(list_of_elements_inside_form)
 
+help_button = HelpButton("add_new_event_help")
+
 
 def get_heading_text():
     header_text = "Do not duplicate event names! (can only have one event with a specific name in a given year, so include months in training weekends eg June Training, or include a number in a series eg Feva Training 1. "
@@ -102,7 +104,6 @@ def get_footer_buttons(form_is_blank: bool):
         )
 
 
-help_button = HelpButton("add_event_help")
 
 
 def form_fields_for_add_event(
@@ -171,7 +172,7 @@ def process_form_when_checking_event(
         )
     except Exception as e:
         verify_text = (
-            "Doesn't appear to be a valid event (wrong date time in old browser?) error code %s"
+            "Doesn't appear to be a valid event: error %s"
             % str(e)
         )
 

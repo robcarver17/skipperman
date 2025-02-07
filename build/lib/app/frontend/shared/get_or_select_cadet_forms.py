@@ -1,3 +1,4 @@
+from app.backend.cadets.list_of_cadets import get_list_of_cadets_sorted_by_first_name, get_list_of_similar_cadets
 from app.objects.abstract_objects.abstract_form import Form
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
@@ -88,14 +89,14 @@ def get_list_of_cadet_buttons(
 ) -> ListOfLines:
     if see_all_cadets:
         list_of_cadets = get_list_of_cadets_sorted_by_first_name(
-            data_layer=interface.data
+            object_store=interface.object_store
         )
         msg = "Currently choosing from all cadets"
         extra_button = see_similar_cadets_only_button
     else:
         ## similar cadets with option to see more
         list_of_cadets = get_list_of_similar_cadets(
-            data_layer=interface.data, cadet=cadet
+            object_store=interface.object_store, cadet=cadet
         )
         msg = "Currently choosing from similar cadets only:"
         extra_button = see_all_cadets_button

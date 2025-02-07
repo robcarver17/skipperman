@@ -63,7 +63,7 @@ def get_list_of_unique_volunteer_ids_identified_in_registration_data(
     list_of_volunteers_identified = get_list_of_identified_volunteers_at_event(
         object_store=object_store, event=event
     )
-    all_ids = list_of_volunteers_identified.unique_list_of_volunteer_ids()
+    all_ids = list_of_volunteers_identified.unique_list_of_allocated_volunteer_ids()
 
     return all_ids
 
@@ -157,7 +157,7 @@ def update_list_of_identified_volunteers_at_event(
     list_of_identified_volunteers_at_event: ListOfIdentifiedVolunteersAtEvent,
 ):
     object_store.update(
-        object_definition=object_store,
+        object_definition=object_definition_for_identified_volunteers_at_event,
         new_object=list_of_identified_volunteers_at_event,
         event_id=event.id,
     )

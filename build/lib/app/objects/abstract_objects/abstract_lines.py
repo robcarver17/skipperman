@@ -4,6 +4,8 @@ from typing import Union
 from app.objects.abstract_objects.abstract_text import Input, Heading
 from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar
 
+class HorizontalLine:
+    pass
 
 class Line(list):
     def __init__(self, passed_list: Union[list, Button, str, Input, Heading]):

@@ -60,7 +60,7 @@ def get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats(
                 patrol_boat_by_day=all_event_data.dict_of_volunteers_at_event_with_patrol_boats.patrol_boats_for_volunteer(
                     volunteer
                 ),
-                role_and_group_by_day=all_event_data.dict_of_volunteers_at_event_with_days_and_role.days_and_roles_for_volunteer(
+                role_and_group_by_day=all_event_data.dict_of_volunteers_at_event_with_days_and_roles.days_and_roles_for_volunteer(
                     volunteer
                 ),
                 availability=all_event_data.dict_of_registration_data_for_volunteers_at_event.get_data_for_volunteer(

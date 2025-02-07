@@ -4,7 +4,8 @@ from app.objects.exceptions import arg_not_passed
 
 from app.objects.cadets import ListOfCadets, Cadet
 
-from app.objects.day_selectors import DictOfDaySelectors, DaySelector
+from app.objects.day_selectors import DaySelector
+from app.objects.cadet_attendance import DictOfDaySelectors
 
 from app.objects.events import Event
 

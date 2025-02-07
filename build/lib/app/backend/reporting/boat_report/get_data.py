@@ -9,9 +9,7 @@ from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     get_dict_of_all_event_info_for_cadets,
 )
 from app.objects.cadets import Cadet, ListOfCadets
-from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import (
-    no_boat_class_partner_or_sail_number,
-)
+from app.objects.boat_classes import no_boat_class_partner_or_sail_number
 
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 from app.objects.groups import (

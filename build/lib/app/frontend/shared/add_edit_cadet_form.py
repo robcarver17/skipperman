@@ -10,7 +10,6 @@ from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
     Button,
-    HelpButton,
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -24,6 +23,7 @@ from app.objects.abstract_objects.abstract_lines import (
     Line,
     _______________,
 )
+from app.objects.abstract_objects.abstract_text import bold
 
 from app.objects.cadets import Cadet, default_cadet
 from app.objects.membership_status import (
@@ -91,7 +91,7 @@ def get_add_cadet_form_with_information_passed(
             _______________,
             form_fields,
             _______________,
-            cadet_and_text.verification_text,
+            bold(cadet_and_text.verification_text),
             _______________,
             footer_buttons,
         ]

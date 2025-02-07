@@ -10,7 +10,7 @@ from app.frontend.events.clothing.render_clothing import (
     are_we_showing_only_committee,
 )
 
-from app.objects.composed.clothing_at_event import ClothingAtEvent
+from app.objects.clothing import ClothingAtEvent
 from app.backend.clothing.dict_of_clothing_for_event import (
     change_clothing_size_for_cadet,
     change_colour_group_for_cadet,

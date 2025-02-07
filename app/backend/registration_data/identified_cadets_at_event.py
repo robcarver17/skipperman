@@ -31,7 +31,7 @@ def is_cadet_marked_as_test_cadet_to_skip_in_for_row_in_raw_registration_data(
     identified_cadets_at_event = get_list_of_identified_cadets_at_event(
         object_store=object_store, event=event
     )
-    return identified_cadets_at_event.cadet_id_given_row_id(row_id) is missing_data
+    return identified_cadets_at_event.cadet_id_given_row_id_ignoring_test_cadets(row_id, default_when_missing=missing_data) is missing_data
 
 
 def get_row_in_registration_data_for_cadet_both_cancelled_and_active(
@@ -80,7 +80,7 @@ def get_all_rows_in_registration_data_which_have_been_identified_for_a_specific_
             cadet_id=cadet.id
         )
     )
-    relevant_rows = raw_registration_data.subset_with_id(list_of_row_ids)
+    relevant_rows = raw_registration_data.subset_with_list_of_row_ids(list_of_row_ids)
 
     return relevant_rows
 
@@ -126,7 +126,7 @@ def identified_cadet_ids_in_raw_registration_data(
 
     row_ids = raw_registration_data.list_of_row_ids()
     list_of_cadet_ids = [
-        identified_cadet_data.cadet_id_given_row_id(row_id) for row_id in row_ids
+        identified_cadet_data.cadet_id_given_row_id_ignoring_test_cadets(row_id, default_when_missing=missing_data) for row_id in row_ids
     ]
     list_of_cadet_ids = [
         cadet_id for cadet_id in list_of_cadet_ids if cadet_id is not missing_data
@@ -139,7 +139,7 @@ def mark_row_as_skip_cadet(object_store: ObjectStore, event: Event, row_id: str)
     identified_cadets_at_event = get_list_of_identified_cadets_at_event(
         object_store=object_store, event=event
     )
-    identified_cadets_at_event.add_row_with_test_cadet_as_skipping(row_id=row_id)
+    identified_cadets_at_event.add_row_with_test_cadet(row_id=row_id)
     update_list_of_identified_cadets_at_event(
         identified_cadets_at_event=identified_cadets_at_event,
         event=event,
@@ -178,7 +178,9 @@ def cadet_at_event_given_row_id(
     identified_cadets_at_event = get_list_of_identified_cadets_at_event(
         object_store=object_store, event=event
     )
-    cadet_id = identified_cadets_at_event.cadet_id_given_row_id(row_id)
+    cadet_id = identified_cadets_at_event.cadet_id_given_row_id_ignoring_test_cadets(row_id, default_when_missing=missing_data)
+    if cadet_id is missing_data:
+        raise Exception("No idenitified cadet at row ID %s" % row_id)
 
     return get_cadet_from_id(object_store=object_store, cadet_id=cadet_id)
 

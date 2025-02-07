@@ -3,14 +3,14 @@ from app.data_access.store.object_store import ObjectStore
 from app.data_access.store.object_definitions import (
     object_definition_for_list_of_boat_classes,
 )
-from app.objects.boat_classes import ListOfBoatClasses, BoatClass
+from app.objects.boat_classes import ListOfBoatClasses, BoatClass, no_boat_class
 
 
 def get_boat_class_from_name(
-    object_store: ObjectStore, boat_class_name: str
+    object_store: ObjectStore, boat_class_name: str, default=no_boat_class
 ) -> BoatClass:
     list_of_boat_classes = get_list_of_boat_classes(object_store)
-    return list_of_boat_classes[list_of_boat_classes.idx_given_name(boat_class_name)]
+    return list_of_boat_classes.boat_class_given_name(boat_class_name, default=default)
 
 
 def add_new_boat_class_given_string(
@@ -27,7 +27,7 @@ def modify_boat_class(
     object_store: ObjectStore, existing_object: BoatClass, new_object: BoatClass
 ):
     list_of_boats = get_list_of_boat_classes(object_store)
-    list_of_boats.replace(existing_boat=existing_object, new_boat=new_object)
+    list_of_boats.replace(existing_boat_class=existing_object, new_boat_class=new_object)
     try:
         list_of_boats.check_for_duplicated_names()
     except:

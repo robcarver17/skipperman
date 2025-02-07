@@ -6,7 +6,7 @@ from enum import Enum
 from app.objects.volunteers import Volunteer
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from app.objects.generic_list_of_objects import GenericListOfObjects
+from app.objects.generic_list_of_objects import GenericListOfObjects, get_unique_object_with_attr_in_list
 from app.objects.generic_objects import GenericSkipperManObject
 
 UserGroup = Enum("UserGroup", ["admin", "skipper", "instructor", "public"])
@@ -23,7 +23,7 @@ class SkipperManUser(GenericSkipperManObject):
     username: str
     password_hash: str
     group: UserGroup
-    email_address: str
+    email_address: str ## not currently used
     volunteer_id: str
 
     @classmethod
@@ -47,9 +47,6 @@ class SkipperManUser(GenericSkipperManObject):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def is_instructor(self):
-        return self.group == INSTRUCTOR_GROUP
-
     def is_skipper_or_admin(self):
         return self.group in [SKIPPER_GROUP, ADMIN_GROUP]
 
@@ -59,19 +56,28 @@ class SkipperManUser(GenericSkipperManObject):
 
 
 NO_VOLUNTEER_ID = "-1"
+DEFAULT_ADMIN_USER = "default" ### OK to have in cleartext here as only used if no user security file exists
+DEFAULT_ADMIN_PASSWORD = "default"
+
 default_admin_user_if_none_defined = SkipperManUser(
-    "default",
-    generate_password_hash("default"),
+    username=DEFAULT_ADMIN_USER,
+    password_hash=generate_password_hash(DEFAULT_ADMIN_PASSWORD),
     group=ADMIN_GROUP,
     email_address="",
     volunteer_id=NO_VOLUNTEER_ID,
 )
+
 default_user_if_not_logged_in = SkipperManUser(
-    "public",
-    "public",
+    username="public",
+    password_hash="public", ## irrelevant as not going to be logging in
     group=PUBLIC_GROUP,
     email_address="",
     volunteer_id=NO_VOLUNTEER_ID,
+)
+
+
+new_blank_user = SkipperManUser(
+    "", "", ADMIN_GROUP, email_address="", volunteer_id=NO_VOLUNTEER_ID
 )
 
 
@@ -116,15 +122,13 @@ class ListOfSkipperManUsers(GenericListOfObjects):
         user = self.get_user_given_username(username)
         self.remove(user)
 
-    def get_user_given_username(self, username: str) -> SkipperManUser:
-        users = self.list_of_users()
-        matching = [user for user in users if user.username == username]
-        if len(matching) > 1:
-            raise Exception("Can't have duplicate users")
-        if len(matching) == 0:
-            return default_user_if_not_logged_in
-
-        return matching[0]
+    def get_user_given_username(self, username: str, default =default_user_if_not_logged_in) -> SkipperManUser:
+        return get_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='username',
+            attr_value=username,
+            default=default
+        )
 
     def list_of_usernames_excludes_default(self):
         return [user.username for user in self]
@@ -132,10 +136,19 @@ class ListOfSkipperManUsers(GenericListOfObjects):
     def list_of_users(self) -> "ListOfSkipperManUsers":
         return list_of_users_or_default_if_empty(self)
 
-    def at_least_one_admin_user(self):
+    def only_one_admin_user_and_it_is_the_passed_user(self, user: SkipperManUser) -> bool:
         ## doesn't use list of users
+        admin_users = self.list_of_admin_users()
+        if len(admin_users)==1:
+            this_is_the_admin_user = admin_users[0] == user
+            return this_is_the_admin_user
+        else:
+            return False
+
+    def list_of_admin_users(self):
         admin = [user for user in self if user.group == ADMIN_GROUP]
-        return len(admin) > 0
+
+        return ListOfSkipperManUsers(admin)
 
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_usernames_excludes_default()
@@ -158,3 +171,4 @@ def get_random_string(length: int) -> str:
     letters = string.ascii_lowercase
     result_str = "".join(choice(letters) for i in range(length))
     return result_str
+

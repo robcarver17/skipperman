@@ -25,6 +25,11 @@ class RegistrationDataForVolunteerAtEvent:
     )
     notes: str = ""
 
+    def clear_user_data(self):
+        self.any_other_information = ""
+        self.notes = ""
+
+
     @classmethod
     def from_volunteer_at_event_with_id(
         cls,
@@ -33,7 +38,7 @@ class RegistrationDataForVolunteerAtEvent:
     ):
         return cls(
             availablity=volunteer_at_event_with_id.availablity,
-            list_of_associated_cadets=ListOfCadets.subset_from_list_of_ids(
+            list_of_associated_cadets=ListOfCadets.DEPRECATE_subset_from_list_of_ids(
                 full_list=list_of_cadets,
                 list_of_ids=volunteer_at_event_with_id.list_of_associated_cadet_id,
             ),
@@ -56,6 +61,19 @@ class DictOfRegistrationDataForVolunteerAtEvent(
         super().__init__(raw_dict)
         self._event = event
         self._list_of_volunteers_at_event_with_id = list_of_volunteers_at_event_with_id
+
+    def update_volunteer_notes_at_event(
+            self, volunteer: Volunteer, new_notes: str
+    ):
+        volunteer_data = self.get_data_for_volunteer(volunteer)
+        volunteer_data.notes = new_notes
+        self.list_of_volunteers_at_event_with_id.update_notes(volunteer=volunteer, new_notes=new_notes)
+
+    def clear_user_data(self):
+        for registration_data_for_volunteer in self.values():
+            registration_data_for_volunteer.clear_user_data()
+
+        self.list_of_volunteers_at_event_with_id.clear_user_data()
 
     def sort_by_list_of_volunteers(self, list_of_volunteers: ListOfVolunteers):
         new_raw_dict = dict(
@@ -110,7 +128,7 @@ def compose_dict_of_registration_data_for_volunteer_at_event(
     event_id: str,
     list_of_volunteers: ListOfVolunteers,
     list_of_cadets: ListOfCadets,
-    list_of_volunteers_at_events_with_id: ListOfVolunteersAtEventWithId,
+    list_of_volunteers_at_event_with_id: ListOfVolunteersAtEventWithId,
     list_of_events: ListOfEvents,
 ) -> DictOfRegistrationDataForVolunteerAtEvent:
     event = list_of_events.object_with_id(event_id)
@@ -118,13 +136,13 @@ def compose_dict_of_registration_data_for_volunteer_at_event(
     raw_dict = compose_raw_dict_of_registration_data_for_volunteer_at_event(
         list_of_volunteers=list_of_volunteers,
         list_of_cadets=list_of_cadets,
-        list_of_volunteers_at_event_with_id=list_of_volunteers_at_events_with_id,
+        list_of_volunteers_at_event_with_id=list_of_volunteers_at_event_with_id,
     )
 
     return DictOfRegistrationDataForVolunteerAtEvent(
         raw_dict=raw_dict,
         event=event,
-        list_of_volunteers_at_event_with_id=list_of_volunteers_at_events_with_id,
+        list_of_volunteers_at_event_with_id=list_of_volunteers_at_event_with_id,
     )
 
 

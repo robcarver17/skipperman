@@ -56,10 +56,10 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
 
         self.append(IdentifiedCadetAtEvent.create_row_for_test_cadet(row_id=row_id))
 
-    def cadet_id_given_row_id(self, row_id: str) -> str:
+    def cadet_id_given_row_id_ignoring_test_cadets(self, row_id: str, default_when_missing = missing_data) -> str:
         matching = [item for item in self if item.row_id == row_id]
         if len(matching) == 0:
-            raise MissingData
+            return default_when_missing
         elif len(matching) > 1:
             raise MultipleMatches("Can't have same row_id more than once")
 
@@ -67,7 +67,7 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
         cadet_id = str(matching_item.cadet_id)
 
         if cadet_id == SKIP_TEST_CADET_ID:
-            raise MissingData
+            return default_when_missing
 
         return cadet_id
 

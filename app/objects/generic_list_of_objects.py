@@ -1,6 +1,6 @@
 from typing import List
 import pandas as pd
-from app.objects.exceptions import MissingData
+from app.objects.exceptions import MissingData, arg_not_passed, MultipleMatches
 from app.objects.generic_objects import (
     GenericSkipperManObject,
     GenericSkipperManObjectWithIds,
@@ -51,39 +51,34 @@ class GenericListOfObjectsWithIds(GenericListOfObjects):
     def as_str(self):
         return ", ".join([str(object) for object in self])
 
-    def pop_with_id(self, id):
-        index = self.index_of_id(id)
-        return self.pop(index)
+    def object_with_id(self, id: str, default=arg_not_passed):
+        return get_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_value=id,
+            attr_name='id',
+            default=default
+        )
 
-    def object_with_id(self, id: str):
-        index = self.index_of_id(id)
+    def index_of_id(self, id:str, default = arg_not_passed) -> int:
+        return get_idx_of_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_value=id,
+            attr_name='id',
+            default=default
+        )
 
-        return self[index]
 
-    def index_of_id(self, id) -> int:
-        list_of_ids = self.list_of_ids
-        try:
-            index = list_of_ids.index(id)
-        except ValueError:
-            raise MissingData("id %s is missing" % id)
-
-        return index
-
-    @classmethod
-    def subset_from_list_of_ids(
-        cls, full_list: "GenericListOfObjectsWithIds", list_of_ids: List[str]
+    def subset_from_list_of_ids_retaining_order(
+        self, list_of_ids: List[str]
     ):
         subset_list = [
-            full_list.object_with_id(id)
-            for id in full_list.list_of_ids
-            if id in list_of_ids
+            object_in_list
+            for object_in_list in self
+            if object_in_list.id in list_of_ids
         ]
 
-        return cls(subset_list)
+        return self.__class__(subset_list)
 
-    def replace_with_new_object(self, new_object):
-        idx = self.index_of_id(new_object.id)
-        self[idx] = new_object
 
     @property
     def list_of_ids(self) -> list:
@@ -105,6 +100,32 @@ class GenericListOfObjectsWithIds(GenericListOfObjects):
 
         return max_id
 
+def get_unique_object_with_attr_in_list(some_list: list, attr_value, attr_name = "id", default=arg_not_passed):
+    idx = get_idx_of_unique_object_with_attr_in_list(some_list=some_list, attr_value=attr_value, attr_name=attr_name,
+                                                     default=index_not_found)
+    if idx is index_not_found:
+        if default is arg_not_passed:
+            raise MissingData("%s = %s not found" % (attr_name, attr_value))
+        else:
+            return default
+
+    return some_list[idx]
+
+
+def get_idx_of_unique_object_with_attr_in_list(some_list: list, attr_value, attr_name = "id", default=arg_not_passed):
+    list_of_idx = [idx for idx, object_in_list in enumerate(some_list) if getattr(object_in_list, attr_name)==attr_value]
+    if len(list_of_idx)==0:
+        if default is arg_not_passed:
+            raise MissingData("%s = %s not found" % (attr_name, attr_value))
+        else:
+            return default
+
+    elif len(list_of_idx)>1:
+        raise MultipleMatches("Multiple matches for %s=%s" % (attr_name, attr_value))
+    else:
+        return list_of_idx[0]
+
+index_not_found = object()
 
 def create_list_of_objects_from_dataframe(
     class_of_object: GenericSkipperManObject, df: pd.DataFrame

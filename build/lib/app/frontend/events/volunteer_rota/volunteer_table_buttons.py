@@ -79,6 +79,8 @@ def get_skills_button(
 ) -> Button:
     dict_of_skills = volunteer_data_at_event.volunteer_skills
     skill_label = dict_of_skills.skills_held_as_str()
+    if len(skill_label)==0:
+        skill_label = "Click to add skills"
 
     if ready_to_swap:
         return skill_label
@@ -136,7 +138,7 @@ def get_volunteer_button_or_string(volunteer: Volunteer, ready_to_swap: bool):
     if ready_to_swap:
         return volunteer.name
     else:
-        return Button(name_of_volunteer_button(volunteer))
+        return Button(label=volunteer.name, value=name_of_volunteer_button(volunteer))
 
 
 def get_allocation_inputs_buttons_in_role_when_available(

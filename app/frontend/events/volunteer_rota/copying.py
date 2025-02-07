@@ -15,8 +15,8 @@ from app.frontend.events.volunteer_rota.button_values import (
     from_previous_role_copy_button_to_volunteer,
 )
 from app.frontend.events.volunteer_rota.volunteer_rota_buttons import (
-    copy_all_roles_button,
-    copy_all_first_role_button,
+    copy_all_roles_from_first_role_button,
+    copy_and_overwrite_all_roles_from_first_role_button,
     get_all_copy_previous_role_buttons,
     get_all_copy_overwrite_individual_role_buttons,
     get_all_copy_fill_individual_role_buttons,
@@ -26,10 +26,10 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
 def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str):
-    if copy_all_roles_button.pressed(copy_button):
+    if copy_all_roles_from_first_role_button.pressed(copy_button):
         update_if_copy_first_role_to_empty_roles_button_pressed(interface=interface)
 
-    elif copy_all_first_role_button.pressed(copy_button):
+    elif copy_and_overwrite_all_roles_from_first_role_button.pressed(copy_button):
         update_if_copy_first_role_and_overwrite_button_pressed(interface=interface)
 
     elif copy_button in get_all_copy_previous_role_buttons(interface=interface):
@@ -116,6 +116,7 @@ def update_if_copy_first_role_to_empty_roles_button_pressed(
         copy_earliest_valid_role_to_all_empty_for_volunteer(
             object_store=interface.object_store, event=event, volunteer=volunteer
         )
+
 
 
 def update_if_copy_first_role_and_overwrite_button_pressed(

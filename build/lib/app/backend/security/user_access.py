@@ -44,16 +44,6 @@ def get_list_of_events_entitled_to_see(
     return all_events
 
 
-def is_volunteer_SI_or_super_user(interface: abstractInterface):
-    volunteer = get_volunteer_for_logged_in_user_or_superuser(interface)
-
-    if volunteer is SUPERUSER:
-        return True
-    return is_volunteer_qualified_as_SI(
-        object_store=interface.object_store, volunteer=volunteer
-    )
-
-
 def can_volunteer_see_event(
     object_store: ObjectStore, event: Event, volunteer: Volunteer
 ):
@@ -101,3 +91,14 @@ def can_see_all_groups_and_award_qualifications(
     )
 
     return is_senior_instructor_at_event
+
+
+
+def is_volunteer_SI_or_super_user(interface: abstractInterface):
+    volunteer = get_volunteer_for_logged_in_user_or_superuser(interface)
+
+    if volunteer is SUPERUSER:
+        return True
+    return is_volunteer_qualified_as_SI(
+        object_store=interface.object_store, volunteer=volunteer
+    )

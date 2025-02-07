@@ -6,6 +6,7 @@ from app.backend.qualifications_and_ticks.list_of_qualifications import (
     get_qualification_given_name,
     get_qualification_given_id,
 )
+from app.backend.groups.list_of_groups import get_group_with_name
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.groups import Group
@@ -19,7 +20,8 @@ CADET_ID = "cadet"
 
 def get_group_from_state(interface: abstractInterface) -> Group:
     name = get_group_name_from_state(interface)
-    return Group.name_only(name)
+    group = get_group_with_name(object_store=interface.object_store, group_name=name)
+    return group
 
 
 def get_group_name_from_state(interface: abstractInterface) -> str:

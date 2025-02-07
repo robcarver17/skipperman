@@ -5,6 +5,7 @@ from app.frontend.events.import_data.wa_import_gateway import (
 )
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+from app.frontend.utilities.data_and_backups.restore_backup_from_snapshot import help_button
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -13,7 +14,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     main_menu_button,
     Button,
     ButtonBar,
-    back_menu_button,
+    back_menu_button, HelpButton,
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -22,12 +23,12 @@ IMPORT_FROM_WA = "Import from WA spreadsheet file"
 
 wa_import_button = Button(IMPORT_FROM_WA, tile=True)
 
-nav_buttons = ButtonBar([main_menu_button, back_menu_button])
+nav_buttons = ButtonBar([main_menu_button, back_menu_button, help_button])
 option_buttons = Line([wa_import_button])
 
 
 def display_form_choose_import_source(interface: abstractInterface) -> Form:
-    lines_inside_form = ListOfLines([nav_buttons, option_buttons])
+    lines_inside_form = ListOfLines([nav_buttons, option_buttons, help_button])
 
     return Form(lines_inside_form)
 
@@ -44,3 +45,5 @@ def post_form_choose_import_source(
         )
     else:
         return button_error_and_back_to_initial_state_form(interface)
+
+help_button = HelpButton("import_registration_data_help")

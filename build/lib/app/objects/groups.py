@@ -7,7 +7,7 @@ from app.objects.generic_objects import GenericSkipperManObjectWithIds
 from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
 
 
-UNALLOCATED_GROUP_STR = "Unallocated"
+UNALLOCATED_GROUP_STR = "No group set"
 
 
 GroupLocation = Enum(
@@ -52,8 +52,9 @@ class Group(GenericSkipperManObjectWithIds):
             name=name, location=undetermined_group_location, protected=True, hidden=True
         )
 
+
     def __eq__(self, other):
-        return self.name == other.name
+        return self.name == other.name and self.location == other.location and self.hidden == other.hidden
 
     def __hash__(self):
         return hash(self.name)

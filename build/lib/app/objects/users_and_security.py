@@ -53,6 +53,8 @@ class SkipperManUser(GenericSkipperManObject):
     def is_skipper_or_admin(self):
         return self.group in [SKIPPER_GROUP, ADMIN_GROUP]
 
+    def is_admin(self):
+        return self.group == ADMIN_GROUP
 
 #
 #
@@ -132,10 +134,18 @@ class ListOfSkipperManUsers(GenericListOfObjects):
     def list_of_users(self) -> "ListOfSkipperManUsers":
         return list_of_users_or_default_if_empty(self)
 
-    def at_least_one_admin_user(self):
+    def only_one_admin_user_and_it_is_the_passed_user(self, user: SkipperManUser) -> bool:
         ## doesn't use list of users
+        admin_users = self.list_of_admin_users()
+        if len(admin_users)==1:
+            return admin_users[0] == user
+        else:
+            return False
+
+    def list_of_admin_users(self):
         admin = [user for user in self if user.group == ADMIN_GROUP]
-        return len(admin) > 0
+
+        return ListOfSkipperManUsers(admin)
 
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_usernames_excludes_default()

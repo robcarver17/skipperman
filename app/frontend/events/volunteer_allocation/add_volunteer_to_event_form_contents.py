@@ -8,10 +8,9 @@ from app.backend.registration_data.identified_volunteers_at_event import (
     get_list_of_relevant_information_for_volunteer_in_registration_data,
 )
 from app.backend.registration_data.cadet_and_volunteer_connections_at_event import (
-    are_all_cadets_in_list_already_connection_to_volunteer,
     get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer,
 )
-from app.objects.abstract_objects.abstract_form import checkboxInput, textInput, Form
+from app.objects.abstract_objects.abstract_form import  textInput, Form
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     Line,
@@ -23,14 +22,11 @@ from app.objects.events import Event
 from app.objects.relevant_information_for_volunteers import (
     RelevantInformationForVolunteer,
     ListOfRelevantInformationForVolunteer,
-    missing_relevant_information,
-    suggested_volunteer_availability,
+    missing_relevant_information
 )
 from app.objects.volunteers import Volunteer
 
-
 AVAILABILITY = "availability"
-MAKE_CADET_CONNECTION = "connection"
 ANY_OTHER_INFORMATION = "any_other_information"
 PREFERRED_DUTIES = "preferred_duties"
 SAME_OR_DIFFERENT = "same_or_different"
@@ -51,10 +47,6 @@ def display_form_to_confirm_volunteer_details(
 
     header_text = get_header_text(event=event, volunteer=volunteer, interface=interface)
 
-    connection_checkbox = get_connection_checkbox(
-        interface=interface, volunteer=volunteer, event=event
-    )
-
     any_other_information_text = get_any_other_information_text(
         list_of_relevant_information=list_of_relevant_information
     )
@@ -69,7 +61,7 @@ def display_form_to_confirm_volunteer_details(
         list_of_relevant_information=list_of_relevant_information
     )
 
-    same_or_different_text = get_same_or_different_text(
+    same_or_different_text = get_same_or_different_text_and_input_box(
         list_of_relevant_information=list_of_relevant_information
     )
     same_or_different_input = get_same_or_different_input(
@@ -77,7 +69,7 @@ def display_form_to_confirm_volunteer_details(
     )
 
     available_text = get_availablity_text(
-        interface=interface, list_of_relevant_information=list_of_relevant_information
+        list_of_relevant_information=list_of_relevant_information
     )
     available_checkbox = (
         get_availability_checkbox_for_volunteer_at_event_based_on_relevant_information(
@@ -92,17 +84,22 @@ def display_form_to_confirm_volunteer_details(
             [
                 header_text,
                 _______________,
-                connection_checkbox,
                 _______________,
                 status_text,
                 _______________,
+                _______________,
                 available_text.add_Lines(),
+                _______________,
                 available_checkbox,
+                _______________,
                 _______________,
                 any_other_information_text,
                 _______________,
+                _______________,
                 preferred_duties_text.add_Lines(),
+                _______________,
                 preferred_duties_input,
+                _______________,
                 _______________,
                 same_or_different_text.add_Lines(),
                 same_or_different_input,
@@ -154,54 +151,21 @@ def get_list_of_active_associated_cadet_names_in_mapped_event_data_given_identif
     return list_of_cadets.list_of_names()
 
 
-def get_connection_checkbox(
-    interface: abstractInterface, event: Event, volunteer: Volunteer
-) -> Union[checkboxInput, str]:
-    list_of_cadets = get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer(
-        object_store=interface.object_store, event=event, volunteer=volunteer
-    )
-    if len(list_of_cadets) == 0:
-        return ""
-
-    already_all_connected = are_all_cadets_in_list_already_connection_to_volunteer(
-        object_store=interface.object_store,
-        volunteer=volunteer,
-        list_of_cadets=list_of_cadets,
-    )
-
-    if already_all_connected:
-        return ""
-
-    dict_of_labels = dict([(cadet.id, cadet.name) for cadet in list_of_cadets])
-    dict_of_checked = dict(
-        [(cadet.id, True) for cadet in list_of_cadets]
-    )  ## we assume we want to connect by default
-
-    connection_checkbox = checkboxInput(
-        dict_of_labels=dict_of_labels,
-        dict_of_checked=dict_of_checked,
-        input_name=MAKE_CADET_CONNECTION,
-        input_label="Tick to permanently connect sailor with volunteer (leave blank if not usually connected):",
-    )
-
-    return connection_checkbox
-
 
 def get_availablity_text(
-    interface: abstractInterface,
     list_of_relevant_information: ListOfRelevantInformationForVolunteer,
 ) -> ListOfLines:
     all_available = ListOfLines()
     for relevant_information in list_of_relevant_information:
         all_available = all_available + get_availablity_text_for_single_entry(
-            interface=interface, relevant_information=relevant_information
+            relevant_information=relevant_information
         )
 
     return all_available
 
 
 def get_availablity_text_for_single_entry(
-    interface: abstractInterface, relevant_information: RelevantInformationForVolunteer
+    relevant_information: RelevantInformationForVolunteer
 ) -> ListOfLines:
     if relevant_information is missing_relevant_information:
         return ListOfLines("")
@@ -210,29 +174,20 @@ def get_availablity_text_for_single_entry(
         relevant_information=relevant_information
     )
     availability_info = relevant_information.availability
+
+    if availability_info.volunteer_availablity.is_empty():
+        volunteer_availability = "No availability for volunteer in form"
+    else:
+        volunteer_availability = "In form volunteer said they were available on %s" % str(availability_info.volunteer_availablity)
+
+    cadet_availabilty = "Cadet registered in form available on %s" % str(availability_info.cadet_availability)
+
     available_text = ListOfLines(
         [
-            "Availability for volunteer in form when registered with cadet %s"
-            % cadet_name
+            "Availability for volunteer in form when registered with cadet %s: %s. %s"
+            % (cadet_name, cadet_availabilty, volunteer_availability)
         ]
     )
-    if availability_info.day_availability is not missing_data:
-        available_text.append(
-            "- In form said they were available on %s "
-            % availability_info.day_availability
-        )
-    elif availability_info.weekend_availability is not missing_data:
-        available_text.append(
-            "- In form said they were available on %s "
-            % availability_info.weekend_availability
-        )
-    else:
-        available_text.append(
-            "- Cadet registered in form for %s"
-            % str(availability_info.cadet_availability)
-        )
-
-    available_text.append("")
 
     return available_text
 
@@ -266,19 +221,15 @@ def get_availability_checkbox_for_volunteer_at_event_based_on_relevant_informati
 def first_valid_availability(
     list_of_relevant_information: ListOfRelevantInformationForVolunteer, event: Event
 ) -> DaySelector:
-    availabilty = event.day_selector_for_days_in_event()
 
     for relevant_information in list_of_relevant_information:
-        try:
-            availabilty = suggested_volunteer_availability(
-                relevant_information.availability
-            )
-            break
-        except:
+        availabilty = relevant_information.availability.volunteer_availablity
+        if availabilty.is_empty():
             continue
+        else:
+            return availabilty
 
-    if len(availabilty.days_available()) == 0:
-        availabilty = event.day_selector_for_days_in_event()
+    availabilty = event.day_selector_for_days_in_event()
 
     return availabilty
 
@@ -371,12 +322,25 @@ def first_valid_preferred_duties(
     return ""
 
 
-def get_same_or_different_text(
+def get_same_or_different_text_and_input_box(
     list_of_relevant_information: ListOfRelevantInformationForVolunteer,
 ) -> ListOfLines:
-    list_of_same_or_different = ListOfLines(
-        ["Same or different duties in form (for each registration):"]
-    )
+    same_or_different_text = get_same_or_different_text(list_of_relevant_information)
+    if same_or_different_text is None:
+        return ListOfLines([""])
+
+    same_or_different_input_line = get_same_or_different_input(list_of_relevant_information)
+    same_or_different_input_header = "Same or different duties in form (for each registration):"
+
+    return ListOfLines(
+        [same_or_different_input_header]+same_or_different_text+[same_or_different_input_line]
+    ).add_Lines()
+
+def get_same_or_different_text(
+    list_of_relevant_information: ListOfRelevantInformationForVolunteer,
+) -> Union[list, None]:
+    list_of_same_or_different =[]
+
     for relevant_information in list_of_relevant_information:
         try:
             same_or_different_text = relevant_information.availability.same_or_different
@@ -386,8 +350,8 @@ def get_same_or_different_text(
         except:
             continue
 
-    if len(list_of_same_or_different) == 1:
-        return ListOfLines([""])
+    if len(list_of_same_or_different) == 0:
+        return None
 
     return list_of_same_or_different
 
@@ -395,6 +359,7 @@ def get_same_or_different_text(
 def get_same_or_different_input(
     list_of_relevant_information: ListOfRelevantInformationForVolunteer,
 ) -> textInput:
+
     return textInput(
         input_name=SAME_OR_DIFFERENT,
         input_label="Enter same or different preference",

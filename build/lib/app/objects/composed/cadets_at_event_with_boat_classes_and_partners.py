@@ -11,22 +11,32 @@ from app.objects.boat_classes import BoatClass, ListOfBoatClasses, no_boat_class
 from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import (
     ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
     CadetAtEventWithBoatClassAndPartnerWithIds,
-    NO_PARTNER_REQUIRED_STR,
-    NOT_ALLOCATED_STR,
 )
+from app.objects.partners import NO_PARTNER_REQUIRED_STR, NOT_ALLOCATED_STR
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.day_selectors import Day
 from app.objects.utils import most_common
+from enum import Enum
+
+NoCadetPartner = Enum('NoCadetPartner', [NO_PARTNER_REQUIRED_STR, NOT_ALLOCATED_STR])
+no_cadet_partner_required = NoCadetPartner[NO_PARTNER_REQUIRED_STR]
+no_partner_allocated = NoCadetPartner[NOT_ALLOCATED_STR]
 
 
-class NoPartnerCadetRequired:
-    def __repr__(self):
-        return NO_PARTNER_REQUIRED_STR
 
-
-class NoPartnerAllocated:
-    def __repr__(self):
-        return NOT_ALLOCATED_STR
+def are_partners_equal(partner: Union[Cadet, NoCadetPartner], other_partner: Union[Cadet, NoCadetPartner])->bool:
+    no_partner= no_partnership_given_partner_cadet(partner)
+    no_other_partner = no_partnership_given_partner_cadet(other_partner)
+    if no_partner and no_other_partner:
+        return partner == other_partner
+    elif no_partner and not no_other_partner:
+        return False
+    elif not no_partner and no_other_partner:
+        return False
+    elif not no_partner and not no_other_partner:
+        return partner == other_partner
+    else:
+        raise Exception
 
 
 @dataclass
@@ -35,7 +45,17 @@ class CadetBoatClassAndPartnerAtEventOnDay:
     boat_class: BoatClass
     sail_number: str
     day: Day
-    partner_cadet: Cadet = NoPartnerCadetRequired
+    partner_cadet: Cadet = no_cadet_partner_required
+
+
+    def __eq__(self, other):
+        equal_partners = are_partners_equal(self.partner_cadet, other.partner_cadet)
+        return self.cadet == other.cadet and \
+                self.boat_class == other.boat_class and \
+                self.sail_number == other.sail_number and \
+                self.day == other.day and \
+                equal_partners
+
 
     def partner_cadet_id(self) -> str:
         return from_partner_cadet_to_id_or_string(self.partner_cadet)
@@ -51,11 +71,12 @@ class CadetBoatClassAndPartnerAtEventOnDay:
             cadet_id=cadet_at_event_with_boat_class_and_partner_with_ids.partner_cadet_id,
             list_of_cadets=list_of_cadets,
         )
+
         return cls(
             cadet=list_of_cadets.cadet_with_id(
                 cadet_at_event_with_boat_class_and_partner_with_ids.cadet_id
             ),
-            boat_class=list_of_boats.object_with_id(
+            boat_class=list_of_boats.boat_with_id(
                 cadet_at_event_with_boat_class_and_partner_with_ids.boat_class_id
             ),
             day=cadet_at_event_with_boat_class_and_partner_with_ids.day,
@@ -64,21 +85,22 @@ class CadetBoatClassAndPartnerAtEventOnDay:
         )
 
 
+
 def from_cadet_id_to_partner_cadet(
     cadet_id: str, list_of_cadets: ListOfCadets
-) -> Union[Cadet, object]:
+) -> Union[Cadet, NoCadetPartner]:
     if cadet_id == NOT_ALLOCATED_STR:
-        return NoPartnerAllocated
+        return no_partner_allocated
     elif cadet_id == NO_PARTNER_REQUIRED_STR:
-        return NoPartnerCadetRequired
+        return no_cadet_partner_required
     else:
         return list_of_cadets.cadet_with_id(cadet_id)
 
 
-def from_partner_cadet_to_id_or_string(partner_cadet: Union[Cadet, object]):
-    if partner_cadet is NoPartnerAllocated:
+def from_partner_cadet_to_id_or_string(partner_cadet: Union[Cadet, NoCadetPartner]):
+    if partner_cadet is no_partner_allocated:
         return NOT_ALLOCATED_STR
-    elif partner_cadet is NoPartnerCadetRequired:
+    elif partner_cadet is no_cadet_partner_required:
         return NO_PARTNER_REQUIRED_STR
 
     return partner_cadet.id
@@ -88,7 +110,7 @@ def from_partner_cadet_to_id_or_string(partner_cadet: Union[Cadet, object]):
 class BoatClassAndPartnerAtEventOnDay:
     boat_class: BoatClass
     sail_number: str
-    partner_cadet: Cadet = NoPartnerCadetRequired
+    partner_cadet: Cadet = no_cadet_partner_required
 
     @property
     def has_partner(self) -> bool:
@@ -106,20 +128,20 @@ def no_partnership_given_partner_cadet_as_str(partner_as_str: str):
 
 def no_partnership_object_given_str(partner_as_str: str):
     if partner_as_str == NO_PARTNER_REQUIRED_STR:
-        return NoPartnerCadetRequired
+        return no_cadet_partner_required
     elif partner_as_str == NOT_ALLOCATED_STR:
-        return NoPartnerAllocated
+        return no_partner_allocated
     else:
         raise Exception("Don't know how to process %s" % partner_as_str)
 
 
-def no_partnership_given_partner_cadet(partner: Union[Cadet, object]):
-    if partner is NoPartnerCadetRequired:
+def no_partnership_given_partner_cadet(partner: Union[Cadet, NoCadetPartner]):
+    if partner is no_cadet_partner_required:
         return True
-    elif partner is NoPartnerAllocated:
+    elif partner is no_partner_allocated:
         return True
-
-    return False
+    else:
+        return False
 
 
 def valid_partnership_given_partner_cadet(partner: Union[Cadet, object]):
@@ -137,7 +159,7 @@ class DictOfDaysBoatClassAndPartners(Dict[Day, BoatClassAndPartnerAtEventOnDay])
             for boat_class_and_partner in self.values()
         ]
 
-        return most_common(list_of_boat_classes, BoatClass.create_empty())
+        return most_common(list_of_boat_classes, no_boat_class)
 
     def most_common_partner(self) -> Cadet:
         list_of_partners = [
@@ -145,7 +167,7 @@ class DictOfDaysBoatClassAndPartners(Dict[Day, BoatClassAndPartnerAtEventOnDay])
             for boat_class_and_partner in self.values()
         ]
 
-        return most_common(list_of_partners, Cadet.create_empty())
+        return most_common(list_of_partners, no_cadet_partner_required)
 
     def unique_list_of_boat_classes(self) -> ListOfBoatClasses:
         list_of_boat_classes = [
@@ -170,11 +192,11 @@ class DictOfDaysBoatClassAndPartners(Dict[Day, BoatClassAndPartnerAtEventOnDay])
 
         return boat_class_and_partner.sail_number
 
-    def boat_class_on_day(self, day: Day) -> BoatClass:
+    def boat_class_on_day(self, day: Day, default = no_boat_class) -> BoatClass:
         try:
             boat_class_and_partner = self.boat_class_and_partner_on_day(day)
         except:
-            return no_boat_class
+            return default
 
         return boat_class_and_partner.boat_class
 
@@ -182,7 +204,7 @@ class DictOfDaysBoatClassAndPartners(Dict[Day, BoatClassAndPartnerAtEventOnDay])
         try:
             boat_class_and_partner = self.boat_class_and_partner_on_day(day)
         except:
-            return NoPartnerCadetRequired
+            return no_cadet_partner_required
 
         return boat_class_and_partner.partner_cadet
 
@@ -201,6 +223,7 @@ class DictOfDaysBoatClassAndPartners(Dict[Day, BoatClassAndPartnerAtEventOnDay])
 class ListOfCadetBoatClassAndPartnerAtEventOnDay(
     List[CadetBoatClassAndPartnerAtEventOnDay]
 ):
+
     @classmethod
     def from_list_of_cadets_at_event_with_boat_class_and_partner_with_ids(
         cls,
@@ -220,11 +243,25 @@ class ListOfCadetBoatClassAndPartnerAtEventOnDay(
         )
 
     def list_of_valid_partners(self) -> ListOfCadets:
+        list_of_all_partners = self.list_of_all_partners_including_unallocated_and_not_required()
+        print("Gen Z voice: valid")
+        print(list_of_all_partners)
+        valid_list_of_partners = ListOfCadets(
+            [
+                partner_cadet
+                for partner_cadet in list_of_all_partners
+                if valid_partnership_given_partner_cadet(partner_cadet)
+            ]
+        )
+
+        print(valid_list_of_partners)
+        return valid_list_of_partners
+
+    def list_of_all_partners_including_unallocated_and_not_required(self) -> ListOfCadets:
         return ListOfCadets(
             [
                 element.partner_cadet
                 for element in self
-                if valid_partnership_given_partner_cadet(element)
             ]
         )
 
@@ -263,7 +300,7 @@ class ListOfCadetBoatClassAndPartnerAtEventOnDay(
         )
 
     def element_on_day_for_cadet(
-        self, cadet: Cadet, day: Day
+        self, cadet: Cadet, day: Day, default=missing_data
     ) -> CadetBoatClassAndPartnerAtEventOnDay:
         list_of_elements = [
             element for element in self if element.cadet == cadet and element.day == day
@@ -271,7 +308,7 @@ class ListOfCadetBoatClassAndPartnerAtEventOnDay(
         if len(list_of_elements) > 1:
             raise MultipleMatches
         elif len(list_of_elements) == 0:
-            return missing_data
+            return default
 
         return list_of_elements[0]
 
@@ -341,7 +378,7 @@ class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPart
                     )
                 )
 
-            return ListOfCadetBoatClassAndPartnerAtEventOnDay(new_list)
+        return ListOfCadetBoatClassAndPartnerAtEventOnDay(new_list)
 
     def unique_sorted_list_of_boat_classes_at_event(self) -> ListOfBoatClasses:
         boat_classes_for_cadets = [
@@ -410,7 +447,7 @@ class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPart
             boat_classes_and_partners.boat_class_and_partner_on_day(day)
         )
 
-        boat_classes_and_partner_on_day.partner_cadet = NoPartnerAllocated
+        boat_classes_and_partner_on_day.partner_cadet = no_partner_allocated
         self.list_of_cadets_at_event_with_boat_class_and_partners_with_ids.remove_two_handed_partner_from_existing_cadet(
             cadet_id=cadet.id, day=day
         )

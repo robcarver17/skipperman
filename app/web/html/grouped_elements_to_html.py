@@ -85,6 +85,8 @@ from app.web.html.forms import (
     html_checkbox_input,
 )
 from app.web.html.config_html import DEBUG
+from app.web.html.html_components import horizontal_line
+from app.objects.abstract_objects.abstract_lines import HorizontalLine
 
 ## RECURSIVE SPAGHETTI AS MANY ELEMENTS CAN CONTAIN OTHER ELEMENTS
 
@@ -234,6 +236,7 @@ def get_html_for_element_in_line(
         DetailLine,
         Image,
         int,
+        HorizontalLine
     ],
     urls_of_interest: UrlsOfInterest = arg_not_passed,
 ) -> Html:
@@ -339,6 +342,8 @@ def get_html_for_element_in_line(
 
     elif type(element_in_line) is Image:
         return get_html_image(element_in_line, urls_of_interest=urls_of_interest)
+    elif type(element_in_line) is HorizontalLine:
+        return horizontal_line
 
     else:
         raise Exception(

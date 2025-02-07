@@ -2,7 +2,7 @@ from copy import copy
 from dataclasses import dataclass
 from typing import Dict, List, Union
 
-from app.objects.roles_and_teams import Team, role_location_lake
+from app.objects.roles_and_teams import Team, role_location_lake, no_team
 
 from app.objects.utils import most_common, flatten
 
@@ -75,15 +75,15 @@ class RoleAndGroup:
 
     def __repr__(self):
         if self.group == unallocated_group:
-            return self.role
+            return self.role.name
         else:
-            return "%s (%s)" % (self.role, self.group)
+            return "%s (%s)" % (self.role.name, self.group.name)
 
     def __eq__(self, other):
         return self.__hash__() == other.__hash__()
 
     def __hash__(self):
-        return hash("%s_%s" % (self.role, self.group.name))
+        return hash("%s_%s" % (self.role.name, self.group.name))
 
     @property
     def is_unallocated(self):
@@ -170,8 +170,8 @@ class RoleAndGroupAndTeam:
 
 class ListOfRolesAndGroupsAndTeams(List[RoleAndGroupAndTeam]):
     @property
-    def list_of_groups(self) -> List[Group]:
-        return [role_and_group.group for role_and_group in self]
+    def list_of_groups(self) -> ListOfGroups:
+        return ListOfGroups([role_and_group.group for role_and_group in self])
 
     @property
     def list_of_roles(self) -> List[RoleWithSkills]:
@@ -243,7 +243,7 @@ class DictOfDaysRolesAndGroupsAndTeams(Dict[Day, RoleAndGroupAndTeam]):
             default=RoleAndGroupAndTeam.create_unallocated(),
         )
 
-    def list_of_groups(self) -> List[Group]:
+    def list_of_groups(self) -> ListOfGroups:
         return self.list_of_roles_and_groups.list_of_groups
 
     def list_of_roles(self) -> List[RoleWithSkills]:
@@ -488,13 +488,14 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
         return self.dict_of_teams_with_roles.roles_for_team(team)
 
     @property
-    def all_groups_at_event(self) -> List[Group]:
+    def all_groups_at_event(self) -> ListOfGroups:
         all_groups = [
-            dict_of_roles_and_group.list_of_groups()
+            list(dict_of_roles_and_group.list_of_groups())
             for dict_of_roles_and_group in self.all_dicts_of_roles_and_groups
         ]
         all_groups = flatten(all_groups)
-        return list(set(all_groups))
+        return ListOfGroups(list(set(all_groups)))
+
 
     @property
     def all_teams_at_event(self) -> List[Team]:
@@ -507,14 +508,15 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
         return list(set(all_teams))
 
     @property
-    def all_roles_at_event(self) -> List[RoleWithSkills]:
-        all_roles = [
+    def all_roles_at_event(self) -> ListOfRolesWithSkills:
+        all_roles_at_event = [
             dict_of_roles_and_group.list_of_roles()
             for dict_of_roles_and_group in self.all_dicts_of_roles_and_groups
         ]
-        all_roles = flatten(all_roles)
+        all_roles_at_event = flatten(all_roles_at_event)
+        unique_list_of_roles = list(set(all_roles_at_event))
 
-        return all_roles
+        return ListOfRolesWithSkills.from_list_of_roles_with_skills(unique_list_of_roles)
 
     def list_of_volunteers_with_roles_and_groups_and_teams_doing_role_on_day(
         self, role: RoleWithSkills, day: Day

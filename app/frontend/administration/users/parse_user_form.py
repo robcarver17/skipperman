@@ -27,12 +27,11 @@ from app.frontend.administration.users.render_users_form import (
     PASSWORD_CONFIRM,
     GROUP,
     name_for_user_and_input_type,
-    new_user,
     username_from_deletion_button,
     VOLUNTEER,
     username_from_reset_button,
 )
-from app.objects.users_and_security import SkipperManUser, UserGroup
+from app.objects.users_and_security import SkipperManUser, UserGroup, new_blank_user
 
 
 @dataclass
@@ -62,7 +61,7 @@ def generate_reset_message_for_user_name(
 
 def add_new_user_if_present(interface: abstractInterface):
     user_values = get_user_values_from_values_in_form(
-        interface=interface, user=new_user, username_field_present=True
+        interface=interface, user=new_blank_user, username_field_present=True
     )
     if is_user_empty(user_values):
         return

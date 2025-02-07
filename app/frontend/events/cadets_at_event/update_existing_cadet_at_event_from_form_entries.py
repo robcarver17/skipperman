@@ -75,7 +75,7 @@ def get_new_cadet_at_event_from_mapped_event_and_optionally_form(
     cadet: Cadet,
     use_form_data: bool = False,
 ) -> CadetWithIdAtEvent:
-    row_in_mapped_wa_event = get_row_in_registration_data_for_cadet_both_cancelled_and_active(
+    row_in_registration_data = get_row_in_registration_data_for_cadet_both_cancelled_and_active(
         object_store=interface.object_store,
         cadet=cadet,
         event=event,
@@ -83,7 +83,7 @@ def get_new_cadet_at_event_from_mapped_event_and_optionally_form(
     )
     new_cadet_at_event_from_mapped_event_data = (
         get_cadet_at_event_from_row_in_event_raw_registration_data(
-            row_in_mapped_wa_event=row_in_mapped_wa_event, event=event, cadet=cadet
+            row_in_registration_data=row_in_registration_data, event=event, cadet=cadet
         )
     )
 

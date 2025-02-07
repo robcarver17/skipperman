@@ -18,7 +18,6 @@ from app.objects.composed.volunteer_with_group_and_role_at_event import (
 from app.objects.composed.volunteers_with_all_event_data import (
     DictOfAllEventDataForVolunteers,
 )
-from app.objects.roles_and_teams import instructor_team
 from app.objects.utils import flatten
 from app.objects.roles_and_teams import Team
 
@@ -110,7 +109,7 @@ def get_sorted_df_for_rest_of_team(
     ]
 
     as_df = pd.DataFrame(list_of_rest_of_team)
-    if team == instructor_team:
+    if team.is_instructor_team():
         sort_order_list = [ROLE, GROUP]
     else:
         sort_order_list = [ROLE, GROUP, BOAT]
@@ -198,7 +197,7 @@ def sort_df_by_role(
     include_no_role: bool = True,
 ) -> pd.DataFrame:
     all_roles_in_order = (
-        volunteer_event_data.dict_of_volunteers_at_event_with_days_and_role.list_of_roles_with_skills
+        volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles.list_of_roles_with_skills
     )
     new_df = pd.DataFrame()
     for role in all_roles_in_order:
@@ -223,7 +222,7 @@ def sort_df_by_group(
 ) -> pd.DataFrame:
 
     all_groups = (
-        volunteer_event_data.dict_of_volunteers_at_event_with_days_and_role.list_of_groups
+        volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles.list_of_groups
     )
     new_df = pd.DataFrame()
     for group in all_groups:

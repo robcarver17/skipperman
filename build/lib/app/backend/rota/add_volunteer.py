@@ -27,7 +27,7 @@ def get_list_of_volunteers_except_those_already_at_event(
         x=all_volunteer_ids, y=volunteers_at_event.list_of_ids
     )
 
-    volunteers = ListOfVolunteers.subset_from_list_of_ids(
+    volunteers = ListOfVolunteers.DEPRECATE_subset_from_list_of_ids(
         master_list_of_volunteers, ids_of_volunteers_not_at_event
     )
 

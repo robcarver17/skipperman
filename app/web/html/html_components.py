@@ -67,6 +67,7 @@ html_nav_wrapper = HtmlWrapper("<nav>%s</nav>")
 html_container_wrapper = HtmlWrapper('<div class="w3-container">%s</div>')
 
 
+
 def get_detail_wrapper(summary_text: str, open_detail: bool = False):
     open_str = 'open="yes"' if open_detail else ""
     return HtmlWrapper(

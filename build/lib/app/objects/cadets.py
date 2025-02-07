@@ -188,7 +188,7 @@ class ListOfCadets(GenericListOfObjectsWithIds):
 
     def excluding_cadets_from_other_list(self, list_of_cadets: "ListOfCadets"):
         list_of_ids = in_x_not_in_y(self.list_of_ids, list_of_cadets.list_of_ids)
-        return self.subset_from_list_of_ids(self, list_of_ids)
+        return self.DEPRECATE_subset_from_list_of_ids(self, list_of_ids)
 
     def add(self, cadet: Cadet):
         if cadet in self:

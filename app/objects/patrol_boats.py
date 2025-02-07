@@ -2,14 +2,14 @@ from dataclasses import dataclass
 
 from app.objects.exceptions import (
     arg_not_passed,
-    missing_data,
     MissingData,
     MultipleMatches,
 )
-from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
+from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds, get_unique_object_with_attr_in_list, get_idx_of_unique_object_with_attr_in_list
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
 
 NO_BOAT = "NO_BOAT"
+NO_BOAT_ID = str(-9999)
 
 
 @dataclass
@@ -33,7 +33,7 @@ class PatrolBoat(GenericSkipperManObjectWithIds):
 
     @classmethod
     def create_empty(cls):
-        return cls(NO_BOAT, hidden=False)
+        return cls(NO_BOAT, hidden=False, id=NO_BOAT_ID)
 
 
 no_patrol_boat = PatrolBoat.create_empty()
@@ -45,28 +45,28 @@ class ListOfPatrolBoats(GenericListOfObjectsWithIds):
         return PatrolBoat
 
     def sort_from_other_list_of_boats(self, other_list_of_boats: "ListOfPatrolBoats"):
-        return ListOfPatrolBoats([boat for boat in other_list_of_boats if boat in self])
+        return self.subset_from_list_of_ids_retaining_order(other_list_of_boats.list_of_ids)
 
     def replace(self, existing_patrol_boat: PatrolBoat, new_patrol_boat: PatrolBoat):
         object_idx = self.idx_given_name(existing_patrol_boat.name)
         new_patrol_boat.id = existing_patrol_boat.id
         self[object_idx] = new_patrol_boat
 
-    def boat_given_name(self, patrol_boat_name: str) -> PatrolBoat:
-        matching = [item for item in self if item.name == patrol_boat_name]
+    def boat_given_name(self, patrol_boat_name: str, default = arg_not_passed) -> PatrolBoat:
+        return get_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='name',
+            attr_value=patrol_boat_name,
+            default=default
+        )
 
-        if len(matching) == 0:
-            raise MissingData
-        elif len(matching) > 1:
-            raise MultipleMatches(
-                "Found more than one patrol boat with same name should be impossible"
-            )
-
-        return matching[0]
-
-    def idx_given_name(self, patrol_boat_name: str) -> int:
-        boat = self.boat_given_name(patrol_boat_name)
-        return self.index(boat)
+    def idx_given_name(self, patrol_boat_name: str, default = arg_not_passed) -> int:
+        return get_idx_of_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='name',
+            attr_value=patrol_boat_name,
+            default=default
+        )
 
     def add(self, patrol_boat_name: str):
         try:
@@ -86,3 +86,4 @@ class ListOfPatrolBoats(GenericListOfObjectsWithIds):
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_names()
         assert len(list_of_names) == len(set(list_of_names))
+

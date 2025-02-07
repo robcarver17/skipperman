@@ -31,5 +31,7 @@ For example:
 ***
 ***
 ![add_cadet2.png](/static/add_cadet2.png)
+***
+***
 
 At this stage you can make some changes, and then click 'check details again' to try and remove any warnings; cancel the adding of this cadet, or select 'Yes - these details are correct' once you are happy you have everything correct. If all goes well, the system will confirm the new cadet has been added. If you have a cadet that is identical to an existing cadet (exactly the same name, and date of birth), and you have ignored the warnings, then the system will report an error and not add the sailor. Otherwise, even if there is only one letter different in their name or just one day out in the date of birth, the new sailor will be added. So once again, be very careful you aren't duplicating.

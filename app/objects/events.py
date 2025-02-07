@@ -9,10 +9,10 @@ from app.data_access.configuration.configuration import (
 
 from app.objects.utils import transform_date_into_str, similar
 from app.objects.generic_list_of_objects import (
-    GenericListOfObjectsWithIds,
+    GenericListOfObjectsWithIds, get_unique_object_with_attr_in_list,
 )
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
-from app.objects.exceptions import arg_not_passed
+from app.objects.exceptions import arg_not_passed, MultipleMatches, MissingData
 from app.objects.day_selectors import (
     day_given_datetime,
     all_possible_days,
@@ -44,6 +44,9 @@ class Event(GenericSkipperManObjectWithIds):
     def from_date_length_and_name_only(
         cls, event_name: str, start_date: datetime.date, duration: int
     ):
+        if duration>7:
+            raise Exception("Events cannot be more than one week long")
+
         if duration < 1:
             end_date = start_date
         else:
@@ -54,7 +57,7 @@ class Event(GenericSkipperManObjectWithIds):
     def details_as_list_of_str(self):
         return [
             self.event_description,
-            "From %s to %s, %d days, covering %s"
+            "From %s to %s, %d days: %s"
             % (
                 str(self.start_date),
                 str(self.end_date),
@@ -144,11 +147,12 @@ class Event(GenericSkipperManObjectWithIds):
         while some_date <= self.end_date:
             date_list.append(some_date)
             some_date += datetime.timedelta(days=1)
+
         return date_list
 
     def in_the_past(self) -> bool:
-        days = datetime.date.today() - self.end_date
-        return days.days > 0
+        date_diff = datetime.date.today() - self.end_date
+        return date_diff.days > 0
 
 
 def add_days(some_date: datetime.date, duration: int) -> datetime.date:
@@ -175,18 +179,18 @@ class ListOfEvents(GenericListOfObjectsWithIds):
         self.append(event)
 
     def confirm_event_does_not_already_exist(self, event: Event):
-        try:
-            self.index(event)
-        except ValueError:
-            return
+        exists = event.event_description in self.list_of_event_descriptions
 
-        raise Exception("Event %s already in data" % str(event))
+        if exists:
+            raise Exception("Event %s already in data" % str(event))
 
-    def event_with_description(self, event_description: str) -> Event:
-        list_of_descriptions = self.list_of_event_descriptions
-        idx = list_of_descriptions.index(event_description)
-
-        return self[idx]
+    def event_with_description(self, event_description: str, default = arg_not_passed) -> Event:
+        return get_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='event_description',
+            attr_value=event_description,
+            default=default
+        )
 
     def sort_by(self, sort_by: str):
         if sort_by == SORT_BY_START_DSC:
@@ -242,23 +246,19 @@ SORT_BY_NAME = "Sort by event name"
 SORT_BY_START_DSC = "Sort by start date, descending"
 
 
-def list_of_events_excluding_one_event(
+def list_of_events_excluding_one_event_and_past_events(
     list_of_events: ListOfEvents,
     event_to_exclude: Event,
     sort_by: str = SORT_BY_START_ASC,
-    only_past: bool = True,
 ) -> ListOfEvents:
-    if only_past:
-        list_of_events = ListOfEvents(
-            [
-                event
-                for event in list_of_events
-                if event.start_date < event_to_exclude.start_date
-            ]
-        )
-    else:
-        list_of_events.pop_with_id(event_to_exclude.id)
-
+    list_of_events = ListOfEvents(
+        [
+            event
+            for event in list_of_events
+            if event.start_date < datetime.date.today()
+               and not event.event_description== event_to_exclude.event_description
+        ]
+    )
     list_of_events = list_of_events.sort_by(sort_by)
 
     return list_of_events

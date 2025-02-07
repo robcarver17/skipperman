@@ -39,7 +39,8 @@ from app.objects.users_and_security import (
     ALL_GROUPS,
     NO_VOLUNTEER_ID,
 )
-from app.backend.security.list_of_users import get_list_of_users, no_admin_users
+from app.backend.security.list_of_users import get_list_of_users, list_of_admin_users
+from build.lib.app.frontend.events.volunteer_rota.edit_volunteer_details_from_rota import delete_button
 
 SAVE_ENTRY_BUTTON_LABEL = "Save edits to existing"
 ADD_ENTRY_BUTTON_LABEL = "Add a new user"
@@ -99,12 +100,16 @@ add_entry_button = Button(
 
 
 def warning_text(interface: abstractInterface):
-    if no_admin_users(interface.object_store):
+    admin_users = list_of_admin_users(interface.object_store)
+    if len(admin_users)==0:
         return Line(
             bold(
                 "*** AT LEAST ONE USER MUST HAVE ADMIN RIGHTS - ADD A NEW USER OR EDIT AN EXISTING USER TO REFLECT THIS ***"
             )
         )
+    elif len(admin_users)==1:
+        single_admin_user = admin_users[0]
+        return "Only one admin user (%s)- you will not be able to delete that user unless you add another" % single_admin_user.username
     else:
         return ""
 
@@ -151,6 +156,12 @@ def rows_for_existing_list_of_users(
 def get_row_for_existing_user(
     interface: abstractInterface, existing_user: SkipperManUser
 ) -> RowInTable:
+    list_of_users = get_list_of_users(interface.object_store)
+    if list_of_users.only_one_admin_user_and_it_is_the_passed_user(existing_user):
+        delete_button = "Cannot delete"
+    else:
+        delete_button = button_for_deletion(existing_user)
+
     return RowInTable(
         [
             "",
@@ -158,7 +169,7 @@ def get_row_for_existing_user(
             text_box_for_password(existing_user),
             text_box_for_password(existing_user, True),
             dropdown_for_group(existing_user),
-            button_for_deletion(existing_user),
+            delete_button,
             dropdown_for_volunteer(interface=interface, user=existing_user),
             button_to_reset_password(existing_user),
         ],

@@ -7,7 +7,7 @@ from app.objects.abstract_objects.abstract_lines import Line
 
 from app.objects.exceptions import arg_not_passed
 
-from app.objects.groups import Group, ListOfGroups, all_locations
+from app.objects.groups import Group, ListOfGroups, all_locations_for_input
 
 from app.data_access.store.object_store import ObjectStore
 
@@ -94,7 +94,7 @@ def get_row_for_existing_entry(entry: Group, **kwargs_to_ignore) -> RowInTable:
 
 
 dict_of_location_options = dict(
-    [(location.name, location.name) for location in all_locations]
+    [(location.name, location.name) for location in all_locations_for_input]
 )
 
 

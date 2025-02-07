@@ -8,8 +8,7 @@ from app.objects.cadet_at_event_with_club_boat_with_ids import (
 )
 from app.objects.exceptions import missing_data
 from app.objects.events import Event
-from app.objects.composed.cadets_at_event_with_groups import CadetWithGroupOnDay
-from app.objects.cadet_with_id_with_group_at_event import GROUP_STR_NAME
+from app.objects.composed.cadets_at_event_with_groups import CadetWithGroupOnDay, GROUP_STR_NAME
 from app.backend.reporting import (
     SpecificParametersForTypeOfReport,
 )

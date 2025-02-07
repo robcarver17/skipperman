@@ -40,6 +40,9 @@ class abstractInterface:
     display_and_post_form_function_maps: DisplayAndPostFormFunctionMaps = arg_not_passed
     action_name: str = ""
 
+    def clear_cache(self):
+        self.object_store.clear_store()
+
     def flush_cache_to_store(self):
         read_only = self.read_only
         if self.read_only:
@@ -138,6 +141,7 @@ class abstractInterface:
     @property
     def read_only(self):
         raise NotImplemented
+
 
 
 def form_with_message_and_finished_button(

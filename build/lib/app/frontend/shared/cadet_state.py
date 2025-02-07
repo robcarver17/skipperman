@@ -1,8 +1,15 @@
-from app.objects.exceptions import missing_data, MissingData
+from app.backend.cadets.list_of_cadets import get_cadet_from_id
+from app.objects.exceptions import missing_data, MissingData, arg_not_passed
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
 
+def is_cadet_set_in_state(interface:abstractInterface):
+    try:
+        get_cadet_from_state(interface)
+        return True
+    except MissingData:
+        return False
 
 def clear_cadet_state(interface: abstractInterface):
     interface.clear_persistent_value(CADET)
@@ -17,11 +24,11 @@ def update_state_for_specific_cadet_id(interface: abstractInterface, cadet_id: s
 
 
 def get_cadet_from_state(interface: abstractInterface) -> Cadet:
-    cadet_id = get_cadet_id_selected_from_state(interface)
+    cadet_id = get_cadet_id_selected_from_state(interface, default=missing_data)
     if cadet_id is missing_data:
         raise MissingData
 
-    return get_cadet_from_id(data_layer=interface.data, cadet_id=cadet_id)
+    return get_cadet_from_id(object_store=interface.object_store, cadet_id=cadet_id)
 
 
 def get_cadet_id_selected_from_state(

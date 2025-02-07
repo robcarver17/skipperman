@@ -28,9 +28,9 @@ from app.objects.boat_classes import (
     ListOfBoatClasses,
 )
 from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import (
-    NO_PARTNERSHIP_LIST_OF_STR,
     ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
 )
+from app.objects.partners import NO_PARTNERSHIP_LIST_OF_STR
 from app.objects.events import Event
 from app.objects.patrol_boats import ListOfPatrolBoats
 
@@ -310,7 +310,7 @@ class DinghiesData:
     def cadet_at_event_or_missing_data(
         self, event: Event, cadet_id: str
     ) -> CadetWithIdAtEvent:
-        return self.cadets_at_event_data.cadet_at_event_or_missing_data(
+        return self.cadets_at_event_data.cadet_with_id_and_data_at_event(
             event=event, cadet_id=cadet_id
         )
 

@@ -116,6 +116,16 @@ class ListOfCadetsOnCommittee(List[CadetOnCommittee]):
 
         return False
 
+    def is_cadet_elected_to_committee(self, cadet: Cadet) -> bool:
+        for cadet_on_committee in self:
+            if (
+                cadet_on_committee.cadet_id == cadet.id
+            ):
+                return True
+
+        return False
+
+
     def list_of_cadets_currently_serving(self) -> ListOfCadets:
         return ListOfCadets(
             [

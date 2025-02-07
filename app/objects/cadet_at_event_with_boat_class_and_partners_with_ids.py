@@ -1,22 +1,12 @@
 from dataclasses import dataclass
 
 from app.objects.day_selectors import Day
-from app.objects.exceptions import missing_data
-from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
+from app.objects.exceptions import missing_data, arg_not_passed
+from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds, get_idx_of_unique_object_with_attr_in_list, \
+    get_unique_object_with_attr_in_list
 from app.objects.generic_objects import GenericSkipperManObject
+from app.objects.partners import NO_PARTNER_REQUIRED_STR, NOT_ALLOCATED_STR, valid_partnership_given_partner_id_or_str
 from app.objects.utils import make_id_as_int_str
-
-NO_PARTNER_REQUIRED_STR = "Singlehander"
-NOT_ALLOCATED_STR = "Unallocated"
-NO_PARTNERSHIP_LIST_OF_STR = [NOT_ALLOCATED_STR, NO_PARTNER_REQUIRED_STR]
-
-
-def no_partnership_given_partner_id_or_str(partnership_str: str):
-    return partnership_str in NO_PARTNERSHIP_LIST_OF_STR
-
-
-def valid_partnership_given_partner_id_or_str(partnership_str: str):
-    return not no_partnership_given_partner_id_or_str(partnership_str)
 
 
 @dataclass
@@ -141,7 +131,7 @@ class ListOfCadetAtEventWithBoatClassAndPartnerWithIds(GenericListOfObjectsWithI
         self.clear_boat_details_from_existing_cadet_id(partner_id, day=day)
 
     def clear_boat_details_from_existing_cadet_id(self, cadet_id: str, day: Day):
-        idx = self.idx_of_item_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
+        idx = self.idx_of_item_with_cadet_id_on_day(cadet_id=cadet_id, day=day, default=missing_data)
         if idx is missing_data:
             return
         self.pop(idx)
@@ -177,7 +167,7 @@ class ListOfCadetAtEventWithBoatClassAndPartnerWithIds(GenericListOfObjectsWithI
     def update_boat_for_cadet_on_day(
         self, cadet_id: str, boat_class_id: str, sail_number: str, day: Day
     ):
-        object_with_id = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
+        object_with_id = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day, default=missing_data)
         if object_with_id is missing_data:
             self.add_boat_for_no_existing_cadet(
                 cadet_id=cadet_id,
@@ -201,22 +191,20 @@ class ListOfCadetAtEventWithBoatClassAndPartnerWithIds(GenericListOfObjectsWithI
             )
         )
 
-    def idx_of_item_with_cadet_id_on_day(self, cadet_id: str, day: Day):
-        item = self.object_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
-        if item is missing_data:
-            return missing_data
-
-        return self.index(item)
+    def idx_of_item_with_cadet_id_on_day(self, cadet_id: str, day: Day, default=arg_not_passed):
+        return get_idx_of_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='cadet_id',
+            attr_value=cadet_id,
+            default=default
+        )
 
     def object_with_cadet_id_on_day(
-        self, cadet_id: str, day: Day, default=missing_data
+        self, cadet_id: str, day: Day, default=arg_not_passed
     ) -> CadetAtEventWithBoatClassAndPartnerWithIds:
-        list_of_items = [
-            item for item in self if item.cadet_id == cadet_id and item.day == day
-        ]
-        if len(list_of_items) == 0:
-            return default
-        if len(list_of_items) > 1:
-            raise Exception("Can only have one dinghy per cadet per day")
-
-        return list_of_items[0]
+        return get_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='cadet_id',
+            attr_value=cadet_id,
+            default=default
+        )

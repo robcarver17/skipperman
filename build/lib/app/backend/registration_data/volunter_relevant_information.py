@@ -1,3 +1,5 @@
+from typing import Union
+
 from app.data_access.store.object_store import ObjectStore
 
 from app.backend.registration_data.identified_cadets_at_event import (
@@ -5,7 +7,7 @@ from app.backend.registration_data.identified_cadets_at_event import (
 )
 from app.objects.cadets import default_cadet
 from app.objects.exceptions import missing_data
-from app.objects.cadet_with_id_at_event import get_attendance_selection_from_event_row
+from app.objects.cadet_with_id_at_event import get_sailor_attendance_selection_from_event_row
 
 from app.objects.events import Event
 from app.data_access.configuration.field_list import (
@@ -97,12 +99,6 @@ def get_availability_information_for_volunteer(
     row_in_mapped_event: RowInRegistrationData, volunteer_index: int, event: Event
 ) -> RelevantInformationForVolunteerAvailability:
     dict_of_fields_for_volunteer = LIST_OF_VOLUNTEER_FIELDS[volunteer_index]
-    day_available_key = dict_of_fields_for_volunteer[
-        AVAILABILITY_KEY_IN_VOLUNTEER_FIELDS_DICT
-    ]
-    weekend_available_key = dict_of_fields_for_volunteer[
-        WEEKEND_AVAILABILITY_KEY_IN_VOLUNTEER_FIELDS_DICT
-    ]
     preferred_duties_key = dict_of_fields_for_volunteer[
         DUTIES_KEY_IN_VOLUNTEER_FIELDS_DICT
     ]
@@ -110,21 +106,50 @@ def get_availability_information_for_volunteer(
         SAME_OR_VARIED_KEY_IN_VOLUNTEER_FIELDS_DICT
     ]
 
-    cadet_availability = get_attendance_selection_from_event_row(
+    cadet_availability = get_sailor_attendance_selection_from_event_row(
         event=event, row=row_in_mapped_event
     )  ## will cover all days
 
+    volunteer_availability = get_availability_for_volunteer(
+        row_in_mapped_event=row_in_mapped_event,
+        volunteer_index=volunteer_index,
+        event=event
+    )
+
     return RelevantInformationForVolunteerAvailability(
         cadet_availability=cadet_availability,
-        day_availability=row_in_mapped_event.get_item(day_available_key, missing_data),
-        weekend_availability=row_in_mapped_event.get_item(
-            weekend_available_key, missing_data
-        ),
+        volunteer_availablity=volunteer_availability,
+
         any_other_information=row_in_mapped_event.get_item(ANY_OTHER_INFORMATION, ""),
         preferred_duties=row_in_mapped_event.get_item(preferred_duties_key, ""),
         same_or_different=row_in_mapped_event.get_item(same_or_different_key, ""),
         row_status=row_in_mapped_event.registration_status,
     )
+
+from app.objects.day_selectors import  DaySelector,    create_day_selector_from_short_form_text_with_passed_days
+
+
+def get_availability_for_volunteer(    row_in_mapped_event: RowInRegistrationData, volunteer_index: int, event: Event) -> Union[DaySelector, object]:
+    dict_of_fields_for_volunteer = LIST_OF_VOLUNTEER_FIELDS[volunteer_index]
+    day_available_key = dict_of_fields_for_volunteer[
+        AVAILABILITY_KEY_IN_VOLUNTEER_FIELDS_DICT
+    ]
+    weekend_available_key = dict_of_fields_for_volunteer[
+        WEEKEND_AVAILABILITY_KEY_IN_VOLUNTEER_FIELDS_DICT
+    ]
+
+    weekend_available_text = row_in_mapped_event.get_item(weekend_available_key, "")
+    day_available_text = row_in_mapped_event.get_item(day_available_key, "")
+
+    days_in_event = event.days_in_event()
+
+    if len(weekend_available_text)>0:
+        return create_day_selector_from_short_form_text_with_passed_days(weekend_available_text, days_in_event=days_in_event)
+    elif len(day_available_text)>0:
+        return create_day_selector_from_short_form_text_with_passed_days(day_available_text, days_in_event=days_in_event)
+    else:
+        return DaySelector.create_empty()
+
 
 
 def get_details_information_for_volunteer(

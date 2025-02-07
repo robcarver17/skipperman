@@ -11,12 +11,13 @@ from app.objects.events import Event, ListOfEvents
 
 from app.objects.cadet_with_id_with_group_at_event import (
     CADET_NAME,
-    GROUP_STR_NAME,
     ListOfCadetIdsWithGroups,
 )
+from app.objects.composed.cadets_at_event_with_groups import GROUP_STR_NAME
 from app.objects.cadets import Cadet, ListOfCadets
 
-from app.objects.day_selectors import Day, DictOfDaySelectors, DaySelector
+from app.objects.day_selectors import Day, DaySelector
+from app.objects.cadet_attendance import DictOfDaySelectors
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.groups import Group, ListOfGroups, unallocated_group
@@ -273,10 +274,26 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
 
         return group_dict.most_common()
 
+    def subset_for_list_of_cadets(self, list_of_cadets: ListOfCadets)-> 'DictOfCadetsWithDaysAndGroupsAtEvent':
+        raw_dict =         dict([
+            (cadet,
+             self.get_days_and_groups_for_cadet(cadet))
+            for cadet in list_of_cadets])
+
+        return DictOfCadetsWithDaysAndGroupsAtEvent(
+            raw_dict=raw_dict,
+            list_of_groups=self.list_of_groups,
+            event=self.event,
+            list_of_cadet_ids_with_groups=self.list_of_cadet_ids_with_groups
+        )
+
+
+
+
     def get_days_and_groups_for_cadet(
         self, cadet: Cadet, default=arg_not_passed
     ) -> DaysAndGroups:
-        if default == arg_not_passed:
+        if default is arg_not_passed:
             default = empty_days_and_groups
 
         return self.get(cadet, default)

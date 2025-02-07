@@ -74,19 +74,19 @@ def get_cadet_at_event(
     cadets_at_event = get_list_of_cadets_with_id_and_registration_data_at_event(
         object_store=object_store, event=event
     )
-    return cadets_at_event.cadet_at_event_or_missing_data(cadet_id=cadet.id)
+    return cadets_at_event.cadet_with_id_and_data_at_event(cadet_id=cadet.id)
 
 
 def add_new_cadet_to_event_from_row_in_registration_data(
     object_store: ObjectStore,
     event: Event,
-    row_in_mapped_wa_event: RowInRegistrationData,
+    row_in_registration_data: RowInRegistrationData,
     cadet: Cadet,
 ):
     cadet_at_event = get_cadet_at_event_from_row_in_event_raw_registration_data(
         event=event,
         cadet=cadet,
-        row_in_mapped_wa_event=row_in_mapped_wa_event,
+        row_in_registration_data=row_in_registration_data
     )
 
     add_new_cadet_to_event(
@@ -173,5 +173,5 @@ def update_list_of_cadets_with_id_and_registration_data_at_event(
     object_store.update(
         list_of_cadets_with_id_at_event,
         object_definition=object_definition_for_cadets_with_ids_and_registration_data_at_event,
-        event=event,
+        event_id=event.id,
     )

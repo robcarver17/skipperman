@@ -26,8 +26,8 @@ def verify_event_and_warn(object_store: ObjectStore, event: Event) -> str:
     if event.duration == 1:
         warn_text += "Event is only one day long. "
 
-    if event.duration > 8:
-        warn_text += "Event is more than a week long. "
+    if event.duration > 7:
+        warn_text += "Event is more than a week long. Skipperman does not support events more than a week in length."
 
     warn_text += warning_for_similar_events(object_store=object_store, event=event)
 

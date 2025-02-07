@@ -1,12 +1,12 @@
 from typing import Union, Callable
 
 from app.frontend.events.food.automatically_get_food_data import (
-    update_food_for_cadets_from_registration_data,
+    display_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import,
     update_food_for_volunteers_from_registration_data,
 )
 
 from app.frontend.events.clothing.automatically_get_clothing_data_from_cadets import (
-    update_cadet_clothing_at_event,
+    display_call_to_update_cadet_clothing_at_event_during_import
 )
 
 from app.frontend.events.cadets_at_event.interactively_update_records_of_cadets_at_event import (
@@ -39,9 +39,8 @@ import_stages_in_order = [
     display_form_interactively_update_cadets_at_event,
     display_form_volunteer_identification,
     display_add_volunteers_to_event,
-    update_cadet_clothing_at_event,
-    update_food_for_cadets_from_registration_data,
-    update_food_for_volunteers_from_registration_data,
+    display_call_to_update_cadet_clothing_at_event_during_import,
+    display_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import,
 ]
 
 
@@ -53,10 +52,10 @@ def import_controller(interface: abstractInterface) -> Union[Form, NewForm]:
         return form_with_message_and_finished_button(
             "Finished importing WA data",
             interface=interface,
-            function_whose_parent_go_to_on_button_press=import_controller,
         )
 
     print("Next import %s" % str(next_import))
+
     return interface.get_new_form_given_function(next_import)
 
 

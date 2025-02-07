@@ -86,11 +86,9 @@ def get_list_of_cadets_with_those_with_name_similar_to_volunteer_with_listed_fir
 def get_list_of_cadets_with_names_similar_to_volunteer(
     volunteer: Volunteer, from_list_of_cadets: ListOfCadets
 ) -> ListOfCadets:
-    volunteer_as_pseudo_cadet = Cadet(
+    volunteer_as_pseudo_cadet = Cadet.from_name_only(
         first_name=volunteer.first_name,
         surname=volunteer.surname,
-        date_of_birth=datetime.date(1970, 1, 1),
-        membership_status=current_member,
     )  ## so matching works
 
     similar_cadets = from_list_of_cadets.similar_surnames(volunteer_as_pseudo_cadet)

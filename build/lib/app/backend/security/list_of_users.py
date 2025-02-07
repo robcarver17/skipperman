@@ -32,9 +32,10 @@ def get_list_of_users(
     return list_of_users.list_of_users()
 
 
-def no_admin_users(object_store: ObjectStore):
+def list_of_admin_users(object_store: ObjectStore) -> ListOfSkipperManUsers:
     all_users = get_list_of_users(object_store)
-    return not all_users.at_least_one_admin_user()
+    return all_users.list_of_admin_users()
+
 
 
 def get_list_of_users_could_be_empty(

@@ -58,16 +58,16 @@ def get_volunteer_name_sort_buttons() -> List[Button]:
 
 APPLY_FILTER_BUTTON_LABEL = "Apply filters"
 CLEAR_FILTERS_BUTTON_LABEL = "Clear all filters"
-COPY_ALL_ROLES_BUTTON_LABEL = "Copy from earliest allocated role to fill empty roles"
-COPY_ALL_FIRST_ROLE_BUTTON_LABEL = (
+COPY_ALL_ROLES_FROM_FIRST_ROLE_BUTTON_LABEL = "Copy from earliest allocated role to fill empty roles"
+COPY_AND_OVERWRITE_FROM__FIRST_ROLE_BUTTON_LABEL = (
     "Copy from earliest allocated role to fill empty and overwrite existing roles"
 )
 ADD_NEW_VOLUNTEER_BUTTON_LABEL = "Add new volunteer to rota"
 apply_filter_button = Button(APPLY_FILTER_BUTTON_LABEL, nav_button=True)
 clear_filter_button = Button(CLEAR_FILTERS_BUTTON_LABEL, nav_button=True)
 add_volunteer_button = Button(ADD_NEW_VOLUNTEER_BUTTON_LABEL, nav_button=True)
-copy_all_roles_button = Button(COPY_ALL_ROLES_BUTTON_LABEL, nav_button=True)
-copy_all_first_role_button = Button(COPY_ALL_FIRST_ROLE_BUTTON_LABEL, nav_button=True)
+copy_all_roles_from_first_role_button = Button(COPY_ALL_ROLES_FROM_FIRST_ROLE_BUTTON_LABEL, nav_button=True)
+copy_and_overwrite_all_roles_from_first_role_button = Button(COPY_AND_OVERWRITE_FROM__FIRST_ROLE_BUTTON_LABEL, nav_button=True)
 download_matrix_button = Button(
     "Download spreadsheet of volunteer information", nav_button=True
 )
@@ -82,8 +82,8 @@ def get_header_buttons_for_rota(interface: abstractInterface):
                 cancel_menu_button,
                 save_menu_button,
                 add_volunteer_button,
-                copy_all_roles_button,
-                copy_all_first_role_button,
+                copy_all_roles_from_first_role_button,
+                copy_and_overwrite_all_roles_from_first_role_button,
                 download_matrix_button,
                 help_button,
             ]
@@ -204,7 +204,7 @@ def get_all_copy_buttons(interface: abstractInterface):
     return (
         get_all_copy_overwrite_individual_role_buttons(interface)
         + get_all_copy_fill_individual_role_buttons(interface)
-        + [COPY_ALL_ROLES_BUTTON_LABEL, COPY_ALL_FIRST_ROLE_BUTTON_LABEL]
+        + [COPY_ALL_ROLES_FROM_FIRST_ROLE_BUTTON_LABEL, COPY_AND_OVERWRITE_FROM__FIRST_ROLE_BUTTON_LABEL]
         + get_all_copy_previous_role_buttons(interface)
     )
 

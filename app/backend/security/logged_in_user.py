@@ -25,15 +25,6 @@ def get_volunteer_for_logged_in_user_or_superuser(
     return volunteer
 
 
-def get_volunteer_id_of_logged_in_user_or_superuser_CHANGE_TO_VOLUNTEER(
-    interface: abstractInterface,
-) -> Union[str, object]:
-    user = get_logged_in_skipperman_user(interface)
-
-    if user.is_skipper_or_admin():
-        return SUPERUSER
-    else:
-        return user.volunteer_id
 
 
 def get_logged_in_skipperman_user(interface: abstractInterface) -> SkipperManUser:

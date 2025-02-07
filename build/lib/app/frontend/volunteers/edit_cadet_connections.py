@@ -52,12 +52,8 @@ def display_form_edit_cadet_volunteer_connections(
         object_store=interface.object_store
     )
 
-    form = form_to_edit_connections(
-        volunteer=volunteer,
-        connected_cadets=connected_cadets,
-        header_text=header_text,
-        from_list_of_cadets=from_list_of_cadets,
-    )
+    form = form_to_edit_connections(volunteer=volunteer, existing_connected_cadets=connected_cadets,
+                                    header_text=header_text, list_of_cadets_to_choose_from=from_list_of_cadets)
 
     return form
 
@@ -75,13 +71,15 @@ def post_form_edit_cadet_volunteer_connections(
     button = interface.last_button_pressed()
     ### Buttons are back; delete button for individual cadet connection; add to add a new connection
     if back_menu_button.pressed(button):
-        interface.clear_cache()
+        interface.flush_cache_to_store()
         return previous_form(interface)
+
     elif add_connection_button.pressed(button):
         add_connection_from_form(interface)
         interface.flush_cache_to_store()
-        ## might want to do more
+        ## might want to do more, display form again
         return display_form_edit_cadet_volunteer_connections(interface)
+
     else:
         ## must be delete button
         return post_form_edit_cadet_volunteer_connections_when_delete_button_probably_pressed(

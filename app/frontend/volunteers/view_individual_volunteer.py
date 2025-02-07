@@ -1,7 +1,8 @@
 from typing import Union
 
+from app.backend.events.list_of_events import get_sorted_list_of_events
 from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
-    get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first,
+get_all_roles_for_list_of_events_for_volunteer_as_dict
 )
 from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunteer
 from app.frontend.volunteers.edit_cadet_connections import (
@@ -33,6 +34,7 @@ from app.backend.volunteers.connected_cadets import (
     get_list_of_cadets_associated_with_volunteer,
 )
 from app.frontend.shared.volunteer_state import get_volunteer_from_state
+from app.objects.events import SORT_BY_START_DSC
 
 from app.objects.volunteers import Volunteer
 
@@ -81,11 +83,12 @@ def display_form_for_selected_volunteer(
 def list_of_lines_with_allocations_and_roles(
     interface: abstractInterface, volunteer: Volunteer
 ) -> ListOfLines:
-    dict_of_roles = (
-        get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(
-            object_store=interface.object_store, volunteer=volunteer
+    list_of_events = get_sorted_list_of_events(interface.object_store, sort_by=SORT_BY_START_DSC)
+
+    dict_of_roles = get_all_roles_for_list_of_events_for_volunteer_as_dict(
+            object_store=interface.object_store, volunteer=volunteer,
+            list_of_events=list_of_events
         )
-    )
 
     return from_dict_of_roles_to_list_of_lines(dict_of_roles)
 

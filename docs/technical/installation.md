@@ -1,6 +1,6 @@
 # Installation - local
 
-Once all installed you can run a local instance with (linux command line): 
+Once all installed you can run a local instance with (assuming a Linux command line): 
 
 ```
 cd skipperman

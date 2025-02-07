@@ -14,6 +14,7 @@ SORT_BY_CADET_LOCATION = "Sort_by_cw"
 AVAILABILTY_FILTER = "av_filter"
 SKILLS_FILTER = "skills_filter"
 
+from app.backend.volunteers.skills import get_list_of_skills
 
 def get_skills_filter_from_state(interface: abstractInterface) -> SkillsDict:
     skills_dict_with_str = interface.get_persistent_value(
@@ -24,7 +25,7 @@ def get_skills_filter_from_state(interface: abstractInterface) -> SkillsDict:
     else:
         skills_dict = SkillsDict.from_dict_of_str_and_bool(skills_dict_with_str)
 
-    raise Exception("can't pad skills")
+    all_skills = get_list_of_skills(object_store=interface.object_store)
     skills_dict.pad_with_missing_skills(all_skills=all_skills)
 
     return skills_dict

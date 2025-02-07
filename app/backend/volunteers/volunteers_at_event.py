@@ -7,7 +7,6 @@ from app.objects.cadets import ListOfCadets
 from app.objects.day_selectors import DaySelector, Day
 from app.objects.relevant_information_for_volunteers import (
     ListOfRelevantInformationForVolunteer,
-    suggested_volunteer_availability,
 )
 from app.objects.volunteer_at_event_with_id import (
     VolunteerAtEventWithId,
@@ -94,9 +93,7 @@ def get_volunteer_at_event_from_list_of_relevant_information_with_no_conflicts(
     ]  ## can use first as all the same - checked
     return VolunteerAtEventWithId(
         volunteer_id=volunteer.id,
-        availablity=suggested_volunteer_availability(
-            first_relevant_information.availability
-        ),
+        availablity=first_relevant_information.availability.volunteer_availablity,
         list_of_associated_cadet_id=list_of_associated_cadets.list_of_ids,
         preferred_duties=first_relevant_information.availability.preferred_duties,
         same_or_different=first_relevant_information.availability.same_or_different,
@@ -167,7 +164,7 @@ def make_volunteer_available_on_day(
         day=day, volunteer=volunteer
     )
     update_dict_of_registration_data_for_volunteers_at_event(
-        object_store=object_store, dict_of_registration_data=volunteer_registration_data
+        object_store=object_store, event=event, dict_of_registration_data=volunteer_registration_data
     )
 
 

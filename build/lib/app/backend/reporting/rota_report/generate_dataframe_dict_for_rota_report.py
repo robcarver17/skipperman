@@ -67,7 +67,7 @@ def get_df_for_reporting_volunteers_for_day(
     day: Day, volunteer_event_data: DictOfAllEventDataForVolunteers
 ) -> pd.DataFrame:
     list_of_teams = (
-        volunteer_event_data.dict_of_volunteers_at_event_with_days_and_role.all_teams_at_event
+        volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles.all_teams_at_event
     )
     list_of_team_df = []
     for team in list_of_teams:
@@ -108,12 +108,12 @@ def get_dict_of_volunteers_in_team_on_day_at_event(
 ) -> Dict[RoleWithSkills, List[VolunteerWithRoleGroupAndTeamAtEvent]]:
 
     dict_of_volunteers_and_roles_this_team = {}
-    all_roles_in_team = volunteer_event_data.dict_of_volunteers_at_event_with_days_and_role.roles_for_team(
+    all_roles_in_team = volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles.roles_for_team(
         team
     )
 
     for role in all_roles_in_team:  ## first name will be leader
-        list_of_volunteers_doing_roles_this_role = volunteer_event_data.dict_of_volunteers_at_event_with_days_and_role.list_of_volunteers_with_roles_and_groups_and_teams_doing_role_on_day(
+        list_of_volunteers_doing_roles_this_role = volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles.list_of_volunteers_with_roles_and_groups_and_teams_doing_role_on_day(
             day=day, role=role
         )
         dict_of_volunteers_and_roles_this_team[role] = (

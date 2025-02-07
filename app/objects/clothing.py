@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.objects.generic_list_of_objects import GenericListOfObjects
+from app.objects.exceptions import arg_not_passed
+from app.objects.generic_list_of_objects import GenericListOfObjects, get_unique_object_with_attr_in_list
 from app.objects.generic_objects import GenericSkipperManObject
 
 UNALLOCATED_COLOUR = ""
@@ -35,6 +36,10 @@ class ListOfCadetsWithClothingAndIdsAtEvent(GenericListOfObjects):
         object = self.object_with_cadet_id(cadet_id)
         object.colour = colour
 
+    def remove_clothing_for_cadet_at_event(self, cadet_id:str):
+        object_with_cadet_id = self.object_with_cadet_id(cadet_id)
+        self.remove(object_with_cadet_id)
+
     def clear_colour_group_for_cadet(
         self,
         cadet_id: str,
@@ -46,13 +51,28 @@ class ListOfCadetsWithClothingAndIdsAtEvent(GenericListOfObjects):
         object = self.object_with_cadet_id(cadet_id)
         object.size = size
 
-    def object_with_cadet_id(self, cadet_id) -> CadetWithClothingAndIdsAtEvent:
-        list_of_ids = self.list_of_cadet_ids()
-        idx = list_of_ids.index(cadet_id)
-
-        return self[idx]
+    def object_with_cadet_id(self, cadet_id: str, default=arg_not_passed) -> CadetWithClothingAndIdsAtEvent:
+        return get_unique_object_with_attr_in_list(
+        some_list=self,
+            attr_name='cadet_id',
+            attr_value=cadet_id,
+            default=default
+        )
 
     def filter_for_list_of_cadet_ids(self, list_of_cadet_ids: List[str]):
         return ListOfCadetsWithClothingAndIdsAtEvent(
             [object for object in self if object.cadet_id in list_of_cadet_ids]
         )
+
+
+@dataclass
+class ClothingAtEvent:
+    size: str = UNALLOCATED_SIZE
+    colour: str = UNALLOCATED_COLOUR
+
+    @property
+    def has_colour(self):
+        return not self.colour == UNALLOCATED_COLOUR
+
+    def clear_colour(self):
+        self.colour = UNALLOCATED_COLOUR

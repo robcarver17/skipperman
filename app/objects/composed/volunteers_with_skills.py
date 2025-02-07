@@ -6,7 +6,6 @@ from app.objects.volunteer_skills import (
     Skill,
     PB2_skill,
     SI_skill,
-    skill_from_str,
     ListOfSkills,
 )
 from app.objects.volunteers import Volunteer, ListOfVolunteers
@@ -57,8 +56,8 @@ class SkillsDict(Dict[Skill, bool]):
             == other.list_of_held_skill_names_sorted
         )
 
-    def has_skill_name(self, skill_name: str):
-        return self.get(skill_from_str(skill_name), False)
+    def has_skill(self, skill: Skill):
+        return self.get(skill, False)
 
     def empty(self):
         return not any([held for held in self.values()])
@@ -90,7 +89,7 @@ class SkillsDict(Dict[Skill, bool]):
     def from_dict_of_str_and_bool(cls, skills_dict: Dict[str, bool]):
         return cls(
             [
-                (skill_from_str(skill_name), skill_held)
+                (Skill(skill_name), skill_held)
                 for skill_name, skill_held in skills_dict.items()
             ]
         )
@@ -186,49 +185,9 @@ class DictOfVolunteersWithSkills(Dict[Volunteer, SkillsDict]):
     def remove_volunteer_driving_qualification(self, volunteer: Volunteer):
         self.delete_skill_for_volunteer(volunteer=volunteer, skill=PB2_skill)
 
-    def volunteer_id_can_drive_safety_boat(self, volunteer_id: str) -> bool:
-        return volunteer_id in self.list_of_volunteer_ids_who_can_drive_safety_boat()
-
-    def volunteer_is_senior_instructor(self, volunteer_id: str) -> bool:
-        return volunteer_id in self.list_of_volunteer_ids_who_are_senior_instructors()
-
-    def list_of_volunteer_ids_who_can_drive_safety_boat(self) -> List[str]:
-        return list(
-            set(
-                [
-                    item.volunteer_id
-                    for item in self
-                    if item.volunteer_can_drive_safety_boat
-                ]
-            )
-        )
-
-    def list_of_volunteer_ids_who_are_senior_instructors(self) -> List[str]:
-        return list(
-            set(
-                [
-                    item.volunteer_id
-                    for item in self
-                    if item.volunteer_is_senior_instructor
-                ]
-            )
-        )
 
     def dict_of_skills_for_volunteer(self, volunteer: Volunteer) -> SkillsDict:
         return self.get(volunteer, SkillsDict())
-
-    def dict_of_skills_for_volunteer_id(self, volunteer_id: str) -> SkillsDict:
-        skills_held = self.skills_for_volunteer_id(volunteer_id)
-        dict_of_skills = dict([(skill, True) for skill in skills_held])
-
-        return SkillsDict(dict_of_skills)
-
-    def skills_for_volunteer_id(self, volunteer_id: str) -> List[Skill]:
-        skills = [
-            element.skill for element in self if element.volunteer.id == volunteer_id
-        ]
-
-        return skills
 
     def replace_skills_for_volunteer_with_new_skills_dict(
         self, volunteer: Volunteer, dict_of_skills: SkillsDict

@@ -1,7 +1,7 @@
 from copy import copy
 from typing import List, Callable
 
-from app.objects.composed.volunteer_roles import is_qualified_for_role
+from app.objects.composed.volunteer_roles import empty_if_qualified_for_role_else_warnings
 
 
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
@@ -38,7 +38,8 @@ from app.objects.cadets import (
 )
 from app.objects.day_selectors import empty_day_selector
 from app.objects.events import Event
-from app.objects.registration_data import get_status_from_row
+from app.objects.registration_data import get_volunteer_status_from_row
+from build.lib.app.frontend.administration.users.render_users_form import warning_text
 
 
 def warn_on_all_volunteers_availability(
@@ -103,9 +104,9 @@ def warn_on_all_volunteers_generic(
 
 def warn_about_single_volunteer_with_qualifications(
     volunteer: Volunteer,
-    event: Event,
+    event: Event, ## not used but called by generic function so keep
     volunteer_event_data: AllEventDataForVolunteer,
-    object_store: ObjectStore,  ## not used
+    object_store: ObjectStore,  ## not used, ditto
 ) -> str:
 
     dict_of_skills = volunteer_event_data.volunteer_skills
@@ -113,10 +114,12 @@ def warn_about_single_volunteer_with_qualifications(
 
     roles_with_warning = []
     for volunteer_role in list_of_volunteer_roles:
-        if not is_qualified_for_role(
-            role=volunteer_role, dict_of_skills=dict_of_skills
-        ):
-            roles_with_warning.append(volunteer_role.name)
+        warnings = empty_if_qualified_for_role_else_warnings(role=volunteer_role, dict_of_skills=dict_of_skills)
+        if len(warnings)==0:
+            continue
+
+        warning_text = "for %s needs: %s" % (volunteer_role.name, warnings)
+        roles_with_warning.append(warning_text)
 
     if len(roles_with_warning) == 0:
         return ""
@@ -327,6 +330,8 @@ def is_first_event_for_cadet(
             object_store=object_store, cadet=cadet
         )
     )
+    if len(previous_allocation)==0:
+        raise Exception("Only one allocation for cadet %s " % cadet)
     previous_allocation.pop(event)
 
     return len(previous_allocation) == 0
@@ -341,7 +346,7 @@ def get_volunteer_status_and_possible_names(
 
     relevant_rows = relevant_rows.active_registrations_only()
 
-    status_in_rows = [get_status_from_row(row) for row in relevant_rows]
+    status_in_rows = [get_volunteer_status_from_row(row) for row in relevant_rows]
     status_in_rows = [status for status in status_in_rows if len(status) > 0]
 
     if len(status_in_rows) == 0:

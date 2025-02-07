@@ -47,7 +47,7 @@ from app.objects.exceptions import missing_data
 from app.objects.day_selectors import DaySelector, Day
 from app.objects.events import (
     Event,
-    list_of_events_excluding_one_event,
+    list_of_events_excluding_one_event_and_past_events,
     SORT_BY_START_ASC,
 )
 from app.objects.groups import Group
@@ -63,10 +63,9 @@ from app.objects.boat_classes import (
     ListOfBoatClasses,
 )
 from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import (
-    NO_PARTNER_REQUIRED_STR,
-    no_partnership_given_partner_id_or_str,
     ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
 )
+from app.objects.partners import NO_PARTNER_REQUIRED_STR, no_partnership_given_partner_id_or_str
 from app.objects.utils import similar, all_equal, most_common
 from app.objects.qualifications import ListOfCadetsWithIdsAndQualifications
 from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent
@@ -294,7 +293,7 @@ class AllocationData:
             for item in list_of_cadets_at_event_available
             if not item.cadet_id == cadet.id
         ]
-        list_of_cadets = ListOfCadets.subset_from_list_of_ids(
+        list_of_cadets = ListOfCadets.DEPRECATE_subset_from_list_of_ids(
             self.list_of_all_cadets, list_of_cadet_ids_at_available
         )
 
@@ -617,7 +616,7 @@ def get_allocation_data(interface: abstractInterface, event: Event) -> Allocatio
         interface=interface, event=event
     )
     list_of_events = DEPRECATE_get_sorted_list_of_events(interface)
-    list_of_previous_events = list_of_events_excluding_one_event(
+    list_of_previous_events = list_of_events_excluding_one_event_and_past_events(
         list_of_events=list_of_events,
         event_to_exclude=event,
         only_past=True,

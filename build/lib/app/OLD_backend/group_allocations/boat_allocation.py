@@ -10,10 +10,10 @@ from app.OLD_backend.data.dinghies import DinghiesData
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import (
-    no_partnership_given_partner_id_or_str,
     CadetAtEventWithBoatClassAndPartnerWithIds,
     ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
 )
+from app.objects.partners import no_partnership_given_partner_id_or_str
 from app.backend.boat_classes.update_boat_information import \
     compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values
 

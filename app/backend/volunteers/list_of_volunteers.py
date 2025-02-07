@@ -19,9 +19,7 @@ def get_volunteer_from_name(
 ) -> Volunteer:
     list_of_volunteers = get_list_of_volunteers(object_store)
 
-    return list_of_volunteers.get_volunteer_from_list_of_volunteers_given_name(
-        volunteer_name
-    )
+    return list_of_volunteers.volunteer_with_matching_name(volunteer_name)
 
 
 def get_volunteer_from_id(object_store: ObjectStore, volunteer_id: str) -> Volunteer:

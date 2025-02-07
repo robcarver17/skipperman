@@ -4,7 +4,8 @@ from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
 
 from app.objects.exceptions import missing_data, arg_not_passed
 
-from app.objects.day_selectors import Day, DictOfDaySelectors, DaySelector
+from app.objects.day_selectors import Day, DaySelector
+from app.objects.cadet_attendance import DictOfDaySelectors
 
 from app.objects.cadets import ListOfCadets, Cadet
 
@@ -140,7 +141,7 @@ class GroupAllocationsData:
         )
         groups = [
             list_of_cadet_ids_with_groups.item_with_cadet_id(cadet_id).group
-            for cadet_id in list_of_cadet_ids_with_groups.list_of_ids
+            for cadet_id in list_of_cadet_ids_with_groups.list_of_cadet_ids
         ]
         groups = list(set(groups))
         raise Exception("Can't order groups")
@@ -377,7 +378,7 @@ class GroupAllocationsData:
     def cadet_at_event_or_missing_data(
         self, event: Event, cadet_id: str
     ) -> CadetWithIdAtEvent:
-        return self.cadets_at_event_data.cadet_at_event_or_missing_data(
+        return self.cadets_at_event_data.cadet_with_id_and_data_at_event(
             event=event, cadet_id=cadet_id
         )
 

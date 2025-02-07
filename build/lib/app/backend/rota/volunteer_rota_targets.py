@@ -39,7 +39,7 @@ def get_list_of_actual_and_targets_for_roles_at_event(
         object_store=object_store, event=event
     )
     volunteers_in_roles_at_event = (
-        all_event_data.dict_of_volunteers_at_event_with_days_and_role
+        all_event_data.dict_of_volunteers_at_event_with_days_and_roles
     )
 
     targets_at_event = get_volunteer_targets_at_event(

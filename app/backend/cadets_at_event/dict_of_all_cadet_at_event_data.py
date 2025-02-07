@@ -4,7 +4,8 @@ from app.objects.exceptions import arg_not_passed
 
 from app.objects.cadets import ListOfCadets, Cadet
 
-from app.objects.day_selectors import DictOfDaySelectors, DaySelector, Day
+from app.objects.day_selectors import DaySelector, Day
+from app.objects.cadet_attendance import DictOfDaySelectors
 
 from app.objects.events import Event
 
@@ -139,11 +140,12 @@ def get_list_of_active_cadets_at_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfCadets:
     cadets_at_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event
+        object_store=object_store, event=event,
+        active_only=True
     )
 
     active_cadets_at_event = (
-        cadets_at_event_data.dict_of_cadets_with_registration_data.list_of_cadets()
+        cadets_at_event_data.list_of_cadets
     )
 
     return active_cadets_at_event

@@ -1,61 +1,34 @@
-import datetime
+from copy import copy
+from random import random
 from typing import List
 import pandas as pd
 
+from app.objects.generic_list_of_objects import GenericListOfObjects, create_list_of_objects_from_dataframe, \
+    create_data_frame_given_list_of_objects
+from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.registration_status import (
-    POSSIBLE_STATUS_NAMES,
     RegistrationStatus,
-    cancelled_status,
-    active_paid_status,
-    active_unpaid_status,
-    active_part_paid_status,
     empty_status,
 )
 from app.objects.utils import (
     clean_up_dict_with_nans,
-    transform_df_from_str_to_dates,
-    transform_datetime_into_str,
+    transform_df_from_str_to_dates, transform_df_from_dates_to_str
 )
 
 from app.data_access.configuration.field_list import (
-    REGISTRATION_DATE,
-    REGISTERED_BY_LAST_NAME,
-    REGISTERED_BY_FIRST_NAME,
     VOLUNTEER_STATUS,
-)
-
-from app.data_access.configuration.configuration import (
-    WA_ACTIVE_AND_PAID_STATUS,
-    WA_CANCELLED_STATUS,
-    WA_PARTIAL_PAID_STATUS,
-    WA_UNPAID_STATUS,
+    _ROW_ID,
+    _REGISTRATION_STATUS,
+    _SPECIAL_FIELDS
 )
 from app.objects.exceptions import missing_data
-from app.data_access.configuration.field_list import PAYMENT_STATUS
 
-## DO NOT CHANGE THESE OR DATA WILL BREAK
-
-
-def unique_row_identifier(
-    registration_date: datetime.datetime,
-    registered_by_last_name: str,
-    registered_by_first_name: str,
-) -> str:
-    ## generate a unique hash from reg date, name, first name
-    reg_datetime_as_str = transform_datetime_into_str(registration_date)
-    row_id = "%s_%s_%s" % (
-        reg_datetime_as_str,
-        registered_by_last_name.lower().strip(),
-        registered_by_first_name.lower().strip(),
-    )
-
-    return row_id
 
 
 # can't use generic methods here as based on dataclasses
-class RowInRegistrationData(dict):
+class RowInRegistrationData(GenericSkipperManObject, dict):
     def __eq__(self, other: dict):
-        my_keys = list(set(list(self.keys())))
+        my_keys = self.list_of_keys_excluding_special_keys()
 
         for key in my_keys:
             other_value = other.get(key, missing_data)
@@ -71,12 +44,32 @@ class RowInRegistrationData(dict):
         return True
 
     def clear_values(self):
-        my_keys = list(self.keys())
+        my_keys = self.list_of_keys_excluding_special_keys()
         for key in my_keys:
             self[key] = ""
 
     def get_item(self, key, default=""):
         return self.get(key, default)
+
+    @classmethod
+    def from_dict_of_str(cls, some_dict):
+        some_dict = clean_up_dict_with_nans(some_dict)
+        try:
+            registration_status_as_str = some_dict.pop(_REGISTRATION_STATUS)
+            registration_status = RegistrationStatus(registration_status_as_str)
+        except:
+            registration_status = empty_status
+
+        some_dict[_REGISTRATION_STATUS] = registration_status
+
+        return RowInRegistrationData(some_dict)
+
+
+    def as_str_dict(self) -> dict:
+        new_dict = dict(copy(self))
+        new_dict[_REGISTRATION_STATUS] = new_dict[_REGISTRATION_STATUS].name
+
+        return new_dict
 
     @classmethod
     def from_external_dict(cls, some_dict: dict):
@@ -88,98 +81,54 @@ class RowInRegistrationData(dict):
 
         return row_as_dict
 
+    def list_of_keys_excluding_special_keys(self) -> List[str]:
+        list_of_keys = list(self.keys())
+        for special_key in _SPECIAL_FIELDS:
+            list_of_keys.remove(special_key)
+
+        return list_of_keys
+
     @property
-    def row_id(self):
-        return unique_row_identifier(
-            registration_date=self.registration_date,
-            registered_by_first_name=self.registered_by_first_name,
-            registered_by_last_name=self.registered_by_last_name,
-        )
+    def row_id(self) -> str:
+        return self.get(_ROW_ID, '')
+
+    @row_id.setter
+    def row_id(self, row_id: str):
+        self[_ROW_ID] = row_id
+
+    def replace_row_id_by_adding_random_number(self):
+        existing_row_id = self.row_id
+        add_on = str(int(random()*100))
+        self.row_id = existing_row_id + "_"+add_on
 
     @property
     def registration_status(self) -> RegistrationStatus:
-        return get_status_from_row_of_mapped_wa_event_data(self)
+        reg_status = self.get(_REGISTRATION_STATUS, empty_status)
+
+        return reg_status
 
     @registration_status.setter
     def registration_status(self, new_status: RegistrationStatus):
-        set_status_str_in_row_of_mapped_wa_event_data(self, new_status)
-
-    @property
-    def registration_date(self):
-        return self[REGISTRATION_DATE]
-
-    @registration_date.setter
-    def registration_date(self, new_date: datetime.datetime):
-        self[REGISTRATION_DATE] = new_date
-
-    @property
-    def registered_by_first_name(self):
-        return self[REGISTERED_BY_FIRST_NAME]
-
-    @property
-    def registered_by_last_name(self):
-        return self[REGISTERED_BY_LAST_NAME]
+        self[_REGISTRATION_STATUS] = new_status
 
 
-def get_status_from_row_of_mapped_wa_event_data(
-    row_of_mapped_wa_event_data: RowInRegistrationData,
-) -> RegistrationStatus:
-    status_str = get_status_str_from_row_of_mapped_wa_event_data(
-        row_of_mapped_wa_event_data
-    )
-    if status_str in POSSIBLE_STATUS_NAMES:
-        return RegistrationStatus(status_str)
-
-    elif status_str in WA_ACTIVE_AND_PAID_STATUS:
-        return active_paid_status
-
-    elif status_str in WA_CANCELLED_STATUS:
-        return cancelled_status
-
-    elif status_str in WA_UNPAID_STATUS:
-        return active_unpaid_status
-
-    elif status_str in WA_PARTIAL_PAID_STATUS:
-        return active_part_paid_status
-
-    elif status_str == "":
-        return empty_status
-    else:
-        raise Exception(
-            "WA has used a status of %s in the mapped field %s, not recognised, update configuration.py"
-            % (status_str, PAYMENT_STATUS)
-        )
 
 
-def set_status_str_in_row_of_mapped_wa_event_data(
-    row_of_mapped_wa_event_data: RowInRegistrationData, new_status: RegistrationStatus
-):
-    row_of_mapped_wa_event_data[PAYMENT_STATUS] = new_status.name
-
-
-def get_status_str_from_row_of_mapped_wa_event_data(
-    row_of_mapped_wa_event_data: RowInRegistrationData,
-) -> str:
-    status_field = row_of_mapped_wa_event_data.get_item(PAYMENT_STATUS, missing_data)
-    if status_field is missing_data:
-        raise Exception(
-            "Can't get status of entry because field %s is missing from mapping; check your field mapping"
-            % PAYMENT_STATUS
-        )
-
-    return status_field
-
-
-class RegistrationDataForEvent(list):
+class RegistrationDataForEvent(GenericListOfObjects):
     def __init__(self, list_of_rows: List[RowInRegistrationData]):
         super().__init__(list_of_rows)
+
+    @property
+    def _object_class_contained(self):
+        return RowInRegistrationData
 
     def __repr__(self):
         return str(self.to_df())
 
-    def pop_id(self, row_id):
-        idx = self.idx_with_id(row_id)
-        self.pop(idx)
+    def clear_user_data(self):
+        for row in self:
+            row.clear_values()
+
 
     def get_row_with_rowid(self, row_id):
         subset = self.subset_with_id(row_id)
@@ -191,7 +140,10 @@ class RegistrationDataForEvent(list):
         return subset[0]
 
     def list_of_row_ids(self) -> list:
-        return extract_list_of_row_ids_from_existing_wa_event(self)
+        return [
+            reg_row.row_id
+            for reg_row in self
+        ]
 
     def remove_empty_status(self) -> "RegistrationDataForEvent":
         return self.remove_rows_with_status(empty_status)
@@ -208,24 +160,33 @@ class RegistrationDataForEvent(list):
         subset = [row for row in self if row.registration_status.is_active]
         return RegistrationDataForEvent(subset)
 
-    def idx_with_id(self, list_of_row_ids: list) -> int:
-        subset = [row for row in self if row.row_id in list_of_row_ids]
-        if len(subset) == 0:
-            return missing_data
-        elif len(subset) > 0:
-            raise Exception("Duplicate row IDs")
-        item = subset[0]
 
-        return self.index(item)
 
     def subset_with_id(self, list_of_row_ids: list) -> "RegistrationDataForEvent":
         subset = [row for row in self if row.row_id in list_of_row_ids]
         return RegistrationDataForEvent(subset)
 
     @classmethod
+    def from_df_of_str(cls, df: pd.DataFrame):
+        ## special methods as registration data contains date fields
+        transform_df_from_str_to_dates(df)
+
+        list_of_items = create_list_of_objects_from_dataframe(RowInRegistrationData, df)
+
+        return cls(list_of_items)
+
+    def as_df_of_str(self) -> pd.DataFrame:
+        ## special methods as registration data contains date fields
+        df = create_data_frame_given_list_of_objects(self)
+
+        transform_df_from_dates_to_str(df)
+
+        return df
+
+    @classmethod
     def from_df(cls, some_df: pd.DataFrame):
         list_of_dicts = [
-            RowInRegistrationData.from_external_dict(df_row.to_dict())
+            RowInRegistrationData.from_dict_of_str(df_row.to_dict())
             for __, df_row in some_df.iterrows()
         ]
         return cls(list_of_dicts)
@@ -257,17 +218,5 @@ def summarise_status(mapped_event: RegistrationDataForEvent) -> dict:
     return all_status
 
 
-def extract_list_of_row_ids_from_existing_wa_event(
-    existing_mapped_wa_event_with_ids: RegistrationDataForEvent,
-) -> list:
-    ## Entry timestamps are unique
-    list_of_timestamps = [
-        row_of_mapped_data.row_id
-        for row_of_mapped_data in existing_mapped_wa_event_with_ids
-    ]
-
-    return list_of_timestamps
-
-
-def get_status_from_row(row: RowInRegistrationData):
+def get_volunteer_status_from_row(row: RowInRegistrationData):
     return row.get_item(VOLUNTEER_STATUS, "")

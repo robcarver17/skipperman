@@ -7,7 +7,7 @@ from app.objects.groups import Group
 
 from app.objects.cadets import ListOfCadets
 
-from app.objects.day_selectors import DictOfDaySelectors
+from app.objects.cadet_attendance import DictOfDaySelectors
 from app.objects.composed.ticksheet import DictOfCadetsAndTicksWithinQualification
 from app.objects.composed.ticks_for_qualification import TicksForQualification
 
@@ -59,7 +59,7 @@ class LabelledTickSheet:
 
     def add_health_notes(self, health_notes: List[str]):
         print(health_notes)
-        health_multindex = pd.MultiIndex.from_tuples([("", "Medical notes")])
+        health_multindex = pd.MultiIndex.from_tuples([("Medical notes", "")])
         if self.cadets_in_columns:
             health_row = pd.DataFrame(
                 health_notes, index=health_multindex, columns=self.df.columns

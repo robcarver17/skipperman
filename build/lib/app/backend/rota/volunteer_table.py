@@ -6,7 +6,7 @@ from app.backend.volunteers.volunteers_at_event import (
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
 from app.objects.events import Event
 
-from app.objects.groups import unallocated_group, Group
+from app.objects.groups import unallocated_group, Group, ListOfGroups
 
 from app.data_access.store.object_store import ObjectStore
 from app.backend.volunteers.roles_and_teams import (
@@ -33,11 +33,11 @@ def get_dict_of_roles_for_dropdown(object_store: ObjectStore):
 
 def get_dict_of_groups_for_dropdown(object_store: ObjectStore):
     groups = get_list_of_groups(object_store)
-    dict_of_groups = {group.name: group.name for group in groups}
+    dict_of_groups = {group.name: group.name for group in groups if not group.hidden}
     dict_of_groups[unallocated_group.name] = unallocated_group.name
 
     # return dict_of_groups
-    return {}
+    return dict_of_groups
 
 
 def all_roles_match_across_event(
@@ -107,11 +107,11 @@ def volunteer_has_at_least_one_day_in_role_and_all_roles_and_groups_match(
 
 def get_list_of_groups_volunteer_is_instructor_for(
     object_store: ObjectStore, event: Event, volunteer: Volunteer
-) -> List[Group]:
+) -> ListOfGroups:
     dict_of_all_event_data = get_dict_of_all_event_data_for_volunteers(
         object_store=object_store, event=event
     )
-    volunteer_days_and_roles = dict_of_all_event_data.dict_of_volunteers_at_event_with_days_and_role.days_and_roles_for_volunteer(
+    volunteer_days_and_roles = dict_of_all_event_data.dict_of_volunteers_at_event_with_days_and_roles.days_and_roles_for_volunteer(
         volunteer
     )
 

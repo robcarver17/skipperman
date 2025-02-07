@@ -198,7 +198,7 @@ def sort_df_by_role(
     include_no_role: bool = True,
 ) -> pd.DataFrame:
     all_roles_in_order = (
-        volunteer_event_data.dict_of_volunteers_at_event_with_days_and_role.list_of_roles_with_skills
+        volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles.list_of_roles_with_skills
     )
     new_df = pd.DataFrame()
     for role in all_roles_in_order:
@@ -223,7 +223,7 @@ def sort_df_by_group(
 ) -> pd.DataFrame:
 
     all_groups = (
-        volunteer_event_data.dict_of_volunteers_at_event_with_days_and_role.list_of_groups
+        volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles.list_of_groups
     )
     new_df = pd.DataFrame()
     for group in all_groups:

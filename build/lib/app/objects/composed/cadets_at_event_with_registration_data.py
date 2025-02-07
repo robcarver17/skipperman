@@ -29,6 +29,11 @@ class CadetRegistrationData:
     notes: str = ""
     health: str = ""
 
+    def clean_data(self):
+        self.data_in_row.clear_values()
+        self.health = ""
+        self.notes = ""
+
     @property
     def emergency_contact(self):
         contact = self.data_in_row.get_item(RESPONSIBLE_ADULT_NUMBER, "")
@@ -62,22 +67,6 @@ class CadetRegistrationData:
         return self.status.is_active
 
 
-@dataclass
-class DEPRECATE_CadetWithEventData:
-    cadet: Cadet
-    event_data: CadetRegistrationData
-
-    @classmethod
-    def from_cadet_with_id_at_event(
-        cls, event: Event, cadet: Cadet, cadet_with_id_at_event: CadetWithIdAtEvent
-    ):
-        return cls(
-            cadet=cadet,
-            event_data=CadetRegistrationData.from_cadet_with_id_at_event(
-                event=event, cadet_with_id_at_event=cadet_with_id_at_event
-            ),
-        )
-
 
 class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
     def __init__(
@@ -88,6 +77,12 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
         super().__init__(raw_list)
         self._list_of_cadets_with_id_at_event = list_of_cadets_with_id_at_event
 
+    def clear_user_data(self):
+        for reg_data_for_cadet in self.values():
+            reg_data_for_cadet.clean_data()
+            
+        self.list_of_cadets_with_id_at_event.clear_private_data()
+
     def update_availability_of_existing_cadet_at_event(
         self,
         cadet: Cadet,
@@ -96,7 +91,7 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
 
         registration_data = self.registration_data_for_cadet(cadet)
         registration_data.availability = new_availabilty
-        cadet_at_event_data = self.list_of_cadets_with_id_at_event.cadet_at_event(cadet)
+        cadet_at_event_data = self.list_of_cadets_with_id_at_event.cadet_at_event(cadet_id=cadet.id)
         cadet_at_event_data.availability = new_availabilty
 
     def update_status_of_existing_cadet_in_event_info_to_cancelled_or_deleted(

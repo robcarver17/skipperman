@@ -84,7 +84,7 @@ def add_unregistered_partner_cadet(
     add_new_cadet_to_event_from_row_in_registration_data(
         object_store=object_store,
         event=event,
-        row_in_mapped_wa_event=new_row,
+        row_in_registration_data=new_row,
         cadet=new_cadet,
     )
 
@@ -130,9 +130,7 @@ def modify_row_to_clone_for_new_cadet_partner(
 ) -> RowInRegistrationData:
     new_row = copy(existing_row)
 
-    new_row.registration_date = existing_row.registration_date + datetime.timedelta(
-        0, 9
-    )  ## otherwise get duplicate key
+    new_row.replace_row_id_by_adding_random_number()
     new_row.registration_status = manual_status  ## avoids it being deleted
     new_row[CADET_FIRST_NAME] = new_cadet.first_name
     new_row[CADET_SURNAME] = new_cadet.surname

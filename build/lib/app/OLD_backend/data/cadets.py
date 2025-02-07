@@ -93,7 +93,7 @@ class CadetData:
         self, list_of_cadet_ids: List[str]
     ) -> ListOfCadets:
         list_of_cadets = self.get_list_of_cadets()
-        return ListOfCadets.subset_from_list_of_ids(
+        return ListOfCadets.DEPRECATE_subset_from_list_of_ids(
             full_list=list_of_cadets, list_of_ids=list_of_cadet_ids
         )
 

@@ -1,5 +1,7 @@
 from typing import List
 
+from app.backend.cadets.list_of_cadets import get_cadet_from_id
+from app.backend.events.list_of_events import get_list_of_events
 from app.backend.groups.cadets_with_groups_at_event import (
     add_or_upate_group_for_cadet_on_day_if_cadet_available_on_day,
 )
@@ -19,7 +21,7 @@ from app.frontend.events.group_allocation.input_fields import (
     CLUB_BOAT,
     PARTNER,
     BOAT_CLASS,
-    SAIL_NUMBER,
+    SAIL_NUMBER, cadet_id_from_cadet_available_buttons,
 )
 from app.objects.events import Event
 
@@ -38,7 +40,7 @@ from app.backend.registration_data.update_cadets_at_event import (
     update_notes_for_existing_cadet_at_event,
 )
 from app.backend.cadets_at_event.update_status_and_availability_of_cadets_at_event import (
-    update_availability_of_existing_cadet_at_event_and_return_messages,
+    update_availability_of_existing_cadet_at_event_and_return_messages, make_cadet_available_on_day,
 )
 
 from app.frontend.events.constants import (
@@ -69,8 +71,6 @@ def update_data_given_allocation_form(interface: abstractInterface):
     update_boat_info_for_all_cadets_in_form(
         interface=interface, list_of_cadets=list_of_cadets
     )
-
-    interface.flush_cache_to_store()
 
 
 def do_group_allocation_for_cadet_at_event(
@@ -356,3 +356,22 @@ def get_update_for_cadet(
         boat_class_name=boat_class_name,
         two_handed_partner_cadet_as_str=two_handed_partner_as_str,
     )
+
+
+def make_cadet_available_on_current_day(
+    interface: abstractInterface, add_availability_button_name: str
+):
+    day = get_day_from_state_or_none(interface)
+    if day is None:
+        interface.log_error(
+            "Can't make cadet available on day when no day set - this shouldn't happen contact support"
+        )
+
+    cadet_id = cadet_id_from_cadet_available_buttons(add_availability_button_name)
+    event = get_event_from_state(interface)
+    cadet = get_cadet_from_id(object_store=interface.object_store, cadet_id=cadet_id)
+
+    make_cadet_available_on_day(
+        object_store=interface.object_store, event=event, cadet=cadet, day=day
+    )
+    interface.flush_cache_to_store()

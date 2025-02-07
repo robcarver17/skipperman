@@ -1,12 +1,18 @@
 from dataclasses import dataclass
 
-from app.objects.exceptions import missing_data, arg_not_passed
+from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import BoatClassAndPartnerAtEventOnDay
+from app.objects.exceptions import missing_data, arg_not_passed, MultipleMatches, MissingData
 from app.objects.generic_list_of_objects import (
-    GenericListOfObjectsWithIds,
+    GenericListOfObjectsWithIds, get_idx_of_unique_object_with_attr_in_list, get_unique_object_with_attr_in_list,
 )
 
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
 
+NO_BOAT_CLASS_NAME = ""
+
+
+
+NO_BOAT_CLASS_ID = str(-9999)
 
 @dataclass
 class BoatClass(GenericSkipperManObjectWithIds):
@@ -20,8 +26,14 @@ class BoatClass(GenericSkipperManObjectWithIds):
     def __eq__(self, other):
         return self.name == other.name and self.hidden == other.hidden
 
+    def __hash__(self):
+        return hash(self.name)
 
-no_boat_class = BoatClass("", True)
+    @classmethod
+    def create_empty(cls):
+        return cls(NO_BOAT_CLASS_NAME, False, NO_BOAT_CLASS_ID)
+
+no_boat_class = BoatClass.create_empty()
 
 
 class ListOfBoatClasses(GenericListOfObjectsWithIds):
@@ -29,17 +41,36 @@ class ListOfBoatClasses(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return BoatClass
 
-    def idx_given_name(self, boat_name: str):
-        id = [item.id for item in self if item.name == boat_name]
+    def boat_with_id(self, id: str):
+        if id ==NO_BOAT_CLASS_ID:
+            return no_boat_class
 
-        if len(id) == 0:
-            return missing_data
-        elif len(id) > 1:
-            raise Exception(
-                "Found more than one boat with same name should be impossible"
-            )
+        index = self.index_of_id(id)
 
-        return self.index_of_id(str(id[0]))
+        return self[index]
+
+    def boat_class_given_name(self, boat_class_name: str, default=arg_not_passed):
+        if boat_class_name == no_boat_class.name:
+            return no_boat_class
+        return get_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_value=boat_class_name,
+            attr_name='name',
+            default=default
+        )
+
+    def replace(self, existing_boat_class: BoatClass, new_boat_class: BoatClass):
+        object_idx = self.idx_given_name(existing_boat_class.name)
+        new_boat_class.id = existing_boat_class.id
+        self[object_idx] = new_boat_class
+
+    def idx_given_name(self, boat_name: str, default=arg_not_passed):
+        return get_idx_of_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_value=boat_name,
+            attr_name='name',
+            default=default
+        )
 
     def add(self, boat_name: str):
         try:
@@ -57,3 +88,8 @@ class ListOfBoatClasses(GenericListOfObjectsWithIds):
     def check_for_duplicated_names(self):
         list_of_names = [role.name for role in self]
         assert len(list_of_names) == len(set(list_of_names))
+
+
+no_boat_class_partner_or_sail_number = BoatClassAndPartnerAtEventOnDay(
+    boat_class=no_boat_class, sail_number=""
+)

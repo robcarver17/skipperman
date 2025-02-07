@@ -14,8 +14,8 @@ from app.data_access.store.object_store import ObjectStore
 from app.objects.events import Event
 from app.objects.composed.clothing_at_event import (
     DictOfCadetsWithClothingAtEvent,
-    ClothingAtEvent,
 )
+from app.objects.clothing import ClothingAtEvent
 
 
 def get_dict_of_cadets_with_clothing_at_event(

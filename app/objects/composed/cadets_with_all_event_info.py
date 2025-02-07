@@ -4,7 +4,7 @@ from typing import Dict, List
 from app.objects.boat_classes import BoatClass
 from app.objects.club_dinghies import ClubDinghy
 from app.objects.day_selectors import DaySelector, Day
-from app.objects.exceptions import MissingData
+from app.objects.exceptions import MissingData, arg_not_passed
 from app.objects.groups import Group, unallocated_group
 
 from app.objects.registration_status import RegistrationStatus
@@ -35,10 +35,9 @@ from app.objects.composed.cadets_at_event_with_groups import (
 
 from app.objects.composed.clothing_at_event import (
     DictOfCadetsWithClothingAtEvent,
-    ClothingAtEvent,
 )
+from app.objects.clothing import ClothingAtEvent
 from app.objects.composed.food_at_event import (
-    ListOfCadetsWithFoodRequirementsAtEvent,
     DictOfCadetsWithFoodRequirementsAtEvent,
     FoodRequirements,
 )
@@ -88,6 +87,10 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         self._dict_of_cadets_with_food_required_at_event = (
             dict_of_cadets_with_food_required_at_event
         )
+
+    def dict_of_cadets_with_groups_for_all_cadets_in_data(self) -> DictOfCadetsWithDaysAndGroupsAtEvent:
+        return self.dict_of_cadets_with_days_and_groups.subset_for_list_of_cadets(self.list_of_cadets)
+
 
     def cadets_in_group_during_event(self, group: Group) -> ListOfCadets:
         if group is unallocated_group:
@@ -194,11 +197,12 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
 
         return messages
 
-    def event_data_for_cadet(self, cadet: Cadet):
-        try:
-            return self.get(cadet)
-        except:
+    def event_data_for_cadet(self, cadet: Cadet, default = arg_not_passed) -> AllEventInfoForCadet:
+        data = self.get(cadet, default)
+        if data is arg_not_passed:
             raise MissingData
+
+        return data
 
     @property
     def dict_of_cadets_and_boat_class_and_partners(self):
@@ -267,6 +271,7 @@ def compose_dict_of_all_event_info_for_cadet(
         dict_of_cadets_with_clothing_at_event=dict_of_cadets_with_clothing_at_event,
         dict_of_cadets_with_food_required_at_event=dict_of_cadets_with_food_required_at_event,
         event=event,
+
     )
 
 

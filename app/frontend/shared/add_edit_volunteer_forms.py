@@ -28,6 +28,7 @@ from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
 )
+from app.objects.abstract_objects.abstract_text import bold
 from app.objects.volunteers import Volunteer, default_volunteer
 
 
@@ -91,7 +92,7 @@ def get_add_volunteer_form_with_information_passed(
             _______________,
             form_fields,
             _______________,
-            volunteer_and_text.verification_text,
+            bold(volunteer_and_text.verification_text),
             _______________,
             footer_buttons,
         ]

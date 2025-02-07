@@ -18,19 +18,29 @@ class ObjectStore:
         self._data_api = data_api
         self._object_store = {}
 
+    def delete_all_data(self, are_you_sure:bool = False):
+        ### YOU REALLY NEED TO BE SURE!
+        if are_you_sure:
+            ## REDUDANT CODE AS YOU CAN'T BE TOO CAREFUL
+            self.data_api.delete_all_master_data(are_you_sure)
+
     def backup_underlying_data(self):
         self.data_api.make_backup()
 
-    def clear_store(self):
-        self.data_store.clear_stored_items()
-        self.clear_object_store()
 
     def flush_store(self, read_only: bool = False):
         if not read_only:
-            self.data_store.save_stored_items()
+            self.save_store()
 
-        self.data_store.clear_stored_items()  ## everything cached in underlying data store
-        self.clear_object_store()  ## everything cached in this object
+        self.clear_store()
+
+    def save_store(self):
+        print("Saving %s" % str(self.data_store))
+        self.data_store.save_stored_items()
+
+    def clear_store(self):
+        self.data_store.clear_stored_items() ## underlying cache
+        self.clear_object_store() ## this cache
 
     def update(
         self,
@@ -72,7 +82,6 @@ class ObjectStore:
     ):
         key = get_store_key(object_definition=object_definition, **kwargs)
         self.object_store[key] = new_object
-        print("Updating %s in object store" % key)
 
     def _call_and_store(
         self,
@@ -90,6 +99,14 @@ class ObjectStore:
 
     def clear_object_store(self):
         self._object_store = {}
+
+    @property
+    def master_data_path(self) -> str:
+        return self.data_api.master_data_path
+
+    @property
+    def backup_data_path(self):
+        return self.data_api.backup_data_path
 
     @property
     def data_api(self) -> GenericDataApi:
@@ -162,7 +179,6 @@ def update_data_store_with_changed_underlying_object(
     data_store = object_store.data_store
 
     data_store.write(new_object, data_access_method=data_access_method)
-    print("updating %s in data store" % str(object_definition))
 
 
 def update_objects_in_store_with_changed_iterable_object(

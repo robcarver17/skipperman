@@ -22,9 +22,7 @@ from app.objects.cadets import Cadet
 from app.objects.cadet_at_event_with_club_boat_with_ids import NO_CLUB_BOAT
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 from app.objects.day_selectors import Day
-from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import (
-    NO_PARTNERSHIP_LIST_OF_STR,
-)
+from app.objects.partners import NO_PARTNERSHIP_LIST_OF_STR
 from app.objects.utils import make_id_as_int_str
 
 
@@ -159,6 +157,7 @@ def get_input_fields_for_cadet_on_day(
     return input_fields
 
 
+
 def make_cadet_available_button_name(cadet: Cadet):
     return "%s_%s" % (MAKE_CADET_AVAILABLE_ON_DAY_BUTTON, cadet.id)
 
@@ -223,11 +222,11 @@ def get_dropdown_input_for_group_allocation(
 def get_dict_of_all_possible_groups_for_dropdown_input(
     dict_of_all_event_data: DictOfAllEventInfoForCadets,
 ):
-    all_group_names = (
-        dict_of_all_event_data.dict_of_cadets_with_days_and_groups.list_of_groups.list_of_names()
+    all_groups = (
+        dict_of_all_event_data.dict_of_cadets_with_days_and_groups.list_of_groups
     )
     dict_of_all_possible_groups_for_dropdown_input = dict(
-        [(group, group) for group in all_group_names]
+        [(group.name, group.name) for group in all_groups if not group.hidden]
     )
 
     return dict_of_all_possible_groups_for_dropdown_input
@@ -252,6 +251,7 @@ def get_dropdown_input_for_club_boat_allocation_across_days(
         current_club_boat_name=current_club_boat_name,
     )
 
+    return dropdown_input_field
 
 def get_dropdown_input_for_club_boat_allocation_on_day(
     cadet: Cadet, day: Day, dict_of_all_event_data: DictOfAllEventInfoForCadets
@@ -277,7 +277,7 @@ def get_dict_of_club_dinghies_for_dropdown(
     )
     dict_of_club_dinghies_for_dropdown_input = {NO_CLUB_BOAT: NO_CLUB_BOAT}
     dict_of_all_possible_club_boats = dict(
-        [(dinghy.name, dinghy.name) for dinghy in club_dinghies]
+        [(dinghy.name, dinghy.name) for dinghy in club_dinghies if not dinghy.hidden]
     )
     dict_of_club_dinghies_for_dropdown_input.update(dict_of_all_possible_club_boats)
 
@@ -357,9 +357,11 @@ def get_dict_of_boat_classes(dict_of_all_event_data: DictOfAllEventInfoForCadets
     boat_classes = (
         dict_of_all_event_data.dict_of_cadets_and_boat_class_and_partners.list_of_boat_classes
     )
+    boat_classes.append(no_boat_class)
     dict_of_all_possible_boat_classes = dict(
-        [(dinghy.name, dinghy.name) for dinghy in boat_classes]
+        [(dinghy.name, dinghy.name) for dinghy in boat_classes if not dinghy.hidden]
     )
+
     return dict_of_all_possible_boat_classes
 
 

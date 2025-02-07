@@ -6,6 +6,7 @@ from app.data_access.configuration.configuration import (
 )
 from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
+get_unique_object_with_attr_in_list,get_idx_of_unique_object_with_attr_in_list
 )
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
 from app.objects.utils import similar
@@ -19,16 +20,13 @@ class Volunteer(GenericSkipperManObjectWithIds):
     id: str = arg_not_passed
 
     def __repr__(self):
-        return "%s %s" % (
-            self.first_name.title(),
-            self.surname.title(),
-        )
+        return self.name
 
     def __eq__(self, other):
-        return (self.first_name == other.first_name) and (self.surname == other.surname)
+        return self.name == other.name
 
     def __hash__(self):
-        return hash(self.first_name + "_" + self.surname)
+        return hash(self.name)
 
     def replace_everything_except_id(self, updated_volunteer: "Volunteer"):
         self.first_name = updated_volunteer.first_name
@@ -46,7 +44,7 @@ class Volunteer(GenericSkipperManObjectWithIds):
     def name(self):
         return self.first_name.title() + " " + self.surname.title()
 
-    def similarity_name(self, other_volunteer: "Volunteer") -> float:
+    def similarity_of_names(self, other_volunteer: "Volunteer") -> float:
         return similar(self.name, other_volunteer.name)
 
 
@@ -57,7 +55,7 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
 
     def add(self, volunteer: Volunteer):
         try:
-            assert volunteer not in self
+            assert volunteer.name not in self.list_of_names()
         except:
             raise Exception("Can't have duplicate volunteer names")
         volunteer_id = self.next_id()
@@ -72,11 +70,13 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
             updated_volunteer=updated_volunteer
         )
 
-    def volunteer_with_matching_name(self, volunteer: Volunteer) -> Volunteer:
-        try:
-            return self[self.index(volunteer)]
-        except ValueError:
-            raise MissingData
+    def volunteer_with_matching_name(self, volunteer: Volunteer, default =arg_not_passed) -> Volunteer:
+        return get_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='name',
+            attr_value=volunteer.name,
+            default=default
+        )
 
     def similar_volunteers(
         self,
@@ -86,7 +86,7 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
         similar_names = [
             other_volunteer
             for other_volunteer in self
-            if other_volunteer.similarity_name(volunteer) > name_threshold
+            if other_volunteer.similarity_of_names(volunteer) > name_threshold
         ]
 
         return ListOfVolunteers(similar_names)
@@ -97,17 +97,6 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
     def sort_by_firstname(self):
         return ListOfVolunteers(sorted(self, key=lambda x: x.first_name))
 
-    def get_volunteer_from_list_of_volunteers_given_name(
-        self, volunteer_name: str
-    ) -> Volunteer:
-        list_of_volunteer_names = self.list_of_names()
-
-        try:
-            idx = list_of_volunteer_names.index(volunteer_name)
-        except ValueError:
-            raise MissingData
-
-        return self[idx]
 
     def list_of_names(self) -> List[str]:
         return [volunteer.name for volunteer in self]

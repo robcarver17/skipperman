@@ -224,8 +224,8 @@ app/data_access/csv/dinghies_at_events.py
 app/data_access/csv/food_and_clothing.py
 app/data_access/csv/generic_csv_data.py
 app/data_access/csv/list_of_events.py
-app/data_access/csv/mapped_wa_event.py
 app/data_access/csv/qualifications.py
+app/data_access/csv/registration_data.py
 app/data_access/csv/resolve_csv_paths_and_filenames.py
 app/data_access/csv/resources.py
 app/data_access/csv/users.py

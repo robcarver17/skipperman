@@ -8,10 +8,11 @@ from app.objects.day_selectors import (
     day_selector_to_text_in_stored_format,
     Day,
 )
-from app.objects.exceptions import missing_data, MissingData, MultipleMatches
-from app.objects.generic_list_of_objects import GenericListOfObjects
+from app.objects.exceptions import missing_data, MissingData, MultipleMatches, arg_not_passed
+from app.objects.generic_list_of_objects import GenericListOfObjects, get_unique_object_with_attr_in_list, get_idx_of_unique_object_with_attr_in_list
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.utils import clean_up_dict_with_nans
+
 
 LIST_KEY = "list_of_associated_cadet_id"
 AVAILABILITY_KEY = "availablity"
@@ -22,13 +23,20 @@ NOTES = "notes"
 class VolunteerAtEventWithId(GenericSkipperManObject):
     volunteer_id: str
     availablity: DaySelector
-    list_of_associated_cadet_id: list  ## no longer used
+    list_of_associated_cadet_id: list  ## no longer used kept to avoid breaking data
     preferred_duties: str = ""  ## information only
     same_or_different: str = ""  ## information only
     any_other_information: str = (
         ""  ## information only - double counted as required twice
     )
     notes: str = ""
+
+
+    def clear_user_data(self):
+        self.any_other_information = ""
+        self.notes = ""
+        self.preferred_duties = ""
+        self.same_or_different = ""
 
     @classmethod
     def from_dict_of_str(cls, dict_with_str):
@@ -71,14 +79,19 @@ class VolunteerAtEventWithId(GenericSkipperManObject):
 
         return as_dict
 
-    def available_on_day(self, day: Day) -> bool:
-        return self.availablity.available_on_day(day)
-
 
 class ListOfVolunteersAtEventWithId(GenericListOfObjects):
     @property
     def _object_class_contained(self):
         return VolunteerAtEventWithId
+
+    def clear_user_data(self):
+        for volunteer_at_event in self:
+            volunteer_at_event.clear_private_data()
+
+    def update_notes(self, volunteer: Volunteer, new_notes: str):
+        volunteer_at_event = self.volunteer_at_event_with_id(volunteer.id)
+        volunteer_at_event.notes = new_notes
 
     def make_volunteer_available_on_day(self, volunteer: Volunteer, day: Day):
         volunteer_at_event = self.volunteer_at_event_with_id(volunteer.id)
@@ -93,49 +106,48 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
             volunteer_id
         )
         if idx_of_volunteer_at_event is missing_data:
-            pass
+            raise Exception("Can't drop non existent volunteer")
         else:
             del self[idx_of_volunteer_at_event]
 
-    def volunteer_at_event_with_id(self, volunteer_id: str) -> VolunteerAtEventWithId:
-        index_of_matching_volunteer = self.index_of_volunteer_at_event_with_id(
-            volunteer_id
+    def volunteer_at_event_with_id(self, volunteer_id: str, default = arg_not_passed) -> VolunteerAtEventWithId:
+        return get_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='volunteer_id',
+            attr_value=volunteer_id,
+            default=default
+
         )
-        return self[index_of_matching_volunteer]
 
-    def index_of_volunteer_at_event_with_id(self, volunteer_id: str) -> int:
-        list_of_ids = self.list_of_volunteer_ids
-        list_of_matching_indices = [
-            idx for idx, item_id in enumerate(list_of_ids) if item_id == volunteer_id
-        ]
-        if len(list_of_matching_indices) == 0:
-            raise MissingData
-        elif len(list_of_matching_indices) == 1:
-            return list_of_matching_indices[0]
-        else:
-            raise MultipleMatches("A volunteer can't appear more than once at an event")
-
-    @property
-    def list_of_volunteer_ids(self) -> list:
-        return [str(object.volunteer_id) for object in self]
+    def index_of_volunteer_at_event_with_id(self, volunteer_id: str, default = arg_not_passed) -> int:
+        return get_idx_of_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='volunteer_id',
+            attr_value=volunteer_id,
+            default=default
+        )
 
     def add_new_volunteer(self, volunteer_at_event: VolunteerAtEventWithId):
-        existing_volunteer_at_event = self.volunteer_at_event_with_id(
-            volunteer_id=volunteer_at_event.volunteer_id
-        )
-        if existing_volunteer_at_event is missing_data:
-            self.append(volunteer_at_event)
-        else:
+        if self.volunteer_already_exist(volunteer_at_event):
             raise Exception(
                 "Can't add volunteer with id %s to event again"
                 % volunteer_at_event.volunteer_id
             )
 
+        self.append(volunteer_at_event)
+
+    def volunteer_already_exist(self, volunteer_at_event: VolunteerAtEventWithId):
+        volunteer = self.volunteer_at_event_with_id(
+            volunteer_id=volunteer_at_event.volunteer_id,
+            default=missing_data
+        )
+        return volunteer is not missing_data
+
     def sort_by_list_of_volunteer_ids(
         self, list_of_ids
     ) -> "ListOfVolunteersAtEventWithId":
         new_list_of_volunteers_at_event = [
-            self.volunteer_at_event_with_id(id) for id in list_of_ids
+            self.volunteer_at_event_with_id(id, default=missing_data) for id in list_of_ids
         ]
         new_list_of_volunteers_at_event = [
             volunteer_at_event

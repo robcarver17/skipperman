@@ -30,6 +30,11 @@ class VolunteerAtEventWithId(GenericSkipperManObject):
     )
     notes: str = ""
 
+
+    def clear_user_data(self):
+        self.any_other_information = ""
+        self.notes = ""
+
     @classmethod
     def from_dict_of_str(cls, dict_with_str):
         dict_with_str = clean_up_dict_with_nans(dict_with_str)
@@ -80,6 +85,14 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
     def _object_class_contained(self):
         return VolunteerAtEventWithId
 
+    def clear_user_data(self):
+        for volunteer_at_event in self:
+            volunteer_at_event.clear_private_data()
+
+    def update_notes(self, volunteer: Volunteer, new_notes: str):
+        volunteer_at_event = self.volunteer_at_event_with_id(volunteer.id)
+        volunteer_at_event.notes = new_notes
+
     def make_volunteer_available_on_day(self, volunteer: Volunteer, day: Day):
         volunteer_at_event = self.volunteer_at_event_with_id(volunteer.id)
         volunteer_at_event.availablity.make_available_on_day(day)
@@ -93,14 +106,15 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
             volunteer_id
         )
         if idx_of_volunteer_at_event is missing_data:
-            pass
+            raise Exception("Can't drop non existent volunteer")
         else:
             del self[idx_of_volunteer_at_event]
 
     def volunteer_at_event_with_id(self, volunteer_id: str) -> VolunteerAtEventWithId:
         index_of_matching_volunteer = self.index_of_volunteer_at_event_with_id(
-            volunteer_id
+        volunteer_id
         )
+
         return self[index_of_matching_volunteer]
 
     def index_of_volunteer_at_event_with_id(self, volunteer_id: str) -> int:
@@ -120,16 +134,22 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
         return [str(object.volunteer_id) for object in self]
 
     def add_new_volunteer(self, volunteer_at_event: VolunteerAtEventWithId):
-        existing_volunteer_at_event = self.volunteer_at_event_with_id(
-            volunteer_id=volunteer_at_event.volunteer_id
-        )
-        if existing_volunteer_at_event is missing_data:
-            self.append(volunteer_at_event)
-        else:
+        if self.volunteer_already_exist(volunteer_at_event):
             raise Exception(
                 "Can't add volunteer with id %s to event again"
                 % volunteer_at_event.volunteer_id
             )
+
+        self.append(volunteer_at_event)
+
+    def volunteer_already_exist(self, volunteer_at_event: VolunteerAtEventWithId):
+        try:
+            self.volunteer_at_event_with_id(
+                volunteer_id=volunteer_at_event.volunteer_id
+            )
+            return True
+        except MissingData:
+            return False
 
     def sort_by_list_of_volunteer_ids(
         self, list_of_ids

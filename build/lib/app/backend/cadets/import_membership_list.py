@@ -40,6 +40,7 @@ def create_temp_file_with_list_of_cadets(
 
 def read_imported_list_of_cadets(filename: str) -> ListOfCadets:
     data = load_spreadsheet_file_and_clear_nans(filename)
+    data[DOB_IN_MEMBERSHIP_FILE] = pd.to_datetime(data[DOB_IN_MEMBERSHIP_FILE], format=DOB_FORMAT)
     list_of_cadets = [
         cadet_from_row_in_imported_list(cadet_row=cadet_row, row_id=int(row_id))
         for row_id, cadet_row in data.iterrows()
@@ -49,6 +50,7 @@ def read_imported_list_of_cadets(filename: str) -> ListOfCadets:
 
 
 def cadet_from_row_in_imported_list(cadet_row: pd.Series, row_id: int) -> Cadet:
+    print("Row %s" % cadet_row)
     first_name = cadet_row[FIRST_NAME_IN_MEMBERSHIP_FILE]
     surname = cadet_row[SURNAME_IN_MEMBERSHIP_FILE]
     dob = cadet_row[DOB_IN_MEMBERSHIP_FILE]
@@ -71,6 +73,7 @@ temp_list_of_cadets_file_name = get_staged_adhoc_filename("list_of_cadets")
 FIRST_NAME_IN_MEMBERSHIP_FILE = "First name"
 SURNAME_IN_MEMBERSHIP_FILE = "Last name"
 DOB_IN_MEMBERSHIP_FILE = "Date of Birth"
+DOB_FORMAT = "%d/%m/%Y"
 ALL_FIELDS_IN_CADET_MEMBERSHIP_LIST_FILE = [
     FIRST_NAME_IN_MEMBERSHIP_FILE,
     SURNAME_IN_MEMBERSHIP_FILE,

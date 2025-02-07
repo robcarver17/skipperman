@@ -125,5 +125,5 @@ def get_dict_of_value_by_cadet_id(
 def get_value_for_cadet_id_in_event(
     cadets_at_event: ListOfCadetsWithIDAtEvent, field_key: str, id: str
 ):
-    cadet_at_event = cadets_at_event.cadet_at_event_or_missing_data(id)
+    cadet_at_event = cadets_at_event.cadet_with_id_and_data_at_event(id)
     return cadet_at_event.data_in_row.get(field_key, "")

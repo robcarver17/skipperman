@@ -216,11 +216,10 @@ def warn_on_all_volunteers_in_patrol_boats(
     return DetailListOfLines(ListOfLines(all_warnings).add_Lines(), name="Warnings")
 
 
-def get_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonBar:
+def get_top_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonBar:
     in_swap_state = is_ready_to_swap(interface)
     if in_swap_state:
         return ButtonBar([])
-    help_button = HelpButton("patrol_boat_help")
     return ButtonBar(
         [
             cancel_menu_button,
@@ -233,6 +232,19 @@ def get_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonBar:
         ]
     )
 
+def get_bottom_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonBar:
+    in_swap_state = is_ready_to_swap(interface)
+    if in_swap_state:
+        return ButtonBar([])
+    return ButtonBar(
+        [
+            cancel_menu_button,
+            save_menu_button,
+            help_button,
+        ]
+    )
+
+help_button = HelpButton("patrol_boat_help")
 
 link = Link(
     url=WEBLINK_FOR_QUALIFICATIONS, string="Qualifications table", open_new_window=True

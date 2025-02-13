@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from app.objects.exceptions import missing_data, MultipleMatches, MissingData
-from app.objects.generic_list_of_objects import GenericListOfObjects
+from app.objects.exceptions import missing_data,  arg_not_passed
+from app.objects.generic_list_of_objects import GenericListOfObjects, get_unique_object_with_attr_in_list
 
 from app.objects.generic_objects import GenericSkipperManObject
 
@@ -31,11 +31,10 @@ class ListOfTargetForRoleWithIdAtEvent(GenericListOfObjects):
         matching_item = self._get_target_object_for_role_at_event(role_id)
         matching_item.target = target
 
-    def _get_target_object_for_role_at_event(self, role_id: str, default = missing_data):
-        matching = [item for item in self if item.role_id == role_id]
-        if len(matching) > 1:
-            raise MultipleMatches("Can't have duplicates")
-        if len(matching) == 0:
-            return default
-
-        return matching[0]
+    def _get_target_object_for_role_at_event(self, role_id: str, default = arg_not_passed):
+        return get_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='role_id',
+            attr_value=role_id,
+            default=default
+        )

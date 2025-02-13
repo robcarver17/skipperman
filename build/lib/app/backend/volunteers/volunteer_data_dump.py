@@ -3,14 +3,15 @@ from typing import Dict, List
 
 import pandas as pd
 
+from app.backend.events.list_of_events import get_list_of_events, get_sorted_list_of_events
 from app.data_access.store.object_store import ObjectStore
 from app.objects.composed.volunteer_with_group_and_role_at_event import RoleAndGroup
 
-from app.objects.events import Event, ListOfEvents
-
+from app.objects.events import Event, ListOfEvents, SORT_BY_START_DSC
 
 from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
     get_all_roles_across_recent_events_for_volunteer_as_dict_with_sort_order,
+    get_all_roles_for_list_of_events_for_volunteer_as_dict,
 )
 from app.objects.volunteers import Volunteer
 
@@ -103,9 +104,11 @@ def get_row_data_for_volunteer(
     object_store: ObjectStore, volunteer: Volunteer
 ) -> VolunteerRowData:
     name = volunteer.name
+    list_of_events = get_sorted_list_of_events(object_store, sort_by=SORT_BY_START_DSC)
     roles_with_teams_as_dict = (
-        get_all_roles_across_recent_events_for_volunteer_as_dict_with_sort_order(
-            object_store=object_store, volunteer=volunteer
+        get_all_roles_for_list_of_events_for_volunteer_as_dict(
+            object_store=object_store, volunteer=volunteer,
+            list_of_events=list_of_events
         )
     )
     roles_with_groups_as_dict = dict(

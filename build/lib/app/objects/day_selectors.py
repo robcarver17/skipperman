@@ -3,8 +3,6 @@ from copy import copy
 from enum import Enum
 from typing import Dict, List
 
-import pandas as pd
-from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.exceptions import arg_not_passed
 
 from app.objects.generic_objects import from_bool_to_str, from_str_to_bool
@@ -16,8 +14,6 @@ Day = Enum(
 
 all_possible_days = list(Day.__members__.values())
 ## we keep the original format, but dynamically add this to data frames on import
-
-ALL_POSSIBLE_DAYS = object()
 
 
 def day_given_datetime(some_day: datetime.date) -> Day:
@@ -36,14 +32,14 @@ class DaySelector(Dict[Day, bool]):
 
     def __eq__(self, other: "DaySelector"):
         for day in all_possible_days:
-            if other.get(day, False) != self.get(day, False):
+            if other.available_on_day(day) != self.available_on_day(day):
                 return False
 
         return True
 
     def __hash__(self):
         return hash(
-            "".join([day.name + str(selected) for day, selected in self.items()])
+            "".join([day.name for day, selected in self.items() if selected])
         )
 
     def align_with_list_of_days(self, list_of_days: List[Day]) -> "DaySelector":
@@ -78,16 +74,6 @@ class DaySelector(Dict[Day, bool]):
         return ",".join(items_as_str)
 
     @classmethod
-    def from_list_of_days(cls, list_of_days: List[Day]):
-        return cls(
-            dict(
-                [
-                    (day, True) for day in list_of_days
-                ]
-            )
-        )
-
-    @classmethod
     def from_str(cls, string: str):
         if len(string) == 0:
             return cls({})
@@ -102,6 +88,17 @@ class DaySelector(Dict[Day, bool]):
 
         return cls(dict_of_pairs)
 
+
+    @classmethod
+    def from_list_of_days(cls, list_of_days: List[Day]):
+        return cls(
+            dict(
+                [
+                    (day, True) for day in list_of_days
+                ]
+            )
+        )
+
     @classmethod
     def create_empty(cls):
         return cls({})
@@ -110,7 +107,7 @@ class DaySelector(Dict[Day, bool]):
         return len(self.days_available())==0
 
     def days_available(self) -> List[Day]:
-        return [day for day in all_possible_days if self.available_on_day(day)]
+        return [day for day in self.all_days_in_selector if self.available_on_day(day)]
 
     def available_on_day(self, day: Day):
         return self.get(day, False)
@@ -121,6 +118,9 @@ class DaySelector(Dict[Day, bool]):
     def make_available_on_day(self, day: Day):
         self[day] = True
 
+    @property
+    def all_days_in_selector(self):
+        return list(self.keys())
 
 def union_across_day_selectors(list_of_day_selectors: List[DaySelector]) -> DaySelector:
     copied_list = copy(list_of_day_selectors)
@@ -132,15 +132,11 @@ def union_across_day_selectors(list_of_day_selectors: List[DaySelector]) -> DayS
     return union_selector
 
 
-NO_DAYS_SELECTED = dict([(day, False) for day in all_possible_days])
-
-empty_day_selector = DaySelector(NO_DAYS_SELECTED)
+empty_day_selector = DaySelector(dict([(day, False) for day in all_possible_days]))
 
 
-def no_days_selected(day_selector: DaySelector, possible_days: list):
+def no_days_selected_from_available_days(day_selector: DaySelector, possible_days: list):
     return not any([day_selector.get(day, False) for day in possible_days])
-
-
 
 
 dict_of_short_day_text_and_Days = dict(
@@ -198,46 +194,3 @@ def day_selector_to_text_in_stored_format(day_selector: DaySelector) -> str:
     return ",".join(day_text_as_list)
 
 
-class DictOfDaySelectors(Dict[Cadet, DaySelector]):
-    def align_with_list_of_days(self, list_of_days: List[Day]) -> "DictOfDaySelectors":
-        return DictOfDaySelectors(
-            dict(
-                [
-                    (cadet, day_selector.align_with_list_of_days(list_of_days))
-                    for cadet, day_selector in self.items()
-                ]
-            )
-        )
-
-    def intersect(self, other: "DictOfDaySelectors"):
-        return DictOfDaySelectors(
-            dict(
-                [
-                    (cadet, self[cadet].intersect(other[cadet]))
-                    for cadet in self.list_of_cadets
-                ]
-            )
-        )
-
-    def as_pd_data_frame(self) -> pd.DataFrame:
-        list_of_dicts = [
-            from_day_selector_to_dict_for_pd(day_selector)
-            for day_selector in self.values()
-        ]
-        df = pd.DataFrame(list_of_dicts)
-        df = df.fillna("N/A")
-
-        return df
-
-    @property
-    def list_of_cadets(self):
-        return ListOfCadets(list(self.keys()))
-
-
-def from_day_selector_to_dict_for_pd(day_selector: DaySelector) -> dict:
-    as_dict = {}
-    for day in all_possible_days:
-        if day_selector.available_on_day(day):
-            as_dict[day.name] = "[  ]"
-
-    return as_dict

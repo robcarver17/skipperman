@@ -81,7 +81,7 @@ class VolunteerAtEventWithSkillsAndRolesAndPatrolBoats:
             role_and_group=self.role_and_group_by_day.role_and_group_and_team_on_day(
                 day
             ),
-            patrol_boat=self.patrol_boat_by_day.get(day),
+            patrol_boat=self.patrol_boat_by_day. boat_on_day(day),
             day=day,
             availability=self.availability,
             role_and_group_by_day=self.role_and_group_by_day,

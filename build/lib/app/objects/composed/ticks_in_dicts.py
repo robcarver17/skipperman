@@ -135,7 +135,7 @@ class QualificationsAndTickItemsAsDict(Dict[Qualification, TickSubStagesAsDict])
 
     def does_substage_name_exist(self, substage_name: str):
         list_of_substages = self.list_of_tick_sub_stages
-        return list_of_substages.idx_given_name(substage_name) is not missing_data
+        return list_of_substages.does_substage_name_exist(substage_name)
 
     def modify_name_of_substage_unique_to_qualification_where_new_name_already_exists(
         self,
@@ -194,7 +194,7 @@ class QualificationsAndTickItemsAsDict(Dict[Qualification, TickSubStagesAsDict])
     def get_substage_id_for_name_adding_if_missing(self, new_substage_name: str) -> str:
         ## check to see if exists
         list_of_substages = self.list_of_tick_sub_stages
-        substage_id = list_of_substages.id_given_name(new_substage_name)
+        substage_id = list_of_substages.id_given_name(new_substage_name, default=missing_data)
         if substage_id is missing_data:
             list_of_substages.add(new_substage_name)
             self.list_of_tick_sub_stages = list_of_substages
@@ -307,7 +307,7 @@ def list_of_substages_given_list_of_ids(
     list_of_tick_sub_stages: ListOfTickSubStages, list_of_substage_ids: List[str]
 ) -> ListOfTickSubStages:
     return ListOfTickSubStages(
-        [list_of_tick_sub_stages.object_with_id(id) for id in list_of_substage_ids]
+        [list_of_tick_sub_stages.substage_given_id(id) for id in list_of_substage_ids]
     )
 
 

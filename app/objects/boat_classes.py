@@ -1,12 +1,13 @@
 from dataclasses import dataclass
 
-from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import BoatClassAndPartnerAtEventOnDay
-from app.objects.exceptions import missing_data, arg_not_passed, MultipleMatches, MissingData
+from app.objects.cadets import Cadet
+from app.objects.exceptions import arg_not_passed
 from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds, get_idx_of_unique_object_with_attr_in_list, get_unique_object_with_attr_in_list,
 )
 
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
+from app.objects.partners import no_cadet_partner_required, valid_partnership_given_partner_cadet
 
 NO_BOAT_CLASS_NAME = ""
 
@@ -49,7 +50,7 @@ class ListOfBoatClasses(GenericListOfObjectsWithIds):
 
         return self[index]
 
-    def boat_class_given_name(self, boat_class_name: str, default=arg_not_passed):
+    def boat_class_given_name(self, boat_class_name: str, default=arg_not_passed) -> BoatClass:
         if boat_class_name == no_boat_class.name:
             return no_boat_class
         return get_unique_object_with_attr_in_list(
@@ -90,6 +91,18 @@ class ListOfBoatClasses(GenericListOfObjectsWithIds):
         assert len(list_of_names) == len(set(list_of_names))
 
 
-no_boat_class_partner_or_sail_number = BoatClassAndPartnerAtEventOnDay(
-    boat_class=no_boat_class, sail_number=""
-)
+@dataclass
+class BoatClassAndPartnerAtEventOnDay:
+    boat_class: BoatClass
+    sail_number: str
+    partner_cadet: Cadet = no_cadet_partner_required
+
+    @property
+    def has_partner(self) -> bool:
+        return valid_partnership_given_partner_cadet(self.partner_cadet)
+
+    @classmethod
+    def create_empty(cls):
+        return cls(    boat_class=no_boat_class, sail_number="", partner_cadet=no_cadet_partner_required)
+
+no_boat_class_partner_or_sail_number = BoatClassAndPartnerAtEventOnDay.create_empty()

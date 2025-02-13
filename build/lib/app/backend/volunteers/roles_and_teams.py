@@ -14,17 +14,22 @@ from app.objects.composed.volunteer_with_group_and_role_at_event import (
     RoleAndGroup,
     ListOfRolesAndGroups,
 )
+from app.objects.exceptions import arg_not_passed
 
 from app.objects.roles_and_teams import ListOfTeams, ListOfRolesWithSkillIds, Team
 from app.backend.groups.list_of_groups import get_list_of_groups
 
+from app.objects.roles_and_teams import no_role_allocated
+from app.objects.groups import unallocated_group
 
 def reorder_tuple_of_item_and_role_and_group(
     object_store: ObjectStore, list_of_tuples: List[Tuple[object, RoleAndGroup]]
 ) -> List[Tuple[object, RoleAndGroup]]:
 
     list_of_roles = get_list_of_roles(object_store)
+    list_of_roles.append(no_role_allocated)
     list_of_groups = get_list_of_groups(object_store)
+    list_of_groups.append(unallocated_group)
 
     list_of_roles_and_groups_in_tuple = ListOfRolesAndGroups(
         [tuple[1] for tuple in list_of_tuples]
@@ -74,9 +79,9 @@ def get_team_from_list_of_given_name_of_team(
     return list_of_teams.matching_team_name(team_selected)
 
 
-def get_team_from_id(object_store: ObjectStore, team_id: str):
+def get_team_from_id(object_store: ObjectStore, team_id: str, default = arg_not_passed):
     list_of_teams = get_list_of_teams(object_store)
-    return list_of_teams.object_with_id(team_id)
+    return list_of_teams.team_with_id(team_id, default =default)
 
 
 def modify_list_of_roles_with_skills(
@@ -160,8 +165,8 @@ def order_list_of_roles(
     object_store: ObjectStore, list_of_roles: ListOfRolesWithSkillIds
 ):
     all_roles = get_list_of_roles(object_store)
-    return ListOfRolesWithSkillIds.DEPRECATE_subset_from_list_of_ids(
-        full_list=all_roles, list_of_ids=list_of_roles.list_of_ids
+    return all_roles.subset_from_list_of_ids_retaining_order(
+         list_of_ids=list_of_roles.list_of_ids
     )
 
 

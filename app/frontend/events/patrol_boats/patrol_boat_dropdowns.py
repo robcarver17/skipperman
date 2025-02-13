@@ -4,7 +4,7 @@ from app.backend.volunteers.list_of_volunteers import get_volunteer_from_name
 from app.backend.volunteers.roles_and_teams import get_list_of_roles_with_skills
 
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
-    get_list_of_boat_names_excluding_boats_already_at_event,
+    get_list_of_visible_boat_names_excluding_boats_already_at_event,
     load_list_of_patrol_boats_at_event,
 )
 from app.backend.rota.volunteer_table import get_dict_of_roles_for_dropdown
@@ -36,7 +36,7 @@ from app.objects.volunteers import Volunteer
 
 def get_add_boat_dropdown(interface: abstractInterface, event: Event) -> Line:
     list_of_boats_excluding_boats_already_at_event = (
-        get_list_of_boat_names_excluding_boats_already_at_event(
+        get_list_of_visible_boat_names_excluding_boats_already_at_event(
             object_store=interface.object_store, event=event
         )
     )
@@ -49,6 +49,8 @@ def get_add_boat_dropdown(interface: abstractInterface, event: Event) -> Line:
             for boat_name in list_of_boats_excluding_boats_already_at_event
         ]
     )
+    print(list_of_boats_as_dict)
+
     dropdown = dropDownInput(
         input_name=ADD_BOAT_DROPDOWN,
         input_label="",
@@ -89,7 +91,7 @@ def get_list_of_strings_of_volunteers_to_add_for_day_on_patrol_boat(
             event_data_for_volunteer=event_data_for_volunteer,
             day=day,
         )
-        for volunteer, event_data_for_volunteer in sorted_volunteers_at_event_but_not_yet_on_patrol_boats
+        for volunteer, event_data_for_volunteer in sorted_volunteers_at_event_but_not_yet_on_patrol_boats.items()
     ]
 
     return dropdown_elements

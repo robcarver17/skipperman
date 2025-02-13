@@ -32,28 +32,6 @@ from app.data_access.store.object_store import ObjectStore
 from app.objects.groups import Group
 
 
-def add_or_upate_group_for_cadet_on_day_if_cadet_available_on_day(
-    object_store: ObjectStore,
-    event: Event,
-    cadet: Cadet,
-    day: Day,
-    group: Group,
-):
-    if is_cadet_unavailable_on_day(object_store=object_store, event=event, cadet=cadet, day=day):
-        return
-
-    dict_of_cadets_with_groups_at_event = get_dict_of_cadets_with_groups_at_event(
-        object_store=object_store, event=event
-    )
-    dict_of_cadets_with_groups_at_event.add_or_upate_group_for_cadet_on_day(
-        cadet=cadet, day=day, group=group
-    )
-    update_dict_of_cadets_with_groups_at_event(
-        object_store=object_store,
-        event=event,
-        dict_of_cadets_with_groups_at_event=dict_of_cadets_with_groups_at_event,
-    )
-
 
 def get_joint_attendance_matrix_for_cadets_in_group_at_event(
     object_store: ObjectStore,

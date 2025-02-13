@@ -30,6 +30,7 @@ all_status_as_list_for_user_input = [
     lapsed_member,
     user_unconfirmed_member,
 ]
+
 all_status_description_as_dict_for_user_input = dict(
     [(describe_status(status), status) for status in all_status_as_list_for_user_input]
 )

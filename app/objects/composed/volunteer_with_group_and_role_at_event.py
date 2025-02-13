@@ -2,6 +2,7 @@ from copy import copy
 from dataclasses import dataclass
 from typing import Dict, List, Union
 
+from app.objects.exceptions import arg_not_passed
 from app.objects.roles_and_teams import Team, role_location_lake
 from app.objects.utils import most_common, flatten
 
@@ -51,7 +52,7 @@ class VolunteerWithRoleGroupAndTeamAtEvent:
             volunteer_with_id_in_role_at_event.role_id
         )
         day = volunteer_with_id_in_role_at_event.day
-        group = list_of_groups.object_with_id(
+        group = list_of_groups.group_with_id(
             volunteer_with_id_in_role_at_event.group_id
         )
         list_of_team_and_index = (
@@ -101,8 +102,14 @@ class RoleAndGroup:
             1000 * role_index
         ) + group_index  ## fine as long as less than 1000 groups
 
+    @classmethod
+    def create_empty(cls):
+        return cls(
+            role=no_role_set,
+            group=unallocated_group
+        )
 
-unallocated_role_and_group = RoleAndGroup()
+unallocated_role_and_group = RoleAndGroup.create_empty()
 
 
 class ListOfRolesAndGroups(List[RoleAndGroup]):
@@ -215,13 +222,13 @@ class DictOfDaysRolesAndGroupsAndTeams(Dict[Day, RoleAndGroupAndTeam]):
         list_of_all_days: List[Day],
         allow_replacement: bool = True,
     ):
-        role_to_copy = self.role_and_group_and_team_on_day(day)
+        role_group_team_to_copy = self.role_and_group_and_team_on_day(day)
         for other_day in list_of_all_days:
             if day == other_day:
                 continue
-            existing_role = self.get(day, None)
-            if existing_role is None or allow_replacement:
-                self[day] = role_to_copy
+            existing_role_group_team = self.role_and_group_and_team_on_day(other_day, None)
+            if existing_role_group_team is None or allow_replacement:
+                self[other_day] = role_group_team_to_copy
 
     def delete_role_on_day(self, day):
         try:
@@ -229,8 +236,11 @@ class DictOfDaysRolesAndGroupsAndTeams(Dict[Day, RoleAndGroupAndTeam]):
         except:
             pass
 
-    def role_and_group_and_team_on_day(self, day: Day) -> RoleAndGroupAndTeam:
-        return self.get(day, unallocated_role_and_group_and_team)
+    def role_and_group_and_team_on_day(self, day: Day, default=arg_not_passed) -> RoleAndGroupAndTeam:
+        if default is arg_not_passed:
+            default = RoleAndGroupAndTeam.create_unallocated()
+
+        return self.get(day, default)
 
     def role_and_group_on_day(self, day: Day) -> RoleAndGroup:
         role_and_group_and_team = self.role_and_group_and_team_on_day(day)
@@ -560,7 +570,8 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
     def days_and_roles_for_volunteer(
         self, volunteer: Volunteer
     ) -> DictOfDaysRolesAndGroupsAndTeams:
-        return self.get(volunteer, DictOfDaysRolesAndGroupsAndTeams())
+        default = DictOfDaysRolesAndGroupsAndTeams()
+        return self.get(volunteer, default)
 
     @property
     def list_of_volunteers_with_id_in_role_at_event(
@@ -597,7 +608,7 @@ def compose_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups(
     dict_of_teams_and_roles: DictOfTeamsWithRoles,
     list_of_volunteers_with_id_in_role_at_event: ListOfVolunteersWithIdInRoleAtEvent,
 ) -> DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups:
-    event = list_of_events.object_with_id(event_id)
+    event = list_of_events.event_with_id(event_id)
     raw_dict = compose_raw_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups(
         list_of_volunteers=list_of_volunteers,
         list_of_groups=list_of_groups,

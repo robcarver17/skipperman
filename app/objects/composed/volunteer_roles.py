@@ -191,6 +191,9 @@ class ListOfRolesWithSkills(List[RoleWithSkills]):
         )
 
     def role_with_name(self, role_name, default  = arg_not_passed):
+        if role_name == no_role_set.name:
+            return no_role_set
+
         return get_unique_object_with_attr_in_list(
             some_list=self,
             attr_name='name',

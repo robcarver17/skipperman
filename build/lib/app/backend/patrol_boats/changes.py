@@ -164,6 +164,7 @@ def add_named_boat_to_event_with_no_allocation(
     )
 
     patrol_boat_data.add_boat_to_event_with_no_allocation(patrol_boat)
+
     update_dict_of_patrol_boats_by_day_for_volunteer_at_event(
         dict_of_volunteers_at_event_with_patrol_boats=patrol_boat_data,
         object_store=object_store,

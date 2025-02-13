@@ -80,8 +80,8 @@ class ListOfCadetsWithGroupOnDay(List[CadetWithGroupOnDay]):
     ):
         list_of_cadets_with_group = [
             CadetWithGroupOnDay(
-                cadet=list_of_cadets.object_with_id(allocation.cadet_id),
-                group=list_of_groups.object_with_id(allocation.group_id),
+                cadet=list_of_cadets.cadet_with_id(allocation.cadet_id),
+                group=list_of_groups.group_with_id(allocation.group_id),
                 day=allocation.day,
             )
             for allocation in list_of_allocations
@@ -95,9 +95,18 @@ class ListOfCadetsWithGroupOnDay(List[CadetWithGroupOnDay]):
 
 class DaysAndGroups(Dict[Day, Group]):
     def update_group_on_day(self, day: Day, group: Group):
+        if group.is_unallocated:
+            try:
+                self.pop(day)
+            except:
+                pass
+
         self[day] = group
 
-    def group_on_day(self, day: Day, default=unallocated_group) -> Group:
+    def group_on_day(self, day: Day, default=arg_not_passed) -> Group:
+        if default is arg_not_passed:
+            default = unallocated_group
+
         return self.get(day, default)
 
     def remove_cadet_from_event_on_day(self, day):
@@ -143,9 +152,6 @@ class DaysAndGroups(Dict[Day, Group]):
         return cls()
 
 
-empty_days_and_groups = DaysAndGroups.create_empty()
-
-
 class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
     def __init__(
         self,
@@ -166,6 +172,11 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
         group: Group,
     ):
         current_allocation = self.get_days_and_groups_for_cadet(cadet=cadet)
+        current_group = current_allocation.group_on_day(day)
+
+        if current_group == group:
+            return
+
         current_allocation.update_group_on_day(day=day, group=group)
         self.list_of_cadet_ids_with_groups.update_group_for_cadet_on_day(
             cadet_id=cadet.id, day=day, chosen_group_id=group.id
@@ -280,7 +291,7 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
         self, cadet: Cadet, default=arg_not_passed
     ) -> DaysAndGroups:
         if default is arg_not_passed:
-            default = empty_days_and_groups
+            default = DaysAndGroups()
 
         return self.get(cadet, default)
 
@@ -308,7 +319,7 @@ def compose_dict_of_cadets_with_days_and_groups_at_event(
     list_of_events: ListOfEvents,
     list_of_cadet_ids_with_groups: ListOfCadetIdsWithGroups,
 ) -> DictOfCadetsWithDaysAndGroupsAtEvent:
-    event = list_of_events.object_with_id(event_id)
+    event = list_of_events.event_with_id(event_id)
 
     raw_dict = compose_raw_dict_of_cadets_with_days_and_groups_at_event(
         list_of_cadets=list_of_cadets,

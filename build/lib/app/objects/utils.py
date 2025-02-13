@@ -26,36 +26,8 @@ from app.data_access.configuration.fixed import (
 )
 
 
-def list_of_list_max_wide_for_table_building(
-    list_of_stuff: list, max_columns=10
-) -> list:
-    use_max_colums = calculate_max_columns(list_of_stuff, max_columns=max_columns)
-    list_to_empty = copy(list_of_stuff)
-    new_list = []
-    while len(list_to_empty) > 0:
-        this_row = []
-        for i in range(use_max_colums):
-            try:
-                this_row.append(list_to_empty.pop())
-            except IndexError:
-                break
-        new_list.append(this_row)
-
-    return new_list
-
-
 OPTIMAL_LINE_LENGTH = 20
 
-
-def calculate_max_columns(list_of_stuff: list, max_columns=10) -> int:
-    max_columns_to_use = max(
-        [min([int(np.floor(len(list_of_stuff) / OPTIMAL_LINE_LENGTH)), max_columns]), 1]
-    )
-    return max_columns_to_use
-
-
-def drop_duplicates_in_list_of_ids(list_of_ids: list):
-    return list(dict.fromkeys(list_of_ids))
 
 
 def all_equal(iterable):
@@ -66,11 +38,6 @@ def all_equal(iterable):
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
-
-@dataclass
-class SingleDiff:
-    old_value: object
-    new_value: object
 
 
 def clean_up_dict_with_nans(some_dict) -> dict:
@@ -105,13 +72,6 @@ def make_id_as_int_str(value: str) -> str:
     except:
         ## actually a string
         return value
-
-
-def list_duplicate_indices(seq):
-    tally = defaultdict(list)
-    for i, item in enumerate(seq):
-        tally[item].append(i)
-    return [locs for locs in tally.values() if len(locs) > 1]
 
 
 KEY_VALUE_SEPERATOR = ":"
@@ -289,3 +249,9 @@ def has_hidden_attribute(object):
 
 def is_protected_object(object):
     return getattr(object, "protected", False)
+
+
+def print_list(x, name):
+    print("%s:" % name)
+    for y in x:
+        print(str(y))

@@ -1,4 +1,5 @@
 from app.data_access.store.object_store import ObjectStore
+from app.objects.exceptions import arg_not_passed
 
 from app.objects.qualifications import ListOfQualifications, Qualification
 from app.data_access.store.object_definitions import (
@@ -35,9 +36,9 @@ def modify_qualification(
     )
 
 
-def get_qualification_given_id(object_store: ObjectStore, id: str) -> Qualification:
+def get_qualification_given_id(object_store: ObjectStore, id: str, default = arg_not_passed) -> Qualification:
     list_of_qualifications = get_list_of_qualifications(object_store)
-    return list_of_qualifications.object_with_id(id)
+    return list_of_qualifications.qualification_given_id(id, default=default)
 
 
 def get_qualification_given_name(object_store: ObjectStore, name: str) -> Qualification:

@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Dict, List, Tuple, Union
 
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
@@ -17,7 +18,7 @@ from app.objects.cadets import Cadet
 from app.objects.club_dinghies import ListOfClubDinghies, no_club_dinghy
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 from app.objects.day_selectors import Day
-from app.objects.exceptions import missing_data
+from app.objects.exceptions import missing_data, arg_not_passed
 from app.objects.groups import unallocated_group
 from app.objects.utils import all_equal, similar
 
@@ -260,9 +261,7 @@ def get_name_of_class_of_boat_on_day(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
     )
     if name_from_data is missing_data:
-        name_from_data = guess_name_of_boat_class_on_day_from_other_information(
-            dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
-        )
+        return no_boat_class.name
 
     return name_from_data
 
@@ -328,7 +327,7 @@ def get_current_group_name_for_day_with_empty_string_if_unallocated( dict_of_all
     return allocated_group_name
 
 def get_current_club_boat_name_for_day_with_empty_string_if_unallocated(dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day):
-    club_boat = dict_of_all_event_data.dict_of_cadets_and_club_dinghies_at_event.get_club_boat_allocation_for_cadet(
+    club_boat = dict_of_all_event_data.dict_of_cadets_and_club_dinghies_at_event.club_dinghys_for_cadet(
         cadet=cadet
     ).dinghy_on_day(day=day, default=no_club_dinghy)
 
@@ -472,12 +471,54 @@ def get_two_handed_partner_as_str_for_cadet_on_day(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
     ):
         return NOT_AVAILABLE
+
     partner = get_two_handed_partner_for_cadet_on_day(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
     )
 
     return partner.name
 
+
+def get_two_handed_partner_as_str_for_dropdown_cadet_on_day(
+        dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
+) -> str:
+
+    partner = get_two_handed_partner_for_cadet_on_day(
+        dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
+    )
+
+    partner_name = get_cadet_name_or_none_given_schedule_status(dict_of_all_event_data=dict_of_all_event_data,
+                                                                cadet=cadet,
+                                                                other_cadet=partner,
+                                                                specific_day=day)
+    if partner_name is None:
+        raise Exception("Partner name should not resolve to none for matched partner")
+
+    return partner_name
+
+
+
+def get_two_handed_partner_as_str_for_dropdown_cadet_across_days(
+        dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet
+) -> str:
+
+    current_partner_name = (
+        get_two_handed_partner_name_for_cadet_across_days_or_none_if_different(
+            dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
+        )
+    )
+    if current_partner_name is None:
+        return None
+
+    partner = dict_of_all_event_data.dict_of_cadets_and_boat_class_and_partners.boat_classes_and_partner_for_cadet(cadet).most_common_partner()
+
+    partner_name = get_cadet_name_or_none_given_schedule_status(dict_of_all_event_data=dict_of_all_event_data,
+                                                                cadet=cadet,
+                                                                other_cadet=partner)
+    if partner_name is None:
+        raise Exception("Partner name should not resolve to none for matched partner")
+
+    return partner_name
 
 def get_two_handed_partner_for_cadet_on_day(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
@@ -490,49 +531,92 @@ def get_two_handed_partner_for_cadet_on_day(
     return partner
 
 
-def get_list_of_cadets_as_str_at_event_with_matching_schedules_excluding_this_cadet(
-    dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet
+Schedule = Enum('Schedule', ['match', 'no_match', 'partial_match', 'unavailable', 'same_cadet'])
+matched_schedule = Schedule.match
+no_matched_schedule = Schedule.no_match
+partial_matched_schedule = Schedule.partial_match
+same_cadet = Schedule.same_cadet
+unavailable = Schedule.unavailable
+
+
+def get_list_of_cadet_names_including_asterix_marks_at_event_with_matching_schedules_excluding_this_cadet(
+    dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, available_on_specific_day: Day = arg_not_passed
 ) -> List[str]:
 
-    this_cadet_availability = cadet_availability_at_event(
-        dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
-    )
 
     cadets_at_event = (
         dict_of_all_event_data.dict_of_cadets_with_registration_data.list_of_active_cadets()
     )
-    raw_list_of_cadets_with_matching_schedules = []
+    raw_list_of_cadet_names__with_matching_schedules = []
     for other_cadet in cadets_at_event:
-        if other_cadet == cadet:
+        cadet_name_or_none = get_cadet_name_or_none_given_schedule_status(
+            dict_of_all_event_data=dict_of_all_event_data,
+            cadet=cadet,
+            other_cadet=other_cadet,
+            specific_day=available_on_specific_day
+        )
+        if cadet_name_or_none is None:
             continue
-        other_cadet_availability = cadet_availability_at_event(
-            dict_of_all_event_data=dict_of_all_event_data, cadet=other_cadet
-        )
-        if this_cadet_availability == other_cadet_availability:
-            raw_list_of_cadets_with_matching_schedules.append(other_cadet)
 
-    cadets_as_str = [str(cadet) for cadet in raw_list_of_cadets_with_matching_schedules]
-    cadets_as_str.sort()
+        raw_list_of_cadet_names__with_matching_schedules.append(cadet_name_or_none)
 
-    return cadets_as_str
+    raw_list_of_cadet_names__with_matching_schedules.sort()
 
+    return raw_list_of_cadet_names__with_matching_schedules
 
-def list_of_cadets_as_str_at_event_excluding_cadet_available_on_day(
-    dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
-):
-    list_of_cadets_at_event_available = (
-        dict_of_all_event_data.dict_of_cadets_with_registration_data.list_of_active_cadets()
+from app.objects.partners import no_partnership_given_partner_cadet, from_partner_cadet_to_id_or_string
+
+def get_cadet_name_or_none_given_schedule_status(
+        dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, other_cadet: Cadet, specific_day: Day = arg_not_passed):
+
+    if no_partnership_given_partner_cadet(other_cadet):
+        return from_partner_cadet_to_id_or_string(other_cadet)
+
+    schedule = get_schedule_status_for_two_cadets(
+        dict_of_all_event_data=dict_of_all_event_data,
+        cadet=cadet,
+        other_cadet=other_cadet,
+        specific_day=specific_day
     )
-    list_of_cadets_at_event_available.remove(cadet)
 
-    return [
-        str(other_cadet)
-        for other_cadet in list_of_cadets_at_event_available
-        if cadet_is_available_on_day(
-            dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
-        )
-    ]
+    if schedule is same_cadet:
+        return None
+    elif schedule is unavailable:
+        return None
+    elif schedule is no_matched_schedule:
+        return None
+    elif schedule is matched_schedule:
+        return other_cadet.name
+    elif schedule is partial_matched_schedule:
+        return other_cadet.name + "*"  ## NO SPACES
+    else:
+        raise Exception("Don't know this schedule")
 
+
+def get_schedule_status_for_two_cadets(
+    dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, other_cadet: Cadet, specific_day: Day = arg_not_passed
+) -> Schedule:
+
+    if cadet == other_cadet:
+        return same_cadet
+    this_cadet_availability = cadet_availability_at_event(
+        dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
+    )
+    other_cadet_availability = cadet_availability_at_event(
+        dict_of_all_event_data=dict_of_all_event_data, cadet=other_cadet
+    )
+
+    if specific_day is not arg_not_passed:
+        if not other_cadet_availability.available_on_day(specific_day):
+            return unavailable
+
+    if this_cadet_availability == other_cadet_availability:
+        return matched_schedule
+
+    if len(this_cadet_availability.days_that_intersect_with(other_cadet_availability))>0:
+        return partial_matched_schedule
+
+    return no_matched_schedule
 
 NOT_AVAILABLE = "Not available"
 

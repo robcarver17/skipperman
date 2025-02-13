@@ -126,8 +126,11 @@ def process_update_to_cadet_food_data_if_new_to_event(
 ):
 
     food_from_registration = registration_data.data_in_row.get_item(
-        CADET_FOOD_PREFERENCE, ""
+        CADET_FOOD_PREFERENCE, None
     )
+    if food_from_registration is None:
+        return
+
     food_requirements = guess_food_requirements_from_food_field(food_from_registration)
     add_new_cadet_with_food_to_event(
         object_store=interface.object_store,
@@ -181,6 +184,8 @@ def process_update_to_volunteer_food_data_if_new_to_event(
             interface=interface, event=event, volunteer=volunteer
         )
     )
+    if len(list_of_food_preferences_as_single_str)==0:
+        return
 
     food_requirements = guess_food_requirements_from_food_field(
         list_of_food_preferences_as_single_str

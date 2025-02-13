@@ -46,6 +46,9 @@ class ListOfClubDinghies(GenericListOfObjectsWithIds):
 
 
     def club_dinghy_with_name(self, boat_name: str,  default=arg_not_passed) -> ClubDinghy:
+        if boat_name == no_club_dinghy.name:
+            return no_club_dinghy
+
         idx = self.idx_given_name(boat_name, default=None)
         if idx is None:
             if default is arg_not_passed:
@@ -64,6 +67,11 @@ class ListOfClubDinghies(GenericListOfObjectsWithIds):
             default=default
         )
 
+    def club_dinghy_with_id(self, dinghy_id: str, default = arg_not_passed):
+        if dinghy_id == no_club_dinghy_id:
+            return no_club_dinghy
+
+        return self.object_with_id(dinghy_id, default=default)
 
     def add(self, boat_name: str):
         try:
@@ -81,3 +89,6 @@ class ListOfClubDinghies(GenericListOfObjectsWithIds):
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_names()
         assert len(list_of_names) == len(set(list_of_names))
+
+
+no_club_dinghy_id = no_club_dinghy.id

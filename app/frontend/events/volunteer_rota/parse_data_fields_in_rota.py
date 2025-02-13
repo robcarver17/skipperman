@@ -3,6 +3,7 @@ from app.backend.rota.volunteer_table import MAKE_UNAVAILABLE
 from app.backend.volunteers.roles_and_teams import get_role_from_name
 
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
+from app.objects.exceptions import missing_data, MISSING_FROM_FORM
 from app.objects.volunteers import Volunteer
 
 from app.objects.events import Event
@@ -69,16 +70,13 @@ def update_details_from_form_for_volunteer_given_specific_day_at_event(
         interface=interface, event=event, volunteer=volunteer, day=day
     )
 
-
 def update_role_or_availability_from_form_for_volunteer_on_day_at_event(
     interface: abstractInterface, event: Event, volunteer: Volunteer, day: Day
 ):
-    try:
-        new_role_name_from_form = interface.value_from_form(
-            input_name_for_role_and_volunteer(volunteer=volunteer, day=day)
-        )
-    except:
-        ## Currently no availability so no dropdown available
+    new_role_name_from_form = interface.value_from_form(
+        input_name_for_role_and_volunteer(volunteer=volunteer, day=day), default=MISSING_FROM_FORM
+    )
+    if new_role_name_from_form == MISSING_FROM_FORM:
         return
 
     if new_role_name_from_form == MAKE_UNAVAILABLE:
@@ -105,11 +103,12 @@ def update_role_or_availability_from_form_for_volunteer_on_day_at_event(
 def update_group_from_form_for_volunteer_on_day_at_event(
     interface: abstractInterface, event: Event, volunteer: Volunteer, day: Day
 ):
-    try:
-        new_group_name_from_form = interface.value_from_form(
-            input_name_for_group_and_volunteer(volunteer=volunteer, day=day)
-        )
-    except:
+    new_group_name_from_form = interface.value_from_form(
+        input_name_for_group_and_volunteer(volunteer=volunteer, day=day),
+        default=MISSING_FROM_FORM
+    )
+
+    if new_group_name_from_form == MISSING_FROM_FORM:
         ## no group dropdown as not relevant or unavailable
         return
 
@@ -132,7 +131,10 @@ def update_notes_for_volunteer_at_event_from_form(
     volunteer_at_event_data: AllEventDataForVolunteer,
 ):
     event = get_event_from_state(interface)
-    new_notes = interface.value_from_form(input_name_for_notes_and_volunteer(volunteer))
+    new_notes = interface.value_from_form(input_name_for_notes_and_volunteer(volunteer), default=MISSING_FROM_FORM)
+    if new_notes == MISSING_FROM_FORM:
+        return
+
     existing_notes = volunteer_at_event_data.registration_data.notes
     if new_notes == existing_notes:
         return

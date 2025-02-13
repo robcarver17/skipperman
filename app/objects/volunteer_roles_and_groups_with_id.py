@@ -6,7 +6,7 @@ from app.objects.roles_and_teams import Team, no_role_allocated_id
 
 from app.objects.day_selectors import Day
 from app.objects.exceptions import missing_data, arg_not_passed, MissingData
-from app.objects.generic_list_of_objects import GenericListOfObjects
+from app.objects.generic_list_of_objects import GenericListOfObjects, get_idx_of_unique_object_with_multiple_attr_in_list, get_unique_object_with_multiple_attr_in_list
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.groups import Group, unallocated_group, unallocated_group_id
 from app.objects.volunteers import Volunteer
@@ -123,22 +123,11 @@ class ListOfVolunteersWithIdInRoleAtEvent(GenericListOfObjects):
     def member_matching_volunteer_id_and_day(
         self, volunteer_id: str, day: Day, default = arg_not_passed
     ) -> VolunteerWithIdInRoleAtEvent:
-        list_of_matches = [
-            volunteer_with_role
-            for volunteer_with_role in self
-            if volunteer_with_role.volunteer_id == volunteer_id
-            and volunteer_with_role.day == day
-        ]
-
-        if len(list_of_matches) == 0:
-            if default is arg_not_passed:
-                raise MissingData
-            else:
-                return default
-        elif len(list_of_matches) > 1:
-            raise MultipleMatches("Cannot have more than one volunteer for a given day")
-
-        return list_of_matches[0]
+        return get_unique_object_with_multiple_attr_in_list(
+            some_list=self,
+            dict_of_attributes={'volunteer_id': volunteer_id, 'day': day},
+            default=default
+        )
 
     def update_volunteer_in_role_on_day(
         self, volunteer: Volunteer, day: Day, new_role_id: str

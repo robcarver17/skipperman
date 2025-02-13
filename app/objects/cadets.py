@@ -220,6 +220,24 @@ class ListOfCadets(GenericListOfObjectsWithIds):
             new_cadet
         )
 
+    def matching_cadet_with_name(self, cadet_name: str, default=arg_not_passed) -> Cadet:
+        exact_match = [
+            cadet_in_list for cadet_in_list in self if cadet_in_list.name == cadet_name
+        ]
+        if len(exact_match) == 1:
+            return exact_match[0]
+        elif len(exact_match) > 1:
+            raise MultipleMatches(
+                "Multiple matching cadets found looking for %s!" % cadet_name
+            )
+        elif len(exact_match)==0:
+            if default is arg_not_passed:
+                raise MissingData
+            else:
+                return default
+
+
+
     def matching_cadet(self, cadet: Cadet, default=arg_not_passed) -> Cadet:
         exact_match = [
             cadet_in_list for cadet_in_list in self if cadet == cadet_in_list

@@ -64,18 +64,11 @@ def save_all_information_in_rota_page(interface: abstractInterface):
         volunteer,
         volunteer_at_event_data,
     ) in dict_of_volunteers_at_event_with_event_data.items():
-        try:
-            update_details_from_form_for_volunteer_at_event(
-                interface=interface,
-                volunteer=volunteer,
-                volunteer_at_event_data=volunteer_at_event_data,
-            )
-        except Exception as e:
-            ## perfectly fine if
-            print(
-                "Can't volunteer %s: error code %s probably because was filtered out"
-                % (volunteer.name, str(e))
-            )
+        update_details_from_form_for_volunteer_at_event(
+            interface=interface,
+            volunteer=volunteer,
+            volunteer_at_event_data=volunteer_at_event_data,
+        )
 
 
 def action_if_volunteer_button_pressed(

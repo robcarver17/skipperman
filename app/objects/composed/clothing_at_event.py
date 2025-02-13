@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Dict, Tuple
 
-from app.objects.exceptions import MissingData, arg_not_passed
+from app.objects.exceptions import MissingData, arg_not_passed, missing_data
 
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.clothing import (
@@ -55,12 +55,8 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
         self,
         cadet: Cadet,
     ) -> bool:
-        try:
-            self.get(cadet)
-        except:
-            return False
-
-        return True
+        clothing = self.clothing_for_cadet(cadet, default=missing_data)
+        return not clothing is missing_data
 
     def as_list(self) -> ListOfCadetsWithClothingAtEvent:
         return ListOfCadetsWithClothingAtEvent(
@@ -95,7 +91,7 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
         try:
             self.pop(cadet)
         except:
-            raise MissingData("Can't remove clothing for non existent cadet")
+            pass
 
         self.list_of_cadets_with_clothing_and_ids.remove_clothing_for_cadet_at_event(cadet.id)
 
@@ -234,9 +230,9 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
         return list(set(sizes))
 
     def clothing_for_cadet(self, cadet: Cadet, default = arg_not_passed) -> ClothingAtEvent:
+        if default is arg_not_passed:
+            default = ClothingAtEvent()
         clothing = self.get(cadet, default)
-        if clothing is arg_not_passed:
-            raise MissingData
 
         return clothing
 

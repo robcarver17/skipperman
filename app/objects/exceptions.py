@@ -47,3 +47,6 @@ class MultipleMatches(Exception):
 
 class CadetNotSelected(Exception):
     pass
+
+
+MISSING_FROM_FORM = "missing_from_form"

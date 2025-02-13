@@ -2,11 +2,10 @@ import datetime
 from dataclasses import dataclass
 from typing import List
 
+from app.objects.generic_list_of_objects import get_idx_of_unique_object_with_attr_in_list, get_unique_object_with_attr_in_list
+
 from app.objects.exceptions import (
-    missing_data,
     arg_not_passed,
-    MissingData,
-    MultipleMatches,
 )
 from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
@@ -45,25 +44,24 @@ class ListOfQualifications(GenericListOfObjectsWithIds):
 
         self[index] = new_qualification
 
-    def qualification_given_name(self, name: str):
-        idx = self.idx_given_name(name)
-        return self[idx]
+    def qualification_given_id(self, qualification_id: str, default = arg_not_passed):
+        return self.object_with_id(qualification_id, default=default)
 
-    def idx_given_name(self, name: str):
-        id = self.id_given_name(name)
-        return self.index_of_id(id)
+    def qualification_given_name(self, name: str, default =arg_not_passed):
+        return get_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='name',
+            attr_value=name,
+            default=default
+        )
 
-    def id_given_name(self, name: str):
-        id = [item.id for item in self if item.name == name]
-
-        if len(id) == 0:
-            raise MissingData
-        elif len(id) > 1:
-            raise MultipleMatches(
-                "Found more than one qualification with same name should be impossible"
-            )
-
-        return str(id[0])
+    def idx_given_name(self, name: str, default = arg_not_passed):
+        return get_idx_of_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='name',
+            attr_value=name,
+            default=default
+        )
 
     def add(self, name: str):
         qualification = Qualification(name=name)
@@ -120,11 +118,12 @@ class ListOfCadetsWithIdsAndQualifications(GenericListOfObjectsWithIds):
             if item.cadet_id == cadet_id and item.qualification_id == qualification_id:
                 self.remove(item)
 
-    def does_cadet_id_have_qualification(self, cadet_id: str, qualification_id: str):
+    def does_cadet_id_have_qualification(self, cadet_id: str, qualification_id: str) -> bool:
         list_of_qualification_ids = self.list_of_qualification_ids_for_cadet(cadet_id)
 
         return qualification_id in list_of_qualification_ids
 
-    def list_of_qualification_ids_for_cadet(self, cadet_id: str):
+    def list_of_qualification_ids_for_cadet(self, cadet_id: str) -> List[str]:
         matching = [item.qualification_id for item in self if item.cadet_id == cadet_id]
         return matching
+

@@ -21,8 +21,7 @@ from app.data_access.configuration.field_list import (
     _REGISTRATION_STATUS,
     _SPECIAL_FIELDS
 )
-from app.objects.exceptions import missing_data
-
+from app.objects.exceptions import missing_data, arg_not_passed
 
 
 # can't use generic methods here as based on dataclasses
@@ -82,7 +81,7 @@ class RowInRegistrationData(GenericSkipperManObject, dict):
         return row_as_dict
 
     def list_of_keys_excluding_special_keys(self) -> List[str]:
-        list_of_keys = list(self.keys())
+        list_of_keys = copy(list(self.keys()))
         for special_key in _SPECIAL_FIELDS:
             list_of_keys.remove(special_key)
 
@@ -112,7 +111,7 @@ class RowInRegistrationData(GenericSkipperManObject, dict):
         self[_REGISTRATION_STATUS] = new_status
 
 
-
+from app.objects.generic_list_of_objects import get_unique_object_with_attr_in_list
 
 class RegistrationDataForEvent(GenericListOfObjects):
     def __init__(self, list_of_rows: List[RowInRegistrationData]):
@@ -130,14 +129,13 @@ class RegistrationDataForEvent(GenericListOfObjects):
             row.clear_values()
 
 
-    def get_row_with_rowid(self, row_id):
-        subset = self.subset_with_id(row_id)
-        if len(subset) == 0:
-            raise Exception("Row ID %s not found in data" % str(row_id))
-        if len(subset) > 1:
-            raise Exception("Duplicate row ID not allowed in data")
-
-        return subset[0]
+    def get_row_with_rowid(self, row_id: str, default = arg_not_passed):
+        return get_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='row_id',
+            attr_value=row_id,
+            default=default
+        )
 
     def list_of_row_ids(self) -> list:
         return [
@@ -161,8 +159,7 @@ class RegistrationDataForEvent(GenericListOfObjects):
         return RegistrationDataForEvent(subset)
 
 
-
-    def subset_with_id(self, list_of_row_ids: list) -> "RegistrationDataForEvent":
+    def subset_with_list_of_row_ids(self, list_of_row_ids: list) -> "RegistrationDataForEvent":
         subset = [row for row in self if row.row_id in list_of_row_ids]
         return RegistrationDataForEvent(subset)
 

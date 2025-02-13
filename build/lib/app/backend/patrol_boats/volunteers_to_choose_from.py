@@ -96,7 +96,7 @@ def move_volunteers_from_list_to_sorted_list(
 
     for volunteer in volunteers_to_move:
         if volunteer not in sorted_list_of_volunteers:
-            sorted_list_of_volunteers += volunteer
+            sorted_list_of_volunteers.append(volunteer)
 
     return sorted_list_of_volunteers
 
@@ -107,7 +107,7 @@ def get_volunteers_in_boat_related_roles_on_day_of_event(
     volunteer_list = []
     for volunteer, event_data_for_volunteer in event_data.items():
         if event_data_for_volunteer.patrol_boats.on_any_patrol_boat_on_given_day(day):
-            volunteer_list += volunteer
+            volunteer_list.append(volunteer)
 
     return ListOfVolunteers(volunteer_list)
 

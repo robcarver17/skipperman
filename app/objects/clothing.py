@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.objects.exceptions import arg_not_passed
+from app.objects.exceptions import arg_not_passed, missing_data
 from app.objects.generic_list_of_objects import GenericListOfObjects, get_unique_object_with_attr_in_list
 from app.objects.generic_objects import GenericSkipperManObject
 
@@ -37,7 +37,9 @@ class ListOfCadetsWithClothingAndIdsAtEvent(GenericListOfObjects):
         object.colour = colour
 
     def remove_clothing_for_cadet_at_event(self, cadet_id:str):
-        object_with_cadet_id = self.object_with_cadet_id(cadet_id)
+        object_with_cadet_id = self.object_with_cadet_id(cadet_id, default=missing_data)
+        if object_with_cadet_id is missing_data:
+            return
         self.remove(object_with_cadet_id)
 
     def clear_colour_group_for_cadet(

@@ -61,7 +61,6 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
 
 
     def identified_as_processed_not_allocated(self, row_id: str, volunteer_index: int):
-        row_and_index = RowIDAndIndex(row_id=row_id, volunteer_index=volunteer_index)
         try:
             assert self.row_and_index_not_in_list_of_rows_and_indices(row_id=row_id, volunteer_index=volunteer_index)
         except:

@@ -16,12 +16,12 @@ from app.data_access.store.object_definitions import (
 
 
 def get_matching_cadet(
-    object_store: ObjectStore, cadet: Cadet, exact_match_required: bool = True
+    object_store: ObjectStore, cadet: Cadet
 ) -> Cadet:
     list_of_cadets = get_list_of_cadets(object_store)
 
     return list_of_cadets.matching_cadet(
-        cadet=cadet, exact_match_required=exact_match_required
+        cadet=cadet
     )
 
 
@@ -47,6 +47,14 @@ def get_cadet_from_list_of_cadets_given_str_of_cadet(
 
     cadet = list_of_cadets[cadet_idx]
 
+    return cadet
+
+
+def get_cadet_from_list_of_cadets_given_name_of_cadet(
+    object_store: ObjectStore, cadet_selected: str, default = arg_not_passed
+) -> Cadet:
+    list_of_cadets = get_list_of_cadets(object_store)
+    cadet = list_of_cadets.matching_cadet_with_name(cadet_selected, default=default)
     return cadet
 
 def get_cadet_from_id(object_store: ObjectStore, cadet_id: str) -> Cadet:

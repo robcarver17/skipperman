@@ -35,6 +35,7 @@ def sorted_active_cadets(
     day_or_none: Day = None,
     sort_order: list = arg_not_passed,
 ) -> ListOfCadets:
+    print("sort order %s" % sort_order)
     if sort_order is arg_not_passed:
         return dict_of_all_event_data.list_of_cadets
 
@@ -192,6 +193,7 @@ def convert_partner_cadets_and_objects_into_names(series_of_cadets_and_names: Li
 def get_sorted_active_cadets_df(
     active_cadets_as_data_frame: pd.DataFrame, sort_order: list
 ) -> pd.DataFrame:
+    print(active_cadets_as_data_frame)
     return active_cadets_as_data_frame.sort_values(sort_order)
 
 

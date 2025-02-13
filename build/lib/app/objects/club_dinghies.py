@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from app.objects.exceptions import missing_data, arg_not_passed
+from app.objects.exceptions import missing_data, arg_not_passed, MissingData
 from app.objects.generic_list_of_objects import (
-    GenericListOfObjectsWithIds,
+    GenericListOfObjectsWithIds, get_idx_of_unique_object_with_attr_in_list,
 )
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
 
@@ -27,7 +27,7 @@ class ClubDinghy(GenericSkipperManObjectWithIds):
 
     @classmethod
     def create_empty(cls):
-        return cls(NO_CLUB_DINGHY_NAME, False, NO_CLUB_DINGHY_ID)
+        return cls(NO_CLUB_DINGHY_NAME, hidden=False, id=NO_CLUB_DINGHY_ID)
 
 
 no_club_dinghy = ClubDinghy.create_empty()
@@ -38,26 +38,40 @@ class ListOfClubDinghies(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return ClubDinghy
 
+
     def replace(self, existing_club_dinghy: ClubDinghy, new_club_dinghy: ClubDinghy):
         object_idx = self.idx_given_name(existing_club_dinghy.name)
         new_club_dinghy.id = existing_club_dinghy.id
         self[object_idx] = new_club_dinghy
 
-    def idx_given_name(self, boat_name: str):
-        id = self.id_given_name(boat_name)
-        return self.index_of_id(id)
 
-    def id_given_name(self, boat_name: str):
-        id = [item.id for item in self if item.name == boat_name]
+    def club_dinghy_with_name(self, boat_name: str,  default=arg_not_passed) -> ClubDinghy:
+        if boat_name == no_club_dinghy.name:
+            return no_club_dinghy
 
-        if len(id) == 0:
-            return missing_data
-        elif len(id) > 1:
-            raise Exception(
-                "Found more than one boat with same name should be impossible"
-            )
+        idx = self.idx_given_name(boat_name, default=None)
+        if idx is None:
+            if default is arg_not_passed:
+                raise MissingData
+            else:
+                return default
 
-        return str(id[0])
+        return self[idx]
+
+
+    def idx_given_name(self, boat_name: str, default=arg_not_passed):
+        return  get_idx_of_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='name',
+            attr_value=boat_name,
+            default=default
+        )
+
+    def club_dinghy_with_id(self, dinghy_id: str, default = arg_not_passed):
+        if dinghy_id == no_club_dinghy_id:
+            return no_club_dinghy
+
+        return self.object_with_id(dinghy_id, default=default)
 
     def add(self, boat_name: str):
         try:
@@ -75,3 +89,6 @@ class ListOfClubDinghies(GenericListOfObjectsWithIds):
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_names()
         assert len(list_of_names) == len(set(list_of_names))
+
+
+no_club_dinghy_id = no_club_dinghy.id

@@ -290,8 +290,8 @@ def log_alert_for_attendance_change(
         return
 
     warning_str = (
-        "*Following volunteers associated with cadet %s for whom days attending updated - check they are still available for their nominated days, and if not update volunteer rota:"
-        % str(cadet)
+        "*Following volunteers associated with sailor %s for whom days attending updated - check they are still available for their nominated days, and if not update volunteer rota:"
+        % cadet.name
     )
 
     log_alert_for_volunteers(warning_str=warning_str, interface=interface, cadet=cadet)

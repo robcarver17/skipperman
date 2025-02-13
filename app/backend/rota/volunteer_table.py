@@ -32,14 +32,14 @@ def get_dict_of_roles_for_dropdown(object_store: ObjectStore):
 
 def get_dict_of_groups_for_dropdown(object_store: ObjectStore):
     groups = get_list_of_groups(object_store)
+    groups = groups+[unallocated_group]
     dict_of_groups = {group.name: group.name for group in groups if not group.hidden}
-    dict_of_groups[unallocated_group.name] = unallocated_group.name
 
     # return dict_of_groups
     return dict_of_groups
 
 
-def all_roles_match_across_event(
+def all_roles_and_groups_match_across_event(
     volunteer_data_at_event: AllEventDataForVolunteer,
 ) -> bool:
     all_volunteers_in_roles_at_event_including_no_role_set = [
@@ -89,16 +89,16 @@ def volunteer_has_at_least_one_day_in_role_and_all_roles_and_groups_match(
         for day in volunteer_data_at_event.event.days_in_event()
     ]
 
-    allocated_roles = [
-        volunteer_role_and_group.role
+    allocated_roles_and_groups = [
+        volunteer_role_and_group
         for volunteer_role_and_group in all_volunteers_in_roles_at_event_including_no_role_set
         if not volunteer_role_and_group.role.is_no_role_set()
     ]
 
-    if len(allocated_roles) == 0:
+    if len(allocated_roles_and_groups) == 0:
         return False
 
-    unique_allocated_roles = set(allocated_roles)
+    unique_allocated_roles = set(allocated_roles_and_groups)
     all_match = len(unique_allocated_roles) == 1
 
     return all_match

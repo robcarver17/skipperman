@@ -5,14 +5,14 @@ from app.objects.volunteers import Volunteer
 
 from app.objects.day_selectors import Day, DaySelector
 from app.objects.events import Event
-from app.objects.exceptions import missing_data, MissingData, MultipleMatches
-from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
+from app.objects.exceptions import missing_data, MissingData, MultipleMatches, arg_not_passed
+from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds, get_unique_object_with_multiple_attr_in_list, get_idx_of_unique_object_with_multiple_attr_in_list
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.patrol_boats import PatrolBoat, ListOfPatrolBoats
 from app.objects.utils import make_id_as_int_str
 
 
-EMPTY_VOLUNTEER_ID = "NONE"
+EMPTY_VOLUNTEER_ID = "NONE" ## DO NOT CHANGE
 ARBITRARY_DAY = Day.Monday
 
 
@@ -138,6 +138,7 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
                 self.remove(item)
 
     def add_unallocated_boat(self, patrol_boat_id: str):
+        print("adding unlaoocated %s" % patrol_boat_id)
         self.append(
             VolunteerWithIdAtEventWithPatrolBoatId.create_unallocated_boat(
                 patrol_boat_id=patrol_boat_id
@@ -166,29 +167,27 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
     def is_volunteer_already_on_a_boat_on_day(
         self, volunteer_id: str, day: Day
     ) -> bool:
-        matches = [
-            item
-            for item in self
-            if item.volunteer_id == volunteer_id and item.day == day
-        ]
+        boat_id = self.which_boat_id_is_volunteer_on_today(
+            volunteer_id=volunteer_id,
+            day=day,
+            default=missing_data
+        )
 
-        return len(matches) > 0
+        return not (boat_id is missing_data)
 
-    def which_boat_id_is_volunteer_on_today(self, volunteer_id: str, day: Day) -> str:
-        matches = [
-            item
-            for item in self
-            if item.volunteer_id == volunteer_id and item.day == day
-        ]
-        if len(matches) == 0:
-            raise MissingData
-        elif len(matches) > 1:
-            raise MultipleMatches(
-                "Volunteer %s day %s is on more than one boat at event shouldn't be possible!"
-                % (volunteer_id, day.name)
-            )
+    def which_boat_id_is_volunteer_on_today(self, volunteer_id: str, day: Day, default = arg_not_passed) -> str:
+        matching_item = get_unique_object_with_multiple_attr_in_list(
+            some_list=self,
+            dict_of_attributes={'volunteer_id': volunteer_id, 'day': day},
+            default=missing_data
+        )
+        if matching_item is missing_data:
+            if default is arg_not_passed:
+                raise MissingData
+            else:
+                return default
 
-        return matches[0].patrol_boat_id
+        return matching_item.patrol_boat_id
 
     def list_of_unique_boats_at_event_including_unallocated(
         self, list_of_patrol_boats: ListOfPatrolBoats

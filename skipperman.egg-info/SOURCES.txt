@@ -169,6 +169,7 @@ app/backend/volunteers/__init__.py
 app/backend/volunteers/add_edit_volunteer.py
 app/backend/volunteers/connected_cadets.py
 app/backend/volunteers/list_of_volunteers.py
+app/backend/volunteers/relevant_information_for_volunteer.py
 app/backend/volunteers/roles_and_teams.py
 app/backend/volunteers/skills.py
 app/backend/volunteers/volunteer_data_dump.py
@@ -495,6 +496,7 @@ app/objects/__init__.py
 app/objects/boat_classes.py
 app/objects/cadet_at_event_with_boat_class_and_partners_with_ids.py
 app/objects/cadet_at_event_with_club_boat_with_ids.py
+app/objects/cadet_attendance.py
 app/objects/cadet_volunteer_connections_with_ids.py
 app/objects/cadet_with_id_at_event.py
 app/objects/cadet_with_id_with_group_at_event.py
@@ -512,6 +514,7 @@ app/objects/groups.py
 app/objects/identified_cadets_at_event.py
 app/objects/identified_volunteer_at_event.py
 app/objects/membership_status.py
+app/objects/partners.py
 app/objects/patrol_boats.py
 app/objects/patrol_boats_with_volunteers_with_id.py
 app/objects/qualifications.py
@@ -544,10 +547,12 @@ app/objects/abstract_objects/../../data_access/configuration/configuration.yaml
 app/objects/composed/__init__.py
 app/objects/composed/cadet_volunteer_associations.py
 app/objects/composed/cadets_at_event_with_boat_classes_and_partners.py
+app/objects/composed/cadets_at_event_with_boat_classes_groups_club_dnghies_and_partners.py
 app/objects/composed/cadets_at_event_with_club_dinghies.py
 app/objects/composed/cadets_at_event_with_groups.py
 app/objects/composed/cadets_at_event_with_registration_data.py
 app/objects/composed/cadets_with_all_event_info.py
+app/objects/composed/cadets_with_all_event_info_functions.py
 app/objects/composed/cadets_with_qualifications.py
 app/objects/composed/clothing_at_event.py
 app/objects/composed/committee.py

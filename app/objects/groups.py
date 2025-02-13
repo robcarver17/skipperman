@@ -4,8 +4,7 @@ from typing import List
 
 from app.objects.exceptions import arg_not_passed, MissingData, MultipleMatches
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
-from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
-
+from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds, get_idx_of_unique_object_with_attr_in_list
 
 UNALLOCATED_GROUP_STR = "No group set"
 UNALLOCATED_GROUP_ID = "0"## dont change
@@ -109,12 +108,29 @@ class ListOfGroups(GenericListOfObjectsWithIds):
 
         self.append(group)
 
+    def group_with_id(self, group_id: str, default= arg_not_passed):
+        if group_id == unallocated_group_id:
+            return unallocated_group
+
+        return self.object_with_id(group_id, default=default)
+
     def replace(self, existing_group: Group, new_group: Group):
-        existing_idx = self.index(existing_group)
+        existing_idx = self.idx_given_name(group_name=existing_group.name)
         new_group.id = existing_group.id
         self[existing_idx] = new_group
 
+    def idx_given_name(self, group_name: str, default=arg_not_passed):
+        return  get_idx_of_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='name',
+            attr_value=group_name,
+            default=default
+        )
+
     def matches_name(self, group_name: str, default = arg_not_passed):
+        if group_name == unallocated_group.name:
+            return unallocated_group
+
         return get_unique_object_with_attr_in_list(some_list=self, attr_name='name', attr_value=group_name, default=default)
 
     def check_for_duplicated_names(self):

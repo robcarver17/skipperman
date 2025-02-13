@@ -133,13 +133,16 @@ def change_sort_order_and_save(interface: abstractInterface):
 
 
 def change_day_and_save(interface: abstractInterface, day_button: str):
-    if no_day_set_in_state(interface):
-        day = Day[day_button]
-        set_day_in_state(interface=interface, day=day)
-    elif reset_day_button.pressed(day_button):
+    if reset_day_button.pressed(day_button):
         clear_day_in_state(interface)
-    else:
-        raise Exception("Don't recognise day button %s" % day_button)
+        return
+
+    try:
+        day = Day[day_button]
+    except:
+        raise Exception("Don't recognise day button %s " % day_button)
+
+    set_day_in_state(interface=interface, day=day)
 
 
 def save_new_order(interface: abstractInterface, new_sort_order: list):

@@ -1,23 +1,18 @@
 from dataclasses import dataclass
-from typing import List, Dict
+from typing import Dict, List, Union
 
-from app.objects.utils import flatten
+from app.objects.boat_classes import BoatClass, ListOfBoatClasses, BoatClassAndPartnerAtEventOnDay, no_boat_class, \
+    no_boat_class_partner_or_sail_number
+from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import CadetAtEventWithBoatClassAndPartnerWithIds, \
+    ListOfCadetAtEventWithBoatClassAndPartnerWithIds
 
-from app.objects.exceptions import MissingData, missing_data, MultipleMatches
-
-from app.objects.events import Event, ListOfEvents
-
-from app.objects.boat_classes import BoatClass, ListOfBoatClasses, no_boat_class, no_boat_class_partner_or_sail_number
-from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import (
-    ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
-    CadetAtEventWithBoatClassAndPartnerWithIds,
-)
-from app.objects.partners import no_cadet_partner_required, \
-    no_partner_allocated, are_partners_equal, from_cadet_id_to_partner_cadet, from_partner_cadet_to_id_or_string, \
-    valid_partnership_given_partner_cadet
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.day_selectors import Day
-from app.objects.utils import most_common
+from app.objects.events import Event, ListOfEvents
+from app.objects.exceptions import missing_data, arg_not_passed
+from app.objects.partners import no_cadet_partner_required, \
+    from_cadet_id_to_partner_cadet, no_partner_allocated, from_partner_cadet_to_id_or_string, NoCadetPartner
+from app.objects.utils import most_common, flatten
 
 
 @dataclass
@@ -28,17 +23,8 @@ class CadetBoatClassAndPartnerAtEventOnDay:
     day: Day
     partner_cadet: Cadet = no_cadet_partner_required
 
-
-    def __eq__(self, other):
-        equal_partners = are_partners_equal(self.partner_cadet, other.partner_cadet)
-        return self.cadet == other.cadet and \
-                self.boat_class == other.boat_class and \
-                self.sail_number == other.sail_number and \
-                self.day == other.day and \
-                equal_partners
-
-
-    def partner_cadet_id(self) -> str:
+    @property
+    def partner_cadet_id(self):
         return from_partner_cadet_to_id_or_string(self.partner_cadet)
 
     @classmethod
@@ -64,17 +50,6 @@ class CadetBoatClassAndPartnerAtEventOnDay:
             sail_number=cadet_at_event_with_boat_class_and_partner_with_ids.sail_number,
             partner_cadet=partner_cadet,
         )
-
-
-@dataclass
-class BoatClassAndPartnerAtEventOnDay:
-    boat_class: BoatClass
-    sail_number: str
-    partner_cadet: Cadet = no_cadet_partner_required
-
-    @property
-    def has_partner(self) -> bool:
-        return valid_partnership_given_partner_cadet(self.partner_cadet)
 
 
 class DictOfDaysBoatClassAndPartners(Dict[Day, BoatClassAndPartnerAtEventOnDay]):
@@ -134,8 +109,10 @@ class DictOfDaysBoatClassAndPartners(Dict[Day, BoatClassAndPartnerAtEventOnDay])
         return boat_class_and_partner.partner_cadet
 
     def boat_class_and_partner_on_day(
-        self, day: Day, default=no_boat_class_partner_or_sail_number
+        self, day: Day, default=arg_not_passed
     ) -> BoatClassAndPartnerAtEventOnDay:
+        if default is arg_not_passed:
+            default = no_boat_class_partner_or_sail_number
         return self.get(day, default)
 
     def remove_boat_and_partner_on_day(self, day: Day):
@@ -167,25 +144,6 @@ class ListOfCadetBoatClassAndPartnerAtEventOnDay(
             ]
         )
 
-    def list_of_valid_partners(self) -> ListOfCadets:
-        list_of_all_partners = self.list_of_all_partners_including_unallocated_and_not_required()
-        valid_list_of_partners = ListOfCadets(
-            [
-                partner_cadet
-                for partner_cadet in list_of_all_partners
-                if valid_partnership_given_partner_cadet(partner_cadet)
-            ]
-        )
-
-        return valid_list_of_partners
-
-    def list_of_all_partners_including_unallocated_and_not_required(self) -> ListOfCadets:
-        return ListOfCadets(
-            [
-                element.partner_cadet
-                for element in self
-            ]
-        )
 
     def unique_list_of_cadets(self) -> ListOfCadets:
         list_of_cadets = [cadet_boat_class.cadet for cadet_boat_class in self]
@@ -221,18 +179,6 @@ class ListOfCadetBoatClassAndPartnerAtEventOnDay(
             ]
         )
 
-    def element_on_day_for_cadet(
-        self, cadet: Cadet, day: Day, default=missing_data
-    ) -> CadetBoatClassAndPartnerAtEventOnDay:
-        list_of_elements = [
-            element for element in self if element.cadet == cadet and element.day == day
-        ]
-        if len(list_of_elements) > 1:
-            raise MultipleMatches
-        elif len(list_of_elements) == 0:
-            return default
-
-        return list_of_elements[0]
 
 
 class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPartners]):
@@ -250,55 +196,87 @@ class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPart
         self._list_of_boat_classes = list_of_boat_classes
         self._event = event
 
-    def create_two_handed_partnership(
+    def DEPRECATE_create_two_handed_partnership(
         self, cadet: Cadet, new_two_handed_partner: Cadet, day: Day
     ):
-        ### FIXME  WE ONLY UPDATE THE UNDERLYING DATA FOR NOW
-        ## RATHER THAN, FOR NOW, IMPLEMENT THE COMPLEX LOGIC
-        ## THIS DOES MEAN THE MODEL OF FLUSHING AND RELOADING HAS TO BE KEPT
+        raise Exception("Need to refactor this code")
 
-        self.list_of_cadets_at_event_with_boat_class_and_partners_with_ids.create_two_handed_partnership(
-            cadet_id=cadet.id,
-            new_two_handed_partner_id=new_two_handed_partner.id,
+    def create_fresh_two_handed_partnership(self, cadet: Cadet, partner_cadet: Cadet, day: Day):
+        print("PArtnering %s and %s" % (cadet.name, partner_cadet.name))
+        self.allocate_partner_for_cadet_on_day(cadet=cadet, cadet_partner=partner_cadet, day=day)
+        self.allocate_partner_for_cadet_on_day(cadet=partner_cadet, cadet_partner=cadet, day=day)
+
+    def breakup_partnership(self, cadet: Cadet, partner_cadet: Cadet, day: Day):
+        self.unallocate_partner_for_cadet_on_day(cadet=cadet, day=day)
+        self.unallocate_partner_for_cadet_on_day(cadet=partner_cadet, day=day)
+
+    def unallocate_partner_for_cadet_on_day(
+            self,
+            cadet: Cadet,
+            day: Day):
+
+        self.allocate_partner_for_cadet_on_day(
+            cadet=cadet,
             day=day,
+            cadet_partner=no_partner_allocated
         )
 
-    def update_boat_info_for_updated_cadet_at_event(
+    def allocate_partner_for_cadet_on_day(
+            self,
+            cadet: Cadet,
+            day: Day,
+            cadet_partner: Union[NoCadetPartner, Cadet]):
+
+        print("Partnering %s with %s on %s" % (cadet.name, cadet_partner.name, day.name))
+        boat_class_and_partners = self.boat_classes_and_partner_for_cadet(cadet=cadet).boat_class_and_partner_on_day(day)
+        boat_class_and_partners.partner_cadet = cadet_partner
+
+        self.list_of_cadets_at_event_with_boat_class_and_partners_with_ids.allocate_partner_for_cadet_on_day(
+            cadet_id=cadet.id,
+            day=day,
+            partner_id=from_partner_cadet_to_id_or_string(cadet_partner)
+        )
+
+
+
+
+
+    def update_boat_class_sail_number_for_updated_cadet_at_event(
         self,
-        cadet_boat_class_and_partner_at_event_on_day: CadetBoatClassAndPartnerAtEventOnDay,
-    ):
-        ### FIXME: WE ONLY UPDATE THE UNDERLYING DATA FOR NOW
-        ## RATHER THAN, FOR NOW, IMPLEMENT THE COMPLEX LOGIC
-        ## THIS DOES MEAN THE MODEL OF FLUSHING AND RELOADING HAS TO BE KEPT
+            cadet: Cadet,
+            day: Day,
+            boat_class: BoatClass,
+            sail_number: str
+           ):
+        boat_class_and_partners = self.boat_classes_and_partner_for_cadet(cadet=cadet).boat_class_and_partner_on_day(day)
+        boat_class_and_partners.boat_class = boat_class
+        boat_class_and_partners.sail_number = sail_number
 
-        self.list_of_cadets_at_event_with_boat_class_and_partners_with_ids.update_boat_info_for_cadet_and_partner_at_event_on_day(
-            CadetAtEventWithBoatClassAndPartnerWithIds(
-                cadet_id=cadet_boat_class_and_partner_at_event_on_day.cadet.id,
-                partner_cadet_id=cadet_boat_class_and_partner_at_event_on_day.partner_cadet_id(),
-                boat_class_id=cadet_boat_class_and_partner_at_event_on_day.boat_class.id,
-                sail_number=cadet_boat_class_and_partner_at_event_on_day.sail_number,
-                day=cadet_boat_class_and_partner_at_event_on_day.day,
-            )
+        self.list_of_cadets_at_event_with_boat_class_and_partners_with_ids.update_boat_and_sail_number_for_cadet_on_day(
+            cadet_id=cadet.id,
+            day=day,
+            boat_class_id=boat_class.id,
+            sail_number=sail_number
         )
+
 
     def as_list_of_cadets_boat_classes_and_partners_at_event_on_day(
-        self,
+        self, day: Day
     ) -> ListOfCadetBoatClassAndPartnerAtEventOnDay:
         new_list = []
         for cadet, dict_of_boat_class_and_partners in self.items():
-            for day in dict_of_boat_class_and_partners.list_of_days:
-                boat_class_and_partner = (
-                    dict_of_boat_class_and_partners.boat_class_and_partner_on_day(day)
+            boat_class_and_partner = (
+                dict_of_boat_class_and_partners.boat_class_and_partner_on_day(day)
+            )
+            new_list.append(
+                CadetBoatClassAndPartnerAtEventOnDay(
+                    cadet=cadet,
+                    boat_class=boat_class_and_partner.boat_class,
+                    partner_cadet=boat_class_and_partner.partner_cadet,
+                    sail_number=boat_class_and_partner.sail_number,
+                    day=day
                 )
-                new_list.append(
-                    CadetBoatClassAndPartnerAtEventOnDay(
-                        cadet=cadet,
-                        day=day,
-                        boat_class=boat_class_and_partner.boat_class,
-                        partner_cadet=boat_class_and_partner.partner_cadet,
-                        sail_number=boat_class_and_partner.sail_number,
-                    )
-                )
+            )
 
         return ListOfCadetBoatClassAndPartnerAtEventOnDay(new_list)
 
@@ -343,8 +321,8 @@ class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPart
         if boat_classes_and_partner_on_day.has_partner:
             partner_cadet = boat_classes_and_partner_on_day.partner_cadet
             message = (
-                "Cadet %s was sailing with a partner; now they aren't sailing %s has no partner on %s"
-                % (cadet, partner_cadet, day)
+                "%s was sailing with a partner; now they aren't sailing %s has no partner on %s"
+                % (cadet.name, partner_cadet.name, day.name)
             )
             self.remove_two_handed_partner_link_from_existing_cadet_on_day(
                 cadet=partner_cadet, day=day
@@ -375,12 +353,11 @@ class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPart
         )
 
     def boat_classes_and_partner_for_cadet(
-        self, cadet: Cadet
+        self, cadet: Cadet, default = arg_not_passed
     ) -> DictOfDaysBoatClassAndPartners:
-        boat_classes_and_partners_for_cadet = self.get(cadet, None)
-        if boat_classes_and_partners_for_cadet is None:
-            return DictOfDaysBoatClassAndPartners()
-        return boat_classes_and_partners_for_cadet
+        if default is arg_not_passed:
+            default = DictOfDaysBoatClassAndPartners()
+        return self.get(cadet, default)
 
     def list_of_cadets(self) -> ListOfCadets:
         return ListOfCadets(list(self.keys()))
@@ -407,7 +384,7 @@ def compose_dict_of_cadets_and_boat_classes_and_partners(
     list_of_boat_classes: ListOfBoatClasses,
     list_of_cadets_at_event_with_boat_class_and_partners_with_ids: ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
 ) -> DictOfCadetsAndBoatClassAndPartners:
-    event = list_of_events.object_with_id(event_id)
+    event = list_of_events.event_with_id(event_id)
 
     raw_dict = compose_raw_dict_of_cadets_and_boat_classes_and_partners(
         list_of_cadets=list_of_cadets,

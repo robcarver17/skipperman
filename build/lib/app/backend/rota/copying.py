@@ -64,7 +64,6 @@ def copy_earliest_valid_role_and_overwrite_for_volunteer(
         object_store=object_store, event=event, volunteer=volunteer
     )
 
-    print("Valid day for volunteer %s is %s" % (volunteer.name, str(valid_day)))
     if valid_day is None:
         return
 

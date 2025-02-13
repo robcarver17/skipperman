@@ -52,6 +52,12 @@ class ListOfPatrolBoats(GenericListOfObjectsWithIds):
         new_patrol_boat.id = existing_patrol_boat.id
         self[object_idx] = new_patrol_boat
 
+    def boat_given_id(self, patrol_boat_id: str, default = arg_not_passed):
+        if patrol_boat_id == no_patrol_boat.id:
+            return no_patrol_boat
+
+        return self.object_with_id(patrol_boat_id, default=default)
+
     def boat_given_name(self, patrol_boat_name: str, default = arg_not_passed) -> PatrolBoat:
         return get_unique_object_with_attr_in_list(
             some_list=self,

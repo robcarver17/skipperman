@@ -70,11 +70,11 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
             updated_volunteer=updated_volunteer
         )
 
-    def volunteer_with_matching_name(self, volunteer: Volunteer, default =arg_not_passed) -> Volunteer:
+    def volunteer_with_matching_name(self, volunteer_name:str, default =arg_not_passed) -> Volunteer:
         return get_unique_object_with_attr_in_list(
             some_list=self,
             attr_name='name',
-            attr_value=volunteer.name,
+            attr_value=volunteer_name,
             default=default
         )
 

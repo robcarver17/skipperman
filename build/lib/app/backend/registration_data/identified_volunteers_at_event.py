@@ -95,7 +95,7 @@ def add_identified_volunteer(
     list_of_volunteers_identified = get_list_of_identified_volunteers_at_event(
         object_store=object_store, event=event
     )
-    list_of_volunteers_identified.add(
+    list_of_volunteers_identified.add_identified_volunteer(
         row_id=row_id, volunteer_id=volunteer.id, volunteer_index=volunteer_index
     )
     update_list_of_identified_volunteers_at_event(
@@ -135,11 +135,8 @@ def volunteer_for_this_row_and_index_already_identified(
     list_of_volunteers_identified = get_list_of_identified_volunteers_at_event(
         object_store=object_store, event=event
     )
-    volunteer_id = list_of_volunteers_identified.volunteer_id_given_row_id_and_index(
-        row_id=row_id, volunteer_index=volunteer_index
-    )
 
-    return volunteer_id is not missing_data
+    return list_of_volunteers_identified.row_and_index_in_list_of_rows_and_indices(row_id=row_id, volunteer_index=volunteer_index)
 
 
 def get_list_of_identified_volunteers_at_event(

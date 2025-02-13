@@ -85,7 +85,6 @@ class Cadet(GenericSkipperManObjectWithIds):
             + self.surname
             + "_"
             + self._date_of_birth_as_str
-            + self.membership_status.name
         )
 
     def add_asterix_to_name(self) -> "Cadet":
@@ -157,7 +156,8 @@ class ListOfCadets(GenericListOfObjectsWithIds):
         return Cadet
 
     def pop_cadet(self, cadet: Cadet):
-        return self.pop_with_id(cadet.id)
+        cadet_idx = self.index_of_id(cadet.id)
+        return self.pop(cadet_idx)
 
     def set_all_current_members_to_temporary_unconfirmed_status(self):
         for cadet in self:
@@ -188,10 +188,11 @@ class ListOfCadets(GenericListOfObjectsWithIds):
 
     def excluding_cadets_from_other_list(self, list_of_cadets: "ListOfCadets"):
         list_of_ids = in_x_not_in_y(self.list_of_ids, list_of_cadets.list_of_ids)
-        return self.DEPRECATE_subset_from_list_of_ids(self, list_of_ids)
+        return self.subset_from_list_of_ids_retaining_order(list_of_ids)
 
     def add(self, cadet: Cadet):
         if cadet in self:
+            ## __eq__ compares name, surname, and DOB
             raise Exception("Cadet %s already in list of existing cadets" % str(cadet))
 
         cadet_id = self.next_id()
@@ -219,7 +220,25 @@ class ListOfCadets(GenericListOfObjectsWithIds):
             new_cadet
         )
 
-    def matching_cadet(self, cadet: Cadet, exact_match_required: bool = False) -> Cadet:
+    def matching_cadet_with_name(self, cadet_name: str, default=arg_not_passed) -> Cadet:
+        exact_match = [
+            cadet_in_list for cadet_in_list in self if cadet_in_list.name == cadet_name
+        ]
+        if len(exact_match) == 1:
+            return exact_match[0]
+        elif len(exact_match) > 1:
+            raise MultipleMatches(
+                "Multiple matching cadets found looking for %s!" % cadet_name
+            )
+        elif len(exact_match)==0:
+            if default is arg_not_passed:
+                raise MissingData
+            else:
+                return default
+
+
+
+    def matching_cadet(self, cadet: Cadet, default=arg_not_passed) -> Cadet:
         exact_match = [
             cadet_in_list for cadet_in_list in self if cadet == cadet_in_list
         ]
@@ -229,35 +248,12 @@ class ListOfCadets(GenericListOfObjectsWithIds):
             raise MultipleMatches(
                 "Multiple matching cadets found looking for %s!" % str(cadet)
             )
+        elif len(exact_match)==0:
+            if default is arg_not_passed:
+                raise MissingData
+            else:
+                return default
 
-        ### no exact matches required
-        if exact_match_required:
-            raise MissingData(
-                "No cadet found matching %s wanted exact match" % str(cadet)
-            )
-        else:
-            return self.matching_cadets_on_name_only(cadet)
-
-    def matching_cadets_on_name_only(self, cadet: Cadet) -> Cadet:
-        names_match = [
-            cadet_in_list
-            for cadet_in_list in self
-            if cadet.has_same_name(cadet_in_list)
-        ]
-
-        if len(names_match) > 1:
-            ## multiple matches, as good as missing data
-            raise MultipleMatches(
-                "Multiple matching cadets found looking for %s with name only match!"
-                % str(cadet)
-            )
-        elif len(names_match) == 0:
-            raise MissingData(
-                "No cadet found matching %s wanted looking for name only match!"
-                % str(cadet)
-            )
-
-        return names_match[0]
 
     def sort_by_surname(self):
         return ListOfCadets(sorted(self, key=lambda x: x.surname))
@@ -291,6 +287,9 @@ class ListOfCadets(GenericListOfObjectsWithIds):
         cadet: Cadet,
         name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME,
     ):
+        if cadet is default_cadet or cadet is test_cadet:
+            return ListOfCadets([])
+
         similar_names = [
             other_cadet
             for other_cadet in self
@@ -304,7 +303,7 @@ class ListOfCadets(GenericListOfObjectsWithIds):
         cadet: Cadet,
         dob_threshold: float = SIMILARITY_LEVEL_TO_WARN_DATE,
     ):
-        if cadet.date_of_birth == DEFAULT_DATE_OF_BIRTH:
+        if cadet is default_cadet or cadet is test_cadet:
             return ListOfCadets([])
 
         similar_dob = [
@@ -328,10 +327,11 @@ class ListOfCadets(GenericListOfObjectsWithIds):
 
         return ListOfCadets(similar_surnames)
 
-    def cadet_with_id(self, cadet_id: str) -> Cadet:
-        if cadet_id == SKIP_TEST_CADET_ID:
+    def cadet_with_id(self, cadet_id: str, default = arg_not_passed) -> Cadet:
+        if cadet_id == test_cadet_id:
             return test_cadet
-        return self.object_with_id(cadet_id)
+
+        return self.object_with_id(cadet_id, default=default)
 
     def list_of_names(self):
         return [cadet.name for cadet in self]
@@ -357,12 +357,6 @@ default_cadet = Cadet(
     membership_status=none_member,
 )
 
-unknown_cadet = Cadet(
-    first_name="Unknown cadet",
-    surname="(data error)",
-    date_of_birth=DEFAULT_DATE_OF_BIRTH,
-    membership_status=none_member,
-)
 
 test_cadet = Cadet(
     "Test",
@@ -372,6 +366,7 @@ test_cadet = Cadet(
     id=SKIP_TEST_CADET_ID,
 )
 
+test_cadet_id = test_cadet.id
 
 def sort_a_list_of_cadets(
     master_list: ListOfCadets, sort_by: str = arg_not_passed

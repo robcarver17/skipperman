@@ -116,7 +116,7 @@ def process_next_row_with_cadet_from_row(
 ) -> Form:
     try:
         matched_cadet_with_id = get_matching_cadet(
-            object_store=interface.object_store, cadet=cadet, exact_match_required=True
+            object_store=interface.object_store, cadet=cadet
         )
     except MissingData:
         ## New cadet

@@ -139,10 +139,10 @@ def update_dict_of_qualifications_for_cadets(
 ):
     cadet = list_of_cadets.cadet_with_id(cadet_with_id_and_qualification.cadet_id)
     list_of_qualifications_and_dates_for_cadet = dict_of_qualifications_for_cadets.get(
-        cadet, QualificationsForCadet([])
+        cadet
     )
 
-    qualification = list_of_qualifications.object_with_id(
+    qualification = list_of_qualifications.qualification_given_id(
         cadet_with_id_and_qualification.qualification_id
     )
     date_achieved = cadet_with_id_and_qualification.date
@@ -156,7 +156,7 @@ def update_dict_of_qualifications_for_cadets(
     )
 
 
-### USED FOR WRITE ONLY
+### USED FOR WRITE TO CSV ONLY
 @dataclass
 class NamedCadetWithQualification(GenericSkipperManObject):
     cadet_name: str

@@ -28,9 +28,6 @@ class NoDaysSelected(Exception):
     pass
 
 
-class NoCadets(Exception):
-    pass
-
 
 class DuplicateCadets(Exception):
     pass
@@ -50,3 +47,6 @@ class MultipleMatches(Exception):
 
 class CadetNotSelected(Exception):
     pass
+
+
+MISSING_FROM_FORM = "missing_from_form"

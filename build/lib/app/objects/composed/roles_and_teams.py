@@ -31,19 +31,19 @@ class ListOfTeamsAndIndices(List[TeamAndIndex]):
 class DictOfTeamsWithRoles(Dict[Team, ListOfRolesWithSkills]):
     def __init__(
         self,
+            raw_dict: Dict[Team, ListOfRolesWithSkills],
         list_of_teams_and_roles_with_ids: ListOfTeamsAndRolesWithIds,
         list_of_teams: ListOfTeams,
         list_of_roles_with_skills: ListOfRolesWithSkills,
     ):
-        super().__init__(
-            compose_raw_dict_of_teams_with_roles(
-                list_of_teams_and_roles_with_ids=list_of_teams_and_roles_with_ids,
-                list_of_teams=list_of_teams,
-                list_of_roles_with_skills=list_of_roles_with_skills,
-            )
-        )
+        super().__init__(raw_dict)
         self._list_of_teams_and_roles_with_ids = list_of_teams_and_roles_with_ids
         self._list_of_roles_with_skills = list_of_roles_with_skills
+        self._list_of_teams = list_of_teams
+
+    def roles_in_instructor_team(self)-> ListOfRolesWithSkills:
+        instructor_team = self.list_of_teams.instructor_team_from_list()
+        return self.roles_for_team(instructor_team)
 
     def roles_for_team(self, team: Team) -> ListOfRolesWithSkills:
         roles_for_team = self.get(team, ListOfRolesWithSkills())
@@ -126,6 +126,10 @@ class DictOfTeamsWithRoles(Dict[Team, ListOfRolesWithSkills]):
         self._list_of_teams_and_roles_with_ids = list_of_teams_and_roles_with_ids
 
     @property
+    def list_of_teams(self) -> ListOfTeams:
+        return self._list_of_teams
+
+    @property
     def list_of_roles_with_skills(self) -> ListOfRolesWithSkills:
         return self._list_of_roles_with_skills
 
@@ -135,7 +139,14 @@ def compose_dict_of_teams_with_roles(
     list_of_teams: ListOfTeams,
     list_of_roles_with_skills: ListOfRolesWithSkills,
 ) -> DictOfTeamsWithRoles:
+
+    raw_dict = compose_raw_dict_of_teams_with_roles(
+        list_of_teams_and_roles_with_ids=list_of_teams_and_roles_with_ids,
+        list_of_teams=list_of_teams,
+        list_of_roles_with_skills=list_of_roles_with_skills,
+    )
     return DictOfTeamsWithRoles(
+        raw_dict=raw_dict,
         list_of_teams_and_roles_with_ids=list_of_teams_and_roles_with_ids,
         list_of_teams=list_of_teams,
         list_of_roles_with_skills=list_of_roles_with_skills,

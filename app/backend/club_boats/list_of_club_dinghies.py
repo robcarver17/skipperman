@@ -3,13 +3,14 @@ from app.data_access.store.object_store import ObjectStore
 from app.data_access.store.object_definitions import (
     object_definition_for_list_of_club_dinghies,
 )
-from app.objects.club_dinghies import ListOfClubDinghies, ClubDinghy
+from app.objects.club_dinghies import ListOfClubDinghies, ClubDinghy, no_club_dinghy
+from app.objects.exceptions import arg_not_passed
 
 
-def get_club_dinghy_with_name(object_store: ObjectStore, boat_name: str) -> ClubDinghy:
+def get_club_dinghy_with_name(object_store: ObjectStore, boat_name: str, default = arg_not_passed) -> ClubDinghy:
     list_of_boats = get_list_of_club_dinghies(object_store)
 
-    return list_of_boats.club_dinghy_with_name(boat_name)
+    return list_of_boats.club_dinghy_with_name(boat_name, default=default)
 
 
 def add_new_club_dinghy_given_string(

@@ -58,7 +58,7 @@ def process_current_cadet_in_temp_file(
     object_store = interface.object_store
     try:
         cadet_in_data = get_matching_cadet(
-            object_store=object_store, cadet=current_cadet, exact_match_required=True
+            object_store=object_store, cadet=current_cadet
         )
         print("Identical cadet to %s already exists " % str(cadet_in_data))
         mark_existing_cadet_as_member_and_log(interface=interface, cadet=cadet_in_data)

@@ -18,7 +18,7 @@ from app.frontend.events.patrol_boats.render_patrol_boat_table import (
     get_top_material_for_patrol_boat_form,
 )
 from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
-    get_button_bar_for_patrol_boats,
+    get_bottom_button_bar_for_patrol_boats, get_top_button_bar_for_patrol_boats
 )
 
 from app.frontend.events.patrol_boats.swapping import (
@@ -54,18 +54,18 @@ def display_form_view_for_patrol_boat_allocation(interface: abstractInterface) -
         interface=interface, event=event
     )
     patrol_boat_table = get_patrol_boat_table(event=event, interface=interface)
-    button_bar = get_button_bar_for_patrol_boats(interface)
-
+    top_button_bar = get_top_button_bar_for_patrol_boats(interface)
+    bottom_button_bar = get_bottom_button_bar_for_patrol_boats(interface)
     return Form(
         ListOfLines(
             [
-                button_bar,
+                top_button_bar,
                 title,
                 _______________,
                 top_material,
                 _______________,
                 patrol_boat_table,
-                button_bar,
+                bottom_button_bar,
                 _______________,
             ]
         )

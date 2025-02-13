@@ -118,8 +118,12 @@ def process_update_to_cadet_new_to_event_with_clothing(
 ):
 
     clothing_size_from_registration = registration_data.data_in_row.get_item(
-        CADET_T_SHIRT_SIZE, ""
+        CADET_T_SHIRT_SIZE, None
     )
+    if clothing_size_from_registration is None:
+        ## probably no clothing at event
+        return
+
     add_new_cadet_with_clothing_to_event(
         object_store=interface.object_store,
         event=event,

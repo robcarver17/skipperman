@@ -25,29 +25,37 @@ class TickSubStage(GenericSkipperManObjectWithIds):
     def __hash__(self):
         return hash(self.name)
 
+from app.objects.generic_list_of_objects import get_unique_object_with_attr_in_list, index_not_found
 
 class ListOfTickSubStages(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return TickSubStage
 
-    def idx_given_name(self, name: str):
-        id = self.id_given_name(name)
-        if id is missing_data:
-            return missing_data
-        return self.index_of_id(id)
+    def id_given_name(self, name: str, default = arg_not_passed):
+        substage = self.substage_given_name(name, default=index_not_found)
+        if substage is index_not_found:
+            if default is arg_not_passed:
+                raise MissingData
+            else:
+                return default
 
-    def id_given_name(self, name: str):
-        id = [item.id for item in self if item.name == name]
+        return substage.id
 
-        if len(id) == 0:
-            raise MissingData
-        elif len(id) > 1:
-            raise MultipleMatches(
-                "Found more than one substage with same name should be impossible"
-            )
+    def does_substage_name_exist(self, substage_name: str):
+        substage = self.substage_given_name(substage_name, default=index_not_found)
+        return not substage is index_not_found
 
-        return str(id[0])
+    def substage_given_name(self, name: str, default = arg_not_passed):
+        return get_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='name',
+            attr_value=name,
+            default=default
+        )
+
+    def substage_given_id(self, id: str, default = arg_not_passed):
+        return self.object_with_id(id, default=default)
 
     def add(self, name: str):
         sub_stage = TickSubStage(name=name)
@@ -62,10 +70,8 @@ class ListOfTickSubStages(GenericListOfObjectsWithIds):
     def modify_name_of_substage_where_new_name_also_does_not_exist(
         self, substage_id: str, new_name: str
     ):
-        items = [item for item in self if item.id == substage_id]
-        assert len(items) == 1
-
-        item = items[0]
+        assert new_name not in self.list_of_names()
+        item = self.substage_given_id(substage_id)
         item.name = new_name
 
     def list_of_names(self):
@@ -106,6 +112,9 @@ class ListOfTickSheetItems(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return TickSheetItem
+
+    def tick_sheet_item_with_id(self, item_id:str, default = arg_not_passed):
+        return self.object_with_id(item_id, default=default)
 
     def switch_all_instances_of_substage_for_qualification(
         self, existing_substage_id: str, stage_id: str, new_substage_id: str

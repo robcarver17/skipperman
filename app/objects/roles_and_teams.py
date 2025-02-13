@@ -105,6 +105,9 @@ class ListOfRolesWithSkillIds(GenericListOfObjectsWithIds):
         return new_role_with_skill_ids.id
 
     def matches_name(self, role_name: str, default = arg_not_passed):
+        if role_name == no_role_allocated.name:
+            return no_role_allocated
+
         return get_unique_object_with_attr_in_list(
             some_list=self,
             attr_name='name',
@@ -127,7 +130,7 @@ class Team(GenericSkipperManObjectWithIds):
     id: str = arg_not_passed
 
     def __eq__(self, other):
-        return self.name == other.name
+        return self.name == other.name and self.location_for_cadet_warning == other.location_for_cadet_warning
 
     def __repr__(self):
         return self.name
@@ -193,7 +196,16 @@ class ListOfTeams(GenericListOfObjectsWithIds):
     def instructor_team_from_list(self):
         return self.matching_team_name(INSTRUCTOR_TEAM)
 
+    def team_with_id(self, team_id: str, default =arg_not_passed):
+        if team_id == no_team.id:
+            return no_team
+
+        return self.object_with_id(team_id)
+
     def matching_team_name(self, team_name: str, default = arg_not_passed) -> Team:
+        if team_name == no_team.name:
+            return no_team
+
         return get_unique_object_with_attr_in_list(
             some_list=self,
             attr_name='name',

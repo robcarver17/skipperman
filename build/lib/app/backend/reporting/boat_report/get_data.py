@@ -186,10 +186,10 @@ def get_second_cadet_name_popping_if_required(
         dict_of_all_event_info_for_cadets.event_data_for_cadet(
             cadet
         ).days_and_boat_class.boat_class_and_partner_on_day(
-            day, default=no_boat_class_partner_or_sail_number
+            day
         )
     )
-    no_partner = not first_cadet_with_dinghy_and_partner.has_partner()
+    no_partner = not first_cadet_with_dinghy_and_partner.has_partner
     if no_partner:
         return ""
 
@@ -217,12 +217,12 @@ def get_boat_class_sail_number_and_club_boat_flag(
     first_cadet_with_dinghy = dict_of_all_event_info_for_cadets.event_data_for_cadet(
         cadet
     ).days_and_boat_class.boat_class_and_partner_on_day(
-        day, default=no_boat_class_partner_or_sail_number
+        day
     )
     boat_name = first_cadet_with_dinghy.boat_class.name[:10]
     sail_number = first_cadet_with_dinghy.sail_number
 
-    has_club_boat = dict_of_all_event_info_for_cadets.dict_of_cadets_and_club_dinghies_at_event.get_club_boat_allocation_for_cadet(
+    has_club_boat = dict_of_all_event_info_for_cadets.dict_of_cadets_and_club_dinghies_at_event.club_dinghys_for_cadet(
         cadet
     ).has_dinghy_on_day(
         day

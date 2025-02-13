@@ -46,11 +46,7 @@ def make_cadet_available_on_day(
     registration_data = get_dict_of_cadets_with_registration_data(
         object_store=object_store,event=event
     )
-    cadet_at_event = registration_data.registration_data_for_cadet(cadet)
-    availablity = cadet_at_event.availability
-    availablity.make_available_on_day(day)
-    registration_data.update_availability_of_existing_cadet_at_event(cadet=cadet, new_availabilty=availablity)
-
+    registration_data.make_cadet_available_on_day(cadet=cadet, day=day)
     update_dict_of_cadets_with_registration_data(object_store=object_store, event=event, dict_of_cadets_with_registration_data=registration_data)
 
 def update_availability_of_existing_cadet_at_event_and_return_messages(
@@ -58,7 +54,11 @@ def update_availability_of_existing_cadet_at_event_and_return_messages(
     event: Event,
     cadet: Cadet,
     new_availabilty: DaySelector,
-):
+) -> List[str]:
+
+    days_now_available = new_availabilty.days_that_intersect_with(event.day_selector_for_days_in_event())
+    if len(days_now_available)==0:
+        return ["Error: You have set availability for %s so they have no days of attendance. If they are not coming cancel then registration instead." % cadet.name]
 
     dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(
         object_store=object_store, event=event, active_only=True
@@ -67,6 +67,7 @@ def update_availability_of_existing_cadet_at_event_and_return_messages(
     messages = dict_of_all_event_info_for_cadets.update_availability_of_existing_cadet_at_event_and_return_messages(
         cadet=cadet, new_availabilty=new_availabilty
     )
+
     update_dict_of_all_event_info_for_cadets(
         dict_of_all_event_info_for_cadets=dict_of_all_event_info_for_cadets,
         object_store=object_store,

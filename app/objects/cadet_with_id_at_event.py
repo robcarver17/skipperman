@@ -8,7 +8,7 @@ from app.data_access.configuration.field_list import (
     ALL_DAYS_ATTENDING_INPUT,
     CADET_HEALTH,
 )
-from app.objects.exceptions import missing_data, arg_not_passed, MultipleMatches
+from app.objects.exceptions import missing_data, arg_not_passed
 from app.objects.day_selectors import (
     DaySelector,
     day_selector_stored_format_from_text,
@@ -29,7 +29,6 @@ from app.objects.registration_data import (
 )
 from app.objects.registration_status import RegistrationStatus
 from app.objects.utils import clean_up_dict_with_nans
-from build.lib.app.objects.exceptions import MissingData
 
 STATUS_KEY = "status"
 AVAILABILITY = "availability"
@@ -113,7 +112,7 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
             cadet_with_id_at_event.clear_private_data()
 
 
-    def cadet_with_id_and_data_at_event(self, cadet_id, default = arg_not_passed) -> CadetWithIdAtEvent:
+    def cadet_with_id_and_data_at_event(self, cadet_id: str, default = arg_not_passed) -> CadetWithIdAtEvent:
         return get_unique_object_with_attr_in_list(
             some_list=self,
             attr_name='cadet_id',

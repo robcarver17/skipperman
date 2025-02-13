@@ -1,8 +1,6 @@
 from typing import List
 
 
-from app.objects.utils import in_x_not_in_y
-
 from app.backend.patrol_boats.list_of_patrol_boats import get_list_of_patrol_boats
 
 from app.objects.day_selectors import Day
@@ -64,7 +62,15 @@ def load_list_of_patrol_boats_at_event(
     list_of_boats_at_event = (
         patrol_boat_data.list_of_unique_boats_at_event_including_unallocated()
     )
-    return list_of_boats_at_event
+    all_patrol_boats = patrol_boat_data.list_of_all_patrol_boats
+
+    sorted_list =  all_patrol_boats.sort_from_other_list_of_boats(list_of_boats_at_event)
+
+    print("all pb %s" % str(all_patrol_boats))
+    print("at event %s" % str(list_of_boats_at_event))
+    print("sorted %s" % str(sorted_list))
+
+    return sorted_list
 
 
 def get_name_of_boat_allocated_to_volunteer_on_day_at_event(
@@ -100,7 +106,7 @@ def get_boat_allocated_to_volunteer_on_day_at_event(
     return boat_dict.boat_on_day(day, default=default)
 
 
-def get_list_of_boat_names_excluding_boats_already_at_event(
+def get_list_of_visible_boat_names_excluding_boats_already_at_event(
     object_store: ObjectStore, event: Event
 ) -> List[str]:
     patrol_boat_data = get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
@@ -112,9 +118,8 @@ def get_list_of_boat_names_excluding_boats_already_at_event(
     names_of_boats_at_event = list_of_boats_at_event.list_of_names()
 
     all_boats = get_list_of_patrol_boats(object_store)
-    names_of_all_boats = all_boats.list_of_names()
 
-    return in_x_not_in_y(names_of_all_boats, names_of_boats_at_event)
+    return [boat.name for boat in all_boats if (not boat.name in names_of_boats_at_event) and (not boat.hidden)]
 
 
 def get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(

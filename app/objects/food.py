@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Union
 
-from app.objects.exceptions import arg_not_passed, MissingData, MultipleMatches
+from app.objects.exceptions import arg_not_passed, MissingData, MultipleMatches, missing_data
 from app.objects.generic_list_of_objects import (
     GenericListOfObjects, get_unique_object_with_attr_in_list,
 )
@@ -114,7 +114,10 @@ class ListOfCadetsWithFoodRequirementsAtEvent(GenericListOfObjects):
         return CadetWithFoodRequirementsAtEvent
 
     def remove_food_requirements_for_cadet_at_event(self, cadet_id: str):
-        self.remove(self.cadet_with_food_with_cadet_id(cadet_id))
+        cadet_with_food = self.cadet_with_food_with_cadet_id(cadet_id, default=missing_data)
+        if cadet_with_food is missing_data:
+            return
+        self.remove(cadet_with_food)
 
     def subset_matches_food_required_description(
         self, food_requirements: FoodRequirements
@@ -159,17 +162,12 @@ class ListOfCadetsWithFoodRequirementsAtEvent(GenericListOfObjects):
         return self[idx]
 
     def idx_with_cadet_id(self, cadet_id, default = arg_not_passed) -> int:
-        list_of_ids = self.list_of_cadet_ids()
-        matching_idx = [idx for idx, id in enumerate(list_of_ids) if id==cadet_id]
-        if len(matching_idx)==0:
-            if default is arg_not_passed:
-                raise MissingData
-            else:
-                return default
-        elif len(matching_idx)>1:
-            raise MultipleMatches
-        else:
-            return matching_idx[0]
+        return get_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='cadet_id',
+            attr_value=cadet_id,
+            default=default
+        )
 
 
     def filter_for_list_of_cadet_ids(
@@ -242,7 +240,9 @@ class ListOfVolunteersWithFoodRequirementsAtEvent(GenericListOfObjects):
         return [object.volunteer_id for object in self]
 
     def drop_volunteer(self, volunteer_id: str):
-        object_with_id = self.volunteer_with_food_with_volunteer_id(volunteer_id)
+        object_with_id = self.volunteer_with_food_with_volunteer_id(volunteer_id, default=missing_data)
+        if object_with_id is missing_data:
+            return
         self.remove(object_with_id)
 
     def volunteer_with_food_with_volunteer_id(

@@ -173,6 +173,9 @@ class ListOfEvents(GenericListOfObjectsWithIds):
     def list_of_event_descriptions(self) -> list:
         return [event.event_description for event in self]
 
+    def event_with_id(self, event_id:str, default = arg_not_passed):
+        return self.object_with_id(event_id, default=default)
+
     def add(self, event: Event):
         self.confirm_event_does_not_already_exist(event)
         event.id = self.next_id()

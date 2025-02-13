@@ -12,6 +12,7 @@ from app.objects.events import (
 )
 
 from app.data_access.store.object_store import ObjectStore
+from build.lib.app.objects.exceptions import arg_not_passed
 
 
 def list_of_previously_used_event_names(object_store: ObjectStore) -> list:
@@ -28,9 +29,9 @@ def add_new_verified_event(object_store: ObjectStore, event: Event):
     )
 
 
-def get_event_from_id(object_store: ObjectStore, event_id: str) -> Event:
+def get_event_from_id(object_store: ObjectStore, event_id: str, default = arg_not_passed) -> Event:
     list_of_events = get_list_of_events(object_store)
-    return list_of_events.object_with_id(event_id)
+    return list_of_events.event_with_id(event_id, default=default)
 
 
 def get_event_from_list_of_events_given_event_description(

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from app.objects.exceptions import MissingData, MultipleMatches, arg_not_passed, missing_data
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
-
+from app.objects.generic_list_of_objects import get_unique_object_with_multiple_attr_in_list
 
 @dataclass
 class VolunteerSkillWithIds(GenericSkipperManObject):
@@ -40,17 +40,8 @@ class ListOfVolunteerSkillsWithIds(GenericListOfObjects):
 
 
     def object_matching_ids(self, volunteer_id: str, skill_id: str, default = arg_not_passed):
-        matching = [
-            object
-            for object in self
-            if object.volunteer_id == volunteer_id and object.skill_id == skill_id
-        ]
-        if len(matching) == 0:
-            if default is arg_not_passed:
-                raise MissingData
-            else:
-                return default
-        elif len(matching) > 1:
-            raise MultipleMatches
-
-        return matching[0]
+        return get_unique_object_with_multiple_attr_in_list(
+            some_list=self,
+            dict_of_attributes={'skill_id': skill_id, 'volunteer_id': volunteer_id},
+            default=default
+        )

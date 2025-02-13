@@ -100,7 +100,7 @@ class QualificationsAndTicksForCadet(Dict[Qualification, TicksForQualification])
         ticks_for_qualification.update_tick(tick_item=tick_item, new_tick=new_tick)
 
     def qualification_given_tick_item(self, tick_item: TickSheetItem, default=arg_not_passed):
-        return self.list_of_qualifications.object_with_id(tick_item.stage_id, default=default)
+        return self.list_of_qualifications.qualification_given_id(tick_item.stage_id, default=default)
 
     @property
     def list_of_qualifications(self):

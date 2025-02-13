@@ -35,12 +35,10 @@ from app.objects.abstract_objects.abstract_buttons import (
 from app.objects.users_and_security import (
     ListOfSkipperManUsers,
     SkipperManUser,
-    ADMIN_GROUP,
     ALL_GROUPS,
-    NO_VOLUNTEER_ID,
+    new_blank_user,
 )
 from app.backend.security.list_of_users import get_list_of_users, list_of_admin_users
-from build.lib.app.frontend.events.volunteer_rota.edit_volunteer_details_from_rota import delete_button
 
 SAVE_ENTRY_BUTTON_LABEL = "Save edits to existing"
 ADD_ENTRY_BUTTON_LABEL = "Add a new user"
@@ -109,14 +107,9 @@ def warning_text(interface: abstractInterface):
         )
     elif len(admin_users)==1:
         single_admin_user = admin_users[0]
-        return "Only one admin user (%s)- you will not be able to delete that user unless you add another" % single_admin_user.username
+        return bold("Only one admin user (%s)- you will not be able to delete that user or change their access group unless you add another" % single_admin_user.username)
     else:
         return ""
-
-
-new_user = SkipperManUser(
-    "", "", ADMIN_GROUP, email_address="", volunteer_id=NO_VOLUNTEER_ID
-)
 
 
 def table_for_users(
@@ -134,12 +127,12 @@ def row_for_new_user(interface: abstractInterface) -> RowInTable:
     return RowInTable(
         [
             "Add new user: ",
-            text_box_for_username(new_user),
-            text_box_for_password(new_user),
-            text_box_for_password(new_user, True),
-            dropdown_for_group(new_user),
+            text_box_for_username(new_blank_user),
+            text_box_for_password(new_blank_user),
+            text_box_for_password(new_blank_user, True),
+            dropdown_for_group(new_blank_user),
             "",
-            dropdown_for_volunteer(interface=interface, user=new_user),
+            dropdown_for_volunteer(interface=interface, user=new_blank_user),
         ],
     )
 
@@ -159,8 +152,10 @@ def get_row_for_existing_user(
     list_of_users = get_list_of_users(interface.object_store)
     if list_of_users.only_one_admin_user_and_it_is_the_passed_user(existing_user):
         delete_button = "Cannot delete"
+        group_dropdown = "Cannot change access"
     else:
         delete_button = button_for_deletion(existing_user)
+        group_dropdown =  dropdown_for_group(existing_user)
 
     return RowInTable(
         [
@@ -168,7 +163,7 @@ def get_row_for_existing_user(
             existing_user.username,
             text_box_for_password(existing_user),
             text_box_for_password(existing_user, True),
-            dropdown_for_group(existing_user),
+            group_dropdown,
             delete_button,
             dropdown_for_volunteer(interface=interface, user=existing_user),
             button_to_reset_password(existing_user),

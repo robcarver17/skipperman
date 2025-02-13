@@ -33,7 +33,7 @@ from app.objects.abstract_objects.abstract_lines import Line
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.rota.volunteer_table import (
-    all_roles_match_across_event,
+    all_roles_and_groups_match_across_event,
     volunteer_has_empty_available_days_without_role,
     volunteer_has_at_least_one_day_in_role_and_all_roles_and_groups_match,
 )
@@ -188,7 +188,7 @@ def get_copy_buttons_for_volunteer(
     volunteer_data_at_event: AllEventDataForVolunteer,
     day: Day,
 ):
-    any_copy_possible = not all_roles_match_across_event(volunteer_data_at_event)
+    any_copy_possible = not all_roles_and_groups_match_across_event(volunteer_data_at_event)
 
     copy_fill_possible = volunteer_has_empty_available_days_without_role(
         volunteer_data_at_event

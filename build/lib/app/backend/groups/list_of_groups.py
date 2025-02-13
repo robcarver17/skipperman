@@ -3,6 +3,7 @@ from app.data_access.store.object_store import ObjectStore
 from app.data_access.store.object_definitions import (
     object_definition_for_list_of_groups,
 )
+from app.objects.exceptions import arg_not_passed
 from app.objects.groups import ListOfGroups, Group
 
 
@@ -31,9 +32,9 @@ def modify_sailing_group(
     )
 
 
-def get_group_with_name(object_store: ObjectStore, group_name: str) -> Group:
+def get_group_with_name(object_store: ObjectStore, group_name: str, default = arg_not_passed) -> Group:
     list_of_groups = get_list_of_groups(object_store)
-    return list_of_groups.matches_name(group_name)
+    return list_of_groups.matches_name(group_name, default=default)
 
 
 def get_list_of_groups(object_store: ObjectStore) -> ListOfGroups:
@@ -51,4 +52,4 @@ def update_list_of_groups(
 
 def order_list_of_groups(object_store: ObjectStore, list_of_groups: ListOfGroups):
     all_groups = get_list_of_groups(object_store)
-    return ListOfGroups.DEPRECATE_subset_from_list_of_ids(all_groups, list_of_groups.list_of_ids)
+    return all_groups.subset_from_list_of_ids_retaining_order(list_of_groups.list_of_ids)

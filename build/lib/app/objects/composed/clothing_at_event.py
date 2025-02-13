@@ -1,31 +1,15 @@
 from dataclasses import dataclass
 from typing import List, Dict, Tuple
 
-import pandas as pd
-
-from app.objects.exceptions import MissingData, MultipleMatches
+from app.objects.exceptions import MissingData, arg_not_passed, missing_data
 
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.clothing import (
     UNALLOCATED_COLOUR,
-    UNALLOCATED_SIZE,
-    ListOfCadetsWithClothingAndIdsAtEvent,
+    ListOfCadetsWithClothingAndIdsAtEvent, ClothingAtEvent,
 )
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
-
-
-@dataclass
-class ClothingAtEvent:
-    size: str = UNALLOCATED_SIZE
-    colour: str = UNALLOCATED_COLOUR
-
-    @property
-    def has_colour(self):
-        return not self.colour == UNALLOCATED_COLOUR
-
-    def clear_colour(self):
-        self.colour = UNALLOCATED_COLOUR
 
 
 @dataclass
@@ -61,12 +45,18 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
         size: str,
     ):
         try:
-            self.clothing_for_cadet(cadet)
-            return Exception("Can't add clothing as cadet already at event")
+            assert not self.does_cadet_have_clothing(cadet)
         except:
-            pass
+            raise Exception("Can't add clothing as cadet already at event")
 
         self[cadet] = ClothingAtEvent(size=size)
+
+    def does_cadet_have_clothing(
+        self,
+        cadet: Cadet,
+    ) -> bool:
+        clothing = self.clothing_for_cadet(cadet, default=missing_data)
+        return not clothing is missing_data
 
     def as_list(self) -> ListOfCadetsWithClothingAtEvent:
         return ListOfCadetsWithClothingAtEvent(
@@ -101,7 +91,9 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
         try:
             self.pop(cadet)
         except:
-            raise MissingData("Can't remove clothing for non existent cadet")
+            pass
+
+        self.list_of_cadets_with_clothing_and_ids.remove_clothing_for_cadet_at_event(cadet.id)
 
     def clear_colour_group_for_cadet(
         self,
@@ -237,10 +229,10 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
 
         return list(set(sizes))
 
-    def clothing_for_cadet(self, cadet: Cadet) -> ClothingAtEvent:
-        clothing = self.get(cadet, None)
-        if clothing is None:
-            raise MissingData
+    def clothing_for_cadet(self, cadet: Cadet, default = arg_not_passed) -> ClothingAtEvent:
+        if default is arg_not_passed:
+            default = ClothingAtEvent()
+        clothing = self.get(cadet, default)
 
         return clothing
 
@@ -256,7 +248,7 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
 
 
 def compose_dict_of_cadets_with_clothing_at_event(
-    event_id: str,
+    event_id: str,## required as will be passed down
     list_of_cadets: ListOfCadets,
     list_of_cadets_with_clothing_and_ids: ListOfCadetsWithClothingAndIdsAtEvent,
 ):

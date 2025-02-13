@@ -35,7 +35,6 @@ class ObjectStore:
         self.clear_store()
 
     def save_store(self):
-        print("Saving %s" % str(self.data_store))
         self.data_store.save_stored_items()
 
     def clear_store(self):

@@ -8,7 +8,6 @@ from app.objects.exceptions import MissingData, MultipleMatches, arg_not_passed,
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.cadets import Cadet, ListOfCadets
 
-
 @dataclass
 class CadetVolunteerAssociation:
     cadet: Cadet

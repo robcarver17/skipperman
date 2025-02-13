@@ -12,6 +12,7 @@ from app.objects.cadet_at_event_with_club_boat_with_ids import (
     ListOfCadetAtEventWithIdAndClubDinghies,
     CadetAtEventWithClubDinghyWithId,
 )
+from build.lib.app.objects.exceptions import arg_not_passed
 
 
 @dataclass
@@ -32,14 +33,20 @@ class ClubDinghyAtEventOnDayForCadet:
                 cadet_at_event_with_club_dinghy_and_id.cadet_id
             ),
             day=cadet_at_event_with_club_dinghy_and_id.day,
-            club_dinghy=list_of_club_dinghies.object_with_id(
+            club_dinghy=list_of_club_dinghies.club_dinghy_with_id(
                 cadet_at_event_with_club_dinghy_and_id.club_dinghy_id
             ),
         )
 
 
 class DictOfDaysAndClubDinghiesAtEventForCadet(Dict[Day, ClubDinghy]):
-    def allocate_club_boat_on_day(self, cadet: Cadet, day: Day, club_boat: ClubDinghy):
+    def allocate_club_boat_on_day(self, day: Day, club_boat: ClubDinghy):
+        if club_boat is no_club_dinghy:
+            try:
+                self.pop(day)
+            except:
+                pass
+
         self[day] = club_boat
 
     def most_common(self) -> ClubDinghy:
@@ -56,13 +63,16 @@ class DictOfDaysAndClubDinghiesAtEventForCadet(Dict[Day, ClubDinghy]):
             return False
 
     def has_dinghy_on_day(self, day: Day, dinghy: ClubDinghy):
-        dinghy_on_day = self.dinghy_on_day(day)
+        dinghy_on_day = self.dinghy_on_day(day, default=no_club_dinghy)
         if dinghy_on_day == no_club_dinghy:
             return False
 
         return dinghy_on_day == dinghy
 
-    def dinghy_on_day(self, day, default=no_club_dinghy) -> ClubDinghy:
+    def dinghy_on_day(self, day, default=arg_not_passed) -> ClubDinghy:
+        if default is arg_not_passed:
+            default = no_club_dinghy
+
         return self.get(day, default)
 
     def unique_list_of_dinghies(self) -> ListOfClubDinghies:
@@ -77,8 +87,6 @@ class DictOfDaysAndClubDinghiesAtEventForCadet(Dict[Day, ClubDinghy]):
         except:
             pass
 
-
-no_club_dinghy_information = DictOfDaysAndClubDinghiesAtEventForCadet()
 
 class ListOfClubDinghysAtEventOnDayForCadet(List[ClubDinghyAtEventOnDayForCadet]):
     @classmethod
@@ -143,7 +151,7 @@ class DictOfCadetsAndClubDinghiesAtEvent(
 
     def allocate_club_boat_on_day(self, cadet: Cadet, day: Day, club_boat: ClubDinghy):
         boats_for_cadet = self.club_dinghys_for_cadet(cadet)
-        boats_for_cadet.allocate_club_boat_on_day(cadet=cadet, day=day, club_boat=club_boat)
+        boats_for_cadet.allocate_club_boat_on_day(day=day, club_boat=club_boat)
         self.list_of_cadets_at_event_with_id_and_club_dinghy.update_allocation_for_cadet_on_day(
             cadet_id=cadet.id, day=day, club_dinghy_id=club_boat.id
         )
@@ -174,19 +182,16 @@ class DictOfCadetsAndClubDinghiesAtEvent(
             pass
 
     def remove_cadet_club_boat_allocation_on_day(self, cadet: Cadet, day: Day):
-        current_allocation = self.get_club_boat_allocation_for_cadet(cadet)
+        current_allocation = self.club_dinghys_for_cadet(cadet)
         current_allocation.remove_cadet_from_event_on_day(day)
         self.list_of_cadets_at_event_with_id_and_club_dinghy.delete_allocation_for_cadet_on_day(
             cadet_id=cadet.id, day=day
         )
 
-    def get_club_boat_allocation_for_cadet(self, cadet: Cadet):
-        return self.get(cadet, DictOfDaysAndClubDinghiesAtEventForCadet())
-
     def club_dinghys_for_cadet(
         self, cadet: Cadet
     ) -> DictOfDaysAndClubDinghiesAtEventForCadet:
-        return self.get(cadet, no_club_dinghy_information)
+        return self.get(cadet,  DictOfDaysAndClubDinghiesAtEventForCadet())
 
     @property
     def list_of_club_dinghies(self) -> ListOfClubDinghies:
@@ -214,7 +219,7 @@ def compose_dict_of_cadets_and_club_dinghies_at_event(
     list_of_club_dinghies: ListOfClubDinghies,
     list_of_cadets_at_event_with_id_and_club_dinghy: ListOfCadetAtEventWithIdAndClubDinghies,
 ) -> DictOfCadetsAndClubDinghiesAtEvent:
-    event = list_of_events.object_with_id(event_id)
+    event = list_of_events.event_with_id(event_id)
     raw_dict = compose_raw_dict_of_cadets_and_club_dinghies_at_event(
         list_of_cadets=list_of_cadets,
         list_of_club_dinghies=list_of_club_dinghies,

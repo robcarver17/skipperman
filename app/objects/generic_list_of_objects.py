@@ -125,6 +125,43 @@ def get_idx_of_unique_object_with_attr_in_list(some_list: list, attr_value, attr
     else:
         return list_of_idx[0]
 
+
+def get_unique_object_with_multiple_attr_in_list(some_list: list, dict_of_attributes: dict, default=arg_not_passed):
+    idx = get_idx_of_unique_object_with_multiple_attr_in_list(some_list=some_list, dict_of_attributes=dict_of_attributes,
+                                                     default=index_not_found)
+    if idx is index_not_found:
+        if default is arg_not_passed:
+            raise MissingData("One or more of attributes not found %s" % str(dict_of_attributes))
+        else:
+            return default
+
+    return some_list[idx]
+
+
+def get_idx_of_unique_object_with_multiple_attr_in_list(some_list: list, dict_of_attributes: dict, default=arg_not_passed):
+    list_of_idx = [idx for idx, object_in_list in enumerate(some_list) if matches_attributes(
+        object_in_list, dict_of_attributes=dict_of_attributes
+    )]
+    if len(list_of_idx)==0:
+        if default is arg_not_passed:
+            raise MissingData("One or more of attributes not found %s" % str(dict_of_attributes))
+        else:
+            return default
+
+    elif len(list_of_idx)>1:
+        raise MultipleMatches("Multiple matches for %s" % str(dict_of_attributes))
+    else:
+        return list_of_idx[0]
+
+
+def matches_attributes(object_in_list, dict_of_attributes: dict) ->bool:
+    for attr_name, attr_value in dict_of_attributes.items():
+        attr_in_object = getattr(object_in_list, attr_name)
+        if attr_in_object!=attr_value:
+            return False
+
+    return True
+
 index_not_found = object()
 
 def create_list_of_objects_from_dataframe(

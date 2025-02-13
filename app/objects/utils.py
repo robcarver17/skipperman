@@ -249,3 +249,9 @@ def has_hidden_attribute(object):
 
 def is_protected_object(object):
     return getattr(object, "protected", False)
+
+
+def print_list(x, name):
+    print("%s:" % name)
+    for y in x:
+        print(str(y))

@@ -194,7 +194,7 @@ def add_two_handed_partnership_on_day_for_new_cadet_when_have_dinghy_for_existin
         object_store=object_store, event=event
     )
 
-    dinghys_data.create_two_handed_partnership(
+    dinghys_data.DEPRECATE_create_two_handed_partnership(
         cadet=original_cadet, new_two_handed_partner=new_cadet, day=day
     )
 

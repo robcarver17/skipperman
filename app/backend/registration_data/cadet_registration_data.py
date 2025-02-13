@@ -60,12 +60,7 @@ def get_availability_dict_for_cadets_at_event(
     registration_data = get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
-    return dict(
-        [
-            (cadet, registration_data.registration_data_for_cadet(cadet).availability)
-            for cadet in registration_data.list_of_cadets()
-        ]
-    )
+    return registration_data.availability_dict()
 
 
 def get_cadet_at_event(

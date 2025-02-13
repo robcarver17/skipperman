@@ -139,7 +139,7 @@ def action_if_item_tick_button_pressed(
     item_id: str,
 ):
     tick_item = (
-        ticksheet_data.list_of_tick_sheet_items_for_this_qualification.object_with_id(
+        ticksheet_data.list_of_tick_sheet_items_for_this_qualification.tick_sheet_item_with_id(
             item_id
         )
     )

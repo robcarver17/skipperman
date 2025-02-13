@@ -4,9 +4,8 @@ from typing import Dict, List
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.volunteer_skills import (
     Skill,
-    PB2_skill,
-    SI_skill,
-    skill_from_str,
+SI_SKILL_NAME,
+VOLUNTEERS_SKILL_FOR_PB2_NAME,
     ListOfSkills,
 )
 from app.objects.volunteers import Volunteer, ListOfVolunteers
@@ -21,13 +20,6 @@ class VolunteerWithSkill(GenericSkipperManObject):
     volunteer: Volunteer
     skill: Skill
 
-    @property
-    def volunteer_can_drive_safety_boat(self) -> bool:
-        return self.skill == PB2_skill
-
-    @property
-    def volunteer_is_senior_instructor(self) -> bool:
-        return self.skill == SI_skill
 
     @classmethod
     def from_volunteer_skills_with_id(
@@ -40,7 +32,7 @@ class VolunteerWithSkill(GenericSkipperManObject):
             volunteer=list_of_volunteers.volunteer_with_id(
                 volunteer_skill_with_id.volunteer_id
             ),
-            skill=list_of_skills.object_with_id(volunteer_skill_with_id.skill_id),
+            skill=list_of_skills.skill_with_id(volunteer_skill_with_id.skill_id),
         )
 
 
@@ -57,8 +49,8 @@ class SkillsDict(Dict[Skill, bool]):
             == other.list_of_held_skill_names_sorted
         )
 
-    def has_skill_name(self, skill_name: str):
-        return self.get(skill_from_str(skill_name), False)
+    def has_skill(self, skill: Skill):
+        return self.get(skill, False)
 
     def empty(self):
         return not any([held for held in self.values()])
@@ -67,16 +59,21 @@ class SkillsDict(Dict[Skill, bool]):
         return [skill.name for skill in self.keys()]
 
     def skills_held_as_str(self):
-        return ", ".join(
-            [skill.name for skill, skill_held in self.items() if skill_held]
+        return ", ".join(self.list_of_held_skill_names_sorted
         )
 
     @property
     def list_of_held_skill_names_sorted(self) -> List[str]:
-        raw_list = [skill.name for skill, skill_held in self.items() if skill_held]
+        raw_list = self.list_of_held_skill_names()
         raw_list.sort()
 
         return raw_list
+
+    def list_of_held_skill_names(self) -> List[str]:
+        raw_list = [skill.name for skill, skill_held in self.items() if skill_held]
+
+        return raw_list
+
 
     def skills_not_held_as_str(self):
         return ", ".join(
@@ -90,7 +87,7 @@ class SkillsDict(Dict[Skill, bool]):
     def from_dict_of_str_and_bool(cls, skills_dict: Dict[str, bool]):
         return cls(
             [
-                (skill_from_str(skill_name), skill_held)
+                (Skill(skill_name), skill_held)
                 for skill_name, skill_held in skills_dict.items()
             ]
         )
@@ -109,11 +106,12 @@ class SkillsDict(Dict[Skill, bool]):
 
     @property
     def can_drive_safety_boat(self) -> bool:
-        return self.get(PB2_skill, False)
+        has_skill = VOLUNTEERS_SKILL_FOR_PB2_NAME in self.list_of_held_skill_names()
+        return has_skill
 
     @property
     def is_SI(self) -> bool:
-        return self.get(SI_skill, False)
+        return SI_SKILL_NAME in self.list_of_held_skill_names()
 
 
 class ListOfVolunteersWithSkills(List[VolunteerWithSkill]):
@@ -168,6 +166,8 @@ class DictOfVolunteersWithSkills(Dict[Volunteer, SkillsDict]):
     def __init__(
         self,
         raw_dict: Dict[Volunteer, SkillsDict],
+        list_of_skills: ListOfSkills,
+
         list_of_volunteers_with_skills_and_ids: ListOfVolunteerSkillsWithIds,
     ):
         super().__init__(raw_dict)
@@ -175,60 +175,19 @@ class DictOfVolunteersWithSkills(Dict[Volunteer, SkillsDict]):
         self._list_of_volunteers_with_skills_and_ids = (
             list_of_volunteers_with_skills_and_ids
         )
+        self._list_of_skills = list_of_skills
 
-    @property
-    def list_of_volunteers_with_skills_and_ids(self):
-        return self._list_of_volunteers_with_skills_and_ids
 
     def add_volunteer_driving_qualification(self, volunteer: Volunteer):
+        PB2_skill = self.list_of_skills.PB2_skill
         self.add_skill_for_volunteer(volunteer=volunteer, skill=PB2_skill)
 
     def remove_volunteer_driving_qualification(self, volunteer: Volunteer):
+        PB2_skill = self.list_of_skills.PB2_skill
         self.delete_skill_for_volunteer(volunteer=volunteer, skill=PB2_skill)
-
-    def volunteer_id_can_drive_safety_boat(self, volunteer_id: str) -> bool:
-        return volunteer_id in self.list_of_volunteer_ids_who_can_drive_safety_boat()
-
-    def volunteer_is_senior_instructor(self, volunteer_id: str) -> bool:
-        return volunteer_id in self.list_of_volunteer_ids_who_are_senior_instructors()
-
-    def list_of_volunteer_ids_who_can_drive_safety_boat(self) -> List[str]:
-        return list(
-            set(
-                [
-                    item.volunteer_id
-                    for item in self
-                    if item.volunteer_can_drive_safety_boat
-                ]
-            )
-        )
-
-    def list_of_volunteer_ids_who_are_senior_instructors(self) -> List[str]:
-        return list(
-            set(
-                [
-                    item.volunteer_id
-                    for item in self
-                    if item.volunteer_is_senior_instructor
-                ]
-            )
-        )
 
     def dict_of_skills_for_volunteer(self, volunteer: Volunteer) -> SkillsDict:
         return self.get(volunteer, SkillsDict())
-
-    def dict_of_skills_for_volunteer_id(self, volunteer_id: str) -> SkillsDict:
-        skills_held = self.skills_for_volunteer_id(volunteer_id)
-        dict_of_skills = dict([(skill, True) for skill in skills_held])
-
-        return SkillsDict(dict_of_skills)
-
-    def skills_for_volunteer_id(self, volunteer_id: str) -> List[Skill]:
-        skills = [
-            element.skill for element in self if element.volunteer.id == volunteer_id
-        ]
-
-        return skills
 
     def replace_skills_for_volunteer_with_new_skills_dict(
         self, volunteer: Volunteer, dict_of_skills: SkillsDict
@@ -277,6 +236,14 @@ class DictOfVolunteersWithSkills(Dict[Volunteer, SkillsDict]):
             volunteer_id=volunteer.id, skill_id=skill.id
         )
 
+    @property
+    def list_of_volunteers_with_skills_and_ids(self):
+        return self._list_of_volunteers_with_skills_and_ids
+
+    @property
+    def list_of_skills(self):
+        return self._list_of_skills
+
 
 def compose_dict_of_volunteer_skills(
     list_of_volunteers: ListOfVolunteers,
@@ -292,6 +259,7 @@ def compose_dict_of_volunteer_skills(
     return DictOfVolunteersWithSkills(
         raw_dict=raw_dict,
         list_of_volunteers_with_skills_and_ids=list_of_volunteers_with_skills_and_ids,
+        list_of_skills=list_of_skills
     )
 
 

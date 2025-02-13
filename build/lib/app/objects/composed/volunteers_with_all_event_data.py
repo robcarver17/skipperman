@@ -10,7 +10,7 @@ from app.objects.composed.cadet_volunteer_associations import (
     DictOfCadetsAssociatedWithVolunteer,
 )
 from app.objects.events import ListOfEvents, Event
-from app.objects.exceptions import missing_data
+from app.objects.exceptions import missing_data, arg_not_passed, MissingData
 
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.composed.volunteers_with_skills import (
@@ -151,8 +151,14 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
             day=day, volunteer=volunteer
         )
 
-    def get_data_for_volunteer(self, volunteer, default=missing_data):
-        return self.get(volunteer, default)
+    def get_data_for_volunteer(self, volunteer, default=arg_not_passed):
+        try:
+            return self.get(volunteer)
+        except:
+            if default is arg_not_passed:
+                raise MissingData
+            else:
+                return default
 
 
     def sort_by_list_of_volunteers(self, list_of_volunteers: ListOfVolunteers):
@@ -223,7 +229,7 @@ def compose_dict_of_all_event_data_for_volunteers(
     dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
     dict_of_volunteers_with_food_at_event: DictOfVolunteersWithFoodRequirementsAtEvent,
 ) -> DictOfAllEventDataForVolunteers:
-    event = list_of_events.object_with_id(event_id)
+    event = list_of_events.event_with_id(event_id)
 
     raw_dict = compose_raw_dict_of_all_event_data_for_volunteers(
         dict_of_volunteers_with_skills=dict_of_volunteers_with_skills,
@@ -283,7 +289,7 @@ def compose_raw_dict_of_all_event_data_for_volunteers(
                         volunteer, ListOfCadets([])
                     ),
                     food_requirements=dict_of_volunteers_with_food_at_event.food_for_volunteer(
-                        volunteer, return_empty=True
+                        volunteer, default = FoodRequirements.create_empty()
                     ),
                     event=event,
                 ),

@@ -70,8 +70,8 @@ no_role_set = RoleWithSkills(
 def from_list_of_skill_ids_to_padded_dict_of_skills(
     list_of_skill_ids: List[str], list_of_skills: ListOfSkills
 ) -> SkillsDict:
-    skills_held = ListOfSkills.DEPRECATE_subset_from_list_of_ids(
-        list_of_ids=list_of_skill_ids, full_list=list_of_skills
+    skills_held = list_of_skills.subset_from_list_of_ids_retaining_order(
+        list_of_ids=list_of_skill_ids
     )
 
     skills_dict = SkillsDict.from_list_of_skills(skills_held)
@@ -79,6 +79,7 @@ def from_list_of_skill_ids_to_padded_dict_of_skills(
 
     return skills_dict
 
+from app.objects.generic_list_of_objects import get_unique_object_with_attr_in_list, get_idx_of_unique_object_with_attr_in_list
 
 class ListOfRolesWithSkills(List[RoleWithSkills]):
     def __init__(
@@ -146,18 +147,15 @@ class ListOfRolesWithSkills(List[RoleWithSkills]):
         self.append(new_role)
 
     def index_of_matching_existing_named_role(
-        self, existing_role: RoleWithSkills
+        self, existing_role: RoleWithSkills, default = arg_not_passed
     ) -> int:
-        try:
-            return self.list_of_names().index(existing_role.name)
-        except ValueError:
-            raise MissingData
+        return self.index_of_matching_existing_role_name(existing_role.name)
 
-    def index_of_matching_existing_role_name(self, existing_role_name: str) -> int:
-        try:
-            return self.list_of_names().index(existing_role_name)
-        except ValueError:
-            raise MissingData
+    def index_of_matching_existing_role_name(self, existing_role_name: str, default = arg_not_passed) -> int:
+        return get_idx_of_unique_object_with_attr_in_list(some_list=self,
+                                                          attr_name='name',
+                                                          attr_value=existing_role_name,
+                                                          default=default)
 
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_names()
@@ -184,15 +182,24 @@ class ListOfRolesWithSkills(List[RoleWithSkills]):
     def list_of_ids(self) -> List[str]:
         return [role.id for role in self]
 
-    def role_with_id(self, id: str) -> RoleWithSkills:
-        try:
-            return self[self.list_of_ids().index(id)]
-        except ValueError:
-            raise MissingData
+    def role_with_id(self, id: str, default = arg_not_passed) -> RoleWithSkills:
+        return get_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='id',
+            attr_value=id,
+            default=default
+        )
 
-    def role_with_name(self, role_name):
-        index = self.index_of_matching_existing_role_name(role_name)
-        return self[index]
+    def role_with_name(self, role_name, default  = arg_not_passed):
+        if role_name == no_role_set.name:
+            return no_role_set
+
+        return get_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='name',
+            attr_value=role_name,
+            default=default
+        )
 
     @property
     def list_of_roles_with_skill_ids(self) -> ListOfRolesWithSkillIds:
@@ -290,7 +297,7 @@ def empty_if_qualified_for_role_else_warnings(role: RoleWithSkills, dict_of_skil
     missing_skills = []
     for skill, skill_needed in skills_required.items():
         if skill_needed:
-            has_skill = dict_of_skills.has_skill_name(skill.name)
+            has_skill = dict_of_skills.has_skill(skill)
             if not has_skill:
                 missing_skills.append(skill.name)
 

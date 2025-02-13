@@ -103,7 +103,7 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
 
     def remove_volunteer_with_id(self, volunteer_id: str):
         idx_of_volunteer_at_event = self.index_of_volunteer_at_event_with_id(
-            volunteer_id
+            volunteer_id, default=missing_data
         )
         if idx_of_volunteer_at_event is missing_data:
             raise Exception("Can't drop non existent volunteer")

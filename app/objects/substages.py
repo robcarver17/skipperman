@@ -113,6 +113,9 @@ class ListOfTickSheetItems(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return TickSheetItem
 
+    def tick_sheet_item_with_id(self, item_id:str, default = arg_not_passed):
+        return self.object_with_id(item_id, default=default)
+
     def switch_all_instances_of_substage_for_qualification(
         self, existing_substage_id: str, stage_id: str, new_substage_id: str
     ):

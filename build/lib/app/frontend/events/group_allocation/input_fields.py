@@ -19,7 +19,6 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.cadets import Cadet
-from app.objects.cadet_at_event_with_club_boat_with_ids import NO_CLUB_BOAT
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 from app.objects.day_selectors import Day
 from app.objects.partners import NO_PARTNERSHIP_LIST_OF_STR
@@ -225,6 +224,7 @@ def get_dict_of_all_possible_groups_for_dropdown_input(
     all_groups = (
         dict_of_all_event_data.dict_of_cadets_with_days_and_groups.list_of_groups
     )
+    all_groups = all_groups+[unallocated_group]
     dict_of_all_possible_groups_for_dropdown_input = dict(
         [(group.name, group.name) for group in all_groups if not group.hidden]
     )
@@ -275,13 +275,12 @@ def get_dict_of_club_dinghies_for_dropdown(
     club_dinghies = (
         dict_of_all_event_data.dict_of_cadets_and_club_dinghies_at_event.list_of_club_dinghies
     )
-    dict_of_club_dinghies_for_dropdown_input = {NO_CLUB_BOAT: NO_CLUB_BOAT}
-    dict_of_all_possible_club_boats = dict(
+    club_dinghies.append(no_club_dinghy)
+    dict_of_all_possible_club_boats_for_dropdown = dict(
         [(dinghy.name, dinghy.name) for dinghy in club_dinghies if not dinghy.hidden]
     )
-    dict_of_club_dinghies_for_dropdown_input.update(dict_of_all_possible_club_boats)
 
-    return dict_of_club_dinghies_for_dropdown_input
+    return dict_of_all_possible_club_boats_for_dropdown
 
 
 def get_dropdown_input_field_for_club_dinghies(
@@ -404,7 +403,7 @@ def get_dropdown_input_for_partner_allocation_across_days(
     cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> ListOfLines:
     current_partner_name = (
-        get_two_handed_partner_name_for_cadet_across_days_or_none_if_different(
+        get_two_handed_partner_as_str_for_dropdown_cadet_across_days(
             dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
         )
     )
@@ -414,7 +413,7 @@ def get_dropdown_input_for_partner_allocation_across_days(
         )
 
     list_of_other_cadets = (
-        get_list_of_cadets_as_str_at_event_with_matching_schedules_excluding_this_cadet(
+        get_list_of_cadet_names_including_asterix_marks_at_event_with_matching_schedules_excluding_this_cadet(
             dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
         )
     )  ### needs to disapply cadets who aren't also available the whole week
@@ -430,12 +429,12 @@ def get_dropdown_input_for_partner_allocation_across_days(
 def get_dropdown_input_for_partner_allocation_on_day(
     cadet: Cadet, day: Day, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> ListOfLines:
-    current_partner_name = get_two_handed_partner_as_str_for_cadet_on_day(
+    current_partner_name =  get_two_handed_partner_as_str_for_dropdown_cadet_on_day(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
     )
     list_of_other_cadets = (
-        list_of_cadets_as_str_at_event_excluding_cadet_available_on_day(
-            dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
+        get_list_of_cadet_names_including_asterix_marks_at_event_with_matching_schedules_excluding_this_cadet(
+            dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, available_on_specific_day=day
         )
     )
 
@@ -463,10 +462,11 @@ def get_dropdown_input_for_partner_allocation(
         dict_of_options=dict_of_all_possible_cadets,
     )
 
-    button_to_add_partner = Button(
-        value=button_name_for_add_partner(cadet_id=cadet.id),
-        label="Add partner as new cadet",
-    )
+    #button_to_add_partner = Button(
+    #    value=button_name_for_add_partner(cadet_id=cadet.id),
+    #    label="Add partner as new cadet",
+    #)
+    button_to_add_partner = "" ##FIXME ONLY INCLUDE WHEN SECOND NAME INCLUDED IN REGISTRATION
 
     return ListOfLines([drop_down_input_field, button_to_add_partner])
 

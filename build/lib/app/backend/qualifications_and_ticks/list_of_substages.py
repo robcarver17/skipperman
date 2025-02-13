@@ -9,6 +9,7 @@ from app.data_access.store.object_definitions import (
     object_definition_for_list_of_tick_sub_stages,
 )
 from app.objects.composed.ticks_in_dicts import QualificationsAndTickItemsAsDict
+from app.objects.exceptions import arg_not_passed
 from app.objects.qualifications import Qualification
 
 from app.objects.substages import ListOfTickSubStages
@@ -52,9 +53,9 @@ def get_suggested_list_of_all_substage_names_excluding_existing_in_qualification
     return in_x_not_in_y(x=all_substage_names, y=substage_names_this_qualification)
 
 
-def get_substage_given_id(object_store: ObjectStore, substage_id):
+def get_substage_given_id(object_store: ObjectStore, substage_id: str, default = arg_not_passed):
     list_of_tick_substages = get_list_of_tick_substages(object_store)
-    return list_of_tick_substages.object_with_id(substage_id)
+    return list_of_tick_substages.substage_given_id(substage_id, default=default)
 
 
 def get_list_of_tick_substages(object_store: ObjectStore) -> ListOfTickSubStages:

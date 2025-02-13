@@ -4,11 +4,10 @@ from typing import List
 
 from app.objects.exceptions import arg_not_passed, MissingData, MultipleMatches
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
-from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
-
+from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds, get_idx_of_unique_object_with_attr_in_list
 
 UNALLOCATED_GROUP_STR = "No group set"
-
+UNALLOCATED_GROUP_ID = "0"## dont change
 
 GroupLocation = Enum(
     "GroupLocation",
@@ -25,16 +24,21 @@ mg_training_group_location = GroupLocation.MG
 unallocated_group_location = GroupLocation.Unallocated
 undetermined_group_location = GroupLocation.Undetermined
 
-all_locations = [
+all_locations_for_input = [
     lake_training_group_location,
     river_training_group_location,
     mg_training_group_location,
 ]
 
+all_allocations = [lake_training_group_location,
+                 river_training_group_location,
+                 mg_training_group_location,
+                 unallocated_group_location,
+                 undetermined_group_location]
 
 def sorted_locations(passed_list_of_locations: List[GroupLocation]):
     return [
-        location for location in all_locations if location in passed_list_of_locations
+        location for location in all_allocations if location in passed_list_of_locations
     ]
 
 
@@ -45,12 +49,6 @@ class Group(GenericSkipperManObjectWithIds):
     protected: bool
     hidden: bool
     id: str = arg_not_passed
-
-    @classmethod
-    def name_only(cls, name: str):
-        return cls(
-            name=name, location=undetermined_group_location, protected=True, hidden=True
-        )
 
 
     def __eq__(self, other):
@@ -65,22 +63,13 @@ class Group(GenericSkipperManObjectWithIds):
     def __repr__(self):
         return self.name
 
-    def __lt__(self, other: "Group"):
-        raise Exception("Can't use sort for groups anymore - better solution required")
-
-    def as_str_replace_unallocated_with_empty(self) -> str:
-        if self.is_unallocated:
-            return ""
-        else:
-            return self.name
-
     @classmethod
     def create_unallocated(cls):
         return cls(
             UNALLOCATED_GROUP_STR,
             location=unallocated_group_location,
             protected=True,
-            id="0",  ## DO NOT CHANGE
+            id=UNALLOCATED_GROUP_ID,  ## DO NOT CHANGE
             hidden=False,
         )
 
@@ -92,6 +81,7 @@ class Group(GenericSkipperManObjectWithIds):
 unallocated_group = Group.create_unallocated()
 unallocated_group_id = unallocated_group.id
 
+from app.objects.generic_list_of_objects import get_unique_object_with_attr_in_list
 
 class ListOfGroups(GenericListOfObjectsWithIds):
     def sort_to_match_other_group_list_order(self, other_groups: "ListOfGroups"):
@@ -118,19 +108,30 @@ class ListOfGroups(GenericListOfObjectsWithIds):
 
         self.append(group)
 
+    def group_with_id(self, group_id: str, default= arg_not_passed):
+        if group_id == unallocated_group_id:
+            return unallocated_group
+
+        return self.object_with_id(group_id, default=default)
+
     def replace(self, existing_group: Group, new_group: Group):
-        existing_idx = self.index(existing_group)
+        existing_idx = self.idx_given_name(group_name=existing_group.name)
         new_group.id = existing_group.id
         self[existing_idx] = new_group
 
-    def matches_name(self, group_name: str):
-        matching_list = [object for object in self if object.name == group_name]
-        if len(matching_list) == 0:
-            raise MissingData
-        elif len(matching_list) > 1:
-            raise MultipleMatches
-        else:
-            return matching_list[0]
+    def idx_given_name(self, group_name: str, default=arg_not_passed):
+        return  get_idx_of_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name='name',
+            attr_value=group_name,
+            default=default
+        )
+
+    def matches_name(self, group_name: str, default = arg_not_passed):
+        if group_name == unallocated_group.name:
+            return unallocated_group
+
+        return get_unique_object_with_attr_in_list(some_list=self, attr_name='name', attr_value=group_name, default=default)
 
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_names()

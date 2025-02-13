@@ -229,7 +229,7 @@ def compose_dict_of_all_event_data_for_volunteers(
     dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
     dict_of_volunteers_with_food_at_event: DictOfVolunteersWithFoodRequirementsAtEvent,
 ) -> DictOfAllEventDataForVolunteers:
-    event = list_of_events.object_with_id(event_id)
+    event = list_of_events.event_with_id(event_id)
 
     raw_dict = compose_raw_dict_of_all_event_data_for_volunteers(
         dict_of_volunteers_with_skills=dict_of_volunteers_with_skills,
@@ -289,7 +289,7 @@ def compose_raw_dict_of_all_event_data_for_volunteers(
                         volunteer, ListOfCadets([])
                     ),
                     food_requirements=dict_of_volunteers_with_food_at_event.food_for_volunteer(
-                        volunteer, return_empty=True
+                        volunteer, default = FoodRequirements.create_empty()
                     ),
                     event=event,
                 ),

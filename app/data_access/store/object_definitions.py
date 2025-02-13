@@ -4,9 +4,8 @@ from typing import Callable, Dict, Union, List
 from app.objects.composed.cadets_with_all_event_info import (
     compose_dict_of_all_event_info_for_cadet,
 )
-from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import (
-    compose_dict_of_cadets_and_boat_classes_and_partners,
-)
+from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import \
+    compose_dict_of_cadets_and_boat_classes_and_partners
 from app.objects.composed.cadets_at_event_with_club_dinghies import (
     compose_dict_of_cadets_and_club_dinghies_at_event,
 )
@@ -525,7 +524,7 @@ object_definition_for_dict_of_patrol_boats_by_day_for_volunteer_at_event = Deriv
         list_of_patrol_boats=object_definition_for_list_of_patrol_boats,
         list_of_volunteers_with_id_at_event_with_patrol_boat_id=object_definition_for_list_of_volunteers_with_ids_and_patrol_boats_at_event,
     ),
-    dict_of_properties_and_underlying_object_definitions_if_modified=dict(),
+    dict_of_properties_and_underlying_object_definitions_if_modified=dict(list_of_volunteers_with_id_at_event_with_patrol_boat_id=object_definition_for_list_of_volunteers_with_ids_and_patrol_boats_at_event),
     required_keys=["event_id"],
 )
 

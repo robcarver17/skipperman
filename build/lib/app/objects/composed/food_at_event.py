@@ -11,6 +11,7 @@ from app.objects.food import (
 )
 from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.volunteers import ListOfVolunteers, Volunteer
+from build.lib.app.objects.exceptions import arg_not_passed
 
 
 class DictOfCadetsWithFoodRequirementsAtEvent(Dict[Cadet, FoodRequirements]):
@@ -103,10 +104,11 @@ class DictOfCadetsWithFoodRequirementsAtEvent(Dict[Cadet, FoodRequirements]):
     def list_of_cadets(self) -> ListOfCadets:
         return ListOfCadets(list(self.keys()))
 
-    def food_for_cadet(self, cadet: Cadet) -> FoodRequirements:
-        food = self.get(cadet, None)
-        if food is None:
-            raise MissingData
+    def food_for_cadet(self, cadet: Cadet, default = arg_not_passed) -> FoodRequirements:
+        if default is arg_not_passed:
+            default = FoodRequirements.create_empty()
+
+        food = self.get(cadet,default)
 
         return food
 
@@ -121,7 +123,7 @@ def compose_dict_of_cadets_with_food_requirements_at_event(
         event_id: str
 ) -> DictOfCadetsWithFoodRequirementsAtEvent:
 
-    event = list_of_events.object_with_id(event_id)
+    event = list_of_events.event_with_id(event_id)
 
     raw_dict = dict(
         [
@@ -154,7 +156,11 @@ class DictOfVolunteersWithFoodRequirementsAtEvent(Dict[Volunteer, FoodRequiremen
         self._event = event
 
     def drop_volunteer(self, volunteer: Volunteer):
-        self.pop(volunteer)
+        try:
+            self.pop(volunteer)
+        except:
+            return
+
         self.list_of_volunteers_with_ids_and_food_requirements.drop_volunteer(
             volunteer_id=volunteer.id
         )
@@ -224,15 +230,13 @@ class DictOfVolunteersWithFoodRequirementsAtEvent(Dict[Volunteer, FoodRequiremen
         )
 
     def food_for_volunteer(
-        self, volunteer: Volunteer, return_empty: bool = False
+        self, volunteer: Volunteer, default = arg_not_passed
     ) -> FoodRequirements:
-        try:
-            return self.get(volunteer)
-        except:
-            if return_empty:
-                return FoodRequirements()
-            else:
-                raise MissingData
+        if default is arg_not_passed:
+            default = FoodRequirements.create_empty()
+        food = self.get(volunteer, default)
+
+        return food
 
     def list_of_volunteers(self) -> ListOfVolunteers:
         return ListOfVolunteers(list(self.keys()))
@@ -254,7 +258,7 @@ def compose_dict_of_volunteers_with_food_requirements_at_event(
         list_of_events: ListOfEvents,
         event_id: str
 ) -> DictOfVolunteersWithFoodRequirementsAtEvent:
-    event = list_of_events.object_with_id(event_id)
+    event = list_of_events.event_with_id(event_id)
 
     raw_dict = dict(
         [

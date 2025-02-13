@@ -1,3 +1,4 @@
+from copy import copy
 from typing import Union
 
 from app.backend.groups.group_allocation_info import (
@@ -110,19 +111,20 @@ def display_form_allocate_cadets_at_event(
 
 
 def get_day_buttons(interface: abstractInterface) -> Line:
+    event = get_event_from_state(interface)
+    event_weekdays = copy(event.days_in_event())
+
     if no_day_set_in_state(interface):
-        event = get_event_from_state(interface)
-        event_weekdays = event.days_in_event()
-        weekday_buttons = [Button(day.name) for day in event_weekdays]
-        return Line(
-            [
-                "  Choose day to edit (if you want to allocate cadets to different groups, boats or partners on specific days): "
-            ]
-            + weekday_buttons
-        )
+        message = "  Choose day to edit (if you want to allocate cadets to different groups, boats or partners on specific days): "
+        all_buttons = [Button(day.name) for day in event_weekdays]
     else:
         day = get_day_from_state_or_none(interface)
-        return Line(["Currently editing %s: " % day.name, reset_day_button])
+        message = "Currently editing %s: " % day.name
+        event_weekdays.remove(day)
+        weekday_selection = [Button(day.name) for day in event_weekdays]
+        all_buttons = [reset_day_button]+weekday_selection
+
+    return Line([message]+all_buttons)
 
 
 reset_day_button = Button(RESET_DAY_BUTTON_LABEL)
@@ -140,20 +142,21 @@ def list_of_all_day_button_names(interface: abstractInterface):
 def get_allocations_and_classes_detail(
     interface: abstractInterface, event: Event
 ) -> DetailListOfLines:
+    object_store = interface.object_store
     allocations = summarise_allocations_for_event(
-        object_store=interface.object_store, event=event
+        object_store=object_store, event=event
     )
     if len(allocations)==0:
         allocations = "No group allocations made"
 
     club_dinghies = summarise_club_boat_allocations_for_event(
-        event=event, object_store=interface.object_store
+        event=event, object_store=object_store
     )
     if len(club_dinghies)==0:
         club_dinghies = "No club dinghy allocations made"
 
     classes = summarise_class_attendance_for_event(
-        event=event, object_store=interface.object_store
+        event=event, object_store=object_store
     )
     if len(classes) ==0:
         classes = "No boat classes allocated"
@@ -189,20 +192,21 @@ from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
 def get_inner_form_for_cadet_allocation(
     interface: abstractInterface, event: Event, sort_order: list
 ) -> Table:
+    object_store = interface.object_store
     dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=interface.object_store, event=event, active_only=True
+        object_store=object_store, event=event, active_only=True
     )
 
     day_or_none = get_day_from_state_or_none(interface)
     list_of_cadets = sorted_active_cadets(
-        object_store=interface.object_store,
+        object_store=object_store,
         dict_of_all_event_data=dict_of_all_event_data,
         sort_order=sort_order,
         day_or_none=day_or_none,
     )
     previous_groups_for_cadets = (
         get_dict_of_event_allocations_for_last_N_events_for_list_of_cadets(
-            object_store=interface.object_store,
+            object_store=object_store,
             list_of_cadets=list_of_cadets,
             remove_unallocated=False,
             N_events=NUMBER_OF_PREVIOUS_EVENTS,
@@ -273,7 +277,7 @@ def get_input_field_headings_for_day(day_name: str) -> list:
         "Allocate: Club boat(%s)" % day_name,
         "Allocate: Class of boat (%s)" % (day_name),
         "Edit: Sail number (%s)" % (day_name),
-        "Allocate: Two handed partner (%s)" % day_name,
+        "Allocate: Two handed partner (%s) *=schedule conflict" % day_name,
     ]
 
     return input_field_names

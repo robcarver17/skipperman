@@ -53,15 +53,15 @@ def row_for_new_entries() -> RowInTable:
 def get_row_for_existing_entry(entry, include_edit_button: bool = False) -> RowInTable:
     protected = is_protected_object(entry)
     if protected:
-        return RowInTable(
+        line = \
             [
-                "Protected - cannot edit: ",
+                "Protected - cannot edit: %s" %
                 entry.name,
             ]
-        )
-    line = [
-        text_box_for_entry(entry),
-    ]
+    else:
+        line = [
+            text_box_for_entry(entry),
+        ]
 
     if include_edit_button:
         line.append(edit_contents_button(entry))

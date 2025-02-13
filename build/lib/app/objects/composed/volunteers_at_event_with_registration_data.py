@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Dict
 
 from app.objects.events import Event, ListOfEvents
-from app.objects.exceptions import MissingData
+from app.objects.exceptions import MissingData, arg_not_passed
 
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.volunteer_at_event_with_id import (
@@ -38,8 +38,7 @@ class RegistrationDataForVolunteerAtEvent:
     ):
         return cls(
             availablity=volunteer_at_event_with_id.availablity,
-            list_of_associated_cadets=ListOfCadets.DEPRECATE_subset_from_list_of_ids(
-                full_list=list_of_cadets,
+            list_of_associated_cadets=list_of_cadets.subset_from_list_of_ids_retaining_order(
                 list_of_ids=volunteer_at_event_with_id.list_of_associated_cadet_id,
             ),
             preferred_duties=volunteer_at_event_with_id.preferred_duties,
@@ -89,7 +88,11 @@ class DictOfRegistrationDataForVolunteerAtEvent(
         )
 
     def drop_volunteer(self, volunteer: Volunteer):
-        self.pop(volunteer)
+        try:
+            self.pop(volunteer)
+        except:
+            return
+
         self.list_of_volunteers_at_event_with_id.remove_volunteer_with_id(volunteer.id)
 
     def make_volunteer_available_on_day(self, volunteer: Volunteer, day: Day):
@@ -100,17 +103,18 @@ class DictOfRegistrationDataForVolunteerAtEvent(
         )
 
     def make_volunteer_unavailable_on_day(self, volunteer: Volunteer, day: Day):
-        registration_for_volunteer = self.get(volunteer)
+        registration_for_volunteer = self.get_data_for_volunteer(volunteer)
         registration_for_volunteer.availablity.make_unavailable_on_day(day)
         self.list_of_volunteers_at_event_with_id.make_volunteer_unavailable_on_day(
             volunteer=volunteer, day=day
         )
 
-    def get_data_for_volunteer(self, volunteer: Volunteer):
-        try:
-            return self.get(volunteer)
-        except:
+    def get_data_for_volunteer(self, volunteer: Volunteer, default = arg_not_passed):
+        data = self.get(volunteer, default)
+        if data is arg_not_passed:
             raise MissingData("Volunteer %s not found" % str(volunteer))
+
+        return data
 
     @property
     def event(self) -> Event:
@@ -131,7 +135,7 @@ def compose_dict_of_registration_data_for_volunteer_at_event(
     list_of_volunteers_at_event_with_id: ListOfVolunteersAtEventWithId,
     list_of_events: ListOfEvents,
 ) -> DictOfRegistrationDataForVolunteerAtEvent:
-    event = list_of_events.object_with_id(event_id)
+    event = list_of_events.event_with_id(event_id)
 
     raw_dict = compose_raw_dict_of_registration_data_for_volunteer_at_event(
         list_of_volunteers=list_of_volunteers,

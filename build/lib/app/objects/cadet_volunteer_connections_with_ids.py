@@ -44,3 +44,4 @@ class ListOfCadetVolunteerAssociationsWithIds(GenericListOfObjects):
             if element.volunteer_id == volunteer_id and element.cadet_id == cadet_id
         ]
         return any(exists)
+

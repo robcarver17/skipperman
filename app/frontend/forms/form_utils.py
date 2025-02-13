@@ -11,7 +11,7 @@ from app.objects.abstract_objects.abstract_form import (
     radioInput,
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines
-from app.objects.exceptions import arg_not_passed
+from app.objects.exceptions import arg_not_passed, MISSING_FROM_FORM
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
 from app.objects.food import FoodRequirements, OTHER_IN_FOOD_REQUIRED
@@ -49,11 +49,14 @@ def get_availability_checkbox(
 def get_availablity_from_form(
     interface: abstractInterface, event: Event, input_name: str
 ) -> DaySelector:
-    list_of_days_ticked_in_form = interface.value_of_multiple_options_from_form(
-        input_name
-    )
     possible_days = event.days_in_event()
+    list_of_days_ticked_in_form = interface.value_of_multiple_options_from_form(
+        input_name, default = MISSING_FROM_FORM
+    )
     day_selector = DaySelector({})
+    if list_of_days_ticked_in_form == MISSING_FROM_FORM:
+        return day_selector
+
     all_ticked = ALL_AVAILABLE in list_of_days_ticked_in_form
 
     for day in possible_days:

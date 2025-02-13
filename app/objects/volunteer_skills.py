@@ -22,14 +22,20 @@ class Skill(GenericSkipperManObjectWithIds):
 
 VOLUNTEERS_SKILL_FOR_PB2_NAME = "PB2" ### DO NOT CHANGE
 SI_SKILL_NAME = "SI" ### DO NOT CHANGE
-SI_skill = Skill(SI_SKILL_NAME)
-PB2_skill = Skill(VOLUNTEERS_SKILL_FOR_PB2_NAME)
 
 
 class ListOfSkills(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return Skill
+
+    @property
+    def PB2_skill(self):
+        return self[self.idx_of_skill_with_name(VOLUNTEERS_SKILL_FOR_PB2_NAME)]
+
+    @property
+    def SI_skill(self):
+        return self[self.idx_of_skill_with_name(SI_SKILL_NAME)]
 
     def add(self, new_skill_name: str):
         try:
@@ -48,6 +54,9 @@ class ListOfSkills(GenericListOfObjectsWithIds):
         existing_skill = self[existing_skill_idx]
         new_skill.id = existing_skill.id
         self[existing_skill_idx] = new_skill
+
+    def skill_with_id(self, skill_id: str, default = arg_not_passed):
+        return self.object_with_id(skill_id, default=default)
 
     def idx_of_skill_with_name(self, skill_name:str, default = arg_not_passed) -> int:
         return get_idx_of_unique_object_with_attr_in_list(

@@ -28,7 +28,7 @@ def get_summary_list_of_patrol_boat_allocations_for_events(
     )
 
     list_of_boats_at_event = (
-        dict_of_volunteers_at_event_with_patrol_boats.list_of_all_patrol_boats_at_event
+        dict_of_volunteers_at_event_with_patrol_boats.list_of_unique_boats_at_event_including_unallocated()
     )
     list_of_all_boats = get_list_of_patrol_boats(object_store)
     sorted_list_of_boats_at_event = (

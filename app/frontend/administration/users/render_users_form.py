@@ -107,7 +107,7 @@ def warning_text(interface: abstractInterface):
         )
     elif len(admin_users)==1:
         single_admin_user = admin_users[0]
-        return "Only one admin user (%s)- you will not be able to delete that user unless you add another" % single_admin_user.username
+        return bold("Only one admin user (%s)- you will not be able to delete that user or change their access group unless you add another" % single_admin_user.username)
     else:
         return ""
 
@@ -152,8 +152,10 @@ def get_row_for_existing_user(
     list_of_users = get_list_of_users(interface.object_store)
     if list_of_users.only_one_admin_user_and_it_is_the_passed_user(existing_user):
         delete_button = "Cannot delete"
+        group_dropdown = "Cannot change access"
     else:
         delete_button = button_for_deletion(existing_user)
+        group_dropdown =  dropdown_for_group(existing_user)
 
     return RowInTable(
         [
@@ -161,7 +163,7 @@ def get_row_for_existing_user(
             existing_user.username,
             text_box_for_password(existing_user),
             text_box_for_password(existing_user, True),
-            dropdown_for_group(existing_user),
+            group_dropdown,
             delete_button,
             dropdown_for_volunteer(interface=interface, user=existing_user),
             button_to_reset_password(existing_user),

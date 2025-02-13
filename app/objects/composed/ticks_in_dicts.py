@@ -307,7 +307,7 @@ def list_of_substages_given_list_of_ids(
     list_of_tick_sub_stages: ListOfTickSubStages, list_of_substage_ids: List[str]
 ) -> ListOfTickSubStages:
     return ListOfTickSubStages(
-        [list_of_tick_sub_stages.object_with_id(id) for id in list_of_substage_ids]
+        [list_of_tick_sub_stages.substage_given_id(id) for id in list_of_substage_ids]
     )
 
 

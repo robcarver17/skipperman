@@ -2,13 +2,14 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import List
 
-from app.objects.exceptions import MissingData, MultipleMatches
+from app.objects.exceptions import MissingData, MultipleMatches, arg_not_passed
 
-from app.objects.cadets import Cadet, ListOfCadets, unknown_cadet
+from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.committee import (
     CadetWithIdCommitteeMember,
     ListOfCadetsWithIdOnCommittee,
 )
+from app.objects.generic_list_of_objects import get_unique_object_with_attr_in_list
 
 
 @dataclass
@@ -71,6 +72,7 @@ class CadetOnCommittee:
         return self.cadet_with_id_on_committee.date_term_ends
 
 
+
 class ListOfCadetsOnCommittee(List[CadetOnCommittee]):
     def __init__(
         self,
@@ -90,23 +92,11 @@ class ListOfCadetsOnCommittee(List[CadetOnCommittee]):
         specific_member = self.get_cadet_on_committee(cadet)
         specific_member.toggle_selection()
 
-    def get_cadet_on_committee(self, cadet: Cadet):
-        matching_cadets = [
-            cadet_on_committee
-            for cadet_on_committee in self
-            if cadet_on_committee.cadet_id == cadet.id
-        ]
-        if len(matching_cadets) > 1:
-            raise MultipleMatches(
-                "Cadet committee data damaged - more than one cadet matches %s"
-                % str(matching_cadets)
-            )
-        if len(matching_cadets) == 0:
-            raise MissingData("Cadet not on committee")
+    def get_cadet_on_committee(self, cadet: Cadet, default = arg_not_passed):
+        return get_unique_object_with_attr_in_list(some_list=self, attr_name = "cadet_id", attr_value=cadet.id,
+                                                   default=default)
 
-        return matching_cadets[0]
-
-    def is_cadet_on_committee(self, cadet: Cadet) -> bool:
+    def is_cadet_currently_on_committee(self, cadet: Cadet) -> bool:
         for cadet_on_committee in self:
             if (
                 cadet_on_committee.cadet_id == cadet.id
@@ -141,6 +131,11 @@ class ListOfCadetsOnCommittee(List[CadetOnCommittee]):
         date_term_starts: datetime.date,
         date_term_ends: datetime.date,
     ):
+        try:
+            assert not self.is_cadet_elected_to_committee(cadet)
+        except:
+            raise Exception("Cadet is already elected to committee")
+
         cadet_on_committee = CadetOnCommittee.new(
             cadet=cadet,
             date_term_starts=date_term_starts,
@@ -149,7 +144,7 @@ class ListOfCadetsOnCommittee(List[CadetOnCommittee]):
         self.append(cadet_on_committee)
 
         ## Change underlying - no need to change list of cadets
-        self.list_of_cadets_with_id_on_commitee.append(
+        self.list_of_cadets_with_id_on_commitee.add(
             cadet_on_committee.cadet_with_id_on_committee
         )
 
@@ -183,7 +178,7 @@ def create_raw_list_of_cadet_committee_members_from_underlying_data(
         try:
             cadet = list_of_cadets.cadet_with_id(cadet_with_id_on_committee.cadet_id)
         except MissingData:
-            cadet = unknown_cadet
+            continue ## or throw error?
 
         list_of_members.append(
             CadetOnCommittee(

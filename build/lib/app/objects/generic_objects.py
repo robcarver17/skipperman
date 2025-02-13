@@ -163,3 +163,6 @@ class GenericSkipperManObjectWithIds(GenericSkipperManObject):
     @property
     def id(self) -> str:
         raise NotImplemented
+
+
+unchanged_object = object()

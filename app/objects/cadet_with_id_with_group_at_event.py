@@ -1,12 +1,11 @@
 from dataclasses import dataclass
 
 from app.objects.day_selectors import Day
-from app.objects.exceptions import arg_not_passed, MissingData
-from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds, get_unique_object_with_attr_in_list
+from app.objects.exceptions import arg_not_passed
+from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
 from app.objects.groups import unallocated_group_id
-from build.lib.app.objects.exceptions import MultipleMatches
-
+from app.objects.generic_list_of_objects import  get_unique_object_with_multiple_attr_in_list, get_idx_of_unique_object_with_multiple_attr_in_list
 
 @dataclass
 class CadetIdWithGroup(GenericSkipperManObjectWithIds):
@@ -43,17 +42,16 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
         item_with_cadet_id_and_day = self.item_with_cadet_id_on_day(
             cadet_id=cadet_id, day=day
         )
-        idx = self.index(item_with_cadet_id_and_day)
+        idx = self.idx_of_item_with_cadet_id_on_day(cadet_id=cadet_id, day=day)
         if item_with_cadet_id_and_day.group_id == chosen_group_id:
             pass
-        if chosen_group_id == unallocated_group_id:
+        elif chosen_group_id == unallocated_group_id:
             ## don't store group as unallocated instead remove entirely
             self.pop(idx)
         else:
             ## replace
-            self[idx] = CadetIdWithGroup(
-                cadet_id=cadet_id, group_id=chosen_group_id, day=day
-            )
+            item_with_cadet_id_and_day.group_id = chosen_group_id
+
 
     def _update_group_for_new_cadet(
         self, cadet_id: str, day: Day, chosen_group_id: str
@@ -70,10 +68,16 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
         return item is not None
 
     def item_with_cadet_id_on_day(self, cadet_id: str, day: Day, default=arg_not_passed) -> CadetIdWithGroup:
-        return get_unique_object_with_attr_in_list(
+        return  get_unique_object_with_multiple_attr_in_list(
             some_list=self,
-            attr_name='cadet_id',
-            attr_value=cadet_id,
+            dict_of_attributes={'cadet_id': cadet_id, 'day': day},
+            default=default
+        )
+
+    def idx_of_item_with_cadet_id_on_day(self, cadet_id: str, day: Day, default=arg_not_passed) -> int:
+        return  get_idx_of_unique_object_with_multiple_attr_in_list(
+            some_list=self,
+            dict_of_attributes={'cadet_id': cadet_id, 'day': day},
             default=default
         )
 

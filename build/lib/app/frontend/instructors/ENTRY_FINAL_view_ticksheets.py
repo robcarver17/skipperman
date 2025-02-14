@@ -141,6 +141,15 @@ def post_form_view_ticksheets_for_event_and_group(
         clear_cadet_state(interface)
         return previous_form(interface)
 
+    return post_form_view_ticksheets_for_event_and_group_not_cancel_or_back(
+        interface
+    )
+
+def post_form_view_ticksheets_for_event_and_group_not_cancel_or_back(
+        interface: abstractInterface,
+) -> Union[Form, NewForm, File]:
+    button_pressed = interface.last_button_pressed()
+
     list_of_tick_buttons = get_list_of_all_tick_related_button_names(interface)
     list_of_all_possible_select_cadet_buttons = (
         get_list_of_all_possible_select_cadet_buttons(interface)
@@ -153,21 +162,24 @@ def post_form_view_ticksheets_for_event_and_group(
     elif edit_checkbox_button.pressed(button_pressed):
         set_edit_state_of_ticksheet(interface=interface, state=EDIT_CHECKBOX_STATE)
 
-    elif save_menu_button.pressed(button_pressed):
-        save_ticksheet_edits(interface)
-        interface.flush_cache_to_store()
-        set_edit_state_of_ticksheet(interface=interface, state=NO_EDIT_STATE)
-
+    ## printing
     elif print_button.pressed(button_pressed):
         return download_labelled_ticksheet_and_return_file(interface)
 
+    ## Select single cadet / all cadets
     elif button_pressed in list_of_all_possible_select_cadet_buttons:
         set_cadet_id(interface=interface, button_pressed=button_pressed)
 
     elif show_all_cadets_button.pressed(button_pressed):
         clear_cadet_state(interface)
 
-    ## SPECIAL BUTTONS: qualification, all ticks, all column
+    ## Saving
+    elif save_menu_button.pressed(button_pressed):
+        save_ticksheet_edits(interface)
+        interface.flush_cache_to_store()
+        set_edit_state_of_ticksheet(interface=interface, state=NO_EDIT_STATE)
+
+    ## SPECIAL BUTTONS: qualification, all ticks, all column (also saves)
     elif button_pressed in list_of_tick_buttons:
         action_if_macro_tick_button_pressed(
             interface=interface, button_pressed=button_pressed

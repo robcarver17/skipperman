@@ -92,7 +92,7 @@ def get_active_cadets_as_data_frame_on_non_specified_day(
         for cadet in active_cadets
     ]
     partners = [
-        dict_of_all_event_data.get_most_common_partner_across_days(cadet)
+        dict_of_all_event_data.get_most_common_partner_name_across_days(cadet)
         for cadet in active_cadets
     ]
     df_as_dict = {
@@ -125,25 +125,25 @@ def get_active_cadets_as_data_frame_on_specific_day(
     groups = [
         dict_of_all_event_data.event_data_for_cadet(cadet).days_and_groups.group_on_day(
             day
-        )
+        ).name
         for cadet in active_cadets
     ]
     club_boats = [
         dict_of_all_event_data.event_data_for_cadet(
             cadet
-        ).days_and_club_dinghies.dinghy_on_day(day)
+        ).days_and_club_dinghies.dinghy_on_day(day).name
         for cadet in active_cadets
     ]
     boat_classes = [
         dict_of_all_event_data.event_data_for_cadet(
             cadet
-        ).days_and_boat_class.boat_class_on_day(day)
+        ).days_and_boat_class.boat_class_on_day(day).name
         for cadet in active_cadets
     ]
     partners = [
         dict_of_all_event_data.event_data_for_cadet(
             cadet
-        ).days_and_boat_class.partner_on_day(day)
+        ).days_and_boat_class.partner_on_day(day).name
         for cadet in active_cadets
     ]
 
@@ -156,8 +156,8 @@ def get_active_cadets_as_data_frame_on_specific_day(
         SORT_CLASS: boat_classes,
         SORT_PARTNER: partners,
     }
-
     active_cadets_as_data_frame = pd.DataFrame(df_as_dict)
+    print(active_cadets_as_data_frame)
     active_cadets_as_data_frame = add_sort_order_to_data_frame(
         object_store=object_store,
         active_cadets_as_data_frame=active_cadets_as_data_frame,
@@ -171,24 +171,20 @@ def add_sort_order_to_data_frame(
 ):
     ## this ensures the groups, boat classes and club boats are sorted in order
     active_cadets_as_data_frame[SORT_GROUP] = pd.Categorical(
-        active_cadets_as_data_frame[SORT_GROUP], get_list_of_groups(object_store)
+        active_cadets_as_data_frame[SORT_GROUP], get_list_of_groups(object_store).list_of_names()
     )
 
     active_cadets_as_data_frame[SORT_CLUBBOAT] = pd.Categorical(
         active_cadets_as_data_frame[SORT_CLUBBOAT],
-        get_list_of_club_dinghies(object_store),
+        get_list_of_club_dinghies(object_store).list_of_names(),
     )
 
     active_cadets_as_data_frame[SORT_CLASS] = pd.Categorical(
-        active_cadets_as_data_frame[SORT_CLASS], get_list_of_boat_classes(object_store)
+        active_cadets_as_data_frame[SORT_CLASS], get_list_of_boat_classes(object_store).list_of_names()
     )
-
-    active_cadets_as_data_frame[SORT_PARTNER] = convert_partner_cadets_and_objects_into_names(active_cadets_as_data_frame[SORT_PARTNER].values)
 
     return active_cadets_as_data_frame
 
-def convert_partner_cadets_and_objects_into_names(series_of_cadets_and_names: List[Union[Cadet, NoCadetPartner]]) -> List[str]:
-    return [partner.name for partner in series_of_cadets_and_names]
 
 def get_sorted_active_cadets_df(
     active_cadets_as_data_frame: pd.DataFrame, sort_order: list

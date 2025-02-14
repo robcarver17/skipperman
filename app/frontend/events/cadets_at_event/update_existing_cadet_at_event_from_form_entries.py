@@ -179,7 +179,7 @@ def update_comparing_new_and_existing_cadet_at_event(
             new_cadet_at_event=new_cadet_at_event,
             existing_cadet_at_event=existing_cadet_at_event,
         )
-    if reg_status_change == new_registration_replacing_deleted_or_cancelled:
+    elif reg_status_change == new_registration_replacing_deleted_or_cancelled:
         ## Replace entire original cadet, new registration
         replace_existing_cadet_at_event_where_original_cadet_was_inactive(
             object_store=interface.object_store,
@@ -188,7 +188,7 @@ def update_comparing_new_and_existing_cadet_at_event(
         )
 
     elif reg_status_change == existing_registration_now_deleted_or_cancelled:
-        ## availability is a moot point
+        ## availability is a moot point, change status
         new_status = new_cadet_at_event.status
         update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_messages(
             object_store=interface.object_store,
@@ -208,11 +208,12 @@ def update_comparing_new_and_existing_cadet_at_event(
 
     else:
         interface.log_error(
-            "For existing cadet %s status change from %s to %s don't know how to handle"
+            "For existing cadet %s status change from %s to %s don't know how to handle %s"
             % (
                 str(new_cadet_at_event),
                 existing_cadet_at_event.status.name,
                 new_cadet_at_event.status.name,
+                reg_status_change
             )
         )
 
@@ -234,7 +235,7 @@ def update_cadet_at_event_when_status_unchanged_and_availability_has_probably_ch
     if availability_unchanged:
         ## Neithier status or availability has changed - shouldn't happen, but heigh ho
         print(
-            "Code identified major change for cadet %s but nothing appears to have happened, probably user entering original values in form for some reason"
+            "Code identified major change for cadet %s but nothing appears to have happened, probably user entering original values in form for some reason."
             % str(existing_cadet_at_event)
         )
         return
@@ -275,10 +276,14 @@ def interpret_status_change(
     if new_status.is_cancelled_or_deleted:
         return existing_registration_now_deleted_or_cancelled
 
-    status_changed = not status_unchanged
+    print("for %s vs %s" % (str(existing_cadet_at_event), str(new_cadet_at_event)))
+    print(original_status)
+    print(new_status)
+    print(original_status.is_active)
+    print(new_status.is_active)
     status_active_and_was_active = new_status.is_active and original_status.is_active
 
-    if status_active_and_was_active and status_changed:
+    if status_active_and_was_active:
         return status_still_active_but_has_changed
 
     return error

@@ -28,6 +28,10 @@ class Event(GenericSkipperManObjectWithIds):
     end_date: datetime.date
     id: str = arg_not_passed
 
+    @property
+    def name(self):
+        return self.event_name
+
     def __repr__(self):
         return self.event_description
 

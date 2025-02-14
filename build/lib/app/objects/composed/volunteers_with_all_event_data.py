@@ -82,7 +82,7 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         )
         self._event = event
 
-    def not_on_patrol_boat_on_given_day(
+    def not_on_patrol_boat_on_given_day_and_available(
         self, day: Day
     ) -> "DictOfAllEventDataForVolunteers":
         list_of_volunteers = ListOfVolunteers(
@@ -90,6 +90,7 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
                 volunteer
                 for volunteer, volunteer_data in self.items()
                 if volunteer_data.not_on_patrol_boat_on_given_day(day)
+                and volunteer_data.registration_data.availablity.available_on_day(day)
             ]
         )
         return self.sort_by_list_of_volunteers(list_of_volunteers)
@@ -106,16 +107,17 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
             new_role_and_group=new_role_and_group,
         )
 
-    def delete_role_at_event_for_volunteer_on_day(self, volunteer: Volunteer, day: Day):
+    def delete_role_at_event_for_volunteer_on_day(self, volunteer: Volunteer, day: Day, delete_power_boat: bool = True):
         days_and_roles_data = self.dict_of_volunteers_at_event_with_days_and_roles
         days_and_roles_data.delete_role_for_volunteer_on_day(
             day=day, volunteer=volunteer
         )
 
-        patrol_boat_data = self.dict_of_volunteers_at_event_with_patrol_boats
-        patrol_boat_data.delete_patrol_boat_for_volunteer_on_day(
-            day=day, volunteer=volunteer
-        )
+        if delete_power_boat:
+            patrol_boat_data = self.dict_of_volunteers_at_event_with_patrol_boats
+            patrol_boat_data.delete_patrol_boat_for_volunteer_on_day(
+                day=day, volunteer=volunteer
+            )
 
     def delete_volunteer_from_event(self, volunteer: Volunteer):
         volunteer_registration_data = (

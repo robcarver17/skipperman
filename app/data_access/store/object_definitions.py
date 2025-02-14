@@ -42,9 +42,6 @@ from app.objects.composed.ticks_in_dicts import (
 from app.objects.composed.ticksheet import (
     compose_dict_of_cadets_with_qualifications_and_ticks,
 )
-from app.objects.composed.ticks_for_qualification import (
-    compose_dict_of_tick_list_items_with_cadet_id_as_key,
-)
 from app.objects.composed.volunteer_roles import compose_list_of_roles_with_skills
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
     compose_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups,
@@ -329,22 +326,12 @@ object_definition_for_dict_of_cadet_ids_with_tick_list_items_for_cadet_id = Iter
     underlying_object_definition=object_definition_for_list_of_cadets_with_tick_list_items_for_cadet_id,
     required_key_for_iteration="list_of_cadet_ids",
     key_for_underlying_object="cadet_id",
+
 )
 
 
 ## DERIVED
 
-
-object_definition_for_dict_of_tick_list_items_with_cadet_id_as_key = DerivedObjectDefinition(
-    composition_function=compose_dict_of_tick_list_items_with_cadet_id_as_key,
-    dict_of_arguments_and_underlying_object_definitions=dict(
-        dict_of_cadet_ids_with_tick_list_items_for_cadet_id=object_definition_for_dict_of_cadet_ids_with_tick_list_items_for_cadet_id
-    ),
-    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
-        dict_of_cadet_ids_with_tick_list_items_for_cadet_id=object_definition_for_dict_of_cadet_ids_with_tick_list_items_for_cadet_id
-    ),
-    required_keys=["list_of_cadet_ids"],
-)
 
 
 object_definition_for_list_of_cadet_committee_members = DerivedObjectDefinition(
@@ -610,11 +597,11 @@ object_definition_for_dict_of_cadets_with_qualifications_and_ticks = DerivedObje
     dict_of_arguments_and_underlying_object_definitions=dict(
         list_of_cadets=object_definition_for_list_of_cadets,
         qualifications_and_tick_items_as_dict=object_definition_for_qualifications_and_tick_items_as_dict,
-        dict_of_cadet_id_and_ticks_with_items=object_definition_for_dict_of_tick_list_items_with_cadet_id_as_key,
+        dict_of_cadet_ids_with_tick_list_items_for_cadet_id=object_definition_for_dict_of_cadet_ids_with_tick_list_items_for_cadet_id,##new
         dict_of_qualifications_for_all_cadets=object_definition_for_dict_of_qualifications_for_cadets,
     ),
     dict_of_properties_and_underlying_object_definitions_if_modified=dict(
-        dict_of_cadet_id_and_ticks_with_items=object_definition_for_dict_of_tick_list_items_with_cadet_id_as_key
+        dict_of_cadet_ids_with_tick_list_items_for_cadet_id=object_definition_for_dict_of_cadet_ids_with_tick_list_items_for_cadet_id,##new
     ),
     required_keys=["list_of_cadet_ids"],
 )  # DictOfCadetsWithQualificationsAndTicks

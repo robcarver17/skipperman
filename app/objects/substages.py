@@ -74,8 +74,6 @@ class ListOfTickSubStages(GenericListOfObjectsWithIds):
         item = self.substage_given_id(substage_id)
         item.name = new_name
 
-    def list_of_names(self):
-        return [sub_stage.name for sub_stage in self]
 
 
 PLACEHOLDER_TICK_SHEET_ID = str(-9999)

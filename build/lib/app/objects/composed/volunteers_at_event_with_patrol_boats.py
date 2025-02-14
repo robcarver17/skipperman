@@ -58,7 +58,8 @@ class PatrolBoatByDayDict(Dict[Day, PatrolBoat]):
         return self.get(day, default)
 
     def delete_patrol_boat_association(self, patrol_boat: PatrolBoat):
-        for day in self.keys():
+        all_days = list(self.keys())
+        for day in all_days:
             if self[day] == patrol_boat:
                 self.pop(day)
 
@@ -244,7 +245,8 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
     def remove_patrol_boat_and_all_associated_volunteers_from_event(
         self, patrol_boat: PatrolBoat
     ):
-        for volunteer_patrol_boats in self.values():
+        list_of_volunteer_patrol_boats = list(self.values())
+        for volunteer_patrol_boats in list_of_volunteer_patrol_boats:
             volunteer_patrol_boats.delete_patrol_boat_association(patrol_boat)
 
         self.list_of_volunteers_with_id_at_event_with_patrol_boat_id.remove_patrol_boat_id_and_all_associated_volunteer_connections_from_event(

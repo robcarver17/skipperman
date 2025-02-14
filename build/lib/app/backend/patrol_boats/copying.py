@@ -22,8 +22,8 @@ def is_possible_to_copy_boat_allocation(
     on_same_boat_for_all_days = volunteer_is_on_same_boat_for_all_days(
         volunteer_at_event_on_boat
     )
-
-    copy_button_required = not on_same_boat_for_all_days
+    single_day = len(volunteer_at_event_on_boat.availability.days_available())==1
+    copy_button_required = (not on_same_boat_for_all_days) and (not single_day)
 
     return copy_button_required
 
@@ -34,7 +34,7 @@ def is_possible_to_copy_boat_and_role_allocation(
     boat_possible = is_possible_to_copy_boat_allocation(
         volunteer_at_event_on_boat=volunteer_at_event_on_boat
     )
-    role_possible = is_possible_to_copy_roles_for_non_grouped_roles_only(
+    role_possible = is_possible_to_copy_roles(
         volunteer_at_event_on_boat=volunteer_at_event_on_boat
     )
 
@@ -129,7 +129,7 @@ def volunteer_has_at_least_one_allocated_boat_which_matches_others(
     )
 
 
-def is_possible_to_copy_roles_for_non_grouped_roles_only(
+def is_possible_to_copy_roles(
     volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 ) -> bool:
     ## Only possible if: none of the roles require a group, and all the roles don't currently match
@@ -142,12 +142,9 @@ def is_possible_to_copy_roles_for_non_grouped_roles_only(
 
     no_roles_to_copy = len(all_roles) == 0
     all_roles_match = len(set(all_roles)) <= 1
+    single_day = len(volunteer_at_event_on_boat.availability.days_available())==1
 
-    roles_require_groups = [role.associate_sailing_group for role in all_roles]
-    at_least_one_role_require_group = any(roles_require_groups)
-
-    ## copy not possible if all roles the same, or at least one requires a group, or nothing to copy
-    if all_roles_match or at_least_one_role_require_group or no_roles_to_copy:
+    if all_roles_match or  no_roles_to_copy or single_day:
         return False
     else:
         return True

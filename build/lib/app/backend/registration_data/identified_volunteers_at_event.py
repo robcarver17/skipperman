@@ -109,7 +109,7 @@ def get_relevant_information_for_volunteer_in_event_at_row_and_index(
     object_store: ObjectStore, row_id: str, volunteer_index: int, event: Event
 ) -> RelevantInformationForVolunteer:
     row_in_mapped_event = get_row_in_raw_registration_data_given_id(
-        object_store=object_store, event=event, row_id=row_id
+        object_store=object_store, event=event, row_id=row_id, default=missing_data
     )
     if row_in_mapped_event is missing_data:
         print(

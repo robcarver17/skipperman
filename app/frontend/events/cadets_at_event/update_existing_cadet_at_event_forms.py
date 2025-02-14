@@ -75,17 +75,17 @@ def display_form_for_update_to_existing_cadet_at_event(
 def buttons_for_update_row() -> Line:
 
     return Line(
-        [use_original_data_button, use_new_data_button, use_data_in_form_button]
+        [use_original_data_button, use_data_in_form_button,  use_new_data_button]
     )
 
 
-USE_NEW_DATA_BUTTON_LABEL = "Use new data imported from latest WA file (recommended)"
+USE_NEW_DATA_BUTTON_LABEL = "Use new data imported from latest file (recommended)"
 use_new_data_button = Button(USE_NEW_DATA_BUTTON_LABEL)
 USE_ORIGINAL_DATA_BUTTON_LABEL = (
-    "Use original data that we already have (ignores subsequent changes in WA file)"
+    "Use original data that we already have (ignores subsequent changes in file)"
 )
 use_original_data_button = Button(USE_ORIGINAL_DATA_BUTTON_LABEL)
-USE_DATA_IN_FORM_BUTTON_LABEL = "Use data as edited in form above (will be newest data from WA file if no changes made in form)"
+USE_DATA_IN_FORM_BUTTON_LABEL = "Use data as edited in form above (will be newest data from file if no changes made in form)"
 use_data_in_form_button = Button(USE_DATA_IN_FORM_BUTTON_LABEL)
 
 

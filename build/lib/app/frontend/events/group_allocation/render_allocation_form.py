@@ -14,7 +14,7 @@ from app.backend.qualifications_and_ticks.progress import (
     get_qualification_status_for_single_cadet_as_list_of_str,
 )
 from app.backend.qualifications_and_ticks.qualifications_for_cadet import (
-    highest_qualification_for_cadet,
+    name_of_highest_qualification_for_cadet,
 )
 from app.frontend.forms.reorder_form import reorder_table
 from app.frontend.shared.cadet_state import get_cadet_from_state, is_cadet_set_in_state
@@ -211,6 +211,8 @@ def get_inner_form_for_cadet_allocation(
             remove_unallocated=False,
             N_events=NUMBER_OF_PREVIOUS_EVENTS,
             excluding_event=event,
+            only_events_before_excluded_event=True,
+            pad=True
         )
     )
     group_allocation_info = get_group_allocation_info(dict_of_all_event_data)
@@ -246,7 +248,7 @@ def get_top_row(
     previous_groups_for_cadets: DictOfEventAllocations,
     group_allocation_info: GroupAllocationInfo,
 ) -> RowInTable:
-    previous_event_names_in_list = previous_groups_for_cadets.list_of_events
+    previous_event_names_in_list = previous_groups_for_cadets.list_of_events.list_of_names()
 
     info_field_names = group_allocation_info.visible_field_names
 
@@ -294,19 +296,19 @@ def get_row_for_cadet(
         interface=interface, event=dict_of_all_event_data.event, cadet=cadet
     )
     previous_groups_as_list = (
-        previous_groups_for_cadets.previous_groups_for_cadet_as_list(cadet)
+        previous_groups_for_cadets.previous_group_names_for_cadet_as_list(cadet)
     )
-    previous_group_info = (
+    group_info = (
         group_allocation_info.group_info_dict_for_cadet_as_ordered_list(cadet)
     )
-    previous_group_info = [
-        make_long_thing_detail_box(field) for field in previous_group_info
+    group_info = [
+        make_long_thing_detail_box(field) for field in group_info
     ]
     input_fields = get_input_fields_for_cadet(
         interface=interface, cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
     )
     qualification = str(
-        highest_qualification_for_cadet(
+        name_of_highest_qualification_for_cadet(
             object_store=interface.object_store, cadet=cadet
         )
     )
@@ -320,7 +322,7 @@ def get_row_for_cadet(
     return RowInTable(
         [cell_for_cadet, days_attending_field]
         + previous_groups_as_list
-        + previous_group_info
+        + group_info
         + [qualification, notes_field]
         + input_fields
     )
@@ -346,7 +348,8 @@ def get_cell_for_cadet_that_is_clicked_on(
     interface: abstractInterface, event: Event, cadet: Cadet
 ) -> ListOfLines:
     list_of_groups_as_str = get_list_of_previous_groups_as_str(
-        object_store=interface.object_store, event_to_exclude=event, cadet=cadet
+        object_store=interface.object_store, event_to_exclude=event, cadet=cadet,
+        only_events_before_excluded_event=False
     )
     list_of_qualifications_as_str = (
         get_qualification_status_for_single_cadet_as_list_of_str(

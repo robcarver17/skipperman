@@ -1,3 +1,3 @@
-DEBUG = False
+DEBUG = True
 
 TERSE = False

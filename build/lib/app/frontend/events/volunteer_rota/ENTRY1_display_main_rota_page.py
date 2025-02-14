@@ -176,6 +176,8 @@ def post_form_view_for_volunteer_rota(
         update_if_swap_button_pressed(
             interface=interface, swap_button=last_button_pressed
         )
+
+    ## SAVES
     elif save_menu_button.pressed(last_button_pressed):
         save_all_information_in_rota_page(interface)
 

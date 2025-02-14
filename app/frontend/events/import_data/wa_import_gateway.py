@@ -158,9 +158,9 @@ new_wa_field_mapping_button = Button("Set up WA field mapping", tile=True)
 existing_wa_field_mapping_button = Button("Check or modify WA field mapping", tile=True)
 
 first_upload_file_button = Button("Upload a WA export file", tile=True)
-subsequent_upload_file_button = Button("Upload an updated WA export file", tile=True)
-import_file_button = Button("Import data from uploaded WA file", tile=True)
-update_file_button = Button("Update data from uploaded WA file", tile=True)
+import_file_button = Button("Import data from current WA file", tile=True)
+update_file_button = Button("Update data from current WA file", tile=True)
+subsequent_upload_file_button = Button("Upload a new WA export file", tile=True)
 
 clear_event_id_button = Button("Reset the stored WA event ID", tile=True)
 

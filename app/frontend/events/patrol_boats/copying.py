@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from app.backend.patrol_boats.changes import (
     copy_across_earliest_allocation_of_boats_at_event,
@@ -24,7 +24,7 @@ from app.backend.patrol_boats.copying import (
     is_required_to_copy_overwrite_boat_and_role_allocation,
     volunteer_has_at_least_one_allocated_boat_and_empty_spaces_to_fill,
     volunteer_has_at_least_one_allocated_boat_which_matches_others,
-    is_possible_to_copy_roles_for_non_grouped_roles_only,
+    is_possible_to_copy_roles,
 )
 from app.data_access.configuration.fixed import (
     COPY_OVERWRITE_SYMBOL,
@@ -75,13 +75,18 @@ def get_copy_buttons_for_boat_allocation(
 
 def get_copy_buttons_for_boat_copy_in_boat_rota(
     volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
-) -> List[Button]:
+) -> List[Union[Button, str]]:
+
+    any_copy_possible = is_possible_to_copy_boat_allocation(volunteer_at_event_on_boat)
+
+    if not any_copy_possible:
+        return [""]
+
     copy_fill_possible = (
         volunteer_has_at_least_one_allocated_boat_and_empty_spaces_to_fill(
             volunteer_at_event_on_boat
         )
     )
-    any_copy_possible = is_possible_to_copy_boat_allocation(volunteer_at_event_on_boat)
     overwrite_copy_required = (
         not volunteer_has_at_least_one_allocated_boat_which_matches_others(
             volunteer_at_event_on_boat
@@ -103,24 +108,25 @@ def get_copy_buttons_for_boat_copy_in_boat_rota(
     )
     fill_button = Button(label=COPY_FILL_BOAT_BUTTON_LABEL, value=fill_button_name)
 
-    if any_copy_possible:
-        buttons = []
-        if overwrite_copy_required:
-            buttons.append(overwrite_button)
-        if copy_fill_possible:
-            buttons.append(fill_button)
-    else:
-        buttons = [""]
+    buttons = []
+    if overwrite_copy_required:
+        buttons.append(overwrite_button)
+    if copy_fill_possible:
+        buttons.append(fill_button)
 
     return buttons
 
 
 def get_copy_buttons_for_role_in_boat_rota(
     volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
-) -> List[Button]:
-    any_copy_possible = is_possible_to_copy_roles_for_non_grouped_roles_only(
+) -> List[Union[Button, str]]:
+
+    any_copy_possible = is_possible_to_copy_roles(
         volunteer_at_event_on_boat=volunteer_at_event_on_boat
     )
+    if not any_copy_possible:
+        return [""]
+
     copy_fill_possible = (
         volunteer_has_at_least_one_allocated_role_and_empty_spaces_to_fill(
             volunteer_at_event_on_boat=volunteer_at_event_on_boat
@@ -131,6 +137,7 @@ def get_copy_buttons_for_role_in_boat_rota(
             volunteer_at_event_on_boat=volunteer_at_event_on_boat
         )
     )
+
     day = volunteer_at_event_on_boat.day
     volunteer_id = volunteer_at_event_on_boat.volunteer.id
     copy_overwrite_button_name = (
@@ -166,10 +173,13 @@ def get_copy_buttons_for_role_in_boat_rota(
 
 def get_copy_buttons_for_role_and_boat_in_rota(
     volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
-) -> List[Button]:
+) -> List[Union[Button, str]]:
     any_copy_possible = is_possible_to_copy_boat_and_role_allocation(
         volunteer_at_event_on_boat
     )
+    if not any_copy_possible:
+        return [""]
+
     fill_copy_possible = is_possible_to_copy_fill_boat_and_role_allocation(
         volunteer_at_event_on_boat
     )
@@ -183,6 +193,7 @@ def get_copy_buttons_for_role_and_boat_in_rota(
             volunteer_id=volunteer_at_event_on_boat.volunteer.id,
         )
     )
+
     copy_fill_button_name = (
         copy_fill_button_name_for_both_volunteer_role_and_boat_at_event_on_day(
             day=volunteer_at_event_on_boat.day,
@@ -195,14 +206,11 @@ def get_copy_buttons_for_role_and_boat_in_rota(
     )
     fill_button = Button(label=COPY_FILL_BOTH_BUTTON_LABEL, value=copy_fill_button_name)
 
-    if any_copy_possible:
-        buttons = []
-        if overwrite_copy_required:
-            buttons.append(overwrite_button)
-        if fill_copy_possible:
-            buttons.append(fill_button)
-    else:
-        buttons = [""]
+    buttons = []
+    if overwrite_copy_required:
+        buttons.append(overwrite_button)
+    if fill_copy_possible:
+        buttons.append(fill_button)
 
     return buttons
 

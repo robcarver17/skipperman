@@ -83,9 +83,6 @@ class ListOfBoatClasses(GenericListOfObjectsWithIds):
 
         self.append(boat)
 
-    def list_of_names(self):
-        return [boat.name for boat in self]
-
     def check_for_duplicated_names(self):
         list_of_names = [role.name for role in self]
         assert len(list_of_names) == len(set(list_of_names))

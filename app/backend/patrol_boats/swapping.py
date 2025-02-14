@@ -30,7 +30,7 @@ class SwapData:
     original_volunteer: Volunteer
 
 
-def is_possible_to_swap_roles_on_one_day_for_non_grouped_roles_only(
+def is_possible_to_swap_roles_on_one_day(
     volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 ) -> bool:
     ## Only possible if: none of the roles require a group, and all the roles don't currently match
@@ -38,10 +38,7 @@ def is_possible_to_swap_roles_on_one_day_for_non_grouped_roles_only(
     if role.is_no_role_set():
         return False
 
-    role_requires_group = role.associate_sailing_group
-    possible_to_swap = not role_requires_group
-
-    return possible_to_swap
+    return True
 
 
 def swap_boats_for_volunteers_in_allocation_using_swapdata(

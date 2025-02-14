@@ -17,7 +17,7 @@ from app.data_access.init_directories import temp_file_name
 from app.backend.rota.changes import delete_role_at_event_for_volunteer_on_day
 from app.backend.volunteers.volunteers_at_event import (
     make_volunteer_available_on_day,
-    make_volunteer_unavailable_on_day,
+    make_volunteer_unavailable_on_day, is_volunteer_currently_available_for_only_one_day,
 )
 from app.backend.rota.volunteer_matrix import get_volunteer_matrix
 from app.frontend.events.volunteer_rota.edit_cadet_connections_for_event_from_rota import (
@@ -130,6 +130,13 @@ def update_if_make_unavailable_button_pressed(
         object_store=interface.object_store, volunteer_id=volunteer_id
     )
     event = get_event_from_state(interface)
+    if is_volunteer_currently_available_for_only_one_day(object_store=interface.object_store, event=event,
+                                                         volunteer=volunteer):
+        interface.log_error(
+            "Can't make volunteer %s unavailable on %s as only volunteering for one day - remove from event if not available on any days"
+            % (volunteer.name, day.name))
+        return
+
     make_volunteer_unavailable_on_day(
         object_store=interface.object_store, event=event, volunteer=volunteer, day=day
     )
@@ -144,7 +151,8 @@ def update_if_remove_role_button_pressed(
     )
     event = get_event_from_state(interface)
     delete_role_at_event_for_volunteer_on_day(
-        object_store=interface.object_store, event=event, volunteer=volunteer, day=day
+        object_store=interface.object_store, event=event, volunteer=volunteer, day=day,
+        delete_power_boat=True
     )
 
 

@@ -109,7 +109,7 @@ def process_update_to_existing_cadet_in_event_data(
     except NoMoreData:
         ## No rows match cadet ID in current registration data, so deleted
         interface.log_error(
-            "Cadet %s was in WA event data, now appears to be missing in latest file - possible data corruption of WA output or manual hacking - no WA changes will be reflected in data"
+            "Cadet %s was in imported data, now appears to be missing in latest file - possible data corruption of imported file or manual hacking - no changes in file will be reflected in Skipperman"
             % cadet
         )
         return process_next_cadet_at_event(interface)

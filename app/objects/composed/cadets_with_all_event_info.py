@@ -2,8 +2,6 @@ from copy import copy
 from dataclasses import dataclass
 from typing import Dict, List
 
-from app.objects.boat_classes import BoatClass
-from app.objects.club_dinghies import ClubDinghy
 from app.objects.composed.cadets_at_event_with_boat_classes_groups_club_dnghies_and_partners import \
     ListOfCadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay, CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay
 from app.objects.composed.cadets_with_all_event_info_functions import \
@@ -45,6 +43,7 @@ from app.objects.composed.food_at_event import (
     DictOfCadetsWithFoodRequirementsAtEvent,
     FoodRequirements,
 )
+from build.lib.app.objects.exceptions import missing_data
 
 
 @dataclass
@@ -150,24 +149,27 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
                 )
             )
 
-    def get_most_common_partner_across_days(self, cadet: Cadet) -> Cadet:
+    def get_most_common_partner_name_across_days(self, cadet: Cadet) -> Cadet:
         event_data_for_cadet = self.event_data_for_cadet(cadet)
+        partner = event_data_for_cadet.days_and_boat_class.most_common_partner()
 
-        return event_data_for_cadet.days_and_boat_class.most_common_partner()
+        return partner.name
 
-    def get_most_common_boat_class_name_across_days(self, cadet: Cadet) -> BoatClass:
+    def get_most_common_boat_class_name_across_days(self, cadet: Cadet) -> str:
         event_data_for_cadet = self.event_data_for_cadet(cadet)
+        boat_class = event_data_for_cadet.days_and_boat_class.most_common_boat_class()
 
-        return event_data_for_cadet.days_and_boat_class.most_common_boat_class()
+        return boat_class.name
 
-    def get_most_common_club_boat_name_across_days(self, cadet: Cadet) -> ClubDinghy:
+    def get_most_common_club_boat_name_across_days(self, cadet: Cadet) -> str:
         event_data_for_cadet = self.event_data_for_cadet(cadet)
+        club_dinghy = event_data_for_cadet.days_and_club_dinghies.most_common()
+        return club_dinghy.name
 
-        return event_data_for_cadet.days_and_club_dinghies.most_common()
-
-    def get_most_common_group_name_across_days(self, cadet: Cadet) -> Group:
+    def get_most_common_group_name_across_days(self, cadet: Cadet) -> str:
         event_data_for_cadet = self.event_data_for_cadet(cadet)
-        return event_data_for_cadet.days_and_groups.most_common()
+        group = event_data_for_cadet.days_and_groups.most_common()
+        return group.name
 
     def update_availability_of_existing_cadet_at_event_and_return_messages(
         self,

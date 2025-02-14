@@ -69,6 +69,10 @@ def get_allocation_dropdown_elements_to_add_volunteer_for_day_and_boat(
         day=day,
     )
 
+    if len(dropdown_elements)==0:
+        ## no volunteers available
+        return dict()
+
     dropdown_elements.insert(0, TOP_ROW_OF_VOLUNTEER_DROPDOWN)
 
     dict_of_options = dict([(element, element) for element in dropdown_elements])
@@ -79,7 +83,8 @@ def get_allocation_dropdown_elements_to_add_volunteer_for_day_and_boat(
 def get_list_of_strings_of_volunteers_to_add_for_day_on_patrol_boat(
     interface: abstractInterface, event: Event, day: Day
 ) -> List[str]:
-    sorted_volunteers_at_event_but_not_yet_on_patrol_boats = get_sorted_volunteer_data_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day(
+    sorted_volunteers_at_event_but_not_yet_on_patrol_boats = \
+        get_sorted_volunteer_data_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day(
         object_store=interface.object_store,
         event=event,
         day=day,
@@ -196,7 +201,7 @@ def volunteer_boat_role_dropdown(
     if in_swap_state:
         return current_role_name
 
-    dict_of_roles_for_dropdown = get_dict_of_roles_for_dropdown(interface.object_store)
+    dict_of_roles_for_dropdown = get_dict_of_roles_for_dropdown(interface.object_store, include_no_role=True, include_unavailable=False)
 
     return dropDownInput(
         input_name=get_dropdown_field_name_for_volunteer_role(
@@ -230,13 +235,13 @@ def get_add_volunteer_to_patrol_boat_dropdown(
 ):
     in_swap_state = is_ready_to_swap(interface)
     if in_swap_state:
-        add_volunteer_dropdown = ""
-    else:
-        add_volunteer_dropdown = (
-            get_allocation_dropdown_to_add_volunteer_for_day_and_boat(
-                interface=interface, boat_at_event=patrol_boat, day=day, event=event
-            )
+        return ""
+
+    add_volunteer_dropdown = (
+        get_allocation_dropdown_to_add_volunteer_for_day_and_boat(
+            interface=interface, boat_at_event=patrol_boat, day=day, event=event
         )
+    )
 
     return add_volunteer_dropdown
 
@@ -249,6 +254,9 @@ def get_allocation_dropdown_to_add_volunteer_for_day_and_boat(
             interface=interface, day=day, event=event
         )
     )
+    if len(dict_of_options)==0:
+        return Line([])
+
     return Line(
         dropDownInput(
             input_label="",

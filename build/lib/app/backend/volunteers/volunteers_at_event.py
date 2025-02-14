@@ -179,3 +179,15 @@ def make_volunteer_unavailable_on_day(
     update_dict_of_all_event_data_for_volunteers(
         object_store=object_store, dict_of_all_event_data=all_volunteer_data
     )
+
+
+def is_volunteer_currently_available_for_only_one_day(object_store: ObjectStore, event: Event, volunteer: Volunteer) -> bool:
+    registration_data = get_dict_of_registration_data_for_volunteers_at_event(
+        object_store=object_store,
+        event=event
+
+    )
+    reg_for_volunteer = registration_data.get_data_for_volunteer(volunteer)
+    availabilty = reg_for_volunteer.availablity.days_available()
+
+    return len(availabilty)<=1

@@ -78,9 +78,10 @@ def get_volunteer_row_to_select_skill(
 def get_existing_allocation_elements_for_day_and_boat(
     interface: abstractInterface, patrol_boat: PatrolBoat, day: Day, event: Event
 ) -> ListOfLines:
+    object_store = interface.object_store
     list_of_volunteers_at_event_on_boats = (
         get_sorted_volunteers_allocated_to_patrol_boat_at_event_on_days_sorted_by_role(
-            object_store=interface.object_store,
+            object_store=object_store,
             event=event,
             day=day,
             patrol_boat=patrol_boat,
@@ -105,7 +106,14 @@ def get_existing_allocation_elements_for_volunteer_day_and_boat(
     name = volunteer_at_event_on_boat.volunteer.name
     has_pb2 = volunteer_at_event_on_boat.skills.can_drive_safety_boat
     if has_pb2:
-        name = "%s (PB2)" % name
+        name = "%s[PB2] " % name
+
+    group = volunteer_at_event_on_boat.role_and_group.group
+    role = volunteer_at_event_on_boat.role_and_group.role
+    if group.is_unallocated or not role.associate_sailing_group:
+        group_name = ""
+    else:
+        group_name = "%s" % group.name
 
     role_dropdown = volunteer_boat_role_dropdown(
         interface=interface,
@@ -116,7 +124,7 @@ def get_existing_allocation_elements_for_volunteer_day_and_boat(
         volunteer_at_event_on_boat=volunteer_at_event_on_boat,
     )
 
-    return Line([name, " ", role_dropdown] + buttons)
+    return Line([name, " ", role_dropdown, group_name] + buttons)
 
 
 def get_buttons_for_volunteer_day_and_boat(

@@ -138,7 +138,7 @@ def update_dict_of_qualifications_for_cadets(
     dict_of_qualifications_for_cadets: DictOfQualificationsForCadets,
 ):
     cadet = list_of_cadets.cadet_with_id(cadet_with_id_and_qualification.cadet_id)
-    list_of_qualifications_and_dates_for_cadet = dict_of_qualifications_for_cadets.get(
+    list_of_qualifications_and_dates_for_cadet = dict_of_qualifications_for_cadets.qualifications_for_cadet(
         cadet
     )
 

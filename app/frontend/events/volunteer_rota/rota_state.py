@@ -8,11 +8,11 @@ from app.objects.day_selectors import Day
 from app.objects.composed.volunteers_with_skills import SkillsDict
 
 SORT_BY_VOLUNTEER_NAME = "Sort_volunteer_name"
-SORT_BY_DAY = "Sort_by_day"
-SORT_BY_CADET_LOCATION = "Sort_by_cw"
+SORT_BY_DAY = "Sort_by_volunteer_day"
+SORT_BY_CADET_LOCATION = "Sort_by_volunteer_cw"
 
-AVAILABILTY_FILTER = "av_filter"
-SKILLS_FILTER = "skills_filter"
+AVAILABILTY_FILTER = "av_filter_volunteer"
+SKILLS_FILTER = "skills_filter_volunteer"
 
 from app.backend.volunteers.skills import get_list_of_skills
 

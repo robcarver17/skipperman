@@ -70,7 +70,5 @@ class ListOfSkills(GenericListOfObjectsWithIds):
         list_of_names = self.list_of_names()
         assert len(list_of_names) == len(set(list_of_names))
 
-    def list_of_names(self):
-        return [skill.name for skill in self]
 
 

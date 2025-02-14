@@ -112,6 +112,7 @@ def set_read_only():
 
 
 @app.route("/%s/" % MAKE_BACKUP, methods=["GET"])
+@login_required
 def make_backup():
     make_backup_from_menu()
     ## only possible from menu page

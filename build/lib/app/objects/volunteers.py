@@ -98,9 +98,6 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
         return ListOfVolunteers(sorted(self, key=lambda x: x.first_name))
 
 
-    def list_of_names(self) -> List[str]:
-        return [volunteer.name for volunteer in self]
-
     def volunteer_with_id(self, id: str) -> Volunteer:
         return self.object_with_id(id)
 

@@ -13,14 +13,17 @@ from app.objects.composed.cadets_at_event_with_groups import (
 )
 from app.objects.events import Event, ListOfEvents
 from app.objects.exceptions import arg_not_passed
-from app.objects.groups import Group
+from app.objects.groups import Group, ListOfGroups, missing_group_display_only
 
 
 def get_list_of_previous_groups_as_str(
-    object_store: ObjectStore, event_to_exclude: Event, cadet: Cadet
+    object_store: ObjectStore, event_to_exclude: Event, cadet: Cadet,
+        only_events_before_excluded_event: bool = True
+
 ) -> List[str]:
     dict_of_groups = get_dict_of_event_allocations_for_last_N_events_for_single_cadet(
-        object_store=object_store, excluding_event=event_to_exclude, cadet=cadet
+        object_store=object_store, excluding_event=event_to_exclude, cadet=cadet,
+        only_events_before_excluded_event=only_events_before_excluded_event,
     )
     dict_of_groups = dict(
         [
@@ -40,13 +43,19 @@ ALL_EVENTS = 99999999999999
 
 
 def get_dict_of_all_event_allocations_for_single_cadet(
-    object_store: ObjectStore, cadet: Cadet, remove_unallocated: bool = False
+    object_store: ObjectStore, cadet: Cadet, remove_unallocated: bool = False,
+    excluding_event: Event = arg_not_passed,
+    only_events_before_excluded_event: bool = True,
+        N_events: int = ALL_EVENTS
+
 ) -> Dict[Event, Group]:
     return get_dict_of_event_allocations_for_last_N_events_for_single_cadet(
         object_store=object_store,
         cadet=cadet,
-        N_events=ALL_EVENTS,
+        N_events=N_events,
+        excluding_event=excluding_event,
         remove_unallocated=remove_unallocated,
+        only_events_before_excluded_event=only_events_before_excluded_event
     )
 
 
@@ -57,8 +66,15 @@ class DictOfEventAllocations(Dict[Cadet, Dict[Event, Group]]):
         super().__init__(raw_dict)
         self._list_of_events = list_of_events
 
-    def previous_groups_for_cadet_as_list(self, cadet: Cadet):
-        return list(self.get(cadet).keys())
+    def previous_group_names_for_cadet_as_list(self, cadet: Cadet):
+        previous_groups = self.previous_groups_for_cadet_as_list(cadet)
+        return previous_groups.list_of_names()
+
+    def previous_groups_for_cadet_as_list(self, cadet: Cadet) -> ListOfGroups:
+        previous_groups_dict_for_cadet = self.get(cadet)
+        previous_groups = ListOfGroups(list(previous_groups_dict_for_cadet.values()))
+
+        return previous_groups
 
     @property
     def list_of_events(self) -> ListOfEvents:
@@ -68,12 +84,16 @@ class DictOfEventAllocations(Dict[Cadet, Dict[Event, Group]]):
 def get_dict_of_event_allocations_for_last_N_events_for_list_of_cadets(
     object_store: ObjectStore,
     list_of_cadets: ListOfCadets,
+    excluding_event: Event ,
     N_events: int = ALL_EVENTS,
     remove_unallocated: bool = False,
-    excluding_event: Event = arg_not_passed,
+        only_events_before_excluded_event: bool = True,
+        pad: bool = False
+
 ) -> DictOfEventAllocations:
     list_of_events = get_list_of_last_N_events(
-        object_store=object_store, N_events=N_events, excluding_event=excluding_event
+        object_store=object_store, N_events=N_events, excluding_event=excluding_event,
+        only_events_before_excluded_event=only_events_before_excluded_event
     )
     raw_dict = dict(
         [
@@ -84,6 +104,7 @@ def get_dict_of_event_allocations_for_last_N_events_for_list_of_cadets(
                     cadet=cadet,
                     list_of_events=list_of_events,
                     remove_unallocated=remove_unallocated,
+                    pad=pad
                 ),
             )
             for cadet in list_of_cadets
@@ -99,9 +120,12 @@ def get_dict_of_event_allocations_for_last_N_events_for_single_cadet(
     N_events: int = ALL_EVENTS,
     excluding_event: Event = arg_not_passed,
     remove_unallocated: bool = False,
+        only_events_before_excluded_event: bool = True
 ) -> Dict[Event, Group]:
+
     list_of_events = get_list_of_last_N_events(
-        object_store=object_store, N_events=N_events, excluding_event=excluding_event
+        object_store=object_store, N_events=N_events, excluding_event=excluding_event,
+        only_events_before_excluded_event=only_events_before_excluded_event
     )
     dict_of_previous_groups = get_dict_of_event_allocations_for_last_N_events_for_single_cadet_given_list_of_events(
         object_store=object_store,
@@ -115,18 +139,40 @@ def get_dict_of_event_allocations_for_last_N_events_for_single_cadet(
 
 def get_list_of_last_N_events(
     object_store: ObjectStore,
+    excluding_event: Event,
+    only_events_before_excluded_event: bool = True,
     N_events: int = ALL_EVENTS,
-    excluding_event: Event = arg_not_passed,
-):
-    unsorted_list_of_events = copy(get_list_of_events(object_store))
 
-    if excluding_event is not arg_not_passed:
-        unsorted_list_of_events.remove(excluding_event)
+) -> ListOfEvents:
+    list_of_events = copy(get_list_of_events(object_store))
+    list_of_events = remove_event_and_possibly_past_events(list_of_events, excluding_event=excluding_event,
+                                                           only_events_before_excluded_event=only_events_before_excluded_event)
 
-    list_of_all_events = unsorted_list_of_events.sort_by_start_date_desc()
-    list_of_events = list_of_all_events[:N_events]
+    list_of_events = get_N_most_recent_events_newest_last(list_of_events, N_events=N_events)
 
     return list_of_events
+
+def remove_event_and_possibly_past_events(list_of_events: ListOfEvents,
+                                          excluding_event: Event,
+                                          only_events_before_excluded_event: bool = True
+                                          ):
+    list_of_events_sorted_by_date_desc = list_of_events.sort_by_start_date_asc() ## newest last
+
+    if excluding_event is not arg_not_passed:
+        idx_of_event = list_of_events_sorted_by_date_desc.index_of_id(excluding_event.id)
+        if only_events_before_excluded_event:
+            list_of_events_sorted_by_date_desc  = list_of_events_sorted_by_date_desc[:idx_of_event] ## only those that occured before this event
+        else:
+            list_of_events_sorted_by_date_desc.pop(idx_of_event)
+
+    return ListOfEvents(list_of_events_sorted_by_date_desc)
+
+def get_N_most_recent_events_newest_last(list_of_events: ListOfEvents,     N_events: int = ALL_EVENTS,
+) -> ListOfEvents:
+
+    list_of_events_sorted_by_date_desc = list_of_events.sort_by_start_date_asc() ## newest last
+
+    return ListOfEvents(list_of_events_sorted_by_date_desc[-N_events:])
 
 
 def get_dict_of_event_allocations_for_last_N_events_for_single_cadet_given_list_of_events(
@@ -134,6 +180,7 @@ def get_dict_of_event_allocations_for_last_N_events_for_single_cadet_given_list_
     cadet: Cadet,
     list_of_events: ListOfEvents,
     remove_unallocated: bool = False,
+        pad: bool = False
 ) -> Dict[Event, Group]:
 
     previous_allocations_as_dict = (
@@ -142,10 +189,11 @@ def get_dict_of_event_allocations_for_last_N_events_for_single_cadet_given_list_
         )
     )
     dict_of_previous_groups = most_common_allocation_for_cadet_in_previous_events(
-        cadet=cadet, previous_allocations_as_dict=previous_allocations_as_dict
+        cadet=cadet, previous_allocations_as_dict=previous_allocations_as_dict,
+        pad=pad
     )
 
-    if remove_unallocated:
+    if (not pad) & remove_unallocated:
         dict_of_previous_groups = dict(
             [
                 (event, group)
@@ -188,25 +236,28 @@ def get_group_allocations_for_event_active_cadets_only(
 def most_common_allocation_for_cadet_in_previous_events(
     cadet: Cadet,
     previous_allocations_as_dict: Dict[Event, DictOfCadetsWithDaysAndGroupsAtEvent],
+        pad: bool = False
 ) -> Dict[Event, Group]:
+
     dict_of_allocations = dict(
         [
             (
                 event,
                 dict_of_allocations_for_event.get_most_common_group_for_cadet(
-                    cadet, default_group=None
+                    cadet, default_group=missing_group_display_only
                 ),
             )
             for event, dict_of_allocations_for_event in previous_allocations_as_dict.items()
         ]
     )
 
-    dict_of_allocations = dict(
-        [
-            (event, allocation)
-            for event, allocation in dict_of_allocations.items()
-            if allocation is not None
-        ]
-    )
+    if not pad:
+        dict_of_allocations = dict(
+            [
+                (event, allocation)
+                for event, allocation in dict_of_allocations.items()
+                if allocation is not missing_group_display_only
+            ]
+        )
 
     return dict_of_allocations

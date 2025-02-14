@@ -75,8 +75,6 @@ class ListOfQualifications(GenericListOfObjectsWithIds):
 
         self.append(qualification)
 
-    def list_of_names(self):
-        return [qual.name for qual in self]
 
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_names()

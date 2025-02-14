@@ -1,5 +1,5 @@
 from app.frontend.shared.events_state import get_event_from_state
-from app.objects.exceptions import MissingData
+from app.objects.exceptions import MissingData, MISSING_FROM_FORM
 
 from app.frontend.shared.cadet_state import get_cadet_from_state
 from typing import List, Dict
@@ -244,9 +244,9 @@ def get_tick_from_checkbox_or_none(
             cadet_id=cadet_id,
             dropdown=False,
         ),
-        default=None,
+        default=MISSING_FROM_FORM,
     )
-    if selected_ticks is None:
+    if selected_ticks is MISSING_FROM_FORM:
         ## must be half or no tick
         return None
 
@@ -280,11 +280,11 @@ def get_dict_of_tick_options() -> Dict[str, str]:
 def get_tick_from_dropdown_or_none(
     interface: abstractInterface, cadet_id: str, item_id: str
 ) -> Tick:
-    try:
-        selected_tick_name = interface.value_from_form(
-            get_name_of_cell(item_id=item_id, cadet_id=cadet_id, dropdown=True)
-        )
-    except:
+    selected_tick_name = interface.value_from_form(
+        get_name_of_cell(item_id=item_id, cadet_id=cadet_id, dropdown=True),
+        default=MISSING_FROM_FORM
+    )
+    if selected_tick_name is MISSING_FROM_FORM:
         ## happens if tick can't be edited
         return None
 

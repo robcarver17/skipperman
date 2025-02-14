@@ -17,7 +17,7 @@ class ClubDinghy(GenericSkipperManObjectWithIds):
     id: str = arg_not_passed
 
     def __hash__(self):
-        return hash(self.name)
+        return hash(self.name)+hash(str(self.hidden))*10000
 
     def __repr__(self):
         return self.name
@@ -37,7 +37,6 @@ class ListOfClubDinghies(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return ClubDinghy
-
 
     def replace(self, existing_club_dinghy: ClubDinghy, new_club_dinghy: ClubDinghy):
         object_idx = self.idx_given_name(existing_club_dinghy.name)
@@ -83,8 +82,6 @@ class ListOfClubDinghies(GenericListOfObjectsWithIds):
 
         self.append(boat)
 
-    def list_of_names(self):
-        return [boat.name for boat in self]
 
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_names()

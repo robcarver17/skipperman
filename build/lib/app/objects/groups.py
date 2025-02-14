@@ -73,6 +73,16 @@ class Group(GenericSkipperManObjectWithIds):
             hidden=False,
         )
 
+    @classmethod
+    def create_missing(cls):
+        return cls(
+            "Not at event",
+            location=unallocated_group_location,
+            protected=True,
+            id="-9asmissing",  ## DO NOT CHANGE
+            hidden=False,
+        )
+
     @property
     def is_unallocated(self):
         return self == unallocated_group
@@ -80,6 +90,7 @@ class Group(GenericSkipperManObjectWithIds):
 
 unallocated_group = Group.create_unallocated()
 unallocated_group_id = unallocated_group.id
+missing_group_display_only = Group.create_missing()
 
 from app.objects.generic_list_of_objects import get_unique_object_with_attr_in_list
 
@@ -137,8 +148,6 @@ class ListOfGroups(GenericListOfObjectsWithIds):
         list_of_names = self.list_of_names()
         assert len(list_of_names) == len(set(list_of_names))
 
-    def list_of_names(self):
-        return [group.name for group in self]
 
     def has_lake_group(self):
         return self.contains_specific_location(lake_training_group_location)

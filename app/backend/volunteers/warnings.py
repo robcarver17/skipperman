@@ -232,13 +232,13 @@ def warn_about_volunteer_availablity_at_event_with_connected_cadets(
                 ]
             )
             warnings.append(
-                "On %s volunteer attending but associated cadets %s are not attending"
-                % (day.name.lower(), missing_cadet_names)
+                "On %s volunteer attending; but associated sailors %s are not attending"
+                % (day.name.upper(), missing_cadet_names)
             )
 
     notes = copy(volunteer_registration_data.notes)
     if len(notes) > 0:
-        notes = "(%s)" % notes
+        notes = "(Notes: %s)" % notes
 
     if len(warnings) > 0:
         prefix = "%s:" % volunteer.name
@@ -327,12 +327,11 @@ def is_first_event_for_cadet(
 ) -> bool:
     previous_allocation = copy(
         get_dict_of_all_event_allocations_for_single_cadet(
-            object_store=object_store, cadet=cadet
+            object_store=object_store, cadet=cadet,
+            excluding_event=event,
+            only_events_before_excluded_event=True
         )
     )
-    if len(previous_allocation)==0:
-        raise Exception("Only one allocation for cadet %s " % cadet)
-    previous_allocation.pop(event)
 
     return len(previous_allocation) == 0
 

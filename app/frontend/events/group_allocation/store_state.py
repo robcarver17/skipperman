@@ -1,11 +1,9 @@
-from copy import copy
 
-from app.backend.groups.sorting import SORT_GROUP, DEFAULT_SORT_ORDER
-from app.frontend.shared.events_state import get_event_from_state
+from app.backend.groups.sorting import  DEFAULT_SORT_ORDER
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.day_selectors import Day
 
-DAY = "day"
+DAY = "day_in_allocation"
 
 
 def no_day_set_in_state(interface: abstractInterface) -> bool:
@@ -27,7 +25,7 @@ def clear_day_in_state(interface: abstractInterface):
     interface.clear_persistent_value(DAY)
 
 
-SORT_ORDER = "sort_order"
+SORT_ORDER = "sort_order_for_group_allocation"
 
 
 def get_current_sort_order(interface: abstractInterface) -> list:

@@ -160,8 +160,6 @@ def dropdown_list_of_cadets_not_on_committee_or_elected_or_none(interface: abstr
             object_store=interface.object_store
         )
     )
-    if len(list_of_cadets_not_on_committee_ordered_by_age)==0:
-        return None
 
     dict_of_members = dict(
         [

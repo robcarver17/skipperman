@@ -73,7 +73,8 @@ def list_of_lines_with_allocations(
     interface: abstractInterface, cadet: Cadet
 ) -> ListOfLines:
     dict_of_allocations = get_dict_of_all_event_allocations_for_single_cadet(
-        object_store=interface.object_store, cadet=cadet, remove_unallocated=False
+        object_store=interface.object_store, cadet=cadet, remove_unallocated=False,
+
     )
     return ListOfLines(
         ["Events registered at:", _______________]

@@ -23,14 +23,15 @@ from app.objects.volunteers import Volunteer
 
 
 def delete_role_at_event_for_volunteer_on_day(
-    object_store: ObjectStore, volunteer: Volunteer, day: Day, event: Event
+    object_store: ObjectStore, volunteer: Volunteer, day: Day, event: Event,
+        delete_power_boat: bool = True
 ):
     dict_of_all_event_data = get_dict_of_all_event_data_for_volunteers(
         object_store=object_store, event=event
     )
 
     dict_of_all_event_data.delete_role_at_event_for_volunteer_on_day(
-        volunteer=volunteer, day=day
+        volunteer=volunteer, day=day, delete_power_boat=delete_power_boat
     )
     update_dict_of_all_event_data_for_volunteers(
         object_store=object_store, dict_of_all_event_data=dict_of_all_event_data
@@ -119,10 +120,11 @@ def update_role_at_event_for_volunteer_on_day(
     volunteer: Volunteer,
     day: Day,
     new_role: RoleWithSkills,
+    remove_power_boat_if_deleting_role: bool = True
 ):
     if new_role.is_no_role_set():
         delete_role_at_event_for_volunteer_on_day(
-            object_store=object_store, event=event, volunteer=volunteer, day=day
+            object_store=object_store, event=event, volunteer=volunteer, day=day, delete_power_boat=remove_power_boat_if_deleting_role
         )
     else:
         update_role_at_event_for_volunteer_on_day_if_switching_roles(

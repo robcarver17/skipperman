@@ -34,7 +34,7 @@ def display_form_edit_registration_details(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     event = get_event_from_state(interface)
-    sort_order = interface.get_persistent_value(SORT_ORDER, SORT_BY_SURNAME)
+    sort_order = get_sort_order_for_registration(interface)
 
     return display_form_edit_registration_details_given_event_and_sort_order(
         event=event, sort_order=sort_order, interface=interface
@@ -123,5 +123,9 @@ def previous_form(interface: abstractInterface):
         display_form_edit_registration_details
     )
 
+def get_sort_order_for_registration(interface: abstractInterface):
+    sort_order = interface.get_persistent_value(SORT_ORDER, default=SORT_BY_SURNAME)
 
-SORT_ORDER = "sort_order"
+    return sort_order
+
+SORT_ORDER = "sort_order_registration_data"

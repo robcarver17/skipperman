@@ -2,6 +2,8 @@ import datetime
 from typing import List
 
 import pandas as pd
+
+from app.objects.exceptions import arg_not_passed
 from app.objects.membership_status import none_member, user_unconfirmed_member
 
 from app.data_access.configuration.field_list import (
@@ -65,13 +67,13 @@ def _translate_df_timestamp_to_datetime(df_timestamp) -> datetime.date:
 
 
 def get_row_in_raw_registration_data_given_id(
-    object_store: ObjectStore, event: Event, row_id: str
+    object_store: ObjectStore, event: Event, row_id: str, default = arg_not_passed
 ) -> RowInRegistrationData:
     registration_data = get_raw_mapped_registration_data(
         object_store=object_store, event=event
     )
 
-    return registration_data.get_row_with_rowid(row_id=row_id)
+    return registration_data.get_row_with_rowid(row_id=row_id, default=default)
 
 
 def get_list_of_row_ids_in_raw_registration_data_for_event(

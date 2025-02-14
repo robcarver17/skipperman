@@ -86,8 +86,6 @@ class ListOfPatrolBoats(GenericListOfObjectsWithIds):
 
         self.append(patrol_boat)
 
-    def list_of_names(self):
-        return [patrol_boat.name for patrol_boat in self]
 
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_names()

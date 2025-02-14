@@ -115,8 +115,6 @@ class ListOfRolesWithSkillIds(GenericListOfObjectsWithIds):
             default=default
         )
 
-    def list_of_names(self) -> List[str]:
-        return [item.name for item in self]
 
 INSTRUCTOR_TEAM = "Instructors" ## DO NOT CHANGE PROTECTED IN DATA
 NO_TEAM = "No team"
@@ -217,8 +215,6 @@ class ListOfTeams(GenericListOfObjectsWithIds):
         list_of_names = self.list_of_names()
         assert len(list_of_names) == len(set(list_of_names))
 
-    def list_of_names(self):
-        return [team.name for team in self]
 
 
 @dataclass

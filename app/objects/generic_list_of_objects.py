@@ -33,6 +33,9 @@ class GenericListOfObjects(list):
     def as_df_of_str(self) -> pd.DataFrame:
         return create_data_frame_given_list_of_objects(self)
 
+    def list_of_names(self):
+        return [item.name for item in self]
+
 
 def get_contained_class(cls):
     empty_instance = cls.create_empty()
@@ -99,6 +102,8 @@ class GenericListOfObjectsWithIds(GenericListOfObjects):
         max_id = max(list_of_ids_as_int)
 
         return max_id
+
+
 
 def get_unique_object_with_attr_in_list(some_list: list, attr_value, attr_name = "id", default=arg_not_passed):
     idx = get_idx_of_unique_object_with_attr_in_list(some_list=some_list, attr_value=attr_value, attr_name=attr_name,

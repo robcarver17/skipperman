@@ -80,9 +80,9 @@ class CsvDataListOfTickSheetItems(GenericCsvData, DataListOfTickSheetItems):
 class CsvDataListOfCadetsWithTickListItems(
     GenericCsvData, DataListOfCadetsWithTickListItems
 ):
-    def read_for_cadet_id(self, cadet_id: str) -> ListOfCadetIdsWithTickListItemIds:
+    def read_for_cadet_id(self, cadet_id: str) -> ListOfTickListItemsAndTicksForSpecificCadet:
         list_of_items_this_cadet = self.read_and_return_object_of_type(
-            ListOfCadetIdsWithTickListItemIds,
+            ListOfTickListItemsAndTicksForSpecificCadet,
             file_identifier=LIST_OF_CADETS_WITH_TICK_LIST_ITEMS_FOR_EACH_CADET,
             additional_file_identifiers=cadet_id,
         )
@@ -91,7 +91,7 @@ class CsvDataListOfCadetsWithTickListItems(
 
     def write_for_cadet_id(
         self,
-        list_of_cadets_with_tick_list_items: ListOfCadetIdsWithTickListItemIds,
+        list_of_cadets_with_tick_list_items: ListOfTickListItemsAndTicksForSpecificCadet,
         cadet_id: str,
     ):
         ## Arguably we could get this from list_of_cadets_with_tick_list_items but it makese the API cleaner

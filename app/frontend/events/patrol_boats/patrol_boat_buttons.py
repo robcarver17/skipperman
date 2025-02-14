@@ -112,17 +112,18 @@ def get_all_remove_volunteer_button_names(
 DELETE_BOAT_BUTTON_LABEL = "Remove boat from rota"
 DELETE_VOLUNTEER_BUTTON_LABEL = REMOVE_SHORTHAND
 COPY_ALL_BOATS_BUTTON_LABEL = (
-    "Copy and fill all boats from earliest allocated boat across days"
+    "Copy / fill boats from earliest"
 )
 COPYOVER_ALL_BOATS_BUTTON_LABEL = (
-    "Copy, fill and overwrite all boats from earliest allocated boat"
+    "Copy / overwrite boats from earliest"
 )
 COPY_BOATS_AND_ROLES_BUTTON_LABEL = (
-    "Copy and fill all boats and roles from earliest allocated boat and role"
+    "Copy / fill all boats&roles from earliest"
 )
 COPYOVER_BOATS_AND_ROLES_BUTTON_LABEL = (
-    "Copy, fill and overwrite all boats and roles from earliest allocated boat and role"
+    "Copy / overwrite all boats&roles from earliest"
 )
+
 copy_all_boats_button = Button(COPY_ALL_BOATS_BUTTON_LABEL, nav_button=True)
 copyover_all_boats_button = Button(COPYOVER_ALL_BOATS_BUTTON_LABEL, nav_button=True)
 copy_all_boats_and_roles_button = Button(

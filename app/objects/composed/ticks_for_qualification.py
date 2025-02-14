@@ -1,11 +1,11 @@
 from typing import Dict, List
 
-from app.objects.cadets import Cadet
 from app.objects.composed.ticks_in_dicts import TickSubStagesAsDict
+from app.objects.exceptions import missing_data
 from app.objects.qualifications import Qualification
 from app.objects.ticks import (
     DictOfTicksWithItem,
-    ListOfCadetIdsWithTickListItemIds,
+    ListOfTickListItemsAndTicksForSpecificCadet,
     Tick,
     full_tick,
     half_tick,
@@ -13,58 +13,27 @@ from app.objects.ticks import (
 )
 from app.objects.substages import TickSubStage, TickSheetItem, ListOfTickSheetItems
 
+class DictOfCadetIdsWithTickListItemsForCadetId(Dict[str, ListOfTickListItemsAndTicksForSpecificCadet]):
+    def get_dict_of_ticks_with_items_for_cadet_id_adding_if_required(self, cadet_id: str) -> DictOfTicksWithItem:
+        list_of_ticks_for_cadet = self.list_of_ticks_for_cadet_id_adding_if_required(cadet_id)
+        return list_of_ticks_for_cadet.dict_of_ticks_with_items()
 
-class DictOfCadetIdAndTicksWithItems(Dict[str, DictOfTicksWithItem]):
-    def __init__(
-        self,
-        raw_dict,
-        dict_of_cadet_ids_with_tick_list_items_for_cadet_id: Dict[
-            str, ListOfCadetIdsWithTickListItemIds
-        ],
-    ):
-        super().__init__(raw_dict)
-        self._dict_of_cadet_ids_with_tick_list_items_for_cadet_id = (
-            dict_of_cadet_ids_with_tick_list_items_for_cadet_id
+    def update_tick(self, cadet_id: str, new_tick: Tick, tick_item: TickSheetItem):
+        list_of_ticks_for_cadet = self.list_of_ticks_for_cadet_id_adding_if_required(cadet_id)
+        list_of_ticks_for_cadet.update_tick(
+            new_tick=new_tick,
+            tick_item=tick_item
         )
 
-    @property
-    def dict_of_cadet_ids_with_tick_list_items_for_cadet_id(
-        self,
-    ) -> Dict[str, ListOfCadetIdsWithTickListItemIds]:
-        return self._dict_of_cadet_ids_with_tick_list_items_for_cadet_id
+    def list_of_ticks_for_cadet_id_adding_if_required(self, cadet_id:str) -> ListOfTickListItemsAndTicksForSpecificCadet:
+        list_of_ticks = self.get(cadet_id, missing_data)
+        if list_of_ticks is missing_data:
+            list_of_ticks = ListOfTickListItemsAndTicksForSpecificCadet([])
+            self[cadet_id] = list_of_ticks
 
-    def update_tick(self, cadet: Cadet, new_tick: Tick, tick_item: TickSheetItem):
-        ## have to modify underlying data so stored properly, don't actually have to modify this object as only intermediate
-        tick_list_items_for_cadet = (
-            self.dict_of_cadet_ids_with_tick_list_items_for_cadet_id[cadet.id]
-        )
-        tick_list_items_for_cadet.update_tick(
-            cadet=cadet, new_tick=new_tick, tick_item=tick_item
-        )
-
-    def get_for_cadet_id(self, cadet_id: str) -> DictOfTicksWithItem:
-        return self.get(cadet_id, DictOfTicksWithItem())
+        return list_of_ticks
 
 
-def compose_dict_of_tick_list_items_with_cadet_id_as_key(
-    dict_of_cadet_ids_with_tick_list_items_for_cadet_id, list_of_cadet_ids: list
-) -> DictOfCadetIdAndTicksWithItems:
-    raw_dict = {}
-    for cadet_id in list_of_cadet_ids:
-        list_of_cadet_ids_with_tick_list_items_for_cadet_id = (
-            dict_of_cadet_ids_with_tick_list_items_for_cadet_id[cadet_id]
-        )
-        for (
-            cadet_with_tick_list_items
-        ) in list_of_cadet_ids_with_tick_list_items_for_cadet_id:
-            raw_dict[str(cadet_with_tick_list_items.cadet_id)] = (
-                cadet_with_tick_list_items.dict_of_ticks_with_items
-            )
-
-    return DictOfCadetIdAndTicksWithItems(
-        raw_dict=raw_dict,
-        dict_of_cadet_ids_with_tick_list_items_for_cadet_id=dict_of_cadet_ids_with_tick_list_items_for_cadet_id,
-    )
 
 
 class DictOfTickSheetItemsAndTicksForCadet(Dict[TickSheetItem, Tick]):

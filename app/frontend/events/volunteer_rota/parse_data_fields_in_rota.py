@@ -3,7 +3,7 @@ from app.backend.rota.volunteer_table import MAKE_UNAVAILABLE
 from app.backend.volunteers.roles_and_teams import get_role_from_name
 
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
-from app.objects.exceptions import missing_data, MISSING_FROM_FORM
+from app.objects.exceptions import MISSING_FROM_FORM
 from app.objects.volunteers import Volunteer
 
 from app.objects.events import Event
@@ -13,7 +13,8 @@ from app.backend.rota.changes import (
     update_role_at_event_for_volunteer_on_day,
     update_group_at_event_for_volunteer_on_day,
 )
-from app.backend.volunteers.volunteers_at_event import make_volunteer_unavailable_on_day
+from app.backend.volunteers.volunteers_at_event import make_volunteer_unavailable_on_day, \
+    is_volunteer_currently_available_for_only_one_day
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.volunteer_rota.render_volunteer_table import (
@@ -70,6 +71,7 @@ def update_details_from_form_for_volunteer_given_specific_day_at_event(
         interface=interface, event=event, volunteer=volunteer, day=day
     )
 
+
 def update_role_or_availability_from_form_for_volunteer_on_day_at_event(
     interface: abstractInterface, event: Event, volunteer: Volunteer, day: Day
 ):
@@ -78,26 +80,45 @@ def update_role_or_availability_from_form_for_volunteer_on_day_at_event(
     )
     if new_role_name_from_form == MISSING_FROM_FORM:
         return
-
-    if new_role_name_from_form == MAKE_UNAVAILABLE:
-        make_volunteer_unavailable_on_day(
-            event=event,
-            volunteer=volunteer,
-            day=day,
-            object_store=interface.object_store,
-        )
-
+    elif new_role_name_from_form == MAKE_UNAVAILABLE:
+        if is_volunteer_currently_available_for_only_one_day(object_store=interface.object_store, event=event, volunteer=volunteer):
+            interface.log_error("Can't make volunteer %s unavailable on %s as only volunteering for one day - remove from event if not available on any days"
+                                % (volunteer.name, day.name))
+            return
+        else:
+            make_volunteer_unavailable_on_day(
+                event=event,
+                volunteer=volunteer,
+                day=day,
+                object_store=interface.object_store,
+            )
+            return
     else:
-        new_role = get_role_from_name(
-            object_store=interface.object_store, role_name=new_role_name_from_form
-        )
-        update_role_at_event_for_volunteer_on_day(
-            object_store=interface.object_store,
+        update_role_or_availability_from_form_for_volunteer_on_day_at_event_when_changing_to_actual_role(
+            interface=interface,
             event=event,
             volunteer=volunteer,
-            day=day,
-            new_role=new_role,
+            day=day
         )
+
+def update_role_or_availability_from_form_for_volunteer_on_day_at_event_when_changing_to_actual_role(
+    interface: abstractInterface, event: Event, volunteer: Volunteer, day: Day
+):
+    new_role_name_from_form = interface.value_from_form(
+        input_name_for_role_and_volunteer(volunteer=volunteer, day=day), default=MISSING_FROM_FORM
+    )
+    new_role = get_role_from_name(
+        object_store=interface.object_store, role_name=new_role_name_from_form
+    )
+    update_role_at_event_for_volunteer_on_day(
+        object_store=interface.object_store,
+        event=event,
+        volunteer=volunteer,
+        day=day,
+        new_role=new_role,
+        remove_power_boat_if_deleting_role=True
+
+    )
 
 
 def update_group_from_form_for_volunteer_on_day_at_event(

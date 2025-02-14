@@ -44,11 +44,19 @@ def remove_qualification_from_cadet(
 
 
 class NoQualifications:
-    def __repr__(self):
-        return "No qualifications"
 
+    def name(self):
+        return "No qualification"
 
 no_qualifications = NoQualifications()
+
+
+def name_of_highest_qualification_for_cadet(
+    object_store: ObjectStore, cadet: Cadet
+) ->str:
+    highest_qualification = highest_qualification_for_cadet(object_store, cadet=cadet)
+
+    return highest_qualification.name
 
 
 def highest_qualification_for_cadet(
@@ -58,11 +66,12 @@ def highest_qualification_for_cadet(
         object_store=object_store, cadet=cadet
     )
     if len(list_of_qualifications_for_cadet) == 0:
-        return no_qualifications
+        return NoQualifications
 
     list_of_qualifications_for_cadet.sort_by_qualification_order()
 
     return list_of_qualifications_for_cadet[-1]
+
 
 
 def sorted_list_of_named_qualifications_for_cadet(

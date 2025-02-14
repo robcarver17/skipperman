@@ -48,7 +48,7 @@ def new_status_and_status_message(
     ## Don't need all shared as new_status can't be deleted
     if old_status.is_cancelled and new_status.is_active:
         status_message = (
-            "Sailor %s was cancelled; now active so probably new registration"
+            "Sailor %s was cancelled; now active so probably new registration replacing the existing cancelled one"
             % str(cadet)
         )
 
@@ -71,12 +71,12 @@ def new_status_and_status_message(
         )
     elif old_status.is_active and new_status.is_active:
         status_message = (
-            "Sailor %s was still active but status has changed from %s to %s"
+            "Sailor %s is still active but status has changed from %s to %s"
             % (str(cadet), old_status_name, new_status_name)
         )
     else:
         status_message = (
-            "Sailor %s status change from %s to %s, shouldn't happen! Check very carefully"
+            "Sailor %s status change from %s to %s, shouldn't happen! Check the registration very carefully!"
             % (str(cadet), old_status_name, new_status_name)
         )
 

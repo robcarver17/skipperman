@@ -7,6 +7,7 @@ from app.backend.rota.changes import update_role_at_event_for_volunteer_on_day
 from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import (
     VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 )
+from app.objects.exceptions import MISSING_FROM_FORM
 from app.objects.volunteers import Volunteer
 
 from app.backend.volunteers.skills import (
@@ -204,10 +205,14 @@ def get_list_of_volunteer_additions_to_boats(
 def get_boat_day_volunteer_for_dropdown_name_or_none(
     interface: abstractInterface, dropdown_name: str
 ) -> Union[BoatDayVolunteer, str]:
-    selected_dropdown = interface.value_from_form(dropdown_name)
+    selected_dropdown = interface.value_from_form(dropdown_name, default=MISSING_FROM_FORM)
 
     if selected_dropdown == TOP_ROW_OF_VOLUNTEER_DROPDOWN:
         return NO_ADDITION_TO_MAKE
+    if selected_dropdown == MISSING_FROM_FORM:
+        return NO_ADDITION_TO_MAKE
+
+
     boat, day = from_allocation_dropdown_input_name_to_boat_and_day(
         interface=interface, dropdown_input_name=dropdown_name
     )
@@ -300,6 +305,7 @@ def update_role_dropdown_for_volunteer_on_day(
         volunteer=volunteer_on_boat.volunteer,
         day=day,
         new_role=role_selected,
+        remove_power_boat_if_deleting_role=False
     )
 
 

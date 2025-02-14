@@ -3,11 +3,10 @@ from typing import List, Dict
 from enum import Enum
 
 import pandas as pd
-from app.objects.cadets import Cadet
-from app.objects.exceptions import arg_not_passed
+from app.objects.exceptions import  MultipleMatches
 
 from app.objects.generic_list_of_objects import (
-    GenericListOfObjects, get_idx_of_unique_object_with_attr_in_list,
+    GenericListOfObjects
 )
 from app.objects.substages import TickSheetItem
 
@@ -45,12 +44,7 @@ def tick_from_str(some_str: str) -> Tick:
 
 class DictOfTicksWithItem(Dict[str, Tick]):
     def update_tick(self, new_tick: Tick, tick_item: TickSheetItem):
-        ## have to modify underlying data so stored properly, don't actually have to modify this object as only intermediate
         self[tick_item.id] = new_tick
-
-    def add_all_ticks_inplace(self):
-        for tick_item_id in self.keys():
-            self[tick_item_id] = full_tick
 
     def as_dict_of_str_aligned_to_list_of_tick_list_items(
         self, list_of_tick_list_items: List[str]
@@ -85,14 +79,13 @@ class CadetIdWithTickListItemIds:
     cadet_id: str
     dict_of_ticks_with_items: DictOfTicksWithItem
 
-    def update_tick(self, new_tick: Tick, tick_item: TickSheetItem):
-        ## have to modify underlying data so stored properly, don't actually have to modify this object as only intermediate
-        self.dict_of_ticks_with_items.update_tick(
-            new_tick=new_tick, tick_item=tick_item
+    @classmethod
+    def create_empty(cls, cadet_id: str):
+        return cls(
+            cadet_id=cadet_id,
+            dict_of_ticks_with_items=DictOfTicksWithItem()
         )
 
-    def add_all_ticks_inplace(self):
-        self.dict_of_ticks_with_items.add_all_ticks_inplace()
 
     @property
     def list_of_tick_item_ids(self) -> List[str]:
@@ -118,7 +111,9 @@ class CadetIdWithTickListItemIds:
         return cls(cadet_id=cadet_id, dict_of_ticks_with_items=dict_of_ticks_with_items)
 
 
-class ListOfCadetIdsWithTickListItemIds(GenericListOfObjects):
+NOTIONAL_CADET_ID_NOT_USED = "**notional***"
+
+class ListOfTickListItemsAndTicksForSpecificCadet(GenericListOfObjects):
     @property
     def _object_class_contained(self):
         return CadetIdWithTickListItemIds
@@ -129,9 +124,6 @@ class ListOfCadetIdsWithTickListItemIds(GenericListOfObjects):
     def as_df_of_str(self) -> pd.DataFrame:
         return list_of_cadets_with_tick_list_items_as_df(self)
 
-    def append(self, __object):
-        raise Exception("Can't append use add or modify specific tick")
-
     @classmethod
     def from_df_of_str(cls, df: pd.DataFrame):
         list_of_cadets_with_tick_list_items = (
@@ -140,22 +132,26 @@ class ListOfCadetIdsWithTickListItemIds(GenericListOfObjects):
 
         return cls(list_of_cadets_with_tick_list_items)
 
-    def update_tick(self, cadet: Cadet, new_tick: Tick, tick_item: TickSheetItem):
-        ## have to modify underlying data so stored properly, don't actually have to modify this object as only intermediate
-        tick_list_items_for_cadet = self[self.index_of_cadet_id(cadet_id=cadet.id)]
-        tick_list_items_for_cadet.update_tick(new_tick=new_tick, tick_item=tick_item)
+    def update_tick(self, new_tick: Tick, tick_item: TickSheetItem):
+        dict_of_ticks = self.dict_of_ticks_with_items()
+        dict_of_ticks.update_tick(new_tick=new_tick, tick_item=tick_item)
 
-    def index_of_cadet_id(self, cadet_id: str, default = arg_not_passed) -> int:
-        return get_idx_of_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name='cadet_id',
-            attr_value=cadet_id,
-            default=default
-        )
+    def dict_of_ticks_with_items(self) -> DictOfTicksWithItem:
+        tick_list_items_for_cadet = self._tick_list_items_for_cadet_adding_if_required()
 
-    @property
-    def list_of_cadet_ids(self):
-        return [str(item.cadet_id) for item in self]
+        return tick_list_items_for_cadet.dict_of_ticks_with_items
+
+    def _tick_list_items_for_cadet_adding_if_required(self) -> CadetIdWithTickListItemIds:
+        if len(self)==0:
+            tick_list_items_for_cadet = CadetIdWithTickListItemIds.create_empty(NOTIONAL_CADET_ID_NOT_USED)
+            self.append(tick_list_items_for_cadet)
+        elif len(self)==1:
+            tick_list_items_for_cadet = self[0]
+            tick_list_items_for_cadet.cadet_id = NOTIONAL_CADET_ID_NOT_USED ## will eventually modify old files for tidiness
+        else:
+            raise MultipleMatches("Cant have more than one cadet in a file now")
+
+        return tick_list_items_for_cadet
 
     def list_of_tick_list_item_ids(self) -> List[str]:
         if len(self)==0:
@@ -167,7 +163,7 @@ class ListOfCadetIdsWithTickListItemIds(GenericListOfObjects):
 
 
 def list_of_cadets_with_tick_list_items_as_df(
-    list_of_cadets_with_tick_list_items: ListOfCadetIdsWithTickListItemIds,
+    list_of_cadets_with_tick_list_items: ListOfTickListItemsAndTicksForSpecificCadet,
 ) -> pd.DataFrame:
     list_of_tick_list_items = (
         list_of_cadets_with_tick_list_items.list_of_tick_list_item_ids()
@@ -184,7 +180,7 @@ def list_of_cadets_with_tick_list_items_as_df(
 
 def from_df_to_list_of_cadets_with_tick_list_items(
     df: pd.DataFrame,
-) -> ListOfCadetIdsWithTickListItemIds:
+) -> ListOfTickListItemsAndTicksForSpecificCadet:
     list_of_cadets_with_tick_lists = []
     for i in range(len(df)):
         row = df.iloc[i]
@@ -193,6 +189,6 @@ def from_df_to_list_of_cadets_with_tick_list_items(
         )
         list_of_cadets_with_tick_lists.append(cadet_with_tick_list_items)
 
-    return ListOfCadetIdsWithTickListItemIds(list_of_cadets_with_tick_lists)
+    return ListOfTickListItemsAndTicksForSpecificCadet(list_of_cadets_with_tick_lists)
 
 

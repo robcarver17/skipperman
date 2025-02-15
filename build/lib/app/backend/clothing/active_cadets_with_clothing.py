@@ -16,14 +16,16 @@ def get_dict_of_active_cadets_with_clothing_at_event(
     unfiltered_dict = get_unfiltered_dict_of_active_cadets_with_clothing_at_event(
         object_store=object_store, event=event
     )
-    cadets_currently_serving_on_committee = get_list_of_cadets_currently_serving(
-        object_store
-    )
 
     if only_committee:
-        return unfiltered_dict.filter_for_list_of_cadets(
+        cadets_currently_serving_on_committee = get_list_of_cadets_currently_serving(
+            object_store
+        )
+        cadets_currently_serving_on_committee_and_at_event =  unfiltered_dict.filter_for_list_of_cadets(
             cadets_currently_serving_on_committee
         )
+        return cadets_currently_serving_on_committee_and_at_event
+
     else:
         return unfiltered_dict
 

@@ -28,6 +28,9 @@ class Volunteer(GenericSkipperManObjectWithIds):
     def __hash__(self):
         return hash(self.name)
 
+    def __lt__(self, other):
+        return self.name<other.name
+
     def replace_everything_except_id(self, updated_volunteer: "Volunteer"):
         self.first_name = updated_volunteer.first_name
         self.surname = updated_volunteer.surname

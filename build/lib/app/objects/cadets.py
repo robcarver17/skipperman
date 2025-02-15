@@ -75,6 +75,9 @@ class Cadet(GenericSkipperManObjectWithIds):
         ## Doesn't consider membership status
         return self.has_same_name(other) and self.date_of_birth == other.date_of_birth
 
+    def __lt__(self, other):
+        return self.name<other.name
+
     def has_same_name(self, other):
         return self.first_name == other.first_name and self.surname == other.surname
 

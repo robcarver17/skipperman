@@ -96,7 +96,7 @@ Certain roles (all instructors, and lake helpers) can be associated with a speci
 
 ## The role or group I want isn't shown
 
-Contact the administrator for now - in a future version of Skipperman you will be able to add these yourself.
+You can change these in the [configuration](configuration_help.md) pages from the main menu. It might be that your role / group is hidden, or you need to add a new one.
 
 ## Changing roles and groups
 
@@ -119,7 +119,7 @@ To make someone unavailable on a given day, click on the umbrella button in the 
 
 You can also change availability by clicking on a volunteers name, changing the day selection ticks, and pressing save. 
 
-Note: if you want to remove a volunteer completely, you should usually do this by [clicking on their name](#removing-a-volunteer-from-an-event) rather than making them unavailable on all days - this will keep them on the screen (which might make sense if you're not sure if they can come, but you want to keep them in mind).
+Note: if you want to remove a volunteer completely, you should do this by [clicking on their name](#removing-a-volunteer-from-an-event) rather than making them unavailable on all days - Skipperman won't let you make someone unavailable on every day of an event.
 
 ## Add a volunteer
 
@@ -265,6 +265,7 @@ You can filter eithier by skill, or by availability/allocation, or both.
 ### Skills filtering
 
 Check the skills boxes to only include volunteers with a given skill (not their self declared skills from preferred duties - whatever is stored in Skipperman), or combination of skills. Click on apply filters once you have chosen the skillset you want to see, and then clear filters when you want to see all volunteers. This is very useful when deciding who your instructors and PB2 drivers are.
+Skill filters are 'or', so if you click say PB2 and DI you will see people with a DI *or* a PB2 skill.
 
 ### Availabilty / Allocation filtering
 
@@ -332,9 +333,9 @@ Expiry dates for certificates are not stored in Skipperman, so it's a good idea 
 
 ## Cadet connections
 
-It's useful to know where the cadets are who are connected to volunteers to avoid putting cadets and parents together, and to be aware of any repercussions for the rota if for example the cadet's registration is cancelled, and this is shown in the Cadet location button for each volunteer. Cadets are connected to volunteers on the registration form. Note that this is a temporary connection for this event only; and this isn't the same as permanent connection (see FIXME for more details).
+It's useful to know where the cadets are who are connected to volunteers to avoid putting cadets and parents together, and to be aware of any repercussions for the rota if for example the cadet's registration is cancelled, and this is shown in the Cadet location button for each volunteer. Cadets are automatically connected to volunteers when the registration forms are imported if the volunteer is listed against a cadets name. Note that this is a permanent connection which will apply to all events.
 
-Clicking on the location button will allow you to modify the temporary event connections for the volunteer:
+Clicking on the location button will allow you to see the connected cadets, their groups, and permanently modify the cadet connections for the volunteer:
 
 ***
 ***
@@ -342,7 +343,7 @@ Clicking on the location button will allow you to modify the temporary event con
 ***
 ***
 
-You can delete the connection, or add a new one by choosing from the dropdown list. The top of the list will include cadets that are most likely to be connected, eg with the same surname or a permanent connection.
+You can delete the connection, or add a new one by choosing from the dropdown list. The top of the list will include cadets that are most likely to be connected, eg with the same surname.
 
 ## Other useful functions
 

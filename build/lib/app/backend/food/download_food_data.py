@@ -204,7 +204,7 @@ def row_for_volunteer_in_data(
         dict(
             name=volunteer.name,
             food_requirement=food_required.describe(),
-            days_available=availability_for_volunteer.days_available(),
+            days_available=availability_for_volunteer.days_available().count_and_days_as_str(),
         )
     )
 

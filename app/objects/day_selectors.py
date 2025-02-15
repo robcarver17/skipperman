@@ -19,6 +19,12 @@ all_possible_days = list(Day.__members__.values())
 def day_given_datetime(some_day: datetime.date) -> Day:
     return all_possible_days[some_day.weekday()]
 
+class ListOfDays(List[Day]):
+    def __repr__(self):
+        return ", ".join([day.name for day in self])
+
+    def count_and_days_as_str(self):
+        return "%d: %s" % (len(self), str(self))
 
 class DaySelector(Dict[Day, bool]):
     def __repr__(self):
@@ -106,8 +112,8 @@ class DaySelector(Dict[Day, bool]):
     def is_empty(self):
         return len(self.days_available())==0
 
-    def days_available(self) -> List[Day]:
-        return [day for day in self.all_days_in_selector if self.available_on_day(day)]
+    def days_available(self) -> ListOfDays:
+        return ListOfDays([day for day in self.all_days_in_selector if self.available_on_day(day)])
 
     def available_on_day(self, day: Day):
         return self.get(day, False)

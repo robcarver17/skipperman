@@ -16,4 +16,4 @@ Edit the volunteers name; this should only be required if they now wish to be kn
 
 A list of connected sailors is shown. Click on the appropriate button to delete a connection, or choose sailors to connect to the volunteer. Sailors with similar surnames are shown first in the list; other sailors are shown in alphabetical order.
 
-Note that connections are also created when sailors are registered for training events. Sometimes this connection doesn't make sense, for example if another adult is looking after a cadet just for that one event. You can remove those connections here. 
+Note that connections are also automatically created when sailors are registered for training events. Sometimes this connection doesn't make sense, for example if another adult is looking after a cadet just for that one event. You can remove those connections here. 

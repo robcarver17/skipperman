@@ -53,7 +53,7 @@ class DictOfCadetsWithFoodRequirementsAtEvent(Dict[Cadet, FoodRequirements]):
         raw_dict = dict(
             [
                 (cadet, food_requirements)
-                for cadet, food_requirements in self
+                for cadet, food_requirements in self.items()
                 if food_requirements == specific_food_requirements
             ]
         )
@@ -181,7 +181,7 @@ class DictOfVolunteersWithFoodRequirementsAtEvent(Dict[Volunteer, FoodRequiremen
         raw_dict = dict(
             [
                 (volunteer, food_requirements)
-                for volunteer, food_requirements in self
+                for volunteer, food_requirements in self.items()
                 if food_requirements == specific_food_requirements
             ]
         )
@@ -203,6 +203,7 @@ class DictOfVolunteersWithFoodRequirementsAtEvent(Dict[Volunteer, FoodRequiremen
         new_food_requirements: FoodRequirements,
     ):
 
+        print("update food for %s to %s" % (volunteer.name, str(new_food_requirements)))
         self[volunteer] = new_food_requirements
         self.list_of_volunteers_with_ids_and_food_requirements.change_food_requirements_for_volunteer(
             volunteer_id=volunteer.id, food_requirements=new_food_requirements

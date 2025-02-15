@@ -6,6 +6,7 @@ from app.objects.generic_list_of_objects import (
     GenericListOfObjects, get_unique_object_with_attr_in_list,
 )
 from app.objects.generic_objects import GenericSkipperManObject
+from app.objects.generic_list_of_objects import index_not_found
 
 OTHER_IN_FOOD_REQUIRED = "other"
 
@@ -35,6 +36,9 @@ class FoodRequirements(GenericSkipperManObject):
 
     def __repr__(self):
         return self.describe()
+
+    def __hash__(self):
+        return hash(self.describe())
 
     def __eq__(self, other):
         for key in food_keys:
@@ -152,22 +156,13 @@ class ListOfCadetsWithFoodRequirementsAtEvent(GenericListOfObjects):
         return [cadet_with_food.cadet_id for cadet_with_food in self]
 
     def cadet_with_food_with_cadet_id(self, cadet_id, default = arg_not_passed) -> CadetWithFoodRequirementsAtEvent:
-        idx = self.idx_with_cadet_id(cadet_id, default=None)
-        if idx is None:
-            if default is arg_not_passed:
-                raise MissingData
-            else:
-                return default
-
-        return self[idx]
-
-    def idx_with_cadet_id(self, cadet_id, default = arg_not_passed) -> int:
         return get_unique_object_with_attr_in_list(
             some_list=self,
             attr_name='cadet_id',
             attr_value=cadet_id,
             default=default
         )
+
 
 
     def filter_for_list_of_cadet_ids(
@@ -217,17 +212,19 @@ class ListOfVolunteersWithFoodRequirementsAtEvent(GenericListOfObjects):
     def change_food_requirements_for_volunteer(
         self, volunteer_id: str, food_requirements: FoodRequirements
     ):
-        volunteer_in_data = self.volunteer_with_food_with_volunteer_id(volunteer_id)
-        volunteer_in_data.food_requirements = food_requirements
+
+        if self.volunteer_has_food_already(volunteer_id):
+            volunteer_in_data = self.volunteer_with_food_with_volunteer_id(volunteer_id)
+            volunteer_in_data.food_requirements = food_requirements
+        else:
+            self.add_new_volunteer_with_food_to_event(volunteer_id=volunteer_id, food_requirements=food_requirements)
 
     def add_new_volunteer_with_food_to_event(
         self,
         volunteer_id: str,
         food_requirements: FoodRequirements,
     ):
-        try:
-            assert volunteer_id not in self.list_of_volunteer_ids()
-        except:
+        if self.volunteer_has_food_already(volunteer_id):
             raise ("Volunteer already has food requirements")
 
         self.append(
@@ -244,6 +241,11 @@ class ListOfVolunteersWithFoodRequirementsAtEvent(GenericListOfObjects):
         if object_with_id is missing_data:
             return
         self.remove(object_with_id)
+
+    def volunteer_has_food_already(self, volunteer_id):
+        volunteer_with_food =self.volunteer_with_food_with_volunteer_id(volunteer_id, default=missing_data)
+
+        return not volunteer_with_food is missing_data
 
     def volunteer_with_food_with_volunteer_id(
         self, volunteer_id: str, default = arg_not_passed

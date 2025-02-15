@@ -50,6 +50,10 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
             raise Exception("Can't add clothing as cadet already at event")
 
         self[cadet] = ClothingAtEvent(size=size)
+        self.list_of_cadets_with_clothing_and_ids.add_new_cadet_with_clothing_size_and_optionally_colour(
+            cadet_id=cadet.id,
+            size=size
+        )
 
     def does_cadet_have_clothing(
         self,
@@ -128,7 +132,7 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
 
     def filter_for_list_of_cadets(self, list_of_cadets: ListOfCadets):
         raw_dict = dict(
-            [(cadet, self.clothing_for_cadet(cadet)) for cadet in list_of_cadets]
+            [(cadet, self.clothing_for_cadet(cadet)) for cadet in list_of_cadets if cadet in self.list_of_cadets]
         )
         return self._create_with_new_raw_dict(raw_dict)
 

@@ -30,6 +30,7 @@ Click on 'remove boat from rota' to remove a boat entirely.
 ## Allocating a volunteer to a boat
 
 Select a volunteer from the dropdown menu, and then click save changes. Volunteers are listed in order, with the ones most likely to be on a boat listed at the top. Note that those with PB2 qualifications are marked, and you can also see their current volunteer role if any in the dropdown. You can add several volunteers at a time, before clicking save. Once a volunteer is added to a boat on a given day, they can't be added to another boat.
+If no volunteer dropdown is shown, it means all the available volunteers on a given day are already on boats.
 
 ![volunteers_added_to_boats.png](/static/volunteers_added_to_boats.png)
 
@@ -37,7 +38,7 @@ Once you have added one volunteer to a boat and pressed save, you have the optio
 
 ![volunteer_added_to_boat_second.png](/static/volunteer_added_to_boat_second.png)
 
-Note: Skipperman doesn't know about boat capacity, so it will allow you to add as many people to a boat as you like. It also won't currently check to see you have a PB2 driver on each boat - this is down to you.
+Note: Skipperman doesn't know about boat capacity, so it will allow you to add as many people to a boat as you like. 
 
 ## Changing roles of volunteers on boats
 
@@ -46,11 +47,11 @@ We can change the allocated role of a volunteer, or add a role to a volunteer wh
 ![boat_changed_role.png](/static/boat_changed_role.png)
 
 Note that we can't change the group of a DI or coach who is on a boat, so it's best to use this function only for safety boat drivers and crew, and do all other role changes in the volunteer [volunteer rota page](volunteer_rota_help#changing-roles-and-groups). Remember by convention a 'helm' is just someone who has the relevant PB2 certificate so there can be more than one helm on a boat.
-
+Note also that you can make someone a 'helm' even if they don't have a PB2 certificate -check the [warnings](#warnings) to see if you have done this.
 
 ## Removing a volunteer from a boat
 
-To remove a volunteer from a boat, click on the &#174; symbol button. Note this won't remove from the volunter rota or change their role, just from the boat.
+To remove a volunteer from a boat, click on the &#174; symbol button. Note this won't remove from the volunter rota or change their role, just take them off the boat.
 
 
 # Summary
@@ -69,7 +70,7 @@ For every person on a boat, that shows you whether they have PB2 or not. You can
 
 There are two types of checks that Skipperman will do, and you can see if there are any resulting warnings by clicking &#17;Warnings.
 
-- Does every boat have a qualified driver on?
+- Does every boat have a qualified driver on for every day?
 - Is every volunteer qualified for their role?
 
 # Copying
@@ -89,12 +90,12 @@ As with the volunteer rota you can also copy, or copy and overwrite, across all 
 
 I'd advise you to read about swapping in the [volunteer rota](volunteer_rota_help#swapping) before looking at swapping here, they work in exactly the same way except that you can swap boats, or boats and roles.
 
-The swap button &#8693; allows you to swap round two volunteers. Note that a swap button moves roles 'up and down' between volunteers on the same day, whilst a copy moves them 'left and right' across days for the same volunteer. Just as for copying, we can swap boats using &#8693 B or boats and roles with &#8693 BR (we can't swap just roles - that can only be done on the [volunteer rota page](volunteer_rota_help#swaps)). It's also not possible to swap boats and roles if you are a DI, coach or AI; swapping boats and roles is usually used for moving people between lake and river boats. Consider this starting point:
+The swap button &#8693; allows you to swap round two volunteers. Note that a swap button moves roles 'up and down' between volunteers on the same day, whilst a copy moves them 'left and right' across days for the same volunteer. Just as for copying, we can swap boats using &#8693 B or boats and roles with &#8693 BR (we can't swap just roles - that can only be done on the [volunteer rota page](volunteer_rota_help#swaps)).  Swapping boats and roles is usually used for moving people between lake and river boats. Consider this starting point:
 
 ![boat_pre_swap.png](/static/boat_pre_swap.png)
 
 - Simon, Beth and Jake can all swap boats and roles.
-- Richard is an instructor so we can only swap boats with him.
+- Richard is an instructor so although we can swap roles, it's not advised.
 
 ## Swap boats
 
@@ -115,7 +116,7 @@ Instead of pressing swap boats, what would have happened if we had pressed Simon
 ![pressed_swap_boats_and_roles_button.png](/static/pressed_swap_boats_and_roles_button.png)
 
 - Beth is on the same boat, if we press swap role then Simon will become the crew and Beth the helm.
-- Richard is a coach, so we can't swap roles, only swap boats
+- Richard is a coach, so we should avoid swapping roles and ought to only swap boats
 - Jake is on a different boat, so we would swap both boats and roles.
 
 Let's click on Jake as it's the most interesting:

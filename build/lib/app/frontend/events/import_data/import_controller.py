@@ -2,7 +2,6 @@ from typing import Union, Callable
 
 from app.frontend.events.food.automatically_get_food_data import (
     display_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import,
-    update_food_for_volunteers_from_registration_data,
 )
 
 from app.frontend.events.clothing.automatically_get_clothing_data_from_cadets import (

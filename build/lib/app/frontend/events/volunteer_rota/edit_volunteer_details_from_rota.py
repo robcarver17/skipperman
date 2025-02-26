@@ -101,7 +101,6 @@ def post_form_confirm_volunteer_details_from_rota(interface: abstractInterface):
     if cancel_button.pressed(last_button):
         return go_back_to_parent_form(interface)
     elif delete_button.pressed(last_button):
-        print("Delete button pressed")
         delete_volunteer_from_event(interface)
         interface.flush_cache_to_store()
         return go_back_to_parent_form(interface)

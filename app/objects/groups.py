@@ -94,6 +94,7 @@ missing_group_display_only = Group.create_missing()
 
 from app.objects.generic_list_of_objects import get_unique_object_with_attr_in_list
 
+
 class ListOfGroups(GenericListOfObjectsWithIds):
     def sort_to_match_other_group_list_order(self, other_groups: "ListOfGroups"):
         return ListOfGroups([group for group in other_groups if group in self])
@@ -154,3 +155,9 @@ class ListOfGroups(GenericListOfObjectsWithIds):
 
     def contains_specific_location(self, location: GroupLocation):
         return any([group.location == location for group in self])
+
+    def add_unallocated(self):
+        if unallocated_group in self:
+            pass
+        else:
+            self.append(unallocated_group)

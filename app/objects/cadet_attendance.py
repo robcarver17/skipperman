@@ -44,8 +44,10 @@ class DictOfDaySelectors(Dict[Cadet, DaySelector]):
 
 def from_day_selector_to_dict_for_pd(day_selector: DaySelector) -> dict:
     as_dict = {}
-    for day in all_possible_days:
+    for day in day_selector.all_days_in_selector:
         if day_selector.available_on_day(day):
             as_dict[day.name] = "[  ]"
+        else:
+            as_dict[day.name] = "N/A"
 
     return as_dict

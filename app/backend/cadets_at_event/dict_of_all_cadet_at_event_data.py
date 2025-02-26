@@ -72,6 +72,7 @@ def get_attendance_matrix_for_list_of_cadets_at_event_with_passed_event_info(
     list_of_cadets: ListOfCadets = arg_not_passed,
 ) -> DictOfDaySelectors:
     dict_of_availability = {}
+    event_days = all_event_info.event.days_in_event()
     if list_of_cadets is arg_not_passed:
         list_of_cadets = all_event_info.list_of_cadets
     for cadet in list_of_cadets:
@@ -79,9 +80,11 @@ def get_attendance_matrix_for_list_of_cadets_at_event_with_passed_event_info(
             cadet, None
         )
         if cadet_at_event_data is None:
-            dict_of_availability[cadet] = DaySelector()
+            availability_for_cadet = DaySelector()
         else:
-            dict_of_availability[cadet] = cadet_at_event_data.availability
+            availability_for_cadet  = cadet_at_event_data.availability
+
+        dict_of_availability[cadet] = availability_for_cadet.align_with_list_of_days(event_days)
 
     return DictOfDaySelectors(dict_of_availability)
 

@@ -154,17 +154,45 @@ def remove_empty_groups_from_group_order_and_arrangement(
         report_type=reporting_options.specific_parameters.report_type,
     )
 
+def add_unallocated_group_to_group_order_and_arrangement(interface: abstractInterface,
+                                              reporting_options: ReportingOptions):
 
-def add_missing_groups_to_group_order_and_arrangement(
-    interface: abstractInterface,
-    missing_groups: GroupOrder,
-    reporting_options: ReportingOptions,
-):
+    unallocated_group = reporting_options.specific_parameters.unallocated_group
+    add_groups_to_group_order_and_arrangement(interface=interface,
+                                              list_of_groups_to_add=GroupOrder([unallocated_group]),
+                                              reporting_options=reporting_options)
+
+
+
+def load_reset_and_update_arrangement_to_groups_in_data(interface: abstractInterface,
+                                                        ordered_groups_in_data: GroupOrder,
+                                                        reporting_options: ReportingOptions):
     arrangement_options_and_group_order = get_stored_arrangement_and_group_order(
-        interface, report_type=reporting_options.specific_parameters.report_type
+        object_store=interface.object_store, report_type=reporting_options.specific_parameters.report_type
     )
-    arrangement_options_and_group_order.add_missing_groups_to_group_order_and_arrangement(
-        missing_groups=missing_groups
+    arrangement_options_and_group_order.group_order = ordered_groups_in_data
+    arrangement_options_and_group_order = reset_arrangement_and_regenerate_columns(
+        reporting_options=reporting_options,
+        arrangement_options_and_group_order=arrangement_options_and_group_order,
+    )
+    update_arrangement_and_group_order(
+        arrangement_and_group_options=arrangement_options_and_group_order,
+        object_store=interface.object_store,
+        report_type=reporting_options.specific_parameters.report_type,
+    )
+
+
+def add_groups_to_group_order_and_arrangement(interface: abstractInterface, list_of_groups_to_add: GroupOrder,
+                                              reporting_options: ReportingOptions):
+    arrangement_options_and_group_order = get_stored_arrangement_and_group_order(
+        object_store=interface.object_store, report_type=reporting_options.specific_parameters.report_type
+    )
+    new_groups = arrangement_options_and_group_order.group_order.missing_but_in_other_group_order(list_of_groups_to_add)
+    if len(new_groups)==0:
+        return
+
+    arrangement_options_and_group_order.add_groups_to_group_order_and_arrangement(
+        groups_to_add=list_of_groups_to_add
     )
     arrangement_options_and_group_order = reset_arrangement_and_regenerate_columns(
         reporting_options=reporting_options,
@@ -172,7 +200,7 @@ def add_missing_groups_to_group_order_and_arrangement(
     )
     update_arrangement_and_group_order(
         arrangement_and_group_options=arrangement_options_and_group_order,
-        interface=interface,
+        object_store=interface.object_store,
         report_type=reporting_options.specific_parameters.report_type,
     )
 
@@ -198,7 +226,7 @@ def modify_arrangement_options_given_custom_list(
     new_arrangement_of_columns: ArrangementOfColumns,
 ):
     arrangement_options_and_group_order = get_stored_arrangement_and_group_order(
-        interface=interface, report_type=report_type
+        object_store=interface.object_store, report_type=report_type
     )
     ## will change method to custom
     arrangement_options_and_group_order.arrangement_options.add_arrangement_of_columns(
@@ -206,6 +234,6 @@ def modify_arrangement_options_given_custom_list(
     )
     update_arrangement_and_group_order(
         arrangement_and_group_options=arrangement_options_and_group_order,
-        interface=interface,
+        object_store=interface.object_store,
         report_type=report_type,
     )

@@ -23,10 +23,6 @@ def get_df_for_volunteers_event_data_dump(object_store: ObjectStore, event: Even
     list_of_identified_volunteers = get_list_of_identified_volunteers_at_event(
         object_store=object_store, event=event
     )
-    list_of_row_ids = [
-        identified_volunteer.row_id
-        for identified_volunteer in list_of_identified_volunteers
-    ]
     list_of_volunteer_ids = list_of_identified_volunteers.list_of_volunteer_ids()
     list_of_volunteers = ListOfVolunteers(
         [
@@ -102,9 +98,8 @@ def get_df_for_volunteers_event_data_dump(object_store: ObjectStore, event: Even
         for volunteer in list_of_volunteers
     ]
 
-    df = pd.DataFrame(
+    dict_for_df = \
         {
-            ROW_ID: list_of_row_ids,
             "Volunteer": list_of_volunteer_names,
             "Cadets": list_of_connected_cadets,
             "Availability": list_of_availability,
@@ -115,9 +110,10 @@ def get_df_for_volunteers_event_data_dump(object_store: ObjectStore, event: Even
             "Role and Group": list_of_role_group,
             "Patrol boat": list_of_boats,
         }
-    )
 
-    df = df.sort_values(ROW_ID)
+    df = pd.DataFrame(dict_for_df)
+
+    df = df.sort_values("Volunteer")
 
     return df
 

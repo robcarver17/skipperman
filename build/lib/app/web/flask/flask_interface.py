@@ -107,7 +107,6 @@ class flaskInterface(abstractInterface):
         return SessionDataForAction(self.action_name)
 
     def uploaded_file(self, input_name: str = "file"):
-        print("inside state")
         return uploaded_file(input_name)
 
     def get_current_logged_in_username(self) -> str:
@@ -140,8 +139,6 @@ def get_last_button_pressed(button_name: str = arg_not_passed) -> str:
 
 
 def uploaded_file(input_name: str = "file"):
-    print("inside uploaded file")
-    print(request.files.keys())
     file = request.files.get(input_name, None)
     if file is None:
         print("no file")

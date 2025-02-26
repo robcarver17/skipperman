@@ -242,7 +242,6 @@ def from_previous_role_copy_button_to_volunteer(
 def from_previous_role_copy_button_to_volunteer_id(
     previous_role_copy_button_name: str,
 ) -> str:
-    print("button %s" % previous_role_copy_button_name)
     __, volunteer_id = previous_role_copy_button_name.split("_")
 
     return volunteer_id

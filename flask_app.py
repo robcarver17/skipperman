@@ -6,6 +6,7 @@ from werkzeug.middleware.profiler import ProfilerMiddleware
 from app.web.documentation.documentation_pages import generate_help_page_html
 from app.web.flask.flash import flash_error
 from app.web.flask.session_data_for_action import clear_session_data_for_all_actions
+from app.web.html.config_html import PROFILE
 from flask import session, Flask, redirect
 from flask_login import login_required, LoginManager
 from werkzeug import Request
@@ -33,15 +34,11 @@ from app.web.html.url_define import (
 )
 from app.data_access.configuration.configuration import MAX_FILE_SIZE
 
-Request.max_form_parts = 5000  # avoid large forms crashing
-
-
-PROFILE = False
-
-#### SETUP
+MEGABYTE = (2 ** 10) ** 2
 
 
 ## Do not move these functions out of this file or things break
+
 def prepare_flask_app(max_file_size: int, profile: bool = False) -> Flask:
     ## Secret key
     app = Flask(__name__)
@@ -61,10 +58,17 @@ def prepare_flask_app(max_file_size: int, profile: bool = False) -> Flask:
     app.config["SECRET_KEY"] = app.secret_key
 
     ## Avoid overload
-    app.config["MAX_CONTENT_LENGTH"] = max_file_size
+    app.config["MAX_CONTENT_LENGTH"] = max_file_size * MEGABYTE
+    app.config['MAX_FORM_MEMORY_SIZE'] = None ## avoids large forms breaking
+    app.config['MAX_FORM_PARTS'] = None ## avoids large forms breaking
 
     return app
 
+
+def prepare_request(max_file_size):
+    Request.max_form_parts = None  # avoid large forms crashing
+    Request.max_form_memory_size = None
+    Request.max_content_length = max_file_size*MEGABYTE
 
 def prepare_login_manager(app: Flask) -> LoginManager:
     login_manager = LoginManager()
@@ -74,11 +78,13 @@ def prepare_login_manager(app: Flask) -> LoginManager:
     return login_manager
 
 
+###SETUP
+prepare_request(max_file_size=MAX_FILE_SIZE)
 app = prepare_flask_app(max_file_size=MAX_FILE_SIZE, profile=PROFILE)
-
-
 login_manager = prepare_login_manager(app)
 
+
+## @APP MAGIC
 
 ## ensures cookies persists between sessions
 @app.before_request

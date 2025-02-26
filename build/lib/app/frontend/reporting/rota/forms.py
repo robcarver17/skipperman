@@ -1,10 +1,11 @@
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import no_volunteers_on_patrol_boats_at_event
 from app.objects.abstract_objects.abstract_form import yes_no_radio
 
 from app.backend.reporting.rota_report.configuration import (
     AdditionalParametersForVolunteerReport,
 )
 from app.frontend.shared.events_state import get_event_from_state
-from app.frontend.reporting.rota.processes import DAYS_TO_SHOW, BOATS
+from app.frontend.reporting.rota.processes import DAYS_TO_SHOW, BOATS, no_volunteers_on_power_boats_at_current_event
 from app.frontend.forms.form_utils import get_availability_checkbox
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -45,11 +46,14 @@ def reporting_options_form_for_rota_additional_parameters(
         include_all=True,
         event=event,
     )
-    boats = yes_no_radio(
-        input_label="Report for power boats only, sorted by power boat (will be ignored if sort by skills also set)",
-        input_name=BOATS,
-        default_is_yes=additional_parameters.power_boats_only,
-    )
+    if no_volunteers_on_power_boats_at_current_event(interface):
+        boats = ""
+    else:
+        boats = yes_no_radio(
+            input_label="Report for power boats only, sorted by power boat (will be ignored if sort by skills also set)",
+            input_name=BOATS,
+            default_is_yes=additional_parameters.power_boats_only,
+        )
 
     my_options = ListOfLines(
         [
@@ -62,3 +66,5 @@ def reporting_options_form_for_rota_additional_parameters(
     )
 
     return my_options.add_Lines()
+
+

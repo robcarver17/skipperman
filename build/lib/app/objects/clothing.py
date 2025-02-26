@@ -78,3 +78,9 @@ class ClothingAtEvent:
 
     def clear_colour(self):
         self.colour = UNALLOCATED_COLOUR
+
+    @classmethod
+    def create_empty(cls):
+        return cls()
+
+no_clothing_requirements= ClothingAtEvent.create_empty()

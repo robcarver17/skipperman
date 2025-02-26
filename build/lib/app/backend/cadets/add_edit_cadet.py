@@ -27,7 +27,6 @@ def modify_cadet(object_store: ObjectStore, existing_cadet: Cadet, new_cadet: Ca
 
 
 def verify_cadet_and_return_warnings(object_store: ObjectStore, cadet: Cadet) -> str:
-    print("Checking %s" % cadet)
     warn_text = ""
     if len(cadet.surname) < 3:
         warn_text += "Surname seems too short. "

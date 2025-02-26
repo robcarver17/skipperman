@@ -6,7 +6,7 @@ from app.objects.exceptions import MissingData, arg_not_passed, missing_data
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.clothing import (
     UNALLOCATED_COLOUR,
-    ListOfCadetsWithClothingAndIdsAtEvent, ClothingAtEvent,
+    ListOfCadetsWithClothingAndIdsAtEvent, ClothingAtEvent, no_clothing_requirements,
 )
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
@@ -235,7 +235,7 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
 
     def clothing_for_cadet(self, cadet: Cadet, default = arg_not_passed) -> ClothingAtEvent:
         if default is arg_not_passed:
-            default = ClothingAtEvent()
+            default = no_clothing_requirements
         clothing = self.get(cadet, default)
 
         return clothing

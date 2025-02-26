@@ -1,6 +1,7 @@
 import pandas as pd
 from typing import Dict
 
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import no_volunteers_on_patrol_boats_at_event
 from app.backend.reporting.rota_report.configuration import (
     AdditionalParametersForVolunteerReport,
 )
@@ -9,6 +10,7 @@ from app.backend.reporting.rota_report.generate_dataframe_dict_for_rota_report i
 )
 
 from app.frontend.forms.form_utils import get_availablity_from_form
+from app.backend.reporting.report_generator import ReportGenerator
 
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -30,7 +32,11 @@ def load_additional_parameters_for_rota_report(
     else:
         days_to_show = DaySelector.from_str(days_to_show_str)
 
-    boats = interface.get_persistent_value(BOATS, default=False)
+    if no_volunteers_on_power_boats_at_current_event(interface):
+        boats= False
+    else:
+        boats = interface.get_persistent_value(BOATS, default=False)
+
     return AdditionalParametersForVolunteerReport(
         days_to_show=days_to_show, power_boats_only=boats
     )
@@ -45,6 +51,8 @@ def clear_additional_parameters_for_rota_report(
 
 def get_rota_report_additional_parameters_from_form_and_save(
     interface: abstractInterface,
+        report_generator: ReportGenerator ## MUST BE INCLUDED AS ALWAYS PASSED
+
 ):
     parameters = get_rota_report_additional_parameters_from_form(interface)
     save_additional_parameters_for_rota(interface, parameters=parameters)
@@ -58,7 +66,10 @@ def get_rota_report_additional_parameters_from_form(
         event=event, interface=interface, input_name=DAYS_TO_SHOW
     )
 
-    boats = interface.true_if_radio_was_yes(BOATS)
+    if no_volunteers_on_power_boats_at_current_event(interface):
+        boats= False
+    else:
+        boats = interface.true_if_radio_was_yes(BOATS)
 
     return AdditionalParametersForVolunteerReport(
         days_to_show=days_to_show, power_boats_only=boats
@@ -112,3 +123,8 @@ def get_dict_of_df_for_reporting_rota_given_event_and_state(
     )
 
     return dict_of_df
+
+def no_volunteers_on_power_boats_at_current_event(interface: abstractInterface):
+    object_store = interface.object_store
+    event =get_event_from_state(interface)
+    return no_volunteers_on_patrol_boats_at_event(object_store=object_store, event=event)

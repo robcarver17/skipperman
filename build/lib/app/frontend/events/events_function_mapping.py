@@ -74,11 +74,11 @@ from app.frontend.events.group_allocation.add_cadet_partner import (
     display_add_cadet_partner,
     post_form_add_cadet_partner,
 )
-from app.frontend.events.volunteer_allocation.volunteer_identification import (
+from app.frontend.events.volunteer_identification.ENTRY_volunteer_identification import (
     display_form_volunteer_identification,
     post_form_volunteer_identification,
 )
-from app.frontend.events.volunteer_allocation.add_volunteers_to_event import (
+from app.frontend.events.volunteer_identification.add_volunteers_to_event import (
     post_form_add_volunteers_to_event,
     display_add_volunteers_to_event,
 )

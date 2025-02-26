@@ -71,8 +71,6 @@ def list_of_warnings_about_fields(
     in_wa_file_not_in_mapping = wa_field_mapping.wa_fields_missing_from_mapping(
         fields_in_wa_file
     )
-    print(ALL_FIELDS_EXPECTED_IN_WA_FILE_MAPPING)
-    print(wa_field_mapping.list_of_skipperman_fields)
 
     expected_not_in_mapping = in_x_not_in_y(
         ALL_FIELDS_EXPECTED_IN_WA_FILE_MAPPING,

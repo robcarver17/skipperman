@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import List
 
 from app.objects.exceptions import arg_not_passed, MissingData
-from app.objects.generic_list_of_objects import GenericListOfObjects
+from app.objects.generic_list_of_objects import GenericListOfObjects, get_unique_object_with_attr_in_list
 
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.exceptions import MultipleMatches
@@ -103,3 +103,4 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
 
     def list_of_row_ids_and_indices(self) -> List[RowIDAndIndex]:
         return [item.row_and_index for item in self]
+

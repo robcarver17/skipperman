@@ -7,8 +7,9 @@ from app.backend.reporting.options_and_parameters.get_and_update_print_options i
 from app.backend.reporting.options_and_parameters.print_options import PrintOptions, default_report_title_and_filename, \
     get_default_filename_for_report
 from app.data_access.configuration.fixed import ALL_PAGESIZE, ALL_FONTS
+from app.data_access.init_directories import web_pathname_of_file
 from app.frontend.shared.events_state import get_event_from_state
-from app.frontend.reporting.shared.report_generator import ReportGenerator
+from app.backend.reporting.report_generator import  ReportGenerator
 from app.objects.abstract_objects.abstract_form import (
     yes_no_radio,
     textInput,
@@ -101,7 +102,7 @@ def report_print_options_as_list_of_lines(print_options: PrintOptions) -> ListOf
     output_pdf_str = "Output to .pdf file" if output_pdf else "Output to .csv file"
     public = print_options.publish_to_public
     public_str = (
-        "Output to public directory with shareable web link"
+        "Output to public directory with shareable web link - %s" % web_pathname_of_file(print_options.filename_with_extension)
         if public
         else "Save in private directory"
     )
@@ -309,7 +310,36 @@ def reset_print_report_options(
     interface: abstractInterface, report_generator: ReportGenerator
 ):
     reset_print_options_to_default(
-        object_store=interface.object_store, report_name=report_generator.name
+        object_store=interface.object_store, report_name=report_generator.report_type
     )
     interface.clear_persistent_value(REPORT_TITLE)
     interface.clear_persistent_value(REPORT_FILENAME)
+
+
+def save_print_options_from_form(    interface: abstractInterface, report_generator: ReportGenerator
+):
+    specific_parameters_for_type_of_report = report_generator.specific_parameters_for_type_of_report
+
+    print_options = get_print_options_from_main_option_form_fields(interface)
+
+    save_print_options(
+        report_type=specific_parameters_for_type_of_report.report_type,
+        print_options=print_options,
+        interface=interface,
+    )
+    interface.flush_cache_to_store()
+
+
+def weblink_for_report(
+    interface: abstractInterface, report_generator: ReportGenerator
+) -> str:
+    specific_parameters_for_type_of_report = report_generator.specific_parameters_for_type_of_report
+
+    print_options = get_saved_print_options(
+        report_type=specific_parameters_for_type_of_report.report_type,
+        interface=interface,
+    )
+    if print_options.publish_to_public:
+        return "Created report can be downloaded and will be found at %s" % web_pathname_of_file(print_options.filename_with_extension)
+    else:
+        return ""

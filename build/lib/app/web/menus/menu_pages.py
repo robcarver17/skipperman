@@ -101,5 +101,4 @@ def can_action_be_seen(action_name: str) -> bool:
         raise Exception("menu_security_dict doesn't include %s" % action_name)
 
     group = get_access_group_for_current_user()
-    print("is %s in %s" % (group.name, str(list_of_allowed_groups)))
     return group in list_of_allowed_groups

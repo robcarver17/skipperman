@@ -1,7 +1,5 @@
-from typing import Union
-
 from app.backend.reporting.boat_report.boat_report_parameters import (
-    specific_parameters_for_boat_report,
+    get_specific_parameters_for_boat_report
 )
 from app.frontend.reporting.boats.forms import (
     reporting_options_form_for_boat_additional_parameters,
@@ -15,7 +13,7 @@ from app.frontend.reporting.boats.processes import (
 )
 
 from app.frontend.reporting.shared.generic_report_pages import *
-from app.frontend.reporting.shared.report_generator import ReportGenerator
+from app.backend.reporting.report_generator import ReportGeneratorWithoutSpecificParameters
 
 
 from app.objects.abstract_objects.abstract_form import (
@@ -111,10 +109,9 @@ def post_form_for_group_arrangement_options_boat_report(
     )
 
 
-boat_report_generator = ReportGenerator(
-    name="Boats and sailors spotters report",
+boat_report_generator = ReportGeneratorWithoutSpecificParameters(
     event_criteria=dict(requires_cadets_and_boats=True),
-    specific_parameters_for_type_of_report=specific_parameters_for_boat_report,
+    specific_parameters_for_type_of_report_function=get_specific_parameters_for_boat_report,
     initial_display_form_function=display_form_report_boat,
     all_options_display_form_function=display_form_for_boat_report_all_options,
     additional_options_display_form_function=display_form_for_boat_report_additional_options,

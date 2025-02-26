@@ -67,7 +67,7 @@ def get_relevant_cadets_for_club_dinghy(
             for cadet in dict_of_cadets_with_club_dinghies_at_event.list_of_cadets
             if dict_of_cadets_with_club_dinghies_at_event.club_dinghys_for_cadet(
                 cadet
-            ).has_dinghy_on_day(day=day, dinghy=dinghy)
+            ).has_specific_dinghy_on_day(day=day, dinghy=dinghy)
         ]
 
     return result_dict

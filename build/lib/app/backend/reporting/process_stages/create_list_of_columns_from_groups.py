@@ -94,32 +94,44 @@ def get_order_of_indices_even_sizing(
 def get_order_of_indices_even_sizing_with_parameters(
     group_count: int, landscape: bool = True
 ) -> ArrangementOfColumns:
-    long_side_column_count = (group_count * (2**0.5)) ** 0.5
-    short_side_column_count = group_count / long_side_column_count
-    if landscape:
-        number_of_columns = int(np.ceil(long_side_column_count))
-    else:
-        number_of_columns = int(np.ceil(short_side_column_count))
 
+    number_of_columns = get_number_of_columns(group_count=group_count, landscape=landscape)
     column_length = int(np.ceil(group_count / number_of_columns))
-
-    def _potentially_truncated_list(column_number):
-        full_list = range(
-            column_number * column_length, (column_number + 1) * column_length
-        )
-        truncated_list = [x for x in full_list if x < group_count]
-
-        return truncated_list
 
     order_list_of_indices = list(
         [
-            _potentially_truncated_list(column_number)
+            _potentially_truncated_list(column_number=column_number, column_length=column_length, group_count=group_count)
             for column_number in range(number_of_columns)
         ]
     )
 
     return ArrangementOfColumns(order_list_of_indices)
 
+
+def get_number_of_columns(    group_count: int, landscape: bool = True
+) -> int:
+    if group_count==0:
+        return 1
+
+    long_side_column_count = (group_count * (2**0.5)) ** 0.5
+    short_side_column_count = group_count / long_side_column_count
+
+    if landscape:
+        number_of_columns = int(np.ceil(long_side_column_count))
+    else:
+        number_of_columns = int(np.ceil(short_side_column_count))
+
+    return number_of_columns
+
+
+def _potentially_truncated_list(column_number:int, column_length: int, group_count: int):
+
+    full_list = range(
+        column_number * column_length, (column_number + 1) * column_length
+    )
+    truncated_list = [x for x in full_list if x < group_count]
+
+    return truncated_list
 
 def get_optimal_size_indices(
     print_options: PrintOptions,

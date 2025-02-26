@@ -80,7 +80,6 @@ def get_attendance_matrix_for_group_at_event(
     return DictOfDaySelectors(all_selectors)
 
 
-### FOLLOWING NEW CODE MIGHT NOT BE NEEDED
 def get_dict_of_cadets_with_groups_at_event(
     object_store: ObjectStore, event: Event
 ) -> DictOfCadetsWithDaysAndGroupsAtEvent:

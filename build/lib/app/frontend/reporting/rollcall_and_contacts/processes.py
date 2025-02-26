@@ -1,10 +1,13 @@
 from typing import Dict
 
+from app.backend.reporting import report_generator
 from app.backend.reporting.rollcall_report.get_data import (
     get_dict_of_df_for_reporting_rollcalls_given_event_and_parameters,
 )
 import pandas as pd
 
+from app.backend.reporting.report_generator import ReportGenerator
+from app.frontend.reporting.shared.arrangement_state import reset_arrangement_to_default_with_groups_in_data
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -15,9 +18,12 @@ from app.backend.reporting.rollcall_report.configuration import (
 
 def get_group_rollcall_report_additional_parameters_from_form_and_save(
     interface: abstractInterface,
+        report_generator: ReportGenerator
+
 ):
+
     parameters = get_group_rollcall_report_additional_parameters_from_form(interface)
-    save_additional_parameters_for_rollcall(interface, parameters=parameters)
+    save_additional_parameters_for_rollcall(interface, parameters=parameters, report_generator=report_generator)
 
 
 def get_group_rollcall_report_additional_parameters_from_form(
@@ -41,13 +47,13 @@ def get_group_rollcall_report_additional_parameters_from_form(
 
 
 def save_additional_parameters_for_rollcall(
-    interface: abstractInterface, parameters: AdditionalParametersForRollcallReport
+    interface: abstractInterface, parameters: AdditionalParametersForRollcallReport, report_generator: ReportGenerator
 ):
     save_show_full_names_parameter(interface=interface, parameters=parameters)
     save_club_boat_asterix_parameter(interface=interface, parameters=parameters)
     save_emergency_contact_parameter(interface=interface, parameters=parameters)
     save_include_health_details_parameter(interface=interface, parameters=parameters)
-    save_unallocated_parameter(interface=interface, parameters=parameters)
+    save_unallocated_parameter(interface=interface, parameters=parameters, report_generator=report_generator)
 
 
 def save_show_full_names_parameter(
@@ -65,11 +71,24 @@ def save_club_boat_asterix_parameter(
 
 
 def save_unallocated_parameter(
-    interface: abstractInterface, parameters: AdditionalParametersForRollcallReport
+    interface: abstractInterface, parameters: AdditionalParametersForRollcallReport, report_generator:ReportGenerator
 ):
+    unallocated_parameter_has_changed = has_unallocated_parameter_changed(interface=interface, parameters=parameters)
     interface.set_persistent_value(
         INCLUDE_UNALLOCATED_CADETS, parameters.include_unallocated_cadets
     )
+
+    if unallocated_parameter_has_changed:
+        interface.log_error("Exclude unallocated sailor settings have changed - resetting arrangement")
+        reset_arrangement_to_default_with_groups_in_data(interface=interface, report_generator=report_generator)
+
+
+def has_unallocated_parameter_changed( interface: abstractInterface, parameters: AdditionalParametersForRollcallReport):
+    current_parameters = load_additional_parameters_for_rollcall_report(interface)
+    current_unalloacted_parameter = current_parameters.include_unallocated_cadets
+    new_unalloacted_parameter = parameters.include_unallocated_cadets
+
+    return current_unalloacted_parameter!=new_unalloacted_parameter
 
 
 def save_emergency_contact_parameter(
@@ -137,7 +156,7 @@ def get_dict_of_df_for_reporting_rollcalls(
 
 
 SHOW_FULL_NAMES = "Show_full_names"
-INCLUDE_UNALLOCATED_CADETS = "Include unallocated group_rollcalls"
+INCLUDE_UNALLOCATED_CADETS = "Include unallocated group rollcalls"
 CLUB_BOAT_ASTERIX = "Asterix for club boats"
 HEALTH_DATA = "Include confidential health data"
 EMERGENCY_CONTACTS = "Include private emergency contact names and phone numbers"

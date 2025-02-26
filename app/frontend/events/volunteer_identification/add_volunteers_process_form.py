@@ -15,13 +15,13 @@ from app.backend.registration_data.cadet_and_volunteer_connections_at_event impo
     update_cadet_connections_when_volunteer_already_at_event,
 )
 from app.frontend.shared.events_state import get_event_from_state
-from app.frontend.events.volunteer_allocation.add_volunteer_to_event_form_contents import (
+from app.frontend.events.volunteer_identification.add_volunteer_to_event_form_contents import (
     AVAILABILITY,
     PREFERRED_DUTIES,
     SAME_OR_DIFFERENT,
     NOTES,
 )
-from app.frontend.events.volunteer_allocation.track_state_in_volunteer_allocation import (
+from app.frontend.events.volunteer_identification.track_state_in_volunteer_allocation import (
     get_current_volunteer_id_at_event,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface

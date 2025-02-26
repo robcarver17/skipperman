@@ -95,7 +95,6 @@ def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewFo
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    print("Flushing store in event allocation")
     interface.flush_cache_to_store()
 
     return interface.get_new_form_given_function(display_form_allocate_cadets)

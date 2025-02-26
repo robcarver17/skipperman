@@ -43,25 +43,51 @@ def get_df_for_reporting_volunteers_with_flags(
         object_store=object_store, event=event
     )
 
-    list_of_days = days_to_show.align_with_list_of_days(event.days_in_event())
-    dict_of_df = {}
-    for day in list_of_days:
-        day_name = day.name
-        df_for_reporting_volunteers_for_day = get_df_for_reporting_volunteers_for_day(
-            day=day, volunteer_event_data=volunteer_event_data
-        )
-        if len(df_for_reporting_volunteers_for_day) == 0:
-            continue
+    list_of_days = days_to_show.align_with_list_of_days(event.days_in_event()).days_available()
 
-        df_for_reporting_volunteers_for_day = apply_sorts_and_transforms_to_df(
-            df_for_reporting_volunteers_for_day=df_for_reporting_volunteers_for_day,
-            volunteer_event_data=volunteer_event_data,
-            power_boats_only=power_boats_only,
-        )
-        dict_of_df[day_name] = df_for_reporting_volunteers_for_day
+    dict_of_df = dict(
+        [
+            (day.name,
+             get_and_transform_df_for_reporting_volunteers_for_day(
+                 volunteer_event_data=volunteer_event_data,
+                 day=day,
+                 power_boats_only=power_boats_only
+             ))
+            for day in list_of_days
+        ]
+    )
 
-    return dict_of_df
+    dict_of_df_excluding_empty = dict(
+        [
+            (day_name,
+            df)
+            for day_name,df in dict_of_df.items()
+            if len(df)>0
+        ]
+    )
 
+    print("days in dict %s" % str(dict_of_df_excluding_empty.keys()))
+
+    return dict_of_df_excluding_empty
+
+
+def get_and_transform_df_for_reporting_volunteers_for_day(
+    day: Day, volunteer_event_data: DictOfAllEventDataForVolunteers,
+        power_boats_only: bool
+) -> pd.DataFrame:
+    df_for_reporting_volunteers_for_day = get_df_for_reporting_volunteers_for_day(
+        day=day, volunteer_event_data=volunteer_event_data
+    )
+    if len(df_for_reporting_volunteers_for_day) == 0:
+        return pd.DataFrame()
+
+    df_for_reporting_volunteers_for_day = apply_sorts_and_transforms_to_df(
+        df_for_reporting_volunteers_for_day=df_for_reporting_volunteers_for_day,
+        volunteer_event_data=volunteer_event_data,
+        power_boats_only=power_boats_only,
+    )
+
+    return df_for_reporting_volunteers_for_day
 
 def get_df_for_reporting_volunteers_for_day(
     day: Day, volunteer_event_data: DictOfAllEventDataForVolunteers
@@ -145,6 +171,7 @@ def transform_df_into_power_boat_only(
     df_for_reporting_volunteers_for_day: pd.DataFrame,
     volunteer_event_data: DictOfAllEventDataForVolunteers,
 ) -> pd.DataFrame:
+
     new_df = sort_df_by_power_boat(
         df_for_reporting_volunteers_for_day=df_for_reporting_volunteers_for_day,
         volunteer_event_data=volunteer_event_data,

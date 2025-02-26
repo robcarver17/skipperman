@@ -5,7 +5,7 @@ import pandas as pd
 from app.data_access.store.object_store import ObjectStore
 
 from app.backend.reporting.rollcall_report.configuration import (
-    AdditionalParametersForRollcallReport,
+    AdditionalParametersForRollcallReport, GROUP_NAME_COLUMN_HEADING_FOR_SPOTTER_SHEET,
 )
 from app.objects.composed.cadets_at_event_with_club_dinghies import (
     DictOfCadetsAndClubDinghiesAtEvent,
@@ -44,11 +44,11 @@ from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoFo
 def get_dict_of_df_for_reporting_rollcalls_with_flags(
     object_store: ObjectStore,
     event: Event,
-    display_full_names: bool = False,
-    include_unallocated_cadets: bool = False,
-    add_asterix_for_club_boats: bool = True,
-    include_emergency_contacts: bool = True,
-    include_health_data: bool = True,
+    display_full_names: bool ,
+    include_unallocated_cadets: bool,
+    add_asterix_for_club_boats: bool,
+    include_emergency_contacts: bool,
+    include_health_data: bool ,
 ) -> Dict[str, pd.DataFrame]:
 
     dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
@@ -70,47 +70,37 @@ def get_dict_of_df_for_reporting_rollcalls_with_flags(
             include_emergency_contacts=include_emergency_contacts,
             include_health_data=include_health_data,
         )
-
         list_of_df.append(df_with_attendance)
 
     df = pd.concat(list_of_df, axis=0)
+    print("here")
+    print(df)
 
-    return {"": df}  ## single sheet in spreadsheet, unnamed
+    return {"Roll call": df}  ## single sheet in spreadsheet
 
 
 def get_block_of_df_for_group_at_event(
     dict_of_all_event_data: DictOfAllEventInfoForCadets,
     group: Group,
-    display_full_names: bool = False,
-    add_asterix_for_club_boats: bool = True,
-    include_emergency_contacts: bool = True,
-    include_health_data: bool = True,
+    display_full_names: bool ,
+    add_asterix_for_club_boats: bool ,
+    include_emergency_contacts: bool ,
+    include_health_data: bool ,
 ) -> pd.DataFrame:
 
     list_of_cadets_in_group = dict_of_all_event_data.cadets_in_group_during_event(group)
-
-    if add_asterix_for_club_boats:
-        list_of_cadets_in_group = add_club_boat_asterix_to_list_of_cadets_with_club_boat_on_any_day(
-            list_of_cadets=list_of_cadets_in_group,
-            dict_of_cadets_at_event_with_club_dinghies=dict_of_all_event_data.dict_of_cadets_and_club_dinghies_at_event,
-        )
-
-    if display_full_names:
-        list_of_cadet_names = [cadet.name for cadet in list_of_cadets_in_group]
-    else:
-        list_of_cadet_names = [
-            cadet.initial_and_surname for cadet in list_of_cadets_in_group
-        ]
-
-    names_as_series = pd.Series(list_of_cadet_names)
-    group_as_series = pd.Series([group] * len(list_of_cadet_names))
-    df = pd.concat([names_as_series, group_as_series], axis=1)
+    df = get_names_and_groups_block_of_df_for_group_at_event(dict_of_all_event_data=dict_of_all_event_data,
+                                                             list_of_cadets_in_group=list_of_cadets_in_group,
+                                                             group=group,
+                                                             display_full_names=display_full_names,
+                                                             add_asterix_for_club_boats=add_asterix_for_club_boats)
 
     df = add_attendance_to_rollcall_df(
         df=df,
         dict_of_all_event_data=dict_of_all_event_data,
         list_of_cadets_in_group=list_of_cadets_in_group,
     )
+
     df = add_extra_to_reporting_df(
         df=df,
         dict_of_all_event_data=dict_of_all_event_data,
@@ -119,9 +109,59 @@ def get_block_of_df_for_group_at_event(
         include_emergency_contacts=include_emergency_contacts,
     )
 
-    df = df.drop_duplicates()
 
     return df
+
+
+def get_names_and_groups_block_of_df_for_group_at_event(
+    dict_of_all_event_data: DictOfAllEventInfoForCadets,
+    group: Group,
+    list_of_cadets_in_group: ListOfCadets,
+    display_full_names: bool,
+    add_asterix_for_club_boats: bool,
+) -> pd.DataFrame:
+
+    names_as_series = get_names_as_series_group_at_event(
+        dict_of_all_event_data=dict_of_all_event_data,
+        list_of_cadets_in_group=list_of_cadets_in_group,
+        display_full_names=display_full_names,
+        add_asterix_for_club_boats=add_asterix_for_club_boats
+    )
+    group_as_series = pd.Series([group.name] * len(names_as_series))
+    df = pd.concat([names_as_series, group_as_series], axis=1)
+    df.columns = ['Name',GROUP_NAME_COLUMN_HEADING_FOR_SPOTTER_SHEET]
+
+
+    return df
+
+def get_names_as_series_group_at_event(
+    dict_of_all_event_data: DictOfAllEventInfoForCadets,
+    list_of_cadets_in_group: ListOfCadets,
+    display_full_names: bool ,
+    add_asterix_for_club_boats: bool,
+) -> pd.Series:
+
+
+    if add_asterix_for_club_boats:
+        list_of_cadets_in_group_for_names = add_club_boat_asterix_to_list_of_cadets_with_club_boat_on_any_day(
+            list_of_cadets=list_of_cadets_in_group,
+            dict_of_cadets_at_event_with_club_dinghies=dict_of_all_event_data.dict_of_cadets_and_club_dinghies_at_event,
+        )
+    else:
+        list_of_cadets_in_group_for_names = list_of_cadets_in_group
+
+    if display_full_names:
+        list_of_cadet_names = [cadet.name for cadet in list_of_cadets_in_group_for_names]
+    else:
+        list_of_cadet_names = [
+            cadet.initial_and_surname for cadet in list_of_cadets_in_group_for_names
+        ]
+
+    names_as_series = pd.Series(list_of_cadet_names)
+
+    return names_as_series
+
+
 
 
 def add_club_boat_asterix_to_list_of_cadets_with_club_boat_on_any_day(
@@ -145,7 +185,7 @@ def add_club_boat_asterix_to_cadet_with_club_boat_on_any_day(
 ) -> Cadet:
     has_dinghy = dict_of_cadets_at_event_with_club_dinghies.club_dinghys_for_cadet(
         cadet
-    ).has_dinghy_on_any_day()
+    ).has_any_dinghy_on_any_day()
 
     if has_dinghy:
         return cadet.add_asterix_to_name()
@@ -165,7 +205,6 @@ def add_attendance_to_rollcall_df(
             list_of_cadets=list_of_cadets_in_group,
         )
     )
-
     attendance_data_df = attendance.as_pd_data_frame()
     attendance_data_df.index = df.index
 

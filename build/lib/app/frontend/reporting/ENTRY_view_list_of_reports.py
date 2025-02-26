@@ -39,7 +39,7 @@ GROUP_ALLOCATION_REPORT_BUTTON_LABEL = "Group allocation for event"
 ROTA_REPORT_BUTTON_LABEL = "Volunteer rota for event"
 BOATS_REPORT_BUTTON_LABEL = "Spotter sheet for event"
 ROLLCALL_REPORT_BUTTON_LABEL = "Rollcall/health/contacts for event"
-QUALIFICATIONS_REPORT_BUTTON_LABEL = "Cadet qualifications_and_ticks"
+QUALIFICATIONS_REPORT_BUTTON_LABEL = "Cadet qualifications and ticks"
 DUMP_BUTTON_LABEL = "Data dumps"
 EVENT_DATA_BUTTON_LABEL = "All event data in giant spreadsheet"
 

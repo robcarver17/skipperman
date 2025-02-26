@@ -1,6 +1,9 @@
 from dataclasses import dataclass
 from typing import Dict, List
 
+import pandas as pd
+
+from app.objects.generic_list_of_objects import create_data_frame_given_list_of_objects
 from app.objects.utils import flatten
 from app.objects.exceptions import arg_not_passed, missing_data
 
@@ -51,8 +54,23 @@ class CadetWithGroupOnDay(GenericSkipperManObject):
     def cadet_id(self):
         return self.cadet.id
 
+    def as_str_dict(self, display_full_names: bool = True) -> dict:
+        if display_full_names:
+            cadet = self.cadet.name
+        else:
+            cadet = self.cadet.initial_and_surname
+
+        group = self.group.name
+        day = self.day.name
+
+        return {'name': cadet, GROUP_STR_NAME: group, 'day': day}
+
 
 class ListOfCadetsWithGroupOnDay(List[CadetWithGroupOnDay]):
+    def as_df_of_str(self, display_full_names: bool = True):
+        list_of_dicts = [item.as_str_dict(display_full_names=display_full_names) for item in self]
+        return pd.DataFrame(list_of_dicts)
+
     def items_with_cadet_id(self, cadet_id: str) -> List[CadetWithGroupOnDay]:
         return [item for item in self if item.cadet_id == cadet_id]
 

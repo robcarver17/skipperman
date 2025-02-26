@@ -45,7 +45,7 @@ def get_cadet_on_committee_status(object_store: ObjectStore, cadet: Cadet) -> st
     list_of_committee_members = get_list_of_cadets_on_committee(object_store)
     try:
         member = list_of_committee_members.get_cadet_on_committee(cadet)
-        print(member)
+
         return member.status_string()
     except MissingData:
         return "Not on cadet committee"

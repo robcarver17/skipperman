@@ -9,8 +9,9 @@ public_reporting_subdirectory: "public" ## make sure mapped and exposed in pytho
 uploads: "uploads" ## directory in users home directory where uploads are temporarily stored; only change for test purposes
 #
 #
-## needs to be large enough to upload a zip with everything
-max_file_size: 2100000 # ~2mb
+## needs to be large enough to upload a zip with everything - ## this is in Megabytes
+max_file_size: 20
+#
 upload_extensions: ".csv, .xls, .zip"
 number_of_backups_to_keep: 10
 #

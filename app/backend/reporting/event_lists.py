@@ -1,3 +1,5 @@
+from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
+    get_dict_of_volunteers_with_roles_and_groups_at_event
 from app.data_access.store.object_store import ObjectStore
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
@@ -18,6 +20,9 @@ def display_list_of_events_with_buttons_criteria_matched(
             if event_matches_criteria(object_store=object_store, event=event, **event_criteria)
         ]
     )
+    if len(list_of_events)==0:
+        return ListOfLines(["No events matching report criteria"])
+
     list_of_event_descriptions = list_of_events.list_of_event_descriptions
     list_with_buttons = [
         Line(Button(event_description, tile=True))
@@ -66,7 +71,7 @@ def event_matches_criteria(
     requires_merch: bool = False,
 ):
     if requires_volunteers:
-        if not event_has_volunteers(event=event, object_store=object_store):
+        if not event_has_volunteers_on_rota(event=event, object_store=object_store):
             return False
 
     if requires_group_allocations:
@@ -79,10 +84,8 @@ def event_matches_criteria(
 
     return True
 
-from app.backend.volunteers.volunteers_at_event import get_dict_of_all_event_data_for_volunteers
-
-def event_has_volunteers(object_store: ObjectStore, event: Event):
-    all_event_data = get_dict_of_all_event_data_for_volunteers(object_store=object_store, event=event)
+def event_has_volunteers_on_rota(object_store: ObjectStore, event: Event):
+    all_event_data = get_dict_of_volunteers_with_roles_and_groups_at_event(object_store=object_store, event=event)
     return len(all_event_data)>0
 
 from app.backend.groups.cadets_with_groups_at_event import get_dict_of_cadets_with_groups_at_event

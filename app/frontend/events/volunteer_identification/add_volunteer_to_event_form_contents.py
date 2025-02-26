@@ -178,14 +178,15 @@ def get_availablity_text_for_single_entry(
     if availability_info.volunteer_availablity.is_empty():
         volunteer_availability = "No availability for volunteer in form"
     else:
-        volunteer_availability = "In form volunteer said they were available on %s" % str(availability_info.volunteer_availablity)
+        volunteer_availability = "In form volunteer said they were available on %s" % str(availability_info.volunteer_availablity.days_available_as_str())
 
-    cadet_availabilty = "Cadet registered in form available on %s" % str(availability_info.cadet_availability)
+    cadet_availabilty = "Cadet registered in form available on %s" % str(availability_info.cadet_availability.days_available_as_str())
 
     available_text = ListOfLines(
-        [
-            "Availability for volunteer in form when registered with cadet %s: %s. %s"
-            % (cadet_name, cadet_availabilty, volunteer_availability)
+
+            ["Availability for volunteer in form when registered with sailor %s:" % cadet_name,
+             "    - Sailor available: %s" % cadet_availabilty,
+             "    - Volunteer available: %s" % volunteer_availability
         ]
     )
 

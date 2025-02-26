@@ -1,3 +1,4 @@
+from copy import copy
 from typing import List, Dict
 import pandas as pd
 from app.objects.utils import in_x_not_in_y
@@ -42,9 +43,12 @@ def get_group_order_from_dict_of_df_given_report_parameters(
         )
         list_of_groups += groups_this_df
 
-    list_of_groups = list(set(list_of_groups))
+    unique_list_of_groups = list(set(list_of_groups))
 
-    return GroupOrder(list_of_groups)
+    all_groups_in_order = specific_parameters_for_type_of_report.group_order
+    list_of_groups_order_preserved = [group for group in all_groups_in_order if group in unique_list_of_groups]
+
+    return GroupOrder(list_of_groups_order_preserved)
 
 
 def get_group_order_from_df_given_report_parameters(
@@ -53,8 +57,11 @@ def get_group_order_from_df_given_report_parameters(
 ) -> List[str]:
     if len(df) == 0:
         return []
-    grouped_df = df.groupby(specific_parameters_for_type_of_report.group_by_column)
-    list_of_groups = list(grouped_df.groups.keys())
+    copy_df = copy(df)
+    column_name_to_group_by = specific_parameters_for_type_of_report.group_by_column
+    column_to_group_by = list(copy_df[column_name_to_group_by])
+    all_groups_in_order = specific_parameters_for_type_of_report.group_order
+    list_of_groups = [group for group in all_groups_in_order if group in column_to_group_by]
 
     return list_of_groups
 
@@ -72,7 +79,7 @@ def get_group_order_excluding_missing_groups(
 
 
 def get_groups_in_dict_missing_from_group_order(
-    dict_of_df,
+    dict_of_df: Dict[str, pd.DataFrame],
     group_order: GroupOrder,
     specific_parameters_for_type_of_report: SpecificParametersForTypeOfReport,
 ) -> GroupOrder:
@@ -82,6 +89,7 @@ def get_groups_in_dict_missing_from_group_order(
     )
 
     return group_order.missing_but_in_other_group_order(group_order_from_df)
+
 
 
 def get_groups_in_group_order_missing_from_dict(

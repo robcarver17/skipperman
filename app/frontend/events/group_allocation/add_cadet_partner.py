@@ -26,6 +26,7 @@ from app.frontend.shared.add_edit_cadet_form import add_cadet_from_form_to_data
 from app.objects.cadets import Cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
+from app.objects.exceptions import MissingData
 
 
 def display_add_cadet_partner(
@@ -125,14 +126,17 @@ def add_matched_partner_cadet_with_duplicate_registration(
     primary_cadet, __ = get_primary_cadet_and_partner_name(interface)
     event = get_event_from_state(interface)
     day_or_none_if_all_days = get_day_from_state_or_none(interface)
-    add_unregistered_partner_cadet(
-        object_store=interface.object_store,
-        event=event,
-        day_or_none_if_all_days=day_or_none_if_all_days,
-        original_cadet=primary_cadet,
-        new_cadet=new_cadet,
-    )
-    interface.flush_cache_to_store()
+    try:
+        add_unregistered_partner_cadet(
+            object_store=interface.object_store,
+            event=event,
+            day_or_none_if_all_days=day_or_none_if_all_days,
+            original_cadet=primary_cadet,
+            new_cadet=new_cadet,
+        )
+        interface.flush_cache_to_store()
+    except MissingData:
+        interface.log_error("Can't add new partner cadet- old event data has probably been cleaned")
 
     return return_to_allocation_pages(interface)
 

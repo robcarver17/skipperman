@@ -30,7 +30,7 @@ def reporting_options_form_for_group_additional_parameters(
                 default_is_yes=additional_parameters.display_full_names,
             ),
             yes_no_radio(
-                input_label="Include unallocated group_allocations? (Changing will reset group order and arrangement)",
+                input_label="Include unallocated group allocations? (Changing will reset custom group arrangements)",
                 input_name=INCLUDE_UNALLOCATED_CADETS,
                 default_is_yes=additional_parameters.include_unallocated_cadets,
             ),
@@ -54,9 +54,9 @@ def explain_additional_parameters_for_allocation_report(
     else:
         name_str = "Display initial and surname only"
     if additional_parameters.include_unallocated_cadets:
-        alloc_str = "Include all group_allocations, even those not allocated to groups"
+        alloc_str = "Include all group allocations, even those not allocated to groups"
     else:
-        alloc_str = "Exclude unallocated group_allocations"
+        alloc_str = "Exclude unallocated group allocations"
     if additional_parameters.add_asterix_for_club_boats:
         club_str = "Include * if club boat hired"
     else:

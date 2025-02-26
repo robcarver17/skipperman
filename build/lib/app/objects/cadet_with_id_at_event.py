@@ -207,7 +207,6 @@ def get_cadet_at_event_from_row_in_event_raw_registration_data(
     availability = get_sailor_attendance_selection_from_event_row(
         row_in_registration_data, event=event
     )
-    print("availability for %s %s " % (cadet.name, str(availability)))
     health = get_health_from_event_row(row_in_registration_data)
 
     return CadetWithIdAtEvent(
@@ -225,7 +224,6 @@ def get_sailor_attendance_selection_from_event_row(
     row: RowInRegistrationData, event: Event
 ) -> DaySelector:
     row_as_dict = row.as_dict()
-    print("row as dict %s" % str(row_as_dict))
     days_in_event = event.days_in_event()
 
     weekend_selection = row_as_dict.get(WEEKEND_DAYS_ATTENDING_INPUT, '')
@@ -242,7 +240,7 @@ def get_sailor_attendance_selection_from_event_row(
             day_selection, days_in_event=days_in_event
         )
     else:
-        print("Not found, doing all")
+        print("Not found, doing all days")
         day_selector_for_all_days_at_event = event.day_selector_for_days_in_event()
         return day_selector_for_all_days_at_event
 

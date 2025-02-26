@@ -6,12 +6,10 @@ SESSION_KEY_FOR_TOGGLE = "__read_only"
 
 
 def toggle_read_only():
-    print(session)
     if is_read_only():
         session[SESSION_KEY_FOR_TOGGLE] = False
     else:
         session[SESSION_KEY_FOR_TOGGLE] = True
-    print(session)
 
 
 def is_read_only():

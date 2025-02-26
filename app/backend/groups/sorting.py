@@ -35,7 +35,7 @@ def sorted_active_cadets(
     day_or_none: Day = None,
     sort_order: list = arg_not_passed,
 ) -> ListOfCadets:
-    print("sort order %s" % sort_order)
+
     if sort_order is arg_not_passed:
         return dict_of_all_event_data.list_of_cadets
 
@@ -106,6 +106,7 @@ def get_active_cadets_as_data_frame_on_non_specified_day(
     }
 
     active_cadets_as_data_frame = pd.DataFrame(df_as_dict)
+
     active_cadets_as_data_frame = add_sort_order_to_data_frame(
         object_store=object_store,
         active_cadets_as_data_frame=active_cadets_as_data_frame,
@@ -157,7 +158,7 @@ def get_active_cadets_as_data_frame_on_specific_day(
         SORT_PARTNER: partners,
     }
     active_cadets_as_data_frame = pd.DataFrame(df_as_dict)
-    print(active_cadets_as_data_frame)
+
     active_cadets_as_data_frame = add_sort_order_to_data_frame(
         object_store=object_store,
         active_cadets_as_data_frame=active_cadets_as_data_frame,
@@ -169,11 +170,19 @@ def get_active_cadets_as_data_frame_on_specific_day(
 def add_sort_order_to_data_frame(
     object_store: ObjectStore, active_cadets_as_data_frame: pd.DataFrame
 ):
+    if len(active_cadets_as_data_frame)==0:
+        return active_cadets_as_data_frame
+
     ## this ensures the groups, boat classes and club boats are sorted in order
     active_cadets_as_data_frame[SORT_GROUP] = pd.Categorical(
         active_cadets_as_data_frame[SORT_GROUP], get_list_of_groups(object_store).list_of_names()
     )
 
+    print("TRYING TO DEBUG WEIRD ERROR!")
+    print(active_cadets_as_data_frame[SORT_CLUBBOAT])
+    print(type(active_cadets_as_data_frame[SORT_CLUBBOAT][0]))
+    print(get_list_of_club_dinghies(object_store).list_of_names())
+    print(type(get_list_of_club_dinghies(object_store).list_of_names()[0]))
     active_cadets_as_data_frame[SORT_CLUBBOAT] = pd.Categorical(
         active_cadets_as_data_frame[SORT_CLUBBOAT],
         get_list_of_club_dinghies(object_store).list_of_names(),
@@ -189,11 +198,15 @@ def add_sort_order_to_data_frame(
 def get_sorted_active_cadets_df(
     active_cadets_as_data_frame: pd.DataFrame, sort_order: list
 ) -> pd.DataFrame:
-    print(active_cadets_as_data_frame)
+    if len(active_cadets_as_data_frame)==0:
+        return active_cadets_as_data_frame
+
     return active_cadets_as_data_frame.sort_values(sort_order)
 
 
 def get_list_of_active_cadets_from_sorted_df(
     sorted_active_cadets_df: pd.DataFrame,
 ) -> ListOfCadets:
+    if len(sorted_active_cadets_df)==0:
+        return ListOfCadets([])
     return ListOfCadets(sorted_active_cadets_df[CADET].to_list())

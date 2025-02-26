@@ -63,7 +63,7 @@ def get_flash_block():
         messages = []
     if len(messages) == 0:
         return ""
-    print(messages)
+
     messages = html_joined_list_as_lines(messages)
 
     return (

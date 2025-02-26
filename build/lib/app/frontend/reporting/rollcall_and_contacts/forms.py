@@ -32,7 +32,7 @@ def reporting_options_form_for_rollcall_additional_parameters(
                 default_is_yes=additional_parameters.display_full_names,
             ),
             yes_no_radio(
-                input_label="Include unallocated group_rollcalls? (Changing will reset group order and arrangement)",
+                input_label="Include unallocated group rollcalls? (Changing will reset group arrangements)",
                 input_name=INCLUDE_UNALLOCATED_CADETS,
                 default_is_yes=additional_parameters.include_unallocated_cadets,
             ),
@@ -58,7 +58,7 @@ def reporting_options_form_for_rollcall_additional_parameters(
 
 
 def explain_additional_parameters_for_rollcall_report(
-    interface: abstractInterface,
+    interface: abstractInterface, ## have to include even though not used
     additional_parameters: AdditionalParametersForRollcallReport,
 ) -> ListOfLines:
     if additional_parameters.display_full_names:

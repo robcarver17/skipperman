@@ -4,6 +4,7 @@ from typing import List, Dict
 from app.data_access.configuration.field_list import (
     RESPONSIBLE_ADULT_NUMBER,
     RESPONSIBLE_ADULT_NAME,
+    CADET_DOUBLE_HANDED_PARTNER
 )
 from app.objects.utils import flatten
 
@@ -33,6 +34,17 @@ class CadetRegistrationData:
         self.data_in_row.clear_values()
         self.health = ""
         self.notes = ""
+
+    def two_handed_partner(self, default=arg_not_passed):
+        partner= self.data_in_row.get_item(CADET_DOUBLE_HANDED_PARTNER, missing_data)
+        if partner is missing_data:
+            if default is arg_not_passed:
+                raise MissingData
+            else:
+                return default
+
+        return partner.strip(" ")
+
 
     @property
     def emergency_contact(self):

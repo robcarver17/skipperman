@@ -22,8 +22,8 @@ def display_form_for_qualifications_report(interface: abstractInterface):
     return Form(contents_of_form)
 
 
-QUALIFICATION_LIST_BUTTON_LABEL = "Download list of qualifications_and_ticks"
-STATUS_REPORT_BUTTON_LABEL = "Qualification status at event"
+QUALIFICATION_LIST_BUTTON_LABEL = "Achieved qualifications"
+STATUS_REPORT_BUTTON_LABEL = "Qualification & tick status at event"
 create_qualification_list_report_button = Button(
     QUALIFICATION_LIST_BUTTON_LABEL, tile=True
 )  ## tile

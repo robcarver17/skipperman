@@ -7,7 +7,7 @@ from app.objects.exceptions import MissingData
 from app.objects.food import (
     ListOfCadetsWithFoodRequirementsAtEvent,
     FoodRequirements,
-    ListOfVolunteersWithFoodRequirementsAtEvent,
+    ListOfVolunteersWithFoodRequirementsAtEvent, no_food_requirements,
 )
 from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.volunteers import ListOfVolunteers, Volunteer
@@ -67,6 +67,9 @@ class DictOfCadetsWithFoodRequirementsAtEvent(Dict[Cadet, FoodRequirements]):
         )
 
     def unique_list_of_food_requirements(self) -> List[FoodRequirements]:
+        if len(self)==0:
+            return no_food_requirements
+
         return list(set(self.values()))
 
     def update_cadet_food_data(
@@ -106,7 +109,7 @@ class DictOfCadetsWithFoodRequirementsAtEvent(Dict[Cadet, FoodRequirements]):
 
     def food_for_cadet(self, cadet: Cadet, default = arg_not_passed) -> FoodRequirements:
         if default is arg_not_passed:
-            default = FoodRequirements.create_empty()
+            default = no_food_requirements
 
         food = self.get(cadet,default)
 
@@ -195,6 +198,9 @@ class DictOfVolunteersWithFoodRequirementsAtEvent(Dict[Volunteer, FoodRequiremen
         )
 
     def unique_list_of_food_requirements(self) -> List[FoodRequirements]:
+        if len(self)==0:
+            return no_food_requirements
+
         return list(set(self.values()))
 
     def update_volunteer_food_data(
@@ -234,7 +240,7 @@ class DictOfVolunteersWithFoodRequirementsAtEvent(Dict[Volunteer, FoodRequiremen
         self, volunteer: Volunteer, default = arg_not_passed
     ) -> FoodRequirements:
         if default is arg_not_passed:
-            default = FoodRequirements.create_empty()
+            default = no_food_requirements
         food = self.get(volunteer, default)
 
         return food

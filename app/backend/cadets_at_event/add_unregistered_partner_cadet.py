@@ -1,4 +1,3 @@
-import datetime
 from copy import copy
 from typing import List
 
@@ -30,6 +29,7 @@ from app.data_access.store.object_store import ObjectStore
 from app.objects.cadets import Cadet
 from app.objects.day_selectors import Day
 from app.objects.events import Event
+from app.objects.exceptions import NoMoreData, MissingData
 from app.objects.registration_data import RowInRegistrationData
 from app.objects.registration_status import manual_status
 from app.backend.registration_data.cadet_registration_data import (
@@ -71,12 +71,16 @@ def add_unregistered_partner_cadet(
     day_or_none_if_all_days: Day,
     event: Event,
 ):
-    new_row = add_new_row_to_raw_registration_data_and_return_row(
-        object_store=object_store,
-        original_cadet=original_cadet,
-        new_cadet=new_cadet,
-        event=event,
-    )
+    try:
+        new_row = add_cloned_row_to_raw_registration_data_and_return_row(
+            object_store=object_store,
+            original_cadet=original_cadet,
+            new_cadet=new_cadet,
+            event=event,
+        )
+    except:
+        raise MissingData("Event has probably been cleaned, original registration data not available")
+
     add_identified_cadet_and_row(
         object_store=object_store, event=event, row_id=new_row.row_id, cadet=new_cadet
     )
@@ -105,12 +109,16 @@ def add_unregistered_partner_cadet(
     )
 
 
-def add_new_row_to_raw_registration_data_and_return_row(
+def add_cloned_row_to_raw_registration_data_and_return_row(
     object_store: ObjectStore, original_cadet: Cadet, new_cadet: Cadet, event: Event
 ) -> RowInRegistrationData:
-    existing_row = get_row_in_registration_data_for_cadet_both_cancelled_and_active(
-        object_store=object_store, cadet=original_cadet, event=event
-    )
+    try:
+        existing_row = get_row_in_registration_data_for_cadet_both_cancelled_and_active(
+            object_store=object_store, cadet=original_cadet, event=event
+        )
+    except NoMoreData:
+        raise MissingData("Event has probably been cleaned, original registration data not available")
+
     new_row = modify_row_to_clone_for_new_cadet_partner(
         original_cadet=original_cadet, new_cadet=new_cadet, existing_row=existing_row
     )
@@ -130,7 +138,7 @@ def modify_row_to_clone_for_new_cadet_partner(
 ) -> RowInRegistrationData:
     new_row = copy(existing_row)
 
-    new_row.replace_row_id_by_adding_random_number()
+    new_row.replace_row_id_by_adding_random_number() ## avoid duplicate warning
     new_row.registration_status = manual_status  ## avoids it being deleted
     new_row[CADET_FIRST_NAME] = new_cadet.first_name
     new_row[CADET_SURNAME] = new_cadet.surname
@@ -194,8 +202,8 @@ def add_two_handed_partnership_on_day_for_new_cadet_when_have_dinghy_for_existin
         object_store=object_store, event=event
     )
 
-    dinghys_data.DEPRECATE_create_two_handed_partnership(
-        cadet=original_cadet, new_two_handed_partner=new_cadet, day=day
+    dinghys_data.create_fresh_two_handed_partnership(
+        cadet=original_cadet, partner_cadet=new_cadet, day=day
     )
 
     update_dict_of_cadets_and_boat_classes_and_partners_at_events(

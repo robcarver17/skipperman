@@ -11,6 +11,7 @@ from app.objects.composed.cadet_volunteer_associations import (
 )
 from app.objects.events import ListOfEvents, Event
 from app.objects.exceptions import missing_data, arg_not_passed, MissingData
+from app.objects.food import no_food_requirements
 
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.composed.volunteers_with_skills import (
@@ -291,7 +292,7 @@ def compose_raw_dict_of_all_event_data_for_volunteers(
                         volunteer, ListOfCadets([])
                     ),
                     food_requirements=dict_of_volunteers_with_food_at_event.food_for_volunteer(
-                        volunteer, default = FoodRequirements.create_empty()
+                        volunteer, default = no_food_requirements
                     ),
                     event=event,
                 ),

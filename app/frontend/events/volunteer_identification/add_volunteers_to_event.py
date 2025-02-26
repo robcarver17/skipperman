@@ -24,15 +24,15 @@ from app.backend.registration_data.volunteer_registration_data import (
     is_volunteer_already_at_event,
 )
 from app.frontend.shared.events_state import get_event_from_state
-from app.frontend.events.volunteer_allocation.add_volunteers_process_form import (
+from app.frontend.events.volunteer_identification.add_volunteers_process_form import (
     add_volunteer_at_event_with_form_contents,
 )
-from app.frontend.events.volunteer_allocation.track_state_in_volunteer_allocation import (
+from app.frontend.events.volunteer_identification.track_state_in_volunteer_allocation import (
     clear_volunteer_id_at_event_in_state,
     get_and_save_next_volunteer_id_in_mapped_event_data,
     get_current_volunteer_at_event,
 )
-from app.frontend.events.volunteer_allocation.add_volunteer_to_event_form_contents import (
+from app.frontend.events.volunteer_identification.add_volunteer_to_event_form_contents import (
     display_form_to_confirm_volunteer_details,
     save_button,
     do_not_add_volunteer,

@@ -9,6 +9,7 @@ from app.objects.composed.cadets_with_all_event_info_functions import \
     RequiredDictForAllocation
 from app.objects.day_selectors import DaySelector, Day
 from app.objects.exceptions import MissingData, arg_not_passed
+from app.objects.food import no_food_requirements
 from app.objects.groups import Group, unallocated_group
 
 from app.objects.registration_status import RegistrationStatus
@@ -38,7 +39,7 @@ from app.objects.composed.cadets_at_event_with_groups import (
 from app.objects.composed.clothing_at_event import (
     DictOfCadetsWithClothingAtEvent,
 )
-from app.objects.clothing import ClothingAtEvent
+from app.objects.clothing import ClothingAtEvent, no_clothing_requirements
 from app.objects.composed.food_at_event import (
     DictOfCadetsWithFoodRequirementsAtEvent,
     FoodRequirements,
@@ -363,10 +364,10 @@ def compose_raw_dict_of_all_event_info_for_cadet(
                         cadet, DictOfDaysAndClubDinghiesAtEventForCadet()
                     ),
                     food_requirements=dict_of_cadets_with_food_required_at_event.get(
-                        cadet, FoodRequirements()
+                        cadet, no_food_requirements
                     ),
                     clothing=dict_of_cadets_with_clothing_at_event.get(
-                        cadet, ClothingAtEvent()
+                        cadet, no_clothing_requirements
                     ),
                 ),
             )

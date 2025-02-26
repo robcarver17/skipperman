@@ -49,7 +49,6 @@ def get_add_boat_dropdown(interface: abstractInterface, event: Event) -> Line:
             for boat_name in list_of_boats_excluding_boats_already_at_event
         ]
     )
-    print(list_of_boats_as_dict)
 
     dropdown = dropDownInput(
         input_name=ADD_BOAT_DROPDOWN,

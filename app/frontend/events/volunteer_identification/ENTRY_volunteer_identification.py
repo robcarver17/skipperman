@@ -23,11 +23,11 @@ from app.frontend.events.import_data.shared_state_tracking_and_data import (
     clear_row_in_state,
     get_current_row_id,
 )
-from app.frontend.events.volunteer_allocation.track_state_in_volunteer_allocation import (
+from app.frontend.events.volunteer_identification.track_state_in_volunteer_allocation import (
     clear_volunteer_index,
     get_and_save_next_volunteer_index,
 )
-from app.frontend.events.volunteer_allocation.volunteer_selection_form_contents import *
+from app.frontend.events.volunteer_identification.volunteer_selection_form_contents import *
 from app.frontend.shared.add_edit_volunteer_forms import (
     add_volunteer_from_form_to_data,
     VolunteerAndVerificationText,

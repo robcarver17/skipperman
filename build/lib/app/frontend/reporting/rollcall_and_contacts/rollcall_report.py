@@ -26,10 +26,10 @@ from app.frontend.reporting.shared.generic_report_pages import (
     display_form_for_generic_report_arrangement_options,
     display_initial_generic_report_form,
 )
-from app.frontend.reporting.shared.report_generator import ReportGenerator
+from app.backend.reporting.report_generator import ReportGeneratorWithoutSpecificParameters
 
 from app.backend.reporting.rollcall_report.configuration import (
-    specific_parameters_for_rollcall_report,
+    get_specific_parameters_for_rollcall_report,
 )
 
 from app.objects.abstract_objects.abstract_form import (
@@ -125,10 +125,9 @@ def post_form_for_group_arrangement_options_rollcall_report(
     )
 
 
-rollcall_report_generator = ReportGenerator(
-    name="Role call, Emergency contact, health details report",
+rollcall_report_generator = ReportGeneratorWithoutSpecificParameters(
     event_criteria=dict(requires_cadets_and_boats=True),
-    specific_parameters_for_type_of_report=specific_parameters_for_rollcall_report,
+    specific_parameters_for_type_of_report_function=get_specific_parameters_for_rollcall_report,
     initial_display_form_function=display_form_report_rollcall,
     all_options_display_form_function=display_form_for_rollcall_report_all_options,
     additional_options_display_form_function=display_form_for_rollcall_report_additional_options,

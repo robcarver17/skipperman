@@ -126,15 +126,15 @@ class ArrangementOptionsAndGroupOrder:
 
         self.subset_if_in_other_group_order(new_group_list)
 
-    def add_missing_groups_to_group_order_and_arrangement(
+    def add_groups_to_group_order_and_arrangement(
         self,
-        missing_groups: GroupOrder,
+        groups_to_add: GroupOrder,
     ):
         current_group_order = self.group_order
         current_columns = (
             self.arrangement_options.arrangement_of_columns
         )  ###uses indices
-        for group in missing_groups:
+        for group in groups_to_add:
             if group not in current_group_order:
                 current_group_order.append(group)
                 index_of_group_in_group_order = current_group_order.index(

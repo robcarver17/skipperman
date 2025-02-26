@@ -1,13 +1,6 @@
 # BUTTONS
 
 
-SAVE_THESE_OPTIONS_BUTTON_LABEL = "Save these print options"
-CREATE_REPORT_BUTTON_LABEL = "Create report with these options"
-
-MODIFY_PRINT_OPTIONS_BUTTON_LABEL = "Modify printing options"
-CHANGE_GROUP_LAYOUT_BUTTON = "Change group layout"
-MODIFY_ADDITIONAL_OPTIONS_BUTTON_LABEL = "Modify report specific options"
-
 
 # FIELDS
 PAGE_ALIGNMENT = "page_alignment"

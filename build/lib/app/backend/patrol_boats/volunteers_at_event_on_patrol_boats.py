@@ -18,6 +18,12 @@ from app.data_access.store.object_definitions import (
     object_definition_for_dict_of_patrol_boats_by_day_for_volunteer_at_event,
 )
 
+def no_volunteers_on_patrol_boats_at_event(object_store: ObjectStore, event: Event):
+    dict_of_patrol_boat_data = get_dict_of_patrol_boats_by_day_for_volunteer_at_event(object_store=object_store, event=event)
+    list_of_volunteers = dict_of_patrol_boat_data.list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_day()
+
+    return len(list_of_volunteers)==0
+
 
 def get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
     object_store: ObjectStore, event: Event
@@ -65,10 +71,6 @@ def load_list_of_patrol_boats_at_event(
     all_patrol_boats = patrol_boat_data.list_of_all_patrol_boats
 
     sorted_list =  all_patrol_boats.sort_from_other_list_of_boats(list_of_boats_at_event)
-
-    print("all pb %s" % str(all_patrol_boats))
-    print("at event %s" % str(list_of_boats_at_event))
-    print("sorted %s" % str(sorted_list))
 
     return sorted_list
 

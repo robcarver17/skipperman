@@ -50,7 +50,6 @@ def read_imported_list_of_cadets(filename: str) -> ListOfCadets:
 
 
 def cadet_from_row_in_imported_list(cadet_row: pd.Series, row_id: int) -> Cadet:
-    print("Row %s" % cadet_row)
     first_name = cadet_row[FIRST_NAME_IN_MEMBERSHIP_FILE]
     surname = cadet_row[SURNAME_IN_MEMBERSHIP_FILE]
     dob = cadet_row[DOB_IN_MEMBERSHIP_FILE]

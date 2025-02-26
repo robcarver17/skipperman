@@ -224,8 +224,8 @@ def get_boat_class_sail_number_and_club_boat_flag(
 
     has_club_boat = dict_of_all_event_info_for_cadets.dict_of_cadets_and_club_dinghies_at_event.club_dinghys_for_cadet(
         cadet
-    ).has_dinghy_on_day(
-        day
+    ).has_any_dinghy_on_specific_day(
+        day=day
     )
     club_boat_flag = "(Club boat)" if has_club_boat else ""
 

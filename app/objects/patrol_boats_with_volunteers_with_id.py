@@ -138,7 +138,6 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
                 self.remove(item)
 
     def add_unallocated_boat(self, patrol_boat_id: str):
-        print("adding unlaoocated %s" % patrol_boat_id)
         self.append(
             VolunteerWithIdAtEventWithPatrolBoatId.create_unallocated_boat(
                 patrol_boat_id=patrol_boat_id

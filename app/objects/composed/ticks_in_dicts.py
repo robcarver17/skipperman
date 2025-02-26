@@ -87,7 +87,6 @@ class QualificationsAndTickItemsAsDict(Dict[Qualification, TickSubStagesAsDict])
         )
 
         if only_this_qualification_has_this_substage:
-            print("it's unqiue")
 
             self.modify_name_of_substage_unique_to_qualification(
                 qualification=qualification,
@@ -100,7 +99,6 @@ class QualificationsAndTickItemsAsDict(Dict[Qualification, TickSubStagesAsDict])
         ##              - neithier - create a new substage and replace all instances of the current substage/stage combination with the new one
 
         new_substage_id = self.get_substage_id_for_name_adding_if_missing(new_name)
-        print("substage id %s" % new_substage_id)
         self.switch_all_instances_of_substage_for_qualification(
             existing_substage_id=existing_substage.id,
             new_substage_id=new_substage_id,

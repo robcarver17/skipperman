@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Dict, List
 
+from app.objects.exceptions import missing_data, MissingData
 from app.objects.roles_and_teams import Team, ListOfTeams, no_team, RoleLocation
 from app.objects.roles_and_teams import ListOfTeamsAndRolesWithIds, TeamsAndRolesWithIds
 from app.objects.composed.volunteer_roles import ListOfRolesWithSkills, RoleWithSkills
@@ -46,7 +47,9 @@ class DictOfTeamsWithRoles(Dict[Team, ListOfRolesWithSkills]):
         return self.roles_for_team(instructor_team)
 
     def roles_for_team(self, team: Team) -> ListOfRolesWithSkills:
-        roles_for_team = self.get(team, ListOfRolesWithSkills())
+        roles_for_team = self.get(team, missing_data)
+        if roles_for_team is missing_data:
+            raise MissingData("No roles found for team %s" % team)
 
         return roles_for_team
 
@@ -88,9 +91,7 @@ class DictOfTeamsWithRoles(Dict[Team, ListOfRolesWithSkills]):
     def _refresh_roles_for_team_to_teams_and_roles_with_ids(
         self, team: Team, new_list_of_roles: ListOfRolesWithSkills
     ):
-        print(self.list_of_teams_and_roles_with_ids)
         self._remove_roles_for_team_to_teams_and_roles_with_ids(team=team)
-        print(self.list_of_teams_and_roles_with_ids)
         self._add_roles_for_team_to_teams_and_roles_with_ids(
             team=team, new_list_of_roles=new_list_of_roles
         )

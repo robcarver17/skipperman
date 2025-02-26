@@ -45,7 +45,7 @@ def get_cadet_data_from_row_of_registration_data_no_checks(
         date_of_birth=dob_as_date,
         membership_status=user_unconfirmed_member,
     )
-    print(cadet)
+
 
     return cadet
 

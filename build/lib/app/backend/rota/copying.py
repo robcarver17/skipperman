@@ -85,7 +85,6 @@ def copy_earliest_valid_role_to_all_empty_for_volunteer(
         object_store=object_store, event=event, volunteer=volunteer
     )
     name = volunteer.name
-    print("Valid day for volunteer %s is %s" % (name, str(valid_day)))
     if valid_day is None:
         return
 

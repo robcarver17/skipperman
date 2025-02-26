@@ -53,7 +53,6 @@ def delete_raw_event_upload_with_event_id(event: Event):
 def save_staged_file_of_raw_event_upload_with_event_id(
     original_filename: str, event: Event
 ):
-    print(original_filename)
     new_filename = get_staged_file_raw_event_filename(event)
     shutil.copy(original_filename, new_filename)
 

@@ -26,11 +26,9 @@ from app.frontend.reporting.shared.generic_report_pages import (
     display_form_for_generic_report_arrangement_options,
     display_initial_generic_report_form,
 )
-from app.frontend.reporting.shared.report_generator import ReportGenerator
+from app.backend.reporting.report_generator import ReportGeneratorWithoutSpecificParameters
 
-from app.backend.reporting.rota_report.configuration import (
-    specific_parameters_for_volunteer_report,
-)
+from app.backend.reporting.rota_report.configuration import get_specific_parameters_for_rota_report
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -125,10 +123,9 @@ def post_form_for_group_arrangement_options_rota_report(
     )
 
 
-rota_report_generator = ReportGenerator(
-    name="Volunteer rota report",
+rota_report_generator = ReportGeneratorWithoutSpecificParameters(
     event_criteria=dict(requires_volunteers=True),
-    specific_parameters_for_type_of_report=specific_parameters_for_volunteer_report,
+    specific_parameters_for_type_of_report_function=get_specific_parameters_for_rota_report,
     initial_display_form_function=display_form_report_rota,
     all_options_display_form_function=display_form_for_rota_report_all_options,
     additional_options_display_form_function=display_form_for_rota_report_additional_options,

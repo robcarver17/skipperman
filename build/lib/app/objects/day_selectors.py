@@ -30,11 +30,15 @@ class DaySelector(Dict[Day, bool]):
     def __repr__(self):
         return self.__str__()
 
-    def __str__(self):
+    def days_available_as_str(self) -> str:
         days = [day.name for day, selected in self.items() if selected]
         joined_days = ", ".join(days)
 
-        return "days: %s " % joined_days
+        return joined_days
+
+    def __str__(self):
+
+        return "days: %s " % self.as_str()
 
     def __eq__(self, other: "DaySelector"):
         for day in all_possible_days:

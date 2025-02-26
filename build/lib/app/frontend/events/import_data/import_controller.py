@@ -14,11 +14,11 @@ from app.frontend.events.cadets_at_event.interactively_update_records_of_cadets_
 from app.frontend.events.cadets_at_event.iteratively_identify_cadets_in_import_stage import (
     display_form_identify_cadets_during_import,
 )
-from app.frontend.events.volunteer_allocation.add_volunteers_to_event import (
+from app.frontend.events.volunteer_identification.add_volunteers_to_event import (
     display_add_volunteers_to_event,
 )
 
-from app.frontend.events.volunteer_allocation.volunteer_identification import (
+from app.frontend.events.volunteer_identification.ENTRY_volunteer_identification import (
     display_form_volunteer_identification,
 )
 

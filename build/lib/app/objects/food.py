@@ -47,6 +47,10 @@ class FoodRequirements(GenericSkipperManObject):
 
         return True
 
+    @classmethod
+    def create_empty(cls):
+        return cls()
+
     def describe(self):
         description_list = []
         for key in food_keys:
@@ -58,6 +62,7 @@ class FoodRequirements(GenericSkipperManObject):
 
         return ", ".join(description_list)
 
+no_food_requirements = FoodRequirements.create_empty()
 
 def guess_food_requirements_from_food_field(food_field_str: str) -> FoodRequirements:
     food_field_str_lower = food_field_str.lower()

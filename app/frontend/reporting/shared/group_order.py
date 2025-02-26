@@ -83,4 +83,15 @@ def get_empty_groups(reporting_options: ReportingOptions) -> GroupOrder:
         group_order=group_order,
         specific_parameters_for_type_of_report=specific_parameters,
     )
-    return GroupOrder(empty_groups)
+    empty_groups=  GroupOrder(empty_groups)
+
+    remove_unalloacted_group(empty_groups=empty_groups, reporting_options=reporting_options)
+
+    return empty_groups
+
+def remove_unalloacted_group(reporting_options: ReportingOptions, empty_groups: GroupOrder):
+    ## Otherwise if unallocated groups included in parameters but not in data will flag
+    unallocated_group = reporting_options.specific_parameters.unallocated_group
+    if unallocated_group in empty_groups:
+        empty_groups.remove(unallocated_group)
+

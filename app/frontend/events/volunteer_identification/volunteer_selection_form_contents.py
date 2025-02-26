@@ -6,7 +6,7 @@ from app.backend.volunteers.list_of_volunteers import (
     get_sorted_list_of_volunteers,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.frontend.events.volunteer_allocation.track_state_in_volunteer_allocation import (
+from app.frontend.events.volunteer_identification.track_state_in_volunteer_allocation import (
     get_relevant_information_for_current_volunteer,
     get_volunteer_index,
 )

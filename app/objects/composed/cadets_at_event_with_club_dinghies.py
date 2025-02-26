@@ -52,7 +52,7 @@ class DictOfDaysAndClubDinghiesAtEventForCadet(Dict[Day, ClubDinghy]):
     def most_common(self) -> ClubDinghy:
         return most_common(self.list_of_dinghies(), default=no_club_dinghy)
 
-    def has_dinghy_on_any_day(self):
+    def has_any_dinghy_on_any_day(self):
         unique_list_of_dinghies = self.unique_list_of_dinghies()
         if len(unique_list_of_dinghies) > 0:
             return True
@@ -62,7 +62,13 @@ class DictOfDaysAndClubDinghiesAtEventForCadet(Dict[Day, ClubDinghy]):
         if single_dinghy is no_club_dinghy:
             return False
 
-    def has_dinghy_on_day(self, day: Day, dinghy: ClubDinghy):
+    def has_any_dinghy_on_specific_day(self, day: Day) ->bool:
+        dinghy_on_day = self.dinghy_on_day(day, default=no_club_dinghy)
+        no_dinghy_on_day = dinghy_on_day is no_club_dinghy
+
+        return not no_dinghy_on_day
+
+    def has_specific_dinghy_on_day(self, day: Day, dinghy: ClubDinghy):
         dinghy_on_day = self.dinghy_on_day(day, default=no_club_dinghy)
         if dinghy_on_day == no_club_dinghy:
             return False

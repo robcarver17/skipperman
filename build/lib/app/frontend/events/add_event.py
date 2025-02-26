@@ -196,7 +196,7 @@ def get_event_from_form(interface) -> Event:
 def process_form_when_event_verified(interface: abstractInterface) -> Form:
     try:
         event = get_event_from_form(interface)
-        print("ffrom form %s" % event)
+
         add_new_verified_event(interface.object_store, event=event)
     except Exception as e:
         ## should never happen as we have to be verified to get here, but still

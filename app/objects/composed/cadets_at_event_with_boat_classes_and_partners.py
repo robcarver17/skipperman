@@ -196,11 +196,6 @@ class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPart
         self._list_of_boat_classes = list_of_boat_classes
         self._event = event
 
-    def DEPRECATE_create_two_handed_partnership(
-        self, cadet: Cadet, new_two_handed_partner: Cadet, day: Day
-    ):
-        raise Exception("Need to refactor this code")
-
     def create_fresh_two_handed_partnership(self, cadet: Cadet, partner_cadet: Cadet, day: Day):
         print("PArtnering %s and %s" % (cadet.name, partner_cadet.name))
         self.allocate_partner_for_cadet_on_day(cadet=cadet, cadet_partner=partner_cadet, day=day)

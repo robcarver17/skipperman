@@ -54,7 +54,7 @@ WILD_APRICOT_EVENT_ID = configuration["wild_apricot_event_id"]
 ALLOWED_UPLOAD_FILE_TYPES = configuration["allowed_upload_file_types"]
 #
 
-## Page sizes - not configured in yaml as won't need changing
+## Page sizes
 MAX_FILE_SIZE = configuration["max_file_size"]
 UPLOAD_EXTENSIONS = configuration["upload_extensions"]
 

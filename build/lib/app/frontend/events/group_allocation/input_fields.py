@@ -419,10 +419,13 @@ def get_dropdown_input_for_partner_allocation_across_days(
     )  ### needs to disapply cadets who aren't also available the whole week
     list_of_other_cadets = NO_PARTNERSHIP_LIST_OF_STR + list_of_other_cadets
 
+    potential_partner_to_be_added_or_empty_string = get_potential_partner_to_be_added_or_missing_data(cadet=cadet, dict_of_all_event_data=dict_of_all_event_data)
+
     return get_dropdown_input_for_partner_allocation(
         cadet=cadet,
         list_of_other_cadets=list_of_other_cadets,
         current_partner_name=current_partner_name,
+        potential_partner_to_be_added_or_empty_string=potential_partner_to_be_added_or_empty_string
     )
 
 
@@ -438,17 +441,25 @@ def get_dropdown_input_for_partner_allocation_on_day(
         )
     )
 
+    potential_partner_to_be_added_or_empty_string = get_potential_partner_to_be_added_or_missing_data(cadet=cadet, dict_of_all_event_data=dict_of_all_event_data)
+
     return get_dropdown_input_for_partner_allocation(
         cadet=cadet,
         list_of_other_cadets=list_of_other_cadets,
         current_partner_name=current_partner_name,
+        potential_partner_to_be_added_or_empty_string=potential_partner_to_be_added_or_empty_string
     )
 
+def get_potential_partner_to_be_added_or_empty_string(cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets) ->str:
+    registration_data = dict_of_all_event_data.dict_of_cadets_with_registration_data.registration_data_for_cadet(cadet)
+
+    return registration_data.two_handed_partner
 
 def get_dropdown_input_for_partner_allocation(
     cadet: Cadet,
     list_of_other_cadets: List[str],
     current_partner_name: str,
+    potential_partner_to_be_added_or_empty_string: str
 ) -> ListOfLines:
     list_of_other_cadets = NO_PARTNERSHIP_LIST_OF_STR + list_of_other_cadets
     dict_of_all_possible_cadets = dict(
@@ -462,11 +473,13 @@ def get_dropdown_input_for_partner_allocation(
         dict_of_options=dict_of_all_possible_cadets,
     )
 
-    #button_to_add_partner = Button(
-    #    value=button_name_for_add_partner(cadet_id=cadet.id),
-    #    label="Add partner as new cadet",
-    #)
-    button_to_add_partner = "" ##FIXME ONLY INCLUDE WHEN SECOND NAME INCLUDED IN REGISTRATION
+    if len(potential_partner_to_be_added_or_empty_string)==0:
+        button_to_add_partner = ""
+    else:
+        button_to_add_partner = Button(
+            value=button_name_for_add_partner(cadet_id=cadet.id),
+            label="Add %s as new cadet" % potential_partner_to_be_added_or_empty_string,
+        )
 
     return ListOfLines([drop_down_input_field, button_to_add_partner])
 

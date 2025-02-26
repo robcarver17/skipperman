@@ -215,6 +215,11 @@ class ListOfTeams(GenericListOfObjectsWithIds):
         list_of_names = self.list_of_names()
         assert len(list_of_names) == len(set(list_of_names))
 
+    def add_unallocated(self):
+        if no_team in self:
+            pass
+        else:
+            self.append(no_team)
 
 
 @dataclass

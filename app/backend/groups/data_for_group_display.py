@@ -692,3 +692,38 @@ def contains_or_similar(name_with_boat_or_similar: str, boat_name: str):
         return 1.0
     else:
         return similar(name_with_boat_or_similar, boat_name)
+
+
+def get_potential_partner_to_be_added_or_missing_data(cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets) ->Union[str, missing_data]:
+    registration_data = dict_of_all_event_data.dict_of_cadets_with_registration_data.registration_data_for_cadet(cadet)
+    potential_partner = registration_data.two_handed_partner(default=missing_data)
+
+    print("%s: (%s)" % (cadet, potential_partner))
+    if looks_like_cadet_already_has_allocated_partner(dict_of_all_event_data=dict_of_all_event_data, cadet=cadet):
+        return missing_data
+
+    if potential_partner is missing_data:
+        return missing_data
+
+    if len(potential_partner)==0:
+        return missing_data
+
+    if looks_like_partner_is_already_at_event(dict_of_all_event_data=dict_of_all_event_data, potential_partner=potential_partner):
+        return missing_data
+
+    return potential_partner
+
+
+def looks_like_cadet_already_has_allocated_partner(dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet):
+    boat_classes_and_partner_for_cadet = dict_of_all_event_data.dict_of_cadets_and_boat_class_and_partners.boat_classes_and_partner_for_cadet(cadet)
+    most_common_partner = boat_classes_and_partner_for_cadet.most_common_partner()
+    most_common_partner_is_not_a_partner =  no_partnership_given_partner_cadet(most_common_partner)
+
+    return not most_common_partner_is_not_a_partner
+
+def looks_like_partner_is_already_at_event(dict_of_all_event_data: DictOfAllEventInfoForCadets, potential_partner:str):
+    active_cadets_at_event = dict_of_all_event_data.dict_of_cadets_with_registration_data.list_of_active_cadets()
+    matching_cadet = active_cadets_at_event.matching_cadet_with_name(potential_partner, default=missing_data)
+    cadet_at_event = not matching_cadet is missing_data
+
+    return cadet_at_event

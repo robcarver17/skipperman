@@ -22,10 +22,10 @@ from app.frontend.reporting.shared.generic_report_pages import (
     post_form_for_generic_report_arrangement_options,
     display_form_for_generic_report_arrangement_options,
 )
-from app.frontend.reporting.shared.report_generator import ReportGenerator
+from app.backend.reporting.report_generator import ReportGeneratorWithoutSpecificParameters
 
 from app.backend.reporting.allocation_report.allocation_report import (
-    specific_parameters_for_allocation_report,
+ get_specific_parameters_for_allocation_report,
 )
 
 from app.objects.abstract_objects.abstract_form import (
@@ -119,10 +119,9 @@ def post_form_for_group_arrangement_options_allocation_report(
     )
 
 
-allocation_report_generator = ReportGenerator(
-    name="Group allocation report",
+allocation_report_generator = ReportGeneratorWithoutSpecificParameters(
     event_criteria=dict(requires_group_allocations=True),
-    specific_parameters_for_type_of_report=specific_parameters_for_allocation_report,
+    specific_parameters_for_type_of_report_function=get_specific_parameters_for_allocation_report,
     initial_display_form_function=display_form_report_group_allocation,
     all_options_display_form_function=display_form_for_report_group_allocation_all_options,
     additional_options_display_form_function=display_form_for_report_group_additional_options,

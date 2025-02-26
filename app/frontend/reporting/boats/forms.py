@@ -69,25 +69,24 @@ def reporting_options_form_for_boat_additional_parameters(
         input_label="Add extra columns to check boats in and out?",
         default_is_yes=additional_parameters.in_out_columns,
     )
-    event = get_event_from_state(interface)
-    if event.contains_groups:
-        exclude_lake = yes_no_radio(
-            input_name=EXCLUDE_LAKE,
-            input_label="Exclude lake sailors?",
-            default_is_yes=additional_parameters.exclude_lake_groups,
-        )
-        exclude_river = yes_no_radio(
-            input_name=EXCLUDE_RIVER_TRAIN,
-            input_label="Exclude sailors in river training groups (won't apply to racers)?",
-            default_is_yes=additional_parameters.exclude_river_training_groups,
-        )
-        exclude_unallocated = yes_no_radio(
-            input_name=EXCLUDE_UNALLOCATED,
-            input_label="Exclude sailors not allocated to groups?",
-            default_is_yes=additional_parameters.exclude_unallocated_groups,
-        )
-    else:
-        exclude_lake = exclude_river = exclude_unallocated = ""
+
+    explainer = "(changing will reset custom group arrangements)"
+
+    exclude_lake = yes_no_radio(
+        input_name=EXCLUDE_LAKE,
+        input_label="Exclude lake sailors? %s" % explainer,
+        default_is_yes=additional_parameters.exclude_lake_groups,
+    )
+    exclude_river = yes_no_radio(
+        input_name=EXCLUDE_RIVER_TRAIN,
+        input_label="Exclude sailors in river training groups (won't apply to racers)? %s" % explainer,
+        default_is_yes=additional_parameters.exclude_river_training_groups,
+    )
+    exclude_unallocated = yes_no_radio(
+        input_name=EXCLUDE_UNALLOCATED,
+        input_label="Exclude sailors not allocated to groups? %s" % explainer,
+        default_is_yes=additional_parameters.exclude_unallocated_groups,
+    )
 
     my_options = ListOfLines(
         [

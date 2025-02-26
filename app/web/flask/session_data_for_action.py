@@ -12,7 +12,6 @@ class SessionDataForAction(object):
 
     def reset_to_initial_stage(self):
         self.stage = INITIAL_STAGE
-        print("stage now %s" % INITIAL_STAGE)
 
     @property
     def is_initial_stage(self) -> bool:

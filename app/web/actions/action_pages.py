@@ -27,7 +27,8 @@ def generate_action_page_html(action_name: str) -> Union[Html, Response]:
     )
 
     html_page_master_layout = get_master_layout(
-        include_read_only_toggle=False, include_user_options=True
+        include_read_only_toggle=False, include_user_options=True,
+        include_backup_option=False
     )
     html_page_master_layout.body.append(html_code_for_action)
 

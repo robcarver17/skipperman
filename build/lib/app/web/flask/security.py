@@ -6,7 +6,7 @@ from app.backend.security.list_of_users import get_list_of_users
 from app.objects.users_and_security import (
     SkipperManUser,
     ListOfSkipperManUsers,
-    UserGroup,
+    UserGroup, ADMIN_GROUP, SKIPPER_GROUP,
 )
 
 
@@ -81,3 +81,13 @@ def skipperman_user_from_flask_user(flask_user: FlaskUser) -> SkipperManUser:
         email_address="",
         volunteer_id="",
     )
+
+
+def allow_user_to_make_snapshots():
+    if not authenticated_user():
+        return False
+
+    access_group = get_access_group_for_current_user()
+    CAN_DO_BACKUPS = [ADMIN_GROUP, SKIPPER_GROUP]
+
+    return access_group in CAN_DO_BACKUPS

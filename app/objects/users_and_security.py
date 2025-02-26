@@ -17,7 +17,6 @@ PUBLIC_GROUP = UserGroup.public
 
 ALL_GROUPS = [ADMIN_GROUP, SKIPPER_GROUP, INSTRUCTOR_GROUP, PUBLIC_GROUP]
 
-
 @dataclass
 class SkipperManUser(GenericSkipperManObject):
     username: str

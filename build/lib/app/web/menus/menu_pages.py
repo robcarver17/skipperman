@@ -8,7 +8,6 @@ from app.objects.abstract_objects.abstract_form import Form
 from app.objects.abstract_objects.abstract_buttons import (
     HelpButton,
     ButtonBar,
-    Button,
     ActionOptionButton,
 )
 
@@ -20,7 +19,7 @@ from app.web.flask.security import get_access_group_for_current_user, authentica
 from app.web.html.html_components import Html
 from app.web.html.master_layout import get_master_layout
 from app.frontend.menu_define import menu_definition, menu_security_dict
-
+from app.web.flask.security import allow_user_to_make_snapshots
 
 ### Returns HTML for a menu page
 def generate_menu_page_html() -> str:
@@ -30,10 +29,11 @@ def generate_menu_page_html() -> str:
     else:
         html_code_for_menu = ""
 
+    include_backup_option= allow_user_to_make_snapshots()
     html_page_master_layout = get_master_layout(
         include_read_only_toggle=True,
         include_user_options=True,
-        include_backup_option=True,
+        include_backup_option=include_backup_option,
     )
     html_page_master_layout.body.append(html_code_for_menu)
 

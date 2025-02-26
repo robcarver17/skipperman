@@ -24,7 +24,7 @@ def get_read_write_logout_and_change_password_link_html_code(
         read_only_html_string = read_only_or_not_html()
     else:
         ## don't offer the option or will get messed up
-        read_only_html_string = ""
+        read_only_html_string = "Read only - changes will not be saved" if is_read_only() else ""
 
     if include_backup_option:
         backup_html_string = make_backup_html()

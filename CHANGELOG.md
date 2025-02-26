@@ -1,4 +1,8 @@
 # Recent
+
+- Read only flag on all pages
+- Only skipper / admin can make backups
+
  
 # Version 2.0
 

@@ -57,7 +57,7 @@ Skills can be required for a specific volunteer role, see below. Although you ca
 
 A volunteer role is something a volunteer can do at an event. As well as the name of the volunteer, and the ability to hide a role, you can set whether a particular role can be associated with a specific saiing group. This is the case for instructors and lake helpers. Note they don't have to be associated at a specific event, but it's an option. You can also set whether a volunteer role needs specific skills by ticking the checkboxes. A volunteer put in that role without those skills at an event will result in a warning.
 
-The SI role is protected since it determines access to information at a specific event; as is the 'no role allocated' role. 
+The SI role is protected as it is an integral part of Skipperman (it determines whether you can award qualifications).
 
 I recommend you stick to alphabetic ordering since that will make it easier to find them in a dropdown. The order isn't used for reporting purposes. Volunteers can be put into teams for reporting purposes and that is what determines the order; see the next section.
 

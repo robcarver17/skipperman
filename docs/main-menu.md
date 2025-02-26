@@ -34,9 +34,13 @@ The main menu consists of the Skipperman orange banner which is always the same,
 
 The user options are in the orange block at the top of the menu.
 
+### Snapshot data (Skippers and Admin users only)
+
+See [snapshotting data](data_backup_help.md)
+
 ### Read only
 
-Skipperman can be run in 'read only' mode. This is useful if you want to avoid accidentally making any changes, for example if you are experimenting with Skipperman. Click on 'Click for read only' to enter read only mode. If you then make any changes to any data, you will get a warning that the changes haven't been saved. Click on 'Read only: Click to change' to turn read only mode off. Read only mode can only be turned on and off from the main menu.
+Skipperman can be run in 'read only' mode. This is useful if you want to avoid accidentally making any changes, for example if you are experimenting with Skipperman. Click on 'Click for read only' to enter read only mode. If you then make any changes to any data, you will get a warning that the changes haven't been saved. Click on 'Read only: Click to change' to turn read only mode off. Read only mode can only be turned on and off from the main menu. On any option page below the main menu, you will see 'Read only - changes will not be saved' if read-only mode is on.
 
 ### Logout
 

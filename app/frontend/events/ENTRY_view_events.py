@@ -22,7 +22,7 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import (
     main_menu_button,
     Button,
-    ButtonBar,
+    ButtonBar, HelpButton,
 )
 from app.objects.abstract_objects.abstract_lines import (
     Line,
@@ -46,7 +46,7 @@ def display_form_view_of_events_sort_order_passed(
     list_of_events_with_buttons = display_list_of_events_with_buttons(
         interface=interface, sort_by=sort_by
     )
-    navbar = ButtonBar([main_menu_button, add_button])
+    navbar = ButtonBar([main_menu_button, add_button, help_button])
 
     contents_of_form = ListOfLines(
         [
@@ -62,6 +62,7 @@ def display_form_view_of_events_sort_order_passed(
 
 
 add_button = Button(ADD_EVENT_BUTTON_LABEL, nav_button=True)
+help_button = HelpButton("view_list_of_events_help")
 
 
 def post_form_view_of_events(interface: abstractInterface) -> Union[Form, NewForm]:

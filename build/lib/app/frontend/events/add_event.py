@@ -84,7 +84,7 @@ def get_add_event_form_with_information_passed(
 
     return Form(list_of_elements_inside_form)
 
-help_button = HelpButton("add_new_event_help")
+help_button = HelpButton("add_event_help")
 
 
 def get_heading_text():

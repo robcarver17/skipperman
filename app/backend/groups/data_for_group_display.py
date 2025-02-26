@@ -694,7 +694,7 @@ def contains_or_similar(name_with_boat_or_similar: str, boat_name: str):
         return similar(name_with_boat_or_similar, boat_name)
 
 
-def get_potential_partner_to_be_added_or_missing_data(cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets) ->Union[str, missing_data]:
+def get_potential_partner_to_be_added_or_missing_data(cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets) ->Union[str, object]:
     registration_data = dict_of_all_event_data.dict_of_cadets_with_registration_data.registration_data_for_cadet(cadet)
     potential_partner = registration_data.two_handed_partner(default=missing_data)
 

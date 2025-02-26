@@ -1,6 +1,8 @@
 # Recent
  
-- data no longer required can be deleted
+# Version 2.0
+
+- full code refactoring and many improvements (sorry not been keeping a record)
 
 # Version 1.0
 

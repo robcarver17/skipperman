@@ -10,7 +10,7 @@ from app.objects.abstract_objects.abstract_lines import (
 from app.objects.abstract_objects.abstract_buttons import (
     cancel_menu_button,
     Button,
-    ButtonBar
+    ButtonBar, HelpButton
 )
 
 from app.frontend.shared.events_state import (
@@ -35,7 +35,7 @@ def display_form_for_clone_event_field_mapping(interface: abstractInterface):
     list_of_events_with_buttons = display_list_of_events_with_field_mapping_buttons(
         exclude_event=current_event, interface=interface
     )
-    nav_bar = ButtonBar([cancel_menu_button])
+    nav_bar = ButtonBar([cancel_menu_button, help_button])
     if len(list_of_events_with_buttons) == 0:
         return ListOfLines([nav_bar, Line("No other events exist with mapping setup")])
     else:
@@ -108,3 +108,6 @@ def clone_field_mapping_for_selected_event_and_return_message(interface: abstrac
     message = "Mapping copied from event %s to %s" %(event_description_selected, str(current_event))
 
     return message
+
+
+help_button = HelpButton("WA_clone_mapping_help")

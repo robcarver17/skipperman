@@ -13,7 +13,7 @@ upload_directory = os.path.join(home_directory, UPLOADS)
 download_directory = os.path.join(home_directory, DOWNLOAD_DIRECTORY)
 skipperman_directory = os.path.join(home_directory, "skipperman")
 docs_directory = os.path.join(skipperman_directory, "docs")
-
+static_files_directory = os.path.join(skipperman_directory, "static")
 
 def web_pathname_of_file(filename_with_extension: str):
     return PUBLIC_WEB_PATH + filename_with_extension

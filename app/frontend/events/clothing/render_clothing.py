@@ -103,13 +103,11 @@ def get_clothing_table(interface: abstractInterface, event: Event) -> Table:
 
 
 def get_top_row_for_clothing_table() -> RowInTable:
-    return RowInTable(
-        [
-            "",
-            "Size (delete existing size to see options, or type in a new value)",
-            "Colour (delete existing size to see options, or type in a new value)",
-        ]
-    )
+    return RowInTable([
+        "",
+        "Size (delete existing size to see options, or type in a new value)",
+        "Colour (delete existing size to see options, or type in a new value)",
+    ])
 
 
 def get_clothing_row_for_cadet(

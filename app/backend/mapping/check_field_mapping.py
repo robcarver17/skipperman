@@ -25,7 +25,16 @@ from app.objects.abstract_objects.abstract_lines import (
 )
 
 
-def check_field_mapping(object_store: ObjectStore, event: Event) -> ListOfLines:
+def check_field_mapping(object_store: ObjectStore, event: Event)-> ListOfLines:
+    fields_in_wa_file = get_field_mapping_or_empty_list_from_raw_event_file(event)
+
+    warning_list = list_of_warnings_about_fields(
+        object_store=object_store, event=event, fields_in_wa_file=fields_in_wa_file
+    )
+
+    return warning_list
+
+def get_field_mapping_or_empty_list_from_raw_event_file( event: Event) -> List[str]:
     if does_raw_event_file_exist(event):
         ## get the raw event file
         filename = get_staged_file_raw_event_filename(event)
@@ -34,12 +43,7 @@ def check_field_mapping(object_store: ObjectStore, event: Event) -> ListOfLines:
     else:
         fields_in_wa_file = []
 
-    warning_list = list_of_warnings_about_fields(
-        object_store=object_store, event=event, fields_in_wa_file=fields_in_wa_file
-    )
-
-    return warning_list
-
+    return fields_in_wa_file
 
 MAPPING_ADVICE_IF_NO_IMPORT_DONE = ListOfLines(
     [
@@ -68,18 +72,23 @@ def list_of_warnings_about_fields(
     in_mapping_not_in_wa_file = wa_field_mapping.wa_fields_missing_from_list(
         fields_in_wa_file
     )
+    in_mapping_not_in_wa_file.sort()
+
     in_wa_file_not_in_mapping = wa_field_mapping.wa_fields_missing_from_mapping(
         fields_in_wa_file
     )
+    in_wa_file_not_in_mapping.sort()
 
     expected_not_in_mapping = in_x_not_in_y(
         ALL_FIELDS_EXPECTED_IN_WA_FILE_MAPPING,
         wa_field_mapping.list_of_skipperman_fields,
     )
+    expected_not_in_mapping.sort()
     unknown_fields = in_x_not_in_y(
         wa_field_mapping.list_of_skipperman_fields,
         ALL_FIELDS_EXPECTED_IN_WA_FILE_MAPPING,
     )
+    unknown_fields.sort()
 
     output = []
     if len(fields_in_wa_file) > 0:
@@ -138,3 +147,31 @@ def list_of_warnings_about_fields(
         output = [bold("No problems with mapping")]
 
     return ListOfLines(output).add_Lines()
+
+
+def get_list_of_unused_skipperman_fields_at_event(object_store: ObjectStore, event: Event) -> List[str]:
+
+    mapping = get_field_mapping_for_event(
+        object_store=object_store, event=event
+    )
+    expected_not_in_mapping = in_x_not_in_y(
+        ALL_FIELDS_EXPECTED_IN_WA_FILE_MAPPING,
+        mapping.list_of_skipperman_fields,
+    )
+
+    return expected_not_in_mapping
+
+
+def get_list_of_unused_WA_fields_at_event_given_uploaded_file(object_store: ObjectStore, event: Event) -> List[str]:
+    WA_mappings = get_field_mapping_or_empty_list_from_raw_event_file(event)
+
+    mapping = get_field_mapping_for_event(
+        object_store=object_store, event=event
+    )
+
+    expected_not_in_mapping = in_x_not_in_y(
+        WA_mappings,
+        mapping.list_of_wa_fields,
+    )
+
+    return expected_not_in_mapping

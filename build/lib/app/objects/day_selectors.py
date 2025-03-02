@@ -175,8 +175,9 @@ def create_day_selector_from_short_form_text_with_passed_days(text: str, days_in
             return all_days
 
     starting_dict = dict()
+    lower_text = text.lower()
     for day_to_find_text, day_to_select in dict_of_short_day_text_and_Days.items():
-        if day_to_find_text in text:
+        if day_to_find_text.lower() in lower_text:
             starting_dict[day_to_select] = True
         else:
             starting_dict[day_to_select] = False

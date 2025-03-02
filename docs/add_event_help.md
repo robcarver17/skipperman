@@ -1,3 +1,4 @@
+**To add an event, from the main menu click 'Events', then 'Add event'**
 
 On clicking add event you will be asked for:
 

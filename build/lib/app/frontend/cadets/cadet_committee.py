@@ -94,15 +94,13 @@ def get_row_for_existing_cadets_on_committee(
     cadet_on_committee: CadetOnCommittee,
 ) -> RowInTable:
     selection_button = select_or_deselect_button(cadet_on_committee)
-    return RowInTable(
-        [
-            cadet_on_committee.cadet.name,
-            str(cadet_on_committee.date_term_starts),
-            str(cadet_on_committee.date_term_ends),
-            cadet_on_committee.status_string(),
-            selection_button,
-        ]
-    )
+    return RowInTable([
+        cadet_on_committee.cadet.name,
+        str(cadet_on_committee.date_term_starts),
+        str(cadet_on_committee.date_term_ends),
+        cadet_on_committee.status_string(),
+        selection_button,
+    ])
 
 
 def select_or_deselect_button(
@@ -129,9 +127,7 @@ def select_or_deselect_button(
 def table_row_for_new_cadet_on_committee(interface: abstractInterface) -> RowInTable:
     dropdown = dropdown_list_of_cadets_not_on_committee_or_elected_or_none(interface)
     if dropdown is None:
-        return RowInTable(
-            ['No sailors available who are members but not yet elected to committee','', '', '', '']
-        )
+        return RowInTable(['No sailors available who are members but not yet elected to committee', '', '', '', ''])
 
     (
         start_date_on_committee,
@@ -149,9 +145,7 @@ def table_row_for_new_cadet_on_committee(interface: abstractInterface) -> RowInT
         value=end_date_on_committee,
     )
 
-    return RowInTable(
-        [dropdown, start_date, end_date, "Prospective committee member", add_button]
-    )
+    return RowInTable([dropdown, start_date, end_date, "Prospective committee member", add_button])
 
 
 def dropdown_list_of_cadets_not_on_committee_or_elected_or_none(interface: abstractInterface):

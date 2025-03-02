@@ -52,18 +52,16 @@ def get_top_row_for_table(event: Event, ready_to_swap: bool) -> RowInTable:
         event=event, ready_to_swap=ready_to_swap
     )
 
-    return RowInTable(
-        [
-            "Volunteer (click to edit days available/ )",
-            "Cadet location (click to edit connections)",
-            "Preferred duties from form",
-            "Same/different preference from form",
-            "Skills (click to edit)",
-            "Previous role (click to fill and overwrite over all days at this event)",
-        ]
-        + buttons_for_days_at_event_as_str
-        + ["Volunteer notes (editable)", "Other information from registration"]
-    )
+    return RowInTable([
+                          "Volunteer (click to edit days available/ )",
+                          "Cadet location (click to edit connections)",
+                          "Preferred duties from form",
+                          "Same/different preference from form",
+                          "Skills (click to edit)",
+                          "Previous role (click to fill and overwrite over all days at this event)",
+                      ]
+                      + buttons_for_days_at_event_as_str
+                      + ["Volunteer notes (editable)", "Other information from registration"])
 
 
 def get_body_of_table_at_event(

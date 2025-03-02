@@ -111,7 +111,6 @@ def html_doc_wrapper(head_material: Html) -> HtmlWrapper:
 
 
 def html_from_pandas_table(table: pd.DataFrame) -> Html:
-    table.style
     return Html(table.to_html())
 
 
@@ -123,3 +122,6 @@ html_table_row_wrapper = HtmlWrapper("<tr >%s</tr>")
 html_table_heading_row_wrapper = HtmlWrapper('<tr class="w3-theme">%s</tr>')
 html_table_element_wrapper = HtmlWrapper("<td>%s</td>")
 html_table_heading_wrapper = HtmlWrapper("<th>%s</th>")
+
+def html_email(email_address:str) -> Html:
+    return Html('<a href="mailto:%s">%s</a>' % (email_address, email_address))

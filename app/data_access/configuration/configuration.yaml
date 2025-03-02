@@ -8,6 +8,10 @@ download_subdirectory: "Downloads" ## non public downloads
 public_reporting_subdirectory: "public" ## make sure mapped and exposed in pythonanywhere
 uploads: "uploads" ## directory in users home directory where uploads are temporarily stored; only change for test purposes
 #
+WA_field_list_file: WA_field_list.xlsx
+#
+support_email: rob@systematicmoney.org
+#
 #
 ## needs to be large enough to upload a zip with everything - ## this is in Megabytes
 max_file_size: 20
@@ -47,5 +51,6 @@ allowed_upload_file_types: ".csv, .xls"
 #
 #
 weblink_for_qualifications: "https://docs.google.com/spreadsheets/d/1a0ov-KN8zzG2mdFQCfLK-I6AD1tLihU-z_3tPF2vlV4/edit?usp=sharing"
+#
 min_colour_groups_to_distribute: 6
 cadet_committee_shirt_colour: "Navy Blue"

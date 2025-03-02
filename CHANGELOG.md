@@ -1,5 +1,7 @@
 # Recent
 
+- Modify mapping in table on screen
+- Much documentation
 - Read only flag on all pages
 - Only skipper / admin can make backups
 

@@ -43,8 +43,8 @@ from app.frontend.events.mapping.clone_field_mapping import (
     post_form_for_clone_event_field_mapping,
 )
 from app.frontend.events.mapping.download_template_field_mapping import (
-    display_form_for_download_template_field_mapping,
-    post_form_for_download_template_field_mapping,
+    display_form_for_download_field_mapping,
+    post_form_for_download_field_mapping,
 )
 
 from app.frontend.events.cadets_at_event.iteratively_identify_cadets_in_import_stage import (
@@ -201,8 +201,8 @@ event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_func
                                     post_form_for_create_custom_field_mapping,
                                 ): {
                                     (
-                                        display_form_for_download_template_field_mapping,
-                                        post_form_for_download_template_field_mapping,
+                                        display_form_for_download_field_mapping,
+                                        post_form_for_download_field_mapping,
                                     ): 0,
                                     (
                                         display_form_for_upload_custom_field_mapping,

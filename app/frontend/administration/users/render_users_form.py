@@ -124,17 +124,15 @@ def table_for_users(
 
 
 def row_for_new_user(interface: abstractInterface) -> RowInTable:
-    return RowInTable(
-        [
-            "Add new user: ",
-            text_box_for_username(new_blank_user),
-            text_box_for_password(new_blank_user),
-            text_box_for_password(new_blank_user, True),
-            dropdown_for_group(new_blank_user),
-            "",
-            dropdown_for_volunteer(interface=interface, user=new_blank_user),
-        ],
-    )
+    return RowInTable([
+        "Add new user: ",
+        text_box_for_username(new_blank_user),
+        text_box_for_password(new_blank_user),
+        text_box_for_password(new_blank_user, True),
+        dropdown_for_group(new_blank_user),
+        "",
+        dropdown_for_volunteer(interface=interface, user=new_blank_user),
+    ])
 
 
 def rows_for_existing_list_of_users(
@@ -157,18 +155,16 @@ def get_row_for_existing_user(
         delete_button = button_for_deletion(existing_user)
         group_dropdown =  dropdown_for_group(existing_user)
 
-    return RowInTable(
-        [
-            "",
-            existing_user.username,
-            text_box_for_password(existing_user),
-            text_box_for_password(existing_user, True),
-            group_dropdown,
-            delete_button,
-            dropdown_for_volunteer(interface=interface, user=existing_user),
-            button_to_reset_password(existing_user),
-        ],
-    )
+    return RowInTable([
+        "",
+        existing_user.username,
+        text_box_for_password(existing_user),
+        text_box_for_password(existing_user, True),
+        group_dropdown,
+        delete_button,
+        dropdown_for_volunteer(interface=interface, user=existing_user),
+        button_to_reset_password(existing_user),
+    ])
 
 
 USERNAME = "username"

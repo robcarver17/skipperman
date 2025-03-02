@@ -91,28 +91,24 @@ def get_row_for_existing_entry(entry: RoleWithSkills, **ignored_kwargs) -> RowIn
             skills_str = "No skills required"
         else:
             skills_str = "Skills required: %s" % skills_as_str
-        return RowInTable(
-            [
-                entry.name,
-                (
-                    "Can associate with sailing group"
-                    if entry.associate_sailing_group
-                    else "Not associated with sailing group"
-                ),
-                skills_str,
-                "Hidden in dropdowns" if entry.hidden else "Visible in dropdowns",
-                "Protected, cannot edit",
-            ]
-        )
-    return RowInTable(
-        [
-            text_box_for_role_name(entry),
-            associate_sailing_group_button_for_entry(entry),
-            skills_checkboxes_for_entry(entry),
-            hide_button_for_entry(entry),
-            Line([up_button_for_entry(entry), down_button_for_entry(entry)]),
-        ]
-    )
+        return RowInTable([
+            entry.name,
+            (
+                "Can associate with sailing group"
+                if entry.associate_sailing_group
+                else "Not associated with sailing group"
+            ),
+            skills_str,
+            "Hidden in dropdowns" if entry.hidden else "Visible in dropdowns",
+            "Protected, cannot edit",
+        ])
+    return RowInTable([
+        text_box_for_role_name(entry),
+        associate_sailing_group_button_for_entry(entry),
+        skills_checkboxes_for_entry(entry),
+        hide_button_for_entry(entry),
+        Line([up_button_for_entry(entry), down_button_for_entry(entry)]),
+    ])
 
 
 ROLE_NAME = "Rolename"

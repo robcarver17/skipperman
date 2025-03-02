@@ -2,8 +2,6 @@ You can use Skipperman to print, view, edit ticksheets; and give qualifications 
 
 # Ticksheets menu option
 
-You can use Skipperman to print, view, edit ticksheets; and give qualifications to cadets.
-
 
 ## Dinghy instructors:
 
@@ -22,16 +20,11 @@ You can use Skipperman to print, view, edit ticksheets; and give qualifications 
 
 # Qualification reports (skippers and senior instructors only)
 
-- [List of cadets recently qualified](ticksheets_SI_skipper_help#download-qualification-list)
-- [Qualification report for an event](ticksheets_choose_group_SI_skipper_help#download-qualification-progress-for-registered cadets)
+- From the main menu select **Ticksheets and qualifications**, and then **Download qualification list**. [Help here](ticksheets_SI_skipper_help#download-qualification-list)
+- From the main menu select **Ticksheets and qualifications**, choose an event, and then click on **Download qualification progress for registered cadets** [Help here](ticksheets_choose_group_SI_skipper_help#download-qualification-progress-for-registered cadets)
 
-Cadet skippers can also access these via the qualifications report menu TO DO
+Cadet skippers can also access these via the [qualifications report menu](link_required).
 
+# Configuring the set of qualifications and ticks (Skippers only)
 
-# Seeing which qualifications a cadet has
-
-TO DO
-
-# Configuring the set of qualifications and ticks
-
-TO DO
+From the main menu select **Configuration**, then **Sailing qualifications**.  

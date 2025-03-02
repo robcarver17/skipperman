@@ -254,13 +254,11 @@ def get_top_row(
 
     input_field_names_over_days = get_daily_input_field_headings(interface=interface)
 
-    return RowInTable(
-        ["", "Set Availability"]  ## cadet name
-        + previous_event_names_in_list
-        + info_field_names
-        + ["Official qualification", "Notes"]
-        + input_field_names_over_days
-    )
+    return RowInTable(["", "Set Availability"]  ## cadet name
+                      + previous_event_names_in_list
+                      + info_field_names
+                      + ["Official qualification", "Notes"]
+                      + input_field_names_over_days)
 
 
 def get_daily_input_field_headings(interface: abstractInterface) -> list:
@@ -319,13 +317,11 @@ def get_row_for_cadet(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
     )
 
-    return RowInTable(
-        [cell_for_cadet, days_attending_field]
-        + previous_groups_as_list
-        + group_info
-        + [qualification, notes_field]
-        + input_fields
-    )
+    return RowInTable([cell_for_cadet, days_attending_field]
+                      + previous_groups_as_list
+                      + group_info
+                      + [qualification, notes_field]
+                      + input_fields)
 
 
 MAX_EVENTS_TO_SHOW = 10

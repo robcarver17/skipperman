@@ -1,12 +1,14 @@
 from typing import Union
+
+from app.backend.events.list_of_events import get_list_of_last_N_events
 from app.backend.mapping.list_of_field_mappings import (
     get_field_mapping_template,
-    get_list_of_field_mapping_template_names,
-    save_field_mapping_template,
+    get_list_of_field_mapping_template_names, does_event_already_have_mapping,
 )
 from app.backend.mapping.list_of_field_mappings import (
     write_mapping_to_temp_csv_file_and_return_filename,
 )
+from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -20,27 +22,39 @@ from app.objects.abstract_objects.abstract_buttons import (
     get_nav_bar_with_just_cancel_button,
 )
 from app.frontend.form_handler import initial_state_form
+from app.objects.events import Event
 
 
-def display_form_for_download_template_field_mapping(interface: abstractInterface):
+def display_form_for_download_field_mapping(interface: abstractInterface):
+
     list_of_templates_with_buttons = display_list_of_templates_with_buttons(interface)
-    if len(list_of_templates_with_buttons) == 0:
-        interface.log_error("Can't download a template when none uploaded")
-        return initial_state_form
-    else:
-        contents_of_form = ListOfLines(
-            [
-                get_nav_bar_with_just_cancel_button(),
-                "Choose template to download and edit in excel",
-                _______________,
-                list_of_templates_with_buttons,
-            ]
-        )
+    list_of_events_with_buttons = display_list_of_other_events_with_buttons_except_this_one(interface)
+    this_event_button = get_button_for_this_event(interface)
+    contents_of_form = ListOfLines(
+        [
+            get_nav_bar_with_just_cancel_button(),
+            _______________,
+            _______________,
+            "Choose mapping to download and edit in excel",
+            _______________,
+            _______________,
+            "Templates:",
+            _______________,
+            list_of_templates_with_buttons,
+            _______________,
+            _______________,
+            "Existing event mappings",
+            _______________,
+            list_of_events_with_buttons,
+            _______________,
+            this_event_button
+        ]
+    )
 
     return Form(contents_of_form)
 
 
-def post_form_for_download_template_field_mapping(
+def post_form_for_download_field_mapping(
     interface: abstractInterface,
 ) -> Union[File, Form, NewForm]:
     template_name = interface.last_button_pressed()
@@ -65,7 +79,7 @@ def post_form_for_download_template_field_mapping(
 
 def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(
-        display_form_for_download_template_field_mapping
+        display_form_for_download_field_mapping
     )
 
 
@@ -74,4 +88,56 @@ def display_list_of_templates_with_buttons(interface: abstractInterface) -> List
     list_of_templates = get_list_of_field_mapping_template_names(
         object_store=interface.object_store
     )
-    return ListOfLines([Button(template_name) for template_name in list_of_templates])
+    return ListOfLines([get_button_for_template(template_name) for template_name in list_of_templates])
+
+
+
+def display_list_of_other_events_with_buttons_except_this_one(interface: abstractInterface) -> ListOfLines:
+    list_of_events = get_other_events(interface)
+
+    return ListOfLines([get_button_for_other_event(event) for event in list_of_events])
+
+BUTTON_VALUE_THIS_EVENT = "button(**thisevent"
+
+def get_button_for_this_event(interface: abstractInterface):
+    event = get_event_from_state(interface)
+
+    existing_field_mapping = does_event_already_have_mapping(
+        object_store=interface.object_store, event=event
+    )
+    if existing_field_mapping:
+        return Button(label="Current event (%s)" % str(event), value=BUTTON_VALUE_THIS_EVENT)
+    else:
+        return ""
+
+def get_button_for_template(template_name:str):
+    return Button(label=template_name, value = get_button_value_for_template(template_name))
+
+template_prefix = "template*"
+def get_button_value_for_template(template_name:str):
+    return template_prefix+template_name
+
+def get_button_for_other_event(event: Event):
+    return Button(label = str(event), value=get_button_value_for_other_event(event))
+
+other_event_prefix = "otherevent*"
+def get_button_value_for_other_event(event: Event):
+    return other_event_prefix+event.event_name
+
+def get_list_of_template_button_values(interface: abstractInterface):
+    list_of_templates = get_list_of_field_mapping_template_names(
+        object_store=interface.object_store
+    )
+    return [get_button_value_for_template(template_name) for template_name in list_of_templates]
+
+def get_list_of_other_event_button_values(interface: abstractInterface):
+    list_of_events = get_other_events(interface)
+    return [get_button_value_for_other_event(event) for event in list_of_events]
+
+def get_other_events(interface: abstractInterface):
+    event = get_event_from_state(interface)
+    return get_list_of_last_N_events(
+        object_store=interface.object_store,
+        excluding_event=event,
+        only_events_before_excluded_event=False
+    )

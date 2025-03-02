@@ -21,7 +21,7 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
-    cancel_menu_button,
+    cancel_menu_button, HelpButton,
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.frontend.shared.events_state import get_event_from_state
@@ -33,13 +33,15 @@ upload_template_button = Button("Upload a new template")
 def display_form_for_choose_template_field_mapping(interface: abstractInterface):
     list_of_templates_with_buttons = display_list_of_templates_with_buttons(interface)
     event = get_event_from_state(interface)
+    button_bar = ButtonBar([cancel_menu_button, help_button])
     if len(list_of_templates_with_buttons) == 0:
         contents_of_form = ListOfLines(
             [
                 "Click to upload a new template for mapping fields",
                 _______________,
                 upload_template_button,
-                cancel_menu_button,
+                _______________,
+                button_bar
             ]
         )
     else:
@@ -54,7 +56,7 @@ def display_form_for_choose_template_field_mapping(interface: abstractInterface)
                 upload_template_button,
                 _______________,
                 _______________,
-                ButtonBar([cancel_menu_button]),
+                button_bar
             ]
         )
 
@@ -119,3 +121,5 @@ def post_form_when_template_chosen(
         interface=interface,
         function_whose_parent_go_to_on_button_press=display_form_for_choose_template_field_mapping,
     )
+
+help_button = HelpButton("WA_template_mapping_help")

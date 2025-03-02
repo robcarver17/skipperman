@@ -1,10 +1,9 @@
-from copy import copy
 from typing import List, Dict
 
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     get_dict_of_all_event_info_for_cadets,
 )
-from app.backend.events.list_of_events import get_list_of_events
+from app.backend.events.list_of_events import get_list_of_last_N_events, ALL_EVENTS
 
 from app.data_access.store.object_store import ObjectStore
 from app.objects.cadets import Cadet, ListOfCadets
@@ -37,9 +36,6 @@ def get_list_of_previous_groups_as_str(
     ]
 
     return list_of_groups_as_str
-
-
-ALL_EVENTS = 99999999999999
 
 
 def get_dict_of_all_event_allocations_for_single_cadet(
@@ -135,44 +131,6 @@ def get_dict_of_event_allocations_for_last_N_events_for_single_cadet(
     )
 
     return dict_of_previous_groups
-
-
-def get_list_of_last_N_events(
-    object_store: ObjectStore,
-    excluding_event: Event,
-    only_events_before_excluded_event: bool = True,
-    N_events: int = ALL_EVENTS,
-
-) -> ListOfEvents:
-    list_of_events = copy(get_list_of_events(object_store))
-    list_of_events = remove_event_and_possibly_past_events(list_of_events, excluding_event=excluding_event,
-                                                           only_events_before_excluded_event=only_events_before_excluded_event)
-
-    list_of_events = get_N_most_recent_events_newest_last(list_of_events, N_events=N_events)
-
-    return list_of_events
-
-def remove_event_and_possibly_past_events(list_of_events: ListOfEvents,
-                                          excluding_event: Event,
-                                          only_events_before_excluded_event: bool = True
-                                          ):
-    list_of_events_sorted_by_date_desc = list_of_events.sort_by_start_date_asc() ## newest last
-
-    if excluding_event is not arg_not_passed:
-        idx_of_event = list_of_events_sorted_by_date_desc.index_of_id(excluding_event.id)
-        if only_events_before_excluded_event:
-            list_of_events_sorted_by_date_desc  = list_of_events_sorted_by_date_desc[:idx_of_event] ## only those that occured before this event
-        else:
-            list_of_events_sorted_by_date_desc.pop(idx_of_event)
-
-    return ListOfEvents(list_of_events_sorted_by_date_desc)
-
-def get_N_most_recent_events_newest_last(list_of_events: ListOfEvents,     N_events: int = ALL_EVENTS,
-) -> ListOfEvents:
-
-    list_of_events_sorted_by_date_desc = list_of_events.sort_by_start_date_asc() ## newest last
-
-    return ListOfEvents(list_of_events_sorted_by_date_desc[-N_events:])
 
 
 def get_dict_of_event_allocations_for_last_N_events_for_single_cadet_given_list_of_events(

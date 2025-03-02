@@ -33,6 +33,7 @@ class GenericListOfObjects(list):
     def as_df_of_str(self) -> pd.DataFrame:
         return create_data_frame_given_list_of_objects(self)
 
+
     def list_of_names(self):
         return [item.name for item in self]
 

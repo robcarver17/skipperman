@@ -108,3 +108,16 @@ def write_mapping_to_temp_csv_file_and_return_filename(
 
 def temp_mapping_file_name() -> str:
     return os.path.join(download_directory, "temp_mapping_file.csv")
+
+
+def delete_mapping_given_skipperman_field(object_store: ObjectStore, event: Event, skipperman_field:str):
+
+    mapping = get_field_mapping_for_event(object_store=object_store, event=event)
+    mapping.delete_mapping(skipperman_field)
+    save_field_mapping_for_event(object_store=object_store, event=event, mapping=mapping)
+
+def save_new_mapping_pairing(object_store: ObjectStore, event: Event, skipperman_field: str,
+                             wa_field: str):
+    mapping = get_field_mapping_for_event(object_store=object_store, event=event)
+    mapping.add_new_mapping(skipperman_field=skipperman_field, wa_field=wa_field)
+    save_field_mapping_for_event(object_store=object_store, event=event, mapping=mapping)

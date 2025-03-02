@@ -1,4 +1,5 @@
 import os.path
+import markdown
 
 from app.data_access.init_directories import docs_directory
 from app.web.html.html_components import (
@@ -12,17 +13,17 @@ def generate_help_page_html(help_page_name: str) -> Html:
 
     html_page_master_layout = get_master_layout(
         include_read_only_toggle=False, include_title="Help", include_user_options=False,
-        include_backup_option=False
+        include_backup_option=False,
+        include_support_email=True
     )
     html_page_master_layout.body.append(html_for_help_text)
 
     return html_page_master_layout.as_html()
 
 
-import markdown
 
 documentation_directory = "docs"
-md = markdown.Markdown(extensions=["toc"])
+md = markdown.Markdown(extensions=["toc", "tables"])
 
 
 def get_help_text_as_html_from_markdown(help_page_name: str) -> str:

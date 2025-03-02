@@ -1,4 +1,9 @@
+import os.path
+
 import pandas as pd
+
+from app.data_access.configuration.configuration import WA_FIELD_LIST_FILE
+from app.data_access.init_directories import static_files_directory
 from app.objects.events import Event
 
 from app.backend.mapping.list_of_field_mappings import temp_mapping_file_name
@@ -11,7 +16,7 @@ from app.data_access.configuration.field_list_groups import ALL_FIELDS_AS_PD_SER
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.mapping.download_template_field_mapping import (
-    display_form_for_download_template_field_mapping,
+    display_form_for_download_field_mapping,
 )
 from app.frontend.events.mapping.upload_field_mapping import (
     display_form_for_upload_custom_field_mapping,
@@ -102,14 +107,12 @@ def previous_form(interface: abstractInterface):
 
 def download_template_form(interface: abstractInterface):
     return interface.get_new_form_given_function(
-        display_form_for_download_template_field_mapping
+        display_form_for_download_field_mapping
     )
 
 
 def download_field_names_form():
-    df_of_fields = ALL_FIELDS_AS_PD_SERIES
-    filename = temp_mapping_file_name()
-    df_of_fields.to_csv(filename, index=False)
+    filename = os.path.join(static_files_directory, WA_FIELD_LIST_FILE)
 
     return File(filename)
 
@@ -154,4 +157,4 @@ UPLOAD_MAPPING_BUTTON_LABEL = "Upload new mapping .csv file"
 upload_new_mapping_button = Button(UPLOAD_MAPPING_BUTTON_LABEL, nav_button=True)
 
 
-help_button = HelpButton("create_mapping_template")
+help_button = HelpButton("WA_create_your_own_mapping_help")

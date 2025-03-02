@@ -50,9 +50,10 @@ change_password_html_string = (
 
 def get_username_banner():
     try:
-        return "Logged in as: %s" % get_username()
+        group = get_access_group_for_current_user()
+        return "Logged in as: %s (%s)" % (get_username(), group.name)
     except:
-        return "Login to see menus"
+        return ""
 
 
 def read_only_or_not_html():

@@ -23,6 +23,8 @@ If you do feel you have to make changes to the form, then you will need to under
 
 # Exporting registration data from Wild Apricot
 
+It's strongly recommended that you create at least one test registration in Wild Apricot at this stage before exporting the data.
+
 To export registration data from WA, click on the 'Export registrants' button, select 'Export to: CSV', make sure 'Export all fields' is ticked, and click Export (it's more reliable to export a .csv file, but Skipperman can also handle .xlsx spreadsheet files if you prefer to use those).
 
 ***
@@ -33,42 +35,50 @@ To export registration data from WA, click on the 'Export registrants' button, s
 
 # Importing data into Skipperman
 
-In Skipperman, select 'Events/ Event name / Import registration data / Import from WA spreadsheet file' to get ready to import.
+First [add the event in Skipperman](add_event_help) in Skipperman.
+Now select 'Main menu/Events/ Event name / Import registration data / Import from WA spreadsheet file' to get ready to import.
 
 If it's a brand new event, you should see the following:
 
+```
 Status:
 No field mapping set up - do this before you import any data
 No WA file has ever been uploaded before (or WA ID has been manually cleared).
 No registration data imported yet.
 No file currently uploaded for import.
+```
 
 ## Field mapping
 
+More [information on field mapping here](WA_field_mapping_help.md).
+
 'Fields' are the labels given to different types of information in Skipperman, like the first and surname of a cadet. 'Field mapping' is the process of going from the data as it comes out of Wild Apricot, and transforming it into labelled fields that Skipperman would recognise. 
 
-Let's assume that you duplicated an existing Cadet event in Wild Apricot without making any changes, and that it's an event which already exists in Skipperman. If not, then you will need to read the detailed help on field mapping FIX ME LINK.
+Let's assume that you duplicated an existing Cadet event in Wild Apricot without making any changes, and that it's an event which already exists in Skipperman. If not, then you will need to read the [detailed help on field mapping](WA_field_mapping_help).
 
-Assuming you're already in 'Events/ Event name / Import registration data / Import from WA spreadsheet file', now click on 'Set up WA field mapping'. Then in the following menu, choose 'Clone the mapping for an existing event'. Then choose the event you want to clone. You will now see the message 'Mapping copied from event June training 2023 to **New event name and year**'.  
+Assuming you're already in 'Main menu/Events/ Event name / Import registration data / Import from WA spreadsheet file', now click on 'Set up WA field mapping'. Then in the following menu, choose 'Clone the mapping for an existing event'. Then choose the event you want to clone. You will now see the message 'Mapping copied from event June training 2023 to **New event name and year**'.  
 After pressing 'Finished', you will see the message 'Mapping already set up for TestEvent 2025'. Click on back and you are back at the main import page. The status will have changed to:
 
 
+```
 Status:
 *Field mapping has been setup.*
 No WA file has ever been uploaded before (or WA ID has been manually cleared).
 No registration data imported yet.
 No file currently uploaded for import.
+```
 
 ## Uploading a WA export file
 
 You are now ready for the next step - uploading the WA file you exported earlier. Click on the 'Upload a WA export file', 'Choose file', and then 'Upload selected file'. If all goes well, you will see the message 'Uploaded file successfully'. The status in the import page will now read:
 
-Status:
+```
 Status:
 Field mapping has been setup.
 *A WA file with WA ID 5271589 has been previously uploaded.*
 No registration data imported yet.
 *WA file has been uploaded ready for import*
+```
 
 The WA ID is a number given by WA to each event, which Skipperman found in the file and is now using to identify the event. And you can also see that we have uploaded a file which is ready for the next stage,  importing.
 
@@ -125,6 +135,12 @@ The next step is to check that the information that has been registered is inter
 - that the volunteer is attending on days when none of their sailors is not attending (note we don't check to see if the reverse is true - eg a volunteer not coming for all the days their sailor is attending)
 
 
+
+
 # Updating an event
 
+```
+Status:
+
+```
 

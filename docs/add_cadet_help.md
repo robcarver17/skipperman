@@ -1,3 +1,4 @@
+**To add a sailor, from the main menu click 'Sailors', then 'Add sailor'**
 
 Sailors can be added to the Skipperman database in one of three ways:
 

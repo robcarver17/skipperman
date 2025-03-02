@@ -60,16 +60,19 @@ def post_form_for_download_field_mapping(
     last_button = interface.last_button_pressed()
     other_event_button_values = get_list_of_other_event_button_values(interface)
     template_button_values = get_list_of_template_button_values(interface)
+    this_event_button = get_button_for_this_event(interface)
+
     if cancel_menu_button.pressed():
         return previous_form(interface)
     elif last_button in other_event_button_values:
         pass
     elif last_button in template_button_values:
         pass
-    elif last_button == 
+    elif this_event_button.pressed(last_button):
+        pass
 
 def download_template(interface: abstractInterface):
-    template_name = pass
+    template_name = ''
     try:
         mapping = get_field_mapping_template(
             object_store=interface.object_store, template_name=template_name

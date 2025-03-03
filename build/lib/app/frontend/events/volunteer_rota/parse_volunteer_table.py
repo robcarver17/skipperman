@@ -12,7 +12,7 @@ from app.frontend.events.volunteer_rota.button_values import (
     get_dict_of_volunteer_name_buttons_and_volunteer_ids,
 )
 
-from app.data_access.init_directories import temp_file_name
+from app.data_access.init_directories import temp_file_name_in_download_directory
 
 from app.backend.rota.changes import delete_role_at_event_for_volunteer_on_day
 from app.backend.volunteers.volunteers_at_event import (
@@ -164,7 +164,7 @@ def save_volunteer_matrix_and_return_filename(interface: abstractInterface) -> s
         event=event,
         sorts_and_filters=sorts_and_filters,
     )
-    filename = temp_file_name()
+    filename = temp_file_name_in_download_directory()
     volunteer_matrix.to_csv(filename)
 
     return filename

@@ -42,7 +42,7 @@ from app.frontend.events.mapping.clone_field_mapping import (
     display_form_for_clone_event_field_mapping,
     post_form_for_clone_event_field_mapping,
 )
-from app.frontend.events.mapping.download_template_field_mapping import (
+from app.frontend.events.mapping.download_field_mapping import (
     display_form_for_download_field_mapping,
     post_form_for_download_field_mapping,
 )

@@ -25,8 +25,9 @@ from app.backend.events.list_of_events import (
 from app.backend.mapping.list_of_field_mappings import (
     get_field_mapping_for_event,
     get_list_of_events_with_field_mapping,
-    save_field_mapping_for_event,
+    save_field_mapping_for_event, does_event_already_have_mapping,
 )
+from app.objects.abstract_objects.abstract_text import bold
 from app.objects.events import Event
 
 
@@ -36,6 +37,7 @@ def display_form_for_clone_event_field_mapping(interface: abstractInterface):
         exclude_event=current_event, interface=interface
     )
     nav_bar = ButtonBar([cancel_menu_button, help_button])
+    warning =get_warning_if_existing_mapping(interface)
     if len(list_of_events_with_buttons) == 0:
         return ListOfLines([nav_bar, Line("No other events exist with mapping setup")])
     else:
@@ -44,13 +46,25 @@ def display_form_for_clone_event_field_mapping(interface: abstractInterface):
                 nav_bar,
                 Line(
                     "Choose event to clone event field mapping for %s"
-                    % str(current_event)
+                    % str(current_event),
+
                 ),
+                warning,
                 _______________,
                 list_of_events_with_buttons,
             ]
         )
 
+def get_warning_if_existing_mapping(interface: abstractInterface):
+    event =get_event_from_state(interface)
+    existing_mapping = does_event_already_have_mapping(
+        object_store=interface.object_store, event=event
+    )
+
+    if existing_mapping:
+        return bold("**WARNING**: Will replace existing mapping - there will be no warning or request for confirmation")
+    else:
+        return ''
 
 def display_list_of_events_with_field_mapping_buttons(
     interface: abstractInterface, exclude_event: Event

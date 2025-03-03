@@ -1,7 +1,7 @@
 from typing import Union
 
 from app.backend.volunteers.volunteer_data_dump import get_volunteer_data_dump
-from app.data_access.init_directories import temp_file_name
+from app.data_access.init_directories import temp_file_name_in_download_directory
 from app.objects.abstract_objects.abstract_text import Heading
 
 
@@ -57,7 +57,7 @@ def post_form_for_data_dump_report(
                 data_name
             )
             df = func_to_call(object_store=interface.object_store)
-            filename = temp_file_name()
+            filename = temp_file_name_in_download_directory()
 
             df.to_csv(filename, index=False)
 

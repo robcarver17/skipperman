@@ -1,6 +1,6 @@
 from app.data_access.store.object_store import ObjectStore
 
-from app.data_access.init_directories import temp_file_name
+from app.data_access.init_directories import temp_file_name_in_download_directory
 from app.objects.composed.cadets_with_qualifications import (
     ListOfNamedCadetsWithQualifications,
 )
@@ -25,7 +25,7 @@ def write_qualifications_to_temp_csv_file_and_return_filename(
     )
     df_of_qualifications = list_of_cadet_names_with_qualifications.as_df_of_str()
 
-    filename = temp_file_name()
+    filename = temp_file_name_in_download_directory()
 
     df_of_qualifications.to_csv(filename, index=False)
 

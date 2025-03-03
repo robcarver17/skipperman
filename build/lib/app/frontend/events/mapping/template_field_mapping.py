@@ -3,7 +3,7 @@ from app.backend.mapping.list_of_field_mappings import (
     get_list_of_field_mapping_template_names,
     get_field_mapping_template,
     save_field_mapping_template,
-    save_field_mapping_for_event,
+    save_field_mapping_for_event, does_event_already_have_mapping,
 )
 
 from app.frontend.events.mapping.upload_template_field_mapping import (
@@ -26,6 +26,7 @@ from app.objects.abstract_objects.abstract_buttons import (
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.form_handler import initial_state_form
+from app.objects.abstract_objects.abstract_text import bold
 
 upload_template_button = Button("Upload a new template")
 
@@ -49,7 +50,11 @@ def display_form_for_choose_template_field_mapping(interface: abstractInterface)
             [
                 "Event field mapping - using templates - for event %s" % str(event),
                 _______________,
-                "Choose template to use, or...",
+                _______________,
+                get_warning_if_existing_mapping(interface),
+                _______________,
+                _______________,
+                "Choose template to use, ...",
                 list_of_templates_with_buttons,
                 _______________,
                 "... or upload a new one",
@@ -62,6 +67,17 @@ def display_form_for_choose_template_field_mapping(interface: abstractInterface)
 
     return Form(contents_of_form)
 
+
+def get_warning_if_existing_mapping(interface: abstractInterface):
+    event =get_event_from_state(interface)
+    existing_mapping = does_event_already_have_mapping(
+        object_store=interface.object_store, event=event
+    )
+
+    if existing_mapping:
+        return bold("**WARNING**: Will replace existing mapping - there will be no warning or request for confirmation")
+    else:
+        return ''
 
 def display_list_of_templates_with_buttons(interface: abstractInterface) -> ListOfLines:
     list_of_templates = get_list_of_field_mapping_template_names(interface.object_store)

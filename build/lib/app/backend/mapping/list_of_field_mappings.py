@@ -2,7 +2,7 @@ import os
 from typing import List
 
 from app.backend.events.list_of_events import get_sorted_list_of_events
-from app.data_access.init_directories import download_directory
+from app.data_access.init_directories import download_directory, temp_file_name_in_download_directory
 from app.data_access.store.object_definitions import (
     object_definition_for_field_mappings_at_event,
     object_definition_for_list_of_field_mapping_templates,
@@ -97,17 +97,16 @@ def get_list_of_events_with_field_mapping(
 
 def write_mapping_to_temp_csv_file_and_return_filename(
     mapping: ListOfWAFieldMappings,
+        filename: str = "temp_mapping_file"
 ) -> str:
     df = mapping.as_df_of_str()
-    filename = temp_mapping_file_name()
+    filename = temp_file_name_in_download_directory(filename, extension=".csv")
 
     df.to_csv(filename, index=False)
 
     return filename
 
 
-def temp_mapping_file_name() -> str:
-    return os.path.join(download_directory, "temp_mapping_file.csv")
 
 
 def delete_mapping_given_skipperman_field(object_store: ObjectStore, event: Event, skipperman_field:str):

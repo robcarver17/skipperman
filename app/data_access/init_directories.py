@@ -19,8 +19,8 @@ def web_pathname_of_file(filename_with_extension: str):
     return PUBLIC_WEB_PATH + filename_with_extension
 
 
-def temp_file_name() -> str:
-    return os.path.join(download_directory, "temp_file.csv")
+def temp_file_name_in_download_directory(filename="temp_file", extension='.csv') -> str:
+    return os.path.join(download_directory, filename+extension)
 
 
 try:

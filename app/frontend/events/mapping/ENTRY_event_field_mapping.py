@@ -31,7 +31,7 @@ from app.backend.mapping.list_of_field_mappings import (
     does_event_already_have_mapping,
 )
 from app.backend.mapping.check_field_mapping import check_field_mapping
-from app.objects.abstract_objects.abstract_text import Heading
+from app.objects.abstract_objects.abstract_text import Heading, bold
 from app.objects.events import Event
 
 
@@ -92,7 +92,7 @@ def warning_text_for_mapping(interface: abstractInterface, event: Event) -> str:
     )
 
     if wa_import_done:
-        warning_text = "*WARNING* Looks like data import has already been done for this event. Changing the mapping could break things. DO NOT CHANGE UNLESS YOU ARE SURE."
+        warning_text = bold("*WARNING* Looks like data import has already been done for this event. Changing the mapping could break things. DO NOT CHANGE UNLESS YOU ARE SURE.")
     else:
         warning_text = ""
 

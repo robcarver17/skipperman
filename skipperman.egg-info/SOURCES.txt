@@ -336,7 +336,7 @@ app/frontend/events/mapping/ENTRY_event_field_mapping.py
 app/frontend/events/mapping/__init__.py
 app/frontend/events/mapping/clone_field_mapping.py
 app/frontend/events/mapping/create_mapping.py
-app/frontend/events/mapping/download_template_field_mapping.py
+app/frontend/events/mapping/download_field_mapping.py
 app/frontend/events/mapping/mapping_table.py
 app/frontend/events/mapping/parse_field_mapping.py
 app/frontend/events/mapping/template_field_mapping.py

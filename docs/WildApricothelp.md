@@ -9,7 +9,7 @@ When setting up a Wild Apricot event it is *strongly recommended* that you use t
 ***
 ***
 
-If you do feel you have to make changes to the form, then you will need to understand how **field mapping** works.
+If you do feel you have to make changes to the form, then you will need to understand how [**field mapping** works](WA_field_mapping_help.md).
 
 
 # Downloading the registration file for Skipperman upload

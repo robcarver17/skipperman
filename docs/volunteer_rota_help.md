@@ -1,10 +1,12 @@
+To access the rota for an event, from the **main menu** choose **Events**, then select an event, then click on **Volunteers**.
+
 The volunteer rota page is used to allocate volunteers to jobs. Only volunteers who have been added to the event can be allocated. Volunteers are normally added when an event is imported, but you can also manually add them here. You can also allocate volunteers in [patrol boat mode](patrol_boat_help): this makes most sense for rescue boat drivers. Make sure you are not in [read only](main-menu#read-only) mode if you want to make changes - use read only mode for experimenting.
+
 
 [TOC]
 
 # Overview
 
-After an event has been imported, you will be presented with a screen like this:
 
 ***
 ***
@@ -23,12 +25,11 @@ Finally, at the bottom of the screen you can see the list of volunteers,
 Each row shows a volunteer who has been imported to the event automatically. You can see, from left to right:
 
 - The volunteers name.  
-- The location of the cadet(s) that the volunteer is connected to: lake training, river training or MG racing. This will only be populated once the cadets have been allocated to groups. This is useful to know if a cadet and parent are likely to be in the same place
+- The location of the cadet(s) that the volunteer is connected to: lake training, river training or MG racing. This will only be populated once the cadets have been allocated to groups. This is useful to know if a cadet and parent are likely to be in the same place.
 - Preferred duties: the duties that the volunteer wants to do, from their registration form. NOTE: If someone says they have a PB2 or instructor qualification, it does not mean they do!
 - Same / different preferences: for some events (primarily cadet week), volunteers can say if they want to do one role or several.
 - Skills recorded in the Skipperman database. This is more likely to accurate, but you should still check it.
-- Previous volunteer role at the last event they did - very helpful for allocating.
-- For each day the role they are doing, and the buttons you can use to give them roles.
+- Previous volunteer role at the last event they did - very helpful for allocating.- For each day the role they are doing, and the buttons you can use to give them roles.
 - Notes and other information from registration
 
 # Typical workflow
@@ -133,7 +134,7 @@ Perhaps there is a non parent helping, or a parent who couldn't originally volun
 
 At this stage you can select an existing volunteer by just pressing the button with their name on.
 
-Alternativley, if the volunteer is new to the club, you can enter their name in the fields shown, and then click on 'Please check these volunteer details for me':
+Alternatively, if the volunteer is new to the club, you can enter their name in the fields shown, and then click on 'Please check these volunteer details for me':
 
 ***
 ***
@@ -240,7 +241,7 @@ In 'Swap mode' we can only do one of two things, swap a volunteer with someone e
 
 # Sorts and filters
 
-By default all volunteers are shown, and they are in the order they were added to the event in (which can be quite useful - if you go to the end of the event after it's been updated, you can see straight away which new volunteers you have). We can use sorting and filtering to change the order and only see a subset of volunters.
+By default, all volunteers are shown, and they are in the order they were added to the event in (which can be quite useful - if you go to the end of the event after it's been updated, you can see straight away which new volunteers you have). We can use sorting and filtering to change the order and only see a subset of volunters.
 
 ***
 ***

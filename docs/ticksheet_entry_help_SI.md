@@ -1,8 +1,9 @@
-The ticksheets and qualifications menu allows you give 'ticks' recording progress, and to award qualifications. Make sure you are not in [read only](main-menu#read-only) mode if you want to make changes - use read only mode for experimenting.
+The ticksheets and qualifications menu allows you give 'ticks' recording progress, and to award qualifications. 
+To access it, from the **main menu** choose **Ticksheets and qualifications**, then the event, then choose the group, and finally the qualification.
 
-[Guide to ticksheets and Qualifications](ticksheets_and_qualifications_guide)
+[Guide to ticksheets and Qualifications](ticksheets_and_qualifications_guide.md)
 
-Previous step: [Choosing a qualification level](ticksheets_choose_levels_SI_skipper_help)
+Previous step: [Choosing a qualification level](ticksheets_choose_levels_SI_skipper_help.md)
 
 [TOC]
 
@@ -48,7 +49,8 @@ Important notes:
 
 - you don’t need all the ticks selected to award a qualification. All the ticks will automatically be selected for you when you click the award button.
 - Qualifications that have already been awarded should not be withdrawn because you disagree with a previous decision - only in case of accident
-- if you withdraw a qualification from a cadet, then all their ticks will be wiped out. **So make sure you have a paper record before doing this**
+- if you withdraw a qualification from a cadet, it won't affect their ticks.
+- This means if you accidentally award a qualification to a cadet without all their ticks, and then withdraw it, you will see the missing ticks again once you have withdrawn the award.
 
 # Skipperman on mobile - individual cadet editing
 

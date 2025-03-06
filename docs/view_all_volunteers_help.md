@@ -9,4 +9,4 @@ Note that a sailor can also be a volunteer - you need to add them in both roles 
 ***
 ***
 
-The first grey nav allows you to get help, go back to the main menu or [add a new volunteer](add_new_volunteer_help). The second nav bar allows you to sort the list of volunteers. This is followed by the volunteers. Pressing an individual volunteer button will allow you to [view and/or edit](view_individual_volunteer_help) an individual volunteer.
+The first grey nav allows you to get help, go back to the main menu or [add a new volunteer](add_new_volunteer_help.md). The second nav bar allows you to sort the list of volunteers. This is followed by the volunteers. Pressing an individual volunteer button will allow you to [view and/or edit](view_individual_volunteer_help.md) an individual volunteer.

@@ -1,4 +1,4 @@
-
+To view an individual volunteer, from the **main menu** choose **Volunteers* and then click on the volunteers name.
 
 For a given volunteer we can see:
 

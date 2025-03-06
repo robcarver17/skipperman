@@ -1,9 +1,9 @@
-The ticksheets and qualifications menu allows you give 'ticks' recording progress. Make sure you are not in [read only](main-menu#read-only) mode if you want to make changes - use read only mode for experimenting.
+The ticksheets and qualifications menu allows you give 'ticks' recording progress. 
+To access it, from the **main menu** choose **Ticksheets and qualifications**, then the event, then choose the group, and finally the qualification.
 
+[Guide to ticksheets and Qualifications](ticksheets_and_qualifications_guide.md)
 
-[Guide to ticksheets and Qualifications](ticksheets_and_qualifications_guide)
-
-Previous step: [Choosing a qualification level](ticksheets_levels_help)
+Previous step: [Choosing a qualification level](ticksheets_levels_help.md)
 
 [TOC]
 

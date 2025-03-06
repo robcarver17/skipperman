@@ -1,4 +1,6 @@
-The cadet committee are the year 12 and year 13 cadets who help organise cadet events. There are also adult members on the committee, but they are not included here. It's helpful to keep a list of committee members, not least to make sure they get polo shirts during Cadet Week. Make sure you are not in [read only](main-menu#read-only) mode if you want to make changes - use read only mode for experimenting.
+To edit the cadet committee, from the **main menu** choose **Sailors**, then **Edit Cadet Committee**.
+
+The cadet committee are the year 12 and year 13 cadets who help organise cadet events. There are also adult members on the committee, but they are not included here. It's helpful to keep a list of committee members, not least to make sure they get polo shirts during Cadet Week. Make sure you are not in [read only](main-menu.md#read-only) mode if you want to make changes - use read only mode for experimenting.
 
 [TOC]
 

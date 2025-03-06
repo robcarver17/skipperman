@@ -1,10 +1,11 @@
-The patrol boat rota page is used to allocate volunteers to patrol boats. Only volunteers who have been added to the event can be allocated - if you want to add a volunteer, you will need the main [volunteer rota page](volunteer_rota_help#add-a-volunteer). Make sure you are not in [read only](main-menu#read-only) mode if you want to make changes - use read only mode for experimenting.
+To access the patrol boat rota, from the **main menu**, select **Events**, choose an event, and then click on **Patrol boats** in the menu.
+
+The patrol boat rota page is used to allocate volunteers to patrol boats. Only volunteers who have been added to the event can be allocated - if you want to add a volunteer, you will need the main [volunteer rota page](volunteer_rota_help.md#add-a-volunteer). Make sure you are not in [read only](main-menu.md#read-only) mode if you want to make changes - use read only mode for experimenting.
 
 [TOC]
 
 # Overview
 
-After an event has been imported, you will be presented with a screen like this:
 
 ***
 ***
@@ -17,7 +18,7 @@ After an event has been imported, you will be presented with a screen like this:
 
 ## Adding a boat
 
-The first thing we need to do is add a boat. Select a boat from the drop down and click add a boat. If the boat you want isn't listed, you will need to add it via the configuration pages. You can add as many boats as you like.
+The first thing we need to do is add a boat. Select a boat from the drop down and click add a boat. If the boat you want isn't listed, you will need to add it via the [configuration](configuration_help.md#patrol-boats) pages. You can add as many boats as you like.
 
 ![boat_added.png](/static/boat_added.png)
 
@@ -82,15 +83,15 @@ For a multi day event, people will often be on the same boat and/or doing the sa
 - 'Copy and fill &#8646;' - this will copy from the relevant day where the button is located, and fill in any empty days with the same boat &#8646; B, role &#8646; R, or boat and role &#8646; BR.
 - 'Copy and overwrite &#10234;' - this will copy from the relevant day where the button is located, and copy it to every single day irrespective of whether there is already a boat and / or role allocated; again we can do this for boats &#10234; B, roles &#10234; R and both &#10234; BR.
 
-Note that the swap button moves roles 'up and down' between volunteers on the same day, whilst the copy button moves them 'left and right' across days for the same volunteer. The overwrite button is thicker, think of it has covering the existing days.
+Note that the swap button moves roles 'up and down' between volunteers on the same day, whilst the copy button moves them 'left and right' across days for the same volunteer. The overwrite button is thicker, think of it as covering over the existing days.
 
 As with the volunteer rota you can also copy, or copy and overwrite, across all volunteers using the buttons in the navigation bar for boats, and also for boats and roles.
 
 # Swapping
 
-I'd advise you to read about swapping in the [volunteer rota](volunteer_rota_help#swapping) before looking at swapping here, they work in exactly the same way except that you can swap boats, or boats and roles.
+I'd advise you to read about swapping in the [volunteer rota](volunteer_rota_help.md#swapping) before looking at swapping here, they work in exactly the same way except that you can swap boats, or boats and roles.
 
-The swap button &#8693; allows you to swap round two volunteers. Note that a swap button moves roles 'up and down' between volunteers on the same day, whilst a copy moves them 'left and right' across days for the same volunteer. Just as for copying, we can swap boats using &#8693 B or boats and roles with &#8693 BR (we can't swap just roles - that can only be done on the [volunteer rota page](volunteer_rota_help#swaps)).  Swapping boats and roles is usually used for moving people between lake and river boats. Consider this starting point:
+The swap button &#8693; allows you to swap round two volunteers. Note that a swap button moves roles 'up and down' between volunteers on the same day, whilst a copy moves them 'left and right' across days for the same volunteer. Just as for copying, we can swap boats using &#8693 B or boats and roles with &#8693 BR (we can't swap just roles - that can only be done on the [volunteer rota page](volunteer_rota_help.md#swaps)).  Swapping boats and roles is usually used for moving people between lake and river boats. Consider this starting point:
 
 ![boat_pre_swap.png](/static/boat_pre_swap.png)
 

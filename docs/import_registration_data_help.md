@@ -1,3 +1,4 @@
+To import the registration data for an event, from the **main menu** choose **events**, then select the event, then click on **import registration data**.
 
 [TOC]
 
@@ -19,7 +20,7 @@ When setting up a Wild Apricot event it is *strongly recommended* that you use t
 ***
 ***
 
-If you do feel you have to make changes to the form, then you will need to understand how **field mapping** works.
+If you do feel you have to make changes to the form, then you will need to understand how [**field mapping**](WA_field_mapping_help.md) works.
 
 # Exporting registration data from Wild Apricot
 
@@ -35,7 +36,7 @@ To export registration data from WA, click on the 'Export registrants' button, s
 
 # Importing data into Skipperman
 
-First [add the event in Skipperman](add_event_help) in Skipperman.
+First [add the event in Skipperman](add_event_help.md) in Skipperman.
 Now select 'Main menu/Events/ Event name / Import registration data / Import from WA spreadsheet file' to get ready to import.
 
 If it's a brand new event, you should see the following:

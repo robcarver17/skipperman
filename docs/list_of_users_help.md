@@ -1,4 +1,6 @@
+To access and modify the list of users, from the **main menu** select **Administration** and then **Users, passwords and access**
 
+Note: Only admin users are permitted to access this information.
 
 [TOC]
 
@@ -6,7 +8,7 @@
 
 Usernames and hashed passwords are stored in `~/skipperman_user_data/secure/userlist.csv`
 
-These are stored seperately from other Skipperman data and are not affected by backup operations. This means that with a new installation of Skipperman, there will be no users set up as there will be no user/password file present. A default user with admin rights (username: admin, password: admin) will be set up so you can log in. After logging in the first thing you should do is add yourself as an admin user, and delete the default (otherwise there will be a security risk). There really should always be at least one admin user on Skipperman, the system will warn you if delete the only existing admin user. 
+These are stored seperately from other Skipperman data and are not affected by backup operations. This means that with a new installation of Skipperman, there will be no users set up as there will be no user/password file present. A default user with admin rights (username: admin, password: admin) will be set up so you can log in. After logging in the first thing you should do is add yourself as an admin user, and delete the default (otherwise there will be a security risk). There must always be at least one admin user on Skipperman, the system will not let you delete or change the group if there is only one admin user. 
 
 
 # Adding new users
@@ -35,11 +37,15 @@ Choose the new group or volunteer from the dropdown and click 'Save edits'.
 
 Note: A volunteer can be associated with more than one user. This can be useful if you want to set up a backup admin account.
 
+Note: You can't change the group if a user is the only admin user.
+
 ## Delete a user
 
-You can also delete a user by selecting the delete button next to their name. Remember it is strongly advised that you have at least one admin account - if you delete the only admin account the system will warn you.
+You can also delete a user by selecting the delete button next to their name. 
 
 Do not delete the account you are currently logged into - you will immediately lose access and unless you have another admin account you will be locked out.
+
+You can't delete a user if they are the only admin user.
 
 # I am locked out of my admin account(s)
 

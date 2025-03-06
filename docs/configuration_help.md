@@ -1,4 +1,4 @@
-The configuration pages allow you to modify various important lists used in Skipperman.
+The **configuration pages** allow you to modify various important lists used in Skipperman.
 
 [TOC]
 
@@ -27,11 +27,11 @@ Some points about editing:
 
 # Club dinghies
 
-These are the boats that cadets can borrow if they don't have their own. They can be hidden from view if a type of boat is no longer used. You don't need to list each boat individually; just the types of boat.
+These are the boats that sailors can borrow if they don't have their own. They can be hidden from view if a type of boat is no longer used. You don't need to list each boat individually; just the types of boat.
 
 # Patrol boats
 
-These are the safety boats used for rescuing. The ordering will be used when we allocate volunteers to boats, and in reports. It's recommended that you use the following order:
+These are the power boats used for rescuing. The ordering will be used when we allocate volunteers to boats, and in reports. It's recommended that you use the following order:
 
 - Launch
 - Club owned big RIBs
@@ -44,7 +44,7 @@ Patrol boats can be hidden. This is useful if you borrow a boat for just one or 
 
 # Boat classes
 
-These are the classes of boats that Cadets can sail. They can be hidden. You might want to add an 'exotic' boat sailed as a one off in a race series, and then hide it to reduce the clutter in the dropdown. I recommend you keep these in alphabetical order to make it easier to find a class in a dropdown.
+These are the classes of boats that sailors can sail. They can be hidden. You might want to add an 'exotic' boat sailed as a one off in a race series, and then hide it to reduce the clutter in the dropdown. I recommend you keep these in alphabetical order to make it easier to find a class in a dropdown.
 
 # Volunteer skills
 
@@ -88,5 +88,5 @@ It's recommended that the order here is lake training, river training, MG groups
 
 # Sailing qualifications
 
-These are the list of qualifications that cadets can achieve, both internal (eg lake badge) and RYA. [If you click on 'edit' you can change the underlying syllabus items ('ticks') for each qualification](edit_qualification_tick_help).
+These are the list of qualifications that sailors can achieve, both internal (eg lake badge) and RYA. [If you click on 'edit' you can change the underlying syllabus items ('ticks') for each qualification](edit_qualification_tick_help.md).
 

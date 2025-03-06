@@ -1,3 +1,5 @@
+To add a volunter, from the **main menu** select **Volunteers**, then **Add volunteer**.
+
 It's important to avoid duplicating volunteers, as it can get confusing. So when adding a new volunteer the system will check to see you aren't adding someone who already exists.
 
 ***

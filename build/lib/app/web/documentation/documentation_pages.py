@@ -1,4 +1,6 @@
 import os.path
+from copy import copy
+
 import markdown
 
 from app.data_access.init_directories import docs_directory
@@ -27,7 +29,11 @@ md = markdown.Markdown(extensions=["toc", "tables"])
 
 
 def get_help_text_as_html_from_markdown(help_page_name: str) -> str:
-    helper_file_name = "%s.md" % help_page_name
+    if ".md" in help_page_name:
+        helper_file_name = copy(help_page_name)
+    else:
+        helper_file_name = "%s.md" % help_page_name
+
     if helper_file_name is None:
         return "Cannot find help file reference for %s" % help_page_name
 

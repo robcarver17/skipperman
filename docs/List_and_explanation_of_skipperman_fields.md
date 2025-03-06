@@ -3,7 +3,7 @@
 
 # Full field list
 
-The following are the data fields used by Skipperman. You should have a good understanding of these if you plan to change the [Wild Apricot field mappings](WA_field_mapping_help).
+The following are the data fields used by Skipperman. You should have a good understanding of these if you plan to change the [Wild Apricot field mappings](WA_field_mapping_help.md).
 
 | Field name                       | Explanation                                | Format                    | Usage          | Can be replaced with                               | Notes                                                                                                                                                                                                                          |
 |----------------------------------|--------------------------------------------|---------------------------|----------------|----------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

@@ -1,3 +1,5 @@
+To access the file management for Skipperman, from the **main menu** choose **Utilities** and **File management**.
+
 Skipperman creates a lot of files. The file management menu allows you to manage these. There are three types of file, and clicking the expand triangle next to each type will allow you to see them.
 
 - Public files
@@ -6,7 +8,7 @@ Skipperman creates a lot of files. The file management menu allows you to manage
 
 # Public files
 
-Public files are usually created when Skipperman creates a report, eg a volunteer rota, and the user chooses to share it. Public files can be seen by anyone who has the relevant web link (that is why they aren't suitable for confidential information, and you should be careful about what reports you write to a public file). The full URL is shown for each file to make it easy to share a link to each file.
+Public files are automatically created when Skipperman creates a report, eg a volunteer rota, and the user chooses to share it. Public files can be seen by anyone who has the relevant web link (that is why they aren't suitable for confidential information, and you should be careful about what reports you write to a public file). The full URL is shown for each file to make it easy to share a link to each file.
 
 ## QR codes for public files
 

@@ -1,7 +1,8 @@
+To edit qualification ticks, from the **main menu** select **configuration**, then **sailing qualifications** and then choose the **Edit** button for the relevant qualification.
 
 A qualification ('stage') consists of substages and tick items. A substage is just a logical grouping of ticks. You shouldn't need to edit qualification details unless you have set up a new qualification, or to make minor changes to names.
 
-It isn't possible to delete substages or ticks; or this would corrupt the qualification records of existing cadets. If the syllabus of an existing qualification changes substantially, then you should probably create a new qualification and rename the old (eg 'RYA1' becomes 'RYA1 pre 2024' and 'RYA1' is the new qualification).
+It isn't possible to delete substages or ticks; or this would corrupt the qualification records of existing cadets. You can however edit the names of the substages and ticks, which could be appropriate if the syllabus has changed slightly. If the syllabus of an existing qualification changes substantially, then you should probably create a new qualification and rename the old (eg 'RYA1' becomes 'RYA1 pre 2024' and 'RYA1' is the new qualification). 
 
 # Substages
 

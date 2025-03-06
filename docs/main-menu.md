@@ -3,8 +3,8 @@
 [TOC]
 
 # Guides to using skipperman
-- [Ticksheets and Qualifications](ticksheets_and_qualifications_guide)
-
+- [Ticksheets and Qualifications](ticksheets_and_qualifications_guide.md)
+- [Importing event data](import_registration_data_help.md)
 
 # The skipperman home page
 
@@ -67,13 +67,14 @@ Menu option pages usually include one or more of the following elemnts:
 
 # Skipperman navigation
 
-Never use the 'Back' button on your browser. Instead use the relevant buttons on the navigation bar:
+**Never use the 'Back' button on your browser** Instead, use the relevant buttons on the navigation bar:
 
 - Main menu - return to the main menu. Only available in the first 'level' of a menu option.
 - Back - return to the previous page. Only available on pages when no editing can be done.
 - Cancel - return to the previous page without saving any of the most recent changes made.
 
-The way that edits are made and saved can be slightly confusing. Where you have to type something, or enter a value in a dropdown menu, then clicking any button apart from cancel will save the edits (there is usually a specific save button, but any button will do). Where edits are made using buttons, then they are saved immediately. There is no 'undo'.
+The way that edits are made and saved can be slightly confusing. Where you have to type something, or enter a value in a dropdown menu, then you will need to click a save button or the changes won't be saved. But where edits are made using buttons, then they are saved immediately (and any text entry or dropdown changes will be ignored). There is no 'undo' and subsequently pressing 'cancel' won't undo the edit.
+For simplicity, get in the habit of pressing save after typing or selecting anything.
 
 Certain buttons have keyboard shortcuts, shown with eg [Alt-c] after the button. For example, back is always [Alt-b], save [Alt-s] and so on:
 
@@ -83,6 +84,6 @@ Certain buttons have keyboard shortcuts, shown with eg [Alt-c] after the button.
 - Add [Alt-a]
 - Help [Alt-h]
 
-NOTE: not all of these are currently implemented across all of Skipperman.
+NOTE: not all of these will work on every page
 
 In most browsers (Explorer, Chrome, Opera version 15 onwards, and Safari) you would use the Alt key plus the relevant (lowercase) letter. In Firefox use Alt, Shift and key. In Opera prior to version 12 use Shift, Escape and key.

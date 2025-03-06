@@ -1,3 +1,4 @@
+To import a membership list, from the **main menu** choose **Sailors** and then click on **Import members from a spreadsheet file**.
 
 It's useful to know if sailors (who can be member cadets, visiting sailors, or juniors racing in a cadet section run race series) are members or not. For example, only current members are eligible to be on the Cadet Committee. They may also have different fees to pay at racing events. Only members are eligble to take part in cadet training weekends. However Skipperman can't automatically know who is a member of the club. You have to export a membership file from the clubs membership database (currently WildApricot), and then import it here to align the two data sets.
 
@@ -55,7 +56,7 @@ You will be asked to confirm eithier:
 
 sailors can be added to the Skipperman database in one of three ways:
 
-- on the [add sailor menu option](add_sailor_help)
+- on the [add sailor menu option](add_sailor_help.md)
 - when processing the registrations for a training or racing event
 - if they appear as a new member when a membership list is imported, described here.
 
@@ -66,7 +67,7 @@ It is *very* important that a sailor is not added twice! So the system goes to a
 
 ## Prepare the import file
 
-Firstly, make sure you are not in [read only](main-menu#read-only) mode if you want to make changes - use read only mode for experimenting. Then download the file you want to import from the membership system (currently Wild Apricot). 
+Firstly, make sure you are not in [read only](main-menu.md#read-only) mode if you want to make changes - use read only mode for experimenting. Then download the file you want to import from the membership system (currently Wild Apricot). 
 
 The membership file must be a csv or xls with following named columns: First name, Last name, Date of Birth. If the column names shown on the Skipperman web page are different from these, use those shown on the web page. Currently, if you export a list of members from Wild Apricot, it will include these fields. Any additional fields will be ignored, but if any of the expected columns are missing it will break.
 

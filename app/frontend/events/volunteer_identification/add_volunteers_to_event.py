@@ -117,6 +117,8 @@ def process_new_volunteer_at_event_with_active_cadets(
             object_store=interface.object_store, event=event, volunteer=volunteer
         )
     )
+    print("Relevant information for %s, %s" % (volunteer.name, str(list_of_relevant_information)))
+    print("")
     issues_with_volunteer = relevant_information_requires_clarification(
         list_of_relevant_information=list_of_relevant_information,
         volunteer=volunteer,

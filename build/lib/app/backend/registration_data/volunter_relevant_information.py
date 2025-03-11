@@ -116,6 +116,9 @@ def get_availability_information_for_volunteer(
         event=event
     )
 
+    if volunteer_availability.is_empty():
+        volunteer_availability = cadet_availability
+
     return RelevantInformationForVolunteerAvailability(
         cadet_availability=cadet_availability,
         volunteer_availablity=volunteer_availability,
@@ -148,6 +151,7 @@ def get_availability_for_volunteer(    row_in_mapped_event: RowInRegistrationDat
     elif len(day_available_text)>0:
         return create_day_selector_from_short_form_text_with_passed_days(day_available_text, days_in_event=days_in_event)
     else:
+
         return DaySelector.create_empty()
 
 

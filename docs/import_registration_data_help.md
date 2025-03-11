@@ -135,7 +135,7 @@ The next step is to check that the information that has been registered is inter
 - that the information the volunteer has put down about their duty preference is consistent over multiple registrations
 - that the volunteer is attending on days when none of their sailors is not attending (note we don't check to see if the reverse is true - eg a volunteer not coming for all the days their sailor is attending)
 
-
+For more information on resolving conflicts, see [here](resolve_volunteer_registration_issues.md)
 
 
 # Updating an event

@@ -1,6 +1,6 @@
 from typing import Union, List
 
-from app.objects.abstract_objects.abstract_buttons import Button
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, HelpButton
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.frontend.forms.form_utils import get_availability_checkbox
@@ -82,6 +82,9 @@ def display_form_to_confirm_volunteer_details(
     return Form(
         ListOfLines(
             [
+                button_bar,
+                _______________,
+                _______________,
                 header_text,
                 _______________,
                 _______________,
@@ -126,6 +129,7 @@ def get_header_text(
 
     return Line(header_text)
 
+button_bar = ButtonBar([HelpButton('resolve_volunteer_registration_issues')])
 
 def get_cadet_names_text_given_identified_volunteer(
     interface: abstractInterface, event: Event, volunteer: Volunteer

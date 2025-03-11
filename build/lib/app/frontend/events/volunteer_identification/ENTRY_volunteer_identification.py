@@ -31,7 +31,7 @@ from app.frontend.events.volunteer_identification.volunteer_selection_form_conte
 from app.frontend.shared.add_edit_volunteer_forms import (
     add_volunteer_from_form_to_data,
     VolunteerAndVerificationText,
-    get_add_volunteer_form_with_information_passed,
+    get_add_volunteer_form_with_information_passed, get_volunteer_from_form,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import (
@@ -183,6 +183,9 @@ def get_add_or_select_existing_volunteers_form(
 
     cadet_in_row = get_cadet_or_missing_data_for_current_row(interface)
 
+    if volunteer is arg_not_passed:
+        volunteer = get_volunteer_from_form(interface)
+
     volunteer_and_text, include_final_button = get_volunteer_text_and_final_button(
         volunteer=volunteer,
         interface=interface,
@@ -211,7 +214,7 @@ def get_volunteer_text_and_final_button(
     interface: abstractInterface,
     first_time: bool,
     cadet_in_row: Cadet,  ## could be missing data
-    volunteer: Volunteer = arg_not_passed,
+    volunteer: Volunteer
 ) -> Tuple[VolunteerAndVerificationText, bool]:
     verification_text = verify_volunteer_and_warn(
         object_store=interface.object_store, volunteer=volunteer

@@ -10,7 +10,7 @@ from app.frontend.events.volunteer_identification.track_state_in_volunteer_alloc
     get_relevant_information_for_current_volunteer,
     get_volunteer_index,
 )
-from app.objects.abstract_objects.abstract_buttons import Button
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, HelpButton
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
@@ -45,6 +45,9 @@ def get_header_text_for_volunteer_selection_form(
 
     header_text = ListOfLines(
         [
+            help_bar,
+            _______________,
+            _______________,
             introduction,
             _______________,
             status_text,
@@ -57,6 +60,7 @@ def get_header_text_for_volunteer_selection_form(
 
     return header_text
 
+help_bar = ButtonBar([HelpButton("identify_volunteers_at_event_help")])
 
 def volunteer_name_is_similar_to_cadet_name(cadet: Cadet, volunteer: Volunteer) -> bool:
 

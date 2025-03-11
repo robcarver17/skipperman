@@ -25,19 +25,15 @@ def display_form_import_event_file(
         interface.log_error("Can't import file as no field mapping set up")
         return initial_state_form
 
-    interface.log_error("Skipping try/except code in import_wa_file.py as debugging")
-    return process_wa_staged_file_already_uploaded(interface)
-    """
     try:
         ## deletes staged file if works ok
         return process_wa_staged_file_already_uploaded(interface)
     except Exception as e:
         # will have to upload again
         delete_staged_file_for_current_event(interface)
-        interface.log_error("Problem with file import_data %s try uploading again" % e)
+        interface.log_error("Problem with file importing data %s try uploading again" % e)
 
         return initial_state_form
-    """
 
 def post_form_import_event_file(interface: abstractInterface) -> Union[Form, NewForm]:
     interface.log_error("Shouldn't get to post on import_data event file!")

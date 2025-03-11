@@ -1,5 +1,7 @@
 # Recent
 
+- Fixed minor bug with identifying volunteers
+- Don't print cadets date of birth if default. Don't match default date cadets to others on similar.
 - Modify mapping in table on screen
 - Much documentation
 - Read only flag on all pages

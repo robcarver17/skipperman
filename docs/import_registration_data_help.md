@@ -94,7 +94,7 @@ You should now be back at the main WA import page. Click on 'Import data from up
 
 ### Importing all the cadets attending
 
-Skipperman will attempt to identify all the cadets in the imported WA event file. If the cadet isn't identical to one that is already in the data (same name and date of birth), then Skipperman will ask you to add the cadet to it's data. You will see a screen like this:
+Skipperman will attempt to identify all the cadets in the imported WA event file. If the cadet isn't identical to one that is already in the data (EXACTLY the same name, and date of birth), then Skipperman will ask you to add the cadet to it's data. You will see a screen like this:
 
 ***
 ***
@@ -103,10 +103,10 @@ Skipperman will attempt to identify all the cadets in the imported WA event file
 ***
 
 - If this isn't actually a new cadet: you will probably see buttons to select an existing cadet. Click on the appropriate cadet. If you can't se the cadet you want, click on 'See all cadets'. **It's really important that you don't add duplicate cadets to the Skipperman data**
-- If this is a new cadet: check the name and date of birth, and membership status. For membership status unless you are sure they are (or are not) a member, put 'unconfirmed'. Membership can be confirmed by importing a list of members exported from WA (Main menu/Sailors/ [import a list of club members](import_membership_list_help)). It is possible to edit the cadet details, and these can also be updated by importing a list of club members from Wild Apricot, so don't worry too much if these aren't precisely right.  
-- If this is a test entry and not a real cadet: click the test button. 
+- If this is a new cadet: check the name and date of birth, and membership status. For racing events you won't usually have the date of birth - if they are a visitor don't worry about including this. If they are a member that is new to Skipperman, you can [edit the date of birth later](view_and_edit_individual_cadet_help.md). For membership status unless you are sure they are (or are not) a member, put 'unconfirmed'. Membership can be confirmed by importing a list of members exported from WA (Main menu/Sailors/ [import a list of club members](import_membership_list_help)). It is possible to edit the cadet details, and these can also be updated by importing a list of club members from Wild Apricot, so don't worry too much if these aren't precisely right.  
+- If this is a test entry and not a real cadet: click the "Skip: this is a test entry" button. 
 
-More help with identifying cadets here:
+More help with identifying cadets [here](identify_cadets_at_event_help.md)
 
 ## Importing all the volunteers attending
 
@@ -125,14 +125,14 @@ volunteer number
 - If this isn't really a volunteer: click on skip. The most common cause of this is where the parent has accidentally put the cadets name in instead of their own. The system warns against this. 
 
 
-More help with identifying volunteers here: 
+More help with identifying volunteers [here](identify_volunteers_at_event_help.md). 
 
 ## Conflicts between volunteer and cadet information
 
 The next step is to check that the information that has been registered is internally consistent. Skipperman will check:
 
 - that the volunteer availability is consistent across registrations (eg if they are associated with more than one cadet)
-- that the information the volunteer has put down about their duty preference is consis
+- that the information the volunteer has put down about their duty preference is consistent over multiple registrations
 - that the volunteer is attending on days when none of their sailors is not attending (note we don't check to see if the reverse is true - eg a volunteer not coming for all the days their sailor is attending)
 
 

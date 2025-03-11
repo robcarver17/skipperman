@@ -64,12 +64,18 @@ class Cadet(GenericSkipperManObjectWithIds):
         )
 
     def __repr__(self):
-        return "%s %s (%s) %s" % (
+        return "%s %s%s %s" % (
             self.first_name,
             self.surname,
-            str(self.date_of_birth),
+            self.date_of_birth_as_string(),
             describe_status(self.membership_status),
         )
+
+    def date_of_birth_as_string(self):
+        if self.date_of_birth == DEFAULT_DATE_OF_BIRTH:
+            return ""
+        else:
+            return " (%s)" % str(self.date_of_birth)
 
     def __eq__(self, other):
         ## Doesn't consider membership status
@@ -144,13 +150,20 @@ class Cadet(GenericSkipperManObjectWithIds):
         return similar(self.surname, other_cadet.surname)
 
     def similarity_dob(self, other_cadet: "Cadet") -> float:
-        return similar(self._date_of_birth_as_str, other_cadet._date_of_birth_as_str)
+        if self.has_default_date_of_birth or other_cadet.has_default_date_of_birth:
+            return 0.0
+        else:
+            return similar(self._date_of_birth_as_str, other_cadet._date_of_birth_as_str)
 
     def day_and_month_of_birth_matches_other_data(self, other_date: datetime.date):
         return (
             self.date_of_birth.day == other_date.day
             and self.date_of_birth.month == other_date.month
         )
+
+    @property
+    def has_default_date_of_birth(self):
+        return self.date_of_birth == DEFAULT_DATE_OF_BIRTH
 
 
 class ListOfCadets(GenericListOfObjectsWithIds):
@@ -279,6 +292,7 @@ class ListOfCadets(GenericListOfObjectsWithIds):
         name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME,
         dob_threshold: float = SIMILARITY_LEVEL_TO_WARN_DATE,
     ) -> "ListOfCadets":
+
         similar_dob = self.similar_dob(cadet, dob_threshold=dob_threshold)
         similar_names = self.similar_names(cadet, name_threshold=name_threshold)
         joint_list_of_similar_cadets = union_of_x_and_y(similar_names, similar_dob)
@@ -306,7 +320,7 @@ class ListOfCadets(GenericListOfObjectsWithIds):
         cadet: Cadet,
         dob_threshold: float = SIMILARITY_LEVEL_TO_WARN_DATE,
     ):
-        if cadet is default_cadet or cadet is test_cadet:
+        if cadet is default_cadet or cadet is test_cadet or cadet.has_default_date_of_birth:
             return ListOfCadets([])
 
         similar_dob = [

@@ -9,7 +9,7 @@ from app.backend.cadets.add_edit_cadet import (
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
-    Button,
+    Button, HelpButton,
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -83,11 +83,13 @@ def get_add_cadet_form_with_information_passed(
 ) -> Form:
     if header_text is arg_not_passed:
         header_text = default_header
+
     form_fields = form_fields_for_add_cadet(cadet_and_text.cadet)
 
     list_of_lines_inside_form = ListOfLines(
         header_text
         + [
+            _______________,
             _______________,
             form_fields,
             _______________,

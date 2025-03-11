@@ -32,8 +32,12 @@ def verify_cadet_and_return_warnings(object_store: ObjectStore, cadet: Cadet) ->
         warn_text += "Surname seems too short. "
     if len(cadet.first_name) < 3:
         warn_text += "First name seems too short. "
-    if is_cadet_age_surprising(cadet):
+
+    if cadet.has_default_date_of_birth:
+        warn_text += "Date of birth not available - using default. "
+    elif is_cadet_age_surprising(cadet):
         warn_text += "Sailor seems awfully old or young for a cadet."
+
     warn_text += warning_for_similar_cadets(cadet=cadet, object_store=object_store)
 
     if len(warn_text) > 0:

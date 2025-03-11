@@ -1,7 +1,7 @@
 from typing import Union
 
 from app.backend.cadets.list_of_cadets import get_matching_cadet
-from app.objects.abstract_objects.abstract_buttons import Button
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, HelpButton
 
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
@@ -173,11 +173,15 @@ extra_buttons = Line([skip_button])
 def header_text_for_form() -> ListOfLines:
 
     default_header_text = [
+        help_button_bar,
         "Looks like a new cadet in the WA entry file. ",
         "You can edit them, check their details and then add, or choose an existing cadet instead (avoid creating duplicates! If the existing cadet details are wrong, select them for now and edit later) \n\n ",
     ]
 
     return ListOfLines(default_header_text).add_Lines()
+
+
+help_button_bar = ButtonBar([HelpButton("identify_cadets_at_event_help")])
 
 
 def post_form_add_cadet_ids_during_import(

@@ -28,7 +28,7 @@ from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
-    HelpButton,
+    HelpButton, main_menu_button,
 )
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
@@ -50,7 +50,7 @@ def display_form_WA_import_gateway(
         "Import event registration data for %s from Wild Apricot (WA) export spreadsheets"
         % event.event_name
     )
-    nav_bar = ButtonBar([back_menu_button, help_button])
+    nav_bar = ButtonBar([main_menu_button, back_menu_button,  help_button])
     upload_status = report_on_status_of_upload(interface=interface, event=event)
     buttons = get_buttons_depending_on_event_status(interface=interface, event=event)
 

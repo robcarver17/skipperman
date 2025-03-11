@@ -1,6 +1,7 @@
 from typing import Union, Tuple
 
 from app.frontend.shared.cadet_state import get_cadet_from_state, clear_cadet_state
+from app.objects.abstract_objects.abstract_buttons import ButtonBar, HelpButton
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.backend.cadets.list_of_cadets import (
     get_cadet_from_list_of_cadets_given_str_of_cadet,
@@ -45,9 +46,10 @@ def display_add_cadet_partner(
 
 
 def header_text_given_cadets(primary_cadet: Cadet, partner_cadet: Cadet) -> ListOfLines:
-    header_text_start = "Following is specified as partner in form for %s: %s - select an existing cadet, or add a new one (don't forget to get their date of birth correct if BSC member)"
-    return ListOfLines([header_text_start % (primary_cadet.name, partner_cadet.name)])
+    header_text_start = "Following is specified as partner in form for %s: %s - select an existing cadet, or add a new one"
+    return ListOfLines([help_button, header_text_start % (primary_cadet.name, partner_cadet.name)]).add_Lines()
 
+help_button = ButtonBar([HelpButton("help_adding_partner")])
 
 def post_form_add_cadet_partner(
     interface: abstractInterface,

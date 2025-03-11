@@ -26,6 +26,7 @@ from app.frontend.shared.get_or_select_cadet_forms import (
     see_all_cadets_button,
     add_cadet_button,
 )
+from app.objects.abstract_objects.abstract_buttons import ButtonBar, HelpButton
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines
@@ -142,8 +143,10 @@ def display_verify_adding_cadet_from_list_form(interface: abstractInterface) -> 
     )
 
 
+
 provided_header_text = ListOfLines(
     [
+        ButtonBar([HelpButton("import_membership_list_help")]),
         "Looks like a cadet in the membership list is very similar to some existing cadets. Click on the existing cadet that matches this one (this will verify they are a member), or add cadet if really a new member,"
     ]
 )

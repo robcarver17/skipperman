@@ -3,12 +3,13 @@ from copy import copy
 from typing import List
 
 from app.backend.volunteers.add_edit_volunteer import list_of_similar_volunteers
+from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME
 from app.objects.exceptions import missing_data
 
 from app.objects.membership_status import current_member
 
 from app.objects.cadets import ListOfCadets, Cadet
-from app.objects.utils import union_of_x_and_y
+from app.objects.utils import union_of_x_and_y, similar
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.composed.cadet_volunteer_associations import (
     ListOfCadetVolunteerAssociations,
@@ -193,3 +194,8 @@ def update_list_of_cadet_volunteer_association(
         new_object=list_of_cadet_volunteer_associations,
         object_definition=object_definition_for_volunteer_and_cadet_associations,
     )
+
+
+def volunteer_name_is_similar_to_cadet_name(cadet: Cadet, volunteer: Volunteer) -> bool:
+
+    return similar(volunteer.name, cadet.name) > SIMILARITY_LEVEL_TO_WARN_NAME

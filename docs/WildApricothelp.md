@@ -48,3 +48,5 @@ To avoid this, **you should strongly discourage parents from re-registering cade
 
 - if the change will modify the amount to be paid (eg number of days attending), make the change yourself in Wild Apricot
 - if the change won't affect payment, make the change in Skipperman itself.
+
+If you allow a duplicate registration to occur, Skipperman will flag it when it imports data. The best thing to do is to cancel the duplicated registrations in Wild Apricot and then re-import the data.

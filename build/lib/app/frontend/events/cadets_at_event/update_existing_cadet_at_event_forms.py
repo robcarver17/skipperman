@@ -18,7 +18,7 @@ from app.frontend.events.constants import (
 from app.objects.abstract_objects.abstract_form import (
     Form,
 )
-from app.objects.abstract_objects.abstract_buttons import Button
+from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, HelpButton
 from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
@@ -57,7 +57,10 @@ def display_form_for_update_to_existing_cadet_at_event(
     form = Form(
         ListOfLines(
             [
+                help_button_bar,
+                _______________,
                 overall_message,
+                _______________,
                 _______________,
                 status_change_field,
                 _______________,
@@ -71,6 +74,7 @@ def display_form_for_update_to_existing_cadet_at_event(
 
     return form
 
+help_button_bar = ButtonBar([HelpButton('resolve_changes_to_registration')])
 
 def buttons_for_update_row() -> Line:
 
@@ -94,15 +98,15 @@ def get_line_in_form_for_attendance_change(
     existing_cadet_at_event_data: CadetWithIdAtEvent,
     event: Event,
 ) -> Union[ListOfLines, Line]:
-    original_attendance = existing_cadet_at_event_data.availability.days_available_as_str()
-    new_attendance = new_cadet_at_event_data.availability.days_available_as_str()
+    original_attendance = existing_cadet_at_event_data.availability
+    new_attendance = new_cadet_at_event_data.availability
 
     if original_attendance == new_attendance:
-        return Line("Attendance at event %s (unchanged)" % str(new_attendance))
+        return Line("Attendance at event %s (unchanged)" % str(new_attendance.days_available_as_str()))
 
     header_line = Line(
         "Originally was attending %s, now attending %s"
-        % (str(original_attendance), str(new_attendance))
+        % (str(original_attendance.days_available_as_str()), str(new_attendance.days_available_as_str()))
     )
     checkbox = get_availability_checkbox(
         new_attendance,

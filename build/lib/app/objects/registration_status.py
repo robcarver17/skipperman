@@ -98,6 +98,13 @@ def get_states_allowed_give_current_status(
 all_possible_status = [
     RegistrationStatus(state_name) for state_name in POSSIBLE_STATUS_NAMES
 ]
+all_possible_status_user_can_select = [
+cancelled_status,
+active_paid_status,
+active_unpaid_status,
+active_part_paid_status,
+]
+
 RegStatusChange = Enum(
     "RegStatusChange",
     [

@@ -313,18 +313,18 @@ class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPart
             boat_classes_and_partners.boat_class_and_partner_on_day(day)
         )
 
-        if boat_classes_and_partner_on_day.has_partner:
-            partner_cadet = boat_classes_and_partner_on_day.partner_cadet
-            message = (
-                "%s was sailing with a partner; now they aren't sailing %s has no partner on %s"
-                % (cadet.name, partner_cadet.name, day.name)
-            )
-            self.remove_two_handed_partner_link_from_existing_cadet_on_day(
-                cadet=partner_cadet, day=day
-            )
-        else:
-            message = ""
+        no_partner =not boat_classes_and_partner_on_day.has_partner
+        if no_partner:
+            return ""
 
+        partner_cadet = boat_classes_and_partner_on_day.partner_cadet
+        message = (
+            "%s was sailing with partner %s, now they aren't sailing: %s has no partner on %s"
+            % (cadet.name, partner_cadet.name,  partner_cadet.name, day.name)
+        )
+        self.remove_two_handed_partner_link_from_existing_cadet_on_day(
+            cadet=partner_cadet, day=day
+        )
         boat_classes_and_partners.remove_boat_and_partner_on_day(day)
 
         self.list_of_cadets_at_event_with_boat_class_and_partners_with_ids.clear_boat_details_from_existing_cadet_id(

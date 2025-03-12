@@ -70,7 +70,7 @@ def display_form_event_field_mapping_existing_mapping(
                     "Mapping already set up for %s" % str(event), centred=True, size=4
                 ),
                 _______________,
-                bold(warning_text),
+                Line(bold(warning_text)),
                 Line(
                     "Press %s to keep existing, or modify"
                     % BACK_BUTTON_LABEL

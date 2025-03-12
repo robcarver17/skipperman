@@ -1,5 +1,6 @@
 from typing import Union, Tuple
 
+from app.backend.volunteers.connected_cadets import volunteer_name_is_similar_to_cadet_name
 from app.backend.volunteers.list_of_volunteers import (
     get_volunteer_with_matching_name,
     get_volunteer_from_list_of_given_str_of_volunteer,

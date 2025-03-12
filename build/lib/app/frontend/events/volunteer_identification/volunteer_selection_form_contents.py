@@ -16,7 +16,6 @@ from app.objects.abstract_objects.abstract_lines import (
     _______________,
     Line,
 )
-from app.objects.utils import similar
 from app.objects.volunteers import Volunteer
 
 
@@ -61,10 +60,6 @@ def get_header_text_for_volunteer_selection_form(
     return header_text
 
 help_bar = ButtonBar([HelpButton("identify_volunteers_at_event_help")])
-
-def volunteer_name_is_similar_to_cadet_name(cadet: Cadet, volunteer: Volunteer) -> bool:
-
-    return similar(volunteer.name, cadet.name) > 0.9
 
 
 def get_footer_buttons_add_or_select_existing_volunteer_form(

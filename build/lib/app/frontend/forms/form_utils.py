@@ -15,7 +15,7 @@ from app.objects.exceptions import arg_not_passed, MISSING_FROM_FORM
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
 from app.objects.food import FoodRequirements, OTHER_IN_FOOD_REQUIRED, no_food_requirements
-from app.objects.registration_status import RegistrationStatus, all_possible_status
+from app.objects.registration_status import RegistrationStatus, all_possible_status, all_possible_status_user_can_select
 from app.objects.composed.volunteers_with_skills import SkillsDict
 
 ALL_AVAILABLE = "Select all"
@@ -152,7 +152,7 @@ def get_food_requirements_from_form(
     return food_requirements
 
 
-all_status_names = [row_status.name for row_status in all_possible_status]
+all_status_names = [row_status.name for row_status in all_possible_status_user_can_select]
 
 
 def dropdown_input_for_status_change(
@@ -170,6 +170,9 @@ def dropdown_input_for_status_change(
         allowable_status_names = all_status_names
     else:
         allowable_status_names = [status.name for status in allowable_status]
+
+    if default_label not in allowable_status_names:
+        allowable_status_names.append(default_label)
 
     dict_of_options = dict(
         [(status_name, status_name) for status_name in allowable_status_names]

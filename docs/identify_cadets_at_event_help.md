@@ -1,4 +1,8 @@
-Skipperman will attempt to identify all the cadets in imported registration data. If the cadet isn't *identical* to one that is already in the data (EXACTLY the same name, and date of birth), then Skipperman will ask you to add the cadet to it's data. You will see a screen like this:
+Skipperman will attempt to identify all the sailors at an event in imported registration data. If the cadet isn't *identical* to one that is already in the data (EXACTLY the same name, and date of birth), then Skipperman will ask you to add the cadet to it's data. You will see a screen like this:
+
+[TOC]
+
+# Importing registration data
 
 ***
 ***
@@ -37,3 +41,9 @@ Remember it is possible to edit the cadet details, and these can also be updated
 
 Sometimes when testing the registration system (eg Wild Apricot) it's useful to create test entries, which don't have real cadets (of course you can also use real cadets but this can cause confusion). If this is a test entry, click on "Skip: this is a test entry" button. 
 
+# Updating registration data
+
+If you subsequently reimport an updated registration file, 
+
+
+Generally speaking it's better to only make changes in Wild Apricot that affect the amount that needs to be paid. 

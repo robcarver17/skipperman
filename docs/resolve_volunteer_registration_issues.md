@@ -18,3 +18,7 @@ At the top of the page you will see warnings highlighting what the issues are.
 Next we can see the 
 
 You should confirm with the volunteer what they are actually doing in terms of availability, and clarify their duty preferences. If you can't confirm immediately, then make a note of the issue, and click save changes. Make sure you return to the volunteer once you have clarification.
+
+# Updating event data
+
+asdf

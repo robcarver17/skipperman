@@ -140,8 +140,11 @@ For more information on resolving conflicts, see [here](resolve_volunteer_regist
 
 # Updating an event
 
+Once you have imported a registration file, you have the option of re-importing an updated version.
+
 ```
 Status:
 
 ```
 
+For help with 

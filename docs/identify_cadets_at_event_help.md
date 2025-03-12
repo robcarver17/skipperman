@@ -78,9 +78,7 @@ Cadet John Smith (2000-01-01) Member was in imported data, now appears to be mis
 
 This can happen if:
 
-- You have [added a sailor manually](link_required.md) to Skipperman who has not been registered in Wild Apricot, and their status is not 'Manual'
-- For some reason you take it upon yourself to manually edit the data file exported from Wild Apricot and remove one or more rows
-- Wild Apricot themselves have changed their export output, 
-- if there is some weird corruption in the system. 
+- You have [added a sailor manually](link_required.md) to Skipperman who has not been registered in Wild Apricot, and their status is not 'Manual'. You can ignore this message, but to make it go away eithier change the [registration status to manual](link_required.md) which would be appropriate for a free event like a racing series, or ask their parent to register them.
+- For some stupid reason you have manually edited the data file exported from Wild Apricot and remove one or more rows. Unless you're an expert trying to debug something, don't do this. Instead, change the registration status to ['Cancelled'](link_required.md). Meanwhile, you can ignore this error.
+- Wild Apricot themselves have changed their export output, or Skipperman has managed to corrupt it's own data. Please contact support - this is serious.
 
-If you haven't added the sailor manually, or done any manual hacking then please contact support to resolve the issue as it's potentially serious.

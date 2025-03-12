@@ -2,7 +2,9 @@ To import the registration data for an event, from the **main menu** choose **ev
 
 [TOC]
 
-# A quick guide to importing registration data (from Wild Apricot)
+A quick guide to importing registration data (from Wild Apricot)
+
+# Introduction
 
 As people can't register for events using Skipperman, and currently use the sailing club's 'Wild Apricot' system, we have to import registration data from there.
 
@@ -235,42 +237,15 @@ Cadet John Smith (2000-01-01) Member was in imported data, now appears to be mis
 
 This can happen if:
 
-- You have [added a sailor manually](link_required.md) to Skipperman who has not been registered in Wild Apricot, and their status is not 'Manual'
-- For some reason you take it upon yourself to manually edit the data file exported from Wild Apricot and remove one or more rows
-- Wild Apricot themselves have changed their export output, 
-- if there is some weird corruption in the system. 
-
-If you haven't added the sailor manually, or done any manual hacking then please contact support to resolve the issue as it's potentially serious.
+- You have [added a sailor manually](link_required.md) to Skipperman who has not been registered in Wild Apricot, and their status is not 'Manual'. You can ignore this message, but to make it go away eithier change the [registration status to manual](link_required.md) which would be appropriate for a free event like a racing series, or ask their parent to register them.
+- For some stupid reason you have manually edited the data file exported from Wild Apricot and remove one or more rows. Unless you're an expert trying to debug something, don't do this. Instead, change the registration status to ['Cancelled'](link_required.md). Meanwhile, you can ignore this error.
+- Wild Apricot themselves have changed their export output, or Skipperman has managed to corrupt it's own data. Please contact support - this is serious.
 
 ### Status and availability changes
 
 The **status** of a registration can be eithier active (eg paid, unpaid, partially paid) or inactive (eg cancelled). 
 
-If the **status** of the registration changes, you will see a screen like this:
-
-***
-***
-![cancelled_registration.png](/static/cancelled_registration.png)
-***
-***
-
-Possible messages are:
-
-> Sailor John Smith (2000-01-01) Member was cancelled; now active so probably new registration replacing the existing cancelled one: select status 
-> Sailor John Smith (2000-01-01) Member was active now cancelled, so probably cancelled in original data
-> Sailor John Smith (2000-01-01) is still active but status has changed from unpaid/partially paid/paid to unpaid/partially paid/paid 
-> Sailor John Smith (2000-01-01) is still active but status has changed from manual to unpaid/partially paid/paid 
-
-These are less common, and you should probably cross-check the registration with WA:
-
-> Existing sailorJohn Smith (2000-01-01) Member data was deleted (missing from event spreadsheet); now active so probably manual editing of import file has occured
-> Sailor John Smith (2000-01-01) Member was deleted (missing from event spreadsheet); now cancelled so probably manual editing of import file has occured
-> Sailor John Smith (2000-01-01) status change from X to Y, shouldn't happen! Check the registration very carefully!
-
-
-If the days the cadet is available changes, you will see a screen like this:
-
-![change_registration_days.png](/static/change_registration_days.png)
+If the **status** of the registration changes, or the days a sailor can attend change, you will get a warning and a form to confirm any changes.
 
 You have three options:
 
@@ -285,4 +260,7 @@ For more help with resolving conflicts with registration data see [here](resolve
 
 If you change the dates a specific cadet is available for, or cancel a cadets registration, it could have an impact on the volunteers they are connected to.
 
+You should also check the [warnings on the volunteer rota page](volunteer_rota_help.md#warnings) to double-check that there is no inconsistency between when volunteers and attending, and when sailors are around.
+
 For more help with resolving conflicts when you update registration data see [here](resolve_volunteer_registration_issues.md#updating-event-data).
+

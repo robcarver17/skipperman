@@ -50,3 +50,7 @@ To avoid this, **you should strongly discourage parents from re-registering cade
 - if the change won't affect payment, make the change in Skipperman itself.
 
 If you allow a duplicate registration to occur, Skipperman will flag it when it imports data. The best thing to do is to cancel the duplicated registrations in Wild Apricot and then re-import the data.
+
+If a registration gets cancelled, it is better to 'un-cancel' it, than to have an additional registration put in to Wild Apricot. This also makes life easier for the BSC treasurer. 
+
+Generally registrations should only be cancelled if the sailor is not attending, and then un-cancelled if they change their mind. Do not cancel registrations if there has been a mistake in the form - make changes to availability in Wild Apricot, and make all other changes in Skipperman. 

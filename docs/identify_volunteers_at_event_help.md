@@ -21,4 +21,3 @@ But if you are sure this is a new volunteer: check the first and second name are
 ## This isn't really a volunteer
 
 If this isn't really a volunteer: click on 'Skip - this isn't a volunteers name'. The most common cause of this is where the parent has accidentally put the cadets name in instead of their own. The system warns against this. Another possibility is that it is a test registration with a made up name.
-

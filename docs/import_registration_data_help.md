@@ -39,15 +39,14 @@ To export registration data from WA, click on the 'Export registrants' button, s
 First [add the event in Skipperman](add_event_help.md) in Skipperman.
 Now select 'Main menu/Events/ Event name / Import registration data / Import from WA spreadsheet file' to get ready to import.
 
-If it's a brand new event, you should see the following:
+If it's a brand new event, you should see the following status update:
 
-```
-Status:
-No field mapping set up - do this before you import any data
-No WA file has ever been uploaded before (or WA ID has been manually cleared).
-No registration data imported yet.
-No file currently uploaded for import.
-```
+> Status:  
+> No field mapping set up - do this before you import any data  
+> No WA file has ever been uploaded before (or WA ID has been manually cleared).  
+> No registration data imported yet.  
+> No file currently uploaded for import.  
+
 
 ## Field mapping
 
@@ -61,27 +60,46 @@ Assuming you're already in 'Main menu/Events/ Event name / Import registration d
 After pressing 'Finished', you will see the message 'Mapping already set up for TestEvent 2025'. Click on back and you are back at the main import page. The status will have changed to:
 
 
-```
-Status:
-*Field mapping has been setup.*
-No WA file has ever been uploaded before (or WA ID has been manually cleared).
-No registration data imported yet.
-No file currently uploaded for import.
-```
+> Status:  
+> Field mapping has been setup.  
+> No WA file has ever been uploaded before (or WA ID has been manually cleared).  
+> No registration data imported yet.  
+> No file currently uploaded for import.  
+
 
 ## Uploading a WA export file
 
 You are now ready for the next step - uploading the WA file you exported earlier. Click on the 'Upload a WA export file', 'Choose file', and then 'Upload selected file'. If all goes well, you will see the message 'Uploaded file successfully'. The status in the import page will now read:
 
-```
-Status:
-Field mapping has been setup.
-*A WA file with WA ID 5271589 has been previously uploaded.*
-No registration data imported yet.
-*WA file has been uploaded ready for import*
-```
+> Status:
+> Field mapping has been setup.
+> A WA file with WA ID 5271589 has been previously uploaded.
+> No registration data imported yet.
+> WA file has been uploaded ready for import
 
-The WA ID is a number given by WA to each event, which Skipperman found in the file and is now using to identify the event. And you can also see that we have uploaded a file which is ready for the next stage,  importing.
+
+
+The WA ID is a number given by WA to each event, which Skipperman found in the file and is now using to identify the event (obviously your WA ID will be something quite different!). And you can also see that we have uploaded a file which is ready for the next stage, importing.
+
+### Duplicate WA ID
+
+If you try and upload a file with a WA ID that has already been assigned to an existing event, you will get an error like this:
+
+
+> Problem with file upload Can't upload file for TestEvent 2025, WA ID 5271589 in file is already mapped to a different existing event June training 2023 - are you sure you have the right file?. 
+> If you aure sure, then clear the WA ID for June training 2023 before retrying.
+
+
+This is to prevent users from accidentally uploading the wrong downloaded event file.
+
+The main reason, apart from testing, that this could happen is if you set up an event twice for some reason; and then get as far as importing data on one event, and then try to do it on the second event. Ideally, you shouldn't do this! But if you do then you will have to eithier:
+
+- go back to using the original event that was set up (and ignore the new one)
+- if you want to use the new event instead of the old one, then follow the instructions in the error message, navigate to the original event / import registration data / import from Wild Apricot, and then click on "Reset the stored WA event IS" 
+
+The latter will not delete or modify the old event in any way, but it will allow you to upload a file with the duplicate WA ID into a different event.
+
+In a future version of Skipperman it will be possible to delete an event for which no data has yet been uploaded.
 
 ## Importing from the WA import file
 
@@ -92,7 +110,7 @@ You should now be back at the main WA import page. Click on 'Import data from up
 - Where relevant; importing any clothing size data (only for events with merchandise)
 - Where relevant; importing any food requirements (only for catered events)
 
-### Importing all the cadets attending
+## Importing all the cadets attending
 
 Skipperman will attempt to identify all the cadets in the imported WA event file. If the cadet isn't identical to one that is already in the data (EXACTLY the same name, and date of birth), then Skipperman will ask you to add the cadet to it's data. You will see a screen like this:
 
@@ -107,6 +125,22 @@ Skipperman will attempt to identify all the cadets in the imported WA event file
 - If this is a test entry and not a real cadet: click the "Skip: this is a test entry" button. 
 
 More help with identifying cadets [here](identify_cadets_at_event_help.md)
+
+## Adding cadet registration data
+
+Next Skipperman will add the registration data for each sailor in the event. You might get this error:
+
+```
+ACTION REQUIRED: Cadet John Smith appears more than once in WA file with an active registration - using the first registration found - go to WA and cancel all but one of the registrations please, and then check details here are correct!
+```
+
+As it says, this means the cadet has been registered multiple times, but the duplicate registrations have not been cancelled. Any registrations found in the file after the first one that is loaded in will be ignored.
+
+To avoid this, strongly discourage parents from re-registering cadets if they have made a mistake (something they are typically going to do because Wild Apricot doesn't allow you to edit a registration, with good reason). Instead:
+
+- if the change will modify the amount to be paid (eg number of days attending), make the change yourself in Wild Apricot
+- if the change won't affect payment, make the change in Skipperman itself.
+
 
 ## Importing all the volunteers attending
 
@@ -142,9 +176,64 @@ For more information on resolving conflicts, see [here](resolve_volunteer_regist
 
 Once you have imported a registration file, you have the option of re-importing an updated version.
 
-```
-Status:
+You won't normally upload a registration file from WA to Skipperman just once. There will often be additional registrations, or last minute cancellations.
+
+There will also potentially be changes to the registration information in Wild Apricot. It is **strongly advised** to only make changes in Wild Apricot that affect the amount that needs to be paid:
+
+- the number of training days attended, 
+- or any cancellation to an existing registration.
+- or a reversal of a cancellation.
+
+**Any other changes you make won't be reflected in Skipperman**. Instead, make the changes directly in Skipperman. This is to avoid the hassle of having to make multiple download and uploads of files. It also means that non Wild Apricot literate users of Skipperman can make their own updates.
+
+You can also, if you prefer, make any of the changes above in Skipperman from the [registration page](link_required.md) to avoid the need to download and upload a new data file. If you make the changes only in Skipperman, and not in Wild Apricot, then a new invoice will not be generated. This might be preferable, if for example someone is still doing the same number of training days, but is doing Saturday only instead of Sunday. Or if someone has cancelled but with short notice and/or without a good reason, in which case you might not want to give them a refund.
+
+## Uploading an updated event file
+
+Before uploading, the status should show:
+
+> Status:
+> Field mapping has been setup.
+> A WA file with WA ID 5271589 has been previously uploaded.
+> Registration data has been imported already, but can be updated from a new file.
+> No file currently uploaded for import.
+
+Click on 'Upload a new WA export file', choose the file and click upload.
+
+The status will now read as:
+
+> Status:
+> Field mapping has been setup.
+> A WA file with WA ID 5271589 has been previously uploaded.
+> Registration data has been imported already, but can be updated from a new file.
+> WA file has been uploaded ready for import
+
+Click on 'Update data from current WA file' to update the registation data. 
+
+## New registrations
+
+Any new sailors that have not been registered before will be added to Skipperman automatically. You may need to [identify the sailors involved](identify_cadets_at_event_help.md), as you did with the first data import.
+
+
+## Conflicts between existing and new registration information
+
+### More than one active registration in the new file for a given sailor 
 
 ```
+ACTION REQUIRED: Cadet John Smith appears more than once in WA file with multiple active registrations - ignoring any possible changes made to registration - go to WA and cancel one of the registrations please!
+```
 
-For help with 
+As it says, this means the cadet has been registered multiple times, but the duplicate registrations have not been cancelled. Any registrations found in the file after the first one that is loaded in will be ignored.
+
+To avoid this, strongly discourage parents from re-registering cadets if they have made a mistake (something they are typically going to do because Wild Apricot doesn't allow you to edit a registration, with good reason). Instead:
+
+- if the change will modify the amount to be paid (eg number of days attending), make the change yourself in Wild Apricot
+- if the change won't affect payment, make the change in Skipperman itself.
+
+
+For more help with resolving conflicts with registration data see [here](link_required.md). 
+
+## New conflicts between volunteer and cadet information
+
+
+For more help with resolving conflicts when you update registration data see [here](resolve_volunteer_registration_issues.md#updating-event-data).

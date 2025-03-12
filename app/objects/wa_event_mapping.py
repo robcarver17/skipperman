@@ -33,10 +33,10 @@ class ListOfWAEventMaps(GenericListOfObjects):
         self.append(WAEventMap(event_id=event_id, wa_id=wa_id))
 
     def is_event_in_mapping_list(self, event_id: str) -> bool:
-        return any([event_id == event_map.event_id for event_map in self])
+        return any([str(event_id) == str(event_map.event_id) for event_map in self])
 
     def is_wa_id_in_mapping_list(self, wa_id: str) -> bool:
-        return any([wa_id == event_map.wa_id for event_map in self])
+        return any([str(wa_id) == str(event_map.wa_id) for event_map in self])
 
     def get_wa_id_for_event(self, event_id: str) -> str:
         wa_and_event_id = self.get_event_map_with_event_id(event_id, default=missing_data)

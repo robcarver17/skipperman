@@ -70,7 +70,7 @@ def display_form_event_field_mapping_existing_mapping(
                     "Mapping already set up for %s" % str(event), centred=True, size=4
                 ),
                 _______________,
-                Heading(warning_text, centred=False, size=6),
+                bold(warning_text),
                 Line(
                     "Press %s to keep existing, or modify"
                     % BACK_BUTTON_LABEL
@@ -92,7 +92,7 @@ def warning_text_for_mapping(interface: abstractInterface, event: Event) -> str:
     )
 
     if wa_import_done:
-        warning_text = bold("*WARNING* Looks like data import has already been done for this event. Changing the mapping could break things. DO NOT CHANGE UNLESS YOU ARE SURE.")
+        warning_text = "*WARNING* Looks like data import has already been done for this event. Changing the mapping could break things. DO NOT CHANGE UNLESS YOU ARE SURE."
     else:
         warning_text = ""
 

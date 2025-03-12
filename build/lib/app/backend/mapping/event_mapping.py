@@ -74,10 +74,11 @@ def confirm_correct_wa_mapping_and_return_true_if_new_event(
     object_store: ObjectStore, event: Event, wa_id: str
 ) -> bool:
     event_id = event.id
-
+    print("WA %s event %s" % (event.id, wa_id))
     event_is_already_in_mapping_list = is_event_mapped_with_wa_id(
         object_store=object_store, event=event
     )
+    print("event already in mapping list %s" % str(event_is_already_in_mapping_list))
 
     if event_is_already_in_mapping_list:
         existing_wa_id = get_wa_id_for_event(event=event, object_store=object_store)
@@ -93,6 +94,7 @@ def confirm_correct_wa_mapping_and_return_true_if_new_event(
     wa_event_is_already_in_mapping_list = is_wa_id_in_mapping_list(
         object_store=object_store, wa_id=wa_id
     )
+    print("wa event already in mapping list %s" % str(wa_event_is_already_in_mapping_list))
 
     if wa_event_is_already_in_mapping_list:
         existing_event_id = get_event_id_for_wa_id(
@@ -117,7 +119,7 @@ def confirm_correct_wa_mapping_and_return_true_if_new_event(
 def add_wa_to_event_mapping(object_store: ObjectStore, event: Event, wa_id: str):
     wa_mapping_data = get_event_id_mapping_for_wa_files(object_store)
     wa_mapping_data.add_event(event_id=event.id, wa_id=wa_id)
-
+    update_event_id_mapping_for_wa_files(object_store=object_store, list_of_wa_event_id_maps=wa_mapping_data)
 
 def get_event_id_mapping_for_wa_files(object_store: ObjectStore) -> ListOfWAEventMaps:
     return object_store.get(object_definition_for_wa_event_mapping)

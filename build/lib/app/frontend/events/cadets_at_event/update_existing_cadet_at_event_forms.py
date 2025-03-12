@@ -94,8 +94,8 @@ def get_line_in_form_for_attendance_change(
     existing_cadet_at_event_data: CadetWithIdAtEvent,
     event: Event,
 ) -> Union[ListOfLines, Line]:
-    original_attendance = existing_cadet_at_event_data.availability
-    new_attendance = new_cadet_at_event_data.availability
+    original_attendance = existing_cadet_at_event_data.availability.days_available_as_str()
+    new_attendance = new_cadet_at_event_data.availability.days_available_as_str()
 
     if original_attendance == new_attendance:
         return Line("Attendance at event %s (unchanged)" % str(new_attendance))

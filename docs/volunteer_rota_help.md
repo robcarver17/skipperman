@@ -1,7 +1,7 @@
 To access the rota for an event, from the **main menu** choose **Events**, then select an event, then click on **Volunteers**.
 ___
 
-The volunteer rota page is used to allocate volunteers to jobs. Only volunteers who have been added to the event can be allocated. Volunteers are normally added when an event is imported, but you can also manually add them here. You can also allocate volunteers in [patrol boat mode](patrol_boat_help): this makes most sense for rescue boat drivers. Make sure you are not in [read only](main-menu#read-only) mode if you want to make changes - use read only mode for experimenting.
+The volunteer rota page is used to allocate volunteers to jobs. Only volunteers who have been added to the event can be allocated. Volunteers are normally added when an event is imported, but you can also manually add them here. You can also allocate volunteers in [patrol boat mode](patrol_boat_help.md): this makes most sense for rescue boat drivers. Make sure you are not in [read only](main-menu#read-only) mode if you want to make changes - use read only mode for experimenting.
 
 [TOC]
 
@@ -16,8 +16,8 @@ The volunteer rota page is used to allocate volunteers to jobs. Only volunteers 
 
 - The first thing we see is the navigation bar with options to 'cancel' (exit this screen without saving any recent changes), 'Add new volunteer' and so on.
 - Then we have a confirmation of which event we are editing.
-- There are some expand triangle buttons to see summaries and warnings
-- There are some very brief instructions.
+- There are some expand triangle buttons ► to see summaries and warnings
+- Then some very brief instructions.
 - Then there are sorts and filter options. 
 
 Finally, at the bottom of the screen you can see the list of volunteers, 
@@ -25,40 +25,42 @@ Finally, at the bottom of the screen you can see the list of volunteers,
 Each row shows a volunteer who has been imported to the event automatically. You can see, from left to right:
 
 - The volunteers name.  
-- The location of the cadet(s) that the volunteer is connected to: lake training, river training or MG racing. This will only be populated once the cadets have been allocated to groups. This is useful to know if a cadet and parent are likely to be in the same place.
+- The location of the sailor(s) that the volunteer is connected to: not in groups, lake training, river training or MG racing; or no connected sailors. This will only be populated once the cadets have been allocated to groups. This is useful to know if a cadet and parent are likely to be in the same place.
 - Preferred duties: the duties that the volunteer wants to do, from their registration form. NOTE: If someone says they have a PB2 or instructor qualification, it does not mean they do!
 - Same / different preferences: for some events (primarily cadet week), volunteers can say if they want to do one role or several.
 - Skills recorded in the Skipperman database. This is more likely to accurate, but you should still check it.
-- Previous volunteer role at the last event they did - very helpful for allocating.- For each day the role they are doing, and the buttons you can use to give them roles.
-- Notes and other information from registration
+- Previous volunteer role at the last event they did - very helpful for allocating.
+- For each day the role they are doing, and the buttons you can use to give them roles.
+- Notes which you can edit and other information from their registration form
 
 # Typical workflow
 
 A typical workflow for a training weekend would be: 
 
 - allocate instructors (DI, RCL and AI)
-- allocate rescue boat drivers
-- allocate other key people, eg ramp spotters and welfare people
+- allocate lake manager if no deputy skipper
+- allocate rescue boat drivers, and possibly a safety lead
+- allocate other key people, eg ramp lead, ramp spotters and welfare people
 - allocate lake helpers
-- allocate ramp including ramp lead, and rescue crew
+- allocate ramp helpers
 
 This would be broadly similar for a racing weekend (although the rota here tends to be a bit ad hoc on the day):
 
 - allocate lead positions: Race officer, Ramp lead
 - allocate bridge (as advised by race officer) 
-- allocate instructors (DI, RCL and AI)
+- allocate race coaches
 - allocate rescue boat drivers
-- allocate ramp
+- allocate ramp including ramp lead, and ramp welfare
 
 For Cadet Week we'd do things slightly differently:
 
-- allocate lead positions: Race officer, Ramp lead, Safety lead, Galley lead, SI
+- allocate lead positions: Race officer, Ramp lead, Safety lead, Galley lead, SI, Lake manager / deputy skipper
 - allocate Bridge (based on a list provided by the race officer and/or what people have put on their form)
-- allocate instructors (DI, RCL and AI)
-- allocate rescue boat drivers
+- allocate instructors (DI, RCL and AI) in discussion with SI
+- allocate rescue boat drivers in discussion with safety lead
 - allocate Galley in co-ordination with Galley lead
 - allocate other key people, eg ramp spotters and welfare people
-- allocate lake helpers
+- allocate lake helpers 
 - allocate ramp and rescue crew
 
 Given the workflow above it can be useful to see what kinds of volunteers are available with a given skills, and which haven't yet been allocated. You can use [skills filtering](#skills-filtering) and [allocation/available filtering](#availabilty--allocation-filtering) to do this.
@@ -72,7 +74,7 @@ At each stage it can also be useful to share the list of volunteers with others,
 
 ## Giving someone a role
 
-To give someone a job, click on the down selection arrow next to 'No role allocated' and choose a *role*. You can then click on 'Save changes' in the navigation bar. You can add roles to multiple volunteers before clicking save.
+To give someone a job, click on the down selection arrow next to `No role allocated` and choose a *role*. You can then click on `Save changes` in the navigation bar. You can add roles to multiple volunteers before clicking save.
 
 ***
 ***
@@ -87,7 +89,7 @@ Note by convention a lake or river 'helm' is just someone who has the relevant P
 
 ## Allocating a group
 
-Certain roles (all instructors, and lake helpers) can be associated with a specific training group (eg Jolly sailors, Laser MG). You can see that the person with the coaches job now has another dropdown with 'Unallocated'. Click on that to select a group, and then press save: 
+Certain roles (all instructors, and lake helpers) can be associated with a specific training group (eg Jolly sailors, Laser MG). You can see that the person with the coaches job now has another dropdown with `Unallocated`. Click on that to select a group, and then press save: 
 
 ***
 ***
@@ -116,15 +118,15 @@ You can remove a group from someone by choosing the 'Unallocated' option from th
 Volunteers can choose which days they are available on registration. Sometimes these will change, or they will make a mistake.
 
 To make someone available on a given day, just click the 'Make available' button in the appropriate column.
-To make someone unavailable on a given day, click on the umbrella button in the appropriate column (because it's a 'rain check' - get it?), or choosing the '**UNAVAILABLE**' option in the role drop down.
+To make someone unavailable on a given day, click on the umbrella button in the appropriate column (because it's a 'rain check' - get it?), or choosing the `UNAVAILABLE` option in the role drop down.
 
 You can also change availability by clicking on a volunteers name, changing the day selection ticks, and pressing save. 
 
-Note: if you want to remove a volunteer completely, you should do this by [clicking on their name](#removing-a-volunteer-from-an-event) rather than making them unavailable on all days - Skipperman won't let you make someone unavailable on every day of an event.
+Note: if you want to remove a volunteer completely, you should do this by [clicking on their name and removing them from the event](#removing-a-volunteer-from-an-event) rather than making them unavailable on all days - Skipperman won't let you make someone unavailable on every day of an event.
 
 ## Add a volunteer
 
-Perhaps there is a non parent helping, or a parent who couldn't originally volunteer now can. You can add them manually. Click on the 'Add new volunteer to rota' option in the navigation bar:
+Perhaps there is a non parent helping, or a parent who couldn't originally volunteer now can. You can add them manually. Click on the `Add new volunteer to rota` option in the navigation bar:
 
 ***
 ***
@@ -134,7 +136,7 @@ Perhaps there is a non parent helping, or a parent who couldn't originally volun
 
 At this stage you can select an existing volunteer by just pressing the button with their name on.
 
-Alternatively, if the volunteer is new to the club, you can enter their name in the fields shown, and then click on 'Please check these volunteer details for me':
+Alternatively, if the volunteer is new to the club, you can enter their name in the fields shown, and then click on `Please check these volunteer details for me`:
 
 ***
 ***
@@ -142,13 +144,13 @@ Alternatively, if the volunteer is new to the club, you can enter their name in 
 ***
 ***
 
-Skipperman doesn't like duplicate volunteers, so it will prompt you if it looks like the person you are adding is very similar to someone who already exists. You can make changes and then click on 'Please check...' to check again, or click on 'Yes these details are correct - add a new volunteer'. This will add a new volunteer to Skipperman, and to the event.
+Skipperman doesn't like duplicate volunteers, so it will prompt you if it looks like the person you are adding is very similar to someone who already exists. You can make changes and then click on `Please check...` to check again, or click on `Yes these details are correct - add a new volunteer`. This will add a new volunteer to Skipperman, and to the event.
 
 If you change your mind about adding a volunteer, just press cancel.
 
 ## Removing a volunteer from an event
 
-Click on a volunteers name and press 'Remove volunteer from event'
+Click on a volunteers name and press `Remove volunteer from event`.
 
 # Copying
 
@@ -170,7 +172,7 @@ For example suppose we begin with this situation:
 ***
 ***
 
-- For Beth we can do both kinds of copy. For example a copy and fill &#8646; from Saturday would allocate 'River crew' to Monday; whilst a copy and overwrite button &#10234 from Sunday would make all three days 'Lake crew'
+- For Beth we can do both kinds of copy. For example a copy and fill &#8646; from Saturday would allocate 'River crew' to Monday; whilst a copy and overwrite button &#10234; from Sunday would make all three days 'Lake crew'
 - Richard has only a copy and fill option shown on Saturday &#8646; as he has no other existing roles to overwrite. Pressing this would allocate 'Coach/Topper MG' to all three days.
 - Ronan has no copy buttons shown since he is only available on one day, so there is nowhere to copy to.
 - Zoie has only copy and fill options shown on &#8646; for Saturday and Sunday - since both roles match there is nothing to overwrite. Pressing eithier of these would allocate 'Lake crew' to her free day on Monday.

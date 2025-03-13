@@ -174,28 +174,34 @@ def add_sort_order_to_data_frame(
         return active_cadets_as_data_frame
 
     ## this ensures the groups, boat classes and club boats are sorted in order
+    list_of_groups =         get_list_of_groups(object_store).list_of_names()
+    list_of_groups = remove_empty_values(list_of_groups)
+
     active_cadets_as_data_frame[SORT_GROUP] = pd.Categorical(
         active_cadets_as_data_frame[SORT_GROUP],
-        get_list_of_groups(object_store).list_of_names(),
+        list_of_groups,
     )
 
-    print("TRYING TO DEBUG WEIRD ERROR!")
-    print(active_cadets_as_data_frame[SORT_CLUBBOAT])
-    print(type(active_cadets_as_data_frame[SORT_CLUBBOAT][0]))
-    print(get_list_of_club_dinghies(object_store).list_of_names())
-    print(type(get_list_of_club_dinghies(object_store).list_of_names()[0]))
+    list_of_club_dinghies = get_list_of_club_dinghies(object_store).list_of_names()
+    list_of_club_dinghies = remove_empty_values(list_of_club_dinghies) ## there is a weird bug but this ensures it won't affect us
+
     active_cadets_as_data_frame[SORT_CLUBBOAT] = pd.Categorical(
         active_cadets_as_data_frame[SORT_CLUBBOAT],
-        get_list_of_club_dinghies(object_store).list_of_names(),
+        list_of_club_dinghies,
     )
+
+    list_of_classes = get_list_of_boat_classes(object_store).list_of_names()
+    list_of_classes = remove_empty_values(list_of_classes)
 
     active_cadets_as_data_frame[SORT_CLASS] = pd.Categorical(
         active_cadets_as_data_frame[SORT_CLASS],
-        get_list_of_boat_classes(object_store).list_of_names(),
+        list_of_classes,
     )
 
     return active_cadets_as_data_frame
 
+def remove_empty_values(some_list: List) -> list:
+    return [x for x in some_list if len(x)>0]
 
 def get_sorted_active_cadets_df(
     active_cadets_as_data_frame: pd.DataFrame, sort_order: list

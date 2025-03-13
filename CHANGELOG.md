@@ -1,6 +1,8 @@
 # Recent
 
-- Fixed minor bug with identifying volunteers
+- Helpful error mesage if adding a two handed partner who is already registered
+- Adding cancel button when adding sailor
+- Fixed a number of minor bugs
 - Don't print cadets date of birth if default. Don't match default date cadets to others on similar.
 - Modify mapping in table on screen
 - Much documentation

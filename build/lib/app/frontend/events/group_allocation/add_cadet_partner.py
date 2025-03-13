@@ -1,8 +1,8 @@
 from typing import Union, Tuple
 
 from app.frontend.shared.cadet_state import get_cadet_from_state, clear_cadet_state
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, HelpButton
-from app.objects.abstract_objects.abstract_lines import ListOfLines
+from app.objects.abstract_objects.abstract_buttons import ButtonBar, HelpButton, cancel_menu_button
+from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.backend.cadets.list_of_cadets import (
     get_cadet_from_list_of_cadets_given_str_of_cadet,
 )
@@ -27,7 +27,9 @@ from app.frontend.shared.add_edit_cadet_form import add_cadet_from_form_to_data
 from app.objects.cadets import Cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.exceptions import MissingData
+from app.objects.events import Event
+from app.objects.exceptions import MissingData, missing_data
+from app.backend.registration_data.cadet_registration_data import get_cadet_at_event
 
 
 def display_add_cadet_partner(
@@ -42,6 +44,7 @@ def display_add_cadet_partner(
         see_all_cadets=False,
         include_final_button=False,
         header_text=header_text,
+        extra_buttons=Line([cancel_menu_button])
     )
 
 
@@ -61,6 +64,9 @@ def post_form_add_cadet_partner(
     last_button_pressed = interface.last_button_pressed()
     primary_cadet, partner_cadet = get_primary_cadet_and_partner_name(interface)
     header_text = header_text_given_cadets(primary_cadet, partner_cadet)
+
+    if cancel_menu_button.pressed(last_button_pressed):
+        return return_to_allocation_pages(interface)
 
     if see_similar_cadets_only_button.pressed(
         last_button_pressed
@@ -121,6 +127,11 @@ def process_form_when_existing_cadet_chosen_as_partner(
             "Cadet selected no longer exists - file corruption or someone deleted?",
         )
 
+    check_if_registered = is_cadet_already_registered(interface=interface, new_cadet=cadet)
+    if check_if_registered:
+        interface.log_error("%s is already attending the event - add them as a two handed partner from the dropdown" % cadet.name)
+        return return_to_allocation_pages(interface)
+
     return add_matched_partner_cadet_with_duplicate_registration(
         interface=interface, new_cadet=cadet
     )
@@ -129,6 +140,7 @@ def process_form_when_existing_cadet_chosen_as_partner(
 def add_matched_partner_cadet_with_duplicate_registration(
     interface: abstractInterface, new_cadet: Cadet
 ) -> NewForm:
+
     primary_cadet, __ = get_primary_cadet_and_partner_name(interface)
     event = get_event_from_state(interface)
     day_or_none_if_all_days = get_day_from_state_or_none(interface)
@@ -148,6 +160,11 @@ def add_matched_partner_cadet_with_duplicate_registration(
 
     return return_to_allocation_pages(interface)
 
+def is_cadet_already_registered(interface: abstractInterface, new_cadet: Cadet):
+    event = get_event_from_state(interface)
+    cadet_at_event = get_cadet_at_event(object_store=interface.object_store, event=event, cadet=new_cadet, default=missing_data)
+
+    return cadet_at_event is not missing_data
 
 def return_to_allocation_pages(interface: abstractInterface) -> NewForm:
     clear_cadet_state(interface)

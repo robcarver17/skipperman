@@ -21,6 +21,7 @@ from app.data_access.store.object_definitions import (
 from app.objects.composed.cadets_at_event_with_registration_data import (
     DictOfCadetsWithRegistrationData,
 )
+from app.objects.exceptions import arg_not_passed
 from app.objects.registration_data import RowInRegistrationData
 
 
@@ -64,12 +65,12 @@ def get_availability_dict_for_cadets_at_event(
 
 
 def get_cadet_at_event(
-    object_store: ObjectStore, event: Event, cadet: Cadet
+    object_store: ObjectStore, event: Event, cadet: Cadet, default=arg_not_passed
 ) -> CadetWithIdAtEvent:
     cadets_at_event = get_list_of_cadets_with_id_and_registration_data_at_event(
         object_store=object_store, event=event
     )
-    return cadets_at_event.cadet_with_id_and_data_at_event(cadet_id=cadet.id)
+    return cadets_at_event.cadet_with_id_and_data_at_event(cadet_id=cadet.id, default=default)
 
 
 def add_new_cadet_to_event_from_row_in_registration_data(

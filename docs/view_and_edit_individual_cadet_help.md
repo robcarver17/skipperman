@@ -1,4 +1,7 @@
-You can view and/ or edit individual sailors. To do this, from the **main menu** select **Sailors**, and then click on the sailor.
+You can view and/ or edit individual sailors. 
+
+To do this, from the **main menu** select **Sailors**, and then click on the sailor.
+___
 
 When you view a sailor you can see their personal attributes (name, DOB, membership status), events they have done, their qualifications, and whether they are a committee member or not. When you edit a sailor you can only change their attributes (name, DOB, membership status). Qualifications can only be awarded from the [tick sheet main menu option](ticksheets_help.md), by suitably authorised users. Committee status can only be changed from the [edit cadet committee screen](cadet_committee_help.md), which can be found when you view all cadets from the main menu.
 

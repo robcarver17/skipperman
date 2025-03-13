@@ -10,7 +10,7 @@ When updating with a new file, we can get conflicts between the original data st
 ACTION REQUIRED: Cadet John Smith (2000-01-01) Member appears more than once in WA file with multiple active registrations - ignoring any possible changes made to registration - go to WA and cancel one of the registrations please!
 ```
 
-As it says, this means the cadet has been registered multiple times, but the duplicate registrations have not been cancelled. Any changes made to these registrations will be ignored. If you allow a duplicate registration to occur, the best thing to do is to cancel the duplicated registrations in Wild Apricot and then re-import the data. Make sure that the details in the remaining registration on Skipperman reflect what the parent actually wants to do.
+As it says, this means the cadet has been registered multiple times, but the duplicate registrations have not been cancelled. Any changes made to these registrations in Wild Apricot will be ignored by Skipperman. If you allow a duplicate registration to occur, the best thing to do is to cancel the duplicated registrations in Wild Apricot and then re-import the data. Make sure that the details in the remaining registration on Skipperman reflect what the parent actually wants to do.
 
 
 ## Missing sailor in registration file
@@ -21,7 +21,7 @@ Cadet John Smith (2000-01-01) Member was in imported data, now appears to be mis
 
 This can happen if:
 
-- You have [added a sailor manually](link_required.md) to Skipperman who has not been registered in Wild Apricot, and their status is not 'Manual'. You can ignore this message, but to make it go away eithier change the [registration status to manual](link_required.md) which would be appropriate for a free event like a racing series, or ask their parent to register them.
+- You have [added a sailor manually](link_required.md) to Skipperman who has not been registered in Wild Apricot, and their status is not 'Manual'. You can ignore this message, but to make it go away eithier change the [registration status to manual](link_required.md) which would be appropriate for a free event like a racing series, or ask their parent to register them (required for a paid for event).
 - For some stupid reason you have manually edited the data file exported from Wild Apricot and remove one or more rows. Unless you're an expert trying to debug something, don't do this. Instead, change the registration status to ['Cancelled'](link_required.md). Meanwhile, you can ignore this error.
 - Wild Apricot themselves have changed their export output, or Skipperman has managed to corrupt it's own data. Please contact support - this is serious.
 
@@ -60,7 +60,7 @@ The original registration has been cancelled in Wild Apricot, so we will update 
 
 **Sailor John Smith (2000-01-01) is still active but status has changed from unpaid/partially paid/paid to unpaid/partially paid/paid**
 
-A payment has been made in Wild Apricot, which will move the status from unpaid, to partially paid, and eventually to paid. It's also possible that . Skipperman will update it's payment status to reflect the change. 
+A payment has been made in Wild Apricot, which will move the status from unpaid, to partially paid, and eventually to paid. It's also possible that payment status can go backwards, if the treasurer voids the invoice for some reason. Skipperman will update it's payment status to reflect the change. 
 
 **Sailor John Smith (2000-01-01) is still active but status has changed from manual to unpaid/partially paid/paid**
 
@@ -70,9 +70,9 @@ At the point where they do register, and this is reflected in the WA imported da
 
 **IMPORTANT** No information in the WA registration will be updated in Skipperman, apart from the payment status and availability. So if the manual registration was wrong, you will need to fix it by [editing the registration in Skipperman](link_required.md).
 
-**Existing sailorJohn Smith (2000-01-01) Member data was deleted (missing from event spreadsheet); now active so probably manual editing of import file has occured**
-**Sailor John Smith (2000-01-01) Member was deleted (missing from event spreadsheet); now cancelled so probably manual editing of import file has occured**
-**Sailor John Smith (2000-01-01) status change from X to Y, shouldn't happen! Check the registration very carefully!**
+**Existing sailorJohn Smith (2000-01-01) Member data was deleted (missing from event spreadsheet); now active so probably manual editing of import file has occured**  
+**Sailor John Smith (2000-01-01) Member was deleted (missing from event spreadsheet); now cancelled so probably manual editing of import file has occured**  
+**Sailor John Smith (2000-01-01) status change from X to Y, shouldn't happen! Check the registration very carefully!**  
 
 If you see any of the above messages, contact support. They shouldn't happen.
 
@@ -87,5 +87,5 @@ If the days the cadet is available changes, you will see a screen like this:
 If you have the option to change availability and/or status, you then have three options:
 
 - Use the original data in Skipperman (which ignores any updates made in Wild Apricot)
-- Use the data in the form. You can select a different status and/or available days. If you don't make any changes in the form, choosing this button will be the same as using the new data from Wild Apricot.
+- Use the data in the form. You can select a different status and/or available days. If you don't make any changes in the form, choosing this button will be the same as using the new data from Wild Apricot, since the form is prepopulated with new data.
 - Use the new data imported from Wild Apricot (recommended)

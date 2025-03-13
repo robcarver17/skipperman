@@ -1,5 +1,7 @@
-
 The view all volunteers page allows you to see a list of all volunteers, and also to add new volunteers, and edit existing ones. 
+
+It is accessed by going to the **main menu** and then clicking **Volunteers**.
+___
 
 Note that a sailor can also be a volunteer - you need to add them in both roles seperately. This doesn't count as duplication.
 

@@ -16,7 +16,7 @@ Click on the download button and you will get a spreadsheet for all the cadets a
 
 ![ticksheet_progress.png](/static/ticksheet_progress.png)
 
-The percentages show the progress made towards getting all their ticks signed off (this accounts for half ticks). Eg if there were 16 tick items and 4 were ticked off that would be 25%, if there were 4 full ticks and 8 half ticks that would be 50%. 100% means all ticks have been completed, but no qualification awarded yet. This report is also very useful when determining how many certificates of each level to order before Cadet Week. Note that because of historic 'holes' in the data, some Cadets may show that they have eg Level 2 but not Level 1.
+The percentages show the progress made towards getting all their ticks signed off (this accounts for half ticks). Eg if there were 16 tick items and 4 were ticked off that would be 25%, if there were 4 full ticks and 8 half ticks that would be 50%. 100% means all ticks have been completed, but no qualification awarded yet. This report is also very useful when determining how many certificates of each level to order before Cadet Week. Note that because of historic 'holes' in the pre-Skipperman data, some cadets may show that they have eg Level 2 but not Level 1.
 
 # Select a group
 

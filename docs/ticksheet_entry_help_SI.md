@@ -1,5 +1,6 @@
 The ticksheets and qualifications menu allows you give 'ticks' recording progress, and to award qualifications. 
 To access it, from the **main menu** choose **Ticksheets and qualifications**, then the event, then choose the group, and finally the qualification.
+___
 
 [Guide to ticksheets and Qualifications](ticksheets_and_qualifications_guide.md)
 
@@ -14,7 +15,7 @@ On entering the area you will see something like this:
 
 # Printing ticksheets
 
-You may want to print the ticksheet to excel (this actually downloads it, and there you can print it). You will probably want to tidy up the formatting a bit, possibly abbreviate medical notes, or import into your own format. Note: The * against a cadets name means they have booked a club boat. Note: As is the case now remember that health information is confidential and should only be retained for as long as required. Paper ticksheets must be returned to the cadet skipper or destroyed. Downloaded files should be deleted after the event.
+You may want to print the ticksheet to excel (this actually downloads it, and there you can print it). You will probably want to tidy up the formatting a bit, possibly abbreviate medical notes, or import into your own format. Note: The * against a cadets name in a printed ticksheet means they have booked a club boat. Note: Health information is confidential and should only be retained for as long as required. Paper ticksheets must be returned to the cadet skipper or destroyed. Downloaded files should be deleted after the event.
 
 # Entering ticks and awarding qualifications
 
@@ -47,9 +48,9 @@ When you are done just save your changes (pressing a button to award all ticks t
 
 Important notes:
 
-- you don’t need all the ticks selected to award a qualification. All the ticks will automatically be selected for you when you click the award button.
+- You don’t need all the ticks selected to award a qualification. All the ticks will automatically be selected for you when you click the award button.
 - Qualifications that have already been awarded should not be withdrawn because you disagree with a previous decision - only in case of accident
-- if you withdraw a qualification from a cadet, it won't affect their ticks.
+- If you withdraw a qualification from a cadet, it won't affect their ticks.
 - This means if you accidentally award a qualification to a cadet without all their ticks, and then withdraw it, you will see the missing ticks again once you have withdrawn the award.
 
 # Skipperman on mobile - individual cadet editing
@@ -58,10 +59,10 @@ It’s quite hard to see a big ticksheet on a phone. This isn’t so bad if you 
 
 ![ticksheet_entry4.png](/static/ticksheet_entry4.png)
 
-All the other cadets have gone. I can now proceed with editing in the normal way, for example by clicking on ‘edit using checkboxes’
+All the other cadets have gone. I can now proceed with editing in the normal way, for example by clicking on `Edit using checkboxes`:
 
 ![ticksheet_entry_SI3.png](/static/ticksheet_entry_SI3.png)
 
 I can easily scroll left and right to see and edit all of his ticks. Notice that the buttons at the top of the column that apply ticks to all cadets are now gone – with only one cadet these aren’t needed. 
 
-Once done, I click on save, and I am back to viewing just one cadet. And if I am done with David I can now click on ‘Show all cadets’ to see everyone again. And I can then select a new cadet to edit.
+Once done, I click on save, and I am back to viewing just one cadet. And if I am done with David I can now click on `Show all cadets` to see everyone again. And I can then select a new cadet to edit.

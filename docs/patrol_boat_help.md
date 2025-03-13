@@ -31,12 +31,12 @@ Click on `Remove boat from rota` to remove a boat entirely.
 
 ## Allocating a volunteer to a boat
 
-Select a volunteer from the dropdown menu, and then click save changes. Volunteers are listed in order, with the ones most likely to be on a boat listed at the top. Note that those with PB2 qualifications are marked, and you can also see their current volunteer role if any in the dropdown. You can add several volunteers at a time, before clicking save. Once a volunteer is added to a boat on a given day, they can't be added to another boat.
+Select a volunteer from the dropdown menu, and then click `Save changes`. Volunteers are listed in order, with the ones most likely to be on a boat listed at the top. Note that those with PB2 qualifications are marked, and you can also see their current volunteer role if any in the dropdown. You can add several volunteers at a time, before clicking save. Once a volunteer is added to a boat on a given day, they can't be added to another boat.
 If no volunteer dropdown is shown, it means all the available volunteers on a given day are already on boats.
 
 ![volunteers_added_to_boats.png](/static/volunteers_added_to_boats.png)
 
-Once you have added one volunteer to a boat and pressed save, you have the option of adding more by selecting them from the dropdown on the boat, and then clicking save. The volunteers above all existing roles in the volunteer rota, but it's also possible to add someone who doesn't, so let's do that:
+Once you have added one volunteer to a boat and pressed save, you have the option of adding more by selecting them from the dropdown on the boat, and then clicking save. The volunteers above all have existing roles in the volunteer rota, but it's also possible to add someone who doesn't, so let's do that:
 
 ![volunteer_added_to_boat_second.png](/static/volunteer_added_to_boat_second.png)
 
@@ -44,25 +44,26 @@ Note: Skipperman doesn't know about boat capacity, so it will allow you to add a
 
 ## Changing roles of volunteers on boats
 
-We can change the allocated role of a volunteer, or add a role to a volunteer who doesn't have, by selecting the role from the dropdown and hitting save:
+We can change the allocated role of a volunteer, or add a role to a volunteer who doesn't have one, by selecting the role from the dropdown and hitting save:
 
 ![boat_changed_role.png](/static/boat_changed_role.png)
 
 Note that we can't change the group of a DI or coach who is on a boat, so it's best to use this function only for safety boat drivers and crew, and do all other role changes in the volunteer [volunteer rota page](volunteer_rota_help#changing-roles-and-groups). Remember by convention a 'helm' is just someone who has the relevant PB2 certificate so there can be more than one helm on a boat.
 Note also that you can make someone a 'helm' even if they don't have a PB2 certificate -check the [warnings](#warnings) to see if you have done this.
+Note that you could make someone a 'lake helm' on a river boat, and vice versa. Skipperman won't stop you, but it will look odd and mess up the rota so please check this.
 
 ## Removing a volunteer from a boat
 
-To remove a volunteer from a boat, click on the &#174; symbol button. Note this won't remove from the volunter rota or change their role, just take them off the boat.
+To remove a volunteer from a boat, click on the &#174; symbol button. Note this won't remove from the volunter rota or change their role, just take them off the boat. To take someone off the rota entirely, you need to [rota page](volunteer_rota_help.md).
 
 
 # Summary
 
-Once you have some volunteers on boats, you can see a summary of how many people are on each boat by clicking &#17;Summary. This is a useful check to make sure you have the right number of helm/crew.
+Once you have some volunteers on boats, you can see a summary of how many people are on each boat by clicking ►Summary. This is a useful check to make sure you have the right number of helm/crew.
 
 # Qualifications table
 
-Click on &#17;Qualifications to see the editable qualifications table:
+Click on ►Qualifications to see the editable qualifications table:
 
 ![boat_quali_table.png](/static/boat_quali_table.png)
 
@@ -70,7 +71,7 @@ For every person on a boat, that shows you whether they have PB2 or not. You can
 
 # Warnings
 
-There are two types of checks that Skipperman will do, and you can see if there are any resulting warnings by clicking &#17;Warnings.
+There are two types of checks that Skipperman will do, and you can see if there are any resulting warnings by clicking ►Warnings.
 
 - Does every boat have a qualified driver on for every day?
 - Is every volunteer qualified for their role?
@@ -96,8 +97,6 @@ The swap button &#8693; allows you to swap round two volunteers. Note that a swa
 
 ![boat_pre_swap.png](/static/boat_pre_swap.png)
 
-- Simon, Beth and Jake can all swap boats and roles.
-- Richard is an instructor so although we can swap roles, it's not advised.
 
 ## Swap boats
 

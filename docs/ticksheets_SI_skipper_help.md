@@ -1,5 +1,8 @@
 The ticksheets and qualifications menu allows you give 'ticks' recording progress, and to award qualifications. 
 
+It is accessed by going to the **main menu** and then clicking **Ticksheets and qualifications*.
+___
+
 [Guide to ticksheets and Qualifications](ticksheets_and_qualifications_guide.md)
 
 [TOC]
@@ -18,7 +21,7 @@ Click on download to see a report of qualifications awarded. This is most useful
 
 # Downloadable documents
 
-Click on  &#17;... to see downloadable documents. These are useful documents and reports relating to current or upcoming events; click to download the latest version. You cannot find your ticksheets here!
+Click on  ►Click triangle to see downloadable documents. These are useful documents and reports relating to current or upcoming events; click to download the latest version. You cannot find your ticksheets here!
 
 # Select an event
 

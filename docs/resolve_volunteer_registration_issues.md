@@ -21,11 +21,11 @@ Availability is shown for both sailors and volunteers. If the sailor did not ind
 
 To resolve any discrepancies, you need to confirm with the volunteer what they are actually doing in terms of availability, and clarify their duty preferences. It might be that they have specified the reasons for the discrepancy in other information, or you might know what their real preferences are. In which case:
 
-- Make changes to their availability by modifying the check-boxes under 'Confirm availability for volunteer'. If you leave all the boxes blank, we assume the volunteer isn't attending. You can also click on the button 'This volunteer is not available at this event'.
-- Make changes to their preferred duties
-- Make changes to their 'same or different' preference. This is optional, and is only used for events with many days (eg Cadet Week)
+- Make changes to their availability by modifying the check-boxes next to `Confirm availability for volunteer`. If you leave all the boxes blank, we assume the volunteer isn't attending. You can also click on the button `This volunteer is not available at this event`.
+- Make changes to their preferred duties. Note this won't allocate the duties, that is done in the [volunteer rota](volunteer_rota_help.md).
+- Make changes to their `same or different` preference. This is optional, and is only used for events with many days (eg Cadet Week).
 
-If you can't resolve the problem immediately, then make a note of the issue in the 'Enter any notes about the volunteer' box, and click save changes. Make sure you return to the volunteer once you have clarification.
+If you can't resolve the problem immediately, then make a note of the issue in the `Enter any notes about the volunteer` box, and click `Save changes`. Make sure you return to the volunteer once you have clarification.
 
 
 
@@ -33,7 +33,7 @@ If you can't resolve the problem immediately, then make a note of the issue in t
 
 ## Volunteer warnings
 
-If the registration for a cadet changes, you may get a warning and a form displayed to resolve any issues. For example, 
+If the registration for a cadet changes, you may get a warning and a form displayed to resolve any issues. For example, if the cadet is no longer doing certain days creating an inconsistency between volunteer and cadet attendance; or if the cadet cancels their registration entirely.
 
 You should also check the [warnings on the volunteer rota page](volunteer_rota_help.md#warnings) to double-check that there is no inconsistency between when volunteers and attending, and when sailors are around.
 

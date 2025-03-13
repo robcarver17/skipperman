@@ -1,5 +1,8 @@
 The view all sailors page allows you to see a list of all sailors registered (which will include member cadets, ex-cadets, junior sailors, and visitors), and also to add new sailors, edit existing ones, and look at or edit the cadet committee. 
 
+It is accessed by going to the **main menu** and then clicking **Sailors**.
+___
+
 ***
 ***
 ![view_cadets_overview.png](/static/view_cadets_overview.png)
@@ -13,7 +16,7 @@ This is followed by a list of sailors. Each has their first name, surname, date 
 - Member
 - Lapsed. This is a sailor that used to be a member,
 - None member. Has never been a member.
-- Unconfirmed member. Not sure if a member or not; typically used when a new sailor is registered for an event but we are unsure if they are a member or not.  
+- Unconfirmed member. Not sure if a member or not; typically used when a new sailor is registered for an event, but we are unsure if they are a member or not.  
 
-See the [help page for importing a membership list](import_membership_list_help.md) for more details about membership status. Clicking on any sailor will allow you to [view them in detail, and edit them](view_and_edit_individual_cadet_help.md).
+See the [help page for importing a membership list](import_membership_list_help.md) for more details about membership status, and how to update this using Wild Apricot data. Clicking on any sailor will allow you to [view them in detail, and edit them](view_and_edit_individual_cadet_help.md).
 

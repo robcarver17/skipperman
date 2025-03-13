@@ -1,7 +1,7 @@
 To access the rota for an event, from the **main menu** choose **Events**, then select an event, then click on **Volunteers**.
+___
 
 The volunteer rota page is used to allocate volunteers to jobs. Only volunteers who have been added to the event can be allocated. Volunteers are normally added when an event is imported, but you can also manually add them here. You can also allocate volunteers in [patrol boat mode](patrol_boat_help): this makes most sense for rescue boat drivers. Make sure you are not in [read only](main-menu#read-only) mode if you want to make changes - use read only mode for experimenting.
-
 
 [TOC]
 

@@ -1,10 +1,11 @@
 To view an individual volunteer, from the **main menu** choose **Volunteers* and then click on the volunteers name.
+___
 
 For a given volunteer we can see:
 
 - the events they have helped at in the past, and in which role
 - The skills they have, or are missing
-- Their connections to sailors. A connection is a close relative eg child or grandchild. This is used to avoid putting volunteers together with their children during training weekends to reduce the risk of 'helicopter parenting'.
+- Any connections to sailors. A connection is a close relative eg child or grandchild. This is used to avoid putting volunteers together with their children during training weekends to reduce the risk of 'helicopter parenting'.
 
 We can edit their names and skills or their connections to sailors.
 
@@ -16,4 +17,5 @@ Edit the volunteers name; this should only be required if they now wish to be kn
 
 A list of connected sailors is shown. Click on the appropriate button to delete a connection, or choose sailors to connect to the volunteer. Sailors with similar surnames are shown first in the list; other sailors are shown in alphabetical order.
 
-Note that connections are also automatically created when sailors are registered for training events. Sometimes this connection doesn't make sense, for example if another adult is looking after a cadet just for that one event. You can remove those connections here. 
+Note that connections are also automatically created when sailors are registered for training events, if a given volunteer is nominated to help on a specific registration. Sometimes this connection doesn't make sense, for example if another adult is looking after a cadet just for that one event. You can remove those connections here. 
+

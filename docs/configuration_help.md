@@ -1,4 +1,6 @@
 The **configuration pages** allow you to modify various important lists used in Skipperman.
+
+It is accessed by going to the **main menu** and then clicking **Configuration*
 ___
 
 [TOC]

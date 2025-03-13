@@ -1,4 +1,4 @@
-**To get to the template mapping page: Main menu/Events/Select event/Import registration data/Import from WA/Check of modify WA mapping/Use template mapping**
+To get to the template mapping page: from the **main menu**, click **Events**, select event, click **Import registration data**, then **Import from WA**, and **Check of modify WA mapping**, before choosing **Use template mapping**
 
 Template mapping is useful for *advanced* users of Skipperman to create custom field mapping files. [More help on field mapping](WA_field_mapping_help.md).
 
@@ -14,9 +14,9 @@ Template mapping is useful for *advanced* users of Skipperman to create custom f
 
 A mapping template file is just a .csv file with a list of the mappings. To create your own, from scratch or by editing an existing template or event, see [creating your own mapping](WA_create_your_own_mapping_help.md).
 
-Click on 'upload a new template', and then in the input box type the template name, click on choose file, select the file, then upload the selected file.
+Click on `Upload a new template`, and then in the input box type the template name, click on choose file, select the file, then upload the selected file.
 
-If you type the name of an existing template, that will be overwritten.
+If you type the name of an existing template, that will be overwritten. There will be no warning so be careful.
 
 It's useful to give templates a year suffix, but not to specify a specific event (so use 'Training weekend 2025' rather than 'June training 2025'). The obvious exception is Cadet Week.
 

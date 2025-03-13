@@ -1,7 +1,8 @@
+Wild Apricot is the system actually used for registration and payment. To make life easier, it's important to use Wild Apricot directly so we can get the data into Skipperman easily.
 
 # Creating a duplicated event
 
-When setting up a Wild Apricot event it is *strongly recommended* that you use the 'copy previous event' function and make *no* changes to the registration form.
+When setting up a Wild Apricot event it is *strongly recommended* that you use the `Duplicate event` function and make *no* changes to the registration form.
 
 ***
 ***
@@ -16,7 +17,7 @@ A great deal of care and thought has gone into the design of registration forms 
 
 # Downloading the registration file for Skipperman upload
 
-To export registration data from WA, click on the 'Export registrants' button, select 'Export to: CSV', make sure 'Export all fields' is ticked, and click Export (it's more reliable to export a .csv file, but Skipperman can also handle .xlsx spreadsheet files if you prefer to use those).
+To export registration data from WA, click on the `Export registrants` button, select `Export to: CSV`, make sure `Export all fields` is ticked, and click the `Export` button (it's more reliable to export a .csv file, but Skipperman can also handle .xlsx spreadsheet files if you prefer to use those).
 
 ***
 ***

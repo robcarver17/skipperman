@@ -1,4 +1,5 @@
-**To access the field mapping menu: Main menu/Events/Select Event/Import registration data/Import from WA/Check or modify WA mapping**
+To get to the field mapping page: from the **main menu**, click **Events**, select event, click **Import registration data**, then **Import from WA**, before choosig **Check or modify WA mapping**
+___
 
 Mapping converts Wild Apricot form entry names to our internal field names - we can't import an event without it.
 
@@ -45,14 +46,14 @@ Once mapping has been set up, it is displayed as a table under the mapping menu.
 
 ## Adding a new mapping
 
-If you want to add a new mapping, click on the dropdown 'Choose skipperman field to add to mapping', and then click on the button 'Add selected skipperman field to mapping'.
+If you want to add a new mapping, click on the dropdown `Choose skipperman field to add to mapping`, and then click on the button `Add selected skipperman field to mapping`.
 
 The button will then be replaced with either:
 
 - If you have uploaded a WA file of registrations, a list of the WA files
 - or if there is no file uploaded, you can just type the WA field name. **Warning: Make sure you type it exactly. I strongly recommend that you create a test registration, export the WA event file, and then import it before modifying the mapping**.
 
-If you have put the wrong skipperman field, you can also change it now. Then click 'Add selected skipperman & WA field to mapping' to add the mapping. If you don't select a skipperman and WA field, then it will cancel the addition of the new mapping. 
+If you have put the wrong skipperman field, you can also change it now. Then click `Add selected skipperman & WA field to mapping` to add the mapping. If you don't select a skipperman and WA field, then it will cancel the addition of the new mapping. 
 
 ## Deleting an existing mapping
 
@@ -118,9 +119,9 @@ If you get lost, to return to the mapping menu page is: Main menu/Events/Select 
 - From the mapping menu, select ['Clone the mapping for an existing event'](WA_clone_mapping_help.md) and choose the existing event that you duplicated.
 - The mapping menu page will now display the [mapping table](#the-mapping-table) of 'Wild Apricot' names that need to be in the Wild Apricot form and their corresponding Skipperman fields.
 - **Do not change anything in the Wild Apricot form that will be used by Skipperman**. You can change other parts of the form, or add new entries. 
-- Do a test registration or two in Wild Apricot to populate the data and to make sure you are happy with the form / event. Don't forget to [mark the entries as test](link_required) in Skipperman when they are imported, and cancel them in WA afterwards.  
+- Do a test registration or two in Wild Apricot to populate the data and to make sure you are happy with the form / event. Don't forget to [mark the entries as test](identify_cadets_at_event_help.md#if-this-is-a-test-entry) in Skipperman when they are imported, and cancel them in WA afterwards.  
 - [Export registration data from Wild Apricot to a .csv file](WildApricothelp.md#downloading-the-registration-file-for-skipperman-upload)
-- [Upload the WA export file into Skipperman](link_required) and then go to the mapping menu
+- [Upload the WA export file into Skipperman](import_registration_data_help.md#uploading-a-wa-export-file) and then go to the mapping menu
 - There should be no issues raised by the [mapping diagnostics](#mapping-diagnostics), and you can proceed to opening up the event for registration on WA
 - **Once you have imported data from WA into Skipperman it is strongly advised not to change the WA form or the Skipperman/WA mapping as this will cause serious problems.**
 
@@ -131,7 +132,7 @@ If you get lost, to return to the mapping menu page is: Main menu/Events/Select 
 - The mapping menu page will now display the [mapping table](#the-mapping-table) of 'Wild Apricot' names that need to be in the Wild Apricot form and their corresponding Skipperman fields.
 - **Do not change anything in the Wild Apricot form that will be used by Skipperman**. You can change other parts of the form, or add new entries. 
 - Open up the event for registration in WA
-- Once some registrations have happened, [export registration data from Wild Apricot to a .csv file](WildApricothelp.md#downloading-the-registration-file-for-skipperman-upload), and [upload the WA export file into Skipperman](link_required)
+- Once some registrations have happened, [export registration data from Wild Apricot to a .csv file](WildApricothelp.md#downloading-the-registration-file-for-skipperman-upload), and [upload the WA export file into Skipperman](import_registration_data_help.md#uploading-a-wa-export-file)
 - On the mapping menu page there should be no significant issues raised by the  [mapping diagnostics](#mapping-diagnostics) - if there are you have a problem! Serves you right for being cocky!
 
 ## If you need to make small changes to the WA event form
@@ -140,9 +141,9 @@ If you get lost, to return to the mapping menu page is: Main menu/Events/Select 
 - From the mapping menu, select ['Clone the mapping for an existing event'](WA_clone_mapping_help.md) and choose the existing event that you duplicated.
 - The mapping menu page will now display  the [mapping table](#the-mapping-table) of 'Wild Apricot' names that need to be in the Wild Apricot form and their corresponding Skipperman fields.
 - Make required changes to the form in Wild Apricot, then make a note of them. 
-- Do a test registration or two in Wild Apricot to populate the data and to make sure you are happy with the form / event. Don't forget to [mark the entries as test](link_required) in Skipperman when they are imported, and cancel them in WA afterwards.  
+- Do a test registration or two in Wild Apricot to populate the data and to make sure you are happy with the form / event. Don't forget to [mark the entries as test](identify_cadets_at_event_help.md#if-this-is-a-test-entry) in Skipperman when they are imported, and cancel them in WA afterwards.  
 - [Export registration data from Wild Apricot to a .csv file](WildApricothelp.md#downloading-the-registration-file-for-skipperman-upload)
-- [Upload the WA export file into Skipperman](link_required) and then go to the mapping menu
+- [Upload the WA export file into Skipperman](import_registration_data_help.md#uploading-a-wa-export-file) and then go to the mapping menu
 - From the main mapping menu page, [make any required changes to the mapping in the mapping table](#the-mapping-table). See [the list of WA fields](List_and_explanation_of_skipperman_fields.md)
 - Check the [mapping diagnostics](#mapping-diagnostics) to check there is nothing significant missing
 - When you are happy with everything, you can open the event up for registration in Wild Apricot
@@ -156,7 +157,7 @@ Only do this if you have read and thoroughly understood [the list of WA fields](
 - If you make changes to the WA form of an existing event, then make a note of them. 
 - Do a test registration or two to populate the data in Wild Apricot  
 - [Export registration data from Wild Apricot to a .csv file](WildApricothelp.md#downloading-the-registration-file-for-skipperman-upload)
-- [Upload the WA export file into Skipperman](link_required) and then go to the mapping menu
+- [Upload the WA export file into Skipperman](import_registration_data_help.md#uploading-a-wa-export-file) and then go to the mapping menu
 - If you have an advanced understanding of the mapping then you can use [cloning](WA_clone_mapping_help.md), but also [template mapping](WA_template_mapping_help.md), or [create your own mapping](WA_create_your_own_mapping_help.md). See the [mapping menu](#the-mapping-menu) for more information.
 - From the main mapping menu page, [make any required changes to the mapping in the mapping table](#the-mapping-table)
 - Check the  [mapping diagnostics](#mapping-diagnostics) to check there is nothing significant missing

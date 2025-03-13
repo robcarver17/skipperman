@@ -209,7 +209,7 @@ If instead we start with the rota in the previous section, and this time press '
 
 ## Previous role copy
 
-Finally, If a volunteer is doing the same job as at their last event, then pressing the button in the previous role column will *copy and overwrite* that role across all days when a volunteer is available. Eg if we press the previous role for Beth, it would put 'Ramp' for all 3 days, irrespective of what was already there.
+Finally, if a volunteer is doing the same job as at their last event, then pressing the button in the previous role column will *copy and overwrite* that role across all days when a volunteer is available. Eg if we press the previous role for Beth, it would put 'Ramp' for all 3 days, irrespective of what was already there.
 
 # Swaps
 
@@ -292,15 +292,15 @@ Once you have entered some roles you will see two new &#17; options on the scree
 ***
 ***
 
-Click on the &#17; to expand them and see the hidden details.
+Click on the ► to expand them and see the hidden details.
 
 ## Summaries
 
-Click on &#17;Summary by ..., and we can see two summaries of the numbers of volunteers allocated, one breaks down into very granular detail; the second sums up over teams and groups. The latter is probably more useful for seeing, for example, that there are the right number of AI/DI in total for a given group.
+Click on ► Summary by ..., and we can see two summaries of the numbers of volunteers allocated, one breaks down into very granular detail; the second sums up over teams and groups. The latter is probably more useful for seeing, for example, that there are the right number of AI/DI in total for a given group.
 
 ## Role numbers and targets
 
-It can be quite useful to have a target number in mind when allocating, so you don't forget to fill a specialist role like ramp welfare, or end up the wrong number of rescue boat crews and helm. Click on &#17;Role numbers and targets:
+It can be quite useful to have a target number in mind when allocating, so you don't forget to fill a specialist role like ramp welfare, or end up the wrong number of rescue boat crews and helm. Click on ► Role numbers and targets:
 
 ***
 ***
@@ -315,7 +315,7 @@ Usually the target is set by the cadet skipper or whoever is the principal organ
 
 ## Warnings
 
-Warnings are things that could be problematic for your volunteer rota; to see them click &#17;Warnings. They come into the following categories:
+Warnings are things that could be problematic for your volunteer rota; to see them click ► Warnings. They come into the following categories:
 
 - A mismatch between cadet availability and volunteer availability - make sure the volunteer really can do those days and record in the notes.
 - A volunteer without any connected cadets - this could be because they have agreed to help, but it could also be because the cadet has cancelled their registration and you haven't removed the volunteer - check with the volunteer, and then record in the notes what they said.
@@ -330,7 +330,7 @@ Clicking on the button for each volunteer under the skills button will allow you
 
 By convention the first aid certificate here doesn't have to be an RYA one (which all instructors will have), it's basically a confirmation they are suitable for a welfare type role.
 
-Similarly, DBS only applies to DBS applied for through the BSC
+Similarly, DBS only applies to DBS applied for through the BSC.
 
 Expiry dates for certificates are not stored in Skipperman, so it's a good idea at the start of each season to check the qualifications table and note if any instructors have lapsed or will lapse during the year. 
 
@@ -353,4 +353,4 @@ You can delete the connection, or add a new one by choosing from the dropdown li
 - You can see more information about the previous roles a volunteer performed by clicking on their name; click cancel to go back.
 - The 'other information' from registration column on the far right can be useful if volunteers have told you about their availability in more detail.
 - You can enter notes about the volunteer in the notes column; typically this would be around issues or finer preferences on roles, or availability constraints not captured by just which day they are around. Remember under GDPR they have the right to see them, so be careful!
-- Click on 'download spreadsheet of volunteer information' in the navigation bar to get a spreadsheet version of what you can see on the screen; useful for sharing with other people without a full on report.
+- Click on 'download spreadsheet of volunteer information' in the navigation bar to get a spreadsheet version of what you can see on the screen; useful for sharing with other people without needing to do a [rota report](volunteer_rota_report_help.md).

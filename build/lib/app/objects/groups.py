@@ -4,19 +4,18 @@ from typing import List
 
 from app.objects.exceptions import arg_not_passed, MissingData, MultipleMatches
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
-from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds, get_idx_of_unique_object_with_attr_in_list
+from app.objects.generic_list_of_objects import (
+    GenericListOfObjectsWithIds,
+    get_idx_of_unique_object_with_attr_in_list,
+)
 
 UNALLOCATED_GROUP_STR = "No group set"
-UNALLOCATED_GROUP_ID = "0"## dont change
+UNALLOCATED_GROUP_ID = "0"  ## dont change
 
 GroupLocation = Enum(
     "GroupLocation",
-    [
-        "Lake_training",
-"River_training",
-"MG",
-"Unallocated",
-"Undetermined"])
+    ["Lake_training", "River_training", "MG", "Unallocated", "Undetermined"],
+)
 
 lake_training_group_location = GroupLocation.Lake_training
 river_training_group_location = GroupLocation.River_training
@@ -30,11 +29,14 @@ all_locations_for_input = [
     mg_training_group_location,
 ]
 
-all_allocations = [lake_training_group_location,
-                 river_training_group_location,
-                 mg_training_group_location,
-                 unallocated_group_location,
-                 undetermined_group_location]
+all_allocations = [
+    lake_training_group_location,
+    river_training_group_location,
+    mg_training_group_location,
+    unallocated_group_location,
+    undetermined_group_location,
+]
+
 
 def sorted_locations(passed_list_of_locations: List[GroupLocation]):
     return [
@@ -50,9 +52,12 @@ class Group(GenericSkipperManObjectWithIds):
     hidden: bool
     id: str = arg_not_passed
 
-
     def __eq__(self, other):
-        return self.name == other.name and self.location == other.location and self.hidden == other.hidden
+        return (
+            self.name == other.name
+            and self.location == other.location
+            and self.hidden == other.hidden
+        )
 
     def __hash__(self):
         return hash(self.name)
@@ -120,7 +125,7 @@ class ListOfGroups(GenericListOfObjectsWithIds):
 
         self.append(group)
 
-    def group_with_id(self, group_id: str, default= arg_not_passed):
+    def group_with_id(self, group_id: str, default=arg_not_passed):
         if group_id == unallocated_group_id:
             return unallocated_group
 
@@ -132,23 +137,21 @@ class ListOfGroups(GenericListOfObjectsWithIds):
         self[existing_idx] = new_group
 
     def idx_given_name(self, group_name: str, default=arg_not_passed):
-        return  get_idx_of_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name='name',
-            attr_value=group_name,
-            default=default
+        return get_idx_of_unique_object_with_attr_in_list(
+            some_list=self, attr_name="name", attr_value=group_name, default=default
         )
 
-    def matches_name(self, group_name: str, default = arg_not_passed):
+    def matches_name(self, group_name: str, default=arg_not_passed):
         if group_name == unallocated_group.name:
             return unallocated_group
 
-        return get_unique_object_with_attr_in_list(some_list=self, attr_name='name', attr_value=group_name, default=default)
+        return get_unique_object_with_attr_in_list(
+            some_list=self, attr_name="name", attr_value=group_name, default=default
+        )
 
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_names()
         assert len(list_of_names) == len(set(list_of_names))
-
 
     def has_lake_group(self):
         return self.contains_specific_location(lake_training_group_location)

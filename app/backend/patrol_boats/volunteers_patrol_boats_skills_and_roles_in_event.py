@@ -46,7 +46,7 @@ def get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats(
         object_store=object_store, event=event
     )
     list_of_volunteers = (
-        all_event_data.dict_of_volunteers_at_event_with_patrol_boats.list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_day()
+        all_event_data.dict_of_volunteers_at_event_with_patrol_boats.list_of_volunteers_with_patrol_boats
     )
 
     return ListOfVolunteersAtEventWithSkillsAndRolesAndPatrolBoats(

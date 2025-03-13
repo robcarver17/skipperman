@@ -52,8 +52,12 @@ class ReportGeneratorWithoutSpecificParameters:
     get_additional_parameters_from_form_and_save: Callable
     get_dict_of_df: Callable
 
-    def add_specific_parameters_for_type_of_report(self, object_store: ObjectStore) -> ReportGenerator:
-        specific_parameters = self.specific_parameters_for_type_of_report_function(object_store)
+    def add_specific_parameters_for_type_of_report(
+        self, object_store: ObjectStore
+    ) -> ReportGenerator:
+        specific_parameters = self.specific_parameters_for_type_of_report_function(
+            object_store
+        )
         return ReportGenerator(
             event_criteria=self.event_criteria,
             specific_parameters_for_type_of_report=specific_parameters,
@@ -67,6 +71,5 @@ class ReportGeneratorWithoutSpecificParameters:
             clear_additional_parameters=self.clear_additional_parameters,
             additional_parameters_form=self.additional_parameters_form,
             get_dict_of_df=self.get_dict_of_df,
-            get_additional_parameters_from_form_and_save=self.get_additional_parameters_from_form_and_save
+            get_additional_parameters_from_form_and_save=self.get_additional_parameters_from_form_and_save,
         )
-

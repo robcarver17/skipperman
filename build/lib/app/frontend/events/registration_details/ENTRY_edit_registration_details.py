@@ -20,6 +20,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
     save_menu_button,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
@@ -67,7 +68,8 @@ def display_form_edit_registration_details_given_event_and_sort_order(
     )
 
 
-nav_buttons = ButtonBar([cancel_menu_button, save_menu_button])
+help_button = HelpButton("registration_editing_help")
+nav_buttons = ButtonBar([cancel_menu_button, save_menu_button, help_button])
 
 
 def get_registration_details_inner_form_for_event(
@@ -123,9 +125,11 @@ def previous_form(interface: abstractInterface):
         display_form_edit_registration_details
     )
 
+
 def get_sort_order_for_registration(interface: abstractInterface):
     sort_order = interface.get_persistent_value(SORT_ORDER, default=SORT_BY_SURNAME)
 
     return sort_order
+
 
 SORT_ORDER = "sort_order_registration_data"

@@ -1,4 +1,5 @@
-**To add a sailor, from the **Main menu** click **Sailors**, then **Add sailor**
+To add a sailor, from the **Main menu** click **Sailors**, then **Add sailor**  
+---
 
 Sailors can be added to the Skipperman database in one of three ways:
 
@@ -14,10 +15,10 @@ It is *very* important that a sailor is not added twice! So the system goes to a
 ***
 ***
 
-On clicking add sailor you will be presented with the screen above. Fill in the relevant details. If you don't know their date of birth, just leave it as 1st January 1970 (the default). This, and other details, can be edited later. The last dropdown is for membership status, choose from the following:
+On clicking `Add sailor` you will be presented with the screen above. Fill in the relevant details. If you don't know their date of birth, just leave it as 1st January 1970 (the default). This, and other details, can be edited later. The last dropdown is for membership status, choose from the following:
 
 - Member. Definitely a member of the club.
-- Lapsed. This is a sailor that used to be a member,
+- Lapsed. This is a sailor that used to be a member, but is no longer.
 - None member. Has never been a member. Used for visiting sailors.
 - Unconfirmed member. Not sure if a member or not. Their status can be confirmed [when a membership list is imported](import_membership_list_help.md)
 
@@ -35,4 +36,4 @@ For example:
 ***
 ***
 
-At this stage you can make some changes, and then click 'check details again' to try and remove any warnings; cancel the adding of this cadet, or select 'Yes - these details are correct' once you are happy you have everything correct. If all goes well, the system will confirm the new cadet has been added. If you have a cadet that is identical to an existing cadet (exactly the same name, and date of birth), and you have ignored the warnings, then the system will report an error and not add the sailor. Otherwise, even if there is only one letter different in their name or just one day out in the date of birth, the new sailor will be added. So once again, be very careful you aren't duplicating.
+At this stage you can make some changes, and then click `Check details again` to try and remove any warnings; cancel the adding of this cadet, or select `Yes - these details are correct` once you are happy you have everything correct. If all goes well, the system will confirm the new cadet has been added. If you have a cadet that is identical to an existing cadet (exactly the same name, and date of birth), and you have ignored the warnings, then the system will report an error and not add the sailor. Otherwise, even if there is only one letter different in their name or just one day out in the date of birth, the new sailor will be added. So once again, be very careful you aren't duplicating.

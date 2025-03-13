@@ -118,7 +118,6 @@ def update_if_copy_first_role_to_empty_roles_button_pressed(
         )
 
 
-
 def update_if_copy_first_role_and_overwrite_button_pressed(
     interface: abstractInterface,
 ):

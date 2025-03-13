@@ -40,12 +40,12 @@ def create_csv_event_report_and_return_filename(
     dict_of_df["Volunteers"] = get_df_for_volunteers_event_data_dump(
         object_store=object_store, event=event
     )
-    #dict_of_df["Food"] = get_df_for_food_event_data_dump(
+    # dict_of_df["Food"] = get_df_for_food_event_data_dump(
     #    object_store=object_store, event=event
-    #)
-    #dict_of_df["Clothing"] = get_df_for_clothing_event_data_dump(
+    # )
+    # dict_of_df["Clothing"] = get_df_for_clothing_event_data_dump(
     #    object_store=object_store, event=event
-    #)
+    # )
 
     dict_of_df = clear_empty_df_in_dict(dict_of_df)
 

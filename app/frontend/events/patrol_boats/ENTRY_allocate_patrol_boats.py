@@ -18,7 +18,8 @@ from app.frontend.events.patrol_boats.render_patrol_boat_table import (
     get_top_material_for_patrol_boat_form,
 )
 from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
-    get_bottom_button_bar_for_patrol_boats, get_top_button_bar_for_patrol_boats
+    get_bottom_button_bar_for_patrol_boats,
+    get_top_button_bar_for_patrol_boats,
 )
 
 from app.frontend.events.patrol_boats.swapping import (

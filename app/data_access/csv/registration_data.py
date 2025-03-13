@@ -1,5 +1,3 @@
-
-
 from app.data_access.csv.generic_csv_data import GenericCsvData
 from app.data_access.csv.resolve_csv_paths_and_filenames import (
     MAPPED_REGISTRATION_DATA_FILE_ID,
@@ -16,7 +14,7 @@ class CsvDataMappedRegistrationData(GenericCsvData, DataMappedRegistrationData):
         registration_data = self.read_and_return_object_of_type(
             RegistrationDataForEvent,
             file_identifier=MAPPED_REGISTRATION_DATA_FILE_ID,
-            additional_file_identifiers=event_id
+            additional_file_identifiers=event_id,
         )
 
         return registration_data
@@ -26,5 +24,5 @@ class CsvDataMappedRegistrationData(GenericCsvData, DataMappedRegistrationData):
         self.write_object(
             mapped_wa_event,
             file_identifier=MAPPED_REGISTRATION_DATA_FILE_ID,
-            additional_file_identifiers=event_id
+            additional_file_identifiers=event_id,
         )

@@ -32,7 +32,7 @@ class ListOfTeamsAndIndices(List[TeamAndIndex]):
 class DictOfTeamsWithRoles(Dict[Team, ListOfRolesWithSkills]):
     def __init__(
         self,
-            raw_dict: Dict[Team, ListOfRolesWithSkills],
+        raw_dict: Dict[Team, ListOfRolesWithSkills],
         list_of_teams_and_roles_with_ids: ListOfTeamsAndRolesWithIds,
         list_of_teams: ListOfTeams,
         list_of_roles_with_skills: ListOfRolesWithSkills,
@@ -42,7 +42,7 @@ class DictOfTeamsWithRoles(Dict[Team, ListOfRolesWithSkills]):
         self._list_of_roles_with_skills = list_of_roles_with_skills
         self._list_of_teams = list_of_teams
 
-    def roles_in_instructor_team(self)-> ListOfRolesWithSkills:
+    def roles_in_instructor_team(self) -> ListOfRolesWithSkills:
         instructor_team = self.list_of_teams.instructor_team_from_list()
         return self.roles_for_team(instructor_team)
 
@@ -161,8 +161,10 @@ def compose_raw_dict_of_teams_with_roles(
 ) -> Dict[Team, ListOfRolesWithSkills]:
     raw_dict = {}
     for team in list_of_teams:
-        list_of_role_ids = list_of_teams_and_roles_with_ids.ordered_role_ids_for_team_id(
-            team_id=team.id
+        list_of_role_ids = (
+            list_of_teams_and_roles_with_ids.ordered_role_ids_for_team_id(
+                team_id=team.id
+            )
         )
         try:
             list_of_roles = list_of_roles_with_skills.subset_for_ids(list_of_role_ids)

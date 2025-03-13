@@ -15,8 +15,9 @@ GROUP = "Group"
 BOAT = "Boat"
 
 
-
-def get_specific_parameters_for_rota_report(object_store: ObjectStore) -> SpecificParametersForTypeOfReport:
+def get_specific_parameters_for_rota_report(
+    object_store: ObjectStore,
+) -> SpecificParametersForTypeOfReport:
     list_of_teams = get_list_of_teams(object_store)
     list_of_teams.add_unallocated()
     specific_parameters_for_rota_report = SpecificParametersForTypeOfReport(
@@ -24,11 +25,10 @@ def get_specific_parameters_for_rota_report(object_store: ObjectStore) -> Specif
         group_by_column=TEAM_NAME,
         report_type="Volunteer rota report",
         group_order=list_of_teams.list_of_names(),
-        unallocated_group=no_team.name
+        unallocated_group=no_team.name,
     )
 
     return specific_parameters_for_rota_report
-
 
 
 @dataclass

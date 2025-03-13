@@ -56,7 +56,6 @@ def get_dict_of_existing_skills_for_volunteer(
     dict_of_all_volunteer_skills = get_dict_of_volunteers_with_skills(object_store)
     list_of_all_available_skills = get_list_of_skills(object_store)
 
-
     dict_of_skills = dict_of_all_volunteer_skills.dict_of_skills_for_volunteer(
         volunteer
     )

@@ -104,10 +104,8 @@ class RoleAndGroup:
 
     @classmethod
     def create_empty(cls):
-        return cls(
-            role=no_role_set,
-            group=unallocated_group
-        )
+        return cls(role=no_role_set, group=unallocated_group)
+
 
 unallocated_role_and_group = RoleAndGroup.create_empty()
 
@@ -226,7 +224,9 @@ class DictOfDaysRolesAndGroupsAndTeams(Dict[Day, RoleAndGroupAndTeam]):
         for other_day in list_of_all_days:
             if day == other_day:
                 continue
-            existing_role_group_team = self.role_and_group_and_team_on_day(other_day, None)
+            existing_role_group_team = self.role_and_group_and_team_on_day(
+                other_day, None
+            )
             if existing_role_group_team is None or allow_replacement:
                 self[other_day] = role_group_team_to_copy
 
@@ -236,7 +236,9 @@ class DictOfDaysRolesAndGroupsAndTeams(Dict[Day, RoleAndGroupAndTeam]):
         except:
             pass
 
-    def role_and_group_and_team_on_day(self, day: Day, default=arg_not_passed) -> RoleAndGroupAndTeam:
+    def role_and_group_and_team_on_day(
+        self, day: Day, default=arg_not_passed
+    ) -> RoleAndGroupAndTeam:
         if default is arg_not_passed:
             default = RoleAndGroupAndTeam.create_unallocated()
 
@@ -473,7 +475,7 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
         except:
             pass
 
-        self.list_of_volunteers_with_id_in_role_at_event.drop_volunteer(volunteer)
+        self._list_of_volunteers_with_id_in_role_at_event = self._list_of_volunteers_with_id_in_role_at_event.drop_volunteer(volunteer)
 
     def delete_role_for_volunteer_on_day(self, day: Day, volunteer: Volunteer):
         roles_for_volunteer = self.days_and_roles_for_volunteer(volunteer)
@@ -505,7 +507,6 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
         all_groups = flatten(all_groups)
         return ListOfGroups(list(set(all_groups)))
 
-
     @property
     def all_teams_at_event(self) -> List[Team]:
         all_teams = [
@@ -525,7 +526,9 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
         all_roles_at_event = flatten(all_roles_at_event)
         unique_list_of_roles = list(set(all_roles_at_event))
 
-        return ListOfRolesWithSkills.from_list_of_roles_with_skills(unique_list_of_roles)
+        return ListOfRolesWithSkills.from_list_of_roles_with_skills(
+            unique_list_of_roles
+        )
 
     def list_of_volunteers_with_roles_and_groups_and_teams_doing_role_on_day(
         self, role: RoleWithSkills, day: Day

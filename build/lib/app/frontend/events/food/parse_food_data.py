@@ -97,6 +97,7 @@ def update_cadet_food_data_if_changed(
         new_food_requirements=new_food_requirements,
     )
 
+
 def save_volunteer_food_data_in_form(interface: abstractInterface):
     event = get_event_from_state(interface)
     volunteers_with_food_at_event = (

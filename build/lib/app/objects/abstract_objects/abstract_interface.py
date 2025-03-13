@@ -100,7 +100,9 @@ class abstractInterface:
     def is_posted_form(self) -> bool:
         raise NotImplemented
 
-    def value_from_form(self, key: str, value_is_date: bool = False, default = arg_not_passed):
+    def value_from_form(
+        self, key: str, value_is_date: bool = False, default=arg_not_passed
+    ):
         raise NotImplemented
 
     def value_of_multiple_options_from_form(
@@ -141,7 +143,6 @@ class abstractInterface:
     @property
     def read_only(self):
         raise NotImplemented
-
 
 
 def form_with_message_and_finished_button(

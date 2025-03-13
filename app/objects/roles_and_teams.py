@@ -5,7 +5,9 @@ from app.objects.exceptions import arg_not_passed, MissingData, MultipleMatches
 
 from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
-    GenericListOfObjects, get_unique_object_with_attr_in_list, get_idx_of_unique_object_with_attr_in_list,
+    GenericListOfObjects,
+    get_unique_object_with_attr_in_list,
+    get_idx_of_unique_object_with_attr_in_list,
 )
 from app.objects.generic_objects import (
     GenericSkipperManObjectWithIds,
@@ -18,9 +20,7 @@ NO_SKILLS_REQUIRED = "-1"
 NO_ROLE_ALLOCATED = "No role allocated"
 NO_ROLE_ALLOCATED_ID = str(-9999)
 
-RoleLocation = Enum(
-    "RoleLocation", ['Lake_training', 'No_warning', 'River_training']
-)
+RoleLocation = Enum("RoleLocation", ["Lake_training", "No_warning", "River_training"])
 
 
 role_location_lake = RoleLocation.Lake_training
@@ -28,7 +28,6 @@ role_location_river = RoleLocation.River_training
 role_location_no_warning = RoleLocation.No_warning
 
 all_role_locations = [role_location_no_warning, role_location_lake, role_location_river]
-
 
 
 @dataclass
@@ -82,11 +81,13 @@ class RolesWithSkillIds(GenericSkipperManObjectWithIds):
             skill_ids_required=[NO_SKILLS_REQUIRED],
             associate_sailing_group=False,
             hidden=False,
-            protected=True
+            protected=True,
         )
+
 
 no_role_allocated = RolesWithSkillIds.create_empty()
 no_role_allocated_id = no_role_allocated.id
+
 
 class ListOfRolesWithSkillIds(GenericListOfObjectsWithIds):
     @property
@@ -104,21 +105,19 @@ class ListOfRolesWithSkillIds(GenericListOfObjectsWithIds):
 
         return new_role_with_skill_ids.id
 
-    def matches_name(self, role_name: str, default = arg_not_passed):
+    def matches_name(self, role_name: str, default=arg_not_passed):
         if role_name == no_role_allocated.name:
             return no_role_allocated
 
         return get_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name='name',
-            attr_value=role_name,
-            default=default
+            some_list=self, attr_name="name", attr_value=role_name, default=default
         )
 
 
-INSTRUCTOR_TEAM = "Instructors" ## DO NOT CHANGE PROTECTED IN DATA
+INSTRUCTOR_TEAM = "Instructors"  ## DO NOT CHANGE PROTECTED IN DATA
 NO_TEAM = "No team"
 NO_TEAM_ID = str(-999)
+
 
 @dataclass
 class Team(GenericSkipperManObjectWithIds):
@@ -128,7 +127,10 @@ class Team(GenericSkipperManObjectWithIds):
     id: str = arg_not_passed
 
     def __eq__(self, other):
-        return self.name == other.name and self.location_for_cadet_warning == other.location_for_cadet_warning
+        return (
+            self.name == other.name
+            and self.location_for_cadet_warning == other.location_for_cadet_warning
+        )
 
     def __repr__(self):
         return self.name
@@ -145,12 +147,11 @@ class Team(GenericSkipperManObjectWithIds):
             NO_TEAM,
             location_for_cadet_warning=role_location_no_warning,
             protected=True,
-            id=NO_TEAM_ID
+            id=NO_TEAM_ID,
         )
 
 
 no_team = Team.create_empty()
-
 
 
 class ListOfTeams(GenericListOfObjectsWithIds):
@@ -168,9 +169,7 @@ class ListOfTeams(GenericListOfObjectsWithIds):
             raise Exception(
                 "Can't add duplicate team name %s already exists" % new_team_name
             )
-        team = Team(
-            name=new_team_name
-        )
+        team = Team(name=new_team_name)
         team.id = self.next_id()
 
         self.append(team)
@@ -186,29 +185,26 @@ class ListOfTeams(GenericListOfObjectsWithIds):
     def index_of_existing_team(self, existing_team: Team, default=arg_not_passed):
         return get_idx_of_unique_object_with_attr_in_list(
             some_list=self,
-            attr_name='name',
+            attr_name="name",
             attr_value=existing_team.name,
-            default=default
+            default=default,
         )
 
     def instructor_team_from_list(self):
         return self.matching_team_name(INSTRUCTOR_TEAM)
 
-    def team_with_id(self, team_id: str, default =arg_not_passed):
+    def team_with_id(self, team_id: str, default=arg_not_passed):
         if team_id == no_team.id:
             return no_team
 
         return self.object_with_id(team_id)
 
-    def matching_team_name(self, team_name: str, default = arg_not_passed) -> Team:
+    def matching_team_name(self, team_name: str, default=arg_not_passed) -> Team:
         if team_name == no_team.name:
             return no_team
 
         return get_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name='name',
-            attr_value=team_name,
-            default=default
+            some_list=self, attr_name="name", attr_value=team_name, default=default
         )
 
     def check_for_duplicated_names(self):
@@ -251,4 +247,3 @@ class ListOfTeamsAndRolesWithIds(GenericListOfObjects):
 
     def list_of_role_ids(self):
         return [team_and_role.role_id for team_and_role in self]
-

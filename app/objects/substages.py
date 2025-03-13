@@ -25,14 +25,19 @@ class TickSubStage(GenericSkipperManObjectWithIds):
     def __hash__(self):
         return hash(self.name)
 
-from app.objects.generic_list_of_objects import get_unique_object_with_attr_in_list, index_not_found
+
+from app.objects.generic_list_of_objects import (
+    get_unique_object_with_attr_in_list,
+    index_not_found,
+)
+
 
 class ListOfTickSubStages(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return TickSubStage
 
-    def id_given_name(self, name: str, default = arg_not_passed):
+    def id_given_name(self, name: str, default=arg_not_passed):
         substage = self.substage_given_name(name, default=index_not_found)
         if substage is index_not_found:
             if default is arg_not_passed:
@@ -46,15 +51,12 @@ class ListOfTickSubStages(GenericListOfObjectsWithIds):
         substage = self.substage_given_name(substage_name, default=index_not_found)
         return not substage is index_not_found
 
-    def substage_given_name(self, name: str, default = arg_not_passed):
+    def substage_given_name(self, name: str, default=arg_not_passed):
         return get_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name='name',
-            attr_value=name,
-            default=default
+            some_list=self, attr_name="name", attr_value=name, default=default
         )
 
-    def substage_given_id(self, id: str, default = arg_not_passed):
+    def substage_given_id(self, id: str, default=arg_not_passed):
         return self.object_with_id(id, default=default)
 
     def add(self, name: str):
@@ -73,7 +75,6 @@ class ListOfTickSubStages(GenericListOfObjectsWithIds):
         assert new_name not in self.list_of_names()
         item = self.substage_given_id(substage_id)
         item.name = new_name
-
 
 
 PLACEHOLDER_TICK_SHEET_ID = str(-9999)
@@ -111,7 +112,7 @@ class ListOfTickSheetItems(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return TickSheetItem
 
-    def tick_sheet_item_with_id(self, item_id:str, default = arg_not_passed):
+    def tick_sheet_item_with_id(self, item_id: str, default=arg_not_passed):
         return self.object_with_id(item_id, default=default)
 
     def switch_all_instances_of_substage_for_qualification(

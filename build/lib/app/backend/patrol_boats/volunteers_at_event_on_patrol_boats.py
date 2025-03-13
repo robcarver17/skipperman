@@ -18,11 +18,14 @@ from app.data_access.store.object_definitions import (
     object_definition_for_dict_of_patrol_boats_by_day_for_volunteer_at_event,
 )
 
-def no_volunteers_on_patrol_boats_at_event(object_store: ObjectStore, event: Event):
-    dict_of_patrol_boat_data = get_dict_of_patrol_boats_by_day_for_volunteer_at_event(object_store=object_store, event=event)
-    list_of_volunteers = dict_of_patrol_boat_data.list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_day()
 
-    return len(list_of_volunteers)==0
+def no_volunteers_on_patrol_boats_at_event(object_store: ObjectStore, event: Event):
+    dict_of_patrol_boat_data = get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
+        object_store=object_store, event=event
+    )
+    list_of_volunteers = dict_of_patrol_boat_data.list_of_volunteers_with_patrol_boats
+
+    return len(list_of_volunteers) == 0
 
 
 def get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
@@ -54,7 +57,7 @@ def get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_day(
         )
     )
     return (
-        list_of_voluteers_at_event_with_patrol_boats.list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_day()
+        list_of_voluteers_at_event_with_patrol_boats.list_of_volunteers_with_patrol_boats
     )
 
 
@@ -70,7 +73,7 @@ def load_list_of_patrol_boats_at_event(
     )
     all_patrol_boats = patrol_boat_data.list_of_all_patrol_boats
 
-    sorted_list =  all_patrol_boats.sort_from_other_list_of_boats(list_of_boats_at_event)
+    sorted_list = all_patrol_boats.sort_from_other_list_of_boats(list_of_boats_at_event)
 
     return sorted_list
 
@@ -121,7 +124,11 @@ def get_list_of_visible_boat_names_excluding_boats_already_at_event(
 
     all_boats = get_list_of_patrol_boats(object_store)
 
-    return [boat.name for boat in all_boats if (not boat.name in names_of_boats_at_event) and (not boat.hidden)]
+    return [
+        boat.name
+        for boat in all_boats
+        if (not boat.name in names_of_boats_at_event) and (not boat.hidden)
+    ]
 
 
 def get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(

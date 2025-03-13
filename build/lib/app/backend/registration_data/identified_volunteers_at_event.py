@@ -136,7 +136,9 @@ def volunteer_for_this_row_and_index_already_identified(
         object_store=object_store, event=event
     )
 
-    return list_of_volunteers_identified.row_and_index_in_list_of_rows_and_indices(row_id=row_id, volunteer_index=volunteer_index)
+    return list_of_volunteers_identified.row_and_index_in_list_of_rows_and_indices(
+        row_id=row_id, volunteer_index=volunteer_index
+    )
 
 
 def get_list_of_identified_volunteers_at_event(

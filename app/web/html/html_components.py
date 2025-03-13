@@ -67,7 +67,6 @@ html_nav_wrapper = HtmlWrapper("<nav>%s</nav>")
 html_container_wrapper = HtmlWrapper('<div class="w3-container">%s</div>')
 
 
-
 def get_detail_wrapper(summary_text: str, open_detail: bool = False):
     open_str = 'open="yes"' if open_detail else ""
     return HtmlWrapper(
@@ -123,5 +122,6 @@ html_table_heading_row_wrapper = HtmlWrapper('<tr class="w3-theme">%s</tr>')
 html_table_element_wrapper = HtmlWrapper("<td>%s</td>")
 html_table_heading_wrapper = HtmlWrapper("<th>%s</th>")
 
-def html_email(email_address:str) -> Html:
+
+def html_email(email_address: str) -> Html:
     return Html('<a href="mailto:%s">%s</a>' % (email_address, email_address))

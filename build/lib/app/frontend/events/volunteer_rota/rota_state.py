@@ -16,6 +16,7 @@ SKILLS_FILTER = "skills_filter_volunteer"
 
 from app.backend.volunteers.skills import get_list_of_skills
 
+
 def get_skills_filter_from_state(interface: abstractInterface) -> SkillsDict:
     skills_dict_with_str = interface.get_persistent_value(
         SKILLS_FILTER, default=None

@@ -13,11 +13,13 @@ from app.objects.day_selectors import (
     DaySelector,
     day_selector_stored_format_from_text,
     day_selector_to_text_in_stored_format,
-     create_day_selector_from_short_form_text_with_passed_days,
+    create_day_selector_from_short_form_text_with_passed_days,
 )
 from app.objects.events import Event
 from app.objects.generic_list_of_objects import (
-    GenericListOfObjectsWithIds, get_unique_object_with_attr_in_list, get_idx_of_unique_object_with_attr_in_list,
+    GenericListOfObjectsWithIds,
+    get_unique_object_with_attr_in_list,
+    get_idx_of_unique_object_with_attr_in_list,
 )
 from app.objects.generic_objects import (
     transform_class_instance_into_string,
@@ -46,7 +48,7 @@ class CadetWithIdAtEvent(GenericSkipperManObjectWithIds):
     data_in_row: RowInRegistrationData
     notes: str = ""
     health: str = ""
-    changed: bool = False ## no longer used but kept for data compatibility
+    changed: bool = False  ## no longer used but kept for data compatibility
 
     def clear_private_data(self):
         self.clear_row_data()
@@ -59,7 +61,7 @@ class CadetWithIdAtEvent(GenericSkipperManObjectWithIds):
     @classmethod
     def from_dict_of_str(cls, dict_with_str):
         dict_with_str = clean_up_dict_with_nans(dict_with_str)
-        availability_as_str = dict_with_str.pop(AVAILABILITY, '')
+        availability_as_str = dict_with_str.pop(AVAILABILITY, "")
         if type(availability_as_str) is not str:
             availability_as_str = ""  ## corner case
         availability = day_selector_stored_format_from_text(availability_as_str)
@@ -111,13 +113,11 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
         for cadet_with_id_at_event in self:
             cadet_with_id_at_event.clear_private_data()
 
-
-    def cadet_with_id_and_data_at_event(self, cadet_id: str, default = arg_not_passed) -> CadetWithIdAtEvent:
+    def cadet_with_id_and_data_at_event(
+        self, cadet_id: str, default=arg_not_passed
+    ) -> CadetWithIdAtEvent:
         return get_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name='cadet_id',
-            attr_value=cadet_id,
-            default=default
+            some_list=self, attr_name="cadet_id", attr_value=cadet_id, default=default
         )
 
     def add(self, cadet_at_event: CadetWithIdAtEvent):
@@ -140,61 +140,49 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
         self, cadet_id: str, new_status: RegistrationStatus
     ):
         self._update_item_for_existing_cadet_at_event(
-            cadet_id=cadet_id,
-            new_item=new_status,
-            attribute='status'
+            cadet_id=cadet_id, new_item=new_status, attribute="status"
         )
 
     def update_notes_for_existing_cadet_at_event(self, cadet_id: str, new_notes: str):
         self._update_item_for_existing_cadet_at_event(
-            cadet_id=cadet_id,
-            new_item=new_notes,
-            attribute='notes'
+            cadet_id=cadet_id, new_item=new_notes, attribute="notes"
         )
 
     def update_health_for_existing_cadet_at_event(self, cadet_id: str, new_health: str):
 
         self._update_item_for_existing_cadet_at_event(
-            cadet_id=cadet_id,
-            new_item=new_health,
-            attribute='health'
+            cadet_id=cadet_id, new_item=new_health, attribute="health"
         )
-
-
 
     def update_data_row_for_existing_cadet_at_event(
         self, cadet_id: str, new_data_in_row: RowInRegistrationData
     ):
         self._update_item_for_existing_cadet_at_event(
-            cadet_id=cadet_id,
-            new_item=new_data_in_row,
-            attribute='data_in_row'
+            cadet_id=cadet_id, new_item=new_data_in_row, attribute="data_in_row"
         )
 
-
     def _update_item_for_existing_cadet_at_event(
-        self, cadet_id: str, attribute: str, new_item: Union[RowInRegistrationData, str, RegistrationStatus]
+        self,
+        cadet_id: str,
+        attribute: str,
+        new_item: Union[RowInRegistrationData, str, RegistrationStatus],
     ):
-        existing_cadet_idx = self.idx_of_items_with_cadet_id(cadet_id, default=missing_data)
+        existing_cadet_idx = self.idx_of_items_with_cadet_id(
+            cadet_id, default=missing_data
+        )
         if existing_cadet_idx is missing_data:
             raise Exception("Can't replace cadet id %s not in data" % cadet_id)
         existing_cadet_at_event = self[existing_cadet_idx]
         setattr(existing_cadet_at_event, attribute, new_item)
         self[existing_cadet_idx] = existing_cadet_at_event
 
-    def idx_of_items_with_cadet_id(self, cadet_id: str, default = arg_not_passed):
+    def idx_of_items_with_cadet_id(self, cadet_id: str, default=arg_not_passed):
         return get_idx_of_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name='cadet_id',
-            attr_value=cadet_id,
-            default=default
-
+            some_list=self, attr_name="cadet_id", attr_value=cadet_id, default=default
         )
-
 
     def is_cadet_id_in_event(self, cadet_id: str):
         return cadet_id in self.list_of_cadet_ids()
-
 
     def list_of_cadet_ids(self) -> List[str]:
         return [str(item.cadet_id) for item in self]
@@ -226,15 +214,15 @@ def get_sailor_attendance_selection_from_event_row(
     row_as_dict = row.as_dict()
     days_in_event = event.days_in_event()
 
-    weekend_selection = row_as_dict.get(WEEKEND_DAYS_ATTENDING_INPUT, '')
-    day_selection = row_as_dict.get(ALL_DAYS_ATTENDING_INPUT, '')
+    weekend_selection = row_as_dict.get(WEEKEND_DAYS_ATTENDING_INPUT, "")
+    day_selection = row_as_dict.get(ALL_DAYS_ATTENDING_INPUT, "")
 
-    if len(weekend_selection)>0:
+    if len(weekend_selection) > 0:
         print("From selection %s" % weekend_selection)
         return create_day_selector_from_short_form_text_with_passed_days(
             weekend_selection, days_in_event=days_in_event
         )
-    elif len(day_selection)>0:
+    elif len(day_selection) > 0:
         print("From selection %s" % day_selection)
         return create_day_selector_from_short_form_text_with_passed_days(
             day_selection, days_in_event=days_in_event
@@ -243,6 +231,7 @@ def get_sailor_attendance_selection_from_event_row(
         print("Not found, doing all days")
         day_selector_for_all_days_at_event = event.day_selector_for_days_in_event()
         return day_selector_for_all_days_at_event
+
 
 def get_health_from_event_row(row: RowInRegistrationData):
     return row.get_item(CADET_HEALTH, "")

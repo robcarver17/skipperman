@@ -48,7 +48,7 @@ def compose_list_of_targets_for_roles_at_event(
     return DictOfTargetsForRolesAtEvent(
         raw_dict=raw_dict,
         list_of_targets_with_role_ids=list_of_targets_with_role_ids,
-        event=list_of_events.event_with_id(event_id)
+        event=list_of_events.event_with_id(event_id),
     )
 
 

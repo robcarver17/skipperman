@@ -14,8 +14,16 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.exceptions import arg_not_passed, MISSING_FROM_FORM
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
-from app.objects.food import FoodRequirements, OTHER_IN_FOOD_REQUIRED, no_food_requirements
-from app.objects.registration_status import RegistrationStatus, all_possible_status, all_possible_status_user_can_select
+from app.objects.food import (
+    FoodRequirements,
+    OTHER_IN_FOOD_REQUIRED,
+    no_food_requirements,
+)
+from app.objects.registration_status import (
+    RegistrationStatus,
+    all_possible_status,
+    all_possible_status_user_can_select,
+)
 from app.objects.composed.volunteers_with_skills import SkillsDict
 
 ALL_AVAILABLE = "Select all"
@@ -51,7 +59,7 @@ def get_availablity_from_form(
 ) -> DaySelector:
     possible_days = event.days_in_event()
     list_of_days_ticked_in_form = interface.value_of_multiple_options_from_form(
-        input_name, default = MISSING_FROM_FORM
+        input_name, default=MISSING_FROM_FORM
     )
     day_selector = DaySelector({})
     if list_of_days_ticked_in_form == MISSING_FROM_FORM:
@@ -148,11 +156,12 @@ def get_food_requirements_from_form(
 
         setattr(food_requirements, key, food_requirement_present)
 
-
     return food_requirements
 
 
-all_status_names = [row_status.name for row_status in all_possible_status_user_can_select]
+all_status_names = [
+    row_status.name for row_status in all_possible_status_user_can_select
+]
 
 
 def dropdown_input_for_status_change(

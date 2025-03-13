@@ -143,11 +143,10 @@ def display_verify_adding_cadet_from_list_form(interface: abstractInterface) -> 
     )
 
 
-
 provided_header_text = ListOfLines(
     [
         ButtonBar([HelpButton("import_membership_list_help")]),
-        "Looks like a cadet in the membership list is very similar to some existing cadets. Click on the existing cadet that matches this one (this will verify they are a member), or add cadet if really a new member,"
+        "Looks like a cadet in the membership list is very similar to some existing cadets. Click on the existing cadet that matches this one (this will verify they are a member), or add cadet if really a new member,",
     ]
 )
 

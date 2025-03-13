@@ -36,7 +36,9 @@ def modify_qualification(
     )
 
 
-def get_qualification_given_id(object_store: ObjectStore, id: str, default = arg_not_passed) -> Qualification:
+def get_qualification_given_id(
+    object_store: ObjectStore, id: str, default=arg_not_passed
+) -> Qualification:
     list_of_qualifications = get_list_of_qualifications(object_store)
     return list_of_qualifications.qualification_given_id(id, default=default)
 

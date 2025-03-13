@@ -56,9 +56,11 @@ def get_top_row_of_volunteer_targets_table(event: Event) -> RowInTable:
     actual_for_days_at_event_as_str = [
         "%s (allocated)" % day.name for day in event.days_in_event()
     ]
-    return RowInTable(["Role"]
-                      + actual_for_days_at_event_as_str
-                      + ["Target (Editable)", "Worst shortfall"])
+    return RowInTable(
+        ["Role"]
+        + actual_for_days_at_event_as_str
+        + ["Target (Editable)", "Worst shortfall"]
+    )
 
 
 def get_body_of_volunteer_targets_table(

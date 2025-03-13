@@ -19,12 +19,14 @@ all_possible_days = list(Day.__members__.values())
 def day_given_datetime(some_day: datetime.date) -> Day:
     return all_possible_days[some_day.weekday()]
 
+
 class ListOfDays(List[Day]):
     def __repr__(self):
         return ", ".join([day.name for day in self])
 
     def count_and_days_as_str(self):
         return "%d: %s" % (len(self), str(self))
+
 
 class DaySelector(Dict[Day, bool]):
     def __repr__(self):
@@ -48,9 +50,7 @@ class DaySelector(Dict[Day, bool]):
         return True
 
     def __hash__(self):
-        return hash(
-            "".join([day.name for day, selected in self.items() if selected])
-        )
+        return hash("".join([day.name for day, selected in self.items() if selected]))
 
     def align_with_list_of_days(self, list_of_days: List[Day]) -> "DaySelector":
         return DaySelector([(day, self.available_on_day(day)) for day in list_of_days])
@@ -98,26 +98,21 @@ class DaySelector(Dict[Day, bool]):
 
         return cls(dict_of_pairs)
 
-
     @classmethod
     def from_list_of_days(cls, list_of_days: List[Day]):
-        return cls(
-            dict(
-                [
-                    (day, True) for day in list_of_days
-                ]
-            )
-        )
+        return cls(dict([(day, True) for day in list_of_days]))
 
     @classmethod
     def create_empty(cls):
         return cls({})
 
     def is_empty(self):
-        return len(self.days_available())==0
+        return len(self.days_available()) == 0
 
     def days_available(self) -> ListOfDays:
-        return ListOfDays([day for day in self.all_days_in_selector if self.available_on_day(day)])
+        return ListOfDays(
+            [day for day in self.all_days_in_selector if self.available_on_day(day)]
+        )
 
     def available_on_day(self, day: Day):
         return self.get(day, False)
@@ -132,6 +127,7 @@ class DaySelector(Dict[Day, bool]):
     def all_days_in_selector(self):
         return list(self.keys())
 
+
 def union_across_day_selectors(list_of_day_selectors: List[DaySelector]) -> DaySelector:
     copied_list = copy(list_of_day_selectors)
     union_selector = copied_list.pop()
@@ -145,7 +141,9 @@ def union_across_day_selectors(list_of_day_selectors: List[DaySelector]) -> DayS
 empty_day_selector = DaySelector(dict([(day, False) for day in all_possible_days]))
 
 
-def no_days_selected_from_available_days(day_selector: DaySelector, possible_days: list):
+def no_days_selected_from_available_days(
+    day_selector: DaySelector, possible_days: list
+):
     return not any([day_selector.get(day, False) for day in possible_days])
 
 
@@ -158,19 +156,23 @@ dict_of_short_day_text_and_Days = dict(
     Sat=Day.Saturday,
     Sun=Day.Sunday,
 )
-inverse_selection_dict = {value: key for key, value in dict_of_short_day_text_and_Days.items()}
+inverse_selection_dict = {
+    value: key for key, value in dict_of_short_day_text_and_Days.items()
+}
 
 
-def create_day_selector_from_short_form_text_with_passed_days(text: str, days_in_event: List[Day] = arg_not_passed) -> DaySelector:
+def create_day_selector_from_short_form_text_with_passed_days(
+    text: str, days_in_event: List[Day] = arg_not_passed
+) -> DaySelector:
     all_days = DaySelector.from_list_of_days(days_in_event)
 
-    if len(text)==0:
+    if len(text) == 0:
         return all_days
 
     if "all days" in text.lower():
         return all_days
 
-    if len(days_in_event)==2:
+    if len(days_in_event) == 2:
         if "both" in text.lower():
             return all_days
 
@@ -183,6 +185,7 @@ def create_day_selector_from_short_form_text_with_passed_days(text: str, days_in
             starting_dict[day_to_select] = False
 
     return DaySelector(starting_dict)
+
 
 def day_selector_stored_format_from_text(text: str) -> DaySelector:
     starting_dict = dict()
@@ -203,5 +206,3 @@ def day_selector_to_text_in_stored_format(day_selector: DaySelector) -> str:
         if attending
     ]
     return ",".join(day_text_as_list)
-
-

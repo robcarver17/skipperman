@@ -6,7 +6,9 @@ from app.backend.security.list_of_users import get_list_of_users
 from app.objects.users_and_security import (
     SkipperManUser,
     ListOfSkipperManUsers,
-    UserGroup, ADMIN_GROUP, SKIPPER_GROUP,
+    UserGroup,
+    ADMIN_GROUP,
+    SKIPPER_GROUP,
 )
 
 

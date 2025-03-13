@@ -1,4 +1,5 @@
 To access the patrol boat rota, from the **main menu**, select **Events**, choose an event, and then click on **Patrol boats** in the menu.
+___
 
 The patrol boat rota page is used to allocate volunteers to patrol boats. Only volunteers who have been added to the event can be allocated - if you want to add a volunteer, you will need the main [volunteer rota page](volunteer_rota_help.md#add-a-volunteer). Make sure you are not in [read only](main-menu.md#read-only) mode if you want to make changes - use read only mode for experimenting.
 
@@ -18,13 +19,13 @@ The patrol boat rota page is used to allocate volunteers to patrol boats. Only v
 
 ## Adding a boat
 
-The first thing we need to do is add a boat. Select a boat from the drop down and click add a boat. If the boat you want isn't listed, you will need to add it via the [configuration](configuration_help.md#patrol-boats) pages. You can add as many boats as you like.
+The first thing we need to do is add a boat. Select a boat from the drop down and click `Add new boat`. If the boat you want isn't listed, you will need to make it visible or add it via the [configuration](configuration_help.md#patrol-boats) pages. You can add as many boats as you like to an event, but each boat can only be added once.
 
 ![boat_added.png](/static/boat_added.png)
 
 ## Removing a boat from the rota
 
-Click on 'remove boat from rota' to remove a boat entirely. 
+Click on `Remove boat from rota` to remove a boat entirely.  
 
 # Allocating volunteers 
 

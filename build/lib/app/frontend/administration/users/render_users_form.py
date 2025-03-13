@@ -62,8 +62,8 @@ def display_form_edit_list_of_users(
     user_table = table_for_users(
         interface=interface, existing_list_of_users=existing_list_of_users
     )
-    nav_buttons = ButtonBar([cancel_menu_button, help_button])
-    footer_buttons = ButtonBar([save_entry_button, add_entry_button])
+    nav_buttons = ButtonBar([cancel_menu_button, save_entry_button, help_button])
+    footer_buttons = ButtonBar([cancel_menu_button, save_entry_button])
 
     return Form(
         [
@@ -92,22 +92,23 @@ save_entry_button = Button(
     shortcut=SAVE_KEYBOARD_SHORTCUT,
 )
 
-add_entry_button = Button(
-    ADD_ENTRY_BUTTON_LABEL, nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT
-)
+add_entry_button = Button(ADD_ENTRY_BUTTON_LABEL, shortcut=ADD_KEYBOARD_SHORTCUT)
 
 
 def warning_text(interface: abstractInterface):
     admin_users = list_of_admin_users(interface.object_store)
-    if len(admin_users)==0:
+    if len(admin_users) == 0:
         return Line(
             bold(
                 "*** AT LEAST ONE USER MUST HAVE ADMIN RIGHTS - ADD A NEW USER OR EDIT AN EXISTING USER TO REFLECT THIS ***"
             )
         )
-    elif len(admin_users)==1:
+    elif len(admin_users) == 1:
         single_admin_user = admin_users[0]
-        return bold("Only one admin user (%s)- you will not be able to delete that user or change their access group unless you add another" % single_admin_user.username)
+        return bold(
+            "Only one admin user (%s)- you will not be able to delete that user or change their access group unless you add another"
+            % single_admin_user.username
+        )
     else:
         return ""
 
@@ -124,15 +125,18 @@ def table_for_users(
 
 
 def row_for_new_user(interface: abstractInterface) -> RowInTable:
-    return RowInTable([
-        "Add new user: ",
-        text_box_for_username(new_blank_user),
-        text_box_for_password(new_blank_user),
-        text_box_for_password(new_blank_user, True),
-        dropdown_for_group(new_blank_user),
-        "",
-        dropdown_for_volunteer(interface=interface, user=new_blank_user),
-    ])
+    return RowInTable(
+        [
+            "Add new user: ",
+            text_box_for_username(new_blank_user),
+            text_box_for_password(new_blank_user),
+            text_box_for_password(new_blank_user, True),
+            dropdown_for_group(new_blank_user),
+            "",
+            dropdown_for_volunteer(interface=interface, user=new_blank_user),
+            add_entry_button,
+        ]
+    )
 
 
 def rows_for_existing_list_of_users(
@@ -153,18 +157,20 @@ def get_row_for_existing_user(
         group_dropdown = "Cannot change access"
     else:
         delete_button = button_for_deletion(existing_user)
-        group_dropdown =  dropdown_for_group(existing_user)
+        group_dropdown = dropdown_for_group(existing_user)
 
-    return RowInTable([
-        "",
-        existing_user.username,
-        text_box_for_password(existing_user),
-        text_box_for_password(existing_user, True),
-        group_dropdown,
-        delete_button,
-        dropdown_for_volunteer(interface=interface, user=existing_user),
-        button_to_reset_password(existing_user),
-    ])
+    return RowInTable(
+        [
+            "",
+            existing_user.username,
+            text_box_for_password(existing_user),
+            text_box_for_password(existing_user, True),
+            group_dropdown,
+            delete_button,
+            dropdown_for_volunteer(interface=interface, user=existing_user),
+            button_to_reset_password(existing_user),
+        ]
+    )
 
 
 USERNAME = "username"

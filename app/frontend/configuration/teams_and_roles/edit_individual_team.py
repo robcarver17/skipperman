@@ -52,14 +52,16 @@ def display_form_edit_individual_team_page(interface: abstractInterface) -> Form
     subhead = Heading("[First name is team leader]", centred=True, size=4)
 
     table = reorder_table(starting_list=names, include_delete=True)
-    add_line = RowInTable([
-        dropdown_to_add_volunteer_to_team(
-            dict_of_teams_and_roles=dict_of_teams_and_roles, team=team
-        ),
-        "",
-        "",
-        add_button,
-    ])
+    add_line = RowInTable(
+        [
+            dropdown_to_add_volunteer_to_team(
+                dict_of_teams_and_roles=dict_of_teams_and_roles, team=team
+            ),
+            "",
+            "",
+            add_button,
+        ]
+    )
     table.append(add_line)
 
     return Form(

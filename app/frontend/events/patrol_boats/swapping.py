@@ -64,7 +64,7 @@ def get_list_of_all_swap_buttons_in_boat_allocation(
         interface=interface, event=event, button_name_function=get_swap_both_button_name
     )
 
-    return swap_boats +  swap_roles + swap_both
+    return swap_boats + swap_roles + swap_both
 
 
 def get_swap_buttons_for_boat_rota(
@@ -86,10 +86,8 @@ def get_swap_buttons_for_boat_rota(
 def get_swap_buttons_when_not_ready_to_swap(
     volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 ) -> list:
-    okay_to_swap_roles = (
-        is_possible_to_swap_roles_on_one_day(
-            volunteer_at_event_on_boat
-        )
+    okay_to_swap_roles = is_possible_to_swap_roles_on_one_day(
+        volunteer_at_event_on_boat
     )
     day = volunteer_at_event_on_boat.day
     volunteer_id = volunteer_at_event_on_boat.volunteer.id
@@ -180,15 +178,16 @@ def get_swap_button_when_ready_to_swap_and_this_is_a_potential_swapper(
 ) -> Union[Button, str]:
 
     if swapping_both:
-        return get_swap_button_when_ready_to_swap_and_this_is_a_potential_swapper_of_both(
-            swapping_boat=swapping_boat,
-            volunteer_at_event_on_boat=volunteer_at_event_on_boat
-
+        return (
+            get_swap_button_when_ready_to_swap_and_this_is_a_potential_swapper_of_both(
+                swapping_boat=swapping_boat,
+                volunteer_at_event_on_boat=volunteer_at_event_on_boat,
+            )
         )
     else:
         return get_swap_button_when_ready_to_swap_and_this_is_a_potential_swapper_of_boats_only(
             swapping_boat=swapping_boat,
-            volunteer_at_event_on_boat=volunteer_at_event_on_boat
+            volunteer_at_event_on_boat=volunteer_at_event_on_boat,
         )
 
 
@@ -200,10 +199,8 @@ def get_swap_button_when_ready_to_swap_and_this_is_a_potential_swapper_of_both(
     same_boat = boat_at_event == swapping_boat
 
     valid_to_swap_boats = not same_boat
-    valid_to_swap_roles = (
-        is_possible_to_swap_roles_on_one_day(
-            volunteer_at_event_on_boat=volunteer_at_event_on_boat
-        )
+    valid_to_swap_roles = is_possible_to_swap_roles_on_one_day(
+        volunteer_at_event_on_boat=volunteer_at_event_on_boat
     )
 
     volunteer_id = volunteer_at_event_on_boat.volunteer.id
@@ -214,19 +211,16 @@ def get_swap_button_when_ready_to_swap_and_this_is_a_potential_swapper_of_both(
             volunteer_id=volunteer_id, day=day
         )
     elif valid_to_swap_boats and not valid_to_swap_roles:
-        return (
-            get_swap_button_when_ready_to_swap_and_this_is_a_swapper_of_boats_only(
-                volunteer_id=volunteer_id, day=day
-            )
+        return get_swap_button_when_ready_to_swap_and_this_is_a_swapper_of_boats_only(
+            volunteer_id=volunteer_id, day=day
         )
     elif not valid_to_swap_boats and valid_to_swap_roles:
-        return (
-            get_swap_button_when_ready_to_swap_and_this_is_a_swapper_of_roles_only(
-                volunteer_id=volunteer_id, day=day
-            )
+        return get_swap_button_when_ready_to_swap_and_this_is_a_swapper_of_roles_only(
+            volunteer_id=volunteer_id, day=day
         )
     else:
         return ""
+
 
 def get_swap_button_when_ready_to_swap_and_this_is_a_potential_swapper_of_boats_only(
     swapping_boat: PatrolBoat,
@@ -239,10 +233,8 @@ def get_swap_button_when_ready_to_swap_and_this_is_a_potential_swapper_of_boats_
     if valid_to_swap_boats:
         volunteer_id = volunteer_at_event_on_boat.volunteer.id
         day = volunteer_at_event_on_boat.day
-        return (
-            get_swap_button_when_ready_to_swap_and_this_is_a_swapper_of_boats_only(
-                volunteer_id=volunteer_id, day=day
-            )
+        return get_swap_button_when_ready_to_swap_and_this_is_a_swapper_of_boats_only(
+            volunteer_id=volunteer_id, day=day
         )
     else:
         return ""

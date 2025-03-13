@@ -15,7 +15,7 @@ from app.frontend.reporting.shared.print_options import (
     get_saved_print_options,
     report_print_options_as_list_of_lines,
 )
-from app.backend.reporting.report_generator import  ReportGenerator
+from app.backend.reporting.report_generator import ReportGenerator
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.objects.abstract_objects.abstract_text import bold
@@ -28,7 +28,9 @@ def get_text_explaining_various_options_for_generic_report(
     additional_options_as_text = report_generator.explain_additional_parameters(
         interface=interface, additional_parameters=additional_parameters
     )
-    specific_parameters_for_type_of_report = report_generator.specific_parameters_for_type_of_report
+    specific_parameters_for_type_of_report = (
+        report_generator.specific_parameters_for_type_of_report
+    )
 
     print_options = get_saved_print_options(
         report_type=specific_parameters_for_type_of_report.report_type,
@@ -49,7 +51,9 @@ def get_text_explaining_various_options_for_generic_report(
 def get_arrangement_options_and_group_order_text(
     interface: abstractInterface, report_generator: ReportGenerator
 ) -> ListOfLines:
-    specific_parameters_for_type_of_report = report_generator.specific_parameters_for_type_of_report
+    specific_parameters_for_type_of_report = (
+        report_generator.specific_parameters_for_type_of_report
+    )
 
     dict_of_df = report_generator.get_dict_of_df(interface)
 

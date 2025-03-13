@@ -2,16 +2,20 @@ from typing import Dict
 
 import pandas as pd
 
-from app.backend.reporting.arrangement.arrange_options import ArrangementOptionsAndGroupOrder
+from app.backend.reporting.arrangement.arrange_options import (
+    ArrangementOptionsAndGroupOrder,
+)
 
 from app.backend.reporting.arrangement.get_and_update_arrangement_options import (
     get_stored_arrangement_and_group_order,
 )
 from app.backend.reporting.options_and_parameters.report_options import ReportingOptions
-from app.backend.reporting.options_and_parameters.report_type_specific_parameters import \
-    SpecificParametersForTypeOfReport
-from app.backend.reporting.process_stages.create_list_of_columns_from_groups import \
-    get_order_of_indices_even_sizing_with_parameters
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
+    SpecificParametersForTypeOfReport,
+)
+from app.backend.reporting.process_stages.create_list_of_columns_from_groups import (
+    get_order_of_indices_even_sizing_with_parameters,
+)
 from app.data_access.store.object_store import ObjectStore
 
 from app.backend.reporting.arrangement.group_order import (
@@ -83,15 +87,19 @@ def get_empty_groups(reporting_options: ReportingOptions) -> GroupOrder:
         group_order=group_order,
         specific_parameters_for_type_of_report=specific_parameters,
     )
-    empty_groups=  GroupOrder(empty_groups)
+    empty_groups = GroupOrder(empty_groups)
 
-    remove_unalloacted_group(empty_groups=empty_groups, reporting_options=reporting_options)
+    remove_unalloacted_group(
+        empty_groups=empty_groups, reporting_options=reporting_options
+    )
 
     return empty_groups
 
-def remove_unalloacted_group(reporting_options: ReportingOptions, empty_groups: GroupOrder):
+
+def remove_unalloacted_group(
+    reporting_options: ReportingOptions, empty_groups: GroupOrder
+):
     ## Otherwise if unallocated groups included in parameters but not in data will flag
     unallocated_group = reporting_options.specific_parameters.unallocated_group
     if unallocated_group in empty_groups:
         empty_groups.remove(unallocated_group)
-

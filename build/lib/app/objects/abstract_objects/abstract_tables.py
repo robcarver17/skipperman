@@ -18,7 +18,9 @@ class ElementsInTable:
 
 
 class RowInTable(list):
-    def __init__(self, contents, has_row_headings: bool = False, is_heading_row: bool = False):
+    def __init__(
+        self, contents, has_row_headings: bool = False, is_heading_row: bool = False
+    ):
         super().__init__(contents)
         self.has_row_headings = has_row_headings
         self.is_heading_row = is_heading_row
@@ -55,7 +57,11 @@ class Table(list):
         for idx, row in enumerate(self):
             is_heading_row = idx == 0 and self.has_column_headings
             rows.append(
-                RowInTable(row, has_row_headings=self.has_row_headings, is_heading_row=is_heading_row)
+                RowInTable(
+                    row,
+                    has_row_headings=self.has_row_headings,
+                    is_heading_row=is_heading_row,
+                )
             )
 
         return rows

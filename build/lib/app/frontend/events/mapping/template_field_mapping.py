@@ -3,7 +3,8 @@ from app.backend.mapping.list_of_field_mappings import (
     get_list_of_field_mapping_template_names,
     get_field_mapping_template,
     save_field_mapping_template,
-    save_field_mapping_for_event, does_event_already_have_mapping,
+    save_field_mapping_for_event,
+    does_event_already_have_mapping,
 )
 
 from app.frontend.events.mapping.upload_template_field_mapping import (
@@ -21,7 +22,8 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
-    cancel_menu_button, HelpButton,
+    cancel_menu_button,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.frontend.shared.events_state import get_event_from_state
@@ -42,7 +44,7 @@ def display_form_for_choose_template_field_mapping(interface: abstractInterface)
                 _______________,
                 upload_template_button,
                 _______________,
-                button_bar
+                button_bar,
             ]
         )
     else:
@@ -61,7 +63,7 @@ def display_form_for_choose_template_field_mapping(interface: abstractInterface)
                 upload_template_button,
                 _______________,
                 _______________,
-                button_bar
+                button_bar,
             ]
         )
 
@@ -69,15 +71,18 @@ def display_form_for_choose_template_field_mapping(interface: abstractInterface)
 
 
 def get_warning_if_existing_mapping(interface: abstractInterface):
-    event =get_event_from_state(interface)
+    event = get_event_from_state(interface)
     existing_mapping = does_event_already_have_mapping(
         object_store=interface.object_store, event=event
     )
 
     if existing_mapping:
-        return bold("**WARNING**: Will replace existing mapping - there will be no warning or request for confirmation")
+        return bold(
+            "**WARNING**: Will replace existing mapping - there will be no warning or request for confirmation"
+        )
     else:
-        return ''
+        return ""
+
 
 def display_list_of_templates_with_buttons(interface: abstractInterface) -> ListOfLines:
     list_of_templates = get_list_of_field_mapping_template_names(interface.object_store)
@@ -137,5 +142,6 @@ def post_form_when_template_chosen(
         interface=interface,
         function_whose_parent_go_to_on_button_press=display_form_for_choose_template_field_mapping,
     )
+
 
 help_button = HelpButton("WA_template_mapping_help")

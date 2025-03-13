@@ -1,6 +1,8 @@
 from typing import Union, Tuple
 
-from app.backend.volunteers.connected_cadets import volunteer_name_is_similar_to_cadet_name
+from app.backend.volunteers.connected_cadets import (
+    volunteer_name_is_similar_to_cadet_name,
+)
 from app.backend.volunteers.list_of_volunteers import (
     get_volunteer_with_matching_name,
     get_volunteer_from_list_of_given_str_of_volunteer,
@@ -32,7 +34,8 @@ from app.frontend.events.volunteer_identification.volunteer_selection_form_conte
 from app.frontend.shared.add_edit_volunteer_forms import (
     add_volunteer_from_form_to_data,
     VolunteerAndVerificationText,
-    get_add_volunteer_form_with_information_passed, get_volunteer_from_form,
+    get_add_volunteer_form_with_information_passed,
+    get_volunteer_from_form,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import (
@@ -215,7 +218,7 @@ def get_volunteer_text_and_final_button(
     interface: abstractInterface,
     first_time: bool,
     cadet_in_row: Cadet,  ## could be missing data
-    volunteer: Volunteer
+    volunteer: Volunteer,
 ) -> Tuple[VolunteerAndVerificationText, bool]:
     verification_text = verify_volunteer_and_warn(
         object_store=interface.object_store, volunteer=volunteer

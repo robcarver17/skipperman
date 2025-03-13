@@ -40,9 +40,13 @@ from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
-def display_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import(interface: abstractInterface) -> NewForm:
+def display_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import(
+    interface: abstractInterface,
+) -> NewForm:
     event = get_event_from_state(interface)
-    update_food_for_cadets_from_registration_data_on_import(interface=interface, event=event)
+    update_food_for_cadets_from_registration_data_on_import(
+        interface=interface, event=event
+    )
     update_food_for_volunteers_from_registration_data(interface=interface, event=event)
 
     interface.flush_cache_to_store()
@@ -52,17 +56,22 @@ def display_call_to_update_food_for_cadets_and_volunteers_from_registration_data
 
 def return_to_controller(interface: abstractInterface) -> NewForm:
     return interface.get_new_display_form_for_parent_of_function(
-       display_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import
+        display_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import
     )
 
-def post_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import(interface: abstractInterface) -> NewForm:
-    interface.log_error("post_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import")
+
+def post_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import(
+    interface: abstractInterface,
+) -> NewForm:
+    interface.log_error(
+        "post_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import"
+    )
     return initial_state_form()
 
 
-
-
-def update_food_for_cadets_from_registration_data_on_import(interface: abstractInterface, event: Event):
+def update_food_for_cadets_from_registration_data_on_import(
+    interface: abstractInterface, event: Event
+):
     dict_of_cadets_at_event_with_registration_data = (
         get_dict_of_cadets_with_registration_data(
             object_store=interface.object_store, event=event
@@ -79,7 +88,6 @@ def update_food_for_cadets_from_registration_data_on_import(interface: abstractI
             cadet=cadet,
             registration_data=registration_data,
         )
-
 
 
 def process_update_to_cadet_food_data(
@@ -146,8 +154,7 @@ from app.backend.volunteers.volunteers_at_event import (
 
 
 def update_food_for_volunteers_from_registration_data(
-    interface: abstractInterface,
-        event: Event
+    interface: abstractInterface, event: Event
 ):
     dict_volunteers_registered_to_event = (
         get_dict_of_registration_data_for_volunteers_at_event(
@@ -184,7 +191,7 @@ def process_update_to_volunteer_food_data_if_new_to_event(
             interface=interface, event=event, volunteer=volunteer
         )
     )
-    if len(list_of_food_preferences_as_single_str)==0:
+    if len(list_of_food_preferences_as_single_str) == 0:
         return
 
     food_requirements = guess_food_requirements_from_food_field(

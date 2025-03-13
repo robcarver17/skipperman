@@ -27,6 +27,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     main_menu_button,
     Button,
     ButtonBar,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
@@ -58,8 +59,9 @@ list_of_report_labels = list(DICT_OF_REPORT_LABELS_AND_STAGES.keys())
 list_of_report_buttons = Line(
     [Button(label, tile=True) for label in list_of_report_labels]
 )
+help_button = HelpButton("reporting_help")
 
-nav_buttons = ButtonBar([main_menu_button])
+nav_buttons = ButtonBar([main_menu_button, help_button])
 
 
 def function_given_pressed_button_label(label) -> Callable:

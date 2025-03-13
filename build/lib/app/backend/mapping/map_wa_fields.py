@@ -2,20 +2,38 @@ from datetime import datetime
 
 import pandas as pd
 
-from app.data_access.configuration.configuration import WA_ACTIVE_AND_PAID_STATUS, WA_CANCELLED_STATUS, \
-    WA_PARTIAL_PAID_STATUS, WA_UNPAID_STATUS
-from app.data_access.configuration.field_list import REGISTERED_BY_FIRST_NAME, REGISTERED_BY_LAST_NAME, \
-    REGISTRATION_DATE, PAYMENT_STATUS
+from app.data_access.configuration.configuration import (
+    WA_ACTIVE_AND_PAID_STATUS,
+    WA_CANCELLED_STATUS,
+    WA_PARTIAL_PAID_STATUS,
+    WA_UNPAID_STATUS,
+)
+from app.data_access.configuration.field_list import (
+    REGISTERED_BY_FIRST_NAME,
+    REGISTERED_BY_LAST_NAME,
+    REGISTRATION_DATE,
+    PAYMENT_STATUS,
+)
 from app.data_access.store.object_store import ObjectStore
 
 from app.backend.mapping.list_of_field_mappings import get_field_mapping_for_event
 from app.objects.events import Event
 from app.objects.exceptions import missing_data
-from app.objects.registration_status import RegistrationStatus, POSSIBLE_STATUS_NAMES, active_paid_status, \
-    cancelled_status, empty_status, active_part_paid_status, active_unpaid_status
+from app.objects.registration_status import (
+    RegistrationStatus,
+    POSSIBLE_STATUS_NAMES,
+    active_paid_status,
+    cancelled_status,
+    empty_status,
+    active_part_paid_status,
+    active_unpaid_status,
+)
 from app.objects.utils import transform_datetime_into_str
 from app.objects.wa_field_mapping import ListOfWAFieldMappings
-from app.objects.registration_data import RegistrationDataForEvent, RowInRegistrationData
+from app.objects.registration_data import (
+    RegistrationDataForEvent,
+    RowInRegistrationData,
+)
 from app.backend.file_handling import load_spreadsheet_file_and_clear_nans
 
 
@@ -23,12 +41,14 @@ def map_wa_fields_in_df_for_event_and_add_special_fields(
     object_store: ObjectStore, event: Event, filename: str
 ) -> RegistrationDataForEvent:
     mapped_wa_event_data = map_wa_fields_in_df_for_event(
-        object_store=object_store,
-        event=event,
-        filename=filename
+        object_store=object_store, event=event, filename=filename
     )
-    mapped_wa_event_data_with_row_status = create_row_status_from_wa_fields_in_event_data(mapped_wa_event_data)
-    mapped_wa_event_data_with_row_status_and_id = add_row_id_from_wa_fields_in_event_data(mapped_wa_event_data_with_row_status)
+    mapped_wa_event_data_with_row_status = (
+        create_row_status_from_wa_fields_in_event_data(mapped_wa_event_data)
+    )
+    mapped_wa_event_data_with_row_status_and_id = (
+        add_row_id_from_wa_fields_in_event_data(mapped_wa_event_data_with_row_status)
+    )
 
     return mapped_wa_event_data_with_row_status_and_id
 
@@ -52,7 +72,6 @@ def map_wa_fields_in_df_for_event(
     return mapped_wa_event_data
 
 
-
 def map_wa_fields_in_df(
     wa_as_df: pd.DataFrame,
     wa_field_mapping: ListOfWAFieldMappings,
@@ -66,15 +85,17 @@ def map_wa_fields_in_df(
 
     mapped_wa_event_data = RegistrationDataForEvent.from_dict(dict_of_mapped_data)
 
-
     return mapped_wa_event_data
 
 
-def create_row_status_from_wa_fields_in_event_data(mapped_wa_event_data: RegistrationDataForEvent) -> RegistrationDataForEvent:
+def create_row_status_from_wa_fields_in_event_data(
+    mapped_wa_event_data: RegistrationDataForEvent,
+) -> RegistrationDataForEvent:
     for row_of_mapped_wa_event_data in mapped_wa_event_data:
         add_status_to_row_of_mapped_wa_event_data(row_of_mapped_wa_event_data)
 
     return mapped_wa_event_data
+
 
 def add_status_to_row_of_mapped_wa_event_data(
     row_of_mapped_wa_event_data: RowInRegistrationData,
@@ -113,8 +134,6 @@ def get_status_from_row_of_mapped_wa_event_data(
         )
 
 
-
-
 def get_status_str_from_row_of_mapped_wa_event_data(
     row_of_mapped_wa_event_data: RowInRegistrationData,
 ) -> str:
@@ -128,17 +147,20 @@ def get_status_str_from_row_of_mapped_wa_event_data(
     return status_field
 
 
-def add_row_id_from_wa_fields_in_event_data(registration_data: RegistrationDataForEvent) -> RegistrationDataForEvent:
+def add_row_id_from_wa_fields_in_event_data(
+    registration_data: RegistrationDataForEvent,
+) -> RegistrationDataForEvent:
     for row_in_registration_data in registration_data:
         add_unique_row_identified_to_row(row_in_registration_data)
 
     return registration_data
 
+
 def add_unique_row_identified_to_row(row_in_registration_data: RowInRegistrationData):
     row_id = unique_row_identifier(
         registration_date=row_in_registration_data[REGISTRATION_DATE],
         registered_by_first_name=row_in_registration_data[REGISTERED_BY_FIRST_NAME],
-        registered_by_last_name=row_in_registration_data[REGISTERED_BY_LAST_NAME]
+        registered_by_last_name=row_in_registration_data[REGISTERED_BY_LAST_NAME],
     )
     row_in_registration_data.row_id = row_id
 
@@ -157,5 +179,3 @@ def unique_row_identifier(
     )
 
     return row_id
-
-

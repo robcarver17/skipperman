@@ -174,7 +174,7 @@ def sort_df_by_power_boat(
 ) -> pd.DataFrame:
     all_boats_in_order = (
         volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats.list_of_unique_boats_at_event_including_unallocated()
-    ) ## FIXME PERHAPS REMOVE UNALLOCATED?
+    )  ## FIXME PERHAPS REMOVE UNALLOCATED?
     new_df = pd.DataFrame()
     for boat in all_boats_in_order:
         subset_df = df_for_reporting_volunteers_for_day[

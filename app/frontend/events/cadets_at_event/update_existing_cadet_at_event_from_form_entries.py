@@ -213,7 +213,7 @@ def update_comparing_new_and_existing_cadet_at_event(
                 str(new_cadet_at_event),
                 existing_cadet_at_event.status.name,
                 new_cadet_at_event.status.name,
-                reg_status_change
+                reg_status_change,
             )
         )
 

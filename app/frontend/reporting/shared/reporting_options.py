@@ -10,10 +10,13 @@ from app.backend.reporting.arrangement.get_and_update_arrangement_options import
     reset_arrangement_report_options,
 )
 from app.backend.reporting.options_and_parameters.report_options import ReportingOptions
-from app.backend.reporting.options_and_parameters.report_type_specific_parameters import \
-    SpecificParametersForTypeOfReport
-from app.backend.reporting.process_stages.create_list_of_groups_from_df import get_dict_of_grouped_df
-from app.backend.reporting.report_generator import  ReportGenerator
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
+    SpecificParametersForTypeOfReport,
+)
+from app.backend.reporting.process_stages.create_list_of_groups_from_df import (
+    get_dict_of_grouped_df,
+)
+from app.backend.reporting.report_generator import ReportGenerator
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.reporting.shared.group_order import (
     get_arrangement_options_and_group_order_from_stored_or_defaults,
@@ -102,7 +105,9 @@ def reset_all_report_options(
     interface: abstractInterface, report_generator: ReportGenerator
 ):
     reset_print_report_options(interface=interface, report_generator=report_generator)
-    reset_specific_report_options(interface=interface, report_generator=report_generator)
+    reset_specific_report_options(
+        interface=interface, report_generator=report_generator
+    )
     reset_arrangement_report_options(
         object_store=interface.object_store, report_generator=report_generator
     )

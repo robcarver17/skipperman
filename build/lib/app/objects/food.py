@@ -1,9 +1,15 @@
 from dataclasses import dataclass
 from typing import List, Union
 
-from app.objects.exceptions import arg_not_passed, MissingData, MultipleMatches, missing_data
+from app.objects.exceptions import (
+    arg_not_passed,
+    MissingData,
+    MultipleMatches,
+    missing_data,
+)
 from app.objects.generic_list_of_objects import (
-    GenericListOfObjects, get_unique_object_with_attr_in_list,
+    GenericListOfObjects,
+    get_unique_object_with_attr_in_list,
 )
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.generic_list_of_objects import index_not_found
@@ -42,7 +48,7 @@ class FoodRequirements(GenericSkipperManObject):
 
     def __eq__(self, other):
         for key in food_keys:
-            if not getattr(self, key)==getattr(other, key):
+            if not getattr(self, key) == getattr(other, key):
                 return False
 
         return True
@@ -62,7 +68,9 @@ class FoodRequirements(GenericSkipperManObject):
 
         return ", ".join(description_list)
 
+
 no_food_requirements = FoodRequirements.create_empty()
+
 
 def guess_food_requirements_from_food_field(food_field_str: str) -> FoodRequirements:
     food_field_str_lower = food_field_str.lower()
@@ -123,7 +131,9 @@ class ListOfCadetsWithFoodRequirementsAtEvent(GenericListOfObjects):
         return CadetWithFoodRequirementsAtEvent
 
     def remove_food_requirements_for_cadet_at_event(self, cadet_id: str):
-        cadet_with_food = self.cadet_with_food_with_cadet_id(cadet_id, default=missing_data)
+        cadet_with_food = self.cadet_with_food_with_cadet_id(
+            cadet_id, default=missing_data
+        )
         if cadet_with_food is missing_data:
             return
         self.remove(cadet_with_food)
@@ -160,15 +170,12 @@ class ListOfCadetsWithFoodRequirementsAtEvent(GenericListOfObjects):
     def list_of_cadet_ids(self) -> List[str]:
         return [cadet_with_food.cadet_id for cadet_with_food in self]
 
-    def cadet_with_food_with_cadet_id(self, cadet_id, default = arg_not_passed) -> CadetWithFoodRequirementsAtEvent:
+    def cadet_with_food_with_cadet_id(
+        self, cadet_id, default=arg_not_passed
+    ) -> CadetWithFoodRequirementsAtEvent:
         return get_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name='cadet_id',
-            attr_value=cadet_id,
-            default=default
+            some_list=self, attr_name="cadet_id", attr_value=cadet_id, default=default
         )
-
-
 
     def filter_for_list_of_cadet_ids(
         self, list_of_cadet_ids: List[str]
@@ -222,7 +229,9 @@ class ListOfVolunteersWithFoodRequirementsAtEvent(GenericListOfObjects):
             volunteer_in_data = self.volunteer_with_food_with_volunteer_id(volunteer_id)
             volunteer_in_data.food_requirements = food_requirements
         else:
-            self.add_new_volunteer_with_food_to_event(volunteer_id=volunteer_id, food_requirements=food_requirements)
+            self.add_new_volunteer_with_food_to_event(
+                volunteer_id=volunteer_id, food_requirements=food_requirements
+            )
 
     def add_new_volunteer_with_food_to_event(
         self,
@@ -242,26 +251,29 @@ class ListOfVolunteersWithFoodRequirementsAtEvent(GenericListOfObjects):
         return [object.volunteer_id for object in self]
 
     def drop_volunteer(self, volunteer_id: str):
-        object_with_id = self.volunteer_with_food_with_volunteer_id(volunteer_id, default=missing_data)
+        object_with_id = self.volunteer_with_food_with_volunteer_id(
+            volunteer_id, default=missing_data
+        )
         if object_with_id is missing_data:
             return
         self.remove(object_with_id)
 
     def volunteer_has_food_already(self, volunteer_id):
-        volunteer_with_food =self.volunteer_with_food_with_volunteer_id(volunteer_id, default=missing_data)
+        volunteer_with_food = self.volunteer_with_food_with_volunteer_id(
+            volunteer_id, default=missing_data
+        )
 
         return not volunteer_with_food is missing_data
 
     def volunteer_with_food_with_volunteer_id(
-        self, volunteer_id: str, default = arg_not_passed
+        self, volunteer_id: str, default=arg_not_passed
     ) -> VolunteerWithFoodRequirementsAtEvent:
         return get_unique_object_with_attr_in_list(
             some_list=self,
-            attr_name='volunteer_id',
+            attr_name="volunteer_id",
             attr_value=volunteer_id,
-            default=default
+            default=default,
         )
-
 
     def filter_for_list_of_volunteer_ids(
         self, list_of_volunteer_ids: List[str]

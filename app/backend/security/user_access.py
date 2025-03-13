@@ -93,7 +93,6 @@ def can_see_all_groups_and_award_qualifications(
     return is_senior_instructor_at_event
 
 
-
 def is_volunteer_SI_or_super_user(interface: abstractInterface):
     volunteer = get_volunteer_for_logged_in_user_or_superuser(interface)
 

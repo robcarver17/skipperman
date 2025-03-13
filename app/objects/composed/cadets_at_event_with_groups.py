@@ -12,7 +12,6 @@ from app.objects.utils import most_common
 from app.objects.events import Event, ListOfEvents
 
 from app.objects.cadet_with_id_with_group_at_event import (
-
     ListOfCadetIdsWithGroups,
 )
 from app.objects.cadets import Cadet, ListOfCadets
@@ -22,6 +21,7 @@ from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.groups import Group, ListOfGroups, unallocated_group
 
 CADET_NAME = "cadet"
+
 
 @dataclass
 class CadetWithGroup:
@@ -49,7 +49,6 @@ class CadetWithGroupOnDay(GenericSkipperManObject):
     def cadet_full_name(self) -> str:
         return self.cadet.name
 
-
     @property
     def cadet_id(self):
         return self.cadet.id
@@ -63,12 +62,14 @@ class CadetWithGroupOnDay(GenericSkipperManObject):
         group = self.group.name
         day = self.day.name
 
-        return {'name': cadet, GROUP_STR_NAME: group, 'day': day}
+        return {"name": cadet, GROUP_STR_NAME: group, "day": day}
 
 
 class ListOfCadetsWithGroupOnDay(List[CadetWithGroupOnDay]):
     def as_df_of_str(self, display_full_names: bool = True):
-        list_of_dicts = [item.as_str_dict(display_full_names=display_full_names) for item in self]
+        list_of_dicts = [
+            item.as_str_dict(display_full_names=display_full_names) for item in self
+        ]
         return pd.DataFrame(list_of_dicts)
 
     def items_with_cadet_id(self, cadet_id: str) -> List[CadetWithGroupOnDay]:
@@ -291,19 +292,22 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
 
         return group_dict.most_common()
 
-    def subset_for_list_of_cadets(self, list_of_cadets: ListOfCadets)-> 'DictOfCadetsWithDaysAndGroupsAtEvent':
-        raw_dict =         dict([
-            (cadet,
-             self.get_days_and_groups_for_cadet(cadet))
-            for cadet in list_of_cadets])
+    def subset_for_list_of_cadets(
+        self, list_of_cadets: ListOfCadets
+    ) -> "DictOfCadetsWithDaysAndGroupsAtEvent":
+        raw_dict = dict(
+            [
+                (cadet, self.get_days_and_groups_for_cadet(cadet))
+                for cadet in list_of_cadets
+            ]
+        )
 
         return DictOfCadetsWithDaysAndGroupsAtEvent(
             raw_dict=raw_dict,
             list_of_groups=self.list_of_groups,
             event=self.event,
-            list_of_cadet_ids_with_groups=self.list_of_cadet_ids_with_groups
+            list_of_cadet_ids_with_groups=self.list_of_cadet_ids_with_groups,
         )
-
 
     def get_days_and_groups_for_cadet(
         self, cadet: Cadet, default=arg_not_passed

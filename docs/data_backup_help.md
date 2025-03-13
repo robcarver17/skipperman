@@ -1,4 +1,5 @@
-To access data backup, from the **main menu** select **utilities**, then **data backup,upload and restore**.
+To access data backup, from the **main menu** select **Utilities**, then choose **Data backup, upload and restore**.
+___
 
 Data can be backed up in two different ways on Skipperman.
 
@@ -7,7 +8,7 @@ Data can be backed up in two different ways on Skipperman.
 
 # Data snapshot
 
-Snapshots are stored locally on the Skipperman server, and are a good way to periodically save what you have done in case you do something stupid (since there is no undo function). To make a snapshot you can eithier click 'Snapshot data' on the main menu page, or click the 'Write a snapshot of the data now' button on the backup data utilities menu option. To restore a snapshot, click on the 'Restore data from data snapshot' button on the backup data menu. 
+Snapshots are stored locally on the Skipperman server, and are a good way to periodically save what you have done in case you do something stupid (since there is no undo function). To make a snapshot you can eithier click `Snapshot data` on the main menu page (in the top orange box header), or click the `Write a snapshot of the data now` button on the backup data utilities menu option. To restore a snapshot, click on the `Restore data from data snapshot` button on the backup data menu. 
 
 Once a snapshot has been restored you can't go back to how the data was before the snapshot was taken (unless you already have a snapshot or full backup), so please bear this in mind.
 

@@ -32,7 +32,9 @@ def modify_sailing_group(
     )
 
 
-def get_group_with_name(object_store: ObjectStore, group_name: str, default = arg_not_passed) -> Group:
+def get_group_with_name(
+    object_store: ObjectStore, group_name: str, default=arg_not_passed
+) -> Group:
     list_of_groups = get_list_of_groups(object_store)
     return list_of_groups.matches_name(group_name, default=default)
 
@@ -52,4 +54,6 @@ def update_list_of_groups(
 
 def order_list_of_groups(object_store: ObjectStore, list_of_groups: ListOfGroups):
     all_groups = get_list_of_groups(object_store)
-    return all_groups.subset_from_list_of_ids_retaining_order(list_of_groups.list_of_ids)
+    return all_groups.subset_from_list_of_ids_retaining_order(
+        list_of_groups.list_of_ids
+    )

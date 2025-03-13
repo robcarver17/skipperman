@@ -9,7 +9,8 @@ from app.data_access.configuration.configuration import (
 
 from app.objects.utils import transform_date_into_str, similar
 from app.objects.generic_list_of_objects import (
-    GenericListOfObjectsWithIds, get_unique_object_with_attr_in_list,
+    GenericListOfObjectsWithIds,
+    get_unique_object_with_attr_in_list,
 )
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
 from app.objects.exceptions import arg_not_passed, MultipleMatches, MissingData
@@ -48,7 +49,7 @@ class Event(GenericSkipperManObjectWithIds):
     def from_date_length_and_name_only(
         cls, event_name: str, start_date: datetime.date, duration: int
     ):
-        if duration>7:
+        if duration > 7:
             raise Exception("Events cannot be more than one week long")
 
         if duration < 1:
@@ -177,7 +178,7 @@ class ListOfEvents(GenericListOfObjectsWithIds):
     def list_of_event_descriptions(self) -> list:
         return [event.event_description for event in self]
 
-    def event_with_id(self, event_id:str, default = arg_not_passed):
+    def event_with_id(self, event_id: str, default=arg_not_passed):
         return self.object_with_id(event_id, default=default)
 
     def add(self, event: Event):
@@ -191,12 +192,14 @@ class ListOfEvents(GenericListOfObjectsWithIds):
         if exists:
             raise Exception("Event %s already in data" % str(event))
 
-    def event_with_description(self, event_description: str, default = arg_not_passed) -> Event:
+    def event_with_description(
+        self, event_description: str, default=arg_not_passed
+    ) -> Event:
         return get_unique_object_with_attr_in_list(
             some_list=self,
-            attr_name='event_description',
+            attr_name="event_description",
             attr_value=event_description,
-            default=default
+            default=default,
         )
 
     def sort_by(self, sort_by: str):
@@ -263,7 +266,7 @@ def list_of_events_excluding_one_event_and_past_events(
             event
             for event in list_of_events
             if event.start_date < datetime.date.today()
-               and not event.event_description== event_to_exclude.event_description
+            and not event.event_description == event_to_exclude.event_description
         ]
     )
     list_of_events = list_of_events.sort_by(sort_by)

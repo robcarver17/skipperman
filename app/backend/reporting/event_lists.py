@@ -1,5 +1,6 @@
-from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
-    get_dict_of_volunteers_with_roles_and_groups_at_event
+from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
+    get_dict_of_volunteers_with_roles_and_groups_at_event,
+)
 from app.data_access.store.object_store import ObjectStore
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
@@ -17,10 +18,12 @@ def display_list_of_events_with_buttons_criteria_matched(
         [
             event
             for event in list_of_events
-            if event_matches_criteria(object_store=object_store, event=event, **event_criteria)
+            if event_matches_criteria(
+                object_store=object_store, event=event, **event_criteria
+            )
         ]
     )
-    if len(list_of_events)==0:
+    if len(list_of_events) == 0:
         return ListOfLines(["No events matching report criteria"])
 
     list_of_event_descriptions = list_of_events.list_of_event_descriptions
@@ -84,18 +87,33 @@ def event_matches_criteria(
 
     return True
 
-def event_has_volunteers_on_rota(object_store: ObjectStore, event: Event):
-    all_event_data = get_dict_of_volunteers_with_roles_and_groups_at_event(object_store=object_store, event=event)
-    return len(all_event_data)>0
 
-from app.backend.groups.cadets_with_groups_at_event import get_dict_of_cadets_with_groups_at_event
+def event_has_volunteers_on_rota(object_store: ObjectStore, event: Event):
+    all_event_data = get_dict_of_volunteers_with_roles_and_groups_at_event(
+        object_store=object_store, event=event
+    )
+    return len(all_event_data) > 0
+
+
+from app.backend.groups.cadets_with_groups_at_event import (
+    get_dict_of_cadets_with_groups_at_event,
+)
+
 
 def event_has_groups(object_store: ObjectStore, event: Event):
-    group_data = get_dict_of_cadets_with_groups_at_event(object_store=object_store, event=event)
-    return len(group_data)>0
+    group_data = get_dict_of_cadets_with_groups_at_event(
+        object_store=object_store, event=event
+    )
+    return len(group_data) > 0
 
-from app.backend.boat_classes.cadets_with_boat_classes_at_event import get_dict_of_cadets_and_boat_classes_and_partners_at_events
+
+from app.backend.boat_classes.cadets_with_boat_classes_at_event import (
+    get_dict_of_cadets_and_boat_classes_and_partners_at_events,
+)
+
 
 def event_has_cadets_with_boats(object_store: ObjectStore, event: Event):
-    boat_data = get_dict_of_cadets_and_boat_classes_and_partners_at_events(object_store=object_store, event=event)
-    return len(boat_data)>0
+    boat_data = get_dict_of_cadets_and_boat_classes_and_partners_at_events(
+        object_store=object_store, event=event
+    )
+    return len(boat_data) > 0

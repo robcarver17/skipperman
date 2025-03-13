@@ -2,12 +2,15 @@ from dataclasses import dataclass
 from typing import List
 
 from app.objects.exceptions import arg_not_passed, MissingData
-from app.objects.generic_list_of_objects import GenericListOfObjects, get_unique_object_with_attr_in_list
+from app.objects.generic_list_of_objects import (
+    GenericListOfObjects,
+    get_unique_object_with_attr_in_list,
+)
 
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.exceptions import MultipleMatches
 
-NO_VOLUNTEER_ALLOCATED_ID = "NO_volunteer_allocated" ## DO not change
+NO_VOLUNTEER_ALLOCATED_ID = "NO_volunteer_allocated"  ## DO not change
 
 
 @dataclass
@@ -59,10 +62,11 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
         ]
         return ListOfIdentifiedVolunteersAtEvent(items)
 
-
     def identified_as_processed_not_allocated(self, row_id: str, volunteer_index: int):
         try:
-            assert self.row_and_index_not_in_list_of_rows_and_indices(row_id=row_id, volunteer_index=volunteer_index)
+            assert self.row_and_index_not_in_list_of_rows_and_indices(
+                row_id=row_id, volunteer_index=volunteer_index
+            )
         except:
             raise Exception("Row ID and index can't appear more than once")
 
@@ -72,9 +76,13 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
             )
         )
 
-    def add_identified_volunteer(self, row_id: str, volunteer_id: str, volunteer_index: int):
+    def add_identified_volunteer(
+        self, row_id: str, volunteer_id: str, volunteer_index: int
+    ):
         try:
-            assert self.row_and_index_not_in_list_of_rows_and_indices(row_id=row_id, volunteer_index=volunteer_index)
+            assert self.row_and_index_not_in_list_of_rows_and_indices(
+                row_id=row_id, volunteer_index=volunteer_index
+            )
         except:
             raise Exception("Row ID and index can't appear more than once")
 
@@ -86,10 +94,16 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
             )
         )
 
-    def row_and_index_not_in_list_of_rows_and_indices(self,  row_id: str, volunteer_index: int) -> bool:
-        return not self.row_and_index_in_list_of_rows_and_indices(row_id=row_id, volunteer_index=volunteer_index)
+    def row_and_index_not_in_list_of_rows_and_indices(
+        self, row_id: str, volunteer_index: int
+    ) -> bool:
+        return not self.row_and_index_in_list_of_rows_and_indices(
+            row_id=row_id, volunteer_index=volunteer_index
+        )
 
-    def row_and_index_in_list_of_rows_and_indices(self,  row_id: str, volunteer_index: int) -> bool:
+    def row_and_index_in_list_of_rows_and_indices(
+        self, row_id: str, volunteer_index: int
+    ) -> bool:
         row_and_index = RowIDAndIndex(row_id=row_id, volunteer_index=volunteer_index)
         return row_and_index in self.list_of_row_ids_and_indices()
 
@@ -103,4 +117,3 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
 
     def list_of_row_ids_and_indices(self) -> List[RowIDAndIndex]:
         return [item.row_and_index for item in self]
-

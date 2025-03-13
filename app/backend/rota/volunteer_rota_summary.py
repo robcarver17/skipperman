@@ -168,13 +168,10 @@ def get_list_of_day_summaries_teams_and_groups_at_event(
         list_of_teams
     )
     if no_team not in sorted_teams_at_event:
-        sorted_teams_at_event = sorted_teams_at_event+[no_team]
-
+        sorted_teams_at_event = sorted_teams_at_event + [no_team]
 
     all_groups = get_list_of_groups(object_store)
-    all_groups_at_event = ListOfGroups(
-        volunteers_in_roles_at_event.all_groups_at_event
-    )
+    all_groups_at_event = ListOfGroups(volunteers_in_roles_at_event.all_groups_at_event)
     sorted_groups_at_event = all_groups_at_event.sort_to_match_other_group_list_order(
         all_groups
     )
@@ -193,7 +190,6 @@ def get_list_of_day_summaries_teams_and_groups_at_event(
         all_day_summaries.append(this_day_summary)
 
     return all_day_summaries
-
 
 
 def get_summary_of_teams_and_groups_for_events_on_day(
@@ -216,7 +212,6 @@ def get_summary_of_teams_and_groups_for_events_on_day(
             )
             summary_dict[team_and_group] = [count]
 
-
     return pd.DataFrame(summary_dict).transpose()
 
 
@@ -238,7 +233,7 @@ def team_and_group_with_count(
 def from_list_of_day_summaries_to_single_df(
     all_day_summaries: List[pd.DataFrame], event: Event
 ) -> pd.DataFrame:
-    all_day_summaries = [summary for summary in all_day_summaries if len(summary)>0]
+    all_day_summaries = [summary for summary in all_day_summaries if len(summary) > 0]
     if len(all_day_summaries) == 0:
         return pd.DataFrame()
 
@@ -248,4 +243,3 @@ def from_list_of_day_summaries_to_single_df(
     single_df = single_df.loc[~(single_df == 0).all(axis=1)]  ## missing values
 
     return single_df
-

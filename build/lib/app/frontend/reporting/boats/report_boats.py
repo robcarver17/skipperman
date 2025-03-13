@@ -1,5 +1,5 @@
 from app.backend.reporting.boat_report.boat_report_parameters import (
-    get_specific_parameters_for_boat_report
+    get_specific_parameters_for_boat_report,
 )
 from app.frontend.reporting.boats.forms import (
     reporting_options_form_for_boat_additional_parameters,
@@ -13,7 +13,9 @@ from app.frontend.reporting.boats.processes import (
 )
 
 from app.frontend.reporting.shared.generic_report_pages import *
-from app.backend.reporting.report_generator import ReportGeneratorWithoutSpecificParameters
+from app.backend.reporting.report_generator import (
+    ReportGeneratorWithoutSpecificParameters,
+)
 
 
 from app.objects.abstract_objects.abstract_form import (

@@ -1,8 +1,8 @@
 To import the registration data for an event, from the **main menu** choose **events**, then select the event, then click on **import registration data**.
+___
 
 [TOC]
 
-A quick guide to importing registration data (from Wild Apricot)
 
 # Introduction
 
@@ -28,7 +28,7 @@ If you do feel you have to make changes to the form, then you will need to under
 
 It's strongly recommended that you create at least one test registration in Wild Apricot at this stage before exporting the data.
 
-To export registration data from WA, click on the 'Export registrants' button, select 'Export to: CSV', make sure 'Export all fields' is ticked, and click Export (it's more reliable to export a .csv file, but Skipperman can also handle .xlsx spreadsheet files if you prefer to use those).
+To export registration data from WA, click on the `Export registrants` button, select `Export to: CSV`, make sure `Export all fields` is ticked, and click `Export` (it's more reliable to export a .csv file, but Skipperman can also handle .xlsx spreadsheet files if you prefer to use those).
 
 ***
 ***
@@ -39,15 +39,15 @@ To export registration data from WA, click on the 'Export registrants' button, s
 # Importing data into Skipperman
 
 First [add the event in Skipperman](add_event_help.md) in Skipperman.
-Now select 'Main menu/Events/ Event name / Import registration data / Import from WA spreadsheet file' to get ready to import.
+Now select `Main menu / Events/ Event name / Import registration data / Import from WA spreadsheet file` to get ready to import.
 
-If it's a brand new event, you should see the following status update:
+If it's a brand-new event, you should see the following status update:
 
-> Status:  
-> No field mapping set up - do this before you import any data  
-> No WA file has ever been uploaded before (or WA ID has been manually cleared).  
-> No registration data imported yet.  
-> No file currently uploaded for import.  
+> `Status`:  
+> `No field mapping set up - do this before you import any data`  
+> `No WA file has ever been uploaded before (or WA ID has been manually cleared).`  
+> `No registration data imported yet.`  
+> `No file currently uploaded for import.`  
 
 
 ## Field mapping
@@ -58,26 +58,24 @@ More [information on field mapping here](WA_field_mapping_help.md).
 
 Let's assume that you duplicated an existing Cadet event in Wild Apricot without making any changes, and that it's an event which already exists in Skipperman. If not, then you will need to read the [detailed help on field mapping](WA_field_mapping_help).
 
-Assuming you're already in 'Main menu/Events/ Event name / Import registration data / Import from WA spreadsheet file', now click on 'Set up WA field mapping'. Then in the following menu, choose 'Clone the mapping for an existing event'. Then choose the event you want to clone. You will now see the message 'Mapping copied from event June training 2023 to **New event name and year**'.  
-After pressing 'Finished', you will see the message 'Mapping already set up for TestEvent 2025'. Click on back and you are back at the main import page. The status will have changed to:
+Assuming you're already in `Main menu / Events/ Event name / Import registration data / Import from WA spreadsheet file`, now click on `Set up WA field mapping`. Then in the following menu, choose `Clone the mapping for an existing event`. Then choose the event you want to clone. You will now see the message `Mapping copied from event June training 2023 to New event name and year`.  
+After pressing `Finished`, you will see the message `Mapping already set up for TestEvent 2025`. Click on `Back` and you are now at the main import page. The status will have changed to:
 
 
-> Status:  
-> Field mapping has been setup.  
-> No WA file has ever been uploaded before (or WA ID has been manually cleared).  
-> No registration data imported yet.  
-> No file currently uploaded for import.  
+> `Field mapping has been setup.`  
+> `No WA file has ever been uploaded before (or WA ID has been manually cleared).`  
+> `No registration data imported yet.`  
+> `No file currently uploaded for import.`  
 
 
 ## Uploading a WA export file
 
-You are now ready for the next step - uploading the WA file you exported earlier. Click on the 'Upload a WA export file', 'Choose file', and then 'Upload selected file'. If all goes well, you will see the message 'Uploaded file successfully'. The status in the import page will now read:
+You are now ready for the next step - uploading the WA file you exported earlier. Click on the `Upload a WA export file`, `Choose file`, and then `Upload selected file`. If all goes well, you will see the message `Uploaded file successfully`. The status in the import page will now read:
 
-> Status:
-> Field mapping has been setup.
-> A WA file with WA ID 5271589 has been previously uploaded.
-> No registration data imported yet.
-> WA file has been uploaded ready for import
+> `Field mapping has been setup.`  
+> `A WA file with WA ID 5271589 has been previously uploaded.`  
+> `No registration data imported yet.`  
+> `WA file has been uploaded ready for import`  
 
 
 
@@ -88,16 +86,14 @@ The WA ID is a number given by WA to each event, which Skipperman found in the f
 If you try and upload a file with a WA ID that has already been assigned to an existing event, you will get an error like this:
 
 
-> Problem with file upload Can't upload file for TestEvent 2025, WA ID 5271589 in file is already mapped to a different existing event June training 2023 - are you sure you have the right file?. 
-> If you aure sure, then clear the WA ID for June training 2023 before retrying.
-
+> `Problem with file upload Can't upload file for TestEvent 2025, WA ID 5271589 in file is already mapped to a different existing event June training 2023 - are you sure you have the right file?. If you are sure, then clear the WA ID for June training 2023 before retrying.`  
 
 This is to prevent users from accidentally uploading the wrong downloaded event file.
 
 The main reason, apart from testing, that this could happen is if you set up an event twice for some reason; and then get as far as importing data on one event, and then try to do it on the second event. Ideally, you shouldn't do this! But if you do then you will have to eithier:
 
 - go back to using the original event that was set up (and ignore the new one)
-- if you want to use the new event instead of the old one, then follow the instructions in the error message, navigate to the original event / import registration data / import from Wild Apricot, and then click on "Reset the stored WA event IS" 
+- Or, if you want to use the new event instead of the old one, then follow the instructions in the error message, navigate to the original event, then choose `Import registration data`, `Import from Wild Apricot`, and then click on `Reset the stored WA event ID` 
 
 The latter will not delete or modify the old event in any way, but it will allow you to upload a file with the duplicate WA ID into a different event.
 
@@ -122,8 +118,8 @@ Skipperman will attempt to identify all the cadets in the imported WA event file
 ***
 ***
 
-- If this isn't actually a new cadet: you will probably see buttons to select an existing cadet. Click on the appropriate cadet. If you can't se the cadet you want, click on 'See all cadets'. **It's really important that you don't add duplicate cadets to the Skipperman data**
-- If this is a new cadet: check the name and date of birth, and membership status. For racing events you won't usually have the date of birth - if they are a visitor don't worry about including this. If they are a member that is new to Skipperman, you can [edit the date of birth later](view_and_edit_individual_cadet_help.md). For membership status unless you are sure they are (or are not) a member, put 'unconfirmed'. Membership can be confirmed by importing a list of members exported from WA (Main menu/Sailors/ [import a list of club members](import_membership_list_help)). It is possible to edit the cadet details, and these can also be updated by importing a list of club members from Wild Apricot, so don't worry too much if these aren't precisely right.  
+- If this isn't actually a new cadet: you will probably see buttons to select an existing cadet. Click on the appropriate cadet. If you can't see the cadet you want, click on `See all cadets`. **It's really important that you don't add duplicate cadets to the Skipperman data**
+- If this is a new cadet: check the name and date of birth, and membership status. For racing events you won't usually have the date of birth - if they are a visitor don't worry about including this. If they are a member that is new to Skipperman, you can [edit the date of birth later](view_and_edit_individual_cadet_help.md). For membership status unless you are sure they are (or are not) a member, put 'unconfirmed'. Membership can be confirmed by [importing a list of club members exported from WA](import_membership_list_help)). It is possible to edit the cadet details, and these can also be updated by importing a list of club members from Wild Apricot, so don't worry too much if these aren't precisely right.  
 - If this is a test entry and not a real cadet: click the "Skip: this is a test entry" button. 
 
 More help with identifying cadets [here](identify_cadets_at_event_help.md)
@@ -155,12 +151,10 @@ Next, Skipperman will try and find the volunteers who have mentioned in the WA e
 ***
 ***
 
-volunteer number
 
-- If this isn't actually a new volunteer: you will probably see buttons to select an existing volunteer. Click on the appropriate volunteer. If you can't se the volunteer you want, click on 'See all volunteers'. **It's really important that you don't add duplicate volunteers to the Skipperman data**
-- If this is a new volunteer: check the first and second name are correct, then click 'add this new volunteer'.   
-- If this isn't really a volunteer: click on skip. The most common cause of this is where the parent has accidentally put the cadets name in instead of their own. The system warns against this. 
-
+- If this isn't actually a new volunteer: you will probably see buttons to select an existing volunteer. Click on the appropriate volunteer. If you can't se the volunteer you want, click on `See all volunteers`. **It's really important that you don't add duplicate volunteers to the Skipperman data**
+- If this is a new volunteer: check the first and second name are correct, then click `Add this new volunteer`.   
+- If this isn't really a volunteer: click on `Skip`. The most common cause of this is where the parent has accidentally put the cadets name in instead of their own. The system warns against this. 
 
 More help with identifying volunteers [here](identify_volunteers_at_event_help.md). 
 
@@ -189,29 +183,27 @@ There will also potentially be changes to the registration information in Wild A
 
 **Any other changes you make won't be reflected in Skipperman**. Instead, make the changes directly in Skipperman. This is to avoid the hassle of having to make multiple download and uploads of files. It also means that non Wild Apricot literate users of Skipperman can make their own updates.
 
-You can also, if you prefer, make any of the changes above in Skipperman from the [registration page](link_required.md) to avoid the need to download and upload a new data file. If you make the changes only in Skipperman, and not in Wild Apricot, then a new invoice will not be generated. This might be preferable, if for example someone is still doing the same number of training days, but is doing Saturday only instead of Sunday. Or if someone has cancelled but with short notice and/or without a good reason, in which case you might not want to give them a refund.
+You can also, if you prefer, make any of the changes above in Skipperman from the [registration page](registration_editing_help.md) to avoid the need to download and upload a new data file. If you make the changes only in Skipperman, and not in Wild Apricot, then a new invoice will not be generated. This might be preferable, if for example someone is still doing the same number of training days, but is doing Saturday only instead of Sunday. Or if someone has cancelled but with short notice and/or without a good reason, in which case you might not want to give them a refund.
 
 ## Uploading an updated event file
 
 Before uploading, the status should show:
 
-> Status:
-> Field mapping has been setup.
-> A WA file with WA ID 5271589 has been previously uploaded.
-> Registration data has been imported already, but can be updated from a new file.
-> No file currently uploaded for import.
+> `Field mapping has been setup.`  
+> `A WA file with WA ID 5271589 has been previously uploaded.`  
+> `Registration data has been imported already, but can be updated from a new file.`  
+> `No file currently uploaded for import.`  
 
-Click on 'Upload a new WA export file', choose the file and click upload.
+Click on `Upload a new WA export file`, choose the file and click upload.
 
 The status will now read as:
 
-> Status:
-> Field mapping has been setup.
-> A WA file with WA ID 5271589 has been previously uploaded.
-> Registration data has been imported already, but can be updated from a new file.
-> WA file has been uploaded ready for import
+> `Field mapping has been setup.`  
+> `A WA file with WA ID 5271589 has been previously uploaded.`  
+> `Registration data has been imported already, but can be updated from a new file.`  
+> `WA file has been uploaded ready for import`  
 
-Click on 'Update data from current WA file' to update the registation data. 
+Click on `Update data from current WA file` to update the registation data. 
 
 ## New registrations
 
@@ -237,8 +229,8 @@ Cadet John Smith (2000-01-01) Member was in imported data, now appears to be mis
 
 This can happen if:
 
-- You have [added a sailor manually](link_required.md) to Skipperman who has not been registered in Wild Apricot, and their status is not 'Manual'. You can ignore this message, but to make it go away eithier change the [registration status to manual](link_required.md) which would be appropriate for a free event like a racing series, or ask their parent to register them.
-- For some stupid reason you have manually edited the data file exported from Wild Apricot and remove one or more rows. Unless you're an expert trying to debug something, don't do this. Instead, change the registration status to ['Cancelled'](link_required.md). Meanwhile, you can ignore this error.
+- You have [added a sailor manually](manually_adding_a_sailor.md) to Skipperman who has not been registered in Wild Apricot, and their status is not 'Manual'. You can ignore this message, but to make it go away eithier change the [registration status to Manual in the registration editing page](registration_editing_help.md) which would be appropriate for a free event like a racing series, or ask their parent to register them.
+- For some stupid reason you have manually edited the data file exported from Wild Apricot and remove one or more rows. Unless you're an expert trying to debug something, don't do this. Instead, change the registration status to ['Cancelled' in the registration editing screen](registration_editing_help.md). Meanwhile, you can ignore this error.
 - Wild Apricot themselves have changed their export output, or Skipperman has managed to corrupt it's own data. Please contact support - this is serious.
 
 ### Status and availability changes

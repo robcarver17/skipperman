@@ -113,13 +113,16 @@ def update_volunteer_food_data(
     event: Event,
     new_food_requirements: FoodRequirements,
 ):
-    dict_of_volunteers_with_food_requirements = get_dict_of_volunteers_with_food_requirements_at_event(
-        object_store=object_store, event=event
+    dict_of_volunteers_with_food_requirements = (
+        get_dict_of_volunteers_with_food_requirements_at_event(
+            object_store=object_store, event=event
+        )
     )
     dict_of_volunteers_with_food_requirements.update_volunteer_food_data(
         volunteer=volunteer, new_food_requirements=new_food_requirements
     )
     update_dict_of_volunteers_with_food_requirements_at_event(
-        object_store=object_store, event=event,
-        dict_of_volunteers_with_food_requirements=dict_of_volunteers_with_food_requirements
+        object_store=object_store,
+        event=event,
+        dict_of_volunteers_with_food_requirements=dict_of_volunteers_with_food_requirements,
     )

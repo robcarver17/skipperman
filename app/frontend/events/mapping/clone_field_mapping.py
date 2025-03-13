@@ -10,7 +10,8 @@ from app.objects.abstract_objects.abstract_lines import (
 from app.objects.abstract_objects.abstract_buttons import (
     cancel_menu_button,
     Button,
-    ButtonBar, HelpButton
+    ButtonBar,
+    HelpButton,
 )
 
 from app.frontend.shared.events_state import (
@@ -25,7 +26,8 @@ from app.backend.events.list_of_events import (
 from app.backend.mapping.list_of_field_mappings import (
     get_field_mapping_for_event,
     get_list_of_events_with_field_mapping,
-    save_field_mapping_for_event, does_event_already_have_mapping,
+    save_field_mapping_for_event,
+    does_event_already_have_mapping,
 )
 from app.objects.abstract_objects.abstract_text import bold
 from app.objects.events import Event
@@ -37,7 +39,7 @@ def display_form_for_clone_event_field_mapping(interface: abstractInterface):
         exclude_event=current_event, interface=interface
     )
     nav_bar = ButtonBar([cancel_menu_button, help_button])
-    warning =get_warning_if_existing_mapping(interface)
+    warning = get_warning_if_existing_mapping(interface)
     if len(list_of_events_with_buttons) == 0:
         return ListOfLines([nav_bar, Line("No other events exist with mapping setup")])
     else:
@@ -47,7 +49,6 @@ def display_form_for_clone_event_field_mapping(interface: abstractInterface):
                 Line(
                     "Choose event to clone event field mapping for %s"
                     % str(current_event),
-
                 ),
                 warning,
                 _______________,
@@ -55,16 +56,20 @@ def display_form_for_clone_event_field_mapping(interface: abstractInterface):
             ]
         )
 
+
 def get_warning_if_existing_mapping(interface: abstractInterface):
-    event =get_event_from_state(interface)
+    event = get_event_from_state(interface)
     existing_mapping = does_event_already_have_mapping(
         object_store=interface.object_store, event=event
     )
 
     if existing_mapping:
-        return bold("**WARNING**: Will replace existing mapping - there will be no warning or request for confirmation")
+        return bold(
+            "**WARNING**: Will replace existing mapping - there will be no warning or request for confirmation"
+        )
     else:
-        return ''
+        return ""
+
 
 def display_list_of_events_with_field_mapping_buttons(
     interface: abstractInterface, exclude_event: Event
@@ -90,14 +95,16 @@ def post_form_for_clone_event_field_mapping(interface: abstractInterface):
 
     message = clone_field_mapping_for_selected_event_and_return_message(interface)
 
-    return form_with_message_and_finished_button(message,
+    return form_with_message_and_finished_button(
+        message,
         interface=interface,
         function_whose_parent_go_to_on_button_press=display_form_for_clone_event_field_mapping,
     )
 
 
-
-def clone_field_mapping_for_selected_event_and_return_message(interface: abstractInterface) -> str:
+def clone_field_mapping_for_selected_event_and_return_message(
+    interface: abstractInterface,
+) -> str:
     event_description_selected = interface.last_button_pressed()
     current_event = get_event_from_state(interface)
 
@@ -119,7 +126,10 @@ def clone_field_mapping_for_selected_event_and_return_message(interface: abstrac
     )
     interface.flush_cache_to_store()
 
-    message = "Mapping copied from event %s to %s" %(event_description_selected, str(current_event))
+    message = "Mapping copied from event %s to %s" % (
+        event_description_selected,
+        str(current_event),
+    )
 
     return message
 

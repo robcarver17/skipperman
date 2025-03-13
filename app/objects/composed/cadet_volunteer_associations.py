@@ -4,9 +4,15 @@ from typing import List, Dict
 from app.objects.cadet_volunteer_connections_with_ids import (
     ListOfCadetVolunteerAssociationsWithIds,
 )
-from app.objects.exceptions import MissingData, MultipleMatches, arg_not_passed, missing_data
+from app.objects.exceptions import (
+    MissingData,
+    MultipleMatches,
+    arg_not_passed,
+    missing_data,
+)
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.cadets import Cadet, ListOfCadets
+
 
 @dataclass
 class CadetVolunteerAssociation:
@@ -30,7 +36,9 @@ class ListOfCadetVolunteerAssociations(List[CadetVolunteerAssociation]):
         self._list_of_cadets = list_of_cadets
 
     def add_association(self, cadet: Cadet, volunteer: Volunteer):
-        association = self.get_association(cadet=cadet, volunteer=volunteer, default=missing_data)
+        association = self.get_association(
+            cadet=cadet, volunteer=volunteer, default=missing_data
+        )
         if association is missing_data:
             ## expected
             self._add_association_without_checking(cadet=cadet, volunteer=volunteer)
@@ -53,7 +61,7 @@ class ListOfCadetVolunteerAssociations(List[CadetVolunteerAssociation]):
         )
 
     def get_association(
-        self, cadet: Cadet, volunteer: Volunteer, default = arg_not_passed
+        self, cadet: Cadet, volunteer: Volunteer, default=arg_not_passed
     ) -> CadetVolunteerAssociation:
         matching = [
             association
@@ -106,7 +114,6 @@ class ListOfCadetVolunteerAssociations(List[CadetVolunteerAssociation]):
         self,
     ) -> ListOfCadetVolunteerAssociationsWithIds:
         return self._list_of_cadet_volunteer_associations_with_ids
-
 
 
 def create_list_of_cadet_volunteer_associations_from_underlying_data(

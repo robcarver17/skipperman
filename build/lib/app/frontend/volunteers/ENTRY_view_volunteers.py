@@ -1,5 +1,6 @@
 from typing import Union
 
+from app.data_access.configuration.fixed import ADD_KEYBOARD_SHORTCUT
 from app.frontend.volunteers.add_volunteer import display_form_add_volunteer
 from app.frontend.volunteers.view_individual_volunteer import (
     display_form_view_individual_volunteer,
@@ -32,7 +33,9 @@ from app.frontend.shared.volunteer_state import (
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 
 ADD_VOLUNTEER_BUTTON_LABEL = "Add volunteer"
-add_button = Button(ADD_VOLUNTEER_BUTTON_LABEL, nav_button=True)
+add_button = Button(
+    ADD_VOLUNTEER_BUTTON_LABEL, nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT
+)
 all_sort_types = [SORT_BY_SURNAME, SORT_BY_FIRSTNAME]
 sort_buttons = ButtonBar(
     [Button(sort_by, nav_button=True) for sort_by in all_sort_types]

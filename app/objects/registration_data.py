@@ -3,8 +3,11 @@ from random import random
 from typing import List
 import pandas as pd
 
-from app.objects.generic_list_of_objects import GenericListOfObjects, create_list_of_objects_from_dataframe, \
-    create_data_frame_given_list_of_objects
+from app.objects.generic_list_of_objects import (
+    GenericListOfObjects,
+    create_list_of_objects_from_dataframe,
+    create_data_frame_given_list_of_objects,
+)
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.registration_status import (
     RegistrationStatus,
@@ -12,14 +15,15 @@ from app.objects.registration_status import (
 )
 from app.objects.utils import (
     clean_up_dict_with_nans,
-    transform_df_from_str_to_dates, transform_df_from_dates_to_str
+    transform_df_from_str_to_dates,
+    transform_df_from_dates_to_str,
 )
 
 from app.data_access.configuration.field_list import (
     VOLUNTEER_STATUS,
     _ROW_ID,
     _REGISTRATION_STATUS,
-    _SPECIAL_FIELDS
+    _SPECIAL_FIELDS,
 )
 from app.objects.exceptions import missing_data, arg_not_passed
 
@@ -63,7 +67,6 @@ class RowInRegistrationData(GenericSkipperManObject, dict):
 
         return RowInRegistrationData(some_dict)
 
-
     def as_str_dict(self) -> dict:
         new_dict = dict(copy(self))
         new_dict[_REGISTRATION_STATUS] = new_dict[_REGISTRATION_STATUS].name
@@ -89,7 +92,7 @@ class RowInRegistrationData(GenericSkipperManObject, dict):
 
     @property
     def row_id(self) -> str:
-        return self.get(_ROW_ID, '')
+        return self.get(_ROW_ID, "")
 
     @row_id.setter
     def row_id(self, row_id: str):
@@ -97,8 +100,8 @@ class RowInRegistrationData(GenericSkipperManObject, dict):
 
     def replace_row_id_by_adding_random_number(self):
         existing_row_id = self.row_id
-        add_on = str(int(random()*100))
-        self.row_id = existing_row_id + "_"+add_on
+        add_on = str(int(random() * 100))
+        self.row_id = existing_row_id + "_" + add_on
 
     @property
     def registration_status(self) -> RegistrationStatus:
@@ -112,6 +115,7 @@ class RowInRegistrationData(GenericSkipperManObject, dict):
 
 
 from app.objects.generic_list_of_objects import get_unique_object_with_attr_in_list
+
 
 class RegistrationDataForEvent(GenericListOfObjects):
     def __init__(self, list_of_rows: List[RowInRegistrationData]):
@@ -128,20 +132,13 @@ class RegistrationDataForEvent(GenericListOfObjects):
         for row in self:
             row.clear_values()
 
-
-    def get_row_with_rowid(self, row_id: str, default = arg_not_passed):
+    def get_row_with_rowid(self, row_id: str, default=arg_not_passed):
         return get_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name='row_id',
-            attr_value=row_id,
-            default=default
+            some_list=self, attr_name="row_id", attr_value=row_id, default=default
         )
 
     def list_of_row_ids(self) -> list:
-        return [
-            reg_row.row_id
-            for reg_row in self
-        ]
+        return [reg_row.row_id for reg_row in self]
 
     def remove_empty_status(self) -> "RegistrationDataForEvent":
         return self.remove_rows_with_status(empty_status)
@@ -158,8 +155,9 @@ class RegistrationDataForEvent(GenericListOfObjects):
         subset = [row for row in self if row.registration_status.is_active]
         return RegistrationDataForEvent(subset)
 
-
-    def subset_with_list_of_row_ids(self, list_of_row_ids: list) -> "RegistrationDataForEvent":
+    def subset_with_list_of_row_ids(
+        self, list_of_row_ids: list
+    ) -> "RegistrationDataForEvent":
         subset = [row for row in self if row.row_id in list_of_row_ids]
         return RegistrationDataForEvent(subset)
 

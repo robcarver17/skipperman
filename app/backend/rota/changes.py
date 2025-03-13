@@ -23,8 +23,11 @@ from app.objects.volunteers import Volunteer
 
 
 def delete_role_at_event_for_volunteer_on_day(
-    object_store: ObjectStore, volunteer: Volunteer, day: Day, event: Event,
-        delete_power_boat: bool = True
+    object_store: ObjectStore,
+    volunteer: Volunteer,
+    day: Day,
+    event: Event,
+    delete_power_boat: bool = True,
 ):
     dict_of_all_event_data = get_dict_of_all_event_data_for_volunteers(
         object_store=object_store, event=event
@@ -110,7 +113,9 @@ def update_volunteer_notes_at_event(
     )
     registration_data.update_volunteer_notes_at_event(volunteer, new_notes=new_notes)
     update_dict_of_registration_data_for_volunteers_at_event(
-        object_store=object_store, event=event, dict_of_registration_data=registration_data
+        object_store=object_store,
+        event=event,
+        dict_of_registration_data=registration_data,
     )
 
 
@@ -120,11 +125,15 @@ def update_role_at_event_for_volunteer_on_day(
     volunteer: Volunteer,
     day: Day,
     new_role: RoleWithSkills,
-    remove_power_boat_if_deleting_role: bool = True
+    remove_power_boat_if_deleting_role: bool = True,
 ):
     if new_role.is_no_role_set():
         delete_role_at_event_for_volunteer_on_day(
-            object_store=object_store, event=event, volunteer=volunteer, day=day, delete_power_boat=remove_power_boat_if_deleting_role
+            object_store=object_store,
+            event=event,
+            volunteer=volunteer,
+            day=day,
+            delete_power_boat=remove_power_boat_if_deleting_role,
         )
     else:
         update_role_at_event_for_volunteer_on_day_if_switching_roles(

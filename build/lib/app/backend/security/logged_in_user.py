@@ -25,8 +25,6 @@ def get_volunteer_for_logged_in_user_or_superuser(
     return volunteer
 
 
-
-
 def get_logged_in_skipperman_user(interface: abstractInterface) -> SkipperManUser:
     username = interface.get_current_logged_in_username()
     list_of_users = get_list_of_users(interface.object_store)

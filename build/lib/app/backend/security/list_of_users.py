@@ -37,7 +37,6 @@ def list_of_admin_users(object_store: ObjectStore) -> ListOfSkipperManUsers:
     return all_users.list_of_admin_users()
 
 
-
 def get_list_of_users_could_be_empty(
     object_store: ObjectStore,
 ) -> ListOfSkipperManUsers:

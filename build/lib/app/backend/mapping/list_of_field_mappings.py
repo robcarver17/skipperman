@@ -2,7 +2,10 @@ import os
 from typing import List
 
 from app.backend.events.list_of_events import get_sorted_list_of_events
-from app.data_access.init_directories import download_directory, temp_file_name_in_download_directory
+from app.data_access.init_directories import (
+    download_directory,
+    temp_file_name_in_download_directory,
+)
 from app.data_access.store.object_definitions import (
     object_definition_for_field_mappings_at_event,
     object_definition_for_list_of_field_mapping_templates,
@@ -96,8 +99,7 @@ def get_list_of_events_with_field_mapping(
 
 
 def write_mapping_to_temp_csv_file_and_return_filename(
-    mapping: ListOfWAFieldMappings,
-        filename: str = "temp_mapping_file"
+    mapping: ListOfWAFieldMappings, filename: str = "temp_mapping_file"
 ) -> str:
     df = mapping.as_df_of_str()
     filename = temp_file_name_in_download_directory(filename, extension=".csv")
@@ -107,16 +109,22 @@ def write_mapping_to_temp_csv_file_and_return_filename(
     return filename
 
 
-
-
-def delete_mapping_given_skipperman_field(object_store: ObjectStore, event: Event, skipperman_field:str):
+def delete_mapping_given_skipperman_field(
+    object_store: ObjectStore, event: Event, skipperman_field: str
+):
 
     mapping = get_field_mapping_for_event(object_store=object_store, event=event)
     mapping.delete_mapping(skipperman_field)
-    save_field_mapping_for_event(object_store=object_store, event=event, mapping=mapping)
+    save_field_mapping_for_event(
+        object_store=object_store, event=event, mapping=mapping
+    )
 
-def save_new_mapping_pairing(object_store: ObjectStore, event: Event, skipperman_field: str,
-                             wa_field: str):
+
+def save_new_mapping_pairing(
+    object_store: ObjectStore, event: Event, skipperman_field: str, wa_field: str
+):
     mapping = get_field_mapping_for_event(object_store=object_store, event=event)
     mapping.add_new_mapping(skipperman_field=skipperman_field, wa_field=wa_field)
-    save_field_mapping_for_event(object_store=object_store, event=event, mapping=mapping)
+    save_field_mapping_for_event(
+        object_store=object_store, event=event, mapping=mapping
+    )

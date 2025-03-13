@@ -8,7 +8,8 @@ from app.frontend.forms.reorder_form import (
 from app.objects.day_selectors import Day
 from app.frontend.shared.cadet_state import (
     clear_cadet_state,
-    update_state_for_specific_cadet_id, is_cadet_set_in_state,
+    update_state_for_specific_cadet_id,
+    is_cadet_set_in_state,
 )
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
@@ -35,7 +36,8 @@ from app.frontend.events.group_allocation.input_fields import (
     cadet_id_given_partner_button,
 )
 from app.frontend.events.group_allocation.parse_allocation_form import (
-    update_data_given_allocation_form, make_cadet_available_on_current_day,
+    update_data_given_allocation_form,
+    make_cadet_available_on_current_day,
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,

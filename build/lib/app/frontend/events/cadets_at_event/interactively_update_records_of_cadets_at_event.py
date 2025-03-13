@@ -93,11 +93,13 @@ def process_update_to_existing_cadet_in_event_data(
     interface: abstractInterface, event: Event, cadet: Cadet
 ) -> Form:
     try:
-        row_in_registration_data = get_row_in_registration_data_for_cadet_both_cancelled_and_active(
-            object_store=interface.object_store,
-            cadet=cadet,
-            event=event,
-            raise_error_on_duplicate=True,
+        row_in_registration_data = (
+            get_row_in_registration_data_for_cadet_both_cancelled_and_active(
+                object_store=interface.object_store,
+                cadet=cadet,
+                event=event,
+                raise_error_on_duplicate=True,
+            )
         )
     except DuplicateCadets:
         interface.log_error(

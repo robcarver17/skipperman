@@ -6,7 +6,8 @@ from app.data_access.configuration.configuration import (
 )
 from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
-get_unique_object_with_attr_in_list,get_idx_of_unique_object_with_attr_in_list
+    get_unique_object_with_attr_in_list,
+    get_idx_of_unique_object_with_attr_in_list,
 )
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
 from app.objects.utils import similar
@@ -29,7 +30,7 @@ class Volunteer(GenericSkipperManObjectWithIds):
         return hash(self.name)
 
     def __lt__(self, other):
-        return self.name<other.name
+        return self.name < other.name
 
     def replace_everything_except_id(self, updated_volunteer: "Volunteer"):
         self.first_name = updated_volunteer.first_name
@@ -73,12 +74,11 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
             updated_volunteer=updated_volunteer
         )
 
-    def volunteer_with_matching_name(self, volunteer_name:str, default =arg_not_passed) -> Volunteer:
+    def volunteer_with_matching_name(
+        self, volunteer_name: str, default=arg_not_passed
+    ) -> Volunteer:
         return get_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name='name',
-            attr_value=volunteer_name,
-            default=default
+            some_list=self, attr_name="name", attr_value=volunteer_name, default=default
         )
 
     def similar_volunteers(
@@ -99,7 +99,6 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
 
     def sort_by_firstname(self):
         return ListOfVolunteers(sorted(self, key=lambda x: x.first_name))
-
 
     def volunteer_with_id(self, id: str) -> Volunteer:
         return self.object_with_id(id)

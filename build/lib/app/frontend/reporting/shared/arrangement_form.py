@@ -2,10 +2,13 @@ from typing import Union, Callable, Dict, List
 
 import pandas as pd
 
-from app.backend.reporting.arrangement.arrange_options import dict_of_arrangements_that_reorder
+from app.backend.reporting.arrangement.arrange_options import (
+    dict_of_arrangements_that_reorder,
+)
 from app.backend.reporting.options_and_parameters.report_options import ReportingOptions
-from app.backend.reporting.options_and_parameters.report_type_specific_parameters import \
-    SpecificParametersForTypeOfReport
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
+    SpecificParametersForTypeOfReport,
+)
 from app.objects.abstract_objects.abstract_text import bold
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
@@ -52,7 +55,6 @@ from app.frontend.reporting.shared.group_order import (
 )
 
 
-
 def form_for_group_arrangement_options(
     interface: abstractInterface,
     specific_parameters_for_type_of_report: SpecificParametersForTypeOfReport,
@@ -71,11 +73,12 @@ def form_for_group_arrangement_options(
         interface=interface, reporting_options=reporting_options
     )
     missing_and_empty_lines = flag_missing_and_empty_groups(
-         reporting_options=reporting_options
+        reporting_options=reporting_options
     )
 
-    return ListOfLines(missing_and_empty_lines+
-        [
+    return ListOfLines(
+        missing_and_empty_lines
+        + [
             add_delete_buttons,
             "Change order of groups then choose auto-layout option:",
             _______________,
@@ -92,17 +95,14 @@ def form_for_group_arrangement_options(
     )
 
 
-def flag_missing_and_empty_groups(
-   reporting_options: ReportingOptions
-) -> List[Line]:
+def flag_missing_and_empty_groups(reporting_options: ReportingOptions) -> List[Line]:
     missing_groups = flag_missing_groups(reporting_options)
     empty_groups = flag_empty_groups(reporting_options)
 
     return [missing_groups, empty_groups]
 
-def flag_missing_groups(
-   reporting_options: ReportingOptions
-) -> Line:
+
+def flag_missing_groups(reporting_options: ReportingOptions) -> Line:
     missing_groups = get_missing_groups(reporting_options=reporting_options)
 
     if len(missing_groups) == 0:
@@ -115,13 +115,10 @@ def flag_missing_groups(
         )
         missing_line = Line(bold(warning))
 
-
     return missing_line
 
 
-def flag_empty_groups(
-   reporting_options: ReportingOptions
-) -> Line:
+def flag_empty_groups(reporting_options: ReportingOptions) -> Line:
     empty_groups = get_empty_groups(reporting_options)
 
     if len(empty_groups) == 0:
@@ -153,10 +150,12 @@ def get_add_delete_buttons_for_group_ordering(
     empty_groups = get_empty_groups(reporting_options)
 
     if len(missing_groups) > 0:
-        if len(missing_groups)>3:
+        if len(missing_groups) > 3:
             missing_text = "Add %d missing groups to report" % len(missing_groups)
         else:
-            missing_text = "Add the following missing groups to report: %s" % ", ".join(missing_groups)
+            missing_text = "Add the following missing groups to report: %s" % ", ".join(
+                missing_groups
+            )
         missing_groups_button = Button(
             missing_text,
             value=ADD_MISSING_BUTTON_NAME,
@@ -165,10 +164,13 @@ def get_add_delete_buttons_for_group_ordering(
         missing_groups_button = ""
 
     if len(empty_groups) > 0:
-        if len(empty_groups)>3:
+        if len(empty_groups) > 3:
             empty_text = "Remove %d empty groups from report" % len(empty_groups)
         else:
-            empty_text =             "Remove the following empty groups from report: %s" % ", ".join(empty_groups)
+            empty_text = (
+                "Remove the following empty groups from report: %s"
+                % ", ".join(empty_groups)
+            )
         empty_groups_button = Button(
             empty_text,
             value=REMOVE_EMPTY_BUTTON_NAME,
@@ -313,8 +315,11 @@ def add_missing_to_group_order_and_arrangement(
     interface: abstractInterface, reporting_options: ReportingOptions
 ):
     missing_groups = get_missing_groups(reporting_options)
-    add_groups_to_group_order_and_arrangement(interface=interface, list_of_groups_to_add=missing_groups,
-                                              reporting_options=reporting_options)
+    add_groups_to_group_order_and_arrangement(
+        interface=interface,
+        list_of_groups_to_add=missing_groups,
+        reporting_options=reporting_options,
+    )
 
 
 def change_arrangement_matrix(

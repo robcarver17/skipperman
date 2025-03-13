@@ -1,4 +1,7 @@
-from app.backend.cadets.list_of_cadets import get_list_of_cadets_sorted_by_first_name, get_list_of_similar_cadets
+from app.backend.cadets.list_of_cadets import (
+    get_list_of_cadets_sorted_by_first_name,
+    get_list_of_similar_cadets,
+)
 from app.objects.abstract_objects.abstract_form import Form
 from app.objects.abstract_objects.abstract_buttons import Button, HelpButton, ButtonBar
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
@@ -22,7 +25,6 @@ def get_add_or_select_existing_cadet_form(
     header_text: ListOfLines,
     cadet: Cadet = arg_not_passed,  ## Is passed only on first iteration when cadet is from data not form
     extra_buttons: Line = arg_not_passed,
-
 ) -> Form:
     if cadet is arg_not_passed:
         ## Form has been filled in, this isn't our first rodeo, get cadet from form
@@ -53,7 +55,7 @@ def get_add_or_select_existing_cadet_form(
     return get_add_cadet_form_with_information_passed(
         cadet_and_text=cadet_and_text,
         footer_buttons=footer_buttons,
-        header_text=header_text
+        header_text=header_text,
     )
 
 

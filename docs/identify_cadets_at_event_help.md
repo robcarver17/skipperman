@@ -10,14 +10,14 @@ Skipperman will attempt to identify all the sailors at an event in imported regi
 ***
 ***
 
-The data about the cadet pulled in from the registration data is displayed. The date of birth will default to 1st January 1970 if this information is missing from the registration data (which is usual for racing events). The membership status will show as 'unconfirmed member'.
+The data about the cadet pulled in from the registration data is displayed. The date of birth will default to 1st January 1970 if this information is missing from the registration data (which is usual for racing events). The membership status will show as `Unconfirmed member`.
 You will then see some warnings about the cadet: if the name shown appears too short, the date of birth does not look correct (i.e. the sailor is of cadet age)
 
 Finally, you will see some option buttons.
 
 ## If this is not a new cadet
 
-You will probably see a warning saying that the Cadet is very similar to an existing cadet. At the bottom of the page you will see buttons with existing cadet(s) on them. Click to choose the cadet you want. If you can't see the cadet you want, click on 'See all cadets'. You can also go back to just seeing the most similar cadets by clicking 'See similar cadets only'.
+You will probably see a warning saying that the Cadet is very similar to an existing cadet. At the bottom of the page you will see buttons with existing cadet(s) on them. Click to choose the cadet you want. If you can't see the cadet you want, click on `See all cadets`. You can also go back to just seeing the most similar cadets by clicking `See similar cadets only`'.
 
 ## If this is actually a new cadet
 
@@ -29,9 +29,9 @@ Date of birth: For racing events you won't usually have the date of birth. If th
 
 For membership status:
 
-- if you are sure they are a paid up member, select 'Member'
-- if you are sure they are a non member (visitor), select 'None member'
-- if you aren't sure, select 'Unconfirmed member'
+- if you are sure they are a paid up member, select `Member`
+- if you are sure they are a non-member (visitor), select `None member`
+- if you aren't sure, select `Unconfirmed member`
 
 Membership or otherwise can be confirmed by [importing a list of club members](import_membership_list_help). 
 
@@ -39,7 +39,7 @@ Remember it is possible to edit the cadet details, and these can also be updated
 
 ## If this is a test entry
 
-Sometimes when testing the registration system (eg Wild Apricot) it's useful to create test entries, which don't have real cadets (of course you can also use real cadets but this can cause confusion). If this is a test entry, click on "Skip: this is a test entry" button. 
+Sometimes when testing the registration system (eg Wild Apricot) it's useful to create test entries, which don't have real cadets (of course you can also use real cadets but this can cause confusion). If this is a test entry, click on `Skip: this is a test entry`. 
 
 # Duplicate registrations
 
@@ -78,7 +78,7 @@ Cadet John Smith (2000-01-01) Member was in imported data, now appears to be mis
 
 This can happen if:
 
-- You have [added a sailor manually](link_required.md) to Skipperman who has not been registered in Wild Apricot, and their status is not 'Manual'. You can ignore this message, but to make it go away eithier change the [registration status to manual](link_required.md) which would be appropriate for a free event like a racing series, or ask their parent to register them.
-- For some stupid reason you have manually edited the data file exported from Wild Apricot and remove one or more rows. Unless you're an expert trying to debug something, don't do this. Instead, change the registration status to ['Cancelled'](link_required.md). Meanwhile, you can ignore this error.
+- You have [added a sailor manually](manually_adding_a_sailor.md) to Skipperman who has not been registered in Wild Apricot, and their status is not `Manual`. You can ignore this message, but to make it go away eithier change the [registration status to manual](registration_editing_help.md) which would be appropriate for a free event like a racing series, or ask their parent to register them.
+- For some stupid reason you have manually edited the data file exported from Wild Apricot and remove one or more rows. Unless you're an expert trying to debug something, don't do this. Instead, change the registration status to ['Cancelled'](registration_editing_help.md). Meanwhile, you can ignore this error.
 - Wild Apricot themselves have changed their export output, or Skipperman has managed to corrupt it's own data. Please contact support - this is serious.
 

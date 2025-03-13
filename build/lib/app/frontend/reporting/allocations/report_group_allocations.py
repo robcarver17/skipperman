@@ -22,10 +22,12 @@ from app.frontend.reporting.shared.generic_report_pages import (
     post_form_for_generic_report_arrangement_options,
     display_form_for_generic_report_arrangement_options,
 )
-from app.backend.reporting.report_generator import ReportGeneratorWithoutSpecificParameters
+from app.backend.reporting.report_generator import (
+    ReportGeneratorWithoutSpecificParameters,
+)
 
 from app.backend.reporting.allocation_report.allocation_report import (
- get_specific_parameters_for_allocation_report,
+    get_specific_parameters_for_allocation_report,
 )
 
 from app.objects.abstract_objects.abstract_form import (

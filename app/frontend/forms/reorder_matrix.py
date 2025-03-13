@@ -1,4 +1,8 @@
-from app.backend.reporting.arrangement.arrangement_order import ArrangementOfRows, EMPTY, ArrangementOfColumns
+from app.backend.reporting.arrangement.arrangement_order import (
+    ArrangementOfRows,
+    EMPTY,
+    ArrangementOfColumns,
+)
 from app.objects.abstract_objects.abstract_tables import RowInTable, Table
 from app.objects.abstract_objects.abstract_text import (
     up_arrow,
@@ -26,7 +30,8 @@ def reorder_matrix(
 
 
 def reorder_matrix_table_row(
-    current_list_of_entries: list, current_order_as_list_for_row: list,
+    current_list_of_entries: list,
+    current_order_as_list_for_row: list,
 ) -> RowInTable:
     row_elements = []
     for column_index, index_in_list in enumerate(current_order_as_list_for_row):

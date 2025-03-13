@@ -1,4 +1,5 @@
 The **configuration pages** allow you to modify various important lists used in Skipperman.
+___
 
 [TOC]
 
@@ -73,7 +74,7 @@ The instructors team is protected since it's a core part of Skipperman.
 
 ## Edit individual roles in a team
 
-If you click on the edit button at the end of a team row, you can re-order the roles in a team, or add new roles to a team. The first role mentioned in a team is the 'team leader', and the other roles will be in that order when we create a volunteer rota. 
+If you click on the `Edit` button at the end of a team row, you can re-order the roles in a team, or add new roles to a team. The first role mentioned in a team is the 'team leader', and the other roles will be in that order when we create a volunteer rota. 
 
 It's fine for people to be in more than one team; for example the lake co-ordinator / deputy skipper is the lead of both the lake helpers and lake safety team. 
 

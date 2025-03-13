@@ -2,13 +2,15 @@ from dataclasses import dataclass
 
 from app.objects.exceptions import missing_data, arg_not_passed, MissingData
 from app.objects.generic_list_of_objects import (
-    GenericListOfObjectsWithIds, get_idx_of_unique_object_with_attr_in_list,
+    GenericListOfObjectsWithIds,
+    get_idx_of_unique_object_with_attr_in_list,
 )
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
 
 
 NO_CLUB_DINGHY_ID = str(-9999)
-NO_CLUB_DINGHY_NAME = ''
+NO_CLUB_DINGHY_NAME = ""
+
 
 @dataclass
 class ClubDinghy(GenericSkipperManObjectWithIds):
@@ -17,7 +19,7 @@ class ClubDinghy(GenericSkipperManObjectWithIds):
     id: str = arg_not_passed
 
     def __hash__(self):
-        return hash(self.name)+hash(str(self.hidden))*10000
+        return hash(self.name) + hash(str(self.hidden)) * 10000
 
     def __repr__(self):
         return self.name
@@ -43,8 +45,9 @@ class ListOfClubDinghies(GenericListOfObjectsWithIds):
         new_club_dinghy.id = existing_club_dinghy.id
         self[object_idx] = new_club_dinghy
 
-
-    def club_dinghy_with_name(self, boat_name: str,  default=arg_not_passed) -> ClubDinghy:
+    def club_dinghy_with_name(
+        self, boat_name: str, default=arg_not_passed
+    ) -> ClubDinghy:
         if boat_name == no_club_dinghy.name:
             return no_club_dinghy
 
@@ -57,16 +60,12 @@ class ListOfClubDinghies(GenericListOfObjectsWithIds):
 
         return self[idx]
 
-
     def idx_given_name(self, boat_name: str, default=arg_not_passed):
-        return  get_idx_of_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name='name',
-            attr_value=boat_name,
-            default=default
+        return get_idx_of_unique_object_with_attr_in_list(
+            some_list=self, attr_name="name", attr_value=boat_name, default=default
         )
 
-    def club_dinghy_with_id(self, dinghy_id: str, default = arg_not_passed):
+    def club_dinghy_with_id(self, dinghy_id: str, default=arg_not_passed):
         if dinghy_id == no_club_dinghy_id:
             return no_club_dinghy
 
@@ -81,7 +80,6 @@ class ListOfClubDinghies(GenericListOfObjectsWithIds):
         boat.id = self.next_id()
 
         self.append(boat)
-
 
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_names()

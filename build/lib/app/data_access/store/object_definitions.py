@@ -4,8 +4,9 @@ from typing import Callable, Dict, Union, List
 from app.objects.composed.cadets_with_all_event_info import (
     compose_dict_of_all_event_info_for_cadet,
 )
-from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import \
-    compose_dict_of_cadets_and_boat_classes_and_partners
+from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import (
+    compose_dict_of_cadets_and_boat_classes_and_partners,
+)
 from app.objects.composed.cadets_at_event_with_club_dinghies import (
     compose_dict_of_cadets_and_club_dinghies_at_event,
 )
@@ -326,12 +327,10 @@ object_definition_for_dict_of_cadet_ids_with_tick_list_items_for_cadet_id = Iter
     underlying_object_definition=object_definition_for_list_of_cadets_with_tick_list_items_for_cadet_id,
     required_key_for_iteration="list_of_cadet_ids",
     key_for_underlying_object="cadet_id",
-
 )
 
 
 ## DERIVED
-
 
 
 object_definition_for_list_of_cadet_committee_members = DerivedObjectDefinition(
@@ -511,7 +510,9 @@ object_definition_for_dict_of_patrol_boats_by_day_for_volunteer_at_event = Deriv
         list_of_patrol_boats=object_definition_for_list_of_patrol_boats,
         list_of_volunteers_with_id_at_event_with_patrol_boat_id=object_definition_for_list_of_volunteers_with_ids_and_patrol_boats_at_event,
     ),
-    dict_of_properties_and_underlying_object_definitions_if_modified=dict(list_of_volunteers_with_id_at_event_with_patrol_boat_id=object_definition_for_list_of_volunteers_with_ids_and_patrol_boats_at_event),
+    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
+        list_of_volunteers_with_id_at_event_with_patrol_boat_id=object_definition_for_list_of_volunteers_with_ids_and_patrol_boats_at_event
+    ),
     required_keys=["event_id"],
 )
 
@@ -533,7 +534,7 @@ object_definition_for_dict_of_cadets_with_food_requirements_at_event = DerivedOb
     dict_of_arguments_and_underlying_object_definitions=dict(
         list_of_cadets=object_definition_for_list_of_cadets,
         list_of_cadets_with_ids_and_food_requirements=object_definition_for_cadet_ids_with_food_at_event,
-        list_of_events = object_definition_for_list_of_events
+        list_of_events=object_definition_for_list_of_events,
     ),
     dict_of_properties_and_underlying_object_definitions_if_modified=dict(
         list_of_cadets_with_ids_and_food_requirements=object_definition_for_cadet_ids_with_food_at_event
@@ -546,7 +547,7 @@ object_definition_for_dict_of_volunteers_with_food_requirements_at_event = Deriv
     dict_of_arguments_and_underlying_object_definitions=dict(
         list_of_volunteers=object_definition_for_volunteers,
         list_of_volunteers_with_ids_and_food_requirements=object_definition_for_volunteer_ids_with_food_at_event,
-        list_of_events = object_definition_for_list_of_events
+        list_of_events=object_definition_for_list_of_events,
     ),
     dict_of_properties_and_underlying_object_definitions_if_modified=dict(
         list_of_volunteers_with_ids_and_food_requirements=object_definition_for_volunteer_ids_with_food_at_event
@@ -597,11 +598,11 @@ object_definition_for_dict_of_cadets_with_qualifications_and_ticks = DerivedObje
     dict_of_arguments_and_underlying_object_definitions=dict(
         list_of_cadets=object_definition_for_list_of_cadets,
         qualifications_and_tick_items_as_dict=object_definition_for_qualifications_and_tick_items_as_dict,
-        dict_of_cadet_ids_with_tick_list_items_for_cadet_id=object_definition_for_dict_of_cadet_ids_with_tick_list_items_for_cadet_id,##new
+        dict_of_cadet_ids_with_tick_list_items_for_cadet_id=object_definition_for_dict_of_cadet_ids_with_tick_list_items_for_cadet_id,  ##new
         dict_of_qualifications_for_all_cadets=object_definition_for_dict_of_qualifications_for_cadets,
     ),
     dict_of_properties_and_underlying_object_definitions_if_modified=dict(
-        dict_of_cadet_ids_with_tick_list_items_for_cadet_id=object_definition_for_dict_of_cadet_ids_with_tick_list_items_for_cadet_id,##new
+        dict_of_cadet_ids_with_tick_list_items_for_cadet_id=object_definition_for_dict_of_cadet_ids_with_tick_list_items_for_cadet_id,  ##new
     ),
     required_keys=["list_of_cadet_ids"],
 )  # DictOfCadetsWithQualificationsAndTicks
@@ -643,7 +644,7 @@ object_definition_for_dict_of_all_event_data_for_volunteers = DerivedObjectDefin
         dict_of_registration_data_for_volunteers_at_event=object_definition_for_dict_of_registration_data_for_volunteers_at_event,
         dict_of_volunteers_at_event_with_days_and_roles=object_definition_for_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups,
         dict_of_volunteers_at_event_with_patrol_boats=object_definition_for_dict_of_patrol_boats_by_day_for_volunteer_at_event,
-        dict_of_volunteers_with_food_at_event=object_definition_for_dict_of_volunteers_with_food_requirements_at_event
+        dict_of_volunteers_with_food_at_event=object_definition_for_dict_of_volunteers_with_food_requirements_at_event,
     ),
     required_keys=["event_id"],
 )

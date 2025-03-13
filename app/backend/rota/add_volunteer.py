@@ -27,8 +27,10 @@ def get_list_of_volunteers_except_those_already_at_event(
         x=all_volunteer_ids, y=volunteers_at_event.list_of_ids
     )
 
-    volunteers_not_at_event = master_list_of_volunteers.subset_from_list_of_ids_retaining_order(
-        ids_of_volunteers_not_at_event
+    volunteers_not_at_event = (
+        master_list_of_volunteers.subset_from_list_of_ids_retaining_order(
+            ids_of_volunteers_not_at_event
+        )
     )
 
     return volunteers_not_at_event.sort_by_firstname()

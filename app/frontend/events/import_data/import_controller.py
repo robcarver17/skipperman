@@ -5,7 +5,7 @@ from app.frontend.events.food.automatically_get_food_data import (
 )
 
 from app.frontend.events.clothing.automatically_get_clothing_data_from_cadets import (
-    display_call_to_update_cadet_clothing_at_event_during_import
+    display_call_to_update_cadet_clothing_at_event_during_import,
 )
 
 from app.frontend.events.cadets_at_event.interactively_update_records_of_cadets_at_event import (

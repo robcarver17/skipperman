@@ -26,7 +26,9 @@ from app.frontend.reporting.shared.generic_report_pages import (
     display_form_for_generic_report_arrangement_options,
     display_initial_generic_report_form,
 )
-from app.backend.reporting.report_generator import ReportGeneratorWithoutSpecificParameters
+from app.backend.reporting.report_generator import (
+    ReportGeneratorWithoutSpecificParameters,
+)
 
 from app.backend.reporting.rollcall_report.configuration import (
     get_specific_parameters_for_rollcall_report,

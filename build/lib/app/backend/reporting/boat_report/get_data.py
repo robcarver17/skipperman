@@ -185,9 +185,7 @@ def get_second_cadet_name_popping_if_required(
     first_cadet_with_dinghy_and_partner = (
         dict_of_all_event_info_for_cadets.event_data_for_cadet(
             cadet
-        ).days_and_boat_class.boat_class_and_partner_on_day(
-            day
-        )
+        ).days_and_boat_class.boat_class_and_partner_on_day(day)
     )
     no_partner = not first_cadet_with_dinghy_and_partner.has_partner
     if no_partner:
@@ -216,9 +214,7 @@ def get_boat_class_sail_number_and_club_boat_flag(
 ) -> Tuple[str, str, str]:
     first_cadet_with_dinghy = dict_of_all_event_info_for_cadets.event_data_for_cadet(
         cadet
-    ).days_and_boat_class.boat_class_and_partner_on_day(
-        day
-    )
+    ).days_and_boat_class.boat_class_and_partner_on_day(day)
     boat_name = first_cadet_with_dinghy.boat_class.name[:10]
     sail_number = first_cadet_with_dinghy.sail_number
 

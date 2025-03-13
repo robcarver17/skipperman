@@ -52,8 +52,12 @@ def display_form_edit_cadet_volunteer_connections(
         object_store=interface.object_store
     )
 
-    form = form_to_edit_connections(volunteer=volunteer, existing_connected_cadets=connected_cadets,
-                                    header_text=header_text, list_of_cadets_to_choose_from=from_list_of_cadets)
+    form = form_to_edit_connections(
+        volunteer=volunteer,
+        existing_connected_cadets=connected_cadets,
+        header_text=header_text,
+        list_of_cadets_to_choose_from=from_list_of_cadets,
+    )
 
     return form
 

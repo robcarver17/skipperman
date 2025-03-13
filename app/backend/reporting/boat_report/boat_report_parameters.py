@@ -15,15 +15,17 @@ SAIL_NUMBER = "Sail number"
 CLUB_BOAT = "Club boat"
 
 
-def get_specific_parameters_for_boat_report(object_store: ObjectStore) -> SpecificParametersForTypeOfReport:
-    list_of_groups = get_list_of_groups(object_store)## will be ordered
+def get_specific_parameters_for_boat_report(
+    object_store: ObjectStore,
+) -> SpecificParametersForTypeOfReport:
+    list_of_groups = get_list_of_groups(object_store)  ## will be ordered
     list_of_groups.add_unallocated()
     specific_parameters_for_boat_report = SpecificParametersForTypeOfReport(
         #    entry_columns=[FIRST_CADET, SECOND_CADET, GROUP, BOAT_CLASS, SAIL_NUMBER, CLUB_BOAT],
         group_by_column=GROUP,
         report_type="Sailors with boats report",
         group_order=list_of_groups.list_of_names(),
-        unallocated_group = unallocated_group.name
+        unallocated_group=unallocated_group.name,
     )
 
     return specific_parameters_for_boat_report

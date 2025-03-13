@@ -58,7 +58,7 @@ def reporting_options_form_for_rollcall_additional_parameters(
 
 
 def explain_additional_parameters_for_rollcall_report(
-    interface: abstractInterface, ## have to include even though not used
+    interface: abstractInterface,  ## have to include even though not used
     additional_parameters: AdditionalParametersForRollcallReport,
 ) -> ListOfLines:
     if additional_parameters.display_full_names:

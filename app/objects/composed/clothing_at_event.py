@@ -6,7 +6,9 @@ from app.objects.exceptions import MissingData, arg_not_passed, missing_data
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.clothing import (
     UNALLOCATED_COLOUR,
-    ListOfCadetsWithClothingAndIdsAtEvent, ClothingAtEvent, no_clothing_requirements,
+    ListOfCadetsWithClothingAndIdsAtEvent,
+    ClothingAtEvent,
+    no_clothing_requirements,
 )
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
@@ -51,8 +53,7 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
 
         self[cadet] = ClothingAtEvent(size=size)
         self.list_of_cadets_with_clothing_and_ids.add_new_cadet_with_clothing_size_and_optionally_colour(
-            cadet_id=cadet.id,
-            size=size
+            cadet_id=cadet.id, size=size
         )
 
     def does_cadet_have_clothing(
@@ -97,7 +98,9 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
         except:
             pass
 
-        self.list_of_cadets_with_clothing_and_ids.remove_clothing_for_cadet_at_event(cadet.id)
+        self.list_of_cadets_with_clothing_and_ids.remove_clothing_for_cadet_at_event(
+            cadet.id
+        )
 
     def clear_colour_group_for_cadet(
         self,
@@ -132,7 +135,11 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
 
     def filter_for_list_of_cadets(self, list_of_cadets: ListOfCadets):
         raw_dict = dict(
-            [(cadet, self.clothing_for_cadet(cadet)) for cadet in list_of_cadets if cadet in self.list_of_cadets]
+            [
+                (cadet, self.clothing_for_cadet(cadet))
+                for cadet in list_of_cadets
+                if cadet in self.list_of_cadets
+            ]
         )
         return self._create_with_new_raw_dict(raw_dict)
 
@@ -233,7 +240,9 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
 
         return list(set(sizes))
 
-    def clothing_for_cadet(self, cadet: Cadet, default = arg_not_passed) -> ClothingAtEvent:
+    def clothing_for_cadet(
+        self, cadet: Cadet, default=arg_not_passed
+    ) -> ClothingAtEvent:
         if default is arg_not_passed:
             default = no_clothing_requirements
         clothing = self.get(cadet, default)
@@ -252,7 +261,7 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
 
 
 def compose_dict_of_cadets_with_clothing_at_event(
-    event_id: str,## required as will be passed down
+    event_id: str,  ## required as will be passed down
     list_of_cadets: ListOfCadets,
     list_of_cadets_with_clothing_and_ids: ListOfCadetsWithClothingAndIdsAtEvent,
 ):

@@ -7,7 +7,9 @@ from app.objects.club_dinghies import ListOfClubDinghies, ClubDinghy, no_club_di
 from app.objects.exceptions import arg_not_passed
 
 
-def get_club_dinghy_with_name(object_store: ObjectStore, boat_name: str, default = arg_not_passed) -> ClubDinghy:
+def get_club_dinghy_with_name(
+    object_store: ObjectStore, boat_name: str, default=arg_not_passed
+) -> ClubDinghy:
     list_of_boats = get_list_of_club_dinghies(object_store)
 
     return list_of_boats.club_dinghy_with_name(boat_name, default=default)

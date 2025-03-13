@@ -27,7 +27,9 @@ def modify_boat_class(
     object_store: ObjectStore, existing_object: BoatClass, new_object: BoatClass
 ):
     list_of_boats = get_list_of_boat_classes(object_store)
-    list_of_boats.replace(existing_boat_class=existing_object, new_boat_class=new_object)
+    list_of_boats.replace(
+        existing_boat_class=existing_object, new_boat_class=new_object
+    )
     try:
         list_of_boats.check_for_duplicated_names()
     except:

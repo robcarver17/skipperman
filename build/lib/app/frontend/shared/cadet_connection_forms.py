@@ -22,9 +22,15 @@ from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.volunteers import Volunteer
 
 
-def form_to_edit_connections(volunteer: Volunteer, existing_connected_cadets: ListOfCadets, header_text: ListOfLines,
-                             list_of_cadets_to_choose_from: ListOfCadets) -> Form:
-    existing_entries = rows_for_existing_entries(existing_connected_cadets=existing_connected_cadets)
+def form_to_edit_connections(
+    volunteer: Volunteer,
+    existing_connected_cadets: ListOfCadets,
+    header_text: ListOfLines,
+    list_of_cadets_to_choose_from: ListOfCadets,
+) -> Form:
+    existing_entries = rows_for_existing_entries(
+        existing_connected_cadets=existing_connected_cadets
+    )
     new_entries = row_for_new_entries(
         volunteer=volunteer,
         connected_cadets=existing_connected_cadets,
@@ -85,7 +91,7 @@ def cadet_from_button_name(interface: abstractInterface, button_name: str) -> Ca
 def row_for_new_entries(
     volunteer: Volunteer,
     connected_cadets: ListOfCadets,
-    list_of_cadets_to_choose_from: ListOfCadets
+    list_of_cadets_to_choose_from: ListOfCadets,
 ) -> Line:
     dict_of_options = get_dict_of_options_for_new_entry_dropdown(
         connected_cadets=connected_cadets,
@@ -104,7 +110,7 @@ def row_for_new_entries(
 def get_dict_of_options_for_new_entry_dropdown(
     volunteer: Volunteer,
     connected_cadets: ListOfCadets,
-    list_of_cadets_to_choose_from: ListOfCadets
+    list_of_cadets_to_choose_from: ListOfCadets,
 ) -> dict:
     list_of_cadets_similar_to_name_first = (
         get_list_of_cadets_similar_to_name_first_excluding_already_connected(

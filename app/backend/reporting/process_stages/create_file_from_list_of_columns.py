@@ -50,7 +50,7 @@ def create_pdf_report_from_list_of_columns_and_return_filename(
     pdf_layout = PdfLayout(print_options=print_options)
 
     for page in list_of_pages_with_columns:
-        if len(page)==0:
+        if len(page) == 0:
             continue
         pdf_layout.add_page(page)
 

@@ -1,4 +1,3 @@
-These are all aspirational and the code needs refactoring to reflect them.
 
 # Layers
 

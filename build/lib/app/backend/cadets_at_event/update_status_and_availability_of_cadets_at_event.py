@@ -37,17 +37,27 @@ def update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_
 
     return messages
 
-from app.backend.registration_data.cadet_registration_data import get_dict_of_cadets_with_registration_data, update_dict_of_cadets_with_registration_data
+
+from app.backend.registration_data.cadet_registration_data import (
+    get_dict_of_cadets_with_registration_data,
+    update_dict_of_cadets_with_registration_data,
+)
+
 
 def make_cadet_available_on_day(
     object_store: ObjectStore, event: Event, cadet: Cadet, day: Day
 ):
 
     registration_data = get_dict_of_cadets_with_registration_data(
-        object_store=object_store,event=event
+        object_store=object_store, event=event
     )
     registration_data.make_cadet_available_on_day(cadet=cadet, day=day)
-    update_dict_of_cadets_with_registration_data(object_store=object_store, event=event, dict_of_cadets_with_registration_data=registration_data)
+    update_dict_of_cadets_with_registration_data(
+        object_store=object_store,
+        event=event,
+        dict_of_cadets_with_registration_data=registration_data,
+    )
+
 
 def update_availability_of_existing_cadet_at_event_and_return_messages(
     object_store: ObjectStore,
@@ -56,9 +66,14 @@ def update_availability_of_existing_cadet_at_event_and_return_messages(
     new_availabilty: DaySelector,
 ) -> List[str]:
 
-    days_now_available = new_availabilty.days_that_intersect_with(event.day_selector_for_days_in_event())
-    if len(days_now_available)==0:
-        return ["Error: You have set availability for %s so they have no days of attendance. If they are not coming cancel then registration instead." % cadet.name]
+    days_now_available = new_availabilty.days_that_intersect_with(
+        event.day_selector_for_days_in_event()
+    )
+    if len(days_now_available) == 0:
+        return [
+            "Error: You have set availability for %s so they have no days of attendance. If they are not coming cancel then registration instead."
+            % cadet.name
+        ]
 
     dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(
         object_store=object_store, event=event, active_only=True

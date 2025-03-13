@@ -6,7 +6,9 @@ from app.backend.reporting.boat_report.boat_report_parameters import (
     AdditionalParametersForBoatReport,
 )
 from app.backend.reporting.boat_report.get_data import get_dict_of_df_for_boat_report
-from app.frontend.reporting.shared.arrangement_state import reset_arrangement_to_default_with_groups_in_data
+from app.frontend.reporting.shared.arrangement_state import (
+    reset_arrangement_to_default_with_groups_in_data,
+)
 from app.backend.reporting.report_generator import ReportGenerator
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -19,11 +21,12 @@ INCLUDE_IN_OUT = "include_in_out"
 
 
 def get_boat_allocation_report_additional_parameters_from_form_and_save(
-    interface: abstractInterface,
-        report_generator: ReportGenerator
+    interface: abstractInterface, report_generator: ReportGenerator
 ):
     parameters = get_boat_report_additional_parameters_from_form(interface)
-    save_additional_parameters_for_boat_report(interface, parameters=parameters, report_generator=report_generator)
+    save_additional_parameters_for_boat_report(
+        interface, parameters=parameters, report_generator=report_generator
+    )
 
 
 def get_boat_report_additional_parameters_from_form(
@@ -46,11 +49,15 @@ def get_boat_report_additional_parameters_from_form(
 
 
 def save_additional_parameters_for_boat_report(
-    interface: abstractInterface, parameters: AdditionalParametersForBoatReport, report_generator: ReportGenerator
+    interface: abstractInterface,
+    parameters: AdditionalParametersForBoatReport,
+    report_generator: ReportGenerator,
 ):
     save_show_full_names_parameter(interface=interface, parameters=parameters)
     save_include_in_out_parameter(interface=interface, parameters=parameters)
-    save_group_exclusion_parameters(interface=interface, parameters=parameters, report_generator=report_generator)
+    save_group_exclusion_parameters(
+        interface=interface, parameters=parameters, report_generator=report_generator
+    )
 
 
 def save_show_full_names_parameter(
@@ -66,9 +73,13 @@ def save_include_in_out_parameter(
 
 
 def save_group_exclusion_parameters(
-    interface: abstractInterface, parameters: AdditionalParametersForBoatReport, report_generator: ReportGenerator
+    interface: abstractInterface,
+    parameters: AdditionalParametersForBoatReport,
+    report_generator: ReportGenerator,
 ):
-    exclusion_parameters_changed = have_group_exclusion_parameters_changed(interface=interface, parameters=parameters)
+    exclusion_parameters_changed = have_group_exclusion_parameters_changed(
+        interface=interface, parameters=parameters
+    )
 
     interface.set_persistent_value(
         EXCLUDE_UNALLOCATED, parameters.exclude_unallocated_groups
@@ -79,18 +90,25 @@ def save_group_exclusion_parameters(
     )
 
     if exclusion_parameters_changed:
-        interface.log_error("Exclude group settings have changed - resetting arrangement")
-        reset_arrangement_to_default_with_groups_in_data(interface=interface, report_generator=report_generator)
+        interface.log_error(
+            "Exclude group settings have changed - resetting arrangement"
+        )
+        reset_arrangement_to_default_with_groups_in_data(
+            interface=interface, report_generator=report_generator
+        )
 
-def have_group_exclusion_parameters_changed(interface: abstractInterface, parameters: AdditionalParametersForBoatReport):
+
+def have_group_exclusion_parameters_changed(
+    interface: abstractInterface, parameters: AdditionalParametersForBoatReport
+):
     current_paramaters = load_additional_parameters_for_boat_report(interface)
     attr_list = [
-        'exclude_unallocated_groups',
-    'exclude_lake_groups',
-    'exclude_river_training_groups'
+        "exclude_unallocated_groups",
+        "exclude_lake_groups",
+        "exclude_river_training_groups",
     ]
     for attr in attr_list:
-        if getattr(current_paramaters, attr)!=getattr(parameters, attr):
+        if getattr(current_paramaters, attr) != getattr(parameters, attr):
             return True
 
     return False

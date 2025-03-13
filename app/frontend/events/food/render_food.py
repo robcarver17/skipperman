@@ -13,6 +13,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     Button,
     save_menu_button,
     cancel_menu_button,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
@@ -21,10 +22,13 @@ from app.objects.food import FoodRequirements
 
 DOWNLOAD_FOOD = "Download food requirements to spreadsheet"
 download_food_button = Button(DOWNLOAD_FOOD, nav_button=True)
+help_button = HelpButton("food_help")
 
 
 def get_button_bar_for_food_required() -> ButtonBar:
-    button_bar = ButtonBar([cancel_menu_button, save_menu_button, download_food_button])
+    button_bar = ButtonBar(
+        [cancel_menu_button, save_menu_button, download_food_button, help_button]
+    )
 
     return button_bar
 

@@ -17,7 +17,8 @@ from app.frontend.events.group_allocation.input_fields import (
     CLUB_BOAT,
     PARTNER,
     BOAT_CLASS,
-    SAIL_NUMBER, cadet_id_from_cadet_available_buttons,
+    SAIL_NUMBER,
+    cadet_id_from_cadet_available_buttons,
 )
 from app.objects.events import Event
 
@@ -27,13 +28,15 @@ from app.frontend.forms.form_utils import (
 )
 from app.backend.boat_classes.update_boat_information import (
     CadetWithDinghySailNumberBoatClassAndPartner,
-    update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event, )
+    update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event,
+)
 from app.objects.utils import print_list
 from app.backend.registration_data.update_cadets_at_event import (
     update_notes_for_existing_cadet_at_event,
 )
 from app.backend.cadets_at_event.update_status_and_availability_of_cadets_at_event import (
-    update_availability_of_existing_cadet_at_event_and_return_messages, make_cadet_available_on_day,
+    update_availability_of_existing_cadet_at_event_and_return_messages,
+    make_cadet_available_on_day,
 )
 
 from app.frontend.events.constants import (
@@ -42,7 +45,7 @@ from app.frontend.events.constants import (
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet, ListOfCadets
-from app.objects.exceptions import  MISSING_FROM_FORM
+from app.objects.exceptions import MISSING_FROM_FORM
 
 
 def update_data_given_allocation_form(interface: abstractInterface):
@@ -86,7 +89,6 @@ def update_attendance_data_for_cadet_in_form(
 
     for message in list_of_messages:
         interface.log_error(message)
-
 
 
 def get_cadet_notes_for_row_in_form_and_alter_registration_data(
@@ -165,19 +167,31 @@ def get_list_of_updates(
 def get_update_for_cadet(
     interface: abstractInterface, cadet: Cadet
 ) -> CadetWithDinghySailNumberBoatClassAndPartner:
-    sail_number = str(interface.value_from_form(
-        input_name_from_column_name_and_cadet_id(
-            cadet_id=cadet.id, column_name=SAIL_NUMBER,
-        ), default=MISSING_FROM_FORM
-    ))
-    boat_class_name = str(interface.value_from_form(
-        input_name_from_column_name_and_cadet_id(
-            cadet_id=cadet.id, column_name=BOAT_CLASS
-        ), default=MISSING_FROM_FORM
-    ))
-    two_handed_partner_as_str = str(interface.value_from_form(
-        input_name_from_column_name_and_cadet_id(cadet_id=cadet.id, column_name=PARTNER), default=MISSING_FROM_FORM
-    ))
+    sail_number = str(
+        interface.value_from_form(
+            input_name_from_column_name_and_cadet_id(
+                cadet_id=cadet.id,
+                column_name=SAIL_NUMBER,
+            ),
+            default=MISSING_FROM_FORM,
+        )
+    )
+    boat_class_name = str(
+        interface.value_from_form(
+            input_name_from_column_name_and_cadet_id(
+                cadet_id=cadet.id, column_name=BOAT_CLASS
+            ),
+            default=MISSING_FROM_FORM,
+        )
+    )
+    two_handed_partner_as_str = str(
+        interface.value_from_form(
+            input_name_from_column_name_and_cadet_id(
+                cadet_id=cadet.id, column_name=PARTNER
+            ),
+            default=MISSING_FROM_FORM,
+        )
+    )
     ## remove asterixes
     two_handed_partner_as_str = remove_asterixes(two_handed_partner_as_str)
 
@@ -185,15 +199,16 @@ def get_update_for_cadet(
         input_name_from_column_name_and_cadet_id(
             cadet_id=cadet.id,
             column_name=CLUB_BOAT,
-        ), default=MISSING_FROM_FORM
+        ),
+        default=MISSING_FROM_FORM,
     )
 
     group_name = interface.value_from_form(
         input_name_from_column_name_and_cadet_id(
             column_name=ALLOCATION, cadet_id=cadet.id
-        ), default=MISSING_FROM_FORM
+        ),
+        default=MISSING_FROM_FORM,
     )
-
 
     return CadetWithDinghySailNumberBoatClassAndPartner(
         cadet=cadet,
@@ -201,11 +216,13 @@ def get_update_for_cadet(
         boat_class_name=boat_class_name,
         two_handed_partner_cadet_as_str=two_handed_partner_as_str,
         club_boat_name=club_boat_name,
-        group_name=group_name
+        group_name=group_name,
     )
 
-def remove_asterixes(field_value: str)-> str:
+
+def remove_asterixes(field_value: str) -> str:
     return field_value.replace("*", "")
+
 
 def make_cadet_available_on_current_day(
     interface: abstractInterface, add_availability_button_name: str

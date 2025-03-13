@@ -5,7 +5,8 @@ import pandas as pd
 from app.data_access.store.object_store import ObjectStore
 
 from app.backend.reporting.rollcall_report.configuration import (
-    AdditionalParametersForRollcallReport, GROUP_NAME_COLUMN_HEADING_FOR_SPOTTER_SHEET,
+    AdditionalParametersForRollcallReport,
+    GROUP_NAME_COLUMN_HEADING_FOR_SPOTTER_SHEET,
 )
 from app.objects.composed.cadets_at_event_with_club_dinghies import (
     DictOfCadetsAndClubDinghiesAtEvent,
@@ -44,11 +45,11 @@ from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoFo
 def get_dict_of_df_for_reporting_rollcalls_with_flags(
     object_store: ObjectStore,
     event: Event,
-    display_full_names: bool ,
+    display_full_names: bool,
     include_unallocated_cadets: bool,
     add_asterix_for_club_boats: bool,
     include_emergency_contacts: bool,
-    include_health_data: bool ,
+    include_health_data: bool,
 ) -> Dict[str, pd.DataFrame]:
 
     dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
@@ -82,18 +83,20 @@ def get_dict_of_df_for_reporting_rollcalls_with_flags(
 def get_block_of_df_for_group_at_event(
     dict_of_all_event_data: DictOfAllEventInfoForCadets,
     group: Group,
-    display_full_names: bool ,
-    add_asterix_for_club_boats: bool ,
-    include_emergency_contacts: bool ,
-    include_health_data: bool ,
+    display_full_names: bool,
+    add_asterix_for_club_boats: bool,
+    include_emergency_contacts: bool,
+    include_health_data: bool,
 ) -> pd.DataFrame:
 
     list_of_cadets_in_group = dict_of_all_event_data.cadets_in_group_during_event(group)
-    df = get_names_and_groups_block_of_df_for_group_at_event(dict_of_all_event_data=dict_of_all_event_data,
-                                                             list_of_cadets_in_group=list_of_cadets_in_group,
-                                                             group=group,
-                                                             display_full_names=display_full_names,
-                                                             add_asterix_for_club_boats=add_asterix_for_club_boats)
+    df = get_names_and_groups_block_of_df_for_group_at_event(
+        dict_of_all_event_data=dict_of_all_event_data,
+        list_of_cadets_in_group=list_of_cadets_in_group,
+        group=group,
+        display_full_names=display_full_names,
+        add_asterix_for_club_boats=add_asterix_for_club_boats,
+    )
 
     df = add_attendance_to_rollcall_df(
         df=df,
@@ -108,7 +111,6 @@ def get_block_of_df_for_group_at_event(
         include_health_data=include_health_data,
         include_emergency_contacts=include_emergency_contacts,
     )
-
 
     return df
 
@@ -125,22 +127,21 @@ def get_names_and_groups_block_of_df_for_group_at_event(
         dict_of_all_event_data=dict_of_all_event_data,
         list_of_cadets_in_group=list_of_cadets_in_group,
         display_full_names=display_full_names,
-        add_asterix_for_club_boats=add_asterix_for_club_boats
+        add_asterix_for_club_boats=add_asterix_for_club_boats,
     )
     group_as_series = pd.Series([group.name] * len(names_as_series))
     df = pd.concat([names_as_series, group_as_series], axis=1)
-    df.columns = ['Name',GROUP_NAME_COLUMN_HEADING_FOR_SPOTTER_SHEET]
-
+    df.columns = ["Name", GROUP_NAME_COLUMN_HEADING_FOR_SPOTTER_SHEET]
 
     return df
+
 
 def get_names_as_series_group_at_event(
     dict_of_all_event_data: DictOfAllEventInfoForCadets,
     list_of_cadets_in_group: ListOfCadets,
-    display_full_names: bool ,
+    display_full_names: bool,
     add_asterix_for_club_boats: bool,
 ) -> pd.Series:
-
 
     if add_asterix_for_club_boats:
         list_of_cadets_in_group_for_names = add_club_boat_asterix_to_list_of_cadets_with_club_boat_on_any_day(
@@ -151,7 +152,9 @@ def get_names_as_series_group_at_event(
         list_of_cadets_in_group_for_names = list_of_cadets_in_group
 
     if display_full_names:
-        list_of_cadet_names = [cadet.name for cadet in list_of_cadets_in_group_for_names]
+        list_of_cadet_names = [
+            cadet.name for cadet in list_of_cadets_in_group_for_names
+        ]
     else:
         list_of_cadet_names = [
             cadet.initial_and_surname for cadet in list_of_cadets_in_group_for_names
@@ -160,8 +163,6 @@ def get_names_as_series_group_at_event(
     names_as_series = pd.Series(list_of_cadet_names)
 
     return names_as_series
-
-
 
 
 def add_club_boat_asterix_to_list_of_cadets_with_club_boat_on_any_day(

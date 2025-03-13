@@ -12,7 +12,9 @@ from app.data_access.store.object_store import ObjectStore
 
 from app.backend.events.summarys import summarise_generic_counts_for_event_over_days
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
-from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import DictOfCadetsAndBoatClassAndPartners
+from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import (
+    DictOfCadetsAndBoatClassAndPartners,
+)
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 

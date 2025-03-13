@@ -108,7 +108,9 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
             new_role_and_group=new_role_and_group,
         )
 
-    def delete_role_at_event_for_volunteer_on_day(self, volunteer: Volunteer, day: Day, delete_power_boat: bool = True):
+    def delete_role_at_event_for_volunteer_on_day(
+        self, volunteer: Volunteer, day: Day, delete_power_boat: bool = True
+    ):
         days_and_roles_data = self.dict_of_volunteers_at_event_with_days_and_roles
         days_and_roles_data.delete_role_for_volunteer_on_day(
             day=day, volunteer=volunteer
@@ -162,7 +164,6 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
                 raise MissingData
             else:
                 return default
-
 
     def sort_by_list_of_volunteers(self, list_of_volunteers: ListOfVolunteers):
         new_raw_dict = dict(
@@ -292,7 +293,7 @@ def compose_raw_dict_of_all_event_data_for_volunteers(
                         volunteer, ListOfCadets([])
                     ),
                     food_requirements=dict_of_volunteers_with_food_at_event.food_for_volunteer(
-                        volunteer, default = no_food_requirements
+                        volunteer, default=no_food_requirements
                     ),
                     event=event,
                 ),

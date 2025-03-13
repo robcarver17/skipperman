@@ -1,4 +1,5 @@
 To clean event data from the **main menu** choose **Utilities** and **Delete sensitive data**. 
+___
 
 Skipperman stores some sensitive; confidential and personal information. Some of this needs to be kept indefinitely as it is essential to the working of the system. But some event specific data is no longer needed once an event has finished
 

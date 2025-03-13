@@ -72,7 +72,6 @@ class CadetOnCommittee:
         return self.cadet_with_id_on_committee.date_term_ends
 
 
-
 class ListOfCadetsOnCommittee(List[CadetOnCommittee]):
     def __init__(
         self,
@@ -92,9 +91,10 @@ class ListOfCadetsOnCommittee(List[CadetOnCommittee]):
         specific_member = self.get_cadet_on_committee(cadet)
         specific_member.toggle_selection()
 
-    def get_cadet_on_committee(self, cadet: Cadet, default = arg_not_passed):
-        return get_unique_object_with_attr_in_list(some_list=self, attr_name = "cadet_id", attr_value=cadet.id,
-                                                   default=default)
+    def get_cadet_on_committee(self, cadet: Cadet, default=arg_not_passed):
+        return get_unique_object_with_attr_in_list(
+            some_list=self, attr_name="cadet_id", attr_value=cadet.id, default=default
+        )
 
     def is_cadet_currently_on_committee(self, cadet: Cadet) -> bool:
         for cadet_on_committee in self:
@@ -108,13 +108,10 @@ class ListOfCadetsOnCommittee(List[CadetOnCommittee]):
 
     def is_cadet_elected_to_committee(self, cadet: Cadet) -> bool:
         for cadet_on_committee in self:
-            if (
-                cadet_on_committee.cadet_id == cadet.id
-            ):
+            if cadet_on_committee.cadet_id == cadet.id:
                 return True
 
         return False
-
 
     def list_of_cadets_currently_serving(self) -> ListOfCadets:
         return ListOfCadets(
@@ -178,7 +175,7 @@ def create_raw_list_of_cadet_committee_members_from_underlying_data(
         try:
             cadet = list_of_cadets.cadet_with_id(cadet_with_id_on_committee.cadet_id)
         except MissingData:
-            continue ## or throw error?
+            continue  ## or throw error?
 
         list_of_members.append(
             CadetOnCommittee(

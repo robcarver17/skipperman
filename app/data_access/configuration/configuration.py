@@ -67,6 +67,6 @@ MIN_AGE_WHEN_CADET_CAN_BE_AT_EVENT_WITHOUT_PARENT = configuration[
 ]
 CADET_COMMITTEE_SHIRT_COLOUR = configuration["cadet_committee_shirt_colour"]
 
-SUPPORT_EMAIL= configuration["support_email"]
+SUPPORT_EMAIL = configuration["support_email"]
 
 WA_FIELD_LIST_FILE = configuration["WA_field_list_file"]

@@ -75,6 +75,3 @@ def get_row_status_cancelled_or_deleted_from_relevant_information(
     cancelled_or_deleted = row_status.is_cancelled_or_deleted
 
     return cancelled_or_deleted
-
-
-

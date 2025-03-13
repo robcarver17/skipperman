@@ -27,9 +27,8 @@ def get_header_text_for_volunteer_selection_form(
     relevant_information_for_identification = relevant_information.identify
 
     status_text = relevant_information_for_identification.self_declared_status
-    other_information = (
-        "Other information in form: "
-        + str(relevant_information_for_identification.any_other_information)
+    other_information = "Other information in form: " + str(
+        relevant_information_for_identification.any_other_information
     )
     if len(status_text) > 0:
         status_text = "Registration volunteer status in form: %s" % status_text
@@ -58,6 +57,7 @@ def get_header_text_for_volunteer_selection_form(
     )
 
     return header_text
+
 
 help_bar = ButtonBar([HelpButton("identify_volunteers_at_event_help")])
 

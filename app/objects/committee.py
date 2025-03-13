@@ -17,7 +17,6 @@ class CadetWithIdCommitteeMember(GenericSkipperManObject):
     def toggle_selection(self):
         self.deselected = not self.deselected
 
-
     def status_string(self):
         after_election = self.after_election()
         before_end_of_term = self.before_end_of_term()
@@ -48,7 +47,7 @@ class ListOfCadetsWithIdOnCommittee(GenericListOfObjects):
     def _object_class_contained(self):
         return CadetWithIdCommitteeMember
 
-    def add(self, cadet_with_id_on_committee:  CadetWithIdCommitteeMember):
+    def add(self, cadet_with_id_on_committee: CadetWithIdCommitteeMember):
         try:
             assert cadet_with_id_on_committee.cadet_id not in self.list_of_cadet_ids()
         except:

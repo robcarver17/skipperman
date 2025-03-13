@@ -28,7 +28,6 @@ class NoDaysSelected(Exception):
     pass
 
 
-
 class DuplicateCadets(Exception):
     pass
 

@@ -2,7 +2,10 @@ from dataclasses import dataclass
 
 from app.objects.exceptions import arg_not_passed
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
-from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds, get_idx_of_unique_object_with_attr_in_list
+from app.objects.generic_list_of_objects import (
+    GenericListOfObjectsWithIds,
+    get_idx_of_unique_object_with_attr_in_list,
+)
 
 
 @dataclass
@@ -20,8 +23,9 @@ class Skill(GenericSkipperManObjectWithIds):
     def __eq__(self, other):
         return self.name == other.name
 
-VOLUNTEERS_SKILL_FOR_PB2_NAME = "PB2" ### DO NOT CHANGE
-SI_SKILL_NAME = "SI" ### DO NOT CHANGE
+
+VOLUNTEERS_SKILL_FOR_PB2_NAME = "PB2"  ### DO NOT CHANGE
+SI_SKILL_NAME = "SI"  ### DO NOT CHANGE
 
 
 class ListOfSkills(GenericListOfObjectsWithIds):
@@ -55,20 +59,14 @@ class ListOfSkills(GenericListOfObjectsWithIds):
         new_skill.id = existing_skill.id
         self[existing_skill_idx] = new_skill
 
-    def skill_with_id(self, skill_id: str, default = arg_not_passed):
+    def skill_with_id(self, skill_id: str, default=arg_not_passed):
         return self.object_with_id(skill_id, default=default)
 
-    def idx_of_skill_with_name(self, skill_name:str, default = arg_not_passed) -> int:
+    def idx_of_skill_with_name(self, skill_name: str, default=arg_not_passed) -> int:
         return get_idx_of_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name='name',
-            attr_value=skill_name,
-            default=default
+            some_list=self, attr_name="name", attr_value=skill_name, default=default
         )
 
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_names()
         assert len(list_of_names) == len(set(list_of_names))
-
-
-

@@ -18,7 +18,6 @@ from app.data_access.store.object_store import ObjectStore
 from app.backend.club_boats.list_of_club_dinghies import get_club_dinghy_with_name
 
 
-
 def is_a_club_dinghy_allocated_for_list_of_cadets_on_any_day_at_event(
     object_store: ObjectStore, event: Event, list_of_cadets: ListOfCadets
 ) -> List[bool]:
@@ -38,10 +37,8 @@ def is_a_club_dinghy_allocated_for_cadet_on_any_day_at_event(
             object_store=object_store, event=event
         )
     )
-    boat_allocation = (
-        dict_of_cadets_and_club_dinghies_at_event.club_dinghys_for_cadet(
-            cadet
-        )
+    boat_allocation = dict_of_cadets_and_club_dinghies_at_event.club_dinghys_for_cadet(
+        cadet
     )
 
     return len(boat_allocation) > 0

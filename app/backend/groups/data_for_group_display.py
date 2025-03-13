@@ -114,11 +114,13 @@ def get_string_describing_different_club_boats_across_days(
         ]
     )
 
-def boat_name_or_none_if_empty(boat_name:str):
-    if len(boat_name)==0:
+
+def boat_name_or_none_if_empty(boat_name: str):
+    if len(boat_name) == 0:
         return "None"
     else:
         return boat_name
+
 
 def get_club_boat_names_across_days(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet
@@ -169,7 +171,9 @@ def guess_if_club_boat_required_and_return_name(
     else:
         return NO_CLUB_DINGHY_NAME
 
+
 NO_CLUB_DINGHY_NAME = no_club_dinghy.name
+
 
 def guess_current_club_boat_name_on_day(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
@@ -271,13 +275,15 @@ def get_name_of_boat_class_on_day_from_data(
 ) -> str:
     boat_class = dict_of_all_event_data.event_data_for_cadet(
         cadet
-    ).days_and_boat_class.boat_class_on_day(day=day, default = no_boat_class)
+    ).days_and_boat_class.boat_class_on_day(day=day, default=no_boat_class)
     if boat_class == no_boat_class:
         return missing_data
 
     return boat_class.name
 
+
 INFORMATION_NOT_AVAILABLE = ""
+
 
 def guess_name_of_boat_class_on_day_from_other_information(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
@@ -289,15 +295,15 @@ def guess_name_of_boat_class_on_day_from_other_information(
     boat_class = allocation_info.get(CADET_BOAT_CLASS, INFORMATION_NOT_AVAILABLE)
     pref_boat = allocation_info.get(DESIRED_BOAT, INFORMATION_NOT_AVAILABLE)
 
-    allocated_group_name = get_current_group_name_for_day_with_empty_string_if_unallocated(
-        dict_of_all_event_data=dict_of_all_event_data,
-        cadet=cadet,
-        day=day
+    allocated_group_name = (
+        get_current_group_name_for_day_with_empty_string_if_unallocated(
+            dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
+        )
     )
-    allocated_club_boat = get_current_club_boat_name_for_day_with_empty_string_if_unallocated(
-        dict_of_all_event_data=dict_of_all_event_data,
-        cadet=cadet,
-        day=day
+    allocated_club_boat = (
+        get_current_club_boat_name_for_day_with_empty_string_if_unallocated(
+            dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
+        )
     )
 
     list_of_dinghies = (
@@ -310,26 +316,33 @@ def guess_name_of_boat_class_on_day_from_other_information(
             allocated_group_name,
             pref_boat,
             pref_group,
-            allocated_club_boat
+            allocated_club_boat,
         ],
     )
 
     return best_guess
 
 
-def get_current_group_name_for_day_with_empty_string_if_unallocated( dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day):
+def get_current_group_name_for_day_with_empty_string_if_unallocated(
+    dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
+):
     allocated_group_name = get_current_group_name_for_day(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
     )
-    if allocated_group_name ==unallocated_group.name:
+    if allocated_group_name == unallocated_group.name:
         allocated_group_name = INFORMATION_NOT_AVAILABLE
 
     return allocated_group_name
 
-def get_current_club_boat_name_for_day_with_empty_string_if_unallocated(dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day):
+
+def get_current_club_boat_name_for_day_with_empty_string_if_unallocated(
+    dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
+):
     club_boat = dict_of_all_event_data.dict_of_cadets_and_club_dinghies_at_event.club_dinghys_for_cadet(
         cadet=cadet
-    ).dinghy_on_day(day=day, default=no_club_dinghy)
+    ).dinghy_on_day(
+        day=day, default=no_club_dinghy
+    )
 
     if club_boat == no_club_dinghy:
         return INFORMATION_NOT_AVAILABLE
@@ -480,26 +493,27 @@ def get_two_handed_partner_as_str_for_cadet_on_day(
 
 
 def get_two_handed_partner_as_str_for_dropdown_cadet_on_day(
-        dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
+    dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
 ) -> str:
 
     partner = get_two_handed_partner_for_cadet_on_day(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
     )
 
-    partner_name = get_cadet_name_or_none_given_schedule_status(dict_of_all_event_data=dict_of_all_event_data,
-                                                                cadet=cadet,
-                                                                other_cadet=partner,
-                                                                specific_day=day)
+    partner_name = get_cadet_name_or_none_given_schedule_status(
+        dict_of_all_event_data=dict_of_all_event_data,
+        cadet=cadet,
+        other_cadet=partner,
+        specific_day=day,
+    )
     if partner_name is None:
         raise Exception("Partner name should not resolve to none for matched partner")
 
     return partner_name
 
 
-
 def get_two_handed_partner_as_str_for_dropdown_cadet_across_days(
-        dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet
+    dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet
 ) -> str:
 
     current_partner_name = (
@@ -510,15 +524,18 @@ def get_two_handed_partner_as_str_for_dropdown_cadet_across_days(
     if current_partner_name is None:
         return None
 
-    partner = dict_of_all_event_data.dict_of_cadets_and_boat_class_and_partners.boat_classes_and_partner_for_cadet(cadet).most_common_partner()
+    partner = dict_of_all_event_data.dict_of_cadets_and_boat_class_and_partners.boat_classes_and_partner_for_cadet(
+        cadet
+    ).most_common_partner()
 
-    partner_name = get_cadet_name_or_none_given_schedule_status(dict_of_all_event_data=dict_of_all_event_data,
-                                                                cadet=cadet,
-                                                                other_cadet=partner)
+    partner_name = get_cadet_name_or_none_given_schedule_status(
+        dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, other_cadet=partner
+    )
     if partner_name is None:
         raise Exception("Partner name should not resolve to none for matched partner")
 
     return partner_name
+
 
 def get_two_handed_partner_for_cadet_on_day(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
@@ -531,7 +548,9 @@ def get_two_handed_partner_for_cadet_on_day(
     return partner
 
 
-Schedule = Enum('Schedule', ['match', 'no_match', 'partial_match', 'unavailable', 'same_cadet'])
+Schedule = Enum(
+    "Schedule", ["match", "no_match", "partial_match", "unavailable", "same_cadet"]
+)
 matched_schedule = Schedule.match
 no_matched_schedule = Schedule.no_match
 partial_matched_schedule = Schedule.partial_match
@@ -540,9 +559,10 @@ unavailable = Schedule.unavailable
 
 
 def get_list_of_cadet_names_including_asterix_marks_at_event_with_matching_schedules_excluding_this_cadet(
-    dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, available_on_specific_day: Day = arg_not_passed
+    dict_of_all_event_data: DictOfAllEventInfoForCadets,
+    cadet: Cadet,
+    available_on_specific_day: Day = arg_not_passed,
 ) -> List[str]:
-
 
     cadets_at_event = (
         dict_of_all_event_data.dict_of_cadets_with_registration_data.list_of_active_cadets()
@@ -553,7 +573,7 @@ def get_list_of_cadet_names_including_asterix_marks_at_event_with_matching_sched
             dict_of_all_event_data=dict_of_all_event_data,
             cadet=cadet,
             other_cadet=other_cadet,
-            specific_day=available_on_specific_day
+            specific_day=available_on_specific_day,
         )
         if cadet_name_or_none is None:
             continue
@@ -564,10 +584,19 @@ def get_list_of_cadet_names_including_asterix_marks_at_event_with_matching_sched
 
     return raw_list_of_cadet_names__with_matching_schedules
 
-from app.objects.partners import no_partnership_given_partner_cadet, from_partner_cadet_to_id_or_string
+
+from app.objects.partners import (
+    no_partnership_given_partner_cadet,
+    from_partner_cadet_to_id_or_string,
+)
+
 
 def get_cadet_name_or_none_given_schedule_status(
-        dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, other_cadet: Cadet, specific_day: Day = arg_not_passed):
+    dict_of_all_event_data: DictOfAllEventInfoForCadets,
+    cadet: Cadet,
+    other_cadet: Cadet,
+    specific_day: Day = arg_not_passed,
+):
 
     if no_partnership_given_partner_cadet(other_cadet):
         return from_partner_cadet_to_id_or_string(other_cadet)
@@ -576,7 +605,7 @@ def get_cadet_name_or_none_given_schedule_status(
         dict_of_all_event_data=dict_of_all_event_data,
         cadet=cadet,
         other_cadet=other_cadet,
-        specific_day=specific_day
+        specific_day=specific_day,
     )
 
     if schedule is same_cadet:
@@ -594,7 +623,10 @@ def get_cadet_name_or_none_given_schedule_status(
 
 
 def get_schedule_status_for_two_cadets(
-    dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, other_cadet: Cadet, specific_day: Day = arg_not_passed
+    dict_of_all_event_data: DictOfAllEventInfoForCadets,
+    cadet: Cadet,
+    other_cadet: Cadet,
+    specific_day: Day = arg_not_passed,
 ) -> Schedule:
 
     if cadet == other_cadet:
@@ -613,10 +645,14 @@ def get_schedule_status_for_two_cadets(
     if this_cadet_availability == other_cadet_availability:
         return matched_schedule
 
-    if len(this_cadet_availability.days_that_intersect_with(other_cadet_availability))>0:
+    if (
+        len(this_cadet_availability.days_that_intersect_with(other_cadet_availability))
+        > 0
+    ):
         return partial_matched_schedule
 
     return no_matched_schedule
+
 
 NOT_AVAILABLE = "Not available"
 
@@ -641,7 +677,7 @@ def guess_best_boat_class_name_given_list_of_possibly_matching_fields(
     list_of_boats: ListOfBoatClasses, list_of_options: List[str]
 ) -> str:
     list_of_options = remove_empty(list_of_options)
-    if len(list_of_options)==0:
+    if len(list_of_options) == 0:
         return ""
 
     list_of_names = remove_empty(list_of_boats.list_of_names())
@@ -650,8 +686,10 @@ def guess_best_boat_class_name_given_list_of_possibly_matching_fields(
     )
     return best_option
 
+
 def remove_empty(list_of_options: List[str]) -> List[str]:
-    return [x for x in list_of_options if not x==INFORMATION_NOT_AVAILABLE]
+    return [x for x in list_of_options if not x == INFORMATION_NOT_AVAILABLE]
+
 
 def best_option_against_boat_names(
     list_of_names: List[str], list_of_options: List[str]
@@ -666,7 +704,7 @@ def best_option_against_boat_names(
     names = [s[1] for s in scores_and_names]
 
     max_score = max(scores)
-    if max_score<0.3:
+    if max_score < 0.3:
         ## no idea
         return ""
 
@@ -679,14 +717,18 @@ def best_option_against_boat_names(
 def similarity_score_and_best_option_against_boat_names_for_one_name(
     option: str, list_of_names: List[str]
 ) -> Tuple[float, str]:
-    score = [contains_or_similar(name_with_boat_or_similar=option, boat_name=boat_name) for boat_name in list_of_names]
+    score = [
+        contains_or_similar(name_with_boat_or_similar=option, boat_name=boat_name)
+        for boat_name in list_of_names
+    ]
     high_score = max(score)
     high_score_index = score.index(high_score)
 
     return high_score, list_of_names[high_score_index]
 
+
 def contains_or_similar(name_with_boat_or_similar: str, boat_name: str):
-    boat_contains =  boat_name in name_with_boat_or_similar
+    boat_contains = boat_name in name_with_boat_or_similar
     option_contains = name_with_boat_or_similar in boat_name
     if boat_contains or option_contains:
         return 1.0
@@ -694,36 +736,58 @@ def contains_or_similar(name_with_boat_or_similar: str, boat_name: str):
         return similar(name_with_boat_or_similar, boat_name)
 
 
-def get_potential_partner_to_be_added_or_missing_data(cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets) ->Union[str, object]:
-    registration_data = dict_of_all_event_data.dict_of_cadets_with_registration_data.registration_data_for_cadet(cadet)
+def get_potential_partner_to_be_added_or_missing_data(
+    cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets
+) -> Union[str, object]:
+    registration_data = dict_of_all_event_data.dict_of_cadets_with_registration_data.registration_data_for_cadet(
+        cadet
+    )
     potential_partner = registration_data.two_handed_partner(default=missing_data)
 
     print("%s: (%s)" % (cadet, potential_partner))
-    if looks_like_cadet_already_has_allocated_partner(dict_of_all_event_data=dict_of_all_event_data, cadet=cadet):
+    if looks_like_cadet_already_has_allocated_partner(
+        dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
+    ):
         return missing_data
 
     if potential_partner is missing_data:
         return missing_data
 
-    if len(potential_partner)==0:
+    if len(potential_partner) == 0:
         return missing_data
 
-    if looks_like_partner_is_already_at_event(dict_of_all_event_data=dict_of_all_event_data, potential_partner=potential_partner):
+    if looks_like_partner_is_already_at_event(
+        dict_of_all_event_data=dict_of_all_event_data,
+        potential_partner=potential_partner,
+    ):
         return missing_data
 
     return potential_partner
 
 
-def looks_like_cadet_already_has_allocated_partner(dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet):
-    boat_classes_and_partner_for_cadet = dict_of_all_event_data.dict_of_cadets_and_boat_class_and_partners.boat_classes_and_partner_for_cadet(cadet)
+def looks_like_cadet_already_has_allocated_partner(
+    dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet
+):
+    boat_classes_and_partner_for_cadet = dict_of_all_event_data.dict_of_cadets_and_boat_class_and_partners.boat_classes_and_partner_for_cadet(
+        cadet
+    )
     most_common_partner = boat_classes_and_partner_for_cadet.most_common_partner()
-    most_common_partner_is_not_a_partner =  no_partnership_given_partner_cadet(most_common_partner)
+    most_common_partner_is_not_a_partner = no_partnership_given_partner_cadet(
+        most_common_partner
+    )
 
     return not most_common_partner_is_not_a_partner
 
-def looks_like_partner_is_already_at_event(dict_of_all_event_data: DictOfAllEventInfoForCadets, potential_partner:str):
-    active_cadets_at_event = dict_of_all_event_data.dict_of_cadets_with_registration_data.list_of_active_cadets()
-    matching_cadet = active_cadets_at_event.matching_cadet_with_name(potential_partner, default=missing_data)
+
+def looks_like_partner_is_already_at_event(
+    dict_of_all_event_data: DictOfAllEventInfoForCadets, potential_partner: str
+):
+    active_cadets_at_event = (
+        dict_of_all_event_data.dict_of_cadets_with_registration_data.list_of_active_cadets()
+    )
+    matching_cadet = active_cadets_at_event.matching_cadet_with_name(
+        potential_partner, default=missing_data
+    )
     cadet_at_event = not matching_cadet is missing_data
 
     return cadet_at_event

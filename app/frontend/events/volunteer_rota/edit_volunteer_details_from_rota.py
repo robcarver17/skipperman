@@ -37,7 +37,9 @@ from app.objects.events import Event
 def display_form_confirm_volunteer_details_from_rota(interface: abstractInterface):
     event = get_event_from_state(interface)
     volunteer = get_volunteer_from_state(interface=interface)
-    past_roles = get_text_of_last_roles(interface=interface, event=event, volunteer=volunteer)
+    past_roles = get_text_of_last_roles(
+        interface=interface, event=event, volunteer=volunteer
+    )
     available_checkbox = Line(
         [
             get_availability_checkbox_for_volunteer_at_event(
@@ -63,11 +65,12 @@ def display_form_confirm_volunteer_details_from_rota(interface: abstractInterfac
     )
 
 
-def get_text_of_last_roles(interface: abstractInterface, event: Event, volunteer: Volunteer) -> Line:
+def get_text_of_last_roles(
+    interface: abstractInterface, event: Event, volunteer: Volunteer
+) -> Line:
     all_roles_as_dict = (
         get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(
-            object_store=interface.object_store, volunteer=volunteer,
-            avoid_event=event
+            object_store=interface.object_store, volunteer=volunteer, avoid_event=event
         )
     )
     text_as_list = [
@@ -142,7 +145,9 @@ def update_volunteer_at_event_from_rota_with_form_contents_and_return_true_if_ok
         interface=interface, event=event, input_name=AVAILABILITY
     )
 
-    if no_days_selected_from_available_days(availability, possible_days=event.days_in_event()):
+    if no_days_selected_from_available_days(
+        availability, possible_days=event.days_in_event()
+    ):
         interface.log_error(
             "No days selected for volunteer at event - can't do this - delete volunteer if not available for event"
         )

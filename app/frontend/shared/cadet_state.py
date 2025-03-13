@@ -4,12 +4,14 @@ from app.objects.exceptions import missing_data, MissingData, arg_not_passed
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
 
-def is_cadet_set_in_state(interface:abstractInterface):
+
+def is_cadet_set_in_state(interface: abstractInterface):
     try:
         get_cadet_from_state(interface)
         return True
     except MissingData:
         return False
+
 
 def clear_cadet_state(interface: abstractInterface):
     interface.clear_persistent_value(CADET)

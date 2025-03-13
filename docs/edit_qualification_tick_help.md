@@ -1,4 +1,5 @@
 To edit qualification ticks, from the **main menu** select **configuration**, then **sailing qualifications** and then choose the **Edit** button for the relevant qualification.
+___
 
 A qualification ('stage') consists of substages and tick items. A substage is just a logical grouping of ticks. You shouldn't need to edit qualification details unless you have set up a new qualification, or to make minor changes to names.
 
@@ -22,9 +23,9 @@ To change the name of a substage, first delete the existing name in the entry bo
 ***
 ***
 
-Now click on the down arrow. A list of existing substages will be presented. Note the LB stages are for the lake badge, which uniquely has one tick in each stage. Select an existing substage. Alternatively, if the substage you want doesn't exist then type it into the box. Click 'save changes' when you are done.
+Now click on the down arrow ▼. A list of existing substages will be presented. Note the LB stages are for the lake badge, which uniquely has one tick in each stage. Select an existing substage. Alternatively, if the substage you want doesn't exist then type it into the box. Click `Save changes` when you are done.
 
-If you want to revert to the original name after deleting it, you can click 'Cancel' (which always abandons any changes and returns you to the previous page), copy and paste the name from the right hand column ('Tick items in sub-stage: Rigging etc'), or hit CTRL-Z (undo change).
+If you want to revert to the original name after deleting it but before saving, you can click `Cancel` (which always abandons any changes and returns you to the previous page), copy and paste the name from the right hand column ('Tick items in sub-stage: Rigging etc'), or hit CTRL-Z (undo change).
 
 ## Add a new substage
 
@@ -38,7 +39,7 @@ If you want to add a new substage, scroll to the bottom of the list:
 ***
 ***
 
-Again, if you click on the down arrow you can see a list of suggested substages to choose one, or enter a completely new name.
+Again, if you click on the down arrow ▼ you can see a list of suggested substages to choose one, or enter a completely new name.
 
 # Tick items
 
@@ -56,4 +57,4 @@ To edit a particular tick item in a substage, just change the text and click sav
 
 ## Add a new tick item
 
-To add a new tick item for a substage, enter it's name under 'New tick item for sub-stage ...' and click 'Add'.
+To add a new tick item for a substage, enter it's name under 'New tick item for sub-stage ...' and click `Add`.

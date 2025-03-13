@@ -47,6 +47,7 @@ def get_list_of_actual_and_targets_for_roles_at_event(
     )
 
     all_volunteer_roles = get_list_of_roles_with_skills(object_store=object_store)
+    visible_roles = [role for role in all_volunteer_roles if not role.hidden]
 
     all_rows = [
         get_row_in_table_with_actual_and_targets_for_roles_at_event(
@@ -55,7 +56,7 @@ def get_list_of_actual_and_targets_for_roles_at_event(
             volunteers_in_roles_at_event=volunteers_in_roles_at_event,
             targets_at_event=targets_at_event,
         )
-        for role in all_volunteer_roles
+        for role in visible_roles
     ]
 
     return all_rows

@@ -6,7 +6,9 @@ from app.data_access.configuration.configuration import WA_FIELD_LIST_FILE
 from app.data_access.init_directories import static_files_directory
 from app.objects.events import Event
 
-from app.backend.mapping.list_of_field_mappings import temp_file_name_in_download_directory
+from app.backend.mapping.list_of_field_mappings import (
+    temp_file_name_in_download_directory,
+)
 from app.backend.wild_apricot.load_wa_file import (
     get_staged_file_raw_event_filename,
 )
@@ -44,16 +46,14 @@ def get_buttons_for_custom_mapping(interface: abstractInterface):
 
     wa_field_button = get_wa_field_download_button(interface)
 
-    bar = \
-        [
-            back_menu_button,
-            help_button,
-            upload_new_mapping_button,
-            download_mapping_button,
-            download_field_names_button,
-            wa_field_button,
-        ]
-
+    bar = [
+        back_menu_button,
+        help_button,
+        upload_new_mapping_button,
+        download_mapping_button,
+        download_field_names_button,
+        wa_field_button,
+    ]
 
     return ButtonBar(bar)
 
@@ -123,7 +123,9 @@ def download_WA_event_field_names_form(interface: abstractInterface):
     except:
         df_of_fields = pd.Series("No WA file: must have already been imported")
 
-    filename = temp_file_name_in_download_directory(filename='WA_field_names_for_%s' % str(event))
+    filename = temp_file_name_in_download_directory(
+        filename="WA_field_names_for_%s" % str(event)
+    )
     df_of_fields.to_csv(filename, index=False)
 
     return File(filename)
@@ -136,17 +138,15 @@ def get_wa_file_from_staging(event: Event):
     return wa_as_df
 
 
-DOWNLOAD_MAPPING_BUTTON_LABEL = (
-    "Download an existing mapping file (template or event)"
-)
+DOWNLOAD_MAPPING_BUTTON_LABEL = "Download an existing mapping file (template or event)"
 download_mapping_button = Button(DOWNLOAD_MAPPING_BUTTON_LABEL, nav_button=True)
 
-DOWNLOAD_FIELD_NAMES_BUTTON_LANEL = (
-    "Download recommended Skipperman fields"
-)
+DOWNLOAD_FIELD_NAMES_BUTTON_LANEL = "Download recommended Skipperman fields"
 download_field_names_button = Button(DOWNLOAD_FIELD_NAMES_BUTTON_LANEL, nav_button=True)
 
-DOWNLOAD_DEFINED_LIST_BUTTON_LABEL = "Download WA field names in the current uploaded WA file"
+DOWNLOAD_DEFINED_LIST_BUTTON_LABEL = (
+    "Download WA field names in the current uploaded WA file"
+)
 download_defined_list_button = Button(
     DOWNLOAD_DEFINED_LIST_BUTTON_LABEL, nav_button=True
 )

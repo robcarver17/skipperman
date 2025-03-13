@@ -1,7 +1,11 @@
 from dataclasses import dataclass
 
 from app.objects.exceptions import arg_not_passed, missing_data
-from app.objects.generic_list_of_objects import GenericListOfObjects, get_unique_object_with_attr_in_list, get_idx_of_unique_object_with_attr_in_list
+from app.objects.generic_list_of_objects import (
+    GenericListOfObjects,
+    get_unique_object_with_attr_in_list,
+    get_idx_of_unique_object_with_attr_in_list,
+)
 from app.objects.generic_objects import GenericSkipperManObject
 
 NO_WA_ID = Exception
@@ -39,7 +43,9 @@ class ListOfWAEventMaps(GenericListOfObjects):
         return any([str(wa_id) == str(event_map.wa_id) for event_map in self])
 
     def get_wa_id_for_event(self, event_id: str) -> str:
-        wa_and_event_id = self.get_event_map_with_event_id(event_id, default=missing_data)
+        wa_and_event_id = self.get_event_map_with_event_id(
+            event_id, default=missing_data
+        )
         if wa_and_event_id is missing_data:
             raise NO_EVENT_ID()
 
@@ -52,28 +58,25 @@ class ListOfWAEventMaps(GenericListOfObjects):
 
         return wa_and_event_id.event_id
 
-    def get_event_map_with_event_id(self, event_id: str, default  = arg_not_passed) -> WAEventMap:
+    def get_event_map_with_event_id(
+        self, event_id: str, default=arg_not_passed
+    ) -> WAEventMap:
         return get_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name='event_id',
-            attr_value=event_id,
-            default=default
+            some_list=self, attr_name="event_id", attr_value=event_id, default=default
         )
 
-    def get_event_map_with_wa_id(self, wa_id: str, default  = arg_not_passed) -> WAEventMap:
+    def get_event_map_with_wa_id(
+        self, wa_id: str, default=arg_not_passed
+    ) -> WAEventMap:
         return get_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name='wa_id',
-            attr_value=wa_id,
-            default=default
+            some_list=self, attr_name="wa_id", attr_value=wa_id, default=default
         )
 
-    def get_idx_of_event_map_with_event_id(self, event_id: str, default  = arg_not_passed) -> int:
+    def get_idx_of_event_map_with_event_id(
+        self, event_id: str, default=arg_not_passed
+    ) -> int:
         return get_idx_of_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name='event_id',
-            attr_value=event_id,
-            default=default
+            some_list=self, attr_name="event_id", attr_value=event_id, default=default
         )
 
     @property

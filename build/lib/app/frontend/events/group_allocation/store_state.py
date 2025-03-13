@@ -1,5 +1,4 @@
-
-from app.backend.groups.sorting import  DEFAULT_SORT_ORDER
+from app.backend.groups.sorting import DEFAULT_SORT_ORDER
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.day_selectors import Day
 

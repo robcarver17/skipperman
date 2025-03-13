@@ -6,7 +6,7 @@ from app.backend.volunteers.volunteers_at_event import (
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
 from app.objects.events import Event
 
-from app.objects.groups import unallocated_group,  ListOfGroups
+from app.objects.groups import unallocated_group, ListOfGroups
 
 from app.data_access.store.object_store import ObjectStore
 from app.backend.volunteers.roles_and_teams import (
@@ -21,7 +21,11 @@ MAKE_UNAVAILABLE = "* UNAVAILABLE *"
 NO_ROLE_SET = "No role allocated"
 
 
-def get_dict_of_roles_for_dropdown(object_store: ObjectStore, include_unavailable: bool = True, include_no_role: bool  = True):
+def get_dict_of_roles_for_dropdown(
+    object_store: ObjectStore,
+    include_unavailable: bool = True,
+    include_no_role: bool = True,
+):
     volunteer_roles = get_list_of_roles(object_store)
     dict_of_roles = {role.name: role.name for role in volunteer_roles}
     if no_role_set:
@@ -34,7 +38,7 @@ def get_dict_of_roles_for_dropdown(object_store: ObjectStore, include_unavailabl
 
 def get_dict_of_groups_for_dropdown(object_store: ObjectStore):
     groups = get_list_of_groups(object_store)
-    groups = groups+[unallocated_group]
+    groups = groups + [unallocated_group]
     dict_of_groups = {group.name: group.name for group in groups if not group.hidden}
 
     # return dict_of_groups

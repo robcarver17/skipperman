@@ -1,4 +1,3 @@
-
 from app.objects.volunteers import Volunteer
 
 from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
@@ -47,7 +46,7 @@ def add_volunteer_at_event_with_form_contents(interface: abstractInterface):
         event=get_event_from_state(interface),
         volunteer_at_event=volunteer_at_event,
     )
-    event =get_event_from_state(interface)
+    event = get_event_from_state(interface)
     update_cadet_connections_when_volunteer_already_at_event(
         object_store=interface.object_store, event=event, volunteer=volunteer
     )
@@ -69,7 +68,9 @@ def get_volunteer_at_event_from_form_contents(
         interface=interface, event=event, input_name=AVAILABILITY
     )
 
-    if no_days_selected_from_available_days(availability_in_form, possible_days=event.days_in_event()):
+    if no_days_selected_from_available_days(
+        availability_in_form, possible_days=event.days_in_event()
+    ):
         raise NoDaysSelected(
             "No days selected for volunteer %s at event - not adding this volunteer - you might want to add manually later"
             % volunteer.name
@@ -93,8 +94,6 @@ def get_volunteer_at_event_from_form_contents(
     )
 
     return volunteer_at_event
-
-
 
 
 def get_any_other_information(
@@ -130,4 +129,4 @@ def get_same_or_different_from_form(interface: abstractInterface) -> str:
         return interface.value_from_form(SAME_OR_DIFFERENT)
     except:
         ## not in original form
-        return ''
+        return ""

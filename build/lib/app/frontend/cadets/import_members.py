@@ -7,7 +7,8 @@ from app.frontend.cadets.iterate_over_import_cadets_in_uploaded_file import (
 )
 from app.backend.cadets.import_membership_list import (
     create_temp_file_with_list_of_cadets,
-    DESCRIBE_ALL_FIELDS_IN_CADET_MEMBERSHIP_LIST_FILE, DOB_FORMAT,
+    DESCRIBE_ALL_FIELDS_IN_CADET_MEMBERSHIP_LIST_FILE,
+    DOB_FORMAT,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm, fileInput
 from app.objects.abstract_objects.abstract_buttons import (
@@ -62,6 +63,7 @@ def display_form_import_members(
     )
 
     return Form(list_of_lines)
+
 
 EXAMPLE_DOB_FORMAT = datetime.date.today().strftime(DOB_FORMAT)
 

@@ -5,8 +5,10 @@ from app.objects.volunteers import Volunteer
 from app.objects.relevant_information_for_volunteers import (
     ListOfRelevantInformationForVolunteer,
 )
-from app.backend.volunteers.relevant_information_for_volunteer import relevant_information_requires_clarification, \
-    NO_ISSUES_WITH_VOLUNTEER
+from app.backend.volunteers.relevant_information_for_volunteer import (
+    relevant_information_requires_clarification,
+    NO_ISSUES_WITH_VOLUNTEER,
+)
 
 from app.backend.registration_data.identified_volunteers_at_event import (
     get_list_of_relevant_information_for_volunteer_in_registration_data,
@@ -117,7 +119,10 @@ def process_new_volunteer_at_event_with_active_cadets(
             object_store=interface.object_store, event=event, volunteer=volunteer
         )
     )
-    print("Relevant information for %s, %s" % (volunteer.name, str(list_of_relevant_information)))
+    print(
+        "Relevant information for %s, %s"
+        % (volunteer.name, str(list_of_relevant_information))
+    )
     print("")
     issues_with_volunteer = relevant_information_requires_clarification(
         list_of_relevant_information=list_of_relevant_information,

@@ -2,7 +2,10 @@ from dataclasses import dataclass
 
 from app.objects.exceptions import arg_not_passed, missing_data
 from app.objects.utils import in_x_not_in_y, in_both_x_and_y
-from app.objects.generic_list_of_objects import GenericListOfObjects, get_unique_object_with_attr_in_list
+from app.objects.generic_list_of_objects import (
+    GenericListOfObjects,
+    get_unique_object_with_attr_in_list,
+)
 from app.objects.generic_objects import GenericSkipperManObject
 
 SKIPPERMAN_FIELD_COLUMN_VALUE = "skipperman_field"
@@ -21,22 +24,25 @@ class ListOfWAFieldMappings(GenericListOfObjects):
         return WAFieldMap
 
     def delete_mapping(self, skipperman_field: str):
-        mapping_pair = self.mapping_pair_for_skipperman_field(skipperman_field=skipperman_field, default=missing_data)
+        mapping_pair = self.mapping_pair_for_skipperman_field(
+            skipperman_field=skipperman_field, default=missing_data
+        )
         if mapping_pair is missing_data:
             raise Exception("Can't delete %s as not in mapping list" % skipperman_field)
         print("delting %s" % mapping_pair)
         self.remove(mapping_pair)
 
-    def mapping_pair_for_skipperman_field(self, skipperman_field:str, default = arg_not_passed) -> WAFieldMap:
+    def mapping_pair_for_skipperman_field(
+        self, skipperman_field: str, default=arg_not_passed
+    ) -> WAFieldMap:
         return get_unique_object_with_attr_in_list(
             some_list=self,
-            attr_name='skipperman_field',
+            attr_name="skipperman_field",
             attr_value=skipperman_field,
-            default=default
+            default=default,
         )
 
-    def add_new_mapping(self, skipperman_field: str,
-                                 wa_field: str):
+    def add_new_mapping(self, skipperman_field: str, wa_field: str):
         if skipperman_field in self.list_of_skipperman_fields:
             raise Exception("Skipperman field %s already exists" % skipperman_field)
         if wa_field in self.list_of_wa_fields:
@@ -44,9 +50,8 @@ class ListOfWAFieldMappings(GenericListOfObjects):
 
         self.append(WAFieldMap(skipperman_field=skipperman_field, wa_field=wa_field))
 
-
     def sort_by_skipperman_field(self):
-        self.sort(key = lambda item: item.skipperman_field)
+        self.sort(key=lambda item: item.skipperman_field)
 
     def matching_wa_fields(self, list_of_wa_fields: list):
         return in_both_x_and_y(list_of_wa_fields, self.list_of_wa_fields)

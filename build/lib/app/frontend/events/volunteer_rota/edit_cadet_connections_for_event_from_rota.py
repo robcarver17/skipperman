@@ -66,8 +66,12 @@ def display_form_edit_cadet_connections_from_rota(interface: abstractInterface):
         event=event,
     )
 
-    form = form_to_edit_connections(volunteer=volunteer, existing_connected_cadets=connected_cadets,
-                                    header_text=header_text, list_of_cadets_to_choose_from=list_of_cadets_at_event)
+    form = form_to_edit_connections(
+        volunteer=volunteer,
+        existing_connected_cadets=connected_cadets,
+        header_text=header_text,
+        list_of_cadets_to_choose_from=list_of_cadets_at_event,
+    )
 
     return form
 

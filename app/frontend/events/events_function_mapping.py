@@ -130,8 +130,14 @@ from app.frontend.events.import_data.wa_import_gateway import (
     post_form_WA_import_gateway,
 )
 
-from app.frontend.events.clothing.automatically_get_clothing_data_from_cadets import display_call_to_update_cadet_clothing_at_event_during_import, post_call_to_update_cadet_clothing_at_event_during_import
-from app.frontend.events.food.automatically_get_food_data import display_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import, post_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import
+from app.frontend.events.clothing.automatically_get_clothing_data_from_cadets import (
+    display_call_to_update_cadet_clothing_at_event_during_import,
+    post_call_to_update_cadet_clothing_at_event_during_import,
+)
+from app.frontend.events.food.automatically_get_food_data import (
+    display_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import,
+    post_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import,
+)
 
 event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_functions(
     NestedDictOfMappings(
@@ -171,12 +177,12 @@ event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_func
                                     ): 0,
                                     (
                                         display_call_to_update_cadet_clothing_at_event_during_import,
-                                        post_call_to_update_cadet_clothing_at_event_during_import
-                                    ):0,
+                                        post_call_to_update_cadet_clothing_at_event_during_import,
+                                    ): 0,
                                     (
                                         display_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import,
-                                        post_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import
-                                    ):0
+                                        post_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import,
+                                    ): 0,
                                 },
                             },
                             (

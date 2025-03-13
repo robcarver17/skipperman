@@ -107,8 +107,10 @@ def row_for_cadet_in_event(
         cadet=cadet, registration_details=registration_details
     )
 
-    return RowInTable([str(cadet), status_button, days_attending_field, health_field, notes_field]
-                      + other_columns)
+    return RowInTable(
+        [str(cadet), status_button, days_attending_field, health_field, notes_field]
+        + other_columns
+    )
 
 
 def get_list_of_column_forms_excluding_reserved_fields(

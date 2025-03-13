@@ -124,27 +124,27 @@ def get_active_cadets_as_data_frame_on_specific_day(
     first_names = [cadet.first_name for cadet in active_cadets]
     surnames = [cadet.surname for cadet in active_cadets]
     groups = [
-        dict_of_all_event_data.event_data_for_cadet(cadet).days_and_groups.group_on_day(
-            day
-        ).name
+        dict_of_all_event_data.event_data_for_cadet(cadet)
+        .days_and_groups.group_on_day(day)
+        .name
         for cadet in active_cadets
     ]
     club_boats = [
-        dict_of_all_event_data.event_data_for_cadet(
-            cadet
-        ).days_and_club_dinghies.dinghy_on_day(day).name
+        dict_of_all_event_data.event_data_for_cadet(cadet)
+        .days_and_club_dinghies.dinghy_on_day(day)
+        .name
         for cadet in active_cadets
     ]
     boat_classes = [
-        dict_of_all_event_data.event_data_for_cadet(
-            cadet
-        ).days_and_boat_class.boat_class_on_day(day).name
+        dict_of_all_event_data.event_data_for_cadet(cadet)
+        .days_and_boat_class.boat_class_on_day(day)
+        .name
         for cadet in active_cadets
     ]
     partners = [
-        dict_of_all_event_data.event_data_for_cadet(
-            cadet
-        ).days_and_boat_class.partner_on_day(day).name
+        dict_of_all_event_data.event_data_for_cadet(cadet)
+        .days_and_boat_class.partner_on_day(day)
+        .name
         for cadet in active_cadets
     ]
 
@@ -170,12 +170,13 @@ def get_active_cadets_as_data_frame_on_specific_day(
 def add_sort_order_to_data_frame(
     object_store: ObjectStore, active_cadets_as_data_frame: pd.DataFrame
 ):
-    if len(active_cadets_as_data_frame)==0:
+    if len(active_cadets_as_data_frame) == 0:
         return active_cadets_as_data_frame
 
     ## this ensures the groups, boat classes and club boats are sorted in order
     active_cadets_as_data_frame[SORT_GROUP] = pd.Categorical(
-        active_cadets_as_data_frame[SORT_GROUP], get_list_of_groups(object_store).list_of_names()
+        active_cadets_as_data_frame[SORT_GROUP],
+        get_list_of_groups(object_store).list_of_names(),
     )
 
     print("TRYING TO DEBUG WEIRD ERROR!")
@@ -189,7 +190,8 @@ def add_sort_order_to_data_frame(
     )
 
     active_cadets_as_data_frame[SORT_CLASS] = pd.Categorical(
-        active_cadets_as_data_frame[SORT_CLASS], get_list_of_boat_classes(object_store).list_of_names()
+        active_cadets_as_data_frame[SORT_CLASS],
+        get_list_of_boat_classes(object_store).list_of_names(),
     )
 
     return active_cadets_as_data_frame
@@ -198,7 +200,7 @@ def add_sort_order_to_data_frame(
 def get_sorted_active_cadets_df(
     active_cadets_as_data_frame: pd.DataFrame, sort_order: list
 ) -> pd.DataFrame:
-    if len(active_cadets_as_data_frame)==0:
+    if len(active_cadets_as_data_frame) == 0:
         return active_cadets_as_data_frame
 
     return active_cadets_as_data_frame.sort_values(sort_order)
@@ -207,6 +209,6 @@ def get_sorted_active_cadets_df(
 def get_list_of_active_cadets_from_sorted_df(
     sorted_active_cadets_df: pd.DataFrame,
 ) -> ListOfCadets:
-    if len(sorted_active_cadets_df)==0:
+    if len(sorted_active_cadets_df) == 0:
         return ListOfCadets([])
     return ListOfCadets(sorted_active_cadets_df[CADET].to_list())

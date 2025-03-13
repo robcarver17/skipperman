@@ -46,7 +46,6 @@ def get_cadet_data_from_row_of_registration_data_no_checks(
         membership_status=user_unconfirmed_member,
     )
 
-
     return cadet
 
 
@@ -67,7 +66,7 @@ def _translate_df_timestamp_to_datetime(df_timestamp) -> datetime.date:
 
 
 def get_row_in_raw_registration_data_given_id(
-    object_store: ObjectStore, event: Event, row_id: str, default = arg_not_passed
+    object_store: ObjectStore, event: Event, row_id: str, default=arg_not_passed
 ) -> RowInRegistrationData:
     registration_data = get_raw_mapped_registration_data(
         object_store=object_store, event=event

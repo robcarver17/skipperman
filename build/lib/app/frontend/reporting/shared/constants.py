@@ -1,7 +1,6 @@
 # BUTTONS
 
 
-
 # FIELDS
 PAGE_ALIGNMENT = "page_alignment"
 FONT = "font"

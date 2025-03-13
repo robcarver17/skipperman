@@ -154,10 +154,12 @@ def get_top_row_for_patrol_boat_table(event: Event) -> RowInTable:
         bold(text) for text in list_of_days_at_event_as_str
     ]
 
-    return RowInTable([
-                          bold("Boat"),
-                      ]
-                      + list_of_days_at_event_as_bold_text)
+    return RowInTable(
+        [
+            bold("Boat"),
+        ]
+        + list_of_days_at_event_as_bold_text
+    )
 
 
 def get_bottom_row_for_patrol_boat_table(
@@ -166,10 +168,12 @@ def get_bottom_row_for_patrol_boat_table(
     add_boat_dropdown = get_add_boat_dropdown(interface=interface, event=event)
     padding_columns = get_bottom_row_padding_columns_for_patrol_boat_table(event)
 
-    return RowInTable([
-                          add_boat_dropdown,
-                      ]
-                      + padding_columns)
+    return RowInTable(
+        [
+            add_boat_dropdown,
+        ]
+        + padding_columns
+    )
 
 
 def get_bottom_row_padding_columns_for_patrol_boat_table(event: Event) -> List[str]:

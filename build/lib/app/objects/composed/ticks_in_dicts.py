@@ -192,7 +192,9 @@ class QualificationsAndTickItemsAsDict(Dict[Qualification, TickSubStagesAsDict])
     def get_substage_id_for_name_adding_if_missing(self, new_substage_name: str) -> str:
         ## check to see if exists
         list_of_substages = self.list_of_tick_sub_stages
-        substage_id = list_of_substages.id_given_name(new_substage_name, default=missing_data)
+        substage_id = list_of_substages.id_given_name(
+            new_substage_name, default=missing_data
+        )
         if substage_id is missing_data:
             list_of_substages.add(new_substage_name)
             self.list_of_tick_sub_stages = list_of_substages

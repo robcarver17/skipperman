@@ -236,7 +236,7 @@ def get_html_for_element_in_line(
         DetailLine,
         Image,
         int,
-        HorizontalLine
+        HorizontalLine,
     ],
     urls_of_interest: UrlsOfInterest = arg_not_passed,
 ) -> Html:

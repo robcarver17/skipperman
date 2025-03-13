@@ -34,10 +34,11 @@ from app.web.html.url_define import (
 )
 from app.data_access.configuration.configuration import MAX_FILE_SIZE
 
-MEGABYTE = (2 ** 10) ** 2
+MEGABYTE = (2**10) ** 2
 
 
 ## Do not move these functions out of this file or things break
+
 
 def prepare_flask_app(max_file_size: int, profile: bool = False) -> Flask:
     ## Secret key
@@ -59,8 +60,8 @@ def prepare_flask_app(max_file_size: int, profile: bool = False) -> Flask:
 
     ## Avoid overload
     app.config["MAX_CONTENT_LENGTH"] = max_file_size * MEGABYTE
-    app.config['MAX_FORM_MEMORY_SIZE'] = None ## avoids large forms breaking
-    app.config['MAX_FORM_PARTS'] = None ## avoids large forms breaking
+    app.config["MAX_FORM_MEMORY_SIZE"] = None  ## avoids large forms breaking
+    app.config["MAX_FORM_PARTS"] = None  ## avoids large forms breaking
 
     return app
 
@@ -68,7 +69,8 @@ def prepare_flask_app(max_file_size: int, profile: bool = False) -> Flask:
 def prepare_request(max_file_size):
     Request.max_form_parts = None  # avoid large forms crashing
     Request.max_form_memory_size = None
-    Request.max_content_length = max_file_size*MEGABYTE
+    Request.max_content_length = max_file_size * MEGABYTE
+
 
 def prepare_login_manager(app: Flask) -> LoginManager:
     login_manager = LoginManager()
@@ -85,6 +87,7 @@ login_manager = prepare_login_manager(app)
 
 
 ## @APP MAGIC
+
 
 ## ensures cookies persists between sessions
 @app.before_request

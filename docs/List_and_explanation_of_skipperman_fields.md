@@ -1,5 +1,15 @@
 
+Mapping converts Wild Apricot form entry names to our internal field names - we can't import an event without it.
+
 [TOC]
+
+# What is mapping?
+
+Skipperman needs to identify certain pieces of information in imported registration data, and does so by labelling them with fixed field names, eg 'Cadet first name'. However, when Wild Apricot exports data, it labels information with the text given on the registration form for the event. And it's possible to use any text on the form that you like: for example 'First name', 'First Name', 'Forename', 'Cadet first name'... Skipperman can't just guess what has been used on the form.
+
+The mapping for an event is basically a list of fields in the Wild Apricot export file, and what they correspond to in Skipperman. Without this list, there is no way for Skipperman to import the data from Wild Apricot.
+
+For an introduction to field mapping, see [here](WA_field_mapping_help.md).
 
 # Full field list
 
@@ -53,7 +63,7 @@ The following are the data fields used by Skipperman. You should have a good und
 
 # Notes to full field list
 
-## Usage
+## Usage / importance
 
 - High: Core field in all events, should not be omitted
 - Depends: Core field in certain events
@@ -110,7 +120,8 @@ It's recommended that you don't use the weekend fields for simplicity; in practi
 
 ### Status selection
 
-asdf
+Contains one of a limited number of Wild Apricot status fields. These are defined in the [config file](/docs/technical/configuration.md#wild-apricot-status-fields).
+
 
 # Field lists recommended for different event types
 

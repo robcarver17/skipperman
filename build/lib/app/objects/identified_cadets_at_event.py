@@ -3,9 +3,12 @@ from typing import List
 
 from app.objects.cadets import Cadet, test_cadet_id
 
-from app.objects.exceptions import  MissingData
-from app.objects.generic_list_of_objects import GenericListOfObjects, get_idx_of_unique_object_with_attr_in_list, \
-    index_not_found
+from app.objects.exceptions import MissingData
+from app.objects.generic_list_of_objects import (
+    GenericListOfObjects,
+    get_idx_of_unique_object_with_attr_in_list,
+    index_not_found,
+)
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.exceptions import MultipleMatches
 from app.objects.exceptions import arg_not_passed
@@ -43,7 +46,9 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
         try:
             assert self.row_does_not_have_identified_cadet_including_test_cadets(row_id)
         except:
-            raise Exception("Row ID %s is already mapped to an identified cadet" % row_id)
+            raise Exception(
+                "Row ID %s is already mapped to an identified cadet" % row_id
+            )
 
         self.append(IdentifiedCadetAtEvent(row_id=row_id, cadet_id=cadet.id))
 
@@ -55,12 +60,14 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
 
         self.append(IdentifiedCadetAtEvent.create_row_for_test_cadet(row_id=row_id))
 
-    def cadet_id_given_row_id_ignoring_test_cadets(self, row_id: str, default_when_missing = arg_not_passed) -> str:
+    def cadet_id_given_row_id_ignoring_test_cadets(
+        self, row_id: str, default_when_missing=arg_not_passed
+    ) -> str:
         matching_idx = get_idx_of_unique_object_with_attr_in_list(
             some_list=self,
-            attr_name='row_id',
+            attr_name="row_id",
             attr_value=row_id,
-            default=index_not_found
+            default=index_not_found,
         )
 
         if matching_idx is index_not_found:
@@ -86,4 +93,3 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
         matching = [item.row_id for item in self if item.cadet_id == cadet_id]
 
         return matching
-

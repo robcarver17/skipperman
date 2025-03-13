@@ -4,7 +4,7 @@ from typing import List, Dict
 from app.data_access.configuration.field_list import (
     RESPONSIBLE_ADULT_NUMBER,
     RESPONSIBLE_ADULT_NAME,
-    CADET_DOUBLE_HANDED_PARTNER
+    CADET_DOUBLE_HANDED_PARTNER,
 )
 from app.objects.utils import flatten
 
@@ -36,7 +36,7 @@ class CadetRegistrationData:
         self.notes = ""
 
     def two_handed_partner(self, default=arg_not_passed):
-        partner= self.data_in_row.get_item(CADET_DOUBLE_HANDED_PARTNER, missing_data)
+        partner = self.data_in_row.get_item(CADET_DOUBLE_HANDED_PARTNER, missing_data)
         if partner is missing_data:
             if default is arg_not_passed:
                 raise MissingData
@@ -44,7 +44,6 @@ class CadetRegistrationData:
                 return default
 
         return partner.strip(" ")
-
 
     @property
     def emergency_contact(self):
@@ -79,7 +78,6 @@ class CadetRegistrationData:
         return self.status.is_active
 
 
-
 class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
     def __init__(
         self,
@@ -97,39 +95,35 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
             ]
         )
 
-
-
     def clear_user_data(self):
         for reg_data_for_cadet in self.values():
             reg_data_for_cadet.clean_data()
-            
+
         self.list_of_cadets_with_id_at_event.clear_private_data()
 
-    def make_cadet_available_on_day(
-        self,
-        cadet: Cadet,
-        day: Day
-    ):
+    def make_cadet_available_on_day(self, cadet: Cadet, day: Day):
 
         registration_data = self.registration_data_for_cadet(cadet)
         registration_data.availability.make_available_on_day(day)
 
-        cadet_at_event_data = self.list_of_cadets_with_id_at_event.cadet_with_id_and_data_at_event(cadet_id=cadet.id)
+        cadet_at_event_data = (
+            self.list_of_cadets_with_id_at_event.cadet_with_id_and_data_at_event(
+                cadet_id=cadet.id
+            )
+        )
         cadet_at_event_data.availability.make_available_on_day(day)
 
-    def make_cadet_unavailable_on_day(
-        self,
-        cadet: Cadet,
-        day: Day
-    ):
+    def make_cadet_unavailable_on_day(self, cadet: Cadet, day: Day):
 
         registration_data = self.registration_data_for_cadet(cadet)
         registration_data.availability.make_unavailable_on_day(day)
 
-        cadet_at_event_data = self.list_of_cadets_with_id_at_event.cadet_with_id_and_data_at_event(cadet_id=cadet.id)
+        cadet_at_event_data = (
+            self.list_of_cadets_with_id_at_event.cadet_with_id_and_data_at_event(
+                cadet_id=cadet.id
+            )
+        )
         cadet_at_event_data.availability.make_unavailable_on_day(day)
-
-
 
     def update_status_of_existing_cadet_in_event_info_to_cancelled_or_deleted(
         self, cadet: Cadet, new_status: RegistrationStatus
@@ -137,8 +131,10 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
         existing_registration = self.registration_data_for_cadet(cadet)
         existing_registration.status = new_status
 
-        cadet_at_event_with_id = self.list_of_cadets_with_id_at_event.cadet_with_id_and_data_at_event(
-            cadet_id=cadet.id
+        cadet_at_event_with_id = (
+            self.list_of_cadets_with_id_at_event.cadet_with_id_and_data_at_event(
+                cadet_id=cadet.id
+            )
         )
         cadet_at_event_with_id.status = new_status
 
@@ -173,7 +169,9 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
 
         return list_of_contacts
 
-    def registration_data_for_cadet(self, cadet: Cadet, default = arg_not_passed) -> CadetRegistrationData:
+    def registration_data_for_cadet(
+        self, cadet: Cadet, default=arg_not_passed
+    ) -> CadetRegistrationData:
         reg_data = self.get(cadet, missing_data)
         if reg_data is missing_data:
             if default is arg_not_passed:

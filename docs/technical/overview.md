@@ -1,4 +1,4 @@
-This document gives a technical overview of the system.
+This document gives a technical overview of the system. FIXME It is extremely incomplete and out of date.
 
 # flask_app
 

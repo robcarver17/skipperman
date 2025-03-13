@@ -16,10 +16,9 @@ def valid_partnership_given_partner_id_or_str(partnership_str: str):
     return not no_partnership_given_partner_id_or_str(partnership_str)
 
 
-NoCadetPartner = Enum('NoCadetPartner', [NO_PARTNER_REQUIRED_STR, NOT_ALLOCATED_STR])
+NoCadetPartner = Enum("NoCadetPartner", [NO_PARTNER_REQUIRED_STR, NOT_ALLOCATED_STR])
 no_cadet_partner_required = NoCadetPartner.Singlehander
 no_partner_allocated = NoCadetPartner.Unallocated
-
 
 
 def from_cadet_id_to_partner_cadet(

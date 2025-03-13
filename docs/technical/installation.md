@@ -28,4 +28,9 @@ Navigate to `https://bsccadetskipper.pythonanywhere.com/`
 
 # Usernames and log in fresh install
 
-The username and login for Skipperman is specific to each installation, will not be affected by data download/upload, and will be set up from scratch on a fresh install. User data is stored in `/skipperman_user_data/secure/userlist.csv`
+The username and login for Skipperman is specific to each installation, will not be affected by data download/upload, and will be set up from scratch on a fresh install. On a fresh install with no users setup the default username / password is `default` and `default`. [**Add a new user or change the password immediately**](/docs/list_of_users_help.md)
+
+
+►
+▼
+`

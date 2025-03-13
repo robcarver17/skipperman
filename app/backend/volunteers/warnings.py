@@ -1,7 +1,9 @@
 from copy import copy
 from typing import List, Callable
 
-from app.objects.composed.volunteer_roles import empty_if_qualified_for_role_else_warnings
+from app.objects.composed.volunteer_roles import (
+    empty_if_qualified_for_role_else_warnings,
+)
 
 
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
@@ -104,7 +106,7 @@ def warn_on_all_volunteers_generic(
 
 def warn_about_single_volunteer_with_qualifications(
     volunteer: Volunteer,
-    event: Event, ## not used but called by generic function so keep
+    event: Event,  ## not used but called by generic function so keep
     volunteer_event_data: AllEventDataForVolunteer,
     object_store: ObjectStore,  ## not used, ditto
 ) -> str:
@@ -114,8 +116,10 @@ def warn_about_single_volunteer_with_qualifications(
 
     roles_with_warning = []
     for volunteer_role in list_of_volunteer_roles:
-        warnings = empty_if_qualified_for_role_else_warnings(role=volunteer_role, dict_of_skills=dict_of_skills)
-        if len(warnings)==0:
+        warnings = empty_if_qualified_for_role_else_warnings(
+            role=volunteer_role, dict_of_skills=dict_of_skills
+        )
+        if len(warnings) == 0:
             continue
 
         warning_text = "for %s needs: %s" % (volunteer_role.name, warnings)
@@ -327,9 +331,10 @@ def is_first_event_for_cadet(
 ) -> bool:
     previous_allocation = copy(
         get_dict_of_all_event_allocations_for_single_cadet(
-            object_store=object_store, cadet=cadet,
+            object_store=object_store,
+            cadet=cadet,
             excluding_event=event,
-            only_events_before_excluded_event=True
+            only_events_before_excluded_event=True,
         )
     )
 

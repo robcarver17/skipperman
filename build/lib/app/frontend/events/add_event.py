@@ -84,6 +84,7 @@ def get_add_event_form_with_information_passed(
 
     return Form(list_of_elements_inside_form)
 
+
 help_button = HelpButton("add_event_help")
 
 
@@ -102,8 +103,6 @@ def get_footer_buttons(form_is_blank: bool):
         return ButtonBar(
             [cancel_menu_button, check_submit_button, final_submit_button, help_button]
         )
-
-
 
 
 def form_fields_for_add_event(
@@ -171,10 +170,7 @@ def process_form_when_checking_event(
             object_store=interface.object_store, event=event
         )
     except Exception as e:
-        verify_text = (
-            "Doesn't appear to be a valid event: error %s"
-            % str(e)
-        )
+        verify_text = "Doesn't appear to be a valid event: error %s" % str(e)
 
         event = default_event
 

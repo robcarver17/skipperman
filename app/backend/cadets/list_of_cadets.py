@@ -4,7 +4,8 @@ from app.objects.cadets import (
     ListOfCadets,
     Cadet,
     sort_a_list_of_cadets,
-    SORT_BY_SURNAME, SORT_BY_FIRSTNAME,
+    SORT_BY_SURNAME,
+    SORT_BY_FIRSTNAME,
 )
 from app.objects.exceptions import arg_not_passed
 
@@ -15,14 +16,10 @@ from app.data_access.store.object_definitions import (
 )
 
 
-def get_matching_cadet(
-    object_store: ObjectStore, cadet: Cadet
-) -> Cadet:
+def get_matching_cadet(object_store: ObjectStore, cadet: Cadet) -> Cadet:
     list_of_cadets = get_list_of_cadets(object_store)
 
-    return list_of_cadets.matching_cadet(
-        cadet=cadet
-    )
+    return list_of_cadets.matching_cadet(cadet=cadet)
 
 
 def are_there_no_similar_cadets(object_store: ObjectStore, cadet: Cadet) -> bool:
@@ -51,11 +48,12 @@ def get_cadet_from_list_of_cadets_given_str_of_cadet(
 
 
 def get_cadet_from_list_of_cadets_given_name_of_cadet(
-    object_store: ObjectStore, cadet_selected: str, default = arg_not_passed
+    object_store: ObjectStore, cadet_selected: str, default=arg_not_passed
 ) -> Cadet:
     list_of_cadets = get_list_of_cadets(object_store)
     cadet = list_of_cadets.matching_cadet_with_name(cadet_selected, default=default)
     return cadet
+
 
 def get_cadet_from_id(object_store: ObjectStore, cadet_id: str) -> Cadet:
     list_of_cadets = get_list_of_cadets(object_store)
@@ -65,8 +63,11 @@ def get_cadet_from_id(object_store: ObjectStore, cadet_id: str) -> Cadet:
 def get_list_of_cadets_sorted_by_surname(object_store: ObjectStore) -> ListOfCadets:
     return get_sorted_list_of_cadets(object_store=object_store, sort_by=SORT_BY_SURNAME)
 
+
 def get_list_of_cadets_sorted_by_first_name(object_store: ObjectStore) -> ListOfCadets:
-    return get_sorted_list_of_cadets(object_store=object_store, sort_by=SORT_BY_FIRSTNAME)
+    return get_sorted_list_of_cadets(
+        object_store=object_store, sort_by=SORT_BY_FIRSTNAME
+    )
 
 
 def get_sorted_list_of_cadets(

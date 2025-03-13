@@ -4,8 +4,8 @@ from typing import Dict, List
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.volunteer_skills import (
     Skill,
-SI_SKILL_NAME,
-VOLUNTEERS_SKILL_FOR_PB2_NAME,
+    SI_SKILL_NAME,
+    VOLUNTEERS_SKILL_FOR_PB2_NAME,
     ListOfSkills,
 )
 from app.objects.volunteers import Volunteer, ListOfVolunteers
@@ -19,7 +19,6 @@ from app.objects.volunteers_with_skills_and_ids import (
 class VolunteerWithSkill(GenericSkipperManObject):
     volunteer: Volunteer
     skill: Skill
-
 
     @classmethod
     def from_volunteer_skills_with_id(
@@ -59,8 +58,7 @@ class SkillsDict(Dict[Skill, bool]):
         return [skill.name for skill in self.keys()]
 
     def skills_held_as_str(self):
-        return ", ".join(self.list_of_held_skill_names_sorted
-        )
+        return ", ".join(self.list_of_held_skill_names_sorted)
 
     @property
     def list_of_held_skill_names_sorted(self) -> List[str]:
@@ -73,7 +71,6 @@ class SkillsDict(Dict[Skill, bool]):
         raw_list = [skill.name for skill, skill_held in self.items() if skill_held]
 
         return raw_list
-
 
     def skills_not_held_as_str(self):
         return ", ".join(
@@ -167,7 +164,6 @@ class DictOfVolunteersWithSkills(Dict[Volunteer, SkillsDict]):
         self,
         raw_dict: Dict[Volunteer, SkillsDict],
         list_of_skills: ListOfSkills,
-
         list_of_volunteers_with_skills_and_ids: ListOfVolunteerSkillsWithIds,
     ):
         super().__init__(raw_dict)
@@ -176,7 +172,6 @@ class DictOfVolunteersWithSkills(Dict[Volunteer, SkillsDict]):
             list_of_volunteers_with_skills_and_ids
         )
         self._list_of_skills = list_of_skills
-
 
     def add_volunteer_driving_qualification(self, volunteer: Volunteer):
         PB2_skill = self.list_of_skills.PB2_skill
@@ -259,7 +254,7 @@ def compose_dict_of_volunteer_skills(
     return DictOfVolunteersWithSkills(
         raw_dict=raw_dict,
         list_of_volunteers_with_skills_and_ids=list_of_volunteers_with_skills_and_ids,
-        list_of_skills=list_of_skills
+        list_of_skills=list_of_skills,
     )
 
 

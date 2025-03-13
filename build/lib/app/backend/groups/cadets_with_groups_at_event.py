@@ -32,7 +32,6 @@ from app.data_access.store.object_store import ObjectStore
 from app.objects.groups import Group
 
 
-
 def get_joint_attendance_matrix_for_cadets_in_group_at_event(
     object_store: ObjectStore,
     event: Event,

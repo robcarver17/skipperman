@@ -22,8 +22,7 @@ def get_sorted_volunteer_data_for_volunteers_at_event_but_not_yet_on_patrol_boat
     event: Event,
     day: Day,
 ) -> DictOfAllEventDataForVolunteers:
-    volunteer_data_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day = \
-        get_volunteer_data_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day(
+    volunteer_data_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day = get_volunteer_data_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day(
         object_store=object_store, event=event, day=day
     )
 
@@ -42,7 +41,9 @@ def get_volunteer_data_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_gi
         object_store=object_store, event=event
     )
 
-    return dict_of_all_event_data_for_volunteers.not_on_patrol_boat_on_given_day_and_available(day)
+    return dict_of_all_event_data_for_volunteers.not_on_patrol_boat_on_given_day_and_available(
+        day
+    )
 
 
 def sort_volunteer_data_by_role_on_day_and_skills_and_then_name(

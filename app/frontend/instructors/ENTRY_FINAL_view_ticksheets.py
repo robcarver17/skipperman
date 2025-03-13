@@ -141,12 +141,11 @@ def post_form_view_ticksheets_for_event_and_group(
         clear_cadet_state(interface)
         return previous_form(interface)
 
-    return post_form_view_ticksheets_for_event_and_group_not_cancel_or_back(
-        interface
-    )
+    return post_form_view_ticksheets_for_event_and_group_not_cancel_or_back(interface)
+
 
 def post_form_view_ticksheets_for_event_and_group_not_cancel_or_back(
-        interface: abstractInterface,
+    interface: abstractInterface,
 ) -> Union[Form, NewForm, File]:
     button_pressed = interface.last_button_pressed()
 

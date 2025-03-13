@@ -46,6 +46,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
     save_menu_button,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -76,7 +77,6 @@ def display_form_allocate_cadets_at_event(
         interface=interface, event=event, sort_order=sort_order
     )
     sort_button_table = sort_buttons_for_allocation_table(sort_order)
-    nav_bar = ButtonBar([cancel_menu_button, save_menu_button])
 
     sort_order_line = DetailListOfLines(
         ListOfLines(
@@ -110,6 +110,10 @@ def display_form_allocate_cadets_at_event(
     )
 
 
+help_button = HelpButton("group_allocation_help")
+nav_bar = ButtonBar([cancel_menu_button, save_menu_button, help_button])
+
+
 def get_day_buttons(interface: abstractInterface) -> Line:
     event = get_event_from_state(interface)
     event_weekdays = copy(event.days_in_event())
@@ -122,9 +126,9 @@ def get_day_buttons(interface: abstractInterface) -> Line:
         message = "Currently editing %s: " % day.name
         event_weekdays.remove(day)
         weekday_selection = [Button(day.name) for day in event_weekdays]
-        all_buttons = [reset_day_button]+weekday_selection
+        all_buttons = [reset_day_button] + weekday_selection
 
-    return Line([message]+all_buttons)
+    return Line([message] + all_buttons)
 
 
 reset_day_button = Button(RESET_DAY_BUTTON_LABEL)
@@ -146,19 +150,19 @@ def get_allocations_and_classes_detail(
     allocations = summarise_allocations_for_event(
         object_store=object_store, event=event
     )
-    if len(allocations)==0:
+    if len(allocations) == 0:
         allocations = "No group allocations made"
 
     club_dinghies = summarise_club_boat_allocations_for_event(
         event=event, object_store=object_store
     )
-    if len(club_dinghies)==0:
+    if len(club_dinghies) == 0:
         club_dinghies = "No club dinghy allocations made"
 
     classes = summarise_class_attendance_for_event(
         event=event, object_store=object_store
     )
-    if len(classes) ==0:
+    if len(classes) == 0:
         classes = "No boat classes allocated"
 
     return DetailListOfLines(
@@ -212,7 +216,7 @@ def get_inner_form_for_cadet_allocation(
             N_events=NUMBER_OF_PREVIOUS_EVENTS,
             excluding_event=event,
             only_events_before_excluded_event=True,
-            pad=True
+            pad=True,
         )
     )
     group_allocation_info = get_group_allocation_info(dict_of_all_event_data)
@@ -248,17 +252,21 @@ def get_top_row(
     previous_groups_for_cadets: DictOfEventAllocations,
     group_allocation_info: GroupAllocationInfo,
 ) -> RowInTable:
-    previous_event_names_in_list = previous_groups_for_cadets.list_of_events.list_of_names()
+    previous_event_names_in_list = (
+        previous_groups_for_cadets.list_of_events.list_of_names()
+    )
 
     info_field_names = group_allocation_info.visible_field_names
 
     input_field_names_over_days = get_daily_input_field_headings(interface=interface)
 
-    return RowInTable(["", "Set Availability"]  ## cadet name
-                      + previous_event_names_in_list
-                      + info_field_names
-                      + ["Official qualification", "Notes"]
-                      + input_field_names_over_days)
+    return RowInTable(
+        ["", "Set Availability"]  ## cadet name
+        + previous_event_names_in_list
+        + info_field_names
+        + ["Official qualification", "Notes"]
+        + input_field_names_over_days
+    )
 
 
 def get_daily_input_field_headings(interface: abstractInterface) -> list:
@@ -296,12 +304,8 @@ def get_row_for_cadet(
     previous_groups_as_list = (
         previous_groups_for_cadets.previous_group_names_for_cadet_as_list(cadet)
     )
-    group_info = (
-        group_allocation_info.group_info_dict_for_cadet_as_ordered_list(cadet)
-    )
-    group_info = [
-        make_long_thing_detail_box(field) for field in group_info
-    ]
+    group_info = group_allocation_info.group_info_dict_for_cadet_as_ordered_list(cadet)
+    group_info = [make_long_thing_detail_box(field) for field in group_info]
     input_fields = get_input_fields_for_cadet(
         interface=interface, cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
     )
@@ -317,11 +321,13 @@ def get_row_for_cadet(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
     )
 
-    return RowInTable([cell_for_cadet, days_attending_field]
-                      + previous_groups_as_list
-                      + group_info
-                      + [qualification, notes_field]
-                      + input_fields)
+    return RowInTable(
+        [cell_for_cadet, days_attending_field]
+        + previous_groups_as_list
+        + group_info
+        + [qualification, notes_field]
+        + input_fields
+    )
 
 
 MAX_EVENTS_TO_SHOW = 10
@@ -337,15 +343,19 @@ def get_cell_for_cadet(
     else:
         return button_to_click_on_cadet(cadet)
 
-def button_to_click_on_cadet(cadet:Cadet):
+
+def button_to_click_on_cadet(cadet: Cadet):
     return Button(str(cadet), value=get_button_id_for_cadet(cadet.id))
+
 
 def get_cell_for_cadet_that_is_clicked_on(
     interface: abstractInterface, event: Event, cadet: Cadet
 ) -> ListOfLines:
     list_of_groups_as_str = get_list_of_previous_groups_as_str(
-        object_store=interface.object_store, event_to_exclude=event, cadet=cadet,
-        only_events_before_excluded_event=False
+        object_store=interface.object_store,
+        event_to_exclude=event,
+        cadet=cadet,
+        only_events_before_excluded_event=False,
     )
     list_of_qualifications_as_str = (
         get_qualification_status_for_single_cadet_as_list_of_str(
@@ -359,6 +369,7 @@ def get_cell_for_cadet_that_is_clicked_on(
         + ["Qualifications:-"]
         + list_of_qualifications_as_str
     ).add_Lines()
+
 
 def this_cadet_has_been_clicked_on_already(interface: abstractInterface, cadet: Cadet):
     try:

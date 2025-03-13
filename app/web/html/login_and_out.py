@@ -16,7 +16,10 @@ def get_login_link_html_code():
         % LOGIN_URL
     )
 
+
 from app.objects.users_and_security import UserGroup
+
+
 def get_read_write_logout_and_change_password_link_html_code(
     include_read_only_toggle: bool, include_backup_option: bool = False
 ):
@@ -24,7 +27,9 @@ def get_read_write_logout_and_change_password_link_html_code(
         read_only_html_string = read_only_or_not_html()
     else:
         ## don't offer the option or will get messed up
-        read_only_html_string = "Read only - changes will not be saved" if is_read_only() else ""
+        read_only_html_string = (
+            "Read only - changes will not be saved" if is_read_only() else ""
+        )
 
     if include_backup_option:
         backup_html_string = make_backup_html()

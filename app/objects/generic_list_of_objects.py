@@ -33,7 +33,6 @@ class GenericListOfObjects(list):
     def as_df_of_str(self) -> pd.DataFrame:
         return create_data_frame_given_list_of_objects(self)
 
-
     def list_of_names(self):
         return [item.name for item in self]
 
@@ -57,24 +56,15 @@ class GenericListOfObjectsWithIds(GenericListOfObjects):
 
     def object_with_id(self, id: str, default=arg_not_passed):
         return get_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_value=id,
-            attr_name='id',
-            default=default
+            some_list=self, attr_value=id, attr_name="id", default=default
         )
 
-    def index_of_id(self, id:str, default = arg_not_passed) -> int:
+    def index_of_id(self, id: str, default=arg_not_passed) -> int:
         return get_idx_of_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_value=id,
-            attr_name='id',
-            default=default
+            some_list=self, attr_value=id, attr_name="id", default=default
         )
 
-
-    def subset_from_list_of_ids_retaining_order(
-        self, list_of_ids: List[str]
-    ):
+    def subset_from_list_of_ids_retaining_order(self, list_of_ids: List[str]):
         subset_list = [
             object_in_list
             for object_in_list in self
@@ -82,7 +72,6 @@ class GenericListOfObjectsWithIds(GenericListOfObjects):
         ]
 
         return self.__class__(subset_list)
-
 
     @property
     def list_of_ids(self) -> list:
@@ -105,10 +94,15 @@ class GenericListOfObjectsWithIds(GenericListOfObjects):
         return max_id
 
 
-
-def get_unique_object_with_attr_in_list(some_list: list, attr_value, attr_name = "id", default=arg_not_passed):
-    idx = get_idx_of_unique_object_with_attr_in_list(some_list=some_list, attr_value=attr_value, attr_name=attr_name,
-                                                     default=index_not_found)
+def get_unique_object_with_attr_in_list(
+    some_list: list, attr_value, attr_name="id", default=arg_not_passed
+):
+    idx = get_idx_of_unique_object_with_attr_in_list(
+        some_list=some_list,
+        attr_value=attr_value,
+        attr_name=attr_name,
+        default=index_not_found,
+    )
     if idx is index_not_found:
         if default is arg_not_passed:
             raise MissingData("%s = %s not found" % (attr_name, attr_value))
@@ -118,57 +112,78 @@ def get_unique_object_with_attr_in_list(some_list: list, attr_value, attr_name =
     return some_list[idx]
 
 
-def get_idx_of_unique_object_with_attr_in_list(some_list: list, attr_value, attr_name = "id", default=arg_not_passed):
-    list_of_idx = [idx for idx, object_in_list in enumerate(some_list) if getattr(object_in_list, attr_name)==attr_value]
-    if len(list_of_idx)==0:
+def get_idx_of_unique_object_with_attr_in_list(
+    some_list: list, attr_value, attr_name="id", default=arg_not_passed
+):
+    list_of_idx = [
+        idx
+        for idx, object_in_list in enumerate(some_list)
+        if getattr(object_in_list, attr_name) == attr_value
+    ]
+    if len(list_of_idx) == 0:
         if default is arg_not_passed:
             raise MissingData("%s = %s not found" % (attr_name, attr_value))
         else:
             return default
 
-    elif len(list_of_idx)>1:
+    elif len(list_of_idx) > 1:
         raise MultipleMatches("Multiple matches for %s=%s" % (attr_name, attr_value))
     else:
         return list_of_idx[0]
 
 
-def get_unique_object_with_multiple_attr_in_list(some_list: list, dict_of_attributes: dict, default=arg_not_passed):
-    idx = get_idx_of_unique_object_with_multiple_attr_in_list(some_list=some_list, dict_of_attributes=dict_of_attributes,
-                                                     default=index_not_found)
+def get_unique_object_with_multiple_attr_in_list(
+    some_list: list, dict_of_attributes: dict, default=arg_not_passed
+):
+    idx = get_idx_of_unique_object_with_multiple_attr_in_list(
+        some_list=some_list,
+        dict_of_attributes=dict_of_attributes,
+        default=index_not_found,
+    )
     if idx is index_not_found:
         if default is arg_not_passed:
-            raise MissingData("One or more of attributes not found %s" % str(dict_of_attributes))
+            raise MissingData(
+                "One or more of attributes not found %s" % str(dict_of_attributes)
+            )
         else:
             return default
 
     return some_list[idx]
 
 
-def get_idx_of_unique_object_with_multiple_attr_in_list(some_list: list, dict_of_attributes: dict, default=arg_not_passed):
-    list_of_idx = [idx for idx, object_in_list in enumerate(some_list) if matches_attributes(
-        object_in_list, dict_of_attributes=dict_of_attributes
-    )]
-    if len(list_of_idx)==0:
+def get_idx_of_unique_object_with_multiple_attr_in_list(
+    some_list: list, dict_of_attributes: dict, default=arg_not_passed
+):
+    list_of_idx = [
+        idx
+        for idx, object_in_list in enumerate(some_list)
+        if matches_attributes(object_in_list, dict_of_attributes=dict_of_attributes)
+    ]
+    if len(list_of_idx) == 0:
         if default is arg_not_passed:
-            raise MissingData("One or more of attributes not found %s" % str(dict_of_attributes))
+            raise MissingData(
+                "One or more of attributes not found %s" % str(dict_of_attributes)
+            )
         else:
             return default
 
-    elif len(list_of_idx)>1:
+    elif len(list_of_idx) > 1:
         raise MultipleMatches("Multiple matches for %s" % str(dict_of_attributes))
     else:
         return list_of_idx[0]
 
 
-def matches_attributes(object_in_list, dict_of_attributes: dict) ->bool:
+def matches_attributes(object_in_list, dict_of_attributes: dict) -> bool:
     for attr_name, attr_value in dict_of_attributes.items():
         attr_in_object = getattr(object_in_list, attr_name)
-        if attr_in_object!=attr_value:
+        if attr_in_object != attr_value:
             return False
 
     return True
 
+
 index_not_found = object()
+
 
 def create_list_of_objects_from_dataframe(
     class_of_object: GenericSkipperManObject, df: pd.DataFrame

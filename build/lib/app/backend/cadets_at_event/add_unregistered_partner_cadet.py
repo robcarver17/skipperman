@@ -79,7 +79,9 @@ def add_unregistered_partner_cadet(
             event=event,
         )
     except:
-        raise MissingData("Event has probably been cleaned, original registration data not available")
+        raise MissingData(
+            "Event has probably been cleaned, original registration data not available"
+        )
 
     add_identified_cadet_and_row(
         object_store=object_store, event=event, row_id=new_row.row_id, cadet=new_cadet
@@ -117,7 +119,9 @@ def add_cloned_row_to_raw_registration_data_and_return_row(
             object_store=object_store, cadet=original_cadet, event=event
         )
     except NoMoreData:
-        raise MissingData("Event has probably been cleaned, original registration data not available")
+        raise MissingData(
+            "Event has probably been cleaned, original registration data not available"
+        )
 
     new_row = modify_row_to_clone_for_new_cadet_partner(
         original_cadet=original_cadet, new_cadet=new_cadet, existing_row=existing_row
@@ -138,7 +142,7 @@ def modify_row_to_clone_for_new_cadet_partner(
 ) -> RowInRegistrationData:
     new_row = copy(existing_row)
 
-    new_row.replace_row_id_by_adding_random_number() ## avoid duplicate warning
+    new_row.replace_row_id_by_adding_random_number()  ## avoid duplicate warning
     new_row.registration_status = manual_status  ## avoids it being deleted
     new_row[CADET_FIRST_NAME] = new_cadet.first_name
     new_row[CADET_SURNAME] = new_cadet.surname

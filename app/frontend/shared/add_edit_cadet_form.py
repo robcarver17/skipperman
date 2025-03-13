@@ -9,7 +9,8 @@ from app.backend.cadets.add_edit_cadet import (
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
-    Button, HelpButton,
+    Button,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,

@@ -56,20 +56,22 @@ def get_all_roles_across_recent_events_for_volunteer_as_dict_with_sort_order(
         object_store=object_store, sort_by=sort_by
     )
     list_of_events = list_of_events_excluding_one_event_and_past_events(
-        list_of_events=list_of_events,
-        event_to_exclude=avoid_event,
-        sort_by=sort_by
+        list_of_events=list_of_events, event_to_exclude=avoid_event, sort_by=sort_by
     )
 
     return get_all_roles_for_list_of_events_for_volunteer_as_dict(
-        object_store=object_store, volunteer=volunteer, list_of_events=list_of_events,
-        N_events=N_events
+        object_store=object_store,
+        volunteer=volunteer,
+        list_of_events=list_of_events,
+        N_events=N_events,
     )
 
 
 def get_all_roles_for_list_of_events_for_volunteer_as_dict(
-    object_store: ObjectStore, volunteer: Volunteer, list_of_events: ListOfEvents,
-        N_events = ALL_EVENTS
+    object_store: ObjectStore,
+    volunteer: Volunteer,
+    list_of_events: ListOfEvents,
+    N_events=ALL_EVENTS,
 ) -> Dict[Event, RoleAndGroupAndTeam]:
     list_of_roles_and_groups = [
         get_role_and_group_for_event_and_volunteer(
@@ -84,12 +86,11 @@ def get_all_roles_for_list_of_events_for_volunteer_as_dict(
             if not role_and_group.is_unallocated
         ]
     )
-    if len(roles_dict)>N_events:
+    if len(roles_dict) > N_events:
         roles_dict_keys = list(roles_dict.keys())
         roles_dict_keys_subset = roles_dict_keys[:N_events]
         roles_dict = dict(
-            (event, roles_dict[event])
-            for event in roles_dict_keys_subset
+            (event, roles_dict[event]) for event in roles_dict_keys_subset
         )
 
     return roles_dict

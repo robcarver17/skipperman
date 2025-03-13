@@ -105,8 +105,7 @@ def get_table_of_cadets_with_buttons(
         object_store=interface.object_store, sort_by=sort_order
     )
     list_of_rows = [
-        row_of_form_for_cadets_with_buttons(cadet)
-        for cadet in list_of_cadets
+        row_of_form_for_cadets_with_buttons(cadet) for cadet in list_of_cadets
     ]
 
     return Table(list_of_rows)

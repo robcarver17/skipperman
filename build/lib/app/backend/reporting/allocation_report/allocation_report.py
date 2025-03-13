@@ -9,7 +9,8 @@ from app.objects.events import Event
 from app.objects.groups import unallocated_group
 from app.objects.composed.cadets_at_event_with_groups import (
     CadetWithGroupOnDay,
-    ListOfCadetsWithGroupOnDay, GROUP_STR_NAME,
+    ListOfCadetsWithGroupOnDay,
+    GROUP_STR_NAME,
 )
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
     SpecificParametersForTypeOfReport,
@@ -17,19 +18,21 @@ from app.backend.reporting.options_and_parameters.report_type_specific_parameter
 
 from app.backend.groups.list_of_groups import get_list_of_groups
 
-def get_specific_parameters_for_allocation_report(object_store: ObjectStore) -> SpecificParametersForTypeOfReport:
-    list_of_groups = get_list_of_groups(object_store)## will be ordered
+
+def get_specific_parameters_for_allocation_report(
+    object_store: ObjectStore,
+) -> SpecificParametersForTypeOfReport:
+    list_of_groups = get_list_of_groups(object_store)  ## will be ordered
     list_of_groups.add_unallocated()
     specific_parameters_for_allocation_report = SpecificParametersForTypeOfReport(
         #    entry_columns=[CADET_NAME],
         group_by_column=GROUP_STR_NAME,
         report_type="Allocation report",
         group_order=list_of_groups.list_of_names(),
-        unallocated_group = unallocated_group.name
+        unallocated_group=unallocated_group.name,
     )
 
     return specific_parameters_for_allocation_report
-
 
 
 @dataclass
@@ -80,7 +83,11 @@ def add_club_boat_asterix_to_cadet_with_group_on_day(
     if dinghy is not missing_data:
         cadet_with_group.cadet = cadet_with_group.cadet.add_asterix_to_name()
 
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets
+
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
+    get_dict_of_all_event_info_for_cadets,
+)
+
 
 def get_dict_of_df_for_reporting_allocations_with_flags(
     object_store: ObjectStore,
@@ -90,8 +97,12 @@ def get_dict_of_df_for_reporting_allocations_with_flags(
     add_asterix_for_club_boats: bool = True,
 ) -> Dict[str, pd.DataFrame]:
 
-    all_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event, active_only=True)
-    group_allocations_data = all_event_data.dict_of_cadets_with_groups_for_all_cadets_in_data()
+    all_event_data = get_dict_of_all_event_info_for_cadets(
+        object_store=object_store, event=event, active_only=True
+    )
+    group_allocations_data = (
+        all_event_data.dict_of_cadets_with_groups_for_all_cadets_in_data()
+    )
     dict_of_df = {}
     for day in event.days_in_event():
         list_of_cadets_with_groups = (

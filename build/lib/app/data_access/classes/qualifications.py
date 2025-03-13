@@ -47,11 +47,14 @@ class DataListOfCadetsWithTickListItems(object):
         raise NotImplemented
 
     def write(
-        self, list_of_cadets_with_tick_list_items: ListOfTickListItemsAndTicksForSpecificCadet
+        self,
+        list_of_cadets_with_tick_list_items: ListOfTickListItemsAndTicksForSpecificCadet,
     ):
         raise NotImplemented
 
-    def read_for_cadet_id(self, cadet_id: str)  -> ListOfTickListItemsAndTicksForSpecificCadet:
+    def read_for_cadet_id(
+        self, cadet_id: str
+    ) -> ListOfTickListItemsAndTicksForSpecificCadet:
         raise NotImplemented
 
     def write_for_cadet_id(

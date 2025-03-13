@@ -5,14 +5,23 @@ from app.objects.volunteers import Volunteer
 
 from app.objects.day_selectors import Day, DaySelector
 from app.objects.events import Event
-from app.objects.exceptions import missing_data, MissingData, MultipleMatches, arg_not_passed
-from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds, get_unique_object_with_multiple_attr_in_list, get_idx_of_unique_object_with_multiple_attr_in_list
+from app.objects.exceptions import (
+    missing_data,
+    MissingData,
+    MultipleMatches,
+    arg_not_passed,
+)
+from app.objects.generic_list_of_objects import (
+    GenericListOfObjectsWithIds,
+    get_unique_object_with_multiple_attr_in_list,
+    get_idx_of_unique_object_with_multiple_attr_in_list,
+)
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.patrol_boats import PatrolBoat, ListOfPatrolBoats
 from app.objects.utils import make_id_as_int_str
 
 
-EMPTY_VOLUNTEER_ID = "NONE" ## DO NOT CHANGE
+EMPTY_VOLUNTEER_ID = "NONE"  ## DO NOT CHANGE
 ARBITRARY_DAY = Day.Monday
 
 
@@ -54,10 +63,12 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
     def _object_class_contained(self):
         return VolunteerWithIdAtEventWithPatrolBoatId
 
-    def drop_volunteer(self, volunteer: Volunteer):
-        for item in self:
-            if item.volunteer_id == volunteer.id:
-                self.remove(item)
+    def drop_volunteer(
+        self, volunteer: Volunteer
+    ) -> "ListOfVolunteersWithIdAtEventWithPatrolBoatsId":
+        print("dropping %s in underlying" % volunteer)
+        new_list = [item for item in self if not item.volunteer_id == volunteer.id]
+        return ListOfVolunteersWithIdAtEventWithPatrolBoatsId(new_list)
 
     def swap_boats_for_volunteers_in_allocation(
         self,
@@ -133,9 +144,8 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
     def remove_patrol_boat_id_and_all_associated_volunteer_connections_from_event(
         self, patrol_boat_id: str
     ):
-        for item in self:
-            if item.patrol_boat_id == patrol_boat_id:
-                self.remove(item)
+        new_list = [item for item in self if not item.patrol_boat_id == patrol_boat_id]
+        return ListOfVolunteersWithIdAtEventWithPatrolBoatsId(new_list)
 
     def add_unallocated_boat(self, patrol_boat_id: str):
         self.append(
@@ -147,6 +157,7 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
     def remove_volunteer_from_patrol_boat_on_day_at_event(
         self, volunteer_id: str, day: Day
     ):
+        ## only one match
         for item in self:
             if item.volunteer_id == volunteer_id and item.day == day:
                 self.remove(item)
@@ -167,18 +178,18 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
         self, volunteer_id: str, day: Day
     ) -> bool:
         boat_id = self.which_boat_id_is_volunteer_on_today(
-            volunteer_id=volunteer_id,
-            day=day,
-            default=missing_data
+            volunteer_id=volunteer_id, day=day, default=missing_data
         )
 
         return not (boat_id is missing_data)
 
-    def which_boat_id_is_volunteer_on_today(self, volunteer_id: str, day: Day, default = arg_not_passed) -> str:
+    def which_boat_id_is_volunteer_on_today(
+        self, volunteer_id: str, day: Day, default=arg_not_passed
+    ) -> str:
         matching_item = get_unique_object_with_multiple_attr_in_list(
             some_list=self,
-            dict_of_attributes={'volunteer_id': volunteer_id, 'day': day},
-            default=missing_data
+            dict_of_attributes={"volunteer_id": volunteer_id, "day": day},
+            default=missing_data,
         )
         if matching_item is missing_data:
             if default is arg_not_passed:

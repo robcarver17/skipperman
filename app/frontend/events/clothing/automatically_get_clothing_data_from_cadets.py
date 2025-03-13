@@ -28,7 +28,6 @@ from app.objects.events import Event
 from app.frontend.form_handler import initial_state_form
 
 
-
 def display_call_to_update_cadet_clothing_at_event_during_import(
     interface: abstractInterface,
 ) -> NewForm:
@@ -40,7 +39,10 @@ def display_call_to_update_cadet_clothing_at_event_during_import(
         )
     )
 
-    for cadet, registration_data in dict_of_cadets_at_event_with_registration_data.items():
+    for (
+        cadet,
+        registration_data,
+    ) in dict_of_cadets_at_event_with_registration_data.items():
         process_update_to_cadet_clothing_data(
             interface=interface,
             event=event,
@@ -49,7 +51,6 @@ def display_call_to_update_cadet_clothing_at_event_during_import(
         )
     interface.flush_cache_to_store()
     return return_to_controller(interface)
-
 
 
 def return_to_controller(interface: abstractInterface) -> NewForm:
@@ -61,8 +62,11 @@ def return_to_controller(interface: abstractInterface) -> NewForm:
 def post_call_to_update_cadet_clothing_at_event_during_import(
     interface: abstractInterface,
 ) -> NewForm:
-    interface.log_error("Serious error: should never get to post_call_to_update_cadet_clothing_at_event_during_import")
+    interface.log_error(
+        "Serious error: should never get to post_call_to_update_cadet_clothing_at_event_during_import"
+    )
     return initial_state_form()
+
 
 def process_update_to_cadet_clothing_data(
     interface: abstractInterface,

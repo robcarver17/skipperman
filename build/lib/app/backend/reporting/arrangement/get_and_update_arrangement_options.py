@@ -5,7 +5,7 @@ from app.data_access.store.object_definitions import (
     object_definition_for_report_arrangement_and_group_order_options,
 )
 from app.data_access.store.object_store import ObjectStore
-from app.backend.reporting.report_generator import  ReportGenerator
+from app.backend.reporting.report_generator import ReportGenerator
 
 
 def get_stored_arrangement_and_group_order(

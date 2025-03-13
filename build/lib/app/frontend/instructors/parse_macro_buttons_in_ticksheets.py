@@ -138,10 +138,8 @@ def action_if_item_tick_button_pressed(
     tick_type: str,
     item_id: str,
 ):
-    tick_item = (
-        ticksheet_data.list_of_tick_sheet_items_for_this_qualification.tick_sheet_item_with_id(
-            item_id
-        )
+    tick_item = ticksheet_data.list_of_tick_sheet_items_for_this_qualification.tick_sheet_item_with_id(
+        item_id
     )
     tick = from_tick_label_to_tick(tick_type)
     list_of_cadets = ticksheet_data.list_of_cadets

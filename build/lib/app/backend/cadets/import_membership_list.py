@@ -40,7 +40,9 @@ def create_temp_file_with_list_of_cadets(
 
 def read_imported_list_of_cadets(filename: str) -> ListOfCadets:
     data = load_spreadsheet_file_and_clear_nans(filename)
-    data[DOB_IN_MEMBERSHIP_FILE] = pd.to_datetime(data[DOB_IN_MEMBERSHIP_FILE], format=DOB_FORMAT)
+    data[DOB_IN_MEMBERSHIP_FILE] = pd.to_datetime(
+        data[DOB_IN_MEMBERSHIP_FILE], format=DOB_FORMAT
+    )
     list_of_cadets = [
         cadet_from_row_in_imported_list(cadet_row=cadet_row, row_id=int(row_id))
         for row_id, cadet_row in data.iterrows()

@@ -23,6 +23,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     save_menu_button,
     cancel_menu_button,
+    HelpButton,
 )
 
 
@@ -63,6 +64,8 @@ def get_button_bar_for_clothing(interface: abstractInterface) -> ButtonBar:
     if not are_we_showing_only_committee(interface):
         button_bar.append(distribute_action_button)
 
+    button_bar.append(help_button)
+
     return button_bar
 
 
@@ -73,6 +76,7 @@ filter_committee_button = Button(FILTER_COMMITTEE_BUTTON_LABEL, nav_button=True)
 export_committee_button = Button(EXPORT_COMMITTEE, nav_button=True)
 export_all_clothing_button = Button(EXPORT_ALL, nav_button=True)
 export_colours_button = Button(EXPORT_COLOURS, nav_button=True)
+help_button = HelpButton("clothing_help")
 
 
 def get_clothing_table(interface: abstractInterface, event: Event) -> Table:
@@ -103,11 +107,13 @@ def get_clothing_table(interface: abstractInterface, event: Event) -> Table:
 
 
 def get_top_row_for_clothing_table() -> RowInTable:
-    return RowInTable([
-        "",
-        "Size (delete existing size to see options, or type in a new value)",
-        "Colour (delete existing size to see options, or type in a new value)",
-    ])
+    return RowInTable(
+        [
+            "",
+            "Size (delete existing size to see options, or type in a new value)",
+            "Colour (delete existing size to see options, or type in a new value)",
+        ]
+    )
 
 
 def get_clothing_row_for_cadet(

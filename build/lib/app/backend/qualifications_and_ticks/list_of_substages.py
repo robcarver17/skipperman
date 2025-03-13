@@ -53,7 +53,9 @@ def get_suggested_list_of_all_substage_names_excluding_existing_in_qualification
     return in_x_not_in_y(x=all_substage_names, y=substage_names_this_qualification)
 
 
-def get_substage_given_id(object_store: ObjectStore, substage_id: str, default = arg_not_passed):
+def get_substage_given_id(
+    object_store: ObjectStore, substage_id: str, default=arg_not_passed
+):
     list_of_tick_substages = get_list_of_tick_substages(object_store)
     return list_of_tick_substages.substage_given_id(substage_id, default=default)
 

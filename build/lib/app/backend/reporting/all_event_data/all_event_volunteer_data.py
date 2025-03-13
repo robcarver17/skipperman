@@ -98,18 +98,17 @@ def get_df_for_volunteers_event_data_dump(object_store: ObjectStore, event: Even
         for volunteer in list_of_volunteers
     ]
 
-    dict_for_df = \
-        {
-            "Volunteer": list_of_volunteer_names,
-            "Cadets": list_of_connected_cadets,
-            "Availability": list_of_availability,
-            "Preferred": list_of_preferred_duties,
-            "Same or different": list_of_same_different,
-            "Notes": list_of_notes,
-            "Skills": list_of_skills,
-            "Role and Group": list_of_role_group,
-            "Patrol boat": list_of_boats,
-        }
+    dict_for_df = {
+        "Volunteer": list_of_volunteer_names,
+        "Cadets": list_of_connected_cadets,
+        "Availability": list_of_availability,
+        "Preferred": list_of_preferred_duties,
+        "Same or different": list_of_same_different,
+        "Notes": list_of_notes,
+        "Skills": list_of_skills,
+        "Role and Group": list_of_role_group,
+        "Patrol boat": list_of_boats,
+    }
 
     df = pd.DataFrame(dict_for_df)
 

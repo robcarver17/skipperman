@@ -5,7 +5,8 @@ from app.objects.composed.cadets_with_qualifications import (
     QualificationsForCadet,
 )
 from app.objects.composed.ticks_for_qualification import (
-    TicksForQualification, DictOfCadetIdsWithTickListItemsForCadetId,
+    TicksForQualification,
+    DictOfCadetIdsWithTickListItemsForCadetId,
 )
 from app.objects.exceptions import arg_not_passed, MissingData
 
@@ -15,7 +16,11 @@ from app.objects.cadets import Cadet, ListOfCadets
 
 from app.objects.composed.ticks_in_dicts import QualificationsAndTickItemsAsDict
 
-from app.objects.ticks import Tick, DictOfTicksWithItem, ListOfTickListItemsAndTicksForSpecificCadet
+from app.objects.ticks import (
+    Tick,
+    DictOfTicksWithItem,
+    ListOfTickListItemsAndTicksForSpecificCadet,
+)
 from app.objects.substages import TickSheetItem, ListOfTickSheetItems
 
 
@@ -98,8 +103,12 @@ class QualificationsAndTicksForCadet(Dict[Qualification, TicksForQualification])
         ticks_for_qualification = self[qualification]
         ticks_for_qualification.update_tick(tick_item=tick_item, new_tick=new_tick)
 
-    def qualification_given_tick_item(self, tick_item: TickSheetItem, default=arg_not_passed):
-        return self.list_of_qualifications.qualification_given_id(tick_item.stage_id, default=default)
+    def qualification_given_tick_item(
+        self, tick_item: TickSheetItem, default=arg_not_passed
+    ):
+        return self.list_of_qualifications.qualification_given_id(
+            tick_item.stage_id, default=default
+        )
 
     @property
     def list_of_qualifications(self):
@@ -113,7 +122,7 @@ class DictOfCadetsWithQualificationsAndTicks(
         self,
         raw_dict: Dict[Cadet, QualificationsAndTicksForCadet],
         qualifications_and_tick_items_as_dict: QualificationsAndTickItemsAsDict,
-        dict_of_cadet_ids_and_tick_list_items_for_cadet_id: DictOfCadetIdsWithTickListItemsForCadetId, ## this is the modified underlying
+        dict_of_cadet_ids_and_tick_list_items_for_cadet_id: DictOfCadetIdsWithTickListItemsForCadetId,  ## this is the modified underlying
     ):
         super().__init__(raw_dict)
         self._dict_of_cadet_ids_and_tick_list_items_for_cadet_id = (
@@ -128,7 +137,9 @@ class DictOfCadetsWithQualificationsAndTicks(
         return ListOfCadets(list(self.keys()))
 
     @property
-    def dict_of_cadet_ids_with_tick_list_items_for_cadet_id(self) -> DictOfCadetIdsWithTickListItemsForCadetId:
+    def dict_of_cadet_ids_with_tick_list_items_for_cadet_id(
+        self,
+    ) -> DictOfCadetIdsWithTickListItemsForCadetId:
         return self._dict_of_cadet_ids_and_tick_list_items_for_cadet_id
 
     @property
@@ -163,29 +174,38 @@ class DictOfCadetsWithQualificationsAndTicks(
             cadet_id=cadet.id, new_tick=new_tick, tick_item=tick_item
         )
 
-    def tick_items_for_cadet(self, cadet: Cadet, default = arg_not_passed) -> QualificationsAndTicksForCadet:
+    def tick_items_for_cadet(
+        self, cadet: Cadet, default=arg_not_passed
+    ) -> QualificationsAndTicksForCadet:
         tick_items = self.get(cadet, default)
         if tick_items is default:
             raise MissingData
 
         return tick_items
 
+
 def compose_dict_of_cadets_with_qualifications_and_ticks(
     list_of_cadet_ids: List[str],
     list_of_cadets: ListOfCadets,
-    dict_of_cadet_ids_with_tick_list_items_for_cadet_id: Dict[str, ListOfTickListItemsAndTicksForSpecificCadet],
+    dict_of_cadet_ids_with_tick_list_items_for_cadet_id: Dict[
+        str, ListOfTickListItemsAndTicksForSpecificCadet
+    ],
     qualifications_and_tick_items_as_dict: QualificationsAndTickItemsAsDict,
     dict_of_qualifications_for_all_cadets: DictOfQualificationsForCadets,
 ) -> DictOfCadetsWithQualificationsAndTicks:
 
     ## Because the underlying is iterable, it won't automatically be of the right class
-    dict_of_cadet_ids_with_tick_list_items_for_cadet_id = DictOfCadetIdsWithTickListItemsForCadetId(dict_of_cadet_ids_with_tick_list_items_for_cadet_id)
+    dict_of_cadet_ids_with_tick_list_items_for_cadet_id = (
+        DictOfCadetIdsWithTickListItemsForCadetId(
+            dict_of_cadet_ids_with_tick_list_items_for_cadet_id
+        )
+    )
 
     raw_dict = {}
     for cadet_id in list_of_cadet_ids:
         cadet = list_of_cadets.cadet_with_id(cadet_id)
-        dict_of_ticks_with_items = (
-            dict_of_cadet_ids_with_tick_list_items_for_cadet_id.get_dict_of_ticks_with_items_for_cadet_id_adding_if_required(cadet_id)
+        dict_of_ticks_with_items = dict_of_cadet_ids_with_tick_list_items_for_cadet_id.get_dict_of_ticks_with_items_for_cadet_id_adding_if_required(
+            cadet_id
         )
         qualifications_for_cadet = (
             dict_of_qualifications_for_all_cadets.qualifications_for_cadet(cadet)
@@ -197,9 +217,8 @@ def compose_dict_of_cadets_with_qualifications_and_ticks(
         )
         raw_dict[cadet] = qualifications_and_ticks_for_cadet
 
-
     return DictOfCadetsWithQualificationsAndTicks(
         raw_dict=raw_dict,
-        dict_of_cadet_ids_and_tick_list_items_for_cadet_id = dict_of_cadet_ids_with_tick_list_items_for_cadet_id,
+        dict_of_cadet_ids_and_tick_list_items_for_cadet_id=dict_of_cadet_ids_with_tick_list_items_for_cadet_id,
         qualifications_and_tick_items_as_dict=qualifications_and_tick_items_as_dict,
     )

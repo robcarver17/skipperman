@@ -79,7 +79,7 @@ def get_skills_button(
 ) -> Button:
     dict_of_skills = volunteer_data_at_event.volunteer_skills
     skill_label = dict_of_skills.skills_held_as_str()
-    if len(skill_label)==0:
+    if len(skill_label) == 0:
         skill_label = "Click to add skills"
 
     if ready_to_swap:
@@ -188,7 +188,9 @@ def get_copy_buttons_for_volunteer(
     volunteer_data_at_event: AllEventDataForVolunteer,
     day: Day,
 ):
-    any_copy_possible = not all_roles_and_groups_match_across_event(volunteer_data_at_event)
+    any_copy_possible = not all_roles_and_groups_match_across_event(
+        volunteer_data_at_event
+    )
 
     copy_fill_possible = volunteer_has_empty_available_days_without_role(
         volunteer_data_at_event

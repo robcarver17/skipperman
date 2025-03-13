@@ -23,6 +23,7 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import (
     cancel_menu_button,
     save_menu_button,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________

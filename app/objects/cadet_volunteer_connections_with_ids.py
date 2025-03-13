@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from app.objects.exceptions import missing_data
 from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.generic_objects import GenericSkipperManObject
 
@@ -9,6 +10,7 @@ class CadetVolunteerAssociationWithIds(GenericSkipperManObject):
     cadet_id: str
     volunteer_id: str
 
+from app.objects.generic_list_of_objects import get_unique_object_with_multiple_attr_in_list
 
 class ListOfCadetVolunteerAssociationsWithIds(GenericListOfObjects):
     @property
@@ -16,17 +18,13 @@ class ListOfCadetVolunteerAssociationsWithIds(GenericListOfObjects):
         return CadetVolunteerAssociationWithIds
 
     def delete(self, cadet_id: str, volunteer_id: str):
-        matching_elements_list = [
-            element
-            for element in self
-            if element.volunteer_id == volunteer_id and element.cadet_id == cadet_id
-        ]
-        if len(matching_elements_list) == 0:
-            return
-        matching_element = matching_elements_list[
-            0
-        ]  ## corner case of duplicates shouldn't happen just in case
-        self.remove(matching_element)
+        association = get_unique_object_with_multiple_attr_in_list(self,
+                                                                   {'volunteer_id': volunteer_id,
+                                                                    'cadet_id': cadet_id},
+                                                                   default = missing_data)
+        if association is missing_data:
+            raise Exception("Can't delete non existint association")
+        self.remove(association)
 
     def add(self, cadet_id: str, volunteer_id: str):
         if self.connection_exists(cadet_id=cadet_id, volunteer_id=volunteer_id):
@@ -38,10 +36,9 @@ class ListOfCadetVolunteerAssociationsWithIds(GenericListOfObjects):
         )
 
     def connection_exists(self, cadet_id: str, volunteer_id: str):
-        exists = [
-            True
-            for element in self
-            if element.volunteer_id == volunteer_id and element.cadet_id == cadet_id
-        ]
-        return any(exists)
+        association = get_unique_object_with_multiple_attr_in_list(self,
+                                                                   {'volunteer_id': volunteer_id,
+                                                                    'cadet_id': cadet_id},
+                                                                   default = missing_data)
 
+        return association is not missing_data

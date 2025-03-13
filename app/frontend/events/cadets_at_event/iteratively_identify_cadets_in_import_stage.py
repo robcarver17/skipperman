@@ -251,15 +251,17 @@ def process_form_when_skipping_cadet(interface: abstractInterface) -> Form:
     return identify_cadets_on_next_row(interface)
 
 
-from app.backend.cadets.list_of_cadets import get_cadet_from_list_of_cadets_given_str_of_cadet
+from app.backend.cadets.list_of_cadets import (
+    get_cadet_from_list_of_cadets_given_str_of_cadet,
+)
+
 
 def process_form_when_existing_cadet_chosen(interface: abstractInterface) -> Form:
     cadet_selected_as_str = interface.last_button_pressed()
 
     try:
         cadet = get_cadet_from_list_of_cadets_given_str_of_cadet(
-            object_store=interface.object_store,
-            cadet_selected=cadet_selected_as_str
+            object_store=interface.object_store, cadet_selected=cadet_selected_as_str
         )
     except:
         raise Exception(
@@ -268,4 +270,3 @@ def process_form_when_existing_cadet_chosen(interface: abstractInterface) -> For
 
     print(str(cadet))
     return process_row_when_cadet_matched(interface=interface, cadet=cadet)
-

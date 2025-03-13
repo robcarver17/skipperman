@@ -29,7 +29,6 @@ from app.data_access.configuration.fixed import (
 OPTIMAL_LINE_LENGTH = 20
 
 
-
 def all_equal(iterable):
     g = groupby(iterable)
     return next(g, True) and not next(g, False)
@@ -37,7 +36,6 @@ def all_equal(iterable):
 
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
-
 
 
 def clean_up_dict_with_nans(some_dict) -> dict:

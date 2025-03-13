@@ -8,8 +8,17 @@ from app.objects.day_selectors import (
     day_selector_to_text_in_stored_format,
     Day,
 )
-from app.objects.exceptions import missing_data, MissingData, MultipleMatches, arg_not_passed
-from app.objects.generic_list_of_objects import GenericListOfObjects, get_unique_object_with_attr_in_list, get_idx_of_unique_object_with_attr_in_list
+from app.objects.exceptions import (
+    missing_data,
+    MissingData,
+    MultipleMatches,
+    arg_not_passed,
+)
+from app.objects.generic_list_of_objects import (
+    GenericListOfObjects,
+    get_unique_object_with_attr_in_list,
+    get_idx_of_unique_object_with_attr_in_list,
+)
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.utils import clean_up_dict_with_nans
 
@@ -30,7 +39,6 @@ class VolunteerAtEventWithId(GenericSkipperManObject):
         ""  ## information only - double counted as required twice
     )
     notes: str = ""
-
 
     def clear_user_data(self):
         self.any_other_information = ""
@@ -110,21 +118,24 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
         else:
             del self[idx_of_volunteer_at_event]
 
-    def volunteer_at_event_with_id(self, volunteer_id: str, default = arg_not_passed) -> VolunteerAtEventWithId:
+    def volunteer_at_event_with_id(
+        self, volunteer_id: str, default=arg_not_passed
+    ) -> VolunteerAtEventWithId:
         return get_unique_object_with_attr_in_list(
             some_list=self,
-            attr_name='volunteer_id',
+            attr_name="volunteer_id",
             attr_value=volunteer_id,
-            default=default
-
+            default=default,
         )
 
-    def index_of_volunteer_at_event_with_id(self, volunteer_id: str, default = arg_not_passed) -> int:
+    def index_of_volunteer_at_event_with_id(
+        self, volunteer_id: str, default=arg_not_passed
+    ) -> int:
         return get_idx_of_unique_object_with_attr_in_list(
             some_list=self,
-            attr_name='volunteer_id',
+            attr_name="volunteer_id",
             attr_value=volunteer_id,
-            default=default
+            default=default,
         )
 
     def add_new_volunteer(self, volunteer_at_event: VolunteerAtEventWithId):
@@ -138,8 +149,7 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
 
     def volunteer_already_exist(self, volunteer_at_event: VolunteerAtEventWithId):
         volunteer = self.volunteer_at_event_with_id(
-            volunteer_id=volunteer_at_event.volunteer_id,
-            default=missing_data
+            volunteer_id=volunteer_at_event.volunteer_id, default=missing_data
         )
         return volunteer is not missing_data
 
@@ -147,7 +157,8 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
         self, list_of_ids
     ) -> "ListOfVolunteersAtEventWithId":
         new_list_of_volunteers_at_event = [
-            self.volunteer_at_event_with_id(id, default=missing_data) for id in list_of_ids
+            self.volunteer_at_event_with_id(id, default=missing_data)
+            for id in list_of_ids
         ]
         new_list_of_volunteers_at_event = [
             volunteer_at_event

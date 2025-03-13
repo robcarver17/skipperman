@@ -1,4 +1,7 @@
-from app.backend.mapping.list_of_field_mappings import save_field_mapping_for_event, does_event_already_have_mapping
+from app.backend.mapping.list_of_field_mappings import (
+    save_field_mapping_for_event,
+    does_event_already_have_mapping,
+)
 from app.data_access.csv.wa_field_mapping import read_mapping_from_csv_file_object
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
@@ -11,7 +14,11 @@ from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
 )
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
+from app.objects.abstract_objects.abstract_lines import (
+    Line,
+    ListOfLines,
+    _______________,
+)
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_text import bold
 
@@ -31,7 +38,6 @@ def display_form_for_upload_custom_field_mapping(interface: abstractInterface):
             _______________,
             warning,
             _______________,
-
             buttons,
         ]
     )
@@ -39,17 +45,18 @@ def display_form_for_upload_custom_field_mapping(interface: abstractInterface):
     return Form(list_of_lines)
 
 
-
 def get_warning_if_existing_mapping(interface: abstractInterface):
-    event =get_event_from_state(interface)
+    event = get_event_from_state(interface)
     existing_mapping = does_event_already_have_mapping(
         object_store=interface.object_store, event=event
     )
 
     if existing_mapping:
-        return bold("**WARNING**: Will replace existing mapping - there will be no warning or request for confirmation")
+        return bold(
+            "**WARNING**: Will replace existing mapping - there will be no warning or request for confirmation"
+        )
     else:
-        return ''
+        return ""
 
 
 def get_upload_buttons():

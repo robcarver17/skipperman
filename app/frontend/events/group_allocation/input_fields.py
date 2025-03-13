@@ -1,5 +1,7 @@
 from app.backend.groups.data_for_group_display import *
-from app.backend.groups.data_for_group_display import get_potential_partner_to_be_added_or_missing_data
+from app.backend.groups.data_for_group_display import (
+    get_potential_partner_to_be_added_or_missing_data,
+)
 from app.frontend.forms.form_utils import (
     input_name_from_column_name_and_cadet_id,
     get_availability_checkbox,
@@ -157,7 +159,6 @@ def get_input_fields_for_cadet_on_day(
     return input_fields
 
 
-
 def make_cadet_available_button_name(cadet: Cadet):
     return "%s_%s" % (MAKE_CADET_AVAILABLE_ON_DAY_BUTTON, cadet.id)
 
@@ -225,7 +226,7 @@ def get_dict_of_all_possible_groups_for_dropdown_input(
     all_groups = (
         dict_of_all_event_data.dict_of_cadets_with_days_and_groups.list_of_groups
     )
-    all_groups = all_groups+[unallocated_group]
+    all_groups = all_groups + [unallocated_group]
     dict_of_all_possible_groups_for_dropdown_input = dict(
         [(group.name, group.name) for group in all_groups if not group.hidden]
     )
@@ -253,6 +254,7 @@ def get_dropdown_input_for_club_boat_allocation_across_days(
     )
 
     return dropdown_input_field
+
 
 def get_dropdown_input_for_club_boat_allocation_on_day(
     cadet: Cadet, day: Day, dict_of_all_event_data: DictOfAllEventInfoForCadets
@@ -403,52 +405,56 @@ def get_sail_number_field(cadet: Cadet, current_number: str) -> textInput:
 def get_dropdown_input_for_partner_allocation_across_days(
     cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> ListOfLines:
-    current_partner_name = (
-        get_two_handed_partner_as_str_for_dropdown_cadet_across_days(
-            dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
-        )
+    current_partner_name = get_two_handed_partner_as_str_for_dropdown_cadet_across_days(
+        dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
     )
     if current_partner_name is None:
         return get_string_describing_two_handed_partner_name_across_days(
             dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
         )
 
-    list_of_other_cadets = (
-        get_list_of_cadet_names_including_asterix_marks_at_event_with_matching_schedules_excluding_this_cadet(
-            dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
-        )
+    list_of_other_cadets = get_list_of_cadet_names_including_asterix_marks_at_event_with_matching_schedules_excluding_this_cadet(
+        dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
     )  ### needs to disapply cadets who aren't also available the whole week
     list_of_other_cadets = NO_PARTNERSHIP_LIST_OF_STR + list_of_other_cadets
 
-    potential_partner_to_be_added_or_missing_data = get_potential_partner_to_be_added_or_missing_data(cadet=cadet, dict_of_all_event_data=dict_of_all_event_data)
+    potential_partner_to_be_added_or_missing_data = (
+        get_potential_partner_to_be_added_or_missing_data(
+            cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
+        )
+    )
 
     return get_dropdown_input_for_partner_allocation(
         cadet=cadet,
         list_of_other_cadets=list_of_other_cadets,
         current_partner_name=current_partner_name,
-        potential_partner_to_be_added_or_missing_data=potential_partner_to_be_added_or_missing_data
+        potential_partner_to_be_added_or_missing_data=potential_partner_to_be_added_or_missing_data,
     )
 
 
 def get_dropdown_input_for_partner_allocation_on_day(
     cadet: Cadet, day: Day, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> ListOfLines:
-    current_partner_name =  get_two_handed_partner_as_str_for_dropdown_cadet_on_day(
+    current_partner_name = get_two_handed_partner_as_str_for_dropdown_cadet_on_day(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
     )
-    list_of_other_cadets = (
-        get_list_of_cadet_names_including_asterix_marks_at_event_with_matching_schedules_excluding_this_cadet(
-            dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, available_on_specific_day=day
-        )
+    list_of_other_cadets = get_list_of_cadet_names_including_asterix_marks_at_event_with_matching_schedules_excluding_this_cadet(
+        dict_of_all_event_data=dict_of_all_event_data,
+        cadet=cadet,
+        available_on_specific_day=day,
     )
 
-    potential_partner_to_be_added_or_missing_data = get_potential_partner_to_be_added_or_missing_data(cadet=cadet, dict_of_all_event_data=dict_of_all_event_data)
+    potential_partner_to_be_added_or_missing_data = (
+        get_potential_partner_to_be_added_or_missing_data(
+            cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
+        )
+    )
 
     return get_dropdown_input_for_partner_allocation(
         cadet=cadet,
         list_of_other_cadets=list_of_other_cadets,
         current_partner_name=current_partner_name,
-        potential_partner_to_be_added_or_missing_data=potential_partner_to_be_added_or_missing_data
+        potential_partner_to_be_added_or_missing_data=potential_partner_to_be_added_or_missing_data,
     )
 
 
@@ -456,7 +462,7 @@ def get_dropdown_input_for_partner_allocation(
     cadet: Cadet,
     list_of_other_cadets: List[str],
     current_partner_name: str,
-        potential_partner_to_be_added_or_missing_data: str
+    potential_partner_to_be_added_or_missing_data: str,
 ) -> ListOfLines:
     list_of_other_cadets = NO_PARTNERSHIP_LIST_OF_STR + list_of_other_cadets
     dict_of_all_possible_cadets = dict(

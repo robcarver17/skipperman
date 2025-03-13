@@ -79,9 +79,7 @@ def add_new_cadet_to_event_from_row_in_registration_data(
     cadet: Cadet,
 ):
     cadet_at_event = get_cadet_at_event_from_row_in_event_raw_registration_data(
-        event=event,
-        cadet=cadet,
-        row_in_registration_data=row_in_registration_data
+        event=event, cadet=cadet, row_in_registration_data=row_in_registration_data
     )
 
     add_new_cadet_to_event(

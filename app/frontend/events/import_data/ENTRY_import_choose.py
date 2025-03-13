@@ -13,7 +13,8 @@ from app.objects.abstract_objects.abstract_buttons import (
     main_menu_button,
     Button,
     ButtonBar,
-    back_menu_button, HelpButton,
+    back_menu_button,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.objects.abstract_objects.abstract_interface import abstractInterface

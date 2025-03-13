@@ -79,7 +79,12 @@ def from_list_of_skill_ids_to_padded_dict_of_skills(
 
     return skills_dict
 
-from app.objects.generic_list_of_objects import get_unique_object_with_attr_in_list, get_idx_of_unique_object_with_attr_in_list
+
+from app.objects.generic_list_of_objects import (
+    get_unique_object_with_attr_in_list,
+    get_idx_of_unique_object_with_attr_in_list,
+)
+
 
 class ListOfRolesWithSkills(List[RoleWithSkills]):
     def __init__(
@@ -116,6 +121,7 @@ class ListOfRolesWithSkills(List[RoleWithSkills]):
             list_of_skills=list_of_skills,
         )
 
+
     def modify(self, existing_role: RoleWithSkills, new_role: RoleWithSkills):
         index = self.index_of_matching_existing_named_role(existing_role)
         existing_role_in_self = self[index]
@@ -147,15 +153,19 @@ class ListOfRolesWithSkills(List[RoleWithSkills]):
         self.append(new_role)
 
     def index_of_matching_existing_named_role(
-        self, existing_role: RoleWithSkills, default = arg_not_passed
+        self, existing_role: RoleWithSkills, default=arg_not_passed
     ) -> int:
         return self.index_of_matching_existing_role_name(existing_role.name)
 
-    def index_of_matching_existing_role_name(self, existing_role_name: str, default = arg_not_passed) -> int:
-        return get_idx_of_unique_object_with_attr_in_list(some_list=self,
-                                                          attr_name='name',
-                                                          attr_value=existing_role_name,
-                                                          default=default)
+    def index_of_matching_existing_role_name(
+        self, existing_role_name: str, default=arg_not_passed
+    ) -> int:
+        return get_idx_of_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name="name",
+            attr_value=existing_role_name,
+            default=default,
+        )
 
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_names()
@@ -164,9 +174,10 @@ class ListOfRolesWithSkills(List[RoleWithSkills]):
     def list_of_names(self):
         return [role.name for role in self]
 
-    def sort_to_match_other_role_list_order(self,
-                                            other_list: Union['ListOfRolesWithSkills', ListOfRolesWithSkillIds]) -> 'ListOfRolesWithSkills':
-        new_list =[]
+    def sort_to_match_other_role_list_order(
+        self, other_list: Union["ListOfRolesWithSkills", ListOfRolesWithSkillIds]
+    ) -> "ListOfRolesWithSkills":
+        new_list = []
         for role_with_skill in other_list:
             if role_with_skill.name in self.list_of_names():
                 new_list.append(self.role_with_name(role_with_skill.name))
@@ -182,23 +193,17 @@ class ListOfRolesWithSkills(List[RoleWithSkills]):
     def list_of_ids(self) -> List[str]:
         return [role.id for role in self]
 
-    def role_with_id(self, id: str, default = arg_not_passed) -> RoleWithSkills:
+    def role_with_id(self, id: str, default=arg_not_passed) -> RoleWithSkills:
         return get_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name='id',
-            attr_value=id,
-            default=default
+            some_list=self, attr_name="id", attr_value=id, default=default
         )
 
-    def role_with_name(self, role_name, default  = arg_not_passed):
+    def role_with_name(self, role_name, default=arg_not_passed):
         if role_name == no_role_set.name:
             return no_role_set
 
         return get_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name='name',
-            attr_value=role_name,
-            default=default
+            some_list=self, attr_name="name", attr_value=role_name, default=default
         )
 
     @property
@@ -291,7 +296,9 @@ def get_raw_list_of_roles_with_skills(
     return new_list
 
 
-def empty_if_qualified_for_role_else_warnings(role: RoleWithSkills, dict_of_skills: SkillsDict) -> str:
+def empty_if_qualified_for_role_else_warnings(
+    role: RoleWithSkills, dict_of_skills: SkillsDict
+) -> str:
 
     skills_required = role.skills_dict
     missing_skills = []

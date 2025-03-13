@@ -2,7 +2,8 @@ from app.web.flask.flash import get_html_of_flashed_messages
 from app.web.flask.security import authenticated_user
 from app.web.html.html_components import (
     Html,
-    html_joined_list_as_lines, html_email,
+    html_joined_list_as_lines,
+    html_email,
 )
 from app.web.html.login_and_out import (
     get_login_link_html_code,
@@ -11,13 +12,13 @@ from app.web.html.login_and_out import (
 )
 from app.data_access.configuration.configuration import SUPPORT_EMAIL
 
+
 def get_html_header(
     include_read_only_toggle: bool = False,
     include_title: str = "'SKIPPER-MAN'",
     include_user_options: bool = True,
     include_backup_option: bool = False,
-    include_support_email: bool = False
-
+    include_support_email: bool = False,
 ):
     if include_user_options:
         login_or_out_code = html_code_depending_on_whether_logged_in(

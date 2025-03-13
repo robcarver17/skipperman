@@ -13,27 +13,33 @@ from app.objects.ticks import (
 )
 from app.objects.substages import TickSubStage, TickSheetItem, ListOfTickSheetItems
 
-class DictOfCadetIdsWithTickListItemsForCadetId(Dict[str, ListOfTickListItemsAndTicksForSpecificCadet]):
-    def get_dict_of_ticks_with_items_for_cadet_id_adding_if_required(self, cadet_id: str) -> DictOfTicksWithItem:
-        list_of_ticks_for_cadet = self.list_of_ticks_for_cadet_id_adding_if_required(cadet_id)
+
+class DictOfCadetIdsWithTickListItemsForCadetId(
+    Dict[str, ListOfTickListItemsAndTicksForSpecificCadet]
+):
+    def get_dict_of_ticks_with_items_for_cadet_id_adding_if_required(
+        self, cadet_id: str
+    ) -> DictOfTicksWithItem:
+        list_of_ticks_for_cadet = self.list_of_ticks_for_cadet_id_adding_if_required(
+            cadet_id
+        )
         return list_of_ticks_for_cadet.dict_of_ticks_with_items()
 
     def update_tick(self, cadet_id: str, new_tick: Tick, tick_item: TickSheetItem):
-        list_of_ticks_for_cadet = self.list_of_ticks_for_cadet_id_adding_if_required(cadet_id)
-        list_of_ticks_for_cadet.update_tick(
-            new_tick=new_tick,
-            tick_item=tick_item
+        list_of_ticks_for_cadet = self.list_of_ticks_for_cadet_id_adding_if_required(
+            cadet_id
         )
+        list_of_ticks_for_cadet.update_tick(new_tick=new_tick, tick_item=tick_item)
 
-    def list_of_ticks_for_cadet_id_adding_if_required(self, cadet_id:str) -> ListOfTickListItemsAndTicksForSpecificCadet:
+    def list_of_ticks_for_cadet_id_adding_if_required(
+        self, cadet_id: str
+    ) -> ListOfTickListItemsAndTicksForSpecificCadet:
         list_of_ticks = self.get(cadet_id, missing_data)
         if list_of_ticks is missing_data:
             list_of_ticks = ListOfTickListItemsAndTicksForSpecificCadet([])
             self[cadet_id] = list_of_ticks
 
         return list_of_ticks
-
-
 
 
 class DictOfTickSheetItemsAndTicksForCadet(Dict[TickSheetItem, Tick]):

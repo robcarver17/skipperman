@@ -21,6 +21,7 @@ from app.web.html.master_layout import get_master_layout
 from app.frontend.menu_define import menu_definition, menu_security_dict
 from app.web.flask.security import allow_user_to_make_snapshots
 
+
 ### Returns HTML for a menu page
 def generate_menu_page_html() -> str:
     ## hide if logged out EXCEPT public
@@ -29,7 +30,7 @@ def generate_menu_page_html() -> str:
     else:
         html_code_for_menu = ""
 
-    include_backup_option= allow_user_to_make_snapshots()
+    include_backup_option = allow_user_to_make_snapshots()
     html_page_master_layout = get_master_layout(
         include_read_only_toggle=True,
         include_user_options=True,

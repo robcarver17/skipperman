@@ -206,9 +206,7 @@ def list_of_all_copy_previous_roles_buttons(interface: abstractInterface, event:
         object_store=interface.object_store,
     )
     return [
-        copy_previous_role_button_name_from_volunteer_id(
-            volunteer_at_event.id
-        )
+        copy_previous_role_button_name_from_volunteer_id(volunteer_at_event.id)
         for volunteer_at_event in list_of_volunteers_at_event
     ]
 
@@ -256,7 +254,10 @@ def get_dict_of_volunteer_name_buttons_and_volunteer_ids(
     )
 
     return dict(
-        [(name_of_volunteer_button(volunteer), volunteer.id) for volunteer in list_of_volunteers_at_event]
+        [
+            (name_of_volunteer_button(volunteer), volunteer.id)
+            for volunteer in list_of_volunteers_at_event
+        ]
     )
 
 

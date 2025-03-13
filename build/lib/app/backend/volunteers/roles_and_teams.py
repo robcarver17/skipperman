@@ -22,6 +22,7 @@ from app.backend.groups.list_of_groups import get_list_of_groups
 from app.objects.roles_and_teams import no_role_allocated
 from app.objects.groups import unallocated_group
 
+
 def reorder_tuple_of_item_and_role_and_group(
     object_store: ObjectStore, list_of_tuples: List[Tuple[object, RoleAndGroup]]
 ) -> List[Tuple[object, RoleAndGroup]]:
@@ -34,14 +35,18 @@ def reorder_tuple_of_item_and_role_and_group(
     list_of_roles_and_groups_in_tuple = ListOfRolesAndGroups(
         [tuple[1] for tuple in list_of_tuples]
     )
-    unique_list_of_roles_and_groups = ListOfRolesAndGroups(set(list_of_roles_and_groups_in_tuple))
+    unique_list_of_roles_and_groups = ListOfRolesAndGroups(
+        set(list_of_roles_and_groups_in_tuple)
+    )
 
     sorted_list_of_roles_and_groups = unique_list_of_roles_and_groups.sorted(
         list_of_groups=list_of_groups, list_of_roles=list_of_roles
     )
     sorted_list_of_tuples = []
     for role_and_group in sorted_list_of_roles_and_groups:
-        for idx, role_and_group_in_tuple in enumerate(list_of_roles_and_groups_in_tuple):
+        for idx, role_and_group_in_tuple in enumerate(
+            list_of_roles_and_groups_in_tuple
+        ):
             if role_and_group_in_tuple == role_and_group:
                 sorted_list_of_tuples.append(list_of_tuples[idx])
 
@@ -79,9 +84,9 @@ def get_team_from_list_of_given_name_of_team(
     return list_of_teams.matching_team_name(team_selected)
 
 
-def get_team_from_id(object_store: ObjectStore, team_id: str, default = arg_not_passed):
+def get_team_from_id(object_store: ObjectStore, team_id: str, default=arg_not_passed):
     list_of_teams = get_list_of_teams(object_store)
-    return list_of_teams.team_with_id(team_id, default =default)
+    return list_of_teams.team_with_id(team_id, default=default)
 
 
 def modify_list_of_roles_with_skills(
@@ -166,7 +171,7 @@ def order_list_of_roles(
 ):
     all_roles = get_list_of_roles(object_store)
     return all_roles.subset_from_list_of_ids_retaining_order(
-         list_of_ids=list_of_roles.list_of_ids
+        list_of_ids=list_of_roles.list_of_ids
     )
 
 

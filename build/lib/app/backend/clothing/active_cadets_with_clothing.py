@@ -21,8 +21,10 @@ def get_dict_of_active_cadets_with_clothing_at_event(
         cadets_currently_serving_on_committee = get_list_of_cadets_currently_serving(
             object_store
         )
-        cadets_currently_serving_on_committee_and_at_event =  unfiltered_dict.filter_for_list_of_cadets(
-            cadets_currently_serving_on_committee
+        cadets_currently_serving_on_committee_and_at_event = (
+            unfiltered_dict.filter_for_list_of_cadets(
+                cadets_currently_serving_on_committee
+            )
         )
         return cadets_currently_serving_on_committee_and_at_event
 

@@ -62,7 +62,7 @@ class DictOfDaysAndClubDinghiesAtEventForCadet(Dict[Day, ClubDinghy]):
         if single_dinghy is no_club_dinghy:
             return False
 
-    def has_any_dinghy_on_specific_day(self, day: Day) ->bool:
+    def has_any_dinghy_on_specific_day(self, day: Day) -> bool:
         dinghy_on_day = self.dinghy_on_day(day, default=no_club_dinghy)
         no_dinghy_on_day = dinghy_on_day is no_club_dinghy
 
@@ -197,7 +197,7 @@ class DictOfCadetsAndClubDinghiesAtEvent(
     def club_dinghys_for_cadet(
         self, cadet: Cadet
     ) -> DictOfDaysAndClubDinghiesAtEventForCadet:
-        return self.get(cadet,  DictOfDaysAndClubDinghiesAtEventForCadet())
+        return self.get(cadet, DictOfDaysAndClubDinghiesAtEventForCadet())
 
     @property
     def list_of_club_dinghies(self) -> ListOfClubDinghies:

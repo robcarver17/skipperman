@@ -100,12 +100,14 @@ def post_form_config_teams_page(
 
 def get_row_for_existing_entry(entry: Team, **kwargs_ignored) -> RowInTable:
     if entry.protected:
-        return RowInTable([
-            "Cannot edit: %s" % entry.name,
-            entry.location_for_cadet_warning.name,
-            "",
-            edit_contents_button(entry.name),
-        ])
+        return RowInTable(
+            [
+                "Cannot edit: %s" % entry.name,
+                entry.location_for_cadet_warning.name,
+                "",
+                edit_contents_button(entry.name),
+            ]
+        )
     line = [
         text_box_for_team_name(entry),
         dropdown_for_location(entry),

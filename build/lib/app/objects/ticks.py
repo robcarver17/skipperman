@@ -3,11 +3,9 @@ from typing import List, Dict
 from enum import Enum
 
 import pandas as pd
-from app.objects.exceptions import  MultipleMatches
+from app.objects.exceptions import MultipleMatches
 
-from app.objects.generic_list_of_objects import (
-    GenericListOfObjects
-)
+from app.objects.generic_list_of_objects import GenericListOfObjects
 from app.objects.substages import TickSheetItem
 
 Tick = Enum("Tick", ["Full", "Half", "NotApplicable", "NoTick"])
@@ -81,11 +79,7 @@ class CadetIdWithTickListItemIds:
 
     @classmethod
     def create_empty(cls, cadet_id: str):
-        return cls(
-            cadet_id=cadet_id,
-            dict_of_ticks_with_items=DictOfTicksWithItem()
-        )
-
+        return cls(cadet_id=cadet_id, dict_of_ticks_with_items=DictOfTicksWithItem())
 
     @property
     def list_of_tick_item_ids(self) -> List[str]:
@@ -112,6 +106,7 @@ class CadetIdWithTickListItemIds:
 
 
 NOTIONAL_CADET_ID_NOT_USED = "**notional***"
+
 
 class ListOfTickListItemsAndTicksForSpecificCadet(GenericListOfObjects):
     @property
@@ -141,20 +136,24 @@ class ListOfTickListItemsAndTicksForSpecificCadet(GenericListOfObjects):
 
         return tick_list_items_for_cadet.dict_of_ticks_with_items
 
-    def _tick_list_items_for_cadet_adding_if_required(self) -> CadetIdWithTickListItemIds:
-        if len(self)==0:
-            tick_list_items_for_cadet = CadetIdWithTickListItemIds.create_empty(NOTIONAL_CADET_ID_NOT_USED)
+    def _tick_list_items_for_cadet_adding_if_required(
+        self,
+    ) -> CadetIdWithTickListItemIds:
+        if len(self) == 0:
+            tick_list_items_for_cadet = CadetIdWithTickListItemIds.create_empty(
+                NOTIONAL_CADET_ID_NOT_USED
+            )
             self.append(tick_list_items_for_cadet)
-        elif len(self)==1:
+        elif len(self) == 1:
             tick_list_items_for_cadet = self[0]
-            tick_list_items_for_cadet.cadet_id = NOTIONAL_CADET_ID_NOT_USED ## will eventually modify old files for tidiness
+            tick_list_items_for_cadet.cadet_id = NOTIONAL_CADET_ID_NOT_USED  ## will eventually modify old files for tidiness
         else:
             raise MultipleMatches("Cant have more than one cadet in a file now")
 
         return tick_list_items_for_cadet
 
     def list_of_tick_list_item_ids(self) -> List[str]:
-        if len(self)==0:
+        if len(self) == 0:
             return []
         first_cadet = self[0]
         tick_list_items = first_cadet.list_of_tick_item_ids
@@ -190,5 +189,3 @@ def from_df_to_list_of_cadets_with_tick_list_items(
         list_of_cadets_with_tick_lists.append(cadet_with_tick_list_items)
 
     return ListOfTickListItemsAndTicksForSpecificCadet(list_of_cadets_with_tick_lists)
-
-

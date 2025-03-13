@@ -22,7 +22,7 @@ def is_possible_to_copy_boat_allocation(
     on_same_boat_for_all_days = volunteer_is_on_same_boat_for_all_days(
         volunteer_at_event_on_boat
     )
-    single_day = len(volunteer_at_event_on_boat.availability.days_available())==1
+    single_day = len(volunteer_at_event_on_boat.availability.days_available()) == 1
     copy_button_required = (not on_same_boat_for_all_days) and (not single_day)
 
     return copy_button_required
@@ -142,9 +142,9 @@ def is_possible_to_copy_roles(
 
     no_roles_to_copy = len(all_roles) == 0
     all_roles_match = len(set(all_roles)) <= 1
-    single_day = len(volunteer_at_event_on_boat.availability.days_available())==1
+    single_day = len(volunteer_at_event_on_boat.availability.days_available()) == 1
 
-    if all_roles_match or  no_roles_to_copy or single_day:
+    if all_roles_match or no_roles_to_copy or single_day:
         return False
     else:
         return True

@@ -54,7 +54,10 @@ def display_form_for_event_cleaning_sort_order_passed(
         [
             navbar,
             _______________,
-            Heading("Choose event to remove sensitive data for. Only events that have finished are shown.", size=2),
+            Heading(
+                "Choose event to remove sensitive data for. Only events that have finished are shown.",
+                size=2,
+            ),
             Heading(
                 "WARNING CANNOT BE UNDONE EXCEPT VIA RESTORE BACKUP OR RESTORE SNAPSHOT! You will not be asked to confirm your choice.",
                 size=4,

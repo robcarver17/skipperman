@@ -10,7 +10,7 @@ from app.backend.registration_data.identified_volunteers_at_event import (
 from app.backend.registration_data.cadet_and_volunteer_connections_at_event import (
     get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer,
 )
-from app.objects.abstract_objects.abstract_form import  textInput, Form
+from app.objects.abstract_objects.abstract_form import textInput, Form
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     Line,
@@ -22,7 +22,7 @@ from app.objects.events import Event
 from app.objects.relevant_information_for_volunteers import (
     RelevantInformationForVolunteer,
     ListOfRelevantInformationForVolunteer,
-    missing_relevant_information
+    missing_relevant_information,
 )
 from app.objects.volunteers import Volunteer
 
@@ -129,7 +129,9 @@ def get_header_text(
 
     return Line(header_text)
 
-button_bar = ButtonBar([HelpButton('resolve_volunteer_registration_issues')])
+
+button_bar = ButtonBar([HelpButton("resolve_volunteer_registration_issues")])
+
 
 def get_cadet_names_text_given_identified_volunteer(
     interface: abstractInterface, event: Event, volunteer: Volunteer
@@ -155,7 +157,6 @@ def get_list_of_active_associated_cadet_names_in_mapped_event_data_given_identif
     return list_of_cadets.list_of_names()
 
 
-
 def get_availablity_text(
     list_of_relevant_information: ListOfRelevantInformationForVolunteer,
 ) -> ListOfLines:
@@ -169,7 +170,7 @@ def get_availablity_text(
 
 
 def get_availablity_text_for_single_entry(
-    relevant_information: RelevantInformationForVolunteer
+    relevant_information: RelevantInformationForVolunteer,
 ) -> ListOfLines:
     if relevant_information is missing_relevant_information:
         return ListOfLines("")
@@ -182,15 +183,21 @@ def get_availablity_text_for_single_entry(
     if availability_info.volunteer_availablity.is_empty():
         volunteer_availability = "No availability for volunteer in form"
     else:
-        volunteer_availability = "In form volunteer said they were available on %s" % str(availability_info.volunteer_availablity.days_available_as_str())
+        volunteer_availability = (
+            "In form volunteer said they were available on %s"
+            % str(availability_info.volunteer_availablity.days_available_as_str())
+        )
 
-    cadet_availabilty = "Cadet registered in form available on %s" % str(availability_info.cadet_availability.days_available_as_str())
+    cadet_availabilty = "Cadet registered in form available on %s" % str(
+        availability_info.cadet_availability.days_available_as_str()
+    )
 
     available_text = ListOfLines(
-
-            ["Availability for volunteer in form when registered with sailor %s:" % cadet_name,
-             "    - Sailor available: %s" % cadet_availabilty,
-             "    - Volunteer available: %s" % volunteer_availability
+        [
+            "Availability for volunteer in form when registered with sailor %s:"
+            % cadet_name,
+            "    - Sailor available: %s" % cadet_availabilty,
+            "    - Volunteer available: %s" % volunteer_availability,
         ]
     )
 
@@ -334,17 +341,24 @@ def get_same_or_different_text_and_input_box(
     if same_or_different_text is None:
         return ListOfLines([""])
 
-    same_or_different_input_line = get_same_or_different_input(list_of_relevant_information)
-    same_or_different_input_header = "Same or different duties in form (for each registration):"
+    same_or_different_input_line = get_same_or_different_input(
+        list_of_relevant_information
+    )
+    same_or_different_input_header = (
+        "Same or different duties in form (for each registration):"
+    )
 
     return ListOfLines(
-        [same_or_different_input_header]+same_or_different_text+[same_or_different_input_line]
+        [same_or_different_input_header]
+        + same_or_different_text
+        + [same_or_different_input_line]
     ).add_Lines()
+
 
 def get_same_or_different_text(
     list_of_relevant_information: ListOfRelevantInformationForVolunteer,
 ) -> Union[list, None]:
-    list_of_same_or_different =[]
+    list_of_same_or_different = []
 
     for relevant_information in list_of_relevant_information:
         try:

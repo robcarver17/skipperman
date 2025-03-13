@@ -43,27 +43,26 @@ def get_df_for_reporting_volunteers_with_flags(
         object_store=object_store, event=event
     )
 
-    list_of_days = days_to_show.align_with_list_of_days(event.days_in_event()).days_available()
+    list_of_days = days_to_show.align_with_list_of_days(
+        event.days_in_event()
+    ).days_available()
 
     dict_of_df = dict(
         [
-            (day.name,
-             get_and_transform_df_for_reporting_volunteers_for_day(
-                 volunteer_event_data=volunteer_event_data,
-                 day=day,
-                 power_boats_only=power_boats_only
-             ))
+            (
+                day.name,
+                get_and_transform_df_for_reporting_volunteers_for_day(
+                    volunteer_event_data=volunteer_event_data,
+                    day=day,
+                    power_boats_only=power_boats_only,
+                ),
+            )
             for day in list_of_days
         ]
     )
 
     dict_of_df_excluding_empty = dict(
-        [
-            (day_name,
-            df)
-            for day_name,df in dict_of_df.items()
-            if len(df)>0
-        ]
+        [(day_name, df) for day_name, df in dict_of_df.items() if len(df) > 0]
     )
 
     print("days in dict %s" % str(dict_of_df_excluding_empty.keys()))
@@ -72,8 +71,9 @@ def get_df_for_reporting_volunteers_with_flags(
 
 
 def get_and_transform_df_for_reporting_volunteers_for_day(
-    day: Day, volunteer_event_data: DictOfAllEventDataForVolunteers,
-        power_boats_only: bool
+    day: Day,
+    volunteer_event_data: DictOfAllEventDataForVolunteers,
+    power_boats_only: bool,
 ) -> pd.DataFrame:
     df_for_reporting_volunteers_for_day = get_df_for_reporting_volunteers_for_day(
         day=day, volunteer_event_data=volunteer_event_data
@@ -88,6 +88,7 @@ def get_and_transform_df_for_reporting_volunteers_for_day(
     )
 
     return df_for_reporting_volunteers_for_day
+
 
 def get_df_for_reporting_volunteers_for_day(
     day: Day, volunteer_event_data: DictOfAllEventDataForVolunteers

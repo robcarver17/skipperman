@@ -13,6 +13,7 @@ from app.frontend.forms.reorder_form import (
 )
 from app.data_access.configuration.fixed import (
     SAVE_KEYBOARD_SHORTCUT,
+    ADD_KEYBOARD_SHORTCUT,
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -53,11 +54,9 @@ def row_for_new_entries() -> RowInTable:
 def get_row_for_existing_entry(entry, include_edit_button: bool = False) -> RowInTable:
     protected = is_protected_object(entry)
     if protected:
-        line = \
-            [
-                "Protected - cannot edit: %s" %
-                entry.name,
-            ]
+        line = [
+            "Protected - cannot edit: %s" % entry.name,
+        ]
     else:
         line = [
             text_box_for_entry(entry),
@@ -130,9 +129,7 @@ save_button = Button(
 )
 
 add_button = Button(
-    ADD_ENTRY_BUTTON_LABEL,
-    nav_button=True,
-    shortcut=SAVE_KEYBOARD_SHORTCUT,
+    ADD_ENTRY_BUTTON_LABEL, nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT
 )
 
 help_button = HelpButton("configuration_help")

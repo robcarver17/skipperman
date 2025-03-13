@@ -282,7 +282,7 @@ def get_tick_from_dropdown_or_none(
 ) -> Tick:
     selected_tick_name = interface.value_from_form(
         get_name_of_cell(item_id=item_id, cadet_id=cadet_id, dropdown=True),
-        default=MISSING_FROM_FORM
+        default=MISSING_FROM_FORM,
     )
     if selected_tick_name is MISSING_FROM_FORM:
         ## happens if tick can't be edited

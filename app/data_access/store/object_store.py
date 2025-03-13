@@ -18,7 +18,7 @@ class ObjectStore:
         self._data_api = data_api
         self._object_store = {}
 
-    def delete_all_data(self, are_you_sure:bool = False):
+    def delete_all_data(self, are_you_sure: bool = False):
         ### YOU REALLY NEED TO BE SURE!
         if are_you_sure:
             ## REDUDANT CODE AS YOU CAN'T BE TOO CAREFUL
@@ -26,7 +26,6 @@ class ObjectStore:
 
     def backup_underlying_data(self):
         self.data_api.make_backup()
-
 
     def flush_store(self, read_only: bool = False):
         if not read_only:
@@ -38,8 +37,8 @@ class ObjectStore:
         self.data_store.save_stored_items()
 
     def clear_store(self):
-        self.data_store.clear_stored_items() ## underlying cache
-        self.clear_object_store() ## this cache
+        self.data_store.clear_stored_items()  ## underlying cache
+        self.clear_object_store()  ## this cache
 
     def update(
         self,

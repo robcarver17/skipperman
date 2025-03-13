@@ -1,5 +1,6 @@
 from typing import Union
 
+from app.data_access.configuration.fixed import ADD_KEYBOARD_SHORTCUT
 from app.frontend.events.add_event import display_form_view_for_add_event
 from app.frontend.shared.events_state import (
     update_state_for_specific_event_given_event_description,
@@ -22,7 +23,8 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import (
     main_menu_button,
     Button,
-    ButtonBar, HelpButton,
+    ButtonBar,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_lines import (
     Line,
@@ -61,7 +63,9 @@ def display_form_view_of_events_sort_order_passed(
     return Form(contents_of_form)
 
 
-add_button = Button(ADD_EVENT_BUTTON_LABEL, nav_button=True)
+add_button = Button(
+    ADD_EVENT_BUTTON_LABEL, nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT
+)
 help_button = HelpButton("view_list_of_events_help")
 
 

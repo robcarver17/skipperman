@@ -1,11 +1,16 @@
-
 from app.backend.registration_data.raw_mapped_registration_data import (
     does_event_have_imported_registration_data,
 )
 
 from app.frontend.events.mapping.mapping_table import *
-from app.frontend.events.mapping.parse_field_mapping import template_mapping_form, clone_mapping_form, \
-    create_mapping_form, add_skipperman_field_to_mapping, add_WA_and_skipperman_field_to_mapping, delete_mapping
+from app.frontend.events.mapping.parse_field_mapping import (
+    template_mapping_form,
+    clone_mapping_form,
+    create_mapping_form,
+    add_skipperman_field_to_mapping,
+    add_WA_and_skipperman_field_to_mapping,
+    delete_mapping,
+)
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -71,10 +76,7 @@ def display_form_event_field_mapping_existing_mapping(
                 ),
                 _______________,
                 Line(bold(warning_text)),
-                Line(
-                    "Press %s to keep existing, or modify"
-                    % BACK_BUTTON_LABEL
-                ),
+                Line("Press %s to keep existing, or modify" % BACK_BUTTON_LABEL),
                 _______________,
                 "Current field mapping:",
                 mapping_table,
@@ -99,16 +101,13 @@ def warning_text_for_mapping(interface: abstractInterface, event: Event) -> str:
     return warning_text
 
 
-def display_form_event_field_mapping_no_existing_mapping(
-) -> Union[Form, NewForm]:
+def display_form_event_field_mapping_no_existing_mapping() -> Union[Form, NewForm]:
     information = Line(
         "Mapping converts WA field names to our internal field names - we can't import an event without it"
     )
 
     return Form(
-        ListOfLines(
-            [information, _______________, mapping_buttons(), _______________]
-        )
+        ListOfLines([information, _______________, mapping_buttons(), _______________])
     )
 
 
@@ -124,8 +123,6 @@ def mapping_buttons() -> ButtonBar:
             help_button,
         ]
     )
-
-
 
 
 def post_form_event_field_mapping(interface: abstractInterface) -> Union[Form, NewForm]:
@@ -159,6 +156,7 @@ def previous_form(interface: abstractInterface) -> NewForm:
     return interface.get_new_display_form_for_parent_of_function(
         display_form_event_field_mapping
     )
+
 
 MAP_TO_TEMPLATE_BUTTON_LABEL = "Use template mapping"
 map_to_template_button = Button(MAP_TO_TEMPLATE_BUTTON_LABEL, nav_button=True)

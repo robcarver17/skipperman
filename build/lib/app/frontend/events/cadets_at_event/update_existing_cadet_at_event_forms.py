@@ -74,12 +74,14 @@ def display_form_for_update_to_existing_cadet_at_event(
 
     return form
 
-help_button_bar = ButtonBar([HelpButton('resolve_changes_to_registration')])
+
+help_button_bar = ButtonBar([HelpButton("resolve_changes_to_registration")])
+
 
 def buttons_for_update_row() -> Line:
 
     return Line(
-        [use_original_data_button, use_data_in_form_button,  use_new_data_button]
+        [use_original_data_button, use_data_in_form_button, use_new_data_button]
     )
 
 
@@ -102,11 +104,17 @@ def get_line_in_form_for_attendance_change(
     new_attendance = new_cadet_at_event_data.availability
 
     if original_attendance == new_attendance:
-        return Line("Attendance at event %s (unchanged)" % str(new_attendance.days_available_as_str()))
+        return Line(
+            "Attendance at event %s (unchanged)"
+            % str(new_attendance.days_available_as_str())
+        )
 
     header_line = Line(
         "Originally was attending %s, now attending %s"
-        % (str(original_attendance.days_available_as_str()), str(new_attendance.days_available_as_str()))
+        % (
+            str(original_attendance.days_available_as_str()),
+            str(new_attendance.days_available_as_str()),
+        )
     )
     checkbox = get_availability_checkbox(
         new_attendance,

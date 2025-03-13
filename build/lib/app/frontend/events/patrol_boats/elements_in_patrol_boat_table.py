@@ -240,6 +240,7 @@ def get_top_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonB
         ]
     )
 
+
 def get_bottom_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonBar:
     in_swap_state = is_ready_to_swap(interface)
     if in_swap_state:
@@ -251,6 +252,7 @@ def get_bottom_button_bar_for_patrol_boats(interface: abstractInterface) -> Butt
             help_button,
         ]
     )
+
 
 help_button = HelpButton("patrol_boat_help")
 

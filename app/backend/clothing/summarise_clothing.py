@@ -28,7 +28,7 @@ def summarise_clothing(object_store: ObjectStore, event: Event) -> PandasDFTable
 
         all_clothing[size] = clothing_for_size
 
-    if len(all_clothing)==0:
+    if len(all_clothing) == 0:
         return PandasDFTable(pd.DataFrame())
 
     df = pd.DataFrame(all_clothing)

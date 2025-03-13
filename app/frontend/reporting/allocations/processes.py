@@ -3,7 +3,9 @@ from typing import Dict
 
 import pandas as pd
 
-from app.frontend.reporting.shared.arrangement_state import reset_arrangement_to_default_with_groups_in_data
+from app.frontend.reporting.shared.arrangement_state import (
+    reset_arrangement_to_default_with_groups_in_data,
+)
 from app.backend.reporting.report_generator import ReportGenerator
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -16,11 +18,12 @@ from app.backend.reporting.allocation_report.allocation_report import (
 
 
 def get_group_allocation_report_additional_parameters_from_form_and_save(
-    interface: abstractInterface,
-        report_generator: ReportGenerator
+    interface: abstractInterface, report_generator: ReportGenerator
 ):
     parameters = get_group_allocation_report_additional_parameters_from_form(interface)
-    save_additional_parameters_for_allocation(interface, parameters=parameters, report_generator=report_generator)
+    save_additional_parameters_for_allocation(
+        interface, parameters=parameters, report_generator=report_generator
+    )
 
 
 def get_group_allocation_report_additional_parameters_from_form(
@@ -40,13 +43,15 @@ def get_group_allocation_report_additional_parameters_from_form(
 
 
 def save_additional_parameters_for_allocation(
-    interface: abstractInterface, parameters: AdditionalParametersForAllocationReport,
-        report_generator: ReportGenerator
-
+    interface: abstractInterface,
+    parameters: AdditionalParametersForAllocationReport,
+    report_generator: ReportGenerator,
 ):
     save_show_full_names_parameter(interface=interface, parameters=parameters)
     save_club_boat_asterix_parameter(interface=interface, parameters=parameters)
-    save_unallocated_parameter(interface=interface, parameters=parameters, report_generator=report_generator)
+    save_unallocated_parameter(
+        interface=interface, parameters=parameters, report_generator=report_generator
+    )
 
 
 def save_show_full_names_parameter(
@@ -64,20 +69,26 @@ def save_club_boat_asterix_parameter(
 
 
 def save_unallocated_parameter(
-    interface: abstractInterface, parameters: AdditionalParametersForAllocationReport,
-        report_generator: ReportGenerator
-
+    interface: abstractInterface,
+    parameters: AdditionalParametersForAllocationReport,
+    report_generator: ReportGenerator,
 ):
     original_parameters = load_additional_parameters_for_allocation_report(interface)
-    currently_includes_unallocated_cadets = copy(original_parameters.include_unallocated_cadets)
+    currently_includes_unallocated_cadets = copy(
+        original_parameters.include_unallocated_cadets
+    )
     change_to_include_unallocated_cadets = parameters.include_unallocated_cadets
     interface.set_persistent_value(
         INCLUDE_UNALLOCATED_CADETS, change_to_include_unallocated_cadets
     )
 
-    if currently_includes_unallocated_cadets!=change_to_include_unallocated_cadets:
-        interface.log_error("Changed how we are dealing with unallocated cadets: resetting custom group arrangement")
-        reset_arrangement_to_default_with_groups_in_data(interface=interface, report_generator=report_generator)
+    if currently_includes_unallocated_cadets != change_to_include_unallocated_cadets:
+        interface.log_error(
+            "Changed how we are dealing with unallocated cadets: resetting custom group arrangement"
+        )
+        reset_arrangement_to_default_with_groups_in_data(
+            interface=interface, report_generator=report_generator
+        )
 
 
 def load_additional_parameters_for_allocation_report(

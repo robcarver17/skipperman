@@ -181,7 +181,7 @@ def remove_patrol_boat_and_all_associated_volunteers_from_event(
     patrol_boat = from_patrol_boat_name_to_boat(
         object_store=object_store, boat_name=patrol_boat_name
     )
-
+    print("Removing %s from event" % patrol_boat.name)
     patrol_boat_data.remove_patrol_boat_and_all_associated_volunteers_from_event(
         patrol_boat
     )

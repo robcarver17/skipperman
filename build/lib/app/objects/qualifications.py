@@ -2,10 +2,14 @@ import datetime
 from dataclasses import dataclass
 from typing import List
 
-from app.objects.generic_list_of_objects import get_idx_of_unique_object_with_attr_in_list, get_unique_object_with_attr_in_list
+from app.objects.generic_list_of_objects import (
+    get_idx_of_unique_object_with_attr_in_list,
+    get_unique_object_with_attr_in_list,
+get_unique_object_with_multiple_attr_in_list
+)
 
 from app.objects.exceptions import (
-    arg_not_passed,
+    arg_not_passed, missing_data,
 )
 from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
@@ -44,23 +48,17 @@ class ListOfQualifications(GenericListOfObjectsWithIds):
 
         self[index] = new_qualification
 
-    def qualification_given_id(self, qualification_id: str, default = arg_not_passed):
+    def qualification_given_id(self, qualification_id: str, default=arg_not_passed):
         return self.object_with_id(qualification_id, default=default)
 
-    def qualification_given_name(self, name: str, default =arg_not_passed):
+    def qualification_given_name(self, name: str, default=arg_not_passed):
         return get_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name='name',
-            attr_value=name,
-            default=default
+            some_list=self, attr_name="name", attr_value=name, default=default
         )
 
-    def idx_given_name(self, name: str, default = arg_not_passed):
+    def idx_given_name(self, name: str, default=arg_not_passed):
         return get_idx_of_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name='name',
-            attr_value=name,
-            default=default
+            some_list=self, attr_name="name", attr_value=name, default=default
         )
 
     def add(self, name: str):
@@ -74,7 +72,6 @@ class ListOfQualifications(GenericListOfObjectsWithIds):
         qualification.id = self.next_id()
 
         self.append(qualification)
-
 
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_names()
@@ -112,11 +109,21 @@ class ListOfCadetsWithIdsAndQualifications(GenericListOfObjectsWithIds):
         )
 
     def remove_qualification_from_cadet(self, cadet_id: str, qualification_id: str):
-        for item in self:
-            if item.cadet_id == cadet_id and item.qualification_id == qualification_id:
-                self.remove(item)
+        cadet_with_qualification = get_unique_object_with_multiple_attr_in_list(
+            self,
+            {'cadet_id': cadet_id,
+             'qualification_id': qualification_id},
+            default = missing_data
+        )
+        if cadet_with_qualification is missing_data:
+            raise Exception("Can't remove non existitent qualiciation for cadet")
 
-    def does_cadet_id_have_qualification(self, cadet_id: str, qualification_id: str) -> bool:
+        self.remove(cadet_with_qualification)
+
+
+    def does_cadet_id_have_qualification(
+        self, cadet_id: str, qualification_id: str
+    ) -> bool:
         list_of_qualification_ids = self.list_of_qualification_ids_for_cadet(cadet_id)
 
         return qualification_id in list_of_qualification_ids
@@ -124,4 +131,3 @@ class ListOfCadetsWithIdsAndQualifications(GenericListOfObjectsWithIds):
     def list_of_qualification_ids_for_cadet(self, cadet_id: str) -> List[str]:
         matching = [item.qualification_id for item in self if item.cadet_id == cadet_id]
         return matching
-

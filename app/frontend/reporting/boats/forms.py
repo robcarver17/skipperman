@@ -79,7 +79,8 @@ def reporting_options_form_for_boat_additional_parameters(
     )
     exclude_river = yes_no_radio(
         input_name=EXCLUDE_RIVER_TRAIN,
-        input_label="Exclude sailors in river training groups (won't apply to racers)? %s" % explainer,
+        input_label="Exclude sailors in river training groups (won't apply to racers)? %s"
+        % explainer,
         default_is_yes=additional_parameters.exclude_river_training_groups,
     )
     exclude_unallocated = yes_no_radio(

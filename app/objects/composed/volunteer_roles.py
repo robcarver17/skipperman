@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Tuple, Union
 
-from app.objects.exceptions import arg_not_passed, MissingData
+from app.objects.exceptions import arg_not_passed, MissingData, missing_data
 from app.objects.volunteer_skills import ListOfSkills
 from app.objects.roles_and_teams import RolesWithSkillIds, ListOfRolesWithSkillIds
 from app.objects.composed.volunteers_with_skills import SkillsDict
@@ -132,6 +132,16 @@ class ListOfRolesWithSkills(List[RoleWithSkills]):
         self.list_of_roles_with_skill_ids.replace_at_index(
             index=index, new_role_with_skill_ids=new_role_with_skill_ids
         )
+
+    def add_no_role_set(self):
+        if self.contains_no_role_set():
+            pass
+
+        self.append(no_role_set)
+
+    def contains_no_role_set(self):
+        exists = self.role_with_name(NO_ROLE_SET, default=missing_data)
+        return exists is not missing_data
 
     def add(self, new_role_name: str):
         try:

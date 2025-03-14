@@ -24,7 +24,8 @@ from app.objects.roles_and_teams import ListOfTeams, no_team
 from app.objects.volunteer_roles_and_groups_with_id import (
     TeamAndGroup,
 )
-
+from app.objects.roles_and_teams import no_role_allocated
+from app.objects.groups import unallocated_group
 
 def get_summary_list_of_roles_and_groups_for_events(
     object_store: ObjectStore, event: Event
@@ -49,35 +50,17 @@ def get_summary_list_of_roles_and_groups_for_events_as_pd_df(
     return single_df
 
 
-from app.objects.roles_and_teams import ListOfRolesWithSkillIds
-
 
 def get_list_of_day_summaries_for_roles_at_event(
     object_store: ObjectStore, event: Event
 ) -> List[pd.DataFrame]:
-    volunteer_event_data = get_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, event=event
-    )
-    if len(volunteer_event_data) == 0:
+
+    volunteers_in_roles_at_event = get_volunteers_and_roles_at_event(object_store=object_store, event=event)
+    if len(volunteers_in_roles_at_event)==0:
         return []
-    volunteers_in_roles_at_event = (
-        volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles
-    )
 
-    list_of_roles = get_list_of_roles(object_store)
-    all_roles_at_event = volunteers_in_roles_at_event.all_roles_at_event
-
-    sorted_roles_at_event = all_roles_at_event.sort_to_match_other_role_list_order(
-        list_of_roles
-    )
-
-    all_groups = get_list_of_groups(object_store)
-    all_groups_at_event = ListOfGroups(
-        volunteers_in_roles_at_event.all_groups_at_event + [unallocated_group]
-    )
-    sorted_groups_at_event = all_groups_at_event.sort_to_match_other_group_list_order(
-        all_groups
-    )
+    sorted_roles_at_event = get_sorted_roles_at_event(object_store=object_store, event=event)
+    sorted_groups_at_event = get_sorted_groups_at_event(object_store=object_store, event=event)
 
     days_at_event = event.days_in_event()
     all_day_summaries = []
@@ -92,6 +75,47 @@ def get_list_of_day_summaries_for_roles_at_event(
 
     return all_day_summaries
 
+def get_sorted_roles_at_event(    object_store: ObjectStore, event: Event
+) -> ListOfRolesWithSkills:
+    volunteers_in_roles_at_event = get_volunteers_and_roles_at_event(object_store=object_store, event=event)
+
+    list_of_roles = get_list_of_roles(object_store)
+    all_roles_at_event = volunteers_in_roles_at_event.all_roles_at_event
+
+    sorted_roles_at_event = all_roles_at_event.sort_to_match_other_role_list_order(
+        list_of_roles
+    )
+
+    sorted_roles_at_event.add_no_role_set()
+
+    return sorted_roles_at_event
+
+
+
+def get_sorted_groups_at_event(    object_store: ObjectStore, event: Event
+) -> ListOfGroups:
+    volunteers_in_roles_at_event = get_volunteers_and_roles_at_event(object_store=object_store, event=event)
+    all_groups = get_list_of_groups(object_store)
+    all_groups_at_event = ListOfGroups(
+        volunteers_in_roles_at_event.all_groups_at_event + [unallocated_group]
+    )
+    sorted_groups_at_event = all_groups_at_event.sort_to_match_other_group_list_order(
+        all_groups
+    )
+    sorted_groups_at_event.add_unallocated()
+
+    return  sorted_groups_at_event
+
+def get_volunteers_and_roles_at_event(    object_store: ObjectStore, event: Event
+):
+    volunteer_event_data = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
+    )
+    volunteers_in_roles_at_event = (
+        volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles
+    )
+
+    return volunteers_in_roles_at_event
 
 def get_summary_of_roles_and_groups_for_events_on_day(
     day: Day,

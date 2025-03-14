@@ -1,8 +1,6 @@
 
 # to do next
 Before first event is run
-- group allocation help
-- registration editing help
 - summary / role not accurate in small numbers #62
 - copy / overwrite logic needs checking #61
 - volunteer rota warnings not working for attendance mismatch
@@ -10,10 +8,12 @@ Before first event is run
 - add guess boat button #40
 - add raincheck all button to volunteers in rota page #59
 - report reset print options to defaults, different defaults for report types #53
+- keep double handers aligned #65
 - documentation for reporting #49
 
 in near future
-- instructors can do attendance online
+- more elegant handling of manual reg #64
+- instructors can do attendance online #63
 - add inactive cadets to group page with option to change status #42
 - merge cadet, merge volunteer #15
 - sort order refresh without clicking triangle
@@ -29,6 +29,8 @@ Before Cadet week
 
 # Recent
 
+- registration editing help
+- group allocation help
 - option to add registration manually, with help, on both registration and group allocation 
 - Helpful error mesage if adding a two handed partner who is already registered
 - Adding cancel button when adding sailor

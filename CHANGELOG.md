@@ -1,7 +1,6 @@
 
 # to do next
-Before first event is run
-- summary / role not accurate in small numbers #62
+Before first racing event is run
 - copy / overwrite logic needs checking #61
 - volunteer rota warnings not working for attendance mismatch
 - make it easier to find cadets/volunteers when looking at all of them #58
@@ -11,7 +10,7 @@ Before first event is run
 - keep double handers aligned #65
 - documentation for reporting #49
 
-in near future
+in near future (before first training)
 - more elegant handling of manual reg #64
 - instructors can do attendance online #63
 - add inactive cadets to group page with option to change status #42
@@ -27,8 +26,9 @@ Before Cadet week
 - add food / clothing to giant data dump #54
 - add missing stuff to data dumps #55
 
-# Recent
+# Version 2.1
 
+- fixed summary by role/group not accurate in rota by adding no group
 - registration editing help
 - group allocation help
 - option to add registration manually, with help, on both registration and group allocation 

@@ -195,6 +195,7 @@ def add_new_cadet_manually_to_event(
     new_row = add_empty_row_to_raw_registration_data_and_return_row(
         object_store=object_store,
         event=event,
+        cadet=new_cadet
     )
 
     add_identified_cadet_and_row(

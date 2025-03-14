@@ -148,5 +148,5 @@ def return_to_allocation_pages(interface: abstractInterface, calling_function: C
     )
 
 
-header_text_for_adding_cadets = ListOfLines(["Add a new cadet or choose an existing cadet to register at event", "Do not use for paid events, unless they will also be registered in Wild Apricot."])
+header_text_for_adding_cadets = ListOfLines(["Add a new cadet or choose an existing cadet to register at event", "Do not use for paid events, unless they will also be or have been registered in Wild Apricot."]).add_Lines()
 help_button = ButtonBar([HelpButton("manually_adding_a_sailor")])

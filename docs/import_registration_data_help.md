@@ -132,7 +132,12 @@ Next Skipperman will add the registration data for each sailor in the event. You
 ACTION REQUIRED: Cadet John Smith appears more than once in WA file with an active registration - using the first registration found - go to WA and cancel all but one of the registrations please, and then check details here are correct!
 ```
 
-As it says, this means the cadet has been registered multiple times, but the duplicate registrations have not been cancelled. Any registrations found in the file after the first one that is loaded in will be ignored.
+There are two causes for this:
+
+- A WA registration replacing an existing [manual registration](manually_adding_a_sailor.md). See the relevant help page for advice.
+- Duplicate WA registrations
+
+The latter means the cadet has been registered multiple times, but the duplicate registrations have not been cancelled. Any registrations found in the file after the first one that is loaded in will be ignored.
 
 To avoid this, strongly discourage parents from re-registering cadets if they have made a mistake (something they are typically going to do because Wild Apricot doesn't allow you to edit a registration, with good reason). Instead:
 

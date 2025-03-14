@@ -20,13 +20,15 @@ from app.objects.utils import (
     clean_up_dict_with_nans,
     transform_df_from_str_to_dates,
     transform_df_from_dates_to_str,
+transform_datetime_into_str,
+transform_date_into_str
 )
 
 from app.data_access.configuration.field_list import (
     VOLUNTEER_STATUS,
     _ROW_ID,
     _REGISTRATION_STATUS,
-    _SPECIAL_FIELDS, REGISTRATION_DATE,
+    _SPECIAL_FIELDS, REGISTRATION_DATE, CADET_DATE_OF_BIRTH
 )
 from app.objects.exceptions import missing_data, arg_not_passed
 
@@ -77,18 +79,20 @@ class RowInRegistrationData(GenericSkipperManObject, dict):
         return new_dict
 
     @classmethod
-    def create_empty_with_manual_status_set(cls, fields: List[str], row_id:str, registration_date: datetime.datetime):
+    def create_empty_with_manual_status_set(cls, fields: List[str], row_id:str, registration_datetime: datetime.datetime, date_of_birth: datetime.date):
         as_a_dict = dict([(key, '') for key in fields])
 
         for key in as_a_dict.keys():
             if key==REGISTRATION_DATE:
-                as_a_dict[key] = registration_date
+                as_a_dict[key] = registration_datetime
 
-        as_a_dict[_ROW_ID] = row_id
-        as_a_dict[_REGISTRATION_STATUS] = manual_status.name
+            if key==CADET_DATE_OF_BIRTH:
+                as_a_dict[key] = date_of_birth
 
+        as_a_dict[_ROW_ID] = str(row_id)
+        as_a_dict[_REGISTRATION_STATUS] = manual_status
 
-        return RowInRegistrationData.from_dict_of_str(as_a_dict)
+        return RowInRegistrationData(as_a_dict)
 
 
     def as_dict(self) -> dict:

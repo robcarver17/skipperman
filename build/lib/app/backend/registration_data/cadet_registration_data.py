@@ -29,15 +29,17 @@ from app.objects.registration_data import RowInRegistrationData, RegistrationDat
 
 
 def add_empty_row_to_raw_registration_data_and_return_row(
-    object_store: ObjectStore, event: Event
+    object_store: ObjectStore, event: Event,
+        cadet: Cadet
 ) -> RowInRegistrationData:
 
 
     registration_data = get_raw_mapped_registration_data(
-        object_store=object_store, event=event
+        object_store=object_store, event=event,
+
     )
 
-    new_row = create_empty_row_given_existing_registration_data(registration_data)
+    new_row = create_empty_row_given_existing_registration_data(registration_data, cadet=cadet)
     registration_data.append(new_row)
 
     update_raw_mapped_registration_data(
@@ -47,7 +49,8 @@ def add_empty_row_to_raw_registration_data_and_return_row(
     return new_row
 
 def create_empty_row_given_existing_registration_data(
-    registration_data: RegistrationDataForEvent
+    registration_data: RegistrationDataForEvent,
+        cadet: Cadet
 ) -> RowInRegistrationData:
 
 
@@ -57,7 +60,7 @@ def create_empty_row_given_existing_registration_data(
     registration_datetime = datetime.datetime.now()
 
     ## create blank entry with a given status, manual
-    new_row = RowInRegistrationData.create_empty_with_manual_status_set(fields = current_fields_in_data, row_id=row_id, registration_date=registration_datetime)
+    new_row = RowInRegistrationData.create_empty_with_manual_status_set(fields = current_fields_in_data, row_id=row_id, registration_datetime=registration_datetime, date_of_birth=cadet.date_of_birth)
 
     return new_row
 

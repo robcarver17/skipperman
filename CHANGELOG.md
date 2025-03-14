@@ -7,7 +7,6 @@ Before first event is run
 - copy / overwrite logic needs checking #61
 - volunteer rota warnings not working for attendance mismatch
 - make it easier to find cadets/volunteers when looking at all of them #58
-- option to add registration manually, with help, on both registration and group allocation #39
 - add guess boat button #40
 - add raincheck all button to volunteers in rota page #59
 - report reset print options to defaults, different defaults for report types #53
@@ -30,6 +29,7 @@ Before Cadet week
 
 # Recent
 
+- option to add registration manually, with help, on both registration and group allocation 
 - Helpful error mesage if adding a two handed partner who is already registered
 - Adding cancel button when adding sailor
 - Fixed a number of minor bugs

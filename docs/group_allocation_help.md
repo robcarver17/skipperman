@@ -96,9 +96,9 @@ There is an official skipperman field `Boat ownership`. If this is used in the [
 
 To create a sailing partnership, just select the 'allocate two handed partner' dropdown. You will see a list of sailors who can be made partners and put on the same boat. 
 
-If you see a * next to a sailors name in the dropdown, that means there is a scheduling conflict - the sailors aren't at the event on the same day. You might need to [edit event days individually](#dealing-with-different-days) to deal with this.
+If you see a * next to a sailors name in the dropdown, that means there is a scheduling conflict - the sailors aren't at the event on the same day. If you add them as a partner, you will need to [edit event days individually](#dealing-with-different-days) to deal with this.
 
-If a sailor isn't listed at all, that means there are no days at the event when both the sailor and their potential partner are there.
+If a sailor isn't listed at all in the dropdown, that means there are no days at the event when both the sailor and their potential partner are there.
 
 When we add a partner, any previous group allocation, boat name, club boat allocation and sail number for the partner that has been added are removed and replaced with those from the relevant sailor. This makes sense, partners should be in the same group and on the same boat! You can save time then by selecting the group, club boat, boat class and sail number before adding a partner.
 
@@ -130,14 +130,40 @@ Note: Why do we see the `Add Hattie.. as new cadet` button for Hector? It's beca
 - add Hattie as a duplicate cadet - the system would warn you about this and hopefully you wouldn't do it! 
 - try and register Harriet to the event. This will throw up an error since Harriet is already registered.
 
+## Subsequent changes to sailing partners
+
+Skipperman doesn't (currently) automatically keep groups, boats classes, club boats or sail numbers aligned in a partnership.
+
+So you will need to manually edit both partners if you make any changes.
+
+## Remove a sailing partner
+
+To remove a sailing partner, just select `Unallocated` or `Singlehander` from the dropdown next to a sailor and press save. You only have to do this on one partner - the other will automatically lose their partner.
+
+Note: There is no difference in behaviour between Unallocated and Singlehander; but marking a cadet as Unallocated is helpful if you need to find a new partner for them.
+
 # Adding a sailor manually
 
-You may also want to add sailors. This is very useful for racing events, when you want to produce an accurate spotter sheet.
+You may also want to add sailors to an event who:
 
-FIXME feature not yet implemented
+- haven't been officially registered. This is very useful for racing events, when you want to produce an accurate spotter sheet.
+- who you know *will* be registered but haven't yet been
+- or you know *has* been registered, but you don't want go through the hassle of [importing data from Wild Apricot](import_registration_data_help.md) 
 
-See [here for more help](manually_adding_a_sailor.md).
+Click on the `Add unregistered sailor` button at the bottom of the sailors table, and then eithier choose an existing sailor, or add a new one.  See [here for more help](manually_adding_a_sailor.md).
 
+Note that adding a sailor manually will set their registration status to 'Manual'. Since there is no registration information, all the registration fields will be blank. 
+
+If the sailor is subsequently registered on Wild Apricot, and the data imported, you will get an error message: 
+
+> `ACTION REQUIRED: Cadet John Smith (2000-01-01) Member appears more than once in WA file with multiple active registrations - ignoring any possible changes made to registration - go to WA and cancel one of the registrations please!`
+
+You have two options:
+
+- Change the original manual registration to `Cancelled` in Skipperman. Then you can re-import the Wild Apricot file with the new registration. This has the disadvantage that you will lose any changes / additional information added in Skipperman. 
+- Ignore the error. This has the disadvantage that you will need to manually update the original manual registration with any relevant information from Wild Apricot.
+
+NOTE: In a future version of Skipperman the system will allow you to replace the manual registration with an official one automatically.
 
 # See more information about a sailor
 
@@ -163,8 +189,57 @@ You should also go the [volunteer rota](volunteer_rota_help.md) and check the [w
 
 # Dealing with different days
 
+Sometimes sailors are awkward, and are in different groups, or sailing with different people on different days.
 
+Consider these four sailors:
 
+***
+***
+![differet_days.png](/static/differet_days.png)
+***
+***
 
+Now suppose that Evie cannot sail on Friday, and nor can Charlie. If we update their availability and save:
 
+***
+***
+![different_days2.png](/static/different_days2.png)
+***
+***
 
+Notice that the two handed partner column for Isabelle and Samuel has changed, reflecting the fact they now no longer have partners on Friday. Also, these are no longer values that can be changed with a dropdown. Instead, we need to click on the `Friday` button above the sailors table:
+
+***
+***
+![different_days_3_1.png](/static/different_days_3_1.png)
+![different_days_3_2.png](/static/different_days_3_2.png)
+![different_days_3_3.png](/static/different_days_3_3.png)
+***
+***
+
+Firstly, notice that Charlie and Evie are shown as not sailing. We could reverse this by clicking on the `Cadet not sailing today - click to change` button, or updating the availability checkboxes.
+
+You can also see that Isabelle and Samuel are now showing as not having sailing partners. If we add Isabelle as a sailing parter to Samuel:
+
+***
+***
+![different_days_4.png](/static/different_days_4.png)
+***
+***
+
+Isabelle has had her original allocations overwritten by Samuels, as normally happens when we [allocate sailing partners](#creating-sailing-partnerships).
+
+Finally, if we click on `Show all day view` we can see the fruits of our labours:
+
+***
+***
+![different_days_5.png](../static/different_days_5.png)
+***
+***
+
+As a general rule then:
+
+- In the 'all day' view we can make changes to all days a sailor is registered for, unless they have different allocations across different days in which case they will be displayed as text which cannot be edited.
+- Changes made in the individual day view will only affect that day
+
+This can also be done with singlehanded sailors, who can be put in different sailing groups and/or in different boats on each day.

@@ -16,6 +16,7 @@ from app.backend.qualifications_and_ticks.progress import (
 from app.backend.qualifications_and_ticks.qualifications_for_cadet import (
     name_of_highest_qualification_for_cadet,
 )
+from app.data_access.configuration.fixed import ADD_KEYBOARD_SHORTCUT
 from app.frontend.forms.reorder_form import reorder_table
 from app.frontend.shared.cadet_state import get_cadet_from_state, is_cadet_set_in_state
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
@@ -112,7 +113,7 @@ def display_form_allocate_cadets_at_event(
 
 
 help_button = HelpButton("group_allocation_help")
-add_button = Button("Add Unregistered Sailor", nav_button=True)
+add_button = Button("Add unregistered sailor", nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT)
 
 nav_bar_top = ButtonBar([cancel_menu_button, save_menu_button, help_button])
 nav_bar_bottom = ButtonBar([cancel_menu_button, save_menu_button, help_button, add_button])

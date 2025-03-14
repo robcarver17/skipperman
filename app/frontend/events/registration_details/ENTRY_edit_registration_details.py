@@ -1,6 +1,8 @@
 from typing import Union
 
-
+from app.data_access.configuration.fixed import ADD_KEYBOARD_SHORTCUT
+from app.frontend.events.registration_details.add_unregistered_cadet import \
+    display_add_unregistered_cadet_from_registration_form
 from app.frontend.events.registration_details.registration_details_form import (
     get_registration_data,
     get_top_row_for_table_of_registration_details,
@@ -20,7 +22,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
     save_menu_button,
-    HelpButton,
+    HelpButton, Button,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
@@ -52,7 +54,7 @@ def display_form_edit_registration_details_given_event_and_sort_order(
     return Form(
         ListOfLines(
             [
-                nav_buttons,
+                nav_buttons_top,
                 _______________,
                 Line(
                     Heading("Registration details for %s" % event, centred=True, size=4)
@@ -62,14 +64,17 @@ def display_form_edit_registration_details_given_event_and_sort_order(
                 _______________,
                 table,
                 _______________,
-                nav_buttons,
+                nav_buttons_bottom,
             ]
         )
     )
 
 
 help_button = HelpButton("registration_editing_help")
-nav_buttons = ButtonBar([cancel_menu_button, save_menu_button, help_button])
+add_button = Button("Add unregistered sailor", nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT)
+
+nav_buttons_top = ButtonBar([cancel_menu_button, save_menu_button, help_button])
+nav_buttons_bottom = ButtonBar([cancel_menu_button, save_menu_button, add_button, help_button])
 
 
 def get_registration_details_inner_form_for_event(
@@ -108,6 +113,8 @@ def post_form_edit_registration_details(
         event = get_event_from_state(interface)
         parse_registration_details_from_form(interface=interface, event=event)
         interface.flush_cache_to_store()
+    elif add_button.pressed(last_button_pressed):
+        return interface.get_new_form_given_function(display_add_unregistered_cadet_from_registration_form)
 
     elif last_button_pressed in all_sort_types:
         ## no change to stage required, just sort order

@@ -74,6 +74,7 @@ from app.frontend.events.group_allocation.add_cadet_partner import (
     display_add_cadet_partner,
     post_form_add_cadet_partner,
 )
+from app.frontend.events.registration_details.add_unregistered_cadet import display_add_unregistered_cadet_from_registration_form, post_form_add_unregistered_cadet_from_registration_form
 from app.frontend.events.volunteer_identification.ENTRY_volunteer_identification import (
     display_form_volunteer_identification,
     post_form_volunteer_identification,
@@ -138,7 +139,7 @@ from app.frontend.events.food.automatically_get_food_data import (
     display_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import,
     post_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import,
 )
-from app.frontend.events.group_allocation.add_unregistered_cadet import display_add_unregistered_cadet, post_form_add_unregistered_cadet
+from app.frontend.events.group_allocation.add_unregistered_cadet import display_add_unregistered_cadet_from_allocation_form, post_form_add_unregistered_cadet_from_allocation_form
 
 event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_functions(
     NestedDictOfMappings(
@@ -221,12 +222,14 @@ event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_func
                     },
                     (display_form_allocate_cadets, post_form_allocate_cadets): {
                         (display_add_cadet_partner, post_form_add_cadet_partner): 0,
-                        (display_add_unregistered_cadet, post_form_add_unregistered_cadet):0
+                        (display_add_unregistered_cadet_from_allocation_form, post_form_add_unregistered_cadet_from_allocation_form):0
                     },
                     (
                         display_form_edit_registration_details,
                         post_form_edit_registration_details,
-                    ): 0,
+                    ): {
+                        (display_add_unregistered_cadet_from_registration_form, post_form_add_unregistered_cadet_from_registration_form): 0
+                    },
                     (
                         display_form_view_for_volunteer_rota,
                         post_form_view_for_volunteer_rota,

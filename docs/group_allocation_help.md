@@ -27,7 +27,8 @@ From the left, the columns in the sailors table are:
 - A button with the sailors name, DOB and membership status on. Click to [see more details about a sailor](#see-more-information-about-a-sailor).
 - Some checkboxes to set the [sailors availability at the event](#changing-sailor-availability)
 - The groups they were at for the previous three events in the Skipperman data. 
-- Relevant information for allocating their group. This will depend on what is in the registration form, and the [field mappings](WA_field_mapping_help.md) used to import the data.
+- Relevant information for allocating their group which has been entered in the registration form. This will depend on what is in the registration form, and the [field mappings](WA_field_mapping_help.md) used to import the data.
+- The highest qualification that the Cadet has achieved.
 - A notes field - enter any relevant information about the sailor that will be a useful aide memoire. Do not use for health information (that is on the [registration editing page](registration_editing_help.md))
 - Allocate: group. A dropdown for [allocating training and racing groups](#allocating-groups-club-boats-and-boat-classes-and-editing-sail-numbers)
 - Allocate: class of boat. A dropdown for [allocating the class of boat they wish to sail](#allocating-groups-club-boats-and-boat-classes-and-editing-sail-numbers)

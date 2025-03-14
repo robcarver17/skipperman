@@ -1,5 +1,9 @@
 from typing import List, Dict
 
+from app.backend.registration_data.cadet_registration_data import add_empty_row_to_raw_registration_data_and_return_row, \
+    add_new_cadet_to_event_from_row_in_registration_data
+from app.backend.registration_data.identified_cadets_at_event import add_identified_cadet_and_row
+
 from app.objects.exceptions import arg_not_passed
 
 from app.objects.cadets import ListOfCadets, Cadet
@@ -181,3 +185,25 @@ def cadet_availability_at_event(
     return dict_of_all_event_data.event_data_for_cadet(
         cadet
     ).registration_data.availability
+
+
+def add_new_cadet_manually_to_event(
+    object_store: ObjectStore,
+    new_cadet: Cadet,
+    event: Event,
+):
+    new_row = add_empty_row_to_raw_registration_data_and_return_row(
+        object_store=object_store,
+        event=event,
+    )
+
+    add_identified_cadet_and_row(
+        object_store=object_store, event=event, row_id=new_row.row_id, cadet=new_cadet
+    )
+
+    add_new_cadet_to_event_from_row_in_registration_data(
+        object_store=object_store,
+        event=event,
+        row_in_registration_data=new_row,
+        cadet=new_cadet,
+    )

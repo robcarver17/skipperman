@@ -1,8 +1,10 @@
+import datetime
 from copy import copy
 from random import random
 from typing import List
 import pandas as pd
 
+from app.data_access.configuration.field_list_groups import FIELDS_WITH_DATES, FIELDS_WITH_DATETIMES
 from app.objects.generic_list_of_objects import (
     GenericListOfObjects,
     create_list_of_objects_from_dataframe,
@@ -12,6 +14,7 @@ from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.registration_status import (
     RegistrationStatus,
     empty_status,
+manual_status
 )
 from app.objects.utils import (
     clean_up_dict_with_nans,
@@ -23,7 +26,7 @@ from app.data_access.configuration.field_list import (
     VOLUNTEER_STATUS,
     _ROW_ID,
     _REGISTRATION_STATUS,
-    _SPECIAL_FIELDS,
+    _SPECIAL_FIELDS, REGISTRATION_DATE,
 )
 from app.objects.exceptions import missing_data, arg_not_passed
 
@@ -74,9 +77,19 @@ class RowInRegistrationData(GenericSkipperManObject, dict):
         return new_dict
 
     @classmethod
-    def from_external_dict(cls, some_dict: dict):
-        some_dict = clean_up_dict_with_nans(some_dict)
-        return cls(some_dict)
+    def create_empty_with_manual_status_set(cls, fields: List[str], row_id:str, registration_date: datetime.datetime):
+        as_a_dict = dict([(key, '') for key in fields])
+
+        for key in as_a_dict.keys():
+            if key==REGISTRATION_DATE:
+                as_a_dict[key] = registration_date
+
+        as_a_dict[_ROW_ID] = row_id
+        as_a_dict[_REGISTRATION_STATUS] = manual_status.name
+
+
+        return RowInRegistrationData.from_dict_of_str(as_a_dict)
+
 
     def as_dict(self) -> dict:
         row_as_dict = dict(self)
@@ -100,8 +113,7 @@ class RowInRegistrationData(GenericSkipperManObject, dict):
 
     def replace_row_id_by_adding_random_number(self):
         existing_row_id = self.row_id
-        add_on = str(int(random() * 100))
-        self.row_id = existing_row_id + "_" + add_on
+        self.row_id = replace_row_id_by_adding_random_number(existing_row_id)
 
     @property
     def registration_status(self) -> RegistrationStatus:
@@ -178,6 +190,16 @@ class RegistrationDataForEvent(GenericListOfObjects):
 
         return df
 
+    def list_of_fields(self) -> List[str]:
+        df = self.as_df_of_str()
+
+        return list(df.columns)
+
+    def new_unique_row_id(self) -> str:
+        list_of_row_ids = self.list_of_row_ids()
+
+        return get_new_row_id_not_in_existing_list(list_of_row_ids)
+
     @classmethod
     def from_df(cls, some_df: pd.DataFrame):
         list_of_dicts = [
@@ -215,3 +237,17 @@ def summarise_status(mapped_event: RegistrationDataForEvent) -> dict:
 
 def get_volunteer_status_from_row(row: RowInRegistrationData):
     return row.get_item(VOLUNTEER_STATUS, "")
+
+def replace_row_id_by_adding_random_number(existing_row_id):
+    add_on = str(int(random() * 100))
+    return existing_row_id + "_" + add_on
+
+def get_new_row_id_not_in_existing_list(list_of_row_ids: List[str]):
+    not_unique = True
+    while not_unique:
+        new_row_id = "Manual_registration_%s" % str(int(random()*100000))
+        if new_row_id in list_of_row_ids:
+            continue
+        else:
+            return new_row_id
+

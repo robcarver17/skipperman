@@ -1,3 +1,33 @@
+
+# to do next
+Before first event is run
+- group allocation help
+- registration editing help
+- summary / role not accurate in small numbers #62
+- copy / overwrite logic needs checking #61
+- volunteer rota warnings not working for attendance mismatch
+- make it easier to find cadets/volunteers when looking at all of them #58
+- option to add registration manually, with help, on both registration and group allocation #39
+- add guess boat button #40
+- add raincheck all button to volunteers in rota page #59
+- report reset print options to defaults, different defaults for report types #53
+- documentation for reporting #49
+
+in near future
+- instructors can do attendance online
+- add inactive cadets to group page with option to change status #42
+- merge cadet, merge volunteer #15
+- sort order refresh without clicking triangle
+- delete empty event, empty cadet, empty volunteer #26
+- edit event name #16 (don't allow days to be changed - delete instead)
+
+Before Cadet week
+- food add non registered #28
+- food documentation #49
+- clothing documentation #49
+- add food / clothing to giant data dump #54
+- add missing stuff to data dumps #55
+
 # Recent
 
 - Helpful error mesage if adding a two handed partner who is already registered

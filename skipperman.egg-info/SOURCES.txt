@@ -319,6 +319,7 @@ app/frontend/events/food/../../../data_access/configuration/configuration.yaml
 app/frontend/events/group_allocation/ENTRY_allocate_cadets_to_groups.py
 app/frontend/events/group_allocation/__init__.py
 app/frontend/events/group_allocation/add_cadet_partner.py
+app/frontend/events/group_allocation/add_unregistered_cadet.py
 app/frontend/events/group_allocation/input_fields.py
 app/frontend/events/group_allocation/parse_allocation_form.py
 app/frontend/events/group_allocation/render_allocation_form.py

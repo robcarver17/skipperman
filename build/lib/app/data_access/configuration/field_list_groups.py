@@ -7,21 +7,6 @@ from app.data_access.configuration.field_list import *
 
 ## Required to get this to work
 from app.data_access.configuration import field_list
-from app.data_access.configuration.field_list import (
-    VOLUNTEER1_NAME,
-    VOLUNTEER1_DUTIES,
-    VOLUNTEER1_SAME_OR_VARIED,
-    VOLUNTEER1_FOOD_PREFERENCE,
-    VOLUNTEER2_AVAILABILITY,
-    VOLUNTEER2_WEEKEND_AVAILABILITY,
-    VOLUNTEER2_NAME,
-    VOLUNTEER2_DUTIES,
-    VOLUNTEER2_SAME_OR_VARIED,
-    VOLUNTEER2_FOOD_PREFERENCE,
-    REGISTRATION_TOTAL_FEE,
-    REGISTRATION_INTERNAL_NOTES,
-    CADET_FOOD_PREFERENCE,
-)
 
 all_fields = dir(field_list)
 ALL_FIELDS_EXPECTED_IN_WA_FILE_MAPPING = [

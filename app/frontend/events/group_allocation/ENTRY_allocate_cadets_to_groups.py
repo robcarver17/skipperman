@@ -1,6 +1,7 @@
 from typing import Union
 
 from app.backend.events.list_of_events import get_list_of_events
+from app.frontend.events.group_allocation.add_unregistered_cadet import display_add_unregistered_cadet
 from app.frontend.forms.reorder_form import (
     list_of_button_names_given_group_order,
     reorderFormInterface,
@@ -31,6 +32,7 @@ from app.frontend.events.group_allocation.render_allocation_form import (
     get_list_of_all_cadet_buttons,
     cadet_id_from_cadet_button,
     reset_day_button,
+    add_button
 )
 from app.frontend.events.group_allocation.input_fields import (
     cadet_id_given_partner_button,
@@ -72,6 +74,8 @@ def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewFo
     elif save_menu_button.pressed(last_button):
         ## This also saves the stored data in interface otherwise we don't do it later if add partner button saved
         update_data_given_allocation_form(interface)
+    elif add_button.pressed(last_button):
+        return interface.get_new_form_given_function(display_add_unregistered_cadet)
 
     elif was_add_partner_button(interface):
         ### SAVE CADET ID TO GET PARTNER FOR

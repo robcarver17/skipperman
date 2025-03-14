@@ -93,7 +93,7 @@ def display_form_allocate_cadets_at_event(
     return Form(
         ListOfLines(
             [
-                nav_bar,
+                nav_bar_top,
                 Heading("Cadets in %s " % str(event), size=4),
                 _______________,
                 _______________,
@@ -104,14 +104,18 @@ def display_form_allocate_cadets_at_event(
                 Line("Click on a cadet name to show all previous events"),
                 inner_form,
                 _______________,
-                nav_bar,
+
+                nav_bar_bottom,
             ]
         )
     )
 
 
 help_button = HelpButton("group_allocation_help")
-nav_bar = ButtonBar([cancel_menu_button, save_menu_button, help_button])
+add_button = Button("Add Unregistered Sailor", nav_button=True)
+
+nav_bar_top = ButtonBar([cancel_menu_button, save_menu_button, help_button])
+nav_bar_bottom = ButtonBar([cancel_menu_button, save_menu_button, help_button, add_button])
 
 
 def get_day_buttons(interface: abstractInterface) -> Line:

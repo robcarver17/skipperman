@@ -1,8 +1,6 @@
 
 # to do next
 Before first racing event is run
-- copy / overwrite logic needs checking #61
-- volunteer rota warnings not working for attendance mismatch
 - make it easier to find cadets/volunteers when looking at all of them #58
 - add guess boat button #40
 - add raincheck all button to volunteers in rota page #59

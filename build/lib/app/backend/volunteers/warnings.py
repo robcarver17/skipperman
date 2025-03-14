@@ -1,10 +1,10 @@
 from copy import copy
-from typing import List, Callable
+from typing import List, Callable, Dict
 
 from app.objects.composed.volunteer_roles import (
     empty_if_qualified_for_role_else_warnings,
 )
-
+from app.objects.composed.volunteers_at_event_with_registration_data import RegistrationDataForVolunteerAtEvent
 
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
 from app.objects.volunteers import Volunteer
@@ -38,10 +38,9 @@ from app.objects.cadets import (
     Cadet,
     cadet_is_too_young_to_be_without_parent,
 )
-from app.objects.day_selectors import empty_day_selector
+from app.objects.day_selectors import empty_day_selector, Day, DaySelector
 from app.objects.events import Event
 from app.objects.registration_data import get_volunteer_status_from_row
-from build.lib.app.frontend.administration.users.render_users_form import warning_text
 
 
 def warn_on_all_volunteers_availability(
@@ -188,7 +187,6 @@ def warn_about_single_volunteer_availablity_at_event(
 
     if len(active_connected_cadets) == 0:
         return ""
-
     return warn_about_volunteer_availablity_at_event_with_connected_cadets(
         event=event,
         volunteer=volunteer,
@@ -211,34 +209,97 @@ def warn_about_volunteer_availablity_at_event_with_connected_cadets(
     volunteer_registration_data = volunteer_event_data.registration_data
     warnings = []
     for day in event.days_in_event():
-        volunteer_available_on_day = (
-            volunteer_registration_data.availablity.available_on_day(day)
+        warnings = warning_about_volunteer_availability_on_specific_day(
+            volunteer=volunteer,
+            volunteer_registration_data=volunteer_registration_data,
+            active_connected_cadets=active_connected_cadets,
+            cadet_at_event_availability=cadet_at_event_availability,
+            day=day,
+            warnings=warnings
         )
-        list_of_cadets_available_on_day = [
-            cadet
+
+    warnings = add_notes_to_warnings_on_availability(volunteer=volunteer, volunteer_registration_data=volunteer_registration_data, warnings=warnings)
+
+    return warnings
+
+def warning_about_volunteer_availability_on_specific_day(volunteer: Volunteer,
+        volunteer_registration_data: RegistrationDataForVolunteerAtEvent,
+                                                         active_connected_cadets: ListOfCadets,
+                                                         cadet_at_event_availability: Dict[Cadet, DaySelector],
+                                                         day: Day,
+                                                         warnings: List[str]):
+    volunteer_available_on_day = (
+        volunteer_registration_data.availablity.available_on_day(day)
+    )
+    list_of_cadets_available_on_day = get_list_of_cadets_available_on_day(
+        cadet_at_event_availability=cadet_at_event_availability,
+        active_connected_cadets=active_connected_cadets,
+        day=day
+    )
+    any_cadet_available_on_day = len(list_of_cadets_available_on_day) > 0
+
+    print("%s availablity %s cadet availablity %s on %s" % (volunteer.name, volunteer_available_on_day, any_cadet_available_on_day, day.name))
+    if volunteer_available_on_day and not any_cadet_available_on_day:
+        new_warning = warning_if_volunteer_present_and_not_cadet(active_connected_cadets=active_connected_cadets,
+                                                                 list_of_cadets_available_on_day=list_of_cadets_available_on_day,
+                                                                 day=day)
+        warnings.append(new_warning)
+
+    elif not volunteer_available_on_day and any_cadet_available_on_day:
+        new_warning = warning_if_cadet_present_and_no_volunteers(list_of_cadets_available_on_day=list_of_cadets_available_on_day,
+                                                                 day=day)
+        warnings.append(new_warning)
+
+    return warnings
+
+def get_list_of_cadets_available_on_day(cadet_at_event_availability: Dict[Cadet, DaySelector],
+                                                active_connected_cadets: ListOfCadets,
+                                                         day: Day,) -> ListOfCadets:
+    list_of_cadets_available_on_day = [
+        cadet
+        for cadet in active_connected_cadets
+        if is_cadet_available_on_day(cadet=cadet, cadet_at_event_availability=cadet_at_event_availability, day=day)
+    ]
+
+    return ListOfCadets(list_of_cadets_available_on_day)
+
+
+def is_cadet_available_on_day(cadet_at_event_availability: Dict[Cadet, DaySelector],
+                              cadet: Cadet,
+                                                         day: Day,) -> bool:
+    availability_for_cadet = cadet_at_event_availability.get(cadet, empty_day_selector)
+
+    return availability_for_cadet.available_on_day(day)
+
+def warning_if_volunteer_present_and_not_cadet(active_connected_cadets: ListOfCadets, list_of_cadets_available_on_day: ListOfCadets, day: Day)-> str:
+    missing_cadet_names = ", ".join(
+        get_cadet_names_who_are_connected_but_not_available_on_day(active_connected_cadets=active_connected_cadets,
+                                                                   list_of_cadets_available_on_day=list_of_cadets_available_on_day)
+    )
+    return (
+        "On %s volunteer attending; but associated sailors %s are not attending"
+        % (day.name.upper(), missing_cadet_names)
+    )
+
+def get_cadet_names_who_are_connected_but_not_available_on_day(active_connected_cadets: ListOfCadets, list_of_cadets_available_on_day: ListOfCadets, ):
+    missing_cadet_names = \
+        [
+            cadet.name
             for cadet in active_connected_cadets
-            if cadet_at_event_availability.get(
-                cadet, empty_day_selector
-            ).available_on_day(day)
+            if cadet not in list_of_cadets_available_on_day
         ]
 
-        any_cadet_available_on_day = len(list_of_cadets_available_on_day) > 0
+    return missing_cadet_names
 
-        if volunteer_available_on_day == any_cadet_available_on_day:
-            continue
 
-        if not any_cadet_available_on_day:
-            missing_cadet_names = ", ".join(
-                [
-                    cadet.name
-                    for cadet in active_connected_cadets
-                    if cadet not in list_of_cadets_available_on_day
-                ]
-            )
-            warnings.append(
-                "On %s volunteer attending; but associated sailors %s are not attending"
-                % (day.name.upper(), missing_cadet_names)
-            )
+def warning_if_cadet_present_and_no_volunteers(list_of_cadets_available_on_day: ListOfCadets, day: Day) -> str:
+    names_of_attending_cadets = [cadet.name for cadet in list_of_cadets_available_on_day]
+    joined_names = ", ".join(names_of_attending_cadets)
+
+    return "On %s, sailors are attending but volunteer is not: %s" % (day.name.upper(), joined_names)
+
+
+def add_notes_to_warnings_on_availability(volunteer: Volunteer, volunteer_registration_data: RegistrationDataForVolunteerAtEvent, warnings: List[str]) -> str:
 
     notes = copy(volunteer_registration_data.notes)
     if len(notes) > 0:
@@ -250,7 +311,6 @@ def warn_about_volunteer_availablity_at_event_with_connected_cadets(
         return "%s %s %s" % (prefix, warnings_str, notes)
     else:
         return ""
-
 
 def warn_about_single_volunteer_with_no_cadet_at_event(
     volunteer: Volunteer,

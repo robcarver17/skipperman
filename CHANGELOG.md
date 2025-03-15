@@ -24,6 +24,10 @@ Before Cadet week
 - add food / clothing to giant data dump #54
 - add missing stuff to data dumps #55
 
+# Recent
+
+- better handling of discrepancies in membership list upload
+
 # Version 2.1
 
 - fixed summary by role/group not accurate in rota by adding no group

@@ -238,7 +238,6 @@ def warning_about_volunteer_availability_on_specific_day(volunteer: Volunteer,
     )
     any_cadet_available_on_day = len(list_of_cadets_available_on_day) > 0
 
-    print("%s availablity %s cadet availablity %s on %s" % (volunteer.name, volunteer_available_on_day, any_cadet_available_on_day, day.name))
     if volunteer_available_on_day and not any_cadet_available_on_day:
         new_warning = warning_if_volunteer_present_and_not_cadet(active_connected_cadets=active_connected_cadets,
                                                                  list_of_cadets_available_on_day=list_of_cadets_available_on_day,

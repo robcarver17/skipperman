@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.backend.cadets.add_edit_cadet import add_new_verified_cadet
+from app.backend.cadets.add_edit_cadet import add_new_verified_cadet, modify_cadet, modify_cadet_date_of_birth
 
 from app.backend.cadets.iterate_over_membership_list import (
     set_all_current_members_to_temporary_unconfirmed,
@@ -146,7 +146,7 @@ def display_verify_adding_cadet_from_list_form(interface: abstractInterface) -> 
 provided_header_text = ListOfLines(
     [
         ButtonBar([HelpButton("import_membership_list_help")]),
-        "Looks like a cadet in the membership list is very similar to some existing cadets. Click on the existing cadet that matches this one (this will verify they are a member), or add cadet if really a new member,",
+        "Looks like a cadet in the membership list is very similar to some existing cadets. Click on the existing cadet that matches this one (this will verify they are a member), or add cadet if really a new member",
     ]
 )
 
@@ -189,13 +189,38 @@ def confirm_selected_cadet_is_member(interface):
     existing_cadet = get_cadet_from_list_of_cadets_given_str_of_cadet(
         object_store=interface.object_store, cadet_selected=cadet_selected_as_str
     )
+    cadet_in_file = get_cadet_from_temp_file_and_state(interface)
 
+    change_or_warn_on_discrepancy(interface=interface, cadet_in_file=cadet_in_file, existing_cadet=existing_cadet)
     mark_existing_cadet_as_member_and_log(interface=interface, cadet=existing_cadet)
 
     interface.flush_cache_to_store()
 
     return next_iteration_over_rows_in_temp_cadet_file(interface)
 
+def change_or_warn_on_discrepancy(interface: abstractInterface, existing_cadet: Cadet, cadet_in_file: Cadet):
+    if existing_cadet.name!= cadet_in_file.name:
+        interface.log_error("Uploaded membership list has name %s, existing Skipperman data has name %s - not changing; but consider if Skipperman is correct (fine if a nickname)" % (
+            existing_cadet.name,
+            cadet_in_file.name
+        ))
+
+    if existing_cadet.date_of_birth!=cadet_in_file.date_of_birth:
+        if existing_cadet.has_default_date_of_birth:
+            new_date_of_birth = cadet_in_file.date_of_birth
+            interface.log_error("Existing skipperman data has no date of birth for %s, updating to DOB in membership file of %s" % (
+                existing_cadet.name,
+                new_date_of_birth
+            ))
+            modify_cadet_date_of_birth(object_store=interface.object_store, existing_cadet=existing_cadet, new_date_of_birth=new_date_of_birth)
+        else:
+            interface.log_error(
+                "Discrepancy in dates of birth for %s between Skipperman data %s and DOB in membership file %s - find out what is correct and edit Skipperman if required" % (
+                    existing_cadet.name,
+                    str(existing_cadet.date_of_birth),
+                    str(cadet_in_file.date_of_birth)
+                )
+            )
 
 def process_form_when_verified_cadet_to_be_added(interface: abstractInterface) -> Form:
     try:
@@ -289,7 +314,7 @@ def set_all_unconfirmed_members_to_lapsed_and_log(interface: abstractInterface):
     )
     for cadet in lapsed_members:
         interface.log_error(
-            "Cadet %s is not in membership list and has been marked as lapsed: no longer a cadet member"
+            "Existing sailor %s who was a member is not in membership list and has been marked as lapsed: no longer a member"
             % cadet
         )
 
@@ -298,6 +323,6 @@ def set_all_unconfirmed_members_to_lapsed_and_log(interface: abstractInterface):
     )
     for cadet in not_members:
         interface.log_error(
-            "Cadet %s is not in membership list and has been marked as a non member"
+            "Unconfirmed sailor %s is not in membership list and has been marked as a non member"
             % cadet
         )

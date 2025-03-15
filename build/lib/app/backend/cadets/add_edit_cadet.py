@@ -1,3 +1,6 @@
+import datetime
+from copy import copy
+
 from app.data_access.store.object_store import ObjectStore
 
 from app.backend.cadets.list_of_cadets import (
@@ -24,6 +27,16 @@ def modify_cadet(object_store: ObjectStore, existing_cadet: Cadet, new_cadet: Ca
     update_list_of_cadets(
         object_store=object_store, updated_list_of_cadets=list_of_cadets
     )
+
+def modify_cadet_date_of_birth(object_store: ObjectStore, existing_cadet: Cadet, new_date_of_birth: datetime.date):
+    new_cadet= copy(existing_cadet)
+    new_cadet.date_of_birth = new_date_of_birth
+    list_of_cadets = get_list_of_cadets(object_store)
+    list_of_cadets.update_cadet(existing_cadet=existing_cadet, new_cadet=new_cadet)
+    update_list_of_cadets(
+        object_store=object_store, updated_list_of_cadets=list_of_cadets
+    )
+
 
 
 def verify_cadet_and_return_warnings(object_store: ObjectStore, cadet: Cadet) -> str:

@@ -26,9 +26,11 @@ We don't have to do anything - the sailor has the correct membership status alre
 
 *If a sailor is in the membership list, and an identical sailor is already in the system marked as an unconfirmed member*
 
-This is likely to happen if a sailor was originally added to the system as part of an event but we didn't know if they were members or not. The sailor is marked in the system as a member
+This is likely to happen if a sailor was originally added to the system as part of an event but we didn't know if they were members or not. The sailor is marked in the system as a member.
 
-*If a sailor is in the membership list, and an identical sailor is already in the system marked as a non-member, unconfirmed or lapsed member*
+*If a sailor is in the membership list, and an identical sailor is already in the system marked as a non-member
+
+The sailor has joined the club. We mark them as current members.
 
 *If a sailor is in the membership list, and an identical sailor is already in the system marked as a lapsed member*
 
@@ -36,13 +38,13 @@ Looks like the sailor has rejoined - we mark them as current members.
 
 *If a sailor is in the system as a current member, but doesn't appear in the imported membership list*
 
-This is likely to happen if a sailor doesn't renew their membership, or if the imported list only includes sailor members but the relevant sailor as 'aged out'. The sailor is marked as a lapsed member. 
+This is likely to happen if a sailor doesn't renew their membership, or if the imported list only includes cadet members and the relevant sailor is 'aged out'. The sailor is marked as a lapsed member. Since aged out (junior) members don't do training weekends or cadet weeks, just racing events, this isn't a problem.
 
 *If a sailor is in the system as an unconfirmed member, but doesn't appear in the imported membership list*
 
 This is likely to happen if a sailor was originally added to the system as part of an event but we didn't know if they were members or not. The sailor is confirmed in the system as a none member.
 
-*If a sailor is in the  imported membership list, and there are no similar sailors in the system*
+*If a sailor is in the imported membership list, and there are no similar sailors in the system*
 
 This is likely to happen if a sailor has just joined, but hasn't yet done any events. The sailor is added to the system as a new sailor, and marked as a member.
 
@@ -53,7 +55,37 @@ You will be asked to confirm eithier:
 - Which of the similar sailors in the system the imported list is referring to. This happens when the membership list and the database have different names, or dates or birth.  
 - To add a new sailor if this is definitely not one of the existing sailors.  
 
-## A note about adding sailors
+## If it's an existing member
+
+Click on the name of the existing member. You will see one or more warnings:
+
+### Existing member with a different name
+
+> `Uploaded membership list has name John Smith, existing Skipperman data has name Jonny Smith - not changing; but consider if Skipperman is correct (fine if a nickname)`
+
+This could be fine - the precise name sailors prefer to be known by might be different to the official name in the membership list. 
+
+But please encourage parents to use the name in Skipperman when registering and to be consistent, otherwise you will have to keep manually confirming the sailor when importing event data.
+
+Of course if it's a genuine error in the Skipperman data then you should fix it by [editing the sailor](view_and_edit_individual_cadet_help.md).
+
+### Existing member with a default date of birth
+
+> `Existing skipperman data has no date of birth for Jane Smith, updating to DOB in membership file of 2008-01-01`
+
+If we add a sailor to Skipperman in a racing event, then there is no date of birth available. If we then get a date of birth from the membership list, we can update Skipperman accordingly.
+
+
+### Existing member with a different date of birth
+
+> `Discrepancy in dates of birth for Robert Torrance between Skipperman data 2007-02-02 and DOB in membership file 2007-02-03 - find out what is correct and edit Skipperman if required`
+
+This is more serious - it's important that the date of birth is accurate or you will keep having to manually identify the cadet every time there is an event import. 
+
+Eithier the official membership list is wrong (it does happen) - in which case get it corrected. Or the initial addition of the sailor to Skipperman was done with the wrong date of birth: then you should fix it in Skipperman by [editing the sailor](view_and_edit_individual_cadet_help.md).
+
+
+## If you add a new sailor
 
 Sailors can be added to the Skipperman database in one of three ways:
 

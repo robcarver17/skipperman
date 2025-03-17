@@ -27,12 +27,11 @@ from app.frontend.form_handler import (
     button_error_and_back_to_initial_state_form,
 )
 
-header_text = ListOfLines([ButtonBar([HelpButton("add_cadet_help")])])
 
 
 def display_form_add_cadet(interface: abstractInterface) -> Union[Form, NewForm]:
     return get_add_cadet_form(
-        interface=interface, first_time_displayed=True, header_text=header_text
+        interface=interface, first_time_displayed=True, help_string='add_cadet_help'
     )
 
 
@@ -42,7 +41,7 @@ def post_form_add_cadets(interface: abstractInterface) -> Union[Form, NewForm]:
     if check_details_button.pressed(last_button_pressed):
         ## verify results, display form again
         return get_add_cadet_form(
-            interface=interface, first_time_displayed=False, header_text=header_text
+            interface=interface, first_time_displayed=False, help_string='add_cadet_help'
         )
 
     elif final_submit_button.pressed(last_button_pressed):

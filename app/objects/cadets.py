@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import datetime
+from typing import List
 
 from app.data_access.configuration.configuration import (
     SIMILARITY_LEVEL_TO_WARN_DATE,
@@ -142,6 +143,7 @@ class Cadet(GenericSkipperManObjectWithIds):
     def similarity_name(self, other_cadet: "Cadet") -> float:
         return similar(self.name, other_cadet.name)
 
+
     def similarity_surname(self, other_cadet: "Cadet") -> float:
         return similar(self.surname, other_cadet.surname)
 
@@ -268,6 +270,20 @@ class ListOfCadets(GenericListOfObjectsWithIds):
             else:
                 return default
 
+    def sort_by_similarity_name_against_cadet(self, cadet: Cadet):
+        similarity_scores_and_cadets = [dict(cadet=cadet_in_list, score=cadet.similarity_name(cadet_in_list)) for cadet_in_list in self]
+        return self._sort_by_similarity_given_scores(similarity_scores_and_cadets)
+
+    def sort_by_similarity_dob_against_cadet(self, cadet: Cadet):
+        similarity_scores_and_cadets = [dict(cadet=cadet_in_list, score=cadet.similarity_dob(cadet_in_list)) for cadet_in_list in self]
+        return self._sort_by_similarity_given_scores(similarity_scores_and_cadets)
+
+    def _sort_by_similarity_given_scores(self, similarity_scores_and_cadets: List[dict]):
+        sorted_similarity_scores_and_cadets = sorted(similarity_scores_and_cadets, key=lambda x: x.score)
+        sorted_cadets = [score_and_cadet['cadet'] for score_and_cadet in sorted_similarity_scores_and_cadets]
+
+        return ListOfCadets(sorted_cadets)
+
     def sort_by_surname(self):
         return ListOfCadets(sorted(self, key=lambda x: x.surname))
 
@@ -345,6 +361,7 @@ class ListOfCadets(GenericListOfObjectsWithIds):
 
         return ListOfCadets(similar_surnames)
 
+
     def cadet_with_id(self, cadet_id: str, default=arg_not_passed) -> Cadet:
         if cadet_id == test_cadet_id:
             return test_cadet
@@ -385,7 +402,8 @@ test_cadet_id = test_cadet.id
 
 
 def sort_a_list_of_cadets(
-    master_list: ListOfCadets, sort_by: str = arg_not_passed
+    master_list: ListOfCadets, sort_by: str = arg_not_passed,
+        similar_cadet: Cadet = arg_not_passed
 ) -> ListOfCadets:
     if sort_by is arg_not_passed:
         return master_list
@@ -397,11 +415,18 @@ def sort_a_list_of_cadets(
         return master_list.sort_by_dob_asc()
     elif sort_by == SORT_BY_DOB_DSC:
         return master_list.sort_by_dob_desc()
+    elif sort_by == SORT_BY_SIMILARITY_NAME:
+        return master_list.sort_by_similarity_name_against_cadet(cadet=similar_cadet)
+    elif sort_by == SORT_BY_SIMILARITY_DOB:
+        return master_list.sort_by_similarity_dob_against_cadet(cadet=similar_cadet)
     else:
-        return master_list
+        raise Exception("Sort order %s not known" % sort_by)
+
 
 
 SORT_BY_SURNAME = "Sort by surname"
 SORT_BY_FIRSTNAME = "Sort by first name"
 SORT_BY_DOB_ASC = "Sort by date of birth, ascending"
 SORT_BY_DOB_DSC = "Sort by date of birth, descending"
+SORT_BY_SIMILARITY_DOB = "Sort by similarity of DOB"
+SORT_BY_SIMILARITY_NAME = "Sort by similarity of name"

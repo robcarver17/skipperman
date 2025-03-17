@@ -46,6 +46,7 @@ def display_form_edit_individual_cadet(
 
     list_of_lines_inside_form = ListOfLines(
         [
+            ButtonBar([help_button]),
             "Edit sailor",
             _______________,
             form_fields,
@@ -57,6 +58,8 @@ def display_form_edit_individual_cadet(
     )
 
     return Form(list_of_lines_inside_form)
+
+help_button = HelpButton("view_and_edit_individual_cadet_help")
 
 
 def post_form_edit_individual_cadet(
@@ -91,4 +94,3 @@ def modify_cadet_given_form_contents(interface: abstractInterface):
     )
 
 
-help_button = HelpButton("view_and_edit_individual_cadet_help")

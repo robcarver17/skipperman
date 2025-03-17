@@ -54,11 +54,13 @@ def get_add_cadet_form(
     interface: abstractInterface,
     header_text: ListOfLines = arg_not_passed,
     first_time_displayed: bool = True,
+    help_string: str = arg_not_passed,
 ) -> Form:
     if first_time_displayed:
         footer_buttons = get_footer_buttons_for_add_cadet_form(form_is_empty=True)
         return get_add_cadet_form_with_information_passed(
-            footer_buttons=footer_buttons, header_text=header_text
+            footer_buttons=footer_buttons, header_text=header_text,
+            help_string=help_string
         )
     else:
         cadet_and_text = verify_form_with_cadet_details(interface)
@@ -71,6 +73,7 @@ def get_add_cadet_form(
             header_text=header_text,
             cadet_and_text=cadet_and_text,
             footer_buttons=footer_buttons,
+            help_string=help_string
         )
 
 
@@ -79,17 +82,23 @@ default_header = ListOfLines(["Add a new sailor"])
 
 def get_add_cadet_form_with_information_passed(
     footer_buttons: Union[Line, ListOfLines, ButtonBar],
+        help_string: str = arg_not_passed,
     header_text: ListOfLines = arg_not_passed,
     cadet_and_text: CadetAndVerificationText = default_cadet_and_text,
 ) -> Form:
     if header_text is arg_not_passed:
         header_text = default_header
+    if help_string is arg_not_passed:
+        nav_bar = ''
+    else:
+        nav_bar =         ButtonBar([HelpButton(help_string)])
 
     form_fields = form_fields_for_add_cadet(cadet_and_text.cadet)
 
     list_of_lines_inside_form = ListOfLines(
-        header_text
-        + [
+         [
+            nav_bar]+
+        header_text+[
             _______________,
             _______________,
             form_fields,

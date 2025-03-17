@@ -31,6 +31,7 @@ PUBLIC_WEB_PATH = "%s/%s/" % (HOMEPAGE, PUBLIC_REPORTING_SUBDIRECTORY)
 SIMILARITY_LEVEL_TO_WARN_NAME = configuration[
     "similarity_level_to_warn_when_comparing_names"
 ]
+SIMILARITY_LEVEL_TO_WARN_NAME_ON_MATCHING_MEMBERSHIP_LIST = SIMILARITY_LEVEL_TO_WARN_NAME*.7
 SIMILARITY_LEVEL_TO_WARN_DATE = configuration[
     "similarity_level_to_warn_when_comparing_dates"
 ]

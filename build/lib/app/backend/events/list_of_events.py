@@ -78,12 +78,13 @@ ALL_EVENTS = 99999999999999
 
 def get_list_of_last_N_events(
     object_store: ObjectStore,
-    excluding_event: Event,
+    excluding_event: Event = arg_not_passed,
     only_events_before_excluded_event: bool = True,
     N_events: int = ALL_EVENTS,
 ) -> ListOfEvents:
+
     list_of_events = copy(get_list_of_events(object_store))
-    list_of_events = remove_event_and_possibly_past_events(
+    list_of_events = remove_event_and_possibly_past_events_and_sort(
         list_of_events,
         excluding_event=excluding_event,
         only_events_before_excluded_event=only_events_before_excluded_event,
@@ -96,27 +97,34 @@ def get_list_of_last_N_events(
     return list_of_events
 
 
-def remove_event_and_possibly_past_events(
+def remove_event_and_possibly_past_events_and_sort(
     list_of_events: ListOfEvents,
-    excluding_event: Event,
+    excluding_event: Event = arg_not_passed,
     only_events_before_excluded_event: bool = True,
 ):
     list_of_events_sorted_by_date_desc = (
         list_of_events.sort_by_start_date_asc()
     )  ## newest last
 
-    if excluding_event is not arg_not_passed:
-        idx_of_event = list_of_events_sorted_by_date_desc.index_of_id(
-            excluding_event.id
-        )
-        if only_events_before_excluded_event:
-            list_of_events_sorted_by_date_desc = list_of_events_sorted_by_date_desc[
-                :idx_of_event
-            ]  ## only those that occured before this event
-        else:
-            list_of_events_sorted_by_date_desc.pop(idx_of_event)
+    try:# weird not a singleton error
+        if excluding_event==arg_not_passed:
+            return list_of_events_sorted_by_date_desc
+    except:
+        pass
+
+    idx_of_event = list_of_events_sorted_by_date_desc.index_of_id(
+        excluding_event.id
+    )
+    if only_events_before_excluded_event:
+        list_of_events_sorted_by_date_desc = list_of_events_sorted_by_date_desc[
+            :idx_of_event
+        ]  ## only those that occured before this event
+    else:
+        list_of_events_sorted_by_date_desc.pop(idx_of_event)
 
     return ListOfEvents(list_of_events_sorted_by_date_desc)
+
+
 
 
 def get_N_most_recent_events_newest_last(

@@ -1,9 +1,8 @@
 from typing import Union
 
 from app.backend.cadets.list_of_cadets import get_matching_cadet
-from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, HelpButton
 
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
+from app.objects.abstract_objects.abstract_lines import ListOfLines
 
 from app.backend.registration_data.raw_mapped_registration_data import (
     get_row_in_raw_registration_data_given_id,
@@ -25,12 +24,8 @@ from app.frontend.events.import_data.shared_state_tracking_and_data import (
 
 from app.frontend.shared.get_or_select_cadet_forms import (
     get_add_or_select_existing_cadet_form,
-    see_similar_cadets_only_button,
-    check_cadet_for_me_button,
-    see_all_cadets_button,
-    add_cadet_button,
+     ParametersForGetOrSelectCadetForm, generic_post_response_to_add_or_select_cadet,
 )
-from app.frontend.shared.add_edit_cadet_form import add_cadet_from_form_to_data
 
 from app.objects.exceptions import NoMoreData, MissingData
 from app.objects.registration_data import RowInRegistrationData
@@ -156,85 +151,50 @@ def process_row_when_cadet_unmatched(
     return get_add_or_select_existing_cadet_form(
         cadet=cadet,
         interface=interface,
-        see_all_cadets=False,
-        include_final_button=False,
-        extra_buttons=extra_buttons,
-        header_text=header_text_for_form(),
+        parameters=parameters_to_get_or_select_cadet
     )
 
 
-TEST_CADET_SKIP_BUTTON_LABEL = (
-    "Skip: this is a test entry (do not use if it is a real cadet name)"
-)
-skip_button = Button(TEST_CADET_SKIP_BUTTON_LABEL)
-extra_buttons = Line([skip_button])
 
 
 def header_text_for_form() -> ListOfLines:
 
     default_header_text = [
-        help_button_bar,
         "Looks like a new cadet in the WA entry file. ",
         "You can edit them, check their details and then add, or choose an existing cadet instead (avoid creating duplicates! If the existing cadet details are wrong, select them for now and edit later) \n\n ",
     ]
 
     return ListOfLines(default_header_text).add_Lines()
 
+parameters_to_get_or_select_cadet = ParametersForGetOrSelectCadetForm(
+        header_text=header_text_for_form(),
+        help_string="identify_cadets_at_event_help",
+        skip_button=True
+    )
 
-help_button_bar = ButtonBar([HelpButton("identify_cadets_at_event_help")])
 
 
 def post_form_add_cadet_ids_during_import(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
-    header_text = header_text_for_form()
-    last_button_pressed = interface.last_button_pressed()
-    if see_similar_cadets_only_button.pressed(
-        last_button_pressed
-    ) or check_cadet_for_me_button.pressed(last_button_pressed):
+    result = generic_post_response_to_add_or_select_cadet(
+        interface=interface,
+        parameters=parameters_to_get_or_select_cadet
+    )
+    if result.is_form:
+        return result.form
 
-        ## verify results already in form, display form again, allow final this time
-        return get_add_or_select_existing_cadet_form(
-            interface=interface,
-            include_final_button=True,
-            see_all_cadets=False,
-            header_text=header_text,
-            extra_buttons=extra_buttons,
-        )
-
-    elif see_all_cadets_button.pressed(last_button_pressed):
-        ## verify results already in form, display form again, allow final this time
-        return get_add_or_select_existing_cadet_form(
-            interface=interface,
-            include_final_button=True,
-            see_all_cadets=True,
-            header_text=header_text,
-            extra_buttons=extra_buttons,
-        )
-
-    elif add_cadet_button.pressed(last_button_pressed):
-        # no need to reset stage
-        return process_form_when_verified_cadet_to_be_added(interface)
-
-    elif skip_button.pressed(last_button_pressed):
+    elif result.skip:
         return process_form_when_skipping_cadet(interface)
 
+
+    elif result.is_cadet:
+        cadet = result.cadet
+        assert type(cadet) is Cadet
+        return process_row_when_cadet_matched(interface=interface, cadet=cadet)
     else:
-        ## must be an existing cadet that has been selected
-        # no need to reset stage
-        return process_form_when_existing_cadet_chosen(interface)
+        raise Exception("Can't handle result %s" % str(result))
 
-
-def process_form_when_verified_cadet_to_be_added(interface: abstractInterface) -> Form:
-    try:
-        cadet = add_cadet_from_form_to_data(interface)
-    except Exception as e:
-        raise Exception(
-            "Problem adding cadet to data %s - will have to re-import file" % str(e),
-        )
-    ## no need to save will be done next
-
-    return process_row_when_cadet_matched(interface=interface, cadet=cadet)
 
 
 def process_form_when_skipping_cadet(interface: abstractInterface) -> Form:
@@ -251,22 +211,4 @@ def process_form_when_skipping_cadet(interface: abstractInterface) -> Form:
     return identify_cadets_on_next_row(interface)
 
 
-from app.backend.cadets.list_of_cadets import (
-    get_cadet_from_list_of_cadets_given_str_of_cadet,
-)
 
-
-def process_form_when_existing_cadet_chosen(interface: abstractInterface) -> Form:
-    cadet_selected_as_str = interface.last_button_pressed()
-
-    try:
-        cadet = get_cadet_from_list_of_cadets_given_str_of_cadet(
-            object_store=interface.object_store, cadet_selected=cadet_selected_as_str
-        )
-    except:
-        raise Exception(
-            "Cadet selected no longer exists - file corruption or someone deleted?",
-        )
-
-    print(str(cadet))
-    return process_row_when_cadet_matched(interface=interface, cadet=cadet)

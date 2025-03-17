@@ -1,8 +1,8 @@
 from typing import Union, Tuple
 
 from app.frontend.shared.cadet_state import get_cadet_from_state, clear_cadet_state
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, HelpButton, cancel_menu_button
-from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
+from app.objects.abstract_objects.abstract_buttons import  cancel_menu_button
+from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.backend.cadets.list_of_cadets import (
     get_cadet_from_list_of_cadets_given_str_of_cadet,
 )
@@ -20,14 +20,13 @@ from app.frontend.shared.get_or_select_cadet_forms import (
     see_similar_cadets_only_button,
     check_cadet_for_me_button,
     see_all_cadets_button,
-    add_cadet_button,
+    add_cadet_button, ParametersForGetOrSelectCadetForm,
 )
 from app.frontend.shared.add_edit_cadet_form import add_cadet_from_form_to_data
 
 from app.objects.cadets import Cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.events import Event
 from app.objects.exceptions import MissingData, missing_data
 from app.backend.registration_data.cadet_registration_data import get_cadet_at_event
 
@@ -37,25 +36,24 @@ def display_add_cadet_partner(
 ) -> Form:
     primary_cadet, partner_cadet = get_primary_cadet_and_partner_name(interface)
     header_text = header_text_given_cadets(primary_cadet, partner_cadet)
-
+    parameters = ParametersForGetOrSelectCadetForm(
+        help_string='help_adding_partner',
+        header_text=header_text,
+        cancel_button=True
+    )
     return get_add_or_select_existing_cadet_form(
         cadet=partner_cadet,
         interface=interface,
-        see_all_cadets=False,
-        include_final_button=False,
-        header_text=header_text,
-        extra_buttons=Line([cancel_menu_button])
+        parameters=parameters
     )
 
 
 def header_text_given_cadets(primary_cadet: Cadet, partner_cadet: Cadet) -> ListOfLines:
     header_text_start = "Following is specified as partner in form for %s: %s - select an existing cadet, or add a new one"
     return ListOfLines(
-        [help_button, header_text_start % (primary_cadet.name, partner_cadet.name)]
+        [header_text_start % (primary_cadet.name, partner_cadet.name)]
     ).add_Lines()
 
-
-help_button = ButtonBar([HelpButton("help_adding_partner")])
 
 
 def post_form_add_cadet_partner(
@@ -72,20 +70,30 @@ def post_form_add_cadet_partner(
         last_button_pressed
     ) or check_cadet_for_me_button.pressed(last_button_pressed):
         ## verify results already in form, display form again, allow final this time
+        parameters = ParametersForGetOrSelectCadetForm(
+            help_string='help_adding_partner',
+            header_text=header_text,
+            cancel_button=True,
+            final_add_button=True,
+            see_all_cadets_button=False
+        )
         return get_add_or_select_existing_cadet_form(
             interface=interface,
-            include_final_button=True,
-            see_all_cadets=False,
-            header_text=header_text,
+            parameters=parameters
         )
 
     elif see_all_cadets_button.pressed(last_button_pressed):
         ## verify results already in form, display form again, allow final this time
+        parameters = ParametersForGetOrSelectCadetForm(
+            help_string='help_adding_partner',
+            header_text=header_text,
+            cancel_button=True,
+            final_add_button=True,
+            see_all_cadets_button=True
+        )
         return get_add_or_select_existing_cadet_form(
             interface=interface,
-            include_final_button=True,
-            see_all_cadets=True,
-            header_text=header_text,
+            parameters=parameters
         )
 
     elif add_cadet_button.pressed(last_button_pressed):

@@ -1,8 +1,8 @@
 from typing import Union, Tuple
 
 from app.frontend.shared.cadet_state import get_cadet_from_state, clear_cadet_state
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, HelpButton, cancel_menu_button
-from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
+from app.objects.abstract_objects.abstract_buttons import  cancel_menu_button
+from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.backend.cadets.list_of_cadets import (
     get_cadet_from_list_of_cadets_given_str_of_cadet,
 )
@@ -20,14 +20,13 @@ from app.frontend.shared.get_or_select_cadet_forms import (
     see_similar_cadets_only_button,
     check_cadet_for_me_button,
     see_all_cadets_button,
-    add_cadet_button,
+    add_cadet_button, ParametersForGetOrSelectCadetForm, generic_post_response_to_add_or_select_cadet,
 )
 from app.frontend.shared.add_edit_cadet_form import add_cadet_from_form_to_data
 
 from app.objects.cadets import Cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.events import Event
 from app.objects.exceptions import MissingData, missing_data
 from app.backend.registration_data.cadet_registration_data import get_cadet_at_event
 
@@ -36,96 +35,69 @@ def display_add_cadet_partner(
     interface: abstractInterface,
 ) -> Form:
     primary_cadet, partner_cadet = get_primary_cadet_and_partner_name(interface)
-    header_text = header_text_given_cadets(primary_cadet, partner_cadet)
-
+    parameters = get_parameters_for_form_given_cadets(
+        primary_cadet=primary_cadet,
+        partner_cadet=partner_cadet
+    )
     return get_add_or_select_existing_cadet_form(
         cadet=partner_cadet,
         interface=interface,
-        see_all_cadets=False,
-        include_final_button=False,
-        header_text=header_text,
-        extra_buttons=Line([cancel_menu_button])
+        parameters=parameters
     )
 
 
 def header_text_given_cadets(primary_cadet: Cadet, partner_cadet: Cadet) -> ListOfLines:
     header_text_start = "Following is specified as partner in form for %s: %s - select an existing cadet, or add a new one"
     return ListOfLines(
-        [help_button, header_text_start % (primary_cadet.name, partner_cadet.name)]
+        [header_text_start % (primary_cadet.name, partner_cadet.name)]
     ).add_Lines()
 
+def get_parameters_for_form_given_cadets(primary_cadet: Cadet, partner_cadet: Cadet):
+    header_text = header_text_given_cadets(primary_cadet, partner_cadet)
+    parameters = ParametersForGetOrSelectCadetForm(
+        help_string='help_adding_partner',
+        header_text=header_text,
+        cancel_button=True
+    )
 
-help_button = ButtonBar([HelpButton("help_adding_partner")])
-
+    return parameters
 
 def post_form_add_cadet_partner(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     last_button_pressed = interface.last_button_pressed()
     primary_cadet, partner_cadet = get_primary_cadet_and_partner_name(interface)
-    header_text = header_text_given_cadets(primary_cadet, partner_cadet)
+    parameters = get_parameters_for_form_given_cadets(
+        primary_cadet=primary_cadet,
+        partner_cadet=partner_cadet
+    )
+    result = generic_post_response_to_add_or_select_cadet(
+        interface=interface,
+        parameters=parameters
+    )
+    if result.is_form:
+        return result.form
 
-    if cancel_menu_button.pressed(last_button_pressed):
+    elif result.cancel:
         return return_to_allocation_pages(interface)
 
-    if see_similar_cadets_only_button.pressed(
-        last_button_pressed
-    ) or check_cadet_for_me_button.pressed(last_button_pressed):
-        ## verify results already in form, display form again, allow final this time
-        return get_add_or_select_existing_cadet_form(
+
+    elif result.is_cadet:
+        cadet = result.cadet
+        assert type(cadet) is Cadet
+        return process_form_when_cadet_chosen_as_partner(
             interface=interface,
-            include_final_button=True,
-            see_all_cadets=False,
-            header_text=header_text,
+            cadet=cadet
         )
-
-    elif see_all_cadets_button.pressed(last_button_pressed):
-        ## verify results already in form, display form again, allow final this time
-        return get_add_or_select_existing_cadet_form(
-            interface=interface,
-            include_final_button=True,
-            see_all_cadets=True,
-            header_text=header_text,
-        )
-
-    elif add_cadet_button.pressed(last_button_pressed):
-        # no need to reset stage
-        return process_form_when_verified_cadet_to_be_added_as_partner(interface)
-
     else:
-        ## must be an existing cadet that has been selected
-        # no need to reset stage
-        return process_form_when_existing_cadet_chosen_as_partner(interface)
+        raise Exception("Can't handle result %s" % str(result))
 
 
-def process_form_when_verified_cadet_to_be_added_as_partner(
+
+def process_form_when_cadet_chosen_as_partner(
     interface: abstractInterface,
+        cadet: Cadet
 ) -> NewForm:
-    try:
-        cadet = add_cadet_from_form_to_data(interface)
-    except Exception as e:
-        raise Exception(
-            "Problem adding cadet to data code %s CONTACT SUPPORT" % str(e),
-        )
-
-    return add_matched_partner_cadet_with_duplicate_registration(
-        interface=interface, new_cadet=cadet
-    )
-
-
-def process_form_when_existing_cadet_chosen_as_partner(
-    interface: abstractInterface,
-) -> NewForm:
-    cadet_selected_as_str = interface.last_button_pressed()
-
-    try:
-        cadet = get_cadet_from_list_of_cadets_given_str_of_cadet(
-            object_store=interface.object_store, cadet_selected=cadet_selected_as_str
-        )
-    except:
-        raise Exception(
-            "Cadet selected no longer exists - file corruption or someone deleted?",
-        )
 
     check_if_registered = is_cadet_already_registered(interface=interface, new_cadet=cadet)
     if check_if_registered:

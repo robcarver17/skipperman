@@ -1,5 +1,7 @@
-arg_not_passed = object()
-missing_data = object()
+
+## doesn't mater just have to be unique
+arg_not_passed = 213457329874587
+missing_data = 128710283749821374
 
 DAYS_IN_YEAR = 365.25
 
@@ -48,4 +50,4 @@ class CadetNotSelected(Exception):
     pass
 
 
-MISSING_FROM_FORM = "missing_from_form"
+MISSING_FROM_FORM = "Missing from form"

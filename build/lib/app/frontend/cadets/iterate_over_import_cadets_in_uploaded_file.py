@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.backend.cadets.add_edit_cadet import add_new_verified_cadet, modify_cadet, modify_cadet_date_of_birth
+from app.backend.cadets.add_edit_cadet import add_new_verified_cadet,  modify_cadet_date_of_birth
 
 from app.backend.cadets.iterate_over_membership_list import (
     set_all_current_members_to_temporary_unconfirmed,
@@ -17,6 +17,7 @@ from app.backend.cadets.list_of_cadets import (
     get_cadet_from_list_of_cadets_given_str_of_cadet,
     get_matching_cadet,
 )
+from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME_ON_MATCHING_MEMBERSHIP_LIST
 from app.frontend.shared.add_edit_cadet_form import get_cadet_from_form
 
 from app.frontend.shared.get_or_select_cadet_forms import (
@@ -24,9 +25,8 @@ from app.frontend.shared.get_or_select_cadet_forms import (
     see_similar_cadets_only_button,
     check_cadet_for_me_button,
     see_all_cadets_button,
-    add_cadet_button,
+    add_cadet_button, ParametersForGetOrSelectCadetForm, generic_post_response_to_add_or_select_cadet,
 )
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, HelpButton
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines
@@ -61,8 +61,9 @@ def process_current_cadet_in_temp_file(
         cadet_in_data = get_matching_cadet(
             object_store=object_store, cadet=current_cadet
         )
-        print("Identical cadet to %s already exists " % str(cadet_in_data))
+        print("Identical cadet to %s already exists - marking as confirmed member" % str(cadet_in_data))
         mark_existing_cadet_as_member_and_log(interface=interface, cadet=cadet_in_data)
+
         return next_iteration_over_rows_in_temp_cadet_file(interface)
 
     except MissingData:
@@ -76,12 +77,13 @@ def process_current_cadet_in_temp_file_when_no_exact_match(
     interface: abstractInterface, current_cadet: Cadet
 ) -> Union[Form, NewForm]:
     no_similar_cadets = are_there_no_similar_cadets(
-        object_store=interface.object_store, cadet=current_cadet
+        object_store=interface.object_store, cadet=current_cadet,
+        name_threshold=SIMILARITY_LEVEL_TO_WARN_NAME_ON_MATCHING_MEMBERSHIP_LIST
     )
 
     if no_similar_cadets:
         ##### add cadet
-        print("No similar cadets to %s" % str(current_cadet))
+        print("No similar cadets to %s adding automatically" % str(current_cadet))
         current_cadet.membership_status = (
             current_member  ## should be set already, but just in case
         )
@@ -131,64 +133,57 @@ def process_when_cadet_to_be_added_from_membership_list(
 
     return next_iteration_over_rows_in_temp_cadet_file(interface)
 
+def process_when_cadet_already_added_from_form(
+    interface: abstractInterface, cadet: Cadet
+) -> Form:
+    interface.log_error("Added new cadet from membership list %s" % str(cadet))
+    interface.flush_cache_to_store()
+
+    return next_iteration_over_rows_in_temp_cadet_file(interface)
+
 
 def display_verify_adding_cadet_from_list_form(interface: abstractInterface) -> Form:
     current_cadet = get_cadet_from_temp_file_and_state(interface)
     return get_add_or_select_existing_cadet_form(
         cadet=current_cadet,
         interface=interface,
-        header_text=provided_header_text,
-        include_final_button=False,
-        see_all_cadets=False,
+        parameters=edit_or_add_form_parameters
     )
 
 
 provided_header_text = ListOfLines(
     [
-        ButtonBar([HelpButton("import_membership_list_help")]),
         "Looks like a cadet in the membership list is very similar to some existing cadets. Click on the existing cadet that matches this one (this will verify they are a member), or add cadet if really a new member",
     ]
+)
+
+edit_or_add_form_parameters = ParametersForGetOrSelectCadetForm(
+    header_text=provided_header_text,
+    help_string='import_membership_list_help',
 )
 
 
 def post_verify_adding_cadet_from_list_form(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
-    last_button_pressed = interface.last_button_pressed()
-    if see_similar_cadets_only_button.pressed(
-        last_button_pressed
-    ) or check_cadet_for_me_button.pressed(last_button_pressed):
-        ## verify results already in form, display form again, allow final this time
-        return get_add_or_select_existing_cadet_form(
-            interface=interface,
-            include_final_button=True,
-            see_all_cadets=False,
-            header_text=provided_header_text,
-        )
-
-    elif see_all_cadets_button.pressed(last_button_pressed):
-        ## verify results already in form, display form again, allow final this time
-        return get_add_or_select_existing_cadet_form(
-            interface=interface,
-            include_final_button=True,
-            see_all_cadets=True,
-            header_text=provided_header_text,
-        )
-
-    elif add_cadet_button.pressed(last_button_pressed):
-        # no need to reset stage
-        return process_form_when_verified_cadet_to_be_added(interface)
-
-    else:
-        ## must be an existing cadet that has been selected
-        return confirm_selected_cadet_is_member(interface)
-
-
-def confirm_selected_cadet_is_member(interface):
-    cadet_selected_as_str = interface.last_button_pressed()
-    existing_cadet = get_cadet_from_list_of_cadets_given_str_of_cadet(
-        object_store=interface.object_store, cadet_selected=cadet_selected_as_str
+    result = generic_post_response_to_add_or_select_cadet(
+        interface=interface,
+        parameters=edit_or_add_form_parameters
     )
+
+    if result.is_form:
+        return result.form
+
+    elif result.is_cadet:
+        assert type(result.cadet) is Cadet
+        if result.cadet_was_added:
+            return process_when_cadet_already_added_from_form(interface=interface, cadet=result.cadet)
+        else:
+            return confirm_selected_cadet_is_member(interface=interface, existing_cadet=result.cadet)
+    else:
+        raise Exception("Return result %s cannot handle" % str(result))
+
+def confirm_selected_cadet_is_member(interface: abstractInterface, existing_cadet: Cadet):
     cadet_in_file = get_cadet_from_temp_file_and_state(interface)
 
     change_or_warn_on_discrepancy(interface=interface, cadet_in_file=cadet_in_file, existing_cadet=existing_cadet)
@@ -197,6 +192,7 @@ def confirm_selected_cadet_is_member(interface):
     interface.flush_cache_to_store()
 
     return next_iteration_over_rows_in_temp_cadet_file(interface)
+
 
 def change_or_warn_on_discrepancy(interface: abstractInterface, existing_cadet: Cadet, cadet_in_file: Cadet):
     if existing_cadet.name!= cadet_in_file.name:
@@ -208,7 +204,7 @@ def change_or_warn_on_discrepancy(interface: abstractInterface, existing_cadet: 
     if existing_cadet.date_of_birth!=cadet_in_file.date_of_birth:
         if existing_cadet.has_default_date_of_birth:
             new_date_of_birth = cadet_in_file.date_of_birth
-            interface.log_error("Existing skipperman data has default date of birth for %s, updating to DOB in membership file of %s" % (
+            interface.log_error("Existing skipperman data has no date of birth for %s, updating to DOB in membership file of %s" % (
                 existing_cadet.name,
                 new_date_of_birth
             ))
@@ -221,18 +217,6 @@ def change_or_warn_on_discrepancy(interface: abstractInterface, existing_cadet: 
                     str(cadet_in_file.date_of_birth)
                 )
             )
-
-def process_form_when_verified_cadet_to_be_added(interface: abstractInterface) -> Form:
-    try:
-        cadet = get_cadet_from_form(interface)
-    except Exception as e:
-        raise Exception(
-            "Problem adding cadet to data code %s CONTACT SUPPORT" % str(e),
-        )
-
-    return process_when_cadet_to_be_added_from_membership_list(
-        interface=interface, cadet=cadet
-    )
 
 
 ### STATE

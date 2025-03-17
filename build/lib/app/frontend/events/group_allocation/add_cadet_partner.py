@@ -20,7 +20,7 @@ from app.frontend.shared.get_or_select_cadet_forms import (
     see_similar_cadets_only_button,
     check_cadet_for_me_button,
     see_all_cadets_button,
-    add_cadet_button, ParametersForGetOrSelectCadetForm,
+    add_cadet_button, ParametersForGetOrSelectCadetForm, generic_post_response_to_add_or_select_cadet,
 )
 from app.frontend.shared.add_edit_cadet_form import add_cadet_from_form_to_data
 
@@ -35,11 +35,9 @@ def display_add_cadet_partner(
     interface: abstractInterface,
 ) -> Form:
     primary_cadet, partner_cadet = get_primary_cadet_and_partner_name(interface)
-    header_text = header_text_given_cadets(primary_cadet, partner_cadet)
-    parameters = ParametersForGetOrSelectCadetForm(
-        help_string='help_adding_partner',
-        header_text=header_text,
-        cancel_button=True
+    parameters = get_parameters_for_form_given_cadets(
+        primary_cadet=primary_cadet,
+        partner_cadet=partner_cadet
     )
     return get_add_or_select_existing_cadet_form(
         cadet=partner_cadet,
@@ -54,86 +52,52 @@ def header_text_given_cadets(primary_cadet: Cadet, partner_cadet: Cadet) -> List
         [header_text_start % (primary_cadet.name, partner_cadet.name)]
     ).add_Lines()
 
+def get_parameters_for_form_given_cadets(primary_cadet: Cadet, partner_cadet: Cadet):
+    header_text = header_text_given_cadets(primary_cadet, partner_cadet)
+    parameters = ParametersForGetOrSelectCadetForm(
+        help_string='help_adding_partner',
+        header_text=header_text,
+        cancel_button=True
+    )
 
+    return parameters
 
 def post_form_add_cadet_partner(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     last_button_pressed = interface.last_button_pressed()
     primary_cadet, partner_cadet = get_primary_cadet_and_partner_name(interface)
-    header_text = header_text_given_cadets(primary_cadet, partner_cadet)
+    parameters = get_parameters_for_form_given_cadets(
+        primary_cadet=primary_cadet,
+        partner_cadet=partner_cadet
+    )
+    result = generic_post_response_to_add_or_select_cadet(
+        interface=interface,
+        parameters=parameters
+    )
+    if result.is_form:
+        return result.form
 
-    if cancel_menu_button.pressed(last_button_pressed):
+    elif result.cancel:
         return return_to_allocation_pages(interface)
 
-    if see_similar_cadets_only_button.pressed(
-        last_button_pressed
-    ) or check_cadet_for_me_button.pressed(last_button_pressed):
-        ## verify results already in form, display form again, allow final this time
-        parameters = ParametersForGetOrSelectCadetForm(
-            help_string='help_adding_partner',
-            header_text=header_text,
-            cancel_button=True,
-            final_add_button=True,
-            see_all_cadets_button=False
-        )
-        return get_add_or_select_existing_cadet_form(
+
+    elif result.is_cadet:
+        cadet = result.cadet
+        assert type(cadet) is Cadet
+        return process_form_when_cadet_chosen_as_partner(
             interface=interface,
-            parameters=parameters
+            cadet=cadet
         )
-
-    elif see_all_cadets_button.pressed(last_button_pressed):
-        ## verify results already in form, display form again, allow final this time
-        parameters = ParametersForGetOrSelectCadetForm(
-            help_string='help_adding_partner',
-            header_text=header_text,
-            cancel_button=True,
-            final_add_button=True,
-            see_all_cadets_button=True
-        )
-        return get_add_or_select_existing_cadet_form(
-            interface=interface,
-            parameters=parameters
-        )
-
-    elif add_cadet_button.pressed(last_button_pressed):
-        # no need to reset stage
-        return process_form_when_verified_cadet_to_be_added_as_partner(interface)
-
     else:
-        ## must be an existing cadet that has been selected
-        # no need to reset stage
-        return process_form_when_existing_cadet_chosen_as_partner(interface)
+        raise Exception("Can't handle result %s" % str(result))
 
 
-def process_form_when_verified_cadet_to_be_added_as_partner(
+
+def process_form_when_cadet_chosen_as_partner(
     interface: abstractInterface,
+        cadet: Cadet
 ) -> NewForm:
-    try:
-        cadet = add_cadet_from_form_to_data(interface)
-    except Exception as e:
-        raise Exception(
-            "Problem adding cadet to data code %s CONTACT SUPPORT" % str(e),
-        )
-
-    return add_matched_partner_cadet_with_duplicate_registration(
-        interface=interface, new_cadet=cadet
-    )
-
-
-def process_form_when_existing_cadet_chosen_as_partner(
-    interface: abstractInterface,
-) -> NewForm:
-    cadet_selected_as_str = interface.last_button_pressed()
-
-    try:
-        cadet = get_cadet_from_list_of_cadets_given_str_of_cadet(
-            object_store=interface.object_store, cadet_selected=cadet_selected_as_str
-        )
-    except:
-        raise Exception(
-            "Cadet selected no longer exists - file corruption or someone deleted?",
-        )
 
     check_if_registered = is_cadet_already_registered(interface=interface, new_cadet=cadet)
     if check_if_registered:

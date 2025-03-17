@@ -279,7 +279,7 @@ class ListOfCadets(GenericListOfObjectsWithIds):
         return self._sort_by_similarity_given_scores(similarity_scores_and_cadets)
 
     def _sort_by_similarity_given_scores(self, similarity_scores_and_cadets: List[dict]):
-        sorted_similarity_scores_and_cadets = sorted(similarity_scores_and_cadets, key=lambda x: x.score)
+        sorted_similarity_scores_and_cadets = sorted(similarity_scores_and_cadets, key=lambda x: x['score'], reverse=True)
         sorted_cadets = [score_and_cadet['cadet'] for score_and_cadet in sorted_similarity_scores_and_cadets]
 
         return ListOfCadets(sorted_cadets)
@@ -426,7 +426,7 @@ def sort_a_list_of_cadets(
 
 SORT_BY_SURNAME = "Sort by surname"
 SORT_BY_FIRSTNAME = "Sort by first name"
-SORT_BY_DOB_ASC = "Sort by date of birth, ascending"
-SORT_BY_DOB_DSC = "Sort by date of birth, descending"
+SORT_BY_DOB_ASC = "Sort by date of birth, oldest 1st"
+SORT_BY_DOB_DSC = "Sort by date of birth, youngest 1st"
 SORT_BY_SIMILARITY_DOB = "Sort by similarity of DOB"
 SORT_BY_SIMILARITY_NAME = "Sort by similarity of name"

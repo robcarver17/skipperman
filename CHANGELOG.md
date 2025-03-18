@@ -1,7 +1,7 @@
 
 # to do next
 Before first racing event is run
-- add raincheck all button to volunteers in rota page #59
+- add delete from event button to volunteers in rota page #59
 - report reset print options to defaults, different defaults for report types #53
 - keep double handers aligned #65
 - documentation for reporting #49

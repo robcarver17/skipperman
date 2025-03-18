@@ -27,7 +27,7 @@ from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
 from app.objects.events import Event
 from app.objects.groups import Group, sorted_locations
-from app.objects.utils import in_x_not_in_y
+from app.objects.utils import in_x_not_in_y, in_both_x_and_y
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 
 
@@ -166,19 +166,26 @@ def get_list_of_volunteers_associated_with_cadet_at_event(
 
 
 def get_cadet_location_string_for_volunteer(
-    volunteer_data_at_event: AllEventDataForVolunteer,
-    cadets_at_event_data: DictOfAllEventInfoForCadets,
+    object_store: ObjectStore,
+    volunteer_data_at_event: AllEventDataForVolunteer
 ):
+    list_of_cadets_at_event_and_associated =get_list_of_cadets_associated_with_volunteer_at_event(
+        object_store=object_store,
+        volunteer=volunteer_data_at_event.volunteer,
+        event = volunteer_data_at_event.event
+    )
+    if len(list_of_cadets_at_event_and_associated)==0:
+        return "xx No associated sailor(s) at event"  ## trick to get at end of sort
+
     list_of_groups = list_of_cadet_groups_associated_with_volunteer(
-        volunteer_data_at_event=volunteer_data_at_event,
-        cadets_at_event_data=cadets_at_event_data,
+        object_store=object_store,
+        event=volunteer_data_at_event.event,
+        list_of_cadets_at_event_and_associated=list_of_cadets_at_event_and_associated,
     )
     if list_of_groups is no_cadets_allocated_to_groups_yet:
         return "x %d associated sailor(s) not in groups" % len(
-            volunteer_data_at_event.associated_cadets
+            list_of_cadets_at_event_and_associated ## same trick
         )
-    elif list_of_groups is no_cadets_associated_with_volunteer:
-        return "xx No associated sailor(s) at event"  ## trick to get at end of sort
     else:
         return str_type_of_group_given_list_of_groups(list_of_groups)
 
@@ -194,19 +201,14 @@ def str_type_of_group_given_list_of_groups(list_of_groups: List[Group]):
     return ", ".join(sorted_list_of_group_locations)
 
 
-def list_of_cadet_groups_associated_with_volunteer(
-    volunteer_data_at_event: AllEventDataForVolunteer,
-    cadets_at_event_data: DictOfAllEventInfoForCadets,
-) -> Union[List[Group], object]:
-    list_of_associated_cadets = volunteer_data_at_event.associated_cadets
-    list_of_cadets_at_event_and_associated = (
-        list_of_associated_cadets.subset_from_list_of_ids_retaining_order(
-            cadets_at_event_data.list_of_cadets.list_of_ids
-        )
-    )
-    if len(list_of_cadets_at_event_and_associated) == 0:
-        return no_cadets_associated_with_volunteer
 
+def list_of_cadet_groups_associated_with_volunteer(
+    object_store: ObjectStore,
+        list_of_cadets_at_event_and_associated: ListOfCadets,
+    event: Event
+) -> Union[List[Group], object]:
+
+    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event, active_only=True)
     list_of_groups = []
     for cadet in list_of_cadets_at_event_and_associated:
         list_of_groups += cadets_at_event_data.dict_of_cadets_with_days_and_groups.get_days_and_groups_for_cadet(
@@ -220,7 +222,6 @@ def list_of_cadet_groups_associated_with_volunteer(
     return list_of_groups
 
 
-no_cadets_associated_with_volunteer = object()
 no_cadets_allocated_to_groups_yet = object()
 
 

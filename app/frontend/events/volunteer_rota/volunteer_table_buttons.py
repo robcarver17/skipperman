@@ -53,13 +53,11 @@ def get_location_button(
     volunteer_data_at_event: AllEventDataForVolunteer,
     ready_to_swap: bool,
 ) -> Button:
-    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=volunteer_data_at_event.event
-    )
 
     location = get_cadet_location_string_for_volunteer(
+        object_store=object_store,
         volunteer_data_at_event=volunteer_data_at_event,
-        cadets_at_event_data=cadets_at_event_data,
+
     )
 
     if ready_to_swap:

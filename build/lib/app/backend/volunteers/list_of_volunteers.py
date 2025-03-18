@@ -52,21 +52,22 @@ def get_sorted_list_of_volunteers(
 
 
 def sort_list_of_volunteers(
-    list_of_volunteers: ListOfVolunteers, sort_by: str = arg_not_passed
+    list_of_volunteers: ListOfVolunteers, sort_by: str = arg_not_passed,
+        similar_volunteer: Volunteer = arg_not_passed
 ) -> ListOfVolunteers:
-    if sort_by is arg_not_passed:
-        return list_of_volunteers
     if sort_by == SORT_BY_SURNAME:
         return list_of_volunteers.sort_by_surname()
     elif sort_by == SORT_BY_FIRSTNAME:
         return list_of_volunteers.sort_by_firstname()
+    elif sort_by == SORT_BY_NAME_SIMILARITY:
+        return list_of_volunteers.sort_by_similarity(volunteer=similar_volunteer)
     else:
         return list_of_volunteers
 
 
 SORT_BY_SURNAME = "Sort by surname"
 SORT_BY_FIRSTNAME = "Sort by first name"
-
+SORT_BY_NAME_SIMILARITY = "Sort by similarity with name"
 
 def get_list_of_volunteers(object_store: ObjectStore) -> ListOfVolunteers:
     return object_store.get(object_definition_for_volunteers)

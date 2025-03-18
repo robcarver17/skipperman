@@ -15,13 +15,13 @@ The details of the two handed partner from the form are shown. Note that we don'
 
 ## If this is an existing sailor
 
-You can see a warning that it looks like there are existing sailors with very similar or identical names. You can click on a sailors name to register them for the event, or click on `Choose from all existing cadets` if you think they are a sailor that isn't shown. You then have the option of clicking `See similar cadets only`.
+You will probably see a warning that it looks like there are existing sailors with very similar or identical names. You can click on a sailors name to register them for the event, or click on `Choose from all existing cadets` if you think they are a sailor that isn't shown. You can sort this list of sailors in various ways to find the sailor you want. You also have the option of clicking `See similar cadets only`.
 
 Once you have chosen the sailor they will be registered to the event with the existing sailors registration details, boat class, sail number, club boat and training group copied across (where relevant).
 
-If they are already registered you will get an error message - sailors who are already registered should be paired up by selecting them as two handed partners from the dropdown menu in the [group allocation page](group_allocation_help.md).
+If they are already registered you will get an error message - sailors who are already registered should be paired up by selecting them as two-handed partners from the dropdown menu in the [group allocation page](group_allocation_help.md).
 
-## If this is a new sailor
+## If this is a new sailor - not on Skipperman
 
 Check you are happy with the sailors name. Don't worry about the date of birth, that can be [edited later](view_and_edit_individual_cadet_help.md).
 
@@ -29,7 +29,7 @@ For their membership status select eithier 'None member' (if they are a visitor)
 
 Membership status can be [edited](view_and_edit_individual_cadet_help.md) or automatically updated by [importing a list of members](import_membership_list_help.md).
 
-Click on `Please check the details again for me before I add` then on `Yes - these details are correct - add this new cadet` to add the sailor to Skipperman, and register them for this event.
+Click on `I have double checked these details allow me to add` then on `Yes - these details are correct - add this new cadet` to add the sailor to Skipperman, and register them for this event.
 
 ## If you change your mind
 

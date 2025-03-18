@@ -10,7 +10,7 @@ ___
 
 # If the sailor is already in Skipperman
 
-Type the sailors first and last name into the relevant boxes. Then click on `Please check the details...`. A list of sailors with similar names should come up on the screen. If you can't see the sailor, then click on `Choose from all existing cadets`.
+Type the sailors first and last name into the relevant boxes. Then click on `Please check the details...`. A list of sailors with similar names should come up on the screen. If you can't see the sailor, then click on `Choose from all existing cadets`. You can sort the full list of sailors in a few different ways. 
 
 Once the relevant sailor is on the screen, click on the button with their name and date of birth.
 
@@ -32,6 +32,7 @@ Membership or otherwise can be confirmed by [importing a list of club members](i
 
 Remember it is possible to edit the cadet details, and these can also be updated by importing a list of club members from Wild Apricot, so don't worry too much if these aren't precisely right.
 
+Once you are confident then click on `Please check the details again for me` (if it's on screen), and then on `Yes - these details are correct - add this new cadet`.
 
 # Effects of adding a sailor manually
 

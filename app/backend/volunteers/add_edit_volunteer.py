@@ -1,9 +1,13 @@
+from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME
 from app.data_access.store.object_store import ObjectStore
 
 from app.backend.volunteers.list_of_volunteers import (
     get_list_of_volunteers,
     update_list_of_volunteers,
 )
+from app.objects.cadets import Cadet
+from app.objects.exceptions import arg_not_passed
+from app.objects.utils import similar
 from app.objects.volunteers import Volunteer
 
 
@@ -58,7 +62,7 @@ def list_of_similar_volunteers(object_store: ObjectStore, volunteer: Volunteer) 
     return list_of_volunteers.similar_volunteers(volunteer)
 
 
-def verify_volunteer_and_warn(object_store: ObjectStore, volunteer: Volunteer) -> str:
+def verify_volunteer_and_warn(object_store: ObjectStore, volunteer: Volunteer, cadet: Cadet = arg_not_passed) -> str:
     warn_text = ""
     if len(volunteer.surname) < 3:
         warn_text += "Surname seems too short. "
@@ -67,8 +71,19 @@ def verify_volunteer_and_warn(object_store: ObjectStore, volunteer: Volunteer) -
     warn_text += warning_str_for_similar_volunteers(
         object_store=object_store, volunteer=volunteer
     )
+    if cadet is not arg_not_passed:
+        could_be_cadet_not_volunteer = volunteer_name_is_similar_to_cadet_name(
+            volunteer=volunteer, cadet=cadet
+        )
+        if could_be_cadet_not_volunteer:
+            warn_text += "Volunteer name is similar to cadet name %s - are you sure this is actually a volunteer and not a cadet?"
 
     if len(warn_text) > 0:
         warn_text = "DOUBLE CHECK BEFORE ADDING: " + warn_text
 
     return warn_text
+
+
+def volunteer_name_is_similar_to_cadet_name(cadet: Cadet, volunteer: Volunteer) -> bool:
+
+    return similar(volunteer.name, cadet.name) > SIMILARITY_LEVEL_TO_WARN_NAME

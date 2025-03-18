@@ -403,7 +403,7 @@ test_cadet_id = test_cadet.id
 
 def sort_a_list_of_cadets(
     master_list: ListOfCadets, sort_by: str = arg_not_passed,
-        similar_cadet: Cadet = arg_not_passed
+        similar_cadet: Cadet = arg_not_passed,
 ) -> ListOfCadets:
     if sort_by is arg_not_passed:
         return master_list

@@ -4,7 +4,7 @@ To add a sailor, from the **Main menu** click **Sailors**, then **Add sailor**
 Sailors can be added to the Skipperman database in one of three ways:
 
 - on the add sailor menu option which is described here
-- when processing the registrations for a training or racing event 
+- when processing the [registrations for a training or racing event](import_registration_data_help.md) 
 - if they appear as a new member when a membership list is imported [when a membership list is imported](import_membership_list_help.md)
 
 It is *very* important that a sailor is not added twice! So the system goes to a lot of effort to make sure that you aren't duplicating an existing sailor. 

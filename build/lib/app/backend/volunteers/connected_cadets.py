@@ -1,12 +1,9 @@
-import datetime
 from copy import copy
 from typing import List
 
 from app.backend.volunteers.add_edit_volunteer import list_of_similar_volunteers
 from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME
-from app.objects.exceptions import missing_data
-
-from app.objects.membership_status import current_member
+from app.objects.exceptions import missing_data, arg_not_passed
 
 from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.utils import union_of_x_and_y, similar
@@ -44,12 +41,12 @@ def get_dict_of_volunteers_associated_with_cadets(
 def get_list_of_relevant_volunteers(
     object_store: ObjectStore,
     volunteer: Volunteer,
-    cadet: Cadet,  ## could be missing data
+    cadet: Cadet = arg_not_passed,  ## could be missing data
 ) -> ListOfVolunteers:
     list_of_volunteers_with_similar_name = list_of_similar_volunteers(
         object_store=object_store, volunteer=volunteer
     )
-    if cadet is missing_data:
+    if (cadet is missing_data) or (cadet is arg_not_passed):
         list_of_volunteers_associated_with_cadet = []
     else:
         list_of_volunteers_associated_with_cadet = (
@@ -195,7 +192,3 @@ def update_list_of_cadet_volunteer_association(
         object_definition=object_definition_for_volunteer_and_cadet_associations,
     )
 
-
-def volunteer_name_is_similar_to_cadet_name(cadet: Cadet, volunteer: Volunteer) -> bool:
-
-    return similar(volunteer.name, cadet.name) > SIMILARITY_LEVEL_TO_WARN_NAME

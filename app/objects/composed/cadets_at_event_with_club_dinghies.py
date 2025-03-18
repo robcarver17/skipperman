@@ -12,7 +12,7 @@ from app.objects.cadet_at_event_with_club_boat_with_ids import (
     ListOfCadetAtEventWithIdAndClubDinghies,
     CadetAtEventWithClubDinghyWithId,
 )
-from build.lib.app.objects.exceptions import arg_not_passed
+from app.objects.exceptions import arg_not_passed
 
 
 @dataclass

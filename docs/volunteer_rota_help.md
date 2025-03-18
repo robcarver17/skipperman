@@ -134,7 +134,7 @@ Perhaps there is a non parent helping, or a parent who couldn't originally volun
 ***
 ***
 
-At this stage you can select an existing volunteer by just pressing the button with their name on.
+At this stage you can select an existing volunteer by just pressing the button with their name on. You can sort the list of volunteers by first or last name. If you think you know vaguely what the volunteer is called, then you can put your best guess in, and click on `Sort by similarity with name`, The volunteers that are most like this person will appear first. 
 
 Alternatively, if the volunteer is new to the club, you can enter their name in the fields shown, and then click on `Please check these volunteer details for me`:
 
@@ -144,7 +144,9 @@ Alternatively, if the volunteer is new to the club, you can enter their name in 
 ***
 ***
 
-Skipperman doesn't like duplicate volunteers, so it will prompt you if it looks like the person you are adding is very similar to someone who already exists. You can make changes and then click on `Please check...` to check again, or click on `Yes these details are correct - add a new volunteer`. This will add a new volunteer to Skipperman, and to the event.
+Skipperman doesn't like duplicate volunteers, so it will prompt you if it looks like the person you are adding is very similar to someone who already exists. If you have made a mistake, and the volunteer already exists, click on `See similar volunteers only` and click on their name to add them.
+
+Alternatively if this is genuinely a new person, then click on `Yes these details are correct - add a new volunteer`. This will add a new volunteer to Skipperman, and to the event.
 
 If you change your mind about adding a volunteer, just press cancel.
 

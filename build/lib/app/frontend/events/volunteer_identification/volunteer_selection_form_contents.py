@@ -43,8 +43,6 @@ def get_header_text_for_volunteer_selection_form(
 
     header_text = ListOfLines(
         [
-            help_bar,
-            _______________,
             _______________,
             introduction,
             _______________,
@@ -59,7 +57,6 @@ def get_header_text_for_volunteer_selection_form(
     return header_text
 
 
-help_bar = ButtonBar([HelpButton("identify_volunteers_at_event_help")])
 
 
 def get_footer_buttons_add_or_select_existing_volunteer_form(

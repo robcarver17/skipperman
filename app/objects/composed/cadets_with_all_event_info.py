@@ -50,7 +50,6 @@ from app.objects.composed.food_at_event import (
     DictOfCadetsWithFoodRequirementsAtEvent,
     FoodRequirements,
 )
-from build.lib.app.objects.exceptions import missing_data
 
 
 @dataclass

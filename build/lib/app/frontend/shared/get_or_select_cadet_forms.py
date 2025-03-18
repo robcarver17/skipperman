@@ -1,13 +1,14 @@
 from copy import copy
 from dataclasses import dataclass
-from typing import Union, List
+from typing import Union
 
 from app.backend.cadets.list_of_cadets import (
     get_list_of_cadets,
     get_list_of_similar_cadets, get_cadet_from_list_of_cadets_given_str_of_cadet,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm
-from app.objects.abstract_objects.abstract_buttons import Button, cancel_menu_button
+from app.objects.abstract_objects.abstract_buttons import Button, cancel_menu_button, \
+    check_if_button_in_list_was_pressed
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -15,12 +16,13 @@ from app.backend.cadets.add_edit_cadet import verify_cadet_and_return_warnings
 from app.frontend.shared.add_edit_cadet_form import (
     CadetAndVerificationText,
     get_add_cadet_form_with_information_passed,
-    verify_form_with_cadet_details, get_cadet_from_form, add_cadet_from_form_to_data,
+    verify_form_with_cadet_details, add_cadet_from_form_to_data,
 )
 
-from app.objects.cadets import Cadet, sort_a_list_of_cadets, SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, SORT_BY_SIMILARITY_DOB, SORT_BY_SIMILARITY_NAME, SORT_BY_DOB_DSC
-from app.objects.exceptions import arg_not_passed, missing_data
-
+from app.objects.cadets import Cadet, sort_a_list_of_cadets, SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, \
+    SORT_BY_SIMILARITY_DOB, SORT_BY_SIMILARITY_NAME, SORT_BY_DOB_DSC, default_cadet
+from app.objects.exceptions import arg_not_passed
+from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME
 
 @dataclass
 class ParametersForGetOrSelectCadetForm:
@@ -30,7 +32,9 @@ class ParametersForGetOrSelectCadetForm:
     skip_button: bool = False
     final_add_button: bool = False
     see_all_cadets_button: bool = False
+    default_cadet_passed: bool = False
     sort_by: str = SORT_BY_FIRSTNAME
+    similarity_name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME
 
     def save_values_to_state(self, interface: abstractInterface):
         interface.set_persistent_value(SORT_BY_STATE, self.sort_by)
@@ -42,6 +46,18 @@ class ParametersForGetOrSelectCadetForm:
         self.final_add_button = interface.get_persistent_value(FINAL_ADD, False)
         self.see_all_cadets_button = interface.get_persistent_value(SEE_ALL_CADETS, False)
 
+    def clear_values_in_state(self, interface: abstractInterface):
+        for key in [SORT_BY_STATE, SEE_ALL_CADETS, FINAL_ADD]:
+            interface.clear_persistent_value(key)
+
+    def update_with_passed_cadet(self, cadet: Cadet):
+        if cadet is default_cadet:
+            self.default_cadet_passed = True
+            self.see_all_cadets_button = True
+        else:
+            self.default_cadet_passed = False
+
+
 SORT_BY_STATE = '*selectcadetform_sortyby'
 SEE_ALL_CADETS = '*selectcadetform_seelall'
 FINAL_ADD = "*selectcadtes_finaladd"
@@ -49,23 +65,18 @@ FINAL_ADD = "*selectcadtes_finaladd"
 def get_add_or_select_existing_cadet_form(
     interface: abstractInterface,
     parameters: ParametersForGetOrSelectCadetForm,
-    cadet: Cadet = arg_not_passed,  ## Is passed only on first iteration when cadet is from data not form
+    cadet: Cadet = arg_not_passed,  ## can be eithier cadet (passed from eg registration data), arg_not_passed (subsequent calls, get from form), or default_cadet
 ) -> Form:
     parameters.get_values_from_state(interface)
+    parameters.update_with_passed_cadet(cadet)
+
     cadet_and_text = get_cadet_and_verification_text(interface=interface, cadet=cadet)
-
-    verification_text = cadet_and_text.verification_text
-    cadet = cadet_and_text.cadet
-
-    if len(verification_text) == 0:
-        ## nothing to check, so can put add button up
-        parameters.final_add_button = True
 
     ## First time, don't include final or all cadets
     footer_buttons = get_footer_buttons_add_or_select_existing_cadets_form(
         interface=interface,
-        cadet=cadet,
-        parameters=parameters
+        parameters=parameters,
+        cadet_and_text=cadet_and_text
     )
     # Custom header text
 
@@ -81,6 +92,12 @@ def get_cadet_and_verification_text(interface: abstractInterface, cadet: Cadet =
         ## Form has been filled in, this isn't our first rodeo, get cadet from form
         print("Getting cadet from form")
         cadet_and_text = verify_form_with_cadet_details(interface=interface)
+    elif cadet is default_cadet:
+        verification_text = ''
+        cadet_and_text = CadetAndVerificationText(
+            cadet=cadet,
+            verification_text=verification_text
+        )
     else:
         ## Cadet details as in WA passed through, uese these
         verification_text = verify_cadet_and_return_warnings(
@@ -94,19 +111,26 @@ def get_cadet_and_verification_text(interface: abstractInterface, cadet: Cadet =
 
 def get_footer_buttons_add_or_select_existing_cadets_form(
     interface: abstractInterface,
-    cadet: Cadet,
+    cadet_and_text: CadetAndVerificationText,
     parameters: ParametersForGetOrSelectCadetForm,
 
 ) -> ListOfLines:
-    print("cadet for buttons is %s" % cadet)
+    cadet = cadet_and_text.cadet
+    verification_text = cadet_and_text.verification_text
     extra_buttons =get_extra_buttons(parameters)
-    main_buttons = get_list_of_main_buttons(parameters=parameters, cadet=cadet)
+
+    if len(verification_text) == 0 and not parameters.default_cadet_passed:
+        ## nothing to check, so can put add button up
+        parameters.final_add_button = True
+
+    main_buttons = get_list_of_main_buttons(parameters=parameters)
 
     cadet_buttons = get_list_of_cadet_buttons(
         interface=interface, cadet=cadet, parameters=parameters
     )
 
     return ListOfLines([main_buttons, extra_buttons, _______________]+cadet_buttons)
+
 
 def get_extra_buttons(parameters: ParametersForGetOrSelectCadetForm):
     extra_buttons = []
@@ -120,10 +144,13 @@ def get_extra_buttons(parameters: ParametersForGetOrSelectCadetForm):
 
 
 
-def get_list_of_main_buttons(    parameters: ParametersForGetOrSelectCadetForm, cadet: Cadet) -> Line:
-    main_buttons = [check_cadet_for_me_button]
-    if parameters.final_add_button:
-        main_buttons.append(add_cadet_button)
+def get_list_of_main_buttons(    parameters: ParametersForGetOrSelectCadetForm) -> Line:
+    if parameters.default_cadet_passed:
+        main_buttons = [check_cadet_for_me_button]
+    elif parameters.final_add_button:
+        main_buttons = [check_cadet_for_me_button, add_cadet_button]
+    else:
+        main_buttons = [check_confirm_allow_to_add_cadet_button]
 
     return Line(main_buttons)
 
@@ -140,13 +167,15 @@ def get_list_of_cadet_buttons(
     else:
         ## similar cadets with option to see more
         list_of_cadets = get_list_of_similar_cadets(
-            object_store=interface.object_store, cadet=cadet
+            object_store=interface.object_store, cadet=cadet,
+            name_threshold=parameters.similarity_name_threshold
         )
         msg = "Currently choosing from similar cadets only:"
         state_button = see_all_cadets_button
 
 
-    list_of_cadets= sort_a_list_of_cadets(list_of_cadets, sort_by=parameters.sort_by, similar_cadet=cadet)
+    list_of_cadets= sort_a_list_of_cadets(list_of_cadets, sort_by=parameters.sort_by, similar_cadet=cadet,
+                                          )
     sort_order_buttons  = get_sort_order_buttons(parameters)
     cadet_choice_buttons = Line([Button(str(cadet)) for cadet in list_of_cadets])
 
@@ -168,7 +197,12 @@ def get_sort_order_buttons(
     if current_sort_order is not arg_not_passed:
         possible_sort_labels.remove(current_sort_order)
 
-    return [sort_msg]+[Button(sort_label) for sort_label in possible_sort_labels]
+    buttons = [sort_msg]+[Button(sort_label) for sort_label in possible_sort_labels]
+
+    if current_sort_order in [SORT_BY_SIMILARITY_DOB, SORT_BY_SIMILARITY_NAME]:
+        buttons.append(refresh_button)
+
+    return buttons
 
 def is_button_a_sort_button(button_value: str):
     return button_value in possible_sorts
@@ -204,7 +238,7 @@ def generic_post_response_to_add_or_select_cadet(
     interface: abstractInterface,
 parameters: ParametersForGetOrSelectCadetForm
 ) -> ResultFromAddOrSelect:
-
+    parameters.get_values_from_state(interface)
     last_button_pressed = interface.last_button_pressed()
     print("last button %s" % last_button_pressed)
 
@@ -214,18 +248,30 @@ parameters: ParametersForGetOrSelectCadetForm
             parameters=parameters
         )
 
-    elif skip_button.pressed(last_button_pressed):
+    parameters.clear_values_in_state(interface)
+    if skip_button.pressed(last_button_pressed):
         return ResultFromAddOrSelect(skip=True)
 
     elif cancel_menu_button.pressed(last_button_pressed):
         return ResultFromAddOrSelect(cancel=True)
 
     elif add_cadet_button.pressed(last_button_pressed):
-        cadet =add_cadet_from_form_to_data(interface)
+        try:
+            cadet =add_cadet_from_form_to_data(interface)
+        except Exception as e:
+            interface.log_error("Error %s when adding cadet to data" % str(e))
+            return form_as_result(interface=interface, parameters=parameters)
+
+
         return ResultFromAddOrSelect(cadet=cadet, cadet_was_added=True)
 
     else:
-        cadet = get_existing_cadet_selected_from_button(interface)
+        try:
+            cadet = get_existing_cadet_selected_from_button(interface)
+        except Exception as e:
+            interface.log_error("Error %s when selecting exiating cadet" % str(e))
+            return  form_as_result(interface=interface, parameters=parameters)
+
         return ResultFromAddOrSelect(cadet=cadet, cadet_was_added=False)
 
 def response_requires_new_form(interface: abstractInterface):
@@ -233,9 +279,14 @@ def response_requires_new_form(interface: abstractInterface):
     if is_button_a_sort_button(last_button_pressed):
         return True
 
-    return see_similar_cadets_only_button.pressed(
-        last_button_pressed
-    ) or check_cadet_for_me_button.pressed(last_button_pressed) or see_all_cadets_button.pressed(last_button_pressed)
+    return check_if_button_in_list_was_pressed(last_button_pressed=last_button_pressed,
+                                               list_of_buttons=[
+                                                   see_similar_cadets_only_button,
+                                                   see_all_cadets_button,
+                                                   check_confirm_allow_to_add_cadet_button,
+                                                   check_cadet_for_me_button,
+                                                   refresh_button
+                                               ])
 
 
 def generic_post_response_to_add_or_select_when_returning_new_form(
@@ -247,11 +298,15 @@ def generic_post_response_to_add_or_select_when_returning_new_form(
     if is_button_a_sort_button(last_button_pressed):
         print("Sorting by %s" % last_button_pressed)
         parameters.sort_by = last_button_pressed
+    elif refresh_button.pressed(last_button_pressed):
+        pass
 
     elif see_similar_cadets_only_button.pressed(
         last_button_pressed
     ):
         parameters.see_all_cadets_button = False
+    elif check_confirm_allow_to_add_cadet_button.pressed(last_button_pressed):
+        parameters.final_add_button = True
 
     elif check_cadet_for_me_button.pressed(last_button_pressed):
         parameters.final_add_button = True
@@ -266,13 +321,7 @@ def generic_post_response_to_add_or_select_when_returning_new_form(
 
     parameters.save_values_to_state(interface)
 
-    form = get_add_or_select_existing_cadet_form(
-        interface=interface,
-        parameters=parameters)
-
-    return ResultFromAddOrSelect(
-        form=form
-        )
+    return form_as_result(interface=interface, parameters=parameters)
 
 
 
@@ -290,16 +339,32 @@ def get_existing_cadet_selected_from_button(interface: abstractInterface) -> Cad
 
     return cadet
 
+def form_as_result(interface: abstractInterface, parameters: ParametersForGetOrSelectCadetForm) -> ResultFromAddOrSelect:
+    form = get_add_or_select_existing_cadet_form(
+        interface=interface,
+        parameters=parameters)
+
+    return ResultFromAddOrSelect(
+        form=form
+        )
+
+
+
 CHECK_CADET_FOR_ME_BUTTON_LABEL = "Please check the details again for me before I add"
+CHECK_CADET_CONFIRM_BUTTON_LABEL = "I have double checked these details - allow me to add"
 FINAL_CADET_ADD_BUTTON_LABEL = "Yes - these details are correct - add this new cadet"
 SEE_ALL_CADETS_BUTTON_LABEL = "Choose from all existing cadets"
 SEE_SIMILAR_CADETS_ONLY_LABEL = "See similar cadets only"
 SKIP_BUTTON_LABEL = (
     "Skip (do not use if it is a real cadet name)"
 )
+REFRESH_LIST_BUTTON_LABEL = "Refresh list"
+
 
 add_cadet_button = Button(FINAL_CADET_ADD_BUTTON_LABEL)
 check_cadet_for_me_button = Button(CHECK_CADET_FOR_ME_BUTTON_LABEL)
+check_confirm_allow_to_add_cadet_button = Button(CHECK_CADET_CONFIRM_BUTTON_LABEL)
 see_similar_cadets_only_button = Button(SEE_SIMILAR_CADETS_ONLY_LABEL)
 see_all_cadets_button = Button(SEE_ALL_CADETS_BUTTON_LABEL)
 skip_button = Button(SKIP_BUTTON_LABEL)
+refresh_button = Button(REFRESH_LIST_BUTTON_LABEL)

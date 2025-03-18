@@ -44,11 +44,11 @@ This is likely to happen if a sailor doesn't renew their membership, or if the i
 
 This is likely to happen if a sailor was originally added to the system as part of an event but we didn't know if they were members or not. The sailor is confirmed in the system as a none member.
 
-*If a sailor is in the imported membership list, and there are no similar sailors in the system*
+*If a sailor is in the imported membership list, and there are no remotely similar sailors in the system*
 
 This is likely to happen if a sailor has just joined, but hasn't yet done any events. The sailor is added to the system as a new sailor, and marked as a member.
 
-*If a sailor is in the imported membership list, and there similar (but not identical) sailors in the system already*
+*If a sailor is in the imported membership list, and there broadly similar (but not identical) sailors in the system already*
 
 You will be asked to confirm eithier:
 
@@ -143,7 +143,7 @@ If you think the imported sailor really is new, then click on 'please check the 
 
 You have the option of editing the name and DOB of the sailor before adding if you think the import file is wrong, but this isn't recommended. If there is a difference between the Skipperman database and the membership database (currently Wild Apricot), you will have to reconcile them every time you import a membership list. Only change the DOB if the club membership database is wrong (and ask to get it corrected), and only change the name if the sailor would really prefer to be known by a different name eg a shortened version, or if as here the membership system has two names as here. 
 
-Once you are happy click on `Yes - these details are correct - add this new sailor` 
+Once you are happy click on `Yes - these details are correct - add this new cadet` 
  
 
 ### Select an existing sailor and confirm their membership
@@ -152,7 +152,7 @@ The sailors you can choose from have buttons. Initially this will only show sail
 
 You can either:
 
-- Click on `Choose from all existing sailors` if you think this is an existing sailor, but not one of the ones with buttons to select from. You can then choose one of those sailors, or switch back to seeing just the similar sailors.
+- Click on `Choose from all existing sailors` if you think this is an existing sailor, but not one of the ones with buttons to select from. You can then choose one of those sailors, or switch back to seeing just the similar sailors. You can also sort the list of sailors in various ways to try and find the sailor you want.
 - Click on the button with the sailor name on. This will mark that sailor as a member and move on to the next option.
 
 *Note the membership status of the sailors who were originally marked as members in the system is shown as TBC - whilst the import is happening we aren't sure if sailors are members or not.*

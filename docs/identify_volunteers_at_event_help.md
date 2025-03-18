@@ -10,13 +10,13 @@ The page tells you which sailor the volunteer was registered with. Since you can
 
 ## This is not a new volunteer
 
-If this isn't actually a new volunteer: you will probably see buttons to select an existing volunteer - Skipperman will show you the volunteers that have similar names. Click on the appropriate volunteer to identify them. If you can't see the volunteer you want, click on `See all volunteers`. You can go back to seeing just the most similar volunteers by clicking `See similar volunteers only`.
+If this isn't actually a new volunteer: you will probably see buttons to select an existing volunteer - Skipperman will show you the volunteers that have similar names. Click on the appropriate volunteer to identify them. If you can't see the volunteer you want, click on `See all volunteers`. You can sort the full list of volunteers a few different ways to try and find the person you want. You can go back to seeing just the most similar volunteers by clicking `See similar volunteers only`.
 
 ## This is a new volunteer
 
 **It's really important that you don't add duplicate volunteers to the Skipperman data**
 
-But if you are sure this is a new volunteer: check the first and second name are correct, then click `Add this new volunteer`. If the volunteer has errors (too similar to existing volunteer or names too short) you will have to first click `Please check these volunteer details for me`.  
+But if you are sure this is a new volunteer: check the first and second name are correct, then click `I have double checked the volunteers details entered - allow me to add`, and then `Yes - these details are correct - add this new volunteer`. 
 
 ## This isn't really a volunteer
 

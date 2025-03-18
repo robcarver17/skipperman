@@ -7,7 +7,7 @@ from app.frontend.shared.get_or_select_cadet_forms import get_add_or_select_exis
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import  ListOfLines
-from app.objects.cadets import Cadet
+from app.objects.cadets import Cadet, default_cadet
 from app.objects.exceptions import missing_data
 
 
@@ -17,6 +17,7 @@ def display_add_unregistered_form(
 
     return get_add_or_select_existing_cadet_form(
         interface=interface,
+        cadet = default_cadet,
         parameters=get_or_select_parameters
     )
 

@@ -19,7 +19,7 @@ from app.backend.volunteers.add_edit_volunteer import (
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
-    Button,
+    Button, HelpButton,
 )
 from app.objects.abstract_objects.abstract_form import Form, textInput, checkboxInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -29,6 +29,7 @@ from app.objects.abstract_objects.abstract_lines import (
     _______________,
 )
 from app.objects.abstract_objects.abstract_text import bold
+from app.objects.exceptions import arg_not_passed
 from app.objects.volunteers import Volunteer, default_volunteer
 
 
@@ -82,12 +83,19 @@ default_volunteer_and_text = VolunteerAndVerificationText(
 def get_add_volunteer_form_with_information_passed(
     footer_buttons: Union[Line, ListOfLines, ButtonBar],
     header_text: ListOfLines = "Add a new volunteer",
+    help_string: str = arg_not_passed,
     volunteer_and_text: VolunteerAndVerificationText = default_volunteer_and_text,  ## if blank
 ) -> Form:
     form_fields = form_fields_for_add_volunteer(volunteer_and_text.volunteer)
+    if help_string is arg_not_passed:
+        nav_bar = ''
+    else:
+        nav_bar = ButtonBar([HelpButton(help_string)])
 
     list_of_lines_inside_form = ListOfLines(
         [
+            nav_bar,
+            _______________,
             header_text,
             _______________,
             form_fields,

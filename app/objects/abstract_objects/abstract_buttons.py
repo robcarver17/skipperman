@@ -43,6 +43,13 @@ class Button:
     def pressed(self, last_button: str):
         return self.name == last_button
 
+def check_if_button_in_list_was_pressed(last_button_pressed: str, list_of_buttons: List[Button]):
+    for button in list_of_buttons:
+        if button.pressed(last_button_pressed):
+            return True
+
+    return False
+
 
 @dataclass
 class MainMenuNavButton:

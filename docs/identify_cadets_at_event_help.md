@@ -17,7 +17,9 @@ Finally, you will see some option buttons.
 
 ## If this is not a new cadet
 
-You will probably see a warning saying that the Cadet is very similar to an existing cadet. At the bottom of the page you will see buttons with existing cadet(s) on them. Click to choose the cadet you want. If you can't see the cadet you want, click on `See all cadets`. You can also go back to just seeing the most similar cadets by clicking `See similar cadets only`'.
+You will probably see a warning saying that the Cadet is very similar to an existing cadet. At the bottom of the page you will see buttons with existing cadet(s) on them. Click to choose the cadet you want. If you can't see the cadet you want, click on `Choose from all existing cadets`. You can sort the full list of cadets in different ways to make it easier to find the cadet you are looking for. 
+
+You can also go back to just seeing the most similar cadets by clicking `See similar cadets only`'.
 
 ## If this is actually a new cadet
 
@@ -36,6 +38,8 @@ For membership status:
 Membership or otherwise can be confirmed by [importing a list of club members](import_membership_list_help). 
 
 Remember it is possible to edit the cadet details, and these can also be updated by importing a list of club members from Wild Apricot, so don't worry too much if these aren't precisely right.
+
+Once you are happy, click on `I have double checked these details - allow me to add` and then on `Yes - these details are correct - add this new cadet`.
 
 ## If this is a test entry
 

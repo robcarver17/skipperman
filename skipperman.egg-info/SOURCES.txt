@@ -366,7 +366,6 @@ app/frontend/events/volunteer_identification/add_volunteer_to_event_form_content
 app/frontend/events/volunteer_identification/add_volunteers_process_form.py
 app/frontend/events/volunteer_identification/add_volunteers_to_event.py
 app/frontend/events/volunteer_identification/track_state_in_volunteer_allocation.py
-app/frontend/events/volunteer_identification/volunteer_selection_form_contents.py
 app/frontend/events/volunteer_identification/../../../data_access/configuration/configuration.yaml
 app/frontend/events/volunteer_rota/ENTRY1_display_main_rota_page.py
 app/frontend/events/volunteer_rota/__init__.py
@@ -459,6 +458,7 @@ app/frontend/shared/__init__.py
 app/frontend/shared/add_edit_cadet_form.py
 app/frontend/shared/add_edit_volunteer_forms.py
 app/frontend/shared/add_manual_registration.py
+app/frontend/shared/add_select_volunteer_form.py
 app/frontend/shared/cadet_connection_forms.py
 app/frontend/shared/cadet_state.py
 app/frontend/shared/events_state.py

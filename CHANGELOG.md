@@ -1,12 +1,12 @@
 
 # to do next
 Before first racing event is run
-- make it easier to find cadets/volunteers when looking at all of them #58
-- add guess boat button #40
+- Connected cadets shown in volunteer rota are all cadets, not just ones at event #66
 - add raincheck all button to volunteers in rota page #59
 - report reset print options to defaults, different defaults for report types #53
 - keep double handers aligned #65
 - documentation for reporting #49
+- add guess boat button #40
 
 in near future (before first training)
 - more elegant handling of manual reg #64
@@ -27,6 +27,7 @@ Before Cadet week
 # Recent
 
 - better handling of discrepancies in membership list upload
+- made it easier to find cadets/volunteers when looking at all of them by adding sort order (also refactored code) 
 
 # Version 2.1
 

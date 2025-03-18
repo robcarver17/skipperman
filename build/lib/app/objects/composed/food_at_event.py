@@ -12,7 +12,7 @@ from app.objects.food import (
 )
 from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.volunteers import ListOfVolunteers, Volunteer
-from build.lib.app.objects.exceptions import arg_not_passed
+from app.objects.exceptions import arg_not_passed
 
 
 class DictOfCadetsWithFoodRequirementsAtEvent(Dict[Cadet, FoodRequirements]):

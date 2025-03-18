@@ -1,7 +1,6 @@
 
 # to do next
 Before first racing event is run
-- Connected cadets shown in volunteer rota are all cadets, not just ones at event #66
 - add raincheck all button to volunteers in rota page #59
 - report reset print options to defaults, different defaults for report types #53
 - keep double handers aligned #65
@@ -26,6 +25,7 @@ Before Cadet week
 
 # Recent
 
+- Connected cadets shown in volunteer rota are all cadets, not just ones at event
 - better handling of discrepancies in membership list upload
 - made it easier to find cadets/volunteers when looking at all of them by adding sort order (also refactored code) 
 

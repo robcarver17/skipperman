@@ -43,16 +43,16 @@ from app.objects.composed.volunteers_with_all_event_data import AllEventDataForV
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.volunteers import Volunteer
-
+from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 
 def get_location_button(
-    object_store: ObjectStore,
+    dict_of_all_cadet_event_data: DictOfAllEventInfoForCadets,
     volunteer_data_at_event: AllEventDataForVolunteer,
     ready_to_swap: bool,
 ) -> Button:
 
     location = get_cadet_location_string_for_volunteer(
-        object_store=object_store,
+        dict_of_all_cadet_event_data=dict_of_all_cadet_event_data,
         volunteer_data_at_event=volunteer_data_at_event,
 
     )

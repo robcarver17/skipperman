@@ -1,5 +1,7 @@
 from typing import List
 
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets
+from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
 from app.objects.volunteers import Volunteer
 
@@ -79,12 +81,14 @@ def get_body_of_table_at_event(
             sorts_and_filters=sorts_and_filters,
         )
     )
+    dict_of_all_cadet_event_data = get_dict_of_all_event_info_for_cadets(object_store=interface.object_store, event=event)
 
     other_rows = [
         get_row_for_volunteer_at_event(
             ready_to_swap=ready_to_swap,
             volunteer=volunteer,
             volunteer_data_at_event=volunteer_data_at_event,
+            dict_of_all_cadet_event_data=dict_of_all_cadet_event_data,
             interface=interface,
         )
         for volunteer, volunteer_data_at_event in dict_of_volunteers_at_event_with_event_data.items()
@@ -97,12 +101,15 @@ def get_row_for_volunteer_at_event(
     interface: abstractInterface,
     volunteer: Volunteer,
     volunteer_data_at_event: AllEventDataForVolunteer,
+dict_of_all_cadet_event_data: DictOfAllEventInfoForCadets,
+
     ready_to_swap: bool = False,
 ) -> RowInTable:
     first_part = get_first_part_of_row_for_volunteer_at_event(
         interface=interface,
         volunteer=volunteer,
         volunteer_data_at_event=volunteer_data_at_event,
+        dict_of_all_cadet_event_data=dict_of_all_cadet_event_data,
         ready_to_swap=ready_to_swap,
     )
 
@@ -123,13 +130,14 @@ def get_first_part_of_row_for_volunteer_at_event(
     interface: abstractInterface,
     volunteer: Volunteer,
     volunteer_data_at_event: AllEventDataForVolunteer,
+dict_of_all_cadet_event_data: DictOfAllEventInfoForCadets,
     ready_to_swap: bool,
 ) -> list:
     name_button = get_volunteer_button_or_string(
         volunteer=volunteer, ready_to_swap=ready_to_swap
     )
     location = get_location_button(
-        object_store=interface.object_store,
+        dict_of_all_cadet_event_data=dict_of_all_cadet_event_data,
         ready_to_swap=ready_to_swap,
         volunteer_data_at_event=volunteer_data_at_event,
     )

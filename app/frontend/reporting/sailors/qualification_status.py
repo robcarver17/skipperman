@@ -27,7 +27,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     CANCEL_BUTTON_LABEL,
     Button,
     ButtonBar,
-    main_menu_button,
+    main_menu_button, back_menu_button,
 )
 
 
@@ -40,7 +40,7 @@ def display_form_for_qualification_status_report(interface: abstractInterface):
         size=4,
     )
     contents_of_form = ListOfLines(
-        [ButtonBar([main_menu_button, cancel_button]), title, event_buttons]
+        [ButtonBar([main_menu_button, back_menu_button]), title, event_buttons]
     )
 
     return Form(contents_of_form)
@@ -53,7 +53,7 @@ def post_form_for_qualification_status_report(
     interface: abstractInterface,
 ) -> Union[File, Form, NewForm]:
     last_button = interface.last_button_pressed()
-    if cancel_button.pressed(last_button):
+    if back_menu_button.pressed(last_button):
         return previous_form(interface)
     else:
         return action_when_event_button_clicked(interface)

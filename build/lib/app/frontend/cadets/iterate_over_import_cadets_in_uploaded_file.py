@@ -136,7 +136,7 @@ def process_when_cadet_to_be_added_from_membership_list(
     interface: abstractInterface, cadet: Cadet
 ) -> Form:
     add_new_verified_cadet(object_store=interface.object_store, cadet=cadet)
-    interface.log_error("Automatically dded new cadet from membership list %s" % str(cadet))
+    interface.log_error("Automatically added new cadet from membership list %s" % str(cadet))
     interface.flush_cache_to_store()
 
     return next_iteration_over_rows_in_temp_cadet_file(interface)

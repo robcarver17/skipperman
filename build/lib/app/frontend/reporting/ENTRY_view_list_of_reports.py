@@ -9,9 +9,7 @@ from app.frontend.reporting.boats.report_boats import display_form_report_boat
 from app.frontend.reporting.rollcall_and_contacts.rollcall_report import (
     display_form_report_rollcall,
 )
-from app.frontend.reporting.qualifications.ENTRY_report_qualifications import (
-    display_form_for_qualifications_report,
-)
+from app.frontend.reporting.sailors.ENTRY_report_sailors import display_form_for_sailors_report
 from app.frontend.reporting.data_dumps.ENTRY_data_dump import (
     display_form_for_data_dump_report,
 )
@@ -40,7 +38,8 @@ GROUP_ALLOCATION_REPORT_BUTTON_LABEL = "Group allocation for event"
 ROTA_REPORT_BUTTON_LABEL = "Volunteer rota for event"
 BOATS_REPORT_BUTTON_LABEL = "Spotter sheet for event"
 ROLLCALL_REPORT_BUTTON_LABEL = "Rollcall/health/contacts for event"
-QUALIFICATIONS_REPORT_BUTTON_LABEL = "Cadet qualifications and ticks"
+SAILORS_DATA_REPORT_BUTTON_LABEL = "Sailors data"
+CADET_EVENT_HISTORY_REPORT_BUTTON_LABEL = "Cadet event history"
 DUMP_BUTTON_LABEL = "Data dumps"
 EVENT_DATA_BUTTON_LABEL = "All event data in giant spreadsheet"
 
@@ -50,9 +49,10 @@ DICT_OF_REPORT_LABELS_AND_STAGES = {
     ROTA_REPORT_BUTTON_LABEL: display_form_report_rota,
     BOATS_REPORT_BUTTON_LABEL: display_form_report_boat,
     ROLLCALL_REPORT_BUTTON_LABEL: display_form_report_rollcall,
-    QUALIFICATIONS_REPORT_BUTTON_LABEL: display_form_for_qualifications_report,
+    SAILORS_DATA_REPORT_BUTTON_LABEL: display_form_for_sailors_report,
     EVENT_DATA_BUTTON_LABEL: display_form_for_all_event_data_report,
     DUMP_BUTTON_LABEL: display_form_for_data_dump_report,
+
 }
 
 list_of_report_labels = list(DICT_OF_REPORT_LABELS_AND_STAGES.keys())

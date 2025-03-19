@@ -1,7 +1,7 @@
 import os.path
 from typing import Union
 
-from app.frontend.reporting.qualifications.achieved_qualifications import (
+from app.frontend.reporting.sailors.achieved_qualifications import (
     write_qualifications_to_temp_csv_file_and_return_filename,
 )
 

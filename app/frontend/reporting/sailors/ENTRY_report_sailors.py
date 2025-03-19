@@ -1,12 +1,12 @@
-from app.frontend.reporting.qualifications.achieved_qualifications import (
+from app.frontend.reporting.sailors.achieved_qualifications import (
     write_qualifications_to_temp_csv_file_and_return_filename,
 )
 from app.objects.abstract_objects.abstract_lines import Line
 from app.objects.abstract_objects.abstract_buttons import back_menu_button
-from app.frontend.reporting.qualifications.qualification_status import *
+from app.frontend.reporting.sailors.qualification_status import *
 
 
-def display_form_for_qualifications_report(interface: abstractInterface):
+def display_form_for_sailors_report(interface: abstractInterface):
     contents_of_form = ListOfLines(
         [
             ButtonBar([main_menu_button, back_menu_button]),
@@ -32,7 +32,7 @@ expected_qualification_report_button = Button(
 )  ## tile
 
 
-def post_form_for_qualifications_report(
+def post_form_for_sailors_report(
     interface: abstractInterface,
 ) -> Union[File, Form, NewForm]:
     last_button = interface.last_button_pressed()
@@ -52,5 +52,5 @@ def post_form_for_qualifications_report(
 
 def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(
-        post_form_for_qualifications_report
+        post_form_for_sailors_report
     )

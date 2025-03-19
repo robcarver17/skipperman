@@ -38,7 +38,7 @@ Looks like the sailor has rejoined - or belatedly paid their membership fees - w
 
 *If a sailor is in the system as a current member, but doesn't appear in the imported membership list*
 
-This is likely to happen if a sailor doesn't renew their membership, or if the imported list only includes cadet members and the relevant sailor is 'aged out'. The sailor is marked as a lapsed member. Since aged out (junior) members don't do training weekends or cadet weeks, just racing events, this isn't a problem.
+This is likely to happen if a sailor doesn't renew their membership, or if the imported list excludes members over the age of 25. We will mark any over 25s as lapsed members even if they are not, but they would not in any case be taking any further part in cadet / junior racing or training events. 
 
 *If a sailor is in the system as an unconfirmed member, but doesn't appear in the imported membership list*
 
@@ -106,9 +106,18 @@ It is *very* important that a sailor is not added twice! So the system goes to a
 
 Firstly, make sure you are not in [read only](main-menu.md#read-only) mode if you want to make changes - use read only mode for experimenting. Then download the file you want to import from the membership system (currently Wild Apricot). 
 
-You may need to do some cleaning if the date format isn't quite right; and it's also worth deleting any obviously weird members (like the special ones with no date of birth), and anyone born more than 26 years ago (since certain events are open to junior members, we want to confirm that ex-Cadets who are juniors are still members).
-
 The membership file must be a csv or xls with following named columns: `First name`, `Last name`, `Date of Birth`. If the column names shown on the Skipperman web page are different from these, use those shown on the web page. Currently, if you export a list of members from Wild Apricot, it will include these fields. Any additional fields will be ignored, but if any of the expected columns are missing it will break.
+
+You may need to do some manual cleaning if the date format isn't quite right.
+
+Make sure you delete from the spreadsheet before importing:
+- any obviously weird members (like the special ones with no date of birth), 
+- anyone born more than 26 years ago (since certain events are open to junior members, we want to confirm that ex-Cadets who are juniors are still members). If you don't do this, it will slow down the import.
+- Lapsed members
+- 'Pending - new' members; since they haven't yet been confirmed, unless you know for sure they are definitely joining
+
+Optionally, you can also remove:
+- 'Pending-renewal' membership; up to you. If you remove them, they will become lapsed, and then 'un-lapse' when they renew. Alternatively you can leave them in the file for now.
 
 ## Upload the file
 

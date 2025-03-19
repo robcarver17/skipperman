@@ -1,5 +1,5 @@
 from copy import copy
-from typing import Union
+from typing import Union, List
 
 from app.backend.groups.group_allocation_info import (
     get_group_allocation_info,
@@ -60,7 +60,7 @@ from app.objects.abstract_objects.abstract_lines import (
 )
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.abstract_objects.abstract_text import Heading
-from app.objects.cadets import Cadet
+from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.events import (
     Event,
 )
@@ -225,25 +225,23 @@ def get_inner_form_for_cadet_allocation(
         )
     )
     group_allocation_info = get_group_allocation_info(dict_of_all_event_data)
+    top_row = get_top_row(
+                previous_groups_for_cadets=previous_groups_for_cadets,
+                group_allocation_info=group_allocation_info,
+                interface=interface,
+            )
+    body = get_body_of_table_for_cadet_allocation(
+        previous_groups_for_cadets=previous_groups_for_cadets,
+        group_allocation_info=group_allocation_info,
+        list_of_cadets=list_of_cadets,
+        interface=interface,
+        dict_of_all_event_data=dict_of_all_event_data
+    )
 
     return Table(
         [
-            get_top_row(
-                previous_groups_for_cadets=previous_groups_for_cadets,
-                group_allocation_info=group_allocation_info,
-                interface=interface,
-            )
-        ]
-        + [
-            get_row_for_cadet(
-                interface=interface,
-                previous_groups_for_cadets=previous_groups_for_cadets,
-                group_allocation_info=group_allocation_info,
-                dict_of_all_event_data=dict_of_all_event_data,
-                cadet=cadet,
-            )
-            for cadet in list_of_cadets
-        ],
+        top_row
+        ]+body,
         has_column_headings=True,
         has_row_headings=True,
     )
@@ -295,6 +293,22 @@ def get_input_field_headings_for_day(day_name: str) -> list:
 
     return input_field_names
 
+def get_body_of_table_for_cadet_allocation(interface: abstractInterface,
+                                           group_allocation_info: GroupAllocationInfo,
+                                           dict_of_all_event_data: DictOfAllEventInfoForCadets,
+                                           previous_groups_for_cadets: DictOfEventAllocations,
+                                           list_of_cadets: ListOfCadets) -> List[RowInTable]:
+    table_rows= [
+        get_row_for_cadet(
+            interface=interface,
+            previous_groups_for_cadets=previous_groups_for_cadets,
+            group_allocation_info=group_allocation_info,
+            dict_of_all_event_data=dict_of_all_event_data,
+            cadet=cadet,
+        )
+        for cadet in list_of_cadets
+    ]
+    return table_rows
 
 def get_row_for_cadet(
     interface: abstractInterface,

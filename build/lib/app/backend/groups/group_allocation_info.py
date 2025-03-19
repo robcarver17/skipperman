@@ -135,4 +135,5 @@ def cadet_info_from_info_dict(
 
 def all_empty(some_dict: dict):
     all_values = list(some_dict.values())
-    return all([len(value) == 0 for value in all_values])
+    all_values_as_str = [str(x) for x in all_values]
+    return all([len(value) == 0 for value in all_values_as_str])

@@ -8,6 +8,7 @@ Before first racing event is run
 - add guess boat button #40
 
 in near future (before first training)
+- speed up large tables
 - more elegant handling of manual reg #64
 - instructors can do attendance online #63
 - add inactive cadets to group page with option to change status #42

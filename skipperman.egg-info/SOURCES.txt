@@ -49,6 +49,7 @@ app/backend/food/modify_food_data.py
 app/backend/food/summarise_food.py
 app/backend/food/../../data_access/configuration/configuration.yaml
 app/backend/groups/__init__.py
+app/backend/groups/cadet_event_history.py
 app/backend/groups/cadets_with_groups_at_event.py
 app/backend/groups/data_for_group_display.py
 app/backend/groups/group_allocation_info.py
@@ -424,9 +425,6 @@ app/frontend/reporting/boats/forms.py
 app/frontend/reporting/boats/processes.py
 app/frontend/reporting/boats/report_boats.py
 app/frontend/reporting/boats/../../../data_access/configuration/configuration.yaml
-app/frontend/reporting/cadets/__init__.py
-app/frontend/reporting/cadets/cadet_event_history.py
-app/frontend/reporting/cadets/../../../data_access/configuration/configuration.yaml
 app/frontend/reporting/data_dumps/ENTRY_data_dump.py
 app/frontend/reporting/data_dumps/__init__.py
 app/frontend/reporting/data_dumps/../../../data_access/configuration/configuration.yaml

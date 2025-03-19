@@ -1,7 +1,6 @@
 
 # to do next
 Before first racing event is run
-- training group preallocation spreadsheet #70
 - on input show progress #68
 - add delete from event button to volunteers in rota page #59
 - report reset print options to defaults, different defaults for report types #53
@@ -32,6 +31,7 @@ Before Cadet week
 
 # Recent
 
+- training group preallocation spreadsheet 
 - improve handling of import club membership list so that new adults / juniors are ignored, but existing ex cadets are included.
 - Connected cadets shown in volunteer rota are all cadets, not just ones at event
 - better handling of discrepancies in membership list upload

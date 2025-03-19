@@ -175,6 +175,12 @@ class ListOfCadets(GenericListOfObjectsWithIds):
         cadet_idx = self.index_of_id(cadet.id)
         return self.pop(cadet_idx)
 
+    def current_members_only(self):
+        return ListOfCadets([
+            cadet for cadet in self
+            if cadet.membership_status==current_member
+        ])
+
     def set_all_current_members_to_temporary_unconfirmed_status(self):
         for cadet in self:
             if cadet.membership_status == current_member:

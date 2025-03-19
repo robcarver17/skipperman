@@ -1,6 +1,7 @@
 from typing import List, Dict
 
 import pandas as pd
+
 from app.backend.qualifications_and_ticks.list_of_qualifications import (
     get_list_of_qualifications,
 )
@@ -12,13 +13,36 @@ from app.backend.groups.cadets_with_groups_at_event import (
     get_dict_of_cadets_with_groups_at_event,
 )
 
-from app.objects.cadets import Cadet
+from app.objects.cadets import Cadet, ListOfCadets
 
 from app.data_access.store.object_store import ObjectStore
 
 from app.objects.events import Event
 from app.objects.groups import Group
 from app.objects.qualifications import ListOfQualifications, Qualification
+
+
+def get_expected_qualifications_for_list_of_cadets_as_df(
+    object_store: ObjectStore,
+        list_of_cadets: ListOfCadets
+) -> pd.DataFrame:
+    list_of_qualifications = get_list_of_qualifications(object_store)
+
+    list_of_expected_qualifications = []
+    for cadet in list_of_cadets:
+        percentage_list = get_percentage_qualifications_for_single_cadet(
+            object_store=object_store,
+            cadet=cadet,
+            list_of_qualifications=list_of_qualifications,
+        )
+
+        list_of_expected_qualifications.append(percentage_list)
+
+    df = pd.DataFrame(list_of_expected_qualifications)
+    df.columns =  list_of_qualifications.list_of_names()
+    df.index = list_of_cadets.list_of_names()
+
+    return df
 
 
 def get_expected_qualifications_for_cadets_at_event(

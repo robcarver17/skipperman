@@ -456,9 +456,9 @@ app/frontend/reporting/shared/reporting_options.py
 app/frontend/reporting/shared/../../../data_access/configuration/configuration.yaml
 app/frontend/shared/__init__.py
 app/frontend/shared/add_edit_cadet_form.py
-app/frontend/shared/add_edit_volunteer_forms.py
+app/frontend/shared/add_edit_or_choose_volunteer_form.py
 app/frontend/shared/add_manual_registration.py
-app/frontend/shared/add_select_volunteer_form.py
+app/frontend/shared/add_or_select_volunteer.py
 app/frontend/shared/cadet_connection_forms.py
 app/frontend/shared/cadet_state.py
 app/frontend/shared/events_state.py

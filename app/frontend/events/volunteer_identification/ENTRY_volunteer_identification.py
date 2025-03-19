@@ -14,7 +14,7 @@ from app.backend.registration_data.volunter_relevant_information import (
 from app.backend.registration_data.identified_cadets_at_event import (
     is_cadet_marked_as_test_cadet_to_skip_in_for_row_in_raw_registration_data,
 )
-from app.frontend.shared.add_select_volunteer_form import ParametersForGetOrSelectVolunteerForm, \
+from app.frontend.shared.add_or_select_volunteer import ParametersForGetOrSelectVolunteerForm, \
     get_add_or_select_existing_volunteer_form, generic_post_response_to_add_or_select_volunteer
 
 from app.frontend.shared.events_state import get_event_from_state

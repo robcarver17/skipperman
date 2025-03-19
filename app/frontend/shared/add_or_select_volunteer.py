@@ -7,7 +7,7 @@ from app.backend.volunteers.add_edit_volunteer import verify_volunteer_and_warn
 from app.backend.volunteers.connected_cadets import get_list_of_relevant_volunteers
 from app.backend.volunteers.list_of_volunteers import get_list_of_volunteers, sort_list_of_volunteers, \
     get_volunteer_from_list_of_given_str_of_volunteer
-from app.frontend.shared.add_edit_volunteer_forms import VolunteerAndVerificationText, get_volunteer_from_form, \
+from app.frontend.shared.add_edit_or_choose_volunteer_form import VolunteerAndVerificationText, get_volunteer_from_form, \
     get_add_volunteer_form_with_information_passed, add_volunteer_from_form_to_data
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import Button, cancel_menu_button, \

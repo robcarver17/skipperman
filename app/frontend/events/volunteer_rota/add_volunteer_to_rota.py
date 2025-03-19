@@ -4,7 +4,7 @@ from app.backend.rota.add_volunteer import (
     get_list_of_volunteers_except_those_already_at_event,
     add_volunteer_to_event_with_full_availability,
 )
-from app.frontend.shared.add_select_volunteer_form import ParametersForGetOrSelectVolunteerForm, \
+from app.frontend.shared.add_or_select_volunteer import ParametersForGetOrSelectVolunteerForm, \
     get_add_or_select_existing_volunteer_form, generic_post_response_to_add_or_select_volunteer
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface

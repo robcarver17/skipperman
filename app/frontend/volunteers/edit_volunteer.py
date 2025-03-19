@@ -29,7 +29,7 @@ from app.objects.abstract_objects.abstract_interface import (
 )
 
 from app.frontend.shared.volunteer_state import get_volunteer_from_state
-from app.frontend.shared.add_edit_volunteer_forms import (
+from app.frontend.shared.add_edit_or_choose_volunteer_form import (
     get_volunteer_from_form,
     get_and_save_volunteer_skills_from_form,
     skills_form_entries,

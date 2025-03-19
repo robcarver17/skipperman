@@ -6,7 +6,7 @@ from app.frontend.form_handler import (
     initial_state_form,
     button_error_and_back_to_initial_state_form,
 )
-from app.frontend.shared.add_edit_volunteer_forms import (
+from app.frontend.shared.add_edit_or_choose_volunteer_form import (
     add_volunteer_from_form_to_data,
     verify_form_with_volunteer_details,
     get_add_volunteer_form_with_information_passed,

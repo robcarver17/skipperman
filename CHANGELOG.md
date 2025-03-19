@@ -1,6 +1,9 @@
 
 # to do next
 Before first racing event is run
+- import club membership list 
+- training group preallocation spreadsheet #70
+- on input show progress #68
 - add delete from event button to volunteers in rota page #59
 - report reset print options to defaults, different defaults for report types #53
 - keep double handers aligned #65
@@ -8,9 +11,11 @@ Before first racing event is run
 - add guess boat button #40
 
 in near future (before first training)
-- speed up large tables
+- WA qualication import #72
+- club boat limits #71
 - more elegant handling of manual reg #64
 - instructors can do attendance online #63
+- configure visible events in group allocation #69
 - add inactive cadets to group page with option to change status #42
 - merge cadet, merge volunteer #15
 - sort order refresh without clicking triangle
@@ -18,11 +23,13 @@ in near future (before first training)
 - edit event name #16 (don't allow days to be changed - delete instead)
 
 Before Cadet week
+- speed up display of large tables #67
 - food add non registered #28
 - food documentation #49
 - clothing documentation #49
 - add food / clothing to giant data dump #54
 - add missing stuff to data dumps #55
+- massive warning if unique key creators missing from field mappings
 
 # Recent
 

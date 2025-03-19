@@ -27,7 +27,7 @@ from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
     DetailListOfLines,
-    DetailLine,
+    DetailLine, ProgressBar,
 )
 from app.objects.abstract_objects.abstract_tables import (
     DetailTable,
@@ -57,7 +57,7 @@ from app.web.html.abstract_components_to_html import (
     get_html_for_detail_line,
     get_html_for_heading,
     get_html_image,
-    generic_html_button,
+    generic_html_button, get_html_for_progress_bar,
 )
 from app.web.html.html_components import (
     Html,
@@ -237,6 +237,7 @@ def get_html_for_element_in_line(
         Image,
         int,
         HorizontalLine,
+        ProgressBar
     ],
     urls_of_interest: UrlsOfInterest = arg_not_passed,
 ) -> Html:
@@ -344,6 +345,8 @@ def get_html_for_element_in_line(
         return get_html_image(element_in_line, urls_of_interest=urls_of_interest)
     elif type(element_in_line) is HorizontalLine:
         return horizontal_line
+    elif type(element_in_line) is ProgressBar:
+        return get_html_for_progress_bar(element_in_line)
 
     else:
         raise Exception(

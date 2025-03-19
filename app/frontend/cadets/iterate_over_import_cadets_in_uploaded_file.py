@@ -25,7 +25,7 @@ from app.frontend.shared.get_or_select_cadet_forms import (
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_lines import ListOfLines
+from app.objects.abstract_objects.abstract_lines import ListOfLines, ProgressBar, HorizontalLine
 
 from app.objects.cadets import Cadet
 from app.objects.membership_status import (
@@ -34,6 +34,7 @@ from app.objects.membership_status import (
     describe_status,
 )
 from app.objects.exceptions import NoMoreData, MissingData
+from app.objects.utils import percentage_of_x_in_y
 
 
 def begin_iteration_over_rows_in_temp_cadet_file(
@@ -152,6 +153,14 @@ def process_when_cadet_already_added_from_form(
 
 def display_verify_adding_cadet_from_list_form(interface: abstractInterface) -> Form:
     current_cadet = get_cadet_from_temp_file_and_state(interface)
+
+    edit_or_add_form_parameters = ParametersForGetOrSelectCadetForm(
+        header_text=get_header_text(interface),
+        help_string='import_membership_list_help',
+        similarity_name_threshold=SIMILARITY_LEVEL_TO_WARN_NAME_ON_MATCHING_MEMBERSHIP_LIST,
+        skip_button=True
+    )
+
     return get_add_or_select_existing_cadet_form(
         cadet=current_cadet,
         interface=interface,
@@ -159,24 +168,31 @@ def display_verify_adding_cadet_from_list_form(interface: abstractInterface) -> 
     )
 
 
-provided_header_text = ListOfLines(
-    [
-        "Looks like a potentially new cadet in the membership list - or could just be an existing member with slightly different details.',"
-        " Click on the existing cadet that matches this one (this will verify they are a member), or add cadet if really a new member, or skip if not a cadet or junior member",
-    ]
-)
 
-edit_or_add_form_parameters = ParametersForGetOrSelectCadetForm(
-    header_text=provided_header_text,
-    help_string='import_membership_list_help',
-    similarity_name_threshold = SIMILARITY_LEVEL_TO_WARN_NAME_ON_MATCHING_MEMBERSHIP_LIST,
-    skip_button=True
-)
+
+def get_header_text(interface: abstractInterface):
+    progress_bar = ProgressBar("Importing cadets from membership list: ", percentage_of_cadet_ids_done_in_registration_file(interface))
+    provided_header_text = ListOfLines(
+        [
+            progress_bar,
+            HorizontalLine(),
+            "Looks like a potentially new cadet in the membership list - or could just be an existing member with slightly different details.',"
+            " Click on the existing cadet that matches this one (this will verify they are a member), or add cadet if really a new member, or skip if not a cadet or junior member",
+        ]
+    )
+    return provided_header_text
 
 
 def post_verify_adding_cadet_from_list_form(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
+    edit_or_add_form_parameters = ParametersForGetOrSelectCadetForm(
+        header_text=get_header_text(interface),
+        help_string='import_membership_list_help',
+        similarity_name_threshold=SIMILARITY_LEVEL_TO_WARN_NAME_ON_MATCHING_MEMBERSHIP_LIST,
+        skip_button=True
+    )
+
     result = generic_post_response_to_add_or_select_cadet(
         interface=interface,
         parameters=edit_or_add_form_parameters
@@ -235,6 +251,13 @@ def change_or_warn_on_discrepancy(interface: abstractInterface, existing_cadet: 
 
 ### STATE
 
+def percentage_of_cadet_ids_done_in_registration_file(interface: abstractInterface) -> int:
+    list_of_cadets = get_temp_cadet_file_list_of_memberships()
+    current_cadet_id = get_cadet_id_in_temporary_file_from_state(interface=interface)
+
+    current_idx = list_of_cadets.index_of_id(current_cadet_id)
+
+    return percentage_of_x_in_y(current_idx, list_of_cadets)
 
 def reset_temp_cadet_file_counter_to_first_value(interface: abstractInterface) -> Cadet:
     list_of_cadets = get_temp_cadet_file_list_of_memberships()

@@ -1,5 +1,8 @@
 from typing import Union
 
+from app.frontend.events.cadets_at_event.track_cadet_id_in_state_when_importing import \
+    percentage_of_cadets_processed_at_event
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
 
 
@@ -22,7 +25,7 @@ from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, Hel
 from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
-    _______________,
+    _______________, ProgressBar, HorizontalLine,
 )
 
 from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
@@ -30,6 +33,7 @@ from app.objects.events import Event
 
 
 def display_form_for_update_to_existing_cadet_at_event(
+    interface: abstractInterface,
     cadet: Cadet,
     new_cadet_at_event_data: CadetWithIdAtEvent,
     existing_cadet_at_event_data: CadetWithIdAtEvent,
@@ -59,6 +63,9 @@ def display_form_for_update_to_existing_cadet_at_event(
             [
                 help_button_bar,
                 _______________,
+                progress_bar(interface),
+                HorizontalLine(),
+                _______________,
                 overall_message,
                 _______________,
                 _______________,
@@ -73,6 +80,9 @@ def display_form_for_update_to_existing_cadet_at_event(
     )
 
     return form
+
+def progress_bar(interface: abstractInterface):
+    return ProgressBar('Checking for changes in status and attendance across registered cadets', percentage_of_cadets_processed_at_event(interface)),
 
 
 help_button_bar = ButtonBar([HelpButton("resolve_changes_to_registration")])

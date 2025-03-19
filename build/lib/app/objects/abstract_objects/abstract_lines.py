@@ -64,3 +64,8 @@ def make_long_thing_detail_box(some_string: str):
         return DetailLine(string=some_string, name="Detail")
     else:
         return some_string
+
+@dataclass
+class ProgressBar:
+    label: str
+    percentage: int

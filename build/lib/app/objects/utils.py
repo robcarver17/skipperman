@@ -253,3 +253,10 @@ def print_list(x, name):
     print("%s:" % name)
     for y in x:
         print(str(y))
+
+def percentage_of_x_in_y(idx_of_x, y_has_length) -> int:
+    len_y = len(y_has_length)
+    if len_y==0:
+        return 100
+
+    return int(100*float(idx_of_x)/len_y)

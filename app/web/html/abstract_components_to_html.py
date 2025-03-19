@@ -5,7 +5,7 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 from app.objects.abstract_objects.abstract_form import Image, Link
 from app.objects.abstract_objects.abstract_interface import UrlsOfInterest
-from app.objects.abstract_objects.abstract_lines import DetailLine
+from app.objects.abstract_objects.abstract_lines import DetailLine, ProgressBar
 from app.objects.abstract_objects.abstract_text import (
     Heading,
     Arrow,
@@ -284,3 +284,7 @@ def get_html_for_detail_line(line: DetailLine) -> Html:
     line_html = line.string
     detail_wrapper = get_detail_wrapper(line.name, open_detail=line.open)
     return detail_wrapper.wrap_around(line_html)
+
+def get_html_for_progress_bar(progress_bar: ProgressBar) -> Html:
+    return Html('<label for="progress_bar">%s:</label> <progress id="progress_bar" value="%d"  max="100" >  </progress>' \
+                % (progress_bar.label, progress_bar.percentage))

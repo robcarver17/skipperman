@@ -2,7 +2,7 @@ from typing import Union
 
 from app.backend.cadets.list_of_cadets import get_matching_cadet
 
-from app.objects.abstract_objects.abstract_lines import ListOfLines
+from app.objects.abstract_objects.abstract_lines import ListOfLines, ProgressBar, HorizontalLine
 
 from app.backend.registration_data.raw_mapped_registration_data import (
     get_row_in_raw_registration_data_given_id,
@@ -20,6 +20,7 @@ from app.frontend.events.import_data.shared_state_tracking_and_data import (
     get_and_save_next_row_id_in_raw_registration_data,
     get_current_row_id,
     clear_row_in_state,
+percentage_of_row_ids_done_in_registration_file
 )
 
 from app.frontend.shared.get_or_select_cadet_forms import (
@@ -147,6 +148,7 @@ def process_row_when_cadet_unmatched(
     interface: abstractInterface,
     cadet: Cadet,
 ) -> Form:
+    parameters_to_get_or_select_cadet = get_parameters_for_form(interface)
 
     return get_add_or_select_existing_cadet_form(
         cadet=cadet,
@@ -155,28 +157,34 @@ def process_row_when_cadet_unmatched(
     )
 
 
+def get_parameters_for_form(interface: abstractInterface):
+    parameters_to_get_or_select_cadet = ParametersForGetOrSelectCadetForm(
+        header_text=header_text_for_form(interface),
+        help_string="identify_cadets_at_event_help",
+        skip_button=True
+    )
 
+    return parameters_to_get_or_select_cadet
 
-def header_text_for_form() -> ListOfLines:
+def header_text_for_form(interface: abstractInterface) -> ListOfLines:
 
     default_header_text = [
+        ProgressBar('Identifying cadets in registration data', percentage_of_row_ids_done_in_registration_file(interface)),
+        HorizontalLine(),
         "Looks like a new cadet in the WA entry file. ",
         "You can edit them, check their details and then add, or choose an existing cadet instead (avoid creating duplicates! If the existing cadet details are wrong, select them for now and edit later) \n\n ",
     ]
 
     return ListOfLines(default_header_text).add_Lines()
 
-parameters_to_get_or_select_cadet = ParametersForGetOrSelectCadetForm(
-        header_text=header_text_for_form(),
-        help_string="identify_cadets_at_event_help",
-        skip_button=True
-    )
 
 
 
 def post_form_add_cadet_ids_during_import(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
+    parameters_to_get_or_select_cadet = get_parameters_for_form(interface)
+
     result = generic_post_response_to_add_or_select_cadet(
         interface=interface,
         parameters=parameters_to_get_or_select_cadet

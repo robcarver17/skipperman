@@ -53,6 +53,8 @@ class abstractInterface:
     def log_error(self, error_message: str):
         raise NotImplemented
 
+
+
     def set_where_finished_button_should_lead_to(self, stage_name: str):
         self.set_persistent_value(FINISHED_BUTTON_LABEL, stage_name)
 

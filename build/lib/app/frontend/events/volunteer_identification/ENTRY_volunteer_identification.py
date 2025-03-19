@@ -1,5 +1,6 @@
 from typing import Union
-from app.objects.abstract_objects.abstract_lines import _______________, ListOfLines
+
+from app.objects.abstract_objects.abstract_lines import _______________, ListOfLines, ProgressBar, HorizontalLine
 from app.backend.volunteers.list_of_volunteers import (
     get_volunteer_with_matching_name,
 )
@@ -21,7 +22,7 @@ from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.import_data.shared_state_tracking_and_data import (
     get_and_save_next_row_id_in_raw_registration_data,
     clear_row_in_state,
-    get_current_row_id,
+    get_current_row_id, percentage_of_row_ids_done_in_registration_file,
 )
 from app.frontend.events.volunteer_identification.track_state_in_volunteer_allocation import (
     clear_volunteer_index,
@@ -262,6 +263,7 @@ def get_header_text_for_volunteer_selection_form(
     interface: abstractInterface,
 ) -> ListOfLines:
     # Custom header text
+    progress_bar = ProgressBar('Identifying volunteers in registration data', percentage_of_row_ids_done_in_registration_file(interface))
     relevant_information = get_relevant_information_for_current_volunteer(interface)
     relevant_information_for_identification = relevant_information.identify
 
@@ -282,6 +284,8 @@ def get_header_text_for_volunteer_selection_form(
 
     header_text = ListOfLines(
         [
+            progress_bar,
+            HorizontalLine(),
             _______________,
             introduction,
             _______________,

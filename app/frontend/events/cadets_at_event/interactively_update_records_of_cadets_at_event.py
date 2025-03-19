@@ -37,7 +37,6 @@ from app.frontend.events.cadets_at_event.update_existing_cadet_at_event_from_for
     update_cadets_at_event_with_form_data,
 )
 from app.objects.cadet_with_id_at_event import (
-    CadetWithIdAtEvent,
     get_cadet_at_event_from_row_in_event_raw_registration_data,
 )
 
@@ -150,6 +149,7 @@ def process_update_to_existing_cadet_at_event(
         return process_next_cadet_at_event(interface)
     else:
         return display_form_for_update_to_existing_cadet_at_event(
+            interface=interface,
             event=event,
             new_cadet_at_event_data=new_cadet_at_event_data,
             existing_cadet_at_event_data=existing_cadet_at_event_data,

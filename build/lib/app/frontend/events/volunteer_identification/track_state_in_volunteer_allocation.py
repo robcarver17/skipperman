@@ -1,4 +1,5 @@
 from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
+from app.objects.utils import percentage_of_x_in_y
 
 from app.objects.volunteers import Volunteer
 
@@ -67,6 +68,13 @@ def get_relevant_information_for_current_volunteer(
 
 
 VOLUNTEER_AT_EVENT_ID = "vol_at_ev_id"
+
+def percentage_of_volunteers_processed(interface: abstractInterface):
+    current_id = get_current_volunteer_id_at_event(interface)
+    list_of_ids = list_of_unique_volunteer_ids_in_identified_event_data(interface)
+    current_index = list_of_ids.index(current_id)
+
+    return percentage_of_x_in_y(current_index, list_of_ids)
 
 
 def get_and_save_next_volunteer_id_in_mapped_event_data(

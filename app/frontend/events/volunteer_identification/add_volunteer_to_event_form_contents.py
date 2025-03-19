@@ -1,5 +1,7 @@
 from typing import Union, List
 
+from app.frontend.events.volunteer_identification.track_state_in_volunteer_allocation import \
+    percentage_of_volunteers_processed
 from app.objects.abstract_objects.abstract_buttons import Button, ButtonBar, HelpButton
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -14,7 +16,7 @@ from app.objects.abstract_objects.abstract_form import textInput, Form
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     Line,
-    _______________,
+    _______________, ProgressBar, HorizontalLine,
 )
 from app.objects.exceptions import missing_data
 from app.objects.day_selectors import DaySelector
@@ -36,7 +38,7 @@ NOTES = "Notes"
 def display_form_to_confirm_volunteer_details(
     interface: abstractInterface, volunteer: Volunteer, event: Event
 ) -> Form:
-
+    progress_bar = ProgressBar('Checking for volunteer issues', percentage_of_volunteers_processed(interface))
     list_of_relevant_information = (
         get_list_of_relevant_information_for_volunteer_in_registration_data(
             object_store=interface.object_store,
@@ -83,6 +85,9 @@ def display_form_to_confirm_volunteer_details(
         ListOfLines(
             [
                 button_bar,
+                _______________,
+                progress_bar,
+                HorizontalLine(),
                 _______________,
                 _______________,
                 header_text,

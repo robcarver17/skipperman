@@ -26,6 +26,7 @@ def write_group_history_and_qualification_status_to_temp_csv_file_and_return_fil
     df_of_history = get_df_of_history_for_active_cadets(object_store=object_store, list_of_cadets=list_of_cadets)
 
     both_df = pd.concat([df_of_qualifications, df_of_history], axis=1)
+    both_df.insert(0, 'Date of Birth', pd.Series([cadet.date_of_birth for cadet in list_of_cadets], index=both_df.index))
 
     filename = temp_file_name()
     both_df.to_csv(filename, index=True)

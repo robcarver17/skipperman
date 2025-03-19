@@ -356,7 +356,7 @@ FINAL_CADET_ADD_BUTTON_LABEL = "Yes - these details are correct - add this new c
 SEE_ALL_CADETS_BUTTON_LABEL = "Choose from all existing cadets"
 SEE_SIMILAR_CADETS_ONLY_LABEL = "See similar cadets only"
 SKIP_BUTTON_LABEL = (
-    "Skip (do not use if it is a real cadet name)"
+    "Skip"
 )
 REFRESH_LIST_BUTTON_LABEL = "Refresh list"
 

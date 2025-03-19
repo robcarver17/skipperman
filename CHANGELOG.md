@@ -1,7 +1,7 @@
 
 # to do next
 Before first racing event is run
-- import club membership list 
+- import club membership list (with precautions to deal with all club members)
 - training group preallocation spreadsheet #70
 - on input show progress #68
 - add delete from event button to volunteers in rota page #59

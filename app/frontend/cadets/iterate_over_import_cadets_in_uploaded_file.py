@@ -14,18 +14,14 @@ from app.backend.cadets.import_membership_list import (
 )
 from app.backend.cadets.list_of_cadets import (
     are_there_no_similar_cadets,
-    get_cadet_from_list_of_cadets_given_str_of_cadet,
     get_matching_cadet,
 )
 from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME_ON_MATCHING_MEMBERSHIP_LIST
-from app.frontend.shared.add_edit_cadet_form import get_cadet_from_form
+
 
 from app.frontend.shared.get_or_select_cadet_forms import (
     get_add_or_select_existing_cadet_form,
-    see_similar_cadets_only_button,
-    check_cadet_for_me_button,
-    see_all_cadets_button,
-    add_cadet_button, ParametersForGetOrSelectCadetForm, generic_post_response_to_add_or_select_cadet,
+ ParametersForGetOrSelectCadetForm, generic_post_response_to_add_or_select_cadet,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -87,7 +83,7 @@ def process_current_cadet_in_temp_file_when_no_exact_match(
         current_cadet.membership_status = (
             current_member  ## should be set already, but just in case
         )
-        return process_when_cadet_to_be_added_from_membership_list(
+        return process_when_cadet_is_in_membership_list_and_not_in_system(
             interface=interface, cadet=current_cadet
         )
 
@@ -123,12 +119,24 @@ def next_iteration_over_rows_in_temp_cadet_file(
         interface=interface, current_cadet=next_cadet
     )
 
+from app.objects.cadets import is_cadet_age_surprising
+
+def process_when_cadet_is_in_membership_list_and_not_in_system(
+    interface: abstractInterface, cadet: Cadet
+) -> Form:
+    if is_cadet_age_surprising(cadet):
+        ## ignoring, probably not a cadet
+        print("Ignoring the import of %s as too old or young to be a cadet")
+        return next_iteration_over_rows_in_temp_cadet_file(interface)
+
+    return process_when_cadet_to_be_added_from_membership_list(interface=interface, cadet=cadet)
+
 
 def process_when_cadet_to_be_added_from_membership_list(
     interface: abstractInterface, cadet: Cadet
 ) -> Form:
     add_new_verified_cadet(object_store=interface.object_store, cadet=cadet)
-    interface.log_error("Added new cadet from membership list %s" % str(cadet))
+    interface.log_error("Automatically added new cadet from membership list %s" % str(cadet))
     interface.flush_cache_to_store()
 
     return next_iteration_over_rows_in_temp_cadet_file(interface)
@@ -136,7 +144,7 @@ def process_when_cadet_to_be_added_from_membership_list(
 def process_when_cadet_already_added_from_form(
     interface: abstractInterface, cadet: Cadet
 ) -> Form:
-    interface.log_error("Added new cadet from membership list %s" % str(cadet))
+    interface.log_error("Added new cadet  %s" % str(cadet))
     interface.flush_cache_to_store()
 
     return next_iteration_over_rows_in_temp_cadet_file(interface)
@@ -153,14 +161,16 @@ def display_verify_adding_cadet_from_list_form(interface: abstractInterface) -> 
 
 provided_header_text = ListOfLines(
     [
-        "Looks like a potentially new cadet in the membership list - or could just be an existing member with slightly different details. Click on the existing cadet that matches this one (this will verify they are a member), or add cadet if really a new member",
+        "Looks like a potentially new cadet in the membership list - or could just be an existing member with slightly different details.',"
+        " Click on the existing cadet that matches this one (this will verify they are a member), or add cadet if really a new member, or skip if not a cadet or junior member",
     ]
 )
 
 edit_or_add_form_parameters = ParametersForGetOrSelectCadetForm(
     header_text=provided_header_text,
     help_string='import_membership_list_help',
-    similarity_name_threshold = SIMILARITY_LEVEL_TO_WARN_NAME_ON_MATCHING_MEMBERSHIP_LIST
+    similarity_name_threshold = SIMILARITY_LEVEL_TO_WARN_NAME_ON_MATCHING_MEMBERSHIP_LIST,
+    skip_button=True
 )
 
 
@@ -174,6 +184,9 @@ def post_verify_adding_cadet_from_list_form(
 
     if result.is_form:
         return result.form
+
+    elif result.skip:
+        return next_iteration_over_rows_in_temp_cadet_file(interface)
 
     elif result.is_cadet:
         assert type(result.cadet) is Cadet
@@ -299,7 +312,7 @@ def set_all_unconfirmed_members_to_lapsed_and_log(interface: abstractInterface):
     )
     for cadet in lapsed_members:
         interface.log_error(
-            "Existing sailor %s who was a member is not in membership list and has been marked as lapsed: no longer a member"
+            "Existing sailor %s who was a member is not in membership list and has been marked as lapsed: no longer a member: CHECK!"
             % cadet
         )
 

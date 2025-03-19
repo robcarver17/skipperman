@@ -28,13 +28,13 @@ We don't have to do anything - the sailor has the correct membership status alre
 
 This is likely to happen if a sailor was originally added to the system as part of an event but we didn't know if they were members or not. The sailor is marked in the system as a member.
 
-*If a sailor is in the membership list, and an identical sailor is already in the system marked as a non-member
+*If a sailor is in the membership list, and an identical sailor is already in the system marked as a non-member*
 
 The sailor has joined the club. We mark them as current members.
 
 *If a sailor is in the membership list, and an identical sailor is already in the system marked as a lapsed member*
 
-Looks like the sailor has rejoined - we mark them as current members.
+Looks like the sailor has rejoined - or belatedly paid their membership fees - we mark them as current members.
 
 *If a sailor is in the system as a current member, but doesn't appear in the imported membership list*
 
@@ -42,11 +42,15 @@ This is likely to happen if a sailor doesn't renew their membership, or if the i
 
 *If a sailor is in the system as an unconfirmed member, but doesn't appear in the imported membership list*
 
-This is likely to happen if a sailor was originally added to the system as part of an event but we didn't know if they were members or not. The sailor is confirmed in the system as a none member.
+This is likely to happen if a sailor was originally added to the system as part of an event but we didn't know if they were members or not. The sailor is marked in the system as a none member.
 
-*If a sailor is in the imported membership list, and there are no remotely similar sailors in the system*
+*If a sailor is in the imported membership list, and there are no remotely similar sailors in the system, and is of Cadet age*
 
 This is likely to happen if a sailor has just joined, but hasn't yet done any events. The sailor is added to the system as a new sailor, and marked as a member.
+
+*If a sailor is in the imported membership list, and there are no remotely similar sailors in the system, and is not of Cadet age*
+
+This occurs because the membership list most likely includes adult members. We ignore them.
 
 *If a sailor is in the imported membership list, and there broadly similar (but not identical) sailors in the system already*
 
@@ -101,6 +105,8 @@ It is *very* important that a sailor is not added twice! So the system goes to a
 ## Prepare the import file
 
 Firstly, make sure you are not in [read only](main-menu.md#read-only) mode if you want to make changes - use read only mode for experimenting. Then download the file you want to import from the membership system (currently Wild Apricot). 
+
+You may need to do some cleaning if the date format isn't quite right; and it's also worth deleting any obviously weird members (like the special ones with no date of birth), and anyone born more than 26 years ago (since certain events are open to junior members, we want to confirm that ex-Cadets who are juniors are still members).
 
 The membership file must be a csv or xls with following named columns: `First name`, `Last name`, `Date of Birth`. If the column names shown on the Skipperman web page are different from these, use those shown on the web page. Currently, if you export a list of members from Wild Apricot, it will include these fields. Any additional fields will be ignored, but if any of the expected columns are missing it will break.
 

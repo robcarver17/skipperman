@@ -2,7 +2,8 @@ from typing import List
 
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
-from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
+from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer, \
+    DictOfAllEventDataForVolunteers
 from app.objects.volunteers import Volunteer
 
 from app.frontend.forms.swaps import is_ready_to_swap
@@ -18,7 +19,7 @@ from app.frontend.events.volunteer_rota.volunteer_table_buttons import (
     get_skills_button,
     get_buttons_for_days_at_event,
     copy_previous_role_button_or_blank,
-    get_volunteer_button_or_string,
+    get_volunteer_name_cell,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import (
@@ -34,6 +35,16 @@ from app.objects.events import Event
 def get_volunteer_table(
     event: Event, interface: abstractInterface, sorts_and_filters: RotaSortsAndFilters
 ) -> Table:
+    dict_of_volunteers_at_event_with_event_data = (
+        get_sorted_and_filtered_dict_of_volunteers_at_event(
+            object_store=interface.object_store,
+            event=event,
+            sorts_and_filters=sorts_and_filters,
+        )
+    )
+    if len(dict_of_volunteers_at_event_with_event_data)==0:
+        return Table([])
+
     ready_to_swap = is_ready_to_swap(interface)
 
     top_row = get_top_row_for_table(event=event, ready_to_swap=ready_to_swap)
@@ -41,7 +52,7 @@ def get_volunteer_table(
         event=event,
         interface=interface,
         ready_to_swap=ready_to_swap,
-        sorts_and_filters=sorts_and_filters,
+        dict_of_volunteers_at_event_with_event_data=dict_of_volunteers_at_event_with_event_data
     )
 
     return Table(
@@ -71,16 +82,9 @@ def get_top_row_for_table(event: Event, ready_to_swap: bool) -> RowInTable:
 def get_body_of_table_at_event(
     event: Event,
     interface: abstractInterface,
-    sorts_and_filters: RotaSortsAndFilters,
+    dict_of_volunteers_at_event_with_event_data: DictOfAllEventDataForVolunteers,
     ready_to_swap: bool = False,
 ) -> List[RowInTable]:
-    dict_of_volunteers_at_event_with_event_data = (
-        get_sorted_and_filtered_dict_of_volunteers_at_event(
-            object_store=interface.object_store,
-            event=event,
-            sorts_and_filters=sorts_and_filters,
-        )
-    )
     dict_of_all_cadet_event_data = get_dict_of_all_event_info_for_cadets(object_store=interface.object_store, event=event)
 
     other_rows = [
@@ -133,7 +137,7 @@ def get_first_part_of_row_for_volunteer_at_event(
 dict_of_all_cadet_event_data: DictOfAllEventInfoForCadets,
     ready_to_swap: bool,
 ) -> list:
-    name_button = get_volunteer_button_or_string(
+    name_button = get_volunteer_name_cell(
         volunteer=volunteer, ready_to_swap=ready_to_swap
     )
     location = get_location_button(

@@ -122,7 +122,7 @@ To make someone unavailable on a given day, click on the umbrella button in the 
 
 You can also change availability by clicking on a volunteers name, changing the day selection ticks, and pressing save. 
 
-Note: if you want to remove a volunteer completely, you should do this by [clicking on their name and removing them from the event](#removing-a-volunteer-from-an-event) rather than making them unavailable on all days - Skipperman won't let you make someone unavailable on every day of an event.
+Note: if you want to remove a volunteer completely, you should do this by [clicking on the umbrella under their name in the first column](#removing-a-volunteer-from-an-event) rather than making them unavailable on all days - Skipperman won't let you make someone unavailable on every day of an event.
 
 ## Add a volunteer
 
@@ -152,7 +152,7 @@ If you change your mind about adding a volunteer, just press cancel.
 
 ## Removing a volunteer from an event
 
-Click on a volunteers name and press `Remove volunteer from event`.
+Click on the umbrella button under their name (because they are taking a 'rain check').
 
 # Copying
 

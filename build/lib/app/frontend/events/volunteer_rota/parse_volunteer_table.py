@@ -9,7 +9,8 @@ from app.frontend.events.volunteer_rota.button_values import (
     from_known_button_to_volunteer_id_and_day,
     from_location_button_to_volunteer_id,
     from_skills_button_to_volunteer_id,
-    get_dict_of_volunteer_name_buttons_and_volunteer_ids,
+    get_dict_of_volunteer_name_buttons_and_volunteer_ids, button_is_unavailable_across_days,
+    button_is_unavailable_on_specific_day, from_known_button_to_volunteer, from_known_button_to_volunteer_and_day,
 )
 
 from app.data_access.init_directories import temp_file_name_in_download_directory
@@ -18,7 +19,7 @@ from app.backend.rota.changes import delete_role_at_event_for_volunteer_on_day
 from app.backend.volunteers.volunteers_at_event import (
     make_volunteer_available_on_day,
     make_volunteer_unavailable_on_day,
-    is_volunteer_currently_available_for_only_one_day,
+    is_volunteer_currently_available_for_only_one_day, delete_volunteer_at_event,
 )
 from app.backend.rota.volunteer_matrix import get_volunteer_matrix
 from app.frontend.events.volunteer_rota.edit_cadet_connections_for_event_from_rota import (
@@ -126,9 +127,32 @@ def update_if_make_available_button_pressed(
 def update_if_make_unavailable_button_pressed(
     interface: abstractInterface, unavailable_button: str
 ):
-    volunteer_id, day = from_known_button_to_volunteer_id_and_day(unavailable_button)
-    volunteer = get_volunteer_from_id(
-        object_store=interface.object_store, volunteer_id=volunteer_id
+    if button_is_unavailable_across_days(unavailable_button):
+        update_if_make_unavailable_across_days_button_pressed(interface=interface,unavailable_button=unavailable_button)
+    elif button_is_unavailable_on_specific_day(unavailable_button):
+        update_if_make_unavailable_on_specific_day_button_pressed(interface=interface, unavailable_button=unavailable_button)
+    else:
+        raise Exception("Unavailable button %s uknown!" % unavailable_button)
+
+def update_if_make_unavailable_across_days_button_pressed(
+        interface: abstractInterface, unavailable_button: str
+):
+    volunteer = from_known_button_to_volunteer(
+        interface=interface,
+        button_text=unavailable_button
+    )
+    event = get_event_from_state(interface)
+    delete_volunteer_at_event(
+        object_store=interface.object_store, event=event, volunteer=volunteer
+    )
+
+
+def update_if_make_unavailable_on_specific_day_button_pressed(
+        interface: abstractInterface, unavailable_button: str
+):
+
+    volunteer, day = from_known_button_to_volunteer_and_day(
+        interface=interface, copy_button_text=unavailable_button
     )
     event = get_event_from_state(interface)
     if is_volunteer_currently_available_for_only_one_day(

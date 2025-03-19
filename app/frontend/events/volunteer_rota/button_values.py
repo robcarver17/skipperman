@@ -39,12 +39,29 @@ def remove_role_button_value_for_volunteer_id_and_day(
         button_type="RemoveRole", volunteer_id=volunteer_id, day=day
     )
 
+unavailable_across_button_type="ACROSSUNAVAILABLE"
+unavailable_specific_button_type = "UNAVAILABLE"
+
+def button_is_unavailable_across_days(button_text):
+    return button_type_of_generic_button(button_text)==unavailable_across_button_type
+
+def button_is_unavailable_on_specific_day(button_text):
+    return button_type_of_generic_button(button_text)==unavailable_specific_button_type
+
 
 def unavailable_button_value_for_volunteer_id_and_day(
     volunteer_id: str, day: Day
 ) -> str:
     return generic_button_value_for_volunteer_id_and_day(
-        button_type="UNAVAILABLE", volunteer_id=volunteer_id, day=day
+        button_type=unavailable_specific_button_type, volunteer_id=volunteer_id, day=day
+    )
+
+
+def unavailable_button_value_for_volunteer_id_across_days(
+    volunteer_id: str
+) -> str:
+    return generic_button_value_for_volunteer_id(
+        button_type=unavailable_across_button_type, volunteer_id=volunteer_id
     )
 
 
@@ -54,11 +71,26 @@ def generic_button_value_for_volunteer_id_and_day(
     return "%s_%s_%s" % (button_type, volunteer_id, day.name)
 
 
+def generic_button_value_for_volunteer_id(
+    button_type: str, volunteer_id: str
+) -> str:
+    return "%s_%s" % (button_type, volunteer_id)
+
+
 def from_known_button_to_volunteer_id_and_day(copy_button_text: str) -> Tuple[str, Day]:
     __, id, day = from_generic_button_to_volunteer_id_and_day(copy_button_text)
 
     return id, day
 
+def from_known_button_to_volunteer(
+    interface: abstractInterface, button_text: str
+) -> Volunteer:
+    volunteer_id = from_known_button_to_volunteer_id(button_text)
+    volunteer = get_volunteer_from_id(
+        object_store=interface.object_store, volunteer_id=volunteer_id
+    )
+
+    return volunteer
 
 def from_known_button_to_volunteer_and_day(
     interface: abstractInterface, copy_button_text: str
@@ -77,6 +109,26 @@ def from_generic_button_to_volunteer_id_and_day(
     button_type, id, day_name = button_text.split("_")
 
     return button_type, id, Day[day_name]
+
+def from_generic_button_to_volunteer_id(
+    button_text: str,
+) -> Tuple[str, str]:
+    button_type, id = button_text.split("_")
+
+    return button_type, id
+
+def button_type_of_generic_button(
+    button_text: str,
+) -> str:
+    elements_of_button_text = button_text.split("_")
+
+    return elements_of_button_text[0]
+
+
+def from_known_button_to_volunteer_id(button_text: str) -> str:
+    __, id = from_generic_button_to_volunteer_id(button_text)
+
+    return id
 
 
 def get_list_of_generic_button_values_across_days_and_volunteers(
@@ -154,7 +206,7 @@ def get_list_of_remove_role_buttons(interface: abstractInterface, event: Event):
     )
 
 
-def get_list_of_make_unavailable_buttons(interface: abstractInterface, event: Event):
+def get_list_of_make_unavailable_on_specific_day_buttons(interface: abstractInterface, event: Event):
     return get_list_of_generic_button_values_across_days_and_volunteers(
         interface=interface,
         event=event,
@@ -256,6 +308,22 @@ def get_dict_of_volunteer_name_buttons_and_volunteer_ids(
     return dict(
         [
             (name_of_volunteer_button(volunteer), volunteer.id)
+            for volunteer in list_of_volunteers_at_event
+        ]
+    )
+
+
+def get_dict_of_volunteer_unavailable_name_buttons_and_volunteer_ids(
+    interface: abstractInterface, event: Event
+) -> Dict[str, str]:
+    list_of_volunteers_at_event = load_list_of_volunteers_at_event(
+        event=event,
+        object_store=interface.object_store,
+    )
+
+    return dict(
+        [
+            (unavailable_button_value_for_volunteer_id_across_days(volunteer.id), volunteer.id)
             for volunteer in list_of_volunteers_at_event
         ]
     )

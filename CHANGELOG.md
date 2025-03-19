@@ -30,7 +30,7 @@ Before Cadet week
 
 # Recent
 
-- on input show progress
+- on input show progress 
 - training group preallocation spreadsheet 
 - improve handling of import club membership list so that new adults / juniors are ignored, but existing ex cadets are included.
 - Connected cadets shown in volunteer rota are all cadets, not just ones at event

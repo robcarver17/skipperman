@@ -71,7 +71,7 @@ from app.frontend.events.volunteer_rota.volunteer_rota_buttons import (
     last_button_pressed_was_copy_button,
     last_button_pressed_was_swap_button,
     last_button_pressed_was_remove_role_button,
-    last_button_pressed_was_make_unavailable_button,
+    last_button_pressed_was_make_unavailable_for_specific_day_button, last_button_pressed_was_make_all_days_unavailable_for_volunteer,
 )
 
 
@@ -157,10 +157,14 @@ def post_form_view_for_volunteer_rota(
             available_button=last_button_pressed, interface=interface
         )
 
-    elif last_button_pressed_was_make_unavailable_button(interface):
+    elif last_button_pressed_was_make_unavailable_for_specific_day_button(interface):
         update_if_make_unavailable_button_pressed(
             interface=interface, unavailable_button=last_button_pressed
         )
+
+    elif last_button_pressed_was_make_all_days_unavailable_for_volunteer(interface):
+        interface.log_error("PUSHED THE BUTTON! %s" % last_button_pressed)
+        pass
 
     elif last_button_pressed_was_remove_role_button(interface):
         update_if_remove_role_button_pressed(

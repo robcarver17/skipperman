@@ -21,11 +21,11 @@ from app.frontend.events.volunteer_rota.button_values import (
     remove_role_button_value_for_volunteer_in_role_on_day,
     copy_previous_role_button_name_from_volunteer_id,
     location_button_name_from_volunteer_id,
-    skills_button_name_from_volunteer_id,
+    skills_button_name_from_volunteer_id, unavailable_button_value_for_volunteer_id_across_days,
 )
 from app.frontend.events.volunteer_rota.swapping import get_swap_button, has_role_on_day
 
-from app.objects.abstract_objects.abstract_lines import Line
+from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -129,12 +129,14 @@ def button_for_day(day: Day) -> Button:
     return Button(day.name, value=button_value_for_day(day))
 
 
-def get_volunteer_button_or_string(volunteer: Volunteer, ready_to_swap: bool):
+def get_volunteer_name_cell(volunteer: Volunteer, ready_to_swap: bool) -> ListOfLines:
     if ready_to_swap:
-        return volunteer.name
+        return ListOfLines([volunteer.name])
     else:
-        return Button(label=volunteer.name, value=name_of_volunteer_button(volunteer))
-
+        return ListOfLines([
+            Button(label=volunteer.name, value=name_of_volunteer_button(volunteer)),
+            get_make_unavailable_button_for_volunteer_across_days(volunteer)
+            ])
 
 def get_allocation_inputs_buttons_in_role_when_available(
     interface: abstractInterface,
@@ -143,7 +145,7 @@ def get_allocation_inputs_buttons_in_role_when_available(
     ready_to_swap: bool,
 ) -> list:
     ## create the buttons
-    make_unavailable_button = get_make_unavailable_button_for_volunteer(
+    make_unavailable_button = get_make_unavailable_button_for_volunteer_on_day(
         volunteer_data_at_event=volunteer_data_at_event, day=day
     )
     remove_role_button = get_remove_role_button_for_volunteer(
@@ -237,7 +239,7 @@ def get_fill_copy_button_for_volunteer(
     )
 
 
-def get_make_unavailable_button_for_volunteer(
+def get_make_unavailable_button_for_volunteer_on_day(
     volunteer_data_at_event: AllEventDataForVolunteer,
     day: Day,
 ) -> Button:
@@ -245,6 +247,18 @@ def get_make_unavailable_button_for_volunteer(
         label=NOT_AVAILABLE_SHORTHAND,
         value=unavailable_button_value_for_volunteer_in_role_on_day(
             volunteer=volunteer_data_at_event.volunteer, day=day
+        ),
+    )
+
+
+def get_make_unavailable_button_for_volunteer_across_days(
+    volunteer: Volunteer,
+
+) -> Button:
+    return Button(
+        label=NOT_AVAILABLE_SHORTHAND,
+        value=unavailable_button_value_for_volunteer_id_across_days(
+            volunteer_id=volunteer.id
         ),
     )
 

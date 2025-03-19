@@ -14,11 +14,11 @@ from app.frontend.events.volunteer_rota.button_values import (
     get_list_of_copy_overwrite_buttons_for_individual_volunteers,
     get_list_of_copy_fill_buttons_for_individual_volunteers,
     get_list_of_remove_role_buttons,
-    get_list_of_make_unavailable_buttons,
+    get_list_of_make_unavailable_on_specific_day_buttons,
     list_of_all_copy_previous_roles_buttons,
     get_dict_of_volunteer_name_buttons_and_volunteer_ids,
     list_of_all_location_button_names,
-    list_of_all_skills_buttons,
+    list_of_all_skills_buttons, get_dict_of_volunteer_unavailable_name_buttons_and_volunteer_ids,
 )
 from app.frontend.volunteers.ENTRY_view_volunteers import (
     all_sort_types as all_volunteer_name_sort_types,
@@ -133,6 +133,7 @@ def get_list_of_volunteer_name_buttons(interface: abstractInterface) -> list:
     return list_of_volunteer_name_buttons
 
 
+
 def last_button_pressed_was_day_sort_button(interface: abstractInterface):
     return interface.last_button_pressed() in get_all_day_sort_buttons(interface)
 
@@ -243,11 +244,37 @@ def get_all_remove_role_buttons(interface: abstractInterface):
 
 
 def last_button_pressed_was_make_unavailable_button(interface: abstractInterface):
-    return interface.last_button_pressed() in get_all_make_unavailable_buttons(
+    on_specific_day = last_button_pressed_was_make_unavailable_for_specific_day_button(interface)
+    if on_specific_day:
+        return True
+    across_days = last_button_pressed_was_make_all_days_unavailable_for_volunteer(interface)
+    if across_days:
+        return True
+
+    return False
+
+
+def last_button_pressed_was_make_unavailable_for_specific_day_button(interface: abstractInterface):
+    return interface.last_button_pressed() in get_all_make_unavailable_on_day_buttons(
         interface
     )
 
 
-def get_all_make_unavailable_buttons(interface: abstractInterface):
+def get_all_make_unavailable_on_day_buttons(interface: abstractInterface):
     event = get_event_from_state(interface)
-    return get_list_of_make_unavailable_buttons(interface=interface, event=event)
+    return get_list_of_make_unavailable_on_specific_day_buttons(interface=interface, event=event)
+
+def last_button_pressed_was_make_all_days_unavailable_for_volunteer(interface: abstractInterface) -> bool:
+    last_button = interface.last_button_pressed()
+
+    return last_button in get_list_of_make_all_days_unavailable_for_volunteer_buttons(interface)
+
+
+def get_list_of_make_all_days_unavailable_for_volunteer_buttons(interface: abstractInterface) -> list:
+    event = get_event_from_state(interface)
+    volunteer_name_buttons_dict = get_dict_of_volunteer_unavailable_name_buttons_and_volunteer_ids(
+        interface=interface, event=event
+    )
+    list_of_volunteer_unavailable_buttons = list(volunteer_name_buttons_dict.keys())
+
+    return list_of_volunteer_unavailable_buttons

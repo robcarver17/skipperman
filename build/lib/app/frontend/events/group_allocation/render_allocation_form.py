@@ -29,7 +29,7 @@ from app.frontend.events.group_allocation.input_fields import (
     get_input_fields_for_cadet,
     button_name_for_add_partner,
     RESET_DAY_BUTTON_LABEL,
-    make_cadet_available_button_name,
+    make_cadet_available_button_name, guess_boat_button,
 )
 from app.frontend.events.group_allocation.store_state import (
     no_day_set_in_state,
@@ -115,7 +115,7 @@ def display_form_allocate_cadets_at_event(
 help_button = HelpButton("group_allocation_help")
 add_button = Button("Add unregistered sailor", nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT)
 
-nav_bar_top = ButtonBar([cancel_menu_button, save_menu_button, help_button])
+nav_bar_top = ButtonBar([cancel_menu_button, save_menu_button, help_button, guess_boat_button])
 nav_bar_bottom = ButtonBar([cancel_menu_button, save_menu_button, help_button, add_button])
 
 

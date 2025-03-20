@@ -532,10 +532,15 @@ def cadet_id_given_partner_button(button_name: str) -> str:
 
 
 NOTES = "Notes"
-RESET_DAY_BUTTON_LABEL = "Show all day view"
-MAKE_CADET_AVAILABLE_ON_DAY_BUTTON = "Cadet not sailing today - click to change"
 ALLOCATION = "allocation"
 CLUB_BOAT = "club_boat"
 PARTNER = "partner"
 BOAT_CLASS = "boat_class"
 SAIL_NUMBER = "sail_number"
+
+
+RESET_DAY_BUTTON_LABEL = "Show all day view"
+MAKE_CADET_AVAILABLE_ON_DAY_BUTTON = "Cadet not sailing today - click to change"
+GUESS_BOAT_BUTTON = "Autofill Boat Class"
+
+guess_boat_button= Button(GUESS_BOAT_BUTTON, nav_button=True)

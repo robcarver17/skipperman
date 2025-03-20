@@ -148,13 +148,8 @@ def get_current_club_boat_name_on_day(
     club_dinghy = dict_of_all_event_data.event_data_for_cadet(
         cadet
     ).days_and_club_dinghies.dinghy_on_day(day)
-    if club_dinghy == no_club_dinghy:
-        ## Guess
-        return guess_if_club_boat_required_and_return_name(
-            dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
-        )
-    else:
-        return club_dinghy.name
+
+    return club_dinghy.name
 
 
 def guess_if_club_boat_required_and_return_name(

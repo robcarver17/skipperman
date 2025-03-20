@@ -35,7 +35,7 @@ from app.frontend.events.group_allocation.render_allocation_form import (
     add_button
 )
 from app.frontend.events.group_allocation.input_fields import (
-    cadet_id_given_partner_button, was_remove_partner_button,
+    cadet_id_given_partner_button, was_remove_partner_button, guess_boat_button,
 )
 from app.frontend.events.group_allocation.parse_allocation_form import (
     update_data_given_allocation_form,
@@ -91,6 +91,9 @@ def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewFo
 
     elif was_remove_partner_button(last_button):
         remove_partnership_for_cadet_from_group_allocation_button(interface)
+
+    elif guess_boat_button.pressed(last_button):
+        pass
 
     elif last_button in get_list_of_all_cadet_buttons(interface):
         cadet_button_clicked(interface)

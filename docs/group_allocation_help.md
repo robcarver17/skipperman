@@ -44,13 +44,13 @@ The following Skipperman fields, if present in the mapping, will be displayed in
 These should be used at all events:
 
 - Sail number (this will automatically be added to the cadets)
-- Two handed partner (alternatively if 'Crew first name' and 'Crew surname' are mapped, these will be shown as a two handed partner). 
+- Two handed partner (alternatively if 'Crew first name' and 'Crew surname' are mapped, these will be shown in Skipperman as a two handed partner) - unless it is a singlehander only training event.
 - Other information
 
 The following should also be included for training events:
 - Desired boat (use instead of boat class since it gives people the option of borrowing a club boat in one group, or having a backup group)
-- Wants MG (Can also be used to specify if you want eg a Seamanship course)
-- Boat ownership (if this contains the phrase 'Club boat' then a [club boat will be automatically allocated](#allocate-club-boat))
+- Wants MG (required if eg the boat class alone isn't enough to work out which group they should be in. Can also be used to specify if you want eg a Seamanship or Cadet Adventure course)
+- Boat ownership - to indicate [if a club boat is required](#allocate-club-boat))
 - Previous experience (Should only be used for cadets who are new to the club, otherwise we use the Skipperman records)
 - Can swim 25m 
 - Has bouyancy aid 
@@ -60,7 +60,7 @@ The following should be used at racing events:
 
 The following are not recommended for use, but are kept for backwards compatibility with previous events:
 - Highest qualification (We advise this isn't used as it's better to use the Skipperman qualification record)
-- Preferred group (We advise this isn't used, since we should allocate groups, not parents. Fields like 'Wants MG' are better where it might not be clear if a Cadet would be in a training or racing group)
+- Preferred group (We advise this isn't used, since we should allocate groups, not parents; only use if there is a choice of group eg Cadet Adventure)
 
 
 # Allocating groups, club boats and boat classes; and editing sail numbers.
@@ -86,7 +86,7 @@ To allocate a club boat, just select the blank dropdown and choose the required 
 
 Skipperman doesn't know how many club boats are available - use the [summary](#seeing-a-summary) tables to see how many you have allocated.
 
-There is an official skipperman field `Boat ownership`. If this is used in the [event field mapping](WA_field_mapping_help.md), contains the phrase 'club boat' then one is automatically allocated here. However, you should still check that there are enough club boats available (using the [summary](#seeing-a-summary) information), and if required enforce a priority for borrowing them. If a cadet doesn't get a club boat that they need, make sure you allocate them to a backup group.
+There is an official skipperman field `Boat ownership`. If this is used in the [event field mapping](WA_field_mapping_help.md), so you can see if they want a club boat. Check that there are enough club boats available (using the [summary](#seeing-a-summary) information), and if required enforce a priority for borrowing them. If a cadet doesn't get a club boat that they need, make sure you allocate them to a backup group.
 
 
 # Creating sailing partnerships

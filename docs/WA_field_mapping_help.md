@@ -3,6 +3,8 @@ ___
 
 Mapping converts Wild Apricot form entry names to our internal field names - we can't import an event without it.
 
+See the [mapping guide for experts](List_and_explanation_of_skipperman_fields.md) for a list of skipperman field names.
+
 [TOC]
 
 # What is mapping?

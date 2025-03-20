@@ -1,7 +1,6 @@
 
 # to do next
 Before first racing event is run
-- add delete from event button to volunteers in rota page #59
 - report reset print options to defaults, different defaults for report types #53
 - keep double handers aligned #65
 - documentation for reporting #49
@@ -30,6 +29,7 @@ Before Cadet week
 
 # Recent
 
+- add delete from event button to volunteers in rota page 
 - on input show progress 
 - training group preallocation spreadsheet 
 - improve handling of import club membership list so that new adults / juniors are ignored, but existing ex cadets are included.

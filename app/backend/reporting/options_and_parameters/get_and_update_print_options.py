@@ -3,6 +3,12 @@ from app.data_access.store.object_definitions import object_definition_for_print
 from app.data_access.store.object_store import ObjectStore
 
 
+def get_default_print_options(object_store: ObjectStore, report_name: str) -> PrintOptions:
+    return object_store.get(
+        object_definition_for_print_options, report_name="default_%s" % report_name
+    )
+
+
 def get_print_options(object_store: ObjectStore, report_name: str) -> PrintOptions:
     return object_store.get(
         object_definition_for_print_options, report_name=report_name

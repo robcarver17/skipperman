@@ -18,9 +18,7 @@ AUTO_FONT_SIZE = 0
 
 @dataclass
 class PrintOptions(GenericSkipperManObject):
-    filename: str = ""
     output_pdf: bool = True
-    title_str: str = ""
     page_size: str = A4_PAGESIZE
     font: str = "Arial"
     unit: str = UNIT_MM  ## DO NOT CHANGE OR ALL HELL WILL BREAK LOOSE
@@ -32,6 +30,22 @@ class PrintOptions(GenericSkipperManObject):
     publish_to_public: bool = False
     include_size_of_group_if_header: bool = False
     font_size: int = AUTO_FONT_SIZE
+
+    @property
+    def filename(self) -> str:
+        return self._filename
+
+    @filename.setter
+    def filename(self, filename:str):
+        self._filename = filename
+
+    @property
+    def title_str(self) -> str:
+        return self._title_str
+
+    @title_str.setter
+    def title_str(self, title_str: str):
+        self._title_str = title_str
 
     @property
     def auto_font_size(self) -> bool:

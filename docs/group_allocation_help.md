@@ -132,13 +132,13 @@ Note: Why do we see the `Add Hattie.. as new cadet` button for Hector? It's beca
 
 ## Subsequent changes to sailing partners
 
-Skipperman doesn't (currently) automatically keep groups, boats classes, club boats or sail numbers aligned in a partnership.
-
-So you will need to manually edit both partners if you make any changes.
+If you make any change to one half of a sailing partnership (boats, sail numbers or training groups), it will automatically be applied to the other member.
 
 ## Remove a sailing partner
 
-To remove a sailing partner, just select `Unallocated` or `Singlehander` from the dropdown next to a sailor and press save. You only have to do this on one partner - the other will automatically lose their partner.
+To remove a sailing partner, click on the `Remove partnership` button under their name. You only have to do this on one partner - the other will automatically lose their partner.
+
+Their partnership status will change to `Unallocated`. All the other information (group, boat class, club boat and sail number) will be unchanged so you will need to update that as required.
 
 Note: There is no difference in behaviour between Unallocated and Singlehander; but marking a cadet as Unallocated is helpful if you need to find a new partner for them.
 

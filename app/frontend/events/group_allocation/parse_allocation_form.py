@@ -19,6 +19,7 @@ from app.frontend.events.group_allocation.input_fields import (
     BOAT_CLASS,
     SAIL_NUMBER,
     cadet_id_from_cadet_available_buttons,
+    get_cadet_id_given_remove_partner_button_name,
 )
 from app.objects.events import Event
 
@@ -30,6 +31,7 @@ from app.backend.boat_classes.update_boat_information import (
     CadetWithDinghySailNumberBoatClassAndPartner,
     update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event,
 )
+from app.objects.partners import NOT_ALLOCATED_STR
 from app.objects.utils import print_list
 from app.backend.registration_data.update_cadets_at_event import (
     update_notes_for_existing_cadet_at_event,
@@ -110,47 +112,15 @@ def get_cadet_notes_for_row_in_form_and_alter_registration_data(
 def update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_form(
     interface: abstractInterface, list_of_cadets: ListOfCadets
 ):
-    if no_day_set_in_state(interface):
-        update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_form_across_days(
-            interface=interface, list_of_cadets=list_of_cadets
-        )
-    else:
-        day = get_day_from_state_or_none(interface)
-        update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_form_on_day(
-            interface=interface, list_of_cadets=list_of_cadets, day=day
-        )
-
-
-def update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_form_on_day(
-    interface: abstractInterface, list_of_cadets: ListOfCadets, day: Day
-):
     event = get_event_from_state(interface)
     list_of_updates = get_list_of_updates(
         interface=interface, list_of_cadets=list_of_cadets
     )
-    update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event(
-        object_store=interface.object_store,
+    update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_given_update_list(
+        interface=interface,
         event=event,
-        list_of_updates=list_of_updates,
-        day=day,
+        list_of_updates=list_of_updates
     )
-
-
-def update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_form_across_days(
-    interface: abstractInterface, list_of_cadets: ListOfCadets
-):
-    event = get_event_from_state(interface)
-    list_of_updates = get_list_of_updates(
-        interface=interface, list_of_cadets=list_of_cadets
-    )
-    print_list(list_of_updates, "updates")
-    for day in event.days_in_event():
-        update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event(
-            object_store=interface.object_store,
-            event=event,
-            list_of_updates=list_of_updates,
-            day=day,
-        )
 
 
 def get_list_of_updates(
@@ -224,6 +194,32 @@ def remove_asterixes(field_value: str) -> str:
     return field_value.replace("*", "")
 
 
+def update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_given_update_list( interface: abstractInterface, event: Event, list_of_updates: List[CadetWithDinghySailNumberBoatClassAndPartner]):
+    if no_day_set_in_state(interface):
+        list_of_days = event.days_in_event()
+    else:
+        day = get_day_from_state_or_none(interface)
+        list_of_days = [day]
+
+    update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_form_across_days(
+        interface=interface, event=event, list_of_updates=list_of_updates, list_of_days = list_of_days
+    )
+
+
+
+def update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_form_across_days(
+    interface: abstractInterface, event: Event, list_of_updates: List[CadetWithDinghySailNumberBoatClassAndPartner], list_of_days: List[Day]
+):
+
+    for day in list_of_days:
+        update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event(
+            object_store=interface.object_store,
+            event=event,
+            list_of_updates=list_of_updates,
+            day=day,
+        )
+
+
 def make_cadet_available_on_current_day(
     interface: abstractInterface, add_availability_button_name: str
 ):
@@ -241,3 +237,23 @@ def make_cadet_available_on_current_day(
         object_store=interface.object_store, event=event, cadet=cadet, day=day
     )
     interface.flush_cache_to_store()
+
+def remove_partnership_for_cadet_from_group_allocation_button(interface: abstractInterface):
+    last_button = interface.last_button_pressed()
+    cadet_id = get_cadet_id_given_remove_partner_button_name(last_button)
+    event = get_event_from_state(interface)
+    cadet = get_cadet_from_id(object_store=interface.object_store, cadet_id=cadet_id)
+    day = get_day_from_state_or_none(interface)
+    update = get_pseudo_update_to_remove_partner_from_cadet(interface=interface, event=event, cadet=cadet)
+
+    list_of_updates = [update]
+
+    update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_given_update_list(interface=interface,
+                                                                                               event=event,
+                                                                                               list_of_updates=list_of_updates)
+
+def get_pseudo_update_to_remove_partner_from_cadet(interface: abstractInterface, event: Event, cadet: Cadet) -> CadetWithDinghySailNumberBoatClassAndPartner:
+    update = get_update_for_cadet(interface, cadet)
+    update.two_handed_partner_cadet_as_str = NOT_ALLOCATED_STR
+
+    return update

@@ -154,12 +154,7 @@ def process_when_cadet_already_added_from_form(
 def display_verify_adding_cadet_from_list_form(interface: abstractInterface) -> Form:
     current_cadet = get_cadet_from_temp_file_and_state(interface)
 
-    edit_or_add_form_parameters = ParametersForGetOrSelectCadetForm(
-        header_text=get_header_text(interface),
-        help_string='import_membership_list_help',
-        similarity_name_threshold=SIMILARITY_LEVEL_TO_WARN_NAME_ON_MATCHING_MEMBERSHIP_LIST,
-        skip_button=True
-    )
+    edit_or_add_form_parameters = get_form_parameters(interface)
 
     return get_add_or_select_existing_cadet_form(
         cadet=current_cadet,
@@ -168,7 +163,13 @@ def display_verify_adding_cadet_from_list_form(interface: abstractInterface) -> 
     )
 
 
-
+def get_form_parameters(interface: abstractInterface):
+    return ParametersForGetOrSelectCadetForm(
+        header_text=get_header_text(interface),
+        help_string='import_membership_list_help',
+        similarity_name_threshold=SIMILARITY_LEVEL_TO_WARN_NAME_ON_MATCHING_MEMBERSHIP_LIST,
+        skip_button=True
+    )
 
 def get_header_text(interface: abstractInterface):
     progress_bar = ProgressBar("Importing cadets from membership list: ", percentage_of_cadet_ids_done_in_registration_file(interface))
@@ -186,12 +187,7 @@ def get_header_text(interface: abstractInterface):
 def post_verify_adding_cadet_from_list_form(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
-    edit_or_add_form_parameters = ParametersForGetOrSelectCadetForm(
-        header_text=get_header_text(interface),
-        help_string='import_membership_list_help',
-        similarity_name_threshold=SIMILARITY_LEVEL_TO_WARN_NAME_ON_MATCHING_MEMBERSHIP_LIST,
-        skip_button=True
-    )
+    edit_or_add_form_parameters = get_form_parameters(interface)
 
     result = generic_post_response_to_add_or_select_cadet(
         interface=interface,

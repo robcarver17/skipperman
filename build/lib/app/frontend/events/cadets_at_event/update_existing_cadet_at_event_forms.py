@@ -82,7 +82,7 @@ def display_form_for_update_to_existing_cadet_at_event(
     return form
 
 def progress_bar(interface: abstractInterface):
-    return ProgressBar('Checking for changes in status and attendance across registered cadets', percentage_of_cadets_processed_at_event(interface)),
+    return ProgressBar('Checking for changes in status and attendance across registered cadets', percentage_of_cadets_processed_at_event(interface))
 
 
 help_button_bar = ButtonBar([HelpButton("resolve_changes_to_registration")])

@@ -1,6 +1,6 @@
 from app.objects.cadets import Cadet
 
-from app.backend.volunteers.connected_cadets import get_list_of_relevant_volunteers
+from app.backend.volunteers.connected_cadets import get_list_of_similar_volunteers
 from app.backend.volunteers.list_of_volunteers import (
     SORT_BY_SURNAME,
     get_sorted_list_of_volunteers,
@@ -105,7 +105,7 @@ def get_list_of_volunteer_buttons(
         extra_button = see_similar_volunteers_button
     else:
         ## similar volunteers with option to see more
-        list_of_volunteers = get_list_of_relevant_volunteers(
+        list_of_volunteers = get_list_of_similar_volunteers(
             object_store=interface.object_store, volunteer=volunteer, cadet=cadet_in_row
         )
         msg_text = "Showing only volunteers with similar names:"

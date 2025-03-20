@@ -30,7 +30,7 @@ from app.frontend.shared.get_or_select_cadet_forms import (
 
 from app.objects.exceptions import NoMoreData, MissingData
 from app.objects.registration_data import RowInRegistrationData
-from app.objects.cadets import Cadet
+from app.objects.cadets import Cadet, SORT_BY_SIMILARITY_NAME
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 

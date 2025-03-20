@@ -4,7 +4,7 @@ from typing import Union
 
 
 from app.backend.volunteers.add_edit_volunteer import verify_volunteer_and_warn
-from app.backend.volunteers.connected_cadets import get_list_of_relevant_volunteers
+from app.backend.volunteers.connected_cadets import get_list_of_similar_volunteers
 from app.backend.volunteers.list_of_volunteers import get_list_of_volunteers, sort_list_of_volunteers, \
     get_volunteer_from_list_of_given_str_of_volunteer
 from app.frontend.shared.add_edit_volunteer_forms import VolunteerAndVerificationText, get_volunteer_from_form, \
@@ -171,7 +171,7 @@ def get_list_of_volunteer_buttons(
         msg = "Currently choosing from all volunteers"
         state_button = see_similar_volunteers_button
     else:
-        list_of_volunteers = get_list_of_relevant_volunteers(
+        list_of_volunteers = get_list_of_similar_volunteers(
             object_store=interface.object_store, volunteer=volunteer, cadet=cadet
         )
         msg = "Currently choosing from similar volunteers only:"

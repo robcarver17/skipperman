@@ -33,7 +33,7 @@ class ParametersForGetOrSelectCadetForm:
     final_add_button: bool = False
     see_all_cadets_button: bool = False
     default_cadet_passed: bool = False
-    sort_by: str = SORT_BY_FIRSTNAME
+    sort_by: str = SORT_BY_SIMILARITY_NAME
     similarity_name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME
 
     def save_values_to_state(self, interface: abstractInterface):
@@ -158,18 +158,24 @@ def get_list_of_cadet_buttons(
     interface: abstractInterface, cadet: Cadet,     parameters: ParametersForGetOrSelectCadetForm,
 
 ) -> ListOfLines:
-    if parameters.see_all_cadets_button:
+    list_of_similar_cadets = get_list_of_similar_cadets(
+        object_store=interface.object_store, cadet=cadet,
+        name_threshold=parameters.similarity_name_threshold
+    )
+    no_similar_cadets = len(list_of_similar_cadets)==0
+
+    if parameters.see_all_cadets_button or no_similar_cadets:
         list_of_cadets = get_list_of_cadets(
             object_store=interface.object_store
         )
-        msg = "Currently choosing from all cadets"
+        if no_similar_cadets:
+            msg = "No similar cadets - choosing from all cadets"
+        else:
+            msg = "Currently choosing from all cadets"
         state_button = see_similar_cadets_only_button
     else:
         ## similar cadets with option to see more
-        list_of_cadets = get_list_of_similar_cadets(
-            object_store=interface.object_store, cadet=cadet,
-            name_threshold=parameters.similarity_name_threshold
-        )
+        list_of_cadets = list_of_similar_cadets
         msg = "Currently choosing from similar cadets only:"
         state_button = see_all_cadets_button
 

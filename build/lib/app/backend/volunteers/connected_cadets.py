@@ -38,7 +38,7 @@ def get_dict_of_volunteers_associated_with_cadets(
     )
 
 
-def get_list_of_relevant_volunteers(
+def get_list_of_similar_volunteers(
     object_store: ObjectStore,
     volunteer: Volunteer,
     cadet: Cadet = arg_not_passed,  ## could be missing data

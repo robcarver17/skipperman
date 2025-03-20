@@ -35,11 +35,11 @@ from app.frontend.events.group_allocation.render_allocation_form import (
     add_button
 )
 from app.frontend.events.group_allocation.input_fields import (
-    cadet_id_given_partner_button,
+    cadet_id_given_partner_button, was_remove_partner_button,
 )
 from app.frontend.events.group_allocation.parse_allocation_form import (
     update_data_given_allocation_form,
-    make_cadet_available_on_current_day,
+    make_cadet_available_on_current_day, remove_partnership_for_cadet_from_group_allocation_button,
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -89,6 +89,9 @@ def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewFo
             interface=interface, add_availability_button_name=last_button
         )
 
+    elif was_remove_partner_button(last_button):
+        remove_partnership_for_cadet_from_group_allocation_button(interface)
+
     elif last_button in get_list_of_all_cadet_buttons(interface):
         cadet_button_clicked(interface)
 
@@ -110,6 +113,7 @@ def was_add_partner_button(interface: abstractInterface) -> bool:
     button = interface.last_button_pressed()
     all_partner_buttons = get_list_of_all_add_partner_buttons(interface)
     return button in all_partner_buttons
+
 
 
 def previous_form(interface: abstractInterface):

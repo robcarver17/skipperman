@@ -77,6 +77,11 @@ class PartnershipChange:
         return True
 
     @property
+    def has_unchanged_partner(self):
+        return self.did_have_partner and self.now_has_partner and self.original_partner == self.new_partner
+
+
+    @property
     def had_partner_and_now_does_not(self):
         return self.did_have_partner and (not self.now_has_partner)
 
@@ -114,10 +119,6 @@ def update_boat_info_for_updated_cadet_at_event(
     cadet_boat_class_group_club_dinghy_and_partner_on_day: CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
 ):
 
-    print("BEfore:")
-    print(
-        required_dict_for_allocation.dict_of_cadets_and_boat_class_and_partners.list_of_cadets_at_event_with_boat_class_and_partners_with_ids.as_df_of_str()
-    )
 
     if availability_is_bad_for_sailor_or_partner(
         required_dict_for_allocation=required_dict_for_allocation,
@@ -139,10 +140,6 @@ def update_boat_info_for_updated_cadet_at_event(
         cadet_boat_class_group_club_dinghy_and_partner_on_day=cadet_boat_class_group_club_dinghy_and_partner_on_day,
     )
 
-    print("After:")
-    print(
-        required_dict_for_allocation.dict_of_cadets_and_boat_class_and_partners.list_of_cadets_at_event_with_boat_class_and_partners_with_ids.as_df_of_str()
-    )
 
 
 def availability_is_bad_for_sailor_or_partner(
@@ -180,12 +177,13 @@ def update_partnership_info_for_updated_cadet_at_event(
         cadet_boat_class_group_club_dinghy_and_partner_on_day=cadet_boat_class_group_club_dinghy_and_partner_on_day,
     )
 
-    print(
-        "%s: %s"
-        % (str(cadet_boat_class_group_club_dinghy_and_partner_on_day), str(how_changed))
-    )
     if how_changed.unchanged:
-        return
+        if how_changed.has_unchanged_partner:
+            ## Ensure changes are in synch
+            clone_cadet_group_club_dinghy_boat_class_sail_number_to_partner(
+                required_dict_for_allocation=required_dict_for_allocation,
+                cadet_boat_class_group_club_dinghy_and_partner_on_day=cadet_boat_class_group_club_dinghy_and_partner_on_day,
+            )
 
     elif how_changed.had_no_partner_and_still_doesnt:
         ## change only this cadet, change of state from singlehanded to not allocated or reverse
@@ -209,6 +207,8 @@ def update_partnership_info_for_updated_cadet_at_event(
 
     else:
         raise Exception("Shouldn't get here!")
+
+
 
 
 def modify_no_partnership_status_for_existing_cadet(

@@ -24,7 +24,7 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.cadets import Cadet
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 from app.objects.day_selectors import Day
-from app.objects.partners import NO_PARTNERSHIP_LIST_OF_STR
+from app.objects.partners import NO_PARTNERSHIP_LIST_OF_STR, no_partnership_given_partner_cadet_as_str
 from app.objects.utils import make_id_as_int_str
 
 
@@ -402,6 +402,7 @@ def get_sail_number_field(cadet: Cadet, current_number: str) -> textInput:
     return sail_number_field
 
 
+
 def get_dropdown_input_for_partner_allocation_across_days(
     cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> ListOfLines:
@@ -464,6 +465,16 @@ def get_dropdown_input_for_partner_allocation(
     current_partner_name: str,
     potential_partner_to_be_added_or_missing_data: str,
 ) -> ListOfLines:
+
+    drop_down_input_field = get_dropdown_field_for_partner_allocation(list_of_other_cadets=list_of_other_cadets, current_partner_name=current_partner_name, cadet=cadet)
+    partnership_button = get_button_for_partnership_cell(cadet=cadet, potential_partner_to_be_added_or_missing_data=potential_partner_to_be_added_or_missing_data, current_partner_name=current_partner_name)
+
+    return ListOfLines([drop_down_input_field, partnership_button])
+
+def get_dropdown_field_for_partner_allocation(   cadet: Cadet,
+    list_of_other_cadets: List[str],
+    current_partner_name: str,
+) -> dropDownInput:
     list_of_other_cadets = NO_PARTNERSHIP_LIST_OF_STR + list_of_other_cadets
     dict_of_all_possible_cadets = dict(
         [(cadet_name, cadet_name) for cadet_name in list_of_other_cadets]
@@ -476,20 +487,44 @@ def get_dropdown_input_for_partner_allocation(
         dict_of_options=dict_of_all_possible_cadets,
     )
 
+    return drop_down_input_field
+
+def get_button_for_partnership_cell(cadet: Cadet, potential_partner_to_be_added_or_missing_data: str,  current_partner_name: str):
     if potential_partner_to_be_added_or_missing_data is missing_data:
-        button_to_add_partner = ""
+        if no_partnership_given_partner_cadet_as_str(current_partner_name):
+            return ""
+        else:
+            button = Button(
+                value = button_name_for_delete_partner(cadet_id=cadet.id),
+                label = "Remove partnership"
+            )
+
     else:
-        button_to_add_partner = Button(
+        button= Button(
             value=button_name_for_add_partner(cadet_id=cadet.id),
             label="Add %s as new cadet" % potential_partner_to_be_added_or_missing_data,
         )
 
-    return ListOfLines([drop_down_input_field, button_to_add_partner])
+    return button
 
 
 def button_name_for_add_partner(cadet_id: str):
     return "addPartner_%s" % cadet_id
 
+delete_button_prefix = "deletePartner_"
+
+def button_name_for_delete_partner(cadet_id: str):
+    return "%s%s" % (delete_button_prefix, cadet_id)
+
+def was_remove_partner_button(buttone) -> bool:
+    return delete_button_prefix == buttone[:len(delete_button_prefix)]
+
+
+def get_cadet_id_given_remove_partner_button_name(button:str):
+    return get_cadet_id_from_button_with_known_prefix(delete_button_prefix, button)
+
+def get_cadet_id_from_button_with_known_prefix(prefix: str, button:str):
+    return button[len(prefix):]
 
 def cadet_id_given_partner_button(button_name: str) -> str:
     splitter = button_name.split("_")

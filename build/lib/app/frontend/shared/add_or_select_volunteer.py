@@ -4,7 +4,7 @@ from typing import Union
 
 
 from app.backend.volunteers.add_edit_volunteer import verify_volunteer_and_warn
-from app.backend.volunteers.connected_cadets import get_list_of_relevant_volunteers
+from app.backend.volunteers.connected_cadets import get_list_of_similar_volunteers
 from app.backend.volunteers.list_of_volunteers import get_list_of_volunteers, sort_list_of_volunteers, \
     get_volunteer_from_list_of_given_str_of_volunteer
 from app.frontend.shared.add_edit_or_choose_volunteer_form import VolunteerAndVerificationText, get_volunteer_from_form, \
@@ -31,7 +31,7 @@ class ParametersForGetOrSelectVolunteerForm:
     final_add_button: bool = False
     volunteer_is_default: bool = False
     see_all_volunteers: bool = False
-    sort_by: str = SORT_BY_FIRSTNAME
+    sort_by: str = SORT_BY_NAME_SIMILARITY
 
     def save_values_to_state(self, interface: abstractInterface):
         print(str(self))
@@ -164,16 +164,22 @@ def get_list_of_volunteer_buttons(
     interface: abstractInterface, volunteer: Volunteer,    parameters: ParametersForGetOrSelectVolunteerForm, cadet: Cadet = arg_not_passed
 
 ) -> ListOfLines:
-    if parameters.see_all_volunteers:
+    list_of_similar_volunteers = get_list_of_similar_volunteers(
+        object_store=interface.object_store, volunteer=volunteer, cadet=cadet
+    )
+    no_similar_volunteers = len(list_of_similar_volunteers)==0
+    if no_similar_volunteers or parameters.see_all_volunteers:
         list_of_volunteers = get_list_of_volunteers(
             object_store=interface.object_store
         )
-        msg = "Currently choosing from all volunteers"
+        if no_similar_volunteers:
+            msg = "No similar volunteers: choosing from all volunteers"
+        else:
+            msg = "Currently choosing from all volunteers"
         state_button = see_similar_volunteers_button
+
     else:
-        list_of_volunteers = get_list_of_relevant_volunteers(
-            object_store=interface.object_store, volunteer=volunteer, cadet=cadet
-        )
+        list_of_volunteers = list_of_similar_volunteers
         msg = "Currently choosing from similar volunteers only:"
         state_button = see_all_volunteers_button
 

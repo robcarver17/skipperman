@@ -34,6 +34,7 @@ from app.objects.utils import print_list
 from app.objects.boat_classes import no_boat_class
 
 
+
 @dataclass
 class CadetWithDinghySailNumberBoatClassAndPartner:
     cadet: Cadet
@@ -68,19 +69,10 @@ def update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_ev
             dict_of_all_event_info_for_cadets=dict_of_all_event_info_for_cadets,
         )
     )
-    print_list(
-        list_of_potentially_updated_cadets_boats_groups_club_dinghies_and_partners,
-        "Potential updates:",
-    )
 
     list_of_updated_cadets_boats_groups_club_dinghies_and_partners = compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values(
         new_list=list_of_potentially_updated_cadets_boats_groups_club_dinghies_and_partners,
         existing_list=list_of_existing_cadets_boats_groups_club_dinghies_and_partners,
-    )
-
-    print_list(
-        list_of_updated_cadets_boats_groups_club_dinghies_and_partners,
-        "Actual updates:",
     )
 
     update_boat_info_for_updated_cadets_at_event(

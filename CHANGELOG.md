@@ -1,25 +1,25 @@
 
 # to do next
 Before first racing event is run
-- report reset print options to defaults, different defaults for report types #53
-- keep double handers aligned #65
+- add guess boat button #40 (double check club boat behaviour and check field description in docs)
 - documentation for reporting #49
-- add guess boat button #40
+- WA qualication import #72
+
 
 in near future (before first training)
-- WA qualication import #72
 - club boat limits #71
-- more elegant handling of manual reg #64
-- instructors can do attendance online #63
 - configure visible events in group allocation #69
+- more elegant handling of manual reg #64
 - add inactive cadets to group page with option to change status #42
 - merge cadet, merge volunteer #15
 - sort order refresh without clicking triangle
 - delete empty event, empty cadet, empty volunteer #26
 - edit event name #16 (don't allow days to be changed - delete instead)
+- instructors can do attendance online #63
 
 Before Cadet week
-- speed up display of large tables #67
+- speed up display of large tables #67 (also clean up html and button type code)
+- change data to parquet?
 - food add non registered #28
 - food documentation #49
 - clothing documentation #49
@@ -28,7 +28,9 @@ Before Cadet week
 - massive warning if unique key creators missing from field mappings
 
 # Recent
-
+- keep double handers aligned; Remove double handed button
+- dont show similar cadets/volunteers if there are none. Default to similar names.
+- report reset print options to defaults, different defaults for report types 
 - add delete from event button to volunteers in rota page 
 - on input show progress 
 - training group preallocation spreadsheet 

@@ -69,10 +69,17 @@ def update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_ev
             dict_of_all_event_info_for_cadets=dict_of_all_event_info_for_cadets,
         )
     )
+    print_list(
+        list_of_potentially_updated_cadets_boats_groups_club_dinghies_and_partners, "Potential:"
+    )
 
     list_of_updated_cadets_boats_groups_club_dinghies_and_partners = compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values(
         new_list=list_of_potentially_updated_cadets_boats_groups_club_dinghies_and_partners,
         existing_list=list_of_existing_cadets_boats_groups_club_dinghies_and_partners,
+    )
+
+    print_list(
+        list_of_updated_cadets_boats_groups_club_dinghies_and_partners, "Updates:"
     )
 
     update_boat_info_for_updated_cadets_at_event(
@@ -316,17 +323,19 @@ def compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values(
             day=potentially_updated_cadet_at_event_with_info.day,
             default=missing_data,
         )
+
         already_in_a_changed_partnership = is_cadet_already_in_changed_partnership(
             updated_list=updated_list,
             potentially_updated_cadet_at_event_with_info=potentially_updated_cadet_at_event_with_info,
         )
+
+        if already_in_a_changed_partnership:
+            continue
+
         if cadet_in_existing_list is not missing_data:
             if cadet_in_existing_list == potentially_updated_cadet_at_event_with_info:
                 ## no change
                 continue
-
-        if already_in_a_changed_partnership:
-            continue
 
         ## changed,  includes missing data
         updated_list.append(potentially_updated_cadet_at_event_with_info)

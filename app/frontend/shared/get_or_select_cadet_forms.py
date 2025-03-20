@@ -182,7 +182,7 @@ def get_list_of_cadet_buttons(
 
     list_of_cadets= sort_a_list_of_cadets(list_of_cadets, sort_by=parameters.sort_by, similar_cadet=cadet,
                                           )
-    sort_order_buttons  = get_sort_order_buttons(parameters)
+    sort_order_buttons  = get_sort_order_buttons(parameters=parameters, list_of_cadets=list_of_cadets)
     cadet_choice_buttons = Line([Button(str(cadet)) for cadet in list_of_cadets])
 
     return ListOfLines([_______________, Line([msg, state_button]+sort_order_buttons),
@@ -191,9 +191,9 @@ def get_list_of_cadet_buttons(
 
 def get_sort_order_buttons(
      parameters: ParametersForGetOrSelectCadetForm,
-
+    list_of_cadets: list,
 ):
-    if not parameters.see_all_cadets_button:
+    if len(list_of_cadets)<5:
         ## no need to sort, probably not that many
         return ['']
     sort_msg = parameters.sort_by

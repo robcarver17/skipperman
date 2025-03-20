@@ -185,7 +185,7 @@ def get_list_of_volunteer_buttons(
 
 
     list_of_volunteers=sort_list_of_volunteers(list_of_volunteers, sort_by=parameters.sort_by, similar_volunteer = volunteer)
-    sort_order_buttons  = get_sort_order_buttons(parameters)
+    sort_order_buttons  = get_sort_order_buttons(parameters=parameters, list_of_volunteers=list_of_volunteers)
     volunteer_choice_buttons = Line([Button(str(volunteer)) for volunteer in list_of_volunteers])
 
     return ListOfLines([_______________, Line([msg, state_button]+sort_order_buttons),
@@ -194,9 +194,9 @@ def get_list_of_volunteer_buttons(
 
 def get_sort_order_buttons(
      parameters: ParametersForGetOrSelectVolunteerForm,
-
+    list_of_volunteers: list
 ):
-    if not parameters.see_all_volunteers:
+    if len(list_of_volunteers)<5:
         ## no need to sort, probably not that many
         return ['']
     sort_msg = parameters.sort_by

@@ -152,54 +152,6 @@ def get_current_club_boat_name_on_day(
     return club_dinghy.name
 
 
-def guess_if_club_boat_required_and_return_name(
-    dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
-) -> str:
-    ## Guess
-    boat_status = dict_of_all_event_data.event_data_for_cadet(
-        cadet
-    ).registration_data.data_in_row.get(CADET_BOAT_OWNERSHIP_STATUS, "")
-    if "club boat" in boat_status.lower():
-        return guess_current_club_boat_name_on_day(
-            dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
-        )
-    else:
-        return NO_CLUB_DINGHY_NAME
-
-
-NO_CLUB_DINGHY_NAME = no_club_dinghy.name
-
-
-def guess_current_club_boat_name_on_day(
-    dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
-) -> str:
-    ## Guess
-    allocation_info = dict_of_all_event_data.event_data_for_cadet(
-        cadet
-    ).registration_data.data_in_row
-
-    pref_group = allocation_info.get(CADET_GROUP_PREFERENCE, "")
-    boat_class = allocation_info.get(CADET_BOAT_CLASS, "")
-    pref_boat = allocation_info.get(DESIRED_BOAT, "")
-
-    allocated_group = get_current_group_name_for_day(
-        dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
-    )
-
-    list_of_club_boats = (
-        dict_of_all_event_data.dict_of_cadets_and_club_dinghies_at_event.list_of_club_dinghies
-    )
-
-    return guess_best_club_boat_name_given_list_of_possibly_matching_fields(
-        list_of_boats=list_of_club_boats,
-        list_of_options=[
-            boat_class,
-            allocated_group,
-            pref_boat,
-            pref_group,
-        ],
-    )
-
 
 def get_current_boat_class_across_days_or_none_if_different(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet
@@ -673,7 +625,7 @@ def guess_best_boat_class_name_given_list_of_possibly_matching_fields(
 ) -> str:
     list_of_options = remove_empty(list_of_options)
     if len(list_of_options) == 0:
-        return ""
+        return no_boat_class.name
 
     list_of_names = remove_empty(list_of_boats.list_of_names())
     best_option = best_option_against_boat_names(

@@ -1,6 +1,8 @@
 from typing import List
 
 from app.backend.cadets.list_of_cadets import get_cadet_from_id
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets
+from app.backend.groups.data_for_group_display import guess_name_of_boat_class_on_day_from_other_information
 from app.frontend.events.group_allocation.render_allocation_form import (
     get_list_of_all_cadets_with_event_data,
 )
@@ -8,6 +10,7 @@ from app.frontend.events.group_allocation.store_state import (
     no_day_set_in_state,
     get_day_from_state_or_none,
 )
+from app.objects.boat_classes import no_boat_class
 
 from app.objects.day_selectors import Day
 
@@ -32,7 +35,6 @@ from app.backend.boat_classes.update_boat_information import (
     update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event,
 )
 from app.objects.partners import NOT_ALLOCATED_STR
-from app.objects.utils import print_list
 from app.backend.registration_data.update_cadets_at_event import (
     update_notes_for_existing_cadet_at_event,
 )
@@ -241,19 +243,45 @@ def make_cadet_available_on_current_day(
 def remove_partnership_for_cadet_from_group_allocation_button(interface: abstractInterface):
     last_button = interface.last_button_pressed()
     cadet_id = get_cadet_id_given_remove_partner_button_name(last_button)
-    event = get_event_from_state(interface)
     cadet = get_cadet_from_id(object_store=interface.object_store, cadet_id=cadet_id)
-    day = get_day_from_state_or_none(interface)
-    update = get_pseudo_update_to_remove_partner_from_cadet(interface=interface, event=event, cadet=cadet)
 
+    event = get_event_from_state(interface)
+
+    update = get_pseudo_update_to_remove_partner_from_cadet(interface=interface, cadet=cadet)
     list_of_updates = [update]
 
     update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_given_update_list(interface=interface,
                                                                                                event=event,
                                                                                                list_of_updates=list_of_updates)
 
-def get_pseudo_update_to_remove_partner_from_cadet(interface: abstractInterface, event: Event, cadet: Cadet) -> CadetWithDinghySailNumberBoatClassAndPartner:
+def get_pseudo_update_to_remove_partner_from_cadet(interface: abstractInterface,  cadet: Cadet) -> CadetWithDinghySailNumberBoatClassAndPartner:
     update = get_update_for_cadet(interface, cadet)
     update.two_handed_partner_cadet_as_str = NOT_ALLOCATED_STR
 
     return update
+
+def guess_boat_classes_in_allocation_form(interface: abstractInterface):
+    event = get_event_from_state(interface)
+    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=interface.object_store, event=event, active_only=True)
+    list_of_cadets = dict_of_all_event_data.list_of_cadets
+    day_from_state = get_day_from_state_or_none(interface)
+
+    if day_from_state is None:
+        list_of_days = event.days_in_event()
+    else:
+        list_of_days = [day_from_state]
+
+    list_of_updates = []
+    for day in list_of_days:
+        for cadet in list_of_cadets:
+            current_boat = dict_of_all_event_data.dict_of_cadets_and_boat_class_and_partners.boat_classes_and_partner_for_cadet(cadet).boat_class_on_day(day)
+            if not current_boat is no_boat_class:
+                continue
+            boat_class_name = guess_name_of_boat_class_on_day_from_other_information(dict_of_all_event_data=dict_of_all_event_data, day=day, cadet=cadet)
+            update = get_update_for_cadet(interface, cadet)
+            update.boat_class_name = boat_class_name
+            list_of_updates.append(update)
+
+    update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_given_update_list(interface=interface,
+                                                                                               event=event,
+                                                                                               list_of_updates=list_of_updates)

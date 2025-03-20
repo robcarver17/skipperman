@@ -5,7 +5,6 @@ from app.data_access.configuration.field_list_groups import (
     GROUP_ALLOCATION_FIELDS,
     GROUP_ALLOCATION_FIELDS_HIDE,
 )
-from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent
 from app.objects.cadets import Cadet
 from app.objects.composed.cadets_with_all_event_info import (
     DictOfAllEventInfoForCadets,

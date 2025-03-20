@@ -40,6 +40,7 @@ from app.frontend.events.group_allocation.input_fields import (
 from app.frontend.events.group_allocation.parse_allocation_form import (
     update_data_given_allocation_form,
     make_cadet_available_on_current_day, remove_partnership_for_cadet_from_group_allocation_button,
+    guess_boat_classes_in_allocation_form,
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -93,7 +94,7 @@ def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewFo
         remove_partnership_for_cadet_from_group_allocation_button(interface)
 
     elif guess_boat_button.pressed(last_button):
-        pass
+        guess_boat_classes_in_allocation_form(interface)
 
     elif last_button in get_list_of_all_cadet_buttons(interface):
         cadet_button_clicked(interface)

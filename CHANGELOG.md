@@ -1,7 +1,7 @@
 
 # to do next
 Before first racing event is run
-- add guess boat button #40 
+- click on volunteer name reveals history
 - documentation for reporting #49
 - WA qualication import #72
 
@@ -28,7 +28,7 @@ Before Cadet week
 - massive warning if unique key creators missing from field mappings
 
 # Recent
-- added guess boat button (doesn't work with )
+- added guess boat button 
 - removed club boat automapping
 - keep double handers aligned; Remove double handed button
 - dont show similar cadets/volunteers if there are none. Default to similar names.

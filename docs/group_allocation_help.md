@@ -67,6 +67,8 @@ The following are not recommended for use, but are kept for backwards compatibil
 
 Don't forget to save once you have made any changes to groups, club boats, boat classes and sail numbers.
 
+
+
 ## Allocating groups
 
 You need to allocate sailors to training or racing groups, depending on the event:
@@ -88,6 +90,11 @@ Skipperman doesn't know how many club boats are available - use the [summary](#s
 
 There is an official skipperman field `Boat ownership`. If this is used in the [event field mapping](WA_field_mapping_help.md), so you can see if they want a club boat. Check that there are enough club boats available (using the [summary](#seeing-a-summary) information), and if required enforce a priority for borrowing them. If a cadet doesn't get a club boat that they need, make sure you allocate them to a backup group.
 
+## Boat classes and sail numbers
+
+To enter the boat class just use the dropdown. If you don't see the information you want, go to the [configuration](configuration_help.md#boat-classes) as the boat may be hidden or need adding.
+
+It can be quite boring to allocate boat classes to everyone at an event. If you click the `Autofill Boat Class` button at the top it will guess which boat class that each sailor is sailing in. Make sure you check they look correct.
 
 # Creating sailing partnerships
 

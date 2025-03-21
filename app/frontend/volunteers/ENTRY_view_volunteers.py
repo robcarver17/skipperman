@@ -2,6 +2,7 @@ from typing import Union
 
 from app.data_access.configuration.fixed import ADD_KEYBOARD_SHORTCUT
 from app.frontend.volunteers.add_volunteer import display_form_add_volunteer
+from app.frontend.volunteers.update_skills_from_csv import display_form_refresh_volunteer_skills
 from app.frontend.volunteers.view_individual_volunteer import (
     display_form_view_individual_volunteer,
 )
@@ -32,16 +33,6 @@ from app.frontend.shared.volunteer_state import (
 )
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 
-ADD_VOLUNTEER_BUTTON_LABEL = "Add volunteer"
-add_button = Button(
-    ADD_VOLUNTEER_BUTTON_LABEL, nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT
-)
-all_sort_types = [SORT_BY_SURNAME, SORT_BY_FIRSTNAME]
-sort_buttons = ButtonBar(
-    [Button(sort_by, nav_button=True) for sort_by in all_sort_types]
-)
-help_button = HelpButton("view_all_volunteers_help")
-nav_buttons = ButtonBar([main_menu_button, add_button, help_button])
 
 
 def display_form_view_of_volunteers(interface: abstractInterface) -> Form:
@@ -76,6 +67,9 @@ def post_form_view_of_volunteers(interface: abstractInterface) -> Union[Form, Ne
     button_pressed = interface.last_button_pressed()
     if add_button.pressed(button_pressed):
         return add_volunteer_form(interface)
+
+    elif refresh_skills_button.pressed(button_pressed):
+        return interface.get_new_form_given_function(display_form_refresh_volunteer_skills)
 
     elif button_pressed in all_sort_types:
         ## no change to stage required, just sort order
@@ -115,3 +109,19 @@ def get_list_of_volunteers_with_buttons(
 
 def row_of_form_for_volunteer_with_buttons(volunteer: Volunteer) -> RowInTable:
     return RowInTable([Button(str(volunteer))])
+
+ADD_VOLUNTEER_BUTTON_LABEL = "Add volunteer"
+add_button = Button(
+    ADD_VOLUNTEER_BUTTON_LABEL, nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT
+)
+help_button = HelpButton("view_all_volunteers_help")
+
+REFRESH_SKILLS_BUTTON_LABEL = "Refresh key skills from .csv file"
+refresh_skills_button= Button(REFRESH_SKILLS_BUTTON_LABEL, nav_button=True)
+
+nav_buttons = ButtonBar([main_menu_button, add_button, refresh_skills_button, help_button])
+
+all_sort_types = [SORT_BY_SURNAME, SORT_BY_FIRSTNAME]
+sort_buttons = ButtonBar(
+    [Button(sort_by, nav_button=True) for sort_by in all_sort_types]
+)

@@ -5,6 +5,7 @@ from app.objects.generic_objects import GenericSkipperManObjectWithIds
 from app.objects.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     get_idx_of_unique_object_with_attr_in_list,
+get_unique_object_with_attr_in_list
 )
 
 
@@ -61,6 +62,12 @@ class ListOfSkills(GenericListOfObjectsWithIds):
 
     def skill_with_id(self, skill_id: str, default=arg_not_passed):
         return self.object_with_id(skill_id, default=default)
+
+    def skill_with_name(self, skill_name, default=arg_not_passed):
+        return get_unique_object_with_attr_in_list(self,
+                                                   attr_name='name',
+                                                   attr_value=skill_name,
+                                                   default=default)
 
     def idx_of_skill_with_name(self, skill_name: str, default=arg_not_passed) -> int:
         return get_idx_of_unique_object_with_attr_in_list(

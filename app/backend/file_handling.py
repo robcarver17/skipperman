@@ -10,21 +10,21 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
     get_file_from_interface,
 )
-from app.objects.exceptions import FileError
+from app.objects.exceptions import FileError, arg_not_passed
 
 
 def create_local_file_from_uploaded_and_return_filename(
-    interface: abstractInterface, file_marker_name: str
+    interface: abstractInterface, file_marker_name: str, new_filename: str = arg_not_passed
 ) -> str:
-    original_file = verify_and_return_uploaded_wa_event_file(
+    file_object = get_file_from_interface_verify_extension_and_return_file_object(
         interface=interface, file_marker_name=file_marker_name
     )
-    original_filename = save_uploaded_file_as_local_temp_file(original_file)
+    new_filename = save_uploaded_file_as_local_temp_file(file_object, new_filename=new_filename)
 
-    return original_filename
+    return new_filename
 
 
-def verify_and_return_uploaded_wa_event_file(
+def get_file_from_interface_verify_extension_and_return_file_object(
     interface: abstractInterface, file_marker_name: str
 ):
     file = get_file_from_interface(file_marker_name, interface=interface)
@@ -41,10 +41,11 @@ def verify_and_return_uploaded_wa_event_file(
 TEMP_FILE_NAME = "tempfile"  ## can be anything
 
 
-def save_uploaded_file_as_local_temp_file(file) -> str:
-    new_filename = get_next_valid_upload_file_name(TEMP_FILE_NAME)
+def save_uploaded_file_as_local_temp_file(file_object, new_filename: str = arg_not_passed) -> str:
+    if new_filename is arg_not_passed:
+        new_filename = get_next_valid_upload_file_name(TEMP_FILE_NAME)
     try:
-        file.save(new_filename)
+        file_object.save(new_filename)
     except Exception as e:
         raise FileError(
             "Issue %s saving to filename %s- *CONTACT SUPPORT*" % (str(e), new_filename)

@@ -17,7 +17,7 @@ from app.objects.membership_status import current_member
 
 
 def create_temp_file_with_list_of_cadets(
-    interface: abstractInterface, file_marker_name: str
+    interface: abstractInterface, file_marker_name: str,
 ) -> str:
     original_filename = create_local_file_from_uploaded_and_return_filename(
         interface=interface, file_marker_name=file_marker_name
@@ -69,7 +69,6 @@ def remove_temp_file_with_list_of_cadet_members():
     os.remove(temp_list_of_cadets_file_name)
 
 
-temp_list_of_cadets_file_name = get_staged_adhoc_filename("list_of_cadets")
 
 FIRST_NAME_IN_MEMBERSHIP_FILE = "First name"
 SURNAME_IN_MEMBERSHIP_FILE = "Last name"
@@ -84,6 +83,7 @@ DESCRIBE_ALL_FIELDS_IN_CADET_MEMBERSHIP_LIST_FILE = ", ".join(
     ALL_FIELDS_IN_CADET_MEMBERSHIP_LIST_FILE
 )
 
+temp_list_of_cadets_file_name = get_staged_adhoc_filename("list_of_cadets")
 
 def get_temp_cadet_file_list_of_memberships() -> ListOfCadets:
     return read_object_of_type(ListOfCadets, temp_list_of_cadets_file_name)

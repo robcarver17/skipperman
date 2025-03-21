@@ -2,11 +2,8 @@ from app.backend.volunteers.list_of_volunteers import (
     get_volunteer_from_list_of_given_str_of_volunteer,
 )
 
-from app.objects.volunteer_at_event_with_id import VolunteerAtEventWithId
-
 from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
 
-from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.volunteers import Volunteer
 
@@ -46,14 +43,5 @@ def get_volunteer_at_event_from_state(
         object_store=interface.object_store, volunteer_id=volunteer_id
     )
 
-
-def get_volunteer_at_event_with_id_from_state(
-    interface: abstractInterface,
-) -> VolunteerAtEventWithId:
-    volunteer_id = get_volunteer_id_selected_from_state(interface)  ## NEEDS TO BE SET
-    event = get_event_from_state(interface)
-    volunteer_at_event_with_id = DEPRECATE_get_volunteer_at_event_with_id(
-        interface=interface, volunteer_id=volunteer_id, event=event
-    )
-
-    return volunteer_at_event_with_id
+def clear_volunteer_id_in_state(interface: abstractInterface):
+    interface.clear_persistent_value(VOLUNTEER)

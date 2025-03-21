@@ -7,11 +7,11 @@ from app.objects.volunteers import Volunteer, ListOfVolunteers
 
 
 def get_volunteer_with_matching_name(
-    object_store: ObjectStore, volunteer: Volunteer
+    object_store: ObjectStore, volunteer: Volunteer, default = missing_data
 ) -> Union[object, Volunteer]:
     list_of_volunteers = get_list_of_volunteers(object_store)
 
-    return list_of_volunteers.volunteer_with_matching_name(volunteer.name)
+    return list_of_volunteers.volunteer_with_matching_name(volunteer.name, default=default)
 
 
 def get_volunteer_from_name(

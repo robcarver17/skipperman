@@ -1,7 +1,7 @@
 
 ## doesn't mater just have to be unique
-arg_not_passed = 213457329874587
-missing_data = 128710283749821374
+arg_not_passed = "**Arg_not_passed**"
+missing_data = "**missingdata**"
 
 DAYS_IN_YEAR = 365.25
 

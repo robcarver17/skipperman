@@ -6,6 +6,11 @@ from app.frontend.volunteers.add_volunteer import (
     display_form_add_volunteer,
     post_form_add_volunteer,
 )
+from app.frontend.volunteers.iterate_over_imported_volunteer_skills import \
+    display_volunteer_selection_in_skill_import_form, post_volunteer_selection_in_skill_import_form, \
+    display_skills_editing_form_when_mismatch, post_skills_editing_form_when_mismatch
+from app.frontend.volunteers.update_skills_from_csv import display_form_refresh_volunteer_skills, \
+    post_form_refresh_volunteer_skills
 from app.frontend.volunteers.view_individual_volunteer import (
     display_form_view_individual_volunteer,
     post_form_view_individual_volunteer,
@@ -30,6 +35,12 @@ volunteer_function_mapping = (
             {
                 (display_form_view_of_volunteers, post_form_view_of_volunteers): {
                     (display_form_add_volunteer, post_form_add_volunteer): 0,
+                    (display_form_refresh_volunteer_skills, post_form_refresh_volunteer_skills):0,
+                        (display_volunteer_selection_in_skill_import_form,
+                         post_volunteer_selection_in_skill_import_form
+                         ):0, ## RETURNS TO DISPLAY VOLUNTEERS
+                    (display_skills_editing_form_when_mismatch,
+                     post_skills_editing_form_when_mismatch):0,
                     (
                         display_form_view_individual_volunteer,
                         post_form_view_individual_volunteer,

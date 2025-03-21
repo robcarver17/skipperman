@@ -8,7 +8,7 @@ from app.frontend.cadets.iterate_over_import_cadets_in_uploaded_file import (
 from app.backend.cadets.import_membership_list import (
     create_temp_file_with_list_of_cadets,
     DESCRIBE_ALL_FIELDS_IN_CADET_MEMBERSHIP_LIST_FILE,
-    DOB_FORMAT,
+    DOB_FORMAT, temp_list_of_cadets_file_name,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm, fileInput
 from app.objects.abstract_objects.abstract_buttons import (
@@ -90,6 +90,7 @@ def previous_form(interface: abstractInterface) -> NewForm:
 
 def respond_to_uploaded_file(interface: abstractInterface) -> Union[Form, NewForm]:
     try:
+
         create_temp_file_with_list_of_cadets(interface, file_marker_name=FILENAME)
     except Exception as e:
         interface.log_error(

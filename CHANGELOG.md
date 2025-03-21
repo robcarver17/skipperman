@@ -1,9 +1,9 @@
 
 # to do next
 Before first racing event is run
-- click on volunteer name reveals history
-- documentation for reporting #49
 - WA qualication import #72
+- click on volunteer name reveals history and availability checkboxes
+- documentation for reporting #49
 
 
 in near future (before first training)
@@ -19,6 +19,7 @@ in near future (before first training)
 
 Before Cadet week
 - speed up display of large tables #67 (also clean up html and button type code)
+- replace csv with parquet, keep csv for backup
 - change data to parquet?
 - food add non registered #28
 - food documentation #49

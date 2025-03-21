@@ -22,3 +22,32 @@ wild_apricot_payment_fields_which_are_cancelled_status:
 ```
 
 They will need changing if WA changes it's status fields, or a new status is added to Skipperman.
+
+# Import skills csv
+
+First two columns are volunteer name, then date format in standard Python strptime lingo. Then are each of the skills. The skills must match the names of Skipperman skills.
+
+For each skill we can eithier specify:
+
+- for a qualification with a fixed expiry, the explicit column name for the expiry date
+- for a qualification with a start date but no end date (eg AI), the 'valid from' date
+- for a qualification with a fixed expiry but where the spreadsheet has the start date (eg First Aid), the 'starts from' date and the number of years it lasts for.
+
+```
+import_skills_csv: ## names have to correspond to configuration names
+  first_name: 'First Name'
+  last_name: 'Last Name'
+  date_format: '%d-%b-%Y'
+  skills:
+    DI:
+      expires: 'Dinghy Instructor (DI) '
+    SI:
+      expires: 'Senior Instructor (SI)'
+    RCL2:
+      expires: 'Racing Coach 2 (RC)'
+    AI:
+      valid_from: 'Assistant Instructor (AI)'
+    First aid:
+      starts_from: 'First Aid (FA)'
+      expiry_limit_years: 3
+```

@@ -245,6 +245,8 @@ def change_or_warn_on_discrepancy(interface: abstractInterface, existing_cadet: 
             )
 
 
+
+
 ### STATE
 
 def percentage_of_cadet_ids_done_in_registration_file(interface: abstractInterface) -> int:

@@ -32,7 +32,7 @@ from app.web.html.url_define import (
     HELP_PREFIX,
     MAKE_BACKUP,
 )
-from app.data_access.configuration.configuration import MAX_FILE_SIZE
+from app.data_access.configuration.configuration import MAX_FILE_SIZE, SUPPORT_EMAIL
 
 MEGABYTE = (2**10) ** 2
 
@@ -164,7 +164,12 @@ def help(help_page_name):
 
 @app.errorhandler(500)
 def generic_web_error(e):
-    flash_error("Some kind of error - contact support (%s)" % str(e))
+    flash_error("Some kind of error (%s) contact support: %s " % (str(e), SUPPORT_EMAIL))
+    return redirect("/")
+
+@app.errorhandler(404)
+def generic_missing_page_error(e):
+    flash_error("Missing page error (%s) contact support: %s " % (str(e), SUPPORT_EMAIL))
     return redirect("/")
 
 

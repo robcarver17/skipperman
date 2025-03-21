@@ -27,7 +27,7 @@ from app.backend.wild_apricot.load_wa_file import (
     WA_FILE,
 )
 from app.backend.file_handling import (
-    verify_and_return_uploaded_wa_event_file,
+    get_file_from_interface_verify_extension_and_return_file_object,
     save_uploaded_file_as_local_temp_file,
 )
 from app.backend.mapping.event_mapping import verify_and_if_required_add_wa_mapping
@@ -111,7 +111,7 @@ def verify_and_save_uploaded_wa_event_file_as_temporary_file(
     ## returns local filename, ensuring we don't overwrite
     ## does not check is a valid WA file
     ## not associated with event so just given incremental filename
-    file = verify_and_return_uploaded_wa_event_file(
+    file = get_file_from_interface_verify_extension_and_return_file_object(
         interface=interface, file_marker_name=WA_FILE
     )
     temp_filename = save_uploaded_file_as_local_temp_file(file)

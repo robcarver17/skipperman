@@ -23,7 +23,12 @@ from app.frontend.events.volunteer_rota.button_values import (
     location_button_name_from_volunteer_id,
     skills_button_name_from_volunteer_id, unavailable_button_value_for_volunteer_id_across_days,
 )
+from app.frontend.events.volunteer_rota.edit_volunteer_details_from_rota import \
+    get_volunteer_history_and_attendace_checkbox_for_selected_volunteer
 from app.frontend.events.volunteer_rota.swapping import get_swap_button, has_role_on_day
+from app.frontend.forms.swaps import is_ready_to_swap
+from app.frontend.shared.events_state import get_event_from_state
+from app.frontend.shared.volunteer_state import is_volunteer_id_set_in_state, get_volunteer_from_state
 
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
@@ -129,14 +134,32 @@ def button_for_day(day: Day) -> Button:
     return Button(day.name, value=button_value_for_day(day))
 
 
-def get_volunteer_name_cell(volunteer: Volunteer, ready_to_swap: bool) -> ListOfLines:
+def get_volunteer_name_cell(interface: abstractInterface, volunteer: Volunteer, ready_to_swap: bool) -> ListOfLines:
+    ready_to_swap = is_ready_to_swap(interface)
+
     if ready_to_swap:
         return ListOfLines([volunteer.name])
-    else:
-        return ListOfLines([
-            Button(label=volunteer.name, value=name_of_volunteer_button(volunteer)),
-            get_make_unavailable_button_for_volunteer_across_days(volunteer)
-            ])
+
+    volunteer_button = Button(label=volunteer.name, value=name_of_volunteer_button(volunteer))
+    other_material = get_volunteer_other_material(interface=interface, volunteer=volunteer)
+    raincheck_button= get_make_unavailable_button_for_volunteer_across_days(volunteer)
+
+    return ListOfLines([
+        volunteer_button
+        ]+other_material+[
+        raincheck_button
+    ]).add_Lines()
+
+
+def get_volunteer_other_material(interface: abstractInterface, volunteer: Volunteer) -> list:
+    if is_volunteer_id_set_in_state(interface):
+        volunteer_in_state = get_volunteer_from_state(interface)
+        if volunteer_in_state == volunteer:
+            event = get_event_from_state(interface)
+            return get_volunteer_history_and_attendace_checkbox_for_selected_volunteer(interface=interface, volunteer=volunteer, event=event)
+
+    return []
+
 
 def get_allocation_inputs_buttons_in_role_when_available(
     interface: abstractInterface,

@@ -10,21 +10,12 @@ from app.frontend.forms.form_utils import (
 )
 
 from app.backend.volunteers.volunteers_at_event import (
-    delete_volunteer_at_event,
     update_volunteer_availability_at_event,
 )
 from app.backend.registration_data.volunteer_registration_data import (
     get_dict_of_registration_data_for_volunteers_at_event,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.frontend.form_handler import button_error_and_back_to_initial_state_form
-from app.frontend.shared.events_state import get_event_from_state
-from app.frontend.shared.volunteer_state import (
-    get_volunteer_from_state,
-)
-
-from app.objects.abstract_objects.abstract_buttons import Button, CANCEL_BUTTON_LABEL
-from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
@@ -34,9 +25,7 @@ from app.objects.day_selectors import no_days_selected_from_available_days
 from app.objects.events import Event
 
 
-def display_form_confirm_volunteer_details_from_rota(interface: abstractInterface):
-    event = get_event_from_state(interface)
-    volunteer = get_volunteer_from_state(interface=interface)
+def get_volunteer_history_and_attendace_checkbox_for_selected_volunteer(interface: abstractInterface, event: Event, volunteer: Volunteer) -> list:
     past_roles = get_text_of_last_roles(
         interface=interface, event=event, volunteer=volunteer
     )
@@ -48,21 +37,10 @@ def display_form_confirm_volunteer_details_from_rota(interface: abstractInterfac
         ]
     )
 
-    return Form(
-        ListOfLines(
-            [
-                "Following are details for volunteer %s at event %s"
-                % (volunteer.name, str(event)),
-                _______________,
-                available_checkbox,
-                past_roles,
-                _______________,
-                save_button,
-                delete_button,
-                cancel_button,
-            ]
-        )
-    )
+
+    return ListOfLines([past_roles, _______________, available_checkbox
+        ])
+
 
 
 def get_text_of_last_roles(
@@ -94,55 +72,18 @@ def get_availability_checkbox_for_volunteer_at_event(
     return get_availability_checkbox(
         availability=availability,
         event=event,
-        input_name=AVAILABILITY,
-        input_label="Confirm availability for volunteer:",
+        input_name=input_name_for_volunteer_availability(volunteer),
+        input_label="Confirm availability (click volunteers name to save):",
     )
 
 
-def post_form_confirm_volunteer_details_from_rota(interface: abstractInterface):
-    last_button = interface.last_button_pressed()
-    if cancel_button.pressed(last_button):
-        return go_back_to_parent_form(interface)
-    elif delete_button.pressed(last_button):
-        delete_volunteer_from_event(interface)
-        interface.flush_cache_to_store()
-        return go_back_to_parent_form(interface)
-
-    elif save_button.pressed(last_button):
-        form_ok = update_volunteer_at_event_from_rota_with_form_contents_and_return_true_if_ok(
-            interface
-        )
-        if form_ok:
-            interface.flush_cache_to_store()
-            return go_back_to_parent_form(interface)
-        else:
-            return display_form_confirm_volunteer_details_from_rota(interface)
-
-    else:
-        raise button_error_and_back_to_initial_state_form(interface)
-
-
-def go_back_to_parent_form(interface: abstractInterface) -> NewForm:
-    return interface.get_new_display_form_for_parent_of_function(
-        display_form_confirm_volunteer_details_from_rota
-    )
-
-
-def delete_volunteer_from_event(interface: abstractInterface):
-    volunteer = get_volunteer_from_state(interface)
-    event = get_event_from_state(interface)
-    delete_volunteer_at_event(
-        object_store=interface.object_store, event=event, volunteer=volunteer
-    )
-
-
-def update_volunteer_at_event_from_rota_with_form_contents_and_return_true_if_ok(
+def update_volunteer_availability_at_event_from_rota_with_form_contents(
     interface: abstractInterface,
-) -> bool:
-    volunteer = get_volunteer_from_state(interface)
-    event = get_event_from_state(interface)
+        event: Event,
+        volunteer: Volunteer
+):
     availability = get_availablity_from_form(
-        interface=interface, event=event, input_name=AVAILABILITY
+        interface=interface, event=event, input_name=input_name_for_volunteer_availability(volunteer)
     )
 
     if no_days_selected_from_available_days(
@@ -151,7 +92,7 @@ def update_volunteer_at_event_from_rota_with_form_contents_and_return_true_if_ok
         interface.log_error(
             "No days selected for volunteer at event - can't do this - delete volunteer if not available for event"
         )
-        return False
+        return
 
     update_volunteer_availability_at_event(
         object_store=interface.object_store,
@@ -159,14 +100,10 @@ def update_volunteer_at_event_from_rota_with_form_contents_and_return_true_if_ok
         volunteer=volunteer,
         availability=availability,
     )
-
-    return True
+    interface.flush_cache_to_store()
 
 
 AVAILABILITY = "Availability"
-DELETE_VOLUNTEER_FROM_EVENT_BUTTON_LABEL = "Remove volunteer from event"
-SAVE_CHANGES_BUTTON_LABEL = "Save changes"
 
-save_button = Button(SAVE_CHANGES_BUTTON_LABEL)
-delete_button = Button(DELETE_VOLUNTEER_FROM_EVENT_BUTTON_LABEL)
-cancel_button = Button(CANCEL_BUTTON_LABEL)
+def input_name_for_volunteer_availability(volunteer: Volunteer):
+    return AVAILABILITY+volunteer.id

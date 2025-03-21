@@ -71,7 +71,6 @@ from app.frontend.events.volunteer_rota.volunteer_rota_buttons import (
     last_button_pressed_was_copy_button,
     last_button_pressed_was_swap_button,
     last_button_pressed_was_remove_role_button,
-    last_button_pressed_was_make_unavailable_for_specific_day_button,
     last_button_pressed_was_make_all_days_unavailable_for_volunteer, last_button_pressed_was_make_unavailable_button,
 )
 
@@ -125,11 +124,6 @@ def post_form_view_for_volunteer_rota(
     elif add_volunteer_button.pressed(last_button_pressed):
         return add_new_volunteer_form(interface)
 
-    elif last_button_pressed_was_volunteer_name_button(interface):
-        return action_if_volunteer_button_pressed(
-            interface=interface, volunteer_button=last_button_pressed
-        )
-
     elif last_button_pressed_was_location_button(interface):
         return action_if_location_button_pressed(
             interface=interface, location_button=last_button_pressed
@@ -153,6 +147,11 @@ def post_form_view_for_volunteer_rota(
         save_sorts_to_state(interface=interface, sort_by_location=True)
 
     ## Updates to form, display form again
+    elif last_button_pressed_was_volunteer_name_button(interface):
+        action_if_volunteer_button_pressed(
+            interface=interface, volunteer_button=last_button_pressed
+        )
+
     elif last_button_pressed_was_make_available_button(interface):
         update_if_make_available_button_pressed(
             available_button=last_button_pressed, interface=interface

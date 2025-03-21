@@ -8,7 +8,7 @@ from app.frontend.shared.add_edit_or_choose_volunteer_form import (
     get_and_save_volunteer_skills_from_form,
     skills_form_entries,
 )
-from app.frontend.shared.volunteer_state import get_volunteer_from_state
+from app.frontend.shared.volunteer_state import get_volunteer_from_state, clear_volunteer_id_in_state
 
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
@@ -81,6 +81,7 @@ def modify_volunteer_from_rota_given_form_contents(interface: abstractInterface)
 
 
 def previous_form(interface: abstractInterface):
+    clear_volunteer_id_in_state(interface)
     return interface.get_new_display_form_for_parent_of_function(
         display_form_edit_individual_volunteer_skills_from_rota
     )

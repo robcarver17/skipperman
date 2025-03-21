@@ -92,10 +92,6 @@ from app.frontend.events.volunteer_rota.ENTRY1_display_main_rota_page import (
     display_form_view_for_volunteer_rota,
     post_form_view_for_volunteer_rota,
 )
-from app.frontend.events.volunteer_rota.edit_volunteer_details_from_rota import (
-    post_form_confirm_volunteer_details_from_rota,
-    display_form_confirm_volunteer_details_from_rota,
-)
 from app.frontend.events.volunteer_rota.edit_cadet_connections_for_event_from_rota import (
     display_form_edit_cadet_connections_from_rota,
     post_form_edit_cadet_connections_from_rota,
@@ -237,10 +233,6 @@ event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_func
                         (
                             display_form_add_new_volunteer_to_rota_at_event,
                             post_form_add_new_volunteer_to_rota_at_event,
-                        ): 0,
-                        (
-                            display_form_confirm_volunteer_details_from_rota,
-                            post_form_confirm_volunteer_details_from_rota,
                         ): 0,
                         (
                             display_form_edit_cadet_connections_from_rota,

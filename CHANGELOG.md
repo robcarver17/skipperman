@@ -1,7 +1,6 @@
 
 # to do next
 Before first racing event is run
-- click on volunteer name reveals history and availability checkboxes
 - documentation for reporting #49
 
 
@@ -28,6 +27,8 @@ Before Cadet week
 - massive warning if unique key creators missing from field mappings
 
 # Recent
+- click on volunteer name reveals history and availability checkboxes
+- improved volunteer data dump so skills seperate, ideal for filtering
 - WA qualication import
 - added guess boat button 
 - removed club boat automapping

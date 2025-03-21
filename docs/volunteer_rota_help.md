@@ -120,7 +120,7 @@ Volunteers can choose which days they are available on registration. Sometimes t
 To make someone available on a given day, just click the 'Make available' button in the appropriate column.
 To make someone unavailable on a given day, click on the umbrella button in the appropriate column (because it's a 'rain check' - get it?), or choosing the `UNAVAILABLE` option in the role drop down.
 
-You can also change availability by clicking on a volunteers name, changing the day selection ticks, and pressing save. 
+You can also change availability by clicking on a volunteers name, changing the day selection ticks, and clicking on the volunteers name button again. 
 
 Note: if you want to remove a volunteer completely, you should do this by [clicking on the umbrella under their name in the first column](#removing-a-volunteer-from-an-event) rather than making them unavailable on all days - Skipperman won't let you make someone unavailable on every day of an event.
 
@@ -334,7 +334,7 @@ By convention the first aid certificate here doesn't have to be an RYA one (whic
 
 Similarly, DBS only applies to DBS applied for through the BSC.
 
-Expiry dates for certificates are not stored in Skipperman, so it's a good idea at the start of each season to check the qualifications table and note if any instructors have lapsed or will lapse during the year. 
+Expiry dates for certificates are not stored in Skipperman, so it's a good idea at the start of each season to [refresh the qualifications from the official BSC spreadsheet](refresh_skills_with_import_help.md). Also check the qualifications table and note if any instructors have lapsed or will lapse during the year. 
 
 ## Cadet connections
 
@@ -352,7 +352,7 @@ You can delete the connection, or add a new one by choosing from the dropdown li
 
 ## Other useful functions
 
-- You can see more information about the previous roles a volunteer performed by clicking on their name; click cancel to go back.
+- You can see more information about the previous roles a volunteer performed by clicking on their name; click their name again to remove this information.
 - The 'other information' from registration column on the far right can be useful if volunteers have told you about their availability in more detail.
 - You can enter notes about the volunteer in the notes column; typically this would be around issues or finer preferences on roles, or availability constraints not captured by just which day they are around. Remember under GDPR they have the right to see them, so be careful!
 - Click on 'download spreadsheet of volunteer information' in the navigation bar to get a spreadsheet version of what you can see on the screen; useful for sharing with other people without needing to do a [rota report](volunteer_rota_report_help.md).

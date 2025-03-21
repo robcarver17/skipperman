@@ -67,7 +67,7 @@ def get_top_row_for_table(event: Event, ready_to_swap: bool) -> RowInTable:
 
     return RowInTable(
         [
-            "Volunteer (click to edit days available/ )",
+            "Volunteer (click to see full history / edit availability )",
             "Cadet location (click to edit connections)",
             "Preferred duties from form",
             "Same/different preference from form",
@@ -138,6 +138,7 @@ dict_of_all_cadet_event_data: DictOfAllEventInfoForCadets,
     ready_to_swap: bool,
 ) -> list:
     name_button = get_volunteer_name_cell(
+        interface = interface,
         volunteer=volunteer, ready_to_swap=ready_to_swap
     )
     location = get_location_button(

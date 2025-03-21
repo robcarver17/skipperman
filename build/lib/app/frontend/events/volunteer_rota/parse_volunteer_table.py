@@ -2,6 +2,8 @@ from app.backend.rota.sorting_and_filtering import (
     get_sorted_and_filtered_dict_of_volunteers_at_event,
 )
 from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
+from app.frontend.events.volunteer_rota.edit_volunteer_details_from_rota import \
+    update_volunteer_availability_at_event_from_rota_with_form_contents
 
 from app.frontend.forms.form_utils import get_dict_of_skills_from_form
 
@@ -25,9 +27,6 @@ from app.backend.rota.volunteer_matrix import get_volunteer_matrix
 from app.frontend.events.volunteer_rota.edit_cadet_connections_for_event_from_rota import (
     display_form_edit_cadet_connections_from_rota,
 )
-from app.frontend.events.volunteer_rota.edit_volunteer_details_from_rota import (
-    display_form_confirm_volunteer_details_from_rota,
-)
 from app.frontend.events.volunteer_rota.edit_volunteer_skills_from_rota import (
     display_form_edit_individual_volunteer_skills_from_rota,
 )
@@ -46,7 +45,7 @@ from app.frontend.events.volunteer_rota.parse_data_fields_in_rota import (
     update_details_from_form_for_volunteer_at_event,
 )
 from app.frontend.events.volunteer_rota.volunteer_table_buttons import *
-from app.frontend.shared.volunteer_state import update_state_with_volunteer_id
+from app.frontend.shared.volunteer_state import update_state_with_volunteer_id, clear_volunteer_id_in_state, is_volunteer_id_set_in_state
 from app.objects.abstract_objects.abstract_form import NewForm
 
 
@@ -75,18 +74,41 @@ def save_all_information_in_rota_page(interface: abstractInterface):
 
 def action_if_volunteer_button_pressed(
     interface: abstractInterface, volunteer_button: str
-) -> NewForm:
+):
+    if is_volunteer_id_set_in_state(interface):
+        action_if_volunteer_button_pressed_and_volunteer_in_state(interface=interface, volunteer_button=volunteer_button)
+    else:
+        action_if_volunteer_button_pressed_and_no_volunteer_set_in_state(interface=interface, volunteer_button=volunteer_button)
+
+def action_if_volunteer_button_pressed_and_volunteer_in_state(
+    interface: abstractInterface, volunteer_button: str
+):
     event = get_event_from_state(interface)
     volunteer_name_buttons_dict = get_dict_of_volunteer_name_buttons_and_volunteer_ids(
         interface=interface, event=event
     )
 
     volunteer_id = volunteer_name_buttons_dict[volunteer_button]
-    update_state_with_volunteer_id(interface=interface, volunteer_id=volunteer_id)
 
-    return interface.get_new_form_given_function(
-        display_form_confirm_volunteer_details_from_rota
+    volunteer_in_state = get_volunteer_from_state(interface)
+    if volunteer_in_state.id == volunteer_id:
+        update_volunteer_availability_at_event_from_rota_with_form_contents(interface=interface, event=event, volunteer=volunteer_in_state)
+        clear_volunteer_id_in_state(interface)
+    else:
+        ## select another one
+        update_state_with_volunteer_id(interface=interface, volunteer_id=volunteer_id)
+
+def action_if_volunteer_button_pressed_and_no_volunteer_set_in_state(
+    interface: abstractInterface, volunteer_button: str
+):
+    event = get_event_from_state(interface)
+    volunteer_name_buttons_dict = get_dict_of_volunteer_name_buttons_and_volunteer_ids(
+        interface=interface, event=event
     )
+
+    volunteer_id = volunteer_name_buttons_dict[volunteer_button]
+
+    update_state_with_volunteer_id(interface=interface, volunteer_id=volunteer_id)
 
 
 def action_if_location_button_pressed(

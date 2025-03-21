@@ -1,9 +1,7 @@
 
 # to do next
-Before first racing event is run
-- documentation for reporting #49
 
-in near future (before first training)
+Before first training:
 - club boat limits #71
 - clean up button mapping (do before any further buttons added on a relevant screen)
 - configure visible events in group allocation #69
@@ -28,6 +26,10 @@ Before Cadet week
 - massive warning if unique key creators missing from field mappings
 
 # Recent
+ 
+
+# Version 2.2
+- documentation for reporting 
 - click on volunteer name reveals history and availability checkboxes
 - improved volunteer data dump so skills seperate, ideal for filtering
 - WA qualication import

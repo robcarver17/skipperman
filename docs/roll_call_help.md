@@ -3,6 +3,8 @@ ___
 
 The roll call report is private to the skipper and possibly deputy skipper. It contains private health information and contact numbers.
 
+The report can be used for the morning roll call, and in emergencies.
+
 # Report specific parameters
 
 - Show full names? Yes - this is a private report
@@ -21,6 +23,9 @@ Once you have selected the specific parameters you want, click save to return to
 
 It's recommended you use the following [printing options](general_report_config_and_printing_help.md#print-options):
 
+- output to .csv file
+- save in private directory. You **must** do this, or remove all the private information in the specific parameters.
+- put group name as header
+- include size of group
 
 
-# The report

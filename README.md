@@ -4,10 +4,9 @@ Blackwater sailing club cadet skipper management system
 
 
 
-Version 2.1
- 
+Version 2.2
 
-2025-03-14
+2025-03-21
 
 
 ## Use and documentation

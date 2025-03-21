@@ -1,7 +1,6 @@
 
 # to do next
 Before first racing event is run
-- WA qualication import #72
 - click on volunteer name reveals history and availability checkboxes
 - documentation for reporting #49
 
@@ -29,6 +28,7 @@ Before Cadet week
 - massive warning if unique key creators missing from field mappings
 
 # Recent
+- WA qualication import
 - added guess boat button 
 - removed club boat automapping
 - keep double handers aligned; Remove double handed button

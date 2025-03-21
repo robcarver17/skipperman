@@ -20,7 +20,8 @@ For each row in the file, Skipperman will first try and match it to a known volu
 **It's really important that you don't add duplicate volunteers to the Skipperman data**
 
 - If this isn't actually a new volunteer: you will probably see buttons to select an existing volunteer. Click on the appropriate volunteer. If you can't see the volunteer you want, click on `See all volunteers`. You can sort the volunteers. 
-- If this is a new volunteer: check the first and second name are correct, click on `I have double checked the volunteer details - allow me to add` then click `Add this new volunteer`.   
+- If this is a new volunteer but there are similar volunteers shown: check the first and second name are correct, click on `I have double checked the volunteer details - allow me to add` then click `Add this new volunteer`.
+- If this is a new volunteer and there no similar volunteers, you can just click `Add this new volunteer`.   
 - If you don't want to process this row of the file: click on `Skip`. 
 
 

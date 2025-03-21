@@ -135,4 +135,5 @@ allocation_report_generator = ReportGeneratorWithoutSpecificParameters(
     explain_additional_parameters=explain_additional_parameters_for_allocation_report,
     additional_parameters_form=reporting_options_form_for_group_additional_parameters,
     get_additional_parameters_from_form_and_save=get_group_allocation_report_additional_parameters_from_form_and_save,
+    help_page='group_allocation_report_help'
 )

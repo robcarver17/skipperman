@@ -27,7 +27,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     CANCEL_BUTTON_LABEL,
     Button,
     ButtonBar,
-    main_menu_button, back_menu_button,
+    main_menu_button, back_menu_button, HelpButton,
 )
 
 
@@ -40,10 +40,12 @@ def display_form_for_qualification_status_report(interface: abstractInterface):
         size=4,
     )
     contents_of_form = ListOfLines(
-        [ButtonBar([main_menu_button, back_menu_button]), title, event_buttons]
+        [ButtonBar([main_menu_button, back_menu_button, help_button]), title, event_buttons]
     )
 
     return Form(contents_of_form)
+
+help_button = HelpButton('qualifications_report_help#qualifications-and-tick-status')
 
 
 cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)

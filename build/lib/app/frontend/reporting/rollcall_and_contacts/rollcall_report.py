@@ -141,4 +141,5 @@ rollcall_report_generator = ReportGeneratorWithoutSpecificParameters(
     explain_additional_parameters=explain_additional_parameters_for_rollcall_report,
     additional_parameters_form=reporting_options_form_for_rollcall_additional_parameters,
     get_additional_parameters_from_form_and_save=get_group_rollcall_report_additional_parameters_from_form_and_save,
+    help_page='roll_call_help'
 )

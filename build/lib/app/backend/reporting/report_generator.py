@@ -27,6 +27,8 @@ class ReportGenerator:
     get_additional_parameters_from_form_and_save: Callable
     get_dict_of_df: Callable
 
+    help_page: str
+
     @property
     def report_type(self):
         return self.specific_parameters_for_type_of_report.report_type
@@ -52,6 +54,8 @@ class ReportGeneratorWithoutSpecificParameters:
     get_additional_parameters_from_form_and_save: Callable
     get_dict_of_df: Callable
 
+    help_page: str
+
     def add_specific_parameters_for_type_of_report(
         self, object_store: ObjectStore
     ) -> ReportGenerator:
@@ -72,4 +76,5 @@ class ReportGeneratorWithoutSpecificParameters:
             additional_parameters_form=self.additional_parameters_form,
             get_dict_of_df=self.get_dict_of_df,
             get_additional_parameters_from_form_and_save=self.get_additional_parameters_from_form_and_save,
+            help_page = self.help_page
         )

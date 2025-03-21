@@ -27,7 +27,7 @@ def explain_additional_parameters_for_rota_report(
     additional_parameters: AdditionalParametersForVolunteerReport,  ## should be rota
 ) -> ListOfLines:
     days = "Report covers the following days: %s" % str(
-        additional_parameters.days_to_show
+        additional_parameters.days_to_show.days_available_as_str()
     )
     power_boats_only = additional_parameters.power_boats_only
 

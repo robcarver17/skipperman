@@ -124,7 +124,7 @@ def save_include_health_details_parameter(
 def load_additional_parameters_for_rollcall_report(
     interface: abstractInterface,
 ) -> AdditionalParametersForRollcallReport:
-    display_full_names = interface.get_persistent_value(SHOW_FULL_NAMES, False)
+    display_full_names = interface.get_persistent_value(SHOW_FULL_NAMES, True)
     include_unallocated_cadets = interface.get_persistent_value(
         INCLUDE_UNALLOCATED_CADETS, True
     )

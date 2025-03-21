@@ -68,7 +68,7 @@ import_skills_csv: ## names have to correspond to configuration names
     RCL2:
       expires: 'Racing Coach 2 (RC)'
     AI:
-      valid_from: 'Assistant Instructor (AI)'
+      valid_from: 'Assistant Dinghy Instructor (ADI)'
     First aid:
       starts_from: 'First Aid (FA)'
       expiry_limit_years: 3

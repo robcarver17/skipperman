@@ -93,6 +93,9 @@ class SkillsDict(Dict[Skill, bool]):
     def from_list_of_skills(cls, list_of_skills: ListOfSkills):
         return cls([(skill, True) for skill in list_of_skills])
 
+    def as_list_of_skillnames_or_empty(self):
+        return ['' if not held else skill.name for skill, held in self.items()]
+
     def as_list_of_skills(self):
         return ListOfSkills([skill for skill, held in self.items() if held])
 

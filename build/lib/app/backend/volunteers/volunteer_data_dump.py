@@ -9,6 +9,7 @@ from app.backend.events.list_of_events import (
 )
 from app.data_access.store.object_store import ObjectStore
 from app.objects.composed.volunteer_with_group_and_role_at_event import RoleAndGroup
+from app.objects.composed.volunteers_with_skills import SkillsDict
 
 from app.objects.events import Event, ListOfEvents, SORT_BY_START_DSC
 
@@ -16,6 +17,7 @@ from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
     get_all_roles_across_recent_events_for_volunteer_as_dict_with_sort_order,
     get_all_roles_for_list_of_events_for_volunteer_as_dict,
 )
+from app.objects.volunteer_skills import Skill
 from app.objects.volunteers import Volunteer
 
 
@@ -36,8 +38,12 @@ def get_volunteer_data_dump(object_store: ObjectStore) -> pd.DataFrame:
     all_data_as_dict = {
         "Name": list_of_all_row_data.list_of_names(),
         "Connected cadets": list_of_all_row_data.list_of_connected_cadets(),
-        "Skills": list_of_all_row_data.list_of_skills_str(),
     }
+
+    all_data_as_dict.update(
+        list_of_all_row_data.dict_of_skills_str()
+    )
+
 
     all_data_as_dict.update(
         list_of_all_row_data.dict_of_list_of_roles_and_groups_by_event_as_str()
@@ -50,7 +56,7 @@ def get_volunteer_data_dump(object_store: ObjectStore) -> pd.DataFrame:
 class VolunteerRowData:
     name: str
     roles_as_dict: Dict[Event, RoleAndGroup]
-    skills_as_str: str
+    skills: SkillsDict
     connected_cadets_as_str: str
 
 
@@ -58,8 +64,25 @@ class ListOfVolunteerRowData(List[VolunteerRowData]):
     def list_of_names(self):
         return [row_data.name for row_data in self]
 
-    def list_of_skills_str(self):
-        return [row_data.skills_as_str for row_data in self]
+    def dict_of_skills_str(self) -> Dict[str, List[str]]:
+        all_skills = self.all_skills()
+        dict_of_skill_names = dict(
+            [
+                (
+                    skill.name,
+                    self.list_of_skills_or_blank_for_skill_as_str(skill)
+                )
+                for skill in all_skills
+            ]
+        )
+
+        return dict_of_skill_names
+
+    def list_of_skills_or_blank_for_skill_as_str(
+        self, skill: Skill
+    ) -> List[str]:
+        skills_held = [row_data.skills.has_skill(skill) for row_data in self]
+        return [skill if held else '' for held in skills_held]
 
     def list_of_connected_cadets(self):
         return [row_data.connected_cadets_as_str for row_data in self]
@@ -96,6 +119,13 @@ class ListOfVolunteerRowData(List[VolunteerRowData]):
 
         return ListOfEvents(list(set(all_events)))
 
+    def all_skills(self) -> ListOfEvents:
+        all_skills = []
+        for volunteer_row in self:
+            all_skills+=list(volunteer_row.skills.as_list_of_skills())
+
+        return ListOfEvents(list(set(all_skills)))
+
 
 from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunteer
 from app.backend.volunteers.connected_cadets import (
@@ -120,8 +150,7 @@ def get_row_data_for_volunteer(
 
     skills = get_dict_of_existing_skills_for_volunteer(
         object_store=object_store, volunteer=volunteer
-    )
-    skills_as_str = str(skills)
+    ) ## padded
 
     connected_cadets = get_list_of_cadets_associated_with_volunteer(
         object_store=object_store, volunteer=volunteer
@@ -130,7 +159,7 @@ def get_row_data_for_volunteer(
 
     return VolunteerRowData(
         name=name,
-        skills_as_str=skills_as_str,
+        skills=skills,
         roles_as_dict=roles_with_groups_as_dict,
         connected_cadets_as_str=connected_cadets_as_str,
     )

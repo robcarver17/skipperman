@@ -3,9 +3,9 @@
 Before first racing event is run
 - documentation for reporting #49
 
-
 in near future (before first training)
 - club boat limits #71
+- clean up button mapping (do before any further buttons added on a relevant screen)
 - configure visible events in group allocation #69
 - more elegant handling of manual reg #64
 - add inactive cadets to group page with option to change status #42
@@ -16,8 +16,9 @@ in near future (before first training)
 - instructors can do attendance online #63
 
 Before Cadet week
-- speed up display of large tables #67 (also clean up html and button type code)
-- replace csv with parquet, keep csv for backup
+- speed up display of large tables #67 
+- clean up html component mapping
+- replace csv with parquet, keep csv for backup (might have to do sooner if disk limit breaks)
 - change data to parquet?
 - food add non registered #28
 - food documentation #49

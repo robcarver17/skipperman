@@ -8,10 +8,10 @@ from app.objects.utils import we_are_not_the_same
 
 def pseudo_reporting_options_for_event_data_dump(event: Event) -> PrintOptions:
     print_options = PrintOptions(
-        filename="event_data_%s" % event.event_name,
         publish_to_public=False,
         output_pdf=False,
     )
+    print_options.filename = "event_data_%s" % event.event_name
 
     return print_options
 

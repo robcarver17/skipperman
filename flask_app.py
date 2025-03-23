@@ -1,12 +1,15 @@
+import os.path
 import secrets
 from pathlib import Path
 
 from werkzeug.middleware.profiler import ProfilerMiddleware
 
+from app.data_access.init_data import home_directory
 from app.web.documentation.documentation_pages import generate_help_page_html
 from app.web.flask.flash import flash_error
 from app.web.flask.session_data_for_action import clear_session_data_for_all_actions
 from app.web.html.config_html import PROFILE
+
 from flask import session, Flask, redirect
 from flask_login import login_required, LoginManager
 from werkzeug import Request
@@ -46,13 +49,13 @@ def prepare_flask_app(max_file_size: int, profile: bool = False) -> Flask:
     if profile:
         app.wsgi_app = ProfilerMiddleware(app.wsgi_app)
 
-    SECRET_FILE_PATH = Path(".flask_secret")
+    SECRET_FILE = os.path.join(home_directory, ".flask_secret")
     try:
-        with SECRET_FILE_PATH.open("r") as secret_file:
+        with open(SECRET_FILE, "r") as secret_file:
             app.secret_key = secret_file.read()
     except FileNotFoundError:
         # Let's create a cryptographically secure code in that file
-        with SECRET_FILE_PATH.open("w") as secret_file:
+        with open(SECRET_FILE, "w") as secret_file:
             app.secret_key = secrets.token_hex(32)
             secret_file.write(app.secret_key)
 

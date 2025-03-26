@@ -153,7 +153,6 @@ def logout():
 MAIN_MENU_REDIRECT = "/%s/%s" % (ACTION_PREFIX, MAIN_MENU_URL)
 
 @app.route("/%s/<action_option>" % ACTION_PREFIX, methods=["GET", "POST"])
-@login_required
 def action(action_option):
     if not authenticated_user():
         ## belt and braces on security

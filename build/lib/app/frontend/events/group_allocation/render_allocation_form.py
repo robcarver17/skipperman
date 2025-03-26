@@ -9,6 +9,7 @@ from app.backend.groups.previous_groups import (
     get_list_of_previous_groups_as_str,
     DictOfEventAllocations,
     get_dict_of_event_allocations_for_last_N_events_for_list_of_cadets,
+    get_dict_of_event_allocations_given_list_of_events,
 )
 from app.backend.qualifications_and_ticks.progress import (
     get_qualification_status_for_single_cadet_as_list_of_str,
@@ -19,6 +20,8 @@ from app.backend.qualifications_and_ticks.qualifications_for_cadet import (
 from app.data_access.configuration.fixed import ADD_KEYBOARD_SHORTCUT
 from app.frontend.events.group_allocation.buttons import get_day_buttons, button_to_click_on_cadet
 from app.frontend.events.group_allocation.club_boats import get_club_dinghies_form
+from app.frontend.events.group_allocation.previous_events import get_previous_event_selection_form, \
+    get_prior_events_to_show
 from app.frontend.forms.reorder_form import reorder_table
 from app.frontend.shared.cadet_state import get_cadet_from_state
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
@@ -135,6 +138,9 @@ def get_allocations_and_classes_detail(
     else:
         classes = DetailListOfLines(ListOfLines([classes]), name = "Boat classes")
 
+    previous_event_selection_form = DetailListOfLines(get_previous_event_selection_form(interface=interface, event=event),
+                                                      name="Select previous events to show")
+
     return (
         ListOfLines(
             [
@@ -146,6 +152,7 @@ def get_allocations_and_classes_detail(
                 _______________,
                 classes,
                 _______________,
+                previous_event_selection_form
             ]
         )
     )
@@ -179,14 +186,13 @@ def get_inner_form_for_cadet_allocation(
         sort_order=sort_order,
         day_or_none=day_or_none,
     )
+    prior_events = get_prior_events_to_show(interface=interface, event=event)
     previous_groups_for_cadets = (
-        get_dict_of_event_allocations_for_last_N_events_for_list_of_cadets(
+        get_dict_of_event_allocations_given_list_of_events(
             object_store=object_store,
             list_of_cadets=list_of_cadets,
+            list_of_events=prior_events,
             remove_unallocated=False,
-            N_events=NUMBER_OF_PREVIOUS_EVENTS,
-            excluding_event=event,
-            only_events_before_excluded_event=True,
             pad=True,
         )
     )

@@ -96,6 +96,21 @@ def get_dict_of_event_allocations_for_last_N_events_for_list_of_cadets(
         excluding_event=excluding_event,
         only_events_before_excluded_event=only_events_before_excluded_event,
     )
+
+    dict_of_allocations = get_dict_of_event_allocations_given_list_of_events(
+        object_store=object_store,
+        list_of_events=list_of_events,
+        list_of_cadets=list_of_cadets,
+        remove_unallocated=remove_unallocated,
+        pad=pad
+    )
+
+    return dict_of_allocations
+
+def get_dict_of_event_allocations_given_list_of_events(object_store: ObjectStore, list_of_cadets: ListOfCadets,
+                                                       list_of_events: ListOfEvents,
+                                                       remove_unallocated: bool = False,
+                                                       pad: bool = False):
     raw_dict = dict(
         [
             (

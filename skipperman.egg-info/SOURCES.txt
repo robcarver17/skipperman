@@ -333,6 +333,7 @@ app/frontend/events/group_allocation/change_sort_order.py
 app/frontend/events/group_allocation/club_boats.py
 app/frontend/events/group_allocation/input_fields.py
 app/frontend/events/group_allocation/parse_allocation_form.py
+app/frontend/events/group_allocation/previous_events.py
 app/frontend/events/group_allocation/render_allocation_form.py
 app/frontend/events/group_allocation/store_state.py
 app/frontend/events/group_allocation/../../../data_access/configuration/configuration.yaml

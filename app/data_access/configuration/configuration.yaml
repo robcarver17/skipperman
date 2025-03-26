@@ -17,7 +17,7 @@ support_email: rob@systematicmoney.org
 max_file_size: 20
 #
 upload_extensions: ".csv, .xls, .zip"
-number_of_backups_to_keep: 10
+number_of_backups_to_keep: 7
 #
 #
 #

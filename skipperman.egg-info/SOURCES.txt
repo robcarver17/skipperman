@@ -31,6 +31,7 @@ app/backend/clothing/summarise_clothing.py
 app/backend/clothing/../../data_access/configuration/configuration.yaml
 app/backend/club_boats/__init__.py
 app/backend/club_boats/cadets_with_club_dinghies_at_event.py
+app/backend/club_boats/club_boat_limits.py
 app/backend/club_boats/list_of_club_dinghies.py
 app/backend/club_boats/summary.py
 app/backend/club_boats/../../data_access/configuration/configuration.yaml
@@ -188,12 +189,14 @@ app/data_access/__init__.py
 app/data_access/file_access.py
 app/data_access/init_data.py
 app/data_access/init_directories.py
+app/data_access/resolve_paths_and_filenames.py
 app/data_access/uploads_and_downloads.py
 app/data_access/user_data.py
 app/data_access/xls_and_csv.py
 app/data_access/api/__init__.py
 app/data_access/api/csv_api.py
 app/data_access/api/generic_api.py
+app/data_access/api/mixed_api.py
 app/data_access/api/../configuration/configuration.yaml
 app/data_access/backups/__init__.py
 app/data_access/backups/access.py
@@ -230,14 +233,16 @@ app/data_access/csv/generic_csv_data.py
 app/data_access/csv/list_of_events.py
 app/data_access/csv/qualifications.py
 app/data_access/csv/registration_data.py
-app/data_access/csv/resolve_csv_paths_and_filenames.py
 app/data_access/csv/resources.py
 app/data_access/csv/users.py
-app/data_access/csv/utils.py
 app/data_access/csv/volunteers.py
 app/data_access/csv/wa_event_mapping.py
 app/data_access/csv/wa_field_mapping.py
 app/data_access/csv/../configuration/configuration.yaml
+app/data_access/parquet/__init__.py
+app/data_access/parquet/generic_parquet_data.py
+app/data_access/parquet/resources.py
+app/data_access/parquet/../configuration/configuration.yaml
 app/data_access/store/__init__.py
 app/data_access/store/data_access.py
 app/data_access/store/object_definitions.py
@@ -296,6 +301,7 @@ app/frontend/events/__init__.py
 app/frontend/events/add_event.py
 app/frontend/events/constants.py
 app/frontend/events/events_function_mapping.py
+app/frontend/events/view_individual_event_form.py
 app/frontend/events/view_individual_events.py
 app/frontend/events/../../data_access/configuration/configuration.yaml
 app/frontend/events/cadets_at_event/__init__.py
@@ -322,6 +328,9 @@ app/frontend/events/group_allocation/ENTRY_allocate_cadets_to_groups.py
 app/frontend/events/group_allocation/__init__.py
 app/frontend/events/group_allocation/add_cadet_partner.py
 app/frontend/events/group_allocation/add_unregistered_cadet.py
+app/frontend/events/group_allocation/buttons.py
+app/frontend/events/group_allocation/change_sort_order.py
+app/frontend/events/group_allocation/club_boats.py
 app/frontend/events/group_allocation/input_fields.py
 app/frontend/events/group_allocation/parse_allocation_form.py
 app/frontend/events/group_allocation/render_allocation_form.py
@@ -566,6 +575,7 @@ app/objects/composed/cadets_with_all_event_info.py
 app/objects/composed/cadets_with_all_event_info_functions.py
 app/objects/composed/cadets_with_qualifications.py
 app/objects/composed/clothing_at_event.py
+app/objects/composed/club_dinghy_limits.py
 app/objects/composed/committee.py
 app/objects/composed/dict_of_volunteer_role_targets.py
 app/objects/composed/food_at_event.py

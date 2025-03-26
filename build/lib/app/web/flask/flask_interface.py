@@ -99,14 +99,15 @@ class flaskInterface(abstractInterface):
 
         return list_of_values
 
-    def last_button_pressed(self, button_name=arg_not_passed) -> str:
-        return get_last_button_pressed(button_name)
+    def last_button_pressed(self) -> str:
+        return get_last_button_pressed()
 
     @property
     def session_data(
         self,
     ) -> SessionDataForAction:  ## pipe through to current session object
-        return SessionDataForAction(self.action_name)
+        session_data =SessionDataForAction(self.action_name)
+        return session_data
 
     def uploaded_file(self, input_name: str = "file"):
         return uploaded_file(input_name)
@@ -131,11 +132,9 @@ def get_list_from_form(key: str):
     return request.form.getlist(key)
 
 
-def get_last_button_pressed(button_name: str = arg_not_passed) -> str:
-    if button_name == arg_not_passed:
-        button_name = HTML_BUTTON_NAME
+def get_last_button_pressed() -> str:
     try:
-        return request.form.get(button_name, "")
+        return request.form.get(HTML_BUTTON_NAME, "")
     except RequestEntityTooLarge:
         raise RequestEntityTooLarge
 

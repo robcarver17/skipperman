@@ -3,6 +3,7 @@ from typing import Union
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     get_list_of_all_groups_at_event,
 )
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 
 from app.frontend.reporting.sailors.qualification_status import (
     write_expected_qualifications_to_temp_csv_file_and_return_filename,
@@ -47,6 +48,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.instructors.ENTRY3_choose_level import (
     display_form_choose_level_for_group_at_event,
 )
+from app.frontend.shared.buttons import get_attributes_from_button_pressed_of_known_type, get_button_value_given_type_and_attributes, is_button_of_type
 
 
 def display_form_choose_group_for_event(interface: abstractInterface) -> Form:
@@ -118,7 +120,9 @@ def get_group_buttons(interface: abstractInterface, event: Event) -> Line:
             )
         )
 
-    list_with_buttons = [Button(group.name, tile=True) for group in list_of_groups]
+    list_with_buttons = [Button(label=group.name,
+                                value=value_for_group_button(group.name),
+                                tile=True) for group in list_of_groups]
 
     return Line(list_with_buttons)
 
@@ -141,13 +145,18 @@ def post_form_choose_group_for_event(
     if back_menu_button.pressed(button_pressed):
         ## no change to stage required
         return previous_form(interface)
+
     elif download_qualification_list_button.pressed(button_pressed):
         filename = write_expected_qualifications_to_temp_csv_file_and_return_filename(
             interface=interface, event=get_event_from_state(interface)
         )
         return File(filename)
-    else:  ## must be a group
+
+    elif is_group_button(button_pressed):
         return action_when_group_button_clicked(interface)
+
+    else:
+        return button_error_and_back_to_initial_state_form(interface)
 
 
 def previous_form(interface: abstractInterface):
@@ -157,7 +166,7 @@ def previous_form(interface: abstractInterface):
 
 
 def action_when_group_button_clicked(interface: abstractInterface) -> NewForm:
-    group_name_selected = interface.last_button_pressed()
+    group_name_selected = group_name_from_button(interface.last_button_pressed())
     update_state_for_group_name(interface=interface, group_name=group_name_selected)
 
     return form_for_view_group_level(interface)
@@ -167,3 +176,15 @@ def form_for_view_group_level(interface: abstractInterface):
     return interface.get_new_form_given_function(
         display_form_choose_level_for_group_at_event
     )
+
+
+group_select_type = "groupSelect"
+def value_for_group_button(group_name:str):
+    return get_button_value_given_type_and_attributes(group_select_type, group_name)
+
+def is_group_button(button_pressed:str):
+    return is_button_of_type(value_of_button_pressed=button_pressed, type_to_check=group_select_type)
+
+def group_name_from_button(button_pressed:str):
+    return get_attributes_from_button_pressed_of_known_type(value_of_button_pressed=button_pressed, type_to_check=group_select_type)
+

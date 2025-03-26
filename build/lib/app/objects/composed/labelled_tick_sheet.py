@@ -68,7 +68,6 @@ class LabelledTickSheet:
             health_column = pd.DataFrame(
                 health_notes, index=self.df.index, columns=health_multindex
             )
-            print(health_column)
             new_df = pd.concat([self.df, health_column], axis=1)
 
         return self.from_existing_replace_df(new_df)

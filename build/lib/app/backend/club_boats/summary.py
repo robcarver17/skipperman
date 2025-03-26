@@ -1,5 +1,7 @@
 from typing import Dict, List
 
+import pandas as pd
+
 from app.objects.cadets import Cadet
 
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
@@ -8,8 +10,7 @@ from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.backend.events.summarys import summarise_generic_counts_for_event_over_days
-from app.objects.abstract_objects.abstract_tables import PandasDFTable
+from app.backend.events.summarys import     summarise_generic_counts_for_event_over_days_returning_df
 from app.objects.club_dinghies import ClubDinghy
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -24,7 +25,7 @@ from app.backend.club_boats.cadets_with_club_dinghies_at_event import (
 
 def summarise_club_boat_allocations_for_event(
     object_store: ObjectStore, event: Event
-) -> PandasDFTable:
+) -> pd.DataFrame:
     dict_of_cadets_and_club_dinghies_at_event = (
         get_dict_of_cadets_and_club_dinghies_at_event(
             object_store=object_store, event=event
@@ -39,7 +40,7 @@ def summarise_club_boat_allocations_for_event(
         object_store=object_store, event=event
     )
 
-    table = summarise_generic_counts_for_event_over_days(
+    df = summarise_generic_counts_for_event_over_days_returning_df(
         get_id_function=get_relevant_cadets_for_club_dinghy,
         event=event,
         groups=list_of_dinghys_at_event,
@@ -48,7 +49,7 @@ def summarise_club_boat_allocations_for_event(
         list_of_ids_with_groups=dict_of_cadets_and_club_dinghies_at_event,  ## ignore typing error
     )
 
-    return table
+    return df
 
 
 def get_relevant_cadets_for_club_dinghy(

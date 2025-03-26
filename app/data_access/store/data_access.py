@@ -350,6 +350,14 @@ def get_data_access_for_list_of_club_dinghies(data: GenericDataApi) -> DataAcces
         write_method=data.data_List_of_club_dinghies.write,
     )
 
+def get_data_access_for_list_of_club_dinghies_with_limits(data: GenericDataApi) -> DataAccessMethod:
+    return DataAccessMethod(
+        "list_of_club_dinghies_with_limits",
+        read_method=data.data_List_of_club_dinghy_limits.read,
+        write_method=data.data_List_of_club_dinghy_limits.write,
+    )
+
+
 
 def get_data_access_for_list_of_groups(data: GenericDataApi) -> DataAccessMethod:
     return DataAccessMethod(

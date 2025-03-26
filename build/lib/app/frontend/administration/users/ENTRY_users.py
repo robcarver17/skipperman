@@ -9,8 +9,8 @@ from app.frontend.administration.users.parse_user_form import (
 )
 from app.frontend.administration.users.render_users_form import (
     display_form_edit_list_of_users,
-    list_of_deletion_buttons_names,
-    list_of_reset_buttons_names,
+    is_delete_button,
+is_reset_button,
     add_entry_button,
     save_entry_button,
 )
@@ -29,8 +29,6 @@ def display_form_security(interface: abstractInterface) -> Union[Form, NewForm]:
 
 
 def post_form_security(interface: abstractInterface) -> Union[Form, NewForm]:
-    deleted_buttons = list_of_deletion_buttons_names(interface)
-    reset_buttons = list_of_reset_buttons_names(interface)
 
     last_button = interface.last_button_pressed()
 
@@ -41,11 +39,11 @@ def post_form_security(interface: abstractInterface) -> Union[Form, NewForm]:
         save_changes_to_existing_users(interface)
     elif add_entry_button.pressed(last_button):
         add_new_user_if_present(interface)
-    elif last_button in deleted_buttons:
+    elif is_delete_button(last_button):
         delete_selected_user_from_user_list(
             interface=interface, last_button=last_button
         )
-    elif last_button in reset_buttons:
+    elif is_reset_button(last_button):
         reset_link = generate_reset_message_for_user_name(
             last_button=last_button, interface=interface
         )

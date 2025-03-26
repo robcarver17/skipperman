@@ -102,7 +102,7 @@ def modify_arrangement_options_and_group_order_to_reflect_arrangement_method_nam
     arrangement_options_and_group_order.arrangement_options.change_arrangement_options_given_new_method_name(
         arrangement_method_name
     )
-    print(arrangement_options_and_group_order)
+
 
     ## above modifies arrangement method inside reporting options, we now replace the columns
     arrangement_options_and_group_order = create_arrangement_from_order_and_algo(

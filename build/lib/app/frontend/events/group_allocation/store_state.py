@@ -26,6 +26,9 @@ def clear_day_in_state(interface: abstractInterface):
 
 SORT_ORDER = "sort_order_for_group_allocation"
 
+def save_new_sort_order(interface: abstractInterface, new_sort_order: list):
+    interface.set_persistent_value(SORT_ORDER, new_sort_order)
+
 
 def get_current_sort_order(interface: abstractInterface) -> list:
 

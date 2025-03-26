@@ -48,6 +48,8 @@ class DictOfTickSheetItemsAndTicksForCadet(Dict[TickSheetItem, Tick]):
         half_ticks = [0.5 for tick in self.list_of_ticks if tick == half_tick]
 
         total_Ticks = float(len(self.list_of_ticks))
+        if total_Ticks ==0:
+            return 0.0
 
         return 100.0 * (sum(full_ticks) + sum(half_ticks)) / total_Ticks
 

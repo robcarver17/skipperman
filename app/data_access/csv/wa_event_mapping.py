@@ -1,5 +1,5 @@
 from app.data_access.csv.generic_csv_data import GenericCsvData
-from app.data_access.csv.resolve_csv_paths_and_filenames import EVENT_MAPPING_FILE_ID
+from app.data_access.resolve_paths_and_filenames import EVENT_MAPPING_FILE_ID
 from app.objects.wa_event_mapping import ListOfWAEventMaps
 from app.data_access.classes.wa_event_mapping import DataWAEventMapping
 

@@ -29,6 +29,7 @@ from app.objects.composed.cadets_with_qualifications import (
 from app.objects.composed.clothing_at_event import (
     compose_dict_of_cadets_with_clothing_at_event,
 )
+from app.objects.composed.club_dinghy_limits import compose_club_dinghy_limits
 from app.objects.composed.committee import (
     create_list_of_cadet_committee_members_from_underlying_data,
 )
@@ -218,6 +219,11 @@ object_definition_for_list_of_boat_classes = UnderlyingObjectDefinition(
 object_definition_for_list_of_club_dinghies = UnderlyingObjectDefinition(
     data_store_method_function=get_data_access_for_list_of_club_dinghies
 )
+
+object_definition_for_list_of_club_dinghy_limits_with_ids = UnderlyingObjectDefinition(
+    data_store_method_function=get_data_access_for_list_of_club_dinghies_with_limits
+)
+
 
 object_definition_for_list_of_patrol_boats = UnderlyingObjectDefinition(
     data_store_method_function=get_data_access_for_list_of_patrol_boats
@@ -470,6 +476,17 @@ object_definition_for_dict_of_cadets_and_club_dinghies_at_event = DerivedObjectD
         list_of_cadets_at_event_with_id_and_club_dinghy=object_definition_for_cadets_with_ids_and_club_dinghies_at_event
     ),
     required_keys=["event_id"],
+)
+
+object_definition_for_club_dinghy_limits = DerivedObjectDefinition(
+    composition_function=compose_club_dinghy_limits,
+    dict_of_arguments_and_underlying_object_definitions=dict(
+        list_of_club_dinghy_limits = object_definition_for_list_of_club_dinghy_limits_with_ids,
+list_of_club_dinghies = object_definition_for_list_of_club_dinghies,
+list_of_events = object_definition_for_list_of_events),
+    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
+        list_of_club_dinghy_limits=object_definition_for_list_of_club_dinghy_limits_with_ids
+    )
 )
 
 object_definition_for_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups = DerivedObjectDefinition(

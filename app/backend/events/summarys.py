@@ -22,7 +22,7 @@ from app.objects.groups import Group
 
 def summarise_allocations_for_event(
     object_store: ObjectStore, event: Event
-) -> PandasDFTable:
+) -> pd.DataFrame:
     cadets_at_event_data = get_dict_of_all_event_info_for_cadets(
         object_store=object_store, event=event, active_only=True
     )
@@ -36,7 +36,7 @@ def summarise_allocations_for_event(
 
     groups = dict_of_cadets_with_days_and_groups.all_groups_at_event()
 
-    return summarise_generic_counts_for_event_over_days(
+    return summarise_generic_counts_for_event_over_days_returning_df(
         get_id_function=get_relevant_cadets_for_group_on_day,
         event=event,
         groups=groups,
@@ -59,14 +59,15 @@ def get_relevant_cadets_for_group_on_day(
     return result_dict
 
 
-def summarise_generic_counts_for_event_over_days(
+
+def summarise_generic_counts_for_event_over_days_returning_df(
     event: Event,
     list_of_ids_with_groups: list,
     availability_dict: dict,
     groups: list,
     get_id_function: Callable,
     group_labels: list = arg_not_passed,
-) -> PandasDFTable:
+) -> pd.DataFrame:
     rows = [
         get_row_for_group(
             group=group,
@@ -87,7 +88,10 @@ def summarise_generic_counts_for_event_over_days(
 
     df.columns = group_labels
 
-    return PandasDFTable(df.transpose())
+    df = df.transpose()
+
+    return df
+
 
 
 def get_row_for_group(

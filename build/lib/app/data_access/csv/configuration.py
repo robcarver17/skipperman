@@ -7,7 +7,7 @@ from app.data_access.classes.configuration import (
     DataListOfPrintOptions,
     DataListOfArrangementAndGroupOrderOptions,
 )
-from app.data_access.csv.resolve_csv_paths_and_filenames import (
+from app.data_access.resolve_paths_and_filenames import (
     PRINT_OPTIONS_FILE_ID,
     ARRANGEMENT_OPTIONS_FILE_ID,
     GROUPS_FILE_ID,

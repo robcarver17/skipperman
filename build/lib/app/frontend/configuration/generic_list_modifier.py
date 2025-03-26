@@ -2,6 +2,8 @@ from copy import copy
 from dataclasses import dataclass
 from typing import Union, Callable
 
+from app.frontend.shared.buttons import get_button_value_given_type_and_attributes, \
+    get_attributes_from_button_pressed_of_known_type, is_button_of_type
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 
 from app.frontend.forms.form_utils import yes_no_radio, is_radio_yes_or_no
@@ -9,7 +11,7 @@ from app.frontend.forms.reorder_form import (
     UP,
     DOWN,
     get_button_name_to_move_in_list,
-    modify_list_given_button_name,
+    modify_list_given_button_name, is_button_arrow_button,
 )
 from app.data_access.configuration.fixed import (
     SAVE_KEYBOARD_SHORTCUT,
@@ -185,17 +187,22 @@ def text_box_name(entry) -> str:
 def hidden_box_name(entry) -> str:
     return HIDE_BUTTON_FLAG + "_" + str(entry)
 
+edit_button_type="editButton"
 
 def edit_contents_button(entry_name: str) -> Button:
     return Button("Edit", value=name_of_edit_contents_button_name(entry_name))
 
-
 def name_of_edit_contents_button_name(entry_name: str) -> str:
-    return "EDITCONTENTS_%s" % entry_name
+    return get_button_value_given_type_and_attributes(edit_button_type, entry_name)
 
 
 def entry_name_from_edit_contents_button(button_pressed: str) -> str:
-    return button_pressed.split("_")[1]
+    return get_attributes_from_button_pressed_of_known_type(value_of_button_pressed=button_pressed,
+                                                                  type_to_check=edit_button_type)
+
+def is_edit_button_pressed(button_pressed_str) -> bool:
+    print(button_pressed_str)
+    return is_button_of_type(value_of_button_pressed=button_pressed_str, type_to_check=edit_button_type)
 
 
 @dataclass
@@ -203,8 +210,6 @@ class EditButtonPressed:
     entry_name: str
 
 
-def edit_button_pressed(generic_return) -> bool:
-    return type(generic_return) is EditButtonPressed
 
 
 def post_form_edit_generic_list(
@@ -218,9 +223,6 @@ def post_form_edit_generic_list(
     get_object_from_form_function: Callable = get_object_from_form,
 ) -> Union[Form, NewForm, object, EditButtonPressed]:
     last_button = interface.last_button_pressed()
-
-    list_of_arrow_buttons = get_list_of_arrow_buttons(existing_list)
-    edit_contents_buttons = get_list_of_edit_contents_buttons(existing_list)
 
     if cancel_menu_button.pressed(last_button):
         return BACK_BUTTON_PRESSED
@@ -236,19 +238,19 @@ def post_form_edit_generic_list(
     elif add_button.pressed(last_button):
         add_new_entry_from_form(interface=interface, adding_function=adding_function)
 
-    elif last_button in list_of_arrow_buttons:
+    elif is_button_arrow_button(last_button):
         reorder_list_given_form(
             interface=interface,
             save_function=save_function,
             existing_list=existing_list,
         )
-    elif last_button in edit_contents_buttons:
+    elif is_edit_button_pressed(last_button):
         return EditButtonPressed(entry_name_from_edit_contents_button(last_button))
     else:
         return BUTTON_NOT_KNOWN
 
-    return None
-
+def edit_button_returned_from_generic_modifier(content):
+    return type(content) is EditButtonPressed
 
 def get_list_of_edit_contents_buttons(existing_list):
     return [name_of_edit_contents_button_name(entry) for entry in existing_list]

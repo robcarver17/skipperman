@@ -30,7 +30,6 @@ from app.objects.cadets import Cadet
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.exceptions import missing_data, MISSING_FROM_FORM
-from app.objects.utils import print_list
 from app.objects.boat_classes import no_boat_class
 
 
@@ -57,9 +56,6 @@ def update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_ev
     list_of_existing_cadets_boats_groups_club_dinghies_and_partners = dict_of_all_event_info_for_cadets.list_of_cadets_boat_classes_groups_sail_numbers_and_partners_at_event_on_day(
         day
     )
-    print_list(
-        list_of_existing_cadets_boats_groups_club_dinghies_and_partners, "Existing:"
-    )
 
     list_of_potentially_updated_cadets_boats_groups_club_dinghies_and_partners = (
         convert_list_of_inputs_to_list_of_cadet_at_event_objects(
@@ -69,17 +65,10 @@ def update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_ev
             dict_of_all_event_info_for_cadets=dict_of_all_event_info_for_cadets,
         )
     )
-    print_list(
-        list_of_potentially_updated_cadets_boats_groups_club_dinghies_and_partners, "Potential:"
-    )
 
     list_of_updated_cadets_boats_groups_club_dinghies_and_partners = compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values(
         new_list=list_of_potentially_updated_cadets_boats_groups_club_dinghies_and_partners,
         existing_list=list_of_existing_cadets_boats_groups_club_dinghies_and_partners,
-    )
-
-    print_list(
-        list_of_updated_cadets_boats_groups_club_dinghies_and_partners, "Updates:"
     )
 
     update_boat_info_for_updated_cadets_at_event(

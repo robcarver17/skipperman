@@ -28,13 +28,14 @@ class ObjectStore:
         self.data_api.make_backup()
 
     def flush_store(self, read_only: bool = False):
-        if not read_only:
-            self.save_store()
-
+        self.save_store(read_only)
         self.clear_store()
 
-    def save_store(self):
-        self.data_store.save_stored_items()
+    def save_store(self, read_only: bool = False):
+        if read_only:
+            return
+        else:
+            self.data_store.save_stored_items()
 
     def clear_store(self):
         self.data_store.clear_stored_items()  ## underlying cache

@@ -1,6 +1,5 @@
 from typing import List
 
-from app.backend.cadets.list_of_cadets import get_cadet_from_id
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets
 from app.backend.groups.data_for_group_display import guess_name_of_boat_class_on_day_from_other_information
 from app.frontend.events.group_allocation.render_allocation_form import (
@@ -21,9 +20,9 @@ from app.frontend.events.group_allocation.input_fields import (
     PARTNER,
     BOAT_CLASS,
     SAIL_NUMBER,
-    cadet_id_from_cadet_available_buttons,
-    get_cadet_id_given_remove_partner_button_name,
+
 )
+from app.frontend.events.group_allocation.buttons import    get_cadet_from_cadet_available_buttons, get_cadet_given_remove_partner_button_name
 from app.objects.events import Event
 
 from app.frontend.forms.form_utils import (
@@ -231,9 +230,8 @@ def make_cadet_available_on_current_day(
             "Can't make cadet available on day when no day set - this shouldn't happen contact support"
         )
 
-    cadet_id = cadet_id_from_cadet_available_buttons(add_availability_button_name)
+    cadet =get_cadet_from_cadet_available_buttons(object_store=interface.object_store, button_str=add_availability_button_name)
     event = get_event_from_state(interface)
-    cadet = get_cadet_from_id(object_store=interface.object_store, cadet_id=cadet_id)
 
     make_cadet_available_on_day(
         object_store=interface.object_store, event=event, cadet=cadet, day=day
@@ -242,8 +240,7 @@ def make_cadet_available_on_current_day(
 
 def remove_partnership_for_cadet_from_group_allocation_button(interface: abstractInterface):
     last_button = interface.last_button_pressed()
-    cadet_id = get_cadet_id_given_remove_partner_button_name(last_button)
-    cadet = get_cadet_from_id(object_store=interface.object_store, cadet_id=cadet_id)
+    cadet = get_cadet_given_remove_partner_button_name(object_store=interface.object_store, button=last_button)
 
     event = get_event_from_state(interface)
 

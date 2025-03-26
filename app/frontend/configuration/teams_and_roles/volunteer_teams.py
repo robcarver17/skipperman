@@ -38,7 +38,7 @@ from app.frontend.configuration.generic_list_modifier import (
     down_button_for_entry,
     text_box_name,
     edit_contents_button,
-    edit_button_pressed,
+    edit_button_returned_from_generic_modifier,
     display_form_edit_generic_list,
     post_form_edit_generic_list,
 )
@@ -83,7 +83,7 @@ def post_form_config_teams_page(
         return interface.get_new_display_form_for_parent_of_function(
             post_form_config_teams_page
         )
-    elif edit_button_pressed(generic_list_output):
+    elif edit_button_returned_from_generic_modifier(generic_list_output):
         update_state_for_specific_team_given_team_as_str(
             interface=interface, team_selected=generic_list_output.entry_name
         )

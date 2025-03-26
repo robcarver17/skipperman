@@ -3,7 +3,7 @@ import os
 from app.frontend.utilities.files.render_files import (
     checkbox_name_for_filename,
     DELETE_IN_CHECKBOX,
-    type_directory_and_filename_from_button_name,
+    directory_and_filename_from_delete_button_name
 )
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -80,7 +80,7 @@ def delete_all_files_in_directory(directory_name: str):
 
 
 def delete_specific_file(button_pressed: str):
-    type, directory, filename = type_directory_and_filename_from_button_name(
+    directory, filename = directory_and_filename_from_delete_button_name(
         button_pressed
     )
     full_filename = os.path.join(directory, filename)

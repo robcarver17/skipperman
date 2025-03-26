@@ -43,12 +43,20 @@ class abstractInterface:
     def clear_cache(self):
         self.object_store.clear_store()
 
+    def save_cache_to_store_without_clearing(self):
+        read_only = self.warn_and_return_read_only()
+        self.object_store.save_store(read_only)
+
     def flush_cache_to_store(self):
+        read_only = self.warn_and_return_read_only()
+        self.object_store.flush_store(read_only)
+
+    def warn_and_return_read_only(self):
         read_only = self.read_only
-        if self.read_only:
+        if read_only:
             self.log_error("Read only mode - not saving changes")
 
-        self.object_store.flush_store(read_only)
+        return read_only
 
     def log_error(self, error_message: str):
         raise NotImplemented
@@ -121,7 +129,7 @@ class abstractInterface:
         else:
             raise Exception("Value %s is not a yes or no option!" % str(value))
 
-    def last_button_pressed(self, button_name: str = arg_not_passed) -> str:
+    def last_button_pressed(self) -> str:
         raise NotImplemented
 
     def uploaded_file(self, input_name: str = "file"):

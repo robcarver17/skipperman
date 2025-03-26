@@ -9,8 +9,7 @@ from app.objects.abstract_objects.abstract_tables import RowInTable
 
 from app.frontend.forms.reorder_form import (
     reorder_table,
-    list_of_button_names_given_group_order,
-    reorderFormInterface,
+    reorderFormInterface, is_button_arrow_button,
 )
 from app.objects.abstract_objects.abstract_text import Heading
 
@@ -125,7 +124,6 @@ def post_form_edit_individual_team_page(
         dict_of_teams_and_roles=dict_of_teams_and_roles, team=team
     )
 
-    reordering_buttons = list_of_button_names_given_group_order(role_names)
     if cancel_menu_button.pressed(last_button):
         interface.clear_cache()
         return interface.get_new_display_form_for_parent_of_function(
@@ -133,7 +131,7 @@ def post_form_edit_individual_team_page(
         )
     elif add_button.pressed(last_button):
         add_new_role_to_team(interface=interface, team=team)
-    elif last_button in reordering_buttons:
+    elif is_button_arrow_button(last_button):
         reorder_ordered_list_of_roles(
             interface=interface, role_names=role_names, team=team
         )

@@ -1,6 +1,6 @@
-from copy import copy
 from typing import Union, List
 
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets
 from app.backend.groups.group_allocation_info import (
     get_group_allocation_info,
     GroupAllocationInfo,
@@ -17,19 +17,19 @@ from app.backend.qualifications_and_ticks.qualifications_for_cadet import (
     name_of_highest_qualification_for_cadet,
 )
 from app.data_access.configuration.fixed import ADD_KEYBOARD_SHORTCUT
+from app.frontend.events.group_allocation.buttons import get_day_buttons, button_to_click_on_cadet
+from app.frontend.events.group_allocation.club_boats import get_club_dinghies_form
 from app.frontend.forms.reorder_form import reorder_table
-from app.frontend.shared.cadet_state import get_cadet_from_state, is_cadet_set_in_state
+from app.frontend.shared.cadet_state import get_cadet_from_state
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 
-from app.objects.exceptions import missing_data, MissingData
+from app.objects.exceptions import MissingData
 
 from app.frontend.events.group_allocation.input_fields import (
     get_notes_field,
     get_days_attending_field,
     get_input_fields_for_cadet,
-    button_name_for_add_partner,
-    RESET_DAY_BUTTON_LABEL,
-    make_cadet_available_button_name, guess_boat_button,
+    guess_boat_button,
 )
 from app.frontend.events.group_allocation.store_state import (
     no_day_set_in_state,
@@ -58,7 +58,7 @@ from app.objects.abstract_objects.abstract_lines import (
     Line,
     make_long_thing_detail_box,
 )
-from app.objects.abstract_objects.abstract_tables import Table, RowInTable
+from app.objects.abstract_objects.abstract_tables import Table, RowInTable, PandasDFTable
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.events import (
@@ -73,24 +73,11 @@ def display_form_allocate_cadets_at_event(
     allocations_and_class_summary = get_allocations_and_classes_detail(
         event=event, interface=interface
     )
-    day_dropdown = get_day_buttons(interface)
+    day_buttons = get_day_buttons(interface)
+    sort_line = get_sort_line(sort_order)
     inner_form = get_inner_form_for_cadet_allocation(
         interface=interface, event=event, sort_order=sort_order
     )
-    sort_button_table = sort_buttons_for_allocation_table(sort_order)
-
-    sort_order_line = DetailListOfLines(
-        ListOfLines(
-            [
-                _______________,
-                "Specify order that table is sorted in:",
-                sort_button_table,
-            ]
-        ),
-        "Sort order",
-        open=False,
-    )
-
     return Form(
         ListOfLines(
             [
@@ -99,10 +86,14 @@ def display_form_allocate_cadets_at_event(
                 _______________,
                 _______________,
                 allocations_and_class_summary,
-                sort_order_line,
                 _______________,
-                day_dropdown,
+                _______________,
+                sort_line,
+                _______________,
+                day_buttons,
+                _______________,
                 Line("Click on a cadet name to show all previous events"),
+                _______________,
                 inner_form,
                 _______________,
 
@@ -119,83 +110,58 @@ nav_bar_top = ButtonBar([cancel_menu_button, save_menu_button, help_button, gues
 nav_bar_bottom = ButtonBar([cancel_menu_button, save_menu_button, help_button, add_button])
 
 
-def get_day_buttons(interface: abstractInterface) -> Line:
-    event = get_event_from_state(interface)
-    event_weekdays = copy(event.days_in_event())
-
-    if no_day_set_in_state(interface):
-        message = "  Choose day to edit (if you want to allocate cadets to different groups, boats or partners on specific days): "
-        all_buttons = [Button(day.name) for day in event_weekdays]
-    else:
-        day = get_day_from_state_or_none(interface)
-        message = "Currently editing %s: " % day.name
-        event_weekdays.remove(day)
-        weekday_selection = [Button(day.name) for day in event_weekdays]
-        all_buttons = [reset_day_button] + weekday_selection
-
-    return Line([message] + all_buttons)
-
-
-reset_day_button = Button(RESET_DAY_BUTTON_LABEL)
-
-
-def list_of_all_day_button_names(interface: abstractInterface):
-    event = get_event_from_state(interface)
-    event_weekdays = event.days_in_event()
-    weekday_buttons = [day.name for day in event_weekdays]
-    weekday_buttons.append(RESET_DAY_BUTTON_LABEL)
-
-    return weekday_buttons
-
 
 def get_allocations_and_classes_detail(
     interface: abstractInterface, event: Event
-) -> DetailListOfLines:
+) -> ListOfLines:
     object_store = interface.object_store
-    allocations = summarise_allocations_for_event(
+    allocations = PandasDFTable(summarise_allocations_for_event(
         object_store=object_store, event=event
-    )
+    ))
     if len(allocations) == 0:
         allocations = "No group allocations made"
+    else:
+        allocations = DetailListOfLines(ListOfLines([allocations]), name="Groups allocated")
 
-    club_dinghies = summarise_club_boat_allocations_for_event(
-        event=event, object_store=object_store
-    )
-    if len(club_dinghies) == 0:
-        club_dinghies = "No club dinghy allocations made"
+    club_dinghies = DetailListOfLines(ListOfLines(["Allocated club dinghies (numbers are sailors, not boats. * means over capacity):",
+                                                   get_club_dinghies_form(interface=interface, event=event)]),
+                                      name="Club boats")
 
-    classes = summarise_class_attendance_for_event(
+    classes = PandasDFTable(summarise_class_attendance_for_event(
         event=event, object_store=object_store
-    )
+    ))
     if len(classes) == 0:
         classes = "No boat classes allocated"
+    else:
+        classes = DetailListOfLines(ListOfLines([classes]), name = "Boat classes")
 
-    return DetailListOfLines(
+    return (
         ListOfLines(
             [
                 _______________,
                 allocations,
                 _______________,
-                "Allocated club dinghies:",
+
                 club_dinghies,
                 _______________,
-                "Classes",
                 classes,
                 _______________,
             ]
-        ),
-        "Summary",
-        open=False,
+        )
     )
 
 
-def sort_buttons_for_allocation_table(sort_order: list) -> Table:
-    return reorder_table(sort_order)
+def get_sort_line(sort_order):
+    current_sort_order = ", ".join(sort_order)
+    sort_line = Line([
+        "Current sort order: %s" % current_sort_order,
+        "    ",
+        sort_order_change_button
+    ])
 
+    return sort_line
 
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
-    get_dict_of_all_event_info_for_cadets,
-)
+sort_order_change_button = Button("Change sort order")
 
 
 def get_inner_form_for_cadet_allocation(
@@ -325,9 +291,6 @@ def get_row_for_cadet(
     )
     group_info = group_allocation_info.group_info_dict_for_cadet_as_ordered_list(cadet)
     group_info = [make_long_thing_detail_box(field) for field in group_info]
-    input_fields = get_input_fields_for_cadet(
-        interface=interface, cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
-    )
     qualification = str(
         name_of_highest_qualification_for_cadet(
             object_store=interface.object_store, cadet=cadet
@@ -338,6 +301,9 @@ def get_row_for_cadet(
     )
     days_attending_field = get_days_attending_field(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
+    )
+    input_fields = get_input_fields_for_cadet(
+        interface=interface, cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
     )
 
     return RowInTable(
@@ -361,10 +327,6 @@ def get_cell_for_cadet(
         )
     else:
         return button_to_click_on_cadet(cadet)
-
-
-def button_to_click_on_cadet(cadet: Cadet):
-    return Button(str(cadet), value=get_button_id_for_cadet(cadet.id))
 
 
 def get_cell_for_cadet_that_is_clicked_on(
@@ -398,31 +360,6 @@ def this_cadet_has_been_clicked_on_already(interface: abstractInterface, cadet: 
 
     return selected_cadet == cadet
 
-
-def get_button_id_for_cadet(id: str) -> str:
-    return "cadet_%s" % id
-
-
-def get_list_of_all_cadet_buttons(interface: abstractInterface):
-    list_of_cadets = get_list_of_all_cadets_with_event_data(interface)
-    return [get_button_id_for_cadet(id) for id in list_of_cadets.list_of_ids]
-
-
-def cadet_id_from_cadet_button(button_str):
-    return button_str.split("_")[1]
-
-
-def get_list_of_all_add_partner_buttons(interface: abstractInterface):
-    list_of_cadets = get_list_of_all_cadets_with_event_data(interface)
-    return [
-        button_name_for_add_partner(cadet_id=id) for id in list_of_cadets.list_of_ids
-    ]
-
-
-def get_list_of_all_add_cadet_availability_buttons(interface: abstractInterface):
-    list_of_cadets = get_list_of_all_cadets_with_event_data(interface)
-
-    return [make_cadet_available_button_name(cadet) for cadet in list_of_cadets]
 
 
 def get_list_of_all_cadets_with_event_data(interface: abstractInterface):

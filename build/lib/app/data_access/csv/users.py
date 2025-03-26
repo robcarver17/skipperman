@@ -1,6 +1,6 @@
 from app.data_access.csv.generic_csv_data import GenericCsvData
 from app.objects.users_and_security import ListOfSkipperManUsers
-from app.data_access.csv.resolve_csv_paths_and_filenames import USERLIST_FILE_ID
+from app.data_access.resolve_paths_and_filenames import USERLIST_FILE_ID
 from app.data_access.classes.users import DataListOfSkipperManUsers
 
 

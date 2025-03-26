@@ -5,7 +5,7 @@ from app.objects.cadets import (
     Cadet,
     sort_a_list_of_cadets,
     SORT_BY_SURNAME,
-    SORT_BY_FIRSTNAME,
+    SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, SORT_BY_DOB_DSC,
 )
 from app.objects.exceptions import arg_not_passed
 
@@ -97,3 +97,6 @@ def update_list_of_cadets(
         new_object=updated_list_of_cadets,
         object_definition=object_definition_for_list_of_cadets,
     )
+
+
+all_sort_types = [SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, SORT_BY_DOB_DSC]

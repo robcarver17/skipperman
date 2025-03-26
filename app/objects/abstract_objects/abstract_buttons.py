@@ -25,23 +25,30 @@ def is_finished_button(button_value: str) -> bool:
 MAIN_MENU = "main_menu"  ## Not actual index page
 
 
-@dataclass
 class Button:
-    label: Union[str, "Line", Arrow, Pointer, Symbol]
-    value: str = arg_not_passed
-    big: bool = False
-    tile: bool = False
-    nav_button: bool = False
-    shortcut: str = arg_not_passed
+    def __init__(self,
+    label: Union[str, "Line", Arrow, Pointer, Symbol],
+    value: str = arg_not_passed,
+    big: bool = False,
+    tile: bool = False,
+    nav_button: bool = False,
+    shortcut: str = arg_not_passed):
+        if value is arg_not_passed:
+            try:
+                assert type(label) is str
+            except:
+                raise Exception("HAve to provide value for non str button label")
+            value = label
 
-    @property
-    def name(self):
-        if self.value is arg_not_passed:
-            return self.label
-        return self.value
+        self.label = label
+        self.value = value
+        self.big = big
+        self.tile=tile
+        self.nav_button = nav_button
+        self.shortcut = shortcut
 
     def pressed(self, last_button: str):
-        return self.name == last_button
+        return self.value == last_button
 
 def check_if_button_in_list_was_pressed(last_button_pressed: str, list_of_buttons: List[Button]):
     for button in list_of_buttons:
@@ -77,10 +84,6 @@ class ButtonBar(List[Union[HelpButton, Button]]):
 
 def get_nav_bar_with_just_back_button() -> ButtonBar:
     return ButtonBar([back_menu_button])
-
-
-def get_nav_bar_with_just_cancel_button() -> ButtonBar:
-    return ButtonBar([cancel_menu_button])
 
 
 def get_nav_bar_with_just_main_menu_and_back_button() -> ButtonBar:

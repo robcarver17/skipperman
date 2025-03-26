@@ -67,13 +67,6 @@ RIGHT = "RIGHT"
 DIVIDER = "_"  ##
 
 
-def list_of_button_values_given_list_of_entries(list_of_entries: list) -> list:
-    up_buttons = [get_button_name(entry, UP) for entry in list_of_entries]
-    down_buttons = [get_button_name(entry, DOWN) for entry in list_of_entries]
-    right_buttons = [get_button_name(entry, RIGHT) for entry in list_of_entries]
-    left_buttons = [get_button_name(entry, LEFT) for entry in list_of_entries]
-
-    return up_buttons + down_buttons + right_buttons + left_buttons
 
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -104,7 +97,7 @@ def modify_arrangement_given_button_name(
     button_name: str,
     current_list_of_entries: list,
 ) -> ArrangementOfColumns:
-    element_name, action = from_button_name_to_action(button_name)
+    element_name, action = from_button_name_to_label_and_direction(button_name)
     index = current_list_of_entries.index(element_name)
 
     if action == UP:
@@ -120,12 +113,21 @@ def modify_arrangement_given_button_name(
 
     return current_arrangement_of_columns
 
+direction_button_type="matrixButton"
+from app.frontend.shared.buttons import get_button_value_given_type_and_attributes, is_button_of_type, get_attributes_from_button_pressed_of_known_type
 
-def from_button_name_to_action(button_name: str):
-    split_it = button_name.split(DIVIDER)
+def from_button_name_to_label_and_direction(button_name: str):
+    label_and_direction = get_attributes_from_button_pressed_of_known_type(
+        type_to_check=direction_button_type, value_of_button_pressed=button_name
+    )
+    label = label_and_direction[0]
+    direction = label_and_direction[1]
 
-    return split_it[0], split_it[1]
+    return label, direction
 
 
 def get_button_name(label, direction):
-    return "%s%s%s" % (label, DIVIDER, direction)
+    return get_button_value_given_type_and_attributes(direction_button_type, label, direction)
+
+def is_matrix_direction_button(button_name:str):
+    return is_button_of_type(value_of_button_pressed=button_name, type_to_check=direction_button_type)

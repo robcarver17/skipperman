@@ -6,7 +6,7 @@ from app.data_access.classes.cadets import (
     DataListOfIdentifiedCadetsAtEvent,
     DataListOfCadetsOnCommitte,
 )
-from app.data_access.csv.resolve_csv_paths_and_filenames import (
+from app.data_access.resolve_paths_and_filenames import (
     IDENTIFIED_CADETS_AT_EVENT_ID,
     CADETS_AT_EVENT_ID,
     CADETS_WITH_GROUPS_ID,

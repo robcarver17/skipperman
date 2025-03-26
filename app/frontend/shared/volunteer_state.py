@@ -11,13 +11,11 @@ from app.objects.volunteers import Volunteer
 VOLUNTEER = "volunteer"
 
 
-def update_state_for_specific_volunteer_given_volunteer_as_str(
-    interface: abstractInterface, volunteer_selected: str
+def update_state_for_specific_volunteer(
+    interface: abstractInterface, volunteer: Volunteer
 ):
-    volunteer = get_volunteer_from_list_of_given_str_of_volunteer(
-        object_store=interface.object_store, volunteer_as_str=volunteer_selected
-    )
     update_state_with_volunteer_id(interface=interface, volunteer_id=volunteer.id)
+
 
 
 def update_state_with_volunteer_id(interface: abstractInterface, volunteer_id: str):

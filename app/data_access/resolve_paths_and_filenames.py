@@ -3,10 +3,10 @@ from pathlib import Path
 from app.objects.exceptions import arg_not_passed
 
 
-def get_path_and_filename_for_named_csv_file(
+def get_path_and_filename_for_named_file(
     master_data_path: str,
     generic_name_of_file_required: str,
-    additional_file_identifiers: tuple = arg_not_passed,
+    additional_file_identifiers: tuple = arg_not_passed
 ):
     ## returns eg 'group_allocations', 'cadet_master_list.csv'
     if additional_file_identifiers is arg_not_passed:
@@ -113,6 +113,7 @@ LIST_OF_CADETS_WITH_CLOTHING_AT_EVENT = "list_of_cadets_with_clothing_at_event"
 LIST_OF_CADETS_WITH_FOOD_AT_EVENT = "list_of_cadets_with_food_at_event"
 LIST_OF_VOLUNTEERS_WITH_FOOD_AT_EVENT = "list_of_volunteers_with_food_at_event"
 
+CLUB_BOAT_LIMIT = "club_boat_limits"
 
 EVENT_MAPPING_FILE_ID = "wa_event_mapping"
 FIELD_MAPPING_FILE_ID = "wa_field_mapping"
@@ -210,5 +211,9 @@ _dict_of_filenames_and_paths = {
         "mapped_events",
         "list_of_volunteers_with_food_at_event_%s",
     ),
+CLUB_BOAT_LIMIT: (
+  "lists",
+    "club_boat_limit.parquet"
+),
     USERLIST_FILE_ID: ("secure", "userlist.csv"),
 }

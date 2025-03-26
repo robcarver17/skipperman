@@ -153,7 +153,7 @@ def get_cadet_cell_at_start_of_row(
 
     if not_editing(interface):
         return get_select_cadet_button_when_in_no_edit_mode(
-            cadet_id=cadet.id,
+            cadet=cadet,
             cadet_label=cadet_label,
             has_an_id_been_set=has_an_id_been_set,
         )

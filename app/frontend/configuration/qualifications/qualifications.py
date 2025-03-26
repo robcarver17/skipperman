@@ -18,7 +18,7 @@ from app.frontend.configuration.generic_list_modifier import (
     post_form_edit_generic_list,
     BACK_BUTTON_PRESSED,
     BUTTON_NOT_KNOWN,
-    edit_button_pressed,
+    edit_button_returned_from_generic_modifier,
 )
 from app.frontend.shared.qualification_and_tick_state_storage import (
     update_state_for_qualification_name,
@@ -31,7 +31,7 @@ header_text = "List of qualifications and ticks: add, edit, re-order"
 
 
 def display_form_config_qualifications_page(interface: abstractInterface) -> Form:
-    list_of_qualifications = get_list_of_qualifications(interface.object_store)
+    list_of_qualifications = get_list_of_qualifications(interface.object_store).list_of_names()
 
     return display_form_edit_generic_list(
         existing_list=list_of_qualifications,
@@ -59,7 +59,7 @@ def post_form_config_qualifications_page(
         return interface.get_new_display_form_for_parent_of_function(
             post_form_config_qualifications_page
         )
-    elif edit_button_pressed(generic_list_output):
+    elif edit_button_returned_from_generic_modifier(generic_list_output):
         update_state_for_qualification_name(
             interface=interface, qualification_name=generic_list_output.entry_name
         )

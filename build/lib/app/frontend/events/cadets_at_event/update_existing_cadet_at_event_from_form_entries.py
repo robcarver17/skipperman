@@ -276,11 +276,6 @@ def interpret_status_change(
     if new_status.is_cancelled_or_deleted:
         return existing_registration_now_deleted_or_cancelled
 
-    print("for %s vs %s" % (str(existing_cadet_at_event), str(new_cadet_at_event)))
-    print(original_status)
-    print(new_status)
-    print(original_status.is_active)
-    print(new_status.is_active)
     status_active_and_was_active = new_status.is_active and original_status.is_active
 
     if status_active_and_was_active:

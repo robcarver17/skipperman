@@ -1,11 +1,13 @@
 import os
 
 import pandas as pd
-from app.data_access.init_directories import upload_directory
+import qrcode
 
+from app.data_access.init_directories import upload_directory, web_pathname_of_file, download_directory
 from app.data_access.configuration.configuration import ALLOWED_UPLOAD_FILE_TYPES
 from app.data_access.uploads_and_downloads import get_next_valid_upload_file_name
 from app.data_access.xls_and_csv import load_spreadsheet_file
+from app.objects.abstract_objects.abstract_form import File
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
     get_file_from_interface,
@@ -63,3 +65,17 @@ def load_spreadsheet_file_and_clear_nans(filename: str) -> pd.DataFrame:
 
 def get_staged_adhoc_filename(adhoc_name: str):
     return os.path.join(upload_directory, "_%s" % adhoc_name)
+
+
+def generate_qr_code_for_file_in_public_path(filename:str) -> File:
+    web_path = web_pathname_of_file(filename)
+    img = qrcode.make(web_path)
+    qr_code_filename = temp_qr_code_file_name(filename)
+    with open(qr_code_filename, "wb") as qr:
+        img.save(qr)
+
+    return File(qr_code_filename)
+
+
+def temp_qr_code_file_name(filename: str) -> str:
+    return os.path.join(download_directory, "temp_qr_code_%s.png" % filename)

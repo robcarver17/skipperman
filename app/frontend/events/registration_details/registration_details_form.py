@@ -21,7 +21,7 @@ from app.objects.abstract_objects.abstract_form import (
     textInput,
     intInput,
 )
-from app.objects.abstract_objects.abstract_tables import RowInTable
+from app.objects.abstract_objects.abstract_tables import RowInTable, Table
 from app.objects.cadets import Cadet
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
@@ -36,6 +36,10 @@ from app.objects.registration_status import (
     get_states_allowed_give_current_status,
 )
 
+from app.backend.registration_data.cadet_registration_data import (
+    get_dict_of_cadets_with_registration_data,
+)
+
 DAYS_ATTENDING = "days_attending_field"
 NOTES = "Notes"
 HEALTH = "Health"
@@ -48,9 +52,26 @@ class RegistrationDetailsForEvent:
     registration_data: DictOfCadetsWithRegistrationData
 
 
-from app.backend.registration_data.cadet_registration_data import (
-    get_dict_of_cadets_with_registration_data,
-)
+def get_registration_details_inner_form_for_event(
+    interface: abstractInterface, event: Event, sort_order: str
+) -> Table:
+    registration_details = get_registration_data(
+        event=event, sort_order=sort_order, interface=interface
+    )
+    top_row = get_top_row_for_table_of_registration_details(
+        all_columns=registration_details.all_columns_excluding_special_fields
+    )
+    rows_in_table = [
+        row_for_cadet_in_event(
+            cadet=cadet,
+            registration_details=registration_details,
+        )
+        for cadet in registration_details.registration_data.list_of_cadets()
+    ]
+
+    return Table(
+        [top_row] + rows_in_table, has_row_headings=True, has_column_headings=True
+    )
 
 
 def get_registration_data(

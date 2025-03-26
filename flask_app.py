@@ -7,10 +7,10 @@ from werkzeug.middleware.profiler import ProfilerMiddleware
 from app.data_access.init_data import home_directory
 from app.web.documentation.documentation_pages import generate_help_page_html
 from app.web.flask.flash import flash_error
-from app.web.flask.session_data_for_action import clear_session_data_for_all_actions
+from app.web.flask.session_data_for_action import clear_all_action_state_data_from_session
 from app.web.html.config_html import PROFILE
 
-from flask import session, Flask, redirect
+from flask import session, Flask, redirect, url_for
 from flask_login import login_required, LoginManager
 from werkzeug import Request
 
@@ -34,6 +34,7 @@ from app.web.html.url_define import (
     TOGGLE_READ_ONLY,
     HELP_PREFIX,
     MAKE_BACKUP,
+MAIN_MENU_URL
 )
 from app.data_access.configuration.configuration import MAX_FILE_SIZE, SUPPORT_EMAIL
 
@@ -49,17 +50,8 @@ def prepare_flask_app(max_file_size: int, profile: bool = False) -> Flask:
     if profile:
         app.wsgi_app = ProfilerMiddleware(app.wsgi_app)
 
-    SECRET_FILE = os.path.join(home_directory, ".flask_secret")
-    try:
-        with open(SECRET_FILE, "r") as secret_file:
-            app.secret_key = secret_file.read()
-    except FileNotFoundError:
-        # Let's create a cryptographically secure code in that file
-        with open(SECRET_FILE, "w") as secret_file:
-            app.secret_key = secrets.token_hex(32)
-            secret_file.write(app.secret_key)
-
-    app.config["SECRET_KEY"] = app.secret_key
+    secret_key = get_secret_key_from_file_creating_if_required
+    app.config["SECRET_KEY"] = app.secret_key = secret_key
 
     ## Avoid overload
     app.config["MAX_CONTENT_LENGTH"] = max_file_size * MEGABYTE
@@ -68,6 +60,20 @@ def prepare_flask_app(max_file_size: int, profile: bool = False) -> Flask:
 
     return app
 
+
+def get_secret_key_from_file_creating_if_required():
+    SECRET_FILE = os.path.join(home_directory, ".flask_secret")
+
+    try:
+        with open(SECRET_FILE, "r") as secret_file:
+            secret_key = secret_file.read()
+    except FileNotFoundError:
+        # Let's create a cryptographically secure code in that file
+        with open(SECRET_FILE, "w") as secret_file:
+            secret_key = secrets.token_hex(32)
+            secret_file.write(app.secret_key)
+
+    return secret_key
 
 def prepare_request(max_file_size):
     Request.max_form_parts = None  # avoid large forms crashing
@@ -86,6 +92,8 @@ def prepare_login_manager(app: Flask) -> LoginManager:
 ###SETUP
 prepare_request(max_file_size=MAX_FILE_SIZE)
 app = prepare_flask_app(max_file_size=MAX_FILE_SIZE, profile=PROFILE)
+app.secret_key = "a;lsjfd;lkasdfiawers"
+
 login_manager = prepare_login_manager(app)
 
 
@@ -142,11 +150,7 @@ def logout():
     return process_logout()
 
 
-@app.route(INDEX_URL)
-def home():
-    clear_session_data_for_all_actions()
-    return generate_menu_page_html()
-
+MAIN_MENU_REDIRECT = "/%s/%s" % (ACTION_PREFIX, MAIN_MENU_URL)
 
 @app.route("/%s/<action_option>" % ACTION_PREFIX, methods=["GET", "POST"])
 @login_required
@@ -155,8 +159,16 @@ def action(action_option):
         ## belt and braces on security
         print("USER NOT LOGGED IN")
         return generate_menu_page_html()
+    if action_option == MAIN_MENU_URL:
+        clear_all_action_state_data_from_session()
+        return generate_menu_page_html()
+    else:
+        return generate_action_page_html(action_option)
 
-    return generate_action_page_html(action_option)
+
+@app.route(INDEX_URL)
+def home():
+    return redirect(MAIN_MENU_REDIRECT)
 
 
 @app.route("/%s/<help_page_name>" % HELP_PREFIX, methods=["GET", "POST"])
@@ -165,15 +177,16 @@ def help(help_page_name):
     return generate_help_page_html(help_page_name)
 
 
+
 @app.errorhandler(500)
 def generic_web_error(e):
     flash_error("Some kind of error (%s) contact support: %s " % (str(e), SUPPORT_EMAIL))
-    return redirect("/")
+    return generate_menu_page_html()
 
 @app.errorhandler(404)
 def generic_missing_page_error(e):
     flash_error("Missing page error (%s) contact support: %s " % (str(e), SUPPORT_EMAIL))
-    return redirect("/")
+    return generate_menu_page_html()
 
 
 if __name__ == "__main__":

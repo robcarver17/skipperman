@@ -38,7 +38,7 @@ from app.web.html.html_components import (
     html_link,
     get_detail_wrapper,
 )
-from app.web.html.url_define import get_help_url, INDEX_URL
+from app.web.html.url_define import get_help_url, INDEX_URL, MAIN_MENU_URL
 
 
 def get_html_for_heading(heading: Heading):
@@ -100,7 +100,7 @@ HTML_BUTTON_NAME = "action"
 
 
 def html_action_option_button(button_text, url=""):
-    return generic_html_button(button_text=button_text, url=url, menu_tile=True)
+    return generic_html_button(button_text=button_text, button_value="action_%s" % button_text, url=url, menu_tile=True)
 
 
 def help_link_button(
@@ -109,7 +109,9 @@ def help_link_button(
     url = get_help_url(help_page_name)
     if from_main_menu:
         return generic_html_button(
-            "Help", shortcut=shortcut, url=url, open_new_window=True, nav_button=True
+            "Help",
+            button_value="help",
+            shortcut=shortcut, url=url, open_new_window=True, nav_button=True
         )
     else:
         return nav_button_with_link_to_avoid_weird_routing_issue(
@@ -117,15 +119,18 @@ def help_link_button(
         )
 
 
+def get_html_for_main_menu_nav_button(button: MainMenuNavButton) -> Html:
+    return html_for_main_menu_button(label=button.label, shortcut=button.shortcut)
+
 def html_for_main_menu_button(label, shortcut=""):
     return nav_button_with_link_to_avoid_weird_routing_issue(
-        label, url=INDEX_URL, open_new_window=False, shortcut=shortcut
+        label, url=MAIN_MENU_URL, open_new_window=False, shortcut=shortcut
     )
 
 
 def generic_html_button(
     button_text,
-    button_value=arg_not_passed,
+    button_value: str,
     big_button: bool = False,
     menu_tile=False,
     nav_button=False,
@@ -133,9 +138,6 @@ def generic_html_button(
     open_new_window: bool = False,
     shortcut: str = arg_not_passed,
 ):
-    button_name = HTML_BUTTON_NAME
-    if button_value == arg_not_passed:
-        button_value = button_text
     if big_button:
         # size = 'style="font-size : 20px; width: 100%; height: 100px;"'
         size = 'style="font-size : 20px"'
@@ -158,7 +160,7 @@ def generic_html_button(
     if url == "":
         html = Html(
             '<button %s name="%s" type="submit" value="%s" %s %s>%s</button>'
-            % (style_str, button_name, button_value, size, shortcut_str, button_text)
+            % (style_str, HTML_BUTTON_NAME, button_value, size, shortcut_str, button_text)
         )
     else:
         if open_new_window:
@@ -203,8 +205,6 @@ def get_html_for_action_option_button(button: ActionOptionButton):
     )
 
 
-def get_html_for_main_menu_nav_button(button: MainMenuNavButton) -> Html:
-    return html_for_main_menu_button(label=button.label, shortcut=button.shortcut)
 
 
 def get_html_for_help_button(help_button: HelpButton) -> Html:

@@ -1,6 +1,6 @@
 from app.data_access.csv.generic_csv_data import GenericCsvData
 from app.data_access.classes.list_of_events import DataListOfEvents
-from app.data_access.csv.resolve_csv_paths_and_filenames import EVENT_FILE_IDENTIFIER
+from app.data_access.resolve_paths_and_filenames import EVENT_FILE_IDENTIFIER
 
 from app.objects.events import ListOfEvents
 

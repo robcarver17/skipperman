@@ -1,4 +1,5 @@
 from typing import Union, Callable, Dict, List
+from app.frontend.shared.buttons import is_button_of_type, get_button_value_given_type_and_attributes, get_attributes_from_button_pressed_of_known_type
 
 import pandas as pd
 
@@ -24,13 +25,12 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.frontend.forms.reorder_form import (
     reorder_table,
-    reorderFormInterface,
-    list_of_button_names_given_group_order,
+    reorderFormInterface, is_button_arrow_button,
 )
 from app.frontend.forms.reorder_matrix import (
     reorder_matrix,
     reorderMatrixInterface,
-    list_of_button_values_given_list_of_entries,
+     is_matrix_direction_button,
 )
 
 from app.frontend.reporting.shared.arrangements import (
@@ -156,10 +156,8 @@ def get_add_delete_buttons_for_group_ordering(
             missing_text = "Add the following missing groups to report: %s" % ", ".join(
                 missing_groups
             )
-        missing_groups_button = Button(
-            missing_text,
-            value=ADD_MISSING_BUTTON_NAME,
-        )
+        missing_groups_button = get_missing_groups_button(missing_text)
+
     else:
         missing_groups_button = ""
 
@@ -171,10 +169,7 @@ def get_add_delete_buttons_for_group_ordering(
                 "Remove the following empty groups from report: %s"
                 % ", ".join(empty_groups)
             )
-        empty_groups_button = Button(
-            empty_text,
-            value=REMOVE_EMPTY_BUTTON_NAME,
-        )
+        empty_groups_button = get_empty_groups_button(empty_text)
     else:
         empty_groups_button = ""
 
@@ -185,7 +180,7 @@ def get_auto_layout_buttons_form_element() -> Line:
     auto_layout_buttons = Line(
         ["Click to auto-layout based on group order above:  "]
         + [
-            Button(arrangement_description)
+            Button(arrangement_description, value=value_for_auto_layout_button(arrangement_description))
             for arrangement_description in dict_of_arrangements_that_reorder.keys()
         ]
     )
@@ -219,39 +214,29 @@ def post_form_for_group_arrangement_options(
         dict_of_df=dict_of_df,
     )
 
-    list_of_arrangement_descriptions_on_buttons = list(
-        dict_of_arrangements_that_reorder.keys()
-    )
-    list_of_buttons_for_changing_group_order = get_list_of_buttons_changing_group_order(
-        reporting_options
-    )
-    list_of_buttons_changing_matrix_shape = get_list_of_buttons_changing_matrix_shape(
-        reporting_options=reporting_options
-    )
-
     last_button_pressed = interface.last_button_pressed()
 
-    if last_button_pressed in list_of_arrangement_descriptions_on_buttons:
+    if is_auto_layout_button(last_button_pressed):
         change_arrangement_given_method_and_current_order(
             interface=interface, reporting_options=reporting_options
         )
 
-    elif last_button_pressed == REMOVE_EMPTY_BUTTON_NAME:
+    elif get_empty_groups_button().pressed(last_button_pressed):
         remove_empty_from_group_order_and_arrangement(
             interface=interface, reporting_options=reporting_options
         )
 
-    elif last_button_pressed == ADD_MISSING_BUTTON_NAME:
+    elif get_missing_groups_button().pressed(last_button_pressed):
         add_missing_to_group_order_and_arrangement(
             interface=interface, reporting_options=reporting_options
         )
 
-    elif last_button_pressed in list_of_buttons_for_changing_group_order:
+    elif is_button_arrow_button(last_button_pressed):
         change_group_order_and_arrangement(
             interface=interface, reporting_options=reporting_options
         )
 
-    elif last_button_pressed in list_of_buttons_changing_matrix_shape:
+    elif is_matrix_direction_button(last_button_pressed):
         change_arrangement_matrix(
             interface=interface, reporting_options=reporting_options
         )
@@ -267,7 +252,7 @@ def post_form_for_group_arrangement_options(
 def change_arrangement_given_method_and_current_order(
     interface: abstractInterface, reporting_options: ReportingOptions
 ):
-    arrangement_method_name = interface.last_button_pressed()
+    arrangement_method_name = get_arrangement_description_given_button(interface.last_button_pressed())
     arrange_options_and_group_order = (
         modify_arrangement_options_and_group_order_to_reflect_arrangement_method_name(
             reporting_options=reporting_options,
@@ -360,17 +345,29 @@ def get_order_matrix_interface(
     return reorder_matrix_interface
 
 
-def get_list_of_buttons_changing_group_order(reporting_options: ReportingOptions):
-    return list_of_button_names_given_group_order(reporting_options.group_order)
 
 
-def get_list_of_buttons_changing_matrix_shape(
-    reporting_options: ReportingOptions,
-) -> list:
-    order_of_groups_with_numbers = augment_order_of_groups_with_sizes(reporting_options)
+def get_empty_groups_button(empty_text=""):
+    REMOVE_EMPTY_BUTTON_NAME = "removeEmpty"
+    return Button(
+    empty_text,
+    value=REMOVE_EMPTY_BUTTON_NAME,
+)
 
-    return list_of_button_values_given_list_of_entries(order_of_groups_with_numbers)
+def get_missing_groups_button(missing_text=""):
+    ADD_MISSING_BUTTON_NAME = "addMissing"
+    return Button(
+            missing_text,
+            value=ADD_MISSING_BUTTON_NAME,
+        )
 
+button_type_arrange_description = "arrangelayout"
 
-ADD_MISSING_BUTTON_NAME = "addMissing"
-REMOVE_EMPTY_BUTTON_NAME = "removeEmpty"
+def is_auto_layout_button(button_value: str):
+    return is_button_of_type(value_of_button_pressed=button_value, type_to_check=button_type_arrange_description)
+
+def value_for_auto_layout_button(description:str):
+    return get_button_value_given_type_and_attributes(button_type_arrange_description, description)
+
+def get_arrangement_description_given_button(button_value:str):
+    return get_attributes_from_button_pressed_of_known_type(value_of_button_pressed=button_value, type_to_check=button_type_arrange_description)

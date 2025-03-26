@@ -19,8 +19,8 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines, ___________
 from app.objects.abstract_objects.abstract_buttons import (
     cancel_menu_button,
     Button,
-    get_nav_bar_with_just_cancel_button,
 )
+from app.frontend.shared.buttons import get_nav_bar_with_just_cancel_button
 from app.frontend.form_handler import initial_state_form
 from app.objects.events import Event
 

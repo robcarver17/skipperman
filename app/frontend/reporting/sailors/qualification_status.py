@@ -4,6 +4,8 @@ from typing import Union
 from app.backend.qualifications_and_ticks.progress import (
     get_expected_qualifications_for_cadets_at_event,
 )
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+from app.frontend.shared.buttons import is_button_event_selection, event_from_button_pressed
 from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.events import Event
@@ -57,16 +59,14 @@ def post_form_for_qualification_status_report(
     last_button = interface.last_button_pressed()
     if back_menu_button.pressed(last_button):
         return previous_form(interface)
-    else:
+    elif is_button_event_selection(last_button):
         return action_when_event_button_clicked(interface)
+    else:
+        return button_error_and_back_to_initial_state_form(interface)
 
 
 def action_when_event_button_clicked(interface: abstractInterface) -> File:
-    event_description = interface.last_button_pressed()
-
-    event = get_event_from_list_of_events_given_event_description(
-        object_store=interface.object_store, event_description=event_description
-    )
+    event = event_from_button_pressed(value_of_button_pressed=interface.last_button_pressed(), object_store=interface.object_store)
 
     return download_expected_qualification_for_event(interface=interface, event=event)
 

@@ -28,6 +28,7 @@ from app.frontend.reporting.shared.reporting_options import (
     reset_all_report_options,
     reset_specific_report_options,
 )
+from app.frontend.shared.buttons import is_button_event_selection, event_from_button_pressed
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -48,7 +49,7 @@ from app.frontend.form_handler import (
 )
 from app.frontend.shared.events_state import (
     get_event_from_state,
-    update_state_for_specific_event_given_event_description,
+    update_state_for_specific_event,
 )
 
 
@@ -92,12 +93,17 @@ def post_form_initial_generic_report(
         return interface.get_new_display_form_for_parent_of_function(
             report_generator.initial_display_form_function
         )
+    elif is_button_event_selection(last_button):
+        return action_when_event_button_clicked(interface=interface, report_generator=report_generator)
+    else:
+        return button_error_and_back_to_initial_state_form(interface)
 
+
+def action_when_event_button_clicked(interface: abstractInterface,
+    report_generator: ReportGeneratorWithoutSpecificParameters,):
     ## so whilst we are in this stage, we know which event we are talking about
-    event_name_selected = last_button
-    update_state_for_specific_event_given_event_description(
-        interface=interface, event_description=event_name_selected
-    )
+    event = event_from_button_pressed(value_of_button_pressed=interface.last_button_pressed(), object_store=interface.object_store)
+    update_state_for_specific_event(interface=interface, event=event)
 
     return interface.get_new_form_given_function(
         report_generator.all_options_display_form_function

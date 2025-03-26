@@ -1,5 +1,7 @@
 from typing import Dict, List
 
+import pandas as pd
+
 from app.objects.cadets import Cadet
 
 from app.objects.boat_classes import BoatClass
@@ -10,8 +12,8 @@ from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.backend.events.summarys import summarise_generic_counts_for_event_over_days
-from app.objects.abstract_objects.abstract_tables import PandasDFTable
+from app.backend.events.summarys import \
+    summarise_generic_counts_for_event_over_days_returning_df
 from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import (
     DictOfCadetsAndBoatClassAndPartners,
 )
@@ -25,7 +27,7 @@ from app.backend.boat_classes.cadets_with_boat_classes_at_event import (
 
 def summarise_class_attendance_for_event(
     object_store: ObjectStore, event: Event
-) -> PandasDFTable:
+) -> pd.DataFrame:
     dict_of_cadets_and_boat_classes_and_partners_at_events = (
         get_dict_of_cadets_and_boat_classes_and_partners_at_events(
             object_store=object_store, event=event
@@ -39,7 +41,7 @@ def summarise_class_attendance_for_event(
         object_store=object_store, event=event
     )
 
-    table = summarise_generic_counts_for_event_over_days(
+    df = summarise_generic_counts_for_event_over_days_returning_df(
         get_id_function=get_relevant_cadet_ids_for_boat_class_id,
         event=event,
         groups=list_of_boat_classes,
@@ -48,7 +50,7 @@ def summarise_class_attendance_for_event(
         list_of_ids_with_groups=dict_of_cadets_and_boat_classes_and_partners_at_events,  ## ignore warning
     )
 
-    return table
+    return df
 
 
 def get_relevant_cadet_ids_for_boat_class_id(

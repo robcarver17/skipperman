@@ -98,11 +98,14 @@ def get_attendance_matrix_for_list_of_cadets_at_event_with_passed_event_info(
 def get_dict_of_all_event_info_for_cadets(
     object_store: ObjectStore, event: Event, active_only: bool = True
 ) -> DictOfAllEventInfoForCadets:
-    return object_store.get(
+
+    data = object_store.get(
         object_definition=object_definition_for_dict_of_all_event_info_for_cadet,
         event_id=event.id,
         active_only=active_only,
     )
+
+    return data
 
 
 def update_dict_of_all_event_info_for_cadets(

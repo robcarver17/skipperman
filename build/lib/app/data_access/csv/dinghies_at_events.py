@@ -1,7 +1,7 @@
 from app.data_access.csv.generic_csv_data import GenericCsvData
 
 from app.data_access.classes.dinghies_at_events import *
-from app.data_access.csv.resolve_csv_paths_and_filenames import (
+from app.data_access.resolve_paths_and_filenames import (
     LIST_OF_DINGHIES_FILE_ID,
     LIST_OF_CADETS_WITH_DINGHIES_AT_EVENT_FILE_ID,
 )

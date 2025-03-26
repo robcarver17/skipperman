@@ -1,11 +1,11 @@
 from app.objects.exceptions import arg_not_passed
 import pandas as pd
-from app.data_access.csv.resolve_csv_paths_and_filenames import (
-    get_path_and_filename_for_named_csv_file,
+from app.data_access.resolve_paths_and_filenames import (
+    get_path_and_filename_for_named_file,
     get_path_for_generic_name,
 )
 import os
-from app.data_access.csv.utils import files_with_extension_in_resolved_pathname
+from app.data_access.file_access import files_with_extension_in_resolved_pathname
 from typing import List
 
 
@@ -25,7 +25,7 @@ class GenericCsvData(object):
         generic_name_of_file_required: str,
         additional_file_identifiers=arg_not_passed,
     ) -> str:
-        return get_path_and_filename_for_named_csv_file(
+        return get_path_and_filename_for_named_file(
             generic_name_of_file_required=generic_name_of_file_required,
             master_data_path=self._master_data_path,
             additional_file_identifiers=additional_file_identifiers,

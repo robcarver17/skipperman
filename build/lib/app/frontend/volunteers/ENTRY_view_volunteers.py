@@ -1,6 +1,9 @@
 from typing import Union
 
 from app.data_access.configuration.fixed import ADD_KEYBOARD_SHORTCUT
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+from app.frontend.shared.buttons import get_button_value_for_volunteer_selection, is_button_volunteer_selection, \
+    volunteer_from_button_pressed, get_button_value_for_sort_order, is_button_sort_order, sort_order_from_button_pressed
 from app.frontend.volunteers.add_volunteer import display_form_add_volunteer
 from app.frontend.volunteers.update_skills_from_csv import display_form_refresh_volunteer_skills
 from app.frontend.volunteers.view_individual_volunteer import (
@@ -29,7 +32,7 @@ from app.backend.volunteers.list_of_volunteers import (
     SORT_BY_FIRSTNAME,
 )
 from app.frontend.shared.volunteer_state import (
-    update_state_for_specific_volunteer_given_volunteer_as_str,
+    update_state_for_specific_volunteer
 )
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 
@@ -71,13 +74,15 @@ def post_form_view_of_volunteers(interface: abstractInterface) -> Union[Form, Ne
     elif refresh_skills_button.pressed(button_pressed):
         return interface.get_new_form_given_function(display_form_refresh_volunteer_skills)
 
-    elif button_pressed in all_sort_types:
+    elif is_button_sort_order(button_pressed):
         ## no change to stage required, just sort order
-        sort_order = interface.last_button_pressed()
+        sort_order = sort_order_from_button_pressed(button_pressed)
         return get_form_view_of_volunteers(interface=interface, sort_order=sort_order)
 
-    else:  ## must be a volunteer redirect:
+    elif is_button_volunteer_selection(button_pressed):  ## must be a volunteer redirect:
         return view_specific_volunteer_form(interface)
+    else:
+        return button_error_and_back_to_initial_state_form(interface)
 
 
 def add_volunteer_form(interface: abstractInterface):
@@ -85,10 +90,8 @@ def add_volunteer_form(interface: abstractInterface):
 
 
 def view_specific_volunteer_form(interface: abstractInterface):
-    volunteer_selected_as_str = interface.last_button_pressed()
-    update_state_for_specific_volunteer_given_volunteer_as_str(
-        interface=interface, volunteer_selected=volunteer_selected_as_str
-    )
+    volunteer = volunteer_from_button_pressed(object_store=interface.object_store, value_of_button_pressed=interface.last_button_pressed())
+    update_state_for_specific_volunteer(interface=interface, volunteer=volunteer)
     return interface.get_new_form_given_function(display_form_view_individual_volunteer)
 
 
@@ -108,7 +111,7 @@ def get_list_of_volunteers_with_buttons(
 
 
 def row_of_form_for_volunteer_with_buttons(volunteer: Volunteer) -> RowInTable:
-    return RowInTable([Button(str(volunteer))])
+    return RowInTable([Button(str(volunteer), value=get_button_value_for_volunteer_selection(volunteer))])
 
 ADD_VOLUNTEER_BUTTON_LABEL = "Add volunteer"
 add_button = Button(
@@ -123,5 +126,5 @@ nav_buttons = ButtonBar([main_menu_button, add_button, refresh_skills_button, he
 
 all_sort_types = [SORT_BY_SURNAME, SORT_BY_FIRSTNAME]
 sort_buttons = ButtonBar(
-    [Button(sort_by, nav_button=True) for sort_by in all_sort_types]
+    [Button(sort_by, value = get_button_value_for_sort_order(sort_by), nav_button=True) for sort_by in all_sort_types]
 )

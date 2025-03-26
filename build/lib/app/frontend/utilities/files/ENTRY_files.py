@@ -25,7 +25,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     back_menu_button,
 )
 from app.objects.abstract_objects.abstract_tables import DetailTable
-
+from app.frontend.utilities.files.render_files import is_delete_button, is_qr_button, is_replace_button
 
 ## Replace button - one per public file
 ## QR code - one per public file
@@ -70,6 +70,17 @@ def post_form_file_management(
         return interface.get_new_display_form_for_parent_of_function(
             post_form_file_management
         )
+    elif upload_public_file_button.pressed(button_pressed):
+        return interface.get_new_form_given_function(
+            display_form_for_upload_public_file
+        )
+
+    elif is_qr_button(button_pressed):
+        return generate_qr_code(button_pressed)
+
+    elif is_replace_button(button_pressed):
+        return replace_button_pressed(interface)
+
     if clear_temp_files_button.pressed(button_pressed):
         delete_private_temporary_files()
 
@@ -79,32 +90,25 @@ def post_form_file_management(
     elif clear_public_file_button.pressed(button_pressed):
         delete_public_files()
 
-    elif upload_public_file_button.pressed(button_pressed):
-        return interface.get_new_form_given_function(
-            display_form_for_upload_public_file
-        )
+    elif is_delete_button(button_pressed):
+        delete_specific_file(button_pressed)
 
     elif delete_selected_files_button.pressed(button_pressed):
         delete_selected_files(interface)
-
-    elif button_pressed in get_list_of_all_qr_buttons():
-        return generate_qr_code(button_pressed)
-
-    elif button_pressed in get_list_of_all_delete_buttons():
-        delete_specific_file(button_pressed)
-
-    elif button_pressed in get_list_of_all_replace_buttons():
-        type, directory, filename = type_directory_and_filename_from_button_name(
-            button_pressed
-        )
-        store_directory_and_filename(
-            interface=interface, directory_name=directory, filename=filename
-        )
-        return interface.get_new_form_given_function(
-            display_form_to_replace_selected_files
-        )
 
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
     return display_form_file_management(interface)
+
+def replace_button_pressed(interface: abstractInterface) -> NewForm:
+    button_pressed = interface.last_button_pressed()
+    directory, filename = directory_and_filename_from_replace_button_name(
+        button_pressed
+    )
+    store_directory_and_filename(
+        interface=interface, directory_name=directory, filename=filename
+    )
+    return interface.get_new_form_given_function(
+        display_form_to_replace_selected_files
+    )

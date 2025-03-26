@@ -18,6 +18,8 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 from app.objects.abstract_objects.abstract_form import checkboxInput
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
+from app.frontend.shared.buttons import get_attributes_from_button_pressed_of_known_type, \
+    get_button_value_given_type_and_attributes, is_button_of_type
 
 
 def list_of_all_public_files_with_options() -> Table:
@@ -88,24 +90,24 @@ def line_for_file_in_directory(
     )
     delete_button = Button(
         label="Delete",
-        value=button_name_for_filename(
-            directory_name=directory_name, filename=filename, button_type=DELETE
+        value=button_name_for_delete(
+            directory_name=directory_name, filename=filename
         ),
     )
     line_for_file = [display_name, checkbox, delete_button]
     if show_qr_code_button:
         qr_button = Button(
             "QR code",
-            value=button_name_for_filename(
-                directory_name=directory_name, filename=filename, button_type=QR
+            value=button_name_for_qr(
+                directory_name=directory_name, filename=filename
             ),
         )
         line_for_file.append(qr_button)
     if show_replace_button:
         replace_button = Button(
             "Replace",
-            value=button_name_for_filename(
-                directory_name, filename=filename, button_type=REPLACE
+            value=button_name_for_replace(
+                directory_name, filename=filename
             ),
         )
         line_for_file.append(replace_button)
@@ -117,49 +119,7 @@ def checkbox_name_for_filename(directory_name: str, filename: str) -> str:
     return "check_%s_%s" % (directory_name, filename)
 
 
-def get_list_of_all_qr_buttons() -> List[str]:
-    qr_public = list_of_all_buttons_given_directory_and_button_name(
-        public_reporting_directory, button_type=QR
-    )
-    ## Don't do QR for others
 
-    return qr_public
-
-
-def get_list_of_all_replace_buttons() -> List[str]:
-    replace_public = list_of_all_buttons_given_directory_and_button_name(
-        public_reporting_directory, button_type=REPLACE
-    )
-    ## Don't do replace for others
-
-    return replace_public
-
-
-def get_list_of_all_delete_buttons() -> List[str]:
-    delete_public = list_of_all_buttons_given_directory_and_button_name(
-        public_reporting_directory, button_type=DELETE
-    )
-    delete_downloads = list_of_all_buttons_given_directory_and_button_name(
-        download_directory, button_type=DELETE
-    )
-    delete_uploads = list_of_all_buttons_given_directory_and_button_name(
-        upload_directory, button_type=DELETE
-    )
-
-    return delete_uploads + delete_downloads + delete_public
-
-
-def list_of_all_buttons_given_directory_and_button_name(
-    directory_name: str, button_type: str
-) -> List[str]:
-    all_files = get_files_in_directory(directory_name)
-
-    return [
-        button_name_for_filename(
-            directory_name=directory_name, filename=filename, button_type=button_type
-        )
-        for filename in all_files
-    ]
 
 
 QR = "qr"
@@ -167,22 +127,70 @@ REPLACE = "replace"
 DELETE = "delete"
 
 
-def button_name_for_filename(
-    directory_name: str, filename: str, button_type: str
+def button_name_for_qr(
+    directory_name: str, filename: str
 ) -> str:
     ## may get underscores in directory and filename, so use a special seperator
-    return "%s*%s*%s" % (button_type, directory_name, filename)
-
-
-def type_directory_and_filename_from_button_name(
-    button_name: str,
-) -> Tuple[str, str, str]:
-    type_directory_filename = button_name.split("*")
-    return (
-        type_directory_filename[0],
-        type_directory_filename[1],
-        type_directory_filename[2],
+    return get_button_value_given_type_and_attributes(
+        QR,
+        directory_name,
+        filename,
     )
+
+def button_name_for_replace(
+    directory_name: str, filename: str
+) -> str:
+    ## may get underscores in directory and filename, so use a special seperator
+    return get_button_value_given_type_and_attributes(
+        REPLACE,
+        directory_name,
+        filename,
+    )
+
+
+def button_name_for_delete(
+    directory_name: str, filename: str
+) -> str:
+    ## may get underscores in directory and filename, so use a special seperator
+    return get_button_value_given_type_and_attributes(
+        DELETE,
+        directory_name,
+        filename,
+    )
+
+
+def directory_and_filename_from_qr_button_name(
+    button_name: str,
+) -> Tuple[str, str]:
+    return get_attributes_from_button_pressed_of_known_type(
+        value_of_button_pressed=button_name,
+        type_to_check=QR
+    )
+
+def directory_and_filename_from_replace_button_name(
+    button_name: str,
+) -> Tuple[str, str]:
+    return get_attributes_from_button_pressed_of_known_type(
+        value_of_button_pressed=button_name,
+        type_to_check=REPLACE
+    )
+
+def directory_and_filename_from_delete_button_name(
+    button_name: str,
+) -> Tuple[str, str]:
+    return get_attributes_from_button_pressed_of_known_type(
+        value_of_button_pressed=button_name,
+        type_to_check=DELETE
+    )
+
+def is_qr_button(button_value:str):
+    return is_button_of_type(button_value, type_to_check=QR)
+
+def is_delete_button(button_value:str):
+    return is_button_of_type(button_value, type_to_check=DELETE)
+
+def is_replace_button(button_value:str):
+    return is_button_of_type(button_value, type_to_check=REPLACE)
 
 
 CLEAR_TEMP_BUTTON_LABEL = "Delete all temporary download files"  # DOWNLOAD_DIRECTORY

@@ -1,13 +1,10 @@
-from typing import Union, List
+from typing import Union
 
-from app.backend.qualifications_and_ticks.dict_of_qualifications_substages_and_ticks import (
-    get_tick_items_as_dict_for_qualification,
-)
 
 from app.frontend.configuration.qualifications.edit_qualifications_in_detail_form import (
     table_for_edit_qualification_details,
     button_for_new_substage,
-    list_of_button_names_for_new_item_in_substage_name_field,
+     button_pressed_is_substage_button,
 )
 from app.frontend.configuration.qualifications.edit_qualifications_in_stage_parse import (
     add_new_substage_to_qualification_from_form,
@@ -51,9 +48,6 @@ def post_form_edit_qualification_details(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     last_button_pressed = interface.last_button_pressed()
-    list_of_new_item_in_substage_button_names = get_new_item_in_substage_button_names(
-        interface
-    )
 
     if cancel_menu_button.pressed(last_button_pressed):
         interface.clear_cache()
@@ -62,7 +56,8 @@ def post_form_edit_qualification_details(
         )
     if button_for_new_substage.pressed(last_button_pressed):
         add_new_substage_to_qualification_from_form(interface)
-    elif last_button_pressed in list_of_new_item_in_substage_button_names:
+
+    elif button_pressed_is_substage_button(last_button_pressed):
         add_new_tick_list_item_from_form(
             interface=interface, button_pressed=last_button_pressed
         )
@@ -76,11 +71,3 @@ def post_form_edit_qualification_details(
     return display_form_edit_qualification_details(interface)
 
 
-def get_new_item_in_substage_button_names(interface: abstractInterface) -> List[str]:
-    qualification = get_qualification_from_state(interface)
-    tick_items_as_dict = get_tick_items_as_dict_for_qualification(
-        interface.object_store, qualification=qualification
-    )
-    return list_of_button_names_for_new_item_in_substage_name_field(
-        tick_items_as_dict=tick_items_as_dict
-    )

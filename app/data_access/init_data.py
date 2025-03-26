@@ -1,4 +1,5 @@
 ## In the unlikely event of switching to eg a database change here
+from app.data_access.api.mixed_api import MixedParquetAndCsvDataApi
 from app.data_access.configuration.configuration import DATAPATH
 from app.data_access.api.csv_api import CsvDataApi
 from app.data_access.store.object_store import ObjectStore
@@ -19,7 +20,7 @@ except:
 
 ## IF YOU WANT TO USE A DIFFERENT KIND OF DATA, EG DATABASE, CREATE AN API AND MODIFY THIS
 def make_data():
-    return CsvDataApi(
+    return MixedParquetAndCsvDataApi(
         master_data_path=master_data_path,
         user_data_path=user_data_path,
         backup_data_path=backup_data_path,

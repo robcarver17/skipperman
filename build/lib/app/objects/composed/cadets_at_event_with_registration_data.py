@@ -77,6 +77,8 @@ class CadetRegistrationData:
     def active(self):
         return self.status.is_active
 
+    def update_notes(self, new_notes: str):
+        self.notes = new_notes
 
 class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
     def __init__(
@@ -86,6 +88,16 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
     ):
         super().__init__(raw_list)
         self._list_of_cadets_with_id_at_event = list_of_cadets_with_id_at_event
+
+    def update_notes_for_existing_cadet_at_event(self, cadet: Cadet, notes: str):
+        reg_data_for_cadet = self.registration_data_for_cadet(cadet)
+        reg_data_for_cadet.update_notes(notes)
+
+        ## propogate down
+        self.list_of_cadets_with_id_at_event.update_notes_for_existing_cadet_at_event(
+            cadet_id=cadet.id,
+            new_notes=notes
+        )
 
     def availability_dict(self) -> Dict[Cadet, DaySelector]:
         return dict(

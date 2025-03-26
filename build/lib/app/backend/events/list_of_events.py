@@ -3,7 +3,6 @@ from copy import copy
 from app.data_access.store.object_definitions import (
     object_definition_for_list_of_events,
 )
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, Button
 from app.objects.events import (
     ListOfEvents,
     SORT_BY_START_DSC,
@@ -68,9 +67,6 @@ def update_list_of_events(
 
 
 all_sort_types_for_event_list = [SORT_BY_START_ASC, SORT_BY_START_DSC, SORT_BY_NAME]
-sort_buttons_for_event_list = ButtonBar(
-    [Button(sortby, nav_button=True) for sortby in all_sort_types_for_event_list]
-)
 
 ALL_EVENTS = 99999999999999
 

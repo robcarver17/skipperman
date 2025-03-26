@@ -2,6 +2,7 @@ from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
     get_dict_of_volunteers_with_roles_and_groups_at_event,
 )
 from app.data_access.store.object_store import ObjectStore
+from app.frontend.events.ENTRY_view_events import display_given_list_of_events_with_buttons
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.backend.events.list_of_events import get_sorted_list_of_events
@@ -10,7 +11,7 @@ from app.objects.events import SORT_BY_START_DSC, ListOfEvents, Event
 
 def display_list_of_events_with_buttons_criteria_matched(
     object_store: ObjectStore, event_criteria: dict
-) -> ListOfLines:
+):
     list_of_events = get_sorted_list_of_events(
         object_store=object_store, sort_by=SORT_BY_START_DSC
     )
@@ -24,16 +25,9 @@ def display_list_of_events_with_buttons_criteria_matched(
         ]
     )
     if len(list_of_events) == 0:
-        return ListOfLines(["No events matching report criteria"])
+        return Line("No events matching report criteria")
 
-    list_of_event_descriptions = list_of_events.list_of_event_descriptions
-    list_with_buttons = [
-        Line(Button(event_description, tile=True))
-        for event_description in list_of_event_descriptions
-    ]
-
-    return ListOfLines(list_with_buttons)
-
+    return display_given_list_of_events_with_buttons(list_of_events)
 
 def describe_criteria(
     requires_volunteers: bool = False,

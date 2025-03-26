@@ -3,7 +3,7 @@ from app.objects.patrol_boats_with_volunteers_with_id import (
     ListOfVolunteersWithIdAtEventWithPatrolBoatsId,
 )
 from app.objects.club_dinghies import (
-    ListOfClubDinghies,
+    ListOfClubDinghies, ListOfClubDinghyLimits,
 )
 from app.objects.cadet_at_event_with_club_boat_with_ids import (
     ListOfCadetAtEventWithIdAndClubDinghies,
@@ -15,6 +15,13 @@ class DataListOfClubDinghies(object):
         raise NotImplemented
 
     def write(self, list_of_club_dinghies: ListOfClubDinghies):
+        raise NotImplemented
+
+class DataListOfClubDinghyLimits(object):
+    def read(self) -> ListOfClubDinghyLimits:
+        raise NotImplemented
+
+    def write(self, list_of_club_dinghies: ListOfClubDinghyLimits):
         raise NotImplemented
 
 

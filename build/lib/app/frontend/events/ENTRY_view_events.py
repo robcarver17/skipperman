@@ -2,14 +2,15 @@ from typing import Union
 
 from app.data_access.configuration.fixed import ADD_KEYBOARD_SHORTCUT
 from app.frontend.events.add_event import display_form_view_for_add_event
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.shared.events_state import (
-    update_state_for_specific_event_given_event_description,
+ update_state_for_specific_event,
 )
-from app.backend.events.list_of_events import get_sorted_list_of_events
-from app.backend.events.list_of_events import (
-    all_sort_types_for_event_list,
-    sort_buttons_for_event_list,
-)
+from app.backend.events.list_of_events import get_sorted_list_of_events, all_sort_types_for_event_list
+
+from app.frontend.shared.buttons import is_button_sort_order, \
+    sort_order_from_button_pressed, get_button_value_for_event_selection, is_button_event_selection, \
+    event_from_button_pressed, get_button_value_for_sort_order
 
 from app.frontend.events.view_individual_events import (
     display_form_view_individual_event,
@@ -73,21 +74,22 @@ def post_form_view_of_events(interface: abstractInterface) -> Union[Form, NewFor
     button_pressed = interface.last_button_pressed()
     if add_button.pressed(button_pressed):
         return form_for_add_event(interface)
-    elif button_pressed in all_sort_types_for_event_list:
+    elif is_button_sort_order(button_pressed):
         ## no change to stage required
-        sort_by = interface.last_button_pressed()
+        sort_by = sort_order_from_button_pressed(button_pressed)
         return display_form_view_of_events_sort_order_passed(
             interface=interface, sort_by=sort_by
         )
-    else:  ## must be an event
+    elif is_button_event_selection(button_pressed):
         return action_when_event_button_clicked(interface)
+    else:
+        return button_error_and_back_to_initial_state_form(interface)
+
 
 
 def action_when_event_button_clicked(interface: abstractInterface) -> NewForm:
-    event_description_selected = interface.last_button_pressed()
-    update_state_for_specific_event_given_event_description(
-        interface=interface, event_description=event_description_selected
-    )
+    event = event_from_button_pressed(value_of_button_pressed=interface.last_button_pressed(), object_store=interface.object_store)
+    update_state_for_specific_event(interface=interface, event=event)
 
     return form_for_view_event(interface)
 
@@ -102,10 +104,11 @@ def display_list_of_events_with_buttons(
 
 
 def display_given_list_of_events_with_buttons(list_of_events: ListOfEvents) -> Line:
-    list_of_event_descriptions = list_of_events.list_of_event_descriptions
     list_with_buttons = [
-        Button(event_description, tile=True)
-        for event_description in list_of_event_descriptions
+        Button(label=str(event),
+               value =  get_button_value_for_event_selection(event),
+               tile=True)
+        for event in list_of_events
     ]
 
     return Line(list_with_buttons)
@@ -117,3 +120,7 @@ def form_for_add_event(interface: abstractInterface):
 
 def form_for_view_event(interface: abstractInterface):
     return interface.get_new_form_given_function(display_form_view_individual_event)
+
+sort_buttons_for_event_list = ButtonBar(
+    [Button(label=sortby, value=get_button_value_for_sort_order(sortby),nav_button=True) for sortby in all_sort_types_for_event_list]
+)

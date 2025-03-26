@@ -1,11 +1,11 @@
 from typing import Union, List
 
-
+from app.frontend.shared.buttons import get_button_value_for_cadet_selection, cadet_from_button_pressed, \
+    is_button_cadet_selection
 from app.objects.cadets import Cadet
 
 from app.backend.cadets.list_of_cadets import (
     get_cadet_from_list_of_cadets_given_str_of_cadet,
-    get_cadet_from_id,
 )
 from app.backend.cadets.cadet_committee import (
     get_list_of_cadets_on_committee,
@@ -117,9 +117,7 @@ def select_or_deselect_button(
         button_text = "Deselect from committee (can be reinstated)"
 
     selection_button = Button(
-        value=get_select_or_deselect_button_value_for_committee_member(
-            cadet_on_committee
-        ),
+        value=get_button_value_for_cadet_selection(cadet_on_committee.cadet),
         label=button_text,
     )
 
@@ -221,7 +219,7 @@ def post_form_cadet_committee(
     elif add_button.pressed(button_pressed):
         add_new_cadet_to_committee_from_form(interface)
 
-    elif button_pressed_was_in_list_of_all_select_or_deselect_buttons(interface):
+    elif is_button_cadet_selection(button_pressed):
         select_or_deselect_cadet_from_committee(
             interface=interface, button_name=button_pressed
         )
@@ -272,46 +270,11 @@ def select_or_deselect_cadet_from_committee(
 def cadet_from_select_or_deselect_button_name(
     interface: abstractInterface, button_name: str
 ) -> Cadet:
-    cadet_id = cadet_id_from_select_or_deselect_button_name(button_name)
-    cadet = get_cadet_from_id(object_store=interface.object_store, cadet_id=cadet_id)
+    cadet = cadet_from_button_pressed(object_store=interface.object_store, value_of_button_pressed=interface.last_button_pressed())
 
     return cadet
 
 
-def cadet_id_from_select_or_deselect_button_name(button_name: str) -> str:
-    return button_name.split("_")[1]
-
-
-def get_select_or_deselect_button_value_for_committee_member(
-    cadet: CadetOnCommittee,
-) -> str:
-    return "ds_%s" % cadet.cadet_id
-
-
-def button_pressed_was_in_list_of_all_select_or_deselect_buttons(
-    interface: abstractInterface,
-) -> bool:
-    last_button = interface.last_button_pressed()
-    all_button_names = get_list_of_all_select_or_deselect_button_names(interface)
-
-    for button_name in all_button_names:
-        if Button(button_name).pressed(last_button):
-            return True
-
-    return False
-
-
-def get_list_of_all_select_or_deselect_button_names(
-    interface: abstractInterface,
-) -> List[str]:
-    list_of_cadets_with_names_on_committee = get_list_of_cadets_on_committee(
-        object_store=interface.object_store
-    )
-
-    return [
-        get_select_or_deselect_button_value_for_committee_member(cadet)
-        for cadet in list_of_cadets_with_names_on_committee
-    ]
 
 
 ## FIELD NAMES

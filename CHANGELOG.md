@@ -3,7 +3,6 @@
 
 Before first training:
 Group allocation:
-- club boat limits general configuration #71
 - configure visible events in group allocation #69
 - doc all recent changes
 
@@ -35,6 +34,7 @@ Before Cadet week
 - massive warning if unique key creators missing from field mappings
 
 # Recent
+- club boat limits general configuration 
 - sort order refresh without clicking triangle
 - fixed sticky problem with session state by adding redirect 
 

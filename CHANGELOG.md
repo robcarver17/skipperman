@@ -2,8 +2,6 @@
 # to do next
 
 Before first training:
-Group allocation:
-- doc all recent changes
 
 volunteer rota 
 - clean up button mapping
@@ -33,7 +31,7 @@ Before Cadet week
 - massive warning if unique key creators missing from field mappings
 
 # Recent
-- configure visible events in group allocation #69
+- configure visible events in group allocation 
 - club boat limits general configuration 
 - sort order refresh without clicking triangle
 - fixed sticky problem with session state by adding redirect 

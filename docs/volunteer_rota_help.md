@@ -265,7 +265,7 @@ You can also click on the name of each day at the top of the main volunteer tabl
 
 ## Filters
 
-You can filter eithier by skill, or by availability/allocation, or both.
+You can filter either by skill, or by availability/allocation, or both.
 
 ### Skills filtering
 

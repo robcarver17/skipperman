@@ -26,7 +26,7 @@ From the left, the columns in the sailors table are:
 
 - A button with the sailors name, DOB and membership status on. Click to [see more details about a sailor](#see-more-information-about-a-sailor).
 - Some checkboxes to set the [sailors availability at the event](#changing-sailor-availability)
-- The groups they were at for the previous three events in the Skipperman data. 
+- The groups they were at for the previous three events in the Skipperman data, which [can be changed](#changing-the-previous-events-that-are-shown). 
 - Relevant information for allocating their group which has been entered in the registration form. This will depend on what is in the registration form, and the [field mappings](WA_field_mapping_help.md) used to import the data.
 - The highest qualification that the Cadet has achieved.
 - A notes field - enter any relevant information about the sailor that will be a useful aide memoire. Do not use for health information (that is on the [registration editing page](registration_editing_help.md))
@@ -62,6 +62,13 @@ The following are not recommended for use, but are kept for backwards compatibil
 - Highest qualification (We advise this isn't used as it's better to use the Skipperman qualification record)
 - Preferred group (We advise this isn't used, since we should allocate groups, not parents; only use if there is a choice of group eg Cadet Adventure)
 
+## Changing the previous events that are shown
+
+Skipperman defaults to showing the previous 3 events that were held to help choose groups, however at various times of the year this might not be helpful. You can change the groups shown by clicking on the ►Select previous events to show above the sailors table.
+
+Click the events you want to show; this can be as few or as many as you like (although obviously you need at least one event, and if you include too many the table will be become unwieldy.).
+
+Then click on `Save changes to event selection` or `Use default (last 3 events)`.
 
 # Allocating groups, club boats and boat classes; and editing sail numbers.
 
@@ -81,6 +88,7 @@ You need to allocate sailors to training or racing groups, depending on the even
 Choose the appropriate group from the dropdown, bearing in mind the sailors qualification levels and the boat they are likely to sail. If neccesary consult the SI and / or relevant instructors.
 
 If you can't see the group you want, you need to visit the [configuration pages](configuration_help.md#sailing-groups) as the group may be hidden or need to be added.
+
 
 ## Allocate club boat
 
@@ -180,11 +188,17 @@ Click on the sailors name again, or on anyone elses nam, and the additional info
 
 # Changing the sort order
 
-It can sometimes be helpful to sort the sailors table in different ways. Click the ►Sort order at the top of the page. You will see a list of sortable fields, in order of priority. Use the up and down buttons to change the sort order. Unfortunately, for now, you have to reopen the sort order list every time the page refreshes.
+It can sometimes be helpful to sort the sailors table in different ways. Click the `Change sort order` button. You can move the various categories up and down, and then click `Back` to return to the allocation screen.
 
 # Seeing a summary
 
-If you want to see a summary of how many sailors you have put in each group, or how many club boats there are allocated, or how much of each boat class is sailing; then click on ►Summary.
+If you want to see a summary of how many sailors you have put in each group, or how many club boats there are allocated, or how much of each boat class is sailing; then click on the appropriate ► at the top of the page.
+
+## Seeing how many club boats are allocated, and if you have any left 
+
+If you click on ►Club boats, you will see a table of how many club boat spaces have been allocated for each day (note these are the number of *sailors* allocated to club boats, not the number of boats). In the far right column is the number of boat spaces available for this event. These are populated by default with values that can be changed in the [configuration](configuration_help.md#club-dinghies). You can change these values just for this event by modifying the numbers and hitting `Update club boat limits for event`.
+
+If there are more sailors allocated to a club boat on a given day than there are spaces left, you will see a * in that column for the appropriate day.
 
 # Changing sailor availability
 

@@ -89,6 +89,10 @@ def save_event_selection_from_form(interface: abstractInterface):
 def save_event_selection_from_form_if_saved_button_pressed(interface: abstractInterface):
     picklist = get_list_of_events(interface.object_store)
     event_names_chosen = interface.value_of_multiple_options_from_form(event_selection_form_value)
+    if len(event_names_chosen)==0:
+        interface.log_error("Need to select at least one previous event to show. Defaulting to last %d events" % DEFAULT_EVENT_COUNT)
+        clear_prior_event_selection_in_state(interface)
+        return
 
     new_list_of_ids = []
     for event in picklist:

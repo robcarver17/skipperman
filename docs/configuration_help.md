@@ -32,6 +32,8 @@ Some points about editing:
 
 These are the boats that sailors can borrow if they don't have their own. They can be hidden from view if a type of boat is no longer used. You don't need to list each boat individually; just the types of boat.
 
+You can also edit the number of spaces available for each dinghy. For singlehanders this will be the number of club boats, for doublehanders twice the number of club boats, and so on. The values here are defaults and can be changed for a given event on the [group allocation page](group_allocation_help.md#seeing-how-many-club-boats-are-allocated-and-if-you-have-any-left-); if for example one or more club boats is out of action.
+
 # Patrol boats
 
 These are the power boats used for rescuing. The ordering will be used when we allocate volunteers to boats, and in reports. It's recommended that you use the following order:

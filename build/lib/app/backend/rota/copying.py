@@ -1,3 +1,5 @@
+from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
+    get_dict_of_volunteers_with_roles_and_groups_at_event
 from app.objects.volunteers import Volunteer
 
 from app.data_access.store.object_store import ObjectStore
@@ -5,14 +7,8 @@ from app.data_access.store.object_store import ObjectStore
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 
-from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
-    update_dict_of_volunteers_with_roles_and_groups_at_event,
-)
 
-from app.backend.registration_data.volunteer_registration_data import (
-    get_dict_of_registration_data_for_volunteers_at_event,
-)
-
+from app.backend.volunteers.volunteers_at_event import get_dict_of_all_event_data_for_volunteers, update_dict_of_all_event_data_for_volunteers
 
 def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
     object_store: ObjectStore,
@@ -21,23 +17,16 @@ def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
     day: Day,
     allow_replacement: bool = True,
 ):
-    dict_of_volunteers_with_roles_and_groups_at_event = (
-        get_dict_of_volunteers_with_roles_and_groups_at_event(
-            object_store=object_store, event=event
-        )
-    )
-    registration_data_for_volunteers_at_event = (
-        get_dict_of_registration_data_for_volunteers_at_event(
-            object_store=object_store, event=event
-        )
-    )
+    all_event_data = get_dict_of_all_event_data_for_volunteers(object_store=object_store, event=event)
+    registration_data_for_volunteers_at_event = all_event_data.dict_of_registration_data_for_volunteers_at_event
+
     availability_for_volunteer = (
         registration_data_for_volunteers_at_event.get_data_for_volunteer(
             volunteer
         ).availablity
     )
     try:
-        dict_of_volunteers_with_roles_and_groups_at_event.copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
+        all_event_data.copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
             volunteer=volunteer,
             day=day,
             available_days=availability_for_volunteer,
@@ -49,10 +38,7 @@ def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
             % (volunteer.name, day.name, str(e))
         )
 
-    update_dict_of_volunteers_with_roles_and_groups_at_event(
-        object_store=object_store,
-        dict_of_volunteers_with_roles_and_groups_at_event=dict_of_volunteers_with_roles_and_groups_at_event,
-    )
+    update_dict_of_all_event_data_for_volunteers(object_store=object_store, dict_of_all_event_data=all_event_data)
 
 
 def copy_earliest_valid_role_and_overwrite_for_volunteer(
@@ -84,7 +70,6 @@ def copy_earliest_valid_role_to_all_empty_for_volunteer(
     valid_day = get_day_with_earliest_valid_role_and_group_for_volunteer_or_none(
         object_store=object_store, event=event, volunteer=volunteer
     )
-    name = volunteer.name
     if valid_day is None:
         return
 
@@ -96,10 +81,6 @@ def copy_earliest_valid_role_to_all_empty_for_volunteer(
         allow_replacement=False,
     )
 
-
-from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
-    get_dict_of_volunteers_with_roles_and_groups_at_event,
-)
 
 
 def get_day_with_earliest_valid_role_and_group_for_volunteer_or_none(

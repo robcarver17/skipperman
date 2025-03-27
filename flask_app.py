@@ -150,24 +150,23 @@ def logout():
     return process_logout()
 
 
-MAIN_MENU_REDIRECT = "/%s/%s" % (ACTION_PREFIX, MAIN_MENU_URL)
-
 @app.route("/%s/<action_option>" % ACTION_PREFIX, methods=["GET", "POST"])
+@login_required
 def action(action_option):
     if not authenticated_user():
         ## belt and braces on security
         print("USER NOT LOGGED IN")
         return generate_menu_page_html()
-    if action_option == MAIN_MENU_URL:
-        clear_all_action_state_data_from_session()
-        return generate_menu_page_html()
     else:
         return generate_action_page_html(action_option)
 
 
-@app.route(INDEX_URL)
-def home():
-    return redirect(MAIN_MENU_REDIRECT)
+
+@app.route(MAIN_MENU_URL, methods=["GET", "POST"])
+def main_menu():
+    clear_all_action_state_data_from_session()
+    return generate_menu_page_html()
+
 
 
 @app.route("/%s/<help_page_name>" % HELP_PREFIX, methods=["GET", "POST"])
@@ -186,6 +185,11 @@ def generic_web_error(e):
 def generic_missing_page_error(e):
     flash_error("Missing page error (%s) contact support: %s " % (str(e), SUPPORT_EMAIL))
     return generate_menu_page_html()
+
+## We do this otherwise the index url gets randomly called and changes state
+@app.route(INDEX_URL)
+def home():
+    return redirect(MAIN_MENU_URL)
 
 
 if __name__ == "__main__":

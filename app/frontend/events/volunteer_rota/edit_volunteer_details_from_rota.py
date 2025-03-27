@@ -1,3 +1,5 @@
+from typing import List
+
 from app.objects.volunteers import Volunteer
 
 from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
@@ -25,27 +27,7 @@ from app.objects.day_selectors import no_days_selected_from_available_days
 from app.objects.events import Event
 
 
-def get_volunteer_history_and_attendace_checkbox_for_selected_volunteer(interface: abstractInterface, event: Event, volunteer: Volunteer) -> list:
-    past_roles = get_text_of_last_roles(
-        interface=interface, event=event, volunteer=volunteer
-    )
-    available_checkbox = Line(
-        [
-            get_availability_checkbox_for_volunteer_at_event(
-                interface=interface, event=event, volunteer=volunteer
-            )
-        ]
-    )
-
-
-    return ListOfLines([past_roles, _______________, available_checkbox
-        ])
-
-
-
-def get_text_of_last_roles(
-    interface: abstractInterface, event: Event, volunteer: Volunteer
-) -> Line:
+def get_volunteer_history_for_selected_volunteer(interface: abstractInterface, event: Event, volunteer: Volunteer) -> str:
     all_roles_as_dict = (
         get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(
             object_store=interface.object_store, volunteer=volunteer, avoid_event=event
@@ -55,10 +37,11 @@ def get_text_of_last_roles(
         "%s: %s" % (str(event), role) for event, role in all_roles_as_dict.items()
     ]
 
-    text = ", ".join(text_as_list)
-    text = "Previous roles: " + text
+    if len(text_as_list)==0:
+        return "Not volunteered before"
 
-    return Line([text])
+    return "Previous roles: %s" % ", ".join(text_as_list)
+
 
 
 def get_availability_checkbox_for_volunteer_at_event(

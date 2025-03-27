@@ -107,9 +107,13 @@ To change someone's role or group, simply click on the down arrow next to the ro
 
 ## Removing roles and groups
 
-You can remove a role from someone by clicking on the &#174; symbol or choosing the 'No role allocated' from the role dropdown and pressing save.
+You can remove a role from someone on a specific day by clicking on the &#174; symbol or choosing the 'No role allocated' from the role dropdown and pressing save. This will also remove any group they are attached to.
 
-You can remove a group from someone by choosing the 'Unallocated' option from the group dropdown menu and clicking save.
+You can remove all roles someone has by clicking on the &#174; symbol under their name in the first column.
+
+You can remove a group from someone on a specific day by choosing the 'Unallocated' option from the group dropdown menu and clicking save. This won't remove their role
+
+
 
 # Adding, removing and changing volunteer availability
 
@@ -119,8 +123,6 @@ Volunteers can choose which days they are available on registration. Sometimes t
 
 To make someone available on a given day, just click the 'Make available' button in the appropriate column.
 To make someone unavailable on a given day, click on the umbrella button in the appropriate column (because it's a 'rain check' - get it?), or choosing the `UNAVAILABLE` option in the role drop down.
-
-You can also change availability by clicking on a volunteers name, changing the day selection ticks, and clicking on the volunteers name button again. 
 
 Note: if you want to remove a volunteer completely, you should do this by [clicking on the umbrella under their name in the first column](#removing-a-volunteer-from-an-event) rather than making them unavailable on all days - Skipperman won't let you make someone unavailable on every day of an event.
 

@@ -4,16 +4,17 @@
 Before first training:
 
 volunteer rota 
-- clean up button mapping
 - speed up display of large tables #67
 
 patrol boats
 - clean up button mapping (put in change log)
-- speed up display of large tables #67 (put in change log)
+- speed up display of large tables, use all event dict and prop up#67 (put in change log)
+
+group allocation and cadets generally
+- assume same prop up  / down logic as in volunteers
 
 - produce QR code from report page itself
 - more elegant handling of manual reg #64
-- add inactive cadets to group page with option to change status #42
 - merge cadet, merge volunteer #15
 - delete empty event, empty cadet, empty volunteer #26
 - edit event name #16 (don't allow days to be changed - delete instead)
@@ -31,6 +32,7 @@ Before Cadet week
 - massive warning if unique key creators missing from field mappings
 
 # Recent
+- clicking on volunteer does not show availability checkboxes; add remove role across days button
 - configure visible events in group allocation 
 - club boat limits general configuration 
 - sort order refresh without clicking triangle

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, List
 
 from app.objects.events import Event, ListOfEvents
 from app.objects.exceptions import MissingData, arg_not_passed
@@ -59,6 +59,27 @@ class DictOfRegistrationDataForVolunteerAtEvent(
         super().__init__(raw_dict)
         self._event = event
         self._list_of_volunteers_at_event_with_id = list_of_volunteers_at_event_with_id
+
+    def add_new_volunteer(self,
+                          volunteer: Volunteer,
+                        registration_data: RegistrationDataForVolunteerAtEvent
+                          ):
+
+        volunteer_at_event_with_id = VolunteerAtEventWithId(
+            volunteer_id=volunteer.id,
+            availablity=registration_data.availablity,
+            list_of_associated_cadet_id=registration_data.list_of_associated_cadets.list_of_ids,
+            any_other_information=registration_data.any_other_information,
+            notes=registration_data.notes,
+            preferred_duties=registration_data.preferred_duties,
+            same_or_different=registration_data.same_or_different
+        )
+        self.list_of_volunteers_at_event_with_id.add_new_volunteer(
+            volunteer_at_event_with_id
+        )
+
+        self[volunteer] = registration_data
+
 
     def update_volunteer_notes_at_event(self, volunteer: Volunteer, new_notes: str):
         volunteer_data = self.get_data_for_volunteer(volunteer)

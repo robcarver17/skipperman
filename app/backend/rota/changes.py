@@ -4,14 +4,6 @@ from app.backend.volunteers.volunteers_at_event import (
     get_dict_of_all_event_data_for_volunteers,
     update_dict_of_all_event_data_for_volunteers,
 )
-from app.backend.registration_data.volunteer_registration_data import (
-    get_dict_of_registration_data_for_volunteers_at_event,
-    update_dict_of_registration_data_for_volunteers_at_event,
-)
-from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
-    get_dict_of_volunteers_with_roles_and_groups_at_event,
-    update_dict_of_volunteers_with_roles_and_groups_at_event,
-)
 from app.data_access.store.object_store import ObjectStore
 from app.objects.composed.volunteer_roles import RoleWithSkills
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
@@ -75,13 +67,11 @@ def swap_roles_and_groups_for_volunteers_in_allocation(
     volunteer_to_swap_with: Volunteer,
 ):
 
-    dict_of_volunteers_with_roles_and_groups_at_event = (
-        get_dict_of_volunteers_with_roles_and_groups_at_event(
-            object_store=object_store, event=event
-        )
+    dict_of_volunteers_at_event = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
     )
     try:
-        dict_of_volunteers_with_roles_and_groups_at_event.swap_roles_and_groups_for_volunteers_in_allocation(
+        dict_of_volunteers_at_event.swap_roles_and_groups_for_volunteers_in_allocation(
             original_volunteer=original_volunteer,
             volunteer_to_swap_with=volunteer_to_swap_with,
             original_day=original_day,
@@ -99,23 +89,20 @@ def swap_roles_and_groups_for_volunteers_in_allocation(
             )
         )
 
-    update_dict_of_volunteers_with_roles_and_groups_at_event(
-        object_store=object_store,
-        dict_of_volunteers_with_roles_and_groups_at_event=dict_of_volunteers_with_roles_and_groups_at_event,
+    update_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, dict_of_all_event_data=dict_of_volunteers_at_event
     )
 
 
 def update_volunteer_notes_at_event(
     object_store: ObjectStore, event: Event, volunteer: Volunteer, new_notes: str
 ):
-    registration_data = get_dict_of_registration_data_for_volunteers_at_event(
-        event=event, object_store=object_store
+    dict_of_volunteers_at_event = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
     )
-    registration_data.update_volunteer_notes_at_event(volunteer, new_notes=new_notes)
-    update_dict_of_registration_data_for_volunteers_at_event(
-        object_store=object_store,
-        event=event,
-        dict_of_registration_data=registration_data,
+    dict_of_volunteers_at_event.update_volunteer_notes_at_event(volunteer, new_notes=new_notes)
+    update_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, dict_of_all_event_data=dict_of_volunteers_at_event
     )
 
 
@@ -152,24 +139,21 @@ def update_role_at_event_for_volunteer_on_day_if_switching_roles(
     day: Day,
     new_role: RoleWithSkills,
 ):
-    dict_of_volunteers_with_roles_and_groups_at_event = (
-        get_dict_of_volunteers_with_roles_and_groups_at_event(
-            object_store=object_store, event=event
-        )
+    dict_of_volunteers_at_event = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
     )
-    try:
-        dict_of_volunteers_with_roles_and_groups_at_event.update_role_at_event_for_volunteer_on_day_if_switching_roles(
-            volunteer=volunteer, day=day, new_role=new_role
-        )
-    except Exception as e:
-        print(
-            "Can't modify role for volunteer to %s to %s, error %s, conflicting change made?"
-            % (volunteer.name, new_role.name, str(e))
-        )
+    #try:
+    dict_of_volunteers_at_event.update_role_at_event_for_volunteer_on_day_if_switching_roles(
+        volunteer=volunteer, day=day, new_role=new_role
+    )
+    #except Exception as e:
+    #    print(
+    #        "Can't modify role for volunteer to %s to %s, error %s, conflicting change made?"
+    #        % (volunteer.name, new_role.name, str(e))
+    #    )
 
-    update_dict_of_volunteers_with_roles_and_groups_at_event(
-        object_store=object_store,
-        dict_of_volunteers_with_roles_and_groups_at_event=dict_of_volunteers_with_roles_and_groups_at_event,
+    update_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, dict_of_all_event_data=dict_of_volunteers_at_event
     )
 
 
@@ -180,22 +164,19 @@ def update_group_at_event_for_volunteer_on_day(
     day: Day,
     new_group: Group,
 ):
-    dict_of_volunteers_with_roles_and_groups_at_event = (
-        get_dict_of_volunteers_with_roles_and_groups_at_event(
-            object_store=object_store, event=event
-        )
+    dict_of_volunteers_at_event = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
     )
-    try:
-        dict_of_volunteers_with_roles_and_groups_at_event.update_group_at_event_for_volunteer_on_day(
-            volunteer=volunteer, day=day, new_group=new_group
-        )
-    except Exception as e:
-        print(
-            "Can't modify group for volunteer to %s to %s, error %s, conflicting change made?"
-            % (volunteer.name, new_group.name, str(e))
-        )
+    #try:
+    dict_of_volunteers_at_event.update_group_at_event_for_volunteer_on_day(
+        volunteer=volunteer, day=day, new_group=new_group
+    )
+    #except Exception as e:
+    #    print(
+    #        "Can't modify group for volunteer to %s to %s, error %s, conflicting change made?"
+    #        % (volunteer.name, new_group.name, str(e))
+    #    )
 
-    update_dict_of_volunteers_with_roles_and_groups_at_event(
-        object_store=object_store,
-        dict_of_volunteers_with_roles_and_groups_at_event=dict_of_volunteers_with_roles_and_groups_at_event,
+    update_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, dict_of_all_event_data=dict_of_volunteers_at_event
     )

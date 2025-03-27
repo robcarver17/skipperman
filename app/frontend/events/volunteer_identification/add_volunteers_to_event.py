@@ -19,7 +19,7 @@ from app.backend.registration_data.cadet_and_volunteer_connections_at_event impo
     get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer,
 )
 from app.backend.volunteers.volunteers_at_event import (
-    get_volunteer_at_event_from_list_of_relevant_information_with_no_conflicts,
+    get_volunteer_registration_data_from_list_of_relevant_information_with_no_conflicts,
     add_volunteer_at_event,
 )
 from app.backend.registration_data.volunteer_registration_data import (
@@ -153,10 +153,9 @@ def process_new_volunteer_at_event_with_active_cadets_and_where_no_manual_interv
     list_of_associated_cadets = get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer(
         object_store=interface.object_store, volunteer=volunteer, event=event
     )
-    volunteer_at_event = (
-        get_volunteer_at_event_from_list_of_relevant_information_with_no_conflicts(
+    registration_data = (
+        get_volunteer_registration_data_from_list_of_relevant_information_with_no_conflicts(
             list_of_relevant_information=list_of_relevant_information,
-            volunteer=volunteer,
             list_of_associated_cadets=list_of_associated_cadets,
         )
     )
@@ -164,7 +163,8 @@ def process_new_volunteer_at_event_with_active_cadets_and_where_no_manual_interv
     add_volunteer_at_event(
         object_store=interface.object_store,
         event=event,
-        volunteer_at_event=volunteer_at_event,
+        volunteer=volunteer,
+        registration_data=registration_data
     )
     update_cadet_connections_when_volunteer_already_at_event(
         object_store=interface.object_store, event=event, volunteer=volunteer

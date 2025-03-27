@@ -375,6 +375,7 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
     def update_group_at_event_for_volunteer_on_day(
         self, volunteer: Volunteer, day: Day, new_group: Group
     ):
+
         roles_for_volunteer = self.days_and_roles_for_volunteer(volunteer)
         roles_for_volunteer.update_group_on_day(day=day, new_group=new_group)
         self.list_of_volunteers_with_id_in_role_at_event.update_volunteer_in_group_on_day(
@@ -422,7 +423,6 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
     def update_role_at_event_for_volunteer_on_day_if_switching_roles(
         self, volunteer: Volunteer, day: Day, new_role: RoleWithSkills
     ):
-
         roles_for_volunteer = self.days_and_roles_for_volunteer(volunteer)
         roles_for_volunteer.update_role_on_day(day=day, new_role=new_role)
 

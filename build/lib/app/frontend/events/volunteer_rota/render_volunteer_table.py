@@ -1,6 +1,12 @@
 from typing import List
 
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets
+from app.frontend.events.volunteer_rota.edit_volunteer_details_from_rota import \
+    get_volunteer_history_for_selected_volunteer
+from app.frontend.shared.buttons import get_button_value_for_volunteer_selection
+from app.frontend.shared.events_state import get_event_from_state
+from app.frontend.shared.volunteer_state import is_volunteer_id_set_in_state, get_volunteer_from_state
+from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer, \
     DictOfAllEventDataForVolunteers
@@ -17,13 +23,13 @@ from app.frontend.events.volunteer_rota.rota_allocation_inputs import (
 from app.frontend.events.volunteer_rota.volunteer_table_buttons import (
     get_location_button,
     get_skills_button,
-    get_buttons_for_days_at_event,
-    copy_previous_role_button_or_blank,
-    get_volunteer_name_cell,
+    copy_previous_role_button_or_blank, get_make_unavailable_button_for_volunteer_across_days,
+    get_remove_role_button_for_volunteer_across_days,
 )
+from app.frontend.events.volunteer_rota.volunteer_rota_buttons import get_buttons_for_days_at_event
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import (
-    make_long_thing_detail_box,
+    make_long_thing_detail_box, ListOfLines, Line,
 )
 
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
@@ -114,7 +120,6 @@ dict_of_all_cadet_event_data: DictOfAllEventInfoForCadets,
         volunteer=volunteer,
         volunteer_data_at_event=volunteer_data_at_event,
         dict_of_all_cadet_event_data=dict_of_all_cadet_event_data,
-        ready_to_swap=ready_to_swap,
     )
 
     day_inputs = get_allocation_inputs_for_volunteer(
@@ -135,28 +140,26 @@ def get_first_part_of_row_for_volunteer_at_event(
     volunteer: Volunteer,
     volunteer_data_at_event: AllEventDataForVolunteer,
 dict_of_all_cadet_event_data: DictOfAllEventInfoForCadets,
-    ready_to_swap: bool,
 ) -> list:
     name_button = get_volunteer_name_cell(
         interface = interface,
-        volunteer=volunteer, ready_to_swap=ready_to_swap
+        volunteer=volunteer
     )
     location = get_location_button(
+        interface=interface,
         dict_of_all_cadet_event_data=dict_of_all_cadet_event_data,
-        ready_to_swap=ready_to_swap,
         volunteer_data_at_event=volunteer_data_at_event,
     )
 
     preferred = volunteer_data_at_event.registration_data.preferred_duties
     same_different = volunteer_data_at_event.registration_data.same_or_different
     skills_button = get_skills_button(
+        interface=interface,
         volunteer_data_at_event=volunteer_data_at_event,
-        ready_to_swap=ready_to_swap,
     )
     previous_role_copy_button = copy_previous_role_button_or_blank(
-        object_store=interface.object_store,
+        interface=interface,
         volunteer_data_at_event=volunteer_data_at_event,
-        ready_to_swap=ready_to_swap,
     )
 
     return [
@@ -168,6 +171,33 @@ dict_of_all_cadet_event_data: DictOfAllEventInfoForCadets,
         previous_role_copy_button,
     ]
 
+
+def get_volunteer_name_cell(interface: abstractInterface, volunteer: Volunteer) -> ListOfLines:
+    ready_to_swap = is_ready_to_swap(interface)
+
+    if ready_to_swap:
+        return ListOfLines([volunteer.name])
+
+    volunteer_button = Button(label=volunteer.name, value=get_button_value_for_volunteer_selection(volunteer))
+    other_material = get_volunteer_other_material(interface=interface, volunteer=volunteer)
+    raincheck_button= get_make_unavailable_button_for_volunteer_across_days(volunteer)
+    remove_role_button = get_remove_role_button_for_volunteer_across_days(volunteer)
+    line_of_buttons = Line([raincheck_button, remove_role_button])
+
+    return ListOfLines([
+        volunteer_button,
+        other_material,
+        line_of_buttons]).add_Lines()
+
+
+def get_volunteer_other_material(interface: abstractInterface, volunteer: Volunteer) -> str:
+    if is_volunteer_id_set_in_state(interface):
+        volunteer_in_state = get_volunteer_from_state(interface)
+        if volunteer_in_state == volunteer:
+            event = get_event_from_state(interface)
+            return get_volunteer_history_for_selected_volunteer(interface=interface, volunteer=volunteer, event=event)
+
+    return ""
 
 def get_last_part_of_row_for_volunteer_at_event(
     volunteer_data_at_event: AllEventDataForVolunteer, ready_to_swap: bool = False
@@ -196,3 +226,5 @@ def input_name_for_notes_and_volunteer(
     volunteer: Volunteer,
 ) -> str:
     return "NOTES_%s" % volunteer.id
+
+

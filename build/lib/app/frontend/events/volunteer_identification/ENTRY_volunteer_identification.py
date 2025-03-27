@@ -34,7 +34,7 @@ from app.objects.abstract_objects.abstract_interface import (
 )
 from app.objects.cadets import Cadet
 
-from app.objects.exceptions import NoMoreData, arg_not_passed, MissingData, missing_data
+from app.objects.exceptions import NoMoreData, arg_not_passed,  missing_data
 from app.objects.relevant_information_for_volunteers import (
     missing_relevant_information,
 )
@@ -98,7 +98,6 @@ def is_cadet_marked_as_test_cadet_to_skip_in_for_current_row_in_mapped_data(
 
 def next_volunteer_in_current_row(interface: abstractInterface) -> Union[Form, NewForm]:
     try:
-        print("next volunteer index")
         get_and_save_next_volunteer_index(interface)
     except NoMoreData:
         clear_volunteer_index(interface)
@@ -137,13 +136,11 @@ def add_specific_volunteer_at_event(
 def add_passed_volunteer_at_event(
     interface: abstractInterface, volunteer: Volunteer
 ) -> Union[Form, NewForm]:
-    try:
-        matched_volunteer_with_id = get_volunteer_with_matching_name(
-            object_store=interface.object_store, volunteer=volunteer
-        )
-        if matched_volunteer_with_id is missing_data:
-            raise
-    except MissingData:
+    matched_volunteer_with_id = get_volunteer_with_matching_name(
+        object_store=interface.object_store, volunteer=volunteer,
+        default=missing_data
+    )
+    if matched_volunteer_with_id is missing_data:
         print("Volunteer %s not matched going to form to identify" % str(volunteer))
         return display_volunteer_selection_form(
             interface=interface, volunteer=volunteer

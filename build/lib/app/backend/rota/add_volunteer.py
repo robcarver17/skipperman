@@ -1,3 +1,5 @@
+from app.objects.cadets import ListOfCadets
+from app.objects.composed.volunteers_at_event_with_registration_data import RegistrationDataForVolunteerAtEvent
 from app.objects.volunteer_at_event_with_id import VolunteerAtEventWithId
 
 from app.objects.utils import in_x_not_in_y
@@ -43,13 +45,12 @@ def add_volunteer_to_event_with_full_availability(
         event.day_selector_for_days_in_event()
     )  ## assume available all days in event
 
-    volunteer_at_event_with_id = VolunteerAtEventWithId(
-        volunteer_id=volunteer.id,
-        availablity=availability,
-        list_of_associated_cadet_id=[],
-    )
+    registration_data = RegistrationDataForVolunteerAtEvent(availablity=availability,
+                                                            list_of_associated_cadets=ListOfCadets([]))
+
     add_volunteer_at_event(
         object_store=object_store,
-        volunteer_at_event=volunteer_at_event_with_id,
         event=event,
+        volunteer=volunteer,
+        registration_data=registration_data
     )

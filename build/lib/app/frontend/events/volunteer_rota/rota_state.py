@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Union
 
 from app.backend.rota.sorting_and_filtering import RotaSortsAndFilters, FILTER_ALL
@@ -44,24 +45,27 @@ def save_availablity_filter_to_state(
 ):
     interface.set_persistent_value(AVAILABILTY_FILTER, availability_filter_dict)
 
+@dataclass
+class SortParameters:
+    sort_by_volunteer_name: str = arg_not_passed
+    sort_by_day: Day = arg_not_passed
+    sort_by_location: bool = False
 
 def save_sorts_to_state(
     interface: abstractInterface,
-    sort_by_volunteer_name: str = arg_not_passed,
-    sort_by_day: Day = arg_not_passed,
-    sort_by_location: bool = False,
+    sort_parameters: SortParameters
 ):
-    if sort_by_volunteer_name is not arg_not_passed:
-        interface.set_persistent_value(SORT_BY_VOLUNTEER_NAME, sort_by_volunteer_name)
+    if sort_parameters.sort_by_volunteer_name is not arg_not_passed:
+        interface.set_persistent_value(SORT_BY_VOLUNTEER_NAME, sort_parameters.sort_by_volunteer_name)
     else:
         interface.clear_persistent_value(SORT_BY_VOLUNTEER_NAME)
 
-    if sort_by_day is not arg_not_passed:
-        interface.set_persistent_value(SORT_BY_DAY, sort_by_day.name)
+    if sort_parameters.sort_by_day is not arg_not_passed:
+        interface.set_persistent_value(SORT_BY_DAY, sort_parameters.sort_by_day.name)
     else:
         interface.clear_persistent_value(SORT_BY_DAY)
 
-    if sort_by_location:
+    if sort_parameters.sort_by_location:
         interface.set_persistent_value(SORT_BY_CADET_LOCATION, True)
     else:
         interface.clear_persistent_value(SORT_BY_CADET_LOCATION)

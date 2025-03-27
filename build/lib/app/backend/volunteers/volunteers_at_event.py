@@ -1,8 +1,11 @@
+from typing import List
+
 from app.backend.registration_data.volunteer_registration_data import (
     get_dict_of_registration_data_for_volunteers_at_event,
     update_dict_of_registration_data_for_volunteers_at_event,
 )
 from app.objects.cadets import ListOfCadets
+from app.objects.composed.volunteers_at_event_with_registration_data import RegistrationDataForVolunteerAtEvent
 
 from app.objects.day_selectors import DaySelector, Day
 from app.objects.relevant_information_for_volunteers import (
@@ -30,38 +33,16 @@ from app.data_access.store.object_definitions import (
 def add_volunteer_at_event(
     object_store: ObjectStore,
     event: Event,
-    volunteer_at_event: VolunteerAtEventWithId,
+    volunteer: Volunteer,
+    registration_data: RegistrationDataForVolunteerAtEvent
+
 ):
-    list_of_volunteers_at_event = get_list_of_volunteers_with_ids_at_event(
-        object_store=object_store, event=event
-    )
-    list_of_volunteers_at_event.add_new_volunteer(volunteer_at_event)
-    update_list_of_volunteers_with_ids_at_event(
-        object_store=object_store,
-        event=event,
-        list_of_volunteers_at_event_with_id=list_of_volunteers_at_event,
-    )
+    all_event_data = get_dict_of_all_event_data_for_volunteers(object_store=object_store, event=event)
+    all_event_data.add_new_volunteer(volunteer=volunteer,
+                                     registration_data=registration_data)
+    update_dict_of_all_event_data_for_volunteers(object_store=object_store, dict_of_all_event_data=all_event_data)
 
 
-def get_list_of_volunteers_with_ids_at_event(
-    object_store: ObjectStore, event: Event
-) -> ListOfVolunteersAtEventWithId:
-    return object_store.get(
-        object_definition=object_definition_for_list_of_volunteers_with_ids_at_event,
-        event_id=event.id,
-    )
-
-
-def update_list_of_volunteers_with_ids_at_event(
-    object_store: ObjectStore,
-    event: Event,
-    list_of_volunteers_at_event_with_id: ListOfVolunteersAtEventWithId,
-):
-    object_store.update(
-        new_object=list_of_volunteers_at_event_with_id,
-        object_definition=object_definition_for_list_of_volunteers_with_ids_at_event,
-        event_id=event.id,
-    )
 
 
 def get_dict_of_all_event_data_for_volunteers(
@@ -83,18 +64,16 @@ def update_dict_of_all_event_data_for_volunteers(
     )
 
 
-def get_volunteer_at_event_from_list_of_relevant_information_with_no_conflicts(
+def get_volunteer_registration_data_from_list_of_relevant_information_with_no_conflicts(
     list_of_relevant_information: ListOfRelevantInformationForVolunteer,
-    volunteer: Volunteer,
     list_of_associated_cadets: ListOfCadets,
-) -> VolunteerAtEventWithId:
+) -> RegistrationDataForVolunteerAtEvent:
     first_relevant_information = list_of_relevant_information[
         0
     ]  ## can use first as all the same - checked
-    return VolunteerAtEventWithId(
-        volunteer_id=volunteer.id,
+    return RegistrationDataForVolunteerAtEvent(
         availablity=first_relevant_information.availability.volunteer_availablity,
-        list_of_associated_cadet_id=list_of_associated_cadets.list_of_ids,
+        list_of_associated_cadets=list_of_associated_cadets,
         preferred_duties=first_relevant_information.availability.preferred_duties,
         same_or_different=first_relevant_information.availability.same_or_different,
         any_other_information=get_any_other_information_joint_string(
@@ -157,18 +136,9 @@ def update_volunteer_availability_at_event(
 def make_volunteer_available_on_day(
     object_store: ObjectStore, volunteer: Volunteer, event: Event, day: Day
 ):
-    volunteer_registration_data = get_dict_of_registration_data_for_volunteers_at_event(
-        event=event, object_store=object_store
-    )
-    volunteer_registration_data.make_volunteer_available_on_day(
-        day=day, volunteer=volunteer
-    )
-    update_dict_of_registration_data_for_volunteers_at_event(
-        object_store=object_store,
-        event=event,
-        dict_of_registration_data=volunteer_registration_data,
-    )
-
+    dict_of_volunteer_data = get_dict_of_all_event_data_for_volunteers(object_store=object_store, event=event)
+    dict_of_volunteer_data.make_volunteer_available_on_day(day=day, volunteer=volunteer)
+    update_dict_of_all_event_data_for_volunteers(object_store=object_store, dict_of_all_event_data=dict_of_volunteer_data)
 
 def make_volunteer_unavailable_on_day(
     object_store: ObjectStore, volunteer: Volunteer, event: Event, day: Day

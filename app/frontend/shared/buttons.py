@@ -1,10 +1,10 @@
 from typing import List
 
 from app.backend.cadets.list_of_cadets import get_cadet_from_id
-from app.backend.events.list_of_events import all_sort_types_for_event_list, get_event_from_id
+from app.backend.events.list_of_events import get_event_from_id
 from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
 from app.data_access.store.object_store import ObjectStore
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, cancel_menu_button, Button
+from app.objects.abstract_objects.abstract_buttons import ButtonBar, cancel_menu_button
 from app.objects.cadets import Cadet
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -113,15 +113,14 @@ def is_button_of_type(value_of_button_pressed:str, type_to_check: str):
     type_of_button = type_and_attributes[0]
 
     types_match= type_of_button==type_to_check
-
     return types_match
 
-def get_attributes_from_button_pressed_of_known_type(value_of_button_pressed:str, type_to_check: str):
+def get_attributes_from_button_pressed_of_known_type(value_of_button_pressed:str, type_to_check: str, collapse_singleton=True):
     type_and_attributes = get_type_and_attributes_from_button_pressed(value_of_button_pressed)
     type_of_button = type_and_attributes.pop(0)
     if not type_of_button==type_to_check:
         raise Exception("%s not of type %s instead %s" % (value_of_button_pressed, type_to_check, type_of_button))
-    if len(type_and_attributes)==1:
+    if len(type_and_attributes)==1 and collapse_singleton:
         return type_and_attributes[0]
 
     return type_and_attributes

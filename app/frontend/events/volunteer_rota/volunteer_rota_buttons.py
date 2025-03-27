@@ -1,28 +1,18 @@
 from typing import List
 
+from app.backend.volunteers.list_of_volunteers import SORT_BY_SURNAME, SORT_BY_FIRSTNAME
 from app.data_access.configuration.fixed import ADD_KEYBOARD_SHORTCUT
+from app.frontend.events.volunteer_rota.button_values import last_button_was_copy_previous_role, \
+    last_button_pressed_was_copyover_button, last_button_pressed_was_copyfill_button
+from app.frontend.events.volunteer_rota.rota_state import SortParameters
 from app.frontend.forms.swaps import is_ready_to_swap
 
-from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.volunteer_rota.swapping import (
-    get_list_of_swap_buttons,
     cancel_swap_button,
 )
-from app.frontend.events.volunteer_rota.button_values import (
-    get_list_of_day_button_values,
-    get_list_of_make_available_button_values,
-    get_list_of_copy_overwrite_buttons_for_individual_volunteers,
-    get_list_of_copy_fill_buttons_for_individual_volunteers,
-    get_list_of_remove_role_buttons,
-    get_list_of_make_unavailable_on_specific_day_buttons,
-    list_of_all_copy_previous_roles_buttons,
-    get_dict_of_volunteer_name_buttons_and_volunteer_ids,
-    list_of_all_location_button_names,
-    list_of_all_skills_buttons, get_dict_of_volunteer_unavailable_name_buttons_and_volunteer_ids,
-)
-from app.frontend.volunteers.ENTRY_view_volunteers import (
-    all_sort_types as all_volunteer_name_sort_types,
-)
+from app.frontend.shared.buttons import is_button_sort_order, \
+     get_button_value_given_type_and_attributes, \
+    get_attributes_from_button_pressed_of_known_type
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
@@ -31,55 +21,12 @@ from app.objects.abstract_objects.abstract_buttons import (
     HelpButton,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_lines import Line
+from app.objects.day_selectors import Day
+from app.objects.events import Event
+from app.objects.exceptions import arg_not_passed
 
-
-def was_volunteer_name_sort_button_pressed(interface: abstractInterface):
-    all_buttons = get_volunteer_name_sort_buttons()
-
-    return any(
-        [button.pressed(interface.last_button_pressed()) for button in all_buttons]
-    )
-
-
-def get_all_volunteer_sort_buttons():
-    name_sort_buttons = get_volunteer_name_sort_buttons()
-
-    return [sort_by_cadet_location_button] + name_sort_buttons
-
-
-SORT_BY_CADET_LOCATION = "Sort by cadet location"
-sort_by_cadet_location_button = Button(SORT_BY_CADET_LOCATION, nav_button=True)
-
-
-def get_volunteer_name_sort_buttons() -> List[Button]:
-    return [
-        Button(sort_by, nav_button=True) for sort_by in all_volunteer_name_sort_types
-    ]
-
-
-APPLY_FILTER_BUTTON_LABEL = "Apply filters"
-CLEAR_FILTERS_BUTTON_LABEL = "Clear all filters"
-COPY_ALL_ROLES_FROM_FIRST_ROLE_BUTTON_LABEL = (
-    "Copy from earliest allocated role to fill empty roles"
-)
-COPY_AND_OVERWRITE_FROM__FIRST_ROLE_BUTTON_LABEL = (
-    "Copy from earliest allocated role to fill empty and overwrite existing roles"
-)
-ADD_NEW_VOLUNTEER_BUTTON_LABEL = "Add new volunteer to rota"
-apply_filter_button = Button(APPLY_FILTER_BUTTON_LABEL, nav_button=True)
-clear_filter_button = Button(CLEAR_FILTERS_BUTTON_LABEL, nav_button=True)
-add_volunteer_button = Button(
-    ADD_NEW_VOLUNTEER_BUTTON_LABEL, nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT
-)
-copy_all_roles_from_first_role_button = Button(
-    COPY_ALL_ROLES_FROM_FIRST_ROLE_BUTTON_LABEL, nav_button=True
-)
-copy_and_overwrite_all_roles_from_first_role_button = Button(
-    COPY_AND_OVERWRITE_FROM__FIRST_ROLE_BUTTON_LABEL, nav_button=True
-)
-download_matrix_button = Button(
-    "Download spreadsheet of volunteer information", nav_button=True
-)
+from app.frontend.shared.buttons import sort_button_type
 
 
 def get_header_buttons_for_rota(interface: abstractInterface):
@@ -114,167 +61,122 @@ def get_buttons_after_rota_table_if_not_swapping():
     )
 
 
+def get_sort_parameters_from_buttons(button_pressed:str) -> SortParameters:
+    sort_by_volunteer_name = arg_not_passed
+    sort_by_day = arg_not_passed
+    sort_by_location = False
+    attributes = get_attributes_from_button_pressed_of_known_type(value_of_button_pressed=button_pressed, type_to_check=sort_button_type,
+                                                                  collapse_singleton=False) ## ensures a list always returned
+
+    first_attribute = attributes[0]
+    if first_attribute ==sort_by_location_marker:
+        sort_by_location = True
+    elif first_attribute == sort_by_day_marker:
+        day_name_to_sort_by = attributes[1]
+        sort_by_day = Day[day_name_to_sort_by]
+    elif first_attribute == sort_by_name_marker:
+        sort_by = attributes[1]
+        sort_by_volunteer_name = sort_by
+    else:
+        raise Exception("Unknown sort button %s pressed" % button_pressed)
+
+    sort_parameters = SortParameters(
+        sort_by_day=sort_by_day,
+        sort_by_location=sort_by_location,
+        sort_by_volunteer_name=sort_by_volunteer_name
+    )
+    print(sort_parameters)
+
+    return sort_parameters
+
+
+
+def get_all_volunteer_sort_buttons():
+    name_sort_buttons = get_volunteer_name_sort_buttons()
+
+    return [sort_by_cadet_location_button] + name_sort_buttons
+
+
+
+
+sort_by_location_marker = "SortByLocation"
+
+SORT_BY_CADET_LOCATION = "Sort by cadet location"
+sort_by_cadet_location_button = Button(SORT_BY_CADET_LOCATION, nav_button=True, value=get_button_value_given_type_and_attributes(
+    sort_button_type, sort_by_location_marker
+))
+
+sort_by_name_marker="SortByVolName"
+
+def get_volunteer_name_sort_buttons() -> List[Button]:
+    return [
+        Button(sort_by, nav_button=True,
+               value=get_button_value_given_type_and_attributes(
+                   sort_button_type,
+                   sort_by_name_marker,
+                   sort_by
+               )) for sort_by in all_volunteer_name_sort_types
+    ]
+
+all_volunteer_name_sort_types = [SORT_BY_SURNAME, SORT_BY_FIRSTNAME]
+
+
+APPLY_FILTER_BUTTON_LABEL = "Apply filters"
+CLEAR_FILTERS_BUTTON_LABEL = "Clear all filters"
+COPY_ALL_ROLES_FROM_FIRST_ROLE_BUTTON_LABEL = (
+    "Copy from earliest allocated role to fill empty roles"
+)
+COPY_AND_OVERWRITE_FROM__FIRST_ROLE_BUTTON_LABEL = (
+    "Copy from earliest allocated role to fill empty and overwrite existing roles"
+)
+ADD_NEW_VOLUNTEER_BUTTON_LABEL = "Add new volunteer to rota"
+apply_filter_button = Button(APPLY_FILTER_BUTTON_LABEL, nav_button=True)
+clear_filter_button = Button(CLEAR_FILTERS_BUTTON_LABEL, nav_button=True)
+add_volunteer_button = Button(
+    ADD_NEW_VOLUNTEER_BUTTON_LABEL, nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT
+)
+copy_all_roles_from_first_role_button = Button(
+    COPY_ALL_ROLES_FROM_FIRST_ROLE_BUTTON_LABEL, nav_button=True
+)
+copy_and_overwrite_all_roles_from_first_role_button = Button(
+    COPY_AND_OVERWRITE_FROM__FIRST_ROLE_BUTTON_LABEL, nav_button=True
+)
+download_matrix_button = Button(
+    "Download spreadsheet of volunteer information", nav_button=True
+)
+
+
+
 help_button = HelpButton("volunteer_rota_help")
 
 
-def last_button_pressed_was_volunteer_name_button(interface: abstractInterface) -> bool:
-    last_button = interface.last_button_pressed()
 
-    return last_button in get_list_of_volunteer_name_buttons(interface)
+sort_by_day_marker = "SortByDay"
 
-
-def get_list_of_volunteer_name_buttons(interface: abstractInterface) -> list:
-    event = get_event_from_state(interface)
-    volunteer_name_buttons_dict = get_dict_of_volunteer_name_buttons_and_volunteer_ids(
-        interface=interface, event=event
-    )
-    list_of_volunteer_name_buttons = list(volunteer_name_buttons_dict.keys())
-
-    return list_of_volunteer_name_buttons
-
-
-
-def last_button_pressed_was_day_sort_button(interface: abstractInterface):
-    return interface.last_button_pressed() in get_all_day_sort_buttons(interface)
-
-
-def get_all_day_sort_buttons(interface: abstractInterface):
-    event = get_event_from_state(interface)
-
-    return get_list_of_day_button_values(event)
-
-
-def last_button_pressed_was_location_button(interface: abstractInterface) -> bool:
-    return interface.last_button_pressed() in get_all_location_buttons(interface)
-
-
-def get_all_location_buttons(interface: abstractInterface):
-    event = get_event_from_state(interface)
-    all_location_buttons = list_of_all_location_button_names(
-        interface=interface, event=event
-    )
-
-    return all_location_buttons
-
-
-def last_button_pressed_was_skill_button(interface: abstractInterface):
-    return interface.last_button_pressed() in get_all_skill_buttons(interface)
-
-
-def get_all_skill_buttons(interface: abstractInterface):
-    event = get_event_from_state(interface)
-    all_skill_buttons = list_of_all_skills_buttons(interface=interface, event=event)
-
-    return all_skill_buttons
-
-
-def get_all_copy_previous_role_buttons(interface: abstractInterface):
-    event = get_event_from_state(interface)
-    all_copy_previous_role_buttons = list_of_all_copy_previous_roles_buttons(
-        interface=interface, event=event
-    )
-
-    return all_copy_previous_role_buttons
-
-
-def get_all_copy_overwrite_individual_role_buttons(interface: abstractInterface):
-    event = get_event_from_state(interface)
-
-    return get_list_of_copy_overwrite_buttons_for_individual_volunteers(
-        interface=interface, event=event
-    )
-
-
-def get_all_copy_fill_individual_role_buttons(interface: abstractInterface):
-    event = get_event_from_state(interface)
-
-    return get_list_of_copy_fill_buttons_for_individual_volunteers(
-        interface=interface, event=event
-    )
-
-
-def last_button_pressed_was_make_available_button(interface: abstractInterface):
-    return interface.last_button_pressed() in get_all_make_available_buttons(interface)
-
-
-def get_all_make_available_buttons(interface: abstractInterface):
-    event = get_event_from_state(interface)
-    all_buttons = get_list_of_make_available_button_values(
-        interface=interface, event=event
-    )
-
-    return all_buttons
-
-
-def last_button_pressed_was_copy_button(interface: abstractInterface):
-    return interface.last_button_pressed() in get_all_copy_buttons(interface)
-
-
-def get_all_copy_buttons(interface: abstractInterface):
-    return (
-        get_all_copy_overwrite_individual_role_buttons(interface)
-        + get_all_copy_fill_individual_role_buttons(interface)
-        + [
-            COPY_ALL_ROLES_FROM_FIRST_ROLE_BUTTON_LABEL,
-            COPY_AND_OVERWRITE_FROM__FIRST_ROLE_BUTTON_LABEL,
-        ]
-        + get_all_copy_previous_role_buttons(interface)
-    )
-
-
-def last_button_pressed_was_swap_button(interface: abstractInterface):
-    if cancel_swap_button.pressed(interface.last_button_pressed()):
-        return True
+def get_buttons_for_days_at_event(event: Event, ready_to_swap: bool):
+    if ready_to_swap:
+        return event.days_in_event_as_list_of_string()
     else:
-        return interface.last_button_pressed() in get_all_swap_buttons(interface)
+        return [
+            Line([button_for_day(day), " (click to sort group/role)"])
+            for day in event.days_in_event()
+        ]
 
 
-def get_all_swap_buttons(interface: abstractInterface):
-    event = get_event_from_state(interface)
-    return get_list_of_swap_buttons(interface=interface, event=event)
+def button_for_day(day: Day) -> Button:
+    return Button(day.name, value=button_value_for_day(day))
 
 
-def last_button_pressed_was_remove_role_button(interface: abstractInterface):
-    return interface.last_button_pressed() in get_all_remove_role_buttons(interface)
+def button_value_for_day(day: Day):
+    return get_button_value_given_type_and_attributes(sort_button_type, sort_by_day_marker, day.name)
 
 
-def get_all_remove_role_buttons(interface: abstractInterface):
-    event = get_event_from_state(interface)
-    return get_list_of_remove_role_buttons(interface=interface, event=event)
+## COPYS
+def last_button_pressed_was_copy_button(copy_button:str):
+    return copy_all_roles_from_first_role_button.pressed(copy_button) or \
+    copy_and_overwrite_all_roles_from_first_role_button.pressed(copy_button) or\
+    last_button_was_copy_previous_role(copy_button) or\
+    last_button_pressed_was_copyover_button(copy_button) or\
+    last_button_pressed_was_copyfill_button(copy_button)
 
 
-def last_button_pressed_was_make_unavailable_button(interface: abstractInterface):
-    on_specific_day = last_button_pressed_was_make_unavailable_for_specific_day_button(interface)
-    if on_specific_day:
-        return True
-    across_days = last_button_pressed_was_make_all_days_unavailable_for_volunteer(interface)
-    if across_days:
-        return True
-
-    return False
-
-
-def last_button_pressed_was_make_unavailable_for_specific_day_button(interface: abstractInterface):
-    return interface.last_button_pressed() in get_all_make_unavailable_on_day_buttons(
-        interface
-    )
-
-
-def get_all_make_unavailable_on_day_buttons(interface: abstractInterface):
-    event = get_event_from_state(interface)
-    return get_list_of_make_unavailable_on_specific_day_buttons(interface=interface, event=event)
-
-def last_button_pressed_was_make_all_days_unavailable_for_volunteer(interface: abstractInterface) -> bool:
-    last_button = interface.last_button_pressed()
-
-    return last_button in get_list_of_make_all_days_unavailable_for_volunteer_buttons(interface)
-
-
-def get_list_of_make_all_days_unavailable_for_volunteer_buttons(interface: abstractInterface) -> list:
-    event = get_event_from_state(interface)
-    volunteer_name_buttons_dict = get_dict_of_volunteer_unavailable_name_buttons_and_volunteer_ids(
-        interface=interface, event=event
-    )
-    list_of_volunteer_unavailable_buttons = list(volunteer_name_buttons_dict.keys())
-
-    return list_of_volunteer_unavailable_buttons

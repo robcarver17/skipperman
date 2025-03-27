@@ -81,11 +81,11 @@ def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewFo
         return interface.get_new_form_given_function(display_change_sort_order)
 
     else:
-        return post_form_allocate_cadets_when_not_returning_new_form(interface)
+        return post_form_allocate_cadets_when_not_returning_new_form(interface=interface,
+                                                                     last_button=last_button)
 
-def post_form_allocate_cadets_when_not_returning_new_form(interface: abstractInterface) -> Union[Form, NewForm]:
+def post_form_allocate_cadets_when_not_returning_new_form(interface: abstractInterface, last_button:str) -> Union[Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
-    last_button = interface.last_button_pressed()
     if save_menu_button.pressed(last_button):
         ## This also saves the stored data in interface otherwise we don't do it later if add partner button saved
         update_data_given_allocation_form(interface)

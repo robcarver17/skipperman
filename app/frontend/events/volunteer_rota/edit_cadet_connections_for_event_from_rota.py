@@ -27,7 +27,7 @@ from app.frontend.shared.cadet_connection_forms import (
     get_selected_cadet_from_form,
 )
 from app.frontend.shared.volunteer_state import (
-    get_volunteer_from_state,
+    get_volunteer_from_state, clear_volunteer_id_in_state,
 )
 
 from app.objects.cadets import ListOfCadets
@@ -103,14 +103,15 @@ def post_form_edit_cadet_connections_from_rota(
 
     elif add_connection_button.pressed(button):
         add_cadet_connection_from_form(interface)
-        interface.flush_cache_to_store()
-        return display_form_edit_cadet_connections_from_rota(interface)
+
     elif last_button_pressed_was_delete_cadet_connection(interface):
         delete_event_connection_given_form(interface=interface)
-        interface.flush_cache_to_store()
-        return display_form_edit_cadet_connections_from_rota(interface)
+
     else:
         return button_error_and_back_to_initial_state_form(interface)
+
+    interface.flush_cache_to_store()
+    return display_form_edit_cadet_connections_from_rota(interface)
 
 
 def last_button_pressed_was_delete_cadet_connection(interface: abstractInterface):
@@ -133,8 +134,8 @@ def get_list_of_delete_cadet_buttons_with_currently_connected_cadets(
 
     return list_of_delete_cadet_buttons
 
-
 def previous_form(interface: abstractInterface):
+    clear_volunteer_id_in_state(interface)
     return interface.get_new_display_form_for_parent_of_function(
         display_form_edit_cadet_connections_from_rota
     )

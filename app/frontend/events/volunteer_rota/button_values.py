@@ -1,60 +1,91 @@
-from typing import Tuple, Callable, Dict
+from typing import Tuple
 
+from app.data_access.store.object_store import ObjectStore
 from app.objects.volunteers import Volunteer
 
 from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
-from app.backend.volunteers.volunteers_at_event import load_list_of_volunteers_at_event
-from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.objects.day_selectors import Day
-from app.objects.events import Event
+from app.frontend.shared.buttons import is_button_of_type, get_button_value_given_type_and_attributes, \
+    get_attributes_from_button_pressed_of_known_type, is_button_volunteer_selection
+
+def last_button_pressed_was_volunteer_name_button(last_button:str) -> bool:
+    return is_button_volunteer_selection(last_button)
+
+
+def last_button_pressed_was_make_unavailable_button(last_button:str):
+    on_specific_day = last_button_pressed_was_make_unavailable_for_specific_day_button(last_button)
+    if on_specific_day:
+        return True
+    across_days = last_button_pressed_was_make_all_days_unavailable_for_volunteer(last_button)
+    if across_days:
+        return True
+
+    return False
+
+
+make_available_button_type = "MakeAvailable"
+
+def last_button_pressed_was_make_available_button(last_button:str):
+    return is_button_of_type(last_button, make_available_button_type)
 
 
 def make_available_button_value_for_volunteer_on_day(
     volunteer_id: str, day: Day
 ) -> str:
     return generic_button_value_for_volunteer_id_and_day(
-        button_type="MakeAvailable", volunteer_id=volunteer_id, day=day
+        button_type=make_available_button_type, volunteer_id=volunteer_id, day=day
     )
 
+def volunteer_and_day_from_make_available_button(object_store:ObjectStore, button:str):
+    return from_known_button_to_volunteer_and_day(object_store=object_store, button_text=button,
+                                                  button_type=make_available_button_type)
 
-def copy_overwrite_button_value_for_volunteer_id_and_day(
-    volunteer_id: str, day: Day
+
+
+copy_over_button_type = "COPYOVER"
+
+
+def copy_overwrite_button_value_for_volunteer_in_role_on_day(
+    volunteer: Volunteer,
+    day: Day,
 ) -> str:
     return generic_button_value_for_volunteer_id_and_day(
-        button_type="COPYOVER", volunteer_id=volunteer_id, day=day
-    )
+        button_type=copy_over_button_type, volunteer_id=volunteer.id, day=day)
+
+def last_button_pressed_was_copyover_button(last_button:str):
+    return is_button_of_type(last_button, copy_over_button_type)
+
+def from_copyoverwrite_button_to_volunteer_and_day(object_store: ObjectStore, button_value:str):
+    return from_known_button_to_volunteer_and_day(object_store=object_store, button_text=button_value,
+                                                  button_type=copy_over_button_type)
 
 
-def copy_fill_button_value_for_volunteer_id_and_day(volunteer_id: str, day: Day) -> str:
-    return generic_button_value_for_volunteer_id_and_day(
-        button_type="COPYFILL", volunteer_id=volunteer_id, day=day
-    )
+copy_fill_buton_type = "COPYFILL"
 
 
-def remove_role_button_value_for_volunteer_id_and_day(
-    volunteer_id: str, day: Day
+def copy_fill_button_value_for_volunteer_in_role_on_day(
+    volunteer: Volunteer,
+    day: Day,
 ) -> str:
     return generic_button_value_for_volunteer_id_and_day(
-        button_type="RemoveRole", volunteer_id=volunteer_id, day=day
+        button_type=copy_fill_buton_type, volunteer_id=volunteer.id, day=day
     )
+
+def last_button_pressed_was_copyfill_button(last_button:str):
+    return is_button_of_type(last_button, copy_fill_buton_type)
+
+def from_copyfill_button_to_volunteer_and_day(object_store: ObjectStore, button_value:str):
+    return from_known_button_to_volunteer_and_day(object_store=object_store, button_text=button_value,
+                                                  button_type=copy_fill_buton_type)
+
 
 unavailable_across_button_type="ACROSSUNAVAILABLE"
-unavailable_specific_button_type = "UNAVAILABLE"
-
-def button_is_unavailable_across_days(button_text):
-    return button_type_of_generic_button(button_text)==unavailable_across_button_type
-
-def button_is_unavailable_on_specific_day(button_text):
-    return button_type_of_generic_button(button_text)==unavailable_specific_button_type
 
 
-def unavailable_button_value_for_volunteer_id_and_day(
-    volunteer_id: str, day: Day
-) -> str:
-    return generic_button_value_for_volunteer_id_and_day(
-        button_type=unavailable_specific_button_type, volunteer_id=volunteer_id, day=day
-    )
+def last_button_pressed_was_make_all_days_unavailable_for_volunteer(last_button:str) -> bool:
+    return is_button_of_type(last_button, unavailable_across_button_type)
+
 
 
 def unavailable_button_value_for_volunteer_id_across_days(
@@ -64,308 +95,170 @@ def unavailable_button_value_for_volunteer_id_across_days(
         button_type=unavailable_across_button_type, volunteer_id=volunteer_id
     )
 
+def volunteer_from_make_unavailable_across_days_button(object_store:ObjectStore, button:str):
+    return from_known_button_to_volunteer(object_store=object_store, button_type=unavailable_across_button_type,
+                                                  button_text=button)
 
-def generic_button_value_for_volunteer_id_and_day(
-    button_type: str, volunteer_id: str, day: Day
-) -> str:
-    return "%s_%s_%s" % (button_type, volunteer_id, day.name)
+unavailable_specific_button_type = "UNAVAILABLE"
 
-
-def generic_button_value_for_volunteer_id(
-    button_type: str, volunteer_id: str
-) -> str:
-    return "%s_%s" % (button_type, volunteer_id)
-
-
-def from_known_button_to_volunteer_id_and_day(copy_button_text: str) -> Tuple[str, Day]:
-    __, id, day = from_generic_button_to_volunteer_id_and_day(copy_button_text)
-
-    return id, day
-
-def from_known_button_to_volunteer(
-    interface: abstractInterface, button_text: str
-) -> Volunteer:
-    volunteer_id = from_known_button_to_volunteer_id(button_text)
-    volunteer = get_volunteer_from_id(
-        object_store=interface.object_store, volunteer_id=volunteer_id
-    )
-
-    return volunteer
-
-def from_known_button_to_volunteer_and_day(
-    interface: abstractInterface, copy_button_text: str
-) -> Tuple[Volunteer, Day]:
-    id, day = from_known_button_to_volunteer_id_and_day(copy_button_text)
-    volunteer = get_volunteer_from_id(
-        object_store=interface.object_store, volunteer_id=id
-    )
-
-    return volunteer, day
-
-
-def from_generic_button_to_volunteer_id_and_day(
-    button_text: str,
-) -> Tuple[str, str, Day]:
-    button_type, id, day_name = button_text.split("_")
-
-    return button_type, id, Day[day_name]
-
-def from_generic_button_to_volunteer_id(
-    button_text: str,
-) -> Tuple[str, str]:
-    button_type, id = button_text.split("_")
-
-    return button_type, id
-
-def button_type_of_generic_button(
-    button_text: str,
-) -> str:
-    elements_of_button_text = button_text.split("_")
-
-    return elements_of_button_text[0]
-
-
-def from_known_button_to_volunteer_id(button_text: str) -> str:
-    __, id = from_generic_button_to_volunteer_id(button_text)
-
-    return id
-
-
-def get_list_of_generic_button_values_across_days_and_volunteers(
-    interface: abstractInterface, event: Event, value_function: Callable
-) -> list:
-    ## Strictly speaking this will include buttons that aren't visible, but quicker and easier trhan checking
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(
-        event=event,
-        object_store=interface.object_store,
-    )
-    list_of_volunteer_ids = list_of_volunteers_at_event.list_of_ids
-    list_of_days = event.days_in_event()
-
-    all_button_values = []
-    for id in list_of_volunteer_ids:
-        for day in list_of_days:
-            all_button_values.append(value_function(volunteer_id=id, day=day))
-
-    return all_button_values
-
-
-def button_value_for_day(day: Day):
-    return "DAY_%s" % day.name
-
-
-def get_list_of_day_button_values(event: Event):
-    return [button_value_for_day(day) for day in event.days_in_event()]
-
-
-def from_day_button_value_to_day(day_button_value: str) -> Day:
-    __, day_name = day_button_value.split("_")
-    return Day[day_name]
-
-
-def name_of_volunteer_button(volunteer: Volunteer):
-    return "VOLUNTEER_" + volunteer.name
-
-
-def get_list_of_make_available_button_values(
-    interface: abstractInterface, event: Event
-) -> list:
-    ## Strictly speaking this will include buttons that aren't visible, but quicker and easier trhan checking
-    return get_list_of_generic_button_values_across_days_and_volunteers(
-        interface=interface,
-        event=event,
-        value_function=make_available_button_value_for_volunteer_on_day,
-    )
-
-
-def get_list_of_copy_overwrite_buttons_for_individual_volunteers(
-    interface: abstractInterface, event: Event
-):
-    return get_list_of_generic_button_values_across_days_and_volunteers(
-        interface=interface,
-        event=event,
-        value_function=copy_overwrite_button_value_for_volunteer_id_and_day,
-    )
-
-
-def get_list_of_copy_fill_buttons_for_individual_volunteers(
-    interface: abstractInterface, event: Event
-):
-    return get_list_of_generic_button_values_across_days_and_volunteers(
-        interface=interface,
-        event=event,
-        value_function=copy_fill_button_value_for_volunteer_id_and_day,
-    )
-
-
-def get_list_of_remove_role_buttons(interface: abstractInterface, event: Event):
-    return get_list_of_generic_button_values_across_days_and_volunteers(
-        interface=interface,
-        event=event,
-        value_function=remove_role_button_value_for_volunteer_id_and_day,
-    )
-
-
-def get_list_of_make_unavailable_on_specific_day_buttons(interface: abstractInterface, event: Event):
-    return get_list_of_generic_button_values_across_days_and_volunteers(
-        interface=interface,
-        event=event,
-        value_function=unavailable_button_value_for_volunteer_id_and_day,
-    )
-
-
-def copy_overwrite_button_value_for_volunteer_in_role_on_day(
-    volunteer: Volunteer,
-    day: Day,
-) -> str:
-    return copy_overwrite_button_value_for_volunteer_id_and_day(
-        volunteer_id=volunteer.id, day=day
-    )
-
-
-def copy_fill_button_value_for_volunteer_in_role_on_day(
-    volunteer: Volunteer,
-    day: Day,
-) -> str:
-    return copy_fill_button_value_for_volunteer_id_and_day(
-        volunteer_id=volunteer.id, day=day
-    )
+def last_button_pressed_was_make_unavailable_for_specific_day_button(last_button:str):
+    return is_button_of_type(last_button, unavailable_specific_button_type)
 
 
 def unavailable_button_value_for_volunteer_in_role_on_day(
     volunteer: Volunteer,
     day: Day,
 ) -> str:
-    return unavailable_button_value_for_volunteer_id_and_day(
-        volunteer_id=volunteer.id,
-        day=day,
+    return generic_button_value_for_volunteer_id_and_day(
+        button_type=unavailable_specific_button_type, volunteer_id=volunteer.id, day=day
     )
 
+
+def volunteer_and_day_from_make_unavailable_on_specific_day_button(object_store:ObjectStore, button:str):
+    return from_known_button_to_volunteer_and_day(object_store=object_store, button_text=button,
+                                                  button_type=unavailable_specific_button_type)
+
+remove_role_across_button_type = "RemoveRoleAcross"
+
+def remove_role_button_value_for_volunteer_in_role_across_days(
+    volunteer: Volunteer
+) -> str:
+    return generic_button_value_for_volunteer_id(
+        button_type=remove_role_across_button_type, volunteer_id=volunteer.id
+    )
+
+def volunteer_from_remove_role_across_days_button(object_store:ObjectStore, button:str):
+    return from_known_button_to_volunteer(object_store=object_store, button_text=button,
+                                                  button_type=remove_role_across_button_type)
+
+remove_role_button_type = "RemoveRole"
 
 def remove_role_button_value_for_volunteer_in_role_on_day(
     volunteer: Volunteer,
     day: Day,
 ) -> str:
-    return remove_role_button_value_for_volunteer_id_and_day(
-        volunteer_id=volunteer.id,
-        day=day,
+    return generic_button_value_for_volunteer_id_and_day(
+        button_type=remove_role_button_type, volunteer_id=volunteer.id, day=day
     )
 
+def volunteer_and_day_from_remove_role_on_specific_day_button(object_store:ObjectStore, button:str):
+    return from_known_button_to_volunteer_and_day(object_store=object_store, button_text=button,
+                                                  button_type=remove_role_button_type)
 
-def list_of_all_copy_previous_roles_buttons(interface: abstractInterface, event: Event):
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(
-        event=event,
-        object_store=interface.object_store,
-    )
-    return [
-        copy_previous_role_button_name_from_volunteer_id(volunteer_at_event.id)
-        for volunteer_at_event in list_of_volunteers_at_event
-    ]
+def last_button_pressed_was_remove_role_button(last_button:str):
+    return is_button_of_type(last_button, remove_role_button_type) or is_button_of_type(last_button, remove_role_across_button_type)
 
 
-def from_location_button_to_volunteer_id(location_button_name: str) -> str:
-    __, volunteer_id = location_button_name.split("_")
-
-    return volunteer_id
-
-
-def from_skills_button_to_volunteer_id(skills_button_name: str) -> str:
-    __, volunteer_id = skills_button_name.split("_")
-
-    return volunteer_id
-
+previous_role_button_type = "prevRoleCopy"
 
 def from_previous_role_copy_button_to_volunteer(
-    interface: abstractInterface,
+    object_store: ObjectStore,
     previous_role_copy_button_name: str,
 ) -> Volunteer:
-    volunteer_id = from_previous_role_copy_button_to_volunteer_id(
-        previous_role_copy_button_name
+    volunteer = from_known_button_to_volunteer(object_store,
+                                               previous_role_copy_button_name,
+                                               button_type=previous_role_button_type)
+
+    return volunteer
+
+def copy_previous_role_button_name_from_volunteer_id(volunteer_id:str):
+    return generic_button_value_for_volunteer_id(previous_role_button_type, volunteer_id)
+
+def last_button_was_copy_previous_role(last_button:str):
+    return is_button_of_type(last_button, previous_role_button_type)
+
+
+location_button_type = "locationButtonCopy"
+
+def location_button_name_from_volunteer_id(volunteer_id:str):
+    return generic_button_value_for_volunteer_id(location_button_type, volunteer_id=volunteer_id)
+
+def from_location_button_to_volunteer(object_store: ObjectStore, location_button_name: str) -> Volunteer:
+    volunteer = from_known_button_to_volunteer(object_store,
+                                               location_button_name,
+                                               button_type=location_button_type)
+
+    return volunteer
+
+def last_button_pressed_was_location_button(last_button:str) -> bool:
+    return is_button_of_type(last_button, location_button_type)
+
+skills_button_type = "skillsButton"
+
+def from_skills_button_to_volunteer(object_store: ObjectStore, skills_button_name: str) -> Volunteer:
+    volunteer = from_known_button_to_volunteer(object_store,
+                                               skills_button_name,
+                                               button_type=skills_button_type)
+
+    return volunteer
+
+def skills_button_name_from_volunteer_id(volunteer_id):
+    return generic_button_value_for_volunteer_id(skills_button_type, volunteer_id)
+
+def last_button_pressed_was_skill_button(last_button:str):
+    return is_button_of_type(last_button, skills_button_type)
+
+
+
+## Generics
+
+
+def generic_button_value_for_volunteer_id_and_day(
+    button_type: str, volunteer_id: str, day: Day
+) -> str:
+    return get_button_value_given_type_and_attributes(
+        button_type,
+        volunteer_id,
+        day.name
     )
+
+
+def generic_button_value_for_volunteer_id(
+    button_type: str, volunteer_id: str
+) -> str:
+    return get_button_value_given_type_and_attributes(
+        button_type,
+        volunteer_id,
+    )
+
+
+
+
+
+
+
+
+
+
+
+
+
+def from_known_button_to_volunteer(
+    object_store: ObjectStore, button_text: str, button_type: str
+) -> Volunteer:
+    volunteer_id = from_known_button_to_volunteer_id(button_text, button_type=button_type)
     volunteer = get_volunteer_from_id(
-        volunteer_id=volunteer_id, object_store=interface.object_store
+        object_store=object_store, volunteer_id=volunteer_id
     )
 
     return volunteer
 
 
-def from_previous_role_copy_button_to_volunteer_id(
-    previous_role_copy_button_name: str,
-) -> str:
-    __, volunteer_id = previous_role_copy_button_name.split("_")
-
-    return volunteer_id
-
-
-def get_dict_of_volunteer_name_buttons_and_volunteer_ids(
-    interface: abstractInterface, event: Event
-) -> Dict[str, str]:
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(
-        event=event,
-        object_store=interface.object_store,
+def from_known_button_to_volunteer_and_day(
+    object_store: ObjectStore, button_text: str, button_type:str
+) -> Tuple[Volunteer, Day]:
+    id, day = from_known_button_to_volunteer_id_and_day(button_text, button_type=button_type)
+    volunteer = get_volunteer_from_id(
+        object_store=object_store, volunteer_id=id
     )
 
-    return dict(
-        [
-            (name_of_volunteer_button(volunteer), volunteer.id)
-            for volunteer in list_of_volunteers_at_event
-        ]
-    )
+    return volunteer, day
 
+def from_known_button_to_volunteer_id_and_day(button_text: str, button_type:str) -> Tuple[str, Day]:
+    id, day_name = get_attributes_from_button_pressed_of_known_type(type_to_check=button_type, value_of_button_pressed=button_text)
 
-def get_dict_of_volunteer_unavailable_name_buttons_and_volunteer_ids(
-    interface: abstractInterface, event: Event
-) -> Dict[str, str]:
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(
-        event=event,
-        object_store=interface.object_store,
-    )
+    return id, Day[day_name]
 
-    return dict(
-        [
-            (unavailable_button_value_for_volunteer_id_across_days(volunteer.id), volunteer.id)
-            for volunteer in list_of_volunteers_at_event
-        ]
-    )
-
-
-def from_unavailable_button_value_to_volunteer_and_day(
-    button_value: str,
-) -> Tuple[str, Day]:
-    __, volunteer_id, day = from_generic_button_to_volunteer_id_and_day(button_value)
-
-    return volunteer_id, day
-
-
-def copy_previous_role_button_name_from_volunteer_id(volunteer_id: str) -> str:
-    return "prevRoleCopy_%s" % volunteer_id
-
-
-def list_of_all_location_button_names(interface: abstractInterface, event: Event):
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(
-        event=event,
-        object_store=interface.object_store,
-    )
-    return [
-        location_button_name_from_volunteer_id(volunteer_at_event.id)
-        for volunteer_at_event in list_of_volunteers_at_event
-    ]
-
-
-def list_of_all_skills_buttons(interface: abstractInterface, event: Event):
-    list_of_volunteers_at_event = load_list_of_volunteers_at_event(
-        event=event,
-        object_store=interface.object_store,
-    )
-    return [
-        skills_button_name_from_volunteer_id(volunteer_at_event.id)
-        for volunteer_at_event in list_of_volunteers_at_event
-    ]
-
-
-def location_button_name_from_volunteer_id(volunteer_id: str) -> str:
-    return "LOCATION_%s" % volunteer_id
-
-
-def skills_button_name_from_volunteer_id(volunteer_id: str) -> str:
-    return "SKILL_%s" % volunteer_id
+def from_known_button_to_volunteer_id(button_text: str, button_type: str) -> str:
+    id = get_attributes_from_button_pressed_of_known_type(type_to_check=button_type, value_of_button_pressed=button_text)
+    return id

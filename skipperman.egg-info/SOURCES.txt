@@ -390,6 +390,7 @@ app/frontend/events/volunteer_rota/edit_volunteer_skills_from_rota.py
 app/frontend/events/volunteer_rota/elements_in_volunteer_rota_page.py
 app/frontend/events/volunteer_rota/parse_data_fields_in_rota.py
 app/frontend/events/volunteer_rota/parse_volunteer_table.py
+app/frontend/events/volunteer_rota/post_form_actions.py
 app/frontend/events/volunteer_rota/preamble_to_rota_page.py
 app/frontend/events/volunteer_rota/render_volunteer_table.py
 app/frontend/events/volunteer_rota/rota_allocation_inputs.py

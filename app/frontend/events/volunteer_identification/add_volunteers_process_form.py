@@ -1,3 +1,5 @@
+from app.objects.cadets import ListOfCadets
+from app.objects.composed.volunteers_at_event_with_registration_data import RegistrationDataForVolunteerAtEvent
 from app.objects.volunteers import Volunteer
 
 from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
@@ -34,7 +36,7 @@ from app.objects.relevant_information_for_volunteers import (
 def add_volunteer_at_event_with_form_contents(interface: abstractInterface):
     volunteer = get_volunteer_from_state(interface)
     try:
-        volunteer_at_event = get_volunteer_at_event_from_form_contents(
+        registration_data = get_volunteer_at_event_registration_data_from_form_contents(
             interface=interface, volunteer=volunteer
         )
     except NoDaysSelected as e:
@@ -44,7 +46,8 @@ def add_volunteer_at_event_with_form_contents(interface: abstractInterface):
     add_volunteer_at_event(
         object_store=interface.object_store,
         event=get_event_from_state(interface),
-        volunteer_at_event=volunteer_at_event,
+        volunteer=volunteer,
+        registration_data=registration_data
     )
     event = get_event_from_state(interface)
     update_cadet_connections_when_volunteer_already_at_event(
@@ -60,9 +63,9 @@ def get_volunteer_from_state(interface: abstractInterface) -> Volunteer:
     return volunteer
 
 
-def get_volunteer_at_event_from_form_contents(
+def get_volunteer_at_event_registration_data_from_form_contents(
     interface: abstractInterface, volunteer: Volunteer
-) -> VolunteerAtEventWithId:
+) -> RegistrationDataForVolunteerAtEvent:
     event = get_event_from_state(interface)
     availability_in_form = get_availablity_from_form(
         interface=interface, event=event, input_name=AVAILABILITY
@@ -83,17 +86,14 @@ def get_volunteer_at_event_from_form_contents(
     same_or_different_in_form = get_same_or_different_from_form(interface)
     notes_in_form = interface.value_from_form(NOTES)
 
-    volunteer_at_event = VolunteerAtEventWithId(
-        volunteer_id=volunteer.id,
+    return RegistrationDataForVolunteerAtEvent(
         availablity=availability_in_form,
-        list_of_associated_cadet_id=[],  ## no longer used
+        list_of_associated_cadets=ListOfCadets([]),
+        any_other_information=any_other_information,
         preferred_duties=preferred_duties_in_form,
         same_or_different=same_or_different_in_form,
-        any_other_information=any_other_information,
-        notes=notes_in_form,
+        notes=notes_in_form
     )
-
-    return volunteer_at_event
 
 
 def get_any_other_information(

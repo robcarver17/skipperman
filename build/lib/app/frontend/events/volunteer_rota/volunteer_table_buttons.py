@@ -3,8 +3,6 @@ from typing import Union
 from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
     get_last_role_or_none_for_volunteer_at_previous_events,
 )
-from app.data_access.store.object_store import ObjectStore
-
 
 from app.data_access.configuration.fixed import (
     COPY_OVERWRITE_SYMBOL,
@@ -13,8 +11,6 @@ from app.data_access.configuration.fixed import (
     REMOVE_SHORTHAND,
 )
 from app.frontend.events.volunteer_rota.button_values import (
-    button_value_for_day,
-    name_of_volunteer_button,
     copy_overwrite_button_value_for_volunteer_in_role_on_day,
     copy_fill_button_value_for_volunteer_in_role_on_day,
     unavailable_button_value_for_volunteer_in_role_on_day,
@@ -22,15 +18,10 @@ from app.frontend.events.volunteer_rota.button_values import (
     copy_previous_role_button_name_from_volunteer_id,
     location_button_name_from_volunteer_id,
     skills_button_name_from_volunteer_id, unavailable_button_value_for_volunteer_id_across_days,
+    remove_role_button_value_for_volunteer_in_role_across_days,
 )
-from app.frontend.events.volunteer_rota.edit_volunteer_details_from_rota import \
-    get_volunteer_history_and_attendace_checkbox_for_selected_volunteer
 from app.frontend.events.volunteer_rota.swapping import get_swap_button, has_role_on_day
 from app.frontend.forms.swaps import is_ready_to_swap
-from app.frontend.shared.events_state import get_event_from_state
-from app.frontend.shared.volunteer_state import is_volunteer_id_set_in_state, get_volunteer_from_state
-
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -46,15 +37,15 @@ from app.backend.registration_data.cadet_and_volunteer_connections_at_event impo
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
 from app.objects.day_selectors import Day
-from app.objects.events import Event
 from app.objects.volunteers import Volunteer
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 
 def get_location_button(
+    interface: abstractInterface,
     dict_of_all_cadet_event_data: DictOfAllEventInfoForCadets,
     volunteer_data_at_event: AllEventDataForVolunteer,
-    ready_to_swap: bool,
 ) -> Button:
+    ready_to_swap = is_ready_to_swap(interface)
 
     location = get_cadet_location_string_for_volunteer(
         dict_of_all_cadet_event_data=dict_of_all_cadet_event_data,
@@ -74,9 +65,10 @@ def get_location_button(
 
 
 def get_skills_button(
-    volunteer_data_at_event: AllEventDataForVolunteer,
-    ready_to_swap: bool,
+    interface: abstractInterface,
+        volunteer_data_at_event: AllEventDataForVolunteer,
 ) -> Button:
+    ready_to_swap = is_ready_to_swap(interface)
     dict_of_skills = volunteer_data_at_event.volunteer_skills
     skill_label = dict_of_skills.skills_held_as_str()
     if len(skill_label) == 0:
@@ -93,12 +85,12 @@ def get_skills_button(
 
 
 def copy_previous_role_button_or_blank(
-    object_store: ObjectStore,
+    interface: abstractInterface,
     volunteer_data_at_event: AllEventDataForVolunteer,
-    ready_to_swap: bool,
 ) -> Union[Button, str]:
+    ready_to_swap = is_ready_to_swap(interface)
     previous_role = get_last_role_or_none_for_volunteer_at_previous_events(
-        object_store=object_store,
+        object_store=interface.object_store,
         avoid_event=volunteer_data_at_event.event,
         volunteer=volunteer_data_at_event.volunteer,
     )
@@ -117,48 +109,6 @@ def copy_previous_role_button_or_blank(
 
 
 #
-
-
-### SORT BUTTONS
-def get_buttons_for_days_at_event(event: Event, ready_to_swap: bool):
-    if ready_to_swap:
-        return event.days_in_event_as_list_of_string()
-    else:
-        return [
-            Line([button_for_day(day), " (click to sort group/role)"])
-            for day in event.days_in_event()
-        ]
-
-
-def button_for_day(day: Day) -> Button:
-    return Button(day.name, value=button_value_for_day(day))
-
-
-def get_volunteer_name_cell(interface: abstractInterface, volunteer: Volunteer, ready_to_swap: bool) -> ListOfLines:
-    ready_to_swap = is_ready_to_swap(interface)
-
-    if ready_to_swap:
-        return ListOfLines([volunteer.name])
-
-    volunteer_button = Button(label=volunteer.name, value=name_of_volunteer_button(volunteer))
-    other_material = get_volunteer_other_material(interface=interface, volunteer=volunteer)
-    raincheck_button= get_make_unavailable_button_for_volunteer_across_days(volunteer)
-
-    return ListOfLines([
-        volunteer_button
-        ]+other_material+[
-        raincheck_button
-    ]).add_Lines()
-
-
-def get_volunteer_other_material(interface: abstractInterface, volunteer: Volunteer) -> list:
-    if is_volunteer_id_set_in_state(interface):
-        volunteer_in_state = get_volunteer_from_state(interface)
-        if volunteer_in_state == volunteer:
-            event = get_event_from_state(interface)
-            return get_volunteer_history_and_attendace_checkbox_for_selected_volunteer(interface=interface, volunteer=volunteer, event=event)
-
-    return []
 
 
 def get_allocation_inputs_buttons_in_role_when_available(
@@ -282,6 +232,17 @@ def get_make_unavailable_button_for_volunteer_across_days(
         label=NOT_AVAILABLE_SHORTHAND,
         value=unavailable_button_value_for_volunteer_id_across_days(
             volunteer_id=volunteer.id
+        ),
+    )
+
+def get_remove_role_button_for_volunteer_across_days(
+    volunteer: Volunteer,
+
+) -> Button:
+    return Button(
+        label=REMOVE_SHORTHAND,
+        value=remove_role_button_value_for_volunteer_in_role_across_days(
+            volunteer=volunteer
         ),
     )
 

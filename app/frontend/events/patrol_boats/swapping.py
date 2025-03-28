@@ -123,7 +123,7 @@ def get_swap_button_when_ready_to_swap(
 
     if this_is_the_swapper:
         return get_swap_button_when_ready_to_swap_and_this_is_the_swapper(
-            day=day, volunteer_id=volunteer_id
+            day=day, volunteer=volunteer
         )
     elif swapping_on_this_day:
         swapping_boat = get_boat_allocated_to_volunteer_on_day_at_event(
@@ -182,13 +182,13 @@ def get_swap_button_when_swapping_into_empty_boat(patrol_boat: PatrolBoat, day: 
 
 
 def get_swap_button_when_ready_to_swap_and_this_is_the_swapper(
-    day: Day, volunteer_id: str
+    day: Day, volunteer: Volunteer
 ) -> Button:
     button_name = get_swap_cancel_button_name(
-        day=day, volunteer_id=volunteer_id
+        day=day, volunteer_id=volunteer.id
     )
 
-    return Button(value=button_name, label=CANCEL_SWAP_BUTTON_LABEL)
+    return Button(value=button_name, label="SWAPPING %s: click to cancel" % volunteer.name)
 
 
 def get_swap_button_when_ready_to_swap_and_this_is_a_potential_swapper(

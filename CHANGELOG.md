@@ -3,7 +3,6 @@
 
 Before first training:
 
-patrol boats
 - better doc on what happens if skipperman fields updated or added
 - produce QR code from report page itself
 - more elegant handling of manual reg #64

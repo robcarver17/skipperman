@@ -119,7 +119,7 @@ def get_existing_allocation_elements_for_volunteer_day_and_boat(
         volunteer_at_event_on_boat=volunteer_at_event_on_boat,
     )
 
-    return Line([name, " ", role_dropdown, group_name] + buttons)
+    return Line([name, " ", role_dropdown, " ", group_name] + buttons)
 
 
 def get_buttons_for_volunteer_day_and_boat(

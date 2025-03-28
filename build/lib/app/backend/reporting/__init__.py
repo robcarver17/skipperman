@@ -1,2 +1,0 @@
-class ReportingOptions:
-    pass

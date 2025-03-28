@@ -36,6 +36,7 @@ from app.objects.abstract_objects.abstract_text import Heading
 
 def display_form_view_for_patrol_boat_allocation(interface: abstractInterface) -> Form:
     event = get_event_from_state(interface)
+    top_button_bar = get_top_button_bar_for_patrol_boats(interface)
     title = Heading(
         "Patrol boat allocation for event %s" % str(event), centred=True, size=4
     )
@@ -44,7 +45,6 @@ def display_form_view_for_patrol_boat_allocation(interface: abstractInterface) -
         interface=interface, event=event
     )
     patrol_boat_table = get_patrol_boat_table(event=event, interface=interface)
-    top_button_bar = get_top_button_bar_for_patrol_boats(interface)
     bottom_button_bar = get_bottom_button_bar_for_patrol_boats(interface)
     return Form(
         ListOfLines(

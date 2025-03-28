@@ -31,7 +31,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     HelpButton,
     cancel_menu_button,
-    save_menu_button,
+    save_menu_button, Button,
 )
 
 from app.frontend.forms.swaps import is_ready_to_swap
@@ -42,7 +42,8 @@ from app.frontend.events.patrol_boats.patrol_boat_buttons import (
 )
 from app.frontend.events.patrol_boats.copy_buttons import get_copy_buttons_for_boat_allocation, copy_all_boats_button, \
     copyover_all_boats_button, copy_all_boats_and_roles_button, copyover_all_boats_and_roles_button
-from app.frontend.events.patrol_boats.swapping import get_swap_buttons_for_boat_rota
+from app.frontend.events.patrol_boats.swapping import get_swap_buttons_for_boat_rota, get_swap_cancel_button_name, \
+    CANCEL_SWAP_BUTTON_LABEL
 from app.frontend.events.patrol_boats.patrol_boat_dropdowns import (
     volunteer_boat_role_dropdown,
 )
@@ -221,7 +222,7 @@ def warn_on_all_volunteers_in_patrol_boats(
 def get_top_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonBar:
     in_swap_state = is_ready_to_swap(interface)
     if in_swap_state:
-        return ButtonBar([])
+        return ButtonBar([get_arbitrary_swap_cancel_button()])
     return ButtonBar(
         [
             cancel_menu_button,
@@ -233,6 +234,15 @@ def get_top_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonB
             help_button,
         ]
     )
+
+
+def get_arbitrary_swap_cancel_button():
+    ## Only one swap cancel in the table so doesn't matter
+    button_name = get_swap_cancel_button_name(
+        day=Day.Sunday, volunteer_id='arbitrary'
+    )
+
+    return Button(value=button_name, label=CANCEL_SWAP_BUTTON_LABEL)
 
 
 def get_bottom_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonBar:

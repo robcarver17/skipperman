@@ -142,6 +142,7 @@ def get_swap_button_when_ready_to_swap(
         ## Can't swap across dates
         return ""
 
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import get_name_of_boat_allocated_to_volunteer_on_day_at_event
 
 def get_swap_button_to_move_to_boat_without_swapping(
     interface: abstractInterface,
@@ -153,6 +154,15 @@ def get_swap_button_to_move_to_boat_without_swapping(
         swap_day,
         volunteer_to_swap,
     ) = get_type_day_volunteer_from_swap_state(interface)
+
+    volunteer_is_on_boat_named = get_name_of_boat_allocated_to_volunteer_on_day_at_event(
+        object_store=interface.object_store,
+        event=get_event_from_state(interface),
+        day=day,
+        volunteer=volunteer_to_swap
+    )
+    if volunteer_is_on_boat_named == patrol_boat.name:
+        return ""
 
     swapping_on_this_day = swap_day == day
 
@@ -423,11 +433,14 @@ def update_if_swap_button_pressed_and_not_yet_ready_to_swap(
 def update_if_swap_button_pressed_and_ready_to_swap(
     interface: abstractInterface, swap_button: str
 ):
-    swap_data = get_swap_data(interface=interface, swap_button=swap_button)
-    ## swap_type and swap_type_in_state should be consistent, going to use swap_type
-    do_swapping_for_volunteers_boats_and_possibly_roles_in_boat_allocation(
-        object_store=interface.object_store, swap_data=swap_data
-    )
+    if is_swap_cancel_button(swap_button):
+        pass
+    else:
+        swap_data = get_swap_data(interface=interface, swap_button=swap_button)
+        ## swap_type and swap_type_in_state should be consistent, going to use swap_type
+        do_swapping_for_volunteers_boats_and_possibly_roles_in_boat_allocation(
+            object_store=interface.object_store, swap_data=swap_data
+        )
 
     revert_to_not_swapping_state(interface)
 

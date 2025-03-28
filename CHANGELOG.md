@@ -24,6 +24,7 @@ Before Cadet week
 - massive warning if unique key creators missing from field mappings
 
 # Recent
+- cleaned up repo to reduce disk usage on server
 - speed up display of large tables by not flushing cache
 - allow swapping on to empty boat
 - clean up button mapping to make consistent

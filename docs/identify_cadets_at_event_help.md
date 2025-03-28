@@ -72,12 +72,7 @@ If you subsequently reimport an updated registration file, you may need to ident
 ACTION REQUIRED: Cadet John Smith (2000-01-01) Member appears more than once in WA file with multiple active registrations - ignoring any possible changes made to registration - go to WA and cancel one of the registrations please!
 ```
 
-There are two causes for this:
-
-- A WA registration replacing an existing [manual registration](manually_adding_a_sailor.md). See the relevant help page for advice.
-- Duplicate WA registrations
-
-The latter means the cadet has been registered multiple times, but the duplicate registrations have not been cancelled. Any registrations found in the file after the first one that is loaded in will be ignored.  If you allow a duplicate registration to occur, the best thing to do is to cancel the duplicated registrations in Wild Apricot and then re-import the data. Make sure that the details in the remaining registration on Skipperman reflect what the parent actually wants to do.
+This means the cadet has been registered multiple times within WA, but the duplicate registrations have not been cancelled. Any registrations found in the file after the first one that is loaded in will be ignored.  If you allow a duplicate registration to occur, the best thing to do is to cancel the duplicated registrations in Wild Apricot and then re-import the data. Make sure that the details in the remaining registration on Skipperman reflect what the parent actually wants to do.
 
 ## Missing registrations on update
 

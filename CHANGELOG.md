@@ -2,7 +2,6 @@
 # to do next
 
 Before first training:
-- massive warning if unique key creators missing from field mappings
 - more elegant handling of manual reg #64
 - merge cadet, merge volunteer #15
 - delete empty event, empty cadet, empty volunteer #26
@@ -20,6 +19,7 @@ Before Cadet week
 - add missing stuff to data dumps #55
 
 # Recent
+- massive warning if unique key creators missing from field mappings
 - produce QR code from report page itself
 - better doc on what happens if skipperman fields updated or added
 - cleaned up repo to reduce disk usage on server

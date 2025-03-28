@@ -38,13 +38,9 @@ Once you are confident then click on `Please check the details again for me` (if
 
 Note that adding a sailor manually will set their registration status to 'Manual'. Since there is no registration information, all the registration fields will be blank. 
 
-If the sailor is subsequently registered on Wild Apricot, and the data imported, you will get an error message: 
+If the sailor is subsequently registered on Wild Apricot, and the data imported, you will get the following message:
 
-> `ACTION REQUIRED: Cadet John Smith (2000-01-01) Member appears more than once in WA file with multiple active registrations - ignoring any possible changes made to registration - go to WA and cancel one of the registrations please!`
+> `There have been important changes for event registration information about cadet John Smith (2000-01-01) Member`
+> `Sailor John Smith (2000-01-01) Memberis still active but status has changed from Manual to Paid: select status `
 
-You have two options:
-
-- Change the original manual registration to `Cancelled` in Skipperman. Then you can re-import the Wild Apricot file with the new registration. This has the disadvantage that you will lose any changes / additional information added in Skipperman. 
-- Ignore the error. This has the disadvantage that you will need to manually update the original manual registration with any relevant information from Wild Apricot.
-
-NOTE: In a future version of Skipperman the system will allow you to replace the manual registration with an official one automatically.
+If they have been registered with different days attending, that will also be higlighted. Click on `Use new data imported from latest file` to update Skipperman.

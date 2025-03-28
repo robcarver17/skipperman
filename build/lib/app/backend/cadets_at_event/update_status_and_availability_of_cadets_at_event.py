@@ -5,10 +5,6 @@ from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     update_dict_of_all_event_info_for_cadets,
 )
 
-from app.backend.registration_data.cadet_registration_data import (
-    get_list_of_cadets_with_id_and_registration_data_at_event,
-    update_list_of_cadets_with_id_and_registration_data_at_event,
-)
 from app.data_access.store.object_store import ObjectStore
 from app.objects.cadets import Cadet
 from app.objects.day_selectors import Day, DaySelector
@@ -48,14 +44,13 @@ def make_cadet_available_on_day(
     object_store: ObjectStore, event: Event, cadet: Cadet, day: Day
 ):
 
-    registration_data = get_dict_of_cadets_with_registration_data(
-        object_store=object_store, event=event
+    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(
+        object_store=object_store, event=event, active_only=True
     )
-    registration_data.make_cadet_available_on_day(cadet=cadet, day=day)
-    update_dict_of_cadets_with_registration_data(
+    dict_of_all_event_info_for_cadets.make_cadet_available_on_day(cadet=cadet, day=day)
+    update_dict_of_all_event_info_for_cadets(
+        dict_of_all_event_info_for_cadets=dict_of_all_event_info_for_cadets,
         object_store=object_store,
-        event=event,
-        dict_of_cadets_with_registration_data=registration_data,
     )
 
 
@@ -98,14 +93,13 @@ def update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting(
     new_status: RegistrationStatus,
 ):
 
-    registration_data = get_list_of_cadets_with_id_and_registration_data_at_event(
-        object_store=object_store, event=event
+    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(
+        object_store=object_store, event=event, active_only=True
     )
-    registration_data.update_status_of_existing_cadet_at_event(
-        cadet_id=cadet.id, new_status=new_status
+    dict_of_all_event_info_for_cadets.update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting(
+        cadet=cadet, new_status=new_status
     )
-    update_list_of_cadets_with_id_and_registration_data_at_event(
+    update_dict_of_all_event_info_for_cadets(
+        dict_of_all_event_info_for_cadets=dict_of_all_event_info_for_cadets,
         object_store=object_store,
-        event=event,
-        list_of_cadets_with_id_at_event=registration_data,
     )

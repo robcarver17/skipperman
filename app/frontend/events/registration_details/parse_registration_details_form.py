@@ -257,8 +257,7 @@ def get_registration_details_for_row_and_column_name_in_form_and_alter_registrat
     )
 
     form_value = interface.value_from_form(input_name)
-    data_in_row = registration_details.registration_data[cadet].data_in_row
-    data_in_row[column_name] = typecast_input_of_column(
+    new_value_for_column = typecast_input_of_column(
         column_name=column_name, value=form_value
     )
 
@@ -266,7 +265,8 @@ def get_registration_details_for_row_and_column_name_in_form_and_alter_registrat
         object_store=interface.object_store,
         cadet=cadet,
         event=registration_details.event,
-        new_data_in_row=data_in_row,
+        column_name=column_name,
+        new_value_for_column=new_value_for_column
     )
 
 

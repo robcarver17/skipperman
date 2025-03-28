@@ -3,15 +3,10 @@
 
 Before first training:
 
-volunteer rota 
-- speed up display of large tables #67
-
 patrol boats
 - clean up button mapping (put in change log)
 - speed up display of large tables, use all event dict and prop up#67 (put in change log)
 
-group allocation and cadets generally
-- assume same prop up  / down logic as in volunteers
 
 - produce QR code from report page itself
 - more elegant handling of manual reg #64

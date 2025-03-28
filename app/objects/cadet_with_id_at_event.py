@@ -155,10 +155,15 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
         )
 
     def update_data_row_for_existing_cadet_at_event(
-        self, cadet_id: str, new_data_in_row: RowInRegistrationData
+        self, cadet_id: str,                                                                     column_name: str,
+                                                                    new_value_for_column
+
     ):
+        existing_data_in_row = self.cadet_with_id_and_data_at_event(cadet_id).data_in_row
+        existing_data_in_row[column_name] = new_value_for_column
+
         self._update_item_for_existing_cadet_at_event(
-            cadet_id=cadet_id, new_item=new_data_in_row, attribute="data_in_row"
+            cadet_id=cadet_id, new_item=existing_data_in_row, attribute="data_in_row"
         )
 
     def _update_item_for_existing_cadet_at_event(

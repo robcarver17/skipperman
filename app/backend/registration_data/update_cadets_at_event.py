@@ -115,37 +115,22 @@ def update_notes_for_existing_cadet_at_event(
 def update_health_for_existing_cadet_at_event(
     object_store: ObjectStore, event: Event, cadet: Cadet, new_health: str
 ):
-    list_of_cadets_with_id_at_event = (
-        get_list_of_cadets_with_id_and_registration_data_at_event(
-            object_store=object_store, event=event
-        )
+    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
+    dict_of_all_event_data.update_health_for_existing_cadet_at_event(
+        cadet=cadet, new_health=new_health
     )
-    list_of_cadets_with_id_at_event.update_health_for_existing_cadet_at_event(
-        cadet_id=cadet.id, new_health=new_health
-    )
-    update_list_of_cadets_with_id_and_registration_data_at_event(
-        object_store=object_store,
-        event=event,
-        list_of_cadets_with_id_at_event=list_of_cadets_with_id_at_event,
-    )
+    update_dict_of_all_event_info_for_cadets(object_store=object_store, dict_of_all_event_info_for_cadets=dict_of_all_event_data)
 
 
 def update_data_row_for_existing_cadet_at_event(
     object_store: ObjectStore,
     event: Event,
     cadet: Cadet,
-    new_data_in_row: RowInRegistrationData,
+    column_name: str,
+    new_value_for_column
 ):
-    list_of_cadets_with_id_at_event = (
-        get_list_of_cadets_with_id_and_registration_data_at_event(
-            object_store=object_store, event=event
-        )
+    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
+    dict_of_all_event_data.update_data_row_for_existing_cadet_at_event(
+        cadet=cadet, column_name=column_name, new_value_for_column=new_value_for_column
     )
-    list_of_cadets_with_id_at_event.update_data_row_for_existing_cadet_at_event(
-        cadet_id=cadet.id, new_data_in_row=new_data_in_row
-    )
-    update_list_of_cadets_with_id_and_registration_data_at_event(
-        object_store=object_store,
-        event=event,
-        list_of_cadets_with_id_at_event=list_of_cadets_with_id_at_event,
-    )
+    update_dict_of_all_event_info_for_cadets(object_store=object_store, dict_of_all_event_info_for_cadets=dict_of_all_event_data)

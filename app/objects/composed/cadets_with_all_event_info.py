@@ -15,6 +15,7 @@ from app.objects.day_selectors import DaySelector, Day
 from app.objects.exceptions import MissingData, arg_not_passed
 from app.objects.food import no_food_requirements
 from app.objects.groups import Group, unallocated_group
+from app.objects.registration_data import RowInRegistrationData
 
 from app.objects.registration_status import RegistrationStatus
 
@@ -98,6 +99,31 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         self._dict_of_cadets_with_food_required_at_event = (
             dict_of_cadets_with_food_required_at_event
         )
+
+    def update_data_row_for_existing_cadet_at_event(
+            self,
+            cadet: Cadet,
+            column_name: str,
+            new_value_for_column
+    ):
+        registration_data = self.dict_of_cadets_with_registration_data
+        registration_data.update_row_in_registration_data_for_existing_cadet_at_event(cadet=cadet, column_name=column_name, new_value_for_column=new_value_for_column)
+
+        self.propagate_changes_to_cadet_in_underlying_data(cadet)
+
+    def update_health_for_existing_cadet_at_event(
+        self, cadet: Cadet, new_health: str
+    ):
+        event_data = self.event_data_for_cadet(cadet)
+        current_health = event_data.registration_data.health
+        if current_health == new_health:
+            return
+
+        registration_data = self.dict_of_cadets_with_registration_data
+        registration_data.update_health_for_existing_cadet_at_event(cadet=cadet, new_health = new_health)
+
+        self.propagate_changes_to_cadet_in_underlying_data(cadet)
+
 
     def update_notes_for_existing_cadet_at_event(self, cadet: Cadet, notes:str):
         ## my level
@@ -247,10 +273,10 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         return messages
 
     def make_cadet_available_on_day(self, cadet: Cadet, day: Day):
-        self.event_data_for_cadet(cadet).registration_data.availability.make_available_on_day(day)
         self.dict_of_cadets_with_registration_data.make_cadet_available_on_day(
             cadet=cadet, day=day
         )
+        self.propagate_changes_to_cadet_in_underlying_data(cadet)
 
     def remove_availability_of_existing_cadet_on_day_and_return_messages(
         self, cadet: Cadet, day: Day
@@ -276,12 +302,23 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
 
         return [message]
 
+    def update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting(
+            self,
+            cadet: Cadet,
+            new_status: RegistrationStatus,
+    ):
+        self.dict_of_cadets_with_registration_data.update_status_of_existing_cadet_in_event_info(
+            cadet=cadet, new_status=new_status
+        )
+        self.propagate_changes_to_cadet_in_underlying_data(cadet)
+
+
     def update_status_of_existing_cadet_in_event_info_to_cancelled_or_deleted_and_return_messages(
         self, cadet: Cadet, new_status: RegistrationStatus
     ) -> List[str]:
 
         assert new_status.is_cancelled_or_deleted
-        self.dict_of_cadets_with_registration_data.update_status_of_existing_cadet_in_event_info_to_cancelled_or_deleted(
+        self.dict_of_cadets_with_registration_data.update_status_of_existing_cadet_in_event_info(
             cadet=cadet, new_status=new_status
         )
 

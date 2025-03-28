@@ -2,6 +2,7 @@
 # to do next
 
 Before first training:
+- massive warning if unique key creators missing from field mappings
 - more elegant handling of manual reg #64
 - merge cadet, merge volunteer #15
 - delete empty event, empty cadet, empty volunteer #26
@@ -13,11 +14,10 @@ Before Cadet week
 - replace csv with parquet, keep csv for backup (might have to do sooner if disk limit breaks)
 - change data to parquet?
 - food add non registered #28
-- food documentation #49
-- clothing documentation #49
+- food documentation and checks #49
+- clothing documentation and checks #49
 - add food / clothing to giant data dump #54
 - add missing stuff to data dumps #55
-- massive warning if unique key creators missing from field mappings
 
 # Recent
 - produce QR code from report page itself

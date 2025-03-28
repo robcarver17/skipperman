@@ -94,6 +94,8 @@ This is quite normal, because:
 
 Read [mapping guide for experts](List_and_explanation_of_skipperman_fields.md) to see if you need to take action, and add them as new fields in the [mapping table](#the-mapping-table).
 
+Some fields are **key** - Skipperman simply won't work without them. You will see a list of those highlighted at the top of the screen.
+
 ## Fields that are in the Wild Apricot export file, but not in the mapping file
 
 Headed with "Following fields are in WA file but will not be imported, probably OK"

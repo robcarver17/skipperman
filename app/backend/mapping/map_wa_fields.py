@@ -14,6 +14,7 @@ from app.data_access.configuration.field_list import (
     REGISTRATION_DATE,
     PAYMENT_STATUS,
 )
+from app.data_access.configuration.field_list_groups import MINIMUM_REQUIRED_FOR_REGISTRATION
 from app.data_access.store.object_store import ObjectStore
 
 from app.backend.mapping.list_of_field_mappings import get_field_mapping_for_event
@@ -155,6 +156,12 @@ def add_row_id_from_wa_fields_in_event_data(
 
     return registration_data
 
+try:
+    assert REGISTRATION_DATE in MINIMUM_REQUIRED_FOR_REGISTRATION
+    assert REGISTERED_BY_FIRST_NAME in MINIMUM_REQUIRED_FOR_REGISTRATION
+    assert REGISTERED_BY_LAST_NAME in MINIMUM_REQUIRED_FOR_REGISTRATION
+except:
+    raise Exception("Mismatch between unique row identifier and minimum required for registration")
 
 def add_unique_row_identified_to_row(row_in_registration_data: RowInRegistrationData):
     row_id = unique_row_identifier(

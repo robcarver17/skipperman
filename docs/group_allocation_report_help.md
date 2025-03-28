@@ -38,7 +38,7 @@ The report can be publicly accessed once created from the web link shown on the 
 
 It's better to share a link rather than a file, as the former will be automatically updated.
 
-Report links can also be shared via QR codes, which can be created from the [utilities / file management page](file_management_help.md).
+Report links can also be shared via QR codes, which can be created by clicking the 'Get QR code for report' button under 'Modify printing options', if a report is public.
 
 You can also delete your report after the event from the [utilities / file management page](file_management_help.md).
 

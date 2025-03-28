@@ -4,7 +4,6 @@ from random import random
 from typing import List
 import pandas as pd
 
-from app.data_access.configuration.field_list_groups import FIELDS_WITH_DATES, FIELDS_WITH_DATETIMES
 from app.objects.generic_list_of_objects import (
     GenericListOfObjects,
     create_list_of_objects_from_dataframe,
@@ -20,8 +19,6 @@ from app.objects.utils import (
     clean_up_dict_with_nans,
     transform_df_from_str_to_dates,
     transform_df_from_dates_to_str,
-transform_datetime_into_str,
-transform_date_into_str
 )
 
 from app.data_access.configuration.field_list import (

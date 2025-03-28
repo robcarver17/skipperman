@@ -1,6 +1,7 @@
 from app.backend.registration_data.raw_mapped_registration_data import (
     does_event_have_imported_registration_data,
 )
+from app.data_access.store.object_store import ObjectStore
 
 from app.frontend.events.mapping.mapping_table import *
 from app.frontend.events.mapping.parse_field_mapping import (
@@ -35,7 +36,7 @@ from app.frontend.shared.events_state import get_event_from_state
 from app.backend.mapping.list_of_field_mappings import (
     does_event_already_have_mapping,
 )
-from app.backend.mapping.check_field_mapping import check_field_mapping
+from app.backend.mapping.check_field_mapping import check_field_mapping, key_fields_missing_in_mapping
 from app.objects.abstract_objects.abstract_text import Heading, bold
 from app.objects.events import Event
 
@@ -60,12 +61,12 @@ def display_form_event_field_mapping_existing_mapping(
     event: Event,
 ) -> Union[Form, NewForm]:
 
+    nav_bar = mapping_buttons()
+    warning_text = warning_text_for_mapping(interface=interface, event=event)
     mapping_table = get_mapping_table(interface=interface, event=event)
     check_mapping_lines = check_field_mapping(
         object_store=interface.object_store, event=event
     )
-    warning_text = warning_text_for_mapping(interface=interface, event=event)
-    nav_bar = mapping_buttons()
 
     return Form(
         ListOfLines(
@@ -87,6 +88,8 @@ def display_form_event_field_mapping_existing_mapping(
     )
 
 
+
+
 def warning_text_for_mapping(interface: abstractInterface, event: Event) -> str:
     ## CHANGE TO ANY REGISTRATION DATA
     wa_import_done = does_event_have_imported_registration_data(
@@ -94,9 +97,12 @@ def warning_text_for_mapping(interface: abstractInterface, event: Event) -> str:
     )
 
     if wa_import_done:
-        warning_text = "*WARNING* Looks like data import has already been done for this event. Changing the mapping could break things. DO NOT CHANGE UNLESS YOU ARE SURE."
+        warning_text = "*WARNING* Looks like data import has already been done for this event. Changing the mapping could break things. DO NOT CHANGE UNLESS YOU ARE SURE. "
     else:
         warning_text = ""
+    key_fields =key_fields_missing_in_mapping(object_store=interface.object_store, event=event)
+    if len(key_fields)>0:
+        warning_text+="Mapping missing following key fields: %s. IMPORT WILL BREAK." % ", ".join(key_fields)
 
     return warning_text
 

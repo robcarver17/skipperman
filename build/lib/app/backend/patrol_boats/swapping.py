@@ -1,17 +1,14 @@
 from dataclasses import dataclass
 
-from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
-    get_dict_of_patrol_boats_by_day_for_volunteer_at_event,
-    update_dict_of_patrol_boats_by_day_for_volunteer_at_event,
-)
 
 from app.data_access.store.object_store import ObjectStore
 
 from app.backend.rota.changes import swap_roles_and_groups_for_volunteers_in_allocation
+from app.objects.exceptions import arg_not_passed
+from app.objects.patrol_boats import PatrolBoat
 
 from app.objects.volunteers import Volunteer
 
-from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import (
     VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 )
@@ -26,8 +23,28 @@ class SwapData:
     day_to_swap_with: Day
     swap_boats: bool
     swap_roles: bool
-    volunteer_to_swap_with: Volunteer
     original_volunteer: Volunteer
+    volunteer_to_swap_with: Volunteer = arg_not_passed
+    swapping_into_empty_boat: bool = False
+    empty_boat_to_swap_into: PatrolBoat = arg_not_passed
+
+
+def do_swapping_for_volunteers_boats_and_possibly_roles_in_boat_allocation(
+        object_store: ObjectStore, swap_data: SwapData
+):
+    if swap_data.swapping_into_empty_boat:
+        move_volunteer_into_empty_boat_using_swapdata(
+            object_store=object_store, swap_data=swap_data
+        )
+
+    if swap_data.swap_roles:
+        swap_roles_for_volunteers_in_allocation_using_swapdata(
+            object_store=object_store, swap_data=swap_data
+        )
+    if swap_data.swap_boats:
+        swap_boats_for_volunteers_in_allocation_using_swapdata(
+            object_store=object_store, swap_data=swap_data
+        )
 
 
 def is_possible_to_swap_roles_on_one_day(
@@ -42,28 +59,18 @@ def is_possible_to_swap_roles_on_one_day(
 
 
 def swap_boats_for_volunteers_in_allocation_using_swapdata(
-    interface: abstractInterface, swap_data: SwapData
+    object_store:ObjectStore, swap_data: SwapData
 ):
-    try:
-        swap_patrol_boats_for_volunteers_in_allocation(
-            object_store=interface.object_store,
-            event=swap_data.event,
-            volunteer_to_swap_with=swap_data.volunteer_to_swap_with,
-            original_volunteer=swap_data.original_volunteer,
-            day_to_swap_with=swap_data.day_to_swap_with,
-            original_day=swap_data.original_day,
-        )
-    except Exception as e:
-        interface.log_error(
-            "Swap boats of %s and %s failed on day %s, error %s"
-            % (
-                swap_data.volunteer_to_swap_with.name,
-                swap_data.original_volunteer.name,
-                swap_data.day_to_swap_with.name,
-                str(e),
-            )
-        )
+    swap_patrol_boats_for_volunteers_in_allocation(
+        object_store=object_store,
+        event=swap_data.event,
+        volunteer_to_swap_with=swap_data.volunteer_to_swap_with,
+        original_volunteer=swap_data.original_volunteer,
+        day_to_swap_with=swap_data.day_to_swap_with,
+        original_day=swap_data.original_day,
+    )
 
+from app.backend.volunteers.volunteers_at_event import get_dict_of_all_event_data_for_volunteers, update_dict_of_all_event_data_for_volunteers
 
 def swap_patrol_boats_for_volunteers_in_allocation(
     object_store: ObjectStore,
@@ -73,42 +80,36 @@ def swap_patrol_boats_for_volunteers_in_allocation(
     day_to_swap_with: Day,
     volunteer_to_swap_with: Volunteer,
 ):
-    patrol_boat_data = get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
-        object_store=object_store, event=event
-    )
-
-    patrol_boat_data.swap_patrol_boats_for_volunteers_in_allocation(
+    all_event_data = get_dict_of_all_event_data_for_volunteers(object_store, event)
+    all_event_data.swap_patrol_boats_for_volunteers_in_allocation(
         original_volunteer=original_volunteer,
         volunteer_to_swap_with=volunteer_to_swap_with,
         day_to_swap_with=day_to_swap_with,
         original_day=original_day,
     )
 
-    update_dict_of_patrol_boats_by_day_for_volunteer_at_event(
-        dict_of_volunteers_at_event_with_patrol_boats=patrol_boat_data,
-        object_store=object_store,
-    )
-
+    update_dict_of_all_event_data_for_volunteers(object_store, dict_of_all_event_data=all_event_data)
 
 def swap_roles_for_volunteers_in_allocation_using_swapdata(
-    interface: abstractInterface, swap_data: SwapData
+    object_store: ObjectStore, swap_data: SwapData
 ):
-    try:
-        swap_roles_and_groups_for_volunteers_in_allocation(
-            object_store=interface.object_store,
-            event=swap_data.event,
-            volunteer_to_swap_with=swap_data.volunteer_to_swap_with,
-            original_volunteer=swap_data.original_volunteer,
-            day_to_swap_with=swap_data.day_to_swap_with,
-            original_day=swap_data.original_day,
-        )
-    except Exception as e:
-        interface.log_error(
-            "Swap roles of %s and %s failed on day %s, error %s"
-            % (
-                swap_data.volunteer_to_swap_with.name,
-                swap_data.original_volunteer.name,
-                swap_data.day_to_swap_with.name,
-                str(e),
-            )
-        )
+    swap_roles_and_groups_for_volunteers_in_allocation(
+        object_store=object_store,
+        event=swap_data.event,
+        volunteer_to_swap_with=swap_data.volunteer_to_swap_with,
+        original_volunteer=swap_data.original_volunteer,
+        day_to_swap_with=swap_data.day_to_swap_with,
+        original_day=swap_data.original_day,
+    )
+
+def move_volunteer_into_empty_boat_using_swapdata(
+    object_store: ObjectStore, swap_data: SwapData
+):
+    all_event_data = get_dict_of_all_event_data_for_volunteers(object_store, swap_data.event)
+    all_event_data.move_volunteer_into_empty_boat(
+        original_volunteer=swap_data.original_volunteer,
+        day_to_swap_with=swap_data.day_to_swap_with,
+        new_patrol_boat = swap_data.empty_boat_to_swap_into
+    )
+
+    update_dict_of_all_event_data_for_volunteers(object_store, dict_of_all_event_data=all_event_data)

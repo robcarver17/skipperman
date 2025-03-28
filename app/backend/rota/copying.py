@@ -10,6 +10,29 @@ from app.objects.events import Event
 
 from app.backend.volunteers.volunteers_at_event import get_dict_of_all_event_data_for_volunteers, update_dict_of_all_event_data_for_volunteers
 
+
+def copy_earliest_valid_role_for_volunteer(
+    object_store: ObjectStore,
+    event: Event,
+    volunteer: Volunteer,
+        allow_overwrite: bool
+):
+    valid_day = get_day_with_earliest_valid_role_and_group_for_volunteer_or_none(
+        object_store=object_store, event=event, volunteer=volunteer
+    )
+
+    if valid_day is None:
+        return
+
+    copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
+        object_store=object_store,
+        event=event,
+        volunteer=volunteer,
+        day=valid_day,
+        allow_replacement=allow_overwrite,
+    )
+
+
 def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
     object_store: ObjectStore,
     event: Event,
@@ -18,18 +41,10 @@ def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
     allow_replacement: bool = True,
 ):
     all_event_data = get_dict_of_all_event_data_for_volunteers(object_store=object_store, event=event)
-    registration_data_for_volunteers_at_event = all_event_data.dict_of_registration_data_for_volunteers_at_event
-
-    availability_for_volunteer = (
-        registration_data_for_volunteers_at_event.get_data_for_volunteer(
-            volunteer
-        ).availablity
-    )
     try:
         all_event_data.copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
             volunteer=volunteer,
             day=day,
-            available_days=availability_for_volunteer,
             allow_replacement=allow_replacement,
         )
     except Exception as e:
@@ -39,47 +54,6 @@ def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
         )
 
     update_dict_of_all_event_data_for_volunteers(object_store=object_store, dict_of_all_event_data=all_event_data)
-
-
-def copy_earliest_valid_role_and_overwrite_for_volunteer(
-    object_store: ObjectStore,
-    event: Event,
-    volunteer: Volunteer,
-):
-    valid_day = get_day_with_earliest_valid_role_and_group_for_volunteer_or_none(
-        object_store=object_store, event=event, volunteer=volunteer
-    )
-
-    if valid_day is None:
-        return
-
-    copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
-        object_store=object_store,
-        event=event,
-        volunteer=volunteer,
-        day=valid_day,
-        allow_replacement=True,
-    )
-
-
-def copy_earliest_valid_role_to_all_empty_for_volunteer(
-    object_store: ObjectStore,
-    event: Event,
-    volunteer: Volunteer,
-):
-    valid_day = get_day_with_earliest_valid_role_and_group_for_volunteer_or_none(
-        object_store=object_store, event=event, volunteer=volunteer
-    )
-    if valid_day is None:
-        return
-
-    copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
-        object_store=object_store,
-        event=event,
-        volunteer=volunteer,
-        day=valid_day,
-        allow_replacement=False,
-    )
 
 
 

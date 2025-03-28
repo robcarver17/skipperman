@@ -38,7 +38,7 @@ list_of_menu_buttons = Line(
     [backup_files_button, upload_data_button, restore_data_button, snapshot_data_button]
 )
 
-nav_buttons = ButtonBar([back_menu_button, main_menu_button, help_button])
+nav_buttons = ButtonBar([ main_menu_button, back_menu_button,help_button])
 
 
 def display_form_data_and_backups(interface: abstractInterface) -> Form:

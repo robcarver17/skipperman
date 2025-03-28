@@ -1,37 +1,17 @@
-from typing import List, Tuple, Callable
+from typing import Tuple
 
+from app.backend.patrol_boats.list_of_patrol_boats import get_patrol_boat_from_id
 from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
 
 from app.objects.volunteers import Volunteer
 
-from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
-    load_list_of_patrol_boats_at_event,
-    get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day,
-)
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.data_access.configuration.fixed import REMOVE_SHORTHAND, ADD_KEYBOARD_SHORTCUT
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.day_selectors import Day
-from app.objects.events import Event
 from app.objects.patrol_boats import PatrolBoat
 from app.frontend.shared.buttons import get_attributes_from_button_pressed_of_known_type, is_button_of_type, get_button_value_given_type_and_attributes
-
-def get_list_of_generic_buttons_for_each_volunteer_day_combo(
-    interface: abstractInterface, event: Event, button_name_function: Callable
-) -> List[str]:
-    list_of_button_names = []
-    for day in event.days_in_event():
-        list_of_volunteer_ids = (
-            get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(
-                object_store=interface.object_store, event=event, day=day
-            )
-        )
-        for volunteer_id in list_of_volunteer_ids:
-            list_of_button_names.append(
-                button_name_function(day=day, volunteer_id=volunteer_id)
-            )
-    return list_of_button_names
 
 
 def generic_button_name_for_volunteer_in_boat_at_event_on_day(
@@ -57,6 +37,17 @@ def get_day_and_volunteer_given_button_of_type(
     )
 
     return Day[day_name], volunteer
+
+def get_day_and_patrol_boat_given_button_of_type(
+    interface: abstractInterface, button_name: str, button_type: str
+) -> Tuple[Day, PatrolBoat]:
+    day_name, patrol_boat_id  = get_attributes_from_button_pressed_of_known_type(
+        value_of_button_pressed=button_name,
+        type_to_check=button_type
+    )
+
+    patrol_boat =  get_patrol_boat_from_id(object_store=interface.object_store, boat_id=patrol_boat_id)
+    return Day[day_name], patrol_boat
 
 delete_button_type = "deleteBoatButton"
 
@@ -102,18 +93,6 @@ def is_delete_volunteer_button(button_value: str):
 
 DELETE_BOAT_BUTTON_LABEL = "Remove boat from rota"
 DELETE_VOLUNTEER_BUTTON_LABEL = REMOVE_SHORTHAND
-COPY_ALL_BOATS_BUTTON_LABEL = "Copy / fill boats from earliest"
-COPYOVER_ALL_BOATS_BUTTON_LABEL = "Copy / overwrite boats from earliest"
-COPY_BOATS_AND_ROLES_BUTTON_LABEL = "Copy / fill all boats&roles from earliest"
-COPYOVER_BOATS_AND_ROLES_BUTTON_LABEL = "Copy / overwrite all boats&roles from earliest"
 
-copy_all_boats_button = Button(COPY_ALL_BOATS_BUTTON_LABEL, nav_button=True)
-copyover_all_boats_button = Button(COPYOVER_ALL_BOATS_BUTTON_LABEL, nav_button=True)
-copy_all_boats_and_roles_button = Button(
-    COPY_BOATS_AND_ROLES_BUTTON_LABEL, nav_button=True
-)
-copyover_all_boats_and_roles_button = Button(
-    COPYOVER_BOATS_AND_ROLES_BUTTON_LABEL, nav_button=True
-)
 ADD_NEW_BOAT_BUTTON_LABEL = "Add new boat"
 add_new_boat_button = Button(ADD_NEW_BOAT_BUTTON_LABEL, shortcut=ADD_KEYBOARD_SHORTCUT)

@@ -3,14 +3,11 @@ from app.frontend.events.patrol_boats.copying import (
     copy_across_all_boats_and_roles,
     copy_across_all_boats,
     overwrite_allocation_across_all_boats,
-    overwrite_copy_across_all_boats_and_roles, is_copy_button,
-)
+    overwrite_copy_across_all_boats_and_roles, update_if_copy_button_pressed, )
+from app.frontend.events.patrol_boats.copy_buttons import is_copy_button, copy_all_boats_button, \
+    copyover_all_boats_button, copy_all_boats_and_roles_button, copyover_all_boats_and_roles_button
 from app.frontend.events.patrol_boats.parse_patrol_boat_table import *
 from app.frontend.events.patrol_boats.patrol_boat_buttons import (
-    copy_all_boats_button,
-    copyover_all_boats_button,
-    copy_all_boats_and_roles_button,
-    copyover_all_boats_and_roles_button,
     add_new_boat_button, is_delete_boat_button, is_delete_volunteer_button,
 )
 from app.frontend.events.patrol_boats.render_patrol_boat_table import (
@@ -79,14 +76,19 @@ def post_form_view_for_patrol_boat_allocation(
 
     if save_menu_button.pressed(last_button_pressed):
         update_data_from_form_entries_in_patrol_boat_allocation_page(interface)
+
     elif copy_all_boats_button.pressed(last_button_pressed):
         copy_across_all_boats(interface)
+
     elif copy_all_boats_and_roles_button.pressed(last_button_pressed):
         copy_across_all_boats_and_roles(interface)
+
     elif copyover_all_boats_button.pressed(last_button_pressed):
         overwrite_allocation_across_all_boats(interface)
+
     elif copyover_all_boats_and_roles_button.pressed(last_button_pressed):
         overwrite_copy_across_all_boats_and_roles(interface)
+
     elif add_new_boat_button.pressed(last_button_pressed):
         update_adding_boat(interface)
 
@@ -114,9 +116,9 @@ def post_form_view_for_patrol_boat_allocation(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.flush_cache_to_store()
+    interface.save_cache_to_store_without_clearing()
 
-    return display_form_view_for_patrol_boat_allocation(interface)
+    return interface.get_new_form_given_function(display_form_view_for_patrol_boat_allocation)
 
 
 def previous_form(interface: abstractInterface):

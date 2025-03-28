@@ -53,7 +53,6 @@ def parse_registration_details_from_form(interface: abstractInterface, event: Ev
             cadet=cadet,
         )
 
-    interface.flush_cache_to_store()
 
 
 def get_registration_details_for_row_in_form_and_alter_registration_data(

@@ -1,6 +1,6 @@
 from typing import List, Union
 
-
+from app.frontend.events.patrol_boats.swapping import get_swap_button_to_move_to_boat_without_swapping
 from app.frontend.forms.swaps import is_ready_to_swap
 
 from app.backend.patrol_boats.patrol_boat_summary import (
@@ -137,13 +137,9 @@ def get_patrol_boat_table(interface: abstractInterface, event: Event) -> Table:
     other_rows = get_body_of_patrol_boat_table_at_event(
         event=event, interface=interface
     )
-    in_swap_state = is_ready_to_swap(interface)
-    if in_swap_state:
-        bottom_row = RowInTable([""] * len(top_row))
-    else:
-        bottom_row = get_bottom_row_for_patrol_boat_table(
-            interface=interface, event=event
-        )
+    bottom_row = get_bottom_row_for_patrol_boat_table(
+        interface=interface, event=event, top_row=top_row
+    )
 
     return Table([top_row] + other_rows + [bottom_row], has_column_headings=True)
 
@@ -163,8 +159,12 @@ def get_top_row_for_patrol_boat_table(event: Event) -> RowInTable:
 
 
 def get_bottom_row_for_patrol_boat_table(
-    interface: abstractInterface, event: Event
+    interface: abstractInterface, event: Event, top_row: RowInTable
 ) -> RowInTable:
+    in_swap_state = is_ready_to_swap(interface)
+    if in_swap_state:
+        return RowInTable([""] * len(top_row))
+
     add_boat_dropdown = get_add_boat_dropdown(interface=interface, event=event)
     padding_columns = get_bottom_row_padding_columns_for_patrol_boat_table(event)
 
@@ -185,7 +185,7 @@ def get_bottom_row_padding_columns_for_patrol_boat_table(event: Event) -> List[s
 
 
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
-    load_list_of_patrol_boats_at_event,
+    load_list_of_patrol_boats_at_event, is_boat_empty,
 )
 
 
@@ -248,10 +248,50 @@ def get_allocation_inputs_for_boat_across_days(
 def get_allocation_inputs_for_day_and_boat(
     interface: abstractInterface, patrol_boat: PatrolBoat, day: Day, event: Event
 ) -> ListOfLines:
+    if is_boat_empty(object_store=interface.object_store, patrol_boat=patrol_boat, day=day, event=event):
+        return get_allocation_inputs_for_day_and_boat_if_boat_is_empty(
+            interface=interface,
+            patrol_boat=patrol_boat,
+            day=day,
+            event=event
+        )
+    else:
+        return get_allocation_inputs_for_day_and_boat_if_boat_contains_volunteers(
+            interface=interface,
+            patrol_boat=patrol_boat,
+            day=day,
+            event=event
+
+        )
+
+
+def get_allocation_inputs_for_day_and_boat_if_boat_is_empty(
+    interface: abstractInterface, patrol_boat: PatrolBoat, day: Day, event: Event
+) -> ListOfLines:
+    if is_ready_to_swap(interface):
+        return ListOfLines([get_swap_button_to_move_to_boat_without_swapping(interface=interface,
+                                                                             patrol_boat=patrol_boat,
+                                                                             day=day)])
+    else:
+        return get_add_volunteer_to_patrol_boat_dropdown(
+        interface=interface, patrol_boat=patrol_boat, day=day, event=event
+    )
+
+
+def get_allocation_inputs_for_day_and_boat_if_boat_contains_volunteers(
+    interface: abstractInterface, patrol_boat: PatrolBoat, day: Day, event: Event
+) -> ListOfLines:
+
     existing_elements = get_existing_allocation_elements_for_day_and_boat(
         day=day, patrol_boat=patrol_boat, event=event, interface=interface
     )
-    add_volunteer_to_patrol_boat_dropdown = get_add_volunteer_to_patrol_boat_dropdown(
+
+    in_swap_state = is_ready_to_swap(interface)
+    if in_swap_state:
+        last_bit = get_swap_button_to_move_to_boat_without_swapping(patrol_boat=patrol_boat, day=day, interface=interface)
+    else:
+        last_bit =  get_add_volunteer_to_patrol_boat_dropdown(
         interface=interface, patrol_boat=patrol_boat, day=day, event=event
     )
-    return ListOfLines(existing_elements + [add_volunteer_to_patrol_boat_dropdown])
+
+    return ListOfLines(existing_elements + [last_bit])

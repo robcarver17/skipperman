@@ -50,14 +50,8 @@ from app.frontend.events.patrol_boats.patrol_boat_buttons import (
     from_volunter_remove_button_name_to_volunteer_and_day,
     get_day_and_volunteer_given_button_of_type,
 )
-from app.frontend.events.patrol_boats.copying import (
-    COPY_BOAT_OVERWRITE,
-    COPY_ROLE_OVERWRITE,
-    COPY_BOTH_OVERWRITE,
-    COPY_ROLE_FILL,
-    COPY_BOAT_FILL,
-    COPY_BOTH_FILL,
-)
+from app.frontend.events.patrol_boats.copy_buttons import COPY_BOAT_OVERWRITE, COPY_ROLE_OVERWRITE, COPY_BOTH_OVERWRITE, \
+    COPY_BOAT_FILL, COPY_ROLE_FILL, COPY_BOTH_FILL
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
@@ -161,11 +155,12 @@ def update_adding_volunteers_to_specific_boats_and_days(interface: abstractInter
         list_of_volunteer_additions_to_boats.remove_no_additions()
     )
 
-    add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts(
-        interface=interface,
+    messages = add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts(
+        object_store=interface.object_store,
         list_of_volunteer_additions_to_boats=list_of_volunteer_additions_to_boats,
         event=event,
     )
+    [interface.log_error(error) for error in messages]
 
 
 def get_list_of_volunteer_additions_to_boats(

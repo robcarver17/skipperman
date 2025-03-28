@@ -1,10 +1,9 @@
-from typing import List, Union
+from typing import Union
 
 from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event import (
     get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats,
 )
 from app.backend.rota.changes import update_role_at_event_for_volunteer_on_day
-from app.frontend.shared.buttons import get_type_of_button_pressed
 from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import (
     VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 )
@@ -24,13 +23,9 @@ from app.backend.patrol_boats.changes import (
     NO_ADDITION_TO_MAKE,
     ListOfBoatDayVolunteer,
     add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts,
-    copy_across_boats_at_event,
     add_named_boat_to_event_with_no_allocation,
     remove_patrol_boat_and_all_associated_volunteers_from_event,
     delete_volunteer_from_patrol_boat_on_day_at_event,
-)
-from app.backend.rota.copying import (
-    copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days,
 )
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
@@ -48,76 +43,8 @@ from app.frontend.events.patrol_boats.patrol_boat_dropdowns import (
 from app.frontend.events.patrol_boats.patrol_boat_buttons import (
     from_delete_button_name_to_boat_name,
     from_volunter_remove_button_name_to_volunteer_and_day,
-    get_day_and_volunteer_given_button_of_type,
-)
-from app.frontend.events.patrol_boats.copying import (
-    COPY_BOAT_OVERWRITE,
-    COPY_ROLE_OVERWRITE,
-    COPY_BOTH_OVERWRITE,
-    COPY_ROLE_FILL,
-    COPY_BOAT_FILL,
-    COPY_BOTH_FILL,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-
-
-
-def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str):
-    event = get_event_from_state(interface)
-    copy_type = get_type_of_button_pressed(copy_button)
-    day, volunteer = get_day_and_volunteer_given_button_of_type(
-        interface=interface, button_name=copy_button,
-        button_type=copy_type
-    )
-
-    if copy_type == COPY_BOAT_OVERWRITE:
-        copy_boat = True
-        copy_role = False
-        overwrite = True
-    elif copy_type == COPY_BOAT_FILL:
-        copy_boat = True
-        copy_role = False
-        overwrite = False
-    elif copy_type == COPY_ROLE_OVERWRITE:
-        copy_boat = False
-        copy_role = True
-        overwrite = True
-    elif copy_type == COPY_ROLE_FILL:
-        copy_boat = False
-        copy_role = True
-        overwrite = False
-
-    elif copy_type == COPY_BOTH_OVERWRITE:
-        copy_boat = True
-        copy_role = True
-        overwrite = True
-    elif copy_type == COPY_BOTH_FILL:
-        copy_boat = True
-        copy_role = True
-        overwrite = False
-
-    else:
-        raise Exception("button type %s not recognised" % copy_type)
-
-    if copy_boat:
-        copy_across_boats_at_event(
-            object_store=interface.object_store,
-            day=day,
-            volunteer=volunteer,
-            event=event,
-            allow_overwrite=overwrite,
-        )
-
-    if copy_role:
-        copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
-            object_store=interface.object_store,
-            event=event,
-            volunteer=volunteer,
-            day=day,
-            allow_replacement=overwrite,
-        )
-
-
 
 
 def update_if_delete_boat_button_pressed(
@@ -161,11 +88,12 @@ def update_adding_volunteers_to_specific_boats_and_days(interface: abstractInter
         list_of_volunteer_additions_to_boats.remove_no_additions()
     )
 
-    add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts(
-        interface=interface,
+    messages = add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts(
+        object_store=interface.object_store,
         list_of_volunteer_additions_to_boats=list_of_volunteer_additions_to_boats,
         event=event,
     )
+    [interface.log_error(error) for error in messages]
 
 
 def get_list_of_volunteer_additions_to_boats(

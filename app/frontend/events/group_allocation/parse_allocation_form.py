@@ -236,7 +236,6 @@ def make_cadet_available_on_current_day(
     make_cadet_available_on_day(
         object_store=interface.object_store, event=event, cadet=cadet, day=day
     )
-    interface.flush_cache_to_store()
 
 def remove_partnership_for_cadet_from_group_allocation_button(interface: abstractInterface):
     last_button = interface.last_button_pressed()

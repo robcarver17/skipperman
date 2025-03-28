@@ -39,14 +39,9 @@ from typing import  Union
 
 from app.frontend.events.patrol_boats.patrol_boat_buttons import (
     get_remove_volunteer_button,
-    copy_all_boats_button,
-    copy_all_boats_and_roles_button,
-    copyover_all_boats_button,
-    copyover_all_boats_and_roles_button,
 )
-from app.frontend.events.patrol_boats.copying import (
-    get_copy_buttons_for_boat_allocation,
-)
+from app.frontend.events.patrol_boats.copy_buttons import get_copy_buttons_for_boat_allocation, copy_all_boats_button, \
+    copyover_all_boats_button, copy_all_boats_and_roles_button, copyover_all_boats_and_roles_button
 from app.frontend.events.patrol_boats.swapping import get_swap_buttons_for_boat_rota
 from app.frontend.events.patrol_boats.patrol_boat_dropdowns import (
     volunteer_boat_role_dropdown,

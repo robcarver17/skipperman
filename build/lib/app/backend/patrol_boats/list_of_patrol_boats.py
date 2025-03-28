@@ -1,4 +1,5 @@
 from app.data_access.store.object_store import ObjectStore
+from app.objects.exceptions import arg_not_passed
 from app.objects.patrol_boats import ListOfPatrolBoats, PatrolBoat
 from app.data_access.store.object_definitions import (
     object_definition_for_list_of_patrol_boats,
@@ -47,3 +48,7 @@ def from_patrol_boat_name_to_boat(
 ) -> PatrolBoat:
     patrol_boat_data = get_list_of_patrol_boats(object_store)
     return patrol_boat_data.boat_given_name(boat_name)
+
+def get_patrol_boat_from_id(object_store: ObjectStore, boat_id: str, default = arg_not_passed) -> PatrolBoat:
+    patrol_boat_data = get_list_of_patrol_boats(object_store)
+    return patrol_boat_data.boat_given_id(boat_id, default=default)

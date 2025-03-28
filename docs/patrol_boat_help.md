@@ -128,3 +128,7 @@ You can see how this is useful for moving safety crew between the lake and river
 
 Remember by convention a 'helm' is just someone who has the relevant PB2 certificate so there can be more than one helm on a boat.
 
+## Moving boats without swapping
+
+You can also move someone on to a different boat without selecting a volunteer they have to swap with. This is quicker than removing them from one boat and then selecting them on another.
+

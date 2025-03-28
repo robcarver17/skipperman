@@ -4,14 +4,12 @@
 Before first training:
 
 patrol boats
-- speed up display of large tables, use all event dict and prop up#67 (put in change log)
-
-
+- better doc on what happens if skipperman fields updated or added
 - produce QR code from report page itself
 - more elegant handling of manual reg #64
 - merge cadet, merge volunteer #15
 - delete empty event, empty cadet, empty volunteer #26
-- edit event name #16 (don't allow days to be changed - delete instead)
+- edit event name #16 and days (document what happens if days are edited)
 - instructors can do attendance online #63
 
 Before Cadet week
@@ -26,6 +24,8 @@ Before Cadet week
 - massive warning if unique key creators missing from field mappings
 
 # Recent
+- speed up display of large tables by not flushing cache
+- allow swapping on to empty boat
 - clean up button mapping to make consistent
 - can add a partner as new registration even if registration data missing
 - clicking on volunteer does not show availability checkboxes; add remove role across days button

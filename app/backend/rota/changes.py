@@ -142,15 +142,9 @@ def update_role_at_event_for_volunteer_on_day_if_switching_roles(
     dict_of_volunteers_at_event = get_dict_of_all_event_data_for_volunteers(
         object_store=object_store, event=event
     )
-    #try:
     dict_of_volunteers_at_event.update_role_at_event_for_volunteer_on_day_if_switching_roles(
         volunteer=volunteer, day=day, new_role=new_role
     )
-    #except Exception as e:
-    #    print(
-    #        "Can't modify role for volunteer to %s to %s, error %s, conflicting change made?"
-    #        % (volunteer.name, new_role.name, str(e))
-    #    )
 
     update_dict_of_all_event_data_for_volunteers(
         object_store=object_store, dict_of_all_event_data=dict_of_volunteers_at_event
@@ -167,15 +161,9 @@ def update_group_at_event_for_volunteer_on_day(
     dict_of_volunteers_at_event = get_dict_of_all_event_data_for_volunteers(
         object_store=object_store, event=event
     )
-    #try:
     dict_of_volunteers_at_event.update_group_at_event_for_volunteer_on_day(
         volunteer=volunteer, day=day, new_group=new_group
     )
-    #except Exception as e:
-    #    print(
-    #        "Can't modify group for volunteer to %s to %s, error %s, conflicting change made?"
-    #        % (volunteer.name, new_group.name, str(e))
-    #    )
 
     update_dict_of_all_event_data_for_volunteers(
         object_store=object_store, dict_of_all_event_data=dict_of_volunteers_at_event

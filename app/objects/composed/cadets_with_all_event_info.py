@@ -51,6 +51,7 @@ from app.objects.composed.food_at_event import (
     DictOfCadetsWithFoodRequirementsAtEvent,
     FoodRequirements,
 )
+from build.lib.app.objects.volunteers import Volunteer
 
 
 @dataclass
@@ -99,6 +100,7 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         self._dict_of_cadets_with_food_required_at_event = (
             dict_of_cadets_with_food_required_at_event
         )
+
 
     def update_data_row_for_existing_cadet_at_event(
             self,

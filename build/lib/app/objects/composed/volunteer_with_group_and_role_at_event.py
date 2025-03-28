@@ -461,7 +461,7 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
         volunteer: Volunteer,
         day: Day,
         available_days: DaySelector,
-        allow_replacement: bool = True,
+        allow_replacement: bool
     ):
         roles_for_volunteer = self.days_and_roles_for_volunteer(volunteer)
         roles_for_volunteer.copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(

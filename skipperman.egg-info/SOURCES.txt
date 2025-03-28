@@ -358,6 +358,7 @@ app/frontend/events/mapping/upload_template_field_mapping.py
 app/frontend/events/mapping/../../../data_access/configuration/configuration.yaml
 app/frontend/events/patrol_boats/ENTRY_allocate_patrol_boats.py
 app/frontend/events/patrol_boats/__init__.py
+app/frontend/events/patrol_boats/copy_buttons.py
 app/frontend/events/patrol_boats/copying.py
 app/frontend/events/patrol_boats/elements_in_patrol_boat_table.py
 app/frontend/events/patrol_boats/parse_patrol_boat_table.py

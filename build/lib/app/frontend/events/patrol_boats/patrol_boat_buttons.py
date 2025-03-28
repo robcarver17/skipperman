@@ -15,7 +15,7 @@ from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.patrol_boats import PatrolBoat
-
+from app.frontend.shared.buttons import get_attributes_from_button_pressed_of_known_type, is_button_of_type, get_button_value_given_type_and_attributes
 
 def get_list_of_generic_buttons_for_each_volunteer_day_combo(
     interface: abstractInterface, event: Event, button_name_function: Callable
@@ -37,42 +37,38 @@ def get_list_of_generic_buttons_for_each_volunteer_day_combo(
 def generic_button_name_for_volunteer_in_boat_at_event_on_day(
     button_type: str, day: Day, volunteer_id: str
 ) -> str:
-    return "%s_%s_%s" % (button_type, day.name, volunteer_id)
+    return get_button_value_given_type_and_attributes(
+        button_type,
+        day.name,
+        volunteer_id
+    )
 
 
-def get_button_type_day_volunteer_given_button_name(
-    interface: abstractInterface, button_name: str
-) -> Tuple[str, Day, Volunteer]:
-    splitter = button_name.split("_")
-    button_type, day_name, volunteer_id = splitter
+def get_day_and_volunteer_given_button_of_type(
+    interface: abstractInterface, button_name: str, button_type: str
+) -> Tuple[Day, Volunteer]:
+    day_name, volunteer_id  = get_attributes_from_button_pressed_of_known_type(
+        value_of_button_pressed=button_name,
+        type_to_check=button_type
+    )
 
     volunteer = get_volunteer_from_id(
         object_store=interface.object_store, volunteer_id=volunteer_id
     )
 
-    return button_type, Day[day_name], volunteer
+    return Day[day_name], volunteer
 
+delete_button_type = "deleteBoatButton"
 
 def delete_button_for_boat_value(boat_at_event: PatrolBoat) -> str:
-    return "DELETE_" + str(boat_at_event)
+    return get_button_value_given_type_and_attributes(delete_button_type, boat_at_event.name)
 
 
 def from_delete_button_name_to_boat_name(button_name: str) -> str:
-    boat_name = button_name.split("_")[1]
-    return boat_name
+    return get_attributes_from_button_pressed_of_known_type(value_of_button_pressed=button_name, type_to_check=delete_button_type)
 
-
-def list_of_delete_buttons_in_patrol_boat_table(
-    interface: abstractInterface, event: Event
-) -> List[str]:
-    list_of_boats_at_event = load_list_of_patrol_boats_at_event(
-        object_store=interface.object_store, event=event
-    )
-
-    return [
-        delete_button_for_boat_value(boat_at_event)
-        for boat_at_event in list_of_boats_at_event
-    ]
+def is_delete_boat_button(button_name:str):
+    return is_button_of_type(type_to_check=delete_button_type,value_of_button_pressed=button_name)
 
 
 def get_remove_volunteer_button(day: Day, volunteer_id: str) -> Button:
@@ -81,10 +77,11 @@ def get_remove_volunteer_button(day: Day, volunteer_id: str) -> Button:
         value=get_remove_volunteer_button_name(day=day, volunteer_id=volunteer_id),
     )
 
+remove_button_type = "removeVolunteer"
 
 def get_remove_volunteer_button_name(day: Day, volunteer_id: str) -> str:
     return generic_button_name_for_volunteer_in_boat_at_event_on_day(
-        button_type="removeVolunteer", day=day, volunteer_id=volunteer_id
+        button_type=remove_button_type, day=day, volunteer_id=volunteer_id
     )
 
 
@@ -92,21 +89,15 @@ def from_volunter_remove_button_name_to_volunteer_and_day(
     interface: abstractInterface,
     button_name: str,
 ) -> Tuple[Volunteer, Day]:
-    __, day, volunteer = get_button_type_day_volunteer_given_button_name(
-        interface=interface, button_name=button_name
+    day, volunteer = get_day_and_volunteer_given_button_of_type(
+        interface=interface, button_name=button_name,
+        button_type=remove_button_type
     )
 
     return volunteer, day
 
-
-def get_all_remove_volunteer_button_names(
-    interface: abstractInterface, event: Event
-) -> List[str]:
-    return get_list_of_generic_buttons_for_each_volunteer_day_combo(
-        interface=interface,
-        event=event,
-        button_name_function=get_remove_volunteer_button_name,
-    )
+def is_delete_volunteer_button(button_value: str):
+    return is_button_of_type(value_of_button_pressed=button_value, type_to_check=remove_button_type)
 
 
 DELETE_BOAT_BUTTON_LABEL = "Remove boat from rota"

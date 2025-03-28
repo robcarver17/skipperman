@@ -4,6 +4,7 @@ from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event 
     get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats,
 )
 from app.backend.rota.changes import update_role_at_event_for_volunteer_on_day
+from app.frontend.shared.buttons import get_type_of_button_pressed
 from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import (
     VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 )
@@ -46,16 +47,13 @@ from app.frontend.events.patrol_boats.patrol_boat_dropdowns import (
 )
 from app.frontend.events.patrol_boats.patrol_boat_buttons import (
     from_delete_button_name_to_boat_name,
-    list_of_delete_buttons_in_patrol_boat_table,
     from_volunter_remove_button_name_to_volunteer_and_day,
-    get_all_remove_volunteer_button_names,
-    get_button_type_day_volunteer_given_button_name,
+    get_day_and_volunteer_given_button_of_type,
 )
 from app.frontend.events.patrol_boats.copying import (
     COPY_BOAT_OVERWRITE,
     COPY_ROLE_OVERWRITE,
     COPY_BOTH_OVERWRITE,
-    get_list_of_all_types_of_copy_buttons,
     COPY_ROLE_FILL,
     COPY_BOAT_FILL,
     COPY_BOTH_FILL,
@@ -63,15 +61,13 @@ from app.frontend.events.patrol_boats.copying import (
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
-def get_all_copy_boat_buttons_for_boat_allocation(interface: abstractInterface) -> list:
-    event = get_event_from_state(interface)
-    return get_list_of_all_types_of_copy_buttons(interface=interface, event=event)
-
 
 def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str):
     event = get_event_from_state(interface)
-    copy_type, day, volunteer = get_button_type_day_volunteer_given_button_name(
-        interface=interface, button_name=copy_button
+    copy_type = get_type_of_button_pressed(copy_button)
+    day, volunteer = get_day_and_volunteer_given_button_of_type(
+        interface=interface, button_name=copy_button,
+        button_type=copy_type
     )
 
     if copy_type == COPY_BOAT_OVERWRITE:
@@ -122,18 +118,6 @@ def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str
         )
 
 
-def get_all_delete_buttons_for_patrol_boat_table(
-    interface: abstractInterface,
-) -> List[str]:
-    event = get_event_from_state(interface)
-    return list_of_delete_buttons_in_patrol_boat_table(interface=interface, event=event)
-
-
-def get_all_delete_volunteer_buttons_for_patrol_boat_table(
-    interface: abstractInterface,
-) -> List[str]:
-    event = get_event_from_state(interface)
-    return get_all_remove_volunteer_button_names(interface=interface, event=event)
 
 
 def update_if_delete_boat_button_pressed(

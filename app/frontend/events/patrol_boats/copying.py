@@ -6,6 +6,7 @@ from app.backend.patrol_boats.changes import (
 from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event import (
     get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats,
 )
+from app.frontend.shared.buttons import is_button_of_type
 
 from app.frontend.shared.events_state import get_event_from_state
 
@@ -223,6 +224,34 @@ COPY_BOAT_FILL = "copyFillBoatButton"
 COPY_ROLE_FILL = "copyFillRoleButton"
 COPY_BOTH_FILL = "copyFillBothButton"
 
+def is_copy_button(button_value:str):
+    return is_copy_overwrite_boat_button(button_value) or \
+    is_copy_overwrite_role_button(button_value) or \
+    is_copy_overwrite_both_button(button_value) or \
+    \
+    is_copy_boat_fill_button(button_value) or \
+    is_copy_role_fill_button(button_value) or \
+    is_copy_both_fill_button(button_value)
+
+def is_copy_overwrite_boat_button(button_value: str):
+    return is_button_of_type(value_of_button_pressed=button_value, type_to_check=COPY_BOAT_OVERWRITE)
+
+def is_copy_overwrite_role_button(button_value: str):
+    return is_button_of_type(value_of_button_pressed=button_value, type_to_check=COPY_ROLE_OVERWRITE)
+
+def is_copy_overwrite_both_button(button_value: str):
+    return is_button_of_type(value_of_button_pressed=button_value, type_to_check=COPY_BOTH_OVERWRITE)
+
+def is_copy_boat_fill_button(button_value: str):
+    return is_button_of_type(value_of_button_pressed=button_value, type_to_check=COPY_BOAT_FILL)
+
+def is_copy_role_fill_button(button_value: str):
+    return is_button_of_type(value_of_button_pressed=button_value, type_to_check=COPY_ROLE_FILL)
+
+def is_copy_both_fill_button(button_value: str):
+    return is_button_of_type(value_of_button_pressed=button_value, type_to_check=COPY_BOTH_FILL)
+
+
 
 def copy_overwrite_button_name_for_boat_copy_in_boat_at_event_on_day(
     day: Day, volunteer_id: str
@@ -248,6 +277,7 @@ def copy_overwrite_button_name_for_volunteer_role_in_boat_at_event_on_day(
     )
 
 
+
 def copy_fill_button_name_for_volunteer_role_in_boat_at_event_on_day(
     day: Day, volunteer_id: str
 ) -> str:
@@ -271,90 +301,6 @@ def copy_fill_button_name_for_both_volunteer_role_and_boat_at_event_on_day(
         button_type=COPY_BOTH_FILL, day=day, volunteer_id=volunteer_id
     )
 
-
-def get_list_of_all_types_of_copy_buttons(
-    interface: abstractInterface, event: Event
-) -> List[str]:
-    return (
-        get_list_of_all_copy_overwrite_boat_buttons_for_boat_allocation(
-            interface=interface, event=event
-        )
-        + get_list_of_all_copy_overwrite_role_buttons_for_boat_allocation(
-            interface=interface, event=event
-        )
-        + get_list_of_all_copy_overwrite_both_buttons_for_boat_allocation(
-            interface=interface, event=event
-        )
-        + get_list_of_all_copy_fill_boat_buttons_for_boat_allocation(
-            interface=interface, event=event
-        )
-        + get_list_of_all_copy_fill_role_buttons_for_boat_allocation(
-            interface=interface, event=event
-        )
-        + get_list_of_all_copy_fill_both_buttons_for_boat_allocation(
-            interface=interface, event=event
-        )
-    )
-
-
-def get_list_of_all_copy_overwrite_boat_buttons_for_boat_allocation(
-    interface: abstractInterface, event: Event
-) -> List[str]:
-    return get_list_of_generic_buttons_for_each_volunteer_day_combo(
-        interface=interface,
-        event=event,
-        button_name_function=copy_overwrite_button_name_for_boat_copy_in_boat_at_event_on_day,
-    )
-
-
-def get_list_of_all_copy_fill_boat_buttons_for_boat_allocation(
-    interface: abstractInterface, event: Event
-) -> List[str]:
-    return get_list_of_generic_buttons_for_each_volunteer_day_combo(
-        interface=interface,
-        event=event,
-        button_name_function=copy_fill_button_name_for_boat_copy_in_boat_at_event_on_day,
-    )
-
-
-def get_list_of_all_copy_overwrite_role_buttons_for_boat_allocation(
-    interface: abstractInterface, event: Event
-) -> List[str]:
-    return get_list_of_generic_buttons_for_each_volunteer_day_combo(
-        interface=interface,
-        event=event,
-        button_name_function=copy_overwrite_button_name_for_volunteer_role_in_boat_at_event_on_day,
-    )
-
-
-def get_list_of_all_copy_fill_role_buttons_for_boat_allocation(
-    interface: abstractInterface, event: Event
-) -> List[str]:
-    return get_list_of_generic_buttons_for_each_volunteer_day_combo(
-        interface=interface,
-        event=event,
-        button_name_function=copy_fill_button_name_for_volunteer_role_in_boat_at_event_on_day,
-    )
-
-
-def get_list_of_all_copy_overwrite_both_buttons_for_boat_allocation(
-    interface: abstractInterface, event: Event
-) -> List[str]:
-    return get_list_of_generic_buttons_for_each_volunteer_day_combo(
-        interface=interface,
-        event=event,
-        button_name_function=copy_overwrite_button_name_for_both_volunteer_role_and_boat_at_event_on_day,
-    )
-
-
-def get_list_of_all_copy_fill_both_buttons_for_boat_allocation(
-    interface: abstractInterface, event: Event
-) -> List[str]:
-    return get_list_of_generic_buttons_for_each_volunteer_day_combo(
-        interface=interface,
-        event=event,
-        button_name_function=copy_fill_button_name_for_both_volunteer_role_and_boat_at_event_on_day,
-    )
 
 
 def copy_across_all_boats(interface: abstractInterface):

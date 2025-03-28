@@ -1,6 +1,7 @@
 from typing import Union, Tuple
 
 from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
+from app.frontend.shared.buttons import get_type_of_button_pressed, is_button_of_type
 
 from app.objects.volunteers import Volunteer
 
@@ -25,9 +26,8 @@ from app.backend.patrol_boats.swapping import (
 from app.frontend.shared.events_state import get_event_from_state
 
 from app.frontend.events.patrol_boats.patrol_boat_buttons import (
-    get_list_of_generic_buttons_for_each_volunteer_day_combo,
     generic_button_name_for_volunteer_in_boat_at_event_on_day,
-    get_button_type_day_volunteer_given_button_name,
+    get_day_and_volunteer_given_button_of_type,
 )
 from app.data_access.configuration.fixed import (
     BOAT_SHORTHAND,
@@ -43,28 +43,9 @@ from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles impor
     VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 )
 from app.objects.day_selectors import Day
-from app.objects.events import Event
 from app.objects.patrol_boats import PatrolBoat
 
 
-def get_list_of_all_swap_buttons_in_boat_allocation(
-    interface: abstractInterface, event: Event
-) -> list:
-    swap_boats = get_list_of_generic_buttons_for_each_volunteer_day_combo(
-        interface=interface,
-        event=event,
-        button_name_function=get_swap_boats_button_name,
-    )
-    swap_roles = get_list_of_generic_buttons_for_each_volunteer_day_combo(
-        interface=interface,
-        event=event,
-        button_name_function=get_swap_roles_button_name,
-    )
-    swap_both = get_list_of_generic_buttons_for_each_volunteer_day_combo(
-        interface=interface, event=event, button_name_function=get_swap_both_button_name
-    )
-
-    return swap_boats + swap_roles + swap_both
 
 
 def get_swap_buttons_for_boat_rota(
@@ -164,9 +145,9 @@ def get_swap_button_when_ready_to_swap(
 def get_swap_button_when_ready_to_swap_and_this_is_the_swapper(
     day: Day, volunteer_id: str
 ) -> Button:
-    button_name = get_swap_boats_button_name(
+    button_name = get_swap_cancel_button_name(
         day=day, volunteer_id=volunteer_id
-    )  ## button name is irrelevant
+    )
 
     return Button(value=button_name, label=CANCEL_SWAP_BUTTON_LABEL)
 
@@ -279,12 +260,19 @@ def get_swap_roles_button_name(day: Day, volunteer_id: str) -> str:
         SWAP_ROLES, day=day, volunteer_id=volunteer_id
     )
 
+def get_swap_cancel_button_name(day: Day, volunteer_id: str) -> str:
+    return generic_button_name_for_volunteer_in_boat_at_event_on_day(
+        CANCEL_SWAP, day=day, volunteer_id=volunteer_id
+    )
+
 
 def get_and_store_swap_state_from_button_pressed(
     interface: abstractInterface, swap_button: str
 ):
-    swap_type, day, volunteer = get_button_type_day_volunteer_given_button_name(
-        interface=interface, button_name=swap_button
+    swap_type = get_type_of_button_pressed(swap_button)
+    day, volunteer = get_day_and_volunteer_given_button_of_type(
+        interface=interface, button_name=swap_button,
+        button_type=swap_type
     )
     swap_state = SwapButtonState(
         ready_to_swap=True,
@@ -325,6 +313,7 @@ def get_type_day_volunteer_from_swap_state(
 SWAP_BOATS = "SwapBoats"
 SWAP_BOTH = "SwapBoth"
 SWAP_ROLES = "SwapRoles"
+CANCEL_SWAP = "SwapCancel"
 
 SWAP_BOATS_BUTTON_LABEL = Line([SWAP_SHORTHAND, SWAP_SHORTHAND2, BOAT_SHORTHAND])
 SWAP_BOTH_BUTTON_LABEL = Line(
@@ -334,6 +323,26 @@ CANCEL_SWAP_BUTTON_LABEL = "SWAPPING - click to cancel"
 SWAP_WITH_BOATS_BUTTON_LABEL = "Swap boats with me"
 SWAP_WITH_BOTH_BUTTON_LABEL = "Swap role&boats with me"
 SWAP_ROLE_ONLY_BUTTON_LABEL = "Swap role with me"
+
+def is_swap_button(button_value):
+    return is_swap_cancel_button(button_value) or\
+    is_swap_both_button(button_value) or \
+    is_swap_boats_button(button_value) or \
+    is_swap_roles_button(button_value)
+
+def is_swap_cancel_button(button_value:str):
+    return is_button_of_type(type_to_check=CANCEL_SWAP, value_of_button_pressed=button_value)
+
+
+def is_swap_boats_button(button_value:str):
+    return is_button_of_type(type_to_check=SWAP_BOATS, value_of_button_pressed=button_value)
+
+def is_swap_roles_button(button_value:str):
+    return is_button_of_type(type_to_check=SWAP_ROLES, value_of_button_pressed=button_value)
+
+def is_swap_both_button(button_value:str):
+    return is_button_of_type(type_to_check=SWAP_BOTH, value_of_button_pressed=button_value)
+
 
 
 def is_swapping_boats_and_or_roles_based_on_button_type(
@@ -388,13 +397,11 @@ def update_if_swap_button_pressed_and_ready_to_swap(
 
 
 def get_swap_data(interface: abstractInterface, swap_button: str) -> SwapData:
-    (
-        swap_type,
-        day_to_swap_with,
-        volunteer_to_swap_with,
-    ) = get_button_type_day_volunteer_given_button_name(
-        button_name=swap_button, interface=interface
-    )
+    swap_type = get_type_of_button_pressed(swap_button)
+    day_to_swap_with,        volunteer_to_swap_with, = get_day_and_volunteer_given_button_of_type(
+        button_name=swap_button, interface=interface, button_type=swap_type)
+
+
     (
         __not_used_swapping_both,
         original_day,

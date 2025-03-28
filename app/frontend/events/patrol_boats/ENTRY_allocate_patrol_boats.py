@@ -3,7 +3,7 @@ from app.frontend.events.patrol_boats.copying import (
     copy_across_all_boats_and_roles,
     copy_across_all_boats,
     overwrite_allocation_across_all_boats,
-    overwrite_copy_across_all_boats_and_roles,
+    overwrite_copy_across_all_boats_and_roles, is_copy_button,
 )
 from app.frontend.events.patrol_boats.parse_patrol_boat_table import *
 from app.frontend.events.patrol_boats.patrol_boat_buttons import (
@@ -11,7 +11,7 @@ from app.frontend.events.patrol_boats.patrol_boat_buttons import (
     copyover_all_boats_button,
     copy_all_boats_and_roles_button,
     copyover_all_boats_and_roles_button,
-    add_new_boat_button,
+    add_new_boat_button, is_delete_boat_button, is_delete_volunteer_button,
 )
 from app.frontend.events.patrol_boats.render_patrol_boat_table import (
     get_patrol_boat_table,
@@ -23,8 +23,7 @@ from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
 )
 
 from app.frontend.events.patrol_boats.swapping import (
-    get_all_swap_buttons_for_boat_allocation,
-    update_if_swap_button_pressed,
+    update_if_swap_button_pressed, is_swap_button,
 )
 
 from app.objects.abstract_objects.abstract_form import (
@@ -39,9 +38,6 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.frontend.shared.events_state import get_event_from_state
 
-from app.frontend.events.patrol_boats.parse_patrol_boat_table import (
-    get_all_copy_boat_buttons_for_boat_allocation,
-)
 from app.objects.abstract_objects.abstract_text import Heading
 
 
@@ -78,13 +74,15 @@ def post_form_view_for_patrol_boat_allocation(
 ) -> Union[Form, NewForm]:
     last_button_pressed = interface.last_button_pressed()
 
-    if last_button_pressed == cancel_menu_button.name:
+    if cancel_menu_button.pressed(last_button_pressed):
         return previous_form(interface)
 
-    if last_button_pressed == save_menu_button.name:
+    if save_menu_button.pressed(last_button_pressed):
         update_data_from_form_entries_in_patrol_boat_allocation_page(interface)
+
     elif copy_all_boats_button.pressed(last_button_pressed):
         copy_across_all_boats(interface)
+
     elif copy_all_boats_and_roles_button.pressed(last_button_pressed):
         copy_across_all_boats_and_roles(interface)
     elif copyover_all_boats_button.pressed(last_button_pressed):
@@ -94,26 +92,22 @@ def post_form_view_for_patrol_boat_allocation(
     elif add_new_boat_button.pressed(last_button_pressed):
         update_adding_boat(interface)
 
-    elif last_button_pressed in get_all_delete_buttons_for_patrol_boat_table(interface):
+    elif is_delete_boat_button(last_button_pressed):
         update_if_delete_boat_button_pressed(
             interface=interface, delete_button=last_button_pressed
         )
 
-    elif last_button_pressed in get_all_delete_volunteer_buttons_for_patrol_boat_table(
-        interface
-    ):
+    elif is_delete_volunteer_button(last_button_pressed):
         update_if_delete_volunteer_button_pressed(
             interface=interface, delete_button=last_button_pressed
         )
 
-    elif last_button_pressed in get_all_copy_boat_buttons_for_boat_allocation(
-        interface
-    ):
+    elif is_copy_button(last_button_pressed):
         update_if_copy_button_pressed(
             interface=interface, copy_button=last_button_pressed
         )
 
-    elif last_button_pressed in get_all_swap_buttons_for_boat_allocation(interface):
+    elif is_swap_button(last_button_pressed):
         update_if_swap_button_pressed(
             interface=interface, swap_button=last_button_pressed
         )

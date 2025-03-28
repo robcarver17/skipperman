@@ -109,11 +109,16 @@ def get_type_and_attributes_from_button_pressed(value_of_button_pressed: str) ->
     return value_of_button_pressed.split(SPLITTER)
 
 def is_button_of_type(value_of_button_pressed:str, type_to_check: str):
-    type_and_attributes = get_type_and_attributes_from_button_pressed(value_of_button_pressed)
-    type_of_button = type_and_attributes[0]
+    type_of_button = get_type_of_button_pressed(value_of_button_pressed)
 
     types_match= type_of_button==type_to_check
     return types_match
+
+def get_type_of_button_pressed(value_of_button_pressed:str):
+    type_and_attributes = get_type_and_attributes_from_button_pressed(value_of_button_pressed)
+    type_of_button = type_and_attributes[0]
+
+    return type_of_button
 
 def get_attributes_from_button_pressed_of_known_type(value_of_button_pressed:str, type_to_check: str, collapse_singleton=True):
     type_and_attributes = get_type_and_attributes_from_button_pressed(value_of_button_pressed)

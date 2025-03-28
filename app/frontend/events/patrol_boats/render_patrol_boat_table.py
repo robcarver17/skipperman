@@ -212,12 +212,7 @@ def get_row_for_boat_at_event(
     boat_name_and_button_for_first_column = get_boat_name_and_button_for_first_column(
         interface=interface, patrol_boat=patrol_boat
     )
-    day_inputs = [
-        get_allocation_inputs_for_day_and_boat(
-            patrol_boat=patrol_boat, day=day, event=event, interface=interface
-        )
-        for day in event.days_in_event()
-    ]
+    day_inputs = get_allocation_inputs_for_boat_across_days(interface=interface, event=event, patrol_boat=patrol_boat)
 
     return RowInTable([boat_name_and_button_for_first_column] + day_inputs)
 
@@ -238,6 +233,17 @@ def get_boat_name_and_button_for_first_column(
 
     return ListOfLines([boat_name, delete_button]).add_Lines()
 
+
+def get_allocation_inputs_for_boat_across_days(
+    interface: abstractInterface, event: Event, patrol_boat: PatrolBoat
+)-> list:
+    day_inputs = [
+        get_allocation_inputs_for_day_and_boat(
+            patrol_boat=patrol_boat, day=day, event=event, interface=interface
+        )
+        for day in event.days_in_event()
+    ]
+    return day_inputs
 
 def get_allocation_inputs_for_day_and_boat(
     interface: abstractInterface, patrol_boat: PatrolBoat, day: Day, event: Event

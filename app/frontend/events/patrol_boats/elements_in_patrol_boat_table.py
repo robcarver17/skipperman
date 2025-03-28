@@ -12,7 +12,6 @@ from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event 
 from app.data_access.store.object_store import ObjectStore
 
 from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import (
-    VolunteerAtEventWithSkillsAndRolesAndPatrolBoats,
     VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 )
 
@@ -36,7 +35,7 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 
 from app.frontend.forms.swaps import is_ready_to_swap
-from typing import List, Union
+from typing import  Union
 
 from app.frontend.events.patrol_boats.patrol_boat_buttons import (
     get_remove_volunteer_button,

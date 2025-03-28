@@ -119,9 +119,11 @@ def add_cloned_row_to_raw_registration_data_and_return_row(
             object_store=object_store, cadet=original_cadet, event=event
         )
     except NoMoreData:
-        raise MissingData(
+        print(
             "Event has probably been cleaned, original registration data not available"
         )
+
+        existing_row = RowInRegistrationData()
 
     new_row = modify_row_to_clone_for_new_cadet_partner(
         original_cadet=original_cadet, new_cadet=new_cadet, existing_row=existing_row

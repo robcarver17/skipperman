@@ -158,6 +158,8 @@ class DictOfCadetsAndClubDinghiesAtEvent(
     def allocate_club_boat_on_day(self, cadet: Cadet, day: Day, club_boat: ClubDinghy):
         boats_for_cadet = self.club_dinghys_for_cadet(cadet)
         boats_for_cadet.allocate_club_boat_on_day(day=day, club_boat=club_boat)
+        self[cadet] = boats_for_cadet
+
         self.list_of_cadets_at_event_with_id_and_club_dinghy.update_allocation_for_cadet_on_day(
             cadet_id=cadet.id, day=day, club_dinghy_id=club_boat.id
         )
@@ -190,6 +192,8 @@ class DictOfCadetsAndClubDinghiesAtEvent(
     def remove_cadet_club_boat_allocation_on_day(self, cadet: Cadet, day: Day):
         current_allocation = self.club_dinghys_for_cadet(cadet)
         current_allocation.remove_cadet_from_event_on_day(day)
+        self[cadet] = current_allocation
+
         self.list_of_cadets_at_event_with_id_and_club_dinghy.delete_allocation_for_cadet_on_day(
             cadet_id=cadet.id, day=day
         )

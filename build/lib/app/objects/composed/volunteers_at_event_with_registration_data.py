@@ -84,13 +84,16 @@ class DictOfRegistrationDataForVolunteerAtEvent(
     def update_volunteer_notes_at_event(self, volunteer: Volunteer, new_notes: str):
         volunteer_data = self.get_data_for_volunteer(volunteer)
         volunteer_data.notes = new_notes
+        self[volunteer] = volunteer_data
+
         self.list_of_volunteers_at_event_with_id.update_notes(
             volunteer=volunteer, new_notes=new_notes
         )
 
     def clear_user_data(self):
-        for registration_data_for_volunteer in self.values():
+        for volunteer, registration_data_for_volunteer in self.items():
             registration_data_for_volunteer.clear_user_data()
+            self[volunteer] = registration_data_for_volunteer
 
         self.list_of_volunteers_at_event_with_id.clear_user_data()
 
@@ -118,6 +121,8 @@ class DictOfRegistrationDataForVolunteerAtEvent(
     def make_volunteer_available_on_day(self, volunteer: Volunteer, day: Day):
         registration_for_volunteer = self.get_data_for_volunteer(volunteer)
         registration_for_volunteer.availablity.make_available_on_day(day)
+        self[volunteer] = registration_for_volunteer
+
         self.list_of_volunteers_at_event_with_id.make_volunteer_available_on_day(
             volunteer=volunteer, day=day
         )
@@ -125,6 +130,8 @@ class DictOfRegistrationDataForVolunteerAtEvent(
     def make_volunteer_unavailable_on_day(self, volunteer: Volunteer, day: Day):
         registration_for_volunteer = self.get_data_for_volunteer(volunteer)
         registration_for_volunteer.availablity.make_unavailable_on_day(day)
+        self[volunteer] = registration_for_volunteer
+
         self.list_of_volunteers_at_event_with_id.make_volunteer_unavailable_on_day(
             volunteer=volunteer, day=day
         )

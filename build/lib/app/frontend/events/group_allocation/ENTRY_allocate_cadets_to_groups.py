@@ -64,6 +64,40 @@ def display_form_allocate_cadets(interface: abstractInterface) -> Union[Form, Ne
 def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
     last_button = interface.last_button_pressed()
+    if button_clicked_returns_new_form(last_button):
+        return post_form_allocate_cadets_returns_new_form(interface, last_button)
+    elif button_clicked_changes_state_but_not_data(last_button):
+        return post_form_allocate_cadets_when_changing_state_and_not_data(interface, last_button)
+    elif button_clicked_changs_data(last_button):
+        return post_form_allocate_cadets_when_changing_data(interface, last_button)
+    else:
+        return button_error_and_back_to_initial_state_form(interface)
+
+def button_clicked_returns_new_form(last_button:str):
+    return cancel_menu_button.pressed(last_button) or \
+    add_button.pressed(last_button) or \
+    was_add_partner_button(last_button) or \
+    sort_order_change_button.pressed(last_button)
+
+
+
+
+def button_clicked_changes_state_but_not_data(last_button:str):
+    return is_button_cadet_selection(last_button) or \
+     is_button_day_select(last_button)
+
+
+def button_clicked_changs_data(last_button: str):
+    return save_menu_button.pressed(last_button) or \
+        update_limits_button.pressed(last_button) or \
+        is_event_picker_button(last_button) or \
+        is_make_available_button(last_button) or \
+        was_remove_partner_button(last_button) or\
+        guess_boat_button.pressed(last_button)
+
+
+def post_form_allocate_cadets_returns_new_form(interface: abstractInterface, last_button:str) -> Union[Form, NewForm]:
+    ## Called by post on view events form, so both stage and event name are set
     if cancel_menu_button.pressed(last_button):
         interface.clear_cache()
         return previous_form(interface)
@@ -81,13 +115,25 @@ def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewFo
         return interface.get_new_form_given_function(display_change_sort_order)
 
     else:
-        return post_form_allocate_cadets_when_not_returning_new_form(interface=interface,
-                                                                     last_button=last_button)
+        return button_error_and_back_to_initial_state_form(interface)
 
-def post_form_allocate_cadets_when_not_returning_new_form(interface: abstractInterface, last_button:str) -> Union[Form, NewForm]:
+
+def post_form_allocate_cadets_when_changing_state_and_not_data(interface: abstractInterface, last_button:str) -> Union[Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
+    if  is_button_cadet_selection(last_button):
+        cadet_button_clicked(interface)
+
+    elif is_button_day_select(last_button):
+        change_day_and_save(interface=interface, day_button=last_button)
+
+    else:
+        return button_error_and_back_to_initial_state_form(interface)
+
+    return display_form_allocate_cadets(interface)
+
+
+def post_form_allocate_cadets_when_changing_data(interface: abstractInterface, last_button:str) -> Union[Form, NewForm]:
     if save_menu_button.pressed(last_button):
-        ## This also saves the stored data in interface otherwise we don't do it later if add partner button saved
         update_data_given_allocation_form(interface)
 
     elif update_limits_button.pressed(last_button):
@@ -107,18 +153,12 @@ def post_form_allocate_cadets_when_not_returning_new_form(interface: abstractInt
     elif guess_boat_button.pressed(last_button):
         guess_boat_classes_in_allocation_form(interface)
 
-    elif is_button_cadet_selection(last_button):
-        cadet_button_clicked(interface)
-
-    elif is_button_day_select(last_button):
-        change_day_and_save(interface=interface, day_button=last_button)
-
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
     interface.save_cache_to_store_without_clearing()
 
-    return interface.get_new_form_given_function(display_form_allocate_cadets)
+    return display_form_allocate_cadets(interface)
 
 
 

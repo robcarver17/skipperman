@@ -3,7 +3,6 @@ from typing import Dict, List
 
 import pandas as pd
 
-from app.objects.generic_list_of_objects import create_data_frame_given_list_of_objects
 from app.objects.utils import flatten
 from app.objects.exceptions import arg_not_passed, missing_data
 
@@ -197,6 +196,8 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
             return
 
         current_allocation.update_group_on_day(day=day, group=group)
+        self[cadet] = current_allocation
+
         self.list_of_cadet_ids_with_groups.update_group_for_cadet_on_day(
             cadet_id=cadet.id, day=day, chosen_group_id=group.id
         )
@@ -213,6 +214,8 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
     def remove_cadet_from_event_on_day(self, cadet: Cadet, day: Day):
         current_allocation = self.get_days_and_groups_for_cadet(cadet=cadet)
         current_allocation.remove_cadet_from_event_on_day(day)
+        self[cadet] = current_allocation
+
         self.list_of_cadet_ids_with_groups.remove_group_allocation_for_cadet_on_day(
             cadet_id=cadet.id, day=day
         )

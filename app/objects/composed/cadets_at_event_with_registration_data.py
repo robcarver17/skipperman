@@ -103,6 +103,7 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
     ):
         reg_data_for_cadet = self.registration_data_for_cadet(cadet)
         reg_data_for_cadet.update_health(new_health)
+        self[cadet] = reg_data_for_cadet
 
         self.list_of_cadets_with_id_at_event.update_health_for_existing_cadet_at_event(
             cadet_id=cadet.id,
@@ -119,6 +120,8 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
             return
 
         reg_data_for_cadet.update_column_in_data(column_name=column_name, new_value_for_column=new_value_for_column)
+        self[cadet] = reg_data_for_cadet
+
         self.list_of_cadets_with_id_at_event.update_data_row_for_existing_cadet_at_event(
             cadet_id=cadet.id,
             column_name=column_name,
@@ -128,6 +131,7 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
     def update_notes_for_existing_cadet_at_event(self, cadet: Cadet, notes: str):
         reg_data_for_cadet = self.registration_data_for_cadet(cadet)
         reg_data_for_cadet.update_notes(notes)
+        self[cadet]  =reg_data_for_cadet
 
         ## propogate down
         self.list_of_cadets_with_id_at_event.update_notes_for_existing_cadet_at_event(
@@ -153,6 +157,7 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
 
         registration_data = self.registration_data_for_cadet(cadet)
         registration_data.availability.make_available_on_day(day)
+        self[cadet] = registration_data
 
         cadet_at_event_data = (
             self.list_of_cadets_with_id_at_event.cadet_with_id_and_data_at_event(
@@ -165,6 +170,7 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
 
         registration_data = self.registration_data_for_cadet(cadet)
         registration_data.availability.make_unavailable_on_day(day)
+        self[cadet] = registration_data
 
         cadet_at_event_data = (
             self.list_of_cadets_with_id_at_event.cadet_with_id_and_data_at_event(
@@ -178,6 +184,7 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
     ):
         existing_registration = self.registration_data_for_cadet(cadet)
         existing_registration.status = new_status
+        self[cadet] = existing_registration
 
         cadet_at_event_with_id = (
             self.list_of_cadets_with_id_at_event.cadet_with_id_and_data_at_event(

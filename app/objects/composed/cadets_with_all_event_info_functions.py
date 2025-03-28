@@ -369,7 +369,7 @@ def update_cadets_own_info_excluding_partner_and_return_cadet(
         cadet=cadet, day=day, club_boat=club_boat
     )
 
-    rd.dict_of_cadets_and_boat_class_and_partners.update_boat_class_sail_number_for_updated_cadet_at_event(
+    rd.dict_of_cadets_and_boat_class_and_partners.update_boat_class_and_sail_number_on_day(
         cadet=cadet,
         day=day,
         boat_class=boat_class,
@@ -414,3 +414,5 @@ def how_has_partnership_changed(
         new_partner=new_partner,
         new_partner_who_was_their_partner=new_partner_who_was_their_partner,
     )
+
+

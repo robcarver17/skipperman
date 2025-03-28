@@ -236,6 +236,9 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
         dict_of_patrol_boat_for_original_volunteer[original_day] = swap_boat
         dict_of_patrol_boat_for_swap_volunteer[day_to_swap_with] = original_boat
 
+        self[original_volunteer] = dict_of_patrol_boat_for_original_volunteer
+        self[volunteer_to_swap_with] = dict_of_patrol_boat_for_swap_volunteer
+
         self.list_of_volunteers_with_id_at_event_with_patrol_boat_id.swap_boats_for_volunteers_in_allocation(
             volunteer_id_to_swap_with=volunteer_to_swap_with.id,
             original_volunteer_id=original_volunteer.id,
@@ -250,9 +253,9 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
         self._remove_patrol_boat_from_volunteers_at_event_underlying_data(patrol_boat)
 
     def _remove_patrol_boat_from_volunteers_at_event(self, patrol_boat: PatrolBoat):
-        list_of_volunteers_with_patrol_boats = list(self.values())
-        for volunteer_with_patrol_boats in list_of_volunteers_with_patrol_boats:
-            volunteer_with_patrol_boats.delete_patrol_boat_association(patrol_boat)
+        for volunteer, patrol_boat_dict in self.items():
+            patrol_boat_dict.delete_patrol_boat_association(patrol_boat)
+            self[volunteer] = patrol_boat_dict
 
     def _remove_patrol_boat_from_volunteers_at_event_underlying_data(
         self, patrol_boat: PatrolBoat
@@ -268,7 +271,7 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
         )
 
     def add_boat_to_event_with_no_allocation(self, patrol_boat: PatrolBoat):
-
+        ## no need to add at top level
         self.list_of_volunteers_with_id_at_event_with_patrol_boat_id.add_unallocated_boat(
             patrol_boat.id
         )
@@ -286,6 +289,8 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
             day=day,
             allow_overwrite=allow_overwrite,
         )
+        self[volunteer] = patrol_boats_for_volunteer
+
         self.list_of_volunteers_with_id_at_event_with_patrol_boat_id.copy_across_allocation_of_boats_at_event(
             volunteer_id=volunteer.id,
             day=day,
@@ -298,6 +303,7 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
     ):
         patrol_boats_for_volunteer = self.patrol_boats_for_volunteer(volunteer)
         patrol_boats_for_volunteer.add_boat_on_day(patrol_boat=patrol_boat, day=day)
+        self[volunteer] = patrol_boats_for_volunteer
 
         self.list_of_volunteers_with_id_at_event_with_patrol_boat_id.add_volunteer_with_boat(
             volunteer_id=volunteer.id, day=day, patrol_boat_id=patrol_boat.id
@@ -358,6 +364,7 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
     def delete_patrol_boat_for_volunteer_on_day(self, volunteer: Volunteer, day: Day):
         patrol_boats_for_volunteer = self.patrol_boats_for_volunteer(volunteer)
         patrol_boats_for_volunteer.delete_patrol_boat_on_day(day)
+        self[volunteer] = patrol_boats_for_volunteer
 
         self.list_of_volunteers_with_id_at_event_with_patrol_boat_id.remove_volunteer_from_patrol_boat_on_day_at_event(
             volunteer_id=volunteer.id, day=day

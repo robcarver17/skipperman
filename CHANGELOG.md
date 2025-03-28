@@ -3,6 +3,7 @@
 
 Before first training:
 
+- group allocation save still not working 
 patrol boats
 - clean up button mapping (put in change log)
 - speed up display of large tables, use all event dict and prop up#67 (put in change log)
@@ -27,6 +28,7 @@ Before Cadet week
 - massive warning if unique key creators missing from field mappings
 
 # Recent
+- can add a partner as new registration even if registration data missing
 - clicking on volunteer does not show availability checkboxes; add remove role across days button
 - configure visible events in group allocation 
 - club boat limits general configuration 

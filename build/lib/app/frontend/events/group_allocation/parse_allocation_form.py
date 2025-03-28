@@ -271,12 +271,10 @@ def guess_boat_classes_in_allocation_form(interface: abstractInterface):
     list_of_updates = []
     for day in list_of_days:
         for cadet in list_of_cadets:
-            print("guessing for %s on %s" % (cadet.name, day.name))
             current_boat = dict_of_all_event_data.dict_of_cadets_and_boat_class_and_partners.boat_classes_and_partner_for_cadet(cadet).boat_class_on_day(day)
             if not current_boat is no_boat_class:
                 continue
             boat_class_name = guess_name_of_boat_class_on_day_from_other_information(dict_of_all_event_data=dict_of_all_event_data, day=day, cadet=cadet)
-            print("guessing boat %s for %s" % (boat_class_name, cadet.name))
             update = get_update_for_cadet(interface, cadet)
             update.boat_class_name = boat_class_name
             list_of_updates.append(update)

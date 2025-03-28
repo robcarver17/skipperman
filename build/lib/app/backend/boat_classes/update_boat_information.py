@@ -31,7 +31,7 @@ from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.exceptions import missing_data, MISSING_FROM_FORM
 from app.objects.boat_classes import no_boat_class
-
+from app.objects.utils import print_list
 
 
 @dataclass

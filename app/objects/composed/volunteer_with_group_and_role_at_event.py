@@ -378,6 +378,8 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
 
         roles_for_volunteer = self.days_and_roles_for_volunteer(volunteer)
         roles_for_volunteer.update_group_on_day(day=day, new_group=new_group)
+        self[volunteer] = roles_for_volunteer
+
         self.list_of_volunteers_with_id_in_role_at_event.update_volunteer_in_group_on_day(
             volunteer=volunteer, day=day, new_group_id=new_group.id
         )
@@ -413,6 +415,9 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
             original_volunteer_role_and_group
         )
 
+        self[original_volunteer] = days_and_roles_for_original_volunteer
+        self[volunteer_to_swap_with] =days_and_roles_for_swap_volunteer
+
         self.list_of_volunteers_with_id_in_role_at_event.swap_roles_and_groups_for_volunteers_in_allocation(
             original_day=original_day,
             day_to_swap_with=day_to_swap_with,
@@ -425,6 +430,7 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
     ):
         roles_for_volunteer = self.days_and_roles_for_volunteer(volunteer)
         roles_for_volunteer.update_role_on_day(day=day, new_role=new_role)
+        self[volunteer] = roles_for_volunteer
 
         self.list_of_volunteers_with_id_in_role_at_event.update_volunteer_in_role_on_day(
             volunteer=volunteer, day=day, new_role_id=new_role.id
@@ -441,6 +447,7 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
             new_role_and_group=new_role_and_group,
             list_of_days_available=list_of_days_available,
         )
+        self[volunteer] = roles_for_volunteer
 
         self.list_of_volunteers_with_id_in_role_at_event.update_role_and_group_at_event_for_volunteer_on_all_days_when_available(
             role_id=new_role_and_group.role.id,
@@ -462,6 +469,8 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
             allow_replacement=allow_replacement,
             list_of_all_days=available_days.days_available(),
         )
+        self[volunteer] = roles_for_volunteer
+
         self.list_of_volunteers_with_id_in_role_at_event.copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
             volunteer_id=volunteer.id,
             day=day,
@@ -480,6 +489,8 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
     def delete_role_for_volunteer_on_day(self, day: Day, volunteer: Volunteer):
         roles_for_volunteer = self.days_and_roles_for_volunteer(volunteer)
         roles_for_volunteer.delete_role_on_day(day)
+        self[volunteer] = roles_for_volunteer
+
         self.list_of_volunteers_with_id_in_role_at_event.delete_volunteer_in_role_at_event_on_day(
             volunteer=volunteer, day=day
         )

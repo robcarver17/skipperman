@@ -2,9 +2,6 @@
 # to do next
 
 Before first training:
-
-- better doc on what happens if skipperman fields updated or added
-- produce QR code from report page itself
 - more elegant handling of manual reg #64
 - merge cadet, merge volunteer #15
 - delete empty event, empty cadet, empty volunteer #26
@@ -23,6 +20,8 @@ Before Cadet week
 - massive warning if unique key creators missing from field mappings
 
 # Recent
+- produce QR code from report page itself
+- better doc on what happens if skipperman fields updated or added
 - cleaned up repo to reduce disk usage on server
 - speed up display of large tables by not flushing cache
 - allow swapping on to empty boat

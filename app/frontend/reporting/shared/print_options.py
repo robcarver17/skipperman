@@ -12,6 +12,7 @@ from app.data_access.configuration.fixed import ALL_PAGESIZE, ALL_FONTS
 from app.data_access.init_directories import web_pathname_of_file
 from app.frontend.shared.events_state import get_event_from_state
 from app.backend.reporting.report_generator import ReportGenerator
+from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_form import (
     yes_no_radio,
     textInput,
@@ -109,8 +110,10 @@ def report_print_options_as_list_of_lines(print_options: PrintOptions) -> ListOf
         if public
         else "Save in private directory"
     )
+    use_qr_button = qr_button if public else ""
+
     output_pdf_line = Line(output_pdf_str)
-    public_pdf_line = Line(public_str)
+    public_pdf_line = Line([public_str, use_qr_button])
 
     if print_options.auto_font_size:
         font_size = "Automatic"
@@ -146,6 +149,9 @@ def report_print_options_as_list_of_lines(print_options: PrintOptions) -> ListOf
 
     return output.add_Lines()
 
+qr_button = Button(
+        "Get QR code for report",
+        )
 
 def get_print_options_from_main_option_form_fields(
     interface: abstractInterface,

@@ -27,7 +27,7 @@ If you get lost, to return to the mapping menu page is: Main menu/Events/Select 
 - [Export registration data from Wild Apricot to a .csv file](WildApricothelp.md#downloading-the-registration-file-for-skipperman-upload)
 - [Upload the WA export file into Skipperman](link_required) and then go to the mapping menu
 - There should be no issues raised by the [mapping diagnostics](#mapping-diagnostics), and you can proceed to opening up the event for registration on WA
-- **Once you have imported data from WA into Skipperman it is strongly advised not to change the WA form or the Skipperman/WA mapping as this will cause serious problems.**
+- **Once you have imported data from WA into Skipperman it is strongly advised not to change the WA form or the Skipperman/WA mapping as this will cause serious problems.**. If you must, then [see here for advice first](#changing-the-wa-form-after-importing-data)
 
 See [other ways to do the mapping](#other-ways-to-do-the-mapping).
 
@@ -125,7 +125,7 @@ If you get lost, to return to the mapping menu page is: Main menu/Events/Select 
 - [Export registration data from Wild Apricot to a .csv file](WildApricothelp.md#downloading-the-registration-file-for-skipperman-upload)
 - [Upload the WA export file into Skipperman](import_registration_data_help.md#uploading-a-wa-export-file) and then go to the mapping menu
 - There should be no issues raised by the [mapping diagnostics](#mapping-diagnostics), and you can proceed to opening up the event for registration on WA
-- **Once you have imported data from WA into Skipperman it is strongly advised not to change the WA form or the Skipperman/WA mapping as this will cause serious problems.**
+- **Once you have imported data from WA into Skipperman it is strongly advised not to change the WA form or the Skipperman/WA mapping as this will cause serious problems.** If you must, then [see here for advice first](#changing-the-wa-form-after-importing-data)
 
 ## If short of time and feeling confident
 
@@ -149,7 +149,7 @@ If you get lost, to return to the mapping menu page is: Main menu/Events/Select 
 - From the main mapping menu page, [make any required changes to the mapping in the mapping table](#the-mapping-table). See [the list of WA fields](List_and_explanation_of_skipperman_fields.md)
 - Check the [mapping diagnostics](#mapping-diagnostics) to check there is nothing significant missing
 - When you are happy with everything, you can open the event up for registration in Wild Apricot
-- **Once you have imported data from WA into Skipperman it is strongly advised not to change the WA form or the Skipperman/WA mapping as this will cause serious problems.**
+- **Once you have imported data from WA into Skipperman it is strongly advised not to change the WA form or the Skipperman/WA mapping as this will cause serious problems.** If you must, then [see here for advice first](#changing-the-wa-form-after-importing-data)
 
 ## Advanced
 
@@ -164,5 +164,38 @@ Only do this if you have read and thoroughly understood [the list of WA fields](
 - From the main mapping menu page, [make any required changes to the mapping in the mapping table](#the-mapping-table)
 - Check the  [mapping diagnostics](#mapping-diagnostics) to check there is nothing significant missing
 - When you are happy with everything, you can open the event up for registration in Wild Apricot
-- **Once you have imported data from WA into Skipperman it is strongly advised not to change the WA form or the Skipperman/WA mapping as this will cause serious problems.**
+- **Once you have imported data from WA into Skipperman it is strongly advised not to change the WA form or the Skipperman/WA mapping as this will cause serious problems.** If you must, then [see here for advice first](#changing-the-wa-form-after-importing-data)
+
+# Changing the WA form after importing data
+
+Sometimes you will have to change the WA form after importing data. 
+
+
+## Changes to fields not used by skipperman: modifying existing fields, adding fields or deleting fields
+
+Obviously if Skipperman is not going to use the relevant fields, then this is no problem
+
+## Modifying the name of an existing field used by Skipperman
+
+Perhaps the form isn't clear, and you want to change the entry name to something else. If you do this, make sure you update the field mapping before you import any new data. Upload the file with the new mappings. You should see the problematic fields highlighted in the [mapping table](#the-mapping-table). Delete them, and then add back the Skipperman fields with the correct WA field names.
+
+## Removing an existing field used by Skipperman
+
+Obviously any relevant information won't be imported into Skipperman for existing registrations, but presumably you are okay with this since you deleted the WA field.
+
+You can delete the field from the field mapping from the [field mapping table](#the-mapping-table) for tidiness, [otherwise they will show as an error](#wild-apricot-fields-that-are-in-the-mapping-file-but-missing-from-the-wild-apricot-file), but the import will still work.
+
+## Adding a new field to be used by Skipperman
+
+Sometimes you will realise belatedly that you haven't included a vital piece of information. 
+
+To avoid unusual behaviour, follow this procedure:
+
+- export the registrations from WA before making any change, and import into Skipperman without changing the field mapping 
+- temporarily disallow registrations on WA to prevent any more people registering with the old form
+- change the form on WA, and also change the field mapping on Skipperman
+- re-enable registrations
+- any subsequent registrations will use the new form, and can be imported into Skipperman.
+
+Obviously the existing registrations will not include the relevant information from the form in the new field. You are going to have to manually add that information to existing [sailors registration data](registration_editing_help.md), [volunteers](volunteer_rota_help.md), [food](food_help.md) or [clothing](clothing_help.md).
 

@@ -16,6 +16,7 @@ from app.frontend.reporting.shared.print_options import (
     report_print_options_as_list_of_lines,
 )
 from app.backend.reporting.report_generator import ReportGenerator
+from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.objects.abstract_objects.abstract_text import bold
@@ -36,6 +37,7 @@ def get_text_explaining_various_options_for_generic_report(
         report_type=specific_parameters_for_type_of_report.report_type,
         interface=interface,
     )
+
     print_options_as_text = report_print_options_as_list_of_lines(print_options)
     print_options_as_text = ListOfLines(
         [Line(bold("Print Options:")), print_options_as_text]

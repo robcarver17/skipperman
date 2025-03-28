@@ -11,7 +11,7 @@ from app.frontend.reporting.shared.arrangement_form import (
     form_for_group_arrangement_options,
     post_form_for_group_arrangement_options,
 )
-from app.frontend.reporting.shared.create_report import create_generic_report
+from app.frontend.reporting.shared.create_report import create_generic_report, qr_code_for_report
 from app.frontend.reporting.shared.explain_options import (
     get_text_explaining_various_options_for_generic_report,
 )
@@ -19,7 +19,7 @@ from app.frontend.reporting.shared.print_options import (
     get_saved_print_options_and_create_form,
     reset_print_report_options,
     save_print_options_from_form,
-    weblink_for_report,
+    weblink_for_report, qr_button,
 )
 from app.backend.reporting.report_generator import (
     ReportGeneratorWithoutSpecificParameters,
@@ -192,6 +192,8 @@ def post_form_for_generic_report_all_options(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
         )
+    elif qr_button.pressed(last_button_pressed):
+        return qr_code_for_report(interface, report_generator_with_specific_parameters)
 
     elif modify_print_options_button.pressed(last_button_pressed):
         return print_option_form(interface, report_generator)

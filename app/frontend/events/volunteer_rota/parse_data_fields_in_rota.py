@@ -3,19 +3,16 @@ from app.backend.rota.volunteer_table import MAKE_UNAVAILABLE
 from app.backend.volunteers.roles_and_teams import get_role_from_name
 
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
-from app.objects.exceptions import MISSING_FROM_FORM
+from app.objects.exceptions import MISSING_FROM_FORM, arg_not_passed, MissingData
+from app.objects.groups import unallocated_group
 from app.objects.volunteers import Volunteer
 
 from app.objects.events import Event
 
 from app.backend.rota.changes import (
     update_volunteer_notes_at_event,
-    update_role_at_event_for_volunteer_on_day,
-    update_group_at_event_for_volunteer_on_day,
-)
-from app.backend.volunteers.volunteers_at_event import (
-    make_volunteer_unavailable_on_day,
-    is_volunteer_currently_available_for_only_one_day,
+    update_role_and_group_at_event_for_volunteer_on_day,
+
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.shared.events_state import get_event_from_state
@@ -54,80 +51,54 @@ def update_details_for_days_from_form_for_volunteer_at_event(
     event = volunteer_at_event_data.event
     days_at_event = volunteer_at_event_data.event.days_in_event()
     for day in days_at_event:
-        update_details_from_form_for_volunteer_given_specific_day_at_event(
+        update_role_and_group_from_form_for_volunteer_given_specific_day_at_event(
             interface=interface, event=event, day=day, volunteer=volunteer
         )
 
 
-def update_details_from_form_for_volunteer_given_specific_day_at_event(
+def update_role_and_group_from_form_for_volunteer_given_specific_day_at_event(
     interface: abstractInterface,
     event: Event,
     volunteer: Volunteer,
     day: Day,
 ):
 
-    update_role_or_availability_from_form_for_volunteer_on_day_at_event(
-        interface=interface, event=event, volunteer=volunteer, day=day
-    )
-    update_group_from_form_for_volunteer_on_day_at_event(
-        interface=interface, event=event, volunteer=volunteer, day=day
-    )
-
-
-def update_role_or_availability_from_form_for_volunteer_on_day_at_event(
-    interface: abstractInterface, event: Event, volunteer: Volunteer, day: Day
-):
-    new_role_name_from_form = interface.value_from_form(
-        input_name_for_role_and_volunteer(volunteer=volunteer, day=day),
-        default=MISSING_FROM_FORM,
-    )
-    if new_role_name_from_form == MISSING_FROM_FORM:
+    try:
+        new_role = get_role_from_form(interface=interface,  volunteer=volunteer, day=day)
+    except MissingData:
         return
-    elif new_role_name_from_form == MAKE_UNAVAILABLE:
-        if is_volunteer_currently_available_for_only_one_day(
-            object_store=interface.object_store, event=event, volunteer=volunteer
-        ):
-            interface.log_error(
-                "Can't make volunteer %s unavailable on %s as only volunteering for one day - remove from event if not available on any days"
-                % (volunteer.name, day.name)
-            )
-            return
-        else:
-            make_volunteer_unavailable_on_day(
-                event=event,
-                volunteer=volunteer,
-                day=day,
-                object_store=interface.object_store,
-            )
-            return
-    else:
-        update_role_or_availability_from_form_for_volunteer_on_day_at_event_when_changing_to_actual_role(
-            interface=interface, event=event, volunteer=volunteer, day=day
-        )
 
+    new_group = get_group_from_form(interface=interface, volunteer=volunteer, day=day) ### if arg_not_passed, no change
 
-def update_role_or_availability_from_form_for_volunteer_on_day_at_event_when_changing_to_actual_role(
-    interface: abstractInterface, event: Event, volunteer: Volunteer, day: Day
-):
-    new_role_name_from_form = interface.value_from_form(
-        input_name_for_role_and_volunteer(volunteer=volunteer, day=day),
-        default=MISSING_FROM_FORM,
-    )
-    new_role = get_role_from_name(
-        object_store=interface.object_store, role_name=new_role_name_from_form
-    )
-    update_role_at_event_for_volunteer_on_day(
+    update_role_and_group_at_event_for_volunteer_on_day(
         object_store=interface.object_store,
         event=event,
         volunteer=volunteer,
         day=day,
         new_role=new_role,
-        remove_power_boat_if_deleting_role=True,
+        new_group=new_group,
     )
 
+def get_role_from_form(    interface: abstractInterface,
+    volunteer: Volunteer,
+    day: Day,
+    ):
+    new_role_name_from_form = interface.value_from_form(
+        input_name_for_role_and_volunteer(volunteer=volunteer, day=day),
+        default=MISSING_FROM_FORM,
+    )
+    if new_role_name_from_form == MISSING_FROM_FORM:
+        raise MissingData
 
-def update_group_from_form_for_volunteer_on_day_at_event(
-    interface: abstractInterface, event: Event, volunteer: Volunteer, day: Day
+    new_role = get_role_from_name(
+        object_store=interface.object_store, role_name=new_role_name_from_form
+    )
+
+    return new_role
+
+def get_group_from_form(    interface: abstractInterface,
+    volunteer: Volunteer,
+    day: Day,
 ):
     new_group_name_from_form = interface.value_from_form(
         input_name_for_group_and_volunteer(volunteer=volunteer, day=day),
@@ -136,20 +107,13 @@ def update_group_from_form_for_volunteer_on_day_at_event(
 
     if new_group_name_from_form == MISSING_FROM_FORM:
         ## no group dropdown as not relevant or unavailable
-        return
+        return unallocated_group
+    else:
+        new_group = get_group_with_name(
+            object_store=interface.object_store, group_name=new_group_name_from_form
+        )
 
-    new_group_from_form = get_group_with_name(
-        object_store=interface.object_store, group_name=new_group_name_from_form
-    )
-
-    update_group_at_event_for_volunteer_on_day(
-        object_store=interface.object_store,
-        event=event,
-        volunteer=volunteer,
-        day=day,
-        new_group=new_group_from_form,
-    )
-
+    return new_group
 
 def update_notes_for_volunteer_at_event_from_form(
     interface: abstractInterface,

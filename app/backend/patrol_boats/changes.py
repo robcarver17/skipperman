@@ -104,7 +104,6 @@ def copy_across_boats_at_event(
     day: Day,
     allow_overwrite: bool
 ):
-
     all_event_data = get_dict_of_all_event_data_for_volunteers(object_store=object_store,
                                                                event=event)
     all_event_data.copy_across_boats_at_event(
@@ -160,7 +159,6 @@ def remove_patrol_boat_and_all_associated_volunteers_from_event(
     patrol_boat = from_patrol_boat_name_to_boat(
         object_store=object_store, boat_name=patrol_boat_name
     )
-    print("Removing %s from event" % patrol_boat.name)
     all_event_data.remove_patrol_boat_and_all_associated_volunteers_from_event(
         patrol_boat
     )

@@ -149,6 +149,22 @@ class RoleAndGroupAndTeam:
     def not_in_team(self):
         return len(self.list_of_team_and_index) == 0
 
+    def update_role_and_group(self, new_role: RoleWithSkills,
+                                     new_group: Group = arg_not_passed):
+
+        self.role = new_role
+
+        new_group_provided = not new_group is arg_not_passed
+        if new_role.associate_sailing_group:
+            if new_group_provided:
+                self.group = new_group
+            else:
+                ## keep current group, which may be not provided
+                pass
+
+        else:
+            self.group = unallocated_group
+
     def role_and_group(self):
         return RoleAndGroup(role=self.role, group=self.group)
 
@@ -196,17 +212,14 @@ unallocated_role_and_group_and_team = RoleAndGroupAndTeam.create_unallocated()
 
 
 class DictOfDaysRolesAndGroupsAndTeams(Dict[Day, RoleAndGroupAndTeam]):
-    def update_role_on_day(self, day: Day, new_role: RoleWithSkills):
+    def update_role_and_group_on_day(self, day: Day, new_role: RoleWithSkills,
+                                     new_group: Group = arg_not_passed ### if not passed, no change
+                                     ):
 
         existing_role_group_and_team = self.role_and_group_and_team_on_day(day)
-        existing_role_group_and_team.role = new_role
+        existing_role_group_and_team.update_role_and_group(new_role=new_role, new_group=new_group)
         self[day] = existing_role_group_and_team
 
-    def update_group_on_day(self, day: Day, new_group: Group):
-
-        existing_role_group_and_team = self.role_and_group_and_team_on_day(day)
-        existing_role_group_and_team.group = new_group
-        self[day] = existing_role_group_and_team
 
     def update_role_and_group_at_event_for_volunteer_on_all_days_when_available(
         self, new_role_and_group: RoleAndGroupAndTeam, list_of_days_available: List[Day]
@@ -372,17 +385,6 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
 
         self._list_of_roles_with_skills = list_of_roles_with_skills
 
-    def update_group_at_event_for_volunteer_on_day(
-        self, volunteer: Volunteer, day: Day, new_group: Group
-    ):
-
-        roles_for_volunteer = self.days_and_roles_for_volunteer(volunteer)
-        roles_for_volunteer.update_group_on_day(day=day, new_group=new_group)
-        self[volunteer] = roles_for_volunteer
-
-        self.list_of_volunteers_with_id_in_role_at_event.update_volunteer_in_group_on_day(
-            volunteer=volunteer, day=day, new_group_id=new_group.id
-        )
 
     def swap_roles_and_groups_for_volunteers_in_allocation(
         self,
@@ -425,15 +427,21 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
             original_volunteer_id=original_volunteer.id,
         )
 
-    def update_role_at_event_for_volunteer_on_day_if_switching_roles(
-        self, volunteer: Volunteer, day: Day, new_role: RoleWithSkills
+    def update_role_and_group_at_event_for_volunteer_on_day(
+        self, volunteer: Volunteer, day: Day, new_role: RoleWithSkills,
+            new_group: Group = arg_not_passed ### if not passed, no change
     ):
         roles_for_volunteer = self.days_and_roles_for_volunteer(volunteer)
-        roles_for_volunteer.update_role_on_day(day=day, new_role=new_role)
+        roles_for_volunteer.update_role_and_group_on_day(day=day, new_role=new_role, new_group=new_group)
         self[volunteer] = roles_for_volunteer
 
-        self.list_of_volunteers_with_id_in_role_at_event.update_volunteer_in_role_on_day(
-            volunteer=volunteer, day=day, new_role_id=new_role.id
+        group_id = arg_not_passed if new_group is arg_not_passed else new_group.id
+        role_id = new_role.id
+        role_requires_group = new_role.associate_sailing_group
+
+        self.list_of_volunteers_with_id_in_role_at_event.update_role_and_group_for_volunteer_on_day(
+            volunteer=volunteer, day=day, role_id=role_id, group_id=group_id,
+            role_requires_group=role_requires_group
         )
 
     def update_role_and_group_at_event_for_volunteer_on_all_days_when_available(
@@ -449,11 +457,14 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
         )
         self[volunteer] = roles_for_volunteer
 
+        role_requires_group = new_role_and_group.role.associate_sailing_group
+
         self.list_of_volunteers_with_id_in_role_at_event.update_role_and_group_at_event_for_volunteer_on_all_days_when_available(
             role_id=new_role_and_group.role.id,
             volunteer=volunteer,
             group_id=new_role_and_group.group.id,
             list_of_days_available=list_of_days_available,
+            role_requires_group=role_requires_group
         )
 
     def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(

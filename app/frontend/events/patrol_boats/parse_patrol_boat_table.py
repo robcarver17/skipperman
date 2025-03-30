@@ -3,7 +3,7 @@ from typing import Union
 from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event import (
     get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats,
 )
-from app.backend.rota.changes import update_role_at_event_for_volunteer_on_day
+from app.backend.rota.changes import update_role_and_group_at_event_for_volunteer_on_day
 from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import (
     VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 )
@@ -212,13 +212,13 @@ def update_role_dropdown_for_volunteer_on_day(
     if role_selected == current_role:
         return
 
-    update_role_at_event_for_volunteer_on_day(
+    update_role_and_group_at_event_for_volunteer_on_day(
         object_store=interface.object_store,
         event=volunteer_on_boat.event,
         volunteer=volunteer_on_boat.volunteer,
         day=day,
         new_role=role_selected,
-        remove_power_boat_if_deleting_role=False,
+        ## do not pass group
     )
 
 

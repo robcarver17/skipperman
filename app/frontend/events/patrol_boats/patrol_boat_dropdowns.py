@@ -200,7 +200,7 @@ def volunteer_boat_role_dropdown(
         return current_role_name
 
     dict_of_roles_for_dropdown = get_dict_of_roles_for_dropdown(
-        interface.object_store, include_no_role=True, include_unavailable=False
+        interface.object_store
     )
 
     return dropDownInput(

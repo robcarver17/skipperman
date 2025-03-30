@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Dict
 
 from app.objects.composed.volunteer_roles import RoleWithSkills
-from app.objects.day_selectors import Day, DaySelector
+from app.objects.day_selectors import Day
 
 from app.objects.cadets import ListOfCadets
 
@@ -23,7 +23,7 @@ from app.objects.composed.volunteers_with_skills import (
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
     DictOfDaysRolesAndGroupsAndTeams,
     DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
-    RoleAndGroupAndTeam,
+    RoleAndGroupAndTeam, RoleAndGroup,
 )
 from app.objects.composed.volunteers_at_event_with_registration_data import (
     RegistrationDataForVolunteerAtEvent,
@@ -187,34 +187,15 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         )
         self.refresh_data_for_volunteer_from_underlying(volunteer)
 
-    def update_role_at_event_for_volunteer_on_day_if_switching_roles(self,
-        volunteer: Volunteer, day: Day, new_role: RoleWithSkills
-    ):
-        existing_role = self.dict_of_volunteers_at_event_with_days_and_roles.days_and_roles_for_volunteer(volunteer).role_and_group_on_day(day).role
-        if existing_role == new_role:
-            return
-        self.dict_of_volunteers_at_event_with_days_and_roles.update_role_at_event_for_volunteer_on_day_if_switching_roles(
-            volunteer=volunteer, day=day, new_role=new_role
+    def update_role_and_group_at_event_for_volunteer_on_day(self,
+                                                            volunteer: Volunteer, day: Day, new_role: RoleWithSkills,
+                                                            new_group: Group = arg_not_passed ### if not passed, no change
+                                                            ):
+        self.dict_of_volunteers_at_event_with_days_and_roles.update_role_and_group_at_event_for_volunteer_on_day(
+            volunteer=volunteer, day=day, new_role=new_role, new_group=new_group
         )
         self.refresh_data_for_volunteer_from_underlying(volunteer)
 
-    def update_group_at_event_for_volunteer_on_day(
-            self,
-            volunteer: Volunteer,
-            day: Day,
-            new_group: Group
-    ):
-
-        existing_group = self.dict_of_volunteers_at_event_with_days_and_roles.days_and_roles_for_volunteer(volunteer).role_and_group_on_day(day).group
-        if existing_group == new_group:
-            return
-
-        self.dict_of_volunteers_at_event_with_days_and_roles.update_group_at_event_for_volunteer_on_day(
-            volunteer=volunteer,
-            day=day,
-            new_group=new_group
-        )
-        self.refresh_data_for_volunteer_from_underlying(volunteer)
 
     def add_new_volunteer(self,
                           volunteer: Volunteer,

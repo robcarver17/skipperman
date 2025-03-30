@@ -17,7 +17,7 @@ from app.objects.generic_list_of_objects import (
     get_idx_of_unique_object_with_multiple_attr_in_list,
 )
 from app.objects.generic_objects import GenericSkipperManObject
-from app.objects.patrol_boats import PatrolBoat, ListOfPatrolBoats
+from app.objects.patrol_boats import PatrolBoat, ListOfPatrolBoats, no_patrol_boat
 from app.objects.utils import make_id_as_int_str
 
 
@@ -137,6 +137,7 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
             already_allocated = self.is_volunteer_already_on_a_boat_on_day(
                 volunteer_id=volunteer_id, day=other_day
             )
+            print("%s already allocated on %s" % (volunteer_id, other_day))
             if already_allocated:
                 if allow_overwrite:
                     self.remove_volunteer_from_patrol_boat_on_day_at_event(
@@ -150,6 +151,7 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
                 else:
                     continue
             else:
+                print("%s not allocated on %s so adding boat" % (volunteer_id, other_day))
                 self.add_volunteer_with_boat(
                     volunteer_id=volunteer_id,
                     patrol_boat_id=current_boat_id,
@@ -193,10 +195,11 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
         self, volunteer_id: str, day: Day
     ) -> bool:
         boat_id = self.which_boat_id_is_volunteer_on_today(
-            volunteer_id=volunteer_id, day=day, default=missing_data
+            volunteer_id=volunteer_id, day=day, default=no_patrol_boat.id
         )
+        not_on_a_boat = boat_id is no_patrol_boat.id
 
-        return not (boat_id is missing_data)
+        return not not_on_a_boat
 
     def which_boat_id_is_volunteer_on_today(
         self, volunteer_id: str, day: Day, default=arg_not_passed

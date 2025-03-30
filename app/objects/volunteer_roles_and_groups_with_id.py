@@ -5,7 +5,7 @@ from typing import List
 from app.objects.roles_and_teams import Team, no_role_allocated_id
 
 from app.objects.day_selectors import Day
-from app.objects.exceptions import missing_data, arg_not_passed, MissingData
+from app.objects.exceptions import missing_data, arg_not_passed
 from app.objects.generic_list_of_objects import (
     GenericListOfObjects,
     get_unique_object_with_multiple_attr_in_list,
@@ -54,14 +54,38 @@ class ListOfVolunteersWithIdInRoleAtEvent(GenericListOfObjects):
         volunteer: Volunteer,
         group_id: str,
         role_id: str,
+        role_requires_group: bool,
         list_of_days_available: List[Day],
     ):
         for day in list_of_days_available:
-            self.update_volunteer_in_role_on_day(
-                volunteer=volunteer, day=day, new_role_id=role_id
+            self.update_role_and_group_for_volunteer_on_day(
+                volunteer=volunteer,
+                day=day,
+                role_id=role_id,
+                group_id=group_id,
+                role_requires_group=role_requires_group
             )
+
+    def update_role_and_group_for_volunteer_on_day(self,
+        volunteer: Volunteer,
+        day: Day,
+        role_id: str,
+        role_requires_group: bool,
+        group_id: str = arg_not_passed):
+
+        self.update_volunteer_in_role_on_day(
+            volunteer=volunteer, day=day, new_role_id=role_id
+        )
+
+        new_group_provided = not group_id is arg_not_passed
+        if role_requires_group:
+            if new_group_provided:
+                self.update_volunteer_in_group_on_day(
+                    volunteer=volunteer, day=day, new_group_id=group_id
+                )
+        else:
             self.update_volunteer_in_group_on_day(
-                volunteer=volunteer, day=day, new_group_id=group_id
+                volunteer=volunteer, day=day, new_group_id=unallocated_group_id
             )
 
     def drop_volunteer(self, volunteer: Volunteer):

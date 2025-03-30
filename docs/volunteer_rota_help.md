@@ -111,7 +111,7 @@ You can remove a role from someone on a specific day by clicking on the &#174; s
 
 You can remove all roles someone has by clicking on the &#174; symbol under their name in the first column.
 
-You can remove a group from someone on a specific day by choosing the 'Unallocated' option from the group dropdown menu and clicking save. This won't remove their role
+You can remove a group from someone on a specific day by choosing the 'Unallocated' option from the group dropdown menu and clicking save. This won't remove their role.
 
 
 

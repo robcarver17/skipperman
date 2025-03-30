@@ -2,16 +2,15 @@
 # to do next
 
 Before first training:
-- more elegant handling of manual reg #64
+- instructors can do attendance online #63
+- run a full test of data entry - patrol boats (soft copy fill buttons), group allocations (autofill boats)
+
+Before Cadet week
 - merge cadet, merge volunteer #15
 - delete empty event, empty cadet, empty volunteer #26
 - edit event name #16 and days (document what happens if days are edited)
-- instructors can do attendance online #63
-
-Before Cadet week
+- replace key data with parquet
 - clean up html component mapping
-- replace csv with parquet, keep csv for backup (might have to do sooner if disk limit breaks)
-- change data to parquet?
 - food add non registered #28
 - food documentation and checks #49
 - clothing documentation and checks #49
@@ -19,6 +18,7 @@ Before Cadet week
 - add missing stuff to data dumps #55
 
 # Recent
+- more elegant handling of manual reg 
 - massive warning if unique key creators missing from field mappings
 - produce QR code from report page itself
 - better doc on what happens if skipperman fields updated or added

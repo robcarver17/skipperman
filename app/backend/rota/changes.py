@@ -1,3 +1,4 @@
+from app.objects.exceptions import arg_not_passed
 from app.objects.groups import Group
 
 from app.backend.volunteers.volunteers_at_event import (
@@ -106,13 +107,13 @@ def update_volunteer_notes_at_event(
     )
 
 
-def update_role_at_event_for_volunteer_on_day(
+def update_role_and_group_at_event_for_volunteer_on_day(
     object_store: ObjectStore,
     event: Event,
     volunteer: Volunteer,
     day: Day,
     new_role: RoleWithSkills,
-    remove_power_boat_if_deleting_role: bool = True,
+        new_group: Group = arg_not_passed, ### if not passed, no change
 ):
     if new_role.is_no_role_set():
         delete_role_at_event_for_volunteer_on_day(
@@ -120,30 +121,31 @@ def update_role_at_event_for_volunteer_on_day(
             event=event,
             volunteer=volunteer,
             day=day,
-            delete_power_boat=remove_power_boat_if_deleting_role,
         )
     else:
-        update_role_at_event_for_volunteer_on_day_if_switching_roles(
+        update_role_and_group_at_event_for_volunteer_on_day_if_switching_roles_or_groups(
             object_store=object_store,
             event=event,
             volunteer=volunteer,
             day=day,
             new_role=new_role,
+            new_group=new_group
         )
 
 
-def update_role_at_event_for_volunteer_on_day_if_switching_roles(
+def update_role_and_group_at_event_for_volunteer_on_day_if_switching_roles_or_groups(
     object_store: ObjectStore,
     event: Event,
     volunteer: Volunteer,
     day: Day,
     new_role: RoleWithSkills,
+        new_group: Group = arg_not_passed, ### if not passed, no change
 ):
     dict_of_volunteers_at_event = get_dict_of_all_event_data_for_volunteers(
         object_store=object_store, event=event
     )
-    dict_of_volunteers_at_event.update_role_at_event_for_volunteer_on_day_if_switching_roles(
-        volunteer=volunteer, day=day, new_role=new_role
+    dict_of_volunteers_at_event.update_role_and_group_at_event_for_volunteer_on_day(
+        volunteer=volunteer, day=day, new_role=new_role, new_group=new_group
     )
 
     update_dict_of_all_event_data_for_volunteers(
@@ -151,20 +153,3 @@ def update_role_at_event_for_volunteer_on_day_if_switching_roles(
     )
 
 
-def update_group_at_event_for_volunteer_on_day(
-    object_store: ObjectStore,
-    event: Event,
-    volunteer: Volunteer,
-    day: Day,
-    new_group: Group,
-):
-    dict_of_volunteers_at_event = get_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, event=event
-    )
-    dict_of_volunteers_at_event.update_group_at_event_for_volunteer_on_day(
-        volunteer=volunteer, day=day, new_group=new_group
-    )
-
-    update_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, dict_of_all_event_data=dict_of_volunteers_at_event
-    )

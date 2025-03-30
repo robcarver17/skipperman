@@ -74,11 +74,12 @@ class PatrolBoatByDayDict(Dict[Day, PatrolBoat]):
         allow_overwrite: bool,
     ):
         original_boat = self.boat_on_day(day)
-        print("copying %s" % original_boat)
-        for day_to_copy_to in volunteer_availablility_at_event:
-            existing_boat = self.on_any_patrol_boat_on_given_day(day)
-            if existing_boat:
-                print("existing boat... and overwrite is %s" % allow_overwrite)
+        for day_to_copy_to in volunteer_availablility_at_event.days_available():
+            existing_boat = self.boat_on_day(day_to_copy_to, no_patrol_boat)
+            existing_boat_is_an_actual_boat = not existing_boat == no_patrol_boat
+            if existing_boat ==original_boat:
+                continue
+            if existing_boat_is_an_actual_boat:
                 if not allow_overwrite:
                     continue
 
@@ -97,7 +98,9 @@ class PatrolBoatByDayDict(Dict[Day, PatrolBoat]):
     def not_on_patrol_boat_on_given_day(self, day: Day):
         boat_on_day = self.boat_on_day(day, no_patrol_boat)
 
-        return boat_on_day is no_patrol_boat
+        not_on_boat = boat_on_day == no_patrol_boat
+
+        return not_on_boat
 
     def assigned_to_boat_on_day(self, day: Day, patrol_boat: PatrolBoat):
         boat_on_day = self.boat_on_day(day, no_patrol_boat)
@@ -317,14 +320,12 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
         allow_overwrite: bool,
     ):
         patrol_boats_for_volunteer = self.patrol_boats_for_volunteer(volunteer)
-        print("before %s for %s" % (patrol_boats_for_volunteer, volunteer.name))
         patrol_boats_for_volunteer.copy_across_boats_at_event(
             volunteer_availablility_at_event=volunteer_availablility_at_event,
             day=day,
             allow_overwrite=allow_overwrite,
         )
         self[volunteer] = patrol_boats_for_volunteer
-        print("afterwards %s" % patrol_boats_for_volunteer)
 
         self.list_of_volunteers_with_id_at_event_with_patrol_boat_id.copy_across_allocation_of_boats_at_event(
             volunteer_id=volunteer.id,

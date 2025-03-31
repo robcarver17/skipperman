@@ -36,7 +36,7 @@ from app.data_access.csv.resources import (
     CsvDataListOfPatrolBoats,
     CsvDataListOfVolunteersAtEventWithPatrolBoats,
     CsvDataListOfClubDinghies,
-    CsvDataListOfCadetAtEventWithClubDinghies,
+    CsvDataListOfCadetAtEventWithClubDinghies, CsvDataListOfClubDinghyLimits,
 )
 from app.data_access.csv.dinghies_at_events import (
     CsvDataListOfCadetAtEventWithDinghies,
@@ -252,8 +252,8 @@ class MixedParquetAndCsvDataApi(GenericDataApi):
         )
 
     @property
-    def data_List_of_club_dinghy_limits(self) -> ParquetDataListOfClubDinghyLimits:
-        return ParquetDataListOfClubDinghyLimits(
+    def data_List_of_club_dinghy_limits(self) -> CsvDataListOfClubDinghyLimits:
+        return CsvDataListOfClubDinghyLimits(
             master_data_path=self.master_data_path,
             backup_data_path=self.backup_data_path
         )

@@ -115,6 +115,7 @@ LIST_OF_CADETS_WITH_FOOD_AT_EVENT = "list_of_cadets_with_food_at_event"
 LIST_OF_VOLUNTEERS_WITH_FOOD_AT_EVENT = "list_of_volunteers_with_food_at_event"
 
 CLUB_BOAT_LIMIT = "club_boat_limits"
+CLUB_BOAT_LIMIT_CSV = "club_boat_limits"
 
 EVENT_MAPPING_FILE_ID = "wa_event_mapping"
 FIELD_MAPPING_FILE_ID = "wa_field_mapping"
@@ -216,6 +217,10 @@ CLUB_BOAT_LIMIT: (
   "lists",
     "club_boat_limit.parquet"
 ),
+    CLUB_BOAT_LIMIT_CSV: (
+        "lists",
+        "club_boat_limit.csv"
+    ),
     ATTENDANCE_FILE_FOR_SPECIFIC_CADET:
         ("cadet_attendance",
          "attendance_for_%s"),

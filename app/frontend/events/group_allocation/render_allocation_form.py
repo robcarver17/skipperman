@@ -178,8 +178,6 @@ def get_inner_form_for_cadet_allocation(
     dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
         object_store=object_store, event=event, active_only=True
     )
-    print("DICT!")
-    print(dict_of_all_event_data.dict_of_cadets_and_boat_class_and_partners)
     day_or_none = get_day_from_state_or_none(interface)
     list_of_cadets = sorted_active_cadets(
         object_store=object_store,

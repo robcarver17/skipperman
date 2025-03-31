@@ -51,7 +51,7 @@ from app.data_access.csv.qualifications import (
 )
 
 
-class CsvDataApi(GenericDataApi):
+class DEPRECATED_CsvDataApi(GenericDataApi):
     def __init__(
         self, master_data_path: str, user_data_path: str, backup_data_path: str
     ):

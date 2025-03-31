@@ -1,3 +1,4 @@
+from app.objects.attendance import ListOfRawAttendanceItemsForSpecificCadet
 from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent
 from app.objects.identified_cadets_at_event import ListOfIdentifiedCadetsAtEvent
 from app.objects.cadets import ListOfCadets
@@ -46,4 +47,13 @@ class DataListOfCadetsOnCommitte(object):
         raise NotImplemented
 
     def write(self, list_of_cadets: ListOfCadetsWithIdOnCommittee):
+        raise NotImplemented
+
+class DataAttendanceAtEventsForSpecificCadet(object):
+    def read(self, cadet_id: str) -> ListOfRawAttendanceItemsForSpecificCadet:
+        raise NotImplemented
+
+    def write(
+        self, list_of_attendance: ListOfRawAttendanceItemsForSpecificCadet, cadet_id:str
+    ):
         raise NotImplemented

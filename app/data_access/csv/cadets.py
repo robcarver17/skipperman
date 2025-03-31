@@ -4,15 +4,16 @@ from app.data_access.classes.cadets import (
     DataListOfCadetsWithGroups,
     DataListOfCadetsAtEvent,
     DataListOfIdentifiedCadetsAtEvent,
-    DataListOfCadetsOnCommitte,
+    DataListOfCadetsOnCommitte, DataAttendanceAtEventsForSpecificCadet,
 )
 from app.data_access.resolve_paths_and_filenames import (
     IDENTIFIED_CADETS_AT_EVENT_ID,
     CADETS_AT_EVENT_ID,
     CADETS_WITH_GROUPS_ID,
     LIST_OF_CADETS_FILE_ID,
-    LIST_OF_CADETS_ON_COMMITTEE,
+    LIST_OF_CADETS_ON_COMMITTEE, ATTENDANCE_FILE_FOR_SPECIFIC_CADET,
 )
+from app.objects.attendance import ListOfRawAttendanceItemsForSpecificCadet
 
 from app.objects.cadets import ListOfCadets
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
@@ -103,3 +104,5 @@ class CsvDataListOfIdentifiedCadetsAtEvent(
             file_identifier=IDENTIFIED_CADETS_AT_EVENT_ID,
             additional_file_identifiers=event_id,
         )
+
+

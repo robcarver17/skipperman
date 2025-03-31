@@ -47,18 +47,29 @@ def display_form_choose_level_for_group_at_event(interface: abstractInterface) -
     )
     header = Line(
         Heading(
-            "Tick sheets and reports for instructors: Event: %s, Group: %s; Select level"
-            % (str(event), str(group)),
+            "Tick sheets and reports for instructors: Event: %s, Group: %s"            % (str(event), str(group)),
+            centred=False,
+            size=2,
+        )
+    )
+
+    header2 = Line(
+        Heading(
+            "Choose qualification for ticksheets",
             centred=False,
             size=4,
         )
     )
+
     lines_inside_form = ListOfLines(
         [
             navbar,
             _______________,
             header,
             _______________,
+            mark_attendance_button,
+            _______________,
+            header2,
             _______________,
             level_buttons,
         ]
@@ -77,6 +88,7 @@ def get_level_buttons(interface: abstractInterface):
 
     return Line(list_with_buttons)
 
+mark_attendance_button = Button("Mark attendance", tile=True)
 
 def post_form_choose_level_for_group_at_event(
     interface: abstractInterface,

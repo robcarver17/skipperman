@@ -1,7 +1,6 @@
 ## In the unlikely event of switching to eg a database change here
 from app.data_access.api.mixed_api import MixedParquetAndCsvDataApi
 from app.data_access.configuration.configuration import DATAPATH
-from app.data_access.api.csv_api import CsvDataApi
 from app.data_access.store.object_store import ObjectStore
 from app.data_access.user_data import user_data_path
 from app.data_access.backups.backup_data import backup_data_path

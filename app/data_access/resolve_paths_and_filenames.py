@@ -1,5 +1,6 @@
 from os.path import join, exists
 from pathlib import Path
+
 from app.objects.exceptions import arg_not_passed
 
 
@@ -66,7 +67,7 @@ def file_from_generic(generic_name_of_file_required):
 
     return filename
 
-
+ATTENDANCE_FILE_FOR_SPECIFIC_CADET = "attendance_cadets"
 IDENTIFIED_CADETS_AT_EVENT_ID = "identified_cadets_at_event"
 CADETS_AT_EVENT_ID = "cadets_at_event"
 LIST_OF_CADETS_ON_COMMITTEE = "cadets_on_committee"
@@ -215,5 +216,9 @@ CLUB_BOAT_LIMIT: (
   "lists",
     "club_boat_limit.parquet"
 ),
+    ATTENDANCE_FILE_FOR_SPECIFIC_CADET:
+        ("cadet_attendance",
+         "attendance_for_%s"),
+
     USERLIST_FILE_ID: ("secure", "userlist.csv"),
 }

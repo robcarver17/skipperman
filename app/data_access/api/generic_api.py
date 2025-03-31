@@ -206,6 +206,10 @@ class GenericDataApi(object):
     ) -> DataListOfCadetsWithClothingAtEvent:
         raise NotImplemented
 
+    @property
+    def data_register_attendance_at_event(self) -> DataAttendanceAtEventsForSpecificCadet:
+        raise NotImplemented
+
     ## Specials
 
     def delete_all_master_data(self, are_you_sure: bool = False):

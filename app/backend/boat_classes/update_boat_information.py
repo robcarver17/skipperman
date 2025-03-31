@@ -70,7 +70,6 @@ def update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_ev
         new_list=list_of_potentially_updated_cadets_boats_groups_club_dinghies_and_partners,
         existing_list=list_of_existing_cadets_boats_groups_club_dinghies_and_partners,
     )
-
     update_boat_info_for_updated_cadets_at_event(
         object_store=object_store,
         event=event,
@@ -363,3 +362,6 @@ def update_boat_info_for_updated_cadets_at_event(
         object_store=object_store,
         dict_of_all_event_info_for_cadets=dict_of_all_event_info_for_cadets,
     )
+
+    print("ASDF")
+    print(dict_of_all_event_info_for_cadets)

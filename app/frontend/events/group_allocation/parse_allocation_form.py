@@ -10,6 +10,7 @@ from app.frontend.events.group_allocation.store_state import (
     get_day_from_state_or_none,
 )
 from app.objects.boat_classes import no_boat_class
+from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 
 from app.objects.day_selectors import Day
 
@@ -49,6 +50,44 @@ from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.exceptions import MISSING_FROM_FORM
+
+def guess_boat_classes_in_allocation_form(interface: abstractInterface):
+    event = get_event_from_state(interface)
+    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=interface.object_store, event=event, active_only=True)
+    list_of_cadets = dict_of_all_event_data.list_of_cadets
+    day_from_state = get_day_from_state_or_none(interface)
+
+    if day_from_state is None:
+        list_of_days = event.days_in_event()
+    else:
+        list_of_days = [day_from_state]
+
+    list_of_updates = get_list_of_updates_to_boat_classes_in_allocation_form(interface=interface,
+                                                                             dict_of_all_event_data=dict_of_all_event_data,
+                                                                             list_of_days=list_of_days,
+                                                                             list_of_cadets=list_of_cadets)
+
+    update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_given_update_list(interface=interface,
+                                                                                               event=event,
+                                                                                               list_of_updates=list_of_updates)
+
+
+def get_list_of_updates_to_boat_classes_in_allocation_form(interface: abstractInterface,
+                                                           list_of_days: List[Day],
+                                                           list_of_cadets: ListOfCadets,
+                                                           dict_of_all_event_data: DictOfAllEventInfoForCadets) -> List[CadetWithDinghySailNumberBoatClassAndPartner]:
+    list_of_updates = []
+    for day in list_of_days:
+        for cadet in list_of_cadets:
+            current_boat = dict_of_all_event_data.dict_of_cadets_and_boat_class_and_partners.boat_classes_and_partner_for_cadet(cadet).boat_class_on_day(day)
+            if not current_boat is no_boat_class:
+                continue
+            boat_class_name = guess_name_of_boat_class_on_day_from_other_information(dict_of_all_event_data=dict_of_all_event_data, day=day, cadet=cadet)
+            update = get_update_for_cadet(interface, cadet)
+            update.boat_class_name = boat_class_name
+            list_of_updates.append(update)
+
+    return list_of_updates
 
 
 def update_data_given_allocation_form(interface: abstractInterface):
@@ -256,28 +295,4 @@ def get_pseudo_update_to_remove_partner_from_cadet(interface: abstractInterface,
 
     return update
 
-def guess_boat_classes_in_allocation_form(interface: abstractInterface):
-    event = get_event_from_state(interface)
-    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=interface.object_store, event=event, active_only=True)
-    list_of_cadets = dict_of_all_event_data.list_of_cadets
-    day_from_state = get_day_from_state_or_none(interface)
 
-    if day_from_state is None:
-        list_of_days = event.days_in_event()
-    else:
-        list_of_days = [day_from_state]
-
-    list_of_updates = []
-    for day in list_of_days:
-        for cadet in list_of_cadets:
-            current_boat = dict_of_all_event_data.dict_of_cadets_and_boat_class_and_partners.boat_classes_and_partner_for_cadet(cadet).boat_class_on_day(day)
-            if not current_boat is no_boat_class:
-                continue
-            boat_class_name = guess_name_of_boat_class_on_day_from_other_information(dict_of_all_event_data=dict_of_all_event_data, day=day, cadet=cadet)
-            update = get_update_for_cadet(interface, cadet)
-            update.boat_class_name = boat_class_name
-            list_of_updates.append(update)
-
-    update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_given_update_list(interface=interface,
-                                                                                               event=event,
-                                                                                               list_of_updates=list_of_updates)

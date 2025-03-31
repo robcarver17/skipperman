@@ -152,6 +152,7 @@ def post_form_allocate_cadets_when_changing_data(interface: abstractInterface, l
 
     elif guess_boat_button.pressed(last_button):
         guess_boat_classes_in_allocation_form(interface)
+        interface.flush_cache_to_store() ## weird bug
 
     else:
         return button_error_and_back_to_initial_state_form(interface)

@@ -99,18 +99,20 @@ def post_form_edit_cadet_connections_from_rota(
 
     ### Buttons are back; delete button for individual cadet connection; add to add a new connection
     if back_menu_button.pressed(last_button=button):
+        interface.flush_cache_to_store()
         return previous_form(interface)
 
     elif add_connection_button.pressed(button):
         add_cadet_connection_from_form(interface)
+        interface.save_cache_to_store_without_clearing()
 
     elif last_button_pressed_was_delete_cadet_connection(interface):
-        delete_event_connection_given_form(interface=interface)
+        delete_event_connection_given_form(interface)
+        interface.save_cache_to_store_without_clearing()
 
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.flush_cache_to_store()
     return display_form_edit_cadet_connections_from_rota(interface)
 
 

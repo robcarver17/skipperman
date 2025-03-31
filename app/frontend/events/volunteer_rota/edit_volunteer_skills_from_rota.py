@@ -1,6 +1,7 @@
 from typing import Union
 
 from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -63,15 +64,16 @@ def post_form_edit_individual_volunteer_skills_from_rota(
     ## placeholder, not currently used
     button = interface.last_button_pressed()
     if cancel_button.pressed(button):
-        pass
+        return previous_form(interface)
+
     elif save_button.pressed(button):
         modify_volunteer_from_rota_given_form_contents(interface=interface)
+        interface.flush_cache_to_store()
+        return previous_form(interface)
+
     else:
-        raise Exception("Button %s not recognised" % button)
+        return button_error_and_back_to_initial_state_form(interface)
 
-    interface.flush_cache_to_store()
-
-    return previous_form(interface)
 
 
 def modify_volunteer_from_rota_given_form_contents(interface: abstractInterface):

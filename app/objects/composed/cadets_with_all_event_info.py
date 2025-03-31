@@ -154,10 +154,17 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
             availability_dict=availability_dict,
         )
 
-        affected_cadets = update_boat_info_for_updated_cadet_at_event_and_return_affected_cadets(
+        required_dict_for_allocation = update_boat_info_for_updated_cadet_at_event_and_return_affected_cadets(
             cadet_boat_class_group_club_dinghy_and_partner_on_day=cadet_boat_class_group_club_dinghy_and_partner_on_day,
             required_dict_for_allocation=required_dict_for_allocation,
         )
+
+        self._dict_of_cadets_and_boat_class_and_partners = required_dict_for_allocation.dict_of_cadets_and_boat_class_and_partners
+        self._dict_of_cadets_and_club_dinghies_at_event = required_dict_for_allocation.dict_of_cadets_and_club_dinghies_at_event
+        self._dict_of_cadets_with_days_and_groups = required_dict_for_allocation.dict_of_cadets_with_days_and_groups
+
+        affected_cadets = required_dict_for_allocation.affected_cadets
+
         self.propagate_changes_to_list_of_cadets_in_underlying_data(
             affected_cadets
         )
@@ -421,6 +428,7 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
     @property
     def list_of_cadets(self) -> ListOfCadets:
         return ListOfCadets(list(self.keys()))
+
 
 
 def compose_dict_of_all_event_info_for_cadet(

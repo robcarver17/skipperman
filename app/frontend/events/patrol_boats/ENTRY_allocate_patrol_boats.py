@@ -68,6 +68,7 @@ def post_form_view_for_patrol_boat_allocation(
     last_button_pressed = interface.last_button_pressed()
 
     if cancel_menu_button.pressed(last_button_pressed):
+        interface.flush_cache_to_store()
         return previous_form(interface)
 
     if save_menu_button.pressed(last_button_pressed):

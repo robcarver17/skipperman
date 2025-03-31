@@ -111,6 +111,7 @@ def save_details_from_form(interface: abstractInterface):
     interface.save_cache_to_store_without_clearing()
 
 def previous_form(interface: abstractInterface):
+    interface.flush_cache_to_store()
     return interface.get_new_display_form_for_parent_of_function(
         display_form_edit_registration_details
     )

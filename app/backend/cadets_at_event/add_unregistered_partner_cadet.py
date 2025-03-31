@@ -68,7 +68,6 @@ def add_unregistered_partner_cadet(
     object_store: ObjectStore,
     original_cadet: Cadet,
     new_cadet: Cadet,
-    day_or_none_if_all_days: Day,
     event: Event,
 ):
     try:
@@ -97,7 +96,6 @@ def add_unregistered_partner_cadet(
     add_two_handed_partnership_on_for_new_cadet_when_have_dinghy_for_existing_cadet(
         object_store=object_store,
         event=event,
-        day_or_none_if_all_days=day_or_none_if_all_days,
         original_cadet=original_cadet,
         new_cadet=new_cadet,
     )
@@ -106,7 +104,6 @@ def add_unregistered_partner_cadet(
         object_store=object_store,
         new_cadet=new_cadet,
         original_cadet=original_cadet,
-        day_or_none_if_all_days=day_or_none_if_all_days,
         event=event,
     )
 
@@ -155,7 +152,6 @@ def modify_row_to_clone_for_new_cadet_partner(
 
 def add_two_handed_partnership_on_for_new_cadet_when_have_dinghy_for_existing_cadet(
     object_store: ObjectStore,
-    day_or_none_if_all_days: Day,
     event: Event,
     original_cadet: Cadet,
     new_cadet: Cadet,
@@ -164,7 +160,6 @@ def add_two_handed_partnership_on_for_new_cadet_when_have_dinghy_for_existing_ca
     list_of_days = get_list_of_days_given_original_cadet(
         object_store=object_store,
         event=event,
-        day_or_none_if_all_days=day_or_none_if_all_days,
         original_cadet=original_cadet,
     )
     for day in list_of_days:
@@ -179,20 +174,15 @@ def add_two_handed_partnership_on_for_new_cadet_when_have_dinghy_for_existing_ca
 
 def get_list_of_days_given_original_cadet(
     object_store: ObjectStore,
-    day_or_none_if_all_days: Day,
     event: Event,
     original_cadet: Cadet,
 ) -> List[Day]:
-    if day_or_none_if_all_days is None:
-        registration_data = get_dict_of_cadets_with_registration_data(
-            object_store=object_store, event=event
-        )
-        list_of_days = registration_data.registration_data_for_cadet(
-            cadet=original_cadet
-        ).availability.days_available()
-    else:
-        ## single day
-        list_of_days = [day_or_none_if_all_days]
+    registration_data = get_dict_of_cadets_with_registration_data(
+        object_store=object_store, event=event
+    )
+    list_of_days = registration_data.registration_data_for_cadet(
+        cadet=original_cadet
+    ).availability.days_available()
 
     return list_of_days
 
@@ -223,13 +213,11 @@ def add_new_cadet_to_groups(
     object_store: ObjectStore,
     original_cadet: Cadet,
     new_cadet: Cadet,
-    day_or_none_if_all_days: Day,
     event: Event,
 ):
     list_of_days = get_list_of_days_given_original_cadet(
         object_store=object_store,
         event=event,
-        day_or_none_if_all_days=day_or_none_if_all_days,
         original_cadet=original_cadet,
     )
 
@@ -266,3 +254,4 @@ def add_new_cadet_to_group_on_day(
         event=event,
         dict_of_cadets_with_groups_at_event=cadets_at_event_data,
     )
+

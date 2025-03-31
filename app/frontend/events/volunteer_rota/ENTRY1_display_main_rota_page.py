@@ -102,6 +102,7 @@ def post_form_view_for_volunteer_rota_if_new_form_returned(
 ) -> Union[Form, NewForm, File]:
     print("New form returned from rota")
     if cancel_menu_button.pressed(last_button_pressed):
+        interface.flush_cache_to_store()
         return previous_form(interface)
 
     ## File download

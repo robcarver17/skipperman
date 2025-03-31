@@ -137,7 +137,6 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
             already_allocated = self.is_volunteer_already_on_a_boat_on_day(
                 volunteer_id=volunteer_id, day=other_day
             )
-            print("%s already allocated on %s" % (volunteer_id, other_day))
             if already_allocated:
                 if allow_overwrite:
                     self.remove_volunteer_from_patrol_boat_on_day_at_event(
@@ -151,7 +150,6 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
                 else:
                     continue
             else:
-                print("%s not allocated on %s so adding boat" % (volunteer_id, other_day))
                 self.add_volunteer_with_boat(
                     volunteer_id=volunteer_id,
                     patrol_boat_id=current_boat_id,

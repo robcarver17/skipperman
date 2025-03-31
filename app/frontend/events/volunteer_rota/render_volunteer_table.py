@@ -73,7 +73,7 @@ def get_top_row_for_table(event: Event, ready_to_swap: bool) -> RowInTable:
 
     return RowInTable(
         [
-            "Volunteer (click to see full history / edit availability )",
+            "Volunteer (click to see full history)",
             "Cadet location (click to edit connections)",
             "Preferred duties from form",
             "Same/different preference from form",

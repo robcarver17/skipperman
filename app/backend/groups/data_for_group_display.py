@@ -461,7 +461,7 @@ def get_two_handed_partner_as_str_for_dropdown_cadet_on_day(
 
 def get_two_handed_partner_as_str_for_dropdown_cadet_across_days(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet
-) -> str:
+) -> Union[None,str]:
 
     current_partner_name = (
         get_two_handed_partner_name_for_cadet_across_days_or_none_if_different(

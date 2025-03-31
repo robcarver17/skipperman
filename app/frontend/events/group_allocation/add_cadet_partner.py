@@ -1,11 +1,7 @@
 from typing import Union, Tuple
 
 from app.frontend.shared.cadet_state import get_cadet_from_state, clear_cadet_state
-from app.objects.abstract_objects.abstract_buttons import  cancel_menu_button
 from app.objects.abstract_objects.abstract_lines import ListOfLines
-from app.backend.cadets.list_of_cadets import (
-    get_cadet_from_list_of_cadets_given_str_of_cadet,
-)
 
 from app.frontend.events.group_allocation.store_state import get_day_from_state_or_none
 from app.backend.cadets_at_event.add_unregistered_partner_cadet import (
@@ -17,12 +13,8 @@ from app.backend.cadets_at_event.add_unregistered_partner_cadet import (
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.shared.get_or_select_cadet_forms import (
     get_add_or_select_existing_cadet_form,
-    see_similar_cadets_only_button,
-    check_cadet_for_me_button,
-    see_all_cadets_button,
-    add_cadet_button, ParametersForGetOrSelectCadetForm, generic_post_response_to_add_or_select_cadet,
+ParametersForGetOrSelectCadetForm, generic_post_response_to_add_or_select_cadet,
 )
-from app.frontend.shared.add_edit_cadet_form import add_cadet_from_form_to_data
 
 from app.objects.cadets import Cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm
@@ -65,7 +57,6 @@ def get_parameters_for_form_given_cadets(primary_cadet: Cadet, partner_cadet: Ca
 def post_form_add_cadet_partner(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
-    last_button_pressed = interface.last_button_pressed()
     primary_cadet, partner_cadet = get_primary_cadet_and_partner_name(interface)
     parameters = get_parameters_for_form_given_cadets(
         primary_cadet=primary_cadet,
@@ -80,7 +71,6 @@ def post_form_add_cadet_partner(
 
     elif result.cancel:
         return return_to_allocation_pages(interface)
-
 
     elif result.is_cadet:
         cadet = result.cadet
@@ -115,22 +105,27 @@ def add_matched_partner_cadet_with_duplicate_registration(
 
     primary_cadet, __ = get_primary_cadet_and_partner_name(interface)
     event = get_event_from_state(interface)
-    day_or_none_if_all_days = get_day_from_state_or_none(interface)
-    try:
-        add_unregistered_partner_cadet(
-            object_store=interface.object_store,
-            event=event,
-            day_or_none_if_all_days=day_or_none_if_all_days,
-            original_cadet=primary_cadet,
-            new_cadet=new_cadet,
-        )
-        interface.flush_cache_to_store()
-    except MissingData:
-        interface.log_error(
-            "Can't add new partner cadet- old event data has probably been cleaned"
-        )
+    add_unregistered_partner_cadet(
+        object_store=interface.object_store,
+        event=event,
+        original_cadet=primary_cadet,
+        new_cadet=new_cadet,
+    )
+    interface.flush_cache_to_store()
 
     return return_to_allocation_pages(interface)
+
+def get_primary_cadet_and_partner_name(
+    interface: abstractInterface,
+) -> Tuple[Cadet, Cadet]:
+    event = get_event_from_state(interface)
+    primary_cadet = get_cadet_from_state(interface)
+    partner_name = get_registered_two_handed_partner_name_for_cadet_at_event(
+        object_store=interface.object_store, cadet=primary_cadet, event=event
+    )
+    partner_cadet = from_partner_name_to_cadet(partner_name)
+
+    return primary_cadet, partner_cadet
 
 def is_cadet_already_registered(interface: abstractInterface, new_cadet: Cadet):
     event = get_event_from_state(interface)
@@ -146,14 +141,3 @@ def return_to_allocation_pages(interface: abstractInterface) -> NewForm:
     )
 
 
-def get_primary_cadet_and_partner_name(
-    interface: abstractInterface,
-) -> Tuple[Cadet, Cadet]:
-    event = get_event_from_state(interface)
-    primary_cadet = get_cadet_from_state(interface)
-    partner_name = get_registered_two_handed_partner_name_for_cadet_at_event(
-        object_store=interface.object_store, cadet=primary_cadet, event=event
-    )
-    partner_cadet = from_partner_name_to_cadet(partner_name)
-
-    return primary_cadet, partner_cadet

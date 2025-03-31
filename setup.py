@@ -56,6 +56,8 @@ setup(
         "xlsxwriter>3.0",
         "qrcode==7.4.2",
         "markdown==3.6",
+        "fastparquet==2024.11.0",
+        "pyarrow==18.1.0"
     ],
     tests_require=["nose", "flake8"],
     extras_require=dict(),

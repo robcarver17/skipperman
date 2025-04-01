@@ -132,6 +132,10 @@ class DictOfAttendanceAcrossEvents(Dict[Cadet, AttendanceAcrossDaysAndEvents]):
     def update_attendance_for_cadet_on_day_at_event(self, event: Event, cadet: Cadet, day: Day, new_attendance: Attendance):
         current_datetime = datetime.datetime.now()
         attendance_for_cadet = self.attendance_for_cadet_across_days_and_events(cadet)
+        current_attendance = attendance_for_cadet.attendance_for_cadet_at_event(event).attendance_on_day(day).current_attendance
+        if current_attendance==new_attendance:
+            return
+
         attendance_for_cadet.update_attendance_for_cadet_on_day_at_event(
                                                 event=event, day=day, new_attendance=new_attendance,
                                                       datetime_marked=current_datetime)

@@ -1,9 +1,10 @@
 import datetime
 
 from app.backend.cadets.list_of_cadets import get_cadet_from_id
-from app.backend.cadets_at_event.instructor_marked_attendance import get_current_attendance_on_day_for_cadets_in_group
+from app.backend.cadets_at_event.instructor_marked_attendance import get_current_attendance_on_day_for_cadets_in_group, \
+    are_all_cadets_in_group_marked_in_registration_as_present_absent_or_late
 from app.frontend.shared.buttons import get_button_value_given_type_and_attributes, is_button_of_type, \
-    get_attributes_from_button_pressed_of_known_type, get_button_value_for_cadet_selection, is_button_cadet_selection, cadet_from_button_pressed
+    get_attributes_from_button_pressed_of_known_type, get_button_value_for_cadet_selection
 from app.frontend.shared.cadet_state import is_cadet_set_in_state, get_cadet_from_state
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_form import checkboxInput
@@ -23,139 +24,182 @@ def get_table_to_mark_attendance(interface: abstractInterface, event: Event, gro
     current_attendance = get_current_attendance_on_day_for_cadets_in_group(interface.object_store,
                                                                            event=event,group=group, day=day)
 
+    not_initial_registration_phase = is_not_initial_registration(interface,
+                                                                 event,
+                                                                 group,
+                                                                 day)
 
     body_of_table =         [
-            get_row_in_table_for_attendance(interface=interface, cadet=cadet, attendance_on_day=attendance_on_day)
+            get_row_in_table_for_attendance(interface=interface, cadet=cadet, attendance_on_day=attendance_on_day,
+                                            not_initial_registration_phase=not_initial_registration_phase)
             for cadet, attendance_on_day in current_attendance.items()
         ]
     max_width = max([len(row) for row in body_of_table])
-    padding = [""]*(max_width-2)
-    top_row = RowInTable(['Cadet - click to see history', 'Current status', 'Actions']+padding)
+    padding = [""]*(max_width-1)
+    top_row = RowInTable(['Cadet - click to see history']+padding)
 
     return Table(
         [top_row]+body_of_table,
         has_column_headings=True
     )
 
+def is_not_initial_registration(interface: abstractInterface, event: Event, group: Group, day: Day) -> bool:
+    not_initial_registration_phase = are_all_cadets_in_group_marked_in_registration_as_present_absent_or_late(object_store=interface.object_store,
+                                                                             event=event,
+                                                                             group=group, day=day)
+
+    return not_initial_registration_phase
 
 def get_row_in_table_for_attendance(interface: abstractInterface,
-        cadet: Cadet, attendance_on_day: AttendanceOnDay) -> RowInTable:
-    attendance_columns = get_attendance_fields_given_current_attendance(cadet, attendance_on_day.current_attendance)
-    cadet_cell = get_cadet_cell(interface, attendance_on_day, cadet)
+        cadet: Cadet, attendance_on_day: AttendanceOnDay,
+                                    not_initial_registration_phase: bool) -> RowInTable:
+    attendance_columns = get_attendance_fields_given_current_attendance(cadet, attendance_on_day.current_attendance,
+                                                                        not_initial_registration_phase=not_initial_registration_phase)
+
+    cadet_cell = get_cadet_cell(interface, attendance_on_day, cadet, not_initial_registration_phase=not_initial_registration_phase)
+
     return RowInTable([cadet_cell,
-                       attendance_on_day.current_attendance.name
                        ]+attendance_columns)
 
-def get_cadet_cell(interface: abstractInterface, attendance_on_day: AttendanceOnDay, cadet: Cadet):
+def get_cadet_cell(interface: abstractInterface, attendance_on_day: AttendanceOnDay, cadet: Cadet,
+                   not_initial_registration_phase: bool):
+    if not not_initial_registration_phase:
+        return name_and_age_of_cadet(cadet)
+
     history = []
+    include_attendance_on_button = True
     if is_cadet_set_in_state(interface):
         current_cadet = get_cadet_from_state(interface)
         if current_cadet == cadet:
             history = attendance_on_day.history_of_attendance.as_list_of_str()
+            include_attendance_on_button = False ## to avoid showing twice
 
-    return ListOfLines([select_cadet_button(cadet)]+history).add_Lines()
+    return ListOfLines([select_cadet_button(cadet=cadet, attendance_on_day=attendance_on_day,include_attendance=include_attendance_on_button)]+history).add_Lines()
 
-def select_cadet_button(cadet: Cadet):
-    return Button(label=name_and_age_of_cadet(cadet),
+def select_cadet_button(cadet: Cadet, attendance_on_day: AttendanceOnDay, include_attendance: bool):
+    button_label = name_and_age_of_cadet(cadet)
+    if include_attendance:
+        button_label +=" %s" % attendance_on_day.current_attendance.name
+
+    return Button(label=button_label,
                   value=get_button_value_for_cadet_selection(cadet))
 
 def name_and_age_of_cadet(cadet: Cadet):
     return "%s (%dyrs)" % (cadet.name, int(cadet.approx_age_years()))
 
 
-def get_attendance_fields_given_current_attendance(cadet: Cadet, attendance_on_day: Attendance) -> list:
+def get_attendance_fields_given_current_attendance(cadet: Cadet, attendance_on_day: Attendance, not_initial_registration_phase: bool) -> list:
     func_to_call = func_dict[attendance_on_day]
-    return func_to_call(cadet)
+    return func_to_call(cadet, not_initial_registration_phase=not_initial_registration_phase)
 
+### BUTTONS DEPENDS ON CURRENT ATTENDANCE
+def get_attendance_fields_for_attendance_not_yet_registered(cadet: Cadet, not_initial_registration_phase: bool):
+    if not_initial_registration_phase:
+        raise Exception("Shouldn't be possible")
+    else:
+        return [mark_present_checkbox(cadet),
+            mark_late_checkbox(cadet)
+            ]
 
-def get_attendance_fields_for_attendance_not_yet_registered(cadet: Cadet):
-    return [checkboxInput(
-        input_name=check_value_to_mark_present(cadet),
-        input_label = "Mark present",
-        dict_of_labels={PRESENT: ''},
-        dict_of_checked={PRESENT: False}
-    ),
-        Button(label = "Present", value = button_value_to_mark_arrived(cadet)),
-        Button(label = "Absent", value = button_value_to_mark_accident_registration(cadet)),
-        Button(label="Going to be late",
-               value=button_value_to_mark_going_to_be_late(cadet))
+def get_attendance_fields_for_attendance_not_attending(cadet: Cadet, not_initial_registration_phase: bool):
+    if not_initial_registration_phase:
+        return ["",
+                "",
+            Button(
+            value=button_value_to_mark_not_present_as_attending(
+                cadet
+            ),
+            label="Not registered for today - click if coming now and has arrived"
+        ),
+
+                ]
+    else:
+        return [
+                "Not registered for today - tick if coming now and has arrived",
+            mark_present_checkbox(cadet)
         ]
 
-def cadet_has_tick_for_present(interface: abstractInterface, cadet: Cadet):
-    is_ticked_as_list = interface.value_of_multiple_options_from_form(check_value_to_mark_present(cadet), default=[])
-    return PRESENT in is_ticked_as_list
 
-
-def get_attendance_fields_for_attendance_not_attending(cadet: Cadet):
-    return [Button(
-        value=button_value_to_mark_not_present_as_attending(
-            cadet
+def get_attendance_fields_if_marked_present(cadet: Cadet, not_initial_registration_phase: bool):
+    if not_initial_registration_phase:
+        return [
+            mark_returned_checkbox(cadet),
+            Button(
+                value=button_value_to_mark_temporary_absence(
+                    cadet
+                ),
+                label="Taking temporary absence from group"
+            ),
+            Button(
+            value=button_value_to_mark_accident_registration(
+                cadet
+            ),
+            label="Accidentally marked as present - actually absent"
         ),
-        label="Not registered for today - click if coming now and has arrived"
-    )]
-
-
-def get_attendance_fields_if_marked_present(cadet: Cadet):
-    return [Button(
-        value=button_value_to_mark_accident_registration(
-            cadet
-        ),
-        label="Accidentally marked as present - actually absent"
-    ),
-        Button(
-        value=button_value_to_mark_temporary_absence(
-            cadet
-        ),
-        label="Taking temporary absence from group"
-    ),
-    Button(
-        value=button_value_to_mark_returned(cadet),
-        label = message_for_returning(cadet)
-    )]
-
-
-def get_attendance_fields_if_marked_absent(cadet: Cadet):
-    return [Button(
-        value=button_value_to_mark_arrived(
-            cadet
-        ),
-        label="Was marked absent but arrived unexpectedly"
-    )]
-
-
-def get_attendance_fields_if_marked_will_be_late(cadet: Cadet):
-    return [Button(
-        value=button_value_to_mark_arrived(
-            cadet
-        ),
-        label="Late and has now arrived"
-    )
-    ]
-
-
-def get_attendance_fields_if_marked_temporary_absence(cadet: Cadet):
-    return [Button(
-        value=button_value_to_mark_arrived(
-            cadet
-        ),
-        label="Returned to group from temporary absence"
-    ),
-        "",
-    Button(
-        value=button_value_to_mark_returned(cadet),
-        label = message_for_returning(cadet)
-    )]
-
-
-def message_for_returning(cadet: Cadet):
-    if cadet.approx_age_years()<11:
-        return "Returned to parents (primary age)"
+        ]
     else:
-        return "Left group and in club precinct (secondary age)"
+        return [mark_present_checkbox(cadet, checked=True),
+            mark_late_checkbox(cadet),
+            ]
 
 
-def get_attendance_fields_if_marked_return(cadet: Cadet):
-    return []
+def get_attendance_fields_if_marked_absent(cadet: Cadet, not_initial_registration_phase: bool):
+    if not_initial_registration_phase:
+        return ["",
+                "",
+                Button(
+            value=button_value_to_mark_arrived(
+                cadet
+            ),
+            label="Was marked absent but arrived unexpectedly"
+        )]
+    else:
+        return [mark_present_checkbox(cadet),
+            mark_late_checkbox(cadet),            ]
+
+
+def get_attendance_fields_if_marked_will_be_late(cadet: Cadet, not_initial_registration_phase: bool):
+    if not_initial_registration_phase:
+        return ["",
+
+                Button(
+            value=button_value_to_mark_arrived(
+                cadet
+            ),
+            label="Late but now has now arrived"
+        ),
+                "",
+                ""
+        ]
+    else:
+        return [mark_present_checkbox(cadet),
+            mark_late_checkbox(cadet, checked=True),
+            ]
+
+
+def get_attendance_fields_if_marked_temporary_absence(cadet: Cadet, not_initial_registration_phase: bool):
+    if not_initial_registration_phase:
+        return [Button(
+            value=button_value_to_mark_arrived(
+                cadet
+            ),
+            label="Back after temporary absence"
+        ),
+        "",
+        "",
+        ""]
+    else:
+        raise Exception("Should not be possible")
+
+
+
+def get_attendance_fields_if_marked_return(cadet: Cadet, not_initial_registration_phase: bool):
+    ## to remove warnings, doesn't matter
+    print(cadet)
+    print(not_initial_registration_phase)
+    return ['', '', '']
+
+
 
 
 func_dict = {
@@ -166,6 +210,51 @@ func_dict = {
     registration_not_taken: get_attendance_fields_for_attendance_not_yet_registered,
     returned:get_attendance_fields_if_marked_return,
     will_be_late:get_attendance_fields_if_marked_will_be_late}
+
+
+def mark_late_checkbox(cadet: Cadet, checked:bool = False):
+    return checkboxInput(
+        input_name=check_value_to_mark_late(cadet),
+        input_label="Mark late",
+        dict_of_labels={LATE: ''},
+        dict_of_checked={LATE: checked}
+    )
+
+
+def mark_present_checkbox(cadet: Cadet, checked: bool = False):
+    return checkboxInput(
+        input_name=check_value_to_mark_present(cadet),
+        input_label="Mark present",
+        dict_of_labels={PRESENT: ''},
+        dict_of_checked={PRESENT: checked}
+    )
+
+def mark_returned_checkbox(cadet: Cadet):
+    return checkboxInput(
+            input_name=check_value_to_mark_returned(cadet),
+            input_label=message_for_returning(cadet),
+            dict_of_labels={RETURNED: ''},
+            dict_of_checked={RETURNED: False}
+        )
+
+def cadet_has_tick_for_present(interface: abstractInterface, cadet: Cadet):
+    is_ticked_as_list = interface.value_of_multiple_options_from_form(check_value_to_mark_present(cadet), default=[])
+    return PRESENT in is_ticked_as_list
+
+def cadet_has_tick_for_late(interface: abstractInterface, cadet: Cadet):
+    is_ticked_as_list = interface.value_of_multiple_options_from_form(check_value_to_mark_late(cadet), default=[])
+    return LATE in is_ticked_as_list
+
+def cadet_has_tick_for_returned(interface: abstractInterface, cadet: Cadet):
+    is_ticked_as_list = interface.value_of_multiple_options_from_form(check_value_to_mark_returned(cadet), default=[])
+    return RETURNED in is_ticked_as_list
+
+def message_for_returning(cadet: Cadet):
+    if cadet.approx_age_years()<11:
+        return "Returned to parents (primary age)"
+    else:
+        return "Returned to club precinct (secondary age)"
+
 
 
 def day_given_current_day_and_event(interface: abstractInterface, event: Event, warn: bool = False) -> Day:
@@ -193,10 +282,17 @@ def day_given_event_is_currently_on( event: Event) -> Day:
 
 
 PRESENT="Present"
-
+LATE = "Late"
+RETURNED = "Returned"
 
 def check_value_to_mark_present(cadet: Cadet):
     return "Present_%s" % cadet.id
+
+def check_value_to_mark_late(cadet: Cadet):
+    return "Late_%s" % cadet.id
+
+def check_value_to_mark_returned(cadet: Cadet):
+    return "Returned_%s" % cadet.id
 
 
 button_type_going_to_be_late = "goingToBeLate"

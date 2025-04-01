@@ -18,6 +18,7 @@ from app.frontend.instructors.ENTRY_FINAL_view_ticksheets import (
     display_form_view_ticksheets_for_event_and_group,
     post_form_view_ticksheets_for_event_and_group,
 )
+from app.frontend.instructors.mark_attendance import display_instructor_attendance, post_instructor_attendance
 
 instructor_function_mapping = (
     DisplayAndPostFormFunctionMaps.from_nested_dict_of_functions(
@@ -35,7 +36,9 @@ instructor_function_mapping = (
                             (
                                 display_form_view_ticksheets_for_event_and_group,
                                 post_form_view_ticksheets_for_event_and_group,
-                            ): 0
+                            ): 0,
+                            (display_instructor_attendance,
+                            post_instructor_attendance):0
                         }
                     }
                 }

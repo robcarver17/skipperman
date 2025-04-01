@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Callable, Dict, Union, List
 
+from app.objects.composed.attendance import   compose_dict_of_attendance_across_events
 from app.objects.composed.cadets_with_all_event_info import (
     compose_dict_of_all_event_info_for_cadet,
 )
@@ -281,6 +282,11 @@ object_definition_for_list_of_cadets_with_tick_list_items_for_cadet_id = Underly
     required_keys=["cadet_id"],  ##returns ListOfCadetsWithTickListItems
 )
 
+object_definition_for_attendance_of_cadets_for_cadet_id = UnderlyingObjectDefinition(
+    data_store_method_function=get_data_access_for_list_of_cadet_attendance_for_cadet_id,
+    required_keys=["cadet_id"],  ##returns ListOfRawAttendanceItemsForSpecificCadet
+)
+
 object_definition_for_field_mappings_at_event = UnderlyingObjectDefinition(
     data_store_method_function=get_data_access_for_wa_field_mapping_at_event,
     required_keys=["event_id"],
@@ -335,6 +341,12 @@ object_definition_for_dict_of_cadet_ids_with_tick_list_items_for_cadet_id = Iter
     key_for_underlying_object="cadet_id",
 )
 
+
+object_definition_for_dict_of_cadet_ids_with_registration_attendence_for_cadet_id = IterableObjectDefinition(
+    underlying_object_definition=object_definition_for_attendance_of_cadets_for_cadet_id,
+    required_key_for_iteration="list_of_cadet_ids",
+    key_for_underlying_object="cadet_id",
+)
 
 ## DERIVED
 
@@ -609,6 +621,22 @@ object_definition_for_dict_of_all_event_info_for_cadet = DerivedObjectDefinition
     ),
     required_keys=["event_id", "active_only"],
 )
+
+#object_definition_for_dict_of_cadet_ids_with_registration_attendence_for_cadet_id
+
+object_definition_for_dict_of_cadets_with_attendance = DerivedObjectDefinition(
+    composition_function=compose_dict_of_attendance_across_events,
+    dict_of_arguments_and_underlying_object_definitions=dict(
+        list_of_cadets=object_definition_for_list_of_cadets,
+        list_of_events=object_definition_for_list_of_events,
+        dict_of_list_of_raw_attendance = object_definition_for_dict_of_cadet_ids_with_registration_attendence_for_cadet_id,
+    ),
+    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
+        dict_of_list_of_raw_attendance = object_definition_for_dict_of_cadet_ids_with_registration_attendence_for_cadet_id,
+    ),
+    required_keys=["list_of_cadet_ids",],
+)
+
 
 object_definition_for_dict_of_cadets_with_qualifications_and_ticks = DerivedObjectDefinition(
     composition_function=compose_dict_of_cadets_with_qualifications_and_ticks,

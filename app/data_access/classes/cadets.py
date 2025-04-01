@@ -50,10 +50,10 @@ class DataListOfCadetsOnCommitte(object):
         raise NotImplemented
 
 class DataAttendanceAtEventsForSpecificCadet(object):
-    def read(self, cadet_id: str) -> ListOfRawAttendanceItemsForSpecificCadet:
+    def read_attendance_for_cadet_id(self, cadet_id: str) -> ListOfRawAttendanceItemsForSpecificCadet:
         raise NotImplemented
 
-    def write(
+    def write_attendance_for_cadet_id(
         self, list_of_attendance: ListOfRawAttendanceItemsForSpecificCadet, cadet_id:str
     ):
         raise NotImplemented

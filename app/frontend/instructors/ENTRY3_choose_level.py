@@ -1,6 +1,7 @@
 from typing import Union
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+from app.frontend.instructors.mark_attendance import display_instructor_attendance
 from app.frontend.shared.buttons import get_button_value_given_type_and_attributes, is_button_of_type, \
     get_attributes_from_button_pressed_of_known_type
 from app.objects.abstract_objects.abstract_buttons import (
@@ -100,7 +101,8 @@ def post_form_choose_level_for_group_at_event(
 
     elif is_level_button(button_pressed):
         return action_when_level_button_clicked(interface)
-
+    elif mark_attendance_button.pressed(button_pressed):
+        return interface.get_new_form_given_function(display_instructor_attendance)
     else:
         return button_error_and_back_to_initial_state_form(interface)
 

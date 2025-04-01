@@ -38,6 +38,13 @@ def get_data_access_for_list_of_cadets_with_tick_list_items_for_cadet_id(
         cadet_id=cadet_id,
     )
 
+def get_data_access_for_list_of_cadet_attendance_for_cadet_id(data: GenericDataApi, cadet_id:str):
+    return DataAccessMethod(
+        "list_of_cadet_attendance_for_cadet_id",
+        data.data_attendance_at_events_for_specific_cadet.read_attendance_for_cadet_id,
+        data.data_attendance_at_events_for_specific_cadet.write_attendance_for_cadet_id,
+        cadet_id=cadet_id
+    )
 
 def get_data_access_for_list_of_qualifications(
     data: GenericDataApi,

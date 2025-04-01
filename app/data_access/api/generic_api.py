@@ -207,7 +207,7 @@ class GenericDataApi(object):
         raise NotImplemented
 
     @property
-    def data_register_attendance_at_event(self) -> DataAttendanceAtEventsForSpecificCadet:
+    def data_attendance_at_events_for_specific_cadet(self) -> DataAttendanceAtEventsForSpecificCadet:
         raise NotImplemented
 
     ## Specials

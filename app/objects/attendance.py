@@ -5,6 +5,7 @@ from enum import Enum
 from app.objects.day_selectors import Day
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.generic_list_of_objects import GenericListOfObjects, get_subset_of_list_that_matches_multiple_attr
+from app.objects.utils import transform_datetime_into_str
 
 Attendance = Enum("Attendance", ["Not attending today",
                                  'Attending, register not yet taken',
@@ -13,8 +14,10 @@ Attendance = Enum("Attendance", ["Not attending today",
                                  "Temporary absence",
                                  "Will be late",
                                  "Late and arrived",
-                                 "Returned to parent or club"])
+                                 "Returned to parent or club",
+                                 "Unknown"])
 
+unknown = Attendance['Unknown']
 not_attending = Attendance['Not attending today']
 registration_not_taken = Attendance['Attending, register not yet taken']
 present = Attendance['Present']
@@ -41,9 +44,20 @@ class RawAttendanceItem(GenericSkipperManObject):
     datetime_marked: datetime.datetime
     attendance: Attendance
 
+    def as_str_dict(self) -> dict:
+        return dict(
+            event_id = self.event_id,
+            day = self.day.name,
+            attendance = self.attendance.name,
+            datetime_marked = transform_datetime_into_str(self.datetime_marked)
+        )
+
 class ListOfRawAttendanceItemsForSpecificCadet(GenericListOfObjects):
+    @property
     def _object_class_contained(self):
         return RawAttendanceItem
+
+
 
     def list_of_tuple_of_datetime_marked_and_attendance(self):
         return [(item.datetime_marked, item.attendance) for item in self]

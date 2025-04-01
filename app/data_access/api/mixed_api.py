@@ -2,14 +2,13 @@ import shutil
 
 from app.data_access.api.generic_api import GenericDataApi
 from app.data_access.backups.make_backup import make_backup
-from app.data_access.classes.cadets import DataAttendanceAtEventsForSpecificCadet
 from app.data_access.classes.volunteers import DataListOfIdentifiedVolunteersAtEvent
 from app.data_access.csv.cadets import (
     CsvDataListOfCadets,
     CsvDataListOfCadetsWithGroups,
     CsvDataListOfCadetsAtEvent,
     CsvDataListOfIdentifiedCadetsAtEvent,
-    CsvDataListOfCadetsOnCommitte,
+    CsvDataListOfCadetsOnCommitte, CsvDataAttendanceAtEventsForSpecificCadet,
 )
 from app.data_access.csv.food_and_clothing import *
 from app.data_access.csv.list_of_events import CsvDataListOfEvents
@@ -50,8 +49,8 @@ from app.data_access.csv.qualifications import (
     CsvDataListOfTickSheetItems,
     CsvDataListOfTickSubStages,
 )
-from app.data_access.parquet.resources import ParquetDataListOfClubDinghyLimits
-from app.data_access.parquet.cadets import ParquetDataAttendanceAtEventsForSpecificCadet
+#from app.data_access.parquet.resources import ParquetDataListOfClubDinghyLimits
+#from app.data_access.parquet.cadets import ParquetDataAttendanceAtEventsForSpecificCadet
 
 class MixedParquetAndCsvDataApi(GenericDataApi):
     def __init__(
@@ -259,8 +258,8 @@ class MixedParquetAndCsvDataApi(GenericDataApi):
         )
 
     @property
-    def data_register_attendance_at_event(self) -> DataAttendanceAtEventsForSpecificCadet:
-        return ParquetDataAttendanceAtEventsForSpecificCadet(
+    def data_attendance_at_events_for_specific_cadet(self) -> CsvDataAttendanceAtEventsForSpecificCadet:
+        return CsvDataAttendanceAtEventsForSpecificCadet(
             master_data_path=self.master_data_path,
             backup_data_path=self.backup_data_path
         )

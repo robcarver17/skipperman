@@ -5,14 +5,14 @@ from app.objects.attendance import ListOfRawAttendanceItemsForSpecificCadet
 
 
 class ParquetDataAttendanceAtEventsForSpecificCadet(DataAttendanceAtEventsForSpecificCadet, GenericParquetData):
-    def read(self, cadet_id: str) -> ListOfRawAttendanceItemsForSpecificCadet:
+    def read_attendance_for_cadet_id(self, cadet_id: str) -> ListOfRawAttendanceItemsForSpecificCadet:
         return self.read_and_return_object_of_type(
             ListOfRawAttendanceItemsForSpecificCadet,
             file_identifier=ATTENDANCE_FILE_FOR_SPECIFIC_CADET,
             additional_file_identifiers=cadet_id,
         )
 
-    def write(
+    def write_attendance_for_cadet_id(
         self, list_of_attendance: ListOfRawAttendanceItemsForSpecificCadet,
             cadet_id:str
     ):

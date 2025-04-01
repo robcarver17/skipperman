@@ -8,6 +8,8 @@ On entering the ticksheet area for a given group you will see a screen like this
 
 ![ticksheets_levels.png](/static/ticksheets_levels.png)
 
+Click on `Mark attendance` if you want to do a virtual roll call for cadets.
+
 Click on a qualification if you want to view, edit or print ticksheets for cadets in your group.
 
 Next step: [Viewing, printing, and entering ticks](ticksheet_entry_help.md)

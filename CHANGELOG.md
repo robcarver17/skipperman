@@ -1,9 +1,6 @@
 
 # to do next
 
-Before first training:
-- instructors can do attendance online #63
-
 Before Cadet week
 - merge cadet, merge volunteer #15
 - delete empty event, empty cadet, empty volunteer #26
@@ -16,7 +13,8 @@ Before Cadet week
 - add food / clothing to giant data dump #54
 - add missing stuff to data dumps #55
 
-# Recent
+# Version 2.3
+- instructors can do attendance online 
 - fix a few odd bugs, clean up where cache flushing used
 - more elegant handling of manual registration converting to WA
 - massive warning if unique key creators missing from field mappings

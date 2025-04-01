@@ -166,7 +166,7 @@ def get_attendance_fields_if_marked_will_be_late(cadet: Cadet, not_initial_regis
             value=button_value_to_mark_arrived(
                 cadet
             ),
-            label="Late but now has now arrived"
+            label="Late but has now arrived"
         ),
                 "",
                 ""

@@ -14,7 +14,7 @@ Before Cadet week
 - add missing stuff to data dumps #55
 
 # Version 2.3
-- instructors can do attendance online 
+- instructors can do attendance online
 - fix a few odd bugs, clean up where cache flushing used
 - more elegant handling of manual registration converting to WA
 - massive warning if unique key creators missing from field mappings

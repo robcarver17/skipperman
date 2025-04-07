@@ -242,13 +242,16 @@ def process_identification_when_volunteer_matched(
         "Adding volunteer %s as identified for event %s, row_id %s, volunteer index %d"
         % (str(volunteer), str(event), current_row_id, current_index)
     )
-    add_identified_volunteer(
-        object_store=interface.object_store,
-        volunteer=volunteer,
-        event=event,
-        row_id=current_row_id,
-        volunteer_index=int(current_index),
-    )
+    try:
+        add_identified_volunteer(
+            object_store=interface.object_store,
+            volunteer=volunteer,
+            event=event,
+            row_id=current_row_id,
+            volunteer_index=int(current_index),
+        )
+    except Exception as e:
+        interface.log_error("Error adding volunteer %s (code %s) to identified volunteers list; you might need to add them manually check the rota." % (volunteer.name, str(e)))
     interface.flush_cache_to_store()
 
     return next_volunteer_in_current_row(interface)

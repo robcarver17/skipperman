@@ -127,7 +127,7 @@ COPY_ALL_ROLES_FROM_FIRST_ROLE_BUTTON_LABEL = (
     "Copy from earliest allocated role to fill empty roles"
 )
 COPY_AND_OVERWRITE_FROM__FIRST_ROLE_BUTTON_LABEL = (
-    "Copy from earliest allocated role to fill empty and overwrite existing roles"
+    "CAREFUL: Copy from earliest allocated role to fill empty and overwrite existing roles"
 )
 ADD_NEW_VOLUNTEER_BUTTON_LABEL = "Add new volunteer to rota"
 apply_filter_button = Button(APPLY_FILTER_BUTTON_LABEL, nav_button=True)

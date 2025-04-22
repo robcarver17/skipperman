@@ -15,6 +15,7 @@ Before Cadet week
 
 # done recently
 
+- any button press now saves form inputs
 - instructor / group summary table on volunteer rota
 
 # Version 2.3

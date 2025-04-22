@@ -330,9 +330,9 @@ def copy_fill_button_name_for_both_volunteer_role_and_boat_at_event_on_day(
 
 
 COPY_ALL_BOATS_BUTTON_LABEL = "Copy / fill boats from earliest"
-COPYOVER_ALL_BOATS_BUTTON_LABEL = "Copy / overwrite boats from earliest"
+COPYOVER_ALL_BOATS_BUTTON_LABEL = "CAREFUL: Copy / overwrite boats from earliest"
 COPY_BOATS_AND_ROLES_BUTTON_LABEL = "Copy / fill all boats&roles from earliest"
-COPYOVER_BOATS_AND_ROLES_BUTTON_LABEL = "Copy / overwrite all boats&roles from earliest"
+COPYOVER_BOATS_AND_ROLES_BUTTON_LABEL = "CAREFUL: Copy / overwrite all boats&roles from earliest"
 copy_all_boats_button = Button(COPY_ALL_BOATS_BUTTON_LABEL, nav_button=True)
 copyover_all_boats_button = Button(COPYOVER_ALL_BOATS_BUTTON_LABEL, nav_button=True)
 copy_all_boats_and_roles_button = Button(

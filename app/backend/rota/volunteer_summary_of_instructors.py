@@ -1,7 +1,10 @@
 from typing import Dict, List
 
+import numpy as np
 import pandas as pd
 
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets, \
+    get_attendance_matrix_for_list_of_cadets_at_event
 from app.backend.rota.volunteer_rota_summary import get_sorted_list_of_groups_at_event, get_sorted_roles_at_event
 from app.backend.volunteers.roles_and_teams import get_dict_of_teams_and_roles
 from app.backend.volunteers.volunteers_at_event import get_dict_of_all_event_data_for_volunteers
@@ -52,10 +55,14 @@ def get_summary_list_of_of_instructors_and_groups_for_event_as_pd_df(
     return df
 
 
+
 def get_summary_row_of_instructors_for_group_at_event( object_store: ObjectStore,
                                                        volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
                                                        group: Group,
                                                        list_of_instructor_type_roles_at_event_sorted_by_seniority: list) -> dict:
+
+    cadet_count_for_group_over_days = get_cadet_count_for_group_over_days(object_store=object_store, event=volunteers_in_roles_at_event.event,
+                                                                          group=group)
 
     instructor_names_dict = dict([
                                 (role.name,
@@ -70,12 +77,14 @@ def get_summary_row_of_instructors_for_group_at_event( object_store: ObjectStore
     instructor_count = get_instructor_count_allocated_to_group_with_day_annotation(
         volunteers_in_roles_at_event=volunteers_in_roles_at_event,
         group=group,
-        list_of_instructor_type_roles_at_event_sorted_by_seniority=list_of_instructor_type_roles_at_event_sorted_by_seniority
     )
 
-    instructor_names_dict.update({'Instructor count': instructor_count})
+    result_dict= {}
+    result_dict.update(cadet_count_for_group_over_days)
+    result_dict.update(instructor_names_dict)
+    result_dict.update({'Instructor count': instructor_count})
 
-    return instructor_names_dict
+    return result_dict
 
 
 def get_names_of_instructor_with_day_annotation_or_blank_with_role_in_group(volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
@@ -145,7 +154,7 @@ def instructor_present_for_all_days(dict_of_instructors_by_day: Dict[Day, List[s
 
 
 def days_present_for(dict_of_instructors_by_day: Dict[Day, List[str]], instructor:str):
-    list_of_days = [day.name for day, instructors_on_day in dict_of_instructors_by_day.items()
+    list_of_days = [day.name[:3] for day, instructors_on_day in dict_of_instructors_by_day.items()
                     if instructor in instructors_on_day]
 
     return list_of_days
@@ -153,8 +162,10 @@ def days_present_for(dict_of_instructors_by_day: Dict[Day, List[str]], instructo
 
 def get_instructor_count_allocated_to_group_with_day_annotation(volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
                                             group: Group,
-                                                                list_of_instructor_type_roles_at_event_sorted_by_seniority: list):
-
+                                                                ):
+    if group.is_unallocated:
+        return ""
+    
     dict_of_instructors_by_day_for_group = get_dict_of_instructors_by_day_for_group(
         volunteers_in_roles_at_event=volunteers_in_roles_at_event,
         group=group
@@ -186,7 +197,7 @@ def get_dict_of_instructors_by_day_for_group(volunteers_in_roles_at_event: DictO
 
 def annotate_count_across_days(dict_of_instructors_by_day_for_group: Dict[Day, List[str]]):
     list_of_labelled_counts = [
-        "%d (%s)" % (len(instructors_on_day), day.name)
+        "%d (%s)" % (len(instructors_on_day), day.name[:3])
         for day, instructors_on_day  in dict_of_instructors_by_day_for_group.items()
     ]
 
@@ -203,3 +214,21 @@ def get_list_of_instructor_type_roles_at_event_sorted_by_seniority(object_store:
             sorted_list.append(role)
 
     return sorted_list
+
+
+
+def get_cadet_count_for_group_over_days(object_store: ObjectStore, event: Event, group: Group) -> Dict[str, int]:
+    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(
+        object_store=object_store, event=event, active_only=True
+    )
+    dict_of_cadets_with_days_and_groups = (
+        cadets_at_event_data.dict_of_cadets_with_days_and_groups
+    )
+    result_dict = {}
+    for day in cadets_at_event_data.event.days_in_event():
+        if group.is_unallocated:
+            result_dict[day.name] = ""
+        else:
+            result_dict[day.name] = len(dict_of_cadets_with_days_and_groups.list_of_cadets_in_group_on_day(day=day, group=group))
+
+    return result_dict

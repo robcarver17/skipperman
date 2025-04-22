@@ -274,8 +274,11 @@ def get_sorted_list_of_groups_at_event(object_store: ObjectStore, event: Event, 
     sorted_groups_at_event = all_groups_at_event.sort_to_match_other_group_list_order(
         all_groups
     )
-
-    if unallocated_group not in sorted_groups_at_event:
-        sorted_groups_at_event = sorted_groups_at_event + [unallocated_group]
+    if include_unallocated:
+        if unallocated_group not in sorted_groups_at_event:
+            sorted_groups_at_event = sorted_groups_at_event + [unallocated_group]
+    else:
+        if unallocated_group in sorted_groups_at_event:
+            sorted_groups_at_event.remove(unallocated_group)
 
     return sorted_groups_at_event

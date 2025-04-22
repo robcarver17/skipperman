@@ -552,6 +552,29 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
             unique_list_of_roles
         )
 
+
+    def list_of_volunteers_with_roles_and_groups_and_teams_assigned_to_group_on_day(
+        self, group: Group, day: Day
+    ) -> List[VolunteerWithRoleGroupAndTeamAtEvent]:
+        list_of_volunteers = []
+        for volunteer, roles_for_volunteer in self.items():
+            role_and_group_and_team = (
+                roles_for_volunteer.role_and_group_and_team_on_day(day)
+            )
+            if role_and_group_and_team.group == group:
+                list_of_volunteers.append(
+                    VolunteerWithRoleGroupAndTeamAtEvent(
+                        volunteer=volunteer,
+                        role=role_and_group_and_team.role,
+                        group=role_and_group_and_team.group,
+                        list_of_team_and_index=role_and_group_and_team.list_of_team_and_index,
+                        day=day,
+                    )
+                )
+        return list_of_volunteers
+
+
+
     def list_of_volunteers_with_roles_and_groups_and_teams_doing_role_on_day(
         self, role: RoleWithSkills, day: Day
     ) -> List[VolunteerWithRoleGroupAndTeamAtEvent]:

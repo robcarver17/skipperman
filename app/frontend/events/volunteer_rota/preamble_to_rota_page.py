@@ -1,7 +1,7 @@
 from app.backend.rota.volunteer_rota_summary import (
-    get_summary_list_of_roles_and_groups_for_events,
-    get_summary_list_of_teams_and_groups_for_events,
-)
+    get_summary_list_of_roles_and_groups_for_event,
+    get_summary_list_of_teams_and_groups_for_events, )
+from app.backend.rota.volunteer_summary_of_instructors import get_summary_list_of_instructors_and_groups_for_event
 from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
 from app.data_access.configuration.fixed import (
     COPY_OVERWRITE_SYMBOL,
@@ -38,6 +38,7 @@ def get_preamble_before_table(
 
     summary_of_filled_roles = get_summary_table(interface=interface, event=event)
     summary_group_table = get_summary_group_table(interface=interface, event=event)
+    summary_instructor_table = get_summary_instructor_group_table(interface=interface, event=event)
     targets = get_volunteer_targets_table_and_save_button(
         interface=interface, event=event
     )
@@ -53,6 +54,8 @@ def get_preamble_before_table(
             _______________,
             summary_group_table,
             _______________,
+            summary_instructor_table,
+            _______________,
             targets,
             _______________,
             warnings,
@@ -64,7 +67,7 @@ def get_preamble_before_table(
 
 
 def get_summary_table(interface: abstractInterface, event: Event):
-    summary_of_filled_roles = get_summary_list_of_roles_and_groups_for_events(
+    summary_of_filled_roles = get_summary_list_of_roles_and_groups_for_event(
         event=event, object_store=interface.object_store
     )
     if len(summary_of_filled_roles) > 0:
@@ -89,6 +92,21 @@ def get_summary_group_table(interface: abstractInterface, event: Event):
         summary_of_filled_roles = ""
 
     return summary_of_filled_roles
+
+
+
+def get_summary_instructor_group_table(interface: abstractInterface, event: Event):
+    summary_of_instructor_groups = get_summary_list_of_instructors_and_groups_for_event(
+        event=event, object_store=interface.object_store
+    )
+    if len(summary_of_instructor_groups) > 0:
+        summary_of_instructor_groups = DetailListOfLines(
+            ListOfLines([summary_of_instructor_groups]), name="Summary of instructors and groups"
+        )
+    else:
+        summary_of_instructor_groups = ""
+
+    return summary_of_instructor_groups
 
 
 link = Link(

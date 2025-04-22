@@ -252,6 +252,7 @@ def process_identification_when_volunteer_matched(
         )
     except Exception as e:
         interface.log_error("Error adding volunteer %s (code %s) to identified volunteers list; you might need to add them manually check the rota." % (volunteer.name, str(e)))
+
     interface.flush_cache_to_store()
 
     return next_volunteer_in_current_row(interface)

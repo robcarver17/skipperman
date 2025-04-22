@@ -19,25 +19,25 @@ from app.objects.composed.volunteer_with_group_and_role_at_event import (
 )
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.groups import unallocated_group, ListOfGroups
+from app.objects.groups import ListOfGroups
 from app.objects.roles_and_teams import ListOfTeams, no_team
 from app.objects.volunteer_roles_and_groups_with_id import (
     TeamAndGroup,
 )
-from app.objects.roles_and_teams import no_role_allocated
 from app.objects.groups import unallocated_group
 
-def get_summary_list_of_roles_and_groups_for_events(
+
+def get_summary_list_of_roles_and_groups_for_event(
     object_store: ObjectStore, event: Event
 ) -> PandasDFTable:
     return PandasDFTable(
-        get_summary_list_of_roles_and_groups_for_events_as_pd_df(
+        get_summary_list_of_roles_and_groups_for_event_as_pd_df(
             object_store=object_store, event=event
         )
     )
 
 
-def get_summary_list_of_roles_and_groups_for_events_as_pd_df(
+def get_summary_list_of_roles_and_groups_for_event_as_pd_df(
     object_store: ObjectStore, event: Event
 ) -> pd.DataFrame:
     all_day_summaries = get_list_of_day_summaries_for_roles_at_event(
@@ -60,7 +60,7 @@ def get_list_of_day_summaries_for_roles_at_event(
         return []
 
     sorted_roles_at_event = get_sorted_roles_at_event(object_store=object_store, event=event)
-    sorted_groups_at_event = get_sorted_groups_at_event(object_store=object_store, event=event)
+    sorted_groups_at_event = get_sorted_list_of_groups_at_event(object_store=object_store, event=event)
 
     days_at_event = event.days_in_event()
     all_day_summaries = []
@@ -75,36 +75,9 @@ def get_list_of_day_summaries_for_roles_at_event(
 
     return all_day_summaries
 
-def get_sorted_roles_at_event(    object_store: ObjectStore, event: Event
-) -> ListOfRolesWithSkills:
-    volunteers_in_roles_at_event = get_volunteers_and_roles_at_event(object_store=object_store, event=event)
-
-    list_of_roles = get_list_of_roles(object_store)
-    all_roles_at_event = volunteers_in_roles_at_event.all_roles_at_event
-
-    sorted_roles_at_event = all_roles_at_event.sort_to_match_other_role_list_order(
-        list_of_roles
-    )
-
-    sorted_roles_at_event.add_no_role_set()
-
-    return sorted_roles_at_event
 
 
 
-def get_sorted_groups_at_event(    object_store: ObjectStore, event: Event
-) -> ListOfGroups:
-    volunteers_in_roles_at_event = get_volunteers_and_roles_at_event(object_store=object_store, event=event)
-    all_groups = get_list_of_groups(object_store)
-    all_groups_at_event = ListOfGroups(
-        volunteers_in_roles_at_event.all_groups_at_event + [unallocated_group]
-    )
-    sorted_groups_at_event = all_groups_at_event.sort_to_match_other_group_list_order(
-        all_groups
-    )
-    sorted_groups_at_event.add_unallocated()
-
-    return  sorted_groups_at_event
 
 def get_volunteers_and_roles_at_event(    object_store: ObjectStore, event: Event
 ):
@@ -186,21 +159,8 @@ def get_list_of_day_summaries_teams_and_groups_at_event(
         volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles
     )
 
-    list_of_teams = get_list_of_teams(object_store)
-    all_teams_at_event = ListOfTeams(volunteers_in_roles_at_event.all_teams_at_event)
-    sorted_teams_at_event = all_teams_at_event.sort_to_match_other_team_list_order(
-        list_of_teams
-    )
-    if no_team not in sorted_teams_at_event:
-        sorted_teams_at_event = sorted_teams_at_event + [no_team]
-
-    all_groups = get_list_of_groups(object_store)
-    all_groups_at_event = ListOfGroups(volunteers_in_roles_at_event.all_groups_at_event)
-    sorted_groups_at_event = all_groups_at_event.sort_to_match_other_group_list_order(
-        all_groups
-    )
-    if unallocated_group not in sorted_groups_at_event:
-        sorted_groups_at_event = sorted_groups_at_event + [unallocated_group]
+    sorted_teams_at_event = get_sorted_list_of_teams_at_event(object_store=object_store, event=event)
+    sorted_groups_at_event = get_sorted_list_of_groups_at_event(object_store=object_store, event=event)
 
     days_at_event = event.days_in_event()
     all_day_summaries = []
@@ -267,3 +227,55 @@ def from_list_of_day_summaries_to_single_df(
     single_df = single_df.loc[~(single_df == 0).all(axis=1)]  ## missing values
 
     return single_df
+
+
+def get_sorted_roles_at_event(    object_store: ObjectStore, event: Event
+) -> ListOfRolesWithSkills:
+    volunteers_in_roles_at_event = get_volunteers_and_roles_at_event(object_store=object_store, event=event)
+
+    list_of_roles = get_list_of_roles(object_store)
+    all_roles_at_event = volunteers_in_roles_at_event.all_roles_at_event
+
+    sorted_roles_at_event = all_roles_at_event.sort_to_match_other_role_list_order(
+        list_of_roles
+    )
+
+    sorted_roles_at_event.add_no_role_set()
+
+    return sorted_roles_at_event
+
+def get_sorted_list_of_teams_at_event(object_store: ObjectStore, event: Event):
+    volunteer_event_data = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
+    )
+    volunteers_in_roles_at_event = (
+        volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles
+    )
+    list_of_teams = get_list_of_teams(object_store)
+    all_teams_at_event = ListOfTeams(volunteers_in_roles_at_event.all_teams_at_event)
+    sorted_teams_at_event = all_teams_at_event.sort_to_match_other_team_list_order(
+        list_of_teams
+    )
+    if no_team not in sorted_teams_at_event:
+        sorted_teams_at_event = sorted_teams_at_event + [no_team]
+
+    return sorted_teams_at_event
+
+def get_sorted_list_of_groups_at_event(object_store: ObjectStore, event: Event, include_unallocated: bool = True):
+    volunteer_event_data = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
+    )
+    volunteers_in_roles_at_event = (
+        volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles
+    )
+
+    all_groups = get_list_of_groups(object_store)
+    all_groups_at_event = ListOfGroups(volunteers_in_roles_at_event.all_groups_at_event)
+    sorted_groups_at_event = all_groups_at_event.sort_to_match_other_group_list_order(
+        all_groups
+    )
+
+    if unallocated_group not in sorted_groups_at_event:
+        sorted_groups_at_event = sorted_groups_at_event + [unallocated_group]
+
+    return sorted_groups_at_event

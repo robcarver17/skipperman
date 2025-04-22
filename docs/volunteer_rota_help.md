@@ -300,7 +300,19 @@ Click on the ► to expand them and see the hidden details.
 
 ## Summaries
 
-Click on ► Summary by ..., and we can see two summaries of the numbers of volunteers allocated, one breaks down into very granular detail; the second sums up over teams and groups. The latter is probably more useful for seeing, for example, that there are the right number of AI/DI in total for a given group.
+Click on ► Summary by ..., and we can see three summaries of the numbers of volunteers allocated, one breaks down into very granular detail; the second sums up over teams and groups, and the third is for instructors.
+
+### Instructor / group summary table
+
+***
+***
+![group_notes.png](/static/group_notes.png)
+***
+***
+
+This is helpful if you want to see if you have the right number of instructors. There is one row for each group. The first two columns are the cadets assigned on each day. Then you have the names of people in each of the relevant instructor roles. Finally there are some notes, and then an instructor count by day.
+
+You can make notes for each group, and save them.
 
 ## Role numbers and targets
 

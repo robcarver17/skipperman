@@ -1,7 +1,6 @@
 from app.backend.rota.volunteer_rota_summary import (
     get_summary_list_of_roles_and_groups_for_event,
     get_summary_list_of_teams_and_groups_for_events, )
-from app.backend.rota.volunteer_summary_of_instructors import get_summary_list_of_instructors_and_groups_for_event
 from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
 from app.data_access.configuration.fixed import (
     COPY_OVERWRITE_SYMBOL,
@@ -14,9 +13,11 @@ from app.data_access.configuration.fixed import (
 from app.frontend.events.volunteer_rota.volunteer_rota_buttons import (
     get_header_buttons_for_rota,
 )
-from app.frontend.events.volunteer_rota.volunteer_targets import (
+from app.frontend.events.volunteer_rota.volunteer_targets_and_group_notes import (
     get_volunteer_targets_table_and_save_button,
 )
+
+from app.frontend.events.volunteer_rota.volunteer_targets_and_group_notes import get_summary_instructor_group_table
 from app.frontend.events.volunteer_rota.warnings import warn_on_all_volunteers
 from app.objects.abstract_objects.abstract_form import Link
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -94,21 +95,6 @@ def get_summary_group_table(interface: abstractInterface, event: Event):
     return summary_of_filled_roles
 
 
-
-def get_summary_instructor_group_table(interface: abstractInterface, event: Event):
-    summary_of_instructor_groups = get_summary_list_of_instructors_and_groups_for_event(
-        event=event, object_store=interface.object_store
-    )
-    if len(summary_of_instructor_groups) > 0:
-        summary_of_instructor_groups = DetailListOfLines(
-            ListOfLines([summary_of_instructor_groups]), name="Summary of instructors and groups"
-        )
-    else:
-        summary_of_instructor_groups = ""
-
-    return summary_of_instructor_groups
-
-
 link = Link(
     url=WEBLINK_FOR_QUALIFICATIONS,
     string="See qualifications_and_ticks table",
@@ -134,3 +120,5 @@ instructions = ListOfLines(
         link,
     ]
 ).add_Lines()
+
+

@@ -1,5 +1,9 @@
 from typing import List
 
+from app.backend.groups.group_notes_at_event import update_group_notes_at_event_for_group
+from app.backend.rota.volunteer_rota_summary import get_sorted_list_of_groups_at_event
+from app.backend.rota.volunteer_summary_of_instructors import get_summary_table_of_instructors_and_groups_for_event, \
+    get_group_notes_field_value
 from app.frontend.forms.swaps import is_ready_to_swap
 from app.frontend.shared.events_state import get_event_from_state
 
@@ -20,6 +24,7 @@ from app.objects.abstract_objects.abstract_form import intInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.objects.events import Event
+from app.objects.groups import Group
 
 
 def get_volunteer_targets_table_and_save_button(
@@ -137,3 +142,34 @@ def save_volunteer_targets_for_specific_role(
 
 def get_target_from_form(interface: abstractInterface, role_name: str):
     return interface.value_from_form(get_input_name_for_target_box(role_name))
+
+
+def get_summary_instructor_group_table(interface: abstractInterface, event: Event):
+    summary_of_instructor_groups = get_summary_table_of_instructors_and_groups_for_event(
+        object_store=interface.object_store, event=event
+    )
+    if len(summary_of_instructor_groups) == 0:
+        return ""
+
+    summary_of_instructor_groups = DetailListOfLines(
+            ListOfLines([summary_of_instructor_groups,
+                         save_group_notes_button]), name="Summary of instructors and groups"
+        )
+
+    return summary_of_instructor_groups
+
+
+save_group_notes_button = Button("Save Group Notes")
+
+def save_group_notes_from_form(interface: abstractInterface):
+    event = get_event_from_state(interface)
+    list_of_groups =get_sorted_list_of_groups_at_event(object_store=interface.object_store, event=event)
+    for group in list_of_groups:
+        save_group_notes_for_group(interface=interface, event=event, group=group)
+
+def save_group_notes_for_group(interface: abstractInterface, event: Event, group: Group):
+    notes = interface.value_from_form(get_group_notes_field_value(group))
+    update_group_notes_at_event_for_group(object_store=interface.object_store,
+                                          event=event,
+                                          group=group,
+                                          notes=notes)

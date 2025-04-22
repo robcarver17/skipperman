@@ -15,7 +15,7 @@ from app.frontend.events.volunteer_rota.copying import update_if_copy_button_pre
 from app.frontend.events.volunteer_rota.post_form_actions import \
     is_a_form_change_that_does_not_change_underyling_data_but_changes_state, \
     is_a_form_change_that_changes_underlying_data, is_a_form_change_that_returns_a_new_form_and_does_not_change_data
-from app.frontend.events.volunteer_rota.volunteer_targets import (
+from app.frontend.events.volunteer_rota.volunteer_targets_and_group_notes import (
     save_targets_button,
     save_volunteer_targets,
 )
@@ -50,8 +50,9 @@ from app.frontend.events.volunteer_rota.elements_in_volunteer_rota_page import (
     get_filters_and_buttons,
 )
 from app.frontend.events.volunteer_rota.preamble_to_rota_page import (
-    get_preamble_before_table,
-)
+    get_preamble_before_table, )
+from app.frontend.events.volunteer_rota.volunteer_targets_and_group_notes import save_group_notes_button, \
+    save_group_notes_from_form
 from app.frontend.events.volunteer_rota.volunteer_rota_buttons import *
 
 
@@ -192,6 +193,9 @@ def post_form_view_for_volunteer_rota_if_data_changed(
 
     elif save_targets_button.pressed(last_button_pressed):
         save_volunteer_targets(interface)
+
+    elif save_group_notes_button.pressed(last_button_pressed):
+        save_group_notes_from_form(interface)
 
     else:
         print("button not found")

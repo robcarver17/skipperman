@@ -4,7 +4,7 @@ from app.objects.identified_cadets_at_event import ListOfIdentifiedCadetsAtEvent
 from app.objects.cadets import ListOfCadets
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
 from app.objects.committee import ListOfCadetsWithIdOnCommittee
-
+from app.objects.group_notes_at_event import ListOfGroupNotesAtEventWithIds
 
 class DataListOfCadets(object):
     def read(self) -> ListOfCadets:
@@ -23,6 +23,12 @@ class DataListOfCadetsWithGroups(object):
     ):
         raise NotImplemented
 
+class DataListOfGroupNotesAtEvent(object):
+    def read_all_notes(self) -> ListOfGroupNotesAtEventWithIds:
+        raise NotImplemented
+
+    def write_notes(self, list_of_group_notes_with_ids: ListOfGroupNotesAtEventWithIds):
+        raise NotImplemented
 
 class DataListOfCadetsAtEvent(object):
     def read(self, event_id: str) -> ListOfCadetsWithIDAtEvent:

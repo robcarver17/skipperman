@@ -5,7 +5,8 @@ from app.frontend.events.volunteer_rota.button_values import last_button_pressed
 from app.frontend.events.volunteer_rota.swapping import last_button_pressed_was_swap_button
 from app.frontend.events.volunteer_rota.volunteer_rota_buttons import clear_filter_button, apply_filter_button, \
     download_matrix_button, add_volunteer_button, last_button_pressed_was_copy_button
-from app.frontend.events.volunteer_rota.volunteer_targets import save_targets_button
+from app.frontend.events.volunteer_rota.volunteer_targets_and_group_notes import save_targets_button, \
+    save_group_notes_button
 from app.frontend.shared.buttons import is_button_sort_order
 from app.objects.abstract_objects.abstract_buttons import save_menu_button, cancel_menu_button
 
@@ -25,7 +26,8 @@ def is_a_form_change_that_changes_underlying_data(last_button_pressed:str):
         last_button_pressed_was_copy_button(last_button_pressed) or \
         last_button_pressed_was_swap_button(last_button_pressed) or \
         save_menu_button.pressed(last_button_pressed) or\
-        save_targets_button.pressed(last_button_pressed)
+        save_targets_button.pressed(last_button_pressed) or \
+            save_group_notes_button.pressed(last_button_pressed)
 
 
 def is_a_form_change_that_returns_a_new_form_and_does_not_change_data(last_button_pressed:str):

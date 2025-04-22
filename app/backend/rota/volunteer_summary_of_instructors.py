@@ -1,15 +1,11 @@
 from typing import Dict, List
 
-import numpy as np
-import pandas as pd
-
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets, \
-    get_attendance_matrix_for_list_of_cadets_at_event
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets
+from app.backend.groups.group_notes_at_event import get_dict_of_group_notes_at_event
 from app.backend.rota.volunteer_rota_summary import get_sorted_list_of_groups_at_event, get_sorted_roles_at_event
 from app.backend.volunteers.roles_and_teams import get_dict_of_teams_and_roles
 from app.backend.volunteers.volunteers_at_event import get_dict_of_all_event_data_for_volunteers
 from app.data_access.store.object_store import ObjectStore
-from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.composed.volunteer_roles import RoleWithSkills
 from app.objects.composed.volunteer_with_group_and_role_at_event import \
     DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups
@@ -17,19 +13,11 @@ from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.groups import Group
 from app.objects.utils import flatten
+from app.objects.abstract_objects.abstract_tables import Table, RowInTable
+from app.objects.abstract_objects.abstract_form import textInput
 
 
-def get_summary_list_of_instructors_and_groups_for_event(object_store: ObjectStore, event: Event) -> PandasDFTable:
-    return PandasDFTable(
-        get_summary_list_of_of_instructors_and_groups_for_event_as_pd_df(
-            object_store=object_store, event=event
-        )
-    )
-
-
-def get_summary_list_of_of_instructors_and_groups_for_event_as_pd_df(
-    object_store: ObjectStore, event: Event
-) -> pd.DataFrame:
+def get_summary_table_of_instructors_and_groups_for_event(object_store: ObjectStore, event: Event) -> Table:
     volunteer_event_data = get_dict_of_all_event_data_for_volunteers(
         object_store=object_store, event=event
     )
@@ -39,7 +27,10 @@ def get_summary_list_of_of_instructors_and_groups_for_event_as_pd_df(
     sorted_list_of_groups = get_sorted_list_of_groups_at_event(object_store=object_store, event=event)
     list_of_instructor_type_roles_at_event_sorted_by_seniority = get_list_of_instructor_type_roles_at_event_sorted_by_seniority(object_store, event)
 
-    list_of_rows_as_dicts = []
+    list_of_rows = [get_top_row_of_table_of_instructor_counts(
+        event=event,
+        list_of_instructor_type_roles_at_event_sorted_by_seniority=list_of_instructor_type_roles_at_event_sorted_by_seniority
+    )]
     for group in sorted_list_of_groups:
         this_row = get_summary_row_of_instructors_for_group_at_event(
             object_store=object_store,
@@ -47,45 +38,69 @@ def get_summary_list_of_of_instructors_and_groups_for_event_as_pd_df(
             group=group,
             list_of_instructor_type_roles_at_event_sorted_by_seniority=list_of_instructor_type_roles_at_event_sorted_by_seniority
         )
-        list_of_rows_as_dicts.append(this_row)
+        list_of_rows.append(this_row)
 
-    df =  pd.DataFrame(list_of_rows_as_dicts)
-    df.index = sorted_list_of_groups
-
-    return df
+    return Table(list_of_rows, has_column_headings=True, has_row_headings=True)
 
 
+def get_top_row_of_table_of_instructor_counts(event: Event, list_of_instructor_type_roles_at_event_sorted_by_seniority: list) -> RowInTable:
+    list_of_days = [ day.name for day in event.days_in_event()]
+    instructor_roles_as_names = [role.name for role in list_of_instructor_type_roles_at_event_sorted_by_seniority]
+    return RowInTable([
+      '',
+
+    ]+list_of_days+instructor_roles_as_names+
+                      [
+                          'NOTES',
+                          'Instructor count'
+                      ])
 
 def get_summary_row_of_instructors_for_group_at_event( object_store: ObjectStore,
                                                        volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
                                                        group: Group,
-                                                       list_of_instructor_type_roles_at_event_sorted_by_seniority: list) -> dict:
+                                                       list_of_instructor_type_roles_at_event_sorted_by_seniority: list) -> RowInTable:
 
     cadet_count_for_group_over_days = get_cadet_count_for_group_over_days(object_store=object_store, event=volunteers_in_roles_at_event.event,
                                                                           group=group)
 
-    instructor_names_dict = dict([
-                                (role.name,
+    instructor_names = [
+
         get_names_of_instructor_with_day_annotation_or_blank_with_role_in_group(
             volunteers_in_roles_at_event=volunteers_in_roles_at_event,
             role=role,
             group=group
         )
-                                )
+
         for role in list_of_instructor_type_roles_at_event_sorted_by_seniority
-    ])
+    ]
     instructor_count = get_instructor_count_allocated_to_group_with_day_annotation(
         volunteers_in_roles_at_event=volunteers_in_roles_at_event,
         group=group,
+
+    )
+    group_notes = get_group_notes_for_group(object_store=object_store, event=volunteers_in_roles_at_event.event, group=group)
+
+    return RowInTable([
+        group.name
+    ]+cadet_count_for_group_over_days+
+                      instructor_names+
+                      [group_notes,
+                       instructor_count])
+
+
+def get_group_notes_for_group(object_store: ObjectStore, event: Event, group: Group) -> textInput:
+    dict_of_group_notes = get_dict_of_group_notes_at_event(object_store=object_store, event=event)
+    notes =dict_of_group_notes.notes_for_group(group)
+
+    return textInput(
+        input_label="",
+        input_name=get_group_notes_field_value(group),
+        value=notes
     )
 
-    result_dict= {}
-    result_dict.update(cadet_count_for_group_over_days)
-    result_dict.update(instructor_names_dict)
-    result_dict.update({'Instructor count': instructor_count})
 
-    return result_dict
-
+def get_group_notes_field_value(group: Group) -> str:
+    return "NOTES_%s" % group.id
 
 def get_names_of_instructor_with_day_annotation_or_blank_with_role_in_group(volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
                                                                    role: RoleWithSkills,
@@ -165,7 +180,7 @@ def get_instructor_count_allocated_to_group_with_day_annotation(volunteers_in_ro
                                                                 ):
     if group.is_unallocated:
         return ""
-    
+
     dict_of_instructors_by_day_for_group = get_dict_of_instructors_by_day_for_group(
         volunteers_in_roles_at_event=volunteers_in_roles_at_event,
         group=group
@@ -217,18 +232,18 @@ def get_list_of_instructor_type_roles_at_event_sorted_by_seniority(object_store:
 
 
 
-def get_cadet_count_for_group_over_days(object_store: ObjectStore, event: Event, group: Group) -> Dict[str, int]:
+def get_cadet_count_for_group_over_days(object_store: ObjectStore, event: Event, group: Group) -> list:
     cadets_at_event_data = get_dict_of_all_event_info_for_cadets(
         object_store=object_store, event=event, active_only=True
     )
     dict_of_cadets_with_days_and_groups = (
         cadets_at_event_data.dict_of_cadets_with_days_and_groups
     )
-    result_dict = {}
+    results = []
     for day in cadets_at_event_data.event.days_in_event():
         if group.is_unallocated:
-            result_dict[day.name] = ""
+            results.append("")
         else:
-            result_dict[day.name] = len(dict_of_cadets_with_days_and_groups.list_of_cadets_in_group_on_day(day=day, group=group))
+            results.append( len(dict_of_cadets_with_days_and_groups.list_of_cadets_in_group_on_day(day=day, group=group)))
 
-    return result_dict
+    return results

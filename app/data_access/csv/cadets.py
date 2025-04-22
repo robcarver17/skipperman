@@ -4,7 +4,7 @@ from app.data_access.classes.cadets import (
     DataListOfCadetsWithGroups,
     DataListOfCadetsAtEvent,
     DataListOfIdentifiedCadetsAtEvent,
-    DataListOfCadetsOnCommitte, DataAttendanceAtEventsForSpecificCadet,
+    DataListOfCadetsOnCommitte, DataAttendanceAtEventsForSpecificCadet, DataListOfGroupNotesAtEvent,
 )
 from app.data_access.resolve_paths_and_filenames import (
     IDENTIFIED_CADETS_AT_EVENT_ID,
@@ -12,12 +12,14 @@ from app.data_access.resolve_paths_and_filenames import (
     CADETS_WITH_GROUPS_ID,
     LIST_OF_CADETS_FILE_ID,
     LIST_OF_CADETS_ON_COMMITTEE, ATTENDANCE_FILE_FOR_SPECIFIC_CADET,
+GROUP_NOTES_ID
 )
 from app.objects.attendance import ListOfRawAttendanceItemsForSpecificCadet
 
 from app.objects.cadets import ListOfCadets
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
 from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent
+from app.objects.group_notes_at_event import ListOfGroupNotesAtEventWithIds
 from app.objects.identified_cadets_at_event import ListOfIdentifiedCadetsAtEvent
 from app.objects.committee import ListOfCadetsWithIdOnCommittee
 
@@ -63,6 +65,20 @@ class CsvDataListOfCadetsWithGroups(GenericCsvData, DataListOfCadetsWithGroups):
             list_of_cadets_with_groups,
             file_identifier=CADETS_WITH_GROUPS_ID,
             additional_file_identifiers=event_id,
+        )
+
+
+class CsvDataListOfGroupNotesAtEvent(GenericCsvData, DataListOfGroupNotesAtEvent):
+    def read_all_notes(self) -> ListOfGroupNotesAtEventWithIds:
+        return self.read_and_return_object_of_type(
+            ListOfGroupNotesAtEventWithIds,
+            file_identifier=GROUP_NOTES_ID,
+        )
+
+    def write_notes(self, list_of_group_notes_with_ids: ListOfGroupNotesAtEventWithIds):
+        self.write_object(
+            list_of_group_notes_with_ids,
+            file_identifier=GROUP_NOTES_ID
         )
 
 

@@ -8,7 +8,7 @@ from app.data_access.csv.cadets import (
     CsvDataListOfCadetsWithGroups,
     CsvDataListOfCadetsAtEvent,
     CsvDataListOfIdentifiedCadetsAtEvent,
-    CsvDataListOfCadetsOnCommitte, CsvDataAttendanceAtEventsForSpecificCadet,
+    CsvDataListOfCadetsOnCommitte, CsvDataAttendanceAtEventsForSpecificCadet, CsvDataListOfGroupNotesAtEvent,
 )
 from app.data_access.csv.food_and_clothing import *
 from app.data_access.csv.list_of_events import CsvDataListOfEvents
@@ -363,6 +363,12 @@ class MixedParquetAndCsvDataApi(GenericDataApi):
             self.master_data_path, backup_data_path=self.backup_data_path
         )
 
+    @property
+    def data_list_of_group_notes_at_event(self) -> CsvDataListOfGroupNotesAtEvent:
+        return CsvDataListOfGroupNotesAtEvent(
+            self.master_data_path,
+            backup_data_path=self.backup_data_path
+        )
 
 
     #### USERS

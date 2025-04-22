@@ -40,7 +40,7 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
-header_text = "List of sailing groups: add, edit, re-order"
+header_text = "List of sailing groups: add, edit, re-order. Re-ordering will cancel any other changes made since saving."
 
 
 def display_form_config_sailing_groups(interface: abstractInterface) -> Form:

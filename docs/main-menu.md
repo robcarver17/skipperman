@@ -73,7 +73,7 @@ Menu option pages usually include one or more of the following elemnts:
 - Cancel - return to the previous page without saving any of the most recent changes made in text boxes or dropdowns.
 - Back - return to the previous page. Only available on pages when no editing can be done.
 
-The way that edits are made and saved can be slightly confusing. Where you have to type something, or enter a value in a dropdown menu, then you will need to click a save button or the changes won't be saved. But where edits are made using buttons, then they are saved immediately (and any text entry or dropdown changes will be ignored). There is no 'undo' and subsequently pressing 'cancel' won't undo the edit.
+The way that edits are made and saved can be slightly confusing. Where you have to type something, or enter a value in a dropdown menu, then you will need to click a save button. But where edits are made using buttons, then they are saved immediately. Any button apart from 'cancel' will save any text field or dropdown edits made. There is no 'undo' and subsequently pressing 'cancel' won't undo the edit.
 For simplicity, get in the habit of pressing save after typing or selecting anything.
 
 Certain buttons have keyboard shortcuts, shown with eg [Alt-c] after the button. For example, back is always [Alt-b], save [Alt-s] and so on:
@@ -85,4 +85,4 @@ Certain buttons have keyboard shortcuts, shown with eg [Alt-c] after the button.
 - Help [Alt-h]
 
 
-In most browsers (Explorer, Chrome, Opera version 15 onwards, and Safari) you would use the Alt key plus the relevant (lowercase) letter. In Firefox use Alt, Shift and key. In Opera prior to version 12 use Shift, Escape and key.
+In most browsers (Explorer, Chrome, Opera version 15 onwards, and Safari) you would use the Alt key plus the relevant (lowercase) letter. In Firefox use Alt, Shift and key. In Opera prior to version 12 use Shift, Escape and key; for later versions Alt and key should work. On a Mac, use Ctrl/Alt/Key in Chrome, Firefox and Safari. 

@@ -24,8 +24,9 @@ Some points about editing:
 
 - The up and down buttons change the order, and they 'wrap around'; if you click up on the top item it will go to the bottom and vice versa.
 - Changes to ordering (using the up and down buttons) happen immediately. Changes to the hidden attribute, name or other attributes will only happen if you click 'Save edits'
+- If you change the order, any edits made to other attributes will be discarded. Make sure you save edits before re-ordering.
 - If you click cancel any edits you have made will be discarded, but not changes to ordering.
-- To add a new entry type a name in the relevant box, and then click 'Add'. If 
+- To add a new entry type a name in the relevant box, and then click 'Add'. NOTE: If you have made changes to hidden attributes, names or other attributes of existing entries these will also be saved.
 - Names in a list must be unique. If you try and change a name of an item to match another item, or add a new item with a duplicate name, an error will be reported.
 
 # Club dinghies
@@ -78,11 +79,11 @@ The instructors team is protected since it's a core part of Skipperman.
 
 ## Edit individual roles in a team
 
-If you click on the `Edit` button at the end of a team row, you can re-order the roles in a team, or add new roles to a team. The first role mentioned in a team is the 'team leader', and the other roles will be in that order when we create a volunteer rota. 
+If you click on the `Edit` button at the end of a team row, you can re-order the roles in a team, or add new roles to a team. The first role mentioned in a team is the 'team leader', and the other roles will be in that order when we create a volunteer rota. Note that any changes made to team attributes will be discarded if you click the 'Edit' button in the list of teams.
 
 It's fine for people to be in more than one team; for example the lake co-ordinator / deputy skipper is the lead of both the lake helpers and lake safety team. 
 
-Note that you can't add entirely new roles, or change the names or other attributes of a role, you need to go the 'Volunteer roles' configuration page for that.
+Note that you can't add entirely new roles here, or change the names or other attributes of a role, you need to go the 'Volunteer roles' configuration page for that.
 
 
 # Sailing groups
@@ -93,5 +94,5 @@ It's recommended that the order here is lake training, river training, MG groups
 
 # Sailing qualifications
 
-These are the list of qualifications that sailors can achieve, both internal (eg lake badge) and RYA. [If you click on 'edit' you can change the underlying syllabus items ('ticks') for each qualification](edit_qualification_tick_help.md).
+These are the list of qualifications that sailors can achieve, both internal (eg lake badge) and RYA. [If you click on 'edit' you can change the underlying syllabus items ('ticks') for each qualification](edit_qualification_tick_help.md). Note if you click on 'Edit' in the list of qualifications, any changes to qualification names will be discarded.
 

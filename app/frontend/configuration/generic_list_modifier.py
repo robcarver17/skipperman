@@ -90,7 +90,8 @@ def get_object_from_form(interface: abstractInterface, existing_object):
 
 BACK_BUTTON_PRESSED = object()
 BUTTON_NOT_KNOWN = object()
-
+REORDER_PRESSED = object()
+SAVE_OR_ADD_PRESSED = object()
 
 def display_form_edit_generic_list(
     existing_list: list,
@@ -226,28 +227,35 @@ def post_form_edit_generic_list(
 
     if cancel_menu_button.pressed(last_button):
         return BACK_BUTTON_PRESSED
-
-    elif save_button.pressed(last_button):
-        add_edits_from_form(
-            interface=interface,
-            modifying_function=modifying_function,
-            existing_list=existing_list,
-            get_object_from_form_function=get_object_from_form_function,
-        )
-
-    elif add_button.pressed(last_button):
-        add_new_entry_from_form(interface=interface, adding_function=adding_function)
-
+    elif is_edit_button_pressed(last_button):
+        return EditButtonPressed(entry_name_from_edit_contents_button(last_button))
     elif is_button_arrow_button(last_button):
         reorder_list_given_form(
             interface=interface,
             save_function=save_function,
             existing_list=existing_list,
         )
-    elif is_edit_button_pressed(last_button):
-        return EditButtonPressed(entry_name_from_edit_contents_button(last_button))
+        return REORDER_PRESSED
+
+    add_edits_from_form(
+            interface=interface,
+            modifying_function=modifying_function,
+            existing_list=existing_list,
+            get_object_from_form_function=get_object_from_form_function,
+        )
+
+    if save_button.pressed(last_button):
+        ## already saved
+        pass
+
+    elif add_button.pressed(last_button):
+        add_new_entry_from_form(interface=interface, adding_function=adding_function)
+
     else:
         return BUTTON_NOT_KNOWN
+
+    return SAVE_OR_ADD_PRESSED
+
 
 def edit_button_returned_from_generic_modifier(content):
     return type(content) is EditButtonPressed

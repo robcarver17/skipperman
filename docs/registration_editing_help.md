@@ -75,7 +75,7 @@ Some of the fields in the sailors table have edit boxes; make any changes you ne
 
 # Sorting the sailors table
 
-If you want to see the sailors in a different order, click one of the sort buttons at the top of the table.
+If you want to see the sailors in a different order, click one of the sort buttons at the top of the table. Note any changes you make before pressing a sort button will be saved.
 
 # Adding a sailor manually
 
@@ -85,7 +85,7 @@ You may also want to add sailors to an event who:
 - who you know *will* be registered but haven't yet been
 - or you know *has* been registered, but you don't want go through the hassle of [importing data from Wild Apricot](import_registration_data_help.md) 
 
-Click on the `Add unregistered sailor` button at the bottom of the sailors table, and then eithier choose an existing sailor, or add a new one.  See [here for more help](manually_adding_a_sailor.md).
+Click on the `Add unregistered sailor` button at the bottom of the sailors table, and then eithier choose an existing sailor, or add a new one.  See [here for more help](manually_adding_a_sailor.md). Note that any changes you make before pressing the add button will be saved.
 
 Note that adding a sailor manually will set their registration status to 'Manual'. Since there is no registration information, all the registration fields will be blank. 
 

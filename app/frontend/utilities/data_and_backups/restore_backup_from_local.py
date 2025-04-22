@@ -18,6 +18,7 @@ from app.objects.abstract_objects.abstract_interface import (
     get_file_from_interface,
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
+from app.objects.abstract_objects.abstract_text import Heading
 
 ZIPPED_FILE = "zipped_file"
 UPLOAD_FILE_BUTTON_LABEL = (
@@ -27,12 +28,18 @@ UPLOAD_FILE_BUTTON_LABEL = (
 
 def display_form_for_upload_backup(interface: abstractInterface):
     buttons = get_upload_buttons()
-    prompt = Line(
-        "Choose file. Must be a zip file with the correct directory structure. Wrong file will result in messed up data with no recourse except restoring a snapshot! Strongly recommend you make a snapshot first."
-    )
+    prompts =  [              Heading(
+                "Choose file. Must be a .zip file with the correct directory structure", size=4),
+                Heading("WILL OVERWRITE ALL EXISTING DATA - THERE IS NO 'ARE YOU SURE' DIALOG", size=2),
+                Heading(" Wrong file will result in messed up data and unpredictable effects!", size=3),
+                Heading("Can only be undone by going to a more recent snapshot or restoring data from another zip file", size=3),
+                Heading("I *strongly* recommend you snapshot the data first before doing this, just in case", size=3),
+                Heading("Click 'Back' if unsure about doing this", size=4),
+            ]
+
     input_field = Line(fileInput(input_name=ZIPPED_FILE, accept=".zip"))
 
-    list_of_lines = ListOfLines([prompt, input_field, buttons])
+    list_of_lines = ListOfLines(prompts+[input_field, buttons])
 
     return Form(list_of_lines)
 

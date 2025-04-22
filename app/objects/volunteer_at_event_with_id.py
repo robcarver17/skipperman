@@ -32,7 +32,7 @@ NOTES = "notes"
 class VolunteerAtEventWithId(GenericSkipperManObject):
     volunteer_id: str
     availablity: DaySelector
-    list_of_associated_cadet_id: list  ## no longer used kept to avoid breaking data
+    list_of_associated_cadet_id: list  ## No longer used kept to avoid breaking data
     preferred_duties: str = ""  ## information only
     same_or_different: str = ""  ## information only
     any_other_information: str = (
@@ -95,7 +95,7 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
 
     def clear_user_data(self):
         for volunteer_at_event in self:
-            volunteer_at_event.clear_private_data()
+            volunteer_at_event.clear_user_data()
 
     def update_notes(self, volunteer: Volunteer, new_notes: str):
         volunteer_at_event = self.volunteer_at_event_with_id(volunteer.id)

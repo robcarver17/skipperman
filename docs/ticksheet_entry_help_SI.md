@@ -23,7 +23,7 @@ There are two edit modes, ‘checkbox’ and ‘dropdown’. In checkbox mode yo
 
 ## Checkbox tick entry
 
-In checkbox mode you can only award full ticks, or reset an item to no ticks. You can also give a cadet all their ticks by clicking on the full tick button under their name, or give all your cadets a tick for a specific item by clicking on the relevant item. If nearly all your cadets got a specific item, then it’s quicker to award it to all of them and then remove it from the cadet who missed out.
+In checkbox mode you can only award full ticks, or reset an item to no ticks. You can also give a cadet all their ticks by clicking on the full tick button under their name ('row apply'), or give all your cadets a tick for a specific item by clicking on the relevant item ('column apply'). If nearly all your cadets got a specific item, then it’s quicker to award it to all of them and then remove it from the cadet who missed out.
 
 ![ticksheet_entry_SI_1.png](/static/ticksheet_entry_SI_1.png)
 
@@ -31,18 +31,18 @@ Note that if a half tick or N/A tick is awarded, then this can’t be edited to 
 
 Clicking on a cadet name will award the RYA qualification for the relevant cadet, or remove the qualification (which clearly should only be done if there was an error and you clicked the wrong button). 
 
-When you are done just save your changes (pressing a button to award/remove qualifications, or award all ticks to a cadet or to all cadets for a specific item will also save changes). If you don’t want to save, press cancel and that will abandon everything you have done since you last saved.
+When you are done just save your changes (pressing a button to award/remove qualifications, or award all ticks to a cadet or to all cadets for a specific item will also save changes). If you don’t want to save, press cancel and that will abandon everything you have done since you last pressed a button (row or column apply, save button or award/withdraw qualification).
 
 
 ## Dropdown tick entry
 
-In dropdown mode you specify tick values using a dropdown menu; this allows you to award Not Applicable (NA) or half ticks as well as the binary choice of full tick or no tick. Clicking on the buttons below a cadet name or item will award that tick level for all items for a given cadet, or set all ticks to that level for that item over all cadets. 
+In dropdown mode you specify tick values using a dropdown menu; this allows you to award Not Applicable (NA) or half ticks as well as the binary choice of full tick or no tick. Clicking on the buttons below a cadet name or item will award that tick level for all items for a given cadet ('row apply'), or set all ticks to that level for that item over all cadets ('column apply'). 
 
 ![ticksheet_entry_SI2.png](\static\ticksheet_entry_SI2.png)
 
 Clicking on a cadet name will award the RYA qualification for the relevant cadet, or remove the qualification (which clearly should only be done if there was an error and you clicked the wrong button). 
 
-When you are done just save your changes (pressing a button to award all ticks to a cadet or to all cadets for a specific item will also save changes). If you don’t want to save, press cancel and that will abandon everything you have done since you last saved.
+When you are done just save your changes (pressing a button to award all ticks to a cadet or to all cadets for a specific item will also save changes). If you don’t want to save, press cancel and that will abandon everything you have done since you last pressed a button (row or column apply, save button or award/withdraw qualification).
 
 # Qualification awards
 

@@ -52,7 +52,6 @@ def action_if_macro_tick_button_pressed(
             cadet_id=id,
             ticksheet_data=ticksheet_data,
         )
-    interface.flush_cache_to_store()
 
 
 def action_if_cadet_tick_button_pressed(

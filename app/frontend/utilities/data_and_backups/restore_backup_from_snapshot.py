@@ -22,6 +22,7 @@ from app.objects.abstract_objects.abstract_lines import (
     _______________,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
+from app.objects.abstract_objects.abstract_text import Heading
 
 
 def display_form_view_of_snapshots(interface: abstractInterface) -> Form:
@@ -31,9 +32,13 @@ def display_form_view_of_snapshots(interface: abstractInterface) -> Form:
         [
             ButtonBar([back_menu_button, help_button]),
             _______________,
-            Line(
-                "Click on any snapshot to restore - WILL OVERWRITE ALL CHANGES SINCE THEN!"
-            ),
+            Line([
+                Heading(
+                "Click on any snapshot to restore", size=4),
+                Heading("WILL OVERWRITE ALL CHANGES MADE SINCE THEN - THERE IS NO 'ARE YOU SURE' DIALOG", size=2),
+                Heading("Can only be undone by going to a more recent snapshot or restoring data from local machine", size=3),
+                Heading("Click 'Back' if unsure about doing this", size=4),
+            ]),
             _______________,
             list_of_buttons,
         ]

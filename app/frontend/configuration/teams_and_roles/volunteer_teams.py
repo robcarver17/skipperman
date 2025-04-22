@@ -51,7 +51,7 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
-header_text = "List of volunteer teams: add, edit, or re-order"
+header_text = "List of volunteer teams: add, edit, or re-order. Pressing edit or re-order will clear any other changes made."
 
 
 def display_form_config_teams_page(interface: abstractInterface) -> Form:

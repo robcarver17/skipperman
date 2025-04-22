@@ -56,7 +56,7 @@ def display_form_edit_list_of_users(
     instructions = ListOfLines(
         [
             "Edit name, enter new password, modify access, delete (carefully!) or add new user.",
-            " Passwords are not shown, but can be changed by entering new values and clicking 'Save edits' or clicking 'Generate new password' to create an arbitrary password.",
+            " Passwords are not shown, but can be changed by entering new values and clicking 'Save edits' or clicking 'Reset password to random value' to create an arbitrary password.",
         ]
     ).add_Lines()
     warning = warning_text(interface)
@@ -241,7 +241,7 @@ def dropdown_for_group(user: SkipperManUser) -> dropDownInput:
 user_group_options_as_dict = dict([(group.name, group.name) for group in ALL_GROUPS])
 
 def button_to_reset_password(user: SkipperManUser) -> Button:
-    return Button(label="Reset password", value=button_name_for_reset_password(user))
+    return Button(label="Reset password to random value", value=button_name_for_reset_password(user))
 
 
 def button_for_deletion(user: SkipperManUser) -> Button:

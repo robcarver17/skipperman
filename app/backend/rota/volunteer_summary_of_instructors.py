@@ -100,7 +100,7 @@ def get_group_notes_for_group(object_store: ObjectStore, event: Event, group: Gr
 
 
 def get_group_notes_field_value(group: Group) -> str:
-    return "NOTES_%s" % group.id
+    return "GROUP_NOTES_%s" % group.id
 
 def get_names_of_instructor_with_day_annotation_or_blank_with_role_in_group(volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
                                                                    role: RoleWithSkills,

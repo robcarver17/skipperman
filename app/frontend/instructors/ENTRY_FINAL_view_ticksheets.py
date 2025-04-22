@@ -1,4 +1,5 @@
 from typing import Union
+from app.objects.abstract_objects.abstract_buttons import check_if_button_in_list_was_pressed
 
 from app.backend.security.logged_in_user import (
     get_volunteer_for_logged_in_user_or_superuser,
@@ -131,7 +132,56 @@ def can_logged_in_volunteer_award_qualifications(interface: abstractInterface):
 def post_form_view_ticksheets_for_event_and_group(
     interface: abstractInterface,
 ) -> Union[Form, NewForm, File]:
+    if button_pressed_is_back_or_cancel(interface):
+        return post_form_view_ticksheets_for_event_and_group_when_back_or_cancel_pressed(interface)
+
+    elif button_pressed_modifies_state_only(interface):
+        return post_form_view_ticksheets_for_event_modifies_state_only(interface)
+
+    elif button_pressed_modifies_ticksheet(interface):
+        return post_form_view_ticksheets_for_event_and_saving_ticksheets(interface)
+
+    else:
+        return button_error_and_back_to_initial_state_form(interface)
+
+def button_pressed_is_back_or_cancel(interface: abstractInterface):
     button_pressed = interface.last_button_pressed()
+
+    return check_if_button_in_list_was_pressed(button_pressed,
+                                               list_of_buttons=[cancel_menu_button, back_menu_button])
+
+
+def button_pressed_modifies_state_only(interface: abstractInterface):
+    button_pressed = interface.last_button_pressed()
+    if check_if_button_in_list_was_pressed(button_pressed,
+                                        list_of_buttons=[
+                                            print_button,
+                                            show_all_cadets_button,
+                                            edit_dropdown_button,
+                                            edit_checkbox_button
+                                        ]):
+        return True
+
+    if is_button_cadet_selection(button_pressed):
+        return True
+
+    return False
+
+
+def button_pressed_modifies_ticksheet(interface: abstractInterface):
+    last_button = interface.last_button_pressed()
+    if save_menu_button.pressed(last_button):
+        return True
+    if is_generic_tick_button_pressed(last_button):
+        return True
+    return False
+
+
+def post_form_view_ticksheets_for_event_and_group_when_back_or_cancel_pressed(
+        interface: abstractInterface,
+) -> Union[Form, NewForm, File]:
+    button_pressed = interface.last_button_pressed()
+
     if cancel_menu_button.pressed(button_pressed):
         ## DOES NOT SAVE
         set_edit_state_of_ticksheet(interface=interface, state=NO_EDIT_STATE)
@@ -142,10 +192,11 @@ def post_form_view_ticksheets_for_event_and_group(
         clear_cadet_state(interface)
         return previous_form(interface)
 
-    return post_form_view_ticksheets_for_event_and_group_not_cancel_or_back(interface)
+    else:
+        return button_error_and_back_to_initial_state_form(interface)
 
 
-def post_form_view_ticksheets_for_event_and_group_not_cancel_or_back(
+def post_form_view_ticksheets_for_event_modifies_state_only(
     interface: abstractInterface,
 ) -> Union[Form, NewForm, File]:
     button_pressed = interface.last_button_pressed()
@@ -157,10 +208,6 @@ def post_form_view_ticksheets_for_event_and_group_not_cancel_or_back(
     elif edit_checkbox_button.pressed(button_pressed):
         set_edit_state_of_ticksheet(interface=interface, state=EDIT_CHECKBOX_STATE)
 
-    ## printing
-    elif print_button.pressed(button_pressed):
-        return download_labelled_ticksheet_and_return_file(interface)
-
     ## Select single cadet / all cadets
     elif is_button_cadet_selection(button_pressed):
         cadet = cadet_from_button_pressed(object_store=interface.object_store, value_of_button_pressed=button_pressed)
@@ -169,25 +216,40 @@ def post_form_view_ticksheets_for_event_and_group_not_cancel_or_back(
     elif show_all_cadets_button.pressed(button_pressed):
         clear_cadet_state(interface)
 
-    ## SPECIAL BUTTONS: qualification, all ticks, all column (also saves)
-    elif is_generic_tick_button_pressed(button_pressed):
-        action_if_macro_tick_button_pressed(
-            interface=interface, button_pressed=button_pressed
-        )
-
-    ## Saving
-    elif save_menu_button.pressed(button_pressed):
-        save_ticksheet(interface)
+    ## printing
+    elif print_button.pressed(button_pressed):
+        return download_labelled_ticksheet_and_return_file(interface)
 
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
     return display_form_view_ticksheets_for_event_and_group(interface)
 
-def save_ticksheet(interface: abstractInterface):
-    save_ticksheet_edits(interface)
+
+def post_form_view_ticksheets_for_event_and_saving_ticksheets(
+        interface: abstractInterface,
+) -> Union[Form, NewForm, File]:
+    button_pressed = interface.last_button_pressed()
+
+    if is_generic_tick_button_pressed(button_pressed):
+        action_if_macro_tick_button_pressed(
+            interface=interface, button_pressed=button_pressed
+        )
+        save_ticksheet_edits(interface)
+
+    ## Saving
+    elif save_menu_button.pressed(button_pressed):
+        save_ticksheet_edits(interface)
+        set_edit_state_of_ticksheet(interface=interface, state=NO_EDIT_STATE)
+    else:
+        return button_error_and_back_to_initial_state_form(interface)
+
     interface.flush_cache_to_store()
-    set_edit_state_of_ticksheet(interface=interface, state=NO_EDIT_STATE)
+
+    return display_form_view_ticksheets_for_event_and_group(interface)
+
+
+
 
 def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(

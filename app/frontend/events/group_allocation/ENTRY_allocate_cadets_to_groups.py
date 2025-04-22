@@ -64,30 +64,33 @@ def display_form_allocate_cadets(interface: abstractInterface) -> Union[Form, Ne
 def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
     last_button = interface.last_button_pressed()
+    if cancel_menu_button.pressed(last_button):
+        interface.flush_cache_to_store()
+        return previous_form(interface)
+
     if button_clicked_returns_new_form(last_button):
         return post_form_allocate_cadets_returns_new_form(interface, last_button)
-    elif button_clicked_changes_state_but_not_data(last_button):
-        return post_form_allocate_cadets_when_changing_state_and_not_data(interface, last_button)
-    elif button_clicked_changs_data(last_button):
+    elif button_clicked_changes_state(last_button):
+        return post_form_allocate_cadets_when_changing_state(interface, last_button)
+    elif button_clicked_changes_data(last_button):
         return post_form_allocate_cadets_when_changing_data(interface, last_button)
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
 def button_clicked_returns_new_form(last_button:str):
-    return cancel_menu_button.pressed(last_button) or \
-    add_button.pressed(last_button) or \
+    return add_button.pressed(last_button) or \
     was_add_partner_button(last_button) or \
     sort_order_change_button.pressed(last_button)
 
 
 
 
-def button_clicked_changes_state_but_not_data(last_button:str):
+def button_clicked_changes_state(last_button:str):
     return is_button_cadet_selection(last_button) or \
      is_button_day_select(last_button)
 
 
-def button_clicked_changs_data(last_button: str):
+def button_clicked_changes_data(last_button: str):
     return save_menu_button.pressed(last_button) or \
         update_limits_button.pressed(last_button) or \
         is_event_picker_button(last_button) or \
@@ -98,28 +101,32 @@ def button_clicked_changs_data(last_button: str):
 
 def post_form_allocate_cadets_returns_new_form(interface: abstractInterface, last_button:str) -> Union[Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
-    if cancel_menu_button.pressed(last_button):
-        interface.clear_cache()
-        return previous_form(interface)
 
-    elif add_button.pressed(last_button):
+    ## save any existing changes first
+    update_data_given_allocation_form(interface)
+    interface.flush_cache_to_store()  ## new form so flush
+
+    if add_button.pressed(last_button):
         return interface.get_new_form_given_function(display_add_unregistered_cadet_from_allocation_form)
 
     elif was_add_partner_button(last_button):
-        ## DISPLAY NEW FORM
         cadet = get_cadet_given_add_partner_button_name(object_store=interface.object_store, button=last_button)
         update_state_for_specific_cadet(interface=interface, cadet=cadet)
         return interface.get_new_form_given_function(display_add_cadet_partner)
 
     elif sort_order_change_button.pressed(last_button):
+
         return interface.get_new_form_given_function(display_change_sort_order)
 
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
 
-def post_form_allocate_cadets_when_changing_state_and_not_data(interface: abstractInterface, last_button:str) -> Union[Form, NewForm]:
-    ## Called by post on view events form, so both stage and event name are set
+def post_form_allocate_cadets_when_changing_state(interface: abstractInterface, last_button:str) -> Union[Form, NewForm]:
+    ## save existing form changes first
+    update_data_given_allocation_form(interface)
+    interface.save_cache_to_store_without_clearing()
+
     if  is_button_cadet_selection(last_button):
         cadet_button_clicked(interface)
 
@@ -133,8 +140,11 @@ def post_form_allocate_cadets_when_changing_state_and_not_data(interface: abstra
 
 
 def post_form_allocate_cadets_when_changing_data(interface: abstractInterface, last_button:str) -> Union[Form, NewForm]:
+    ## save existing form changes first, might be overwritten later by button actions
+    update_data_given_allocation_form(interface)
+
     if save_menu_button.pressed(last_button):
-        update_data_given_allocation_form(interface)
+        pass # already saved
 
     elif update_limits_button.pressed(last_button):
         update_club_boat_limits_for_event_from_form(interface)

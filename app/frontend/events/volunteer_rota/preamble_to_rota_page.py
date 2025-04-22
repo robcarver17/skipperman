@@ -19,6 +19,7 @@ from app.frontend.events.volunteer_rota.volunteer_targets_and_group_notes import
 
 from app.frontend.events.volunteer_rota.volunteer_targets_and_group_notes import get_summary_instructor_group_table
 from app.frontend.events.volunteer_rota.warnings import warn_on_all_volunteers
+from app.frontend.forms.swaps import is_ready_to_swap
 from app.objects.abstract_objects.abstract_form import Link
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import (
@@ -34,8 +35,10 @@ from app.objects.events import Event
 def get_preamble_before_table(
     interface: abstractInterface, event: Event
 ) -> ListOfLines:
-    header_buttons = get_header_buttons_for_rota(interface)
     title = Heading("Volunteer rota for event %s" % str(event), centred=True, size=4)
+    header_buttons = get_header_buttons_for_rota(interface)
+    if is_ready_to_swap(interface):
+        return ListOfLines([header_buttons, title, _______________, Heading("Swapping: click on swapper or cancel", size=3, centred=True)])
 
     summary_of_filled_roles = get_summary_table(interface=interface, event=event)
     summary_group_table = get_summary_group_table(interface=interface, event=event)

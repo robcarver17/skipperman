@@ -491,7 +491,6 @@ def post_form_for_generic_report_arrangement_options(
         report_generator.arrangement_options_display_form_function
     )
 
-    ## No need to save as only buttons in form
     report_generator_with_specific_parameters = (
         report_generator.add_specific_parameters_for_type_of_report(
             interface.object_store
@@ -505,6 +504,8 @@ def post_form_for_generic_report_arrangement_options(
         return previous_form
 
     elif create_report_button.pressed(last_button_pressed):
+        ## No need to save first as only buttons in form
+
         return create_generic_report(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,

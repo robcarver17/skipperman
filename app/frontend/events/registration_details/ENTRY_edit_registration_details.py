@@ -55,7 +55,7 @@ def display_form_edit_registration_details_given_event_and_sort_order(
                 nav_buttons_top,
                 _______________,
                 Line(
-                    Heading("Registration details for %s" % event, centred=True, size=4)
+                    Heading("Registration details for %s" % event, centred=True, size=3)
                 ),
                 _______________,
                 sort_buttons,
@@ -71,7 +71,7 @@ def display_form_edit_registration_details_given_event_and_sort_order(
 help_button = HelpButton("registration_editing_help")
 add_button = Button("Add unregistered sailor", nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT)
 
-nav_buttons_top = ButtonBar([cancel_menu_button, save_menu_button, help_button])
+nav_buttons_top = ButtonBar([cancel_menu_button, save_menu_button, add_button, help_button])
 nav_buttons_bottom = ButtonBar([cancel_menu_button, save_menu_button, add_button, help_button])
 
 from app.frontend.shared.buttons import is_button_sort_order, sort_order_from_button_pressed
@@ -84,13 +84,18 @@ def post_form_edit_registration_details(
     last_button_pressed = interface.last_button_pressed()
 
     if cancel_menu_button.pressed(last_button_pressed):
+        interface.flush_cache_to_store()
         return previous_form(interface)
 
-    elif add_button.pressed(last_button_pressed):
+    save_details_from_form(interface)
+
+    if add_button.pressed(last_button_pressed):
+        interface.flush_cache_to_store() ## new form
         return interface.get_new_form_given_function(display_add_unregistered_cadet_from_registration_form)
 
     elif save_menu_button.pressed(last_button_pressed):
-        save_details_from_form(interface)
+        ## already saved
+        pass
 
     elif is_button_sort_order(last_button_pressed):
         ## no change to stage required, just sort order

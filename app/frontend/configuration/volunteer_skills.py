@@ -42,7 +42,7 @@ from app.objects.abstract_objects.abstract_form import Form, NewForm, textInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
-header_text = "List of volunteer skills: add, edit, re-order"
+header_text = "List of volunteer skills: add, edit, re-order. Re-ordering will cancel any other changes made since saving."
 
 
 def display_form_config_volunteer_skills(interface: abstractInterface) -> Form:

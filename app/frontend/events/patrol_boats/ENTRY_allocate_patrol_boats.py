@@ -71,8 +71,10 @@ def post_form_view_for_patrol_boat_allocation(
         interface.flush_cache_to_store()
         return previous_form(interface)
 
+    update_data_from_form_entries_in_patrol_boat_allocation_page(interface)
+
     if save_menu_button.pressed(last_button_pressed):
-        update_data_from_form_entries_in_patrol_boat_allocation_page(interface)
+        pass # already done
 
     elif is_copy_button(last_button_pressed):
         update_if_copy_button_pressed(
@@ -91,7 +93,6 @@ def post_form_view_for_patrol_boat_allocation(
         update_if_delete_volunteer_button_pressed(
             interface=interface, delete_button=last_button_pressed
         )
-
 
     elif is_swap_button(last_button_pressed):
         update_if_swap_button_pressed(

@@ -26,19 +26,19 @@ To add a new user enter their username, password (twice), select an access group
 
 ## Change password manually
 
-To change a password just type the new password in both boxes next to the relevant user and click `Save edits` (**do not click the `Reset password` button!**).
+To change a password just type the new password in both boxes next to the relevant user and click `Save edits` (**do not click the `Reset password to random value` button!**). Note that pressing `Add a new user` will also save changes to passwords.
 
 ## Reset password
 
-If you want to reset a password to something random, click on `Reset password`. You will see a message pop up which you can copy and paste to send to the user with their new login credentials.
+If you want to reset a password to something random, click on `Reset password to random value`. You will see a message pop up which you can copy and paste to send to the user with their new login credentials.
 
 ## Change access group or associated volunteer
 
-Choose the new group or volunteer from the dropdown and click `Save edits`. 
+Choose the new group or volunteer from the dropdown and click `Save edits`. Note that pressing any `Reset password` button, or `Add a new user` will also save changes.
 
 Note: A volunteer can be associated with more than one user. This can be useful if you want to set up a backup admin account.
 
-Note: You can't change the access group if a user is the only admin user.
+Note: You can't change the access group if the relevant user is the only admin user.
 
 ## Delete a user
 
@@ -48,11 +48,11 @@ You can also delete a user by selecting the delete button next to their name.
 
 You can't delete a user if they are the only admin user.
 
-# I am locked out of my admin account(s)
+# ADVANCED: I am locked out of my admin account(s)
 
 If you are locked out of your Skipperman admin account for some reason, and you only have one admin account or have forgotten the passwords to all of them, then assuming you have access to the cloud service running Skipperman, it's possible to recover it by:
 
-- temporarily renaming the username/password file (thus making it invisible to Skipperman): from the home directory `cd /skipperman_user_data/secure/; mv userlist.csv userlist_backup.csv` 
+- temporarily rename the username/password file (thus making it invisible to Skipperman): from the home directory `cd /skipperman_user_data/secure/; mv userlist.csv userlist_backup.csv` 
 - delete the entire line in that renamed file starting with your username
 - go to the Skipperman home page, and log in as the default admin user, username: default, password: default
 - You will get the warning **USING DEFAULT ADMIN USER BECAUSE NO SECURITY FILE CREATED YET - ADD A PROPER ADMIN USER ASAP!! (Use Administration Menu)**

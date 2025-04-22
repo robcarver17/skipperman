@@ -28,6 +28,7 @@ def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str
         update_if_copy_first_role_to_empty_roles_button_pressed(interface=interface)
 
     elif copy_and_overwrite_all_roles_from_first_role_button.pressed(copy_button):
+        ### FIXME: CHange to new form and confirm!
         update_if_copy_first_role_and_overwrite_button_pressed(interface=interface)
 
     elif  last_button_was_copy_previous_role(copy_button):

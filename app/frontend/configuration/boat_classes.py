@@ -20,7 +20,7 @@ from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.boat_classes import BoatClass, ListOfBoatClasses
 
-header_text = "List of boat classes: add, edit, re-order"
+header_text = "List of boat classes: add, edit, re-order. Re-ordering will cancel any other changes made since saving."
 
 
 def display_form_config_boat_classes_page(interface: abstractInterface) -> Form:

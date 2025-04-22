@@ -22,7 +22,7 @@ from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.patrol_boats import PatrolBoat, ListOfPatrolBoats
 
-header_text = "List of club patrol boats: add, edit, or re-order"
+header_text = "List of club patrol boats: add, edit, or re-order. Re-ordering will cancel any other changes made since saving."
 
 
 def display_form_config_patrol_boats_page(interface: abstractInterface) -> Form:

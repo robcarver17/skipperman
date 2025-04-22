@@ -25,7 +25,7 @@ from app.objects.club_dinghies import ClubDinghy, ListOfClubDinghies
 from app.objects.composed.club_dinghy_limits import ClubDinghyAndGenericLimit
 from app.objects.exceptions import arg_not_passed
 
-header_text = "List of club dinghies: add, edit or re-order"
+header_text = "List of club dinghies: add, edit or re-order. Re-ordering will cancel any other changes made since saving."
 
 
 def display_form_config_club_dinghies_page(interface: abstractInterface) -> Form:

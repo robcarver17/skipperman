@@ -35,8 +35,12 @@ def post_form_security(interface: abstractInterface) -> Union[Form, NewForm]:
     if cancel_menu_button.pressed(last_button):
         interface.clear_cache()
         return interface.get_new_display_form_for_parent_of_function(post_form_security)
-    elif save_entry_button.pressed(last_button):
-        save_changes_to_existing_users(interface)
+
+    save_changes_to_existing_users(interface)
+
+    if save_entry_button.pressed(last_button):
+        ## already done
+        pass
     elif add_entry_button.pressed(last_button):
         add_new_user_if_present(interface)
     elif is_delete_button(last_button):

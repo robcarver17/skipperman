@@ -85,7 +85,7 @@ def display_form_allocate_cadets_at_event(
         ListOfLines(
             [
                 nav_bar_top,
-                Heading("Cadets in %s " % str(event), size=4),
+                Heading("Cadets in %s: Allocate groups, boats and sailing partners" % str(event), size=3),
                 _______________,
                 _______________,
                 allocations_and_class_summary,
@@ -109,8 +109,8 @@ def display_form_allocate_cadets_at_event(
 help_button = HelpButton("group_allocation_help")
 add_button = Button("Add unregistered sailor", nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT)
 
-nav_bar_top = ButtonBar([cancel_menu_button, save_menu_button, help_button, guess_boat_button])
-nav_bar_bottom = ButtonBar([cancel_menu_button, save_menu_button, help_button, add_button])
+nav_bar_top = ButtonBar([cancel_menu_button, save_menu_button, guess_boat_button, add_button, help_button ])
+nav_bar_bottom = ButtonBar([cancel_menu_button, save_menu_button, add_button, help_button])
 
 
 

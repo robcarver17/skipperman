@@ -28,7 +28,7 @@ from app.data_access.configuration.field_list import (
     _SPECIAL_FIELDS, REGISTRATION_DATE, CADET_DATE_OF_BIRTH
 )
 from app.objects.exceptions import missing_data, arg_not_passed
-
+from app.objects.cadets import default_cadet
 
 # can't use generic methods here as based on dataclasses
 class RowInRegistrationData(GenericSkipperManObject, dict):
@@ -51,7 +51,14 @@ class RowInRegistrationData(GenericSkipperManObject, dict):
     def clear_values(self):
         my_keys = self.list_of_keys_excluding_special_keys()
         for key in my_keys:
-            self[key] = ""
+            if key==REGISTRATION_DATE:
+                pass
+
+            elif key==CADET_DATE_OF_BIRTH:
+                self[key] = default_cadet.date_of_birth
+
+            else:
+                self[key] = ""
 
     def get_item(self, key, default=""):
         return self.get(key, default)

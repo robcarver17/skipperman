@@ -13,6 +13,10 @@ Before Cadet week
 - add food / clothing to giant data dump #54
 - add missing stuff to data dumps #55
 
+# done recently
+
+- instructor / group summary table on volunteer rota
+
 # Version 2.3
 - instructors can do attendance online
 - fix a few odd bugs, clean up where cache flushing used

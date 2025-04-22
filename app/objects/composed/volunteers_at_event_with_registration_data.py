@@ -25,6 +25,9 @@ class RegistrationDataForVolunteerAtEvent:
     )
     notes: str = ""
 
+    def update_notes(self, notes):
+        self.notes = notes
+
     def clear_user_data(self):
         self.any_other_information = ""
         self.notes = ""
@@ -83,7 +86,7 @@ class DictOfRegistrationDataForVolunteerAtEvent(
 
     def update_volunteer_notes_at_event(self, volunteer: Volunteer, new_notes: str):
         volunteer_data = self.get_data_for_volunteer(volunteer)
-        volunteer_data.notes = new_notes
+        volunteer_data.update_notes(new_notes)
         self[volunteer] = volunteer_data
 
         self.list_of_volunteers_at_event_with_id.update_notes(
@@ -136,7 +139,7 @@ class DictOfRegistrationDataForVolunteerAtEvent(
             volunteer=volunteer, day=day
         )
 
-    def get_data_for_volunteer(self, volunteer: Volunteer, default=arg_not_passed):
+    def get_data_for_volunteer(self, volunteer: Volunteer, default=arg_not_passed) -> RegistrationDataForVolunteerAtEvent:
         data = self.get(volunteer, default)
         if data is arg_not_passed:
             raise MissingData("Volunteer %s not found" % str(volunteer))

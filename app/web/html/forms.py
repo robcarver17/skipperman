@@ -1,5 +1,7 @@
 import datetime
 
+import numpy as np
+
 from app.web.html.html_components import Html, HtmlWrapper
 from app.objects.exceptions import arg_not_passed
 
@@ -36,13 +38,15 @@ def html_form_text_area_input(
 ):
     if value is arg_not_passed:
         value = ""
-        
-    if len(value)==0:
-        rows_html = 'rows="1"'
-    else:
-        rows_html = ""
 
-    return Html('%s <textarea name="%s" wrap="soft" %s>%s</textarea>' % (input_label, input_name, rows_html, value))
+    if len(value)==0:
+        size_html = 'rows="1"'
+    else:
+        cols = 20
+        rows = int(np.ceil(len(value)/20))
+        size_html = 'rows="%d" cols="%d"' % (rows, cols)
+
+    return Html('%s <textarea name="%s" wrap="soft" %s>%s</textarea>' % (input_label, input_name, size_html, value))
 
 
 def html_form_email_input(

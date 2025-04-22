@@ -14,7 +14,7 @@ from app.objects.events import Event
 from app.objects.groups import Group
 from app.objects.utils import flatten
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
-from app.objects.abstract_objects.abstract_form import textInput
+from app.objects.abstract_objects.abstract_form import textInput, textAreaInput
 
 
 def get_summary_table_of_instructors_and_groups_for_event(object_store: ObjectStore, event: Event) -> Table:
@@ -88,11 +88,11 @@ def get_summary_row_of_instructors_for_group_at_event( object_store: ObjectStore
                        instructor_count])
 
 
-def get_group_notes_for_group(object_store: ObjectStore, event: Event, group: Group) -> textInput:
+def get_group_notes_for_group(object_store: ObjectStore, event: Event, group: Group) -> textAreaInput:
     dict_of_group_notes = get_dict_of_group_notes_at_event(object_store=object_store, event=event)
     notes =dict_of_group_notes.notes_for_group(group)
 
-    return textInput(
+    return textAreaInput(
         input_label="",
         input_name=get_group_notes_field_value(group),
         value=notes

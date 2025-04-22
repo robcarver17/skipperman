@@ -20,7 +20,7 @@ from app.objects.abstract_objects.abstract_form import (
     Image,
     dropDownInput,
     listInput,
-    checkboxInput,
+    checkboxInput, textAreaInput,
 )
 from app.objects.abstract_objects.abstract_interface import UrlsOfInterest
 from app.objects.abstract_objects.abstract_lines import (
@@ -82,7 +82,7 @@ from app.web.html.forms import (
     html_radio_input,
     html_dropdown_input,
     html_list_input,
-    html_checkbox_input,
+    html_checkbox_input, html_form_text_area_input,
 )
 from app.web.html.config_html import DEBUG
 from app.web.html.html_components import horizontal_line
@@ -270,6 +270,13 @@ def get_html_for_element_in_line(
             input_label=element_in_line.input_label,
             input_name=element_in_line.input_name,
             value=element_in_line.value,
+        )
+    elif type(element_in_line) is textAreaInput:
+        return html_form_text_area_input(
+            input_label=element_in_line.input_label,
+            input_name=element_in_line.input_name,
+            value=element_in_line.value,
+
         )
     elif type(element_in_line) is emailInput:
         return html_form_email_input(

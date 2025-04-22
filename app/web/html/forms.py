@@ -21,12 +21,28 @@ def html_form_text_input(
 ):
     if value is not arg_not_passed:
         value_html = 'value="%s"' % value
+        size = min(10, int(len(value_html)))
     else:
         value_html = ""
+        size = 10
 
     return Html(
-        '%s: <input type="text" name="%s" %s />' % (input_label, input_name, value_html)
+        '%s <input type="text" name="%s" size = "%s" %s />' % (input_label, input_name, size, value_html)
     )
+
+
+def html_form_text_area_input(
+    input_label: str, input_name: str, value: str = arg_not_passed
+):
+    if value is arg_not_passed:
+        value = ""
+        
+    if len(value)==0:
+        rows_html = 'rows="1"'
+    else:
+        rows_html = ""
+
+    return Html('%s <textarea name="%s" wrap="soft" %s>%s</textarea>' % (input_label, input_name, rows_html, value))
 
 
 def html_form_email_input(

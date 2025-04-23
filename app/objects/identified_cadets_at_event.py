@@ -7,7 +7,7 @@ from app.objects.exceptions import MissingData
 from app.objects.generic_list_of_objects import (
     GenericListOfObjects,
     get_idx_of_unique_object_with_attr_in_list,
-    index_not_found,
+    index_not_found, get_idx_of_multiple_object_with_multiple_attr_in_list,
 )
 from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.exceptions import MultipleMatches
@@ -32,6 +32,13 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
     @property
     def _object_class_contained(self):
         return IdentifiedCadetAtEvent
+
+    def delete_cadet_from_identified_data(self, cadet_id:str):
+        while True:
+            list_of_idx =get_idx_of_multiple_object_with_multiple_attr_in_list(self, dict_of_attributes={'cadet_id': cadet_id})
+            if len(list_of_idx)==0:
+                break
+            self.pop(list_of_idx[0])
 
     def row_does_not_have_identified_cadet_including_test_cadets(self, row_id: str):
         return not self.row_has_identified_cadet_including_test_cadets(row_id)

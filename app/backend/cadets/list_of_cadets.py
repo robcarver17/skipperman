@@ -16,6 +16,13 @@ from app.data_access.store.object_definitions import (
 )
 from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME, SIMILARITY_LEVEL_TO_WARN_DATE
 
+def delete_cadet(object_store: ObjectStore, cadet: Cadet, areyousure=False):
+    if not areyousure:
+        return
+
+    list_of_cadets = get_list_of_cadets(object_store)
+    list_of_cadets.pop_cadet(cadet)
+    update_list_of_cadets(object_store=object_store, updated_list_of_cadets=list_of_cadets)
 
 def get_matching_cadet(object_store: ObjectStore, cadet: Cadet) -> Cadet:
     list_of_cadets = get_list_of_cadets(object_store)
@@ -75,11 +82,20 @@ def get_list_of_cadets_sorted_by_first_name(object_store: ObjectStore) -> ListOf
 
 
 def get_sorted_list_of_cadets(
-    object_store: ObjectStore, sort_by: str = arg_not_passed
+    object_store: ObjectStore, sort_by: str = arg_not_passed, similar_cadet: Cadet = arg_not_passed,
+        exclude_cadet: Cadet = arg_not_passed
 ) -> ListOfCadets:
     master_list = get_list_of_cadets(object_store)
 
-    return sort_a_list_of_cadets(master_list=master_list, sort_by=sort_by)
+    list_of_cadets = sort_a_list_of_cadets(master_list=master_list, sort_by=sort_by, similar_cadet=similar_cadet)
+    if exclude_cadet is not arg_not_passed:
+        try:
+            list_of_cadets.remove(exclude_cadet)
+        except:
+            pass
+
+    return list_of_cadets
+
 
 
 def get_list_of_cadets_as_str(list_of_cadets: ListOfCadets) -> List[str]:

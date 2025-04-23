@@ -96,9 +96,15 @@ class CsvDataListOfCadetsWithTickListItems(
         list_of_cadets_with_tick_list_items: ListOfTickListItemsAndTicksForSpecificCadet,
         cadet_id: str,
     ):
+        if len(list_of_cadets_with_tick_list_items)==0:
+            filename = self.get_path_and_filename_for_named_csv_file(LIST_OF_CADETS_WITH_TICK_LIST_ITEMS_FOR_EACH_CADET, additional_file_identifiers=cadet_id)
+            self.delete(filename)
+            return
+
         ## Arguably we could get this from list_of_cadets_with_tick_list_items but it makese the API cleaner
         self.write_object(
             list_of_cadets_with_tick_list_items,
             file_identifier=LIST_OF_CADETS_WITH_TICK_LIST_ITEMS_FOR_EACH_CADET,
             additional_file_identifiers=cadet_id,
         )
+

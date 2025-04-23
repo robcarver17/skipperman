@@ -109,6 +109,12 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return CadetWithIdAtEvent
 
+    def delete_cadet_with_id(self, cadet_id:str):
+        idx=self.idx_of_items_with_cadet_id(cadet_id, default=missing_data)
+        if idx is missing_data:
+            return
+        self.pop(idx)
+
     def clear_private_data(self):
         for cadet_with_id_at_event in self:
             cadet_with_id_at_event.clear_private_data()

@@ -35,6 +35,7 @@ from app.frontend.shared.cadet_state import update_state_for_specific_cadet
 from app.backend.cadets.list_of_cadets import (
     get_sorted_list_of_cadets, all_sort_types,
 )
+from app.objects.exceptions import arg_not_passed
 
 
 def display_form_view_of_cadets(interface: abstractInterface) -> Form:
@@ -99,10 +100,13 @@ def form_for_view_individual_cadet(interface: abstractInterface) -> NewForm:
 
 
 def get_table_of_cadets_with_buttons(
-    interface: abstractInterface, sort_order=SORT_BY_SURNAME
+    interface: abstractInterface, sort_order=SORT_BY_SURNAME, exclude_cadet: Cadet = arg_not_passed,
+        similar_cadet: Cadet = arg_not_passed
 ) -> Table:
     list_of_cadets = get_sorted_list_of_cadets(
-        object_store=interface.object_store, sort_by=sort_order
+        object_store=interface.object_store, sort_by=sort_order,
+        similar_cadet=similar_cadet,
+        exclude_cadet=exclude_cadet
     )
     list_of_rows = [
         row_of_form_for_cadets_with_buttons(cadet) for cadet in list_of_cadets

@@ -98,6 +98,17 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
         super().__init__(raw_list)
         self._list_of_cadets_with_id_at_event = list_of_cadets_with_id_at_event
 
+    def delete_cadet_from_event_and_return_messages(self, cadet: Cadet) -> List[str]:
+        try:
+            self.pop(cadet)
+            self.list_of_cadets_with_id_at_event.delete_cadet_with_id(cadet.id)
+            return ["- Remove cadet from registration data"]
+        except Exception as e:
+            print("%s" % str(e))
+            return []
+
+
+
     def update_health_for_existing_cadet_at_event(
             self, cadet: Cadet, new_health: str
     ):

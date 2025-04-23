@@ -9,7 +9,7 @@ from app.objects.generic_list_of_objects import (
     get_unique_object_with_multiple_attr_in_list,
     get_idx_of_unique_object_with_multiple_attr_in_list,
 )
-
+from app.objects.generic_list_of_objects import get_idx_of_multiple_object_with_multiple_attr_in_list
 
 @dataclass
 class CadetIdWithGroup(GenericSkipperManObjectWithIds):
@@ -22,6 +22,13 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return CadetIdWithGroup
+
+    def delete_cadet_with_id_from_event(self, cadet_id:str):
+        while True:
+            list_of_idx =get_idx_of_multiple_object_with_multiple_attr_in_list(self, dict_of_attributes={'cadet_id': cadet_id})
+            if len(list_of_idx)==0:
+                break
+            self.pop(list_of_idx[0])
 
     def remove_group_allocation_for_cadet_on_day(self, cadet_id: str, day: Day):
         self.update_group_for_cadet_on_day(

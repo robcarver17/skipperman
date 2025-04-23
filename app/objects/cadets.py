@@ -2,6 +2,8 @@ from dataclasses import dataclass
 import datetime
 from typing import List
 
+import numpy as np
+
 from app.data_access.configuration.configuration import (
     SIMILARITY_LEVEL_TO_WARN_DATE,
     SIMILARITY_LEVEL_TO_WARN_NAME,
@@ -276,6 +278,13 @@ class ListOfCadets(GenericListOfObjectsWithIds):
             else:
                 return default
 
+    def sort_by_both_against_cadet(self, cadet: Cadet):
+        similarity_scores_and_cadets = [dict(cadet=cadet_in_list, score=np.mean([
+            cadet.similarity_name(cadet_in_list),
+           cadet.similarity_dob(cadet_in_list)])) for cadet_in_list in self]
+        return self._sort_by_similarity_given_scores(similarity_scores_and_cadets)
+
+
     def sort_by_similarity_name_against_cadet(self, cadet: Cadet):
         similarity_scores_and_cadets = [dict(cadet=cadet_in_list, score=cadet.similarity_name(cadet_in_list)) for cadet_in_list in self]
         return self._sort_by_similarity_given_scores(similarity_scores_and_cadets)
@@ -421,10 +430,16 @@ def sort_a_list_of_cadets(
         return master_list.sort_by_dob_asc()
     elif sort_by == SORT_BY_DOB_DSC:
         return master_list.sort_by_dob_desc()
-    elif sort_by == SORT_BY_SIMILARITY_NAME:
+
+    if similar_cadet is arg_not_passed:
+        raise Exception("Need to pass cadet if sorting by similarity, sort order %s" % sort_by)
+
+    if sort_by == SORT_BY_SIMILARITY_NAME:
         return master_list.sort_by_similarity_name_against_cadet(cadet=similar_cadet)
     elif sort_by == SORT_BY_SIMILARITY_DOB:
         return master_list.sort_by_similarity_dob_against_cadet(cadet=similar_cadet)
+    elif sort_by == SORT_BY_SIMILARITY_BOTH:
+        return master_list.sort_by_both_against_cadet(cadet=similar_cadet)
     else:
         raise Exception("Sort order %s not known" % sort_by)
 
@@ -436,3 +451,4 @@ SORT_BY_DOB_ASC = "Sort by date of birth, oldest 1st"
 SORT_BY_DOB_DSC = "Sort by date of birth, youngest 1st"
 SORT_BY_SIMILARITY_DOB = "Sort by similarity of DOB"
 SORT_BY_SIMILARITY_NAME = "Sort by similarity of name"
+SORT_BY_SIMILARITY_BOTH = "Sort by similarity of name and DOB"

@@ -111,3 +111,14 @@ def update_dict_of_qualifications_for_all_cadets(
         object_definition=object_definition_for_dict_of_qualifications_for_cadets,
         new_object=dict_of_qualifications,
     )
+
+def delete_all_qualifications_for_cadet(object_store: ObjectStore, cadet: Cadet, areyousure=False):
+    if not areyousure:
+        return
+
+    dict_of_qualifications = get_dict_of_qualifications_for_all_cadets(object_store)
+    current_qualifications = dict_of_qualifications.qualifications_for_cadet(cadet)
+    dict_of_qualifications.delete_all_qualifications_for_cadet(cadet)
+    update_dict_of_qualifications_for_all_cadets(dict_of_qualifications=dict_of_qualifications, object_store=object_store)
+
+    return current_qualifications

@@ -5,7 +5,7 @@ from typing import List
 from app.objects.generic_list_of_objects import (
     get_idx_of_unique_object_with_attr_in_list,
     get_unique_object_with_attr_in_list,
-get_unique_object_with_multiple_attr_in_list
+    get_unique_object_with_multiple_attr_in_list, get_idx_of_multiple_object_with_multiple_attr_in_list
 )
 
 from app.objects.exceptions import (
@@ -107,6 +107,13 @@ class ListOfCadetsWithIdsAndQualifications(GenericListOfObjectsWithIds):
                 date=datetime.datetime.today(),
             )
         )
+
+    def delete_all_qualifications_for_cadet(self, cadet_id:str):
+        while True:
+            list_of_idx =get_idx_of_multiple_object_with_multiple_attr_in_list(self, dict_of_attributes={'cadet_id': cadet_id})
+            if len(list_of_idx)==0:
+                break
+            self.pop(list_of_idx[0])
 
     def remove_qualification_from_cadet(self, cadet_id: str, qualification_id: str):
         cadet_with_qualification = get_unique_object_with_multiple_attr_in_list(

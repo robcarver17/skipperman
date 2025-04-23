@@ -135,8 +135,13 @@ class CsvDataAttendanceAtEventsForSpecificCadet(DataAttendanceAtEventsForSpecifi
         self, list_of_attendance: ListOfRawAttendanceItemsForSpecificCadet,
             cadet_id:str
     ):
-        self.write_object(
-            list_of_attendance,
-            file_identifier=ATTENDANCE_FILE_FOR_SPECIFIC_CADET,
-            additional_file_identifiers=cadet_id,
-        )
+        if len(list_of_attendance)==0:
+            filename = self.get_path_and_filename_for_named_csv_file(ATTENDANCE_FILE_FOR_SPECIFIC_CADET,
+                                                                     additional_file_identifiers=cadet_id)
+            self.delete(filename)
+        else:
+            self.write_object(
+                list_of_attendance,
+                file_identifier=ATTENDANCE_FILE_FOR_SPECIFIC_CADET,
+                additional_file_identifiers=cadet_id,
+            )

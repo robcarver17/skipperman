@@ -75,17 +75,11 @@ class CadetOnCommittee:
 class ListOfCadetsOnCommittee(List[CadetOnCommittee]):
     def __init__(
         self,
-        list_of_cadets: ListOfCadets,
-        list_of_cadets_with_id_on_commitee: ListOfCadetsWithIdOnCommittee,
+            raw_list: List[CadetOnCommittee],
+            list_of_cadets_with_id_on_commitee: ListOfCadetsWithIdOnCommittee,
     ):
-        list_of_members = (
-            create_raw_list_of_cadet_committee_members_from_underlying_data(
-                list_of_cadets=list_of_cadets,
-                list_of_cadets_with_id_on_commitee=list_of_cadets_with_id_on_commitee,
-            )
-        )
         self._list_of_cadets_with_id_on_committee = list_of_cadets_with_id_on_commitee
-        super().__init__(list_of_members)
+        super().__init__(raw_list)
 
     def toggle_selection_for_cadet(self, cadet: Cadet):
         specific_member = self.get_cadet_on_committee(cadet)
@@ -121,6 +115,14 @@ class ListOfCadetsOnCommittee(List[CadetOnCommittee]):
                 if cadet_on_committee.currently_serving()
             ]
         )
+
+    def delete_cadet_from_data(self, cadet: Cadet):
+        for cadet_on_committee in self:
+            if cadet_on_committee.cadet_id == cadet.id:
+                self.remove(cadet_on_committee)
+                break
+
+        self.list_of_cadets_with_id_on_commitee.remove_cadet_with_id(cadet_id=cadet.id)
 
     def add_new_member(
         self,
@@ -160,8 +162,12 @@ def create_list_of_cadet_committee_members_from_underlying_data(
     list_of_cadets: ListOfCadets,
     list_of_cadets_with_id_on_commitee: ListOfCadetsWithIdOnCommittee,
 ) -> ListOfCadetsOnCommittee:
-    return ListOfCadetsOnCommittee(
+    raw_list = create_raw_list_of_cadet_committee_members_from_underlying_data(
         list_of_cadets=list_of_cadets,
+        list_of_cadets_with_id_on_commitee=list_of_cadets_with_id_on_commitee
+    )
+    return ListOfCadetsOnCommittee(
+        raw_list=raw_list,
         list_of_cadets_with_id_on_commitee=list_of_cadets_with_id_on_commitee,
     )
 

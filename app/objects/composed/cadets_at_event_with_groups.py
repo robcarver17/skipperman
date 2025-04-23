@@ -183,6 +183,14 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
         self._event = event
         self._list_of_groups = list_of_groups
 
+    def  delete_cadet_from_event_and_return_messages(self, cadet):
+        try:
+            group_allocation_dict =self.pop(cadet)
+            self.list_of_cadet_ids_with_groups.delete_cadet_with_id_from_event(cadet.id)
+            return ["- removed group allocation %s" % str(group_allocation_dict)]
+        except:
+            return []
+
     def add_or_upate_group_for_cadet_on_day(
         self,
         cadet: Cadet,

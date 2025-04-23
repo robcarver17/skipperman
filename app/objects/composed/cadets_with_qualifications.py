@@ -71,6 +71,14 @@ class DictOfQualificationsForCadets(Dict[Cadet, QualificationsForCadet]):
             cadet_id=cadet.id, qualification_id=qualification.id
         )
 
+    def delete_all_qualifications_for_cadet(self, cadet: Cadet):
+        try:
+            self.pop(cadet)
+        except:
+            return
+
+        self.list_of_cadets_with_ids_and_qualifications.delete_all_qualifications_for_cadet(cadet_id=cadet.id)
+
     def remove_qualification_from_cadet(
         self, cadet: Cadet, qualification: Qualification
     ):

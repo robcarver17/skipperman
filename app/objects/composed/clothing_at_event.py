@@ -95,12 +95,13 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
 
         try:
             self.pop(cadet)
+            self.list_of_cadets_with_clothing_and_ids.remove_clothing_for_cadet_at_event(
+                cadet.id
+            )
+            return ['- removed clothing requirements']
         except:
-            pass
+            return []
 
-        self.list_of_cadets_with_clothing_and_ids.remove_clothing_for_cadet_at_event(
-            cadet.id
-        )
 
     def clear_colour_group_for_cadet(
         self,

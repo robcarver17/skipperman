@@ -87,6 +87,9 @@ class AttendanceAcrossDaysAndEvents(Dict[Event, AttendanceAcrossDays]):
     def attendance_for_cadet_at_event(self, event: Event) -> AttendanceAcrossDays:
         return self.get(event, AttendanceAcrossDays())
 
+    @property
+    def list_of_events(self):
+        return list(self.keys())
 
 class DictOfAttendanceAcrossEvents(Dict[Cadet, AttendanceAcrossDaysAndEvents]):
     def __init__(self, raw_dict: Dict[Cadet, AttendanceAcrossDaysAndEvents],

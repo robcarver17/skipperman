@@ -15,7 +15,6 @@ from app.objects.day_selectors import DaySelector, Day
 from app.objects.exceptions import MissingData, arg_not_passed
 from app.objects.food import no_food_requirements
 from app.objects.groups import Group, unallocated_group
-from app.objects.registration_data import RowInRegistrationData
 
 from app.objects.registration_status import RegistrationStatus
 
@@ -100,6 +99,22 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
             dict_of_cadets_with_food_required_at_event
         )
 
+    def delete_cadet_from_event_and_return_messages(self, cadet: Cadet) -> List[str]:
+
+        messages = []
+        messages+=self.dict_of_cadets_with_days_and_groups.delete_cadet_from_event_and_return_messages(cadet)
+        messages+=self.dict_of_cadets_and_boat_class_and_partners.delete_cadet_from_event_and_return_messages(cadet)
+        messages+=self.dict_of_cadets_with_food_required_at_event.remove_food_requirements_for_cadet_at_event(cadet)
+        messages+=self.dict_of_cadets_with_clothing_at_event.remove_clothing_for_cadet_at_event(cadet)
+        messages += self.dict_of_cadets_and_club_dinghies_at_event.remove_cadet_from_event(cadet)
+
+        messages+=self.dict_of_cadets_with_registration_data.delete_cadet_from_event_and_return_messages(cadet) ## do last or may get errors
+
+
+        if len(messages)>0:
+            messages.insert(0, "Will remove cadet from event %s" % str(self.event))
+
+        return messages
 
     def update_data_row_for_existing_cadet_at_event(
             self,

@@ -3,7 +3,8 @@ import datetime
 
 from app.objects.exceptions import MissingData
 
-from app.objects.generic_list_of_objects import GenericListOfObjects
+from app.objects.generic_list_of_objects import GenericListOfObjects, \
+    get_idx_of_multiple_object_with_multiple_attr_in_list
 from app.objects.generic_objects import GenericSkipperManObject
 
 
@@ -57,3 +58,10 @@ class ListOfCadetsWithIdOnCommittee(GenericListOfObjects):
 
     def list_of_cadet_ids(self):
         return [cadet_with_id.cadet_id for cadet_with_id in self]
+
+    def remove_cadet_with_id(self, cadet_id:str):
+        while True:
+            list_of_idx =get_idx_of_multiple_object_with_multiple_attr_in_list(self, dict_of_attributes={'cadet_id': cadet_id})
+            if len(list_of_idx)==0:
+                break
+            self.pop(list_of_idx[0])

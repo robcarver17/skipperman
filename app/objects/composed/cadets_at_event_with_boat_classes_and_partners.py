@@ -22,7 +22,7 @@ from app.objects.partners import (
     from_cadet_id_to_partner_cadet,
     no_partner_allocated,
     from_partner_cadet_to_id_or_string,
-    NoCadetPartner,
+    NoCadetPartner, valid_partnership_given_partner_cadet,
 )
 from app.objects.utils import most_common, flatten
 
@@ -68,6 +68,14 @@ class DictOfDaysBoatClassAndPartners(Dict[Day, BoatClassAndPartnerAtEventOnDay])
     @property
     def list_of_days(self):
         return list(self.keys())
+
+    def delete_boat_class_and_partner_on_day_and_return_deleted_item(self, day: Day):
+        original_item = self.boat_class_and_partner_on_day(day, default=missing_data)
+        if original_item is missing_data:
+            return missing_data
+        self.pop(day)
+
+        return original_item
 
     def allocate_partner_for_cadet_on_day(
         self, day: Day, cadet_partner: Union[NoCadetPartner, Cadet]
@@ -231,6 +239,33 @@ class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPart
         )
         self._list_of_boat_classes = list_of_boat_classes
         self._event = event
+
+    def delete_cadet_from_event_and_return_messages(self, cadet: Cadet):
+        messages = []
+        for day in self.event.days_in_event():
+            messages+=self.delete_cadet_from_event_on_day_and_return_messages(cadet=cadet, day=day)
+
+        return messages
+
+    def delete_cadet_from_event_on_day_and_return_messages(self, cadet: Cadet, day: Day):
+        messages = []
+
+        ## do this first or will fail later
+        partner = self.boat_classes_and_partner_for_cadet(cadet).partner_on_day(day)
+        if valid_partnership_given_partner_cadet(partner):
+            self.breakup_partnership(cadet, partner, day)
+            messages.append("- was sailing with %s on %s, partnership broken up" % (partner.name, day.name))
+
+        deleted_item = self.boat_classes_and_partner_for_cadet(cadet).delete_boat_class_and_partner_on_day_and_return_deleted_item(day)
+
+        if deleted_item is missing_data:
+            return messages
+        else:
+            messages.append(" - deleted %s on %s" % (str(deleted_item), day.name))
+
+        self.list_of_cadets_at_event_with_boat_class_and_partners_with_ids.clear_boat_details_from_existing_cadet_id(cadet_id=cadet.id, day=day)
+
+        return messages
 
     def create_fresh_two_handed_partnership(
         self, cadet: Cadet, partner_cadet: Cadet, day: Day

@@ -2,15 +2,28 @@ from typing import Dict
 
 from app.backend.groups.previous_groups import get_group_allocations_for_event_active_cadets_only
 from app.backend.registration_data.cadet_registration_data import get_availability_dict_for_cadets_at_event
-from app.data_access.store.object_definitions import object_definition_for_dict_of_cadets_with_attendance
+from app.data_access.store.object_definitions import object_definition_for_dict_of_cadets_with_attendance, object_definition_for_attendance_of_cadets_for_cadet_id
 from app.data_access.store.object_store import ObjectStore
-from app.objects.attendance import unknown, registration_not_taken
+from app.objects.attendance import unknown, registration_not_taken, ListOfRawAttendanceItemsForSpecificCadet
 from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.composed.attendance import DictOfAttendanceAcrossEvents, AttendanceOnDay
+from app.objects.attendance import Attendance
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.groups import Group
 
+
+def delete_raw_attendance_for_cadet_and_return_list_of_events(object_store: ObjectStore, cadet: Cadet):
+    attendance = get_attendance_across_events_for_list_of_cadets(object_store, ListOfCadets([cadet]))
+    events = attendance.attendance_for_cadet_across_days_and_events(cadet).list_of_events
+
+    object_store.update(
+        ListOfRawAttendanceItemsForSpecificCadet([]),
+        object_definition=object_definition_for_attendance_of_cadets_for_cadet_id,
+        cadet_id = cadet.id
+    )
+
+    return events
 
 def get_attendance_across_events_for_list_of_cadets(object_store: ObjectStore, list_of_cadets: ListOfCadets) -> DictOfAttendanceAcrossEvents:
     return object_store.get(

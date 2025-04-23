@@ -211,3 +211,17 @@ def add_new_cadet_manually_to_event(
         row_in_registration_data=new_row,
         cadet=new_cadet,
     )
+
+def delete_cadet_from_event_and_return_messages(object_store: ObjectStore, event: Event, cadet: Cadet, areyousure: bool = False) -> List[str]:
+    if not areyousure:
+        return []
+
+    event_info = get_dict_of_all_event_info_for_cadets(
+        object_store=object_store, event=event, active_only=True
+    )
+    messages = event_info.delete_cadet_from_event_and_return_messages(cadet)
+    update_dict_of_all_event_info_for_cadets(dict_of_all_event_info_for_cadets=event_info,
+                                             object_store=object_store,
+                                             )
+
+    return messages

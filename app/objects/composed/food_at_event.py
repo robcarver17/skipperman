@@ -45,8 +45,9 @@ class DictOfCadetsWithFoodRequirementsAtEvent(Dict[Cadet, FoodRequirements]):
             self.list_of_cadets_with_ids_and_food_requirements.remove_food_requirements_for_cadet_at_event(
                 cadet_id=cadet.id
             )
+            return ["- removed food requirements"]
         except:
-            pass
+            return []
 
     def subset_matches_food_required_description(
         self, specific_food_requirements: FoodRequirements

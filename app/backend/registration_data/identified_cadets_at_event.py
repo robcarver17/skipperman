@@ -215,3 +215,14 @@ def update_list_of_identified_cadets_at_event(
         object_definition=object_definition_for_identified_cadets_at_event,
         event_id=event.id,
     )
+
+def delete_cadet_from_identified_data_and_return_rows_deleted(object_store: ObjectStore, event: Event, cadet: Cadet, areyousure=False):
+    if not areyousure:
+        return
+
+    list_of_identified_cadets = get_list_of_identified_cadets_at_event(object_store=object_store, event=event)
+    rows = list_of_identified_cadets.list_of_row_ids_given_cadet_id_allowing_duplicates(cadet_id=cadet.id)
+    list_of_identified_cadets.delete_cadet_from_identified_data(cadet.id)
+    update_list_of_identified_cadets_at_event(object_store=object_store, identified_cadets_at_event=list_of_identified_cadets, event=event)
+
+    return len(rows)

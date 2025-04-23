@@ -20,7 +20,7 @@ from app.data_access.store.object_store import ObjectStore
 from app.data_access.store.object_definitions import (
     object_definition_for_list_of_cadet_committee_members,
 )
-from app.objects.exceptions import MissingData
+from app.objects.exceptions import MissingData, missing_data
 
 
 def get_list_of_cadets_who_are_members_but_not_on_committee_or_elected_ordered_by_name(
@@ -139,6 +139,21 @@ def toggle_selection_for_cadet_committee_member(
         updated_list_of_cadets_on_committee=list_of_committee_members,
     )
 
+
+def delete_cadet_from_committee_data(object_store: ObjectStore, cadet: Cadet, areyousure=False):
+    if not areyousure:
+        return
+
+    list_of_committee_members = get_list_of_cadets_on_committee(object_store)
+    existing_membership = list_of_committee_members.get_cadet_on_committee(cadet, default=missing_data)
+
+    list_of_committee_members.delete_cadet_from_data(cadet)
+    update_list_of_cadets_on_committee(
+        object_store=object_store,
+        updated_list_of_cadets_on_committee=list_of_committee_members,
+    )
+
+    return existing_membership
 
 ## STORAGE
 def get_list_of_cadets_currently_serving(object_store: ObjectStore) -> ListOfCadets:

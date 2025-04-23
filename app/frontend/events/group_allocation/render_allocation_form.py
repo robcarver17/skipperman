@@ -117,29 +117,11 @@ nav_bar_bottom = ButtonBar([cancel_menu_button, save_menu_button, add_button, he
 def get_allocations_and_classes_detail(
     interface: abstractInterface, event: Event
 ) -> ListOfLines:
-    object_store = interface.object_store
-    allocations = PandasDFTable(summarise_allocations_for_event(
-        object_store=object_store, event=event
-    ))
-    if len(allocations) == 0:
-        allocations = "No group allocations made"
-    else:
-        allocations = DetailListOfLines(ListOfLines([allocations]), name="Groups allocated")
 
-    club_dinghies = DetailListOfLines(ListOfLines(["Allocated club dinghies (numbers are sailors, not boats. * means over capacity):",
-                                                   get_club_dinghies_form(interface=interface, event=event)]),
-                                      name="Club boats")
-
-    classes = PandasDFTable(summarise_class_attendance_for_event(
-        event=event, object_store=object_store
-    ))
-    if len(classes) == 0:
-        classes = "No boat classes allocated"
-    else:
-        classes = DetailListOfLines(ListOfLines([classes]), name = "Boat classes")
-
-    previous_event_selection_form = DetailListOfLines(get_previous_event_selection_form(interface=interface, event=event),
-                                                      name="Select previous events to show")
+    allocations = get_allocations_detail(interface=interface, event=event)
+    club_dinghies = get_club_dinghies_detail(interface=interface, event=event)
+    classes = get_classes_detail(interface=interface, event=event)
+    previous_event_selection_form = get_previous_event_selection_detail(interface=interface, event=event)
 
     return (
         ListOfLines(
@@ -157,6 +139,39 @@ def get_allocations_and_classes_detail(
         )
     )
 
+def get_allocations_detail(interface: abstractInterface, event: Event):
+    allocations = PandasDFTable(summarise_allocations_for_event(
+        object_store=interface.object_store, event=event
+    ))
+    if len(allocations) == 0:
+        allocations = "No group allocations made"
+    else:
+        allocations = DetailListOfLines(ListOfLines([allocations]), name="Groups allocated")
+
+    return allocations
+
+def get_club_dinghies_detail(interface: abstractInterface, event: Event):
+    return DetailListOfLines(
+        ListOfLines(
+            [
+                "Allocated club dinghies (numbers are sailors, not boats. * means over capacity):",
+                                                   get_club_dinghies_form(interface=interface, event=event)]),
+                                      name="Club boats")
+
+def get_classes_detail(interface: abstractInterface, event: Event):
+    classes = PandasDFTable(summarise_class_attendance_for_event(
+        event=event, object_store=interface.object_store
+    ))
+    if len(classes) == 0:
+        classes = "No boat classes allocated"
+    else:
+        classes = DetailListOfLines(ListOfLines([classes]), name = "Boat classes")
+
+    return classes
+
+def get_previous_event_selection_detail(interface: abstractInterface, event: Event):
+    return DetailListOfLines(get_previous_event_selection_form(interface=interface, event=event),
+                                                      name="Select previous events to show")
 
 def get_sort_line(sort_order):
     current_sort_order = ", ".join(sort_order)

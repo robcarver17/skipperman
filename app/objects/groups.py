@@ -164,3 +164,7 @@ class ListOfGroups(GenericListOfObjectsWithIds):
             pass
         else:
             self.append(unallocated_group)
+
+    def remove_unallocated(self):
+        if unallocated_group in self:
+            self.remove(unallocated_group)

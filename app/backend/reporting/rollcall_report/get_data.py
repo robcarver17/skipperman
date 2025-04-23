@@ -15,6 +15,12 @@ from app.objects.events import Event
 
 from app.objects.groups import unallocated_group, Group
 from app.objects.cadets import ListOfCadets, Cadet
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
+    get_dict_of_all_event_info_for_cadets,
+    get_attendance_matrix_for_list_of_cadets_at_event_with_passed_event_info,
+)
+from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
+
 
 
 def get_dict_of_df_for_reporting_rollcalls_given_event_and_parameters(
@@ -35,13 +41,6 @@ def get_dict_of_df_for_reporting_rollcalls_given_event_and_parameters(
     return dict_of_df
 
 
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
-    get_dict_of_all_event_info_for_cadets,
-    get_attendance_matrix_for_list_of_cadets_at_event_with_passed_event_info,
-)
-from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
-
-
 def get_dict_of_df_for_reporting_rollcalls_with_flags(
     object_store: ObjectStore,
     event: Event,
@@ -53,7 +52,8 @@ def get_dict_of_df_for_reporting_rollcalls_with_flags(
 ) -> Dict[str, pd.DataFrame]:
 
     dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event
+        object_store=object_store, event=event,
+        active_only=True
     )
     list_of_groups = (
         dict_of_all_event_data.dict_of_cadets_with_days_and_groups.all_groups_at_event()

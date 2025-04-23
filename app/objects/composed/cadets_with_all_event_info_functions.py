@@ -31,6 +31,10 @@ def cadets_not_allocated_to_group_on_at_least_one_day_attending(
 
     list_of_cadets = []
     for cadet in dict_of_cadets_with_registration_data.list_of_cadets():
+        inactive = not dict_of_cadets_with_registration_data.registration_data_for_cadet(cadet).status.is_active
+        if inactive:
+            continue
+
         if cadet_is_not_allocated_to_group_on_at_least_one_day_attending(
             cadet=cadet,
             dict_of_cadets_with_registration_data=dict_of_cadets_with_registration_data,

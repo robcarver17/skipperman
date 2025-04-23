@@ -35,6 +35,7 @@ def summarise_allocations_for_event(
     )
 
     groups = dict_of_cadets_with_days_and_groups.all_groups_at_event()
+    groups.remove_unallocated()
 
     return summarise_generic_counts_for_event_over_days_returning_df(
         get_id_function=get_relevant_cadets_for_group_on_day,

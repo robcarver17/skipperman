@@ -11,7 +11,7 @@ from app.objects.generic_list_of_objects import (
 )
 from app.objects.generic_objects import GenericSkipperManObjectWithIds
 from app.objects.utils import similar
-from app.objects.exceptions import arg_not_passed, MissingData
+from app.objects.exceptions import arg_not_passed, MissingData, missing_data
 
 
 @dataclass
@@ -56,6 +56,13 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return Volunteer
+
+    def delete_volunteer(self, volunteer: Volunteer):
+        current_volunteer_idx = self.index_of_id(volunteer.id, default=missing_data)
+        if current_volunteer_idx is missing_data:
+            return
+
+        self.pop(current_volunteer_idx)
 
     def add(self, volunteer: Volunteer):
         try:

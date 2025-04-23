@@ -278,21 +278,30 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         self.refresh_data_for_volunteer_from_underlying(volunteer)
 
     def delete_volunteer_from_event(self, volunteer: Volunteer):
+
+        try:
+            self.pop(volunteer)
+        except:
+            return []
+
+        messages =[]
+        messages.append("Deleting data for %s" % self.event)
         volunteer_registration_data = (
             self.dict_of_registration_data_for_volunteers_at_event
         )
         volunteer_registration_data.drop_volunteer(volunteer)
+        messages.append("- dropped from registration data")
 
         days_and_roles_data = self.dict_of_volunteers_at_event_with_days_and_roles
-        days_and_roles_data.drop_volunteer(volunteer)
+        messages+=days_and_roles_data.drop_volunteer(volunteer)
 
         patrol_boat_data = self.dict_of_volunteers_at_event_with_patrol_boats
-        patrol_boat_data.drop_volunteer(volunteer)
+        messages+=patrol_boat_data.drop_volunteer(volunteer)
 
         food_data = self.dict_of_volunteers_with_food_at_event
-        food_data.drop_volunteer(volunteer)
+        messages+=food_data.drop_volunteer(volunteer)
 
-        self.pop(volunteer)
+        return messages
 
     def make_volunteer_available_on_day(self, volunteer: Volunteer, day: Day):
         volunteer_registration_data = (

@@ -4,10 +4,9 @@ from app.backend.groups.previous_groups import get_group_allocations_for_event_a
 from app.backend.registration_data.cadet_registration_data import get_availability_dict_for_cadets_at_event
 from app.data_access.store.object_definitions import object_definition_for_dict_of_cadets_with_attendance, object_definition_for_attendance_of_cadets_for_cadet_id
 from app.data_access.store.object_store import ObjectStore
-from app.objects.attendance import unknown, registration_not_taken, ListOfRawAttendanceItemsForSpecificCadet
+from app.objects.attendance import registration_not_taken, ListOfRawAttendanceItemsForSpecificCadet
 from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.composed.attendance import DictOfAttendanceAcrossEvents, AttendanceOnDay
-from app.objects.attendance import Attendance
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.groups import Group

@@ -224,6 +224,13 @@ class DictOfVolunteersWithSkills(Dict[Volunteer, SkillsDict]):
             volunteer_id=volunteer.id, skill_id=skill.id
         )
 
+    def delete_all_skills_for_volunteer(self,  volunteer: Volunteer):
+        try:
+            self.pop(volunteer)
+            self.list_of_volunteers_with_skills_and_ids.delete_all_skills_for_volunteer(volunteer.id)
+        except:
+            pass
+
     def delete_skill_for_volunteer(self, skill: Skill, volunteer: Volunteer):
         if not self.skill_held_for_volunteer(skill=skill, volunteer=volunteer):
             return
@@ -235,7 +242,7 @@ class DictOfVolunteersWithSkills(Dict[Volunteer, SkillsDict]):
         )
 
     @property
-    def list_of_volunteers_with_skills_and_ids(self):
+    def list_of_volunteers_with_skills_and_ids(self) -> ListOfVolunteerSkillsWithIds:
         return self._list_of_volunteers_with_skills_and_ids
 
     @property

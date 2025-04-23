@@ -65,3 +65,4 @@ def get_cadet_to_delete_from_state(interface: abstractInterface) -> Cadet:
 
 def set_cadet_to_delete_in_state(interface: abstractInterface, cadet: Cadet):
     update_state_for_specific_cadet(interface=interface, cadet=cadet)
+

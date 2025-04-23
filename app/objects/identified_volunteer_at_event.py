@@ -4,7 +4,7 @@ from typing import List
 from app.objects.exceptions import arg_not_passed, MissingData
 from app.objects.generic_list_of_objects import (
     GenericListOfObjects,
-    get_unique_object_with_attr_in_list,
+    get_unique_object_with_attr_in_list, get_idx_of_multiple_object_with_multiple_attr_in_list,
 )
 
 from app.objects.generic_objects import GenericSkipperManObject
@@ -46,6 +46,7 @@ class IdentifiedVolunteerAtEvent(GenericSkipperManObject):
         return RowIDAndIndex(row_id=self.row_id, volunteer_index=self.volunteer_index)
 
 
+
 class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
     @property
     def _object_class_contained(self):
@@ -75,6 +76,17 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
                 row_id=row_id, volunteer_index=volunteer_index
             )
         )
+
+    def delete_all_rows_with_volunteer_id(self, volunteer_id: str):
+        while True:
+            idx_list = get_idx_of_multiple_object_with_multiple_attr_in_list(self,
+                                                                             dict_of_attributes={
+                                                                                 'volunteer_id':volunteer_id
+                                                                             })
+            if len(idx_list)==0:
+                break
+
+            self.pop(idx_list[0])
 
     def add_identified_volunteer(
         self, row_id: str, volunteer_id: str, volunteer_index: int

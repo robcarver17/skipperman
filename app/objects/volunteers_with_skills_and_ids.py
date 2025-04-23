@@ -11,7 +11,7 @@ from app.objects.generic_objects import GenericSkipperManObject
 from app.objects.generic_list_of_objects import (
     get_unique_object_with_multiple_attr_in_list,
 )
-
+from app.objects.generic_list_of_objects import get_idx_of_multiple_object_with_multiple_attr_in_list
 
 @dataclass
 class VolunteerSkillWithIds(GenericSkipperManObject):
@@ -32,6 +32,17 @@ class ListOfVolunteerSkillsWithIds(GenericListOfObjects):
             return
 
         self.append(VolunteerSkillWithIds(volunteer_id=volunteer_id, skill_id=skill_id))
+
+    def delete_all_skills_for_volunteer(self, volunteer_id: str):
+        while True:
+            list_of_idx = get_idx_of_multiple_object_with_multiple_attr_in_list(self,
+                                                                                dict_of_attributes={
+                                                                                    'volunteer_id': volunteer_id
+                                                                                })
+            if len(list_of_idx)==0:
+                break
+
+            self.pop(list_of_idx[0])
 
     def delete(self, volunteer_id: str, skill_id: str):
         matching_object = self.object_matching_ids(

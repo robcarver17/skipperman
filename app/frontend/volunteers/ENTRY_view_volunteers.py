@@ -9,6 +9,7 @@ from app.frontend.volunteers.update_skills_from_csv import display_form_refresh_
 from app.frontend.volunteers.view_individual_volunteer import (
     display_form_view_individual_volunteer,
 )
+from app.objects.exceptions import arg_not_passed
 from app.objects.volunteers import Volunteer
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -96,10 +97,13 @@ def view_specific_volunteer_form(interface: abstractInterface):
 
 
 def get_list_of_volunteers_with_buttons(
-    interface: abstractInterface, sort_order=SORT_BY_SURNAME
+    interface: abstractInterface, sort_order=SORT_BY_SURNAME, similar_volunteer: Volunteer =arg_not_passed,
+        exclude_volunteer: Volunteer = arg_not_passed
 ) -> Table:
     list_of_volunteers = get_sorted_list_of_volunteers(
-        object_store=interface.object_store, sort_by=sort_order
+        object_store=interface.object_store, sort_by=sort_order,
+        similar_volunteer=similar_volunteer,
+        exclude_volunteer=exclude_volunteer
     )
 
     list_with_buttons = [

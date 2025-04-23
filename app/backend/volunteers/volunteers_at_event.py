@@ -110,10 +110,12 @@ def delete_volunteer_at_event(
     all_volunteer_data = get_dict_of_all_event_data_for_volunteers(
         object_store=object_store, event=event
     )
-    all_volunteer_data.delete_volunteer_from_event(volunteer)
+    messages = all_volunteer_data.delete_volunteer_from_event(volunteer)
     update_dict_of_all_event_data_for_volunteers(
         object_store=object_store, dict_of_all_event_data=all_volunteer_data
     )
+
+    return messages
 
 
 def update_volunteer_availability_at_event(

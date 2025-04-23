@@ -379,11 +379,14 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
     def drop_volunteer(self, volunteer: Volunteer):
         print("dropping %s" % volunteer)
         try:
+            existing = self.patrol_boats_for_volunteer(volunteer)
             self.pop(volunteer)
-        except:
-            return
+            self._drop_volunteer_underlying_data(volunteer)
 
-        self._drop_volunteer_underlying_data(volunteer)
+            return ['- dropped patrol boats %s' % str(existing)]
+        except:
+            return []
+
 
     def _drop_volunteer_underlying_data(self, volunteer: Volunteer):
 

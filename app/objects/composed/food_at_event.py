@@ -163,13 +163,15 @@ class DictOfVolunteersWithFoodRequirementsAtEvent(Dict[Volunteer, FoodRequiremen
 
     def drop_volunteer(self, volunteer: Volunteer):
         try:
+            existing = self.food_for_volunteer(volunteer)
             self.pop(volunteer)
+            self.list_of_volunteers_with_ids_and_food_requirements.drop_volunteer(
+                volunteer_id=volunteer.id
+            )
+            return ["- dropped food requirements %s" % str(existing)]
         except:
-            return
+            return []
 
-        self.list_of_volunteers_with_ids_and_food_requirements.drop_volunteer(
-            volunteer_id=volunteer.id
-        )
 
     def add_new_volunteer_with_food_to_event(
         self,

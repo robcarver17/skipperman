@@ -491,11 +491,14 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
 
     def drop_volunteer(self, volunteer: Volunteer):
         try:
+            existing =self.days_and_roles_for_volunteer(volunteer)
             self.pop(volunteer)
+            self._list_of_volunteers_with_id_in_role_at_event = self._list_of_volunteers_with_id_in_role_at_event.drop_volunteer(
+                volunteer)
+            return [" - removed allocations %s" % str(existing)]
         except:
-            pass
+            return []
 
-        self._list_of_volunteers_with_id_in_role_at_event = self._list_of_volunteers_with_id_in_role_at_event.drop_volunteer(volunteer)
 
     def delete_role_for_volunteer_on_day(self, day: Day, volunteer: Volunteer):
         roles_for_volunteer = self.days_and_roles_for_volunteer(volunteer)

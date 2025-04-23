@@ -49,6 +49,13 @@ class ListOfCadetVolunteerAssociations(List[CadetVolunteerAssociation]):
             cadet_id=cadet.id, volunteer_id=volunteer.id
         )
 
+    def delete_all_associations_for_volunteer(self, volunteer:Volunteer):
+        list_of_cadets = self.list_of_cadets_associated_with_volunteer(volunteer)
+        for cadet in list_of_cadets:
+            self.delete_association(cadet=cadet, volunteer=volunteer)
+
+        return list_of_cadets
+
     def delete_all_associations_for_cadet(self, cadet: Cadet):
         list_of_volunteers = self.list_of_volunteers_associated_with_cadet(cadet)
         for volunteer in list_of_volunteers:

@@ -45,10 +45,21 @@ def get_list_of_volunteers_as_str(list_of_volunteers: ListOfVolunteers) -> List[
 
 
 def get_sorted_list_of_volunteers(
-    object_store: ObjectStore, sort_by: str = arg_not_passed
+    object_store: ObjectStore, sort_by: str = arg_not_passed,
+        similar_volunteer: Volunteer =arg_not_passed,
+        exclude_volunteer: Volunteer = arg_not_passed
 ) -> ListOfVolunteers:
     master_list = get_list_of_volunteers(object_store)
-    return sort_list_of_volunteers(list_of_volunteers=master_list, sort_by=sort_by)
+
+    new_list = sort_list_of_volunteers(list_of_volunteers=master_list, sort_by=sort_by, similar_volunteer=similar_volunteer)
+
+    if not exclude_volunteer is arg_not_passed:
+        try:
+            new_list.remove(exclude_volunteer)
+        except:
+            pass
+
+    return new_list
 
 
 def sort_list_of_volunteers(
@@ -60,6 +71,8 @@ def sort_list_of_volunteers(
     elif sort_by == SORT_BY_FIRSTNAME:
         return list_of_volunteers.sort_by_firstname()
     elif sort_by == SORT_BY_NAME_SIMILARITY:
+        if similar_volunteer is arg_not_passed:
+            raise Exception("Need to pass similar volunteer")
         return list_of_volunteers.sort_by_similarity(volunteer=similar_volunteer)
     else:
         return list_of_volunteers
@@ -68,6 +81,14 @@ def sort_list_of_volunteers(
 SORT_BY_SURNAME = "Sort by surname"
 SORT_BY_FIRSTNAME = "Sort by first name"
 SORT_BY_NAME_SIMILARITY = "Sort by similarity with name"
+
+def delete_volunteer(object_store: ObjectStore, volunteer: Volunteer, areyousure=False):
+    if not areyousure:
+        return
+
+    list_of_volunteers = get_list_of_volunteers(object_store)
+    list_of_volunteers.delete_volunteer(volunteer)
+    update_list_of_volunteers(object_store=object_store, list_of_volunteers=list_of_volunteers)
 
 def get_list_of_volunteers(object_store: ObjectStore) -> ListOfVolunteers:
     return object_store.get(object_definition_for_volunteers)

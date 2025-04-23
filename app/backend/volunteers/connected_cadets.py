@@ -170,6 +170,25 @@ def delete_all_connections_for_cadet(
     return list_of_associated_volunteers
 
 
+
+def delete_all_connections_for_volunteer(
+    object_store: ObjectStore, volunteer: Volunteer, areyousure: bool =False
+):
+    if not areyousure:
+        return
+
+    list_of_cadet_volunteer_associations = get_list_of_cadet_volunteer_association(
+        object_store
+    )
+    list_of_associated_cadets = list_of_cadet_volunteer_associations.delete_all_associations_for_volunteer(volunteer)
+    update_list_of_cadet_volunteer_association(
+        list_of_cadet_volunteer_associations=list_of_cadet_volunteer_associations,
+        object_store=object_store,
+    )
+
+    return list_of_associated_cadets
+
+
 def add_list_of_cadets_to_volunteer_connection(
     object_store: ObjectStore, volunteer: Volunteer, list_of_cadets: List[Cadet]
 ):

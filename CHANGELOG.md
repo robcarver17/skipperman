@@ -15,6 +15,7 @@ Before Cadet week
 
 # done recently
 
+- delete cadet option added
 - added extra copy menus and generally make sure you are sure before doing something crazy
 - any button press now saves form inputs
 - instructor / group summary table on volunteer rota

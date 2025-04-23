@@ -62,7 +62,6 @@ def delete_cadet_in_data_and_return_warnings(object_store: ObjectStore,
 
     list_of_events= get_list_of_events(object_store)
     for event in list_of_events:
-
         event_messages = delete_cadet_from_event_and_return_messages(object_store=object_store, event=event, cadet=cadet_to_delete, areyousure=True)
         rows_identified = delete_cadet_from_identified_data_and_return_rows_deleted(object_store=object_store, event=event, cadet=cadet_to_delete, areyousure=True)
         if rows_identified>0:

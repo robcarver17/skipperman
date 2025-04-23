@@ -1,3 +1,5 @@
+from copy import copy
+
 from app.objects.volunteer_skills import ListOfSkills, Skill
 from app.objects.volunteers import Volunteer
 
@@ -78,6 +80,18 @@ def update_dict_of_volunteers_with_skills(
         object_definition=object_definition_for_dict_of_volunteers_with_skills,
     )
 
+
+def delete_volunteer_from_skills_and_return_skills(object_store: ObjectStore, volunteer: Volunteer, areyousure=False) -> ListOfSkills:
+    if not areyousure:
+        return ListOfSkills([])
+    dict_of_volunteer_skills = get_dict_of_volunteers_with_skills(object_store)
+    current_skills =copy(dict_of_volunteer_skills.dict_of_skills_for_volunteer(volunteer).as_list_of_skills())
+    dict_of_volunteer_skills.delete_all_skills_for_volunteer(volunteer)
+    update_dict_of_volunteers_with_skills(
+        object_store=object_store, dict_of_volunteer_skills=dict_of_volunteer_skills
+    )
+
+    return current_skills
 
 def get_list_of_skills(object_store: ObjectStore) -> ListOfSkills:
     return object_store.get(object_definition_for_list_of_skills)

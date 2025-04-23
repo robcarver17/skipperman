@@ -40,8 +40,7 @@ from typing import  Union
 from app.frontend.events.patrol_boats.patrol_boat_buttons import (
     get_remove_volunteer_button,
 )
-from app.frontend.events.patrol_boats.copy_buttons import get_copy_buttons_for_boat_allocation, copy_all_boats_button, \
-    copyover_all_boats_button, copy_all_boats_and_roles_button, copyover_all_boats_and_roles_button
+from app.frontend.events.patrol_boats.copy_buttons import get_copy_buttons_for_boat_allocation,    access_copy_menu_button
 from app.frontend.events.patrol_boats.swapping import get_swap_buttons_for_boat_rota, get_swap_cancel_button_name, \
     CANCEL_SWAP_BUTTON_LABEL
 from app.frontend.events.patrol_boats.patrol_boat_dropdowns import (
@@ -227,10 +226,7 @@ def get_top_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonB
         [
             cancel_menu_button,
             save_menu_button,
-            copy_all_boats_button,
-            copy_all_boats_and_roles_button,
-            copyover_all_boats_button,
-            copyover_all_boats_and_roles_button,
+            access_copy_menu_button,
             help_button,
         ]
     )

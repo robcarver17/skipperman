@@ -13,10 +13,6 @@ from app.frontend.events.volunteer_rota.button_values import (
     from_previous_role_copy_button_to_volunteer, from_copyoverwrite_button_to_volunteer_and_day,
     from_copyfill_button_to_volunteer_and_day,
 )
-from app.frontend.events.volunteer_rota.volunteer_rota_buttons import (
-    copy_all_roles_from_first_role_button,
-    copy_and_overwrite_all_roles_from_first_role_button
-)
 
 from app.frontend.events.volunteer_rota.button_values import last_button_was_copy_previous_role, last_button_pressed_was_copyover_button,    last_button_pressed_was_copyfill_button
 
@@ -24,14 +20,7 @@ from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str):
-    if copy_all_roles_from_first_role_button.pressed(copy_button):
-        update_if_copy_first_role_to_empty_roles_button_pressed(interface=interface)
-
-    elif copy_and_overwrite_all_roles_from_first_role_button.pressed(copy_button):
-        ### FIXME: CHange to new form and confirm!
-        update_if_copy_first_role_and_overwrite_button_pressed(interface=interface)
-
-    elif  last_button_was_copy_previous_role(copy_button):
+    if  last_button_was_copy_previous_role(copy_button):
         update_if_copy_previous_role_button_pressed(
             interface=interface, copy_button=copy_button
         )

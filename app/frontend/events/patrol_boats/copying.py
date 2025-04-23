@@ -9,25 +9,14 @@ from app.backend.rota.copying import (
     copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days,
 )
 
-from app.frontend.events.patrol_boats.copy_buttons import is_copy_individual_volunteer_button, \
-    from_copy_button_type_to_copy_parameters, copy_all_boats_button, copyover_all_boats_button, \
-    copy_all_boats_and_roles_button, copyover_all_boats_and_roles_button
+from app.frontend.events.patrol_boats.copy_buttons import     from_copy_button_type_to_copy_parameters
+
 from app.frontend.events.patrol_boats.patrol_boat_buttons import get_day_and_volunteer_given_button_of_type
 from app.frontend.shared.buttons import get_type_of_button_pressed
 
 from app.frontend.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-
-
-
-def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str):
-    if is_copy_individual_volunteer_button(copy_button):
-        update_if_copy_individual_button_pressed(interface=interface, copy_button=copy_button)
-    else:
-        update_if_copy_global_button_pressed(interface=interface, copy_button=copy_button)
-
-
 
 
 def update_if_copy_individual_button_pressed(interface: abstractInterface, copy_button: str):
@@ -58,20 +47,6 @@ def update_if_copy_individual_button_pressed(interface: abstractInterface, copy_
             allow_replacement=copy_parameters.overwrite,
         )
 
-def update_if_copy_global_button_pressed(interface: abstractInterface, copy_button: str):
-    if copy_all_boats_button.pressed(copy_button):
-        copy_across_all_boats(interface)
-
-    elif copy_all_boats_and_roles_button.pressed(copy_button):
-        copy_across_all_boats_and_roles(interface)
-
-    elif copyover_all_boats_button.pressed(copy_button):
-        overwrite_allocation_across_all_boats(interface)
-
-    elif copyover_all_boats_and_roles_button.pressed(copy_button):
-        overwrite_copy_across_all_boats_and_roles(interface)
-    else:
-        raise Exception("Copy button %s not recognised" % copy_button)
 
 
 def copy_across_all_boats(interface: abstractInterface):

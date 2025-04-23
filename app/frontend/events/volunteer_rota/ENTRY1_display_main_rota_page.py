@@ -1,5 +1,6 @@
 from typing import Union
 
+from app.frontend.events.volunteer_rota.copy_menu import display_form_volunteer_copy_menu
 from app.frontend.events.volunteer_rota.parse_volunteer_table import (
     save_volunteer_matrix_and_return_filename,
     action_if_volunteer_button_pressed,
@@ -127,6 +128,8 @@ def post_form_view_for_volunteer_rota_if_new_form_returned(
         return action_if_volunteer_skills_button_pressed(
             interface=interface, volunteer_skills_button=last_button_pressed
         )
+    elif access_copy_menu.pressed(last_button_pressed):
+        return interface.get_new_form_given_function(display_form_volunteer_copy_menu)
     else:
         print("Missing button")
         return button_error_and_back_to_initial_state_form(interface)

@@ -31,7 +31,8 @@ Each row shows a volunteer who has been imported to the event automatically. You
 - Skills recorded in the Skipperman database. This is more likely to accurate, but you should still check it.
 - Previous volunteer role at the last event they did - very helpful for allocating.
 - For each day the role they are doing, and the buttons you can use to give them roles.
-- Notes which you can edit and other information from their registration form
+- Notes which you can edit.
+- Other information from their registration form.
 
 # Typical workflow
 
@@ -39,8 +40,9 @@ A typical workflow for a training weekend would be:
 
 - allocate instructors (DI, RCL and AI)
 - allocate lake manager if no deputy skipper
+- allocate bridge, if cadet's controlling the bridge
 - allocate rescue boat drivers, and possibly a safety lead
-- allocate other key people, eg ramp lead, ramp spotters and welfare people
+- allocate other key people, eg ramp lead and welfare people. Note ramp spotters are only required if cadets are not running the bridge.
 - allocate lake helpers
 - allocate ramp helpers
 
@@ -184,12 +186,12 @@ For example suppose we begin with this situation:
 
 
 ## Global copy
-
-There are also two 'global' copy buttons in the navigation bar which are equivalent to pressing the &#10234; or &#8646; buttons on the *earliest day a given volunteer has a role*, but for every single volunteer. This can be quite useful for a multiday event if you want to give everyone the same role/group; just fill them in on the first day and then press the copy/fill button. Then you can fine tune people who will be on different roles for different days. Be very careful with the 'Copy from the earliest allocated role and overwrite existing roles' button since if you have a lot of changes in allocation they will be lost. Again it's more likely to be useful when you are first putting together a rota.
+You can also access two 'global' copy buttons by clicking on the 'Copy and/or overwrite roles from first available day' button. This will bring up a menu page.
+These buttons are equivalent to pressing the &#10234; or &#8646; buttons on the *earliest day a given volunteer has a role*, but for every single volunteer. This can be quite useful for a multiday event if you want to give everyone the same role/group; just fill them in on the first day and then press the copy/fill button. Then you can fine tune people who will be on different roles for different days. Be very careful with the 'Click to copy earliest role and also overwrite all existing allocations...' button since if you have a lot of changes in allocation they will be lost. Again it's more likely to be useful when you are first putting together a rota.
 
 ### Global copy and fill 
 
-For example if we start with the rota shown in the previous image, and then press 'Copy from earliest allocated role to fill all roles', we get:
+For example if we start with the rota shown in the previous image, and then press 'Click to copy earliest role into any days when the volunteer does not have a role allocated' button, we get:
 
 ![volunteer_after_global_fill.png](/static/volunteer_after_global_fill.png)
 
@@ -203,11 +205,11 @@ Note that if a specific volunteer didn't have a role on Saturday, we would copy 
 
 ![volunteer_global_fill_pre_no_first_role.png](/static/volunteer_global_fill_pre_no_first_role.png)
 
-After pressing 'Copy from earliest allocated role to fill...' Beth would be a lake crew on Saturday - the earliest available role allocated (on Sunday).
+After pressing 'Click to copy earliest role...' Beth would be a lake crew on Saturday - the earliest available role allocated (on Sunday).
 
 ### Global copy, fill and overwrite
 
-If instead we start with the rota in the previous section, and this time press 'Copy from earliest allocated role to fill empty and overwrite existing roles', we get this:
+If instead we start with the rota in the previous section, and this time press 'Click to copy ... and also overwrite existing allocations', we get this:
 
 ![volunteer_After_global_overwrite.png](/static/volunteer_After_global_overwrite.png)
 

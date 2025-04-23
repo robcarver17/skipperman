@@ -4,7 +4,7 @@ from app.frontend.events.volunteer_rota.button_values import last_button_pressed
     last_button_pressed_was_location_button, last_button_pressed_was_skill_button
 from app.frontend.events.volunteer_rota.swapping import last_button_pressed_was_swap_button
 from app.frontend.events.volunteer_rota.volunteer_rota_buttons import clear_filter_button, apply_filter_button, \
-    download_matrix_button, add_volunteer_button, last_button_pressed_was_copy_button
+    download_matrix_button, add_volunteer_button, last_button_pressed_was_copy_button, access_copy_menu
 from app.frontend.events.volunteer_rota.volunteer_targets_and_group_notes import save_targets_button, \
     save_group_notes_button
 from app.frontend.shared.buttons import is_button_sort_order
@@ -35,4 +35,5 @@ def is_a_form_change_that_returns_a_new_form(last_button_pressed:str):
         download_matrix_button.pressed(last_button_pressed) or \
         add_volunteer_button.pressed(last_button_pressed) or \
         last_button_pressed_was_location_button(last_button_pressed) or\
-        last_button_pressed_was_skill_button(last_button_pressed)
+        last_button_pressed_was_skill_button(last_button_pressed) or \
+        access_copy_menu.pressed(last_button_pressed)

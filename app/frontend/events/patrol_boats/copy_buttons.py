@@ -12,12 +12,14 @@ from app.data_access.configuration.fixed import COPY_OVERWRITE_SYMBOL, BOAT_SHOR
 from app.frontend.events.patrol_boats.patrol_boat_buttons import \
     generic_button_name_for_volunteer_in_boat_at_event_on_day
 from app.frontend.shared.buttons import is_button_of_type
-from app.objects.abstract_objects.abstract_buttons import Button, check_if_button_in_list_was_pressed
+from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line
 from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import \
     VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
 from app.objects.day_selectors import Day
 
+
+access_copy_menu_button = Button("Copy/Overwrite patrol boats and/or roles from first available day", nav_button=True)
 
 @dataclass
 class CopyButtonParameters:
@@ -235,18 +237,6 @@ COPY_ROLE_FILL = "copyFillRoleButton"
 COPY_BOTH_FILL = "copyFillBothButton"
 
 
-def is_copy_button(last_button_pressed:str):
-    return is_copy_individual_volunteer_button(last_button_pressed) or \
-    check_if_button_in_list_was_pressed(last_button_pressed=last_button_pressed, list_of_buttons=
-                                        [
-    copy_all_boats_button,
-    copy_all_boats_and_roles_button,
-    copyover_all_boats_button,
-    copyover_all_boats_and_roles_button
-
-                                        ])
-
-
 def is_copy_individual_volunteer_button(button_value:str):
     return is_copy_overwrite_boat_button(button_value) or \
     is_copy_overwrite_role_button(button_value) or \
@@ -329,15 +319,3 @@ def copy_fill_button_name_for_both_volunteer_role_and_boat_at_event_on_day(
     )
 
 
-COPY_ALL_BOATS_BUTTON_LABEL = "Copy / fill boats from earliest"
-COPYOVER_ALL_BOATS_BUTTON_LABEL = "CAREFUL: Copy / overwrite boats from earliest"
-COPY_BOATS_AND_ROLES_BUTTON_LABEL = "Copy / fill all boats&roles from earliest"
-COPYOVER_BOATS_AND_ROLES_BUTTON_LABEL = "CAREFUL: Copy / overwrite all boats&roles from earliest"
-copy_all_boats_button = Button(COPY_ALL_BOATS_BUTTON_LABEL, nav_button=True)
-copyover_all_boats_button = Button(COPYOVER_ALL_BOATS_BUTTON_LABEL, nav_button=True)
-copy_all_boats_and_roles_button = Button(
-    COPY_BOATS_AND_ROLES_BUTTON_LABEL, nav_button=True
-)
-copyover_all_boats_and_roles_button = Button(
-    COPYOVER_BOATS_AND_ROLES_BUTTON_LABEL, nav_button=True
-)

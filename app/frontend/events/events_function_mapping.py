@@ -137,7 +137,8 @@ from app.frontend.events.food.automatically_get_food_data import (
 )
 from app.frontend.events.group_allocation.add_unregistered_cadet import display_add_unregistered_cadet_from_allocation_form, post_form_add_unregistered_cadet_from_allocation_form
 from app.frontend.events.group_allocation.change_sort_order import display_change_sort_order, post_change_sort_order
-
+from app.frontend.events.volunteer_rota.copy_menu import display_form_volunteer_copy_menu, post_form_volunteer_copy_menu
+from app.frontend.events.patrol_boats.copy_menu import display_form_patrol_boat_copy_menu, post_form_patrol_boat_copy_menu
 
 event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_functions(
     NestedDictOfMappings(
@@ -245,11 +246,18 @@ event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_func
                             display_form_edit_individual_volunteer_skills_from_rota,
                             post_form_edit_individual_volunteer_skills_from_rota,
                         ): 0,
+                        (
+                            display_form_volunteer_copy_menu,
+                            post_form_volunteer_copy_menu
+                        ): 0,
                     },
                     (
                         display_form_view_for_patrol_boat_allocation,
                         post_form_view_for_patrol_boat_allocation,
-                    ): 0,
+                    ): {
+                        (display_form_patrol_boat_copy_menu,
+                         post_form_patrol_boat_copy_menu):0
+                    },
                     (
                         display_form_view_for_food_requirements,
                         post_form_view_for_food_requirements,

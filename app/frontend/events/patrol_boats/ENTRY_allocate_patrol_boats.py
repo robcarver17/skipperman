@@ -1,7 +1,8 @@
+from app.frontend.events.patrol_boats.copy_menu import display_form_patrol_boat_copy_menu
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
-from app.frontend.events.patrol_boats.copying import (
-    update_if_copy_button_pressed, )
-from app.frontend.events.patrol_boats.copy_buttons import is_copy_button
+from app.frontend.events.patrol_boats.copying import  update_if_copy_individual_button_pressed
+from app.frontend.events.patrol_boats.copy_buttons import  is_copy_individual_volunteer_button, \
+    access_copy_menu_button
 from app.frontend.events.patrol_boats.parse_patrol_boat_table import *
 from app.frontend.events.patrol_boats.patrol_boat_buttons import (
     add_new_boat_button, is_delete_boat_button, is_delete_volunteer_button,
@@ -73,11 +74,17 @@ def post_form_view_for_patrol_boat_allocation(
 
     update_data_from_form_entries_in_patrol_boat_allocation_page(interface)
 
+    ## New form
+    if access_copy_menu_button.pressed(last_button_pressed):
+        interface.flush_cache_to_store()
+        return interface.get_new_form_given_function(display_form_patrol_boat_copy_menu)
+
+    ## remaining options do something and then return current form
     if save_menu_button.pressed(last_button_pressed):
         pass # already done
 
-    elif is_copy_button(last_button_pressed):
-        update_if_copy_button_pressed(
+    elif is_copy_individual_volunteer_button(last_button_pressed):
+        update_if_copy_individual_button_pressed(
             interface=interface, copy_button=last_button_pressed
         )
 

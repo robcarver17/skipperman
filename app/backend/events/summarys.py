@@ -90,6 +90,7 @@ def summarise_generic_counts_for_event_over_days_returning_df(
     df.columns = group_labels
 
     df = df.transpose()
+    df.loc['TOTAL'] = df.sum(axis=0,numeric_only=True)
 
     return df
 

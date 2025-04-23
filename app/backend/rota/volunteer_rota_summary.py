@@ -46,7 +46,7 @@ def get_summary_list_of_roles_and_groups_for_event_as_pd_df(
     single_df = from_list_of_day_summaries_to_single_df(
         all_day_summaries=all_day_summaries, event=event
     )
-
+    single_df.loc['TOTAL'] = single_df.sum(axis=0,numeric_only=True)
     return single_df
 
 
@@ -145,6 +145,7 @@ def get_summary_list_of_teams_and_groups_for_events_as_pd_df(
     single_df = from_list_of_day_summaries_to_single_df(
         all_day_summaries=all_day_summaries, event=event
     )
+    single_df.loc['TOTAL'] = single_df.sum(axis=0,numeric_only=True)
 
     return single_df
 

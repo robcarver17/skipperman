@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from app.data_access.configuration.configuration import (
-    SIMILARITY_LEVEL_TO_WARN_NAME,
+    SIMILARITY_LEVEL_TO_WARN_NAME, SIMILARITY_LEVEL_TO_WARN_VOLUNTEER_NAME,
 )
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
@@ -89,7 +89,7 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
     def similar_volunteers(
         self,
         volunteer: Volunteer,
-        name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME,
+        name_threshold: float = SIMILARITY_LEVEL_TO_WARN_VOLUNTEER_NAME,
     ) -> "ListOfVolunteers":
         similar_names = [
             other_volunteer

@@ -3,7 +3,7 @@ from app.data_access.store.object_store import ObjectStore
 
 from app.backend.volunteers.list_of_volunteers import (
     get_list_of_volunteers,
-    update_list_of_volunteers,
+    update_list_of_volunteers, list_of_similar_volunteers,
 )
 from app.objects.cadets import Cadet
 from app.objects.utilities.exceptions import arg_not_passed
@@ -55,11 +55,6 @@ def warning_str_for_similar_volunteers(
         )
     else:
         return ""
-
-
-def list_of_similar_volunteers(object_store: ObjectStore, volunteer: Volunteer) -> list:
-    list_of_volunteers = get_list_of_volunteers(object_store)
-    return list_of_volunteers.similar_volunteers(volunteer)
 
 
 def verify_volunteer_and_warn(object_store: ObjectStore, volunteer: Volunteer, cadet: Cadet = arg_not_passed) -> str:

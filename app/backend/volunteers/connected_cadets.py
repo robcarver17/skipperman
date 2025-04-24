@@ -1,7 +1,7 @@
 from copy import copy
 from typing import List
 
-from app.backend.volunteers.add_edit_volunteer import list_of_similar_volunteers
+from app.backend.volunteers.list_of_volunteers import list_of_similar_volunteers
 from app.objects.utilities.exceptions import missing_data, arg_not_passed
 
 from app.objects.cadets import ListOfCadets, Cadet

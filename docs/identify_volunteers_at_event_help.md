@@ -1,4 +1,13 @@
-When an event is being imported Skipperman will try and find the volunteers who have been mentioned in the imported registration data. If a volunteer isn't identical to one already in the data (same name), then Skipperman will give you the option of adding them as a new volunteer, or selecting an existing volunteer. You will see a screen like this:
+When an event is being imported Skipperman will try and find the volunteers who have been mentioned in the imported registration data. 
+
+- If a volunteer has an identical name to one in the data, they will be added automatically.
+- If their name is very similar, but no identical, they will be added with a warning (assuming there is only one similar volunteer):
+
+```
+Volunteer Jane Doe is very similar to one in form Janet Doe, adding automatically. Go to rota to change if problematic."
+```
+
+- If a volunteer isn't identical to one already in the data (same name), then Skipperman will give you the option of adding them as a new volunteer, or selecting an existing volunteer. You will see a screen like this:
 
 ***
 ***

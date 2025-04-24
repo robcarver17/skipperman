@@ -2,7 +2,7 @@ from typing import Union
 
 from app.objects.abstract_objects.abstract_lines import _______________, ListOfLines, ProgressBar, HorizontalLine
 from app.backend.volunteers.list_of_volunteers import (
-    get_volunteer_with_matching_name,
+    get_volunteer_with_matching_name, single_very_similar_volunteer_or_missing_data,
 )
 from app.backend.registration_data.identified_volunteers_at_event import (
     volunteer_for_this_row_and_index_already_identified,
@@ -141,8 +141,8 @@ def add_passed_volunteer_at_event(
         default=missing_data
     )
     if matched_volunteer_with_id is missing_data:
-        print("Volunteer %s not matched going to form to identify" % str(volunteer))
-        return display_volunteer_selection_form(
+        print("Volunteer %s not matched" % str(volunteer))
+        return add_passed_volunteer_if_very_similar_or_display_form_if_not(
             interface=interface, volunteer=volunteer
         )
 
@@ -153,6 +153,21 @@ def add_passed_volunteer_at_event(
         interface=interface, volunteer=matched_volunteer_with_id
     )
 
+def add_passed_volunteer_if_very_similar_or_display_form_if_not(interface: abstractInterface, volunteer: Volunteer
+) -> Union[Form, NewForm]:
+
+    matching_volunteer = single_very_similar_volunteer_or_missing_data(interface.object_store, volunteer=volunteer)
+    if matching_volunteer is missing_data:
+        print("Volunteer %s not matched with single similar volunteer, going to form" % str(volunteer))
+        return display_volunteer_selection_form(
+            interface=interface, volunteer=volunteer
+        )
+
+    interface.log_error("Volunteer %s is very similar to one in form %s, adding automatically. Go to rota to change if problematic." % (
+        matching_volunteer, volunteer
+    ))
+
+    return process_identification_when_volunteer_matched(interface=interface, volunteer=matching_volunteer)
 
 def display_volunteer_selection_form(
     interface: abstractInterface, volunteer: Volunteer

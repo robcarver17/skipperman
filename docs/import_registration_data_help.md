@@ -154,7 +154,17 @@ If you allow a duplicate registration to occur, the best thing to do is to cance
 
 ## Importing all the volunteers attending
 
-Next, Skipperman will try and find the volunteers who have mentioned in the WA event file. If a volunteer isn't identical to one already in the data (same name), then Skipperman will give you the option of adding them as a new volunteer, or selecting an existing volunteer. You will see a screen like this:
+Next, Skipperman will try and find the volunteers who have mentioned in the WA event file. 
+
+If a volunteer has an identical name to one in the data, they will be added automatically.
+
+If their name is similar, but no identical, they will be added with a warning:
+
+```
+Volunteer Jane Doe is very similar to one in form Janet Doe, adding automatically. Go to rota to change if problematic."
+```
+
+If a volunteer isn't very similar to one in the data, then Skipperman will give you the option of adding them as a new volunteer, or selecting an existing volunteer. You will see a screen like this:
 
 ***
 ***

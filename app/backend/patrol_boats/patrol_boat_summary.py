@@ -52,7 +52,9 @@ def get_summary_list_of_patrol_boat_allocations_for_events(
 
     summary_df = pd.DataFrame(results_as_dict, index=boat_index)
     summary_df.columns = event.days_in_event_as_list_of_string()
-    summary_df.loc['TOTAL'] = summary_df.sum(axis=0,numeric_only=True)
+
+    if len(summary_df)>0:
+        summary_df.loc['TOTAL'] = summary_df.sum(axis=0,numeric_only=True)
 
     summary_table = PandasDFTable(summary_df)
 

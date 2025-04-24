@@ -35,6 +35,13 @@ SIMILARITY_LEVEL_TO_WARN_NAME = configuration[
 SIMILARITY_LEVEL_TO_MATCH_VERY_SIMILAR_FIRST_NAMES = configuration["similarity_level_to_match_a_very_similar_cadet_first_name_on_event_import"]
 SIMILARITY_LEVEL_TO_WARN_NAME_ON_MATCHING_MEMBERSHIP_LIST = configuration["similarity_level_to_warn_when_comparing_names_in_membership_list"]
 
+## Volunteers
+SIMILARITY_LEVEL_TO_WARN_VOLUNTEER_NAME = configuration[
+    "similarity_level_to_warn_when_comparing_volunteer_names_on_event_import"
+]
+SIMILARITY_LEVEL_TO_MATCH_VERY_SIMILAR_VOLUNTEER_NAME = \
+    configuration["similarity_level_to_match_a_very_similar_volunteer_name_on_event_import"]
+
 
 MIN_CADET_AGE = configuration["minimum_cadet_age"]
 MAX_CADET_AGE = configuration["maximium_cadet_age"]

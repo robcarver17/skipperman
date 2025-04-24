@@ -15,7 +15,8 @@ Before Cadet week
 
 # done recently
 
-- cleaned up similarity code for cadets, and added 'auto add' option 
+- added auto add option for volunteers if very similar on import
+- cleaned up similarity code for cadets, and added 'auto add' option if very similar on import
 - added 'total' rows to summary tables
 - delete cadet/volunteer option added to admin menu
 - added extra copy menus and generally make sure you are sure before doing something crazy

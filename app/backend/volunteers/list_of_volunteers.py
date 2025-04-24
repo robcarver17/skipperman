@@ -1,5 +1,7 @@
 from typing import List, Union
 
+from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_VOLUNTEER_NAME, \
+    SIMILARITY_LEVEL_TO_MATCH_VERY_SIMILAR_VOLUNTEER_NAME
 from app.data_access.store.object_store import ObjectStore
 from app.data_access.store.object_definitions import object_definition_for_volunteers
 from app.objects.utilities.exceptions import arg_not_passed, missing_data
@@ -101,3 +103,20 @@ def update_list_of_volunteers(
         new_object=list_of_volunteers,
         object_definition=object_definition_for_volunteers,
     )
+
+
+def list_of_similar_volunteers(object_store: ObjectStore, volunteer: Volunteer) -> ListOfVolunteers:
+    list_of_volunteers = get_list_of_volunteers(object_store)
+    return list_of_volunteers.similar_volunteers(volunteer, name_threshold=SIMILARITY_LEVEL_TO_WARN_VOLUNTEER_NAME)
+
+
+def list_of_very_similar_volunteers(object_store: ObjectStore, volunteer: Volunteer) -> ListOfVolunteers:
+    list_of_volunteers = get_list_of_volunteers(object_store)
+    return list_of_volunteers.similar_volunteers(volunteer, name_threshold=SIMILARITY_LEVEL_TO_MATCH_VERY_SIMILAR_VOLUNTEER_NAME)
+
+def single_very_similar_volunteer_or_missing_data(object_store: ObjectStore, volunteer: Volunteer) -> Volunteer:
+    very_similar_volunteers = list_of_very_similar_volunteers(object_store, volunteer)
+    if len(very_similar_volunteers)==1:
+        return very_similar_volunteers[0]
+
+    return missing_data

@@ -3,7 +3,7 @@ from typing import Dict
 from app.backend.reporting.options_and_parameters.print_options import PrintOptions
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.utils import we_are_not_the_same
+from app.objects.utilities.utils import we_are_not_the_same
 
 
 def pseudo_reporting_options_for_event_data_dump(event: Event) -> PrintOptions:

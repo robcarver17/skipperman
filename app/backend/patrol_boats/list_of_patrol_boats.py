@@ -1,5 +1,5 @@
 from app.data_access.store.object_store import ObjectStore
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.patrol_boats import ListOfPatrolBoats, PatrolBoat
 from app.data_access.store.object_definitions import (
     object_definition_for_list_of_patrol_boats,

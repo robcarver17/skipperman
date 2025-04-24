@@ -9,7 +9,7 @@ from app.frontend.volunteers.update_skills_from_csv import display_form_refresh_
 from app.frontend.volunteers.view_individual_volunteer import (
     display_form_view_individual_volunteer,
 )
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.volunteers import Volunteer
 from app.objects.abstract_objects.abstract_form import (
     Form,

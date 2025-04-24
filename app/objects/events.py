@@ -2,18 +2,14 @@ from typing import List
 from dataclasses import dataclass
 import datetime
 
-from app.data_access.configuration.configuration import (
-    SIMILARITY_LEVEL_TO_WARN_NAME,
-    SIMILARITY_LEVEL_TO_WARN_DATE,
-)
 
-from app.objects.utils import transform_date_into_str, similar
-from app.objects.generic_list_of_objects import (
+from app.objects.utilities.utils import transform_date_into_str, similar
+from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     get_unique_object_with_attr_in_list,
 )
-from app.objects.generic_objects import GenericSkipperManObjectWithIds
-from app.objects.exceptions import arg_not_passed, MultipleMatches, MissingData
+from app.objects.utilities.generic_objects import GenericSkipperManObjectWithIds
+from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.day_selectors import (
     day_given_datetime,
     all_possible_days,
@@ -224,8 +220,8 @@ class ListOfEvents(GenericListOfObjectsWithIds):
     def similar_events(
         self,
         event: Event,
-        name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME,
-        date_threshold: float = SIMILARITY_LEVEL_TO_WARN_DATE,
+        name_threshold: float = 0.8,
+        date_threshold: float = 0.9,
     ) -> "ListOfEvents":
         similar_start_date = [
             other_event

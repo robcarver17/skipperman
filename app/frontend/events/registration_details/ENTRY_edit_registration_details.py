@@ -28,7 +28,7 @@ from app.backend.cadets.list_of_cadets import all_sort_types
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import Event
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 
 
 def display_form_edit_registration_details(

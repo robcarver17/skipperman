@@ -29,7 +29,7 @@ from app.data_access.store.object_store import ObjectStore
 from app.objects.cadets import Cadet
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.exceptions import NoMoreData, MissingData
+from app.objects.utilities.exceptions import NoMoreData, MissingData
 from app.objects.registration_data import RowInRegistrationData
 from app.objects.registration_status import manual_status
 from app.backend.registration_data.cadet_registration_data import (

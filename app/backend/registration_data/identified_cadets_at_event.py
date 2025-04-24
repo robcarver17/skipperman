@@ -6,7 +6,7 @@ from app.backend.registration_data.cadet_registration_data import (
     get_list_of_cadets_with_id_and_registration_data_at_event,
 )
 from app.objects.cadets import Cadet
-from app.objects.exceptions import NoMoreData, DuplicateCadets, missing_data
+from app.objects.utilities.exceptions import NoMoreData, DuplicateCadets, missing_data
 
 from app.objects.registration_data import (
     RowInRegistrationData,
@@ -22,7 +22,7 @@ from app.objects.events import Event
 from app.data_access.store.object_definitions import (
     object_definition_for_identified_cadets_at_event,
 )
-from app.objects.utils import union_of_x_and_y
+from app.objects.utilities.utils import union_of_x_and_y
 
 
 def is_cadet_marked_as_test_cadet_to_skip_in_for_row_in_raw_registration_data(

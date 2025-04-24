@@ -4,7 +4,7 @@ from typing import List, Dict
 from app.objects.cadet_volunteer_connections_with_ids import (
     ListOfCadetVolunteerAssociationsWithIds,
 )
-from app.objects.exceptions import (
+from app.objects.utilities.exceptions import (
     MissingData,
     MultipleMatches,
     arg_not_passed,

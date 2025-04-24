@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from app.objects.exceptions import missing_data
-from app.objects.generic_objects import GenericSkipperManObject
-from app.objects.generic_list_of_objects import GenericListOfObjects, get_unique_object_with_multiple_attr_in_list,get_idx_of_unique_object_with_multiple_attr_in_list
+from app.objects.utilities.exceptions import missing_data
+from app.objects.utilities.generic_objects import GenericSkipperManObject
+from app.objects.utilities.generic_list_of_objects import GenericListOfObjects, get_unique_object_with_multiple_attr_in_list,get_idx_of_unique_object_with_multiple_attr_in_list
 
 @dataclass
 class GroupNotesAtEventWithIds(GenericSkipperManObject):

@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.backend.cadets.list_of_cadets import get_matching_cadet
+from app.backend.cadets.list_of_cadets import get_matching_cadet, get_list_of_very_similar_cadets_from_data
 
 from app.objects.abstract_objects.abstract_lines import ListOfLines, ProgressBar, HorizontalLine
 
@@ -28,9 +28,9 @@ from app.frontend.shared.get_or_select_cadet_forms import (
      ParametersForGetOrSelectCadetForm, generic_post_response_to_add_or_select_cadet,
 )
 
-from app.objects.exceptions import NoMoreData, MissingData
+from app.objects.utilities.exceptions import NoMoreData, MissingData, missing_data
 from app.objects.registration_data import RowInRegistrationData
-from app.objects.cadets import Cadet, SORT_BY_SIMILARITY_NAME
+from app.objects.cadets import Cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -148,6 +148,26 @@ def process_row_when_cadet_unmatched(
     interface: abstractInterface,
     cadet: Cadet,
 ) -> Form:
+    very_similar_cadet = does_a_very_similar_cadet_exist_if_not_return_missing_data(interface, cadet=cadet)
+    if very_similar_cadet is missing_data:
+        return process_row_when_cadet_completely_unmatched(interface=interface, cadet=cadet)
+    else:
+        interface.log_error("Found cadet %s, looks a very close match for %s in registration data. If not correct, replace in edit registration page."
+                             % (very_similar_cadet, cadet))
+        return process_row_when_cadet_matched(interface=interface, cadet=very_similar_cadet)
+
+
+def does_a_very_similar_cadet_exist_if_not_return_missing_data(interface: abstractInterface, cadet:Cadet) -> Cadet:
+    similar_cadets = get_list_of_very_similar_cadets_from_data(object_store=interface.object_store, cadet=cadet)
+    if len(similar_cadets)==1:
+        return similar_cadets[0]
+
+    return missing_data
+
+def process_row_when_cadet_completely_unmatched(
+    interface: abstractInterface,
+    cadet: Cadet,
+) -> Form:
     parameters_to_get_or_select_cadet = get_parameters_for_form(interface)
 
     return get_add_or_select_existing_cadet_form(
@@ -155,6 +175,7 @@ def process_row_when_cadet_unmatched(
         interface=interface,
         parameters=parameters_to_get_or_select_cadet
     )
+
 
 
 def get_parameters_for_form(interface: abstractInterface):
@@ -173,6 +194,7 @@ def header_text_for_form(interface: abstractInterface) -> ListOfLines:
         HorizontalLine(),
         "Looks like a new cadet in the WA entry file. ",
         "You can edit them, check their details and then add, or choose an existing cadet instead (avoid creating duplicates! If the existing cadet details are wrong, select them for now and edit later) \n\n ",
+        "If this is a test entry, then click SKIP"
     ]
 
     return ListOfLines(default_header_text).add_Lines()

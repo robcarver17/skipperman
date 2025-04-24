@@ -41,7 +41,7 @@ from app.objects.cadet_with_id_at_event import (
 )
 
 from app.objects.events import Event
-from app.objects.exceptions import NoMoreData, DuplicateCadets
+from app.objects.utilities.exceptions import NoMoreData, DuplicateCadets
 from app.objects.registration_data import RowInRegistrationData
 
 

@@ -18,7 +18,7 @@ from app.objects.abstract_objects.abstract_lines import (
     Line,
     _______________, ProgressBar, HorizontalLine,
 )
-from app.objects.exceptions import missing_data
+from app.objects.utilities.exceptions import missing_data
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
 from app.objects.relevant_information_for_volunteers import (

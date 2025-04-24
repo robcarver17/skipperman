@@ -28,7 +28,7 @@ from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
 from app.objects.events import Event
 from app.objects.groups import Group, sorted_locations
-from app.objects.utils import in_x_not_in_y, in_both_x_and_y
+from app.objects.utilities.utils import in_x_not_in_y, in_both_x_and_y
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 
 

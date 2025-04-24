@@ -4,7 +4,7 @@ from app.objects.abstract_objects.abstract_tables import RowInTable
 
 from app.objects.abstract_objects.abstract_lines import Line
 
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 
 from app.objects.roles_and_teams import (
     ListOfTeams,

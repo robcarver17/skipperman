@@ -8,7 +8,6 @@ from app.backend.groups.group_allocation_info import (
 from app.backend.groups.previous_groups import (
     get_list_of_previous_groups_as_str,
     DictOfEventAllocations,
-    get_dict_of_event_allocations_for_last_N_events_for_list_of_cadets,
     get_dict_of_event_allocations_given_list_of_events,
 )
 from app.backend.qualifications_and_ticks.progress import (
@@ -22,11 +21,10 @@ from app.frontend.events.group_allocation.buttons import get_day_buttons, button
 from app.frontend.events.group_allocation.club_boats import get_club_dinghies_form
 from app.frontend.events.group_allocation.previous_events import get_previous_event_selection_form, \
     get_prior_events_to_show
-from app.frontend.forms.reorder_form import reorder_table
 from app.frontend.shared.cadet_state import get_cadet_from_state
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 
-from app.objects.exceptions import MissingData
+from app.objects.utilities.exceptions import MissingData
 
 from app.frontend.events.group_allocation.input_fields import (
     get_notes_field,
@@ -40,7 +38,6 @@ from app.frontend.events.group_allocation.store_state import (
 )
 
 from app.backend.boat_classes.summary import summarise_class_attendance_for_event
-from app.backend.club_boats.summary import summarise_club_boat_allocations_for_event
 from app.backend.groups.sorting import sorted_active_cadets
 from app.backend.events.summarys import summarise_allocations_for_event
 

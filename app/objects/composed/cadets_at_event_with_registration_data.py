@@ -6,15 +6,16 @@ from app.data_access.configuration.field_list import (
     RESPONSIBLE_ADULT_NAME,
     CADET_DOUBLE_HANDED_PARTNER,
 )
-from app.objects.utils import flatten
+from app.objects.utilities.utils import flatten
 
-from app.objects.exceptions import MissingData, arg_not_passed, missing_data
+from app.objects.utilities.exceptions import MissingData, arg_not_passed, missing_data
 
 from app.objects.cadet_with_id_at_event import (
     CadetWithIdAtEvent,
     ListOfCadetsWithIDAtEvent,
 )
-from app.objects.cadets import Cadet, ListOfCadets, sort_a_list_of_cadets
+from app.objects.cadets import Cadet, ListOfCadets
+from app.objects.utilities.cadet_matching_and_sorting import sort_a_list_of_cadets
 from app.objects.day_selectors import DaySelector, Day
 from app.objects.events import Event, ListOfEvents
 from app.objects.registration_data import RowInRegistrationData

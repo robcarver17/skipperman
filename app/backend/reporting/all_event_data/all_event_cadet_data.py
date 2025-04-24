@@ -27,7 +27,7 @@ from app.backend.volunteers.connected_cadets import (
 )
 
 from app.objects.cadets import Cadet, ListOfCadets
-from app.objects.exceptions import MissingData
+from app.objects.utilities.exceptions import MissingData
 from app.objects.identified_cadets_at_event import IdentifiedCadetAtEvent
 from app.objects.day_selectors import empty_day_selector
 from app.objects.events import Event

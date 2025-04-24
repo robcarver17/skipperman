@@ -1,16 +1,14 @@
 from dataclasses import dataclass
 
-from app.objects.exceptions import (
+from app.objects.utilities.exceptions import (
     arg_not_passed,
-    MissingData,
-    MultipleMatches,
 )
-from app.objects.generic_list_of_objects import (
+from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     get_unique_object_with_attr_in_list,
     get_idx_of_unique_object_with_attr_in_list,
 )
-from app.objects.generic_objects import GenericSkipperManObjectWithIds
+from app.objects.utilities.generic_objects import GenericSkipperManObjectWithIds
 
 NO_BOAT = "NO_BOAT"
 NO_BOAT_ID = str(-9999)

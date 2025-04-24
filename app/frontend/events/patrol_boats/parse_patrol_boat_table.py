@@ -7,7 +7,7 @@ from app.backend.rota.changes import update_role_and_group_at_event_for_voluntee
 from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import (
     VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 )
-from app.objects.exceptions import MISSING_FROM_FORM
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 from app.objects.volunteers import Volunteer
 
 from app.backend.volunteers.skills import (

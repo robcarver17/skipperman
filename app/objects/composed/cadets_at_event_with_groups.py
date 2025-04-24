@@ -3,10 +3,10 @@ from typing import Dict, List
 
 import pandas as pd
 
-from app.objects.utils import flatten
-from app.objects.exceptions import arg_not_passed, missing_data
+from app.objects.utilities.utils import flatten
+from app.objects.utilities.exceptions import arg_not_passed, missing_data
 
-from app.objects.utils import most_common
+from app.objects.utilities.utils import most_common
 
 from app.objects.events import Event, ListOfEvents
 
@@ -16,7 +16,7 @@ from app.objects.cadet_with_id_with_group_at_event import (
 from app.objects.cadets import Cadet, ListOfCadets
 
 from app.objects.day_selectors import Day, DaySelector
-from app.objects.generic_objects import GenericSkipperManObject
+from app.objects.utilities.generic_objects import GenericSkipperManObject
 from app.objects.groups import Group, ListOfGroups, unallocated_group
 
 CADET_NAME = "cadet"

@@ -4,7 +4,7 @@ from typing import List, Union
 from app.objects.groups import Group, unallocated_group
 from app.objects.club_dinghies import ClubDinghy, no_club_dinghy
 
-from app.objects.exceptions import missing_data, MultipleMatches
+from app.objects.utilities.exceptions import missing_data, MultipleMatches
 
 from app.objects.boat_classes import BoatClass, ListOfBoatClasses
 from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import (

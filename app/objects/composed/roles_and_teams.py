@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from typing import Dict, List
 
-from app.objects.exceptions import missing_data, MissingData
+from app.objects.utilities.exceptions import missing_data, MissingData
 from app.objects.roles_and_teams import Team, ListOfTeams, no_team, RoleLocation
 from app.objects.roles_and_teams import ListOfTeamsAndRolesWithIds, TeamsAndRolesWithIds
 from app.objects.composed.volunteer_roles import ListOfRolesWithSkills, RoleWithSkills
-from app.objects.utils import in_x_not_in_y
+from app.objects.utilities.utils import in_x_not_in_y
 
 
 @dataclass

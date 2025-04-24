@@ -1,4 +1,4 @@
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 import pandas as pd
 from app.data_access.resolve_paths_and_filenames import (
     get_path_and_filename_for_named_file,

@@ -49,7 +49,7 @@ from app.frontend.events.constants import (
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet, ListOfCadets
-from app.objects.exceptions import MISSING_FROM_FORM
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 def guess_boat_classes_in_allocation_form(interface: abstractInterface):
     event = get_event_from_state(interface)

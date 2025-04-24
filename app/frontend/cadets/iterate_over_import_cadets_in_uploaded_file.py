@@ -33,8 +33,8 @@ from app.objects.membership_status import (
     system_unconfirmed_member,
     describe_status,
 )
-from app.objects.exceptions import NoMoreData, MissingData
-from app.objects.utils import percentage_of_x_in_y
+from app.objects.utilities.exceptions import NoMoreData, MissingData
+from app.objects.utilities.utils import percentage_of_x_in_y
 
 
 def begin_iteration_over_rows_in_temp_cadet_file(

@@ -38,7 +38,7 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 from app.objects.abstract_objects.abstract_text import up_arrow, down_arrow, Heading
-from app.objects.utils import has_hidden_attribute, is_protected_object
+from app.objects.utilities.utils import has_hidden_attribute, is_protected_object
 
 ADD_ENTRY_TEXT_FIELD = "add_entry_text_field"
 SAVE_ENTRY_BUTTON_LABEL = "Save edits to existing"

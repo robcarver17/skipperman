@@ -8,19 +8,17 @@ from app.objects.day_selectors import (
     day_selector_to_text_in_stored_format,
     Day,
 )
-from app.objects.exceptions import (
+from app.objects.utilities.exceptions import (
     missing_data,
-    MissingData,
-    MultipleMatches,
     arg_not_passed,
 )
-from app.objects.generic_list_of_objects import (
+from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjects,
     get_unique_object_with_attr_in_list,
     get_idx_of_unique_object_with_attr_in_list,
 )
-from app.objects.generic_objects import GenericSkipperManObject
-from app.objects.utils import clean_up_dict_with_nans
+from app.objects.utilities.generic_objects import GenericSkipperManObject
+from app.objects.utilities.utils import clean_up_dict_with_nans
 
 
 LIST_KEY = "list_of_associated_cadet_id"

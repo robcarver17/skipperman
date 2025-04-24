@@ -8,7 +8,7 @@ from app.objects.composed.ticks_for_qualification import (
     TicksForQualification,
     DictOfCadetIdsWithTickListItemsForCadetId,
 )
-from app.objects.exceptions import arg_not_passed, MissingData
+from app.objects.utilities.exceptions import arg_not_passed, MissingData
 
 from app.objects.qualifications import Qualification, ListOfQualifications
 

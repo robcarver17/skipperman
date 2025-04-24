@@ -4,7 +4,7 @@ from typing import Union
 from app.backend.rota.sorting_and_filtering import RotaSortsAndFilters, FILTER_ALL
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.exceptions import arg_not_passed, missing_data
+from app.objects.utilities.exceptions import arg_not_passed, missing_data
 from app.objects.day_selectors import Day
 from app.objects.composed.volunteers_with_skills import SkillsDict
 

@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 
-from app.objects.exceptions import missing_data, arg_not_passed, MissingData
-from app.objects.generic_list_of_objects import (
+from app.objects.utilities.exceptions import missing_data, arg_not_passed, MissingData
+from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     get_idx_of_unique_object_with_attr_in_list, GenericListOfObjects,
 )
-from app.objects.generic_objects import GenericSkipperManObjectWithIds, GenericSkipperManObject
+from app.objects.utilities.generic_objects import GenericSkipperManObjectWithIds, GenericSkipperManObject
 
 NO_CLUB_DINGHY_ID = str(-9999)
 NO_CLUB_DINGHY_NAME = ""
@@ -101,7 +101,7 @@ class ClubDinghyWithLimitAtEvent(GenericSkipperManObject):
     event_id: str =event_id_for_generic_limit
 
 
-from app.objects.generic_list_of_objects import get_unique_object_with_multiple_attr_in_list
+from app.objects.utilities.generic_list_of_objects import get_unique_object_with_multiple_attr_in_list
 
 class ListOfClubDinghyLimits(GenericListOfObjects):
     @property

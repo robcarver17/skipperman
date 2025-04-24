@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Dict
 
-from app.objects.utils import flatten, most_common
+from app.objects.utilities.utils import flatten, most_common
 
 from app.objects.events import ListOfEvents, Event
 
@@ -12,7 +12,7 @@ from app.objects.cadet_at_event_with_club_boat_with_ids import (
     ListOfCadetAtEventWithIdAndClubDinghies,
     CadetAtEventWithClubDinghyWithId,
 )
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 
 
 @dataclass

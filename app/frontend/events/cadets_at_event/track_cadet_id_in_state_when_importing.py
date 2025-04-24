@@ -6,8 +6,8 @@ from app.backend.registration_data.identified_cadets_at_event import (
 from app.backend.cadets.list_of_cadets import get_cadet_from_id
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.exceptions import missing_data, NoMoreData, MissingData
-from app.objects.utils import percentage_of_x_in_y
+from app.objects.utilities.exceptions import missing_data, NoMoreData, MissingData
+from app.objects.utilities.utils import percentage_of_x_in_y
 
 CADET_ID_AT_EVENT = "cadet_id_at_event"
 

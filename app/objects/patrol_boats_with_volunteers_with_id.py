@@ -4,21 +4,18 @@ from typing import List
 from app.objects.volunteers import Volunteer
 
 from app.objects.day_selectors import Day, DaySelector
-from app.objects.events import Event
-from app.objects.exceptions import (
+from app.objects.utilities.exceptions import (
     missing_data,
     MissingData,
-    MultipleMatches,
     arg_not_passed,
 )
-from app.objects.generic_list_of_objects import (
+from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     get_unique_object_with_multiple_attr_in_list,
-    get_idx_of_unique_object_with_multiple_attr_in_list,
 )
-from app.objects.generic_objects import GenericSkipperManObject
-from app.objects.patrol_boats import PatrolBoat, ListOfPatrolBoats, no_patrol_boat
-from app.objects.utils import make_id_as_int_str
+from app.objects.utilities.generic_objects import GenericSkipperManObject
+from app.objects.patrol_boats import ListOfPatrolBoats, no_patrol_boat
+from app.objects.utilities.utils import make_id_as_int_str
 
 
 EMPTY_VOLUNTEER_ID = "NONE"  ## DO NOT CHANGE

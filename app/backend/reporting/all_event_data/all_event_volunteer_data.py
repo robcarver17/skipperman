@@ -1,12 +1,11 @@
 import pandas as pd
 from app.data_access.store.object_store import ObjectStore
 from app.objects.cadets import ListOfCadets
-from app.objects.exceptions import MissingData
+from app.objects.utilities.exceptions import MissingData
 
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 
 from app.backend.reporting.all_event_data.components import (
-    ROW_ID,
     day_item_dict_as_string_or_single_if_identical,
 )
 from app.objects.day_selectors import empty_day_selector

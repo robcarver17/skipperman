@@ -6,11 +6,11 @@ from enum import Enum
 from app.objects.volunteers import Volunteer
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from app.objects.generic_list_of_objects import (
+from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjects,
     get_unique_object_with_attr_in_list,
 )
-from app.objects.generic_objects import GenericSkipperManObject
+from app.objects.utilities.generic_objects import GenericSkipperManObject
 
 UserGroup = Enum("UserGroup", ["admin", "skipper", "instructor", "public"])
 ADMIN_GROUP = UserGroup.admin

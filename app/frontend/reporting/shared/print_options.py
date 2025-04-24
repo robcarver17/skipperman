@@ -41,7 +41,7 @@ from app.frontend.reporting.shared.constants import (
     IF_HEADER_INCLUDE_SIZE,
     FONT_SIZE,
 )
-from app.objects.exceptions import missing_data
+from app.objects.utilities.exceptions import missing_data
 
 
 def get_saved_print_options(

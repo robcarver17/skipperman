@@ -4,7 +4,7 @@ from typing import Union
 
 from app.backend.cadets.list_of_cadets import (
     get_list_of_cadets,
-    get_list_of_similar_cadets, get_cadet_from_list_of_cadets_given_str_of_cadet,
+    get_list_of_similar_cadets_from_data, get_cadet_from_list_of_cadets_given_str_of_cadet,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import Button, cancel_menu_button, \
@@ -19,9 +19,10 @@ from app.frontend.shared.add_edit_cadet_form import (
     verify_form_with_cadet_details, add_cadet_from_form_to_data,
 )
 
-from app.objects.cadets import Cadet, sort_a_list_of_cadets, SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, \
-    SORT_BY_SIMILARITY_DOB, SORT_BY_SIMILARITY_NAME, SORT_BY_DOB_DSC, default_cadet
-from app.objects.exceptions import arg_not_passed
+from app.objects.cadets import Cadet, default_cadet
+from app.objects.utilities.cadet_matching_and_sorting import sort_a_list_of_cadets, SORT_BY_SURNAME, SORT_BY_FIRSTNAME, \
+    SORT_BY_DOB_ASC, SORT_BY_DOB_DSC, SORT_BY_SIMILARITY_BOTH
+from app.objects.utilities.exceptions import arg_not_passed
 from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME
 
 @dataclass
@@ -33,7 +34,7 @@ class ParametersForGetOrSelectCadetForm:
     final_add_button: bool = False
     see_all_cadets_button: bool = False
     default_cadet_passed: bool = False
-    sort_by: str = SORT_BY_SIMILARITY_NAME
+    sort_by: str = SORT_BY_SIMILARITY_BOTH
     similarity_name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME
 
     def save_values_to_state(self, interface: abstractInterface):
@@ -158,7 +159,7 @@ def get_list_of_cadet_buttons(
     interface: abstractInterface, cadet: Cadet,     parameters: ParametersForGetOrSelectCadetForm,
 
 ) -> ListOfLines:
-    list_of_similar_cadets = get_list_of_similar_cadets(
+    list_of_similar_cadets = get_list_of_similar_cadets_from_data(
         object_store=interface.object_store, cadet=cadet,
         name_threshold=parameters.similarity_name_threshold
     )
@@ -205,7 +206,7 @@ def get_sort_order_buttons(
 
     buttons = [sort_msg]+[Button(sort_label) for sort_label in possible_sort_labels]
 
-    if current_sort_order in [SORT_BY_SIMILARITY_DOB, SORT_BY_SIMILARITY_NAME]:
+    if current_sort_order in [SORT_BY_SIMILARITY_BOTH]:
         buttons.append(refresh_button)
 
     return buttons
@@ -217,8 +218,7 @@ possible_sorts = [SORT_BY_SURNAME,
 SORT_BY_FIRSTNAME,
 SORT_BY_DOB_ASC,
 SORT_BY_DOB_DSC,
-SORT_BY_SIMILARITY_NAME,
-                  SORT_BY_SIMILARITY_DOB
+SORT_BY_SIMILARITY_BOTH
 ]
 
 

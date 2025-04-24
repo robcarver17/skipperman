@@ -1,7 +1,7 @@
 from typing import List
 import pandas as pd
-from app.objects.exceptions import MissingData, arg_not_passed, MultipleMatches
-from app.objects.generic_objects import (
+from app.objects.utilities.exceptions import MissingData, arg_not_passed, MultipleMatches
+from app.objects.utilities.generic_objects import (
     GenericSkipperManObject,
     GenericSkipperManObjectWithIds,
     get_list_of_attributes,

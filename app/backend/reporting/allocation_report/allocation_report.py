@@ -4,7 +4,7 @@ from typing import Dict
 import pandas as pd
 
 from app.data_access.store.object_store import ObjectStore
-from app.objects.exceptions import missing_data
+from app.objects.utilities.exceptions import missing_data
 from app.objects.events import Event
 from app.objects.groups import unallocated_group
 from app.objects.composed.cadets_at_event_with_groups import (

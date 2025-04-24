@@ -14,7 +14,7 @@ from app.objects.composed.volunteer_with_group_and_role_at_event import (
     RoleAndGroup,
     ListOfRolesAndGroups,
 )
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 
 from app.objects.roles_and_teams import ListOfTeams, ListOfRolesWithSkillIds, Team
 from app.backend.groups.list_of_groups import get_list_of_groups

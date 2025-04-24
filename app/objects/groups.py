@@ -2,9 +2,9 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import List
 
-from app.objects.exceptions import arg_not_passed, MissingData, MultipleMatches
-from app.objects.generic_objects import GenericSkipperManObjectWithIds
-from app.objects.generic_list_of_objects import (
+from app.objects.utilities.exceptions import arg_not_passed
+from app.objects.utilities.generic_objects import GenericSkipperManObjectWithIds
+from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     get_idx_of_unique_object_with_attr_in_list,
 )
@@ -97,7 +97,7 @@ unallocated_group = Group.create_unallocated()
 unallocated_group_id = unallocated_group.id
 missing_group_display_only = Group.create_missing()
 
-from app.objects.generic_list_of_objects import get_unique_object_with_attr_in_list
+from app.objects.utilities.generic_list_of_objects import get_unique_object_with_attr_in_list
 
 
 class ListOfGroups(GenericListOfObjectsWithIds):

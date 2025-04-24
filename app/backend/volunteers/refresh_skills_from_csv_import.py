@@ -7,7 +7,7 @@ from app.backend.volunteers.skills import get_list_of_skills, get_dict_of_existi
 from app.data_access.store.object_store import ObjectStore
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.skill_import import ListOfRowsInSkillsFile, RowInImportedSkillsFile
-from app.objects.exceptions import missing_data
+from app.objects.utilities.exceptions import missing_data
 from app.objects.volunteer_skills import Skill
 from app.objects.volunteers import Volunteer
 from app.data_access.configuration.configuration import IMPORT_SKILLS_CONFIG

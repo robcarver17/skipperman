@@ -13,7 +13,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line
 from app.objects.cadets import Cadet
 from app.objects.day_selectors import Day
-from app.objects.exceptions import missing_data
+from app.objects.utilities.exceptions import missing_data
 from app.objects.partners import no_partnership_given_partner_cadet_as_str
 
 

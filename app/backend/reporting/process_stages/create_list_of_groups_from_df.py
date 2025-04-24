@@ -13,7 +13,7 @@ from app.backend.reporting.process_stages.strings_columns_groups import (
     ListOfPages,
     EMPTY_GROUP,
 )
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 
 
 class ListOfDfRowsFromSubset(list):

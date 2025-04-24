@@ -1,5 +1,5 @@
 from app.objects.abstract_objects.abstract_interface import UrlsOfInterest
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 
 HOME = "Home"
 INDEX_URL = "/"

@@ -1,7 +1,7 @@
 from copy import copy
 from typing import List, Dict
 import pandas as pd
-from app.objects.utils import in_x_not_in_y
+from app.objects.utilities.utils import in_x_not_in_y
 
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
     SpecificParametersForTypeOfReport,

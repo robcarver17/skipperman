@@ -1,14 +1,12 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.objects.exceptions import arg_not_passed, MissingData
-from app.objects.generic_list_of_objects import (
+from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjects,
-    get_unique_object_with_attr_in_list, get_idx_of_multiple_object_with_multiple_attr_in_list,
+    get_idx_of_multiple_object_with_multiple_attr_in_list,
 )
 
-from app.objects.generic_objects import GenericSkipperManObject
-from app.objects.exceptions import MultipleMatches
+from app.objects.utilities.generic_objects import GenericSkipperManObject
 
 NO_VOLUNTEER_ALLOCATED_ID = "NO_volunteer_allocated"  ## DO not change
 

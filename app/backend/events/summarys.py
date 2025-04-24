@@ -16,7 +16,7 @@ from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
 )
 from app.objects.day_selectors import Day, DaySelector
 from app.objects.events import Event
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.groups import Group
 
 

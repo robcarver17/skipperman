@@ -1,6 +1,6 @@
 from flask import session
 
-from app.objects.exceptions import missing_data
+from app.objects.utilities.exceptions import missing_data
 
 ACTION_STATES_STORAGE = "_action_state"
 INITIAL_STAGE = "_initial_stage"

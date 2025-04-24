@@ -24,8 +24,8 @@ from app.objects.composed.volunteer_roles import no_role_set
 
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.exceptions import arg_not_passed
-from app.objects.utils import print_dict_nicely
+from app.objects.utilities.exceptions import arg_not_passed
+from app.objects.utilities.utils import print_dict_nicely
 from app.objects.composed.volunteers_with_skills import (
     SkillsDict,
 )

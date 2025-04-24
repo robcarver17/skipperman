@@ -3,18 +3,19 @@ from typing import List
 from app.objects.cadets import (
     ListOfCadets,
     Cadet,
-    sort_a_list_of_cadets,
-    SORT_BY_SURNAME,
-    SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, SORT_BY_DOB_DSC,
 )
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.cadet_matching_and_sorting import sort_a_list_of_cadets, SORT_BY_SURNAME, SORT_BY_FIRSTNAME, \
+    SORT_BY_DOB_ASC, SORT_BY_DOB_DSC, get_list_of_similar_cadets, get_list_of_very_similar_cadets
+from app.objects.utilities.exceptions import arg_not_passed
 
 
 from app.data_access.store.object_store import ObjectStore
 from app.data_access.store.object_definitions import (
     object_definition_for_list_of_cadets,
 )
-from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME, SIMILARITY_LEVEL_TO_WARN_DATE
+from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME, \
+    SIMILARITY_LEVEL_TO_MATCH_VERY_SIMILAR_FIRST_NAMES
+
 
 def delete_cadet(object_store: ObjectStore, cadet: Cadet, areyousure=False):
     if not areyousure:
@@ -30,19 +31,20 @@ def get_matching_cadet(object_store: ObjectStore, cadet: Cadet) -> Cadet:
     return list_of_cadets.matching_cadet(cadet=cadet)
 
 
-def are_there_no_similar_cadets(object_store: ObjectStore, cadet: Cadet, name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME,
-                               dob_threshold: float = SIMILARITY_LEVEL_TO_WARN_DATE) -> bool:
-    similar_cadets = get_list_of_similar_cadets(object_store=object_store, cadet=cadet,
-                                                name_threshold=name_threshold,
-                                                dob_threshold=dob_threshold)
+def are_there_no_similar_cadets(object_store: ObjectStore, cadet: Cadet, name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME) -> bool:
+    similar_cadets = get_list_of_similar_cadets_from_data(object_store=object_store, cadet=cadet,
+                                                          name_threshold=name_threshold)
 
     return len(similar_cadets) == 0
 
-def get_list_of_similar_cadets(object_store: ObjectStore, cadet: Cadet, name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME,
-                               dob_threshold: float = SIMILARITY_LEVEL_TO_WARN_DATE) -> list:
+def get_list_of_very_similar_cadets_from_data(object_store: ObjectStore, cadet: Cadet, first_name_threshold=SIMILARITY_LEVEL_TO_MATCH_VERY_SIMILAR_FIRST_NAMES):
     list_of_cadets = get_list_of_cadets(object_store)
-    return list_of_cadets.similar_cadets(cadet, name_threshold=name_threshold, dob_threshold=dob_threshold)
+    return get_list_of_very_similar_cadets(list_of_cadets, other_cadet=cadet, first_name_threshold=first_name_threshold)
 
+def get_list_of_similar_cadets_from_data(object_store: ObjectStore, cadet: Cadet,
+                                         name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME) -> list:
+    list_of_cadets = get_list_of_cadets(object_store)
+    return get_list_of_similar_cadets(list_of_cadets, other_cadet=cadet, name_threshold=name_threshold)
 
 def get_cadet_from_list_of_cadets_given_str_of_cadet(
     object_store: ObjectStore, cadet_selected: str

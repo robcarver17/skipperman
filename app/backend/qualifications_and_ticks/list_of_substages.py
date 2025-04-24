@@ -9,11 +9,11 @@ from app.data_access.store.object_definitions import (
     object_definition_for_list_of_tick_sub_stages,
 )
 from app.objects.composed.ticks_in_dicts import QualificationsAndTickItemsAsDict
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.qualifications import Qualification
 
 from app.objects.substages import ListOfTickSubStages
-from app.objects.utils import in_x_not_in_y
+from app.objects.utilities.utils import in_x_not_in_y
 
 
 @dataclass

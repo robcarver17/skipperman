@@ -2,14 +2,14 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import List
 
-from app.objects.exceptions import MissingData, MultipleMatches, arg_not_passed
+from app.objects.utilities.exceptions import MissingData, arg_not_passed
 
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.committee import (
     CadetWithIdCommitteeMember,
     ListOfCadetsWithIdOnCommittee,
 )
-from app.objects.generic_list_of_objects import get_unique_object_with_attr_in_list
+from app.objects.utilities.generic_list_of_objects import get_unique_object_with_attr_in_list
 
 
 @dataclass

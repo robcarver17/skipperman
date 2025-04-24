@@ -18,7 +18,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.objects.cadets import Cadet
 from app.backend.volunteers.list_of_volunteers import SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_NAME_SIMILARITY
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.volunteers import Volunteer, default_volunteer
 
 

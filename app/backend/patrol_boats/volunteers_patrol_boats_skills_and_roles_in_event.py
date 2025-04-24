@@ -1,4 +1,4 @@
-from app.objects.utils import in_x_not_in_y
+from app.objects.utilities.utils import in_x_not_in_y
 from app.backend.volunteers.roles_and_teams import get_list_of_roles_with_skills
 
 from app.backend.volunteers.volunteers_at_event import (

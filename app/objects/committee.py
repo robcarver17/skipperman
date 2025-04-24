@@ -1,11 +1,9 @@
 from dataclasses import dataclass
 import datetime
 
-from app.objects.exceptions import MissingData
-
-from app.objects.generic_list_of_objects import GenericListOfObjects, \
+from app.objects.utilities.generic_list_of_objects import GenericListOfObjects, \
     get_idx_of_multiple_object_with_multiple_attr_in_list
-from app.objects.generic_objects import GenericSkipperManObject
+from app.objects.utilities.generic_objects import GenericSkipperManObject
 
 
 @dataclass

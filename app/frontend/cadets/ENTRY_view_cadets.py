@@ -12,8 +12,8 @@ from app.frontend.shared.buttons import get_button_value_for_cadet_selection, is
     cadet_from_button_pressed, get_button_value_for_sort_order, is_button_sort_order, sort_order_from_button_pressed
 from app.objects.cadets import (
     Cadet,
-    SORT_BY_SURNAME,
 )
+from app.objects.utilities.cadet_matching_and_sorting import SORT_BY_SURNAME
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -35,7 +35,7 @@ from app.frontend.shared.cadet_state import update_state_for_specific_cadet
 from app.backend.cadets.list_of_cadets import (
     get_sorted_list_of_cadets, all_sort_types,
 )
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 
 
 def display_form_view_of_cadets(interface: abstractInterface) -> Form:

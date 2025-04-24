@@ -10,8 +10,7 @@ from app.frontend.forms.swaps import is_ready_to_swap
 from app.frontend.events.volunteer_rota.swapping import (
     cancel_swap_button,
 )
-from app.frontend.shared.buttons import is_button_sort_order, \
-     get_button_value_given_type_and_attributes, \
+from app.frontend.shared.buttons import get_button_value_given_type_and_attributes, \
     get_attributes_from_button_pressed_of_known_type
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
@@ -24,7 +23,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 
 from app.frontend.shared.buttons import sort_button_type
 

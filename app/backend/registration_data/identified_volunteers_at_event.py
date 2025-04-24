@@ -3,7 +3,7 @@ from app.objects.volunteers import Volunteer
 from app.backend.registration_data.volunter_relevant_information import (
     get_relevant_information_for_volunteer,
 )
-from app.objects.exceptions import missing_data
+from app.objects.utilities.exceptions import missing_data
 
 from app.objects.events import Event
 

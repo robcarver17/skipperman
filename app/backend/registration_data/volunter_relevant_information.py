@@ -6,7 +6,7 @@ from app.backend.registration_data.identified_cadets_at_event import (
     cadet_at_event_given_row_id,
 )
 from app.objects.cadets import default_cadet
-from app.objects.exceptions import missing_data
+from app.objects.utilities.exceptions import missing_data
 from app.objects.cadet_with_id_at_event import (
     get_sailor_attendance_selection_from_event_row,
 )

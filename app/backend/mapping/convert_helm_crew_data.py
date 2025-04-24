@@ -12,7 +12,7 @@ from app.objects.registration_data import (
     RegistrationDataForEvent,
     RowInRegistrationData,
 )
-from app.objects.utils import in_both_x_and_y
+from app.objects.utilities.utils import in_both_x_and_y
 
 
 def convert_mapped_wa_event_potentially_with_joined_rows(

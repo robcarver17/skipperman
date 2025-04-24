@@ -27,7 +27,7 @@ from app.objects.abstract_objects.abstract_interface import (
     form_with_message_and_finished_button,
 )
 
-from app.objects.exceptions import NoMoreData
+from app.objects.utilities.exceptions import NoMoreData
 from app.objects.abstract_objects.abstract_form import NewForm, Form
 
 """

@@ -3,9 +3,9 @@ from typing import List, Dict
 from enum import Enum
 
 import pandas as pd
-from app.objects.exceptions import MultipleMatches
+from app.objects.utilities.exceptions import MultipleMatches
 
-from app.objects.generic_list_of_objects import GenericListOfObjects
+from app.objects.utilities.generic_list_of_objects import GenericListOfObjects
 from app.objects.substages import TickSheetItem
 
 Tick = Enum("Tick", ["Full", "Half", "NotApplicable", "NoTick"])

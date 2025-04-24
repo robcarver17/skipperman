@@ -3,7 +3,7 @@ from typing import Dict, Union, List
 
 from app.objects.club_dinghies import ClubDinghy, ListOfClubDinghyLimits, ListOfClubDinghies, event_id_for_generic_limit
 from app.objects.events import Event, ListOfEvents
-from app.objects.exceptions import missing_data
+from app.objects.utilities.exceptions import missing_data
 
 generic_limit_event = object()
 

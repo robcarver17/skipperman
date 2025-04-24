@@ -3,9 +3,9 @@ from copy import copy
 from enum import Enum
 from typing import Dict, List
 
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 
-from app.objects.generic_objects import from_bool_to_str, from_str_to_bool
+from app.objects.utilities.generic_objects import from_bool_to_str, from_str_to_bool
 
 Day = Enum(
     "Day",

@@ -19,7 +19,7 @@ from app.data_access.store.object_store import ObjectStore
 
 from app.backend.mapping.list_of_field_mappings import get_field_mapping_for_event
 from app.objects.events import Event
-from app.objects.exceptions import missing_data
+from app.objects.utilities.exceptions import missing_data
 from app.objects.registration_status import (
     RegistrationStatus,
     POSSIBLE_STATUS_NAMES,
@@ -29,7 +29,7 @@ from app.objects.registration_status import (
     active_part_paid_status,
     active_unpaid_status,
 )
-from app.objects.utils import transform_datetime_into_str
+from app.objects.utilities.utils import transform_datetime_into_str
 from app.objects.wa_field_mapping import ListOfWAFieldMappings
 from app.objects.registration_data import (
     RegistrationDataForEvent,

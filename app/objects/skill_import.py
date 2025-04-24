@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 
 import pandas as pd
 
-from app.objects.exceptions import missing_data
+from app.objects.utilities.exceptions import missing_data
 
 
 @dataclass

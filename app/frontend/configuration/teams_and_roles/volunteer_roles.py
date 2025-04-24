@@ -22,7 +22,7 @@ from app.frontend.configuration.generic_list_modifier import (
 )
 
 from app.objects.composed.volunteer_roles import ListOfRolesWithSkills, RoleWithSkills
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 
 from app.backend.volunteers.roles_and_teams import (
     get_list_of_roles_with_skills,

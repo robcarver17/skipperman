@@ -4,8 +4,7 @@ from app.objects.volunteers import Volunteer
 
 from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
 
-from app.objects.exceptions import NoDaysSelected
-from app.objects.volunteer_at_event_with_id import VolunteerAtEventWithId
+from app.objects.utilities.exceptions import NoDaysSelected
 
 from app.frontend.forms.form_utils import get_availablity_from_form
 from app.backend.volunteers.volunteers_at_event import add_volunteer_at_event

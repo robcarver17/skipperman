@@ -8,7 +8,7 @@ from app.objects.abstract_objects.abstract_lines import (
     _______________,
 )
 
-from app.objects.exceptions import (
+from app.objects.utilities.exceptions import (
     missing_data,
     NoFileUploaded,
     arg_not_passed,

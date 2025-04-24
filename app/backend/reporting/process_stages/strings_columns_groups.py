@@ -7,7 +7,7 @@ from app.backend.reporting.arrangement.arrange_options import (
 )
 
 from app.data_access.configuration.fixed import APPROX_WIDTH_TO_HEIGHT_RATIO
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 
 
 @dataclass

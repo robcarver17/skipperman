@@ -1,9 +1,8 @@
 from app.backend.groups.list_of_groups import get_group_with_name
-from app.backend.rota.volunteer_table import MAKE_UNAVAILABLE
 from app.backend.volunteers.roles_and_teams import get_role_from_name
 
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
-from app.objects.exceptions import MISSING_FROM_FORM, arg_not_passed, MissingData
+from app.objects.utilities.exceptions import MISSING_FROM_FORM, MissingData
 from app.objects.groups import unallocated_group
 from app.objects.volunteers import Volunteer
 

@@ -2,9 +2,9 @@ from copy import copy
 from dataclasses import dataclass
 from typing import Dict, List, Union
 
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.roles_and_teams import Team, role_location_lake
-from app.objects.utils import most_common, flatten
+from app.objects.utilities.utils import most_common, flatten
 
 from app.objects.events import ListOfEvents, Event
 

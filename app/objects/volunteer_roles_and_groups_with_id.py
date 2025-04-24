@@ -5,12 +5,12 @@ from typing import List
 from app.objects.roles_and_teams import Team, no_role_allocated_id
 
 from app.objects.day_selectors import Day
-from app.objects.exceptions import missing_data, arg_not_passed
-from app.objects.generic_list_of_objects import (
+from app.objects.utilities.exceptions import missing_data, arg_not_passed
+from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjects,
     get_unique_object_with_multiple_attr_in_list,
 )
-from app.objects.generic_objects import GenericSkipperManObject
+from app.objects.utilities.generic_objects import GenericSkipperManObject
 from app.objects.groups import Group, unallocated_group, unallocated_group_id
 from app.objects.volunteers import Volunteer
 

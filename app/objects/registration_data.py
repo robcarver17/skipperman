@@ -4,18 +4,18 @@ from random import random
 from typing import List
 import pandas as pd
 
-from app.objects.generic_list_of_objects import (
+from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjects,
     create_list_of_objects_from_dataframe,
     create_data_frame_given_list_of_objects,
 )
-from app.objects.generic_objects import GenericSkipperManObject
+from app.objects.utilities.generic_objects import GenericSkipperManObject
 from app.objects.registration_status import (
     RegistrationStatus,
     empty_status,
 manual_status
 )
-from app.objects.utils import (
+from app.objects.utilities.utils import (
     clean_up_dict_with_nans,
     transform_df_from_str_to_dates,
     transform_df_from_dates_to_str,
@@ -27,7 +27,7 @@ from app.data_access.configuration.field_list import (
     _REGISTRATION_STATUS,
     _SPECIAL_FIELDS, REGISTRATION_DATE, CADET_DATE_OF_BIRTH
 )
-from app.objects.exceptions import missing_data, arg_not_passed
+from app.objects.utilities.exceptions import missing_data, arg_not_passed
 from app.objects.cadets import default_cadet
 
 # can't use generic methods here as based on dataclasses
@@ -134,7 +134,7 @@ class RowInRegistrationData(GenericSkipperManObject, dict):
         self[_REGISTRATION_STATUS] = new_status
 
 
-from app.objects.generic_list_of_objects import get_unique_object_with_attr_in_list
+from app.objects.utilities.generic_list_of_objects import get_unique_object_with_attr_in_list
 
 
 class RegistrationDataForEvent(GenericListOfObjects):

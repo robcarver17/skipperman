@@ -4,7 +4,7 @@ from enum import EnumMeta
 
 import pandas as pd
 
-from app.objects.utils import (
+from app.objects.utilities.utils import (
     transform_date_into_str,
     transform_datetime_into_str,
     clean_up_dict_with_nans,

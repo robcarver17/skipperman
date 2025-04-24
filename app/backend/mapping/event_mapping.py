@@ -3,7 +3,7 @@ from app.backend.wild_apricot.load_wa_file import get_event_id_from_wa_df
 from app.backend.events.list_of_events import get_event_from_id
 
 from app.objects.events import Event
-from app.objects.exceptions import FileError
+from app.objects.utilities.exceptions import FileError
 
 from app.objects.wa_event_mapping import ListOfWAEventMaps
 

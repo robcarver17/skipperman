@@ -3,9 +3,9 @@ from dataclasses import dataclass
 from typing import List, Dict, Tuple
 
 from app.objects.cadets import ListOfCadets, Cadet
-from app.objects.generic_list_of_objects import GenericListOfObjects
+from app.objects.utilities.generic_list_of_objects import GenericListOfObjects
 
-from app.objects.generic_objects import GenericSkipperManObject
+from app.objects.utilities.generic_objects import GenericSkipperManObject
 from app.objects.qualifications import (
     ListOfQualifications,
     ListOfCadetsWithIdsAndQualifications,

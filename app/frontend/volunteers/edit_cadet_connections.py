@@ -13,7 +13,6 @@ from app.objects.abstract_objects.abstract_buttons import (
     Button,
 )
 from app.objects.abstract_objects.abstract_lines import (
-    Line,
     ListOfLines,
 )
 from app.frontend.form_handler import (
@@ -31,7 +30,7 @@ from app.backend.volunteers.connected_cadets import (
 )
 
 from app.frontend.shared.volunteer_state import get_volunteer_from_state
-from app.objects.exceptions import CadetNotSelected
+from app.objects.utilities.exceptions import CadetNotSelected
 
 
 def display_form_edit_cadet_volunteer_connections(

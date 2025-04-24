@@ -9,7 +9,7 @@ from app.data_access.configuration.configuration import (
     WILD_APRICOT_EVENT_ID,
 )
 from app.data_access.init_directories import upload_directory
-from app.objects.exceptions import NoValidID, FileError
+from app.objects.utilities.exceptions import NoValidID, FileError
 
 
 def get_event_id_from_wa_df(wa_as_df: pd.DataFrame) -> str:

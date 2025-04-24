@@ -19,7 +19,6 @@ from app.objects.composed.cadets_at_event_with_registration_data import (
     DictOfCadetsWithRegistrationData,
 )
 from app.objects.day_selectors import Day, DaySelector
-from app.objects.exceptions import arg_not_passed
 from app.objects.groups import unallocated_group
 from app.objects.partners import valid_partnership_given_partner_cadet, NoCadetPartner
 

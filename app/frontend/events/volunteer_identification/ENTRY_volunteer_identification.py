@@ -34,7 +34,7 @@ from app.objects.abstract_objects.abstract_interface import (
 )
 from app.objects.cadets import Cadet
 
-from app.objects.exceptions import NoMoreData, arg_not_passed,  missing_data
+from app.objects.utilities.exceptions import NoMoreData, arg_not_passed,  missing_data
 from app.objects.relevant_information_for_volunteers import (
     missing_relevant_information,
 )

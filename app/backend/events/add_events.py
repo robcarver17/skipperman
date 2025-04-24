@@ -7,7 +7,6 @@ from app.data_access.store.object_store import ObjectStore
 from app.backend.events.list_of_events import get_sorted_list_of_events
 from app.data_access.configuration.configuration import (
     SIMILARITY_LEVEL_TO_WARN_NAME,
-    SIMILARITY_LEVEL_TO_WARN_DATE,
 )
 
 from app.objects.events import Event, default_event
@@ -44,9 +43,7 @@ def contains_2_more_digits(string: str) -> bool:
 def warning_for_similar_events(object_store: ObjectStore, event: Event) -> str:
     existing_events = get_sorted_list_of_events(object_store)
     similar_events = existing_events.similar_events(
-        event,
-        name_threshold=SIMILARITY_LEVEL_TO_WARN_NAME,
-        date_threshold=SIMILARITY_LEVEL_TO_WARN_DATE,
+        event
     )
 
     if len(similar_events) > 0:

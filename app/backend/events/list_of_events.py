@@ -12,7 +12,7 @@ from app.objects.events import (
 )
 
 from app.data_access.store.object_store import ObjectStore
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 
 
 def list_of_previously_used_event_names(object_store: ObjectStore) -> list:

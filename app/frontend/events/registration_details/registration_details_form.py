@@ -30,7 +30,7 @@ from app.data_access.configuration.field_list_groups import (
     FIELDS_VIEW_ONLY_IN_EDIT_VIEW,
     FIELDS_TO_EDIT_IN_EDIT_VIEW,
 )
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.registration_status import (
     RegistrationStatus,
     get_states_allowed_give_current_status,

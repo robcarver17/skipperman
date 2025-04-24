@@ -8,7 +8,7 @@ from app.data_access.configuration.field_list import (
     ALL_DAYS_ATTENDING_INPUT,
     CADET_HEALTH,
 )
-from app.objects.exceptions import missing_data, arg_not_passed
+from app.objects.utilities.exceptions import missing_data, arg_not_passed
 from app.objects.day_selectors import (
     DaySelector,
     day_selector_stored_format_from_text,
@@ -16,12 +16,12 @@ from app.objects.day_selectors import (
     create_day_selector_from_short_form_text_with_passed_days,
 )
 from app.objects.events import Event
-from app.objects.generic_list_of_objects import (
+from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     get_unique_object_with_attr_in_list,
     get_idx_of_unique_object_with_attr_in_list,
 )
-from app.objects.generic_objects import (
+from app.objects.utilities.generic_objects import (
     transform_class_instance_into_string,
     transform_string_into_class_instance,
     GenericSkipperManObjectWithIds,
@@ -30,7 +30,7 @@ from app.objects.registration_data import (
     RowInRegistrationData,
 )
 from app.objects.registration_status import RegistrationStatus
-from app.objects.utils import clean_up_dict_with_nans
+from app.objects.utilities.utils import clean_up_dict_with_nans
 
 STATUS_KEY = "status"
 AVAILABILITY = "availability"

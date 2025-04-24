@@ -11,10 +11,10 @@ from app.frontend.shared.add_or_select_volunteer import get_add_or_select_existi
 from app.objects.abstract_objects.abstract_buttons import save_menu_button, cancel_menu_button, HelpButton
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_lines import ListOfLines, ProgressBar, HorizontalLine, _______________, Line
+from app.objects.abstract_objects.abstract_lines import ListOfLines, ProgressBar, HorizontalLine, _______________
 from app.objects.skill_import import RowInImportedSkillsFile
-from app.objects.exceptions import NoMoreData, missing_data
-from app.objects.utils import percentage_of_x_in_y
+from app.objects.utilities.exceptions import NoMoreData, missing_data
+from app.objects.utilities.utils import percentage_of_x_in_y
 from app.objects.volunteers import Volunteer
 
 

@@ -1,17 +1,15 @@
 from dataclasses import dataclass
-from typing import List
 
 from app.data_access.configuration.configuration import (
     SIMILARITY_LEVEL_TO_WARN_NAME,
 )
-from app.objects.generic_list_of_objects import (
+from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     get_unique_object_with_attr_in_list,
-    get_idx_of_unique_object_with_attr_in_list,
 )
-from app.objects.generic_objects import GenericSkipperManObjectWithIds
-from app.objects.utils import similar
-from app.objects.exceptions import arg_not_passed, MissingData, missing_data
+from app.objects.utilities.generic_objects import GenericSkipperManObjectWithIds
+from app.objects.utilities.utils import similar
+from app.objects.utilities.exceptions import arg_not_passed, missing_data
 
 
 @dataclass

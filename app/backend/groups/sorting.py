@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List
 
 import pandas as pd
 
@@ -6,10 +6,9 @@ from app.backend.boat_classes.list_of_boat_classes import get_list_of_boat_class
 from app.backend.club_boats.list_of_club_dinghies import get_list_of_club_dinghies
 from app.backend.groups.list_of_groups import get_list_of_groups
 from app.data_access.store.object_store import ObjectStore
-from app.objects.cadets import ListOfCadets, Cadet
-from app.objects.partners import NoCadetPartner
+from app.objects.cadets import ListOfCadets
 from app.objects.day_selectors import Day
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 
 CADET = "Cadet"

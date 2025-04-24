@@ -1,17 +1,15 @@
 from dataclasses import dataclass
 
-from app.objects.exceptions import (
-    MissingData,
-    MultipleMatches,
+from app.objects.utilities.exceptions import (
     arg_not_passed,
     missing_data,
 )
-from app.objects.generic_list_of_objects import GenericListOfObjects
-from app.objects.generic_objects import GenericSkipperManObject
-from app.objects.generic_list_of_objects import (
+from app.objects.utilities.generic_list_of_objects import GenericListOfObjects
+from app.objects.utilities.generic_objects import GenericSkipperManObject
+from app.objects.utilities.generic_list_of_objects import (
     get_unique_object_with_multiple_attr_in_list,
 )
-from app.objects.generic_list_of_objects import get_idx_of_multiple_object_with_multiple_attr_in_list
+from app.objects.utilities.generic_list_of_objects import get_idx_of_multiple_object_with_multiple_attr_in_list
 
 @dataclass
 class VolunteerSkillWithIds(GenericSkipperManObject):

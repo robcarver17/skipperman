@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 
-from app.objects.exceptions import arg_not_passed, missing_data
-from app.objects.utils import in_x_not_in_y, in_both_x_and_y
-from app.objects.generic_list_of_objects import (
+from app.objects.utilities.exceptions import arg_not_passed, missing_data
+from app.objects.utilities.utils import in_x_not_in_y, in_both_x_and_y
+from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjects,
     get_unique_object_with_attr_in_list,
 )
-from app.objects.generic_objects import GenericSkipperManObject
+from app.objects.utilities.generic_objects import GenericSkipperManObject
 
 SKIPPERMAN_FIELD_COLUMN_VALUE = "skipperman_field"
 WA_FIELD_COLUMN_KEY = "wa_field"

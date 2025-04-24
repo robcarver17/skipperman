@@ -1,12 +1,6 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.backend.registration_data.volunteer_registration_data import (
-    get_dict_of_registration_data_for_volunteers_at_event,
-)
-
-from app.objects.exceptions import arg_not_passed
-
 from app.data_access.store.object_store import ObjectStore
 
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
@@ -14,12 +8,11 @@ from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
     update_dict_of_patrol_boats_by_day_for_volunteer_at_event,
 )
 
-from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import (
     VolunteerAtEventWithSkillsAndRolesAndPatrolBoats,
 )
 
-from app.objects.day_selectors import Day, DaySelector
+from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.patrol_boats import PatrolBoat
 from app.objects.volunteers import Volunteer

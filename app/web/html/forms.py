@@ -3,7 +3,7 @@ import datetime
 import numpy as np
 
 from app.web.html.html_components import Html, HtmlWrapper
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 
 
 def form_html_wrapper(current_url: str):

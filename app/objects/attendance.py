@@ -3,9 +3,9 @@ from dataclasses import dataclass
 from enum import Enum
 
 from app.objects.day_selectors import Day
-from app.objects.generic_objects import GenericSkipperManObject
-from app.objects.generic_list_of_objects import GenericListOfObjects, get_subset_of_list_that_matches_multiple_attr
-from app.objects.utils import transform_datetime_into_str
+from app.objects.utilities.generic_objects import GenericSkipperManObject
+from app.objects.utilities.generic_list_of_objects import GenericListOfObjects, get_subset_of_list_that_matches_multiple_attr
+from app.objects.utilities.utils import transform_datetime_into_str
 
 Attendance = Enum("Attendance", ["Not attending today",
                                  'Attending, register not yet taken',

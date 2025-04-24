@@ -12,7 +12,7 @@ from app.objects.composed.cadets_with_all_event_info_functions import (
     RequiredDictForAllocation,
 )
 from app.objects.day_selectors import DaySelector, Day
-from app.objects.exceptions import MissingData, arg_not_passed
+from app.objects.utilities.exceptions import MissingData, arg_not_passed
 from app.objects.food import no_food_requirements
 from app.objects.groups import Group, unallocated_group
 

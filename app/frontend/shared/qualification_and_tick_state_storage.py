@@ -1,4 +1,4 @@
-from app.objects.exceptions import MissingData
+from app.objects.utilities.exceptions import MissingData
 
 from app.frontend.shared.cadet_state import get_cadet_from_state
 

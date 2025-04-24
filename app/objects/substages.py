@@ -1,14 +1,12 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.objects.exceptions import (
+from app.objects.utilities.exceptions import (
     arg_not_passed,
-    missing_data,
     MissingData,
-    MultipleMatches,
 )
-from app.objects.generic_list_of_objects import GenericListOfObjectsWithIds
-from app.objects.generic_objects import GenericSkipperManObjectWithIds
+from app.objects.utilities.generic_list_of_objects import GenericListOfObjectsWithIds
+from app.objects.utilities.generic_objects import GenericSkipperManObjectWithIds
 
 
 @dataclass
@@ -26,7 +24,7 @@ class TickSubStage(GenericSkipperManObjectWithIds):
         return hash(self.name)
 
 
-from app.objects.generic_list_of_objects import (
+from app.objects.utilities.generic_list_of_objects import (
     get_unique_object_with_attr_in_list,
     index_not_found,
 )

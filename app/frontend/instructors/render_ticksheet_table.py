@@ -1,5 +1,5 @@
 from app.frontend.shared.events_state import get_event_from_state
-from app.objects.exceptions import MissingData, MISSING_FROM_FORM
+from app.objects.utilities.exceptions import MissingData, MISSING_FROM_FORM
 
 from app.frontend.shared.cadet_state import get_cadet_from_state
 from typing import List, Dict

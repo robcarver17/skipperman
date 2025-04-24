@@ -3,19 +3,15 @@ from typing import List
 from app.backend.groups.previous_groups import (
     get_group_allocations_for_event_active_cadets_only,
 )
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 
-from app.objects.day_selectors import Day
 from app.objects.cadet_attendance import DictOfDaySelectors
 
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     get_attendance_matrix_for_list_of_cadets_at_event,
     get_dict_of_all_event_info_for_cadets,
 )
-from app.backend.registration_data.cadet_registration_data import (
-    is_cadet_unavailable_on_day,
-)
-from app.objects.cadets import ListOfCadets, Cadet
+from app.objects.cadets import ListOfCadets
 from app.objects.composed.cadets_at_event_with_groups import (
     DictOfCadetsWithDaysAndGroupsAtEvent,
 )

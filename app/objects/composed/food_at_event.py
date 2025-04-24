@@ -1,8 +1,6 @@
-from dataclasses import dataclass
 from typing import Dict, List
 
 from app.objects.events import ListOfEvents, Event
-from app.objects.exceptions import MissingData
 
 from app.objects.food import (
     ListOfCadetsWithFoodRequirementsAtEvent,
@@ -12,7 +10,7 @@ from app.objects.food import (
 )
 from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.volunteers import ListOfVolunteers, Volunteer
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 
 
 class DictOfCadetsWithFoodRequirementsAtEvent(Dict[Cadet, FoodRequirements]):

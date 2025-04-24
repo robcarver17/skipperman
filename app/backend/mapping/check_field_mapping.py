@@ -16,7 +16,7 @@ from app.objects.events import Event
 from app.data_access.configuration.field_list_groups import (
     ALL_FIELDS_EXPECTED_IN_WA_FILE_MAPPING, MINIMUM_REQUIRED_FOR_REGISTRATION,MINIMUM_REQUIRED_FOR_REGISTRATION_ALTS
 )
-from app.objects.utils import in_x_not_in_y
+from app.objects.utilities.utils import in_x_not_in_y
 from app.objects.abstract_objects.abstract_text import bold
 from app.objects.abstract_objects.abstract_lines import (
     Line,

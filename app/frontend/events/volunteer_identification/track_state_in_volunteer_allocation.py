@@ -1,5 +1,5 @@
 from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
-from app.objects.utils import percentage_of_x_in_y
+from app.objects.utilities.utils import percentage_of_x_in_y
 
 from app.objects.volunteers import Volunteer
 
@@ -15,7 +15,7 @@ from app.backend.registration_data.identified_volunteers_at_event import (
     get_relevant_information_for_volunteer_in_event_at_row_and_index,
     get_list_of_unique_volunteer_ids_identified_in_registration_data,
 )
-from app.objects.exceptions import missing_data, NoMoreData
+from app.objects.utilities.exceptions import missing_data, NoMoreData
 from app.data_access.configuration.field_list_groups import LIST_OF_VOLUNTEER_FIELDS
 
 number_of_volunteers_allowed = len(LIST_OF_VOLUNTEER_FIELDS)

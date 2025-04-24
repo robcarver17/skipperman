@@ -1,8 +1,8 @@
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import Dict
 
 from app.objects.events import Event, ListOfEvents
-from app.objects.exceptions import MissingData, arg_not_passed
+from app.objects.utilities.exceptions import MissingData, arg_not_passed
 
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.volunteer_at_event_with_id import (

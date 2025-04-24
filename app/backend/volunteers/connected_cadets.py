@@ -2,11 +2,11 @@ from copy import copy
 from typing import List
 
 from app.backend.volunteers.add_edit_volunteer import list_of_similar_volunteers
-from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME
-from app.objects.exceptions import missing_data, arg_not_passed
+from app.objects.utilities.exceptions import missing_data, arg_not_passed
 
 from app.objects.cadets import ListOfCadets, Cadet
-from app.objects.utils import union_of_x_and_y, similar
+from app.objects.utilities.cadet_matching_and_sorting import get_list_of_cadets_with_similar_surname
+from app.objects.utilities.utils import union_of_x_and_y
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.composed.cadet_volunteer_associations import (
     ListOfCadetVolunteerAssociations,
@@ -84,12 +84,8 @@ def get_list_of_cadets_with_those_with_name_similar_to_volunteer_with_listed_fir
 def get_list_of_cadets_with_names_similar_to_volunteer(
     volunteer: Volunteer, from_list_of_cadets: ListOfCadets
 ) -> ListOfCadets:
-    volunteer_as_pseudo_cadet = Cadet.from_name_only(
-        first_name=volunteer.first_name,
-        surname=volunteer.surname,
-    )  ## so matching works
 
-    similar_cadets = from_list_of_cadets.similar_surnames(volunteer_as_pseudo_cadet)
+    similar_cadets = get_list_of_cadets_with_similar_surname(from_list_of_cadets, surname=volunteer.surname)
     similar_cadets = similar_cadets.sort_by_firstname()
 
     return similar_cadets

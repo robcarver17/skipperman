@@ -30,7 +30,7 @@ from app.objects.abstract_objects.abstract_text import (
     at_symbol,
     Text,
 )
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 from app.web.html.html_components import (
     html_container_wrapper,
     Html,
@@ -38,7 +38,7 @@ from app.web.html.html_components import (
     html_link,
     get_detail_wrapper,
 )
-from app.web.html.url_define import get_help_url, INDEX_URL, MAIN_MENU_URL
+from app.web.html.url_define import get_help_url, MAIN_MENU_URL
 
 
 def get_html_for_heading(heading: Heading):

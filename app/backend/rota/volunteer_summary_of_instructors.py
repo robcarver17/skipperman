@@ -12,9 +12,9 @@ from app.objects.composed.volunteer_with_group_and_role_at_event import \
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.groups import Group
-from app.objects.utils import flatten
+from app.objects.utilities.utils import flatten
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
-from app.objects.abstract_objects.abstract_form import textInput, textAreaInput
+from app.objects.abstract_objects.abstract_form import textAreaInput
 
 
 def get_summary_table_of_instructors_and_groups_for_event(object_store: ObjectStore, event: Event) -> Table:

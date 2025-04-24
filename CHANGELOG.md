@@ -15,7 +15,9 @@ Before Cadet week
 
 # done recently
 
-- delete cadet option added
+- cleaned up similarity code for cadets, and added 'auto add' option 
+- added 'total' rows to summary tables
+- delete cadet/volunteer option added to admin menu
 - added extra copy menus and generally make sure you are sure before doing something crazy
 - any button press now saves form inputs
 - instructor / group summary table on volunteer rota

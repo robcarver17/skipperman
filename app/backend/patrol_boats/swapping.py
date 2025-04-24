@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from app.data_access.store.object_store import ObjectStore
 
 from app.backend.rota.changes import swap_roles_and_groups_for_volunteers_in_allocation
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.patrol_boats import PatrolBoat
 
 from app.objects.volunteers import Volunteer

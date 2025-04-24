@@ -6,8 +6,8 @@ from app.backend.volunteers.list_of_volunteers import (
     update_list_of_volunteers,
 )
 from app.objects.cadets import Cadet
-from app.objects.exceptions import arg_not_passed
-from app.objects.utils import similar
+from app.objects.utilities.exceptions import arg_not_passed
+from app.objects.utilities.utils import similar
 from app.objects.volunteers import Volunteer
 
 

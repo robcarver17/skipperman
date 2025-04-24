@@ -25,7 +25,7 @@ from app.objects.abstract_objects.abstract_lines import (
     _______________,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface, form_with_message_and_finished_button
-from app.objects.cadets import SORT_BY_SIMILARITY_BOTH
+from app.objects.utilities.cadet_matching_and_sorting import SORT_BY_SIMILARITY_BOTH
 
 
 def display_form_merge_delete_cadets(interface: abstractInterface):

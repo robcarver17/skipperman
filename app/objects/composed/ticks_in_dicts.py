@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from app.objects.exceptions import missing_data
+from app.objects.utilities.exceptions import missing_data
 from app.objects.qualifications import Qualification, ListOfQualifications
 from app.objects.substages import (
     TickSubStage,

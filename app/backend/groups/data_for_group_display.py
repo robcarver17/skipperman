@@ -3,11 +3,9 @@ from typing import Dict, List, Tuple, Union
 
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     cadet_is_unavailable_on_day,
-    cadet_is_available_on_day,
     cadet_availability_at_event,
 )
 from app.data_access.configuration.field_list import (
-    CADET_BOAT_OWNERSHIP_STATUS,
     CADET_GROUP_PREFERENCE,
     CADET_BOAT_CLASS,
     DESIRED_BOAT,
@@ -18,9 +16,9 @@ from app.objects.cadets import Cadet
 from app.objects.club_dinghies import ListOfClubDinghies, no_club_dinghy
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 from app.objects.day_selectors import Day
-from app.objects.exceptions import missing_data, arg_not_passed
+from app.objects.utilities.exceptions import missing_data, arg_not_passed
 from app.objects.groups import unallocated_group
-from app.objects.utils import all_equal, similar
+from app.objects.utilities.utils import all_equal, similar
 
 
 def get_current_group_name_across_days_or_none_if_different(

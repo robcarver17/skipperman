@@ -16,7 +16,7 @@ from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import (
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.day_selectors import Day
 from app.objects.events import Event, ListOfEvents
-from app.objects.exceptions import missing_data, arg_not_passed
+from app.objects.utilities.exceptions import missing_data, arg_not_passed
 from app.objects.partners import (
     no_cadet_partner_required,
     from_cadet_id_to_partner_cadet,
@@ -24,7 +24,7 @@ from app.objects.partners import (
     from_partner_cadet_to_id_or_string,
     NoCadetPartner, valid_partnership_given_partner_cadet,
 )
-from app.objects.utils import most_common, flatten
+from app.objects.utilities.utils import most_common, flatten
 
 
 @dataclass

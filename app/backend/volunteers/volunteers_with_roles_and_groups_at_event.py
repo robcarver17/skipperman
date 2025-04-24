@@ -24,7 +24,7 @@ from app.objects.events import (
     list_of_events_excluding_one_event_and_past_events,
     ListOfEvents,
 )
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.volunteers import Volunteer
 
 ALL_EVENTS = 999999999999

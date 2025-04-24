@@ -3,7 +3,6 @@ from typing import Union, Tuple
 from app.frontend.shared.cadet_state import get_cadet_from_state, clear_cadet_state
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 
-from app.frontend.events.group_allocation.store_state import get_day_from_state_or_none
 from app.backend.cadets_at_event.add_unregistered_partner_cadet import (
     from_partner_name_to_cadet,
     add_unregistered_partner_cadet,
@@ -19,7 +18,7 @@ ParametersForGetOrSelectCadetForm, generic_post_response_to_add_or_select_cadet,
 from app.objects.cadets import Cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.exceptions import MissingData, missing_data
+from app.objects.utilities.exceptions import missing_data
 from app.backend.registration_data.cadet_registration_data import get_cadet_at_event
 
 

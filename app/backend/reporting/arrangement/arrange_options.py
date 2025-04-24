@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import pandas as pd
 
 from app.backend.reporting.arrangement.group_order import GroupOrder
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 from app.backend.reporting.arrangement.arrangement_order import ArrangementOfColumns
 from app.backend.reporting.arrangement.arrangement_methods import (
     ArrangementMethod,

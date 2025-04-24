@@ -15,11 +15,10 @@ from app.web.flask.session_data_for_action import (
 from app.web.html.forms import html_as_date
 from app.web.html.abstract_components_to_html import HTML_BUTTON_NAME
 from app.web.html.read_only import is_read_only
-from app.objects.exceptions import (
+from app.objects.utilities.exceptions import (
     NoFileUploaded,
     missing_data,
     arg_not_passed,
-    NoButtonPressed,
 )
 from flask import request
 

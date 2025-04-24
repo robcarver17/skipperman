@@ -172,7 +172,7 @@ def get_cadet_from_button_pressed(interface: abstractInterface) -> Cadet:
     return cadet
 
 
-from app.objects.exceptions import CadetNotSelected
+from app.objects.utilities.exceptions import CadetNotSelected
 
 
 def get_selected_cadet_from_form(interface: abstractInterface) -> Cadet:

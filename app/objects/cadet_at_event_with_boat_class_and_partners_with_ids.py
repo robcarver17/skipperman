@@ -1,23 +1,21 @@
 from dataclasses import dataclass
 
 from app.objects.day_selectors import Day
-from app.objects.exceptions import missing_data, arg_not_passed
-from app.objects.generic_list_of_objects import (
+from app.objects.utilities.exceptions import missing_data, arg_not_passed
+from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     get_idx_of_unique_object_with_multiple_attr_in_list,
     get_unique_object_with_multiple_attr_in_list,
 )
-from app.objects.generic_objects import (
+from app.objects.utilities.generic_objects import (
     GenericSkipperManObject,
     get_class_instance_from_str_dict,
 )
 from app.objects.partners import (
     NO_PARTNER_REQUIRED_STR,
     NOT_ALLOCATED_STR,
-    valid_partnership_given_partner_id_or_str,
-    from_partner_cadet_to_id_or_string,
 )
-from app.objects.utils import make_id_as_int_str
+from app.objects.utilities.utils import make_id_as_int_str
 from app.objects.boat_classes import NO_BOAT_CLASS_ID
 
 

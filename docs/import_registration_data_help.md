@@ -122,6 +122,12 @@ Skipperman will attempt to identify all the cadets in the imported WA event file
 - If this is a new cadet: check the name and date of birth, and membership status. For racing events you won't usually have the date of birth - if they are a visitor don't worry about including this. If they are a member that is new to Skipperman, you can [edit the date of birth later](view_and_edit_individual_cadet_help.md). For membership status unless you are sure they are (or are not) a member, put 'unconfirmed'. Membership can be confirmed by [importing a list of club members exported from WA](import_membership_list_help)). It is possible to edit the cadet details, and these can also be updated by importing a list of club members from Wild Apricot, so don't worry too much if these aren't precisely right.  
 - If this is a test entry and not a real cadet: click the "Skip: this is a test entry" button. 
 
+Sometimes a cadet entry is very close, but not identical. In this case the cadet will be added to the data, but you will see a warning like this:
+
+```
+Found cadet John Doe (2001-10-01) Member, looks a very close match for Jon Doe (2001-01-10) Unconfirmed member in registration data. If not correct, replace in edit registration page.
+```
+
 More help with identifying cadets [here](identify_cadets_at_event_help.md)
 
 ## Adding cadet registration data

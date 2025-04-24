@@ -3,8 +3,8 @@ from app.backend.registration_data.raw_mapped_registration_data import (
 )
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.exceptions import missing_data, NoMoreData
-from app.objects.utils import percentage_of_x_in_y
+from app.objects.utilities.exceptions import missing_data, NoMoreData
+from app.objects.utilities.utils import percentage_of_x_in_y
 
 ROW_ID = "row_id"
 

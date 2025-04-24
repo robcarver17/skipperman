@@ -1,7 +1,7 @@
 import datetime
 import pathlib
 
-from app.objects.utils import transform_datetime_into_str, transform_str_into_datetime
+from app.objects.utilities.utils import transform_datetime_into_str, transform_str_into_datetime
 import os
 from typing import List
 

@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from app.objects.exceptions import missing_data
-from app.objects.generic_list_of_objects import GenericListOfObjects
-from app.objects.generic_objects import GenericSkipperManObject
+from app.objects.utilities.exceptions import missing_data
+from app.objects.utilities.generic_list_of_objects import GenericListOfObjects
+from app.objects.utilities.generic_objects import GenericSkipperManObject
 
 
 @dataclass
@@ -10,7 +10,7 @@ class CadetVolunteerAssociationWithIds(GenericSkipperManObject):
     cadet_id: str
     volunteer_id: str
 
-from app.objects.generic_list_of_objects import get_unique_object_with_multiple_attr_in_list
+from app.objects.utilities.generic_list_of_objects import get_unique_object_with_multiple_attr_in_list
 
 class ListOfCadetVolunteerAssociationsWithIds(GenericListOfObjects):
     @property

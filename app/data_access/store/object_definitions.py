@@ -60,7 +60,7 @@ from app.objects.composed.volunteers_with_all_event_data import (
     compose_dict_of_all_event_data_for_volunteers,
 )
 from app.objects.composed.volunteers_with_skills import compose_dict_of_volunteer_skills
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.composed.dict_of_volunteer_role_targets import (
     compose_list_of_targets_for_roles_at_event,
 )

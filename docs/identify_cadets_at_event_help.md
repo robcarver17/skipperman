@@ -1,8 +1,36 @@
-Skipperman will attempt to identify all the sailors at an event in imported registration data. If the cadet isn't *identical* to one that is already in the data (EXACTLY the same name, and date of birth), then Skipperman will ask you to add the cadet to it's data. You will see a screen like this:
+
+
 
 [TOC]
 
 # Importing registration data
+
+Skipperman will attempt to identify all the sailors at an event in imported registration data. 
+
+## If the cadet is an identical match
+
+If the cadet in the registration is identical to an existing cadet (same name, and date of birth) then Skipperman will 'silently' add it to the registration data.
+
+## If the cadet is almost an identical match
+
+If the cadet in the registration is very similar to a single existing cadet, then Skipperman will add it but flag it like this:
+
+```
+Found cadet John Doe (2001-10-01) Member, looks a very close match for Jon Doe (2025-01-10) Unconfirmed member in registration data. If not correct, replace in edit registration page.
+```
+
+This is to avoid common problems with mismatches causing annoying requests to check cadet details:
+
+- using the current year for the date of birth instead of the actual one (as above)
+- getting day and month mixed up in a date entry field (as above)
+- slightly misspelling the name (as above)
+- for racing events, not including the date of birth on the entry form
+
+It won't deal with names that are very different. 
+
+## If the cadet isn't a close match to a single existing cadet
+
+If the cadet isn't identical or a close match to a single existing cadet, then Skipperman will ask you to add the cadet to it's data. You will see a screen like this:
 
 ***
 ***
@@ -15,13 +43,13 @@ You will then see some warnings about the cadet: if the name shown appears too s
 
 Finally, you will see some option buttons.
 
-## If this is not a new cadet
+### If this is not a new cadet
 
 You will probably see a warning saying that the Cadet is very similar to an existing cadet. At the bottom of the page you will see buttons with existing cadet(s) on them. Click to choose the cadet you want. If you can't see the cadet you want, click on `Choose from all existing cadets`. You can sort the full list of cadets in different ways to make it easier to find the cadet you are looking for. 
 
 You can also go back to just seeing the most similar cadets by clicking `See similar cadets only`'.
 
-## If this is actually a new cadet
+### If this is actually a new cadet
 
  **It's really important that you don't add duplicate cadets to the Skipperman data**
 
@@ -41,7 +69,7 @@ Remember it is possible to edit the cadet details, and these can also be updated
 
 Once you are happy, click on `I have double checked these details - allow me to add` and then on `Yes - these details are correct - add this new cadet`.
 
-## If this is a test entry
+### If this is a test entry
 
 Sometimes when testing the registration system (eg Wild Apricot) it's useful to create test entries, which don't have real cadets (of course you can also use real cadets but this can cause confusion). If this is a test entry, click on `Skip: this is a test entry`. 
 

@@ -3,8 +3,8 @@ from typing import List
 
 import pandas as pd
 
-from app.objects.exceptions import arg_not_passed
-from app.objects.membership_status import none_member, user_unconfirmed_member
+from app.objects.utilities.exceptions import arg_not_passed
+from app.objects.membership_status import user_unconfirmed_member
 
 from app.data_access.configuration.field_list import (
     CADET_FIRST_NAME,

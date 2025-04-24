@@ -10,7 +10,7 @@ from app.objects.composed.cadet_volunteer_associations import (
     DictOfCadetsAssociatedWithVolunteer,
 )
 from app.objects.events import ListOfEvents, Event
-from app.objects.exceptions import arg_not_passed, MissingData
+from app.objects.utilities.exceptions import arg_not_passed, MissingData
 from app.objects.food import no_food_requirements
 from app.objects.groups import Group
 from app.objects.patrol_boats import PatrolBoat
@@ -23,8 +23,7 @@ from app.objects.composed.volunteers_with_skills import (
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
     DictOfDaysRolesAndGroupsAndTeams,
     DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
-    RoleAndGroupAndTeam, RoleAndGroup,
-)
+    RoleAndGroupAndTeam, )
 from app.objects.composed.volunteers_at_event_with_registration_data import (
     RegistrationDataForVolunteerAtEvent,
     DictOfRegistrationDataForVolunteerAtEvent,

@@ -30,12 +30,11 @@ PUBLIC_WEB_PATH = "%s/%s/" % (HOMEPAGE, PUBLIC_REPORTING_SUBDIRECTORY)
 
 ## Cadets
 SIMILARITY_LEVEL_TO_WARN_NAME = configuration[
-    "similarity_level_to_warn_when_comparing_names"
+    "similarity_level_to_warn_when_comparing_names_on_event_import"
 ]
-SIMILARITY_LEVEL_TO_WARN_NAME_ON_MATCHING_MEMBERSHIP_LIST = SIMILARITY_LEVEL_TO_WARN_NAME
-SIMILARITY_LEVEL_TO_WARN_DATE = configuration[
-    "similarity_level_to_warn_when_comparing_dates"
-]
+SIMILARITY_LEVEL_TO_MATCH_VERY_SIMILAR_FIRST_NAMES = configuration["similarity_level_to_match_a_very_similar_cadet_first_name_on_event_import"]
+SIMILARITY_LEVEL_TO_WARN_NAME_ON_MATCHING_MEMBERSHIP_LIST = configuration["similarity_level_to_warn_when_comparing_names_in_membership_list"]
+
 
 MIN_CADET_AGE = configuration["minimum_cadet_age"]
 MAX_CADET_AGE = configuration["maximium_cadet_age"]

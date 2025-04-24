@@ -32,7 +32,7 @@ from app.objects.membership_status import (
     describe_status,
     all_status_description_as_dict_for_user_input,
 )
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 
 
 @dataclass

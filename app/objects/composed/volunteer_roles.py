@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Tuple, Union
 
-from app.objects.exceptions import arg_not_passed, MissingData, missing_data
+from app.objects.utilities.exceptions import arg_not_passed, missing_data
 from app.objects.volunteer_skills import ListOfSkills
 from app.objects.roles_and_teams import RolesWithSkillIds, ListOfRolesWithSkillIds
 from app.objects.composed.volunteers_with_skills import SkillsDict
@@ -80,7 +80,7 @@ def from_list_of_skill_ids_to_padded_dict_of_skills(
     return skills_dict
 
 
-from app.objects.generic_list_of_objects import (
+from app.objects.utilities.generic_list_of_objects import (
     get_unique_object_with_attr_in_list,
     get_idx_of_unique_object_with_attr_in_list,
 )

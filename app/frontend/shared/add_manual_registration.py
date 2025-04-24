@@ -8,7 +8,7 @@ from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import  ListOfLines
 from app.objects.cadets import Cadet, default_cadet
-from app.objects.exceptions import missing_data
+from app.objects.utilities.exceptions import missing_data
 
 
 def display_add_unregistered_form(

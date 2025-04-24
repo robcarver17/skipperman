@@ -1,5 +1,5 @@
 from app.backend.cadets.list_of_cadets import get_cadet_from_id
-from app.objects.exceptions import missing_data, MissingData, arg_not_passed
+from app.objects.utilities.exceptions import missing_data, MissingData
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet

@@ -9,7 +9,7 @@ from app.backend.registration_data.identified_cadets_at_event import \
 from app.backend.volunteers.connected_cadets import delete_all_connections_for_cadet
 from app.data_access.store.object_store import ObjectStore
 from app.objects.cadets import Cadet
-from app.objects.exceptions import missing_data
+from app.objects.utilities.exceptions import missing_data
 
 from app.backend.events.list_of_events import get_list_of_events
 

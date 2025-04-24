@@ -1,8 +1,7 @@
 from app.objects.cadets import ListOfCadets
 from app.objects.composed.volunteers_at_event_with_registration_data import RegistrationDataForVolunteerAtEvent
-from app.objects.volunteer_at_event_with_id import VolunteerAtEventWithId
 
-from app.objects.utils import in_x_not_in_y
+from app.objects.utilities.utils import in_x_not_in_y
 
 from app.data_access.store.object_store import ObjectStore
 

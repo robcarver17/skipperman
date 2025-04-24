@@ -83,6 +83,7 @@ def get_filename_and_save_new_file(interface: abstractInterface) -> Form:
         interface.log_error("Something went wrong uploading file: error %s" % str(e))
         return display_form_for_upload_public_file(interface)
 
+    web_path = web_path.replace(" ", "%")
     return form_with_message_and_finished_button(
         "Uploaded new file %s" % (web_path),
         interface=interface,

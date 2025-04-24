@@ -20,7 +20,7 @@ from app.data_access.store.object_store import ObjectStore
 from app.data_access.store.object_definitions import (
     object_definition_for_list_of_cadet_committee_members,
 )
-from app.objects.exceptions import MissingData, missing_data
+from app.objects.utilities.exceptions import MissingData, missing_data
 
 
 def get_list_of_cadets_who_are_members_but_not_on_committee_or_elected_ordered_by_name(

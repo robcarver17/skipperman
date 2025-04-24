@@ -17,7 +17,7 @@ from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     get_dict_of_all_event_info_for_cadets,
 )
 from app.objects.registration_data import summarise_status
-from app.objects.utils import print_dict_nicely
+from app.objects.utilities.utils import print_dict_nicely
 
 
 def identify_birthdays(object_store: ObjectStore, event: Event) -> list:

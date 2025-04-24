@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from app.objects.utils import in_x_not_in_y
+from app.objects.utilities.utils import in_x_not_in_y
 
 MARK_AS_DELETE = -9999
 

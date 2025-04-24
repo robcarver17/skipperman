@@ -1,11 +1,7 @@
-from app.backend.volunteers.list_of_volunteers import (
-    get_volunteer_from_list_of_given_str_of_volunteer,
-)
-
 from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.exceptions import missing_data
+from app.objects.utilities.exceptions import missing_data
 from app.objects.volunteers import Volunteer
 
 VOLUNTEER = "volunteer"

@@ -12,7 +12,7 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
     get_file_from_interface,
 )
-from app.objects.exceptions import FileError, arg_not_passed
+from app.objects.utilities.exceptions import FileError, arg_not_passed
 
 
 def create_local_file_from_uploaded_and_return_filename(

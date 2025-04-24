@@ -1,4 +1,4 @@
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 from app.data_access.init_data import object_store as default_object_store
 from app.data_access.store.object_definitions import object_definition_for_list_of_users
 from app.data_access.store.object_store import ObjectStore

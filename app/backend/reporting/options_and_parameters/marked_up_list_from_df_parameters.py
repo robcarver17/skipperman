@@ -5,7 +5,7 @@ from app.backend.reporting.options_and_parameters.print_options import PrintOpti
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
     SpecificParametersForTypeOfReport,
 )
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 
 
 @dataclass

@@ -11,7 +11,7 @@ from app.backend.groups.previous_groups import get_dict_of_group_allocations_for
 from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.composed.cadets_at_event_with_groups import DictOfCadetsWithDaysAndGroupsAtEvent
 from app.objects.events import Event, ListOfEvents
-from app.objects.exceptions import missing_data
+from app.objects.utilities.exceptions import missing_data
 
 
 def write_group_history_and_qualification_status_to_temp_csv_file_and_return_filename(

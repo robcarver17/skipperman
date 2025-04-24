@@ -4,7 +4,7 @@ from app.backend.registration_data.cadet_registration_data import add_empty_row_
     add_new_cadet_to_event_from_row_in_registration_data
 from app.backend.registration_data.identified_cadets_at_event import add_identified_cadet_and_row
 
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 
 from app.objects.cadets import ListOfCadets, Cadet
 

@@ -2,7 +2,7 @@ from typing import List, Union
 
 from app.data_access.store.object_store import ObjectStore
 from app.data_access.store.object_definitions import object_definition_for_volunteers
-from app.objects.exceptions import arg_not_passed, missing_data
+from app.objects.utilities.exceptions import arg_not_passed, missing_data
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 
 

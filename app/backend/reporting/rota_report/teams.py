@@ -18,7 +18,7 @@ from app.objects.composed.volunteer_with_group_and_role_at_event import (
 from app.objects.composed.volunteers_with_all_event_data import (
     DictOfAllEventDataForVolunteers,
 )
-from app.objects.utils import flatten
+from app.objects.utilities.utils import flatten
 from app.objects.roles_and_teams import Team
 
 

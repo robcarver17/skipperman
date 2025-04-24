@@ -5,7 +5,7 @@ from app.data_access.store.object_store import ObjectStore
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line, _______________
 from app.objects.events import Event, ListOfEvents
-from app.objects.exceptions import missing_data
+from app.objects.utilities.exceptions import missing_data
 from app.objects.abstract_objects.abstract_form import checkboxInput
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.frontend.shared.buttons import get_button_value_given_type_and_attributes, is_button_of_type

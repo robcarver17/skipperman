@@ -5,7 +5,7 @@ from app.objects.day_selectors import DaySelector, Day, union_across_day_selecto
 from app.objects.relevant_information_for_volunteers import (
     ListOfRelevantInformationForVolunteer,
 )
-from app.objects.utils import we_are_not_the_same
+from app.objects.utilities.utils import we_are_not_the_same
 from app.objects.volunteers import Volunteer
 
 

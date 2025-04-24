@@ -11,7 +11,7 @@ from app.data_access.configuration.fixed import (
     COLUMN_GAP_MM,
 )
 from app.objects.events import Event
-from app.objects.generic_objects import GenericSkipperManObject
+from app.objects.utilities.generic_objects import GenericSkipperManObject
 
 AUTO_FONT_SIZE = 0
 

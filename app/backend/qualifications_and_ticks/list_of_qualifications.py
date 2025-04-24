@@ -1,5 +1,5 @@
 from app.data_access.store.object_store import ObjectStore
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 
 from app.objects.qualifications import ListOfQualifications, Qualification
 from app.data_access.store.object_definitions import (

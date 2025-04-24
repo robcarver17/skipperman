@@ -32,7 +32,7 @@ from app.objects.abstract_objects.abstract_lines import (
     Line,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.exceptions import missing_data
+from app.objects.utilities.exceptions import missing_data
 
 GROUP_ALLOCATION_REPORT_BUTTON_LABEL = "Group allocation for event"
 ROTA_REPORT_BUTTON_LABEL = "Volunteer rota for event"

@@ -43,7 +43,7 @@ from app.objects.abstract_objects.abstract_text import (
     Symbol,
     Text,
 )
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 
 from app.web.html.abstract_components_to_html import (
     arrow_text,

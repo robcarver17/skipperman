@@ -41,7 +41,7 @@ from app.frontend.events.volunteer_identification.add_volunteer_to_event_form_co
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.exceptions import NoMoreData
+from app.objects.utilities.exceptions import NoMoreData
 from app.objects.events import Event
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 

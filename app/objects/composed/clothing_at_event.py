@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Dict, Tuple
 
-from app.objects.exceptions import MissingData, arg_not_passed, missing_data
+from app.objects.utilities.exceptions import arg_not_passed, missing_data
 
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.clothing import (
@@ -10,8 +10,8 @@ from app.objects.clothing import (
     ClothingAtEvent,
     no_clothing_requirements,
 )
-from app.objects.generic_list_of_objects import GenericListOfObjects
-from app.objects.generic_objects import GenericSkipperManObject
+from app.objects.utilities.generic_list_of_objects import GenericListOfObjects
+from app.objects.utilities.generic_objects import GenericSkipperManObject
 
 
 @dataclass

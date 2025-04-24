@@ -3,8 +3,8 @@ from app.data_access.store.object_store import ObjectStore
 from app.data_access.store.object_definitions import (
     object_definition_for_list_of_club_dinghies,
 )
-from app.objects.club_dinghies import ListOfClubDinghies, ClubDinghy, no_club_dinghy
-from app.objects.exceptions import arg_not_passed
+from app.objects.club_dinghies import ListOfClubDinghies, ClubDinghy
+from app.objects.utilities.exceptions import arg_not_passed
 
 
 def get_club_dinghy_with_name(

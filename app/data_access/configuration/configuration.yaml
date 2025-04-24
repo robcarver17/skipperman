@@ -22,8 +22,9 @@ number_of_backups_to_keep: 10
 #
 #
 # Filtering cadet inputs
-similarity_level_to_warn_when_comparing_names: 0.8 # change if too many/too few similars coming through
-similarity_level_to_warn_when_comparing_dates: 0.9 # probably shouldn't change
+similarity_level_to_warn_when_comparing_names_on_event_import: 0.7 # change if too many/too few similars coming through
+similarity_level_to_match_a_very_similar_cadet_first_name_on_event_import: 0.9 # probably shouldn't change
+similarity_level_to_warn_when_comparing_names_in_membership_list: 0.6
 
 # Only change the following when
 minimum_cadet_age: 7

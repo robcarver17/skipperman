@@ -4,7 +4,7 @@ from copy import copy
 from app.data_access.store.object_store import ObjectStore
 
 from app.backend.cadets.list_of_cadets import (
-    get_list_of_similar_cadets,
+    get_list_of_similar_cadets_from_data,
     get_list_of_cadets,
     update_list_of_cadets,
 )
@@ -60,7 +60,7 @@ def verify_cadet_and_return_warnings(object_store: ObjectStore, cadet: Cadet) ->
 
 
 def warning_for_similar_cadets(object_store: ObjectStore, cadet: Cadet) -> str:
-    similar_cadets = get_list_of_similar_cadets(object_store=object_store, cadet=cadet)
+    similar_cadets = get_list_of_similar_cadets_from_data(object_store=object_store, cadet=cadet)
 
     if len(similar_cadets) > 0:
         similar_cadets_str = ", ".join(

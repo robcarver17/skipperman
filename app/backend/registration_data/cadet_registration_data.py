@@ -24,7 +24,7 @@ from app.data_access.store.object_definitions import (
 from app.objects.composed.cadets_at_event_with_registration_data import (
     DictOfCadetsWithRegistrationData,
 )
-from app.objects.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.registration_data import RowInRegistrationData, RegistrationDataForEvent
 
 

@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Dict
 
 import pandas as pd
@@ -53,7 +54,8 @@ def save_dict_of_df_as_xls(
     path_and_filename_with_extension = path_and_filename_without_extension + ".xlsx"
     with pd.ExcelWriter(path_and_filename_with_extension) as writer:
         for sheet_name, df in dict_of_df.items():
-            df.to_excel(writer, sheet_name=sheet_name, index=write_index)
+            full_sheet_name = "%s Printed %s" % (sheet_name, datetime.now().strftime("%b %d %H%M"))
+            df.to_excel(writer, sheet_name=full_sheet_name, index=write_index)
 
     return path_and_filename_with_extension
 

@@ -1,3 +1,4 @@
+import datetime
 from dataclasses import dataclass
 from fpdf import FPDF
 
@@ -58,7 +59,7 @@ class PdfLayout:
             pass
 
     def add_title_to_page(self):
-        title_str = self.title_str
+        title_str = "%s (Printed %s)" % (self.title_str, datetime.datetime.now().strftime("%b %d %H:%M"))
         pdf = self.pdf
         pdf.set_font(self.font, "", self._title_font_size())
         margin = self.edge_margin_measurement_units

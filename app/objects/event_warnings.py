@@ -40,7 +40,33 @@ class ListOfEventWarnings(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return EventWarningLog
 
+    def mark_all_active_event_warnings_with_priority_and_category_as_ignored(self,
+                                                                             category: str, priority: str):
+        active_only=self.active_only()
+        in_category =active_only.with_category(category)
+        with_priority = in_category.with_priority(priority=priority)
+        __ = [self.mark_event_warning_with_id_as_ignored(warning.id) for warning in with_priority]
+
+    def mark_all_ignored_event_warnings_with_priority_and_category_as_unignored(self,
+                                                                                category: str, priority: str):
+        ignored_only=self.ignored_only()
+        in_category =ignored_only.with_category(category)
+        with_priority = in_category.with_priority(priority=priority)
+        __ = [self.mark_event_warning_with_id_as_unignored(warning.id) for warning in with_priority]
+
     def add_or_update_list_of_new_event_warnings_clearing_any_missing(self,
+                                                                      list_of_warnings: List[str], category: str,
+                                                                      priority: str):
+
+        self._update_list_of_new_event_warnings_clearing_any_missing(list_of_warnings=list_of_warnings,
+                                                                     category=category,
+                                                                     priority=priority)
+
+        self._add_list_of_potentially_new_event_warnings(list_of_warnings=list_of_warnings,
+                                                         category=category,
+                                                         priority=priority)
+
+    def _update_list_of_new_event_warnings_clearing_any_missing(self,
                                                                       list_of_warnings: List[str], category: str,
                                                                       priority: str):
 
@@ -50,11 +76,12 @@ class ListOfEventWarnings(GenericListOfObjectsWithIds):
         for existing_warning in all_existing_warnings_of_this_category_and_priority:
             if existing_warning.auto_refreshed:
                 if existing_warning.warning not in list_of_warnings:
-                    print("warning %s is resolved" % existing_warning)
                     self.delete_event_warning_with_id_as_resolved(existing_warning.id)
 
-        print("here2")
-        print(list_of_warnings)
+    def _add_list_of_potentially_new_event_warnings(self,
+                                                                    list_of_warnings: List[str], category: str,
+                                                                    priority: str):
+
         for potentially_new_warning in list_of_warnings:
             self.add_new_event_warning_checking_for_duplicate_from_components( ## if duplicated will skip anyway
                 warning=potentially_new_warning,
@@ -110,6 +137,14 @@ class ListOfEventWarnings(GenericListOfObjectsWithIds):
         item = self[idx]
         item.ignored = True
 
+    def mark_event_warning_with_id_as_unignored(self, warning_id:str):
+        idx = self.index_of_id(warning_id, missing_data)
+        if idx is missing_data:
+            return
+
+        item = self[idx]
+        item.ignored = False
+
     def get_list_of_warnings_at_event_for_categories_sorted_by_priority_and_category(self, list_of_categories: list[str]) -> 'ListOfEventWarnings':
         in_categories = self.in_categories(list_of_categories)
         in_categories.sort(key=lambda item: item.category)
@@ -138,6 +173,12 @@ class ListOfEventWarnings(GenericListOfObjectsWithIds):
         return ListOfEventWarnings(
             [item for item in self if item.category == category]
         )
+
+    def with_priority(self, priority: str) -> 'ListOfEventWarnings':
+        return ListOfEventWarnings(
+            [item for item in self if item.priority == priority]
+        )
+
 
     def all_existing_warnings_of_this_category_and_priority(self, category: str, priority:str) -> 'ListOfEventWarnings':
         return ListOfEventWarnings(

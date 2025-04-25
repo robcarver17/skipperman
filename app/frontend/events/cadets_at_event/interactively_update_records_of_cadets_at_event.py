@@ -42,10 +42,11 @@ from app.objects.cadet_with_id_at_event import (
     get_cadet_at_event_from_row_in_event_raw_registration_data,
 )
 from app.objects.events import Event
+from app.objects.registration_status import manual_status
 from app.objects.utilities.exceptions import NoMoreData, DuplicateCadets
 from app.objects.registration_data import RowInRegistrationData
 
-from app.objects.event_warnings import HIGH_PRIORITY, CADET_REGISTRATION, LOW_PRIORITY
+from app.objects.event_warnings import HIGH_PRIORITY, CADET_REGISTRATION, LOW_PRIORITY, LOWEST_PRIORITY
 
 
 def display_form_interactively_update_cadets_at_event(
@@ -115,13 +116,21 @@ def process_update_to_existing_cadet_in_event_data(
         return process_next_cadet_at_event(interface)
 
     except NoMoreData:
-        ## No rows match cadet ID in current registration data, so deleted
-        message = \
-            "Cadet %s was in imported data, now appears to be missing in latest file - possible data corruption of imported file or manual hacking - no changes in file will be reflected in Skipperman"% cadet
+        cadet_at_event = get_cadet_at_event(object_store=interface.object_store, event=event, cadet=cadet)
+        if cadet_at_event.status == manual_status:
+            message = \
+                "Cadet %s was added manually - is still not appearing in official registration import. "% cadet
+            priority = LOWEST_PRIORITY
+        else:
+            ## No rows match cadet ID in current registration data, so deleted
+            message = \
+                "Cadet %s was in imported data, now appears to be missing in latest file - possible data corruption of imported file or manual hacking - no changes in file will be reflected in Skipperman"% cadet
+            priority = LOW_PRIORITY
+
         add_new_event_warning_checking_for_duplicate(object_store=interface.object_store,
                                                      event=event,
                                                      warning="On import at %s, %s" % (datetime.now(), message),
-                                                     category=CADET_REGISTRATION, priority=LOW_PRIORITY,
+                                                     category=CADET_REGISTRATION, priority=priority,
                                                      auto_refreshed=False)  ## warning will sit on system until cleared
         interface.log_error(message)
 

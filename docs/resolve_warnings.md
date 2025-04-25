@@ -1,5 +1,6 @@
-To see the volunteer warnings for an event, from the **main menu** choose **Events**, then select an event, then click on **Volunteers**; finally choose the ► Active Warnings and/or ► Ignored warnings
-To access the cadet warnings for an event, from the **main menu** select **Events**, choose your event, and then click on **Edit sailors registration data**; finally choose the ► Active Warnings and/or ► Ignored warnings 
+- To see the volunteer warnings for an event, from the **main menu** choose **Events**, then select an event, then click on **Volunteers**; finally choose the ► Active Warnings and/or ► Ignored warnings
+
+- To access the cadet warnings for an event, from the **main menu** select **Events**, choose your event, and then click on **Edit sailors registration data**; finally choose the ► Active Warnings and/or ► Ignored warnings 
 
 ___
 
@@ -21,11 +22,15 @@ Warnings that are active (not ignored) will appear here. Warnings appear sorted 
 
 You can eithier *clear* warnings (eg if someone is not qualified as a DI, add them as a DI), or click on them to be *ignored* (and then press `Save changes to warnings`). Remember, if a warning is generated during the registration import, it has to be ignored, it can't be cleared.
 
+Alternatively, you can ignore a group of warnings (same priority and category) by pressing the relevant button above the group. That will also save any changes to warning checkboxes.
+
 Once warnings are ignored, they appear in the `Ignored warnings` section.
 
 ## Ignored warnings
 
 Warnings that have been ignored appear here. You can 'unignore' them by clicking the checkbox and pressing `Save changes to warnings`.
+
+Alternatively, you can unignore a group of warnings (same priority and category) by pressing the relevant button above the group. That will also save any changes to warning checkboxes.
 
 # Warnings on import - cadets
 

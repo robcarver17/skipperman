@@ -8,7 +8,7 @@ from app.frontend.events.volunteer_rota.volunteer_rota_buttons import clear_filt
 from app.frontend.events.volunteer_rota.volunteer_targets_and_group_notes import save_targets_button, \
     save_group_notes_button
 from app.frontend.shared.buttons import is_button_sort_order
-from app.frontend.shared.warnings_table import save_warnings_button
+from app.frontend.shared.warnings_table import save_warnings_button, is_save_warnings_button_pressed
 from app.objects.abstract_objects.abstract_buttons import save_menu_button, cancel_menu_button
 
 
@@ -29,7 +29,7 @@ def is_a_form_change_that_changes_underlying_data(last_button_pressed:str):
         save_menu_button.pressed(last_button_pressed) or\
         save_targets_button.pressed(last_button_pressed) or \
             save_group_notes_button.pressed(last_button_pressed) or\
-        save_warnings_button.pressed(last_button_pressed)
+        is_save_warnings_button_pressed(last_button_pressed)
 
 
 

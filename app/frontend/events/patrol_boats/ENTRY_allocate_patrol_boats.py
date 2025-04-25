@@ -19,7 +19,8 @@ from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
 from app.frontend.events.patrol_boats.swapping import (
     update_if_swap_button_pressed, is_swap_button,
 )
-from app.frontend.shared.warnings_table import save_warnings_button, save_warnings_from_table
+from app.frontend.shared.warnings_table import save_warnings_button, save_warnings_from_table, \
+    is_save_warnings_button_pressed
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -84,7 +85,7 @@ def post_form_view_for_patrol_boat_allocation(
     if save_menu_button.pressed(last_button_pressed):
         pass # already done
 
-    elif save_warnings_button.pressed(last_button_pressed):
+    elif is_save_warnings_button_pressed(last_button_pressed):
         save_warnings_from_table(interface)
 
     elif is_copy_individual_volunteer_button(last_button_pressed):

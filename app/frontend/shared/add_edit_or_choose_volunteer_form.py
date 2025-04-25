@@ -135,7 +135,7 @@ VOLUNTEERING = "Helping"
 NO_AVAILABILITY_NAME="availability_checkbox_nmae"
 
 def availability_in_form_set_to_no(interface: abstractInterface):
-    value = interface.value_from_form(NO_AVAILABILITY_NAME)
+    value = interface.value_from_form(NO_AVAILABILITY_NAME, default='')
     return value == NO_AVAILABILITY
 
 def get_footer_buttons_for_add_volunteer_form(form_is_empty: bool) -> ButtonBar:

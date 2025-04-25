@@ -14,7 +14,8 @@ Before Cadet week
 
 # done recently
 
-- cleanup behaviour of buttons when identifyin cadets/volunteers in registration import
+- button to clear a group of warnings
+- cleanup behaviour of buttons when identifying cadets/volunteers in registration import
 - volunteer adding is now automatic, with warnings generated if required
 - added warnings which can be ignored and includes registration warnings
 - volunteer status now handled better

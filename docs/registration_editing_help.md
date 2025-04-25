@@ -115,7 +115,7 @@ Warnings that have not been ignored are shown here.  Warnings appear sorted by p
 
 You can eithier *clear* warnings, or click on them to be *ignored* (and then press `Save changes to warnings`). Remember that warnings generated in an import can only be ignore (once you have taken relevant action), and won't be cleared automatically. Only warnings from the data can be cleared.
 
-To see more about warnings, go to [resolving warnings](resolve_volunteer_registration_issues.md)
+To see more about warnings, go to [resolving warnings](resolve_warnings.md)
 
 ## Ignored warnings
 

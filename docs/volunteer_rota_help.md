@@ -339,7 +339,7 @@ Usually the target is set by the cadet skipper or whoever is the principal organ
 
 Warnings are things that could be problematic for your volunteer rota; to see them click ► Active Warnings and ► Ignored warnings.
 
-For more help on warnings, see [resolving registration issues](resolve_volunteer_registration_issues.md).
+For more help on warnings, see [resolving registration issues](resolve_warnings.md).
 
 # Misc
 

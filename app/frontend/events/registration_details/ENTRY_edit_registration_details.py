@@ -12,7 +12,8 @@ from app.frontend.events.registration_details.parse_registration_details_form im
     parse_registration_details_from_form,
 )
 from app.frontend.shared.buttons import get_button_value_for_sort_order
-from app.frontend.shared.warnings_table import display_warnings_tables, save_warnings_button, save_warnings_from_table
+from app.frontend.shared.warnings_table import display_warnings_tables, save_warnings_button, save_warnings_from_table, \
+    is_save_warnings_button_pressed
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
@@ -112,7 +113,7 @@ def post_form_edit_registration_details(
     elif save_menu_button.pressed(last_button_pressed):
         ## already saved
         pass
-    elif save_warnings_button.pressed(last_button_pressed):
+    elif is_save_warnings_button_pressed(last_button_pressed):
         save_warnings_from_table(interface)
 
     elif is_button_sort_order(last_button_pressed):

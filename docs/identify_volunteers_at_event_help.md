@@ -7,6 +7,8 @@ When an event is being imported Skipperman will try and find the volunteers who 
 Volunteer Jane Doe is very similar to one in form Janet Doe, adding automatically. Go to rota to change if problematic."
 ```
 
+To see a list of volunteers added in this way, go to the [volunteer rota warnings.](volunteer_rota_help.md#warnings)
+
 - If a volunteer isn't identical to one already in the data (same name), then Skipperman will give you the option of adding them as a new volunteer, or selecting an existing volunteer. You will see a screen like this:
 
 ***

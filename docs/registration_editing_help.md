@@ -99,3 +99,24 @@ You have two options:
 - Ignore the error. This has the disadvantage that you will need to manually update the original manual registration with any relevant information from Wild Apricot.
 
 NOTE: In a future version of Skipperman the system will allow you to replace the manual registration with an official one automatically.
+
+# Warnings
+
+Warnings are generated in two ways:
+
+- When an import is done
+- Based on the current data in the system
+
+The latter can be *cleared* (by changing the data) and *ignored*, whilst the former can only be *ignored*.
+
+## Active warnings
+
+Warnings that have not been ignored are shown here.  Warnings appear sorted by priority, and then by category.
+
+You can eithier *clear* warnings, or click on them to be *ignored* (and then press `Save changes to warnings`). Remember that warnings generated in an import can only be ignore (once you have taken relevant action), and won't be cleared automatically. Only warnings from the data can be cleared.
+
+To see more about warnings, go to [resolving warnings](resolve_volunteer_registration_issues.md)
+
+## Ignored warnings
+
+Warnings that have been ignored appear here. You can 'unignore' them by clicking the checkbox and pressing `Save changes to warnings`.

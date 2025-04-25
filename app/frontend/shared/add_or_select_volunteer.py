@@ -8,7 +8,8 @@ from app.backend.volunteers.connected_cadets import get_list_of_similar_voluntee
 from app.backend.volunteers.list_of_volunteers import get_list_of_volunteers, sort_list_of_volunteers, \
     get_volunteer_from_list_of_given_str_of_volunteer
 from app.frontend.shared.add_edit_or_choose_volunteer_form import VolunteerAndVerificationText, get_volunteer_from_form, \
-    get_add_volunteer_form_with_information_passed, add_volunteer_from_form_to_data
+    get_add_volunteer_form_with_information_passed, add_volunteer_from_form_to_data, availability_in_form_set_to_no
+from app.frontend.shared.buttons import break_up_buttons
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import Button, cancel_menu_button, \
     check_if_button_in_list_was_pressed
@@ -29,6 +30,7 @@ class ParametersForGetOrSelectVolunteerForm:
     cancel_button: bool = False
     skip_button: bool = False
     final_add_button: bool = False
+    availability_checkbox: bool = False
     volunteer_is_default: bool = False
     see_all_volunteers: bool = False
     sort_by: str = SORT_BY_NAME_SIMILARITY
@@ -40,7 +42,7 @@ class ParametersForGetOrSelectVolunteerForm:
         interface.set_persistent_value(FINAL_ADD, self.final_add_button)
 
     def get_values_from_state(self, interface: abstractInterface):
-        self.sort_by = interface.get_persistent_value(SORT_BY_STATE, SORT_BY_FIRSTNAME)
+        self.sort_by = interface.get_persistent_value(SORT_BY_STATE, SORT_BY_NAME_SIMILARITY)
         self.final_add_button = interface.get_persistent_value(FINAL_ADD, False)
         self.see_all_volunteers = interface.get_persistent_value(SEE_ALL_VOLUNTEERS, False)
 
@@ -86,6 +88,7 @@ def get_add_or_select_existing_volunteer_form(
         volunteer_and_text=volunteer_and_text,
         footer_buttons=footer_buttons,
         header_text=parameters.header_text,
+        availability_checkbox = parameters.availability_checkbox,
         help_string = parameters.help_string
     )
 
@@ -167,29 +170,29 @@ def get_list_of_volunteer_buttons(
     list_of_similar_volunteers = get_list_of_similar_volunteers(
         object_store=interface.object_store, volunteer=volunteer, cadet=cadet
     )
+    list_of_all_volunteers = get_list_of_volunteers(object_store=interface.object_store)
     no_similar_volunteers = len(list_of_similar_volunteers)==0
-    if no_similar_volunteers or parameters.see_all_volunteers:
-        list_of_volunteers = get_list_of_volunteers(
-            object_store=interface.object_store
-        )
-        if no_similar_volunteers:
-            msg = "No similar volunteers: choosing from all volunteers"
-        else:
-            msg = "Currently choosing from all volunteers"
+    if no_similar_volunteers:
+        msg = "No similar volunteers: choosing from all volunteers. "
+        state_button = ""
+        list_of_volunteers = list_of_all_volunteers
+    elif parameters.see_all_volunteers:
+        list_of_volunteers = list_of_all_volunteers
+        msg = "Currently choosing from all volunteers. "
         state_button = see_similar_volunteers_button
-
     else:
         list_of_volunteers = list_of_similar_volunteers
-        msg = "Currently choosing from similar volunteers only:"
+        msg = "Currently choosing from similar volunteers only. "
         state_button = see_all_volunteers_button
 
 
     list_of_volunteers=sort_list_of_volunteers(list_of_volunteers, sort_by=parameters.sort_by, similar_volunteer = volunteer)
     sort_order_buttons  = get_sort_order_buttons(parameters=parameters, list_of_volunteers=list_of_volunteers)
-    volunteer_choice_buttons = Line([Button(str(volunteer)) for volunteer in list_of_volunteers])
+    volunteer_choice_buttons = break_up_buttons([Button(str(volunteer)) for volunteer in list_of_volunteers])
 
     return ListOfLines([_______________, Line([msg, state_button]+sort_order_buttons),
                         _______________, volunteer_choice_buttons]).add_Lines()
+
 
 
 def get_sort_order_buttons(
@@ -199,7 +202,7 @@ def get_sort_order_buttons(
     if len(list_of_volunteers)<5:
         ## no need to sort, probably not that many
         return ['']
-    sort_msg = parameters.sort_by
+    sort_msg = " Sorting by: %s" % parameters.sort_by
 
     current_sort_order = parameters.sort_by
     possible_sort_labels = copy(possible_sorts)
@@ -229,6 +232,7 @@ class ResultFromAddOrSelectVolunteer:
     skip: bool = False
     cancel: bool = False
     volunteer_was_added: bool = False
+    no_availability: bool = False
 
     @property
     def is_form(self):
@@ -275,7 +279,9 @@ parameters: ParametersForGetOrSelectVolunteerForm
             interface.log_error("Error selecting volunteer %s" % str(e))
             return form_as_result(interface=interface, parameters=parameters)
 
-        return ResultFromAddOrSelectVolunteer(volunteer=volunteer, volunteer_was_added=False)
+        on_site_parent = availability_in_form_set_to_no(interface)
+
+        return ResultFromAddOrSelectVolunteer(volunteer=volunteer, volunteer_was_added=False, no_availability=on_site_parent)
 
 def response_requires_new_form(interface: abstractInterface):
     last_button_pressed = interface.last_button_pressed()
@@ -315,6 +321,7 @@ def generic_post_response_to_add_or_select_volunteer_when_returning_new_form(
     elif see_all_volunteers_button.pressed(last_button_pressed):
         ## verify results already in form, display form again, allow final this time
         parameters.see_all_volunteers = True
+        parameters.sort_by = SORT_BY_NAME_SIMILARITY
 
     elif check_if_button_in_list_was_pressed(last_button_pressed=last_button_pressed, list_of_buttons=[check_for_me_volunteer_button, check_confirm_volunteer_button]):
         parameters.final_add_button= True

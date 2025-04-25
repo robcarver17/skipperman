@@ -1,9 +1,7 @@
-from typing import List
-
 from app.backend.registration_data.volunteer_registration_data import (
     get_dict_of_registration_data_for_volunteers_at_event,
-    update_dict_of_registration_data_for_volunteers_at_event,
 )
+from app.backend.volunteers.relevant_information_for_volunteer import check_any_status_is_unable
 from app.objects.cadets import ListOfCadets
 from app.objects.composed.volunteers_at_event_with_registration_data import RegistrationDataForVolunteerAtEvent
 
@@ -11,10 +9,7 @@ from app.objects.day_selectors import DaySelector, Day
 from app.objects.relevant_information_for_volunteers import (
     ListOfRelevantInformationForVolunteer,
 )
-from app.objects.volunteer_at_event_with_id import (
-    VolunteerAtEventWithId,
-    ListOfVolunteersAtEventWithId,
-)
+from app.objects.utilities.utils import simplify_and_display
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 
 from app.objects.composed.volunteers_with_all_event_data import (
@@ -63,6 +58,41 @@ def update_dict_of_all_event_data_for_volunteers(
         new_object=dict_of_all_event_data,
     )
 
+def get_volunteer_registration_data_from_list_of_relevant_information(
+    list_of_relevant_information: ListOfRelevantInformationForVolunteer,
+    list_of_associated_cadets: ListOfCadets,
+        any_issues:bool
+) -> RegistrationDataForVolunteerAtEvent:
+
+    if any_issues:
+        return get_volunteer_registration_data_from_list_of_relevant_information_with_conflicts(
+            list_of_relevant_information=list_of_relevant_information,
+            list_of_associated_cadets=list_of_associated_cadets
+
+        )
+    else:
+        return get_volunteer_registration_data_from_list_of_relevant_information_with_no_conflicts(
+            list_of_relevant_information=list_of_relevant_information,
+            list_of_associated_cadets=list_of_associated_cadets
+        )
+
+def get_volunteer_registration_data_from_list_of_relevant_information_with_conflicts(
+    list_of_relevant_information: ListOfRelevantInformationForVolunteer,
+    list_of_associated_cadets: ListOfCadets,
+) -> RegistrationDataForVolunteerAtEvent:
+    first_relevant_information = list_of_relevant_information[
+        0
+    ]  ## can use first as all the same - checked
+
+    return RegistrationDataForVolunteerAtEvent(
+        availablity=merge_availability(list_of_relevant_information),
+        list_of_associated_cadets=list_of_associated_cadets,
+        preferred_duties=merge_preferred_duties(list_of_relevant_information),
+        same_or_different=merge_same_or_different(list_of_relevant_information),
+        self_declared_status=merge_self_declared_status(list_of_relevant_information),
+        any_other_information=merge_other_information(list_of_relevant_information)
+    )
+
 
 def get_volunteer_registration_data_from_list_of_relevant_information_with_no_conflicts(
     list_of_relevant_information: ListOfRelevantInformationForVolunteer,
@@ -71,27 +101,65 @@ def get_volunteer_registration_data_from_list_of_relevant_information_with_no_co
     first_relevant_information = list_of_relevant_information[
         0
     ]  ## can use first as all the same - checked
+
+    ### we should never get here since a status of unavailable will throw out an error but hey ho
+    availability = get_availablity_given_status(first_relevant_information.availability.volunteer_availablity, list_of_relevant_information=list_of_relevant_information)
+
     return RegistrationDataForVolunteerAtEvent(
-        availablity=first_relevant_information.availability.volunteer_availablity,
+        availablity=availability,
         list_of_associated_cadets=list_of_associated_cadets,
         preferred_duties=first_relevant_information.availability.preferred_duties,
         same_or_different=first_relevant_information.availability.same_or_different,
-        any_other_information=get_any_other_information_joint_string(
-            list_of_relevant_information
-        ),
+        self_declared_status=first_relevant_information.identify.self_declared_status,
+        any_other_information=merge_other_information(list_of_relevant_information) ## only one not checked for uniqueness
+    )
+
+def merge_availability(list_of_relevant_information: ListOfRelevantInformationForVolunteer)-> DaySelector:
+    all_availability = [relevant_information.availability.volunteer_availablity for relevant_information in list_of_relevant_information]
+    availability = DaySelector.create_empty()
+    for item_available in all_availability:
+        availability=availability.union(item_available)
+
+    availability = get_availablity_given_status(availability, list_of_relevant_information)
+
+    return availability
+
+def merge_preferred_duties(list_of_relevant_information: ListOfRelevantInformationForVolunteer)->str:
+    return merge_string(list_of_relevant_information, 'availability', 'preferred_duties')
+
+def merge_same_or_different(list_of_relevant_information: ListOfRelevantInformationForVolunteer)-> str:
+    return merge_string(list_of_relevant_information, 'availability','same_or_different')
+
+def merge_self_declared_status(list_of_relevant_information: ListOfRelevantInformationForVolunteer)-> str:
+    return merge_string(list_of_relevant_information, 'identify','self_declared_status')
+
+def merge_other_information(list_of_relevant_information: ListOfRelevantInformationForVolunteer)-> str:
+    return merge_string(
+        list_of_relevant_information,
+        first_item="details",
+        second_item='any_other_information',
+        linker=", "
     )
 
 
-def get_any_other_information_joint_string(
+def get_availablity_given_status(availability: DaySelector, list_of_relevant_information: ListOfRelevantInformationForVolunteer,):
+    if check_any_status_is_unable(list_of_relevant_information=list_of_relevant_information):
+        return availability.create_empty()
+    else:
+        return availability
+
+def merge_string(
     list_of_relevant_information: ListOfRelevantInformationForVolunteer,
+        first_item: str,
+        second_item:str,
+        linker: str =" OR "
 ) -> str:
-    list_of_other_information = [
-        relevant_information.availability.any_other_information
+    list_of_strings = [
+        getattr(getattr(relevant_information, first_item), second_item)
         for relevant_information in list_of_relevant_information
     ]
-    unique_list = list(set(list_of_other_information))
 
-    return ". ".join(unique_list)
+    return simplify_and_display(list_of_strings, linker=linker)
 
 
 def load_list_of_volunteers_at_event(
@@ -165,3 +233,4 @@ def is_volunteer_currently_available_for_only_one_day(
     availabilty = reg_for_volunteer.availablity.days_available()
 
     return len(availabilty) <= 1
+

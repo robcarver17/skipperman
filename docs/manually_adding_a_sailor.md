@@ -20,7 +20,8 @@ Once the relevant sailor is on the screen, click on the button with their name a
 
 But if you are sure this is a new cadet: enter their name and date of birth (making any corrections in the relevant input fields), and membership status. 
 
-Date of birth: You won't usually have the date of birth for a new sailor, unless they have done a WA registration already. If they are a visitor don't worry about including this, leave it on the default date. If they are a member that is new to Skipperman, and you aren't sure of their date of birth or it hasn't been included in the registration form, then you can [edit the date of birth later](view_and_edit_individual_cadet_help.md). 
+Date of birth: You won't usually have the date of birth for a new sailor, unless they have done a WA registration already. If they are a visitor don't worry about including this, change the DOB status to 'Non member - don't need to know'. 
+If they are a member that is new to Skipperman, and you aren't sure of their date of birth or it hasn't been included in the registration form, then choose DOB status 'I need to confirm - leave blank for now'. You can [edit the date of birth later](view_and_edit_individual_cadet_help.md). 
 
 For membership status:
 
@@ -44,3 +45,4 @@ If the sailor is subsequently registered on Wild Apricot, and the data imported,
 > `Sailor John Smith (2000-01-01) Memberis still active but status has changed from Manual to Paid: select status `
 
 If they have been registered with different days attending, that will also be higlighted. Click on `Use new data imported from latest file` to update Skipperman.
+

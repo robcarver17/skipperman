@@ -2,7 +2,7 @@ from typing import Union
 
 from app.backend.rota.add_volunteer import (
     get_list_of_volunteers_except_those_already_at_event,
-    add_volunteer_to_event_with_full_availability,
+    add_volunteer_to_event_with_availability,
 )
 from app.frontend.shared.add_or_select_volunteer import ParametersForGetOrSelectVolunteerForm, \
     get_add_or_select_existing_volunteer_form, generic_post_response_to_add_or_select_volunteer
@@ -33,7 +33,8 @@ header_text = ListOfLines(
 
 parameters_for_form = ParametersForGetOrSelectVolunteerForm(header_text=header_text,
                                                             help_string='volunteer_rota_help#add-a-volunteer',
-                                                            cancel_button=True)
+                                                            cancel_button=True,
+                                                            availability_checkbox=True)
 
 
 def post_form_add_new_volunteer_to_rota_at_event(
@@ -48,7 +49,7 @@ def post_form_add_new_volunteer_to_rota_at_event(
         return result.form
     elif result.is_volunteer:
         return action_when_volunteer_known_for_rota(
-        volunteer=result.volunteer, interface=interface
+        volunteer=result.volunteer, interface=interface, no_availability=result.no_availability
     )
     else:
         raise Exception("Return result %s cannot handle" % str(result))
@@ -58,13 +59,15 @@ def post_form_add_new_volunteer_to_rota_at_event(
 
 
 def action_when_volunteer_known_for_rota(
-    volunteer: Volunteer, interface: abstractInterface
+    volunteer: Volunteer, interface: abstractInterface,
+no_availability: bool
 ) -> Union[Form, NewForm]:
     event = get_event_from_state(interface)
     not_at_event = get_list_of_volunteers_except_those_already_at_event(object_store=interface.object_store, event=event)
     if volunteer in not_at_event:
-        add_volunteer_to_event_with_full_availability(
-            object_store=interface.object_store, event=event, volunteer=volunteer
+        add_volunteer_to_event_with_availability(
+            object_store=interface.object_store, event=event, volunteer=volunteer,
+            no_availability=no_availability
         )
         interface.flush_cache_to_store()
     else:

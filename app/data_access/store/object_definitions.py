@@ -268,6 +268,11 @@ object_definition_for_list_of_volunteers_with_ids_roles_and_groups_at_event = Un
     required_keys=["event_id"],
 )
 
+object_definition_for_list_of_event_warnings = UnderlyingObjectDefinition(
+    data_store_method_function=get_data_access_for_list_of_event_warnings,
+required_keys=["event_id"]
+)
+
 object_definition_for_list_of_volunteers_with_ids_at_event = UnderlyingObjectDefinition(
     data_store_method_function=get_data_access_for_volunteers_at_event,
     required_keys=["event_id"],

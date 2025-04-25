@@ -18,6 +18,7 @@ from app.objects.day_selectors import DaySelector, Day
 class RegistrationDataForVolunteerAtEvent:
     availablity: DaySelector
     list_of_associated_cadets: ListOfCadets
+    self_declared_status: str = "" ## info only
     preferred_duties: str = ""  ## information only
     same_or_different: str = ""  ## information only
     any_other_information: str = (
@@ -47,6 +48,7 @@ class RegistrationDataForVolunteerAtEvent:
             same_or_different=volunteer_at_event_with_id.same_or_different,
             any_other_information=volunteer_at_event_with_id.any_other_information,
             notes=volunteer_at_event_with_id.notes,
+            self_declared_status=volunteer_at_event_with_id.self_declared_status
         )
 
 
@@ -75,7 +77,8 @@ class DictOfRegistrationDataForVolunteerAtEvent(
             any_other_information=registration_data.any_other_information,
             notes=registration_data.notes,
             preferred_duties=registration_data.preferred_duties,
-            same_or_different=registration_data.same_or_different
+            same_or_different=registration_data.same_or_different,
+            self_declared_status=registration_data.self_declared_status
         )
         self.list_of_volunteers_at_event_with_id.add_new_volunteer(
             volunteer_at_event_with_id

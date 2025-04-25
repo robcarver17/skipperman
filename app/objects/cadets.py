@@ -31,6 +31,10 @@ from app.objects.utilities.exceptions import (
     MultipleMatches,
 )
 
+DOB_SURE = "Known"
+DOB_UNKNOWN = "I need to confirm - leave blank for now"
+DOB_IRRELEVANT = "Non member - don't need to know"
+
 
 @dataclass
 class Cadet(GenericSkipperManObjectWithIds):
@@ -47,12 +51,14 @@ class Cadet(GenericSkipperManObjectWithIds):
         surname: str,
         date_of_birth: datetime.date,
         membership_status: MembershipStatus,
+        dob_status: str = DOB_SURE,
         id: str = arg_not_passed,
     ):
+
         return cls(
             first_name=first_name.strip(" ").title(),
             surname=surname.strip(" ").title(),
-            date_of_birth=transform_str_or_datetime_into_date(date_of_birth),
+            date_of_birth=dob_from_passed_dob(date_of_birth=date_of_birth, dob_status=dob_status),
             membership_status=membership_status,
             id=id,
         )
@@ -66,8 +72,12 @@ class Cadet(GenericSkipperManObjectWithIds):
         )
 
     def date_of_birth_as_string(self):
-        if self.date_of_birth == DEFAULT_DATE_OF_BIRTH:
-            return ""
+        if self.has_default_date_of_birth:
+            return "" ## for old data
+        elif self.has_unknown_date_of_birth:
+            return "(DOB unconfirmed)"
+        elif self.has_irrelevant_date_of_birth:
+            return "" ## typically used for non members
         else:
             return " (%s)" % str(self.date_of_birth)
 
@@ -143,6 +153,27 @@ class Cadet(GenericSkipperManObjectWithIds):
     def has_default_date_of_birth(self):
         return self.date_of_birth == DEFAULT_DATE_OF_BIRTH
 
+    @property
+    def has_unknown_date_of_birth(self):
+        return self.date_of_birth == UNCONFIRMED_DATE_OF_BIRTH
+
+    @property
+    def has_irrelevant_date_of_birth(self):
+        return self.date_of_birth == IRRELEVANT_DATE_OF_BIRTH
+
+
+def dob_from_passed_dob(date_of_birth: datetime.date, dob_status: str):
+
+    if dob_status == DOB_SURE:
+        use_date_of_birth = transform_str_or_datetime_into_date(date_of_birth)
+    elif dob_status == DOB_IRRELEVANT:
+        use_date_of_birth = IRRELEVANT_DATE_OF_BIRTH
+    elif dob_status == DOB_UNKNOWN:
+        use_date_of_birth = UNCONFIRMED_DATE_OF_BIRTH
+    else:
+        raise Exception("DOB status %s unknown" % dob_status)
+
+    return use_date_of_birth
 
 class ListOfCadets(GenericListOfObjectsWithIds):
     @property
@@ -284,6 +315,13 @@ def cadet_is_too_young_to_be_without_parent(cadet: Cadet) -> bool:
 
 
 def is_cadet_age_surprising(cadet: Cadet):
+    if cadet.has_default_date_of_birth:
+        return False
+    elif cadet.has_unknown_date_of_birth:
+        return False
+    elif cadet.has_irrelevant_date_of_birth:
+        return False
+
     age = cadet.approx_age_years()
 
     return age < MIN_CADET_AGE or age > MAX_CADET_AGE
@@ -293,12 +331,14 @@ SKIP_TEST_CADET_ID = str(-9999)
 
 DEFAULT_DATE_OF_BIRTH = datetime.date(1970, 1, 1)
 UNCONFIRMED_DATE_OF_BIRTH =datetime.date(1950,1,1)
+IRRELEVANT_DATE_OF_BIRTH = datetime.date(1960,1,1)
 
-default_cadet = Cadet(
+default_cadet = Cadet.new(
     first_name=" ",
     surname=" ",
     date_of_birth=DEFAULT_DATE_OF_BIRTH,
-    membership_status=none_member,
+    membership_status=user_unconfirmed_member,
+    dob_status=DOB_UNKNOWN
 )
 
 
@@ -311,6 +351,4 @@ test_cadet = Cadet(
 )
 
 test_cadet_id = test_cadet.id
-
-
 

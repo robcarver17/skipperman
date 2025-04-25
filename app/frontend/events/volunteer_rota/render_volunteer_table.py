@@ -77,6 +77,7 @@ def get_top_row_for_table(event: Event, ready_to_swap: bool) -> RowInTable:
             "Cadet location (click to edit connections)",
             "Preferred duties from form",
             "Same/different preference from form",
+            "Status from form",
             "Skills (click to edit)",
             "Previous role (click to fill and overwrite over all days at this event)",
         ]
@@ -153,6 +154,7 @@ dict_of_all_cadet_event_data: DictOfAllEventInfoForCadets,
 
     preferred = volunteer_data_at_event.registration_data.preferred_duties
     same_different = volunteer_data_at_event.registration_data.same_or_different
+    status = volunteer_data_at_event.registration_data.self_declared_status
     skills_button = get_skills_button(
         interface=interface,
         volunteer_data_at_event=volunteer_data_at_event,
@@ -167,6 +169,7 @@ dict_of_all_cadet_event_data: DictOfAllEventInfoForCadets,
         location,
         preferred,
         same_different,
+        status,
         skills_button,
         previous_role_copy_button,
     ]

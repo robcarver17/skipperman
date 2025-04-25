@@ -3,52 +3,21 @@ import shutil
 from app.data_access.api.generic_api import GenericDataApi
 from app.data_access.backups.make_backup import make_backup
 from app.data_access.classes.volunteers import DataListOfIdentifiedVolunteersAtEvent
-from app.data_access.csv.cadets import (
-    CsvDataListOfCadets,
-    CsvDataListOfCadetsWithGroups,
-    CsvDataListOfCadetsAtEvent,
-    CsvDataListOfIdentifiedCadetsAtEvent,
-    CsvDataListOfCadetsOnCommitte, CsvDataAttendanceAtEventsForSpecificCadet, CsvDataListOfGroupNotesAtEvent,
-)
+from app.data_access.csv.cadets import *
 from app.data_access.csv.food_and_clothing import *
 from app.data_access.csv.list_of_events import CsvDataListOfEvents
 from app.data_access.csv.wa_event_mapping import CsvDataWAEventMapping
 from app.data_access.csv.wa_field_mapping import CsvDataWAFieldMapping
-from app.data_access.csv.registration_data import (
-    CsvDataMappedRegistrationData,
-)
+from app.data_access.csv.registration_data import *
 from app.data_access.csv.configuration import *
-from app.data_access.csv.volunteers import (
-    CsvDataListOfVolunteers,
-    CsvDataListOfVolunteerSkills,
-    CsvDataListOfCadetVolunteerAssociations,
-    CsvDataListOfVolunteersAtEvent,
-    CsvDataListOfIdentifiedVolunteersAtEvent,
-    CsvDataListOfVolunteersInRolesAtEvent,
-    CsvDataListOfTargetForRoleAtEvent,
-    CsvDataListOfSkills,
-    CsvDataListOfTeams,
-    CsvDataListOfRoles,
-    CsvDataListOfTeamsAndRolesWithIds,
-)
-from app.data_access.csv.resources import (
-    CsvDataListOfPatrolBoats,
-    CsvDataListOfVolunteersAtEventWithPatrolBoats,
-    CsvDataListOfClubDinghies,
-    CsvDataListOfCadetAtEventWithClubDinghies, CsvDataListOfClubDinghyLimits,
-)
+from app.data_access.csv.volunteers import *
+from app.data_access.csv.resources import *
 from app.data_access.csv.dinghies_at_events import (
     CsvDataListOfCadetAtEventWithDinghies,
     CsvDataListOfDinghies,
 )
 from app.data_access.csv.users import CsvDataListOfSkipperManUsers
-from app.data_access.csv.qualifications import (
-    CsvDataListOfQualifications,
-    CsvListOfCadetsWithQualifications,
-    CsvDataListOfCadetsWithTickListItems,
-    CsvDataListOfTickSheetItems,
-    CsvDataListOfTickSubStages,
-)
+from app.data_access.csv.qualifications import *
 #from app.data_access.parquet.resources import ParquetDataListOfClubDinghyLimits
 #from app.data_access.parquet.cadets import ParquetDataAttendanceAtEventsForSpecificCadet
 
@@ -143,6 +112,13 @@ class MixedParquetAndCsvDataApi(GenericDataApi):
         return CsvDataMappedRegistrationData(
             master_data_path=self.master_data_path,
             backup_data_path=self.backup_data_path,
+        )
+
+    @property
+    def data_event_warnings(self)-> CsvDataListOfEventWarnings:
+        return CsvDataListOfEventWarnings(
+            master_data_path=self.master_data_path,
+            backup_data_path=self.backup_data_path
         )
 
     @property

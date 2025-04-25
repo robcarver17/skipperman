@@ -23,15 +23,37 @@ If they are already registered you will get an error message - sailors who are a
 
 ## If this is a new sailor - not on Skipperman
 
-Check you are happy with the sailors name. Don't worry about the date of birth, that can be [edited later](view_and_edit_individual_cadet_help.md).
+ **It's really important that you don't add duplicate cadets to the Skipperman data**
 
-For their membership status select eithier 'None member' (if they are a visitor), 'Unconfirmed member' (if you aren't sure), or 'Member' (if you are 100% sure they are currently a paid up member).
+But if you are sure this is a new cadet: enter their name and date of birth (making any corrections in the relevant input fields), and membership status. 
 
-Membership status can be [edited](view_and_edit_individual_cadet_help.md) or automatically updated by [importing a list of members](import_membership_list_help.md).
+Date of birth: You won't usually have the date of birth for a new sailor, unless they have done a WA registration already. If they are a visitor don't worry about including this, change the DOB status to 'Non member - don't need to know'. 
+If they are a member that is new to Skipperman, and you aren't sure of their date of birth or it hasn't been included in the registration form, then choose DOB status 'I need to confirm - leave blank for now'. You can [edit the date of birth later](view_and_edit_individual_cadet_help.md). 
 
-Click on `I have double checked these details allow me to add` then on `Yes - these details are correct - add this new cadet` to add the sailor to Skipperman, and register them for this event.
+For membership status:
+
+- if you are sure they are a paid up member, select `Member`
+- if you are sure they are a non-member (visitor), select `None member`
+- if you aren't sure, select `Unconfirmed member`
+
+Membership or otherwise can be confirmed by [importing a list of club members](import_membership_list_help). 
+
+Remember it is possible to edit the cadet details, and these can also be updated by importing a list of club members from Wild Apricot, so don't worry too much if these aren't precisely right.
+
+Once you are confident then click on `Please check the details again for me` (if it's on screen), and then on `Yes - these details are correct - add this new cadet`.
 
 ## If you change your mind
 
 Click `Cancel` and no two handed partner will be added.
+
+# Effects of adding a sailor manually
+
+Note that adding a sailor manually will set their registration status to 'Manual'. Since there is no registration information, all the registration fields will be blank. 
+
+If the sailor is subsequently registered on Wild Apricot, and the data imported, you will get the following message:
+
+> `There have been important changes for event registration information about cadet John Smith (2000-01-01) Member`
+> `Sailor John Smith (2000-01-01) Memberis still active but status has changed from Manual to Paid: select status `
+
+If they have been registered with different days attending, that will also be higlighted. Click on `Use new data imported from latest file` to update Skipperman.
 

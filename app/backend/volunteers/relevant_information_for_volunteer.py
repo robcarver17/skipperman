@@ -1,19 +1,17 @@
-from typing import List
-
-from app.data_access.configuration.configuration import UNABLE_TO_VOLUNTEER_KEYWORD
-from app.objects.day_selectors import DaySelector, Day, union_across_day_selectors
+from app.objects.registration_data import check_any_status_is_unable_given_list_of_status
 from app.objects.relevant_information_for_volunteers import (
     ListOfRelevantInformationForVolunteer,
 )
-from app.objects.utilities.utils import we_are_not_the_same
+from app.objects.utilities.utils import we_are_not_the_same, simplify_and_display
 from app.objects.volunteers import Volunteer
-
+from app.objects.event_warnings import EventWarningLog, ListOfEventWarnings, VOLUNTEER_AVAILABILITY, VOLUNTEER_PREFERENCE, HIGH_PRIORITY, \
+    LOW_PRIORITY
 
 def relevant_information_requires_clarification(
     volunteer: Volunteer,
     list_of_relevant_information: ListOfRelevantInformationForVolunteer,
-) -> str:
-    issues = NO_ISSUES_WITH_VOLUNTEER
+) -> ListOfEventWarnings:
+    issues = []
     volunteer_name = volunteer.name
 
     issues = add_status_conflict_to_issues_list(
@@ -37,32 +35,37 @@ def relevant_information_requires_clarification(
         issues=issues,
     )
 
-    return issues
+    return ListOfEventWarnings(issues)
 
-
-def add_status_conflict_to_issues_list(
-    list_of_relevant_information: ListOfRelevantInformationForVolunteer,
-    volunteer_name: str,
-    issues: str,
+def check_any_status_is_unable(    list_of_relevant_information: ListOfRelevantInformationForVolunteer,
 ):
-
     list_of_status = [
         relevant_information.identify.self_declared_status
         for relevant_information in list_of_relevant_information
     ]
 
-    any_status_is_unable = any(
-        [
-            status
-            for status in list_of_status
-            if UNABLE_TO_VOLUNTEER_KEYWORD in status.lower()
-        ]
-    )
-    if any_status_is_unable:
-        issues += (
-            "Volunteer %s says they are unable to volunteer, according to at least one registration. "
-            % volunteer_name
-        )
+    any_status_is_unable = check_any_status_is_unable_given_list_of_status(list_of_status)
+    return any_status_is_unable
+
+
+def add_status_conflict_to_issues_list(
+    list_of_relevant_information: ListOfRelevantInformationForVolunteer,
+    volunteer_name: str,
+    issues: list,
+):
+    list_of_status = [
+        relevant_information.identify.self_declared_status
+        for relevant_information in list_of_relevant_information
+    ]
+
+    if check_any_status_is_unable(list_of_relevant_information):
+        issues.append(
+            EventWarningLog(
+                priority= HIGH_PRIORITY,
+                category=VOLUNTEER_AVAILABILITY,
+                warning="Volunteer %s says they are unable to volunteer, according to at least one registration: status in registration %s "
+            % (volunteer_name, simplify_and_display(list_of_status)),
+                auto_refreshed=False))
     else:
         print("No issues with status conflict")
 
@@ -72,92 +75,36 @@ def add_status_conflict_to_issues_list(
 def add_availablity_conflict_to_issues_list(
     list_of_relevant_information: ListOfRelevantInformationForVolunteer,
     volunteer_name: str,
-    issues: str,
+    issues: list,
 ):
 
     list_of_availability = [
         relevant_information.availability.volunteer_availablity
         for relevant_information in list_of_relevant_information
     ]
-    print("volunteer availability %s" % str(list_of_availability))
 
     conflict_with_availability_declared_by_volunteer = we_are_not_the_same(
         list_of_availability
     )
     if conflict_with_availability_declared_by_volunteer:
-        issues += (
-            "Inconsistency between availability for %s across registrations for different sailors. "
-            % volunteer_name
-        )
-    else:
-        ## Volunteer consistent let's check cadets
-        issues = add_cadet_vs_volunteer_availablity_conflict_to_issues_list(
-            list_of_relevant_information=list_of_relevant_information,
-            volunteer_name=volunteer_name,
-            issues=issues,
+        issues.append(
+            EventWarningLog(
+                priority=HIGH_PRIORITY,
+                category=VOLUNTEER_AVAILABILITY,
+                auto_refreshed=False,
+                warning="Inconsistency between availability for %s across registrations for different sailors: %s "
+            % (volunteer_name, simplify_and_display([available.days_available_as_str() for available in list_of_availability]),
+               )
+            )
         )
 
     return issues
-
-
-def add_cadet_vs_volunteer_availablity_conflict_to_issues_list(
-    list_of_relevant_information: ListOfRelevantInformationForVolunteer,
-    volunteer_name: str,
-    issues: str,
-):
-
-    volunteer_availability = list_of_relevant_information[
-        0
-    ].availability.volunteer_availablity  ## all the same if we get here
-    list_of_cadet_availability = [
-        relevant_information.availability.cadet_availability
-        for relevant_information in list_of_relevant_information
-    ]
-
-    print(
-        "volunteer availability (alll same) %s cadet availability %s"
-        % (str(volunteer_availability), str(list_of_cadet_availability))
-    )
-    cadet_vs_volunteer_availability_conflict_on_days = (
-        list_of_days_when_volunteer_available_when_cadet_not_attending(
-            volunteer_availability=volunteer_availability,
-            list_of_cadet_availability=list_of_cadet_availability,
-        )
-    )
-    if len(cadet_vs_volunteer_availability_conflict_on_days) > 0:
-        cadet_vs_volunteer_availability_conflict_on_days_as_str = ", ".join(
-            [day.name for day in cadet_vs_volunteer_availability_conflict_on_days]
-        )
-        issues += (
-            "Volunteer %s is available on the following days when cadet is not: %s. "
-            % (volunteer_name, cadet_vs_volunteer_availability_conflict_on_days_as_str)
-        )
-    else:
-        print("No issues with availability")
-
-    return issues
-
-
-def list_of_days_when_volunteer_available_when_cadet_not_attending(
-    volunteer_availability: DaySelector, list_of_cadet_availability: List[DaySelector]
-) -> List[Day]:
-    all_cadets_availability = union_across_day_selectors(list_of_cadet_availability)
-    print("All cadets availability as single union %s" % str(all_cadets_availability))
-    bad_days = [
-        day
-        for day in volunteer_availability.days_available()
-        if not all_cadets_availability.available_on_day(day)
-    ]
-
-    print("bad days %s" % str(bad_days))
-
-    return bad_days
 
 
 def add_preferred_conflict_to_list_of_isses(
     list_of_relevant_information: ListOfRelevantInformationForVolunteer,
     volunteer_name: str,
-    issues: str,
+    issues: list,
 ):
     list_of_preferred = [
         relevant_information.availability.preferred_duties
@@ -165,10 +112,14 @@ def add_preferred_conflict_to_list_of_isses(
     ]
     preferred_conflict = we_are_not_the_same(list_of_preferred)
     if preferred_conflict:
-        issues += (
-            "Inconsistency on preferred duties across registrations for volunter %s . "
-            % volunteer_name
-        )
+        issues.append(
+            EventWarningLog(
+                priority=LOW_PRIORITY,
+                category=VOLUNTEER_PREFERENCE,
+                auto_refreshed=False,
+            warning="Inconsistency on preferred duties across registrations for volunteer %s: %s "
+            % (volunteer_name, simplify_and_display(list_of_preferred))))
+
     else:
         print("No issues with preferred duties")
 
@@ -178,7 +129,7 @@ def add_preferred_conflict_to_list_of_isses(
 def add_same_or_different_conflict_to_list_of_issues(
     list_of_relevant_information: ListOfRelevantInformationForVolunteer,
     volunteer_name: str,
-    issues: str,
+    issues: list,
 ):
     list_of_same_or_different = [
         relevant_information.availability.same_or_different
@@ -186,14 +137,17 @@ def add_same_or_different_conflict_to_list_of_issues(
     ]
     same_or_different_conflict = we_are_not_the_same(list_of_same_or_different)
     if same_or_different_conflict:
-        issues += (
-            "Inconsistency on same/different duties across registrations for volunteer %s . "
-            % volunteer_name
-        )
+        issues.append(
+            EventWarningLog(
+                priority=LOW_PRIORITY,
+                category=VOLUNTEER_PREFERENCE,
+                auto_refreshed=False,
+            warning="Inconsistency on same/different duties across registrations for volunteer %s: %s "
+            % (volunteer_name, simplify_and_display(list_of_same_or_different))))
+
     else:
         print("No issues with same/different duties")
 
     return issues
 
 
-NO_ISSUES_WITH_VOLUNTEER = ""

@@ -172,14 +172,6 @@ def update_if_make_unavailable_on_specific_day_button_pressed(
         button=unavailable_button
     )
     event = get_event_from_state(interface)
-    if is_volunteer_currently_available_for_only_one_day(
-        object_store=interface.object_store, event=event, volunteer=volunteer
-    ):
-        interface.log_error(
-            "Can't make volunteer %s unavailable on %s as only volunteering for one day - remove from event if not available on any days"
-            % (volunteer.name, day.name)
-        )
-        return
 
     make_volunteer_unavailable_on_day(
         object_store=interface.object_store, event=event, volunteer=volunteer, day=day

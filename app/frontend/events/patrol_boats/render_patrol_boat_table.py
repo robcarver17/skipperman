@@ -10,7 +10,7 @@ from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
     get_existing_allocation_elements_for_day_and_boat,
     get_volunteer_row_to_select_skill,
     get_list_of_volunteers_for_skills_checkboxes,
-    warn_on_all_volunteers_in_patrol_boats,
+    update_and_get_warnings_on_all_volunteers_in_patrol_boats,
     instructions_qual_table,
     instructions_text,
 )
@@ -49,7 +49,7 @@ def get_top_material_for_patrol_boat_form(
     patrol_boat_driver_and_crew_qualifications = (
         get_patrol_boat_driver_and_crew_qualifications(interface=interface, event=event)
     )
-    warnings = warn_on_all_volunteers_in_patrol_boats(interface=interface, event=event)
+    warnings = update_and_get_warnings_on_all_volunteers_in_patrol_boats(interface=interface, event=event)
     return ListOfLines(
         [
             _______________,
@@ -59,8 +59,10 @@ def get_top_material_for_patrol_boat_form(
             _______________,
             patrol_boat_driver_and_crew_qualifications,
             _______________,
-            _______________,
-            warnings,
+            _______________]+
+
+            warnings+
+            [
             _______________,
             _______________,
             instructions_text,

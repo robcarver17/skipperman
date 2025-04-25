@@ -21,7 +21,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     cancel_menu_button,
     Button, HelpButton,
 )
-from app.objects.abstract_objects.abstract_form import Form, textInput, checkboxInput
+from app.objects.abstract_objects.abstract_form import Form, textInput, checkboxInput, dropDownInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import (
     Line,
@@ -85,8 +85,9 @@ def get_add_volunteer_form_with_information_passed(
     header_text: ListOfLines = "Add a new volunteer",
     help_string: str = arg_not_passed,
     volunteer_and_text: VolunteerAndVerificationText = default_volunteer_and_text,  ## if blank
+        availability_checkbox: bool = False
 ) -> Form:
-    form_fields = form_fields_for_add_volunteer(volunteer_and_text.volunteer)
+    form_fields = form_fields_for_add_volunteer(volunteer_and_text.volunteer, availability_checkbox=availability_checkbox)
     if help_string is arg_not_passed:
         nav_bar = ''
     else:
@@ -109,17 +110,33 @@ def get_add_volunteer_form_with_information_passed(
     return Form(list_of_lines_inside_form)
 
 
-def form_fields_for_add_volunteer(volunteer: Volunteer):
+def form_fields_for_add_volunteer(volunteer: Volunteer, availability_checkbox: bool = False):
     first_name = textInput(
         input_label="First name", input_name=FIRST_NAME, value=volunteer.first_name
     )
     surname = textInput(
         input_label="Second name", input_name=SURNAME, value=volunteer.surname
     )
-    form_fields = ListOfLines([Line(first_name), Line(surname)])
+    form_fields = [first_name, surname]
+    if availability_checkbox:
+        form_fields.append(dropDownInput(
+            dict_of_options={VOLUNTEERING:VOLUNTEERING, NO_AVAILABILITY:NO_AVAILABILITY},
+            input_label="Select if parent on site ",
+            input_name=NO_AVAILABILITY_NAME,
+            default_label=VOLUNTEERING
+        ))
+
+    form_fields = ListOfLines(form_fields).add_Lines()
 
     return form_fields
 
+NO_AVAILABILITY="Parent on site, not volunteering"
+VOLUNTEERING = "Helping"
+NO_AVAILABILITY_NAME="availability_checkbox_nmae"
+
+def availability_in_form_set_to_no(interface: abstractInterface):
+    value = interface.value_from_form(NO_AVAILABILITY_NAME)
+    return value == NO_AVAILABILITY
 
 def get_footer_buttons_for_add_volunteer_form(form_is_empty: bool) -> ButtonBar:
     if form_is_empty:

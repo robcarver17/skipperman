@@ -69,7 +69,7 @@ UPLOAD_EXTENSIONS = configuration["upload_extensions"]
 MINIMUM_COLOUR_GROUPS_TO_DISTRIBUTE = configuration["min_colour_groups_to_distribute"]
 
 ## if following in volunteer status field can't volunteer
-UNABLE_TO_VOLUNTEER_KEYWORD = configuration["if_volunteer_unable_to_volunteer_contains"]
+UNABLE_TO_VOLUNTEER_KEYWORD_LIST = configuration["if_volunteer_unable_to_volunteer_contains"]
 MIN_AGE_WHEN_CADET_CAN_BE_AT_EVENT_WITHOUT_PARENT = configuration[
     "minimum_age_when_cadet_can_be_at_event_without_parent"
 ]

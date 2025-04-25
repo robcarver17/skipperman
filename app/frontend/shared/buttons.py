@@ -4,7 +4,8 @@ from app.backend.cadets.list_of_cadets import get_cadet_from_id
 from app.backend.events.list_of_events import get_event_from_id
 from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
 from app.data_access.store.object_store import ObjectStore
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, cancel_menu_button
+from app.objects.abstract_objects.abstract_buttons import ButtonBar, cancel_menu_button, Button
+from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.cadets import Cadet
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -134,3 +135,11 @@ def get_attributes_from_button_pressed_of_known_type(value_of_button_pressed:str
 def get_nav_bar_with_just_cancel_button() -> ButtonBar:
     return ButtonBar([cancel_menu_button])
 
+
+def break_up_buttons(list_of_buttons: List[Button], first_line: int=3, chunk_size: int = 6) -> ListOfLines:
+    first_chunk = list_of_buttons[:first_line]
+    rest_of_list = list_of_buttons[first_line:]
+    chunks = ['', first_chunk,'', '']
+    for i in range(0, len(rest_of_list), chunk_size):
+        chunks.append(rest_of_list[i:i + chunk_size])
+    return ListOfLines(chunks).add_Lines()

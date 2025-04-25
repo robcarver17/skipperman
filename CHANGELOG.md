@@ -3,9 +3,8 @@
 
 Before Cadet week
 - merge cadet, merge volunteer #15
-- delete empty event, empty cadet, empty volunteer #26
+- delete empty event,  #26
 - edit event name #16 and days (document what happens if days are edited)
-- replace key data with parquet
 - clean up html component mapping
 - food add non registered #28
 - food documentation and checks #49
@@ -15,6 +14,10 @@ Before Cadet week
 
 # done recently
 
+- cleanup behaviour of buttons when identifyin cadets/volunteers in registration import
+- volunteer adding is now automatic, with warnings generated if required
+- added warnings which can be ignored and includes registration warnings
+- volunteer status now handled better
 - added auto add option for volunteers if very similar on import
 - cleaned up similarity code for cadets, and added 'auto add' option if very similar on import
 - added 'total' rows to summary tables

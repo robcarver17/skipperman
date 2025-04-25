@@ -1,5 +1,7 @@
+from datetime import datetime
 from typing import Union
 
+from app.backend.events.event_warnings import add_new_event_warning_checking_for_duplicate
 from app.objects.cadets import Cadet
 
 from app.backend.registration_data.update_cadets_at_event import (
@@ -39,10 +41,11 @@ from app.frontend.events.cadets_at_event.update_existing_cadet_at_event_from_for
 from app.objects.cadet_with_id_at_event import (
     get_cadet_at_event_from_row_in_event_raw_registration_data,
 )
-
 from app.objects.events import Event
 from app.objects.utilities.exceptions import NoMoreData, DuplicateCadets
 from app.objects.registration_data import RowInRegistrationData
+
+from app.objects.event_warnings import HIGH_PRIORITY, CADET_REGISTRATION, LOW_PRIORITY
 
 
 def display_form_interactively_update_cadets_at_event(
@@ -101,18 +104,27 @@ def process_update_to_existing_cadet_in_event_data(
             )
         )
     except DuplicateCadets:
-        interface.log_error(
-            "ACTION REQUIRED: Cadet %s appears more than once in WA file with multiple active registrations - ignoring any possible changes made to registration - go to WA and cancel one of the registrations please!"
-            % cadet
-        )
+        message = "ACTION REQUIRED: Cadet %s appears more than once in WA file with multiple active registrations - ignoring any possible changes made to registration - go to WA and cancel one of the registrations please!"            % cadet
+        interface.log_error(message)
+        add_new_event_warning_checking_for_duplicate(object_store=interface.object_store,
+                                                     event=event,
+                                                     warning="On import at %s, %s" % (datetime.now(), message),
+                                                     category=CADET_REGISTRATION, priority=HIGH_PRIORITY,
+                                                     auto_refreshed=False)  ## warning will sit on system until cleared
+
         return process_next_cadet_at_event(interface)
 
     except NoMoreData:
         ## No rows match cadet ID in current registration data, so deleted
-        interface.log_error(
-            "Cadet %s was in imported data, now appears to be missing in latest file - possible data corruption of imported file or manual hacking - no changes in file will be reflected in Skipperman"
-            % cadet
-        )
+        message = \
+            "Cadet %s was in imported data, now appears to be missing in latest file - possible data corruption of imported file or manual hacking - no changes in file will be reflected in Skipperman"% cadet
+        add_new_event_warning_checking_for_duplicate(object_store=interface.object_store,
+                                                     event=event,
+                                                     warning="On import at %s, %s" % (datetime.now(), message),
+                                                     category=CADET_REGISTRATION, priority=LOW_PRIORITY,
+                                                     auto_refreshed=False)  ## warning will sit on system until cleared
+        interface.log_error(message)
+
         return process_next_cadet_at_event(interface)
 
     return process_update_to_existing_cadet_at_event(
@@ -186,10 +198,15 @@ def process_update_to_cadet_new_to_event(
             raise_error_on_duplicate=True,
         )
     except DuplicateCadets:
-        interface.log_error(
-            "ACTION REQUIRED: Cadet %s appears more than once in WA file with an active registration - using the first registration found - go to WA and cancel all but one of the registrations please, and then check details here are correct!"
-            % cadet
-        )
+        message= \
+            "ACTION REQUIRED: Cadet %s appears more than once in imported file with an active registration - using the first registration found - go to WA and cancel all but one of the registrations please, and then check details here are correct!"            % cadet
+        add_new_event_warning_checking_for_duplicate(object_store=interface.object_store,
+                                                     event=event,
+                                                     warning="On import at %s, %s" % (datetime.now(), message),
+                                                     category=CADET_REGISTRATION, priority=HIGH_PRIORITY,
+                                                     auto_refreshed=False)  ## warning will sit on system until cleared
+        interface.log_error(message)
+
         relevant_row = get_row_in_registration_data_for_cadet_both_cancelled_and_active(
             object_store=interface.object_store,
             cadet=cadet,
@@ -197,10 +214,16 @@ def process_update_to_cadet_new_to_event(
             raise_error_on_duplicate=False,  ## try again this time allowing duplicates
         )
     except NoMoreData:
+        message =             "ACTION REQUIRED: Cadet %s vanished from raw registration data file - should not happen: contact support"% cadet
         interface.log_error(
-            "ACTION REQUIRED: Cadet %s vanished from raw registration data file - contact support"
-            % cadet
+            message
         )
+        add_new_event_warning_checking_for_duplicate(object_store=interface.object_store,
+                                                     event=event,
+                                                     warning="On import at %s, %s" % (datetime.now(), message),
+                                                     category=CADET_REGISTRATION, priority=HIGH_PRIORITY,
+                                                     auto_refreshed=False)  ## warning will sit on system until cleared
+
         return process_next_cadet_at_event(interface)
 
     add_new_cadet_to_event_from_row_in_registration_data(

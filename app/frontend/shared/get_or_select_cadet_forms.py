@@ -6,6 +6,7 @@ from app.backend.cadets.list_of_cadets import (
     get_list_of_cadets,
     get_list_of_similar_cadets_from_data, get_cadet_from_list_of_cadets_given_str_of_cadet,
 )
+from app.frontend.shared.buttons import break_up_buttons
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_buttons import Button, cancel_menu_button, \
     check_if_button_in_list_was_pressed
@@ -43,7 +44,7 @@ class ParametersForGetOrSelectCadetForm:
         interface.set_persistent_value(FINAL_ADD, self.final_add_button)
 
     def get_values_from_state(self, interface: abstractInterface):
-        self.sort_by = interface.get_persistent_value(SORT_BY_STATE, SORT_BY_FIRSTNAME)
+        self.sort_by = interface.get_persistent_value(SORT_BY_STATE, SORT_BY_SIMILARITY_BOTH)
         self.final_add_button = interface.get_persistent_value(FINAL_ADD, False)
         self.see_all_cadets_button = interface.get_persistent_value(SEE_ALL_CADETS, False)
 
@@ -164,30 +165,30 @@ def get_list_of_cadet_buttons(
         name_threshold=parameters.similarity_name_threshold
     )
     no_similar_cadets = len(list_of_similar_cadets)==0
+    list_of_all_cadets_in_data = get_list_of_cadets(object_store=interface.object_store)
 
-    if parameters.see_all_cadets_button or no_similar_cadets:
-        list_of_cadets = get_list_of_cadets(
-            object_store=interface.object_store
-        )
-        if no_similar_cadets:
-            msg = "No similar cadets - choosing from all cadets"
-        else:
-            msg = "Currently choosing from all cadets"
+    if no_similar_cadets:
+        list_of_cadets = list_of_all_cadets_in_data
+        state_button = " "
+        msg = "No similar cadets - choosing from all. "
+    elif parameters.see_all_cadets_button:
+        list_of_cadets = list_of_all_cadets_in_data
+        msg = "Currently choosing from all cadets. "
         state_button = see_similar_cadets_only_button
     else:
         ## similar cadets with option to see more
         list_of_cadets = list_of_similar_cadets
-        msg = "Currently choosing from similar cadets only:"
+        msg = "Currently choosing from similar cadets only. "
         state_button = see_all_cadets_button
-
 
     list_of_cadets= sort_a_list_of_cadets(list_of_cadets, sort_by=parameters.sort_by, similar_cadet=cadet,
                                           )
     sort_order_buttons  = get_sort_order_buttons(parameters=parameters, list_of_cadets=list_of_cadets)
-    cadet_choice_buttons = Line([Button(str(cadet)) for cadet in list_of_cadets])
+    cadet_choice_buttons = [Button(str(cadet)) for cadet in list_of_cadets]
+    cadet_choice_buttons = break_up_buttons(cadet_choice_buttons)
 
     return ListOfLines([_______________, Line([msg, state_button]+sort_order_buttons),
-                        _______________, cadet_choice_buttons]).add_Lines()
+                        _______________,]+ cadet_choice_buttons).add_Lines()
 
 
 def get_sort_order_buttons(
@@ -197,7 +198,7 @@ def get_sort_order_buttons(
     if len(list_of_cadets)<5:
         ## no need to sort, probably not that many
         return ['']
-    sort_msg = parameters.sort_by
+    sort_msg = " Current sort: %s" % parameters.sort_by
 
     current_sort_order = parameters.sort_by
     possible_sort_labels = copy(possible_sorts)
@@ -321,7 +322,7 @@ def generic_post_response_to_add_or_select_when_returning_new_form(
     elif see_all_cadets_button.pressed(last_button_pressed):
         ## verify results already in form, display form again, allow final this time
         parameters.see_all_cadets_button = True
-
+        parameters.sort_by = SORT_BY_SIMILARITY_BOTH ## OBVIOUS DEFAULT
     else:
         raise Exception("Button not recognised! %s" % last_button_pressed)
 

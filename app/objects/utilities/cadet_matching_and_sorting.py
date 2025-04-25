@@ -4,7 +4,7 @@ import numpy as np
 
 from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_NAME, \
     SIMILARITY_LEVEL_TO_MATCH_VERY_SIMILAR_FIRST_NAMES
-from app.objects.cadets import Cadet, DEFAULT_DATE_OF_BIRTH, ListOfCadets
+from app.objects.cadets import Cadet, DEFAULT_DATE_OF_BIRTH, ListOfCadets, IRRELEVANT_DATE_OF_BIRTH
 from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.utilities.utils import similar
 
@@ -127,7 +127,7 @@ def similar_cadet_DOB_matching_returns_multiple_codes(date_in_data: datetime.dat
     if date_in_data==other_date:
         return [MATCHES]
 
-    if DEFAULT_DATE_OF_BIRTH == other_date:
+    if DEFAULT_DATE_OF_BIRTH == other_date or other_date==IRRELEVANT_DATE_OF_BIRTH:
         return [ONE_IS_DEFAULT, MATCHES]
 
     errors = check_dates_across_perms(date_in_data, other_date, errors)

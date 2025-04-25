@@ -187,8 +187,11 @@ The next step is to check that the information that has been registered is inter
 - that the information the volunteer has put down about their duty preference is consistent over multiple registrations
 - that the volunteer is attending on days when none of their sailors is not attending (note we don't check to see if the reverse is true - eg a volunteer not coming for all the days their sailor is attending)
 
-For more information on resolving conflicts, see [here](resolve_volunteer_registration_issues.md)
+For more information on resolving conflicts, see [here](volunteer_rota_help.md#warnings).
 
+# Checking warnings
+
+To check and resolve any outstanding issues raised in the event import, go to the [volunteer rota](volunteer_rota_help.md#warnings) and the [cadet registration edit page](registration_editing_help.md#warnings).
 
 # Updating an event
 
@@ -233,6 +236,8 @@ Any new sailors that have not been registered before will be added to Skipperman
 
 ## Conflicts between existing and new registration information
 
+You can see a list of cadets with import errors in the [registration editing, warnings section](registration_editing_help.md#warnings). 
+
 ### More than one active registration in the new file for a given sailor 
 
 ```
@@ -266,14 +271,11 @@ You have three options:
 - Use the data in the form. You can select a different status and/or available days. If you don't make any changes in the form, choosing this button will be the same as using the new data from Wild Apricot.
 - Use the new data imported from Wild Apricot (recommended)
 
-For more help with resolving conflicts with registration data see [here](resolve_changes_to_registration.md). 
-
 
 ## New conflicts between volunteer and cadet information
 
 If you change the dates a specific cadet is available for, or cancel a cadets registration, it could have an impact on the volunteers they are connected to.
 
-You should also check the [warnings on the volunteer rota page](volunteer_rota_help.md#warnings) to double-check that there is no inconsistency between when volunteers and attending, and when sailors are around.
+Check the [warnings on the volunteer rota page](volunteer_rota_help.md#warnings) to double-check that there is no inconsistency between when volunteers and attending, and when sailors are around.
 
-For more help with resolving conflicts when you update registration data see [here](resolve_volunteer_registration_issues.md#updating-event-data).
 

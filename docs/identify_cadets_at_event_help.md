@@ -28,6 +28,8 @@ This is to avoid common problems with mismatches causing annoying requests to ch
 
 It won't deal with names that are very different. 
 
+You can see a list of cadets with identical matches in the [registration editing, warnings section](registration_editing_help.md#warnings). 
+
 ## If the cadet isn't a close match to a single existing cadet
 
 If the cadet isn't identical or a close match to a single existing cadet, then Skipperman will ask you to add the cadet to it's data. You will see a screen like this:
@@ -38,7 +40,8 @@ If the cadet isn't identical or a close match to a single existing cadet, then S
 ***
 ***
 
-The data about the cadet pulled in from the registration data is displayed. The date of birth will default to 1st January 1970 if this information is missing from the registration data (which is usual for racing events). The membership status will show as `Unconfirmed member`.
+The data about the cadet pulled in from the registration data is displayed. 
+The date of birth will default to 1st January 1970 if this information is missing from the registration data (which is usual for racing events). The membership status will show as `Unconfirmed member`.
 You will then see some warnings about the cadet: if the name shown appears too short, the date of birth does not look correct (i.e. the sailor is of cadet age)
 
 Finally, you will see some option buttons.
@@ -53,9 +56,10 @@ You can also go back to just seeing the most similar cadets by clicking `See sim
 
  **It's really important that you don't add duplicate cadets to the Skipperman data**
 
-But if you are sure this is a new cadet: check the name and date of birth (making any corrections in the relevant input fields), and membership status. 
+But if you are sure this is a new cadet: enter their name and date of birth (making any corrections in the relevant input fields), and membership status. 
 
-Date of birth: For racing events you won't usually have the date of birth. If they are a visitor don't worry about including this, leave it on the default date. If they are a member that is new to Skipperman, and you aren't sure of their date of birth or it hasn't been included in the registration form, then you can [edit the date of birth later](view_and_edit_individual_cadet_help.md). 
+Date of birth: You won't usually have the date of birth for a new sailor, unless they have done a WA registration already. If they are a visitor don't worry about including this, change the DOB status to 'Non member - don't need to know'. 
+If they are a member that is new to Skipperman, and you aren't sure of their date of birth or it hasn't been included in the registration form, then choose DOB status 'I need to confirm - leave blank for now'. You can [edit the date of birth later](view_and_edit_individual_cadet_help.md). 
 
 For membership status:
 
@@ -67,11 +71,13 @@ Membership or otherwise can be confirmed by [importing a list of club members](i
 
 Remember it is possible to edit the cadet details, and these can also be updated by importing a list of club members from Wild Apricot, so don't worry too much if these aren't precisely right.
 
-Once you are happy, click on `I have double checked these details - allow me to add` and then on `Yes - these details are correct - add this new cadet`.
+Once you are confident then click on `Please check the details again for me` (if it's on screen), and then on `Yes - these details are correct - add this new cadet`.
 
 ### If this is a test entry
 
 Sometimes when testing the registration system (eg Wild Apricot) it's useful to create test entries, which don't have real cadets (of course you can also use real cadets but this can cause confusion). If this is a test entry, click on `Skip: this is a test entry`. 
+
+You can see a list of rows which have been skipped on importing in the [registration editing, warnings section](registration_editing_help.md#warnings). 
 
 # Duplicate registrations
 
@@ -88,10 +94,13 @@ To avoid this, strongly discourage parents from re-registering cadets if they ha
 - if the change will modify the amount to be paid (eg number of days attending), make the change yourself in Wild Apricot
 - if the change won't affect payment, make the change in Skipperman itself.
 
+You can see a list of cadets with import errors in the [registration editing, warnings section](registration_editing_help.md#warnings). 
 
 # Updating registration data
 
 If you subsequently reimport an updated registration file, you may need to identify any cadets with new registrations, but any existing registrations with identified sailors will be remembered.
+
+You can see a list of cadets with import errors in the [registration editing, warnings section](registration_editing_help.md#warnings). 
 
 ## Duplicate registrations on update
 
@@ -110,7 +119,6 @@ Cadet John Smith (2000-01-01) Member was in imported data, now appears to be mis
 
 This can happen if:
 
-- You have [added a sailor manually](manually_adding_a_sailor.md) to Skipperman who has not been registered in Wild Apricot, and their status is not `Manual`. You can ignore this message, but to make it go away eithier change the [registration status to manual](registration_editing_help.md) which would be appropriate for a free event like a racing series, or ask their parent to register them.
 - For some stupid reason you have manually edited the data file exported from Wild Apricot and remove one or more rows. Unless you're an expert trying to debug something, don't do this. Instead, change the registration status to ['Cancelled'](registration_editing_help.md). Meanwhile, you can ignore this error.
 - Wild Apricot themselves have changed their export output, or Skipperman has managed to corrupt it's own data. Please contact support - this is serious.
 

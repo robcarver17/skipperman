@@ -38,6 +38,7 @@ class DaySelector(Dict[Day, bool]):
 
         return joined_days
 
+
     def __str__(self):
 
         return "days: %s " % self.as_str()

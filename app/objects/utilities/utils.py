@@ -260,3 +260,13 @@ def percentage_of_x_in_y(idx_of_x, y_has_length) -> int:
         return 100
 
     return int(100*float(idx_of_x)/len_y)
+
+
+def simplify_and_display(some_list, linker =", "):
+    if len(some_list)==0:
+        return ""
+    unique_list = list(set(some_list))
+    if len(unique_list)==1:
+        return str(unique_list[0])
+
+    return linker.join(unique_list)

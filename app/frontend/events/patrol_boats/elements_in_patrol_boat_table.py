@@ -1,4 +1,6 @@
 from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunteer
+from app.frontend.shared.events_state import get_event_from_state
+from app.frontend.shared.warnings_table import display_warnings_tables
 
 from app.objects.volunteers import ListOfVolunteers, Volunteer
 
@@ -15,8 +17,8 @@ from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles impor
     VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 )
 
-from app.backend.patrol_boats.patrol_boat_warnings import warn_on_pb2_drivers
-from app.backend.volunteers.warnings import warn_on_volunteer_qualifications
+from app.backend.patrol_boats.patrol_boat_warnings import process_all_warnings_for_patrol_boats, \
+    get_all_saved_warnings_for_patrol_boats
 from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
 from app.data_access.configuration.fixed import (
     COPY_OVERWRITE_SYMBOL,
@@ -199,23 +201,17 @@ def get_list_of_volunteers_for_skills_checkboxes(
     )
 
 
-def warn_on_all_volunteers_in_patrol_boats(
+def update_and_get_warnings_on_all_volunteers_in_patrol_boats(
     interface: abstractInterface,
     event: Event,
-) -> Union[DetailListOfLines, str]:
-    qualification_warnings = warn_on_volunteer_qualifications(
-        object_store=interface.object_store, event=event
-    )
-    pb2driver_warnings = warn_on_pb2_drivers(
-        object_store=interface.object_store, event=event
-    )
+) -> Union[ListOfLines, str]:
 
-    all_warnings = qualification_warnings + pb2driver_warnings
+    process_all_warnings_for_patrol_boats(object_store=interface.object_store, event=event)
+    interface.save_cache_to_store_without_clearing()
 
-    if len(all_warnings) == 0:
-        return ""
+    all_warnings = get_all_saved_warnings_for_patrol_boats(object_store=interface.object_store, event=event)
 
-    return DetailListOfLines(ListOfLines(all_warnings).add_Lines(), name="Warnings")
+    return display_warnings_tables(all_warnings)
 
 
 def get_top_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonBar:

@@ -41,44 +41,101 @@ from app.objects.cadets import (
 from app.objects.day_selectors import empty_day_selector, Day, DaySelector
 from app.objects.events import Event
 from app.objects.registration_data import get_volunteer_status_from_row
+from app.objects.event_warnings import ListOfEventWarnings, MEDIUM_PRIORITY, CADET_WITHOUT_ADULT, \
+    VOLUNTEER_AVAILABILITY, VOLUNTEER_GROUP, LOW_PRIORITY, LOWEST_PRIORITY, VOLUNTEER_UNCONNECTED, \
+    VOLUNTEER_QUALIFICATION, HIGH_PRIORITY, VOLUNTEER_IDENTITY, VOLUNTEER_PREFERENCE
+from app.backend.events.event_warnings import add_or_update_list_of_new_event_warnings_clearing_any_missing, \
+    get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority
 
-
-def warn_on_all_volunteers_availability(
-    object_store: ObjectStore, event: Event
-) -> List[str]:
-    return warn_on_all_volunteers_generic(
-        object_store=object_store,
-        event=event,
-        warning_function=warn_about_single_volunteer_availablity_at_event,
+def process_all_warnings_for_rota(object_store: ObjectStore, event: Event):
+    warn_on_all_volunteers_availability_volunteers_missing(
+        object_store=object_store, event=event
+    )
+    warn_on_all_volunteers_availability_sailors_missing(
+        object_store=object_store, event=event
+    )
+    warn_on_all_volunteers_group(
+        object_store=object_store, event=event
+    )
+    warn_on_all_volunteers_unconnected(
+        object_store=object_store, event=event
+    )
+    warn_on_volunteer_qualifications(
+        object_store=object_store, event=event
+    )
+    warn_on_cadets_which_should_have_volunteers(
+        object_store=object_store, event=event
     )
 
 
-def warn_on_all_volunteers_group(object_store: ObjectStore, event: Event) -> List[str]:
-    return warn_on_all_volunteers_generic(
+def warn_on_all_volunteers_availability_volunteers_missing(
+    object_store: ObjectStore, event: Event
+):
+    warnings = warn_on_all_volunteers_generic(
+        object_store=object_store,
+        event=event,
+        warning_function=warn_about_single_volunteer_availablity_at_event_missing_volunteer,
+    )
+
+    process_warnings_into_warning_list(object_store=object_store, event=event,
+                                       list_of_warnings=warnings, category=VOLUNTEER_AVAILABILITY,
+                                       priority=LOW_PRIORITY)
+
+def warn_on_all_volunteers_availability_sailors_missing(
+    object_store: ObjectStore, event: Event
+):
+    warnings = warn_on_all_volunteers_generic(
+        object_store=object_store,
+        event=event,
+        warning_function=warn_about_single_volunteer_availablity_at_event_missing_sailor,
+    )
+
+    process_warnings_into_warning_list(object_store=object_store, event=event,
+                                       list_of_warnings=warnings, category=VOLUNTEER_AVAILABILITY,
+                                       priority=MEDIUM_PRIORITY)
+
+def warn_on_all_volunteers_group(object_store: ObjectStore, event: Event):
+    warnings =  warn_on_all_volunteers_generic(
         object_store=object_store,
         event=event,
         warning_function=warn_about_single_volunteer_groups_at_event,
     )
 
+    process_warnings_into_warning_list(object_store=object_store, event=event,
+                                       list_of_warnings=warnings,
+                                       category=VOLUNTEER_GROUP,
+                                       priority=LOW_PRIORITY)
+
 
 def warn_on_all_volunteers_unconnected(
     object_store: ObjectStore, event: Event
-) -> List[str]:
-    return warn_on_all_volunteers_generic(
+):
+    warnings = warn_on_all_volunteers_generic(
         object_store=object_store,
         event=event,
         warning_function=warn_about_single_volunteer_with_no_cadet_at_event,
     )
 
+    process_warnings_into_warning_list(object_store=object_store, event=event,
+                                       list_of_warnings=warnings,
+                                       category = VOLUNTEER_UNCONNECTED,
+                                       priority=LOWEST_PRIORITY,
+                                       )
+
 
 def warn_on_volunteer_qualifications(
     object_store: ObjectStore, event: Event
-) -> List[str]:
-    return warn_on_all_volunteers_generic(
+):
+    warnings= warn_on_all_volunteers_generic(
         object_store=object_store,
         event=event,
         warning_function=warn_about_single_volunteer_with_qualifications,
     )
+
+    process_warnings_into_warning_list(object_store=object_store, event=event,
+                                       list_of_warnings=warnings,
+                                       category=VOLUNTEER_QUALIFICATION,
+                                       priority=HIGH_PRIORITY)
 
 
 def warn_on_all_volunteers_generic(
@@ -98,7 +155,7 @@ def warn_on_all_volunteers_generic(
         )
         list_of_warnings.append(warnings_for_volunteer)
 
-    list_of_warnings = process_warning_list(list_of_warnings)
+    list_of_warnings = remove_empty_values_in_warning_list(list_of_warnings)
 
     return list_of_warnings
 
@@ -174,7 +231,7 @@ def warn_about_single_volunteer_groups_at_event(
     return ", ".join(group_warnings_for_volunteer)
 
 
-def warn_about_single_volunteer_availablity_at_event(
+def warn_about_single_volunteer_availablity_at_event_missing_volunteer(
     volunteer: Volunteer,
     event: Event,
     volunteer_event_data: AllEventDataForVolunteer,
@@ -193,6 +250,31 @@ def warn_about_single_volunteer_availablity_at_event(
         object_store=object_store,
         volunteer_event_data=volunteer_event_data,
         active_connected_cadets=active_connected_cadets,
+        missing_volunteers_if_true_otherwise_missing_cadets = True
+    )
+
+
+def warn_about_single_volunteer_availablity_at_event_missing_sailor(
+    volunteer: Volunteer,
+    event: Event,
+    volunteer_event_data: AllEventDataForVolunteer,
+    object_store: ObjectStore,
+) -> str:
+
+    active_connected_cadets = get_list_of_cadets_associated_with_volunteer_at_event(
+        object_store=object_store, event=event, volunteer=volunteer
+    )
+
+    if len(active_connected_cadets) == 0:
+        return ""
+    return warn_about_volunteer_availablity_at_event_with_connected_cadets(
+        event=event,
+        volunteer=volunteer,
+        object_store=object_store,
+        volunteer_event_data=volunteer_event_data,
+        active_connected_cadets=active_connected_cadets,
+        missing_volunteers_if_true_otherwise_missing_cadets=False
+
     )
 
 
@@ -202,6 +284,7 @@ def warn_about_volunteer_availablity_at_event_with_connected_cadets(
     volunteer: Volunteer,
     volunteer_event_data: AllEventDataForVolunteer,
     active_connected_cadets: ListOfCadets,
+        missing_volunteers_if_true_otherwise_missing_cadets: bool
 ) -> str:
     cadet_at_event_availability = get_availability_dict_for_active_cadets_at_event(
         object_store=object_store, event=event
@@ -215,7 +298,8 @@ def warn_about_volunteer_availablity_at_event_with_connected_cadets(
             active_connected_cadets=active_connected_cadets,
             cadet_at_event_availability=cadet_at_event_availability,
             day=day,
-            warnings=warnings
+            warnings=warnings,
+            missing_volunteers_if_true_otherwise_missing_cadets=missing_volunteers_if_true_otherwise_missing_cadets
         )
 
     warnings = add_notes_to_warnings_on_availability(volunteer=volunteer, volunteer_registration_data=volunteer_registration_data, warnings=warnings)
@@ -223,11 +307,12 @@ def warn_about_volunteer_availablity_at_event_with_connected_cadets(
     return warnings
 
 def warning_about_volunteer_availability_on_specific_day(volunteer: Volunteer,
-        volunteer_registration_data: RegistrationDataForVolunteerAtEvent,
+                                                        volunteer_registration_data: RegistrationDataForVolunteerAtEvent,
                                                          active_connected_cadets: ListOfCadets,
                                                          cadet_at_event_availability: Dict[Cadet, DaySelector],
                                                          day: Day,
-                                                         warnings: List[str]):
+                                                         warnings: List[str],
+                                                         missing_volunteers_if_true_otherwise_missing_cadets: bool):
     volunteer_available_on_day = (
         volunteer_registration_data.availablity.available_on_day(day)
     )
@@ -238,16 +323,18 @@ def warning_about_volunteer_availability_on_specific_day(volunteer: Volunteer,
     )
     any_cadet_available_on_day = len(list_of_cadets_available_on_day) > 0
 
-    if volunteer_available_on_day and not any_cadet_available_on_day:
-        new_warning = warning_if_volunteer_present_and_not_cadet(active_connected_cadets=active_connected_cadets,
-                                                                 list_of_cadets_available_on_day=list_of_cadets_available_on_day,
-                                                                 day=day)
-        warnings.append(new_warning)
+    if missing_volunteers_if_true_otherwise_missing_cadets:
+        if not volunteer_available_on_day and any_cadet_available_on_day:
+            new_warning = warning_if_cadet_present_and_no_volunteers(list_of_cadets_available_on_day=list_of_cadets_available_on_day,
+                                                                     day=day)
+            warnings.append(new_warning)
+    else:
+        if volunteer_available_on_day and not any_cadet_available_on_day:
+            new_warning = warning_if_volunteer_present_and_not_cadet(active_connected_cadets=active_connected_cadets,
+                                                                     list_of_cadets_available_on_day=list_of_cadets_available_on_day,
+                                                                     day=day)
+            warnings.append(new_warning)
 
-    elif not volunteer_available_on_day and any_cadet_available_on_day:
-        new_warning = warning_if_cadet_present_and_no_volunteers(list_of_cadets_available_on_day=list_of_cadets_available_on_day,
-                                                                 day=day)
-        warnings.append(new_warning)
 
     return warnings
 
@@ -332,7 +419,8 @@ def warn_about_single_volunteer_with_no_cadet_at_event(
 
 def warn_on_cadets_which_should_have_volunteers(
     object_store: ObjectStore, event: Event
-) -> List[str]:
+) :
+    ## NOT GENERIC!
     active_cadets = get_list_of_active_cadets_at_event(
         object_store=object_store, event=event
     )
@@ -343,7 +431,10 @@ def warn_on_cadets_which_should_have_volunteers(
         for cadet in active_cadets
     ]
 
-    return process_warning_list(list_of_warnings)
+    list_of_warnings = remove_empty_values_in_warning_list(list_of_warnings)
+    process_warnings_into_warning_list(object_store=object_store, event=event,
+                                       list_of_warnings=list_of_warnings,
+                                       priority=HIGH_PRIORITY, category=CADET_WITHOUT_ADULT)
 
 
 def warning_for_specific_cadet_at_event(
@@ -423,10 +514,32 @@ def get_volunteer_status_and_possible_names(
     return "(Declared volunteer status: %s)" % ", ".join(status_in_rows)
 
 
-def process_warning_list(list_of_warnings: List[str]) -> List[str]:
+def remove_empty_values_in_warning_list(list_of_warnings: List[str]) -> List[str]:
     list_of_warnings = [warning for warning in list_of_warnings if len(warning) > 0]
 
-    if len(list_of_warnings) > 0:
-        list_of_warnings = [" "] + list_of_warnings
-
     return list_of_warnings
+
+def process_warnings_into_warning_list(object_store: ObjectStore, event: Event, list_of_warnings: List[str], priority: str, category: str):
+    add_or_update_list_of_new_event_warnings_clearing_any_missing(
+        object_store=object_store,
+        event=event,
+        category=category,
+        priority=priority,
+        new_list_of_warnings=list_of_warnings
+    )
+
+def get_all_saved_warnings_for_volunteer_rota(object_store: ObjectStore, event: Event) -> ListOfEventWarnings:
+    all_warnings = get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority(
+        object_store=object_store,
+        event=event,
+        list_of_categories=[
+            VOLUNTEER_IDENTITY,
+    VOLUNTEER_QUALIFICATION,
+    CADET_WITHOUT_ADULT,
+    VOLUNTEER_AVAILABILITY,
+    VOLUNTEER_GROUP,
+    VOLUNTEER_UNCONNECTED,
+        VOLUNTEER_PREFERENCE])
+
+    return all_warnings
+

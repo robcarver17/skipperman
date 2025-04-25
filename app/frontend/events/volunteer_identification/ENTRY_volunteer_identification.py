@@ -1,5 +1,6 @@
 from typing import Union
 
+from app.backend.events.event_warnings import add_new_event_warning_checking_for_duplicate
 from app.objects.abstract_objects.abstract_lines import _______________, ListOfLines, ProgressBar, HorizontalLine
 from app.backend.volunteers.list_of_volunteers import (
     get_volunteer_with_matching_name, single_very_similar_volunteer_or_missing_data,
@@ -33,6 +34,7 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 from app.objects.cadets import Cadet
+from app.objects.event_warnings import HIGH_PRIORITY, VOLUNTEER_IDENTITY
 
 from app.objects.utilities.exceptions import NoMoreData, arg_not_passed,  missing_data
 from app.objects.relevant_information_for_volunteers import (
@@ -166,6 +168,11 @@ def add_passed_volunteer_if_very_similar_or_display_form_if_not(interface: abstr
     interface.log_error("Volunteer %s is very similar to one in form %s, adding automatically. Go to rota to change if problematic." % (
         matching_volunteer, volunteer
     ))
+    warning = "Assumed volunteer %s was identical to volunteer %s in registration data" % (matching_volunteer, volunteer)
+    add_new_event_warning_checking_for_duplicate(object_store=interface.object_store,
+                                                 event=get_event_from_state(interface),
+                                                 warning=warning, category=VOLUNTEER_IDENTITY, priority=HIGH_PRIORITY,
+                                                 auto_refreshed=False)  ## warning will sit on system until cleared
 
     return process_identification_when_volunteer_matched(interface=interface, volunteer=matching_volunteer)
 

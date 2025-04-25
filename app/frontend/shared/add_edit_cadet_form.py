@@ -16,8 +16,7 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     textInput,
     dateInput,
-    dropDownInput,
-)
+    dropDownInput, )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
@@ -26,11 +25,12 @@ from app.objects.abstract_objects.abstract_lines import (
 )
 from app.objects.abstract_objects.abstract_text import bold
 
-from app.objects.cadets import Cadet, default_cadet
+from app.objects.cadets import Cadet, default_cadet, DOB_SURE, DOB_UNKNOWN, DOB_IRRELEVANT, UNCONFIRMED_DATE_OF_BIRTH, \
+    DEFAULT_DATE_OF_BIRTH, IRRELEVANT_DATE_OF_BIRTH
 from app.objects.membership_status import (
     MembershipStatus,
     describe_status,
-    all_status_description_as_dict_for_user_input,
+    all_status_description_as_dict_for_user_input, none_member,
 )
 from app.objects.utilities.exceptions import arg_not_passed
 
@@ -124,6 +124,21 @@ def form_fields_for_add_cadet(cadet: Cadet):
         input_name=DOB,
         value=cadet.date_of_birth,
     )
+    if cadet.membership_status==none_member:
+        default_dob_status = DOB_IRRELEVANT
+    elif cadet.date_of_birth==UNCONFIRMED_DATE_OF_BIRTH:
+        default_dob_status = DOB_UNKNOWN
+    elif cadet.date_of_birth == IRRELEVANT_DATE_OF_BIRTH:
+        default_dob_status = DOB_IRRELEVANT
+    else:
+        default_dob_status = DOB_SURE
+
+    dob_unsure = dropDownInput(
+        input_label="status: ",
+        input_name=DOB_UNSURE_FIELD,
+        dict_of_options={DOB_SURE: DOB_SURE, DOB_IRRELEVANT: DOB_IRRELEVANT, DOB_UNKNOWN: DOB_UNKNOWN},
+        default_label=default_dob_status
+    )
     membership_status = dropDownInput(
         input_label="",
         input_name=MEMBERSHIP_STATUS,
@@ -132,7 +147,7 @@ def form_fields_for_add_cadet(cadet: Cadet):
     )
 
     form_fields = ListOfLines(
-        [Line(first_name), Line(surname), Line(dob), Line(membership_status)]
+        [Line(first_name), Line(surname), Line([dob, dob_unsure]), Line(membership_status)]
     )
 
     return form_fields
@@ -177,6 +192,7 @@ def get_footer_buttons_for_add_cadet_form(form_is_empty: bool) -> ButtonBar:
 FIRST_NAME = "first_name"
 SURNAME = "surname"
 DOB = "date_of_birth"
+DOB_UNSURE_FIELD = "dob_unsure"
 MEMBERSHIP_STATUS = "membership_status"
 
 CHECK_BUTTON_LABEL = "Check details entered"
@@ -189,6 +205,7 @@ def get_cadet_from_form(interface: abstractInterface) -> Cadet:
     first_name = interface.value_from_form(FIRST_NAME).strip().title()
     surname = interface.value_from_form(SURNAME).strip().title()
     date_of_birth = interface.value_from_form(DOB, value_is_date=True)
+    dob_status = interface.value_from_form(DOB_UNSURE_FIELD)
     membership_status = MembershipStatus[interface.value_from_form(MEMBERSHIP_STATUS)]
 
     return Cadet.new(
@@ -196,6 +213,7 @@ def get_cadet_from_form(interface: abstractInterface) -> Cadet:
         surname=surname,
         date_of_birth=date_of_birth,
         membership_status=membership_status,
+        dob_status=dob_status
     )
 
 

@@ -1,5 +1,6 @@
 from app.objects.cadets import ListOfCadets
 from app.objects.composed.volunteers_at_event_with_registration_data import RegistrationDataForVolunteerAtEvent
+from app.objects.day_selectors import DaySelector
 
 from app.objects.utilities.utils import in_x_not_in_y
 
@@ -37,12 +38,13 @@ def get_list_of_volunteers_except_those_already_at_event(
     return volunteers_not_at_event.sort_by_firstname()
 
 
-def add_volunteer_to_event_with_full_availability(
-    object_store: ObjectStore, volunteer: Volunteer, event: Event
+def add_volunteer_to_event_with_availability(
+    object_store: ObjectStore, volunteer: Volunteer, event: Event, no_availability: bool
 ):
-    availability = (
-        event.day_selector_for_days_in_event()
-    )  ## assume available all days in event
+    if no_availability:
+        availability = DaySelector.create_empty()
+    else:
+        availability = event.day_selector_for_days_in_event()
 
     registration_data = RegistrationDataForVolunteerAtEvent(availablity=availability,
                                                             list_of_associated_cadets=ListOfCadets([]))

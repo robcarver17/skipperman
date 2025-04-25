@@ -1,5 +1,7 @@
 from typing import Union
 
+from app.backend.registration_data.warnings import \
+    refresh_registration_data_warnings_and_return_sorted_list_of_active_warnings
 from app.data_access.configuration.fixed import ADD_KEYBOARD_SHORTCUT
 from app.frontend.events.registration_details.add_unregistered_cadet import \
     display_add_unregistered_cadet_from_registration_form
@@ -10,6 +12,7 @@ from app.frontend.events.registration_details.parse_registration_details_form im
     parse_registration_details_from_form,
 )
 from app.frontend.shared.buttons import get_button_value_for_sort_order
+from app.frontend.shared.warnings_table import display_warnings_tables, save_warnings_button, save_warnings_from_table
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
@@ -45,6 +48,7 @@ def display_form_edit_registration_details(
 def display_form_edit_registration_details_given_event_and_sort_order(
     interface: abstractInterface, event: Event, sort_order: str
 ) -> Union[Form, NewForm]:
+    warnings_detail =get_warnings_table(interface, event)
     table = get_registration_details_inner_form_for_event(
         interface=interface, event=event, sort_order=sort_order
     )
@@ -57,6 +61,8 @@ def display_form_edit_registration_details_given_event_and_sort_order(
                 Line(
                     Heading("Registration details for %s" % event, centred=True, size=3)
                 ),
+                _______________]+
+                warnings_detail+[
                 _______________,
                 sort_buttons,
                 _______________,
@@ -67,6 +73,16 @@ def display_form_edit_registration_details_given_event_and_sort_order(
         )
     )
 
+def get_warnings_table(interface: abstractInterface, event: Event) -> ListOfLines:
+    warnings = refresh_registration_data_warnings_and_return_sorted_list_of_active_warnings(
+        object_store=interface.object_store,
+        event=event
+    )
+    interface.save_cache_to_store_without_clearing()
+
+    warnings_detail = display_warnings_tables(warnings)
+
+    return warnings_detail
 
 help_button = HelpButton("registration_editing_help")
 add_button = Button("Add unregistered sailor", nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT)
@@ -96,6 +112,8 @@ def post_form_edit_registration_details(
     elif save_menu_button.pressed(last_button_pressed):
         ## already saved
         pass
+    elif save_warnings_button.pressed(last_button_pressed):
+        save_warnings_from_table(interface)
 
     elif is_button_sort_order(last_button_pressed):
         ## no change to stage required, just sort order

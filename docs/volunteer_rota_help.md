@@ -130,7 +130,7 @@ Note: if you want to remove a volunteer completely, you should do this by [click
 
 ## Add a volunteer
 
-Perhaps there is a non parent helping, or a parent who couldn't originally volunteer now can. You can add them manually. Click on the `Add new volunteer to rota` option in the navigation bar:
+Perhaps there is a non parent helping, a parent on site who can't help but needs to be there, or a parent who couldn't originally volunteer now can. You can add them manually. Click on the `Add new volunteer to rota` option in the navigation bar:
 
 ***
 ***
@@ -152,7 +152,11 @@ Skipperman doesn't like duplicate volunteers, so it will prompt you if it looks 
 
 Alternatively if this is genuinely a new person, then click on `Yes these details are correct - add a new volunteer`. This will add a new volunteer to Skipperman, and to the event.
 
+NOTE: If the volunteer is a parent who will be on site, but not actually helping, select that option from the dropdown BEFORE you cick on the relevant volunteer or click to add a new volunteer. This is to avoid issues with [warnings about cadets being on site by themselves](resolve_warnings.md#cadets-without-appropriate-adults). They will be added with no days available. Otherwise, the volunteer will be added with all days available. You can change that once they are in the rota.
+
 If you change your mind about adding a volunteer, just press cancel.
+
+
 
 ## Removing a volunteer from an event
 
@@ -333,12 +337,9 @@ Usually the target is set by the cadet skipper or whoever is the principal organ
 
 ## Warnings
 
-Warnings are things that could be problematic for your volunteer rota; to see them click ► Warnings. They come into the following categories:
+Warnings are things that could be problematic for your volunteer rota; to see them click ► Active Warnings and ► Ignored warnings.
 
-- A mismatch between cadet availability and volunteer availability - make sure the volunteer really can do those days and record in the notes.
-- A volunteer without any connected cadets - this could be because they have agreed to help, but it could also be because the cadet has cancelled their registration and you haven't removed the volunteer - check with the volunteer, and then record in the notes what they said.
-- Volunteers who are at the lake with one or more connected cadets, or worse still allocated to a sailing group that their cadet is in. Make sure you are happy with this.
-- Is every volunteer qualified for their role?
+For more help on warnings, see [resolving registration issues](resolve_volunteer_registration_issues.md).
 
 # Misc
 

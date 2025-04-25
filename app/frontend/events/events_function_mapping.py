@@ -80,7 +80,7 @@ from app.frontend.events.volunteer_identification.ENTRY_volunteer_identification
     post_form_volunteer_identification,
 )
 from app.frontend.events.volunteer_identification.add_volunteers_to_event import (
-    post_form_add_volunteers_to_event,
+    post_add_volunteers_to_event,
     display_add_volunteers_to_event,
 )
 
@@ -174,7 +174,7 @@ event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_func
                                     ): 0,
                                     (
                                         display_add_volunteers_to_event,
-                                        post_form_add_volunteers_to_event,
+                                        post_add_volunteers_to_event,
                                     ): 0,
                                     (
                                         display_call_to_update_cadet_clothing_at_event_during_import,

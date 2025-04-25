@@ -36,6 +36,7 @@ class VolunteerAtEventWithId(GenericSkipperManObject):
     any_other_information: str = (
         ""  ## information only - double counted as required twice
     )
+    self_declared_status: str = ""
     notes: str = ""
 
     def clear_user_data(self):
@@ -69,6 +70,7 @@ class VolunteerAtEventWithId(GenericSkipperManObject):
             any_other_information=str(dict_with_str["any_other_information"]),
             list_of_associated_cadet_id=list_of_cadet_ids,
             availablity=availability,
+            self_declared_status=str(dict_with_str.get('self_declared_status', '')),
             notes=dict_with_str["notes"],
         )
 

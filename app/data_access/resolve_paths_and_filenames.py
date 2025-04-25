@@ -77,6 +77,7 @@ GROUP_NOTES_ID = "group_notes"
 LIST_OF_CADETS_FILE_ID = "cadet_master_list"
 EVENT_FILE_IDENTIFIER = "list_of_events"
 MAPPED_REGISTRATION_DATA_FILE_ID = "mapped_registration_data_fileid"
+EVENT_WARNINGS_FILE_ID = "event_warnings_field_id"
 PRINT_OPTIONS_FILE_ID = "print_options"
 ARRANGEMENT_OPTIONS_FILE_ID = "arrangement_options"
 GROUPS_FILE_ID = "groups"
@@ -136,6 +137,7 @@ _dict_of_filenames_and_paths = {
     TEMPLATES_FIELD_MAPPING_FILE_ID: ("event_field_mapping_templates", "%s.csv"),
     GROUPS_FILE_ID: ("lists", "groups.csv"),
     MAPPED_REGISTRATION_DATA_FILE_ID: ("mapped_events", "mapped_wa_event_%s.csv"),
+    EVENT_WARNINGS_FILE_ID : ("mapped_events", "event_warnings_%s.csv"),
     CADETS_AT_EVENT_ID: (
         "mapped_events",
         "cadets_at_event_%s.csv",

@@ -36,6 +36,8 @@ from app.frontend.events.volunteer_rota.rota_state import (
     get_sorts_and_filters_from_state,
     clear_all_filters,
 )
+from app.frontend.shared.buttons import is_button_sort_order
+from app.frontend.shared.warnings_table import save_warnings_button, save_warnings_from_table
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -209,6 +211,9 @@ def post_form_view_for_volunteer_rota_if_data_changed(
 
     elif save_group_notes_button.pressed(last_button_pressed):
         save_group_notes_from_form(interface)
+
+    elif save_warnings_button.pressed(last_button_pressed):
+        save_warnings_from_table(interface)
 
     else:
         return button_error_and_back_to_initial_state_form(interface)

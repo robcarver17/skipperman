@@ -71,10 +71,24 @@ For every person on a boat, that shows you whether they have PB2 or not. You can
 
 # Warnings
 
+## Active warnings
+
 There are two types of checks that Skipperman will do, and you can see if there are any resulting warnings by clicking ►Warnings.
 
 - Does every boat have a qualified driver on for every day?
 - Is every volunteer qualified for their role?
+
+Warnings appear sorted by priority, and then by category.
+
+You can eithier *clear* warnings, or click on them to be *ignored* (and then press `Save changes to warnings`). To clear warnings:
+
+- Add a driver where one is missing
+- Set a volunteer qualification in the [qualifications table](#qualifications-table)) or in the [volunteer rota](volunteer_rota_help.md), or [edit volunteer page](view_individual_volunteer_help.md).
+
+## Ignored warnings
+
+Warnings that have been ignored appear here. You can 'unignore' them by clicking the checkbox and pressing `Save changes to warnings`.
+
 
 # Copying
 

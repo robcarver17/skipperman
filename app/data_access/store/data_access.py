@@ -100,6 +100,14 @@ def get_data_access_for_cadets_with_groups(
         event_id=event_id,
     )
 
+def get_data_access_for_list_of_event_warnings(data: GenericDataApi, event_id:str) -> DataAccessMethod:
+    return DataAccessMethod(
+        "list_of_event_warnings",
+        data.data_event_warnings.read,
+        data.data_event_warnings.write,
+        event_id=event_id
+    )
+
 
 def get_data_access_for_cadets_with_ids_and_registration_data_at_event(
     data: GenericDataApi, event_id: str

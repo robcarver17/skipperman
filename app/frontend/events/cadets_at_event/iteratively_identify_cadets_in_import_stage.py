@@ -1,8 +1,11 @@
+import datetime
 from typing import Union
 
 from app.backend.cadets.list_of_cadets import get_matching_cadet, get_list_of_very_similar_cadets_from_data
+from app.backend.events.event_warnings import add_new_event_warning_checking_for_duplicate
 
-from app.objects.abstract_objects.abstract_lines import ListOfLines, ProgressBar, HorizontalLine
+from app.objects.abstract_objects.abstract_lines import ListOfLines, ProgressBar, HorizontalLine, DetailListOfLines, \
+    Line
 
 from app.backend.registration_data.raw_mapped_registration_data import (
     get_row_in_raw_registration_data_given_id,
@@ -27,6 +30,8 @@ from app.frontend.shared.get_or_select_cadet_forms import (
     get_add_or_select_existing_cadet_form,
      ParametersForGetOrSelectCadetForm, generic_post_response_to_add_or_select_cadet,
 )
+from app.objects.event_warnings import CADET_IDENTITY, HIGH_PRIORITY, MEDIUM_PRIORITY, LOWEST_PRIORITY, CADET_REGISTRATION
+from app.objects.utilities.cadet_matching_and_sorting import SORT_BY_SIMILARITY_BOTH
 
 from app.objects.utilities.exceptions import NoMoreData, MissingData, missing_data
 from app.objects.registration_data import RowInRegistrationData
@@ -152,8 +157,13 @@ def process_row_when_cadet_unmatched(
     if very_similar_cadet is missing_data:
         return process_row_when_cadet_completely_unmatched(interface=interface, cadet=cadet)
     else:
-        interface.log_error("Found cadet %s, looks a very close match for %s in registration data. If not correct, replace in edit registration page."
-                             % (very_similar_cadet, cadet))
+        message = "Found cadet %s, looks a very close match for %s in registration data. If not correct, replace in edit registration page; otherwise click ignore in warnings there" % (very_similar_cadet, cadet)
+        interface.log_error(message)
+        warning = "Assumed cadet %s was identical to cadet %s in registration data." % (very_similar_cadet, cadet)
+        add_new_event_warning_checking_for_duplicate(object_store=interface.object_store, event=get_event_from_state(interface),
+                                                     warning=warning, category=CADET_IDENTITY, priority=HIGH_PRIORITY,
+                                                     auto_refreshed=False)## warning will sit on system until cleared
+
         return process_row_when_cadet_matched(interface=interface, cadet=very_similar_cadet)
 
 
@@ -182,22 +192,33 @@ def get_parameters_for_form(interface: abstractInterface):
     parameters_to_get_or_select_cadet = ParametersForGetOrSelectCadetForm(
         header_text=header_text_for_form(interface),
         help_string="identify_cadets_at_event_help",
-        skip_button=True
+        skip_button=True,
+        sort_by=SORT_BY_SIMILARITY_BOTH
     )
 
     return parameters_to_get_or_select_cadet
 
 def header_text_for_form(interface: abstractInterface) -> ListOfLines:
-
-    default_header_text = [
+    event=get_event_from_state(interface)
+    row_id = get_current_row_id(interface)
+    row = get_row_in_raw_registration_data_given_id(
+        object_store=interface.object_store, event=event, row_id=row_id
+    )
+    reg_details = \
+                           DetailListOfLines(
+        ListOfLines(
+            ["Registration details: %s" % str(row)]
+        ), name="Click to see full registration details"
+    )
+    default_header_text = ListOfLines([
         ProgressBar('Identifying cadets in registration data', percentage_of_row_ids_done_in_registration_file(interface)),
         HorizontalLine(),
-        "Looks like a new cadet in the WA entry file. ",
-        "You can edit them, check their details and then add, or choose an existing cadet instead (avoid creating duplicates! If the existing cadet details are wrong, select them for now and edit later) \n\n ",
-        "If this is a test entry, then click SKIP"
-    ]
+        Line("Looks like a new cadet in the WA entry file. "),
+        Line("You can edit them, check their details and then add, or choose an existing cadet instead (avoid creating duplicates! If the existing cadet details are wrong, select them for now and edit later)"),
+        Line("If this is a test entry, then click SKIP"),
+        reg_details])
 
-    return ListOfLines(default_header_text).add_Lines()
+    return default_header_text
 
 
 
@@ -217,10 +238,10 @@ def post_form_add_cadet_ids_during_import(
     elif result.skip:
         return process_form_when_skipping_cadet(interface)
 
-
     elif result.is_cadet:
         cadet = result.cadet
         assert type(cadet) is Cadet
+
         return process_row_when_cadet_matched(interface=interface, cadet=cadet)
     else:
         raise Exception("Can't handle result %s" % str(result))
@@ -235,6 +256,10 @@ def process_form_when_skipping_cadet(interface: abstractInterface) -> Form:
     mark_row_as_skip_cadet(
         event=event, row_id=row_id, object_store=interface.object_store
     )
+    add_new_event_warning_checking_for_duplicate(object_store=interface.object_store,
+                                                 event=event,
+                                                 warning="On import at %s, skipped identifying sailor in row with ID" % str(datetime.datetime.now()), category=CADET_IDENTITY, priority=LOWEST_PRIORITY,
+                                                 auto_refreshed=False)  ## warning will sit on system until cleared
 
     interface.flush_cache_to_store()
     ## run recursively until no more data

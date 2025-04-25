@@ -4,6 +4,7 @@ from random import random
 from typing import List
 import pandas as pd
 
+from app.data_access.configuration.configuration import UNABLE_TO_VOLUNTEER_KEYWORD_LIST
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjects,
     create_list_of_objects_from_dataframe,
@@ -259,3 +260,22 @@ def get_new_row_id_not_in_existing_list(list_of_row_ids: List[str]):
         else:
             return new_row_id
 
+
+def check_any_status_is_unable_given_list_of_status(list_of_status:List[str]):
+    any_status_is_unable = any(
+        [
+            status
+            for status in list_of_status
+            if status_is_unable(status)
+        ]
+    )
+
+    return any_status_is_unable
+
+
+def status_is_unable(status:str):
+    for keyword in UNABLE_TO_VOLUNTEER_KEYWORD_LIST:
+        if keyword in status.lower():
+            return True
+
+    return False

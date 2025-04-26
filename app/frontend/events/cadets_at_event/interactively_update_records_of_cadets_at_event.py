@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Union
 
 from app.backend.events.event_warnings import add_new_event_warning_checking_for_duplicate
+from app.data_access.configuration.configuration import local_timezone
 from app.objects.cadets import Cadet
 
 from app.backend.registration_data.update_cadets_at_event import (
@@ -109,7 +110,7 @@ def process_update_to_existing_cadet_in_event_data(
         interface.log_error(message)
         add_new_event_warning_checking_for_duplicate(object_store=interface.object_store,
                                                      event=event,
-                                                     warning="On import at %s, %s" % (datetime.now(), message),
+                                                     warning="On import at %s, %s" % (datetime.now(local_timezone), message),
                                                      category=CADET_REGISTRATION, priority=HIGH_PRIORITY,
                                                      auto_refreshed=False)  ## warning will sit on system until cleared
 
@@ -129,7 +130,7 @@ def process_update_to_existing_cadet_in_event_data(
 
         add_new_event_warning_checking_for_duplicate(object_store=interface.object_store,
                                                      event=event,
-                                                     warning="On import at %s, %s" % (datetime.now(), message),
+                                                     warning="On import at %s, %s" % (datetime.now(local_timezone), message),
                                                      category=CADET_REGISTRATION, priority=priority,
                                                      auto_refreshed=False)  ## warning will sit on system until cleared
         interface.log_error(message)
@@ -211,7 +212,7 @@ def process_update_to_cadet_new_to_event(
             "ACTION REQUIRED: Cadet %s appears more than once in imported file with an active registration - using the first registration found - go to WA and cancel all but one of the registrations please, and then check details here are correct!"            % cadet
         add_new_event_warning_checking_for_duplicate(object_store=interface.object_store,
                                                      event=event,
-                                                     warning="On import at %s, %s" % (datetime.now(), message),
+                                                     warning="On import at %s, %s" % (datetime.now(local_timezone), message),
                                                      category=CADET_REGISTRATION, priority=HIGH_PRIORITY,
                                                      auto_refreshed=False)  ## warning will sit on system until cleared
         interface.log_error(message)
@@ -229,7 +230,7 @@ def process_update_to_cadet_new_to_event(
         )
         add_new_event_warning_checking_for_duplicate(object_store=interface.object_store,
                                                      event=event,
-                                                     warning="On import at %s, %s" % (datetime.now(), message),
+                                                     warning="On import at %s, %s" % (datetime.now(local_timezone), message),
                                                      category=CADET_REGISTRATION, priority=HIGH_PRIORITY,
                                                      auto_refreshed=False)  ## warning will sit on system until cleared
 

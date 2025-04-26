@@ -3,6 +3,7 @@ from typing import Dict
 
 from app.backend.registration_data.raw_mapped_registration_data import get_raw_mapped_registration_data, \
     update_raw_mapped_registration_data
+from app.data_access.configuration.configuration import local_timezone
 from app.objects.day_selectors import DaySelector, Day
 
 from app.objects.cadets import Cadet, ListOfCadets
@@ -57,7 +58,7 @@ def create_empty_row_given_existing_registration_data(
     ## get current fields, or none
     current_fields_in_data = registration_data.list_of_fields()
     row_id = registration_data.new_unique_row_id()
-    registration_datetime = datetime.datetime.now()
+    registration_datetime = datetime.datetime.now(local_timezone)
 
     ## create blank entry with a given status, manual
     new_row = RowInRegistrationData.create_empty_with_manual_status_set(fields = current_fields_in_data, row_id=row_id, registration_datetime=registration_datetime, date_of_birth=cadet.date_of_birth)

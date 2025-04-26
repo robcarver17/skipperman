@@ -3,6 +3,7 @@ from typing import Union
 
 from app.backend.cadets.list_of_cadets import get_matching_cadet, get_list_of_very_similar_cadets_from_data
 from app.backend.events.event_warnings import add_new_event_warning_checking_for_duplicate
+from app.data_access.configuration.configuration import local_timezone
 
 from app.objects.abstract_objects.abstract_lines import ListOfLines, ProgressBar, HorizontalLine, DetailListOfLines, \
     Line
@@ -258,7 +259,7 @@ def process_form_when_skipping_cadet(interface: abstractInterface) -> Form:
     )
     add_new_event_warning_checking_for_duplicate(object_store=interface.object_store,
                                                  event=event,
-                                                 warning="On import at %s, skipped identifying sailor in row with ID" % str(datetime.datetime.now()), category=CADET_IDENTITY, priority=LOWEST_PRIORITY,
+                                                 warning="On import at %s, skipped identifying sailor in row with ID" % str(datetime.datetime.now(local_timezone)), category=CADET_IDENTITY, priority=LOWEST_PRIORITY,
                                                  auto_refreshed=False)  ## warning will sit on system until cleared
 
     interface.flush_cache_to_store()

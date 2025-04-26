@@ -2,6 +2,7 @@ import datetime
 from dataclasses import dataclass
 from typing import Dict, List
 
+from app.data_access.configuration.configuration import local_timezone
 from app.objects.attendance import ListOfRawAttendanceItemsForSpecificCadet, Attendance, unknown, not_attending, registration_not_taken, absent
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.day_selectors import Day, DaySelector
@@ -133,7 +134,7 @@ class DictOfAttendanceAcrossEvents(Dict[Cadet, AttendanceAcrossDaysAndEvents]):
         return self.get(cadet, AttendanceAcrossDaysAndEvents())
 
     def update_attendance_for_cadet_on_day_at_event(self, event: Event, cadet: Cadet, day: Day, new_attendance: Attendance):
-        current_datetime = datetime.datetime.now()
+        current_datetime = datetime.datetime.now(local_timezone)
         attendance_for_cadet = self.attendance_for_cadet_across_days_and_events(cadet)
         current_attendance = attendance_for_cadet.attendance_for_cadet_at_event(event).attendance_on_day(day).current_attendance
         if current_attendance==new_attendance:

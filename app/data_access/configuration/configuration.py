@@ -1,5 +1,5 @@
 import yaml
-
+import pytz
 from app.data_access.file_access import get_relative_pathname_from_list
 from app.objects.skill_import import from_skills_dict_in_import_config_to_import_config
 
@@ -80,3 +80,5 @@ SUPPORT_EMAIL = configuration["support_email"]
 WA_FIELD_LIST_FILE = configuration["WA_field_list_file"]
 
 IMPORT_SKILLS_CONFIG = from_skills_dict_in_import_config_to_import_config(configuration['import_skills_csv'])
+
+local_timezone = pytz.timezone(configuration['pytz_timezone'])

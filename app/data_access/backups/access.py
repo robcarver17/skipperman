@@ -1,6 +1,7 @@
 import datetime
 import pathlib
 
+from app.data_access.configuration.configuration import local_timezone
 from app.objects.utilities.utils import transform_datetime_into_str, transform_str_into_datetime
 import os
 from typing import List
@@ -42,7 +43,7 @@ def all_diffs_in_directory(datapath) -> List[int]:
 def create_timestamp_file(backup_directory_for_this_backup: str):
     filename = os.path.join(backup_directory_for_this_backup, TIMESTAMP_FILE_NAME)
     with open(filename, "w") as f:
-        f.write(transform_datetime_into_str(datetime.datetime.now()))
+        f.write(transform_datetime_into_str(datetime.datetime.now(local_timezone)))
 
 
 def read_timestamp_file(backup_directory_for_this_backup: str) -> datetime.datetime:

@@ -162,7 +162,7 @@ class ListOfEventWarnings(GenericListOfObjectsWithIds):
             [item for item in self if item.ignored]
         )
 
-    def in_categories(self, list_of_categories: list[str]) -> 'ListOfEventWarnings':
+    def in_categories(self, list_of_categories: List[str]) -> 'ListOfEventWarnings':
         new_list = []
         for category in list_of_categories:
             new_list+=self.with_category(category)

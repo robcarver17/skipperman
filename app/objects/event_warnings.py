@@ -146,6 +146,7 @@ class ListOfEventWarnings(GenericListOfObjectsWithIds):
         item.ignored = False
 
     def get_list_of_warnings_at_event_for_categories_sorted_by_priority_and_category(self, list_of_categories: list[str]) -> 'ListOfEventWarnings':
+        return ListOfEventWarnings([]) ## TMEPFIX
         in_categories = self.in_categories(list_of_categories)
         in_categories.sort(key=lambda item: item.category)
         in_categories.sort(key=lambda item: item.priority)

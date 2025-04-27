@@ -1,3 +1,5 @@
+from typing import Union
+
 from app.frontend.cadets.cadet_function_mapping import cadet_function_mapping
 from app.frontend.events.events_function_mapping import event_function_mapping
 from app.frontend.reporting.reporting_function_mapping import reporting_function_mapping
@@ -24,7 +26,7 @@ class MissingMethod(Exception):
     pass
 
 
-def get_abstract_form_for_specific_action(action_name) -> [File, Form]:
+def get_abstract_form_for_specific_action(action_name) -> Union[File, Form]:
     try:
         form_handler = get_form_handler_for_specific_action(action_name)
     except MissingMethod:

@@ -50,7 +50,7 @@ def get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority
     return list_of_warnings.get_list_of_warnings_at_event_for_categories_sorted_by_priority_and_category(list_of_categories=list_of_categories)
 
 
-def get_list_of_all_warning_ids_at_event(object_store: ObjectStore, event: Event) -> list[str]:
+def get_list_of_all_warning_ids_at_event(object_store: ObjectStore, event: Event) -> List[str]:
     list_of_warnings = get_list_of_event_warnings(object_store=object_store, event=event)
     return list_of_warnings.list_of_ids
 

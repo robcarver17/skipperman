@@ -14,6 +14,7 @@ from app.frontend.shared.get_or_select_cadet_forms import (
     get_add_or_select_existing_cadet_form,
 ParametersForGetOrSelectCadetForm, generic_post_response_to_add_or_select_cadet,
 )
+from app.objects.abstract_objects.abstract_text import bold
 
 from app.objects.cadets import Cadet
 from app.objects.abstract_objects.abstract_form import Form, NewForm
@@ -39,8 +40,10 @@ def display_add_cadet_partner(
 
 def header_text_given_cadets(primary_cadet: Cadet, partner_cadet: Cadet) -> ListOfLines:
     header_text_start = "Following is specified as partner in form for %s: %s - select an existing cadet, or add a new one"
+    bold_text = bold("You should only add partners who haven't been officially registered, for: - racing events, where registration is not required; who you know will be registered but haven't yet been, or you know has been registered, but you don't want go through the hassle of importing data from Wild Apricot")
+
     return ListOfLines(
-        [header_text_start % (primary_cadet.name, partner_cadet.name)]
+        [header_text_start % (primary_cadet.name, partner_cadet.name), bold_text]
     ).add_Lines()
 
 def get_parameters_for_form_given_cadets(primary_cadet: Cadet, partner_cadet: Cadet):

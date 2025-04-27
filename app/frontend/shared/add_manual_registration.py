@@ -7,6 +7,7 @@ from app.frontend.shared.get_or_select_cadet_forms import get_add_or_select_exis
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import  ListOfLines
+from app.objects.abstract_objects.abstract_text import bold
 from app.objects.cadets import Cadet, default_cadet
 from app.objects.utilities.exceptions import missing_data
 
@@ -16,6 +17,7 @@ def display_add_unregistered_form(
 ) -> Form:
 
     return get_add_or_select_existing_cadet_form(
+
         interface=interface,
         cadet = default_cadet,
         parameters=get_or_select_parameters
@@ -88,7 +90,7 @@ def return_to_allocation_pages(interface: abstractInterface, calling_function: C
     )
 
 
-header_text_for_adding_cadets = ListOfLines(["Add a new cadet or choose an existing cadet to register at event", "Do not use for paid events, unless they will also be or have been registered in Wild Apricot."]).add_Lines()
+header_text_for_adding_cadets = ListOfLines(["Add a new cadet or choose an existing cadet to register at event", bold("DO NOT USE for paid events, unless they will DEFINITELY BE REGISTERED or HAVE BEEN registered in Wild Apricot.")]).add_Lines()
 
 get_or_select_parameters =     parameters = ParametersForGetOrSelectCadetForm(
         header_text=header_text_for_adding_cadets,

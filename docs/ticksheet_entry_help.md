@@ -1,5 +1,5 @@
-The ticksheets and qualifications menu allows you give 'ticks' recording progress. 
-To access it, from the **main menu** choose **Ticksheets and qualifications**, then the event, then choose the group, and finally the qualification.
+The ticksheets and qualifications menu allows you give 'ticks' recording progress, mark attendance and find out about the sailors in your group. 
+To access it, from the **main menu** choose **Instructors**, then the event, then choose the group, and finally the qualification.
 ___
 
 [Guide to ticksheets and Qualifications](ticksheets_and_qualifications_guide.md)

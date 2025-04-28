@@ -115,7 +115,7 @@ class flaskInterface(abstractInterface):
         return get_username()
 
     @property
-    def read_only(self):
+    def local_read_only(self):
         return is_read_only()
 
 

@@ -22,8 +22,8 @@ You can use Skipperman to print, view, edit ticksheets; and give qualifications 
 
 # Qualification reports (Skippers and senior instructors only)
 
-- From the main menu select **Ticksheets and qualifications**, and then **Download qualification list**. [Help here](ticksheets_SI_skipper_help.md#download-qualification-list)
-- From the main menu select **Ticksheets and qualifications**, choose an event, and then click on **Download qualification progress for registered cadets** [Help here](ticksheets_choose_group_SI_skipper_help.md#download-qualification-progress-for-registered cadets)
+- From the main menu select **Instructors**, and then **Download qualification list**. [Help here](ticksheets_SI_skipper_help.md#download-qualification-list)
+- From the main menu select **Instructors**, choose an event, and then click on **Download qualification progress for registered cadets** [Help here](ticksheets_choose_group_SI_skipper_help.md#download-qualification-progress-for-registered cadets)
 
 Cadet skippers can also access these via the [qualifications report menu](qualifications_report_help.md).
 

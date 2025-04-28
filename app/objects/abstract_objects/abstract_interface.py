@@ -152,7 +152,20 @@ class abstractInterface:
 
     @property
     def read_only(self):
+        return self.local_read_only or self.global_read_only
+
+    @property
+    def local_read_only(self):
+        ## set for each user
         raise NotImplemented
+
+    @property
+    def global_read_only(self):
+        return self.object_store.global_read_only
+
+    @global_read_only.setter
+    def global_read_only(self, global_read_only:bool):
+        self.object_store.global_read_only = global_read_only
 
 
 def form_with_message_and_finished_button(

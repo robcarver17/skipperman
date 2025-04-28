@@ -10,6 +10,7 @@ LOGOUT_URL = "logout"
 LINK_LOGIN = "link_login"
 CHANGE_PASSWORD = "change_password"
 TOGGLE_READ_ONLY = "toggle_read_only"
+TOGGLE_READ_ONLY_GLOBAL = "toggle_read_only_global"
 STATIC_DIRECTORY = "static"
 MAKE_BACKUP = "make_backup"
 MAIN_MENU_URL = '/main/'

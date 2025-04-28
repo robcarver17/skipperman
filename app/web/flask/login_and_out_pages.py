@@ -6,7 +6,7 @@ from app.backend.security.modify_user import change_password_for_user
 from app.objects.users_and_security import (
     default_admin_user_if_none_defined,
     ADMIN_GROUP,
-    SKIPPER_GROUP,
+    SKIPPER_GROUP, INSTRUCTOR_GROUP,
 )
 from app.web.flask.flash import flash_error, flash_log
 from app.web.flask.security import (
@@ -124,11 +124,13 @@ def welcome_message_for_user():
 
     if access_group == SKIPPER_GROUP:
         return (
-            "Welcome skipper %s! (well, skipper or not you have skipper access privileges)"
+            "Welcome Skipper %s! (well, skipper or not you have skipper access privileges)"
             % usernmae
         )
     elif access_group == ADMIN_GROUP:
         return "Welcome oh mighty admin user %s!" % usernmae
+    elif access_group == INSTRUCTOR_GROUP:
+        return "Welcome instructor %s. Thank you for your hard work with the cadets!" % usernmae
     else:
         return
 

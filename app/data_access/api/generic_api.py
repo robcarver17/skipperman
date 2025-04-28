@@ -13,12 +13,20 @@ from app.data_access.classes.food_and_clothing import *
 
 
 class GenericDataApi(object):
-    ## FOLLOWING SHOULD BE OVERWRITTEN BY SPECIFIC CLASSES
     def due_for_another_backup(self) -> bool:
         return False
 
     def make_backup(self):
         raise Exception
+
+    ## FOLLOWING SHOULD BE OVERWRITTEN BY SPECIFIC CLASSES
+    @property
+    def global_read_only(self):
+        raise NotImplemented
+
+    @global_read_only.setter
+    def global_read_only(self, global_read_only:bool):
+        raise NotImplemented
 
     @property
     def data_list_of_cadets(self) -> DataListOfCadets:

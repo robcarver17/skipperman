@@ -18,7 +18,7 @@ To add a new user enter their username, password (twice), select an access group
 
 - Admin. Can see all menu options
 - Skipper. Can see all menu options except `Administration`. Should be limited to Cadet Skipper and Deputy skipper(s).
-- Instructor. Can see only `Ticksheets and Qualifications` menu. Instructors with the skill 'SI' can see additional options in that menu.
+- Instructor. Can see only `Instructors` menu. Instructors with the skill 'SI' can see additional options in that menu.
 - Public. Cannot see any menu options.
 
 

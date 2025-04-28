@@ -22,7 +22,7 @@ from app.web.flask.login_and_out_pages import (
     change_password_page,
 )
 from app.web.html.make_backup import make_backup_from_menu
-from app.web.html.read_only import toggle_read_only
+from app.web.html.read_only import toggle_read_only_local, toggle_read_only_global
 from app.web.menus.menu_pages import generate_menu_page_html
 from app.web.actions.action_pages import generate_action_page_html
 from app.web.html.url_define import (
@@ -34,7 +34,7 @@ from app.web.html.url_define import (
     TOGGLE_READ_ONLY,
     HELP_PREFIX,
     MAKE_BACKUP,
-MAIN_MENU_URL
+    MAIN_MENU_URL, TOGGLE_READ_ONLY_GLOBAL
 )
 from app.data_access.configuration.configuration import MAX_FILE_SIZE, SUPPORT_EMAIL
 
@@ -125,8 +125,14 @@ def change_password():
 
 
 @app.route("/%s/" % TOGGLE_READ_ONLY, methods=["GET"])
-def set_read_only():
-    toggle_read_only()
+def set_read_only_local():
+    toggle_read_only_local()
+    ## only possible from menu page
+    return generate_menu_page_html()
+
+@app.route("/%s/" % TOGGLE_READ_ONLY_GLOBAL, methods=["GET"])
+def set_read_only_global():
+    toggle_read_only_global()
     ## only possible from menu page
     return generate_menu_page_html()
 

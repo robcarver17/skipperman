@@ -25,5 +25,5 @@ There are also some other ways to get event data out of Skipperman, which can be
 - Raw information of volunteer information for an event - from the [Events / volunteer rota page](volunteer_rota_help.md#other-useful-functions)
 - Food requirements for an event - from the [Events / food requirements page](food_help.md)
 - Clothing requirements for an event with merch - from the [Events / clothing page](clothing_help.md)
-- Tick sheets for instructors from the [Ticksheets and qualifications menu option](ticksheets_help.md)
+- Tick sheets for instructors from the [Instructors menu option](ticksheets_help.md)
 

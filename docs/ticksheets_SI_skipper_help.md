@@ -1,6 +1,6 @@
 The ticksheets and qualifications menu allows you give 'ticks' recording progress, and to award qualifications. 
 
-It is accessed by going to the **main menu** and then clicking **Ticksheets and qualifications*.
+It is accessed by going to the **main menu** and then clicking **Instructors*.
 ___
 
 [Guide to ticksheets and Qualifications](ticksheets_and_qualifications_guide.md)

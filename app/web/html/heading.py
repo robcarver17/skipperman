@@ -21,13 +21,13 @@ def get_html_header(
     include_support_email: bool = False,
 ):
     if include_user_options:
-        login_or_out_code = html_code_depending_on_whether_logged_in(
+        user_options_line = html_code_depending_on_whether_logged_in(
             include_read_only_toggle=include_read_only_toggle,
             include_backup_option=include_backup_option,
         )
-        username = get_username_banner()
+        username_banner = get_username_banner()
     else:
-        login_or_out_code = username = ""
+        user_options_line = username_banner = ""
 
     if include_support_email:
         support_email = Html("For support email: %s" % html_email(SUPPORT_EMAIL))
@@ -46,8 +46,8 @@ def get_html_header(
       </div>
     </header>""" % (
         include_title,
-        username,
-        login_or_out_code,
+        username_banner,
+        user_options_line,
         support_email,
     )
 

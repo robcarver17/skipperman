@@ -56,7 +56,7 @@ The menu options available are shown with the large black tiles, and will depend
 
 - Administrators can see everything
 - Skippers can see everything, except the 'Administration' option
-- Instructors can only see the 'Ticksheets and qualifications' option
+- Instructors can only see the 'Instructors' option
 
 ### Navigating inside the menu options
 

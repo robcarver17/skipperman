@@ -28,8 +28,8 @@ def display_instructor_attendance(interface: abstractInterface):
 
     try:
         table = get_table_to_mark_attendance(interface, event=event, group=group, day=day)
-    except:
-        table = "Can't change attendance when event is not on"
+    except Exception as e:
+        table = "error %s" % str(e)
     save_buttons = get_save_buttons(interface, event=event, group=group, day=day)
     return Form(
         ListOfLines(

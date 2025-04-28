@@ -80,7 +80,9 @@ def read_only_or_not_when_can_be_set_and_admin_user():
 
 
 def read_only_or_not_when_can_be_set_and_non_admin_user():
-    if is_local_read_only():
+    if is_global_read_only():
+        return read_only_global_message
+    elif is_local_read_only():
         return unset_local_message()
     else:
         return set_local_message_for_non_admin()

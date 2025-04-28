@@ -38,9 +38,11 @@ def get_event_heading(interface: abstractInterface, event: Event) -> ListOfLines
     return event_description
 
 def summary_tables_for_event(interface: abstractInterface, event: Event) -> ListOfLines:
-    summarise_registrations = summarise_registrations_for_event(
+    summarise_registrations = PandasDFTable(summarise_registrations_for_event(
         object_store=interface.object_store, event=event
-    )
+    ))
+    if len(summarise_registrations)==0:
+        summarise_registrations=""
 
     allocations = PandasDFTable(summarise_allocations_for_event(
         object_store=interface.object_store, event=event

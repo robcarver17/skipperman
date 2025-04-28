@@ -32,6 +32,25 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
     def _object_class_contained(self):
         return IdentifiedCadetAtEvent
 
+    def count_of_identified_rows(self):
+        return  len(list(set([item.row_id for item in self])))
+
+    def count_of_test_rows(self):
+        return len([item for item in self if item.is_test_cadet])
+
+    def count_of_rows_identified_as_cadets(self):
+        return len([item for item in self if not item.is_test_cadet])
+
+    def count_of_cadets_in_rows(self):
+        cadet_ids = [item.cadet_id for item in self if not item.is_test_cadet]
+        unique_cadet_ids = set(cadet_ids)
+        return len(unique_cadet_ids)
+
+    def count_of_duplicate_rows(self):
+        count_of_cadet_ids = self.count_of_cadets_in_rows()
+        count_of_identified_row = self.count_of_rows_identified_as_cadets()
+        return count_of_identified_row - count_of_cadet_ids
+
     def delete_cadet_from_identified_data(self, cadet_id:str):
         while True:
             list_of_idx =get_idx_of_multiple_object_with_multiple_attr_in_list(self, dict_of_attributes={'cadet_id': cadet_id})

@@ -1,23 +1,17 @@
+import pandas as pd
+
 from app.backend.registration_data.cadet_registration_data import (
     get_dict_of_cadets_with_registration_data,
-)
-from app.backend.registration_data.identified_cadets_at_event import (
-    get_list_of_identified_cadets_at_event,
 )
 from app.backend.registration_data.raw_mapped_registration_data import (
     get_raw_mapped_registration_data,
 )
-from app.backend.groups.cadets_with_groups_at_event import (
-    get_dict_of_cadets_with_groups_at_event,
-)
-from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
+from app.objects.composed.cadets_at_event_with_registration_data import DictOfCadetsWithRegistrationData
 from app.objects.events import Event
 from app.data_access.store.object_store import ObjectStore
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     get_dict_of_all_event_info_for_cadets,
 )
-from app.objects.registration_data import summarise_status
-from app.objects.utilities.utils import print_dict_nicely
 
 
 def identify_birthdays(object_store: ObjectStore, event: Event) -> list:
@@ -42,38 +36,44 @@ def identify_birthdays(object_store: ObjectStore, event: Event) -> list:
 
     return descr_str_list
 
+from app.backend.registration_data.identified_cadets_at_event import get_list_of_identified_cadets_at_event
 
 def summarise_registrations_for_event(
     object_store: ObjectStore, event: Event
-) -> ListOfLines:
-    summary_data = ListOfLines([])
+) -> pd.DataFrame:
+    summary_data = {}
     mapped_data = get_raw_mapped_registration_data(
         event=event, object_store=object_store
     )
-    status_dict = summarise_status(mapped_data)
-    summary_data.append(Line(print_dict_nicely("Registration status", status_dict)))
+    summary_data['Registrations in last import file'] = len(mapped_data)
 
-    identified_cadets = get_list_of_identified_cadets_at_event(
-        object_store=object_store, event=event
-    )
+    list_of_identified_cadets = get_list_of_identified_cadets_at_event(object_store,
+                                                               event=event)
+    summary_data['(1) Total identified rows for all imports'] = list_of_identified_cadets.count_of_identified_rows()
+    summary_data['(2) Rows marked as test'] = list_of_identified_cadets.count_of_test_rows()
+    summary_data['(3) Rows identified as cadets = 2-1'] = list_of_identified_cadets.count_of_rows_identified_as_cadets()
+    summary_data['(4) Number of cadets identified'] = list_of_identified_cadets.count_of_cadets_in_rows()
+    summary_data['(5) Probably duplicates = 3-4'] = list_of_identified_cadets.count_of_rows_identified_as_cadets() - list_of_identified_cadets.count_of_cadets_in_rows()
 
     cadets_at_event = get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
-    cadet_dict = {
-        "Identified in registration data": len(identified_cadets),
-        "In event data (including cancelled)": len(cadets_at_event),
-        "Active in event data": len(cadets_at_event.list_of_active_cadets()),
-    }
+    summary_data['Cadets in event data (including cancelled)'] = len(cadets_at_event)
 
-    dict_of_cadets_with_groups_at_event = get_dict_of_cadets_with_groups_at_event(
-        object_store=object_store, event=event
-    )
-    for day in event.days_in_event():
-        cadet_dict["Allocated to groups on %s" % day.name] = len(
-            dict_of_cadets_with_groups_at_event.subset_for_day(day)
-        )
+    status_summary = summarise_status(cadets_at_event)
+    summary_data.update(status_summary)
+    summary_data['Total active in event data (status is not cancelled)'] = len(cadets_at_event.list_of_active_cadets())
+    print(summary_data)
+    summary_data = pd.DataFrame(summary_data, index=["Count"]).transpose()
+    return summary_data
 
-    summary_data.append(Line(print_dict_nicely("Cadet status", cadet_dict)))
+def summarise_status(cadets_with_registration_data_at_event: DictOfCadetsWithRegistrationData) -> dict:
+    all_status = {}
+    for cadet_data in list(cadets_with_registration_data_at_event.values()):
+        status = cadet_data.data_in_row.registration_status
+        status_label = "... of which: %s" % status
+        current_count = all_status.get(status_label, 0)
+        current_count += 1
+        all_status[status_label] = current_count
 
-    return summary_data.add_Lines()
+    return all_status

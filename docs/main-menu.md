@@ -42,11 +42,13 @@ See [snapshotting data](data_backup_help.md)
 
 Skipperman can be run in 'read only' mode. This is useful if you want to avoid accidentally making any changes, for example if you are experimenting with Skipperman. Click on 'Click for read only' to enter read only mode. If you then make any changes to any data, you will get a warning that the changes haven't been saved. Click on 'Read only: Click to change' to turn read only mode off. Read only mode can only be turned on and off from the main menu. On any option page below the main menu, you will see 'Read only - changes will not be saved' if read-only mode is on.
 
-### Globabl read only
+### Global read only
 
-It's also possible for an admin user to set Skipperman to 'global read only'. This means every user will be in read only mode, even if they haven't set it themselves. Admin users will see the options 'Click for GLOBAL read only' and 'Click for read only (your user session only)'. This should only be done if you are doing some work / fixes on the Skipperman data.
+It's also possible for an admin user to set Skipperman to 'global read only'. This means every user will be in read only mode, even if they haven't set it themselves. Admin users will see the options 'Click for GLOBAL read only' and 'Click for read only (your user session only)'. Use the former to enter global read only mode. This should only be done if you are doing some work / fixes on the Skipperman data.
 
 In global read only, a user will see 'SKIPPERMAN READ ONLY MODE SET BY ADMIN USER - contact support - saves will not be changed'. This shouldn't last very long, so try logging into Skipperman in a few minutes
+
+Admin users can turn off global read only from the main menu screen.
 
 ### Logout
 

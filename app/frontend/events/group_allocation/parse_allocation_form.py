@@ -139,8 +139,10 @@ def get_cadet_notes_for_row_in_form_and_alter_registration_data(
     event: Event,
 ):
     new_notes = interface.value_from_form(
-        input_name_from_column_name_and_cadet_id(column_name=NOTES, cadet_id=cadet.id)
+        input_name_from_column_name_and_cadet_id(column_name=NOTES, cadet_id=cadet.id), default=MISSING_FROM_FORM
     )
+    if new_notes==MISSING_FROM_FORM:
+        return
     update_notes_for_existing_cadet_at_event(
         object_store=interface.object_store,
         event=event,

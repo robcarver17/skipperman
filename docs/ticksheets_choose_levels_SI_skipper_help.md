@@ -8,6 +8,8 @@ On entering the ticksheet area for a given group you will see a screen like this
 
 ![ticksheets_levels.png](/static/ticksheets_levels.png)
 
-Click on a qualification if you want to view, edit or print ticksheets for cadets in your group.
+Click on `Mark attendance` if you want to do a [paperless roll call for cadets](mark_attendance_help.md).
+
+Click on ► `Group information` to see detailed information about who is in your group. You can also download this as a spreadsheet.
 
 Next step: [Viewing, printing, and entering ticks; and awarding qualifications](ticksheet_entry_help_SI.md)

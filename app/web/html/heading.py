@@ -34,7 +34,7 @@ def get_html_header(
         support_email = Html("For support email: %s" % (html_email(SUPPORT_EMAIL)))
         help_link = HELP_PREFIX+"/"+MAIN_HELP_PAGE
         print(help_link)
-        global_help = Html('<a href="/%s" class="w3-bar-item w3-button w3-padding-16">General help</a>' % help_link)
+        global_help = Html('<a href="/%s" class="w3-bar-item w3-button w3-padding-16">Click here for general help</a>' % help_link)
         support_email_and_global_help = html_joined_list_as_lines([support_email, global_help])
     else:
         support_email_and_global_help = ""

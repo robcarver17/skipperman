@@ -56,6 +56,8 @@ def name_of_highest_qualification_for_cadet(
     object_store: ObjectStore, cadet: Cadet
 ) -> str:
     highest_qualification = highest_qualification_for_cadet(object_store, cadet=cadet)
+    if highest_qualification is NoQualifications:
+        return "None"
 
     return highest_qualification.name
 

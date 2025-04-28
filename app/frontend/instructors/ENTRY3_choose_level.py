@@ -1,5 +1,8 @@
+import os
 from typing import Union
 
+from app.backend.qualifications_and_ticks.group_information_table import get_group_info_table
+from app.data_access.init_directories import download_directory
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.instructors.mark_attendance import display_instructor_attendance
 from app.frontend.shared.buttons import get_button_value_given_type_and_attributes, is_button_of_type, \
@@ -11,13 +14,14 @@ from app.objects.abstract_objects.abstract_buttons import (
     HelpButton,
     back_menu_button,
 )
+from app.objects.abstract_objects.abstract_tables import PandasDFTable
 
 from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
-    _______________,
+    _______________, DetailListOfLines,
 )
 
 from app.frontend.shared.events_state import get_event_from_state
@@ -30,12 +34,14 @@ from app.backend.qualifications_and_ticks.list_of_qualifications import (
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,
-    NewForm,
+    NewForm, File,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.instructors.ENTRY_FINAL_view_ticksheets import (
     display_form_view_ticksheets_for_event_and_group,
 )
+from app.objects.events import Event
+from app.objects.groups import Group
 
 
 def display_form_choose_level_for_group_at_event(interface: abstractInterface) -> Form:
@@ -61,12 +67,14 @@ def display_form_choose_level_for_group_at_event(interface: abstractInterface) -
             size=4,
         )
     )
-
+    group_info = detail_expansion_for_group_info_and_download(interface, event=event, group=group)
     lines_inside_form = ListOfLines(
         [
             navbar,
             _______________,
             header,
+            _______________,
+            group_info,
             _______________,
             mark_attendance_button,
             _______________,
@@ -93,7 +101,7 @@ mark_attendance_button = Button("Mark attendance", tile=True)
 
 def post_form_choose_level_for_group_at_event(
     interface: abstractInterface,
-) -> Union[Form, NewForm]:
+) -> Union[Form, NewForm, File]:
     button_pressed = interface.last_button_pressed()
     if back_menu_button.pressed(button_pressed):
         ## no change to stage required
@@ -103,6 +111,8 @@ def post_form_choose_level_for_group_at_event(
         return action_when_level_button_clicked(interface)
     elif mark_attendance_button.pressed(button_pressed):
         return interface.get_new_form_given_function(display_instructor_attendance)
+    elif button_download_group_info_table_as_csv.pressed(button_pressed):
+        return download_group_info_table(interface)
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
@@ -139,3 +149,25 @@ def is_level_button(button_pressed:str):
 def level_name_from_button(button_pressed:str):
     return get_attributes_from_button_pressed_of_known_type(value_of_button_pressed=button_pressed, type_to_check=level_select_type)
 
+def detail_expansion_for_group_info_and_download(interface: abstractInterface, event: Event, group: Group):
+    group_info_table = get_group_info_table(object_store=interface.object_store, event=event, group=group)
+    return DetailListOfLines(ListOfLines([
+        PandasDFTable(group_info_table),
+        button_download_group_info_table_as_csv
+    ]), name='Group information')
+
+button_download_group_info_table_as_csv = Button("Download group information as spreadsheet")
+
+def download_group_info_table(interface: abstractInterface)-> File:
+    event = get_event_from_state(interface)
+    group = get_group_from_state(interface)
+
+    group_info_table = get_group_info_table(object_store=interface.object_store, event=event, group=group)
+
+    filename = temp_file_name()
+    group_info_table.to_csv(filename, index=True)
+
+    return File(filename)
+
+def temp_file_name() -> str:
+    return os.path.join(download_directory, "temp_file.csv")

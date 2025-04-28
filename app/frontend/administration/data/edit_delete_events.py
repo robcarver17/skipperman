@@ -29,6 +29,8 @@ Both display_form... and post_form... should be added to the relevant ..._functi
 
 """
 
+## FIXME JUST A COPY DOES NOT DO ANYTHING YET AS NOT YET IMPLEMENTED
+
 def display_form_edit_delete_events(interface: abstractInterface):
     navbar = ButtonBar([main_menu_button, back_menu_button, cancel_menu_button, save_button, help_button]) ## any form without a cancel should have a main menu
     ## a form that accepts input would have a save_button and cancel_button
@@ -56,14 +58,14 @@ def post_form_edit_delete_events(interface: abstractInterface) -> Union[Form, Ne
 
     if back_menu_button.pressed(button_pressed):
         interface.flush_cache_to_store()
-        return interface.get_new_display_form_for_parent_of_function(display_form_AN_EXAMPLE)
+        return interface.get_new_display_form_for_parent_of_function(display_form_edit_delete_events)
 
     elif cancel_menu_button.pressed(button_pressed):
         interface.log_error("You pressed cancel")
         interface.flush_cache_to_store()
     elif save_button.pressed(button_pressed):
         interface.log_error("you entered %s" % interface.value_from_form(input_name))
-        return interface.get_new_form_given_function(display_form_AN_EXAMPLE) ## could equally be any function 'below'
+        return interface.get_new_form_given_function(display_form_edit_delete_events) ## could equally be any function 'below'
     else:
         return button_error_and_back_to_initial_state_form(interface)
 

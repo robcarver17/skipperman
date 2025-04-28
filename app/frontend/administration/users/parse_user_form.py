@@ -189,12 +189,12 @@ def get_user_values_from_values_in_form(
     username_field_present: bool = False,
 ) -> SkipperManUserFromForm:
 
-    try:
-        group_str = interface.value_from_form(name_for_user_and_input_type(user, GROUP))
-        group = UserGroup[group_str]
-    except:
-        ## if single admin user dropdown own't be present
+    group_str = interface.value_from_form(name_for_user_and_input_type(user, GROUP), default='')
+    if group_str=='':
+        ## if single admin user dropdown own't be present and can't change name
         group = user.group.name
+    else:
+        group = UserGroup[group_str]
 
     if username_field_present:
         username = interface.value_from_form(
@@ -203,6 +203,7 @@ def get_user_values_from_values_in_form(
     else:
         username = user.username
     # email = interface.value_from_form(name_for_user_and_input_type(user, EMAIL))
+
     volunteer_name = interface.value_from_form(
         name_for_user_and_input_type(user, VOLUNTEER)
     )

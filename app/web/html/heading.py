@@ -11,6 +11,7 @@ from app.web.html.login_and_out import (
     get_username_banner,
 )
 from app.data_access.configuration.configuration import SUPPORT_EMAIL
+from app.web.html.url_define import HELP_PREFIX, MAIN_HELP_PAGE
 
 
 def get_html_header(
@@ -18,7 +19,7 @@ def get_html_header(
     include_title: str = "'SKIPPER-MAN'",
     include_user_options: bool = True,
     include_backup_option: bool = False,
-    include_support_email: bool = False,
+    include_support_email_and_global_help: bool = False,
 ):
     if include_user_options:
         user_options_line = html_code_depending_on_whether_logged_in(
@@ -29,10 +30,14 @@ def get_html_header(
     else:
         user_options_line = username_banner = ""
 
-    if include_support_email:
-        support_email = Html("For support email: %s" % html_email(SUPPORT_EMAIL))
+    if include_support_email_and_global_help:
+        support_email = Html("For support email: %s" % (html_email(SUPPORT_EMAIL)))
+        help_link = HELP_PREFIX+"/"+MAIN_HELP_PAGE
+        print(help_link)
+        global_help = Html('<a href="/%s" class="w3-bar-item w3-button w3-padding-16">General help</a>' % help_link)
+        support_email_and_global_help = html_joined_list_as_lines([support_email, global_help])
     else:
-        support_email = ""
+        support_email_and_global_help = ""
 
     html_header = """
     <header class="w3-container w3-padding w3-orange" id="myHeader">
@@ -48,7 +53,7 @@ def get_html_header(
         include_title,
         username_banner,
         user_options_line,
-        support_email,
+        support_email_and_global_help,
     )
 
     return html_header

@@ -18,7 +18,7 @@ def generate_help_page_html(help_page_name: str) -> Html:
         include_title="Help",
         include_user_options=False,
         include_backup_option=False,
-        include_support_email=True,
+        include_support_email_and_global_help_link=True,
     )
     html_page_master_layout.body.append(html_for_help_text)
 

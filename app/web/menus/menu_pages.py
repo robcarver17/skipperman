@@ -1,7 +1,7 @@
 from typing import List
 
 from app.web.flask.session_data_for_action import clear_all_action_state_data_from_session
-from app.web.html.url_define import get_action_url, get_urls_of_interest
+from app.web.html.url_define import get_action_url, get_urls_of_interest, MAIN_MENU_URL, MAIN_HELP_PAGE
 
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 
@@ -62,7 +62,7 @@ def get_menu_as_abstract_objects() -> Form:
 
 
 def get_nav_bar_for_main_menu() -> ButtonBar:
-    navbar = ButtonBar([HelpButton("main-menu", from_main_menu=True)])
+    navbar = ButtonBar([HelpButton(MAIN_HELP_PAGE, from_main_menu=True)])
 
     return navbar
 

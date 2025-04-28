@@ -43,6 +43,8 @@ SAVE_CHANGES_BUTTON_LABEL = "Save changes"
 def get_top_material_for_patrol_boat_form(
     interface: abstractInterface, event: Event
 ) -> ListOfLines:
+    if is_ready_to_swap(interface):
+        return ListOfLines([""])
     summary_of_boat_allocations = get_patrol_boat_summary(
         interface=interface, event=event
     )
@@ -91,9 +93,6 @@ def get_patrol_boat_summary(
 def get_patrol_boat_driver_and_crew_qualifications(
     interface: abstractInterface, event: Event
 ) -> Union[DetailListOfLines, str]:
-    in_swap_state = is_ready_to_swap(interface)
-    if in_swap_state:
-        return ""
 
     patrol_boat_driver_and_crew_qualifications_table = (
         get_patrol_boat_driver_and_crew_qualifications_table(

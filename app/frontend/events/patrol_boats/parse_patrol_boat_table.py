@@ -7,7 +7,7 @@ from app.backend.rota.changes import update_role_and_group_at_event_for_voluntee
 from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import (
     VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 )
-from app.objects.utilities.exceptions import MISSING_FROM_FORM
+from app.objects.utilities.exceptions import MISSING_FROM_FORM, UNKNOWN
 from app.objects.volunteers import Volunteer
 
 from app.backend.volunteers.skills import (
@@ -30,8 +30,7 @@ from app.backend.patrol_boats.changes import (
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
     get_unique_list_of_volunteers_for_skills_checkboxes,
-    is_volunteer_skill_checkbox_ticked,
-)
+    is_volunteer_skill_checkbox_ticked, )
 from app.frontend.events.patrol_boats.patrol_boat_dropdowns import (
     TOP_ROW_OF_VOLUNTEER_DROPDOWN,
     from_allocation_dropdown_input_name_to_boat_and_day,
@@ -69,10 +68,10 @@ def update_data_from_form_entries_in_patrol_boat_allocation_page(
     interface: abstractInterface,
 ):
     ## Any added volunteers
-    update_skills_checkbox(interface)
     if is_ready_to_swap(interface):
         return
     else:
+        update_skills_checkbox(interface)
         update_role_dropdowns(interface)
         update_adding_volunteers_to_specific_boats_and_days(
             interface
@@ -161,8 +160,12 @@ def update_skills_checkbox_for_specific_volunteer(
     is_ticked = is_volunteer_skill_checkbox_ticked(
         interface=interface, volunteer_id=volunteer.id
     )
+    if is_ticked is UNKNOWN:
+        ### fields not available for some reason
+        return
 
     if currently_has_boat_skill == is_ticked:
+        ## no change needed
         return
 
     if is_ticked:

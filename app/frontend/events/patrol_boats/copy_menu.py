@@ -20,7 +20,7 @@ from app.objects.abstract_objects.abstract_lines import (
     _______________, Line,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_text import Heading
+from app.objects.abstract_objects.abstract_text import Heading, bold
 
 
 def display_form_patrol_boat_copy_menu(interface: abstractInterface):
@@ -40,7 +40,8 @@ def display_form_patrol_boat_copy_menu(interface: abstractInterface):
             copy_all_boats_and_roles_button,
             _______________,
             _______________,
-            "Warnings: These options overwrite existing data. Be careful, consider snapshotting data first. ",
+            bold("Warning: These options overwrite existing data. Be careful, consider snapshotting data first. "),
+            _______________,
             copyover_all_boats_button,
             _______________,
             copyover_all_boats_and_roles_button

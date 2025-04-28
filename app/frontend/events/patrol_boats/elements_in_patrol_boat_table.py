@@ -1,6 +1,6 @@
 from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunteer
-from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.shared.warnings_table import display_warnings_tables
+from app.objects.utilities.exceptions import UNKNOWN
 
 from app.objects.volunteers import ListOfVolunteers, Volunteer
 
@@ -53,7 +53,6 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
-    DetailListOfLines,
 )
 from app.objects.abstract_objects.abstract_tables import RowInTable
 from app.objects.day_selectors import Day
@@ -176,11 +175,15 @@ def get_volunteer_skill_checkbox_name(volunteer_id: str) -> str:
 
 def is_volunteer_skill_checkbox_ticked(
     interface: abstractInterface, volunteer_id: str
-) -> bool:
+) -> Union[bool, object]:
     checkbox_name = get_volunteer_skill_checkbox_name(volunteer_id=volunteer_id)
-    return VOLUNTEERS_SKILL_FOR_PB2 in interface.value_of_multiple_options_from_form(
-        checkbox_name
+    boxes_ticked = interface.value_of_multiple_options_from_form(
+        checkbox_name, default=UNKNOWN
     )
+    if boxes_ticked== UNKNOWN:
+        return UNKNOWN
+    else:
+        return VOLUNTEERS_SKILL_FOR_PB2 in boxes_ticked
 
 
 def get_unique_list_of_volunteers_for_skills_checkboxes(
@@ -206,9 +209,11 @@ def update_and_get_warnings_on_all_volunteers_in_patrol_boats(
     event: Event,
 ) -> Union[ListOfLines, str]:
 
+    if is_ready_to_swap(interface):
+        return ListOfLines([""])
+
     process_all_warnings_for_patrol_boats(object_store=interface.object_store, event=event)
     interface.save_cache_to_store_without_clearing()
-
     all_warnings = get_all_saved_warnings_for_patrol_boats(object_store=interface.object_store, event=event)
 
     return display_warnings_tables(all_warnings)

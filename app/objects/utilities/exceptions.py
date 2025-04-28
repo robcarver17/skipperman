@@ -51,3 +51,4 @@ class CadetNotSelected(Exception):
 
 
 MISSING_FROM_FORM = "Missing from form"
+UNKNOWN = object()

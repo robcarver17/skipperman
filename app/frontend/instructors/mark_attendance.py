@@ -26,7 +26,10 @@ def display_instructor_attendance(interface: abstractInterface):
     instructions = bold("Use tick boxes and save if cadets are present, otherwise use buttons"
                         )
 
-    table = get_table_to_mark_attendance(interface, event=event, group=group, day=day)
+    try:
+        table = get_table_to_mark_attendance(interface, event=event, group=group, day=day)
+    except:
+        table = "Can't change attendance when event is not on"
     save_buttons = get_save_buttons(interface, event=event, group=group, day=day)
     return Form(
         ListOfLines(

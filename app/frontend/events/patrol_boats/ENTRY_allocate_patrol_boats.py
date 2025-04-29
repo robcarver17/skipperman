@@ -69,7 +69,7 @@ def display_form_view_for_patrol_boat_allocation(interface: abstractInterface) -
 
 def post_form_view_for_patrol_boat_allocation(
     interface: abstractInterface,
-) -> Union[Form, NewForm]:
+) -> Union[Form, NewForm, File]:
     last_button_pressed = interface.last_button_pressed()
 
     if cancel_menu_button.pressed(last_button_pressed):
@@ -90,7 +90,7 @@ def post_form_view_for_patrol_boat_allocation(
         pass # already done
 
     elif is_save_warnings_button_pressed(last_button_pressed):
-        save_warnings_from_table(interface)
+        pass # already done
 
     elif is_copy_individual_volunteer_button(last_button_pressed):
         update_if_copy_individual_button_pressed(

@@ -4,6 +4,7 @@ from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event 
     get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats,
 )
 from app.backend.rota.changes import update_role_and_group_at_event_for_volunteer_on_day
+from app.frontend.shared.warnings_table import save_warnings_from_table
 from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import (
     VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 )
@@ -70,13 +71,15 @@ def update_data_from_form_entries_in_patrol_boat_allocation_page(
     ## Any added volunteers
     if is_ready_to_swap(interface):
         return
-    else:
-        update_skills_checkbox(interface)
-        update_role_dropdowns(interface)
-        update_adding_volunteers_to_specific_boats_and_days(
-            interface
-        )  ## must come last or will confuse role and skills
 
+    update_skills_checkbox(interface)
+    update_role_dropdowns(interface)
+    update_adding_volunteers_to_specific_boats_and_days(
+        interface
+    )  ## must come last or will confuse role and skills
+    save_warnings_from_table(interface)
+
+    interface.save_cache_to_store_without_clearing()
 
 def update_adding_volunteers_to_specific_boats_and_days(interface: abstractInterface):
     event = get_event_from_state(interface)

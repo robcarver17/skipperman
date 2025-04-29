@@ -107,9 +107,11 @@ def post_form_edit_registration_details(
     if cancel_menu_button.pressed(last_button_pressed):
         interface.flush_cache_to_store()
         return previous_form(interface)
-    elif quick_report_button.pressed(last_button_pressed):
-        return create_quick_spotters_report(interface)
+
     save_details_from_form(interface)
+
+    if quick_report_button.pressed(last_button_pressed):
+        return create_quick_spotters_report(interface)
 
     if add_button.pressed(last_button_pressed):
         interface.flush_cache_to_store() ## new form
@@ -119,7 +121,8 @@ def post_form_edit_registration_details(
         ## already saved
         pass
     elif is_save_warnings_button_pressed(last_button_pressed):
-        save_warnings_from_table(interface)
+        ## already saved
+        pass
 
     elif is_button_sort_order(last_button_pressed):
         ## no change to stage required, just sort order
@@ -137,6 +140,8 @@ def post_form_edit_registration_details(
 def save_details_from_form(interface: abstractInterface):
     event = get_event_from_state(interface)
     parse_registration_details_from_form(interface=interface, event=event)
+    save_warnings_from_table(interface)
+
     interface.save_cache_to_store_without_clearing()
 
 def previous_form(interface: abstractInterface):

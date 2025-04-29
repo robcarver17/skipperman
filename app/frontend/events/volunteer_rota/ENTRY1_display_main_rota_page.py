@@ -97,6 +97,8 @@ def post_form_view_for_volunteer_rota(
         interface.flush_cache_to_store()
         return previous_form(interface)
 
+    save_all_information_across_forms(interface)
+
     if is_a_form_change_that_changes_state(last_button_pressed):
         return post_form_view_for_volunteer_rota_if_state_changed(interface, last_button_pressed)
     elif is_a_form_change_that_changes_underlying_data(last_button_pressed):
@@ -121,9 +123,6 @@ def post_form_view_for_volunteer_rota_if_new_form_returned(
     if quick_report_button.pressed(last_button_pressed):
         return create_quick_report(interface)
 
-    save_all_information_in_rota_page(interface)
-    interface.flush_cache_to_store() ## as new page loading
-
     if add_volunteer_button.pressed(last_button_pressed):
         return add_new_volunteer_form(interface)
 
@@ -146,9 +145,6 @@ def post_form_view_for_volunteer_rota_if_state_changed(
         interface: abstractInterface,last_button_pressed:str
 ) -> Union[Form, NewForm, File]:
     print("Change state returned in rota")
-
-    save_all_information_in_rota_page(interface)
-    interface.save_cache_to_store_without_clearing()
 
     ## SORTS - DO NOT CHANGE UNDERLYING DATA
     if is_button_sort_order(last_button_pressed):
@@ -179,8 +175,6 @@ def post_form_view_for_volunteer_rota_if_data_changed(
         interface: abstractInterface, last_button_pressed: str
 ) -> Union[Form, NewForm, File]:
     print("Changing underlying data")
-    save_all_information_in_rota_page(interface)
-    interface.save_cache_to_store_without_clearing()
 
     if last_button_pressed_was_make_available_button(last_button_pressed):
         update_if_make_available_button_pressed(
@@ -213,13 +207,13 @@ def post_form_view_for_volunteer_rota_if_data_changed(
         pass ## already saved
 
     elif save_targets_button.pressed(last_button_pressed):
-        save_volunteer_targets(interface)
+        pass
 
     elif save_group_notes_button.pressed(last_button_pressed):
-        save_group_notes_from_form(interface)
+        pass
 
     elif is_save_warnings_button_pressed(last_button_pressed):
-        save_warnings_from_table(interface)
+        pass
 
     else:
         return button_error_and_back_to_initial_state_form(interface)
@@ -228,6 +222,13 @@ def post_form_view_for_volunteer_rota_if_data_changed(
 
     return interface.get_new_form_given_function(display_form_view_for_volunteer_rota)
 
+def save_all_information_across_forms(interface: abstractInterface):
+    save_all_information_in_rota_page(interface)
+    save_volunteer_targets(interface)
+    save_group_notes_from_form(interface)
+    save_warnings_from_table(interface)
+
+    interface.save_cache_to_store_without_clearing()
 
 def add_new_volunteer_form(interface: abstractInterface):
     return interface.get_new_form_given_function(

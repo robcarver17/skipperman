@@ -71,6 +71,8 @@ def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewFo
         interface.flush_cache_to_store()
         return previous_form(interface)
 
+    save_all_information_in_forms_on_page(interface)
+
     if button_clicked_returns_new_form(last_button):
         return post_form_allocate_cadets_returns_new_form(interface, last_button)
     elif button_clicked_changes_state(last_button):
@@ -106,9 +108,6 @@ def button_clicked_changes_data(last_button: str):
 
 def post_form_allocate_cadets_returns_new_form(interface: abstractInterface, last_button:str) -> Union[File, Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
-
-    ## save any existing changes first
-    update_data_given_allocation_form(interface)
     interface.flush_cache_to_store()  ## new form so flush
 
     if add_button.pressed(last_button):
@@ -134,9 +133,6 @@ def post_form_allocate_cadets_returns_new_form(interface: abstractInterface, las
 
 
 def post_form_allocate_cadets_when_changing_state(interface: abstractInterface, last_button:str) -> Union[Form, NewForm, File]:
-    ## save existing form changes first
-    update_data_given_allocation_form(interface)
-    interface.save_cache_to_store_without_clearing()
 
     if  is_button_cadet_selection(last_button):
         cadet_button_clicked(interface)
@@ -152,16 +148,14 @@ def post_form_allocate_cadets_when_changing_state(interface: abstractInterface, 
 
 def post_form_allocate_cadets_when_changing_data(interface: abstractInterface, last_button:str) -> Union[Form, NewForm]:
     ## save existing form changes first, might be overwritten later by button actions
-    update_data_given_allocation_form(interface)
-
     if save_menu_button.pressed(last_button):
         pass # already saved
 
     elif update_limits_button.pressed(last_button):
-        update_club_boat_limits_for_event_from_form(interface)
+        pass ## alredy saved
 
     elif is_event_picker_button(last_button):
-        save_event_selection_from_form(interface)
+        pass ## already saved
 
     elif is_make_available_button(last_button):
         make_cadet_available_on_current_day(
@@ -183,6 +177,12 @@ def post_form_allocate_cadets_when_changing_data(interface: abstractInterface, l
     return display_form_allocate_cadets(interface)
 
 
+def save_all_information_in_forms_on_page(interface: abstractInterface):
+    update_data_given_allocation_form(interface)
+    update_club_boat_limits_for_event_from_form(interface)
+    save_event_selection_from_form(interface)
+
+    interface.save_cache_to_store_without_clearing()
 
 
 def previous_form(interface: abstractInterface):

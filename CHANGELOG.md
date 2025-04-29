@@ -1,19 +1,11 @@
 
-# to do next
 
-Before Cadet week
-- merge cadet, merge volunteer #15
-- delete empty event,  #26
-- edit event name #16 and days (document what happens if days are edited)
-- clean up html component mapping
-- food add non registered #28
-- food documentation and checks #49
-- clothing documentation and checks #49
-- add food / clothing to giant data dump #54
-- add missing stuff to data dumps #55
+# Version 3.0
 
-# done recently
-
+- added more summary tables and print statements to diagnose import issues
+- global data lock 
+- fixed vanishing PB2 qualified error
+- use UK local time not GMT
 - button to clear a group of warnings
 - cleanup behaviour of buttons when identifying cadets/volunteers in registration import
 - volunteer adding is now automatic, with warnings generated if required

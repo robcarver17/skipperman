@@ -1,13 +1,12 @@
 # 'SKIPPERMAN'
 
-Blackwater sailing club cadet skipper management system
+Blackwater Sailing Club Cadet SKIPPER MANagement system
 
+Version 3.0
 
+2025-04-29
 
-Version 2.2
-
-2025-03-21
-
+Author: Robert Carver AKA Skipperman
 
 ## Use and documentation
 
@@ -32,16 +31,7 @@ See [requirements.txt](requirements.txt) for full details.
 
 ## Installation
 
-This package isn't hosted on pip. So to get the code the easiest way is to use git:
-
-```
-git clone https://github.com/robcarver17/skipperman.git
-#
-# then one of (linux):
-#
-python3 setup.py install # normal
-python3 setup.py install --user # avoids use of sudo
-```
+Most users won't need to install Skipperman, they can just access it from [the website: https://bsccadetskipper.pythonanywhere.com](https://bsccadetskipper.pythonanywhere.com/)
 
 There is a more complete installation guide [here](docs/technical/installation.md)
 

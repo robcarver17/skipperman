@@ -1,5 +1,19 @@
 Most users won't need to install Skipperman, they can just access it from [the website: https://bsccadetskipper.pythonanywhere.com](https://bsccadetskipper.pythonanywhere.com/)
 
+# Getting from git
+
+This package isn't hosted on pip. So to get the code the easiest way is to use git:
+
+```
+git clone https://github.com/robcarver17/skipperman.git
+#
+# then one of (linux):
+#
+python3 setup.py install # normal
+python3 setup.py install --user # avoids use of sudo
+```
+
+
 # Installation - local
 
 Once all installed you can run a local instance with (assuming a Linux command line): 

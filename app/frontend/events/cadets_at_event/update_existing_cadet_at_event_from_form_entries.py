@@ -39,6 +39,7 @@ from app.objects.registration_status import (
     RegStatusChange,
     error,
 )
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 
 def update_cadets_at_event_with_form_data(interface: abstractInterface):
@@ -111,11 +112,11 @@ def update_cadet_at_event_with_form_data(
 def status_and_attendance_from_form_entries(
     interface: abstractInterface, cadet_at_event: CadetWithIdAtEvent, event: Event
 ) -> Tuple[RegistrationStatus, DaySelector]:
-    try:
-        attendance = get_availablity_from_form(
-            interface=interface, event=event, input_name=ATTENDANCE
-        )
-    except:
+
+    attendance = get_availablity_from_form(
+        interface=interface, event=event, input_name=ATTENDANCE
+    )
+    if attendance is MISSING_FROM_FORM:
         attendance = cadet_at_event.availability
         print("Attendance not included in form")
 

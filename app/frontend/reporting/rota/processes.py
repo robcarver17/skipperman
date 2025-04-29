@@ -18,7 +18,7 @@ from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
-
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 DAYS_TO_SHOW = "DaysToShow"
 BOATS = "boats"
@@ -66,6 +66,9 @@ def get_rota_report_additional_parameters_from_form(
     days_to_show = get_availablity_from_form(
         event=event, interface=interface, input_name=DAYS_TO_SHOW
     )
+    if days_to_show is MISSING_FROM_FORM:
+        print("Days to show missing from form")
+        days_to_show = event.day_selector_for_days_in_event()
 
     if no_volunteers_on_power_boats_at_current_event(interface):
         boats = False

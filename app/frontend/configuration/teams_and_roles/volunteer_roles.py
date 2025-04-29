@@ -22,7 +22,7 @@ from app.frontend.configuration.generic_list_modifier import (
 )
 
 from app.objects.composed.volunteer_roles import ListOfRolesWithSkills, RoleWithSkills
-from app.objects.utilities.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed, MISSING_FROM_FORM
 
 from app.backend.volunteers.roles_and_teams import (
     get_list_of_roles_with_skills,
@@ -184,12 +184,22 @@ def get_modified_role_from_form(
     new_associated_or_not = is_radio_yes_or_no(
         interface=interface, input_name=name_of_associate_group_for_role(existing_role)
     )
+    if new_associated_or_not is MISSING_FROM_FORM:
+        print("associated missing for %s" % str(existing_object))
+        new_associated_or_not = existing_object.associate_sailing_group
+
     new_skills_dict = get_dict_of_skills_from_form(
         interface=interface, field_name=name_of_skills_checkbox_for_role(existing_role)
     )
+    if new_skills_dict is MISSING_FROM_FORM:
+        new_skills_dict = existing_role.skills_dict
+
     new_hidden = is_radio_yes_or_no(
         interface=interface, input_name=hidden_box_name(existing_role)
     )
+    if new_hidden is MISSING_FROM_FORM:
+        print("hidden missing for %s" % str(existing_object))
+        new_hidden = existing_object.hidden
 
     modified_role = RoleWithSkills(
         name=new_role_name,

@@ -1,3 +1,4 @@
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 from app.objects.volunteers import Volunteer
 
 from app.objects.cadets import Cadet
@@ -70,6 +71,8 @@ def save_cadet_food_data_for_cadet(
         other_input_name=other_input_name,
         checkbox_input_name=checkbox_input_name,
     )
+    if new_food_requirements is MISSING_FROM_FORM:
+        print("food for %s missing" % cadet.name)
 
     update_cadet_food_data_if_changed(
         interface=interface,
@@ -133,6 +136,9 @@ def save_volunteer_food_data_for_volunteer(
         other_input_name=other_input_name,
         checkbox_input_name=checkbox_input_name,
     )
+
+    if new_food_requirements is MISSING_FROM_FORM:
+        print("food for %s missing" % volunteer.name)
 
     update_volunteer_food_data_if_changed(
         interface=interface,

@@ -38,6 +38,7 @@ from app.data_access.configuration.field_list_groups import (
 )
 from app.objects.day_selectors import DaySelector
 from app.objects.registration_status import RegistrationStatus
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 
 def parse_registration_details_from_form(interface: abstractInterface, event: Event):
@@ -106,6 +107,10 @@ def get_days_attending_for_row_in_form_and_alter_registration_data(
         ),
         event=registration_details.event,
     )
+    if new_attendance is MISSING_FROM_FORM:
+        print("attendance not in form")
+        return
+
     original_attendance = (
         registration_details.registration_data.registration_data_for_cadet(
             cadet

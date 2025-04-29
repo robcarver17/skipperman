@@ -1,5 +1,6 @@
 from typing import List
 
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 from app.objects.volunteers import Volunteer
 
 from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
@@ -68,14 +69,8 @@ def update_volunteer_availability_at_event_from_rota_with_form_contents(
     availability = get_availablity_from_form(
         interface=interface, event=event, input_name=input_name_for_volunteer_availability(volunteer)
     )
-
-    if no_days_selected_from_available_days(
-        availability, possible_days=event.days_in_event()
-    ):
-        interface.log_error(
-            "No days selected for volunteer at event - can't do this - delete volunteer if not available for event"
-        )
-        return
+    if availability is MISSING_FROM_FORM:
+        print("Availability not in form")
 
     update_volunteer_availability_at_event(
         object_store=interface.object_store,

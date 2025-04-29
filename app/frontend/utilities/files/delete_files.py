@@ -15,6 +15,7 @@ from app.data_access.init_directories import (
     upload_directory,
     download_directory,
 )
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 
 def delete_selected_files(interface: abstractInterface):
@@ -44,8 +45,10 @@ def check_if_file_selected_and_delete(
 ):
     checkbox_list = interface.value_of_multiple_options_from_form(
         checkbox_name_for_filename(directory_name=directory_name, filename=filename),
-        default=[],
+        default=MISSING_FROM_FORM,
     )  ## if file recently created won't be in list
+    if checkbox_list is MISSING_FROM_FORM:
+        return
 
     if DELETE_IN_CHECKBOX in checkbox_list:
         full_filename = os.path.join(directory_name, filename)

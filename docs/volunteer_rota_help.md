@@ -126,7 +126,9 @@ Volunteers can choose which days they are available on registration. Sometimes t
 To make someone available on a given day, just click the 'Make available' button in the appropriate column.
 To make someone unavailable on a given day, click on the umbrella button in the appropriate column (because it's a 'rain check' - get it?), or choosing the `UNAVAILABLE` option in the role drop down.
 
-Note: if you want to remove a volunteer completely, you should do this by [clicking on the umbrella under their name in the first column](#removing-a-volunteer-from-an-event) rather than making them unavailable on all days - Skipperman won't let you make someone unavailable on every day of an event.
+If you want to remove a volunteer completely, you should do this by [clicking on the umbrella under their name in the first column](#removing-a-volunteer-from-an-event).
+
+If a volunteer is a parent who has to be on site, but can't help, then you should remove their availability from each day but keep them in the event. Otherwise, there will be a [warning](resolve_warnings.md#cadets-without-appropriate-adults).
 
 ## Add a volunteer
 
@@ -152,7 +154,7 @@ Skipperman doesn't like duplicate volunteers, so it will prompt you if it looks 
 
 Alternatively if this is genuinely a new person, then click on `Yes these details are correct - add a new volunteer`. This will add a new volunteer to Skipperman, and to the event.
 
-NOTE: If the volunteer is a parent who will be on site, but not actually helping, select that option from the dropdown BEFORE you cick on the relevant volunteer or click to add a new volunteer. This is to avoid issues with [warnings about cadets being on site by themselves](resolve_warnings.md#cadets-without-appropriate-adults). They will be added with no days available. Otherwise, the volunteer will be added with all days available. You can change that once they are in the rota.
+If the volunteer is a parent who will be on site, but not actually helping, select that option from the dropdown BEFORE you cick on the relevant volunteer or click to add a new volunteer. This is to avoid issues with [warnings about cadets being on site by themselves](resolve_warnings.md#cadets-without-appropriate-adults). They will be added with no days available. Otherwise, the volunteer will be added with all days available. You can change the days they are available once they are in the rota.
 
 If you change your mind about adding a volunteer, just press cancel.
 

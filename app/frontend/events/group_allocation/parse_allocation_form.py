@@ -119,6 +119,9 @@ def update_attendance_data_for_cadet_in_form(
         ),
         event=event,
     )
+    if new_availability is MISSING_FROM_FORM:
+        print("Availability missing from form")
+        return
 
     list_of_messages = (
         update_availability_of_existing_cadet_at_event_and_return_messages(

@@ -1,6 +1,6 @@
 from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunteer
 from app.frontend.shared.warnings_table import display_warnings_tables
-from app.objects.utilities.exceptions import UNKNOWN
+from app.objects.utilities.exceptions import UNKNOWN, MISSING_FROM_FORM
 
 from app.objects.volunteers import ListOfVolunteers, Volunteer
 
@@ -178,10 +178,10 @@ def is_volunteer_skill_checkbox_ticked(
 ) -> Union[bool, object]:
     checkbox_name = get_volunteer_skill_checkbox_name(volunteer_id=volunteer_id)
     boxes_ticked = interface.value_of_multiple_options_from_form(
-        checkbox_name, default=UNKNOWN
+        checkbox_name, default=MISSING_FROM_FORM
     )
-    if boxes_ticked== UNKNOWN:
-        return UNKNOWN
+    if boxes_ticked is MISSING_FROM_FORM:
+        return MISSING_FROM_FORM
     else:
         return VOLUNTEERS_SKILL_FOR_PB2 in boxes_ticked
 

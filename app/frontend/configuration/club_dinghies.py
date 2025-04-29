@@ -23,7 +23,7 @@ from app.objects.abstract_objects.abstract_lines import Line
 from app.objects.abstract_objects.abstract_tables import RowInTable
 from app.objects.club_dinghies import ClubDinghy, ListOfClubDinghies
 from app.objects.composed.club_dinghy_limits import ClubDinghyAndGenericLimit
-from app.objects.utilities.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed, MISSING_FROM_FORM
 
 header_text = "List of club dinghies: add, edit or re-order. Re-ordering will cancel any other changes made since saving."
 
@@ -123,6 +123,9 @@ def get_modified_dinghy_and_limit_from_form(
     new_hidden = is_radio_yes_or_no(
         interface=interface, input_name=hidden_box_name(existing_dinghy_and_limit)
     )
+    if new_hidden is MISSING_FROM_FORM:
+        print("hidden missing")
+        new_hidden = existing_dinghy_and_limit.hidden
 
     modified_boat_and_limits = ClubDinghyAndGenericLimit(
         club_dinghy=ClubDinghy(name=new_dinghy_name, hidden=new_hidden),

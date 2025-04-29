@@ -52,7 +52,7 @@ from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.shared.volunteer_state import update_state_with_volunteer_id, clear_volunteer_id_in_state, \
     is_volunteer_id_set_in_state, get_volunteer_from_state
 from app.objects.abstract_objects.abstract_form import NewForm
-
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 
 def save_all_information_in_rota_page(interface: abstractInterface):
@@ -248,6 +248,9 @@ def update_volunteer_skills_filter(interface: abstractInterface):
     dict_of_skills = get_dict_of_skills_from_form(
         interface=interface, field_name=SKILLS_FILTER
     )
+    if dict_of_skills is MISSING_FROM_FORM:
+        print("missing from form")
+        return
 
     save_skills_filter_to_state(interface=interface, dict_of_skills=dict_of_skills)
 

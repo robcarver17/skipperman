@@ -116,7 +116,7 @@ class abstractInterface:
         raise NotImplemented
 
     def value_of_multiple_options_from_form(
-        self, key: str, default=arg_not_passed
+        self, key: str, default: list
     ) -> list:
         raise NotImplemented
 

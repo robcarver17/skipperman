@@ -62,7 +62,7 @@ def get_availablity_from_form(
     )
     day_selector = DaySelector({})
     if list_of_days_ticked_in_form == MISSING_FROM_FORM:
-        return day_selector
+        return MISSING_FROM_FORM
 
     all_ticked = ALL_AVAILABLE in list_of_days_ticked_in_form
 
@@ -141,8 +141,10 @@ def get_food_requirements_from_form(
 ) -> FoodRequirements:
     other_food = interface.value_from_form(other_input_name)
     food_required_as_list = interface.value_of_multiple_options_from_form(
-        checkbox_input_name
+        checkbox_input_name, default=MISSING_FROM_FORM
     )
+    if food_required_as_list is MISSING_FROM_FORM:
+        return MISSING_FROM_FORM
 
     food_requirements = no_food_requirements
     possible_fields = list(food_requirements.as_dict().keys())
@@ -222,8 +224,10 @@ def get_dict_of_skills_from_form(
 ) -> SkillsDict:
     all_skills = get_list_of_skills(interface.object_store)
     selected_skills_as_list_of_str = interface.value_of_multiple_options_from_form(
-        field_name
+            field_name, default=MISSING_FROM_FORM
     )
+    if selected_skills_as_list_of_str is MISSING_FROM_FORM:
+        return MISSING_FROM_FORM
     skills_dict = SkillsDict()
     for skill in all_skills:
         skill_name = skill.name
@@ -248,7 +252,11 @@ def yes_no_radio(
 
 
 def is_radio_yes_or_no(interface: abstractInterface, input_name: str):
-    return YES in interface.value_of_multiple_options_from_form(input_name, default=[])
+    values_in_form =interface.value_of_multiple_options_from_form(input_name, default=MISSING_FROM_FORM)
+    if values_in_form is MISSING_FROM_FORM:
+        return MISSING_FROM_FORM
+
+    return YES in values_in_form
 
 
 YES = "Yes"

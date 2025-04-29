@@ -29,7 +29,7 @@ from app.objects.abstract_objects.abstract_lines import (
     _______________,
 )
 from app.objects.abstract_objects.abstract_text import bold
-from app.objects.utilities.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed, MISSING_FROM_FORM
 from app.objects.volunteers import Volunteer, default_volunteer
 
 
@@ -151,6 +151,10 @@ def get_and_save_volunteer_skills_from_form(
     dict_of_skills = get_dict_of_skills_from_form(
         interface=interface, field_name=SKILLS
     )
+    if dict_of_skills is MISSING_FROM_FORM:
+        print("skills dict not in form")
+        return
+
     save_skills_for_volunteer(
         object_store=interface.object_store,
         volunteer=volunteer,

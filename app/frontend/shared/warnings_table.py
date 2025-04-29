@@ -12,6 +12,7 @@ from app.backend.events.event_warnings import get_list_of_all_warning_ids_at_eve
     mark_all_ignored_event_warnings_with_priority_and_category_as_unignored, mark_event_warning_with_id_as_unignore
 from app.objects.events import Event
 from app.frontend.shared.buttons import get_button_value_given_type_and_attributes, is_button_of_type, get_attributes_from_button_pressed_of_known_type
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 from app.objects.utilities.generic_objects import from_bool_to_str, from_str_to_bool
 
 WARNING_FIELD_ID = "**warnings"
@@ -158,9 +159,8 @@ def save_warnings_from_table_checkboxes(interface: abstractInterface, event:Even
 
 def process_warning_with_id_from_table(interface: abstractInterface, event: Event, warning_id:str):
     field_name = get_field_for_warning(warning_id)
-    try:
-        checkboxvalue_list =interface.value_of_multiple_options_from_form(field_name)
-    except:
+    checkboxvalue_list =interface.value_of_multiple_options_from_form(field_name, MISSING_FROM_FORM)
+    if checkboxvalue_list is MISSING_FROM_FORM:
         # not all warnings are visible, might be on wrong page
         print("%s not visible" % field_name)
         return

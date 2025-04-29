@@ -44,6 +44,16 @@ from app.frontend.reporting.shared.constants import (
 from app.objects.utilities.exceptions import missing_data
 
 
+
+def override_print_options_with_new_values(
+    print_options: PrintOptions, publish_to_public = False, **kwargs
+) -> PrintOptions:
+    kwargs['publish_to_public'] = publish_to_public
+    for key, value in kwargs:
+        setattr(print_options, key, value)
+
+    return print_options
+
 def get_saved_print_options(
     report_type: str, interface: abstractInterface
 ) -> PrintOptions:

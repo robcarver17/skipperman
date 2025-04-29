@@ -38,6 +38,7 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 from app.objects.abstract_objects.abstract_text import up_arrow, down_arrow, Heading
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 from app.objects.utilities.utils import has_hidden_attribute, is_protected_object
 
 ADD_ENTRY_TEXT_FIELD = "add_entry_text_field"
@@ -82,6 +83,10 @@ def get_object_from_form(interface: abstractInterface, existing_object):
         is_hidden = is_radio_yes_or_no(
             interface=interface, input_name=hidden_box_name(existing_object)
         )
+
+        if is_hidden is MISSING_FROM_FORM:
+            print("hidden missing frrom form for %s" % str(existing_object))
+            is_hidden = existing_object.hidden
 
         return object_class(name=new_name, hidden=is_hidden)
     else:

@@ -5,7 +5,7 @@ from app.objects.abstract_objects.abstract_tables import RowInTable
 
 from app.objects.abstract_objects.abstract_lines import Line
 
-from app.objects.utilities.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed, MISSING_FROM_FORM
 
 from app.objects.groups import Group, ListOfGroups, all_locations_for_input
 
@@ -130,6 +130,9 @@ def get_group_from_form(
     is_hidden = is_radio_yes_or_no(
         interface=interface, input_name=hidden_box_name(existing_object)
     )
+    if is_hidden is MISSING_FROM_FORM:
+        print("hidden missing for %s" % str(existing_object))
+        is_hidden = existing_object.hidden
 
     new_group = Group(
         name=new_group_name, location=new_location, protected=False, hidden=is_hidden

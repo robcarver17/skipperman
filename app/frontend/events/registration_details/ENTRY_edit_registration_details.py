@@ -11,10 +11,12 @@ from app.frontend.events.registration_details.registration_details_form import (
 from app.frontend.events.registration_details.parse_registration_details_form import (
     parse_registration_details_from_form,
 )
+from app.frontend.reporting.rollcall_and_contacts.rollcall_report import rollcall_report_generator
+from app.frontend.reporting.shared.create_report import create_generic_report
 from app.frontend.shared.buttons import get_button_value_for_sort_order
 from app.frontend.shared.warnings_table import display_warnings_tables, save_warnings_button, save_warnings_from_table, \
     is_save_warnings_button_pressed
-from app.objects.abstract_objects.abstract_form import Form, NewForm
+from app.objects.abstract_objects.abstract_form import Form, NewForm, File
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
@@ -87,15 +89,17 @@ def get_warnings_table(interface: abstractInterface, event: Event) -> ListOfLine
 
 help_button = HelpButton("registration_editing_help")
 add_button = Button("Add unregistered sailor", nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT)
+quick_report_button = Button("Quick role call report", nav_button=True)
 
-nav_buttons_top = ButtonBar([cancel_menu_button, save_menu_button, add_button, help_button])
+
+nav_buttons_top = ButtonBar([cancel_menu_button, save_menu_button, add_button, quick_report_button, help_button])
 nav_buttons_bottom = ButtonBar([cancel_menu_button, save_menu_button, add_button, help_button])
 
 from app.frontend.shared.buttons import is_button_sort_order, sort_order_from_button_pressed
 
 def post_form_edit_registration_details(
     interface: abstractInterface,
-) -> Union[Form, NewForm]:
+) -> Union[Form, NewForm, File]:
     ## Called by post on view events form, so both stage and event name are set
 
     last_button_pressed = interface.last_button_pressed()
@@ -103,7 +107,8 @@ def post_form_edit_registration_details(
     if cancel_menu_button.pressed(last_button_pressed):
         interface.flush_cache_to_store()
         return previous_form(interface)
-
+    elif quick_report_button.pressed(last_button_pressed):
+        return create_quick_spotters_report(interface)
     save_details_from_form(interface)
 
     if add_button.pressed(last_button_pressed):
@@ -163,3 +168,13 @@ def get_sort_buttons():
     return sort_buttons
 
 clear_sort_button = Button(label="Sort by registration order", nav_button=True)
+
+def create_quick_spotters_report(interface: abstractInterface) -> File:
+    report_generator_with_specific_parameters = (
+        rollcall_report_generator.add_specific_parameters_for_type_of_report(
+            interface.object_store
+        )
+    )
+    interface.log_error("Quick reports are generated with current report parameters: do not get published to web. To publish or change parameters to go Reporting menu option.")
+    return create_generic_report(report_generator=report_generator_with_specific_parameters, interface=interface
+                                 )

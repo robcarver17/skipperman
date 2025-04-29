@@ -14,7 +14,7 @@ from app.backend.events.list_of_events import (
     get_event_from_list_of_events_given_event_description,
 )
 
-from app.frontend.events.ENTRY_view_events import display_list_of_events_with_buttons
+from app.frontend.shared.event_selection import display_list_of_events_with_buttons
 
 from app.data_access.init_directories import download_directory
 

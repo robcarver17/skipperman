@@ -2,7 +2,7 @@ from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
     get_dict_of_volunteers_with_roles_and_groups_at_event,
 )
 from app.data_access.store.object_store import ObjectStore
-from app.frontend.events.ENTRY_view_events import display_given_list_of_events_with_buttons
+from app.frontend.shared.event_selection import display_given_list_of_events_with_buttons
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.backend.events.list_of_events import get_sorted_list_of_events

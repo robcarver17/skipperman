@@ -93,10 +93,13 @@ def is_cadet_marked_as_test_cadet_to_skip_in_for_current_row_in_mapped_data(
 ):
     current_row_id = get_current_row_id(interface)
     event = get_event_from_state(interface)
-    return is_cadet_marked_as_test_cadet_to_skip_in_for_row_in_raw_registration_data(
+    test_row = is_cadet_marked_as_test_cadet_to_skip_in_for_row_in_raw_registration_data(
         object_store=interface.object_store, row_id=current_row_id, event=event
     )
+    if test_row:
+        print("row %s is test cadet" % test_row)
 
+    return test_row
 
 def next_volunteer_in_current_row(interface: abstractInterface) -> Union[Form, NewForm]:
     try:
@@ -116,12 +119,16 @@ def current_volunteer_already_identified(interface: abstractInterface):
     current_index = get_volunteer_index(interface)
     event = get_event_from_state(interface)
 
-    return volunteer_for_this_row_and_index_already_identified(
+    already_identified= volunteer_for_this_row_and_index_already_identified(
         object_store=interface.object_store,
         event=event,
         row_id=current_row_id,
         volunteer_index=current_index,
     )
+    if already_identified:
+        print("Row %s index %s is already identified" % (current_row_id, current_index))
+
+    return already_identified
 
 
 def add_specific_volunteer_at_event(
@@ -143,13 +150,13 @@ def add_passed_volunteer_at_event(
         default=missing_data
     )
     if matched_volunteer_with_id is missing_data:
-        print("Volunteer %s not matched" % str(volunteer))
+        print("Volunteer %s not matched precisely" % str(volunteer))
         return add_passed_volunteer_if_very_similar_or_display_form_if_not(
             interface=interface, volunteer=volunteer
         )
 
     print(
-        "Volunteer %s matched id is %s" % (str(volunteer), matched_volunteer_with_id.id)
+        "Volunteer %s matched precisely with  %s" % (str(volunteer), matched_volunteer_with_id.id)
     )
     return process_identification_when_volunteer_matched(
         interface=interface, volunteer=matched_volunteer_with_id

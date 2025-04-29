@@ -375,3 +375,7 @@ You can delete the connection, or add a new one by choosing from the dropdown li
 - The 'other information' from registration column on the far right can be useful if volunteers have told you about their availability in more detail.
 - You can enter notes about the volunteer in the notes column; typically this would be around issues or finer preferences on roles, or availability constraints not captured by just which day they are around. Remember under GDPR they have the right to see them, so be careful!
 - Click on 'download spreadsheet of volunteer information' in the navigation bar to get a spreadsheet version of what you can see on the screen; useful for sharing with other people without needing to do a [rota report](volunteer_rota_report_help.md).
+
+# Quick reports
+
+If you choose the 'quick report' option in the menu, you can run a [volunteer rota report](volunteer_rota_report_help.md). This report will run with the printing options currently set up, and it **will not be published to the public**. If you want to publish it, or change the report settings, go to the relevant part of the [reports menu.](reporting_help.md).

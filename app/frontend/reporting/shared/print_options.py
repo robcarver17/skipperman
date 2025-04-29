@@ -49,7 +49,7 @@ def override_print_options_with_new_values(
     print_options: PrintOptions, publish_to_public = False, **kwargs
 ) -> PrintOptions:
     kwargs['publish_to_public'] = publish_to_public
-    for key, value in kwargs:
+    for key, value in kwargs.items():
         setattr(print_options, key, value)
 
     return print_options

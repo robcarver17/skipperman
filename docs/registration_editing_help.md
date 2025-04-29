@@ -120,3 +120,7 @@ To see more about warnings, go to [resolving warnings](resolve_warnings.md)
 ## Ignored warnings
 
 Warnings that have been ignored appear here. You can 'unignore' them by clicking the checkbox and pressing `Save changes to warnings`.
+
+# Quick reports
+
+If you choose the 'quick report' option in the menu, you can run a [roll call report](roll_call_help.md). This report will run with the printing options currently set up and they **will not be published to the public**. If you want to change the report settings, go to the relevant part of the [reports menu.](reporting_help.md).

@@ -146,3 +146,6 @@ Remember by convention a 'helm' is just someone who has the relevant PB2 certifi
 
 You can also move someone on to a different boat without selecting a volunteer they have to swap with. This is quicker than removing them from one boat and then selecting them on another.
 
+# Quick reports
+
+If you choose the 'quick report' option in the menu, you can run a [patrol boat only volunteer report](volunteer_rota_report_help.md). This report will run with the printing options currently set up (except it will always generate a .csv file), and they **will not be published to the public**. If you want to publish it, or change the report settings, go to the relevant part of the [reports menu.](reporting_help.md).

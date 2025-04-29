@@ -264,3 +264,7 @@ As a general rule then:
 - Changes made in the individual day view will only affect that day
 
 This can also be done with singlehanded sailors, who can be put in different sailing groups and/or in different boats on each day.
+
+# Quick reports
+
+If you choose one of the two 'quick report' options in the menu, you can run a [group allocation report](group_allocation_report_help.md) or a [spotter sheet](spotter_sheet_report.md). These reports will run with the printing options currently set up and they **will not be published to the public**. If you want to publish them, or change the report settings, go to the relevant part of the [reports menu.](reporting_help.md).

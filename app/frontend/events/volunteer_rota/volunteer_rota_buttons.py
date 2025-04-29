@@ -39,9 +39,12 @@ def get_header_buttons_for_rota(interface: abstractInterface):
                 add_volunteer_button,
                 access_copy_menu,
                 download_matrix_button,
+                quick_report_button,
                 help_button,
             ]
         )
+
+quick_report_button = Button("Quick report", nav_button=True)
 
 
 def get_buttons_after_rota_table_if_swapping():

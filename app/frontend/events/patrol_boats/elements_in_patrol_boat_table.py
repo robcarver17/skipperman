@@ -228,9 +228,12 @@ def get_top_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonB
             cancel_menu_button,
             save_menu_button,
             access_copy_menu_button,
+            quick_report_button,
             help_button,
         ]
     )
+
+quick_report_button = Button("Quick report", nav_button=True)
 
 
 def get_arbitrary_swap_cancel_button():

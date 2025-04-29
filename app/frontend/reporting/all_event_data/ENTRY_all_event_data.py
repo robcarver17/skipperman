@@ -9,9 +9,7 @@ from app.frontend.shared.buttons import is_button_event_selection, event_from_bu
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import SORT_BY_START_DSC
 
-
-
-from app.frontend.events.ENTRY_view_events import display_list_of_events_with_buttons
+from app.frontend.shared.event_selection import display_list_of_events_with_buttons
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_form import (

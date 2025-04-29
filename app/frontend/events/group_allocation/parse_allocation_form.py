@@ -9,6 +9,9 @@ from app.frontend.events.group_allocation.store_state import (
     no_day_set_in_state,
     get_day_from_state_or_none,
 )
+from app.frontend.reporting.allocations.report_group_allocations import allocation_report_generator
+from app.frontend.reporting.shared.create_report import create_generic_report
+from app.objects.abstract_objects.abstract_form import File
 from app.objects.boat_classes import no_boat_class
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 

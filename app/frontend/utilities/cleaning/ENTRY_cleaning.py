@@ -4,9 +4,7 @@ from app.backend.events.cleaning import clean_sensitive_data_for_event
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_text import Heading
 
-from app.frontend.events.ENTRY_view_events import (
-    display_given_list_of_events_with_buttons,
-)
+from app.frontend.shared.event_selection import display_given_list_of_events_with_buttons
 from app.backend.events.list_of_events import (
     get_sorted_list_of_events,
     all_sort_types_for_event_list,

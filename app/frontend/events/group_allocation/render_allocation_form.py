@@ -105,8 +105,11 @@ def display_form_allocate_cadets_at_event(
 
 help_button = HelpButton("group_allocation_help")
 add_button = Button("Add unregistered sailor", nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT)
+quick_group_report_button = Button("Quick group report", nav_button=True)
+quick_spotters_report_button = Button("Quick spotters report", nav_button=True)
 
-nav_bar_top = ButtonBar([cancel_menu_button, save_menu_button, guess_boat_button, add_button, help_button ])
+
+nav_bar_top = ButtonBar([cancel_menu_button, save_menu_button, guess_boat_button, add_button, quick_group_report_button, quick_spotters_report_button, help_button])
 nav_bar_bottom = ButtonBar([cancel_menu_button, save_menu_button, add_button, help_button])
 
 

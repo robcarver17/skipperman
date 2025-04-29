@@ -25,9 +25,7 @@ from app.backend.security.user_access import (
 
 from app.objects.abstract_objects.abstract_text import Heading
 
-from app.frontend.events.ENTRY_view_events import (
-    display_given_list_of_events_with_buttons,
-)
+from app.frontend.shared.event_selection import display_given_list_of_events_with_buttons
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,

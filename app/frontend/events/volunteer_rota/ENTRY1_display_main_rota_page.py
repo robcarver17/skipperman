@@ -36,8 +36,10 @@ from app.frontend.events.volunteer_rota.rota_state import (
     get_sorts_and_filters_from_state,
     clear_all_filters,
 )
+from app.frontend.reporting.rota.report_rota import rota_report_generator
+from app.frontend.reporting.shared.create_report import create_generic_report
 from app.frontend.shared.buttons import is_button_sort_order
-from app.frontend.shared.warnings_table import save_warnings_button, save_warnings_from_table, \
+from app.frontend.shared.warnings_table import  save_warnings_from_table, \
     is_save_warnings_button_pressed
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -115,6 +117,9 @@ def post_form_view_for_volunteer_rota_if_new_form_returned(
     if download_matrix_button.pressed(last_button_pressed):
         filename = save_volunteer_matrix_and_return_filename(interface)
         return File(filename)
+
+    if quick_report_button.pressed(last_button_pressed):
+        return create_quick_report(interface)
 
     save_all_information_in_rota_page(interface)
     interface.flush_cache_to_store() ## as new page loading
@@ -234,3 +239,15 @@ def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(
         display_form_view_for_volunteer_rota
     )
+
+
+
+def create_quick_report(interface: abstractInterface) -> File:
+    report_generator_with_specific_parameters = (
+        rota_report_generator.add_specific_parameters_for_type_of_report(
+            interface.object_store
+        )
+    )
+    interface.log_error("Quick reports are generated with current report parameters: do not get published to web. To publish or change parameters to go Reporting menu option.")
+    return create_generic_report(report_generator=report_generator_with_specific_parameters, interface=interface
+                                 )

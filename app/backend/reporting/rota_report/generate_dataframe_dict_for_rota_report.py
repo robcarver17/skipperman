@@ -96,6 +96,8 @@ def get_df_for_reporting_volunteers_for_day(
     list_of_teams = (
         volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles.all_teams_at_event
     )
+    if len(list_of_teams)==0:
+        return pd.DataFrame()
     list_of_team_df = []
     for team in list_of_teams:
         team_df = get_df_for_team_on_day(

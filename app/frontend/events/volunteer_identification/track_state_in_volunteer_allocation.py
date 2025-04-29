@@ -9,7 +9,7 @@ from app.frontend.events.import_data.shared_state_tracking_and_data import (
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.relevant_information_for_volunteers import (
-    RelevantInformationForVolunteer,
+    RelevantInformationForVolunteer, missing_relevant_information,
 )
 from app.backend.registration_data.identified_volunteers_at_event import (
     get_relevant_information_for_volunteer_in_event_at_row_and_index,
@@ -63,7 +63,8 @@ def get_relevant_information_for_current_volunteer(
             event=event,
         )
     )
-
+    if relevant_information is missing_relevant_information:
+        print("row %s index %d missing" % (row_id, volunteer_index))
     return relevant_information
 
 

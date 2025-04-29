@@ -237,7 +237,7 @@ Volunteer name: On SATURDAY volunteer attending; but associated sailors Sailor a
 
 Check with the volunteer that this is correct. 
 
-- if the availability for the cadet is wrong, go . You may also want to get the registration changed in WA if this will generate an invoice change.
+- if the availability for the cadet is wrong, go to the edit registration page for the event and update it. You may also want to get the registration changed in WA if this will generate an invoice change.
 - if the availability for the volunteer is wrong, [change it in the rota](volunteer_rota_help.md#adding-removing-and-changing-volunteer-availability)
 
 ## No connected cadets

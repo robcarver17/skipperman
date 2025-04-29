@@ -58,8 +58,13 @@ You can also go back to just seeing the most similar cadets by clicking `See sim
 
 But if you are sure this is a new cadet: enter their name and date of birth (making any corrections in the relevant input fields), and membership status. 
 
-Date of birth: You won't usually have the date of birth for a new sailor, unless they have done a WA registration already. If they are a visitor don't worry about including this, change the DOB status to 'Non member - don't need to know'. 
-If they are a member that is new to Skipperman, and you aren't sure of their date of birth or it hasn't been included in the registration form, then choose DOB status 'I need to confirm - leave blank for now'. You can [edit the date of birth later](view_and_edit_individual_cadet_help.md). 
+Date of birth (DOB) You won't always have the date of birth for a new sailor.
+
+- If they are a visitor don't worry about including this, change the DOB status to 'Non member - don't need to know'.
+- if they are a member that is new to Skipperman, and you are happy with the date of birth pre-populated from their registration, then change their DOB status to 'Known'. You can also change the date of birth if you think it's wrong in the form.
+- If they are a member that is new to Skipperman, and you aren't sure of their date of birth or it hasn't been included in the registration form, then choose DOB status 'I need to confirm - leave blank for now'.
+
+You can [edit the date of birth later](view_and_edit_individual_cadet_help.md). 
 
 For membership status:
 

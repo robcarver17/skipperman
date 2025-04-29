@@ -23,6 +23,26 @@ from app.objects.groups import unallocated_group
 from app.objects.partners import valid_partnership_given_partner_cadet, NoCadetPartner
 
 
+def cadets_not_allocated_to_group_but_attending_on_day(    dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
+    dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
+                                                           day: Day
+) -> ListOfCadets:
+    list_of_cadets = []
+    for cadet in dict_of_cadets_with_registration_data.list_of_cadets():
+        inactive = not dict_of_cadets_with_registration_data.registration_data_for_cadet(cadet).status.is_active
+        if inactive:
+            continue
+
+        attending = dict_of_cadets_with_registration_data.registration_data_for_cadet(cadet).availability.available_on_day(day)
+        if not attending:
+            continue
+
+        group = dict_of_cadets_with_days_and_groups.get_days_and_groups_for_cadet(cadet).group_on_day(day, default=unallocated_group)
+        if group is unallocated_group:
+            list_of_cadets.append(cadet)
+
+    return ListOfCadets(list_of_cadets)
+
 def cadets_not_allocated_to_group_on_at_least_one_day_attending(
     dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
     dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,

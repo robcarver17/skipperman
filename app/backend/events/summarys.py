@@ -14,6 +14,8 @@ from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     get_dict_of_all_event_info_for_cadets,
     get_attendance_matrix_for_list_of_cadets_at_event,
 )
+from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
+from app.objects.composed.cadets_with_all_event_info_functions import cadets_not_allocated_to_group_but_attending_on_day
 from app.objects.day_selectors import Day, DaySelector
 from app.objects.events import Event
 from app.objects.utilities.exceptions import arg_not_passed
@@ -37,14 +39,21 @@ def summarise_allocations_for_event(
     groups = dict_of_cadets_with_days_and_groups.all_groups_at_event()
     groups.remove_unallocated()
 
-    return summarise_generic_counts_for_event_over_days_returning_df(
+    df =  summarise_generic_counts_for_event_over_days_returning_df(
         get_id_function=get_relevant_cadets_for_group_on_day,
         event=event,
         groups=groups,
         availability_dict=availability_dict,
         list_of_ids_with_groups=dict_of_cadets_with_days_and_groups,
+        include_total=False ## add with unallocated
     )
 
+    df = add_unallocated_row(cadets_at_event_data=cadets_at_event_data,
+                             df=df)
+
+    df.loc['TOTAL'] = df.sum(axis=0, numeric_only=True)
+
+    return df
 
 def get_relevant_cadets_for_group_on_day(
     group: Group,
@@ -68,6 +77,7 @@ def summarise_generic_counts_for_event_over_days_returning_df(
     groups: list,
     get_id_function: Callable,
     group_labels: list = arg_not_passed,
+        include_total: bool = True
 ) -> pd.DataFrame:
     rows = [
         get_row_for_group(
@@ -90,7 +100,8 @@ def summarise_generic_counts_for_event_over_days_returning_df(
     df.columns = group_labels
 
     df = df.transpose()
-    df.loc['TOTAL'] = df.sum(axis=0,numeric_only=True)
+    if include_total:
+        df.loc['TOTAL'] = df.sum(axis=0,numeric_only=True)
 
     return df
 
@@ -144,3 +155,17 @@ def available_on_day(
         return 1
     else:
         return 0
+
+def add_unallocated_row(cadets_at_event_data: DictOfAllEventInfoForCadets, df: pd.DataFrame):
+    count = {}
+    for day in cadets_at_event_data.event.days_in_event():
+        list_of_cadets= cadets_not_allocated_to_group_but_attending_on_day(dict_of_cadets_with_days_and_groups=cadets_at_event_data.dict_of_cadets_with_days_and_groups,
+                                                           dict_of_cadets_with_registration_data=cadets_at_event_data.dict_of_cadets_with_registration_data,
+                                                           day=day)
+        count[day.name] = len(list_of_cadets)
+
+    unallocated_row = pd.DataFrame(count, index = ["Unallocated"])
+    if len(df)==0:
+        return unallocated_row
+
+    return pd.concat([df, unallocated_row])

@@ -229,17 +229,15 @@ def get_sailor_attendance_selection_from_event_row(
     day_selection = row_as_dict.get(ALL_DAYS_ATTENDING_INPUT, "")
 
     if len(weekend_selection) > 0:
-        print("From selection %s" % weekend_selection)
         return create_day_selector_from_short_form_text_with_passed_days(
             weekend_selection, days_in_event=days_in_event
         )
     elif len(day_selection) > 0:
-        print("From selection %s" % day_selection)
         return create_day_selector_from_short_form_text_with_passed_days(
             day_selection, days_in_event=days_in_event
         )
     else:
-        print("Not found, doing all days")
+        print("Selector not found, doing all days")
         day_selector_for_all_days_at_event = event.day_selector_for_days_in_event()
         return day_selector_for_all_days_at_event
 

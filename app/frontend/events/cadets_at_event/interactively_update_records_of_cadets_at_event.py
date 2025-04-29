@@ -167,7 +167,7 @@ def process_update_to_existing_cadet_at_event(
         existing_cadet_at_event_data=existing_cadet_at_event_data,
     ):
         ## nothing to do
-        print("Cadet %s unchanged between existing and registration data")
+        print("Cadet %s unchanged between existing and registration data" % str(cadet))
         return process_next_cadet_at_event(interface)
     else:
         return display_form_for_update_to_existing_cadet_at_event(

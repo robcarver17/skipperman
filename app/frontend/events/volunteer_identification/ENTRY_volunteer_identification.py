@@ -76,10 +76,12 @@ def process_volunteer_on_next_row_of_event_data(
 def identify_volunteers_in_specific_row_initialise(
     interface: abstractInterface,
 ) -> NewForm:
+    print("Parsing row %s" %   get_current_row_id(interface))
     test_row = is_cadet_marked_as_test_cadet_to_skip_in_for_current_row_in_mapped_data(
         interface
     )
     if test_row:
+        print("Test row, skipping")
         return process_volunteer_on_next_row_of_event_data(interface)
 
     print("Clearing volunteer index within row")
@@ -105,12 +107,15 @@ def next_volunteer_in_current_row(interface: abstractInterface) -> Union[Form, N
     try:
         get_and_save_next_volunteer_index(interface)
     except NoMoreData:
+        print("End of current row, on to next row")
         clear_volunteer_index(interface)
         return process_volunteer_on_next_row_of_event_data(interface)
 
+    print("Now on %s row, index %s" % (get_current_row_id(interface), get_volunteer_index(interface)))
     if current_volunteer_already_identified(interface):
         return next_volunteer_in_current_row(interface)
     else:
+        print("Not identified - adding new volunteer")
         return add_specific_volunteer_at_event(interface=interface)
 
 
@@ -137,7 +142,11 @@ def add_specific_volunteer_at_event(
     relevant_information = get_relevant_information_for_current_volunteer(interface)
     volunteer = get_volunteer_from_relevant_information(relevant_information)
     if volunteer is missing_relevant_information:
+        print("Relevant information was missing")
+
         return next_volunteer_in_current_row(interface)
+
+    print("Relevant information was %s" % str(relevant_information))
 
     return add_passed_volunteer_at_event(interface=interface, volunteer=volunteer)
 

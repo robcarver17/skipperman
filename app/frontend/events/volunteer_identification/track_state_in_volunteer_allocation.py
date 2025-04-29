@@ -65,6 +65,8 @@ def get_relevant_information_for_current_volunteer(
     )
     if relevant_information is missing_relevant_information:
         print("row %s index %d missing" % (row_id, volunteer_index))
+
+    print("Following relevant information found: %s at %s %s" % (str(relevant_information), row_id, volunteer_index))
     return relevant_information
 
 

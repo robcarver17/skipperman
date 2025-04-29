@@ -125,7 +125,13 @@ def get_attributes_from_button_pressed(last_button: str):
 PSEUDO_PRIORITY_FOR_SAVE_ALL_WARNINGS = "save_allwarnings"
 WARNINGS_BUTTON_TYPE = "warnings_in_event-button_type"
 
+def is_warning_button(last_button:str):
+    return is_button_of_type(value_of_button_pressed=last_button, type_to_check=WARNINGS_BUTTON_TYPE)
+
 def was_specific_button_to_flag_warnings_pressed(last_button:str):
+    if not is_warning_button(last_button):
+        return False
+
     priority, category, ignore_on = get_attributes_from_button_pressed(last_button)
 
     was_save_all_button = priority ==PSEUDO_PRIORITY_FOR_SAVE_ALL_WARNINGS

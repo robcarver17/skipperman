@@ -1,7 +1,8 @@
 from typing import Union
 
 from app.backend.events.summarys import summarise_allocations_for_event
-from app.backend.events.view_event import identify_birthdays, summarise_registrations_for_event
+from app.backend.events.view_event import identify_birthdays, summarise_registrations_for_event, \
+    summarise_volunteers_for_event
 from app.backend.patrol_boats.patrol_boat_summary import get_summary_list_of_patrol_boat_allocations_for_events
 from app.backend.rota.volunteer_rota_summary import get_summary_list_of_teams_and_groups_for_events
 from app.objects.abstract_objects.abstract_buttons import ButtonBar, main_menu_button, back_menu_button, Button, \
@@ -43,6 +44,13 @@ def summary_tables_for_event(interface: abstractInterface, event: Event) -> List
     ))
     if len(summarise_registrations)==0:
         summarise_registrations=""
+
+    summarise_volunteers = PandasDFTable(summarise_volunteers_for_event(
+        object_store=interface.object_store, event=event
+    ))
+    if len(summarise_volunteers)==0:
+        summarise_volunteers=""
+
 
     allocations = PandasDFTable(summarise_allocations_for_event(
         object_store=interface.object_store, event=event
@@ -126,6 +134,7 @@ def summary_tables_for_event(interface: abstractInterface, event: Event) -> List
         [
             summarise_registrations,
             allocations_lines,
+            summarise_volunteers,
             rota_lines,
             boat_lines,
             # food_summary,

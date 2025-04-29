@@ -187,15 +187,18 @@ def get_volunteer_from_relevant_information(
     relevant_information_for_volunteer: RelevantInformationForVolunteer,
 ) -> Volunteer:
     if relevant_information_for_volunteer is missing_relevant_information:
+        print("Relevant information was missing")
         return missing_relevant_information
     relevant_information_for_id = relevant_information_for_volunteer.identify
     if minimum_volunteer_information_is_missing(relevant_information_for_id):
+        print("Minimum information unavailable")
         return missing_relevant_information
 
     inferred_volunteer = infer_volunteer_from_provided_information(
         relevant_information_for_id
     )
     if inferred_volunteer is NO_VOLUNTEER_IN_FORM:
+        print("Can't infer volunteer from provided information")
         return missing_relevant_information
 
     return inferred_volunteer

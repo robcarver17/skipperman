@@ -6,6 +6,7 @@ from app.backend.registration_data.cadet_registration_data import (
 from app.backend.registration_data.raw_mapped_registration_data import (
     get_raw_mapped_registration_data,
 )
+from app.data_access.configuration.field_list_groups import MAX_CONFIGURABLE_VOLUNTEERS
 from app.objects.composed.cadets_at_event_with_registration_data import DictOfCadetsWithRegistrationData
 from app.objects.events import Event
 from app.data_access.store.object_store import ObjectStore
@@ -77,3 +78,29 @@ def summarise_status(cadets_with_registration_data_at_event: DictOfCadetsWithReg
         all_status[status_label] = current_count
 
     return all_status
+
+from app.backend.registration_data.identified_volunteers_at_event import get_list_of_identified_volunteers_at_event
+from app.backend.volunteers.volunteers_at_event import get_dict_of_all_event_data_for_volunteers
+
+def summarise_volunteers_for_event(object_store: ObjectStore, event: Event):
+    summary_data = {}
+    list_of_identified_cadets = get_list_of_identified_cadets_at_event(object_store,
+                                                                       event=event)
+    list_of_identified_volunteers = get_list_of_identified_volunteers_at_event(
+        object_store=object_store,
+        event=event
+    )
+    list_of_identified_volunteers.unique_list_of_allocated_volunteer_ids()
+    summary_data['(1) Unique cadet registrations in last import file'] = list_of_identified_cadets.count_of_cadets_in_rows()
+    summary_data['(2) Maximum theoretical volunteers available %d per row' % MAX_CONFIGURABLE_VOLUNTEERS] = MAX_CONFIGURABLE_VOLUNTEERS*list_of_identified_cadets.count_of_cadets_in_rows()
+
+    summary_data['(3) Volunteers identified including duplicates'] = len(list_of_identified_volunteers.list_of_volunteer_ids())
+    summary_data['(4) Unique volunteers identified '] = len(
+        list_of_identified_volunteers.unique_list_of_allocated_volunteer_ids())
+
+    volunteers_at_event = get_dict_of_all_event_data_for_volunteers(object_store=object_store, event=event)
+    summary_data['Volunteers added to event'] = len(volunteers_at_event.list_of_volunteers())
+
+    summary_data = pd.DataFrame(summary_data, index=["Count"]).transpose()
+    
+    return summary_data

@@ -33,7 +33,7 @@ class SessionDataForAction(object):
         try:
             other_data.pop(key)
         except:
-            print("%s not in persistent storage" % key)
+            return
 
     def list_of_keys_with_persistent_values(self) -> list:
         other_data = self.other_data
@@ -79,7 +79,6 @@ class SessionDataForAction(object):
 
 
 def _update_session_dict_for_action(action_name: str, new_dict: dict):
-    print("updating %s with %s " % (action_name, str(new_dict)))
     ## ignore IDE warning that code doesn't appear to do anything, it does
     all_action_state_data = _get_session_data_dict_for_action(action_name)
     all_action_state_data = new_dict

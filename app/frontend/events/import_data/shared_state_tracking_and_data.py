@@ -52,8 +52,8 @@ def get_next_row_id_in_event_data(interface: abstractInterface, current_id: str)
         raise NoMoreData
 
     print(
-        "Getting next ID %s (index %d) from list %s was %s (index %d)"
-        % (new_id, new_index, list_of_ids, current_id, current_index)
+        "Getting next ID %s (index %d) from list was %s (index %d)"
+        % (new_id, new_index,  current_id, current_index)
     )
 
     return new_id

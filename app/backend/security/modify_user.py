@@ -8,6 +8,7 @@ from app.data_access.configuration.configuration import HOMEPAGE
 from app.data_access.init_data import object_store as default_object_store
 from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.users_and_security import get_random_string
+from app.web.html.url_define import LINK_LOGIN
 
 
 def change_password_for_user(
@@ -42,8 +43,9 @@ def generate_reset_message(username: str, object_store: ObjectStore) -> str:
     change_password_for_user(
         object_store=object_store, username=username, new_password=new_password
     )
-    return "Message: Login to %s using username: %s password: %s" % (
+    return "Message to send to user: Login with %s/%s/?username=%s&password=%s AND THEN CHANGE YOUR PASSWORD!!!" % (
         HOMEPAGE,
+        LINK_LOGIN,
         username,
         new_password,
     )

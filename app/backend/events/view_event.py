@@ -102,5 +102,5 @@ def summarise_volunteers_for_event(object_store: ObjectStore, event: Event):
     summary_data['Volunteers added to event'] = len(volunteers_at_event.list_of_volunteers())
 
     summary_data = pd.DataFrame(summary_data, index=["Count"]).transpose()
-    
+
     return summary_data

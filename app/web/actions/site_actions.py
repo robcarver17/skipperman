@@ -12,6 +12,7 @@ from app.frontend.instructors.instructor_function_mapping import (
 )
 from app.frontend.administration.admin_function_mapping import admin_function_mapping
 from app.frontend.utilities.utilities_function_mapping import utilities_function_mapping
+from app.objects.utilities.exceptions import MissingMethod
 
 from app.web.flask.flask_interface import flaskInterface
 from app.objects.abstract_objects.abstract_form import Form, form_with_message, File
@@ -20,10 +21,6 @@ from app.objects.abstract_objects.form_function_mapping import (
 )
 from app.frontend.form_handler import FormHandler
 from app.data_access.init_data import object_store
-
-
-class MissingMethod(Exception):
-    pass
 
 
 def get_abstract_form_for_specific_action(action_name) -> Union[File, Form]:

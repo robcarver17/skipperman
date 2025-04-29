@@ -30,7 +30,7 @@ A key design decision is how the GUI is implemented and deployed; a web front en
 
 Skipperman also needs to be flexible enough so that it can cope with eg changes in WA event fields without rewriting code.
 
-## A few questions - Sam
+## A few questions - Sam G.
 
 ### Q:How is data storage going to work? Are we going to do cloud storage? Otherwise we would have a different copy for each user that then would need merging.
 
@@ -40,5 +40,4 @@ That does not preclude cloud storage, which may make sense depending on how the 
 
 ### I think we could probably find a good python library so we wouldn't need a web interface. Either that or there exist plenty of good libraries in other languages (I have experience with .NET MAUI for example, which is cross platform).
 
--Sam
 

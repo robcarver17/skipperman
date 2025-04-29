@@ -1,8 +1,10 @@
 from typing import Union
 
+from app.backend.clothing.summarise_clothing import summarise_clothing
 from app.backend.events.summarys import summarise_allocations_for_event
 from app.backend.events.view_event import identify_birthdays, summarise_registrations_for_event, \
     summarise_volunteers_for_event
+from app.backend.food.summarise_food import summarise_food_data_by_day
 from app.backend.patrol_boats.patrol_boat_summary import get_summary_list_of_patrol_boat_allocations_for_events
 from app.backend.rota.volunteer_rota_summary import get_summary_list_of_teams_and_groups_for_events
 from app.objects.abstract_objects.abstract_buttons import ButtonBar, main_menu_button, back_menu_button, Button, \
@@ -98,13 +100,12 @@ def summary_tables_for_event(interface: abstractInterface, event: Event) -> List
     else:
         boat_lines = ""
 
-    """
-    food_summary = summarise_food_data_by_day(interface=interface, event=event)
+    food_summary = summarise_food_data_by_day(object_store=interface.object_store, event=event)
     if len(food_summary)>0:
         food_summary_lines = ListOfLines(
             [
                 _______________,
-                "Food requirements",
+                "Food requirements (if catered event)",
                 _______________,
                 food_summary,
                 _______________,
@@ -114,7 +115,7 @@ def summary_tables_for_event(interface: abstractInterface, event: Event) -> List
         food_summary_lines = ""
 
 
-    clothing_summary = summarise_clothing(interface=interface, event=event)
+    clothing_summary = summarise_clothing(object_store=interface.object_store, event=event)
     if len(clothing_summary)>0:        
         clothing_summary_lines = ListOfLines(
             [
@@ -128,17 +129,22 @@ def summary_tables_for_event(interface: abstractInterface, event: Event) -> List
     else:
         clothing_summary_lines = ""
 
-    """
 
     summary_lines = ListOfLines(
         [
             summarise_registrations,
+            _______________,
             allocations_lines,
+            _______________,
             summarise_volunteers,
+            _______________,
             rota_lines,
+            _______________,
             boat_lines,
-            # food_summary,
-            # clothing_summary,
+            _______________,
+             food_summary_lines,
+            _______________,
+            clothing_summary_lines,
         ]
     )
 

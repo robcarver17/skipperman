@@ -49,12 +49,14 @@ wild_apricot_payment_fields_which_are_part_paid_status:
 wild_apricot_payment_fields_which_are_cancelled_status:
   - "Canceled"
   - "Cancelled"
-if_volunteer_unable_to_volunteer_contains:
-  - 'unable' ## if volunteer status contains this, can't volunteer
-  - 'cannot'
+#
 wild_apricot_event_id: "Event ID"
 allowed_upload_file_types: ".csv, .xls"
 #
+#
+if_volunteer_unable_to_volunteer_contains:
+  - 'unable' ## if volunteer status contains this, can't volunteer
+  - 'cannot'
 #
 pytz_timezone: 'GB'
 #

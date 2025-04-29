@@ -72,7 +72,7 @@ def summarise_food_data_by_day_for_volunteers(
                 )
             ]
             summary_dict[day.name] = sum(list_to_count)
-        summary_dict["Count"] = count_number_of_volunteers_meeting_days_required_target(
+        summary_dict["Total over event"] = count_number_of_volunteers_meeting_days_required_target(
             availability_dict=availability_dict, days_required=days_required
         )
 
@@ -111,7 +111,7 @@ def summarise_food_data_by_day_for_cadets(
             ]
             summary_dict[day.name] = sum(list_to_count)
 
-        summary_dict["Count"] = count_cadets_with_right_age(
+        summary_dict["Total over event"] = count_cadets_with_right_age(
             cadets_with_food_requirements=cadets_with_food_requirements,
             age_window=age_window,
         )

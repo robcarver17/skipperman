@@ -1,3 +1,5 @@
+Most users won't need to install Skipperman, they can just access it from [the website: https://bsccadetskipper.pythonanywhere.com](https://bsccadetskipper.pythonanywhere.com/)
+
 # Installation - local
 
 Once all installed you can run a local instance with (assuming a Linux command line): 
@@ -10,7 +12,7 @@ flask run
 
 Then go to `http://127.0.0.1:5000/` on your chrome browser and you should see the skipperman home page.
 
-# Installation and updating code - existing cloud 
+# Installation and updating code - existing cloud provider
 
 Log into https://www.pythonanywhere.com/user/bsccadetskipper/
 

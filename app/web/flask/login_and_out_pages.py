@@ -63,7 +63,6 @@ def display_change_password_page():
 def login_link_page():
     username = request.args.get("username")
     password = request.args.get("password")
-    flash_log("CHANGE YOUR PASSWORD NOW %s!" % get_username())
     return process_login(username=username, password=password)
 
 

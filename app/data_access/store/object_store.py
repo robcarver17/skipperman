@@ -124,7 +124,7 @@ class ObjectStore:
         return self.data_api.global_read_only
 
     @global_read_only.setter
-    def global_read_only(self, global_read_only:bool):
+    def global_read_only(self, global_read_only: bool):
         self.data_api.global_read_only = global_read_only
 
 

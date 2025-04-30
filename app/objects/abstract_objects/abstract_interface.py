@@ -61,8 +61,6 @@ class abstractInterface:
     def log_error(self, error_message: str):
         raise NotImplemented
 
-
-
     def set_where_finished_button_should_lead_to(self, stage_name: str):
         self.set_persistent_value(FINISHED_BUTTON_LABEL, stage_name)
 
@@ -115,9 +113,7 @@ class abstractInterface:
     ):
         raise NotImplemented
 
-    def value_of_multiple_options_from_form(
-        self, key: str, default: list
-    ) -> list:
+    def value_of_multiple_options_from_form(self, key: str, default: list) -> list:
         raise NotImplemented
 
     def true_if_radio_was_yes(self, input_label: str) -> bool:
@@ -164,7 +160,7 @@ class abstractInterface:
         return self.object_store.global_read_only
 
     @global_read_only.setter
-    def global_read_only(self, global_read_only:bool):
+    def global_read_only(self, global_read_only: bool):
         self.object_store.global_read_only = global_read_only
 
 

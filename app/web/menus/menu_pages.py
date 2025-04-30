@@ -1,7 +1,14 @@
 from typing import List
 
-from app.web.flask.session_data_for_action import clear_all_action_state_data_from_session
-from app.web.html.url_define import get_action_url, get_urls_of_interest, MAIN_MENU_URL, MAIN_HELP_PAGE
+from app.web.flask.session_data_for_action import (
+    clear_all_action_state_data_from_session,
+)
+from app.web.html.url_define import (
+    get_action_url,
+    get_urls_of_interest,
+    MAIN_MENU_URL,
+    MAIN_HELP_PAGE,
+)
 
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 
@@ -30,7 +37,6 @@ def generate_menu_page_html() -> str:
         html_code_for_menu = generate_menu_html()
     else:
         html_code_for_menu = ""
-
 
     include_backup_option = allow_user_to_make_snapshots()
     html_page_master_layout = get_master_layout(

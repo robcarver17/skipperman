@@ -49,6 +49,9 @@ def from_patrol_boat_name_to_boat(
     patrol_boat_data = get_list_of_patrol_boats(object_store)
     return patrol_boat_data.boat_given_name(boat_name)
 
-def get_patrol_boat_from_id(object_store: ObjectStore, boat_id: str, default = arg_not_passed) -> PatrolBoat:
+
+def get_patrol_boat_from_id(
+    object_store: ObjectStore, boat_id: str, default=arg_not_passed
+) -> PatrolBoat:
     patrol_boat_data = get_list_of_patrol_boats(object_store)
     return patrol_boat_data.boat_given_id(boat_id, default=default)

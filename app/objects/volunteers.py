@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 
 from app.data_access.configuration.configuration import (
-    SIMILARITY_LEVEL_TO_WARN_NAME, SIMILARITY_LEVEL_TO_WARN_VOLUNTEER_NAME,
+    SIMILARITY_LEVEL_TO_WARN_NAME,
+    SIMILARITY_LEVEL_TO_WARN_VOLUNTEER_NAME,
 )
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
@@ -100,12 +101,18 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
         return ListOfVolunteers(similar_names)
 
     def sort_by_similarity(self, volunteer: Volunteer):
-        volunteers_with_scores = [{'volunteer': volunteer_in_list,
-                                   'score': volunteer_in_list.similarity_of_names(volunteer)} for volunteer_in_list in self]
-        sorted_volunteers_with_score = sorted(volunteers_with_scores, key = lambda x: x['score'], reverse=True)
-        sorted_volunteers = [x['volunteer'] for x in sorted_volunteers_with_score]
+        volunteers_with_scores = [
+            {
+                "volunteer": volunteer_in_list,
+                "score": volunteer_in_list.similarity_of_names(volunteer),
+            }
+            for volunteer_in_list in self
+        ]
+        sorted_volunteers_with_score = sorted(
+            volunteers_with_scores, key=lambda x: x["score"], reverse=True
+        )
+        sorted_volunteers = [x["volunteer"] for x in sorted_volunteers_with_score]
         return ListOfVolunteers(sorted_volunteers)
-
 
     def sort_by_surname(self):
         return ListOfVolunteers(sorted(self, key=lambda x: x.surname))

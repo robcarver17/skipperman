@@ -2,8 +2,12 @@ from typing import Union
 
 from app.backend.rota.volunteer_rota_summary import (
     get_summary_list_of_roles_and_groups_for_event,
-    get_summary_list_of_teams_and_groups_for_events, )
-from app.backend.volunteers.warnings import process_all_warnings_for_rota, get_all_saved_warnings_for_volunteer_rota
+    get_summary_list_of_teams_and_groups_for_events,
+)
+from app.backend.volunteers.warnings import (
+    process_all_warnings_for_rota,
+    get_all_saved_warnings_for_volunteer_rota,
+)
 from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
 from app.data_access.configuration.fixed import (
     COPY_OVERWRITE_SYMBOL,
@@ -20,7 +24,9 @@ from app.frontend.events.volunteer_rota.volunteer_targets_and_group_notes import
     get_volunteer_targets_table_and_save_button,
 )
 
-from app.frontend.events.volunteer_rota.volunteer_targets_and_group_notes import get_summary_instructor_group_table
+from app.frontend.events.volunteer_rota.volunteer_targets_and_group_notes import (
+    get_summary_instructor_group_table,
+)
 from app.frontend.forms.swaps import is_ready_to_swap
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.shared.warnings_table import display_warnings_tables
@@ -42,11 +48,20 @@ def get_preamble_before_table(
     title = Heading("Volunteer rota for event %s" % str(event), centred=True, size=4)
     header_buttons = get_header_buttons_for_rota(interface)
     if is_ready_to_swap(interface):
-        return ListOfLines([header_buttons, title, _______________, Heading("Swapping: click on swapper or cancel", size=3, centred=True)])
+        return ListOfLines(
+            [
+                header_buttons,
+                title,
+                _______________,
+                Heading("Swapping: click on swapper or cancel", size=3, centred=True),
+            ]
+        )
 
     summary_of_filled_roles = get_summary_table(interface=interface, event=event)
     summary_group_table = get_summary_group_table(interface=interface, event=event)
-    summary_instructor_table = get_summary_instructor_group_table(interface=interface, event=event)
+    summary_instructor_table = get_summary_instructor_group_table(
+        interface=interface, event=event
+    )
     targets = get_volunteer_targets_table_and_save_button(
         interface=interface, event=event
     )
@@ -65,8 +80,10 @@ def get_preamble_before_table(
             summary_instructor_table,
             _______________,
             targets,
-            _______________,]+
-            warnings+[
+            _______________,
+        ]
+        + warnings
+        + [
             _______________,
             instructions,
             _______________,
@@ -136,6 +153,8 @@ def get_volunteer_warning_table(
     process_all_warnings_for_rota(object_store=interface.object_store, event=event)
     interface.save_cache_to_store_without_clearing()
 
-    all_warnings = get_all_saved_warnings_for_volunteer_rota(object_store=interface.object_store, event=event)
+    all_warnings = get_all_saved_warnings_for_volunteer_rota(
+        object_store=interface.object_store, event=event
+    )
 
     return display_warnings_tables(all_warnings)

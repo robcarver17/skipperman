@@ -1,7 +1,9 @@
 from typing import List, Union
 
-from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN_VOLUNTEER_NAME, \
-    SIMILARITY_LEVEL_TO_MATCH_VERY_SIMILAR_VOLUNTEER_NAME
+from app.data_access.configuration.configuration import (
+    SIMILARITY_LEVEL_TO_WARN_VOLUNTEER_NAME,
+    SIMILARITY_LEVEL_TO_MATCH_VERY_SIMILAR_VOLUNTEER_NAME,
+)
 from app.data_access.store.object_store import ObjectStore
 from app.data_access.store.object_definitions import object_definition_for_volunteers
 from app.objects.utilities.exceptions import arg_not_passed, missing_data
@@ -9,11 +11,13 @@ from app.objects.volunteers import Volunteer, ListOfVolunteers
 
 
 def get_volunteer_with_matching_name(
-    object_store: ObjectStore, volunteer: Volunteer, default = missing_data
+    object_store: ObjectStore, volunteer: Volunteer, default=missing_data
 ) -> Union[object, Volunteer]:
     list_of_volunteers = get_list_of_volunteers(object_store)
 
-    return list_of_volunteers.volunteer_with_matching_name(volunteer.name, default=default)
+    return list_of_volunteers.volunteer_with_matching_name(
+        volunteer.name, default=default
+    )
 
 
 def get_volunteer_from_name(
@@ -47,13 +51,18 @@ def get_list_of_volunteers_as_str(list_of_volunteers: ListOfVolunteers) -> List[
 
 
 def get_sorted_list_of_volunteers(
-    object_store: ObjectStore, sort_by: str = arg_not_passed,
-        similar_volunteer: Volunteer =arg_not_passed,
-        exclude_volunteer: Volunteer = arg_not_passed
+    object_store: ObjectStore,
+    sort_by: str = arg_not_passed,
+    similar_volunteer: Volunteer = arg_not_passed,
+    exclude_volunteer: Volunteer = arg_not_passed,
 ) -> ListOfVolunteers:
     master_list = get_list_of_volunteers(object_store)
 
-    new_list = sort_list_of_volunteers(list_of_volunteers=master_list, sort_by=sort_by, similar_volunteer=similar_volunteer)
+    new_list = sort_list_of_volunteers(
+        list_of_volunteers=master_list,
+        sort_by=sort_by,
+        similar_volunteer=similar_volunteer,
+    )
 
     if not exclude_volunteer is arg_not_passed:
         try:
@@ -65,8 +74,9 @@ def get_sorted_list_of_volunteers(
 
 
 def sort_list_of_volunteers(
-    list_of_volunteers: ListOfVolunteers, sort_by: str = arg_not_passed,
-        similar_volunteer: Volunteer = arg_not_passed
+    list_of_volunteers: ListOfVolunteers,
+    sort_by: str = arg_not_passed,
+    similar_volunteer: Volunteer = arg_not_passed,
 ) -> ListOfVolunteers:
     if sort_by == SORT_BY_SURNAME:
         return list_of_volunteers.sort_by_surname()
@@ -84,13 +94,17 @@ SORT_BY_SURNAME = "Sort by surname"
 SORT_BY_FIRSTNAME = "Sort by first name"
 SORT_BY_NAME_SIMILARITY = "Sort by similarity with name"
 
+
 def delete_volunteer(object_store: ObjectStore, volunteer: Volunteer, areyousure=False):
     if not areyousure:
         return
 
     list_of_volunteers = get_list_of_volunteers(object_store)
     list_of_volunteers.delete_volunteer(volunteer)
-    update_list_of_volunteers(object_store=object_store, list_of_volunteers=list_of_volunteers)
+    update_list_of_volunteers(
+        object_store=object_store, list_of_volunteers=list_of_volunteers
+    )
+
 
 def get_list_of_volunteers(object_store: ObjectStore) -> ListOfVolunteers:
     return object_store.get(object_definition_for_volunteers)
@@ -105,18 +119,29 @@ def update_list_of_volunteers(
     )
 
 
-def list_of_similar_volunteers(object_store: ObjectStore, volunteer: Volunteer) -> ListOfVolunteers:
+def list_of_similar_volunteers(
+    object_store: ObjectStore, volunteer: Volunteer
+) -> ListOfVolunteers:
     list_of_volunteers = get_list_of_volunteers(object_store)
-    return list_of_volunteers.similar_volunteers(volunteer, name_threshold=SIMILARITY_LEVEL_TO_WARN_VOLUNTEER_NAME)
+    return list_of_volunteers.similar_volunteers(
+        volunteer, name_threshold=SIMILARITY_LEVEL_TO_WARN_VOLUNTEER_NAME
+    )
 
 
-def list_of_very_similar_volunteers(object_store: ObjectStore, volunteer: Volunteer) -> ListOfVolunteers:
+def list_of_very_similar_volunteers(
+    object_store: ObjectStore, volunteer: Volunteer
+) -> ListOfVolunteers:
     list_of_volunteers = get_list_of_volunteers(object_store)
-    return list_of_volunteers.similar_volunteers(volunteer, name_threshold=SIMILARITY_LEVEL_TO_MATCH_VERY_SIMILAR_VOLUNTEER_NAME)
+    return list_of_volunteers.similar_volunteers(
+        volunteer, name_threshold=SIMILARITY_LEVEL_TO_MATCH_VERY_SIMILAR_VOLUNTEER_NAME
+    )
 
-def single_very_similar_volunteer_or_missing_data(object_store: ObjectStore, volunteer: Volunteer) -> Volunteer:
+
+def single_very_similar_volunteer_or_missing_data(
+    object_store: ObjectStore, volunteer: Volunteer
+) -> Volunteer:
     very_similar_volunteers = list_of_very_similar_volunteers(object_store, volunteer)
-    if len(very_similar_volunteers)==1:
+    if len(very_similar_volunteers) == 1:
         return very_similar_volunteers[0]
 
     return missing_data

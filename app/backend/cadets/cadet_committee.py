@@ -140,12 +140,16 @@ def toggle_selection_for_cadet_committee_member(
     )
 
 
-def delete_cadet_from_committee_data(object_store: ObjectStore, cadet: Cadet, areyousure=False):
+def delete_cadet_from_committee_data(
+    object_store: ObjectStore, cadet: Cadet, areyousure=False
+):
     if not areyousure:
         return
 
     list_of_committee_members = get_list_of_cadets_on_committee(object_store)
-    existing_membership = list_of_committee_members.get_cadet_on_committee(cadet, default=missing_data)
+    existing_membership = list_of_committee_members.get_cadet_on_committee(
+        cadet, default=missing_data
+    )
 
     list_of_committee_members.delete_cadet_from_data(cadet)
     update_list_of_cadets_on_committee(
@@ -154,6 +158,7 @@ def delete_cadet_from_committee_data(object_store: ObjectStore, cadet: Cadet, ar
     )
 
     return existing_membership
+
 
 ## STORAGE
 def get_list_of_cadets_currently_serving(object_store: ObjectStore) -> ListOfCadets:

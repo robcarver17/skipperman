@@ -42,9 +42,7 @@ def contains_2_more_digits(string: str) -> bool:
 
 def warning_for_similar_events(object_store: ObjectStore, event: Event) -> str:
     existing_events = get_sorted_list_of_events(object_store)
-    similar_events = existing_events.similar_events(
-        event
-    )
+    similar_events = existing_events.similar_events(event)
 
     if len(similar_events) > 0:
         similar_events_str = ", ".join(

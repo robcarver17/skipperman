@@ -1,11 +1,17 @@
 import datetime
 from typing import Union
 
-from app.backend.volunteers.refresh_skills_from_csv_import import  create_skills_refresh_file
-from app.data_access.configuration.configuration import ALLOWED_UPLOAD_FILE_TYPES, IMPORT_SKILLS_CONFIG, \
-    WEBLINK_FOR_QUALIFICATIONS
-from app.frontend.volunteers.iterate_over_imported_volunteer_skills import \
-    begin_iteration_over_rows_in_temp_volunteer_file
+from app.backend.volunteers.refresh_skills_from_csv_import import (
+    create_skills_refresh_file,
+)
+from app.data_access.configuration.configuration import (
+    ALLOWED_UPLOAD_FILE_TYPES,
+    IMPORT_SKILLS_CONFIG,
+    WEBLINK_FOR_QUALIFICATIONS,
+)
+from app.frontend.volunteers.iterate_over_imported_volunteer_skills import (
+    begin_iteration_over_rows_in_temp_volunteer_file,
+)
 
 from app.objects.abstract_objects.abstract_form import Form, NewForm, fileInput
 from app.objects.abstract_objects.abstract_buttons import (
@@ -26,7 +32,8 @@ from app.objects.abstract_objects.abstract_interface import (
 
 UPLOAD_FILE_BUTTON_LABEL = "Upload file"
 
-import_skills_config = IMPORT_SKILLS_CONFIG ## caps are nasty
+import_skills_config = IMPORT_SKILLS_CONFIG  ## caps are nasty
+
 
 def display_form_refresh_volunteer_skills(
     interface: abstractInterface,  ## unused but always passed
@@ -37,7 +44,8 @@ def display_form_refresh_volunteer_skills(
         [
             "Refresh key skills held by volunteers according to imported skills file with expiry",
             _______________,
-            "Get the file from %s, and export the first page to .csv" % WEBLINK_FOR_QUALIFICATIONS
+            "Get the file from %s, and export the first page to .csv"
+            % WEBLINK_FOR_QUALIFICATIONS,
         ]
     ).add_Lines()
     prompt = Line(
@@ -81,13 +89,11 @@ def post_form_refresh_volunteer_skills(interface: abstractInterface):
 
 def previous_form(interface: abstractInterface) -> NewForm:
     return interface.get_new_display_form_for_parent_of_function(
-       display_form_refresh_volunteer_skills
+        display_form_refresh_volunteer_skills
     )
 
 
 def respond_to_uploaded_file(interface: abstractInterface) -> Union[Form, NewForm]:
-    create_skills_refresh_file(
-        interface=interface, file_marker_name=FILENAME
-    )
+    create_skills_refresh_file(interface=interface, file_marker_name=FILENAME)
 
     return begin_iteration_over_rows_in_temp_volunteer_file(interface)

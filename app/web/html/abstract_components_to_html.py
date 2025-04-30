@@ -100,7 +100,12 @@ HTML_BUTTON_NAME = "action"
 
 
 def html_action_option_button(button_text, url=""):
-    return generic_html_button(button_text=button_text, button_value="action_%s" % button_text, url=url, menu_tile=True)
+    return generic_html_button(
+        button_text=button_text,
+        button_value="action_%s" % button_text,
+        url=url,
+        menu_tile=True,
+    )
 
 
 def help_link_button(
@@ -111,7 +116,10 @@ def help_link_button(
         return generic_html_button(
             "Help",
             button_value="help",
-            shortcut=shortcut, url=url, open_new_window=True, nav_button=True
+            shortcut=shortcut,
+            url=url,
+            open_new_window=True,
+            nav_button=True,
         )
     else:
         return nav_button_with_link_to_avoid_weird_routing_issue(
@@ -121,6 +129,7 @@ def help_link_button(
 
 def get_html_for_main_menu_nav_button(button: MainMenuNavButton) -> Html:
     return html_for_main_menu_button(label=button.label, shortcut=button.shortcut)
+
 
 def html_for_main_menu_button(label, shortcut=""):
     return nav_button_with_link_to_avoid_weird_routing_issue(
@@ -160,7 +169,14 @@ def generic_html_button(
     if url == "":
         html = Html(
             '<button %s name="%s" type="submit" value="%s" %s %s>%s</button>'
-            % (style_str, HTML_BUTTON_NAME, button_value, size, shortcut_str, button_text)
+            % (
+                style_str,
+                HTML_BUTTON_NAME,
+                button_value,
+                size,
+                shortcut_str,
+                button_text,
+            )
         )
     else:
         if open_new_window:
@@ -203,8 +219,6 @@ def get_html_for_action_option_button(button: ActionOptionButton):
         button_text=button.label,
         url=button.url,
     )
-
-
 
 
 def get_html_for_help_button(help_button: HelpButton) -> Html:
@@ -285,6 +299,9 @@ def get_html_for_detail_line(line: DetailLine) -> Html:
     detail_wrapper = get_detail_wrapper(line.name, open_detail=line.open)
     return detail_wrapper.wrap_around(line_html)
 
+
 def get_html_for_progress_bar(progress_bar: ProgressBar) -> Html:
-    return Html('<label for="progress_bar">%s:</label> <progress id="progress_bar" value="%d"  max="100" >  </progress>' \
-                % (progress_bar.label, progress_bar.percentage))
+    return Html(
+        '<label for="progress_bar">%s:</label> <progress id="progress_bar" value="%d"  max="100" >  </progress>'
+        % (progress_bar.label, progress_bar.percentage)
+    )

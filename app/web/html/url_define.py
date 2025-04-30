@@ -13,8 +13,9 @@ TOGGLE_READ_ONLY = "toggle_read_only"
 TOGGLE_READ_ONLY_GLOBAL = "toggle_read_only_global"
 STATIC_DIRECTORY = "static"
 MAKE_BACKUP = "make_backup"
-MAIN_MENU_URL = '/main/'
-MAIN_HELP_PAGE = 'main-menu'
+MAIN_MENU_URL = "/main/"
+MAIN_HELP_PAGE = "main-menu"
+
 
 def get_action_url(action_name: str):
     return "/%s/%s" % (ACTION_PREFIX, action_name)

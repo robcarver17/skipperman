@@ -27,7 +27,8 @@ from app.frontend.shared.cadet_connection_forms import (
     get_selected_cadet_from_form,
 )
 from app.frontend.shared.volunteer_state import (
-    get_volunteer_from_state, clear_volunteer_id_in_state,
+    get_volunteer_from_state,
+    clear_volunteer_id_in_state,
 )
 
 from app.objects.cadets import ListOfCadets
@@ -135,6 +136,7 @@ def get_list_of_delete_cadet_buttons_with_currently_connected_cadets(
     )
 
     return list_of_delete_cadet_buttons
+
 
 def previous_form(interface: abstractInterface):
     clear_volunteer_id_in_state(interface)

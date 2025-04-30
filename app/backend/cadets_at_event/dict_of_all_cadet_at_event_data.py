@@ -1,8 +1,12 @@
 from typing import List, Dict
 
-from app.backend.registration_data.cadet_registration_data import add_empty_row_to_raw_registration_data_and_return_row, \
-    add_new_cadet_to_event_from_row_in_registration_data
-from app.backend.registration_data.identified_cadets_at_event import add_identified_cadet_and_row
+from app.backend.registration_data.cadet_registration_data import (
+    add_empty_row_to_raw_registration_data_and_return_row,
+    add_new_cadet_to_event_from_row_in_registration_data,
+)
+from app.backend.registration_data.identified_cadets_at_event import (
+    add_identified_cadet_and_row,
+)
 
 from app.objects.utilities.exceptions import arg_not_passed
 
@@ -196,9 +200,7 @@ def add_new_cadet_manually_to_event(
     event: Event,
 ):
     new_row = add_empty_row_to_raw_registration_data_and_return_row(
-        object_store=object_store,
-        event=event,
-        cadet=new_cadet
+        object_store=object_store, event=event, cadet=new_cadet
     )
 
     add_identified_cadet_and_row(
@@ -212,7 +214,10 @@ def add_new_cadet_manually_to_event(
         cadet=new_cadet,
     )
 
-def delete_cadet_from_event_and_return_messages(object_store: ObjectStore, event: Event, cadet: Cadet, areyousure: bool = False) -> List[str]:
+
+def delete_cadet_from_event_and_return_messages(
+    object_store: ObjectStore, event: Event, cadet: Cadet, areyousure: bool = False
+) -> List[str]:
     if not areyousure:
         return []
 
@@ -220,8 +225,9 @@ def delete_cadet_from_event_and_return_messages(object_store: ObjectStore, event
         object_store=object_store, event=event, active_only=True
     )
     messages = event_info.delete_cadet_from_event_and_return_messages(cadet)
-    update_dict_of_all_event_info_for_cadets(dict_of_all_event_info_for_cadets=event_info,
-                                             object_store=object_store,
-                                             )
+    update_dict_of_all_event_info_for_cadets(
+        dict_of_all_event_info_for_cadets=event_info,
+        object_store=object_store,
+    )
 
     return messages

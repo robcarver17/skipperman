@@ -46,24 +46,29 @@ def get_summary_list_of_roles_and_groups_for_event_as_pd_df(
     single_df = from_list_of_day_summaries_to_single_df(
         all_day_summaries=all_day_summaries, event=event
     )
-    if len(single_df)==0:
+    if len(single_df) == 0:
         return single_df
 
-    single_df.loc['TOTAL'] = single_df.sum(axis=0,numeric_only=True)
+    single_df.loc["TOTAL"] = single_df.sum(axis=0, numeric_only=True)
     return single_df
-
 
 
 def get_list_of_day_summaries_for_roles_at_event(
     object_store: ObjectStore, event: Event
 ) -> List[pd.DataFrame]:
 
-    volunteers_in_roles_at_event = get_volunteers_and_roles_at_event(object_store=object_store, event=event)
-    if len(volunteers_in_roles_at_event)==0:
+    volunteers_in_roles_at_event = get_volunteers_and_roles_at_event(
+        object_store=object_store, event=event
+    )
+    if len(volunteers_in_roles_at_event) == 0:
         return []
 
-    sorted_roles_at_event = get_sorted_roles_at_event(object_store=object_store, event=event)
-    sorted_groups_at_event = get_sorted_list_of_groups_at_event(object_store=object_store, event=event)
+    sorted_roles_at_event = get_sorted_roles_at_event(
+        object_store=object_store, event=event
+    )
+    sorted_groups_at_event = get_sorted_list_of_groups_at_event(
+        object_store=object_store, event=event
+    )
 
     days_at_event = event.days_in_event()
     all_day_summaries = []
@@ -79,11 +84,7 @@ def get_list_of_day_summaries_for_roles_at_event(
     return all_day_summaries
 
 
-
-
-
-def get_volunteers_and_roles_at_event(    object_store: ObjectStore, event: Event
-):
+def get_volunteers_and_roles_at_event(object_store: ObjectStore, event: Event):
     volunteer_event_data = get_dict_of_all_event_data_for_volunteers(
         object_store=object_store, event=event
     )
@@ -92,6 +93,7 @@ def get_volunteers_and_roles_at_event(    object_store: ObjectStore, event: Even
     )
 
     return volunteers_in_roles_at_event
+
 
 def get_summary_of_roles_and_groups_for_events_on_day(
     day: Day,
@@ -148,10 +150,10 @@ def get_summary_list_of_teams_and_groups_for_events_as_pd_df(
     single_df = from_list_of_day_summaries_to_single_df(
         all_day_summaries=all_day_summaries, event=event
     )
-    if len(single_df)==0:
+    if len(single_df) == 0:
         return single_df
 
-    single_df.loc['TOTAL'] = single_df.sum(axis=0,numeric_only=True)
+    single_df.loc["TOTAL"] = single_df.sum(axis=0, numeric_only=True)
 
     return single_df
 
@@ -166,8 +168,12 @@ def get_list_of_day_summaries_teams_and_groups_at_event(
         volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles
     )
 
-    sorted_teams_at_event = get_sorted_list_of_teams_at_event(object_store=object_store, event=event)
-    sorted_groups_at_event = get_sorted_list_of_groups_at_event(object_store=object_store, event=event)
+    sorted_teams_at_event = get_sorted_list_of_teams_at_event(
+        object_store=object_store, event=event
+    )
+    sorted_groups_at_event = get_sorted_list_of_groups_at_event(
+        object_store=object_store, event=event
+    )
 
     days_at_event = event.days_in_event()
     all_day_summaries = []
@@ -236,9 +242,12 @@ def from_list_of_day_summaries_to_single_df(
     return single_df
 
 
-def get_sorted_roles_at_event(    object_store: ObjectStore, event: Event
+def get_sorted_roles_at_event(
+    object_store: ObjectStore, event: Event
 ) -> ListOfRolesWithSkills:
-    volunteers_in_roles_at_event = get_volunteers_and_roles_at_event(object_store=object_store, event=event)
+    volunteers_in_roles_at_event = get_volunteers_and_roles_at_event(
+        object_store=object_store, event=event
+    )
 
     list_of_roles = get_list_of_roles(object_store)
     all_roles_at_event = volunteers_in_roles_at_event.all_roles_at_event
@@ -250,6 +259,7 @@ def get_sorted_roles_at_event(    object_store: ObjectStore, event: Event
     sorted_roles_at_event.add_no_role_set()
 
     return sorted_roles_at_event
+
 
 def get_sorted_list_of_teams_at_event(object_store: ObjectStore, event: Event):
     volunteer_event_data = get_dict_of_all_event_data_for_volunteers(
@@ -268,7 +278,10 @@ def get_sorted_list_of_teams_at_event(object_store: ObjectStore, event: Event):
 
     return sorted_teams_at_event
 
-def get_sorted_list_of_groups_at_event(object_store: ObjectStore, event: Event, include_unallocated: bool = True):
+
+def get_sorted_list_of_groups_at_event(
+    object_store: ObjectStore, event: Event, include_unallocated: bool = True
+):
     volunteer_event_data = get_dict_of_all_event_data_for_volunteers(
         object_store=object_store, event=event
     )

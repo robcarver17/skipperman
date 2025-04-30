@@ -10,9 +10,16 @@ from app.frontend.events.import_data.ENTRY_import_choose import (
 from app.frontend.events.registration_details.ENTRY_edit_registration_details import (
     display_form_edit_registration_details,
 )
-from app.frontend.events.view_individual_event_form import get_event_form_for_event, group_allocation_button, \
-    edit_registration_button, volunteer_rota_button, patrol_boat_allocation_button, food_button, clothing_button, \
-    import_registration_data_button
+from app.frontend.events.view_individual_event_form import (
+    get_event_form_for_event,
+    group_allocation_button,
+    edit_registration_button,
+    volunteer_rota_button,
+    patrol_boat_allocation_button,
+    food_button,
+    clothing_button,
+    import_registration_data_button,
+)
 from app.frontend.events.volunteer_rota.ENTRY1_display_main_rota_page import (
     display_form_view_for_volunteer_rota,
 )
@@ -125,5 +132,3 @@ def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(
         post_form_view_individual_event
     )
-
-

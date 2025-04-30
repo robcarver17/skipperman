@@ -125,5 +125,5 @@ boat_report_generator = ReportGeneratorWithoutSpecificParameters(
     explain_additional_parameters=explain_additional_parameters_for_boat_report,
     additional_parameters_form=reporting_options_form_for_boat_additional_parameters,
     get_additional_parameters_from_form_and_save=get_boat_allocation_report_additional_parameters_from_form_and_save,
-    help_page='spotter_sheet_report'
+    help_page="spotter_sheet_report",
 )

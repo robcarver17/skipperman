@@ -4,14 +4,16 @@ from typing import List
 from app.objects.utilities.exceptions import missing_data
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjects,
-    get_idx_of_multiple_object_with_multiple_attr_in_list, get_unique_object_with_multiple_attr_in_list,
+    get_idx_of_multiple_object_with_multiple_attr_in_list,
+    get_unique_object_with_multiple_attr_in_list,
     get_idx_of_unique_object_with_multiple_attr_in_list,
 )
 
 from app.objects.utilities.generic_objects import GenericSkipperManObject
 
 PERMANENT_SKIP_VOLUNTEER_ID = "NO_volunteer_allocated"  ## DO not change
-SKIP_FOR_NOW_VOLUNTEER_ID = "SKip_for_now" ## do not change
+SKIP_FOR_NOW_VOLUNTEER_ID = "SKip_for_now"  ## do not change
+
 
 @dataclass
 class RowIDAndIndex:
@@ -54,13 +56,12 @@ class IdentifiedVolunteerAtEvent(GenericSkipperManObject):
         return cls(
             row_id=row_id,
             volunteer_index=volunteer_index,
-            volunteer_id=SKIP_FOR_NOW_VOLUNTEER_ID
+            volunteer_id=SKIP_FOR_NOW_VOLUNTEER_ID,
         )
 
     @property
     def row_and_index(self):
         return RowIDAndIndex(row_id=self.row_id, volunteer_index=self.volunteer_index)
-
 
 
 class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
@@ -96,7 +97,11 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
 
     def add_permanently_skipped_volunteer(self, row_id: str, volunteer_index: int):
         if self.is_temporary_skip(volunteer_index=volunteer_index, row_id=row_id):
-            return self.replace_temporary_skip(row_id=row_id, volunteer_index=volunteer_index, volunteer_id=PERMANENT_SKIP_VOLUNTEER_ID)
+            return self.replace_temporary_skip(
+                row_id=row_id,
+                volunteer_index=volunteer_index,
+                volunteer_id=PERMANENT_SKIP_VOLUNTEER_ID,
+            )
 
         try:
             assert self.row_and_index_not_in_list_of_rows_and_indices(
@@ -108,7 +113,7 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
         self.add_identified_volunteer_without_checking(
             row_id=row_id,
             volunteer_index=volunteer_index,
-            volunteer_id=PERMANENT_SKIP_VOLUNTEER_ID
+            volunteer_id=PERMANENT_SKIP_VOLUNTEER_ID,
         )
 
     def add_temporarily_skipped_volunteer(self, row_id: str, volunteer_index: int):
@@ -125,15 +130,18 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
         self.add_identified_volunteer_without_checking(
             row_id=row_id,
             volunteer_index=volunteer_index,
-            volunteer_id=SKIP_FOR_NOW_VOLUNTEER_ID
+            volunteer_id=SKIP_FOR_NOW_VOLUNTEER_ID,
         )
-
 
     def add_identified_volunteer(
         self, row_id: str, volunteer_id: str, volunteer_index: int
     ):
         if self.is_temporary_skip(volunteer_index=volunteer_index, row_id=row_id):
-            return self.replace_temporary_skip(row_id=row_id, volunteer_index=volunteer_index, volunteer_id=volunteer_id)
+            return self.replace_temporary_skip(
+                row_id=row_id,
+                volunteer_index=volunteer_index,
+                volunteer_id=volunteer_id,
+            )
 
         try:
             assert self.row_and_index_not_in_list_of_rows_and_indices(
@@ -146,7 +154,8 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
             row_id=row_id, volunteer_index=volunteer_index, volunteer_id=volunteer_id
         )
 
-    def add_identified_volunteer_without_checking(self, row_id: str, volunteer_id: str, volunteer_index: int
+    def add_identified_volunteer_without_checking(
+        self, row_id: str, volunteer_id: str, volunteer_index: int
     ):
         self.append(
             IdentifiedVolunteerAtEvent(
@@ -156,37 +165,38 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
             )
         )
 
-
     def is_temporary_skip(self, row_id: str, volunteer_index: int):
         item = get_unique_object_with_multiple_attr_in_list(
             some_list=self,
             dict_of_attributes=dict(row_id=row_id, volunteer_index=volunteer_index),
-            default=missing_data
+            default=missing_data,
         )
         if item is missing_data:
             return False
 
         return item.is_temporary_skip
 
-    def replace_temporary_skip(self,row_id: str, volunteer_index: int, volunteer_id:str):
+    def replace_temporary_skip(
+        self, row_id: str, volunteer_index: int, volunteer_id: str
+    ):
         self.delete_specific_item(row_id=row_id, volunteer_index=volunteer_index)
         self.add_identified_volunteer_without_checking(
             row_id=row_id, volunteer_index=volunteer_index, volunteer_id=volunteer_id
         )
 
-    def delete_specific_item(self,row_id: str, volunteer_index: int):
-        idx = get_idx_of_unique_object_with_multiple_attr_in_list( some_list=self,
-            dict_of_attributes=dict(row_id=row_id, volunteer_index=volunteer_index)
+    def delete_specific_item(self, row_id: str, volunteer_index: int):
+        idx = get_idx_of_unique_object_with_multiple_attr_in_list(
+            some_list=self,
+            dict_of_attributes=dict(row_id=row_id, volunteer_index=volunteer_index),
         )
         self.pop(idx)
 
     def delete_all_rows_with_volunteer_id(self, volunteer_id: str):
         while True:
-            idx_list = get_idx_of_multiple_object_with_multiple_attr_in_list(self,
-                                                                             dict_of_attributes={
-                                                                                 'volunteer_id':volunteer_id
-                                                                             })
-            if len(idx_list)==0:
+            idx_list = get_idx_of_multiple_object_with_multiple_attr_in_list(
+                self, dict_of_attributes={"volunteer_id": volunteer_id}
+            )
+            if len(idx_list) == 0:
                 break
 
             self.pop(idx_list[0])
@@ -204,10 +214,13 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
         row_and_index = RowIDAndIndex(row_id=row_id, volunteer_index=volunteer_index)
         return row_and_index in self.list_of_row_ids_and_indices()
 
-    def row_and_index_in_list_and_identified_or_permanent_skip_but_not_temporarily_skipped(self, row_id: str, volunteer_index: int):
-        idx = get_idx_of_unique_object_with_multiple_attr_in_list( some_list=self,
+    def row_and_index_in_list_and_identified_or_permanent_skip_but_not_temporarily_skipped(
+        self, row_id: str, volunteer_index: int
+    ):
+        idx = get_idx_of_unique_object_with_multiple_attr_in_list(
+            some_list=self,
             dict_of_attributes=dict(row_id=row_id, volunteer_index=volunteer_index),
-                                                                   default=missing_data
+            default=missing_data,
         )
         if idx is missing_data:
             return False
@@ -217,7 +230,6 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
             return False
 
         return True
-
 
     def unique_list_of_allocated_volunteer_ids(self):
         volunteer_ids = self.list_of_volunteer_ids_excluding_skipped()

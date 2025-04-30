@@ -30,7 +30,7 @@ class SwapData:
 
 
 def do_swapping_for_volunteers_boats_and_possibly_roles_in_boat_allocation(
-        object_store: ObjectStore, swap_data: SwapData
+    object_store: ObjectStore, swap_data: SwapData
 ):
     if swap_data.swapping_into_empty_boat:
         move_volunteer_into_empty_boat_using_swapdata(
@@ -59,7 +59,7 @@ def is_possible_to_swap_roles_on_one_day(
 
 
 def swap_boats_for_volunteers_in_allocation_using_swapdata(
-    object_store:ObjectStore, swap_data: SwapData
+    object_store: ObjectStore, swap_data: SwapData
 ):
     swap_patrol_boats_for_volunteers_in_allocation(
         object_store=object_store,
@@ -70,7 +70,12 @@ def swap_boats_for_volunteers_in_allocation_using_swapdata(
         original_day=swap_data.original_day,
     )
 
-from app.backend.volunteers.volunteers_at_event import get_dict_of_all_event_data_for_volunteers, update_dict_of_all_event_data_for_volunteers
+
+from app.backend.volunteers.volunteers_at_event import (
+    get_dict_of_all_event_data_for_volunteers,
+    update_dict_of_all_event_data_for_volunteers,
+)
+
 
 def swap_patrol_boats_for_volunteers_in_allocation(
     object_store: ObjectStore,
@@ -88,7 +93,10 @@ def swap_patrol_boats_for_volunteers_in_allocation(
         original_day=original_day,
     )
 
-    update_dict_of_all_event_data_for_volunteers(object_store, dict_of_all_event_data=all_event_data)
+    update_dict_of_all_event_data_for_volunteers(
+        object_store, dict_of_all_event_data=all_event_data
+    )
+
 
 def swap_roles_for_volunteers_in_allocation_using_swapdata(
     object_store: ObjectStore, swap_data: SwapData
@@ -102,14 +110,19 @@ def swap_roles_for_volunteers_in_allocation_using_swapdata(
         original_day=swap_data.original_day,
     )
 
+
 def move_volunteer_into_empty_boat_using_swapdata(
     object_store: ObjectStore, swap_data: SwapData
 ):
-    all_event_data = get_dict_of_all_event_data_for_volunteers(object_store, swap_data.event)
+    all_event_data = get_dict_of_all_event_data_for_volunteers(
+        object_store, swap_data.event
+    )
     all_event_data.move_volunteer_into_empty_boat(
         original_volunteer=swap_data.original_volunteer,
         day_to_swap_with=swap_data.day_to_swap_with,
-        new_patrol_boat = swap_data.empty_boat_to_swap_into
+        new_patrol_boat=swap_data.empty_boat_to_swap_into,
     )
 
-    update_dict_of_all_event_data_for_volunteers(object_store, dict_of_all_event_data=all_event_data)
+    update_dict_of_all_event_data_for_volunteers(
+        object_store, dict_of_all_event_data=all_event_data
+    )

@@ -3,7 +3,11 @@ from typing import List, Dict
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     get_dict_of_all_event_info_for_cadets,
 )
-from app.backend.events.list_of_events import get_list_of_last_N_events, ALL_EVENTS, get_list_of_events
+from app.backend.events.list_of_events import (
+    get_list_of_last_N_events,
+    ALL_EVENTS,
+    get_list_of_events,
+)
 
 from app.data_access.store.object_store import ObjectStore
 from app.objects.cadets import Cadet, ListOfCadets
@@ -102,15 +106,19 @@ def get_dict_of_event_allocations_for_last_N_events_for_list_of_cadets(
         list_of_events=list_of_events,
         list_of_cadets=list_of_cadets,
         remove_unallocated=remove_unallocated,
-        pad=pad
+        pad=pad,
     )
 
     return dict_of_allocations
 
-def get_dict_of_event_allocations_given_list_of_events(object_store: ObjectStore, list_of_cadets: ListOfCadets,
-                                                       list_of_events: ListOfEvents,
-                                                       remove_unallocated: bool = False,
-                                                       pad: bool = False):
+
+def get_dict_of_event_allocations_given_list_of_events(
+    object_store: ObjectStore,
+    list_of_cadets: ListOfCadets,
+    list_of_events: ListOfEvents,
+    remove_unallocated: bool = False,
+    pad: bool = False,
+):
     raw_dict = dict(
         [
             (
@@ -185,15 +193,15 @@ def get_dict_of_event_allocations_for_last_N_events_for_single_cadet_given_list_
 
 
 def get_dict_of_group_allocations_for_all_events_active_cadets_only(
-    object_store: ObjectStore
+    object_store: ObjectStore,
 ) -> Dict[Event, DictOfCadetsWithDaysAndGroupsAtEvent]:
     list_of_events = get_list_of_events(object_store)
     list_of_events = list_of_events.sort_by_start_date_asc()
 
     return get_dict_of_group_allocations_for_list_of_events_active_cadets_only(
-        object_store=object_store,
-        list_of_events=list_of_events
+        object_store=object_store, list_of_events=list_of_events
     )
+
 
 def get_dict_of_group_allocations_for_list_of_events_active_cadets_only(
     object_store: ObjectStore, list_of_events: list

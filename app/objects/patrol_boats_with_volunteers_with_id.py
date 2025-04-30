@@ -68,18 +68,14 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
         return ListOfVolunteersWithIdAtEventWithPatrolBoatsId(new_list)
 
     def update_volunteer_on_boat(
-        self,
-        day: Day,
-        volunteer_id: str,
-        new_patrol_boat_id:str
+        self, day: Day, volunteer_id: str, new_patrol_boat_id: str
     ):
 
         self.remove_volunteer_from_patrol_boat_on_day_at_event(
             volunteer_id=volunteer_id, day=day
         )
         self.add_volunteer_with_boat(
-            volunteer_id=volunteer_id, day=day,
-            patrol_boat_id=new_patrol_boat_id
+            volunteer_id=volunteer_id, day=day, patrol_boat_id=new_patrol_boat_id
         )
 
     def swap_boats_for_volunteers_in_allocation(

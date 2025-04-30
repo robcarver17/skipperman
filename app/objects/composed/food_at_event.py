@@ -170,7 +170,6 @@ class DictOfVolunteersWithFoodRequirementsAtEvent(Dict[Volunteer, FoodRequiremen
         except:
             return []
 
-
     def add_new_volunteer_with_food_to_event(
         self,
         food_requirements: FoodRequirements,

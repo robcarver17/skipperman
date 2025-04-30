@@ -97,7 +97,9 @@ unallocated_group = Group.create_unallocated()
 unallocated_group_id = unallocated_group.id
 missing_group_display_only = Group.create_missing()
 
-from app.objects.utilities.generic_list_of_objects import get_unique_object_with_attr_in_list
+from app.objects.utilities.generic_list_of_objects import (
+    get_unique_object_with_attr_in_list,
+)
 
 
 class ListOfGroups(GenericListOfObjectsWithIds):

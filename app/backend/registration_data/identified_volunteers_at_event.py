@@ -50,10 +50,8 @@ def list_of_identified_volunteers_with_volunteer_id(
     list_of_volunteers_identified = get_list_of_identified_volunteers_at_event(
         object_store=object_store, event=event
     )
-    return (
-        list_of_volunteers_identified.list_of_identified_volunteers_with_volunteer_id_excluding_skipped(
-            volunteer_id=volunteer.id
-        )
+    return list_of_volunteers_identified.list_of_identified_volunteers_with_volunteer_id_excluding_skipped(
+        volunteer_id=volunteer.id
     )
 
 
@@ -178,13 +176,24 @@ def update_list_of_identified_volunteers_at_event(
         event_id=event.id,
     )
 
-def delete_volunteer_from_identified_data_and_return_rows_deleted(object_store: ObjectStore, event: Event, volunteer: Volunteer, areyousure=False):
+
+def delete_volunteer_from_identified_data_and_return_rows_deleted(
+    object_store: ObjectStore, event: Event, volunteer: Volunteer, areyousure=False
+):
     if not areyousure:
         return
 
-    list_of_identified_volunteers = get_list_of_identified_volunteers_at_event(object_store=object_store, event=event)
-    rows = list_of_identified_volunteers.list_of_identified_volunteers_with_volunteer_id_excluding_skipped(volunteer.id)
+    list_of_identified_volunteers = get_list_of_identified_volunteers_at_event(
+        object_store=object_store, event=event
+    )
+    rows = list_of_identified_volunteers.list_of_identified_volunteers_with_volunteer_id_excluding_skipped(
+        volunteer.id
+    )
     list_of_identified_volunteers.delete_all_rows_with_volunteer_id(volunteer.id)
-    update_list_of_identified_volunteers_at_event(object_store=object_store, list_of_identified_volunteers_at_event=list_of_identified_volunteers, event=event)
+    update_list_of_identified_volunteers_at_event(
+        object_store=object_store,
+        list_of_identified_volunteers_at_event=list_of_identified_volunteers,
+        event=event,
+    )
 
     return len(rows)

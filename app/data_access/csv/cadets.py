@@ -4,15 +4,18 @@ from app.data_access.classes.cadets import (
     DataListOfCadetsWithGroups,
     DataListOfCadetsAtEvent,
     DataListOfIdentifiedCadetsAtEvent,
-    DataListOfCadetsOnCommitte, DataAttendanceAtEventsForSpecificCadet, DataListOfGroupNotesAtEvent,
+    DataListOfCadetsOnCommitte,
+    DataAttendanceAtEventsForSpecificCadet,
+    DataListOfGroupNotesAtEvent,
 )
 from app.data_access.resolve_paths_and_filenames import (
     IDENTIFIED_CADETS_AT_EVENT_ID,
     CADETS_AT_EVENT_ID,
     CADETS_WITH_GROUPS_ID,
     LIST_OF_CADETS_FILE_ID,
-    LIST_OF_CADETS_ON_COMMITTEE, ATTENDANCE_FILE_FOR_SPECIFIC_CADET,
-GROUP_NOTES_ID
+    LIST_OF_CADETS_ON_COMMITTEE,
+    ATTENDANCE_FILE_FOR_SPECIFIC_CADET,
+    GROUP_NOTES_ID,
 )
 from app.objects.attendance import ListOfRawAttendanceItemsForSpecificCadet
 
@@ -76,10 +79,7 @@ class CsvDataListOfGroupNotesAtEvent(GenericCsvData, DataListOfGroupNotesAtEvent
         )
 
     def write_notes(self, list_of_group_notes_with_ids: ListOfGroupNotesAtEventWithIds):
-        self.write_object(
-            list_of_group_notes_with_ids,
-            file_identifier=GROUP_NOTES_ID
-        )
+        self.write_object(list_of_group_notes_with_ids, file_identifier=GROUP_NOTES_ID)
 
 
 class CsvDataListOfCadetsAtEvent(GenericCsvData, DataListOfCadetsAtEvent):
@@ -122,9 +122,12 @@ class CsvDataListOfIdentifiedCadetsAtEvent(
         )
 
 
-
-class CsvDataAttendanceAtEventsForSpecificCadet(DataAttendanceAtEventsForSpecificCadet, GenericCsvData):
-    def read_attendance_for_cadet_id(self, cadet_id: str) -> ListOfRawAttendanceItemsForSpecificCadet:
+class CsvDataAttendanceAtEventsForSpecificCadet(
+    DataAttendanceAtEventsForSpecificCadet, GenericCsvData
+):
+    def read_attendance_for_cadet_id(
+        self, cadet_id: str
+    ) -> ListOfRawAttendanceItemsForSpecificCadet:
         return self.read_and_return_object_of_type(
             ListOfRawAttendanceItemsForSpecificCadet,
             file_identifier=ATTENDANCE_FILE_FOR_SPECIFIC_CADET,
@@ -132,12 +135,14 @@ class CsvDataAttendanceAtEventsForSpecificCadet(DataAttendanceAtEventsForSpecifi
         )
 
     def write_attendance_for_cadet_id(
-        self, list_of_attendance: ListOfRawAttendanceItemsForSpecificCadet,
-            cadet_id:str
+        self,
+        list_of_attendance: ListOfRawAttendanceItemsForSpecificCadet,
+        cadet_id: str,
     ):
-        if len(list_of_attendance)==0:
-            filename = self.get_path_and_filename_for_named_csv_file(ATTENDANCE_FILE_FOR_SPECIFIC_CADET,
-                                                                     additional_file_identifiers=cadet_id)
+        if len(list_of_attendance) == 0:
+            filename = self.get_path_and_filename_for_named_csv_file(
+                ATTENDANCE_FILE_FOR_SPECIFIC_CADET, additional_file_identifiers=cadet_id
+            )
             self.delete(filename)
         else:
             self.write_object(

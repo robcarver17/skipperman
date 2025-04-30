@@ -59,6 +59,7 @@ def display_form_edit_individual_cadet(
 
     return Form(list_of_lines_inside_form)
 
+
 help_button = HelpButton("view_and_edit_individual_cadet_help")
 
 
@@ -92,5 +93,3 @@ def modify_cadet_given_form_contents(interface: abstractInterface):
         existing_cadet=existing_cadet,
         new_cadet=new_cadet,
     )
-
-

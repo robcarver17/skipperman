@@ -7,8 +7,11 @@ from app.backend.qualifications_and_ticks.list_of_substages import (
 from app.backend.qualifications_and_ticks.dict_of_qualifications_substages_and_ticks import (
     get_tick_items_as_dict_for_qualification,
 )
-from app.frontend.shared.buttons import get_button_value_given_type_and_attributes, \
-    get_attributes_from_button_pressed_of_known_type, is_button_of_type
+from app.frontend.shared.buttons import (
+    get_button_value_given_type_and_attributes,
+    get_attributes_from_button_pressed_of_known_type,
+    is_button_of_type,
+)
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_form import textInput, listInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -156,16 +159,24 @@ def list_of_button_names_for_new_item_in_substage_name_field(
 def button_for_new_item_in_substage_name(substage: TickSubStage) -> Button:
     return Button("Add", value=button_value_for_new_item_in_substage_name(substage))
 
+
 tick_substage_select = "tickSubstageSelect"
+
 
 def button_value_for_new_item_in_substage_name(substage: TickSubStage) -> str:
     return get_button_value_given_type_and_attributes(tick_substage_select, substage.id)
 
-def button_pressed_is_substage_button(button_value:str):
-    return is_button_of_type(value_of_button_pressed=button_value, type_to_check=tick_substage_select)
+
+def button_pressed_is_substage_button(button_value: str):
+    return is_button_of_type(
+        value_of_button_pressed=button_value, type_to_check=tick_substage_select
+    )
+
 
 def substage_id_for_button_name_new_item(button_value: str) -> str:
-    return get_attributes_from_button_pressed_of_known_type(value_of_button_pressed=button_value, type_to_check=tick_substage_select)
+    return get_attributes_from_button_pressed_of_known_type(
+        value_of_button_pressed=button_value, type_to_check=tick_substage_select
+    )
 
 
 FIELDNAME_FOR_NEW_SUBSTAGE_TEXT_BOX = "SUBSTAGENEW"

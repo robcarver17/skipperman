@@ -25,7 +25,11 @@ from app.objects.abstract_objects.abstract_buttons import (
     back_menu_button,
 )
 from app.objects.abstract_objects.abstract_tables import DetailTable
-from app.frontend.utilities.files.render_files import is_delete_button, is_qr_button, is_replace_button
+from app.frontend.utilities.files.render_files import (
+    is_delete_button,
+    is_qr_button,
+    is_replace_button,
+)
 
 ## Replace button - one per public file
 ## QR code - one per public file
@@ -101,6 +105,7 @@ def post_form_file_management(
 
     return display_form_file_management(interface)
 
+
 def replace_button_pressed(interface: abstractInterface) -> NewForm:
     button_pressed = interface.last_button_pressed()
     directory, filename = directory_and_filename_from_replace_button_name(
@@ -109,6 +114,4 @@ def replace_button_pressed(interface: abstractInterface) -> NewForm:
     store_directory_and_filename(
         interface=interface, directory_name=directory, filename=filename
     )
-    return interface.get_new_form_given_function(
-        display_form_to_replace_selected_files
-    )
+    return interface.get_new_form_given_function(display_form_to_replace_selected_files)

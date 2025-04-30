@@ -94,7 +94,7 @@ class SkillsDict(Dict[Skill, bool]):
         return cls([(skill, True) for skill in list_of_skills])
 
     def as_list_of_skillnames_or_empty(self):
-        return ['' if not held else skill.name for skill, held in self.items()]
+        return ["" if not held else skill.name for skill, held in self.items()]
 
     def as_list_of_skills(self):
         return ListOfSkills([skill for skill, held in self.items() if held])
@@ -224,10 +224,12 @@ class DictOfVolunteersWithSkills(Dict[Volunteer, SkillsDict]):
             volunteer_id=volunteer.id, skill_id=skill.id
         )
 
-    def delete_all_skills_for_volunteer(self,  volunteer: Volunteer):
+    def delete_all_skills_for_volunteer(self, volunteer: Volunteer):
         try:
             self.pop(volunteer)
-            self.list_of_volunteers_with_skills_and_ids.delete_all_skills_for_volunteer(volunteer.id)
+            self.list_of_volunteers_with_skills_and_ids.delete_all_skills_for_volunteer(
+                volunteer.id
+            )
         except:
             pass
 

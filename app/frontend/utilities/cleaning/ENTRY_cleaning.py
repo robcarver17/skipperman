@@ -4,15 +4,20 @@ from app.backend.events.cleaning import clean_sensitive_data_for_event
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_text import Heading
 
-from app.frontend.shared.event_selection import display_given_list_of_events_with_buttons
+from app.frontend.shared.event_selection import (
+    display_given_list_of_events_with_buttons,
+)
 from app.backend.events.list_of_events import (
     get_sorted_list_of_events,
     all_sort_types_for_event_list,
-
 )
-from app.frontend.shared.buttons import is_button_sort_order, \
-    sort_order_from_button_pressed, is_button_event_selection, event_from_button_pressed, \
-    get_button_value_for_sort_order
+from app.frontend.shared.buttons import (
+    is_button_sort_order,
+    sort_order_from_button_pressed,
+    is_button_event_selection,
+    event_from_button_pressed,
+    get_button_value_for_sort_order,
+)
 from app.objects.events import SORT_BY_START_DSC, ListOfEvents
 
 from app.objects.abstract_objects.abstract_form import (
@@ -22,7 +27,8 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     HelpButton,
-    back_menu_button, Button,
+    back_menu_button,
+    Button,
 )
 from app.objects.abstract_objects.abstract_lines import (
     Line,
@@ -95,7 +101,10 @@ def post_form_view_of_event_data_cleaning(
 
 
 def action_when_event_button_clicked(interface: abstractInterface) -> Form:
-    event = event_from_button_pressed(value_of_button_pressed=interface.last_button_pressed(), object_store=interface.object_store)
+    event = event_from_button_pressed(
+        value_of_button_pressed=interface.last_button_pressed(),
+        object_store=interface.object_store,
+    )
     clean_sensitive_data_for_event(object_store=interface.object_store, event=event)
     interface.flush_cache_to_store()
 
@@ -118,6 +127,12 @@ def display_list_of_events_with_buttons_ignoring_future_events(
 
     return display_given_list_of_events_with_buttons(list_of_events)
 
+
 sort_buttons_for_event_list = ButtonBar(
-    [Button(label=sortby, value=get_button_value_for_sort_order(sortby),nav_button=True) for sortby in all_sort_types_for_event_list]
+    [
+        Button(
+            label=sortby, value=get_button_value_for_sort_order(sortby), nav_button=True
+        )
+        for sortby in all_sort_types_for_event_list
+    ]
 )

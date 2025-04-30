@@ -21,12 +21,12 @@ MAKE_UNAVAILABLE = "* UNAVAILABLE *"
 NO_ROLE_SET = "No role allocated"
 
 
-def get_dict_of_roles_for_dropdown(
-    object_store: ObjectStore
-):
+def get_dict_of_roles_for_dropdown(object_store: ObjectStore):
     volunteer_roles = get_list_of_roles(object_store)
-    volunteer_roles= volunteer_roles+[no_role_set]
-    dict_of_roles = {role.name: role.name for role in volunteer_roles if not role.hidden}
+    volunteer_roles = volunteer_roles + [no_role_set]
+    dict_of_roles = {
+        role.name: role.name for role in volunteer_roles if not role.hidden
+    }
 
     return dict_of_roles
 

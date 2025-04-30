@@ -1,6 +1,8 @@
 from typing import List, Union
 
-from app.frontend.events.patrol_boats.swapping import get_swap_button_to_move_to_boat_without_swapping
+from app.frontend.events.patrol_boats.swapping import (
+    get_swap_button_to_move_to_boat_without_swapping,
+)
 from app.frontend.forms.swaps import is_ready_to_swap
 
 from app.backend.patrol_boats.patrol_boat_summary import (
@@ -51,7 +53,9 @@ def get_top_material_for_patrol_boat_form(
     patrol_boat_driver_and_crew_qualifications = (
         get_patrol_boat_driver_and_crew_qualifications(interface=interface, event=event)
     )
-    warnings = update_and_get_warnings_on_all_volunteers_in_patrol_boats(interface=interface, event=event)
+    warnings = update_and_get_warnings_on_all_volunteers_in_patrol_boats(
+        interface=interface, event=event
+    )
     return ListOfLines(
         [
             _______________,
@@ -61,10 +65,10 @@ def get_top_material_for_patrol_boat_form(
             _______________,
             patrol_boat_driver_and_crew_qualifications,
             _______________,
-            _______________]+
-
-            warnings+
-            [
+            _______________,
+        ]
+        + warnings
+        + [
             _______________,
             _______________,
             instructions_text,
@@ -186,7 +190,8 @@ def get_bottom_row_padding_columns_for_patrol_boat_table(event: Event) -> List[s
 
 
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
-    load_list_of_patrol_boats_at_event, is_boat_empty,
+    load_list_of_patrol_boats_at_event,
+    is_boat_empty,
 )
 
 
@@ -213,7 +218,9 @@ def get_row_for_boat_at_event(
     boat_name_and_button_for_first_column = get_boat_name_and_button_for_first_column(
         interface=interface, patrol_boat=patrol_boat
     )
-    day_inputs = get_allocation_inputs_for_boat_across_days(interface=interface, event=event, patrol_boat=patrol_boat)
+    day_inputs = get_allocation_inputs_for_boat_across_days(
+        interface=interface, event=event, patrol_boat=patrol_boat
+    )
 
     return RowInTable([boat_name_and_button_for_first_column] + day_inputs)
 
@@ -237,7 +244,7 @@ def get_boat_name_and_button_for_first_column(
 
 def get_allocation_inputs_for_boat_across_days(
     interface: abstractInterface, event: Event, patrol_boat: PatrolBoat
-)-> list:
+) -> list:
     day_inputs = [
         get_allocation_inputs_for_day_and_boat(
             patrol_boat=patrol_boat, day=day, event=event, interface=interface
@@ -246,23 +253,22 @@ def get_allocation_inputs_for_boat_across_days(
     ]
     return day_inputs
 
+
 def get_allocation_inputs_for_day_and_boat(
     interface: abstractInterface, patrol_boat: PatrolBoat, day: Day, event: Event
 ) -> ListOfLines:
-    if is_boat_empty(object_store=interface.object_store, patrol_boat=patrol_boat, day=day, event=event):
+    if is_boat_empty(
+        object_store=interface.object_store,
+        patrol_boat=patrol_boat,
+        day=day,
+        event=event,
+    ):
         return get_allocation_inputs_for_day_and_boat_if_boat_is_empty(
-            interface=interface,
-            patrol_boat=patrol_boat,
-            day=day,
-            event=event
+            interface=interface, patrol_boat=patrol_boat, day=day, event=event
         )
     else:
         return get_allocation_inputs_for_day_and_boat_if_boat_contains_volunteers(
-            interface=interface,
-            patrol_boat=patrol_boat,
-            day=day,
-            event=event
-
+            interface=interface, patrol_boat=patrol_boat, day=day, event=event
         )
 
 
@@ -270,13 +276,17 @@ def get_allocation_inputs_for_day_and_boat_if_boat_is_empty(
     interface: abstractInterface, patrol_boat: PatrolBoat, day: Day, event: Event
 ) -> ListOfLines:
     if is_ready_to_swap(interface):
-        return ListOfLines([get_swap_button_to_move_to_boat_without_swapping(interface=interface,
-                                                                             patrol_boat=patrol_boat,
-                                                                             day=day)])
+        return ListOfLines(
+            [
+                get_swap_button_to_move_to_boat_without_swapping(
+                    interface=interface, patrol_boat=patrol_boat, day=day
+                )
+            ]
+        )
     else:
         return get_add_volunteer_to_patrol_boat_dropdown(
-        interface=interface, patrol_boat=patrol_boat, day=day, event=event
-    )
+            interface=interface, patrol_boat=patrol_boat, day=day, event=event
+        )
 
 
 def get_allocation_inputs_for_day_and_boat_if_boat_contains_volunteers(
@@ -289,10 +299,12 @@ def get_allocation_inputs_for_day_and_boat_if_boat_contains_volunteers(
 
     in_swap_state = is_ready_to_swap(interface)
     if in_swap_state:
-        last_bit = get_swap_button_to_move_to_boat_without_swapping(patrol_boat=patrol_boat, day=day, interface=interface)
+        last_bit = get_swap_button_to_move_to_boat_without_swapping(
+            patrol_boat=patrol_boat, day=day, interface=interface
+        )
     else:
-        last_bit =  get_add_volunteer_to_patrol_boat_dropdown(
-        interface=interface, patrol_boat=patrol_boat, day=day, event=event
-    )
+        last_bit = get_add_volunteer_to_patrol_boat_dropdown(
+            interface=interface, patrol_boat=patrol_boat, day=day, event=event
+        )
 
     return ListOfLines(existing_elements + [last_bit])

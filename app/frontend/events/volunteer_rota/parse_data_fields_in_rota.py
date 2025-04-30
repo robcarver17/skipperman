@@ -11,7 +11,6 @@ from app.objects.events import Event
 from app.backend.rota.changes import (
     update_volunteer_notes_at_event,
     update_role_and_group_at_event_for_volunteer_on_day,
-
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.shared.events_state import get_event_from_state
@@ -63,11 +62,13 @@ def update_role_and_group_from_form_for_volunteer_given_specific_day_at_event(
 ):
 
     try:
-        new_role = get_role_from_form(interface=interface,  volunteer=volunteer, day=day)
+        new_role = get_role_from_form(interface=interface, volunteer=volunteer, day=day)
     except MissingData:
         return
 
-    new_group = get_group_from_form(interface=interface, volunteer=volunteer, day=day) ### if arg_not_passed, no change
+    new_group = get_group_from_form(
+        interface=interface, volunteer=volunteer, day=day
+    )  ### if arg_not_passed, no change
 
     update_role_and_group_at_event_for_volunteer_on_day(
         object_store=interface.object_store,
@@ -78,10 +79,12 @@ def update_role_and_group_from_form_for_volunteer_given_specific_day_at_event(
         new_group=new_group,
     )
 
-def get_role_from_form(    interface: abstractInterface,
+
+def get_role_from_form(
+    interface: abstractInterface,
     volunteer: Volunteer,
     day: Day,
-    ):
+):
     new_role_name_from_form = interface.value_from_form(
         input_name_for_role_and_volunteer(volunteer=volunteer, day=day),
         default=MISSING_FROM_FORM,
@@ -95,7 +98,9 @@ def get_role_from_form(    interface: abstractInterface,
 
     return new_role
 
-def get_group_from_form(    interface: abstractInterface,
+
+def get_group_from_form(
+    interface: abstractInterface,
     volunteer: Volunteer,
     day: Day,
 ):
@@ -113,6 +118,7 @@ def get_group_from_form(    interface: abstractInterface,
         )
 
     return new_group
+
 
 def update_notes_for_volunteer_at_event_from_form(
     interface: abstractInterface,

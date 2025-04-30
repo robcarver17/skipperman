@@ -24,7 +24,8 @@ from app.frontend.reporting.shared.group_order import (
 )
 from app.frontend.reporting.shared.print_options import (
     get_saved_print_options,
-    reset_print_report_options, override_print_options_with_new_values,
+    reset_print_report_options,
+    override_print_options_with_new_values,
 )
 from app.objects.utilities.exceptions import arg_not_passed
 
@@ -74,7 +75,7 @@ def get_reporting_options(
     interface: abstractInterface,
     specific_parameters_for_type_of_report: SpecificParametersForTypeOfReport,
     dict_of_df: Dict[str, pd.DataFrame],
-    override_print_options: dict = arg_not_passed
+    override_print_options: dict = arg_not_passed,
 ) -> ReportingOptions:
     arrangement_options_and_group_order = get_arrangement_options_and_group_order_from_stored_or_defaults(
         object_store=interface.object_store,
@@ -88,7 +89,9 @@ def get_reporting_options(
     )
 
     if not override_print_options is arg_not_passed:
-        print_options = override_print_options_with_new_values(print_options, **override_print_options)
+        print_options = override_print_options_with_new_values(
+            print_options, **override_print_options
+        )
 
     marked_up_list_from_df_parameters_with_actual_group_order = (
         create_parameters_to_create_marked_up_list_from_df(

@@ -65,6 +65,7 @@ def make_long_thing_detail_box(some_string: str):
     else:
         return some_string
 
+
 @dataclass
 class ProgressBar:
     label: str

@@ -5,7 +5,10 @@ from app.backend.qualifications_and_ticks.ticksheets import (
 )
 
 from app.frontend.shared.events_state import get_event_from_state
-from app.frontend.shared.cadet_state import update_state_for_specific_cadet_id, update_state_for_specific_cadet
+from app.frontend.shared.cadet_state import (
+    update_state_for_specific_cadet_id,
+    update_state_for_specific_cadet,
+)
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 
 from app.frontend.shared.qualification_and_tick_state_storage import (
@@ -30,8 +33,13 @@ from app.objects.ticks import (
     Tick,
 )
 from app.objects.substages import TickSheetItem
-from app.frontend.shared.buttons import get_button_value_for_cadet_selection, cadet_from_button_pressed, \
-    get_button_value_given_type_and_attributes, get_attributes_from_button_pressed_of_known_type, is_button_of_type
+from app.frontend.shared.buttons import (
+    get_button_value_for_cadet_selection,
+    cadet_from_button_pressed,
+    get_button_value_given_type_and_attributes,
+    get_attributes_from_button_pressed_of_known_type,
+    is_button_of_type,
+)
 
 
 def get_select_cadet_button_when_in_no_edit_mode(
@@ -227,8 +235,6 @@ def get_name_of_qualify_disqualify_for_cadet_button(
     return get_name_of_generic_button(cadet_id_axis, label, cadet_id)
 
 
-
-
 def get_name_of_tick_all_for_cadet_button(cadet_id: str):
     return get_name_of_generic_button(cadet_id_axis, full_label, cadet_id)
 
@@ -256,19 +262,29 @@ def get_name_of_tick_half_for_item_button(item_id: str):
 def get_name_of_tick_na_for_item_button(item_id: str):
     return get_name_of_generic_button(item_id_axis, na_label, item_id)
 
-generic_tick_button_type="genericTickButton"
+
+generic_tick_button_type = "genericTickButton"
+
 
 def get_name_of_generic_button(axis: str, tick_type: str, id: str):
-    return get_button_value_given_type_and_attributes(generic_tick_button_type, axis, tick_type, id)
+    return get_button_value_given_type_and_attributes(
+        generic_tick_button_type, axis, tick_type, id
+    )
+
 
 def get_axis_tick_type_id_from_button_name(button_name: str) -> Tuple[str, str, str]:
-    axis, tick_type, id = get_attributes_from_button_pressed_of_known_type(value_of_button_pressed=button_name,
-                                                                           type_to_check=generic_tick_button_type)
+    axis, tick_type, id = get_attributes_from_button_pressed_of_known_type(
+        value_of_button_pressed=button_name, type_to_check=generic_tick_button_type
+    )
     return axis, tick_type, id
 
-def is_generic_tick_button_pressed(button_name:str):
 
-    return is_button_of_type(type_to_check=generic_tick_button_type, value_of_button_pressed=button_name)
+def is_generic_tick_button_pressed(button_name: str):
+
+    return is_button_of_type(
+        type_to_check=generic_tick_button_type, value_of_button_pressed=button_name
+    )
+
 
 ### only internal, weird names make unusual collisions less likely
 qual_label = "tBqQUAL"
@@ -289,5 +305,3 @@ def from_tick_label_to_tick(tick_label) -> Tick:
 
 types_of_tick = [full_label, half_label, na_label, no_tick_label]
 types_of_tick_for_cadet = types_of_tick + [qual_label, disqual_leable]
-
-

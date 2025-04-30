@@ -3,14 +3,20 @@ from typing import Union
 from app.data_access.configuration.fixed import ADD_KEYBOARD_SHORTCUT
 from app.frontend.events.add_event import display_form_view_for_add_event
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
-from app.frontend.shared.event_selection import display_list_of_events_with_buttons, sort_buttons_for_event_list
+from app.frontend.shared.event_selection import (
+    display_list_of_events_with_buttons,
+    sort_buttons_for_event_list,
+)
 from app.frontend.shared.events_state import (
- update_state_for_specific_event,
+    update_state_for_specific_event,
 )
 
-from app.frontend.shared.buttons import is_button_sort_order, \
-    sort_order_from_button_pressed, is_button_event_selection, \
-    event_from_button_pressed
+from app.frontend.shared.buttons import (
+    is_button_sort_order,
+    sort_order_from_button_pressed,
+    is_button_event_selection,
+    event_from_button_pressed,
+)
 
 from app.frontend.events.view_individual_events import (
     display_form_view_individual_event,
@@ -85,9 +91,11 @@ def post_form_view_of_events(interface: abstractInterface) -> Union[Form, NewFor
         return button_error_and_back_to_initial_state_form(interface)
 
 
-
 def action_when_event_button_clicked(interface: abstractInterface) -> NewForm:
-    event = event_from_button_pressed(value_of_button_pressed=interface.last_button_pressed(), object_store=interface.object_store)
+    event = event_from_button_pressed(
+        value_of_button_pressed=interface.last_button_pressed(),
+        object_store=interface.object_store,
+    )
     update_state_for_specific_event(interface=interface, event=event)
 
     return form_for_view_event(interface)
@@ -99,4 +107,3 @@ def form_for_add_event(interface: abstractInterface):
 
 def form_for_view_event(interface: abstractInterface):
     return interface.get_new_form_given_function(display_form_view_individual_event)
-

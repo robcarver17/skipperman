@@ -121,7 +121,6 @@ class ListOfRolesWithSkills(List[RoleWithSkills]):
             list_of_skills=list_of_skills,
         )
 
-
     def modify(self, existing_role: RoleWithSkills, new_role: RoleWithSkills):
         index = self.index_of_matching_existing_named_role(existing_role)
         existing_role_in_self = self[index]

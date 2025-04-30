@@ -28,15 +28,17 @@ def modify_cadet(object_store: ObjectStore, existing_cadet: Cadet, new_cadet: Ca
         object_store=object_store, updated_list_of_cadets=list_of_cadets
     )
 
-def modify_cadet_date_of_birth(object_store: ObjectStore, existing_cadet: Cadet, new_date_of_birth: datetime.date):
-    new_cadet= copy(existing_cadet)
+
+def modify_cadet_date_of_birth(
+    object_store: ObjectStore, existing_cadet: Cadet, new_date_of_birth: datetime.date
+):
+    new_cadet = copy(existing_cadet)
     new_cadet.date_of_birth = new_date_of_birth
     list_of_cadets = get_list_of_cadets(object_store)
     list_of_cadets.update_cadet(existing_cadet=existing_cadet, new_cadet=new_cadet)
     update_list_of_cadets(
         object_store=object_store, updated_list_of_cadets=list_of_cadets
     )
-
 
 
 def verify_cadet_and_return_warnings(object_store: ObjectStore, cadet: Cadet) -> str:
@@ -60,7 +62,9 @@ def verify_cadet_and_return_warnings(object_store: ObjectStore, cadet: Cadet) ->
 
 
 def warning_for_similar_cadets(object_store: ObjectStore, cadet: Cadet) -> str:
-    similar_cadets = get_list_of_similar_cadets_from_data(object_store=object_store, cadet=cadet)
+    similar_cadets = get_list_of_similar_cadets_from_data(
+        object_store=object_store, cadet=cadet
+    )
 
     if len(similar_cadets) > 0:
         similar_cadets_str = ", ".join(

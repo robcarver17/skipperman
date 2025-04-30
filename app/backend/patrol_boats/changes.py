@@ -16,7 +16,10 @@ from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.patrol_boats import PatrolBoat
 from app.objects.volunteers import Volunteer
-from app.backend.volunteers.volunteers_at_event import get_dict_of_all_event_data_for_volunteers, update_dict_of_all_event_data_for_volunteers
+from app.backend.volunteers.volunteers_at_event import (
+    get_dict_of_all_event_data_for_volunteers,
+    update_dict_of_all_event_data_for_volunteers,
+)
 
 
 @dataclass
@@ -44,8 +47,9 @@ def add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts(
     list_of_volunteer_additions_to_boats: ListOfBoatDayVolunteer,
     event: Event,
 ) -> List[str]:
-    all_event_data = get_dict_of_all_event_data_for_volunteers(object_store=object_store,
-                                                               event=event)
+    all_event_data = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
+    )
     messages = []
     for boat_day_volunteer in list_of_volunteer_additions_to_boats:
         try:
@@ -65,7 +69,9 @@ def add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts(
                 )
             )
 
-    update_dict_of_all_event_data_for_volunteers(object_store=object_store, dict_of_all_event_data=all_event_data)
+    update_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, dict_of_all_event_data=all_event_data
+    )
 
     return messages
 
@@ -95,17 +101,20 @@ def copy_across_boats_at_event(
     event: Event,
     volunteer: Volunteer,
     day: Day,
-    allow_overwrite: bool
+    allow_overwrite: bool,
 ):
-    all_event_data = get_dict_of_all_event_data_for_volunteers(object_store=object_store,
-                                                               event=event)
+    all_event_data = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
+    )
     all_event_data.copy_across_boats_at_event(
         volunteer=volunteer,
         day=day,
         allow_overwrite=allow_overwrite,
     )
 
-    update_dict_of_all_event_data_for_volunteers(object_store=object_store, dict_of_all_event_data=all_event_data)
+    update_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, dict_of_all_event_data=all_event_data
+    )
 
 
 def earliest_day_with_boat_for_volunteer_or_none(
@@ -146,8 +155,9 @@ def add_named_boat_to_event_with_no_allocation(
 def remove_patrol_boat_and_all_associated_volunteers_from_event(
     object_store: ObjectStore, event: Event, patrol_boat_name: str
 ):
-    all_event_data = get_dict_of_all_event_data_for_volunteers(object_store=object_store,
-                                                               event=event)
+    all_event_data = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
+    )
 
     patrol_boat = from_patrol_boat_name_to_boat(
         object_store=object_store, boat_name=patrol_boat_name
@@ -155,17 +165,20 @@ def remove_patrol_boat_and_all_associated_volunteers_from_event(
     all_event_data.remove_patrol_boat_and_all_associated_volunteers_from_event(
         patrol_boat
     )
-    update_dict_of_all_event_data_for_volunteers(object_store=object_store, dict_of_all_event_data=all_event_data)
+    update_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, dict_of_all_event_data=all_event_data
+    )
 
 
 def delete_volunteer_from_patrol_boat_on_day_at_event(
     object_store: ObjectStore, event: Event, volunteer: Volunteer, day: Day
 ):
-    all_event_data = get_dict_of_all_event_data_for_volunteers(object_store=object_store,
-                                                               event=event)
-
-    all_event_data.delete_patrol_boat_for_volunteer_on_day(
-        volunteer=volunteer, day=day
+    all_event_data = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
     )
 
-    update_dict_of_all_event_data_for_volunteers(object_store=object_store, dict_of_all_event_data=all_event_data)
+    all_event_data.delete_patrol_boat_for_volunteer_on_day(volunteer=volunteer, day=day)
+
+    update_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, dict_of_all_event_data=all_event_data
+    )

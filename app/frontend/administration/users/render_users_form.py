@@ -39,7 +39,11 @@ from app.objects.users_and_security import (
     new_blank_user,
 )
 from app.backend.security.list_of_users import get_list_of_users, list_of_admin_users
-from app.frontend.shared.buttons import get_button_value_given_type_and_attributes, is_button_of_type, get_attributes_from_button_pressed_of_known_type
+from app.frontend.shared.buttons import (
+    get_button_value_given_type_and_attributes,
+    is_button_of_type,
+    get_attributes_from_button_pressed_of_known_type,
+)
 
 SAVE_ENTRY_BUTTON_LABEL = "Save edits to existing"
 ADD_ENTRY_BUTTON_LABEL = "Add a new user"
@@ -240,8 +244,12 @@ def dropdown_for_group(user: SkipperManUser) -> dropDownInput:
 
 user_group_options_as_dict = dict([(group.name, group.name) for group in ALL_GROUPS])
 
+
 def button_to_reset_password(user: SkipperManUser) -> Button:
-    return Button(label="Reset password to random value", value=button_name_for_reset_password(user))
+    return Button(
+        label="Reset password to random value",
+        value=button_name_for_reset_password(user),
+    )
 
 
 def button_for_deletion(user: SkipperManUser) -> Button:
@@ -251,22 +259,34 @@ def button_for_deletion(user: SkipperManUser) -> Button:
 button_type_reset_password = "resetPassword"
 button_type_deletion = "deleteUser"
 
+
 def button_name_for_deletion(user: SkipperManUser):
-    return get_button_value_given_type_and_attributes(button_type_deletion, user.username)
+    return get_button_value_given_type_and_attributes(
+        button_type_deletion, user.username
+    )
 
 
 def button_name_for_reset_password(user: SkipperManUser):
-    return get_button_value_given_type_and_attributes(button_type_reset_password, user.username)
+    return get_button_value_given_type_and_attributes(
+        button_type_reset_password, user.username
+    )
 
-def is_delete_button(button_value:str):
-    return is_button_of_type(value_of_button_pressed=button_value, type_to_check=button_type_deletion)
 
-def is_reset_button(button_value:str):
-    return is_button_of_type(value_of_button_pressed=button_value, type_to_check=button_type_reset_password)
+def is_delete_button(button_value: str):
+    return is_button_of_type(
+        value_of_button_pressed=button_value, type_to_check=button_type_deletion
+    )
+
+
+def is_reset_button(button_value: str):
+    return is_button_of_type(
+        value_of_button_pressed=button_value, type_to_check=button_type_reset_password
+    )
+
 
 def username_from_deletion_button(button_name: str) -> str:
     return get_attributes_from_button_pressed_of_known_type(
-        type_to_check=button_type_deletion,value_of_button_pressed=button_name
+        type_to_check=button_type_deletion, value_of_button_pressed=button_name
     )
 
 
@@ -275,7 +295,6 @@ def username_from_reset_button(button_name: str) -> str:
         type_to_check=button_type_reset_password, value_of_button_pressed=button_name
     )
 
+
 def name_for_user_and_input_type(user: SkipperManUser, input_type: str):
     return user.username + "_" + input_type
-
-

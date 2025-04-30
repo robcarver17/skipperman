@@ -55,7 +55,6 @@ def parse_registration_details_from_form(interface: abstractInterface, event: Ev
         )
 
 
-
 def get_registration_details_for_row_in_form_and_alter_registration_data(
     interface: abstractInterface,
     cadet: Cadet,
@@ -270,7 +269,7 @@ def get_registration_details_for_row_and_column_name_in_form_and_alter_registrat
         cadet=cadet,
         event=registration_details.event,
         column_name=column_name,
-        new_value_for_column=new_value_for_column
+        new_value_for_column=new_value_for_column,
     )
 
 

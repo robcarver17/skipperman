@@ -11,7 +11,10 @@ from app.frontend.reporting.shared.arrangement_form import (
     form_for_group_arrangement_options,
     post_form_for_group_arrangement_options,
 )
-from app.frontend.reporting.shared.create_report import create_generic_report, qr_code_for_report
+from app.frontend.reporting.shared.create_report import (
+    create_generic_report,
+    qr_code_for_report,
+)
 from app.frontend.reporting.shared.explain_options import (
     get_text_explaining_various_options_for_generic_report,
 )
@@ -19,7 +22,8 @@ from app.frontend.reporting.shared.print_options import (
     get_saved_print_options_and_create_form,
     reset_print_report_options,
     save_print_options_from_form,
-    weblink_for_report, qr_button,
+    weblink_for_report,
+    qr_button,
 )
 from app.backend.reporting.report_generator import (
     ReportGeneratorWithoutSpecificParameters,
@@ -28,7 +32,10 @@ from app.frontend.reporting.shared.reporting_options import (
     reset_all_report_options,
     reset_specific_report_options,
 )
-from app.frontend.shared.buttons import is_button_event_selection, event_from_button_pressed
+from app.frontend.shared.buttons import (
+    is_button_event_selection,
+    event_from_button_pressed,
+)
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -41,7 +48,8 @@ from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
     main_menu_button,
-    back_menu_button, HelpButton,
+    back_menu_button,
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.form_handler import (
@@ -94,15 +102,22 @@ def post_form_initial_generic_report(
             report_generator.initial_display_form_function
         )
     elif is_button_event_selection(last_button):
-        return action_when_event_button_clicked(interface=interface, report_generator=report_generator)
+        return action_when_event_button_clicked(
+            interface=interface, report_generator=report_generator
+        )
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
 
-def action_when_event_button_clicked(interface: abstractInterface,
-    report_generator: ReportGeneratorWithoutSpecificParameters,):
+def action_when_event_button_clicked(
+    interface: abstractInterface,
+    report_generator: ReportGeneratorWithoutSpecificParameters,
+):
     ## so whilst we are in this stage, we know which event we are talking about
-    event = event_from_button_pressed(value_of_button_pressed=interface.last_button_pressed(), object_store=interface.object_store)
+    event = event_from_button_pressed(
+        value_of_button_pressed=interface.last_button_pressed(),
+        object_store=interface.object_store,
+    )
     update_state_for_specific_event(interface=interface, event=event)
 
     return interface.get_new_form_given_function(
@@ -135,7 +150,7 @@ def display_form_for_generic_report_all_options(
             back_menu_button,
             create_report_button,
             reset_all_options_button,
-            help_button
+            help_button,
         ]
     )
 
@@ -270,7 +285,7 @@ def display_form_for_generic_report_additional_options(
                         create_report_button,
                         save_button,
                         reset_specific_options_button,
-                        help_button
+                        help_button,
                     ]
                 ),
                 _______________,
@@ -357,7 +372,7 @@ def display_form_for_generic_report_print_options(
         report_type=specific_parameters_for_type_of_report.report_type,
         report_for=str(event),
     )
-    help_button = HelpButton('general_report_config_and_printing_help#print-options')
+    help_button = HelpButton("general_report_config_and_printing_help#print-options")
 
     return Form(
         ListOfLines(
@@ -368,7 +383,7 @@ def display_form_for_generic_report_print_options(
                         save_button,
                         create_report_button,
                         reset_print_options_button,
-                        help_button
+                        help_button,
                     ]
                 ),
                 _______________,
@@ -453,7 +468,9 @@ def display_form_for_generic_report_arrangement_options(
         specific_parameters_for_type_of_report=specific_parameters_for_type_of_report,
     )
     event = get_event_from_state(interface)
-    help_button = HelpButton('general_report_config_and_printing_help#arrangement-options')
+    help_button = HelpButton(
+        "general_report_config_and_printing_help#arrangement-options"
+    )
 
     return Form(
         ListOfLines(
@@ -463,7 +480,7 @@ def display_form_for_generic_report_arrangement_options(
                         back_menu_button,
                         create_report_button,
                         reset_layout_options_button,
-                        help_button
+                        help_button,
                     ]
                 ),
                 Heading(

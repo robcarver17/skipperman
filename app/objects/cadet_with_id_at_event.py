@@ -109,8 +109,8 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return CadetWithIdAtEvent
 
-    def delete_cadet_with_id(self, cadet_id:str):
-        idx=self.idx_of_items_with_cadet_id(cadet_id, default=missing_data)
+    def delete_cadet_with_id(self, cadet_id: str):
+        idx = self.idx_of_items_with_cadet_id(cadet_id, default=missing_data)
         if idx is missing_data:
             return
         self.pop(idx)
@@ -161,11 +161,11 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
         )
 
     def update_data_row_for_existing_cadet_at_event(
-        self, cadet_id: str,                                                                     column_name: str,
-                                                                    new_value_for_column
-
+        self, cadet_id: str, column_name: str, new_value_for_column
     ):
-        existing_data_in_row = self.cadet_with_id_and_data_at_event(cadet_id).data_in_row
+        existing_data_in_row = self.cadet_with_id_and_data_at_event(
+            cadet_id
+        ).data_in_row
         existing_data_in_row[column_name] = new_value_for_column
 
         self._update_item_for_existing_cadet_at_event(

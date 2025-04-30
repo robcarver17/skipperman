@@ -10,7 +10,7 @@ from app.data_access.store.object_store import ObjectStore
 
 from app.data_access.store.object_definitions import (
     object_definition_for_dict_of_cadets_with_qualifications_and_ticks,
-object_definition_for_list_of_cadets_with_tick_list_items_for_cadet_id
+    object_definition_for_list_of_cadets_with_tick_list_items_for_cadet_id,
 )
 from app.objects.composed.ticksheet import (
     DictOfCadetsWithQualificationsAndTicks,
@@ -83,16 +83,25 @@ def update_dict_of_cadets_with_qualifications_and_ticks(
         new_object=new_dict_of_cadets_with_qualifications_and_ticks,
     )
 
+
 from app.objects.ticks import ListOfTickListItemsAndTicksForSpecificCadet
 
-def delete_ticks_for_cadet(object_store: ObjectStore, cadet: Cadet, areyousure: bool = False):
+
+def delete_ticks_for_cadet(
+    object_store: ObjectStore, cadet: Cadet, areyousure: bool = False
+):
     if not areyousure:
         return
 
-    ticks = object_store.get(object_definition_for_list_of_cadets_with_tick_list_items_for_cadet_id, cadet_id=cadet.id).list_of_tick_list_item_ids()
+    ticks = object_store.get(
+        object_definition_for_list_of_cadets_with_tick_list_items_for_cadet_id,
+        cadet_id=cadet.id,
+    ).list_of_tick_list_item_ids()
 
-    object_store.update(new_object=ListOfTickListItemsAndTicksForSpecificCadet([]),
-                        object_definition=object_definition_for_list_of_cadets_with_tick_list_items_for_cadet_id,
-                        cadet_id=cadet.id)
+    object_store.update(
+        new_object=ListOfTickListItemsAndTicksForSpecificCadet([]),
+        object_definition=object_definition_for_list_of_cadets_with_tick_list_items_for_cadet_id,
+        cadet_id=cadet.id,
+    )
 
     return len(ticks)

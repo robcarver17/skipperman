@@ -14,21 +14,24 @@ from app.objects.abstract_objects.abstract_buttons import (
 
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.frontend.administration.data.merge_delete_cadets import display_form_merge_delete_cadets
-from app.frontend.administration.data.merge_delete_volunteers import display_form_merge_delete_volunteers
-from app.frontend.administration.data.edit_delete_events import display_form_edit_delete_events
+from app.frontend.administration.data.merge_delete_cadets import (
+    display_form_merge_delete_cadets,
+)
+from app.frontend.administration.data.merge_delete_volunteers import (
+    display_form_merge_delete_volunteers,
+)
+from app.frontend.administration.data.edit_delete_events import (
+    display_form_edit_delete_events,
+)
 
 merge_cadet_option = Button("Merge / delete sailor", tile=True)
 merge_volunteer_option = Button("Merge / delete volunteer", tile=True)
 edit_event = Button("Edit / Delete event", tile=True)
 
-option_buttons = Line([
-    edit_event,
-    merge_cadet_option,
-    merge_volunteer_option
-])
+option_buttons = Line([edit_event, merge_cadet_option, merge_volunteer_option])
 
 nav_buttons = ButtonBar([back_menu_button])
+
 
 def display_form_data(interface: abstractInterface) -> Union[Form, NewForm]:
 
@@ -45,7 +48,9 @@ def post_form_data(interface: abstractInterface) -> Union[Form, NewForm]:
     if merge_cadet_option.pressed(last_button):
         return interface.get_new_form_given_function(display_form_merge_delete_cadets)
     elif merge_volunteer_option.pressed(last_button):
-        return interface.get_new_form_given_function(display_form_merge_delete_volunteers)
+        return interface.get_new_form_given_function(
+            display_form_merge_delete_volunteers
+        )
     elif edit_event.pressed(last_button):
         return interface.get_new_form_given_function(display_form_edit_delete_events)
     else:

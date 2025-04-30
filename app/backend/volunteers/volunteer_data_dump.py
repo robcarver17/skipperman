@@ -40,10 +40,7 @@ def get_volunteer_data_dump(object_store: ObjectStore) -> pd.DataFrame:
         "Connected cadets": list_of_all_row_data.list_of_connected_cadets(),
     }
 
-    all_data_as_dict.update(
-        list_of_all_row_data.dict_of_skills_str()
-    )
-
+    all_data_as_dict.update(list_of_all_row_data.dict_of_skills_str())
 
     all_data_as_dict.update(
         list_of_all_row_data.dict_of_list_of_roles_and_groups_by_event_as_str()
@@ -68,21 +65,16 @@ class ListOfVolunteerRowData(List[VolunteerRowData]):
         all_skills = self.all_skills()
         dict_of_skill_names = dict(
             [
-                (
-                    skill.name,
-                    self.list_of_skills_or_blank_for_skill_as_str(skill)
-                )
+                (skill.name, self.list_of_skills_or_blank_for_skill_as_str(skill))
                 for skill in all_skills
             ]
         )
 
         return dict_of_skill_names
 
-    def list_of_skills_or_blank_for_skill_as_str(
-        self, skill: Skill
-    ) -> List[str]:
+    def list_of_skills_or_blank_for_skill_as_str(self, skill: Skill) -> List[str]:
         skills_held = [row_data.skills.has_skill(skill) for row_data in self]
-        return [skill if held else '' for held in skills_held]
+        return [skill if held else "" for held in skills_held]
 
     def list_of_connected_cadets(self):
         return [row_data.connected_cadets_as_str for row_data in self]
@@ -122,7 +114,7 @@ class ListOfVolunteerRowData(List[VolunteerRowData]):
     def all_skills(self) -> ListOfEvents:
         all_skills = []
         for volunteer_row in self:
-            all_skills+=list(volunteer_row.skills.as_list_of_skills())
+            all_skills += list(volunteer_row.skills.as_list_of_skills())
 
         return ListOfEvents(list(set(all_skills)))
 
@@ -150,7 +142,7 @@ def get_row_data_for_volunteer(
 
     skills = get_dict_of_existing_skills_for_volunteer(
         object_store=object_store, volunteer=volunteer
-    ) ## padded
+    )  ## padded
 
     connected_cadets = get_list_of_cadets_associated_with_volunteer(
         object_store=object_store, volunteer=volunteer

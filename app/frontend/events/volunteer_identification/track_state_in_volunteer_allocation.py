@@ -9,7 +9,8 @@ from app.frontend.events.import_data.shared_state_tracking_and_data import (
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.relevant_information_for_volunteers import (
-    RelevantInformationForVolunteer, missing_relevant_information,
+    RelevantInformationForVolunteer,
+    missing_relevant_information,
 )
 from app.backend.registration_data.identified_volunteers_at_event import (
     get_relevant_information_for_volunteer_in_event_at_row_and_index,
@@ -66,11 +67,15 @@ def get_relevant_information_for_current_volunteer(
     if relevant_information is missing_relevant_information:
         print("row %s index %d missing" % (row_id, volunteer_index))
 
-    print("Following relevant information found: %s at %s %s" % (str(relevant_information), row_id, volunteer_index))
+    print(
+        "Following relevant information found: %s at %s %s"
+        % (str(relevant_information), row_id, volunteer_index)
+    )
     return relevant_information
 
 
 VOLUNTEER_AT_EVENT_ID = "vol_at_ev_id"
+
 
 def percentage_of_volunteers_processed(interface: abstractInterface):
     current_id = get_current_volunteer_id_at_event(interface)

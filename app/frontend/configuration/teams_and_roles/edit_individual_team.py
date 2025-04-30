@@ -9,7 +9,8 @@ from app.objects.abstract_objects.abstract_tables import RowInTable
 
 from app.frontend.forms.reorder_form import (
     reorder_table,
-    reorderFormInterface, is_button_arrow_button,
+    reorderFormInterface,
+    is_button_arrow_button,
 )
 from app.objects.abstract_objects.abstract_text import Heading
 

@@ -146,14 +146,22 @@ def get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(
     return list_of_voluteers_on_day.list_of_ids
 
 
-def is_boat_empty(object_store: ObjectStore, event: Event, day: Day, patrol_boat: PatrolBoat):
+def is_boat_empty(
+    object_store: ObjectStore, event: Event, day: Day, patrol_boat: PatrolBoat
+):
     list_of_voluteers_at_event_with_patrol_boats = (
         get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
             object_store=object_store, event=event
         )
     )
-    for volunteer in list_of_voluteers_at_event_with_patrol_boats.list_of_volunteers_with_patrol_boats:
-        if list_of_voluteers_at_event_with_patrol_boats.patrol_boats_for_volunteer(volunteer).assigned_to_boat_on_day(day, patrol_boat):
+    for (
+        volunteer
+    ) in (
+        list_of_voluteers_at_event_with_patrol_boats.list_of_volunteers_with_patrol_boats
+    ):
+        if list_of_voluteers_at_event_with_patrol_boats.patrol_boats_for_volunteer(
+            volunteer
+        ).assigned_to_boat_on_day(day, patrol_boat):
             return False
 
     return True

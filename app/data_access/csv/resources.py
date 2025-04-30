@@ -86,12 +86,10 @@ class CsvDataListOfCadetAtEventWithClubDinghies(
         )
 
 
-from app.data_access.resolve_paths_and_filenames import (
-    CLUB_BOAT_LIMIT_CSV
-)
+from app.data_access.resolve_paths_and_filenames import CLUB_BOAT_LIMIT_CSV
 
 
-class CsvDataListOfClubDinghyLimits(GenericCsvData,  DataListOfClubDinghyLimits):
+class CsvDataListOfClubDinghyLimits(GenericCsvData, DataListOfClubDinghyLimits):
     def read(self) -> ListOfClubDinghyLimits:
         list_of_boats = self.read_and_return_object_of_type(
             ListOfClubDinghyLimits, file_identifier=CLUB_BOAT_LIMIT_CSV

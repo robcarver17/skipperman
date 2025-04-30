@@ -17,7 +17,8 @@ from app.frontend.events.volunteer_rota.button_values import (
     remove_role_button_value_for_volunteer_in_role_on_day,
     copy_previous_role_button_name_from_volunteer_id,
     location_button_name_from_volunteer_id,
-    skills_button_name_from_volunteer_id, unavailable_button_value_for_volunteer_id_across_days,
+    skills_button_name_from_volunteer_id,
+    unavailable_button_value_for_volunteer_id_across_days,
     remove_role_button_value_for_volunteer_in_role_across_days,
 )
 from app.frontend.events.volunteer_rota.swapping import get_swap_button, has_role_on_day
@@ -40,6 +41,7 @@ from app.objects.day_selectors import Day
 from app.objects.volunteers import Volunteer
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 
+
 def get_location_button(
     interface: abstractInterface,
     dict_of_all_cadet_event_data: DictOfAllEventInfoForCadets,
@@ -50,7 +52,6 @@ def get_location_button(
     location = get_cadet_location_string_for_volunteer(
         dict_of_all_cadet_event_data=dict_of_all_cadet_event_data,
         volunteer_data_at_event=volunteer_data_at_event,
-
     )
 
     if ready_to_swap:
@@ -66,7 +67,7 @@ def get_location_button(
 
 def get_skills_button(
     interface: abstractInterface,
-        volunteer_data_at_event: AllEventDataForVolunteer,
+    volunteer_data_at_event: AllEventDataForVolunteer,
 ) -> Button:
     ready_to_swap = is_ready_to_swap(interface)
     dict_of_skills = volunteer_data_at_event.volunteer_skills
@@ -226,7 +227,6 @@ def get_make_unavailable_button_for_volunteer_on_day(
 
 def get_make_unavailable_button_for_volunteer_across_days(
     volunteer: Volunteer,
-
 ) -> Button:
     return Button(
         label=NOT_AVAILABLE_SHORTHAND,
@@ -235,9 +235,9 @@ def get_make_unavailable_button_for_volunteer_across_days(
         ),
     )
 
+
 def get_remove_role_button_for_volunteer_across_days(
     volunteer: Volunteer,
-
 ) -> Button:
     return Button(
         label=REMOVE_SHORTHAND,

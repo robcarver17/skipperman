@@ -224,7 +224,7 @@ def get_dict_of_skills_from_form(
 ) -> SkillsDict:
     all_skills = get_list_of_skills(interface.object_store)
     selected_skills_as_list_of_str = interface.value_of_multiple_options_from_form(
-            field_name, default=MISSING_FROM_FORM
+        field_name, default=MISSING_FROM_FORM
     )
     if selected_skills_as_list_of_str is MISSING_FROM_FORM:
         return MISSING_FROM_FORM
@@ -252,7 +252,9 @@ def yes_no_radio(
 
 
 def is_radio_yes_or_no(interface: abstractInterface, input_name: str):
-    values_in_form =interface.value_of_multiple_options_from_form(input_name, default=MISSING_FROM_FORM)
+    values_in_form = interface.value_of_multiple_options_from_form(
+        input_name, default=MISSING_FROM_FORM
+    )
     if values_in_form is MISSING_FROM_FORM:
         return MISSING_FROM_FORM
 

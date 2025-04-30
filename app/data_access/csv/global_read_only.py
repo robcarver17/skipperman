@@ -9,7 +9,8 @@ def is_global_read_only(user_data_path: str):
     filename = global_read_only_marker_file_name(user_data_path)
     return Path(filename).is_file()
 
-def set_global_read_only(user_data_path: str, global_read_only:bool):
+
+def set_global_read_only(user_data_path: str, global_read_only: bool):
     filename = global_read_only_marker_file_name(user_data_path)
     if global_read_only:
         try:
@@ -21,6 +22,7 @@ def set_global_read_only(user_data_path: str, global_read_only:bool):
             os.remove(filename)
         except:
             pass
+
 
 def global_read_only_marker_file_name(user_data_path: str):
     return os.path.join(user_data_path, global_read_only_marker_file)

@@ -8,8 +8,14 @@ from app.frontend.cadets.view_individual_cadets import (
     display_form_view_individual_cadet,
 )
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
-from app.frontend.shared.buttons import get_button_value_for_cadet_selection, is_button_cadet_selection, \
-    cadet_from_button_pressed, get_button_value_for_sort_order, is_button_sort_order, sort_order_from_button_pressed
+from app.frontend.shared.buttons import (
+    get_button_value_for_cadet_selection,
+    is_button_cadet_selection,
+    cadet_from_button_pressed,
+    get_button_value_for_sort_order,
+    is_button_sort_order,
+    sort_order_from_button_pressed,
+)
 from app.objects.cadets import (
     Cadet,
 )
@@ -33,7 +39,8 @@ from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 
 from app.frontend.shared.cadet_state import update_state_for_specific_cadet
 from app.backend.cadets.list_of_cadets import (
-    get_sorted_list_of_cadets, all_sort_types,
+    get_sorted_list_of_cadets,
+    all_sort_types,
 )
 from app.objects.utilities.exceptions import arg_not_passed
 
@@ -92,21 +99,26 @@ def post_form_view_of_cadets(interface: abstractInterface) -> Union[Form, NewFor
 
 
 def form_for_view_individual_cadet(interface: abstractInterface) -> NewForm:
-    cadet = cadet_from_button_pressed(value_of_button_pressed=interface.last_button_pressed(),
-                                      object_store=interface.object_store)
+    cadet = cadet_from_button_pressed(
+        value_of_button_pressed=interface.last_button_pressed(),
+        object_store=interface.object_store,
+    )
     update_state_for_specific_cadet(interface=interface, cadet=cadet)
 
     return interface.get_new_form_given_function(display_form_view_individual_cadet)
 
 
 def get_table_of_cadets_with_buttons(
-    interface: abstractInterface, sort_order=SORT_BY_SURNAME, exclude_cadet: Cadet = arg_not_passed,
-        similar_cadet: Cadet = arg_not_passed
+    interface: abstractInterface,
+    sort_order=SORT_BY_SURNAME,
+    exclude_cadet: Cadet = arg_not_passed,
+    similar_cadet: Cadet = arg_not_passed,
 ) -> Table:
     list_of_cadets = get_sorted_list_of_cadets(
-        object_store=interface.object_store, sort_by=sort_order,
+        object_store=interface.object_store,
+        sort_by=sort_order,
         similar_cadet=similar_cadet,
-        exclude_cadet=exclude_cadet
+        exclude_cadet=exclude_cadet,
     )
     list_of_rows = [
         row_of_form_for_cadets_with_buttons(cadet) for cadet in list_of_cadets
@@ -118,9 +130,10 @@ def get_table_of_cadets_with_buttons(
 def row_of_form_for_cadets_with_buttons(cadet: Cadet) -> RowInTable:
     return RowInTable([get_button_for_cadet(cadet)])
 
-def get_button_for_cadet(cadet:Cadet):
-    return Button(label=str(cadet),
-                  value = get_button_value_for_cadet_selection(cadet))
+
+def get_button_for_cadet(cadet: Cadet):
+    return Button(label=str(cadet), value=get_button_value_for_cadet_selection(cadet))
+
 
 def sort_button_pressed(button_pressed: str):
     return any([button.pressed(button_pressed) for button in sort_buttons])
@@ -138,11 +151,14 @@ committee_button = Button(CADET_COMMITTEE_BUTTON_LABEL, nav_button=True)
 help_button = HelpButton("view_all_cadets_help")
 
 
-
 nav_buttons = ButtonBar(
     [main_menu_button, add_button, import_button, committee_button, help_button]
 )
 
-sort_buttons_list = [Button(label=sort_by, value=get_button_value_for_sort_order(sort_by),
-                            nav_button=True) for sort_by in all_sort_types]
+sort_buttons_list = [
+    Button(
+        label=sort_by, value=get_button_value_for_sort_order(sort_by), nav_button=True
+    )
+    for sort_by in all_sort_types
+]
 sort_buttons = ButtonBar(sort_buttons_list)

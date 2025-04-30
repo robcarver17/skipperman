@@ -4,11 +4,13 @@ from typing import List
 import pandas as pd
 
 from app.data_access.file_access import files_with_extension_in_resolved_pathname
-from app.data_access.resolve_paths_and_filenames import get_path_and_filename_for_named_file, get_path_for_generic_name
+from app.data_access.resolve_paths_and_filenames import (
+    get_path_and_filename_for_named_file,
+    get_path_for_generic_name,
+)
 from app.objects.utilities.exceptions import arg_not_passed
 
 EXTENSION = "parquet"
-
 
 
 class GenericParquetData(object):
@@ -59,9 +61,7 @@ class GenericParquetData(object):
         )
         write_object_as_parquet_file(object, path_and_filename)
 
-    def get_list_of_files_in_path_for_field_id(
-        self, file_identifier: str
-    ) -> List[str]:
+    def get_list_of_files_in_path_for_field_id(self, file_identifier: str) -> List[str]:
         path = self.path_for_field_id(file_identifier)
         return files_with_extension_in_resolved_pathname(path, extension=".parquet")
 

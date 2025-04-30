@@ -7,7 +7,7 @@ from app.objects.utilities.exceptions import arg_not_passed
 def get_path_and_filename_for_named_file(
     master_data_path: str,
     generic_name_of_file_required: str,
-    additional_file_identifiers: tuple = arg_not_passed
+    additional_file_identifiers: tuple = arg_not_passed,
 ):
     ## returns eg 'group_allocations', 'cadet_master_list.csv'
     if additional_file_identifiers is arg_not_passed:
@@ -66,6 +66,7 @@ def file_from_generic(generic_name_of_file_required):
         )
 
     return filename
+
 
 ATTENDANCE_FILE_FOR_SPECIFIC_CADET = "attendance_cadets"
 IDENTIFIED_CADETS_AT_EVENT_ID = "identified_cadets_at_event"
@@ -137,7 +138,7 @@ _dict_of_filenames_and_paths = {
     TEMPLATES_FIELD_MAPPING_FILE_ID: ("event_field_mapping_templates", "%s.csv"),
     GROUPS_FILE_ID: ("lists", "groups.csv"),
     MAPPED_REGISTRATION_DATA_FILE_ID: ("mapped_events", "mapped_wa_event_%s.csv"),
-    EVENT_WARNINGS_FILE_ID : ("mapped_events", "event_warnings_%s.csv"),
+    EVENT_WARNINGS_FILE_ID: ("mapped_events", "event_warnings_%s.csv"),
     CADETS_AT_EVENT_ID: (
         "mapped_events",
         "cadets_at_event_%s.csv",
@@ -216,17 +217,8 @@ _dict_of_filenames_and_paths = {
         "mapped_events",
         "list_of_volunteers_with_food_at_event_%s",
     ),
-CLUB_BOAT_LIMIT: (
-  "lists",
-    "club_boat_limit.parquet"
-),
-    CLUB_BOAT_LIMIT_CSV: (
-        "lists",
-        "club_boat_limit.csv"
-    ),
-    ATTENDANCE_FILE_FOR_SPECIFIC_CADET:
-        ("cadet_attendance",
-         "attendance_for_%s"),
-
+    CLUB_BOAT_LIMIT: ("lists", "club_boat_limit.parquet"),
+    CLUB_BOAT_LIMIT_CSV: ("lists", "club_boat_limit.csv"),
+    ATTENDANCE_FILE_FOR_SPECIFIC_CADET: ("cadet_attendance", "attendance_for_%s"),
     USERLIST_FILE_ID: ("secure", "userlist.csv"),
 }

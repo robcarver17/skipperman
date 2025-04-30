@@ -58,7 +58,9 @@ class Cadet(GenericSkipperManObjectWithIds):
         return cls(
             first_name=first_name.strip(" ").title(),
             surname=surname.strip(" ").title(),
-            date_of_birth=dob_from_passed_dob(date_of_birth=date_of_birth, dob_status=dob_status),
+            date_of_birth=dob_from_passed_dob(
+                date_of_birth=date_of_birth, dob_status=dob_status
+            ),
             membership_status=membership_status,
             id=id,
         )
@@ -73,11 +75,11 @@ class Cadet(GenericSkipperManObjectWithIds):
 
     def date_of_birth_as_string(self):
         if self.has_default_date_of_birth:
-            return "" ## for old data
+            return ""  ## for old data
         elif self.has_unknown_date_of_birth:
             return "(DOB unconfirmed)"
         elif self.has_irrelevant_date_of_birth:
-            return "" ## typically used for non members
+            return ""  ## typically used for non members
         else:
             return " (%s)" % str(self.date_of_birth)
 
@@ -175,6 +177,7 @@ def dob_from_passed_dob(date_of_birth: datetime.date, dob_status: str):
 
     return use_date_of_birth
 
+
 class ListOfCadets(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
@@ -185,10 +188,9 @@ class ListOfCadets(GenericListOfObjectsWithIds):
         return self.pop(cadet_idx)
 
     def current_members_only(self):
-        return ListOfCadets([
-            cadet for cadet in self
-            if cadet.membership_status==current_member
-        ])
+        return ListOfCadets(
+            [cadet for cadet in self if cadet.membership_status == current_member]
+        )
 
     def set_all_current_members_to_temporary_unconfirmed_status(self):
         for cadet in self:
@@ -300,7 +302,6 @@ class ListOfCadets(GenericListOfObjectsWithIds):
     def sort_by_dob_desc(self):
         return ListOfCadets(sorted(self, key=lambda x: x.date_of_birth, reverse=True))
 
-
     def cadet_with_id(self, cadet_id: str, default=arg_not_passed) -> Cadet:
         if cadet_id == permanent_skip_cadet_id:
             return permanent_skip_cadet
@@ -308,8 +309,6 @@ class ListOfCadets(GenericListOfObjectsWithIds):
             return temporary_skip_cadet
 
         return self.object_with_id(cadet_id, default=default)
-
-
 
 
 def cadet_is_too_young_to_be_without_parent(cadet: Cadet) -> bool:
@@ -333,15 +332,15 @@ PERMANENT_SKIP_TEST_CADET_ID = str(-9999)
 TEMPORARY_SKIP_TEST_CADET_ID = str(9991)
 
 DEFAULT_DATE_OF_BIRTH = datetime.date(1970, 1, 1)
-UNCONFIRMED_DATE_OF_BIRTH =datetime.date(1950,1,1)
-IRRELEVANT_DATE_OF_BIRTH = datetime.date(1960,1,1)
+UNCONFIRMED_DATE_OF_BIRTH = datetime.date(1950, 1, 1)
+IRRELEVANT_DATE_OF_BIRTH = datetime.date(1960, 1, 1)
 
 default_cadet = Cadet.new(
     first_name=" ",
     surname=" ",
     date_of_birth=DEFAULT_DATE_OF_BIRTH,
     membership_status=user_unconfirmed_member,
-    dob_status=DOB_UNKNOWN
+    dob_status=DOB_UNKNOWN,
 )
 
 
@@ -364,4 +363,3 @@ temporary_skip_cadet = Cadet(
 )
 
 temporary_skip_cadet_id = temporary_skip_cadet.id
-

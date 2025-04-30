@@ -9,12 +9,15 @@ from app.objects.utilities.utils import percentage_of_x_in_y
 ROW_ID = "row_id"
 
 
-def percentage_of_row_ids_done_in_registration_file(interface: abstractInterface) -> int:
+def percentage_of_row_ids_done_in_registration_file(
+    interface: abstractInterface,
+) -> int:
     current_id = get_current_row_id(interface)
     list_of_ids = list_of_row_ids_in_raw_registration_data(interface)
     current_index = list_of_ids.index(current_id)
 
     return percentage_of_x_in_y(current_index, list_of_ids)
+
 
 def get_and_save_next_row_id_in_raw_registration_data(
     interface: abstractInterface,
@@ -53,7 +56,7 @@ def get_next_row_id_in_event_data(interface: abstractInterface, current_id: str)
 
     print(
         "Getting next ID %s (index %d) from list was %s (index %d)"
-        % (new_id, new_index,  current_id, current_index)
+        % (new_id, new_index, current_id, current_index)
     )
 
     return new_id

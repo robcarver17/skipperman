@@ -2,8 +2,10 @@ from app.backend.groups.data_for_group_display import *
 from app.backend.groups.data_for_group_display import (
     get_potential_partner_to_be_added_or_missing_data,
 )
-from app.frontend.events.group_allocation.buttons import get_make_available_button, \
-    get_button_for_partnership_cell
+from app.frontend.events.group_allocation.buttons import (
+    get_make_available_button,
+    get_button_for_partnership_cell,
+)
 from app.frontend.forms.form_utils import (
     input_name_from_column_name_and_cadet_id,
     get_availability_checkbox,
@@ -96,10 +98,8 @@ def get_input_fields_for_cadet_across_days(
     sail_number_field = get_sail_number_field_across_days(
         cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
     )
-    input_for_partner_allocation = (
-        get_input_for_partner_allocation_across_days(
-            cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
-        )
+    input_for_partner_allocation = get_input_for_partner_allocation_across_days(
+        cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
     )
 
     input_fields = [
@@ -122,17 +122,14 @@ def get_input_fields_for_cadet_on_day(
     if not availability.available_on_day(day):
         return get_input_fields_for_cadet_on_day_when_unavailable(cadet)
     else:
-        return get_input_fields_for_cadet_on_day_when_available(cadet=cadet,
-                                                                day=day,
-                                                                dict_of_all_event_data=dict_of_all_event_data)
+        return get_input_fields_for_cadet_on_day_when_available(
+            cadet=cadet, day=day, dict_of_all_event_data=dict_of_all_event_data
+        )
 
-def get_input_fields_for_cadet_on_day_when_unavailable(
-    cadet: Cadet
-) -> list:
+
+def get_input_fields_for_cadet_on_day_when_unavailable(cadet: Cadet) -> list:
     padding = [""] * 4
-    return [
-        get_make_available_button(cadet)
-    ] + padding
+    return [get_make_available_button(cadet)] + padding
 
 
 def get_input_fields_for_cadet_on_day_when_available(
@@ -155,10 +152,8 @@ def get_input_fields_for_cadet_on_day_when_available(
     sail_number_field = get_sail_number_field_on_day(
         cadet=cadet, dict_of_all_event_data=dict_of_all_event_data, day=day
     )
-    input_for_partner_allocation = (
-        get_input_for_partner_allocation_on_day(
-            cadet=cadet, dict_of_all_event_data=dict_of_all_event_data, day=day
-        )
+    input_for_partner_allocation = get_input_for_partner_allocation_on_day(
+        cadet=cadet, dict_of_all_event_data=dict_of_all_event_data, day=day
     )
 
     input_fields = [
@@ -407,7 +402,6 @@ def get_sail_number_field(cadet: Cadet, current_number: str) -> textInput:
     return sail_number_field
 
 
-
 def get_input_for_partner_allocation_across_days(
     cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> ListOfLines:
@@ -420,8 +414,7 @@ def get_input_for_partner_allocation_across_days(
         )
     else:
         return get_input_for_partner_allocation_across_days_when_consistent(
-            dict_of_all_event_data=dict_of_all_event_data,
-            cadet=cadet
+            dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
         )
 
 
@@ -484,12 +477,22 @@ def get_input_for_partner_allocation(
     potential_partner_to_be_added_or_missing_data: str,
 ) -> ListOfLines:
 
-    drop_down_input_field = get_dropdown_field_for_partner_allocation(list_of_other_cadets=list_of_other_cadets, current_partner_name=current_partner_name, cadet=cadet)
-    partnership_button = get_button_for_partnership_cell(cadet=cadet, potential_partner_to_be_added_or_missing_data=potential_partner_to_be_added_or_missing_data, current_partner_name=current_partner_name)
+    drop_down_input_field = get_dropdown_field_for_partner_allocation(
+        list_of_other_cadets=list_of_other_cadets,
+        current_partner_name=current_partner_name,
+        cadet=cadet,
+    )
+    partnership_button = get_button_for_partnership_cell(
+        cadet=cadet,
+        potential_partner_to_be_added_or_missing_data=potential_partner_to_be_added_or_missing_data,
+        current_partner_name=current_partner_name,
+    )
 
     return ListOfLines([drop_down_input_field, partnership_button])
 
-def get_dropdown_field_for_partner_allocation(   cadet: Cadet,
+
+def get_dropdown_field_for_partner_allocation(
+    cadet: Cadet,
     list_of_other_cadets: List[str],
     current_partner_name: str,
 ) -> dropDownInput:
@@ -508,7 +511,6 @@ def get_dropdown_field_for_partner_allocation(   cadet: Cadet,
     return drop_down_input_field
 
 
-
 NOTES = "Notes"
 ALLOCATION = "allocation"
 CLUB_BOAT = "club_boat"
@@ -519,4 +521,4 @@ SAIL_NUMBER = "sail_number"
 
 GUESS_BOAT_BUTTON = "Autofill Boat Class"
 
-guess_boat_button= Button(GUESS_BOAT_BUTTON, nav_button=True)
+guess_boat_button = Button(GUESS_BOAT_BUTTON, nav_button=True)

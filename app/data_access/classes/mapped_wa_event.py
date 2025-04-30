@@ -1,6 +1,7 @@
 from app.objects.registration_data import RegistrationDataForEvent
 from app.objects.event_warnings import ListOfEventWarnings
 
+
 class DataMappedRegistrationData(object):
     def read(self, event_id: str) -> RegistrationDataForEvent:
         raise NotImplemented

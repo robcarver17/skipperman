@@ -31,9 +31,7 @@ class CadetRegistrationData:
     notes: str = ""
     health: str = ""
 
-    def update_column_in_data(self,
-                        column_name: str,
-                        new_value_for_column):
+    def update_column_in_data(self, column_name: str, new_value_for_column):
 
         self.data_in_row[column_name] = new_value_for_column
 
@@ -90,6 +88,7 @@ class CadetRegistrationData:
     def update_health(self, new_health: str):
         self.health = new_health
 
+
 class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
     def __init__(
         self,
@@ -108,47 +107,42 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
             print("%s" % str(e))
             return []
 
-
-
-    def update_health_for_existing_cadet_at_event(
-            self, cadet: Cadet, new_health: str
-    ):
+    def update_health_for_existing_cadet_at_event(self, cadet: Cadet, new_health: str):
         reg_data_for_cadet = self.registration_data_for_cadet(cadet)
         reg_data_for_cadet.update_health(new_health)
         self[cadet] = reg_data_for_cadet
 
         self.list_of_cadets_with_id_at_event.update_health_for_existing_cadet_at_event(
-            cadet_id=cadet.id,
-             new_health=new_health
+            cadet_id=cadet.id, new_health=new_health
         )
 
-    def update_row_in_registration_data_for_existing_cadet_at_event(self, cadet: Cadet,
-                                                                    column_name: str,
-                                                                    new_value_for_column
-                                                                    ):
+    def update_row_in_registration_data_for_existing_cadet_at_event(
+        self, cadet: Cadet, column_name: str, new_value_for_column
+    ):
         reg_data_for_cadet = self.registration_data_for_cadet(cadet)
-        existing_value =reg_data_for_cadet.data_in_row[column_name]
-        if existing_value==new_value_for_column:
+        existing_value = reg_data_for_cadet.data_in_row[column_name]
+        if existing_value == new_value_for_column:
             return
 
-        reg_data_for_cadet.update_column_in_data(column_name=column_name, new_value_for_column=new_value_for_column)
+        reg_data_for_cadet.update_column_in_data(
+            column_name=column_name, new_value_for_column=new_value_for_column
+        )
         self[cadet] = reg_data_for_cadet
 
         self.list_of_cadets_with_id_at_event.update_data_row_for_existing_cadet_at_event(
             cadet_id=cadet.id,
             column_name=column_name,
-            new_value_for_column=new_value_for_column
+            new_value_for_column=new_value_for_column,
         )
 
     def update_notes_for_existing_cadet_at_event(self, cadet: Cadet, notes: str):
         reg_data_for_cadet = self.registration_data_for_cadet(cadet)
         reg_data_for_cadet.update_notes(notes)
-        self[cadet]  =reg_data_for_cadet
+        self[cadet] = reg_data_for_cadet
 
         ## propogate down
         self.list_of_cadets_with_id_at_event.update_notes_for_existing_cadet_at_event(
-            cadet_id=cadet.id,
-            new_notes=notes
+            cadet_id=cadet.id, new_notes=notes
         )
 
     def availability_dict(self) -> Dict[Cadet, DaySelector]:

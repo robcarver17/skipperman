@@ -150,7 +150,6 @@ def get_current_club_boat_name_on_day(
     return club_dinghy.name
 
 
-
 def get_current_boat_class_across_days_or_none_if_different(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet
 ) -> Union[str, None]:
@@ -459,7 +458,7 @@ def get_two_handed_partner_as_str_for_dropdown_cadet_on_day(
 
 def get_two_handed_partner_as_str_for_dropdown_cadet_across_days(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet
-) -> Union[None,str]:
+) -> Union[None, str]:
 
     current_partner_name = (
         get_two_handed_partner_name_for_cadet_across_days_or_none_if_different(

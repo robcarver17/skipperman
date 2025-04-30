@@ -105,7 +105,7 @@ class flaskInterface(abstractInterface):
     def session_data(
         self,
     ) -> SessionDataForAction:  ## pipe through to current session object
-        session_data =SessionDataForAction(self.action_name)
+        session_data = SessionDataForAction(self.action_name)
         return session_data
 
     def uploaded_file(self, input_name: str = "file"):

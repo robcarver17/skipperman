@@ -1,6 +1,8 @@
 from typing import Union, List
 
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
+    get_dict_of_all_event_info_for_cadets,
+)
 from app.backend.groups.group_allocation_info import (
     get_group_allocation_info,
     GroupAllocationInfo,
@@ -17,10 +19,15 @@ from app.backend.qualifications_and_ticks.qualifications_for_cadet import (
     name_of_highest_qualification_for_cadet,
 )
 from app.data_access.configuration.fixed import ADD_KEYBOARD_SHORTCUT
-from app.frontend.events.group_allocation.buttons import get_day_buttons, button_to_click_on_cadet
+from app.frontend.events.group_allocation.buttons import (
+    get_day_buttons,
+    button_to_click_on_cadet,
+)
 from app.frontend.events.group_allocation.club_boats import get_club_dinghies_form
-from app.frontend.events.group_allocation.previous_events import get_previous_event_selection_form, \
-    get_prior_events_to_show
+from app.frontend.events.group_allocation.previous_events import (
+    get_previous_event_selection_form,
+    get_prior_events_to_show,
+)
 from app.frontend.shared.cadet_state import get_cadet_from_state
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 
@@ -58,7 +65,11 @@ from app.objects.abstract_objects.abstract_lines import (
     Line,
     make_long_thing_detail_box,
 )
-from app.objects.abstract_objects.abstract_tables import Table, RowInTable, PandasDFTable
+from app.objects.abstract_objects.abstract_tables import (
+    Table,
+    RowInTable,
+    PandasDFTable,
+)
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.events import (
@@ -82,7 +93,11 @@ def display_form_allocate_cadets_at_event(
         ListOfLines(
             [
                 nav_bar_top,
-                Heading("Cadets in %s: Allocate groups, boats and sailing partners" % str(event), size=3),
+                Heading(
+                    "Cadets in %s: Allocate groups, boats and sailing partners"
+                    % str(event),
+                    size=3,
+                ),
                 _______________,
                 _______________,
                 allocations_and_class_summary,
@@ -96,7 +111,6 @@ def display_form_allocate_cadets_at_event(
                 _______________,
                 inner_form,
                 _______________,
-
                 nav_bar_bottom,
             ]
         )
@@ -104,14 +118,27 @@ def display_form_allocate_cadets_at_event(
 
 
 help_button = HelpButton("group_allocation_help")
-add_button = Button("Add unregistered sailor", nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT)
+add_button = Button(
+    "Add unregistered sailor", nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT
+)
 quick_group_report_button = Button("Quick group report", nav_button=True)
 quick_spotters_report_button = Button("Quick spotters report", nav_button=True)
 
 
-nav_bar_top = ButtonBar([cancel_menu_button, save_menu_button, guess_boat_button, add_button, quick_group_report_button, quick_spotters_report_button, help_button])
-nav_bar_bottom = ButtonBar([cancel_menu_button, save_menu_button, add_button, help_button])
-
+nav_bar_top = ButtonBar(
+    [
+        cancel_menu_button,
+        save_menu_button,
+        guess_boat_button,
+        add_button,
+        quick_group_report_button,
+        quick_spotters_report_button,
+        help_button,
+    ]
+)
+nav_bar_bottom = ButtonBar(
+    [cancel_menu_button, save_menu_button, add_button, help_button]
+)
 
 
 def get_allocations_and_classes_detail(
@@ -121,67 +148,85 @@ def get_allocations_and_classes_detail(
     allocations = get_allocations_detail(interface=interface, event=event)
     club_dinghies = get_club_dinghies_detail(interface=interface, event=event)
     classes = get_classes_detail(interface=interface, event=event)
-    previous_event_selection_form = get_previous_event_selection_detail(interface=interface, event=event)
-
-    return (
-        ListOfLines(
-            [
-                _______________,
-                allocations,
-                _______________,
-
-                club_dinghies,
-                _______________,
-                classes,
-                _______________,
-                previous_event_selection_form
-            ]
-        )
+    previous_event_selection_form = get_previous_event_selection_detail(
+        interface=interface, event=event
     )
 
+    return ListOfLines(
+        [
+            _______________,
+            allocations,
+            _______________,
+            club_dinghies,
+            _______________,
+            classes,
+            _______________,
+            previous_event_selection_form,
+        ]
+    )
+
+
 def get_allocations_detail(interface: abstractInterface, event: Event):
-    allocations = PandasDFTable(summarise_allocations_for_event(
-        object_store=interface.object_store, event=event
-    ))
+    allocations = PandasDFTable(
+        summarise_allocations_for_event(
+            object_store=interface.object_store, event=event
+        )
+    )
     if len(allocations) == 0:
         allocations = "No group allocations made"
     else:
-        allocations = DetailListOfLines(ListOfLines([allocations]), name="Groups allocated")
+        allocations = DetailListOfLines(
+            ListOfLines([allocations]), name="Groups allocated"
+        )
 
     return allocations
+
 
 def get_club_dinghies_detail(interface: abstractInterface, event: Event):
     return DetailListOfLines(
         ListOfLines(
             [
                 "Allocated club dinghies (numbers are sailors, not boats. * means over capacity):",
-                                                   get_club_dinghies_form(interface=interface, event=event)]),
-                                      name="Club boats")
+                get_club_dinghies_form(interface=interface, event=event),
+            ]
+        ),
+        name="Club boats",
+    )
+
 
 def get_classes_detail(interface: abstractInterface, event: Event):
-    classes = PandasDFTable(summarise_class_attendance_for_event(
-        event=event, object_store=interface.object_store
-    ))
+    classes = PandasDFTable(
+        summarise_class_attendance_for_event(
+            event=event, object_store=interface.object_store
+        )
+    )
     if len(classes) == 0:
         classes = "No boat classes allocated"
     else:
-        classes = DetailListOfLines(ListOfLines([classes]), name = "Boat classes")
+        classes = DetailListOfLines(ListOfLines([classes]), name="Boat classes")
 
     return classes
 
+
 def get_previous_event_selection_detail(interface: abstractInterface, event: Event):
-    return DetailListOfLines(get_previous_event_selection_form(interface=interface, event=event),
-                                                      name="Select previous events to show")
+    return DetailListOfLines(
+        get_previous_event_selection_form(interface=interface, event=event),
+        name="Select previous events to show",
+    )
+
 
 def get_sort_line(sort_order):
     current_sort_order = ", ".join(sort_order)
-    sort_line = Line([
-        "Current sort order: %s" % current_sort_order,
-        "    ",
-        sort_order_change_button
-    ])
+    sort_line = Line(
+        [
+            "Current sort order: %s" % current_sort_order,
+            "    ",
+            sort_order_change_button,
+        ]
+    )
 
     return sort_line
+
 
 sort_order_change_button = Button("Change sort order")
 
@@ -201,33 +246,29 @@ def get_inner_form_for_cadet_allocation(
         day_or_none=day_or_none,
     )
     prior_events = get_prior_events_to_show(interface=interface, event=event)
-    previous_groups_for_cadets = (
-        get_dict_of_event_allocations_given_list_of_events(
-            object_store=object_store,
-            list_of_cadets=list_of_cadets,
-            list_of_events=prior_events,
-            remove_unallocated=False,
-            pad=True,
-        )
+    previous_groups_for_cadets = get_dict_of_event_allocations_given_list_of_events(
+        object_store=object_store,
+        list_of_cadets=list_of_cadets,
+        list_of_events=prior_events,
+        remove_unallocated=False,
+        pad=True,
     )
     group_allocation_info = get_group_allocation_info(dict_of_all_event_data)
     top_row = get_top_row(
-                previous_groups_for_cadets=previous_groups_for_cadets,
-                group_allocation_info=group_allocation_info,
-                interface=interface,
-            )
+        previous_groups_for_cadets=previous_groups_for_cadets,
+        group_allocation_info=group_allocation_info,
+        interface=interface,
+    )
     body = get_body_of_table_for_cadet_allocation(
         previous_groups_for_cadets=previous_groups_for_cadets,
         group_allocation_info=group_allocation_info,
         list_of_cadets=list_of_cadets,
         interface=interface,
-        dict_of_all_event_data=dict_of_all_event_data
+        dict_of_all_event_data=dict_of_all_event_data,
     )
 
     return Table(
-        [
-        top_row
-        ]+body,
+        [top_row] + body,
         has_column_headings=True,
         has_row_headings=True,
     )
@@ -279,12 +320,15 @@ def get_input_field_headings_for_day(day_name: str) -> list:
 
     return input_field_names
 
-def get_body_of_table_for_cadet_allocation(interface: abstractInterface,
-                                           group_allocation_info: GroupAllocationInfo,
-                                           dict_of_all_event_data: DictOfAllEventInfoForCadets,
-                                           previous_groups_for_cadets: DictOfEventAllocations,
-                                           list_of_cadets: ListOfCadets) -> List[RowInTable]:
-    table_rows= [
+
+def get_body_of_table_for_cadet_allocation(
+    interface: abstractInterface,
+    group_allocation_info: GroupAllocationInfo,
+    dict_of_all_event_data: DictOfAllEventInfoForCadets,
+    previous_groups_for_cadets: DictOfEventAllocations,
+    list_of_cadets: ListOfCadets,
+) -> List[RowInTable]:
+    table_rows = [
         get_row_for_cadet(
             interface=interface,
             previous_groups_for_cadets=previous_groups_for_cadets,
@@ -295,6 +339,7 @@ def get_body_of_table_for_cadet_allocation(interface: abstractInterface,
         for cadet in list_of_cadets
     ]
     return table_rows
+
 
 def get_row_for_cadet(
     interface: abstractInterface,
@@ -379,7 +424,6 @@ def this_cadet_has_been_clicked_on_already(interface: abstractInterface, cadet: 
         return False
 
     return selected_cadet == cadet
-
 
 
 def get_list_of_all_cadets_with_event_data(interface: abstractInterface):

@@ -32,15 +32,20 @@ PUBLIC_WEB_PATH = "%s/%s/" % (HOMEPAGE, PUBLIC_REPORTING_SUBDIRECTORY)
 SIMILARITY_LEVEL_TO_WARN_NAME = configuration[
     "similarity_level_to_warn_when_comparing_names_on_event_import"
 ]
-SIMILARITY_LEVEL_TO_MATCH_VERY_SIMILAR_FIRST_NAMES = configuration["similarity_level_to_match_a_very_similar_cadet_first_name_on_event_import"]
-SIMILARITY_LEVEL_TO_WARN_NAME_ON_MATCHING_MEMBERSHIP_LIST = configuration["similarity_level_to_warn_when_comparing_names_in_membership_list"]
+SIMILARITY_LEVEL_TO_MATCH_VERY_SIMILAR_FIRST_NAMES = configuration[
+    "similarity_level_to_match_a_very_similar_cadet_first_name_on_event_import"
+]
+SIMILARITY_LEVEL_TO_WARN_NAME_ON_MATCHING_MEMBERSHIP_LIST = configuration[
+    "similarity_level_to_warn_when_comparing_names_in_membership_list"
+]
 
 ## Volunteers
 SIMILARITY_LEVEL_TO_WARN_VOLUNTEER_NAME = configuration[
     "similarity_level_to_warn_when_comparing_volunteer_names_on_event_import"
 ]
-SIMILARITY_LEVEL_TO_MATCH_VERY_SIMILAR_VOLUNTEER_NAME = \
-    configuration["similarity_level_to_match_a_very_similar_volunteer_name_on_event_import"]
+SIMILARITY_LEVEL_TO_MATCH_VERY_SIMILAR_VOLUNTEER_NAME = configuration[
+    "similarity_level_to_match_a_very_similar_volunteer_name_on_event_import"
+]
 
 
 MIN_CADET_AGE = configuration["minimum_cadet_age"]
@@ -69,7 +74,9 @@ UPLOAD_EXTENSIONS = configuration["upload_extensions"]
 MINIMUM_COLOUR_GROUPS_TO_DISTRIBUTE = configuration["min_colour_groups_to_distribute"]
 
 ## if following in volunteer status field can't volunteer
-UNABLE_TO_VOLUNTEER_KEYWORD_LIST = configuration["if_volunteer_unable_to_volunteer_contains"]
+UNABLE_TO_VOLUNTEER_KEYWORD_LIST = configuration[
+    "if_volunteer_unable_to_volunteer_contains"
+]
 MIN_AGE_WHEN_CADET_CAN_BE_AT_EVENT_WITHOUT_PARENT = configuration[
     "minimum_age_when_cadet_can_be_at_event_without_parent"
 ]
@@ -79,6 +86,8 @@ SUPPORT_EMAIL = configuration["support_email"]
 
 WA_FIELD_LIST_FILE = configuration["WA_field_list_file"]
 
-IMPORT_SKILLS_CONFIG = from_skills_dict_in_import_config_to_import_config(configuration['import_skills_csv'])
+IMPORT_SKILLS_CONFIG = from_skills_dict_in_import_config_to_import_config(
+    configuration["import_skills_csv"]
+)
 
-local_timezone = pytz.timezone(configuration['pytz_timezone'])
+local_timezone = pytz.timezone(configuration["pytz_timezone"])

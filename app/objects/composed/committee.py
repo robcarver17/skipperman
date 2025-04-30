@@ -9,7 +9,9 @@ from app.objects.committee import (
     CadetWithIdCommitteeMember,
     ListOfCadetsWithIdOnCommittee,
 )
-from app.objects.utilities.generic_list_of_objects import get_unique_object_with_attr_in_list
+from app.objects.utilities.generic_list_of_objects import (
+    get_unique_object_with_attr_in_list,
+)
 
 
 @dataclass
@@ -75,8 +77,8 @@ class CadetOnCommittee:
 class ListOfCadetsOnCommittee(List[CadetOnCommittee]):
     def __init__(
         self,
-            raw_list: List[CadetOnCommittee],
-            list_of_cadets_with_id_on_commitee: ListOfCadetsWithIdOnCommittee,
+        raw_list: List[CadetOnCommittee],
+        list_of_cadets_with_id_on_commitee: ListOfCadetsWithIdOnCommittee,
     ):
         self._list_of_cadets_with_id_on_committee = list_of_cadets_with_id_on_commitee
         super().__init__(raw_list)
@@ -164,7 +166,7 @@ def create_list_of_cadet_committee_members_from_underlying_data(
 ) -> ListOfCadetsOnCommittee:
     raw_list = create_raw_list_of_cadet_committee_members_from_underlying_data(
         list_of_cadets=list_of_cadets,
-        list_of_cadets_with_id_on_commitee=list_of_cadets_with_id_on_commitee
+        list_of_cadets_with_id_on_commitee=list_of_cadets_with_id_on_commitee,
     )
     return ListOfCadetsOnCommittee(
         raw_list=raw_list,

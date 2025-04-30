@@ -7,7 +7,7 @@ from app.objects.relevant_information_for_volunteers import (
     ListOfRelevantInformationForVolunteer,
 )
 from app.backend.volunteers.relevant_information_for_volunteer import (
-    relevant_information_requires_clarification
+    relevant_information_requires_clarification,
 )
 
 from app.backend.registration_data.identified_volunteers_at_event import (
@@ -44,8 +44,10 @@ def display_add_volunteers_to_event(
 
     return next_volunteer_in_event(interface)
 
-def post_add_volunteers_to_event(interface:abstractInterface):
+
+def post_add_volunteers_to_event(interface: abstractInterface):
     raise Exception("Should never be reached post_add_volunteers_to_event")
+
 
 def next_volunteer_in_event(interface: abstractInterface) -> Union[Form, NewForm]:
     try:
@@ -124,25 +126,29 @@ def process_new_volunteer_at_event_with_active_cadets(
         list_of_relevant_information=list_of_relevant_information,
         volunteer=volunteer,
     )
-    any_issues = len(issues_with_volunteer)>0
+    any_issues = len(issues_with_volunteer) > 0
     if any_issues:
-        add_list_of_event_warnings(object_store=interface.object_store, event=event,
-                                   new_list_of_warnings=issues_with_volunteer)
+        add_list_of_event_warnings(
+            object_store=interface.object_store,
+            event=event,
+            new_list_of_warnings=issues_with_volunteer,
+        )
 
     return process_new_volunteer_at_event_with_active_cadets_with_issues_logged(
         interface=interface,
         event=event,
         list_of_relevant_information=list_of_relevant_information,
         volunteer=volunteer,
-        any_issues=any_issues
+        any_issues=any_issues,
     )
+
 
 def process_new_volunteer_at_event_with_active_cadets_with_issues_logged(
     interface: abstractInterface,
     list_of_relevant_information: ListOfRelevantInformationForVolunteer,
     volunteer: Volunteer,
     event: Event,
-        any_issues: bool
+    any_issues: bool,
 ) -> Union[Form, NewForm]:
     list_of_associated_cadets = get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer(
         object_store=interface.object_store, volunteer=volunteer, event=event
@@ -151,7 +157,7 @@ def process_new_volunteer_at_event_with_active_cadets_with_issues_logged(
         get_volunteer_registration_data_from_list_of_relevant_information(
             list_of_relevant_information=list_of_relevant_information,
             list_of_associated_cadets=list_of_associated_cadets,
-            any_issues=any_issues
+            any_issues=any_issues,
         )
     )
 
@@ -160,7 +166,7 @@ def process_new_volunteer_at_event_with_active_cadets_with_issues_logged(
         object_store=interface.object_store,
         event=event,
         volunteer=volunteer,
-        registration_data=registration_data
+        registration_data=registration_data,
     )
     update_cadet_connections_when_volunteer_already_at_event(
         object_store=interface.object_store, event=event, volunteer=volunteer
@@ -168,4 +174,3 @@ def process_new_volunteer_at_event_with_active_cadets_with_issues_logged(
 
     interface.flush_cache_to_store()
     return next_volunteer_in_event(interface)
-

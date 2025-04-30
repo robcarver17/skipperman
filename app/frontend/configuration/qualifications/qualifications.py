@@ -31,7 +31,9 @@ header_text = "List of qualifications and ticks: add, edit, re-order. Re-orderin
 
 
 def display_form_config_qualifications_page(interface: abstractInterface) -> Form:
-    list_of_qualifications = get_list_of_qualifications(interface.object_store).list_of_names()
+    list_of_qualifications = get_list_of_qualifications(
+        interface.object_store
+    ).list_of_names()
 
     return display_form_edit_generic_list(
         existing_list=list_of_qualifications,

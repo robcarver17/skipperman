@@ -16,7 +16,8 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     textInput,
     dateInput,
-    dropDownInput, )
+    dropDownInput,
+)
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
@@ -25,12 +26,21 @@ from app.objects.abstract_objects.abstract_lines import (
 )
 from app.objects.abstract_objects.abstract_text import bold
 
-from app.objects.cadets import Cadet, default_cadet, DOB_SURE, DOB_UNKNOWN, DOB_IRRELEVANT, UNCONFIRMED_DATE_OF_BIRTH, \
-    DEFAULT_DATE_OF_BIRTH, IRRELEVANT_DATE_OF_BIRTH
+from app.objects.cadets import (
+    Cadet,
+    default_cadet,
+    DOB_SURE,
+    DOB_UNKNOWN,
+    DOB_IRRELEVANT,
+    UNCONFIRMED_DATE_OF_BIRTH,
+    DEFAULT_DATE_OF_BIRTH,
+    IRRELEVANT_DATE_OF_BIRTH,
+)
 from app.objects.membership_status import (
     MembershipStatus,
     describe_status,
-    all_status_description_as_dict_for_user_input, none_member,
+    all_status_description_as_dict_for_user_input,
+    none_member,
 )
 from app.objects.utilities.exceptions import arg_not_passed
 
@@ -59,8 +69,9 @@ def get_add_cadet_form(
     if first_time_displayed:
         footer_buttons = get_footer_buttons_for_add_cadet_form(form_is_empty=True)
         return get_add_cadet_form_with_information_passed(
-            footer_buttons=footer_buttons, header_text=header_text,
-            help_string=help_string
+            footer_buttons=footer_buttons,
+            header_text=header_text,
+            help_string=help_string,
         )
     else:
         cadet_and_text = verify_form_with_cadet_details(interface)
@@ -73,7 +84,7 @@ def get_add_cadet_form(
             header_text=header_text,
             cadet_and_text=cadet_and_text,
             footer_buttons=footer_buttons,
-            help_string=help_string
+            help_string=help_string,
         )
 
 
@@ -82,23 +93,23 @@ default_header = ListOfLines(["Add a new sailor"])
 
 def get_add_cadet_form_with_information_passed(
     footer_buttons: Union[Line, ListOfLines, ButtonBar],
-        help_string: str = arg_not_passed,
+    help_string: str = arg_not_passed,
     header_text: ListOfLines = arg_not_passed,
     cadet_and_text: CadetAndVerificationText = default_cadet_and_text,
 ) -> Form:
     if header_text is arg_not_passed:
         header_text = default_header
     if help_string is arg_not_passed:
-        nav_bar = ''
+        nav_bar = ""
     else:
-        nav_bar =         ButtonBar([HelpButton(help_string)])
+        nav_bar = ButtonBar([HelpButton(help_string)])
 
     form_fields = form_fields_for_add_cadet(cadet_and_text.cadet)
 
     list_of_lines_inside_form = ListOfLines(
-         [
-            nav_bar]+
-        header_text+[
+        [nav_bar]
+        + header_text
+        + [
             _______________,
             _______________,
             form_fields,
@@ -124,9 +135,9 @@ def form_fields_for_add_cadet(cadet: Cadet):
         input_name=DOB,
         value=cadet.date_of_birth,
     )
-    if cadet.membership_status==none_member:
+    if cadet.membership_status == none_member:
         default_dob_status = DOB_IRRELEVANT
-    elif cadet.date_of_birth==UNCONFIRMED_DATE_OF_BIRTH:
+    elif cadet.date_of_birth == UNCONFIRMED_DATE_OF_BIRTH:
         default_dob_status = DOB_UNKNOWN
     elif cadet.date_of_birth == IRRELEVANT_DATE_OF_BIRTH:
         default_dob_status = DOB_IRRELEVANT
@@ -136,8 +147,12 @@ def form_fields_for_add_cadet(cadet: Cadet):
     dob_unsure = dropDownInput(
         input_label="status: ",
         input_name=DOB_UNSURE_FIELD,
-        dict_of_options={DOB_SURE: DOB_SURE, DOB_IRRELEVANT: DOB_IRRELEVANT, DOB_UNKNOWN: DOB_UNKNOWN},
-        default_label=default_dob_status
+        dict_of_options={
+            DOB_SURE: DOB_SURE,
+            DOB_IRRELEVANT: DOB_IRRELEVANT,
+            DOB_UNKNOWN: DOB_UNKNOWN,
+        },
+        default_label=default_dob_status,
     )
     membership_status = dropDownInput(
         input_label="",
@@ -147,7 +162,12 @@ def form_fields_for_add_cadet(cadet: Cadet):
     )
 
     form_fields = ListOfLines(
-        [Line(first_name), Line(surname), Line([dob, dob_unsure]), Line(membership_status)]
+        [
+            Line(first_name),
+            Line(surname),
+            Line([dob, dob_unsure]),
+            Line(membership_status),
+        ]
     )
 
     return form_fields
@@ -213,7 +233,7 @@ def get_cadet_from_form(interface: abstractInterface) -> Cadet:
         surname=surname,
         date_of_birth=date_of_birth,
         membership_status=membership_status,
-        dob_status=dob_status
+        dob_status=dob_status,
     )
 
 

@@ -48,7 +48,11 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.instructors.ENTRY3_choose_level import (
     display_form_choose_level_for_group_at_event,
 )
-from app.frontend.shared.buttons import get_attributes_from_button_pressed_of_known_type, get_button_value_given_type_and_attributes, is_button_of_type
+from app.frontend.shared.buttons import (
+    get_attributes_from_button_pressed_of_known_type,
+    get_button_value_given_type_and_attributes,
+    is_button_of_type,
+)
 
 
 def display_form_choose_group_for_event(interface: abstractInterface) -> Form:
@@ -120,9 +124,10 @@ def get_group_buttons(interface: abstractInterface, event: Event) -> Line:
             )
         )
 
-    list_with_buttons = [Button(label=group.name,
-                                value=value_for_group_button(group.name),
-                                tile=True) for group in list_of_groups]
+    list_with_buttons = [
+        Button(label=group.name, value=value_for_group_button(group.name), tile=True)
+        for group in list_of_groups
+    ]
 
     return Line(list_with_buttons)
 
@@ -179,12 +184,19 @@ def form_for_view_group_level(interface: abstractInterface):
 
 
 group_select_type = "groupSelect"
-def value_for_group_button(group_name:str):
+
+
+def value_for_group_button(group_name: str):
     return get_button_value_given_type_and_attributes(group_select_type, group_name)
 
-def is_group_button(button_pressed:str):
-    return is_button_of_type(value_of_button_pressed=button_pressed, type_to_check=group_select_type)
 
-def group_name_from_button(button_pressed:str):
-    return get_attributes_from_button_pressed_of_known_type(value_of_button_pressed=button_pressed, type_to_check=group_select_type)
+def is_group_button(button_pressed: str):
+    return is_button_of_type(
+        value_of_button_pressed=button_pressed, type_to_check=group_select_type
+    )
 
+
+def group_name_from_button(button_pressed: str):
+    return get_attributes_from_button_pressed_of_known_type(
+        value_of_button_pressed=button_pressed, type_to_check=group_select_type
+    )

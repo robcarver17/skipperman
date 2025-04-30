@@ -4,7 +4,7 @@ from typing import Union
 from app.frontend.configuration.qualifications.edit_qualifications_in_detail_form import (
     table_for_edit_qualification_details,
     button_for_new_substage,
-     button_pressed_is_substage_button,
+    button_pressed_is_substage_button,
 )
 from app.frontend.configuration.qualifications.edit_qualifications_in_stage_parse import (
     add_new_substage_to_qualification_from_form,
@@ -69,5 +69,3 @@ def post_form_edit_qualification_details(
     interface.flush_cache_to_store()
 
     return display_form_edit_qualification_details(interface)
-
-

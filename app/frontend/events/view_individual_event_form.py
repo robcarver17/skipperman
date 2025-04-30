@@ -2,16 +2,32 @@ from typing import Union
 
 from app.backend.clothing.summarise_clothing import summarise_clothing
 from app.backend.events.summarys import summarise_allocations_for_event
-from app.backend.events.view_event import identify_birthdays, summarise_registrations_for_event, \
-    summarise_volunteers_for_event
+from app.backend.events.view_event import (
+    identify_birthdays,
+    summarise_registrations_for_event,
+    summarise_volunteers_for_event,
+)
 from app.backend.food.summarise_food import summarise_food_data_by_day
-from app.backend.patrol_boats.patrol_boat_summary import get_summary_list_of_patrol_boat_allocations_for_events
-from app.backend.rota.volunteer_rota_summary import get_summary_list_of_teams_and_groups_for_events
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, main_menu_button, back_menu_button, Button, \
-    HelpButton
+from app.backend.patrol_boats.patrol_boat_summary import (
+    get_summary_list_of_patrol_boat_allocations_for_events,
+)
+from app.backend.rota.volunteer_rota_summary import (
+    get_summary_list_of_teams_and_groups_for_events,
+)
+from app.objects.abstract_objects.abstract_buttons import (
+    ButtonBar,
+    main_menu_button,
+    back_menu_button,
+    Button,
+    HelpButton,
+)
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_lines import ListOfLines, Line, _______________
+from app.objects.abstract_objects.abstract_lines import (
+    ListOfLines,
+    Line,
+    _______________,
+)
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import Event
@@ -40,23 +56,27 @@ def get_event_heading(interface: abstractInterface, event: Event) -> ListOfLines
 
     return event_description
 
+
 def summary_tables_for_event(interface: abstractInterface, event: Event) -> ListOfLines:
-    summarise_registrations = PandasDFTable(summarise_registrations_for_event(
-        object_store=interface.object_store, event=event
-    ))
-    if len(summarise_registrations)==0:
-        summarise_registrations=""
+    summarise_registrations = PandasDFTable(
+        summarise_registrations_for_event(
+            object_store=interface.object_store, event=event
+        )
+    )
+    if len(summarise_registrations) == 0:
+        summarise_registrations = ""
 
-    summarise_volunteers = PandasDFTable(summarise_volunteers_for_event(
-        object_store=interface.object_store, event=event
-    ))
-    if len(summarise_volunteers)==0:
-        summarise_volunteers=""
+    summarise_volunteers = PandasDFTable(
+        summarise_volunteers_for_event(object_store=interface.object_store, event=event)
+    )
+    if len(summarise_volunteers) == 0:
+        summarise_volunteers = ""
 
-
-    allocations = PandasDFTable(summarise_allocations_for_event(
-        object_store=interface.object_store, event=event
-    ))
+    allocations = PandasDFTable(
+        summarise_allocations_for_event(
+            object_store=interface.object_store, event=event
+        )
+    )
     if len(allocations) > 0:
         allocations_lines = ListOfLines(
             [
@@ -100,8 +120,10 @@ def summary_tables_for_event(interface: abstractInterface, event: Event) -> List
     else:
         boat_lines = ""
 
-    food_summary = summarise_food_data_by_day(object_store=interface.object_store, event=event)
-    if len(food_summary)>0:
+    food_summary = summarise_food_data_by_day(
+        object_store=interface.object_store, event=event
+    )
+    if len(food_summary) > 0:
         food_summary_lines = ListOfLines(
             [
                 _______________,
@@ -114,9 +136,10 @@ def summary_tables_for_event(interface: abstractInterface, event: Event) -> List
     else:
         food_summary_lines = ""
 
-
-    clothing_summary = summarise_clothing(object_store=interface.object_store, event=event)
-    if len(clothing_summary)>0:        
+    clothing_summary = summarise_clothing(
+        object_store=interface.object_store, event=event
+    )
+    if len(clothing_summary) > 0:
         clothing_summary_lines = ListOfLines(
             [
                 _______________,
@@ -128,7 +151,6 @@ def summary_tables_for_event(interface: abstractInterface, event: Event) -> List
         )
     else:
         clothing_summary_lines = ""
-
 
     summary_lines = ListOfLines(
         [
@@ -142,7 +164,7 @@ def summary_tables_for_event(interface: abstractInterface, event: Event) -> List
             _______________,
             boat_lines,
             _______________,
-             food_summary_lines,
+            food_summary_lines,
             _______________,
             clothing_summary_lines,
         ]

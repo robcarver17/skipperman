@@ -7,7 +7,9 @@ from werkzeug.middleware.profiler import ProfilerMiddleware
 from app.data_access.init_data import home_directory
 from app.web.documentation.documentation_pages import generate_help_page_html
 from app.web.flask.flash import flash_error
-from app.web.flask.session_data_for_action import clear_all_action_state_data_from_session
+from app.web.flask.session_data_for_action import (
+    clear_all_action_state_data_from_session,
+)
 from app.web.html.config_html import PROFILE
 
 from flask import session, Flask, redirect, url_for
@@ -35,7 +37,9 @@ from app.web.html.url_define import (
     TOGGLE_READ_ONLY,
     HELP_PREFIX,
     MAKE_BACKUP,
-    MAIN_MENU_URL, TOGGLE_READ_ONLY_GLOBAL, LINK_LOGIN
+    MAIN_MENU_URL,
+    TOGGLE_READ_ONLY_GLOBAL,
+    LINK_LOGIN,
 )
 from app.data_access.configuration.configuration import MAX_FILE_SIZE, SUPPORT_EMAIL
 
@@ -75,6 +79,7 @@ def get_secret_key_from_file_creating_if_required():
             secret_file.write(app.secret_key)
 
     return secret_key
+
 
 def prepare_request(max_file_size):
     Request.max_form_parts = None  # avoid large forms crashing
@@ -148,7 +153,7 @@ def make_backup():
     return generate_menu_page_html()
 
 
-@app.route("/%s/" % LINK_LOGIN , methods=["GET"])
+@app.route("/%s/" % LINK_LOGIN, methods=["GET"])
 def link_login():
     return login_link_page()
 
@@ -170,12 +175,10 @@ def action(action_option):
         return generate_action_page_html(action_option)
 
 
-
 @app.route(MAIN_MENU_URL, methods=["GET", "POST"])
 def main_menu():
     clear_all_action_state_data_from_session()
     return generate_menu_page_html()
-
 
 
 @app.route("/%s/<help_page_name>" % HELP_PREFIX, methods=["GET", "POST"])
@@ -184,16 +187,21 @@ def help(help_page_name):
     return generate_help_page_html(help_page_name)
 
 
-
 @app.errorhandler(500)
 def generic_web_error(e):
-    flash_error("Some kind of error (%s) contact support: %s " % (str(e), SUPPORT_EMAIL))
+    flash_error(
+        "Some kind of error (%s) contact support: %s " % (str(e), SUPPORT_EMAIL)
+    )
     return generate_menu_page_html()
+
 
 @app.errorhandler(404)
 def generic_missing_page_error(e):
-    flash_error("Missing page error (%s) contact support: %s " % (str(e), SUPPORT_EMAIL))
+    flash_error(
+        "Missing page error (%s) contact support: %s " % (str(e), SUPPORT_EMAIL)
+    )
     return generate_menu_page_html()
+
 
 ## We do this otherwise the index url gets randomly called and changes state
 @app.route(INDEX_URL)

@@ -26,11 +26,12 @@ from app.objects.composed.volunteers_with_all_event_data import AllEventDataForV
 from app.objects.day_selectors import Day
 
 swap_button_type = "SWAP"
+
+
 def swap_button_value_for_volunteer_id_and_day(volunteer_id: str, day: Day) -> str:
     return generic_button_value_for_volunteer_id_and_day(
         button_type=swap_button_type, volunteer_id=volunteer_id, day=day
     )
-
 
 
 def get_swap_button(
@@ -139,7 +140,9 @@ def update_if_swap_button_pressed_and_not_yet_ready_to_swap(
 def get_and_store_swap_state_from_button_pressed(
     interface: abstractInterface, swap_button: str
 ):
-    volunteer_id, day = from_known_button_to_volunteer_id_and_day(swap_button, button_type=swap_button_type)
+    volunteer_id, day = from_known_button_to_volunteer_id_and_day(
+        swap_button, button_type=swap_button_type
+    )
     swap_state = SwapButtonState(
         ready_to_swap=True,
         dict_of_thing_to_swap=dict(day_str=day.name, volunteer_id=volunteer_id),
@@ -198,8 +201,10 @@ def update_if_swap_button_pressed_and_ready_to_swap_but_not_cancel_button(
         )
 
 
-def last_button_pressed_was_swap_button(last_button:str):
+def last_button_pressed_was_swap_button(last_button: str):
     if cancel_swap_button.pressed(last_button):
         return True
     else:
-        return is_button_of_type(type_to_check=swap_button_type, value_of_button_pressed=last_button)
+        return is_button_of_type(
+            type_to_check=swap_button_type, value_of_button_pressed=last_button
+        )

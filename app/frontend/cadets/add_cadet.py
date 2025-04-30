@@ -28,10 +28,9 @@ from app.frontend.form_handler import (
 )
 
 
-
 def display_form_add_cadet(interface: abstractInterface) -> Union[Form, NewForm]:
     return get_add_cadet_form(
-        interface=interface, first_time_displayed=True, help_string='add_cadet_help'
+        interface=interface, first_time_displayed=True, help_string="add_cadet_help"
     )
 
 
@@ -41,7 +40,9 @@ def post_form_add_cadets(interface: abstractInterface) -> Union[Form, NewForm]:
     if check_details_button.pressed(last_button_pressed):
         ## verify results, display form again
         return get_add_cadet_form(
-            interface=interface, first_time_displayed=False, help_string='add_cadet_help'
+            interface=interface,
+            first_time_displayed=False,
+            help_string="add_cadet_help",
         )
 
     elif final_submit_button.pressed(last_button_pressed):

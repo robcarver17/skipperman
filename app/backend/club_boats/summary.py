@@ -10,7 +10,9 @@ from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.backend.events.summarys import     summarise_generic_counts_for_event_over_days_returning_df
+from app.backend.events.summarys import (
+    summarise_generic_counts_for_event_over_days_returning_df,
+)
 from app.objects.club_dinghies import ClubDinghy
 from app.objects.day_selectors import Day
 from app.objects.events import Event

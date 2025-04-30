@@ -5,7 +5,10 @@ from app.backend.qualifications_and_ticks.progress import (
     get_expected_qualifications_for_cadets_at_event,
 )
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
-from app.frontend.shared.buttons import is_button_event_selection, event_from_button_pressed
+from app.frontend.shared.buttons import (
+    is_button_event_selection,
+    event_from_button_pressed,
+)
 from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.events import Event
@@ -29,7 +32,9 @@ from app.objects.abstract_objects.abstract_buttons import (
     CANCEL_BUTTON_LABEL,
     Button,
     ButtonBar,
-    main_menu_button, back_menu_button, HelpButton,
+    main_menu_button,
+    back_menu_button,
+    HelpButton,
 )
 
 
@@ -42,12 +47,17 @@ def display_form_for_qualification_status_report(interface: abstractInterface):
         size=4,
     )
     contents_of_form = ListOfLines(
-        [ButtonBar([main_menu_button, back_menu_button, help_button]), title, event_buttons]
+        [
+            ButtonBar([main_menu_button, back_menu_button, help_button]),
+            title,
+            event_buttons,
+        ]
     )
 
     return Form(contents_of_form)
 
-help_button = HelpButton('qualifications_report_help#qualifications-and-tick-status')
+
+help_button = HelpButton("qualifications_report_help#qualifications-and-tick-status")
 
 
 cancel_button = Button(CANCEL_BUTTON_LABEL, nav_button=True)
@@ -66,7 +76,10 @@ def post_form_for_qualification_status_report(
 
 
 def action_when_event_button_clicked(interface: abstractInterface) -> File:
-    event = event_from_button_pressed(value_of_button_pressed=interface.last_button_pressed(), object_store=interface.object_store)
+    event = event_from_button_pressed(
+        value_of_button_pressed=interface.last_button_pressed(),
+        object_store=interface.object_store,
+    )
 
     return download_expected_qualification_for_event(interface=interface, event=event)
 

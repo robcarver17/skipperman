@@ -43,9 +43,12 @@ def generate_reset_message(username: str, object_store: ObjectStore) -> str:
     change_password_for_user(
         object_store=object_store, username=username, new_password=new_password
     )
-    return "Message to send to user: Login with %s/%s/?username=%s&password=%s AND THEN CHANGE YOUR PASSWORD!!!" % (
-        HOMEPAGE,
-        LINK_LOGIN,
-        username,
-        new_password,
+    return (
+        "Message to send to user: Login with %s/%s/?username=%s&password=%s AND THEN CHANGE YOUR PASSWORD!!!"
+        % (
+            HOMEPAGE,
+            LINK_LOGIN,
+            username,
+            new_password,
+        )
     )

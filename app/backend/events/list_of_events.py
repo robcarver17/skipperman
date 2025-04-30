@@ -101,15 +101,13 @@ def remove_event_and_possibly_past_events_and_sort(
         list_of_events.sort_by_start_date_asc()
     )  ## newest last
 
-    try:# weird not a singleton error
-        if excluding_event==arg_not_passed:
+    try:  # weird not a singleton error
+        if excluding_event == arg_not_passed:
             return list_of_events_sorted_by_date_desc
     except:
         pass
 
-    idx_of_event = list_of_events_sorted_by_date_desc.index_of_id(
-        excluding_event.id
-    )
+    idx_of_event = list_of_events_sorted_by_date_desc.index_of_id(excluding_event.id)
     if only_events_before_excluded_event:
         list_of_events_sorted_by_date_desc = list_of_events_sorted_by_date_desc[
             :idx_of_event
@@ -118,8 +116,6 @@ def remove_event_and_possibly_past_events_and_sort(
         list_of_events_sorted_by_date_desc.pop(idx_of_event)
 
     return ListOfEvents(list_of_events_sorted_by_date_desc)
-
-
 
 
 def get_N_most_recent_events_newest_last(

@@ -1,6 +1,8 @@
 from typing import Union
 
-from app.frontend.events.volunteer_rota.copy_menu import display_form_volunteer_copy_menu
+from app.frontend.events.volunteer_rota.copy_menu import (
+    display_form_volunteer_copy_menu,
+)
 from app.frontend.events.volunteer_rota.parse_volunteer_table import (
     save_volunteer_matrix_and_return_filename,
     action_if_volunteer_button_pressed,
@@ -13,9 +15,11 @@ from app.frontend.events.volunteer_rota.parse_volunteer_table import (
     save_all_information_in_rota_page,
 )
 from app.frontend.events.volunteer_rota.copying import update_if_copy_button_pressed
-from app.frontend.events.volunteer_rota.post_form_actions import \
-    is_a_form_change_that_changes_state, \
-    is_a_form_change_that_changes_underlying_data, is_a_form_change_that_returns_a_new_form
+from app.frontend.events.volunteer_rota.post_form_actions import (
+    is_a_form_change_that_changes_state,
+    is_a_form_change_that_changes_underlying_data,
+    is_a_form_change_that_returns_a_new_form,
+)
 from app.frontend.events.volunteer_rota.volunteer_targets_and_group_notes import (
     save_targets_button,
     save_volunteer_targets,
@@ -24,8 +28,10 @@ from app.frontend.events.volunteer_rota.volunteer_targets_and_group_notes import
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 
-from app.frontend.events.volunteer_rota.swapping import update_if_swap_button_pressed, \
-    last_button_pressed_was_swap_button
+from app.frontend.events.volunteer_rota.swapping import (
+    update_if_swap_button_pressed,
+    last_button_pressed_was_swap_button,
+)
 from app.frontend.events.volunteer_rota.add_volunteer_to_rota import (
     display_form_add_new_volunteer_to_rota_at_event,
 )
@@ -39,8 +45,10 @@ from app.frontend.events.volunteer_rota.rota_state import (
 from app.frontend.reporting.rota.report_rota import rota_report_generator
 from app.frontend.reporting.shared.create_report import create_generic_report
 from app.frontend.shared.buttons import is_button_sort_order
-from app.frontend.shared.warnings_table import  save_warnings_from_table, \
-    is_save_warnings_button_pressed
+from app.frontend.shared.warnings_table import (
+    save_warnings_from_table,
+    is_save_warnings_button_pressed,
+)
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -56,9 +64,12 @@ from app.frontend.events.volunteer_rota.elements_in_volunteer_rota_page import (
     get_filters_and_buttons,
 )
 from app.frontend.events.volunteer_rota.preamble_to_rota_page import (
-    get_preamble_before_table, )
-from app.frontend.events.volunteer_rota.volunteer_targets_and_group_notes import save_group_notes_button, \
-    save_group_notes_from_form
+    get_preamble_before_table,
+)
+from app.frontend.events.volunteer_rota.volunteer_targets_and_group_notes import (
+    save_group_notes_button,
+    save_group_notes_from_form,
+)
 from app.frontend.events.volunteer_rota.volunteer_rota_buttons import *
 
 
@@ -100,18 +111,24 @@ def post_form_view_for_volunteer_rota(
     save_all_information_across_forms(interface)
 
     if is_a_form_change_that_changes_state(last_button_pressed):
-        return post_form_view_for_volunteer_rota_if_state_changed(interface, last_button_pressed)
+        return post_form_view_for_volunteer_rota_if_state_changed(
+            interface, last_button_pressed
+        )
     elif is_a_form_change_that_changes_underlying_data(last_button_pressed):
-        return post_form_view_for_volunteer_rota_if_data_changed(interface, last_button_pressed)
+        return post_form_view_for_volunteer_rota_if_data_changed(
+            interface, last_button_pressed
+        )
     elif is_a_form_change_that_returns_a_new_form(last_button_pressed):
-        return post_form_view_for_volunteer_rota_if_new_form_returned(interface, last_button_pressed)
+        return post_form_view_for_volunteer_rota_if_new_form_returned(
+            interface, last_button_pressed
+        )
     else:
         print("Triggered none of the rota button checks")
         return button_error_and_back_to_initial_state_form(interface)
 
 
 def post_form_view_for_volunteer_rota_if_new_form_returned(
-        interface: abstractInterface, last_button_pressed: str
+    interface: abstractInterface, last_button_pressed: str
 ) -> Union[Form, NewForm, File]:
     print("New form returned from rota")
 
@@ -141,17 +158,16 @@ def post_form_view_for_volunteer_rota_if_new_form_returned(
         print("Missing button")
         return button_error_and_back_to_initial_state_form(interface)
 
+
 def post_form_view_for_volunteer_rota_if_state_changed(
-        interface: abstractInterface,last_button_pressed:str
+    interface: abstractInterface, last_button_pressed: str
 ) -> Union[Form, NewForm, File]:
     print("Change state returned in rota")
 
     ## SORTS - DO NOT CHANGE UNDERLYING DATA
     if is_button_sort_order(last_button_pressed):
         sort_parameters = get_sort_parameters_from_buttons(last_button_pressed)
-        save_sorts_to_state(
-            interface=interface, sort_parameters=sort_parameters
-        )
+        save_sorts_to_state(interface=interface, sort_parameters=sort_parameters)
     elif clear_filter_button.pressed(last_button_pressed):
         clear_all_filters(interface)
 
@@ -172,7 +188,7 @@ def post_form_view_for_volunteer_rota_if_state_changed(
 
 
 def post_form_view_for_volunteer_rota_if_data_changed(
-        interface: abstractInterface, last_button_pressed: str
+    interface: abstractInterface, last_button_pressed: str
 ) -> Union[Form, NewForm, File]:
     print("Changing underlying data")
 
@@ -204,7 +220,7 @@ def post_form_view_for_volunteer_rota_if_data_changed(
     ## SAVES
 
     elif save_menu_button.pressed(last_button_pressed):
-        pass ## already saved
+        pass  ## already saved
 
     elif save_targets_button.pressed(last_button_pressed):
         pass
@@ -222,6 +238,7 @@ def post_form_view_for_volunteer_rota_if_data_changed(
 
     return interface.get_new_form_given_function(display_form_view_for_volunteer_rota)
 
+
 def save_all_information_across_forms(interface: abstractInterface):
     save_all_information_in_rota_page(interface)
     save_volunteer_targets(interface)
@@ -229,6 +246,7 @@ def save_all_information_across_forms(interface: abstractInterface):
     save_warnings_from_table(interface)
 
     interface.save_cache_to_store_without_clearing()
+
 
 def add_new_volunteer_form(interface: abstractInterface):
     return interface.get_new_form_given_function(
@@ -242,13 +260,15 @@ def previous_form(interface: abstractInterface):
     )
 
 
-
 def create_quick_report(interface: abstractInterface) -> File:
     report_generator_with_specific_parameters = (
         rota_report_generator.add_specific_parameters_for_type_of_report(
             interface.object_store
         )
     )
-    interface.log_error("Quick reports are generated with current report parameters: do not get published to web. To publish or change parameters to go Reporting menu option.")
-    return create_generic_report(report_generator=report_generator_with_specific_parameters, interface=interface
-                                 )
+    interface.log_error(
+        "Quick reports are generated with current report parameters: do not get published to web. To publish or change parameters to go Reporting menu option."
+    )
+    return create_generic_report(
+        report_generator=report_generator_with_specific_parameters, interface=interface
+    )

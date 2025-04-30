@@ -254,4 +254,3 @@ def add_new_cadet_to_group_on_day(
         event=event,
         dict_of_cadets_with_groups_at_event=cadets_at_event_data,
     )
-

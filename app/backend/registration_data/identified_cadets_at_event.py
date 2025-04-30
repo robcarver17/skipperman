@@ -143,7 +143,9 @@ def identified_cadet_ids_in_raw_registration_data(
     return list_of_cadet_ids
 
 
-def mark_row_as_permanently_skip_cadet(object_store: ObjectStore, event: Event, row_id: str):
+def mark_row_as_permanently_skip_cadet(
+    object_store: ObjectStore, event: Event, row_id: str
+):
     identified_cadets_at_event = get_list_of_identified_cadets_at_event(
         object_store=object_store, event=event
     )
@@ -154,7 +156,10 @@ def mark_row_as_permanently_skip_cadet(object_store: ObjectStore, event: Event, 
         object_store=object_store,
     )
 
-def mark_row_as_temporarily_skip_cadet(object_store: ObjectStore, event: Event, row_id: str):
+
+def mark_row_as_temporarily_skip_cadet(
+    object_store: ObjectStore, event: Event, row_id: str
+):
     identified_cadets_at_event = get_list_of_identified_cadets_at_event(
         object_store=object_store, event=event
     )
@@ -172,7 +177,9 @@ def add_identified_cadet_and_row(
     identified_cadets_at_event = get_list_of_identified_cadets_at_event(
         object_store=object_store, event=event
     )
-    identified_cadets_at_event.add_cadet_and_row_association(cadet_id=cadet.id, row_id=row_id)
+    identified_cadets_at_event.add_cadet_and_row_association(
+        cadet_id=cadet.id, row_id=row_id
+    )
     update_list_of_identified_cadets_at_event(
         identified_cadets_at_event=identified_cadets_at_event,
         event=event,
@@ -197,8 +204,10 @@ def cadet_at_event_given_row_id(
     identified_cadets_at_event = get_list_of_identified_cadets_at_event(
         object_store=object_store, event=event
     )
-    cadet_id = identified_cadets_at_event.cadet_id_given_row_id_ignoring_all_skipped_cadets(
-        row_id, default_when_missing=missing_data
+    cadet_id = (
+        identified_cadets_at_event.cadet_id_given_row_id_ignoring_all_skipped_cadets(
+            row_id, default_when_missing=missing_data
+        )
     )
     if cadet_id is missing_data:
         raise Exception("No idenitified cadet at row ID %s" % row_id)
@@ -227,13 +236,24 @@ def update_list_of_identified_cadets_at_event(
         event_id=event.id,
     )
 
-def delete_cadet_from_identified_data_and_return_rows_deleted(object_store: ObjectStore, event: Event, cadet: Cadet, areyousure=False):
+
+def delete_cadet_from_identified_data_and_return_rows_deleted(
+    object_store: ObjectStore, event: Event, cadet: Cadet, areyousure=False
+):
     if not areyousure:
         return
 
-    list_of_identified_cadets = get_list_of_identified_cadets_at_event(object_store=object_store, event=event)
-    rows = list_of_identified_cadets.list_of_row_ids_given_cadet_id_allowing_duplicates(cadet_id=cadet.id)
+    list_of_identified_cadets = get_list_of_identified_cadets_at_event(
+        object_store=object_store, event=event
+    )
+    rows = list_of_identified_cadets.list_of_row_ids_given_cadet_id_allowing_duplicates(
+        cadet_id=cadet.id
+    )
     list_of_identified_cadets.delete_cadet_from_identified_data(cadet.id)
-    update_list_of_identified_cadets_at_event(object_store=object_store, identified_cadets_at_event=list_of_identified_cadets, event=event)
+    update_list_of_identified_cadets_at_event(
+        object_store=object_store,
+        identified_cadets_at_event=list_of_identified_cadets,
+        event=event,
+    )
 
     return len(rows)

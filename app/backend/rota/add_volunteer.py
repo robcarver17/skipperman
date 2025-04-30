@@ -1,5 +1,7 @@
 from app.objects.cadets import ListOfCadets
-from app.objects.composed.volunteers_at_event_with_registration_data import RegistrationDataForVolunteerAtEvent
+from app.objects.composed.volunteers_at_event_with_registration_data import (
+    RegistrationDataForVolunteerAtEvent,
+)
 from app.objects.day_selectors import DaySelector
 
 from app.objects.utilities.utils import in_x_not_in_y
@@ -46,12 +48,13 @@ def add_volunteer_to_event_with_availability(
     else:
         availability = event.day_selector_for_days_in_event()
 
-    registration_data = RegistrationDataForVolunteerAtEvent(availablity=availability,
-                                                            list_of_associated_cadets=ListOfCadets([]))
+    registration_data = RegistrationDataForVolunteerAtEvent(
+        availablity=availability, list_of_associated_cadets=ListOfCadets([])
+    )
 
     add_volunteer_at_event(
         object_store=object_store,
         event=event,
         volunteer=volunteer,
-        registration_data=registration_data
+        registration_data=registration_data,
     )

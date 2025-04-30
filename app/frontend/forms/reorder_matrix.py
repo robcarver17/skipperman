@@ -67,8 +67,6 @@ RIGHT = "RIGHT"
 DIVIDER = "_"  ##
 
 
-
-
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
@@ -113,8 +111,14 @@ def modify_arrangement_given_button_name(
 
     return current_arrangement_of_columns
 
-direction_button_type="matrixButton"
-from app.frontend.shared.buttons import get_button_value_given_type_and_attributes, is_button_of_type, get_attributes_from_button_pressed_of_known_type
+
+direction_button_type = "matrixButton"
+from app.frontend.shared.buttons import (
+    get_button_value_given_type_and_attributes,
+    is_button_of_type,
+    get_attributes_from_button_pressed_of_known_type,
+)
+
 
 def from_button_name_to_label_and_direction(button_name: str):
     label_and_direction = get_attributes_from_button_pressed_of_known_type(
@@ -127,7 +131,12 @@ def from_button_name_to_label_and_direction(button_name: str):
 
 
 def get_button_name(label, direction):
-    return get_button_value_given_type_and_attributes(direction_button_type, label, direction)
+    return get_button_value_given_type_and_attributes(
+        direction_button_type, label, direction
+    )
 
-def is_matrix_direction_button(button_name:str):
-    return is_button_of_type(value_of_button_pressed=button_name, type_to_check=direction_button_type)
+
+def is_matrix_direction_button(button_name: str):
+    return is_button_of_type(
+        value_of_button_pressed=button_name, type_to_check=direction_button_type
+    )

@@ -124,6 +124,7 @@ class textInput(Input):
     input_name: str
     value: str = arg_not_passed
 
+
 @dataclass
 class textAreaInput(Input):
     input_label: str

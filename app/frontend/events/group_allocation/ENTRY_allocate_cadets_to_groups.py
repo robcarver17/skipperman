@@ -1,18 +1,38 @@
 from typing import Union
 
-from app.frontend.events.group_allocation.change_sort_order import display_change_sort_order
-from app.frontend.events.group_allocation.club_boats import update_limits_button, \
-    update_club_boat_limits_for_event_from_form
-from app.frontend.events.group_allocation.previous_events import is_event_picker_button, save_event_selection_from_form
-from app.frontend.reporting.allocations.report_group_allocations import allocation_report_generator
+from app.frontend.events.group_allocation.change_sort_order import (
+    display_change_sort_order,
+)
+from app.frontend.events.group_allocation.club_boats import (
+    update_limits_button,
+    update_club_boat_limits_for_event_from_form,
+)
+from app.frontend.events.group_allocation.previous_events import (
+    is_event_picker_button,
+    save_event_selection_from_form,
+)
+from app.frontend.reporting.allocations.report_group_allocations import (
+    allocation_report_generator,
+)
 from app.frontend.reporting.boats.report_boats import boat_report_generator
 from app.frontend.reporting.shared.create_report import create_generic_report
-from app.frontend.shared.buttons import cadet_from_button_pressed, is_button_cadet_selection
-from app.frontend.shared.cadet_state import update_state_for_specific_cadet, get_cadet_from_state
+from app.frontend.shared.buttons import (
+    cadet_from_button_pressed,
+    is_button_cadet_selection,
+)
+from app.frontend.shared.cadet_state import (
+    update_state_for_specific_cadet,
+    get_cadet_from_state,
+)
 
-from app.frontend.events.group_allocation.add_unregistered_cadet import display_add_unregistered_cadet_from_allocation_form
+from app.frontend.events.group_allocation.add_unregistered_cadet import (
+    display_add_unregistered_cadet_from_allocation_form,
+)
 
-from app.frontend.shared.buttons import is_button_day_select, get_day_from_button_pressed
+from app.frontend.shared.buttons import (
+    is_button_day_select,
+    get_day_from_button_pressed,
+)
 from app.frontend.shared.cadet_state import (
     clear_cadet_state,
     is_cadet_set_in_state,
@@ -29,21 +49,31 @@ from app.frontend.events.group_allocation.store_state import (
 )
 from app.frontend.events.group_allocation.render_allocation_form import (
     display_form_allocate_cadets_at_event,
-    add_button, sort_order_change_button, quick_group_report_button, quick_spotters_report_button
+    add_button,
+    sort_order_change_button,
+    quick_group_report_button,
+    quick_spotters_report_button,
 )
-from app.frontend.events.group_allocation.buttons import reset_day_button, is_make_available_button, \
-    was_remove_partner_button, get_cadet_given_add_partner_button_name, was_add_partner_button
+from app.frontend.events.group_allocation.buttons import (
+    reset_day_button,
+    is_make_available_button,
+    was_remove_partner_button,
+    get_cadet_given_add_partner_button_name,
+    was_add_partner_button,
+)
 from app.frontend.events.group_allocation.input_fields import (
     guess_boat_button,
 )
 from app.frontend.events.group_allocation.parse_allocation_form import (
     update_data_given_allocation_form,
-    make_cadet_available_on_current_day, remove_partnership_for_cadet_from_group_allocation_button,
+    make_cadet_available_on_current_day,
+    remove_partnership_for_cadet_from_group_allocation_button,
     guess_boat_classes_in_allocation_form,
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,
-    NewForm, File,
+    NewForm,
+    File,
 )
 from app.objects.abstract_objects.abstract_buttons import (
     cancel_menu_button,
@@ -82,39 +112,47 @@ def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewFo
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-def button_clicked_returns_new_form(last_button:str):
-    return add_button.pressed(last_button) or \
-    was_add_partner_button(last_button) or \
-    sort_order_change_button.pressed(last_button) or \
-    quick_group_report_button.pressed(last_button) or \
-quick_spotters_report_button.pressed(last_button)
+
+def button_clicked_returns_new_form(last_button: str):
+    return (
+        add_button.pressed(last_button)
+        or was_add_partner_button(last_button)
+        or sort_order_change_button.pressed(last_button)
+        or quick_group_report_button.pressed(last_button)
+        or quick_spotters_report_button.pressed(last_button)
+    )
 
 
-
-def button_clicked_changes_state(last_button:str):
-    return is_button_cadet_selection(last_button) or \
-     is_button_day_select(last_button)
-
+def button_clicked_changes_state(last_button: str):
+    return is_button_cadet_selection(last_button) or is_button_day_select(last_button)
 
 
 def button_clicked_changes_data(last_button: str):
-    return save_menu_button.pressed(last_button) or \
-        update_limits_button.pressed(last_button) or \
-        is_event_picker_button(last_button) or \
-        is_make_available_button(last_button) or \
-        was_remove_partner_button(last_button) or\
-        guess_boat_button.pressed(last_button)
+    return (
+        save_menu_button.pressed(last_button)
+        or update_limits_button.pressed(last_button)
+        or is_event_picker_button(last_button)
+        or is_make_available_button(last_button)
+        or was_remove_partner_button(last_button)
+        or guess_boat_button.pressed(last_button)
+    )
 
 
-def post_form_allocate_cadets_returns_new_form(interface: abstractInterface, last_button:str) -> Union[File, Form, NewForm]:
+def post_form_allocate_cadets_returns_new_form(
+    interface: abstractInterface, last_button: str
+) -> Union[File, Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
     interface.flush_cache_to_store()  ## new form so flush
 
     if add_button.pressed(last_button):
-        return interface.get_new_form_given_function(display_add_unregistered_cadet_from_allocation_form)
+        return interface.get_new_form_given_function(
+            display_add_unregistered_cadet_from_allocation_form
+        )
 
     elif was_add_partner_button(last_button):
-        cadet = get_cadet_given_add_partner_button_name(object_store=interface.object_store, button=last_button)
+        cadet = get_cadet_given_add_partner_button_name(
+            object_store=interface.object_store, button=last_button
+        )
         update_state_for_specific_cadet(interface=interface, cadet=cadet)
         return interface.get_new_form_given_function(display_add_cadet_partner)
 
@@ -122,7 +160,7 @@ def post_form_allocate_cadets_returns_new_form(interface: abstractInterface, las
 
         return interface.get_new_form_given_function(display_change_sort_order)
 
-    elif     quick_group_report_button.pressed(last_button):
+    elif quick_group_report_button.pressed(last_button):
         return create_quick_group_report(interface)
 
     elif quick_spotters_report_button.pressed(last_button):
@@ -132,9 +170,11 @@ def post_form_allocate_cadets_returns_new_form(interface: abstractInterface, las
         return button_error_and_back_to_initial_state_form(interface)
 
 
-def post_form_allocate_cadets_when_changing_state(interface: abstractInterface, last_button:str) -> Union[Form, NewForm, File]:
+def post_form_allocate_cadets_when_changing_state(
+    interface: abstractInterface, last_button: str
+) -> Union[Form, NewForm, File]:
 
-    if  is_button_cadet_selection(last_button):
+    if is_button_cadet_selection(last_button):
         cadet_button_clicked(interface)
 
     elif is_button_day_select(last_button):
@@ -146,16 +186,18 @@ def post_form_allocate_cadets_when_changing_state(interface: abstractInterface, 
     return display_form_allocate_cadets(interface)
 
 
-def post_form_allocate_cadets_when_changing_data(interface: abstractInterface, last_button:str) -> Union[Form, NewForm]:
+def post_form_allocate_cadets_when_changing_data(
+    interface: abstractInterface, last_button: str
+) -> Union[Form, NewForm]:
     ## save existing form changes first, might be overwritten later by button actions
     if save_menu_button.pressed(last_button):
-        pass # already saved
+        pass  # already saved
 
     elif update_limits_button.pressed(last_button):
-        pass ## alredy saved
+        pass  ## alredy saved
 
     elif is_event_picker_button(last_button):
-        pass ## already saved
+        pass  ## already saved
 
     elif is_make_available_button(last_button):
         make_cadet_available_on_current_day(
@@ -167,7 +209,7 @@ def post_form_allocate_cadets_when_changing_data(interface: abstractInterface, l
 
     elif guess_boat_button.pressed(last_button):
         guess_boat_classes_in_allocation_form(interface)
-        interface.flush_cache_to_store() ## weird bug
+        interface.flush_cache_to_store()  ## weird bug
 
     else:
         return button_error_and_back_to_initial_state_form(interface)
@@ -200,10 +242,11 @@ def change_day_and_save(interface: abstractInterface, day_button: str):
     set_day_in_state(interface=interface, day=day)
 
 
-
 def cadet_button_clicked(interface: abstractInterface):
     last_button = interface.last_button_pressed()
-    cadet= cadet_from_button_pressed(object_store=interface.object_store, value_of_button_pressed=last_button)
+    cadet = cadet_from_button_pressed(
+        object_store=interface.object_store, value_of_button_pressed=last_button
+    )
 
     if is_cadet_set_in_state(interface):
         selected_cadet = get_cadet_from_state(interface)
@@ -220,9 +263,13 @@ def create_quick_group_report(interface: abstractInterface) -> File:
             interface.object_store
         )
     )
-    interface.log_error("Quick reports are generated with current report parameters: do not get published to web. To publish or change parameters to go Reporting menu option.")
-    return create_generic_report(report_generator=report_generator_with_specific_parameters, interface=interface
-                                 )
+    interface.log_error(
+        "Quick reports are generated with current report parameters: do not get published to web. To publish or change parameters to go Reporting menu option."
+    )
+    return create_generic_report(
+        report_generator=report_generator_with_specific_parameters, interface=interface
+    )
+
 
 def create_quick_spotters_report(interface: abstractInterface) -> File:
     report_generator_with_specific_parameters = (
@@ -230,6 +277,9 @@ def create_quick_spotters_report(interface: abstractInterface) -> File:
             interface.object_store
         )
     )
-    interface.log_error("Quick reports are generated with current report parameters: do not get published to web. To publish or change parameters to go Reporting menu option.")
-    return create_generic_report(report_generator=report_generator_with_specific_parameters, interface=interface
-                                 )
+    interface.log_error(
+        "Quick reports are generated with current report parameters: do not get published to web. To publish or change parameters to go Reporting menu option."
+    )
+    return create_generic_report(
+        report_generator=report_generator_with_specific_parameters, interface=interface
+    )

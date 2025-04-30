@@ -6,6 +6,7 @@ from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGrou
 from app.objects.committee import ListOfCadetsWithIdOnCommittee
 from app.objects.group_notes_at_event import ListOfGroupNotesAtEventWithIds
 
+
 class DataListOfCadets(object):
     def read(self) -> ListOfCadets:
         raise NotImplemented
@@ -23,12 +24,14 @@ class DataListOfCadetsWithGroups(object):
     ):
         raise NotImplemented
 
+
 class DataListOfGroupNotesAtEvent(object):
     def read_all_notes(self) -> ListOfGroupNotesAtEventWithIds:
         raise NotImplemented
 
     def write_notes(self, list_of_group_notes_with_ids: ListOfGroupNotesAtEventWithIds):
         raise NotImplemented
+
 
 class DataListOfCadetsAtEvent(object):
     def read(self, event_id: str) -> ListOfCadetsWithIDAtEvent:
@@ -55,11 +58,16 @@ class DataListOfCadetsOnCommitte(object):
     def write(self, list_of_cadets: ListOfCadetsWithIdOnCommittee):
         raise NotImplemented
 
+
 class DataAttendanceAtEventsForSpecificCadet(object):
-    def read_attendance_for_cadet_id(self, cadet_id: str) -> ListOfRawAttendanceItemsForSpecificCadet:
+    def read_attendance_for_cadet_id(
+        self, cadet_id: str
+    ) -> ListOfRawAttendanceItemsForSpecificCadet:
         raise NotImplemented
 
     def write_attendance_for_cadet_id(
-        self, list_of_attendance: ListOfRawAttendanceItemsForSpecificCadet, cadet_id:str
+        self,
+        list_of_attendance: ListOfRawAttendanceItemsForSpecificCadet,
+        cadet_id: str,
     ):
         raise NotImplemented

@@ -182,7 +182,7 @@ class DictOfCadetsAndClubDinghiesAtEvent(
 
     def remove_cadet_from_event(self, cadet: Cadet):
         current_allocation = self.club_dinghys_for_cadet(cadet)
-        if len(current_allocation)==0:
+        if len(current_allocation) == 0:
             return []
         for day in self.event.days_in_event():
             self.remove_cadet_club_boat_allocation_on_day(cadet=cadet, day=day)

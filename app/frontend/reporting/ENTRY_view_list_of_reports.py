@@ -9,7 +9,9 @@ from app.frontend.reporting.boats.report_boats import display_form_report_boat
 from app.frontend.reporting.rollcall_and_contacts.rollcall_report import (
     display_form_report_rollcall,
 )
-from app.frontend.reporting.sailors.ENTRY_report_sailors import display_form_for_sailors_report
+from app.frontend.reporting.sailors.ENTRY_report_sailors import (
+    display_form_for_sailors_report,
+)
 from app.frontend.reporting.data_dumps.ENTRY_data_dump import (
     display_form_for_data_dump_report,
 )
@@ -52,7 +54,6 @@ DICT_OF_REPORT_LABELS_AND_STAGES = {
     SAILORS_DATA_REPORT_BUTTON_LABEL: display_form_for_sailors_report,
     EVENT_DATA_BUTTON_LABEL: display_form_for_all_event_data_report,
     DUMP_BUTTON_LABEL: display_form_for_data_dump_report,
-
 }
 
 list_of_report_labels = list(DICT_OF_REPORT_LABELS_AND_STAGES.keys())

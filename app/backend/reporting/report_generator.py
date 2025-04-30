@@ -76,5 +76,5 @@ class ReportGeneratorWithoutSpecificParameters:
             additional_parameters_form=self.additional_parameters_form,
             get_dict_of_df=self.get_dict_of_df,
             get_additional_parameters_from_form_and_save=self.get_additional_parameters_from_form_and_save,
-            help_page = self.help_page
+            help_page=self.help_page,
         )

@@ -25,7 +25,9 @@ from app.backend.security.user_access import (
 
 from app.objects.abstract_objects.abstract_text import Heading
 
-from app.frontend.shared.event_selection import display_given_list_of_events_with_buttons
+from app.frontend.shared.event_selection import (
+    display_given_list_of_events_with_buttons,
+)
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -51,10 +53,16 @@ from app.objects.events import SORT_BY_START_DSC
 from app.frontend.instructors.ENTRY2_choose_group import (
     display_form_choose_group_for_event,
 )
-from app.frontend.shared.buttons import get_attributes_from_button_pressed_of_known_type, is_button_of_type, \
-    get_button_value_given_type_and_attributes, is_button_sort_order, \
-    sort_order_from_button_pressed, get_button_value_for_sort_order, is_button_event_selection, \
-    event_from_button_pressed
+from app.frontend.shared.buttons import (
+    get_attributes_from_button_pressed_of_known_type,
+    is_button_of_type,
+    get_button_value_given_type_and_attributes,
+    is_button_sort_order,
+    sort_order_from_button_pressed,
+    get_button_value_for_sort_order,
+    is_button_event_selection,
+    event_from_button_pressed,
+)
 
 
 def display_form_main_instructors_page(interface: abstractInterface) -> Form:
@@ -162,7 +170,10 @@ def get_file_given_button_pressed(button_pressed: str) -> File:
 
 
 def action_when_event_button_clicked(interface: abstractInterface) -> NewForm:
-    event = event_from_button_pressed(value_of_button_pressed=interface.last_button_pressed(), object_store=interface.object_store)
+    event = event_from_button_pressed(
+        value_of_button_pressed=interface.last_button_pressed(),
+        object_store=interface.object_store,
+    )
     update_state_for_specific_event(interface=interface, event=event)
 
     return form_for_view_event(interface)
@@ -189,24 +200,33 @@ def list_of_all_files_in_public_directory_with_clickable_buttons() -> ListOfLine
 
 
 def line_for_file_in_directory(filename: str):
-    return Button(label=filename, value = get_button_value_for_filename(filename))
+    return Button(label=filename, value=get_button_value_for_filename(filename))
+
 
 select_file = "selectFileType"
-def get_button_value_for_filename(filename:str):
-    return get_button_value_given_type_and_attributes(
-        select_file,
-        filename
+
+
+def get_button_value_for_filename(filename: str):
+    return get_button_value_given_type_and_attributes(select_file, filename)
+
+
+def is_filename_button_pressed(value_of_button: str):
+    return is_button_of_type(
+        type_to_check=select_file, value_of_button_pressed=value_of_button
     )
 
-def is_filename_button_pressed(value_of_button:str):
-    return is_button_of_type(type_to_check=select_file, value_of_button_pressed=value_of_button)
 
-def filename_from_pressed_button(value_of_button:str) ->str:
+def filename_from_pressed_button(value_of_button: str) -> str:
     return get_attributes_from_button_pressed_of_known_type(
-        value_of_button_pressed=value_of_button,
-        type_to_check=select_file
+        value_of_button_pressed=value_of_button, type_to_check=select_file
     )
+
 
 sort_buttons_for_event_list = ButtonBar(
-    [Button(label=sortby, value=get_button_value_for_sort_order(sortby),nav_button=True) for sortby in all_sort_types_for_event_list]
+    [
+        Button(
+            label=sortby, value=get_button_value_for_sort_order(sortby), nav_button=True
+        )
+        for sortby in all_sort_types_for_event_list
+    ]
 )

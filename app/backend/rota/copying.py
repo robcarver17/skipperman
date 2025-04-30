@@ -1,5 +1,6 @@
-from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
-    get_dict_of_volunteers_with_roles_and_groups_at_event
+from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
+    get_dict_of_volunteers_with_roles_and_groups_at_event,
+)
 from app.objects.volunteers import Volunteer
 
 from app.data_access.store.object_store import ObjectStore
@@ -8,14 +9,14 @@ from app.objects.day_selectors import Day
 from app.objects.events import Event
 
 
-from app.backend.volunteers.volunteers_at_event import get_dict_of_all_event_data_for_volunteers, update_dict_of_all_event_data_for_volunteers
+from app.backend.volunteers.volunteers_at_event import (
+    get_dict_of_all_event_data_for_volunteers,
+    update_dict_of_all_event_data_for_volunteers,
+)
 
 
 def copy_earliest_valid_role_for_volunteer(
-    object_store: ObjectStore,
-    event: Event,
-    volunteer: Volunteer,
-        allow_overwrite: bool
+    object_store: ObjectStore, event: Event, volunteer: Volunteer, allow_overwrite: bool
 ):
     valid_day = get_day_with_earliest_valid_role_and_group_for_volunteer_or_none(
         object_store=object_store, event=event, volunteer=volunteer
@@ -40,7 +41,9 @@ def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
     day: Day,
     allow_replacement: bool = True,
 ):
-    all_event_data = get_dict_of_all_event_data_for_volunteers(object_store=object_store, event=event)
+    all_event_data = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
+    )
     try:
         all_event_data.copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
             volunteer=volunteer,
@@ -53,8 +56,9 @@ def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
             % (volunteer.name, day.name, str(e))
         )
 
-    update_dict_of_all_event_data_for_volunteers(object_store=object_store, dict_of_all_event_data=all_event_data)
-
+    update_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, dict_of_all_event_data=all_event_data
+    )
 
 
 def get_day_with_earliest_valid_role_and_group_for_volunteer_or_none(

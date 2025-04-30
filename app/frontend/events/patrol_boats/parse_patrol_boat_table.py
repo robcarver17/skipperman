@@ -31,7 +31,8 @@ from app.backend.patrol_boats.changes import (
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
     get_unique_list_of_volunteers_for_skills_checkboxes,
-    is_volunteer_skill_checkbox_ticked, )
+    is_volunteer_skill_checkbox_ticked,
+)
 from app.frontend.events.patrol_boats.patrol_boat_dropdowns import (
     TOP_ROW_OF_VOLUNTEER_DROPDOWN,
     from_allocation_dropdown_input_name_to_boat_and_day,
@@ -81,6 +82,7 @@ def update_data_from_form_entries_in_patrol_boat_allocation_page(
 
     interface.save_cache_to_store_without_clearing()
 
+
 def update_adding_volunteers_to_specific_boats_and_days(interface: abstractInterface):
     event = get_event_from_state(interface)
     list_of_volunteer_additions_to_boats = get_list_of_volunteer_additions_to_boats(
@@ -90,10 +92,12 @@ def update_adding_volunteers_to_specific_boats_and_days(interface: abstractInter
         list_of_volunteer_additions_to_boats.remove_no_additions()
     )
 
-    messages = add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts(
-        object_store=interface.object_store,
-        list_of_volunteer_additions_to_boats=list_of_volunteer_additions_to_boats,
-        event=event,
+    messages = (
+        add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts(
+            object_store=interface.object_store,
+            list_of_volunteer_additions_to_boats=list_of_volunteer_additions_to_boats,
+            event=event,
+        )
     )
     [interface.log_error(error) for error in messages]
 

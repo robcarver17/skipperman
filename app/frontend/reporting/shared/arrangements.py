@@ -103,7 +103,6 @@ def modify_arrangement_options_and_group_order_to_reflect_arrangement_method_nam
         arrangement_method_name
     )
 
-
     ## above modifies arrangement method inside reporting options, we now replace the columns
     arrangement_options_and_group_order = create_arrangement_from_order_and_algo(
         reporting_options=reporting_options

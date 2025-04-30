@@ -1,4 +1,3 @@
-
 from app.data_access.classes.resources import *
 from app.data_access.parquet.generic_parquet_data import GenericParquetData
 from app.data_access.resolve_paths_and_filenames import (
@@ -6,7 +5,7 @@ from app.data_access.resolve_paths_and_filenames import (
 )
 
 
-class ParquetDataListOfClubDinghyLimits(GenericParquetData,  DataListOfClubDinghyLimits):
+class ParquetDataListOfClubDinghyLimits(GenericParquetData, DataListOfClubDinghyLimits):
     def read(self) -> ListOfClubDinghyLimits:
         list_of_boats = self.read_and_return_object_of_type(
             ListOfClubDinghyLimits, file_identifier=CLUB_BOAT_LIMIT

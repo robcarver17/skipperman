@@ -1,5 +1,7 @@
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets, \
-    update_dict_of_all_event_info_for_cadets
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
+    get_dict_of_all_event_info_for_cadets,
+    update_dict_of_all_event_info_for_cadets,
+)
 from app.data_access.store.object_store import ObjectStore
 
 from app.objects.cadets import Cadet
@@ -85,8 +87,6 @@ def new_status_and_status_message(
     return new_status, status_message
 
 
-
-
 def replace_existing_cadet_at_event_where_original_cadet_was_inactive(
     object_store: ObjectStore, event: Event, new_cadet_at_event: CadetWithIdAtEvent
 ):
@@ -104,22 +104,35 @@ def replace_existing_cadet_at_event_where_original_cadet_was_inactive(
         list_of_cadets_with_id_at_event=list_of_cadets_with_id_at_event,
     )
 
+
 def update_notes_for_existing_cadet_at_event(
     object_store: ObjectStore, event: Event, cadet: Cadet, new_notes: str
 ):
-    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
-    dict_of_all_event_data.update_notes_for_existing_cadet_at_event(cadet=cadet, notes=new_notes)
-    update_dict_of_all_event_info_for_cadets(object_store=object_store, dict_of_all_event_info_for_cadets=dict_of_all_event_data)
+    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
+        object_store=object_store, event=event
+    )
+    dict_of_all_event_data.update_notes_for_existing_cadet_at_event(
+        cadet=cadet, notes=new_notes
+    )
+    update_dict_of_all_event_info_for_cadets(
+        object_store=object_store,
+        dict_of_all_event_info_for_cadets=dict_of_all_event_data,
+    )
 
 
 def update_health_for_existing_cadet_at_event(
     object_store: ObjectStore, event: Event, cadet: Cadet, new_health: str
 ):
-    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
+    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
+        object_store=object_store, event=event
+    )
     dict_of_all_event_data.update_health_for_existing_cadet_at_event(
         cadet=cadet, new_health=new_health
     )
-    update_dict_of_all_event_info_for_cadets(object_store=object_store, dict_of_all_event_info_for_cadets=dict_of_all_event_data)
+    update_dict_of_all_event_info_for_cadets(
+        object_store=object_store,
+        dict_of_all_event_info_for_cadets=dict_of_all_event_data,
+    )
 
 
 def update_data_row_for_existing_cadet_at_event(
@@ -127,10 +140,15 @@ def update_data_row_for_existing_cadet_at_event(
     event: Event,
     cadet: Cadet,
     column_name: str,
-    new_value_for_column
+    new_value_for_column,
 ):
-    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
+    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
+        object_store=object_store, event=event
+    )
     dict_of_all_event_data.update_data_row_for_existing_cadet_at_event(
         cadet=cadet, column_name=column_name, new_value_for_column=new_value_for_column
     )
-    update_dict_of_all_event_info_for_cadets(object_store=object_store, dict_of_all_event_info_for_cadets=dict_of_all_event_data)
+    update_dict_of_all_event_info_for_cadets(
+        object_store=object_store,
+        dict_of_all_event_info_for_cadets=dict_of_all_event_data,
+    )

@@ -22,7 +22,9 @@ def get_df_for_volunteers_event_data_dump(object_store: ObjectStore, event: Even
     list_of_identified_volunteers = get_list_of_identified_volunteers_at_event(
         object_store=object_store, event=event
     )
-    list_of_volunteer_ids = list_of_identified_volunteers.list_of_volunteer_ids_excluding_skipped()
+    list_of_volunteer_ids = (
+        list_of_identified_volunteers.list_of_volunteer_ids_excluding_skipped()
+    )
     list_of_volunteers = ListOfVolunteers(
         [
             get_volunteer_from_id(object_store=object_store, volunteer_id=volunteer_id)

@@ -17,8 +17,10 @@ from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles impor
     VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 )
 
-from app.backend.patrol_boats.patrol_boat_warnings import process_all_warnings_for_patrol_boats, \
-    get_all_saved_warnings_for_patrol_boats
+from app.backend.patrol_boats.patrol_boat_warnings import (
+    process_all_warnings_for_patrol_boats,
+    get_all_saved_warnings_for_patrol_boats,
+)
 from app.data_access.configuration.configuration import WEBLINK_FOR_QUALIFICATIONS
 from app.data_access.configuration.fixed import (
     COPY_OVERWRITE_SYMBOL,
@@ -33,18 +35,25 @@ from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     HelpButton,
     cancel_menu_button,
-    save_menu_button, Button,
+    save_menu_button,
+    Button,
 )
 
 from app.frontend.forms.swaps import is_ready_to_swap
-from typing import  Union
+from typing import Union
 
 from app.frontend.events.patrol_boats.patrol_boat_buttons import (
     get_remove_volunteer_button,
 )
-from app.frontend.events.patrol_boats.copy_buttons import get_copy_buttons_for_boat_allocation,    access_copy_menu_button
-from app.frontend.events.patrol_boats.swapping import get_swap_buttons_for_boat_rota, get_swap_cancel_button_name, \
-    CANCEL_SWAP_BUTTON_LABEL
+from app.frontend.events.patrol_boats.copy_buttons import (
+    get_copy_buttons_for_boat_allocation,
+    access_copy_menu_button,
+)
+from app.frontend.events.patrol_boats.swapping import (
+    get_swap_buttons_for_boat_rota,
+    get_swap_cancel_button_name,
+    CANCEL_SWAP_BUTTON_LABEL,
+)
 from app.frontend.events.patrol_boats.patrol_boat_dropdowns import (
     volunteer_boat_role_dropdown,
 )
@@ -212,9 +221,13 @@ def update_and_get_warnings_on_all_volunteers_in_patrol_boats(
     if is_ready_to_swap(interface):
         return ListOfLines([""])
 
-    process_all_warnings_for_patrol_boats(object_store=interface.object_store, event=event)
+    process_all_warnings_for_patrol_boats(
+        object_store=interface.object_store, event=event
+    )
     interface.save_cache_to_store_without_clearing()
-    all_warnings = get_all_saved_warnings_for_patrol_boats(object_store=interface.object_store, event=event)
+    all_warnings = get_all_saved_warnings_for_patrol_boats(
+        object_store=interface.object_store, event=event
+    )
 
     return display_warnings_tables(all_warnings)
 
@@ -233,14 +246,13 @@ def get_top_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonB
         ]
     )
 
+
 quick_report_button = Button("Quick report", nav_button=True)
 
 
 def get_arbitrary_swap_cancel_button():
     ## Only one swap cancel in the table so doesn't matter
-    button_name = get_swap_cancel_button_name(
-        day=Day.Sunday, volunteer_id='arbitrary'
-    )
+    button_name = get_swap_cancel_button_name(day=Day.Sunday, volunteer_id="arbitrary")
 
     return Button(value=button_name, label=CANCEL_SWAP_BUTTON_LABEL)
 

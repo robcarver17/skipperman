@@ -38,13 +38,17 @@ def get_data_access_for_list_of_cadets_with_tick_list_items_for_cadet_id(
         cadet_id=cadet_id,
     )
 
-def get_data_access_for_list_of_cadet_attendance_for_cadet_id(data: GenericDataApi, cadet_id:str):
+
+def get_data_access_for_list_of_cadet_attendance_for_cadet_id(
+    data: GenericDataApi, cadet_id: str
+):
     return DataAccessMethod(
         "list_of_cadet_attendance_for_cadet_id",
         data.data_attendance_at_events_for_specific_cadet.read_attendance_for_cadet_id,
         data.data_attendance_at_events_for_specific_cadet.write_attendance_for_cadet_id,
-        cadet_id=cadet_id
+        cadet_id=cadet_id,
     )
+
 
 def get_data_access_for_list_of_qualifications(
     data: GenericDataApi,
@@ -100,12 +104,15 @@ def get_data_access_for_cadets_with_groups(
         event_id=event_id,
     )
 
-def get_data_access_for_list_of_event_warnings(data: GenericDataApi, event_id:str) -> DataAccessMethod:
+
+def get_data_access_for_list_of_event_warnings(
+    data: GenericDataApi, event_id: str
+) -> DataAccessMethod:
     return DataAccessMethod(
         "list_of_event_warnings",
         data.data_event_warnings.read,
         data.data_event_warnings.write,
-        event_id=event_id
+        event_id=event_id,
     )
 
 
@@ -365,13 +372,15 @@ def get_data_access_for_list_of_club_dinghies(data: GenericDataApi) -> DataAcces
         write_method=data.data_List_of_club_dinghies.write,
     )
 
-def get_data_access_for_list_of_club_dinghies_with_limits(data: GenericDataApi) -> DataAccessMethod:
+
+def get_data_access_for_list_of_club_dinghies_with_limits(
+    data: GenericDataApi,
+) -> DataAccessMethod:
     return DataAccessMethod(
         "list_of_club_dinghies_with_limits",
         read_method=data.data_List_of_club_dinghy_limits.read,
         write_method=data.data_List_of_club_dinghy_limits.write,
     )
-
 
 
 def get_data_access_for_list_of_groups(data: GenericDataApi) -> DataAccessMethod:
@@ -415,11 +424,12 @@ def get_data_access_for_list_of_teams_and_roles_with_ids(
         write_method=data.data_list_of_teams_and_roles_with_ids.write,
     )
 
+
 def get_data_access_for_list_of_notes_for_groups(
-        data: GenericDataApi
-)-> DataAccessMethod:
+    data: GenericDataApi,
+) -> DataAccessMethod:
     return DataAccessMethod(
         "list_of_notes_for_groups",
         read_method=data.data_list_of_group_notes_at_event.read_all_notes,
-        write_method=data.data_list_of_group_notes_at_event.write_notes
+        write_method=data.data_list_of_group_notes_at_event.write_notes,
     )

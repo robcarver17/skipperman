@@ -5,7 +5,9 @@ from app.backend.volunteers.list_of_volunteers import list_of_similar_volunteers
 from app.objects.utilities.exceptions import missing_data, arg_not_passed
 
 from app.objects.cadets import ListOfCadets, Cadet
-from app.objects.utilities.cadet_matching_and_sorting import get_list_of_cadets_with_similar_surname
+from app.objects.utilities.cadet_matching_and_sorting import (
+    get_list_of_cadets_with_similar_surname,
+)
 from app.objects.utilities.utils import union_of_x_and_y
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.composed.cadet_volunteer_associations import (
@@ -85,7 +87,9 @@ def get_list_of_cadets_with_names_similar_to_volunteer(
     volunteer: Volunteer, from_list_of_cadets: ListOfCadets
 ) -> ListOfCadets:
 
-    similar_cadets = get_list_of_cadets_with_similar_surname(from_list_of_cadets, surname=volunteer.surname)
+    similar_cadets = get_list_of_cadets_with_similar_surname(
+        from_list_of_cadets, surname=volunteer.surname
+    )
     similar_cadets = similar_cadets.sort_by_firstname()
 
     return similar_cadets
@@ -149,7 +153,7 @@ def delete_cadet_connection(
 
 
 def delete_all_connections_for_cadet(
-    object_store: ObjectStore, cadet: Cadet, areyousure: bool =False
+    object_store: ObjectStore, cadet: Cadet, areyousure: bool = False
 ):
     if not areyousure:
         return
@@ -157,7 +161,9 @@ def delete_all_connections_for_cadet(
     list_of_cadet_volunteer_associations = get_list_of_cadet_volunteer_association(
         object_store
     )
-    list_of_associated_volunteers = list_of_cadet_volunteer_associations.delete_all_associations_for_cadet(cadet)
+    list_of_associated_volunteers = (
+        list_of_cadet_volunteer_associations.delete_all_associations_for_cadet(cadet)
+    )
     update_list_of_cadet_volunteer_association(
         list_of_cadet_volunteer_associations=list_of_cadet_volunteer_associations,
         object_store=object_store,
@@ -166,9 +172,8 @@ def delete_all_connections_for_cadet(
     return list_of_associated_volunteers
 
 
-
 def delete_all_connections_for_volunteer(
-    object_store: ObjectStore, volunteer: Volunteer, areyousure: bool =False
+    object_store: ObjectStore, volunteer: Volunteer, areyousure: bool = False
 ):
     if not areyousure:
         return
@@ -176,7 +181,11 @@ def delete_all_connections_for_volunteer(
     list_of_cadet_volunteer_associations = get_list_of_cadet_volunteer_association(
         object_store
     )
-    list_of_associated_cadets = list_of_cadet_volunteer_associations.delete_all_associations_for_volunteer(volunteer)
+    list_of_associated_cadets = (
+        list_of_cadet_volunteer_associations.delete_all_associations_for_volunteer(
+            volunteer
+        )
+    )
     update_list_of_cadet_volunteer_association(
         list_of_cadet_volunteer_associations=list_of_cadet_volunteer_associations,
         object_store=object_store,
@@ -224,4 +233,3 @@ def update_list_of_cadet_volunteer_association(
         new_object=list_of_cadet_volunteer_associations,
         object_definition=object_definition_for_volunteer_and_cadet_associations,
     )
-

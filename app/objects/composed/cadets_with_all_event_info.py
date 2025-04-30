@@ -64,8 +64,9 @@ class AllEventInfoForCadet:
     def is_active_registration(self):
         return self.registration_data.status.is_active
 
-    def update_notes(self, new_notes:str):
+    def update_notes(self, new_notes: str):
         self.registration_data.update_notes(new_notes)
+
 
 class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
     def __init__(
@@ -102,58 +103,72 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
     def delete_cadet_from_event_and_return_messages(self, cadet: Cadet) -> List[str]:
 
         messages = []
-        messages+=self.dict_of_cadets_with_days_and_groups.delete_cadet_from_event_and_return_messages(cadet)
-        messages+=self.dict_of_cadets_and_boat_class_and_partners.delete_cadet_from_event_and_return_messages(cadet)
-        messages+=self.dict_of_cadets_with_food_required_at_event.remove_food_requirements_for_cadet_at_event(cadet)
-        messages+=self.dict_of_cadets_with_clothing_at_event.remove_clothing_for_cadet_at_event(cadet)
-        messages += self.dict_of_cadets_and_club_dinghies_at_event.remove_cadet_from_event(cadet)
+        messages += self.dict_of_cadets_with_days_and_groups.delete_cadet_from_event_and_return_messages(
+            cadet
+        )
+        messages += self.dict_of_cadets_and_boat_class_and_partners.delete_cadet_from_event_and_return_messages(
+            cadet
+        )
+        messages += self.dict_of_cadets_with_food_required_at_event.remove_food_requirements_for_cadet_at_event(
+            cadet
+        )
+        messages += self.dict_of_cadets_with_clothing_at_event.remove_clothing_for_cadet_at_event(
+            cadet
+        )
+        messages += (
+            self.dict_of_cadets_and_club_dinghies_at_event.remove_cadet_from_event(
+                cadet
+            )
+        )
 
-        messages+=self.dict_of_cadets_with_registration_data.delete_cadet_from_event_and_return_messages(cadet) ## do last or may get errors
+        messages += self.dict_of_cadets_with_registration_data.delete_cadet_from_event_and_return_messages(
+            cadet
+        )  ## do last or may get errors
 
-
-        if len(messages)>0:
+        if len(messages) > 0:
             messages.insert(0, "Will remove cadet from event %s" % str(self.event))
 
         return messages
 
     def update_data_row_for_existing_cadet_at_event(
-            self,
-            cadet: Cadet,
-            column_name: str,
-            new_value_for_column
+        self, cadet: Cadet, column_name: str, new_value_for_column
     ):
         registration_data = self.dict_of_cadets_with_registration_data
-        registration_data.update_row_in_registration_data_for_existing_cadet_at_event(cadet=cadet, column_name=column_name, new_value_for_column=new_value_for_column)
+        registration_data.update_row_in_registration_data_for_existing_cadet_at_event(
+            cadet=cadet,
+            column_name=column_name,
+            new_value_for_column=new_value_for_column,
+        )
 
         self.propagate_changes_to_cadet_in_underlying_data(cadet)
 
-    def update_health_for_existing_cadet_at_event(
-        self, cadet: Cadet, new_health: str
-    ):
+    def update_health_for_existing_cadet_at_event(self, cadet: Cadet, new_health: str):
         event_data = self.event_data_for_cadet(cadet)
         current_health = event_data.registration_data.health
         if current_health == new_health:
             return
 
         registration_data = self.dict_of_cadets_with_registration_data
-        registration_data.update_health_for_existing_cadet_at_event(cadet=cadet, new_health = new_health)
+        registration_data.update_health_for_existing_cadet_at_event(
+            cadet=cadet, new_health=new_health
+        )
 
         self.propagate_changes_to_cadet_in_underlying_data(cadet)
 
-
-    def update_notes_for_existing_cadet_at_event(self, cadet: Cadet, notes:str):
+    def update_notes_for_existing_cadet_at_event(self, cadet: Cadet, notes: str):
         ## my level
         event_data = self.event_data_for_cadet(cadet)
         current_notes = event_data.registration_data.notes
-        if current_notes==notes:
+        if current_notes == notes:
             return
 
         ## propogate down
         registration_data = self.dict_of_cadets_with_registration_data
-        registration_data.update_notes_for_existing_cadet_at_event(cadet=cadet, notes=notes)
+        registration_data.update_notes_for_existing_cadet_at_event(
+            cadet=cadet, notes=notes
+        )
 
         self.propagate_changes_to_cadet_in_underlying_data(cadet)
-
 
     def update_boat_info_for_updated_cadet_at_event(
         self,
@@ -174,17 +189,19 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
             required_dict_for_allocation=required_dict_for_allocation,
         )
 
-        self._dict_of_cadets_and_boat_class_and_partners = required_dict_for_allocation.dict_of_cadets_and_boat_class_and_partners
-        self._dict_of_cadets_and_club_dinghies_at_event = required_dict_for_allocation.dict_of_cadets_and_club_dinghies_at_event
-        self._dict_of_cadets_with_days_and_groups = required_dict_for_allocation.dict_of_cadets_with_days_and_groups
+        self._dict_of_cadets_and_boat_class_and_partners = (
+            required_dict_for_allocation.dict_of_cadets_and_boat_class_and_partners
+        )
+        self._dict_of_cadets_and_club_dinghies_at_event = (
+            required_dict_for_allocation.dict_of_cadets_and_club_dinghies_at_event
+        )
+        self._dict_of_cadets_with_days_and_groups = (
+            required_dict_for_allocation.dict_of_cadets_with_days_and_groups
+        )
 
         affected_cadets = required_dict_for_allocation.affected_cadets
 
-        self.propagate_changes_to_list_of_cadets_in_underlying_data(
-            affected_cadets
-        )
-
-
+        self.propagate_changes_to_list_of_cadets_in_underlying_data(affected_cadets)
 
     def list_of_cadets_boat_classes_groups_sail_numbers_and_partners_at_event_on_day(
         self, day: Day
@@ -326,15 +343,14 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         return [message]
 
     def update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting(
-            self,
-            cadet: Cadet,
-            new_status: RegistrationStatus,
+        self,
+        cadet: Cadet,
+        new_status: RegistrationStatus,
     ):
         self.dict_of_cadets_with_registration_data.update_status_of_existing_cadet_in_event_info(
             cadet=cadet, new_status=new_status
         )
         self.propagate_changes_to_cadet_in_underlying_data(cadet)
-
 
     def update_status_of_existing_cadet_in_event_info_to_cancelled_or_deleted_and_return_messages(
         self, cadet: Cadet, new_status: RegistrationStatus
@@ -367,10 +383,13 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
 
         return messages
 
-    def propagate_changes_to_list_of_cadets_in_underlying_data(self, list_of_cadets: ListOfCadets):
-        [self.propagate_changes_to_cadet_in_underlying_data(
-            cadet
-        ) for cadet in list_of_cadets]
+    def propagate_changes_to_list_of_cadets_in_underlying_data(
+        self, list_of_cadets: ListOfCadets
+    ):
+        [
+            self.propagate_changes_to_cadet_in_underlying_data(cadet)
+            for cadet in list_of_cadets
+        ]
 
     def propagate_changes_to_cadet_in_underlying_data(self, cadet: Cadet):
         event_data_for_cadet = AllEventInfoForCadet(
@@ -393,11 +412,10 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         )
         self.update_event_data_for_cadet(cadet, event_data=event_data_for_cadet)
 
-
     def update_event_data_for_cadet(
-        self, cadet: Cadet, event_data: AllEventInfoForCadet):
+        self, cadet: Cadet, event_data: AllEventInfoForCadet
+    ):
         self[cadet] = event_data
-
 
     def event_data_for_cadet(
         self, cadet: Cadet, default=arg_not_passed
@@ -443,7 +461,6 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
     @property
     def list_of_cadets(self) -> ListOfCadets:
         return ListOfCadets(list(self.keys()))
-
 
 
 def compose_dict_of_all_event_info_for_cadet(

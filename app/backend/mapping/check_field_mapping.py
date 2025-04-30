@@ -14,7 +14,9 @@ from app.backend.wild_apricot.load_wa_file import (
 
 from app.objects.events import Event
 from app.data_access.configuration.field_list_groups import (
-    ALL_FIELDS_EXPECTED_IN_WA_FILE_MAPPING, MINIMUM_REQUIRED_FOR_REGISTRATION,MINIMUM_REQUIRED_FOR_REGISTRATION_ALTS
+    ALL_FIELDS_EXPECTED_IN_WA_FILE_MAPPING,
+    MINIMUM_REQUIRED_FOR_REGISTRATION,
+    MINIMUM_REQUIRED_FOR_REGISTRATION_ALTS,
 )
 from app.objects.utilities.utils import in_x_not_in_y
 from app.objects.abstract_objects.abstract_text import bold
@@ -24,7 +26,9 @@ from app.objects.abstract_objects.abstract_lines import (
     _______________,
 )
 
-def key_fields_missing_in_mapping( object_store: ObjectStore,
+
+def key_fields_missing_in_mapping(
+    object_store: ObjectStore,
     event: Event,
 ):
     wa_field_mapping = get_field_mapping_for_event(
@@ -36,11 +40,17 @@ def key_fields_missing_in_mapping( object_store: ObjectStore,
             problems.append(field)
 
     for __, field_list in MINIMUM_REQUIRED_FOR_REGISTRATION_ALTS.items():
-        any_fields = any([field in wa_field_mapping.list_of_skipperman_fields for field in field_list])
+        any_fields = any(
+            [
+                field in wa_field_mapping.list_of_skipperman_fields
+                for field in field_list
+            ]
+        )
         if not any_fields:
             problems.append("At least one of %s" % ", ".join(field_list))
 
     return problems
+
 
 def check_field_mapping(object_store: ObjectStore, event: Event) -> ListOfLines:
     fields_in_wa_file = get_field_mapping_or_empty_list_from_raw_event_file(event)

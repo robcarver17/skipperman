@@ -149,8 +149,9 @@ class RoleAndGroupAndTeam:
     def not_in_team(self):
         return len(self.list_of_team_and_index) == 0
 
-    def update_role_and_group(self, new_role: RoleWithSkills,
-                                     new_group: Group = arg_not_passed):
+    def update_role_and_group(
+        self, new_role: RoleWithSkills, new_group: Group = arg_not_passed
+    ):
 
         self.role = new_role
 
@@ -212,14 +213,18 @@ unallocated_role_and_group_and_team = RoleAndGroupAndTeam.create_unallocated()
 
 
 class DictOfDaysRolesAndGroupsAndTeams(Dict[Day, RoleAndGroupAndTeam]):
-    def update_role_and_group_on_day(self, day: Day, new_role: RoleWithSkills,
-                                     new_group: Group = arg_not_passed ### if not passed, no change
-                                     ):
+    def update_role_and_group_on_day(
+        self,
+        day: Day,
+        new_role: RoleWithSkills,
+        new_group: Group = arg_not_passed,  ### if not passed, no change
+    ):
 
         existing_role_group_and_team = self.role_and_group_and_team_on_day(day)
-        existing_role_group_and_team.update_role_and_group(new_role=new_role, new_group=new_group)
+        existing_role_group_and_team.update_role_and_group(
+            new_role=new_role, new_group=new_group
+        )
         self[day] = existing_role_group_and_team
-
 
     def update_role_and_group_at_event_for_volunteer_on_all_days_when_available(
         self, new_role_and_group: RoleAndGroupAndTeam, list_of_days_available: List[Day]
@@ -385,7 +390,6 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
 
         self._list_of_roles_with_skills = list_of_roles_with_skills
 
-
     def swap_roles_and_groups_for_volunteers_in_allocation(
         self,
         original_day: Day,
@@ -418,7 +422,7 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
         )
 
         self[original_volunteer] = days_and_roles_for_original_volunteer
-        self[volunteer_to_swap_with] =days_and_roles_for_swap_volunteer
+        self[volunteer_to_swap_with] = days_and_roles_for_swap_volunteer
 
         self.list_of_volunteers_with_id_in_role_at_event.swap_roles_and_groups_for_volunteers_in_allocation(
             original_day=original_day,
@@ -428,11 +432,16 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
         )
 
     def update_role_and_group_at_event_for_volunteer_on_day(
-        self, volunteer: Volunteer, day: Day, new_role: RoleWithSkills,
-            new_group: Group = arg_not_passed ### if not passed, no change
+        self,
+        volunteer: Volunteer,
+        day: Day,
+        new_role: RoleWithSkills,
+        new_group: Group = arg_not_passed,  ### if not passed, no change
     ):
         roles_for_volunteer = self.days_and_roles_for_volunteer(volunteer)
-        roles_for_volunteer.update_role_and_group_on_day(day=day, new_role=new_role, new_group=new_group)
+        roles_for_volunteer.update_role_and_group_on_day(
+            day=day, new_role=new_role, new_group=new_group
+        )
         self[volunteer] = roles_for_volunteer
 
         group_id = arg_not_passed if new_group is arg_not_passed else new_group.id
@@ -440,8 +449,11 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
         role_requires_group = new_role.associate_sailing_group
 
         self.list_of_volunteers_with_id_in_role_at_event.update_role_and_group_for_volunteer_on_day(
-            volunteer=volunteer, day=day, role_id=role_id, group_id=group_id,
-            role_requires_group=role_requires_group
+            volunteer=volunteer,
+            day=day,
+            role_id=role_id,
+            group_id=group_id,
+            role_requires_group=role_requires_group,
         )
 
     def update_role_and_group_at_event_for_volunteer_on_all_days_when_available(
@@ -464,7 +476,7 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
             volunteer=volunteer,
             group_id=new_role_and_group.group.id,
             list_of_days_available=list_of_days_available,
-            role_requires_group=role_requires_group
+            role_requires_group=role_requires_group,
         )
 
     def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
@@ -472,7 +484,7 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
         volunteer: Volunteer,
         day: Day,
         available_days: DaySelector,
-        allow_replacement: bool
+        allow_replacement: bool,
     ):
         roles_for_volunteer = self.days_and_roles_for_volunteer(volunteer)
         roles_for_volunteer.copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
@@ -491,14 +503,16 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
 
     def drop_volunteer(self, volunteer: Volunteer):
         try:
-            existing =self.days_and_roles_for_volunteer(volunteer)
+            existing = self.days_and_roles_for_volunteer(volunteer)
             self.pop(volunteer)
-            self._list_of_volunteers_with_id_in_role_at_event = self._list_of_volunteers_with_id_in_role_at_event.drop_volunteer(
-                volunteer)
+            self._list_of_volunteers_with_id_in_role_at_event = (
+                self._list_of_volunteers_with_id_in_role_at_event.drop_volunteer(
+                    volunteer
+                )
+            )
             return [" - removed allocations %s" % str(existing)]
         except:
             return []
-
 
     def delete_role_for_volunteer_on_day(self, day: Day, volunteer: Volunteer):
         roles_for_volunteer = self.days_and_roles_for_volunteer(volunteer)
@@ -555,7 +569,6 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
             unique_list_of_roles
         )
 
-
     def list_of_volunteers_with_roles_and_groups_and_teams_assigned_to_group_on_day(
         self, group: Group, day: Day
     ) -> List[VolunteerWithRoleGroupAndTeamAtEvent]:
@@ -575,8 +588,6 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
                     )
                 )
         return list_of_volunteers
-
-
 
     def list_of_volunteers_with_roles_and_groups_and_teams_doing_role_on_day(
         self, role: RoleWithSkills, day: Day

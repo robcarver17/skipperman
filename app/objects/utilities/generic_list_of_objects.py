@@ -1,6 +1,10 @@
 from typing import List
 import pandas as pd
-from app.objects.utilities.exceptions import MissingData, arg_not_passed, MultipleMatches
+from app.objects.utilities.exceptions import (
+    MissingData,
+    arg_not_passed,
+    MultipleMatches,
+)
 from app.objects.utilities.generic_objects import (
     GenericSkipperManObject,
     GenericSkipperManObjectWithIds,
@@ -154,8 +158,9 @@ def get_unique_object_with_multiple_attr_in_list(
 def get_idx_of_unique_object_with_multiple_attr_in_list(
     some_list: list, dict_of_attributes: dict, default=arg_not_passed
 ):
-    list_of_idx = get_idx_of_multiple_object_with_multiple_attr_in_list(some_list=some_list,
-                                                                        dict_of_attributes=dict_of_attributes)
+    list_of_idx = get_idx_of_multiple_object_with_multiple_attr_in_list(
+        some_list=some_list, dict_of_attributes=dict_of_attributes
+    )
     if len(list_of_idx) == 0:
         if default is arg_not_passed:
             raise MissingData(
@@ -169,10 +174,12 @@ def get_idx_of_unique_object_with_multiple_attr_in_list(
     else:
         return list_of_idx[0]
 
-def get_subset_of_list_that_matches_multiple_attr(    some_list: list, dict_of_attributes: dict):
+
+def get_subset_of_list_that_matches_multiple_attr(
+    some_list: list, dict_of_attributes: dict
+):
     list_of_idx = get_idx_of_multiple_object_with_multiple_attr_in_list(
-        some_list=some_list,
-        dict_of_attributes=dict_of_attributes
+        some_list=some_list, dict_of_attributes=dict_of_attributes
     )
     return [some_list[idx] for idx in list_of_idx]
 

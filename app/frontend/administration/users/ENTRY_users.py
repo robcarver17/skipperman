@@ -10,7 +10,7 @@ from app.frontend.administration.users.parse_user_form import (
 from app.frontend.administration.users.render_users_form import (
     display_form_edit_list_of_users,
     is_delete_button,
-is_reset_button,
+    is_reset_button,
     add_entry_button,
     save_entry_button,
 )

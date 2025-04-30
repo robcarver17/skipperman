@@ -1,11 +1,19 @@
-from app.frontend.events.patrol_boats.copy_menu import display_form_patrol_boat_copy_menu
+from app.frontend.events.patrol_boats.copy_menu import (
+    display_form_patrol_boat_copy_menu,
+)
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
-from app.frontend.events.patrol_boats.copying import  update_if_copy_individual_button_pressed
-from app.frontend.events.patrol_boats.copy_buttons import  is_copy_individual_volunteer_button, \
-    access_copy_menu_button
+from app.frontend.events.patrol_boats.copying import (
+    update_if_copy_individual_button_pressed,
+)
+from app.frontend.events.patrol_boats.copy_buttons import (
+    is_copy_individual_volunteer_button,
+    access_copy_menu_button,
+)
 from app.frontend.events.patrol_boats.parse_patrol_boat_table import *
 from app.frontend.events.patrol_boats.patrol_boat_buttons import (
-    add_new_boat_button, is_delete_boat_button, is_delete_volunteer_button,
+    add_new_boat_button,
+    is_delete_boat_button,
+    is_delete_volunteer_button,
 )
 from app.frontend.events.patrol_boats.render_patrol_boat_table import (
     get_patrol_boat_table,
@@ -13,20 +21,25 @@ from app.frontend.events.patrol_boats.render_patrol_boat_table import (
 )
 from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
     get_bottom_button_bar_for_patrol_boats,
-    get_top_button_bar_for_patrol_boats, quick_report_button,
+    get_top_button_bar_for_patrol_boats,
+    quick_report_button,
 )
 
 from app.frontend.events.patrol_boats.swapping import (
-    update_if_swap_button_pressed, is_swap_button,
+    update_if_swap_button_pressed,
+    is_swap_button,
 )
 from app.frontend.reporting.rota.report_rota import rota_report_generator
 from app.frontend.reporting.shared.create_report import create_generic_report
-from app.frontend.shared.warnings_table import  save_warnings_from_table, \
-    is_save_warnings_button_pressed
+from app.frontend.shared.warnings_table import (
+    save_warnings_from_table,
+    is_save_warnings_button_pressed,
+)
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
-    NewForm, File,
+    NewForm,
+    File,
 )
 from app.objects.abstract_objects.abstract_buttons import (
     cancel_menu_button,
@@ -87,10 +100,10 @@ def post_form_view_for_patrol_boat_allocation(
 
     ## remaining options do something and then return current form
     if save_menu_button.pressed(last_button_pressed):
-        pass # already done
+        pass  # already done
 
     elif is_save_warnings_button_pressed(last_button_pressed):
-        pass # already done
+        pass  # already done
 
     elif is_copy_individual_volunteer_button(last_button_pressed):
         update_if_copy_individual_button_pressed(
@@ -121,7 +134,9 @@ def post_form_view_for_patrol_boat_allocation(
 
     interface.save_cache_to_store_without_clearing()
 
-    return interface.get_new_form_given_function(display_form_view_for_patrol_boat_allocation)
+    return interface.get_new_form_given_function(
+        display_form_view_for_patrol_boat_allocation
+    )
 
 
 def previous_form(interface: abstractInterface):
@@ -130,16 +145,17 @@ def previous_form(interface: abstractInterface):
     )
 
 
-
-
-
 def create_quick_report(interface: abstractInterface) -> File:
     report_generator_with_specific_parameters = (
         rota_report_generator.add_specific_parameters_for_type_of_report(
             interface.object_store
         )
     )
-    interface.log_error("Quick reports are generated with current report parameters: do not get published to web. To publish or change parameters to go Reporting menu option.")
-    return create_generic_report(report_generator=report_generator_with_specific_parameters, interface=interface,
-                                 override_print_options={'power_boats_only': True, 'output_pdf': False}
-                                 )
+    interface.log_error(
+        "Quick reports are generated with current report parameters: do not get published to web. To publish or change parameters to go Reporting menu option."
+    )
+    return create_generic_report(
+        report_generator=report_generator_with_specific_parameters,
+        interface=interface,
+        override_print_options={"power_boats_only": True, "output_pdf": False},
+    )

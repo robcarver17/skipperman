@@ -1,14 +1,24 @@
 from typing import List
 
-from app.backend.events.event_warnings import \
-    get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority, process_warnings_into_warning_list
-from app.objects.event_warnings import ListOfEventWarnings, VOLUNTEER_QUALIFICATION, MISSING_DRIVER, HIGH_PRIORITY
+from app.backend.events.event_warnings import (
+    get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority,
+    process_warnings_into_warning_list,
+)
+from app.objects.event_warnings import (
+    ListOfEventWarnings,
+    VOLUNTEER_QUALIFICATION,
+    MISSING_DRIVER,
+    HIGH_PRIORITY,
+)
 from app.objects.volunteers import ListOfVolunteers
 
 from app.data_access.store.object_store import ObjectStore
 
 
-from app.backend.volunteers.warnings import remove_empty_values_in_warning_list, warn_on_volunteer_qualifications
+from app.backend.volunteers.warnings import (
+    remove_empty_values_in_warning_list,
+    warn_on_volunteer_qualifications,
+)
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.patrol_boats import PatrolBoat
@@ -22,12 +32,9 @@ from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunt
 
 def process_all_warnings_for_patrol_boats(object_store: ObjectStore, event: Event):
 
-    warn_on_volunteer_qualifications(
-        object_store=object_store, event=event
-    )
-    warn_on_pb2_drivers(
-        object_store=object_store, event=event
-    )
+    warn_on_volunteer_qualifications(object_store=object_store, event=event)
+    warn_on_pb2_drivers(object_store=object_store, event=event)
+
 
 def warn_on_pb2_drivers(object_store: ObjectStore, event: Event):
     list_of_boats_at_event = load_list_of_patrol_boats_at_event(
@@ -41,11 +48,13 @@ def warn_on_pb2_drivers(object_store: ObjectStore, event: Event):
 
     list_of_warnings = remove_empty_values_in_warning_list(list_of_warnings)
 
-    process_warnings_into_warning_list(object_store=object_store, event=event,
-                                       list_of_warnings=list_of_warnings,
-                                       category=MISSING_DRIVER,
-                                       priority=HIGH_PRIORITY)
-
+    process_warnings_into_warning_list(
+        object_store=object_store,
+        event=event,
+        list_of_warnings=list_of_warnings,
+        category=MISSING_DRIVER,
+        priority=HIGH_PRIORITY,
+    )
 
 
 def warn_on_pb2_drivers_for_boat(
@@ -101,14 +110,15 @@ def any_volunteers_in_list_can_drive(
     return False
 
 
-
-def get_all_saved_warnings_for_patrol_boats(object_store: ObjectStore, event: Event)-> ListOfEventWarnings:
-    all_warnings = get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority(
-        object_store=object_store,
-        event=event,
-        list_of_categories=[
-    VOLUNTEER_QUALIFICATION,
-            MISSING_DRIVER
-])
+def get_all_saved_warnings_for_patrol_boats(
+    object_store: ObjectStore, event: Event
+) -> ListOfEventWarnings:
+    all_warnings = (
+        get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority(
+            object_store=object_store,
+            event=event,
+            list_of_categories=[VOLUNTEER_QUALIFICATION, MISSING_DRIVER],
+        )
+    )
 
     return all_warnings

@@ -60,7 +60,10 @@ class PdfLayout:
             pass
 
     def add_title_to_page(self):
-        title_str = "%s (Printed %s)" % (self.title_str, datetime.datetime.now(local_timezone).strftime("%b %d %H:%M"))
+        title_str = "%s (Printed %s)" % (
+            self.title_str,
+            datetime.datetime.now(local_timezone).strftime("%b %d %H:%M"),
+        )
         pdf = self.pdf
         pdf.set_font(self.font, "", self._title_font_size())
         margin = self.edge_margin_measurement_units

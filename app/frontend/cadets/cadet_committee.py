@@ -1,7 +1,10 @@
 from typing import Union, List
 
-from app.frontend.shared.buttons import get_button_value_for_cadet_selection, cadet_from_button_pressed, \
-    is_button_cadet_selection
+from app.frontend.shared.buttons import (
+    get_button_value_for_cadet_selection,
+    cadet_from_button_pressed,
+    is_button_cadet_selection,
+)
 from app.objects.cadets import Cadet
 
 from app.backend.cadets.list_of_cadets import (
@@ -270,11 +273,12 @@ def select_or_deselect_cadet_from_committee(
 def cadet_from_select_or_deselect_button_name(
     interface: abstractInterface, button_name: str
 ) -> Cadet:
-    cadet = cadet_from_button_pressed(object_store=interface.object_store, value_of_button_pressed=interface.last_button_pressed())
+    cadet = cadet_from_button_pressed(
+        object_store=interface.object_store,
+        value_of_button_pressed=interface.last_button_pressed(),
+    )
 
     return cadet
-
-
 
 
 ## FIELD NAMES

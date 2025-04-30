@@ -2,8 +2,11 @@ from copy import copy
 from dataclasses import dataclass
 from typing import Union, Callable
 
-from app.frontend.shared.buttons import get_button_value_given_type_and_attributes, \
-    get_attributes_from_button_pressed_of_known_type, is_button_of_type
+from app.frontend.shared.buttons import (
+    get_button_value_given_type_and_attributes,
+    get_attributes_from_button_pressed_of_known_type,
+    is_button_of_type,
+)
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 
 from app.frontend.forms.form_utils import yes_no_radio, is_radio_yes_or_no
@@ -11,7 +14,8 @@ from app.frontend.forms.reorder_form import (
     UP,
     DOWN,
     get_button_name_to_move_in_list,
-    modify_list_given_button_name, is_button_arrow_button,
+    modify_list_given_button_name,
+    is_button_arrow_button,
 )
 from app.data_access.configuration.fixed import (
     SAVE_KEYBOARD_SHORTCUT,
@@ -97,6 +101,7 @@ BACK_BUTTON_PRESSED = object()
 BUTTON_NOT_KNOWN = object()
 REORDER_PRESSED = object()
 SAVE_OR_ADD_PRESSED = object()
+
 
 def display_form_edit_generic_list(
     existing_list: list,
@@ -193,29 +198,34 @@ def text_box_name(entry) -> str:
 def hidden_box_name(entry) -> str:
     return HIDE_BUTTON_FLAG + "_" + str(entry)
 
-edit_button_type="editButton"
+
+edit_button_type = "editButton"
+
 
 def edit_contents_button(entry_name: str) -> Button:
     return Button("Edit", value=name_of_edit_contents_button_name(entry_name))
+
 
 def name_of_edit_contents_button_name(entry_name: str) -> str:
     return get_button_value_given_type_and_attributes(edit_button_type, entry_name)
 
 
 def entry_name_from_edit_contents_button(button_pressed: str) -> str:
-    return get_attributes_from_button_pressed_of_known_type(value_of_button_pressed=button_pressed,
-                                                                  type_to_check=edit_button_type)
+    return get_attributes_from_button_pressed_of_known_type(
+        value_of_button_pressed=button_pressed, type_to_check=edit_button_type
+    )
+
 
 def is_edit_button_pressed(button_pressed_str) -> bool:
     print(button_pressed_str)
-    return is_button_of_type(value_of_button_pressed=button_pressed_str, type_to_check=edit_button_type)
+    return is_button_of_type(
+        value_of_button_pressed=button_pressed_str, type_to_check=edit_button_type
+    )
 
 
 @dataclass
 class EditButtonPressed:
     entry_name: str
-
-
 
 
 def post_form_edit_generic_list(
@@ -243,11 +253,11 @@ def post_form_edit_generic_list(
         return REORDER_PRESSED
 
     add_edits_from_form(
-            interface=interface,
-            modifying_function=modifying_function,
-            existing_list=existing_list,
-            get_object_from_form_function=get_object_from_form_function,
-        )
+        interface=interface,
+        modifying_function=modifying_function,
+        existing_list=existing_list,
+        get_object_from_form_function=get_object_from_form_function,
+    )
 
     if save_button.pressed(last_button):
         ## already saved
@@ -264,6 +274,7 @@ def post_form_edit_generic_list(
 
 def edit_button_returned_from_generic_modifier(content):
     return type(content) is EditButtonPressed
+
 
 def get_list_of_edit_contents_buttons(existing_list):
     return [name_of_edit_contents_button_name(entry) for entry in existing_list]

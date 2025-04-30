@@ -63,15 +63,17 @@ class ListOfVolunteersWithIdInRoleAtEvent(GenericListOfObjects):
                 day=day,
                 role_id=role_id,
                 group_id=group_id,
-                role_requires_group=role_requires_group
+                role_requires_group=role_requires_group,
             )
 
-    def update_role_and_group_for_volunteer_on_day(self,
+    def update_role_and_group_for_volunteer_on_day(
+        self,
         volunteer: Volunteer,
         day: Day,
         role_id: str,
         role_requires_group: bool,
-        group_id: str = arg_not_passed):
+        group_id: str = arg_not_passed,
+    ):
 
         self.update_volunteer_in_role_on_day(
             volunteer=volunteer, day=day, new_role_id=role_id
@@ -89,7 +91,7 @@ class ListOfVolunteersWithIdInRoleAtEvent(GenericListOfObjects):
             )
 
     def drop_volunteer(self, volunteer: Volunteer):
-        new_list = [item for item in self if not item.volunteer_id==volunteer.id]
+        new_list = [item for item in self if not item.volunteer_id == volunteer.id]
 
         return ListOfVolunteersWithIdInRoleAtEvent(new_list)
 

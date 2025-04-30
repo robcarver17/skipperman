@@ -16,7 +16,8 @@ from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
     main_menu_button,
-    back_menu_button, HelpButton,
+    back_menu_button,
+    HelpButton,
 )
 
 dict_of_dump_options_and_functions_to_generate_df = {
@@ -42,7 +43,9 @@ def display_form_for_data_dump_report(interface: abstractInterface):
 
     return Form(contents_of_form)
 
-help_button = HelpButton('data_dumps_report')
+
+help_button = HelpButton("data_dumps_report")
+
 
 def post_form_for_data_dump_report(
     interface: abstractInterface,

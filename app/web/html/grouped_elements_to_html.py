@@ -20,14 +20,16 @@ from app.objects.abstract_objects.abstract_form import (
     Image,
     dropDownInput,
     listInput,
-    checkboxInput, textAreaInput,
+    checkboxInput,
+    textAreaInput,
 )
 from app.objects.abstract_objects.abstract_interface import UrlsOfInterest
 from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
     DetailListOfLines,
-    DetailLine, ProgressBar,
+    DetailLine,
+    ProgressBar,
 )
 from app.objects.abstract_objects.abstract_tables import (
     DetailTable,
@@ -57,7 +59,8 @@ from app.web.html.abstract_components_to_html import (
     get_html_for_detail_line,
     get_html_for_heading,
     get_html_image,
-    generic_html_button, get_html_for_progress_bar,
+    generic_html_button,
+    get_html_for_progress_bar,
 )
 from app.web.html.html_components import (
     Html,
@@ -82,7 +85,8 @@ from app.web.html.forms import (
     html_radio_input,
     html_dropdown_input,
     html_list_input,
-    html_checkbox_input, html_form_text_area_input,
+    html_checkbox_input,
+    html_form_text_area_input,
 )
 from app.web.html.config_html import DEBUG
 from app.web.html.html_components import horizontal_line
@@ -237,7 +241,7 @@ def get_html_for_element_in_line(
         Image,
         int,
         HorizontalLine,
-        ProgressBar
+        ProgressBar,
     ],
     urls_of_interest: UrlsOfInterest = arg_not_passed,
 ) -> Html:
@@ -276,7 +280,6 @@ def get_html_for_element_in_line(
             input_label=element_in_line.input_label,
             input_name=element_in_line.input_name,
             value=element_in_line.value,
-
         )
     elif type(element_in_line) is emailInput:
         return html_form_email_input(

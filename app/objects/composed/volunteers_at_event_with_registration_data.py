@@ -18,7 +18,7 @@ from app.objects.day_selectors import DaySelector, Day
 class RegistrationDataForVolunteerAtEvent:
     availablity: DaySelector
     list_of_associated_cadets: ListOfCadets
-    self_declared_status: str = "" ## info only
+    self_declared_status: str = ""  ## info only
     preferred_duties: str = ""  ## information only
     same_or_different: str = ""  ## information only
     any_other_information: str = (
@@ -48,7 +48,7 @@ class RegistrationDataForVolunteerAtEvent:
             same_or_different=volunteer_at_event_with_id.same_or_different,
             any_other_information=volunteer_at_event_with_id.any_other_information,
             notes=volunteer_at_event_with_id.notes,
-            self_declared_status=volunteer_at_event_with_id.self_declared_status
+            self_declared_status=volunteer_at_event_with_id.self_declared_status,
         )
 
 
@@ -65,10 +65,11 @@ class DictOfRegistrationDataForVolunteerAtEvent(
         self._event = event
         self._list_of_volunteers_at_event_with_id = list_of_volunteers_at_event_with_id
 
-    def add_new_volunteer(self,
-                          volunteer: Volunteer,
-                        registration_data: RegistrationDataForVolunteerAtEvent
-                          ):
+    def add_new_volunteer(
+        self,
+        volunteer: Volunteer,
+        registration_data: RegistrationDataForVolunteerAtEvent,
+    ):
 
         volunteer_at_event_with_id = VolunteerAtEventWithId(
             volunteer_id=volunteer.id,
@@ -78,14 +79,13 @@ class DictOfRegistrationDataForVolunteerAtEvent(
             notes=registration_data.notes,
             preferred_duties=registration_data.preferred_duties,
             same_or_different=registration_data.same_or_different,
-            self_declared_status=registration_data.self_declared_status
+            self_declared_status=registration_data.self_declared_status,
         )
         self.list_of_volunteers_at_event_with_id.add_new_volunteer(
             volunteer_at_event_with_id
         )
 
         self[volunteer] = registration_data
-
 
     def update_volunteer_notes_at_event(self, volunteer: Volunteer, new_notes: str):
         volunteer_data = self.get_data_for_volunteer(volunteer)
@@ -142,7 +142,9 @@ class DictOfRegistrationDataForVolunteerAtEvent(
             volunteer=volunteer, day=day
         )
 
-    def get_data_for_volunteer(self, volunteer: Volunteer, default=arg_not_passed) -> RegistrationDataForVolunteerAtEvent:
+    def get_data_for_volunteer(
+        self, volunteer: Volunteer, default=arg_not_passed
+    ) -> RegistrationDataForVolunteerAtEvent:
         data = self.get(volunteer, default)
         if data is arg_not_passed:
             raise MissingData("Volunteer %s not found" % str(volunteer))

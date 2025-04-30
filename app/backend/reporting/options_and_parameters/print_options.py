@@ -36,7 +36,7 @@ class PrintOptions(GenericSkipperManObject):
         return self._filename
 
     @filename.setter
-    def filename(self, filename:str):
+    def filename(self, filename: str):
         self._filename = filename
 
     @property

@@ -25,7 +25,7 @@ class GenericDataApi(object):
         raise NotImplemented
 
     @global_read_only.setter
-    def global_read_only(self, global_read_only:bool):
+    def global_read_only(self, global_read_only: bool):
         raise NotImplemented
 
     @property
@@ -63,7 +63,7 @@ class GenericDataApi(object):
         raise NotImplemented
 
     @property
-    def data_event_warnings(self)-> DataListOfEventWarnings:
+    def data_event_warnings(self) -> DataListOfEventWarnings:
         raise NotImplemented
 
     @property
@@ -219,7 +219,9 @@ class GenericDataApi(object):
         raise NotImplemented
 
     @property
-    def data_attendance_at_events_for_specific_cadet(self) -> DataAttendanceAtEventsForSpecificCadet:
+    def data_attendance_at_events_for_specific_cadet(
+        self,
+    ) -> DataAttendanceAtEventsForSpecificCadet:
         raise NotImplemented
 
     @property

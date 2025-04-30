@@ -38,7 +38,7 @@ class GenericSkipperManObject:
         return cls(**dict_of_nones)
 
     ######
-    #THIS METHOD USED WHEN WRITING .CSV TO DISK
+    # THIS METHOD USED WHEN WRITING .CSV TO DISK
     ######
 
     def as_df_of_str(self) -> pd.DataFrame:
@@ -46,7 +46,7 @@ class GenericSkipperManObject:
         return pd.DataFrame({KEYS: as_str_dict.keys(), VALUES: as_str_dict.values()})
 
     ######
-    #THIS METHOD USED WHEN READING .CSV FROM DISK
+    # THIS METHOD USED WHEN READING .CSV FROM DISK
     ######
 
     @classmethod

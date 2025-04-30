@@ -29,7 +29,8 @@ def html_form_text_input(
         size = 10
 
     return Html(
-        '%s <input type="text" name="%s" size = "%s" %s />' % (input_label, input_name, size, value_html)
+        '%s <input type="text" name="%s" size = "%s" %s />'
+        % (input_label, input_name, size, value_html)
     )
 
 
@@ -39,14 +40,17 @@ def html_form_text_area_input(
     if value is arg_not_passed:
         value = ""
 
-    if len(value)==0:
+    if len(value) == 0:
         size_html = 'rows="1"'
     else:
         cols = 20
-        rows = int(np.ceil(len(value)/20))
+        rows = int(np.ceil(len(value) / 20))
         size_html = 'rows="%d" cols="%d"' % (rows, cols)
 
-    return Html('%s <textarea name="%s" wrap="soft" %s>%s</textarea>' % (input_label, input_name, size_html, value))
+    return Html(
+        '%s <textarea name="%s" wrap="soft" %s>%s</textarea>'
+        % (input_label, input_name, size_html, value)
+    )
 
 
 def html_form_email_input(

@@ -23,8 +23,7 @@ from app.objects.qualifications import ListOfQualifications, Qualification
 
 
 def get_expected_qualifications_for_list_of_cadets_as_df(
-    object_store: ObjectStore,
-        list_of_cadets: ListOfCadets
+    object_store: ObjectStore, list_of_cadets: ListOfCadets
 ) -> pd.DataFrame:
     list_of_qualifications = get_list_of_qualifications(object_store)
 
@@ -39,7 +38,7 @@ def get_expected_qualifications_for_list_of_cadets_as_df(
         list_of_expected_qualifications.append(percentage_list)
 
     df = pd.DataFrame(list_of_expected_qualifications)
-    df.columns =  list_of_qualifications.list_of_names()
+    df.columns = list_of_qualifications.list_of_names()
     df.index = list_of_cadets.list_of_names()
 
     return df

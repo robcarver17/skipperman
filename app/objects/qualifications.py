@@ -5,11 +5,13 @@ from typing import List
 from app.objects.utilities.generic_list_of_objects import (
     get_idx_of_unique_object_with_attr_in_list,
     get_unique_object_with_attr_in_list,
-    get_unique_object_with_multiple_attr_in_list, get_idx_of_multiple_object_with_multiple_attr_in_list
+    get_unique_object_with_multiple_attr_in_list,
+    get_idx_of_multiple_object_with_multiple_attr_in_list,
 )
 
 from app.objects.utilities.exceptions import (
-    arg_not_passed, missing_data,
+    arg_not_passed,
+    missing_data,
 )
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
@@ -108,25 +110,25 @@ class ListOfCadetsWithIdsAndQualifications(GenericListOfObjectsWithIds):
             )
         )
 
-    def delete_all_qualifications_for_cadet(self, cadet_id:str):
+    def delete_all_qualifications_for_cadet(self, cadet_id: str):
         while True:
-            list_of_idx =get_idx_of_multiple_object_with_multiple_attr_in_list(self, dict_of_attributes={'cadet_id': cadet_id})
-            if len(list_of_idx)==0:
+            list_of_idx = get_idx_of_multiple_object_with_multiple_attr_in_list(
+                self, dict_of_attributes={"cadet_id": cadet_id}
+            )
+            if len(list_of_idx) == 0:
                 break
             self.pop(list_of_idx[0])
 
     def remove_qualification_from_cadet(self, cadet_id: str, qualification_id: str):
         cadet_with_qualification = get_unique_object_with_multiple_attr_in_list(
             self,
-            {'cadet_id': cadet_id,
-             'qualification_id': qualification_id},
-            default = missing_data
+            {"cadet_id": cadet_id, "qualification_id": qualification_id},
+            default=missing_data,
         )
         if cadet_with_qualification is missing_data:
             raise Exception("Can't remove non existitent qualiciation for cadet")
 
         self.remove(cadet_with_qualification)
-
 
     def does_cadet_id_have_qualification(
         self, cadet_id: str, qualification_id: str

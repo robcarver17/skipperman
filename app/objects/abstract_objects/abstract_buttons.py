@@ -26,13 +26,15 @@ MAIN_MENU = "main_menu"  ## Not actual index page
 
 
 class Button:
-    def __init__(self,
-    label: Union[str, "Line", Arrow, Pointer, Symbol],
-    value: str = arg_not_passed,
-    big: bool = False,
-    tile: bool = False,
-    nav_button: bool = False,
-    shortcut: str = arg_not_passed):
+    def __init__(
+        self,
+        label: Union[str, "Line", Arrow, Pointer, Symbol],
+        value: str = arg_not_passed,
+        big: bool = False,
+        tile: bool = False,
+        nav_button: bool = False,
+        shortcut: str = arg_not_passed,
+    ):
         if value is arg_not_passed:
             try:
                 assert type(label) is str
@@ -43,14 +45,17 @@ class Button:
         self.label = label
         self.value = value
         self.big = big
-        self.tile=tile
+        self.tile = tile
         self.nav_button = nav_button
         self.shortcut = shortcut
 
     def pressed(self, last_button: str):
         return self.value == last_button
 
-def check_if_button_in_list_was_pressed(last_button_pressed: str, list_of_buttons: List[Button]):
+
+def check_if_button_in_list_was_pressed(
+    last_button_pressed: str, list_of_buttons: List[Button]
+):
     for button in list_of_buttons:
         if button.pressed(last_button_pressed):
             return True

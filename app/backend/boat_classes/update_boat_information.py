@@ -361,4 +361,3 @@ def update_boat_info_for_updated_cadets_at_event(
         object_store=object_store,
         dict_of_all_event_info_for_cadets=dict_of_all_event_info_for_cadets,
     )
-

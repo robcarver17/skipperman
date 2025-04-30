@@ -23,7 +23,8 @@ from app.objects.composed.volunteers_with_skills import (
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
     DictOfDaysRolesAndGroupsAndTeams,
     DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
-    RoleAndGroupAndTeam, )
+    RoleAndGroupAndTeam,
+)
 from app.objects.composed.volunteers_at_event_with_registration_data import (
     RegistrationDataForVolunteerAtEvent,
     DictOfRegistrationDataForVolunteerAtEvent,
@@ -84,80 +85,73 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         )
         self._event = event
 
-    def  move_volunteer_into_empty_boat(
-            self,
+    def move_volunteer_into_empty_boat(
+        self,
         original_volunteer: Volunteer,
         day_to_swap_with: Day,
-        new_patrol_boat: PatrolBoat
+        new_patrol_boat: PatrolBoat,
     ):
-        self.dict_of_volunteers_at_event_with_patrol_boats. move_volunteer_into_empty_boat(
+        self.dict_of_volunteers_at_event_with_patrol_boats.move_volunteer_into_empty_boat(
             original_volunteer=original_volunteer,
             day_to_swap_with=day_to_swap_with,
-            new_patrol_boat=new_patrol_boat
+            new_patrol_boat=new_patrol_boat,
         )
         self.refresh_data_for_volunteer_from_underlying(original_volunteer)
 
     def swap_patrol_boats_for_volunteers_in_allocation(
-            self,
-            original_day: Day,
-            original_volunteer: Volunteer,
-            day_to_swap_with: Day,
-            volunteer_to_swap_with: Volunteer):
+        self,
+        original_day: Day,
+        original_volunteer: Volunteer,
+        day_to_swap_with: Day,
+        volunteer_to_swap_with: Volunteer,
+    ):
         self.dict_of_volunteers_at_event_with_patrol_boats.swap_patrol_boats_for_volunteers_in_allocation(
             original_volunteer=original_volunteer,
             original_day=original_day,
             day_to_swap_with=day_to_swap_with,
-            volunteer_to_swap_with=volunteer_to_swap_with
+            volunteer_to_swap_with=volunteer_to_swap_with,
         )
         self.refresh_data_for_volunteer_from_underlying(original_volunteer)
         self.refresh_data_for_volunteer_from_underlying(volunteer_to_swap_with)
 
-    def delete_patrol_boat_for_volunteer_on_day(
-        self,
-            volunteer: Volunteer,
-            day:Day
-    ):
+    def delete_patrol_boat_for_volunteer_on_day(self, volunteer: Volunteer, day: Day):
         self.dict_of_volunteers_at_event_with_patrol_boats.delete_patrol_boat_for_volunteer_on_day(
-            volunteer=volunteer,
-            day=day
+            volunteer=volunteer, day=day
         )
         self.refresh_data_for_volunteer_from_underlying(volunteer)
 
-
     def remove_patrol_boat_and_all_associated_volunteers_from_event(
-            self, patrol_boat: PatrolBoat
+        self, patrol_boat: PatrolBoat
     ):
 
-        affected_volunteers  = self.dict_of_volunteers_at_event_with_patrol_boats.remove_patrol_boat_and_all_associated_volunteers_from_event_and_return_volunteers(
+        affected_volunteers = self.dict_of_volunteers_at_event_with_patrol_boats.remove_patrol_boat_and_all_associated_volunteers_from_event_and_return_volunteers(
             patrol_boat=patrol_boat
         )
-        [self.refresh_data_for_volunteer_from_underlying(volunteer) for volunteer in affected_volunteers]
+        [
+            self.refresh_data_for_volunteer_from_underlying(volunteer)
+            for volunteer in affected_volunteers
+        ]
 
     def copy_across_boats_at_event(
-            self,
-            volunteer: Volunteer,
-            day: Day,
-            allow_overwrite: bool):
+        self, volunteer: Volunteer, day: Day, allow_overwrite: bool
+    ):
 
-        volunteer_availablility_at_event = self.get_data_for_volunteer(volunteer).registration_data.availablity
+        volunteer_availablility_at_event = self.get_data_for_volunteer(
+            volunteer
+        ).registration_data.availablity
         self.dict_of_volunteers_at_event_with_patrol_boats.copy_across_boats_at_event(
             volunteer=volunteer,
             day=day,
             allow_overwrite=allow_overwrite,
-            volunteer_availablility_at_event=volunteer_availablility_at_event
+            volunteer_availablility_at_event=volunteer_availablility_at_event,
         )
         self.refresh_data_for_volunteer_from_underlying(volunteer)
 
     def add_volunteer_with_boat(
-            self,
-            volunteer: Volunteer,
-            patrol_boat: PatrolBoat,
-            day: Day
+        self, volunteer: Volunteer, patrol_boat: PatrolBoat, day: Day
     ):
         self.dict_of_volunteers_at_event_with_patrol_boats.add_volunteer_with_boat(
-            volunteer=volunteer,
-            patrol_boat=patrol_boat,
-            day=day
+            volunteer=volunteer, patrol_boat=patrol_boat, day=day
         )
 
         self.refresh_data_for_volunteer_from_underlying(volunteer)
@@ -175,61 +169,62 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         )
         return self.sort_by_list_of_volunteers(list_of_volunteers)
 
-    def update_volunteer_notes_at_event(self, volunteer: Volunteer, new_notes:str):
+    def update_volunteer_notes_at_event(self, volunteer: Volunteer, new_notes: str):
         existing_notes = self.get_data_for_volunteer(volunteer).registration_data.notes
         if existing_notes == new_notes:
             return
 
         self.dict_of_registration_data_for_volunteers_at_event.update_volunteer_notes_at_event(
-            volunteer=volunteer,
-            new_notes=new_notes
+            volunteer=volunteer, new_notes=new_notes
         )
         self.refresh_data_for_volunteer_from_underlying(volunteer)
 
-    def update_role_and_group_at_event_for_volunteer_on_day(self,
-                                                            volunteer: Volunteer, day: Day, new_role: RoleWithSkills,
-                                                            new_group: Group = arg_not_passed ### if not passed, no change
-                                                            ):
+    def update_role_and_group_at_event_for_volunteer_on_day(
+        self,
+        volunteer: Volunteer,
+        day: Day,
+        new_role: RoleWithSkills,
+        new_group: Group = arg_not_passed,  ### if not passed, no change
+    ):
         self.dict_of_volunteers_at_event_with_days_and_roles.update_role_and_group_at_event_for_volunteer_on_day(
             volunteer=volunteer, day=day, new_role=new_role, new_group=new_group
         )
         self.refresh_data_for_volunteer_from_underlying(volunteer)
 
-
-    def add_new_volunteer(self,
-                          volunteer: Volunteer,
-                            registration_data: RegistrationDataForVolunteerAtEvent
-                          ):
+    def add_new_volunteer(
+        self,
+        volunteer: Volunteer,
+        registration_data: RegistrationDataForVolunteerAtEvent,
+    ):
 
         self.dict_of_registration_data_for_volunteers_at_event.add_new_volunteer(
-            volunteer=volunteer,
-            registration_data=registration_data
+            volunteer=volunteer, registration_data=registration_data
         )
         self.refresh_data_for_volunteer_from_underlying(volunteer)
 
     def swap_roles_and_groups_for_volunteers_in_allocation(
-            self,
-            original_volunteer: Volunteer,
-            volunteer_to_swap_with: Volunteer,
-            original_day: Day,
-            day_to_swap_with: Day,
-        ):
+        self,
+        original_volunteer: Volunteer,
+        volunteer_to_swap_with: Volunteer,
+        original_day: Day,
+        day_to_swap_with: Day,
+    ):
         self.dict_of_volunteers_at_event_with_days_and_roles.swap_roles_and_groups_for_volunteers_in_allocation(
             original_volunteer=original_volunteer,
             volunteer_to_swap_with=volunteer_to_swap_with,
             original_day=original_day,
-            day_to_swap_with=day_to_swap_with
+            day_to_swap_with=day_to_swap_with,
         )
         self.refresh_data_for_volunteer_from_underlying(original_volunteer)
         self.refresh_data_for_volunteer_from_underlying(volunteer_to_swap_with)
 
-    def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(self,
-            volunteer: Volunteer,
-            day: Day,
-            allow_replacement:bool
-        ):
+    def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
+        self, volunteer: Volunteer, day: Day, allow_replacement: bool
+    ):
 
-        registration_data_for_volunteers_at_event = self.dict_of_registration_data_for_volunteers_at_event
+        registration_data_for_volunteers_at_event = (
+            self.dict_of_registration_data_for_volunteers_at_event
+        )
 
         available_days = (
             registration_data_for_volunteers_at_event.get_data_for_volunteer(
@@ -241,7 +236,7 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
             volunteer=volunteer,
             day=day,
             available_days=available_days,
-            allow_replacement=allow_replacement
+            allow_replacement=allow_replacement,
         )
         self.refresh_data_for_volunteer_from_underlying(volunteer)
 
@@ -283,7 +278,7 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         except:
             return []
 
-        messages =[]
+        messages = []
         messages.append("Deleting data for %s" % self.event)
         volunteer_registration_data = (
             self.dict_of_registration_data_for_volunteers_at_event
@@ -292,13 +287,13 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         messages.append("- dropped from registration data")
 
         days_and_roles_data = self.dict_of_volunteers_at_event_with_days_and_roles
-        messages+=days_and_roles_data.drop_volunteer(volunteer)
+        messages += days_and_roles_data.drop_volunteer(volunteer)
 
         patrol_boat_data = self.dict_of_volunteers_at_event_with_patrol_boats
-        messages+=patrol_boat_data.drop_volunteer(volunteer)
+        messages += patrol_boat_data.drop_volunteer(volunteer)
 
         food_data = self.dict_of_volunteers_with_food_at_event
-        messages+=food_data.drop_volunteer(volunteer)
+        messages += food_data.drop_volunteer(volunteer)
 
         return messages
 
@@ -358,28 +353,28 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         )
 
     def refresh_data_for_volunteer_from_underlying(self, volunteer):
-        self[volunteer] =                 AllEventDataForVolunteer(
-                    volunteer=volunteer,
-                    registration_data=self.dict_of_registration_data_for_volunteers_at_event[
-                        volunteer
-                    ],
-                    volunteer_skills=self.dict_of_volunteers_with_skills.get(
-                        volunteer, SkillsDict()
-                    ),
-                    roles_and_groups=self.dict_of_volunteers_at_event_with_days_and_roles.get(
-                        volunteer, DictOfDaysRolesAndGroupsAndTeams()
-                    ),
-                    patrol_boats=self.dict_of_volunteers_at_event_with_patrol_boats.get(
-                        volunteer, PatrolBoatByDayDict()
-                    ),
-                    associated_cadets=self.dict_of_cadets_associated_with_volunteers.get(
-                        volunteer, ListOfCadets([])
-                    ),
-                    food_requirements=self.dict_of_volunteers_with_food_at_event.food_for_volunteer(
-                        volunteer, default=no_food_requirements
-                    ),
-                    event=self.event,
-                )
+        self[volunteer] = AllEventDataForVolunteer(
+            volunteer=volunteer,
+            registration_data=self.dict_of_registration_data_for_volunteers_at_event[
+                volunteer
+            ],
+            volunteer_skills=self.dict_of_volunteers_with_skills.get(
+                volunteer, SkillsDict()
+            ),
+            roles_and_groups=self.dict_of_volunteers_at_event_with_days_and_roles.get(
+                volunteer, DictOfDaysRolesAndGroupsAndTeams()
+            ),
+            patrol_boats=self.dict_of_volunteers_at_event_with_patrol_boats.get(
+                volunteer, PatrolBoatByDayDict()
+            ),
+            associated_cadets=self.dict_of_cadets_associated_with_volunteers.get(
+                volunteer, ListOfCadets([])
+            ),
+            food_requirements=self.dict_of_volunteers_with_food_at_event.food_for_volunteer(
+                volunteer, default=no_food_requirements
+            ),
+            event=self.event,
+        )
 
     @property
     def dict_of_registration_data_for_volunteers_at_event(

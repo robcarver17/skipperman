@@ -28,7 +28,9 @@ from app.objects.day_selectors import no_days_selected_from_available_days
 from app.objects.events import Event
 
 
-def get_volunteer_history_for_selected_volunteer(interface: abstractInterface, event: Event, volunteer: Volunteer) -> str:
+def get_volunteer_history_for_selected_volunteer(
+    interface: abstractInterface, event: Event, volunteer: Volunteer
+) -> str:
     all_roles_as_dict = (
         get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(
             object_store=interface.object_store, volunteer=volunteer, avoid_event=event
@@ -38,11 +40,10 @@ def get_volunteer_history_for_selected_volunteer(interface: abstractInterface, e
         "%s: %s" % (str(event), role) for event, role in all_roles_as_dict.items()
     ]
 
-    if len(text_as_list)==0:
+    if len(text_as_list) == 0:
         return "Not volunteered before"
 
     return "Previous roles: %s" % ", ".join(text_as_list)
-
 
 
 def get_availability_checkbox_for_volunteer_at_event(
@@ -62,12 +63,12 @@ def get_availability_checkbox_for_volunteer_at_event(
 
 
 def update_volunteer_availability_at_event_from_rota_with_form_contents(
-    interface: abstractInterface,
-        event: Event,
-        volunteer: Volunteer
+    interface: abstractInterface, event: Event, volunteer: Volunteer
 ):
     availability = get_availablity_from_form(
-        interface=interface, event=event, input_name=input_name_for_volunteer_availability(volunteer)
+        interface=interface,
+        event=event,
+        input_name=input_name_for_volunteer_availability(volunteer),
     )
     if availability is MISSING_FROM_FORM:
         print("Availability not in form")
@@ -83,5 +84,6 @@ def update_volunteer_availability_at_event_from_rota_with_form_contents(
 
 AVAILABILITY = "Availability"
 
+
 def input_name_for_volunteer_availability(volunteer: Volunteer):
-    return AVAILABILITY+volunteer.id
+    return AVAILABILITY + volunteer.id

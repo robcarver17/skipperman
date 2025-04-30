@@ -18,8 +18,11 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 from app.objects.abstract_objects.abstract_form import checkboxInput
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
-from app.frontend.shared.buttons import get_attributes_from_button_pressed_of_known_type, \
-    get_button_value_given_type_and_attributes, is_button_of_type
+from app.frontend.shared.buttons import (
+    get_attributes_from_button_pressed_of_known_type,
+    get_button_value_given_type_and_attributes,
+    is_button_of_type,
+)
 
 
 def list_of_all_public_files_with_options() -> Table:
@@ -90,25 +93,19 @@ def line_for_file_in_directory(
     )
     delete_button = Button(
         label="Delete",
-        value=button_name_for_delete(
-            directory_name=directory_name, filename=filename
-        ),
+        value=button_name_for_delete(directory_name=directory_name, filename=filename),
     )
     line_for_file = [display_name, checkbox, delete_button]
     if show_qr_code_button:
         qr_button = Button(
             "QR code",
-            value=button_name_for_qr(
-                directory_name=directory_name, filename=filename
-            ),
+            value=button_name_for_qr(directory_name=directory_name, filename=filename),
         )
         line_for_file.append(qr_button)
     if show_replace_button:
         replace_button = Button(
             "Replace",
-            value=button_name_for_replace(
-                directory_name, filename=filename
-            ),
+            value=button_name_for_replace(directory_name, filename=filename),
         )
         line_for_file.append(replace_button)
 
@@ -119,17 +116,12 @@ def checkbox_name_for_filename(directory_name: str, filename: str) -> str:
     return "check_%s_%s" % (directory_name, filename)
 
 
-
-
-
 QR = "qr"
 REPLACE = "replace"
 DELETE = "delete"
 
 
-def button_name_for_qr(
-    directory_name: str, filename: str
-) -> str:
+def button_name_for_qr(directory_name: str, filename: str) -> str:
     ## may get underscores in directory and filename, so use a special seperator
     return get_button_value_given_type_and_attributes(
         QR,
@@ -137,9 +129,8 @@ def button_name_for_qr(
         filename,
     )
 
-def button_name_for_replace(
-    directory_name: str, filename: str
-) -> str:
+
+def button_name_for_replace(directory_name: str, filename: str) -> str:
     ## may get underscores in directory and filename, so use a special seperator
     return get_button_value_given_type_and_attributes(
         REPLACE,
@@ -148,9 +139,7 @@ def button_name_for_replace(
     )
 
 
-def button_name_for_delete(
-    directory_name: str, filename: str
-) -> str:
+def button_name_for_delete(directory_name: str, filename: str) -> str:
     ## may get underscores in directory and filename, so use a special seperator
     return get_button_value_given_type_and_attributes(
         DELETE,
@@ -163,33 +152,35 @@ def directory_and_filename_from_qr_button_name(
     button_name: str,
 ) -> Tuple[str, str]:
     return get_attributes_from_button_pressed_of_known_type(
-        value_of_button_pressed=button_name,
-        type_to_check=QR
+        value_of_button_pressed=button_name, type_to_check=QR
     )
+
 
 def directory_and_filename_from_replace_button_name(
     button_name: str,
 ) -> Tuple[str, str]:
     return get_attributes_from_button_pressed_of_known_type(
-        value_of_button_pressed=button_name,
-        type_to_check=REPLACE
+        value_of_button_pressed=button_name, type_to_check=REPLACE
     )
+
 
 def directory_and_filename_from_delete_button_name(
     button_name: str,
 ) -> Tuple[str, str]:
     return get_attributes_from_button_pressed_of_known_type(
-        value_of_button_pressed=button_name,
-        type_to_check=DELETE
+        value_of_button_pressed=button_name, type_to_check=DELETE
     )
 
-def is_qr_button(button_value:str):
+
+def is_qr_button(button_value: str):
     return is_button_of_type(button_value, type_to_check=QR)
 
-def is_delete_button(button_value:str):
+
+def is_delete_button(button_value: str):
     return is_button_of_type(button_value, type_to_check=DELETE)
 
-def is_replace_button(button_value:str):
+
+def is_replace_button(button_value: str):
     return is_button_of_type(button_value, type_to_check=REPLACE)
 
 

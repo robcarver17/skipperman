@@ -15,9 +15,7 @@ def get_event_id_from_state(interface: abstractInterface) -> str:
     return interface.get_persistent_value(EVENT)
 
 
-def update_state_for_specific_event(
-    interface: abstractInterface, event: Event
-):
+def update_state_for_specific_event(interface: abstractInterface, event: Event):
     id = event.id
     interface.set_persistent_value(EVENT, id)
 

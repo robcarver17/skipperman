@@ -2,8 +2,11 @@ from copy import copy
 from dataclasses import dataclass
 
 from app.backend.reporting.arrangement.arrangement_order import IndicesToSwap
-from app.frontend.shared.buttons import get_button_value_given_type_and_attributes, is_button_of_type, \
-    get_attributes_from_button_pressed_of_known_type
+from app.frontend.shared.buttons import (
+    get_button_value_given_type_and_attributes,
+    is_button_of_type,
+    get_attributes_from_button_pressed_of_known_type,
+)
 from app.objects.abstract_objects.abstract_tables import RowInTable, Table
 from app.objects.abstract_objects.abstract_text import up_arrow, down_arrow
 from app.objects.abstract_objects.abstract_buttons import Button
@@ -106,8 +109,6 @@ def indices_to_swap_given_button_name(
         raise Exception("Can't do this")
 
 
-
-
 def reorder_table(starting_list: list, include_delete: bool = False) -> Table:
     reorder_table = Table(
         [
@@ -157,30 +158,33 @@ def row_in_reorder_form(
 
     return RowInTable(row)
 
-arrow_button_type="arrowButton"
+
+arrow_button_type = "arrowButton"
 
 
 def is_button_arrow_button(value_of_button_pressed: str):
-    return is_button_of_type(type_to_check=arrow_button_type, value_of_button_pressed=value_of_button_pressed)
+    return is_button_of_type(
+        type_to_check=arrow_button_type, value_of_button_pressed=value_of_button_pressed
+    )
+
 
 @dataclass
 class DirectionAndElement:
     direction_or_action: str
     element_name: str
 
-def get_button_name_to_move_in_list(element:str, direction):
+
+def get_button_name_to_move_in_list(element: str, direction):
     return get_button_value_given_type_and_attributes(
-        arrow_button_type,
-        direction,
-        element
+        arrow_button_type, direction, element
     )
+
 
 def from_button_name_to_direction_and_element_name(button_name: str):
     attributes = get_attributes_from_button_pressed_of_known_type(
-        value_of_button_pressed=button_name, type_to_check=arrow_button_type)
-
-    return DirectionAndElement(
-        direction_or_action=attributes[0],
-        element_name=attributes[1]
+        value_of_button_pressed=button_name, type_to_check=arrow_button_type
     )
 
+    return DirectionAndElement(
+        direction_or_action=attributes[0], element_name=attributes[1]
+    )

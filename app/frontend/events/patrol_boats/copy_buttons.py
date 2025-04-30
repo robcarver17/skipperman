@@ -1,25 +1,40 @@
 from dataclasses import dataclass
 from typing import List, Union
 
-from app.backend.patrol_boats.copying import is_possible_to_copy_boat_allocation, \
-    volunteer_has_at_least_one_allocated_boat_and_empty_spaces_to_fill, \
-    volunteer_has_at_least_one_allocated_boat_which_matches_others, is_possible_to_copy_roles, \
-    volunteer_has_at_least_one_allocated_role_and_empty_spaces_to_fill, \
-    volunteer_has_at_least_one_allocated_role_which_matches_others, is_possible_to_copy_boat_and_role_allocation, \
-    is_possible_to_copy_fill_boat_and_role_allocation, is_required_to_copy_overwrite_boat_and_role_allocation
-from app.data_access.configuration.fixed import COPY_OVERWRITE_SYMBOL, BOAT_SHORTHAND, BOAT_AND_ROLE_SHORTHAND, \
-    ROLE_SHORTHAND, COPY_FILL_SYMBOL
-from app.frontend.events.patrol_boats.patrol_boat_buttons import \
-    generic_button_name_for_volunteer_in_boat_at_event_on_day
+from app.backend.patrol_boats.copying import (
+    is_possible_to_copy_boat_allocation,
+    volunteer_has_at_least_one_allocated_boat_and_empty_spaces_to_fill,
+    volunteer_has_at_least_one_allocated_boat_which_matches_others,
+    is_possible_to_copy_roles,
+    volunteer_has_at_least_one_allocated_role_and_empty_spaces_to_fill,
+    volunteer_has_at_least_one_allocated_role_which_matches_others,
+    is_possible_to_copy_boat_and_role_allocation,
+    is_possible_to_copy_fill_boat_and_role_allocation,
+    is_required_to_copy_overwrite_boat_and_role_allocation,
+)
+from app.data_access.configuration.fixed import (
+    COPY_OVERWRITE_SYMBOL,
+    BOAT_SHORTHAND,
+    BOAT_AND_ROLE_SHORTHAND,
+    ROLE_SHORTHAND,
+    COPY_FILL_SYMBOL,
+)
+from app.frontend.events.patrol_boats.patrol_boat_buttons import (
+    generic_button_name_for_volunteer_in_boat_at_event_on_day,
+)
 from app.frontend.shared.buttons import is_button_of_type
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import Line
-from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import \
-    VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday
+from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import (
+    VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
+)
 from app.objects.day_selectors import Day
 
 
-access_copy_menu_button = Button("Copy/Overwrite patrol boats and/or roles from first available day", nav_button=True)
+access_copy_menu_button = Button(
+    "Copy/Overwrite patrol boats and/or roles from first available day", nav_button=True
+)
+
 
 @dataclass
 class CopyButtonParameters:
@@ -57,7 +72,9 @@ def from_copy_button_type_to_copy_parameters(copy_type: str):
     else:
         raise Exception("button type %s not recognised" % copy_type)
 
-    return CopyButtonParameters(copy_boat=copy_boat, copy_role=copy_role, overwrite=overwrite)
+    return CopyButtonParameters(
+        copy_boat=copy_boat, copy_role=copy_role, overwrite=overwrite
+    )
 
 
 COPY_OVERWRITE_BOAT_BUTTON_LABEL = Line([COPY_OVERWRITE_SYMBOL, BOAT_SHORTHAND])
@@ -237,38 +254,51 @@ COPY_ROLE_FILL = "copyFillRoleButton"
 COPY_BOTH_FILL = "copyFillBothButton"
 
 
-def is_copy_individual_volunteer_button(button_value:str):
-    return is_copy_overwrite_boat_button(button_value) or \
-    is_copy_overwrite_role_button(button_value) or \
-    is_copy_overwrite_both_button(button_value) or \
-    \
-    is_copy_boat_fill_button(button_value) or \
-    is_copy_role_fill_button(button_value) or \
-    is_copy_both_fill_button(button_value)
+def is_copy_individual_volunteer_button(button_value: str):
+    return (
+        is_copy_overwrite_boat_button(button_value)
+        or is_copy_overwrite_role_button(button_value)
+        or is_copy_overwrite_both_button(button_value)
+        or is_copy_boat_fill_button(button_value)
+        or is_copy_role_fill_button(button_value)
+        or is_copy_both_fill_button(button_value)
+    )
 
 
 def is_copy_overwrite_boat_button(button_value: str):
-    return is_button_of_type(value_of_button_pressed=button_value, type_to_check=COPY_BOAT_OVERWRITE)
+    return is_button_of_type(
+        value_of_button_pressed=button_value, type_to_check=COPY_BOAT_OVERWRITE
+    )
 
 
 def is_copy_overwrite_role_button(button_value: str):
-    return is_button_of_type(value_of_button_pressed=button_value, type_to_check=COPY_ROLE_OVERWRITE)
+    return is_button_of_type(
+        value_of_button_pressed=button_value, type_to_check=COPY_ROLE_OVERWRITE
+    )
 
 
 def is_copy_overwrite_both_button(button_value: str):
-    return is_button_of_type(value_of_button_pressed=button_value, type_to_check=COPY_BOTH_OVERWRITE)
+    return is_button_of_type(
+        value_of_button_pressed=button_value, type_to_check=COPY_BOTH_OVERWRITE
+    )
 
 
 def is_copy_boat_fill_button(button_value: str):
-    return is_button_of_type(value_of_button_pressed=button_value, type_to_check=COPY_BOAT_FILL)
+    return is_button_of_type(
+        value_of_button_pressed=button_value, type_to_check=COPY_BOAT_FILL
+    )
 
 
 def is_copy_role_fill_button(button_value: str):
-    return is_button_of_type(value_of_button_pressed=button_value, type_to_check=COPY_ROLE_FILL)
+    return is_button_of_type(
+        value_of_button_pressed=button_value, type_to_check=COPY_ROLE_FILL
+    )
 
 
 def is_copy_both_fill_button(button_value: str):
-    return is_button_of_type(value_of_button_pressed=button_value, type_to_check=COPY_BOTH_FILL)
+    return is_button_of_type(
+        value_of_button_pressed=button_value, type_to_check=COPY_BOTH_FILL
+    )
 
 
 def copy_overwrite_button_name_for_boat_copy_in_boat_at_event_on_day(
@@ -317,5 +347,3 @@ def copy_fill_button_name_for_both_volunteer_role_and_boat_at_event_on_day(
     return generic_button_name_for_volunteer_in_boat_at_event_on_day(
         button_type=COPY_BOTH_FILL, day=day, volunteer_id=volunteer_id
     )
-
-

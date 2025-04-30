@@ -130,7 +130,6 @@ def load_additional_parameters_for_boat_report(
         EXCLUDE_UNALLOCATED, False
     )
 
-
     return AdditionalParametersForBoatReport(
         exclude_unallocated_groups=exclude_unallocated_groups,
         exclude_lake_groups=exclude_lake_groups,

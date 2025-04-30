@@ -7,6 +7,7 @@ INITIAL_STAGE = "_initial_stage"
 OTHER_DATA = "_other_data"
 STAGE_NAME = "_stage_name"
 
+
 class SessionDataForAction(object):
     def __init__(self, action_name: str):
         self._action_name = action_name
@@ -49,7 +50,6 @@ class SessionDataForAction(object):
         state_data_as_dict_from_session[OTHER_DATA] = new_other_data
         self.update_session_dict_for_action(state_data_as_dict_from_session)
 
-
     def reset_to_initial_stage(self):
         self.stage = INITIAL_STAGE
 
@@ -75,7 +75,6 @@ class SessionDataForAction(object):
     @property
     def state_data_as_dict_from_session(self) -> dict:
         return _get_session_data_dict_for_action(action_name=self.action_name)
-
 
 
 def _update_session_dict_for_action(action_name: str, new_dict: dict):

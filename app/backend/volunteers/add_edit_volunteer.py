@@ -50,7 +50,7 @@ def warning_str_for_similar_volunteers(
         )
         ## Some similar volunteers, let's see if it's a match
         return (
-            "Following existing volunteers look awfully similar:\n %s"
+            "Following existing volunteers look awfully similar:\n %s. "
             % similar_volunteers_str
         )
     else:
@@ -71,7 +71,7 @@ def verify_volunteer_and_warn(object_store: ObjectStore, volunteer: Volunteer, c
             volunteer=volunteer, cadet=cadet
         )
         if could_be_cadet_not_volunteer:
-            warn_text += "Volunteer name is similar to cadet name %s - are you sure this is actually a volunteer and not a cadet?" % cadet.name
+            warn_text += " Volunteer name is similar to cadet name %s - are you sure this is actually a volunteer and not a cadet? " % cadet.name
 
     if len(warn_text) > 0:
         warn_text = "DOUBLE CHECK BEFORE ADDING: " + warn_text

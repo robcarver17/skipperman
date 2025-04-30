@@ -140,7 +140,7 @@ def get_df_for_cadets_event_data_dump(object_store: ObjectStore, event: Event):
 def cadet_name_or_test(
     object_store: ObjectStore, identified_cadet: IdentifiedCadetAtEvent
 ):
-    if identified_cadet.is_test_cadet:
+    if identified_cadet.is_permanent_skip_cadet:
         return "Test"
     return get_cadet_from_id(
         object_store=object_store, cadet_id=identified_cadet.cadet_id

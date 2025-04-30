@@ -1,4 +1,6 @@
+# Version 3.01
 
+- WA files not deleted after import. Adding concept of 'temporary skip'
 
 # Version 3.0
 

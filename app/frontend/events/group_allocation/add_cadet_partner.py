@@ -1,6 +1,8 @@
 from typing import Union, Tuple
 
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.shared.cadet_state import get_cadet_from_state, clear_cadet_state
+from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 
 from app.backend.cadets_at_event.add_unregistered_partner_cadet import (
@@ -51,10 +53,12 @@ def get_parameters_for_form_given_cadets(primary_cadet: Cadet, partner_cadet: Ca
     parameters = ParametersForGetOrSelectCadetForm(
         help_string='help_adding_partner',
         header_text=header_text,
-        cancel_button=True
+        extra_buttons=[cancel_button]
     )
 
     return parameters
+
+cancel_button = Button("Cancel")
 
 def post_form_add_cadet_partner(
     interface: abstractInterface,
@@ -71,8 +75,12 @@ def post_form_add_cadet_partner(
     if result.is_form:
         return result.form
 
-    elif result.cancel:
-        return return_to_allocation_pages(interface)
+    elif result.is_button:
+        if result.button_pressed == cancel_button:
+            return return_to_allocation_pages(interface)
+        else:
+            return button_error_and_back_to_initial_state_form(interface)
+
 
     elif result.is_cadet:
         cadet = result.cadet

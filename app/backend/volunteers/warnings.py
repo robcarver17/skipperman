@@ -1,12 +1,14 @@
 from copy import copy
 from typing import List, Callable, Dict
 
+from app.backend.registration_data.volunter_relevant_information import get_volunteer_from_relevant_information
 from app.objects.composed.volunteer_roles import (
     empty_if_qualified_for_role_else_warnings,
 )
 from app.objects.composed.volunteers_at_event_with_registration_data import RegistrationDataForVolunteerAtEvent
 
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
+from app.objects.identified_volunteer_at_event import RowIDAndIndex
 from app.objects.volunteers import Volunteer
 
 from app.data_access.store.object_store import ObjectStore
@@ -44,10 +46,14 @@ from app.objects.registration_data import get_volunteer_status_from_row
 from app.objects.event_warnings import ListOfEventWarnings, MEDIUM_PRIORITY, CADET_WITHOUT_ADULT, \
     VOLUNTEER_AVAILABILITY, VOLUNTEER_GROUP, LOW_PRIORITY, LOWEST_PRIORITY, VOLUNTEER_UNCONNECTED, \
     VOLUNTEER_QUALIFICATION, HIGH_PRIORITY, VOLUNTEER_IDENTITY, VOLUNTEER_PREFERENCE
-from app.backend.events.event_warnings import add_or_update_list_of_new_event_warnings_clearing_any_missing, \
-    get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority
+from app.backend.events.event_warnings import \
+    get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority, process_warnings_into_warning_list
+
 
 def process_all_warnings_for_rota(object_store: ObjectStore, event: Event):
+    warn_on_volunteers_with_skipped_registration(
+        object_store=object_store, event=event
+    )
     warn_on_all_volunteers_availability_volunteers_missing(
         object_store=object_store, event=event
     )
@@ -66,6 +72,8 @@ def process_all_warnings_for_rota(object_store: ObjectStore, event: Event):
     warn_on_cadets_which_should_have_volunteers(
         object_store=object_store, event=event
     )
+
+
 
 
 def warn_on_all_volunteers_availability_volunteers_missing(
@@ -293,7 +301,6 @@ def warn_about_volunteer_availablity_at_event_with_connected_cadets(
     warnings = []
     for day in event.days_in_event():
         warnings = warning_about_volunteer_availability_on_specific_day(
-            volunteer=volunteer,
             volunteer_registration_data=volunteer_registration_data,
             active_connected_cadets=active_connected_cadets,
             cadet_at_event_availability=cadet_at_event_availability,
@@ -306,7 +313,7 @@ def warn_about_volunteer_availablity_at_event_with_connected_cadets(
 
     return warnings
 
-def warning_about_volunteer_availability_on_specific_day(volunteer: Volunteer,
+def warning_about_volunteer_availability_on_specific_day(
                                                         volunteer_registration_data: RegistrationDataForVolunteerAtEvent,
                                                          active_connected_cadets: ListOfCadets,
                                                          cadet_at_event_availability: Dict[Cadet, DaySelector],
@@ -509,9 +516,42 @@ def get_volunteer_status_and_possible_names(
     status_in_rows = list(set(status_in_rows))
 
     if len(status_in_rows) > 1:
-        status_in_rows.append(("[for different registered cadets]"))
+        status_in_rows.append("[for different registered cadets]")
 
     return "(Declared volunteer status: %s)" % ", ".join(status_in_rows)
+
+from app.backend.registration_data.identified_volunteers_at_event import get_list_of_identified_volunteers_at_event, \
+    get_relevant_information_for_volunteer_in_event_at_row_and_index
+
+
+def warn_on_volunteers_with_skipped_registration(object_store: ObjectStore, event: Event):
+    identified_volunteers_at_event = get_list_of_identified_volunteers_at_event(object_store=object_store, event=event)
+    list_of_temporary_row_ids_and_volunteer_index = identified_volunteers_at_event.list_of_row_and_index_temporary_skip()
+    warnings = [warning_for_specific_temporary_skip_volunteer_id_at_event(
+        object_store=object_store,
+        event=event,
+        row_id_and_index=row_id_and_index
+
+    ) for row_id_and_index in list_of_temporary_row_ids_and_volunteer_index]
+
+    process_warnings_into_warning_list(object_store=object_store, event=event,
+                                       list_of_warnings=warnings, category=VOLUNTEER_IDENTITY,
+                                       priority=MEDIUM_PRIORITY)
+
+def warning_for_specific_temporary_skip_volunteer_id_at_event(object_store: ObjectStore, event: Event, row_id_and_index: RowIDAndIndex) -> str:
+    relevant_information = (
+        get_relevant_information_for_volunteer_in_event_at_row_and_index(
+            object_store=object_store,
+            row_id=row_id_and_index.row_id,
+            volunteer_index=row_id_and_index.volunteer_index,
+            event=event,
+        )
+    )
+    volunteer = get_volunteer_from_relevant_information(relevant_information)
+    warning = \
+        "Temporarily skipping volunteer probably called %s in row %s id %d"    % (volunteer.name, str(row_id_and_index.row_id), row_id_and_index.volunteer_index)
+
+    return warning
 
 
 def remove_empty_values_in_warning_list(list_of_warnings: List[str]) -> List[str]:
@@ -519,14 +559,6 @@ def remove_empty_values_in_warning_list(list_of_warnings: List[str]) -> List[str
 
     return list_of_warnings
 
-def process_warnings_into_warning_list(object_store: ObjectStore, event: Event, list_of_warnings: List[str], priority: str, category: str):
-    add_or_update_list_of_new_event_warnings_clearing_any_missing(
-        object_store=object_store,
-        event=event,
-        category=category,
-        priority=priority,
-        new_list_of_warnings=list_of_warnings
-    )
 
 def get_all_saved_warnings_for_volunteer_rota(object_store: ObjectStore, event: Event) -> ListOfEventWarnings:
     all_warnings = get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority(

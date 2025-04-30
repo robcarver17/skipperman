@@ -47,7 +47,7 @@ from app.objects.registration_status import manual_status
 from app.objects.utilities.exceptions import NoMoreData, DuplicateCadets
 from app.objects.registration_data import RowInRegistrationData
 
-from app.objects.event_warnings import HIGH_PRIORITY, CADET_REGISTRATION, LOW_PRIORITY, LOWEST_PRIORITY
+from app.objects.event_warnings import HIGH_PRIORITY, CADET_REGISTRATION, LOW_PRIORITY, LOWEST_PRIORITY, MEDIUM_PRIORITY
 
 
 def display_form_interactively_update_cadets_at_event(
@@ -107,33 +107,22 @@ def process_update_to_existing_cadet_in_event_data(
         )
     except DuplicateCadets:
         message = "ACTION REQUIRED: Cadet %s appears more than once in WA file with multiple active registrations - ignoring any possible changes made to registration - go to WA and cancel one of the registrations please!"            % cadet
-        interface.log_error(message)
-        add_new_event_warning_checking_for_duplicate(object_store=interface.object_store,
-                                                     event=event,
-                                                     warning="On import at %s, %s" % (datetime.now(local_timezone), message),
-                                                     category=CADET_REGISTRATION, priority=HIGH_PRIORITY,
-                                                     auto_refreshed=False)  ## warning will sit on system until cleared
+        log_import_error(interface=interface, message=message, priority=HIGH_PRIORITY, log_as_warning=True)
 
         return process_next_cadet_at_event(interface)
 
     except NoMoreData:
         cadet_at_event = get_cadet_at_event(object_store=interface.object_store, event=event, cadet=cadet)
-        if cadet_at_event.status == manual_status:
-            message = \
-                "Cadet %s was added manually - is still not appearing in official registration import. "% cadet
-            priority = LOWEST_PRIORITY
+        if cadet_at_event.status.is_manual:
+            warning = \
+                "Cadet %s was added manually - is still not appearing in official registration import. " % cadet
+            # no need to create formal warnign wll be done later
+            log_import_error(interface=interface, message=warning, log_as_warning=False)
         else:
             ## No rows match cadet ID in current registration data, so deleted
             message = \
                 "Cadet %s was in imported data, now appears to be missing in latest file - possible data corruption of imported file or manual hacking - no changes in file will be reflected in Skipperman"% cadet
-            priority = LOW_PRIORITY
-
-        add_new_event_warning_checking_for_duplicate(object_store=interface.object_store,
-                                                     event=event,
-                                                     warning="On import at %s, %s" % (datetime.now(local_timezone), message),
-                                                     category=CADET_REGISTRATION, priority=priority,
-                                                     auto_refreshed=False)  ## warning will sit on system until cleared
-        interface.log_error(message)
+            log_import_error(interface=interface, message=message, log_as_warning=True, priority=LOW_PRIORITY)
 
         return process_next_cadet_at_event(interface)
 
@@ -210,12 +199,7 @@ def process_update_to_cadet_new_to_event(
     except DuplicateCadets:
         message= \
             "ACTION REQUIRED: Cadet %s appears more than once in imported file with an active registration - using the first registration found - go to WA and cancel all but one of the registrations please, and then check details here are correct!"            % cadet
-        add_new_event_warning_checking_for_duplicate(object_store=interface.object_store,
-                                                     event=event,
-                                                     warning="On import at %s, %s" % (datetime.now(local_timezone), message),
-                                                     category=CADET_REGISTRATION, priority=HIGH_PRIORITY,
-                                                     auto_refreshed=False)  ## warning will sit on system until cleared
-        interface.log_error(message)
+        log_import_error(interface=interface, message=message, priority=HIGH_PRIORITY, log_as_warning=True)
 
         relevant_row = get_row_in_registration_data_for_cadet_both_cancelled_and_active(
             object_store=interface.object_store,
@@ -228,11 +212,7 @@ def process_update_to_cadet_new_to_event(
         interface.log_error(
             message
         )
-        add_new_event_warning_checking_for_duplicate(object_store=interface.object_store,
-                                                     event=event,
-                                                     warning="On import at %s, %s" % (datetime.now(local_timezone), message),
-                                                     category=CADET_REGISTRATION, priority=HIGH_PRIORITY,
-                                                     auto_refreshed=False)  ## warning will sit on system until cleared
+        log_import_error(interface=interface, message=message, priority=HIGH_PRIORITY, log_as_warning=True)
 
         return process_next_cadet_at_event(interface)
 
@@ -251,3 +231,16 @@ def finished_looping_return_to_controller(interface: abstractInterface) -> NewFo
     return interface.get_new_display_form_for_parent_of_function(
         display_form_interactively_update_cadets_at_event
     )
+
+def log_import_error(interface: abstractInterface, message: str, priority: str = MEDIUM_PRIORITY, category=CADET_REGISTRATION, log_as_warning: bool= True):
+    event = get_event_from_state(interface)
+    interface.log_error(message)
+    if log_as_warning:
+        add_new_event_warning_checking_for_duplicate(object_store=interface.object_store,
+                                                  event=event,
+                                                  warning="On import at %s, %s" % (
+                                                  datetime.now(local_timezone), message),
+                                                  category=category, priority=priority,
+                                                  auto_refreshed=False)  ## warning will sit on system until cleared
+
+    print(message)

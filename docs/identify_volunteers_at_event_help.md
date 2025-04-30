@@ -29,6 +29,11 @@ If this isn't actually a new volunteer: you will probably see buttons to select 
 
 But if you are sure this is a new volunteer: check the first and second name are correct, then click `I have double checked the volunteers details entered - allow me to add`, and then `Yes - these details are correct - add this new volunteer`. 
 
-## This isn't really a volunteer
+## This isn't really a volunteer, or a non volunteering parent who will be on site
 
-If this isn't really a volunteer: click on `Skip - this isn't a volunteers name`. The most common cause of this is where the parent has accidentally put the cadets name in instead of their own. The system warns against this. Another possibility is that it is a test registration with a made up name.
+If this isn't really a volunteer: click on `Skip permanently - this isn't a volunteer or a parent on site`. The most common cause of this is where the parent has accidentally put the cadets name in instead of their own. The system warns against this. Another possibility is that it is a test registration with a made up name.
+
+
+## I'm not sure
+
+If you need to clarify who the volunteer is, click `Skip for now and import later`. You will see this volunteer again the next time you import from the same or an updated WA file.

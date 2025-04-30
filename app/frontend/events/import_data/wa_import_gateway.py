@@ -75,7 +75,7 @@ def report_on_status_of_upload(
     field_text = (
         "Field mapping has been setup."
         if existing_field_mapping
-        else "No field mapping set up - do this before you import any data"
+        else "No field mapping set up - do this before you can import any data"
     )
     if event_mapping_set_up:
         WA_ID = get_wa_id_for_event(event=event, object_store=interface.object_store)
@@ -89,7 +89,7 @@ def report_on_status_of_upload(
         else "No registration data imported yet."
     )
     upload_text = (
-        "WA file has been uploaded ready for import"
+        "WA file has been uploaded and can be imported."
         if raw_event_file_uploaded
         else "No file currently uploaded for import."
     )
@@ -160,7 +160,7 @@ existing_wa_field_mapping_button = Button("Check or modify WA field mapping", ti
 
 first_upload_file_button = Button("Upload a WA export file", tile=True)
 import_file_button = Button("Import data from current WA file", tile=True)
-update_file_button = Button("Update data from current WA file", tile=True)
+update_file_button = Button("Update data using current WA file", tile=True)
 subsequent_upload_file_button = Button("Upload a new WA export file", tile=True)
 
 clear_event_id_button = Button("Reset the stored WA event ID", tile=True)

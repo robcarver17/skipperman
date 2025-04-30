@@ -25,10 +25,13 @@ If they are already registered you will get an error message - sailors who are a
 
  **It's really important that you don't add duplicate cadets to the Skipperman data**
 
-But if you are sure this is a new cadet: enter their name and date of birth (making any corrections in the relevant input fields), and membership status. 
+But if you are sure this is a new cadet: enter their name, date of birth, and membership status. 
 
-Date of birth: You won't usually have the date of birth for a new sailor, unless they have done a WA registration already. If they are a visitor don't worry about including this, change the DOB status to 'Non member - don't need to know'. 
-If they are a member that is new to Skipperman, and you aren't sure of their date of birth or it hasn't been included in the registration form, then choose DOB status 'I need to confirm - leave blank for now'. You can [edit the date of birth later](view_and_edit_individual_cadet_help.md). 
+Date of birth: 
+
+- If they are a visitor don't worry about including this, change the DOB status to 'Non member - don't need to know'. 
+- If they are a member and you aren't sure of their date of birth, then choose DOB status 'I need to confirm - leave blank for now'. You can [edit the date of birth later](view_and_edit_individual_cadet_help.md). 
+- If weirdly you know their date of birth, then enter it here and set the DOB status to 'Known'
 
 For membership status:
 
@@ -55,5 +58,6 @@ If the sailor is subsequently registered on Wild Apricot, and the data imported,
 > `There have been important changes for event registration information about cadet John Smith (2000-01-01) Member`
 > `Sailor John Smith (2000-01-01) Memberis still active but status has changed from Manual to Paid: select status `
 
-If they have been registered with different days attending, that will also be higlighted. Click on `Use new data imported from latest file` to update Skipperman.
+If they have been registered with different days attending from those in the current Skipperman data, that will also be higlighted. Click on `Use new data imported from latest file` to update Skipperman.
 
+Any other information on the registration form won't be pulled in, but any volunteers included will be identified and added.

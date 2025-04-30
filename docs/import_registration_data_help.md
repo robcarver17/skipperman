@@ -97,7 +97,6 @@ The main reason, apart from testing, that this could happen is if you set up an 
 
 The latter will not delete or modify the old event in any way, but it will allow you to upload a file with the duplicate WA ID into a different event.
 
-In a future version of Skipperman it will be possible to delete an event for which no data has yet been uploaded.
 
 ## Importing from the WA import file
 
@@ -110,7 +109,13 @@ You should now be back at the main WA import page. Click on 'Import data from up
 
 ## Importing all the cadets attending
 
-Skipperman will attempt to identify all the cadets in the imported WA event file. If the cadet isn't identical to one that is already in the data (EXACTLY the same name, and date of birth), then Skipperman will ask you to add the cadet to it's data. You will see a screen like this:
+Skipperman will attempt to identify all the cadets in the imported WA event file. If a cadet is identical to one that is already in the data (EXACTLY the same name, and date of birth) it will be added silently. If a cadet entry is very close, but not identical. In this case the cadet will be added to the data, but you will see a warning like this:
+
+```
+Found cadet John Doe (2001-10-01) Member, looks a very close match for Jon Doe (2001-01-10) Unconfirmed member in registration data. If not correct, replace in edit registration page.
+```
+
+If the cadet isn't identical or very similar, then Skipperman will ask you to add the cadet to it's data. You will see a screen like this:
 
 ***
 ***
@@ -120,37 +125,29 @@ Skipperman will attempt to identify all the cadets in the imported WA event file
 
 - If this isn't actually a new cadet: you will probably see buttons to select an existing cadet. Click on the appropriate cadet. If you can't see the cadet you want, click on `See all cadets`. **It's really important that you don't add duplicate cadets to the Skipperman data**
 - If this is a new cadet: check the name and date of birth, and membership status. For racing events you won't usually have the date of birth - if they are a visitor don't worry about including this. If they are a member that is new to Skipperman, you can [edit the date of birth later](view_and_edit_individual_cadet_help.md). For membership status unless you are sure they are (or are not) a member, put 'unconfirmed'. Membership can be confirmed by [importing a list of club members exported from WA](import_membership_list_help)). It is possible to edit the cadet details, and these can also be updated by importing a list of club members from Wild Apricot, so don't worry too much if these aren't precisely right.  
-- If this is a test entry and not a real cadet: click the "Skip: this is a test entry" button. 
+- If this is a test entry and not a real cadet: click the "Skip permanently: this is a test entry" button. 
+- If you aren't sure and what to come back to this cadet on the next import, click "Skip for now"
 
-Sometimes a cadet entry is very close, but not identical. In this case the cadet will be added to the data, but you will see a warning like this:
-
-```
-Found cadet John Doe (2001-10-01) Member, looks a very close match for Jon Doe (2001-01-10) Unconfirmed member in registration data. If not correct, replace in edit registration page.
-```
 
 More help with identifying cadets [here](identify_cadets_at_event_help.md)
 
 ## Adding cadet registration data
 
-Next Skipperman will add the registration data for each sailor in the event. You might get this error:
+Next Skipperman will add the registration data for each sailor in the event. A quick guide to likely errors, [more detailed advice here](identify_cadets_at_event_help.md):
 
 ```
 ACTION REQUIRED: Cadet John Smith appears more than once in WA file with an active registration - using the first registration found - go to WA and cancel all but one of the registrations please, and then check details here are correct!
 ```
 
-There are two causes for this:
+This means the cadet has been registered multiple times, but the duplicate registrations have not been cancelled. Any registrations found in the file after the first one that is loaded in will be ignored.  If you allow a duplicate registration to occur, the best thing to do is to cancel the duplicated registrations in Wild Apricot and then re-import the data. Make sure that the details in the remaining registration on Skipperman reflect what the parent actually wants to do.
 
-- A WA registration replacing an existing [manual registration](manually_adding_a_sailor.md). See the relevant help page for advice.
-- Duplicate WA registrations
+```
+Cadet Jon Doe was added manually - is still not appearing in official registration import
+```
 
-The latter means the cadet has been registered multiple times, but the duplicate registrations have not been cancelled. Any registrations found in the file after the first one that is loaded in will be ignored.
+This is fine for a racing event, but for training events where payment and agreement to terms and conditions is required, get the sailor to register and then export the data from WA and update in Skipperman.
 
-To avoid this, strongly discourage parents from re-registering cadets if they have made a mistake (something they are typically going to do because Wild Apricot doesn't allow you to edit a registration, with good reason). Instead:
-
-- if the change will modify the amount to be paid (eg number of days attending), make the change yourself in Wild Apricot
-- if the change won't affect payment, make the change in Skipperman itself.
-
-If you allow a duplicate registration to occur, the best thing to do is to cancel the duplicated registrations in Wild Apricot and then re-import the data. Make sure that the details in the remaining registration on Skipperman reflect what the parent actually wants to do.
+You can see all the registration warnings for import on the [edit registration page](registration_editing_help.md#warnings) and there is advice here on [resolving warnings](resolve_warnings.md).
 
 ## Importing all the volunteers attending
 
@@ -175,7 +172,10 @@ If a volunteer isn't very similar to one in the data, then Skipperman will give 
 
 - If this isn't actually a new volunteer: you will probably see buttons to select an existing volunteer. Click on the appropriate volunteer. If you can't se the volunteer you want, click on `See all volunteers`. **It's really important that you don't add duplicate volunteers to the Skipperman data**
 - If this is a new volunteer: check the first and second name are correct, then click `Add this new volunteer`.   
-- If this isn't really a volunteer: click on `Skip`. The most common cause of this is where the parent has accidentally put the cadets name in instead of their own. The system warns against this. 
+- If this isn't really a volunteer: click on `Skip permanently`. The most common cause of this is where the parent has accidentally put the cadets name in instead of their own. The system warns against this. 
+- If you aren't sure and want to add the volunteer on a subsequent import, click `Skip for now`.
+
+Important - if a 'volunteer' is actually a parent who can't help but will be on site, you should add them. You can then change their availability in the [rota page](volunteer_rota_help.md).
 
 More help with identifying volunteers [here](identify_volunteers_at_event_help.md). 
 
@@ -187,11 +187,15 @@ The next step is to check that the information that has been registered is inter
 - that the information the volunteer has put down about their duty preference is consistent over multiple registrations
 - that the volunteer is attending on days when none of their sailors is not attending (note we don't check to see if the reverse is true - eg a volunteer not coming for all the days their sailor is attending)
 
-For more information on resolving conflicts, see [here](volunteer_rota_help.md#warnings).
+Any warnings generated in this process will appear [on the volunteer rota page, under warnings](volunteer_rota_help.md#warnings).
+
+For more information, see [resolving warnings](resolve_warnings.md).
 
 # Checking warnings
 
 To check and resolve any outstanding issues raised in the event import, go to the [volunteer rota](volunteer_rota_help.md#warnings) and the [cadet registration edit page](registration_editing_help.md#warnings).
+
+For more information, see [resolving warnings](resolve_warnings.md).
 
 # Updating an event
 
@@ -216,18 +220,11 @@ Before uploading, the status should show:
 > `Field mapping has been setup.`  
 > `A WA file with WA ID 5271589 has been previously uploaded.`  
 > `Registration data has been imported already, but can be updated from a new file.`  
-> `No file currently uploaded for import.`  
+> `WA file has been uploaded ready for import` 
 
-Click on `Upload a new WA export file`, choose the file and click upload.
+Note that the 'ready for import' message is still there, because the original WA file will stay on the system. This is in case we want to go back to skipped cadets and volunteers.
 
-The status will now read as:
-
-> `Field mapping has been setup.`  
-> `A WA file with WA ID 5271589 has been previously uploaded.`  
-> `Registration data has been imported already, but can be updated from a new file.`  
-> `WA file has been uploaded ready for import`  
-
-Click on `Update data from current WA file` to update the registation data. 
+Click on `Upload a new WA export file`, choose the file and click upload. Then click on `Update data from current WA file` to update the registation data. 
 
 ## New registrations
 
@@ -237,6 +234,8 @@ Any new sailors that have not been registered before will be added to Skipperman
 ## Conflicts between existing and new registration information
 
 You can see a list of cadets with import errors in the [registration editing, warnings section](registration_editing_help.md#warnings). 
+
+[More about resolving warnings](resolve_warnings.md)
 
 ### More than one active registration in the new file for a given sailor 
 
@@ -255,9 +254,19 @@ Cadet John Smith (2000-01-01) Member was in imported data, now appears to be mis
 
 This can happen if:
 
-- You have [added a sailor manually](manually_adding_a_sailor.md) to Skipperman who has not been registered in Wild Apricot, and their status is not 'Manual'. You can ignore this message, but to make it go away eithier change the [registration status to Manual in the registration editing page](registration_editing_help.md) which would be appropriate for a free event like a racing series, or ask their parent to register them.
 - For some stupid reason you have manually edited the data file exported from Wild Apricot and remove one or more rows. Unless you're an expert trying to debug something, don't do this. Instead, change the registration status to ['Cancelled' in the registration editing screen](registration_editing_help.md). Meanwhile, you can ignore this error.
 - Wild Apricot themselves have changed their export output, or Skipperman has managed to corrupt it's own data. Please contact support - this is serious.
+
+
+
+```
+Cadet John Smith (2000-01-01) (2006-02-08) Member was added manually - is still not appearing in official registration import.
+```
+
+This happens if you manually add a sailor to Skipperman, but they haven't yet been registered and imported from WA. That is fine for eg racing events where no payment is required or formal confirmation of registration, in which case you can ignore.
+
+Otherwise to clear, get the sailor registered on WA and then import into Skipperman.
+
 
 ### Status and availability changes
 
@@ -278,4 +287,5 @@ If you change the dates a specific cadet is available for, or cancel a cadets re
 
 Check the [warnings on the volunteer rota page](volunteer_rota_help.md#warnings) to double-check that there is no inconsistency between when volunteers and attending, and when sailors are around.
 
+[More about resolving warnings](resolve_warnings.md)
 

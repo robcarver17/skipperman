@@ -302,8 +302,10 @@ class ListOfCadets(GenericListOfObjectsWithIds):
 
 
     def cadet_with_id(self, cadet_id: str, default=arg_not_passed) -> Cadet:
-        if cadet_id == test_cadet_id:
-            return test_cadet
+        if cadet_id == permanent_skip_cadet_id:
+            return permanent_skip_cadet
+        elif cadet_id == temporary_skip_cadet_id:
+            return temporary_skip_cadet
 
         return self.object_with_id(cadet_id, default=default)
 
@@ -327,7 +329,8 @@ def is_cadet_age_surprising(cadet: Cadet):
     return age < MIN_CADET_AGE or age > MAX_CADET_AGE
 
 
-SKIP_TEST_CADET_ID = str(-9999)
+PERMANENT_SKIP_TEST_CADET_ID = str(-9999)
+TEMPORARY_SKIP_TEST_CADET_ID = str(9991)
 
 DEFAULT_DATE_OF_BIRTH = datetime.date(1970, 1, 1)
 UNCONFIRMED_DATE_OF_BIRTH =datetime.date(1950,1,1)
@@ -342,13 +345,23 @@ default_cadet = Cadet.new(
 )
 
 
-test_cadet = Cadet(
+permanent_skip_cadet = Cadet(
     "Test",
     "",
     date_of_birth=DEFAULT_DATE_OF_BIRTH,
     membership_status=none_member,
-    id=SKIP_TEST_CADET_ID,
+    id=PERMANENT_SKIP_TEST_CADET_ID,
 )
 
-test_cadet_id = test_cadet.id
+permanent_skip_cadet_id = permanent_skip_cadet.id
+
+temporary_skip_cadet = Cadet(
+    "Temp skip",
+    "",
+    date_of_birth=DEFAULT_DATE_OF_BIRTH,
+    membership_status=none_member,
+    id=TEMPORARY_SKIP_TEST_CADET_ID,
+)
+
+temporary_skip_cadet_id = temporary_skip_cadet.id
 

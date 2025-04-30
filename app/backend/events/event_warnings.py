@@ -66,3 +66,13 @@ def mark_all_ignored_event_warnings_with_priority_and_category_as_unignored(obje
     list_of_warnings = get_list_of_event_warnings(object_store=object_store, event=event)
     list_of_warnings.mark_all_ignored_event_warnings_with_priority_and_category_as_unignored(category=category, priority=priority)
     update_list_of_event_warnings(list_of_event_warnings=list_of_warnings, event=event, object_store=object_store)
+
+
+def process_warnings_into_warning_list(object_store: ObjectStore, event: Event, list_of_warnings: List[str], priority: str, category: str):
+    add_or_update_list_of_new_event_warnings_clearing_any_missing(
+        object_store=object_store,
+        event=event,
+        category=category,
+        priority=priority,
+        new_list_of_warnings=list_of_warnings
+    )

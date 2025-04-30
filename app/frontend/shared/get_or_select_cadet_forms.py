@@ -1,6 +1,6 @@
 from copy import copy
 from dataclasses import dataclass
-from typing import Union
+from typing import Union, List
 
 from app.backend.cadets.list_of_cadets import (
     get_list_of_cadets,
@@ -8,8 +8,7 @@ from app.backend.cadets.list_of_cadets import (
 )
 from app.frontend.shared.buttons import break_up_buttons
 from app.objects.abstract_objects.abstract_form import Form, NewForm
-from app.objects.abstract_objects.abstract_buttons import Button, cancel_menu_button, \
-    check_if_button_in_list_was_pressed
+from app.objects.abstract_objects.abstract_buttons import Button,    check_if_button_in_list_was_pressed
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -30,13 +29,32 @@ from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN
 class ParametersForGetOrSelectCadetForm:
     header_text: ListOfLines
     help_string: str = arg_not_passed
-    cancel_button: bool = False
-    skip_button: bool = False
+    extra_buttons: List[Button] = arg_not_passed
     final_add_button: bool = False
     see_all_cadets_button: bool = False
     default_cadet_passed: bool = False
     sort_by: str = SORT_BY_SIMILARITY_BOTH
     similarity_name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME
+
+    @property
+    def list_of_extra_buttons(self):
+        if self.extra_buttons is arg_not_passed:
+            return []
+        else:
+            return self.extra_buttons
+
+    def was_extra_button_pressed(self, button_pressed:str):
+        if self.extra_buttons is arg_not_passed:
+            return []
+        else:
+            return check_if_button_in_list_was_pressed(last_button_pressed=button_pressed, list_of_buttons=self.extra_buttons)
+
+    def which_button_pressed(self, button_pressed:str):
+        for button in self.list_of_extra_buttons:
+            if button.pressed(button_pressed):
+                return button
+
+        raise Exception("no buttons pressed")
 
     def save_values_to_state(self, interface: abstractInterface):
         interface.set_persistent_value(SORT_BY_STATE, self.sort_by)
@@ -119,7 +137,7 @@ def get_footer_buttons_add_or_select_existing_cadets_form(
 ) -> ListOfLines:
     cadet = cadet_and_text.cadet
     verification_text = cadet_and_text.verification_text
-    extra_buttons =get_extra_buttons(parameters)
+    extra_buttons =Line(parameters.list_of_extra_buttons)
 
     if len(verification_text) == 0 and not parameters.default_cadet_passed:
         ## nothing to check, so can put add button up
@@ -132,17 +150,6 @@ def get_footer_buttons_add_or_select_existing_cadets_form(
     )
 
     return ListOfLines([main_buttons, extra_buttons, _______________]+cadet_buttons)
-
-
-def get_extra_buttons(parameters: ParametersForGetOrSelectCadetForm):
-    extra_buttons = []
-    if parameters.cancel_button:
-        extra_buttons.append(cancel_menu_button)
-    if parameters.skip_button:
-        extra_buttons.append(skip_button)
-    extra_buttons = Line(extra_buttons)
-
-    return extra_buttons
 
 
 
@@ -228,9 +235,9 @@ SORT_BY_SIMILARITY_BOTH
 class ResultFromAddOrSelect:
     form: Union[Form, NewForm] = arg_not_passed
     cadet: Cadet = arg_not_passed
-    skip: bool = False
-    cancel: bool = False
     cadet_was_added: bool = False
+    is_button: bool = False
+    button_pressed: Button = arg_not_passed
 
     @property
     def is_form(self):
@@ -256,11 +263,9 @@ parameters: ParametersForGetOrSelectCadetForm
         )
 
     parameters.clear_values_in_state(interface)
-    if skip_button.pressed(last_button_pressed):
-        return ResultFromAddOrSelect(skip=True)
-
-    elif cancel_menu_button.pressed(last_button_pressed):
-        return ResultFromAddOrSelect(cancel=True)
+    if parameters.was_extra_button_pressed(last_button_pressed):
+        return ResultFromAddOrSelect(button_pressed=parameters.which_button_pressed(last_button_pressed),
+                                     is_button=True)
 
     elif add_cadet_button.pressed(last_button_pressed):
         try:

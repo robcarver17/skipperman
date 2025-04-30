@@ -53,6 +53,10 @@ class RegistrationStatus:
     def is_deleted(self):
         return self.name == DELETED
 
+    @property
+    def is_manual(self):
+        return self.name == MANUAL
+
 
 cancelled_status = RegistrationStatus(CANCELLED)
 active_paid_status = RegistrationStatus(ACTIVE_PAID)

@@ -25,14 +25,14 @@ from app.data_access.store.object_definitions import (
 from app.objects.utilities.utils import union_of_x_and_y
 
 
-def is_cadet_marked_as_test_cadet_to_skip_in_for_row_in_raw_registration_data(
+def is_cadet_marked_as_skip_in_for_row_in_raw_registration_data(
     object_store: ObjectStore, row_id: str, event: Event
 ) -> bool:
     identified_cadets_at_event = get_list_of_identified_cadets_at_event(
         object_store=object_store, event=event
     )
     return (
-        identified_cadets_at_event.cadet_id_given_row_id_ignoring_test_cadets(
+        identified_cadets_at_event.cadet_id_given_row_id_ignoring_all_skipped_cadets(
             row_id, default_when_missing=missing_data
         )
         is missing_data
@@ -131,7 +131,7 @@ def identified_cadet_ids_in_raw_registration_data(
 
     row_ids = raw_registration_data.list_of_row_ids()
     list_of_cadet_ids = [
-        identified_cadet_data.cadet_id_given_row_id_ignoring_test_cadets(
+        identified_cadet_data.cadet_id_given_row_id_ignoring_all_skipped_cadets(
             row_id, default_when_missing=missing_data
         )
         for row_id in row_ids
@@ -143,11 +143,22 @@ def identified_cadet_ids_in_raw_registration_data(
     return list_of_cadet_ids
 
 
-def mark_row_as_skip_cadet(object_store: ObjectStore, event: Event, row_id: str):
+def mark_row_as_permanently_skip_cadet(object_store: ObjectStore, event: Event, row_id: str):
     identified_cadets_at_event = get_list_of_identified_cadets_at_event(
         object_store=object_store, event=event
     )
-    identified_cadets_at_event.add_row_with_test_cadet(row_id=row_id)
+    identified_cadets_at_event.add_row_with_permanent_skip_cadet(row_id=row_id)
+    update_list_of_identified_cadets_at_event(
+        identified_cadets_at_event=identified_cadets_at_event,
+        event=event,
+        object_store=object_store,
+    )
+
+def mark_row_as_temporarily_skip_cadet(object_store: ObjectStore, event: Event, row_id: str):
+    identified_cadets_at_event = get_list_of_identified_cadets_at_event(
+        object_store=object_store, event=event
+    )
+    identified_cadets_at_event.add_row_with_temporary_skip_cadet(row_id=row_id)
     update_list_of_identified_cadets_at_event(
         identified_cadets_at_event=identified_cadets_at_event,
         event=event,
@@ -161,7 +172,7 @@ def add_identified_cadet_and_row(
     identified_cadets_at_event = get_list_of_identified_cadets_at_event(
         object_store=object_store, event=event
     )
-    identified_cadets_at_event.add_cadet_and_row_association(cadet=cadet, row_id=row_id)
+    identified_cadets_at_event.add_cadet_and_row_association(cadet_id=cadet.id, row_id=row_id)
     update_list_of_identified_cadets_at_event(
         identified_cadets_at_event=identified_cadets_at_event,
         event=event,
@@ -169,13 +180,13 @@ def add_identified_cadet_and_row(
     )
 
 
-def is_row_in_event_already_identified_with_cadet(
+def is_row_in_event_already_identified_with_cadet_or_permanently_skipped(
     object_store: ObjectStore, event: Event, row: RowInRegistrationData
 ) -> bool:
     identified_cadets_at_event = get_list_of_identified_cadets_at_event(
         object_store=object_store, event=event
     )
-    return identified_cadets_at_event.row_has_identified_cadet_including_test_cadets(
+    return identified_cadets_at_event.row_has_identified_cadet_including_permanently_skipped_cadets_but_not_temporary(
         row_id=row.row_id
     )
 
@@ -186,7 +197,7 @@ def cadet_at_event_given_row_id(
     identified_cadets_at_event = get_list_of_identified_cadets_at_event(
         object_store=object_store, event=event
     )
-    cadet_id = identified_cadets_at_event.cadet_id_given_row_id_ignoring_test_cadets(
+    cadet_id = identified_cadets_at_event.cadet_id_given_row_id_ignoring_all_skipped_cadets(
         row_id, default_when_missing=missing_data
     )
     if cadet_id is missing_data:

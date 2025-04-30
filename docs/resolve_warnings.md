@@ -34,15 +34,15 @@ Alternatively, you can unignore a group of warnings (same priority and category)
 
 # Warnings on import - cadets
 
-- Skipped rows
+- Permanently skipped rows
 - Assumed identity in imported record
 - Duplicate registrations
 - Mysteriously missing cadets
 
-## Skipped rows
+## Permanently skipped rows
 
 ```
-On import at DATETIME, skipped identifying sailor in row with ID
+Permanently skipping cadet Jon Doe row id ...
 ```
 This just means you have skipped a test row; it's useful to know this if you find a registration has 'vanished' from Skipperman it could be an accidental skip.
 
@@ -110,12 +110,12 @@ This can happen if:
 
 # Warnings on import - volunteers
 
-For each volunteer attending an event, Skipperman will check:
+For each volunteer attending an event, we will get warnings if:
 
-- that the volunteer exists in the data; sometimes adding volunteers that are almost the same as one we already have
-- that the volunteer can help (if "Volunteer status" [field](List_and_explanation_of_skipperman_fields.md) used in event, and is correctly populated, eg contains 'cannot' or 'unable')
-- that the volunteer availability is consistent across registrations (eg if they are associated with more than one cadet)
-- that the information the volunteer has put down about their duty preference is consistent over multiple registrations
+- a very similar volunteer was added
+- A volunteer says they cannot help (if "Volunteer status" [field](List_and_explanation_of_skipperman_fields.md) used in event, and is correctly populated, eg contains 'cannot' or 'unable')
+- volunteer availability is inconsistent across registrations (eg if they are associated with more than one cadet)
+- volunteer duty preference is inconsistent over multiple registrations
 
 ## A volunteer that was not precisely identified
 
@@ -125,6 +125,7 @@ Assumed volunteer John Doe was identical to volunteer Jon Doe in registration da
 
 - If the correct voluteer has been idenitifed, click on ignore.
 - If the wrong volunteer has been identified: [delete the volunteer](volunteer_rota_help.md#removing-a-volunteer-from-an-event) and [add the correct volunteer](volunteer_rota_help.md#add-a-volunteer).
+
 
 ## A volunteer that cannot help
 
@@ -163,8 +164,36 @@ These can probably be safely ignored unless their preference is critical; contac
 
 In the [cadet registration page](registration_editing_help.md#warnings), you will see the following warnings based on current data:
 
+- Cadets which have been skipped temporarily in registration import
+- Cadets which were added manually
 - Cadets without appropriate adults
 - Cadets without confirmed dates of birth
+
+
+### Temporarily skipped cadets in registration import
+
+```
+On import, temporarily skipped identifying sailor registered as Jane Doe in row with ID 2023/05/25 08:00:42.000000_doe_jon 
+```
+
+To clear the error, go back to the [import registration data](import_registration_data_help.md) screen and click on 'Update data using current WA file'. Then for the relevant cadets, eithier:
+
+- mark as permanently skipped (test entry)
+- mark as an existing Cadet
+- add as a new Cadet
+
+You can also ignore the error, but there should be no good reason to do this.
+
+### Cadets which were added manually
+
+```
+Cadet Jonny Doe has been registered manually - OK if no training and unpaid event
+```
+
+This will happen if you add a cadet manually on the [group allocation](group_allocation_help.md) or [edit registration](registration_editing_help.md) pages, or click on 'Add a sailing partner' in the [group allocation page](group_allocation_help.md). Eithier:
+
+- If it's a racing event without payment and no registration is required, ignore.
+- To clear, ensure the cadet is registered in WA then [import the updated registration data](import_registration_data_help.md#updating-an-event). 
 
 ### Cadets without adults
 
@@ -190,11 +219,24 @@ If a cadet has an unconfirmed date of birth, this can be cleared by adding their
 
 In the [volunteer rota](volunteer_rota_help.md#warnings) you will see the following warnings based on data:
 
-- Is every volunteer qualified for their role?
+- Volunteer temporarily skipped on import
+- Unqualified volunteers
 - Cadets without appropriate adults
 - Volunteers who are at the lake with one or more connected cadets, or worse still allocated to a sailing group that their cadet is in. 
 - A mismatch between cadet availability and volunteer availability 
 - A volunteer without any connected cadets
+
+## A volunteer that was temporarily skipped
+
+```
+Temporarily skipping volunteer probably called Jon Doe in row 2023/05/25 08:00:42.000000_doe_jon id 0
+```
+
+Go back to the import page, and re-import the data. Then eithier:
+
+- mark the volunteer as permanently skipped
+- identify with an existing volunteer
+- add as a completely new volunteer
 
 ## Unqualified volunteers
 

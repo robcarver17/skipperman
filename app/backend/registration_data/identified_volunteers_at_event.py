@@ -51,7 +51,7 @@ def list_of_identified_volunteers_with_volunteer_id(
         object_store=object_store, event=event
     )
     return (
-        list_of_volunteers_identified.list_of_identified_volunteers_with_volunteer_id(
+        list_of_volunteers_identified.list_of_identified_volunteers_with_volunteer_id_excluding_skipped(
             volunteer_id=volunteer.id
         )
     )
@@ -68,14 +68,31 @@ def get_list_of_unique_volunteer_ids_identified_in_registration_data(
     return all_ids
 
 
-def mark_volunteer_as_skipped(
+def mark_volunteer_as_skipped_permanently(
     object_store: ObjectStore, event: Event, row_id: str, volunteer_index: int
 ):
 
     list_of_volunteers_identified = get_list_of_identified_volunteers_at_event(
         object_store=object_store, event=event
     )
-    list_of_volunteers_identified.identified_as_processed_not_allocated(
+    list_of_volunteers_identified.add_permanently_skipped_volunteer(
+        row_id=row_id, volunteer_index=volunteer_index
+    )
+    update_list_of_identified_volunteers_at_event(
+        list_of_identified_volunteers_at_event=list_of_volunteers_identified,
+        object_store=object_store,
+        event=event,
+    )
+
+
+def mark_volunteer_as_skipped_for_now(
+    object_store: ObjectStore, event: Event, row_id: str, volunteer_index: int
+):
+
+    list_of_volunteers_identified = get_list_of_identified_volunteers_at_event(
+        object_store=object_store, event=event
+    )
+    list_of_volunteers_identified.add_temporarily_skipped_volunteer(
         row_id=row_id, volunteer_index=volunteer_index
     )
     update_list_of_identified_volunteers_at_event(
@@ -128,7 +145,7 @@ def get_relevant_information_for_volunteer_in_event_at_row_and_index(
     return relevant_information
 
 
-def volunteer_for_this_row_and_index_already_identified(
+def volunteer_for_this_row_and_index_already_identified_or_permanently_skipped(
     object_store: ObjectStore, event: Event, row_id: str, volunteer_index: int
 ) -> bool:
 
@@ -136,7 +153,7 @@ def volunteer_for_this_row_and_index_already_identified(
         object_store=object_store, event=event
     )
 
-    return list_of_volunteers_identified.row_and_index_in_list_of_rows_and_indices(
+    return list_of_volunteers_identified.row_and_index_in_list_and_identified_or_permanent_skip_but_not_temporarily_skipped(
         row_id=row_id, volunteer_index=volunteer_index
     )
 
@@ -166,7 +183,7 @@ def delete_volunteer_from_identified_data_and_return_rows_deleted(object_store: 
         return
 
     list_of_identified_volunteers = get_list_of_identified_volunteers_at_event(object_store=object_store, event=event)
-    rows = list_of_identified_volunteers.list_of_identified_volunteers_with_volunteer_id(volunteer.id)
+    rows = list_of_identified_volunteers.list_of_identified_volunteers_with_volunteer_id_excluding_skipped(volunteer.id)
     list_of_identified_volunteers.delete_all_rows_with_volunteer_id(volunteer.id)
     update_list_of_identified_volunteers_at_event(object_store=object_store, list_of_identified_volunteers_at_event=list_of_identified_volunteers, event=event)
 

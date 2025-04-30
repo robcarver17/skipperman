@@ -2,8 +2,10 @@ from typing import Callable, Union
 
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import add_new_cadet_manually_to_event
 from app.backend.registration_data.cadet_registration_data import get_cadet_at_event
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.shared.get_or_select_cadet_forms import get_add_or_select_existing_cadet_form, ParametersForGetOrSelectCadetForm, generic_post_response_to_add_or_select_cadet
+from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import  ListOfLines
@@ -35,8 +37,11 @@ def post_form_add_unregistered_cadet(
     if result.is_form:
         return result.form
 
-    elif result.cancel:
-        return return_to_allocation_pages(interface=interface, calling_function=calling_function)
+    elif result.is_button:
+        if result.button_pressed == cancel_button:
+            return return_to_allocation_pages(interface=interface, calling_function=calling_function)
+        else:
+            return button_error_and_back_to_initial_state_form(interface)
 
     elif result.is_cadet:
         cadet = result.cadet
@@ -90,10 +95,12 @@ def return_to_allocation_pages(interface: abstractInterface, calling_function: C
     )
 
 
+cancel_button = Button("Cancel")
 header_text_for_adding_cadets = ListOfLines(["Add a new cadet or choose an existing cadet to register at event", bold("DO NOT USE for paid events, unless they will DEFINITELY BE REGISTERED or HAVE BEEN registered in Wild Apricot.")]).add_Lines()
 
 get_or_select_parameters =     parameters = ParametersForGetOrSelectCadetForm(
         header_text=header_text_for_adding_cadets,
         help_string="manually_adding_a_sailor",
-        cancel_button=True
+        extra_buttons=[cancel_button]
     )
+

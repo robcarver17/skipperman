@@ -18,10 +18,13 @@ Once the relevant sailor is on the screen, click on the button with their name a
 
  **It's really important that you don't add duplicate cadets to the Skipperman data**
 
-But if you are sure this is a new cadet: enter their name and date of birth (making any corrections in the relevant input fields), and membership status. 
+But if you are sure this is a new cadet: enter their name, date of birth (making any corrections in the relevant input fields), and membership status. 
 
-Date of birth: You won't usually have the date of birth for a new sailor, unless they have done a WA registration already. If they are a visitor don't worry about including this, change the DOB status to 'Non member - don't need to know'. 
-If they are a member that is new to Skipperman, and you aren't sure of their date of birth or it hasn't been included in the registration form, then choose DOB status 'I need to confirm - leave blank for now'. You can [edit the date of birth later](view_and_edit_individual_cadet_help.md). 
+Date of birth: 
+
+- If they are a visitor don't worry about including this, change the DOB status to 'Non member - don't need to know'. 
+- If they are a member and you aren't sure of their date of birth, then choose DOB status 'I need to confirm - leave blank for now'. You can [edit the date of birth later](view_and_edit_individual_cadet_help.md). 
+- If they are a member and you know their date of birth, then enter it here and set the DOB status to 'Known'
 
 For membership status:
 
@@ -46,3 +49,4 @@ If the sailor is subsequently registered on Wild Apricot, and the data imported,
 
 If they have been registered with different days attending, that will also be higlighted. Click on `Use new data imported from latest file` to update Skipperman.
 
+Any other information on the registration form won't be pulled in, but any volunteers included will be identified and added.

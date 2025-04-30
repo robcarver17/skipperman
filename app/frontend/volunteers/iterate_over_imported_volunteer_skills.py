@@ -8,7 +8,7 @@ from app.backend.volunteers.refresh_skills_from_csv_import import load_skills_re
     get_volunteer_from_row, delete_skills_refresh_file,  compare_skills_for_volunteer_with_passed_and_return_warning
 from app.frontend.shared.add_or_select_volunteer import get_add_or_select_existing_volunteer_form, \
     ParametersForGetOrSelectVolunteerForm, generic_post_response_to_add_or_select_volunteer
-from app.objects.abstract_objects.abstract_buttons import save_menu_button, cancel_menu_button, HelpButton
+from app.objects.abstract_objects.abstract_buttons import save_menu_button, cancel_menu_button, HelpButton, Button
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, ProgressBar, HorizontalLine, _______________
@@ -59,8 +59,10 @@ def get_form_parameters(interface: abstractInterface) -> ParametersForGetOrSelec
     header_text = get_header_text_for_volunteer_selection_form(interface)
     parameters_for_form = ParametersForGetOrSelectVolunteerForm(header_text=header_text,
                                                                 help_string="refresh_skills_with_import_help",
-                                                                skip_button=True)
+                                                                extra_buttons=[skip_button])
     return parameters_for_form
+
+skip_button = Button("Skip")
 
 def get_header_text_for_volunteer_selection_form(
     interface: abstractInterface,
@@ -84,8 +86,12 @@ def post_volunteer_selection_in_skill_import_form(
         interface=interface,
         parameters=parameters
     )
-    if result.skip:
-        return next_volunteer_in_temporary_file(interface)
+    if result.is_button:
+        if result.button_pressed == skip_button:
+            return next_volunteer_in_temporary_file(interface)
+        else:
+            interface.log_error("Button %s not recognised, skipping volunteer in row" % result.button_pressed)
+            return next_volunteer_in_temporary_file(interface)
 
     elif result.is_form:
         return result.form
@@ -140,7 +146,7 @@ def display_skills_editing_form_when_mismatch(interface: abstractInterface):
             [
                 progress_bar,
                 _______________,
-                "Edit Skipperman skills to many any changes, and save. Or just hit save to keep existing skills. Or cancel to abandon the import - all changes saved so far will be kept.",
+                "Edit Skipperman skills for %s to mark any changes, and save. Or just hit save to keep existing skills. Or cancel to abandon the import - all changes saved so far will be kept." % volunteer.name,
                 skills_entries,
                 _______________,
                 [save_menu_button, cancel_menu_button, help_button]

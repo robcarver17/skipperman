@@ -1,20 +1,22 @@
 from typing import Union
 
 from app.backend.events.event_warnings import add_new_event_warning_checking_for_duplicate
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import _______________, ListOfLines, ProgressBar, HorizontalLine
 from app.backend.volunteers.list_of_volunteers import (
     get_volunteer_with_matching_name, single_very_similar_volunteer_or_missing_data,
 )
 from app.backend.registration_data.identified_volunteers_at_event import (
-    volunteer_for_this_row_and_index_already_identified,
+    volunteer_for_this_row_and_index_already_identified_or_permanently_skipped,
     add_identified_volunteer,
-    mark_volunteer_as_skipped,
+    mark_volunteer_as_skipped_permanently, mark_volunteer_as_skipped_for_now,
 )
 from app.backend.registration_data.volunter_relevant_information import (
     get_volunteer_from_relevant_information,
 )
 from app.backend.registration_data.identified_cadets_at_event import (
-    is_cadet_marked_as_test_cadet_to_skip_in_for_row_in_raw_registration_data,
+    is_cadet_marked_as_skip_in_for_row_in_raw_registration_data,
 )
 from app.frontend.shared.add_or_select_volunteer import ParametersForGetOrSelectVolunteerForm, \
     get_add_or_select_existing_volunteer_form, generic_post_response_to_add_or_select_volunteer
@@ -34,7 +36,7 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 from app.objects.cadets import Cadet
-from app.objects.event_warnings import HIGH_PRIORITY, VOLUNTEER_IDENTITY
+from app.objects.event_warnings import HIGH_PRIORITY, VOLUNTEER_IDENTITY, MEDIUM_PRIORITY
 
 from app.objects.utilities.exceptions import NoMoreData, arg_not_passed,  missing_data
 from app.objects.relevant_information_for_volunteers import (
@@ -77,11 +79,10 @@ def identify_volunteers_in_specific_row_initialise(
     interface: abstractInterface,
 ) -> NewForm:
     print("Parsing row %s" %   get_current_row_id(interface))
-    test_row = is_cadet_marked_as_test_cadet_to_skip_in_for_current_row_in_mapped_data(
+    cadet_skip = is_cadet_marked_as_test_cadet_to_skip_in_for_current_row_in_mapped_data(
         interface
     )
-    if test_row:
-        print("Test row, skipping")
+    if cadet_skip:
         return process_volunteer_on_next_row_of_event_data(interface)
 
     print("Clearing volunteer index within row")
@@ -95,13 +96,13 @@ def is_cadet_marked_as_test_cadet_to_skip_in_for_current_row_in_mapped_data(
 ):
     current_row_id = get_current_row_id(interface)
     event = get_event_from_state(interface)
-    test_row = is_cadet_marked_as_test_cadet_to_skip_in_for_row_in_raw_registration_data(
+    cadet_skip = is_cadet_marked_as_skip_in_for_row_in_raw_registration_data(
         object_store=interface.object_store, row_id=current_row_id, event=event
     )
-    if test_row:
-        print("row %s is test cadet" % test_row)
+    if cadet_skip:
+        print("Cadet registration marked as temporary or permanent skip - not processing volunteers for now in this row")
 
-    return test_row
+    return cadet_skip
 
 def next_volunteer_in_current_row(interface: abstractInterface) -> Union[Form, NewForm]:
     try:
@@ -112,6 +113,7 @@ def next_volunteer_in_current_row(interface: abstractInterface) -> Union[Form, N
         return process_volunteer_on_next_row_of_event_data(interface)
 
     print("Now on %s row, index %s" % (get_current_row_id(interface), get_volunteer_index(interface)))
+
     if current_volunteer_already_identified(interface):
         return next_volunteer_in_current_row(interface)
     else:
@@ -124,14 +126,14 @@ def current_volunteer_already_identified(interface: abstractInterface):
     current_index = get_volunteer_index(interface)
     event = get_event_from_state(interface)
 
-    already_identified= volunteer_for_this_row_and_index_already_identified(
+    already_identified= volunteer_for_this_row_and_index_already_identified_or_permanently_skipped(
         object_store=interface.object_store,
         event=event,
         row_id=current_row_id,
         volunteer_index=current_index,
     )
     if already_identified:
-        print("Row %s index %s is already identified" % (current_row_id, current_index))
+        print("Row %s index %s is already identified (or permanently skipped)" % (current_row_id, current_index))
 
     return already_identified
 
@@ -142,7 +144,7 @@ def add_specific_volunteer_at_event(
     relevant_information = get_relevant_information_for_current_volunteer(interface)
     volunteer = get_volunteer_from_relevant_information(relevant_information)
     if volunteer is missing_relevant_information:
-        print("Relevant information was missing")
+        print("Relevant information was missing - cannot identify - most probably blank second volunteer")
 
         return next_volunteer_in_current_row(interface)
 
@@ -174,23 +176,28 @@ def add_passed_volunteer_at_event(
 def add_passed_volunteer_if_very_similar_or_display_form_if_not(interface: abstractInterface, volunteer: Volunteer
 ) -> Union[Form, NewForm]:
 
-    matching_volunteer = single_very_similar_volunteer_or_missing_data(interface.object_store, volunteer=volunteer)
-    if matching_volunteer is missing_data:
+    very_similar_volunteer = single_very_similar_volunteer_or_missing_data(interface.object_store, volunteer=volunteer)
+    very_similar_volunteer_exists = not very_similar_volunteer is missing_data
+
+    if very_similar_volunteer_exists:
+        log_very_similar_volunteer(interface=interface, volunteer=volunteer, matching_volunteer=very_similar_volunteer)
+        return process_identification_when_volunteer_matched(interface=interface, volunteer=very_similar_volunteer)
+    else:
         print("Volunteer %s not matched with single similar volunteer, going to form" % str(volunteer))
         return display_volunteer_selection_form(
             interface=interface, volunteer=volunteer
         )
 
+def log_very_similar_volunteer(interface: abstractInterface, volunteer: Volunteer, matching_volunteer: Volunteer):
     interface.log_error("Volunteer %s is very similar to one in form %s, adding automatically. Go to rota to change if problematic." % (
         matching_volunteer, volunteer
     ))
     warning = "Assumed volunteer %s was identical to volunteer %s in registration data" % (matching_volunteer, volunteer)
+    print(warning)
     add_new_event_warning_checking_for_duplicate(object_store=interface.object_store,
                                                  event=get_event_from_state(interface),
                                                  warning=warning, category=VOLUNTEER_IDENTITY, priority=HIGH_PRIORITY,
                                                  auto_refreshed=False)  ## warning will sit on system until cleared
-
-    return process_identification_when_volunteer_matched(interface=interface, volunteer=matching_volunteer)
 
 def display_volunteer_selection_form(
     interface: abstractInterface, volunteer: Volunteer
@@ -199,6 +206,7 @@ def display_volunteer_selection_form(
     if cadet_in_row is missing_data:
         cadet_in_row = arg_not_passed
     parameters = get_form_parameters(interface)
+
     return get_add_or_select_existing_volunteer_form(
         interface=interface,
         volunteer=volunteer,
@@ -210,10 +218,11 @@ def get_form_parameters(interface: abstractInterface) -> ParametersForGetOrSelec
     header_text = get_header_text_for_volunteer_selection_form(interface=interface)
     parameters_for_form = ParametersForGetOrSelectVolunteerForm(header_text=header_text,
                                                                 help_string="identify_volunteers_at_event_help",
-                                                                skip_button=True)
+                                                                extra_buttons=[permanent_skip_button, temporary_skip_button])
     return parameters_for_form
 
-
+permanent_skip_button = Button("Skip permanently- this isn't a volunteer or parent on site")
+temporary_skip_button = Button("Skip for now and import later")
 
 def get_cadet_or_missing_data_for_current_row(interface: abstractInterface) -> Cadet:
     relevant_information = get_relevant_information_for_current_volunteer(interface)
@@ -230,8 +239,13 @@ def post_form_volunteer_identification(
         interface=interface,
         parameters=parameters
     )
-    if result.skip:
-        return action_when_skipping_volunteer(interface)
+    if result.is_button:
+        if result.button_pressed == temporary_skip_button:
+            return action_when_temporarily_skipping_volunteer(interface)
+        elif result.button_pressed == permanent_skip_button:
+            return action_when_permanently_skipping_volunteer(interface)
+        else:
+            return button_error_and_back_to_initial_state_form(interface)
     elif result.is_form:
         return result.form
     elif result.is_volunteer:
@@ -243,20 +257,17 @@ def post_form_volunteer_identification(
         raise Exception("Can't hanlde result %s" % str(result))
 
 
-
-
-
-def action_when_skipping_volunteer(interface: abstractInterface) -> NewForm:
+def action_when_permanently_skipping_volunteer(interface: abstractInterface) -> NewForm:
     event = get_event_from_state(interface)
     current_row_id = get_current_row_id(interface)
     current_index = get_volunteer_index(interface)
 
     print(
-        "Skipping volunteer row %s id %d as identified for event %s"
+        "Permanently skipping volunteer row %s id %d as identified for event %s"
         % (str(current_row_id), current_index, str(event))
     )
 
-    mark_volunteer_as_skipped(
+    mark_volunteer_as_skipped_permanently(
         object_store=interface.object_store,
         event=event,
         row_id=current_row_id,
@@ -265,6 +276,25 @@ def action_when_skipping_volunteer(interface: abstractInterface) -> NewForm:
 
     return next_volunteer_in_current_row(interface)
 
+
+def action_when_temporarily_skipping_volunteer(interface: abstractInterface) -> NewForm:
+    event = get_event_from_state(interface)
+    current_row_id = get_current_row_id(interface)
+    current_index = get_volunteer_index(interface)
+
+    print(
+        "Temporarily skipping volunteer row %s id %d as identified for event %s"
+        % (str(current_row_id), current_index, str(event))
+    )
+
+    mark_volunteer_as_skipped_for_now(
+        object_store=interface.object_store,
+        event=event,
+        row_id=current_row_id,
+        volunteer_index=int(current_index),
+    )
+
+    return next_volunteer_in_current_row(interface)
 
 
 
@@ -332,7 +362,8 @@ def get_header_text_for_volunteer_selection_form(
             other_information,
             _______________,
             "You can edit them, check their details and then add, or choose an existing volunteer instead. ",
-            "(Avoid creating duplicates! If the existing volunteer details are wrong, select them for now and edit later). Skip if there is no volunteer for this cadet available here.",
+            "(Avoid creating duplicates! If the existing volunteer details are wrong, select them for now and edit later).",
+            "Skip . Skip an import later",
         ]
     )
 

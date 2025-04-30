@@ -4,8 +4,10 @@ from app.backend.rota.add_volunteer import (
     get_list_of_volunteers_except_those_already_at_event,
     add_volunteer_to_event_with_availability,
 )
+from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.shared.add_or_select_volunteer import ParametersForGetOrSelectVolunteerForm, \
     get_add_or_select_existing_volunteer_form, generic_post_response_to_add_or_select_volunteer
+from app.objects.abstract_objects.abstract_buttons import cancel_menu_button
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -33,7 +35,7 @@ header_text = ListOfLines(
 
 parameters_for_form = ParametersForGetOrSelectVolunteerForm(header_text=header_text,
                                                             help_string='volunteer_rota_help#add-a-volunteer',
-                                                            cancel_button=True,
+                                                            extra_buttons=[cancel_menu_button],
                                                             availability_checkbox=True)
 
 
@@ -43,8 +45,12 @@ def post_form_add_new_volunteer_to_rota_at_event(
     result = generic_post_response_to_add_or_select_volunteer(
         interface=interface, parameters=parameters_for_form
     )
-    if result.cancel:
-        return previous_form(interface)
+    if result.is_button:
+        if result.button_pressed == cancel_menu_button:
+            return previous_form(interface)
+        else:
+            return button_error_and_back_to_initial_state_form(interface)
+
     elif result.is_form:
         return result.form
     elif result.is_volunteer:

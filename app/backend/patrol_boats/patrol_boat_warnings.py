@@ -1,15 +1,14 @@
 from typing import List
 
 from app.backend.events.event_warnings import \
-    get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority
+    get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority, process_warnings_into_warning_list
 from app.objects.event_warnings import ListOfEventWarnings, VOLUNTEER_QUALIFICATION, MISSING_DRIVER, HIGH_PRIORITY
 from app.objects.volunteers import ListOfVolunteers
 
 from app.data_access.store.object_store import ObjectStore
 
 
-from app.backend.volunteers.warnings import remove_empty_values_in_warning_list, warn_on_volunteer_qualifications, \
-    process_warnings_into_warning_list
+from app.backend.volunteers.warnings import remove_empty_values_in_warning_list, warn_on_volunteer_qualifications
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.patrol_boats import PatrolBoat

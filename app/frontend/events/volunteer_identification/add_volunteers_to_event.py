@@ -74,6 +74,7 @@ def process_identified_volunteer_at_event(
     )
 
     if all_cancelled:
+        print("All cadets cancelled for %s, not adding" % volunteer)
         ### We don't add a volunteer here
         ### But we also don't auto delete an existing volunteer, in case the volunteer staying on has other associated cadets. If a volunteer does already exist, then the cancellation will be picked up when we next look at the volunteer rota
         return next_volunteer_in_event(interface)
@@ -91,6 +92,7 @@ def process_identified_volunteer_at_event_with_valid_registered_cadets(
         object_store=interface.object_store, event=event, volunteer=volunteer
     )
     if already_added:
+        print("Already added %s to event, updating connections" % volunteer)
         update_cadet_connections_when_volunteer_already_at_event(
             object_store=interface.object_store, event=event, volunteer=volunteer
         )
@@ -107,6 +109,8 @@ def process_new_volunteer_at_event_with_active_cadets(
     interface: abstractInterface, event: Event, volunteer: Volunteer
 ) -> Union[Form, NewForm]:
     ## New volunteer with cadets
+    print("New volunteer %s to event with active cadets" % volunteer)
+
     list_of_relevant_information = (
         get_list_of_relevant_information_for_volunteer_in_registration_data(
             object_store=interface.object_store, event=event, volunteer=volunteer
@@ -151,7 +155,7 @@ def process_new_volunteer_at_event_with_active_cadets_with_issues_logged(
         )
     )
 
-
+    print("Adding %s with data %s to event" % (volunteer, str(registration_data)))
     add_volunteer_at_event(
         object_store=interface.object_store,
         event=event,

@@ -21,8 +21,9 @@ from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN
 
 from app.frontend.shared.get_or_select_cadet_forms import (
     get_add_or_select_existing_cadet_form,
- ParametersForGetOrSelectCadetForm, generic_post_response_to_add_or_select_cadet,
+    ParametersForGetOrSelectCadetForm, generic_post_response_to_add_or_select_cadet, skip_button,
 )
+from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, ProgressBar, HorizontalLine
@@ -168,8 +169,9 @@ def get_form_parameters(interface: abstractInterface):
         header_text=get_header_text(interface),
         help_string='import_membership_list_help',
         similarity_name_threshold=SIMILARITY_LEVEL_TO_WARN_NAME_ON_MATCHING_MEMBERSHIP_LIST,
-        skip_button=True
+        extra_buttons=[skip_button]
     )
+
 
 def get_header_text(interface: abstractInterface):
     progress_bar = ProgressBar("Importing cadets from membership list: ", percentage_of_cadet_ids_done_in_registration_file(interface))
@@ -197,8 +199,12 @@ def post_verify_adding_cadet_from_list_form(
     if result.is_form:
         return result.form
 
-    elif result.skip:
-        return next_iteration_over_rows_in_temp_cadet_file(interface)
+    elif result.is_button:
+        if result.button_pressed == skip_button:
+            return next_iteration_over_rows_in_temp_cadet_file(interface)
+        else:
+            interface.log_error("Button %s not recognised - contact support - skipping cadet in file" % str(result.button_pressed))
+            return next_iteration_over_rows_in_temp_cadet_file(interface)
 
     elif result.is_cadet:
         assert type(result.cadet) is Cadet

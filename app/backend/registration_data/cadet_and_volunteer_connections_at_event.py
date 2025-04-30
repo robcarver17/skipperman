@@ -115,7 +115,7 @@ def get_unique_list_of_cadet_ids_in_registration_data_given_identified_volunteer
     )
 
     list_of_all_cadet_ids_for_volunteer = [
-        identified_cadets_at_event.cadet_id_given_row_id_ignoring_test_cadets(
+        identified_cadets_at_event.cadet_id_given_row_id_ignoring_all_skipped_cadets(
             identified_volunteer.row_id
         )
         for identified_volunteer in relevant_identified_volunteers

@@ -11,8 +11,7 @@ from app.frontend.shared.add_edit_or_choose_volunteer_form import VolunteerAndVe
     get_add_volunteer_form_with_information_passed, add_volunteer_from_form_to_data, availability_in_form_set_to_no
 from app.frontend.shared.buttons import break_up_buttons
 from app.objects.abstract_objects.abstract_form import Form, NewForm
-from app.objects.abstract_objects.abstract_buttons import Button, cancel_menu_button, \
-    check_if_button_in_list_was_pressed
+from app.objects.abstract_objects.abstract_buttons import Button,     check_if_button_in_list_was_pressed
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -27,13 +26,32 @@ from app.objects.volunteers import Volunteer, default_volunteer
 class ParametersForGetOrSelectVolunteerForm:
     header_text: ListOfLines
     help_string: str = arg_not_passed
-    cancel_button: bool = False
-    skip_button: bool = False
     final_add_button: bool = False
+    extra_buttons: list[Button] = arg_not_passed
     availability_checkbox: bool = False
     volunteer_is_default: bool = False
     see_all_volunteers: bool = False
     sort_by: str = SORT_BY_NAME_SIMILARITY
+
+    @property
+    def list_of_extra_buttons(self):
+        if self.extra_buttons is arg_not_passed:
+            return []
+        else:
+            return self.extra_buttons
+
+    def was_extra_button_pressed(self, button_pressed:str):
+        if self.extra_buttons is arg_not_passed:
+            return []
+        else:
+            return check_if_button_in_list_was_pressed(last_button_pressed=button_pressed, list_of_buttons=self.extra_buttons)
+
+    def which_button_pressed(self, button_pressed:str):
+        for button in self.list_of_extra_buttons:
+            if button.pressed(button_pressed):
+                return button
+
+        raise Exception("no buttons pressed")
 
     def save_values_to_state(self, interface: abstractInterface):
         print(str(self))
@@ -127,7 +145,7 @@ parameters: ParametersForGetOrSelectVolunteerForm,
         ## nothing to check, so can put add button up
         parameters.final_add_button = True
 
-    extra_buttons =get_extra_buttons(parameters)
+    extra_buttons =Line(parameters.list_of_extra_buttons)
 
     main_buttons = get_list_of_main_buttons(parameters=parameters)
 
@@ -137,17 +155,6 @@ parameters: ParametersForGetOrSelectVolunteerForm,
 
     return ListOfLines([main_buttons, extra_buttons, _______________]+volunteer_buttons)
 
-
-
-def get_extra_buttons(parameters:ParametersForGetOrSelectVolunteerForm):
-    extra_buttons = []
-    if parameters.cancel_button:
-        extra_buttons.append(cancel_menu_button)
-    if parameters.skip_button:
-        extra_buttons.append(skip_volunteer_button)
-    extra_buttons = Line(extra_buttons)
-
-    return extra_buttons
 
 
 
@@ -229,8 +236,8 @@ possible_sorts = [
 class ResultFromAddOrSelectVolunteer:
     form: Union[Form, NewForm] = arg_not_passed
     volunteer: Volunteer = arg_not_passed,
-    skip: bool = False
-    cancel: bool = False
+    is_button: bool = False
+    button_pressed: Button = arg_not_passed
     volunteer_was_added: bool = False
     no_availability: bool = False
 
@@ -257,11 +264,9 @@ parameters: ParametersForGetOrSelectVolunteerForm
         )
 
     parameters.clear_values_in_state(interface)
-    if skip_volunteer_button.pressed(last_button_pressed):
-        return ResultFromAddOrSelectVolunteer(skip=True)
-
-    elif cancel_menu_button.pressed(last_button_pressed):
-        return ResultFromAddOrSelectVolunteer(cancel=True)
+    if parameters.was_extra_button_pressed(last_button_pressed):
+        return ResultFromAddOrSelectVolunteer(button_pressed=parameters.which_button_pressed(last_button_pressed),
+                                     is_button=True)
 
     elif add_volunteer_button.pressed(last_button_pressed):
         try:
@@ -368,7 +373,6 @@ CHECK_FOR_ME_VOLUNTEER_BUTTON_LABEL = "Please check these volunteer details for 
 FINAL_VOLUNTEER_ADD_BUTTON_LABEL = (
     "Yes - these details are correct - add this new volunteer"
 )
-SKIP_VOLUNTEER_BUTTON_LABEL = "Skip - this isn't a volunteers name"
 REFRESH_LIST_BUTTON_LABEL = "Refresh list"
 
 add_volunteer_button = Button(FINAL_VOLUNTEER_ADD_BUTTON_LABEL)
@@ -379,5 +383,4 @@ see_similar_volunteers_button = Button(SEE_SIMILAR_VOLUNTEER_ONLY_LABEL)
 check_for_me_volunteer_button = Button(CHECK_FOR_ME_VOLUNTEER_BUTTON_LABEL)
 check_confirm_volunteer_button = Button(CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL)
 
-skip_volunteer_button = Button(SKIP_VOLUNTEER_BUTTON_LABEL)
 refresh_list_button = Button(REFRESH_LIST_BUTTON_LABEL)

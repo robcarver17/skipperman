@@ -55,9 +55,6 @@ def process_wa_staged_file_already_uploaded(interface: abstractInterface) -> New
     )
     interface.flush_cache_to_store()
 
-    print("Deleting staging file no longer needed")
-    delete_staged_file_for_current_event(interface)
-
     return import_controller_form(interface)
 
 

@@ -50,20 +50,21 @@ def summarise_registrations_for_event(
 
     list_of_identified_cadets = get_list_of_identified_cadets_at_event(object_store,
                                                                event=event)
-    summary_data['(1) Total identified rows for all imports'] = list_of_identified_cadets.count_of_identified_rows()
-    summary_data['(2) Rows marked as test'] = list_of_identified_cadets.count_of_test_rows()
-    summary_data['(3) Rows identified as cadets = 2-1'] = list_of_identified_cadets.count_of_rows_identified_as_cadets()
-    summary_data['(4) Number of cadets identified'] = list_of_identified_cadets.count_of_cadets_in_rows()
-    summary_data['(5) Probably duplicates = 3-4'] = list_of_identified_cadets.count_of_rows_identified_as_cadets() - list_of_identified_cadets.count_of_cadets_in_rows()
+    summary_data['(A) Total processed rows for all imports'] = list_of_identified_cadets.count_of_identified_rows()
+    summary_data['(B) Rows marked as test - permanent skip'] = list_of_identified_cadets.count_of_permanent_skip_rows()
+    summary_data['(C) Rows marked as skip for now'] = list_of_identified_cadets.count_of_temporary_skip_rows()
+    summary_data['(D) Rows identified as cadets = A-B-C'] = list_of_identified_cadets.count_of_rows_identified_as_cadets()
+    summary_data['(E) Number of cadets identified'] = list_of_identified_cadets.count_of_cadets_in_rows()
+    summary_data['(F) Probably duplicates = D-E'] = list_of_identified_cadets.count_of_rows_identified_as_cadets() - list_of_identified_cadets.count_of_cadets_in_rows()
 
     cadets_at_event = get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
-    summary_data['Cadets in event data (including cancelled)'] = len(cadets_at_event)
+    summary_data['(G) Cadets in event data (including cancelled)'] = len(cadets_at_event)
 
     status_summary = summarise_status(cadets_at_event)
     summary_data.update(status_summary)
-    summary_data['Total active in event data (status is not cancelled)'] = len(cadets_at_event.list_of_active_cadets())
+    summary_data['Total active in event data (excludes cancelled)'] = len(cadets_at_event.list_of_active_cadets())
     print(summary_data)
     summary_data = pd.DataFrame(summary_data, index=["Count"]).transpose()
     return summary_data
@@ -90,16 +91,20 @@ def summarise_volunteers_for_event(object_store: ObjectStore, event: Event):
         object_store=object_store,
         event=event
     )
-    list_of_identified_volunteers.unique_list_of_allocated_volunteer_ids()
-    summary_data['(1) Unique cadet registrations in last import file'] = list_of_identified_cadets.count_of_cadets_in_rows()
-    summary_data['(2) Maximum theoretical volunteers available %d per row' % MAX_CONFIGURABLE_VOLUNTEERS] = MAX_CONFIGURABLE_VOLUNTEERS*list_of_identified_cadets.count_of_cadets_in_rows()
 
-    summary_data['(3) Volunteers identified including duplicates'] = len(list_of_identified_volunteers.list_of_volunteer_ids())
-    summary_data['(4) Unique volunteers identified '] = len(
-        list_of_identified_volunteers.unique_list_of_allocated_volunteer_ids())
+    summary_data['(A) Unique cadet registrations in last import file'] = list_of_identified_cadets.count_of_cadets_in_rows()
+    summary_data['(B) Maximum theoretical volunteers available %d fields per row' % MAX_CONFIGURABLE_VOLUNTEERS] = MAX_CONFIGURABLE_VOLUNTEERS*list_of_identified_cadets.count_of_cadets_in_rows()
+
+    summary_data['(C) Total processed volunteer fields for all imports'] = list_of_identified_volunteers.count_of_identified_row_and_index_including_skipped()
+    summary_data['(D) Fields marked as permanent skip'] = list_of_identified_volunteers.count_of_permanent_skip_row_and_index()
+    summary_data['(E) Fields marked as skip for now'] = list_of_identified_volunteers.count_of_temporary_skip_row_and_index()
+    summary_data['(F) Fields identified as volunteers = C - D -E'] = list_of_identified_volunteers.count_of_row_and_index_identified_as_volunteer()
+    summary_data['(G) Number of unique volunteers identified'] = list_of_identified_volunteers.number_of_unique_volunteers_identified()
+    summary_data['(H) Probably duplicates = F-G'] = list_of_identified_volunteers.count_of_row_and_index_identified_as_volunteer() - list_of_identified_volunteers.number_of_unique_volunteers_identified()
 
     volunteers_at_event = get_dict_of_all_event_data_for_volunteers(object_store=object_store, event=event)
-    summary_data['Volunteers added to event'] = len(volunteers_at_event.list_of_volunteers())
+    summary_data['(I) Volunteers added to event'] = len(volunteers_at_event.list_of_volunteers())
+    summary_data['(J) Volunteers not added to event as all registrations cancelled G - I'] = list_of_identified_volunteers.number_of_unique_volunteers_identified() - len(volunteers_at_event.list_of_volunteers())
 
     summary_data = pd.DataFrame(summary_data, index=["Count"]).transpose()
 

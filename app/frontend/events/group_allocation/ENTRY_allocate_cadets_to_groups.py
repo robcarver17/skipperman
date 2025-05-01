@@ -267,7 +267,9 @@ def create_quick_group_report(interface: abstractInterface) -> File:
         "Quick reports are generated with current report parameters: do not get published to web. To publish or change parameters to go Reporting menu option."
     )
     return create_generic_report(
-        report_generator=report_generator_with_specific_parameters, interface=interface
+        report_generator=report_generator_with_specific_parameters, interface=interface,
+        override_print_options=dict(publish_to_public=False),
+        ignore_stored_print_option_values_and_use_default=True
     )
 
 
@@ -281,5 +283,7 @@ def create_quick_spotters_report(interface: abstractInterface) -> File:
         "Quick reports are generated with current report parameters: do not get published to web. To publish or change parameters to go Reporting menu option."
     )
     return create_generic_report(
-        report_generator=report_generator_with_specific_parameters, interface=interface
+        report_generator=report_generator_with_specific_parameters, interface=interface,
+        override_print_options=dict(publish_to_public=False),
+        ignore_stored_print_option_values_and_use_default=True
     )

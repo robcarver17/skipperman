@@ -157,5 +157,6 @@ def create_quick_report(interface: abstractInterface) -> File:
     return create_generic_report(
         report_generator=report_generator_with_specific_parameters,
         interface=interface,
-        override_print_options={"power_boats_only": True, "output_pdf": False},
+        override_print_options={"power_boats_only": True, "output_pdf": False, "publish_to_public": False},
+        ignore_stored_print_option_values_and_use_default=True
     )

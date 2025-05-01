@@ -55,16 +55,17 @@ def override_print_options_with_new_values(
 
 
 def get_saved_print_options(
-    report_type: str, interface: abstractInterface
+    report_type: str, interface: abstractInterface,
+    ignore_stored_values_and_use_default: bool = False
 ) -> PrintOptions:
     print_options = get_print_options(
         object_store=interface.object_store, report_name=report_type
     )
     print_options.title_str = get_report_title_from_storage_or_use_default(
-        report_type=report_type, interface=interface
+        report_type=report_type, interface=interface, ignore_stored_values_and_use_default=ignore_stored_values_and_use_default
     )
     print_options.filename = get_report_filename_from_storage_or_use_default(
-        report_title=print_options.title_str, interface=interface
+        report_title=print_options.title_str, interface=interface, ignore_stored_values_and_use_default=ignore_stored_values_and_use_default
     )
 
     print("Loaded saved print shared %s" % str(print_options))
@@ -72,10 +73,12 @@ def get_saved_print_options(
 
 
 def get_report_title_from_storage_or_use_default(
-    report_type: str, interface: abstractInterface
+    report_type: str, interface: abstractInterface,
+        ignore_stored_values_and_use_default: bool = False
+
 ) -> str:
     title = interface.get_persistent_value(REPORT_TITLE)
-    if title is missing_data:
+    if title is missing_data or ignore_stored_values_and_use_default:
         event = get_event_from_state(interface)
         title = default_report_title_and_filename(event=event, report_type=report_type)
         interface.set_persistent_value(REPORT_TITLE, title)
@@ -84,10 +87,12 @@ def get_report_title_from_storage_or_use_default(
 
 
 def get_report_filename_from_storage_or_use_default(
-    report_title: str, interface: abstractInterface
+    report_title: str, interface: abstractInterface,
+        ignore_stored_values_and_use_default: bool = False
+
 ) -> str:
     filename = interface.get_persistent_value(REPORT_FILENAME)
-    if filename is missing_data:
+    if filename is missing_data or ignore_stored_values_and_use_default:
         filename = get_default_filename_for_report(report_title)
         interface.set_persistent_value(REPORT_FILENAME, filename)
 

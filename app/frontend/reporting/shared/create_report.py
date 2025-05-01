@@ -24,12 +24,14 @@ def create_generic_report(
     interface: abstractInterface,
     report_generator: ReportGenerator,
     override_print_options: dict = arg_not_passed,
+        ignore_stored_print_option_values_and_use_default: bool = False,
 ) -> File:
 
     filename = create_generic_report_and_return_filename(
         interface,
         report_generator=report_generator,
         override_print_options=override_print_options,
+        ignore_stored_print_option_values_and_use_default=ignore_stored_print_option_values_and_use_default
     )
     return File(filename)
 
@@ -38,6 +40,8 @@ def create_generic_report_and_return_filename(
     interface: abstractInterface,
     report_generator: ReportGenerator,
     override_print_options: dict = arg_not_passed,
+        ignore_stored_print_option_values_and_use_default: bool = False,
+
 ) -> str:
     print("Creating report")
 
@@ -51,6 +55,8 @@ def create_generic_report_and_return_filename(
         specific_parameters_for_type_of_report=specific_parameters_for_type_of_report,
         dict_of_df=dict_of_df,
         override_print_options=override_print_options,
+        ignore_stored_print_option_values_and_use_default=ignore_stored_print_option_values_and_use_default
+
     )
 
     reporting_options.filter_arrangement_options_in_place_to_remove_non_existent_groups()

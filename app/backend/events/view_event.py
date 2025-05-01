@@ -163,7 +163,7 @@ def summarise_volunteers_for_event(object_store: ObjectStore, event: Event):
         volunteers_at_event.list_of_volunteers()
     )
     summary_data[
-        "(J) Volunteers not added to event as all registrations cancelled G - I"
+        "(J) Volunteers not added to event as all registrations cancelled (positive), manually added volunteers (negative) G - I"
     ] = list_of_identified_volunteers.number_of_unique_volunteers_identified() - len(
         volunteers_at_event.list_of_volunteers()
     )

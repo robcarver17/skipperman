@@ -29,6 +29,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.objects.events import Event
 from app.objects.groups import Group
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 
 def get_volunteer_targets_table_and_save_button(
@@ -177,7 +178,9 @@ def save_group_notes_from_form(interface: abstractInterface):
 def save_group_notes_for_group(
     interface: abstractInterface, event: Event, group: Group
 ):
-    notes = interface.value_from_form(get_group_notes_field_value(group))
+    notes = interface.value_from_form(get_group_notes_field_value(group), MISSING_FROM_FORM)
+    if notes is MISSING_FROM_FORM:
+        return
     update_group_notes_at_event_for_group(
         object_store=interface.object_store, event=event, group=group, notes=notes
     )

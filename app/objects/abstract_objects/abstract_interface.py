@@ -109,7 +109,7 @@ class abstractInterface:
         raise NotImplemented
 
     def value_from_form(
-        self, key: str, value_is_date: bool = False, default=arg_not_passed
+        self, key: str,  default=arg_not_passed, value_is_date: bool = False
     ):
         raise NotImplemented
 

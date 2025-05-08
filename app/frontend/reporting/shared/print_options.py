@@ -59,7 +59,8 @@ def get_saved_print_options(
     ignore_stored_values_and_use_default: bool = False
 ) -> PrintOptions:
     print_options = get_print_options(
-        object_store=interface.object_store, report_name=report_type
+        object_store=interface.object_store, report_name=report_type,
+        ignore_stored_values_and_use_default=ignore_stored_values_and_use_default
     )
     print_options.title_str = get_report_title_from_storage_or_use_default(
         report_type=report_type, interface=interface, ignore_stored_values_and_use_default=ignore_stored_values_and_use_default

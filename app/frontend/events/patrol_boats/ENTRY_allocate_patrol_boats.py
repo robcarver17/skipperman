@@ -148,7 +148,7 @@ def previous_form(interface: abstractInterface):
 def create_quick_report(interface: abstractInterface) -> File:
     report_generator_with_specific_parameters = (
         rota_report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store
+            interface.object_store,
         )
     )
     interface.log_error(
@@ -157,6 +157,7 @@ def create_quick_report(interface: abstractInterface) -> File:
     return create_generic_report(
         report_generator=report_generator_with_specific_parameters,
         interface=interface,
-        override_print_options={"power_boats_only": True, "output_pdf": False, "publish_to_public": False},
+        override_print_options={ "output_pdf": False, "publish_to_public": False},
+        override_additional_options={"power_boats_only": True},
         ignore_stored_print_option_values_and_use_default=True
     )

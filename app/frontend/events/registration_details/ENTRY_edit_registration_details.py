@@ -105,7 +105,7 @@ help_button = HelpButton("registration_editing_help")
 add_button = Button(
     "Add unregistered sailor", nav_button=True, shortcut=ADD_KEYBOARD_SHORTCUT
 )
-quick_report_button = Button("Quick role call report", nav_button=True)
+quick_report_button = Button("Quick roll call report", nav_button=True)
 
 
 nav_buttons_top = ButtonBar(

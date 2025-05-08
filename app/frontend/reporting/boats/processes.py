@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Callable
 
 import pandas as pd
 
@@ -6,12 +6,15 @@ from app.backend.reporting.boat_report.boat_report_parameters import (
     AdditionalParametersForBoatReport,
 )
 from app.backend.reporting.boat_report.get_data import get_dict_of_df_for_boat_report
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import \
+    apply_override_additional_options
 from app.frontend.reporting.shared.arrangement_state import (
     reset_arrangement_to_default_with_groups_in_data,
 )
 from app.backend.reporting.report_generator import ReportGenerator
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
+from app.objects.utilities.exceptions import arg_not_passed
 
 DISPLAY_FULL_NAMES = "display_full_names"
 EXCLUDE_LAKE = "exclude_lake"
@@ -154,9 +157,13 @@ def clear_additional_parameters_for_boat_report(
 
 def get_dict_of_df_for_reporting_boats(
     interface: abstractInterface,
+        override_additional_options: dict = arg_not_passed
+
 ) -> Dict[str, pd.DataFrame]:
     event = get_event_from_state(interface)
     additional_parameters = load_additional_parameters_for_boat_report(interface)
+    if override_additional_options is not arg_not_passed:
+        additional_parameters=apply_override_additional_options(additional_parameters, **override_additional_options)
 
     dict_of_df = get_dict_of_df_for_boat_report(
         object_store=interface.object_store,

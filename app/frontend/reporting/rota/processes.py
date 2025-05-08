@@ -1,9 +1,11 @@
 import pandas as pd
-from typing import Dict
+from typing import Dict, Callable
 
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
     no_volunteers_on_patrol_boats_at_event,
 )
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import \
+    apply_override_additional_options
 from app.backend.reporting.rota_report.configuration import (
     AdditionalParametersForVolunteerReport,
 )
@@ -18,7 +20,7 @@ from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
-from app.objects.utilities.exceptions import MISSING_FROM_FORM
+from app.objects.utilities.exceptions import MISSING_FROM_FORM, arg_not_passed
 
 DAYS_TO_SHOW = "DaysToShow"
 BOATS = "boats"
@@ -103,9 +105,13 @@ def save_patrol_boat_parameter(
 
 def get_dict_of_df_for_reporting_rota(
     interface: abstractInterface,
+        override_additional_options: dict = arg_not_passed
+
 ) -> Dict[str, pd.DataFrame]:
     event = get_event_from_state(interface)
     additional_parameters = load_additional_parameters_for_rota_report(interface)
+    if override_additional_options is not arg_not_passed:
+        additional_parameters=apply_override_additional_options(additional_parameters, **override_additional_options)
 
     dict_of_df = get_dict_of_df_for_reporting_rota_given_event_and_state(
         event=event, additional_parameters=additional_parameters, interface=interface

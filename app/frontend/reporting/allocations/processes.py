@@ -1,8 +1,10 @@
 from copy import copy
-from typing import Dict
+from typing import Dict, Callable
 
 import pandas as pd
 
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import \
+    apply_override_additional_options
 from app.frontend.reporting.shared.arrangement_state import (
     reset_arrangement_to_default_with_groups_in_data,
 )
@@ -15,6 +17,7 @@ from app.backend.reporting.allocation_report.allocation_report import (
     AdditionalParametersForAllocationReport,
     get_dict_of_df_for_reporting_allocations_with_flags,
 )
+from app.objects.utilities.exceptions import arg_not_passed
 
 
 def get_group_allocation_report_additional_parameters_from_form_and_save(
@@ -117,10 +120,12 @@ def clear_additional_parameters_for_allocation_report(
 
 def get_dict_of_df_for_reporting_allocations(
     interface: abstractInterface,
+    override_additional_options: dict = arg_not_passed
 ) -> Dict[str, pd.DataFrame]:
     event = get_event_from_state(interface)
     additional_parameters = load_additional_parameters_for_allocation_report(interface)
-
+    if override_additional_options is not arg_not_passed:
+        additional_parameters=apply_override_additional_options(additional_parameters, **override_additional_options)
     dict_of_df = get_dict_of_df_for_reporting_allocations_given_event_and_state(
         interface=interface, event=event, additional_parameters=additional_parameters
     )

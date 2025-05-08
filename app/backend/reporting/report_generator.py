@@ -5,6 +5,7 @@ from app.backend.reporting.options_and_parameters.report_type_specific_parameter
     SpecificParametersForTypeOfReport,
 )
 from app.data_access.store.object_store import ObjectStore
+from app.objects.utilities.exceptions import arg_not_passed
 
 
 @dataclass
@@ -57,7 +58,8 @@ class ReportGeneratorWithoutSpecificParameters:
     help_page: str
 
     def add_specific_parameters_for_type_of_report(
-        self, object_store: ObjectStore
+        self, object_store: ObjectStore,
+
     ) -> ReportGenerator:
         specific_parameters = self.specific_parameters_for_type_of_report_function(
             object_store

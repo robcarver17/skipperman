@@ -1,6 +1,8 @@
-from typing import Dict
+from typing import Dict, Callable
 
 from app.backend.reporting import report_generator
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import \
+    apply_override_additional_options
 from app.backend.reporting.rollcall_report.get_data import (
     get_dict_of_df_for_reporting_rollcalls_given_event_and_parameters,
 )
@@ -16,6 +18,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.backend.reporting.rollcall_report.configuration import (
     AdditionalParametersForRollcallReport,
 )
+from app.objects.utilities.exceptions import arg_not_passed
 
 
 def get_group_rollcall_report_additional_parameters_from_form_and_save(
@@ -158,9 +161,13 @@ def clear_additional_parameters_for_rollcall_report(
 
 def get_dict_of_df_for_reporting_rollcalls(
     interface: abstractInterface,
+        override_additional_options: dict = arg_not_passed
+
 ) -> Dict[str, pd.DataFrame]:
     event = get_event_from_state(interface)
-    additional_parameters = load_additional_parameters_for_rollcall_report(interface)
+    additional_parameters =load_additional_parameters_for_rollcall_report(interface)
+    if override_additional_options is not arg_not_passed:
+        additional_parameters=apply_override_additional_options(additional_parameters, **override_additional_options)
 
     dict_of_df = get_dict_of_df_for_reporting_rollcalls_given_event_and_parameters(
         object_store=interface.object_store,

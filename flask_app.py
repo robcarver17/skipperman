@@ -165,7 +165,6 @@ def logout():
 
 
 @app.route("/%s/<action_option>" % ACTION_PREFIX, methods=["GET", "POST"])
-@login_required
 def action(action_option):
     if not authenticated_user():
         ## belt and braces on security

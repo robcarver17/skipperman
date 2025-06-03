@@ -39,7 +39,7 @@ from app.web.html.url_define import (
     MAKE_BACKUP,
     MAIN_MENU_URL,
     TOGGLE_READ_ONLY_GLOBAL,
-    LINK_LOGIN,
+    LINK_LOGIN, ACTION_WITH_STATE,
 )
 from app.data_access.configuration.configuration import MAX_FILE_SIZE, SUPPORT_EMAIL
 
@@ -167,10 +167,18 @@ def logout():
 @app.route("/%s/<action_option>" % ACTION_PREFIX, methods=["GET", "POST"])
 def action(action_option):
     if not authenticated_user():
-        ## belt and braces on security
         print("USER NOT LOGGED IN")
         return generate_menu_page_html()
     else:
+        return generate_action_page_html(action_option)
+
+@app.route("/%s/<action_option>/<state>" % ACTION_WITH_STATE, methods=["GET", "POST"])
+def action_with_state(action_option, state):
+    if not authenticated_user():
+        print("USER NOT LOGGED IN")
+        return generate_menu_page_html()
+    else:
+        print("%s %s" % (action_option, state))
         return generate_action_page_html(action_option)
 
 
@@ -181,7 +189,6 @@ def main_menu():
 
 
 @app.route("/%s/<help_page_name>" % HELP_PREFIX, methods=["GET", "POST"])
-@login_required
 def help(help_page_name):
     return generate_help_page_html(help_page_name)
 

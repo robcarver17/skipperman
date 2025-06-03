@@ -278,19 +278,15 @@ def get_sorted_list_of_teams_at_event(object_store: ObjectStore, event: Event):
 
     return sorted_teams_at_event
 
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets
 
 def get_sorted_list_of_groups_at_event(
     object_store: ObjectStore, event: Event, include_unallocated: bool = True
 ):
-    volunteer_event_data = get_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, event=event
-    )
-    volunteers_in_roles_at_event = (
-        volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles
-    )
+    cadet_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
+    all_groups_at_event = cadet_event_data.dict_of_cadets_with_days_and_groups.all_groups_at_event()
 
     all_groups = get_list_of_groups(object_store)
-    all_groups_at_event = ListOfGroups(volunteers_in_roles_at_event.all_groups_at_event)
     sorted_groups_at_event = all_groups_at_event.sort_to_match_other_group_list_order(
         all_groups
     )

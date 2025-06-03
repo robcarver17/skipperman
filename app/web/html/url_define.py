@@ -4,6 +4,7 @@ from app.objects.utilities.exceptions import arg_not_passed
 HOME = "Home"
 INDEX_URL = "/"
 ACTION_PREFIX = "action"
+ACTION_WITH_STATE= "submenu"
 HELP_PREFIX = "help"
 LOGIN_URL = "login"
 LOGOUT_URL = "logout"

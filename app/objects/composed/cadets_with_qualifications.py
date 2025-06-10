@@ -17,6 +17,7 @@ from app.objects.qualifications import (
 class QualificationAndDate:
     qualification: Qualification
     date_achieved: datetime.date
+    awarded_by: str
 
     @property
     def name(self):
@@ -24,13 +25,14 @@ class QualificationAndDate:
 
 
 class QualificationsForCadet(List[QualificationAndDate]):
-    def apply_qualification(self, qualification: Qualification):
+    def apply_qualification(self, qualification: Qualification, awarded_by:str):
         if self.is_cadet_qualified(qualification):
             return
 
         self.append(
             QualificationAndDate(
-                qualification=qualification, date_achieved=datetime.date.today()
+                qualification=qualification, date_achieved=datetime.date.today(),
+                awarded_by=awarded_by
             )
         )
 
@@ -64,11 +66,11 @@ class DictOfQualificationsForCadets(Dict[Cadet, QualificationsForCadet]):
         )
         super().__init__(dict_of_qualifications)
 
-    def apply_qualification_to_cadet(self, cadet: Cadet, qualification: Qualification):
+    def apply_qualification_to_cadet(self, cadet: Cadet, qualification: Qualification, awarded_by: str):
         qualifications_for_cadet = self.qualifications_for_cadet(cadet)
-        qualifications_for_cadet.apply_qualification(qualification)
+        qualifications_for_cadet.apply_qualification(qualification, awarded_by=awarded_by)
         self.list_of_cadets_with_ids_and_qualifications.apply_qualification_to_cadet(
-            cadet_id=cadet.id, qualification_id=qualification.id
+            cadet_id=cadet.id, qualification_id=qualification.id, awarded_by=awarded_by
         )
 
     def delete_all_qualifications_for_cadet(self, cadet: Cadet):
@@ -105,7 +107,7 @@ class DictOfQualificationsForCadets(Dict[Cadet, QualificationsForCadet]):
 
     def list_of_cadets_and_qualifications_and_dates(
         self,
-    ) -> List[Tuple[Cadet, Qualification, datetime.date]]:
+    ) -> List[Tuple[Cadet, Qualification, datetime.date, str]]:
         all_in_one_list = []
         for cadet in self.list_of_cadets:
             all_quals_cadet = self[cadet]
@@ -115,6 +117,7 @@ class DictOfQualificationsForCadets(Dict[Cadet, QualificationsForCadet]):
                         cadet,
                         qualification_and_date.qualification,
                         qualification_and_date.date_achieved,
+                        qualification_and_date.awarded_by
                     )
                 )
 
@@ -157,7 +160,8 @@ def update_dict_of_qualifications_for_cadets(
     )
     date_achieved = cadet_with_id_and_qualification.date
     qualification_and_date = QualificationAndDate(
-        qualification=qualification, date_achieved=date_achieved
+        qualification=qualification, date_achieved=date_achieved,
+        awarded_by=cadet_with_id_and_qualification.awarded_by
     )
 
     list_of_qualifications_and_dates_for_cadet.append(qualification_and_date)
@@ -172,6 +176,7 @@ class NamedCadetWithQualification(GenericSkipperManObject):
     cadet_name: str
     qualification_name: str
     date: datetime.date
+    awarded_by: str
 
 
 class ListOfNamedCadetsWithQualifications(GenericListOfObjects):
@@ -197,6 +202,7 @@ class ListOfNamedCadetsWithQualifications(GenericListOfObjects):
                     cadet_name=cadet_qualification_date[0].name,
                     qualification_name=cadet_qualification_date[1].name,
                     date=cadet_qualification_date[2],
+                    awarded_by=cadet_qualification_date[3]
                 )
                 for cadet_qualification_date in list_of_cadets_and_qualifications_and_dates
             ]

@@ -25,6 +25,17 @@ def get_volunteer_for_logged_in_user_or_superuser(
     return volunteer
 
 
+def get_volunteer_name_for_logged_in_user(
+    interface: abstractInterface,
+) -> Union[Volunteer, object]:
+    user = get_logged_in_skipperman_user(interface)
+
+    volunteer = get_volunteer_from_id(
+        object_store=interface.object_store, volunteer_id=user.volunteer_id
+    )
+
+    return volunteer.name
+
 def get_logged_in_skipperman_user(interface: abstractInterface) -> SkipperManUser:
     username = interface.get_current_logged_in_username()
     list_of_users = get_list_of_users(interface.object_store)

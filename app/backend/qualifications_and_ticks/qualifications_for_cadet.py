@@ -14,13 +14,14 @@ from app.objects.qualifications import Qualification
 
 
 def apply_qualification_to_cadet(
-    object_store: ObjectStore, cadet: Cadet, qualification: Qualification
+    object_store: ObjectStore, cadet: Cadet, qualification: Qualification, awarded_by: str
 ):
     dict_of_qualifications_for_all_cadets = get_dict_of_qualifications_for_all_cadets(
         object_store
     )
     dict_of_qualifications_for_all_cadets.apply_qualification_to_cadet(
-        cadet=cadet, qualification=qualification
+        cadet=cadet, qualification=qualification,
+        awarded_by=awarded_by
     )
     update_dict_of_qualifications_for_all_cadets(
         object_store=object_store,

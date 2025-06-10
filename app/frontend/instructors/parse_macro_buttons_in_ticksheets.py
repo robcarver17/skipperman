@@ -1,3 +1,4 @@
+from app.backend.security.logged_in_user import get_volunteer_name_for_logged_in_user
 from app.objects.cadets import Cadet
 
 from app.objects.composed.ticksheet import DictOfCadetsAndTicksWithinQualification
@@ -89,8 +90,10 @@ def action_if_cadet_apply_qualification_button_pressed(
         interface.log_error("User not allowed to apply qualifications_and_ticks!")
 
     qualification = get_qualification_from_state(interface)
+    awarded_by = get_volunteer_name_for_logged_in_user(interface)
     apply_qualification_to_cadet(
-        object_store=interface.object_store, cadet=cadet, qualification=qualification
+        object_store=interface.object_store, cadet=cadet, qualification=qualification,
+        awarded_by=awarded_by
     )
 
 

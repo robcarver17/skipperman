@@ -85,6 +85,7 @@ class CadetWithIdAndQualification(GenericSkipperManObject):
     cadet_id: str
     qualification_id: str
     date: datetime.date
+    awarded_by: str
 
 
 class ListOfCadetsWithIdsAndQualifications(GenericListOfObjectsWithIds):
@@ -97,7 +98,7 @@ class ListOfCadetsWithIdsAndQualifications(GenericListOfObjectsWithIds):
             sorted(self, key=lambda object: object.date, reverse=True)
         )
 
-    def apply_qualification_to_cadet(self, cadet_id: str, qualification_id: str):
+    def apply_qualification_to_cadet(self, cadet_id: str, qualification_id: str, awarded_by: str):
         if self.does_cadet_id_have_qualification(
             cadet_id=cadet_id, qualification_id=qualification_id
         ):
@@ -107,6 +108,7 @@ class ListOfCadetsWithIdsAndQualifications(GenericListOfObjectsWithIds):
                 cadet_id=cadet_id,
                 qualification_id=qualification_id,
                 date=datetime.datetime.today(),
+                awarded_by=awarded_by
             )
         )
 

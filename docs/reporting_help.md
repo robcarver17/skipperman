@@ -13,7 +13,7 @@ These reports are sophisticated and be [configured](general_report_config_and_pr
 There are also the following 'simple' reports which produce raw spreadsheets without requiring configuration:
 
 - Sailors data
-  - [Achieved qualifications](qualifications_report_help.md#achieved-qualifications) - the date when a qualification was achieved. Used when working out which books need signing.
+  - [Achieved qualifications](qualifications_report_help.md#achieved-qualifications) - the date when a qualification was achieved, and who awarded it. Used when working out which books need signing.
   - [Qualification and tick status](qualifications_report_help.md#qualifications-and-tick-status) at an event - useful for working out what RYA books to order and planning teaching for an event
   - [Group history and qualifications](qualifications_report_help.md#group-history-and-qualifications) - useful for planning likely group allocations 
 - All event data - A giant spreadsheet with all the data for an event

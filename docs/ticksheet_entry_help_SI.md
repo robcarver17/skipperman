@@ -47,7 +47,7 @@ When you are done just save your changes (pressing a button to award all ticks t
 # Qualification awards
 
 Important notes:
-
+- The current name of the volunteer logged in to Skipperman is logged with the date against the qualification.  
 - You don’t need all the ticks selected to award a qualification. All the ticks will automatically be selected for you when you click the award button.
 - Qualifications that have already been awarded should not be withdrawn because you disagree with a previous decision - only in case of accident
 - If you withdraw a qualification from a cadet, it won't affect their ticks.

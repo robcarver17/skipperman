@@ -22,7 +22,6 @@ from app.frontend.reporting.shared.print_options import (
     get_saved_print_options_and_create_form,
     reset_print_report_options,
     save_print_options_from_form,
-    weblink_for_report,
     qr_button,
 )
 from app.backend.reporting.report_generator import (
@@ -154,9 +153,6 @@ def display_form_for_generic_report_all_options(
         ]
     )
 
-    link = weblink_for_report(
-        interface=interface, report_generator=report_generator_with_specific_parameters
-    )
     return Form(
         ListOfLines(
             [
@@ -171,7 +167,6 @@ def display_form_for_generic_report_all_options(
                     size=4,
                     centred=True,
                 ),
-                link,
                 _______________,
                 ButtonBar([modify_additional_options_button]),
                 bold("Specific options for this report"),

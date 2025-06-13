@@ -1,3 +1,5 @@
+from typing import Union
+
 from app.backend.reporting.options_and_parameters.get_and_update_print_options import (
     get_print_options,
     reset_print_options_to_default,
@@ -17,7 +19,7 @@ from app.objects.abstract_objects.abstract_form import (
     yes_no_radio,
     textInput,
     radioInput,
-    intInput,
+    intInput, Link,
 )
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
@@ -119,14 +121,10 @@ def report_print_options_as_list_of_lines(print_options: PrintOptions) -> ListOf
     landscape_str = "Landscape" if print_options.landscape else "Portrait"
     output_pdf = print_options.output_pdf
     output_pdf_str = "Output to .pdf file" if output_pdf else "Output to .csv file"
-    public = print_options.publish_to_public
-    public_str = (
-        "Output to public directory with shareable web link - %s"
-        % web_pathname_of_file(print_options.filename_with_extension)
-        if public
-        else "Save in private directory"
-    )
-    use_qr_button = qr_button if public else ""
+    public_str = get_url_or_keep_private(print_options)
+
+    publish_to_public = print_options.publish_to_public
+    use_qr_button = qr_button if publish_to_public else ""
 
     output_pdf_line = Line(output_pdf_str)
     public_pdf_line = Line([public_str, use_qr_button])
@@ -165,6 +163,19 @@ def report_print_options_as_list_of_lines(print_options: PrintOptions) -> ListOf
 
     return output.add_Lines()
 
+def get_url_or_keep_private(print_options: PrintOptions):
+    publish_to_public = print_options.publish_to_public
+    if publish_to_public:
+        web_path_of_file = web_pathname_of_file(print_options.filename_with_extension)
+
+        text =         "Output to public directory with shareable web link: "
+        return Line([text, Link(
+            url=web_path_of_file,
+            string=web_path_of_file,
+            open_new_window=True,
+        )])
+    else:
+        return "Save in private directory"
 
 qr_button = Button(
     "Get QR code for report",
@@ -360,21 +371,3 @@ def save_print_options_from_form(
     interface.flush_cache_to_store()
 
 
-def weblink_for_report(
-    interface: abstractInterface, report_generator: ReportGenerator
-) -> str:
-    specific_parameters_for_type_of_report = (
-        report_generator.specific_parameters_for_type_of_report
-    )
-
-    print_options = get_saved_print_options(
-        report_type=specific_parameters_for_type_of_report.report_type,
-        interface=interface,
-    )
-    if print_options.publish_to_public:
-        return (
-            "Created report can be downloaded and will be found at %s"
-            % web_pathname_of_file(print_options.filename_with_extension)
-        )
-    else:
-        return ""

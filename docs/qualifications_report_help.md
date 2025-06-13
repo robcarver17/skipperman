@@ -18,4 +18,6 @@ This report can also be accessed from the Instructors menu, once an event has be
 
 # Group history and qualifications
 
+No configuration is required, just click to generate the report. Warning: this is quite a slow report!
+
 This includes the 'achieved qualifications information' and then adds additional columns showing the sailing group a given sailor was allocated to for each event.

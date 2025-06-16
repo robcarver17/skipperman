@@ -26,7 +26,6 @@ NUMBER_OF_BACKUPS = configuration["number_of_backups_to_keep"]
 ## links
 WEBLINK_FOR_QUALIFICATIONS = configuration["weblink_for_qualifications"]
 HOMEPAGE = configuration["homepage"]
-PUBLIC_WEB_PATH = "%s/%s/" % (HOMEPAGE, PUBLIC_REPORTING_SUBDIRECTORY)
 
 ## Cadets
 SIMILARITY_LEVEL_TO_WARN_NAME = configuration[

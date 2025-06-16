@@ -10,8 +10,9 @@ from app.backend.reporting.options_and_parameters.print_options import (
     default_report_title_and_filename,
     get_default_filename_for_report,
 )
+from app.backend.reporting.process_stages.create_file_from_list_of_columns import \
+    web_pathname_of_public_version_of_local_report_file
 from app.data_access.configuration.fixed import ALL_PAGESIZE, ALL_FONTS
-from app.data_access.init_directories import web_pathname_of_file
 from app.frontend.shared.events_state import get_event_from_state
 from app.backend.reporting.report_generator import ReportGenerator
 from app.objects.abstract_objects.abstract_buttons import Button
@@ -166,7 +167,7 @@ def report_print_options_as_list_of_lines(print_options: PrintOptions) -> ListOf
 def get_url_or_keep_private(print_options: PrintOptions):
     publish_to_public = print_options.publish_to_public
     if publish_to_public:
-        web_path_of_file = web_pathname_of_file(print_options.filename_with_extension)
+        web_path_of_file = web_pathname_of_public_version_of_local_report_file(print_options)
 
         text =         "Output to public directory with shareable web link: "
         return Line([text, Link(

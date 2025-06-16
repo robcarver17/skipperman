@@ -3,12 +3,14 @@ import os
 import pandas as pd
 import qrcode
 
+from app.data_access.file_access import web_pathname_of_public_version_of_local_file_without_extension, PathAndFilename
 from app.data_access.init_directories import (
     upload_directory,
-    web_pathname_of_file,
+    FIXMEREMOVE_web_pathname_of_file,
     download_directory,
 )
-from app.data_access.configuration.configuration import ALLOWED_UPLOAD_FILE_TYPES
+from app.data_access.configuration.configuration import ALLOWED_UPLOAD_FILE_TYPES, HOMEPAGE, \
+    PUBLIC_REPORTING_SUBDIRECTORY
 from app.data_access.uploads_and_downloads import get_next_valid_upload_file_name
 from app.data_access.xls_and_csv import load_spreadsheet_file
 from app.objects.abstract_objects.abstract_form import File
@@ -77,10 +79,12 @@ def get_staged_adhoc_filename(adhoc_name: str):
     return os.path.join(upload_directory, "_%s" % adhoc_name)
 
 
-def generate_qr_code_for_file_in_public_path(filename: str) -> File:
-    web_path = web_pathname_of_file(filename)
+def generate_qr_code_for_file_in_public_path(filename_without_extension: str) -> File:
+    path_and_filename = PathAndFilename(path="", extension="", filename_without_extension=filename_without_extension)
+    web_path = web_pathname_of_public_version_of_local_file_without_extension(path_and_filename,webserver_url=HOMEPAGE,
+                                                                              public_path=PUBLIC_REPORTING_SUBDIRECTORY)
     img = qrcode.make(web_path)
-    qr_code_filename = temp_qr_code_file_name(filename)
+    qr_code_filename = temp_qr_code_file_name(filename_without_extension)
     with open(qr_code_filename, "wb") as qr:
         img.save(qr)
 

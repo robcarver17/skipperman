@@ -6,7 +6,7 @@ import os
 
 from werkzeug.exceptions import RequestEntityTooLarge
 
-from app.data_access.init_directories import web_pathname_of_file
+from app.data_access.init_directories import FIXMEREMOVE_web_pathname_of_file
 from app.objects.abstract_objects.abstract_form import fileInput, Form
 from app.objects.abstract_objects.abstract_buttons import (
     CANCEL_BUTTON_LABEL,
@@ -62,7 +62,7 @@ def post_form_to_replace_selected_files(interface: abstractInterface):
 
     directory_name, filename = retrieve_directory_and_filename(interface)
     full_filename = os.path.join(directory_name, filename)
-    web_path = web_pathname_of_file(filename)
+    web_path = FIXMEREMOVE_web_pathname_of_file(filename)
 
     try:
         file = get_file_from_interface(FILE_FIELD, interface=interface)

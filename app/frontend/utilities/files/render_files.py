@@ -7,7 +7,7 @@ from app.data_access.init_directories import (
     public_reporting_directory,
     upload_directory,
     download_directory,
-    web_pathname_of_file,
+    FIXMEREMOVE_web_pathname_of_file,
 )
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
@@ -79,7 +79,7 @@ def line_for_file_in_directory(
     include_web_path: bool = False,
 ) -> RowInTable:
     if include_web_path:
-        display_name = web_pathname_of_file(filename)
+        display_name = FIXMEREMOVE_web_pathname_of_file(filename)
     else:
         display_name = filename
 

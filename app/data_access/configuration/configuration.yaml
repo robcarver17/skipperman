@@ -5,7 +5,7 @@ datapath: "skipperman_data" ## directory in users home directory where data stor
 backuppath: "skipperman_backup"
 userdata: "skipperman_user_data" ## special directory for username and password hashes (plus maybe user specific config)
 download_subdirectory: "Downloads" ## non public downloads
-public_reporting_subdirectory: "public" ## make sure mapped and exposed in pythonanywhere
+public_reporting_subdirectory: "file" ## make sure mapped and exposed in pythonanywhere
 uploads: "uploads" ## directory in users home directory where uploads are temporarily stored; only change for test purposes
 #
 WA_field_list_file: WA_field_list.xlsx

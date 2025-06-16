@@ -1,9 +1,11 @@
+from copy import copy
 from datetime import datetime
 from typing import Dict
 
 import pandas as pd
 
 from app.data_access.configuration.configuration import local_timezone
+from app.data_access.file_access import PathAndFilename
 from app.objects.utilities.exceptions import NoValidFile
 
 """
@@ -32,9 +34,9 @@ def load_spreadsheet_file(filename: str) -> pd.DataFrame:
 
 def save_dict_of_df_as_spreadsheet_file(
     dict_of_df: Dict[str, pd.DataFrame],
-    path_and_filename_no_extension: str,
+    path_and_filename_no_extension:PathAndFilename,
     write_index: bool = False,
-):
+) -> PathAndFilename:
     try:
         path_and_filename_with_extension = save_dict_of_df_as_xls(
             dict_of_df, path_and_filename_no_extension, write_index=write_index
@@ -49,11 +51,12 @@ def save_dict_of_df_as_spreadsheet_file(
 
 def save_dict_of_df_as_xls(
     dict_of_df: Dict[str, pd.DataFrame],
-    path_and_filename_without_extension: str,
+    path_and_filename_without_extension: PathAndFilename,
     write_index: bool = False,
-):
-    path_and_filename_with_extension = path_and_filename_without_extension + ".xlsx"
-    with pd.ExcelWriter(path_and_filename_with_extension) as writer:
+) -> PathAndFilename:
+    path_and_filename = copy(path_and_filename_without_extension)
+    path_and_filename.add_or_replace_extension(".xlsx")
+    with pd.ExcelWriter(path_and_filename.full_path_and_name) as writer:
         for sheet_name, df in dict_of_df.items():
             full_sheet_name = "%s Printed %s" % (
                 sheet_name,
@@ -61,17 +64,20 @@ def save_dict_of_df_as_xls(
             )
             df.to_excel(writer, sheet_name=full_sheet_name, index=write_index)
 
-    return path_and_filename_with_extension
+    return path_and_filename
 
 
 def save_dict_of_df_as_csv(
     dict_of_df: Dict[str, pd.DataFrame],
-    path_and_filename_without_extension: str,
+    path_and_filename_without_extension: PathAndFilename,
     write_index: bool = False,
-):
-    path_and_filename_with_extension = path_and_filename_without_extension + ".csv"
-    with open(path_and_filename_with_extension, "a") as f:
+) -> PathAndFilename:
+    path_and_filename = copy(path_and_filename_without_extension)
+    path_and_filename.add_or_replace_extension(".csv")
+    with open(path_and_filename.full_path_and_name, "a") as f:
         for sheet_name, df in dict_of_df.items():
             f.write(sheet_name)
             df.to_csv(f, index=write_index)
             f.write("\n")
+
+    return path_and_filename

@@ -3,7 +3,6 @@ import os.path
 import pandas as pd
 
 from app.data_access.configuration.configuration import WA_FIELD_LIST_FILE
-from app.data_access.init_directories import static_files_directory
 from app.objects.events import Event
 
 from app.backend.mapping.list_of_field_mappings import (
@@ -31,6 +30,8 @@ from app.objects.abstract_objects.abstract_form import Form, NewForm, File
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 
+from app.data_access.init_directories import skipperman_directory
+static_files_directory = os.path.join(skipperman_directory, "static")
 
 def display_form_for_create_custom_field_mapping(interface: abstractInterface):
     event = get_event_from_state(interface)

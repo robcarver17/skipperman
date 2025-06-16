@@ -7,7 +7,7 @@ from app.data_access.file_access import (
 )
 from app.data_access.init_directories import (
     public_reporting_directory,
-    web_pathname_of_file,
+    FIXMEREMOVE_web_pathname_of_file,
 )
 from app.objects.abstract_objects.abstract_form import textInput, fileInput, Form
 from app.objects.abstract_objects.abstract_buttons import (
@@ -75,7 +75,7 @@ def get_filename_and_save_new_file(interface: abstractInterface) -> Form:
         return display_form_for_upload_public_file(interface)
 
     full_filename = os.path.join(public_reporting_directory, filename)
-    web_path = web_pathname_of_file(filename)
+    web_path = FIXMEREMOVE_web_pathname_of_file(filename)
     try:
         file = get_file_from_interface(FILE_FIELD, interface=interface)
         file.save(full_filename)

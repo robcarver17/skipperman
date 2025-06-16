@@ -1,4 +1,3 @@
-from app.data_access.configuration.configuration import MIN_CADET_AGE, MAX_CADET_AGE
 from app.objects.abstract_objects.abstract_text import *
 
 
@@ -60,3 +59,4 @@ MAX_AGE_TO_JOIN_COMMITTEE = 17
 ID_KEY = "id"  ## ANYTHING WITH 'ID' IS AN INT SAVED AS A STRING
 ID_KEY_SUFFIX = "_id"  ## DITTO ANY FIELD NAME
 LIST_OF_ID_KEY_TO_IGNORE_WHEN_CLEANING = ["row_id"]
+MEGABYTE = (2**10) ** 2

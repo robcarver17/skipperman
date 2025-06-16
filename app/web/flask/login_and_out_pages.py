@@ -139,6 +139,7 @@ def welcome_message_for_user():
 
 
 def process_logout():
+    usernmae = get_username()
     logout_user()
 
     return generate_menu_page_html()

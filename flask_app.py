@@ -126,11 +126,13 @@ def login():
 
 
 @app.route("/%s/" % CHANGE_PASSWORD, methods=["GET", "POST"])
+@login_required
 def change_password():
     return change_password_page()
 
 
 @app.route("/%s/" % TOGGLE_READ_ONLY, methods=["GET"])
+@login_required
 def set_read_only_local():
     toggle_read_only_local()
     ## only possible from menu page
@@ -138,6 +140,7 @@ def set_read_only_local():
 
 
 @app.route("/%s/" % TOGGLE_READ_ONLY_GLOBAL, methods=["GET"])
+@login_required
 def set_read_only_global():
     if is_admin_user():
         toggle_read_only_global()
@@ -159,9 +162,11 @@ def link_login():
 
 
 @app.route("/%s/" % LOGOUT_URL)
-@login_required
 def logout():
-    return process_logout()
+    if authenticated_user():
+        return process_logout()
+    else:
+        return generate_menu_page_html()
 
 
 @app.route("/%s/<action_option>" % ACTION_PREFIX, methods=["GET", "POST"])

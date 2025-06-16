@@ -67,7 +67,7 @@ def process_form_when_cadet_verified(
     except Exception as e:
         ## should never happen as we have to be verified to get here, but still
         interface.log_error(
-            "Can't add this sailor, something weird has happened error code %s, try again"
+            "Can't add this sailor, error code %s, try again"
             % str(e)
         )
         return initial_state_form

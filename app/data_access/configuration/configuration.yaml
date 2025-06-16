@@ -32,7 +32,7 @@ similarity_level_to_match_a_very_similar_volunteer_name_on_event_import: 0.85
 #
 # Only change the following whenclub rules change
 minimum_cadet_age: 7
-maximium_cadet_age: 19
+maximium_cadet_age: 18
 minimum_age_when_cadet_can_be_at_event_without_parent: 11
 #
 # Wild apricot

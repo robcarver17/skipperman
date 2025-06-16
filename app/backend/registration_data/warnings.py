@@ -4,6 +4,7 @@ from app.backend.registration_data.raw_mapped_registration_data import (
 )
 from app.backend.volunteers.warnings import warn_on_cadets_which_should_have_volunteers
 from app.data_access.store.object_store import ObjectStore
+from app.objects.cadets import cadet_seems_too_young
 from app.objects.events import Event
 from app.objects.event_warnings import (
     ListOfEventWarnings,
@@ -14,7 +15,7 @@ from app.objects.event_warnings import (
     CADET_WITHOUT_ADULT,
     CADET_MANUALLY_ADDED,
     CADET_SKIPPED_TEMPORARY,
-    LOW_PRIORITY,
+    LOW_PRIORITY, HIGH_PRIORITY,
 )
 from app.backend.events.event_warnings import (
     add_or_update_list_of_new_event_warnings_clearing_any_missing,
@@ -53,13 +54,14 @@ def refresh_registration_data_warnings_and_return_sorted_list_of_active_warnings
 
 
 def refresh_registration_data_warnings(object_store: ObjectStore, event: Event):
-    refresh_date_of_birth_warnings(object_store, event)
+    refresh_unknown_date_of_birth_warnings(object_store, event)
+    refresh_too_young_warnings(object_store, event)
     warn_on_cadets_which_should_have_volunteers(object_store, event)
     refresh_manually_added_cadet_warnings(object_store, event)
     refresh_temporarily_skipped_cadet_warnings(object_store, event)
 
 
-def refresh_date_of_birth_warnings(object_store: ObjectStore, event: Event):
+def refresh_unknown_date_of_birth_warnings(object_store: ObjectStore, event: Event):
     registered_cadets = get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
@@ -70,6 +72,8 @@ def refresh_date_of_birth_warnings(object_store: ObjectStore, event: Event):
             warnings.append(
                 "Cadet %s has unknown date of birth - needs confirming" % cadet
             )
+        #elif cadet_seems_too_young(cadet):
+
 
     process_warnings_into_warning_list(
         object_store=object_store,
@@ -77,6 +81,28 @@ def refresh_date_of_birth_warnings(object_store: ObjectStore, event: Event):
         list_of_warnings=warnings,
         category=CADET_DOB,
         priority=LOW_PRIORITY,
+    )
+
+
+def refresh_too_young_warnings(object_store: ObjectStore, event: Event):
+    registered_cadets = get_dict_of_cadets_with_registration_data(
+        object_store=object_store, event=event
+    )
+    active_cadets = registered_cadets.list_of_active_cadets()
+    warnings = []
+    for cadet in active_cadets:
+        if cadet_seems_too_young(cadet):
+            warnings.append(
+                "Sailor %s is too young to be a member " % cadet
+            )
+
+
+    process_warnings_into_warning_list(
+        object_store=object_store,
+        event=event,
+        list_of_warnings=warnings,
+        category=CADET_DOB,
+        priority=HIGH_PRIORITY
     )
 
 

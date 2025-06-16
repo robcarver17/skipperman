@@ -49,11 +49,11 @@ def display_form_edit_delete_events(interface: abstractInterface):
         [
             navbar,
             _______________,
-            "Example form",
+            "Not yet implemented. This is a placeholder. ",
             textInput(
                 input_name=input_name,
                 value="default value",
-                input_label="enter something",
+                input_label="",
             ),
             _______________,
         ]

@@ -82,7 +82,7 @@ def post_form_to_replace_selected_files(interface: abstractInterface):
         delete_existing_public_files(original_path_and_filename)
         full_filename= get_public_filename_with_suffix_given_local_file(original_path_and_filename)
         file.save(full_filename.full_path_and_name)
-        
+
     except Exception as e:
         interface.log_error("Something went wrong uploading file: error %s" % str(e))
         return display_form_to_replace_selected_files(interface)

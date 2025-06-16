@@ -160,6 +160,16 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
             cadet_id=cadet_id, new_item=new_health, attribute="health"
         )
 
+    def update_all_data_in_row_for_existing_cadet_at_event(
+        self, cadet_id: str, data_row:dict):
+
+        for key,value in data_row.items():
+            self.update_data_row_for_existing_cadet_at_event(
+                cadet_id=cadet_id,
+                column_name=key,
+                new_value_for_column=value
+            )
+
     def update_data_row_for_existing_cadet_at_event(
         self, cadet_id: str, column_name: str, new_value_for_column
     ):

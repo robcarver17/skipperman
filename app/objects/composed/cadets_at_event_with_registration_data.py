@@ -98,6 +98,19 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
         super().__init__(raw_list)
         self._list_of_cadets_with_id_at_event = list_of_cadets_with_id_at_event
 
+
+    def update_registration_data_for_existing_cadet(self, cadet: Cadet,
+        row_in_registration_data: RowInRegistrationData):
+        registration_data_for_cadet = self.registration_data_for_cadet(cadet)
+        registration_data_for_cadet.data_in_row = row_in_registration_data
+        self[cadet] = registration_data_for_cadet
+
+        self.list_of_cadets_with_id_at_event.update_all_data_in_row_for_existing_cadet_at_event(
+            cadet_id=cadet.id,
+            data_row=row_in_registration_data.as_dict_excluding_special_keys()
+        )
+
+
     def delete_cadet_from_event_and_return_messages(self, cadet: Cadet) -> List[str]:
         try:
             self.pop(cadet)

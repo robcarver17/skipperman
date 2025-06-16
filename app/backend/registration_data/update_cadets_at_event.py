@@ -32,6 +32,23 @@ def no_important_difference_between_cadets_at_event(
     return status_matches and available_matches
 
 
+def registration_replacing_manual(
+    new_cadet_at_event_data: CadetWithIdAtEvent,
+    existing_cadet_at_event_data: CadetWithIdAtEvent,
+) -> bool:
+    status_matches = (
+        new_cadet_at_event_data.status == existing_cadet_at_event_data.status
+    )
+
+    if status_matches:
+        return False
+
+    if new_cadet_at_event_data.status.is_active:
+        if existing_cadet_at_event_data.status.is_manual:
+            return True
+
+    return False
+
 NO_STATUS_CHANGE = object()
 
 

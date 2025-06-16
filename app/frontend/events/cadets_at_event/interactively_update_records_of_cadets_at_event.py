@@ -1,6 +1,8 @@
 from datetime import datetime
 from typing import Union
 
+from app.backend.cadets_at_event.update_status_and_availability_of_cadets_at_event import \
+    update_registration_details_for_existing_cadet_at_event
 from app.backend.events.event_warnings import (
     add_new_event_warning_checking_for_duplicate,
 )
@@ -8,7 +10,7 @@ from app.data_access.configuration.configuration import local_timezone
 from app.objects.cadets import Cadet
 
 from app.backend.registration_data.update_cadets_at_event import (
-    no_important_difference_between_cadets_at_event,
+    no_important_difference_between_cadets_at_event, registration_replacing_manual,
 )
 from app.backend.registration_data.cadet_registration_data import (
     is_cadet_already_at_event,
@@ -136,7 +138,7 @@ def process_update_to_existing_cadet_in_event_data(
                 "Cadet %s was added manually - is still not appearing in official registration import. "
                 % cadet
             )
-            # no need to create formal warnign wll be done later
+            # no need to create formal warning wll be done later
             log_import_error(interface=interface, message=warning, log_as_warning=False)
         else:
             ## No rows match cadet ID in current registration data, so deleted

@@ -12,6 +12,7 @@ from app.objects.composed.cadets_with_all_event_info_functions import (
     RequiredDictForAllocation,
 )
 from app.objects.day_selectors import DaySelector, Day
+from app.objects.registration_data import RowInRegistrationData
 from app.objects.utilities.exceptions import MissingData, arg_not_passed
 from app.objects.food import no_food_requirements
 from app.objects.groups import Group, unallocated_group
@@ -341,6 +342,14 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         self.propagate_changes_to_cadet_in_underlying_data(cadet)
 
         return [message]
+
+    def update_registration_data_for_existing_cadet(self, cadet: Cadet,
+        row_in_registration_data: RowInRegistrationData):
+        self.dict_of_cadets_with_registration_data.update_registration_data_for_existing_cadet(
+            cadet=cadet,
+            row_in_registration_data=row_in_registration_data
+        )
+        self.propagate_changes_to_cadet_in_underlying_data(cadet)
 
     def update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting(
         self,

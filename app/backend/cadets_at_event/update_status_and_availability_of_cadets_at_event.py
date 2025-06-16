@@ -6,9 +6,11 @@ from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
 )
 
 from app.data_access.store.object_store import ObjectStore
+from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent, get_health_from_event_row
 from app.objects.cadets import Cadet
 from app.objects.day_selectors import Day, DaySelector
 from app.objects.events import Event
+from app.objects.registration_data import RowInRegistrationData
 from app.objects.registration_status import RegistrationStatus
 
 
@@ -103,3 +105,27 @@ def update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting(
         dict_of_all_event_info_for_cadets=dict_of_all_event_info_for_cadets,
         object_store=object_store,
     )
+
+
+def update_registration_details_for_existing_cadet_at_event(
+    object_store: ObjectStore,
+    event: Event,
+    cadet: Cadet,
+        row_in_registration_data: RowInRegistrationData
+):
+
+    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(
+        object_store=object_store, event=event, active_only=True
+    )
+    dict_of_all_event_info_for_cadets.update_registration_data_for_existing_cadet(
+        cadet=cadet, row_in_registration_data=row_in_registration_data
+    )
+    dict_of_all_event_info_for_cadets.update_health_for_existing_cadet_at_event(
+        cadet=cadet,
+        new_health=get_health_from_event_row(row_in_registration_data)
+    )
+    update_dict_of_all_event_info_for_cadets(
+        dict_of_all_event_info_for_cadets=dict_of_all_event_info_for_cadets,
+        object_store=object_store,
+    )
+

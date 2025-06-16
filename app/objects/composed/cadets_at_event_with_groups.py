@@ -241,7 +241,8 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
         self, day: Day, include_unallocated_cadets: bool
     ) -> ListOfCadetsWithGroupOnDay:
         list_of_cadets_by_group = []
-        for cadet in self.list_of_cadets:
+        list_of_cadets = self.list_of_cadets.sort_by_name()
+        for cadet in list_of_cadets:
             days_and_groups_for_cadet = self.get_days_and_groups_for_cadet(cadet)
             group_on_day = days_and_groups_for_cadet.group_on_day(day)
             list_of_cadets_by_group.append(

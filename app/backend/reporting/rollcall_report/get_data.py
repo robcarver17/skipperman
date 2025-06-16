@@ -88,6 +88,7 @@ def get_block_of_df_for_group_at_event(
 ) -> pd.DataFrame:
 
     list_of_cadets_in_group = dict_of_all_event_data.cadets_in_group_during_event(group)
+    list_of_cadets_in_group = list_of_cadets_in_group.sort_by_name()
     df = get_names_and_groups_block_of_df_for_group_at_event(
         dict_of_all_event_data=dict_of_all_event_data,
         list_of_cadets_in_group=list_of_cadets_in_group,

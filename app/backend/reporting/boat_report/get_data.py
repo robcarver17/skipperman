@@ -55,7 +55,6 @@ def get_df_for_day_of_boat_report(
     cadets_at_event_on_day = list_of_active_cadets_on_day(
         day=day, dict_of_all_event_info_for_cadets=dict_of_all_event_info_for_cadets
     )
-
     list_of_row = [
         row_of_data_for_cadet(
             dict_of_all_event_info_for_cadets=dict_of_all_event_info_for_cadets,
@@ -77,7 +76,7 @@ def get_df_for_day_of_boat_report(
     if len(df) == 0:
         return pd.DataFrame()
 
-    df = df.sort_values(by=BOAT_CLASS)
+    df = df.sort_values(by=[FIRST_CADET, BOAT_CLASS])
 
     return df
 

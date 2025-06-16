@@ -49,7 +49,7 @@ def get_ticksheet_data_for_cadets_at_event_in_group_with_qualification(
         object_store=object_store, event=event
     )
     cadets_in_group = all_group_allocations_at_event.cadets_in_group_during_event(group)
-    cadets_in_group = cadets_in_group.sort_by_firstname()
+    cadets_in_group = cadets_in_group.sort_by_name()
     dict_of_cadets_with_qualifications_and_ticks = (
         get_dict_of_cadets_with_qualifications_and_ticks(
             object_store=object_store, list_of_cadet_ids=cadets_in_group.list_of_ids

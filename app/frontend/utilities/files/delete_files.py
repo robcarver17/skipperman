@@ -8,7 +8,8 @@ from app.frontend.utilities.files.render_files import (
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.data_access.file_access import (
-    get_files_in_directory,
+    get_files_in_directory, get_newest_file_matching_filename,
+    get_files_in_directory_mask_suffix_and_extension_from_filename_remove_duplicates,
 )
 from app.data_access.init_directories import (
     public_reporting_directory,
@@ -33,7 +34,10 @@ def delete_selected_files(interface: abstractInterface):
 def delete_selected_files_in_directory(
     interface: abstractInterface, directory_name: str
 ):
-    all_files = get_files_in_directory(directory_name)
+    if directory_name == public_reporting_directory:
+        all_files = get_files_in_directory_mask_suffix_and_extension_from_filename_remove_duplicates(directory_name)
+    else:
+        all_files = get_files_in_directory(directory_name)
     for filename in all_files:
         check_if_file_selected_and_delete(
             interface=interface, directory_name=directory_name, filename=filename
@@ -51,7 +55,11 @@ def check_if_file_selected_and_delete(
         return
 
     if DELETE_IN_CHECKBOX in checkbox_list:
-        full_filename = os.path.join(directory_name, filename)
+        if directory_name == public_reporting_directory:
+            full_filename = get_newest_file_matching_filename(filename=filename, pathname=public_reporting_directory)
+        else:
+            full_filename = os.path.join(directory_name, filename)
+
         try:
             os.remove(full_filename)
         except:
@@ -83,8 +91,7 @@ def delete_all_files_in_directory(directory_name: str):
 
 
 def delete_specific_file(button_pressed: str):
-    directory, filename = directory_and_filename_from_delete_button_name(button_pressed)
-    full_filename = os.path.join(directory, filename)
+    full_filename = directory_and_filename_from_delete_button_name(button_pressed)
 
     try:
         os.remove(full_filename)

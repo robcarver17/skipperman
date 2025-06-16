@@ -1,4 +1,3 @@
-import os.path
 from typing import Union
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
@@ -7,7 +6,8 @@ from app.frontend.reporting.sailors.achieved_qualifications import (
 )
 
 from app.data_access.file_access import (
-    get_files_in_directory,
+    get_files_in_directory_mask_suffix_and_extension_from_filename_remove_duplicates,
+    get_newest_file_matching_filename,
 )
 from app.data_access.init_directories import public_reporting_directory
 
@@ -165,8 +165,10 @@ def post_form_main_instructors_page(
 
 
 def get_file_given_button_pressed(button_pressed: str) -> File:
-    filename = filename_from_pressed_button(button_pressed)
-    return File(os.path.join(public_reporting_directory, filename))
+    filename_without_suffix_or_extension = filename_without_suffix_or_extension_from_pressed_button(button_pressed)
+    filename = get_newest_file_matching_filename(filename=filename_without_suffix_or_extension,
+                                                 pathname=public_reporting_directory)
+    return File(filename)
 
 
 def action_when_event_button_clicked(interface: abstractInterface) -> NewForm:
@@ -192,7 +194,7 @@ def get_event_buttons(interface: abstractInterface, sort_by: str) -> Line:
 
 
 def list_of_all_files_in_public_directory_with_clickable_buttons() -> ListOfLines:
-    all_files = get_files_in_directory(public_reporting_directory)
+    all_files = get_files_in_directory_mask_suffix_and_extension_from_filename_remove_duplicates(public_reporting_directory)
 
     return ListOfLines(
         [line_for_file_in_directory(filename=filename) for filename in all_files]
@@ -216,7 +218,7 @@ def is_filename_button_pressed(value_of_button: str):
     )
 
 
-def filename_from_pressed_button(value_of_button: str) -> str:
+def filename_without_suffix_or_extension_from_pressed_button(value_of_button: str) -> str:
     return get_attributes_from_button_pressed_of_known_type(
         value_of_button_pressed=value_of_button, type_to_check=select_file
     )

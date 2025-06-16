@@ -1,4 +1,3 @@
-from typing import Union
 
 from app.frontend.utilities.files.delete_files import (
     delete_selected_files,
@@ -24,7 +23,7 @@ from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.abstract_objects.abstract_buttons import (
     back_menu_button,
 )
-from app.objects.abstract_objects.abstract_tables import DetailTable
+
 from app.frontend.utilities.files.render_files import (
     is_delete_button,
     is_qr_button,
@@ -36,17 +35,10 @@ from app.frontend.utilities.files.render_files import (
 
 
 def display_form_file_management(interface: abstractInterface) -> Form:
-    public_files = DetailTable(
-        list_of_all_public_files_with_options(), name="Public files"
-    )
-    private_files = DetailTable(
-        list_of_all_private_download_files_with_options(),
-        name="Private downloaded files (temporary)",
-    )
-    upload_files = DetailTable(
-        list_of_all_upload_files_with_options(),
-        name="Private uploaded files (temporary)",
-    )
+    public_files = list_of_all_public_files_with_options()
+    private_files = list_of_all_private_download_files_with_options()
+    upload_files = list_of_all_upload_files_with_options()
+
     lines_inside_form = ListOfLines(
         [
             nav_buttons,

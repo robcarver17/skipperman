@@ -1,3 +1,7 @@
+from app.backend.reporting.process_stages.create_file_from_list_of_columns import delete_existing_public_files, \
+    get_public_filename_with_suffix_given_local_file
+from app.data_access.configuration.configuration import PUBLIC_REPORTING_SUBDIRECTORY, HOMEPAGE
+from app.data_access.init_directories import public_reporting_directory
 from app.frontend.utilities.files.state import (
     retrieve_directory_and_filename,
     clear_directory_and_filename,
@@ -6,7 +10,6 @@ import os
 
 from werkzeug.exceptions import RequestEntityTooLarge
 
-from app.data_access.init_directories import FIXMEREMOVE_web_pathname_of_file
 from app.objects.abstract_objects.abstract_form import fileInput, Form
 from app.objects.abstract_objects.abstract_buttons import (
     CANCEL_BUTTON_LABEL,
@@ -19,6 +22,7 @@ from app.objects.abstract_objects.abstract_interface import (
     form_with_message_and_finished_button,
     get_file_from_interface,
 )
+from app.data_access.file_access import web_pathname_of_public_version_of_local_file_without_extension, PathAndFilename
 
 empty_name = ""
 FILE_FIELD = "file"
@@ -27,6 +31,11 @@ UPLOAD_FILE_BUTTON_LABEL = "Upload replacement file"
 
 def display_form_to_replace_selected_files(interface: abstractInterface) -> Form:
     directory_name, filename = retrieve_directory_and_filename(interface)
+    try:
+        assert directory_name == public_reporting_directory
+    except:
+        raise Exception("Can only replace public files")
+
     buttons = ButtonBar([cancel_button, upload_button])
     file_select_field = fileInput(input_name=FILE_FIELD)
 
@@ -60,13 +69,20 @@ def post_form_to_replace_selected_files(interface: abstractInterface):
         )
         return previous_form
 
-    directory_name, filename = retrieve_directory_and_filename(interface)
-    full_filename = os.path.join(directory_name, filename)
-    web_path = FIXMEREMOVE_web_pathname_of_file(filename)
+    __, original_raw_filename = retrieve_directory_and_filename(interface)
+    original_path_and_filename = PathAndFilename(filename_without_extension=original_raw_filename,
+                                                 path=public_reporting_directory)
+
+    web_path = web_pathname_of_public_version_of_local_file_without_extension(original_path_and_filename,
+                                                                              public_path=PUBLIC_REPORTING_SUBDIRECTORY,
+                                                                              webserver_url=HOMEPAGE)
 
     try:
         file = get_file_from_interface(FILE_FIELD, interface=interface)
-        file.save(full_filename)
+        delete_existing_public_files(original_path_and_filename)
+        full_filename= get_public_filename_with_suffix_given_local_file(original_path_and_filename)
+        file.save(full_filename.full_path_and_name)
+        
     except Exception as e:
         interface.log_error("Something went wrong uploading file: error %s" % str(e))
         return display_form_to_replace_selected_files(interface)

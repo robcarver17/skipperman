@@ -6,7 +6,6 @@ import qrcode
 from app.data_access.file_access import web_pathname_of_public_version_of_local_file_without_extension, PathAndFilename
 from app.data_access.init_directories import (
     upload_directory,
-    FIXMEREMOVE_web_pathname_of_file,
     download_directory,
 )
 from app.data_access.configuration.configuration import ALLOWED_UPLOAD_FILE_TYPES, HOMEPAGE, \

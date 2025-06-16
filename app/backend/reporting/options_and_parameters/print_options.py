@@ -123,6 +123,6 @@ def default_report_title_and_filename(event: Event, report_type: str) -> str:
 
 def get_default_filename_for_report(default_title: str) -> str:
     default_file_name = default_title.replace(" ", "_")
-    default_file_name = default_file_name.replace(":", "_")
+    default_file_name = default_file_name.replace(":", "")
 
     return default_file_name

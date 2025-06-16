@@ -14,10 +14,6 @@ skipperman_directory = os.path.join(home_directory, "skipperman")
 docs_directory = os.path.join(skipperman_directory, "docs")
 
 
-def FIXMEREMOVE_web_pathname_of_file(filename_with_extension: str):
-    return "url_here" + filename_with_extension
-
-
 
 def temp_file_name_in_download_directory(filename="temp_file", extension=".csv") -> str:
     return os.path.join(download_directory, filename + extension)

@@ -9,12 +9,33 @@ from typing import List
 from app.objects.utilities.exceptions import MissingData
 
 
+def get_files_in_directory_mask_suffix_and_extension_from_filename_remove_duplicates(mypath: str):
+    onlyfiles = get_files_in_directory(mypath)
+    masked_files= [mask_suffix_and_extension_from_filename(filename) for filename in onlyfiles]
+    no_duplicated_files = list(set(masked_files))
+
+    return no_duplicated_files
+
 def get_files_in_directory(mypath: str):
     onlyfiles = [
         f for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))
     ]
     return onlyfiles
 
+def mask_suffix_and_extension_from_filename(filename:str):
+    filename_without_extension =get_filename_and_extension(filename)[0]
+    filename_without_extension_and_suffix = filename_without_extension[:-12]
+
+    return filename_without_extension_and_suffix
+
+def get_filename_and_extension(filename:str):
+    filename_and_extension = filename.split(".")
+    filename_without_extension = filename.split(".")[0]
+    if len(filename_and_extension)==1:
+        return filename_without_extension, ""
+    extension = filename.split(".")[1]
+
+    return filename_without_extension, extension
 
 def get_relative_pathname_from_list(path_as_list: List[str]) -> str:
     package_name = path_as_list[0]
@@ -51,9 +72,9 @@ def files_with_extension_in_resolved_pathname(
 
 @dataclass
 class PathAndFilename:
-    path: str
     filename_without_extension: str
-    extension: str
+    path: str = ""
+    extension: str = ""
 
     @property
     def full_path_and_name(self):
@@ -64,7 +85,7 @@ class PathAndFilename:
 
     @property
     def filename(self):
-        return self.filename_without_extension + self.extension
+        return self.filename_without_extension + "."+ self.extension
 
     def replace_path(self, path:str):
         self.path = path

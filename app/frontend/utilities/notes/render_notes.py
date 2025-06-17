@@ -3,11 +3,11 @@ from app.backend.administration_and_utilities.notes import get_list_of_notes_wit
 from app.backend.volunteers.list_of_volunteers import get_list_of_volunteers
 from app.data_access.configuration.fixed import SAVE_KEYBOARD_SHORTCUT
 from app.objects.abstract_objects.abstract_buttons import HelpButton, Button
-from app.objects.abstract_objects.abstract_form import textAreaInput, checkboxInput, dropDownInput, textInput
+from app.objects.abstract_objects.abstract_form import textAreaInput, checkboxInput, dropDownInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
-from app.objects.composed.notes_with_volunteers import NoteWithVolunteer, no_volunteer_assigned, SORT_BY_DATE, \
+from app.objects.composed.notes_with_volunteers import NoteWithVolunteer,SORT_BY_DATE, \
     ListOfNotesWithVolunteers
 from app.objects.notes import LIST_OF_PRIORITIES
 
@@ -93,7 +93,6 @@ def assigned_volunteer_dropdown(interface: abstractInterface, existing_note_with
 def get_dict_of_volunteer_names_and_ids(interface: abstractInterface):
     list_of_volunteers = get_list_of_volunteers(interface.object_store)
     list_of_volunteers =list_of_volunteers.sort_by_firstname()
-    list_of_volunteers.insert(0, no_volunteer_assigned)
     return dict([(volunteer.name, volunteer.id) for volunteer in list_of_volunteers])
 
 def priority_dropdown(existing_note_with_volunteer: NoteWithVolunteer):

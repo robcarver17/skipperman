@@ -1,12 +1,11 @@
-from app.backend.administration_and_utilities.notes import add_quick_note, get_list_of_notes_with_volunteers
+from app.backend.administration_and_utilities.notes import get_list_of_notes_with_volunteers
 from app.backend.security.logged_in_user import get_loggged_in_volunteer
 from app.backend.volunteers.list_of_volunteers import get_list_of_volunteers
 from app.frontend.utilities.notes.render_notes import quick_note_text, get_input_name_for_note, VOLUNTEER_ASSIGNED, \
     PRIORITY, COMPLETED, TEXT, sort_by_author, sort_by_date, sort_by_assigned, sort_by_priority, update_sort_name
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.composed.notes_with_volunteers import NoteWithVolunteer, no_volunteer_assigned, SORT_BY_ASSIGNED, SORT_BY_AUTHOR, SORT_BY_PRIORITY, SORT_BY_DATE
-from app.objects.notes import NOT_ASSIGNED_TO_VOLUNTEER_ID
-from app.objects.utilities.exceptions import MissingData, MISSING_FROM_FORM, arg_not_passed
+from app.objects.composed.notes_with_volunteers import NoteWithVolunteer, SORT_BY_ASSIGNED, SORT_BY_AUTHOR, SORT_BY_PRIORITY, SORT_BY_DATE
+from app.objects.utilities.exceptions import MISSING_FROM_FORM, arg_not_passed
 from app.backend.administration_and_utilities.notes import add_quick_note, update_note_with_new_data
 
 def save_all_notes(interface: abstractInterface):
@@ -46,9 +45,6 @@ def get_assigned_volunteer_from_form(interface: abstractInterface, note: NoteWit
     assigned_volunteer_id = interface.value_from_form(get_input_name_for_note(note, VOLUNTEER_ASSIGNED), default=MISSING_FROM_FORM)
     if assigned_volunteer_id is MISSING_FROM_FORM or assigned_volunteer_id is arg_not_passed:
         return note.assigned_volunteer
-
-    if str(assigned_volunteer_id) ==str(NOT_ASSIGNED_TO_VOLUNTEER_ID):
-        return no_volunteer_assigned
 
     list_of_volunteers = get_list_of_volunteers(interface.object_store)
 

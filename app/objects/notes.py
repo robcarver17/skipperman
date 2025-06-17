@@ -10,7 +10,6 @@ from app.objects.utilities.generic_objects import (
 )
 from app.data_access.configuration.fixed import LOWEST_PRIORITY, LOW_PRIORITY, MEDIUM_PRIORITY, HIGH_PRIORITY
 
-NOT_ASSIGNED_TO_VOLUNTEER_ID = -999
 LIST_OF_PRIORITIES = [LOWEST_PRIORITY, LOW_PRIORITY, MEDIUM_PRIORITY, HIGH_PRIORITY]
 
 @dataclass

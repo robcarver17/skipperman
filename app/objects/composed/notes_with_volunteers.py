@@ -2,12 +2,10 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import List
 
-from app.objects.notes import Note, NOT_ASSIGNED_TO_VOLUNTEER_ID, LIST_OF_PRIORITIES, ListOfNotes
+from app.objects.notes import Note,  LIST_OF_PRIORITIES, ListOfNotes
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.utilities.generic_list_of_objects import get_unique_object_with_attr_in_list
 
-no_volunteer_assigned = Volunteer("Not", "Assigned")
-no_volunteer_assigned.id = NOT_ASSIGNED_TO_VOLUNTEER_ID
 
 @dataclass
 class NoteWithVolunteer:
@@ -21,11 +19,7 @@ class NoteWithVolunteer:
 
     @classmethod
     def from_note(cls, note: Note, list_of_volunteers: ListOfVolunteers):
-        if str(note.assigned_volunteer_id)==str(NOT_ASSIGNED_TO_VOLUNTEER_ID):
-            volunteer_assigned = no_volunteer_assigned
-        else:
-            volunteer_assigned = list_of_volunteers.volunteer_with_id(note.assigned_volunteer_id)
-
+        volunteer_assigned = list_of_volunteers.volunteer_with_id(note.assigned_volunteer_id)
         volunteer_author = list_of_volunteers.volunteer_with_id(note.author_volunteer_id)
 
         return cls(
@@ -46,7 +40,7 @@ class NoteWithVolunteer:
             created_datetime=note.created_datetime,
             priority=note.priority,
             author_volunteer=author_volunteer,
-            assigned_volunteer=no_volunteer_assigned,
+            assigned_volunteer=author_volunteer,
             completed=note.completed,
             id=note.id
         )

@@ -99,7 +99,7 @@ def assigned_volunteer_dropdown(interface: abstractInterface, existing_note_with
             input_name=get_input_name_for_note(existing_note_with_volunteer, VOLUNTEER_ASSIGNED)
         )
     else:
-        return existing_note_with_volunteer.assigned_volunteer
+        return existing_note_with_volunteer.assigned_volunteer.name
 
 
 def get_dict_of_volunteer_names_and_ids(interface: abstractInterface):
